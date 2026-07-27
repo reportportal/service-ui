@@ -2820,7 +2820,7 @@
   "ProjectTeamPage.assignUser": "Назначить пользователя",
   "premiumPromoModal.contactUsButton": "Связаться с нами",
   "premiumPromoModal.explorePlansButton": "Тарифы",
-  "premiumPromoModal.feature.more": "\u2026и многое другое",
+  "premiumPromoModal.feature.more": "и многое другое\u2026",
   "premiumPromoModal.feature.organizations": "Организации",
   "premiumPromoModal.feature.qualityGates": "Quality Gates",
   "premiumPromoModal.feature.sso": "Единый вход (SSO)",

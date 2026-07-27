@@ -54,13 +54,13 @@ export const PLUGIN_DESCRIPTIONS_MAP: Record<string, ReactNode> = {
   [SAML]: (
     <FormattedMessage
       id="Integrations.Saml.description"
-      defaultMessage="Integration with SAML, can be help to speed up the process user creation and login to ReportPortal. Integration provides an exchange of information between ReportPortal and SAML, such as possibility to login to ReportPortal with SAML credentials."
+      defaultMessage="Integration with SAML, can help to speed up the process of user creation and login to ReportPortal. Integration provides an exchange of information between ReportPortal and SAML, such as possibility to login to ReportPortal with SAML credentials."
     />
   ),
   [LDAP]: (
     <FormattedMessage
       id="Integrations.Ldap.description"
-      defaultMessage="Integration with LDAP, can be help to speed up the process user creation and login to ReportPortal. Integration provides an exchange of information between ReportPortal and LDAP, such as possibility to login to ReportPortal with LDAP credentials."
+      defaultMessage="Integration with LDAP, can help to speed up the process of user creation and login to ReportPortal. Integration provides an exchange of information between ReportPortal and LDAP, such as possibility to login to ReportPortal with LDAP credentials."
     />
   ),
   [GITHUB]: (
