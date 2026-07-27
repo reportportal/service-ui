@@ -203,7 +203,7 @@ export const AVAILABLE_PLUGINS_CATALOG: AvailablePlugin[] = [
     groupType: AUTHORIZATION_GROUP_TYPE,
     details: { name: 'LDAP Auth' },
     description:
-      'Integration with LDAP, can help to speed up the process of user creation and login to ReportPortal. Integration provides an exchange of information between ReportPortal and LDAP, such as possibility to login to ReportPortal with LDAP credentials',
+      'Integration with LDAP, can help to speed up the process of user creation and login to ReportPortal. Integration provides an exchange of information between ReportPortal and LDAP, such as possibility to login to ReportPortal with LDAP credentials.',
   },
   {
     name: SAML,
