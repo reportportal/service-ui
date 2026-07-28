@@ -503,7 +503,7 @@ export const InstanceAssignment = ({
                 key={`project-${selectedOrganizationId}-${invitedUserId}`}
                 inputProps={{
                   label: formatMessage(messages.project),
-                  clearable: totalProjects > 0 && !!selectedOrganizationId,
+                  clearable: !!selectedOrganizationId,
                   placeholder: formatMessage(invitationMessages.selectSearchProject),
                   onClear: () => {
                     dispatch(change(formName, FORM_FIELDS.ORGANIZATION.PROJECTS.NAME, null));
@@ -526,8 +526,6 @@ export const InstanceAssignment = ({
                     ? formatMessage(invitationMessages.noProjectsCreated)
                     : formatMessage(COMMON_LOCALE_KEYS.NO_AVAILABLE_OPTIONS)
                 }
-                isDropdownMode={totalProjects === 0 && selectedOrganizationId}
-                icon={totalProjects === 0 && selectedOrganizationId ? <div /> : undefined}
                 useFixedPositioning
                 dropdownMatchInputWidth
               />
