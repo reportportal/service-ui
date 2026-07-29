@@ -17,6 +17,7 @@
 import { normalizeEventString } from '../../utils';
 import { LAUNCH_ANALYZE_TYPES_TO_ANALYTICS_TITLES_MAP } from '../common/constants';
 import { getBasicClickEventParameters, normalizeEventParameter } from '../common/ga4Utils';
+import { EMAIL } from 'common/constants/pluginNames';
 
 const PROJECT_SETTINGS = 'project_settings';
 const ANALYZER = 'analyzer';
@@ -139,7 +140,7 @@ export const PROJECT_SETTINGS_NOTIFICATIONS_EVENTS = {
     ...BASIC_EVENT_PARAMETERS_NOTIFICATIONS,
     element_name: 'button_save',
     modal: normalizeEventString(modalName),
-    status: getStatus(status),
+    ...(communicationChanelName === EMAIL && { status: getStatus(status) }),
     type: normalizeEventString(type),
     switcher: getSwitcher(switcher),
     icon_name: ruleId,
