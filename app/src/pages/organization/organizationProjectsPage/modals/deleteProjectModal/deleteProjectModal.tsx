@@ -30,6 +30,7 @@ import { ModalButtonProps } from 'types/common';
 import { createClassnames } from 'common/utils';
 import { useTracking } from 'react-tracking';
 import { PROJECTS_PAGE_EVENTS } from 'components/main/analytics/events/ga4Events/projectsPageEvents';
+import { PreservedText } from 'components/preservedText';
 
 import { messages } from '../../messages';
 
@@ -37,7 +38,11 @@ import styles from './deleteProjectModal.scss';
 
 const cx = createClassnames(styles);
 
-const Bold = (chunks: ReactNode) => <b>{chunks}</b>;
+const BoldProjectName = (chunks: ReactNode) => (
+  <PreservedText wrap>
+    <b>{chunks}</b>
+  </PreservedText>
+);
 
 const PROJECT_NAME_FIELD = 'projectName';
 const DELETE_PROJECT_FORM = 'deleteProjectForm';
@@ -93,7 +98,7 @@ const DeleteProjectModal: FC<DeleteProjectModalProps> = ({
         <p>
           {formatMessage(messages.confirmDeleteProjectMessage, {
             projectName,
-            b: Bold,
+            b: BoldProjectName,
           })}
         </p>
         <FieldProvider name={PROJECT_NAME_FIELD}>

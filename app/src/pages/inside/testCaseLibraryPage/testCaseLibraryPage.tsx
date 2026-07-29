@@ -31,6 +31,7 @@ import { useBreadCrumbsTree } from 'common/hooks';
 import { createClassnames, debounce } from 'common/utils';
 import { ProjectDetails } from 'pages/organization/constants';
 import { NavLink } from 'components/main/navLink';
+import { PreservedText } from 'components/preservedText';
 import { SettingsLayout } from 'layouts/settingsLayout';
 import ImportIcon from 'common/img/import-thin-inline.svg';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
@@ -160,7 +161,9 @@ export const TestCaseLibraryPage = () => {
     );
   };
 
-  const breadcrumbDescriptors = [{ id: 'project', title: projectName, link: projectLink }];
+  const breadcrumbDescriptors = [
+    { id: 'project', title: <PreservedText>{projectName}</PreservedText>, link: projectLink },
+  ];
 
   const hasActiveSearchOrFilters =
     !!location?.query?.testCasesSearchParams ||

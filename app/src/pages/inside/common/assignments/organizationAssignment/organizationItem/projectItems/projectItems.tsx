@@ -20,6 +20,7 @@ import { BaseIconButton, CloseIcon, Dropdown, Tooltip } from '@reportportal/ui-k
 import { capitalize, createClassnames } from 'common/utils';
 import { EDITOR, VIEWER } from 'common/constants/projectRoles';
 import { getRoleTitle } from 'common/utils/permissions';
+import { PreservedText } from 'components/preservedText';
 import { messages } from 'common/constants/localization/invitationsLocalization';
 import { messages as assignmentMessages } from 'common/constants/localization/assignmentsLocalization';
 
@@ -98,7 +99,9 @@ export const ProjectItems = ({
 
   return projects.map((project) => (
     <div className={cx('project')} key={project.id}>
-      <div className={cx('name', { disabled })}>{project.name}</div>
+      <div className={cx('name', { disabled })}>
+        <PreservedText>{project.name}</PreservedText>
+      </div>
       <div className={cx('controls')}>
         {canEditByDefault ? (
           <Tooltip

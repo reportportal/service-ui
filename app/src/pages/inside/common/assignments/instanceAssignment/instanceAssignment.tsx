@@ -477,7 +477,7 @@ export const InstanceAssignment = ({
                     {...getItemProps({ item, index })}
                     isNew={isNew}
                   >
-                    <PreservedText>{item}</PreservedText>
+                    <PreservedText wrap>{item}</PreservedText>
                   </AutocompleteOption>
                 )}
               />
@@ -530,6 +530,15 @@ export const InstanceAssignment = ({
                 icon={totalProjects === 0 && selectedOrganizationId ? <div /> : undefined}
                 useFixedPositioning
                 dropdownMatchInputWidth
+                renderOption={(item: string, index: number, isNew: boolean, getItemProps) => (
+                  <AutocompleteOption
+                    key={item}
+                    {...getItemProps({ item, index })}
+                    isNew={isNew}
+                  >
+                    <PreservedText wrap>{item}</PreservedText>
+                  </AutocompleteOption>
+                )}
               />
             </FieldErrorHint>
           </FieldProvider>

@@ -23,6 +23,7 @@ import { projectInfoIdSelector, projectNameSelector } from 'controllers/project'
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { EDITOR, VIEWER } from 'common/constants/projectRoles';
 import { messages } from 'common/constants/localization/invitationsLocalization';
+import { PreservedText } from 'components/preservedText';
 import { showErrorNotification } from 'controllers/notification';
 import { ApiError } from 'types/api';
 import {
@@ -58,7 +59,11 @@ export const useInviteUser = <L extends keyof FormDataMap>(level: L, overrides?:
   const getHeader = () => {
     if (level === Level.PROJECT) {
       const message = ssoUsersOnly ? messages.assignUserTo : messages.inviteUserTo;
-      return `${formatMessage(message)} ${projectName}`;
+      return (
+        <>
+          {formatMessage(message)} <PreservedText>{projectName}</PreservedText>
+        </>
+      );
     }
 
     if (level === Level.INSTANCE) {

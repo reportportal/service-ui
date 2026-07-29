@@ -24,6 +24,7 @@ import { activeDashboardItemSelector } from 'controllers/dashboard';
 import { projectNameSelector } from 'controllers/project';
 import { PageLayout } from 'layouts/pageLayout';
 import { GhostButton } from 'components/buttons/ghostButton';
+import { PreservedText } from 'components/preservedText';
 import ExportIcon from 'common/img/export-inline.svg';
 import styles from './dashboardPrintPage.scss';
 import { WidgetsGrid } from '../widgetsGrid';
@@ -85,7 +86,9 @@ export class DashboardPrintPage extends Component {
             <div className={cx('dashboard-printed-header')}>
               <p className={cx('title')}>
                 {formatMessage(messages.projectTitle)}
-                <span className={cx('title-value')}>{projectName}</span>
+                <span className={cx('title-value')}>
+                  <PreservedText>{projectName}</PreservedText>
+                </span>
               </p>
               <p className={cx('title')}>
                 {formatMessage(messages.dashboardTitle)}

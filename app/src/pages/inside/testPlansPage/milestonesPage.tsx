@@ -26,6 +26,7 @@ import { MILESTONES_PAGE_EVENTS, MILESTONES_PAGE_VIEW_TYPE } from 'analyticsEven
 
 import { SettingsLayout } from 'layouts/settingsLayout';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
+import { PreservedText } from 'components/preservedText';
 import { ProjectDetails } from 'pages/organization/constants';
 import { projectNameSelector } from 'controllers/project';
 import { PROJECT_DASHBOARD_PAGE, urlOrganizationAndProjectSelector } from 'controllers/pages';
@@ -69,7 +70,9 @@ export const MilestonesPage = () => {
   const milestones = useSelector(milestonesSelector);
   const milestonesLoading = useSelector(milestonesLoadingSelector);
   const projectLink = { type: PROJECT_DASHBOARD_PAGE, payload: { organizationSlug, projectSlug } };
-  const breadcrumbDescriptors = [{ id: 'project', title: projectName, link: projectLink }];
+  const breadcrumbDescriptors = [
+    { id: 'project', title: <PreservedText>{projectName}</PreservedText>, link: projectLink },
+  ];
   const { offset, limit } = useQueryParams(defaultMilestoneQueryParams);
   const queryParams = useMemo(() => ({ offset, limit }), [offset, limit]);
 

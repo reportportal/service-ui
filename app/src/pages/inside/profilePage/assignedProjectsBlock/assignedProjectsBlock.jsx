@@ -19,6 +19,7 @@ import classNames from 'classnames/bind';
 import { defineMessages, useIntl } from 'react-intl';
 import { availableProjectsSelector } from 'controllers/user';
 import { ScrollWrapper } from 'components/main/scrollWrapper/scrollWrapper';
+import { PreservedText } from 'components/preservedText';
 import { BlockContainerBody } from '../blockContainer';
 import styles from './assignedProjectsBlock.scss';
 
@@ -54,7 +55,9 @@ export const AssignedProjectsBlock = () => {
           {availableProjects.map(({ organizationName, organizationRole, projects }) => (
             <>
               <div key={organizationName} className={cx('organization-item')}>
-                <div className={cx('name-col')}>{organizationName}</div>
+                <div className={cx('name-col')}>
+                  <PreservedText>{organizationName}</PreservedText>
+                </div>
                 <div className={cx('role')}>
                   <div className={cx('role-description')}>
                     {formatMessage(messages.organization)}
@@ -64,7 +67,9 @@ export const AssignedProjectsBlock = () => {
               </div>
               {projects.map(({ projectKey, projectName, projectRole }) => (
                 <div key={projectKey} className={cx('project-item')}>
-                  <div className={cx('name-col')}>{projectName}</div>
+                  <div className={cx('name-col')}>
+                    <PreservedText>{projectName}</PreservedText>
+                  </div>
                   <div className={cx('role-col')}>{projectRole}</div>
                 </div>
               ))}

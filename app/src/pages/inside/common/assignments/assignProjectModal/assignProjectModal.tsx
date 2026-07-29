@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+import type { ReactNode } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useIntl } from 'react-intl';
 import { useTracking } from 'react-tracking';
@@ -28,12 +29,19 @@ import { ModalButtonProps } from 'types/common';
 import { activeOrganizationIdSelector } from 'controllers/organization';
 import { AssignedOrganizations, assignedOrganizationsSelector } from 'controllers/user';
 import { selfAssignToProjectAction } from 'controllers/organization/projects';
+import { PreservedText } from 'components/preservedText';
 import { messages } from 'common/constants/localization/assignmentsLocalization';
 import { ORGANIZATION_PAGE_EVENTS } from 'components/main/analytics/events/ga4Events/organizationsPageEvents';
 
 import styles from './assignProjectModal.scss';
 
 const cx = createClassnames(styles);
+
+const BoldProjectName = (chunks: ReactNode) => (
+  <PreservedText wrap>
+    <b>{chunks}</b>
+  </PreservedText>
+);
 
 interface Project {
   projectId: number;
@@ -87,7 +95,7 @@ export const AssignProjectModal = ({ project, onSuccess }: AssignProjectModalPro
         {formatMessage(descriptionMessage, {
           projectName: project.projectName,
           roleName: memberRoleName,
-          b: (data) => <b>{data}</b>,
+          b: BoldProjectName,
         })}
       </div>
     </Modal>

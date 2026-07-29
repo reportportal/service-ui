@@ -274,7 +274,7 @@ export const ProjectSidebar = ({ onClickNavBtn }) => {
         {formatMessage(messages.organization)}: {organizationName}
       </PreservedText>
     ),
-    bottomTitle: projectName,
+    bottomTitle: <PreservedText>{projectName}</PreservedText>,
     level: 'project',
   };
 

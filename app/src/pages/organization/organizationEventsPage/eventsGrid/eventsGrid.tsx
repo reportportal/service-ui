@@ -96,7 +96,9 @@ const TimeColumn = ({ className, value = {} }: BaseColumnComponentProps) => (
 );
 
 const ProjectNameColumn = ({ className, value = {} }: BaseColumnComponentProps) => (
-  <div className={cx('project-name-col', className)}>{value.project_name}</div>
+  <div className={cx('project-name-col', className)}>
+    <PreservedText wrap>{value.project_name}</PreservedText>
+  </div>
 );
 
 const SubjectTypeColumn = ({ className, value = {} }: BaseColumnComponentProps) => (

@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+import { ReactNode } from 'react';
 import { useIntl } from 'react-intl';
 import {
   Button,
@@ -47,7 +48,7 @@ const getFullInvitationLink = (link: string): string => {
 interface ExternalUserInvitationModalProps {
   email: string;
   link: string;
-  header?: string;
+  header?: string | ReactNode;
   isOrgEmailIntegrationAvailable?: boolean;
 }
 

@@ -23,11 +23,13 @@ import {
   InfoIcon,
   Tooltip,
 } from '@reportportal/ui-kit';
+import { AutocompleteOption } from '@reportportal/ui-kit/autocompletes';
 import { createClassnames, fetch } from 'common/utils';
 import { useIntl } from 'react-intl';
 import { messages } from 'common/constants/localization/invitationsLocalization';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { AsyncAutocompleteV2 } from 'componentLibrary/autocompletes/asyncAutocompleteV2';
+import { PreservedText } from 'components/preservedText';
 import { URLS } from 'common/urls';
 import {
   ProjectsSearchesItem,
@@ -170,6 +172,11 @@ export const AddProjectForm = ({
           customEmptyListMessage={formatMessage(COMMON_LOCALE_KEYS.NO_AVAILABLE_OPTIONS)}
           useFixedPositioning
           dropdownMatchInputWidth
+          renderOption={(item: string, index: number, isNew: boolean, getItemProps) => (
+            <AutocompleteOption key={item} {...getItemProps({ item, index })} isNew={isNew}>
+              <PreservedText wrap>{item}</PreservedText>
+            </AutocompleteOption>
+          )}
         />
       </div>
       <div className={cx('checkbox-wrapper')}>
