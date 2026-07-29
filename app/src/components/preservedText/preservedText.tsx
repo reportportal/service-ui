@@ -27,13 +27,6 @@ interface PreservedTextProps {
   wrap?: boolean;
 }
 
-export const PreservedText = ({
-  children,
-  className,
-  wrap = false,
-  ...rest
-}: PreservedTextProps) => (
-  <span className={cx('preserved-text', { wrap }, className)} {...rest}>
-    {children}
-  </span>
+export const PreservedText = ({ children, className, wrap = false }: PreservedTextProps) => (
+  <span className={cx('preserved-text', { wrap }, className)}>{children}</span>
 );
