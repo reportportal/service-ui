@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { FC, ReactNode } from 'react';
+import { ComponentProps, FC, ReactNode } from 'react';
 import { useIntl } from 'react-intl';
 import { useSelector } from 'react-redux';
 import { Popover } from '@reportportal/ui-kit';
@@ -42,6 +42,8 @@ interface ExecutionStatusPopoverProps {
   setIsOpened: (isOpened: boolean) => void;
   place: ExecutionStatusChangePlace;
   children: ReactNode;
+  shouldUsePortal?: ComponentProps<typeof Popover>['shouldUsePortal'];
+  strategy?: ComponentProps<typeof Popover>['strategy'];
 }
 
 export const ExecutionStatusPopover: FC<ExecutionStatusPopoverProps> = ({
@@ -51,6 +53,8 @@ export const ExecutionStatusPopover: FC<ExecutionStatusPopoverProps> = ({
   setIsOpened,
   place,
   children,
+  shouldUsePortal,
+  strategy,
 }) => {
   const { formatMessage } = useIntl();
   const { openModal } = useExecutionStatusModal();
@@ -112,6 +116,8 @@ export const ExecutionStatusPopover: FC<ExecutionStatusPopoverProps> = ({
       isOpened={isOpened}
       setIsOpened={setIsOpened}
       isCentered={false}
+      shouldUsePortal={shouldUsePortal}
+      strategy={strategy}
     >
       {children}
     </Popover>

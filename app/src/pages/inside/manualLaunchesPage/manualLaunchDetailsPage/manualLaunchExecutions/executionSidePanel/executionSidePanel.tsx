@@ -308,6 +308,8 @@ export const ExecutionSidePanel = ({ executionId, onClose }: ExecutionSidePanelP
           setIsOpened={setIsStatusPopoverOpen}
           currentStatus={currentStatus}
           place={MANUAL_LAUNCHES_PLACE.EXECUTION_DETAILS_SIDEBAR}
+          shouldUsePortal
+          strategy="fixed"
         >
           <Button
             variant="ghost"
