@@ -18,3 +18,17 @@ import { DELETE_MILESTONE_CONFIRM_WORD } from './constants';
 
 export const isDeleteMilestoneConfirmationValid = (value: string) =>
   value.trim().toLowerCase() === DELETE_MILESTONE_CONFIRM_WORD;
+
+export const needsLabelTextSelectionFix = (): boolean => {
+  if (typeof navigator === 'undefined') {
+    return false;
+  }
+
+  const { userAgent } = navigator;
+
+  if (/Chrome|Chromium|CriOS|Edg\//i.test(userAgent)) {
+    return false;
+  }
+
+  return /AppleWebKit/i.test(userAgent);
+};
