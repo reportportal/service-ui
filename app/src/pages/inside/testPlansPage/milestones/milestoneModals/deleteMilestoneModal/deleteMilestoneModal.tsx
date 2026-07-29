@@ -16,6 +16,7 @@
 
 import {
   ChangeEvent,
+  type KeyboardEvent,
   type PointerEvent,
   type ReactNode,
   useId,
@@ -27,6 +28,7 @@ import { FieldText, Modal } from '@reportportal/ui-kit';
 import { VoidFn } from '@reportportal/ui-kit/common';
 
 import { createClassnames } from 'common/utils';
+import { isEnterOrSpaceKey } from 'common/utils/helperUtils/eventUtils';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { LoadingSubmitButton } from 'components/loadingSubmitButton';
 import { useModalButtons } from 'hooks/useModalButtons';
@@ -60,6 +62,13 @@ export const DeleteMilestoneModal = ({ data }: DeleteMilestoneModalProps) => {
     setConfirmText(event.target.value);
   };
 
+  const focusConfirmInput = () => {
+    if (isLoading) {
+      return;
+    }
+    confirmInputRef.current?.focus();
+  };
+
   const handleInstructionPointerDown = (event: PointerEvent<HTMLDivElement>) => {
     instructionPointerRef.current = {
       x: event.clientX,
@@ -82,9 +91,6 @@ export const DeleteMilestoneModal = ({ data }: DeleteMilestoneModalProps) => {
   };
 
   const handleInstructionClick = () => {
-    if (isLoading) {
-      return;
-    }
     const pointer = instructionPointerRef.current;
     instructionPointerRef.current = null;
     if (pointer?.moved) {
@@ -93,7 +99,15 @@ export const DeleteMilestoneModal = ({ data }: DeleteMilestoneModalProps) => {
     if (window.getSelection()?.toString()) {
       return;
     }
-    confirmInputRef.current?.focus();
+    focusConfirmInput();
+  };
+
+  const handleInstructionKeyDown = (event: KeyboardEvent<HTMLDivElement>) => {
+    if (!isEnterOrSpaceKey(event)) {
+      return;
+    }
+    event.preventDefault();
+    focusConfirmInput();
   };
 
   const handleSubmit = () => {
@@ -137,10 +151,13 @@ export const DeleteMilestoneModal = ({ data }: DeleteMilestoneModalProps) => {
             <>
               <div
                 id={confirmInstructionId}
+                role="button"
+                tabIndex={0}
                 className={cx('delete-milestone-modal__confirm-label')}
                 onPointerDown={handleInstructionPointerDown}
                 onPointerMove={handleInstructionPointerMove}
                 onClick={handleInstructionClick}
+                onKeyDown={handleInstructionKeyDown}
               >
                 {formatMessage(messages.typeDeleteInstructionLabel)}
               </div>
