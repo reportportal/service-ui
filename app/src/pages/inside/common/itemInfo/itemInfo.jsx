@@ -179,6 +179,7 @@ export class ItemInfo extends Component {
               )}
             </ItemNameTooltip>
           </NameLink>
+          <wbr />
           <span className={cx('edit-number-box')}>
             <NameLink
               itemId={value.id}
@@ -189,12 +190,12 @@ export class ItemInfo extends Component {
               {value.number && <span className={cx('number')}>#{value.number}</span>}
             </NameLink>
             {autoAnalysisLabel && (
-              <div className={cx('item-badge', 'auto-analysis')}>Auto-analysis</div>
+              <span className={cx('item-badge', 'auto-analysis')}>Auto-analysis</span>
             )}
             {patternAnalyzingLabel && (
-              <div className={cx('item-badge', 'pattern-analysis')}>Pattern-analysis</div>
+              <span className={cx('item-badge', 'pattern-analysis')}>Pattern-analysis</span>
             )}
-            {value.rerun && <div className={cx('item-badge', 'rerun')}>Rerun</div>}
+            {value.rerun && <span className={cx('item-badge', 'rerun')}>Rerun</span>}
             {!hideEdit && (
               <span className={cx('edit-icon')} onClick={this.handleEditItem}>
                 {Parser(PencilIcon)}
