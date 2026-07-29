@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+import type { ReactNode } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useIntl } from 'react-intl';
 import { Modal } from '@reportportal/ui-kit';
@@ -23,12 +24,19 @@ import { hideModalAction } from 'controllers/modal';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { ModalButtonProps } from 'types/common';
 import { fetchUserInfoAction, idSelector } from 'controllers/user';
+import { PreservedText } from 'components/preservedText';
 import { messages } from 'common/constants/localization/assignmentsLocalization';
 import { unassignFromProjectAction } from 'controllers/organization/projects';
 
 import styles from './unassignProjectModal.scss';
 
 const cx = createClassnames(styles);
+
+const BoldProjectName = (chunks: ReactNode) => (
+  <PreservedText wrap>
+    <b>{chunks}</b>
+  </PreservedText>
+);
 
 interface User {
   id: number;
@@ -90,7 +98,7 @@ export const UnassignProjectModal = ({ user, project, onSuccess }: UnassignProje
         {formatMessage(descriptionMessage, {
           name: user.fullName,
           project: project.projectName,
-          b: (innerData) => <b>{innerData}</b>,
+          b: BoldProjectName,
         })}
       </div>
     </Modal>

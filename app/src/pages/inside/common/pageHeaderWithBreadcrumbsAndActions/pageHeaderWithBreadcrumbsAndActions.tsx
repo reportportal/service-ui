@@ -28,7 +28,7 @@ const cx = createClassnames(styles);
 
 interface BreadcrumbDescriptor {
   id: string;
-  title: string;
+  title: string | ReactNode;
   onClick?: VoidFn;
 }
 

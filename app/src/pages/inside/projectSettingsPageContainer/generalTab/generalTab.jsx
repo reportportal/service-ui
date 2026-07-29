@@ -49,6 +49,7 @@ import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
 import { langSelector } from 'controllers/lang';
 import { ClipboardButton } from 'components/buttons/copyClipboardButton';
 import { SpinningPreloader } from 'components/preloaders/spinningPreloader';
+import { PreservedText } from 'components/preservedText';
 import { PROJECT_SETTINGS_GENERAL_TAB_EVENTS } from 'analyticsEvents/projectSettingsPageEvents';
 import { settingsMessages } from 'common/constants/localization/settingsLocalization';
 import { activeOrganizationSettingsSelector } from 'controllers/organization';
@@ -362,7 +363,7 @@ export class GeneralTab extends Component {
               {intl.formatMessage(messages.projectNameLabel)}
             </div>
             <div className={cx('fake-input')} title={projectName}>
-              {projectName}
+              <PreservedText wrap>{projectName}</PreservedText>
             </div>
             <div className={cx('info-wrapper')}>
               <span className={cx('info')}>

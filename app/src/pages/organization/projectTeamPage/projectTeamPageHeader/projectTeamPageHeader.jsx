@@ -71,7 +71,7 @@ export const ProjectTeamPageHeader = ({
   };
 
   const projectCrumb = {
-    title: projectName,
+    title: <PreservedText>{projectName}</PreservedText>,
   };
 
   let lastCrumb = rootCrumb;

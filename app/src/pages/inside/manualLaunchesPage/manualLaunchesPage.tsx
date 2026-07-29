@@ -34,6 +34,7 @@ import { createClassnames, debounce } from 'common/utils';
 import { MANUAL_LAUNCHES_FILTER_URL_KEYS } from 'common/manualLaunches/manualLaunchesFilterUrl';
 import { SEARCH_DELAY } from 'common/constants/delayTime';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
+import { PreservedText } from 'components/preservedText';
 import {
   PROJECT_DASHBOARD_PAGE,
   urlOrganizationAndProjectSelector,
@@ -209,7 +210,9 @@ export const ManualLaunchesPage = () => {
   }, [dispatch, offset, pageSize, appliedSearchQuery, appliedFilters, location?.query]);
 
   const projectLink = { type: PROJECT_DASHBOARD_PAGE, payload: { organizationSlug, projectSlug } };
-  const breadcrumbDescriptors = [{ id: 'project', title: projectName, link: projectLink }];
+  const breadcrumbDescriptors = [
+    { id: 'project', title: <PreservedText>{projectName}</PreservedText>, link: projectLink },
+  ];
 
   return (
     <SettingsLayout>

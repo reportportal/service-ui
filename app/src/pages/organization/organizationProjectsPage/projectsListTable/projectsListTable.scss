@@ -45,7 +45,7 @@
     cursor: pointer;
     overflow: hidden;
     text-overflow: ellipsis;
-    white-space: nowrap;
+    white-space: pre;
 
     &:hover {
       color: var(--rp-ui-base-topaz-hover);

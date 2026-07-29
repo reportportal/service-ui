@@ -62,7 +62,7 @@ export const useBreadCrumbsTree = (): BreadcrumbTreeNode[] => {
       if (projectSlug) {
         organizationCrumb.children = [
           {
-            title: projectName,
+            title: <PreservedText>{projectName}</PreservedText>,
             link: { type: PROJECT_DASHBOARD_PAGE, payload: { organizationSlug, projectSlug } },
           },
         ];

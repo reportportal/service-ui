@@ -31,6 +31,7 @@ import { projectNameSelector } from 'controllers/project';
 import { referenceDictionary } from 'common/utils/referenceDictionary';
 import { useUserPermissions } from 'hooks/useUserPermissions';
 import { PremiumPromoModal } from 'components/premiumPromoModal';
+import { PreservedText } from 'components/preservedText';
 import discoverPluginsIcon from 'common/img/discover-icon-inline.svg';
 import billingIcon from 'common/img/billing-icon-inline.svg';
 import openInNewTabIcon from 'common/img/open-in-new-tab-inline.svg';
@@ -59,7 +60,7 @@ export const TestExecutionsPromoPage = () => {
 
     if (organizationSlug) {
       const organizationCrumb = {
-        title: organizationName,
+        title:  <PreservedText>{organizationName}</PreservedText>,
         link: { type: ORGANIZATION_PROJECTS_PAGE, payload: { organizationSlug } },
         children: [],
       };
@@ -68,7 +69,7 @@ export const TestExecutionsPromoPage = () => {
 
       if (projectSlug) {
         const projectCrumb = {
-          title: projectName,
+          title: <PreservedText>{projectName}</PreservedText>,
           link: {
             type: PROJECT_DASHBOARD_PAGE,
             payload: { organizationSlug, projectSlug },

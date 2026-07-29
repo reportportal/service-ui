@@ -38,7 +38,7 @@ export const AddProjectModal = ({ data = {}, handleSubmit, anyTouched, invalid, 
   const { formatMessage } = useIntl();
   const { onSubmit } = data;
   const onCreateProject = ({ projectName }) => {
-    onSubmit(projectName);
+    onSubmit(projectName.trim());
   };
   const hideModal = () => dispatch(hideModalAction());
 
