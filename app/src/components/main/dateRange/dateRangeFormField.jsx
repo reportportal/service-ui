@@ -44,8 +44,9 @@ export const DateRangeFormField = ({
   input,
   popperClassName = '',
   calendarClassName = '',
-  onClose,
+  onClose = () => {},
   maxRangeDays,
+  placeholder
 }) => {
   const { formatMessage } = useIntl();
   const { value = '', onChange } = input;
@@ -82,6 +83,7 @@ export const DateRangeFormField = ({
       <div className={cx('title')}>{formatMessage(messages.customRange)}</div>
       <div className={cx('date-picker-container')}>
         <DatePicker
+          placeholder={placeholder}
           selectsRange
           value={[startDate, endDate]}
           onChange={handleDateChange}
@@ -107,9 +109,5 @@ DateRangeFormField.propTypes = {
   popperClassName: PropTypes.string,
   calendarClassName: PropTypes.string,
   maxRangeDays: PropTypes.number,
-};
-DateRangeFormField.defaultProps = {
-  onClose: () => {},
-  popperClassName: '',
-  calendarClassName: '',
+  placeholder: PropTypes.string
 };
