@@ -130,41 +130,45 @@ class AttachmentsSlider extends Component {
     return (
       <Fragment>
         <Slider className={cx('slider', { 'thumbs-view': isThumbsView })}>
-          {attachments.map((attachment, index) => (
-            <Slide index={index} key={attachment.id}>
-              <div
-                className={cx('preview-container', {
-                  'main-area': !isThumbsView,
-                  active: isThumbsView && activeItemId === index,
-                })}
-                onClick={() => onClickItem(index)}
-              >
-                <Image
-                  className={cx('preview')}
-                  src={
-                    isThumbsView && attachment.isImage ? attachment.thumbnailSrc : attachment.src
-                  }
-                  alt={attachment.alt}
-                  isStatic={!attachment.isImage}
-                  preloaderColor="charcoal"
-                />
-                {!isThumbsView && (
-                  <div className={cx('file-name')}>
-                    {attachment.fileName ||
-                      createAttachmentName(attachment.id, attachment.contentType)}
-                  </div>
+          {attachments.map((attachment, index) => {
+            const fileName =
+              attachment.fileName || createAttachmentName(attachment.id, attachment.contentType);
+
+            return (
+              <Slide index={index} key={attachment.id}>
+                <div
+                  className={cx('preview-container', {
+                    'main-area': !isThumbsView,
+                    active: isThumbsView && activeItemId === index,
+                  })}
+                  onClick={() => onClickItem(index)}
+                >
+                  <Image
+                    className={cx('preview')}
+                    src={
+                      isThumbsView && attachment.isImage ? attachment.thumbnailSrc : attachment.src
+                    }
+                    alt={attachment.alt}
+                    isStatic={!attachment.isImage}
+                    preloaderColor="charcoal"
+                  />
+                  {!isThumbsView && (
+                    <div className={cx('file-name')} title={fileName}>
+                      {fileName}
+                    </div>
+                  )}
+                </div>
+                {withActions && (
+                  <AttachmentActions
+                    value={attachment}
+                    showCaptions
+                    className={cx('actions')}
+                    events={LOG_PAGE_EVENTS.ATTACHMENT_IN_CAROUSEL}
+                  />
                 )}
-              </div>
-              {withActions && (
-                <AttachmentActions
-                  value={attachment}
-                  showCaptions
-                  className={cx('actions')}
-                  events={LOG_PAGE_EVENTS.ATTACHMENT_IN_CAROUSEL}
-                />
-              )}
-            </Slide>
-          ))}
+              </Slide>
+            );
+          })}
         </Slider>
         <ButtonBack onClick={this.backArrowClickHandler} className={cx('arrow', 'prev-arrow')}>
           {Parser(ArrowIcon)}

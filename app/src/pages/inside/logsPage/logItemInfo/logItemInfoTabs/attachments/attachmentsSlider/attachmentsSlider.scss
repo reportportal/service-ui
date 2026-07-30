@@ -46,12 +46,13 @@
 
 .slider {
   width: 70%;
-  height: 235px;
+  height: 300px;
   margin: 0 auto;
 
   & ~ .arrow {
     width: 40px;
     height: 40px;
+    top: 110px;
   }
 }
 
@@ -60,6 +61,7 @@
   height: 120px;
 
   & ~ .arrow {
+    top: 50%;
     width: 20px;
     height: 20px;
   }
@@ -100,30 +102,38 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 215px;
+    height: 260px;
 
     .preview {
-      max-height: 100%;
+      flex-shrink: 0;
+      max-height: 215px;
       margin: 0 auto;
+      object-fit: contain;
       cursor: pointer;
     }
   }
 }
 
 .file-name {
+  display: -webkit-box;
+  flex-shrink: 0;
+  max-width: 100%;
+  max-height: 32px;
   margin-top: 8px;
-  padding: 4px 8px;
+  padding: 0 8px;
+  overflow: hidden;
   color: $COLOR--gray-60;
   font-size: 12px;
+  line-height: 16px;
   text-align: center;
   word-break: break-word;
-  max-width: 100%;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
 }
 
 .actions {
-  position: absolute;
-  width: 100%;
-  top: 215px;
+  margin-top: 8px;
 }
 
 :global {
