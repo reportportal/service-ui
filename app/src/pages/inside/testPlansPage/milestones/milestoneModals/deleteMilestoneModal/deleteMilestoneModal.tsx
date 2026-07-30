@@ -14,12 +14,21 @@
  * limitations under the License.
  */
 
-import { ChangeEvent, type ReactNode, useState } from 'react';
+import {
+  ChangeEvent,
+  type KeyboardEvent,
+  type PointerEvent,
+  type ReactNode,
+  useId,
+  useRef,
+  useState,
+} from 'react';
 import { useIntl } from 'react-intl';
-import { Modal, FieldText } from '@reportportal/ui-kit';
+import { FieldText, Modal } from '@reportportal/ui-kit';
 import { VoidFn } from '@reportportal/ui-kit/common';
 
 import { createClassnames } from 'common/utils';
+import { isEnterOrSpaceKey } from 'common/utils/helperUtils/eventUtils';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { LoadingSubmitButton } from 'components/loadingSubmitButton';
 import { useModalButtons } from 'hooks/useModalButtons';
@@ -27,7 +36,7 @@ import { useModalButtons } from 'hooks/useModalButtons';
 import { useDeleteMilestone } from './useDeleteMilestone';
 import { messages } from './messages';
 import type { DeleteMilestoneModalProps } from './types';
-import { isDeleteMilestoneConfirmationValid } from './utils';
+import { isDeleteMilestoneConfirmationValid, needsLabelTextSelectionFix } from './utils';
 
 import styles from './deleteMilestoneModal.scss';
 
@@ -35,10 +44,71 @@ const cx = createClassnames(styles);
 
 const renderDeleteConfirmationBold = (chunks: ReactNode) => <strong>{chunks}</strong>;
 
+const INSTRUCTION_POINTER_MOVE_THRESHOLD_PX = 3;
+
 export const DeleteMilestoneModal = ({ data }: DeleteMilestoneModalProps) => {
   const { formatMessage } = useIntl();
+  const confirmInstructionId = useId();
+  const confirmInputId = useId();
+  const confirmInputRef = useRef<HTMLInputElement>(null);
+  const instructionPointerRef = useRef<{ x: number; y: number; moved: boolean } | null>(null);
   const [confirmText, setConfirmText] = useState('');
+  const [useWebKitInstruction] = useState(() => needsLabelTextSelectionFix());
   const { isLoading, deleteMilestone } = useDeleteMilestone();
+
+  const confirmPlaceholder = formatMessage(messages.confirmPlaceholder);
+
+  const handleConfirmTextChange = (event: ChangeEvent<HTMLInputElement>) => {
+    setConfirmText(event.target.value);
+  };
+
+  const focusConfirmInput = () => {
+    if (isLoading) {
+      return;
+    }
+    confirmInputRef.current?.focus();
+  };
+
+  const handleInstructionPointerDown = (event: PointerEvent<HTMLDivElement>) => {
+    instructionPointerRef.current = {
+      x: event.clientX,
+      y: event.clientY,
+      moved: false,
+    };
+  };
+
+  const handleInstructionPointerMove = (event: PointerEvent<HTMLDivElement>) => {
+    const pointer = instructionPointerRef.current;
+    if (!pointer) {
+      return;
+    }
+    if (
+      Math.abs(event.clientX - pointer.x) > INSTRUCTION_POINTER_MOVE_THRESHOLD_PX ||
+      Math.abs(event.clientY - pointer.y) > INSTRUCTION_POINTER_MOVE_THRESHOLD_PX
+    ) {
+      pointer.moved = true;
+    }
+  };
+
+  const handleInstructionClick = () => {
+    const pointer = instructionPointerRef.current;
+    instructionPointerRef.current = null;
+    if (pointer?.moved) {
+      return;
+    }
+    if (window.getSelection()?.toString()) {
+      return;
+    }
+    focusConfirmInput();
+  };
+
+  const handleInstructionKeyDown = (event: KeyboardEvent<HTMLDivElement>) => {
+    if (!isEnterOrSpaceKey(event)) {
+      return;
+    }
+    event.preventDefault();
+    focusConfirmInput();
+  };
 
   const handleSubmit = () => {
     if (!data || !isDeleteMilestoneConfirmationValid(confirmText)) return;
@@ -77,14 +147,41 @@ export const DeleteMilestoneModal = ({ data }: DeleteMilestoneModalProps) => {
           })}
         </p>
         <div className={cx('delete-milestone-modal__confirm-field')}>
-          <FieldText
-            label={formatMessage(messages.typeDeleteInstructionLabel)}
-            defaultWidth={false}
-            value={confirmText}
-            onChange={(e: ChangeEvent<HTMLInputElement>) => setConfirmText(e.target.value)}
-            placeholder={formatMessage(messages.confirmPlaceholder)}
-            disabled={isLoading}
-          />
+          {useWebKitInstruction ? (
+            <>
+              <div
+                id={confirmInstructionId}
+                role="button"
+                tabIndex={0}
+                className={cx('delete-milestone-modal__confirm-label')}
+                onPointerDown={handleInstructionPointerDown}
+                onPointerMove={handleInstructionPointerMove}
+                onClick={handleInstructionClick}
+                onKeyDown={handleInstructionKeyDown}
+              >
+                {formatMessage(messages.typeDeleteInstructionLabel)}
+              </div>
+              <FieldText
+                ref={confirmInputRef}
+                id={confirmInputId}
+                aria-labelledby={confirmInstructionId}
+                defaultWidth={false}
+                value={confirmText}
+                onChange={handleConfirmTextChange}
+                placeholder={confirmPlaceholder}
+                disabled={isLoading}
+              />
+            </>
+          ) : (
+            <FieldText
+              label={formatMessage(messages.typeDeleteInstructionLabel)}
+              defaultWidth={false}
+              value={confirmText}
+              onChange={handleConfirmTextChange}
+              placeholder={confirmPlaceholder}
+              disabled={isLoading}
+            />
+          )}
         </div>
       </div>
     </Modal>

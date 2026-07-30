@@ -58,4 +58,14 @@
       opacity: 1;
     }
   }
+
+  &__confirm-label {
+    @include ms.milestone-body-13-medium;
+
+    margin-bottom: 4px;
+    color: var(--rp-ui-color-text);
+    cursor: pointer;
+    user-select: text;
+    -webkit-user-select: text;
+  }
 }
