@@ -16,7 +16,6 @@
 
 import {
   ChangeEvent,
-  type KeyboardEvent,
   type PointerEvent,
   type ReactNode,
   useId,
@@ -28,7 +27,6 @@ import { FieldText, Modal } from '@reportportal/ui-kit';
 import { VoidFn } from '@reportportal/ui-kit/common';
 
 import { createClassnames } from 'common/utils';
-import { isEnterOrSpaceKey } from 'common/utils/helperUtils/eventUtils';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { LoadingSubmitButton } from 'components/loadingSubmitButton';
 import { useModalButtons } from 'hooks/useModalButtons';
@@ -102,14 +100,6 @@ export const DeleteMilestoneModal = ({ data }: DeleteMilestoneModalProps) => {
     focusConfirmInput();
   };
 
-  const handleInstructionKeyDown = (event: KeyboardEvent<HTMLDivElement>) => {
-    if (!isEnterOrSpaceKey(event)) {
-      return;
-    }
-    event.preventDefault();
-    focusConfirmInput();
-  };
-
   const handleSubmit = () => {
     if (!data || !isDeleteMilestoneConfirmationValid(confirmText)) return;
     deleteMilestone(data.id);
@@ -151,13 +141,10 @@ export const DeleteMilestoneModal = ({ data }: DeleteMilestoneModalProps) => {
             <>
               <div
                 id={confirmInstructionId}
-                role="button"
-                tabIndex={0}
                 className={cx('delete-milestone-modal__confirm-label')}
                 onPointerDown={handleInstructionPointerDown}
                 onPointerMove={handleInstructionPointerMove}
                 onClick={handleInstructionClick}
-                onKeyDown={handleInstructionKeyDown}
               >
                 {formatMessage(messages.typeDeleteInstructionLabel)}
               </div>
