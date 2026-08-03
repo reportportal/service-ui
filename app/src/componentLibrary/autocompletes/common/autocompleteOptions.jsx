@@ -40,6 +40,7 @@ export class AutocompleteOptions extends Component {
     createWithoutConfirmation: PropTypes.bool,
     variant: autocompleteVariantType,
     creatable: PropTypes.bool,
+    optionsMaxHeight: PropTypes.number,
   };
 
   static defaultProps = {
@@ -55,6 +56,7 @@ export class AutocompleteOptions extends Component {
     createWithoutConfirmation: false,
     variant: 'light',
     creatable: true,
+    optionsMaxHeight: 140,
   };
 
   filterStaticOptions = () => {
@@ -124,13 +126,13 @@ export class AutocompleteOptions extends Component {
   };
 
   render() {
-    const { async, options, createWithoutConfirmation, creatable } = this.props;
+    const { async, options, createWithoutConfirmation, creatable, optionsMaxHeight } = this.props;
     const availableOptions = async ? options : this.filterStaticOptions();
     const prompt = this.getPrompt(options);
     if (prompt) return prompt;
     return (
       <div className={cx({ container: options.length })}>
-        <ScrollWrapper autoHeight autoHeightMax={140}>
+        <ScrollWrapper autoHeight autoHeightMax={optionsMaxHeight}>
           {this.renderItems(availableOptions)}
         </ScrollWrapper>
         {!createWithoutConfirmation &&
