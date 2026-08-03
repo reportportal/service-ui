@@ -26,7 +26,18 @@ import { scrollIntoAutocompleteMenu } from '../common/scrollIntoAutocompleteMenu
 
 const DEFAULT_OPTIONS_INDEX = 0;
 
+const DEFAULT_OPTIONS_MAX_HEIGHT = 140;
+const MIN_OPTIONS_MAX_HEIGHT = 60;
+const MENU_BASE_OVERHEAD = 20; // .menu margin-top (4) + .container margins (8 + 8)
+const NEW_ITEM_OVERHEAD = 53; // divider (1 + 8 + 8) + .new-item min-height (36)
+
 export class SingleAutocomplete extends Component {
+  referenceEl = null;
+
+  state = {
+    optionsMaxHeight: DEFAULT_OPTIONS_MAX_HEIGHT,
+  };
+
   static propTypes = {
     options: PropTypes.array,
     loading: PropTypes.bool,
@@ -56,6 +67,9 @@ export class SingleAutocomplete extends Component {
     stateReducer: PropTypes.func,
     variant: autocompleteVariantType,
     useFixedPositioning: PropTypes.bool,
+    // Opt-in: clamp options list height to fit space below the field, so the menu
+    // never overflows the viewport.
+    adaptiveOptionsHeight: PropTypes.bool,
     creatable: PropTypes.bool,
   };
 
@@ -87,7 +101,29 @@ export class SingleAutocomplete extends Component {
     stateReducer: (state, changes) => changes,
     variant: 'light',
     useFixedPositioning: false,
+    adaptiveOptionsHeight: false,
     creatable: true,
+  };
+
+  setReferenceEl = (popperRef) => (el) => {
+    popperRef(el);
+    this.referenceEl = el;
+  };
+
+  // Shrink the options list to fit the space below the field, so the menu never
+  // overflows the viewport. The new-item row is rendered outside the ScrollWrapper
+  // and always stays visible.
+  recalcOptionsMaxHeight = () => {
+    if (!this.referenceEl) return;
+    const { createWithoutConfirmation, creatable } = this.props;
+    const hasNewItemRow = creatable && !createWithoutConfirmation;
+    const overhead = MENU_BASE_OVERHEAD + (hasNewItemRow ? NEW_ITEM_OVERHEAD : 0);
+    const { bottom } = this.referenceEl.getBoundingClientRect();
+    const available = window.innerHeight - bottom - overhead;
+    const next = Math.min(DEFAULT_OPTIONS_MAX_HEIGHT, Math.max(MIN_OPTIONS_MAX_HEIGHT, available));
+    if (next !== this.state.optionsMaxHeight) {
+      this.setState({ optionsMaxHeight: next });
+    }
   };
 
   getOptionProps = (getItemProps, highlightedIndex, selectedItem) => ({ item, index, ...rest }) =>
@@ -132,6 +168,7 @@ export class SingleAutocomplete extends Component {
       stateReducer,
       variant,
       useFixedPositioning,
+      adaptiveOptionsHeight,
       creatable,
       ...props
     } = this.props;
@@ -141,7 +178,13 @@ export class SingleAutocomplete extends Component {
           onChange={onChange}
           itemToString={parseValueToString}
           selectedItem={value}
-          onStateChange={onStateChange}
+          onStateChange={(changes, ...args) => {
+            onStateChange?.(changes, ...args);
+
+            if (adaptiveOptionsHeight && changes?.isOpen) {
+              this.recalcOptionsMaxHeight();
+            }
+          }}
           defaultHighlightedIndex={DEFAULT_OPTIONS_INDEX}
           stateReducer={stateReducer}
           scrollIntoView={scrollIntoAutocompleteMenu}
@@ -158,7 +201,7 @@ export class SingleAutocomplete extends Component {
             <div>
               <Reference>
                 {({ ref }) => (
-                  <div ref={ref}>
+                  <div ref={this.setReferenceEl(ref)}>
                     <FieldText
                       {...getInputProps({
                         placeholder: !disabled ? placeholder : '',
@@ -227,6 +270,7 @@ export class SingleAutocomplete extends Component {
                     createWithoutConfirmation={createWithoutConfirmation}
                     className={menuClassName}
                     options={options}
+                    optionsMaxHeight={this.state.optionsMaxHeight}
                     variant={variant}
                     creatable={creatable}
                     {...props}
