@@ -21,6 +21,7 @@ import classNames from 'classnames/bind';
 import { Manager, Reference, Popper } from 'react-popper';
 import { autocompleteVariantType } from '../common/propTypes';
 import { AutocompleteMenu } from '../common/autocompleteMenu';
+import { scrollIntoAutocompleteMenu } from '../common/scrollIntoAutocompleteMenu';
 import { SelectedItems } from './selectedItems';
 import { MultipleDownshift } from './multipleDownshift';
 import styles from './multipleAutocomplete.scss';
@@ -116,6 +117,7 @@ export const MultipleAutocomplete = ({
         existingItemsMap={existingItemsMap}
         handleUnStoredItemCb={handleUnStoredItemCb}
         customizeNewSelectedValue={customizeNewSelectedValue}
+        scrollIntoView={scrollIntoAutocompleteMenu}
       >
         {({
           getInputProps,

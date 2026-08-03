@@ -181,6 +181,7 @@ export class ComponentHealthCheckControls extends Component {
         disabled={!filterId || isMainControlsDisabled}
         inputTooltip={filterId ? null : formatMessage(messages.attributeKeyInput)}
         addButtonTooltip={filterId ? null : formatMessage(messages.addAttributeKeyButton)}
+        withOwnerLevel
         getURI={URLS.itemAttributeKeysAllSearch(
           projectKey,
           filterId,

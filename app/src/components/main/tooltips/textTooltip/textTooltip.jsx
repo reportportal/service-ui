@@ -17,7 +17,7 @@
 import classNames from 'classnames/bind';
 import PropTypes from 'prop-types';
 import Parser from 'html-react-parser';
-import DOMPurify from 'dompurify';
+import { sanitizeUserHtml } from 'common/utils/sanitizeUserHtml';
 import styles from './textTooltip.scss';
 
 const cx = classNames.bind(styles);
@@ -29,8 +29,8 @@ export const TextTooltip = ({
   preventTargetSanitizing,
 }) => {
   const content = preventTargetSanitizing
-    ? Parser(DOMPurify.sanitize(tooltipContent, { ADD_ATTR: ['target'] }))
-    : Parser(DOMPurify.sanitize(tooltipContent));
+    ? Parser(sanitizeUserHtml(tooltipContent, { ADD_ATTR: ['target'] }))
+    : Parser(sanitizeUserHtml(tooltipContent));
 
   return (
     <div className={cx('text-tooltip', className)}>{preventParsing ? tooltipContent : content}</div>

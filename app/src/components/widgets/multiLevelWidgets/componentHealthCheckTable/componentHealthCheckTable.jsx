@@ -19,6 +19,8 @@ import PropTypes from 'prop-types';
 import { injectIntl } from 'react-intl';
 import classNames from 'classnames/bind';
 import { connect } from 'react-redux';
+import Parser from 'html-react-parser';
+import OwnerIcon from 'common/img/owner-icon-inline.svg';
 import {
   STATS_TOTAL,
   STATS_SKIPPED,
@@ -43,6 +45,10 @@ import {
   getBreadcrumbs,
   getNewActiveBreadcrumbs,
 } from 'components/widgets/multiLevelWidgets/common/utils';
+import {
+  LAUNCH_OWNER_LEVEL_KEY,
+  launchOwnerLevelMessages,
+} from 'common/constants/launchOwnerLevel';
 import { STATE_READY } from 'components/widgets/common/constants';
 import isEqual from 'fast-deep-equal';
 import {
@@ -264,17 +270,33 @@ export class ComponentHealthCheckTable extends Component {
   getPassingRateValue = () =>
     Number(this.props.widget.contentParameters?.widgetOptions.minPassingRate);
 
-  getCompositeAttributes = (value) => {
+  getActiveCompositeAttributes = (value) => {
     const { activeBreadcrumbId, activeAttributes } = this.state;
     const { widget } = this.props;
     const attributes = widget.contentParameters?.widgetOptions.attributeKeys;
-    const compositeAttributes = getNewActiveAttributes(
+
+    return getNewActiveAttributes(
       getBreadcrumbs(attributes, activeBreadcrumbId)[activeBreadcrumbId].key,
       value,
       activeAttributes,
     );
+  };
 
-    return compositeAttributes.map(formatAttribute).join(',');
+  getCompositeAttributes = (value) => {
+    const compositeAttributes = this.getActiveCompositeAttributes(value);
+
+    return (
+      compositeAttributes
+        .filter((attribute) => attribute.key !== LAUNCH_OWNER_LEVEL_KEY)
+        .map(formatAttribute)
+        .join(',') || undefined
+    );
+  };
+
+  getLaunchOwner = (value) => {
+    const compositeAttributes = this.getActiveCompositeAttributes(value);
+
+    return compositeAttributes.find((attribute) => attribute.key === LAUNCH_OWNER_LEVEL_KEY)?.value;
   };
 
   isClickableAttribute = () => {
@@ -297,6 +319,8 @@ export class ComponentHealthCheckTable extends Component {
       widget,
       slugs: { organizationSlug, projectSlug },
     } = this.props;
+    const attributes = widget.contentParameters?.widgetOptions.attributeKeys;
+    const hasLaunchOwner = attributes?.includes(LAUNCH_OWNER_LEVEL_KEY) ?? false;
     const customProps = {
       minPassingRate: this.getPassingRateValue(),
       formatMessage,
@@ -308,6 +332,8 @@ export class ComponentHealthCheckTable extends Component {
         projectSlug,
       },
       getCompositeAttributes: this.getCompositeAttributes,
+      getLaunchOwner: this.getLaunchOwner,
+      launchOwnerFilter: hasLaunchOwner,
       onClickAttribute: this.onClickAttribute,
       isClickableAttribute: this.isClickableAttribute(),
       excludeSkipped: widget.contentParameters?.widgetOptions.excludeSkipped,
@@ -341,6 +367,7 @@ export class ComponentHealthCheckTable extends Component {
     const { activeBreadcrumbs, activeBreadcrumbId, isLoading } = this.state;
     const {
       widget: { contentParameters },
+      intl: { formatMessage },
     } = this.props;
     const state = contentParameters?.widgetOptions.state;
     const attributes = contentParameters?.widgetOptions.attributeKeys;
@@ -355,6 +382,12 @@ export class ComponentHealthCheckTable extends Component {
             breadcrumbs={breadcrumbs}
             activeBreadcrumbs={activeBreadcrumbs}
             onClickBreadcrumbs={this.onClickBreadcrumbs}
+            getKeyLabel={(key) =>
+              key === LAUNCH_OWNER_LEVEL_KEY
+                ? formatMessage(launchOwnerLevelMessages.ownerLevelOption)
+                : key
+            }
+            getKeyIcon={(key) => (key === LAUNCH_OWNER_LEVEL_KEY ? Parser(OwnerIcon) : null)}
           />
         </div>
         {data && state === STATE_READY && !isLoading ? (

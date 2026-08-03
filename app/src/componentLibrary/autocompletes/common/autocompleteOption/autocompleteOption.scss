@@ -27,27 +27,10 @@
   }
 }
 
-@mixin draw-button-border($displayValue, $width) {
-  content: '';
-  display: block;
-  position: absolute;
-  width: $width;
-  height: 25px;
-  border-radius: 4px;
-  border: 1px solid $COLOR--topaz-focused;
-  top: 0;
-  left: 0;
-  transform: translateY(-2px);
-}
-
 @mixin button-active-state($width) {
   .button-active:not(.disabled, :hover) {
     position: relative;
     color: $COLOR--topaz-focused;
-
-    &::after {
-      @include draw-button-border(block, $width);
-    }
 
     svg * {
       fill: $COLOR--topaz-focused;
@@ -71,7 +54,7 @@
 .divider {
   display: block;
   height: 1px;
-  margin: 0 12px;
+  margin: 8px 12px;
   background: $COLOR--e-100;
 }
 
@@ -79,6 +62,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+  gap: 8px;
 
   button {
     min-width: unset;
@@ -101,7 +85,6 @@
 .value {
   display: inline-block;
   height: 28px;
-  max-width: 50%;
   padding: 4px 8px;
   font-size: 13px;
   text-align: center;
@@ -111,6 +94,11 @@
   white-space: nowrap;
   text-overflow: ellipsis;
   box-sizing: border-box;
+}
+
+.new-button {
+  flex-shrink: 0;
+  min-width: fit-content;
 }
 
 .key-variant {

@@ -51,6 +51,7 @@ export class AutocompleteOptionsComponent extends Component {
     getUniqKey: PropTypes.func,
     newItemButtonText: PropTypes.string,
     creatable: PropTypes.bool,
+    optionsMaxHeight: PropTypes.number,
   };
 
   static defaultProps = {
@@ -68,6 +69,7 @@ export class AutocompleteOptionsComponent extends Component {
     newItemButtonText: '',
     creatable: true,
     shouldShowEmptyListMessage: true,
+    optionsMaxHeight: 140,
   };
 
   filterStaticOptions = () => {
@@ -116,7 +118,7 @@ export class AutocompleteOptionsComponent extends Component {
     return options.length ? options.map((item, index) => this.renderItem(item, index)) : '';
   };
 
-  renderNewItem = (options) => {
+  renderNewItem = (options, showDivider = false) => {
     const { inputValue, getItemProps, optionVariant, variant, newItemButtonText } = this.props;
     const index = options.length;
     const isNew = true;
@@ -127,6 +129,7 @@ export class AutocompleteOptionsComponent extends Component {
           optionVariant={optionVariant}
           {...getItemProps({ item: inputValue, index })}
           isNew={isNew}
+          showDivider={showDivider}
           variant={variant}
           newItemButtonText={newItemButtonText}
         >
@@ -149,7 +152,7 @@ export class AutocompleteOptionsComponent extends Component {
   };
 
   render() {
-    const { async, options, createWithoutConfirmation, shouldShowEmptyListMessage, creatable } =
+    const { async, options, createWithoutConfirmation, shouldShowEmptyListMessage, creatable, optionsMaxHeight } =
       this.props;
     const availableOptions = async ? options : this.filterStaticOptions();
     const prompt = this.getPrompt(options);
@@ -162,12 +165,14 @@ export class AutocompleteOptionsComponent extends Component {
 
     return (
       <div className={cx('container')}>
-        <ScrollWrapper autoHeight autoHeightMax={140}>
+        <ScrollWrapper autoHeight autoHeightMax={optionsMaxHeight}>
           {areAvailableOptionsEmpty
             ? shouldShowEmptyListMessage && this.renderEmptyList()
             : this.renderItems(availableOptions)}
         </ScrollWrapper>
-        {!createWithoutConfirmation && creatable && this.renderNewItem(availableOptions)}
+        {!createWithoutConfirmation &&
+          creatable &&
+          this.renderNewItem(availableOptions, availableOptions.length > 0)}
       </div>
     );
   }

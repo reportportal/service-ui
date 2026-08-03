@@ -217,6 +217,7 @@
   "AttributesFieldArrayControl.attributeKeyFieldPlaceholder": "请输入属性名",
   "AttributesFieldArrayControl.levelCanBeAddedMessage": "可以再增加1层",
   "AttributesFieldArrayControl.levelsCanBeAddedMessage": "可以再增加{amount}层",
+  "AttributesFieldArrayControl.ownerLevelOption": "所有者",
   "AvailablePluginDetail.discoverPremium": "探索高级版",
   "AvailablePluginDetail.install": "安装",
   "AutoAnalysis.AutoAnalysisMode": "自动分析服务基于的数据",

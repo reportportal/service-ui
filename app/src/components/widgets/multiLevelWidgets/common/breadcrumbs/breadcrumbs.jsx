@@ -28,47 +28,66 @@ export class Breadcrumbs extends PureComponent {
     breadcrumbs: PropTypes.array,
     activeBreadcrumbs: PropTypes.array,
     onClickBreadcrumbs: PropTypes.func,
+    getKeyLabel: PropTypes.func,
+    getKeyIcon: PropTypes.func,
   };
 
   static defaultProps = {
     breadcrumbs: [],
     activeBreadcrumbs: [],
     onClickBreadcrumbs: () => {},
+    getKeyLabel: (key) => key,
+    getKeyIcon: () => null,
   };
 
   render() {
-    const { breadcrumbs, activeBreadcrumbs, onClickBreadcrumbs } = this.props;
+    const { breadcrumbs, activeBreadcrumbs, onClickBreadcrumbs, getKeyLabel, getKeyIcon } =
+      this.props;
     const actualBreadcrumbs = activeBreadcrumbs || breadcrumbs;
 
     return (
       <ul className={cx('breadcrumbs')}>
-        {actualBreadcrumbs?.map((item, i) => (
-          <li className={cx('item', { active: item.isActive })} key={item.key}>
-            {!item.isStatic && !item.isActive ? (
-              // eslint-disable-next-line jsx-a11y/anchor-is-valid
-              <a className={cx('link')} onClick={() => onClickBreadcrumbs(item.id)}>
-                <span className={cx('link-key')} title={item.key}>
-                  {item.key}
-                </span>
-                <span className={cx('link-value')}>
-                  <span
-                    className={cx('link-color')}
-                    style={{ backgroundColor: item.additionalProperties.color }}
-                  />
-                  <span className={cx('link-value-name')} title={item.additionalProperties.value}>
-                    {item.additionalProperties.value}
+        {actualBreadcrumbs?.map((item, i) => {
+          const keyLabel = getKeyLabel(item.key);
+          const keyIcon = getKeyIcon(item.key);
+          return (
+            <li className={cx('item', { active: item.isActive })} key={item.key}>
+              {!item.isStatic && !item.isActive ? (
+                // eslint-disable-next-line jsx-a11y/anchor-is-valid
+                <a className={cx('link')} onClick={() => onClickBreadcrumbs(item.id)}>
+                  <span className={cx('link-key')} title={keyLabel}>
+                    {keyIcon && (
+                      <i className={cx('key-icon')} aria-hidden="true">
+                        {keyIcon}
+                      </i>
+                    )}
+                    {keyLabel}
                   </span>
-                  <span>{`, ${item.additionalProperties.passingRate}%`}</span>
+                  <span className={cx('link-value')}>
+                    <span
+                      className={cx('link-color')}
+                      style={{ backgroundColor: item.additionalProperties.color }}
+                    />
+                    <span className={cx('link-value-name')} title={item.additionalProperties.value}>
+                      {item.additionalProperties.value}
+                    </span>
+                    <span>{`, ${item.additionalProperties.passingRate}%`}</span>
+                  </span>
+                </a>
+              ) : (
+                <span className={cx('item-name')} title={keyLabel}>
+                  {keyIcon && (
+                    <i className={cx('key-icon')} aria-hidden="true">
+                      {keyIcon}
+                    </i>
+                  )}
+                  {keyLabel}
                 </span>
-              </a>
-            ) : (
-              <span className={cx('item-name')} title={item.key}>
-                {item.key}
-              </span>
-            )}
-            {i + 1 < actualBreadcrumbs.length && <span className={cx('icon')} />}
-          </li>
-        ))}
+              )}
+              {i + 1 < actualBreadcrumbs.length && <span className={cx('icon')} />}
+            </li>
+          );
+        })}
       </ul>
     );
   }

@@ -36,6 +36,9 @@ export class AutocompleteOptions extends Component {
     async: PropTypes.bool,
     notFoundPrompt: PropTypes.node,
     isOptionUnique: PropTypes.func,
+    isOptionExist: PropTypes.func,
+    pinnedOptions: PropTypes.array,
+    createNewAtBottom: PropTypes.bool,
   };
 
   static defaultProps = {
@@ -54,6 +57,9 @@ export class AutocompleteOptions extends Component {
       <FormattedMessage id={'AsyncAutocomplete.notFound'} defaultMessage={'No matches found'} />
     ),
     isOptionUnique: null,
+    isOptionExist: null,
+    pinnedOptions: [],
+    createNewAtBottom: false,
   };
 
   filterStaticOptions = () => {
@@ -84,7 +90,9 @@ export class AutocompleteOptions extends Component {
   };
 
   isOptionExist = (inputValue, options) =>
-    options.some((option) => this.props.parseValueToString(option) === inputValue);
+    this.props.isOptionExist
+      ? this.props.isOptionExist(inputValue, options)
+      : options.some((option) => this.props.parseValueToString(option) === inputValue);
 
   isOptionUnique = (inputValue, options) =>
     !this.props.isOptionUnique || this.props.isOptionUnique(inputValue, options);
@@ -116,11 +124,16 @@ export class AutocompleteOptions extends Component {
   };
 
   renderItems = (options) => {
-    const { inputValue, createNewOption } = this.props;
-    let newItem = null;
+    const { inputValue, createNewOption, createNewAtBottom } = this.props;
 
     if (this.canCreateNewItem(options)) {
-      newItem = createNewOption(inputValue);
+      const newItem = createNewOption(inputValue);
+      if (createNewAtBottom) {
+        const items = [...options, newItem];
+        return items.map((item, index) =>
+          this.renderItem(item, index, newItem && index === items.length - 1),
+        );
+      }
       return [newItem, ...options].map((item, index) =>
         this.renderItem(item, index, newItem && index === 0),
       );
@@ -130,7 +143,9 @@ export class AutocompleteOptions extends Component {
   };
 
   render() {
-    const options = this.props.async ? this.props.options : this.filterStaticOptions();
+    const { async, pinnedOptions } = this.props;
+    const loadedOptions = async ? this.props.options : this.filterStaticOptions();
+    const options = [...pinnedOptions, ...loadedOptions];
     const prompt = this.getPrompt(options);
     if (prompt) return prompt;
     return this.renderItems(options);

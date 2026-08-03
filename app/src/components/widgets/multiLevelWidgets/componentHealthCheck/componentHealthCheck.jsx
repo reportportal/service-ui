@@ -44,6 +44,7 @@ import {
   getBreadcrumbs,
   getNewActiveBreadcrumbs,
 } from 'components/widgets/multiLevelWidgets/common/utils';
+import { LAUNCH_OWNER_LEVEL_KEY } from 'common/constants/launchOwnerLevel';
 import { MAX_PASSING_RATE_VALUE } from './constants';
 import { ComponentHealthCheckLegend } from './legend/componentHealthCheckLegend';
 import { GroupsSection } from './groupsSection';
@@ -179,15 +180,25 @@ export class ComponentHealthCheck extends Component {
     const { widget, getStatisticsLink } = this.props;
     const { activeBreadcrumbId, activeAttributes } = this.state;
     const attributes = widget.contentParameters?.widgetOptions.attributeKeys;
+    const hasLaunchOwner = attributes?.includes(LAUNCH_OWNER_LEVEL_KEY) ?? false;
     const breadcrumbs = getBreadcrumbs(attributes, activeBreadcrumbId)[activeBreadcrumbId];
     const compositeAttributes =
       breadcrumbs && getNewActiveAttributes(breadcrumbs.key, value, activeAttributes);
+    const launchOwner = compositeAttributes?.find(
+      (attribute) => attribute.key === LAUNCH_OWNER_LEVEL_KEY,
+    )?.value;
     const link = getStatisticsLink({
       statuses: [PASSED, FAILED, SKIPPED, INTERRUPTED].filter(
         (status) => !(widget.contentParameters?.widgetOptions.excludeSkipped && status === SKIPPED),
       ),
       launchesLimit: DEFAULT_LAUNCHES_LIMIT,
-      compositeAttribute: compositeAttributes?.map(formatAttribute).join(','),
+      compositeAttribute:
+        compositeAttributes
+          ?.filter((attribute) => attribute.key !== LAUNCH_OWNER_LEVEL_KEY)
+          .map(formatAttribute)
+          .join(',') || undefined,
+      launchOwner,
+      launchOwnerFilter: hasLaunchOwner,
       isLatest: widget.contentParameters.widgetOptions.latest,
     });
     const navigationParams = this.getDefaultLinkParams(widget.appliedFilters[0].id);

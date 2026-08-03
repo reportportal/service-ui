@@ -22,17 +22,14 @@ import { useIntl } from 'react-intl';
 import NavigationIcon from 'common/img/navigation-icon-inline.svg';
 import OpenInNewTabIcon from 'common/img/open-in-new-tab-inline.svg';
 import { widgetDocsReferences } from 'common/utils/referenceDictionary';
+import { LinkComponent } from 'pages/inside/common/LinkComponent';
 import { messages } from '../messages';
 import styles from './testExecutionsPromoBanner.scss';
 
 const cx = classNames.bind(styles);
 
-export const TestExecutionsPromoBanner = ({ onOpenNewSearch, onDocumentationClick }) => {
+export const TestExecutionsPromoBanner = ({ onOpenNewSearch, documentationClickEvent }) => {
   const { formatMessage } = useIntl();
-
-  const handleDocumentationClick = () => {
-    onDocumentationClick?.();
-  };
 
   return (
     <div className={cx('banner')}>
@@ -46,16 +43,14 @@ export const TestExecutionsPromoBanner = ({ onOpenNewSearch, onDocumentationClic
         </div>
       </div>
       <div className={cx('banner-actions')}>
-        <a
+        <LinkComponent
+          to={widgetDocsReferences.testExecutions}
+          icon={OpenInNewTabIcon}
           className={cx('documentation-link')}
-          href={widgetDocsReferences.testExecutions}
-          target="_blank"
-          rel="noopener noreferrer"
-          onClick={handleDocumentationClick}
+          event={documentationClickEvent}
         >
-          {formatMessage(messages.documentationButton)}
-          <span className={cx('external-link-icon')}>{Parser(OpenInNewTabIcon)}</span>
-        </a>
+          <span>{formatMessage(messages.documentationButton)}</span>
+        </LinkComponent>
         <button type="button" className={cx('open-new-search-btn')} onClick={onOpenNewSearch}>
           {formatMessage(messages.openNewSearchButton)}
         </button>
@@ -66,5 +61,5 @@ export const TestExecutionsPromoBanner = ({ onOpenNewSearch, onDocumentationClic
 
 TestExecutionsPromoBanner.propTypes = {
   onOpenNewSearch: PropTypes.func,
-  onDocumentationClick: PropTypes.func,
+  documentationClickEvent: PropTypes.object,
 };

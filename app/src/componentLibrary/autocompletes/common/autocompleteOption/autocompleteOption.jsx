@@ -30,6 +30,7 @@ export const AutocompleteOption = ({
   isSelected,
   children,
   isNew,
+  showDivider,
   disabled,
   optionVariant,
   variant,
@@ -46,7 +47,7 @@ export const AutocompleteOption = ({
 
   return isNew ? (
     <>
-      <div className={cx('divider', variant)} />
+      {showDivider && <div className={cx('divider', variant)} />}
       <li
         className={cx('new-item', optionVariant, variant, {
           active: isActive,
@@ -58,7 +59,7 @@ export const AutocompleteOption = ({
         <span className={cx('value')}>{children}</span>
         <Button
           {...(!disabled ? props : {})}
-          className={cx({ 'button-active': isActive })}
+          className={cx('new-button', { 'button-active': isActive })}
           icon={Parser(PlusIcon)}
           variant="text"
           adjustWidthOn="content"
@@ -84,6 +85,7 @@ AutocompleteOption.propTypes = {
   isActive: PropTypes.bool,
   isSelected: PropTypes.bool,
   isNew: PropTypes.bool,
+  showDivider: PropTypes.bool,
   children: PropTypes.node,
   disabled: PropTypes.bool,
   optionVariant: singleAutocompleteOptionVariantType,
@@ -94,6 +96,7 @@ AutocompleteOption.defaultProps = {
   isActive: false,
   isSelected: false,
   isNew: false,
+  showDivider: false,
   children: null,
   disabled: false,
   optionVariant: '',

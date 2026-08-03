@@ -1,5 +1,5 @@
-/*!
- * Copyright 2019 EPAM Systems
+/*
+ * Copyright 2026 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,23 +14,21 @@
  * limitations under the License.
  */
 
-.tooltip-content {
-  text-align: start;
-}
+import { defineMessages } from 'react-intl';
 
-.content-container {
-  display: flex;
-  flex-direction: column;
-  word-break: normal;
-}
+export const LAUNCH_OWNER_LEVEL_KEY = '$launchOwner';
 
-.icon {
-  display: inline-block;
-  width: 22px;
-  height: 22px;
-  vertical-align: middle;
-
-  svg {
-    fill: $COLOR--gray-60;
-  }
-}
+export const launchOwnerLevelMessages = defineMessages({
+  ownerLevelOption: {
+    id: 'AttributesFieldArrayControl.ownerLevelOption',
+    defaultMessage: 'Owner',
+  },
+  ownerFilterTitle: {
+    id: 'LaunchLevelEntities.OwnerTitle',
+    defaultMessage: 'Owner',
+  },
+  ownerFilterPlaceholder: {
+    id: 'LaunchLevelEntities.ownerName.placeholder',
+    defaultMessage: 'Enter owner name',
+  },
+});
