@@ -126,6 +126,11 @@ export const PERMISSIONS_MAP: PermissionsMap = {
     [ACTIONS.SEE_ROW_ACTION_MENU]: true,
     [ACTIONS.CHANGE_STATUS]: true,
     [ACTIONS.LOCK_DASHBOARD]: true,
+    // TMS FEATURES:
+    [ACTIONS.CREATE_MANUAL_LAUNCH]: true,
+    [ACTIONS.MANAGE_TEST_CASES]: true,
+    [ACTIONS.MANAGE_TEST_PLANS]: true,
+    [ACTIONS.MANAGE_EXECUTIONS]: true,
   },
   [MEMBER]: {
     [VIEWER]: {
