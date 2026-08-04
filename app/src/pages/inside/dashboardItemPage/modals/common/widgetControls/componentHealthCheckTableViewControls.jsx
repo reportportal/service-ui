@@ -199,6 +199,7 @@ export class ComponentHealthCheckTableViewControls extends Component {
         fieldValidator={fieldValidator}
         maxAttributesAmount={MAX_ATTRIBUTES_AMOUNT}
         showRemainingLevels
+        withOwnerLevel
         getURI={url}
         disabled={this.props.isMainControlsDisabled}
       />

@@ -99,8 +99,9 @@
 .documentation-link {
   display: flex;
   align-items: center;
-  gap: 4px;
-  font-family: var(--rp-ui-base-font-family);
+  gap: 6px;
+  height: 18px;
+  font-family: var(--rp-ui-base-font-family-heading);
   font-weight: var(--rp-ui-base-fw-regular);
   font-size: 13px;
   line-height: 18px;
@@ -112,19 +113,9 @@
   &:hover {
     color: var(--rp-ui-base-topaz-hover);
   }
-}
 
-.external-link-icon {
-  display: inline-flex;
-  flex-shrink: 0;
-
-  svg {
-    width: 16px;
-    height: 16px;
-  }
-
-  svg path {
-    fill: currentColor;
+  i svg * {
+    fill: var(--rp-ui-base-e-300);
   }
 }
 
@@ -137,7 +128,7 @@
   border: none;
   border-radius: 3px;
   background-color: var(--rp-ui-base-topaz);
-  font-family: var(--rp-ui-base-font-family);
+  font-family: var(--rp-ui-base-font-family-heading);
   font-weight: var(--rp-ui-base-fw-regular);
   font-size: 13px;
   line-height: 18px;

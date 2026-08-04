@@ -190,6 +190,7 @@
   "AttributesFieldArrayControl.attributeKeyFieldPlaceholder": "Ingrese la clave del atributo",
   "AttributesFieldArrayControl.levelCanBeAddedMessage": "Se puede agregar 1 nivel",
   "AttributesFieldArrayControl.levelsCanBeAddedMessage": "Se pueden agregar {amount} niveles",
+  "AttributesFieldArrayControl.ownerLevelOption": "Propietario",
   "AutoAnalysis.AutoAnalysisMode": "Modo de análisis automático",
   "AutoAnalysis.AutoAnalysisModeDescription": "Puedes especificar las ejecuciones que se utilizarán como base para el análisis automático. Consulta la <a>documentación</a>.",
   "AutoAnalysis.allLaunchesCaption": "Todas las ejecuciones anteriores",

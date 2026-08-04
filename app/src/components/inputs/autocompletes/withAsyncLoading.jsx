@@ -26,6 +26,7 @@ export const WithAsyncLoading = (AutocompleteComponent) =>
       makeOptions: PropTypes.func,
       filterOption: PropTypes.func,
       minLength: PropTypes.number,
+      pinnedOptions: PropTypes.array,
     };
 
     static defaultProps = {
@@ -34,6 +35,7 @@ export const WithAsyncLoading = (AutocompleteComponent) =>
       makeOptions: (values) => values,
       filterOption: () => true,
       minLength: 1,
+      pinnedOptions: [],
     };
 
     state = {

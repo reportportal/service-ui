@@ -46,7 +46,7 @@ const getDefects = (values, name) => {
 export const DefectsColumn = (
   { className, value },
   name,
-  { isLatest, getCompositeAttributes, linkPayload },
+  { isLatest, getCompositeAttributes, getLaunchOwner, launchOwnerFilter, linkPayload },
 ) => {
   const data = value.statistics
     ? getDefects(value.statistics, name)
@@ -58,6 +58,8 @@ export const DefectsColumn = (
       isLatest,
       launchesLimit: DEFAULT_LAUNCHES_LIMIT,
       compositeAttribute: getCompositeAttributes(value.attributeValue),
+      launchOwner: getLaunchOwner(value.attributeValue),
+      launchOwnerFilter,
       filterType: true,
     },
     ownLinkParams: {

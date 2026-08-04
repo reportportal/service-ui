@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-import { Component } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import Parser from 'html-react-parser';
 import classNames from 'classnames/bind';
-import { injectIntl } from 'react-intl';
+import { useIntl } from 'react-intl';
 import DOMPurify from 'dompurify';
 import { withModal, ModalLayout } from 'components/main/modal';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
@@ -26,58 +26,56 @@ import styles from './deleteItemsModal.scss';
 
 const cx = classNames.bind(styles);
 
-@withModal('deleteItemsModal')
-@injectIntl
-export class DeleteItemsModal extends Component {
-  static propTypes = {
-    intl: PropTypes.object.isRequired,
-    data: PropTypes.shape({
-      onConfirm: PropTypes.func,
-      items: PropTypes.array,
-      header: PropTypes.string,
-      mainContent: PropTypes.string,
-      eventsInfo: PropTypes.object,
-      warning: PropTypes.string,
-    }),
-  };
+const renderMainContent = (mainContent) => {
+  if (typeof mainContent === 'string') {
+    return Parser(DOMPurify.sanitize(mainContent));
+  }
 
-  static defaultProps = {
-    data: {
-      items: [],
-      onConfirm: () => {},
-      eventsInfo: {},
-    },
-  };
-  confirmAndClose = (closeModal) => {
-    this.props.data.onConfirm(this.props.data.items);
+  return mainContent;
+};
+
+const DeleteItemsModalComponent = ({ data = { items: [], onConfirm: () => {}, eventsInfo: {} } }) => {
+  const { formatMessage } = useIntl();
+  const { header, mainContent, eventsInfo, warning } = data;
+
+  const confirmAndClose = (closeModal) => {
+    data.onConfirm(data.items);
     closeModal();
   };
 
-  render() {
-    const {
-      intl: { formatMessage },
-      data: { header, mainContent, eventsInfo, warning },
-    } = this.props;
-    const okButton = {
-      text: formatMessage(COMMON_LOCALE_KEYS.DELETE),
-      danger: true,
-      onClick: this.confirmAndClose,
-      eventInfo: eventsInfo.deleteBtn,
-    };
-    const cancelButton = {
-      text: formatMessage(COMMON_LOCALE_KEYS.CANCEL),
-      eventInfo: eventsInfo.cancelBtn,
-    };
-    return (
-      <ModalLayout
-        title={header}
-        okButton={okButton}
-        cancelButton={cancelButton}
-        closeIconEventInfo={eventsInfo.closeIcon}
-        warningMessage={warning}
-      >
-        <p className={cx('message')}>{Parser(DOMPurify.sanitize(mainContent))}</p>
-      </ModalLayout>
-    );
-  }
-}
+  const okButton = {
+    text: formatMessage(COMMON_LOCALE_KEYS.DELETE),
+    danger: true,
+    onClick: confirmAndClose,
+    eventInfo: eventsInfo.deleteBtn,
+  };
+  const cancelButton = {
+    text: formatMessage(COMMON_LOCALE_KEYS.CANCEL),
+    eventInfo: eventsInfo.cancelBtn,
+  };
+
+  return (
+    <ModalLayout
+      title={header}
+      okButton={okButton}
+      cancelButton={cancelButton}
+      closeIconEventInfo={eventsInfo.closeIcon}
+      warningMessage={warning}
+    >
+      <p className={cx('message')}>{renderMainContent(mainContent)}</p>
+    </ModalLayout>
+  );
+};
+
+DeleteItemsModalComponent.propTypes = {
+  data: PropTypes.shape({
+    onConfirm: PropTypes.func,
+    items: PropTypes.array,
+    header: PropTypes.string,
+    mainContent: PropTypes.oneOfType([PropTypes.string, PropTypes.node]),
+    eventsInfo: PropTypes.object,
+    warning: PropTypes.string,
+  }),
+};
+
+export const DeleteItemsModal = withModal('deleteItemsModal')(DeleteItemsModalComponent);

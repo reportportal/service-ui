@@ -40,6 +40,7 @@ export class AutocompleteOptions extends Component {
     createWithoutConfirmation: PropTypes.bool,
     variant: autocompleteVariantType,
     creatable: PropTypes.bool,
+    optionsMaxHeight: PropTypes.number,
   };
 
   static defaultProps = {
@@ -55,6 +56,7 @@ export class AutocompleteOptions extends Component {
     createWithoutConfirmation: false,
     variant: 'light',
     creatable: true,
+    optionsMaxHeight: 140,
   };
 
   filterStaticOptions = () => {
@@ -103,7 +105,7 @@ export class AutocompleteOptions extends Component {
     return options.length ? options.map((item, index) => this.renderItem(item, index)) : '';
   };
 
-  renderNewItem = (options) => {
+  renderNewItem = (options, showDivider = false) => {
     const { inputValue, getItemProps, optionVariant, variant } = this.props;
     const index = options.length;
     const isNew = true;
@@ -114,6 +116,7 @@ export class AutocompleteOptions extends Component {
           optionVariant={optionVariant}
           {...getItemProps({ item: inputValue, index })}
           isNew={isNew}
+          showDivider={showDivider}
           variant={variant}
         >
           {this.props.parseValueToString(inputValue)}
@@ -123,16 +126,18 @@ export class AutocompleteOptions extends Component {
   };
 
   render() {
-    const { async, options, createWithoutConfirmation, creatable } = this.props;
+    const { async, options, createWithoutConfirmation, creatable, optionsMaxHeight } = this.props;
     const availableOptions = async ? options : this.filterStaticOptions();
     const prompt = this.getPrompt(options);
     if (prompt) return prompt;
     return (
       <div className={cx({ container: options.length })}>
-        <ScrollWrapper autoHeight autoHeightMax={140}>
+        <ScrollWrapper autoHeight autoHeightMax={optionsMaxHeight}>
           {this.renderItems(availableOptions)}
         </ScrollWrapper>
-        {!createWithoutConfirmation && creatable && this.renderNewItem(availableOptions)}
+        {!createWithoutConfirmation &&
+          creatable &&
+          this.renderNewItem(availableOptions, availableOptions.length > 0)}
       </div>
     );
   }

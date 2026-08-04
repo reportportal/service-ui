@@ -1,5 +1,5 @@
-/*!
- * Copyright 2019 EPAM Systems
+/*
+ * Copyright 2026 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,23 +14,4 @@
  * limitations under the License.
  */
 
-.tooltip-content {
-  text-align: start;
-}
-
-.content-container {
-  display: flex;
-  flex-direction: column;
-  word-break: normal;
-}
-
-.icon {
-  display: inline-block;
-  width: 22px;
-  height: 22px;
-  vertical-align: middle;
-
-  svg {
-    fill: $COLOR--gray-60;
-  }
-}
+export { DeleteDashboardConfirmationMessage } from './deleteDashboardConfirmationMessage';

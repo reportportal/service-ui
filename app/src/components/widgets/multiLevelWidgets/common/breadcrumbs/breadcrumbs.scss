@@ -30,12 +30,22 @@
   line-height: normal;
   color: $COLOR--gray-60;
 
+  .key-icon svg path {
+    fill: $COLOR--gray-60;
+  }
+
   &.active {
     color: $COLOR--topaz;
+
+    .key-icon svg path {
+      fill: $COLOR--topaz;
+    }
   }
 }
 
 .item-name {
+  display: flex;
+  align-items: center;
   max-width: 70px;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -73,7 +83,23 @@
 }
 
 .link-key {
+  display: flex;
+  align-items: center;
   font-size: 11px;
+}
+
+.key-icon {
+  display: inline-flex;
+  align-items: center;
+  width: 13px;
+  height: 13px;
+  margin-right: 8px;
+  flex-shrink: 0;
+
+  svg {
+    width: 13px;
+    height: 13px;
+  }
 }
 
 .icon {
