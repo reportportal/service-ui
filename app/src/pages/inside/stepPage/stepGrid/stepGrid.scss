@@ -89,6 +89,7 @@
 
 .failed {
   background-color: $COLOR--light-red;
+  --background-color: #{$COLOR--light-red};
 }
 
 .error-message-wrapper {

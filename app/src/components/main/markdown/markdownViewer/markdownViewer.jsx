@@ -16,9 +16,9 @@
 
 import React, { Component } from 'react';
 import Parser from 'html-react-parser';
-import DOMPurify from 'dompurify';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
+import { sanitizeUserHtml } from 'common/utils/sanitizeUserHtml';
 import { SingletonMarkdownObject } from '../singletonMarkdownObject';
 import { MODE_DEFAULT } from '../constants';
 import styles from './markdownViewer.scss';
@@ -76,13 +76,14 @@ export class MarkdownViewer extends Component {
 
   render() {
     const { value, mode } = this.props;
+
     return (
       <div className={cx('viewer-wrapper')}>
         <div
           ref={this.container}
           className={cx('markdown-viewer', { [`mode-${mode}`]: mode }, this.props.className)}
         >
-          {Parser(DOMPurify.sanitize(this.simpleMDE.markdown(value || '').trim()))}
+          {Parser(sanitizeUserHtml(this.simpleMDE.markdown(value || '').trim()))}
         </div>
       </div>
     );

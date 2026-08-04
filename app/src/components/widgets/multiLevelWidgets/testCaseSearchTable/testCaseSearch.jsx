@@ -129,9 +129,6 @@ export const TestCaseSearch = ({ widget: { id: widgetId }, isDisplayedLaunches }
     dispatch(loadMoreSearchedItemsAction({ widgetId, trackPerformance, isDisplayedLaunches }));
   };
 
-  const handleDocumentationClick = () => {
-    trackEvent(WIDGETS_EVENTS.onTcsPromoDocumentationClick(dashboardId, PROMOTION_BANNER_SOURCE));
-  };
   const handleLoadMoreMessageDocumentationClick = () => {
     trackEvent(
       WIDGETS_EVENTS.onWidgetDocumentLinkClick(widgetId, dashboardId, 'promotion_load_more_message'),
@@ -207,7 +204,10 @@ export const TestCaseSearch = ({ widget: { id: widgetId }, isDisplayedLaunches }
       />
       <TestExecutionsPromoBanner
         onOpenNewSearch={handleOpenNewSearch}
-        onDocumentationClick={handleDocumentationClick}
+        documentationClickEvent={WIDGETS_EVENTS.onTcsPromoDocumentationClick(
+          dashboardId,
+          PROMOTION_BANNER_SOURCE,
+        )}
       />
       <TestCaseSearchContent
         listView={isDisplayedLaunches}

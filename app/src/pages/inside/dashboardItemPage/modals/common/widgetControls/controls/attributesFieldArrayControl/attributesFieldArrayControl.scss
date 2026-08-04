@@ -72,3 +72,53 @@
 .tooltip {
   max-width: 300px;
 }
+
+.owner-option {
+  display: inline-flex;
+  align-items: center;
+}
+
+.owner-value-wrap {
+  position: relative;
+
+  &:focus-within .owner-selected-overlay {
+    display: none;
+  }
+}
+
+.owner-selected-overlay {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  right: 2px;
+  height: 32px;
+  display: inline-flex;
+  align-items: center;
+  padding: 0 22px 0 10px;
+  background-color: $COLOR--white-two;
+  font-size: 13px;
+  font-family: $FONT-REGULAR;
+  color: $COLOR--charcoal-grey;
+  border: none;
+  box-sizing: border-box;
+  white-space: nowrap;
+  overflow: hidden;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.owner-icon {
+  display: inline-flex;
+  width: 13px;
+  height: 13px;
+  margin-right: 8px;
+
+  svg {
+    width: 13px;
+    height: 13px;
+
+    path {
+      fill: $COLOR--lima;
+    }
+  }
+}

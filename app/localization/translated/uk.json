@@ -217,6 +217,7 @@
   "AttributesFieldArrayControl.attributeKeyFieldPlaceholder": "Введить ключ атрибуту",
   "AttributesFieldArrayControl.levelCanBeAddedMessage": "1 рівень може бути доданий",
   "AttributesFieldArrayControl.levelsCanBeAddedMessage": "{amount} рівнів можуть бути додані",
+  "AttributesFieldArrayControl.ownerLevelOption": "Власник",
   "AvailablePluginDetail.discoverPremium": "Дізнатися про Premium",
   "AvailablePluginDetail.install": "Встановити",
   "AutoAnalysis.AutoAnalysisMode": "Авто-Аналіз на основі",

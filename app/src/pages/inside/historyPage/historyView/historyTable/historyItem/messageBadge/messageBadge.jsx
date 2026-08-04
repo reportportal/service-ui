@@ -27,8 +27,8 @@ const cx = classNames.bind(styles);
 const MessageBadgeToolTip = ({ data }) => (
   <div className={cx('tooltip-content')}>
     {data.map((item) => (
-      <div className={cx('content-container')} key={item.comment}>
-        <MarkdownViewer value={item.comment} />
+      <div className={cx('content-container')} key={item.comment || item.ticketId}>
+        <MarkdownViewer value={item.comment || item.ticketId} />
       </div>
     ))}
   </div>

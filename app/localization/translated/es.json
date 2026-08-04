@@ -217,6 +217,7 @@
   "AttributesFieldArrayControl.attributeKeyFieldPlaceholder": "Ingrese la clave del atributo",
   "AttributesFieldArrayControl.levelCanBeAddedMessage": "Se puede agregar 1 nivel",
   "AttributesFieldArrayControl.levelsCanBeAddedMessage": "Se pueden agregar {amount} niveles",
+  "AttributesFieldArrayControl.ownerLevelOption": "Propietario",
   "AvailablePluginDetail.discoverPremium": "Descubrir Premium",
   "AvailablePluginDetail.install": "Instalar",
   "AutoAnalysis.AutoAnalysisMode": "Modo de análisis automático",
