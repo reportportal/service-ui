@@ -141,9 +141,10 @@ describe('MarkdownViewer', () => {
     const xssPayload =
       '"><style>#phish{position:fixed;top:0;left:0;width:100%;height:100%}</style><div id=phish><form><button>Login</button></form></div>';
     const wrapper = mount(<MarkdownViewer value={xssPayload} />);
+    const container = wrapper.instance().container.current;
 
     expect(wrapper.find('form')).toHaveLength(0);
     expect(wrapper.find('button')).toHaveLength(0);
-    expect(wrapper.html()).not.toContain('position:fixed');
+    expect(container.innerHTML).not.toMatch(/position:fixed/i);
   });
 });
