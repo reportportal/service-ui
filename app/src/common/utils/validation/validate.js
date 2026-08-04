@@ -73,7 +73,7 @@ export const projectName = composeValidators([isNotEmpty, regex(/^[0-9a-zA-Z-_]{
 export const btsIntegrationName = composeValidators([isNotEmpty, maxLength(55)]);
 export const btsProject = composeValidators([isNotEmpty, maxLength(55)]);
 export const btsUserName = composeValidators([isNotEmpty, maxLength(55)]);
-export const btsPassword = composeValidators([isNotEmpty, maxLength(55)]);
+export const btsPassword = composeValidators([isNotEmpty, maxLength(512)]);
 export const patternNameLength = composeValidators([isNotEmpty, maxLength(55)]);
 export const ruleNameLength = composeValidators([isNotEmpty, maxLength(55)]);
 export const createNameUniqueValidator = (itemId, items) => (newName) =>
