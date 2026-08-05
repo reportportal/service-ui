@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 EPAM Systems
+ * Copyright 2026 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,10 +14,4 @@
  * limitations under the License.
  */
 
-export const COMMANDS_TAB = 'commands';
-export { LOGS_TAB } from '../../constants';
-export const METADATA_TAB = 'metadata';
-
-export const COMMAND_FIELD = 'command';
-export const PARAMETERS_FIELD = 'parameters';
-export const RESPONSE_FIELD = 'response';
+export const LOGS_TAB = 'logs';
