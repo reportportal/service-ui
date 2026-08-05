@@ -508,8 +508,6 @@ export class LogItemInfoTabs extends Component {
     if (tabs.find((tab) => tab.id === activeTabId)) {
       return activeTabId;
     }
-    // Previously selected tab may be gone after step navigation (e.g. Remote device
-    // missing on the next nested step). Fall back to All Logs so content is shown.
     if (tabs.find((tab) => tab.id === 'logs')) {
       return 'logs';
     }
