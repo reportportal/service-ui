@@ -183,7 +183,7 @@ export const TestCaseLibraryPage = () => {
     }
 
     return (
-      <ScrollWrapper resetRequired hideTracksWhenNotNeeded>
+      <ScrollWrapper hideTracksWhenNotNeeded>
         <MainPageEmptyState />
       </ScrollWrapper>
     );
