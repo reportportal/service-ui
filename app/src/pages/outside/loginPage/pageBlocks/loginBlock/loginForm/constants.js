@@ -15,6 +15,6 @@
  */
 
 export const DEFAULT_USER_CREDENTIALS = {
-  login: 'default',
+  login: 'default@reportportal.internal',
   password: '1q2w3e',
 };
