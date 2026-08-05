@@ -264,6 +264,10 @@ export class LogItemInfoTabs extends Component {
               [tabId]: isVisible,
             },
           }));
+
+          if (!isVisible && this.props.activeTabId === tabId) {
+            this.props.setActiveTabId('logs');
+          }
         })
         .catch(() => {
           if (requestId !== this.logTabVisibilityRequestId) {
@@ -276,6 +280,10 @@ export class LogItemInfoTabs extends Component {
               [tabId]: false,
             },
           }));
+
+          if (this.props.activeTabId === tabId) {
+            this.props.setActiveTabId('logs');
+          }
         });
     });
   };
@@ -500,7 +508,12 @@ export class LogItemInfoTabs extends Component {
     if (tabs.find((tab) => tab.id === activeTabId)) {
       return activeTabId;
     }
-    return null;
+    // Previously selected tab may be gone after step navigation (e.g. Remote device
+    // missing on the next nested step). Fall back to All Logs so content is shown.
+    if (tabs.find((tab) => tab.id === 'logs')) {
+      return 'logs';
+    }
+    return tabs[0]?.id ?? null;
   };
 
   render() {
