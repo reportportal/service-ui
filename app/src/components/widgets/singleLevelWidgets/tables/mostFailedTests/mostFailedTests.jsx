@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import React, { useMemo } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import { useSelector } from 'react-redux';
 import { useTracking } from 'react-tracking';
@@ -22,21 +22,16 @@ import { actionToPath, history, selectLocationState } from 'redux-first-router';
 import qs from 'qs';
 import { testCaseNameLinkSelector } from 'controllers/testItem';
 import { activeDashboardIdSelector } from 'controllers/pages';
-import { activeProjectSelector } from 'controllers/user';
 import { WIDGETS_EVENTS } from 'components/main/analytics/events/ga4Events/dashboardsPageEvents';
 import { TestsTableWidget } from '../components/testsTableWidget';
 import * as cfg from './mostFailedTestsCfg';
 
 export const MostFailedTests = ({ widget }) => {
-  const activeProject = useSelector(activeProjectSelector);
+  const getTestCaseNameLink = useSelector(testCaseNameLinkSelector);
   const dashboardId = useSelector(activeDashboardIdSelector);
   const location = useSelector(selectLocationState);
   const { routesMap } = location;
   const { trackEvent } = useTracking();
-
-  const getTestCaseNameLink = useMemo(() => {
-    return testCaseNameLinkSelector({ user: { activeProject } });
-  }, [activeProject]);
 
   const getIssueTypeMessage = (issueType) => {
     const type = issueType.split('$')[2];
