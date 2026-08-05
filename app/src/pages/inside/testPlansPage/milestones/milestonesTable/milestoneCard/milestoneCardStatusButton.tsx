@@ -17,7 +17,7 @@
 import { useState, type MouseEvent } from 'react';
 import { useIntl } from 'react-intl';
 import { useTracking } from 'react-tracking';
-import { ChevronDownDropdownIcon, Popover } from '@reportportal/ui-kit';
+import { Button, ChevronDownDropdownIcon, Popover } from '@reportportal/ui-kit';
 
 import { MILESTONES_PAGE_EVENTS } from 'analyticsEvents/milestonesPageEvents';
 import type { TmsMilestoneStatus } from 'controllers/milestone';
@@ -72,7 +72,7 @@ export const MilestoneCardStatusButton = ({
   };
 
   const statusButton = (
-    <button
+    <Button
       type="button"
       className={cx(
         'milestone-card__status-toggle',
@@ -94,7 +94,7 @@ export const MilestoneCardStatusButton = ({
           <ChevronDownDropdownIcon />
         </span>
       )}
-    </button>
+    </Button>
   );
 
   if (isReadOnly) {

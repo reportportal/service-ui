@@ -31,10 +31,10 @@ export const messages = defineMessages({
   },
   attributeKeyPlaceholderRequired: {
     id: 'CreateTestPlanModal.attributeKeyPlaceholderRequired',
-    defaultMessage: 'Key *',
+    defaultMessage: 'Key',
   },
   attributeValuePlaceholderRequired: {
     id: 'CreateTestPlanModal.attributeValuePlaceholderRequired',
-    defaultMessage: 'Value *',
+    defaultMessage: 'Value',
   },
 });
