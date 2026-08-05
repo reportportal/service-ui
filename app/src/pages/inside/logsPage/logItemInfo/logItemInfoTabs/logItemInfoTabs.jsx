@@ -51,6 +51,7 @@ import { getSauceLabsConfig } from 'components/integrations/integrationProviders
 import { availableIntegrationsByPluginNameSelector } from 'controllers/plugins';
 import { uiExtensionLogTabSelector } from 'controllers/plugins/uiExtensions';
 import { StackTrace } from 'pages/inside/common/stackTrace';
+import { LOGS_TAB } from '../../constants';
 import { SauceLabsIntegrationButton } from './sauceLabsIntegrationButton';
 import { InfoTabs } from '../infoTabs';
 import { LogItemDetails } from './logItemDetails';
@@ -154,7 +155,7 @@ export class LogItemInfoTabs extends Component {
     lastActivity: null,
     fetchFirstAttachments: () => {},
     attachments: [],
-    activeTabId: 'logs',
+    activeTabId: LOGS_TAB,
     setActiveTabId: () => {},
     noLogsCollapsing: false,
     logTabExtensions: [],
@@ -266,7 +267,7 @@ export class LogItemInfoTabs extends Component {
           }));
 
           if (!isVisible && this.props.activeTabId === tabId) {
-            this.props.setActiveTabId('logs');
+            this.props.setActiveTabId(LOGS_TAB);
           }
         })
         .catch(() => {
@@ -282,7 +283,7 @@ export class LogItemInfoTabs extends Component {
           }));
 
           if (this.props.activeTabId === tabId) {
-            this.props.setActiveTabId('logs');
+            this.props.setActiveTabId(LOGS_TAB);
           }
         });
     });
@@ -370,7 +371,7 @@ export class LogItemInfoTabs extends Component {
         logId,
         shouldClearSearchFilter: Boolean(logQuery[LOG_MESSAGE_FILTER_KEY]),
       });
-      setActiveTabId('logs');
+      setActiveTabId(LOGS_TAB);
     } catch {
       showNotificationAction({
         message: formatMessage(messages.jumpToLogFailed),
@@ -413,7 +414,7 @@ export class LogItemInfoTabs extends Component {
         },
       },
       {
-        id: 'logs',
+        id: LOGS_TAB,
         label: formatMessage(messages.logsTab),
         icon: LogIcon,
         stroked: true,
@@ -476,7 +477,7 @@ export class LogItemInfoTabs extends Component {
 
   toggleSauceLabsIntegrationContent = () => {
     // TODO: Handle SauceLabs integration as independent tab
-    this.props.setActiveTabId('logs');
+    this.props.setActiveTabId(LOGS_TAB);
     this.props.onToggleSauceLabsIntegrationView();
   };
 
@@ -508,8 +509,8 @@ export class LogItemInfoTabs extends Component {
     if (tabs.some((tab) => tab.id === activeTabId)) {
       return activeTabId;
     }
-    if (tabs.some((tab) => tab.id === 'logs')) {
-      return 'logs';
+    if (tabs.some((tab) => tab.id === LOGS_TAB)) {
+      return LOGS_TAB;
     }
     return tabs[0]?.id ?? null;
   };
