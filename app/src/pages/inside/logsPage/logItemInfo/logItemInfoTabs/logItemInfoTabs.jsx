@@ -505,10 +505,10 @@ export class LogItemInfoTabs extends Component {
 
   getActiveTabId = (tabs) => {
     const { activeTabId } = this.props;
-    if (tabs.find((tab) => tab.id === activeTabId)) {
+    if (tabs.some((tab) => tab.id === activeTabId)) {
       return activeTabId;
     }
-    if (tabs.find((tab) => tab.id === 'logs')) {
+    if (tabs.some((tab) => tab.id === 'logs')) {
       return 'logs';
     }
     return tabs[0]?.id ?? null;
