@@ -19,6 +19,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import classNames from 'classnames/bind';
 import { injectIntl, defineMessages, FormattedMessage } from 'react-intl';
+import { useEllipsisTitle } from '@reportportal/ui-kit';
 import { ALIGN_CENTER, Grid } from 'components/main/grid';
 import {
   PROJECT_LAUNCHES_PAGE,
@@ -42,7 +43,7 @@ const messages = defineMessages({
   deleteCol: { id: 'MembersGrid.deleteCol', defaultMessage: 'Delete' },
 });
 
-const NameColumn = ({ className, value, customProps }) => {
+const NameColumn = ({ className, value = {}, customProps = {} }) => {
   const { organizationSlug, projectSlug, editable = true } = customProps;
   return (
     <div className={cx('name-col', className)}>
@@ -67,12 +68,8 @@ NameColumn.propTypes = {
   value: PropTypes.object,
   customProps: PropTypes.object,
 };
-NameColumn.defaultProps = {
-  value: {},
-  customProps: {},
-};
 
-const OptionsColumn = ({ className, value }) => (
+const OptionsColumn = ({ className, value = {} }) => (
   <div className={cx('options-col', className)}>
     <FilterOptions entities={value.conditions} sort={value.orders} />
   </div>
@@ -81,27 +78,27 @@ OptionsColumn.propTypes = {
   className: PropTypes.string.isRequired,
   value: PropTypes.object,
 };
-OptionsColumn.defaultProps = {
-  value: {},
-};
 
-const OwnerColumn = ({ className, value }) => (
-  <div className={cx('owner-col', className)}>
-    <div className={cx('mobile-label', 'owner-label')}>
-      <FormattedMessage id={'OwnerColumn.owner'} defaultMessage={'Owner:'} />
+const OwnerColumn = ({ className, value = {} }) => {
+  const { ref, title } = useEllipsisTitle(value.owner);
+
+  return (
+    <div className={cx('owner-col', className)}>
+      <div className={cx('mobile-label', 'owner-label')}>
+        <FormattedMessage id={'OwnerColumn.owner'} defaultMessage={'Owner:'} />
+      </div>
+      <div ref={ref} title={title} className={cx('owner-name')}>
+        {value.owner}
+      </div>
     </div>
-    {value.owner}
-  </div>
-);
+  );
+};
 OwnerColumn.propTypes = {
   className: PropTypes.string.isRequired,
   value: PropTypes.object,
 };
-OwnerColumn.defaultProps = {
-  value: {},
-};
 
-const DisplayOnLaunchColumn = ({ className, value, customProps }) => {
+const DisplayOnLaunchColumn = ({ className, value = {}, customProps = {} }) => {
   const { onChangeDisplay, userFilters, readOnly } = customProps;
   return (
     <div className={cx('display-col', className)}>
@@ -120,12 +117,8 @@ DisplayOnLaunchColumn.propTypes = {
   value: PropTypes.object,
   customProps: PropTypes.object,
 };
-DisplayOnLaunchColumn.defaultProps = {
-  value: {},
-  customProps: {},
-};
 
-const DeleteColumn = ({ className, value, customProps }) => {
+const DeleteColumn = ({ className, value = {}, customProps = {} }) => {
   const { disabled, onDelete } = customProps;
 
   return (
@@ -138,10 +131,6 @@ DeleteColumn.propTypes = {
   className: PropTypes.string.isRequired,
   value: PropTypes.object,
   customProps: PropTypes.object,
-};
-DeleteColumn.defaultProps = {
-  value: {},
-  customProps: {},
 };
 
 @connect((state) => ({
