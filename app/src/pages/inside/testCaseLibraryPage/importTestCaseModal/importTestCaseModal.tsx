@@ -52,7 +52,7 @@ const MAX_FILE_SIZE_BYTES = MAX_FILE_SIZE_MB * 1024 * 1024;
 const CSV_MIME_TYPES: MimeType[] = [MIME_TYPES.csv, MIME_TYPES.xls, MIME_TYPES.plain];
 const TEMPLATE_FILE_NAME = 'test-case-import-template.csv';
 const TEMPLATE_CSV_CONTENT = [
-  'summary,description,priority,precondition,requirements,step_1_action,step_1_expected',
+  'summary,description,priority,preconditions,requirements,test steps,expected result',
   '"Verify login","User can sign in with valid credentials","HIGH","User exists","REQ-001","Open login page","Login page is displayed"',
 ].join('\n');
 
