@@ -28,9 +28,9 @@ import {
   getMilestoneStatusPopoverOptionMessageDescriptor,
 } from '../../milestoneStatusMessages';
 import {
+  getMilestoneStatusButtonVariant,
   getMilestoneStatusChooseEventType,
   getMilestoneStatusPopoverOptions,
-  milestoneStatusToCssModifier,
 } from '../../milestoneStatus';
 
 import type { MilestoneCardProps } from './types';
@@ -46,7 +46,6 @@ export const MilestoneCardStatusButton = ({
   const { formatMessage } = useIntl();
   const { trackEvent } = useTracking();
   const [isOpened, setIsOpened] = useState(false);
-  const statusModifier = milestoneStatusToCssModifier(milestone.status);
   const options = getMilestoneStatusPopoverOptions(milestone.status);
   const isReadOnly = !onChangeMilestoneStatus;
 
@@ -74,26 +73,14 @@ export const MilestoneCardStatusButton = ({
   const statusButton = (
     <Button
       type="button"
-      className={cx(
-        'milestone-card__status-toggle',
-        `milestone-card__status-toggle_${statusModifier}`,
-      )}
+      variant={getMilestoneStatusButtonVariant(milestone.status)}
+      icon={!isReadOnly ? <ChevronDownDropdownIcon /> : undefined}
+      iconPlace="end"
       aria-expanded={isReadOnly ? undefined : isOpened}
       aria-haspopup={isReadOnly ? undefined : 'listbox'}
       disabled={isReadOnly}
     >
-      <span className={cx('milestone-card__status-toggle-label')}>
-        {formatMessage(getMilestoneStatusMessageDescriptor(milestone.status))}
-      </span>
-      {!isReadOnly && (
-        <span
-          className={cx('milestone-card__status-chevron', {
-            'milestone-card__status-chevron_open': isOpened,
-          })}
-        >
-          <ChevronDownDropdownIcon />
-        </span>
-      )}
+      {formatMessage(getMilestoneStatusMessageDescriptor(milestone.status))}
     </Button>
   );
 
