@@ -46,6 +46,7 @@ import {
 import { areFoldersLoadingSelector, foldersSelector, isLoadingFilteredFoldersSelector } from 'controllers/testCase';
 import { useUserPermissions } from 'hooks/useUserPermissions';
 import { SearchField } from 'components/fields/searchField';
+import { ScrollWrapper } from 'components/main/scrollWrapper';
 import { TestCasePageDefaultValues } from 'pages/inside/common/testCaseList/constants';
 import {
   FilterSidePanel,
@@ -170,6 +171,8 @@ export const TestCaseLibraryPage = () => {
     !!location?.query?.filterPriorities ||
     !!location?.query?.filterTags;
 
+  const showEmptyState = !areFoldersLoading && !hasFolders && !hasActiveSearchOrFilters;
+
   const renderContent = () => {
     if (areFoldersLoading) {
       return <BubblesLoader />;
@@ -179,7 +182,11 @@ export const TestCaseLibraryPage = () => {
       return <TestCaseFolders />;
     }
 
-    return <MainPageEmptyState />;
+    return (
+      <ScrollWrapper hideTracksWhenNotNeeded>
+        <MainPageEmptyState />
+      </ScrollWrapper>
+    );
   };
 
   return (
@@ -255,7 +262,8 @@ export const TestCaseLibraryPage = () => {
           </div>
           <div
             className={cx('test-case-library-page__content', {
-              'test-case-library-page__content--no-padding': hasFolders,
+              'test-case-library-page__content--no-padding': hasFolders || hasActiveSearchOrFilters,
+              'test-case-library-page__content--empty': showEmptyState,
             })}
           >
             {renderContent()}

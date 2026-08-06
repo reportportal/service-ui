@@ -21,15 +21,19 @@ import { useTracking } from 'react-tracking';
 import { TEST_CASE_LIBRARY_EVENTS } from 'analyticsEvents/testCaseLibraryPageEvents';
 import { NumerableBlock } from 'pages/common/numerableBlock';
 import { EmptyStatePage } from 'pages/inside/common/emptyStatePage';
-import { referenceDictionary } from 'common/utils';
+import { createClassnames, referenceDictionary } from 'common/utils';
 import { useUserPermissions } from 'hooks/useUserPermissions';
 import { useCreateFolderModal } from 'pages/inside/testCaseLibraryPage/testCaseFolders/modals/createFolderModal';
+import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 
 import { messages } from '../messages';
 import { commonMessages } from '../../commonMessages';
-import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { useCreateTestCaseModal } from '../../createTestCaseModal';
 import { useImportTestCaseModal } from '../../importTestCaseModal';
+
+import styles from './mainPageEmptyState.scss';
+
+const cx = createClassnames(styles);
 
 export const MainPageEmptyState = () => {
   const { formatMessage } = useIntl();
@@ -62,31 +66,33 @@ export const MainPageEmptyState = () => {
     (translation) => Parser(formatMessage(translation, {}, { ignoreTag: true })),
   );
 
-  const buttons = canManageTestCases ? [
-    {
-      name: formatMessage(commonMessages.createFolder),
-      dataAutomationId: 'createFolderButton',
-      isCompact: true,
-      handleButton: handleCreateFolder,
-    },
-    {
-      name: formatMessage(commonMessages.createTestCase),
-      dataAutomationId: 'createTestCaseButton',
-      isCompact: true,
-      variant: 'ghost',
-      handleButton: handleCreateTestCase,
-    },
-    {
-      name: formatMessage(COMMON_LOCALE_KEYS.IMPORT),
-      dataAutomationId: 'importTestCaseButton',
-      isCompact: false,
-      variant: 'ghost',
-      handleButton: handleImportTestCase,
-    },
-  ] : [];
+  const buttons = canManageTestCases
+    ? [
+        {
+          name: formatMessage(commonMessages.createFolder),
+          dataAutomationId: 'createFolderButton',
+          isCompact: true,
+          handleButton: handleCreateFolder,
+        },
+        {
+          name: formatMessage(commonMessages.createTestCase),
+          dataAutomationId: 'createTestCaseButton',
+          isCompact: true,
+          variant: 'ghost',
+          handleButton: handleCreateTestCase,
+        },
+        {
+          name: formatMessage(COMMON_LOCALE_KEYS.IMPORT),
+          dataAutomationId: 'importTestCaseButton',
+          isCompact: false,
+          variant: 'ghost',
+          handleButton: handleImportTestCase,
+        },
+      ]
+    : [];
 
   return (
-    <>
+    <div className={cx('main-page-empty-state')}>
       <EmptyStatePage
         title={formatMessage(messages.emptyPageTitle)}
         description={formatMessage(messages.emptyPageDescription)}
@@ -100,6 +106,6 @@ export const MainPageEmptyState = () => {
         title={formatMessage(messages.numerableBlockTitle)}
         fullWidth
       />
-    </>
+    </div>
   );
 };
