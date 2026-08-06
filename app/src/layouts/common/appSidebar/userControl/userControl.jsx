@@ -34,12 +34,14 @@ const UserControl = ({ onClick }) => {
   return (
     <button type="button" className={cx('user-block-wrapper')} onClick={onClick}>
       <span className={cx('avatar-block')}>
-        <UserAvatar
-          className={cx('user-avatar')}
-          userId={id}
-          timestamp={photoTimeStamp}
-          thumbnail
-        />
+        {id && (
+          <UserAvatar
+            className={cx('user-avatar')}
+            userId={id}
+            timestamp={photoTimeStamp}
+            thumbnail
+          />
+        )}
       </span>
       <div className={cx('user-control')}>
         <div className={cx('user-details')}>

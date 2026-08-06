@@ -350,7 +350,7 @@ function* watchDeleteUserAccount() {
 }
 
 function* watchFetchUserInfo() {
-  yield takeEvery(FETCH_USER_INFO, fetchUserInfo);
+  yield takeEvery(FETCH_USER_INFO, fetchUserWorker);
 }
 
 function* watchLoadProjectSettings() {
