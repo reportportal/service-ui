@@ -56,6 +56,7 @@ export {
   MILESTONE_CHANGE_STATUS_MODAL_BUTTON_ELEMENT_NAME,
   MILESTONE_STATUS,
   MILESTONE_STATUS_CHOOSE_EVENT_TYPE,
+  getMilestoneStatusButtonVariant,
   getMilestoneStatusChooseEventType,
   isBackToScheduledPopoverOption,
   normalizeMilestoneStatus,
@@ -65,6 +66,7 @@ export {
 export type {
   MilestoneCardStatusCssModifier,
   MilestoneChangeStatusModalButtonElementName,
+  MilestoneStatusButtonVariant,
   MilestoneStatusDropdownChooseType,
 } from './milestoneStatus';
 export {

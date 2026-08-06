@@ -19,6 +19,8 @@ import type { TmsMilestoneStatus } from 'controllers/milestone';
 
 export { MilestoneStatus as MILESTONE_STATUS } from 'controllers/milestone';
 
+export type MilestoneStatusButtonVariant = 'primary' | 'ghost';
+
 export type MilestoneCardStatusCssModifier = 'scheduled' | 'testing' | 'completed';
 
 export function normalizeMilestoneStatus(status: string | undefined | null): TmsMilestoneStatus {
@@ -27,6 +29,11 @@ export function normalizeMilestoneStatus(status: string | undefined | null): Tms
   if (key === String(MilestoneStatus.COMPLETED)) return MilestoneStatus.COMPLETED;
   return MilestoneStatus.SCHEDULED;
 }
+
+export const getMilestoneStatusButtonVariant = (
+  status: string | undefined | null,
+): MilestoneStatusButtonVariant =>
+  normalizeMilestoneStatus(status) === MilestoneStatus.COMPLETED ? 'ghost' : 'primary';
 
 export const milestoneStatusToCssModifier = (
   status: string | undefined | null,

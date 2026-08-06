@@ -135,67 +135,6 @@
     }
   }
 
-  &__status-toggle {
-    @include ms.milestone-status-pill;
-
-    flex-shrink: 0;
-    text-transform: capitalize;
-    justify-content: space-between;
-    gap: 8px;
-    min-width: 118px;
-    padding: 7px 10px 7px 16px;
-
-    &-label {
-      flex: 1;
-      min-width: 0;
-      text-align: center;
-    }
-
-    &_scheduled {
-      color: var(--rp-ui-base-bg-000);
-      background: var(--rp-ui-color-primary);
-    }
-
-    &_testing {
-      color: var(--rp-ui-base-bg-000);
-      background: var(--rp-ui-base-topaz);
-    }
-
-    &_completed {
-      color: var(--rp-ui-color-primary);
-      background: transparent;
-      border: 1px solid var(--rp-ui-color-primary);
-
-      &:hover {
-        background: var(--rp-ui-base-bg-200);
-      }
-    }
-  }
-
-  &__status-chevron {
-    display: inline-flex;
-    flex-shrink: 0;
-    line-height: 0;
-    color: var(--rp-ui-base-bg-000);
-    transition: transform 0.2s ease;
-
-    &_open {
-      transform: rotate(180deg);
-    }
-
-    :global(svg) {
-      display: block;
-    }
-
-    :global(path) {
-      fill: currentcolor;
-    }
-  }
-
-  &__status-toggle_completed &__status-chevron {
-    color: var(--rp-ui-color-primary);
-  }
-
   &__actions-trigger {
     flex-shrink: 0;
     display: flex;
