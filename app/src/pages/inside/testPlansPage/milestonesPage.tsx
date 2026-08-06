@@ -141,8 +141,8 @@ export const MilestonesPage = () => {
                 variant="text"
                 data-automation-id="refreshPageButton"
                 icon={<RefreshIcon />}
-                disabled={loading}
-                onClick={() => dispatch(getMilestonesAction(queryParams))}
+                disabled={loading || !isAuthorized}
+                onClick={() => isAuthorized && dispatch(getMilestonesAction(queryParams))}
               >
                 {formatMessage(commonMessages.refreshPage)}
               </Button>
