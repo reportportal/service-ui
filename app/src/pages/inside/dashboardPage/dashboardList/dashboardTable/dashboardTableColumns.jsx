@@ -18,6 +18,7 @@ import { useState, useEffect, useRef } from 'react';
 import classNames from 'classnames/bind';
 import PropTypes from 'prop-types';
 import { useTracking } from 'react-tracking';
+import { useEllipsisTitle } from '@reportportal/ui-kit';
 import { Icon } from 'components/main/icon';
 import { NavLink } from 'components/main/navLink';
 import { DASHBOARD_EVENTS } from 'analyticsEvents/dashboardsPageEvents';
@@ -38,7 +39,7 @@ import { messages } from './messages';
 
 const cx = classNames.bind(styles);
 
-export const NameColumn = ({ value, customProps: { getLink }, className }) => {
+export const NameColumn = ({ value = {}, customProps: { getLink } = {}, className = '' }) => {
   const { trackEvent } = useTracking();
   const { id: dashboardId, name, locked } = value;
 
@@ -70,13 +71,7 @@ NameColumn.propTypes = {
   className: PropTypes.string,
 };
 
-NameColumn.defaultProps = {
-  value: {},
-  customProps: {},
-  className: '',
-};
-
-export const DescriptionColumn = ({ value, className }) => (
+export const DescriptionColumn = ({ value = '', className = '' }) => (
   <div className={cx(className, 'description', { empty: !value })}>{value}</div>
 );
 DescriptionColumn.propTypes = {
@@ -84,27 +79,24 @@ DescriptionColumn.propTypes = {
   className: PropTypes.string,
 };
 
-DescriptionColumn.defaultProps = {
-  value: '',
-  className: '',
-};
+export const OwnerColumn = ({ value = '', className = '' }) => {
+  const { ref, title } = useEllipsisTitle(value);
 
-export const OwnerColumn = ({ value, className }) => (
-  <div className={cx(className, 'owner')}>{value}</div>
-);
+  return (
+    <div className={cx(className, 'owner')}>
+      <div ref={ref} title={title} className={cx('owner-name')}>
+        {value}
+      </div>
+    </div>
+  );
+};
 
 OwnerColumn.propTypes = {
   value: PropTypes.string,
   className: PropTypes.string,
 };
 
-OwnerColumn.defaultProps = {
-  value: '',
-  className: '',
-};
-
-
-export const DuplicateColumn = ({ value, customProps, className }) => {
+export const DuplicateColumn = ({ value = {}, customProps = {}, className = '' }) => {
   const { trackEvent } = useTracking();
   const { formatMessage } = useIntl();
   const [opened, setOpened] = useState(false);
@@ -202,13 +194,7 @@ DuplicateColumn.propTypes = {
   className: PropTypes.string,
 };
 
-DuplicateColumn.defaultProps = {
-  value: {},
-  customProps: {},
-  className: '',
-};
-
-export const EditColumn = ({ value, customProps, className }) => {
+export const EditColumn = ({ value = {}, customProps = {}, className = '' }) => {
   const { trackEvent } = useTracking();
   const { onEdit } = customProps;
   const { id, locked } = value;
@@ -236,13 +222,8 @@ EditColumn.propTypes = {
   customProps: PropTypes.object,
   className: PropTypes.string,
 };
-EditColumn.defaultProps = {
-  value: {},
-  customProps: {},
-  className: '',
-};
 
-export const DeleteColumn = ({ value, customProps, className }) => {
+export const DeleteColumn = ({ value = {}, customProps = {}, className = '' }) => {
   const { trackEvent } = useTracking();
   const { id, locked } = value;
   const canLock = useCanLockDashboard();
@@ -268,9 +249,4 @@ DeleteColumn.propTypes = {
   value: PropTypes.object,
   customProps: PropTypes.object,
   className: PropTypes.string,
-};
-DeleteColumn.defaultProps = {
-  value: {},
-  customProps: {},
-  className: '',
 };

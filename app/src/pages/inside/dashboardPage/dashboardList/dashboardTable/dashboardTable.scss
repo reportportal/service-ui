@@ -46,6 +46,14 @@
   line-height: 22px;
 }
 
+.owner-name {
+  width: 0;
+  min-width: 100%;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
 .icon-cell {
   width: 6.5%;
   padding: 15px 0;
@@ -195,5 +203,14 @@
     @media (max-width: $SCREEN_SM_MAX) {
       display: none;
     }
+  }
+
+  .owner-name {
+    width: auto;
+    display: inline;
+    overflow: visible;
+    text-overflow: unset;
+    white-space: normal;
+    word-break: break-all;
   }
 }
