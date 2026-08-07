@@ -35,7 +35,8 @@ import type { GetMilestonesAction } from './types';
 let abortController: AbortController | undefined;
 
 function* getMilestones(action: GetMilestonesAction): Generator {
-  abortController = new AbortController();
+  const controller = new AbortController();
+  abortController = controller;
 
   try {
     const projectKey = (yield select(projectKeySelector)) as string;
@@ -55,7 +56,7 @@ function* getMilestones(action: GetMilestonesAction): Generator {
       : defaultMilestoneQueryParams;
 
     const data = (yield call(fetch, URLS.tmsMilestone(projectKey, params), {
-      signal: abortController.signal,
+      signal: controller.signal,
     })) as TmsMilestonePageRS;
 
     yield put(
@@ -77,10 +78,9 @@ function* getMilestones(action: GetMilestonesAction): Generator {
 }
 
 function handleLogoutDuringMilestonesFetch(): void {
-  if (abortController) {
-    abortController.abort();
-    abortController = undefined;
-  }
+  const controller = abortController;
+  abortController = undefined;
+  controller?.abort();
 }
 
 function* watchGetMilestones() {
