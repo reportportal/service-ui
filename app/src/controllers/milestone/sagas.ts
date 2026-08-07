@@ -14,8 +14,7 @@
  * limitations under the License.
  */
 
-import { call, select, all, put, fork, cancel, takeEvery } from 'redux-saga/effects';
-import { Task } from 'redux-saga';
+import { call, select, all, put, takeEvery, takeLatest } from 'redux-saga/effects';
 
 import { URLS } from 'common/urls';
 import { fetch } from 'common/utils';
@@ -33,7 +32,11 @@ import {
 } from './constants';
 import type { GetMilestonesAction } from './types';
 
-function* getMilestones(action: GetMilestonesAction, abortController: AbortController): Generator {
+let abortController: AbortController | undefined;
+
+function* getMilestones(action: GetMilestonesAction): Generator {
+  abortController = new AbortController();
+
   try {
     const projectKey = (yield select(projectKeySelector)) as string;
 
@@ -73,25 +76,7 @@ function* getMilestones(action: GetMilestonesAction, abortController: AbortContr
   }
 }
 
-let getMilestonesTask: Task | undefined;
-let abortController: AbortController | undefined;
-
-function* handleGetMilestones(action: GetMilestonesAction): Generator {
-  if (getMilestonesTask) {
-    yield cancel(getMilestonesTask);
-  }
-  if (abortController) {
-    abortController.abort();
-  }
-
-  abortController = new AbortController();
-  getMilestonesTask = (yield fork(getMilestones, action, abortController)) as Task;
-}
-
-function* handleLogoutDuringMilestonesFetch(): Generator {
-  if (getMilestonesTask) {
-    yield cancel(getMilestonesTask);
-  }
+function handleLogoutDuringMilestonesFetch(): void {
   if (abortController) {
     abortController.abort();
     abortController = undefined;
@@ -99,7 +84,7 @@ function* handleLogoutDuringMilestonesFetch(): Generator {
 }
 
 function* watchGetMilestones() {
-  yield takeEvery(GET_MILESTONES, handleGetMilestones);
+  yield takeLatest(GET_MILESTONES, getMilestones);
   yield takeEvery(LOGOUT, handleLogoutDuringMilestonesFetch);
 }
 
