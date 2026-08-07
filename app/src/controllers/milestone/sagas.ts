@@ -36,6 +36,7 @@ let abortController: AbortController | undefined;
 
 function* getMilestones(action: GetMilestonesAction): Generator {
   const controller = new AbortController();
+  abortController?.abort();
   abortController = controller;
 
   try {
