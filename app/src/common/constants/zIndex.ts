@@ -18,4 +18,5 @@
 export const OVERLAY_PANEL_Z_INDEX = 100 as const;
 export const MODAL_Z_INDEX = 110 as const;
 export const MODAL_POPUP_Z_INDEX = 111 as const;
+export const NOTIFICATION_Z_INDEX = 112 as const;
 export const SCREEN_LOCK_Z_INDEX = 120 as const;

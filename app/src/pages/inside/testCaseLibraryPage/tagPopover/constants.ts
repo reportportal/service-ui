@@ -14,15 +14,4 @@
  * limitations under the License.
  */
 
-import { getNextDuplicateName } from 'common/utils';
-
-import { NAME_FIELD_MAX_LENGTH } from '../createMilestoneModal/constants';
-
-/**
- * Builds the next name when duplicating a milestone:
- * "My milestone" → "My milestone (1)"
- * "My milestone (1)" → "My milestone (2)"
- * Truncates the base name when base + suffix would exceed max length.
- */
-export const getNextDuplicateMilestoneName = (currentName: string): string =>
-  getNextDuplicateName(currentName, NAME_FIELD_MAX_LENGTH);
+export const TAG_MAX_LENGTH = 255;

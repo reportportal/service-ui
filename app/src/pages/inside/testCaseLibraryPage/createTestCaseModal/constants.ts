@@ -10,3 +10,5 @@ export const TEST_CASE_FORM_INITIAL_VALUES = {
   attributes: [],
   requirements: [{ id: uniqueId(), value: '' }],
 };
+
+export const NAME_FIELD_MAX_LENGTH = 255;

@@ -20,7 +20,7 @@ import { useTracking } from 'react-tracking';
 import { reduxForm, InjectedFormProps } from 'redux-form';
 
 import { TEST_CASE_LIBRARY_EVENTS } from 'analyticsEvents/testCaseLibraryPageEvents';
-import { commonValidators } from 'common/utils';
+import { commonValidators, getNextDuplicateName } from 'common/utils';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { withModal } from 'controllers/modal';
 import { UseModalData } from 'common/hooks';
@@ -29,7 +29,10 @@ import { ExtendedTestCase } from 'types/testCase';
 import { commonMessages } from '../commonMessages';
 import { CreateTestCaseFormData } from '../types';
 import { TestCaseModal } from '../createTestCaseModal/testCaseModal/testCaseModal';
-import { TEST_CASE_FORM_INITIAL_VALUES } from '../createTestCaseModal/constants';
+import {
+  NAME_FIELD_MAX_LENGTH,
+  TEST_CASE_FORM_INITIAL_VALUES,
+} from '../createTestCaseModal/constants';
 import { useTestCase } from '../hooks/useTestCase';
 import { useTestCaseFormInitialization } from '../hooks/useTestCaseFormInitialization';
 
@@ -65,7 +68,10 @@ const DuplicateSelectedTestCaseModal = reduxForm<
 
   const initializeWithNameSuffix = useCallback(
     (values: Partial<CreateTestCaseFormData>) => {
-      initialize({ ...values, name: `${testCase?.name ?? ''} (1)` });
+      initialize({
+        ...values,
+        name: getNextDuplicateName(testCase?.name ?? '', NAME_FIELD_MAX_LENGTH),
+      });
     },
     [initialize, testCase?.name],
   );
