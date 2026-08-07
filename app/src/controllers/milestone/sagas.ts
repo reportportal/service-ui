@@ -66,8 +66,9 @@ function* getMilestones(action: GetMilestonesAction): Generator {
       }),
     );
   } catch (error) {
-    // Ignore abort errors
-    if (error instanceof Error && error.message !== 'REQUEST_CANCELED') {
+    const isCancellation = error instanceof Error && error.message === 'REQUEST_CANCELED';
+
+    if (!isCancellation) {
       yield put(fetchErrorAction(MILESTONES_NAMESPACE, error));
       yield put(
         showErrorNotification({
