@@ -22,6 +22,8 @@ export const CREATE_MILESTONE_FORM_NAME = 'create-milestone-modal-form';
 
 export const NAME_FIELD = 'name';
 
+export const NAME_FIELD_MAX_LENGTH = 255;
+
 export const INITIAL_MILESTONE_FORM_VALUES: MilestoneFormValues = {
   name: '',
   type: '',

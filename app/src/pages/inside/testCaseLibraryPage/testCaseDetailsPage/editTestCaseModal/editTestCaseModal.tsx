@@ -30,6 +30,7 @@ import { commonValidators } from 'common/utils/validation';
 import { useModalButtons } from 'hooks/useModalButtons';
 
 import { FieldErrorHint, FieldProvider } from 'components/fields';
+import { NAME_FIELD_MAX_LENGTH } from '../../createTestCaseModal/constants';
 import { UpdateTestCasePayload } from '../../hooks/useTestCaseMutations';
 import { useTestCase } from '../../hooks/useTestCase';
 import { messages } from '../messages';
@@ -95,6 +96,7 @@ const EditTestCaseModal = ({
               label={formatMessage(commonMessages.testCaseName)}
               defaultWidth={false}
               isRequired
+              maxLength={NAME_FIELD_MAX_LENGTH}
             />
           </FieldErrorHint>
         </FieldProvider>

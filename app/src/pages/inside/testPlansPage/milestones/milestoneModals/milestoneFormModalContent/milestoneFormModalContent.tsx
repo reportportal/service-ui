@@ -24,7 +24,7 @@ import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { FieldErrorHint, FieldProvider } from 'components/fields';
 
 import { createMilestoneModalMessages } from '../createMilestoneModal/messages';
-import { NAME_FIELD } from '../createMilestoneModal/constants';
+import { NAME_FIELD, NAME_FIELD_MAX_LENGTH } from '../createMilestoneModal/constants';
 import {
   endDateDaysAfterStart,
   endDateMonthsAfterStart,
@@ -99,6 +99,7 @@ export const MilestoneFormModalContent = ({
               label={formatMessage(COMMON_LOCALE_KEYS.NAME)}
               defaultWidth={false}
               isRequired
+              maxLength={NAME_FIELD_MAX_LENGTH}
             />
           </FieldErrorHint>
         </FieldProvider>

@@ -33,5 +33,8 @@ $Z-INDEX-MODAL: 110;
 // Portaled autocomplete/dropdown menus above modals.
 $Z-INDEX-MODAL-POPUP: 111;
 
+// Toast notifications above modals and their popups.
+$Z-INDEX-NOTIFICATION: 112;
+
 // Topmost app overlay — must cover modals, popups, and side panels during async operations.
 $Z-INDEX-SCREEN-LOCK: 120;

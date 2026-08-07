@@ -23,6 +23,7 @@ import { createClassnames } from 'common/utils';
 import { SearchField } from 'components/fields/searchField';
 import { Tag } from 'types/testCase';
 
+import { TAG_MAX_LENGTH } from './constants';
 import { TagPopoverProps, TagError } from '../types';
 import { useTagSearch } from './useTagSearch';
 import { messages } from './messages';
@@ -147,7 +148,7 @@ export const TagPopover = ({
           className={cx('tag-popover__create-section')}
         >
           <span className={cx('tag-popover__create-value')}>{searchValue}</span>
-          <span className={cx('tag-popover__create-button-text')}>
+          <span className={cx('tag-popover__create-button')}>
             + {formatMessage(commonMessages.createNew)}
           </span>
         </Button>
@@ -195,6 +196,7 @@ export const TagPopover = ({
               filter=""
               onFilterChange={handleSearchChange}
               placeholder={formatMessage(messages.searchPlaceholder)}
+              maxLength={TAG_MAX_LENGTH}
               isFullWidth
               isAlwaysActive
             />

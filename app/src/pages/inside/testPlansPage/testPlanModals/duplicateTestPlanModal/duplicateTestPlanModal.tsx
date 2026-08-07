@@ -17,9 +17,11 @@
 import { useIntl } from 'react-intl';
 
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
+import { getNextDuplicateName } from 'common/utils';
 import type { TestPlanDto } from 'controllers/testPlan/types';
 
 import { TestPlanModal } from '../testPlanModal';
+import { NAME_FIELD_MAX_LENGTH } from '../constants';
 import { commonMessages } from '../../commonMessages';
 import { useDuplicateTestPlan } from './useDuplicateTestPlan';
 
@@ -45,7 +47,7 @@ export const DuplicateTestPlanModal = ({ data, onSuccess }: DuplicateTestPlanMod
       isLoading={isLoading}
       formName="duplicate-test-plan-modal-form"
       initialValues={{
-        name: `${data.name} (1)`,
+        name: getNextDuplicateName(data.name, NAME_FIELD_MAX_LENGTH),
         description: data.description,
         attributes: data.attributes || [],
       }}

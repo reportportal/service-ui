@@ -33,6 +33,12 @@ import { TestPlanAttributes } from './testPlanAttributes';
 import { messages } from './messages';
 
 import styles from './testPlanModal.scss';
+import {
+  DESCRIPTION_FIELD,
+  DESCRIPTION_FIELD_MAX_LENGTH,
+  NAME_FIELD,
+  NAME_FIELD_MAX_LENGTH,
+} from '../constants';
 
 const cx = createClassnames(styles);
 
@@ -115,25 +121,35 @@ const TestPlanModalComponent = ({
       cancelButton={cancelButton}
       allowCloseOutside={!dirty}
       onClose={() => dispatch(hideModalAction())}
+      scrollable
     >
       <div className={cx('test-plan-modal__content-wrapper')}>
         <form onSubmit={handleSubmit(onSubmit) as (event: FormEvent) => void}>
           <div className={cx('test-plan-modal__container')}>
-            <FieldProvider name="name" placeholder={formatMessage(messages.enterTestPlanName)}>
+            <FieldProvider
+              name={NAME_FIELD}
+              placeholder={formatMessage(messages.enterTestPlanName)}
+            >
               <FieldErrorHint provideHint={false}>
                 <FieldText
                   label={formatMessage(COMMON_LOCALE_KEYS.NAME)}
                   defaultWidth={false}
                   isRequired
+                  maxLength={NAME_FIELD_MAX_LENGTH}
                 />
               </FieldErrorHint>
             </FieldProvider>
             <FieldProvider
-              name="description"
+              name={DESCRIPTION_FIELD}
               placeholder={formatMessage(messages.addTestPlanDescription)}
             >
               <FieldErrorHint provideHint={false}>
-                <FieldTextFlex label={formatMessage(commonMessages.description)} value="" />
+                <FieldTextFlex
+                  label={formatMessage(commonMessages.description)}
+                  value=""
+                  maxLength={DESCRIPTION_FIELD_MAX_LENGTH}
+                  maxLengthDisplay={DESCRIPTION_FIELD_MAX_LENGTH}
+                />
               </FieldErrorHint>
             </FieldProvider>
             <TestPlanAttributes />
