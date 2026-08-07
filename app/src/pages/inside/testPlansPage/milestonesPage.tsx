@@ -40,6 +40,7 @@ import {
 } from 'controllers/milestone';
 import { useUserPermissions } from 'hooks/useUserPermissions';
 import { useQueryParams } from 'common/hooks';
+import { isAuthorizedSelector } from 'controllers/auth';
 
 import {
   EmptyMilestones,
@@ -69,6 +70,7 @@ export const MilestonesPage = () => {
   ) as ProjectDetails;
   const milestones = useSelector(milestonesSelector);
   const milestonesLoading = useSelector(milestonesLoadingSelector);
+  const isAuthorized = useSelector(isAuthorizedSelector);
   const projectLink = { type: PROJECT_DASHBOARD_PAGE, payload: { organizationSlug, projectSlug } };
   const breadcrumbDescriptors = [
     { id: 'project', title: <PreservedText>{projectName}</PreservedText>, link: projectLink },
@@ -77,10 +79,10 @@ export const MilestonesPage = () => {
   const queryParams = useMemo(() => ({ offset, limit }), [offset, limit]);
 
   useEffect(() => {
-    if (isUndefined(milestones) && !milestonesLoading) {
+    if (isUndefined(milestones) && !milestonesLoading && isAuthorized) {
       dispatch(getMilestonesAction(queryParams));
     }
-  }, [dispatch, milestones, milestonesLoading, queryParams]);
+  }, [dispatch, milestones, milestonesLoading, queryParams, isAuthorized]);
 
   const hasTrackedViewRef = useRef(false);
 
@@ -139,8 +141,8 @@ export const MilestonesPage = () => {
                 variant="text"
                 data-automation-id="refreshPageButton"
                 icon={<RefreshIcon />}
-                disabled={loading}
-                onClick={() => dispatch(getMilestonesAction(queryParams))}
+                disabled={loading || !isAuthorized}
+                onClick={() => isAuthorized && dispatch(getMilestonesAction(queryParams))}
               >
                 {formatMessage(commonMessages.refreshPage)}
               </Button>

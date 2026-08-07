@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { takeLatest, call, select, all, put } from 'redux-saga/effects';
+import { call, select, all, put, takeEvery, takeLatest } from 'redux-saga/effects';
 
 import { URLS } from 'common/urls';
 import { fetch } from 'common/utils';
@@ -22,6 +22,7 @@ import { fetchSuccessAction, fetchErrorAction } from 'controllers/fetch';
 import { FETCH_START } from 'controllers/fetch/constants';
 import { showErrorNotification } from 'controllers/notification';
 import { projectKeySelector } from 'controllers/project';
+import { LOGOUT } from 'controllers/auth';
 
 import {
   GET_MILESTONES,
@@ -31,7 +32,13 @@ import {
 } from './constants';
 import type { GetMilestonesAction } from './types';
 
+let abortController: AbortController | undefined;
+
 function* getMilestones(action: GetMilestonesAction): Generator {
+  const controller = new AbortController();
+  abortController?.abort();
+  abortController = controller;
+
   try {
     const projectKey = (yield select(projectKeySelector)) as string;
 
@@ -49,7 +56,9 @@ function* getMilestones(action: GetMilestonesAction): Generator {
         }
       : defaultMilestoneQueryParams;
 
-    const data = (yield call(fetch, URLS.tmsMilestone(projectKey, params))) as TmsMilestonePageRS;
+    const data = (yield call(fetch, URLS.tmsMilestone(projectKey, params), {
+      signal: controller.signal,
+    })) as TmsMilestonePageRS;
 
     yield put(
       fetchSuccessAction(MILESTONES_NAMESPACE, {
@@ -57,17 +66,28 @@ function* getMilestones(action: GetMilestonesAction): Generator {
       }),
     );
   } catch (error) {
-    yield put(fetchErrorAction(MILESTONES_NAMESPACE, error));
-    yield put(
-      showErrorNotification({
-        messageId: 'milestoneLoadingFailed',
-      }),
-    );
+    const isCancellation = error instanceof Error && error.message === 'REQUEST_CANCELED';
+
+    if (!isCancellation) {
+      yield put(fetchErrorAction(MILESTONES_NAMESPACE, error));
+      yield put(
+        showErrorNotification({
+          messageId: 'milestoneLoadingFailed',
+        }),
+      );
+    }
   }
+}
+
+function handleLogoutDuringMilestonesFetch(): void {
+  const controller = abortController;
+  abortController = undefined;
+  controller?.abort();
 }
 
 function* watchGetMilestones() {
   yield takeLatest(GET_MILESTONES, getMilestones);
+  yield takeEvery(LOGOUT, handleLogoutDuringMilestonesFetch);
 }
 
 export function* milestoneSagas() {
