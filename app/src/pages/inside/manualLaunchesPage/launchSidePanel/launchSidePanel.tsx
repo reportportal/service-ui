@@ -208,7 +208,9 @@ export const LaunchSidePanel = memo(
             <div className={cx('meta-item-row')}>
               <TestPlanIcon />
               <span className={cx('meta-label')}>{formatMessage(messages.testPlan)}:</span>
-              <span className={cx('meta-value')}>{testPlan.name}</span>
+              <span className={cx('meta-value')} title={testPlan.name}>
+                {testPlan.name}
+              </span>
             </div>
           </div>
         )}

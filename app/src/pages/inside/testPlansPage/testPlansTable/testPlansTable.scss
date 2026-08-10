@@ -125,6 +125,8 @@ $milestone-test-plan-table-progress-column-inline-pad: 0;
     align-items: baseline;
     column-gap: 8px;
     min-width: 0;
+    max-width: 100%;
+    overflow: hidden;
     text-align: left;
   }
 
@@ -144,7 +146,10 @@ $milestone-test-plan-table-progress-column-inline-pad: 0;
 
     flex: 1;
     min-width: 0;
+    overflow: hidden;
     text-align: left;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
 
   &__coverage-ratio {
@@ -218,6 +223,8 @@ $milestone-test-plan-table-progress-column-inline-pad: 0;
     justify-content: flex-start;
     width: 100%;
     max-width: 100%;
+    min-width: 0;
+    overflow: hidden;
     text-align: left;
     background: transparent;
     font: inherit;

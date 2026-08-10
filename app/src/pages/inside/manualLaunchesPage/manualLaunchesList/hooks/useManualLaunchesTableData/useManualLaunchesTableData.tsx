@@ -177,6 +177,7 @@ export const useManualLaunchesTableData = (
                       'manual-launches-list-table-cell-hoverable',
                     )}
                     type="button"
+                    title={name}
                   >
                     {name}
                   </button>

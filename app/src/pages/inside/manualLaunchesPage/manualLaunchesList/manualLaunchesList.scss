@@ -142,9 +142,16 @@
     &__details-button {
       @include mixins.button-reset();
 
+      display: block;
+      max-width: 100%;
+      min-width: 0;
+      overflow: hidden;
       color: var(--rp-ui-base-almost-black);
       border-radius: 50%;
       margin: 8px 0;
+      text-align: left;
+      text-overflow: ellipsis;
+      white-space: nowrap;
     }
 
     &-cell-launch-id {
@@ -172,7 +179,9 @@
 
 .cell-content {
   width: 100%;
+  min-width: 0;
   height: 100%;
+  overflow: hidden;
   cursor: pointer;
   display: flex;
   align-items: center;

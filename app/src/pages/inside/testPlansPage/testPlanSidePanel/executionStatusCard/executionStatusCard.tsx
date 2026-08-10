@@ -51,7 +51,9 @@ export const ExecutionStatusCard = memo(({ executions }: ExecutionStatusProps) =
     <div className={cx('execution-status-wrapper')}>
       {executions.map((execution) => (
         <div key={`${execution.launch.name}-${execution.status}`} className={cx('execution-item')}>
-          <span className={cx('execution-title')}>{execution.launch.name}</span>
+          <span className={cx('execution-title')} title={execution.launch.name}>
+            {execution.launch.name}
+          </span>
           <div
             className={cx(
               'status-indicator',

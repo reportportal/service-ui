@@ -188,7 +188,9 @@ export const TestCaseDetailsHeader = ({
       </div>
       <div className={cx('header__title')}>
         <PriorityIcon priority={testCasePriority} className={cx('header__title-icon')} />
-        {testCase.name}
+        <span className={cx('header__title-text')} title={testCase.name}>
+          {testCase.name}
+        </span>
         {canManageTestCases && (
           <button
             type="button"

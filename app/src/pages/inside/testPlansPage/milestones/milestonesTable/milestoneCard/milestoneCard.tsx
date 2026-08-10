@@ -106,7 +106,9 @@ export const MilestoneCard = ({
             </span>
             <MilestoneTypeIcon type={milestone.type} />
             <div className={cx('milestone-card__title-block')}>
-              <div className={cx('milestone-card__name')}>{milestone.name}</div>
+              <div className={cx('milestone-card__name')} title={milestone.name}>
+                {milestone.name}
+              </div>
               <div className={cx('milestone-card__dates')}>{dateRange}</div>
             </div>
             <div className={cx('milestone-card__metrics')}>
