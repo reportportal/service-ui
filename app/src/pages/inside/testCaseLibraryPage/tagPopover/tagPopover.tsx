@@ -39,7 +39,6 @@ export const TagPopover = ({
   selectedTags = [],
   placement = 'bottom',
   className,
-  shouldParseSelectedTags = false,
 }: TagPopoverProps) => {
   const { formatMessage } = useIntl();
   const [searchValue, setSearchValue] = useState('');
@@ -57,12 +56,12 @@ export const TagPopover = ({
       ),
   );
   const hasAvailableTags = !isEmpty(availableTags);
-  const tagsToParse = shouldParseSelectedTags ? selectedTags : [...allTags, ...selectedTags];
   const isTagNameAlreadyAdded =
-    hasSearchValue && tagsToParse.some((tag) => normalizeTagKey(tag.key) === normalizedSearchValue);
-  const isTagNameExist = shouldParseSelectedTags
-    ? allTags.some((tag) => normalizeTagKey(tag.key) === normalizedSearchValue)
-    : false;
+    hasSearchValue &&
+    selectedTags.some((tag) => normalizeTagKey(tag.key) === normalizedSearchValue);
+  const isTagNameExist = allTags.some(
+    (tag) => normalizeTagKey(tag.key) === normalizedSearchValue,
+  );
 
   const handleSearchChange = (value: string) => {
     setSearchValue(value);

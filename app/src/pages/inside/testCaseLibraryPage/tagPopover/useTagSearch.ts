@@ -83,27 +83,29 @@ export const useTagSearch = (searchValue: string = '') => {
 
   const createTag = useCallback(
     (tagKey: string, selectedTags: Tag[] = []) => {
-      const tagExists = allTags.some((tag) => tag.key.toLowerCase() === tagKey.toLowerCase());
+      const existingTag = allTags.find(
+        (tag) => tag.key.toLowerCase() === tagKey.toLowerCase(),
+      );
       const tagAlreadySelected = selectedTags.some(
         (tag) => tag.key.toLowerCase() === tagKey.toLowerCase(),
       );
 
-      if (tagExists || tagAlreadySelected) {
+      if (tagAlreadySelected) {
         setError(TagError.TAG_ALREADY_ADDED);
         return null;
       }
 
+      if (existingTag) {
+        setError(null);
+        return existingTag;
+      }
+
       setError(null);
 
-      const newTag: Tag = {
+      return {
         id: -Date.now(),
         key: tagKey,
       };
-
-      setAllTags((prevTags) => [...prevTags, newTag]);
-      setTags((prevTags) => [...prevTags, newTag]);
-
-      return newTag;
     },
     [allTags],
   );
