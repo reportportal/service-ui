@@ -79,6 +79,14 @@ export const settingsMessages = defineMessages({
     id: 'GeneralTab.day1',
     defaultMessage: '1 day',
   },
+  day2: {
+    id: 'GeneralTab.day2',
+    defaultMessage: '2 days',
+  },
+  day5: {
+    id: 'GeneralTab.day5',
+    defaultMessage: '5 days',
+  },
   week1: {
     id: 'GeneralTab.week1',
     defaultMessage: '7 days',
