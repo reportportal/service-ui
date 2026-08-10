@@ -46,8 +46,15 @@
     min-width: 0;
   }
 
-  &__title {
+  &__title-group {
+    display: flex;
     flex: 1;
+    gap: 8px;
+    align-items: center;
+    min-width: 0;
+  }
+
+  &__title {
     min-width: 0;
     margin: 0;
     overflow: hidden;
