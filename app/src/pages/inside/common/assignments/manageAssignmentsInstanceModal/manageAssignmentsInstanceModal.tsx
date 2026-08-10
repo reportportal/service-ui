@@ -358,7 +358,7 @@ const ManageAssignmentsInstanceModalView = ({
   const renderDocumentationLink = useCallback(
     (chunks: ReactNode) => (
       <ExternalLink
-        href={referenceDictionary.rpDoc}
+        href={referenceDictionary.manageAssignmentInstanceLevel}
         variant="compact"
         isColoredIcon={false}
         onClick={() => trackEvent(ALL_USERS_PAGE_EVENTS.MANAGE_ASSIGNMENTS_DOCUMENTATION)}
