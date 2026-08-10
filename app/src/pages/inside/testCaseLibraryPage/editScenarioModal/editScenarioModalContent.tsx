@@ -20,6 +20,10 @@ import { createClassnames } from 'common/utils';
 import { ModalLoadingOverlay } from 'components/modalLoadingOverlay';
 
 import { useModalActions } from '../hooks/useModalActions';
+import {
+  AttachmentValidationProvider,
+  useAttachmentValidation,
+} from '../createTestCaseModal/attachmentValidationContext';
 import { ScenarioFields } from './scenarioFields';
 import { EditScenarioModalContentProps } from './types';
 
@@ -27,7 +31,7 @@ import styles from './editScenarioModal.scss';
 
 const cx = createClassnames(styles);
 
-export const EditScenarioModalContent = ({
+const EditScenarioModalContentInner = ({
   title,
   submitButtonText,
   isLoading,
@@ -37,10 +41,12 @@ export const EditScenarioModalContent = ({
   allowCloseOutside: allowCloseOutsideFromProps,
   handleSubmit,
 }: EditScenarioModalContentProps) => {
+  const { hasBlockingAttachments } = useAttachmentValidation();
   const { okButton, cancelButton, handleClose, handleFormSubmit } = useModalActions({
     submitButtonText,
     isLoading,
     pristine,
+    hasBlockingAttachments,
     handleSubmit,
     onSubmitHandler,
   });
@@ -67,3 +73,9 @@ export const EditScenarioModalContent = ({
     </Modal>
   );
 };
+
+export const EditScenarioModalContent = (props: EditScenarioModalContentProps) => (
+  <AttachmentValidationProvider>
+    <EditScenarioModalContentInner {...props} />
+  </AttachmentValidationProvider>
+);

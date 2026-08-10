@@ -60,6 +60,8 @@ interface CreateFolderAutocompleteProps {
   menuClassName?: string;
   onStateChange?: SingleAutocompleteOnStateChange;
   onChange?: (value: FolderWithFullPath | NewFolderData) => void;
+  onBlur?: () => void;
+  onFocus?: () => void;
 }
 
 export const CreateFolderAutocomplete = ({
@@ -80,6 +82,8 @@ export const CreateFolderAutocomplete = ({
   menuClassName,
   onStateChange = noop,
   onChange = noop,
+  onBlur = noop,
+  onFocus = noop,
 }: CreateFolderAutocompleteProps) => {
   const { formatMessage } = useIntl();
   const [inputValue, setInputValue] = useState('');
@@ -216,8 +220,8 @@ export const CreateFolderAutocomplete = ({
         parseValueToString={parseValueToString}
         onStateChange={handleStateChange}
         onChange={handleChange}
-        onBlur={noop}
-        onFocus={noop}
+        onBlur={onBlur}
+        onFocus={onFocus}
       />
     </div>
   );

@@ -57,6 +57,7 @@ const DuplicateSelectedTestCaseModal = reduxForm<
 })(({
   data,
   initialize,
+  invalid,
   handleSubmit,
 }: UseModalData<DuplicateSelectedTestCaseModalProps> &
   InjectedFormProps<CreateTestCaseFormData, DuplicateSelectedTestCaseModalProps>) => {
@@ -96,6 +97,7 @@ const DuplicateSelectedTestCaseModal = reduxForm<
   return (
     <TestCaseModal
       pristine={!isInitialized}
+      invalid={invalid}
       handleSubmit={handleSubmit}
       title={formatMessage(commonMessages.duplicateTestCase)}
       submitButtonText={formatMessage(COMMON_LOCALE_KEYS.DUPLICATE)}

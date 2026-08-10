@@ -34,6 +34,8 @@ interface UseModalActionsParams {
   submitButtonText: string;
   isLoading: boolean;
   pristine?: boolean;
+  invalid?: boolean;
+  hasBlockingAttachments?: boolean;
   handleSubmit: (
     handler: (formData: CreateTestCaseFormData) => void | Promise<void>,
   ) => (event: FormEvent) => void;
@@ -51,6 +53,8 @@ export const useModalActions = ({
   submitButtonText,
   isLoading,
   pristine,
+  invalid = false,
+  hasBlockingAttachments = false,
   handleSubmit,
   onSubmitHandler,
 }: UseModalActionsParams): UseModalActionsReturn => {
@@ -61,9 +65,17 @@ export const useModalActions = ({
     () => ({
       children: <LoadingSubmitButton isLoading={isLoading}>{submitButtonText}</LoadingSubmitButton>,
       onClick: handleSubmit(onSubmitHandler) as (event: MouseEvent<HTMLButtonElement>) => void,
-      disabled: Boolean(isLoading || pristine),
+      disabled: Boolean(isLoading || pristine || invalid || hasBlockingAttachments),
     }),
-    [isLoading, pristine, submitButtonText, handleSubmit, onSubmitHandler],
+    [
+      isLoading,
+      pristine,
+      invalid,
+      hasBlockingAttachments,
+      submitButtonText,
+      handleSubmit,
+      onSubmitHandler,
+    ],
   );
 
   const cancelButton: ModalButton = useMemo(
