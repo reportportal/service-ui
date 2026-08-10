@@ -65,8 +65,11 @@ interface ManageAssignmentsOrganizationModalOwnProps {
 }
 
 const renderDescriptionLink = (chunks: ReactNode) => (
-  // TODO: currently the link does not lead anywhere, as the url is not clarified yet.
-  <ExternalLink href={referenceDictionary.rpDoc} variant="compact" isColoredIcon={false}>
+  <ExternalLink
+    href={referenceDictionary.manageAssignmentOrgLevel}
+    variant="compact"
+    isColoredIcon={false}
+  >
     {chunks}
   </ExternalLink>
 );
@@ -316,7 +319,7 @@ const FormWrapper = reduxForm<
     assignmentsData: UserOrganizationProjectsResponse | null;
     assignmentsLoading: boolean;
     assignmentsUpdateLoading: boolean;
-    isAddingProject: boolean
+    isAddingProject: boolean;
   }
 >({
   form: MANAGE_ASSIGNMENTS_FORM,

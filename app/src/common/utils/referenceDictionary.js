@@ -66,6 +66,10 @@ export const referenceDictionary = {
     'https://reportportal.io/pricing/saas/?utm_source=trigger&utm_medium=product&utm_campaign=promo_page&utm_content=cloud_version',
   rpExplorePremiumFeaturesCloud:
     'https://reportportal.io/docs/terms-and-conditions/PremiumFeatures/?utm_source=trigger&utm_medium=product&utm_campaign=promo_page&utm_content=cloud_version',
+  manageAssignmentOrgLevel:
+    'https://reportportal.io/docs/configuration/organization-level/OrganizationUsers#manage-assignments',
+  manageAssignmentInstanceLevel:
+    'https://reportportal.io/docs/configuration/instance-level/AllUsers#manage-assignments',
 };
 
 export const docsReferences = {
