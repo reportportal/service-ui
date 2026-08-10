@@ -59,10 +59,13 @@
   }
 
   &__name {
+    overflow: hidden;
     font-weight: var(--rp-ui-base-fw-medium);
     font-size: 15px;
     line-height: 20px;
     color: var(--rp-ui-color-text);
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
 
   &__dates {
@@ -74,6 +77,7 @@
 
   &__metrics {
     display: flex;
+    flex-shrink: 0;
     gap: 24px;
     align-items: center;
   }

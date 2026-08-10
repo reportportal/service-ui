@@ -102,7 +102,13 @@ export const TestPlansTable = ({
   };
 
   const getOpenTestPlanDetailsButton = useCallback(
-    (testPlanId: number, testPlanName: string, children: ReactNode, kind: TestPlanRowClickKind) => (
+    (
+      testPlanId: number,
+      testPlanName: string,
+      children: ReactNode,
+      kind: TestPlanRowClickKind,
+      title?: string,
+    ) => (
       <button
         type="button"
         className={cx('milestone-test-plan-table__table-cell-clickable', {
@@ -110,6 +116,7 @@ export const TestPlansTable = ({
           'milestone-test-plan-table__table-cell-clickable_chevron': kind === 'chevron',
         })}
         aria-label={formatMessage(messages.viewTestPlanDetails, { testPlanName })}
+        title={title}
         onClick={() => handleRowClick(testPlanId, kind)}
       >
         {children}
@@ -173,7 +180,13 @@ export const TestPlansTable = ({
           testPlanName: {
             ...row.testPlanName,
             content: contentForRow,
-            component: getOpenTestPlanDetailsButton(row.id as number, testPlanName, nameCell, 'name'),
+            component: getOpenTestPlanDetailsButton(
+              row.id as number,
+              testPlanName,
+              nameCell,
+              'name',
+              contentForRow,
+            ),
           },
           icon: {
             component: getOpenTestPlanDetailsButton(

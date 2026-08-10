@@ -266,7 +266,9 @@ export const TestCaseSidePanel = memo(
           <div className={cx('header-top')}>
             <div className={cx('test-case-name')}>
               <PriorityIcon priority={testCase.priority} className={cx('priority-icon')} />
-              <span className={cx('test-name')}>{testCase.name}</span>
+              <span className={cx('test-name')} title={testCase.name}>
+                {testCase.name}
+              </span>
             </div>
             <button
               type="button"

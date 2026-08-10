@@ -219,7 +219,10 @@ export const ManualLaunchExecutionPage = () => {
       <span className={cx('manual-launch-execution-page__title-business-id')}>
         {execution.testCaseDisplayId}
       </span>
-      <span className={cx('manual-launch-execution-page__title-name')}>
+      <span
+        className={cx('manual-launch-execution-page__title-name')}
+        title={execution.testCaseName}
+      >
         {execution.testCaseName}
       </span>
     </span>

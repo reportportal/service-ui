@@ -15,7 +15,7 @@
  */
 
 import { ReactNode } from 'react';
-import { Breadcrumbs } from '@reportportal/ui-kit';
+import { Breadcrumbs, useEllipsisTitle } from '@reportportal/ui-kit';
 import { VoidFn } from '@reportportal/ui-kit/common';
 
 import { useBreadCrumbsTree } from 'common/hooks';
@@ -46,6 +46,8 @@ export const PageHeaderWithBreadcrumbsAndActions = ({
   actionsClassName,
 }: PageHeaderWithBreadcrumbsAndActionsProps) => {
   const breadcrumbsTree = useBreadCrumbsTree();
+  const stringTitle = typeof title === 'string' ? title : undefined;
+  const { ref: titleRef, title: ellipsisTitle } = useEllipsisTitle(stringTitle);
 
   return (
     <header className={cx('page-header-with-breadcrumbs-and-actions')}>
@@ -57,7 +59,13 @@ export const PageHeaderWithBreadcrumbsAndActions = ({
         />
       </div>
       <div className={cx('page-header-with-breadcrumbs-and-actions__title-row')}>
-        <h1 className={cx('page-header-with-breadcrumbs-and-actions__title')}>{title}</h1>
+        <h1
+          ref={titleRef}
+          title={ellipsisTitle}
+          className={cx('page-header-with-breadcrumbs-and-actions__title')}
+        >
+          {title}
+        </h1>
         {actions && (
           <div className={cx('page-header-with-breadcrumbs-and-actions__actions', actionsClassName)}>
             {actions}

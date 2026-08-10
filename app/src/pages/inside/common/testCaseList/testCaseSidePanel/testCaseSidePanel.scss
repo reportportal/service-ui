@@ -40,6 +40,8 @@
       align-items: flex-start;
       justify-content: space-between;
       margin-bottom: 8px;
+      gap: 8px;
+      min-width: 0;
     }
 
     &-meta {
@@ -53,6 +55,8 @@
     display: flex;
     align-items: flex-start;
     gap: 8px;
+    min-width: 0;
+    flex: 1;
   }
 
   .meta-row {
@@ -133,8 +137,9 @@
     font-size: 20px;
     line-height: 31px;
     color: var(--rp-ui-base-almost-black);
-    overflow-wrap: break-word;
-    hyphens: auto;
+    min-width: 0;
+    overflow-wrap: anywhere;
+    word-break: break-word;
   }
 
   .close-button {
