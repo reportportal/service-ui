@@ -154,7 +154,6 @@ const BatchEditTagsModal = reduxForm<BatchEditTagsModalFormValues, BatchEditTags
           {formatMessage(messages.batchEditTagsModalAddButton)}
         </Button>
       }
-      shouldParseSelectedTags
     />
   );
 
