@@ -51,6 +51,7 @@ import {
   useDuplicateMilestoneModal,
   useEditMilestoneModal,
 } from './milestones';
+import { BetaBadge } from '../common/betaBadge';
 import { PageHeaderWithBreadcrumbsAndActions } from '../common/pageHeaderWithBreadcrumbsAndActions';
 import { commonMessages } from './commonMessages';
 
@@ -134,6 +135,7 @@ export const MilestonesPage = () => {
       <ScrollWrapper resetRequired>
         <PageHeaderWithBreadcrumbsAndActions
           title={formatMessage(commonMessages.pageTitle)}
+          titleAddon={<BetaBadge />}
           breadcrumbDescriptors={breadcrumbDescriptors}
           actions={
             <>

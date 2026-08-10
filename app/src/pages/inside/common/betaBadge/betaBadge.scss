@@ -1,5 +1,5 @@
 /*!
- * Copyright 2019 EPAM Systems
+ * Copyright 2026 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,19 +14,30 @@
  * limitations under the License.
  */
 
+.beta-badge-wrapper {
+  max-width: fit-content;
+  flex-shrink: 0;
+  align-self: baseline;
+}
+
+.tooltip-content {
+  width: 308px;
+}
+
 .beta-badge {
-  position: absolute;
-  top: -2px;
-  right: -18px;
-  padding: 1.8px 5.4px 2.7px 5.4px;
-  border-radius: 12px;
-  background: $COLOR--dark-pastel-green;
-  color: $COLOR--white-two;
-  font-size: 9px;
-  line-height: 9px;
-  text-transform: none;
-  font-family: $FONT-REGULAR;
-  @media (max-width: $SCREEN_XS_MAX) {
-    display: none;
-  }
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 39px;
+  height: 20px;
+  padding: 2px 8px;
+  border: 1px solid var(--rp-ui-base-test-execution-status-passed);
+  border-radius: 6px;
+  color: var(--rp-ui-base-test-execution-status-passed);
+  font-family: var(--rp-ui-base-font-family);
+  font-size: 11px;
+  font-weight: var(--rp-ui-base-fw-bold);
+  line-height: 16px;
+  white-space: nowrap;
+  box-sizing: border-box;
 }

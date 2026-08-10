@@ -46,6 +46,7 @@ import {
 import { areFoldersLoadingSelector, foldersSelector, isLoadingFilteredFoldersSelector } from 'controllers/testCase';
 import { useUserPermissions } from 'hooks/useUserPermissions';
 import { SearchField } from 'components/fields/searchField';
+import { BetaBadge } from 'pages/inside/common/betaBadge';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
 import { TestCasePageDefaultValues } from 'pages/inside/common/testCaseList/constants';
 import {
@@ -200,8 +201,11 @@ export const TestCaseLibraryPage = () => {
                 LinkComponent={NavLink}
               />
             </div>
-            <div className={cx('test-case-library-page__title')}>
-              {formatMessage(commonMessages.testCaseLibraryHeader)}
+            <div className={cx('test-case-library-page__title-group')}>
+              <div className={cx('test-case-library-page__title')}>
+                {formatMessage(commonMessages.testCaseLibraryHeader)}
+              </div>
+              <BetaBadge />
             </div>
             <div className={cx('test-case-library-page__right-section')}>
               <div className={cx('test-case-library-page__actions')}>

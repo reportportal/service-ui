@@ -58,6 +58,7 @@ import { ManualLaunchesPageContent } from './manualLaunchesPageContent';
 import { commonMessages } from '../testPlansPage/commonMessages';
 import { ITEMS_PER_PAGE_OPTIONS } from './manualLaunchesList/contants';
 import { useURLBoundPagination } from '../common/testCaseList/useURLBoundPagination';
+import { BetaBadge } from '../common/betaBadge';
 import { PageHeaderWithBreadcrumbsAndActions } from '../common/pageHeaderWithBreadcrumbsAndActions';
 import {
   ManualLaunchesFilterSidePanel,
@@ -219,6 +220,7 @@ export const ManualLaunchesPage = () => {
       <ScrollWrapper resetRequired>
         <PageHeaderWithBreadcrumbsAndActions
           title={formatMessage(messages.manualLaunchesTitle)}
+          titleAddon={<BetaBadge />}
           breadcrumbDescriptors={breadcrumbDescriptors}
           {...((!isEmpty(content) || appliedSearchQuery || searchValue || isLoading || hasActiveFilters) && {
             actions: (
