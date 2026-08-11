@@ -18,13 +18,13 @@ import PropTypes from 'prop-types';
 import { Layout } from 'layouts/common/layout';
 import { HeaderLayout } from '../headerLayout';
 import { InstanceSidebar } from './instanceSidebar';
-import { ExportsBanner } from '../common/exportsBanner';
+import { AppBanner } from 'layouts/common/appBanner';
 
 export const InstanceLayout = ({ children, rawContent }) => (
   <Layout
     Header={HeaderLayout}
     Sidebar={InstanceSidebar}
-    Banner={ExportsBanner}
+    Banner={AppBanner}
     rawContent={rawContent}
   >
     {children}

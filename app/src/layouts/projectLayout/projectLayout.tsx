@@ -22,7 +22,7 @@ import { useFullSelector } from 'hooks/useTypedSelector';
 import { AppState } from 'types/store';
 import { HeaderLayout } from '../headerLayout';
 import { ProjectSidebar } from './projectSidebar';
-import { AppBanner } from './appBanner';
+import { AppBanner } from 'layouts/common/appBanner';
 
 type ProjectLayoutProps = PropsWithChildren<{
   rawContent?: boolean;
