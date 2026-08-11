@@ -93,7 +93,10 @@ export const useTestCaseTags = ({ testCaseId }: UseTestCaseTagsParams) => {
       );
 
       if (!isTagExists) {
-        const updatedAttributes = [...currentAttributes, tag];
+        const updatedAttributes = [
+          ...currentAttributes,
+          { ...tag, key: tag.key.trim().toLowerCase() },
+        ];
         await updateTestCaseTags(updatedAttributes);
       }
     },

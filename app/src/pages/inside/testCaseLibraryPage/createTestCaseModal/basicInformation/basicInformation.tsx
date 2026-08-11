@@ -58,10 +58,13 @@ export const BasicInformation = ({
 
   const handleTagSelect = useCallback(
     (tag: Attribute) => {
-      const isTagExists = attributes.some(({ key }) => key === tag.key);
+      const normalizedKey = tag.key.trim().toLowerCase();
+      const isTagExists = attributes.some(
+        ({ key }) => key.trim().toLowerCase() === normalizedKey,
+      );
 
       if (!isTagExists) {
-        const updatedAttributes = [...attributes, tag];
+        const updatedAttributes = [...attributes, { ...tag, key: normalizedKey }];
 
         dispatch(change(formName, 'attributes', updatedAttributes));
       }
@@ -71,7 +74,10 @@ export const BasicInformation = ({
 
   const handleTagRemove = useCallback(
     (tagKey: string) => {
-      const updatedAttributes = attributes.filter(({ key }) => key !== tagKey);
+      const normalizedKey = tagKey.trim().toLowerCase();
+      const updatedAttributes = attributes.filter(
+        ({ key }) => key.trim().toLowerCase() !== normalizedKey,
+      );
 
       dispatch(change(formName, 'attributes', updatedAttributes));
     },
