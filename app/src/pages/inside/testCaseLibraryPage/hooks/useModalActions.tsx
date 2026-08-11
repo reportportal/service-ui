@@ -34,6 +34,8 @@ interface UseModalActionsParams {
   submitButtonText: string;
   isLoading: boolean;
   pristine?: boolean;
+  invalid?: boolean;
+  hasBlockingAttachments?: boolean;
   handleSubmit: (
     handler: (formData: CreateTestCaseFormData) => void | Promise<void>,
   ) => (event: FormEvent) => void;
@@ -51,19 +53,23 @@ export const useModalActions = ({
   submitButtonText,
   isLoading,
   pristine,
+  invalid = false,
+  hasBlockingAttachments = false,
   handleSubmit,
   onSubmitHandler,
 }: UseModalActionsParams): UseModalActionsReturn => {
   const { formatMessage } = useIntl();
   const dispatch = useDispatch();
 
+  const isSubmitDisabled = Boolean(isLoading || pristine || invalid || hasBlockingAttachments);
+
   const okButton: ModalButton = useMemo(
     () => ({
       children: <LoadingSubmitButton isLoading={isLoading}>{submitButtonText}</LoadingSubmitButton>,
       onClick: handleSubmit(onSubmitHandler) as (event: MouseEvent<HTMLButtonElement>) => void,
-      disabled: Boolean(isLoading || pristine),
+      disabled: isSubmitDisabled,
     }),
-    [isLoading, pristine, submitButtonText, handleSubmit, onSubmitHandler],
+    [isLoading, isSubmitDisabled, submitButtonText, handleSubmit, onSubmitHandler],
   );
 
   const cancelButton: ModalButton = useMemo(
@@ -78,9 +84,17 @@ export const useModalActions = ({
     dispatch(hideModalAction());
   }, [dispatch]);
 
-  const handleFormSubmit = useMemo(
-    () => handleSubmit(onSubmitHandler) as (event: FormEvent) => void,
-    [handleSubmit, onSubmitHandler],
+  const handleFormSubmit = useCallback(
+    (event: FormEvent) => {
+      event.preventDefault();
+
+      if (isSubmitDisabled) {
+        return;
+      }
+
+      handleSubmit(onSubmitHandler)(event);
+    },
+    [handleSubmit, isSubmitDisabled, onSubmitHandler],
   );
 
   return {

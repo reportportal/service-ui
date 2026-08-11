@@ -55,6 +55,7 @@ const EditTestCaseModalComponent = ({
   data,
   initialize,
   pristine,
+  invalid,
   handleSubmit,
 }: UseModalData<EditTestCaseModalProps> &
   InjectedFormProps<CreateTestCaseFormData, EditTestCaseModalProps>) => {
@@ -96,6 +97,7 @@ const EditTestCaseModalComponent = ({
   return (
     <TestCaseModal
       pristine={!isInitialized || pristine}
+      invalid={invalid}
       handleSubmit={handleSubmit}
       title={formatMessage(commonMessages.editTestCase)}
       submitButtonText={formatMessage(COMMON_LOCALE_KEYS.SAVE)}

@@ -26,6 +26,10 @@ import { CreateTestCaseFormData } from '../../types';
 import { useModalActions } from '../../hooks/useModalActions';
 import { BasicInformation } from '../basicInformation';
 import { TestCaseDetails } from '../testCaseDetails';
+import {
+  AttachmentValidationProvider,
+  useAttachmentValidation,
+} from '../attachmentValidationContext';
 
 import styles from '../testCaseModal.scss';
 
@@ -34,6 +38,7 @@ const cx = createClassnames(styles);
 interface TestCaseModalProps extends ModalCommonProps {
   formName: string;
   pristine?: boolean;
+  invalid?: boolean;
   handleSubmit: (
     handler: (formData: CreateTestCaseFormData) => void | Promise<void>,
   ) => (event: FormEvent) => void;
@@ -41,21 +46,25 @@ interface TestCaseModalProps extends ModalCommonProps {
   isTemplateFieldDisabled?: boolean;
 }
 
-export const TestCaseModal = ({
+const TestCaseModalContent = ({
   title,
   submitButtonText,
   isLoading,
   onSubmitHandler,
   formName,
   pristine,
+  invalid = false,
   handleSubmit,
   hideFolderField = false,
   isTemplateFieldDisabled = false,
 }: TestCaseModalProps) => {
+  const { hasBlockingAttachments } = useAttachmentValidation();
   const { okButton, cancelButton, handleClose, handleFormSubmit } = useModalActions({
     submitButtonText,
     isLoading,
     pristine,
+    invalid,
+    hasBlockingAttachments,
     handleSubmit,
     onSubmitHandler,
   });
@@ -90,3 +99,9 @@ export const TestCaseModal = ({
     </Modal>
   );
 };
+
+export const TestCaseModal = (props: TestCaseModalProps) => (
+  <AttachmentValidationProvider>
+    <TestCaseModalContent {...props} />
+  </AttachmentValidationProvider>
+);
