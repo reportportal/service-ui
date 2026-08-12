@@ -15,7 +15,7 @@
  */
 
 import { Action } from 'redux';
-import { takeLatest, call, select, all, put } from 'redux-saga/effects';
+import { takeLatest, takeEvery, call, select, all, put } from 'redux-saga/effects';
 
 import { URLS } from 'common/urls';
 import { fetch } from 'common/utils';
@@ -31,6 +31,7 @@ import {
 import { projectKeySelector } from 'controllers/project';
 import { locationSelector, PROJECT_MILESTONES_PAGE } from 'controllers/pages';
 import { LocationInfo } from 'controllers/pages/typed-selectors';
+import { LOGOUT } from 'controllers/auth';
 
 import {
   GET_TEST_PLANS,
@@ -45,6 +46,8 @@ import {
 import { GetTestPlansParams, GetTestPlanParams } from './actionCreators';
 import type { TestPlanDto, TestPlanFoldersDto, TestPlanTestCaseDto } from './types';
 import { Page } from '../../types/common';
+
+let abortController: AbortController | undefined;
 
 interface GetTestPlansAction extends Action<typeof GET_TEST_PLANS> {
   payload?: GetTestPlansParams;
@@ -92,6 +95,10 @@ function* getTestPlans(action: GetTestPlansAction): Generator {
 }
 
 function* getTestPlan(action: GetTestPlanAction): Generator {
+  const controller = new AbortController();
+  abortController?.abort();
+  abortController = controller;
+
   const projectKey = (yield select(projectKeySelector)) as string;
   const location = (yield select(locationSelector)) as LocationInfo;
   const { testPlanId, offset, limit, testCasesSearchParams } = action.payload;
@@ -111,29 +118,36 @@ function* getTestPlan(action: GetTestPlanAction): Generator {
         meta: { namespace: ACTIVE_TEST_PLAN_NAMESPACE },
       });
 
-      const data = (yield call(fetch, URLS.testPlanById(projectKey, testPlanId))) as TestPlanDto;
+      const data = (yield call(fetch, URLS.testPlanById(projectKey, testPlanId), {
+        signal: controller.signal,
+      })) as TestPlanDto;
       const planFolders = (yield call(
         fetch,
         URLS.testFolders(projectKey, { 'filter.eq.testPlanId': testPlanId }),
+        { signal: controller.signal },
       )) as TestPlanFoldersDto;
 
       yield put(fetchSuccessAction(ACTIVE_TEST_PLAN_NAMESPACE, data));
       yield put(fetchSuccessAction(TEST_PLAN_FOLDERS_NAMESPACE, planFolders));
     }
   } catch (error) {
-    yield put(fetchErrorAction(ACTIVE_TEST_PLAN_NAMESPACE, error, true));
-    yield put(
-      showNotification({
-        messageId: 'testPlanRedirectWarningMessage',
-        type: NOTIFICATION_TYPES.WARNING,
-        typographyColor: NOTIFICATION_TYPOGRAPHY_COLOR_TYPES.BLACK,
-        duration: WARNING_NOTIFICATION_DURATION,
-      }),
-    );
-    yield put({
-      type: PROJECT_MILESTONES_PAGE,
-      payload: location.payload,
-    });
+    const isCancellation = error instanceof Error && error.message === 'REQUEST_CANCELED';
+
+    if (!isCancellation) {
+      yield put(fetchErrorAction(ACTIVE_TEST_PLAN_NAMESPACE, error, true));
+      yield put(
+        showNotification({
+          messageId: 'testPlanRedirectWarningMessage',
+          type: NOTIFICATION_TYPES.WARNING,
+          typographyColor: NOTIFICATION_TYPOGRAPHY_COLOR_TYPES.BLACK,
+          duration: WARNING_NOTIFICATION_DURATION,
+        }),
+      );
+      yield put({
+        type: PROJECT_MILESTONES_PAGE,
+        payload: location.payload,
+      });
+    }
 
     return;
   }
@@ -151,17 +165,23 @@ function* getTestPlan(action: GetTestPlanAction): Generator {
       planTestCases = (yield call(
         fetch,
         URLS.testPlanTestCases(projectKey, testPlanId, params),
+        { signal: controller.signal },
       )) as TestPlanTestCaseDto;
     } else {
       planTestCases = (yield call(
         fetch,
-        URLS.testPlanTestCases(projectKey, testPlanId, { 'filter.eq.testFolderId': action.payload.folderId, ...params })
+        URLS.testPlanTestCases(projectKey, testPlanId, { 'filter.eq.testFolderId': action.payload.folderId, ...params }),
+        { signal: controller.signal },
       )) as TestPlanTestCaseDto;
     }
 
     yield put(fetchSuccessAction(TEST_PLAN_TEST_CASES_NAMESPACE, planTestCases));
   } catch (error) {
-    yield put(fetchErrorAction(TEST_PLAN_TEST_CASES_NAMESPACE, error));
+    const isCancellation = error instanceof Error && error.message === 'REQUEST_CANCELED';
+
+    if (!isCancellation) {
+      yield put(fetchErrorAction(TEST_PLAN_TEST_CASES_NAMESPACE, error));
+    }
   }
 }
 
@@ -169,8 +189,15 @@ function* watchGetTestPlans() {
   yield takeLatest(GET_TEST_PLANS, getTestPlans);
 }
 
+function handleLogoutDuringTestPlanFetch(): void {
+  const controller = abortController;
+  abortController = undefined;
+  controller?.abort();
+}
+
 function* watchGetTestPlan() {
   yield takeLatest(GET_TEST_PLAN, getTestPlan);
+  yield takeEvery(LOGOUT, handleLogoutDuringTestPlanFetch);
 }
 
 export function* testPlanSagas() {
