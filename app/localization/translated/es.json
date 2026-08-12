@@ -1119,6 +1119,8 @@
   "ForgotPasswordForm.successSendEmail": "Las instrucciones para restablecer la contraseña se han enviado a la dirección de correo electrónico {email}",
   "Fullscreen.exitNote": "Presione <b>Esc</b> para salir del modo de pantalla completa",
   "GeneralTab.day1": "1 día",
+  "GeneralTab.day2": "2 días",
+  "GeneralTab.day5": "5 días",
   "GeneralTab.forever": "Siempre",
   "GeneralTab.hour1": "1 hora",
   "GeneralTab.hour12": "12 horas",

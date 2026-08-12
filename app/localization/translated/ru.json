@@ -1119,6 +1119,8 @@
   "ForgotPasswordForm.successSendEmail": "Инструкции по восстановлению пароля отправлены на электронный адрес {email}",
   "Fullscreen.exitNote": "Нажмите <b>Esc</b>, чтобы выйти из полноэкранного режима",
   "GeneralTab.day1": "1 день",
+  "GeneralTab.day2": "2 дня",
+  "GeneralTab.day5": "5 дней",
   "GeneralTab.forever": "Всегда",
   "GeneralTab.hour1": "1 час",
   "GeneralTab.hour12": "12 часов",
