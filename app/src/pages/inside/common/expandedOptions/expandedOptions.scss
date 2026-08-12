@@ -175,7 +175,7 @@
 
   &__search-wrapper {
     @include flex-center(row, center, center);
-    
+
     flex-shrink: 0;
     padding: 7px 8px;
     background-color: var(--rp-ui-base-bg-200);
@@ -268,7 +268,8 @@
     flex-direction: column;
   }
 
-  &__no-search-results {
+  &__no-search-results,
+  &__search-loading {
     display: flex;
     align-items: center;
     justify-content: center;

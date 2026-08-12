@@ -20,7 +20,13 @@ import { useDrop } from 'react-dnd';
 import { isEmpty } from 'es-toolkit/compat';
 import Parser from 'html-react-parser';
 import { useSelector } from 'react-redux';
-import { BaseIconButton, SearchIcon, FieldText, useTreeDropValidation } from '@reportportal/ui-kit';
+import {
+  BaseIconButton,
+  BubblesLoader,
+  SearchIcon,
+  FieldText,
+  useTreeDropValidation,
+} from '@reportportal/ui-kit';
 import { TreeSortableContainer, DragLayer } from '@reportportal/ui-kit/sortable';
 import type { TreeDragItem, TreeDropPosition } from '@reportportal/ui-kit/common';
 
@@ -181,19 +187,12 @@ export const ExpandedOptions = ({
     hasFolderSidebarFilters && respondedSidebarFilterKey !== sidebarFilterKey;
 
   const isSidebarResolving = isSearchFilteredLoading || isSidebarFilterStale;
-  const [stableHidePageSearchSidebar, setStableHidePageSearchSidebar] = useState(false);
 
-  useEffect(() => {
-    if (!hasFolderSidebarFilters) {
-      setStableHidePageSearchSidebar(false);
-      return;
-    }
-    if (!isSidebarResolving) {
-      setStableHidePageSearchSidebar(!hasSearchFilteredFolders);
-    }
-  }, [hasFolderSidebarFilters, isSidebarResolving, hasSearchFilteredFolders]);
-
-  const hideSidebar = stableHidePageSearchSidebar || hideFolderSidebar;
+  const showNoSearchResults =
+    hasFolderSidebarFilters && !isSidebarResolving && !hasSearchFilteredFolders;
+  const hideSidebar =
+    hideFolderSidebar ||
+    (hasFolderSidebarFilters && (isSidebarResolving || !hasSearchFilteredFolders));
 
   const handleMoveFolder = useCallback(
     (draggedItem: TreeDragItem, targetId: string | number, position: TreeDropPosition) => {
@@ -244,6 +243,42 @@ export const ExpandedOptions = ({
       expandedIds: effectiveExpandedIds,
     });
   }, [isFlatView, searchQuery, folderSearchSource, activeFolderId, effectiveExpandedIds]);
+
+  const renderContentArea = () => {
+    if (showNoSearchResults) {
+      return (
+        <div className={cx('expanded-options__content-scroll')}>
+          <div className={cx('expanded-options__content')}>
+            <div className={cx('expanded-options__no-search-results')}>
+              <EmptyPageState
+                label={formatMessage(COMMON_LOCALE_KEYS.NO_RESULTS)}
+                description={formatMessage(testCaseListMessages.noResultsDescription)}
+                emptyIcon={NoResultsIcon}
+              />
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    if (hasFolderSidebarFilters && isSidebarResolving) {
+      return (
+        <div className={cx('expanded-options__content-scroll')}>
+          <div className={cx('expanded-options__content')}>
+            <div className={cx('expanded-options__search-loading')}>
+              <BubblesLoader />
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    return (
+      <ScrollWrapper className={cx('expanded-options__content-scroll')}>
+        <div className={cx('expanded-options__content')}>{children}</div>
+      </ScrollWrapper>
+    );
+  };
 
   const renderContent = () => (
     <>
@@ -352,23 +387,7 @@ export const ExpandedOptions = ({
             )}
           </div>
         )}
-        {stableHidePageSearchSidebar ? (
-          <div className={cx('expanded-options__content-scroll')}>
-            <div className={cx('expanded-options__content')}>
-              <div className={cx('expanded-options__no-search-results')}>
-                <EmptyPageState
-                  label={formatMessage(COMMON_LOCALE_KEYS.NO_RESULTS)}
-                  description={formatMessage(testCaseListMessages.noResultsDescription)}
-                  emptyIcon={NoResultsIcon}
-                />
-              </div>
-            </div>
-          </div>
-        ) : (
-          <ScrollWrapper className={cx('expanded-options__content-scroll')}>
-            <div className={cx('expanded-options__content')}>{children}</div>
-          </ScrollWrapper>
-        )}
+        {renderContentArea()}
       </div>
     </>
   );
