@@ -17,5 +17,7 @@
 .organization-users-page {
   display: flex;
   flex-direction: column;
-  min-height: 100%;
+  flex: 1;
+  min-height: 0;
+  height: 100%;
 }
