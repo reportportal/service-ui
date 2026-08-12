@@ -20,7 +20,7 @@ import {
   getManageAssignmentsSaveCondition,
   isAssignmentDirty,
 } from '../utils';
-import { type ReactNode, useCallback, useEffect, useRef, useState } from 'react';
+import { type ReactNode, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { connect, useDispatch, useSelector } from 'react-redux';
 import { MessageDescriptor, useIntl } from 'react-intl';
 import { formValueSelector, reduxForm } from 'redux-form';
@@ -63,16 +63,6 @@ interface ManageAssignmentsOrganizationModalOwnProps {
   organization: Organization;
   onUnassign?: () => void;
 }
-
-const renderDescriptionLink = (chunks: ReactNode) => (
-  <ExternalLink
-    href={referenceDictionary.manageAssignmentOrgLevel}
-    variant="compact"
-    isColoredIcon={false}
-  >
-    {chunks}
-  </ExternalLink>
-);
 
 const ManageAssignmentsOrganizationModalView = ({
   user,
@@ -249,10 +239,6 @@ const ManageAssignmentsOrganizationModalView = ({
     );
   };
 
-  const description = formatMessage(messages.manageAssignmentsDescription, {
-    link: renderDescriptionLink,
-  });
-
   const handleOrganizationChange = (value: OrganizationValue | OrganizationValue[]) => {
     const next = Array.isArray(value) ? value[0] : value;
     if (next) setCurrentOrganization(next);
@@ -261,6 +247,28 @@ const ManageAssignmentsOrganizationModalView = ({
     resetModalState();
     dispatch(hideModalAction());
   }, [resetModalState, dispatch]);
+
+  const renderDocumentationLink = useCallback(
+    (chunks: ReactNode) => (
+      <ExternalLink
+        href={referenceDictionary.manageAssignmentOrgLevel}
+        variant="compact"
+        isColoredIcon={false}
+        onClick={() => trackEvent(ORGANIZATION_PAGE_EVENTS.MANAGE_ASSIGNMENTS_DOCUMENTATION)}
+      >
+        {chunks}
+      </ExternalLink>
+    ),
+    [trackEvent],
+  );
+
+  const description = useMemo(
+    () =>
+      formatMessage(messages.manageAssignmentsDescription, {
+        link: renderDocumentationLink,
+      }),
+    [formatMessage, renderDocumentationLink],
+  );
 
   return (
     <Modal
