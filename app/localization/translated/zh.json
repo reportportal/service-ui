@@ -1119,6 +1119,8 @@
   "ForgotPasswordForm.successSendEmail": "密码恢复说明已发送至邮箱{email}",
   "Fullscreen.exitNote": "按<b>Esc</b>退出全屏模式",
   "GeneralTab.day1": "1天",
+  "GeneralTab.day2": "2天",
+  "GeneralTab.day5": "5天",
   "GeneralTab.forever": "永远",
   "GeneralTab.hour1": "1小时",
   "GeneralTab.hour12": "12小时",

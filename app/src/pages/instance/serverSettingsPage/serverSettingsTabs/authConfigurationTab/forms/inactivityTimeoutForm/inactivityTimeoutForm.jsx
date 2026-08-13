@@ -61,7 +61,10 @@ export const InactivityTimeoutForm = () => {
     { value: getMilliseconds(15 / 60), label: formatMessage(settingsMessages.minutes15) },
     { value: getMilliseconds(1), label: formatMessage(settingsMessages.hour1) },
     { value: getMilliseconds(12), label: formatMessage(settingsMessages.hour12) },
-    { value: getMilliseconds(24), label: formatMessage(settingsMessages.hour24) },
+    { value: getMilliseconds(24), label: formatMessage(settingsMessages.day1) },
+    { value: getMilliseconds(48), label: formatMessage(settingsMessages.day2) },
+    { value: getMilliseconds(120), label: formatMessage(settingsMessages.day5) },
+    { value: getMilliseconds(168), label: formatMessage(settingsMessages.week1) },
   ];
 
   const handleTimeoutChange = (value) => {
