@@ -16,15 +16,15 @@
 
 import PropTypes from 'prop-types';
 import { Layout } from 'layouts/common/layout';
+import { AppBanner } from 'layouts/common/appBanner';
 import { HeaderLayout } from '../headerLayout';
 import { OrganizationSidebar } from './organizationSidebar';
-import { ExportsBanner } from '../common/exportsBanner';
 
 export const OrganizationLayout = ({ children, rawContent }) => (
   <Layout
     Header={HeaderLayout}
     Sidebar={OrganizationSidebar}
-    Banner={ExportsBanner}
+    Banner={AppBanner}
     rawContent={rawContent}
   >
     {children}

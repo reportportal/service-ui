@@ -25,6 +25,7 @@ import type { AppState } from 'types/store';
 
 import type { AttachmentFormValue } from '../types';
 import { useAttachmentUpload } from './useAttachmentUpload';
+import { useAttachmentValidation } from './attachmentValidationContext';
 import { messages } from './messages';
 import {
   areAttachmentFormListsEqual,
@@ -35,6 +36,12 @@ type FieldAttachmentRow = AttachmentFormValue | BaseAttachmentFile;
 
 const EMPTY_FIELD_ATTACHMENTS: FieldAttachmentRow[] = [];
 
+const hasBlockingAttachmentFile = (file: BaseAttachmentFile): boolean =>
+  !isEmpty(file.validationErrors) ||
+  Boolean(file.customErrorMessage) ||
+  Boolean(file.uploadError) ||
+  Boolean(file.isUploading);
+
 interface UseTmsFileUploadOptions {
   formName: string;
   fieldName: string;
@@ -44,6 +51,8 @@ export const useTmsFileUpload = ({ formName, fieldName }: UseTmsFileUploadOption
   const dispatch = useDispatch();
   const { uploadAttachment } = useAttachmentUpload();
   const { formatMessage } = useIntl();
+  const { addBlocker, removeBlocker } = useAttachmentValidation();
+  const isBlockingRef = useRef(false);
   const isInitializedRef = useRef(false);
   const selector = formValueSelector(formName || 'no-form');
   const fieldAttachmentsRaw = useSelector<
@@ -76,6 +85,29 @@ export const useTmsFileUpload = ({ formName, fieldName }: UseTmsFileUploadOption
     useFileProcessing<BaseAttachmentFile>({
       onUpload: handleUpload,
     });
+
+  // Track whether this field is currently blocking so we only call add/remove on transitions.
+  useEffect(() => {
+    const isBlocking = attachedFiles.some(hasBlockingAttachmentFile);
+
+    if (isBlocking && !isBlockingRef.current) {
+      addBlocker();
+      isBlockingRef.current = true;
+    } else if (!isBlocking && isBlockingRef.current) {
+      removeBlocker();
+      isBlockingRef.current = false;
+    }
+  }, [attachedFiles, addBlocker, removeBlocker]);
+
+  // Remove from count on unmount (e.g. a Step is deleted while it has a bad file).
+  useEffect(() => {
+    return () => {
+      if (isBlockingRef.current) {
+        removeBlocker();
+        isBlockingRef.current = false;
+      }
+    };
+  }, [removeBlocker]);
 
   useEffect(() => {
     if (!isEmpty(fieldAttachments) && !isInitializedRef.current) {
@@ -123,7 +155,13 @@ export const useTmsFileUpload = ({ formName, fieldName }: UseTmsFileUploadOption
 
     const attachments = normalizeAttachmentsFromUnknown(
       attachedFiles
-        .filter((file) => file.attachmentId && !file.uploadError)
+        .filter(
+          (file) =>
+            file.attachmentId &&
+            !file.uploadError &&
+            !file.customErrorMessage &&
+            isEmpty(file.validationErrors),
+        )
         .map(({ attachmentId, fileName, size }) => ({
           id: attachmentId,
           fileName,

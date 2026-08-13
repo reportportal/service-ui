@@ -36,6 +36,7 @@ import {
   locationSelector,
   updatePagePropertiesAction,
 } from 'controllers/pages';
+import { isAuthorizedSelector } from 'controllers/auth';
 import {
   showNotification,
   NOTIFICATION_TYPES,
@@ -100,6 +101,7 @@ export const TestPlanDetailsPage = () => {
   const testCases = useTestPlanSelector(testPlanTestCasesSelector);
 
   const location = useSelector(locationSelector);
+  const isAuthorized = useSelector(isAuthorizedSelector);
   const isLoadingFilteredFolders = useSelector(isLoadingFilteredFoldersSelector);
   const areFoldersLoading = useSelector(areFoldersLoadingSelector);
   const areFoldersFetched = useSelector(areFoldersFetchedSelector);
@@ -240,7 +242,7 @@ export const TestPlanDetailsPage = () => {
   }, [isLoading, areFoldersLoading, testPlan, testPlanFolders, testPlanId, trackEvent]);
 
   useEffect(() => {
-    if (!isLoading && isEmpty(testPlan)) {
+    if (!isLoading && isEmpty(testPlan) && isAuthorized) {
       dispatch(
         showNotification({
           type: NOTIFICATION_TYPES.WARNING,
@@ -255,7 +257,7 @@ export const TestPlanDetailsPage = () => {
         payload: { organizationSlug, projectSlug },
       });
     }
-  }, [isLoading, testPlan, dispatch, organizationSlug, projectSlug, formatMessage]);
+  }, [isLoading, testPlan, isAuthorized, dispatch, organizationSlug, projectSlug, formatMessage]);
 
   const breadcrumbDescriptors = [
     {

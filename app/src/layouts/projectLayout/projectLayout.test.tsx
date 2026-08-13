@@ -29,7 +29,7 @@ jest.mock('../headerLayout', () => ({
   HeaderLayout: () => null,
 }));
 
-jest.mock('./appBanner', () => ({
+jest.mock('layouts/common/appBanner', () => ({
   AppBanner: () => null,
 }));
 

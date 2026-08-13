@@ -53,6 +53,7 @@ type CreateTestCaseModalProps = CreateTestCaseModalOwnProps &
 const CreateTestCaseModalComponent = ({
   data,
   pristine,
+  invalid,
   initialize,
   handleSubmit,
 }: CreateTestCaseModalProps) => {
@@ -86,6 +87,7 @@ const CreateTestCaseModalComponent = ({
   return (
     <TestCaseModal
       pristine={pristine}
+      invalid={invalid}
       handleSubmit={handleSubmit}
       title={formatMessage(commonMessages.createTestCase)}
       submitButtonText={formatMessage(COMMON_LOCALE_KEYS.CREATE)}

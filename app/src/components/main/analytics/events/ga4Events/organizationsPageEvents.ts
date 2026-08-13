@@ -164,6 +164,11 @@ export const ORGANIZATION_PAGE_EVENTS = {
     modal: 'manage_assignments_of_user',
     ...(condition && { condition }),
   }),
+  MANAGE_ASSIGNMENTS_DOCUMENTATION: {
+    ...BASIC_EVENT_PARAMETERS,
+    link_name: 'documentation',
+    place: 'manage_assignment',
+  },
   unassignUser: (isCurrentUser: boolean) => ({
     ...BASIC_EVENT_PARAMETERS,
     place: 'all_users',
