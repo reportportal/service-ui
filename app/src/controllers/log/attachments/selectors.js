@@ -28,6 +28,9 @@ export const attachmentsPaginationSelector = (state) => attachmentsSelector(stat
 
 export const activeAttachmentIdSelector = (state) => attachmentsSelector(state).activeAttachmentId;
 
+export const attachmentModalLoadingIdSelector = (state) =>
+  attachmentsSelector(state).modalLoadingId;
+
 export const attachmentItemsSelector = createSelector(
   logsWithAttachmentsSelector,
   projectKeySelector,

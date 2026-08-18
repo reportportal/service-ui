@@ -31,6 +31,8 @@ const getQueryParams = (paramsObj, options = {}) =>
   stringify(paramsObj, { addQueryPrefix: true, ...options });
 const removeTrailingSlash = (url) => (url.endsWith('/') ? url.slice(0, -1) : url);
 
+export const resolveApiPath = (path) => `${DEFAULT_COMMON_API_URL_PREFIX}${path}`;
+
 export const URLS = {
   apiDocs: (apiType) => `${apiType}/api-docs`,
   dataPhoto: (userId, at, loadThumbnail) =>
@@ -325,6 +327,8 @@ export const URLS = {
   generateDemoData: (projectKey) => `${urlBase}demo/${projectKey}/generate`,
   getFileById: (projectKey, dataId, loadThumbnail) =>
     `${urlBase}data/${projectKey}/${dataId}${getQueryParams({ loadThumbnail })}`,
+
+  createStreamLink: (projectKey, dataId) => `${urlBase}data/${projectKey}/streams/${dataId}/link`,
 
   githubAuthSettings: () => `${urlCommonBase}settings/oauth/github`, // TODO: to be changed in the future
   analyticsServerSettings: () => `${urlBase}settings/analytics`,

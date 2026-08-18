@@ -22,6 +22,7 @@ export {
   openAttachmentInModalAction,
   downloadAttachmentAction,
   openAttachmentInBrowserAction,
+  setAttachmentModalLoadingIdAction,
 } from './actionCreators';
 export {
   FILE_PREVIEWS_MAP,
@@ -29,6 +30,7 @@ export {
   ATTACHMENT_CODE_MODAL_ID,
   ATTACHMENT_HAR_FILE_MODAL_ID,
   ATTACHMENT_IMAGE_MODAL_ID,
+  ATTACHMENT_VIDEO_MODAL_ID,
   ATTACHMENTS_NAMESPACE,
   DOWNLOAD_ATTACHMENT_ACTION,
   OPEN_ATTACHMENT_IN_BROWSER_ACTION,
@@ -47,6 +49,7 @@ export {
   logsWithAttachmentsSelector,
   attachmentsPaginationSelector,
   activeAttachmentIdSelector,
+  attachmentModalLoadingIdSelector,
 } from './selectors';
 export { attachmentsReducer } from './reducer';
 export { attachmentSagas } from './sagas';

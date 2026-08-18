@@ -98,6 +98,11 @@
     cursor: pointer;
   }
 
+  .preview-loader {
+    width: 60px;
+    height: 60px;
+  }
+
   &.main-area {
     display: flex;
     justify-content: center;

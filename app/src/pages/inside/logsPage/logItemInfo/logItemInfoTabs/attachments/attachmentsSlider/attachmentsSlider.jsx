@@ -20,6 +20,7 @@ import Parser from 'html-react-parser';
 import classNames from 'classnames/bind';
 import track from 'react-tracking';
 import { WithStore, Slider, Slide, ButtonBack, ButtonNext } from 'pure-react-carousel';
+import { SpinLoader } from '@reportportal/ui-kit';
 import ArrowIcon from 'common/img/arrow-right-inline.svg';
 import { Image } from 'components/main/image';
 import { LOG_PAGE_EVENTS } from 'components/main/analytics/events';
@@ -46,6 +47,7 @@ class AttachmentsSlider extends Component {
     visibleThumbs: PropTypes.number,
     carouselStore: PropTypes.object,
     withActions: PropTypes.bool,
+    loadingItemId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
   };
 
   static defaultProps = {
@@ -58,6 +60,7 @@ class AttachmentsSlider extends Component {
     visibleThumbs: DEFAULT_VISIBLE_THUMBS,
     carouselStore: {},
     withActions: false,
+    loadingItemId: null,
   };
 
   componentDidMount() {
@@ -126,13 +129,15 @@ class AttachmentsSlider extends Component {
   };
 
   render() {
-    const { isThumbsView, attachments, activeItemId, onClickItem, withActions } = this.props;
+    const { isThumbsView, attachments, activeItemId, onClickItem, withActions, loadingItemId } =
+      this.props;
     return (
       <Fragment>
         <Slider className={cx('slider', { 'thumbs-view': isThumbsView })}>
           {attachments.map((attachment, index) => {
             const fileName =
               attachment.fileName || createAttachmentName(attachment.id, attachment.contentType);
+            const isLoading = !isThumbsView && attachment.id === loadingItemId;
 
             return (
               <Slide index={index} key={attachment.id}>
@@ -143,15 +148,21 @@ class AttachmentsSlider extends Component {
                   })}
                   onClick={() => onClickItem(index)}
                 >
-                  <Image
-                    className={cx('preview')}
-                    src={
-                      isThumbsView && attachment.isImage ? attachment.thumbnailSrc : attachment.src
-                    }
-                    alt={attachment.alt}
-                    isStatic={!attachment.isImage}
-                    preloaderColor="charcoal"
-                  />
+                  {isLoading ? (
+                    <SpinLoader className={cx('preview-loader')} />
+                  ) : (
+                    <Image
+                      className={cx('preview')}
+                      src={
+                        isThumbsView && attachment.isImage
+                          ? attachment.thumbnailSrc
+                          : attachment.src
+                      }
+                      alt={attachment.alt}
+                      isStatic={!attachment.isImage}
+                      preloaderColor="charcoal"
+                    />
+                  )}
                   {!isThumbsView && (
                     <div className={cx('file-name')} title={fileName}>
                       {fileName}

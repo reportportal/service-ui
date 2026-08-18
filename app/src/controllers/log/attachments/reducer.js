@@ -23,6 +23,7 @@ import {
   ATTACHMENTS_NAMESPACE,
   CLEAR_ATTACHMENTS_ACTION,
   SET_ACTIVE_ATTACHMENT_ACTION,
+  SET_ATTACHMENT_MODAL_LOADING_ID_ACTION,
 } from './constants';
 
 export const logsWithAttachmentsReducer = (state = [], { type = '' }) => {
@@ -52,6 +53,15 @@ export const activeAttachmentReducer = (state = 0, { type = '', payload = {} }) 
   }
 };
 
+export const modalLoadingIdReducer = (state = null, { type = '', payload = null }) => {
+  switch (type) {
+    case SET_ATTACHMENT_MODAL_LOADING_ID_ACTION:
+      return payload;
+    default:
+      return state;
+  }
+};
+
 export const attachmentsReducer = combineReducers({
   logsWithAttachments: queueReducers(
     fetchReducer(ATTACHMENTS_NAMESPACE, { contentPath: 'content' }),
@@ -60,4 +70,5 @@ export const attachmentsReducer = combineReducers({
   pagination: queueReducers(paginationReducer(ATTACHMENTS_NAMESPACE), attachmentsPaginationReducer),
   loading: loadingReducer(ATTACHMENTS_NAMESPACE),
   activeAttachmentId: activeAttachmentReducer,
+  modalLoadingId: modalLoadingIdReducer,
 });

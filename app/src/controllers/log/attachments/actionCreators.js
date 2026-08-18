@@ -19,6 +19,7 @@ import {
   CLEAR_ATTACHMENTS_ACTION,
   FETCH_FIRST_ATTACHMENTS_ACTION,
   SET_ACTIVE_ATTACHMENT_ACTION,
+  SET_ATTACHMENT_MODAL_LOADING_ID_ACTION,
   DOWNLOAD_ATTACHMENT_ACTION,
   OPEN_ATTACHMENT_IN_MODAL_ACTION,
   OPEN_ATTACHMENT_IN_BROWSER_ACTION,
@@ -46,6 +47,11 @@ export const setActiveAttachmentAction = (attachmentId) => ({
 export const openAttachmentInModalAction = (payload) => ({
   type: OPEN_ATTACHMENT_IN_MODAL_ACTION,
   payload,
+});
+
+export const setAttachmentModalLoadingIdAction = (attachmentId) => ({
+  type: SET_ATTACHMENT_MODAL_LOADING_ID_ACTION,
+  payload: attachmentId,
 });
 
 export const downloadAttachmentAction = (payload) => ({
