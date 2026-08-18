@@ -53,14 +53,8 @@ export const activeAttachmentReducer = (state = 0, { type = '', payload = {} }) 
   }
 };
 
-export const modalLoadingIdReducer = (state = null, { type = '', payload = null }) => {
-  switch (type) {
-    case SET_ATTACHMENT_MODAL_LOADING_ID_ACTION:
-      return payload;
-    default:
-      return state;
-  }
-};
+export const modalLoadingIdReducer = (state = null, { type = '', payload = null }) =>
+  type === SET_ATTACHMENT_MODAL_LOADING_ID_ACTION ? payload : state;
 
 export const attachmentsReducer = combineReducers({
   logsWithAttachments: queueReducers(
