@@ -43,12 +43,12 @@
     min-height: 35px;
     max-width: 65px;
   }
+}
 
-  &.loader {
-    height: 25px;
-    width: 25px;
-    cursor: default;
-  }
+.loader {
+  height: 25px;
+  width: 25px;
+  cursor: default;
 }
 
 .attachment-icon {

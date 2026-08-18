@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+import { useState } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { injectIntl } from 'react-intl';
@@ -26,8 +27,15 @@ import styles from './attachmentVideoModal.scss';
 const cx = classNames.bind(styles);
 
 const AttachmentVideoModalComponent = ({ data: { video, fileName } = {}, intl }) => {
+  const [isPlaybackError, setIsPlaybackError] = useState(false);
+  const [lastVideo, setLastVideo] = useState(video);
   const { formatMessage } = intl;
   const title = fileName || formatMessage(messages.title);
+
+  if (video !== lastVideo) {
+    setLastVideo(video);
+    setIsPlaybackError(false);
+  }
 
   const renderCancelButton = () => ({
     text: formatMessage(COMMON_LOCALE_KEYS.CLOSE),
@@ -42,9 +50,14 @@ const AttachmentVideoModalComponent = ({ data: { video, fileName } = {}, intl })
     >
       <div className={cx('attachment-modal-content-wrapper')}>
         <div className={cx('attachment-video-wrapper')}>
-          {video ? (
+          {video && !isPlaybackError ? (
             // eslint-disable-next-line jsx-a11y/media-has-caption -- no caption track is available for attachment videos
-            <video className={cx('video-item')} controls preload="metadata">
+            <video
+              className={cx('video-item')}
+              controls
+              preload="metadata"
+              onError={() => setIsPlaybackError(true)}
+            >
               <source src={video} />
               {formatMessage(messages.videoUnsupported)}
             </video>
