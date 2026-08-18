@@ -138,6 +138,7 @@ export class GeneralTab extends Component {
   static defaultProps = {
     lang: 'en',
     organizationSettings: {},
+    formValues: {},
     isLoading: false,
     userRoles: {},
   };
@@ -241,7 +242,19 @@ export class GeneralTab extends Component {
     return !retentionLimit || retentionLimit > value ? value : retentionLimit;
   };
 
-  getRetentionOptions = (fieldName) => {
+  sortValues = (a, b) => {
+    if (a.value === 0) {
+      return 1;
+    }
+
+    if (b.value === 0) {
+      return -1;
+    }
+
+    return a.value - b.value;
+  };
+
+  getBaseOptions = (fieldName) => {
     const { lang } = this.props;
     const retentionLimits = this.getRetentionLimits();
     const retentionLimit = retentionLimits[fieldName];
@@ -264,21 +277,22 @@ export class GeneralTab extends Component {
     return options;
   };
 
-  createValueFormatter = (values) => (value) => {
-    const selectedOption = values.find((option) => option.value === value);
-    if (selectedOption) {
-      return selectedOption;
-    }
-    return { label: secondsToDays(value, this.props.lang), value };
-  };
+  getRetentionOptions = (fieldName, value) => {
+    const { intl, lang } = this.props;
+    const options = [...this.getBaseOptions(fieldName)];
 
-  formatRetention = (fieldName) => this.createValueFormatter(this.getRetentionOptions(fieldName));
+    if (Number.isFinite(value) && !options.some((elem) => elem.value === value)) {
+      const label =
+        value === 0 ? intl.formatMessage(settingsMessages.forever) : secondsToDays(value, lang);
+      options.push({ label, value });
+      options.sort(this.sortValues);
+    }
+
+    return options;
+  };
 
   formatInputValues = () => {
     const { formValues } = this.props;
-    if (!formValues) {
-      return {};
-    }
     const arrValues = Object.entries(formValues).map(([key, value]) => [
       key,
       value === 0 ? Infinity : value,
@@ -289,8 +303,9 @@ export class GeneralTab extends Component {
   };
 
   getLaunchesOptions = () => {
+    const { formValues } = this.props;
     const inputValues = this.formatInputValues();
-    const options = this.getRetentionOptions('keepLaunches');
+    const options = this.getRetentionOptions('keepLaunches', formValues.keepLaunches);
     const newOptions = options.map((elem) => {
       const disabled =
         elem.value !== 0 &&
@@ -307,8 +322,9 @@ export class GeneralTab extends Component {
   };
 
   getLogOptions = () => {
+    const { formValues } = this.props;
     const inputValues = this.formatInputValues();
-    const options = this.getRetentionOptions('keepLogs');
+    const options = this.getRetentionOptions('keepLogs', formValues.keepLogs);
     const newOptions = options.map((elem) => {
       const disabled =
         elem.value === 0
@@ -327,24 +343,19 @@ export class GeneralTab extends Component {
           : undefined,
       };
     });
-    if (newOptions.every((v) => v.hidden)) {
-      newOptions.push(this.formatRetention('keepLogs')(inputValues.keepLogs));
-    }
     return newOptions;
   };
 
   getScreenshotsOptions = () => {
+    const { formValues } = this.props;
     const inputValues = this.formatInputValues();
-    const options = this.getRetentionOptions('keepScreenshots');
+    const options = this.getRetentionOptions('keepScreenshots', formValues.keepScreenshots);
     const newOptions = options.map((elem) => {
       const isHidden =
         elem.value === 0 ? elem.value !== inputValues.keepLogs : elem.value > inputValues.keepLogs;
       const hidden = inputValues.keepLogs === Infinity ? false : isHidden;
       return { ...elem, hidden };
     });
-    if (newOptions.every((v) => v.hidden)) {
-      newOptions.push(this.formatRetention('keepScreenshots')(inputValues.keepScreenshots));
-    }
     return newOptions;
   };
 
