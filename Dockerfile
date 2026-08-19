@@ -24,7 +24,7 @@ COPY --from=generate-build-info /usr/src/app/build /usr/share/nginx/html
 COPY config.template.json /usr/share/nginx/html/config.template.json
 
 RUN rm /etc/nginx/conf.d/default.conf
-COPY nginx.conf /etc/nginx/nginx.conf
+COPY nginx.conf /etc/nginx/nginx.conf.template
 
 COPY entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh

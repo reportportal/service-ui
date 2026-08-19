@@ -146,7 +146,7 @@ export class JiraConnectionFormFields extends Component {
           dataAutomationId="passwordBTSField"
         >
           <FieldErrorHint provideHint={false}>
-            <FieldText defaultWidth={false} type="password" />
+            <FieldText defaultWidth={false} type="password" maxLength={null} />
           </FieldErrorHint>
         </FieldElement>
       </Fragment>

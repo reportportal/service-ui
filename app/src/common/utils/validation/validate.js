@@ -96,7 +96,7 @@ export const projectVersionLength = composeValidators([isNotEmpty, maxLength(60)
 export const btsIntegrationName = composeValidators([isNotEmpty, maxLength(55)]);
 export const btsProject = composeValidators([isNotEmpty, maxLength(55)]);
 export const btsUserName = composeValidators([isNotEmpty, maxLength(55)]);
-export const btsPassword = composeValidators([isNotEmpty, maxLength(55)]);
+export const btsPassword = composeValidators([isNotEmpty, maxLength(512)]);
 export const patternNameLength = composeValidators([isNotEmpty, maxLength(55)]);
 export const ruleNameLength = composeValidators([isNotEmpty, maxLength(55)]);
 export const createNameUniqueValidator = (itemId, items) => (newName) =>
