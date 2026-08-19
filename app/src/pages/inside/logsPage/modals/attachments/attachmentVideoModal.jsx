@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { useState } from 'react';
+import {useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { injectIntl } from 'react-intl';
@@ -28,14 +28,12 @@ const cx = classNames.bind(styles);
 
 const AttachmentVideoModalComponent = ({ data: { video, fileName } = {}, intl }) => {
   const [isPlaybackError, setIsPlaybackError] = useState(false);
-  const [lastVideo, setLastVideo] = useState(video);
   const { formatMessage } = intl;
   const title = fileName || formatMessage(messages.title);
 
-  if (video !== lastVideo) {
-    setLastVideo(video);
+  useEffect(() => {
     setIsPlaybackError(false);
-  }
+  }, [video]);
 
   const renderCancelButton = () => ({
     text: formatMessage(COMMON_LOCALE_KEYS.CLOSE),
