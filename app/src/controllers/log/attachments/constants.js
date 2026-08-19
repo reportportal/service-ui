@@ -33,8 +33,10 @@ export const CLEAR_ATTACHMENTS_ACTION = 'clearAttachmentsAction';
 export const ATTACHMENT_HAR_FILE_MODAL_ID = 'attachmentHarFileModal';
 export const ATTACHMENT_CODE_MODAL_ID = 'attachmentCodeModal';
 export const ATTACHMENT_IMAGE_MODAL_ID = 'attachmentImageModal';
+export const ATTACHMENT_VIDEO_MODAL_ID = 'attachmentVideoModal';
 export const FETCH_FIRST_ATTACHMENTS_ACTION = 'fetchFirstAttachments';
 export const SET_ACTIVE_ATTACHMENT_ACTION = 'setActiveAttachment';
+export const SET_ATTACHMENT_MODAL_LOADING_ID_ACTION = 'setAttachmentModalLoadingIdAction';
 
 export const DOWNLOAD_ATTACHMENT_ACTION = 'downloadAttachmentAction';
 export const OPEN_ATTACHMENT_IN_MODAL_ACTION = 'openAttachmentInModalAction';
@@ -75,6 +77,11 @@ export const FILE_MODAL_IDS_MAP = {
   [FILE_TYPES.PHP]: ATTACHMENT_CODE_MODAL_ID,
   [FILE_TYPES.HAR]: ATTACHMENT_HAR_FILE_MODAL_ID,
   [FILE_TYPES.IMAGE]: ATTACHMENT_IMAGE_MODAL_ID,
+  [FILE_TYPES.MP4]: ATTACHMENT_VIDEO_MODAL_ID,
+  [FILE_TYPES.WEBM]: ATTACHMENT_VIDEO_MODAL_ID,
+  [FILE_TYPES.MOV]: ATTACHMENT_VIDEO_MODAL_ID,
+  [FILE_TYPES.AVI]: ATTACHMENT_VIDEO_MODAL_ID,
+  [FILE_TYPES.MKV]: ATTACHMENT_VIDEO_MODAL_ID,
 };
 
 export const FILE_ACTIONS_MAP = {
@@ -103,6 +110,11 @@ export const FILE_ACTIONS_MAP = {
     FILE_TYPES.IMAGE,
     FILE_TYPES.TXT,
     FILE_TYPES.PLAIN,
+    FILE_TYPES.MP4,
+    FILE_TYPES.WEBM,
+    FILE_TYPES.MOV,
+    FILE_TYPES.AVI,
+    FILE_TYPES.MKV,
   ],
 };
 

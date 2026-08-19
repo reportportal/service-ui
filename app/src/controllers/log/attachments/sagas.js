@@ -15,9 +15,10 @@
  */
 
 import { takeLatest, takeEvery, call, put, all, select, take } from 'redux-saga/effects';
-import { URLS } from 'common/urls';
+import { URLS, resolveApiPath } from 'common/urls';
 import { fetch } from 'common/utils/fetch';
 import { showModalAction, HIDE_MODAL } from 'controllers/modal';
+import { showDefaultErrorNotification } from 'controllers/notification';
 import { concatFetchDataAction, createFetchPredicate } from 'controllers/fetch';
 import {
   activeRetryIdSelector,
@@ -35,6 +36,7 @@ import {
   ATTACHMENT_CODE_MODAL_ID,
   ATTACHMENT_HAR_FILE_MODAL_ID,
   ATTACHMENT_IMAGE_MODAL_ID,
+  ATTACHMENT_VIDEO_MODAL_ID,
   FETCH_ATTACHMENTS_CONCAT_ACTION,
   ATTACHMENTS_NAMESPACE,
   DEFAULT_PAGE_SIZE,
@@ -50,6 +52,7 @@ import {
   isTextWithJson,
   createAttachmentName,
 } from './utils';
+import { setAttachmentModalLoadingIdAction } from './actionCreators';
 
 function* getAttachmentURL() {
   const projectKey = yield select(projectKeySelector);
@@ -112,6 +115,7 @@ function* openImageModalsWorker(data) {
       data: { image: imageURL, fileName: data.fileName },
     }),
   );
+  yield put(setAttachmentModalLoadingIdAction(null));
   yield take(HIDE_MODAL);
   URL.revokeObjectURL(imageURL);
 }
@@ -131,10 +135,31 @@ function* openBinaryModalWorker(data) {
   );
 }
 
+/* VIDEO */
+function* openVideoModalWorker(data) {
+  const projectKey = yield select(projectKeySelector);
+  const response = yield call(fetch, URLS.createStreamLink(projectKey, data.id), {
+    method: 'post',
+  });
+
+  yield put(
+    showModalAction({
+      id: ATTACHMENT_VIDEO_MODAL_ID,
+      data: {
+        video: response?.url ? resolveApiPath(response.url) : null,
+        fileName: data.fileName,
+      },
+    }),
+  );
+  yield put(setAttachmentModalLoadingIdAction(null));
+  yield take(HIDE_MODAL);
+}
+
 const ATTACHMENT_MODAL_WORKERS = {
   [ATTACHMENT_IMAGE_MODAL_ID]: openImageModalsWorker,
   [ATTACHMENT_HAR_FILE_MODAL_ID]: openHarModalWorker,
   [ATTACHMENT_CODE_MODAL_ID]: openBinaryModalWorker,
+  [ATTACHMENT_VIDEO_MODAL_ID]: openVideoModalWorker,
 };
 
 function* openAttachmentInModal({ payload: { id, contentType, fileName } }) {
@@ -149,10 +174,13 @@ function* openAttachmentInModal({ payload: { id, contentType, fileName } }) {
       id,
       fileName: fileName || createAttachmentName(id, contentType),
     };
+    yield put(setAttachmentModalLoadingIdAction(id));
     try {
       yield call(ATTACHMENT_MODAL_WORKERS[modalId], data);
-    } catch {
-      /* empty */
+    } catch (error) {
+      yield put(showDefaultErrorNotification(error));
+    } finally {
+      yield put(setAttachmentModalLoadingIdAction(null));
     }
   }
 }
