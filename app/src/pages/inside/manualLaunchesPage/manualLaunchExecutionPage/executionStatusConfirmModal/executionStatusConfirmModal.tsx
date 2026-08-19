@@ -62,6 +62,7 @@ import {
   EXECUTION_STATUS_CONFIRM_FORM_NAME,
   STATUS_CONFIG,
   EXECUTION_STATUS_FAILED,
+  RECORDED_RESULT_STATUSES,
 } from '../constants';
 import { messages } from './messages';
 import { messages as commonMessages } from '../messages';
@@ -119,7 +120,11 @@ const ExecutionStatusConfirmModalComponent: FC<
   const title = isClearStatus
     ? formatMessage(messages.clearStatus)
     : formatMessage(messages.markAsStatus, { status: statusLabel });
-  const isStatusChange = currentStatus && !isClearStatus;
+
+  const hasRecordedResult = RECORDED_RESULT_STATUSES.includes(
+    String(currentStatus).toUpperCase() as ExecutionStatus,
+  );
+  const isStatusChange = hasRecordedResult && !isClearStatus;
   const showPostIssueToBts =
     canManageExecutions && status === EXECUTION_STATUS_FAILED && !isEmpty(availableBtsIntegrations);
   const okButtonLabel = isClearStatus

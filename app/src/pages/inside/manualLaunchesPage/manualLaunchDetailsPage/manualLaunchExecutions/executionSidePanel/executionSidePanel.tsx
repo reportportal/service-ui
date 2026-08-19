@@ -87,7 +87,7 @@ export const ExecutionSidePanel = ({ executionId, onClose }: ExecutionSidePanelP
     executionDetails?.manualScenario?.manualScenarioType === TestCaseManualScenario.TEXT;
   const [isStatusPopoverOpen, setIsStatusPopoverOpen] = useState(false);
 
-  useOnClickOutside(sidePanelRef, onClose);
+  useOnClickOutside(sidePanelRef, isStatusPopoverOpen ? undefined : onClose);
 
   const onFolderClick = (e?: React.MouseEvent, folderId?: number) => {
     e?.preventDefault();
