@@ -15,7 +15,6 @@
  */
 
 import { commonMessages } from 'pages/inside/common/common-messages';
-import { ExecutionStatus } from 'pages/inside/manualLaunchesPage/types';
 
 import type { StatusButtonConfig, StatusConfig, ExecutionStatusType } from './types';
 
@@ -23,13 +22,6 @@ export const EXECUTION_STATUS_TO_RUN = 'TO_RUN' as const;
 export const EXECUTION_STATUS_SKIPPED: ExecutionStatusType = 'skipped';
 export const EXECUTION_STATUS_FAILED: ExecutionStatusType = 'failed';
 export const EXECUTION_STATUS_PASSED: ExecutionStatusType = 'passed';
-
-
-export const RECORDED_RESULT_STATUSES: ExecutionStatus[] = [
-  ExecutionStatus.PASSED,
-  ExecutionStatus.FAILED,
-  ExecutionStatus.SKIPPED,
-];
 
 export const STATUS_BUTTONS: StatusButtonConfig[] = [
   { status: EXECUTION_STATUS_SKIPPED, message: commonMessages.skipped },

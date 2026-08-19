@@ -62,7 +62,6 @@ import {
   EXECUTION_STATUS_CONFIRM_FORM_NAME,
   STATUS_CONFIG,
   EXECUTION_STATUS_FAILED,
-  RECORDED_RESULT_STATUSES,
 } from '../constants';
 import { messages } from './messages';
 import { messages as commonMessages } from '../messages';
@@ -96,6 +95,8 @@ const ExecutionStatusConfirmModalComponent: FC<
   const isClearStatus = status === ExecutionStatus.TO_RUN;
   const executionId = data?.executionId;
 
+  const hasLoadedExecution = !!executionId && activeExecution?.id === executionId;
+
   const {
     pendingFiles: attachedFiles,
     removedAttachmentIds: removedServerAttachmentIds,
@@ -106,56 +107,41 @@ const ExecutionStatusConfirmModalComponent: FC<
     handleExistingRemove: handleServerAttachmentRemove,
   } = useFileAttachments({
     resetKey: modalKey,
-    existingAttachments:
-      executionId && activeExecution?.id === executionId
-        ? (activeExecution.executionComment?.attachments ?? [])
-        : [],
+    existingAttachments: hasLoadedExecution
+      ? (activeExecution.executionComment?.attachments ?? [])
+      : [],
     messages: {
       duplicateFileNames: commonMessages.duplicateFileNames,
       emptyFiles: commonMessages.emptyFiles,
     },
   });
-  const currentStatus = data?.currentStatus;
   const statusLabel = isClearStatus ? '' : formatMessage(STATUS_CONFIG[status]?.label);
   const title = isClearStatus
     ? formatMessage(messages.clearStatus)
     : formatMessage(messages.markAsStatus, { status: statusLabel });
 
-  const hasRecordedResult = RECORDED_RESULT_STATUSES.includes(
-    String(currentStatus).toUpperCase() as ExecutionStatus,
-  );
-  const isStatusChange = hasRecordedResult && !isClearStatus;
   const showPostIssueToBts =
     canManageExecutions && status === EXECUTION_STATUS_FAILED && !isEmpty(availableBtsIntegrations);
   const okButtonLabel = isClearStatus
     ? formatMessage(messages.clearStatus)
     : formatMessage(messages.markAsStatus, { status: statusLabel });
 
-  const shouldSeedCommentForm = !isStatusChange && !isClearStatus;
+  const shouldSeedCommentForm = !isClearStatus;
+  const seededComment = hasLoadedExecution
+    ? String(activeExecution.executionComment?.comment ?? '')
+    : '';
 
   useEffect(() => {
     if (!executionId || dirty || !shouldSeedCommentForm) return;
 
-    const comment =
-      activeExecution?.id === executionId
-        ? String(activeExecution.executionComment?.comment ?? '')
-        : '';
-
     dispatch(
       initialize(EXECUTION_STATUS_CONFIRM_FORM_NAME, {
-        comment,
+        comment: seededComment,
         postIssueToBts: false,
         clearCommentAndLinksToBTS: false,
       }),
     );
-  }, [
-    executionId,
-    shouldSeedCommentForm,
-    dirty,
-    dispatch,
-    activeExecution?.id,
-    activeExecution?.executionComment?.comment,
-  ]);
+  }, [executionId, shouldSeedCommentForm, seededComment, dirty, dispatch]);
 
   const onSubmit = (values: ExecutionStatusConfirmFormValues) => {
     if (!executionId) return;
@@ -189,8 +175,8 @@ const ExecutionStatusConfirmModalComponent: FC<
         postIssueToBts: clearCommentCheckboxChecked ? false : values.postIssueToBts,
         attachments: clearCommentCheckboxChecked ? [] : attachedFiles,
         clearExecutionCommentAndBts: isClearStatus ? clearCommentCheckboxChecked : undefined,
-        preserveExistingCommentIfFormSkipped: isStatusChange,
-        ...(!isClearStatus && !isStatusChange
+        preserveExistingCommentIfFormSkipped: !hasLoadedExecution,
+        ...(!isClearStatus && hasLoadedExecution
           ? { removedServerAttachmentIds: Array.from(removedServerAttachmentIds) }
           : {}),
         onSuccess: () => {
@@ -227,38 +213,13 @@ const ExecutionStatusConfirmModalComponent: FC<
       cancelButton={cancelButton}
       allowCloseOutside={!dirty && !isSubmitting}
       scrollable
-      className={cx('execution-status-confirm-modal', {
-        'execution-status-confirm-modal--simple': isStatusChange,
-      })}
+      className={cx('execution-status-confirm-modal')}
     >
       <form
         className={cx('modal-content')}
         onSubmit={handleSubmit(onSubmit) as (event: FormEvent) => void}
       >
-        {isStatusChange && (
-          <>
-            <div className={cx('confirmation-text')}>
-              <div className={cx('confirmation-question')}>
-                {formatMessage(messages.confirmStatusChange, {
-                  status: <strong>{statusLabel}</strong>,
-                })}
-              </div>
-              <div className={cx('confirmation-hint')}>
-                {formatMessage(messages.updateCommentIfNeeded)}
-              </div>
-            </div>
-
-            {showPostIssueToBts && (
-              <div className={cx('checkbox-section')}>
-                <FieldProvider name="postIssueToBts">
-                  <InputCheckbox>{formatMessage(commonMessages.postIssueToBts)}</InputCheckbox>
-                </FieldProvider>
-              </div>
-            )}
-          </>
-        )}
-
-        {!isStatusChange && !isClearStatus && (
+        {!isClearStatus && (
           <>
             <div className={cx('comment-section')}>
               <FieldProvider name="comment">
