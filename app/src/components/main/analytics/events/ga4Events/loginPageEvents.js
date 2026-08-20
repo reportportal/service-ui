@@ -46,6 +46,12 @@ export const LOGIN_PAGE_EVENTS = {
     ...getBasicClickEventParameters(LOGIN_PAGE),
     element_name: 'open_more_news',
   },
+  switchNews: ({ iconName, elementName, condition }) => ({
+    ...getBasicClickEventParameters(LOGIN_PAGE),
+    icon_name: iconName,
+    element_name: elementName,
+    condition,
+  }),
   CLICK_ON_READ_MORE: {
     ...getBasicClickEventParameters(LOGIN_PAGE),
     link_name: 'read_more',

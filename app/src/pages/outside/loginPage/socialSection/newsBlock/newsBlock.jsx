@@ -21,6 +21,7 @@ import { defineMessages, FormattedMessage, useIntl } from 'react-intl';
 import { useTracking } from 'react-tracking';
 import { LOGIN_PAGE_EVENTS } from 'components/main/analytics/events/ga4Events/loginPageEvents';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
+import { parseSentences, stripEmojis } from 'common/utils/stringUtils';
 import styles from './newsBlock.scss';
 import { PostBlock } from './postBlock';
 
@@ -42,6 +43,12 @@ const UNDO_HIDE_MS = 6000;
 const CLICK_SUPPRESS_AFTER_DRAG_MS = 350;
 const PROMOTE_RETRY_MS = 90;
 const PARALLAX_MAX_DEG = 2;
+
+const NEWS_ELEMENT_NAME_MAX_LENGTH = 80;
+const NEWS_SWITCH_DOT_CLICK = 'dot_click';
+const NEWS_SWITCH_CARD_CLICK = 'card_click';
+const NEWS_SWITCH_CARD_SCROLL = 'card_scroll';
+const NEWS_SWITCH_CARD_DRAG_AND_DROP = 'card_drag_and_drop';
 
 const messages = defineMessages({
   undo: {
@@ -93,6 +100,11 @@ const getLayerTop = (layer, maxLayer) => {
   return depth * (STACK_STEP_PX - depth * 2);
 };
 
+const getNewsElementName = (text = '') => {
+  const firstSentence = parseSentences(text)?.[0] || text;
+  return stripEmojis(firstSentence).slice(0, NEWS_ELEMENT_NAME_MAX_LENGTH).trim();
+};
+
 const prefersReducedMotion = () =>
   typeof window !== 'undefined' &&
   !!window.matchMedia &&
@@ -129,6 +141,24 @@ const NewsDeck = ({ tweets = [], onExpandedChange = null }) => {
   const { formatMessage } = useIntl();
   const { trackEvent } = useTracking();
   const visibleTweets = tweets;
+
+  const trackNewsSwitch = useCallback(
+    (cardIndex, condition) => {
+      const tweet = visibleTweets[cardIndex];
+      if (!tweet) {
+        return;
+      }
+
+      trackEvent(
+        LOGIN_PAGE_EVENTS.switchNews({
+          iconName: `news_${cardIndex + 1}`,
+          elementName: getNewsElementName(tweet.text),
+          condition,
+        }),
+      );
+    },
+    [trackEvent, visibleTweets],
+  );
   const stackSize = Math.min(MAX_TWEETS, visibleTweets.length);
 
   // order[0] is the index (into visibleTweets) of the front card;
@@ -271,7 +301,7 @@ const NewsDeck = ({ tweets = [], onExpandedChange = null }) => {
   }, [measureStack]);
 
   const cycle = useCallback(
-    (direction) => {
+    (direction, condition) => {
       const currentOrder = orderRef.current;
       if (expandedRef.current || animatingRef.current || currentOrder.length < 2) {
         return;
@@ -289,6 +319,9 @@ const NewsDeck = ({ tweets = [], onExpandedChange = null }) => {
           ? [...currentOrder.slice(1), currentOrder[0]]
           : [currentOrder[currentOrder.length - 1], ...currentOrder.slice(0, -1)];
       commitOrder(next);
+      if (condition) {
+        trackNewsSwitch(next[0], condition);
+      }
       clearTimeout(animatingTimerRef.current);
       animatingTimerRef.current = setTimeout(() => {
         animatingRef.current = false;
@@ -296,11 +329,11 @@ const NewsDeck = ({ tweets = [], onExpandedChange = null }) => {
       clearTimeout(demotingTimerRef.current);
       demotingTimerRef.current = setTimeout(() => setDemotingCard(null), CYCLE_DURATION_MS);
     },
-    [commitOrder, getCardNode],
+    [commitOrder, getCardNode, trackNewsSwitch],
   );
 
   // a function declaration (not useCallback) so the retry can reference itself
-  function promote(cardIndex) {
+  function promote(cardIndex, condition) {
     const currentOrder = orderRef.current;
     if (
       expandedRef.current ||
@@ -312,9 +345,15 @@ const NewsDeck = ({ tweets = [], onExpandedChange = null }) => {
     if (animatingRef.current) {
       // another animation is in flight — retry instead of dying silently
       clearTimeout(promoteTimerRef.current);
-      promoteTimerRef.current = setTimeout(() => promote(cardIndex), PROMOTE_RETRY_MS);
+      promoteTimerRef.current = setTimeout(
+        () => promote(cardIndex, condition),
+        PROMOTE_RETRY_MS,
+      );
 
       return;
+    }
+    if (condition) {
+      trackNewsSwitch(cardIndex, condition);
     }
     const position = currentOrder.indexOf(cardIndex);
     cycle(position <= currentOrder.length / 2 ? 1 : -1);
@@ -476,7 +515,7 @@ const NewsDeck = ({ tweets = [], onExpandedChange = null }) => {
           front.style.transition = '';
           front.style.transform = '';
         }
-        cycle(wheelAccRef.current > 0 ? 1 : -1);
+        cycle(wheelAccRef.current > 0 ? 1 : -1, NEWS_SWITCH_CARD_SCROLL);
         wheelAccRef.current = 0;
 
         return;
@@ -618,7 +657,7 @@ const NewsDeck = ({ tweets = [], onExpandedChange = null }) => {
       return;
     }
     if (axis === 'y' && Math.abs(dy) > DRAG_CYCLE_THRESHOLD_PX) {
-      cycle(dy > 0 ? 1 : -1);
+      cycle(dy > 0 ? 1 : -1, NEWS_SWITCH_CARD_DRAG_AND_DROP);
     }
     if (axis === 'x' && Math.abs(dx) > DRAG_DISMISS_THRESHOLD_PX) {
       dismiss(dx > 0 ? 1 : -1);
@@ -640,7 +679,7 @@ const NewsDeck = ({ tweets = [], onExpandedChange = null }) => {
     }
     const cardIndex = Number(cardEntry[0]);
     if (orderRef.current[0] !== cardIndex) {
-      promote(cardIndex);
+      promote(cardIndex, NEWS_SWITCH_CARD_CLICK);
     }
   };
 
@@ -847,7 +886,7 @@ const NewsDeck = ({ tweets = [], onExpandedChange = null }) => {
                     position: index + 1,
                     total: Math.min(visibleTweets.length, MAX_TWEETS),
                   })}
-                  onClick={() => promote(index)}
+                  onClick={() => promote(index, NEWS_SWITCH_DOT_CLICK)}
                 />
               ),
             )}
