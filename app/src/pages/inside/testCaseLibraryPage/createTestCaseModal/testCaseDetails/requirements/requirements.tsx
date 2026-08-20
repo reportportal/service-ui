@@ -22,6 +22,7 @@ import { FieldErrorHint, FieldProvider } from 'components/fields';
 import { createClassnames, uniqueId } from 'common/utils';
 import { Requirement } from 'types/testCase';
 import { commonMessages } from 'pages/inside/common/common-messages';
+import { REQUIREMENT_FIELD_MAX_LENGTH } from '../../constants';
 
 import styles from './requirements.scss';
 
@@ -53,7 +54,7 @@ const RequirementsList = ({ fields }: WrappedFieldArrayProps<Requirement>) => {
             <div className={cx('input-container')}>
               <FieldProvider name={`${item}.value`} placeholder={formatMessage(messages.enterLink)}>
                 <FieldErrorHint provideHint={false}>
-                  <FieldText defaultWidth={false} />
+                  <FieldText defaultWidth={false} maxLength={REQUIREMENT_FIELD_MAX_LENGTH} />
                 </FieldErrorHint>
               </FieldProvider>
             </div>

@@ -18,6 +18,7 @@ import { defineMessages, useIntl } from 'react-intl';
 import { FieldProvider } from 'components/fields/fieldProvider';
 import { FieldErrorHint } from 'components/fields/fieldErrorHint';
 import { FieldTextFlex } from '@reportportal/ui-kit';
+import { PRECONDITION_FIELD_MAX_LENGTH } from '../../constants';
 
 const messages = defineMessages({
   enterPrecondition: {
@@ -39,6 +40,8 @@ export const Precondition = () => {
         <FieldTextFlex
           label={formatMessage(messages.precondition)}
           placeholder={formatMessage(messages.enterPrecondition)}
+          maxLength={PRECONDITION_FIELD_MAX_LENGTH}
+          maxLengthDisplay={PRECONDITION_FIELD_MAX_LENGTH}
           value=""
         />
       </FieldErrorHint>

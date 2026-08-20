@@ -26,7 +26,7 @@ import { AsyncAutocompleteV2 } from 'componentLibrary/autocompletes/asyncAutocom
 import { LAUNCH_NAME_FILTER_KEY } from 'pages/inside/common/constants';
 
 import { ExistingLaunchFieldsProps, LaunchOption } from './types';
-import { LAUNCH_FORM_FIELD_NAMES, PAGE_SIZE } from './constants';
+import { LAUNCH_FORM_FIELD_NAMES, PAGE_SIZE, LAUNCH_NAME_MAX_LENGTH } from './constants';
 import { messages } from './messages';
 
 import styles from './launchFormFields.scss';
@@ -71,6 +71,7 @@ export const ExistingLaunchFields = ({ onLaunchSelect }: ExistingLaunchFieldsPro
         skipOptionCreation
         isDropdownMode
         minLength={0}
+        maxLength={LAUNCH_NAME_MAX_LENGTH}
         limitOptions={PAGE_SIZE}
         limitationText={formatMessage(messages.tooManyLaunchesResult)}
         menuClassName={cx('modal-autocomplete-menu')}

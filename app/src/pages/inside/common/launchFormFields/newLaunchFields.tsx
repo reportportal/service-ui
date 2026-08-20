@@ -32,7 +32,7 @@ import { LAUNCH_NAME_FILTER_KEY } from 'pages/inside/common/constants';
 import { MAX_FIELD_LENGTH } from 'common/utils/validation';
 
 import { NewLaunchFieldsProps, TestPlanOption } from './types';
-import { LAUNCH_FORM_FIELD_NAMES } from './constants';
+import { LAUNCH_FORM_FIELD_NAMES, LAUNCH_NAME_MAX_LENGTH } from './constants';
 import { messages } from './messages';
 import { AttributeListField } from './attributeListField';
 
@@ -123,7 +123,12 @@ export const NewLaunchFields = ({
           validate={validateLaunchName}
         >
           <FieldErrorHint provideHint={false}>
-            <FieldText label={formatMessage(messages.launchName)} defaultWidth={false} isRequired />
+            <FieldText
+              label={formatMessage(messages.launchName)}
+              defaultWidth={false}
+              isRequired
+              maxLength={LAUNCH_NAME_MAX_LENGTH}
+            />
           </FieldErrorHint>
         </FieldProvider>
       </div>

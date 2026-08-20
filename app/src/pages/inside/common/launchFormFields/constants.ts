@@ -32,3 +32,4 @@ export const LAUNCH_FORM_FIELD_NAMES = {
 } as const;
 
 export const PAGE_SIZE = 50;
+export const LAUNCH_NAME_MAX_LENGTH = 255;
