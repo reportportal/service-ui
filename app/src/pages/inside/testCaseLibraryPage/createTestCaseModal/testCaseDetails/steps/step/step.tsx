@@ -22,6 +22,10 @@ import { createClassnames } from 'common/utils';
 import { FieldErrorHint, FieldProvider } from 'components/fields';
 import { AttachmentList, type Attachment } from 'pages/inside/common/attachmentList';
 import { FieldSection } from 'pages/inside/common/fieldSection';
+import {
+  INSTRUCTIONS_FIELD_MAX_LENGTH,
+  EXPECTED_RESULT_FIELD_MAX_LENGTH,
+} from '../../../constants';
 
 import styles from './step.scss';
 
@@ -110,6 +114,8 @@ export const Step = ({
             label={formatMessage(messages.instructions)}
             placeholder={formatMessage(messages.enterInstruction)}
             minHeight={textAreaHeight}
+            maxLength={INSTRUCTIONS_FIELD_MAX_LENGTH}
+            maxLengthDisplay={INSTRUCTIONS_FIELD_MAX_LENGTH}
           />
         </FieldErrorHint>
       </FieldProvider>
@@ -120,6 +126,8 @@ export const Step = ({
             label={formatMessage(messages.expectedResult)}
             placeholder={formatMessage(messages.enterExpectedResult)}
             minHeight={textAreaHeight}
+            maxLength={EXPECTED_RESULT_FIELD_MAX_LENGTH}
+            maxLengthDisplay={EXPECTED_RESULT_FIELD_MAX_LENGTH}
           />
         </FieldErrorHint>
       </FieldProvider>

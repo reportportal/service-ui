@@ -33,7 +33,11 @@ import { messages } from './messages';
 import { commonMessages } from '../../commonMessages';
 import { PrioritySelect } from '../../prioritySelect/prioritySelect';
 import { CREATE_TEST_CASE_FORM_NAME } from '../formConstants';
-import { NAME_FIELD_MAX_LENGTH } from '../constants';
+import {
+  NAME_FIELD_MAX_LENGTH,
+  FOLDER_FIELD_MAX_LENGTH,
+  DESCRIPTION_FIELD_MAX_LENGTH,
+} from '../constants';
 
 import styles from './basicInformation.scss';
 
@@ -105,6 +109,7 @@ export const BasicInformation = ({
               placeholder={formatMessage(messages.selectOrCreateFolder)}
               shouldDisplayNewFolderButton
               isRequired
+              maxLength={FOLDER_FIELD_MAX_LENGTH}
             />
           </FieldErrorHint>
         </FieldProvider>
@@ -116,7 +121,12 @@ export const BasicInformation = ({
       </FieldProvider>
       <FieldProvider name="description" placeholder={formatMessage(messages.addDetailsOrContext)}>
         <FieldErrorHint provideHint={false} className={cx('basic-information__field')}>
-          <FieldTextFlex label={formatMessage(globalCommonMessages.description)} value="" />
+          <FieldTextFlex
+            label={formatMessage(globalCommonMessages.description)}
+            maxLength={DESCRIPTION_FIELD_MAX_LENGTH}
+            maxLengthDisplay={DESCRIPTION_FIELD_MAX_LENGTH}
+            value=""
+          />
         </FieldErrorHint>
       </FieldProvider>
       <EditableTagsSection

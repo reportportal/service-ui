@@ -62,6 +62,7 @@ interface CreateFolderAutocompleteProps {
   onChange?: (value: FolderWithFullPath | NewFolderData) => void;
   onBlur?: () => void;
   onFocus?: () => void;
+  maxLength?: number;
 }
 
 export const CreateFolderAutocomplete = ({
@@ -84,6 +85,7 @@ export const CreateFolderAutocomplete = ({
   onChange = noop,
   onBlur = noop,
   onFocus = noop,
+  maxLength,
 }: CreateFolderAutocompleteProps) => {
   const { formatMessage } = useIntl();
   const [inputValue, setInputValue] = useState('');
@@ -215,6 +217,7 @@ export const CreateFolderAutocomplete = ({
         isDropdownMode
         placeholder={placeholder || formatMessage(commonMessages.searchFolderToSelect)}
         options={filteredFolders}
+        maxLength={maxLength}
         customEmptyListMessage={customEmptyListMessage || formatMessage(messages.noFoldersFound)}
         renderOption={renderOption}
         parseValueToString={parseValueToString}
