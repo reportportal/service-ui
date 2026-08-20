@@ -36,7 +36,8 @@ export const parseSentences = (text) =>
     .filter(Boolean);
 
 export const stripEmojis = (str) => {
-  const emojiRegex = /\p{Extended_Pictographic}|\uFE0F|\u200D/gu;
+  const emojiRegex =
+    /(?:[#*0-9]\uFE0F?\u20E3)|\p{Extended_Pictographic}|\p{Regional_Indicator}|\uFE0F|\u200D/gu;
 
   return str.replace(emojiRegex, '').replace(/\s+/g, ' ').trim();
 };

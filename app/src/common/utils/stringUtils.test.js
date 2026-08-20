@@ -131,7 +131,14 @@ describe('stripEmojis', () => {
     expect(stripEmojis('Hi 😀😃😄!')).toBe('Hi !');
   });
 
-  test('should return unchanged plain text', () => {
-    expect(stripEmojis('No emojis here')).toBe('No emojis here');
+  test('should remove flag and keycap sequences', () => {
+    expect(stripEmojis('Hello 🇺🇸 world')).toBe('Hello world');
+    expect(stripEmojis('Score 1️⃣5️⃣')).toBe('Score');
+    expect(stripEmojis('Tags #️⃣ *️⃣')).toBe('Tags');
+  });
+
+  test('should keep plain letters and digits', () => {
+    expect(stripEmojis('Hello US')).toBe('Hello US');
+    expect(stripEmojis('Version 5 #1 *2')).toBe('Version 5 #1 *2');
   });
 });
