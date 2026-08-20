@@ -23,3 +23,15 @@ export const normalizeExecutionEstimationTime = (value: unknown): string | numbe
 
   return Number.isNaN(time) ? (value as string | number) : time;
 };
+
+export const EXECUTION_ESTIMATION_TIME_MAX_VALUE = 2147483647;
+
+export const createExecutionEstimationTimeMaxValidator =
+  (errorMessage: string) =>
+  (value: unknown): string | undefined => {
+    const time = Number(value);
+
+    return !Number.isNaN(time) && time > EXECUTION_ESTIMATION_TIME_MAX_VALUE
+      ? errorMessage
+      : undefined;
+  };

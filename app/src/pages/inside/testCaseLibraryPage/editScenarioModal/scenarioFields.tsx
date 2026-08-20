@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+import { useCallback } from 'react';
 import { useSelector } from 'react-redux';
 import { MIME_TYPES } from '@reportportal/ui-kit/fileDropArea';
 import { FieldNumber } from '@reportportal/ui-kit';
@@ -22,7 +23,11 @@ import { noop } from 'es-toolkit';
 
 import { createClassnames } from 'common/utils';
 import { FieldProvider } from 'components/fields';
-import { normalizeExecutionEstimationTime } from '../utils/executionEstimationTimeFieldUtils';
+import {
+  normalizeExecutionEstimationTime,
+  EXECUTION_ESTIMATION_TIME_MAX_VALUE,
+  createExecutionEstimationTimeMaxValidator,
+} from '../utils/executionEstimationTimeFieldUtils';
 
 import { AttachmentArea } from '../createTestCaseModal/attachmentArea';
 import { Precondition } from '../createTestCaseModal/testCaseDetails/precondition';
@@ -45,6 +50,16 @@ export const ScenarioFields = ({ formName }: ScenarioFieldsProps) => {
   const manualScenarioType = useSelector(manualScenarioTypeSelector(formName));
   const stepsData = useSelector(stepsDataSelector(formName));
 
+  const validateExecutionTime = useCallback(
+    (value: unknown) =>
+      createExecutionEstimationTimeMaxValidator(
+        formatMessage(commonMessages.executionTimeMaxValueHint, {
+          maxValue: EXECUTION_ESTIMATION_TIME_MAX_VALUE,
+        }),
+      )(value),
+    [formatMessage],
+  );
+
   const { steps, isEditMode, handleAddStep, handleRemoveStep, handleMoveStep, handleReorderSteps } =
     useStepsManagement({
       formName,
@@ -60,9 +75,11 @@ export const ScenarioFields = ({ formName }: ScenarioFieldsProps) => {
         <FieldProvider
           name="executionEstimationTime"
           parse={normalizeExecutionEstimationTime}
+          validate={validateExecutionTime}
         >
           <FieldNumber
             min={1}
+            max={EXECUTION_ESTIMATION_TIME_MAX_VALUE}
             label={formatMessage(commonMessages.executionTime)}
             onChange={noop}
           />
