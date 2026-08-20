@@ -142,7 +142,7 @@ import OpenInNewTabIcon from 'common/img/open-in-new-tab-inline.svg';
 import { Input } from 'components/inputs/input';
 import { InputDropdown } from 'components/inputs/inputDropdown';
 import { InputRadio } from 'components/inputs/inputRadio';
-import { URLS } from 'common/urls';
+import { URLS, resolveApiPath } from 'common/urls';
 import { isEmailIntegrationAvailableSelector, SECRET_FIELDS_KEY } from 'controllers/plugins';
 import { showScreenLockAction, hideScreenLockAction } from 'controllers/screenLock';
 import {
@@ -487,6 +487,7 @@ export const createImportProps = (pluginName) => ({
     fetch,
     downloadFile,
     URLS,
+    resolveApiPath,
     debounce,
     getGroupedDefectTypesOptions,
     isEmptyObject,
