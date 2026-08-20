@@ -28,3 +28,15 @@ export const capitalize = (str) => {
 export const stringEqual = (value1, value2) => String(value1) === String(value2);
 
 export const compareStringsLocale = (a, b) => a.localeCompare(b);
+
+export const parseSentences = (text) =>
+  text
+    .split(/(?<=[.!?])\s+|\r?\n/)
+    .map((s) => s.trim())
+    .filter(Boolean);
+
+export const stripEmojis = (str) => {
+  const emojiRegex = /\p{Extended_Pictographic}|\uFE0F|\u200D/gu;
+
+  return str.replace(emojiRegex, '').replace(/\s+/g, ' ').trim();
+};
