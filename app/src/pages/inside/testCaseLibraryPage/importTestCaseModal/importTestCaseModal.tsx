@@ -310,6 +310,7 @@ export const ImportTestCaseModal = ({
               }}
               acceptFileMimeTypes={CSV_MIME_TYPES}
               maxFileSize={MAX_FILE_SIZE_BYTES}
+              isMultipleFiles={false}
               onFilesAdded={handleFilesAdded}
             >
               <div className={cx('import-test-case-modal__drop-wrap')}>
