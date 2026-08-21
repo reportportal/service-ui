@@ -240,7 +240,7 @@ const messages = {
     },
     btsPasswordHint: {
       id: 'BtsCommonMessages.btsPasswordHint',
-      defaultMessage: 'Password should have size from 1 to 55',
+      defaultMessage: 'Password should have size from 1 to 512',
     },
     portFieldHint: {
       id: 'EmailFormFields.portFieldHint',

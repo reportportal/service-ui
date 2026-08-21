@@ -246,7 +246,7 @@
   "BtsCommonMessages.authTypeLabel": "Tipo de autorización",
   "BtsCommonMessages.btsBoardIdHint": "El identificador del tablero debe tener entre 1 y 55 caracteres",
   "BtsCommonMessages.btsIntegrationNameHint": "El nombre de la integración debe tener entre 1 y 55 caracteres",
-  "BtsCommonMessages.btsPasswordHint": "La contraseña debe tener entre 1 y 55 caracteres",
+  "BtsCommonMessages.btsPasswordHint": "La contraseña debe tener entre 1 y 512 caracteres",
   "BtsCommonMessages.btsProjectIdHint": "El ID del proyecto debe tener entre 1 y 55 caracteres",
   "BtsCommonMessages.btsProjectKeyHint": "La clave del proyecto debe tener entre 1 y 55 caracteres",
   "BtsCommonMessages.btsUrlHint": "Por favor, proporciona un enlace válido al sistema de gestión de incidencias",

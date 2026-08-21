@@ -246,7 +246,7 @@
   "BtsCommonMessages.authTypeLabel": "Тып аўтарызацыі",
   "BtsCommonMessages.btsBoardIdHint": "Ідэнтыфікатар панэлі павінен мець памер ад 1 да 55 знакаў",
   "BtsCommonMessages.btsIntegrationNameHint": "Памер імя Інтэграцыі павінен быць ад 1 да 55",
-  "BtsCommonMessages.btsPasswordHint": "Пароль павінен быць памерам ад 1 да 55",
+  "BtsCommonMessages.btsPasswordHint": "Пароль павінен быць памерам ад 1 да 512",
   "BtsCommonMessages.btsProjectIdHint": "ID праекта павінен быць памерам ад 1 да 55",
   "BtsCommonMessages.btsProjectKeyHint": "Ключ праекта павіннен быць памерам ад 1 да 55",
   "BtsCommonMessages.btsUrlHint": "Калі ласка, падайце сапраўдную спасылку ў САХ",
