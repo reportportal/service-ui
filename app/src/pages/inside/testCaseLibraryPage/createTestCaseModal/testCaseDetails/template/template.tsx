@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+import { useCallback } from 'react';
 import { defineMessages, useIntl } from 'react-intl';
 import { noop } from 'es-toolkit';
 import { FieldNumber } from '@reportportal/ui-kit';
@@ -22,6 +23,10 @@ import { createClassnames } from 'common/utils';
 import { FieldProvider } from 'components/fields';
 import { ManualScenarioType } from 'pages/inside/testCaseLibraryPage/types';
 import { commonMessages } from 'pages/inside/testCaseLibraryPage/commonMessages';
+import {
+  EXECUTION_ESTIMATION_TIME_MAX_VALUE,
+  createExecutionEstimationTimeMaxValidator,
+} from 'pages/inside/testCaseLibraryPage/utils/executionEstimationTimeFieldUtils';
 
 import { DropdownWithDescription } from '../../dropdownWithDescription';
 
@@ -59,6 +64,16 @@ interface TemplateProps {
 export const Template = ({ isTemplateFieldDisabled = false }: TemplateProps) => {
   const { formatMessage } = useIntl();
 
+  const validateExecutionTime = useCallback(
+    (value: unknown) =>
+      createExecutionEstimationTimeMaxValidator(
+        formatMessage(commonMessages.executionTimeMaxValueHint, {
+          maxValue: EXECUTION_ESTIMATION_TIME_MAX_VALUE,
+        }),
+      )(value),
+    [formatMessage],
+  );
+
   const templateOptions = [
     {
       value: ManualScenarioType.STEPS,
@@ -83,9 +98,10 @@ export const Template = ({ isTemplateFieldDisabled = false }: TemplateProps) => 
         />
       </FieldProvider>
       <div className={cx('template__execution-time')}>
-        <FieldProvider name="executionEstimationTime">
+        <FieldProvider name="executionEstimationTime" validate={validateExecutionTime}>
           <FieldNumber
             min={1}
+            max={EXECUTION_ESTIMATION_TIME_MAX_VALUE}
             label={formatMessage(commonMessages.executionTime)}
             onChange={noop}
           />

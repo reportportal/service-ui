@@ -110,6 +110,10 @@ export const commonMessages: Record<string, MessageDescriptor> = defineMessages(
     id: 'CreateTestCaseModal.executionTime',
     defaultMessage: 'Execution time, min',
   },
+  executionTimeMaxValueHint: {
+    id: 'CreateTestCaseModal.executionTimeMaxValueHint',
+    defaultMessage: 'Value cannot exceed {maxValue}',
+  },
   duplicateTestCase: {
     id: 'TestCaseLibraryPage.duplicateTestCase',
     defaultMessage: 'Duplicate Test Case',
