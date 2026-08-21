@@ -187,7 +187,7 @@ export const useManualLaunchesTableData = (
             startTime: {
               content: startTime,
               component: (
-                <div {...baseCellProps} {...openSidePanelHandlers}>
+                <div className={cx('cell-content', { selected: isSelected })}>
                   {startTime ? (
                     <AbsRelTime
                       startTime={startTime}
