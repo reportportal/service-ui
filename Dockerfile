@@ -23,7 +23,8 @@ USER root
 COPY --from=build-frontend /usr/src/app/build /usr/share/nginx/html
 COPY --from=generate-build-info /usr/src/app/build /usr/share/nginx/html
 
-RUN rm /etc/nginx/conf.d/default.conf
+RUN rm /etc/nginx/conf.d/default.conf \
+    && mkdir -p /etc/nginx/extra-conf.d
 COPY nginx.conf /etc/nginx/nginx.conf.template
 
 COPY entrypoint.sh /entrypoint.sh
