@@ -52,6 +52,14 @@ export const LOGIN_PAGE_EVENTS = {
     element_name: elementName,
     condition,
   }),
+  CLICK_ON_UNDO: {
+    ...getBasicClickEventParameters(LOGIN_PAGE),
+    element_name: 'undo',
+  },
+  SWIPE_NEWS_CARD: {
+    ...getBasicClickEventParameters(LOGIN_PAGE),
+    condition: 'card_swipe',
+  },
   CLICK_ON_READ_MORE: {
     ...getBasicClickEventParameters(LOGIN_PAGE),
     link_name: 'read_more',

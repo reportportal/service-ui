@@ -660,6 +660,7 @@ const NewsDeck = ({ tweets = [], onExpandedChange = null }) => {
       cycle(dy > 0 ? 1 : -1, NEWS_SWITCH_CARD_DRAG_AND_DROP);
     }
     if (axis === 'x' && Math.abs(dx) > DRAG_DISMISS_THRESHOLD_PX) {
+      trackEvent(LOGIN_PAGE_EVENTS.SWIPE_NEWS_CARD);
       dismiss(dx > 0 ? 1 : -1);
     }
   };
@@ -867,7 +868,10 @@ const NewsDeck = ({ tweets = [], onExpandedChange = null }) => {
           <button
             type="button"
             className={cx('undo-button')}
-            onClick={undoDismiss}
+            onClick={() => {
+              trackEvent(LOGIN_PAGE_EVENTS.CLICK_ON_UNDO);
+              undoDismiss();
+            }}
             tabIndex={isUndoShown ? 0 : -1}
             aria-hidden={!isUndoShown}
           >
