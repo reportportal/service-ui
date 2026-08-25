@@ -14,10 +14,11 @@
  * limitations under the License.
  */
 
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { projectKeySelector } from 'controllers/project';
 import { isEmpty } from 'es-toolkit/compat';
+import { saveAs } from 'file-saver';
 import { AttachedFile } from '@reportportal/ui-kit';
 
 import { createClassnames, fetch, convertBytesToMB } from 'common/utils';
@@ -41,25 +42,28 @@ export const AttachmentList = ({
 }: AttachmentsListProps) => {
   const projectKey = useSelector(projectKeySelector);
   const [attachmentsWithPreview, setAttachmentsWithPreview] = useState<Attachment[] | null>(null);
-  const getAttachmentWithThumbnail = async (attachment: Attachment, objectUrls: string[]) => {
-    try {
-      const response = await fetch(
-        URLS.attachmentThumbnail(projectKey, attachment.id),
-        { responseType: 'blob' },
-        true,
-      );
-      const src = URL.createObjectURL(response.data as MediaSource);
+  const getAttachmentWithThumbnail = useCallback(
+    async (attachment: Attachment, objectUrls: string[]) => {
+      try {
+        const response = await fetch(
+          URLS.attachmentThumbnail(projectKey, attachment.id),
+          { responseType: 'blob' },
+          true,
+        );
+        const src = URL.createObjectURL(response.data as MediaSource);
 
-      objectUrls.push(src);
+        objectUrls.push(src);
 
-      return {
-        ...attachment,
-        src,
-      };
-    } catch {
-      return { ...attachment };
-    }
-  };
+        return {
+          ...attachment,
+          src,
+        };
+      } catch {
+        return { ...attachment };
+      }
+    },
+    [projectKey],
+  );
 
   useEffect(() => {
     let isMounted = true;
@@ -89,10 +93,27 @@ export const AttachmentList = ({
         URL.revokeObjectURL(url);
       });
     };
-  }, [withPreview, attachments]);
+  }, [withPreview, attachments, getAttachmentWithThumbnail]);
 
   const displayedAttachments =
     withPreview && attachmentsWithPreview ? attachmentsWithPreview : attachments;
+
+  const handleDownload = useCallback(
+    async (attachmentId: number, fileName: string) => {
+      try {
+        const response = await fetch(
+          URLS.tmsAttachmentDownload(projectKey, attachmentId),
+          { responseType: 'blob' },
+          true,
+        );
+
+        saveAs(response.data as Blob, fileName);
+      } catch (error) {
+        console.error('Download failed:', error);
+      }
+    },
+    [projectKey],
+  );
 
   return (
     <div className={cx('attachments-list', className)}>
@@ -105,6 +126,9 @@ export const AttachmentList = ({
           textPosition={withPreview ? 'bottom' : 'right'}
           imageSrc={src}
           isFullWidth
+          onDownload={() => {
+            handleDownload(id, fileName).catch(() => {});
+          }}
         />
       ))}
     </div>
