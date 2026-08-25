@@ -42,25 +42,28 @@ export const AttachmentList = ({
 }: AttachmentsListProps) => {
   const projectKey = useSelector(projectKeySelector);
   const [attachmentsWithPreview, setAttachmentsWithPreview] = useState<Attachment[] | null>(null);
-  const getAttachmentWithThumbnail = async (attachment: Attachment, objectUrls: string[]) => {
-    try {
-      const response = await fetch(
-        URLS.attachmentThumbnail(projectKey, attachment.id),
-        { responseType: 'blob' },
-        true,
-      );
-      const src = URL.createObjectURL(response.data as MediaSource);
+  const getAttachmentWithThumbnail = useCallback(
+    async (attachment: Attachment, objectUrls: string[]) => {
+      try {
+        const response = await fetch(
+          URLS.attachmentThumbnail(projectKey, attachment.id),
+          { responseType: 'blob' },
+          true,
+        );
+        const src = URL.createObjectURL(response.data as MediaSource);
 
-      objectUrls.push(src);
+        objectUrls.push(src);
 
-      return {
-        ...attachment,
-        src,
-      };
-    } catch {
-      return { ...attachment };
-    }
-  };
+        return {
+          ...attachment,
+          src,
+        };
+      } catch {
+        return { ...attachment };
+      }
+    },
+    [projectKey],
+  );
 
   useEffect(() => {
     let isMounted = true;
