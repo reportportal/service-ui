@@ -20,8 +20,7 @@ import { useIntl } from 'react-intl';
 import OpenIcon from 'common/img/open-in-new-tab-inline.svg';
 import { useEffect } from 'react';
 import { referenceDictionary } from 'common/utils';
-import { showModalAction } from 'controllers/modal';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { userIdSelector } from 'controllers/user';
 import { faqDictionary } from 'common/utils/referenceDictionary';
 import { HELP_AND_SERVICE_VERSIONS_EVENTS } from 'analyticsEvents/helpAndServiceVersionsEvents';
@@ -35,7 +34,6 @@ const cx = classNames.bind(styles);
 
 export const FAQContent = ({ onOpen, closeSidebar, closePopover }) => {
   const { formatMessage } = useIntl();
-  const dispatch = useDispatch();
   const userId = useSelector(userIdSelector);
   const { trackEvent } = useTracking();
 
