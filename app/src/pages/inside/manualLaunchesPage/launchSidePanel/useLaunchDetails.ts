@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { useEffect, useState, useCallback } from 'react';
+import { useEffect, useState, useCallback, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { projectKeySelector } from 'controllers/project';
@@ -31,6 +31,11 @@ export const useLaunchDetails = (launchId: number | null) => {
   const [refetchTrigger, setRefetchTrigger] = useState(0);
   const dispatch = useDispatch();
   const projectKey = useSelector(projectKeySelector);
+  const lastLoadedKeyRef = useRef<{
+    id: number;
+    projectKey: string;
+    refetchTrigger: number;
+  } | null>(null);
 
   const refetchLaunchDetails = useCallback(() => {
     setRefetchTrigger((prev) => prev + 1);
@@ -38,8 +43,25 @@ export const useLaunchDetails = (launchId: number | null) => {
 
   useEffect(() => {
     if (!launchId) {
+      return undefined;
+    }
+
+    const lastLoadedKey = lastLoadedKeyRef.current;
+    const isUpToDate =
+      lastLoadedKey?.id === launchId &&
+      lastLoadedKey?.projectKey === projectKey &&
+      lastLoadedKey?.refetchTrigger === refetchTrigger;
+
+    if (isUpToDate) {
+      return undefined;
+    }
+
+    const isDifferentLaunch =
+      lastLoadedKey?.id !== launchId || lastLoadedKey?.projectKey !== projectKey;
+
+    if (isDifferentLaunch) {
+      lastLoadedKeyRef.current = null;
       setLaunchDetails(null);
-      return;
     }
 
     const abortController = new AbortController();
@@ -58,6 +80,7 @@ export const useLaunchDetails = (launchId: number | null) => {
         }
 
         setLaunchDetails(response);
+        lastLoadedKeyRef.current = { id: launchId, projectKey, refetchTrigger };
       } catch {
         if (abortController.signal.aborted) {
           return;
@@ -69,9 +92,7 @@ export const useLaunchDetails = (launchId: number | null) => {
           }),
         );
       } finally {
-        if (!abortController.signal.aborted) {
-          hideSpinner();
-        }
+        hideSpinner();
       }
     };
 
@@ -79,6 +100,7 @@ export const useLaunchDetails = (launchId: number | null) => {
 
     return () => {
       abortController.abort();
+      hideSpinner();
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [projectKey, launchId, dispatch, refetchTrigger]);
