@@ -31,9 +31,11 @@ export const useLaunchDetails = (launchId: number | null) => {
   const [refetchTrigger, setRefetchTrigger] = useState(0);
   const dispatch = useDispatch();
   const projectKey = useSelector(projectKeySelector);
-  const lastFetchedRef = useRef<{ id: number; projectKey: string; refetchTrigger: number } | null>(
-    null,
-  );
+  const lastLoadedKeyRef = useRef<{
+    id: number;
+    projectKey: string;
+    refetchTrigger: number;
+  } | null>(null);
 
   const refetchLaunchDetails = useCallback(() => {
     setRefetchTrigger((prev) => prev + 1);
@@ -41,20 +43,25 @@ export const useLaunchDetails = (launchId: number | null) => {
 
   useEffect(() => {
     if (!launchId) {
-      return;
+      return undefined;
     }
 
-    setLaunchDetails((prevLaunchDetails) =>
-      prevLaunchDetails && prevLaunchDetails.id !== launchId ? null : prevLaunchDetails,
-    );
+    const lastLoadedKey = lastLoadedKeyRef.current;
+    const isUpToDate =
+      lastLoadedKey?.id === launchId &&
+      lastLoadedKey?.projectKey === projectKey &&
+      lastLoadedKey?.refetchTrigger === refetchTrigger;
 
-    const isAlreadyUpToDate =
-      lastFetchedRef.current?.id === launchId &&
-      lastFetchedRef.current?.projectKey === projectKey &&
-      lastFetchedRef.current?.refetchTrigger === refetchTrigger;
-
-    if (isAlreadyUpToDate) {
+    if (isUpToDate) {
       return undefined;
+    }
+
+    const isDifferentLaunch =
+      lastLoadedKey?.id !== launchId || lastLoadedKey?.projectKey !== projectKey;
+
+    if (isDifferentLaunch) {
+      lastLoadedKeyRef.current = null;
+      setLaunchDetails(null);
     }
 
     const abortController = new AbortController();
@@ -73,7 +80,7 @@ export const useLaunchDetails = (launchId: number | null) => {
         }
 
         setLaunchDetails(response);
-        lastFetchedRef.current = { id: launchId, projectKey, refetchTrigger };
+        lastLoadedKeyRef.current = { id: launchId, projectKey, refetchTrigger };
       } catch {
         if (abortController.signal.aborted) {
           return;
@@ -85,9 +92,7 @@ export const useLaunchDetails = (launchId: number | null) => {
           }),
         );
       } finally {
-        if (!abortController.signal.aborted) {
-          hideSpinner();
-        }
+        hideSpinner();
       }
     };
 
@@ -95,6 +100,7 @@ export const useLaunchDetails = (launchId: number | null) => {
 
     return () => {
       abortController.abort();
+      hideSpinner();
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [projectKey, launchId, dispatch, refetchTrigger]);
