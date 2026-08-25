@@ -26,7 +26,7 @@ import { MessageDescriptor, useIntl } from 'react-intl';
 import { formValueSelector, reduxForm } from 'redux-form';
 import { Button, Modal, Tooltip } from '@reportportal/ui-kit';
 import { useTracking } from 'react-tracking';
-import { createClassnames, referenceDictionary } from 'common/utils';
+import { createClassnames, docsReferences } from 'common/utils';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { ExternalLink } from 'pages/inside/common/externalLink';
 import { fetchUserInfoAction, idSelector } from 'controllers/user';
@@ -251,7 +251,7 @@ const ManageAssignmentsOrganizationModalView = ({
   const renderDocumentationLink = useCallback(
     (chunks: ReactNode) => (
       <ExternalLink
-        href={referenceDictionary.manageAssignmentOrgLevel}
+        href={docsReferences.manageAssignmentOrgLevel}
         variant="compact"
         isColoredIcon={false}
         onClick={() => trackEvent(ORGANIZATION_PAGE_EVENTS.MANAGE_ASSIGNMENTS_DOCUMENTATION)}

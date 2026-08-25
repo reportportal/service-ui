@@ -20,8 +20,7 @@ import { useIntl } from 'react-intl';
 import OpenIcon from 'common/img/open-in-new-tab-inline.svg';
 import { useEffect } from 'react';
 import { referenceDictionary } from 'common/utils';
-import { showModalAction } from 'controllers/modal';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { userIdSelector } from 'controllers/user';
 import { faqDictionary } from 'common/utils/referenceDictionary';
 import { HELP_AND_SERVICE_VERSIONS_EVENTS } from 'analyticsEvents/helpAndServiceVersionsEvents';
@@ -35,7 +34,6 @@ const cx = classNames.bind(styles);
 
 export const FAQContent = ({ onOpen, closeSidebar, closePopover }) => {
   const { formatMessage } = useIntl();
-  const dispatch = useDispatch();
   const userId = useSelector(userIdSelector);
   const { trackEvent } = useTracking();
 
@@ -79,11 +77,8 @@ export const FAQContent = ({ onOpen, closeSidebar, closePopover }) => {
   const openModal = () => {
     closePopover();
     closeSidebar();
-    dispatch(
-      showModalAction({
-        id: 'requestSupportModal',
-      }),
-    );
+    // Bring the modal back when needed and transform the link into a <button>
+    // dispatch(showModalAction({ id: 'requestSupportModal'}));
     trackEvent(HELP_AND_SERVICE_VERSIONS_EVENTS.CLICK_REQUEST_PROFESSIONAL_SERVICE);
   };
 
@@ -136,9 +131,12 @@ export const FAQContent = ({ onOpen, closeSidebar, closePopover }) => {
           channel: () => furtherAssistanceLinks.channel,
         })}
       </p>
-      <button className={cx('menu-item', 'with-divider')} onClick={openModal}>
-        {formatMessage(messages.requestService)}
-      </button>
+      <LinkItem
+        link={faqDictionary.rpRequestService}
+        content={formatMessage(messages.requestService)}
+        className={cx('menu-item', 'with-divider')}
+        onClick={openModal}
+      />
     </>
   );
 };
