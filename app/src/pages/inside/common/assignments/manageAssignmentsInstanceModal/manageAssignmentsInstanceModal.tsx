@@ -27,7 +27,7 @@ import {
 import { Modal, SystemMessage } from '@reportportal/ui-kit';
 import { ADMINISTRATOR } from 'common/constants/accountRoles';
 import { useTracking } from 'react-tracking';
-import { createClassnames, fetch, referenceDictionary } from 'common/utils';
+import { createClassnames, docsReferences, fetch } from 'common/utils';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { ExternalLink } from 'pages/inside/common/externalLink';
 import { messages } from 'common/constants/localization/assignmentsLocalization';
@@ -358,7 +358,7 @@ const ManageAssignmentsInstanceModalView = ({
   const renderDocumentationLink = useCallback(
     (chunks: ReactNode) => (
       <ExternalLink
-        href={referenceDictionary.manageAssignmentInstanceLevel}
+        href={docsReferences.manageAssignmentInstanceLevel}
         variant="compact"
         isColoredIcon={false}
         onClick={() => trackEvent(ALL_USERS_PAGE_EVENTS.MANAGE_ASSIGNMENTS_DOCUMENTATION)}

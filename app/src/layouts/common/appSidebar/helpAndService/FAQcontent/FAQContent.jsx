@@ -79,11 +79,8 @@ export const FAQContent = ({ onOpen, closeSidebar, closePopover }) => {
   const openModal = () => {
     closePopover();
     closeSidebar();
-    dispatch(
-      showModalAction({
-        id: 'requestSupportModal',
-      }),
-    );
+    // Bring the modal back when needed and transform the link into a <button>
+    // dispatch(showModalAction({ id: 'requestSupportModal'}));
     trackEvent(HELP_AND_SERVICE_VERSIONS_EVENTS.CLICK_REQUEST_PROFESSIONAL_SERVICE);
   };
 
@@ -136,9 +133,12 @@ export const FAQContent = ({ onOpen, closeSidebar, closePopover }) => {
           channel: () => furtherAssistanceLinks.channel,
         })}
       </p>
-      <button className={cx('menu-item', 'with-divider')} onClick={openModal}>
-        {formatMessage(messages.requestService)}
-      </button>
+      <LinkItem
+        link={faqDictionary.rpRequestService}
+        content={formatMessage(messages.requestService)}
+        className={cx('menu-item', 'with-divider')}
+        onClick={openModal}
+      />
     </>
   );
 };

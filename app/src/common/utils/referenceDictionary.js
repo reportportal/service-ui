@@ -66,10 +66,6 @@ export const referenceDictionary = {
     'https://reportportal.io/pricing/saas/?utm_source=trigger&utm_medium=product&utm_campaign=promo_page&utm_content=cloud_version',
   rpExplorePremiumFeaturesCloud:
     'https://reportportal.io/docs/terms-and-conditions/PremiumFeatures/?utm_source=trigger&utm_medium=product&utm_campaign=promo_page&utm_content=cloud_version',
-  manageAssignmentOrgLevel:
-    'https://reportportal.io/docs/configuration/organization-level/OrganizationUsers#manage-assignments',
-  manageAssignmentInstanceLevel:
-    'https://reportportal.io/docs/configuration/instance-level/AllUsers#manage-assignments',
 };
 
 export const docsReferences = {
@@ -98,6 +94,10 @@ export const docsReferences = {
     'https://reportportal.io/docs/log-data-in-reportportal/ImplementOwnIntegration/',
   logTypesDocs: 'https://reportportal.io/docs/configuration/ProjectSettings#log-types',
   userManagement: 'https://reportportal.io/docs/configuration/UserManagement/',
+  manageAssignmentOrgLevel:
+    'https://reportportal.io/docs/configuration/organization-level/OrganizationUsers#manage-assignments',
+  manageAssignmentInstanceLevel:
+    'https://reportportal.io/docs/configuration/instance-level/AllUsers#manage-assignments',
 };
 
 export const faqDictionary = {
@@ -113,6 +113,8 @@ export const faqDictionary = {
     'https://reportportal.io/docs/installation-steps/ReportPortal23.1FileStorageOptions',
   pricingOptions: 'https://reportportal.io/pricing/saas',
   rpEmailRequestSupport: 'mailto:support@reportportal.io?subject=Support Request from RP instance',
+  rpRequestService:
+    'https://reportportal.io/contact-us/general/?utm_source=trigger&utm_medium=product&utm_campaign=faq&utm_content=request_service',
 };
 
 export const servicesUpdate = {
