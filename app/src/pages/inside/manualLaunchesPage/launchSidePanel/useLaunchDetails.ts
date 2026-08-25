@@ -38,9 +38,12 @@ export const useLaunchDetails = (launchId: number | null) => {
 
   useEffect(() => {
     if (!launchId) {
-      setLaunchDetails(null);
       return;
     }
+
+    setLaunchDetails((prevLaunchDetails) =>
+      prevLaunchDetails && prevLaunchDetails.id !== launchId ? null : prevLaunchDetails,
+    );
 
     const abortController = new AbortController();
 
