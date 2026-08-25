@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { useEffect, useState, useCallback } from 'react';
+import { useEffect, useState, useCallback, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { projectKeySelector } from 'controllers/project';
@@ -31,6 +31,9 @@ export const useLaunchDetails = (launchId: number | null) => {
   const [refetchTrigger, setRefetchTrigger] = useState(0);
   const dispatch = useDispatch();
   const projectKey = useSelector(projectKeySelector);
+  const lastFetchedRef = useRef<{ id: number; projectKey: string; refetchTrigger: number } | null>(
+    null,
+  );
 
   const refetchLaunchDetails = useCallback(() => {
     setRefetchTrigger((prev) => prev + 1);
@@ -44,6 +47,15 @@ export const useLaunchDetails = (launchId: number | null) => {
     setLaunchDetails((prevLaunchDetails) =>
       prevLaunchDetails && prevLaunchDetails.id !== launchId ? null : prevLaunchDetails,
     );
+
+    const isAlreadyUpToDate =
+      lastFetchedRef.current?.id === launchId &&
+      lastFetchedRef.current?.projectKey === projectKey &&
+      lastFetchedRef.current?.refetchTrigger === refetchTrigger;
+
+    if (isAlreadyUpToDate) {
+      return undefined;
+    }
 
     const abortController = new AbortController();
 
@@ -61,6 +73,7 @@ export const useLaunchDetails = (launchId: number | null) => {
         }
 
         setLaunchDetails(response);
+        lastFetchedRef.current = { id: launchId, projectKey, refetchTrigger };
       } catch {
         if (abortController.signal.aborted) {
           return;
