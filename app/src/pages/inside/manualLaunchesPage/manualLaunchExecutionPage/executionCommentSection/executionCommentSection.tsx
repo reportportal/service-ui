@@ -14,10 +14,11 @@
  * limitations under the License.
  */
 
-import { FC, useMemo, useRef, useState, FormEventHandler, ChangeEventHandler } from 'react';
+import { FC, useCallback, useMemo, useRef, useState, FormEventHandler, ChangeEventHandler } from 'react';
 import { useIntl } from 'react-intl';
 import { useDispatch, useSelector } from 'react-redux';
 import { useTracking } from 'react-tracking';
+import { saveAs } from 'file-saver';
 import {
   Button,
   DragAndDropIcon,
@@ -27,7 +28,8 @@ import {
 } from '@reportportal/ui-kit';
 import { isEmpty } from 'es-toolkit/compat';
 
-import { createClassnames } from 'common/utils';
+import { createClassnames, fetch } from 'common/utils';
+import { URLS } from 'common/urls';
 import { MAX_FILE_SIZE } from 'common/constants/fileConstants';
 import { useTextareaAutoResize } from 'common/hooks';
 import { projectKeySelector } from 'controllers/project';
@@ -36,7 +38,7 @@ import {
   type TestCaseExecution,
 } from 'controllers/manualLaunch';
 import { useManualLaunchId } from 'hooks/useTypedSelector';
-import { useFileAttachments } from 'hooks/useFileAttachments';
+import { useFileAttachments, type AttachedFileData } from 'hooks/useFileAttachments';
 
 import { messages as statusModalMessages } from '../executionStatusConfirmModal/messages';
 import { messages } from '../messages';
@@ -175,6 +177,24 @@ export const ExecutionCommentSection: FC<ExecutionCommentSectionProps> = ({ exec
     );
   };
 
+  const handleDownloadFile = useCallback(
+    (file: AttachedFileData) => {
+      if (file.file) {
+        saveAs(file.file, file.fileName);
+        return;
+      }
+
+      fetch(URLS.tmsAttachmentDownload(projectKey, file.id), { responseType: 'blob' }, true)
+        .then((response) => {
+          saveAs(response.data as Blob, file.fileName);
+        })
+        .catch((error) => {
+          console.error('Download failed:', error);
+        });
+    },
+    [projectKey],
+  );
+
   const handleClearLocal = () => {
     setComment('');
     setPendingFiles([]);
@@ -285,6 +305,7 @@ export const ExecutionCommentSection: FC<ExecutionCommentSectionProps> = ({ exec
                   className={cx('attachments-block__list')}
                   files={existingAttachmentsData}
                   onRemoveFile={(id) => handleExistingRemoveWithSave(id)}
+                  onDownloadFile={handleDownloadFile}
                 />
               )}
               {!isEmpty(pendingFilesData) && (
@@ -292,6 +313,7 @@ export const ExecutionCommentSection: FC<ExecutionCommentSectionProps> = ({ exec
                   className={cx('attachments-block__list')}
                   files={pendingFilesData}
                   onRemoveFile={handlePendingRemove}
+                  onDownloadFile={handleDownloadFile}
                 />
               )}
             </FileDropArea>{' '}
