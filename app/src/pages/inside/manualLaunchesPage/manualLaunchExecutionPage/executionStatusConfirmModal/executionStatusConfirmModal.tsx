@@ -162,7 +162,8 @@ const ExecutionStatusConfirmModalComponent: FC<
       );
     }
 
-    const shouldOpenBtsModal = values.postIssueToBts && !clearCommentCheckboxChecked;
+    const shouldOpenBtsModal =
+      values.postIssueToBts && hasBtsIntegration && !clearCommentCheckboxChecked;
 
     setIsSubmitting(true);
     dispatch(
