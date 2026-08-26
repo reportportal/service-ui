@@ -18,7 +18,7 @@ import { Component } from 'react';
 import Downshift from 'downshift';
 import PropTypes from 'prop-types';
 import { Manager, Reference, Popper } from 'react-popper';
-import { FieldText } from '@reportportal/ui-kit';
+import { FieldText, ThemeProvider } from '@reportportal/ui-kit';
 import { ENTER_KEY_CODE, TAB_KEY_CODE } from 'common/constants/keyCodes';
 import { AutocompleteMenu } from '../common/autocompleteMenu';
 import { autocompleteVariantType, singleAutocompleteOptionVariantType } from '../common/propTypes';
@@ -217,51 +217,52 @@ export class SingleAutocomplete extends Component {
               <Reference>
                 {({ ref }) => (
                   <div ref={this.setReferenceEl(ref)}>
-                    <FieldText
-                      {...getInputProps({
-                        placeholder: !disabled ? placeholder : '',
-                        maxLength,
-                        onFocus: () => {
-                          onFocus();
-                        },
-                        ref: refFunction,
-                        onKeyDown: (event) => {
-                          if (event.keyCode === ENTER_KEY_CODE) {
-                            event.preventDefault();
-                          }
-
-                          if (inputValue && isOpen) {
-                            this.handleKeyDown(event, setHighlightedIndex);
-                          }
-                          inputOnKeyDown?.(event);
-                        },
-                        onBlur: (e) => {
-                          const newValue = (inputValue || '').trim();
-
-                          if (!skipOptionCreation) {
-                            if (!createWithoutConfirmation && !newValue) {
-                              selectItem(newValue);
+                    <ThemeProvider theme={variant}>
+                      <FieldText
+                        {...getInputProps({
+                          placeholder: !disabled ? placeholder : '',
+                          maxLength,
+                          onFocus: () => {
+                            onFocus();
+                          },
+                          ref: refFunction,
+                          onKeyDown: (event) => {
+                            if (event.keyCode === ENTER_KEY_CODE) {
+                              event.preventDefault();
                             }
 
-                            if (createWithoutConfirmation && creatable) {
-                              selectItem(newValue);
+                            if (inputValue && isOpen) {
+                              this.handleKeyDown(event, setHighlightedIndex);
                             }
-                          }
+                            inputOnKeyDown?.(event);
+                          },
+                          onBlur: (e) => {
+                            const newValue = (inputValue || '').trim();
 
-                          onBlur(e);
-                          isOptionUnique?.(newValue ? !options.find((v) => v === newValue) : null);
-                          setTouch(true);
-                        },
-                        disabled,
-                        defaultWidth: false,
-                        isRequired,
-                        touched,
-                        error,
-                        endIcon: icon,
-                        variant,
-                        ...restInputProps,
-                      })}
-                    />
+                            if (!skipOptionCreation) {
+                              if (!createWithoutConfirmation && !newValue) {
+                                selectItem(newValue);
+                              }
+
+                              if (createWithoutConfirmation && creatable) {
+                                selectItem(newValue);
+                              }
+                            }
+
+                            onBlur(e);
+                            isOptionUnique?.(newValue ? !options.find((v) => v === newValue) : null);
+                            setTouch(true);
+                          },
+                          disabled,
+                          defaultWidth: false,
+                          isRequired,
+                          touched,
+                          error,
+                          endIcon: icon,
+                          ...restInputProps,
+                        })}
+                      />
+                    </ThemeProvider>
                   </div>
                 )}
               </Reference>
