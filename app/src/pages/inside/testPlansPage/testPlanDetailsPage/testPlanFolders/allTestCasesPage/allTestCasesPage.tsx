@@ -109,12 +109,7 @@ export const AllTestCasesPage = ({
 
   return (
     <>
-      <div
-        className={cx(
-          'all-test-cases-page',
-          isAnyRowSelected ? 'all-test-cases-page__with-panel' : '',
-        )}
-      >
+      <div className={cx('all-test-cases-page')}>
         <TestCaseList
           testCases={testCases}
           isLoading={loading}
