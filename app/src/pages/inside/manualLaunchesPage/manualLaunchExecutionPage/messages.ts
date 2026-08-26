@@ -89,4 +89,8 @@ export const messages = defineMessages({
     id: 'ExecutionStatusConfirmModal.postIssueToBts',
     defaultMessage: 'Post or link issue to BTS',
   },
+  postIssueToBtsDisabledTooltip: {
+    id: 'ExecutionStatusConfirmModal.postIssueToBtsDisabledTooltip',
+    defaultMessage: 'No integration with BTS configured yet.\nContact Admin for assistance',
+  },
 });
