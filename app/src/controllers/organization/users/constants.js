@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+import { PAGE_KEY, SIZE_KEY } from 'controllers/pagination';
+
 export const FETCH_ORGANIZATION_USERS = 'fetchOrganizationUsers';
 export const PREPARE_ACTIVE_ORGANIZATION_USERS = 'prepareActiveOrganizationUsers';
 export const ASSIGN_TO_ORGANIZATION = 'assignToOrganization';
@@ -25,5 +27,17 @@ export const UPDATE_USER_ASSIGNMENTS = 'updateUserAssignments';
 export const UPDATE_USER_ASSIGNMENTS_SUCCESS = 'updateUserAssignmentsSuccess';
 export const UPDATE_USER_ASSIGNMENTS_FAILURE = 'updateUserAssignmentsFailure';
 export const NAMESPACE = 'organizationUsers';
+export const DEFAULT_LIMITATION = 50;
 export const SEARCH_KEY = 'full_name';
 export const SORTING_KEY = 'order';
+
+export const DEFAULT_PAGINATION = {
+	[PAGE_KEY]: 1,
+	[SIZE_KEY]: DEFAULT_LIMITATION,
+};
+
+export const initialPaginationState = {
+	size: DEFAULT_LIMITATION,
+	totalElements: 0,
+	totalPages: 0,
+};

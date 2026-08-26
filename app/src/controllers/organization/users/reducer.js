@@ -28,8 +28,8 @@ import {
   UPDATE_USER_ASSIGNMENTS,
   UPDATE_USER_ASSIGNMENTS_SUCCESS,
   UPDATE_USER_ASSIGNMENTS_FAILURE,
+  initialPaginationState,
 } from './constants';
-import { initialPaginationState } from '../projects/constants';
 
 export const usersFetchReducer = fetchReducer(NAMESPACE, {
   contentPath: 'items',
