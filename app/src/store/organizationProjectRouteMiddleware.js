@@ -74,7 +74,8 @@ export const organizationProjectRouteMiddleware = (store) => (next) => (action) 
   if (!authorized || !isOrganizationPage) return next(action);
 
   const { slug: organizationSlug } = activeOrganizationSelector(getState());
-  const { projectSlug } = activeProjectSelector(getState());
+  const { organizationSlug: activeProjectOrganizationSlug, projectSlug } =
+    activeProjectSelector(getState());
   const user = userInfoSelector(getState());
   const {
     hasPermission,
@@ -103,7 +104,10 @@ export const organizationProjectRouteMiddleware = (store) => (next) => (action) 
   }
 
   const isChangedOrganization = !stringEqual(organizationSlug, hashOrganizationSlug);
-  const isChangedProject = isChangedOrganization || !stringEqual(projectSlug, hashProjectSlug);
+  const isChangedProject =
+    isChangedOrganization ||
+    !stringEqual(activeProjectOrganizationSlug, hashOrganizationSlug) ||
+    !stringEqual(projectSlug, hashProjectSlug);
   const projectKey = assignedProjectKey || (assignmentNotRequired && hashProjectKey);
 
   // Organization changed — fetch its data (runs independently of project change)
