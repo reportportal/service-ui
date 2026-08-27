@@ -14,23 +14,6 @@
  * limitations under the License.
  */
 
-.text-template {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-
-  &__dropzone {
-    height: 204px;
-    flex: 0 0 auto;
-  }
-
-  &__drop-area {
-    div {
-      min-width: 0;
-    }
-  }
-}
-
 .field {
   height: auto;
 
