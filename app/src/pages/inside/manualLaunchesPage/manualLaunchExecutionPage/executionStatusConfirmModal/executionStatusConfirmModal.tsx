@@ -83,7 +83,7 @@ const ExecutionStatusConfirmModalComponent: FC<
   const launchId = useManualLaunchId();
   const activeExecution = useSelector(activeManualLaunchExecutionSelector);
   const availableBtsIntegrations = useSelector(availableBtsIntegrationsSelector);
-
+  const tooltipRoot = document.getElementById('tooltip-root');
   const modalKey = `${data?.executionId}-${data?.status}-${data?.currentStatus}`;
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -247,6 +247,7 @@ const ExecutionStatusConfirmModalComponent: FC<
                     content={formatMessage(commonMessages.postIssueToBtsDisabledTooltip)}
                     placement="top"
                     wrapperClassName={cx('post-issue-tooltip-wrapper')}
+                    portalRoot={tooltipRoot}
                   >
                     <FieldProvider name="postIssueToBts">
                       <InputCheckbox disabled>
