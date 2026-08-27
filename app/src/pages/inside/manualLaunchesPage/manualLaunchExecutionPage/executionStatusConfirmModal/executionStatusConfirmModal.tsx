@@ -25,6 +25,7 @@ import {
   FieldTextFlex,
   PlusIcon,
   DragAndDropIcon,
+  Tooltip,
 } from '@reportportal/ui-kit';
 import { MIME_TYPES } from '@reportportal/ui-kit/fileDropArea';
 import { VoidFn } from '@reportportal/ui-kit/common';
@@ -61,7 +62,6 @@ import {
   EXECUTION_STATUS_CONFIRM_MODAL,
   EXECUTION_STATUS_CONFIRM_FORM_NAME,
   STATUS_CONFIG,
-  EXECUTION_STATUS_FAILED,
 } from '../constants';
 import { messages } from './messages';
 import { messages as commonMessages } from '../messages';
@@ -120,8 +120,8 @@ const ExecutionStatusConfirmModalComponent: FC<
     ? formatMessage(messages.clearStatus)
     : formatMessage(messages.markAsStatus, { status: statusLabel });
 
-  const showPostIssueToBts =
-    canManageExecutions && status === EXECUTION_STATUS_FAILED && !isEmpty(availableBtsIntegrations);
+  const canPostIssueToBts = canManageExecutions;
+  const hasBtsIntegration = !isEmpty(availableBtsIntegrations);
   const okButtonLabel = isClearStatus
     ? formatMessage(messages.clearStatus)
     : formatMessage(messages.markAsStatus, { status: statusLabel });
@@ -162,7 +162,8 @@ const ExecutionStatusConfirmModalComponent: FC<
       );
     }
 
-    const shouldOpenBtsModal = values.postIssueToBts && !clearCommentCheckboxChecked;
+    const shouldOpenBtsModal =
+      values.postIssueToBts && hasBtsIntegration && !clearCommentCheckboxChecked;
 
     setIsSubmitting(true);
     dispatch(
@@ -235,15 +236,29 @@ const ExecutionStatusConfirmModalComponent: FC<
               </FieldProvider>
             </div>
 
-            {showPostIssueToBts && (
+            {canPostIssueToBts && (
               <div className={cx('checkbox-section')}>
-                <FieldProvider name="postIssueToBts">
-                  <InputCheckbox>{formatMessage(commonMessages.postIssueToBts)}</InputCheckbox>
-                </FieldProvider>
+                {hasBtsIntegration  ? (
+                  <FieldProvider name="postIssueToBts">
+                    <InputCheckbox>{formatMessage(commonMessages.postIssueToBts)}</InputCheckbox>
+                  </FieldProvider>
+                ) : (
+                  <Tooltip
+                    content={formatMessage(commonMessages.postIssueToBtsDisabledTooltip)}
+                    placement="top"
+                    wrapperClassName={cx('post-issue-tooltip-wrapper')}
+                  >
+                    <FieldProvider name="postIssueToBts">
+                      <InputCheckbox disabled>
+                        {formatMessage(commonMessages.postIssueToBts)}
+                      </InputCheckbox>
+                    </FieldProvider>
+                  </Tooltip>
+                )}
               </div>
             )}
 
-            {showPostIssueToBts && <div className={cx('divider')} />}
+            {canPostIssueToBts && <div className={cx('divider')} />}
 
             <div className={cx('attachments-section')}>
               <div className={cx('attachments-file-drop')}>
