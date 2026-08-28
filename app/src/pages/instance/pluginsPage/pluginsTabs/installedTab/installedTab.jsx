@@ -21,13 +21,18 @@ import { injectIntl, defineMessages } from 'react-intl';
 import classNames from 'classnames/bind';
 import { URLS } from 'common/urls';
 import { fetch } from 'common/utils';
+import { getPluginsFilter } from 'common/constants/pluginsFilter';
+import { ALL_GROUP_TYPE } from 'common/constants/pluginsGroupTypes';
 import {
-  getPluginsFilter,
-  INSTALLED_GROUP_TYPE,
-  PLUGIN_FILTER_GROUP_VALUES,
-} from 'common/constants/pluginsFilter';
-import { ALL_GROUP_TYPE, AVAILABLE_PLUGINS_TYPE } from 'common/constants/pluginsGroupTypes';
-import { updatePluginSuccessAction } from 'controllers/plugins';
+  updatePluginSuccessAction,
+  fetchMarketplaceCatalogueAction,
+  installMarketplacePluginAction,
+  marketplaceAvailablePluginsSelector,
+  marketplaceInstalledPluginsSelector,
+  marketplaceCatalogueLoadingSelector,
+  marketplaceRegistryHostSelector,
+  isMarketplaceRegistryOfflineSelector,
+} from 'controllers/plugins';
 import { disablePluginPopupContentSelector } from 'controllers/plugins/uiExtensions';
 import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
 import { PLUGINS_PAGE_EVENTS } from 'components/main/analytics/events';
@@ -49,26 +54,11 @@ import {
 } from './constants';
 import styles from './installedTab.scss';
 import { PluginsFilter } from '../../pluginsFilter';
-import { PluginsListItems } from '../../pluginsListItems';
 import { ActionPanel } from '../../actionPanel';
 import { AvailablePluginDetail } from '../../availablePluginDetail';
-import { AVAILABLE_PLUGINS_CATALOG, PLUGIN_TIERS } from '../../availablePluginsCatalog';
+import { PluginsCatalog, ROW_ACTIONS } from '../../pluginsCatalog';
 
 const cx = classNames.bind(styles);
-
-const groupRank = (groupType) => {
-  const idx = PLUGIN_FILTER_GROUP_VALUES.indexOf(groupType);
-  return idx < 0 ? PLUGIN_FILTER_GROUP_VALUES.length : idx;
-};
-
-const getDisplayName = ({ details, name }) => details?.name || name || '';
-
-const sortByGroupAndName = (a, b) =>
-  groupRank(a.groupType) - groupRank(b.groupType) ||
-  getDisplayName(a).localeCompare(getDisplayName(b));
-
-const sortByTierGroupAndName = (a, b) =>
-  (a.tier !== PLUGIN_TIERS.PREMIUM) - (b.tier !== PLUGIN_TIERS.PREMIUM) || sortByGroupAndName(a, b);
 
 const messages = defineMessages({
   disabledPluginMessage: {
@@ -102,11 +92,18 @@ const messages = defineMessages({
 @connect(
   (state) => ({
     disablePluginPopupContent: (pluginName) => disablePluginPopupContentSelector(state, pluginName),
+    marketplaceInstalled: marketplaceInstalledPluginsSelector(state),
+    availablePlugins: marketplaceAvailablePluginsSelector(state),
+    catalogueLoading: marketplaceCatalogueLoadingSelector(state),
+    registryOffline: isMarketplaceRegistryOfflineSelector(state),
+    registryHost: marketplaceRegistryHostSelector(state),
   }),
   {
     showNotification,
     updatePluginSuccessAction,
     showModalAction,
+    fetchMarketplaceCatalogueAction,
+    installMarketplacePluginAction,
   },
 )
 export class InstalledTab extends Component {
@@ -117,17 +114,30 @@ export class InstalledTab extends Component {
     plugins: PropTypes.array.isRequired,
     updatePluginSuccessAction: PropTypes.func.isRequired,
     disablePluginPopupContent: PropTypes.func.isRequired,
+    marketplaceInstalled: PropTypes.array.isRequired,
+    availablePlugins: PropTypes.array.isRequired,
+    catalogueLoading: PropTypes.bool.isRequired,
+    registryOffline: PropTypes.bool.isRequired,
+    fetchMarketplaceCatalogueAction: PropTypes.func.isRequired,
+    installMarketplacePluginAction: PropTypes.func.isRequired,
+    registryHost: PropTypes.string,
     showNotification: PropTypes.func,
   };
 
   static defaultProps = {
+    registryHost: null,
     showNotification: () => {},
   };
 
   state = {
     activeFilterItem: ALL_GROUP_TYPE,
+    searchQuery: '',
     subPage: DEFAULT_BREADCRUMB,
   };
+
+  componentDidMount() {
+    this.props.fetchMarketplaceCatalogueAction();
+  }
 
   onToggleActive = (itemData) => {
     const {
@@ -257,8 +267,14 @@ export class InstalledTab extends Component {
       case AVAILABLE_PLUGIN_DETAIL_SUBPAGE:
         return <AvailablePluginDetail key={data.name} plugin={data} />;
       default: {
-        const installedPlugins = this.getInstalledPluginsList(activeFilterItem);
-        const availablePlugins = this.getAvailablePluginsList(activeFilterItem);
+        const {
+          plugins,
+          marketplaceInstalled,
+          availablePlugins,
+          catalogueLoading,
+          registryOffline,
+          registryHost,
+        } = this.props;
 
         return (
           <div className={cx('plugins-content-wrapper')}>
@@ -272,24 +288,22 @@ export class InstalledTab extends Component {
             </div>
             <div className={cx('plugins-content')}>
               {this.renderFilterMobileBlock()}
-              {availablePlugins.length > 0 && (
-                <div className={cx('available-section')}>
-                  <PluginsListItems
-                    title={AVAILABLE_PLUGINS_TYPE}
-                    items={availablePlugins}
-                    onItemClick={this.availablePluginDetailSubPageHandler}
-                  />
-                </div>
-              )}
-              {installedPlugins.length > 0 && (
-                <PluginsListItems
-                  title={ALL_GROUP_TYPE}
-                  items={installedPlugins}
-                  showToggleConfirmationModal={this.showToggleConfirmationModal}
-                  onToggleActive={this.onToggleActive}
-                  onItemClick={this.installedPluginsSubPageHandler}
-                />
-              )}
+              <PluginsCatalog
+                installedPlugins={plugins}
+                marketplaceInstalled={marketplaceInstalled}
+                availablePlugins={availablePlugins}
+                loading={catalogueLoading}
+                offline={registryOffline}
+                registryHost={registryHost}
+                activeCategory={activeFilterItem}
+                query={this.state.searchQuery}
+                onQueryChange={this.handleQueryChange}
+                onRowAction={this.handleRowAction}
+                onInstalledItemClick={this.installedPluginsSubPageHandler}
+                onAvailableItemClick={this.availablePluginDetailSubPageHandler}
+                onToggleActive={this.onToggleActive}
+                showToggleConfirmationModal={this.showToggleConfirmationModal}
+              />
             </div>
           </div>
         );
@@ -316,33 +330,6 @@ export class InstalledTab extends Component {
     return breadcrumbs;
   };
 
-  getInstalledPluginsList = (activeFilterItem) => {
-    const { plugins } = this.props;
-
-    const filtered =
-      activeFilterItem === ALL_GROUP_TYPE || activeFilterItem === INSTALLED_GROUP_TYPE
-        ? plugins
-        : plugins.filter((item) => item.groupType === activeFilterItem);
-
-    return [...filtered].sort(sortByGroupAndName);
-  };
-
-  getAvailablePluginsList = (activeFilterItem) => {
-    if (activeFilterItem === INSTALLED_GROUP_TYPE) {
-      return [];
-    }
-
-    const installedNames = this.props.plugins.map((plugin) => plugin.name);
-
-    const filtered = AVAILABLE_PLUGINS_CATALOG.filter(
-      (entry) =>
-        !installedNames.includes(entry.name) &&
-        (activeFilterItem === ALL_GROUP_TYPE || entry.groupType === activeFilterItem),
-    );
-
-    return [...filtered].sort(sortByTierGroupAndName);
-  };
-
   generateOptions = () =>
     getPluginsFilter(this.props.filterItems).map((item) => ({
       label: item.label,
@@ -366,6 +353,19 @@ export class InstalledTab extends Component {
       this.setState({
         activeFilterItem: value,
       });
+    }
+  };
+
+  handleQueryChange = (searchQuery) => this.setState({ searchQuery });
+
+  // install, update and rollback are the same request: make this version the active one
+  handleRowAction = (action, row) => {
+    if (action === ROW_ACTIONS.INSTALL) {
+      this.props.installMarketplacePluginAction(row.registryId, row.latestVersion);
+    } else if (action === ROW_ACTIONS.UPDATE) {
+      this.props.installMarketplacePluginAction(row.registryId, row.updateAvailable);
+    } else if (action === ROW_ACTIONS.DISCOVER_PREMIUM && row.contactUrl) {
+      window.open(row.contactUrl, '_blank', 'noopener,noreferrer');
     }
   };
 

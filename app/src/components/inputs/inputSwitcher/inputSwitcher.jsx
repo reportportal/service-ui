@@ -21,17 +21,17 @@ import styles from './inputSwitcher.scss';
 const cx = classNames.bind(styles);
 
 export const InputSwitcher = ({
-  children,
-  value,
-  onChange,
-  onFocus,
-  onBlur,
-  readOnly,
-  className,
-  childrenFirst,
-  childrenClassName,
-  size,
-  mode,
+  children = null,
+  value = false,
+  onChange = () => {},
+  onFocus = () => {},
+  onBlur = () => {},
+  readOnly = false,
+  className = '',
+  childrenFirst = false,
+  childrenClassName = '',
+  size = '',
+  mode = '',
 }) => {
   const sliderClasses = cx({
     'switcher-slider': true,
@@ -92,18 +92,4 @@ InputSwitcher.propTypes = {
   childrenClassName: PropTypes.string,
   size: PropTypes.string,
   mode: PropTypes.string,
-};
-
-InputSwitcher.defaultProps = {
-  children: null,
-  value: false,
-  onChange: () => {},
-  onFocus: () => {},
-  onBlur: () => {},
-  readOnly: false,
-  className: '',
-  childrenFirst: false,
-  childrenClassName: '',
-  size: '',
-  mode: '',
 };

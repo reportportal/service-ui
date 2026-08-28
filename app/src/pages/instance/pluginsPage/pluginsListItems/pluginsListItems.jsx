@@ -68,6 +68,13 @@ const pluginTitle = defineMessages({
   },
 });
 
+const messages = defineMessages({
+  groupCount: {
+    id: 'PluginsList.groupCount',
+    defaultMessage: '({count})',
+  },
+});
+
 @injectIntl
 export class PluginsListItems extends Component {
   static propTypes = {
@@ -77,6 +84,7 @@ export class PluginsListItems extends Component {
     onToggleActive: PropTypes.func,
     showToggleConfirmationModal: PropTypes.func,
     onItemClick: PropTypes.func,
+    onRowAction: PropTypes.func,
     filterMobileBlock: PropTypes.element,
   };
 
@@ -85,6 +93,7 @@ export class PluginsListItems extends Component {
     showToggleConfirmationModal: () => {},
     filterMobileBlock: null,
     onItemClick: () => {},
+    onRowAction: () => {},
   };
 
   render() {
@@ -94,13 +103,19 @@ export class PluginsListItems extends Component {
       onItemClick,
       items,
       onToggleActive,
+      onRowAction,
       filterMobileBlock,
       showToggleConfirmationModal,
     } = this.props;
 
     return (
       <Fragment>
-        <h2 className={cx('plugins-content-title')}>{formatMessage(pluginTitle[title])}</h2>
+        <h2 className={cx('plugins-content-title')}>
+          {formatMessage(pluginTitle[title])}{' '}
+          <span className={cx('plugins-content-count')} data-automation-id="pluginsGroupCount">
+            {formatMessage(messages.groupCount, { count: items.length })}
+          </span>
+        </h2>
         {filterMobileBlock}
         <div className={cx('plugins-content-list')}>
           {items.map((item) => (
@@ -109,6 +124,7 @@ export class PluginsListItems extends Component {
               onClick={onItemClick}
               data={item}
               onToggleActive={onToggleActive}
+              onRowAction={onRowAction}
               showToggleConfirmationModal={showToggleConfirmationModal}
             />
           ))}
