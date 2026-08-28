@@ -74,6 +74,7 @@ export {
   marketplacePluginUpdateVersionSelector,
   hasMarketplacePluginUpdateSelector,
   isMarketplacePluginInstallingSelector,
+  marketplaceCatalogueQuerySelector,
 } from './selectors';
 export { pluginSagas } from './sagas';
 export {

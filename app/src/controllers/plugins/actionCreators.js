@@ -200,8 +200,10 @@ export const fetchMarketplaceCatalogueAction = ({ q, category } = {}) => ({
   payload: { q, category },
 });
 
-export const fetchMarketplaceCatalogueStartAction = () => ({
+// carries the filter so the store can remember what the catalogue is showing
+export const fetchMarketplaceCatalogueStartAction = ({ q, category } = {}) => ({
   type: FETCH_MARKETPLACE_CATALOGUE_START,
+  payload: { q, category },
 });
 
 export const fetchMarketplaceCatalogueSuccessAction = (catalogue) => ({
@@ -214,9 +216,10 @@ export const fetchMarketplaceCatalogueErrorAction = (error) => ({
   payload: error,
 });
 
-export const installMarketplacePluginAction = (registryId) => ({
+// install, update and rollback are the same request: only the version differs, and it is required
+export const installMarketplacePluginAction = (registryId, version) => ({
   type: INSTALL_MARKETPLACE_PLUGIN,
-  payload: { registryId },
+  payload: { registryId, version },
 });
 
 export const installMarketplacePluginStartAction = (registryId) => ({

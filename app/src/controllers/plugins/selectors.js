@@ -221,6 +221,10 @@ export const marketplacePluginUpdateVersionSelector = (state, pluginName) =>
 export const hasMarketplacePluginUpdateSelector = (state, pluginName) =>
   marketplacePluginUpdateVersionSelector(state, pluginName) !== null;
 
+// the filter the catalogue is showing, so a refetch does not silently drop it
+export const marketplaceCatalogueQuerySelector = (state) =>
+  marketplaceSelector(state).query || { q: null, category: null };
+
 export const isMarketplacePluginInstallingSelector = (state, registryId) =>
   (marketplaceSelector(state).installing || []).includes(registryId);
 

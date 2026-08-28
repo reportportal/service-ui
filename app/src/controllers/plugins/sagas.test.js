@@ -22,6 +22,7 @@ import {
   fetchMarketplaceCatalogueStartAction,
   fetchMarketplaceCatalogueSuccessAction,
   fetchMarketplaceCatalogueErrorAction,
+  installMarketplacePluginAction,
   installMarketplacePluginStartAction,
   installMarketplacePluginSuccessAction,
   installMarketplacePluginErrorAction,
@@ -45,11 +46,14 @@ const offlinePayload = {
   available: [],
 };
 
-const run = (saga, action) => {
+// a saga that throws must fail the test, not quietly shorten the dispatched list
+const run = (saga, action, state = {}) => {
   const dispatched = [];
-  return runSaga({ dispatch: (a) => dispatched.push(a), getState: () => ({}) }, saga, action)
-    .done.then(() => dispatched)
-    .catch(() => dispatched);
+  return runSaga(
+    { dispatch: (a) => dispatched.push(a), getState: () => state },
+    saga,
+    action,
+  ).done.then(() => dispatched);
 };
 
 describe('controllers/plugins/sagas marketplace', () => {
@@ -116,27 +120,65 @@ describe('controllers/plugins/sagas marketplace', () => {
   });
 
   describe('installMarketplacePlugin', () => {
-    test('posts to the install endpoint and refetches the catalogue', async () => {
+    test('posts the requested version, which the endpoint requires', async () => {
       fetch.mockResolvedValue({});
 
-      const dispatched = await run(installMarketplacePlugin, {
-        payload: { registryId: 'slack' },
-      });
+      await run(installMarketplacePlugin, installMarketplacePluginAction('slack', '1.2.0'));
 
-      expect(fetch).toHaveBeenCalledWith('../api/v1/plugins/slack/install', { method: 'post' });
+      expect(fetch).toHaveBeenCalledWith('../api/v1/plugins/slack/install', {
+        method: 'post',
+        data: { version: '1.2.0' },
+      });
+    });
+
+    // install, update and rollback are the same request, differing only by version
+    test('posts the older version asked for on a rollback', async () => {
+      fetch.mockResolvedValue({});
+
+      await run(installMarketplacePlugin, installMarketplacePluginAction('slack', '0.9.0'));
+
+      expect(fetch).toHaveBeenCalledWith('../api/v1/plugins/slack/install', {
+        method: 'post',
+        data: { version: '0.9.0' },
+      });
+    });
+
+    test('refetches the catalogue on success', async () => {
+      fetch.mockResolvedValue({});
+
+      const dispatched = await run(
+        installMarketplacePlugin,
+        installMarketplacePluginAction('slack', '1.2.0'),
+      );
+
       expect(dispatched).toEqual([
         installMarketplacePluginStartAction('slack'),
         installMarketplacePluginSuccessAction('slack'),
-        fetchMarketplaceCatalogueAction(),
+        fetchMarketplaceCatalogueAction({ q: null, category: null }),
       ]);
+    });
+
+    test('the refetch keeps the filter the catalogue was last loaded with', async () => {
+      fetch.mockResolvedValue({});
+
+      const dispatched = await run(
+        installMarketplacePlugin,
+        installMarketplacePluginAction('slack', '1.2.0'),
+        { plugins: { marketplace: { query: { q: 'ji ra', category: 'BTS' }, installing: [] } } },
+      );
+
+      expect(dispatched).toContainEqual(
+        fetchMarketplaceCatalogueAction({ q: 'ji ra', category: 'BTS' }),
+      );
     });
 
     test('a failed install is reported and does not refetch', async () => {
       fetch.mockRejectedValue(new Error('Forbidden'));
 
-      const dispatched = await run(installMarketplacePlugin, {
-        payload: { registryId: 'slack' },
-      });
+      const dispatched = await run(
+        installMarketplacePlugin,
+        installMarketplacePluginAction('slack', '1.2.0'),
+      );
 
       expect(dispatched).toEqual([
         installMarketplacePluginStartAction('slack'),

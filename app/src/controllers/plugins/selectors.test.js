@@ -27,6 +27,7 @@ import {
   marketplacePluginUpdateVersionSelector,
   hasMarketplacePluginUpdateSelector,
   isMarketplacePluginInstallingSelector,
+  marketplaceCatalogueQuerySelector,
 } from './selectors';
 
 const installed = [
@@ -121,6 +122,13 @@ describe('controllers/plugins/marketplace selectors', () => {
   test('no plugin has an update while the registry is offline', () => {
     expect(marketplacePluginUpdateVersionSelector(loadedOffline, 'jira')).toBeNull();
     expect(hasMarketplacePluginUpdateSelector(loadedOffline, 'jira')).toBe(false);
+  });
+
+  test('expose the filter the catalogue was last requested with', () => {
+    expect(
+      marketplaceCatalogueQuerySelector(mockState({ query: { q: 'ji', category: 'BTS' } })),
+    ).toEqual({ q: 'ji', category: 'BTS' });
+    expect(marketplaceCatalogueQuerySelector({})).toEqual({ q: null, category: null });
   });
 
   test('track which plugin is being installed', () => {

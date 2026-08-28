@@ -46,7 +46,7 @@ import {
   FETCH_MARKETPLACE_CATALOGUE,
   INSTALL_MARKETPLACE_PLUGIN,
 } from './constants';
-import { pluginByNameSelector } from './selectors';
+import { pluginByNameSelector, marketplaceCatalogueQuerySelector } from './selectors';
 import {
   removePluginSuccessAction,
   removeProjectIntegrationsByTypeSuccessAction,
@@ -281,7 +281,7 @@ function* watchRemovePlugin() {
 }
 
 export function* fetchMarketplaceCatalogue({ payload = {} } = {}) {
-  yield put(fetchMarketplaceCatalogueStartAction());
+  yield put(fetchMarketplaceCatalogueStartAction(payload));
   try {
     const catalogue = yield call(fetch, URLS.marketplaceCatalogue(payload));
     // an OFFLINE registry is part of a successful payload, never an error
@@ -295,12 +295,18 @@ function* watchFetchMarketplaceCatalogue() {
   yield takeEvery(FETCH_MARKETPLACE_CATALOGUE, fetchMarketplaceCatalogue);
 }
 
-export function* installMarketplacePlugin({ payload: { registryId } }) {
+export function* installMarketplacePlugin({ payload: { registryId, version } }) {
   yield put(installMarketplacePluginStartAction(registryId));
   try {
-    yield call(fetch, URLS.marketplacePluginInstall(registryId), { method: 'post' });
+    // the endpoint requires the version: install, update and rollback differ only by it
+    yield call(fetch, URLS.marketplacePluginInstall(registryId), {
+      method: 'post',
+      data: { version },
+    });
     yield put(installMarketplacePluginSuccessAction(registryId));
-    yield put(fetchMarketplaceCatalogueAction());
+    // refetch with the filter still on screen, not the unfiltered catalogue
+    const query = yield select(marketplaceCatalogueQuerySelector);
+    yield put(fetchMarketplaceCatalogueAction(query));
   } catch (error) {
     yield put(installMarketplacePluginErrorAction(registryId, error.message));
     yield put(showDefaultErrorNotification(error));

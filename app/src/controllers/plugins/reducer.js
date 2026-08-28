@@ -154,19 +154,29 @@ const INITIAL_MARKETPLACE_STATE = {
   error: null,
   installing: [],
   installError: null,
+  query: { q: null, category: null },
 };
 
 export const marketplaceReducer = (state = INITIAL_MARKETPLACE_STATE, { type, payload } = {}) => {
   switch (type) {
-    case FETCH_MARKETPLACE_CATALOGUE_START:
-      return { ...state, catalogueState: MARKETPLACE_CATALOGUE_STATE.LOADING, error: null };
+    case FETCH_MARKETPLACE_CATALOGUE_START: {
+      const { q = null, category = null } = payload || {};
+      return {
+        ...state,
+        catalogueState: MARKETPLACE_CATALOGUE_STATE.LOADING,
+        error: null,
+        // the filter this catalogue is showing, so a refetch can reproduce it
+        query: { q: q || null, category: category || null },
+      };
+    }
     case FETCH_MARKETPLACE_CATALOGUE_SUCCESS: {
       const registry = payload.registry || {};
-      // offline is a loaded state: the payload is still authoritative about installed plugins
+      // offline is a loaded state: the payload is still authoritative about installed plugins.
+      // Only an explicit ONLINE is online, so an unknown status degrades to the cautious side.
       const catalogueState =
-        registry.status === REGISTRY_STATUS.OFFLINE
-          ? MARKETPLACE_CATALOGUE_STATE.LOADED_OFFLINE
-          : MARKETPLACE_CATALOGUE_STATE.LOADED_ONLINE;
+        registry.status === REGISTRY_STATUS.ONLINE
+          ? MARKETPLACE_CATALOGUE_STATE.LOADED_ONLINE
+          : MARKETPLACE_CATALOGUE_STATE.LOADED_OFFLINE;
 
       return {
         ...state,

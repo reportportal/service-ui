@@ -47,6 +47,7 @@ describe('controllers/plugins/marketplaceReducer', () => {
     expect(state.registry).toEqual({ status: null, host: null });
     expect(state.error).toBeNull();
     expect(state.installing).toEqual([]);
+    expect(state.query).toEqual({ q: null, category: null });
   });
 
   test('moves to the in-flight state and drops a previous error on fetch start', () => {
@@ -80,6 +81,60 @@ describe('controllers/plugins/marketplaceReducer', () => {
     expect(state.registry.host).toBe('registry.reportportal.io');
     expect(state.installed).toEqual(offlinePayload.installed);
     expect(state.error).toBeNull();
+  });
+
+  test('treats an unrecognised registry status as not online', () => {
+    const state = marketplaceReducer(
+      undefined,
+      fetchMarketplaceCatalogueSuccessAction({
+        registry: { status: 'DEGRADED', host: 'registry.reportportal.io' },
+        installed: [],
+        available: [],
+      }),
+    );
+
+    expect(state.catalogueState).toBe(MARKETPLACE_CATALOGUE_STATE.LOADED_OFFLINE);
+  });
+
+  test('treats a missing registry block as not online', () => {
+    const state = marketplaceReducer(
+      undefined,
+      fetchMarketplaceCatalogueSuccessAction({ installed: [], available: [] }),
+    );
+
+    expect(state.catalogueState).toBe(MARKETPLACE_CATALOGUE_STATE.LOADED_OFFLINE);
+  });
+
+  test('remembers the filter a fetch was started with', () => {
+    const state = marketplaceReducer(
+      undefined,
+      fetchMarketplaceCatalogueStartAction({ q: 'ji ra', category: 'BTS' }),
+    );
+
+    expect(state.query).toEqual({ q: 'ji ra', category: 'BTS' });
+  });
+
+  test('an unfiltered fetch clears the remembered filter', () => {
+    const filtered = marketplaceReducer(
+      undefined,
+      fetchMarketplaceCatalogueStartAction({ q: 'ji ra', category: 'BTS' }),
+    );
+    const state = marketplaceReducer(filtered, fetchMarketplaceCatalogueStartAction());
+
+    expect(state.query).toEqual({ q: null, category: null });
+  });
+
+  test('keeps the remembered filter across a success so a refetch can reuse it', () => {
+    const started = marketplaceReducer(
+      undefined,
+      fetchMarketplaceCatalogueStartAction({ q: 'ji ra', category: 'BTS' }),
+    );
+    const state = marketplaceReducer(
+      started,
+      fetchMarketplaceCatalogueSuccessAction(onlinePayload),
+    );
+
+    expect(state.query).toEqual({ q: 'ji ra', category: 'BTS' });
   });
 
   test('defaults missing lists to empty arrays', () => {
