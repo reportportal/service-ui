@@ -15,7 +15,7 @@
  */
 
 export { pluginsReducer } from './reducer';
-export { SECRET_FIELDS_KEY } from './constants';
+export { SECRET_FIELDS_KEY, MARKETPLACE_CATALOGUE_STATE, REGISTRY_STATUS } from './constants';
 export {
   fetchPluginsAction,
   fetchPublicPluginsAction,
@@ -30,6 +30,8 @@ export {
   updateIntegrationAction,
   setProjectIntegrationsAction,
   setOrganizationIntegrationsAction,
+  fetchMarketplaceCatalogueAction,
+  installMarketplacePluginAction,
 } from './actionCreators';
 export {
   filterAvailablePlugins,
@@ -61,6 +63,17 @@ export {
   globalIntegrationsSelector,
   pluginsLoadingSelector,
   organizationPluginSelector,
+  marketplaceCatalogueStateSelector,
+  marketplaceInstalledPluginsSelector,
+  marketplaceAvailablePluginsSelector,
+  marketplaceRegistrySelector,
+  marketplaceRegistryHostSelector,
+  marketplaceCatalogueLoadingSelector,
+  isMarketplaceRegistryOfflineSelector,
+  marketplaceCatalogueErrorSelector,
+  marketplacePluginUpdateVersionSelector,
+  hasMarketplacePluginUpdateSelector,
+  isMarketplacePluginInstallingSelector,
 } from './selectors';
 export { pluginSagas } from './sagas';
 export {

@@ -41,6 +41,14 @@ import {
   FETCH_GLOBAL_INTEGRATIONS_SUCCESS,
   REMOVE_GLOBAL_INTEGRATIONS_BY_TYPE_SUCCESS,
   SET_ORGANIZATION_INTEGRATIONS,
+  FETCH_MARKETPLACE_CATALOGUE,
+  FETCH_MARKETPLACE_CATALOGUE_START,
+  FETCH_MARKETPLACE_CATALOGUE_SUCCESS,
+  FETCH_MARKETPLACE_CATALOGUE_ERROR,
+  INSTALL_MARKETPLACE_PLUGIN,
+  INSTALL_MARKETPLACE_PLUGIN_START,
+  INSTALL_MARKETPLACE_PLUGIN_SUCCESS,
+  INSTALL_MARKETPLACE_PLUGIN_ERROR,
 } from './constants';
 
 export const fetchPluginsAction = () => ({
@@ -185,4 +193,43 @@ export const removeGlobalIntegrationsByTypeSuccessAction = (instanceType) => ({
 export const setOrganizationIntegrationsAction = (organizationIntegrations) => ({
   type: SET_ORGANIZATION_INTEGRATIONS,
   payload: organizationIntegrations,
+});
+
+export const fetchMarketplaceCatalogueAction = ({ q, category } = {}) => ({
+  type: FETCH_MARKETPLACE_CATALOGUE,
+  payload: { q, category },
+});
+
+export const fetchMarketplaceCatalogueStartAction = () => ({
+  type: FETCH_MARKETPLACE_CATALOGUE_START,
+});
+
+export const fetchMarketplaceCatalogueSuccessAction = (catalogue) => ({
+  type: FETCH_MARKETPLACE_CATALOGUE_SUCCESS,
+  payload: catalogue,
+});
+
+export const fetchMarketplaceCatalogueErrorAction = (error) => ({
+  type: FETCH_MARKETPLACE_CATALOGUE_ERROR,
+  payload: error,
+});
+
+export const installMarketplacePluginAction = (registryId) => ({
+  type: INSTALL_MARKETPLACE_PLUGIN,
+  payload: { registryId },
+});
+
+export const installMarketplacePluginStartAction = (registryId) => ({
+  type: INSTALL_MARKETPLACE_PLUGIN_START,
+  payload: registryId,
+});
+
+export const installMarketplacePluginSuccessAction = (registryId) => ({
+  type: INSTALL_MARKETPLACE_PLUGIN_SUCCESS,
+  payload: registryId,
+});
+
+export const installMarketplacePluginErrorAction = (registryId, error) => ({
+  type: INSTALL_MARKETPLACE_PLUGIN_ERROR,
+  payload: { registryId, error },
 });

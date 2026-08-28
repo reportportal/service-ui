@@ -43,6 +43,8 @@ import {
   SECRET_FIELDS_KEY,
   UPDATE_PLUGIN_SUCCESS,
   PUBLIC_PLUGINS,
+  FETCH_MARKETPLACE_CATALOGUE,
+  INSTALL_MARKETPLACE_PLUGIN,
 } from './constants';
 import { pluginByNameSelector } from './selectors';
 import {
@@ -51,6 +53,13 @@ import {
   removeOrganizationIntegrationsByTypeSuccessAction,
   fetchGlobalIntegrationsSuccessAction,
   removeGlobalIntegrationsByTypeSuccessAction,
+  fetchMarketplaceCatalogueAction,
+  fetchMarketplaceCatalogueStartAction,
+  fetchMarketplaceCatalogueSuccessAction,
+  fetchMarketplaceCatalogueErrorAction,
+  installMarketplacePluginStartAction,
+  installMarketplacePluginSuccessAction,
+  installMarketplacePluginErrorAction,
 } from './actionCreators';
 import { fetchExtensionManifests, fetchExtensionManifest } from './uiExtensions';
 import {
@@ -271,6 +280,37 @@ function* watchRemovePlugin() {
   yield takeEvery(REMOVE_PLUGIN, removePlugin);
 }
 
+export function* fetchMarketplaceCatalogue({ payload = {} } = {}) {
+  yield put(fetchMarketplaceCatalogueStartAction());
+  try {
+    const catalogue = yield call(fetch, URLS.marketplaceCatalogue(payload));
+    // an OFFLINE registry is part of a successful payload, never an error
+    yield put(fetchMarketplaceCatalogueSuccessAction(catalogue));
+  } catch (error) {
+    yield put(fetchMarketplaceCatalogueErrorAction(error.message));
+  }
+}
+
+function* watchFetchMarketplaceCatalogue() {
+  yield takeEvery(FETCH_MARKETPLACE_CATALOGUE, fetchMarketplaceCatalogue);
+}
+
+export function* installMarketplacePlugin({ payload: { registryId } }) {
+  yield put(installMarketplacePluginStartAction(registryId));
+  try {
+    yield call(fetch, URLS.marketplacePluginInstall(registryId), { method: 'post' });
+    yield put(installMarketplacePluginSuccessAction(registryId));
+    yield put(fetchMarketplaceCatalogueAction());
+  } catch (error) {
+    yield put(installMarketplacePluginErrorAction(registryId, error.message));
+    yield put(showDefaultErrorNotification(error));
+  }
+}
+
+function* watchInstallMarketplacePlugin() {
+  yield takeEvery(INSTALL_MARKETPLACE_PLUGIN, installMarketplacePlugin);
+}
+
 function* watchPluginListFetch() {
   yield takeEvery(
     [createFetchPredicate(NAMESPACE), createFetchPredicate(PUBLIC_PLUGINS)],
@@ -295,5 +335,7 @@ export function* pluginSagas() {
     watchRemovePlugin(),
     watchPluginChange(),
     watchPluginListFetch(),
+    watchFetchMarketplaceCatalogue(),
+    watchInstallMarketplacePlugin(),
   ]);
 }

@@ -29,6 +29,7 @@ import {
   filterIntegrationsByName,
   filterEnabledExternalPlugins,
 } from './utils';
+import { MARKETPLACE_CATALOGUE_STATE } from './constants';
 
 export const domainSelector = (state) => state.plugins || {};
 
@@ -186,6 +187,42 @@ export const isEmailIntegrationAvailableSelector = (state) => {
 
 export const namedAvailableBtsIntegrationsSelector =
   namedAvailableIntegrationsByGroupTypeSelector(BTS_GROUP_TYPE);
+
+const marketplaceSelector = (state) => domainSelector(state).marketplace || {};
+
+export const marketplaceCatalogueStateSelector = (state) =>
+  marketplaceSelector(state).catalogueState || MARKETPLACE_CATALOGUE_STATE.NOT_REQUESTED;
+
+export const marketplaceInstalledPluginsSelector = (state) =>
+  marketplaceSelector(state).installed || [];
+
+export const marketplaceAvailablePluginsSelector = (state) =>
+  marketplaceSelector(state).available || [];
+
+export const marketplaceRegistrySelector = (state) =>
+  marketplaceSelector(state).registry || { status: null, host: null };
+
+export const marketplaceRegistryHostSelector = (state) => marketplaceRegistrySelector(state).host;
+
+export const marketplaceCatalogueLoadingSelector = (state) =>
+  marketplaceCatalogueStateSelector(state) === MARKETPLACE_CATALOGUE_STATE.LOADING;
+
+export const isMarketplaceRegistryOfflineSelector = (state) =>
+  marketplaceCatalogueStateSelector(state) === MARKETPLACE_CATALOGUE_STATE.LOADED_OFFLINE;
+
+export const marketplaceCatalogueErrorSelector = (state) =>
+  marketplaceSelector(state).error || null;
+
+// null while offline: the registry block is absent, so no update can be claimed
+export const marketplacePluginUpdateVersionSelector = (state, pluginName) =>
+  marketplaceInstalledPluginsSelector(state).find((plugin) => plugin.name === pluginName)
+    ?.marketplace?.updateAvailable?.version || null;
+
+export const hasMarketplacePluginUpdateSelector = (state, pluginName) =>
+  marketplacePluginUpdateVersionSelector(state, pluginName) !== null;
+
+export const isMarketplacePluginInstallingSelector = (state, registryId) =>
+  (marketplaceSelector(state).installing || []).includes(registryId);
 
 export const availableBtsIntegrationsSelector = (state) => {
   const namedAvailableBtsIntegrations = namedAvailableBtsIntegrationsSelector(state);

@@ -347,6 +347,11 @@ export const URLS = {
   appInfoApi: () => `${urlCommonBase}info`,
   appInfoUi: () => `${uiInfoBase}info`,
 
+  // marketplace catalogue: plural, and deliberately not the singular `plugin` above
+  marketplaceCatalogue: ({ q, category } = {}) =>
+    `${urlBase}plugins${getQueryParams({ q: q || undefined, category: category || undefined })}`,
+  marketplacePluginInstall: (registryId) => `${urlBase}plugins/${registryId}/install`,
+
   plugin: () => `${urlBase}plugin`,
   pluginById: (pluginId) => `${urlBase}plugin/${pluginId}`,
   pluginPublic: () => `${urlBase}plugin/public`,

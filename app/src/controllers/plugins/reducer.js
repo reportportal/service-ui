@@ -42,6 +42,14 @@ import {
   PUBLIC_PLUGINS,
   SET_ORGANIZATION_INTEGRATIONS,
   ORGANIZATION_INTEGRATIONS,
+  FETCH_MARKETPLACE_CATALOGUE_START,
+  FETCH_MARKETPLACE_CATALOGUE_SUCCESS,
+  FETCH_MARKETPLACE_CATALOGUE_ERROR,
+  INSTALL_MARKETPLACE_PLUGIN_START,
+  INSTALL_MARKETPLACE_PLUGIN_SUCCESS,
+  INSTALL_MARKETPLACE_PLUGIN_ERROR,
+  MARKETPLACE_CATALOGUE_STATE,
+  REGISTRY_STATUS,
 } from './constants';
 
 const addIntegration = (state, type, payload) => ({
@@ -138,6 +146,61 @@ export const integrationsReducer = (state = {}, { type = '', payload = {} }) => 
   }
 };
 
+const INITIAL_MARKETPLACE_STATE = {
+  catalogueState: MARKETPLACE_CATALOGUE_STATE.NOT_REQUESTED,
+  registry: { status: null, host: null },
+  installed: [],
+  available: [],
+  error: null,
+  installing: [],
+  installError: null,
+};
+
+export const marketplaceReducer = (state = INITIAL_MARKETPLACE_STATE, { type, payload } = {}) => {
+  switch (type) {
+    case FETCH_MARKETPLACE_CATALOGUE_START:
+      return { ...state, catalogueState: MARKETPLACE_CATALOGUE_STATE.LOADING, error: null };
+    case FETCH_MARKETPLACE_CATALOGUE_SUCCESS: {
+      const registry = payload.registry || {};
+      // offline is a loaded state: the payload is still authoritative about installed plugins
+      const catalogueState =
+        registry.status === REGISTRY_STATUS.OFFLINE
+          ? MARKETPLACE_CATALOGUE_STATE.LOADED_OFFLINE
+          : MARKETPLACE_CATALOGUE_STATE.LOADED_ONLINE;
+
+      return {
+        ...state,
+        catalogueState,
+        registry: { status: registry.status || null, host: registry.host || null },
+        installed: payload.installed || [],
+        available: payload.available || [],
+        error: null,
+      };
+    }
+    case FETCH_MARKETPLACE_CATALOGUE_ERROR:
+      return {
+        ...state,
+        catalogueState: MARKETPLACE_CATALOGUE_STATE.FAILED,
+        registry: { status: null, host: null },
+        installed: [],
+        available: [],
+        error: payload,
+      };
+    case INSTALL_MARKETPLACE_PLUGIN_START:
+      return { ...state, installing: [...state.installing, payload], installError: null };
+    case INSTALL_MARKETPLACE_PLUGIN_SUCCESS:
+      return { ...state, installing: state.installing.filter((id) => id !== payload) };
+    case INSTALL_MARKETPLACE_PLUGIN_ERROR:
+      return {
+        ...state,
+        installing: state.installing.filter((id) => id !== payload.registryId),
+        installError: payload,
+      };
+    default:
+      return state;
+  }
+};
+
 // TODO: store remote plugins separately
 export const pluginsReducer = combineReducers({
   plugins: queueReducers(fetchReducer(NAMESPACE), updatePluginLocallyReducer),
@@ -145,4 +208,5 @@ export const pluginsReducer = combineReducers({
   integrations: integrationsReducer,
   uiExtensions: uiExtensionsReducer,
   pluginsLoading: loadingReducer(NAMESPACE),
+  marketplace: marketplaceReducer,
 });

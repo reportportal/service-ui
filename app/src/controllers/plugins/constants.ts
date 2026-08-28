@@ -54,3 +54,33 @@ export const ORGANIZATION_INTEGRATIONS = 'organizationIntegrations';
 export const PUBLIC_PLUGINS = 'publicPlugins';
 
 export const SECRET_FIELDS_KEY = 'rp_secretFieldsToClear';
+
+export const MARKETPLACE = 'marketplace';
+
+export const FETCH_MARKETPLACE_CATALOGUE = 'fetchMarketplaceCatalogue';
+export const FETCH_MARKETPLACE_CATALOGUE_START = 'fetchMarketplaceCatalogueStart';
+export const FETCH_MARKETPLACE_CATALOGUE_SUCCESS = 'fetchMarketplaceCatalogueSuccess';
+export const FETCH_MARKETPLACE_CATALOGUE_ERROR = 'fetchMarketplaceCatalogueError';
+
+export const INSTALL_MARKETPLACE_PLUGIN = 'installMarketplacePlugin';
+export const INSTALL_MARKETPLACE_PLUGIN_START = 'installMarketplacePluginStart';
+export const INSTALL_MARKETPLACE_PLUGIN_SUCCESS = 'installMarketplacePluginSuccess';
+export const INSTALL_MARKETPLACE_PLUGIN_ERROR = 'installMarketplacePluginError';
+
+/** Registry reachability as reported by service-api. */
+export const REGISTRY_STATUS = {
+  ONLINE: 'ONLINE',
+  OFFLINE: 'OFFLINE',
+} as const;
+
+/**
+ * Offline is a loaded state, not a failure: the response is authoritative about installed
+ * plugins, only the registry-sourced parts are missing.
+ */
+export const MARKETPLACE_CATALOGUE_STATE = {
+  NOT_REQUESTED: 'NOT_REQUESTED',
+  LOADING: 'LOADING',
+  LOADED_ONLINE: 'LOADED_ONLINE',
+  LOADED_OFFLINE: 'LOADED_OFFLINE',
+  FAILED: 'FAILED',
+} as const;
