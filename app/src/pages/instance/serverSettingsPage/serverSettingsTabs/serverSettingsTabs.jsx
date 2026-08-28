@@ -25,6 +25,7 @@ import {
   ANALYTICS,
   LINKS_AND_BRANDING,
   FEATURES,
+  MARKETPLACE,
 } from 'common/constants/settingsTabs';
 import { NavigationTabs } from 'components/main/navigationTabs';
 import {
@@ -36,6 +37,7 @@ import { AuthConfigurationTab } from './authConfigurationTab';
 import { AnalyticsTab } from './analyticsTab';
 import { LinksAndBrandingTab } from './linksAndBrandingTab';
 import { FeaturesTab } from './featuresTab';
+import { MarketplaceTab } from './marketplaceTab';
 
 const messages = defineMessages({
   accessConfiguration: {
@@ -53,6 +55,10 @@ const messages = defineMessages({
   features: {
     id: 'ServerSettingsTabs.features',
     defaultMessage: 'Features',
+  },
+  marketplace: {
+    id: 'ServerSettingsTabs.marketplace',
+    defaultMessage: 'Marketplace',
   },
 });
 
@@ -89,6 +95,12 @@ const ServerSettingsTabs = ({ activeTab = ACCESS_CONFIGURATION, onChangeTab = ()
       component: <FeaturesTab />,
       mobileDisabled: true,
       eventInfo: ADMIN_SERVER_SETTINGS_PAGE_EVENTS.FEATURES_TAB,
+    },
+    [MARKETPLACE]: {
+      name: intl.formatMessage(messages.marketplace),
+      link: createTabLink(MARKETPLACE),
+      component: <MarketplaceTab />,
+      mobileDisabled: true,
     },
     [ANALYTICS]: {
       name: intl.formatMessage(messages.statistics),
