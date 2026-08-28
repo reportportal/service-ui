@@ -25,6 +25,7 @@ import {
   OTHER_GROUP_TYPE,
 } from 'common/constants/pluginsGroupTypes';
 import { INSTALLED_GROUP_TYPE } from 'common/constants/pluginsFilter';
+import { PLUGIN_TIERS } from '../availablePluginsCatalog';
 import { PluginsCatalog } from './pluginsCatalog';
 import { ROW_ACTIONS } from './utils';
 
@@ -186,8 +187,9 @@ describe('PluginsCatalog', () => {
   });
 
   describe('Catalog.List.Search Results', () => {
-    test('the query filters both groups at once and the counts follow', () => {
-      const wrapper = render({ query: 'e' });
+    test('the query narrows the locally held Installed group and the count follows', () => {
+      // the Available group arrives already narrowed by GET /api/v1/plugins?q=
+      const wrapper = render({ query: 'e', availablePlugins: [qualityGate] });
 
       expect(rowNames(group(wrapper, ALL_GROUP_TYPE))).toEqual(['Jira Server']);
       expect(rowNames(group(wrapper, AVAILABLE_PLUGINS_TYPE))).toEqual(['Quality Gate']);
@@ -196,8 +198,15 @@ describe('PluginsCatalog', () => {
       ).toBe('(1)');
     });
 
-    test('a category chip narrows both groups on top of the query', () => {
-      const wrapper = render({ query: 'a', activeCategory: BTS_GROUP_TYPE });
+    test('the Available group is shown as the server returned it, not filtered again here', () => {
+      // filtering it locally would hide rows the server matched on something other than the name
+      const wrapper = render({ query: 'nothing matches this', availablePlugins: [slack] });
+
+      expect(rowNames(group(wrapper, AVAILABLE_PLUGINS_TYPE))).toEqual(['Slack']);
+    });
+
+    test('a category chip narrows the locally held Installed group on top of the query', () => {
+      const wrapper = render({ query: 'a', activeCategory: BTS_GROUP_TYPE, availablePlugins: [] });
 
       expect(rowNames(group(wrapper, ALL_GROUP_TYPE))).toEqual(['Jira Server', 'Rally']);
       expect(group(wrapper, AVAILABLE_PLUGINS_TYPE)).toHaveLength(0);
@@ -214,7 +223,12 @@ describe('PluginsCatalog', () => {
   describe('Catalog.List.No Search Results', () => {
     test('hides both groups and offers to clear the search', () => {
       const onQueryChange = jest.fn();
-      const wrapper = render({ query: 'nothing matches this', onQueryChange });
+      // an empty result set from GET /api/v1/plugins?q=, and nothing installed matches either
+      const wrapper = render({
+        query: 'nothing matches this',
+        availablePlugins: [],
+        onQueryChange,
+      });
 
       expect(groupNames(wrapper)).toEqual([]);
       expect(wrapper.find('[data-automation-id="noSearchResults"]')).toHaveLength(1);
@@ -332,6 +346,85 @@ describe('PluginsCatalog', () => {
       expect(actions(installed)).toEqual([]);
       expect(installed.find('[data-automation-id="pluginBadge"]')).toHaveLength(0);
     });
+
+    test('strips marketplace signals itself when the payload still carries them', () => {
+      // service-api is expected to null the block, but the UI may not depend on it: nothing
+      // marketplace-sourced is verifiable while offline, whatever the payload says
+      const installed = group(
+        render({
+          offline: true,
+          registryHost: 'marketplace.reportportal.io',
+          availablePlugins: [],
+          marketplaceInstalled: [jiraMerged, rallyMerged],
+        }),
+        ALL_GROUP_TYPE,
+      );
+
+      expect(rowNames(installed)).toEqual(['Jira Server', 'Rally']);
+      expect(actions(installed)).toEqual([]);
+      expect(installed.find('[data-automation-id="pluginBadge"]')).toHaveLength(0);
+    });
+  });
+
+  describe('a catalogue request that failed outright', () => {
+    // the fetch never produced a payload, so the store holds no registry data at all
+    const failedProps = { failed: true, marketplaceInstalled: [], availablePlugins: [] };
+
+    test('says the catalogue could not be loaded instead of showing a working page', () => {
+      const alert = render(failedProps).find('[data-automation-id="catalogueUnavailableAlert"]');
+
+      expect(alert).toHaveLength(1);
+      expect(alert.text()).toMatch(/could not be loaded/i);
+    });
+
+    test('is not passed off as an offline registry', () => {
+      const failed = render(failedProps);
+      const offline = render({
+        offline: true,
+        registryHost: 'marketplace.reportportal.io',
+        marketplaceInstalled: [],
+      });
+
+      expect(failed.find('[data-automation-id="registryOfflineAlert"]')).toHaveLength(0);
+      expect(offline.find('[data-automation-id="catalogueUnavailableAlert"]')).toHaveLength(0);
+      // offline the installed list is still authoritative; after a failure nothing is known
+      expect(failed.find('[data-automation-id="catalogueUnavailableAlert"]').text()).toMatch(
+        /out of date/i,
+      );
+      expect(offline.find('[data-automation-id="registryOfflineAlert"]').text()).not.toMatch(
+        /out of date/i,
+      );
+    });
+
+    test('renders no Available group and no marketplace signals on installed rows', () => {
+      const wrapper = render({
+        ...failedProps,
+        // a payload left over from an earlier load must not be believed after a failure
+        marketplaceInstalled: [jiraMerged, rallyMerged],
+        availablePlugins: [slack],
+      });
+
+      expect(groupNames(wrapper)).toEqual([ALL_GROUP_TYPE]);
+      expect(actions(group(wrapper, ALL_GROUP_TYPE))).toEqual([]);
+      expect(
+        group(wrapper, ALL_GROUP_TYPE).find('[data-automation-id="pluginBadge"]'),
+      ).toHaveLength(0);
+    });
+
+    test('offers a retry rather than leaving the page as the only account of itself', () => {
+      const onRetry = jest.fn();
+      const wrapper = render({ ...failedProps, onRetry });
+
+      click(wrapper.find('[data-automation-id="retryCatalogue"]').last().find('button'));
+
+      expect(onRetry).toHaveBeenCalled();
+    });
+
+    test('a failure is not a no-results state, even with a query on screen', () => {
+      const wrapper = render({ ...failedProps, installedPlugins: [], query: 'jira' });
+
+      expect(wrapper.find('[data-automation-id="noSearchResults"]')).toHaveLength(0);
+    });
   });
 
   describe('an installed plugin the registry could not match', () => {
@@ -361,6 +454,20 @@ describe('PluginsCatalog', () => {
       expect(unmatched.find('[data-automation-id="pluginRowAction"]')).toHaveLength(0);
       expect(absent.find('[data-automation-id="pluginBadge"]')).toHaveLength(0);
       expect(absent.find('[data-automation-id="pluginRowAction"]')).toHaveLength(0);
+    });
+
+    test('an installed plugin that carries a tier field is still an installed row', () => {
+      // rows are classified by an explicit kind, not by a field the local plugin may grow
+      const wrapper = render({
+        installedPlugins: [{ ...jira, tier: PLUGIN_TIERS.PREMIUM }],
+        marketplaceInstalled: [jiraMerged],
+        availablePlugins: [],
+      });
+      const row = group(wrapper, ALL_GROUP_TYPE).find('[data-automation-id="pluginRow"]').at(0);
+
+      expect(row.find('[data-badge="ADVISORY"]')).toHaveLength(1);
+      expect(row.find(`[data-badge="${PLUGIN_TIERS.PREMIUM}"]`)).toHaveLength(0);
+      expect(actions(group(wrapper, ALL_GROUP_TYPE))).toEqual([ROW_ACTIONS.UPDATE]);
     });
   });
 });

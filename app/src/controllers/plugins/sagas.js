@@ -14,7 +14,8 @@
  * limitations under the License.
  */
 
-import { takeEvery, all, put, select, call } from 'redux-saga/effects';
+import { delay } from 'redux-saga';
+import { takeEvery, takeLatest, all, put, select, call } from 'redux-saga/effects';
 import { URLS } from 'common/urls';
 import {
   showNotification,
@@ -45,6 +46,7 @@ import {
   PUBLIC_PLUGINS,
   FETCH_MARKETPLACE_CATALOGUE,
   INSTALL_MARKETPLACE_PLUGIN,
+  MARKETPLACE_SEARCH_DEBOUNCE,
 } from './constants';
 import { pluginByNameSelector, marketplaceCatalogueQuerySelector } from './selectors';
 import {
@@ -281,18 +283,28 @@ function* watchRemovePlugin() {
 }
 
 export function* fetchMarketplaceCatalogue({ payload = {} } = {}) {
+  // typing is debounced, and takeLatest cancels this wait outright when the next keystroke
+  // arrives, so the store hears nothing until a request really leaves
+  if (payload.debounced) {
+    yield call(delay, MARKETPLACE_SEARCH_DEBOUNCE);
+  }
+
   yield put(fetchMarketplaceCatalogueStartAction(payload));
   try {
     const catalogue = yield call(fetch, URLS.marketplaceCatalogue(payload));
     // an OFFLINE registry is part of a successful payload, never an error
     yield put(fetchMarketplaceCatalogueSuccessAction(catalogue));
   } catch (error) {
+    // a failed catalogue has to be as loud as any other failed request here: an unexplained
+    // page is indistinguishable from an instance that simply has nothing to offer
     yield put(fetchMarketplaceCatalogueErrorAction(error.message));
+    yield put(showDefaultErrorNotification(error));
   }
 }
 
-function* watchFetchMarketplaceCatalogue() {
-  yield takeEvery(FETCH_MARKETPLACE_CATALOGUE, fetchMarketplaceCatalogue);
+// takeLatest, not takeEvery: a slow catalogue response must never land on top of a newer one
+export function* watchFetchMarketplaceCatalogue() {
+  yield takeLatest(FETCH_MARKETPLACE_CATALOGUE, fetchMarketplaceCatalogue);
 }
 
 export function* installMarketplacePlugin({ payload: { registryId, version } }) {

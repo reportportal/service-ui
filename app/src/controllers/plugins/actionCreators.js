@@ -195,9 +195,10 @@ export const setOrganizationIntegrationsAction = (organizationIntegrations) => (
   payload: organizationIntegrations,
 });
 
-export const fetchMarketplaceCatalogueAction = ({ q, category } = {}) => ({
+// `debounced` marks a request the user is still typing into; every other one leaves at once
+export const fetchMarketplaceCatalogueAction = ({ q, category, debounced } = {}) => ({
   type: FETCH_MARKETPLACE_CATALOGUE,
-  payload: { q, category },
+  payload: { q, category, debounced },
 });
 
 // carries the filter so the store can remember what the catalogue is showing

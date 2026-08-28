@@ -23,6 +23,7 @@ import {
   marketplaceRegistryHostSelector,
   marketplaceCatalogueLoadingSelector,
   isMarketplaceRegistryOfflineSelector,
+  hasMarketplaceCatalogueFailedSelector,
   marketplaceCatalogueErrorSelector,
   marketplacePluginUpdateVersionSelector,
   hasMarketplacePluginUpdateSelector,
@@ -101,6 +102,17 @@ describe('controllers/plugins/marketplace selectors', () => {
       ),
     ).toBe(false);
     expect(marketplaceCatalogueErrorSelector(loadedOffline)).toBeNull();
+  });
+
+  test('a failed request is its own state, distinct from offline and from a fresh store', () => {
+    expect(
+      hasMarketplaceCatalogueFailedSelector(
+        mockState({ catalogueState: MARKETPLACE_CATALOGUE_STATE.FAILED, error: 'boom' }),
+      ),
+    ).toBe(true);
+    expect(hasMarketplaceCatalogueFailedSelector(loadedOffline)).toBe(false);
+    expect(hasMarketplaceCatalogueFailedSelector(loadedOnline)).toBe(false);
+    expect(hasMarketplaceCatalogueFailedSelector({})).toBe(false);
   });
 
   test('surface the error of a failed request', () => {

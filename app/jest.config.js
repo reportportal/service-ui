@@ -21,6 +21,9 @@ module.exports = {
     '^.+\\.(css|scss)$': 'identity-obj-proxy',
     '^.+\\.(svg|jpg|jpeg|png|gif)$': '<rootDir>/test/__mocks__/fileMock.js',
     '^components[/](.+)': '<rootDir>/src/components/$1',
+    // the two webpack aliases the mapper was missing
+    '^componentLibrary[/](.+)': '<rootDir>/src/componentLibrary/$1',
+    '^analyticsEvents[/](.+)': '<rootDir>/src/components/main/analytics/events/ga4Events/$1',
     '^controllers[/](.+)': '<rootDir>/src/controllers/$1',
     '^common[/](.+)': '<rootDir>/src/common/$1',
     '^hooks[/](.+)': '<rootDir>/src/hooks/$1',

@@ -27,7 +27,12 @@ import {
   installMarketplacePluginSuccessAction,
   installMarketplacePluginErrorAction,
 } from './actionCreators';
-import { fetchMarketplaceCatalogue, installMarketplacePlugin } from './sagas';
+import {
+  fetchMarketplaceCatalogue,
+  installMarketplacePlugin,
+  watchFetchMarketplaceCatalogue,
+} from './sagas';
+import { FETCH_MARKETPLACE_CATALOGUE_SUCCESS, MARKETPLACE_SEARCH_DEBOUNCE } from './constants';
 
 jest.mock('common/utils', () => ({
   ...jest.requireActual('common/utils'),
@@ -57,9 +62,47 @@ const run = (saga, action, state = {}) => {
   ).done.then(() => dispatched);
 };
 
+// the watcher has to be driven through a store interface, since what is under test is which
+// take helper it uses, not what one run of the worker does
+const runWatcher = (watcher, state = {}) => {
+  const dispatched = [];
+  const listeners = [];
+  const dispatch = (action) => {
+    dispatched.push(action);
+    listeners.forEach((listener) => listener(action));
+  };
+
+  runSaga(
+    {
+      subscribe: (listener) => {
+        listeners.push(listener);
+        return () => {};
+      },
+      dispatch,
+      getState: () => state,
+      onError: () => {},
+    },
+    watcher,
+  );
+
+  return { dispatched, dispatch };
+};
+
+const settle = () => new Promise((resolve) => setTimeout(resolve, 0));
+
+const deferred = () => {
+  let resolve;
+  const promise = new Promise((res) => {
+    resolve = res;
+  });
+
+  return { promise, resolve };
+};
+
 describe('controllers/plugins/sagas marketplace', () => {
   beforeEach(() => {
-    fetch.mockClear();
+    // mockReset, not mockClear: a one-shot response queued by a test must not leak into the next
+    fetch.mockReset();
   });
 
   describe('fetchMarketplaceCatalogue', () => {
@@ -126,10 +169,67 @@ describe('controllers/plugins/sagas marketplace', () => {
 
       const dispatched = await run(fetchMarketplaceCatalogue, fetchMarketplaceCatalogueAction());
 
-      expect(dispatched).toEqual([
-        fetchMarketplaceCatalogueStartAction(),
-        fetchMarketplaceCatalogueErrorAction('Network Error'),
-      ]);
+      expect(dispatched[0]).toEqual(fetchMarketplaceCatalogueStartAction());
+      expect(dispatched).toContainEqual(fetchMarketplaceCatalogueErrorAction('Network Error'));
+    });
+
+    test('a debounced request does not leave on the keystroke that asked for it', async () => {
+      jest.useFakeTimers();
+      fetch.mockResolvedValue(onlinePayload);
+      const done = run(
+        fetchMarketplaceCatalogue,
+        fetchMarketplaceCatalogueAction({ q: 'j', debounced: true }),
+      );
+
+      await Promise.resolve();
+      expect(fetch).not.toHaveBeenCalled();
+
+      jest.advanceTimersByTime(MARKETPLACE_SEARCH_DEBOUNCE);
+      const dispatched = await done;
+
+      expect(fetch).toHaveBeenCalledWith('../api/v1/plugins?q=j');
+      // nothing is announced to the store until the request actually leaves
+      expect(dispatched[0]).toEqual(fetchMarketplaceCatalogueStartAction({ q: 'j' }));
+      jest.useRealTimers();
+    });
+
+    test('an undebounced request leaves immediately', async () => {
+      fetch.mockResolvedValue(onlinePayload);
+
+      await run(fetchMarketplaceCatalogue, fetchMarketplaceCatalogueAction({ q: 'j' }));
+
+      expect(fetch).toHaveBeenCalledWith('../api/v1/plugins?q=j');
+    });
+
+    // a failed catalogue must never be as quiet as an empty one
+    test('a transport failure is reported, like every other failed request here', async () => {
+      const error = new Error('Network Error');
+      fetch.mockRejectedValue(error);
+
+      const dispatched = await run(fetchMarketplaceCatalogue, fetchMarketplaceCatalogueAction());
+
+      expect(dispatched).toContainEqual(showDefaultErrorNotification(error));
+    });
+
+    test('a slow response cannot overwrite a newer one', async () => {
+      const slow = deferred();
+      const fast = deferred();
+      fetch.mockReturnValueOnce(slow.promise).mockReturnValueOnce(fast.promise);
+      const { dispatched, dispatch } = runWatcher(watchFetchMarketplaceCatalogue);
+
+      dispatch(fetchMarketplaceCatalogueAction({ q: 'ji' }));
+      await settle();
+      dispatch(fetchMarketplaceCatalogueAction({ q: 'jira' }));
+      await settle();
+
+      fast.resolve(onlinePayload);
+      await settle();
+      slow.resolve(offlinePayload);
+      await settle();
+
+      expect(dispatched.filter(({ type }) => type === FETCH_MARKETPLACE_CATALOGUE_SUCCESS)).toEqual(
+        [fetchMarketplaceCatalogueSuccessAction(onlinePayload)],
+      );
     });
   });
 

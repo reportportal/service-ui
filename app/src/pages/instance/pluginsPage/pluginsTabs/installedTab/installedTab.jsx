@@ -21,7 +21,7 @@ import { injectIntl, defineMessages } from 'react-intl';
 import classNames from 'classnames/bind';
 import { URLS } from 'common/urls';
 import { fetch } from 'common/utils';
-import { getPluginsFilter } from 'common/constants/pluginsFilter';
+import { getPluginsFilter, PLUGIN_FILTER_GROUP_VALUES } from 'common/constants/pluginsFilter';
 import { ALL_GROUP_TYPE } from 'common/constants/pluginsGroupTypes';
 import {
   updatePluginSuccessAction,
@@ -32,6 +32,7 @@ import {
   marketplaceCatalogueLoadingSelector,
   marketplaceRegistryHostSelector,
   isMarketplaceRegistryOfflineSelector,
+  hasMarketplaceCatalogueFailedSelector,
 } from 'controllers/plugins';
 import { disablePluginPopupContentSelector } from 'controllers/plugins/uiExtensions';
 import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
@@ -96,6 +97,7 @@ const messages = defineMessages({
     availablePlugins: marketplaceAvailablePluginsSelector(state),
     catalogueLoading: marketplaceCatalogueLoadingSelector(state),
     registryOffline: isMarketplaceRegistryOfflineSelector(state),
+    catalogueFailed: hasMarketplaceCatalogueFailedSelector(state),
     registryHost: marketplaceRegistryHostSelector(state),
   }),
   {
@@ -118,6 +120,7 @@ export class InstalledTab extends Component {
     availablePlugins: PropTypes.array.isRequired,
     catalogueLoading: PropTypes.bool.isRequired,
     registryOffline: PropTypes.bool.isRequired,
+    catalogueFailed: PropTypes.bool.isRequired,
     fetchMarketplaceCatalogueAction: PropTypes.func.isRequired,
     installMarketplacePluginAction: PropTypes.func.isRequired,
     registryHost: PropTypes.string,
@@ -273,6 +276,7 @@ export class InstalledTab extends Component {
           availablePlugins,
           catalogueLoading,
           registryOffline,
+          catalogueFailed,
           registryHost,
         } = this.props;
 
@@ -294,10 +298,12 @@ export class InstalledTab extends Component {
                 availablePlugins={availablePlugins}
                 loading={catalogueLoading}
                 offline={registryOffline}
+                failed={catalogueFailed}
                 registryHost={registryHost}
                 activeCategory={activeFilterItem}
                 query={this.state.searchQuery}
                 onQueryChange={this.handleQueryChange}
+                onRetry={this.refetchCatalogue}
                 onRowAction={this.handleRowAction}
                 onInstalledItemClick={this.installedPluginsSubPageHandler}
                 onAvailableItemClick={this.availablePluginDetailSubPageHandler}
@@ -348,15 +354,35 @@ export class InstalledTab extends Component {
 
   subPagesCache = {};
 
+  // the chip and the query are both server-side filters; ALL and INSTALLED are synthetic
+  // chips this endpoint knows nothing about, so they narrow nothing remotely
+  catalogueParams = ({
+    query = this.state.searchQuery,
+    category = this.state.activeFilterItem,
+  }) => ({
+    q: query.trim() || null,
+    category: PLUGIN_FILTER_GROUP_VALUES.includes(category) ? category : null,
+  });
+
+  refetchCatalogue = () => this.props.fetchMarketplaceCatalogueAction(this.catalogueParams({}));
+
   handleFilterChange = (value) => {
     if (value !== this.state.activeFilterItem) {
       this.setState({
         activeFilterItem: value,
       });
+      this.props.fetchMarketplaceCatalogueAction(this.catalogueParams({ category: value }));
     }
   };
 
-  handleQueryChange = (searchQuery) => this.setState({ searchQuery });
+  // the field stays responsive while the request waits: only the request is debounced
+  handleQueryChange = (searchQuery) => {
+    this.setState({ searchQuery });
+    this.props.fetchMarketplaceCatalogueAction({
+      ...this.catalogueParams({ query: searchQuery }),
+      debounced: true,
+    });
+  };
 
   // install, update and rollback are the same request: make this version the active one
   handleRowAction = (action, row) => {

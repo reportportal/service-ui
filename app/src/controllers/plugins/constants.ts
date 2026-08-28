@@ -62,6 +62,9 @@ export const FETCH_MARKETPLACE_CATALOGUE_START = 'fetchMarketplaceCatalogueStart
 export const FETCH_MARKETPLACE_CATALOGUE_SUCCESS = 'fetchMarketplaceCatalogueSuccess';
 export const FETCH_MARKETPLACE_CATALOGUE_ERROR = 'fetchMarketplaceCatalogueError';
 
+/** How long a search waits before it becomes a request, so a keystroke does not become one. */
+export const MARKETPLACE_SEARCH_DEBOUNCE = 300;
+
 export const INSTALL_MARKETPLACE_PLUGIN = 'installMarketplacePlugin';
 export const INSTALL_MARKETPLACE_PLUGIN_START = 'installMarketplacePluginStart';
 export const INSTALL_MARKETPLACE_PLUGIN_SUCCESS = 'installMarketplacePluginSuccess';

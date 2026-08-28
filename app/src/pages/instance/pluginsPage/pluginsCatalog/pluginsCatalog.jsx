@@ -24,6 +24,7 @@ import { INSTALLED_GROUP_TYPE } from 'common/constants/pluginsFilter';
 import SearchIcon from 'common/img/search-icon-inline.svg';
 import { PluginsListItems } from '../pluginsListItems';
 import { RegistryOfflineAlert } from '../registryOfflineAlert';
+import { CatalogueUnavailableAlert } from '../catalogueUnavailableAlert';
 import {
   filterRows,
   mergeInstalledRows,
@@ -60,11 +61,13 @@ export const PluginsCatalog = ({
   availablePlugins,
   loading = false,
   offline = false,
+  failed = false,
   registryHost = null,
   activeCategory,
   query,
   onQueryChange,
   onRowAction,
+  onRetry = () => {},
   onInstalledItemClick = () => {},
   onAvailableItemClick = () => {},
   onToggleActive = () => Promise.resolve(),
@@ -72,22 +75,28 @@ export const PluginsCatalog = ({
 }) => {
   const { formatMessage } = useIntl();
 
+  // offline the registry never answered and after a failure nothing answered at all, so no
+  // marketplace signal is verifiable — enforced here rather than trusting the payload to arrive
+  // with the block nulled
+  const marketplaceTrusted = !offline && !failed;
   const installedRows = filterRows(
-    mergeInstalledRows(installedPlugins, marketplaceInstalled),
+    mergeInstalledRows(installedPlugins, marketplaceInstalled, marketplaceTrusted),
     activeCategory,
     query,
   ).sort(sortByGroupAndName);
 
-  // offline nothing can be browsed or installed, and the Installed chip asks for installed only
-  const hideAvailable = offline || activeCategory === INSTALLED_GROUP_TYPE;
+  // nothing can be browsed or installed without a catalogue, and the Installed chip asks for
+  // installed only
+  const hideAvailable = !marketplaceTrusted || activeCategory === INSTALLED_GROUP_TYPE;
+  // the available half is the answer the server gave to this query and category, so it is
+  // rendered as it arrived; only the locally held installed half is narrowed here
   const availableRows = hideAvailable
     ? []
-    : filterRows(availablePlugins.map(toAvailableRow), activeCategory, query).sort(
-        sortByTierGroupAndName,
-      );
+    : availablePlugins.map(toAvailableRow).sort(sortByTierGroupAndName);
 
   const hasQuery = query.trim().length > 0;
-  const isEmpty = installedRows.length === 0 && availableRows.length === 0;
+  // an empty screen after a failure is explained by the alert, not by a no-results state
+  const isEmpty = !failed && installedRows.length === 0 && availableRows.length === 0;
 
   return (
     <div className={cx('plugins-catalog')}>
@@ -102,6 +111,7 @@ export const PluginsCatalog = ({
         />
       </div>
       {offline && <RegistryOfflineAlert host={registryHost} />}
+      {failed && <CatalogueUnavailableAlert onRetry={onRetry} />}
       {loading ? (
         <div className={cx('plugins-catalog-loader')} data-automation-id="catalogLoader">
           <BubblesLoader />
@@ -168,11 +178,13 @@ PluginsCatalog.propTypes = {
   availablePlugins: PropTypes.array.isRequired,
   loading: PropTypes.bool,
   offline: PropTypes.bool,
+  failed: PropTypes.bool,
   registryHost: PropTypes.string,
   activeCategory: PropTypes.string.isRequired,
   query: PropTypes.string.isRequired,
   onQueryChange: PropTypes.func.isRequired,
   onRowAction: PropTypes.func.isRequired,
+  onRetry: PropTypes.func,
   onInstalledItemClick: PropTypes.func,
   onAvailableItemClick: PropTypes.func,
   onToggleActive: PropTypes.func,

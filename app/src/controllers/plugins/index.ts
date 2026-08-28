@@ -70,6 +70,7 @@ export {
   marketplaceRegistryHostSelector,
   marketplaceCatalogueLoadingSelector,
   isMarketplaceRegistryOfflineSelector,
+  hasMarketplaceCatalogueFailedSelector,
   marketplaceCatalogueErrorSelector,
   marketplacePluginUpdateVersionSelector,
   hasMarketplacePluginUpdateSelector,

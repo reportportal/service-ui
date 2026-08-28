@@ -210,6 +210,11 @@ export const marketplaceCatalogueLoadingSelector = (state) =>
 export const isMarketplaceRegistryOfflineSelector = (state) =>
   marketplaceCatalogueStateSelector(state) === MARKETPLACE_CATALOGUE_STATE.LOADED_OFFLINE;
 
+// not the same thing as offline: offline the installed list is still authoritative, here the
+// request produced nothing and even the installed list cannot be claimed to be current
+export const hasMarketplaceCatalogueFailedSelector = (state) =>
+  marketplaceCatalogueStateSelector(state) === MARKETPLACE_CATALOGUE_STATE.FAILED;
+
 export const marketplaceCatalogueErrorSelector = (state) =>
   marketplaceSelector(state).error || null;
 
