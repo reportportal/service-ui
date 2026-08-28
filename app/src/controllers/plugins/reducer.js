@@ -49,6 +49,12 @@ import {
   INSTALL_MARKETPLACE_PLUGIN_SUCCESS,
   INSTALL_MARKETPLACE_PLUGIN_ERROR,
   MARKETPLACE_CATALOGUE_STATE,
+  FETCH_MARKETPLACE_PLUGIN_DETAIL_START,
+  FETCH_MARKETPLACE_PLUGIN_DETAIL_SUCCESS,
+  FETCH_MARKETPLACE_PLUGIN_DETAIL_ERROR,
+  FETCH_MARKETPLACE_LICENCE_SUCCESS,
+  MARKETPLACE_LICENCE_START,
+  MARKETPLACE_LICENCE_ERROR,
   REGISTRY_STATUS,
 } from './constants';
 
@@ -211,6 +217,102 @@ export const marketplaceReducer = (state = INITIAL_MARKETPLACE_STATE, { type, pa
   }
 };
 
+const INITIAL_PLUGIN_DETAIL_STATE = {
+  detailState: MARKETPLACE_CATALOGUE_STATE.NOT_REQUESTED,
+  registryId: null,
+  registry: { status: null, host: null },
+  plugin: null,
+  versions: [],
+  changelog: null,
+  screenshots: [],
+  advisory: null,
+  blocked: null,
+  removed: null,
+  error: null,
+};
+
+/**
+ * The plugin page's registry half. It carries the same four-way state as the catalogue and on
+ * purpose: offline is a loaded response whose registry-sourced parts are simply absent, while a
+ * failure means nothing was learned at all. Anything registry-derived is dropped in both cases,
+ * so a stale advisory from a previous plugin can never be shown against this one.
+ */
+export const marketplacePluginDetailReducer = (
+  state = INITIAL_PLUGIN_DETAIL_STATE,
+  { type, payload } = {},
+) => {
+  switch (type) {
+    case FETCH_MARKETPLACE_PLUGIN_DETAIL_START:
+      return {
+        ...INITIAL_PLUGIN_DETAIL_STATE,
+        detailState: MARKETPLACE_CATALOGUE_STATE.LOADING,
+        registryId: payload || null,
+      };
+    case FETCH_MARKETPLACE_PLUGIN_DETAIL_SUCCESS: {
+      const registry = payload.registry || {};
+      const online = registry.status === REGISTRY_STATUS.ONLINE;
+
+      return {
+        ...INITIAL_PLUGIN_DETAIL_STATE,
+        detailState: online
+          ? MARKETPLACE_CATALOGUE_STATE.LOADED_ONLINE
+          : MARKETPLACE_CATALOGUE_STATE.LOADED_OFFLINE,
+        registryId: payload.plugin?.id || state.registryId,
+        registry: { status: registry.status || null, host: registry.host || null },
+        // an offline answer has no registry half to keep, so none of it is kept
+        plugin: online ? payload.plugin || null : null,
+        versions: online ? payload.versions || [] : [],
+        changelog: online ? payload.changelog || null : null,
+        screenshots: online ? payload.screenshots || [] : [],
+        advisory: online ? payload.advisory || null : null,
+        blocked: online ? payload.blocked || null : null,
+        removed: online ? payload.removed || null : null,
+      };
+    }
+    case FETCH_MARKETPLACE_PLUGIN_DETAIL_ERROR:
+      return {
+        ...INITIAL_PLUGIN_DETAIL_STATE,
+        detailState: MARKETPLACE_CATALOGUE_STATE.FAILED,
+        registryId: state.registryId,
+        error: payload,
+      };
+    default:
+      return state;
+  }
+};
+
+const INITIAL_LICENCE_STATE = {
+  configured: false,
+  customerId: null,
+  loading: false,
+  error: null,
+};
+
+/**
+ * Whether this instance holds marketplace credentials, and who it signs as. There is no case
+ * that stores a key: the endpoint never returns one and the form's action never reaches here.
+ */
+export const marketplaceLicenceReducer = (
+  state = INITIAL_LICENCE_STATE,
+  { type, payload } = {},
+) => {
+  switch (type) {
+    case MARKETPLACE_LICENCE_START:
+      return { ...state, loading: true, error: null };
+    case FETCH_MARKETPLACE_LICENCE_SUCCESS:
+      return {
+        configured: payload.configured,
+        customerId: payload.customerId,
+        loading: false,
+        error: null,
+      };
+    case MARKETPLACE_LICENCE_ERROR:
+      return { ...state, loading: false, error: payload };
+    default:
+      return state;
+  }
+};
+
 // TODO: store remote plugins separately
 export const pluginsReducer = combineReducers({
   plugins: queueReducers(fetchReducer(NAMESPACE), updatePluginLocallyReducer),
@@ -219,4 +321,6 @@ export const pluginsReducer = combineReducers({
   uiExtensions: uiExtensionsReducer,
   pluginsLoading: loadingReducer(NAMESPACE),
   marketplace: marketplaceReducer,
+  marketplacePluginDetail: marketplacePluginDetailReducer,
+  marketplaceLicence: marketplaceLicenceReducer,
 });

@@ -42,6 +42,15 @@ export const ROW_BADGES = {
 
 export const getDisplayName = ({ details, name }) => details?.name || name || '';
 
+/**
+ * Whether the registry half of a response may be believed. Offline the registry never answered,
+ * and after a failure nothing answered at all, so in neither case is any marketplace-sourced
+ * signal verifiable. The catalogue and the plugin page share this one rule so the two screens
+ * cannot come to disagree about what they are allowed to claim.
+ */
+export const isMarketplaceTrusted = ({ offline = false, failed = false } = {}) =>
+  !offline && !failed;
+
 const groupRank = (groupType) => {
   const idx = PLUGIN_FILTER_GROUP_VALUES.indexOf(groupType);
   return idx < 0 ? PLUGIN_FILTER_GROUP_VALUES.length : idx;

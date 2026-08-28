@@ -1,0 +1,227 @@
+/*
+ * Copyright 2026 EPAM Systems
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+import { mount } from 'enzyme';
+import { IntlProvider } from 'react-intl';
+import { PluginMarketplaceBlocks } from './pluginMarketplaceBlocks';
+
+const detail = {
+  versions: [
+    { version: '1.4.0', publishedAt: '2025-11-02T00:00:00Z' },
+    { version: '1.5.2', publishedAt: '2026-03-12T00:00:00Z' },
+    { version: '1.5.0', publishedAt: '2026-01-20T00:00:00Z' },
+  ],
+  changelog: {
+    version: '1.5.2',
+    lines: ['Fixed a crash when posting an issue with no summary.'],
+  },
+  screenshots: ['https://registry.rp.io/a.png', 'https://registry.rp.io/b.png'],
+  advisory: null,
+  blocked: null,
+  removed: null,
+};
+
+const render = (props = {}) =>
+  mount(
+    <IntlProvider locale="en">
+      <PluginMarketplaceBlocks detail={detail} {...props} />
+    </IntlProvider>,
+  );
+
+const find = (wrapper, id) => wrapper.find(`[data-automation-id="${id}"]`);
+
+describe('PluginMarketplaceBlocks', () => {
+  // the enzyme react-18 adapter reads rendered text through findDOMNode; jestsetup turns every
+  // console.error into a throw, so React's one-time deprecation notice is filtered out here
+  const consoleError = console.error;
+
+  beforeAll(() => {
+    console.error = (message, ...rest) => {
+      if (typeof message === 'string' && message.includes('findDOMNode is deprecated')) {
+        return;
+      }
+      consoleError(message, ...rest);
+    };
+  });
+
+  afterAll(() => {
+    console.error = consoleError;
+  });
+
+  describe('versions', () => {
+    test('lists every published version, newest first', () => {
+      const text = find(render(), 'pluginVersions').text();
+
+      expect(find(render(), 'pluginVersionRow')).toHaveLength(3);
+      expect(text.indexOf('v.1.5.2')).toBeLessThan(text.indexOf('v.1.5.0'));
+      expect(text.indexOf('v.1.5.0')).toBeLessThan(text.indexOf('v.1.4.0'));
+    });
+
+    // the registry states a date, so it is shown as that date rather than shifted into the
+    // reader's timezone
+    test('a version row carries the publish date the registry stated', () => {
+      expect(find(render(), 'pluginVersions').text()).toContain('Mar 12, 2026');
+    });
+
+    test('the versions block is absent when the registry named no versions', () => {
+      const wrapper = render({ detail: { ...detail, versions: [] } });
+
+      expect(find(wrapper, 'pluginVersions')).toHaveLength(0);
+    });
+  });
+
+  describe('changelog', () => {
+    test('the heading carries the version it describes', () => {
+      expect(find(render(), 'pluginChangelog').text()).toContain("What's new in 1.5.2");
+    });
+
+    test('every changelog line is rendered', () => {
+      expect(find(render(), 'pluginChangelogLine')).toHaveLength(1);
+    });
+
+    test('the changelog block is absent when there is none', () => {
+      const wrapper = render({ detail: { ...detail, changelog: null } });
+
+      expect(find(wrapper, 'pluginChangelog')).toHaveLength(0);
+    });
+  });
+
+  describe('screenshots', () => {
+    test('renders one tile per screenshot', () => {
+      expect(find(render(), 'pluginScreenshot')).toHaveLength(2);
+    });
+
+    // an empty group is absence of data, so it is hidden rather than explained
+    test('the whole block is absent when there are none, not an empty strip', () => {
+      const wrapper = render({ detail: { ...detail, screenshots: [] } });
+
+      expect(find(wrapper, 'pluginScreenshots')).toHaveLength(0);
+    });
+  });
+
+  describe('marketplace alerts', () => {
+    const advisory = {
+      severity: 'high',
+      text: 'CVE-2026-1234 allows remote code execution through a crafted issue payload.',
+      attachedAt: '2026-02-15T00:00:00Z',
+      fixedIn: '1.5.2',
+    };
+    const blocked = {
+      blockedAt: '2026-02-15T00:00:00Z',
+      reason: 'critical vulnerability in jackson-databind',
+    };
+    const removed = {
+      removed: '2026-04-02T00:00:00Z',
+      removalReason: 'a trademark claim',
+    };
+
+    test('the advisory names what happened, its severity and when it was reported', () => {
+      const text = find(render({ detail: { ...detail, advisory } }), 'pluginAdvisoryAlert').text();
+
+      expect(text).toContain('high');
+      expect(text).toContain('CVE-2026-1234');
+      expect(text).toContain('2026');
+    });
+
+    test('the advisory says the plugin keeps running', () => {
+      const text = find(render({ detail: { ...detail, advisory } }), 'pluginAdvisoryAlert').text();
+
+      expect(text).toContain('keeps running');
+    });
+
+    test('the advisory says which version fixes it', () => {
+      const text = find(render({ detail: { ...detail, advisory } }), 'pluginAdvisoryAlert').text();
+
+      expect(text).toContain('Fixed in 1.5.2');
+    });
+
+    test('a blocked version says it keeps running but cannot be rolled back to', () => {
+      const text = find(render({ detail: { ...detail, blocked } }), 'pluginBlockedAlert').text();
+
+      expect(text).toContain('jackson-databind');
+      expect(text).toContain('keeps running');
+      expect(text).toContain('cannot be reinstalled or rolled back to');
+      expect(text).toContain('Archive the current .jar');
+    });
+
+    test('a removed plugin keeps running and leaves manual upload as the only path', () => {
+      const text = find(render({ detail: { ...detail, removed } }), 'pluginRemovedAlert').text();
+
+      expect(text).toContain('trademark claim');
+      expect(text).toContain('keeps running');
+      expect(text).toContain('no version can be installed, updated or rolled back to');
+      expect(text).toContain('Manual .jar upload is the only remaining path');
+    });
+
+    test('no alert is rendered when the registry reports nothing against the plugin', () => {
+      const wrapper = render();
+
+      expect(find(wrapper, 'pluginAdvisoryAlert')).toHaveLength(0);
+      expect(find(wrapper, 'pluginBlockedAlert')).toHaveLength(0);
+      expect(find(wrapper, 'pluginRemovedAlert')).toHaveLength(0);
+    });
+  });
+
+  describe('degradation', () => {
+    const loud = {
+      ...detail,
+      advisory: { severity: 'high', text: 'CVE-2026-1234', attachedAt: '2026-02-15T00:00:00Z' },
+      blocked: { blockedAt: '2026-02-15T00:00:00Z', reason: 'jackson-databind' },
+      removed: { removed: '2026-04-02T00:00:00Z', removalReason: 'a trademark claim' },
+    };
+
+    const assertNothingClaimed = (wrapper) => {
+      expect(find(wrapper, 'pluginVersions')).toHaveLength(0);
+      expect(find(wrapper, 'pluginChangelog')).toHaveLength(0);
+      expect(find(wrapper, 'pluginScreenshots')).toHaveLength(0);
+      expect(find(wrapper, 'pluginAdvisoryAlert')).toHaveLength(0);
+      expect(find(wrapper, 'pluginBlockedAlert')).toHaveLength(0);
+      expect(find(wrapper, 'pluginRemovedAlert')).toHaveLength(0);
+    };
+
+    test('offline shows nothing registry-derived, whatever the payload carried', () => {
+      const wrapper = render({ detail: loud, offline: true, registryHost: 'registry.rp.io' });
+
+      assertNothingClaimed(wrapper);
+    });
+
+    test('offline names the host that could not be reached', () => {
+      const wrapper = render({ detail: loud, offline: true, registryHost: 'registry.rp.io' });
+
+      expect(find(wrapper, 'registryOfflineAlert').text()).toContain('registry.rp.io');
+    });
+
+    // the same rule as the catalogue: a failure is not a quieter kind of offline
+    test('a failed request shows nothing registry-derived either', () => {
+      const wrapper = render({ detail: loud, failed: true });
+
+      assertNothingClaimed(wrapper);
+    });
+
+    test('a failed request says so rather than looking like a plugin with nothing to report', () => {
+      const wrapper = render({ detail: loud, failed: true });
+
+      expect(find(wrapper, 'catalogueUnavailableAlert')).toHaveLength(1);
+    });
+
+    test('nothing is claimed while the request is still in flight', () => {
+      const wrapper = render({ detail: loud, loading: true });
+
+      assertNothingClaimed(wrapper);
+      expect(find(wrapper, 'pluginDetailLoader')).toHaveLength(1);
+    });
+  });
+});

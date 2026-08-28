@@ -49,6 +49,16 @@ import {
   INSTALL_MARKETPLACE_PLUGIN_START,
   INSTALL_MARKETPLACE_PLUGIN_SUCCESS,
   INSTALL_MARKETPLACE_PLUGIN_ERROR,
+  FETCH_MARKETPLACE_PLUGIN_DETAIL,
+  FETCH_MARKETPLACE_PLUGIN_DETAIL_START,
+  FETCH_MARKETPLACE_PLUGIN_DETAIL_SUCCESS,
+  FETCH_MARKETPLACE_PLUGIN_DETAIL_ERROR,
+  FETCH_MARKETPLACE_LICENCE,
+  FETCH_MARKETPLACE_LICENCE_SUCCESS,
+  SET_MARKETPLACE_LICENCE,
+  DELETE_MARKETPLACE_LICENCE,
+  MARKETPLACE_LICENCE_START,
+  MARKETPLACE_LICENCE_ERROR,
 } from './constants';
 
 export const fetchPluginsAction = () => ({
@@ -236,4 +246,56 @@ export const installMarketplacePluginSuccessAction = (registryId) => ({
 export const installMarketplacePluginErrorAction = (registryId, error) => ({
   type: INSTALL_MARKETPLACE_PLUGIN_ERROR,
   payload: { registryId, error },
+});
+
+export const fetchMarketplacePluginDetailAction = (registryId) => ({
+  type: FETCH_MARKETPLACE_PLUGIN_DETAIL,
+  payload: registryId,
+});
+
+export const fetchMarketplacePluginDetailStartAction = (registryId) => ({
+  type: FETCH_MARKETPLACE_PLUGIN_DETAIL_START,
+  payload: registryId,
+});
+
+export const fetchMarketplacePluginDetailSuccessAction = (detail) => ({
+  type: FETCH_MARKETPLACE_PLUGIN_DETAIL_SUCCESS,
+  payload: detail,
+});
+
+export const fetchMarketplacePluginDetailErrorAction = (error) => ({
+  type: FETCH_MARKETPLACE_PLUGIN_DETAIL_ERROR,
+  payload: error,
+});
+
+export const fetchMarketplaceLicenceAction = () => ({
+  type: FETCH_MARKETPLACE_LICENCE,
+});
+
+// GET answers {configured, customerId} and nothing else, so nothing else is stored
+export const fetchMarketplaceLicenceSuccessAction = ({ configured, customerId } = {}) => ({
+  type: FETCH_MARKETPLACE_LICENCE_SUCCESS,
+  payload: { configured: Boolean(configured), customerId: customerId || null },
+});
+
+/**
+ * The key travels in the action and no further: the saga hands it to the request and the
+ * reducer never sees this action type, so it cannot end up in a state that outlives the call.
+ */
+export const setMarketplaceLicenceAction = ({ customerId, privateKey }) => ({
+  type: SET_MARKETPLACE_LICENCE,
+  payload: { customerId, privateKey },
+});
+
+export const deleteMarketplaceLicenceAction = () => ({
+  type: DELETE_MARKETPLACE_LICENCE,
+});
+
+export const marketplaceLicenceStartAction = () => ({
+  type: MARKETPLACE_LICENCE_START,
+});
+
+export const marketplaceLicenceErrorAction = (error) => ({
+  type: MARKETPLACE_LICENCE_ERROR,
+  payload: error,
 });

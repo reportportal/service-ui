@@ -27,6 +27,7 @@ import { RegistryOfflineAlert } from '../registryOfflineAlert';
 import { CatalogueUnavailableAlert } from '../catalogueUnavailableAlert';
 import {
   filterRows,
+  isMarketplaceTrusted,
   mergeInstalledRows,
   sortByGroupAndName,
   sortByTierGroupAndName,
@@ -75,10 +76,9 @@ export const PluginsCatalog = ({
 }) => {
   const { formatMessage } = useIntl();
 
-  // offline the registry never answered and after a failure nothing answered at all, so no
-  // marketplace signal is verifiable — enforced here rather than trusting the payload to arrive
-  // with the block nulled
-  const marketplaceTrusted = !offline && !failed;
+  // the one rule, shared with the plugin page: enforced here rather than trusting the payload
+  // to arrive with the block nulled
+  const marketplaceTrusted = isMarketplaceTrusted({ offline, failed });
   const installedRows = filterRows(
     mergeInstalledRows(installedPlugins, marketplaceInstalled, marketplaceTrusted),
     activeCategory,

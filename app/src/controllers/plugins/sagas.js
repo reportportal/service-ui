@@ -47,6 +47,10 @@ import {
   FETCH_MARKETPLACE_CATALOGUE,
   INSTALL_MARKETPLACE_PLUGIN,
   MARKETPLACE_SEARCH_DEBOUNCE,
+  FETCH_MARKETPLACE_PLUGIN_DETAIL,
+  FETCH_MARKETPLACE_LICENCE,
+  SET_MARKETPLACE_LICENCE,
+  DELETE_MARKETPLACE_LICENCE,
 } from './constants';
 import { pluginByNameSelector, marketplaceCatalogueQuerySelector } from './selectors';
 import {
@@ -62,6 +66,12 @@ import {
   installMarketplacePluginStartAction,
   installMarketplacePluginSuccessAction,
   installMarketplacePluginErrorAction,
+  fetchMarketplacePluginDetailStartAction,
+  fetchMarketplacePluginDetailSuccessAction,
+  fetchMarketplacePluginDetailErrorAction,
+  fetchMarketplaceLicenceSuccessAction,
+  marketplaceLicenceStartAction,
+  marketplaceLicenceErrorAction,
 } from './actionCreators';
 import { fetchExtensionManifests, fetchExtensionManifest } from './uiExtensions';
 import {
@@ -325,6 +335,80 @@ export function* installMarketplacePlugin({ payload: { registryId, version } }) 
   }
 }
 
+/**
+ * The registry half of one plugin's page. takeLatest, because opening a second plugin while the
+ * first is still in flight must never end with the first one's answer painted over the second.
+ */
+export function* fetchMarketplacePluginDetail({ payload: registryId }) {
+  yield put(fetchMarketplacePluginDetailStartAction(registryId));
+  try {
+    const detail = yield call(fetch, URLS.marketplacePluginDetail(registryId));
+    // as on the catalogue, an OFFLINE registry is part of a successful payload
+    yield put(fetchMarketplacePluginDetailSuccessAction(detail));
+  } catch (error) {
+    yield put(fetchMarketplacePluginDetailErrorAction(error.message));
+    yield put(showDefaultErrorNotification(error));
+  }
+}
+
+export function* watchFetchMarketplacePluginDetail() {
+  yield takeLatest(FETCH_MARKETPLACE_PLUGIN_DETAIL, fetchMarketplacePluginDetail);
+}
+
+export function* fetchMarketplaceLicence() {
+  try {
+    const licence = yield call(fetch, URLS.marketplaceLicence());
+    yield put(fetchMarketplaceLicenceSuccessAction(licence));
+  } catch (error) {
+    yield put(marketplaceLicenceErrorAction(error.message));
+    yield put(showDefaultErrorNotification(error));
+  }
+}
+
+function* watchFetchMarketplaceLicence() {
+  yield takeEvery(FETCH_MARKETPLACE_LICENCE, fetchMarketplaceLicence);
+}
+
+/**
+ * The key is read out of the action, handed to the request and dropped. Nothing derived from it
+ * is dispatched: the only thing the store learns is what the endpoint answers, which by contract
+ * is {configured, customerId}.
+ */
+export function* setMarketplaceLicence({ payload: { customerId, privateKey } }) {
+  yield put(marketplaceLicenceStartAction());
+  try {
+    const licence = yield call(fetch, URLS.marketplaceLicence(), {
+      method: 'put',
+      data: { customerId, privateKey },
+    });
+    yield put(fetchMarketplaceLicenceSuccessAction(licence));
+    yield put(showSuccessNotification({ messageId: 'updateMarketplaceLicenceSuccess' }));
+  } catch (error) {
+    yield put(marketplaceLicenceErrorAction(error.message));
+    yield put(showDefaultErrorNotification(error));
+  }
+}
+
+function* watchSetMarketplaceLicence() {
+  yield takeEvery(SET_MARKETPLACE_LICENCE, setMarketplaceLicence);
+}
+
+export function* deleteMarketplaceLicence() {
+  yield put(marketplaceLicenceStartAction());
+  try {
+    const licence = yield call(fetch, URLS.marketplaceLicence(), { method: 'delete' });
+    yield put(fetchMarketplaceLicenceSuccessAction(licence));
+    yield put(showSuccessNotification({ messageId: 'removeMarketplaceLicenceSuccess' }));
+  } catch (error) {
+    yield put(marketplaceLicenceErrorAction(error.message));
+    yield put(showDefaultErrorNotification(error));
+  }
+}
+
+function* watchDeleteMarketplaceLicence() {
+  yield takeEvery(DELETE_MARKETPLACE_LICENCE, deleteMarketplaceLicence);
+}
+
 function* watchInstallMarketplacePlugin() {
   yield takeEvery(INSTALL_MARKETPLACE_PLUGIN, installMarketplacePlugin);
 }
@@ -355,5 +439,9 @@ export function* pluginSagas() {
     watchPluginListFetch(),
     watchFetchMarketplaceCatalogue(),
     watchInstallMarketplacePlugin(),
+    watchFetchMarketplacePluginDetail(),
+    watchFetchMarketplaceLicence(),
+    watchSetMarketplaceLicence(),
+    watchDeleteMarketplaceLicence(),
   ]);
 }

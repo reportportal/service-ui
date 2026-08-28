@@ -156,6 +156,14 @@ export const notificationMessages = defineMessages({
     id: 'InstancesSection.removePluginSuccess',
     defaultMessage: 'Plugin has been uninstalled successfully',
   },
+  updateMarketplaceLicenceSuccess: {
+    id: 'MarketplaceLicence.updateSuccess',
+    defaultMessage: 'Marketplace licence credentials have been saved',
+  },
+  removeMarketplaceLicenceSuccess: {
+    id: 'MarketplaceLicence.removeSuccess',
+    defaultMessage: 'Marketplace licence credentials have been removed',
+  },
   updateIntegrationSuccess: {
     id: 'IntegrationSettingsContainer.updateIntegrationSuccess',
     defaultMessage: 'Integration has been updated successfully',
@@ -312,7 +320,8 @@ export const notificationMessages = defineMessages({
   },
   testCasesAddedToTestPlanFromLibrarySuccess: {
     id: 'TestPlanDetailsPage.testCasesAddedToTestPlanFromLibrarySuccess',
-    defaultMessage: '{count, plural, one {# Test Case was} other {# Test Cases were}} successfully added to Test Plan.',
+    defaultMessage:
+      '{count, plural, one {# Test Case was} other {# Test Cases were}} successfully added to Test Plan.',
   },
   testCaseUpdatedSuccess: {
     id: 'TestCaseLibraryPage.testCaseUpdatedSuccess',

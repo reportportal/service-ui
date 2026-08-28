@@ -33,6 +33,12 @@ import {
   marketplaceRegistryHostSelector,
   isMarketplaceRegistryOfflineSelector,
   hasMarketplaceCatalogueFailedSelector,
+  fetchMarketplacePluginDetailAction,
+  marketplacePluginDetailDataSelector,
+  marketplacePluginDetailLoadingSelector,
+  isMarketplacePluginDetailOfflineSelector,
+  hasMarketplacePluginDetailFailedSelector,
+  marketplacePluginDetailRegistryHostSelector,
 } from 'controllers/plugins';
 import { disablePluginPopupContentSelector } from 'controllers/plugins/uiExtensions';
 import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
@@ -58,6 +64,7 @@ import { PluginsFilter } from '../../pluginsFilter';
 import { ActionPanel } from '../../actionPanel';
 import { AvailablePluginDetail } from '../../availablePluginDetail';
 import { PluginsCatalog, ROW_ACTIONS } from '../../pluginsCatalog';
+import { PluginMarketplaceBlocks } from '../../pluginMarketplaceBlocks';
 
 const cx = classNames.bind(styles);
 
@@ -99,6 +106,11 @@ const messages = defineMessages({
     registryOffline: isMarketplaceRegistryOfflineSelector(state),
     catalogueFailed: hasMarketplaceCatalogueFailedSelector(state),
     registryHost: marketplaceRegistryHostSelector(state),
+    pluginDetail: marketplacePluginDetailDataSelector(state),
+    detailLoading: marketplacePluginDetailLoadingSelector(state),
+    detailOffline: isMarketplacePluginDetailOfflineSelector(state),
+    detailFailed: hasMarketplacePluginDetailFailedSelector(state),
+    detailRegistryHost: marketplacePluginDetailRegistryHostSelector(state),
   }),
   {
     showNotification,
@@ -106,6 +118,7 @@ const messages = defineMessages({
     showModalAction,
     fetchMarketplaceCatalogueAction,
     installMarketplacePluginAction,
+    fetchMarketplacePluginDetailAction,
   },
 )
 export class InstalledTab extends Component {
@@ -125,9 +138,16 @@ export class InstalledTab extends Component {
     installMarketplacePluginAction: PropTypes.func.isRequired,
     registryHost: PropTypes.string,
     showNotification: PropTypes.func,
+    pluginDetail: PropTypes.object.isRequired,
+    detailLoading: PropTypes.bool.isRequired,
+    detailOffline: PropTypes.bool.isRequired,
+    detailFailed: PropTypes.bool.isRequired,
+    fetchMarketplacePluginDetailAction: PropTypes.func.isRequired,
+    detailRegistryHost: PropTypes.string,
   };
 
   static defaultProps = {
+    detailRegistryHost: null,
     registryHost: null,
     showNotification: () => {},
   };
@@ -248,15 +268,19 @@ export class InstalledTab extends Component {
     switch (type) {
       case INSTALLED_PLUGINS_SUBPAGE:
         return (
-          <IntegrationInfoContainer
-            integrationType={data}
-            isGlobal
-            onToggleActive={this.onToggleActive}
-            onItemClick={this.installedPluginsSettingsSubPageHandler}
-            showToggleConfirmationModal={this.showToggleConfirmationModal}
-            removePluginSuccessCallback={this.goToMainPageHandler}
-            events={PLUGINS_PAGE_EVENTS}
-          />
+          <>
+            {/* what the registry says about this plugin, on the same terms as the catalogue */}
+            {data.registryId && this.renderMarketplaceBlocks()}
+            <IntegrationInfoContainer
+              integrationType={data}
+              isGlobal
+              onToggleActive={this.onToggleActive}
+              onItemClick={this.installedPluginsSettingsSubPageHandler}
+              showToggleConfirmationModal={this.showToggleConfirmationModal}
+              removePluginSuccessCallback={this.goToMainPageHandler}
+              events={PLUGINS_PAGE_EVENTS}
+            />
+          </>
         );
       case INSTALLED_PLUGINS_SETTINGS_SUBPAGE:
         return (
@@ -268,7 +292,19 @@ export class InstalledTab extends Component {
           />
         );
       case AVAILABLE_PLUGIN_DETAIL_SUBPAGE:
-        return <AvailablePluginDetail key={data.name} plugin={data} />;
+        return (
+          <AvailablePluginDetail
+            key={data.name}
+            plugin={data}
+            detail={this.props.pluginDetail}
+            loading={this.props.detailLoading}
+            offline={this.props.detailOffline}
+            failed={this.props.detailFailed}
+            registryHost={this.props.detailRegistryHost}
+            onInstall={this.handleInstallFromDetail}
+            onRetry={this.refetchPluginDetail}
+          />
+        );
       default: {
         const {
           plugins,
@@ -402,19 +438,48 @@ export class InstalledTab extends Component {
       title: pageTitle,
     });
 
-  installedPluginsSubPageHandler = (pageData) =>
-    this.changeSubPage({
+  renderMarketplaceBlocks = () => (
+    <PluginMarketplaceBlocks
+      detail={this.props.pluginDetail}
+      loading={this.props.detailLoading}
+      offline={this.props.detailOffline}
+      failed={this.props.detailFailed}
+      registryHost={this.props.detailRegistryHost}
+      onRetry={this.refetchPluginDetail}
+    />
+  );
+
+  // a plugin the registry could not be asked about has no page of registry content to fetch
+  fetchPluginDetail = (registryId) => {
+    if (registryId) {
+      this.props.fetchMarketplacePluginDetailAction(registryId);
+    }
+  };
+
+  refetchPluginDetail = () => this.fetchPluginDetail(this.state.subPage.data?.registryId);
+
+  handleInstallFromDetail = (row) =>
+    this.props.installMarketplacePluginAction(row.registryId, row.latestVersion);
+
+  installedPluginsSubPageHandler = (pageData) => {
+    this.fetchPluginDetail(pageData.registryId);
+
+    return this.changeSubPage({
       type: INSTALLED_PLUGINS_SUBPAGE,
       data: pageData,
       title: pageData.details.name || pageData.name,
     });
+  };
 
-  availablePluginDetailSubPageHandler = (pageData) =>
-    this.changeSubPage({
+  availablePluginDetailSubPageHandler = (pageData) => {
+    this.fetchPluginDetail(pageData.registryId);
+
+    return this.changeSubPage({
       type: AVAILABLE_PLUGIN_DETAIL_SUBPAGE,
       data: pageData,
       title: pageData.details.name || pageData.name,
     });
+  };
 
   renderFilterMobileBlock = () => (
     <div className={cx('plugins-filter-mobile')}>

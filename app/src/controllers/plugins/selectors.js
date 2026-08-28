@@ -244,3 +244,47 @@ export const availableBtsIntegrationsSelector = (state) => {
     [],
   );
 };
+
+const marketplacePluginDetailSelector = (state) =>
+  domainSelector(state).marketplacePluginDetail || {};
+
+export const marketplacePluginDetailStateSelector = (state) =>
+  marketplacePluginDetailSelector(state).detailState || MARKETPLACE_CATALOGUE_STATE.NOT_REQUESTED;
+
+export const marketplacePluginDetailLoadingSelector = (state) =>
+  marketplacePluginDetailStateSelector(state) === MARKETPLACE_CATALOGUE_STATE.LOADING;
+
+export const isMarketplacePluginDetailOfflineSelector = (state) =>
+  marketplacePluginDetailStateSelector(state) === MARKETPLACE_CATALOGUE_STATE.LOADED_OFFLINE;
+
+export const hasMarketplacePluginDetailFailedSelector = (state) =>
+  marketplacePluginDetailStateSelector(state) === MARKETPLACE_CATALOGUE_STATE.FAILED;
+
+export const marketplacePluginDetailRegistryHostSelector = (state) =>
+  (marketplacePluginDetailSelector(state).registry || {}).host || null;
+
+/** The registry half of the plugin page, already emptied by the reducer when unverifiable. */
+export const marketplacePluginDetailDataSelector = (state) => {
+  const detail = marketplacePluginDetailSelector(state);
+
+  return {
+    plugin: detail.plugin || null,
+    versions: detail.versions || [],
+    changelog: detail.changelog || null,
+    screenshots: detail.screenshots || [],
+    advisory: detail.advisory || null,
+    blocked: detail.blocked || null,
+    removed: detail.removed || null,
+  };
+};
+
+const marketplaceLicenceSelector = (state) => domainSelector(state).marketplaceLicence || {};
+
+export const isMarketplaceLicenceConfiguredSelector = (state) =>
+  Boolean(marketplaceLicenceSelector(state).configured);
+
+export const marketplaceLicenceCustomerIdSelector = (state) =>
+  marketplaceLicenceSelector(state).customerId || null;
+
+export const marketplaceLicenceLoadingSelector = (state) =>
+  Boolean(marketplaceLicenceSelector(state).loading);

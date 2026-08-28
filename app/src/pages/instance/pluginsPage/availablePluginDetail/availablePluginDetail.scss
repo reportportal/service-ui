@@ -18,8 +18,22 @@
 
 .available-plugin-detail {
   display: flex;
+  flex-direction: column;
+  gap: 32px;
   padding-left: 5px;
   font-family: var(--rp-ui-base-font-family-heading);
+}
+
+.head {
+  display: flex;
+}
+
+.version {
+  display: block;
+  margin-top: 2px;
+  font-size: 13px;
+  line-height: 20px;
+  color: $COLOR--e-600;
 }
 
 .logo {

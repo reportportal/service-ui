@@ -87,3 +87,15 @@ export const MARKETPLACE_CATALOGUE_STATE = {
   LOADED_OFFLINE: 'LOADED_OFFLINE',
   FAILED: 'FAILED',
 } as const;
+
+export const FETCH_MARKETPLACE_PLUGIN_DETAIL = 'fetchMarketplacePluginDetail';
+export const FETCH_MARKETPLACE_PLUGIN_DETAIL_START = 'fetchMarketplacePluginDetailStart';
+export const FETCH_MARKETPLACE_PLUGIN_DETAIL_SUCCESS = 'fetchMarketplacePluginDetailSuccess';
+export const FETCH_MARKETPLACE_PLUGIN_DETAIL_ERROR = 'fetchMarketplacePluginDetailError';
+
+export const FETCH_MARKETPLACE_LICENCE = 'fetchMarketplaceLicence';
+export const FETCH_MARKETPLACE_LICENCE_SUCCESS = 'fetchMarketplaceLicenceSuccess';
+export const SET_MARKETPLACE_LICENCE = 'setMarketplaceLicence';
+export const DELETE_MARKETPLACE_LICENCE = 'deleteMarketplaceLicence';
+export const MARKETPLACE_LICENCE_START = 'marketplaceLicenceStart';
+export const MARKETPLACE_LICENCE_ERROR = 'marketplaceLicenceError';

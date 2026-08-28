@@ -22,8 +22,13 @@ import {
   installMarketplacePluginStartAction,
   installMarketplacePluginSuccessAction,
   installMarketplacePluginErrorAction,
+  fetchMarketplaceLicenceSuccessAction,
 } from './actionCreators';
-import { marketplaceReducer } from './reducer';
+import {
+  marketplaceReducer,
+  marketplacePluginDetailReducer,
+  marketplaceLicenceReducer,
+} from './reducer';
 
 const onlinePayload = {
   registry: { status: 'ONLINE', host: 'registry.reportportal.io' },
@@ -180,5 +185,139 @@ describe('controllers/plugins/marketplaceReducer', () => {
 
     expect(state.installing).toEqual(['telegram']);
     expect(state.installError).toEqual({ registryId: 'slack', error: 'nope' });
+  });
+});
+
+describe('controllers/plugins/marketplacePluginDetailReducer', () => {
+  const onlineDetail = {
+    registry: { status: 'ONLINE', host: 'registry.reportportal.io' },
+    plugin: { id: 'plugin-bts-jira', name: 'Jira Server', latestVersion: '1.5.2' },
+    versions: [{ version: '1.5.2', publishedAt: '2026-03-12T00:00:00Z' }],
+    changelog: { version: '1.5.2', lines: ['Fixed a crash.'] },
+    screenshots: ['https://registry/shot-1.png'],
+    advisory: { severity: 'high', text: 'CVE-2026-1234', attachedAt: '2026-02-15T00:00:00Z' },
+  };
+
+  test('an ONLINE answer keeps the registry half', () => {
+    const state = marketplacePluginDetailReducer(undefined, {
+      type: 'fetchMarketplacePluginDetailSuccess',
+      payload: onlineDetail,
+    });
+
+    expect(state.detailState).toBe(MARKETPLACE_CATALOGUE_STATE.LOADED_ONLINE);
+    expect(state.versions).toHaveLength(1);
+    expect(state.advisory).toEqual(onlineDetail.advisory);
+    expect(state.screenshots).toEqual(['https://registry/shot-1.png']);
+  });
+
+  // an OFFLINE answer is a success whose registry half is simply not knowable
+  test('an OFFLINE answer keeps nothing registry-derived, whatever the payload carries', () => {
+    const state = marketplacePluginDetailReducer(undefined, {
+      type: 'fetchMarketplacePluginDetailSuccess',
+      payload: { ...onlineDetail, registry: { status: 'OFFLINE', host: 'registry.rp.io' } },
+    });
+
+    expect(state.detailState).toBe(MARKETPLACE_CATALOGUE_STATE.LOADED_OFFLINE);
+    expect(state.plugin).toBeNull();
+    expect(state.versions).toEqual([]);
+    expect(state.changelog).toBeNull();
+    expect(state.screenshots).toEqual([]);
+    expect(state.advisory).toBeNull();
+    expect(state.registry.host).toBe('registry.rp.io');
+  });
+
+  test('an unknown registry status degrades to the cautious side', () => {
+    const state = marketplacePluginDetailReducer(undefined, {
+      type: 'fetchMarketplacePluginDetailSuccess',
+      payload: { ...onlineDetail, registry: { status: 'DEGRADED', host: 'registry.rp.io' } },
+    });
+
+    expect(state.detailState).toBe(MARKETPLACE_CATALOGUE_STATE.LOADED_OFFLINE);
+    expect(state.advisory).toBeNull();
+  });
+
+  // opening a second plugin must not show the first one's advisory for even a frame
+  test("a new request drops the previous plugin's registry half", () => {
+    const loaded = marketplacePluginDetailReducer(undefined, {
+      type: 'fetchMarketplacePluginDetailSuccess',
+      payload: onlineDetail,
+    });
+    const state = marketplacePluginDetailReducer(loaded, {
+      type: 'fetchMarketplacePluginDetailStart',
+      payload: 'plugin-notification-slack',
+    });
+
+    expect(state.detailState).toBe(MARKETPLACE_CATALOGUE_STATE.LOADING);
+    expect(state.registryId).toBe('plugin-notification-slack');
+    expect(state.advisory).toBeNull();
+    expect(state.versions).toEqual([]);
+  });
+
+  test('a failed request keeps nothing but the failure', () => {
+    const loaded = marketplacePluginDetailReducer(undefined, {
+      type: 'fetchMarketplacePluginDetailSuccess',
+      payload: onlineDetail,
+    });
+    const state = marketplacePluginDetailReducer(loaded, {
+      type: 'fetchMarketplacePluginDetailError',
+      payload: 'Bad Gateway',
+    });
+
+    expect(state.detailState).toBe(MARKETPLACE_CATALOGUE_STATE.FAILED);
+    expect(state.error).toBe('Bad Gateway');
+    expect(state.versions).toEqual([]);
+    expect(state.advisory).toBeNull();
+  });
+});
+
+describe('controllers/plugins/fetchMarketplaceLicenceSuccessAction', () => {
+  // the last line of defence: whatever a response or a caller carries, the action that reaches
+  // the store is built out of the two fields the endpoint is contracted to answer
+  test('carries only whether credentials exist and who they sign as', () => {
+    const action = fetchMarketplaceLicenceSuccessAction({
+      configured: true,
+      customerId: 'acme',
+      privateKey: 'c2VjcmV0',
+    });
+
+    expect(action.payload).toEqual({ configured: true, customerId: 'acme' });
+  });
+
+  test('an absent customer id is null rather than undefined', () => {
+    expect(fetchMarketplaceLicenceSuccessAction({ configured: false }).payload).toEqual({
+      configured: false,
+      customerId: null,
+    });
+  });
+});
+
+describe('controllers/plugins/marketplaceLicenceReducer', () => {
+  test('stores whether credentials exist and who they sign as', () => {
+    const state = marketplaceLicenceReducer(undefined, {
+      type: 'fetchMarketplaceLicenceSuccess',
+      payload: { configured: true, customerId: 'acme' },
+    });
+
+    expect(state).toEqual({ configured: true, customerId: 'acme', loading: false, error: null });
+  });
+
+  // there is no endpoint that returns a key and there must be no state that could hold one
+  test('a key smuggled into the payload is not kept', () => {
+    const state = marketplaceLicenceReducer(undefined, {
+      type: 'fetchMarketplaceLicenceSuccess',
+      payload: { configured: true, customerId: 'acme', privateKey: 'c2VjcmV0' },
+    });
+
+    expect(JSON.stringify(state)).not.toContain('c2VjcmV0');
+  });
+
+  test('the submit action itself never reaches the store', () => {
+    const before = marketplaceLicenceReducer(undefined, { type: '@@INIT' });
+    const after = marketplaceLicenceReducer(before, {
+      type: 'setMarketplaceLicence',
+      payload: { customerId: 'acme', privateKey: 'c2VjcmV0' },
+    });
+
+    expect(after).toBe(before);
   });
 });

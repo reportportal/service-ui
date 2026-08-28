@@ -26,13 +26,32 @@ import {
   installMarketplacePluginStartAction,
   installMarketplacePluginSuccessAction,
   installMarketplacePluginErrorAction,
+  fetchMarketplacePluginDetailAction,
+  fetchMarketplacePluginDetailStartAction,
+  fetchMarketplacePluginDetailSuccessAction,
+  fetchMarketplacePluginDetailErrorAction,
+  fetchMarketplaceLicenceAction,
+  fetchMarketplaceLicenceSuccessAction,
+  setMarketplaceLicenceAction,
+  deleteMarketplaceLicenceAction,
+  marketplaceLicenceStartAction,
+  marketplaceLicenceErrorAction,
 } from './actionCreators';
 import {
   fetchMarketplaceCatalogue,
   installMarketplacePlugin,
   watchFetchMarketplaceCatalogue,
+  fetchMarketplacePluginDetail,
+  watchFetchMarketplacePluginDetail,
+  fetchMarketplaceLicence,
+  setMarketplaceLicence,
+  deleteMarketplaceLicence,
 } from './sagas';
-import { FETCH_MARKETPLACE_CATALOGUE_SUCCESS, MARKETPLACE_SEARCH_DEBOUNCE } from './constants';
+import {
+  FETCH_MARKETPLACE_CATALOGUE_SUCCESS,
+  FETCH_MARKETPLACE_PLUGIN_DETAIL_SUCCESS,
+  MARKETPLACE_SEARCH_DEBOUNCE,
+} from './constants';
 
 jest.mock('common/utils', () => ({
   ...jest.requireActual('common/utils'),
@@ -88,6 +107,9 @@ const runWatcher = (watcher, state = {}) => {
   return { dispatched, dispatch };
 };
 
+// captured before any test can install fake timers, so a leak is detectable by identity
+const NATIVE_SET_TIMEOUT = setTimeout;
+
 const settle = () => new Promise((resolve) => setTimeout(resolve, 0));
 
 const deferred = () => {
@@ -103,6 +125,12 @@ describe('controllers/plugins/sagas marketplace', () => {
   beforeEach(() => {
     // mockReset, not mockClear: a one-shot response queued by a test must not leak into the next
     fetch.mockReset();
+  });
+
+  // a test that installs fake timers cannot be trusted to take them down again: a failing
+  // assertion returns first, and every test after it then runs with time stopped
+  afterEach(() => {
+    jest.useRealTimers();
   });
 
   describe('fetchMarketplaceCatalogue', () => {
@@ -190,7 +218,12 @@ describe('controllers/plugins/sagas marketplace', () => {
       expect(fetch).toHaveBeenCalledWith('../api/v1/plugins?q=j');
       // nothing is announced to the store until the request actually leaves
       expect(dispatched[0]).toEqual(fetchMarketplaceCatalogueStartAction({ q: 'j' }));
-      jest.useRealTimers();
+    });
+
+    // the debounce test installs fake timers; a failing assertion above returns before any
+    // in-test restore, so the restore has to be an afterEach or the whole file below runs faked
+    test('the debounce test leaves real timers behind', () => {
+      expect(setTimeout).toBe(NATIVE_SET_TIMEOUT);
     });
 
     test('an undebounced request leaves immediately', async () => {
@@ -299,6 +332,148 @@ describe('controllers/plugins/sagas marketplace', () => {
         installMarketplacePluginErrorAction('slack', 'Forbidden'),
         showDefaultErrorNotification(new Error('Forbidden')),
       ]);
+    });
+  });
+
+  describe('fetchMarketplacePluginDetail', () => {
+    const detailPayload = {
+      registry: { status: 'ONLINE', host: 'registry.reportportal.io' },
+      plugin: { id: 'plugin-bts-jira', name: 'Jira Server', latestVersion: '1.5.2' },
+      versions: [{ version: '1.5.2', publishedAt: '2026-03-12T00:00:00Z' }],
+    };
+
+    test('asks the registry id endpoint, not the catalogue one', async () => {
+      fetch.mockResolvedValue(detailPayload);
+
+      await run(
+        fetchMarketplacePluginDetail,
+        fetchMarketplacePluginDetailAction('plugin-bts-jira'),
+      );
+
+      expect(fetch).toHaveBeenCalledWith('../api/v1/plugins/plugin-bts-jira');
+    });
+
+    test('announces the request before it leaves and hands the payload to the store', async () => {
+      fetch.mockResolvedValue(detailPayload);
+
+      const dispatched = await run(
+        fetchMarketplacePluginDetail,
+        fetchMarketplacePluginDetailAction('plugin-bts-jira'),
+      );
+
+      expect(dispatched).toEqual([
+        fetchMarketplacePluginDetailStartAction('plugin-bts-jira'),
+        fetchMarketplacePluginDetailSuccessAction(detailPayload),
+      ]);
+    });
+
+    test('a failed detail request is reported, like every other failed request here', async () => {
+      fetch.mockRejectedValue(new Error('Bad Gateway'));
+
+      const dispatched = await run(
+        fetchMarketplacePluginDetail,
+        fetchMarketplacePluginDetailAction('plugin-bts-jira'),
+      );
+
+      expect(dispatched).toContainEqual(fetchMarketplacePluginDetailErrorAction('Bad Gateway'));
+      expect(dispatched).toContainEqual(showDefaultErrorNotification(new Error('Bad Gateway')));
+    });
+
+    // opening a second plugin while the first is still in flight must not paint the first
+    test('a slow response cannot land on top of a newer one', async () => {
+      const slow = deferred();
+      const fast = deferred();
+      fetch.mockReturnValueOnce(slow.promise).mockReturnValueOnce(fast.promise);
+
+      const { dispatched, dispatch } = runWatcher(watchFetchMarketplacePluginDetail);
+      dispatch(fetchMarketplacePluginDetailAction('plugin-bts-jira'));
+      dispatch(fetchMarketplacePluginDetailAction('plugin-notification-slack'));
+
+      fast.resolve({ ...detailPayload, plugin: { id: 'plugin-notification-slack' } });
+      await settle();
+      slow.resolve(detailPayload);
+      await settle();
+
+      const landed = dispatched.filter(
+        (action) => action.type === FETCH_MARKETPLACE_PLUGIN_DETAIL_SUCCESS,
+      );
+      expect(landed).toHaveLength(1);
+      expect(landed[0].payload.plugin.id).toBe('plugin-notification-slack');
+    });
+  });
+
+  describe('marketplace licence', () => {
+    test('stores only what the endpoint answers', async () => {
+      fetch.mockResolvedValue({ configured: true, customerId: 'acme' });
+
+      const dispatched = await run(fetchMarketplaceLicence, fetchMarketplaceLicenceAction());
+
+      expect(fetch).toHaveBeenCalledWith('../api/v1/plugins/licence');
+      expect(dispatched).toContainEqual(
+        fetchMarketplaceLicenceSuccessAction({ configured: true, customerId: 'acme' }),
+      );
+    });
+
+    test('submits the credentials with PUT', async () => {
+      fetch.mockResolvedValue({ configured: true, customerId: 'acme' });
+
+      await run(
+        setMarketplaceLicence,
+        setMarketplaceLicenceAction({ customerId: 'acme', privateKey: 'c2VjcmV0' }),
+      );
+
+      expect(fetch).toHaveBeenCalledWith('../api/v1/plugins/licence', {
+        method: 'put',
+        data: { customerId: 'acme', privateKey: 'c2VjcmV0' },
+      });
+    });
+
+    test('never puts the key into anything the store keeps', async () => {
+      fetch.mockResolvedValue({ configured: true, customerId: 'acme' });
+
+      const dispatched = await run(
+        setMarketplaceLicence,
+        setMarketplaceLicenceAction({ customerId: 'acme', privateKey: 'c2VjcmV0' }),
+      );
+
+      expect(JSON.stringify(dispatched)).not.toContain('c2VjcmV0');
+    });
+
+    test('a rejected submit is reported and leaves the stored state alone', async () => {
+      fetch.mockRejectedValue(new Error('Forbidden'));
+
+      const dispatched = await run(
+        setMarketplaceLicence,
+        setMarketplaceLicenceAction({ customerId: 'acme', privateKey: 'c2VjcmV0' }),
+      );
+
+      expect(dispatched).toContainEqual(marketplaceLicenceErrorAction('Forbidden'));
+      expect(dispatched).toContainEqual(showDefaultErrorNotification(new Error('Forbidden')));
+      expect(dispatched).not.toContainEqual(
+        fetchMarketplaceLicenceSuccessAction({ configured: true, customerId: 'acme' }),
+      );
+    });
+
+    test('removing the credentials DELETEs and stores the answer', async () => {
+      fetch.mockResolvedValue({ configured: false, customerId: null });
+
+      const dispatched = await run(deleteMarketplaceLicence, deleteMarketplaceLicenceAction());
+
+      expect(fetch).toHaveBeenCalledWith('../api/v1/plugins/licence', { method: 'delete' });
+      expect(dispatched).toContainEqual(
+        fetchMarketplaceLicenceSuccessAction({ configured: false, customerId: null }),
+      );
+    });
+
+    test('a submit announces itself so the form can be held while it is in flight', async () => {
+      fetch.mockResolvedValue({ configured: true, customerId: 'acme' });
+
+      const dispatched = await run(
+        setMarketplaceLicence,
+        setMarketplaceLicenceAction({ customerId: 'acme', privateKey: 'c2VjcmV0' }),
+      );
+
+      expect(dispatched[0]).toEqual(marketplaceLicenceStartAction());
     });
   });
 });

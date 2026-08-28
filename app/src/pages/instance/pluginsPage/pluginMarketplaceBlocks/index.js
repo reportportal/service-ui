@@ -14,5 +14,4 @@
  * limitations under the License.
  */
 
-export { PluginsCatalog } from './pluginsCatalog';
-export { ROW_ACTIONS, isMarketplaceTrusted } from './utils';
+export { PluginMarketplaceBlocks } from './pluginMarketplaceBlocks';

@@ -32,6 +32,10 @@ export {
   setOrganizationIntegrationsAction,
   fetchMarketplaceCatalogueAction,
   installMarketplacePluginAction,
+  fetchMarketplacePluginDetailAction,
+  fetchMarketplaceLicenceAction,
+  setMarketplaceLicenceAction,
+  deleteMarketplaceLicenceAction,
 } from './actionCreators';
 export {
   filterAvailablePlugins,
@@ -76,6 +80,15 @@ export {
   hasMarketplacePluginUpdateSelector,
   isMarketplacePluginInstallingSelector,
   marketplaceCatalogueQuerySelector,
+  marketplacePluginDetailStateSelector,
+  marketplacePluginDetailLoadingSelector,
+  isMarketplacePluginDetailOfflineSelector,
+  hasMarketplacePluginDetailFailedSelector,
+  marketplacePluginDetailRegistryHostSelector,
+  marketplacePluginDetailDataSelector,
+  isMarketplaceLicenceConfiguredSelector,
+  marketplaceLicenceCustomerIdSelector,
+  marketplaceLicenceLoadingSelector,
 } from './selectors';
 export { pluginSagas } from './sagas';
 export {

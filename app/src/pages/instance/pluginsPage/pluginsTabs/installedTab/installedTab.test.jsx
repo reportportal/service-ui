@@ -22,7 +22,11 @@ import { IntlProvider } from 'react-intl';
 import { BTS_GROUP_TYPE, ALL_GROUP_TYPE } from 'common/constants/pluginsGroupTypes';
 import { INSTALLED_GROUP_TYPE } from 'common/constants/pluginsFilter';
 import { MARKETPLACE_CATALOGUE_STATE } from 'controllers/plugins';
-import { FETCH_MARKETPLACE_CATALOGUE } from 'controllers/plugins/constants';
+import {
+  FETCH_MARKETPLACE_CATALOGUE,
+  FETCH_MARKETPLACE_PLUGIN_DETAIL,
+  INSTALL_MARKETPLACE_PLUGIN,
+} from 'controllers/plugins/constants';
 import { PluginsCatalog } from '../../pluginsCatalog';
 import { PluginsFilter } from '../../pluginsFilter';
 import { InstalledTab } from './installedTab';
@@ -62,8 +66,9 @@ const render = (marketplace = marketplaceState()) => {
     dispatched.filter(({ type }) => type === FETCH_MARKETPLACE_CATALOGUE).pop()?.payload;
   const requestCount = () =>
     dispatched.filter(({ type }) => type === FETCH_MARKETPLACE_CATALOGUE).length;
+  const of = (type) => dispatched.filter((action) => action.type === type);
 
-  return { wrapper, call, lastRequest, requestCount };
+  return { wrapper, call, lastRequest, requestCount, of };
 };
 
 describe('InstalledTab', () => {
@@ -144,5 +149,47 @@ describe('InstalledTab', () => {
     call(PluginsCatalog, 'onRetry');
 
     expect(lastRequest()).toEqual({ q: null, category: null, debounced: undefined });
+  });
+
+  describe('the plugin page', () => {
+    const slackRow = {
+      kind: 'AVAILABLE',
+      registryId: 'plugin-notification-slack',
+      name: 'Slack',
+      latestVersion: '1.5.2',
+      tier: 'free',
+      locked: false,
+      details: { name: 'Slack', version: '1.5.2' },
+    };
+
+    test('opening a plugin asks the registry about that plugin', () => {
+      const { call, of } = render();
+
+      call(PluginsCatalog, 'onAvailableItemClick', slackRow);
+
+      expect(of(FETCH_MARKETPLACE_PLUGIN_DETAIL).pop().payload).toBe('plugin-notification-slack');
+    });
+
+    // an unmatched plugin has no registry id, so there is nothing to ask about and nothing to show
+    test('a plugin the registry could not be matched to is not asked about', () => {
+      const { call, of } = render();
+
+      call(PluginsCatalog, 'onAvailableItemClick', { ...slackRow, registryId: null });
+
+      expect(of(FETCH_MARKETPLACE_PLUGIN_DETAIL)).toHaveLength(0);
+    });
+
+    test('installing from the plugin page asks for the version the registry published', () => {
+      const { wrapper, call, of } = render();
+
+      call(PluginsCatalog, 'onAvailableItemClick', slackRow);
+      wrapper.update();
+      wrapper.find('[data-automation-id="installAction"]').first().prop('onClick')();
+
+      expect(of(INSTALL_MARKETPLACE_PLUGIN).pop().payload).toEqual({
+        registryId: 'plugin-notification-slack',
+        version: '1.5.2',
+      });
+    });
   });
 });

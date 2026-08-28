@@ -1,0 +1,85 @@
+/*!
+ * Copyright 2026 EPAM Systems
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+.plugin-marketplace-blocks {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.sections {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.alert,
+.loader {
+  display: flex;
+  justify-content: center;
+}
+
+.block-header {
+  margin: 0 0 8px;
+  font-family: $FONT-ROBOTO-MEDIUM;
+  font-size: 15px;
+  line-height: 24px;
+  color: $COLOR--e-800;
+}
+
+.card {
+  border: 1px solid $COLOR--e-200;
+  border-radius: 8px;
+  background-color: $COLOR--white-two;
+}
+
+.version-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 12px 16px;
+  font-size: 13px;
+  line-height: 20px;
+
+  & + & {
+    border-top: 1px solid $COLOR--e-200;
+  }
+}
+
+.version-date {
+  color: $COLOR--e-600;
+}
+
+.changelog-line {
+  margin: 0;
+  padding: 8px 16px;
+  font-size: 13px;
+  line-height: 20px;
+}
+
+.screenshot-strip {
+  display: flex;
+  gap: 16px;
+  overflow-x: auto;
+}
+
+.screenshot {
+  flex: 0 0 auto;
+  width: 320px;
+  height: 180px;
+  object-fit: cover;
+  border: 1px solid $COLOR--e-200;
+  border-radius: 8px;
+}
