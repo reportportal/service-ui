@@ -46,11 +46,12 @@ const offlinePayload = {
   available: [],
 };
 
-// a saga that throws must fail the test, not quietly shorten the dispatched list
+// a saga that throws must fail the test with its own error, not quietly shorten the
+// dispatched list; onError replaces redux-saga's logger so the rejection is what surfaces
 const run = (saga, action, state = {}) => {
   const dispatched = [];
   return runSaga(
-    { dispatch: (a) => dispatched.push(a), getState: () => state },
+    { dispatch: (a) => dispatched.push(a), getState: () => state, onError: () => {} },
     saga,
     action,
   ).done.then(() => dispatched);
@@ -94,6 +95,19 @@ describe('controllers/plugins/sagas marketplace', () => {
       );
 
       expect(fetch).toHaveBeenCalledWith('../api/v1/plugins');
+    });
+
+    test('hands the filter to the store, which a later refetch reads back', async () => {
+      fetch.mockResolvedValue(onlinePayload);
+
+      const dispatched = await run(
+        fetchMarketplaceCatalogue,
+        fetchMarketplaceCatalogueAction({ q: 'ji ra', category: 'BTS' }),
+      );
+
+      expect(dispatched[0]).toEqual(
+        fetchMarketplaceCatalogueStartAction({ q: 'ji ra', category: 'BTS' }),
+      );
     });
 
     test('an OFFLINE payload is a success, not an error', async () => {
