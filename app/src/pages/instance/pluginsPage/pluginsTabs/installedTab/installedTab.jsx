@@ -270,7 +270,7 @@ export class InstalledTab extends Component {
         return (
           <>
             {/* what the registry says about this plugin, on the same terms as the catalogue */}
-            {data.registryId && this.renderMarketplaceBlocks()}
+            {this.renderMarketplaceBlocks(data)}
             <IntegrationInfoContainer
               integrationType={data}
               isGlobal
@@ -438,16 +438,23 @@ export class InstalledTab extends Component {
       title: pageTitle,
     });
 
-  renderMarketplaceBlocks = () => (
-    <PluginMarketplaceBlocks
-      detail={this.props.pluginDetail}
-      loading={this.props.detailLoading}
-      offline={this.props.detailOffline}
-      failed={this.props.detailFailed}
-      registryHost={this.props.detailRegistryHost}
-      onRetry={this.refetchPluginDetail}
-    />
-  );
+  // a plugin with no registry id was never asked about, so the reason nothing can be shown is
+  // the catalogue's — the registry was down, the catalogue failed, or it matched no entry
+  renderMarketplaceBlocks = (data) => {
+    const unmatched = !data.registryId;
+
+    return (
+      <PluginMarketplaceBlocks
+        detail={this.props.pluginDetail}
+        loading={!unmatched && this.props.detailLoading}
+        offline={unmatched ? this.props.registryOffline : this.props.detailOffline}
+        failed={unmatched ? this.props.catalogueFailed : this.props.detailFailed}
+        unmatched={unmatched}
+        registryHost={unmatched ? this.props.registryHost : this.props.detailRegistryHost}
+        onRetry={unmatched ? this.refetchCatalogue : this.refetchPluginDetail}
+      />
+    );
+  };
 
   // a plugin the registry could not be asked about has no page of registry content to fetch
   fetchPluginDetail = (registryId) => {

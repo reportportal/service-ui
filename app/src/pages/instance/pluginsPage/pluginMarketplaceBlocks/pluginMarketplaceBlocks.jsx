@@ -80,6 +80,16 @@ const messages = defineMessages({
     defaultMessage:
       'Removed on {date} following {reason}. It keeps running here, but no version can be installed, updated or rolled back to. Manual .jar upload is the only remaining path.',
   },
+  // silence would read as "nothing to report", which is a claim this screen cannot make
+  unmatchedHeader: {
+    id: 'PluginMarketplaceBlocks.unmatchedHeader',
+    defaultMessage: 'The registry has no entry for this plugin',
+  },
+  unmatchedBody: {
+    id: 'PluginMarketplaceBlocks.unmatchedBody',
+    defaultMessage:
+      'The registry lists no plugin matching this one, so no advisory, block, removal or update can be checked for it and none of its versions, screenshots or changelog can be shown. It keeps running, and uploading a .jar by hand is the only way to change its version.',
+  },
 });
 
 /**
@@ -88,18 +98,21 @@ const messages = defineMessages({
  *
  * None of it is rendered unless the registry half of the response can be believed, and that is
  * decided by the same helper the catalogue uses. A block with no data is left out entirely rather
- * than explained, exactly as an empty group is on the catalogue.
+ * than explained, exactly as an empty group is on the catalogue — but the reason there is nothing
+ * to show is always given, so a plugin the registry has never heard of does not look like one it
+ * has nothing to say about.
  */
 export const PluginMarketplaceBlocks = ({
   detail,
   loading = false,
   offline = false,
   failed = false,
+  unmatched = false,
   registryHost = null,
   onRetry = () => {},
 }) => {
   const { formatMessage, formatDate } = useIntl();
-  const trusted = isMarketplaceTrusted({ offline, failed });
+  const trusted = isMarketplaceTrusted({ offline, failed, unmatched });
   const { versions, changelog, screenshots, advisory, blocked, removed } = trusted
     ? detail
     : {
@@ -116,6 +129,14 @@ export const PluginMarketplaceBlocks = ({
     <div className={cx('plugin-marketplace-blocks')}>
       {offline && <RegistryOfflineAlert host={registryHost} />}
       {failed && <CatalogueUnavailableAlert onRetry={onRetry} />}
+      {/* offline and failed already say why the registry knows nothing of this plugin */}
+      {unmatched && !offline && !failed && (
+        <div className={cx('alert')} data-automation-id="pluginUnmatchedAlert">
+          <SystemMessage mode="info" header={formatMessage(messages.unmatchedHeader)}>
+            {formatMessage(messages.unmatchedBody)}
+          </SystemMessage>
+        </div>
+      )}
       {loading && (
         <div className={cx('loader')} data-automation-id="pluginDetailLoader">
           <BubblesLoader />
@@ -231,6 +252,7 @@ PluginMarketplaceBlocks.propTypes = {
   loading: PropTypes.bool,
   offline: PropTypes.bool,
   failed: PropTypes.bool,
+  unmatched: PropTypes.bool,
   registryHost: PropTypes.string,
   onRetry: PropTypes.func,
 };

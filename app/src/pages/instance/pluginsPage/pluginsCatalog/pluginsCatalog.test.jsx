@@ -124,23 +124,6 @@ const actions = (scope) =>
 const click = (node) => node.prop('onClick')({ stopPropagation: () => {} });
 
 describe('PluginsCatalog', () => {
-  // the enzyme react-18 adapter reads rendered text through findDOMNode; jestsetup turns every
-  // console.error into a throw, so React's one-time deprecation notice is filtered out here
-  const consoleError = console.error;
-
-  beforeAll(() => {
-    console.error = (message, ...rest) => {
-      if (typeof message === 'string' && message.includes('findDOMNode is deprecated')) {
-        return;
-      }
-      consoleError(message, ...rest);
-    };
-  });
-
-  afterAll(() => {
-    console.error = consoleError;
-  });
-
   describe('Catalog.List.Default', () => {
     test('renders the Installed group before Available, each with its count', () => {
       const wrapper = render();

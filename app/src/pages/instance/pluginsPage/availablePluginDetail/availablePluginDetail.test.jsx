@@ -57,21 +57,6 @@ const render = (props = {}) =>
 const find = (wrapper, id) => wrapper.find(`[data-automation-id="${id}"]`);
 
 describe('AvailablePluginDetail', () => {
-  const consoleError = console.error;
-
-  beforeAll(() => {
-    console.error = (message, ...rest) => {
-      if (typeof message === 'string' && message.includes('findDOMNode is deprecated')) {
-        return;
-      }
-      consoleError(message, ...rest);
-    };
-  });
-
-  afterAll(() => {
-    console.error = consoleError;
-  });
-
   test('the header carries the version the registry publishes', () => {
     expect(find(render(), 'pluginDetailVersion').first().text()).toBe('version 1.5.2');
   });

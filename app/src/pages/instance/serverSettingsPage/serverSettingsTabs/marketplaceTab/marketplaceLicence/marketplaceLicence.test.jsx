@@ -19,12 +19,15 @@ import { mount } from 'enzyme';
 import { IntlProvider } from 'react-intl';
 import { MarketplaceLicence } from './marketplaceLicence';
 
+// the section is mounted through a host so a prop can arrive later, the way the GET answer does
+const Host = (props) => (
+  <IntlProvider locale="en" onError={() => {}}>
+    <MarketplaceLicence isAdmin {...props} />
+  </IntlProvider>
+);
+
 const render = (props = {}) => {
-  const wrapper = mount(
-    <IntlProvider locale="en" onError={() => {}}>
-      <MarketplaceLicence isAdmin {...props} />
-    </IntlProvider>,
-  );
+  const wrapper = mount(<Host {...props} />);
   const find = (id) => wrapper.find(`[data-automation-id="${id}"]`);
   const call = (id, prop, ...args) => {
     act(() => {
@@ -35,29 +38,17 @@ const render = (props = {}) => {
   const type = (id, value) => call(id, 'onChange', { target: { value } });
   const click = (id) => call(id, 'onClick');
   const valueOf = (id) => find(id).first().prop('value');
+  const arrive = (next) => {
+    act(() => {
+      wrapper.setProps(next);
+    });
+    wrapper.update();
+  };
 
-  return { wrapper, find, click, type, valueOf };
+  return { wrapper, find, click, type, valueOf, arrive };
 };
 
 describe('MarketplaceLicence', () => {
-  const consoleError = console.error;
-
-  beforeAll(() => {
-    console.error = (message, ...rest) => {
-      if (
-        typeof message === 'string' &&
-        /findDOMNode is deprecated|Support for defaultProps will be removed/.test(message)
-      ) {
-        return;
-      }
-      consoleError(message, ...rest);
-    };
-  });
-
-  afterAll(() => {
-    console.error = consoleError;
-  });
-
   // the three endpoints are IS_ADMIN, so the section is absent rather than shown disabled
   test('is not rendered for anyone but an admin', () => {
     const { find } = render({ isAdmin: false });
@@ -84,10 +75,30 @@ describe('MarketplaceLicence', () => {
     expect(valueOf('licenceKeyField')).toBe('');
   });
 
-  test('says explicitly that the stored key cannot be shown and how to replace it', () => {
-    const { find } = render({ configured: true, customerId: 'acme' });
+  // the parent dispatches the GET in an effect, so the stored id always arrives after mount
+  test('the stored customer id reaches the field when the answer arrives', () => {
+    const { valueOf, arrive } = render();
 
-    expect(find('licenceKeyHint').first().text()).toMatch(/never shown again/i);
+    arrive({ configured: true, customerId: 'acme' });
+
+    expect(valueOf('customerIdField')).toBe('acme');
+  });
+
+  test('a typed customer id is not thrown away by an unrelated re-render', () => {
+    const { type, valueOf, arrive } = render({ configured: true, customerId: 'acme' });
+
+    type('customerIdField', 'globex');
+    arrive({ configured: true, customerId: 'acme', loading: true });
+
+    expect(valueOf('customerIdField')).toBe('globex');
+  });
+
+  test('says explicitly that the stored key cannot be shown, nor reused to save', () => {
+    const { find } = render({ configured: true, customerId: 'acme' });
+    const hint = find('licenceKeyHint').first().text();
+
+    expect(hint).toMatch(/never shown again/i);
+    expect(hint).toMatch(/paste the key again/i);
   });
 
   test('submitting sends the customer id and the key that was typed', () => {
@@ -101,9 +112,31 @@ describe('MarketplaceLicence', () => {
     expect(onSubmit).toHaveBeenCalledWith({ customerId: 'acme', privateKey: 'c2VjcmV0' });
   });
 
+  // PUT /v1/plugins/licence takes both halves or neither: a blank key is refused here rather
+  // than sent as an empty string and refused as a 400
+  test('saving is refused while either half is missing', () => {
+    const { find, type } = render();
+    const isDisabled = () => find('submitLicence').first().prop('disabled');
+
+    expect(isDisabled()).toBe(true);
+
+    type('customerIdField', 'acme');
+    expect(isDisabled()).toBe(true);
+
+    type('licenceKeyField', 'c2VjcmV0');
+    expect(isDisabled()).toBe(false);
+  });
+
+  test('a stored key is no substitute for typing one: saving still needs the key', () => {
+    const { find } = render({ configured: true, customerId: 'acme' });
+
+    expect(find('submitLicence').first().prop('disabled')).toBe(true);
+  });
+
   test('the key does not outlive the request that carried it', () => {
     const { type, click, valueOf } = render();
 
+    type('customerIdField', 'acme');
     type('licenceKeyField', 'c2VjcmV0');
     click('submitLicence');
 

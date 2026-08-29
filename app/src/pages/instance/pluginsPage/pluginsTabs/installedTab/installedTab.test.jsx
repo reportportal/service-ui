@@ -42,9 +42,23 @@ const marketplaceState = (overrides = {}) => ({
   ...overrides,
 });
 
-const render = (marketplace = marketplaceState()) => {
+// the installed plugin subpage also renders the integration sections, which read these slices
+const restOfState = {
+  location: { payload: {} },
+  user: { info: { userRole: 'ADMINISTRATOR', assignedOrganizations: {}, assignedProjects: {} } },
+};
+
+const render = (marketplace = marketplaceState(), marketplacePluginDetail = {}) => {
   const dispatched = [];
-  const store = createStore((state = { plugins: { marketplace } }, action) => {
+  const initial = {
+    ...restOfState,
+    plugins: {
+      marketplace,
+      marketplacePluginDetail,
+      integrations: { globalIntegrations: [], projectIntegrations: [] },
+    },
+  };
+  const store = createStore((state = initial, action) => {
     dispatched.push(action);
     return state;
   });
@@ -72,17 +86,17 @@ const render = (marketplace = marketplaceState()) => {
 };
 
 describe('InstalledTab', () => {
-  // jestsetup turns every console.error into a throw, so React's notices about components this
-  // page already had — and react-popper's update after the test ends — are filtered out here
+  // on top of the notices jestsetup already drops: react-popper updates after the test ends, and
+  // InstancesSection — a component this page only mounts — requires a prop nobody passes it
   const consoleError = console.error;
-  const reactNoise =
-    /findDOMNode is deprecated|Support for defaultProps will be removed|for a non-boolean attribute/;
-  const popperAct = (message, rest) =>
-    message.includes('was not wrapped in act') && rest.some((arg) => /Popper/.test(String(arg)));
+  const knownNoise = (message, rest) =>
+    (message.includes('was not wrapped in act') &&
+      rest.some((arg) => /Popper/.test(String(arg)))) ||
+    rest.some((arg) => /`userRole` is marked as required/.test(String(arg)));
 
   beforeAll(() => {
     console.error = (message, ...rest) => {
-      if (typeof message === 'string' && (reactNoise.test(message) || popperAct(message, rest))) {
+      if (typeof message === 'string' && knownNoise(message, rest)) {
         return;
       }
       consoleError(message, ...rest);
@@ -177,6 +191,69 @@ describe('InstalledTab', () => {
       call(PluginsCatalog, 'onAvailableItemClick', { ...slackRow, registryId: null });
 
       expect(of(FETCH_MARKETPLACE_PLUGIN_DETAIL)).toHaveLength(0);
+    });
+
+    // three different situations that all leave an installed plugin with no registry id, and an
+    // operator can act on each of them differently
+    describe('an installed plugin with nothing to show', () => {
+      const jiraRow = {
+        kind: 'INSTALLED',
+        name: 'jira',
+        enabled: true,
+        groupType: BTS_GROUP_TYPE,
+        pluginType: BTS_GROUP_TYPE,
+        // the registry knows nothing about this plugin, or could not be asked
+        registryId: null,
+        marketplace: null,
+        details: { name: 'Jira' },
+      };
+      const openJira = (marketplace, detail) => {
+        const { wrapper, call } = render(marketplace, detail);
+
+        call(PluginsCatalog, 'onInstalledItemClick', jiraRow);
+
+        return wrapper;
+      };
+      const alert = (wrapper, id) => wrapper.find(`[data-automation-id="${id}"]`);
+
+      test('an unmatched plugin says the registry has no entry for it', () => {
+        const wrapper = openJira();
+
+        expect(alert(wrapper, 'pluginUnmatchedAlert').first().text()).toMatch(/no entry/i);
+      });
+
+      test('an offline registry is named as the reason, with the host', () => {
+        const wrapper = openJira(
+          marketplaceState({ catalogueState: MARKETPLACE_CATALOGUE_STATE.LOADED_OFFLINE }),
+        );
+
+        expect(alert(wrapper, 'registryOfflineAlert').first().text()).toContain(
+          'registry.reportportal.io',
+        );
+        expect(alert(wrapper, 'pluginUnmatchedAlert')).toHaveLength(0);
+      });
+
+      // the request in flight is some other plugin's: this one was never asked about
+      test('an unmatched plugin does not borrow another request’s spinner', () => {
+        const wrapper = openJira(marketplaceState(), {
+          detailState: MARKETPLACE_CATALOGUE_STATE.LOADING,
+        });
+
+        expect(alert(wrapper, 'pluginDetailLoader')).toHaveLength(0);
+        expect(alert(wrapper, 'pluginUnmatchedAlert')).not.toHaveLength(0);
+      });
+
+      test('a failed catalogue is named as the reason instead', () => {
+        const wrapper = openJira(
+          marketplaceState({
+            catalogueState: MARKETPLACE_CATALOGUE_STATE.FAILED,
+            error: 'Network Error',
+          }),
+        );
+
+        expect(alert(wrapper, 'catalogueUnavailableAlert')).not.toHaveLength(0);
+        expect(alert(wrapper, 'pluginUnmatchedAlert')).toHaveLength(0);
+      });
     });
 
     test('installing from the plugin page asks for the version the registry published', () => {

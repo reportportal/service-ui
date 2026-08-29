@@ -48,10 +48,11 @@ const messages = defineMessages({
     id: 'MarketplaceLicence.configured',
     defaultMessage: 'Credentials are configured for customer {customerId}.',
   },
+  // PUT takes both halves or neither, so a stored key cannot stand in for a typed one
   keyNotShown: {
     id: 'MarketplaceLicence.keyNotShown',
     defaultMessage:
-      'The stored key is never shown again. Paste a new one to replace it, or leave this empty to keep the one already stored.',
+      'The stored key is never shown again and cannot be reused from here. Paste the key again — the same one or a replacement — to save any change, including a change of customer ID.',
   },
   notConfigured: {
     id: 'MarketplaceLicence.notConfigured',
@@ -102,13 +103,26 @@ export const MarketplaceLicence = ({
   const [customerIdValue, setCustomerIdValue] = useState(customerId || '');
   const [privateKey, setPrivateKey] = useState('');
   const [confirmingRemoval, setConfirmingRemoval] = useState(false);
+  const [lastCustomerId, setLastCustomerId] = useState(customerId);
+
+  // the GET is dispatched by the parent's effect, so the stored id always lands after mount; the
+  // field takes it whenever it changes, and leaves what is being typed alone in between
+  if (customerId !== lastCustomerId) {
+    setLastCustomerId(customerId);
+    setCustomerIdValue(customerId || '');
+  }
 
   if (!isAdmin) {
     return null;
   }
 
+  const trimmedCustomerId = customerIdValue.trim();
+  // the endpoint requires both halves, so a half-filled form is refused here rather than sent
+  // and refused there
+  const canSubmit = Boolean(trimmedCustomerId) && Boolean(privateKey);
+
   const handleSubmit = () => {
-    onSubmit({ customerId: customerIdValue.trim(), privateKey });
+    onSubmit({ customerId: trimmedCustomerId, privateKey });
     // the key does not outlive the request that carries it
     setPrivateKey('');
   };
@@ -153,7 +167,7 @@ export const MarketplaceLicence = ({
         <div className={cx('actions')}>
           <Button
             variant="primary"
-            disabled={loading}
+            disabled={loading || !canSubmit}
             data-automation-id="submitLicence"
             onClick={handleSubmit}
           >

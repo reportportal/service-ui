@@ -44,23 +44,6 @@ const render = (props = {}) =>
 const find = (wrapper, id) => wrapper.find(`[data-automation-id="${id}"]`);
 
 describe('PluginMarketplaceBlocks', () => {
-  // the enzyme react-18 adapter reads rendered text through findDOMNode; jestsetup turns every
-  // console.error into a throw, so React's one-time deprecation notice is filtered out here
-  const consoleError = console.error;
-
-  beforeAll(() => {
-    console.error = (message, ...rest) => {
-      if (typeof message === 'string' && message.includes('findDOMNode is deprecated')) {
-        return;
-      }
-      consoleError(message, ...rest);
-    };
-  });
-
-  afterAll(() => {
-    console.error = consoleError;
-  });
-
   describe('versions', () => {
     test('lists every published version, newest first', () => {
       const text = find(render(), 'pluginVersions').text();
@@ -215,6 +198,22 @@ describe('PluginMarketplaceBlocks', () => {
       const wrapper = render({ detail: loud, failed: true });
 
       expect(find(wrapper, 'catalogueUnavailableAlert')).toHaveLength(1);
+    });
+
+    // an unmatched plugin was never asked about, so whatever the store still holds is some
+    // other plugin's answer
+    test('an unmatched plugin claims nothing and says why', () => {
+      const wrapper = render({ detail: loud, unmatched: true });
+
+      assertNothingClaimed(wrapper);
+      expect(find(wrapper, 'pluginUnmatchedAlert').text()).toMatch(/no entry/i);
+    });
+
+    test('an unmatched plugin whose registry is down is explained as offline, once', () => {
+      const wrapper = render({ detail: loud, unmatched: true, offline: true });
+
+      expect(find(wrapper, 'registryOfflineAlert')).toHaveLength(1);
+      expect(find(wrapper, 'pluginUnmatchedAlert')).toHaveLength(0);
     });
 
     test('nothing is claimed while the request is still in flight', () => {
