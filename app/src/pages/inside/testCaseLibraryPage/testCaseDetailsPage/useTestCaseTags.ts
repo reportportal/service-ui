@@ -88,12 +88,16 @@ export const useTestCaseTags = ({ testCaseId }: UseTestCaseTagsParams) => {
 
       const currentAttributes = testCaseDetails?.attributes || [];
 
+      const normalizedTagKey = tag.key.trim().toLowerCase();
       const isTagExists = currentAttributes.some(
-        (attr) => attr.key.toLowerCase() === tag.key.toLowerCase(),
+        (attr) => attr.key.trim().toLowerCase() === normalizedTagKey,
       );
 
       if (!isTagExists) {
-        const updatedAttributes = [...currentAttributes, tag];
+        const updatedAttributes = [
+          ...currentAttributes,
+          { ...tag, key: normalizedTagKey },
+        ];
         await updateTestCaseTags(updatedAttributes);
       }
     },
@@ -107,7 +111,7 @@ export const useTestCaseTags = ({ testCaseId }: UseTestCaseTagsParams) => {
       const currentAttributes = testCaseDetails?.attributes || [];
 
       const updatedAttributes = currentAttributes.filter(
-        (attr) => attr.key.toLowerCase() !== tagKey.toLowerCase(),
+        (attr) => attr.key.trim().toLowerCase() !== tagKey.trim().toLowerCase(),
       );
       await updateTestCaseTags(updatedAttributes);
     },

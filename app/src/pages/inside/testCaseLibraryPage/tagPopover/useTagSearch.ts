@@ -25,6 +25,26 @@ import { Tag } from 'types/testCase';
 
 import { TagError, AttributesResponse } from '../types';
 
+const normalizeTagKey = (value: string) => value.trim().toLowerCase();
+
+const dedupeTagsByKey = (tags: Tag[]): Tag[] => {
+  const seen = new Set<string>();
+  const result: Tag[] = [];
+
+  tags.forEach((tag) => {
+    const normalizedKey = normalizeTagKey(tag.key);
+
+    if (!normalizedKey || seen.has(normalizedKey)) {
+      return;
+    }
+
+    seen.add(normalizedKey);
+    result.push({ ...tag, key: normalizedKey });
+  });
+
+  return result;
+};
+
 export const useTagSearch = (searchValue: string = '') => {
   const [allTags, setAllTags] = useState<Tag[]>([]);
   const [tags, setTags] = useState<Tag[]>([]);
@@ -44,7 +64,7 @@ export const useTagSearch = (searchValue: string = '') => {
       const response = await fetch<AttributesResponse>(URLS.tmsAttributes(projectKey, {}));
       const tagsOnly = (response.content || []).filter((attr) => !attr.value);
 
-      setAllTags(tagsOnly);
+      setAllTags(dedupeTagsByKey(tagsOnly));
     } catch {
       setAllTags([]);
     } finally {
@@ -69,10 +89,14 @@ export const useTagSearch = (searchValue: string = '') => {
       );
 
       const matchedTags = keys
-        .map((key) => allTags.find((tag) => tag.key === key))
+        .map((key) => {
+          const normalizedKey = normalizeTagKey(key);
+
+          return allTags.find((tag) => normalizeTagKey(tag.key) === normalizedKey);
+        })
         .filter(isNotNil);
 
-      setTags(matchedTags);
+      setTags(dedupeTagsByKey(matchedTags));
     } catch {
       setTags([]);
       setError(TagError.TAG_SEARCH_FAILED);
@@ -83,11 +107,12 @@ export const useTagSearch = (searchValue: string = '') => {
 
   const createTag = useCallback(
     (tagKey: string, selectedTags: Tag[] = []) => {
+      const normalizedTagKey = normalizeTagKey(tagKey);
       const existingTag = allTags.find(
-        (tag) => tag.key.toLowerCase() === tagKey.toLowerCase(),
+        (tag) => normalizeTagKey(tag.key) === normalizedTagKey,
       );
       const tagAlreadySelected = selectedTags.some(
-        (tag) => tag.key.toLowerCase() === tagKey.toLowerCase(),
+        (tag) => normalizeTagKey(tag.key) === normalizedTagKey,
       );
 
       if (tagAlreadySelected) {
@@ -104,7 +129,7 @@ export const useTagSearch = (searchValue: string = '') => {
 
       return {
         id: -Date.now(),
-        key: tagKey,
+        key: normalizedTagKey,
       };
     },
     [allTags],
