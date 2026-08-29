@@ -25,7 +25,7 @@ import {
 import { INSTALLED_GROUP_TYPE } from 'common/constants/pluginsFilter';
 import catalogue from 'controllers/plugins/__fixtures__/catalogue.json';
 import catalogueOffline from 'controllers/plugins/__fixtures__/catalogue-offline.json';
-import { PLUGIN_TIERS } from '../availablePluginsCatalog';
+import { PLUGIN_TIERS } from 'common/constants/pluginTiers';
 import { PluginsCatalog } from './pluginsCatalog';
 import { ROW_ACTIONS } from './utils';
 
@@ -99,11 +99,11 @@ describe('PluginsCatalog', () => {
       ).toBe('(2)');
     });
 
-    test('the Available group is the registry catalogue, not the hardcoded one', () => {
+    test('the Available group is the registry catalogue and nothing else', () => {
       const wrapper = render();
 
       expect(rowNames(group(wrapper, AVAILABLE_PLUGINS_TYPE))).toEqual(['Azure DevOps', 'Slack']);
-      // Jira Cloud is in AVAILABLE_PLUGINS_CATALOG but not in the registry response
+      // a plugin the registry did not offer appears on the page under no heading
       expect(rowNames(wrapper)).not.toContain('Jira Cloud');
     });
 

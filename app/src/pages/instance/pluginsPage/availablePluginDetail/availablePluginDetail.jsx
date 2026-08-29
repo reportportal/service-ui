@@ -26,7 +26,7 @@ import { PremiumPromoModal } from 'components/premiumPromoModal';
 import { PLUGINS_PAGE_EVENTS } from 'components/main/analytics/events';
 import { showModalAction } from 'controllers/modal';
 import { referenceDictionary } from 'common/utils/referenceDictionary';
-import { PLUGIN_TIERS } from '../availablePluginsCatalog';
+import { PLUGIN_TIERS } from 'common/constants/pluginTiers';
 import { PluginMarketplaceBlocks } from '../pluginMarketplaceBlocks';
 import styles from './availablePluginDetail.scss';
 

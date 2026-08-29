@@ -16,7 +16,7 @@
 
 import { ALL_GROUP_TYPE } from 'common/constants/pluginsGroupTypes';
 import { INSTALLED_GROUP_TYPE, PLUGIN_FILTER_GROUP_VALUES } from 'common/constants/pluginsFilter';
-import { PLUGIN_TIERS } from '../availablePluginsCatalog';
+import { PLUGIN_TIERS } from 'common/constants/pluginTiers';
 
 export const PREMIUM_ACCESS = 'premium';
 

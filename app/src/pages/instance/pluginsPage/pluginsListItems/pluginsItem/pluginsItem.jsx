@@ -24,7 +24,7 @@ import { PLUGIN_DISABLED_MESSAGES_BY_GROUP_TYPE } from 'components/integrations/
 import { InputSwitcher } from 'components/inputs/inputSwitcher';
 import { PluginIcon } from 'components/integrations/elements/pluginIcon';
 import DownloadIcon from 'common/img/download-inline.svg';
-import { PLUGIN_TIERS } from '../../availablePluginsCatalog';
+import { PLUGIN_TIERS } from 'common/constants/pluginTiers';
 import {
   getRowAction,
   getRowBadges,

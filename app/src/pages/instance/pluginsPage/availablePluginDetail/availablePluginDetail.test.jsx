@@ -21,7 +21,7 @@ import { createStore } from 'redux';
 import catalogue from 'controllers/plugins/__fixtures__/catalogue.json';
 import pluginDetail from 'controllers/plugins/__fixtures__/plugin-detail.json';
 import offlineDetail from 'controllers/plugins/__fixtures__/plugin-detail-offline.json';
-import { PLUGIN_TIERS } from '../availablePluginsCatalog';
+import { PLUGIN_TIERS } from 'common/constants/pluginTiers';
 import { toAvailableRow } from '../pluginsCatalog/utils';
 import { AvailablePluginDetail } from './availablePluginDetail';
 
