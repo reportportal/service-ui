@@ -16,23 +16,14 @@
 
 import { mount } from 'enzyme';
 import { IntlProvider } from 'react-intl';
+import detail from 'controllers/plugins/__fixtures__/plugin-detail.json';
+import removedDetail from 'controllers/plugins/__fixtures__/plugin-detail-removed.json';
+import offlineDetail from 'controllers/plugins/__fixtures__/plugin-detail-offline.json';
 import { PluginMarketplaceBlocks } from './pluginMarketplaceBlocks';
 
-const detail = {
-  versions: [
-    { version: '1.4.0', publishedAt: '2025-11-02T00:00:00Z' },
-    { version: '1.5.2', publishedAt: '2026-03-12T00:00:00Z' },
-    { version: '1.5.0', publishedAt: '2026-01-20T00:00:00Z' },
-  ],
-  changelog: {
-    version: '1.5.2',
-    lines: ['Fixed a crash when posting an issue with no summary.'],
-  },
-  screenshots: ['https://registry.rp.io/a.png', 'https://registry.rp.io/b.png'],
-  advisory: null,
-  blocked: null,
-  removed: null,
-};
+// the same answer with one part of it taken out, rather than a shape of this test's own making
+const without = (...keys) =>
+  Object.fromEntries(Object.entries(detail).filter(([key]) => !keys.includes(key)));
 
 const render = (props = {}) =>
   mount(
@@ -48,9 +39,8 @@ describe('PluginMarketplaceBlocks', () => {
     test('lists every published version, newest first', () => {
       const text = find(render(), 'pluginVersions').text();
 
-      expect(find(render(), 'pluginVersionRow')).toHaveLength(3);
-      expect(text.indexOf('v.1.5.2')).toBeLessThan(text.indexOf('v.1.5.0'));
-      expect(text.indexOf('v.1.5.0')).toBeLessThan(text.indexOf('v.1.4.0'));
+      expect(find(render(), 'pluginVersionRow')).toHaveLength(2);
+      expect(text.indexOf('v.1.6.0')).toBeLessThan(text.indexOf('v.1.5.2'));
     });
 
     // the registry states a date, so it is shown as that date rather than shifted into the
@@ -60,7 +50,7 @@ describe('PluginMarketplaceBlocks', () => {
     });
 
     test('the versions block is absent when the registry named no versions', () => {
-      const wrapper = render({ detail: { ...detail, versions: [] } });
+      const wrapper = render({ detail: { ...detail, versions: offlineDetail.versions } });
 
       expect(find(wrapper, 'pluginVersions')).toHaveLength(0);
     });
@@ -68,15 +58,15 @@ describe('PluginMarketplaceBlocks', () => {
 
   describe('changelog', () => {
     test('the heading carries the version it describes', () => {
-      expect(find(render(), 'pluginChangelog').text()).toContain("What's new in 1.5.2");
+      expect(find(render(), 'pluginChangelog').text()).toContain("What's new in 1.6.0");
     });
 
     test('every changelog line is rendered', () => {
-      expect(find(render(), 'pluginChangelogLine')).toHaveLength(1);
+      expect(find(render(), 'pluginChangelogLine')).toHaveLength(2);
     });
 
     test('the changelog block is absent when there is none', () => {
-      const wrapper = render({ detail: { ...detail, changelog: null } });
+      const wrapper = render({ detail: without('changelog') });
 
       expect(find(wrapper, 'pluginChangelog')).toHaveLength(0);
     });
@@ -89,82 +79,72 @@ describe('PluginMarketplaceBlocks', () => {
 
     // an empty group is absence of data, so it is hidden rather than explained
     test('the whole block is absent when there are none, not an empty strip', () => {
-      const wrapper = render({ detail: { ...detail, screenshots: [] } });
+      const wrapper = render({ detail: { ...detail, screenshots: offlineDetail.screenshots } });
 
       expect(find(wrapper, 'pluginScreenshots')).toHaveLength(0);
     });
   });
 
   describe('marketplace alerts', () => {
-    const advisory = {
-      severity: 'high',
-      text: 'CVE-2026-1234 allows remote code execution through a crafted issue payload.',
-      attachedAt: '2026-02-15T00:00:00Z',
-      fixedIn: '1.5.2',
-    };
-    const blocked = {
-      blockedAt: '2026-02-15T00:00:00Z',
-      reason: 'critical vulnerability in jackson-databind',
-    };
-    const removed = {
-      removed: '2026-04-02T00:00:00Z',
-      removalReason: 'a trademark claim',
-    };
-
     test('the advisory names what happened, its severity and when it was reported', () => {
-      const text = find(render({ detail: { ...detail, advisory } }), 'pluginAdvisoryAlert').text();
+      const text = find(render(), 'pluginAdvisoryAlert').text();
 
       expect(text).toContain('high');
-      expect(text).toContain('CVE-2026-1234');
-      expect(text).toContain('2026');
+      expect(text).toContain('Leaks the API key into the log');
+      expect(text).toContain('Mar 12, 2026');
     });
 
     test('the advisory says the plugin keeps running', () => {
-      const text = find(render({ detail: { ...detail, advisory } }), 'pluginAdvisoryAlert').text();
-
-      expect(text).toContain('keeps running');
-    });
-
-    test('the advisory says which version fixes it', () => {
-      const text = find(render({ detail: { ...detail, advisory } }), 'pluginAdvisoryAlert').text();
-
-      expect(text).toContain('Fixed in 1.5.2');
+      expect(find(render(), 'pluginAdvisoryAlert').text()).toContain('keeps running');
     });
 
     test('a blocked version says it keeps running but cannot be rolled back to', () => {
-      const text = find(render({ detail: { ...detail, blocked } }), 'pluginBlockedAlert').text();
+      const text = find(render(), 'pluginBlockedAlert').text();
 
-      expect(text).toContain('jackson-databind');
+      expect(text).toContain('Signed with a revoked key');
       expect(text).toContain('keeps running');
       expect(text).toContain('cannot be reinstalled or rolled back to');
       expect(text).toContain('Archive the current .jar');
     });
 
     test('a removed plugin keeps running and leaves manual upload as the only path', () => {
-      const text = find(render({ detail: { ...detail, removed } }), 'pluginRemovedAlert').text();
+      const text = find(render({ detail: removedDetail }), 'pluginRemovedAlert').text();
 
-      expect(text).toContain('trademark claim');
+      expect(text).toContain('Vendor withdrew it');
+      expect(text).toContain('Jan 5, 2026');
       expect(text).toContain('keeps running');
       expect(text).toContain('no version can be installed, updated or rolled back to');
       expect(text).toContain('Manual .jar upload is the only remaining path');
     });
 
     test('no alert is rendered when the registry reports nothing against the plugin', () => {
-      const wrapper = render();
+      const wrapper = render({ detail: without('advisory', 'blocked') });
 
       expect(find(wrapper, 'pluginAdvisoryAlert')).toHaveLength(0);
       expect(find(wrapper, 'pluginBlockedAlert')).toHaveLength(0);
       expect(find(wrapper, 'pluginRemovedAlert')).toHaveLength(0);
     });
+
+    // a field this service never sends can only ever render a blank clause, so it is not read
+    // at all: reading it would put a sentence on screen that nothing can fill
+    test('no alert reads a field the registry does not publish', () => {
+      const wrapper = render({
+        detail: {
+          ...detail,
+          advisory: { ...detail.advisory, fixedIn: '9.9.9' },
+          blocked: { blockedAt: detail.blocked.blockedAt, blockReason: 'never sent' },
+          removed: { removedAt: '2026-01-05T12:00:00Z', removalReason: 'Vendor withdrew it' },
+        },
+      });
+
+      expect(find(wrapper, 'pluginAdvisoryAlert').text()).not.toContain('9.9.9');
+      expect(find(wrapper, 'pluginBlockedAlert').text()).not.toContain('never sent');
+      expect(find(wrapper, 'pluginRemovedAlert').text()).not.toContain('Jan 5, 2026');
+    });
   });
 
   describe('degradation', () => {
-    const loud = {
-      ...detail,
-      advisory: { severity: 'high', text: 'CVE-2026-1234', attachedAt: '2026-02-15T00:00:00Z' },
-      blocked: { blockedAt: '2026-02-15T00:00:00Z', reason: 'jackson-databind' },
-      removed: { removed: '2026-04-02T00:00:00Z', removalReason: 'a trademark claim' },
-    };
+    const loud = { ...detail, removed: removedDetail.removed };
 
     const assertNothingClaimed = (wrapper) => {
       expect(find(wrapper, 'pluginVersions')).toHaveLength(0);
@@ -182,9 +162,13 @@ describe('PluginMarketplaceBlocks', () => {
     });
 
     test('offline names the host that could not be reached', () => {
-      const wrapper = render({ detail: loud, offline: true, registryHost: 'registry.rp.io' });
+      const wrapper = render({
+        detail: loud,
+        offline: true,
+        registryHost: offlineDetail.registry.host,
+      });
 
-      expect(find(wrapper, 'registryOfflineAlert').text()).toContain('registry.rp.io');
+      expect(find(wrapper, 'registryOfflineAlert').text()).toContain('marketplace.reportportal.io');
     });
 
     // the same rule as the catalogue: a failure is not a quieter kind of offline

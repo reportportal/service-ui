@@ -52,10 +52,6 @@ const messages = defineMessages({
     id: 'PluginMarketplaceBlocks.advisoryReported',
     defaultMessage: 'Reported {date}.',
   },
-  advisoryFixedIn: {
-    id: 'PluginMarketplaceBlocks.advisoryFixedIn',
-    defaultMessage: 'Fixed in {version} — upgrade when you can.',
-  },
   // marketplace state is about what may be installed, never about switching off what is here
   advisoryKeepsRunning: {
     id: 'PluginMarketplaceBlocks.advisoryKeepsRunning',
@@ -157,8 +153,7 @@ export const PluginMarketplaceBlocks = ({
                   `${formatMessage(messages.advisoryReported, {
                     date: date(advisory.attachedAt),
                   })} `}
-                {advisory.fixedIn &&
-                  `${formatMessage(messages.advisoryFixedIn, { version: advisory.fixedIn })} `}
+                {/* the registry states only what the advisory is, never which version fixes it */}
                 {formatMessage(messages.advisoryKeepsRunning)}
               </SystemMessage>
             </div>
@@ -168,7 +163,7 @@ export const PluginMarketplaceBlocks = ({
               <SystemMessage mode="warning" header={formatMessage(messages.blockedHeader)}>
                 {formatMessage(messages.blockedBody, {
                   date: date(blocked.blockedAt),
-                  reason: blocked.reason || blocked.blockReason || '',
+                  reason: blocked.reason || '',
                 })}
               </SystemMessage>
             </div>
@@ -177,7 +172,7 @@ export const PluginMarketplaceBlocks = ({
             <div className={cx('alert')} data-automation-id="pluginRemovedAlert">
               <SystemMessage mode="warning" header={formatMessage(messages.removedHeader)}>
                 {formatMessage(messages.removedBody, {
-                  date: date(removed.removed || removed.removedAt),
+                  date: date(removed.removed),
                   reason: removed.removalReason || '',
                 })}
               </SystemMessage>

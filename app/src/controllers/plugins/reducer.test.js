@@ -14,6 +14,10 @@
  * limitations under the License.
  */
 
+import catalogue from './__fixtures__/catalogue.json';
+import catalogueOffline from './__fixtures__/catalogue-offline.json';
+import pluginDetail from './__fixtures__/plugin-detail.json';
+import pluginDetailOffline from './__fixtures__/plugin-detail-offline.json';
 import { MARKETPLACE_CATALOGUE_STATE } from './constants';
 import {
   fetchMarketplaceCatalogueStartAction,
@@ -30,17 +34,10 @@ import {
   marketplaceLicenceReducer,
 } from './reducer';
 
-const onlinePayload = {
-  registry: { status: 'ONLINE', host: 'registry.reportportal.io' },
-  installed: [{ name: 'jira', version: '5.0.0' }],
-  available: [{ id: 'slack', name: 'Slack', latestVersion: '1.0.0' }],
-};
-
-const offlinePayload = {
-  registry: { status: 'OFFLINE', host: 'registry.reportportal.io' },
-  installed: [{ name: 'jira', version: '5.0.0', marketplace: null }],
-  available: [],
-};
+// the two catalogue bodies service-api really sends
+const onlinePayload = catalogue;
+const offlinePayload = catalogueOffline;
+const REGISTRY_HOST = catalogue.registry.host;
 
 describe('controllers/plugins/marketplaceReducer', () => {
   test('starts in the not-requested state with empty lists', () => {
@@ -70,7 +67,7 @@ describe('controllers/plugins/marketplaceReducer', () => {
     );
 
     expect(state.catalogueState).toBe(MARKETPLACE_CATALOGUE_STATE.LOADED_ONLINE);
-    expect(state.registry).toEqual({ status: 'ONLINE', host: 'registry.reportportal.io' });
+    expect(state.registry).toEqual({ status: 'ONLINE', host: REGISTRY_HOST });
     expect(state.installed).toEqual(onlinePayload.installed);
     expect(state.available).toEqual(onlinePayload.available);
     expect(state.error).toBeNull();
@@ -83,7 +80,7 @@ describe('controllers/plugins/marketplaceReducer', () => {
     );
 
     expect(state.catalogueState).toBe(MARKETPLACE_CATALOGUE_STATE.LOADED_OFFLINE);
-    expect(state.registry.host).toBe('registry.reportportal.io');
+    expect(state.registry.host).toBe(REGISTRY_HOST);
     expect(state.installed).toEqual(offlinePayload.installed);
     expect(state.error).toBeNull();
   });
@@ -92,9 +89,8 @@ describe('controllers/plugins/marketplaceReducer', () => {
     const state = marketplaceReducer(
       undefined,
       fetchMarketplaceCatalogueSuccessAction({
-        registry: { status: 'DEGRADED', host: 'registry.reportportal.io' },
-        installed: [],
-        available: [],
+        ...onlinePayload,
+        registry: { status: 'DEGRADED', host: REGISTRY_HOST },
       }),
     );
 
@@ -104,6 +100,7 @@ describe('controllers/plugins/marketplaceReducer', () => {
   test('treats a missing registry block as not online', () => {
     const state = marketplaceReducer(
       undefined,
+      // a body no route sends: the envelope is contracted, but the UI may not lean on it
       fetchMarketplaceCatalogueSuccessAction({ installed: [], available: [] }),
     );
 
@@ -145,7 +142,7 @@ describe('controllers/plugins/marketplaceReducer', () => {
   test('defaults missing lists to empty arrays', () => {
     const state = marketplaceReducer(
       undefined,
-      fetchMarketplaceCatalogueSuccessAction({ registry: { status: 'ONLINE', host: 'h' } }),
+      fetchMarketplaceCatalogueSuccessAction({ registry: catalogue.registry }),
     );
 
     expect(state.installed).toEqual([]);
@@ -189,14 +186,7 @@ describe('controllers/plugins/marketplaceReducer', () => {
 });
 
 describe('controllers/plugins/marketplacePluginDetailReducer', () => {
-  const onlineDetail = {
-    registry: { status: 'ONLINE', host: 'registry.reportportal.io' },
-    plugin: { id: 'plugin-bts-jira', name: 'Jira Server', latestVersion: '1.5.2' },
-    versions: [{ version: '1.5.2', publishedAt: '2026-03-12T00:00:00Z' }],
-    changelog: { version: '1.5.2', lines: ['Fixed a crash.'] },
-    screenshots: ['https://registry/shot-1.png'],
-    advisory: { severity: 'high', text: 'CVE-2026-1234', attachedAt: '2026-02-15T00:00:00Z' },
-  };
+  const onlineDetail = pluginDetail;
 
   test('an ONLINE answer keeps the registry half', () => {
     const state = marketplacePluginDetailReducer(undefined, {
@@ -205,16 +195,16 @@ describe('controllers/plugins/marketplacePluginDetailReducer', () => {
     });
 
     expect(state.detailState).toBe(MARKETPLACE_CATALOGUE_STATE.LOADED_ONLINE);
-    expect(state.versions).toHaveLength(1);
+    expect(state.versions).toEqual(onlineDetail.versions);
     expect(state.advisory).toEqual(onlineDetail.advisory);
-    expect(state.screenshots).toEqual(['https://registry/shot-1.png']);
+    expect(state.screenshots).toEqual(onlineDetail.screenshots);
   });
 
   // an OFFLINE answer is a success whose registry half is simply not knowable
   test('an OFFLINE answer keeps nothing registry-derived, whatever the payload carries', () => {
     const state = marketplacePluginDetailReducer(undefined, {
       type: 'fetchMarketplacePluginDetailSuccess',
-      payload: { ...onlineDetail, registry: { status: 'OFFLINE', host: 'registry.rp.io' } },
+      payload: { ...onlineDetail, registry: pluginDetailOffline.registry },
     });
 
     expect(state.detailState).toBe(MARKETPLACE_CATALOGUE_STATE.LOADED_OFFLINE);
@@ -223,13 +213,13 @@ describe('controllers/plugins/marketplacePluginDetailReducer', () => {
     expect(state.changelog).toBeNull();
     expect(state.screenshots).toEqual([]);
     expect(state.advisory).toBeNull();
-    expect(state.registry.host).toBe('registry.rp.io');
+    expect(state.registry.host).toBe(REGISTRY_HOST);
   });
 
   test('an unknown registry status degrades to the cautious side', () => {
     const state = marketplacePluginDetailReducer(undefined, {
       type: 'fetchMarketplacePluginDetailSuccess',
-      payload: { ...onlineDetail, registry: { status: 'DEGRADED', host: 'registry.rp.io' } },
+      payload: { ...onlineDetail, registry: { status: 'DEGRADED', host: REGISTRY_HOST } },
     });
 
     expect(state.detailState).toBe(MARKETPLACE_CATALOGUE_STATE.LOADED_OFFLINE);
@@ -244,11 +234,11 @@ describe('controllers/plugins/marketplacePluginDetailReducer', () => {
     });
     const state = marketplacePluginDetailReducer(loaded, {
       type: 'fetchMarketplacePluginDetailStart',
-      payload: 'plugin-notification-slack',
+      payload: 'plugin-notify-slack',
     });
 
     expect(state.detailState).toBe(MARKETPLACE_CATALOGUE_STATE.LOADING);
-    expect(state.registryId).toBe('plugin-notification-slack');
+    expect(state.registryId).toBe('plugin-notify-slack');
     expect(state.advisory).toBeNull();
     expect(state.versions).toEqual([]);
   });

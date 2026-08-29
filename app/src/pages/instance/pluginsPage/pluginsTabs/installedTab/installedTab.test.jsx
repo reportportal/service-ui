@@ -27,13 +27,16 @@ import {
   FETCH_MARKETPLACE_PLUGIN_DETAIL,
   INSTALL_MARKETPLACE_PLUGIN,
 } from 'controllers/plugins/constants';
-import { PluginsCatalog } from '../../pluginsCatalog';
+import catalogue from 'controllers/plugins/__fixtures__/catalogue.json';
+import catalogueOffline from 'controllers/plugins/__fixtures__/catalogue-offline.json';
+import { PluginsCatalog, ROW_ACTIONS } from '../../pluginsCatalog';
+import { mergeInstalledRows, toAvailableRow } from '../../pluginsCatalog/utils';
 import { PluginsFilter } from '../../pluginsFilter';
 import { InstalledTab } from './installedTab';
 
 const marketplaceState = (overrides = {}) => ({
   catalogueState: MARKETPLACE_CATALOGUE_STATE.LOADED_ONLINE,
-  registry: { status: 'ONLINE', host: 'registry.reportportal.io' },
+  registry: catalogue.registry,
   installed: [],
   available: [],
   error: null,
@@ -41,6 +44,19 @@ const marketplaceState = (overrides = {}) => ({
   query: { q: null, category: null },
   ...overrides,
 });
+
+// GET /plugin — the locally installed integration type, the half no catalogue fixture covers
+const localJira = {
+  name: 'jira',
+  enabled: true,
+  groupType: BTS_GROUP_TYPE,
+  pluginType: BTS_GROUP_TYPE,
+  details: { name: 'Jira' },
+};
+// the rows the catalogue itself builds, from the responses service-api really sends
+const installedRowFrom = (response) => mergeInstalledRows([localJira], response.installed)[0];
+const availableRowFrom = (id) =>
+  toAvailableRow(catalogue.available.find((entry) => entry.id === id));
 
 // the installed plugin subpage also renders the integration sections, which read these slices
 const restOfState = {
@@ -166,22 +182,45 @@ describe('InstalledTab', () => {
   });
 
   describe('the plugin page', () => {
-    const slackRow = {
-      kind: 'AVAILABLE',
-      registryId: 'plugin-notification-slack',
-      name: 'Slack',
-      latestVersion: '1.5.2',
-      tier: 'free',
-      locked: false,
-      details: { name: 'Slack', version: '1.5.2' },
-    };
+    const slackRow = availableRowFrom('plugin-notify-slack');
 
     test('opening a plugin asks the registry about that plugin', () => {
       const { call, of } = render();
 
       call(PluginsCatalog, 'onAvailableItemClick', slackRow);
 
-      expect(of(FETCH_MARKETPLACE_PLUGIN_DETAIL).pop().payload).toBe('plugin-notification-slack');
+      expect(of(FETCH_MARKETPLACE_PLUGIN_DETAIL).pop().payload).toBe('plugin-notify-slack');
+    });
+
+    // the registry id of an installed plugin is carried inside its marketplace block; read from
+    // anywhere else every installed plugin looks like one the registry has never heard of
+    test('opening a matched installed plugin asks the registry about it', () => {
+      const { wrapper, call, of } = render();
+
+      call(PluginsCatalog, 'onInstalledItemClick', installedRowFrom(catalogue));
+
+      expect(of(FETCH_MARKETPLACE_PLUGIN_DETAIL).pop().payload).toBe('plugin-bts-jira');
+      expect(wrapper.find('[data-automation-id="pluginUnmatchedAlert"]')).toHaveLength(0);
+    });
+
+    // the registry publishes it on the manifest, and without it the action does nothing at all
+    test('Discover Premium opens the contact link the registry published', () => {
+      const open = jest.spyOn(window, 'open').mockImplementation(() => {});
+      const { call } = render();
+
+      call(
+        PluginsCatalog,
+        'onRowAction',
+        ROW_ACTIONS.DISCOVER_PREMIUM,
+        availableRowFrom('plugin-bts-azure'),
+      );
+
+      expect(open).toHaveBeenCalledWith(
+        'https://reportportal.io/contact',
+        '_blank',
+        'noopener,noreferrer',
+      );
+      open.mockRestore();
     });
 
     // an unmatched plugin has no registry id, so there is nothing to ask about and nothing to show
@@ -196,17 +235,9 @@ describe('InstalledTab', () => {
     // three different situations that all leave an installed plugin with no registry id, and an
     // operator can act on each of them differently
     describe('an installed plugin with nothing to show', () => {
-      const jiraRow = {
-        kind: 'INSTALLED',
-        name: 'jira',
-        enabled: true,
-        groupType: BTS_GROUP_TYPE,
-        pluginType: BTS_GROUP_TYPE,
-        // the registry knows nothing about this plugin, or could not be asked
-        registryId: null,
-        marketplace: null,
-        details: { name: 'Jira' },
-      };
+      // the offline response is the one that carries no marketplace block, so the row it merges
+      // into has no registry id: the registry knows nothing of this plugin, or was never asked
+      const jiraRow = installedRowFrom(catalogueOffline);
       const openJira = (marketplace, detail) => {
         const { wrapper, call } = render(marketplace, detail);
 
@@ -228,7 +259,7 @@ describe('InstalledTab', () => {
         );
 
         expect(alert(wrapper, 'registryOfflineAlert').first().text()).toContain(
-          'registry.reportportal.io',
+          catalogue.registry.host,
         );
         expect(alert(wrapper, 'pluginUnmatchedAlert')).toHaveLength(0);
       });
@@ -264,8 +295,8 @@ describe('InstalledTab', () => {
       wrapper.find('[data-automation-id="installAction"]').first().prop('onClick')();
 
       expect(of(INSTALL_MARKETPLACE_PLUGIN).pop().payload).toEqual({
-        registryId: 'plugin-notification-slack',
-        version: '1.5.2',
+        registryId: 'plugin-notify-slack',
+        version: '2.0.0',
       });
     });
   });

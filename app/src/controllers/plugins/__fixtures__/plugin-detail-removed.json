@@ -1,0 +1,17 @@
+{
+  "registry" : {
+    "status" : "ONLINE",
+    "host" : "marketplace.reportportal.io"
+  },
+  "plugin" : {
+    "id" : "plugin-bts-gitlab"
+  },
+  "versions" : [ ],
+  "screenshots" : [ ],
+  "removed" : {
+    "removed" : "2026-01-05T12:00:00Z",
+    "removalReason" : "Vendor withdrew it",
+    "removedBy" : "operator@rp.io"
+  },
+  "locked" : false
+}

@@ -17,6 +17,9 @@
 import { runSaga } from 'redux-saga';
 import { fetch } from 'common/utils';
 import { showDefaultErrorNotification } from 'controllers/notification';
+import catalogue from './__fixtures__/catalogue.json';
+import catalogueOffline from './__fixtures__/catalogue-offline.json';
+import pluginDetail from './__fixtures__/plugin-detail.json';
 import {
   fetchMarketplaceCatalogueAction,
   fetchMarketplaceCatalogueStartAction,
@@ -58,17 +61,9 @@ jest.mock('common/utils', () => ({
   fetch: jest.fn(),
 }));
 
-const onlinePayload = {
-  registry: { status: 'ONLINE', host: 'registry.reportportal.io' },
-  installed: [{ name: 'jira', version: '5.0.0' }],
-  available: [{ id: 'slack', name: 'Slack' }],
-};
-
-const offlinePayload = {
-  registry: { status: 'OFFLINE', host: 'registry.reportportal.io' },
-  installed: [{ name: 'jira', version: '5.0.0', marketplace: null }],
-  available: [],
-};
+// the bodies the routes really answer with; the saga is transport and passes them through whole
+const onlinePayload = catalogue;
+const offlinePayload = catalogueOffline;
 
 // a saga that throws must fail the test with its own error, not quietly shorten the
 // dispatched list; onError replaces redux-saga's logger so the rejection is what surfaces
@@ -336,11 +331,7 @@ describe('controllers/plugins/sagas marketplace', () => {
   });
 
   describe('fetchMarketplacePluginDetail', () => {
-    const detailPayload = {
-      registry: { status: 'ONLINE', host: 'registry.reportportal.io' },
-      plugin: { id: 'plugin-bts-jira', name: 'Jira Server', latestVersion: '1.5.2' },
-      versions: [{ version: '1.5.2', publishedAt: '2026-03-12T00:00:00Z' }],
-    };
+    const detailPayload = pluginDetail;
 
     test('asks the registry id endpoint, not the catalogue one', async () => {
       fetch.mockResolvedValue(detailPayload);
@@ -387,9 +378,9 @@ describe('controllers/plugins/sagas marketplace', () => {
 
       const { dispatched, dispatch } = runWatcher(watchFetchMarketplacePluginDetail);
       dispatch(fetchMarketplacePluginDetailAction('plugin-bts-jira'));
-      dispatch(fetchMarketplacePluginDetailAction('plugin-notification-slack'));
+      dispatch(fetchMarketplacePluginDetailAction('plugin-notify-slack'));
 
-      fast.resolve({ ...detailPayload, plugin: { id: 'plugin-notification-slack' } });
+      fast.resolve({ ...detailPayload, plugin: { id: 'plugin-notify-slack' } });
       await settle();
       slow.resolve(detailPayload);
       await settle();
@@ -398,7 +389,7 @@ describe('controllers/plugins/sagas marketplace', () => {
         (action) => action.type === FETCH_MARKETPLACE_PLUGIN_DETAIL_SUCCESS,
       );
       expect(landed).toHaveLength(1);
-      expect(landed[0].payload.plugin.id).toBe('plugin-notification-slack');
+      expect(landed[0].payload.plugin.id).toBe('plugin-notify-slack');
     });
   });
 

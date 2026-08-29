@@ -86,6 +86,9 @@ export const toAvailableRow = (entry) => ({
  * `marketplaceTrusted` is false whenever the registry-sourced half of the catalogue is not
  * something this screen can vouch for. The block is then dropped here rather than trusted to
  * arrive empty: the backend nulling it is a contract, not a guarantee the UI may lean on.
+ *
+ * The registry id is read from inside the block, which is where the wire carries it: it is a
+ * marketplace-sourced fact, so a row without a block has no known registry id at all.
  */
 export const toInstalledRow = (plugin, mergedEntry, marketplaceTrusted = true) => {
   const marketplace = (marketplaceTrusted && mergedEntry?.marketplace) || null;
@@ -94,7 +97,7 @@ export const toInstalledRow = (plugin, mergedEntry, marketplaceTrusted = true) =
     ...plugin,
     kind: ROW_KINDS.INSTALLED,
     marketplace,
-    registryId: (marketplaceTrusted && mergedEntry?.pluginId) || null,
+    registryId: marketplace?.pluginId || null,
     updateAvailable: marketplace?.updateAvailable?.version || null,
   };
 };

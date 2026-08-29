@@ -21,80 +21,40 @@ import {
   ALL_GROUP_TYPE,
   AVAILABLE_PLUGINS_TYPE,
   BTS_GROUP_TYPE,
-  NOTIFICATION_GROUP_TYPE,
-  OTHER_GROUP_TYPE,
 } from 'common/constants/pluginsGroupTypes';
 import { INSTALLED_GROUP_TYPE } from 'common/constants/pluginsFilter';
+import catalogue from 'controllers/plugins/__fixtures__/catalogue.json';
+import catalogueOffline from 'controllers/plugins/__fixtures__/catalogue-offline.json';
 import { PLUGIN_TIERS } from '../availablePluginsCatalog';
 import { PluginsCatalog } from './pluginsCatalog';
 import { ROW_ACTIONS } from './utils';
 
-const jira = {
-  name: 'JIRA',
-  type: 'JIRA',
-  enabled: true,
-  groupType: BTS_GROUP_TYPE,
-  details: { name: 'Jira Server', version: '5.0.0' },
+// GET /plugin — the locally installed integration types. It is a different endpoint from the
+// catalogue and has no wire fixture, so only the display name is invented here; everything the
+// two responses have to agree on is taken from the catalogue row itself.
+const DISPLAY_NAMES = {
+  jira: 'Jira',
+  rally: 'Rally',
+  gitlab: 'GitLab',
+  'custom-scanner': 'Custom Scanner',
 };
-const rally = {
-  name: 'RALLY',
-  type: 'RALLY',
-  enabled: true,
-  groupType: BTS_GROUP_TYPE,
-  details: { name: 'Rally', version: '5.0.0' },
-};
-
-const marketplaceBlock = (overrides = {}) => ({
-  access: 'public',
-  tier: 'official',
-  updateAvailable: null,
-  advisory: null,
-  blocked: null,
-  removed: null,
-  ...overrides,
+const localPlugin = (row) => ({
+  name: row.name,
+  type: row.name.toUpperCase(),
+  enabled: row.enabled,
+  groupType: row.groupType,
+  details: { name: DISPLAY_NAMES[row.name], version: row.version },
 });
 
-const jiraMerged = {
-  name: 'JIRA',
-  pluginId: 'plugin-bts-jira',
-  marketplace: marketplaceBlock({
-    updateAvailable: { version: '5.1.0' },
-    advisory: { severity: 'high', text: 'Known issue', attachedAt: '2026-08-01' },
-  }),
-};
-const rallyMerged = {
-  name: 'RALLY',
-  pluginId: 'plugin-bts-rally',
-  marketplace: marketplaceBlock(),
-};
-
-const slack = {
-  id: 'plugin-slack',
-  name: 'Slack',
-  latestVersion: '1.2.0',
-  description: 'Slack notifications',
-  groupType: NOTIFICATION_GROUP_TYPE,
-  access: 'public',
-  tier: 'official',
-  locked: false,
-  contactUrl: null,
-};
-const qualityGate = {
-  id: 'plugin-quality-gate',
-  name: 'Quality Gate',
-  latestVersion: '2.0.0',
-  description: 'Quality gates',
-  groupType: OTHER_GROUP_TYPE,
-  access: 'premium',
-  tier: 'official',
-  locked: true,
-  contactUrl: 'https://reportportal.io/contact',
-};
+const installedRow = (name) => catalogue.installed.find((row) => row.name === name);
+const availableEntry = (id) => catalogue.available.find((entry) => entry.id === id);
+const slack = availableEntry('plugin-notify-slack');
+const azure = availableEntry('plugin-bts-azure');
 
 const defaultProps = {
-  installedPlugins: [jira, rally],
-  marketplaceInstalled: [jiraMerged, rallyMerged],
-  availablePlugins: [slack, qualityGate],
+  installedPlugins: catalogue.installed.map(localPlugin),
+  marketplaceInstalled: catalogue.installed,
+  availablePlugins: catalogue.available,
   loading: false,
   offline: false,
   registryHost: null,
@@ -131,7 +91,7 @@ describe('PluginsCatalog', () => {
       expect(groupNames(wrapper)).toEqual([ALL_GROUP_TYPE, AVAILABLE_PLUGINS_TYPE]);
       expect(
         group(wrapper, ALL_GROUP_TYPE).find('[data-automation-id="pluginsGroupCount"]').text(),
-      ).toBe('(2)');
+      ).toBe('(4)');
       expect(
         group(wrapper, AVAILABLE_PLUGINS_TYPE)
           .find('[data-automation-id="pluginsGroupCount"]')
@@ -142,7 +102,7 @@ describe('PluginsCatalog', () => {
     test('the Available group is the registry catalogue, not the hardcoded one', () => {
       const wrapper = render();
 
-      expect(rowNames(group(wrapper, AVAILABLE_PLUGINS_TYPE))).toEqual(['Quality Gate', 'Slack']);
+      expect(rowNames(group(wrapper, AVAILABLE_PLUGINS_TYPE))).toEqual(['Azure DevOps', 'Slack']);
       // Jira Cloud is in AVAILABLE_PLUGINS_CATALOG but not in the registry response
       expect(rowNames(wrapper)).not.toContain('Jira Cloud');
     });
@@ -172,10 +132,10 @@ describe('PluginsCatalog', () => {
   describe('Catalog.List.Search Results', () => {
     test('the query narrows the locally held Installed group and the count follows', () => {
       // the Available group arrives already narrowed by GET /api/v1/plugins?q=
-      const wrapper = render({ query: 'e', availablePlugins: [qualityGate] });
+      const wrapper = render({ query: 'la', availablePlugins: [azure] });
 
-      expect(rowNames(group(wrapper, ALL_GROUP_TYPE))).toEqual(['Jira Server']);
-      expect(rowNames(group(wrapper, AVAILABLE_PLUGINS_TYPE))).toEqual(['Quality Gate']);
+      expect(rowNames(group(wrapper, ALL_GROUP_TYPE))).toEqual(['GitLab']);
+      expect(rowNames(group(wrapper, AVAILABLE_PLUGINS_TYPE))).toEqual(['Azure DevOps']);
       expect(
         group(wrapper, ALL_GROUP_TYPE).find('[data-automation-id="pluginsGroupCount"]').text(),
       ).toBe('(1)');
@@ -191,7 +151,7 @@ describe('PluginsCatalog', () => {
     test('a category chip narrows the locally held Installed group on top of the query', () => {
       const wrapper = render({ query: 'a', activeCategory: BTS_GROUP_TYPE, availablePlugins: [] });
 
-      expect(rowNames(group(wrapper, ALL_GROUP_TYPE))).toEqual(['Jira Server', 'Rally']);
+      expect(rowNames(group(wrapper, ALL_GROUP_TYPE))).toEqual(['GitLab', 'Jira', 'Rally']);
       expect(group(wrapper, AVAILABLE_PLUGINS_TYPE)).toHaveLength(0);
     });
 
@@ -253,7 +213,7 @@ describe('PluginsCatalog', () => {
     });
 
     test('a locked premium plugin offers Discover Premium instead of Install', () => {
-      const wrapper = render({ availablePlugins: [qualityGate] });
+      const wrapper = render({ availablePlugins: [azure] });
 
       expect(actions(group(wrapper, AVAILABLE_PLUGINS_TYPE))).toEqual([
         ROW_ACTIONS.DISCOVER_PREMIUM,
@@ -281,20 +241,34 @@ describe('PluginsCatalog', () => {
 
       expect(onRowAction).toHaveBeenCalledWith(
         ROW_ACTIONS.INSTALL,
-        expect.objectContaining({ registryId: 'plugin-slack', latestVersion: '1.2.0' }),
+        expect.objectContaining({ registryId: 'plugin-notify-slack', latestVersion: '2.0.0' }),
+      );
+    });
+
+    // the registry id of an installed plugin is a marketplace-sourced fact and is carried
+    // nowhere but inside the marketplace block; read from the row itself it is always absent,
+    // and Update would then be raised for no plugin at all
+    test('Update carries the registry id the marketplace block states', () => {
+      const onRowAction = jest.fn();
+      const wrapper = render({ availablePlugins: [], onRowAction });
+
+      click(wrapper.find('[data-automation-id="pluginRowAction"]').last().find('button'));
+
+      expect(onRowAction).toHaveBeenCalledWith(
+        ROW_ACTIONS.UPDATE,
+        expect.objectContaining({ registryId: 'plugin-bts-jira', updateAvailable: '1.6.0' }),
       );
     });
   });
 
   describe('Catalog.List.Registry Offline', () => {
+    // the registry block is absent for every installed plugin while offline
     const offlineProps = {
       offline: true,
-      registryHost: 'marketplace.reportportal.io',
-      // the registry block is absent for every installed plugin while offline
-      marketplaceInstalled: [
-        { name: 'JIRA', pluginId: null, marketplace: null },
-        { name: 'RALLY', pluginId: null, marketplace: null },
-      ],
+      registryHost: catalogueOffline.registry.host,
+      installedPlugins: catalogueOffline.installed.map(localPlugin),
+      marketplaceInstalled: catalogueOffline.installed,
+      availablePlugins: catalogueOffline.available,
     };
 
     test('names the exact host that could not be reached', () => {
@@ -311,21 +285,21 @@ describe('PluginsCatalog', () => {
     });
 
     test('does not render the Available group even with a stale catalogue in the store', () => {
-      const wrapper = render(offlineProps);
+      const wrapper = render({ ...offlineProps, availablePlugins: catalogue.available });
 
       expect(group(wrapper, AVAILABLE_PLUGINS_TYPE)).toHaveLength(0);
       expect(groupNames(wrapper)).toEqual([ALL_GROUP_TYPE]);
     });
 
     test('installed rows keep their names but lose every badge and action', () => {
-      // the same two plugins carry a badge and an action while the registry answers
+      // the same plugins carry badges and an action while the registry answers
       const online = group(render({ availablePlugins: [] }), ALL_GROUP_TYPE);
       expect(online.find('[data-automation-id="pluginBadge"]').length).toBeGreaterThan(0);
       expect(actions(online)).toEqual([ROW_ACTIONS.UPDATE]);
 
       const installed = group(render(offlineProps), ALL_GROUP_TYPE);
 
-      expect(rowNames(installed)).toEqual(['Jira Server', 'Rally']);
+      expect(rowNames(installed)).toEqual(['Jira', 'Custom Scanner']);
       expect(actions(installed)).toEqual([]);
       expect(installed.find('[data-automation-id="pluginBadge"]')).toHaveLength(0);
     });
@@ -336,14 +310,13 @@ describe('PluginsCatalog', () => {
       const installed = group(
         render({
           offline: true,
-          registryHost: 'marketplace.reportportal.io',
+          registryHost: catalogueOffline.registry.host,
           availablePlugins: [],
-          marketplaceInstalled: [jiraMerged, rallyMerged],
+          marketplaceInstalled: catalogue.installed,
         }),
         ALL_GROUP_TYPE,
       );
 
-      expect(rowNames(installed)).toEqual(['Jira Server', 'Rally']);
       expect(actions(installed)).toEqual([]);
       expect(installed.find('[data-automation-id="pluginBadge"]')).toHaveLength(0);
     });
@@ -364,8 +337,8 @@ describe('PluginsCatalog', () => {
       const failed = render(failedProps);
       const offline = render({
         offline: true,
-        registryHost: 'marketplace.reportportal.io',
-        marketplaceInstalled: [],
+        registryHost: catalogueOffline.registry.host,
+        marketplaceInstalled: catalogueOffline.installed,
       });
 
       expect(failed.find('[data-automation-id="registryOfflineAlert"]')).toHaveLength(0);
@@ -383,8 +356,8 @@ describe('PluginsCatalog', () => {
       const wrapper = render({
         ...failedProps,
         // a payload left over from an earlier load must not be believed after a failure
-        marketplaceInstalled: [jiraMerged, rallyMerged],
-        availablePlugins: [slack],
+        marketplaceInstalled: catalogue.installed,
+        availablePlugins: catalogue.available,
       });
 
       expect(groupNames(wrapper)).toEqual([ALL_GROUP_TYPE]);
@@ -411,25 +384,22 @@ describe('PluginsCatalog', () => {
   });
 
   describe('an installed plugin the registry could not match', () => {
-    const zephyr = {
-      name: 'ZEPHYR',
-      type: 'ZEPHYR',
-      enabled: true,
-      groupType: BTS_GROUP_TYPE,
-      details: { name: 'Zephyr', version: '1.0.0' },
-    };
-
     test('is degraded the same way as offline while the registry is online', () => {
       const wrapper = render({
-        installedPlugins: [jira, rally, zephyr],
         availablePlugins: [],
-        // RALLY came back unmatched, ZEPHYR is missing from the merged response altogether
-        marketplaceInstalled: [jiraMerged, { name: 'RALLY', pluginId: null, marketplace: null }],
+        // gitlab is missing from the merged response altogether; custom-scanner is in it but
+        // matched no registry entry, so it carries no marketplace block
+        marketplaceInstalled: catalogue.installed.filter((row) => row.name !== 'gitlab'),
       });
       const rows = group(wrapper, ALL_GROUP_TYPE).find('[data-automation-id="pluginRow"]');
-      const [matched, unmatched, absent] = [rows.at(0), rows.at(1), rows.at(2)];
+      const [absent, matched, , unmatched] = [rows.at(0), rows.at(1), rows.at(2), rows.at(3)];
 
-      expect(rowNames(group(wrapper, ALL_GROUP_TYPE))).toEqual(['Jira Server', 'Rally', 'Zephyr']);
+      expect(rowNames(group(wrapper, ALL_GROUP_TYPE))).toEqual([
+        'GitLab',
+        'Jira',
+        'Rally',
+        'Custom Scanner',
+      ]);
       expect(matched.find('[data-automation-id="pluginBadge"]').length).toBeGreaterThan(0);
       expect(matched.find('[data-automation-id="pluginRowAction"]')).toHaveLength(1);
       // neither row may borrow another plugin's signals
@@ -442,8 +412,8 @@ describe('PluginsCatalog', () => {
     test('an installed plugin that carries a tier field is still an installed row', () => {
       // rows are classified by an explicit kind, not by a field the local plugin may grow
       const wrapper = render({
-        installedPlugins: [{ ...jira, tier: PLUGIN_TIERS.PREMIUM }],
-        marketplaceInstalled: [jiraMerged],
+        installedPlugins: [{ ...localPlugin(installedRow('jira')), tier: PLUGIN_TIERS.PREMIUM }],
+        marketplaceInstalled: [installedRow('jira')],
         availablePlugins: [],
       });
       const row = group(wrapper, ALL_GROUP_TYPE).find('[data-automation-id="pluginRow"]').at(0);

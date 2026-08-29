@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+import catalogue from './__fixtures__/catalogue.json';
+import catalogueOffline from './__fixtures__/catalogue-offline.json';
 import { MARKETPLACE_CATALOGUE_STATE } from './constants';
 import {
   marketplaceCatalogueStateSelector,
@@ -31,23 +33,14 @@ import {
   marketplaceCatalogueQuerySelector,
 } from './selectors';
 
-const installed = [
-  {
-    name: 'jira',
-    version: '5.0.0',
-    marketplace: { pluginId: 'jira', updateAvailable: { version: '5.1.0' } },
-  },
-  { name: 'rally', version: '5.0.0', marketplace: { pluginId: 'rally', updateAvailable: null } },
-  { name: 'custom', version: '1.0.0', marketplace: null },
-];
-
-const available = [{ id: 'slack', name: 'Slack' }];
+// jira carries an update, rally a marketplace block without one, custom-scanner no block at all
+const { installed, available, registry } = catalogue;
 
 const mockState = (marketplace) => ({ plugins: { marketplace } });
 
 const loadedOnline = mockState({
   catalogueState: MARKETPLACE_CATALOGUE_STATE.LOADED_ONLINE,
-  registry: { status: 'ONLINE', host: 'registry.reportportal.io' },
+  registry,
   installed,
   available,
   error: null,
@@ -56,9 +49,9 @@ const loadedOnline = mockState({
 
 const loadedOffline = mockState({
   catalogueState: MARKETPLACE_CATALOGUE_STATE.LOADED_OFFLINE,
-  registry: { status: 'OFFLINE', host: 'registry.reportportal.io' },
-  installed: [{ name: 'jira', version: '5.0.0', marketplace: null }],
-  available: [],
+  registry: catalogueOffline.registry,
+  installed: catalogueOffline.installed,
+  available: catalogueOffline.available,
   error: null,
   installing: [],
 });
@@ -76,11 +69,8 @@ describe('controllers/plugins/marketplace selectors', () => {
   });
 
   test('expose the registry status and host', () => {
-    expect(marketplaceRegistrySelector(loadedOnline)).toEqual({
-      status: 'ONLINE',
-      host: 'registry.reportportal.io',
-    });
-    expect(marketplaceRegistryHostSelector(loadedOffline)).toBe('registry.reportportal.io');
+    expect(marketplaceRegistrySelector(loadedOnline)).toEqual(registry);
+    expect(marketplaceRegistryHostSelector(loadedOffline)).toBe(registry.host);
   });
 
   test('loading is true only while the request is in flight', () => {
@@ -124,10 +114,10 @@ describe('controllers/plugins/marketplace selectors', () => {
   });
 
   test('an update is available only when the registry offered a newer version', () => {
-    expect(marketplacePluginUpdateVersionSelector(loadedOnline, 'jira')).toBe('5.1.0');
+    expect(marketplacePluginUpdateVersionSelector(loadedOnline, 'jira')).toBe('1.6.0');
     expect(hasMarketplacePluginUpdateSelector(loadedOnline, 'jira')).toBe(true);
     expect(hasMarketplacePluginUpdateSelector(loadedOnline, 'rally')).toBe(false);
-    expect(hasMarketplacePluginUpdateSelector(loadedOnline, 'custom')).toBe(false);
+    expect(hasMarketplacePluginUpdateSelector(loadedOnline, 'custom-scanner')).toBe(false);
     expect(hasMarketplacePluginUpdateSelector(loadedOnline, 'unknown')).toBe(false);
   });
 

@@ -18,32 +18,23 @@ import { mount } from 'enzyme';
 import { IntlProvider } from 'react-intl';
 import { Provider } from 'react-redux';
 import { createStore } from 'redux';
+import catalogue from 'controllers/plugins/__fixtures__/catalogue.json';
+import pluginDetail from 'controllers/plugins/__fixtures__/plugin-detail.json';
+import offlineDetail from 'controllers/plugins/__fixtures__/plugin-detail-offline.json';
 import { PLUGIN_TIERS } from '../availablePluginsCatalog';
+import { toAvailableRow } from '../pluginsCatalog/utils';
 import { AvailablePluginDetail } from './availablePluginDetail';
 
 jest.mock('react-tracking', () => ({
   useTracking: () => ({ trackEvent: () => {} }),
 }));
 
-const emptyDetail = {
-  versions: [],
-  changelog: null,
-  screenshots: [],
-  advisory: null,
-  blocked: null,
-  removed: null,
-};
+// the registry half of an unreachable registry's answer: the envelope and nothing under it
+const emptyDetail = offlineDetail;
 
-const slack = {
-  kind: 'AVAILABLE',
-  registryId: 'plugin-notification-slack',
-  name: 'Slack',
-  description: 'Slack notifications',
-  latestVersion: '1.5.2',
-  tier: PLUGIN_TIERS.FREE,
-  locked: false,
-  details: { name: 'Slack', version: '1.5.2' },
-};
+const availableRow = (id) => toAvailableRow(catalogue.available.find((entry) => entry.id === id));
+const slack = availableRow('plugin-notify-slack');
+const azure = availableRow('plugin-bts-azure');
 
 const render = (props = {}) =>
   mount(
@@ -58,7 +49,7 @@ const find = (wrapper, id) => wrapper.find(`[data-automation-id="${id}"]`);
 
 describe('AvailablePluginDetail', () => {
   test('the header carries the version the registry publishes', () => {
-    expect(find(render(), 'pluginDetailVersion').first().text()).toBe('version 1.5.2');
+    expect(find(render(), 'pluginDetailVersion').first().text()).toBe('version 2.0.0');
   });
 
   test('installing asks for the plugin the page is showing', () => {
@@ -72,36 +63,31 @@ describe('AvailablePluginDetail', () => {
 
   // premium with a licence configured installs like any other plugin
   test('a premium plugin whose licence is configured offers Install', () => {
-    const wrapper = render({ plugin: { ...slack, tier: PLUGIN_TIERS.PREMIUM, locked: false } });
+    const wrapper = render({ plugin: { ...azure, locked: false } });
 
+    expect(azure.tier).toBe(PLUGIN_TIERS.PREMIUM);
     expect(find(wrapper, 'installAction')).not.toHaveLength(0);
     expect(find(wrapper, 'discoverPremiumAction')).toHaveLength(0);
   });
 
   test('a premium plugin with no licence can only be enquired about', () => {
-    const wrapper = render({ plugin: { ...slack, tier: PLUGIN_TIERS.PREMIUM, locked: true } });
+    const wrapper = render({ plugin: azure });
 
     expect(find(wrapper, 'discoverPremiumAction')).not.toHaveLength(0);
     expect(find(wrapper, 'installAction')).toHaveLength(0);
   });
 
   test('the registry blocks are part of the page', () => {
-    const detail = {
-      ...emptyDetail,
-      versions: [{ version: '1.5.2', publishedAt: '2026-03-12T00:00:00Z' }],
-    };
-
-    expect(find(render({ detail }), 'pluginVersions')).not.toHaveLength(0);
+    expect(find(render({ detail: pluginDetail }), 'pluginVersions')).not.toHaveLength(0);
   });
 
   // the page must not become a place where an unverifiable claim can still be read
   test('nothing registry-derived survives an offline registry', () => {
-    const detail = {
-      ...emptyDetail,
-      versions: [{ version: '1.5.2', publishedAt: '2026-03-12T00:00:00Z' }],
-      advisory: { severity: 'high', text: 'CVE-2026-1234', attachedAt: '2026-02-15T00:00:00Z' },
-    };
-    const wrapper = render({ detail, offline: true, registryHost: 'registry.rp.io' });
+    const wrapper = render({
+      detail: pluginDetail,
+      offline: true,
+      registryHost: offlineDetail.registry.host,
+    });
 
     expect(find(wrapper, 'pluginVersions')).toHaveLength(0);
     expect(find(wrapper, 'pluginAdvisoryAlert')).toHaveLength(0);
