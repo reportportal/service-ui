@@ -164,6 +164,18 @@ export const notificationMessages = defineMessages({
     id: 'MarketplaceLicence.removeSuccess',
     defaultMessage: 'Marketplace licence credentials have been removed',
   },
+  // the endpoint refuses these bodies outright, so the operator is told what is wrong with the
+  // request rather than that a request failed
+  marketplaceInstallVersionUnknown: {
+    id: 'MarketplaceInstall.versionUnknown',
+    defaultMessage:
+      'This plugin cannot be installed: the registry did not state which version to install',
+  },
+  marketplaceLicenceRefused: {
+    id: 'MarketplaceLicence.refused',
+    defaultMessage:
+      'Enter both a customer ID and a licence key, neither blank and each within the length the registry accepts',
+  },
   updateIntegrationSuccess: {
     id: 'IntegrationSettingsContainer.updateIntegrationSuccess',
     defaultMessage: 'Integration has been updated successfully',

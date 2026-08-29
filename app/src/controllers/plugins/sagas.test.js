@@ -16,10 +16,13 @@
 
 import { runSaga } from 'redux-saga';
 import { fetch } from 'common/utils';
-import { showDefaultErrorNotification } from 'controllers/notification';
+import { showDefaultErrorNotification, NOTIFICATION_TYPES } from 'controllers/notification';
 import catalogue from './__fixtures__/catalogue.json';
 import catalogueOffline from './__fixtures__/catalogue-offline.json';
 import pluginDetail from './__fixtures__/plugin-detail.json';
+import installRequest from './__fixtures__/install-request.json';
+import licenceRequest from './__fixtures__/licence-request.json';
+import requestConstraints from './__fixtures__/request-constraints.json';
 import {
   fetchMarketplaceCatalogueAction,
   fetchMarketplaceCatalogueStartAction,
@@ -54,6 +57,7 @@ import {
   FETCH_MARKETPLACE_CATALOGUE_SUCCESS,
   FETCH_MARKETPLACE_PLUGIN_DETAIL_SUCCESS,
   MARKETPLACE_SEARCH_DEBOUNCE,
+  MARKETPLACE_LICENCE_MAX_LENGTHS,
 } from './constants';
 
 jest.mock('common/utils', () => ({
@@ -64,6 +68,19 @@ jest.mock('common/utils', () => ({
 // the bodies the routes really answer with; the saga is transport and passes them through whole
 const onlinePayload = catalogue;
 const offlinePayload = catalogueOffline;
+
+// the body of the request the saga made, so a field name can be compared against the shape
+// service-api publishes rather than against a literal written on this side
+const sentBody = () => fetch.mock.calls[0][1].data;
+
+// the four values the published constraints say every mandatory string field refuses
+const REFUSED_VALUES = [undefined, null, '', '   '];
+
+// a notification action carries a timestamped uid, so it is compared by what it says
+const notifications = (dispatched) =>
+  dispatched
+    .filter((action) => action.type === 'showNotification')
+    .map(({ payload }) => ({ messageId: payload.messageId, type: payload.type }));
 
 // a saga that throws must fail the test with its own error, not quietly shorten the
 // dispatched list; onError replaces redux-saga's logger so the rejection is what surfaces
@@ -262,6 +279,8 @@ describe('controllers/plugins/sagas marketplace', () => {
   });
 
   describe('installMarketplacePlugin', () => {
+    const installConstraints = requestConstraints['install-request.json'].fields;
+
     test('posts the requested version, which the endpoint requires', async () => {
       fetch.mockResolvedValue({});
 
@@ -269,8 +288,18 @@ describe('controllers/plugins/sagas marketplace', () => {
 
       expect(fetch).toHaveBeenCalledWith('../api/v1/plugins/slack/install', {
         method: 'post',
-        data: { version: '1.2.0' },
+        data: { ...installRequest, version: '1.2.0' },
       });
+    });
+
+    // the names are taken from the body service-api publishes as accepted, not from a literal
+    // agreed on here: a field this side invents is a 400 nobody sees until it is deployed
+    test('posts exactly the field names the endpoint accepts', async () => {
+      fetch.mockResolvedValue({});
+
+      await run(installMarketplacePlugin, installMarketplacePluginAction('slack', '1.2.0'));
+
+      expect(Object.keys(sentBody())).toEqual(Object.keys(installRequest));
     });
 
     // install, update and rollback are the same request, differing only by version
@@ -281,8 +310,42 @@ describe('controllers/plugins/sagas marketplace', () => {
 
       expect(fetch).toHaveBeenCalledWith('../api/v1/plugins/slack/install', {
         method: 'post',
-        data: { version: '0.9.0' },
+        data: { ...installRequest, version: '0.9.0' },
       });
+    });
+
+    test('the published constraint on version is that it is required and never blank', () => {
+      expect(installConstraints.version).toMatchObject({
+        mandatory: true,
+        refusesEmpty: true,
+        refusesBlank: true,
+      });
+    });
+
+    // a row whose version the registry never stated is a body service-api refuses with a 400
+    // before the handler runs, so it never leaves: the round trip could only come back as an
+    // unexplained failure on a plugin that was never going to be installed
+    test.each(REFUSED_VALUES)('a version of %p is never posted', async (version) => {
+      fetch.mockResolvedValue({});
+
+      await run(installMarketplacePlugin, installMarketplacePluginAction('slack', version));
+
+      expect(fetch).not.toHaveBeenCalled();
+    });
+
+    test('a version the endpoint would refuse is reported instead of sent', async () => {
+      fetch.mockResolvedValue({});
+
+      const dispatched = await run(
+        installMarketplacePlugin,
+        installMarketplacePluginAction('slack', '   '),
+      );
+
+      expect(notifications(dispatched)).toEqual([
+        { messageId: 'marketplaceInstallVersionUnknown', type: NOTIFICATION_TYPES.ERROR },
+      ]);
+      // nothing else happened: the row never entered the installing state it could not leave
+      expect(dispatched).toHaveLength(1);
     });
 
     test('refetches the catalogue on success', async () => {
@@ -405,6 +468,8 @@ describe('controllers/plugins/sagas marketplace', () => {
       );
     });
 
+    const licenceConstraints = requestConstraints['licence-request.json'].fields;
+
     test('submits the credentials with PUT', async () => {
       fetch.mockResolvedValue({ configured: true, customerId: 'acme' });
 
@@ -415,8 +480,101 @@ describe('controllers/plugins/sagas marketplace', () => {
 
       expect(fetch).toHaveBeenCalledWith('../api/v1/plugins/licence', {
         method: 'put',
-        data: { customerId: 'acme', privateKey: 'c2VjcmV0' },
+        data: { ...licenceRequest, customerId: 'acme', privateKey: 'c2VjcmV0' },
       });
+    });
+
+    test('puts exactly the field names the endpoint accepts', async () => {
+      fetch.mockResolvedValue({ configured: true, customerId: 'acme' });
+
+      await run(
+        setMarketplaceLicence,
+        setMarketplaceLicenceAction({ customerId: 'acme', privateKey: 'c2VjcmV0' }),
+      );
+
+      expect(Object.keys(sentBody())).toEqual(Object.keys(licenceRequest));
+    });
+
+    test('the published constraints are that both halves are required and bounded', () => {
+      expect(licenceConstraints).toEqual({
+        customerId: {
+          mandatory: true,
+          refusesEmpty: true,
+          refusesBlank: true,
+          maxLength: MARKETPLACE_LICENCE_MAX_LENGTHS.customerId,
+          refusesLonger: true,
+        },
+        privateKey: {
+          mandatory: true,
+          refusesEmpty: true,
+          refusesBlank: true,
+          maxLength: MARKETPLACE_LICENCE_MAX_LENGTHS.privateKey,
+          refusesLonger: true,
+        },
+      });
+    });
+
+    // both halves are @NotBlank there, so a half-filled body is a 400 raised before the handler
+    // runs — nothing is stored, and the operator learns only that something failed
+    test.each(REFUSED_VALUES)('a customer id of %p is never sent', async (customerId) => {
+      fetch.mockResolvedValue({ configured: true, customerId: 'acme' });
+
+      await run(
+        setMarketplaceLicence,
+        setMarketplaceLicenceAction({ customerId, privateKey: 'k' }),
+      );
+
+      expect(fetch).not.toHaveBeenCalled();
+    });
+
+    test.each(REFUSED_VALUES)('a licence key of %p is never sent', async (privateKey) => {
+      fetch.mockResolvedValue({ configured: true, customerId: 'acme' });
+
+      await run(
+        setMarketplaceLicence,
+        setMarketplaceLicenceAction({ customerId: 'acme', privateKey }),
+      );
+
+      expect(fetch).not.toHaveBeenCalled();
+    });
+
+    test('a value longer than the endpoint accepts is never sent', async () => {
+      fetch.mockResolvedValue({ configured: true, customerId: 'acme' });
+
+      await run(
+        setMarketplaceLicence,
+        setMarketplaceLicenceAction({
+          customerId: 'a'.repeat(MARKETPLACE_LICENCE_MAX_LENGTHS.customerId + 1),
+          privateKey: 'c2VjcmV0',
+        }),
+      );
+
+      expect(fetch).not.toHaveBeenCalled();
+    });
+
+    test('a value exactly as long as the endpoint accepts is sent', async () => {
+      fetch.mockResolvedValue({ configured: true, customerId: 'acme' });
+      const customerId = 'a'.repeat(MARKETPLACE_LICENCE_MAX_LENGTHS.customerId);
+
+      await run(
+        setMarketplaceLicence,
+        setMarketplaceLicenceAction({ customerId, privateKey: 'c2VjcmV0' }),
+      );
+
+      expect(sentBody()).toEqual({ ...licenceRequest, customerId, privateKey: 'c2VjcmV0' });
+    });
+
+    test('credentials the endpoint would refuse are reported instead of sent', async () => {
+      const dispatched = await run(
+        setMarketplaceLicence,
+        setMarketplaceLicenceAction({ customerId: '   ', privateKey: 'c2VjcmV0' }),
+      );
+
+      expect(notifications(dispatched)).toEqual([
+        { messageId: 'marketplaceLicenceRefused', type: NOTIFICATION_TYPES.ERROR },
+      ]);
+      // and the form is never left waiting on a request that was not made
+      expect(dispatched).toHaveLength(1);
     });
 
     test('never puts the key into anything the store keeps', async () => {

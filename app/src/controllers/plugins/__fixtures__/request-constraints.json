@@ -1,0 +1,33 @@
+{
+  "install-request.json" : {
+    "route" : "POST /v1/plugins/{registryId}/install",
+    "onViolation" : "400 Bad Request. The body is refused by @Valid before the handler runs, so nothing is installed and nothing is stored.",
+    "fields" : {
+      "version" : {
+        "mandatory" : true,
+        "refusesEmpty" : true,
+        "refusesBlank" : true
+      }
+    }
+  },
+  "licence-request.json" : {
+    "route" : "PUT /v1/plugins/licence",
+    "onViolation" : "400 Bad Request. The body is refused by @Valid before the handler runs, so nothing is installed and nothing is stored.",
+    "fields" : {
+      "customerId" : {
+        "mandatory" : true,
+        "refusesEmpty" : true,
+        "refusesBlank" : true,
+        "maxLength" : 255,
+        "refusesLonger" : true
+      },
+      "privateKey" : {
+        "mandatory" : true,
+        "refusesEmpty" : true,
+        "refusesBlank" : true,
+        "maxLength" : 512,
+        "refusesLonger" : true
+      }
+    }
+  }
+}

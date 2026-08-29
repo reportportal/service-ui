@@ -99,3 +99,13 @@ export const SET_MARKETPLACE_LICENCE = 'setMarketplaceLicence';
 export const DELETE_MARKETPLACE_LICENCE = 'deleteMarketplaceLicence';
 export const MARKETPLACE_LICENCE_START = 'marketplaceLicenceStart';
 export const MARKETPLACE_LICENCE_ERROR = 'marketplaceLicenceError';
+
+/**
+ * The bounds PUT /v1/plugins/licence declares. They are stated here because the UI has to
+ * decide before it sends; that they are still the service's bounds is asserted against
+ * __fixtures__/request-constraints.json, which service-api generates from its own validator.
+ */
+export const MARKETPLACE_LICENCE_MAX_LENGTHS = {
+  customerId: 255,
+  privateKey: 512,
+} as const;

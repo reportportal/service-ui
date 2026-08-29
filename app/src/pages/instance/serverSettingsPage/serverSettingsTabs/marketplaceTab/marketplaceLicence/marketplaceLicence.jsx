@@ -117,12 +117,13 @@ export const MarketplaceLicence = ({
   }
 
   const trimmedCustomerId = customerIdValue.trim();
-  // the endpoint requires both halves, so a half-filled form is refused here rather than sent
-  // and refused there
-  const canSubmit = Boolean(trimmedCustomerId) && Boolean(privateKey);
+  const trimmedPrivateKey = privateKey.trim();
+  // both halves are @NotBlank there, so a half-filled form — or one holding nothing but the
+  // whitespace a paste dragged in — is refused here rather than sent and refused as a 400
+  const canSubmit = Boolean(trimmedCustomerId) && Boolean(trimmedPrivateKey);
 
   const handleSubmit = () => {
-    onSubmit({ customerId: trimmedCustomerId, privateKey });
+    onSubmit({ customerId: trimmedCustomerId, privateKey: trimmedPrivateKey });
     // the key does not outlive the request that carries it
     setPrivateKey('');
   };

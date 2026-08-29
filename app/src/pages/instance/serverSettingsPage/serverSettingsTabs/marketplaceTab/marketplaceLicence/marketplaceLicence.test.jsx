@@ -127,6 +127,27 @@ describe('MarketplaceLicence', () => {
     expect(isDisabled()).toBe(false);
   });
 
+  // @NotBlank, not @NotEmpty: whitespace is as refused there as an empty string is
+  test('saving is refused while the key is nothing but whitespace', () => {
+    const { find, type } = render();
+
+    type('customerIdField', 'acme');
+    type('licenceKeyField', '   ');
+
+    expect(find('submitLicence').first().prop('disabled')).toBe(true);
+  });
+
+  test('a key pasted with whitespace around it is sent without it', () => {
+    const onSubmit = jest.fn();
+    const { type, click } = render({ onSubmit });
+
+    type('customerIdField', 'acme');
+    type('licenceKeyField', '  c2VjcmV0\n');
+    click('submitLicence');
+
+    expect(onSubmit).toHaveBeenCalledWith({ customerId: 'acme', privateKey: 'c2VjcmV0' });
+  });
+
   test('a stored key is no substitute for typing one: saving still needs the key', () => {
     const { find } = render({ configured: true, customerId: 'acme' });
 

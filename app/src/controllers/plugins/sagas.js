@@ -20,6 +20,7 @@ import { URLS } from 'common/urls';
 import {
   showNotification,
   showDefaultErrorNotification,
+  showErrorNotification,
   NOTIFICATION_TYPES,
   showSuccessNotification,
 } from 'controllers/notification';
@@ -51,6 +52,7 @@ import {
   FETCH_MARKETPLACE_LICENCE,
   SET_MARKETPLACE_LICENCE,
   DELETE_MARKETPLACE_LICENCE,
+  MARKETPLACE_LICENCE_MAX_LENGTHS,
 } from './constants';
 import { pluginByNameSelector, marketplaceCatalogueQuerySelector } from './selectors';
 import {
@@ -317,7 +319,25 @@ export function* watchFetchMarketplaceCatalogue() {
   yield takeLatest(FETCH_MARKETPLACE_CATALOGUE, fetchMarketplaceCatalogue);
 }
 
+/**
+ * Every marketplace request body is validated by service-api before its handler runs, and the
+ * constraints are published beside the fixtures the tests read (`request-constraints.json`).
+ * A body that breaks one of them comes back as a 400 that says nothing useful on screen, so it
+ * is refused here instead: what the operator is told then names the field, not the status code.
+ */
+const isBlank = (value) => typeof value !== 'string' || value.trim() === '';
+
+const isTooLong = (value, max) => value.length > max;
+
 export function* installMarketplacePlugin({ payload: { registryId, version } }) {
+  // the registry states a version for everything it offers; when it did not, there is nothing
+  // to install and the row must not be left looking as though something is under way
+  if (isBlank(version)) {
+    yield put(showErrorNotification({ messageId: 'marketplaceInstallVersionUnknown' }));
+
+    return;
+  }
+
   yield put(installMarketplacePluginStartAction(registryId));
   try {
     // the endpoint requires the version: install, update and rollback differ only by it
@@ -375,6 +395,20 @@ function* watchFetchMarketplaceLicence() {
  * is {configured, customerId}.
  */
 export function* setMarketplaceLicence({ payload: { customerId, privateKey } }) {
+  // both halves are required, neither may be blank and each is bounded; a body outside that is
+  // stored nowhere, so sending it would only cost the operator a round trip to be told so
+  const refused =
+    isBlank(customerId) ||
+    isBlank(privateKey) ||
+    isTooLong(customerId, MARKETPLACE_LICENCE_MAX_LENGTHS.customerId) ||
+    isTooLong(privateKey, MARKETPLACE_LICENCE_MAX_LENGTHS.privateKey);
+
+  if (refused) {
+    yield put(showErrorNotification({ messageId: 'marketplaceLicenceRefused' }));
+
+    return;
+  }
+
   yield put(marketplaceLicenceStartAction());
   try {
     const licence = yield call(fetch, URLS.marketplaceLicence(), {
