@@ -89,7 +89,9 @@ export class ActionPanel extends Component {
       <div className={cx('action-panel')} title={formatMessage(messages.uploadPluginDescription)}>
         {ACTION_BUTTONS.map(({ key, icon, onClick }) => (
           <div className={cx('action-button')} key={key}>
-            <Button variant="ghost" icon={Parser(icon)} onClick={onClick}>
+            {/* adjustWidthOn="content": the kit's default width made "Upload plugin" wrap onto
+                two lines in the page header, where the sidebar it came from had room */}
+            <Button variant="ghost" adjustWidthOn="content" icon={Parser(icon)} onClick={onClick}>
               {formatMessage(messages[key])}
             </Button>
           </div>

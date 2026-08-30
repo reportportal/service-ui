@@ -14,7 +14,11 @@
  * limitations under the License.
  */
 
+// flex: none because this sits beside the category chips in the page header, and a flex item
+// shrinks below its content by default: the chips took the room and "Upload plugin" wrapped
+// onto two lines. The button's own adjustWidthOn cannot help while its parent is being squeezed.
 .action-panel {
+  flex: none;
   display: flex;
   align-items: center;
   gap: 10px;
