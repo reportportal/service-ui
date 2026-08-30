@@ -17,6 +17,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import track from 'react-tracking';
 import { injectIntl, defineMessages } from 'react-intl';
 import classNames from 'classnames/bind';
 import { URLS } from 'common/urls';
@@ -65,6 +66,7 @@ import { ActionPanel } from '../../actionPanel';
 import { AvailablePluginDetail } from '../../availablePluginDetail';
 import { PluginsCatalog, ROW_ACTIONS, getDisplayName } from '../../pluginsCatalog';
 import { PluginMarketplaceBlocks } from '../../pluginMarketplaceBlocks';
+import { premiumPromoModal } from '../../premiumPromo';
 
 const cx = classNames.bind(styles);
 
@@ -97,6 +99,7 @@ const messages = defineMessages({
 });
 
 @injectIntl
+@track()
 @connect(
   (state) => ({
     disablePluginPopupContent: (pluginName) => disablePluginPopupContentSelector(state, pluginName),
@@ -126,6 +129,7 @@ export class InstalledTab extends Component {
     intl: PropTypes.object.isRequired,
     filterItems: PropTypes.array.isRequired,
     showModalAction: PropTypes.func.isRequired,
+    tracking: PropTypes.shape({ trackEvent: PropTypes.func }).isRequired,
     plugins: PropTypes.array.isRequired,
     updatePluginSuccessAction: PropTypes.func.isRequired,
     disablePluginPopupContent: PropTypes.func.isRequired,
@@ -429,8 +433,16 @@ export class InstalledTab extends Component {
       this.props.installMarketplacePluginAction(row.registryId, row.latestVersion);
     } else if (action === ROW_ACTIONS.UPDATE) {
       this.props.installMarketplacePluginAction(row.registryId, row.updateAvailable);
-    } else if (action === ROW_ACTIONS.DISCOVER_PREMIUM && row.contactUrl) {
-      window.open(row.contactUrl, '_blank', 'noopener,noreferrer');
+    } else if (action === ROW_ACTIONS.DISCOVER_PREMIUM) {
+      // the same modal the plugin page opens, built in the same place, so one button cannot
+      // start meaning two things again
+      this.props.showModalAction(
+        premiumPromoModal({
+          trackEvent: this.props.tracking.trackEvent,
+          title: getDisplayName(row),
+          contactUrl: row.contactUrl,
+        }),
+      );
     }
   };
 

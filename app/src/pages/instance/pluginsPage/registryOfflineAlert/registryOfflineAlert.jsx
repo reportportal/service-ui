@@ -52,9 +52,7 @@ export const RegistryOfflineAlert = ({ host = null }) => {
     <div className={cx('registry-offline-alert')} data-automation-id="registryOfflineAlert">
       <SystemMessage mode="warning" header={formatMessage(messages.header)}>
         <span data-automation-id="registryOfflineHost">
-          {host
-            ? formatMessage(messages.knownHost, { host })
-            : formatMessage(messages.unknownHost)}
+          {host ? formatMessage(messages.knownHost, { host }) : formatMessage(messages.unknownHost)}
         </span>{' '}
         {formatMessage(messages.body)}
       </SystemMessage>

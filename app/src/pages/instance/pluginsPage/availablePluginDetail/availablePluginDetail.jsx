@@ -23,12 +23,11 @@ import { useTracking } from 'react-tracking';
 import { Button } from '@reportportal/ui-kit';
 import { PluginBadge, BADGE_TONES } from '../pluginBadge';
 import { PluginIcon } from 'components/integrations/elements/pluginIcon';
-import { PremiumPromoModal } from 'components/premiumPromoModal';
 import { PLUGINS_PAGE_EVENTS } from 'components/main/analytics/events';
 import { showModalAction } from 'controllers/modal';
-import { referenceDictionary } from 'common/utils/referenceDictionary';
 import { PLUGIN_TIERS } from 'common/constants/pluginTiers';
 import { PluginMarketplaceBlocks } from '../pluginMarketplaceBlocks';
+import { premiumPromoModal } from '../premiumPromo';
 import styles from './availablePluginDetail.scss';
 
 const cx = classNames.bind(styles);
@@ -97,30 +96,10 @@ export const AvailablePluginDetail = ({
     onInstall(plugin);
   };
 
-  const handleDiscoverPremium = () => {
-    trackEvent(PLUGINS_PAGE_EVENTS.clickDiscoverPremium(title));
+  const handleDiscoverPremium = () =>
     dispatch(
-      showModalAction({
-        component: (
-          <PremiumPromoModal
-            onExplorePlans={() => {
-              trackEvent(PLUGINS_PAGE_EVENTS.clickPremiumModalExplorePlans);
-              window.open(
-                referenceDictionary.rpExplorePlansPlugins,
-                '_blank',
-                'noopener,noreferrer',
-              );
-            }}
-            onContactUs={() => {
-              trackEvent(PLUGINS_PAGE_EVENTS.clickPremiumModalContactUs);
-              window.open(referenceDictionary.rpContactUsPlugins, '_blank', 'noopener,noreferrer');
-            }}
-            onNotNow={() => trackEvent(PLUGINS_PAGE_EVENTS.clickPremiumModalNotNow)}
-          />
-        ),
-      }),
+      showModalAction(premiumPromoModal({ trackEvent, title, contactUrl: plugin.contactUrl })),
     );
-  };
 
   return (
     <div className={cx('available-plugin-detail')}>
@@ -181,6 +160,7 @@ AvailablePluginDetail.propTypes = {
     description: PropTypes.string,
     latestVersion: PropTypes.string,
     locked: PropTypes.bool,
+    contactUrl: PropTypes.string,
     registryId: PropTypes.string,
     details: PropTypes.shape({
       name: PropTypes.string,

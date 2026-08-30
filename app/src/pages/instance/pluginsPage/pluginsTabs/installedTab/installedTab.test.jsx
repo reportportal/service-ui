@@ -27,6 +27,9 @@ import {
   FETCH_MARKETPLACE_PLUGIN_DETAIL,
   INSTALL_MARKETPLACE_PLUGIN,
 } from 'controllers/plugins/constants';
+import { SHOW_MODAL } from 'controllers/modal/constants';
+import { PremiumPromoModal } from 'components/premiumPromoModal';
+import { referenceDictionary } from 'common/utils/referenceDictionary';
 import catalogue from 'controllers/plugins/__fixtures__/catalogue.json';
 import catalogueOffline from 'controllers/plugins/__fixtures__/catalogue-offline.json';
 import { PluginsCatalog, ROW_ACTIONS } from '../../pluginsCatalog';
@@ -57,6 +60,10 @@ const localJira = {
 const installedRowFrom = (response) => mergeInstalledRows([localJira], response.installed)[0];
 const availableRowFrom = (id) =>
   toAvailableRow(catalogue.available.find((entry) => entry.id === id));
+
+// showModalAction carries the modal as a React element on the action, so the assertions read
+// its type and props rather than a component name.
+const shownModal = (of) => of(SHOW_MODAL).pop().payload.activeModal.component;
 
 // the installed plugin subpage also renders the integration sections, which read these slices
 const restOfState = {
@@ -203,10 +210,12 @@ describe('InstalledTab', () => {
       expect(wrapper.find('[data-automation-id="pluginUnmatchedAlert"]')).toHaveLength(0);
     });
 
-    // the registry publishes it on the manifest, and without it the action does nothing at all
-    test('Discover Premium opens the contact link the registry published', () => {
+    // One button, one behaviour. The row used to jump straight to the contact link while the
+    // plugin page opened the promo modal, so a user who met both had no way to tell which they
+    // would get. Kills reinstating window.open on the row.
+    test('Discover Premium opens the same promo modal the plugin page opens', () => {
       const open = jest.spyOn(window, 'open').mockImplementation(() => {});
-      const { call } = render();
+      const { call, of } = render();
 
       call(
         PluginsCatalog,
@@ -215,8 +224,41 @@ describe('InstalledTab', () => {
         availableRowFrom('plugin-bts-azure'),
       );
 
+      expect(of(SHOW_MODAL)).toHaveLength(1);
+      expect(shownModal(of).type).toBe(PremiumPromoModal);
+      expect(open).not.toHaveBeenCalled();
+      open.mockRestore();
+    });
+
+    // contactUrl is the plugin's own purchase CTA, which for a third-party plugin is its
+    // vendor's page — an enquiry sent to ReportPortal's sales instead reaches the wrong
+    // company. Kills dropping contactUrl in favour of the instance-wide link.
+    test("the modal's Contact us goes to the plugin's own contact link", () => {
+      const open = jest.spyOn(window, 'open').mockImplementation(() => {});
+      const { call, of } = render();
+      const row = availableRowFrom('plugin-bts-azure');
+
+      call(PluginsCatalog, 'onRowAction', ROW_ACTIONS.DISCOVER_PREMIUM, row);
+      shownModal(of).props.onContactUs();
+
+      expect(row.contactUrl).toBe('https://reportportal.io/contact');
+      expect(open).toHaveBeenCalledWith(row.contactUrl, '_blank', 'noopener,noreferrer');
+      open.mockRestore();
+    });
+
+    // and a plugin that published none still has somewhere to go
+    test('without a published contact link the modal falls back to the instance-wide one', () => {
+      const open = jest.spyOn(window, 'open').mockImplementation(() => {});
+      const { call, of } = render();
+
+      call(PluginsCatalog, 'onRowAction', ROW_ACTIONS.DISCOVER_PREMIUM, {
+        ...availableRowFrom('plugin-bts-azure'),
+        contactUrl: null,
+      });
+      shownModal(of).props.onContactUs();
+
       expect(open).toHaveBeenCalledWith(
-        'https://reportportal.io/contact',
+        referenceDictionary.rpContactUsPlugins,
         '_blank',
         'noopener,noreferrer',
       );
