@@ -124,7 +124,11 @@ export const PluginMarketplaceBlocks = ({
   return (
     <div className={cx('plugin-marketplace-blocks')}>
       {offline && <RegistryOfflineAlert host={registryHost} />}
-      {failed && <CatalogueUnavailableAlert onRetry={onRetry} />}
+      {/* an unmatched plugin is one the catalogue could not place, so that is the request that
+          failed; otherwise the failure is this plugin's own detail request */}
+      {failed && (
+        <CatalogueUnavailableAlert onRetry={onRetry} scope={unmatched ? 'catalogue' : 'plugin'} />
+      )}
       {/* offline and failed already say why the registry knows nothing of this plugin */}
       {unmatched && !offline && !failed && (
         <div className={cx('alert')} data-automation-id="pluginUnmatchedAlert">

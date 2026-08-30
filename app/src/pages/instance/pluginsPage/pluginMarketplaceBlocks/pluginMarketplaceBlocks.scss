@@ -14,10 +14,20 @@
  * limitations under the License.
  */
 
+// Aligned with the sections around it. The plugin header reserves a gutter for the logo and
+// InstancesSection below indents to clear it; without the same offset these blocks stood in a
+// column of their own, one indent to the left of everything else on the page.
 .plugin-marketplace-blocks {
   display: flex;
   flex-direction: column;
   gap: 24px;
+  max-width: 600px;
+  margin-left: 145px;
+  margin-top: 25px;
+
+  @media (max-width: $SCREEN_XS_MAX) {
+    margin-left: 0;
+  }
 }
 
 .sections {
@@ -30,6 +40,12 @@
 .loader {
   display: flex;
   justify-content: center;
+}
+
+// The blocks are their own column now, so the alerts inside them fill it rather than centring
+// against a width they no longer have.
+.alert > * {
+  width: 100%;
 }
 
 .block-header {

@@ -21,11 +21,12 @@ import classNames from 'classnames/bind';
 import Parser from 'html-react-parser';
 import { Button } from '@reportportal/ui-kit';
 import { PLUGIN_DISABLED_MESSAGES_BY_GROUP_TYPE } from 'components/integrations/messages';
-import { InputSwitcher } from 'components/inputs/inputSwitcher';
 import { PluginIcon } from 'components/integrations/elements/pluginIcon';
 import DownloadIcon from 'common/img/download-inline.svg';
 import { PLUGIN_TIERS } from 'common/constants/pluginTiers';
 import {
+  getDescription,
+  getDisplayName,
   getRowAction,
   getRowBadges,
   isAvailableRow,
@@ -90,37 +91,13 @@ export class PluginsItem extends Component {
   static propTypes = {
     intl: PropTypes.object.isRequired,
     data: PropTypes.object.isRequired,
-    onToggleActive: PropTypes.func,
-    showToggleConfirmationModal: PropTypes.func,
-    toggleable: PropTypes.bool,
     onClick: PropTypes.func,
     onRowAction: PropTypes.func,
   };
 
   static defaultProps = {
-    onToggleActive: () => Promise.resolve(),
-    showToggleConfirmationModal: () => {},
-    toggleable: true,
     onClick: () => {},
     onRowAction: () => {},
-  };
-
-  state = {
-    isEnabled: this.props.data.enabled,
-  };
-
-  toggleActiveHandler = () => {
-    const { data, onToggleActive } = this.props;
-    const isEnabled = !data.enabled;
-    this.setState({
-      isEnabled,
-    });
-
-    onToggleActive(data).catch(() => {
-      this.setState({
-        isEnabled: data.enabled,
-      });
-    });
   };
 
   itemClickHandler = () => {
@@ -132,37 +109,20 @@ export class PluginsItem extends Component {
     this.props.onRowAction(action, this.props.data);
   };
 
-  onChangeHandler = () => {
-    const {
-      data: { name, enabled, details: { name: detailsName, pluginLocation } = {} },
-      showToggleConfirmationModal,
-    } = this.props;
-    const displayName = detailsName || name;
-
-    showToggleConfirmationModal(
-      enabled,
-      displayName,
-      this.toggleActiveHandler,
-      pluginLocation,
-      name,
-    );
-  };
-
   render() {
     const {
       intl: { formatMessage },
       data: {
-        name,
         uploadedBy,
         enabled,
         groupType,
         tier,
-        details: { name: detailsName, version, disabledPluginTooltip } = {},
+        details: { version, disabledPluginTooltip } = {},
       },
-      toggleable,
       data,
     } = this.props;
-    const displayName = detailsName || name;
+    const displayName = getDisplayName(data);
+    const description = getDescription(data);
     const isInAvailablePluginList = isAvailableRow(data);
     const badges = getRowBadges(data);
     const rowAction = getRowAction(data);
@@ -200,25 +160,37 @@ export class PluginsItem extends Component {
                 }
               >{`${version || ''}`}</span>
             </div>
-            {isInAvailablePluginList && (
-              <span
-                className={cx('plugins-tier', { premium: tier === PLUGIN_TIERS.PREMIUM })}
-                data-automation-id="pluginBadge"
-                data-badge={tier}
-              >
-                {formatMessage(tier === PLUGIN_TIERS.PREMIUM ? messages.premium : messages.free)}
-              </span>
+            {/* absent rather than blank: a row with nothing to say says nothing */}
+            {description && (
+              <p className={cx('plugins-description')} data-automation-id="pluginDescription">
+                {description}
+              </p>
             )}
-            {badges.map((badge) => (
-              <span
-                key={badge}
-                className={cx('plugins-badge', `badge-${badge.toLowerCase()}`)}
-                data-automation-id="pluginBadge"
-                data-badge={badge}
-              >
-                {formatMessage(messages[badge])}
-              </span>
-            ))}
+            {(isInAvailablePluginList || badges.length > 0) && (
+              <div className={cx('plugins-badges')}>
+                {isInAvailablePluginList && (
+                  <span
+                    className={cx('plugins-tier', { premium: tier === PLUGIN_TIERS.PREMIUM })}
+                    data-automation-id="pluginBadge"
+                    data-badge={tier}
+                  >
+                    {formatMessage(
+                      tier === PLUGIN_TIERS.PREMIUM ? messages.premium : messages.free,
+                    )}
+                  </span>
+                )}
+                {badges.map((badge) => (
+                  <span
+                    key={badge}
+                    className={cx('plugins-badge', `badge-${badge.toLowerCase()}`)}
+                    data-automation-id="pluginBadge"
+                    data-badge={badge}
+                  >
+                    {formatMessage(messages[badge])}
+                  </span>
+                ))}
+              </div>
+            )}
           </div>
         </div>
         <div className={cx('plugins-additional-block')}>
@@ -236,12 +208,6 @@ export class PluginsItem extends Component {
                 {formatMessage(messages[rowAction])}
               </Button>
             </div>
-          )}
-          {/* the toggle reads local state, so it survives an unreachable registry */}
-          {toggleable && !isInAvailablePluginList && (
-            <button className={cx('plugins-switcher')} onClick={(e) => e.stopPropagation()}>
-              <InputSwitcher value={this.state.isEnabled} onChange={this.onChangeHandler} />
-            </button>
           )}
         </div>
       </div>

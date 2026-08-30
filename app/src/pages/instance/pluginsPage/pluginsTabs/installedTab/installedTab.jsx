@@ -63,7 +63,7 @@ import styles from './installedTab.scss';
 import { PluginsFilter } from '../../pluginsFilter';
 import { ActionPanel } from '../../actionPanel';
 import { AvailablePluginDetail } from '../../availablePluginDetail';
-import { PluginsCatalog, ROW_ACTIONS } from '../../pluginsCatalog';
+import { PluginsCatalog, ROW_ACTIONS, getDisplayName } from '../../pluginsCatalog';
 import { PluginMarketplaceBlocks } from '../../pluginMarketplaceBlocks';
 
 const cx = classNames.bind(styles);
@@ -268,19 +268,20 @@ export class InstalledTab extends Component {
     switch (type) {
       case INSTALLED_PLUGINS_SUBPAGE:
         return (
-          <>
-            {/* what the registry says about this plugin, on the same terms as the catalogue */}
-            {this.renderMarketplaceBlocks(data)}
-            <IntegrationInfoContainer
-              integrationType={data}
-              isGlobal
-              onToggleActive={this.onToggleActive}
-              onItemClick={this.installedPluginsSettingsSubPageHandler}
-              showToggleConfirmationModal={this.showToggleConfirmationModal}
-              removePluginSuccessCallback={this.goToMainPageHandler}
-              events={PLUGINS_PAGE_EVENTS}
-            />
-          </>
+          // What the registry says about this plugin sits below the plugin's own header and
+          // above its integrations: an alert about a plugin has to appear under the name of the
+          // plugin it is about, not above the breadcrumb where it reads as the page's.
+          <IntegrationInfoContainer
+            integrationType={data}
+            isGlobal
+            onToggleActive={this.onToggleActive}
+            onItemClick={this.installedPluginsSettingsSubPageHandler}
+            showToggleConfirmationModal={this.showToggleConfirmationModal}
+            removePluginSuccessCallback={this.goToMainPageHandler}
+            events={PLUGINS_PAGE_EVENTS}
+            afterInfoSection={this.renderMarketplaceBlocks(data)}
+            title={getDisplayName(data)}
+          />
         );
       case INSTALLED_PLUGINS_SETTINGS_SUBPAGE:
         return (
@@ -318,7 +319,9 @@ export class InstalledTab extends Component {
 
         return (
           <div className={cx('plugins-content-wrapper')}>
-            <div className={cx('plugins-sidebar')}>
+            {/* Chips and the upload control sit in a header above the list, so the content
+                column is the full width the design gives it. */}
+            <div className={cx('plugins-header')}>
               <PluginsFilter
                 filterItems={filterItems}
                 activeItem={activeFilterItem}
@@ -343,8 +346,6 @@ export class InstalledTab extends Component {
                 onRowAction={this.handleRowAction}
                 onInstalledItemClick={this.installedPluginsSubPageHandler}
                 onAvailableItemClick={this.availablePluginDetailSubPageHandler}
-                onToggleActive={this.onToggleActive}
-                showToggleConfirmationModal={this.showToggleConfirmationModal}
               />
             </div>
           </div>
@@ -474,7 +475,7 @@ export class InstalledTab extends Component {
     return this.changeSubPage({
       type: INSTALLED_PLUGINS_SUBPAGE,
       data: pageData,
-      title: pageData.details.name || pageData.name,
+      title: getDisplayName(pageData),
     });
   };
 
@@ -484,7 +485,7 @@ export class InstalledTab extends Component {
     return this.changeSubPage({
       type: AVAILABLE_PLUGIN_DETAIL_SUBPAGE,
       data: pageData,
-      title: pageData.details.name || pageData.name,
+      title: getDisplayName(pageData),
     });
   };
 

@@ -40,7 +40,21 @@ export const ROW_BADGES = {
   REMOVED: 'REMOVED',
 };
 
-export const getDisplayName = ({ details, name }) => details?.name || name || '';
+/**
+ * The name to print for a row.
+ *
+ * <p>ReportPortal's own label first — it is what every other screen calls this plugin — then the
+ * registry's, then the identifier. The middle step is what stops a PF4J id like `jira` or `ldap`
+ * being printed in a list where the row beside it says "Azure DevOps": those plugins carry no
+ * local display name at all, and the registry is the only place one exists.
+ */
+export const getDisplayName = ({ details, marketplace, name }) =>
+  details?.name || marketplace?.name || name || '';
+
+/** The one-line description under the name. Available rows carry their own; installed rows read
+ * the registry's, which is absent while offline or unmatched — and then the row simply has none. */
+export const getDescription = ({ description, marketplace }) =>
+  description || marketplace?.description || '';
 
 /**
  * Whether the registry half of a response may be believed. Offline the registry never answered,

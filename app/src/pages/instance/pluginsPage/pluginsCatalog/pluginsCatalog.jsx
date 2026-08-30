@@ -71,8 +71,6 @@ export const PluginsCatalog = ({
   onRetry = () => {},
   onInstalledItemClick = () => {},
   onAvailableItemClick = () => {},
-  onToggleActive = () => Promise.resolve(),
-  showToggleConfirmationModal = () => {},
 }) => {
   const { formatMessage } = useIntl();
 
@@ -125,13 +123,13 @@ export const PluginsCatalog = ({
               data-automation-id="pluginsGroup"
               data-group={ALL_GROUP_TYPE}
             >
+              {/* no toggle on a catalogue row: enable/disable is local state and lives on the
+                  plugin page, where the rest of this plugin's local settings already are */}
               <PluginsListItems
                 title={ALL_GROUP_TYPE}
                 items={installedRows}
                 onItemClick={onInstalledItemClick}
-                onToggleActive={onToggleActive}
                 onRowAction={onRowAction}
-                showToggleConfirmationModal={showToggleConfirmationModal}
               />
             </div>
           )}
@@ -187,6 +185,4 @@ PluginsCatalog.propTypes = {
   onRetry: PropTypes.func,
   onInstalledItemClick: PropTypes.func,
   onAvailableItemClick: PropTypes.func,
-  onToggleActive: PropTypes.func,
-  showToggleConfirmationModal: PropTypes.func,
 };

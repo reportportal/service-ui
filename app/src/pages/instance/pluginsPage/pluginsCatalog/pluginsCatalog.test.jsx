@@ -110,6 +110,74 @@ describe('PluginsCatalog', () => {
     test('offers no sorting control', () => {
       expect(render().find('[data-automation-id="pluginsSorting"]')).toHaveLength(0);
     });
+
+    test('no row carries a toggle: enable/disable lives on the plugin page', () => {
+      // "ROWS: no toggle in the list" — the switcher is local state, and the catalogue is about
+      // what the marketplace offers. Kills re-adding InputSwitcher to a row.
+      const wrapper = render();
+
+      expect(wrapper.find('InputSwitcher')).toHaveLength(0);
+    });
+
+    test('an installed plugin with no local display name is named by the registry', () => {
+      // A PF4J plugin is identified by an id like "jira"; without the registry's name that id is
+      // what the row prints, beside an available row reading "Azure DevOps". Kills dropping the
+      // `marketplace?.name` step from getDisplayName.
+      const row = installedRow('jira');
+      const wrapper = render({
+        installedPlugins: [{ ...localPlugin(row), details: { version: row.version } }],
+        marketplaceInstalled: [row],
+        availablePlugins: [],
+      });
+
+      expect(rowNames(group(wrapper, ALL_GROUP_TYPE))).toEqual([row.marketplace.name]);
+    });
+
+    test("ReportPortal's own name wins over the registry's", () => {
+      // The rest of the product calls this plugin by its local name, and the catalogue must not
+      // be the one screen that calls it something else. Kills swapping the fallback order.
+      const row = installedRow('jira');
+      const wrapper = render({
+        installedPlugins: [localPlugin(row)],
+        marketplaceInstalled: [row],
+        availablePlugins: [],
+      });
+
+      expect(rowNames(group(wrapper, ALL_GROUP_TYPE))).toEqual([DISPLAY_NAMES.jira]);
+    });
+
+    test('a row shows the description, and shows none when there is none to show', () => {
+      // Kills dropping the description element, and kills rendering an empty one for a plugin
+      // the registry never described.
+      const described = installedRow('jira');
+      const bare = installedRow('gitlab');
+      const wrapper = render({
+        installedPlugins: [described, bare].map(localPlugin),
+        marketplaceInstalled: [described, bare],
+        availablePlugins: [],
+      });
+      const rows = group(wrapper, ALL_GROUP_TYPE).find('[data-automation-id="pluginRow"]');
+      const rowNamed = (name) =>
+        rows.filterWhere((node) => node.find('.plugins-name').text() === name);
+      const descriptionOf = (row) => row.find('[data-automation-id="pluginDescription"]');
+
+      expect(descriptionOf(rowNamed(DISPLAY_NAMES.jira)).text()).toBe(
+        described.marketplace.description,
+      );
+      // gitlab is known only by its tombstone: a removed plugin has no catalogue entry left to
+      // read a description from, so the row shows none rather than an empty line.
+      expect(bare.marketplace.description).toBeUndefined();
+      expect(descriptionOf(rowNamed(DISPLAY_NAMES.gitlab))).toHaveLength(0);
+    });
+
+    test('an available row shows the description the catalogue sent', () => {
+      const wrapper = render({ installedPlugins: [], marketplaceInstalled: [] });
+      const rows = group(wrapper, AVAILABLE_PLUGINS_TYPE).find('[data-automation-id="pluginRow"]');
+
+      expect(rows.at(0).find('[data-automation-id="pluginDescription"]').text()).toBe(
+        azure.description,
+      );
+    });
   });
 
   describe('Catalog.List.Loading', () => {
@@ -276,6 +344,18 @@ describe('PluginsCatalog', () => {
 
       expect(alert).toHaveLength(1);
       expect(alert.text()).toContain('marketplace.reportportal.io');
+    });
+
+    test('the host is in the body, where nothing re-cases it', () => {
+      // SystemMessage title-cases its header, which rendered "marketplace" as "Marketplace" — a
+      // different hostname, and naming the host is only useful if it is the one to go and check.
+      // .text() reads the DOM, which text-transform never touches, so this cannot be asserted by
+      // reading the string: it has to be asserted by where the string is. Kills moving the host
+      // back into the header.
+      const alert = render(offlineProps).find('[data-automation-id="registryOfflineAlert"]');
+      const header = alert.find('[data-automation-id="registryOfflineHost"]');
+
+      expect(header.text()).toContain('marketplace.reportportal.io');
     });
 
     test('says that the absence of warnings is not an all-clear', () => {

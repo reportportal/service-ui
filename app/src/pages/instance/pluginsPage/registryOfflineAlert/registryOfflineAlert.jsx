@@ -22,14 +22,21 @@ import styles from './registryOfflineAlert.scss';
 
 const cx = classNames.bind(styles);
 
+// The host stays out of the header. SystemMessage title-cases what it is given, which turns a
+// hostname into a different hostname — "marketplace" rendered as "Marketplace" — and the whole
+// point of naming it is that an operator can go and check that exact address.
 const messages = defineMessages({
   header: {
     id: 'RegistryOfflineAlert.header',
-    defaultMessage: 'The plugin registry at {host} could not be reached',
+    defaultMessage: 'The plugin registry could not be reached',
   },
   unknownHost: {
     id: 'RegistryOfflineAlert.unknownHost',
-    defaultMessage: 'the configured address',
+    defaultMessage: 'The configured registry address did not answer.',
+  },
+  knownHost: {
+    id: 'RegistryOfflineAlert.knownHost',
+    defaultMessage: '{host} did not answer.',
   },
   body: {
     id: 'RegistryOfflineAlert.body',
@@ -43,12 +50,12 @@ export const RegistryOfflineAlert = ({ host = null }) => {
 
   return (
     <div className={cx('registry-offline-alert')} data-automation-id="registryOfflineAlert">
-      <SystemMessage
-        mode="warning"
-        header={formatMessage(messages.header, {
-          host: host || formatMessage(messages.unknownHost),
-        })}
-      >
+      <SystemMessage mode="warning" header={formatMessage(messages.header)}>
+        <span data-automation-id="registryOfflineHost">
+          {host
+            ? formatMessage(messages.knownHost, { host })
+            : formatMessage(messages.unknownHost)}
+        </span>{' '}
         {formatMessage(messages.body)}
       </SystemMessage>
     </div>

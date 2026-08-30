@@ -11,6 +11,8 @@
     "groupType" : "BTS",
     "marketplace" : {
       "pluginId" : "plugin-bts-jira",
+      "name" : "Jira Cloud",
+      "description" : "Post and link Jira Cloud issues from a failed test item.",
       "access" : "premium",
       "tier" : "official",
       "latestVersion" : "1.6.0",
@@ -37,6 +39,8 @@
     "groupType" : "BTS",
     "marketplace" : {
       "pluginId" : "plugin-bts-rally",
+      "name" : "Rally",
+      "description" : "Rally work-item integration.",
       "access" : "public",
       "tier" : "official",
       "latestVersion" : "5.0.0",

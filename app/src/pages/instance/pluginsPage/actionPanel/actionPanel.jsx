@@ -32,10 +32,6 @@ export const UPLOAD = 'upload';
 const cx = classNames.bind(styles);
 
 const messages = defineMessages({
-  uploadPluginTitle: {
-    id: 'PluginsPage.uploadPluginTitle',
-    defaultMessage: 'Upload Plugin',
-  },
   uploadPluginDescription: {
     id: 'PluginsPage.uploadPluginDescription',
     defaultMessage: "Don't see the plugin you need? Upload your own.",
@@ -87,20 +83,16 @@ export class ActionPanel extends Component {
       },
     ];
     return (
-      <div className={cx('action-panel')}>
-        <h3 className={cx('action-panel-title')}>{formatMessage(messages.uploadPluginTitle)}</h3>
-        <p className={cx('action-panel-description')}>
-          {formatMessage(messages.uploadPluginDescription)}
-        </p>
-        <div className={cx('action-buttons')}>
-          {ACTION_BUTTONS.map(({ key, icon, onClick }) => (
-            <div className={cx('action-button')} key={key}>
-              <GhostButton icon={icon} onClick={onClick}>
-                {formatMessage(messages[key])}
-              </GhostButton>
-            </div>
-          ))}
-        </div>
+      /* The control lives in the page header now, so the sidebar's heading and explanatory
+         line went with the sidebar; the explanation survives as the button's tooltip. */
+      <div className={cx('action-panel')} title={formatMessage(messages.uploadPluginDescription)}>
+        {ACTION_BUTTONS.map(({ key, icon, onClick }) => (
+          <div className={cx('action-button')} key={key}>
+            <GhostButton icon={icon} onClick={onClick}>
+              {formatMessage(messages[key])}
+            </GhostButton>
+          </div>
+        ))}
       </div>
     );
   }

@@ -15,4 +15,4 @@
  */
 
 export { PluginsCatalog } from './pluginsCatalog';
-export { ROW_ACTIONS, isMarketplaceTrusted } from './utils';
+export { ROW_ACTIONS, getDisplayName, isMarketplaceTrusted } from './utils';

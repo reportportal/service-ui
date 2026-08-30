@@ -81,16 +81,12 @@ export class PluginsListItems extends Component {
     intl: PropTypes.object.isRequired,
     title: PropTypes.string.isRequired,
     items: PropTypes.array.isRequired,
-    onToggleActive: PropTypes.func,
-    showToggleConfirmationModal: PropTypes.func,
     onItemClick: PropTypes.func,
     onRowAction: PropTypes.func,
     filterMobileBlock: PropTypes.element,
   };
 
   static defaultProps = {
-    onToggleActive: () => {},
-    showToggleConfirmationModal: () => {},
     filterMobileBlock: null,
     onItemClick: () => {},
     onRowAction: () => {},
@@ -102,10 +98,8 @@ export class PluginsListItems extends Component {
       title,
       onItemClick,
       items,
-      onToggleActive,
       onRowAction,
       filterMobileBlock,
-      showToggleConfirmationModal,
     } = this.props;
 
     return (
@@ -123,9 +117,7 @@ export class PluginsListItems extends Component {
               key={item.type || item.name}
               onClick={onItemClick}
               data={item}
-              onToggleActive={onToggleActive}
               onRowAction={onRowAction}
-              showToggleConfirmationModal={showToggleConfirmationModal}
             />
           ))}
         </div>

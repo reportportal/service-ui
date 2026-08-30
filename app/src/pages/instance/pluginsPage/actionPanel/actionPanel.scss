@@ -16,36 +16,6 @@
 
 .action-panel {
   display: flex;
-  flex-direction: column;
-  gap: 8px;
-  margin-top: 40px;
-}
-
-.action-panel-title {
-  font-size: 16px;
-  line-height: normal;
-  font-family: $FONT-BOLD;
-  color: $COLOR--black-2;
-}
-
-.action-panel-description {
-  font-size: 12px;
-  line-height: 18px;
-  font-family: $FONT-REGULAR;
-  color: $COLOR--gray-47;
-  max-width: 174px;
-}
-
-.action-buttons {
-  display: flex;
-  flex-direction: column;
-  margin-top: 8px;
-
-  .action-button {
-    margin-top: 10px;
-
-    &:first-child {
-      margin-top: 0;
-    }
-  }
+  align-items: center;
+  gap: 10px;
 }
