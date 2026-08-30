@@ -152,18 +152,17 @@ export const MarketplaceLicence = ({
           />
         </div>
         <div className={cx('field')}>
+          {/* the field's own help slot rather than a paragraph beside it: the kit already
+              places and styles this text, and a hand-rolled one drifts from every other form */}
           <FieldText
             type="password"
             label={formatMessage(messages.licenceKey)}
             value={privateKey}
             data-automation-id="licenceKeyField"
+            helpText={configured ? formatMessage(messages.keyNotShown) : undefined}
+            classNameHelpText={cx('licence-key-hint')}
             onChange={(event) => setPrivateKey(event.target.value)}
           />
-          {configured && (
-            <p className={cx('hint')} data-automation-id="licenceKeyHint">
-              {formatMessage(messages.keyNotShown)}
-            </p>
-          )}
         </div>
         <div className={cx('actions')}>
           <Button

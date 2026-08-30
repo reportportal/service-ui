@@ -126,51 +126,6 @@
   gap: 8px;
 }
 
-.plugins-tier {
-  display: flex;
-  align-items: center;
-  height: 16px;
-  width: fit-content;
-  border-radius: 12px;
-  padding: 0 10px;
-  color: $COLOR--white-two;
-  background-color: $COLOR--plugin-tier-free;
-  font-size: 9px;
-  line-height: normal;
-  font-family: $FONT-SEMIBOLD;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-
-  &.premium {
-    background-color: $COLOR--plugin-tier-premium;
-  }
-}
-
-.plugins-badge {
-  display: flex;
-  align-items: center;
-  height: 16px;
-  width: fit-content;
-  border-radius: 12px;
-  padding: 0 10px;
-  color: $COLOR--white-two;
-  background-color: $COLOR--topaz;
-  font-size: 9px;
-  line-height: normal;
-  font-family: $FONT-SEMIBOLD;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-
-  &.badge-advisory {
-    background-color: $COLOR--warning-orange;
-  }
-
-  &.badge-blocked,
-  &.badge-removed {
-    background-color: $COLOR--deep-red;
-  }
-}
-
 .plugins-row-action {
   display: flex;
   align-items: center;

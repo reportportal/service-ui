@@ -18,12 +18,11 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { injectIntl, defineMessages } from 'react-intl';
 import classNames from 'classnames/bind';
-import Parser from 'html-react-parser';
-import { Button } from '@reportportal/ui-kit';
+import { Button, DownloadIcon } from '@reportportal/ui-kit';
 import { PLUGIN_DISABLED_MESSAGES_BY_GROUP_TYPE } from 'components/integrations/messages';
 import { PluginIcon } from 'components/integrations/elements/pluginIcon';
-import DownloadIcon from 'common/img/download-inline.svg';
 import { PLUGIN_TIERS } from 'common/constants/pluginTiers';
+import { PluginBadge, BADGE_TONES } from '../../pluginBadge';
 import {
   getDescription,
   getDisplayName,
@@ -82,6 +81,13 @@ const ACTION_VARIANTS = {
   [ROW_ACTIONS.INSTALL]: 'primary',
   [ROW_ACTIONS.UPDATE]: 'ghost',
   [ROW_ACTIONS.DISCOVER_PREMIUM]: 'text',
+};
+
+// A marketplace signal is a warning or worse; the tier is neither.
+const BADGE_TONES_BY_ROW_BADGE = {
+  [ROW_BADGES.ADVISORY]: BADGE_TONES.WARNING,
+  [ROW_BADGES.BLOCKED]: BADGE_TONES.DANGER,
+  [ROW_BADGES.REMOVED]: BADGE_TONES.DANGER,
 };
 
 const maxVersionLengthForTitle = 17;
@@ -169,25 +175,27 @@ export class PluginsItem extends Component {
             {(isInAvailablePluginList || badges.length > 0) && (
               <div className={cx('plugins-badges')}>
                 {isInAvailablePluginList && (
-                  <span
-                    className={cx('plugins-tier', { premium: tier === PLUGIN_TIERS.PREMIUM })}
+                  <PluginBadge
+                    tone={
+                      tier === PLUGIN_TIERS.PREMIUM ? BADGE_TONES.PREMIUM : BADGE_TONES.FREE
+                    }
                     data-automation-id="pluginBadge"
                     data-badge={tier}
                   >
                     {formatMessage(
                       tier === PLUGIN_TIERS.PREMIUM ? messages.premium : messages.free,
                     )}
-                  </span>
+                  </PluginBadge>
                 )}
                 {badges.map((badge) => (
-                  <span
+                  <PluginBadge
                     key={badge}
-                    className={cx('plugins-badge', `badge-${badge.toLowerCase()}`)}
+                    tone={BADGE_TONES_BY_ROW_BADGE[badge]}
                     data-automation-id="pluginBadge"
                     data-badge={badge}
                   >
                     {formatMessage(messages[badge])}
-                  </span>
+                  </PluginBadge>
                 ))}
               </div>
             )}
@@ -202,7 +210,7 @@ export class PluginsItem extends Component {
             >
               <Button
                 variant={ACTION_VARIANTS[rowAction]}
-                icon={rowAction === ROW_ACTIONS.UPDATE ? Parser(DownloadIcon) : null}
+                icon={rowAction === ROW_ACTIONS.UPDATE ? <DownloadIcon /> : null}
                 onClick={this.rowActionHandler(rowAction)}
               >
                 {formatMessage(messages[rowAction])}

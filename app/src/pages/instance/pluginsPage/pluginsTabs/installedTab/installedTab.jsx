@@ -373,9 +373,11 @@ export class InstalledTab extends Component {
     return breadcrumbs;
   };
 
+  // Formatted here rather than handed over as an element: an option label is text, and the
+  // kit's Dropdown — where this is headed — declares `label: string`.
   generateOptions = () =>
     getPluginsFilter(this.props.filterItems).map((item) => ({
-      label: item.label,
+      label: this.props.intl.formatMessage(item.message),
       value: item.value,
     }));
 
@@ -491,6 +493,12 @@ export class InstalledTab extends Component {
 
   renderFilterMobileBlock = () => (
     <div className={cx('plugins-filter-mobile')}>
+      {/* Still the legacy dropdown. The kit's Dropdown is the component this should be, but it
+          calls downshift's getMenuProps only inside its `opened &&` branch, and downshift
+          requires that getter on every render — so mounting it closed throws
+          "You forgot to call the getMenuProps getter function". Verified in isolation, with
+          nothing of ours in the tree. Fixed upstream in the ui-kit; swap this the release after
+          that lands. */}
       <InputDropdown
         options={this.generateOptions()}
         value={this.state.activeFilterItem}

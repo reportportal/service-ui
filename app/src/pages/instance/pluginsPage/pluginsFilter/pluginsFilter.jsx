@@ -55,7 +55,7 @@ export const PluginsFilter = ({ filterItems, onFilterChange, activeItem }) => {
               onClick={changeFilterItem}
               id={item.value}
             >
-              {item.label}
+              {formatMessage(item.message)}
             </button>
           </li>
         ))}

@@ -94,11 +94,20 @@ describe('MarketplaceLicence', () => {
   });
 
   test('says explicitly that the stored key cannot be shown, nor reused to save', () => {
+    // The copy rides the field's own help slot, so it is read off the field rather than off a
+    // paragraph beside it — and asserting the prop is what keeps this true if the kit ever
+    // changes where it paints that text.
     const { find } = render({ configured: true, customerId: 'acme' });
-    const hint = find('licenceKeyHint').first().text();
+    const hint = find('licenceKeyField').first().prop('helpText');
 
     expect(hint).toMatch(/never shown again/i);
     expect(hint).toMatch(/paste the key again/i);
+  });
+
+  test('the key field carries no help text until a key is actually stored', () => {
+    const { find } = render();
+
+    expect(find('licenceKeyField').first().prop('helpText')).toBeUndefined();
   });
 
   test('submitting sends the customer id and the key that was typed', () => {

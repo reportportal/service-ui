@@ -22,7 +22,8 @@ import track from 'react-tracking';
 import classNames from 'classnames/bind';
 import { showModalAction } from 'controllers/modal';
 import { fetchPluginsAction } from 'controllers/plugins';
-import { GhostButton } from 'components/buttons/ghostButton';
+import { Button } from '@reportportal/ui-kit';
+import Parser from 'html-react-parser';
 import { PLUGINS_PAGE_EVENTS } from 'components/main/analytics/events';
 import ImportIcon from 'common/img/import-inline.svg';
 import styles from './actionPanel.scss';
@@ -88,9 +89,9 @@ export class ActionPanel extends Component {
       <div className={cx('action-panel')} title={formatMessage(messages.uploadPluginDescription)}>
         {ACTION_BUTTONS.map(({ key, icon, onClick }) => (
           <div className={cx('action-button')} key={key}>
-            <GhostButton icon={icon} onClick={onClick}>
+            <Button variant="ghost" icon={Parser(icon)} onClick={onClick}>
               {formatMessage(messages[key])}
-            </GhostButton>
+            </Button>
           </div>
         ))}
       </div>

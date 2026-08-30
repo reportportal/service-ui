@@ -21,6 +21,7 @@ import { defineMessages, useIntl } from 'react-intl';
 import { useDispatch } from 'react-redux';
 import { useTracking } from 'react-tracking';
 import { Button } from '@reportportal/ui-kit';
+import { PluginBadge, BADGE_TONES } from '../pluginBadge';
 import { PluginIcon } from 'components/integrations/elements/pluginIcon';
 import { PremiumPromoModal } from 'components/premiumPromoModal';
 import { PLUGINS_PAGE_EVENTS } from 'components/main/analytics/events';
@@ -137,9 +138,9 @@ export const AvailablePluginDetail = ({
                 </span>
               )}
               <div className={cx('tier-row')}>
-                <span className={cx('tier', { premium: isPremium })}>
+                <PluginBadge tone={isPremium ? BADGE_TONES.PREMIUM : BADGE_TONES.FREE}>
                   {formatMessage(isPremium ? messages.premium : messages.free)}
-                </span>
+                </PluginBadge>
                 <span className={cx('tier-description')}>
                   {formatMessage(
                     isPremium ? messages.premiumDescription : messages.freeDescription,

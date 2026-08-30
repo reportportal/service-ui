@@ -14,36 +14,34 @@
  * limitations under the License.
  */
 
-.marketplace-licence {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  max-width: 480px;
+.plugin-badge {
+  display: inline-flex;
+  align-items: center;
+  height: 16px;
+  width: fit-content;
+  border-radius: 12px;
+  padding: 0 10px;
+  color: $COLOR--white-two;
+  background-color: $COLOR--topaz;
+  font-size: 9px;
+  line-height: normal;
+  font-family: $FONT-SEMIBOLD;
+  text-transform: uppercase;
+  letter-spacing: 1px;
 }
 
-.description,
-.status,
-.confirm-body {
-  margin: 0;
-  font-size: 13px;
-  line-height: 20px;
+.free {
+  background-color: $COLOR--plugin-tier-free;
 }
 
-// Only a hook for tests to find the field's help text; the kit owns how it looks.
-.licence-key-hint {
-  display: inline-block;
+.premium {
+  background-color: $COLOR--plugin-tier-premium;
 }
 
-.actions {
-  display: flex;
-  gap: 12px;
+.warning {
+  background-color: $COLOR--warning-orange;
 }
 
-.confirm {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  padding: 16px;
-  border: 1px solid $COLOR--e-200;
-  border-radius: 8px;
+.danger {
+  background-color: $COLOR--deep-red;
 }

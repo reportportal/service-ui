@@ -1,4 +1,4 @@
-/*!
+/*
  * Copyright 2026 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,36 +14,4 @@
  * limitations under the License.
  */
 
-.marketplace-licence {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  max-width: 480px;
-}
-
-.description,
-.status,
-.confirm-body {
-  margin: 0;
-  font-size: 13px;
-  line-height: 20px;
-}
-
-// Only a hook for tests to find the field's help text; the kit owns how it looks.
-.licence-key-hint {
-  display: inline-block;
-}
-
-.actions {
-  display: flex;
-  gap: 12px;
-}
-
-.confirm {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  padding: 16px;
-  border: 1px solid $COLOR--e-200;
-  border-radius: 8px;
-}
+export { PluginBadge, BADGE_TONES } from './pluginBadge';

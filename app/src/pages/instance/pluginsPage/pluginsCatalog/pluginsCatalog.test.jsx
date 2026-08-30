@@ -374,14 +374,14 @@ describe('PluginsCatalog', () => {
     test('installed rows keep their names but lose every badge and action', () => {
       // the same plugins carry badges and an action while the registry answers
       const online = group(render({ availablePlugins: [] }), ALL_GROUP_TYPE);
-      expect(online.find('[data-automation-id="pluginBadge"]').length).toBeGreaterThan(0);
+      expect(online.find('span[data-automation-id="pluginBadge"]').length).toBeGreaterThan(0);
       expect(actions(online)).toEqual([ROW_ACTIONS.UPDATE]);
 
       const installed = group(render(offlineProps), ALL_GROUP_TYPE);
 
       expect(rowNames(installed)).toEqual(['Jira', 'Custom Scanner']);
       expect(actions(installed)).toEqual([]);
-      expect(installed.find('[data-automation-id="pluginBadge"]')).toHaveLength(0);
+      expect(installed.find('span[data-automation-id="pluginBadge"]')).toHaveLength(0);
     });
 
     test('strips marketplace signals itself when the payload still carries them', () => {
@@ -398,7 +398,7 @@ describe('PluginsCatalog', () => {
       );
 
       expect(actions(installed)).toEqual([]);
-      expect(installed.find('[data-automation-id="pluginBadge"]')).toHaveLength(0);
+      expect(installed.find('span[data-automation-id="pluginBadge"]')).toHaveLength(0);
     });
   });
 
@@ -443,7 +443,7 @@ describe('PluginsCatalog', () => {
       expect(groupNames(wrapper)).toEqual([ALL_GROUP_TYPE]);
       expect(actions(group(wrapper, ALL_GROUP_TYPE))).toEqual([]);
       expect(
-        group(wrapper, ALL_GROUP_TYPE).find('[data-automation-id="pluginBadge"]'),
+        group(wrapper, ALL_GROUP_TYPE).find('span[data-automation-id="pluginBadge"]'),
       ).toHaveLength(0);
     });
 
@@ -480,12 +480,12 @@ describe('PluginsCatalog', () => {
         'Rally',
         'Custom Scanner',
       ]);
-      expect(matched.find('[data-automation-id="pluginBadge"]').length).toBeGreaterThan(0);
+      expect(matched.find('span[data-automation-id="pluginBadge"]').length).toBeGreaterThan(0);
       expect(matched.find('[data-automation-id="pluginRowAction"]')).toHaveLength(1);
       // neither row may borrow another plugin's signals
-      expect(unmatched.find('[data-automation-id="pluginBadge"]')).toHaveLength(0);
+      expect(unmatched.find('span[data-automation-id="pluginBadge"]')).toHaveLength(0);
       expect(unmatched.find('[data-automation-id="pluginRowAction"]')).toHaveLength(0);
-      expect(absent.find('[data-automation-id="pluginBadge"]')).toHaveLength(0);
+      expect(absent.find('span[data-automation-id="pluginBadge"]')).toHaveLength(0);
       expect(absent.find('[data-automation-id="pluginRowAction"]')).toHaveLength(0);
     });
 
@@ -498,8 +498,8 @@ describe('PluginsCatalog', () => {
       });
       const row = group(wrapper, ALL_GROUP_TYPE).find('[data-automation-id="pluginRow"]').at(0);
 
-      expect(row.find('[data-badge="ADVISORY"]')).toHaveLength(1);
-      expect(row.find(`[data-badge="${PLUGIN_TIERS.PREMIUM}"]`)).toHaveLength(0);
+      expect(row.find('span[data-badge="ADVISORY"]')).toHaveLength(1);
+      expect(row.find(`span[data-badge="${PLUGIN_TIERS.PREMIUM}"]`)).toHaveLength(0);
       expect(actions(group(wrapper, ALL_GROUP_TYPE))).toEqual([ROW_ACTIONS.UPDATE]);
     });
   });

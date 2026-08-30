@@ -17,11 +17,10 @@
 import PropTypes from 'prop-types';
 import { defineMessages, useIntl } from 'react-intl';
 import classNames from 'classnames/bind';
-import Parser from 'html-react-parser';
-import { BubblesLoader, Button, FieldText } from '@reportportal/ui-kit';
+import { BubblesLoader, Button } from '@reportportal/ui-kit';
 import { ALL_GROUP_TYPE, AVAILABLE_PLUGINS_TYPE } from 'common/constants/pluginsGroupTypes';
 import { INSTALLED_GROUP_TYPE } from 'common/constants/pluginsFilter';
-import SearchIcon from 'common/img/search-icon-inline.svg';
+import { SearchField } from 'components/fields/searchField';
 import { PluginsListItems } from '../pluginsListItems';
 import { RegistryOfflineAlert } from '../registryOfflineAlert';
 import { CatalogueUnavailableAlert } from '../catalogueUnavailableAlert';
@@ -98,14 +97,16 @@ export const PluginsCatalog = ({
 
   return (
     <div className={cx('plugins-catalog')}>
+      {/* the shared search field, not a private FieldText: it already carries the kit's icon,
+          the clear affordance and the house sizing. isAlwaysActive because the design keeps the
+          field open — the collapsing variant belongs to toolbars, not to a page's own search. */}
       <div className={cx('plugins-catalog-search')} data-automation-id="pluginsSearch">
-        <FieldText
-          value={query}
+        <SearchField
+          searchValue={query}
+          setSearchValue={onQueryChange}
+          onFilterChange={() => {}}
           placeholder={formatMessage(messages.searchPlaceholder)}
-          startIcon={Parser(SearchIcon)}
-          clearable
-          onChange={(event) => onQueryChange(event.target.value)}
-          onClear={() => onQueryChange('')}
+          isAlwaysActive
         />
       </div>
       {offline && <RegistryOfflineAlert host={registryHost} />}
