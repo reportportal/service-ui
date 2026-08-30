@@ -51,5 +51,9 @@
   font-family: var(--rp-ui-base-font-family);
   font-size: 13px;
   line-height: 20px;
-  color: var(--rp-ui-base-gray-47);
+  // --rp-ui-base-gray-47 never existed — it was the app's $COLOR--gray-47 spliced into kit
+  // syntax, so the declaration was invalid at computed-value time and this line quietly
+  // inherited its parent's colour instead of going grey. The kit's own name for secondary
+  // text resolves to e-400 (#8d95a1), which is what the design calls Text/Secondary.
+  color: var(--rp-ui-color-text-secondary);
 }
