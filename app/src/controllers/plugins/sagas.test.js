@@ -360,16 +360,18 @@ describe('controllers/plugins/sagas marketplace', () => {
         installMarketplacePluginAction('slack', '1.2.0'),
       );
 
-      expect(dispatched).toEqual([
-        installMarketplacePluginStartAction('slack'),
-        installMarketplacePluginSuccessAction('slack'),
-        showNotification({
-          type: NOTIFICATION_TYPES.SUCCESS,
-          messageId: 'marketplacePluginInstalled',
-          values: { version: '1.2.0' },
-        }),
-        fetchMarketplaceCatalogueAction({ q: null, category: null }),
+      // showNotification stamps a uid off the clock, so the action cannot be compared whole:
+      // two calls a millisecond apart are unequal. The order and the rest of the payload are
+      // what this test is about.
+      expect(dispatched.map((action) => action.type)).toEqual([
+        'installMarketplacePluginStart',
+        'installMarketplacePluginSuccess',
+        'showNotification',
+        'fetchMarketplaceCatalogue',
       ]);
+      expect(dispatched[0]).toEqual(installMarketplacePluginStartAction('slack'));
+      expect(dispatched[1]).toEqual(installMarketplacePluginSuccessAction('slack'));
+      expect(dispatched[3]).toEqual(fetchMarketplaceCatalogueAction({ q: null, category: null }));
     });
 
     test('says so, naming the version that is now active', async () => {
@@ -383,13 +385,14 @@ describe('controllers/plugins/sagas marketplace', () => {
         installMarketplacePluginAction('slack', '1.2.0'),
       );
 
-      expect(dispatched).toContainEqual(
-        showNotification({
-          type: NOTIFICATION_TYPES.SUCCESS,
-          messageId: 'marketplacePluginInstalled',
-          values: { version: '1.2.0' },
-        }),
-      );
+      const notification = dispatched.find((action) => action.type === 'showNotification');
+
+      expect(notification).toBeDefined();
+      expect(notification.payload).toMatchObject({
+        type: NOTIFICATION_TYPES.SUCCESS,
+        messageId: 'marketplacePluginInstalled',
+        values: { version: '1.2.0' },
+      });
     });
 
     test('a failed install is not announced as a success', async () => {
