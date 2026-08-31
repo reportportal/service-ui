@@ -45,6 +45,7 @@ const AttachmentVideoModalComponent = ({ data: { video, fileName } = {}, intl })
       title={title}
       cancelButton={renderCancelButton()}
       className={cx('attachment-video-modal')}
+      scrollable
     >
       <div className={cx('attachment-modal-content-wrapper')}>
         <div className={cx('attachment-video-wrapper')}>
