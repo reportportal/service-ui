@@ -56,6 +56,66 @@ describe('PluginMarketplaceBlocks', () => {
     });
   });
 
+  // FR-A-03. The endpoint has always taken an arbitrary version and the saga has always posted
+  // whatever it was given; the list is where an admin reaches a version that is neither the
+  // latest nor the one running.
+  describe('rolling back to another version', () => {
+    const installed = { installedVersion: '1.6.0', onUseVersion: () => {} };
+    const rowFor = (wrapper, version) =>
+      find(wrapper, 'pluginVersionRow').filterWhere((node) => node.prop('data-version') === version);
+
+    test('posts the version whose row was clicked', () => {
+      // 1.5.2 is blocked in the fixture, so an unblocked older version is added to roll back to
+      const versions = [...detail.versions, { version: '1.4.0', publishedAt: '2025-11-01T00:00:00Z', blocked: false }];
+      const posted = [];
+      const wrapper = render({
+        detail: { ...detail, versions },
+        ...installed,
+        onUseVersion: (version) => posted.push(version),
+      });
+
+      rowFor(wrapper, '1.4.0').find('[data-automation-id="useVersionAction"]').first().prop('onClick')();
+
+      expect(posted).toEqual(['1.4.0']);
+    });
+
+    test('the running version is labelled, not offered', () => {
+      const wrapper = render(installed);
+      const row = rowFor(wrapper, '1.6.0');
+
+      expect(find(row, 'installedVersionMarker')).toHaveLength(1);
+      expect(find(row, 'useVersionAction')).toHaveLength(0);
+    });
+
+    test('a blocked version is labelled, not offered', () => {
+      // FR-OP-03 keeps it in the history and refuses the download; a control here earns a 403
+      const wrapper = render(installed);
+      const row = rowFor(wrapper, '1.5.2');
+
+      expect(detail.versions.find((v) => v.version === '1.5.2').blocked).toBe(true);
+      expect(find(row, 'blockedVersionMarker')).toHaveLength(1);
+      expect(find(row, 'useVersionAction')).toHaveLength(0);
+    });
+
+    test('a removed plugin offers no version at all', () => {
+      // the registry answers 410 for every version, so none of them is reachable
+      const wrapper = render({
+        detail: { ...detail, removed: removedDetail.removed },
+        ...installed,
+      });
+
+      expect(find(wrapper, 'useVersionAction')).toHaveLength(0);
+    });
+
+    test('a page with nothing installed shows no version actions', () => {
+      // the available-plugin page renders this same component: there is nothing to change from
+      const wrapper = render();
+
+      expect(find(wrapper, 'useVersionAction')).toHaveLength(0);
+      expect(find(wrapper, 'installedVersionMarker')).toHaveLength(0);
+    });
+  });
+
   describe('changelog', () => {
     test('the heading carries the version it describes', () => {
       expect(find(render(), 'pluginChangelog').text()).toContain("What's new in 1.6.0");

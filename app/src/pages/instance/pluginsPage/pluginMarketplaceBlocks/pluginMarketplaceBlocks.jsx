@@ -17,7 +17,7 @@
 import PropTypes from 'prop-types';
 import { defineMessages, useIntl } from 'react-intl';
 import classNames from 'classnames/bind';
-import { BubblesLoader, SystemMessage } from '@reportportal/ui-kit';
+import { Button, BubblesLoader, SystemMessage } from '@reportportal/ui-kit';
 import { RegistryOfflineAlert } from '../registryOfflineAlert';
 import { CatalogueUnavailableAlert } from '../catalogueUnavailableAlert';
 import { isMarketplaceTrusted } from '../pluginsCatalog';
@@ -30,6 +30,20 @@ const messages = defineMessages({
   versions: {
     id: 'PluginMarketplaceBlocks.versions',
     defaultMessage: 'Versions',
+  },
+  installedVersion: {
+    id: 'PluginMarketplaceBlocks.installedVersion',
+    defaultMessage: 'Installed',
+  },
+  blockedVersion: {
+    id: 'PluginMarketplaceBlocks.blockedVersion',
+    defaultMessage: 'Blocked',
+  },
+  // Not "Roll back": install, update and rollback are one request, and this list is ordered by
+  // publish date, which is not version order — so naming a direction would sometimes be a lie.
+  useVersion: {
+    id: 'PluginMarketplaceBlocks.useVersion',
+    defaultMessage: 'Use this version',
   },
   screenshots: {
     id: 'PluginMarketplaceBlocks.screenshots',
@@ -106,6 +120,8 @@ export const PluginMarketplaceBlocks = ({
   unmatched = false,
   registryHost = null,
   onRetry = () => {},
+  installedVersion = null,
+  onUseVersion = null,
 }) => {
   const { formatMessage, formatDate } = useIntl();
   const trusted = isMarketplaceTrusted({ offline, failed, unmatched });
@@ -120,6 +136,55 @@ export const PluginMarketplaceBlocks = ({
         removed: null,
       };
   const date = (value) => formatPublishDate(formatDate, value);
+
+  /**
+   * What a version row offers. Rollback is one of three things this endpoint does — install,
+   * update and roll back differ only by which version is posted — so the list is where an admin
+   * reaches a version that is neither the latest nor the one running.
+   *
+   * Four cases, and only the last is an action:
+   *  - the running version is labelled, never offered: re-posting it would reinstall it;
+   *  - a blocked version is labelled too. FR-OP-03 keeps it in the history with a warning and
+   *    refuses the download, so drawing a control that earns a 403 would be a lie;
+   *  - a removed plugin has no reachable version at all — the registry answers 410 for every
+   *    one — so the whole column goes quiet;
+   *  - anything else can be made active.
+   *
+   * The column is absent entirely on a page with nothing installed (the available-plugin page
+   * renders this same component), which is what `onUseVersion` being null means.
+   */
+  const versionAction = (entry) => {
+    if (!onUseVersion || removed) {
+      return null;
+    }
+    if (installedVersion && entry.version === installedVersion) {
+      return (
+        <span className={cx('version-state')} data-automation-id="installedVersionMarker">
+          {formatMessage(messages.installedVersion)}
+        </span>
+      );
+    }
+    if (entry.blocked) {
+      return (
+        <span
+          className={cx('version-state', 'blocked')}
+          data-automation-id="blockedVersionMarker"
+        >
+          {formatMessage(messages.blockedVersion)}
+        </span>
+      );
+    }
+    return (
+      <Button
+        variant="text"
+        adjustWidthOn="content"
+        data-automation-id="useVersionAction"
+        onClick={() => onUseVersion(entry.version)}
+      >
+        {formatMessage(messages.useVersion)}
+      </Button>
+    );
+  };
 
   return (
     <div className={cx('plugin-marketplace-blocks')}>
@@ -225,9 +290,13 @@ export const PluginMarketplaceBlocks = ({
                     key={entry.version}
                     className={cx('version-row')}
                     data-automation-id="pluginVersionRow"
+                    data-version={entry.version}
                   >
                     <span className={cx('version')}>{`v.${entry.version}`}</span>
                     <span className={cx('version-date')}>{date(entry.publishedAt)}</span>
+                    <span className={cx('version-action')}>
+                      {versionAction(entry)}
+                    </span>
                   </div>
                 ))}
               </div>
@@ -254,4 +323,8 @@ PluginMarketplaceBlocks.propTypes = {
   unmatched: PropTypes.bool,
   registryHost: PropTypes.string,
   onRetry: PropTypes.func,
+  /** The version running here, labelled rather than offered. Null on the available-plugin page. */
+  installedVersion: PropTypes.string,
+  /** Makes a version the active one. Null hides the column: nothing is installed to change. */
+  onUseVersion: PropTypes.func,
 };

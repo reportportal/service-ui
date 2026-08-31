@@ -467,6 +467,10 @@ export class InstalledTab extends Component {
         unmatched={unmatched}
         registryHost={unmatched ? this.props.registryHost : this.props.detailRegistryHost}
         onRetry={unmatched ? this.refetchCatalogue : this.refetchPluginDetail}
+        installedVersion={data.details?.version || null}
+        onUseVersion={(version) =>
+          this.props.installMarketplacePluginAction(data.registryId, version)
+        }
       />
     );
   };

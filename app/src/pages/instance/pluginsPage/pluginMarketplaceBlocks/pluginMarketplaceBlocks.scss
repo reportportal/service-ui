@@ -64,7 +64,8 @@
 
 .version-row {
   display: flex;
-  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
   padding: 12px 16px;
   font-size: 13px;
   line-height: 20px;
@@ -74,8 +75,28 @@
   }
 }
 
+// The date takes the slack so the version and the action stay put down the column, which the
+// old space-between could not do once a third cell arrived.
 .version-date {
+  flex: 1 1 auto;
+  text-align: right;
   color: $COLOR--e-400;
+}
+
+.version-action {
+  flex: none;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  min-width: 120px;
+}
+
+.version-state {
+  color: var(--rp-ui-color-text-secondary);
+
+  &.blocked {
+    color: $COLOR--deep-red;
+  }
 }
 
 .changelog-line {
