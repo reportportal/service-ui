@@ -72,6 +72,14 @@
   font-weight: var(--rp-ui-base-fw-bold);
 }
 
+.author {
+  display: block;
+  margin-top: 2px;
+  font-size: 13px;
+  line-height: 20px;
+  color: var(--rp-ui-color-text-secondary);
+}
+
 .tier-row {
   display: flex;
   flex-wrap: wrap;

@@ -24,6 +24,7 @@ import { PluginIcon } from 'components/integrations/elements/pluginIcon';
 import { PLUGIN_TIERS } from 'common/constants/pluginTiers';
 import { PluginBadge, BADGE_TONES } from '../../pluginBadge';
 import {
+  getAuthor,
   getDescription,
   getDisplayName,
   getRowAction,
@@ -119,7 +120,6 @@ export class PluginsItem extends Component {
     const {
       intl: { formatMessage },
       data: {
-        uploadedBy,
         enabled,
         groupType,
         tier,
@@ -129,6 +129,7 @@ export class PluginsItem extends Component {
     } = this.props;
     const displayName = getDisplayName(data);
     const description = getDescription(data);
+    const author = getAuthor(data);
     const isInAvailablePluginList = isAvailableRow(data);
     const badges = getRowBadges(data);
     const rowAction = getRowAction(data);
@@ -156,7 +157,9 @@ export class PluginsItem extends Component {
           <div className={cx('plugins-info')}>
             <div className={cx('plugins-info-content')}>
               <span className={cx('plugins-name')}>{displayName}</span>
-              <span className={cx('plugins-author')}>{`by ${uploadedBy || 'ReportPortal'}`}</span>
+              {/* absent rather than guessed: the old `|| 'ReportPortal'` fallback signed every
+                  third-party plugin in the catalogue with the wrong name */}
+              {author && <span className={cx('plugins-author')}>{`by ${author}`}</span>}
               <span
                 className={cx('plugins-version')}
                 title={

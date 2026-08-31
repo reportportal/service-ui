@@ -57,6 +57,17 @@ export const getDescription = ({ description, marketplace }) =>
   description || marketplace?.description || '';
 
 /**
+ * Who wrote the plugin, per the registry.
+ *
+ * <p>`uploadedBy` first, because for a hand-uploaded plugin that is the only fact anyone has.
+ * Then the registry's author. There is deliberately no third fallback: the row used to end in
+ * `|| 'ReportPortal'`, which printed a false attribution on every third-party plugin in the
+ * catalogue. An unknown author is unknown, and the line is left out.
+ */
+export const getAuthor = ({ uploadedBy, author, marketplace }) =>
+  uploadedBy || author || marketplace?.author || '';
+
+/**
  * Whether the registry half of a response may be believed. Offline the registry never answered,
  * and after a failure nothing answered at all, so in neither case is any marketplace-sourced
  * signal verifiable. An unmatched plugin has no registry half at all: it was never asked about,
@@ -85,6 +96,7 @@ export const toAvailableRow = (entry) => ({
   name: entry.name,
   details: { name: entry.name, version: entry.latestVersion },
   description: entry.description,
+  author: entry.author || null,
   groupType: entry.groupType,
   latestVersion: entry.latestVersion,
   contactUrl: entry.contactUrl || null,

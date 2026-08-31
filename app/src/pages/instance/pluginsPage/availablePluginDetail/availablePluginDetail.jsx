@@ -61,6 +61,10 @@ const messages = defineMessages({
     id: 'AvailablePluginDetail.version',
     defaultMessage: 'version {version}',
   },
+  author: {
+    id: 'AvailablePluginDetail.author',
+    defaultMessage: 'by {author}',
+  },
 });
 
 /**
@@ -86,6 +90,8 @@ export const AvailablePluginDetail = ({
   // premium alone is not a lock: an instance with a licence installs premium plugins normally
   const isLocked = Boolean(plugin.locked);
   const version = plugin.latestVersion || plugin.details?.version;
+  // the registry's, read off the detail response; the row's copy is the same value
+  const author = detail?.plugin?.author || plugin.author || null;
 
   useEffect(() => {
     trackEvent(PLUGINS_PAGE_EVENTS.availablePluginDetailPageView(title));
@@ -114,6 +120,13 @@ export const AvailablePluginDetail = ({
               {version && (
                 <span className={cx('version')} data-automation-id="pluginDetailVersion">
                   {formatMessage(messages.version, { version })}
+                </span>
+              )}
+              {/* FR-U-02 names the author among what a detail page shows. Absent, not guessed:
+                  the registry either named someone or it did not. */}
+              {author && (
+                <span className={cx('author')} data-automation-id="pluginDetailAuthor">
+                  {formatMessage(messages.author, { author })}
                 </span>
               )}
               <div className={cx('tier-row')}>
@@ -158,6 +171,7 @@ AvailablePluginDetail.propTypes = {
     name: PropTypes.string.isRequired,
     tier: PropTypes.string.isRequired,
     description: PropTypes.string,
+    author: PropTypes.string,
     latestVersion: PropTypes.string,
     locked: PropTypes.bool,
     contactUrl: PropTypes.string,

@@ -170,6 +170,30 @@ describe('PluginsCatalog', () => {
       expect(descriptionOf(rowNamed(DISPLAY_NAMES.gitlab))).toHaveLength(0);
     });
 
+    test('a row is signed with the author the registry named, not a guess', () => {
+      // The row used to end in `|| 'ReportPortal'`, which signed every third-party plugin in the
+      // catalogue with the wrong name. Kills reinstating any such fallback.
+      const wrapper = render({ installedPlugins: [], marketplaceInstalled: [] });
+      const rows = group(wrapper, AVAILABLE_PLUGINS_TYPE).find('[data-automation-id="pluginRow"]');
+      const authorOf = (row) => row.find('.plugins-author');
+
+      expect(azure.author).toBeTruthy();
+      expect(azure.author).not.toBe('ReportPortal');
+      expect(rows.filterWhere((r) => r.text().includes(azure.name)).find('.plugins-author').text())
+        .toBe(`by ${azure.author}`);
+      expect(authorOf(rows.at(0)).length).toBeGreaterThan(0);
+    });
+
+    test('a plugin nobody is named for shows no author line at all', () => {
+      const wrapper = render({
+        installedPlugins: [],
+        marketplaceInstalled: [],
+        availablePlugins: [{ ...azure, author: undefined }],
+      });
+
+      expect(group(wrapper, AVAILABLE_PLUGINS_TYPE).find('.plugins-author')).toHaveLength(0);
+    });
+
     test('an available row shows the description the catalogue sent', () => {
       const wrapper = render({ installedPlugins: [], marketplaceInstalled: [] });
       const rows = group(wrapper, AVAILABLE_PLUGINS_TYPE).find('[data-automation-id="pluginRow"]');
