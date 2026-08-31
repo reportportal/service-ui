@@ -63,6 +63,7 @@ const DuplicateFolderModal = reduxForm<DuplicateFolderFormValues, DuplicateFolde
   }),
 })(({
   dirty,
+  invalid,
   data: {
     folder: { id: folderId, name: folderName, parentFolderId },
   },
@@ -124,6 +125,7 @@ const DuplicateFolderModal = reduxForm<DuplicateFolderFormValues, DuplicateFolde
       formName={DUPLICATE_FORM_NAME}
       title={formatMessage(commonMessages.duplicateFolder)}
       dirty={dirty}
+      invalid={invalid}
       isLoading={isDuplicating}
       isToggled={shouldMoveToRoot}
       toggleLabel={formatMessage(messages.moveToRootDirectory)}
