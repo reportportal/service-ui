@@ -227,6 +227,10 @@ export const hasMarketplacePluginUpdateSelector = (state, pluginName) =>
   marketplacePluginUpdateVersionSelector(state, pluginName) !== null;
 
 // the filter the catalogue is showing, so a refetch does not silently drop it
+/** The plugin the last install moved into the Installed group, or null. */
+export const justInstalledMarketplacePluginSelector = (state) =>
+  marketplaceSelector(state).justInstalled || null;
+
 export const marketplaceCatalogueQuerySelector = (state) =>
   marketplaceSelector(state).query || { q: null, category: null };
 

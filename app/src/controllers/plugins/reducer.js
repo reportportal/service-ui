@@ -48,6 +48,7 @@ import {
   INSTALL_MARKETPLACE_PLUGIN_START,
   INSTALL_MARKETPLACE_PLUGIN_SUCCESS,
   INSTALL_MARKETPLACE_PLUGIN_ERROR,
+  CLEAR_JUST_INSTALLED_MARKETPLACE_PLUGIN,
   MARKETPLACE_CATALOGUE_STATE,
   FETCH_MARKETPLACE_PLUGIN_DETAIL_START,
   FETCH_MARKETPLACE_PLUGIN_DETAIL_SUCCESS,
@@ -160,6 +161,9 @@ const INITIAL_MARKETPLACE_STATE = {
   error: null,
   installing: [],
   installError: null,
+  // The plugin the last install moved into the Installed group. The row jumps groups on a
+  // refetch, so this is what lets the list say where it went; cleared once it has been seen.
+  justInstalled: null,
   query: { q: null, category: null },
 };
 
@@ -205,7 +209,13 @@ export const marketplaceReducer = (state = INITIAL_MARKETPLACE_STATE, { type, pa
     case INSTALL_MARKETPLACE_PLUGIN_START:
       return { ...state, installing: [...state.installing, payload], installError: null };
     case INSTALL_MARKETPLACE_PLUGIN_SUCCESS:
-      return { ...state, installing: state.installing.filter((id) => id !== payload) };
+      return {
+        ...state,
+        installing: state.installing.filter((id) => id !== payload),
+        justInstalled: payload,
+      };
+    case CLEAR_JUST_INSTALLED_MARKETPLACE_PLUGIN:
+      return { ...state, justInstalled: null };
     case INSTALL_MARKETPLACE_PLUGIN_ERROR:
       return {
         ...state,

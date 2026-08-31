@@ -49,6 +49,7 @@ import {
   INSTALL_MARKETPLACE_PLUGIN_START,
   INSTALL_MARKETPLACE_PLUGIN_SUCCESS,
   INSTALL_MARKETPLACE_PLUGIN_ERROR,
+  CLEAR_JUST_INSTALLED_MARKETPLACE_PLUGIN,
   FETCH_MARKETPLACE_PLUGIN_DETAIL,
   FETCH_MARKETPLACE_PLUGIN_DETAIL_START,
   FETCH_MARKETPLACE_PLUGIN_DETAIL_SUCCESS,
@@ -241,6 +242,10 @@ export const installMarketplacePluginStartAction = (registryId) => ({
 export const installMarketplacePluginSuccessAction = (registryId) => ({
   type: INSTALL_MARKETPLACE_PLUGIN_SUCCESS,
   payload: registryId,
+});
+
+export const clearJustInstalledMarketplacePluginAction = () => ({
+  type: CLEAR_JUST_INSTALLED_MARKETPLACE_PLUGIN,
 });
 
 export const installMarketplacePluginErrorAction = (registryId, error) => ({

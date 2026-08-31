@@ -70,6 +70,7 @@ export const PluginsCatalog = ({
   onRetry = () => {},
   onInstalledItemClick = () => {},
   onAvailableItemClick = () => {},
+  justInstalledId = null,
 }) => {
   const { formatMessage } = useIntl();
 
@@ -131,6 +132,7 @@ export const PluginsCatalog = ({
                 items={installedRows}
                 onItemClick={onInstalledItemClick}
                 onRowAction={onRowAction}
+                highlightedRegistryId={justInstalledId}
               />
             </div>
           )}
@@ -186,4 +188,6 @@ PluginsCatalog.propTypes = {
   onRetry: PropTypes.func,
   onInstalledItemClick: PropTypes.func,
   onAvailableItemClick: PropTypes.func,
+  /** Registry id of the plugin the last install moved into the Installed group. */
+  justInstalledId: PropTypes.string,
 };

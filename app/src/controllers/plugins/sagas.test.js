@@ -16,7 +16,11 @@
 
 import { runSaga } from 'redux-saga';
 import { fetch } from 'common/utils';
-import { showDefaultErrorNotification, NOTIFICATION_TYPES } from 'controllers/notification';
+import {
+  showDefaultErrorNotification,
+  showNotification,
+  NOTIFICATION_TYPES,
+} from 'controllers/notification';
 import catalogue from './__fixtures__/catalogue.json';
 import catalogueOffline from './__fixtures__/catalogue-offline.json';
 import pluginDetail from './__fixtures__/plugin-detail.json';
@@ -359,8 +363,46 @@ describe('controllers/plugins/sagas marketplace', () => {
       expect(dispatched).toEqual([
         installMarketplacePluginStartAction('slack'),
         installMarketplacePluginSuccessAction('slack'),
+        showNotification({
+          type: NOTIFICATION_TYPES.SUCCESS,
+          messageId: 'marketplacePluginInstalled',
+          values: { version: '1.2.0' },
+        }),
         fetchMarketplaceCatalogueAction({ q: null, category: null }),
       ]);
+    });
+
+    test('says so, naming the version that is now active', async () => {
+      // The row leaves Available and reappears under Installed; without a word the page just
+      // reshuffles, and whether it worked is the one thing that reshuffle does not say. The
+      // version is in the message because install, update and rollback are the same request.
+      fetch.mockResolvedValue({});
+
+      const dispatched = await run(
+        installMarketplacePlugin,
+        installMarketplacePluginAction('slack', '1.2.0'),
+      );
+
+      expect(dispatched).toContainEqual(
+        showNotification({
+          type: NOTIFICATION_TYPES.SUCCESS,
+          messageId: 'marketplacePluginInstalled',
+          values: { version: '1.2.0' },
+        }),
+      );
+    });
+
+    test('a failed install is not announced as a success', async () => {
+      fetch.mockRejectedValue(new Error('Bad Gateway'));
+
+      const dispatched = await run(
+        installMarketplacePlugin,
+        installMarketplacePluginAction('slack', '1.2.0'),
+      );
+
+      expect(
+        dispatched.some((action) => action?.payload?.messageId === 'marketplacePluginInstalled'),
+      ).toBe(false);
     });
 
     test('the refetch keeps the filter the catalogue was last loaded with', async () => {

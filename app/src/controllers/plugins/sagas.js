@@ -346,6 +346,16 @@ export function* installMarketplacePlugin({ payload: { registryId, version } }) 
       data: { version },
     });
     yield put(installMarketplacePluginSuccessAction(registryId));
+    // Say so. The row leaves the Available group and reappears under Installed, and without a
+    // word the page just reshuffles — the one thing the user cannot tell from that is whether it
+    // worked. The toggle on this same page has always confirmed itself this way.
+    yield put(
+      showNotification({
+        type: NOTIFICATION_TYPES.SUCCESS,
+        messageId: 'marketplacePluginInstalled',
+        values: { version },
+      }),
+    );
     // refetch with the filter still on screen, not the unfiltered catalogue
     const query = yield select(marketplaceCatalogueQuerySelector);
     yield put(fetchMarketplaceCatalogueAction(query));

@@ -69,6 +69,7 @@ export const INSTALL_MARKETPLACE_PLUGIN = 'installMarketplacePlugin';
 export const INSTALL_MARKETPLACE_PLUGIN_START = 'installMarketplacePluginStart';
 export const INSTALL_MARKETPLACE_PLUGIN_SUCCESS = 'installMarketplacePluginSuccess';
 export const INSTALL_MARKETPLACE_PLUGIN_ERROR = 'installMarketplacePluginError';
+export const CLEAR_JUST_INSTALLED_MARKETPLACE_PLUGIN = 'clearJustInstalledMarketplacePlugin';
 
 /** Registry reachability as reported by service-api. */
 export const REGISTRY_STATUS = {

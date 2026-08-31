@@ -28,10 +28,12 @@ import {
   updatePluginSuccessAction,
   fetchMarketplaceCatalogueAction,
   installMarketplacePluginAction,
+  clearJustInstalledMarketplacePluginAction,
   marketplaceAvailablePluginsSelector,
   marketplaceInstalledPluginsSelector,
   marketplaceCatalogueLoadingSelector,
   marketplaceRegistryHostSelector,
+  justInstalledMarketplacePluginSelector,
   isMarketplaceRegistryOfflineSelector,
   hasMarketplaceCatalogueFailedSelector,
   fetchMarketplacePluginDetailAction,
@@ -109,6 +111,7 @@ const messages = defineMessages({
     registryOffline: isMarketplaceRegistryOfflineSelector(state),
     catalogueFailed: hasMarketplaceCatalogueFailedSelector(state),
     registryHost: marketplaceRegistryHostSelector(state),
+    justInstalledId: justInstalledMarketplacePluginSelector(state),
     pluginDetail: marketplacePluginDetailDataSelector(state),
     detailLoading: marketplacePluginDetailLoadingSelector(state),
     detailOffline: isMarketplacePluginDetailOfflineSelector(state),
@@ -121,6 +124,7 @@ const messages = defineMessages({
     showModalAction,
     fetchMarketplaceCatalogueAction,
     installMarketplacePluginAction,
+    clearJustInstalledMarketplacePluginAction,
     fetchMarketplacePluginDetailAction,
   },
 )
@@ -141,6 +145,8 @@ export class InstalledTab extends Component {
     fetchMarketplaceCatalogueAction: PropTypes.func.isRequired,
     installMarketplacePluginAction: PropTypes.func.isRequired,
     registryHost: PropTypes.string,
+    justInstalledId: PropTypes.string,
+    clearJustInstalledMarketplacePluginAction: PropTypes.func.isRequired,
     showNotification: PropTypes.func,
     pluginDetail: PropTypes.object.isRequired,
     detailLoading: PropTypes.bool.isRequired,
@@ -151,6 +157,7 @@ export class InstalledTab extends Component {
   };
 
   static defaultProps = {
+    justInstalledId: null,
     detailRegistryHost: null,
     registryHost: null,
     showNotification: () => {},
@@ -165,6 +172,19 @@ export class InstalledTab extends Component {
   componentDidMount() {
     this.props.fetchMarketplaceCatalogueAction();
   }
+
+  // The highlight answers one question — where did it go — and only for as long as that question
+  // is live. Leaving the page, or narrowing the list to look for something else, is the user
+  // saying they have moved on, so the mark goes with them rather than sitting there as a status.
+  componentWillUnmount() {
+    this.forgetJustInstalled();
+  }
+
+  forgetJustInstalled = () => {
+    if (this.props.justInstalledId) {
+      this.props.clearJustInstalledMarketplacePluginAction();
+    }
+  };
 
   onToggleActive = (itemData) => {
     const {
@@ -350,6 +370,7 @@ export class InstalledTab extends Component {
                 onRowAction={this.handleRowAction}
                 onInstalledItemClick={this.installedPluginsSubPageHandler}
                 onAvailableItemClick={this.availablePluginDetailSubPageHandler}
+                justInstalledId={this.props.justInstalledId}
               />
             </div>
           </div>
@@ -411,6 +432,7 @@ export class InstalledTab extends Component {
 
   handleFilterChange = (value) => {
     if (value !== this.state.activeFilterItem) {
+      this.forgetJustInstalled();
       this.setState({
         activeFilterItem: value,
       });
@@ -420,6 +442,7 @@ export class InstalledTab extends Component {
 
   // the field stays responsive while the request waits: only the request is debounced
   handleQueryChange = (searchQuery) => {
+    this.forgetJustInstalled();
     this.setState({ searchQuery });
     this.props.fetchMarketplaceCatalogueAction({
       ...this.catalogueParams({ query: searchQuery }),

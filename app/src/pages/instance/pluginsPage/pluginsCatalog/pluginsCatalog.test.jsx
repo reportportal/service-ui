@@ -107,6 +107,35 @@ describe('PluginsCatalog', () => {
       expect(rowNames(wrapper)).not.toContain('Jira Cloud');
     });
 
+    test('the row a plugin just landed in is marked, and only that one', () => {
+      // The install moves the row from Available to Installed and the list reshuffles under the
+      // user. The mark is the answer to "where did it go"; the toast says whether it worked.
+      const row = installedRow('jira');
+      const other = installedRow('rally');
+      const wrapper = render({
+        installedPlugins: [row, other].map(localPlugin),
+        marketplaceInstalled: [row, other],
+        availablePlugins: [],
+        justInstalledId: row.marketplace.pluginId,
+      });
+      const marked = wrapper
+        .find('[data-automation-id="pluginRow"]')
+        .filterWhere((node) => node.prop('data-highlighted'));
+
+      expect(marked).toHaveLength(1);
+      expect(marked.find('.plugins-name').text()).toBe(DISPLAY_NAMES.jira);
+    });
+
+    test('nothing is marked when nothing was just installed', () => {
+      const wrapper = render();
+
+      expect(
+        wrapper
+          .find('[data-automation-id="pluginRow"]')
+          .filterWhere((node) => node.prop('data-highlighted')),
+      ).toHaveLength(0);
+    });
+
     test('offers no sorting control', () => {
       expect(render().find('[data-automation-id="pluginsSorting"]')).toHaveLength(0);
     });

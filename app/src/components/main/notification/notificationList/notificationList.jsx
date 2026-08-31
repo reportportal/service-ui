@@ -156,6 +156,12 @@ export const notificationMessages = defineMessages({
     id: 'InstancesSection.removePluginSuccess',
     defaultMessage: 'Plugin has been uninstalled successfully',
   },
+  // Names the version, because install, update and rollback are the same request and only the
+  // version says which of the three just happened.
+  marketplacePluginInstalled: {
+    id: 'PluginsCatalog.marketplacePluginInstalled',
+    defaultMessage: 'Version {version} is now active. The plugin is in Installed plugins.',
+  },
   updateMarketplaceLicenceSuccess: {
     id: 'MarketplaceLicence.updateSuccess',
     defaultMessage: 'Marketplace licence credentials have been saved',

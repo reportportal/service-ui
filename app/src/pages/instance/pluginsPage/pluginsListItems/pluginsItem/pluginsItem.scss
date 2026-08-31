@@ -32,6 +32,20 @@
     background-color: $COLOR--tealish-hover;
   }
 
+  // Where the plugin went. It fades rather than latches: the answer is only interesting for the
+  // moment after the list reshuffles, and a colour that stays becomes a status nobody can clear.
+  &.highlighted {
+    border-color: $COLOR--topaz;
+    animation: plugin-row-landed 2.4s ease-out 1;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    &.highlighted {
+      animation: none;
+      background-color: $COLOR--tealish-hover;
+    }
+  }
+
   @media (max-width: $SCREEN_XS_MAX) {
     align-items: flex-start;
     min-height: max-content;
@@ -129,4 +143,14 @@
 .plugins-row-action {
   display: flex;
   align-items: center;
+}
+
+@keyframes plugin-row-landed {
+  0%,
+  60% {
+    background-color: $COLOR--tealish-hover;
+  }
+  100% {
+    background-color: transparent;
+  }
 }

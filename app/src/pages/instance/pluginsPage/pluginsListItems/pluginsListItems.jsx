@@ -84,10 +84,13 @@ export class PluginsListItems extends Component {
     onItemClick: PropTypes.func,
     onRowAction: PropTypes.func,
     filterMobileBlock: PropTypes.element,
+    /** Registry id of the row to point at, if one of these is it. */
+    highlightedRegistryId: PropTypes.string,
   };
 
   static defaultProps = {
     filterMobileBlock: null,
+    highlightedRegistryId: null,
     onItemClick: () => {},
     onRowAction: () => {},
   };
@@ -100,6 +103,7 @@ export class PluginsListItems extends Component {
       items,
       onRowAction,
       filterMobileBlock,
+      highlightedRegistryId,
     } = this.props;
 
     return (
@@ -118,6 +122,7 @@ export class PluginsListItems extends Component {
               onClick={onItemClick}
               data={item}
               onRowAction={onRowAction}
+              highlighted={Boolean(highlightedRegistryId) && item.registryId === highlightedRegistryId}
             />
           ))}
         </div>

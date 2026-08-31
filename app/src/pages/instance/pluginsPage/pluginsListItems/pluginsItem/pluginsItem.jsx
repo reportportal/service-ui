@@ -100,11 +100,42 @@ export class PluginsItem extends Component {
     data: PropTypes.object.isRequired,
     onClick: PropTypes.func,
     onRowAction: PropTypes.func,
+    /** This row is where the plugin just installed ended up. */
+    highlighted: PropTypes.bool,
   };
 
   static defaultProps = {
     onClick: () => {},
     onRowAction: () => {},
+    highlighted: false,
+  };
+
+  rowRef = React.createRef();
+
+  // A row that arrived below the fold is a row nobody sees change colour. Scrolled only when it
+  // is actually out of view, so a highlight on a row already on screen does not yank the page.
+  componentDidMount() {
+    if (this.props.highlighted) {
+      this.scrollIntoViewIfNeeded();
+    }
+  }
+
+  componentDidUpdate(previous) {
+    if (this.props.highlighted && !previous.highlighted) {
+      this.scrollIntoViewIfNeeded();
+    }
+  }
+
+  scrollIntoViewIfNeeded = () => {
+    const node = this.rowRef.current;
+    if (!node || typeof node.getBoundingClientRect !== 'function') {
+      return;
+    }
+    const { top, bottom } = node.getBoundingClientRect();
+    const visible = top >= 0 && bottom <= (window.innerHeight || 0);
+    if (!visible && typeof node.scrollIntoView === 'function') {
+      node.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
   };
 
   itemClickHandler = () => {
@@ -136,8 +167,10 @@ export class PluginsItem extends Component {
 
     return (
       <div
-        className={cx('plugins-list-item')}
+        ref={this.rowRef}
+        className={cx('plugins-list-item', { highlighted: this.props.highlighted })}
         data-automation-id="pluginRow"
+        data-highlighted={this.props.highlighted || undefined}
         onClick={this.itemClickHandler}
         title={
           enabled || isInAvailablePluginList
