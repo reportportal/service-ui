@@ -233,6 +233,66 @@ describe('PluginsCatalog', () => {
     });
   });
 
+  // Catalog.Row.All States — the "Installed · disabled" row.
+  describe('Catalog.Row.disabled', () => {
+    const disabledRow = (row) => ({ ...localPlugin(row), enabled: false });
+
+    test('a switched-off plugin says so, where its action would have been', () => {
+      // The toggle used to carry this and was removed from the row; without a state in its place
+      // a disabled plugin is indistinguishable from a working one. Kills dropping getRowState.
+      const row = installedRow('jira');
+      const wrapper = render({
+        installedPlugins: [disabledRow(row)],
+        marketplaceInstalled: [row],
+        availablePlugins: [],
+      });
+      const marker = wrapper.find('[data-automation-id="pluginRowState"]').first();
+
+      expect(marker.prop('data-state')).toBe('DISABLED');
+      expect(wrapper.find('[data-automation-id="pluginRowAction"]')).toHaveLength(0);
+    });
+
+    test('an enabled plugin keeps its action', () => {
+      const row = installedRow('jira');
+      const wrapper = render({
+        installedPlugins: [localPlugin(row)],
+        marketplaceInstalled: [row],
+        availablePlugins: [],
+      });
+
+      expect(wrapper.find('[data-automation-id="pluginRowState"]')).toHaveLength(0);
+      expect(actions(group(wrapper, ALL_GROUP_TYPE))).toEqual([ROW_ACTIONS.UPDATE]);
+    });
+
+    test('it survives an unreachable registry, unlike the marketplace badges', () => {
+      // Local state, always knowable. The offline rule drops signals the registry vouches for;
+      // whether an admin switched this plugin off is not one of them.
+      const row = installedRow('jira');
+      const wrapper = render({
+        offline: true,
+        registryHost: catalogueOffline.registry.host,
+        installedPlugins: [disabledRow(row)],
+        marketplaceInstalled: [row],
+        availablePlugins: [],
+      });
+
+      expect(
+        wrapper.find('[data-automation-id="pluginRowState"]').first().prop('data-state'),
+      ).toBe('DISABLED');
+      expect(wrapper.find('[data-automation-id="pluginBadge"]')).toHaveLength(0);
+    });
+
+    test('an available row never carries the state, whatever fields it happens to have', () => {
+      const wrapper = render({
+        installedPlugins: [],
+        marketplaceInstalled: [],
+        availablePlugins: [{ ...azure, enabled: false }],
+      });
+
+      expect(wrapper.find('[data-automation-id="pluginRowState"]')).toHaveLength(0);
+    });
+  });
+
   describe('Catalog.List.Loading', () => {
     test('the list area waits while the search header still renders', () => {
       const wrapper = render({ loading: true });

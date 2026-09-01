@@ -40,6 +40,7 @@ import { InstalledTab } from './installedTab';
 const marketplaceState = (overrides = {}) => ({
   catalogueState: MARKETPLACE_CATALOGUE_STATE.LOADED_ONLINE,
   registry: catalogue.registry,
+  instance: catalogue.instance,
   installed: [],
   available: [],
   error: null,
@@ -186,6 +187,33 @@ describe('InstalledTab', () => {
     call(PluginsCatalog, 'onRetry');
 
     expect(lastRequest()).toEqual({ q: null, category: null, debounced: undefined });
+  });
+
+  // Catalog.List.Upload Disabled — "identical to Default except the Upload Plugin control is
+  // absent from the header. Do not replace the control with a disabled state; it is not a
+  // permission error, the capability is simply off."
+  describe('Catalog.List.Upload Disabled', () => {
+    const uploadControl = (wrapper) => wrapper.find('ActionPanel');
+
+    test('the control is there when the instance allows a hand-uploaded jar', () => {
+      expect(uploadControl(render().wrapper).length).toBeGreaterThan(0);
+    });
+
+    test('the control is absent — not disabled — when the instance does not', () => {
+      const { wrapper } = render(
+        marketplaceState({ instance: { uploadAllowed: false } }),
+      );
+
+      expect(uploadControl(wrapper)).toHaveLength(0);
+    });
+
+    test('an older service-api that sends no instance block keeps the control', () => {
+      // A missing key must not read as "forbidden": losing the escape valve to a field that was
+      // never sent is worse than showing a control the instance would refuse.
+      const { wrapper } = render(marketplaceState({ instance: undefined }));
+
+      expect(uploadControl(wrapper).length).toBeGreaterThan(0);
+    });
   });
 
   describe('the plugin page', () => {

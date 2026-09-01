@@ -30,6 +30,14 @@
   letter-spacing: 1px;
 }
 
+// Outlined rather than filled: switched off is a state of this instance, not a verdict on the
+// plugin, and a solid colour would read as one.
+.neutral {
+  background-color: transparent;
+  border: 1px solid var(--rp-ui-color-text-secondary);
+  color: var(--rp-ui-color-text-secondary);
+}
+
 .free {
   background-color: $COLOR--plugin-tier-free;
 }

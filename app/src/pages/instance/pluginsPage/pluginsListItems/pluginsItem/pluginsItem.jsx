@@ -29,9 +29,11 @@ import {
   getDisplayName,
   getRowAction,
   getRowBadges,
+  getRowState,
   isAvailableRow,
   ROW_ACTIONS,
   ROW_BADGES,
+  ROW_STATES,
 } from '../../pluginsCatalog/utils';
 import styles from './pluginsItem.scss';
 
@@ -73,6 +75,10 @@ const messages = defineMessages({
   [ROW_BADGES.REMOVED]: {
     id: 'PluginItem.removedBadge',
     defaultMessage: 'Removed from registry',
+  },
+  [ROW_STATES.DISABLED]: {
+    id: 'PluginItem.disabledState',
+    defaultMessage: 'Disabled',
   },
 });
 
@@ -163,6 +169,7 @@ export class PluginsItem extends Component {
     const author = getAuthor(data);
     const isInAvailablePluginList = isAvailableRow(data);
     const badges = getRowBadges(data);
+    const rowState = getRowState(data);
     const rowAction = getRowAction(data);
 
     return (
@@ -238,7 +245,18 @@ export class PluginsItem extends Component {
           </div>
         </div>
         <div className={cx('plugins-additional-block')}>
-          {rowAction && (
+          {/* State first, and instead of the action: a plugin that is switched off has nothing
+              to offer here, and the design puts the state where the action would have been. */}
+          {rowState && (
+            <PluginBadge
+              tone={BADGE_TONES.NEUTRAL}
+              data-automation-id="pluginRowState"
+              data-state={rowState}
+            >
+              {formatMessage(messages[rowState])}
+            </PluginBadge>
+          )}
+          {!rowState && rowAction && (
             <div
               className={cx('plugins-row-action')}
               data-automation-id="pluginRowAction"

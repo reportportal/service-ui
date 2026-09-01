@@ -227,6 +227,13 @@ export const hasMarketplacePluginUpdateSelector = (state, pluginName) =>
   marketplacePluginUpdateVersionSelector(state, pluginName) !== null;
 
 // the filter the catalogue is showing, so a refetch does not silently drop it
+/**
+ * Whether this instance permits a hand-uploaded jar. Defaults to true when the field is absent,
+ * so an older service-api keeps the control rather than losing it to a missing key.
+ */
+export const isPluginUploadAllowedSelector = (state) =>
+  marketplaceSelector(state).instance?.uploadAllowed !== false;
+
 /** The plugin the last install moved into the Installed group, or null. */
 export const justInstalledMarketplacePluginSelector = (state) =>
   marketplaceSelector(state).justInstalled || null;

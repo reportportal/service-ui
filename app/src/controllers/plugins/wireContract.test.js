@@ -27,7 +27,7 @@ import licenceRequest from './__fixtures__/licence-request.json';
  * whose wire shape changed, or they were never regenerated after it changed and now describe a
  * service that no longer exists. `__fixtures__/README.md` says how to regenerate them.
  */
-const CONTRACT_HASH = '48f99867bdf5c7bf523686615329c66033c023466b0ae756e70738e9744927ea';
+const CONTRACT_HASH = '74cb316e28f6344062ac99cd40d40de8dd141e4ce26c044b786dc11654bd43a8';
 
 const INSTALL_ROUTE = 'POST /v1/plugins/{registryId}/install';
 const LICENCE_ROUTE = 'PUT /v1/plugins/licence';

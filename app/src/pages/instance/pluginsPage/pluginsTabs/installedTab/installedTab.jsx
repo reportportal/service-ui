@@ -34,6 +34,7 @@ import {
   marketplaceCatalogueLoadingSelector,
   marketplaceRegistryHostSelector,
   justInstalledMarketplacePluginSelector,
+  isPluginUploadAllowedSelector,
   isMarketplaceRegistryOfflineSelector,
   hasMarketplaceCatalogueFailedSelector,
   fetchMarketplacePluginDetailAction,
@@ -112,6 +113,7 @@ const messages = defineMessages({
     catalogueFailed: hasMarketplaceCatalogueFailedSelector(state),
     registryHost: marketplaceRegistryHostSelector(state),
     justInstalledId: justInstalledMarketplacePluginSelector(state),
+    uploadAllowed: isPluginUploadAllowedSelector(state),
     pluginDetail: marketplacePluginDetailDataSelector(state),
     detailLoading: marketplacePluginDetailLoadingSelector(state),
     detailOffline: isMarketplacePluginDetailOfflineSelector(state),
@@ -146,6 +148,7 @@ export class InstalledTab extends Component {
     installMarketplacePluginAction: PropTypes.func.isRequired,
     registryHost: PropTypes.string,
     justInstalledId: PropTypes.string,
+    uploadAllowed: PropTypes.bool.isRequired,
     clearJustInstalledMarketplacePluginAction: PropTypes.func.isRequired,
     showNotification: PropTypes.func,
     pluginDetail: PropTypes.object.isRequired,
@@ -351,7 +354,9 @@ export class InstalledTab extends Component {
                 activeItem={activeFilterItem}
                 onFilterChange={this.handleFilterChange}
               />
-              <ActionPanel />
+              {/* Absent, not disabled. The capability is switched off by environment, which is
+                  not a permission error and must not be shown as one. */}
+              {this.props.uploadAllowed && <ActionPanel />}
             </div>
             <div className={cx('plugins-content')}>
               {this.renderFilterMobileBlock()}

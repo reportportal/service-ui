@@ -33,6 +33,25 @@ export const ROW_ACTIONS = {
   DISCOVER_PREMIUM: 'DISCOVER_PREMIUM',
 };
 
+/**
+ * The row's own state, as opposed to anything the registry said. Local and always knowable, so
+ * unlike the marketplace signals it survives an unreachable registry — the toggle that used to
+ * carry it did too. It takes the action slot: a plugin that is switched off has nothing to
+ * offer there, and the design shows the state where the action would have been.
+ */
+export const ROW_STATES = {
+  DISABLED: 'DISABLED',
+};
+
+/**
+ * What the row shows instead of an action, or null when it should show the action.
+ *
+ * <p>Read off `enabled === false` rather than `!enabled`: an available row has no such field,
+ * and undefined must not read as "switched off".
+ */
+export const getRowState = (row) =>
+  !isAvailableRow(row) && row.enabled === false ? ROW_STATES.DISABLED : null;
+
 /** Marketplace-sourced signals a row can carry. All of them are unverifiable while offline. */
 export const ROW_BADGES = {
   ADVISORY: 'ADVISORY',

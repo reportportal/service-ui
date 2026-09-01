@@ -3,6 +3,9 @@
     "status" : "ONLINE",
     "host" : "marketplace.reportportal.io"
   },
+  "instance" : {
+    "uploadAllowed" : true
+  },
   "installed" : [ {
     "integrationTypeId" : 7,
     "name" : "jira",

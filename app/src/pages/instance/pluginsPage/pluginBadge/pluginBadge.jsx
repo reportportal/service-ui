@@ -32,6 +32,7 @@ const cx = classNames.bind(styles);
  * settle by inventing a design-system component out of one feature's needs.
  */
 export const BADGE_TONES = {
+  NEUTRAL: 'neutral',
   FREE: 'free',
   PREMIUM: 'premium',
   WARNING: 'warning',

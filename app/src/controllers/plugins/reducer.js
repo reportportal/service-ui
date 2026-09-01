@@ -156,6 +156,8 @@ export const integrationsReducer = (state = {}, { type = '', payload = {} }) => 
 const INITIAL_MARKETPLACE_STATE = {
   catalogueState: MARKETPLACE_CATALOGUE_STATE.NOT_REQUESTED,
   registry: { status: null, host: null },
+  // what the instance itself permits, as opposed to what the registry offers
+  instance: { uploadAllowed: true },
   installed: [],
   available: [],
   error: null,
@@ -181,6 +183,7 @@ export const marketplaceReducer = (state = INITIAL_MARKETPLACE_STATE, { type, pa
     }
     case FETCH_MARKETPLACE_CATALOGUE_SUCCESS: {
       const registry = payload.registry || {};
+      const instance = payload.instance || state.instance;
       // offline is a loaded state: the payload is still authoritative about installed plugins.
       // Only an explicit ONLINE is online, so an unknown status degrades to the cautious side.
       const catalogueState =
@@ -192,6 +195,7 @@ export const marketplaceReducer = (state = INITIAL_MARKETPLACE_STATE, { type, pa
         ...state,
         catalogueState,
         registry: { status: registry.status || null, host: registry.host || null },
+        instance,
         installed: payload.installed || [],
         available: payload.available || [],
         error: null,
