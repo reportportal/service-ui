@@ -46,6 +46,8 @@ type SingleAutocompleteRenderOption = ComponentProps<
   typeof SingleAutocomplete<FolderWithFullPath>
 >['renderOption'];
 
+type FolderAutocompleteValue = FolderWithFullPath | NewFolderData | null;
+
 interface CreateFolderAutocompleteProps {
   name?: string;
   label?: string;
@@ -53,7 +55,7 @@ interface CreateFolderAutocompleteProps {
   isRequired?: boolean;
   className?: string;
   customEmptyListMessage?: string;
-  value?: FolderWithFullPath | NewFolderData | null;
+  value?: FolderAutocompleteValue;
   error?: string;
   touched?: boolean;
   shouldDisplayNewFolderButton?: boolean;
@@ -64,8 +66,8 @@ interface CreateFolderAutocompleteProps {
   placement?: ComponentProps<typeof SingleAutocomplete>['placement'];
   menuClassName?: string;
   onStateChange?: SingleAutocompleteOnStateChange;
-  onChange?: (value: FolderWithFullPath | NewFolderData | null) => void;
-  onBlur?: (value?: FolderWithFullPath | NewFolderData | null) => void;
+  onChange?: (value: FolderAutocompleteValue) => void;
+  onBlur?: (value?: FolderAutocompleteValue) => void;
   onFocus?: () => void;
   maxLength?: number;
 }
