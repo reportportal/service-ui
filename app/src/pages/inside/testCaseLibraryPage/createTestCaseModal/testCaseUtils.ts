@@ -76,6 +76,14 @@ interface ProcessFolderResult {
 export const processFolder = (
   folder: FolderWithFullPath | NewFolderData | string,
 ): ProcessFolderResult => {
+  if (!isString(folder) && 'id' in folder && typeof folder.id === 'number') {
+    return {
+      payload: { testFolderId: folder.id },
+      newFolderDetails: undefined,
+      existingFolderId: folder.id,
+    };
+  }
+
   if (isString(folder)) {
     return {
       payload: { testFolder: { name: folder } },
@@ -91,7 +99,7 @@ export const processFolder = (
       payload: {
         testFolder: {
           name: folder.name,
-          ...(parentId && { parentTestFolderId: parentId }),
+          ...(parentId != null && { parentTestFolderId: parentId }),
         },
       },
       newFolderDetails: folder,

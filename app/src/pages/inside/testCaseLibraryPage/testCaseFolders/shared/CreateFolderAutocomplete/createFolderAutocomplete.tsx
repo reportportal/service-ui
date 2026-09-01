@@ -28,6 +28,11 @@ import { commonMessages } from 'pages/inside/testCaseLibraryPage/commonMessages'
 import { findFolderById } from 'pages/inside/testCaseLibraryPage/utils';
 import { NewFolderData } from 'pages/inside/testCaseLibraryPage/utils/getFolderFromFormValues';
 
+import {
+  getFolderAutocompleteLabel,
+  keepSelectedFolderStateReducer,
+} from './keepSelectedFolderStateReducer';
+import { resolveFolderAutocompleteChange } from './resolveFolderAutocompleteChange';
 import { messages } from './messages';
 import styles from './createFolderAutocomplete.scss';
 
@@ -41,6 +46,8 @@ type SingleAutocompleteRenderOption = ComponentProps<
   typeof SingleAutocomplete<FolderWithFullPath>
 >['renderOption'];
 
+type FolderAutocompleteValue = FolderWithFullPath | NewFolderData | null;
+
 interface CreateFolderAutocompleteProps {
   name?: string;
   label?: string;
@@ -48,7 +55,7 @@ interface CreateFolderAutocompleteProps {
   isRequired?: boolean;
   className?: string;
   customEmptyListMessage?: string;
-  value?: FolderWithFullPath | NewFolderData | null;
+  value?: FolderAutocompleteValue;
   error?: string;
   touched?: boolean;
   shouldDisplayNewFolderButton?: boolean;
@@ -59,8 +66,8 @@ interface CreateFolderAutocompleteProps {
   placement?: ComponentProps<typeof SingleAutocomplete>['placement'];
   menuClassName?: string;
   onStateChange?: SingleAutocompleteOnStateChange;
-  onChange?: (value: FolderWithFullPath | NewFolderData) => void;
-  onBlur?: () => void;
+  onChange?: (value: FolderAutocompleteValue) => void;
+  onBlur?: (value?: FolderAutocompleteValue) => void;
   onFocus?: () => void;
   maxLength?: number;
 }
@@ -167,27 +174,13 @@ export const CreateFolderAutocomplete = ({
   };
 
   const handleChange = (selectedItem: FolderWithFullPath | string | null) => {
-    if (selectedItem) {
-      onChange(isString(selectedItem) ? { name: selectedItem } : selectedItem);
-    }
-
-    autocompleteInputRef.current?.blur();
+    onChange(resolveFolderAutocompleteChange(selectedItem, value));
   };
 
-  const parseValueToString = (option: FolderWithFullPath | NewFolderData | string) => {
-    if (!option) {
-      return '';
-    }
-
-    if (isString(option)) {
-      return option;
-    }
-
-    if ('fullPath' in option) {
-      return option.description || option.name || '';
-    }
-
-    return option.name || '';
+  const handleBlur = () => {
+    // Pass the current folder value, not the FocusEvent. redux-form would otherwise
+    // treat event.target.value (display name string) as the field value and drop the id.
+    onBlur(value ?? null);
   };
 
   const handleStateChange: SingleAutocompleteOnStateChange = (changes, stateAndHelpers) => {
@@ -197,6 +190,10 @@ export const CreateFolderAutocomplete = ({
 
     onStateChange(changes, stateAndHelpers);
   };
+
+  const stateReducer = keepSelectedFolderStateReducer<FolderWithFullPath | string>(
+    getFolderAutocompleteLabel,
+  );
 
   return (
     <div className={cx('create-folder-autocomplete', className)}>
@@ -220,10 +217,12 @@ export const CreateFolderAutocomplete = ({
         maxLength={maxLength}
         customEmptyListMessage={customEmptyListMessage || formatMessage(messages.noFoldersFound)}
         renderOption={renderOption}
-        parseValueToString={parseValueToString}
+        parseValueToString={getFolderAutocompleteLabel}
+        getUniqKey={(item) => (isString(item) ? item : String(item.id))}
+        stateReducer={stateReducer}
         onStateChange={handleStateChange}
         onChange={handleChange}
-        onBlur={onBlur}
+        onBlur={handleBlur}
         onFocus={onFocus}
       />
     </div>
