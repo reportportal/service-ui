@@ -25,7 +25,7 @@ import {
   ManualScenarioType,
   CreateTestCaseFormData,
 } from '../types';
-import { NewFolderData } from '../utils/getFolderFromFormValues';
+import { NewFolderData, isNewFolderData } from '../utils/getFolderFromFormValues';
 import { getMeaningfulRequirements } from '../utils/requirementsUtils';
 import { hasStepContent } from '../../common/scenarioUtils';
 
@@ -92,17 +92,25 @@ export const processFolder = (
     };
   }
 
-  const parentId = folder.parentTestFolderId;
+  if (isNewFolderData(folder)) {
+    const parentId = folder.parentTestFolderId;
+
+    return {
+      payload: {
+        testFolder: {
+          name: folder.name,
+          ...(parentId != null && { parentTestFolderId: parentId }),
+        },
+      },
+      newFolderDetails: folder,
+      existingFolderId: undefined,
+    };
+  }
 
   return {
-    payload: {
-      testFolder: {
-        name: folder.name,
-        ...(parentId && { parentTestFolderId: parentId }),
-      },
-    },
-    newFolderDetails: folder,
-    existingFolderId: undefined,
+    payload: { testFolderId: folder.id },
+    newFolderDetails: undefined,
+    existingFolderId: folder.id,
   };
 };
 

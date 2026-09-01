@@ -64,8 +64,8 @@ interface CreateFolderAutocompleteProps {
   placement?: ComponentProps<typeof SingleAutocomplete>['placement'];
   menuClassName?: string;
   onStateChange?: SingleAutocompleteOnStateChange;
-  onChange?: (value: FolderWithFullPath | NewFolderData) => void;
-  onBlur?: () => void;
+  onChange?: (value: FolderWithFullPath | NewFolderData | null) => void;
+  onBlur?: (value?: FolderWithFullPath | NewFolderData | null) => void;
   onFocus?: () => void;
   maxLength?: number;
 }
@@ -88,6 +88,7 @@ export const CreateFolderAutocomplete = ({
   menuClassName,
   onStateChange = noop,
   onChange = noop,
+  onBlur = noop,
   onFocus = noop,
   maxLength,
 }: CreateFolderAutocompleteProps) => {
@@ -171,11 +172,13 @@ export const CreateFolderAutocomplete = ({
   };
 
   const handleChange = (selectedItem: FolderWithFullPath | string | null) => {
-    const nextValue = resolveFolderAutocompleteChange(selectedItem, value);
+    onChange(resolveFolderAutocompleteChange(selectedItem, value));
+  };
 
-    if (nextValue) {
-      onChange(nextValue);
-    }
+  const handleBlur = () => {
+    // Pass the current folder value, not the FocusEvent. redux-form would otherwise
+    // treat event.target.value (display name string) as the field value and drop the id.
+    onBlur(value ?? null);
   };
 
   const handleStateChange: SingleAutocompleteOnStateChange = (changes, stateAndHelpers) => {
@@ -217,7 +220,7 @@ export const CreateFolderAutocomplete = ({
         stateReducer={stateReducer}
         onStateChange={handleStateChange}
         onChange={handleChange}
-        onBlur={noop}
+        onBlur={handleBlur}
         onFocus={onFocus}
       />
     </div>

@@ -57,4 +57,12 @@ describe('processFolder', () => {
     });
     expect(result.existingFolderId).toBeUndefined();
   });
+
+  it('keeps parentTestFolderId when it is 0', () => {
+    const result = processFolder({ name: 'New folder', parentTestFolderId: 0 });
+
+    expect(result.payload).toEqual({
+      testFolder: { name: 'New folder', parentTestFolderId: 0 },
+    });
+  });
 });

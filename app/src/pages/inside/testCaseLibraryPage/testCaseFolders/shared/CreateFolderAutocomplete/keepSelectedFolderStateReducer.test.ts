@@ -109,4 +109,8 @@ describe('resolveFolderAutocompleteChange', () => {
   it('treats an unmatched typed string as a new folder name', () => {
     expect(resolveFolderAutocompleteChange('Brand new', folderB)).toEqual({ name: 'Brand new' });
   });
+
+  it('returns null when the selection is cleared', () => {
+    expect(resolveFolderAutocompleteChange(null, folderB)).toBeNull();
+  });
 });
