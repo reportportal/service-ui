@@ -25,7 +25,7 @@ import {
   ManualScenarioType,
   CreateTestCaseFormData,
 } from '../types';
-import { NewFolderData, isNewFolderData } from '../utils/getFolderFromFormValues';
+import { NewFolderData } from '../utils/getFolderFromFormValues';
 import { getMeaningfulRequirements } from '../utils/requirementsUtils';
 import { hasStepContent } from '../../common/scenarioUtils';
 
@@ -76,6 +76,14 @@ interface ProcessFolderResult {
 export const processFolder = (
   folder: FolderWithFullPath | NewFolderData | string,
 ): ProcessFolderResult => {
+  if (!isString(folder) && 'id' in folder && typeof folder.id === 'number') {
+    return {
+      payload: { testFolderId: folder.id },
+      newFolderDetails: undefined,
+      existingFolderId: folder.id,
+    };
+  }
+
   if (isString(folder)) {
     return {
       payload: { testFolder: { name: folder } },
@@ -84,25 +92,17 @@ export const processFolder = (
     };
   }
 
-  if (isNewFolderData(folder)) {
-    const parentId = folder.parentTestFolderId;
-
-    return {
-      payload: {
-        testFolder: {
-          name: folder.name,
-          ...(parentId && { parentTestFolderId: parentId }),
-        },
-      },
-      newFolderDetails: folder,
-      existingFolderId: undefined,
-    };
-  }
+  const parentId = folder.parentTestFolderId;
 
   return {
-    payload: { testFolderId: folder.id },
-    newFolderDetails: undefined,
-    existingFolderId: folder.id,
+    payload: {
+      testFolder: {
+        name: folder.name,
+        ...(parentId && { parentTestFolderId: parentId }),
+      },
+    },
+    newFolderDetails: folder,
+    existingFolderId: undefined,
   };
 };
 

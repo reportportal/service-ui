@@ -28,6 +28,11 @@ import { commonMessages } from 'pages/inside/testCaseLibraryPage/commonMessages'
 import { findFolderById } from 'pages/inside/testCaseLibraryPage/utils';
 import { NewFolderData } from 'pages/inside/testCaseLibraryPage/utils/getFolderFromFormValues';
 
+import {
+  getFolderAutocompleteLabel,
+  keepSelectedFolderStateReducer,
+} from './keepSelectedFolderStateReducer';
+import { resolveFolderAutocompleteChange } from './resolveFolderAutocompleteChange';
 import { messages } from './messages';
 import styles from './createFolderAutocomplete.scss';
 
@@ -83,7 +88,6 @@ export const CreateFolderAutocomplete = ({
   menuClassName,
   onStateChange = noop,
   onChange = noop,
-  onBlur = noop,
   onFocus = noop,
   maxLength,
 }: CreateFolderAutocompleteProps) => {
@@ -167,27 +171,11 @@ export const CreateFolderAutocomplete = ({
   };
 
   const handleChange = (selectedItem: FolderWithFullPath | string | null) => {
-    if (selectedItem) {
-      onChange(isString(selectedItem) ? { name: selectedItem } : selectedItem);
+    const nextValue = resolveFolderAutocompleteChange(selectedItem, value);
+
+    if (nextValue) {
+      onChange(nextValue);
     }
-
-    autocompleteInputRef.current?.blur();
-  };
-
-  const parseValueToString = (option: FolderWithFullPath | NewFolderData | string) => {
-    if (!option) {
-      return '';
-    }
-
-    if (isString(option)) {
-      return option;
-    }
-
-    if ('fullPath' in option) {
-      return option.description || option.name || '';
-    }
-
-    return option.name || '';
   };
 
   const handleStateChange: SingleAutocompleteOnStateChange = (changes, stateAndHelpers) => {
@@ -197,6 +185,10 @@ export const CreateFolderAutocomplete = ({
 
     onStateChange(changes, stateAndHelpers);
   };
+
+  const stateReducer = keepSelectedFolderStateReducer<FolderWithFullPath | string>(
+    getFolderAutocompleteLabel,
+  );
 
   return (
     <div className={cx('create-folder-autocomplete', className)}>
@@ -220,10 +212,12 @@ export const CreateFolderAutocomplete = ({
         maxLength={maxLength}
         customEmptyListMessage={customEmptyListMessage || formatMessage(messages.noFoldersFound)}
         renderOption={renderOption}
-        parseValueToString={parseValueToString}
+        parseValueToString={getFolderAutocompleteLabel}
+        getUniqKey={(item) => (isString(item) ? item : String(item.id))}
+        stateReducer={stateReducer}
         onStateChange={handleStateChange}
         onChange={handleChange}
-        onBlur={onBlur}
+        onBlur={noop}
         onFocus={onFocus}
       />
     </div>
