@@ -103,20 +103,24 @@ function AdminSidebarComponent({
   const createTopSidebarItems = () => {
     let menuCounter = 0;
     const menuStep = 10;
+    const nextMenuOrder = () => {
+      menuCounter += menuStep;
+      return menuCounter;
+    };
     const items = [
       {
         onClick: handleClickButton(ADMIN_SIDEBAR_EVENTS.CLICK_PROJECTS_BTN),
         link: { type: PROJECTS_PAGE },
         icon: ProjectsIcon,
         message: <FormattedMessage id={'AdminSidebar.allProjects'} defaultMessage={'Projects'} />,
-        menuOrder: (menuCounter += menuStep),
+        menuOrder: nextMenuOrder(),
       },
       {
         onClick: handleClickButton(ADMIN_SIDEBAR_EVENTS.CLICK_ALL_USERS_BTN),
         link: { type: ALL_USERS_PAGE },
         icon: UsersIcon,
         message: <FormattedMessage id={'AdminSidebar.allUsers'} defaultMessage={'All Users'} />,
-        menuOrder: (menuCounter += menuStep),
+        menuOrder: nextMenuOrder(),
       },
       {
         onClick: handleClickButton(ADMIN_SIDEBAR_EVENTS.CLICK_SERVER_SETTINGS_BTN),
@@ -125,14 +129,14 @@ function AdminSidebarComponent({
         message: (
           <FormattedMessage id={'AdminSidebar.settings'} defaultMessage={'Server settings'} />
         ),
-        menuOrder: (menuCounter += menuStep),
+        menuOrder: nextMenuOrder(),
       },
       {
         onClick: handleClickButton(ADMIN_SIDEBAR_EVENTS.CLICK_PLUGINS_BTN),
         link: { type: PLUGINS_PAGE },
         icon: PluginsIcon,
         message: <FormattedMessage id={'AdminSidebar.plugins'} defaultMessage={'Plugins'} />,
-        menuOrder: (menuCounter += menuStep),
+        menuOrder: nextMenuOrder(),
       },
     ];
 
@@ -146,7 +150,7 @@ function AdminSidebarComponent({
           link: { type: PLUGIN_UI_EXTENSION_ADMIN_PAGE, payload: { pluginPage: extension.name } },
           icon: extension.buttonIcon,
           message: extension.buttonLabel || extension.name,
-          menuOrder: (menuCounter += menuStep),
+          menuOrder: nextMenuOrder(),
         }),
       );
 
@@ -161,7 +165,7 @@ function AdminSidebarComponent({
           },
           icon: <RemotePluginIcon icon={payload.icon} />,
           message: payload.title || payload.name,
-          menuOrder: payload.menuOrder ?? (menuCounter += menuStep),
+          menuOrder: payload.menuOrder ?? nextMenuOrder(),
         }),
       );
 
