@@ -69,7 +69,7 @@ export const useTagSearch = (searchValue: string = '') => {
       );
 
       const matchedTags = keys
-        .map((key) => allTags.find((tag) => tag.key === key))
+        .map((key) => allTags.find((tag) => tag.key.toLowerCase() === key.toLowerCase()))
         .filter(isNotNil);
 
       setTags(matchedTags);
