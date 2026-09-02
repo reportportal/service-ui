@@ -130,6 +130,7 @@ const messages = defineMessages({
 });
 
 const urlValidator = bindMessageToValidator(validate.ldapUrl, 'requiredFieldHint');
+const SEARCH_FILTER_MAX_LENGTH = 1024;
 
 const LdapFormFieldsComponent = ({
   initialize,
@@ -222,6 +223,9 @@ const LdapFormFieldsComponent = ({
   const getFieldsConfig = () => {
     const defaultField = <FieldText maxLength="128" defaultWidth={false} />;
     const maxField = <FieldText maxLength="256" defaultWidth={false} />;
+    const searchFilterField = (
+      <FieldText maxLength={SEARCH_FILTER_MAX_LENGTH} defaultWidth={false} />
+    );
 
     const firstStepFields = [
       {
@@ -275,7 +279,7 @@ const LdapFormFieldsComponent = ({
           name: USER_SEARCH_FILTER_KEY,
         },
         label: messages.userSearchFilterLabel,
-        children: defaultField,
+        children: searchFilterField,
       },
       {
         fieldProps: {
@@ -289,7 +293,7 @@ const LdapFormFieldsComponent = ({
           name: GROUP_SEARCH_FILTER_KEY,
         },
         label: messages.groupSearchFilterLabel,
-        children: defaultField,
+        children: searchFilterField,
       },
       {
         fieldProps: {
