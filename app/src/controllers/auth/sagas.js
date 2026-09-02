@@ -79,6 +79,12 @@ import { tokenSelector } from './selectors';
 
 // TODO: clear cookie on logout
 function* handleLogout({ payload }) {
+  try {
+    yield call(fetch, URLS.grafanaSession(), { method: 'DELETE' });
+  } catch {
+    // Grafana session revocation must not block ReportPortal logout.
+  }
+
   yield put(resetTokenAction());
   yield put(fetchPublicPluginsAction());
   yield put(fetchAppInfoAction());

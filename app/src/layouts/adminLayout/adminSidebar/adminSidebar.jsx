@@ -37,6 +37,8 @@ import {
   uiExtensionAdminPagesSelector,
   uiExtensionAdminSidebarComponentsSelector,
 } from 'controllers/plugins/uiExtensions';
+import { PLUGIN_TYPE_REMOTE } from 'controllers/plugins/uiExtensions/constants';
+import { RemotePluginIcon } from 'components/integrations/elements/pluginIcon/remotePluginIcon';
 import { ADMIN_SIDEBAR_EVENTS } from 'components/main/analytics/events';
 import { withTooltip } from 'components/main/tooltips/tooltip';
 import { TextTooltip } from 'components/main/tooltips/textTooltip';
@@ -99,18 +101,22 @@ function AdminSidebarComponent({
   };
 
   const createTopSidebarItems = () => {
+    let menuCounter = 0;
+    const menuStep = 10;
     const items = [
       {
         onClick: handleClickButton(ADMIN_SIDEBAR_EVENTS.CLICK_PROJECTS_BTN),
         link: { type: PROJECTS_PAGE },
         icon: ProjectsIcon,
         message: <FormattedMessage id={'AdminSidebar.allProjects'} defaultMessage={'Projects'} />,
+        menuOrder: (menuCounter += menuStep),
       },
       {
         onClick: handleClickButton(ADMIN_SIDEBAR_EVENTS.CLICK_ALL_USERS_BTN),
         link: { type: ALL_USERS_PAGE },
         icon: UsersIcon,
         message: <FormattedMessage id={'AdminSidebar.allUsers'} defaultMessage={'All Users'} />,
+        menuOrder: (menuCounter += menuStep),
       },
       {
         onClick: handleClickButton(ADMIN_SIDEBAR_EVENTS.CLICK_SERVER_SETTINGS_BTN),
@@ -119,12 +125,14 @@ function AdminSidebarComponent({
         message: (
           <FormattedMessage id={'AdminSidebar.settings'} defaultMessage={'Server settings'} />
         ),
+        menuOrder: (menuCounter += menuStep),
       },
       {
         onClick: handleClickButton(ADMIN_SIDEBAR_EVENTS.CLICK_PLUGINS_BTN),
         link: { type: PLUGINS_PAGE },
         icon: PluginsIcon,
         message: <FormattedMessage id={'AdminSidebar.plugins'} defaultMessage={'Plugins'} />,
+        menuOrder: (menuCounter += menuStep),
       },
     ];
 
@@ -138,6 +146,22 @@ function AdminSidebarComponent({
           link: { type: PLUGIN_UI_EXTENSION_ADMIN_PAGE, payload: { pluginPage: extension.name } },
           icon: extension.buttonIcon,
           message: extension.buttonLabel || extension.name,
+          menuOrder: (menuCounter += menuStep),
+        }),
+      );
+
+    adminPageExtensions
+      .filter(({ pluginType, payload }) => pluginType === PLUGIN_TYPE_REMOTE && payload.icon)
+      .forEach(({ payload }) =>
+        items.push({
+          onClick: handleClickButton(),
+          link: {
+            type: PLUGIN_UI_EXTENSION_ADMIN_PAGE,
+            payload: { pluginPage: payload.slug },
+          },
+          icon: <RemotePluginIcon icon={payload.icon} />,
+          message: payload.title || payload.name,
+          menuOrder: payload.menuOrder ?? (menuCounter += menuStep),
         }),
       );
 
@@ -149,7 +173,7 @@ function AdminSidebarComponent({
       }),
     );
 
-    return items;
+    return items.sort((a, b) => a.menuOrder - b.menuOrder);
   };
 
   const createBottomSidebarItems = () => [

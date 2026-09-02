@@ -177,8 +177,8 @@ export class AppSidebar extends Component {
             payload: { projectId: activeProject, pluginPage: payload.slug },
           },
           icon: <RemotePluginIcon icon={payload.icon} />,
-          message: payload.title,
-          menuOrder: payload.menuOrder || (menuCounter += menuStep),
+          message: payload.title || payload.name,
+          menuOrder: payload.menuOrder ?? (menuCounter += menuStep),
         });
       }
     });
