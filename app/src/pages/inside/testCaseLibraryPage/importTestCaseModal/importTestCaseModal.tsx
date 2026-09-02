@@ -47,7 +47,7 @@ export type ImportTestCaseModalData = {
 };
 
 const cx = createClassnames(styles);
-const MAX_FILE_SIZE_MB = 10;
+const MAX_FILE_SIZE_MB = 32;
 const MAX_FILE_SIZE_BYTES = MAX_FILE_SIZE_MB * 1024 * 1024;
 const CSV_MIME_TYPES: MimeType[] = [MIME_TYPES.csv, MIME_TYPES.xls, MIME_TYPES.plain];
 const TEMPLATE_FILE_NAME = 'test-case-import-template.csv';
@@ -306,7 +306,9 @@ export const ImportTestCaseModal = ({
             <FileDropArea
               messages={{
                 incorrectFileFormat: formatMessage(messages.incorrectFileFormat),
-                incorrectFileSize: formatMessage(messages.incorrectFileSize),
+                incorrectFileSize: formatMessage(messages.incorrectFileSize, {
+                  size: MAX_FILE_SIZE_MB,
+                }),
               }}
               acceptFileMimeTypes={CSV_MIME_TYPES}
               maxFileSize={MAX_FILE_SIZE_BYTES}
