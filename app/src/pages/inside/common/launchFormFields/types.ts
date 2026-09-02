@@ -114,6 +114,7 @@ export interface NewLaunchFieldsProps {
 
 export interface BaseLaunchModalProps {
   testCases: ExtendedTestCase[];
+  selectedTestCaseIds?: number[];
   folderId?: number;
   testPlanId?: number;
   modalTitle: string;
