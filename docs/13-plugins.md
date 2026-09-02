@@ -101,7 +101,12 @@ Remote plugins are uploaded as `.json` manifests on **Instance → Plugins**. Th
 }
 ```
 
-`baseUrl` must be an absolute HTTP(S) URL without a trailing slash. The page `url` is relative to `baseUrl` and becomes the iframe source. Same-origin iframe pages are covered by the default `frame-src 'self'` CSP rule. A remote domain must be explicitly allowed in `frame-src`.
+`baseUrl` must be an absolute HTTP(S) URL without a trailing slash. The page `url` is relative to `baseUrl` and becomes the iframe source.
+
+Embedding is controlled by CSP on **both** sides:
+
+- **ReportPortal** (`frame-src`): same-origin pages are allowed by default (`'self'`). A remote domain must be explicitly allowed.
+- **Remote page** (`frame-ancestors`): if the plugin response sets this header, it must allow the ReportPortal origin; otherwise the browser blocks the iframe even when `frame-src` permits the URL.
 
 Disabling or uninstalling a remote plugin removes its sidebar entries. The page `slug` forms the plugin route, while `title` overrides the navigation label.
 
