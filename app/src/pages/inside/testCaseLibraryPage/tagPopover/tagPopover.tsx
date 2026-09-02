@@ -106,7 +106,7 @@ export const TagPopover = ({
           className={cx('tag-popover__tag-item')}
           onClick={() => handleTag(tag)}
         >
-          {tag.key}
+          {tag.key.toLowerCase()}
         </button>
       ))}
     </div>
