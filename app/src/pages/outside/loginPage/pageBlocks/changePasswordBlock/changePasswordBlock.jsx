@@ -59,7 +59,7 @@ const messages = defineMessages({
   },
 });
 
-const TokenExpiredActions = () => {
+const InvalidTokenActions = () => {
   const { formatMessage } = useIntl();
   const dispatch = useDispatch();
 
@@ -98,7 +98,6 @@ const ChangePasswordBlockComponent = ({ reset = '' }) => {
   const dispatch = useDispatch();
   const [loading, setLoading] = useState(true);
   const [valid, setValid] = useState(true);
-  const [isExpired, setIsExpired] = useState(false);
 
   useEffect(() => {
     if (!reset) {
@@ -114,14 +113,12 @@ const ChangePasswordBlockComponent = ({ reset = '' }) => {
       .then((response) => {
         if (isMounted) {
           setValid(response.is);
-          setIsExpired(!!response.isExpired);
           setLoading(false);
         }
       })
       .catch(() => {
         if (isMounted) {
           setValid(false);
-          setIsExpired(false);
           setLoading(false);
         }
       });
@@ -131,17 +128,11 @@ const ChangePasswordBlockComponent = ({ reset = '' }) => {
     };
   }, [dispatch, reset]);
 
-  useEffect(() => {
-    if (!loading && !valid && !isExpired) {
-      dispatch(rfrRedirect({ type: LOGIN_PAGE }));
-    }
-  }, [dispatch, loading, valid, isExpired]);
-
   if (loading) {
     return <SpinningPreloader />;
   }
 
-  if (isExpired) {
+  if (!valid) {
     return (
       <>
         <PageSectionContainer
@@ -149,15 +140,11 @@ const ChangePasswordBlockComponent = ({ reset = '' }) => {
           hint={messages.tokenExpired}
           leftAligned
         >
-          <TokenExpiredActions />
+          <InvalidTokenActions />
         </PageSectionContainer>
         <OutsideLoginFooter />
       </>
     );
-  }
-
-  if (!valid) {
-    return null;
   }
 
   return (
