@@ -32,7 +32,10 @@ import {
   getFolderAutocompleteLabel,
   keepSelectedFolderStateReducer,
 } from './keepSelectedFolderStateReducer';
-import { resolveFolderAutocompleteChange } from './resolveFolderAutocompleteChange';
+import {
+  resolveFolderAutocompleteChange,
+  shouldIgnoreFolderAutocompleteClear,
+} from './resolveFolderAutocompleteChange';
 import { messages } from './messages';
 import styles from './createFolderAutocomplete.scss';
 
@@ -174,6 +177,10 @@ export const CreateFolderAutocomplete = ({
   };
 
   const handleChange = (selectedItem: FolderWithFullPath | string | null) => {
+    if (shouldIgnoreFolderAutocompleteClear(selectedItem, inputValue)) {
+      return;
+    }
+
     onChange(resolveFolderAutocompleteChange(selectedItem, value));
   };
 

@@ -22,7 +22,10 @@ import {
   getFolderAutocompleteLabel,
   keepSelectedFolderStateReducer,
 } from './keepSelectedFolderStateReducer';
-import { resolveFolderAutocompleteChange } from './resolveFolderAutocompleteChange';
+import {
+  resolveFolderAutocompleteChange,
+  shouldIgnoreFolderAutocompleteClear,
+} from './resolveFolderAutocompleteChange';
 
 const folderA: FolderWithFullPath = {
   id: 48,
@@ -47,11 +50,13 @@ const apply = (
   changes: Partial<StateChangeOptions<FolderWithFullPath | string>> & {
     type: StateChangeOptions<FolderWithFullPath | string>['type'];
   },
+  stateInputValue?: string,
 ) =>
   reduce(
-    { selectedItem, inputValue: getFolderAutocompleteLabel(selectedItem) } as DownshiftState<
-      FolderWithFullPath | string
-    >,
+    {
+      selectedItem,
+      inputValue: stateInputValue ?? getFolderAutocompleteLabel(selectedItem),
+    } as DownshiftState<FolderWithFullPath | string>,
     changes as StateChangeOptions<FolderWithFullPath | string>,
   );
 
@@ -95,6 +100,42 @@ describe('keepSelectedFolderStateReducer', () => {
 
     expect(result.selectedItem).toBe('Brand new');
   });
+
+  it('keeps a newly created folder name when blur clears the selection', () => {
+    const result = apply('New folder', {
+      type: Downshift.stateChangeTypes.unknown,
+      selectedItem: null,
+      inputValue: '',
+    });
+
+    expect(result.selectedItem).toBe('New folder');
+    expect(result.inputValue).toBe('New folder');
+  });
+
+  it('keeps the selected folder when blur clears the selection', () => {
+    const result = apply(folderB, {
+      type: Downshift.stateChangeTypes.unknown,
+      selectedItem: null,
+      inputValue: '',
+    });
+
+    expect(result.selectedItem).toEqual(folderB);
+    expect(result.inputValue).toBe('Test');
+  });
+
+  it('allows clearing a new folder when the input is emptied', () => {
+    const result = apply(
+      'New folder',
+      {
+        type: Downshift.stateChangeTypes.unknown,
+        selectedItem: null,
+        inputValue: '',
+      },
+      '',
+    );
+
+    expect(result.selectedItem).toBeNull();
+  });
 });
 
 describe('resolveFolderAutocompleteChange', () => {
@@ -112,5 +153,19 @@ describe('resolveFolderAutocompleteChange', () => {
 
   it('returns null when the selection is cleared', () => {
     expect(resolveFolderAutocompleteChange(null, folderB)).toBeNull();
+  });
+});
+
+describe('shouldIgnoreFolderAutocompleteClear', () => {
+  it('ignores a blur-driven clear while the input still has text', () => {
+    expect(shouldIgnoreFolderAutocompleteClear(null, 'New folder')).toBe(true);
+  });
+
+  it('allows clearing when the input is empty', () => {
+    expect(shouldIgnoreFolderAutocompleteClear(null, '')).toBe(false);
+  });
+
+  it('does not ignore a real selection', () => {
+    expect(shouldIgnoreFolderAutocompleteClear('New folder', 'New folder')).toBe(false);
   });
 });

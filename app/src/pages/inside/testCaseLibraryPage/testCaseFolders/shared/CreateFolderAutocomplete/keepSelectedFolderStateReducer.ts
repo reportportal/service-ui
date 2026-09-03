@@ -54,15 +54,20 @@ export const keepSelectedFolderStateReducer =
       return changes;
     }
 
-    if (changes.selectedItem === null || !hasFolderId(state.selectedItem)) {
+    const current = state.selectedItem;
+    const currentLabel = current ? itemToString(current).trim() : '';
+    const displayedInput = (state.inputValue ?? '').trim();
+    const nextInput = (changes.inputValue ?? state.inputValue ?? '').trim();
+
+    if (changes.selectedItem === null) {
+      if (current && currentLabel && displayedInput === currentLabel) {
+        return { ...changes, selectedItem: current, inputValue: currentLabel };
+      }
+
       return changes;
     }
 
-    const current = state.selectedItem;
-    const currentLabel = itemToString(current);
-    const nextInput = (changes.inputValue ?? state.inputValue ?? '').trim();
-
-    if (nextInput !== currentLabel) {
+    if (!hasFolderId(current) || nextInput !== currentLabel) {
       return changes;
     }
 

@@ -21,6 +21,11 @@ import { NewFolderData } from 'pages/inside/testCaseLibraryPage/utils/getFolderF
 
 import { getFolderAutocompleteLabel } from './keepSelectedFolderStateReducer';
 
+export const shouldIgnoreFolderAutocompleteClear = (
+  selectedItem: FolderWithFullPath | string | null,
+  inputValue: string,
+): boolean => selectedItem === null && Boolean(inputValue.trim());
+
 export const resolveFolderAutocompleteChange = (
   selectedItem: FolderWithFullPath | string | null,
   currentValue?: FolderWithFullPath | NewFolderData | null,
