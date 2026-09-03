@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { ComponentProps, useMemo, useRef, useState } from 'react';
+import { ComponentProps, useEffect, useMemo, useRef, useState } from 'react';
 import { useIntl } from 'react-intl';
 import { useSelector } from 'react-redux';
 import { FieldLabel, SingleAutocomplete } from '@reportportal/ui-kit';
@@ -97,7 +97,15 @@ export const CreateFolderAutocomplete = ({
   const { formatMessage } = useIntl();
   const [inputValue, setInputValue] = useState('');
   const autocompleteInputRef = useRef<HTMLInputElement>(null);
+  const isMountedRef = useRef(true);
   const folders = useSelector(transformedFoldersWithFullPathSelector);
+
+  useEffect(
+    () => () => {
+      isMountedRef.current = false;
+    },
+    [],
+  );
 
   const filteredFolders = !isEmpty(excludeFolderIds)
     ? folders.filter((folder) => !excludeFolderIds.includes(folder.id))
@@ -178,6 +186,10 @@ export const CreateFolderAutocomplete = ({
   };
 
   const handleBlur = () => {
+    if (!isMountedRef.current) {
+      return;
+    }
+
     // Pass the current folder value, not the FocusEvent. redux-form would otherwise
     // treat event.target.value (display name string) as the field value and drop the id.
     onBlur(value ?? null);
