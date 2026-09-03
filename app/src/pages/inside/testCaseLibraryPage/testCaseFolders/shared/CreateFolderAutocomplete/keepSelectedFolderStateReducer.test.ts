@@ -22,10 +22,7 @@ import {
   getFolderAutocompleteLabel,
   keepSelectedFolderStateReducer,
 } from './keepSelectedFolderStateReducer';
-import {
-  resolveFolderAutocompleteChange,
-  shouldIgnoreFolderAutocompleteClear,
-} from './resolveFolderAutocompleteChange';
+import { resolveFolderAutocompleteChange } from './resolveFolderAutocompleteChange';
 
 const folderA: FolderWithFullPath = {
   id: 48,
@@ -153,19 +150,5 @@ describe('resolveFolderAutocompleteChange', () => {
 
   it('returns null when the selection is cleared', () => {
     expect(resolveFolderAutocompleteChange(null, folderB)).toBeNull();
-  });
-});
-
-describe('shouldIgnoreFolderAutocompleteClear', () => {
-  it('ignores a blur-driven clear while the input still has text', () => {
-    expect(shouldIgnoreFolderAutocompleteClear(null, 'New folder')).toBe(true);
-  });
-
-  it('allows clearing when the input is empty', () => {
-    expect(shouldIgnoreFolderAutocompleteClear(null, '')).toBe(false);
-  });
-
-  it('does not ignore a real selection', () => {
-    expect(shouldIgnoreFolderAutocompleteClear('New folder', 'New folder')).toBe(false);
   });
 });

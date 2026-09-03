@@ -62,7 +62,7 @@ const CreateTestCaseModalComponent = ({
   const { isLoading: isCreateTestCaseLoading, createTestCase } = useTestCase();
 
   useEffect(() => {
-    initialize({ ...TEST_CASE_FORM_INITIAL_VALUES, folder: data?.folder });
+    initialize({ ...TEST_CASE_FORM_INITIAL_VALUES, folder: data?.folder ?? null });
   }, [data, initialize]);
 
   const handleCreate = useCallback(
@@ -106,4 +106,5 @@ export const CreateTestCaseModal = reduxForm<CreateTestCaseFormData, CreateTestC
     folder: commonValidators.requiredField(folder),
   }),
   enableReinitialize: false,
+  destroyOnUnmount: true,
 })(CreateTestCaseModalComponent);
