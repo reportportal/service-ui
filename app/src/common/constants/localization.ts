@@ -412,6 +412,10 @@ export const COMMON_LOCALE_KEYS = defineMessages({
     id: 'Common.refresh',
     defaultMessage: 'Refresh',
   },
+  OOPS: {
+    id: 'Common.oops',
+    defaultMessage: 'Oops...',
+  },
 });
 
 export const BULK_COMMON_LOCALE_KEYS = defineMessages({

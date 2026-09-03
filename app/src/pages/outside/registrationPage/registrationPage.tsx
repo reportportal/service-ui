@@ -21,6 +21,7 @@ import { useTracking } from 'react-tracking';
 import Link from 'redux-first-router-link';
 import { Button } from '@reportportal/ui-kit';
 import { LOGIN_PAGE } from 'controllers/pages';
+import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { LOGIN_PAGE_EVENTS } from 'components/main/analytics/events/ga4Events/loginPageEvents';
 import { PageSectionContainer } from '../common/pageSectionContainer';
 import { OutsideLoginFooter } from '../common/outsideLoginFooter';
@@ -39,10 +40,6 @@ const messages = defineMessages({
   registration: {
     id: 'RegistrationPage.registration',
     defaultMessage: 'Create your account',
-  },
-  oops: {
-    id: 'RegistrationPage.oops',
-    defaultMessage: 'Oops...',
   },
   tokenExpired: {
     id: 'RegistrationPage.tokenExpired',
@@ -119,7 +116,7 @@ export const RegistrationPage = ({
                 </PageSectionContainer>
               ) : (
                 <PageSectionContainer
-                  header={messages.oops}
+                  header={COMMON_LOCALE_KEYS.OOPS}
                   hint={tokenProvided ? messages.tokenExpired : messages.tokenNotProvided}
                   leftAligned
                 >
