@@ -51,6 +51,7 @@ import { CHANGE_PRIORITY_MODAL_KEY } from './changePriorityModal';
 import { messages } from './messages';
 import { FolderEmptyState } from '../emptyState/folder/folderEmptyState';
 import { commonMessages } from '../commonMessages';
+import { isManualScenarioEmpty } from '../addToLaunchButton/isManualScenarioEmpty';
 import { useAddTestCasesToTestPlanModal } from '../addTestCasesToTestPlanModal/useAddTestCasesToTestPlanModal';
 import { useBatchDuplicateTestCasesModal } from './batchDuplicateTestCasesModal';
 import { useBatchDeleteTestCasesModal } from './batchDeleteTestCasesModal';
@@ -103,6 +104,18 @@ export const AllTestCasesPage = ({
 
   const isAnyRowSelected = !isEmpty(selectedRows);
   const selectedRowIds = useMemo(() => selectedRows.map((row) => row.id), [selectedRows]);
+
+  const isAddToLaunchDisabled = useMemo(() => {
+    const loadedSelectedTestCases = selectedRowIds
+      .map((id) => testCases.find((testCase) => testCase.id === id))
+      .filter((testCase): testCase is TestCase => Boolean(testCase));
+
+    if (isEmpty(loadedSelectedTestCases)) {
+      return false;
+    }
+
+    return loadedSelectedTestCases.every((testCase) => isManualScenarioEmpty(testCase.manualScenario));
+  }, [selectedRowIds, testCases]);
 
   const trackBulkOperation = useCallback(
     (elementName: TestCaseBulkOperationElementName) => {
@@ -263,9 +276,21 @@ export const AllTestCasesPage = ({
             <Button variant="ghost" onClick={handleOpenMoveTestCaseModal}>
               {formatMessage(messages.moveToFolder)}
             </Button>
-            <Button variant="ghost" onClick={handleOpenAddToLaunchModal}>
-              {formatMessage(COMMON_LOCALE_KEYS.ADD_TO_LAUNCH)}
-            </Button>
+            {isAddToLaunchDisabled ? (
+              <Tooltip
+                wrapperClassName={cx('tooltip-wrapper')}
+                placement="top"
+                content={formatMessage(COMMON_LOCALE_KEYS.ADD_TO_LAUNCH_TOOLTIP_TEXT)}
+              >
+                <Button variant="ghost" disabled>
+                  {formatMessage(COMMON_LOCALE_KEYS.ADD_TO_LAUNCH)}
+                </Button>
+              </Tooltip>
+            ) : (
+              <Button variant="ghost" onClick={handleOpenAddToLaunchModal}>
+                {formatMessage(COMMON_LOCALE_KEYS.ADD_TO_LAUNCH)}
+              </Button>
+            )}
             {hasTestPlans ? (
               <Button onClick={handleOpenAddToTestPlanModal}>
                 {formatMessage(COMMON_LOCALE_KEYS.ADD_TO_TEST_PLAN)}
