@@ -17,7 +17,7 @@
 import { ComponentProps, ReactElement, ReactNode } from 'react';
 import { compact } from 'es-toolkit';
 import { isArray, isEmpty } from 'es-toolkit/compat';
-import { Popover, Tooltip } from '@reportportal/ui-kit';
+import { BubblesLoader, Popover, Tooltip } from '@reportportal/ui-kit';
 import { VoidFn } from '@reportportal/ui-kit/common';
 
 import { createClassnames } from 'common/utils';
@@ -53,6 +53,7 @@ interface PopoverControlProps {
   children?: ReactNode;
   isOpened?: boolean;
   setIsOpened?: (isOpened: boolean) => void;
+  isLoading?: boolean;
 }
 
 export const PopoverControl = ({
@@ -63,6 +64,7 @@ export const PopoverControl = ({
   children,
   isOpened,
   setIsOpened,
+  isLoading = false,
 }: PopoverControlProps) => {
   const renderItem = (item: PopoverItem, groupIndex: number, itemIndex: number) => {
     const { label, icon, className = '', variant, disabled, tooltip, onClick } = item;
@@ -119,11 +121,19 @@ export const PopoverControl = ({
   const renderList = () =>
     normalizeItemGroups(items).flatMap((group, groupIndex) => renderGroup(group, groupIndex));
 
+  const content = isLoading ? (
+    <div className={cx('popover-control__loading')}>
+      <BubblesLoader />
+    </div>
+  ) : (
+    <ul>{renderList()}</ul>
+  );
+
   return (
     <Popover
       className={cx('popover-control')}
       isOpened={isOpened}
-      content={<ul>{renderList()}</ul>}
+      content={content}
       placement={placement}
       strategy={strategy}
       shouldUsePortal={shouldUsePortal}
