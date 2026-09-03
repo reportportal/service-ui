@@ -38,6 +38,7 @@ export const BaseLaunchModal = ({
   handleSubmit,
   change,
   testCases,
+  selectedTestCaseIds,
   folderId,
   testPlanId,
   modalTitle,
@@ -62,6 +63,7 @@ export const BaseLaunchModal = ({
     folderId,
     onClearSelection,
     onSubmitSuccess,
+    selectedTestCaseIds,
   );
 
   const areAllTestCasesCovered = useMemo(

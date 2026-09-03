@@ -18,7 +18,7 @@ import { useCallback, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useIntl } from 'react-intl';
 import { isString } from 'es-toolkit';
-import { isNumber } from 'es-toolkit/compat';
+import { isEmpty, isNumber } from 'es-toolkit/compat';
 
 import { URLS } from 'common/urls';
 import { fetch } from 'common/utils';
@@ -36,6 +36,36 @@ import { generateUUID } from './utils';
 import { messages } from './messages';
 import { fetchAllTestCases } from '../testLibrarySidePanel/utils';
 
+const resolveTestCaseIds = ({
+  folderId,
+  selectedTestCaseIds,
+  submitTestCases,
+  uncoveredTestsOnly,
+}: {
+  folderId?: number;
+  selectedTestCaseIds?: number[];
+  submitTestCases: ExtendedTestCase[];
+  uncoveredTestsOnly?: boolean;
+}): number[] => {
+  if (!folderId && selectedTestCaseIds?.length) {
+    if (!uncoveredTestsOnly) {
+      return selectedTestCaseIds;
+    }
+
+    return selectedTestCaseIds.filter((id) => {
+      const testCase = submitTestCases.find((item) => item.id === id);
+
+      return testCase ? !getIsManualCovered(testCase.lastExecution?.status) : true;
+    });
+  }
+
+  const addedTestCases = uncoveredTestsOnly
+    ? submitTestCases.filter((testCase) => !getIsManualCovered(testCase.lastExecution?.status))
+    : submitTestCases;
+
+  return addedTestCases.map((testCase) => testCase.id);
+};
+
 export const useCreateManualLaunch = (
   testCases: ExtendedTestCase[],
   activeMode: LaunchMode,
@@ -44,6 +74,7 @@ export const useCreateManualLaunch = (
   folderId?: number,
   onClearSelection?: () => void,
   onSubmitSuccess?: (mode: LaunchMode) => void,
+  selectedTestCaseIds?: number[],
 ) => {
   const [isLoading, setIsLoading] = useState(false);
   const dispatch = useDispatch();
@@ -86,13 +117,27 @@ export const useCreateManualLaunch = (
         return;
       }
 
-      const addedTestCases = formValues.uncoveredTestsOnly
-        ? submitTestCases.filter(
-            (testCase) => !getIsManualCovered(testCase.lastExecution?.status),
-          )
-        : submitTestCases;
+      const testCaseIds = resolveTestCaseIds({
+        folderId,
+        selectedTestCaseIds,
+        submitTestCases,
+        uncoveredTestsOnly: formValues.uncoveredTestsOnly,
+      });
 
-      const testCaseIds = addedTestCases.map((testCase) => testCase.id);
+      if (isEmpty(testCaseIds)) {
+        dispatch(
+          showErrorNotification({
+            message: formatMessage(messages.launchCreationFailed),
+          }),
+        );
+        setIsLoading(false);
+
+        return;
+      }
+
+      const primaryTestCaseName = submitTestCases.find(
+        (testCase) => testCase.id === testCaseIds[0],
+      )?.name;
 
       try {
         const launchId = isLaunchObject(formValues.name) ? formValues.name.id : selectedLaunchId;
@@ -118,10 +163,10 @@ export const useCreateManualLaunch = (
           dispatch(
             showSuccessNotification({
               message:
-                addedTestCases.length > 1
+                testCaseIds.length > 1
                   ? formatMessage(messages.testCasesAddedSuccess)
                   : formatMessage(messages.testCaseAddedSuccess, {
-                      testCaseName: addedTestCases[0]?.name,
+                      testCaseName: primaryTestCaseName,
                     }),
             }),
           );
@@ -173,6 +218,8 @@ export const useCreateManualLaunch = (
     [
       testPlanId,
       getTestCasesForSubmit,
+      folderId,
+      selectedTestCaseIds,
       selectedLaunchId,
       activeMode,
       onClearSelection,
