@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { CSSProperties, useCallback, useMemo, useState } from 'react';
+import { CSSProperties, useCallback, useEffect, useMemo, useState } from 'react';
 import { useIntl } from 'react-intl';
 import { useDrop } from 'react-dnd';
 import { isEmpty } from 'es-toolkit/compat';
@@ -190,6 +190,12 @@ export const ExpandedOptions = ({
   const hideSidebar =
     hideFolderSidebar ||
     (hasFolderSidebarFilters && (isSidebarResolving || !hasSearchFilteredFolders));
+
+  useEffect(() => {
+    if (hideSidebar) {
+      setScrollEdges(NO_SCROLL_OVERFLOW_EDGES);
+    }
+  }, [hideSidebar]);
 
   const handleMoveFolder = useCallback(
     (draggedItem: TreeDragItem, targetId: string | number, position: TreeDropPosition) => {

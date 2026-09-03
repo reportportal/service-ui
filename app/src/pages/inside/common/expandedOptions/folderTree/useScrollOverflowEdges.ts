@@ -55,6 +55,7 @@ export const useScrollOverflowEdges = (
 ) => {
   const onChangeRef = useRef(onChange);
   const previousEdgesRef = useRef<ScrollOverflowEdges>(NO_SCROLL_OVERFLOW_EDGES);
+  const hasOnChange = Boolean(onChange);
 
   onChangeRef.current = onChange;
 
@@ -95,5 +96,5 @@ export const useScrollOverflowEdges = (
       element.removeEventListener('scroll', update);
       resizeObserver.disconnect();
     };
-  }, [scrollRef, contentSizeKey]);
+  }, [scrollRef, contentSizeKey, hasOnChange]);
 };
