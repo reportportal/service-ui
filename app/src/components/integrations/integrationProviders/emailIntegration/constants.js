@@ -14,7 +14,9 @@
  * limitations under the License.
  */
 
+/* Legacy boolean flag, kept only for reading integrations persisted before AUTH_MODE_KEY existed. */
 export const AUTH_ENABLED_KEY = 'authEnabled';
+export const AUTH_MODE_KEY = 'authMode';
 export const PROTOCOL_KEY = 'protocol';
 export const SSL_KEY = 'sslEnabled';
 export const TLS_KEY = 'starTlsEnabled';
@@ -24,14 +26,24 @@ export const HOST_KEY = 'host';
 export const PORT_KEY = 'port';
 export const USERNAME_KEY = 'username';
 export const PASSWORD_KEY = 'password';
+export const TENANT_ID_KEY = 'tenantId';
+export const CLIENT_ID_KEY = 'clientId';
+export const CLIENT_SECRET_KEY = 'clientSecret';
 const RP_HOST = 'rpHost';
 
+export const AUTH_MODE_OFF = 'OFF';
+export const AUTH_MODE_BASIC = 'BASIC';
+export const AUTH_MODE_OAUTH2 = 'OAUTH2';
+
 export const DEFAULT_FORM_CONFIG = {
-  [AUTH_ENABLED_KEY]: false,
+  [AUTH_MODE_KEY]: AUTH_MODE_OFF,
   [PROTOCOL_KEY]: 'smtp',
   [SSL_KEY]: false,
   [TLS_KEY]: false,
   [USERNAME_KEY]: '',
   [PASSWORD_KEY]: '',
+  [TENANT_ID_KEY]: '',
+  [CLIENT_ID_KEY]: '',
+  [CLIENT_SECRET_KEY]: '',
   [RP_HOST]: window.location.origin,
 };
