@@ -14,22 +14,32 @@
  * limitations under the License.
  */
 
+import { useEffect, useState } from 'react';
 import { useIntl } from 'react-intl';
 import { useSelector } from 'react-redux';
 import { useTracking } from 'react-tracking';
 
-import { transformedFoldersWithFullPathSelector, TransformedFolder } from 'controllers/testCase';
+import {
+  foldersSelector,
+  transformedFoldersWithFullPathSelector,
+  TransformedFolder,
+} from 'controllers/testCase';
+import { projectKeySelector } from 'controllers/project';
 import {
   FOLDER_POPOVER_ELEMENT_NAME,
   type FolderPopoverElementName,
   TEST_CASE_LIBRARY_EVENTS,
 } from 'analyticsEvents/testCaseLibraryPageEvents';
 import { useUserPermissions } from 'hooks/useUserPermissions';
+import { useHasTestPlans } from 'hooks/useHasTestPlans';
 import { PopoverItem } from 'pages/common/popoverControl';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
+import { getAllSubfolderIds } from 'common/utils/folderUtils';
+import { fetchAllTestCases } from 'pages/inside/common/testLibrarySidePanel/utils';
 
 import { useAddToLaunchModal } from '../../addToLaunchModal';
 import { useAddTestCasesToTestPlanModal } from '../../addTestCasesToTestPlanModal/useAddTestCasesToTestPlanModal';
+import { isManualScenarioEmpty } from '../../addToLaunchButton/isManualScenarioEmpty';
 import { useDeleteFolderModal } from '../../testCaseFolders/modals/deleteFolderModal';
 import { useRenameFolderModal } from '../../testCaseFolders/modals/renameFolderModal';
 import { useDuplicateFolderModal } from '../../testCaseFolders/modals/duplicateFolderModal';
@@ -42,6 +52,7 @@ interface UseTestCaseFolderMenuProps {
   folder: TransformedFolder;
   activeFolder: number | null;
   setAllTestCases: () => void;
+  isMenuOpen?: boolean;
 }
 
 const getTotalFolderTestsCount = (folder: TransformedFolder): number => {
@@ -55,6 +66,7 @@ export const useTestCaseFolderMenu = ({
   folder,
   activeFolder,
   setAllTestCases,
+  isMenuOpen = false,
 }: UseTestCaseFolderMenuProps) => {
   const { formatMessage } = useIntl();
   const { trackEvent } = useTracking();
@@ -68,8 +80,70 @@ export const useTestCaseFolderMenu = ({
   const { openModal: openCreateSubfolderModal } = useCreateSubfolderModal();
 
   const foldersWithFullPath = useSelector(transformedFoldersWithFullPathSelector);
+  const allFolders = useSelector(foldersSelector);
+  const projectKey = useSelector(projectKeySelector);
   const totalFolderTestsCount = getTotalFolderTestsCount(folder);
   const isAddActionsDisabled = totalFolderTestsCount === 0;
+  const { hasTestPlans, isCheckingTestPlansExistence } = useHasTestPlans();
+
+  const [hasExecutableTestCases, setHasExecutableTestCases] = useState<boolean | null>(null);
+
+  useEffect(() => {
+    if (!isMenuOpen || hasExecutableTestCases !== null || isAddActionsDisabled || !projectKey) {
+      return;
+    }
+
+    let isCancelled = false;
+    const folderIds = getAllSubfolderIds(folder.id, allFolders);
+
+    fetchAllTestCases(projectKey, {
+      'filter.in.testFolderId': folderIds.join(','),
+      offset: 0,
+      limit: 50,
+    })
+      .then((testCases) => {
+        if (!isCancelled) {
+          setHasExecutableTestCases(
+            testCases.some((testCase) => !isManualScenarioEmpty(testCase.manualScenario)),
+          );
+        }
+      })
+      .catch(() => {
+        if (!isCancelled) {
+          setHasExecutableTestCases(true);
+        }
+      });
+
+    return () => {
+      isCancelled = true;
+    };
+  }, [isMenuOpen, hasExecutableTestCases, isAddActionsDisabled, projectKey, folder.id, allFolders]);
+
+  const isCheckingExecutableTestCases =
+    isMenuOpen && !isAddActionsDisabled && hasExecutableTestCases === null;
+  const isMenuContentLoading =
+    isCheckingExecutableTestCases || (isMenuOpen && isCheckingTestPlansExistence);
+  const isAddToLaunchDisabled = isAddActionsDisabled || hasExecutableTestCases === false;
+
+  const getAddToTestPlanTooltip = () => {
+    if (isAddActionsDisabled) {
+      return formatMessage(commonMessages.noTestCasesAvailableToAddToTestPlan);
+    }
+    if (!hasTestPlans) {
+      return formatMessage(commonMessages.noTestPlanCreated);
+    }
+    return undefined;
+  };
+
+  const getAddToLaunchTooltip = () => {
+    if (isAddActionsDisabled) {
+      return formatMessage(commonMessages.noTestCasesAvailableToAddToLaunch);
+    }
+    if (hasExecutableTestCases === false) {
+      return formatMessage(COMMON_LOCALE_KEYS.ADD_TO_LAUNCH_TOOLTIP_TEXT);
+    }
+    return undefined;
+  };
 
   const { canManageTestCases } = useUserPermissions();
 
@@ -140,18 +214,14 @@ export const useTestCaseFolderMenu = ({
           {
             label: formatMessage(COMMON_LOCALE_KEYS.ADD_TO_TEST_PLAN),
             onClick: handleAddToTestPlan,
-            disabled: isAddActionsDisabled,
-            tooltip: isAddActionsDisabled
-              ? formatMessage(commonMessages.noTestCasesAvailableToAddToTestPlan)
-              : undefined,
+            disabled: isAddActionsDisabled || !hasTestPlans,
+            tooltip: getAddToTestPlanTooltip(),
           },
           {
             label: formatMessage(COMMON_LOCALE_KEYS.ADD_TO_LAUNCH),
             onClick: handleAddToLaunch,
-            disabled: isAddActionsDisabled,
-            tooltip: isAddActionsDisabled
-              ? formatMessage(commonMessages.noTestCasesAvailableToAddToLaunch)
-              : undefined,
+            disabled: isAddToLaunchDisabled,
+            tooltip: getAddToLaunchTooltip(),
           },
         ],
         [
@@ -188,5 +258,6 @@ export const useTestCaseFolderMenu = ({
 
   return {
     testCaseFolderTooltipItems,
+    isMenuContentLoading,
   };
 };

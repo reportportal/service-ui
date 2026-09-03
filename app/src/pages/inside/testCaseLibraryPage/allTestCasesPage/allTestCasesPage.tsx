@@ -19,7 +19,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useIntl } from 'react-intl';
 import { useTracking } from 'react-tracking';
 import { isEmpty, noop, countBy } from 'es-toolkit/compat';
-import { Button, MeatballMenuIcon, Pagination, Selection } from '@reportportal/ui-kit';
+import { Button, MeatballMenuIcon, Pagination, Selection, Tooltip } from '@reportportal/ui-kit';
 
 import {
   TEST_CASE_BULK_OPERATION_ELEMENT_NAME,
@@ -43,12 +43,14 @@ import { locationQuerySelector, payloadSelector, urlFolderIdSelector } from 'con
 import { foldersSelector } from 'controllers/testCase';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { useUserPermissions } from 'hooks/useUserPermissions';
+import { useHasTestPlans } from 'hooks/useHasTestPlans';
 import { useURLBoundPagination } from 'pages/inside/common/testCaseList/useURLBoundPagination';
 import { useProjectDetails } from 'hooks/useTypedSelector';
 
 import { CHANGE_PRIORITY_MODAL_KEY } from './changePriorityModal';
 import { messages } from './messages';
 import { FolderEmptyState } from '../emptyState/folder/folderEmptyState';
+import { commonMessages } from '../commonMessages';
 import { useAddTestCasesToTestPlanModal } from '../addTestCasesToTestPlanModal/useAddTestCasesToTestPlanModal';
 import { useBatchDuplicateTestCasesModal } from './batchDuplicateTestCasesModal';
 import { useBatchDeleteTestCasesModal } from './batchDeleteTestCasesModal';
@@ -97,6 +99,7 @@ export const AllTestCasesPage = ({
   const { openModal: openMoveTestCaseModal } = useMoveTestCaseModal();
   const { openModal: openBatchEditTagsModal } = useBatchEditTagsModal();
   const { canManageTestCases } = useUserPermissions();
+  const { hasTestPlans } = useHasTestPlans();
 
   const isAnyRowSelected = !isEmpty(selectedRows);
   const selectedRowIds = useMemo(() => selectedRows.map((row) => row.id), [selectedRows]);
@@ -263,9 +266,19 @@ export const AllTestCasesPage = ({
             <Button variant="ghost" onClick={handleOpenAddToLaunchModal}>
               {formatMessage(COMMON_LOCALE_KEYS.ADD_TO_LAUNCH)}
             </Button>
-            <Button onClick={handleOpenAddToTestPlanModal}>
-              {formatMessage(COMMON_LOCALE_KEYS.ADD_TO_TEST_PLAN)}
-            </Button>
+            {hasTestPlans ? (
+              <Button onClick={handleOpenAddToTestPlanModal}>
+                {formatMessage(COMMON_LOCALE_KEYS.ADD_TO_TEST_PLAN)}
+              </Button>
+            ) : (
+              <Tooltip
+                wrapperClassName={cx('tooltip-wrapper')}
+                placement="top"
+                content={formatMessage(commonMessages.noTestPlanCreated)}
+              >
+                <Button disabled>{formatMessage(COMMON_LOCALE_KEYS.ADD_TO_TEST_PLAN)}</Button>
+              </Tooltip>
+            )}
           </div>
         </div>
       )}

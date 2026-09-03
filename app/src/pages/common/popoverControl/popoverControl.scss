@@ -95,4 +95,11 @@
       white-space: nowrap;
     }
   }
+
+  &__loading {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 8px 16px;
+  }
 }

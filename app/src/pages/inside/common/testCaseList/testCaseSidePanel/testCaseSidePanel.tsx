@@ -32,7 +32,9 @@ import { isEmpty } from 'es-toolkit/compat';
 
 import { createClassnames, copyToClipboard } from 'common/utils';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
+import { OVERLAY_PANEL_Z_INDEX } from 'common/constants/zIndex';
 import { useOnClickOutside } from 'common/hooks';
+import { useHasTestPlans } from 'hooks/useHasTestPlans';
 import { PriorityIcon } from 'pages/inside/common/priorityIcon';
 import { TMS_INSTANCE_KEY } from 'pages/inside/common/constants';
 import CrossIcon from 'common/img/cross-icon-inline.svg';
@@ -47,6 +49,7 @@ import { AdaptiveTagList } from 'pages/inside/productVersionPage/linkedTestCases
 import { AttachmentList } from 'pages/inside/common/attachmentList';
 import { ManualScenario, ExtendedTestCase, Requirement, TestCaseManualScenario } from 'types/testCase';
 import { useAddTestCasesToTestPlanModal } from 'pages/inside/testCaseLibraryPage/addTestCasesToTestPlanModal/useAddTestCasesToTestPlanModal';
+import { commonMessages as testCaseLibraryCommonMessages } from 'pages/inside/testCaseLibraryPage/commonMessages';
 import { useEditTestCaseModal } from 'pages/inside/testCaseLibraryPage/createTestCaseModal';
 import { useDeleteTestCaseModal } from 'pages/inside/testCaseLibraryPage/deleteTestCaseModal';
 import { useMoveTestCaseModal } from 'pages/inside/testCaseLibraryPage/moveTestCaseModal/useMoveTestCaseModal';
@@ -160,6 +163,7 @@ export const TestCaseSidePanel = memo(
     const { openModal: openDeleteTestCaseModal } = useDeleteTestCaseModal();
     const { openModal: openMoveTestCaseModal } = useMoveTestCaseModal();
     const { openModal: openDuplicateSelectedTestCaseModal } = useDuplicateSelectedTestCaseModal();
+    const { hasTestPlans } = useHasTestPlans();
 
     const folderId = testCase?.testFolder?.id;
 
@@ -371,14 +375,33 @@ export const TestCaseSidePanel = memo(
                 testCaseId={testCase.id}
                 place={TEST_CASE_PLACE.SIDE_PANEL}
               />
-              <Button
-                variant="primary"
-                className={cx('action-button', 'last-button')}
-                onClick={handleAddToTestPlanClick}
-                data-automation-id="test-case-add-to-test-plan"
-              >
-                {formatMessage(COMMON_LOCALE_KEYS.ADD_TO_TEST_PLAN)}
-              </Button>
+              {hasTestPlans ? (
+                <Button
+                  variant="primary"
+                  className={cx('action-button', 'last-button')}
+                  onClick={handleAddToTestPlanClick}
+                  data-automation-id="test-case-add-to-test-plan"
+                >
+                  {formatMessage(COMMON_LOCALE_KEYS.ADD_TO_TEST_PLAN)}
+                </Button>
+              ) : (
+                <Tooltip
+                  wrapperClassName={cx('tooltip-wrapper')}
+                  portalRoot={document.body}
+                  zIndex={OVERLAY_PANEL_Z_INDEX + 1}
+                  placement="top"
+                  content={formatMessage(testCaseLibraryCommonMessages.noTestPlanCreated)}
+                >
+                  <Button
+                    variant="primary"
+                    className={cx('action-button', 'last-button')}
+                    disabled
+                    data-automation-id="test-case-add-to-test-plan"
+                  >
+                    {formatMessage(COMMON_LOCALE_KEYS.ADD_TO_TEST_PLAN)}
+                  </Button>
+                </Tooltip>
+              )}
             </>
           )}
         </div>
