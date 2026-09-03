@@ -89,6 +89,12 @@ export const useTestCaseFolderMenu = ({
   const [hasExecutableTestCases, setHasExecutableTestCases] = useState<boolean | null>(null);
 
   useEffect(() => {
+    if (!isMenuOpen) {
+      setHasExecutableTestCases(null);
+    }
+  }, [isMenuOpen]);
+
+  useEffect(() => {
     if (!isMenuOpen || hasExecutableTestCases !== null || isAddActionsDisabled || !projectKey) {
       return;
     }

@@ -62,6 +62,7 @@ export const useHasTestPlans = () => {
     }
 
     let isCancelled = false;
+    setHasTestPlans(false);
     setIsCheckingTestPlansExistence(true);
 
     getHasTestPlansPromise(projectKey).then((result) => {
