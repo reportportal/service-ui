@@ -241,6 +241,22 @@
     position: relative;
     overflow: hidden;
 
+    &--fade-top::before {
+      content: '';
+      position: absolute;
+      z-index: 1;
+      top: 0;
+      left: 0;
+      right: var(--folder-tree-scrollbar-gutter, 0px);
+      height: 48px;
+      pointer-events: none;
+      background: linear-gradient(
+        180deg,
+        var(--rp-ui-base-bg-000) 0%,
+        color-mix(in srgb, var(--rp-ui-base-bg-000) 0%, transparent) 100%
+      );
+    }
+
     &:has(.expanded-options__drop-placeholder) {
       .folders-tree {
         opacity: 0.5;

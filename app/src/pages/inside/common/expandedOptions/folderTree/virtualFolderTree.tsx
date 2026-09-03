@@ -31,6 +31,11 @@ import { ROW_HEIGHT_PX } from '../folder/connectorLines';
 import { useFlattenedTree, type FlatFolderNode } from '../useFlattenedTree';
 
 import { FOLDER_DRAG_TYPE, EXTERNAL_TREE_DROP_TYPE } from '../constants';
+import {
+  NO_SCROLL_OVERFLOW_EDGES,
+  useScrollOverflowEdges,
+  type ScrollOverflowEdges,
+} from './useScrollOverflowEdges';
 
 import styles from './virtualFolderTree.scss';
 
@@ -53,6 +58,7 @@ export interface VirtualFolderTreeProps {
   onFolderClick: (id: number) => void;
   setAllTestCases: VoidFn;
   onToggleFolder: (folder: TransformedFolder) => void;
+  onScrollEdgesChange?: (edges: ScrollOverflowEdges) => void;
 }
 
 export const VirtualFolderTree = ({
@@ -72,10 +78,15 @@ export const VirtualFolderTree = ({
   onFolderClick,
   setAllTestCases,
   onToggleFolder,
+  onScrollEdgesChange,
 }: VirtualFolderTreeProps) => {
   const scrollRef = useRef<HTMLDivElement>(null);
   const flatFolders = useFlattenedTree(folders, expandedIds, searchQuery, isFlatView);
   const flatFoldersRef = useRef(flatFolders);
+  const isTreeContentHidden =
+    Boolean(pageSearchQuery && isSearchFilteredLoading) ||
+    Boolean(pageSearchQuery && !hasSearchFilteredFolders) ||
+    Boolean(searchQuery && !hasAnyMatch);
 
   const virtualizer = useVirtualizer({
     count: size(flatFolders),
@@ -85,6 +96,22 @@ export const VirtualFolderTree = ({
   });
 
   flatFoldersRef.current = flatFolders;
+
+  const contentSizeKey = isTreeContentHidden
+    ? 'hidden'
+    : `${size(flatFolders)}:${virtualizer.getTotalSize()}`;
+
+  useScrollOverflowEdges(
+    scrollRef,
+    isTreeContentHidden ? undefined : onScrollEdgesChange,
+    contentSizeKey,
+  );
+
+  useEffect(() => {
+    if (isTreeContentHidden) {
+      onScrollEdgesChange?.(NO_SCROLL_OVERFLOW_EDGES);
+    }
+  }, [isTreeContentHidden, onScrollEdgesChange]);
 
   const scrollToActiveFolder = useCallback(
     (folderId: number) => {
