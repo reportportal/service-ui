@@ -105,15 +105,17 @@ export const AllTestCasesPage = ({
   const isAnyRowSelected = !isEmpty(selectedRows);
   const selectedRowIds = useMemo(() => selectedRows.map((row) => row.id), [selectedRows]);
 
-  const isAddToLaunchDisabled = useMemo(
-    () =>
-      selectedRowIds.every((id) => {
-        const testCase = testCases.find((selectedTestCase) => selectedTestCase.id === id);
+  const isAddToLaunchDisabled = useMemo(() => {
+    const loadedSelectedTestCases = selectedRowIds
+      .map((id) => testCases.find((testCase) => testCase.id === id))
+      .filter((testCase): testCase is TestCase => Boolean(testCase));
 
-        return isManualScenarioEmpty(testCase?.manualScenario);
-      }),
-    [selectedRowIds, testCases],
-  );
+    if (isEmpty(loadedSelectedTestCases)) {
+      return false;
+    }
+
+    return loadedSelectedTestCases.every((testCase) => isManualScenarioEmpty(testCase.manualScenario));
+  }, [selectedRowIds, testCases]);
 
   const trackBulkOperation = useCallback(
     (elementName: TestCaseBulkOperationElementName) => {
