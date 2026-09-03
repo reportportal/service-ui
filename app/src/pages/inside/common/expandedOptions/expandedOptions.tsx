@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { useCallback, useMemo } from 'react';
+import { CSSProperties, useCallback, useEffect, useMemo, useState } from 'react';
 import { useIntl } from 'react-intl';
 import { useDrop } from 'react-dnd';
 import { isEmpty } from 'es-toolkit/compat';
@@ -47,6 +47,10 @@ import { EmptyPageState } from 'pages/common/emptyPageState';
 import { messages } from './messages';
 import { VirtualFolderTree } from './folderTree/virtualFolderTree';
 import { FolderTreeFooter } from './folderTree/folderTreeFooter';
+import {
+  NO_SCROLL_OVERFLOW_EDGES,
+  type ScrollOverflowEdges,
+} from './folderTree/useScrollOverflowEdges';
 import type { ExpandedOptionsProps } from './types';
 import { useFolderSearch } from './useFolderSearch';
 import { useSearchFilteredFolders } from './useSearchFilteredFolders';
@@ -85,6 +89,17 @@ export const ExpandedOptions = ({
     flatViewScopeId,
   });
   const allFolders = useSelector(foldersSelector);
+  const [scrollEdges, setScrollEdges] = useState<ScrollOverflowEdges>(NO_SCROLL_OVERFLOW_EDGES);
+
+  const handleScrollEdgesChange = useCallback((edges: ScrollOverflowEdges) => {
+    setScrollEdges((previous) =>
+      previous.canScrollUp === edges.canScrollUp &&
+      previous.canScrollDown === edges.canScrollDown &&
+      previous.scrollbarGutter === edges.scrollbarGutter
+        ? previous
+        : edges,
+    );
+  }, []);
 
   const internalSearchData = useSearchFilteredFolders({
     searchQuery: searchFilteredData ? undefined : pageSearchQuery,
@@ -175,6 +190,12 @@ export const ExpandedOptions = ({
   const hideSidebar =
     hideFolderSidebar ||
     (hasFolderSidebarFilters && (isSidebarResolving || !hasSearchFilteredFolders));
+
+  useEffect(() => {
+    if (hideSidebar) {
+      setScrollEdges(NO_SCROLL_OVERFLOW_EDGES);
+    }
+  }, [hideSidebar]);
 
   const handleMoveFolder = useCallback(
     (draggedItem: TreeDragItem, targetId: string | number, position: TreeDropPosition) => {
@@ -276,7 +297,14 @@ export const ExpandedOptions = ({
       )}
       <div className={cx('expanded-options', { 'expanded-options--no-sidebar': hideSidebar })}>
         {hideSidebar || (
-          <div className={cx('expanded-options__sidebar')}>
+          <div
+            className={cx('expanded-options__sidebar')}
+            style={
+              {
+                '--folder-tree-scrollbar-gutter': `${scrollEdges.scrollbarGutter}px`,
+              } as CSSProperties
+            }
+          >
             <div className={cx('sidebar-header')}>
               <button
                 type="button"
@@ -321,7 +349,12 @@ export const ExpandedOptions = ({
                 />
               </div>
             )}
-            <div ref={dropZoneRef} className={cx('expanded-options__sidebar-folders-wrapper')}>
+            <div
+              ref={dropZoneRef}
+              className={cx('expanded-options__sidebar-folders-wrapper', {
+                'expanded-options__sidebar-folders-wrapper--fade-top': scrollEdges.canScrollUp,
+              })}
+            >
               {isDraggingAny && !isOverFoldersZone && (
                 <div className={cx('expanded-options__drop-placeholder')}>
                   <div className={cx('expanded-options__drop-placeholder-content')}>
@@ -354,6 +387,7 @@ export const ExpandedOptions = ({
                 setAllTestCases={setAllTestCases}
                 onToggleFolder={handleToggleFolder}
                 onFolderClick={onFolderClick}
+                onScrollEdgesChange={handleScrollEdgesChange}
               />
             </div>
             {!isEmpty(filteredFolders) && (
@@ -361,6 +395,7 @@ export const ExpandedOptions = ({
                 isFlatView={isFlatView}
                 isExpandAllDisabled={isExpandAllDisabled}
                 isCollapseAllDisabled={isCollapseAllDisabled}
+                showBottomFade={scrollEdges.canScrollDown}
                 onFlatViewChange={setIsFlatView}
                 onExpandAll={handleExpandAll}
                 onCollapseAll={handleCollapseAll}
