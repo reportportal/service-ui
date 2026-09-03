@@ -62,6 +62,54 @@ All loaded extensions can be used in application core via [selectors](https://gi
 | sidebarComponent      | Adds a component to the application sidebar.                                                                                                                                                                                                                                                                                                                                                                                                                             |
 | launchItemComponent   | Adds a component to the every launch entity on launches page (component will be displayed under the launch name).                                                                                                                                                                                                                                                                                                                                                        |
 
+## Remote UI plugins
+
+Remote plugins are uploaded as `.json` manifests on **Instance → Plugins**. Their pages are loaded in a sandboxed iframe instead of registering React components:
+
+- `modules.projectPages` adds pages to the project sidebar.
+- `modules.adminPages` adds pages to the instance administration sidebar and is available only to instance administrators.
+
+```json
+{
+  "$schema": "https://schema.reportportal.io/manifest.schema.json",
+  "manifestVersion": "1.0",
+  "id": "my-remote-app",
+  "name": "My Remote App",
+  "version": "1.0.0",
+  "description": "A description of the app",
+  "developer": { "name": "Publisher Name" },
+  "baseUrl": "https://example.com",
+  "icon": {
+    "type": "svg",
+    "content": "<svg xmlns=\"http://www.w3.org/2000/svg\"></svg>"
+  },
+  "permissions": { "scopes": [] },
+  "modules": {
+    "adminPages": [
+      {
+        "slug": "my-admin-page",
+        "name": "My Admin Page",
+        "title": "My Admin Page",
+        "url": "/admin",
+        "icon": {
+          "type": "svg",
+          "content": "<svg xmlns=\"http://www.w3.org/2000/svg\"></svg>"
+        }
+      }
+    ]
+  }
+}
+```
+
+`baseUrl` must be an absolute HTTP(S) URL without a trailing slash. The page `url` is relative to `baseUrl` and becomes the iframe source.
+
+Embedding is controlled by CSP on **both** sides:
+
+- **ReportPortal** (`frame-src`): same-origin pages are allowed by default (`'self'`). A remote domain must be explicitly allowed.
+- **Remote page** (`frame-ancestors`): if the plugin response sets this header, it must allow the ReportPortal origin; otherwise the browser blocks the iframe even when `frame-src` permits the URL.
+
+Disabling or uninstalling a remote plugin removes its sidebar entries. The page `slug` forms the plugin route, while `title` overrides the navigation label.
+
 #### Permissions
 
 For `integrations` page permissions are applied according to permission map (PM and Admin can edit settings on this page, other users have readonly access).<br/>

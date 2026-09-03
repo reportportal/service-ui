@@ -74,11 +74,21 @@ import {
   SET_TOKEN,
   LOGIN_SUCCESS,
   ANONYMOUS_REDIRECT_PATH_STORAGE_KEY,
+  GRAFANA_SESSION_REVOKE_TIMEOUT,
 } from './constants';
 import { tokenSelector } from './selectors';
 
 // TODO: clear cookie on logout
 function* handleLogout({ payload }) {
+  try {
+    yield call(fetch, URLS.grafanaSession(), {
+      method: 'DELETE',
+      timeout: GRAFANA_SESSION_REVOKE_TIMEOUT,
+    });
+  } catch (error) {
+    console.error('Failed to revoke Grafana session on logout', error);
+  }
+
   yield put(resetTokenAction());
   yield put(fetchPublicPluginsAction());
   yield put(fetchAppInfoAction());
