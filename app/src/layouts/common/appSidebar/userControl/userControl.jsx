@@ -19,7 +19,7 @@ import { useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { FormattedMessage } from 'react-intl';
-import { userInfoSelector, photoTimeStampSelector } from 'controllers/user';
+import { userInfoSelector } from 'controllers/user';
 import { ADMINISTRATOR } from 'common/constants/accountRoles';
 import { UserAvatar } from 'pages/inside/common/userAvatar';
 import { ProfileMenu } from './profileMenu';
@@ -29,19 +29,11 @@ const cx = classNames.bind(styles);
 
 const UserControl = ({ onClick }) => {
   const { userRole, fullName, email, id } = useSelector(userInfoSelector);
-  const photoTimeStamp = useSelector(photoTimeStampSelector);
 
   return (
     <button type="button" className={cx('user-block-wrapper')} onClick={onClick}>
       <span className={cx('avatar-block')}>
-        {id && (
-          <UserAvatar
-            className={cx('user-avatar')}
-            userId={id}
-            timestamp={photoTimeStamp}
-            thumbnail
-          />
-        )}
+        {id && <UserAvatar className={cx('user-avatar')} userId={id} thumbnail />}
       </span>
       <div className={cx('user-control')}>
         <div className={cx('user-details')}>
