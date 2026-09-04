@@ -31,6 +31,7 @@
     "@reportportal/ui-kit": "^0.0.1-alpha.253",
     "@tanstack/react-virtual": "^3.13.23",
     "axios": "^1.16.0",
+    "brace-expansion": "^5.0.7",
     "c3": "0.7.20",
     "chart.js": "2.9.4",
     "chartjs-plugin-datalabels": "0.6.0",
