@@ -29,7 +29,7 @@ import { fetch, isEmptyObject } from 'common/utils';
 import { historyItemsSelector } from 'controllers/log';
 import { linkIssueAction, postIssueAction, unlinkIssueAction } from 'controllers/step';
 import { LINK_ISSUE, POST_ISSUE, UNLINK_ISSUE } from 'common/constants/actionTypes';
-import { analyzerExtensionsSelector } from 'controllers/appInfo';
+import { isAnalyzerAvailableSelector } from 'controllers/appInfo';
 import { TO_INVESTIGATE_LOCATOR_PREFIX } from 'common/constants/defectTypes';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { useWindowResize } from 'common/hooks';
@@ -61,7 +61,7 @@ const MakeDecision = ({ data }) => {
   const dispatch = useDispatch();
   const projectKey = useSelector(projectKeySelector);
   const historyItems = useSelector(historyItemsSelector);
-  const isAnalyzerAvailable = !!useSelector(analyzerExtensionsSelector).length;
+  const isAnalyzerAvailable = useSelector(isAnalyzerAvailableSelector);
   const isBulkOperation = data.items && data.items.length > 1;
   const itemData = isBulkOperation ? data.items : data.items[0];
   const clusterIds = data.items[0].clusterId

@@ -22,7 +22,7 @@ import { useSelector } from 'react-redux';
 import { TO_INVESTIGATE_LOCATOR_PREFIX } from 'common/constants/defectTypes';
 import { activeFilterSelector } from 'controllers/filter';
 import { historyItemsSelector } from 'controllers/log';
-import { analyzerExtensionsSelector } from 'controllers/appInfo';
+import { isAnalyzerAvailableSelector } from 'controllers/appInfo';
 import { InputDropdownRadio } from '../../../elements/inputDropdownRadio';
 import {
   ALL_LOADED_TI_FROM_HISTORY_LINE,
@@ -46,7 +46,7 @@ export const OptionsBlock = ({
   const activeFilter = useSelector(activeFilterSelector);
   const historyItems = useSelector(historyItemsSelector);
   const [expanded, setOptionsState] = useState(false);
-  const isAnalyzerAvailable = !!useSelector(analyzerExtensionsSelector).length;
+  const isAnalyzerAvailable = useSelector(isAnalyzerAvailableSelector);
   const defectFromTIGroup = currentTestItem.issue.issueType.startsWith(
     TO_INVESTIGATE_LOCATOR_PREFIX,
   );

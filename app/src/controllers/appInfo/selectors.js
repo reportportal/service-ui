@@ -71,6 +71,8 @@ export const instanceIdSelector = (state) =>
 export const analyticsEnabledSelector = (state) =>
   extensionsConfigSelector(state)[ANALYTICS_ALL_KEY] === 'true';
 export const analyzerExtensionsSelector = (state) => extensionsSelector(state).analyzers || [];
+export const isAnalyzerAvailableSelector = (state) =>
+  analyzerExtensionsSelector(state).some((analyzer) => !!analyzer.available);
 export const authExtensionsSelector = (state) => apiInfoSelector(state).authExtensions || {};
 export const ssoUsersOnlySelector = (state) =>
   extensionsConfigSelector(state)[SSO_USERS_ONLY_KEY] === 'true';
@@ -112,7 +114,7 @@ export const baseEventParametersSelector = createSelector(
   patternAnalysisEnabledSelector,
   projectInfoIdSelector,
   isAdminSelector,
-  analyzerExtensionsSelector,
+  isAnalyzerAvailableSelector,
   enabledPattersSelector,
   activeOrganizationIdSelector,
   activeOrganizationTypeSelector,
@@ -125,7 +127,7 @@ export const baseEventParametersSelector = createSelector(
     isPatternAnalyzerEnabled,
     projectInfoId,
     isAdmin,
-    analyzerExtensions,
+    isAnalyzerAvailable,
     enabledPatterns,
     organizationId,
     entryType,
@@ -139,7 +141,7 @@ export const baseEventParametersSelector = createSelector(
       !!enabledPatterns.length && String(isPatternAnalyzerEnabled) === 'true',
     projectInfoId,
     isAdmin,
-    isAnalyzerAvailable: !!analyzerExtensions.length,
+    isAnalyzerAvailable,
     organizationId,
     entryType,
     pageLevel,
