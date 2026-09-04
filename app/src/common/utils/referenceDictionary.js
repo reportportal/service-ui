@@ -98,6 +98,7 @@ export const docsReferences = {
     'https://reportportal.io/docs/configuration/organization-level/OrganizationUsers#manage-assignments',
   manageAssignmentInstanceLevel:
     'https://reportportal.io/docs/configuration/instance-level/AllUsers#manage-assignments',
+  restorePassword: 'https://reportportal.io/docs/configuration/user-account/RestoreAPassword/',
 };
 
 export const faqDictionary = {
