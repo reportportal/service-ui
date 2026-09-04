@@ -25,7 +25,7 @@ import { IN_PROGRESS } from 'common/constants/launchStatuses';
 import { updateLaunchLocallyAction } from 'controllers/launch';
 import { showModalAction } from 'controllers/modal';
 import { enabledPattersSelector, projectKeySelector } from 'controllers/project';
-import { analyzerExtensionsSelector, importantLaunchesEnabledSelector } from 'controllers/appInfo';
+import { isAnalyzerAvailableSelector, importantLaunchesEnabledSelector } from 'controllers/appInfo';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { ANALYZER_TYPES } from 'common/constants/analyzerTypes';
 import { RETENTION_POLICY } from 'common/constants/retentionPolicy';
@@ -53,7 +53,7 @@ export const Hamburger = ({ launch, customProps }) => {
   } = useUserPermissions();
   const projectKey = useSelector(projectKeySelector);
   const enabledPatterns = useSelector(enabledPattersSelector);
-  const analyzerExtensions = useSelector(analyzerExtensionsSelector);
+  const isAnalyzerAvailable = useSelector(isAnalyzerAvailableSelector);
   const areImportantLaunchesEnabled = useSelector(importantLaunchesEnabledSelector);
 
   const isLaunchInProgress = launch.status === IN_PROGRESS.toUpperCase();
@@ -156,7 +156,7 @@ export const Hamburger = ({ launch, customProps }) => {
       return formatMessage(messages.uniqueErrorAnalysisIsInProgress);
     } else if (isLaunchInProgress) {
       return formatMessage(messages.uniqueErrorAnalysisLaunchesInProgressError);
-    } else if (!analyzerExtensions.length) {
+    } else if (!isAnalyzerAvailable) {
       return formatMessage(messages.serviceAnalyzerDisabledTooltip);
     } else {
       return '';

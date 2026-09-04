@@ -38,7 +38,7 @@ import { fetch } from 'common/utils';
 import { URLS } from 'common/urls';
 import { showModalAction } from 'controllers/modal';
 import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
-import { analyzerExtensionsSelector } from 'controllers/appInfo';
+import { isAnalyzerAvailableSelector } from 'controllers/appInfo';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { useUserPermissions } from 'hooks/useUserPermissions';
 import { messages } from './messages';
@@ -66,9 +66,8 @@ export const AnalyzerContainer = ({ setHeaderNodes }) => {
   const projectKey = useSelector(projectKeySelector);
   const { subTab: activeSubTab } = useSelector(payloadSelector);
   const analyzerConfig = useSelector(analyzerAttributesSelector);
-  const analyzerExtensions = useSelector(analyzerExtensionsSelector);
+  const isAnalyzerServiceAvailable = useSelector(isAnalyzerAvailableSelector);
   const { canUpdateSettings } = useUserPermissions();
-  const isAnalyzerServiceAvailable = !!analyzerExtensions.length;
   const analyzerUnavailableTitle = !isAnalyzerServiceAvailable
     ? formatMessage(COMMON_LOCALE_KEYS.ANALYZER_DISABLED)
     : null;
