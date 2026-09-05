@@ -189,7 +189,7 @@
     "typescript-eslint": "^8.35.0",
     "webpack": "^5.104.1",
     "webpack-cli": "^6.0.1",
-    "webpack-dev-server": "^5.2.4",
+    "webpack-dev-server": "^5.2.6",
     "webpack-merge": "^6.0.1",
     "webpack-notifier": "^1.15.0",
     "webpack-subresource-integrity": "5.1.0",
