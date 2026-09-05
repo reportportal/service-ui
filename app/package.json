@@ -103,7 +103,7 @@
     "video.js": "7.21.7"
   },
   "devDependencies": {
-    "@babel/core": "^7.28.5",
+    "@babel/core": "^7.29.6",
     "@babel/eslint-parser": "^7.28.5",
     "@babel/node": "^7.28.0",
     "@babel/plugin-proposal-class-properties": "7.18.6",
