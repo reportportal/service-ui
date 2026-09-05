@@ -29,6 +29,7 @@ import {
   filterIntegrationsByName,
   filterEnabledExternalPlugins,
 } from './utils';
+import { MARKETPLACE_CATALOGUE_STATE } from './constants';
 
 export const domainSelector = (state) => state.plugins || {};
 
@@ -187,6 +188,62 @@ export const isEmailIntegrationAvailableSelector = (state) => {
 export const namedAvailableBtsIntegrationsSelector =
   namedAvailableIntegrationsByGroupTypeSelector(BTS_GROUP_TYPE);
 
+const marketplaceSelector = (state) => domainSelector(state).marketplace || {};
+
+export const marketplaceCatalogueStateSelector = (state) =>
+  marketplaceSelector(state).catalogueState || MARKETPLACE_CATALOGUE_STATE.NOT_REQUESTED;
+
+export const marketplaceInstalledPluginsSelector = (state) =>
+  marketplaceSelector(state).installed || [];
+
+export const marketplaceAvailablePluginsSelector = (state) =>
+  marketplaceSelector(state).available || [];
+
+export const marketplaceRegistrySelector = (state) =>
+  marketplaceSelector(state).registry || { status: null, host: null };
+
+export const marketplaceRegistryHostSelector = (state) => marketplaceRegistrySelector(state).host;
+
+export const marketplaceCatalogueLoadingSelector = (state) =>
+  marketplaceCatalogueStateSelector(state) === MARKETPLACE_CATALOGUE_STATE.LOADING;
+
+export const isMarketplaceRegistryOfflineSelector = (state) =>
+  marketplaceCatalogueStateSelector(state) === MARKETPLACE_CATALOGUE_STATE.LOADED_OFFLINE;
+
+// not the same thing as offline: offline the installed list is still authoritative, here the
+// request produced nothing and even the installed list cannot be claimed to be current
+export const hasMarketplaceCatalogueFailedSelector = (state) =>
+  marketplaceCatalogueStateSelector(state) === MARKETPLACE_CATALOGUE_STATE.FAILED;
+
+export const marketplaceCatalogueErrorSelector = (state) =>
+  marketplaceSelector(state).error || null;
+
+// null while offline: the registry block is absent, so no update can be claimed
+export const marketplacePluginUpdateVersionSelector = (state, pluginName) =>
+  marketplaceInstalledPluginsSelector(state).find((plugin) => plugin.name === pluginName)
+    ?.marketplace?.updateAvailable?.version || null;
+
+export const hasMarketplacePluginUpdateSelector = (state, pluginName) =>
+  marketplacePluginUpdateVersionSelector(state, pluginName) !== null;
+
+// the filter the catalogue is showing, so a refetch does not silently drop it
+/**
+ * Whether this instance permits a hand-uploaded jar. Defaults to true when the field is absent,
+ * so an older service-api keeps the control rather than losing it to a missing key.
+ */
+export const isPluginUploadAllowedSelector = (state) =>
+  marketplaceSelector(state).instance?.uploadAllowed !== false;
+
+/** The plugin the last install moved into the Installed group, or null. */
+export const justInstalledMarketplacePluginSelector = (state) =>
+  marketplaceSelector(state).justInstalled || null;
+
+export const marketplaceCatalogueQuerySelector = (state) =>
+  marketplaceSelector(state).query || { q: null, category: null };
+
+export const isMarketplacePluginInstallingSelector = (state, registryId) =>
+  (marketplaceSelector(state).installing || []).includes(registryId);
+
 export const availableBtsIntegrationsSelector = (state) => {
   const namedAvailableBtsIntegrations = namedAvailableBtsIntegrationsSelector(state);
 
@@ -198,3 +255,47 @@ export const availableBtsIntegrationsSelector = (state) => {
     [],
   );
 };
+
+const marketplacePluginDetailSelector = (state) =>
+  domainSelector(state).marketplacePluginDetail || {};
+
+export const marketplacePluginDetailStateSelector = (state) =>
+  marketplacePluginDetailSelector(state).detailState || MARKETPLACE_CATALOGUE_STATE.NOT_REQUESTED;
+
+export const marketplacePluginDetailLoadingSelector = (state) =>
+  marketplacePluginDetailStateSelector(state) === MARKETPLACE_CATALOGUE_STATE.LOADING;
+
+export const isMarketplacePluginDetailOfflineSelector = (state) =>
+  marketplacePluginDetailStateSelector(state) === MARKETPLACE_CATALOGUE_STATE.LOADED_OFFLINE;
+
+export const hasMarketplacePluginDetailFailedSelector = (state) =>
+  marketplacePluginDetailStateSelector(state) === MARKETPLACE_CATALOGUE_STATE.FAILED;
+
+export const marketplacePluginDetailRegistryHostSelector = (state) =>
+  (marketplacePluginDetailSelector(state).registry || {}).host || null;
+
+/** The registry half of the plugin page, already emptied by the reducer when unverifiable. */
+export const marketplacePluginDetailDataSelector = (state) => {
+  const detail = marketplacePluginDetailSelector(state);
+
+  return {
+    plugin: detail.plugin || null,
+    versions: detail.versions || [],
+    changelog: detail.changelog || null,
+    screenshots: detail.screenshots || [],
+    advisory: detail.advisory || null,
+    blocked: detail.blocked || null,
+    removed: detail.removed || null,
+  };
+};
+
+const marketplaceLicenceSelector = (state) => domainSelector(state).marketplaceLicence || {};
+
+export const isMarketplaceLicenceConfiguredSelector = (state) =>
+  Boolean(marketplaceLicenceSelector(state).configured);
+
+export const marketplaceLicenceCustomerIdSelector = (state) =>
+  marketplaceLicenceSelector(state).customerId || null;
+
+export const marketplaceLicenceLoadingSelector = (state) =>
+  Boolean(marketplaceLicenceSelector(state).loading);

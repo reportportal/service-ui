@@ -15,7 +15,7 @@
  */
 
 export { pluginsReducer } from './reducer';
-export { SECRET_FIELDS_KEY } from './constants';
+export { SECRET_FIELDS_KEY, MARKETPLACE_CATALOGUE_STATE, REGISTRY_STATUS } from './constants';
 export {
   fetchPluginsAction,
   fetchPublicPluginsAction,
@@ -30,6 +30,13 @@ export {
   updateIntegrationAction,
   setProjectIntegrationsAction,
   setOrganizationIntegrationsAction,
+  fetchMarketplaceCatalogueAction,
+  installMarketplacePluginAction,
+  clearJustInstalledMarketplacePluginAction,
+  fetchMarketplacePluginDetailAction,
+  fetchMarketplaceLicenceAction,
+  setMarketplaceLicenceAction,
+  deleteMarketplaceLicenceAction,
 } from './actionCreators';
 export {
   filterAvailablePlugins,
@@ -61,6 +68,30 @@ export {
   globalIntegrationsSelector,
   pluginsLoadingSelector,
   organizationPluginSelector,
+  marketplaceCatalogueStateSelector,
+  marketplaceInstalledPluginsSelector,
+  marketplaceAvailablePluginsSelector,
+  marketplaceRegistrySelector,
+  marketplaceRegistryHostSelector,
+  marketplaceCatalogueLoadingSelector,
+  isMarketplaceRegistryOfflineSelector,
+  hasMarketplaceCatalogueFailedSelector,
+  marketplaceCatalogueErrorSelector,
+  marketplacePluginUpdateVersionSelector,
+  hasMarketplacePluginUpdateSelector,
+  isMarketplacePluginInstallingSelector,
+  marketplaceCatalogueQuerySelector,
+  justInstalledMarketplacePluginSelector,
+  isPluginUploadAllowedSelector,
+  marketplacePluginDetailStateSelector,
+  marketplacePluginDetailLoadingSelector,
+  isMarketplacePluginDetailOfflineSelector,
+  hasMarketplacePluginDetailFailedSelector,
+  marketplacePluginDetailRegistryHostSelector,
+  marketplacePluginDetailDataSelector,
+  isMarketplaceLicenceConfiguredSelector,
+  marketplaceLicenceCustomerIdSelector,
+  marketplaceLicenceLoadingSelector,
 } from './selectors';
 export { pluginSagas } from './sagas';
 export {

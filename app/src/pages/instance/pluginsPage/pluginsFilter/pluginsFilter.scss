@@ -14,45 +14,47 @@
  * limitations under the License.
  */
 
+// Horizontal chips, not a sidebar list: the design puts the category selector in the header
+// above the content column, so the column itself is the full 820px.
 .plugins-filter {
   display: flex;
-  flex-direction: column;
-  gap: 16px;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
 }
 
 .plugins-filter-title {
-  font-size: 16px;
-  line-height: normal;
-  font-family: $FONT-BOLD;
-  color: $COLOR--black-2;
+  margin-right: 4px;
+  font-size: 13px;
+  line-height: 20px;
+  font-family: $FONT-REGULAR;
+  color: $COLOR--gray-47;
 }
 
 .plugins-filter-list {
   display: flex;
-  flex-direction: column;
-  max-width: 160px;
+  flex-wrap: wrap;
+  gap: 8px;
 }
+
 .plugins-filter-button {
-  height: 26px;
-  width: 100%;
-  margin: 2px 0;
-  padding: 4px 10px;
-  border: none;
+  height: 28px;
+  padding: 0 12px;
+  border: 1px solid $COLOR--gray-91;
   background: transparent;
   color: $COLOR--black-2;
   font-size: 13px;
+  line-height: 20px;
   font-family: $FONT-REGULAR;
-  border-radius: 2px;
+  border-radius: 14px;
   box-sizing: border-box;
-  text-align: left;
+  white-space: nowrap;
   cursor: pointer;
 
   &:hover,
   &:focus {
-    background-color: $COLOR--topaz;
-    color: $COLOR--white-two;
-    font-family: $FONT-SEMIBOLD;
-    letter-spacing: 0;
+    border-color: $COLOR--topaz;
+    color: $COLOR--topaz;
   }
 
   &:focus {
@@ -61,8 +63,14 @@
 }
 
 .active {
+  border-color: $COLOR--topaz;
   background-color: $COLOR--topaz;
   color: $COLOR--white-two;
   font-family: $FONT-SEMIBOLD;
-  letter-spacing: 0;
+
+  &:hover,
+  &:focus {
+    border-color: $COLOR--topaz;
+    color: $COLOR--white-two;
+  }
 }

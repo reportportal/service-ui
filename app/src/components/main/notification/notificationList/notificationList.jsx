@@ -156,6 +156,32 @@ export const notificationMessages = defineMessages({
     id: 'InstancesSection.removePluginSuccess',
     defaultMessage: 'Plugin has been uninstalled successfully',
   },
+  // Names the version, because install, update and rollback are the same request and only the
+  // version says which of the three just happened.
+  marketplacePluginInstalled: {
+    id: 'PluginsCatalog.marketplacePluginInstalled',
+    defaultMessage: 'Version {version} is now active. The plugin is in Installed plugins.',
+  },
+  updateMarketplaceLicenceSuccess: {
+    id: 'MarketplaceLicence.updateSuccess',
+    defaultMessage: 'Marketplace licence credentials have been saved',
+  },
+  removeMarketplaceLicenceSuccess: {
+    id: 'MarketplaceLicence.removeSuccess',
+    defaultMessage: 'Marketplace licence credentials have been removed',
+  },
+  // the endpoint refuses these bodies outright, so the operator is told what is wrong with the
+  // request rather than that a request failed
+  marketplaceInstallVersionUnknown: {
+    id: 'MarketplaceInstall.versionUnknown',
+    defaultMessage:
+      'This plugin cannot be installed: the registry did not state which version to install',
+  },
+  marketplaceLicenceRefused: {
+    id: 'MarketplaceLicence.refused',
+    defaultMessage:
+      'Enter both a customer ID and a licence key, neither blank and each within the length the registry accepts',
+  },
   updateIntegrationSuccess: {
     id: 'IntegrationSettingsContainer.updateIntegrationSuccess',
     defaultMessage: 'Integration has been updated successfully',
@@ -312,7 +338,8 @@ export const notificationMessages = defineMessages({
   },
   testCasesAddedToTestPlanFromLibrarySuccess: {
     id: 'TestPlanDetailsPage.testCasesAddedToTestPlanFromLibrarySuccess',
-    defaultMessage: '{count, plural, one {# Test Case was} other {# Test Cases were}} successfully added to Test Plan.',
+    defaultMessage:
+      '{count, plural, one {# Test Case was} other {# Test Cases were}} successfully added to Test Plan.',
   },
   testCaseUpdatedSuccess: {
     id: 'TestCaseLibraryPage.testCaseUpdatedSuccess',

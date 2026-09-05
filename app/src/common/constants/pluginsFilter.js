@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { FormattedMessage } from 'react-intl';
+import { defineMessages } from 'react-intl';
 import {
   ALL_GROUP_TYPE,
   BTS_GROUP_TYPE,
@@ -27,36 +27,27 @@ import {
 // Special filter that shows only installed plugins (no available-to-install section).
 export const INSTALLED_GROUP_TYPE = 'INSTALLED';
 
+// Descriptors, not rendered elements: the kit's Dropdown takes `label: string`, so a consumer
+// has to be able to format these itself rather than receive JSX it cannot turn back into text.
+export const PLUGINS_FILTER_MESSAGES = defineMessages({
+  [ALL_GROUP_TYPE]: { id: 'PluginsFilter.all', defaultMessage: 'All' },
+  [INSTALLED_GROUP_TYPE]: { id: 'PluginsFilter.installed', defaultMessage: 'Installed' },
+  [AUTHORIZATION_GROUP_TYPE]: { id: 'PluginsFilter.auth', defaultMessage: 'Authorization' },
+  [NOTIFICATION_GROUP_TYPE]: { id: 'PluginsFilter.notifications', defaultMessage: 'Notifications' },
+  [IMPORT_GROUP_TYPE]: { id: 'PluginsFilter.import', defaultMessage: 'Launches Import' },
+  [BTS_GROUP_TYPE]: { id: 'PluginsFilter.bts', defaultMessage: 'Bug Tracking Systems' },
+  [OTHER_GROUP_TYPE]: { id: 'PluginsFilter.other', defaultMessage: 'Other' },
+});
+
 const PLUGINS_FILTER_LIST = [
-  {
-    value: ALL_GROUP_TYPE,
-    label: <FormattedMessage id={'PluginsFilter.all'} defaultMessage={'All'} />,
-  },
-  {
-    value: INSTALLED_GROUP_TYPE,
-    label: <FormattedMessage id={'PluginsFilter.installed'} defaultMessage={'Installed'} />,
-  },
-  {
-    value: AUTHORIZATION_GROUP_TYPE,
-    label: <FormattedMessage id={'PluginsFilter.auth'} defaultMessage={'Authorization'} />,
-  },
-  {
-    value: NOTIFICATION_GROUP_TYPE,
-    label: <FormattedMessage id={'PluginsFilter.notifications'} defaultMessage={'Notifications'} />,
-  },
-  {
-    value: IMPORT_GROUP_TYPE,
-    label: <FormattedMessage id={'PluginsFilter.import'} defaultMessage={'Launches Import'} />,
-  },
-  {
-    value: BTS_GROUP_TYPE,
-    label: <FormattedMessage id={'PluginsFilter.bts'} defaultMessage={'Bug Tracking Systems'} />,
-  },
-  {
-    value: OTHER_GROUP_TYPE,
-    label: <FormattedMessage id={'PluginsFilter.other'} defaultMessage={'Other'} />,
-  },
-];
+  ALL_GROUP_TYPE,
+  INSTALLED_GROUP_TYPE,
+  AUTHORIZATION_GROUP_TYPE,
+  NOTIFICATION_GROUP_TYPE,
+  IMPORT_GROUP_TYPE,
+  BTS_GROUP_TYPE,
+  OTHER_GROUP_TYPE,
+].map((value) => ({ value, message: PLUGINS_FILTER_MESSAGES[value] }));
 
 // Real plugin group types (excludes the synthetic All / Installed filters).
 export const PLUGIN_FILTER_GROUP_VALUES = PLUGINS_FILTER_LIST.filter(

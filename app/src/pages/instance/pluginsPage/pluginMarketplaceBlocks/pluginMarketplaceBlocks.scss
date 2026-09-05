@@ -1,0 +1,122 @@
+/*!
+ * Copyright 2026 EPAM Systems
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+// Aligned with the sections around it. The plugin header reserves a gutter for the logo and
+// InstancesSection below indents to clear it; without the same offset these blocks stood in a
+// column of their own, one indent to the left of everything else on the page.
+.plugin-marketplace-blocks {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  max-width: 600px;
+  margin-left: 145px;
+  margin-top: 25px;
+
+  @media (max-width: $SCREEN_XS_MAX) {
+    margin-left: 0;
+  }
+}
+
+.sections {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.alert,
+.loader {
+  display: flex;
+  justify-content: center;
+}
+
+// The blocks are their own column now, so the alerts inside them fill it rather than centring
+// against a width they no longer have.
+.alert > * {
+  width: 100%;
+}
+
+.block-header {
+  margin: 0 0 8px;
+  font-family: $FONT-ROBOTO-MEDIUM;
+  font-size: 15px;
+  line-height: 24px;
+  color: $COLOR--almost-black;
+}
+
+.card {
+  border: 1px solid $COLOR--e-200;
+  border-radius: 8px;
+  background-color: $COLOR--white-two;
+}
+
+.version-row {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 12px 16px;
+  font-size: 13px;
+  line-height: 20px;
+
+  & + & {
+    border-top: 1px solid $COLOR--e-200;
+  }
+}
+
+// The date takes the slack so the version and the action stay put down the column, which the
+// old space-between could not do once a third cell arrived.
+.version-date {
+  flex: 1 1 auto;
+  text-align: right;
+  color: $COLOR--e-400;
+}
+
+.version-action {
+  flex: none;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  min-width: 120px;
+}
+
+.version-state {
+  color: var(--rp-ui-color-text-secondary);
+
+  &.blocked {
+    color: $COLOR--deep-red;
+  }
+}
+
+.changelog-line {
+  margin: 0;
+  padding: 8px 16px;
+  font-size: 13px;
+  line-height: 20px;
+}
+
+.screenshot-strip {
+  display: flex;
+  gap: 16px;
+  overflow-x: auto;
+}
+
+.screenshot {
+  flex: 0 0 auto;
+  width: 320px;
+  height: 180px;
+  object-fit: cover;
+  border: 1px solid $COLOR--e-200;
+  border-radius: 8px;
+}

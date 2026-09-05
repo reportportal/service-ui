@@ -1,0 +1,10 @@
+{
+  "contractHash" : "74cb316e28f6344062ac99cd40d40de8dd141e4ce26c044b786dc11654bd43a8",
+  "algorithm" : "SHA-256, hex, over the routes below in the order given: the route on a line of its own, then one line per field path.",
+  "routes" : {
+    "GET /v1/plugins" : [ "available[].access", "available[].author", "available[].contactUrl", "available[].description", "available[].groupType", "available[].id", "available[].latestVersion", "available[].locked", "available[].name", "available[].tier", "installed[].enabled", "installed[].groupType", "installed[].integrationTypeId", "installed[].marketplace.access", "installed[].marketplace.advisory.attachedAt", "installed[].marketplace.advisory.severity", "installed[].marketplace.advisory.text", "installed[].marketplace.author", "installed[].marketplace.blocked.blockedAt", "installed[].marketplace.blocked.reason", "installed[].marketplace.blocked.version", "installed[].marketplace.description", "installed[].marketplace.latestVersion", "installed[].marketplace.locked", "installed[].marketplace.name", "installed[].marketplace.pluginId", "installed[].marketplace.removed.removalReason", "installed[].marketplace.removed.removed", "installed[].marketplace.removed.removedBy", "installed[].marketplace.tier", "installed[].marketplace.updateAvailable.version", "installed[].name", "installed[].version", "instance.uploadAllowed", "registry.host", "registry.status" ],
+    "GET /v1/plugins/{registryId}" : [ "advisory.attachedAt", "advisory.severity", "advisory.text", "blocked.blockedAt", "blocked.reason", "blocked.version", "changelog.lines[]", "changelog.version", "locked", "plugin.access", "plugin.author", "plugin.description", "plugin.id", "plugin.latestVersion", "plugin.name", "plugin.tier", "registry.host", "registry.status", "removed.removalReason", "removed.removed", "removed.removedBy", "screenshots[]", "versions[].blocked", "versions[].publishedAt", "versions[].version" ],
+    "POST /v1/plugins/{registryId}/install" : [ "version" ],
+    "PUT /v1/plugins/licence" : [ "customerId", "privateKey" ]
+  }
+}

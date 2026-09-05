@@ -14,13 +14,15 @@
  * limitations under the License.
  */
 
+// A row, not a card: the catalogue is one column of full-width rows 104px tall on a 116px pitch
+// (Figma "Plugins / 01 · Catalog", content column 820px). The 12px of pitch is the list's gap.
 .plugins-list-item {
   display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  width: 277px;
-  height: 118px;
-  padding: 15px;
+  align-items: center;
+  gap: 16px;
+  width: 100%;
+  min-height: 104px;
+  padding: 16px 20px;
   box-sizing: border-box;
   border: solid 1px $COLOR--gray-91;
   border-radius: 4px;
@@ -30,71 +32,82 @@
     background-color: $COLOR--tealish-hover;
   }
 
-  @media (max-width: $SCREEN_SM_MAX) {
-    width: 100%;
-    margin-right: 0;
+  // Where the plugin went. It fades rather than latches: the answer is only interesting for the
+  // moment after the list reshuffles, and a colour that stays becomes a status nobody can clear.
+  &.highlighted {
+    border-color: $COLOR--topaz;
+    animation: plugin-row-landed 2.4s ease-out 1;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    &.highlighted {
+      animation: none;
+      background-color: $COLOR--tealish-hover;
+    }
   }
 
   @media (max-width: $SCREEN_XS_MAX) {
-    height: max-content;
+    align-items: flex-start;
+    min-height: max-content;
+    padding: 16px;
   }
 }
 
 .plugins-info-block {
-  flex-grow: 1;
+  flex: 1 1 auto;
   display: flex;
   align-items: flex-start;
-  width: 100%;
-  height: max-content;
-
-  @media (max-width: $SCREEN_XS_MAX) {
-    align-items: center;
-    height: 100%;
-  }
+  min-width: 0;
 }
 
 .plugins-image {
+  flex: none;
   align-self: flex-start;
-  width: 30px;
-  height: 30px;
-  margin-right: 15px;
+  width: 40px;
+  height: 40px;
+  margin-right: 16px;
 
   svg {
-    width: 30px;
-    height: 30px;
+    width: 40px;
+    height: 40px;
   }
 }
 
 .plugins-info {
   display: flex;
   flex-direction: column;
+  gap: 4px;
+  min-width: 0;
   width: 100%;
 }
 
 .plugins-info-content {
   display: flex;
   flex-wrap: wrap;
-  flex-direction: column;
-  align-content: space-between;
-  height: 40px;
+  align-items: baseline;
+  gap: 8px;
   width: 100%;
-  overflow: hidden;
-
-  @media (max-width: $SCREEN_XS_MAX) {
-    height: 34px;
-  }
 }
 
 .plugins-name {
-  margin-bottom: 10px;
-  margin-right: 10px;
   color: $COLOR--black-2;
   font-size: 15px;
+  line-height: 24px;
   font-family: $FONT-SEMIBOLD;
+}
 
-  @media (max-width: $SCREEN_XS_MAX) {
-    margin-bottom: 5px;
-  }
+// Two lines, then an ellipsis. The registry's descriptions are one sentence, but nothing
+// enforces that, and a long one must not push the row off its pitch.
+.plugins-description {
+  margin: 0;
+  color: $COLOR--gray-47;
+  font-size: 13px;
+  line-height: 20px;
+  font-family: $FONT-REGULAR;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 
 .plugins-author {
@@ -110,40 +123,34 @@
 }
 
 .plugins-additional-block {
-  flex-grow: 1;
+  flex: none;
   display: flex;
   justify-content: flex-end;
   align-items: center;
-  width: 100%;
 
   @media (max-width: $SCREEN_XS_MAX) {
     display: none;
   }
 }
 
-.plugins-switcher {
-  all: unset;
-  height: 14px;
-  width: 20px;
+.plugins-badges {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
 }
 
-.plugins-tier {
+.plugins-row-action {
   display: flex;
   align-items: center;
-  height: 16px;
-  width: fit-content;
-  border-radius: 12px;
-  padding: 0 10px;
-  margin-top: 8px;
-  color: $COLOR--white-two;
-  background-color: $COLOR--plugin-tier-free;
-  font-size: 9px;
-  line-height: normal;
-  font-family: $FONT-SEMIBOLD;
-  text-transform: uppercase;
-  letter-spacing: 1px;
+}
 
-  &.premium {
-    background-color: $COLOR--plugin-tier-premium;
+@keyframes plugin-row-landed {
+  0%,
+  60% {
+    background-color: $COLOR--tealish-hover;
+  }
+  100% {
+    background-color: transparent;
   }
 }

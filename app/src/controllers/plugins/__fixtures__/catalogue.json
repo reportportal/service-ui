@@ -1,0 +1,98 @@
+{
+  "registry" : {
+    "status" : "ONLINE",
+    "host" : "marketplace.reportportal.io"
+  },
+  "instance" : {
+    "uploadAllowed" : true
+  },
+  "installed" : [ {
+    "integrationTypeId" : 7,
+    "name" : "jira",
+    "version" : "1.5.2",
+    "enabled" : true,
+    "groupType" : "BTS",
+    "marketplace" : {
+      "pluginId" : "plugin-bts-jira",
+      "name" : "Jira Cloud",
+      "description" : "Post and link Jira Cloud issues from a failed test item.",
+      "author" : "Atlassian",
+      "access" : "premium",
+      "tier" : "official",
+      "latestVersion" : "1.6.0",
+      "updateAvailable" : {
+        "version" : "1.6.0"
+      },
+      "advisory" : {
+        "severity" : "high",
+        "text" : "Leaks the API key into the log",
+        "attachedAt" : "2026-03-12T10:15:30Z"
+      },
+      "blocked" : {
+        "version" : "1.5.2",
+        "blockedAt" : "2026-03-12T10:15:30Z",
+        "reason" : "Signed with a revoked key"
+      },
+      "locked" : true
+    }
+  }, {
+    "integrationTypeId" : 8,
+    "name" : "rally",
+    "version" : "5.0.0",
+    "enabled" : true,
+    "groupType" : "BTS",
+    "marketplace" : {
+      "pluginId" : "plugin-bts-rally",
+      "name" : "Rally",
+      "description" : "Rally work-item integration.",
+      "author" : "Broadcom",
+      "access" : "public",
+      "tier" : "official",
+      "latestVersion" : "5.0.0",
+      "locked" : false
+    }
+  }, {
+    "integrationTypeId" : 9,
+    "name" : "gitlab",
+    "version" : "2.1.0",
+    "enabled" : false,
+    "groupType" : "BTS",
+    "marketplace" : {
+      "pluginId" : "plugin-bts-gitlab",
+      "removed" : {
+        "removed" : "2026-01-05T12:00:00Z",
+        "removalReason" : "Vendor withdrew it",
+        "removedBy" : "operator@rp.io"
+      },
+      "locked" : false
+    }
+  }, {
+    "integrationTypeId" : 10,
+    "name" : "custom-scanner",
+    "version" : "0.9.0",
+    "enabled" : true,
+    "groupType" : "OTHER"
+  } ],
+  "available" : [ {
+    "id" : "plugin-notify-slack",
+    "name" : "Slack",
+    "latestVersion" : "2.0.0",
+    "description" : "Posts a message when a launch finishes",
+    "author" : "ReportPortal",
+    "groupType" : "NOTIFICATION",
+    "access" : "public",
+    "tier" : "official",
+    "locked" : false
+  }, {
+    "id" : "plugin-bts-azure",
+    "name" : "Azure DevOps",
+    "latestVersion" : "1.2.0",
+    "description" : "Tracks issues in Azure Boards",
+    "author" : "Microsoft",
+    "contactUrl" : "https://reportportal.io/contact",
+    "groupType" : "BTS",
+    "access" : "premium",
+    "tier" : "verified",
+    "locked" : true
+  } ]
+}

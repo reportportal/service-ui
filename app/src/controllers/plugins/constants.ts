@@ -54,3 +54,59 @@ export const ORGANIZATION_INTEGRATIONS = 'organizationIntegrations';
 export const PUBLIC_PLUGINS = 'publicPlugins';
 
 export const SECRET_FIELDS_KEY = 'rp_secretFieldsToClear';
+
+export const MARKETPLACE = 'marketplace';
+
+export const FETCH_MARKETPLACE_CATALOGUE = 'fetchMarketplaceCatalogue';
+export const FETCH_MARKETPLACE_CATALOGUE_START = 'fetchMarketplaceCatalogueStart';
+export const FETCH_MARKETPLACE_CATALOGUE_SUCCESS = 'fetchMarketplaceCatalogueSuccess';
+export const FETCH_MARKETPLACE_CATALOGUE_ERROR = 'fetchMarketplaceCatalogueError';
+
+/** How long a search waits before it becomes a request, so a keystroke does not become one. */
+export const MARKETPLACE_SEARCH_DEBOUNCE = 300;
+
+export const INSTALL_MARKETPLACE_PLUGIN = 'installMarketplacePlugin';
+export const INSTALL_MARKETPLACE_PLUGIN_START = 'installMarketplacePluginStart';
+export const INSTALL_MARKETPLACE_PLUGIN_SUCCESS = 'installMarketplacePluginSuccess';
+export const INSTALL_MARKETPLACE_PLUGIN_ERROR = 'installMarketplacePluginError';
+export const CLEAR_JUST_INSTALLED_MARKETPLACE_PLUGIN = 'clearJustInstalledMarketplacePlugin';
+
+/** Registry reachability as reported by service-api. */
+export const REGISTRY_STATUS = {
+  ONLINE: 'ONLINE',
+  OFFLINE: 'OFFLINE',
+} as const;
+
+/**
+ * Offline is a loaded state, not a failure: the response is authoritative about installed
+ * plugins, only the registry-sourced parts are missing.
+ */
+export const MARKETPLACE_CATALOGUE_STATE = {
+  NOT_REQUESTED: 'NOT_REQUESTED',
+  LOADING: 'LOADING',
+  LOADED_ONLINE: 'LOADED_ONLINE',
+  LOADED_OFFLINE: 'LOADED_OFFLINE',
+  FAILED: 'FAILED',
+} as const;
+
+export const FETCH_MARKETPLACE_PLUGIN_DETAIL = 'fetchMarketplacePluginDetail';
+export const FETCH_MARKETPLACE_PLUGIN_DETAIL_START = 'fetchMarketplacePluginDetailStart';
+export const FETCH_MARKETPLACE_PLUGIN_DETAIL_SUCCESS = 'fetchMarketplacePluginDetailSuccess';
+export const FETCH_MARKETPLACE_PLUGIN_DETAIL_ERROR = 'fetchMarketplacePluginDetailError';
+
+export const FETCH_MARKETPLACE_LICENCE = 'fetchMarketplaceLicence';
+export const FETCH_MARKETPLACE_LICENCE_SUCCESS = 'fetchMarketplaceLicenceSuccess';
+export const SET_MARKETPLACE_LICENCE = 'setMarketplaceLicence';
+export const DELETE_MARKETPLACE_LICENCE = 'deleteMarketplaceLicence';
+export const MARKETPLACE_LICENCE_START = 'marketplaceLicenceStart';
+export const MARKETPLACE_LICENCE_ERROR = 'marketplaceLicenceError';
+
+/**
+ * The bounds PUT /v1/plugins/licence declares. They are stated here because the UI has to
+ * decide before it sends; that they are still the service's bounds is asserted against
+ * __fixtures__/request-constraints.json, which service-api generates from its own validator.
+ */
+export const MARKETPLACE_LICENCE_MAX_LENGTHS = {
+  customerId: 255,
+  privateKey: 512,
+} as const;

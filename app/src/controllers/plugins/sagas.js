@@ -14,11 +14,13 @@
  * limitations under the License.
  */
 
-import { takeEvery, all, put, select, call } from 'redux-saga/effects';
+import { delay } from 'redux-saga';
+import { takeEvery, takeLatest, all, put, select, call } from 'redux-saga/effects';
 import { URLS } from 'common/urls';
 import {
   showNotification,
   showDefaultErrorNotification,
+  showErrorNotification,
   NOTIFICATION_TYPES,
   showSuccessNotification,
 } from 'controllers/notification';
@@ -43,14 +45,35 @@ import {
   SECRET_FIELDS_KEY,
   UPDATE_PLUGIN_SUCCESS,
   PUBLIC_PLUGINS,
+  FETCH_MARKETPLACE_CATALOGUE,
+  INSTALL_MARKETPLACE_PLUGIN,
+  MARKETPLACE_SEARCH_DEBOUNCE,
+  FETCH_MARKETPLACE_PLUGIN_DETAIL,
+  FETCH_MARKETPLACE_LICENCE,
+  SET_MARKETPLACE_LICENCE,
+  DELETE_MARKETPLACE_LICENCE,
+  MARKETPLACE_LICENCE_MAX_LENGTHS,
 } from './constants';
-import { pluginByNameSelector } from './selectors';
+import { pluginByNameSelector, marketplaceCatalogueQuerySelector } from './selectors';
 import {
   removePluginSuccessAction,
   removeProjectIntegrationsByTypeSuccessAction,
   removeOrganizationIntegrationsByTypeSuccessAction,
   fetchGlobalIntegrationsSuccessAction,
   removeGlobalIntegrationsByTypeSuccessAction,
+  fetchMarketplaceCatalogueAction,
+  fetchMarketplaceCatalogueStartAction,
+  fetchMarketplaceCatalogueSuccessAction,
+  fetchMarketplaceCatalogueErrorAction,
+  installMarketplacePluginStartAction,
+  installMarketplacePluginSuccessAction,
+  installMarketplacePluginErrorAction,
+  fetchMarketplacePluginDetailStartAction,
+  fetchMarketplacePluginDetailSuccessAction,
+  fetchMarketplacePluginDetailErrorAction,
+  fetchMarketplaceLicenceSuccessAction,
+  marketplaceLicenceStartAction,
+  marketplaceLicenceErrorAction,
 } from './actionCreators';
 import { fetchExtensionManifests, fetchExtensionManifest } from './uiExtensions';
 import {
@@ -271,6 +294,169 @@ function* watchRemovePlugin() {
   yield takeEvery(REMOVE_PLUGIN, removePlugin);
 }
 
+export function* fetchMarketplaceCatalogue({ payload = {} } = {}) {
+  // typing is debounced, and takeLatest cancels this wait outright when the next keystroke
+  // arrives, so the store hears nothing until a request really leaves
+  if (payload.debounced) {
+    yield call(delay, MARKETPLACE_SEARCH_DEBOUNCE);
+  }
+
+  yield put(fetchMarketplaceCatalogueStartAction(payload));
+  try {
+    const catalogue = yield call(fetch, URLS.marketplaceCatalogue(payload));
+    // an OFFLINE registry is part of a successful payload, never an error
+    yield put(fetchMarketplaceCatalogueSuccessAction(catalogue));
+  } catch (error) {
+    // a failed catalogue has to be as loud as any other failed request here: an unexplained
+    // page is indistinguishable from an instance that simply has nothing to offer
+    yield put(fetchMarketplaceCatalogueErrorAction(error.message));
+    yield put(showDefaultErrorNotification(error));
+  }
+}
+
+// takeLatest, not takeEvery: a slow catalogue response must never land on top of a newer one
+export function* watchFetchMarketplaceCatalogue() {
+  yield takeLatest(FETCH_MARKETPLACE_CATALOGUE, fetchMarketplaceCatalogue);
+}
+
+/**
+ * Every marketplace request body is validated by service-api before its handler runs, and the
+ * constraints are published beside the fixtures the tests read (`request-constraints.json`).
+ * A body that breaks one of them comes back as a 400 that says nothing useful on screen, so it
+ * is refused here instead: what the operator is told then names the field, not the status code.
+ */
+const isBlank = (value) => typeof value !== 'string' || value.trim() === '';
+
+const isTooLong = (value, max) => value.length > max;
+
+export function* installMarketplacePlugin({ payload: { registryId, version } }) {
+  // the registry states a version for everything it offers; when it did not, there is nothing
+  // to install and the row must not be left looking as though something is under way
+  if (isBlank(version)) {
+    yield put(showErrorNotification({ messageId: 'marketplaceInstallVersionUnknown' }));
+
+    return;
+  }
+
+  yield put(installMarketplacePluginStartAction(registryId));
+  try {
+    // the endpoint requires the version: install, update and rollback differ only by it
+    yield call(fetch, URLS.marketplacePluginInstall(registryId), {
+      method: 'post',
+      data: { version },
+    });
+    yield put(installMarketplacePluginSuccessAction(registryId));
+    // Say so. The row leaves the Available group and reappears under Installed, and without a
+    // word the page just reshuffles — the one thing the user cannot tell from that is whether it
+    // worked. The toggle on this same page has always confirmed itself this way.
+    yield put(
+      showNotification({
+        type: NOTIFICATION_TYPES.SUCCESS,
+        messageId: 'marketplacePluginInstalled',
+        values: { version },
+      }),
+    );
+    // refetch with the filter still on screen, not the unfiltered catalogue
+    const query = yield select(marketplaceCatalogueQuerySelector);
+    yield put(fetchMarketplaceCatalogueAction(query));
+  } catch (error) {
+    yield put(installMarketplacePluginErrorAction(registryId, error.message));
+    yield put(showDefaultErrorNotification(error));
+  }
+}
+
+/**
+ * The registry half of one plugin's page. takeLatest, because opening a second plugin while the
+ * first is still in flight must never end with the first one's answer painted over the second.
+ */
+export function* fetchMarketplacePluginDetail({ payload: registryId }) {
+  yield put(fetchMarketplacePluginDetailStartAction(registryId));
+  try {
+    const detail = yield call(fetch, URLS.marketplacePluginDetail(registryId));
+    // as on the catalogue, an OFFLINE registry is part of a successful payload
+    yield put(fetchMarketplacePluginDetailSuccessAction(detail));
+  } catch (error) {
+    yield put(fetchMarketplacePluginDetailErrorAction(error.message));
+    yield put(showDefaultErrorNotification(error));
+  }
+}
+
+export function* watchFetchMarketplacePluginDetail() {
+  yield takeLatest(FETCH_MARKETPLACE_PLUGIN_DETAIL, fetchMarketplacePluginDetail);
+}
+
+export function* fetchMarketplaceLicence() {
+  try {
+    const licence = yield call(fetch, URLS.marketplaceLicence());
+    yield put(fetchMarketplaceLicenceSuccessAction(licence));
+  } catch (error) {
+    yield put(marketplaceLicenceErrorAction(error.message));
+    yield put(showDefaultErrorNotification(error));
+  }
+}
+
+function* watchFetchMarketplaceLicence() {
+  yield takeEvery(FETCH_MARKETPLACE_LICENCE, fetchMarketplaceLicence);
+}
+
+/**
+ * The key is read out of the action, handed to the request and dropped. Nothing derived from it
+ * is dispatched: the only thing the store learns is what the endpoint answers, which by contract
+ * is {configured, customerId}.
+ */
+export function* setMarketplaceLicence({ payload: { customerId, privateKey } }) {
+  // both halves are required, neither may be blank and each is bounded; a body outside that is
+  // stored nowhere, so sending it would only cost the operator a round trip to be told so
+  const refused =
+    isBlank(customerId) ||
+    isBlank(privateKey) ||
+    isTooLong(customerId, MARKETPLACE_LICENCE_MAX_LENGTHS.customerId) ||
+    isTooLong(privateKey, MARKETPLACE_LICENCE_MAX_LENGTHS.privateKey);
+
+  if (refused) {
+    yield put(showErrorNotification({ messageId: 'marketplaceLicenceRefused' }));
+
+    return;
+  }
+
+  yield put(marketplaceLicenceStartAction());
+  try {
+    const licence = yield call(fetch, URLS.marketplaceLicence(), {
+      method: 'put',
+      data: { customerId, privateKey },
+    });
+    yield put(fetchMarketplaceLicenceSuccessAction(licence));
+    yield put(showSuccessNotification({ messageId: 'updateMarketplaceLicenceSuccess' }));
+  } catch (error) {
+    yield put(marketplaceLicenceErrorAction(error.message));
+    yield put(showDefaultErrorNotification(error));
+  }
+}
+
+function* watchSetMarketplaceLicence() {
+  yield takeEvery(SET_MARKETPLACE_LICENCE, setMarketplaceLicence);
+}
+
+export function* deleteMarketplaceLicence() {
+  yield put(marketplaceLicenceStartAction());
+  try {
+    const licence = yield call(fetch, URLS.marketplaceLicence(), { method: 'delete' });
+    yield put(fetchMarketplaceLicenceSuccessAction(licence));
+    yield put(showSuccessNotification({ messageId: 'removeMarketplaceLicenceSuccess' }));
+  } catch (error) {
+    yield put(marketplaceLicenceErrorAction(error.message));
+    yield put(showDefaultErrorNotification(error));
+  }
+}
+
+function* watchDeleteMarketplaceLicence() {
+  yield takeEvery(DELETE_MARKETPLACE_LICENCE, deleteMarketplaceLicence);
+}
+
+function* watchInstallMarketplacePlugin() {
+  yield takeEvery(INSTALL_MARKETPLACE_PLUGIN, installMarketplacePlugin);
+}
+
 function* watchPluginListFetch() {
   yield takeEvery(
     [createFetchPredicate(NAMESPACE), createFetchPredicate(PUBLIC_PLUGINS)],
@@ -295,5 +481,11 @@ export function* pluginSagas() {
     watchRemovePlugin(),
     watchPluginChange(),
     watchPluginListFetch(),
+    watchFetchMarketplaceCatalogue(),
+    watchInstallMarketplacePlugin(),
+    watchFetchMarketplacePluginDetail(),
+    watchFetchMarketplaceLicence(),
+    watchSetMarketplaceLicence(),
+    watchDeleteMarketplaceLicence(),
   ]);
 }

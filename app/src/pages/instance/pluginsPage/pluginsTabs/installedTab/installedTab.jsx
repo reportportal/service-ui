@@ -17,17 +17,33 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import track from 'react-tracking';
 import { injectIntl, defineMessages } from 'react-intl';
 import classNames from 'classnames/bind';
 import { URLS } from 'common/urls';
 import { fetch } from 'common/utils';
+import { getPluginsFilter, PLUGIN_FILTER_GROUP_VALUES } from 'common/constants/pluginsFilter';
+import { ALL_GROUP_TYPE } from 'common/constants/pluginsGroupTypes';
 import {
-  getPluginsFilter,
-  INSTALLED_GROUP_TYPE,
-  PLUGIN_FILTER_GROUP_VALUES,
-} from 'common/constants/pluginsFilter';
-import { ALL_GROUP_TYPE, AVAILABLE_PLUGINS_TYPE } from 'common/constants/pluginsGroupTypes';
-import { updatePluginSuccessAction } from 'controllers/plugins';
+  updatePluginSuccessAction,
+  fetchMarketplaceCatalogueAction,
+  installMarketplacePluginAction,
+  clearJustInstalledMarketplacePluginAction,
+  marketplaceAvailablePluginsSelector,
+  marketplaceInstalledPluginsSelector,
+  marketplaceCatalogueLoadingSelector,
+  marketplaceRegistryHostSelector,
+  justInstalledMarketplacePluginSelector,
+  isPluginUploadAllowedSelector,
+  isMarketplaceRegistryOfflineSelector,
+  hasMarketplaceCatalogueFailedSelector,
+  fetchMarketplacePluginDetailAction,
+  marketplacePluginDetailDataSelector,
+  marketplacePluginDetailLoadingSelector,
+  isMarketplacePluginDetailOfflineSelector,
+  hasMarketplacePluginDetailFailedSelector,
+  marketplacePluginDetailRegistryHostSelector,
+} from 'controllers/plugins';
 import { disablePluginPopupContentSelector } from 'controllers/plugins/uiExtensions';
 import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
 import { PLUGINS_PAGE_EVENTS } from 'components/main/analytics/events';
@@ -49,26 +65,13 @@ import {
 } from './constants';
 import styles from './installedTab.scss';
 import { PluginsFilter } from '../../pluginsFilter';
-import { PluginsListItems } from '../../pluginsListItems';
 import { ActionPanel } from '../../actionPanel';
 import { AvailablePluginDetail } from '../../availablePluginDetail';
-import { AVAILABLE_PLUGINS_CATALOG, PLUGIN_TIERS } from '../../availablePluginsCatalog';
+import { PluginsCatalog, ROW_ACTIONS, getDisplayName } from '../../pluginsCatalog';
+import { PluginMarketplaceBlocks } from '../../pluginMarketplaceBlocks';
+import { premiumPromoModal } from '../../premiumPromo';
 
 const cx = classNames.bind(styles);
-
-const groupRank = (groupType) => {
-  const idx = PLUGIN_FILTER_GROUP_VALUES.indexOf(groupType);
-  return idx < 0 ? PLUGIN_FILTER_GROUP_VALUES.length : idx;
-};
-
-const getDisplayName = ({ details, name }) => details?.name || name || '';
-
-const sortByGroupAndName = (a, b) =>
-  groupRank(a.groupType) - groupRank(b.groupType) ||
-  getDisplayName(a).localeCompare(getDisplayName(b));
-
-const sortByTierGroupAndName = (a, b) =>
-  (a.tier !== PLUGIN_TIERS.PREMIUM) - (b.tier !== PLUGIN_TIERS.PREMIUM) || sortByGroupAndName(a, b);
 
 const messages = defineMessages({
   disabledPluginMessage: {
@@ -99,14 +102,32 @@ const messages = defineMessages({
 });
 
 @injectIntl
+@track()
 @connect(
   (state) => ({
     disablePluginPopupContent: (pluginName) => disablePluginPopupContentSelector(state, pluginName),
+    marketplaceInstalled: marketplaceInstalledPluginsSelector(state),
+    availablePlugins: marketplaceAvailablePluginsSelector(state),
+    catalogueLoading: marketplaceCatalogueLoadingSelector(state),
+    registryOffline: isMarketplaceRegistryOfflineSelector(state),
+    catalogueFailed: hasMarketplaceCatalogueFailedSelector(state),
+    registryHost: marketplaceRegistryHostSelector(state),
+    justInstalledId: justInstalledMarketplacePluginSelector(state),
+    uploadAllowed: isPluginUploadAllowedSelector(state),
+    pluginDetail: marketplacePluginDetailDataSelector(state),
+    detailLoading: marketplacePluginDetailLoadingSelector(state),
+    detailOffline: isMarketplacePluginDetailOfflineSelector(state),
+    detailFailed: hasMarketplacePluginDetailFailedSelector(state),
+    detailRegistryHost: marketplacePluginDetailRegistryHostSelector(state),
   }),
   {
     showNotification,
     updatePluginSuccessAction,
     showModalAction,
+    fetchMarketplaceCatalogueAction,
+    installMarketplacePluginAction,
+    clearJustInstalledMarketplacePluginAction,
+    fetchMarketplacePluginDetailAction,
   },
 )
 export class InstalledTab extends Component {
@@ -114,19 +135,58 @@ export class InstalledTab extends Component {
     intl: PropTypes.object.isRequired,
     filterItems: PropTypes.array.isRequired,
     showModalAction: PropTypes.func.isRequired,
+    tracking: PropTypes.shape({ trackEvent: PropTypes.func }).isRequired,
     plugins: PropTypes.array.isRequired,
     updatePluginSuccessAction: PropTypes.func.isRequired,
     disablePluginPopupContent: PropTypes.func.isRequired,
+    marketplaceInstalled: PropTypes.array.isRequired,
+    availablePlugins: PropTypes.array.isRequired,
+    catalogueLoading: PropTypes.bool.isRequired,
+    registryOffline: PropTypes.bool.isRequired,
+    catalogueFailed: PropTypes.bool.isRequired,
+    fetchMarketplaceCatalogueAction: PropTypes.func.isRequired,
+    installMarketplacePluginAction: PropTypes.func.isRequired,
+    registryHost: PropTypes.string,
+    justInstalledId: PropTypes.string,
+    uploadAllowed: PropTypes.bool.isRequired,
+    clearJustInstalledMarketplacePluginAction: PropTypes.func.isRequired,
     showNotification: PropTypes.func,
+    pluginDetail: PropTypes.object.isRequired,
+    detailLoading: PropTypes.bool.isRequired,
+    detailOffline: PropTypes.bool.isRequired,
+    detailFailed: PropTypes.bool.isRequired,
+    fetchMarketplacePluginDetailAction: PropTypes.func.isRequired,
+    detailRegistryHost: PropTypes.string,
   };
 
   static defaultProps = {
+    justInstalledId: null,
+    detailRegistryHost: null,
+    registryHost: null,
     showNotification: () => {},
   };
 
   state = {
     activeFilterItem: ALL_GROUP_TYPE,
+    searchQuery: '',
     subPage: DEFAULT_BREADCRUMB,
+  };
+
+  componentDidMount() {
+    this.props.fetchMarketplaceCatalogueAction();
+  }
+
+  // The highlight answers one question — where did it go — and only for as long as that question
+  // is live. Leaving the page, or narrowing the list to look for something else, is the user
+  // saying they have moved on, so the mark goes with them rather than sitting there as a status.
+  componentWillUnmount() {
+    this.forgetJustInstalled();
+  }
+
+  forgetJustInstalled = () => {
+    if (this.props.justInstalledId) {
+      this.props.clearJustInstalledMarketplacePluginAction();
+    }
   };
 
   onToggleActive = (itemData) => {
@@ -235,6 +295,9 @@ export class InstalledTab extends Component {
     switch (type) {
       case INSTALLED_PLUGINS_SUBPAGE:
         return (
+          // What the registry says about this plugin sits below the plugin's own header and
+          // above its integrations: an alert about a plugin has to appear under the name of the
+          // plugin it is about, not above the breadcrumb where it reads as the page's.
           <IntegrationInfoContainer
             integrationType={data}
             isGlobal
@@ -243,6 +306,8 @@ export class InstalledTab extends Component {
             showToggleConfirmationModal={this.showToggleConfirmationModal}
             removePluginSuccessCallback={this.goToMainPageHandler}
             events={PLUGINS_PAGE_EVENTS}
+            afterInfoSection={this.renderMarketplaceBlocks(data)}
+            title={getDisplayName(data)}
           />
         );
       case INSTALLED_PLUGINS_SETTINGS_SUBPAGE:
@@ -255,41 +320,63 @@ export class InstalledTab extends Component {
           />
         );
       case AVAILABLE_PLUGIN_DETAIL_SUBPAGE:
-        return <AvailablePluginDetail key={data.name} plugin={data} />;
+        return (
+          <AvailablePluginDetail
+            key={data.name}
+            plugin={data}
+            detail={this.props.pluginDetail}
+            loading={this.props.detailLoading}
+            offline={this.props.detailOffline}
+            failed={this.props.detailFailed}
+            registryHost={this.props.detailRegistryHost}
+            onInstall={this.handleInstallFromDetail}
+            onRetry={this.refetchPluginDetail}
+          />
+        );
       default: {
-        const installedPlugins = this.getInstalledPluginsList(activeFilterItem);
-        const availablePlugins = this.getAvailablePluginsList(activeFilterItem);
+        const {
+          plugins,
+          marketplaceInstalled,
+          availablePlugins,
+          catalogueLoading,
+          registryOffline,
+          catalogueFailed,
+          registryHost,
+        } = this.props;
 
         return (
           <div className={cx('plugins-content-wrapper')}>
-            <div className={cx('plugins-sidebar')}>
+            {/* Chips and the upload control sit in a header above the list, so the content
+                column is the full width the design gives it. */}
+            <div className={cx('plugins-header')}>
               <PluginsFilter
                 filterItems={filterItems}
                 activeItem={activeFilterItem}
                 onFilterChange={this.handleFilterChange}
               />
-              <ActionPanel />
+              {/* Absent, not disabled. The capability is switched off by environment, which is
+                  not a permission error and must not be shown as one. */}
+              {this.props.uploadAllowed && <ActionPanel />}
             </div>
             <div className={cx('plugins-content')}>
               {this.renderFilterMobileBlock()}
-              {availablePlugins.length > 0 && (
-                <div className={cx('available-section')}>
-                  <PluginsListItems
-                    title={AVAILABLE_PLUGINS_TYPE}
-                    items={availablePlugins}
-                    onItemClick={this.availablePluginDetailSubPageHandler}
-                  />
-                </div>
-              )}
-              {installedPlugins.length > 0 && (
-                <PluginsListItems
-                  title={ALL_GROUP_TYPE}
-                  items={installedPlugins}
-                  showToggleConfirmationModal={this.showToggleConfirmationModal}
-                  onToggleActive={this.onToggleActive}
-                  onItemClick={this.installedPluginsSubPageHandler}
-                />
-              )}
+              <PluginsCatalog
+                installedPlugins={plugins}
+                marketplaceInstalled={marketplaceInstalled}
+                availablePlugins={availablePlugins}
+                loading={catalogueLoading}
+                offline={registryOffline}
+                failed={catalogueFailed}
+                registryHost={registryHost}
+                activeCategory={activeFilterItem}
+                query={this.state.searchQuery}
+                onQueryChange={this.handleQueryChange}
+                onRetry={this.refetchCatalogue}
+                onRowAction={this.handleRowAction}
+                onInstalledItemClick={this.installedPluginsSubPageHandler}
+                onAvailableItemClick={this.availablePluginDetailSubPageHandler}
+                justInstalledId={this.props.justInstalledId}
+              />
             </div>
           </div>
         );
@@ -316,36 +403,11 @@ export class InstalledTab extends Component {
     return breadcrumbs;
   };
 
-  getInstalledPluginsList = (activeFilterItem) => {
-    const { plugins } = this.props;
-
-    const filtered =
-      activeFilterItem === ALL_GROUP_TYPE || activeFilterItem === INSTALLED_GROUP_TYPE
-        ? plugins
-        : plugins.filter((item) => item.groupType === activeFilterItem);
-
-    return [...filtered].sort(sortByGroupAndName);
-  };
-
-  getAvailablePluginsList = (activeFilterItem) => {
-    if (activeFilterItem === INSTALLED_GROUP_TYPE) {
-      return [];
-    }
-
-    const installedNames = this.props.plugins.map((plugin) => plugin.name);
-
-    const filtered = AVAILABLE_PLUGINS_CATALOG.filter(
-      (entry) =>
-        !installedNames.includes(entry.name) &&
-        (activeFilterItem === ALL_GROUP_TYPE || entry.groupType === activeFilterItem),
-    );
-
-    return [...filtered].sort(sortByTierGroupAndName);
-  };
-
+  // Formatted here rather than handed over as an element: an option label is text, and the
+  // kit's Dropdown — where this is headed — declares `label: string`.
   generateOptions = () =>
     getPluginsFilter(this.props.filterItems).map((item) => ({
-      label: item.label,
+      label: this.props.intl.formatMessage(item.message),
       value: item.value,
     }));
 
@@ -361,11 +423,54 @@ export class InstalledTab extends Component {
 
   subPagesCache = {};
 
+  // the chip and the query are both server-side filters; ALL and INSTALLED are synthetic
+  // chips this endpoint knows nothing about, so they narrow nothing remotely
+  catalogueParams = ({
+    query = this.state.searchQuery,
+    category = this.state.activeFilterItem,
+  }) => ({
+    q: query.trim() || null,
+    category: PLUGIN_FILTER_GROUP_VALUES.includes(category) ? category : null,
+  });
+
+  refetchCatalogue = () => this.props.fetchMarketplaceCatalogueAction(this.catalogueParams({}));
+
   handleFilterChange = (value) => {
     if (value !== this.state.activeFilterItem) {
+      this.forgetJustInstalled();
       this.setState({
         activeFilterItem: value,
       });
+      this.props.fetchMarketplaceCatalogueAction(this.catalogueParams({ category: value }));
+    }
+  };
+
+  // the field stays responsive while the request waits: only the request is debounced
+  handleQueryChange = (searchQuery) => {
+    this.forgetJustInstalled();
+    this.setState({ searchQuery });
+    this.props.fetchMarketplaceCatalogueAction({
+      ...this.catalogueParams({ query: searchQuery }),
+      debounced: true,
+    });
+  };
+
+  // install, update and rollback are the same request: make this version the active one
+  handleRowAction = (action, row) => {
+    if (action === ROW_ACTIONS.INSTALL) {
+      this.props.installMarketplacePluginAction(row.registryId, row.latestVersion);
+    } else if (action === ROW_ACTIONS.UPDATE) {
+      this.props.installMarketplacePluginAction(row.registryId, row.updateAvailable);
+    } else if (action === ROW_ACTIONS.DISCOVER_PREMIUM) {
+      // the same modal the plugin page opens, built in the same place, so one button cannot
+      // start meaning two things again
+      this.props.showModalAction(
+        premiumPromoModal({
+          trackEvent: this.props.tracking.trackEvent,
+          title: getDisplayName(row),
+          contactUrl: row.contactUrl,
+        }),
+      );
     }
   };
 
@@ -376,22 +481,68 @@ export class InstalledTab extends Component {
       title: pageTitle,
     });
 
-  installedPluginsSubPageHandler = (pageData) =>
-    this.changeSubPage({
+  // a plugin with no registry id was never asked about, so the reason nothing can be shown is
+  // the catalogue's — the registry was down, the catalogue failed, or it matched no entry
+  renderMarketplaceBlocks = (data) => {
+    const unmatched = !data.registryId;
+
+    return (
+      <PluginMarketplaceBlocks
+        detail={this.props.pluginDetail}
+        loading={!unmatched && this.props.detailLoading}
+        offline={unmatched ? this.props.registryOffline : this.props.detailOffline}
+        failed={unmatched ? this.props.catalogueFailed : this.props.detailFailed}
+        unmatched={unmatched}
+        registryHost={unmatched ? this.props.registryHost : this.props.detailRegistryHost}
+        onRetry={unmatched ? this.refetchCatalogue : this.refetchPluginDetail}
+        installedVersion={data.details?.version || null}
+        onUseVersion={(version) =>
+          this.props.installMarketplacePluginAction(data.registryId, version)
+        }
+      />
+    );
+  };
+
+  // a plugin the registry could not be asked about has no page of registry content to fetch
+  fetchPluginDetail = (registryId) => {
+    if (registryId) {
+      this.props.fetchMarketplacePluginDetailAction(registryId);
+    }
+  };
+
+  refetchPluginDetail = () => this.fetchPluginDetail(this.state.subPage.data?.registryId);
+
+  handleInstallFromDetail = (row) =>
+    this.props.installMarketplacePluginAction(row.registryId, row.latestVersion);
+
+  installedPluginsSubPageHandler = (pageData) => {
+    this.fetchPluginDetail(pageData.registryId);
+
+    return this.changeSubPage({
       type: INSTALLED_PLUGINS_SUBPAGE,
       data: pageData,
-      title: pageData.details.name || pageData.name,
+      title: getDisplayName(pageData),
     });
+  };
 
-  availablePluginDetailSubPageHandler = (pageData) =>
-    this.changeSubPage({
+  availablePluginDetailSubPageHandler = (pageData) => {
+    this.fetchPluginDetail(pageData.registryId);
+
+    return this.changeSubPage({
       type: AVAILABLE_PLUGIN_DETAIL_SUBPAGE,
       data: pageData,
-      title: pageData.details.name || pageData.name,
+      title: getDisplayName(pageData),
     });
+  };
 
   renderFilterMobileBlock = () => (
     <div className={cx('plugins-filter-mobile')}>
+      {/* Still the legacy dropdown. The kit's Dropdown is the component this should be, but it
+          calls downshift's getMenuProps only inside its `opened &&` branch, and downshift
+          requires that getter on every render — so mounting it closed throws
+          "You forgot to call the getMenuProps getter function". Verified in isolation, with
+          nothing of ours in the tree. Fixed upstream in the ui-kit; swap this the release after
+          that lands. */}
       <InputDropdown
         options={this.generateOptions()}
         value={this.state.activeFilterItem}

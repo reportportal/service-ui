@@ -28,7 +28,7 @@ const cx = classNames.bind(styles);
 const messages = defineMessages({
   categories: {
     id: 'PluginsFilter.categories',
-    defaultMessage: 'Categories',
+    defaultMessage: 'Category:',
   },
 });
 
@@ -46,7 +46,7 @@ export const PluginsFilter = ({ filterItems, onFilterChange, activeItem }) => {
 
   return (
     <div className={cx('plugins-filter')}>
-      <h3 className={cx('plugins-filter-title')}>{formatMessage(messages.categories)}</h3>
+      <span className={cx('plugins-filter-title')}>{formatMessage(messages.categories)}</span>
       <ul className={cx('plugins-filter-list')}>
         {getFilterItems().map((item) => (
           <li key={item.value} className={cx('plugins-filter-item')}>
@@ -55,7 +55,7 @@ export const PluginsFilter = ({ filterItems, onFilterChange, activeItem }) => {
               onClick={changeFilterItem}
               id={item.value}
             >
-              {item.label}
+              {formatMessage(item.message)}
             </button>
           </li>
         ))}

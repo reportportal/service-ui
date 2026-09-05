@@ -47,6 +47,10 @@ export class IntegrationInfoContainer extends Component {
     removePluginSuccessCallback: PropTypes.func,
     isGlobal: PropTypes.bool,
     events: PropTypes.object,
+    /** Rendered between the plugin header and its integrations — see the plugins page. */
+    afterInfoSection: PropTypes.node,
+    /** Overrides the heading, for a caller that knows a better name than the local one. */
+    title: PropTypes.string,
   };
 
   static defaultProps = {
@@ -54,6 +58,8 @@ export class IntegrationInfoContainer extends Component {
     removePluginSuccessCallback: () => {},
     isGlobal: false,
     events: {},
+    afterInfoSection: null,
+    title: null,
   };
 
   render() {
@@ -68,8 +74,10 @@ export class IntegrationInfoContainer extends Component {
       isGlobal,
       showToggleConfirmationModal,
       events,
+      afterInfoSection,
+      title,
     } = this.props;
-    const pluginTitle = details.name || name;
+    const pluginTitle = title || details.name || name;
 
     return (
       <Fragment>
@@ -84,6 +92,7 @@ export class IntegrationInfoContainer extends Component {
           isGlobal={isGlobal}
           pluginDetails={details}
         />
+        {afterInfoSection}
         <InstancesSection
           pluginDetails={details}
           globalIntegrations={globalIntegrations}

@@ -24,6 +24,7 @@ export const ACCESS_CONFIGURATION = 'accessConfiguration';
 export const FEATURES = 'features';
 export const ANALYTICS = 'analytics';
 export const LINKS_AND_BRANDING = 'linksAndBranding';
+export const MARKETPLACE = 'marketplace';
 export const PATTERN_ANALYSIS = 'patternAnalysis';
 export const QUALITY_GATES = 'qualityGates';
 export const ENVIRONMENTS = 'environments';

@@ -18,8 +18,22 @@
 
 .available-plugin-detail {
   display: flex;
+  flex-direction: column;
+  gap: 32px;
   padding-left: 5px;
   font-family: var(--rp-ui-base-font-family-heading);
+}
+
+.head {
+  display: flex;
+}
+
+.version {
+  display: block;
+  margin-top: 2px;
+  font-size: 13px;
+  line-height: 20px;
+  color: $COLOR--e-400;
 }
 
 .logo {
@@ -58,33 +72,20 @@
   font-weight: var(--rp-ui-base-fw-bold);
 }
 
+.author {
+  display: block;
+  margin-top: 2px;
+  font-size: 13px;
+  line-height: 20px;
+  color: var(--rp-ui-color-text-secondary);
+}
+
 .tier-row {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
   gap: 8px;
   margin-top: 8px;
-}
-
-.tier {
-  display: inline-flex;
-  align-items: center;
-  height: 16px;
-  width: fit-content;
-  border-radius: 12px;
-  padding: 0 10px;
-  color: $COLOR--white-two;
-  background-color: $COLOR--plugin-tier-free;
-  font-size: 9px;
-  line-height: normal;
-  font-family: var(--rp-ui-base-font-family-heading);
-  font-weight: var(--rp-ui-base-fw-semi-bold);
-  text-transform: uppercase;
-  letter-spacing: 1px;
-
-  &.premium {
-    background-color: $COLOR--plugin-tier-premium;
-  }
 }
 
 .tier-description {

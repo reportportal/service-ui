@@ -46,6 +46,17 @@ global.localStorage = (() => {
   };
 })();
 
+// A console.error is a failed test here. React's own notices are not defects of the test that
+// happens to mount the component — the enzyme react-18 adapter reads text through findDOMNode,
+// and plenty of components still declare defaultProps — so they are dropped once, here, rather
+// than by boilerplate at the top of every file that mounts one.
+const REACT_NOTICES =
+  /findDOMNode is deprecated|Support for defaultProps will be removed|for a non-boolean attribute/;
+
 console.error = (message) => {
+  if (typeof message === 'string' && REACT_NOTICES.test(message)) {
+    return;
+  }
+
   throw new Error(message);
 };
