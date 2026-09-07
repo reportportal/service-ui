@@ -359,7 +359,9 @@ export const ManualLaunchExecutions = ({
               fixedColumns={fixedColumns}
               primaryColumn={primaryColumn}
               sortableColumns={[]}
-              className={cx('executions-table')}
+              className={cx('executions-table', {
+                'executions-table_selectable': canManageTestCases,
+              })}
               headerClassName={cx('executions-table-header')}
               bodyClassName={cx('executions-table-body')}
               rowClassName={cx('execution-chip')}
