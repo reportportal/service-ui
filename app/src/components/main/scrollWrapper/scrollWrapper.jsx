@@ -93,16 +93,21 @@ export class ScrollWrapper extends Component {
       this.spring.addListener({ onSpringUpdate: this.handleSpringUpdate });
       this.stopScroll = false;
     }
+    this.applyScrollReset();
     this.updateScrollContainerRef();
   }
 
   componentDidUpdate() {
+    this.applyScrollReset();
+    this.updateScrollContainerRef();
+  }
+
+  applyScrollReset = () => {
     if (this.props.resetRequired) {
       this.scrollbars.scrollTop(0);
       this.props.onReset();
     }
-    this.updateScrollContainerRef();
-  }
+  };
 
   componentWillUnmount() {
     if (this.props.withBackToTop) {

@@ -139,11 +139,14 @@ export const ManualLaunchExecutionPage = () => {
   }, [execution?.id, hasStatus]);
 
   useEffect(() => {
+    if (isLaunchLoading || isExecutionLoading) {
+      return;
+    }
     if (execution?.id !== undefined && execution.id !== prevExecutionIdRef.current) {
       prevExecutionIdRef.current = execution.id;
       setResetScroll(true);
     }
-  }, [execution?.id]);
+  }, [execution?.id, isLaunchLoading, isExecutionLoading]);
 
   const lastViewedExecutionRef = useRef<{ id: number; type: string } | null>(null);
 
