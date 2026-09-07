@@ -67,6 +67,8 @@
   .section-content {
     margin-top: 12px;
     margin-left: 22px;
+    min-width: 0;
+    overflow-wrap: anywhere;
 
     .default-content {
       display: flex;
