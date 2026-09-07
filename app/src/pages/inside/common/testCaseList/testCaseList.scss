@@ -27,8 +27,11 @@
 
 .test-case-table {
   margin-bottom: 32px;
-  margin-left: -32px;
-  width: calc(100% + 32px);
+
+  &_selectable {
+    margin-left: -32px;
+    width: calc(100% + 32px);
+  }
 
   > div:first-child > div:first-child {
     padding: 4px 0 4px;
