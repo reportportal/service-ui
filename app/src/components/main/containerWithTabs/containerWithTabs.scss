@@ -36,7 +36,9 @@
   height: 100%;
   box-sizing: border-box;
   padding: 0 15px;
+  border: none;
   border-bottom: 1px solid transparent;
+  background: none;
   font-family: $FONT-SEMIBOLD;
   font-size: 14px;
   color: $COLOR--gray-47;
@@ -46,6 +48,12 @@
   text-transform: uppercase;
   line-height: 30px;
   cursor: pointer;
+
+  &:focus-visible {
+    outline: 2px solid $COLOR--topaz;
+    outline-offset: -2px;
+    border-radius: 3px;
+  }
 }
 .active {
   border-bottom: 1px solid $COLOR--topaz;

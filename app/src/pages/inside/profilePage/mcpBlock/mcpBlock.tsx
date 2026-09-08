@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-import { useTracking } from 'react-tracking';
 import { createClassnames } from 'common/utils';
 import { ContainerWithTabs } from 'components/main/containerWithTabs';
 import { BlockContainerBody } from '../blockContainer';
@@ -24,18 +23,12 @@ import styles from './mcpBlock.scss';
 
 const cx = createClassnames(styles);
 
-export const McpBlock = () => {
-  const { trackEvent } = useTracking();
-
-  return (
-    <div className={cx('mcp-block')}>
-      <BlockContainerBody>
-        <div className={cx('content-container')}>
-          <ContainerWithTabs
-            data={[TabsConfig.localConfig(trackEvent), TabsConfig.remoteConfig(trackEvent)]}
-          />
-        </div>
-      </BlockContainerBody>
-    </div>
-  );
-};
+export const McpBlock = () => (
+  <div className={cx('mcp-block')}>
+    <BlockContainerBody>
+      <div className={cx('content-container')}>
+        <ContainerWithTabs data={[TabsConfig.localConfig(), TabsConfig.remoteConfig()]} />
+      </div>
+    </BlockContainerBody>
+  </div>
+);
