@@ -59,4 +59,17 @@ export const PROFILE_PAGE_EVENTS = {
     element_name: 'sign_up',
     place: 'page_delete_account',
   },
+  clickProfilePageTab: (tab) => ({
+    ...basicClickEventParametersProfile,
+    element_name: tab,
+  }),
+  clickProfilePageMcpSubTab: (subTab) => ({
+    ...basicClickEventParametersProfile,
+    element_name: `${subTab}_mcp`,
+  }),
+  CLICK_MCP_DOCUMENTATION_LINK: {
+    ...basicClickEventParametersProfile,
+    link_name: 'documentation',
+    place: 'mcp',
+  },
 };

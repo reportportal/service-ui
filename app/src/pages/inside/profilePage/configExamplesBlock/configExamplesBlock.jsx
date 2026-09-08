@@ -16,7 +16,6 @@
 import classNames from 'classnames/bind';
 import React, { Component } from 'react';
 import { ContainerWithTabs } from 'components/main/containerWithTabs';
-import { PROFILE_PAGE_EVENTS } from 'components/main/analytics/events';
 import styles from './configExamplesBlock.scss';
 import { BlockContainerBody } from '../blockContainer';
 
@@ -31,7 +30,6 @@ export class ConfigExamplesBlock extends Component {
         <BlockContainerBody>
           <div className={cx('content-container')}>
             <ContainerWithTabs
-              selectTabEventInfo={PROFILE_PAGE_EVENTS.SELECT_CONFIGURATION_TAB}
               data={[
                 TabsConfig.javaConfig(),
                 TabsConfig.pythonConfig(),

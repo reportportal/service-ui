@@ -2231,6 +2231,7 @@
   "ProfilePage.apiKeys": "Claves API",
   "ProfilePage.apiKeys.fetchApiKeysError": "Ocurrió un error al obtener las claves API",
   "ProfilePage.configurationExamples": "Ejemplos de configuración",
+  "ProfilePage.mcp": "MCP",
   "ProfilePage.projectAssignmentTab": "Assignments",
   "ProfilePage.title": "Perfil del usuario",
   "ProfilePage.updateSessionExpirationSuccess": "Session inactivity timeout has been changed successfully",

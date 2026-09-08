@@ -2234,6 +2234,7 @@
   "ProfilePage.apiKeys": "API ключи",
   "ProfilePage.apiKeys.fetchApiKeysError": "Произошла ошибка при получении ключей API",
   "ProfilePage.configurationExamples": "Примеры конфигурации",
+  "ProfilePage.mcp": "MCP",
   "ProfilePage.projectAssignmentTab": "Назначения",
   "ProfilePage.title": "Профиль пользователя",
   "ProfilePage.updateSessionExpirationSuccess": "Время неактивности сессии было изменено успешно",

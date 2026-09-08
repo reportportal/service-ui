@@ -2233,6 +2233,7 @@
   "ProfilePage.apiKeys": "API ключы",
   "ProfilePage.apiKeys.fetchApiKeysError": "Падчас атрымання ключоў API адбылася памылка",
   "ProfilePage.configurationExamples": "Прыклады канфiгурацыi",
+  "ProfilePage.mcp": "MCP",
   "ProfilePage.projectAssignmentTab": "Прызначэнне",
   "ProfilePage.title": "Профіль карыстальніка",
   "ProfilePage.updateSessionExpirationSuccess": "Час неактыўнасці сесіі быў зменены паспяхова",
