@@ -25,7 +25,7 @@ import {
   filterIdSelector,
   urlOrganizationAndProjectSelector,
 } from 'controllers/pages';
-import { isTestItemsListSelector } from 'controllers/testItem';
+import { isTestItemsListSelector, isSearchWidgetItemsExistSelector } from 'controllers/testItem';
 import styles from './groupHeader.scss';
 
 const cx = classNames.bind(styles);
@@ -40,12 +40,15 @@ const createLink = (projectSlug, filterId, launchId, testItemIds, organizationSl
   },
 });
 
-export const GroupHeader = connect((state) => ({
+export const mapStateToProps = (state) => ({
   launchId: launchIdSelector(state),
   filterId: filterIdSelector(state),
   isTestItemsList: isTestItemsListSelector(state),
+  isSearchedItems: isSearchWidgetItemsExistSelector(state),
   slugs: urlOrganizationAndProjectSelector(state),
-}))(({
+});
+
+export const GroupHeader = connect(mapStateToProps)(({
   data,
   launchId,
   filterId,
