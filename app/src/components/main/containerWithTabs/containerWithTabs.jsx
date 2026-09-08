@@ -74,10 +74,6 @@ export class ContainerWithTabs extends Component {
                   // eslint-disable-next-line react/no-array-index-key
                   key={id}
                   type="button"
-                  role="tab"
-                  id={`tab-${id}`}
-                  aria-selected={active === id}
-                  aria-controls={`tabpanel-${id}`}
                   data-id={id}
                   className={cx({ tab: true, active: active === id })}
                   onClick={this.tabClickHandler}
