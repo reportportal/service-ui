@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 EPAM Systems
+ * Copyright 2026 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,7 +14,4 @@
  * limitations under the License.
  */
 
-export const API_KEYS_ROUTE = 'apiKeys';
-export const ASSIGNMENTS_ROUTE = 'assignments';
-export const CONFIG_EXAMPLES_ROUTE = 'configExamples';
-export const MCP_ROUTE = 'mcp';
+export { McpBlock } from './mcpBlock';

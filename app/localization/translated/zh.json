@@ -2229,6 +2229,7 @@
   "ProfilePage.apiKeys": "API keys",
   "ProfilePage.apiKeys.fetchApiKeysError": "在获取 API 密钥时发生了错误",
   "ProfilePage.configurationExamples": "配置示例",
+  "ProfilePage.mcp": "MCP",
   "ProfilePage.projectAssignmentTab": "Assignments",
   "ProfilePage.title": "用户简介",
   "ProfilePage.updateSessionExpirationSuccess": "Session inactivity timeout has been changed successfully",
