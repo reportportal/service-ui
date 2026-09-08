@@ -139,6 +139,7 @@ const ChangePasswordBlockComponent = ({ reset = '' }) => {
           header={COMMON_LOCALE_KEYS.OOPS}
           hint={messages.tokenExpired}
           leftAligned
+          customClassName={cx('invalid-token-section')}
         >
           <InvalidTokenActions />
         </PageSectionContainer>
