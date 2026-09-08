@@ -117,7 +117,7 @@ const MakeDecision = ({ data }) => {
   }, [modalState]);
 
   useEffect(() => {
-    if (isMLSuggestionsAvailable) {
+    if (isAnalyzerAvailable && isMLSuggestionsAvailable) {
       setLoadingMLSuggest(true);
       const url =
         clusterIds.length === 1
