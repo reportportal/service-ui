@@ -19,13 +19,16 @@ import path from 'path';
 
 const SRC = path.resolve(__dirname, '../../../..');
 const SOURCE_EXTENSIONS = ['.js', '.jsx', '.ts', '.tsx'];
+// The pre-marketplace page, kept verbatim behind the 'marketplace' localStorage flag; its
+// hardcoded catalogue is the point — it must not change while the flag is off.
+const LEGACY_DIR = path.resolve(__dirname, '../legacy');
 
 const sourceFiles = (dir) =>
   fs.readdirSync(dir, { withFileTypes: true }).flatMap((entry) => {
     const full = path.join(dir, entry.name);
 
     if (entry.isDirectory()) {
-      return sourceFiles(full);
+      return full === LEGACY_DIR ? [] : sourceFiles(full);
     }
 
     return SOURCE_EXTENSIONS.includes(path.extname(entry.name)) && full !== __filename
