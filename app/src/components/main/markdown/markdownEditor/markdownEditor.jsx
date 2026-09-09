@@ -299,6 +299,8 @@ export class MarkdownEditor extends React.Component {
       hint: { hintText, hintCondition },
     } = this.props;
 
+    const editorValue = this.easyMDE ? this.easyMDE.value() : value;
+
     return (
       <>
         <div
@@ -320,10 +322,9 @@ export class MarkdownEditor extends React.Component {
         {provideErrorHint && error && (touched || active) ? (
           <div className={cx('error')}>{error}</div>
         ) : (
-          hintText &&
-          hintCondition(this.easyMDE ? this.easyMDE.value() : value) && (
+          hintText && hintCondition(editorValue) && (
             <div className={cx('hint')}>
-              {hintText(this.easyMDE ? this.easyMDE.value() : value)}
+              {hintText(editorValue)}
             </div>
           )
         )}
