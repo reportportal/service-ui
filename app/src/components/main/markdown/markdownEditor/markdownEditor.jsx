@@ -17,13 +17,13 @@
 import React from 'react';
 import track from 'react-tracking';
 import ReactDOMServer from 'react-dom/server';
-import SimpleMDE from 'simplemde';
+import EasyMDE from 'easymde';
 import { injectIntl, defineMessages } from 'react-intl';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
-import 'simplemde/dist/simplemde.min.css';
+import 'easymde/dist/easymde.min.css';
 import { MarkdownViewer } from '../markdownViewer/markdownViewer';
-import { MODE_DEFAULT } from '../constants';
+import { MODE_DEFAULT, MODE_DARK } from '../constants';
 import styles from './markdownEditor.scss';
 
 const cx = classNames.bind(styles);
@@ -132,8 +132,8 @@ export class MarkdownEditor extends React.Component {
 
   componentDidUpdate(prevProps) {
     if (this.props.controlled) {
-      if (this.simpleMDE.value() !== this.props.value && prevProps.value !== this.props.value) {
-        this.simpleMDE.value(this.props.value);
+      if (this.easyMDE.value() !== this.props.value && prevProps.value !== this.props.value) {
+        this.easyMDE.value(this.props.value);
       }
     }
   }
@@ -158,83 +158,83 @@ export class MarkdownEditor extends React.Component {
     let toolbar = [
       {
         name: 'heading-1',
-        action: SimpleMDE.toggleHeading1,
+        action: EasyMDE.toggleHeading1,
         className: 'icon-header-1',
         title: formatMessage(toolbarTitles.heading1),
       },
       {
         name: 'heading-2',
-        action: SimpleMDE.toggleHeading2,
+        action: EasyMDE.toggleHeading2,
         className: 'icon-header-2',
         title: formatMessage(toolbarTitles.heading2),
       },
       {
         name: 'heading-3',
-        action: SimpleMDE.toggleHeading3,
+        action: EasyMDE.toggleHeading3,
         className: 'icon-header-3',
         title: formatMessage(toolbarTitles.heading3),
       },
       {
         name: 'clean-block',
-        action: SimpleMDE.cleanBlock,
+        action: EasyMDE.cleanBlock,
         className: 'icon-clean-block',
         title: formatMessage(toolbarTitles.cleanBlock),
       },
       '|',
       {
         name: 'bold',
-        action: SimpleMDE.toggleBold,
+        action: EasyMDE.toggleBold,
         className: 'icon-bold',
         title: formatMessage(toolbarTitles.bold),
       },
       {
         name: 'italic',
-        action: SimpleMDE.toggleItalic,
+        action: EasyMDE.toggleItalic,
         className: 'icon-italic',
         title: formatMessage(toolbarTitles.italic),
       },
       {
         name: 'strikethrough',
-        action: SimpleMDE.toggleStrikethrough,
+        action: EasyMDE.toggleStrikethrough,
         className: 'icon-strikethrough',
         title: formatMessage(toolbarTitles.strikethrough),
       },
       '|',
       {
         name: 'unordered-list',
-        action: SimpleMDE.toggleUnorderedList,
+        action: EasyMDE.toggleUnorderedList,
         className: 'icon-unordered-list',
         title: formatMessage(toolbarTitles.unorderedList),
       },
       {
         name: 'ordered-list',
-        action: SimpleMDE.toggleOrderedList,
+        action: EasyMDE.toggleOrderedList,
         className: 'icon-ordered-list',
         title: formatMessage(toolbarTitles.orderedList),
       },
       '|',
       {
         name: 'image',
-        action: SimpleMDE.drawImage,
+        action: EasyMDE.drawImage,
         className: 'icon-image',
         title: formatMessage(toolbarTitles.image),
       },
       {
         name: 'link',
-        action: SimpleMDE.drawLink,
+        action: EasyMDE.drawLink,
         className: 'icon-link',
         title: formatMessage(toolbarTitles.link),
       },
       '|',
       {
         name: 'quote',
-        action: SimpleMDE.toggleBlockquote,
+        action: EasyMDE.toggleBlockquote,
         className: 'icon-quote',
         title: formatMessage(toolbarTitles.quote),
       },
       {
         name: 'code',
-        action: SimpleMDE.toggleCodeBlock,
+        action: EasyMDE.toggleCodeBlock,
         className: 'icon-code',
         title: formatMessage(toolbarTitles.code),
       },
@@ -245,7 +245,7 @@ export class MarkdownEditor extends React.Component {
           this.setState((state) => ({
             isPreview: !state.isPreview,
           }));
-          return SimpleMDE.togglePreview(...props);
+          return EasyMDE.togglePreview(...props);
         },
         className: 'icon-preview no-disable',
         title: formatMessage(toolbarTitles.preview),
@@ -258,13 +258,14 @@ export class MarkdownEditor extends React.Component {
       );
     }
 
-    this.simpleMDE = new SimpleMDE({
+    this.easyMDE = new EasyMDE({
       element: this.holder,
       status: false,
       autoDownloadFontAwesome: false,
       toolbar,
       placeholder: this.props.placeholder || '',
       spellChecker: false,
+      minHeight: mode === MODE_DARK ? '30px' : '50px',
       blockStyles: {
         bold: '**',
         italic: '*',
@@ -273,17 +274,17 @@ export class MarkdownEditor extends React.Component {
       previewRender: (plainText) =>
         ReactDOMServer.renderToStaticMarkup(<MarkdownViewer value={plainText} mode={mode} />),
     });
-    this.simpleMDE.codemirror.on('change', this.onChangeHandler);
-    manipulateEditorOutside(this.simpleMDE.codemirror);
+    this.easyMDE.codemirror.on('change', this.onChangeHandler);
+    manipulateEditorOutside(this.easyMDE.codemirror);
   }
   componentWillUnmount() {
-    this.simpleMDE.codemirror.off('change', this.onChangeHandler);
+    this.easyMDE.codemirror.off('change', this.onChangeHandler);
   }
   onChangeHandler = () => {
-    this.props.onChange(this.simpleMDE.value());
+    this.props.onChange(this.easyMDE.value());
     this.props.eventsInfo.onChange &&
       this.props.tracking.trackEvent(this.props.eventsInfo.onChange);
-    this.props.manipulateEditorOutside(this.simpleMDE.codemirror);
+    this.props.manipulateEditorOutside(this.easyMDE.codemirror);
   };
 
   render() {
@@ -320,9 +321,9 @@ export class MarkdownEditor extends React.Component {
           <div className={cx('error')}>{error}</div>
         ) : (
           hintText &&
-          hintCondition(this.simpleMDE ? this.simpleMDE.value() : value) && (
+          hintCondition(this.easyMDE ? this.easyMDE.value() : value) && (
             <div className={cx('hint')}>
-              {hintText(this.simpleMDE ? this.simpleMDE.value() : value)}
+              {hintText(this.easyMDE ? this.easyMDE.value() : value)}
             </div>
           )
         )}

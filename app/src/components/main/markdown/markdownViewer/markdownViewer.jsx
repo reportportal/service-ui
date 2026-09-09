@@ -42,7 +42,7 @@ export class MarkdownViewer extends Component {
 
   constructor(props) {
     super(props);
-    this.simpleMDE = SingletonMarkdownObject.getInstance();
+    this.easyMDE = SingletonMarkdownObject.getInstance();
     this.container = React.createRef();
   }
 
@@ -83,7 +83,7 @@ export class MarkdownViewer extends Component {
           ref={this.container}
           className={cx('markdown-viewer', { [`mode-${mode}`]: mode }, this.props.className)}
         >
-          {Parser(sanitizeUserHtml(this.simpleMDE.markdown(value || '').trim()))}
+          {Parser(sanitizeUserHtml(this.easyMDE.markdown(value || '').trim()))}
         </div>
       </div>
     );

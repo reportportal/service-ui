@@ -13,17 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import SimpleMDE from 'simplemde';
+import EasyMDE from 'easymde';
 
 let instance = null;
 const el = document.createElement('div');
 el.innerHTML = '<textarea></textarea>';
 const getInstance = () => {
   if (!instance) {
-    instance = new SimpleMDE({
+    instance = new EasyMDE({
       autoDownloadFontAwesome: false,
       element: el.getElementsByTagName('textarea')[0],
       spellChecker: false,
+      minHeight: '50px',
       blockStyles: {
         bold: '**',
         italic: '*',
