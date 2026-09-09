@@ -33,6 +33,17 @@ import {
 import { ActionsItem } from '../../attachmentActions/actionsItem';
 import { messages } from './messages';
 
+// highlight.js tokenizes synchronously, so large files are rendered without highlighting
+const MAX_HIGHLIGHTED_LENGTH = 100000;
+const CONTENT_STYLE = {
+  ...DEFAULT_HIGHLIGHT_STYLE,
+  margin: 0,
+  overflow: 'auto',
+  whiteSpace: 'pre-wrap',
+  overflowWrap: 'anywhere',
+};
+const CODE_TAG_PROPS = { style: { whiteSpace: 'inherit', overflowWrap: 'inherit' } };
+
 @withModal(ATTACHMENT_CODE_MODAL_ID)
 @connect(null, { openAttachmentInBrowserAction })
 @injectIntl
@@ -72,6 +83,7 @@ export class AttachmentCodeModal extends Component {
       intl,
       data: { extension, content, fileName },
     } = this.props;
+    const safeContent = typeof content === 'string' ? content : JSON.stringify(content, null, 4);
     const cancelButton = {
       text: intl.formatMessage(COMMON_LOCALE_KEYS.CLOSE),
     };
@@ -84,13 +96,18 @@ export class AttachmentCodeModal extends Component {
         renderFooterElements={this.renderCustomButton}
       >
         <form>
-          <SyntaxHighlighter
-            language={extension}
-            style={atomOneLight}
-            customStyle={DEFAULT_HIGHLIGHT_STYLE}
-          >
-            {content}
-          </SyntaxHighlighter>
+          {safeContent.length > MAX_HIGHLIGHTED_LENGTH ? (
+            <pre style={CONTENT_STYLE}>{safeContent}</pre>
+          ) : (
+            <SyntaxHighlighter
+              language={extension}
+              style={atomOneLight}
+              customStyle={CONTENT_STYLE}
+              codeTagProps={CODE_TAG_PROPS}
+            >
+              {safeContent}
+            </SyntaxHighlighter>
+          )}
         </form>
       </ModalLayout>
     );
