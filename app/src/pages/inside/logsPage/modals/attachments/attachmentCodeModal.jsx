@@ -83,7 +83,8 @@ export class AttachmentCodeModal extends Component {
       intl,
       data: { extension, content, fileName },
     } = this.props;
-    const safeContent = typeof content === 'string' ? content : JSON.stringify(content, null, 4);
+    const safeContent =
+      typeof content === 'string' ? content : (JSON.stringify(content, null, 4) ?? '');
     const cancelButton = {
       text: intl.formatMessage(COMMON_LOCALE_KEYS.CLOSE),
     };
