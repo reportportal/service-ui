@@ -52,8 +52,8 @@ export class AttachmentCodeModal extends Component {
   static propTypes = {
     data: PropTypes.shape({
       extension: PropTypes.string.isRequired,
-      content: PropTypes.string.isRequired,
-      id: PropTypes.number.isRequired,
+      content: PropTypes.oneOfType([PropTypes.string, PropTypes.object]).isRequired,
+      id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
       fileName: PropTypes.string,
     }).isRequired,
     intl: PropTypes.object.isRequired,
