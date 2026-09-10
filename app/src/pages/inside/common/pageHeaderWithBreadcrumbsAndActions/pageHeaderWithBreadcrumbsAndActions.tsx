@@ -38,6 +38,7 @@ interface PageHeaderWithBreadcrumbsAndActionsProps {
   titleAddon?: ReactNode;
   actions?: ReactNode;
   actionsClassName?: string;
+  titleTailNumChars?: number;
 }
 
 export const PageHeaderWithBreadcrumbsAndActions = ({
@@ -46,6 +47,7 @@ export const PageHeaderWithBreadcrumbsAndActions = ({
   titleAddon,
   actions,
   actionsClassName,
+  titleTailNumChars,
 }: PageHeaderWithBreadcrumbsAndActionsProps) => {
   const breadcrumbsTree = useBreadCrumbsTree();
   const stringTitle = typeof title === 'string' ? title : undefined;
@@ -58,6 +60,7 @@ export const PageHeaderWithBreadcrumbsAndActions = ({
           descriptors={breadcrumbDescriptors}
           tree={breadcrumbsTree}
           LinkComponent={NavLink}
+          titleTailNumChars={titleTailNumChars}
         />
       </div>
       <div className={cx('page-header-with-breadcrumbs-and-actions__title-row')}>

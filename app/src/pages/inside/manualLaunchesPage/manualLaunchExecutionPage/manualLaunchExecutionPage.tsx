@@ -217,6 +217,7 @@ export const ManualLaunchExecutionPage = () => {
               <PageHeaderWithBreadcrumbsAndActions
                 title=""
                 breadcrumbDescriptors={breadcrumbDescriptors}
+                titleTailNumChars={0}
               />
             </div>
             <div className={cx('empty-message')}>{formatMessage(messages.executionNotFound)}</div>
@@ -249,6 +250,7 @@ export const ManualLaunchExecutionPage = () => {
               title={executionTitle}
               breadcrumbDescriptors={breadcrumbDescriptors}
               actions={renderHeaderActions()}
+              titleTailNumChars={0}
             />
           </div>
           <div className={cx('manual-launch-execution-page__content')}>
