@@ -245,6 +245,19 @@ const INITIAL_PLUGIN_DETAIL_STATE = {
   error: null,
 };
 
+// The registry-sourced fields of a detail response, read only when the registry answered.
+// INITIAL_PLUGIN_DETAIL_STATE already holds the empty value of each, so an offline or failed
+// answer needs no overrides at all — spreading the initial state is what drops them.
+const registryDetail = (payload) => ({
+  plugin: payload.plugin || null,
+  versions: payload.versions || [],
+  changelog: payload.changelog || null,
+  screenshots: payload.screenshots || [],
+  advisory: payload.advisory || null,
+  blocked: payload.blocked || null,
+  removed: payload.removed || null,
+});
+
 /**
  * The plugin page's registry half. It carries the same four-way state as the catalogue and on
  * purpose: offline is a loaded response whose registry-sourced parts are simply absent, while a
@@ -274,13 +287,7 @@ export const marketplacePluginDetailReducer = (
         registryId: payload.plugin?.id || state.registryId,
         registry: { status: registry.status || null, host: registry.host || null },
         // an offline answer has no registry half to keep, so none of it is kept
-        plugin: online ? payload.plugin || null : null,
-        versions: online ? payload.versions || [] : [],
-        changelog: online ? payload.changelog || null : null,
-        screenshots: online ? payload.screenshots || [] : [],
-        advisory: online ? payload.advisory || null : null,
-        blocked: online ? payload.blocked || null : null,
-        removed: online ? payload.removed || null : null,
+        ...(online ? registryDetail(payload) : {}),
       };
     }
     case FETCH_MARKETPLACE_PLUGIN_DETAIL_ERROR:
