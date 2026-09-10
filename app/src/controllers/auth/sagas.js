@@ -96,6 +96,11 @@ function* logoutOnServer(redirectedPage) {
 
 // TODO: clear cookie on logout
 function* handleLogout({ payload }) {
+  const token = yield select(tokenSelector);
+  if (!token) {
+    return;
+  }
+
   yield call(logoutOnServer, payload);
   yield put(resetTokenAction());
   yield put(fetchPublicPluginsAction());
@@ -115,7 +120,10 @@ function* handleLogout({ payload }) {
 }
 
 function* watchLogout() {
-  yield takeEvery(LOGOUT, handleLogout);
+  while (true) {
+    const action = yield take(LOGOUT);
+    yield call(handleLogout, action);
+  }
 }
 
 function* loginSuccessHandler({ payload }) {
