@@ -109,7 +109,12 @@ export const AllTestCasesPage = ({
 
   return (
     <>
-      <div className={cx('all-test-cases-page')}>
+      <div
+        className={cx(
+          'all-test-cases-page',
+          isAnyRowSelected ? 'all-test-cases-page__with-panel' : '',
+        )}
+      >
         <TestCaseList
           testCases={testCases}
           isLoading={loading}
@@ -121,40 +126,38 @@ export const AllTestCasesPage = ({
           instanceKey={instanceKey}
         />
       </div>
-      <div className={cx('sticky-wrapper')}>
-        {Boolean(testPlansTestCasesPageData?.totalElements) && (
-          <div className={cx('pagination', isAnyRowSelected ? 'pagination-with-panel' : '')}>
-            <Pagination
-              pageSize={pageSize}
-              activePage={activePage}
-              totalItems={testPlansTestCasesPageData.totalElements}
-              totalPages={totalPages}
-              pageSizeOptions={ITEMS_PER_PAGE_OPTIONS}
-              changePage={setPageNumber}
-              changePageSize={setPageSize}
-              captions={captions}
-              className={cx('pagination-content')}
-            />
+      {Boolean(testPlansTestCasesPageData?.totalElements) && (
+        <div className={cx('pagination', isAnyRowSelected ? 'pagination-with-panel' : '')}>
+          <Pagination
+            pageSize={pageSize}
+            activePage={activePage}
+            totalItems={testPlansTestCasesPageData.totalElements}
+            totalPages={totalPages}
+            pageSizeOptions={ITEMS_PER_PAGE_OPTIONS}
+            changePage={setPageNumber}
+            changePageSize={setPageSize}
+            captions={captions}
+            className={cx('pagination-content')}
+          />
+        </div>
+      )}
+      {isAnyRowSelected && (
+        <div className={cx('selection')}>
+          <Selection selectedCount={selectedRowIds.length} onClearSelection={onClearSelection} />
+          <div className={cx('selection-controls')}>
+            <Button
+              variant="ghost"
+              onClick={handleOpenRemoveModal}
+              className={cx('selection-controls__remove-button')}
+            >
+              {formatMessage(removeTestCasesFromTestPlanMessages.removeFromTestPlanTitle)}
+            </Button>
+            <Button variant="primary" onClick={handleOpenAddToLaunchModal}>
+              {formatMessage(COMMON_LOCALE_KEYS.ADD_TO_LAUNCH)}
+            </Button>
           </div>
-        )}
-        {isAnyRowSelected && (
-          <div className={cx('selection')}>
-            <Selection selectedCount={selectedRowIds.length} onClearSelection={onClearSelection} />
-            <div className={cx('selection-controls')}>
-              <Button
-                variant="ghost"
-                onClick={handleOpenRemoveModal}
-                className={cx('selection-controls__remove-button')}
-              >
-                {formatMessage(removeTestCasesFromTestPlanMessages.removeFromTestPlanTitle)}
-              </Button>
-              <Button variant="primary" onClick={handleOpenAddToLaunchModal}>
-                {formatMessage(COMMON_LOCALE_KEYS.ADD_TO_LAUNCH)}
-              </Button>
-            </div>
-          </div>
-        )}
-      </div>
+        </div>
+      )}
     </>
   );
 };
