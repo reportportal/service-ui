@@ -18,9 +18,26 @@ import {
   drawMarkdownLink,
   handleMarkdownUrlPaste,
   isMarkdownLinkUrl,
+  normalizeMarkdownLinkUrl,
 } from './markdownLinkUtils';
 
 describe('markdownLinkUtils', () => {
+  describe('normalizeMarkdownLinkUrl', () => {
+    test('normalizes valid http(s) and www urls', () => {
+      expect(normalizeMarkdownLinkUrl('https://reportportal.io')).toBe('https://reportportal.io');
+      expect(normalizeMarkdownLinkUrl('http://example.com/path')).toBe('http://example.com/path');
+      expect(normalizeMarkdownLinkUrl('www.example.com')).toBe('http://www.example.com');
+    });
+
+    test('rejects incomplete and invalid values', () => {
+      expect(normalizeMarkdownLinkUrl('https://')).toBeNull();
+      expect(normalizeMarkdownLinkUrl('www.')).toBeNull();
+      expect(normalizeMarkdownLinkUrl('not a url')).toBeNull();
+      expect(normalizeMarkdownLinkUrl('')).toBeNull();
+      expect(normalizeMarkdownLinkUrl('ftp://example.com')).toBeNull();
+    });
+  });
+
   describe('isMarkdownLinkUrl', () => {
     test('accepts http and https urls', () => {
       expect(isMarkdownLinkUrl('https://reportportal.io')).toBe(true);
@@ -32,6 +49,8 @@ describe('markdownLinkUtils', () => {
       expect(isMarkdownLinkUrl('not a url')).toBe(false);
       expect(isMarkdownLinkUrl('')).toBe(false);
       expect(isMarkdownLinkUrl('ftp://example.com')).toBe(false);
+      expect(isMarkdownLinkUrl('https://')).toBe(false);
+      expect(isMarkdownLinkUrl('www.')).toBe(false);
     });
   });
 
@@ -54,6 +73,45 @@ describe('markdownLinkUtils', () => {
 
       expect(preventDefault).toHaveBeenCalled();
       expect(replaceSelection).toHaveBeenCalledWith('[docs](https://reportportal.io)');
+    });
+
+    test('prefixes www urls on paste', () => {
+      const replaceSelection = jest.fn();
+      const preventDefault = jest.fn();
+      const cm = {
+        getSelection: () => 'docs',
+        replaceSelection,
+      };
+      const event = {
+        preventDefault,
+        clipboardData: {
+          getData: () => 'www.example.com',
+        },
+      };
+
+      handleMarkdownUrlPaste(cm, event);
+
+      expect(replaceSelection).toHaveBeenCalledWith('[docs](http://www.example.com)');
+    });
+
+    test('does not handle incomplete urls', () => {
+      const replaceSelection = jest.fn();
+      const preventDefault = jest.fn();
+      const cm = {
+        getSelection: () => 'docs',
+        replaceSelection,
+      };
+      const event = {
+        preventDefault,
+        clipboardData: {
+          getData: () => 'https://',
+        },
+      };
+
+      handleMarkdownUrlPaste(cm, event);
+
+      expect(preventDefault).not.toHaveBeenCalled();
+      expect(replaceSelection).not.toHaveBeenCalled();
     });
 
     test('does not handle paste without selection', () => {
@@ -110,6 +168,87 @@ describe('markdownLinkUtils', () => {
         configurable: true,
         value: originalClipboard,
       });
+    });
+
+    test('replaces placeholder with clipboard url when document is unchanged', async () => {
+      const replaceSelection = jest.fn();
+      const replaceRange = jest.fn();
+      const setSelection = jest.fn();
+      const focus = jest.fn();
+      let cursorStart = { line: 0, ch: 0 };
+      let cursorEnd = { line: 0, ch: 4 };
+      const cm = {
+        getSelection: () => 'docs',
+        getCursor: (type) => (type === 'start' ? cursorStart : cursorEnd),
+        setSelection: (from, to) => {
+          setSelection(from, to);
+          cursorStart = from;
+          cursorEnd = to;
+        },
+        replaceSelection,
+        replaceRange,
+        changeGeneration: () => 1,
+        isClean: () => true,
+        focus,
+      };
+      const editor = {
+        codemirror: cm,
+        isPreviewActive: () => false,
+      };
+
+      Object.defineProperty(navigator, 'clipboard', {
+        configurable: true,
+        value: {
+          readText: () => Promise.resolve('www.example.com'),
+        },
+      });
+
+      drawMarkdownLink(editor);
+      await Promise.resolve();
+      await Promise.resolve();
+
+      expect(replaceSelection).toHaveBeenCalledWith('[docs](http://)');
+      expect(replaceRange).toHaveBeenCalledWith(
+        'http://www.example.com',
+        { line: 0, ch: 7 },
+        { line: 0, ch: 14 },
+      );
+    });
+
+    test('skips clipboard url when document changed after placeholder insert', async () => {
+      const replaceRange = jest.fn();
+      let cursorStart = { line: 0, ch: 0 };
+      let cursorEnd = { line: 0, ch: 4 };
+      const cm = {
+        getSelection: () => 'docs',
+        getCursor: (type) => (type === 'start' ? cursorStart : cursorEnd),
+        setSelection: (from, to) => {
+          cursorStart = from;
+          cursorEnd = to;
+        },
+        replaceSelection: jest.fn(),
+        replaceRange,
+        changeGeneration: () => 1,
+        isClean: () => false,
+        focus: jest.fn(),
+      };
+      const editor = {
+        codemirror: cm,
+        isPreviewActive: () => false,
+      };
+
+      Object.defineProperty(navigator, 'clipboard', {
+        configurable: true,
+        value: {
+          readText: () => Promise.resolve('https://reportportal.io'),
+        },
+      });
+
+      drawMarkdownLink(editor);
+      await Promise.resolve();
+      await Promise.resolve();
+
+      expect(replaceRange).not.toHaveBeenCalled();
     });
   });
 });

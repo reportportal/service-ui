@@ -16,19 +16,29 @@
 
 const DEFAULT_LINK_URL = 'http://';
 
-export const isMarkdownLinkUrl = (text = '') => {
+export const normalizeMarkdownLinkUrl = (text = '') => {
   const trimmed = text.trim();
   if (!trimmed || /\s/.test(trimmed)) {
-    return false;
+    return null;
   }
 
+  const candidate = /^www\./i.test(trimmed) ? `http://${trimmed}` : trimmed;
+
   try {
-    const url = new URL(trimmed);
-    return url.protocol === 'http:' || url.protocol === 'https:';
+    const url = new URL(candidate);
+    if (url.protocol !== 'http:' && url.protocol !== 'https:') {
+      return null;
+    }
+    if (!url.hostname || url.hostname === 'www.') {
+      return null;
+    }
+    return candidate;
   } catch {
-    return /^(https?:\/\/|www\.)/i.test(trimmed);
+    return null;
   }
 };
+
+export const isMarkdownLinkUrl = (text) => Boolean(normalizeMarkdownLinkUrl(text));
 
 const insertMarkdownLink = (cm, selectedText, from, url) => {
   const linkText = selectedText || 'link';
@@ -56,37 +66,47 @@ export const drawMarkdownLink = (editor) => {
 
   const selectedText = cm.getSelection();
   const from = cm.getCursor('start');
-  const to = cm.getCursor('end');
 
-  const applyLink = (url) => {
-    cm.setSelection(from, to);
-    insertMarkdownLink(cm, selectedText, from, url || DEFAULT_LINK_URL);
-  };
+  insertMarkdownLink(cm, selectedText, from, DEFAULT_LINK_URL);
 
-  if (!navigator.clipboard?.readText) {
-    applyLink(DEFAULT_LINK_URL);
+  if (!navigator.clipboard?.readText || selectedText.includes('\n')) {
     return;
   }
+
+  const urlFrom = cm.getCursor('start');
+  const urlTo = cm.getCursor('end');
+  const generation = cm.changeGeneration(true);
 
   navigator.clipboard
     .readText()
     .then((text) => {
-      const trimmed = text.trim();
-      applyLink(isMarkdownLinkUrl(trimmed) ? trimmed : DEFAULT_LINK_URL);
+      if (!cm.isClean(generation)) {
+        return;
+      }
+
+      const normalized = normalizeMarkdownLinkUrl(text);
+      if (!normalized) {
+        return;
+      }
+
+      cm.replaceRange(normalized, urlFrom, urlTo);
+      cm.setSelection(urlFrom, {
+        line: urlFrom.line,
+        ch: urlFrom.ch + normalized.length,
+      });
+      cm.focus();
     })
-    .catch(() => {
-      applyLink(DEFAULT_LINK_URL);
-    });
+    .catch(() => {});
 };
 
 export const handleMarkdownUrlPaste = (cm, event) => {
   const selection = cm.getSelection();
-  const pastedText = event.clipboardData?.getData('text/plain')?.trim();
+  const normalized = normalizeMarkdownLinkUrl(event.clipboardData?.getData('text/plain'));
 
-  if (!selection || !isMarkdownLinkUrl(pastedText)) {
+  if (!selection || !normalized) {
     return;
   }
 
   event.preventDefault();
-  cm.replaceSelection(`[${selection}](${pastedText})`);
+  cm.replaceSelection(`[${selection}](${normalized})`);
 };
