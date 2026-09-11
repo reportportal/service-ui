@@ -24,6 +24,7 @@ import classNames from 'classnames/bind';
 import 'easymde/dist/easymde.min.css';
 import { MarkdownViewer } from '../markdownViewer/markdownViewer';
 import { MODE_DEFAULT, MODE_DARK } from '../constants';
+import { drawMarkdownLink, handleMarkdownUrlPaste } from './markdownLinkUtils';
 import styles from './markdownEditor.scss';
 
 const cx = classNames.bind(styles);
@@ -221,7 +222,7 @@ export class MarkdownEditor extends React.Component {
       },
       {
         name: 'link',
-        action: EasyMDE.drawLink,
+        action: drawMarkdownLink,
         className: 'icon-link',
         title: formatMessage(toolbarTitles.link),
       },
@@ -269,16 +270,25 @@ export class MarkdownEditor extends React.Component {
       blockStyles: {
         bold: '**',
         italic: '*',
-        code: '`',
+        code: '```',
+      },
+      shortcuts: {
+        drawLink: null,
       },
       previewRender: (plainText) =>
         ReactDOMServer.renderToStaticMarkup(<MarkdownViewer value={plainText} mode={mode} />),
     });
+    this.easyMDE.codemirror.addKeyMap({
+      'Cmd-K': () => drawMarkdownLink(this.easyMDE),
+      'Ctrl-K': () => drawMarkdownLink(this.easyMDE),
+    });
     this.easyMDE.codemirror.on('change', this.onChangeHandler);
+    this.easyMDE.codemirror.on('paste', handleMarkdownUrlPaste);
     manipulateEditorOutside(this.easyMDE.codemirror);
   }
   componentWillUnmount() {
     this.easyMDE.codemirror.off('change', this.onChangeHandler);
+    this.easyMDE.codemirror.off('paste', handleMarkdownUrlPaste);
   }
   onChangeHandler = () => {
     this.props.onChange(this.easyMDE.value());
