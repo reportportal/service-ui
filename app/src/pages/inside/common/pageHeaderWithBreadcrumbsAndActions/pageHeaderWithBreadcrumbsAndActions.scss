@@ -37,6 +37,22 @@
     gap: 12px;
     margin-bottom: 12px;
     min-width: 0;
+
+    [data-testid='breadcrumb'] {
+      min-width: 0;
+      max-width: 100%;
+    }
+
+    a,
+    button {
+      display: block;
+      min-width: 0;
+      max-width: 100%;
+    }
+
+    div:has(> [data-testid='breadcrumb']):first-child {
+      flex: 0 0 auto;
+    }
   }
 
   &__title-row {

@@ -27,9 +27,18 @@
 
   &__container {
     min-width: 0;
+
+    [data-testid='breadcrumb'] {
+      min-width: 0;
+      max-width: 100%;
+    }
   }
 
-  a {
+  a,
+  button {
+    display: block;
+    min-width: 0;
+    max-width: 100%;
     cursor: pointer;
 
     &:hover {
