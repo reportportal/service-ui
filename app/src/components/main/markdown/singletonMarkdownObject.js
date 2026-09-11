@@ -28,7 +28,7 @@ const getInstance = () => {
       blockStyles: {
         bold: '**',
         italic: '*',
-        code: '`',
+        code: '```',
       },
     });
   }
