@@ -80,6 +80,7 @@ export {
   marketplacePluginUpdateVersionSelector,
   hasMarketplacePluginUpdateSelector,
   isMarketplacePluginInstallingSelector,
+  marketplaceInstallingPluginsSelector,
   marketplaceInstallErrorSelector,
   marketplaceCatalogueQuerySelector,
   justInstalledMarketplacePluginSelector,

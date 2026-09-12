@@ -438,6 +438,14 @@ describe('InstalledTab', () => {
       const rendered = render();
 
       start(rendered);
+      // opening it dispatches nothing yet — the claim under test is what CANCELLING does, so the
+      // dialog is actually dismissed rather than merely left alone
+      expect(rendered.of(INSTALL_MARKETPLACE_PLUGIN)).toHaveLength(0);
+
+      const { onCancel, cancelText } = confirmation(rendered.of).data;
+
+      expect(cancelText).toBeTruthy();
+      onCancel?.();
 
       expect(rendered.of(INSTALL_MARKETPLACE_PLUGIN)).toHaveLength(0);
     });

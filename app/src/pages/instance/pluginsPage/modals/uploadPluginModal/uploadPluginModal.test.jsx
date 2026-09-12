@@ -29,8 +29,8 @@ jest.mock('common/utils', () => ({
   fetch: jest.fn(),
 }));
 
-// what fetch throws for a registry answer with a JSON body: the body itself
-const registryError = (code, message) => ({ code, message });
+// what fetch throws for an answer with a JSON body: the body itself
+const registryError = (errorCode, message) => ({ errorCode, message });
 
 const jar = (name) => ({
   file: new File(['jar'], name, { type: 'application/java-archive' }),
@@ -85,51 +85,68 @@ describe('UploadPluginModal', () => {
     fetch.mockReset();
   });
 
-  describe('a version the registry already holds', () => {
-    // the registry answers 409 CONFLICT; the admin is told the rule, not handed the server string
-    test('a conflict is shown as its own state instead of the raw server message', async () => {
-      fetch.mockRejectedValue(registryError('CONFLICT', 'Plugin or version already exists'));
-      const { attach, upload, find, of } = render();
+  // The instance answers a duplicate with PLUGIN_UPLOAD_ERROR 40039 and HTTP 400 — the code it
+  // uses for every other upload failure — so the rejection cannot be told apart from any other.
+  // The name is what carries it: same plugin, same version, said before anything is sent.
+  describe('a version the instance already holds', () => {
+    const installedJira = { name: 'jira', details: { version: '5.7.0' } };
+
+    test('the same version is told apart from the plugin merely being installed', () => {
+      const { attach, find } = render([installedJira]);
 
       attach('jira-5.7.0.jar');
-      await upload();
 
       expect(find('uploadVersionExistsMessage').first().text()).toContain(
         'This version is already installed',
       );
+      // the weaker warning is not stacked on top of the stronger one
+      expect(find('uploadReplaceExistingMessage')).toHaveLength(0);
+    });
+
+    test('a different version of the same plugin is a replacement, not a duplicate', () => {
+      const { attach, find } = render([installedJira]);
+
+      attach('jira-5.8.0.jar');
+
+      expect(find('uploadVersionExistsMessage')).toHaveLength(0);
+      expect(find('uploadReplaceExistingMessage')).not.toHaveLength(0);
+    });
+
+    test('it is said before anything is sent, not after the server refuses', async () => {
+      const { attach, find, of } = render([installedJira]);
+
+      attach('jira-5.7.0.jar');
+
+      expect(find('uploadVersionExistsMessage')).not.toHaveLength(0);
+      expect(fetch).not.toHaveBeenCalled();
       expect(of(SHOW_NOTIFICATION)).toHaveLength(0);
     });
 
-    test('a conflict reported only by status is recognised too', async () => {
-      fetch.mockRejectedValue({ response: { status: 409, data: {} } });
-      const { attach, upload, find } = render();
+    test('an installed plugin whose version nobody recorded says nothing about versions', () => {
+      const { attach, find } = render([{ name: 'jira', details: {} }]);
 
       attach('jira-5.7.0.jar');
-      await upload();
-
-      expect(find('uploadVersionExistsMessage')).not.toHaveLength(0);
-    });
-
-    test('any other failure keeps the generic notification', async () => {
-      fetch.mockRejectedValue(registryError('INTERNAL_ERROR', 'Unexpected registry error'));
-      const { attach, upload, find, of } = render();
-
-      attach('jira-5.7.0.jar');
-      await upload();
 
       expect(find('uploadVersionExistsMessage')).toHaveLength(0);
-      expect(of(SHOW_NOTIFICATION).pop().payload.message).toBe('Unexpected registry error');
     });
 
-    test('dropping the rejected file clears the state it was rejected in', async () => {
-      fetch.mockRejectedValue(registryError('CONFLICT', 'Plugin or version already exists'));
-      const { attach, upload, remove, find } = render();
+    test('dropping the file takes the warning with it', () => {
+      const { attach, remove, find } = render([installedJira]);
 
       attach('jira-5.7.0.jar');
-      await upload();
       remove('jira-5.7.0.jar');
 
       expect(find('uploadVersionExistsMessage')).toHaveLength(0);
+    });
+
+    test('a failure the instance sent still keeps the generic notification', async () => {
+      fetch.mockRejectedValue(registryError('INTERNAL_ERROR', 'Unexpected server error'));
+      const { attach, upload, of } = render();
+
+      attach('jira-5.7.0.jar');
+      await upload();
+
+      expect(of(SHOW_NOTIFICATION).pop().payload.message).toBe('Unexpected server error');
     });
   });
 

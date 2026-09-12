@@ -307,7 +307,7 @@ describe('PluginsCatalog', () => {
         installedPlugins: [],
         marketplaceInstalled: [],
         availablePlugins: [slack],
-        isPluginInstalling: (registryId) => registryId === slack.id,
+        installingIds: [slack.id],
         onRowAction,
       });
 
@@ -323,7 +323,7 @@ describe('PluginsCatalog', () => {
         installedPlugins: [],
         marketplaceInstalled: [],
         availablePlugins: [slack, { ...azure, locked: false }],
-        isPluginInstalling: (registryId) => registryId === slack.id,
+        installingIds: [slack.id],
       });
 
       expect(installStates(wrapper)).toEqual([undefined, 'INSTALLING']);
@@ -332,18 +332,27 @@ describe('PluginsCatalog', () => {
 
     test('an update in flight is marked on the installed row it was raised from', () => {
       // an update is the same install request, so the Installed group has the same state to show
-      const isPluginInstalling = jest.fn((registryId) => registryId === 'plugin-bts-jira');
-      const wrapper = render({ availablePlugins: [], isPluginInstalling });
+      const wrapper = render({ availablePlugins: [], installingIds: ['plugin-bts-jira'] });
+      const row = (name) =>
+        group(wrapper, ALL_GROUP_TYPE)
+          .find('[data-automation-id="pluginRow"]')
+          .filterWhere((node) => node.find('.plugins-name').text() === name);
+
+      expect(row(DISPLAY_NAMES.jira).prop('data-install-state')).toBe('INSTALLING');
+      expect(actions(group(wrapper, ALL_GROUP_TYPE))).toEqual([]);
+      // the id an install is matched on is the registry's, carried inside the marketplace block —
+      // not the local plugin name, which the install endpoint knows nothing about
+      expect(row(DISPLAY_NAMES.rally).prop('data-install-state')).toBeFalsy();
+    });
+
+    test('the local plugin name is not what an install is matched on', () => {
+      // 'jira' is the local IntegrationType name; the registry knows it as 'plugin-bts-jira'
+      const wrapper = render({ availablePlugins: [], installingIds: ['jira'] });
       const jira = group(wrapper, ALL_GROUP_TYPE)
         .find('[data-automation-id="pluginRow"]')
         .filterWhere((node) => node.find('.plugins-name').text() === DISPLAY_NAMES.jira);
 
-      expect(jira.prop('data-install-state')).toBe('INSTALLING');
-      expect(actions(group(wrapper, ALL_GROUP_TYPE))).toEqual([]);
-      // the id an install is requested with is the registry's, carried inside the marketplace
-      // block — not the local plugin name, which the install endpoint knows nothing about
-      expect(isPluginInstalling).toHaveBeenCalledWith('plugin-bts-jira');
-      expect(isPluginInstalling).not.toHaveBeenCalledWith('jira');
+      expect(jira.prop('data-install-state')).toBeFalsy();
     });
 
     test('a row the registry never matched carries no install state at all', () => {
@@ -406,7 +415,7 @@ describe('PluginsCatalog', () => {
       // whatever it is handed
       const wrapper = render({
         ...failedProps,
-        isPluginInstalling: (registryId) => registryId === slack.id,
+        installingIds: [slack.id],
       });
 
       expect(wrapper.find('span[data-automation-id="pluginRowInstallError"]')).toHaveLength(0);

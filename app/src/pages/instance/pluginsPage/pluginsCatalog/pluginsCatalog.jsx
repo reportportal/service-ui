@@ -72,14 +72,17 @@ export const PluginsCatalog = ({
   onInstalledItemClick = () => {},
   onAvailableItemClick = () => {},
   justInstalledId = null,
-  isPluginInstalling = () => false,
+  installingIds = [],
   installFailedId = null,
 }) => {
   const { formatMessage } = useIntl();
 
   // an install can be under way, or have just failed, for a row in either group: an update is
   // the same request as an install, made from the Installed one
-  const installState = { isInstalling: isPluginInstalling, failedRegistryId: installFailedId };
+  const installState = {
+    isInstalling: (registryId) => installingIds.includes(registryId),
+    failedRegistryId: installFailedId,
+  };
   // the one rule, shared with the plugin page: enforced here rather than trusting the payload
   // to arrive with the block nulled
   const marketplaceTrusted = isMarketplaceTrusted({ offline, failed });
@@ -203,7 +206,7 @@ PluginsCatalog.propTypes = {
   /** Registry id of the plugin the last install moved into the Installed group. */
   justInstalledId: PropTypes.string,
   /** Whether an install of this registry id is in flight right now. */
-  isPluginInstalling: PropTypes.func,
+  installingIds: PropTypes.arrayOf(PropTypes.string),
   /** Registry id of the plugin the last install failed for. */
   installFailedId: PropTypes.string,
 };

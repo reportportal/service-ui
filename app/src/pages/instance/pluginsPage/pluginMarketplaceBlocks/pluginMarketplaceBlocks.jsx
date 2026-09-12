@@ -131,6 +131,7 @@ export const PluginMarketplaceBlocks = ({
   installedVersion = null,
   onUseVersion = null,
   showTier = true,
+  installing = false,
 }) => {
   const { formatMessage, formatDate } = useIntl();
   const trusted = isMarketplaceTrusted({ offline, failed, unmatched });
@@ -194,6 +195,9 @@ export const PluginMarketplaceBlocks = ({
         adjustWidthOn="content"
         data-automation-id="useVersionAction"
         onClick={() => onUseVersion(entry.version)}
+        // every row here installs the same plugin, so while one version is on its way none of
+        // the others may be started: two installs of one plugin race to be the one that lands
+        disabled={installing}
       >
         {formatMessage(messages.useVersion)}
       </Button>
@@ -341,6 +345,8 @@ export const PluginMarketplaceBlocks = ({
 };
 
 PluginMarketplaceBlocks.propTypes = {
+  /** An install for this plugin is on its way, so no version may start another. */
+  installing: PropTypes.bool,
   detail: PropTypes.shape({
     /** The registry's own answer about the plugin, `access` and `tier` among it. */
     plugin: PropTypes.object,

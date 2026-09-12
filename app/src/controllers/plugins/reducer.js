@@ -218,8 +218,12 @@ export const marketplaceReducer = (state = INITIAL_MARKETPLACE_STATE, { type, pa
         installing: state.installing.filter((id) => id !== payload),
         justInstalled: payload,
       };
+    // Both marks are per-row and transient, and they are forgotten together on purpose: leaving a
+    // filter, searching or leaving the page ends the moment either of them describes. A failure
+    // kept its mark until the *next* install started, so a row could still read "Install failed"
+    // a day later, and starting an unrelated install cleared it.
     case CLEAR_JUST_INSTALLED_MARKETPLACE_PLUGIN:
-      return { ...state, justInstalled: null };
+      return { ...state, justInstalled: null, installError: null };
     case INSTALL_MARKETPLACE_PLUGIN_ERROR:
       return {
         ...state,

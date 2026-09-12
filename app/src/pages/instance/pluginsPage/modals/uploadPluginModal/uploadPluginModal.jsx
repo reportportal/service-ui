@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import React, { useState } from 'react';
+import React from 'react';
 import { withModal } from 'controllers/modal';
 import PropTypes from 'prop-types';
 import { defineMessages, useIntl } from 'react-intl';
@@ -78,17 +78,14 @@ const messages = defineMessages({
 
 const MAX_FILE_SIZE = 134217728;
 const ACCEPT_FILE_MIME_TYPES = ['.jar', '.json'];
-const CONFLICT_STATUS = 409;
-const CONFLICT_ERROR_CODE = 'CONFLICT';
 const FILE_EXTENSION = /\.[^.]+$/;
 const PLUGIN_ID_SEPARATOR = /^[-_.]/;
+// A plugin jar is published as <plugin id>-<version>.jar, so the version sits in the name beside
+// the id the warning above already reads out of it.
+const VERSION_IN_FILE_NAME = /[-_.]([0-9]+(?:\.[0-9]+)*[^-_.]*)$/;
 
-// The registry refuses a jar whose plugin id and version it already holds. Its message is the
-// registry's own wording, so the case is told apart by the status or the error code — whichever
-// the rejection carries: fetch throws the response body when there is one, the error otherwise.
-const isVersionConflict = (err) =>
-  (err?.response?.status ?? err?.status) === CONFLICT_STATUS ||
-  (err?.response?.data?.code ?? err?.code) === CONFLICT_ERROR_CODE;
+const versionInFileName = (fileName) =>
+  VERSION_IN_FILE_NAME.exec(fileName.replace(FILE_EXTENSION, ''))?.[1] ?? null;
 
 const startsWithPluginId = (fileName, pluginId) =>
   fileName.startsWith(pluginId) && PLUGIN_ID_SEPARATOR.test(fileName.slice(pluginId.length));
@@ -118,23 +115,27 @@ export const UploadPluginModal = ({ data: { onImport } }) => {
   const { trackEvent } = useTracking();
   const dispatch = useDispatch();
   const plugins = useSelector(pluginsSelector);
-  const [versionExists, setVersionExists] = useState(false);
 
   const pendingFile = files.find(
     ({ valid, uploaded, isLoading }) => valid && !uploaded && !isLoading,
   );
   const replacedPlugin = pendingFile && installedPluginFor(pendingFile.file.name, plugins);
+  // The instance refuses a second file claiming a version it already holds, and it says so in
+  // prose the client must not match on: service-api answers PLUGIN_UPLOAD_ERROR (40039) with
+  // HTTP 400 — the same code it uses for every other upload failure — so the rejection itself
+  // cannot be told apart. The name carries what is needed instead: same plugin, same version.
+  // Guessing wrong only shows or withholds a warning; the upload is unchanged either way.
+  const versionExists = Boolean(
+    replacedPlugin &&
+      replacedPlugin.details?.version &&
+      versionInFileName(pendingFile.file.name) === replacedPlugin.details.version,
+  );
 
   const onUploadSuccess = () => {
     onImport();
   };
 
   const onUploadError = (id, err) => {
-    if (isVersionConflict(err)) {
-      setVersionExists(true);
-      return;
-    }
-
     dispatch(
       showNotification({
         message: err.message,
@@ -144,12 +145,10 @@ export const UploadPluginModal = ({ data: { onImport } }) => {
   };
 
   const onRemoveFile = (id) => {
-    setVersionExists(false);
     removeFile(id);
   };
 
   const saveFiles = async () => {
-    setVersionExists(false);
     trackEvent(PLUGINS_PAGE_EVENTS.clickUploadModalBtn(getFilesNames(files)));
     await uploadFiles(URLS.plugin(), onUploadSuccess, onUploadError);
   };

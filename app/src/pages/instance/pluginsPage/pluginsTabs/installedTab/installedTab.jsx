@@ -36,7 +36,7 @@ import {
   marketplaceCatalogueLoadingSelector,
   marketplaceRegistryHostSelector,
   justInstalledMarketplacePluginSelector,
-  isMarketplacePluginInstallingSelector,
+  marketplaceInstallingPluginsSelector,
   marketplaceInstallErrorSelector,
   isPluginUploadAllowedSelector,
   isMarketplaceRegistryOfflineSelector,
@@ -155,10 +155,35 @@ const bold = (chunks) => DOMPurify.sanitize(`<b>${chunks}</b>`);
  * that published something semver cannot parse — takes the downgrade wording rather than
  * promising an upgrade nobody has established. `semverDiff` throws on either of those, which is
  * why the answer is not simply its return value.
+ *
+ * <p>It is coerced first because plugins are not disciplined about the third segment: a version
+ * recorded as `5.7` is not semver and made `semverDiff` throw, so every pick from a plugin
+ * versioned that way was confirmed as a downgrade — including picks that plainly move forward.
  */
+const SEMVER_CORE = /^\d+(\.\d+){0,2}/;
+
+const toComparable = (value) => {
+  const core = SEMVER_CORE.exec(String(value ?? ''))?.[0];
+
+  if (!core) {
+    return null;
+  }
+
+  const segments = core.split('.');
+
+  return [...segments, ...Array(3 - segments.length).fill('0')].join('.');
+};
+
 const isUpgradeFrom = (installedVersion, version) => {
+  const from = toComparable(installedVersion);
+  const to = toComparable(version);
+
+  if (!from || !to) {
+    return false;
+  }
+
   try {
-    return Boolean(semverDiff(installedVersion, version));
+    return Boolean(semverDiff(from, to));
   } catch {
     return false;
   }
@@ -176,7 +201,7 @@ const isUpgradeFrom = (installedVersion, version) => {
     catalogueFailed: hasMarketplaceCatalogueFailedSelector(state),
     registryHost: marketplaceRegistryHostSelector(state),
     justInstalledId: justInstalledMarketplacePluginSelector(state),
-    isPluginInstalling: (registryId) => isMarketplacePluginInstallingSelector(state, registryId),
+    installingIds: marketplaceInstallingPluginsSelector(state),
     // which row it failed for is all the row shows; the reason was the notification's to tell
     installFailedId: marketplaceInstallErrorSelector(state)?.registryId || null,
     uploadAllowed: isPluginUploadAllowedSelector(state),
@@ -214,7 +239,7 @@ export class InstalledTab extends Component {
     installMarketplacePluginAction: PropTypes.func.isRequired,
     registryHost: PropTypes.string,
     justInstalledId: PropTypes.string,
-    isPluginInstalling: PropTypes.func.isRequired,
+    installingIds: PropTypes.arrayOf(PropTypes.string).isRequired,
     installFailedId: PropTypes.string,
     uploadAllowed: PropTypes.bool.isRequired,
     clearJustInstalledMarketplacePluginAction: PropTypes.func.isRequired,
@@ -446,6 +471,7 @@ export class InstalledTab extends Component {
             registryHost={this.props.detailRegistryHost}
             onInstall={this.handleInstallFromDetail}
             onRetry={this.refetchPluginDetail}
+            installing={this.props.installingIds.includes(data.id)}
           />
         );
       default: {
@@ -491,7 +517,7 @@ export class InstalledTab extends Component {
                 onInstalledItemClick={this.installedPluginsSubPageHandler}
                 onAvailableItemClick={this.availablePluginDetailSubPageHandler}
                 justInstalledId={this.props.justInstalledId}
-                isPluginInstalling={this.props.isPluginInstalling}
+                installingIds={this.props.installingIds}
                 installFailedId={this.props.installFailedId}
               />
             </div>
@@ -617,6 +643,7 @@ export class InstalledTab extends Component {
         registryHost={unmatched ? this.props.registryHost : this.props.detailRegistryHost}
         onRetry={unmatched ? this.refetchCatalogue : this.refetchPluginDetail}
         installedVersion={data.details?.version || null}
+        installing={this.props.installingIds.includes(data.registryId)}
         onUseVersion={(version) =>
           this.showVersionChangeModal(
             getDisplayName(data),

@@ -58,6 +58,10 @@ const messages = defineMessages({
     id: 'AvailablePluginDetail.install',
     defaultMessage: 'Install',
   },
+  installing: {
+    id: 'PluginItem.installingState',
+    defaultMessage: 'Installing…',
+  },
   version: {
     id: 'AvailablePluginDetail.version',
     defaultMessage: 'version {version}',
@@ -82,6 +86,7 @@ export const AvailablePluginDetail = ({
   registryHost = null,
   onInstall = () => {},
   onRetry = () => {},
+  installing = false,
 }) => {
   const { formatMessage } = useIntl();
   const { trackEvent } = useTracking();
@@ -152,9 +157,19 @@ export const AvailablePluginDetail = ({
               data-automation-id={isLocked ? 'discoverPremiumAction' : 'installAction'}
               className={cx(isLocked ? 'discover-button' : 'install-button')}
               onClick={isLocked ? handleDiscoverPremium : handleInstall}
-              disabled={!isLocked && !version}
+              // a second press while the first install is still in flight would start a second
+              // download of the same plugin; the row in the catalogue has always said so, and
+              // this button is the same request made from a different place
+              disabled={!isLocked && (!version || installing)}
             >
-              {formatMessage(isLocked ? messages.discoverPremium : messages.install)}
+              {formatMessage(
+                // eslint-disable-next-line no-nested-ternary
+                isLocked
+                  ? messages.discoverPremium
+                  : installing
+                    ? messages.installing
+                    : messages.install,
+              )}
             </Button>
           </div>
           <p className={cx('description')}>{plugin.description}</p>
@@ -175,6 +190,7 @@ export const AvailablePluginDetail = ({
 };
 
 AvailablePluginDetail.propTypes = {
+  installing: PropTypes.bool,
   plugin: PropTypes.shape({
     name: PropTypes.string.isRequired,
     tier: PropTypes.string.isRequired,

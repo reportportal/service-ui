@@ -21,6 +21,7 @@ import {
   showNotification,
   NOTIFICATION_TYPES,
 } from 'controllers/notification';
+import { notificationMessages } from 'components/main/notification/notificationList/notificationList';
 import catalogue from './__fixtures__/catalogue.json';
 import catalogueOffline from './__fixtures__/catalogue-offline.json';
 import pluginDetail from './__fixtures__/plugin-detail.json';
@@ -63,6 +64,7 @@ import {
   MARKETPLACE_SEARCH_DEBOUNCE,
   MARKETPLACE_LICENCE_MAX_LENGTHS,
   MARKETPLACE_INSTALL_ERROR,
+  MARKETPLACE_INSTALL_ERROR_MESSAGES,
 } from './constants';
 
 jest.mock('common/utils', () => ({
@@ -472,8 +474,26 @@ describe('controllers/plugins/sagas marketplace', () => {
       });
 
       // the whole point of reading the code is that these do not all read alike
+      // against the shipped map, not against this file's own table: asserting the table is unique
+      // proves only that the table was typed carefully
       test('no two of them are told the same way', () => {
-        expect(new Set(failures.map(([, messageId]) => messageId)).size).toBe(failures.length);
+        const told = Object.values(MARKETPLACE_INSTALL_ERROR_MESSAGES);
+
+        expect(new Set(told).size).toBe(told.length);
+      });
+
+      test('every code this UI claims to know names a descriptor that exists', () => {
+        Object.values(MARKETPLACE_INSTALL_ERROR_MESSAGES).forEach((messageId) => {
+          expect(notificationMessages).toHaveProperty(messageId);
+        });
+      });
+
+      test('every classified code is covered by a case above', () => {
+        expect(failures.map(([code]) => code).sort()).toEqual(
+          Object.keys(MARKETPLACE_INSTALL_ERROR_MESSAGES)
+            .map(Number)
+            .sort(),
+        );
       });
 
       test('the row still leaves the installing state', async () => {

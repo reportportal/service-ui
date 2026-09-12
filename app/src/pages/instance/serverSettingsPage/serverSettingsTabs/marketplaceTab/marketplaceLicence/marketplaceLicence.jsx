@@ -125,6 +125,9 @@ export const MarketplaceLicence = ({
   const [confirmingRemoval, setConfirmingRemoval] = useState(false);
   const [lastCustomerId, setLastCustomerId] = useState(customerId);
   const [saveInFlight, setSaveInFlight] = useState(false);
+  // the slice's error is shared with the GET made on mount, so the banner waits for a request
+  // this operator actually sent
+  const [hasSubmitted, setHasSubmitted] = useState(false);
   const [wasLoading, setWasLoading] = useState(loading);
   const [saved, setSaved] = useState(false);
 
@@ -141,6 +144,7 @@ export const MarketplaceLicence = ({
     setWasLoading(loading);
     if (!loading && saveInFlight) {
       setSaveInFlight(false);
+      setHasSubmitted(true);
       setSaved(!error && configured);
     }
   }
@@ -222,8 +226,10 @@ export const MarketplaceLicence = ({
           />
         </div>
         {/* a rejection the server sent back, told apart from the two required hints by sitting
-            over the form rather than under a field */}
-        {error && (
+            over the form rather than under a field. Only after the operator sent something: the
+            slice also holds a failed GET from mount, and "the server did not accept the last
+            request" over untouched fields blames them for a read they never made. */}
+        {error && hasSubmitted && (
           <p className={cx('error')} data-automation-id="licenceError">
             {formatMessage(messages.requestFailed, { reason: error })}
           </p>

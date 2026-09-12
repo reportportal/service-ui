@@ -216,9 +216,23 @@ describe('MarketplaceLicence', () => {
   });
 
   test('a rejection the server sent back is shown, reason and all', () => {
-    const { find } = render({ error: 'Licence key signature does not match' });
+    const { find, type, click, arrive } = render();
+
+    type('customerIdField', 'acme');
+    type('licenceKeyField', 'c2VjcmV0');
+    click('submitLicence');
+    arrive({ loading: true });
+    arrive({ loading: false, error: 'Licence key signature does not match' });
 
     expect(find('licenceError').first().text()).toContain('Licence key signature does not match');
+  });
+
+  // the slice's error is shared with the GET this page makes on mount, and an instance whose
+  // service-api has no such endpoint would otherwise be told its untouched form was refused
+  test('a read that failed on mount is not reported as a refused submission', () => {
+    const { find } = render({ error: 'Request failed with status code 404' });
+
+    expect(find('licenceError')).toHaveLength(0);
   });
 
   test('nothing rejected, no form-level error', () => {
@@ -230,10 +244,19 @@ describe('MarketplaceLicence', () => {
   // the two states say different things in different places: a rejection is about the form the
   // server saw, not about a half the user has yet to fill in
   test('a server rejection is not mistaken for a required half', () => {
-    const { find } = render({ error: 'Licence key signature does not match' });
+    const { find, type, click, arrive } = render();
+
+    type('customerIdField', 'acme');
+    type('licenceKeyField', 'c2VjcmV0');
+    click('submitLicence');
+    arrive({ loading: true });
+    arrive({ loading: false, error: 'Licence key signature does not match' });
 
     expect(find('licenceError')).not.toHaveLength(0);
-    expect(find('customerIdField').first().prop('touched')).toBe(false);
+    // the customer id the operator sent is still in the field, so it has nothing to require
+    expect(find('customerIdField').first().prop('error')).toBeFalsy();
+    // the key field was emptied by the send, not left blank by the operator: it holds the hint
+    // but stays untouched, which is what keeps the kit from showing it as their omission
     expect(find('licenceKeyField').first().prop('touched')).toBe(false);
   });
 

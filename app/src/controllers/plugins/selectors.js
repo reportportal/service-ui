@@ -244,9 +244,23 @@ export const marketplaceCatalogueQuerySelector = (state) =>
 export const isMarketplacePluginInstallingSelector = (state, registryId) =>
   (marketplaceSelector(state).installing || []).includes(registryId);
 
+// One frozen empty array, so a state holding no installs keeps returning the same reference and
+// connect's shallow compare stays true.
+const NO_INSTALLS = [];
+
+/**
+ * The ids currently installing. A consumer that maps over rows wants these rather than the
+ * per-id predicate above: binding that one in mapStateToProps makes a fresh closure on every
+ * store change, which fails the shallow compare and re-renders the whole catalogue for actions
+ * that have nothing to do with it.
+ */
+export const marketplaceInstallingPluginsSelector = (state) =>
+  marketplaceSelector(state).installing || NO_INSTALLS;
+
 /**
  * The install that last failed, as `{ registryId, error }`, or null. Starting an install clears
- * it, so this is only ever the attempt the user is still looking at.
+ * it, and so do the events that forget a just-installed row — leaving the filter, searching,
+ * leaving the page — so this is only ever an attempt the user is still looking at.
  */
 export const marketplaceInstallErrorSelector = (state) =>
   marketplaceSelector(state).installError || null;
