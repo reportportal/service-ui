@@ -62,6 +62,7 @@ import {
   FETCH_MARKETPLACE_PLUGIN_DETAIL_SUCCESS,
   MARKETPLACE_SEARCH_DEBOUNCE,
   MARKETPLACE_LICENCE_MAX_LENGTHS,
+  MARKETPLACE_INSTALL_ERROR,
 } from './constants';
 
 jest.mock('common/utils', () => ({
@@ -435,6 +436,67 @@ describe('controllers/plugins/sagas marketplace', () => {
         installMarketplacePluginErrorAction('slack', 'Forbidden'),
         showDefaultErrorNotification(new Error('Forbidden')),
       ]);
+    });
+
+    // service-api answers a failed install with its own error body, and the code in it is the one
+    // thing that separates a rejected licence from a blocked version from a registry nobody can
+    // reach. Told as a single toast, all of them leave the operator with the same nothing.
+    describe('a failure the registry named', () => {
+      const failures = [
+        [MARKETPLACE_INSTALL_ERROR.LICENCE_REJECTED, 'marketplaceInstallLicenceRejected'],
+        [MARKETPLACE_INSTALL_ERROR.VERSION_BLOCKED, 'marketplaceInstallVersionBlocked'],
+        [MARKETPLACE_INSTALL_ERROR.PLUGIN_REMOVED, 'marketplaceInstallPluginRemoved'],
+        [MARKETPLACE_INSTALL_ERROR.REGISTRY_UNREACHABLE, 'marketplaceInstallRegistryUnreachable'],
+        [MARKETPLACE_INSTALL_ERROR.DOWNLOAD_FAILED, 'marketplaceInstallDownloadFailed'],
+      ];
+
+      const failWith = (errorCode) => {
+        fetch.mockRejectedValue({ errorCode, message: 'Registry said so' });
+
+        return run(installMarketplacePlugin, installMarketplacePluginAction('slack', '1.2.0'));
+      };
+
+      test.each(failures)('%i is told as itself', async (errorCode, messageId) => {
+        const dispatched = await failWith(errorCode);
+
+        expect(notifications(dispatched)).toEqual([{ messageId, type: NOTIFICATION_TYPES.ERROR }]);
+        // and only as itself: the raw server string is not thrown on screen beside it
+        expect(dispatched.map((action) => action.type)).not.toContain(
+          'showDefaultErrorNotification',
+        );
+      });
+
+      // the whole point of reading the code is that these do not all read alike
+      test('no two of them are told the same way', () => {
+        expect(new Set(failures.map(([, messageId]) => messageId)).size).toBe(failures.length);
+      });
+
+      test('the row still leaves the installing state', async () => {
+        const dispatched = await failWith(MARKETPLACE_INSTALL_ERROR.VERSION_BLOCKED);
+
+        expect(dispatched).toContainEqual(
+          installMarketplacePluginErrorAction('slack', 'Registry said so'),
+        );
+      });
+    });
+
+    describe('a failure the registry did not name', () => {
+      // an unrecognised failure is never dressed as one of the states above; the operator is
+      // still told what the server said, which is all anyone has to go on
+      test.each([
+        ['a code this UI has never heard of', { errorCode: 40045, message: 'Something else' }],
+        ['a body carrying no code at all', { message: 'Something else' }],
+      ])('%s keeps the generic notification', async (_, error) => {
+        fetch.mockRejectedValue(error);
+
+        const dispatched = await run(
+          installMarketplacePlugin,
+          installMarketplacePluginAction('slack', '1.2.0'),
+        );
+
+        expect(dispatched).toContainEqual(showDefaultErrorNotification(error));
+        expect(notifications(dispatched)).toEqual([]);
+      });
     });
   });
 

@@ -23,10 +23,20 @@
 
 .description,
 .status,
-.confirm-body {
+.confirm-body,
+.error,
+.saved {
   margin: 0;
   font-size: 13px;
   line-height: 20px;
+}
+
+.error {
+  color: $COLOR--system-message-error;
+}
+
+.saved {
+  color: $COLOR--passed;
 }
 
 // Only a hook for tests to find the field's help text; the kit owns how it looks.

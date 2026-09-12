@@ -18,21 +18,24 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { injectIntl, defineMessages } from 'react-intl';
 import classNames from 'classnames/bind';
-import { Button, DownloadIcon } from '@reportportal/ui-kit';
+import { Button, DownloadIcon, SpinLoader } from '@reportportal/ui-kit';
 import { PLUGIN_DISABLED_MESSAGES_BY_GROUP_TYPE } from 'components/integrations/messages';
 import { PluginIcon } from 'components/integrations/elements/pluginIcon';
 import { PLUGIN_TIERS } from 'common/constants/pluginTiers';
 import { PluginBadge, BADGE_TONES } from '../../pluginBadge';
+import { PluginTrustMark } from '../../pluginTrustMark';
 import {
   getAuthor,
   getDescription,
   getDisplayName,
   getRowAction,
   getRowBadges,
+  getRowInstallState,
   getRowState,
   isAvailableRow,
   ROW_ACTIONS,
   ROW_BADGES,
+  ROW_INSTALL_STATES,
   ROW_STATES,
 } from '../../pluginsCatalog/utils';
 import styles from './pluginsItem.scss';
@@ -79,6 +82,14 @@ const messages = defineMessages({
   [ROW_STATES.DISABLED]: {
     id: 'PluginItem.disabledState',
     defaultMessage: 'Disabled',
+  },
+  [ROW_INSTALL_STATES.INSTALLING]: {
+    id: 'PluginItem.installingState',
+    defaultMessage: 'Installing…',
+  },
+  [ROW_INSTALL_STATES.FAILED]: {
+    id: 'PluginItem.installFailedState',
+    defaultMessage: 'Install failed',
   },
 });
 
@@ -160,6 +171,7 @@ export class PluginsItem extends Component {
         enabled,
         groupType,
         tier,
+        trust,
         details: { version, disabledPluginTooltip } = {},
       },
       data,
@@ -171,6 +183,7 @@ export class PluginsItem extends Component {
     const badges = getRowBadges(data);
     const rowState = getRowState(data);
     const rowAction = getRowAction(data);
+    const installState = getRowInstallState(data);
 
     return (
       <div
@@ -178,6 +191,7 @@ export class PluginsItem extends Component {
         className={cx('plugins-list-item', { highlighted: this.props.highlighted })}
         data-automation-id="pluginRow"
         data-highlighted={this.props.highlighted || undefined}
+        data-install-state={installState || undefined}
         onClick={this.itemClickHandler}
         title={
           enabled || isInAvailablePluginList
@@ -197,6 +211,10 @@ export class PluginsItem extends Component {
           <div className={cx('plugins-info')}>
             <div className={cx('plugins-info-content')}>
               <span className={cx('plugins-name')}>{displayName}</span>
+              {/* Who wrote it, which is a different question from what it costs: the badge below
+                  answers the second one, and an installed row has an answer to this one even
+                  though it has no badge. */}
+              <PluginTrustMark trust={trust} />
               {/* absent rather than guessed: the old `|| 'ReportPortal'` fallback signed every
                   third-party plugin in the catalogue with the wrong name */}
               {author && <span className={cx('plugins-author')}>{`by ${author}`}</span>}
@@ -245,31 +263,63 @@ export class PluginsItem extends Component {
           </div>
         </div>
         <div className={cx('plugins-additional-block')}>
-          {/* State first, and instead of the action: a plugin that is switched off has nothing
-              to offer here, and the design puts the state where the action would have been. */}
-          {rowState && (
-            <PluginBadge
-              tone={BADGE_TONES.NEUTRAL}
-              data-automation-id="pluginRowState"
-              data-state={rowState}
-            >
-              {formatMessage(messages[rowState])}
-            </PluginBadge>
-          )}
-          {!rowState && rowAction && (
-            <div
-              className={cx('plugins-row-action')}
-              data-automation-id="pluginRowAction"
-              data-action={rowAction}
-            >
+          {/* An install of this row's own plugin takes the slot whole while it runs: it is the
+              answer to what is happening here, and the button it replaces is the one that must
+              not be pressed a second time. Rendered in place of that button rather than beside
+              it, so there is nothing left to click. */}
+          {installState === ROW_INSTALL_STATES.INSTALLING ? (
+            <div className={cx('plugins-row-action')} data-automation-id="pluginRowInstalling">
               <Button
-                variant={ACTION_VARIANTS[rowAction]}
-                icon={rowAction === ROW_ACTIONS.UPDATE ? <DownloadIcon /> : null}
-                onClick={this.rowActionHandler(rowAction)}
+                variant={ACTION_VARIANTS[rowAction] || ACTION_VARIANTS[ROW_ACTIONS.INSTALL]}
+                icon={<SpinLoader />}
+                disabled
               >
-                {formatMessage(messages[rowAction])}
+                {formatMessage(messages[ROW_INSTALL_STATES.INSTALLING])}
               </Button>
             </div>
+          ) : (
+            <>
+              {/* Beside the action, not instead of it: what the row says about a failure is
+                  which plugin it happened to, and the next thing to do about it is to try
+                  again. What went wrong was said when it happened, by the notification the
+                  error code is classified into. */}
+              {installState === ROW_INSTALL_STATES.FAILED && (
+                <PluginBadge
+                  tone={BADGE_TONES.DANGER}
+                  data-automation-id="pluginRowInstallError"
+                  data-install-state={installState}
+                >
+                  {formatMessage(messages[ROW_INSTALL_STATES.FAILED])}
+                </PluginBadge>
+              )}
+              {/* State first, and instead of the action: a plugin that is switched off has
+                  nothing to offer here, and the design puts the state where the action would
+                  have been. */}
+              {rowState && (
+                <PluginBadge
+                  tone={BADGE_TONES.NEUTRAL}
+                  data-automation-id="pluginRowState"
+                  data-state={rowState}
+                >
+                  {formatMessage(messages[rowState])}
+                </PluginBadge>
+              )}
+              {!rowState && rowAction && (
+                <div
+                  className={cx('plugins-row-action')}
+                  data-automation-id="pluginRowAction"
+                  data-action={rowAction}
+                >
+                  <Button
+                    variant={ACTION_VARIANTS[rowAction]}
+                    icon={rowAction === ROW_ACTIONS.UPDATE ? <DownloadIcon /> : null}
+                    onClick={this.rowActionHandler(rowAction)}
+                  >
+                    {formatMessage(messages[rowAction])}
+                  </Button>
+                </div>
+              )}
+            </>
           )}
         </div>
       </div>

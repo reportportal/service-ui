@@ -18,6 +18,9 @@ import PropTypes from 'prop-types';
 import { defineMessages, useIntl } from 'react-intl';
 import classNames from 'classnames/bind';
 import { Button, BubblesLoader, SystemMessage } from '@reportportal/ui-kit';
+import { PLUGIN_TIERS, toPluginTier, toTrustTier } from 'common/constants/pluginTiers';
+import { PluginBadge, BADGE_TONES } from '../pluginBadge';
+import { PluginTrustMark } from '../pluginTrustMark';
 import { RegistryOfflineAlert } from '../registryOfflineAlert';
 import { CatalogueUnavailableAlert } from '../catalogueUnavailableAlert';
 import { isMarketplaceTrusted } from '../pluginsCatalog';
@@ -100,6 +103,11 @@ const messages = defineMessages({
     defaultMessage:
       'The registry lists no plugin matching this one, so no advisory, block, removal or update can be checked for it and none of its versions, screenshots or changelog can be shown. It keeps running, and uploading a .jar by hand is the only way to change its version.',
   },
+  // the same words the catalogue row and the available-plugin page use for the same axis
+  premium: {
+    id: 'PluginItem.premium',
+    defaultMessage: 'Premium',
+  },
 });
 
 /**
@@ -122,9 +130,15 @@ export const PluginMarketplaceBlocks = ({
   onRetry = () => {},
   installedVersion = null,
   onUseVersion = null,
+  showTier = true,
 }) => {
   const { formatMessage, formatDate } = useIntl();
   const trusted = isMarketplaceTrusted({ offline, failed, unmatched });
+  // Both axes, off the registry's own answer for this plugin. While a request is in flight the
+  // answer on the store is still the last plugin's, so nothing is read from it until it lands.
+  const { access, tier } = (trusted && !loading && detail.plugin) || {};
+  const trust = toTrustTier(tier);
+  const isPremium = toPluginTier(access) === PLUGIN_TIERS.PREMIUM;
   const { versions, changelog, screenshots, advisory, blocked, removed } = trusted
     ? detail
     : {
@@ -188,6 +202,24 @@ export const PluginMarketplaceBlocks = ({
 
   return (
     <div className={cx('plugin-marketplace-blocks')}>
+      {/* What the plugin is, before what has happened to it. An installed plugin's page has a
+          header of its own that knows nothing of the registry, so this is the only place its
+          tier can be stated; the available-plugin page states it up there and turns this off. */}
+      {showTier && (trust || isPremium) && (
+        <div className={cx('tier-row')} data-automation-id="pluginDetailTierRow">
+          <PluginTrustMark trust={trust} />
+          {/* public is the ordinary case and the design gives it no pill of its own */}
+          {isPremium && (
+            <PluginBadge
+              tone={BADGE_TONES.PREMIUM}
+              data-automation-id="pluginBadge"
+              data-badge={PLUGIN_TIERS.PREMIUM}
+            >
+              {formatMessage(messages.premium)}
+            </PluginBadge>
+          )}
+        </div>
+      )}
       {offline && <RegistryOfflineAlert host={registryHost} />}
       {/* an unmatched plugin is one the catalogue could not place, so that is the request that
           failed; otherwise the failure is this plugin's own detail request */}
@@ -310,6 +342,8 @@ export const PluginMarketplaceBlocks = ({
 
 PluginMarketplaceBlocks.propTypes = {
   detail: PropTypes.shape({
+    /** The registry's own answer about the plugin, `access` and `tier` among it. */
+    plugin: PropTypes.object,
     versions: PropTypes.array,
     changelog: PropTypes.object,
     screenshots: PropTypes.array,
@@ -327,4 +361,6 @@ PluginMarketplaceBlocks.propTypes = {
   installedVersion: PropTypes.string,
   /** Makes a version the active one. Null hides the column: nothing is installed to change. */
   onUseVersion: PropTypes.func,
+  /** False on a page whose own header already carries the tier, so it is not said twice. */
+  showTier: PropTypes.bool,
 };

@@ -244,6 +244,13 @@ export const marketplaceCatalogueQuerySelector = (state) =>
 export const isMarketplacePluginInstallingSelector = (state, registryId) =>
   (marketplaceSelector(state).installing || []).includes(registryId);
 
+/**
+ * The install that last failed, as `{ registryId, error }`, or null. Starting an install clears
+ * it, so this is only ever the attempt the user is still looking at.
+ */
+export const marketplaceInstallErrorSelector = (state) =>
+  marketplaceSelector(state).installError || null;
+
 export const availableBtsIntegrationsSelector = (state) => {
   const namedAvailableBtsIntegrations = namedAvailableBtsIntegrationsSelector(state);
 
@@ -299,3 +306,6 @@ export const marketplaceLicenceCustomerIdSelector = (state) =>
 
 export const marketplaceLicenceLoadingSelector = (state) =>
   Boolean(marketplaceLicenceSelector(state).loading);
+
+export const marketplaceLicenceErrorSelector = (state) =>
+  marketplaceLicenceSelector(state).error || null;

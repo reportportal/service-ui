@@ -24,6 +24,7 @@ import {
   isMarketplaceLicenceConfiguredSelector,
   marketplaceLicenceCustomerIdSelector,
   marketplaceLicenceLoadingSelector,
+  marketplaceLicenceErrorSelector,
 } from 'controllers/plugins';
 import { MarketplaceLicence } from './marketplaceLicence';
 
@@ -33,6 +34,7 @@ export const MarketplaceTab = () => {
   const configured = useSelector(isMarketplaceLicenceConfiguredSelector);
   const customerId = useSelector(marketplaceLicenceCustomerIdSelector);
   const loading = useSelector(marketplaceLicenceLoadingSelector);
+  const error = useSelector(marketplaceLicenceErrorSelector);
 
   useEffect(() => {
     // the endpoint is admin-only, so only an admin asks
@@ -47,6 +49,7 @@ export const MarketplaceTab = () => {
       configured={configured}
       customerId={customerId}
       loading={loading}
+      error={error}
       onSubmit={(credentials) => dispatch(setMarketplaceLicenceAction(credentials))}
       onRemove={() => dispatch(deleteMarketplaceLicenceAction())}
     />

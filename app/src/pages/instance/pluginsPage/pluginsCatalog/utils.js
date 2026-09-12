@@ -16,9 +16,14 @@
 
 import { ALL_GROUP_TYPE } from 'common/constants/pluginsGroupTypes';
 import { INSTALLED_GROUP_TYPE, PLUGIN_FILTER_GROUP_VALUES } from 'common/constants/pluginsFilter';
-import { PLUGIN_TIERS } from 'common/constants/pluginTiers';
+import {
+  PLUGIN_ACCESS_TIERS,
+  PLUGIN_TIERS,
+  toPluginTier,
+  toTrustTier,
+} from 'common/constants/pluginTiers';
 
-export const PREMIUM_ACCESS = 'premium';
+export const PREMIUM_ACCESS = PLUGIN_ACCESS_TIERS.PREMIUM;
 
 /** What a row is, stated outright: no row may be classified by a field it happens to carry. */
 export const ROW_KINDS = {
@@ -51,6 +56,45 @@ export const ROW_STATES = {
  */
 export const getRowState = (row) =>
   !isAvailableRow(row) && row.enabled === false ? ROW_STATES.DISABLED : null;
+
+/**
+ * What is happening to this row's own install. Neither state comes from the catalogue: both are
+ * this session's, keyed on the registry id — the id an install is requested with — so a row
+ * without one can be in neither.
+ */
+export const ROW_INSTALL_STATES = {
+  INSTALLING: 'INSTALLING',
+  FAILED: 'FAILED',
+};
+
+const installStateOf = (registryId, isInstalling, failedRegistryId) => {
+  if (!registryId) {
+    return null;
+  }
+  // starting an install clears the failure, so no row is ever in both states at once
+  if (isInstalling(registryId)) {
+    return ROW_INSTALL_STATES.INSTALLING;
+  }
+
+  return registryId === failedRegistryId ? ROW_INSTALL_STATES.FAILED : null;
+};
+
+/**
+ * Stamps each row with its install state, which is how it reaches the row: the list between the
+ * catalogue and the row passes `items` through and nothing else.
+ */
+export const withInstallState = (
+  rows,
+  { isInstalling = () => false, failedRegistryId = null } = {},
+) =>
+  rows.map((row) => {
+    const installState = installStateOf(row.registryId, isInstalling, failedRegistryId);
+
+    return installState ? { ...row, installState } : row;
+  });
+
+/** The stamp above, read the way a row's other states are read. */
+export const getRowInstallState = (row) => row.installState || null;
 
 /** Marketplace-sourced signals a row can carry. All of them are unverifiable while offline. */
 export const ROW_BADGES = {
@@ -120,7 +164,9 @@ export const toAvailableRow = (entry) => ({
   latestVersion: entry.latestVersion,
   contactUrl: entry.contactUrl || null,
   locked: Boolean(entry.locked),
-  tier: entry.access === PREMIUM_ACCESS ? PLUGIN_TIERS.PREMIUM : PLUGIN_TIERS.FREE,
+  // the two registry axes, kept apart: `tier` is `access`, `trust` is the wire's own `tier`
+  tier: toPluginTier(entry.access),
+  trust: toTrustTier(entry.tier),
 });
 
 /**
@@ -144,6 +190,8 @@ export const toInstalledRow = (plugin, mergedEntry, marketplaceTrusted = true) =
     marketplace,
     registryId: marketplace?.pluginId || null,
     updateAvailable: marketplace?.updateAvailable?.version || null,
+    // who wrote it is the registry's claim like every other one here, so it goes with the block
+    trust: toTrustTier(marketplace?.tier),
   };
 };
 

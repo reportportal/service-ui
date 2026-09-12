@@ -22,6 +22,7 @@ import { useDispatch } from 'react-redux';
 import { useTracking } from 'react-tracking';
 import { Button } from '@reportportal/ui-kit';
 import { PluginBadge, BADGE_TONES } from '../pluginBadge';
+import { PluginTrustMark } from '../pluginTrustMark';
 import { PluginIcon } from 'components/integrations/elements/pluginIcon';
 import { PLUGINS_PAGE_EVENTS } from 'components/main/analytics/events';
 import { showModalAction } from 'controllers/modal';
@@ -114,9 +115,14 @@ export const AvailablePluginDetail = ({
         <div className={cx('content')}>
           <div className={cx('header')}>
             <div className={cx('info')}>
-              <h2 className={cx('title')} data-automation-id="pluginDetailTitle">
-                {title}
-              </h2>
+              <div className={cx('title-row')}>
+                <h2 className={cx('title')} data-automation-id="pluginDetailTitle">
+                  {title}
+                </h2>
+                {/* the other axis, and the reason it sits by the name rather than in the row
+                    below: who wrote the plugin is not what it costs */}
+                <PluginTrustMark trust={plugin.trust} />
+              </div>
               {version && (
                 <span className={cx('version')} data-automation-id="pluginDetailVersion">
                   {formatMessage(messages.version, { version })}
@@ -154,6 +160,7 @@ export const AvailablePluginDetail = ({
           <p className={cx('description')}>{plugin.description}</p>
         </div>
       </div>
+      {/* this page states both axes in its own header, so the blocks are told not to */}
       <PluginMarketplaceBlocks
         detail={detail}
         loading={loading}
@@ -161,6 +168,7 @@ export const AvailablePluginDetail = ({
         failed={failed}
         registryHost={registryHost}
         onRetry={onRetry}
+        showTier={false}
       />
     </div>
   );
@@ -170,6 +178,8 @@ AvailablePluginDetail.propTypes = {
   plugin: PropTypes.shape({
     name: PropTypes.string.isRequired,
     tier: PropTypes.string.isRequired,
+    /** The other axis: who stands behind the plugin, or null if the registry named nobody. */
+    trust: PropTypes.string,
     description: PropTypes.string,
     author: PropTypes.string,
     latestVersion: PropTypes.string,

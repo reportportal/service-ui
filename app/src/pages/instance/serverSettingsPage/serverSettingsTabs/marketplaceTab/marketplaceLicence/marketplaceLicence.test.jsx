@@ -37,6 +37,7 @@ const render = (props = {}) => {
   };
   const type = (id, value) => call(id, 'onChange', { target: { value } });
   const click = (id) => call(id, 'onClick');
+  const blur = (id) => call(id, 'onBlur');
   const valueOf = (id) => find(id).first().prop('value');
   const arrive = (next) => {
     act(() => {
@@ -45,7 +46,7 @@ const render = (props = {}) => {
     wrapper.update();
   };
 
-  return { wrapper, find, click, type, valueOf, arrive };
+  return { wrapper, find, click, type, blur, valueOf, arrive };
 };
 
 describe('MarketplaceLicence', () => {
@@ -155,6 +156,149 @@ describe('MarketplaceLicence', () => {
     click('submitLicence');
 
     expect(onSubmit).toHaveBeenCalledWith({ customerId: 'acme', privateKey: 'c2VjcmV0' });
+  });
+
+  // a disabled button is not a reason: the asterisk marks the halves the save needs
+  test('both halves are marked required on the fields themselves', () => {
+    const { find } = render();
+
+    expect(find('customerIdField').first().prop('isRequired')).toBe(true);
+    expect(find('licenceKeyField').first().prop('isRequired')).toBe(true);
+  });
+
+  test('a half left empty says why the button is dead', () => {
+    const { find, blur } = render();
+
+    blur('customerIdField');
+    blur('licenceKeyField');
+
+    // the kit paints error only once the field is touched, so both halves are asserted
+    expect(find('customerIdField').first().prop('error')).toMatch(/required/i);
+    expect(find('customerIdField').first().prop('touched')).toBe(true);
+    expect(find('licenceKeyField').first().prop('error')).toMatch(/required/i);
+    expect(find('licenceKeyField').first().prop('touched')).toBe(true);
+  });
+
+  test('the reason is not thrown at a field nobody has been near yet', () => {
+    const { find } = render();
+
+    expect(find('customerIdField').first().prop('touched')).toBe(false);
+    expect(find('licenceKeyField').first().prop('touched')).toBe(false);
+  });
+
+  test('the reason goes once the half it is about is filled in', () => {
+    const { find, blur, type } = render();
+
+    blur('customerIdField');
+    type('customerIdField', 'acme');
+
+    expect(find('customerIdField').first().prop('error')).toBeUndefined();
+  });
+
+  // @NotBlank there too: whitespace fills nothing, so the reason stands
+  test('whitespace does not count as filling a required half', () => {
+    const { find, blur, type } = render();
+
+    blur('licenceKeyField');
+    type('licenceKeyField', '   ');
+
+    expect(find('licenceKeyField').first().prop('error')).toMatch(/required/i);
+  });
+
+  // the stored-key note is the field's standing help, not something an error may evict
+  test('the required reason does not push the stored-key note off the key field', () => {
+    const { find, blur } = render({ configured: true, customerId: 'acme' });
+
+    blur('licenceKeyField');
+
+    expect(find('licenceKeyField').first().prop('hasDoubleMessage')).toBe(true);
+    expect(find('licenceKeyField').first().prop('helpText')).toMatch(/never shown again/i);
+  });
+
+  test('a rejection the server sent back is shown, reason and all', () => {
+    const { find } = render({ error: 'Licence key signature does not match' });
+
+    expect(find('licenceError').first().text()).toContain('Licence key signature does not match');
+  });
+
+  test('nothing rejected, no form-level error', () => {
+    const { find } = render();
+
+    expect(find('licenceError')).toHaveLength(0);
+  });
+
+  // the two states say different things in different places: a rejection is about the form the
+  // server saw, not about a half the user has yet to fill in
+  test('a server rejection is not mistaken for a required half', () => {
+    const { find } = render({ error: 'Licence key signature does not match' });
+
+    expect(find('licenceError')).not.toHaveLength(0);
+    expect(find('customerIdField').first().prop('touched')).toBe(false);
+    expect(find('licenceKeyField').first().prop('touched')).toBe(false);
+  });
+
+  // the toast is gone a moment later; the section is where the outcome stays
+  test('a save that landed is stated in the section itself', () => {
+    const { find, type, click, arrive } = render();
+
+    type('customerIdField', 'acme');
+    type('licenceKeyField', 'c2VjcmV0');
+    click('submitLicence');
+    arrive({ loading: true });
+    arrive({ loading: false, configured: true, customerId: 'acme' });
+
+    expect(find('licenceSaved').first().text()).toMatch(/premium plugins/i);
+  });
+
+  test('the success line still echoes no key', () => {
+    const { wrapper, type, click, arrive } = render();
+
+    type('customerIdField', 'acme');
+    type('licenceKeyField', 'c2VjcmV0');
+    click('submitLicence');
+    arrive({ loading: true });
+    arrive({ loading: false, configured: true, customerId: 'acme' });
+
+    expect(wrapper.text()).not.toContain('c2VjcmV0');
+  });
+
+  // replacing credentials that are already stored: configured stays true through the failure, so
+  // only the error tells the two outcomes apart
+  test('a save the server refused is not called a success', () => {
+    const { find, type, click, arrive } = render({ configured: true, customerId: 'acme' });
+
+    type('licenceKeyField', 'c2VjcmV0');
+    click('submitLicence');
+    arrive({ loading: true });
+    arrive({ loading: false, error: 'Licence key signature does not match' });
+
+    expect(find('licenceSaved')).toHaveLength(0);
+    expect(find('licenceError')).not.toHaveLength(0);
+  });
+
+  test('the success line does not outlive the edit that supersedes it', () => {
+    const { find, type, click, arrive } = render();
+
+    type('customerIdField', 'acme');
+    type('licenceKeyField', 'c2VjcmV0');
+    click('submitLicence');
+    arrive({ loading: true });
+    arrive({ loading: false, configured: true, customerId: 'acme' });
+    type('customerIdField', 'globex');
+
+    expect(find('licenceSaved')).toHaveLength(0);
+  });
+
+  // the removal has its own outcome — the status line — and must not borrow the save's
+  test('a removal is never reported as a save', () => {
+    const { find, click, arrive } = render({ configured: true, customerId: 'acme' });
+
+    click('removeLicence');
+    click('confirmRemoveLicence');
+    arrive({ loading: true });
+    arrive({ loading: false, configured: false, customerId: null });
+
+    expect(find('licenceSaved')).toHaveLength(0);
   });
 
   test('a stored key is no substitute for typing one: saving still needs the key', () => {

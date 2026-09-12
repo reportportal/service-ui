@@ -182,6 +182,34 @@ export const notificationMessages = defineMessages({
     defaultMessage:
       'Enter both a customer ID and a licence key, neither blank and each within the length the registry accepts',
   },
+  // One per failure the registry names, because the next move differs in every case: renew the
+  // licence, pick another version, upload a jar, or simply wait. Which one is shown is decided in
+  // controllers/plugins from the error code, so these ids are part of that contract.
+  marketplaceInstallLicenceRejected: {
+    id: 'MarketplaceInstall.licenceRejected',
+    defaultMessage:
+      'The marketplace rejected the license on this instance, so nothing was installed. Check the license key in the instance Settings.',
+  },
+  marketplaceInstallVersionBlocked: {
+    id: 'MarketplaceInstall.versionBlocked',
+    defaultMessage:
+      "This version is blocked and can't be installed. Choose another version, or upload a .jar you already have manually.",
+  },
+  marketplaceInstallPluginRemoved: {
+    id: 'MarketplaceInstall.pluginRemoved',
+    defaultMessage:
+      'This plugin was removed from the marketplace, so nothing was installed. The only way to install it now is by uploading a .jar file.',
+  },
+  marketplaceInstallRegistryUnreachable: {
+    id: 'MarketplaceInstall.registryUnreachable',
+    defaultMessage:
+      "Can't connect to the plugin marketplace. Installed plugins keep running, but nothing can be installed until the connection returns.",
+  },
+  marketplaceInstallDownloadFailed: {
+    id: 'MarketplaceInstall.downloadFailed',
+    defaultMessage:
+      "Couldn't install the plugin. The download did not complete, so nothing was installed and the instance is unchanged. Try again in a few minutes.",
+  },
   updateIntegrationSuccess: {
     id: 'IntegrationSettingsContainer.updateIntegrationSuccess',
     defaultMessage: 'Integration has been updated successfully',

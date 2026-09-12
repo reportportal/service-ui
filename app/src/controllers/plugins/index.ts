@@ -80,6 +80,7 @@ export {
   marketplacePluginUpdateVersionSelector,
   hasMarketplacePluginUpdateSelector,
   isMarketplacePluginInstallingSelector,
+  marketplaceInstallErrorSelector,
   marketplaceCatalogueQuerySelector,
   justInstalledMarketplacePluginSelector,
   isPluginUploadAllowedSelector,
@@ -92,6 +93,7 @@ export {
   isMarketplaceLicenceConfiguredSelector,
   marketplaceLicenceCustomerIdSelector,
   marketplaceLicenceLoadingSelector,
+  marketplaceLicenceErrorSelector,
 } from './selectors';
 export { pluginSagas } from './sagas';
 export {

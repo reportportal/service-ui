@@ -19,6 +19,7 @@ import { IntlProvider } from 'react-intl';
 import detail from 'controllers/plugins/__fixtures__/plugin-detail.json';
 import removedDetail from 'controllers/plugins/__fixtures__/plugin-detail-removed.json';
 import offlineDetail from 'controllers/plugins/__fixtures__/plugin-detail-offline.json';
+import { PLUGIN_TRUST_TIERS } from 'common/constants/pluginTiers';
 import { PluginMarketplaceBlocks } from './pluginMarketplaceBlocks';
 
 // the same answer with one part of it taken out, rather than a shape of this test's own making
@@ -35,6 +36,43 @@ const render = (props = {}) =>
 const find = (wrapper, id) => wrapper.find(`[data-automation-id="${id}"]`);
 
 describe('PluginMarketplaceBlocks', () => {
+  // Plugin Detail. Installed. Premium — an installed plugin's page is this component under a
+  // header that knows nothing of the marketplace, so the tier is stated here or nowhere.
+  describe('the tier of the plugin the page is about', () => {
+    const tierRow = (wrapper) => find(wrapper, 'pluginDetailTierRow');
+
+    test('a premium plugin says so on an installed plugin’s page', () => {
+      const wrapper = render();
+
+      expect(detail.plugin.access).toBe('premium');
+      expect(tierRow(wrapper).first().find('span.premium').first().text()).toMatch(/premium/i);
+    });
+
+    test('the trust axis is stated beside it, not instead of it', () => {
+      const trustMark = find(tierRow(render()), 'pluginTrustMark').first();
+
+      expect(trustMark.prop('data-trust')).toBe(PLUGIN_TRUST_TIERS.OFFICIAL);
+    });
+
+    // a public plugin costs nothing to say nothing about: the design gives it no pill
+    test('nothing is claimed about a public plugin’s price', () => {
+      const plugin = { ...detail.plugin, access: 'public' };
+      const row = tierRow(render({ detail: { ...detail, plugin } }));
+
+      expect(row.find('span.premium')).toHaveLength(0);
+      expect(find(row, 'pluginTrustMark')).not.toHaveLength(0);
+    });
+
+    test('a plugin the registry said neither thing about has no tier row at all', () => {
+      expect(tierRow(render({ detail: offlineDetail }))).toHaveLength(0);
+    });
+
+    // the page that carries the tier in its own header turns this off rather than doubling it
+    test('the row can be left to the page above it', () => {
+      expect(tierRow(render({ showTier: false }))).toHaveLength(0);
+    });
+  });
+
   describe('versions', () => {
     test('lists every published version, newest first', () => {
       const text = find(render(), 'pluginVersions').text();
@@ -207,6 +245,7 @@ describe('PluginMarketplaceBlocks', () => {
     const loud = { ...detail, removed: removedDetail.removed };
 
     const assertNothingClaimed = (wrapper) => {
+      expect(find(wrapper, 'pluginDetailTierRow')).toHaveLength(0);
       expect(find(wrapper, 'pluginVersions')).toHaveLength(0);
       expect(find(wrapper, 'pluginChangelog')).toHaveLength(0);
       expect(find(wrapper, 'pluginScreenshots')).toHaveLength(0);

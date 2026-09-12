@@ -21,7 +21,8 @@ import { createStore } from 'redux';
 import catalogue from 'controllers/plugins/__fixtures__/catalogue.json';
 import pluginDetail from 'controllers/plugins/__fixtures__/plugin-detail.json';
 import offlineDetail from 'controllers/plugins/__fixtures__/plugin-detail-offline.json';
-import { PLUGIN_TIERS } from 'common/constants/pluginTiers';
+import { PLUGIN_TIERS, PLUGIN_TRUST_TIERS } from 'common/constants/pluginTiers';
+import { SHOW_MODAL } from 'controllers/modal/constants';
 import { toAvailableRow } from '../pluginsCatalog/utils';
 import { AvailablePluginDetail } from './availablePluginDetail';
 
@@ -35,10 +36,20 @@ const emptyDetail = offlineDetail;
 const availableRow = (id) => toAvailableRow(catalogue.available.find((entry) => entry.id === id));
 const slack = availableRow('plugin-notify-slack');
 const azure = availableRow('plugin-bts-azure');
+// no fixture entry is a partner's, so the axis the catalogue does carry is turned to the value
+// the frame shows rather than a row of this test's own making
+const partner = { ...slack, trust: PLUGIN_TRUST_TIERS.PARTNER };
+
+// what the page itself put on the store, as opposed to what it handed to its parent
+const dispatched = [];
+const store = createStore((state = {}, action) => {
+  dispatched.push(action);
+  return state;
+});
 
 const render = (props = {}) =>
   mount(
-    <Provider store={createStore(() => ({}))}>
+    <Provider store={store}>
       <IntlProvider locale="en" onError={() => {}}>
         <AvailablePluginDetail plugin={slack} detail={emptyDetail} {...props} />
       </IntlProvider>
@@ -46,8 +57,13 @@ const render = (props = {}) =>
   );
 
 const find = (wrapper, id) => wrapper.find(`[data-automation-id="${id}"]`);
+const modals = () => dispatched.filter(({ type }) => type === SHOW_MODAL);
 
 describe('AvailablePluginDetail', () => {
+  beforeEach(() => {
+    dispatched.length = 0;
+  });
+
   test('the header carries the version the registry publishes', () => {
     expect(find(render(), 'pluginDetailVersion').first().text()).toBe('version 2.0.0');
   });
@@ -59,6 +75,25 @@ describe('AvailablePluginDetail', () => {
     find(wrapper, 'installAction').first().prop('onClick')();
 
     expect(onInstall).toHaveBeenCalledWith(slack);
+  });
+
+  // An install is confirmed before it runs, and the page that owns the request is the page that
+  // asks. Opening a dialog here as well would put two of them on screen for one click.
+  test('the install is handed up, not decided here', () => {
+    const wrapper = render({ onInstall: () => {} });
+
+    find(wrapper, 'installAction').first().prop('onClick')();
+
+    expect(modals()).toHaveLength(0);
+  });
+
+  // the premium enquiry is the page's own, which is what makes the absence above a decision
+  test('the premium enquiry is the page’s own dialog', () => {
+    const wrapper = render({ plugin: azure });
+
+    find(wrapper, 'discoverPremiumAction').first().prop('onClick')();
+
+    expect(modals()).toHaveLength(1);
   });
 
   // premium with a licence configured installs like any other plugin
@@ -75,6 +110,39 @@ describe('AvailablePluginDetail', () => {
 
     expect(find(wrapper, 'discoverPremiumAction')).not.toHaveLength(0);
     expect(find(wrapper, 'installAction')).toHaveLength(0);
+  });
+
+  // Plugin Detail. Available. Partner
+  describe('the trust axis', () => {
+    test('the header marks a partner plugin as one, and says what that means', () => {
+      const mark = find(render({ plugin: partner }), 'pluginTrustMark').first();
+
+      expect(mark.prop('data-trust')).toBe(PLUGIN_TRUST_TIERS.PARTNER);
+      expect(mark.prop('title')).toMatch(/third-party vendor/i);
+    });
+
+    // the axes are independent, so the pricier one must not be able to answer for the other
+    test('a partner plugin that is also premium states both', () => {
+      const wrapper = render({ plugin: { ...azure, trust: PLUGIN_TRUST_TIERS.PARTNER } });
+
+      expect(find(wrapper, 'pluginTrustMark').first().prop('data-trust')).toBe(
+        PLUGIN_TRUST_TIERS.PARTNER,
+      );
+      expect(wrapper.find('span.premium')).not.toHaveLength(0);
+    });
+
+    test('a plugin the registry vouches for in no way this build knows carries no mark', () => {
+      const wrapper = render({ plugin: { ...slack, trust: null } });
+
+      expect(find(wrapper, 'pluginTrustMark')).toHaveLength(0);
+    });
+
+    // the header already states both axes; the blocks under it would only say it twice
+    test('the blocks below do not repeat the tier the header carries', () => {
+      const wrapper = render({ plugin: azure, detail: pluginDetail });
+
+      expect(find(wrapper, 'pluginDetailTierRow')).toHaveLength(0);
+    });
   });
 
   test('the registry blocks are part of the page', () => {

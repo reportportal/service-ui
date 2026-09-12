@@ -36,6 +36,15 @@
   gap: 24px;
 }
 
+// Directly under the plugin's own header, which is where the design puts both axes; the gap of
+// the column above keeps it off the first alert.
+.tier-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
 .alert,
 .loader {
   display: flex;

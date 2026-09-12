@@ -20,6 +20,8 @@ import { connect } from 'react-redux';
 import track from 'react-tracking';
 import { injectIntl, defineMessages } from 'react-intl';
 import classNames from 'classnames/bind';
+import DOMPurify from 'dompurify';
+import semverDiff from 'semver-diff';
 import { URLS } from 'common/urls';
 import { fetch } from 'common/utils';
 import { getPluginsFilter, PLUGIN_FILTER_GROUP_VALUES } from 'common/constants/pluginsFilter';
@@ -34,6 +36,8 @@ import {
   marketplaceCatalogueLoadingSelector,
   marketplaceRegistryHostSelector,
   justInstalledMarketplacePluginSelector,
+  isMarketplacePluginInstallingSelector,
+  marketplaceInstallErrorSelector,
   isPluginUploadAllowedSelector,
   isMarketplaceRegistryOfflineSelector,
   hasMarketplaceCatalogueFailedSelector,
@@ -99,7 +103,66 @@ const messages = defineMessages({
     id: 'PluginItem.enablePluginMessage',
     defaultMessage: 'Are you sure you want to enable a plugin {pluginName}?',
   },
+  installPluginTitle: {
+    id: 'PluginItem.installPluginTitle',
+    defaultMessage: 'Install Plugin',
+  },
+  installPluginMessage: {
+    id: 'PluginItem.installPluginMessage',
+    defaultMessage:
+      '<b>{pluginName}</b> will be downloaded from the marketplace and installed on this instance.',
+  },
+  install: {
+    id: 'PluginItem.install',
+    defaultMessage: 'Install',
+  },
+  upgradeVersionTitle: {
+    id: 'PluginItem.upgradeVersionTitle',
+    defaultMessage: 'Upgrade Version',
+  },
+  upgradeVersionMessage: {
+    id: 'PluginItem.upgradeVersionMessage',
+    defaultMessage:
+      '<b>{pluginName}</b> will be upgraded to <b>{version}</b>. The instance keeps one version at a time, so the current one will be replaced.',
+  },
+  upgrade: {
+    id: 'PluginItem.upgrade',
+    defaultMessage: 'Upgrade',
+  },
+  downgradeVersionTitle: {
+    id: 'PluginItem.downgradeVersionTitle',
+    defaultMessage: 'Downgrade Version',
+  },
+  downgradeVersionMessage: {
+    id: 'PluginItem.downgradeVersionMessage',
+    defaultMessage:
+      '<b>{pluginName}</b> will be downgraded to <b>{version}</b>. The instance keeps one version at a time, so the current one will be replaced.',
+  },
+  downgrade: {
+    id: 'PluginItem.downgrade',
+    defaultMessage: 'Downgrade',
+  },
 });
+
+// the modal parses its message as markup, so the emphasis has to reach it as a sanitised string
+const bold = (chunks) => DOMPurify.sanitize(`<b>${chunks}</b>`);
+
+/**
+ * Whether posting this version moves the instance forward from the one it is running.
+ *
+ * <p>Both dialogs warn that the running version is replaced and only the verb differs, so a pair
+ * that cannot be compared — a plugin whose installed version was never recorded, or a registry
+ * that published something semver cannot parse — takes the downgrade wording rather than
+ * promising an upgrade nobody has established. `semverDiff` throws on either of those, which is
+ * why the answer is not simply its return value.
+ */
+const isUpgradeFrom = (installedVersion, version) => {
+  try {
+    return Boolean(semverDiff(installedVersion, version));
+  } catch {
+    return false;
+  }
+};
 
 @injectIntl
 @track()
@@ -113,6 +176,9 @@ const messages = defineMessages({
     catalogueFailed: hasMarketplaceCatalogueFailedSelector(state),
     registryHost: marketplaceRegistryHostSelector(state),
     justInstalledId: justInstalledMarketplacePluginSelector(state),
+    isPluginInstalling: (registryId) => isMarketplacePluginInstallingSelector(state, registryId),
+    // which row it failed for is all the row shows; the reason was the notification's to tell
+    installFailedId: marketplaceInstallErrorSelector(state)?.registryId || null,
     uploadAllowed: isPluginUploadAllowedSelector(state),
     pluginDetail: marketplacePluginDetailDataSelector(state),
     detailLoading: marketplacePluginDetailLoadingSelector(state),
@@ -148,6 +214,8 @@ export class InstalledTab extends Component {
     installMarketplacePluginAction: PropTypes.func.isRequired,
     registryHost: PropTypes.string,
     justInstalledId: PropTypes.string,
+    isPluginInstalling: PropTypes.func.isRequired,
+    installFailedId: PropTypes.string,
     uploadAllowed: PropTypes.bool.isRequired,
     clearJustInstalledMarketplacePluginAction: PropTypes.func.isRequired,
     showNotification: PropTypes.func,
@@ -161,6 +229,7 @@ export class InstalledTab extends Component {
 
   static defaultProps = {
     justInstalledId: null,
+    installFailedId: null,
     detailRegistryHost: null,
     registryHost: null,
     showNotification: () => {},
@@ -273,6 +342,52 @@ export class InstalledTab extends Component {
     });
   };
 
+  /**
+   * An install changes what this instance runs, so it may not travel from a click straight to a
+   * download. The dialog names no version: an install always takes the one the registry publishes
+   * as latest, so there is no choice here to state.
+   */
+  showInstallPluginModal = (pluginName, callback) => {
+    const {
+      intl: { formatMessage },
+    } = this.props;
+
+    this.props.showModalAction({
+      id: 'confirmationModal',
+      data: {
+        message: formatMessage(messages.installPluginMessage, { pluginName, b: bold }),
+        onConfirm: callback,
+        title: formatMessage(messages.installPluginTitle),
+        confirmText: formatMessage(messages.install),
+        cancelText: formatMessage(COMMON_LOCALE_KEYS.CANCEL),
+      },
+    });
+  };
+
+  // an upgrade and a rollback are the same request, and the dialog is the only place the two are
+  // told apart — which is the whole reason an admin is asked before one of them runs
+  showVersionChangeModal = (pluginName, version, upgrade, callback) => {
+    const {
+      intl: { formatMessage },
+    } = this.props;
+
+    this.props.showModalAction({
+      id: 'confirmationModal',
+      data: {
+        message: formatMessage(
+          upgrade ? messages.upgradeVersionMessage : messages.downgradeVersionMessage,
+          { pluginName, version, b: bold },
+        ),
+        onConfirm: callback,
+        title: formatMessage(
+          upgrade ? messages.upgradeVersionTitle : messages.downgradeVersionTitle,
+        ),
+        confirmText: formatMessage(upgrade ? messages.upgrade : messages.downgrade),
+        cancelText: formatMessage(COMMON_LOCALE_KEYS.CANCEL),
+      },
+    });
+  };
+
   showToggleConfirmationModal = (
     isEnabled,
     pluginName,
@@ -376,6 +491,8 @@ export class InstalledTab extends Component {
                 onInstalledItemClick={this.installedPluginsSubPageHandler}
                 onAvailableItemClick={this.availablePluginDetailSubPageHandler}
                 justInstalledId={this.props.justInstalledId}
+                isPluginInstalling={this.props.isPluginInstalling}
+                installFailedId={this.props.installFailedId}
               />
             </div>
           </div>
@@ -458,9 +575,13 @@ export class InstalledTab extends Component {
   // install, update and rollback are the same request: make this version the active one
   handleRowAction = (action, row) => {
     if (action === ROW_ACTIONS.INSTALL) {
-      this.props.installMarketplacePluginAction(row.registryId, row.latestVersion);
+      this.showInstallPluginModal(getDisplayName(row), () =>
+        this.props.installMarketplacePluginAction(row.registryId, row.latestVersion),
+      );
     } else if (action === ROW_ACTIONS.UPDATE) {
-      this.props.installMarketplacePluginAction(row.registryId, row.updateAvailable);
+      this.showVersionChangeModal(getDisplayName(row), row.updateAvailable, true, () =>
+        this.props.installMarketplacePluginAction(row.registryId, row.updateAvailable),
+      );
     } else if (action === ROW_ACTIONS.DISCOVER_PREMIUM) {
       // the same modal the plugin page opens, built in the same place, so one button cannot
       // start meaning two things again
@@ -497,7 +618,12 @@ export class InstalledTab extends Component {
         onRetry={unmatched ? this.refetchCatalogue : this.refetchPluginDetail}
         installedVersion={data.details?.version || null}
         onUseVersion={(version) =>
-          this.props.installMarketplacePluginAction(data.registryId, version)
+          this.showVersionChangeModal(
+            getDisplayName(data),
+            version,
+            isUpgradeFrom(data.details?.version, version),
+            () => this.props.installMarketplacePluginAction(data.registryId, version),
+          )
         }
       />
     );
@@ -513,7 +639,9 @@ export class InstalledTab extends Component {
   refetchPluginDetail = () => this.fetchPluginDetail(this.state.subPage.data?.registryId);
 
   handleInstallFromDetail = (row) =>
-    this.props.installMarketplacePluginAction(row.registryId, row.latestVersion);
+    this.showInstallPluginModal(getDisplayName(row), () =>
+      this.props.installMarketplacePluginAction(row.registryId, row.latestVersion),
+    );
 
   installedPluginsSubPageHandler = (pageData) => {
     this.fetchPluginDetail(pageData.registryId);

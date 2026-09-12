@@ -35,6 +35,7 @@ import catalogueOffline from 'controllers/plugins/__fixtures__/catalogue-offline
 import { PluginsCatalog, ROW_ACTIONS } from '../../pluginsCatalog';
 import { mergeInstalledRows, toAvailableRow } from '../../pluginsCatalog/utils';
 import { PluginsFilter } from '../../pluginsFilter';
+import { PluginMarketplaceBlocks } from '../../pluginMarketplaceBlocks';
 import { InstalledTab } from './installedTab';
 
 const marketplaceState = (overrides = {}) => ({
@@ -55,7 +56,7 @@ const localJira = {
   enabled: true,
   groupType: BTS_GROUP_TYPE,
   pluginType: BTS_GROUP_TYPE,
-  details: { name: 'Jira' },
+  details: { name: 'Jira', version: '1.5.2' },
 };
 // the rows the catalogue itself builds, from the responses service-api really sends
 const installedRowFrom = (response) => mergeInstalledRows([localJira], response.installed)[0];
@@ -65,6 +66,8 @@ const availableRowFrom = (id) =>
 // showModalAction carries the modal as a React element on the action, so the assertions read
 // its type and props rather than a component name.
 const shownModal = (of) => of(SHOW_MODAL).pop().payload.activeModal.component;
+// the confirmation is the app's shared dialog, so what was asked is its data, not a component
+const confirmation = (of) => of(SHOW_MODAL).pop().payload.activeModal;
 
 // the installed plugin subpage also renders the integration sections, which read these slices
 const restOfState = {
@@ -200,9 +203,7 @@ describe('InstalledTab', () => {
     });
 
     test('the control is absent — not disabled — when the instance does not', () => {
-      const { wrapper } = render(
-        marketplaceState({ instance: { uploadAllowed: false } }),
-      );
+      const { wrapper } = render(marketplaceState({ instance: { uploadAllowed: false } }));
 
       expect(uploadControl(wrapper)).toHaveLength(0);
     });
@@ -363,10 +364,184 @@ describe('InstalledTab', () => {
       call(PluginsCatalog, 'onAvailableItemClick', slackRow);
       wrapper.update();
       wrapper.find('[data-automation-id="installAction"]').first().prop('onClick')();
+      confirmation(of).data.onConfirm();
 
       expect(of(INSTALL_MARKETPLACE_PLUGIN).pop().payload).toEqual({
         registryId: 'plugin-notify-slack',
         version: '2.0.0',
+      });
+    });
+  });
+
+  /**
+   * Install, upgrade and rollback are one request — make this version the active one — and every
+   * one of them changes what the instance runs. None may travel from a click to a finished
+   * download, so each is asked about first, in the app's own confirmation dialog.
+   */
+  describe('nothing is installed on a bare click', () => {
+    const slackRow = availableRowFrom('plugin-notify-slack');
+    const jiraRow = installedRowFrom(catalogue);
+
+    const openPluginPage = (rendered) => {
+      rendered.call(PluginsCatalog, 'onAvailableItemClick', slackRow);
+      rendered.wrapper.update();
+      rendered.wrapper.find('[data-automation-id="installAction"]').first().prop('onClick')();
+    };
+
+    const openVersions = (rendered) => {
+      rendered.call(PluginsCatalog, 'onInstalledItemClick', jiraRow);
+      rendered.wrapper.update();
+    };
+
+    // Install. Confirm. From Row and Install. Confirm. From Header are the same dialog, and it
+    // names the plugin rather than leaving the reader to remember which row they clicked.
+    test.each([
+      [
+        'a catalogue row',
+        (rendered) => rendered.call(PluginsCatalog, 'onRowAction', ROW_ACTIONS.INSTALL, slackRow),
+      ],
+      ['the plugin page header', openPluginPage],
+    ])('installing from %s asks first', (_, install) => {
+      const rendered = render();
+
+      install(rendered);
+
+      const { id, data } = confirmation(rendered.of);
+      expect(id).toBe('confirmationModal');
+      expect(data.title).toBe('Install Plugin');
+      expect(data.message).toContain('Slack');
+      expect(data.message).toContain('will be downloaded from the marketplace');
+      expect(data.confirmText).toBe('Install');
+      expect(data.cancelText).toBe('Cancel');
+    });
+
+    // the dialog posts nothing by existing: only its confirm button does, so a user who closes it
+    // has installed nothing
+    test.each([
+      [
+        'a catalogue row',
+        (rendered) => rendered.call(PluginsCatalog, 'onRowAction', ROW_ACTIONS.INSTALL, slackRow),
+      ],
+      ['the plugin page header', openPluginPage],
+      [
+        'an update',
+        (rendered) => rendered.call(PluginsCatalog, 'onRowAction', ROW_ACTIONS.UPDATE, jiraRow),
+      ],
+      [
+        'a version from the list',
+        (rendered) => {
+          openVersions(rendered);
+          rendered.call(PluginMarketplaceBlocks, 'onUseVersion', '1.4.0');
+        },
+      ],
+    ])('cancelling the dialog opened from %s installs nothing', (_, start) => {
+      const rendered = render();
+
+      start(rendered);
+
+      expect(rendered.of(INSTALL_MARKETPLACE_PLUGIN)).toHaveLength(0);
+    });
+
+    test('confirming an install from a catalogue row posts the published version', () => {
+      const { call, of } = render();
+
+      call(PluginsCatalog, 'onRowAction', ROW_ACTIONS.INSTALL, slackRow);
+      confirmation(of).data.onConfirm();
+
+      expect(of(INSTALL_MARKETPLACE_PLUGIN).pop().payload).toEqual({
+        registryId: 'plugin-notify-slack',
+        version: '2.0.0',
+      });
+    });
+
+    // Versions. Upgrade. Confirm — the version on offer is stated, because the row's button says
+    // only "Update" and an admin cannot otherwise see what they are moving to
+    test('an update is confirmed as an upgrade to the version on offer', () => {
+      const { call, of } = render();
+
+      call(PluginsCatalog, 'onRowAction', ROW_ACTIONS.UPDATE, jiraRow);
+
+      const { data } = confirmation(of);
+      expect(data.title).toBe('Upgrade Version');
+      expect(data.message).toContain('Jira');
+      expect(data.message).toContain('will be upgraded to');
+      expect(data.message).toContain('1.6.0');
+      expect(data.confirmText).toBe('Upgrade');
+
+      data.onConfirm();
+
+      expect(of(INSTALL_MARKETPLACE_PLUGIN).pop().payload).toEqual({
+        registryId: 'plugin-bts-jira',
+        version: '1.6.0',
+      });
+    });
+
+    /**
+     * Versions. Downgrade. Confirm. The version list offers every version that is neither running
+     * nor blocked, so the same control walks the instance forwards and backwards — and which of
+     * the two it is doing is exactly what the dialog exists to say.
+     */
+    describe('a version chosen from the list', () => {
+      const useVersion = (version) => {
+        const rendered = render();
+
+        openVersions(rendered);
+        rendered.call(PluginMarketplaceBlocks, 'onUseVersion', version);
+
+        return rendered;
+      };
+
+      test('older than the running one is a downgrade', () => {
+        const { of } = useVersion('1.4.0');
+
+        const { data } = confirmation(of);
+        expect(data.title).toBe('Downgrade Version');
+        expect(data.message).toContain('will be downgraded to');
+        expect(data.message).toContain('1.4.0');
+        expect(data.confirmText).toBe('Downgrade');
+      });
+
+      test('newer than the running one is an upgrade', () => {
+        const { of } = useVersion('1.6.0');
+
+        const { data } = confirmation(of);
+        expect(data.title).toBe('Upgrade Version');
+        expect(data.message).toContain('will be upgraded to');
+        expect(data.confirmText).toBe('Upgrade');
+      });
+
+      // 1.10.0 is newer than 1.9.0; compared as text it is older, and the dialog would tell an
+      // admin they were rolling back while the instance moved forward
+      test('is compared as a version, not as a string', () => {
+        const { of } = useVersion('1.10.0');
+
+        expect(confirmation(of).data.title).toBe('Upgrade Version');
+      });
+
+      test('confirming posts that version', () => {
+        const { of } = useVersion('1.4.0');
+
+        confirmation(of).data.onConfirm();
+
+        expect(of(INSTALL_MARKETPLACE_PLUGIN).pop().payload).toEqual({
+          registryId: 'plugin-bts-jira',
+          version: '1.4.0',
+        });
+      });
+
+      // both dialogs warn that the running version is replaced, so neither is wrong about the
+      // consequence — but claiming an upgrade nobody established would be
+      test('is a downgrade when the running version is not known', () => {
+        const rendered = render();
+
+        rendered.call(PluginsCatalog, 'onInstalledItemClick', {
+          ...jiraRow,
+          details: { name: 'Jira' },
+        });
+        rendered.wrapper.update();
+        rendered.call(PluginMarketplaceBlocks, 'onUseVersion', '1.6.0');
+
+        expect(confirmation(rendered.of).data.title).toBe('Downgrade Version');
       });
     });
   });

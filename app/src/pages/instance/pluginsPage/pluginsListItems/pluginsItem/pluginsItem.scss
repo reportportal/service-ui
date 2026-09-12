@@ -127,6 +127,8 @@
   display: flex;
   justify-content: flex-end;
   align-items: center;
+  // a failed install leaves its badge standing beside the action it failed from
+  gap: 12px;
 
   @media (max-width: $SCREEN_XS_MAX) {
     display: none;

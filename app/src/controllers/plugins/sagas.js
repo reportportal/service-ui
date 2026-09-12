@@ -53,6 +53,7 @@ import {
   SET_MARKETPLACE_LICENCE,
   DELETE_MARKETPLACE_LICENCE,
   MARKETPLACE_LICENCE_MAX_LENGTHS,
+  MARKETPLACE_INSTALL_ERROR_MESSAGES,
 } from './constants';
 import { pluginByNameSelector, marketplaceCatalogueQuerySelector } from './selectors';
 import {
@@ -329,6 +330,18 @@ const isBlank = (value) => typeof value !== 'string' || value.trim() === '';
 
 const isTooLong = (value, max) => value.length > max;
 
+/**
+ * Which of the registry's install failures this is, as the messageId that says so.
+ *
+ * service-api answers a failed install with its own error body, and `common/utils/fetch` throws
+ * that body whole — so `errorCode` is here to be read, and is what separates a rejected licence
+ * from a blocked version from a registry nobody can reach. A code this map does not list returns
+ * null on purpose: the caller then keeps the generic notification, which at least repeats what
+ * the server said, rather than dressing an unrecognised failure as one of these.
+ */
+export const marketplaceInstallErrorMessageId = (error) =>
+  MARKETPLACE_INSTALL_ERROR_MESSAGES[error?.errorCode] || null;
+
 export function* installMarketplacePlugin({ payload: { registryId, version } }) {
   // the registry states a version for everything it offers; when it did not, there is nothing
   // to install and the row must not be left looking as though something is under way
@@ -361,7 +374,12 @@ export function* installMarketplacePlugin({ payload: { registryId, version } }) 
     yield put(fetchMarketplaceCatalogueAction(query));
   } catch (error) {
     yield put(installMarketplacePluginErrorAction(registryId, error.message));
-    yield put(showDefaultErrorNotification(error));
+
+    const messageId = marketplaceInstallErrorMessageId(error);
+
+    yield put(
+      messageId ? showErrorNotification({ messageId }) : showDefaultErrorNotification(error),
+    );
   }
 }
 

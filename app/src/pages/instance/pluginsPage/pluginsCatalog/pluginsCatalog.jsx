@@ -31,6 +31,7 @@ import {
   sortByGroupAndName,
   sortByTierGroupAndName,
   toAvailableRow,
+  withInstallState,
 } from './utils';
 import styles from './pluginsCatalog.scss';
 
@@ -71,17 +72,25 @@ export const PluginsCatalog = ({
   onInstalledItemClick = () => {},
   onAvailableItemClick = () => {},
   justInstalledId = null,
+  isPluginInstalling = () => false,
+  installFailedId = null,
 }) => {
   const { formatMessage } = useIntl();
 
+  // an install can be under way, or have just failed, for a row in either group: an update is
+  // the same request as an install, made from the Installed one
+  const installState = { isInstalling: isPluginInstalling, failedRegistryId: installFailedId };
   // the one rule, shared with the plugin page: enforced here rather than trusting the payload
   // to arrive with the block nulled
   const marketplaceTrusted = isMarketplaceTrusted({ offline, failed });
-  const installedRows = filterRows(
-    mergeInstalledRows(installedPlugins, marketplaceInstalled, marketplaceTrusted),
-    activeCategory,
-    query,
-  ).sort(sortByGroupAndName);
+  const installedRows = withInstallState(
+    filterRows(
+      mergeInstalledRows(installedPlugins, marketplaceInstalled, marketplaceTrusted),
+      activeCategory,
+      query,
+    ).sort(sortByGroupAndName),
+    installState,
+  );
 
   // nothing can be browsed or installed without a catalogue, and the Installed chip asks for
   // installed only
@@ -90,7 +99,10 @@ export const PluginsCatalog = ({
   // rendered as it arrived; only the locally held installed half is narrowed here
   const availableRows = hideAvailable
     ? []
-    : availablePlugins.map(toAvailableRow).sort(sortByTierGroupAndName);
+    : withInstallState(
+        availablePlugins.map(toAvailableRow).sort(sortByTierGroupAndName),
+        installState,
+      );
 
   const hasQuery = query.trim().length > 0;
   // an empty screen after a failure is explained by the alert, not by a no-results state
@@ -190,4 +202,8 @@ PluginsCatalog.propTypes = {
   onAvailableItemClick: PropTypes.func,
   /** Registry id of the plugin the last install moved into the Installed group. */
   justInstalledId: PropTypes.string,
+  /** Whether an install of this registry id is in flight right now. */
+  isPluginInstalling: PropTypes.func,
+  /** Registry id of the plugin the last install failed for. */
+  installFailedId: PropTypes.string,
 };

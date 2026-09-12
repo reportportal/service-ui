@@ -92,7 +92,7 @@
     "contactUrl" : "https://reportportal.io/contact",
     "groupType" : "BTS",
     "access" : "premium",
-    "tier" : "verified",
+    "tier" : "official",
     "locked" : true
   } ]
 }

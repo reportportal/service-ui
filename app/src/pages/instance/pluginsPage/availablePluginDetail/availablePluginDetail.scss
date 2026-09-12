@@ -64,6 +64,12 @@
   min-width: 0;
 }
 
+.title-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
 .title {
   color: $COLOR--black-2;
   font-size: 22px;

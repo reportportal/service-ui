@@ -17,6 +17,11 @@
 import marker from './__fixtures__/contract-marker.json';
 import installRequest from './__fixtures__/install-request.json';
 import licenceRequest from './__fixtures__/licence-request.json';
+import catalogue from './__fixtures__/catalogue.json';
+import catalogueOffline from './__fixtures__/catalogue-offline.json';
+import pluginDetail from './__fixtures__/plugin-detail.json';
+import pluginDetailRemoved from './__fixtures__/plugin-detail-removed.json';
+import pluginDetailOffline from './__fixtures__/plugin-detail-offline.json';
 
 /**
  * The SHA-256 service-api computes over the field paths of every route these fixtures cover.
@@ -32,6 +37,26 @@ const CONTRACT_HASH = '74cb316e28f6344062ac99cd40d40de8dd141e4ce26c044b786dc1165
 const INSTALL_ROUTE = 'POST /v1/plugins/{registryId}/install';
 const LICENCE_ROUTE = 'PUT /v1/plugins/licence';
 
+/**
+ * The whole of the registry's TrustTier (service-marketplace `internal/domain/types.go`), which
+ * service-api passes through untouched as a String. Any other spelling here is a response no
+ * server can send, and a contract test pinned to one proves nothing.
+ */
+const TRUST_TIERS = ['official', 'partner'];
+
+const RESPONSE_FIXTURES = [
+  catalogue,
+  catalogueOffline,
+  pluginDetail,
+  pluginDetailRemoved,
+  pluginDetailOffline,
+];
+
+const tiersIn = (node) =>
+  typeof node !== 'object' || node === null
+    ? []
+    : Object.entries(node).flatMap(([key, value]) => (key === 'tier' ? [value] : tiersIn(value)));
+
 describe('the checked-in marketplace fixtures', () => {
   test('are the shapes service-api publishes today', () => {
     expect(marker.contractHash).toBe(CONTRACT_HASH);
@@ -45,5 +70,13 @@ describe('the checked-in marketplace fixtures', () => {
 
   test('cover the licence body the UI sends', () => {
     expect(Object.keys(licenceRequest)).toEqual(marker.routes[LICENCE_ROUTE]);
+  });
+
+  test('carry only trust tiers the registry can emit', () => {
+    const tiers = RESPONSE_FIXTURES.flatMap(tiersIn);
+
+    // an empty sweep would pass the assertion below without reading a single fixture
+    expect(tiers.length).toBeGreaterThan(0);
+    expect(tiers.filter((tier) => !TRUST_TIERS.includes(tier))).toEqual([]);
   });
 });

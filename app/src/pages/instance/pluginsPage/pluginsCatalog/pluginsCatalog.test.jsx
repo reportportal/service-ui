@@ -293,6 +293,127 @@ describe('PluginsCatalog', () => {
     });
   });
 
+  // Catalog.Row.All States — the row while its own install runs, and the row it failed for.
+  describe('Catalog.Row.installing', () => {
+    const installStates = (scope) =>
+      scope.find('[data-automation-id="pluginRow"]').map((node) => node.prop('data-install-state'));
+    const inFlight = (scope) => scope.find('[data-automation-id="pluginRowInstalling"]').first();
+
+    test('the row says so where its action was, and leaves nothing to click again', () => {
+      // Until the catalogue refetches, the row is the only place the click went. Kills dropping
+      // the in-flight state, and kills leaving the action button rendered beside it.
+      const onRowAction = jest.fn();
+      const wrapper = render({
+        installedPlugins: [],
+        marketplaceInstalled: [],
+        availablePlugins: [slack],
+        isPluginInstalling: (registryId) => registryId === slack.id,
+        onRowAction,
+      });
+
+      expect(inFlight(wrapper).text()).toMatch(/installing/i);
+      expect(inFlight(wrapper).find('button').prop('disabled')).toBe(true);
+      expect(inFlight(wrapper).find('button').prop('onClick')).toBeUndefined();
+      expect(actions(wrapper)).toEqual([]);
+      expect(onRowAction).not.toHaveBeenCalled();
+    });
+
+    test('only the plugin being installed, not every row in the group', () => {
+      const wrapper = render({
+        installedPlugins: [],
+        marketplaceInstalled: [],
+        availablePlugins: [slack, { ...azure, locked: false }],
+        isPluginInstalling: (registryId) => registryId === slack.id,
+      });
+
+      expect(installStates(wrapper)).toEqual([undefined, 'INSTALLING']);
+      expect(actions(wrapper)).toEqual([ROW_ACTIONS.INSTALL]);
+    });
+
+    test('an update in flight is marked on the installed row it was raised from', () => {
+      // an update is the same install request, so the Installed group has the same state to show
+      const isPluginInstalling = jest.fn((registryId) => registryId === 'plugin-bts-jira');
+      const wrapper = render({ availablePlugins: [], isPluginInstalling });
+      const jira = group(wrapper, ALL_GROUP_TYPE)
+        .find('[data-automation-id="pluginRow"]')
+        .filterWhere((node) => node.find('.plugins-name').text() === DISPLAY_NAMES.jira);
+
+      expect(jira.prop('data-install-state')).toBe('INSTALLING');
+      expect(actions(group(wrapper, ALL_GROUP_TYPE))).toEqual([]);
+      // the id an install is requested with is the registry's, carried inside the marketplace
+      // block — not the local plugin name, which the install endpoint knows nothing about
+      expect(isPluginInstalling).toHaveBeenCalledWith('plugin-bts-jira');
+      expect(isPluginInstalling).not.toHaveBeenCalledWith('jira');
+    });
+
+    test('a row the registry never matched carries no install state at all', () => {
+      // it has no registry id, so it is neither the row being installed nor the one that failed;
+      // kills comparing a missing id against a missing failure and calling the two equal
+      const wrapper = render({
+        offline: true,
+        registryHost: catalogueOffline.registry.host,
+        installedPlugins: catalogueOffline.installed.map(localPlugin),
+        marketplaceInstalled: catalogueOffline.installed,
+        availablePlugins: [],
+        installFailedId: null,
+      });
+
+      expect(installStates(wrapper).filter(Boolean)).toEqual([]);
+      expect(wrapper.find('span[data-automation-id="pluginRowInstallError"]')).toHaveLength(0);
+    });
+  });
+
+  describe('Catalog.Row.install failed', () => {
+    const failedProps = {
+      installedPlugins: [],
+      marketplaceInstalled: [],
+      availablePlugins: [slack, { ...azure, locked: false }],
+      installFailedId: slack.id,
+    };
+
+    test('the row it failed for says so, and keeps the action so it can be tried again', () => {
+      // a failed install left no trace anywhere on the page: the toast is gone by the time the
+      // user looks back at the list. Kills dropping the failed state from the row.
+      const onRowAction = jest.fn();
+      const wrapper = render({ ...failedProps, onRowAction });
+      const rows = wrapper.find('[data-automation-id="pluginRow"]');
+      const failed = rows.filterWhere((node) => node.prop('data-install-state') === 'FAILED');
+
+      expect(failed).toHaveLength(1);
+      expect(failed.find('.plugins-name').text()).toBe(slack.name);
+      expect(failed.find('span[data-automation-id="pluginRowInstallError"]').text()).toMatch(
+        /install failed/i,
+      );
+
+      click(failed.find('[data-automation-id="pluginRowAction"]').last().find('button'));
+      expect(onRowAction).toHaveBeenCalledWith(
+        ROW_ACTIONS.INSTALL,
+        expect.objectContaining({ registryId: slack.id }),
+      );
+    });
+
+    test('it is not the marketplace saying something about the plugin', () => {
+      // the registry's own signals are the badges beside the name; a failed install of ours is
+      // not one of them and must not be counted as one
+      const wrapper = render(failedProps);
+
+      expect(wrapper.find('span[data-automation-id="pluginBadge"]')).toHaveLength(2);
+      expect(wrapper.find('span[data-automation-id="pluginRowInstallError"]')).toHaveLength(1);
+    });
+
+    test('the row whose install is under way is not also shown as failed', () => {
+      // the start of an install clears the failure in the store; the row picks the live state
+      // whatever it is handed
+      const wrapper = render({
+        ...failedProps,
+        isPluginInstalling: (registryId) => registryId === slack.id,
+      });
+
+      expect(wrapper.find('span[data-automation-id="pluginRowInstallError"]')).toHaveLength(0);
+      expect(wrapper.find('[data-automation-id="pluginRowInstalling"]').exists()).toBe(true);
+    });
+  });
+
   describe('Catalog.List.Loading', () => {
     test('the list area waits while the search header still renders', () => {
       const wrapper = render({ loading: true });

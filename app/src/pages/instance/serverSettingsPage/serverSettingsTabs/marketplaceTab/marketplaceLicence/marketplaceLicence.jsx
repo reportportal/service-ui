@@ -79,6 +79,23 @@ const messages = defineMessages({
     id: 'MarketplaceLicence.cancel',
     defaultMessage: 'Cancel',
   },
+  // the id the rest of the app already uses for this, so the section reads the same as every
+  // other required field rather than inventing its own wording
+  requiredField: {
+    id: 'Common.requiredFieldHint',
+    defaultMessage: 'Field is required',
+  },
+  // the same slice carries a failed GET, PUT and DELETE alike, so the lead-in claims no more
+  // than that the last request was not accepted
+  requestFailed: {
+    id: 'MarketplaceLicence.requestFailed',
+    defaultMessage: 'The server did not accept the last request: {reason}',
+  },
+  saved: {
+    id: 'MarketplaceLicence.saved',
+    defaultMessage:
+      'Credentials saved. Premium plugins can be installed now — the credentials are checked the first time you install one.',
+  },
 });
 
 /**
@@ -96,20 +113,36 @@ export const MarketplaceLicence = ({
   configured = false,
   customerId = null,
   loading = false,
+  error = null,
   onSubmit = () => {},
   onRemove = () => {},
 }) => {
   const { formatMessage } = useIntl();
   const [customerIdValue, setCustomerIdValue] = useState(customerId || '');
   const [privateKey, setPrivateKey] = useState('');
+  const [customerIdTouched, setCustomerIdTouched] = useState(false);
+  const [privateKeyTouched, setPrivateKeyTouched] = useState(false);
   const [confirmingRemoval, setConfirmingRemoval] = useState(false);
   const [lastCustomerId, setLastCustomerId] = useState(customerId);
+  const [saveInFlight, setSaveInFlight] = useState(false);
+  const [wasLoading, setWasLoading] = useState(loading);
+  const [saved, setSaved] = useState(false);
 
   // the GET is dispatched by the parent's effect, so the stored id always lands after mount; the
   // field takes it whenever it changes, and leaves what is being typed alone in between
   if (customerId !== lastCustomerId) {
     setLastCustomerId(customerId);
     setCustomerIdValue(customerId || '');
+  }
+
+  // loading dropping back is the request answering; the store writes the answer in the same
+  // action, so an error and a stored licence cannot both be claimed for one save
+  if (loading !== wasLoading) {
+    setWasLoading(loading);
+    if (!loading && saveInFlight) {
+      setSaveInFlight(false);
+      setSaved(!error && configured);
+    }
   }
 
   if (!isAdmin) {
@@ -121,16 +154,21 @@ export const MarketplaceLicence = ({
   // both halves are @NotBlank there, so a half-filled form — or one holding nothing but the
   // whitespace a paste dragged in — is refused here rather than sent and refused as a 400
   const canSubmit = Boolean(trimmedCustomerId) && Boolean(trimmedPrivateKey);
+  const requiredHint = formatMessage(messages.requiredField);
 
   const handleSubmit = () => {
+    setSaved(false);
+    setSaveInFlight(true);
     onSubmit({ customerId: trimmedCustomerId, privateKey: trimmedPrivateKey });
     // the key does not outlive the request that carries it
     setPrivateKey('');
+    setPrivateKeyTouched(false);
   };
 
   const handleRemove = () => {
     setConfirmingRemoval(false);
     setPrivateKey('');
+    setSaved(false);
     onRemove();
   };
 
@@ -143,12 +181,21 @@ export const MarketplaceLicence = ({
             ? formatMessage(messages.configured, { customerId: customerId || '' })
             : formatMessage(messages.notConfigured)}
         </p>
+        {/* both halves are required: the label carries the asterisk and, once a field has been
+            visited and left empty, the kit paints the reason the save button is dead */}
         <div className={cx('field')}>
           <FieldText
             label={formatMessage(messages.customerId)}
             value={customerIdValue}
+            isRequired
+            error={trimmedCustomerId ? undefined : requiredHint}
+            touched={customerIdTouched}
             data-automation-id="customerIdField"
-            onChange={(event) => setCustomerIdValue(event.target.value)}
+            onBlur={() => setCustomerIdTouched(true)}
+            onChange={(event) => {
+              setCustomerIdValue(event.target.value);
+              setSaved(false);
+            }}
           />
         </div>
         <div className={cx('field')}>
@@ -158,12 +205,34 @@ export const MarketplaceLicence = ({
             type="password"
             label={formatMessage(messages.licenceKey)}
             value={privateKey}
+            isRequired
+            error={trimmedPrivateKey ? undefined : requiredHint}
+            touched={privateKeyTouched}
+            // the stored-key note is the field's standing help, so it stays beside the error
+            // rather than being replaced by it
+            hasDoubleMessage
             data-automation-id="licenceKeyField"
             helpText={configured ? formatMessage(messages.keyNotShown) : undefined}
             classNameHelpText={cx('licence-key-hint')}
-            onChange={(event) => setPrivateKey(event.target.value)}
+            onBlur={() => setPrivateKeyTouched(true)}
+            onChange={(event) => {
+              setPrivateKey(event.target.value);
+              setSaved(false);
+            }}
           />
         </div>
+        {/* a rejection the server sent back, told apart from the two required hints by sitting
+            over the form rather than under a field */}
+        {error && (
+          <p className={cx('error')} data-automation-id="licenceError">
+            {formatMessage(messages.requestFailed, { reason: error })}
+          </p>
+        )}
+        {saved && (
+          <p className={cx('saved')} data-automation-id="licenceSaved">
+            {formatMessage(messages.saved)}
+          </p>
+        )}
         <div className={cx('actions')}>
           <Button
             variant="primary"
@@ -216,6 +285,7 @@ MarketplaceLicence.propTypes = {
   configured: PropTypes.bool,
   customerId: PropTypes.string,
   loading: PropTypes.bool,
+  error: PropTypes.string,
   onSubmit: PropTypes.func,
   onRemove: PropTypes.func,
 };

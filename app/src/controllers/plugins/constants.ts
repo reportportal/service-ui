@@ -71,6 +71,35 @@ export const INSTALL_MARKETPLACE_PLUGIN_SUCCESS = 'installMarketplacePluginSucce
 export const INSTALL_MARKETPLACE_PLUGIN_ERROR = 'installMarketplacePluginError';
 export const CLEAR_JUST_INSTALLED_MARKETPLACE_PLUGIN = 'clearJustInstalledMarketplacePlugin';
 
+/**
+ * The registry failures an install can end in, by the `errorCode` service-api puts in its error
+ * body. That number is the only part of the body that tells them apart — the `message` beside it
+ * is prose written for a log, and matching on it would break the first time it is reworded.
+ */
+export const MARKETPLACE_INSTALL_ERROR = {
+  LICENCE_REJECTED: 40047,
+  VERSION_BLOCKED: 40048,
+  PLUGIN_REMOVED: 40049,
+  REGISTRY_UNREACHABLE: 40050,
+  // "the registry answered unusably": a garbled body, a dead download URL, a CDN that refused.
+  // From here they are one thing — the download did not finish and nothing was installed.
+  DOWNLOAD_FAILED: 40053,
+} as const;
+
+/**
+ * What each of them is told as. A code missing from this map is missing on purpose: it keeps the
+ * generic notification, which repeats what the server said, rather than being folded into a state
+ * it is not. Every value here must name a descriptor in `notificationMessages`, or the toast
+ * renders blank.
+ */
+export const MARKETPLACE_INSTALL_ERROR_MESSAGES: Record<number, string> = {
+  [MARKETPLACE_INSTALL_ERROR.LICENCE_REJECTED]: 'marketplaceInstallLicenceRejected',
+  [MARKETPLACE_INSTALL_ERROR.VERSION_BLOCKED]: 'marketplaceInstallVersionBlocked',
+  [MARKETPLACE_INSTALL_ERROR.PLUGIN_REMOVED]: 'marketplaceInstallPluginRemoved',
+  [MARKETPLACE_INSTALL_ERROR.REGISTRY_UNREACHABLE]: 'marketplaceInstallRegistryUnreachable',
+  [MARKETPLACE_INSTALL_ERROR.DOWNLOAD_FAILED]: 'marketplaceInstallDownloadFailed',
+};
+
 /** Registry reachability as reported by service-api. */
 export const REGISTRY_STATUS = {
   ONLINE: 'ONLINE',
