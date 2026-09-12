@@ -84,6 +84,12 @@ export const MARKETPLACE_INSTALL_ERROR = {
   // "the registry answered unusably": a garbled body, a dead download URL, a CDN that refused.
   // From here they are one thing — the download did not finish and nothing was installed.
   DOWNLOAD_FAILED: 40053,
+  // The version's declared range does not cover the release this instance runs.
+  PLUGIN_INCOMPATIBLE: 40044,
+  // Compatibility could not be decided at all — the instance does not know its own release, or the
+  // declared range will not parse — so service-api refused instead of guessing. Until the catalogue
+  // contract carries a compatibility verdict, this refusal is the only place the answer surfaces.
+  COMPATIBILITY_UNKNOWN: 40045,
 } as const;
 
 /**
@@ -98,6 +104,8 @@ export const MARKETPLACE_INSTALL_ERROR_MESSAGES: Record<number, string> = {
   [MARKETPLACE_INSTALL_ERROR.PLUGIN_REMOVED]: 'marketplaceInstallPluginRemoved',
   [MARKETPLACE_INSTALL_ERROR.REGISTRY_UNREACHABLE]: 'marketplaceInstallRegistryUnreachable',
   [MARKETPLACE_INSTALL_ERROR.DOWNLOAD_FAILED]: 'marketplaceInstallDownloadFailed',
+  [MARKETPLACE_INSTALL_ERROR.PLUGIN_INCOMPATIBLE]: 'marketplaceInstallIncompatible',
+  [MARKETPLACE_INSTALL_ERROR.COMPATIBILITY_UNKNOWN]: 'marketplaceInstallCompatibilityUnknown',
 };
 
 /** Registry reachability as reported by service-api. */

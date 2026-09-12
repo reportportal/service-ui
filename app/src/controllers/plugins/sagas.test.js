@@ -448,6 +448,11 @@ describe('controllers/plugins/sagas marketplace', () => {
         [MARKETPLACE_INSTALL_ERROR.PLUGIN_REMOVED, 'marketplaceInstallPluginRemoved'],
         [MARKETPLACE_INSTALL_ERROR.REGISTRY_UNREACHABLE, 'marketplaceInstallRegistryUnreachable'],
         [MARKETPLACE_INSTALL_ERROR.DOWNLOAD_FAILED, 'marketplaceInstallDownloadFailed'],
+        [MARKETPLACE_INSTALL_ERROR.PLUGIN_INCOMPATIBLE, 'marketplaceInstallIncompatible'],
+        [
+          MARKETPLACE_INSTALL_ERROR.COMPATIBILITY_UNKNOWN,
+          'marketplaceInstallCompatibilityUnknown',
+        ],
       ];
 
       const failWith = (errorCode) => {
@@ -484,7 +489,7 @@ describe('controllers/plugins/sagas marketplace', () => {
       // an unrecognised failure is never dressed as one of the states above; the operator is
       // still told what the server said, which is all anyone has to go on
       test.each([
-        ['a code this UI has never heard of', { errorCode: 40045, message: 'Something else' }],
+        ['a code this UI has never heard of', { errorCode: 40099, message: 'Something else' }],
         ['a body carrying no code at all', { message: 'Something else' }],
       ])('%s keeps the generic notification', async (_, error) => {
         fetch.mockRejectedValue(error);

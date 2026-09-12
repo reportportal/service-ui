@@ -210,6 +210,19 @@ export const notificationMessages = defineMessages({
     defaultMessage:
       "Couldn't install the plugin. The download did not complete, so nothing was installed and the instance is unchanged. Try again in a few minutes.",
   },
+  marketplaceInstallIncompatible: {
+    id: 'MarketplaceInstall.incompatible',
+    defaultMessage:
+      "This version doesn't run on the ReportPortal release this instance uses, so nothing was installed. Choose a version that supports it.",
+  },
+  // Refused rather than guessed: either the instance cannot say which ReportPortal release it runs,
+  // or the version declares a range that will not parse. Both are the instance's problem rather than
+  // the plugin's, so this points at the instance instead of offering another version.
+  marketplaceInstallCompatibilityUnknown: {
+    id: 'MarketplaceInstall.compatibilityUnknown',
+    defaultMessage:
+      'Compatibility could not be checked, so nothing was installed. Ask an administrator to confirm which ReportPortal release this instance reports.',
+  },
   updateIntegrationSuccess: {
     id: 'IntegrationSettingsContainer.updateIntegrationSuccess',
     defaultMessage: 'Integration has been updated successfully',
