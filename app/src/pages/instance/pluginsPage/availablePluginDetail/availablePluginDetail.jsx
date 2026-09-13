@@ -184,6 +184,11 @@ export const AvailablePluginDetail = ({
         registryHost={registryHost}
         onRetry={onRetry}
         showTier={false}
+        installing={installing}
+        // a version row on this page installs that version; on an installed plugin's page the
+        // same row switches to it, which is why the label is asked for rather than assumed
+        useVersionLabel="install"
+        onUseVersion={isLocked ? null : (chosen) => onInstall(plugin, chosen)}
       />
     </div>
   );

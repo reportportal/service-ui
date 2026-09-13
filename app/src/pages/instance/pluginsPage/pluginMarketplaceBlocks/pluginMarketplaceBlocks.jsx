@@ -48,6 +48,10 @@ const messages = defineMessages({
     id: 'PluginMarketplaceBlocks.useVersion',
     defaultMessage: 'Use this version',
   },
+  installVersion: {
+    id: 'PluginItem.install',
+    defaultMessage: 'Install',
+  },
   screenshots: {
     id: 'PluginMarketplaceBlocks.screenshots',
     defaultMessage: 'Screenshots',
@@ -132,6 +136,8 @@ export const PluginMarketplaceBlocks = ({
   onUseVersion = null,
   showTier = true,
   installing = false,
+  // 'install' on a plugin the instance does not have yet, 'use' on one it is already running
+  useVersionLabel = 'use',
 }) => {
   const { formatMessage, formatDate } = useIntl();
   const trusted = isMarketplaceTrusted({ offline, failed, unmatched });
@@ -181,10 +187,7 @@ export const PluginMarketplaceBlocks = ({
     }
     if (entry.blocked) {
       return (
-        <span
-          className={cx('version-state', 'blocked')}
-          data-automation-id="blockedVersionMarker"
-        >
+        <span className={cx('version-state', 'blocked')} data-automation-id="blockedVersionMarker">
           {formatMessage(messages.blockedVersion)}
         </span>
       );
@@ -199,7 +202,9 @@ export const PluginMarketplaceBlocks = ({
         // the others may be started: two installs of one plugin race to be the one that lands
         disabled={installing}
       >
-        {formatMessage(messages.useVersion)}
+        {formatMessage(
+          useVersionLabel === 'install' ? messages.installVersion : messages.useVersion,
+        )}
       </Button>
     );
   };
@@ -330,9 +335,7 @@ export const PluginMarketplaceBlocks = ({
                   >
                     <span className={cx('version')}>{`v.${entry.version}`}</span>
                     <span className={cx('version-date')}>{date(entry.publishedAt)}</span>
-                    <span className={cx('version-action')}>
-                      {versionAction(entry)}
-                    </span>
+                    <span className={cx('version-action')}>{versionAction(entry)}</span>
                   </div>
                 ))}
               </div>
@@ -347,6 +350,7 @@ export const PluginMarketplaceBlocks = ({
 PluginMarketplaceBlocks.propTypes = {
   /** An install for this plugin is on its way, so no version may start another. */
   installing: PropTypes.bool,
+  useVersionLabel: PropTypes.oneOf(['use', 'install']),
   detail: PropTypes.shape({
     /** The registry's own answer about the plugin, `access` and `tier` among it. */
     plugin: PropTypes.object,

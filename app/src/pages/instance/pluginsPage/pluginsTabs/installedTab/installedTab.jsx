@@ -74,6 +74,7 @@ import { AvailablePluginDetail } from '../../availablePluginDetail';
 import { PluginsCatalog, ROW_ACTIONS, getDisplayName } from '../../pluginsCatalog';
 import { PluginMarketplaceBlocks } from '../../pluginMarketplaceBlocks';
 import { premiumPromoModal } from '../../premiumPromo';
+import { installPluginModal } from '../../modals/installPluginModal';
 
 const cx = classNames.bind(styles);
 
@@ -372,6 +373,23 @@ export class InstalledTab extends Component {
    * download. The dialog names no version: an install always takes the one the registry publishes
    * as latest, so there is no choice here to state.
    */
+  /**
+   * The install dialog the design draws: the same sentence, plus the version it will post. Used
+   * wherever the version list is in hand — the plugin's own page and every row of its versions
+   * table. A catalogue row has only `latestVersion` and no list to choose from, so it keeps the
+   * plain confirmation below.
+   */
+  showInstallVersionModal = (pluginName, versions, defaultVersion, callback) => {
+    this.props.showModalAction(
+      installPluginModal({
+        pluginName,
+        versions,
+        defaultVersion,
+        onInstall: callback,
+      }),
+    );
+  };
+
   showInstallPluginModal = (pluginName, callback) => {
     const {
       intl: { formatMessage },
@@ -665,10 +683,26 @@ export class InstalledTab extends Component {
 
   refetchPluginDetail = () => this.fetchPluginDetail(this.state.subPage.data?.registryId);
 
-  handleInstallFromDetail = (row) =>
-    this.showInstallPluginModal(getDisplayName(row), () =>
-      this.props.installMarketplacePluginAction(row.registryId, row.latestVersion),
+  // the page has the registry's version list in hand, so the header offers the choice the design
+  // asks for; with no list to offer it falls back to the plain confirmation and the latest build
+  handleInstallFromDetail = (row, version = null) => {
+    const versions = this.props.pluginDetail?.versions || [];
+    const install = (chosen) =>
+      this.props.installMarketplacePluginAction(row.registryId, chosen || row.latestVersion);
+
+    if (versions.length === 0) {
+      this.showInstallPluginModal(getDisplayName(row), () => install(null));
+
+      return;
+    }
+
+    this.showInstallVersionModal(
+      getDisplayName(row),
+      versions,
+      version || row.latestVersion,
+      install,
     );
+  };
 
   installedPluginsSubPageHandler = (pageData) => {
     this.fetchPluginDetail(pageData.registryId);

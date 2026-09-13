@@ -1,5 +1,5 @@
-/*
- * Copyright 2024 EPAM Systems
+/*!
+ * Copyright 2026 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,5 +14,24 @@
  * limitations under the License.
  */
 
-export { UploadPluginModal } from './uploadPluginModal';
-export { InstallPluginModal, installPluginModal } from './installPluginModal';
+.description {
+  margin: 0 0 24px;
+  font-family: var(--rp-ui-base-font-family);
+  font-size: 13px;
+  line-height: 20px;
+  color: var(--rp-ui-color-text-primary);
+}
+
+.version-label {
+  display: block;
+  margin-bottom: 4px;
+  font-family: var(--rp-ui-base-font-family);
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 20px;
+  color: var(--rp-ui-color-text-primary);
+}
+
+.version-field {
+  width: 100%;
+}
