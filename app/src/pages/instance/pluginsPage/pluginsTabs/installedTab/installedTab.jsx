@@ -39,6 +39,7 @@ import {
   marketplaceInstallingPluginsSelector,
   marketplaceInstallErrorSelector,
   isPluginUploadAllowedSelector,
+  marketplaceProductVersionSelector,
   isMarketplaceRegistryOfflineSelector,
   hasMarketplaceCatalogueFailedSelector,
   fetchMarketplacePluginDetailAction,
@@ -206,6 +207,7 @@ const isUpgradeFrom = (installedVersion, version) => {
     // which row it failed for is all the row shows; the reason was the notification's to tell
     installFailedId: marketplaceInstallErrorSelector(state)?.registryId || null,
     uploadAllowed: isPluginUploadAllowedSelector(state),
+    productVersion: marketplaceProductVersionSelector(state),
     pluginDetail: marketplacePluginDetailDataSelector(state),
     detailLoading: marketplacePluginDetailLoadingSelector(state),
     detailOffline: isMarketplacePluginDetailOfflineSelector(state),
@@ -243,6 +245,7 @@ export class InstalledTab extends Component {
     installingIds: PropTypes.arrayOf(PropTypes.string).isRequired,
     installFailedId: PropTypes.string,
     uploadAllowed: PropTypes.bool.isRequired,
+  productVersion: PropTypes.string,
     clearJustInstalledMarketplacePluginAction: PropTypes.func.isRequired,
     showNotification: PropTypes.func,
     pluginDetail: PropTypes.object.isRequired,
@@ -385,6 +388,7 @@ export class InstalledTab extends Component {
         pluginName,
         versions,
         defaultVersion,
+        productVersion: this.props.productVersion,
         onInstall: callback,
       }),
     );

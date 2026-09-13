@@ -85,6 +85,7 @@ export {
   marketplaceCatalogueQuerySelector,
   justInstalledMarketplacePluginSelector,
   isPluginUploadAllowedSelector,
+  marketplaceProductVersionSelector,
   marketplacePluginDetailStateSelector,
   marketplacePluginDetailLoadingSelector,
   isMarketplacePluginDetailOfflineSelector,

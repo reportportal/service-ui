@@ -46,6 +46,15 @@ const messages = defineMessages({
     id: 'PluginItem.install',
     defaultMessage: 'Install',
   },
+  // the two facts the frame states together: what the version wants, and what this instance is
+  incompatibleWithRange: {
+    id: 'InstallPluginModal.incompatibleWithRange',
+    defaultMessage: 'Needs ReportPortal {requires}. This instance runs {productVersion}.',
+  },
+  incompatibleUnknownRelease: {
+    id: 'InstallPluginModal.incompatibleUnknownRelease',
+    defaultMessage: "This version doesn't run on the release this instance uses.",
+  },
 });
 
 /**
@@ -57,16 +66,52 @@ const messages = defineMessages({
  * already says which ones are blocked, and the versions table beside this dialog marks them;
  * putting one in a picker would only trade a visible rule for a server error.
  *
- * <p>Compatibility is NOT represented here. The registry publishes a per-version range and
- * service-api applies it, but neither the range nor the running ReportPortal release reaches this
- * client, so the dialog cannot mark a version as incompatible without inventing the verdict. When
- * the catalogue contract carries it, this is where it goes.
+ * <p>A version that does not run here is shown and disabled, not hidden: the frame keeps it in the
+ * list so the newest build is visibly present and visibly unavailable, which is the question the
+ * user came with. The tooltip states both halves — what the version wants and what this instance
+ * is — because either alone leaves them nowhere to go.
+ *
+ * <p>The verdict is service-api's, never recomputed here, and only an explicit `false` disables a
+ * row. The range beside it is quoted, not parsed.
  */
 export const InstallPluginModal = ({ data }) => {
-  const { pluginName, versions, defaultVersion, onInstall } = data;
+  const { pluginName, versions, defaultVersion, productVersion, onInstall } = data;
   const { formatMessage } = useIntl();
-  const installable = versions.filter(({ blocked }) => !blocked).map(({ version }) => version);
-  // the row that opened this dialog wins; otherwise the newest installable one
+
+  // Only an explicit refusal closes a row. service-api serialises with NON_NULL, so an undecided
+  // verdict and an older service-api that sends no verdict at all arrive identically as absent —
+  // and disabling on absence would leave such an instance unable to install anything. Absent means
+  // this side has no opinion; the server still refuses on install, and says why.
+  const whyUnavailable = (entry) => {
+    if (entry.compatible !== false) {
+      return null;
+    }
+
+    return entry.requires && productVersion
+      ? formatMessage(messages.incompatibleWithRange, {
+          requires: entry.requires,
+          productVersion,
+        })
+      : formatMessage(messages.incompatibleUnknownRelease);
+  };
+
+  // blocked versions are not in the list at all — the registry refuses them outright, and offering
+  // one would trade a stated rule for a server error. An incompatible one stays, disabled.
+  const options = versions
+    .filter(({ blocked }) => !blocked)
+    .map((entry) => {
+      const unavailable = whyUnavailable(entry);
+
+      return {
+        value: entry.version,
+        label: entry.version,
+        disabled: Boolean(unavailable),
+        title: unavailable || undefined,
+      };
+    });
+  const installable = options.filter(({ disabled }) => !disabled).map(({ value }) => value);
+  // the row that opened this dialog wins; otherwise the newest version that can actually be
+  // installed, which is not always the newest one
   const [version, setVersion] = useState(
     installable.includes(defaultVersion) ? defaultVersion : installable[0],
   );
@@ -91,11 +136,7 @@ export const InstallPluginModal = ({ data }) => {
           binding to one */}
       <span className={cx('version-label')}>{formatMessage(messages.versionLabel)}</span>
       <div className={cx('version-field')} data-automation-id="installPluginVersion">
-        <InputDropdown
-          value={version}
-          options={installable.map((value) => ({ value, label: value }))}
-          onChange={setVersion}
-        />
+        <InputDropdown value={version} options={options} onChange={setVersion} />
       </div>
     </ModalLayout>
   );
@@ -106,10 +147,19 @@ InstallPluginModal.propTypes = {
     pluginName: PropTypes.string.isRequired,
     /** The registry's version list for this plugin, newest first, `blocked` among each entry. */
     versions: PropTypes.arrayOf(
-      PropTypes.shape({ version: PropTypes.string.isRequired, blocked: PropTypes.bool }),
+      PropTypes.shape({
+        version: PropTypes.string.isRequired,
+        blocked: PropTypes.bool,
+        /** service-api's verdict: true, false, or null when it could not be decided. */
+        compatible: PropTypes.bool,
+        /** The range the version declares, for quoting in the reason. */
+        requires: PropTypes.string,
+      }),
     ).isRequired,
     /** Preselected when it is installable — the version whose row opened this dialog. */
     defaultVersion: PropTypes.string,
+    /** The release this instance reports, or null when it does not know. Quoted, never parsed. */
+    productVersion: PropTypes.string,
     onInstall: PropTypes.func.isRequired,
   }).isRequired,
 };

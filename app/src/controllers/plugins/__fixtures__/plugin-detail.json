@@ -15,11 +15,20 @@
   "versions" : [ {
     "version" : "1.6.0",
     "publishedAt" : "2026-03-12T10:15:30Z",
-    "blocked" : false
+    "blocked" : false,
+    "compatible" : true,
+    "requires" : ">=26.0"
   }, {
     "version" : "1.5.2",
     "publishedAt" : "2026-01-05T12:00:00Z",
-    "blocked" : true
+    "blocked" : true,
+    "compatible" : false,
+    "requires" : ">=27.0",
+    "advisory" : {
+      "severity" : "high",
+      "text" : "CVE-2026-1234 allows remote code execution.",
+      "attachedAt" : "2026-01-05T12:00:00Z"
+    }
   } ],
   "changelog" : {
     "version" : "1.6.0",

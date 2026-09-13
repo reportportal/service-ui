@@ -29,13 +29,18 @@ const VERSIONS = [
   { version: '5.5.0' },
 ];
 
-const render = ({ versions = VERSIONS, defaultVersion = null, onInstall = () => {} } = {}) => {
+const render = ({
+  versions = VERSIONS,
+  defaultVersion = null,
+  productVersion = null,
+  onInstall = () => {},
+} = {}) => {
   const store = createStore((state = { location: { payload: {} } }) => state);
   const wrapper = mount(
     <Provider store={store}>
       <IntlProvider locale="en" onError={() => {}}>
         <InstallPluginModal
-          data={{ pluginName: 'Slack', versions, defaultVersion, onInstall }}
+          data={{ pluginName: 'Slack', versions, defaultVersion, productVersion, onInstall }}
         />
       </IntlProvider>
     </Provider>,
@@ -100,11 +105,11 @@ describe('InstallPluginModal', () => {
   test('a blocked version is not offered', () => {
     const { dropdown } = render();
 
-    expect(dropdown().prop('options').map(({ value }) => value)).toEqual([
-      '5.7.0',
-      '5.6.1',
-      '5.5.0',
-    ]);
+    expect(
+      dropdown()
+        .prop('options')
+        .map(({ value }) => value),
+    ).toEqual(['5.7.0', '5.6.1', '5.5.0']);
   });
 
   // it would post a version the registry refuses, and the refusal would read as a server error
@@ -150,5 +155,90 @@ describe('InstallPluginModal', () => {
 
     expect(modal.component.type).toBe(InstallPluginModal);
     expect(modal.component.props.data.pluginName).toBe('Slack');
+  });
+
+  // Install. Select Version. Latest not compatible (27390:15156) — the newest build stays in the
+  // list, visibly present and visibly unavailable, and the selection falls to the newest that runs
+  describe('a version that does not run here', () => {
+    const MIXED = [
+      { version: '5.8.0', compatible: false, requires: '>=26.2' },
+      { version: '5.7.0', compatible: true, requires: '>=25.1' },
+      { version: '5.6.1', compatible: true, requires: '>=25.1' },
+    ];
+
+    test('the newest is offered but cannot be chosen', () => {
+      const { dropdown } = render({ versions: MIXED, productVersion: '26.1' });
+      const newest = dropdown()
+        .prop('options')
+        .find(({ value }) => value === '5.8.0');
+
+      expect(newest).toBeDefined();
+      expect(newest.disabled).toBe(true);
+    });
+
+    test('it says what it wants and what this instance is', () => {
+      const { dropdown } = render({ versions: MIXED, productVersion: '26.1' });
+      const newest = dropdown()
+        .prop('options')
+        .find(({ value }) => value === '5.8.0');
+
+      expect(newest.title).toContain('>=26.2');
+      expect(newest.title).toContain('26.1');
+    });
+
+    test('the selection falls to the newest version that does run', () => {
+      const onInstall = jest.fn();
+      const { confirm } = render({ versions: MIXED, productVersion: '26.1', onInstall });
+
+      confirm();
+
+      expect(onInstall).toHaveBeenCalledWith('5.7.0');
+    });
+
+    test('a row asking for the incompatible one does not get it', () => {
+      const onInstall = jest.fn();
+      const { confirm } = render({
+        versions: MIXED,
+        defaultVersion: '5.8.0',
+        productVersion: '26.1',
+        onInstall,
+      });
+
+      confirm();
+
+      expect(onInstall).toHaveBeenCalledWith('5.7.0');
+    });
+
+    test('an instance that cannot name its release still states the refusal', () => {
+      const { dropdown } = render({ versions: MIXED, productVersion: null });
+      const newest = dropdown()
+        .prop('options')
+        .find(({ value }) => value === '5.8.0');
+
+      expect(newest.disabled).toBe(true);
+      expect(newest.title).toBeTruthy();
+    });
+
+    // service-api serialises with NON_NULL, so "undecided" and "an older service-api" arrive the
+    // same way — as nothing. Closing a row on that would leave such an instance unable to install
+    // anything at all, and the server still refuses on install if it must.
+    test('a verdict that never arrived is not read as a refusal', () => {
+      const onInstall = jest.fn();
+      const { dropdown, confirm } = render({
+        versions: [{ version: '5.8.0' }, { version: '5.7.0' }],
+        productVersion: '26.1',
+        onInstall,
+      });
+
+      expect(
+        dropdown()
+          .prop('options')
+          .every(({ disabled }) => !disabled),
+      ).toBe(true);
+
+      confirm();
+
+      expect(onInstall).toHaveBeenCalledWith('5.8.0');
+    });
   });
 });

@@ -32,7 +32,7 @@ import pluginDetailOffline from './__fixtures__/plugin-detail-offline.json';
  * whose wire shape changed, or they were never regenerated after it changed and now describe a
  * service that no longer exists. `__fixtures__/README.md` says how to regenerate them.
  */
-const CONTRACT_HASH = '74cb316e28f6344062ac99cd40d40de8dd141e4ce26c044b786dc11654bd43a8';
+const CONTRACT_HASH = 'a85c120eb04101f5affd0d7caf2774a1459c1af4e7986abd91fd399e78555e0c';
 
 const INSTALL_ROUTE = 'POST /v1/plugins/{registryId}/install';
 const LICENCE_ROUTE = 'PUT /v1/plugins/licence';

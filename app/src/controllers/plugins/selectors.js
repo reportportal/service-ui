@@ -234,6 +234,14 @@ export const hasMarketplacePluginUpdateSelector = (state, pluginName) =>
 export const isPluginUploadAllowedSelector = (state) =>
   marketplaceSelector(state).instance?.uploadAllowed !== false;
 
+/**
+ * The ReportPortal release this instance reports, or null when it cannot say. Quoted when
+ * explaining why a version will not install; never parsed — service-api decides compatibility and
+ * sends the verdict, and reading the release here would be a second opinion on its answer.
+ */
+export const marketplaceProductVersionSelector = (state) =>
+  marketplaceSelector(state).instance?.productVersion || null;
+
 /** The plugin the last install moved into the Installed group, or null. */
 export const justInstalledMarketplacePluginSelector = (state) =>
   marketplaceSelector(state).justInstalled || null;
