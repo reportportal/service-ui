@@ -18,6 +18,8 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { connect } from 'react-redux';
+import { FormattedMessage, defineMessages } from 'react-intl';
+import { SystemMessage } from '@reportportal/ui-kit';
 import { updateIntegrationAction } from 'controllers/plugins';
 import { uiExtensionIntegrationSettingsSelector } from 'controllers/plugins/uiExtensions/selectors';
 import { INTEGRATIONS_SETTINGS_COMPONENTS_MAP } from 'components/integrations/settingsComponentsMap';
@@ -26,6 +28,16 @@ import { applyIntegrationFormPrepare } from 'components/integrations/integration
 import styles from './integrationSettingsContainer.scss';
 
 const cx = classNames.bind(styles);
+
+// The same descriptor the create path shows for a plugin with no settings UI, so the two say the
+// same thing and share the existing translations.
+const messages = defineMessages({
+  formNotAvailable: {
+    id: 'AddIntegrationModal.formNotAvailable',
+    defaultMessage:
+      'Configuration form is not available for this plugin. Install or update a plugin UI extension that provides integration fields.',
+  },
+});
 
 @connect(
   (state) => ({
@@ -109,15 +121,21 @@ export class IntegrationSettingsContainer extends Component {
 
     return (
       <div className={cx('integration-settings-container')}>
-        <IntegrationSettingsComponent
-          data={updatedData}
-          onUpdate={this.updateIntegration}
-          goToPreviousPage={goToPreviousPage}
-          isGlobal={isGlobal}
-          extension={integrationSettingsExtension}
-          withPreloader
-          silentOnError={false}
-        />
+        {IntegrationSettingsComponent ? (
+          <IntegrationSettingsComponent
+            data={updatedData}
+            onUpdate={this.updateIntegration}
+            goToPreviousPage={goToPreviousPage}
+            isGlobal={isGlobal}
+            extension={integrationSettingsExtension}
+            withPreloader
+            silentOnError={false}
+          />
+        ) : (
+          <SystemMessage mode="info">
+            <FormattedMessage {...messages.formNotAvailable} />
+          </SystemMessage>
+        )}
       </div>
     );
   }

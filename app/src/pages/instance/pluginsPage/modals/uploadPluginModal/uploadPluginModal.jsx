@@ -19,10 +19,12 @@ import { withModal } from 'controllers/modal';
 import PropTypes from 'prop-types';
 import { defineMessages, useIntl } from 'react-intl';
 import { useTracking } from 'react-tracking';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import DOMPurify from 'dompurify';
+import { SystemMessage } from '@reportportal/ui-kit';
 import { URLS } from 'common/urls';
 import { NOTIFICATION_TYPES, showNotification } from 'controllers/notification';
+import { pluginsSelector } from 'controllers/plugins';
 import { getFilesNames } from 'pages/common/uploadFileControls/utils';
 import {
   FilesDropzone,
@@ -54,10 +56,54 @@ const messages = defineMessages({
     id: 'UploadPluginModal.importConfirmationWarning',
     defaultMessage: 'Are you sure you want to interrupt the plugin uploading?',
   },
+  versionExistsHeader: {
+    id: 'UploadPluginModal.versionExistsHeader',
+    defaultMessage: 'This version is already installed',
+  },
+  versionExistsMessage: {
+    id: 'UploadPluginModal.versionExistsMessage',
+    defaultMessage:
+      'A version number identifies one specific build, so the instance will not accept a second file claiming the same one.',
+  },
+  replaceExistingHeader: {
+    id: 'UploadPluginModal.replaceExistingHeader',
+    defaultMessage: 'This plugin is already installed',
+  },
+  replaceExistingMessage: {
+    id: 'UploadPluginModal.replaceExistingMessage',
+    defaultMessage:
+      'Uploading makes this file the active version. The version installed now is removed from the instance and cannot be restored from here.',
+  },
 });
 
 const MAX_FILE_SIZE = 134217728;
 const ACCEPT_FILE_MIME_TYPES = ['.jar', '.json'];
+const FILE_EXTENSION = /\.[^.]+$/;
+const PLUGIN_ID_SEPARATOR = /^[-_.]/;
+// A plugin jar is published as <plugin id>-<version>.jar, so the version sits in the name beside
+// the id the warning above already reads out of it.
+const VERSION_IN_FILE_NAME = /[-_.]([0-9]+(?:\.[0-9]+)*[^-_.]*)$/;
+
+const versionInFileName = (fileName) =>
+  VERSION_IN_FILE_NAME.exec(fileName.replace(FILE_EXTENSION, ''))?.[1] ?? null;
+
+const startsWithPluginId = (fileName, pluginId) =>
+  fileName.startsWith(pluginId) && PLUGIN_ID_SEPARATOR.test(fileName.slice(pluginId.length));
+
+// The jar is not opened in the browser, so the plugin it carries is read off the file name a
+// plugin is published under, <plugin id>-<version>.jar. Guessing wrong only shows or withholds a
+// warning: the upload itself is unchanged, and the instance stays the authority on what it
+// replaces.
+const installedPluginFor = (fileName, plugins) => {
+  const name = fileName.replace(FILE_EXTENSION, '').toLowerCase();
+
+  return plugins
+    .filter((plugin) => {
+      const pluginId = plugin.name?.toLowerCase();
+      return pluginId && (name === pluginId || startsWithPluginId(name, pluginId));
+    })
+    .sort((a, b) => b.name.length - a.name.length)[0];
+};
 
 export const UploadPluginModal = ({ data: { onImport } }) => {
   const {
@@ -68,6 +114,22 @@ export const UploadPluginModal = ({ data: { onImport } }) => {
   const { formatMessage } = useIntl();
   const { trackEvent } = useTracking();
   const dispatch = useDispatch();
+  const plugins = useSelector(pluginsSelector);
+
+  const pendingFile = files.find(
+    ({ valid, uploaded, isLoading }) => valid && !uploaded && !isLoading,
+  );
+  const replacedPlugin = pendingFile && installedPluginFor(pendingFile.file.name, plugins);
+  // The instance refuses a second file claiming a version it already holds, and it says so in
+  // prose the client must not match on: service-api answers PLUGIN_UPLOAD_ERROR (40039) with
+  // HTTP 400 — the same code it uses for every other upload failure — so the rejection itself
+  // cannot be told apart. The name carries what is needed instead: same plugin, same version.
+  // Guessing wrong only shows or withholds a warning; the upload is unchanged either way.
+  const versionExists = Boolean(
+    replacedPlugin &&
+      replacedPlugin.details?.version &&
+      versionInFileName(pendingFile.file.name) === replacedPlugin.details.version,
+  );
 
   const onUploadSuccess = () => {
     onImport();
@@ -80,6 +142,10 @@ export const UploadPluginModal = ({ data: { onImport } }) => {
         type: NOTIFICATION_TYPES.ERROR,
       }),
     );
+  };
+
+  const onRemoveFile = (id) => {
+    removeFile(id);
   };
 
   const saveFiles = async () => {
@@ -96,10 +162,24 @@ export const UploadPluginModal = ({ data: { onImport } }) => {
       onCancel={cancelRequests}
       onSave={saveFiles}
     >
+      {versionExists && (
+        <div data-automation-id="uploadVersionExistsMessage">
+          <SystemMessage mode="error" header={formatMessage(messages.versionExistsHeader)}>
+            {formatMessage(messages.versionExistsMessage)}
+          </SystemMessage>
+        </div>
+      )}
+      {!versionExists && replacedPlugin && (
+        <div data-automation-id="uploadReplaceExistingMessage">
+          <SystemMessage mode="warning" header={formatMessage(messages.replaceExistingHeader)}>
+            {formatMessage(messages.replaceExistingMessage)}
+          </SystemMessage>
+        </div>
+      )}
       <FilesDropzone
         files={files}
         addFiles={addFiles}
-        removeFile={removeFile}
+        removeFile={onRemoveFile}
         multiple={false}
         maxFileSize={MAX_FILE_SIZE}
         acceptFileMimeTypes={ACCEPT_FILE_MIME_TYPES}

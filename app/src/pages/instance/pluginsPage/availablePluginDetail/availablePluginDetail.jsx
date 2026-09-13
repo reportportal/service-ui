@@ -21,12 +21,14 @@ import { defineMessages, useIntl } from 'react-intl';
 import { useDispatch } from 'react-redux';
 import { useTracking } from 'react-tracking';
 import { Button } from '@reportportal/ui-kit';
+import { PluginBadge, BADGE_TONES } from '../pluginBadge';
+import { PluginTrustMark } from '../pluginTrustMark';
 import { PluginIcon } from 'components/integrations/elements/pluginIcon';
-import { PremiumPromoModal } from 'components/premiumPromoModal';
 import { PLUGINS_PAGE_EVENTS } from 'components/main/analytics/events';
 import { showModalAction } from 'controllers/modal';
-import { referenceDictionary } from 'common/utils/referenceDictionary';
-import { PLUGIN_TIERS } from '../availablePluginsCatalog';
+import { PLUGIN_TIERS } from 'common/constants/pluginTiers';
+import { PluginMarketplaceBlocks } from '../pluginMarketplaceBlocks';
+import { premiumPromoModal } from '../premiumPromo';
 import styles from './availablePluginDetail.scss';
 
 const cx = classNames.bind(styles);
@@ -56,93 +58,165 @@ const messages = defineMessages({
     id: 'AvailablePluginDetail.install',
     defaultMessage: 'Install',
   },
+  installing: {
+    id: 'PluginItem.installingState',
+    defaultMessage: 'Installing…',
+  },
+  version: {
+    id: 'AvailablePluginDetail.version',
+    defaultMessage: 'version {version}',
+  },
+  author: {
+    id: 'AvailablePluginDetail.author',
+    defaultMessage: 'by {author}',
+  },
 });
 
-export const AvailablePluginDetail = ({ plugin }) => {
+/**
+ * A marketplace plugin's page. The header is what service-api merged for the catalogue row; the
+ * blocks under it are the registry's own answer for this plugin, and they say nothing at all
+ * unless that answer can be believed.
+ */
+export const AvailablePluginDetail = ({
+  plugin,
+  detail,
+  loading = false,
+  offline = false,
+  failed = false,
+  registryHost = null,
+  onInstall = () => {},
+  onRetry = () => {},
+  installing = false,
+}) => {
   const { formatMessage } = useIntl();
   const { trackEvent } = useTracking();
   const dispatch = useDispatch();
   const title = plugin.details?.name || plugin.name;
   const isPremium = plugin.tier === PLUGIN_TIERS.PREMIUM;
+  // premium alone is not a lock: an instance with a licence installs premium plugins normally
+  const isLocked = Boolean(plugin.locked);
+  const version = plugin.latestVersion || plugin.details?.version;
+  // the registry's, read off the detail response; the row's copy is the same value
+  const author = detail?.plugin?.author || plugin.author || null;
 
   useEffect(() => {
     trackEvent(PLUGINS_PAGE_EVENTS.availablePluginDetailPageView(title));
   }, [title, trackEvent]);
 
   const handleInstall = () => {
-    if (!plugin.documentationUrl) {
-      return;
-    }
-
     trackEvent(PLUGINS_PAGE_EVENTS.clickInstallAvailablePlugin(title));
-    window.open(plugin.documentationUrl, '_blank', 'noopener,noreferrer');
+    onInstall(plugin);
   };
 
-  const handleDiscoverPremium = () => {
-    trackEvent(PLUGINS_PAGE_EVENTS.clickDiscoverPremium(title));
+  const handleDiscoverPremium = () =>
     dispatch(
-      showModalAction({
-        component: (
-          <PremiumPromoModal
-            onExplorePlans={() => {
-              trackEvent(PLUGINS_PAGE_EVENTS.clickPremiumModalExplorePlans);
-              window.open(
-                referenceDictionary.rpExplorePlansPlugins,
-                '_blank',
-                'noopener,noreferrer',
-              );
-            }}
-            onContactUs={() => {
-              trackEvent(PLUGINS_PAGE_EVENTS.clickPremiumModalContactUs);
-              window.open(referenceDictionary.rpContactUsPlugins, '_blank', 'noopener,noreferrer');
-            }}
-            onNotNow={() => trackEvent(PLUGINS_PAGE_EVENTS.clickPremiumModalNotNow)}
-          />
-        ),
-      }),
+      showModalAction(premiumPromoModal({ trackEvent, title, contactUrl: plugin.contactUrl })),
     );
-  };
 
   return (
     <div className={cx('available-plugin-detail')}>
-      <PluginIcon className={cx('logo')} pluginData={plugin} alt={title} />
-      <div className={cx('content')}>
-        <div className={cx('header')}>
-          <div className={cx('info')}>
-            <h2 className={cx('title')}>{title}</h2>
-            <div className={cx('tier-row')}>
-              <span className={cx('tier', { premium: isPremium })}>
-                {formatMessage(isPremium ? messages.premium : messages.free)}
-              </span>
-              <span className={cx('tier-description')}>
-                {formatMessage(isPremium ? messages.premiumDescription : messages.freeDescription)}
-              </span>
+      <div className={cx('head')}>
+        <PluginIcon className={cx('logo')} pluginData={plugin} alt={title} />
+        <div className={cx('content')}>
+          <div className={cx('header')}>
+            <div className={cx('info')}>
+              <div className={cx('title-row')}>
+                <h2 className={cx('title')} data-automation-id="pluginDetailTitle">
+                  {title}
+                </h2>
+                {/* the other axis, and the reason it sits by the name rather than in the row
+                    below: who wrote the plugin is not what it costs */}
+                <PluginTrustMark trust={plugin.trust} />
+              </div>
+              {version && (
+                <span className={cx('version')} data-automation-id="pluginDetailVersion">
+                  {formatMessage(messages.version, { version })}
+                </span>
+              )}
+              {/* FR-U-02 names the author among what a detail page shows. Absent, not guessed:
+                  the registry either named someone or it did not. */}
+              {author && (
+                <span className={cx('author')} data-automation-id="pluginDetailAuthor">
+                  {formatMessage(messages.author, { author })}
+                </span>
+              )}
+              <div className={cx('tier-row')}>
+                <PluginBadge tone={isPremium ? BADGE_TONES.PREMIUM : BADGE_TONES.FREE}>
+                  {formatMessage(isPremium ? messages.premium : messages.free)}
+                </PluginBadge>
+                <span className={cx('tier-description')}>
+                  {formatMessage(
+                    isPremium ? messages.premiumDescription : messages.freeDescription,
+                  )}
+                </span>
+              </div>
             </div>
+            <Button
+              variant="primary"
+              adjustWidthOn="content"
+              data-automation-id={isLocked ? 'discoverPremiumAction' : 'installAction'}
+              className={cx(isLocked ? 'discover-button' : 'install-button')}
+              onClick={isLocked ? handleDiscoverPremium : handleInstall}
+              // a second press while the first install is still in flight would start a second
+              // download of the same plugin; the row in the catalogue has always said so, and
+              // this button is the same request made from a different place
+              disabled={!isLocked && (!version || installing)}
+            >
+              {formatMessage(
+                // eslint-disable-next-line no-nested-ternary
+                isLocked
+                  ? messages.discoverPremium
+                  : installing
+                    ? messages.installing
+                    : messages.install,
+              )}
+            </Button>
           </div>
-          <Button
-            variant="primary"
-            adjustWidthOn="content"
-            className={cx(isPremium ? 'discover-button' : 'install-button')}
-            onClick={isPremium ? handleDiscoverPremium : handleInstall}
-            disabled={!isPremium && !plugin.documentationUrl}
-          >
-            {formatMessage(isPremium ? messages.discoverPremium : messages.install)}
-          </Button>
+          <p className={cx('description')}>{plugin.description}</p>
         </div>
-        <p className={cx('description')}>{plugin.description}</p>
       </div>
+      {/* this page states both axes in its own header, so the blocks are told not to */}
+      <PluginMarketplaceBlocks
+        detail={detail}
+        loading={loading}
+        offline={offline}
+        failed={failed}
+        registryHost={registryHost}
+        onRetry={onRetry}
+        showTier={false}
+        installing={installing}
+        // a version row on this page installs that version; on an installed plugin's page the
+        // same row switches to it, which is why the label is asked for rather than assumed
+        useVersionLabel="install"
+        onUseVersion={isLocked ? null : (chosen) => onInstall(plugin, chosen)}
+      />
     </div>
   );
 };
 
 AvailablePluginDetail.propTypes = {
+  installing: PropTypes.bool,
   plugin: PropTypes.shape({
     name: PropTypes.string.isRequired,
     tier: PropTypes.string.isRequired,
+    /** The other axis: who stands behind the plugin, or null if the registry named nobody. */
+    trust: PropTypes.string,
     description: PropTypes.string,
-    documentationUrl: PropTypes.string,
+    author: PropTypes.string,
+    latestVersion: PropTypes.string,
+    locked: PropTypes.bool,
+    contactUrl: PropTypes.string,
+    registryId: PropTypes.string,
     details: PropTypes.shape({
       name: PropTypes.string,
+      version: PropTypes.string,
     }),
   }).isRequired,
+  detail: PropTypes.object.isRequired,
+  loading: PropTypes.bool,
+  offline: PropTypes.bool,
+  failed: PropTypes.bool,
+  registryHost: PropTypes.string,
+  onInstall: PropTypes.func,
+  onRetry: PropTypes.func,
 };

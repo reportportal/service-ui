@@ -68,23 +68,31 @@ const pluginTitle = defineMessages({
   },
 });
 
+const messages = defineMessages({
+  groupCount: {
+    id: 'PluginsList.groupCount',
+    defaultMessage: '({count})',
+  },
+});
+
 @injectIntl
 export class PluginsListItems extends Component {
   static propTypes = {
     intl: PropTypes.object.isRequired,
     title: PropTypes.string.isRequired,
     items: PropTypes.array.isRequired,
-    onToggleActive: PropTypes.func,
-    showToggleConfirmationModal: PropTypes.func,
     onItemClick: PropTypes.func,
+    onRowAction: PropTypes.func,
     filterMobileBlock: PropTypes.element,
+    /** Registry id of the row to point at, if one of these is it. */
+    highlightedRegistryId: PropTypes.string,
   };
 
   static defaultProps = {
-    onToggleActive: () => {},
-    showToggleConfirmationModal: () => {},
     filterMobileBlock: null,
+    highlightedRegistryId: null,
     onItemClick: () => {},
+    onRowAction: () => {},
   };
 
   render() {
@@ -93,14 +101,19 @@ export class PluginsListItems extends Component {
       title,
       onItemClick,
       items,
-      onToggleActive,
+      onRowAction,
       filterMobileBlock,
-      showToggleConfirmationModal,
+      highlightedRegistryId,
     } = this.props;
 
     return (
       <Fragment>
-        <h2 className={cx('plugins-content-title')}>{formatMessage(pluginTitle[title])}</h2>
+        <h2 className={cx('plugins-content-title')}>
+          {formatMessage(pluginTitle[title])}{' '}
+          <span className={cx('plugins-content-count')} data-automation-id="pluginsGroupCount">
+            {formatMessage(messages.groupCount, { count: items.length })}
+          </span>
+        </h2>
         {filterMobileBlock}
         <div className={cx('plugins-content-list')}>
           {items.map((item) => (
@@ -108,8 +121,8 @@ export class PluginsListItems extends Component {
               key={item.type || item.name}
               onClick={onItemClick}
               data={item}
-              onToggleActive={onToggleActive}
-              showToggleConfirmationModal={showToggleConfirmationModal}
+              onRowAction={onRowAction}
+              highlighted={Boolean(highlightedRegistryId) && item.registryId === highlightedRegistryId}
             />
           ))}
         </div>

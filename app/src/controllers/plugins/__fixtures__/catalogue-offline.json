@@ -1,0 +1,23 @@
+{
+  "registry" : {
+    "status" : "OFFLINE",
+    "host" : "marketplace.reportportal.io"
+  },
+  "instance" : {
+    "uploadAllowed" : true
+  },
+  "installed" : [ {
+    "integrationTypeId" : 7,
+    "name" : "jira",
+    "version" : "1.5.2",
+    "enabled" : true,
+    "groupType" : "BTS"
+  }, {
+    "integrationTypeId" : 10,
+    "name" : "custom-scanner",
+    "version" : "0.9.0",
+    "enabled" : true,
+    "groupType" : "OTHER"
+  } ],
+  "available" : [ ]
+}

@@ -1,0 +1,40 @@
+{
+  "registry" : {
+    "status" : "ONLINE",
+    "host" : "marketplace.reportportal.io"
+  },
+  "plugin" : {
+    "id" : "plugin-bts-jira",
+    "name" : "Jira",
+    "description" : "Tracks issues in Jira",
+    "author" : "Atlassian",
+    "latestVersion" : "1.6.0",
+    "access" : "premium",
+    "tier" : "official"
+  },
+  "versions" : [ {
+    "version" : "1.6.0",
+    "publishedAt" : "2026-03-12T10:15:30Z",
+    "blocked" : false
+  }, {
+    "version" : "1.5.2",
+    "publishedAt" : "2026-01-05T12:00:00Z",
+    "blocked" : true
+  } ],
+  "changelog" : {
+    "version" : "1.6.0",
+    "lines" : [ "Fixed a crash on an empty summary", "Dropped the legacy field" ]
+  },
+  "screenshots" : [ "https://cdn.rp.io/jira/1.png", "https://cdn.rp.io/jira/2.png" ],
+  "advisory" : {
+    "severity" : "high",
+    "text" : "Leaks the API key into the log",
+    "attachedAt" : "2026-03-12T10:15:30Z"
+  },
+  "blocked" : {
+    "version" : "1.6.0",
+    "blockedAt" : "2026-03-12T10:15:30Z",
+    "reason" : "Signed with a revoked key"
+  },
+  "locked" : true
+}

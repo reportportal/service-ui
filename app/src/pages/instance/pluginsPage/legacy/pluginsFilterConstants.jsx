@@ -22,7 +22,7 @@ import {
   AUTHORIZATION_GROUP_TYPE,
   OTHER_GROUP_TYPE,
   IMPORT_GROUP_TYPE,
-} from './pluginsGroupTypes';
+} from 'common/constants/pluginsGroupTypes';
 
 // Special filter that shows only installed plugins (no available-to-install section).
 export const INSTALLED_GROUP_TYPE = 'INSTALLED';

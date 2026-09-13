@@ -21,6 +21,9 @@ module.exports = {
     '^.+\\.(css|scss)$': 'identity-obj-proxy',
     '^.+\\.(svg|jpg|jpeg|png|gif)$': '<rootDir>/test/__mocks__/fileMock.js',
     '^components[/](.+)': '<rootDir>/src/components/$1',
+    // the two webpack aliases the mapper was missing
+    '^componentLibrary[/](.+)': '<rootDir>/src/componentLibrary/$1',
+    '^analyticsEvents[/](.+)': '<rootDir>/src/components/main/analytics/events/ga4Events/$1',
     '^controllers[/](.+)': '<rootDir>/src/controllers/$1',
     '^common[/](.+)': '<rootDir>/src/common/$1',
     '^hooks[/](.+)': '<rootDir>/src/hooks/$1',
@@ -45,6 +48,17 @@ module.exports = {
       statements: 60,
     },
   },
+  // the ui-kit ships ESM only, so it has to go through babel like our own sources.
+  // .babelrc is file-relative and never reaches node_modules, hence the explicit configFile.
+  transform: {
+    '^.+\\.[jt]sx?$': [
+      'babel-jest',
+      { configFile: require('path').resolve(__dirname, '.babelrc') },
+    ],
+  },
+  transformIgnorePatterns: [
+    '/node_modules/(?!@reportportal/ui-kit|react-dnd|dnd-core|@react-dnd|react-datepicker|clsx|date-fns)',
+  ],
   testPathIgnorePatterns: ['<rootDir>/node_modules/'],
   testEnvironment: 'jsdom',
 };

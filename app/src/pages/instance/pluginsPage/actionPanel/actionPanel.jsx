@@ -22,7 +22,8 @@ import track from 'react-tracking';
 import classNames from 'classnames/bind';
 import { showModalAction } from 'controllers/modal';
 import { fetchPluginsAction } from 'controllers/plugins';
-import { GhostButton } from 'components/buttons/ghostButton';
+import { Button } from '@reportportal/ui-kit';
+import Parser from 'html-react-parser';
 import { PLUGINS_PAGE_EVENTS } from 'components/main/analytics/events';
 import ImportIcon from 'common/img/import-inline.svg';
 import styles from './actionPanel.scss';
@@ -32,10 +33,6 @@ export const UPLOAD = 'upload';
 const cx = classNames.bind(styles);
 
 const messages = defineMessages({
-  uploadPluginTitle: {
-    id: 'PluginsPage.uploadPluginTitle',
-    defaultMessage: 'Upload Plugin',
-  },
   uploadPluginDescription: {
     id: 'PluginsPage.uploadPluginDescription',
     defaultMessage: "Don't see the plugin you need? Upload your own.",
@@ -87,20 +84,18 @@ export class ActionPanel extends Component {
       },
     ];
     return (
-      <div className={cx('action-panel')}>
-        <h3 className={cx('action-panel-title')}>{formatMessage(messages.uploadPluginTitle)}</h3>
-        <p className={cx('action-panel-description')}>
-          {formatMessage(messages.uploadPluginDescription)}
-        </p>
-        <div className={cx('action-buttons')}>
-          {ACTION_BUTTONS.map(({ key, icon, onClick }) => (
-            <div className={cx('action-button')} key={key}>
-              <GhostButton icon={icon} onClick={onClick}>
-                {formatMessage(messages[key])}
-              </GhostButton>
-            </div>
-          ))}
-        </div>
+      /* The control lives in the page header now, so the sidebar's heading and explanatory
+         line went with the sidebar; the explanation survives as the button's tooltip. */
+      <div className={cx('action-panel')} title={formatMessage(messages.uploadPluginDescription)}>
+        {ACTION_BUTTONS.map(({ key, icon, onClick }) => (
+          <div className={cx('action-button')} key={key}>
+            {/* adjustWidthOn="content": the kit's default width made "Upload plugin" wrap onto
+                two lines in the page header, where the sidebar it came from had room */}
+            <Button variant="ghost" adjustWidthOn="content" icon={Parser(icon)} onClick={onClick}>
+              {formatMessage(messages[key])}
+            </Button>
+          </div>
+        ))}
       </div>
     );
   }
