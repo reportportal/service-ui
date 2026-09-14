@@ -76,7 +76,11 @@ export const PluginTrustMark = ({ trust = null }) => {
   }
 
   return (
+    // role="img" because a bare span is `generic`, and ARIA does not expose a label on that role:
+    // the mark would be a glyph with no name to a screen reader, which is the one reader that
+    // cannot see the glyph
     <span
+      role="img"
       className={cx('plugin-trust-mark', trust)}
       data-automation-id="pluginTrustMark"
       data-trust={trust}
