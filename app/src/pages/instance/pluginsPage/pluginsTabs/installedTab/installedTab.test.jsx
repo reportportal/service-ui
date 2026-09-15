@@ -66,7 +66,16 @@ const availableRowFrom = (id) =>
 // its type and props rather than a component name.
 const shownModal = (of) => of(SHOW_MODAL).pop().payload.activeModal.component;
 // the confirmation is the app's shared dialog, so what was asked is its data, not a component
-const confirmation = (of) => of(SHOW_MODAL).pop().payload.activeModal;
+// Two shapes reach the modal action: the app's shared dialog, raised by id with its data beside
+// it, and this page's own dialogs, raised as an element carrying data as a prop. What a test wants
+// to know is the same either way — what was asked — so this reads whichever shape arrived.
+const confirmation = (of) => {
+  const activeModal = of(SHOW_MODAL).pop().payload.activeModal;
+
+  return activeModal.component
+    ? { id: null, data: activeModal.component.props.data }
+    : activeModal;
+};
 
 // the installed plugin subpage also renders the integration sections, which read these slices
 const restOfState = {

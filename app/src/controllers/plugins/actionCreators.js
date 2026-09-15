@@ -248,9 +248,15 @@ export const clearJustInstalledMarketplacePluginAction = () => ({
   type: CLEAR_JUST_INSTALLED_MARKETPLACE_PLUGIN,
 });
 
-export const installMarketplacePluginErrorAction = (registryId, error) => ({
+/**
+ * @param registryId the plugin the install was for
+ * @param error      what the server said, kept verbatim for the full message
+ * @param errorCode  service-api's `errorCode`, which is what tells the failures apart. Without it
+ *     the store has only prose, and the page could say that something went wrong but not what.
+ */
+export const installMarketplacePluginErrorAction = (registryId, error, errorCode = null) => ({
   type: INSTALL_MARKETPLACE_PLUGIN_ERROR,
-  payload: { registryId, error },
+  payload: { registryId, error, errorCode },
 });
 
 export const fetchMarketplacePluginDetailAction = (registryId) => ({

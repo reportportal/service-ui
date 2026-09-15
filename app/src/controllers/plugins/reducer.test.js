@@ -181,7 +181,8 @@ describe('controllers/plugins/marketplaceReducer', () => {
     state = marketplaceReducer(state, installMarketplacePluginErrorAction('slack', 'nope'));
 
     expect(state.installing).toEqual(['telegram']);
-    expect(state.installError).toEqual({ registryId: 'slack', error: 'nope' });
+    // the code travels with the message: the plugin page tells the three named failures apart by it
+    expect(state.installError).toEqual({ registryId: 'slack', error: 'nope', errorCode: null });
   });
 });
 

@@ -499,8 +499,14 @@ describe('controllers/plugins/sagas marketplace', () => {
       test('the row still leaves the installing state', async () => {
         const dispatched = await failWith(MARKETPLACE_INSTALL_ERROR.VERSION_BLOCKED);
 
+        // the code travels into the store beside the message: the plugin page tells the three
+        // named failures apart by it, and prose is not something to match on
         expect(dispatched).toContainEqual(
-          installMarketplacePluginErrorAction('slack', 'Registry said so'),
+          installMarketplacePluginErrorAction(
+            'slack',
+            'Registry said so',
+            MARKETPLACE_INSTALL_ERROR.VERSION_BLOCKED,
+          ),
         );
       });
     });

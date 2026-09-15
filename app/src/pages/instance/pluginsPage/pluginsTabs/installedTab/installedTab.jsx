@@ -76,6 +76,8 @@ import { PluginMarketplaceBlocks } from '../../pluginMarketplaceBlocks';
 import { compareVersions } from '../../versionsTable/utils';
 import { premiumPromoModal } from '../../premiumPromo';
 import { installPluginModal } from '../../modals/installPluginModal';
+import { versionChangeModal } from '../../modals/versionChangeModal';
+import { VersionChangeAlert } from '../../versionChangeAlert';
 
 const cx = classNames.bind(styles);
 
@@ -177,8 +179,9 @@ const isUpgradeFrom = (installedVersion, version) =>
     registryHost: marketplaceRegistryHostSelector(state),
     justInstalledId: justInstalledMarketplacePluginSelector(state),
     installingIds: marketplaceInstallingPluginsSelector(state),
-    // which row it failed for is all the row shows; the reason was the notification's to tell
+    // which row it failed for is all the row shows; the plugin page shows the whole thing
     installFailedId: marketplaceInstallErrorSelector(state)?.registryId || null,
+    installError: marketplaceInstallErrorSelector(state),
     uploadAllowed: isPluginUploadAllowedSelector(state),
     productVersion: marketplaceProductVersionSelector(state),
     pluginDetail: marketplacePluginDetailDataSelector(state),
@@ -217,6 +220,12 @@ export class InstalledTab extends Component {
     justInstalledId: PropTypes.string,
     installingIds: PropTypes.arrayOf(PropTypes.string).isRequired,
     installFailedId: PropTypes.string,
+    /** The whole failure, which the plugin page needs and a row does not. */
+    installError: PropTypes.shape({
+      registryId: PropTypes.string,
+      error: PropTypes.string,
+      errorCode: PropTypes.number,
+    }),
     uploadAllowed: PropTypes.bool.isRequired,
   productVersion: PropTypes.string,
     clearJustInstalledMarketplacePluginAction: PropTypes.func.isRequired,
@@ -386,14 +395,20 @@ export class InstalledTab extends Component {
 
   // an upgrade and a rollback are the same request, and the dialog is the only place the two are
   // told apart — which is the whole reason an admin is asked before one of them runs
-  showVersionChangeModal = (pluginName, version, upgrade, callback) => {
+  /**
+   * Not the shared confirmation dialog, which closes the instant it is confirmed. A version change
+   * can fail, and closing before the request has said anything leaves the admin on an unchanged
+   * page with nothing saying whether it was about to change. This one stays until the install
+   * succeeds, and on failure stays while the page explains.
+   */
+  showVersionChangeModal = (registryId, pluginName, version, upgrade, callback) => {
     const {
       intl: { formatMessage },
     } = this.props;
 
-    this.props.showModalAction({
-      id: 'confirmationModal',
-      data: {
+    this.props.showModalAction(
+      versionChangeModal({
+        registryId,
         message: formatMessage(
           upgrade ? messages.upgradeVersionMessage : messages.downgradeVersionMessage,
           { pluginName, version, b: bold },
@@ -404,8 +419,8 @@ export class InstalledTab extends Component {
         ),
         confirmText: formatMessage(upgrade ? messages.upgrade : messages.downgrade),
         cancelText: formatMessage(COMMON_LOCALE_KEYS.CANCEL),
-      },
-    });
+      }),
+    );
   };
 
   showToggleConfirmationModal = (
@@ -441,7 +456,13 @@ export class InstalledTab extends Component {
             showToggleConfirmationModal={this.showToggleConfirmationModal}
             removePluginSuccessCallback={this.goToMainPageHandler}
             events={PLUGINS_PAGE_EVENTS}
-            afterInfoSection={this.renderMarketplaceBlocks(data)}
+            afterInfoSection={
+              <>
+                {this.renderMarketplaceBlocks(data)}
+                {/* at the foot of the content area, clear of the blocks it is reporting on */}
+                {this.renderVersionChangeAlert(data)}
+              </>
+            }
             title={getDisplayName(data)}
           />
         );
@@ -602,7 +623,7 @@ export class InstalledTab extends Component {
         this.props.installMarketplacePluginAction(row.registryId, row.latestVersion),
       );
     } else if (action === ROW_ACTIONS.UPDATE) {
-      this.showVersionChangeModal(getDisplayName(row), row.updateAvailable, true, () =>
+      this.showVersionChangeModal(row.registryId, getDisplayName(row), row.updateAvailable, true, () =>
         this.props.installMarketplacePluginAction(row.registryId, row.updateAvailable),
       );
     } else if (action === ROW_ACTIONS.DISCOVER_PREMIUM) {
@@ -627,6 +648,27 @@ export class InstalledTab extends Component {
 
   // a plugin with no registry id was never asked about, so the reason nothing can be shown is
   // the catalogue's — the registry was down, the catalogue failed, or it matched no entry
+  /**
+   * The failure of a version change, reported on the page rather than in the dialog that asked for
+   * it: the operation was about the plugin, and unlike a toast this outlives the moment — an admin
+   * who looked away while a download ran comes back to a page that still explains itself.
+   */
+  renderVersionChangeAlert = (data) => {
+    const failure = this.props.installError;
+    if (!failure || failure.registryId !== data.registryId) {
+      return null;
+    }
+
+    return (
+      <VersionChangeAlert
+        pluginName={getDisplayName(data)}
+        installedVersion={data.details?.version || ''}
+        errorCode={failure.errorCode}
+        reason={failure.error}
+      />
+    );
+  };
+
   renderMarketplaceBlocks = (data) => {
     const unmatched = !data.registryId;
 
@@ -644,6 +686,7 @@ export class InstalledTab extends Component {
         productVersion={this.props.productVersion}
         onUseVersion={(version) =>
           this.showVersionChangeModal(
+            data.registryId,
             getDisplayName(data),
             version,
             isUpgradeFrom(data.details?.version, version),
