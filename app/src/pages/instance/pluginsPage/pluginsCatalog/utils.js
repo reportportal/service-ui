@@ -265,19 +265,57 @@ export const getRowIncompatibility = (row) => {
 };
 
 /** Badges an installed row shows; the tier badge of an available row is rendered from `tier`. */
+/**
+ * The one badge a row shows, or none.
+ *
+ * <p>A row can be several bad things at once — the checked-in catalogue fixture has a plugin that
+ * is both blocked and under an advisory — and it used to print a pill for each. The spec asks for
+ * one badge at the highest severity, and it is right to: three pills on one row make the reader
+ * rank them, and the ranking is not theirs to do. Removal outranks a block, which outranks an
+ * advisory, because that is the order in which the row stops being usable at all.
+ *
+ * <p>Returns an array so callers stay unchanged, but it holds at most one entry.
+ */
 export const getRowBadges = (row) => {
   if (isAvailableRow(row) || isDegradedRow(row)) {
     return [];
   }
 
   const { advisory, blocked, removed } = row.marketplace;
+  const worst =
+    (removed && ROW_BADGES.REMOVED) ||
+    (blocked && ROW_BADGES.BLOCKED) ||
+    (advisory && ROW_BADGES.ADVISORY) ||
+    null;
 
-  return [
-    removed && ROW_BADGES.REMOVED,
-    blocked && ROW_BADGES.BLOCKED,
-    advisory && ROW_BADGES.ADVISORY,
-  ].filter(Boolean);
+  return worst ? [worst] : [];
 };
+
+/** Severities the registry publishes, ordered as it defines them. */
+export const ADVISORY_SEVERITIES = {
+  LOW: 'low',
+  MEDIUM: 'medium',
+  HIGH: 'high',
+  CRITICAL: 'critical',
+};
+
+const SEVERE_ADVISORY = [ADVISORY_SEVERITIES.HIGH, ADVISORY_SEVERITIES.CRITICAL];
+
+/**
+ * The severity of the advisory on a row, lowercased, or null when there is none to read.
+ *
+ * <p>The row used to read the advisory object as a boolean, so a `low` and a `critical` advisory
+ * were the same amber pill. The detail page has said the severity all along; the row is where an
+ * admin scanning a list decides what to open first, which is exactly where it mattered most.
+ */
+export const getRowAdvisorySeverity = (row) => {
+  const severity = row.marketplace?.advisory?.severity;
+
+  return typeof severity === 'string' && severity.trim() ? severity.trim().toLowerCase() : null;
+};
+
+/** Whether that severity is one a row should shout about rather than merely mark. */
+export const isSevereAdvisory = (severity) => SEVERE_ADVISORY.includes(severity);
 
 const matchesCategory = (row, category) =>
   category === ALL_GROUP_TYPE || row.groupType === category;

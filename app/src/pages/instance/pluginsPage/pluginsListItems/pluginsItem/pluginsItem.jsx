@@ -30,6 +30,7 @@ import {
   getDisplayName,
   getRowAction,
   getRowBadges,
+  getRowAdvisorySeverity,
   getRowIncompatibility,
   getRowInstallState,
   getRowState,
@@ -38,6 +39,7 @@ import {
   ROW_BADGES,
   ROW_INSTALL_STATES,
   ROW_STATES,
+  isSevereAdvisory,
 } from '../../pluginsCatalog/utils';
 import styles from './pluginsItem.scss';
 
@@ -71,6 +73,10 @@ const messages = defineMessages({
   [ROW_BADGES.ADVISORY]: {
     id: 'PluginItem.advisoryBadge',
     defaultMessage: 'Advisory',
+  },
+  advisoryBadgeWithSeverity: {
+    id: 'PluginItem.advisoryBadgeWithSeverity',
+    defaultMessage: 'Advisory — {severity}',
   },
   [ROW_BADGES.BLOCKED]: {
     id: 'PluginItem.blockedBadge',
@@ -126,6 +132,15 @@ const BADGE_TONES_BY_ROW_BADGE = {
   [ROW_BADGES.BLOCKED]: BADGE_TONES.DANGER,
   [ROW_BADGES.REMOVED]: BADGE_TONES.DANGER,
 };
+
+/**
+ * The advisory badge takes its tone from the severity the registry published. A `critical` and a
+ * `low` advisory used to be the same amber pill, because the row read the advisory object as a
+ * boolean — and a list is exactly where that costs something, since it is where an admin decides
+ * which plugin to open first.
+ */
+const advisoryTone = (severity) =>
+  isSevereAdvisory(severity) ? BADGE_TONES.DANGER : BADGE_TONES.WARNING;
 
 const maxVersionLengthForTitle = 17;
 
@@ -227,6 +242,7 @@ export class PluginsItem extends Component {
     const rowAction = getRowAction(data);
     const installState = getRowInstallState(data);
     const incompatible = getRowIncompatibility(data);
+    const advisorySeverity = getRowAdvisorySeverity(data);
 
     return (
       <div
@@ -308,11 +324,20 @@ export class PluginsItem extends Component {
                 {badges.map((badge) => (
                   <PluginBadge
                     key={badge}
-                    tone={BADGE_TONES_BY_ROW_BADGE[badge]}
+                    tone={
+                      badge === ROW_BADGES.ADVISORY
+                        ? advisoryTone(advisorySeverity)
+                        : BADGE_TONES_BY_ROW_BADGE[badge]
+                    }
                     data-automation-id="pluginBadge"
                     data-badge={badge}
+                    data-severity={badge === ROW_BADGES.ADVISORY ? advisorySeverity : undefined}
                   >
-                    {formatMessage(messages[badge])}
+                    {badge === ROW_BADGES.ADVISORY && advisorySeverity
+                      ? formatMessage(messages.advisoryBadgeWithSeverity, {
+                          severity: advisorySeverity,
+                        })
+                      : formatMessage(messages[badge])}
                   </PluginBadge>
                 ))}
               </div>

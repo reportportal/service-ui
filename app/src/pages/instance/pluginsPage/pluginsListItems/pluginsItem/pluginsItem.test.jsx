@@ -18,6 +18,7 @@ import { mount } from 'enzyme';
 import { IntlProvider } from 'react-intl';
 import catalogue from 'controllers/plugins/__fixtures__/catalogue.json';
 import { PLUGIN_TIERS, PLUGIN_TRUST_TIERS } from 'common/constants/pluginTiers';
+import { PluginBadge } from '../../pluginBadge';
 import { toAvailableRow, toInstalledRow } from '../../pluginsCatalog/utils';
 import { PluginsItem } from './pluginsItem';
 
@@ -148,6 +149,69 @@ describe('PluginsItem', () => {
       const wrapper = render(toInstalledRow(localSauce, sauce, false));
 
       expect(find(wrapper, 'pluginIncompatibleMark')).toHaveLength(0);
+    });
+  });
+
+  describe('the one badge a row shows', () => {
+    const badges = (wrapper) =>
+      wrapper.find('span[data-automation-id="pluginBadge"]').map((b) => b.prop('data-badge'));
+    // tone is a PluginBadge prop, so read it off the component rather than the span it renders
+    const advisoryBadge = (wrapper) =>
+      wrapper.find(PluginBadge).filterWhere((b) => b.prop('data-badge') === 'ADVISORY').first();
+    // the same local half, with whatever registry block a case needs
+    const installed = (marketplace) =>
+      toInstalledRow(localJira, { ...jira, marketplace: { ...jira.marketplace, ...marketplace } });
+
+    // the checked-in fixture has a row that is both, and it used to print a pill for each: three
+    // pills on one row make the reader rank them, and the ranking is not theirs to do
+    test('a row that is several bad things at once shows only the worst', () => {
+      const wrapper = render(installed({}));
+
+      expect(badges(wrapper)).toEqual(['BLOCKED']);
+    });
+
+    test('removal outranks a block', () => {
+      const wrapper = render(
+        installed({ removed: { removed: '2026-03-01T00:00:00Z', removalReason: 'withdrawn' } }),
+      );
+
+      expect(badges(wrapper)).toEqual(['REMOVED']);
+    });
+
+    test('a block outranks an advisory', () => {
+      expect(badges(render(installed({ blocked: null })))).toEqual(['ADVISORY']);
+    });
+
+    test('a row with nothing wrong shows no badge at all', () => {
+      expect(badges(render(installed({ advisory: null, blocked: null })))).toEqual([]);
+    });
+
+    // a list is where an admin decides which plugin to open first, so this is exactly where
+    // reading the advisory as a boolean cost something
+    test('a severe advisory is not the same pill as a mild one', () => {
+      const mild = render(installed({ blocked: null, advisory: { severity: 'low', text: 'x' } }));
+      const severe = render(
+        installed({ blocked: null, advisory: { severity: 'critical', text: 'x' } }),
+      );
+
+      expect(advisoryBadge(mild).prop('tone')).toBe('warning');
+      expect(advisoryBadge(severe).prop('tone')).toBe('danger');
+    });
+
+    test('the badge names the severity the registry published', () => {
+      const wrapper = render(
+        installed({ blocked: null, advisory: { severity: 'high', text: 'x' } }),
+      );
+
+      expect(advisoryBadge(wrapper).text()).toBe('Advisory — high');
+      expect(advisoryBadge(wrapper).prop('data-severity')).toBe('high');
+    });
+
+    test('an advisory with no severity is still a badge, just an unqualified one', () => {
+      const wrapper = render(installed({ blocked: null, advisory: { text: 'x' } }));
+
+      expect(advisoryBadge(wrapper).text()).toBe('Advisory');
+      expect(advisoryBadge(wrapper).prop('tone')).toBe('warning');
     });
   });
 

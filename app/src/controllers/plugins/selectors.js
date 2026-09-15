@@ -249,9 +249,6 @@ export const justInstalledMarketplacePluginSelector = (state) =>
 export const marketplaceCatalogueQuerySelector = (state) =>
   marketplaceSelector(state).query || { q: null, category: null };
 
-export const isMarketplacePluginInstallingSelector = (state, registryId) =>
-  (marketplaceSelector(state).installing || []).includes(registryId);
-
 // One frozen empty array, so a state holding no installs keeps returning the same reference and
 // connect's shallow compare stays true.
 const NO_INSTALLS = [];

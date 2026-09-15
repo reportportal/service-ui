@@ -29,7 +29,6 @@ import {
   marketplaceCatalogueErrorSelector,
   marketplacePluginUpdateVersionSelector,
   hasMarketplacePluginUpdateSelector,
-  isMarketplacePluginInstallingSelector,
   marketplaceCatalogueQuerySelector,
 } from './selectors';
 
@@ -133,9 +132,4 @@ describe('controllers/plugins/marketplace selectors', () => {
     expect(marketplaceCatalogueQuerySelector({})).toEqual({ q: null, category: null });
   });
 
-  test('track which plugin is being installed', () => {
-    expect(isMarketplacePluginInstallingSelector(loadedOnline, 'slack')).toBe(true);
-    expect(isMarketplacePluginInstallingSelector(loadedOnline, 'telegram')).toBe(false);
-    expect(isMarketplacePluginInstallingSelector({}, 'slack')).toBe(false);
-  });
 });

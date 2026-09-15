@@ -767,7 +767,9 @@ describe('PluginsCatalog', () => {
       });
       const row = group(wrapper, ALL_GROUP_TYPE).find('[data-automation-id="pluginRow"]').at(0);
 
-      expect(row.find('span[data-badge="ADVISORY"]')).toHaveLength(1);
+      // BLOCKED rather than ADVISORY because this fixture row is both, and a row shows the worst
+      // one only; what this test is about is that a marketplace badge appears and a tier one does not
+      expect(row.find('span[data-badge="BLOCKED"]')).toHaveLength(1);
       expect(row.find(`span[data-badge="${PLUGIN_TIERS.PREMIUM}"]`)).toHaveLength(0);
       expect(actions(group(wrapper, ALL_GROUP_TYPE))).toEqual([ROW_ACTIONS.UPDATE]);
     });

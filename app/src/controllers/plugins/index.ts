@@ -79,7 +79,6 @@ export {
   marketplaceCatalogueErrorSelector,
   marketplacePluginUpdateVersionSelector,
   hasMarketplacePluginUpdateSelector,
-  isMarketplacePluginInstallingSelector,
   marketplaceInstallingPluginsSelector,
   marketplaceInstallErrorSelector,
   marketplaceCatalogueQuerySelector,
