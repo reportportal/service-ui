@@ -83,7 +83,7 @@ export class MarkdownViewer extends Component {
           ref={this.container}
           className={cx('markdown-viewer', { [`mode-${mode}`]: mode }, this.props.className)}
         >
-          {Parser(sanitizeUserHtml(this.easyMDE.markdown(value || '').trim()))}
+          {Parser(sanitizeUserHtml(this.easyMDE.markdown(value || '')).trim())}
         </div>
       </div>
     );
