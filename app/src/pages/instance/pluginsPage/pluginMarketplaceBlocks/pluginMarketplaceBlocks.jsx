@@ -17,7 +17,7 @@
 import PropTypes from 'prop-types';
 import { defineMessages, useIntl } from 'react-intl';
 import classNames from 'classnames/bind';
-import { Button, BubblesLoader, SystemMessage } from '@reportportal/ui-kit';
+import { BubblesLoader, SystemMessage } from '@reportportal/ui-kit';
 import { PLUGIN_TIERS, toPluginTier, toTrustTier } from 'common/constants/pluginTiers';
 import { PluginBadge, BADGE_TONES } from '../pluginBadge';
 import { PluginTrustMark } from '../pluginTrustMark';

@@ -81,8 +81,11 @@ const ACCEPT_FILE_MIME_TYPES = ['.jar', '.json'];
 const FILE_EXTENSION = /\.[^.]+$/;
 const PLUGIN_ID_SEPARATOR = /^[-_.]/;
 // A plugin jar is published as <plugin id>-<version>.jar, so the version sits in the name beside
-// the id the warning above already reads out of it.
-const VERSION_IN_FILE_NAME = /[-_.]([0-9]+(?:\.[0-9]+)*[^-_.]*)$/;
+// the id the warning above already reads out of it. The qualifier after the digits has to begin
+// with something that is not a digit — not a claim about what a version may look like, but what
+// stops the digit runs and the qualifier from competing for the same characters and making the
+// match backtrack.
+const VERSION_IN_FILE_NAME = /[-_.](\d+(?:\.\d+)*(?:[^\d\-_.][^-_.]*)?)$/;
 
 const versionInFileName = (fileName) =>
   VERSION_IN_FILE_NAME.exec(fileName.replace(FILE_EXTENSION, ''))?.[1] ?? null;

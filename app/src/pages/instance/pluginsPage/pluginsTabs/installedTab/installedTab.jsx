@@ -21,7 +21,6 @@ import track from 'react-tracking';
 import { injectIntl, defineMessages } from 'react-intl';
 import classNames from 'classnames/bind';
 import DOMPurify from 'dompurify';
-import semverDiff from 'semver-diff';
 import { URLS } from 'common/urls';
 import { fetch } from 'common/utils';
 import { getPluginsFilter, PLUGIN_FILTER_GROUP_VALUES } from 'common/constants/pluginsFilter';
@@ -74,6 +73,7 @@ import { ActionPanel } from '../../actionPanel';
 import { AvailablePluginDetail } from '../../availablePluginDetail';
 import { PluginsCatalog, ROW_ACTIONS, getDisplayName } from '../../pluginsCatalog';
 import { PluginMarketplaceBlocks } from '../../pluginMarketplaceBlocks';
+import { compareVersions } from '../../versionsTable/utils';
 import { premiumPromoModal } from '../../premiumPromo';
 import { installPluginModal } from '../../modals/installPluginModal';
 
@@ -153,43 +153,16 @@ const bold = (chunks) => DOMPurify.sanitize(`<b>${chunks}</b>`);
  * Whether posting this version moves the instance forward from the one it is running.
  *
  * <p>Both dialogs warn that the running version is replaced and only the verb differs, so a pair
- * that cannot be compared — a plugin whose installed version was never recorded, or a registry
- * that published something semver cannot parse — takes the downgrade wording rather than
- * promising an upgrade nobody has established. `semverDiff` throws on either of those, which is
- * why the answer is not simply its return value.
+ * that cannot be told apart takes the downgrade wording rather than promising an upgrade nobody
+ * has established.
  *
- * <p>It is coerced first because plugins are not disciplined about the third segment: a version
- * recorded as `5.7` is not semver and made `semverDiff` throw, so every pick from a plugin
- * versioned that way was confirmed as a downgrade — including picks that plainly move forward.
+ * <p>This asks the comparator the versions table orders rows with, so the verb the dialog uses and
+ * the direction the row claimed cannot disagree. It replaces a `semverDiff` call that had to
+ * pad every version to three segments first and still answered "downgrade" for anything semver
+ * refused to parse.
  */
-const SEMVER_CORE = /^\d+(\.\d+){0,2}/;
-
-const toComparable = (value) => {
-  const core = SEMVER_CORE.exec(String(value ?? ''))?.[0];
-
-  if (!core) {
-    return null;
-  }
-
-  const segments = core.split('.');
-
-  return [...segments, ...Array(3 - segments.length).fill('0')].join('.');
-};
-
-const isUpgradeFrom = (installedVersion, version) => {
-  const from = toComparable(installedVersion);
-  const to = toComparable(version);
-
-  if (!from || !to) {
-    return false;
-  }
-
-  try {
-    return Boolean(semverDiff(from, to));
-  } catch {
-    return false;
-  }
-};
+const isUpgradeFrom = (installedVersion, version) =>
+  Boolean(installedVersion) && compareVersions(version, installedVersion) > 0;
 
 @injectIntl
 @track()

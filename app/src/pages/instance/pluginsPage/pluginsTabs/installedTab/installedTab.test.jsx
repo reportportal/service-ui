@@ -526,6 +526,15 @@ describe('InstalledTab', () => {
         expect(confirmation(of).data.title).toBe('Upgrade Version');
       });
 
+      // the dialog and the versions table now ask one comparator, so a version the old semver
+      // coercion truncated to three segments — and then called a downgrade, because the truncation
+      // made it equal to the running one — reads as the step forward it is
+      test('a fourth segment is part of the version, not noise past it', () => {
+        const { of } = useVersion('1.5.2.1');
+
+        expect(confirmation(of).data.title).toBe('Upgrade Version');
+      });
+
       test('confirming posts that version', () => {
         const { of } = useVersion('1.4.0');
 

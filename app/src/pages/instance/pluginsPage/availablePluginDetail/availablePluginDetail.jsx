@@ -100,6 +100,14 @@ export const AvailablePluginDetail = ({
   // the registry's, read off the detail response; the row's copy is the same value
   const author = detail?.plugin?.author || plugin.author || null;
 
+  const actionLabel = () => {
+    if (isLocked) {
+      return messages.discoverPremium;
+    }
+
+    return installing ? messages.installing : messages.install;
+  };
+
   useEffect(() => {
     trackEvent(PLUGINS_PAGE_EVENTS.availablePluginDetailPageView(title));
   }, [title, trackEvent]);
@@ -163,14 +171,7 @@ export const AvailablePluginDetail = ({
               // this button is the same request made from a different place
               disabled={!isLocked && (!version || installing)}
             >
-              {formatMessage(
-                // eslint-disable-next-line no-nested-ternary
-                isLocked
-                  ? messages.discoverPremium
-                  : installing
-                    ? messages.installing
-                    : messages.install,
-              )}
+              {formatMessage(actionLabel())}
             </Button>
           </div>
           <p className={cx('description')}>{plugin.description}</p>
