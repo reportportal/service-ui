@@ -18,7 +18,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { injectIntl, defineMessages } from 'react-intl';
 import classNames from 'classnames/bind';
-import { Button, DownloadIcon, SpinLoader, WarningIcon } from '@reportportal/ui-kit';
+import { Button, DownloadIcon, SpinLoader } from '@reportportal/ui-kit';
 import { PLUGIN_DISABLED_MESSAGES_BY_GROUP_TYPE } from 'components/integrations/messages';
 import { PluginIcon } from 'components/integrations/elements/pluginIcon';
 import { PLUGIN_TIERS } from 'common/constants/pluginTiers';
@@ -41,6 +41,7 @@ import {
   ROW_STATES,
   isSevereAdvisory,
 } from '../../pluginsCatalog/utils';
+import { VersionMark, VERSION_MARK_TONES } from '../../versionMark';
 import styles from './pluginsItem.scss';
 
 const cx = classNames.bind(styles);
@@ -289,15 +290,11 @@ export class PluginsItem extends Component {
                   that something is wrong: the two things a reader needs are the requirement and
                   the release they are on, and neither is anywhere else on the row. */}
               {incompatible && (
-                <span
-                  role="img"
-                  className={cx('plugins-incompatible')}
-                  data-automation-id="pluginIncompatibleMark"
-                  title={this.incompatibilityReason(incompatible)}
-                  aria-label={this.incompatibilityReason(incompatible)}
-                >
-                  <WarningIcon />
-                </span>
+                <VersionMark
+                  tone={VERSION_MARK_TONES.INCOMPATIBLE}
+                  automationId="pluginIncompatibleMark"
+                  tooltipContent={this.incompatibilityReason(incompatible)}
+                />
               )}
             </div>
             {/* absent rather than blank: a row with nothing to say says nothing */}

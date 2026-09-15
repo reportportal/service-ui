@@ -22,6 +22,8 @@
     "version" : "1.5.2",
     "publishedAt" : "2026-01-05T12:00:00Z",
     "blocked" : true,
+    "blockedAt" : "2026-01-05T12:00:00Z",
+    "blockReason" : "Signed with a revoked key",
     "compatible" : false,
     "requires" : ">=27.0",
     "advisory" : {

@@ -18,8 +18,9 @@ import { useState } from 'react';
 import PropTypes from 'prop-types';
 import { defineMessages, useIntl } from 'react-intl';
 import classNames from 'classnames/bind';
-import { Button, ChevronDownDropdownIcon, DownloadIcon, WarningIcon } from '@reportportal/ui-kit';
-import { sortVersionsNewestFirst, compareVersions } from './utils';
+import { Button, ChevronDownDropdownIcon, DownloadIcon } from '@reportportal/ui-kit';
+import { VersionMark, VERSION_MARK_TONES } from '../versionMark';
+import { sortVersionsNewestFirst, compareVersions, readRangeBound } from './utils';
 import styles from './versionsTable.scss';
 
 const cx = classNames.bind(styles);
@@ -70,13 +71,34 @@ const messages = defineMessages({
     id: 'VersionsTable.noReleaseNotes',
     defaultMessage: 'No changes were documented for this version.',
   },
-  incompatible: {
-    id: 'VersionsTable.incompatible',
-    defaultMessage: 'Needs ReportPortal {requires}. This instance runs {productVersion}.',
+  needsNewer: {
+    id: 'VersionsTable.needsNewer',
+    defaultMessage: 'Needs ReportPortal {version} or later. This instance runs {productVersion}.',
+  },
+  needsOlder: {
+    id: 'VersionsTable.needsOlder',
+    defaultMessage:
+      'Built for ReportPortal {version} or earlier. This instance runs {productVersion}.',
   },
   incompatibleNoRelease: {
     id: 'VersionsTable.incompatibleNoRelease',
     defaultMessage: "This version doesn't run on the release this instance uses.",
+  },
+  blockedWithReason: {
+    id: 'VersionsTable.blockedWithReason',
+    defaultMessage:
+      "Blocked on {blockedAt}: {reason} It keeps running, but can't be reinstalled or downgraded"
+      + ' to.',
+  },
+  blockedOn: {
+    id: 'VersionsTable.blockedOn',
+    defaultMessage:
+      "Blocked on {blockedAt}. It keeps running, but can't be reinstalled or downgraded to.",
+  },
+  blockedUndated: {
+    id: 'VersionsTable.blockedUndated',
+    defaultMessage:
+      "Blocked by the marketplace. It keeps running, but can't be reinstalled or downgraded to.",
   },
   advisory: {
     id: 'VersionsTable.advisory',
@@ -152,13 +174,30 @@ export const VersionsTable = ({
   const day = (value) =>
     value ? formatDate(value, { day: 'numeric', month: 'short', year: 'numeric' }) : '';
 
-  const incompatibleReason = (entry) =>
-    entry.requires && productVersion
-      ? formatMessage(messages.incompatible, {
-          requires: entry.requires,
-          productVersion,
-        })
-      : formatMessage(messages.incompatibleNoRelease);
+  const incompatibleReason = (entry) => {
+    const bound = readRangeBound(entry.requires);
+    // without a release to compare against, or a range this cannot make a sentence of, the honest
+    // thing is to say only that it does not run here rather than print a range at the reader
+    if (!bound || !productVersion) {
+      return formatMessage(messages.incompatibleNoRelease);
+    }
+
+    return formatMessage(bound.direction === 'newer' ? messages.needsNewer : messages.needsOlder, {
+      version: bound.version,
+      productVersion,
+    });
+  };
+
+  const blockedReason = (entry) => {
+    if (!entry.blockedAt) {
+      return formatMessage(messages.blockedUndated);
+    }
+    const blockedAt = day(entry.blockedAt);
+
+    return entry.blockReason
+      ? formatMessage(messages.blockedWithReason, { blockedAt, reason: entry.blockReason })
+      : formatMessage(messages.blockedOn, { blockedAt });
+  };
 
   const advisoryReason = ({ advisory }) => {
     const common = { severity: advisory.severity, attachedAt: day(advisory.attachedAt) };
@@ -169,25 +208,26 @@ export const VersionsTable = ({
       : formatMessage(messages.advisoryNoUpgrade, common);
   };
 
+  const renderInstalledState = () => (
+    <span className={cx('state')} data-automation-id="installedVersionMarker">
+      {formatMessage(messages.currentVersion)}
+    </span>
+  );
+
   const renderAction = (entry) => {
     if (removed || !onUseVersion) {
       return null;
     }
+    // A blocked version keeps whatever the row would otherwise say — it is still the current one
+    // if it is installed — and simply offers nothing. What happened to it is the mark's to explain,
+    // beside the version it happened to, rather than a word where an action would be.
     if (entry.blocked) {
-      return (
-        <span className={cx('state', 'blocked')} data-automation-id="blockedVersionMarker">
-          {formatMessage(messages.blocked)}
-        </span>
-      );
+      return rowAction(entry.version, installedVersion) ? null : renderInstalledState();
     }
 
     const action = rowAction(entry.version, installedVersion);
     if (!action) {
-      return (
-        <span className={cx('state')} data-automation-id="installedVersionMarker">
-          {formatMessage(messages.currentVersion)}
-        </span>
-      );
+      return renderInstalledState();
     }
 
     return (
@@ -238,27 +278,27 @@ export const VersionsTable = ({
                   <ChevronDownDropdownIcon />
                 </button>
                 <span className={cx('number')}>{entry.version}</span>
+                {/* red, because a withdrawn version is about risk rather than about fit */}
+                {entry.blocked && (
+                  <VersionMark
+                    tone={VERSION_MARK_TONES.DANGER}
+                    automationId="blockedVersionMark"
+                    tooltipContent={blockedReason(entry)}
+                  />
+                )}
                 {entry.compatible === false && (
-                  <span
-                    role="img"
-                    className={cx('mark', 'incompatible')}
-                    data-automation-id="incompatibleVersionMark"
-                    title={incompatibleReason(entry)}
-                    aria-label={incompatibleReason(entry)}
-                  >
-                    <WarningIcon />
-                  </span>
+                  <VersionMark
+                    tone={VERSION_MARK_TONES.INCOMPATIBLE}
+                    automationId="incompatibleVersionMark"
+                    tooltipContent={incompatibleReason(entry)}
+                  />
                 )}
                 {entry.advisory && (
-                  <span
-                    role="img"
-                    className={cx('mark', 'advisory')}
-                    data-automation-id="advisoryVersionMark"
-                    title={advisoryReason(entry)}
-                    aria-label={advisoryReason(entry)}
-                  >
-                    <WarningIcon />
-                  </span>
+                  <VersionMark
+                    tone={VERSION_MARK_TONES.DANGER}
+                    automationId="advisoryVersionMark"
+                    tooltipContent={advisoryReason(entry)}
+                  />
                 )}
               </span>
               <span className={cx('cell', 'date-cell')}>{day(entry.publishedAt)}</span>

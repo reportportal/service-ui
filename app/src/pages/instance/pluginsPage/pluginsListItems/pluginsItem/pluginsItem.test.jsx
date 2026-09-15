@@ -19,6 +19,7 @@ import { IntlProvider } from 'react-intl';
 import catalogue from 'controllers/plugins/__fixtures__/catalogue.json';
 import { PLUGIN_TIERS, PLUGIN_TRUST_TIERS } from 'common/constants/pluginTiers';
 import { PluginBadge } from '../../pluginBadge';
+import { VersionMark } from '../../versionMark';
 import { toAvailableRow, toInstalledRow } from '../../pluginsCatalog/utils';
 import { PluginsItem } from './pluginsItem';
 
@@ -86,7 +87,10 @@ describe('PluginsItem', () => {
   });
 
   describe('a build that does not run on this release', () => {
-    const markOf = (wrapper) => find(wrapper, 'pluginIncompatibleMark').first();
+    // the explanation is the tooltip's content now, not the browser's `title`
+    const markOf = (wrapper) =>
+      find(wrapper, 'pluginIncompatibleMark').first().parents(VersionMark).first();
+    const reasonOf = (wrapper) => markOf(wrapper).prop('tooltipContent');
     const actionButton = (wrapper) => find(wrapper, 'pluginRowAction').find('button').first();
 
     test('an available row is marked and its Install is dead', () => {
@@ -97,10 +101,10 @@ describe('PluginsItem', () => {
     });
 
     test('the mark names the requirement and the release this instance runs', () => {
-      const title = markOf(render(toAvailableRow(incompatibleAvailable))).prop('title');
+      const reason = reasonOf(render(toAvailableRow(incompatibleAvailable)));
 
-      expect(title).toContain('>=26.2');
-      expect(title).toContain('26.1');
+      expect(reason).toContain('>=26.2');
+      expect(reason).toContain('26.1');
     });
 
     test('a row whose latest build does run is neither marked nor disabled', () => {
@@ -123,11 +127,11 @@ describe('PluginsItem', () => {
     // the newer build cannot be taken, so without the mark the second one read as the first
     test('an installed row says an update is being withheld rather than nothing', () => {
       const wrapper = render(toInstalledRow(localSauce, sauce));
-      const title = markOf(wrapper).prop('title');
+      const reason = reasonOf(wrapper);
 
-      expect(title).toContain('5.0.0');
-      expect(title).toContain('>=26.2');
-      expect(title).toContain('26.1');
+      expect(reason).toContain('5.0.0');
+      expect(reason).toContain('>=26.2');
+      expect(reason).toContain('26.1');
       expect(find(wrapper, 'pluginRowAction')).toHaveLength(0);
     });
 

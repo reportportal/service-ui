@@ -126,13 +126,15 @@ describe('PluginMarketplaceBlocks', () => {
       expect(find(row, 'useVersionAction')).toHaveLength(0);
     });
 
-    test('a blocked version is labelled, not offered', () => {
+    test('a blocked version is marked, not offered', () => {
       // FR-OP-03 keeps it in the history and refuses the download; a control here earns a 403
       const wrapper = render(installed);
       const row = rowFor(wrapper, '1.5.2');
 
       expect(detail.versions.find((v) => v.version === '1.5.2').blocked).toBe(true);
-      expect(find(row, 'blockedVersionMarker')).toHaveLength(1);
+      // a red mark beside the version, carrying the operator's reason, rather than a word where
+      // the action would be: the row still says whatever it otherwise would
+      expect(find(row, 'blockedVersionMark')).not.toHaveLength(0);
       expect(find(row, 'useVersionAction')).toHaveLength(0);
     });
 

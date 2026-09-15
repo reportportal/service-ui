@@ -17,6 +17,7 @@
 import { act } from 'react';
 import { mount } from 'enzyme';
 import { IntlProvider } from 'react-intl';
+import { VersionMark } from '../versionMark';
 import { VersionsTable } from './versionsTable';
 
 // midday UTC, so the day a date renders on is the same in every timezone a CI box might run in
@@ -40,6 +41,10 @@ const rows = (wrapper) =>
 const rowFor = (wrapper, version) =>
   find(wrapper, 'pluginVersionRow').filterWhere((node) => node.prop('data-version') === version);
 const actionOf = (wrapper, version) => rowFor(wrapper, version).find('button[data-action]').first();
+// the marks carry their explanation as tooltip content now, not as the browser's `title`
+const tooltipOf = (wrapper, version, automationId) =>
+  find(rowFor(wrapper, version), automationId).first().parents(VersionMark).first()
+    .prop('tooltipContent');
 const expand = (wrapper, version) => {
   act(() => {
     find(rowFor(wrapper, version), 'expandVersion').first().prop('onClick')();
@@ -165,12 +170,36 @@ describe('VersionsTable', () => {
       expect(actionOf(wrapper, '5.8.0').prop('disabled')).toBe(true);
     });
 
-    test('the mark states what the version wants and what this instance is', () => {
+    // the design does not print the range: "26.2 or later" and "25.1 or earlier" are two different
+    // situations for a reader, and one of them is never solved by upgrading ReportPortal
+    test('a build that is too new says which release it needs', () => {
       const wrapper = render({ versions: mixed, productVersion: '26.1' });
-      const mark = find(rowFor(wrapper, '5.8.0'), 'incompatibleVersionMark').first();
 
-      expect(mark.prop('title')).toContain('>=26.2');
-      expect(mark.prop('title')).toContain('26.1');
+      expect(tooltipOf(wrapper, '5.8.0', 'incompatibleVersionMark')).toBe(
+        'Needs ReportPortal 26.2 or later. This instance runs 26.1.',
+      );
+    });
+
+    test('a build that is too old says what it was built for instead', () => {
+      const wrapper = render({
+        versions: [{ version: '5.6.0', compatible: false, requires: '<=25.1' }],
+        productVersion: '26.1',
+      });
+
+      expect(tooltipOf(wrapper, '5.6.0', 'incompatibleVersionMark')).toBe(
+        'Built for ReportPortal 25.1 or earlier. This instance runs 26.1.',
+      );
+    });
+
+    test('a range that makes no sentence says only that it does not run here', () => {
+      const wrapper = render({
+        versions: [{ version: '5.8.0', compatible: false, requires: 'whenever' }],
+        productVersion: '26.1',
+      });
+
+      expect(tooltipOf(wrapper, '5.8.0', 'incompatibleVersionMark')).toBe(
+        "This version doesn't run on the release this instance uses.",
+      );
     });
 
     test('a version that does run is neither marked nor disabled', () => {
@@ -218,11 +247,11 @@ describe('VersionsTable', () => {
         installedVersion: '5.7.0',
         latestVersion: '5.8.0',
       });
-      const mark = find(rowFor(wrapper, '5.7.0'), 'advisoryVersionMark').first();
+      const tooltip = tooltipOf(wrapper, '5.7.0', 'advisoryVersionMark');
 
-      expect(mark.prop('title')).toContain('critical');
-      expect(mark.prop('title')).toContain('Feb 15, 2026');
-      expect(mark.prop('title')).toContain('5.8.0');
+      expect(tooltip).toContain('critical');
+      expect(tooltip).toContain('Feb 15, 2026');
+      expect(tooltip).toContain('5.8.0');
     });
 
     // an advisory is a warning, not a lock: refusing to let an admin move off a vulnerable build
@@ -255,14 +284,59 @@ describe('VersionsTable', () => {
   });
 
   describe('Versions. Table. Blocked Version and Plugin Removed', () => {
-    test('a blocked version is labelled, never offered', () => {
+    test('a blocked version is marked, never offered', () => {
       const wrapper = render({
         versions: [{ version: '5.8.0', blocked: true }, { version: '5.7.0' }],
         installedVersion: '5.7.0',
       });
       const row = rowFor(wrapper, '5.8.0');
 
-      expect(find(row, 'blockedVersionMarker')).toHaveLength(1);
+      expect(find(row, 'blockedVersionMark')).not.toHaveLength(0);
+      expect(find(row, 'useVersionAction')).toHaveLength(0);
+    });
+
+    /**
+     * The operator's reason is the one part of a block a reader cannot work out, so it travels to
+     * the row it happened to rather than being summarised into the word "Blocked".
+     */
+    test('the mark carries when it was blocked and why', () => {
+      const wrapper = render({
+        versions: [
+          {
+            version: '5.8.0',
+            blocked: true,
+            blockedAt: '2026-02-15T12:00:00Z',
+            blockReason: 'Signed with a revoked key.',
+          },
+        ],
+      });
+
+      const tooltip = tooltipOf(wrapper, '5.8.0', 'blockedVersionMark');
+      expect(tooltip).toContain('Feb 15, 2026');
+      expect(tooltip).toContain('Signed with a revoked key.');
+      expect(tooltip).toContain("can't be reinstalled or downgraded to");
+    });
+
+    test('a block with no reason recorded still says when', () => {
+      const wrapper = render({
+        versions: [{ version: '5.8.0', blocked: true, blockedAt: '2026-02-15T12:00:00Z' }],
+      });
+
+      expect(tooltipOf(wrapper, '5.8.0', 'blockedVersionMark')).toBe(
+        "Blocked on Feb 15, 2026. It keeps running, but can't be reinstalled or downgraded to.",
+      );
+    });
+
+    // the blocked version is still the one running: the row keeps saying so, and simply offers
+    // nothing, because what happened to it is the mark's to explain
+    test('the installed version being blocked does not stop the row naming it', () => {
+      const wrapper = render({
+        versions: [{ version: '5.7.0', blocked: true }],
+        installedVersion: '5.7.0',
+      });
+      const row = rowFor(wrapper, '5.7.0');
+
+      expect(find(row, 'installedVersionMarker')).toHaveLength(1);
       expect(find(row, 'useVersionAction')).toHaveLength(0);
     });
 
