@@ -27,7 +27,7 @@ import { PASSWORD_MAX_ALLOWED_LENGTH } from 'common/constants/validation';
 import { passwordMinLengthSelector } from 'controllers/appInfo';
 import { URLS } from 'common/urls';
 import { LOGIN_PAGE } from 'controllers/pages';
-import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
+import { showNotification, showDefaultErrorNotification, NOTIFICATION_TYPES } from 'controllers/notification';
 import { PasswordRequirementsList } from 'components/passwordRequirementsList';
 import { LoadingSubmitButton } from 'components/loadingSubmitButton';
 import { FieldProvider } from 'components/fields/fieldProvider';
@@ -91,10 +91,6 @@ const messages = defineMessages({
   successChange: {
     id: 'ChangePasswordForm.successChange',
     defaultMessage: 'Your password has been changed successfully',
-  },
-  failedChange: {
-    id: 'ChangePasswordForm.failedChange',
-    defaultMessage: 'Failed to update password',
   },
 });
 
@@ -170,13 +166,8 @@ const ChangePasswordFormComponent = ({ handleSubmit, resetQueryParam = '' }) => 
           );
           dispatch(redirect({ type: LOGIN_PAGE }));
         })
-        .catch(() => {
-          dispatch(
-            showNotification({
-              type: NOTIFICATION_TYPES.ERROR,
-              message: formatMessage(messages.failedChange),
-            }),
-          );
+        .catch((error) => {
+          dispatch(showDefaultErrorNotification(error));
         })
         .then(() => {
           setIsLoading(false);
