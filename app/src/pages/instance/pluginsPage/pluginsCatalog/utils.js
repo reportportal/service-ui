@@ -15,7 +15,7 @@
  */
 
 import { ALL_GROUP_TYPE } from 'common/constants/pluginsGroupTypes';
-import { INSTALLED_GROUP_TYPE, PLUGIN_FILTER_GROUP_VALUES } from 'common/constants/pluginsFilter';
+import { PLUGIN_FILTER_GROUP_VALUES } from 'common/constants/pluginsFilter';
 import {
   PLUGIN_ACCESS_TIERS,
   PLUGIN_TIERS,
@@ -280,7 +280,7 @@ export const getRowBadges = (row) => {
 };
 
 const matchesCategory = (row, category) =>
-  category === ALL_GROUP_TYPE || category === INSTALLED_GROUP_TYPE || row.groupType === category;
+  category === ALL_GROUP_TYPE || row.groupType === category;
 
 const matchesQuery = (row, query) => {
   const normalized = query.trim().toLowerCase();

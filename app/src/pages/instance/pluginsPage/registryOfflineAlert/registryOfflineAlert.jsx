@@ -38,10 +38,15 @@ const messages = defineMessages({
     id: 'RegistryOfflineAlert.knownHost',
     defaultMessage: '{host} did not answer.',
   },
+  // The reviewed copy, plus the two things it does not say and this page needs. FR-A-04 requires
+  // the all-clear caveat: nothing marketplace-derived is retained while the registry is
+  // unreachable, so every row goes clean and a reader would otherwise take that for good news.
+  // And the hand upload is the escape valve for exactly this situation, so it is worth naming
+  // while the rest of the page is refusing to do anything.
   body: {
     id: 'RegistryOfflineAlert.body',
     defaultMessage:
-      'Nothing can be browsed or installed from the registry right now, and no advisory, block, removal or update can be checked for the plugins you already have. The absence of warnings below is not an all-clear. Uploading a plugin .jar by hand still works.',
+      'Installed plugins keep running. Available plugins are not listed, and nothing can be installed, upgraded or downgraded until the connection returns. No advisory, block or removal can be checked either, so the absence of warnings below is not an all-clear. Uploading a plugin .jar by hand still works. Refresh the page to check again.',
   },
 });
 

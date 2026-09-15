@@ -19,10 +19,14 @@ import { IntlProvider } from 'react-intl';
 import { BubblesLoader } from '@reportportal/ui-kit';
 import {
   ALL_GROUP_TYPE,
+  AUTHORIZATION_GROUP_TYPE,
   AVAILABLE_PLUGINS_TYPE,
   BTS_GROUP_TYPE,
+  IMPORT_GROUP_TYPE,
+  NOTIFICATION_GROUP_TYPE,
+  OTHER_GROUP_TYPE,
 } from 'common/constants/pluginsGroupTypes';
-import { INSTALLED_GROUP_TYPE } from 'common/constants/pluginsFilter';
+import { getPluginsFilter, PLUGIN_FILTER_GROUP_VALUES } from 'common/constants/pluginsFilter';
 import catalogue from 'controllers/plugins/__fixtures__/catalogue.json';
 import catalogueOffline from 'controllers/plugins/__fixtures__/catalogue-offline.json';
 import { PLUGIN_TIERS } from 'common/constants/pluginTiers';
@@ -471,11 +475,27 @@ describe('PluginsCatalog', () => {
       expect(group(wrapper, AVAILABLE_PLUGINS_TYPE)).toHaveLength(0);
     });
 
-    test('the Installed chip hides the Available group', () => {
-      const wrapper = render({ activeCategory: INSTALLED_GROUP_TYPE });
+    // status is the two groups, not a chip: an `Installed` chip made one axis selectable in two
+    // controls that then had to agree, and had nothing to filter on a screen with nothing installed
+    test('status is not one of the chips', () => {
+      const chips = getPluginsFilter(PLUGIN_FILTER_GROUP_VALUES).map((chip) => chip.value);
 
-      expect(group(wrapper, ALL_GROUP_TYPE).exists()).toBe(true);
-      expect(group(wrapper, AVAILABLE_PLUGINS_TYPE)).toHaveLength(0);
+      expect(chips).not.toContain('INSTALLED');
+    });
+
+    // the order is fixed by the design rather than by the data, so it may not be sorted by count
+    // or alphabetically
+    test('the chips are the six the design fixes, in its order', () => {
+      const chips = getPluginsFilter(PLUGIN_FILTER_GROUP_VALUES).map((chip) => chip.value);
+
+      expect(chips).toEqual([
+        ALL_GROUP_TYPE,
+        BTS_GROUP_TYPE,
+        NOTIFICATION_GROUP_TYPE,
+        AUTHORIZATION_GROUP_TYPE,
+        IMPORT_GROUP_TYPE,
+        OTHER_GROUP_TYPE,
+      ]);
     });
   });
 

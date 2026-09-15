@@ -19,7 +19,6 @@ import { defineMessages, useIntl } from 'react-intl';
 import classNames from 'classnames/bind';
 import { BubblesLoader, Button } from '@reportportal/ui-kit';
 import { ALL_GROUP_TYPE, AVAILABLE_PLUGINS_TYPE } from 'common/constants/pluginsGroupTypes';
-import { INSTALLED_GROUP_TYPE } from 'common/constants/pluginsFilter';
 import { SearchField } from 'components/fields/searchField';
 import { PluginsListItems } from '../pluginsListItems';
 import { RegistryOfflineAlert } from '../registryOfflineAlert';
@@ -96,9 +95,8 @@ export const PluginsCatalog = ({
     installState,
   );
 
-  // nothing can be browsed or installed without a catalogue, and the Installed chip asks for
-  // installed only
-  const hideAvailable = !marketplaceTrusted || activeCategory === INSTALLED_GROUP_TYPE;
+  // nothing can be browsed or installed without a catalogue
+  const hideAvailable = !marketplaceTrusted;
   // the available half is the answer the server gave to this query and category, so it is
   // rendered as it arrived; only the locally held installed half is narrowed here
   const availableRows = hideAvailable

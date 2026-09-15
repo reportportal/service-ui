@@ -20,7 +20,6 @@ import { Provider } from 'react-redux';
 import { createStore } from 'redux';
 import { IntlProvider } from 'react-intl';
 import { BTS_GROUP_TYPE, ALL_GROUP_TYPE } from 'common/constants/pluginsGroupTypes';
-import { INSTALLED_GROUP_TYPE } from 'common/constants/pluginsFilter';
 import { MARKETPLACE_CATALOGUE_STATE } from 'controllers/plugins';
 import {
   FETCH_MARKETPLACE_CATALOGUE,
@@ -165,13 +164,16 @@ describe('InstalledTab', () => {
     expect(lastRequest()).toEqual({ q: 'jir', category: BTS_GROUP_TYPE, debounced: undefined });
   });
 
-  test('the synthetic All and Installed chips are not sent as categories', () => {
+  // `All` is the absence of a category, not a category named All — so going back to it has to
+  // clear the one the server is filtering on, rather than send a seventh value it cannot resolve
+  test('the synthetic All chip clears the category instead of being sent as one', () => {
     const { call, lastRequest } = render();
 
-    call(PluginsFilter, 'onFilterChange', INSTALLED_GROUP_TYPE);
-    expect(lastRequest()).toEqual({ q: null, category: null, debounced: undefined });
+    call(PluginsFilter, 'onFilterChange', BTS_GROUP_TYPE);
+    expect(lastRequest()).toEqual({ q: null, category: BTS_GROUP_TYPE, debounced: undefined });
 
     call(PluginsFilter, 'onFilterChange', ALL_GROUP_TYPE);
+
     expect(lastRequest()).toEqual({ q: null, category: null, debounced: undefined });
   });
 
