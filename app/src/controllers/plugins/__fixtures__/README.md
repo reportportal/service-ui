@@ -15,13 +15,28 @@ To change a fixture, change the response in service-api and re-run:
 Absent fields are absent on purpose: the service serialises with `NON_NULL`, so a `null` is
 never sent and the UI must treat "missing" and "null" as the same thing.
 
-| File | Route | State |
-| --- | --- | --- |
-| `catalogue.json` | `GET /v1/plugins` | registry online: installed matched, installed unmatched, installed removed, installed with an update withheld as incompatible, available, available but incompatible, premium locked, advisory, blocked, update available |
-| `catalogue-offline.json` | `GET /v1/plugins` | registry unreachable: local rows only, no marketplace block, nothing available |
-| `plugin-detail.json` | `GET /v1/plugins/{registryId}` | registry online: manifest, version history, changelog, screenshots, advisory, blocked, premium locked |
-| `plugin-detail-removed.json` | `GET /v1/plugins/{registryId}` | registry online: tombstone only — removed from the marketplace, still running here |
-| `plugin-detail-offline.json` | `GET /v1/plugins/{registryId}` | registry unreachable: the envelope and nothing registry-derived |
+| File | Route |
+| --- | --- |
+| `catalogue.json` | `GET /v1/plugins` |
+| `catalogue-offline.json` | `GET /v1/plugins` |
+| `plugin-detail.json` | `GET /v1/plugins/{registryId}` |
+| `plugin-detail-removed.json` | `GET /v1/plugins/{registryId}` |
+| `plugin-detail-offline.json` | `GET /v1/plugins/{registryId}` |
+
+What each one covers:
+
+- `catalogue.json` — registry online. Installed: matched, unmatched, removed, and one whose
+  update is withheld because the newest build does not run on this release. Available: one
+  that runs here, one that does not, and a premium row that is locked. Plus an advisory, a
+  blocked version and an update that is offered.
+- `catalogue-offline.json` — registry unreachable: local rows only, no marketplace block on
+  any of them, nothing offered for install.
+- `plugin-detail.json` — registry online: manifest, version history, changelog, screenshots,
+  advisory, blocked version, premium locked.
+- `plugin-detail-removed.json` — registry online, tombstone only: removed from the
+  marketplace and still running here.
+- `plugin-detail-offline.json` — registry unreachable: the envelope, and nothing derived from
+  the registry.
 
 ## Request fixtures
 
@@ -29,10 +44,13 @@ These are bodies the UI **sends**, not answers it receives. They are produced fr
 records the controller deserialises into, and the test proves each file reads back into its
 record, so a body built from one of these is a body this service accepts.
 
-| File | Route | Body |
-| --- | --- | --- |
-| `install-request.json` | `POST /v1/plugins/{registryId}/install` | install, update and rollback are the same request — only `version` differs |
-| `licence-request.json` | `PUT /v1/plugins/licence` | the credentials an operator got from the registry |
+| File | Route |
+| --- | --- |
+| `install-request.json` | `POST /v1/plugins/{registryId}/install` |
+| `licence-request.json` | `PUT /v1/plugins/licence` |
+
+Install, update and rollback are one request — only `version` differs. The licence body is
+the credentials an operator got from the registry.
 
 The `privateKey` in `licence-request.json` is 64 zero bytes in base64. It is a shape, not a
 credential, and the running service rejects it as not an Ed25519 key.
