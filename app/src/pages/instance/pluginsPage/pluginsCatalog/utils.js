@@ -299,7 +299,7 @@ export const ADVISORY_SEVERITIES = {
   CRITICAL: 'critical',
 };
 
-const SEVERE_ADVISORY = [ADVISORY_SEVERITIES.HIGH, ADVISORY_SEVERITIES.CRITICAL];
+const SEVERE_ADVISORY = new Set([ADVISORY_SEVERITIES.HIGH, ADVISORY_SEVERITIES.CRITICAL]);
 
 /**
  * The severity of the advisory on a row, lowercased, or null when there is none to read.
@@ -315,7 +315,7 @@ export const getRowAdvisorySeverity = (row) => {
 };
 
 /** Whether that severity is one a row should shout about rather than merely mark. */
-export const isSevereAdvisory = (severity) => SEVERE_ADVISORY.includes(severity);
+export const isSevereAdvisory = (severity) => SEVERE_ADVISORY.has(severity);
 
 const matchesCategory = (row, category) =>
   category === ALL_GROUP_TYPE || row.groupType === category;
