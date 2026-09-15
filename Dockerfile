@@ -16,7 +16,7 @@ COPY ./app/ /usr/src/app/
 RUN export NODE_OPTIONS="--max-old-space-size=4096"
 RUN npm ci --legacy-peer-deps && npm run build
 
-FROM nginxinc/nginx-unprivileged:1.30.4-alpine3.24-slim
+FROM nginxinc/nginx-unprivileged:1.30.4-alpine3.24
 
 USER root
 
