@@ -494,6 +494,7 @@ export class InstalledTab extends Component {
             onInstall={this.handleInstallFromDetail}
             onRetry={this.refetchPluginDetail}
             installing={this.props.installingIds.includes(data.id)}
+            productVersion={this.props.productVersion}
           />
         );
       default: {
@@ -666,6 +667,7 @@ export class InstalledTab extends Component {
         onRetry={unmatched ? this.refetchCatalogue : this.refetchPluginDetail}
         installedVersion={data.details?.version || null}
         installing={this.props.installingIds.includes(data.registryId)}
+        productVersion={this.props.productVersion}
         onUseVersion={(version) =>
           this.showVersionChangeModal(
             getDisplayName(data),

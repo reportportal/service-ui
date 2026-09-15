@@ -78,7 +78,8 @@ describe('PluginMarketplaceBlocks', () => {
       const text = find(render(), 'pluginVersions').text();
 
       expect(find(render(), 'pluginVersionRow')).toHaveLength(2);
-      expect(text.indexOf('v.1.6.0')).toBeLessThan(text.indexOf('v.1.5.2'));
+      // the design numbers the rows plainly; the old list prefixed them with "v."
+      expect(text.indexOf('1.6.0')).toBeLessThan(text.indexOf('1.5.2'));
     });
 
     // the registry states a date, so it is shown as that date rather than shifted into the

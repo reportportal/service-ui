@@ -87,6 +87,7 @@ export const AvailablePluginDetail = ({
   onInstall = () => {},
   onRetry = () => {},
   installing = false,
+  productVersion = null,
 }) => {
   const { formatMessage } = useIntl();
   const { trackEvent } = useTracking();
@@ -185,9 +186,7 @@ export const AvailablePluginDetail = ({
         onRetry={onRetry}
         showTier={false}
         installing={installing}
-        // a version row on this page installs that version; on an installed plugin's page the
-        // same row switches to it, which is why the label is asked for rather than assumed
-        useVersionLabel="install"
+        productVersion={productVersion}
         onUseVersion={isLocked ? null : (chosen) => onInstall(plugin, chosen)}
       />
     </div>
@@ -196,6 +195,7 @@ export const AvailablePluginDetail = ({
 
 AvailablePluginDetail.propTypes = {
   installing: PropTypes.bool,
+  productVersion: PropTypes.string,
   plugin: PropTypes.shape({
     name: PropTypes.string.isRequired,
     tier: PropTypes.string.isRequired,

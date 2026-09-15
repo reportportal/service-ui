@@ -24,7 +24,8 @@ import { PluginTrustMark } from '../pluginTrustMark';
 import { RegistryOfflineAlert } from '../registryOfflineAlert';
 import { CatalogueUnavailableAlert } from '../catalogueUnavailableAlert';
 import { isMarketplaceTrusted } from '../pluginsCatalog';
-import { formatPublishDate, sortVersionsNewestFirst } from './utils';
+import { VersionsTable } from '../versionsTable';
+import { formatPublishDate } from './utils';
 import styles from './pluginMarketplaceBlocks.scss';
 
 const cx = classNames.bind(styles);
@@ -136,8 +137,7 @@ export const PluginMarketplaceBlocks = ({
   onUseVersion = null,
   showTier = true,
   installing = false,
-  // 'install' on a plugin the instance does not have yet, 'use' on one it is already running
-  useVersionLabel = 'use',
+  productVersion = null,
 }) => {
   const { formatMessage, formatDate } = useIntl();
   const trusted = isMarketplaceTrusted({ offline, failed, unmatched });
@@ -157,57 +157,6 @@ export const PluginMarketplaceBlocks = ({
         removed: null,
       };
   const date = (value) => formatPublishDate(formatDate, value);
-
-  /**
-   * What a version row offers. Rollback is one of three things this endpoint does — install,
-   * update and roll back differ only by which version is posted — so the list is where an admin
-   * reaches a version that is neither the latest nor the one running.
-   *
-   * Four cases, and only the last is an action:
-   *  - the running version is labelled, never offered: re-posting it would reinstall it;
-   *  - a blocked version is labelled too. FR-OP-03 keeps it in the history with a warning and
-   *    refuses the download, so drawing a control that earns a 403 would be a lie;
-   *  - a removed plugin has no reachable version at all — the registry answers 410 for every
-   *    one — so the whole column goes quiet;
-   *  - anything else can be made active.
-   *
-   * The column is absent entirely on a page with nothing installed (the available-plugin page
-   * renders this same component), which is what `onUseVersion` being null means.
-   */
-  const versionAction = (entry) => {
-    if (!onUseVersion || removed) {
-      return null;
-    }
-    if (installedVersion && entry.version === installedVersion) {
-      return (
-        <span className={cx('version-state')} data-automation-id="installedVersionMarker">
-          {formatMessage(messages.installedVersion)}
-        </span>
-      );
-    }
-    if (entry.blocked) {
-      return (
-        <span className={cx('version-state', 'blocked')} data-automation-id="blockedVersionMarker">
-          {formatMessage(messages.blockedVersion)}
-        </span>
-      );
-    }
-    return (
-      <Button
-        variant="text"
-        adjustWidthOn="content"
-        data-automation-id="useVersionAction"
-        onClick={() => onUseVersion(entry.version)}
-        // every row here installs the same plugin, so while one version is on its way none of
-        // the others may be started: two installs of one plugin race to be the one that lands
-        disabled={installing}
-      >
-        {formatMessage(
-          useVersionLabel === 'install' ? messages.installVersion : messages.useVersion,
-        )}
-      </Button>
-    );
-  };
 
   return (
     <div className={cx('plugin-marketplace-blocks')}>
@@ -322,25 +271,16 @@ export const PluginMarketplaceBlocks = ({
               </div>
             </section>
           )}
-          {versions.length > 0 && (
-            <section className={cx('block')} data-automation-id="pluginVersions">
-              <h3 className={cx('block-header')}>{formatMessage(messages.versions)}</h3>
-              <div className={cx('card')}>
-                {sortVersionsNewestFirst(versions).map((entry) => (
-                  <div
-                    key={entry.version}
-                    className={cx('version-row')}
-                    data-automation-id="pluginVersionRow"
-                    data-version={entry.version}
-                  >
-                    <span className={cx('version')}>{`v.${entry.version}`}</span>
-                    <span className={cx('version-date')}>{date(entry.publishedAt)}</span>
-                    <span className={cx('version-action')}>{versionAction(entry)}</span>
-                  </div>
-                ))}
-              </div>
-            </section>
-          )}
+          <VersionsTable
+            versions={versions}
+            installedVersion={installedVersion}
+            latestVersion={detail?.plugin?.latestVersion || null}
+            productVersion={productVersion}
+            changelog={changelog}
+            onUseVersion={onUseVersion}
+            installing={installing}
+            removed={Boolean(removed)}
+          />
         </div>
       )}
     </div>
@@ -350,7 +290,8 @@ export const PluginMarketplaceBlocks = ({
 PluginMarketplaceBlocks.propTypes = {
   /** An install for this plugin is on its way, so no version may start another. */
   installing: PropTypes.bool,
-  useVersionLabel: PropTypes.oneOf(['use', 'install']),
+  /** The release this instance reports, quoted when a version will not run here. */
+  productVersion: PropTypes.string,
   detail: PropTypes.shape({
     /** The registry's own answer about the plugin, `access` and `tier` among it. */
     plugin: PropTypes.object,
