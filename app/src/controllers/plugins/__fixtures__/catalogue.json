@@ -24,6 +24,8 @@
       "updateAvailable" : {
         "version" : "1.6.0"
       },
+      "compatible" : true,
+      "requires" : ">=25.1",
       "advisory" : {
         "severity" : "high",
         "text" : "Leaks the API key into the log",
@@ -50,6 +52,26 @@
       "access" : "public",
       "tier" : "official",
       "latestVersion" : "5.0.0",
+      "compatible" : true,
+      "requires" : ">=25.1",
+      "locked" : false
+    }
+  }, {
+    "integrationTypeId" : 11,
+    "name" : "sauce-labs",
+    "version" : "4.0.0",
+    "enabled" : true,
+    "groupType" : "OTHER",
+    "marketplace" : {
+      "pluginId" : "plugin-other-sauce-labs",
+      "name" : "Sauce Labs",
+      "description" : "Pulls a Sauce Labs session recording into a failed test item.",
+      "author" : "Sauce Labs",
+      "access" : "public",
+      "tier" : "official",
+      "latestVersion" : "5.0.0",
+      "compatible" : false,
+      "requires" : ">=26.2",
       "locked" : false
     }
   }, {
@@ -83,6 +105,20 @@
     "groupType" : "NOTIFICATION",
     "access" : "public",
     "tier" : "official",
+    "compatible" : true,
+    "requires" : ">=25.1",
+    "locked" : false
+  }, {
+    "id" : "plugin-other-sauce-labs",
+    "name" : "Sauce Labs",
+    "latestVersion" : "5.0.0",
+    "description" : "Pulls a Sauce Labs session recording into a failed test item.",
+    "author" : "Sauce Labs",
+    "groupType" : "OTHER",
+    "access" : "public",
+    "tier" : "official",
+    "compatible" : false,
+    "requires" : ">=26.2",
     "locked" : false
   }, {
     "id" : "plugin-bts-azure",
@@ -94,6 +130,8 @@
     "groupType" : "BTS",
     "access" : "premium",
     "tier" : "official",
+    "compatible" : true,
+    "requires" : ">=25.1",
     "locked" : true
   } ]
 }

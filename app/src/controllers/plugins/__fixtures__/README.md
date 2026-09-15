@@ -17,7 +17,7 @@ never sent and the UI must treat "missing" and "null" as the same thing.
 
 | File | Route | State |
 | --- | --- | --- |
-| `catalogue.json` | `GET /v1/plugins` | registry online: installed matched, installed unmatched, installed removed, available, premium locked, advisory, blocked, update available |
+| `catalogue.json` | `GET /v1/plugins` | registry online: installed matched, installed unmatched, installed removed, installed with an update withheld as incompatible, available, available but incompatible, premium locked, advisory, blocked, update available |
 | `catalogue-offline.json` | `GET /v1/plugins` | registry unreachable: local rows only, no marketplace block, nothing available |
 | `plugin-detail.json` | `GET /v1/plugins/{registryId}` | registry online: manifest, version history, changelog, screenshots, advisory, blocked, premium locked |
 | `plugin-detail-removed.json` | `GET /v1/plugins/{registryId}` | registry online: tombstone only — removed from the marketplace, still running here |

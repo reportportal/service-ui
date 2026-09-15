@@ -18,7 +18,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { injectIntl, defineMessages } from 'react-intl';
 import classNames from 'classnames/bind';
-import { Button, DownloadIcon, SpinLoader } from '@reportportal/ui-kit';
+import { Button, DownloadIcon, SpinLoader, WarningIcon } from '@reportportal/ui-kit';
 import { PLUGIN_DISABLED_MESSAGES_BY_GROUP_TYPE } from 'components/integrations/messages';
 import { PluginIcon } from 'components/integrations/elements/pluginIcon';
 import { PLUGIN_TIERS } from 'common/constants/pluginTiers';
@@ -30,6 +30,7 @@ import {
   getDisplayName,
   getRowAction,
   getRowBadges,
+  getRowIncompatibility,
   getRowInstallState,
   getRowState,
   isAvailableRow,
@@ -91,6 +92,24 @@ const messages = defineMessages({
     id: 'PluginItem.installFailedState',
     defaultMessage: 'Install failed',
   },
+  incompatible: {
+    id: 'PluginItem.incompatible',
+    defaultMessage: 'Needs ReportPortal {requires}. This instance runs {productVersion}.',
+  },
+  incompatibleNoRelease: {
+    id: 'PluginItem.incompatibleNoRelease',
+    defaultMessage: "This version doesn't run on the release this instance uses.",
+  },
+  updateWithheld: {
+    id: 'PluginItem.updateWithheld',
+    defaultMessage:
+      'Version {version} is available but needs ReportPortal {requires}. This instance runs'
+      + ' {productVersion}.',
+  },
+  updateWithheldNoRelease: {
+    id: 'PluginItem.updateWithheldNoRelease',
+    defaultMessage: "Version {version} is available but doesn't run on the release this instance uses.",
+  },
 });
 
 // The ui-kit calls the bordered variant `ghost` and the borderless one `text`; the spec calls
@@ -119,12 +138,15 @@ export class PluginsItem extends Component {
     onRowAction: PropTypes.func,
     /** This row is where the plugin just installed ended up. */
     highlighted: PropTypes.bool,
+    /** The ReportPortal release this instance reports, quoted when explaining a refusal. */
+    productVersion: PropTypes.string,
   };
 
   static defaultProps = {
     onClick: () => {},
     onRowAction: () => {},
     highlighted: false,
+    productVersion: null,
   };
 
   rowRef = React.createRef();
@@ -159,6 +181,26 @@ export class PluginsItem extends Component {
     this.props.onClick(this.props.data);
   };
 
+  /**
+   * Why the row will not offer the build. The wording splits on whether anything newer exists:
+   * with a newer version the sentence is about an update being held back, and without one it is
+   * about the plugin this instance is already running having fallen out of range.
+   */
+  incompatibilityReason = ({ version, requires, newer }) => {
+    const { formatMessage } = this.props.intl;
+    const { productVersion } = this.props;
+
+    if (newer) {
+      return requires && productVersion
+        ? formatMessage(messages.updateWithheld, { version, requires, productVersion })
+        : formatMessage(messages.updateWithheldNoRelease, { version });
+    }
+
+    return requires && productVersion
+      ? formatMessage(messages.incompatible, { requires, productVersion })
+      : formatMessage(messages.incompatibleNoRelease);
+  };
+
   rowActionHandler = (action) => (event) => {
     event.stopPropagation();
     this.props.onRowAction(action, this.props.data);
@@ -184,6 +226,7 @@ export class PluginsItem extends Component {
     const rowState = getRowState(data);
     const rowAction = getRowAction(data);
     const installState = getRowInstallState(data);
+    const incompatible = getRowIncompatibility(data);
 
     return (
       <div
@@ -226,6 +269,20 @@ export class PluginsItem extends Component {
                     : ''
                 }
               >{`${version || ''}`}</span>
+              {/* Amber, beside the version, and it says what the build wants rather than only
+                  that something is wrong: the two things a reader needs are the requirement and
+                  the release they are on, and neither is anywhere else on the row. */}
+              {incompatible && (
+                <span
+                  role="img"
+                  className={cx('plugins-incompatible')}
+                  data-automation-id="pluginIncompatibleMark"
+                  title={this.incompatibilityReason(incompatible)}
+                  aria-label={this.incompatibilityReason(incompatible)}
+                >
+                  <WarningIcon />
+                </span>
+              )}
             </div>
             {/* absent rather than blank: a row with nothing to say says nothing */}
             {description && (
@@ -313,6 +370,9 @@ export class PluginsItem extends Component {
                   <Button
                     variant={ACTION_VARIANTS[rowAction]}
                     icon={rowAction === ROW_ACTIONS.UPDATE ? <DownloadIcon /> : null}
+                    // the server would refuse this install; the row says so instead of letting
+                    // the user find out from the error that follows the click
+                    disabled={Boolean(incompatible) && rowAction === ROW_ACTIONS.INSTALL}
                     onClick={this.rowActionHandler(rowAction)}
                   >
                     {formatMessage(messages[rowAction])}

@@ -36,6 +36,7 @@ const DISPLAY_NAMES = {
   jira: 'Jira',
   rally: 'Rally',
   gitlab: 'GitLab',
+  'sauce-labs': 'Sauce Labs',
   'custom-scanner': 'Custom Scanner',
 };
 const localPlugin = (row) => ({
@@ -91,18 +92,22 @@ describe('PluginsCatalog', () => {
       expect(groupNames(wrapper)).toEqual([ALL_GROUP_TYPE, AVAILABLE_PLUGINS_TYPE]);
       expect(
         group(wrapper, ALL_GROUP_TYPE).find('[data-automation-id="pluginsGroupCount"]').text(),
-      ).toBe('(4)');
+      ).toBe('(5)');
       expect(
         group(wrapper, AVAILABLE_PLUGINS_TYPE)
           .find('[data-automation-id="pluginsGroupCount"]')
           .text(),
-      ).toBe('(2)');
+      ).toBe('(3)');
     });
 
     test('the Available group is the registry catalogue and nothing else', () => {
       const wrapper = render();
 
-      expect(rowNames(group(wrapper, AVAILABLE_PLUGINS_TYPE))).toEqual(['Azure DevOps', 'Slack']);
+      expect(rowNames(group(wrapper, AVAILABLE_PLUGINS_TYPE))).toEqual([
+        'Azure DevOps',
+        'Slack',
+        'Sauce Labs',
+      ]);
       // a plugin the registry did not offer appears on the page under no heading
       expect(rowNames(wrapper)).not.toContain('Jira Cloud');
     });
@@ -445,11 +450,11 @@ describe('PluginsCatalog', () => {
       // the Available group arrives already narrowed by GET /api/v1/plugins?q=
       const wrapper = render({ query: 'la', availablePlugins: [azure] });
 
-      expect(rowNames(group(wrapper, ALL_GROUP_TYPE))).toEqual(['GitLab']);
+      expect(rowNames(group(wrapper, ALL_GROUP_TYPE))).toEqual(['GitLab', 'Sauce Labs']);
       expect(rowNames(group(wrapper, AVAILABLE_PLUGINS_TYPE))).toEqual(['Azure DevOps']);
       expect(
         group(wrapper, ALL_GROUP_TYPE).find('[data-automation-id="pluginsGroupCount"]').text(),
-      ).toBe('(1)');
+      ).toBe('(2)');
     });
 
     test('the Available group is shown as the server returned it, not filtered again here', () => {
@@ -722,6 +727,7 @@ describe('PluginsCatalog', () => {
         'Jira',
         'Rally',
         'Custom Scanner',
+        'Sauce Labs',
       ]);
       expect(matched.find('span[data-automation-id="pluginBadge"]').length).toBeGreaterThan(0);
       expect(matched.find('[data-automation-id="pluginRowAction"]')).toHaveLength(1);

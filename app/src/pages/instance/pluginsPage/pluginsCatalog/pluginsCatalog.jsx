@@ -74,6 +74,7 @@ export const PluginsCatalog = ({
   justInstalledId = null,
   installingIds = [],
   installFailedId = null,
+  productVersion = null,
 }) => {
   const { formatMessage } = useIntl();
 
@@ -148,6 +149,7 @@ export const PluginsCatalog = ({
                 onItemClick={onInstalledItemClick}
                 onRowAction={onRowAction}
                 highlightedRegistryId={justInstalledId}
+                productVersion={productVersion}
               />
             </div>
           )}
@@ -162,6 +164,7 @@ export const PluginsCatalog = ({
                 items={availableRows}
                 onItemClick={onAvailableItemClick}
                 onRowAction={onRowAction}
+                productVersion={productVersion}
               />
             </div>
           )}
@@ -209,4 +212,6 @@ PluginsCatalog.propTypes = {
   installingIds: PropTypes.arrayOf(PropTypes.string),
   /** Registry id of the plugin the last install failed for. */
   installFailedId: PropTypes.string,
+  /** The ReportPortal release this instance reports, quoted when a row explains a refusal. */
+  productVersion: PropTypes.string,
 };

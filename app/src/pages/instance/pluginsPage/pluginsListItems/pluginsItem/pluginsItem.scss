@@ -122,6 +122,20 @@
   font-family: $FONT-REGULAR;
 }
 
+// amber, the same colour the versions table marks an incompatible version with: this warns about
+// whether a build runs here, and red stays reserved for a security advisory
+.plugins-incompatible {
+  display: inline-flex;
+  align-items: center;
+  margin-left: 4px;
+
+  svg {
+    width: 14px;
+    height: 14px;
+    fill: var(--rp-ui-color-warning);
+  }
+}
+
 .plugins-additional-block {
   flex: none;
   display: flex;

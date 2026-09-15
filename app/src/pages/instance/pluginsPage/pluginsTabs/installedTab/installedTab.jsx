@@ -515,6 +515,7 @@ export class InstalledTab extends Component {
                 justInstalledId={this.props.justInstalledId}
                 installingIds={this.props.installingIds}
                 installFailedId={this.props.installFailedId}
+                productVersion={this.props.productVersion}
               />
             </div>
           </div>

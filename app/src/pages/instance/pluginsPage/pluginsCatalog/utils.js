@@ -22,6 +22,7 @@ import {
   toPluginTier,
   toTrustTier,
 } from 'common/constants/pluginTiers';
+import { compareVersions } from '../versionsTable/utils';
 
 export const PREMIUM_ACCESS = PLUGIN_ACCESS_TIERS.PREMIUM;
 
@@ -164,6 +165,11 @@ export const toAvailableRow = (entry) => ({
   latestVersion: entry.latestVersion,
   contactUrl: entry.contactUrl || null,
   locked: Boolean(entry.locked),
+  // service-api's verdict on `latestVersion`, and the range behind it. Carried through as it
+  // arrived rather than coerced to a boolean: the server serialises with NON_NULL, so "could not
+  // decide" reaches us as nothing at all, and that has to stay distinguishable from "no".
+  compatible: entry.compatible,
+  requires: entry.requires || null,
   // the two registry axes, kept apart: `tier` is `access`, `trust` is the wire's own `tier`
   tier: toPluginTier(entry.access),
   trust: toTrustTier(entry.tier),
@@ -190,6 +196,10 @@ export const toInstalledRow = (plugin, mergedEntry, marketplaceTrusted = true) =
     marketplace,
     registryId: marketplace?.pluginId || null,
     updateAvailable: marketplace?.updateAvailable?.version || null,
+    // the verdict on the newest published version, which is what tells a row that is genuinely
+    // current apart from one whose update is being withheld: `updateAvailable` is null in both
+    compatible: marketplace?.compatible,
+    requires: marketplace?.requires || null,
     // who wrote it is the registry's claim like every other one here, so it goes with the block
     trust: toTrustTier(marketplace?.tier),
   };
@@ -217,6 +227,41 @@ export const getRowAction = (row) => {
   // on an installed row every remaining signal is read straight out of the marketplace block,
   // so a row without one offers nothing: none of it is verifiable
   return row.marketplace?.updateAvailable ? ROW_ACTIONS.UPDATE : null;
+};
+
+/**
+ * What a row may say about the newest published build not running on this release, or null when
+ * it may say nothing.
+ *
+ * <p>Only an explicit `false` is a refusal. service-api serialises with NON_NULL, so a verdict it
+ * could not reach arrives as no field at all, and the causes are an instance that does not know
+ * its own release, a version that declares no range, and a range that will not parse. Reading any
+ * of those as "incompatible" would mark every plugin in the catalogue unusable on an instance that
+ * simply never configured `rp.product.version`.
+ *
+ * <p>`newer` separates the two things a refusal can mean on an installed row. With a newer version
+ * published, the row is holding back an update the instance cannot take — the state that was
+ * indistinguishable from being up to date, because `updateAvailable` is absent either way. Without
+ * one, the plugin this instance is actually running is the one out of range, which is a different
+ * sentence and not an offer of anything.
+ */
+export const getRowIncompatibility = (row) => {
+  if (row.compatible !== false) {
+    return null;
+  }
+
+  if (isAvailableRow(row)) {
+    return { version: row.latestVersion || null, requires: row.requires || null, newer: false };
+  }
+
+  const latest = row.marketplace?.latestVersion || null;
+  const installed = row.details?.version || null;
+
+  return {
+    version: latest,
+    requires: row.requires || null,
+    newer: Boolean(latest && installed && compareVersions(latest, installed) > 0),
+  };
 };
 
 /** Badges an installed row shows; the tier badge of an available row is rendered from `tier`. */
