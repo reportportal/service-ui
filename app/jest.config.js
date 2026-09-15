@@ -53,7 +53,7 @@ module.exports = {
   transform: {
     '^.+\\.[jt]sx?$': [
       'babel-jest',
-      { configFile: require('path').resolve(__dirname, '.babelrc') },
+      { configFile: require('node:path').resolve(__dirname, '.babelrc') },
     ],
   },
   transformIgnorePatterns: [
