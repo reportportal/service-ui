@@ -109,7 +109,7 @@ export const LinkBTSIssueForm: FC<LinkBTSIssueFormProps> = ({
         namedBtsIntegrations={namedBtsIntegrations}
         pluginName={pluginName}
         integrationId={integrationId}
-        onChangePlugin={onChangePlugin}
+        onChangePluginName={onChangePlugin}
         onChangeIntegration={onChangeIntegration}
         theme="light"
       />
