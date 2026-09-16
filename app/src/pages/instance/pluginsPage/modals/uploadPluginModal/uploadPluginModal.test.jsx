@@ -41,7 +41,7 @@ const jar = (name) => ({
   uploadingProgress: 0,
 });
 
-const render = (plugins = []) => {
+const render = (plugins = [], { onUploaded = () => {} } = {}) => {
   const dispatched = [];
   const initial = { plugins: { plugins } };
   const store = createStore((state = initial, action) => {
@@ -51,7 +51,7 @@ const render = (plugins = []) => {
   const wrapper = mount(
     <Provider store={store}>
       <IntlProvider locale="en" onError={() => {}}>
-        <UploadPluginModal data={{ onImport: () => {} }} />
+        <UploadPluginModal data={{ onImport: () => {}, onUploaded }} />
       </IntlProvider>
     </Provider>,
   );
@@ -219,6 +219,61 @@ describe('UploadPluginModal', () => {
       await upload();
 
       expect(find('uploadReplaceExistingMessage')).toHaveLength(0);
+    });
+  });
+
+  // Upload. Success (27669:18101). A plugin that has just arrived does nothing until an integration
+  // exists, and its own page is where one is created — so the upload does not end by dropping the
+  // admin back on a list whose only visible change is a row appearing.
+  describe('once the upload is accepted', () => {
+    test('it says so, briefly', async () => {
+      fetch.mockResolvedValue({ id: 42 });
+      const { attach, upload, of } = render();
+
+      attach('jira-5.7.0.jar');
+      await upload();
+
+      const notification = of(SHOW_NOTIFICATION).pop();
+
+      expect(notification.payload.messageId).toBe('pluginUploaded');
+      expect(notification.payload.type).toBe('success');
+    });
+
+    // the server's own id for what it created, not a guess off the file name — the same parse the
+    // replace warning uses is explicitly advisory, and this one decides where the admin ends up
+    test('the page is handed the id the server created', async () => {
+      fetch.mockResolvedValue({ id: 42 });
+      const onUploaded = jest.fn();
+      const { attach, upload } = render([], { onUploaded });
+
+      attach('jira-5.7.0.jar');
+      await upload();
+
+      expect(onUploaded).toHaveBeenCalledWith(42);
+    });
+
+    // landing somewhere wrong is worse than not moving, so an answer with no id moves nobody
+    test('an answer without an id sends the page nowhere', async () => {
+      fetch.mockResolvedValue({});
+      const onUploaded = jest.fn();
+      const { attach, upload } = render([], { onUploaded });
+
+      attach('jira-5.7.0.jar');
+      await upload();
+
+      expect(onUploaded).toHaveBeenCalledWith(null);
+    });
+
+    test('a failed upload neither congratulates nor navigates', async () => {
+      fetch.mockRejectedValue(registryError('INTERNAL_ERROR', 'Unexpected server error'));
+      const onUploaded = jest.fn();
+      const { attach, upload, of } = render([], { onUploaded });
+
+      attach('jira-5.7.0.jar');
+      await upload();
+
+      expect(onUploaded).not.toHaveBeenCalled();
+      expect(of(SHOW_NOTIFICATION).map((a) => a.payload.messageId)).not.toContain('pluginUploaded');
     });
   });
 });

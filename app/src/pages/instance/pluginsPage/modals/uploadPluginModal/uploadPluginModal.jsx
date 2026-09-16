@@ -108,7 +108,7 @@ const installedPluginFor = (fileName, plugins) => {
     .sort((a, b) => b.name.length - a.name.length)[0];
 };
 
-export const UploadPluginModal = ({ data: { onImport } }) => {
+export const UploadPluginModal = ({ data: { onImport, onUploaded = () => {} } }) => {
   const {
     files,
     actions: { addFiles, removeFile, updateFile },
@@ -134,8 +134,19 @@ export const UploadPluginModal = ({ data: { onImport } }) => {
       versionInFileName(pendingFile.file.name) === replacedPlugin.details.version,
   );
 
-  const onUploadSuccess = () => {
+  // A freshly uploaded plugin does nothing until an integration exists (D-13), and its own page is
+  // where one is created — so the admin is taken there rather than back to a list where the only
+  // visible change is a row appearing. The refetch has to land first, so the id is handed to the
+  // page and the page opens it when the plugin arrives.
+  const onUploadSuccess = (_, response) => {
+    dispatch(
+      showNotification({
+        messageId: 'pluginUploaded',
+        type: NOTIFICATION_TYPES.SUCCESS,
+      }),
+    );
     onImport();
+    onUploaded(response?.id ?? null);
   };
 
   const onUploadError = (id, err) => {
@@ -202,6 +213,9 @@ export const UploadPluginModal = ({ data: { onImport } }) => {
 UploadPluginModal.propTypes = {
   data: PropTypes.shape({
     onImport: PropTypes.func,
+    /** Handed the new integration type's id, so the page can open the plugin once the refetch
+     * lands. Null when the server answered without one, and then the page stays where it is. */
+    onUploaded: PropTypes.func,
   }).isRequired,
 };
 export default withModal('uploadPluginModal')(UploadPluginModal);

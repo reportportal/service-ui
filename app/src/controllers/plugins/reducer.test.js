@@ -181,8 +181,25 @@ describe('controllers/plugins/marketplaceReducer', () => {
     state = marketplaceReducer(state, installMarketplacePluginErrorAction('slack', 'nope'));
 
     expect(state.installing).toEqual(['telegram']);
-    // the code travels with the message: the plugin page tells the three named failures apart by it
-    expect(state.installError).toEqual({ registryId: 'slack', error: 'nope', errorCode: null });
+    // the code travels with the message: the plugin page tells the four named failures apart by it
+    expect(state.installError).toEqual({
+      registryId: 'slack',
+      error: 'nope',
+      errorCode: null,
+      version: null,
+    });
+  });
+
+  // Install. Failed. Version Blocked names the version the marketplace refused, and that is not
+  // always the plugin's latest: an admin who picked an older build from the versions table has to
+  // be told which one was rejected, and nothing else on the page knows what was asked for.
+  test('the refused version travels with the failure', () => {
+    const state = marketplaceReducer(
+      undefined,
+      installMarketplacePluginErrorAction('slack', 'blocked', 40048, '5.2.1'),
+    );
+
+    expect(state.installError.version).toBe('5.2.1');
   });
 });
 

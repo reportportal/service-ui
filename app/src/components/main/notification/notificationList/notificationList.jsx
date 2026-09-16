@@ -156,6 +156,12 @@ export const notificationMessages = defineMessages({
     id: 'InstancesSection.removePluginSuccess',
     defaultMessage: 'Plugin has been uninstalled successfully',
   },
+  // Short and with no sub-text, because it is transient — anything that has to be read belongs on
+  // the page the admin is about to land on, not in an alert that dismisses itself.
+  pluginUploaded: {
+    id: 'UploadPluginModal.pluginUploaded',
+    defaultMessage: 'Plugin uploaded',
+  },
   // Names the version, because install, update and rollback are the same request and only the
   // version says which of the three just happened.
   marketplacePluginInstalled: {

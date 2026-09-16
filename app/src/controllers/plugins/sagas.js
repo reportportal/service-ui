@@ -373,7 +373,9 @@ export function* installMarketplacePlugin({ payload: { registryId, version } }) 
     const query = yield select(marketplaceCatalogueQuerySelector);
     yield put(fetchMarketplaceCatalogueAction(query));
   } catch (error) {
-    yield put(installMarketplacePluginErrorAction(registryId, error.message, error?.errorCode));
+    yield put(
+      installMarketplacePluginErrorAction(registryId, error.message, error?.errorCode, version),
+    );
 
     const messageId = marketplaceInstallErrorMessageId(error);
 

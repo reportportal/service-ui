@@ -115,6 +115,18 @@ const messages = defineMessages({
     defaultMessage:
       'Remove this plugin from the instance and revoke all access and authorizations.',
   },
+  // States the fact rather than the refusal: a bundled plugin is part of the instance, so there is
+  // nothing here that could be removed and nothing the admin should go looking for elsewhere.
+  uninstallBuiltinNote: {
+    id: 'InstancesSection.uninstallBuiltinNote',
+    defaultMessage:
+      'This plugin ships with ReportPortal and is part of the instance, so it cannot be removed.'
+      + ' Switch it off above if you do not want it used.',
+  },
+  uninstallBuiltinHint: {
+    id: 'InstancesSection.uninstallBuiltinHint',
+    defaultMessage: 'Bundled with ReportPortal — it was not installed and cannot be uninstalled',
+  },
 });
 
 @connect(
@@ -366,19 +378,28 @@ export class InstancesSection extends Component {
             )}
           </Fragment>
         )}
-        {isGlobal && !this.builtin && (
+        {/* Installed. Core (27032:9148): a bundled plugin cannot be uninstalled, and the block used
+            to be omitted for it — which leaves an admin looking for the control and finding
+            nothing, with no way to learn why. STATUS_SYSTEM.md §5 puts the reason in one place: the
+            disabled action itself, with its tooltip. */}
+        {isGlobal && (
           <Fragment>
             <h3 className={cx('uninstall-plugin-title')}>
               {formatMessage(messages.uninstallPluginTitle)}
             </h3>
             <p className={cx('uninstall-plugin-note')}>
-              {formatMessage(messages.uninstallPluginNote)}
+              {formatMessage(
+                this.builtin ? messages.uninstallBuiltinNote : messages.uninstallPluginNote,
+              )}
             </p>
             <BigButton
               className={cx('uninstall-plugin-button')}
               color={'tomato'}
               roundedCorners
-              onClick={this.removePluginClickHandler}
+              disabled={this.builtin}
+              title={this.builtin ? formatMessage(messages.uninstallBuiltinHint) : undefined}
+              data-automation-id="uninstallPluginButton"
+              onClick={this.builtin ? undefined : this.removePluginClickHandler}
             >
               {formatMessage(COMMON_LOCALE_KEYS.UNINSTALL)}
             </BigButton>

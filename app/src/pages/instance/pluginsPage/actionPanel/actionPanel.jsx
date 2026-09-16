@@ -54,10 +54,18 @@ export class ActionPanel extends Component {
     intl: PropTypes.object.isRequired,
     showModalAction: PropTypes.func.isRequired,
     fetchPluginsAction: PropTypes.func.isRequired,
+    /** Handed the new integration type's id when an upload succeeds, so the page can open the
+     * plugin once the refetch lands. The panel does not navigate itself: it does not know where
+     * the pages are. */
+    onUploaded: PropTypes.func,
     tracking: PropTypes.shape({
       trackEvent: PropTypes.func,
       getTrackingData: PropTypes.func,
     }).isRequired,
+  };
+
+  static defaultProps = {
+    onUploaded: () => {},
   };
 
   openUploadModal = () => {
@@ -68,6 +76,7 @@ export class ActionPanel extends Component {
       id: 'uploadPluginModal',
       data: {
         onImport: this.props.fetchPluginsAction,
+        onUploaded: this.props.onUploaded,
       },
     });
   };

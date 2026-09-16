@@ -60,6 +60,7 @@ import {
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { showModalAction } from 'controllers/modal';
 import { InputDropdown } from 'components/inputs/inputDropdown';
+import { isPluginBuiltin } from 'components/integrations/utils';
 import { Button, DownloadIcon } from '@reportportal/ui-kit';
 import {
   INSTALLED_PLUGINS_SUBPAGE,
@@ -274,9 +275,10 @@ export class InstalledTab extends Component {
       registryId: PropTypes.string,
       error: PropTypes.string,
       errorCode: PropTypes.number,
+      version: PropTypes.string,
     }),
     uploadAllowed: PropTypes.bool.isRequired,
-  productVersion: PropTypes.string,
+    productVersion: PropTypes.string,
     configuredPlugins: PropTypes.arrayOf(PropTypes.string),
     clearJustInstalledMarketplacePluginAction: PropTypes.func.isRequired,
     showNotification: PropTypes.func,
@@ -300,11 +302,43 @@ export class InstalledTab extends Component {
     activeFilterItem: ALL_GROUP_TYPE,
     searchQuery: '',
     subPage: DEFAULT_BREADCRUMB,
+    // the integration type id an upload just created, held only until the refetched list carries it
+    uploadedPluginId: null,
   };
 
   componentDidMount() {
     this.props.fetchMarketplaceCatalogueAction();
   }
+
+  /**
+   * Upload. Success (27669:18101): the admin lands on the new plugin's page rather than back on the
+   * list. A freshly uploaded plugin does nothing until an integration exists, and its page is where
+   * one is created — a list where the only change is a row appearing does not say that.
+   *
+   * <p>It waits here rather than navigating from the dialog because the plugin is not on the client
+   * yet when the upload answers: the refetch the dialog started has to land first. The id is the
+   * server's own, from the upload response, so nothing is guessed from a file name.
+   */
+  componentDidUpdate() {
+    const { uploadedPluginId } = this.state;
+    if (!uploadedPluginId) {
+      return;
+    }
+
+    const uploaded = this.props.plugins.find((plugin) => plugin.id === uploadedPluginId);
+    if (uploaded) {
+      this.setState({ uploadedPluginId: null });
+      this.installedPluginsSubPageHandler(uploaded);
+    }
+  }
+
+  // Null when the server answered without an id, and then the page stays where it is: landing
+  // somewhere wrong is worse than not moving.
+  handlePluginUploaded = (integrationTypeId) => {
+    if (integrationTypeId) {
+      this.setState({ uploadedPluginId: integrationTypeId });
+    }
+  };
 
   // The highlight answers one question — where did it go — and only for as long as that question
   // is live. Leaving the page, or narrowing the list to look for something else, is the user
@@ -414,10 +448,13 @@ export class InstalledTab extends Component {
    * table. A catalogue row has only `latestVersion` and no list to choose from, so it keeps the
    * plain confirmation below.
    */
-  showInstallVersionModal = (pluginName, versions, defaultVersion, callback) => {
+  showInstallVersionModal = (pluginName, registryId, versions, defaultVersion, callback) => {
     this.props.showModalAction(
       installPluginModal({
         pluginName,
+        // the dialog waits on this install rather than closing on confirm, which is what lets the
+        // four Install. Failed. frames be drawn with it still open behind the alert
+        registryId,
         versions,
         defaultVersion,
         productVersion: this.props.productVersion,
@@ -545,6 +582,7 @@ export class InstalledTab extends Component {
             onRetry={this.refetchPluginDetail}
             installing={this.props.installingIds.includes(data.id)}
             productVersion={this.props.productVersion}
+            installError={this.props.installError}
           />
         );
       default: {
@@ -570,7 +608,7 @@ export class InstalledTab extends Component {
               />
               {/* Absent, not disabled. The capability is switched off by environment, which is
                   not a permission error and must not be shown as one. */}
-              {this.props.uploadAllowed && <ActionPanel />}
+              {this.props.uploadAllowed && <ActionPanel onUploaded={this.handlePluginUploaded} />}
             </div>
             <div className={cx('plugins-content')}>
               {this.renderFilterMobileBlock()}
@@ -769,7 +807,11 @@ export class InstalledTab extends Component {
   };
 
   renderProvenance = (data) => {
-    const unmatched = !data.registryId;
+    // A bundled plugin is also absent from the registry index, and "not in the index" was the whole
+    // test — so Email Server, which ships with ReportPortal and was never uploaded by anyone, was
+    // being labelled as hand-installed. Provenance is a statement about where the plugin came from,
+    // and that one is simply false.
+    const unmatched = !data.registryId && !isPluginBuiltin(data.name);
     if (!unmatched || this.props.registryOffline || this.props.catalogueFailed) {
       return null;
     }
@@ -807,6 +849,14 @@ export class InstalledTab extends Component {
   };
 
   renderMarketplaceBlocks = (data) => {
+    // Installed. Core (27032:9148): a bundled plugin has no registry versions, so upgrade and
+    // downgrade do not apply to it and the block is left out by decision rather than for want of
+    // data. Without this it fell through to the hand-installed case and was told it could be
+    // changed "through uploading another .jar", which is not how a bundled plugin is replaced.
+    if (isPluginBuiltin(data.name)) {
+      return null;
+    }
+
     const unmatched = !data.registryId;
 
     return (
@@ -859,6 +909,7 @@ export class InstalledTab extends Component {
 
     this.showInstallVersionModal(
       getDisplayName(row),
+      row.registryId,
       versions,
       version || row.latestVersion,
       install,

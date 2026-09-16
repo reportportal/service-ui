@@ -253,10 +253,18 @@ export const clearJustInstalledMarketplacePluginAction = () => ({
  * @param error      what the server said, kept verbatim for the full message
  * @param errorCode  service-api's `errorCode`, which is what tells the failures apart. Without it
  *     the store has only prose, and the page could say that something went wrong but not what.
+ * @param version    the version that was refused. Not the plugin's latest: an admin who picked an
+ *     older build from the table must be told which one the marketplace would not serve, and the
+ *     page has no other way to know which one was asked for.
  */
-export const installMarketplacePluginErrorAction = (registryId, error, errorCode = null) => ({
+export const installMarketplacePluginErrorAction = (
+  registryId,
+  error,
+  errorCode = null,
+  version = null,
+) => ({
   type: INSTALL_MARKETPLACE_PLUGIN_ERROR,
-  payload: { registryId, error, errorCode },
+  payload: { registryId, error, errorCode, version },
 });
 
 export const fetchMarketplacePluginDetailAction = (registryId) => ({

@@ -28,9 +28,12 @@ export const useFilesUpload = (files, updateFile) => {
     await Promise.allSettled(
       filesFormData.map(async ({ data, id }) => {
         try {
-          await uploadFile(url, data, id);
+          // the response was discarded here, and it is the only thing that names what was created:
+          // the plugin upload answers with the new integration type's id, which is how the page
+          // finds the plugin to open once the list comes back
+          const response = await uploadFile(url, data, id);
           updateFile(id, { uploaded: true, isLoading: false, uploadFailed: false });
-          onSuccess(id);
+          onSuccess(id, response);
         } catch (err) {
           updateFile(id, {
             uploaded: true,

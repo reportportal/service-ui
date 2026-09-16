@@ -14,12 +14,17 @@
  * limitations under the License.
  */
 
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
+import { useSelector } from 'react-redux';
 import { defineMessages, useIntl } from 'react-intl';
 import classNames from 'classnames/bind';
 import Parser from 'html-react-parser';
 import { ModalLayout } from 'components/main/modal';
+import {
+  marketplaceInstallErrorSelector,
+  marketplaceInstallingPluginsSelector,
+} from 'controllers/plugins';
 // the app's own dropdown rather than the kit's: the kit builds on downshift and cannot mount
 // outside a browser, so a component holding it could not be tested at all
 import { InputDropdown } from 'components/inputs/inputDropdown';
@@ -45,6 +50,10 @@ const messages = defineMessages({
   install: {
     id: 'PluginItem.install',
     defaultMessage: 'Install',
+  },
+  installing: {
+    id: 'PluginItem.installingState',
+    defaultMessage: 'Installing…',
   },
   // the two facts the frame states together: what the version wants, and what this instance is
   incompatibleWithRange: {
@@ -73,9 +82,16 @@ const messages = defineMessages({
  *
  * <p>The verdict is service-api's, never recomputed here, and only an explicit `false` disables a
  * row. The range beside it is quoted, not parsed.
+ *
+ * <p>It also outlives its own answer, for the reason `VersionChangeModal` does: all four
+ * `Install. Failed.*` frames are drawn with this dialog still open behind the alert. Closing on
+ * confirm leaves an admin looking at a page that has not changed, with nothing saying whether it
+ * was about to — and on failure it keeps them where they were instead of dropping them somewhere
+ * and explaining afterwards. The failure itself is reported on the page: the operation was about
+ * the plugin, not about the dialog.
  */
 export const InstallPluginModal = ({ data }) => {
-  const { pluginName, versions, defaultVersion, productVersion, onInstall } = data;
+  const { pluginName, registryId, versions, defaultVersion, productVersion, onInstall } = data;
   const { formatMessage } = useIntl();
 
   // Only an explicit refusal closes a row. service-api serialises with NON_NULL, so an undecided
@@ -116,14 +132,49 @@ export const InstallPluginModal = ({ data }) => {
     installable.includes(defaultVersion) ? defaultVersion : installable[0],
   );
 
+  // Without a registryId this dialog cannot recognise its own install, so it keeps the old
+  // behaviour and closes on confirm. That is the catalogue's plain-confirmation path, which has no
+  // failure frame of its own.
+  const installing = useSelector(marketplaceInstallingPluginsSelector).includes(registryId);
+  const installError = useSelector(marketplaceInstallErrorSelector);
+  const [submitted, setSubmitted] = useState(false);
+  // Whether the install was ever seen running. The saga adds the plugin to the in-flight set a tick
+  // after the action is dispatched, so for that tick `installing` is still false and an effect
+  // keyed on it alone reads "already finished" and closes on the spot.
+  const [started, setStarted] = useState(false);
+  const closeRef = useRef(null);
+
+  const failed = Boolean(registryId) && installError?.registryId === registryId;
+  const waits = Boolean(registryId);
+
+  useEffect(() => {
+    if (installing) {
+      setStarted(true);
+    }
+  }, [installing]);
+
+  useEffect(() => {
+    // it ran, it stopped running, and nothing failed: there is nothing left to confirm or explain
+    if (waits && submitted && started && !installing && !failed) {
+      closeRef.current?.();
+    }
+  }, [waits, submitted, started, installing, failed]);
+
   return (
     <ModalLayout
       title={formatMessage(messages.title)}
       okButton={{
-        text: formatMessage(messages.install),
-        disabled: !version,
+        text: formatMessage(installing ? messages.installing : messages.install),
+        disabled: !version || installing,
         onClick: (closeModal) => {
-          closeModal();
+          if (!waits) {
+            closeModal();
+            onInstall(version);
+            return;
+          }
+
+          closeRef.current = closeModal;
+          setSubmitted(true);
           onInstall(version);
         },
       }}
@@ -145,6 +196,9 @@ export const InstallPluginModal = ({ data }) => {
 InstallPluginModal.propTypes = {
   data: PropTypes.shape({
     pluginName: PropTypes.string.isRequired,
+    /** The plugin being installed, which is how this dialog recognises its own install. Absent on
+     * the catalogue's plain path, where the dialog closes on confirm as it always did. */
+    registryId: PropTypes.string,
     /** The registry's version list for this plugin, newest first, `blocked` among each entry. */
     versions: PropTypes.arrayOf(
       PropTypes.shape({
@@ -170,6 +224,7 @@ InstallPluginModal.propTypes = {
  */
 export const installPluginModal = ({
   pluginName,
+  registryId = null,
   versions,
   defaultVersion = null,
   productVersion = null,
@@ -177,7 +232,7 @@ export const installPluginModal = ({
 }) => ({
   component: (
     <InstallPluginModal
-      data={{ pluginName, versions, defaultVersion, productVersion, onInstall }}
+      data={{ pluginName, registryId, versions, defaultVersion, productVersion, onInstall }}
     />
   ),
 });

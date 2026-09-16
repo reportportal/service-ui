@@ -82,6 +82,25 @@ export class IntegrationForm extends Component {
     metaData: {},
   };
 
+  /**
+   * Plugin Detail. Integration. Connection Error (27468:15575): the configuration block is open in
+   * edit mode there, where Integration. Detail shows it read-only behind an Edit button. It is a
+   * third state of the block rather than an inconsistency — an admin who arrived at a broken
+   * integration came to change something, and making them press Edit first is a step that exists
+   * only because the form defaults to read.
+   *
+   * <p>It has to happen here rather than in the initial state: the connection is tested after
+   * mount, so `connected` is still true when this component is first constructed.
+   *
+   * <p>Only on the transition, and only into edit. A connection that recovers does not close a form
+   * the admin may have started typing into.
+   */
+  componentDidUpdate(prevProps) {
+    if (prevProps.connected && !this.props.connected && this.state.disabled) {
+      this.setState({ disabled: false });
+    }
+  }
+
   toggleDisabled = () => {
     if (this.props.dirty && !this.state.disabled) {
       this.props.reset();

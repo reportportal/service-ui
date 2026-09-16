@@ -435,7 +435,9 @@ describe('controllers/plugins/sagas marketplace', () => {
 
       expect(dispatched).toEqual([
         installMarketplacePluginStartAction('slack'),
-        installMarketplacePluginErrorAction('slack', 'Forbidden'),
+        // the version travels into the failure: Install. Failed. Version Blocked names the build
+        // the marketplace refused, and after the request nothing else remembers which was asked for
+        installMarketplacePluginErrorAction('slack', 'Forbidden', undefined, '1.2.0'),
         showDefaultErrorNotification(new Error('Forbidden')),
       ]);
     });
@@ -499,13 +501,15 @@ describe('controllers/plugins/sagas marketplace', () => {
       test('the row still leaves the installing state', async () => {
         const dispatched = await failWith(MARKETPLACE_INSTALL_ERROR.VERSION_BLOCKED);
 
-        // the code travels into the store beside the message: the plugin page tells the three
-        // named failures apart by it, and prose is not something to match on
+        // the code travels into the store beside the message: the plugin page tells the four
+        // named failures apart by it, and prose is not something to match on. The version goes
+        // with it, because the blocked case is the one that has to name what was refused.
         expect(dispatched).toContainEqual(
           installMarketplacePluginErrorAction(
             'slack',
             'Registry said so',
             MARKETPLACE_INSTALL_ERROR.VERSION_BLOCKED,
+            '1.2.0',
           ),
         );
       });

@@ -29,18 +29,33 @@ const VERSIONS = [
   { version: '5.5.0' },
 ];
 
+const marketplace = ({ installing = [], installError = null } = {}) => ({
+  location: { payload: {} },
+  plugins: { marketplace: { installing, installError } },
+});
+
 const render = ({
   versions = VERSIONS,
   defaultVersion = null,
   productVersion = null,
+  registryId = null,
   onInstall = () => {},
+  state = marketplace(),
 } = {}) => {
-  const store = createStore((state = { location: { payload: {} } }) => state);
+  let current = state;
+  const store = createStore(() => current);
   const wrapper = mount(
     <Provider store={store}>
       <IntlProvider locale="en" onError={() => {}}>
         <InstallPluginModal
-          data={{ pluginName: 'Slack', versions, defaultVersion, productVersion, onInstall }}
+          data={{
+            pluginName: 'Slack',
+            registryId,
+            versions,
+            defaultVersion,
+            productVersion,
+            onInstall,
+          }}
         />
       </IntlProvider>
     </Provider>,
@@ -53,15 +68,27 @@ const render = ({
     });
     wrapper.update();
   };
+  const okButton = () => wrapper.find('ModalLayout').first().prop('okButton');
   // the layout owns the buttons; the modal's own claim is what it hands them
+  const closed = jest.fn();
   const confirm = () => {
-    const { onClick } = wrapper.find('ModalLayout').first().prop('okButton');
+    const { onClick } = okButton();
     act(() => {
-      onClick(() => {});
+      onClick(closed);
     });
+    wrapper.update();
+  };
+  // what the saga does, one step at a time, so the dialog is watched through the window that
+  // actually caught it out: dispatch, then the in-flight set, then the answer
+  const setState = (next) => {
+    current = next;
+    act(() => {
+      store.dispatch({ type: 'test/state' });
+    });
+    wrapper.update();
   };
 
-  return { wrapper, dropdown, choose, confirm };
+  return { wrapper, dropdown, choose, confirm, okButton, closed, setState };
 };
 
 describe('InstallPluginModal', () => {
@@ -256,6 +283,90 @@ describe('InstallPluginModal', () => {
       confirm();
 
       expect(onInstall).toHaveBeenCalledWith('5.8.0');
+    });
+  });
+
+  // All four Install. Failed. frames (27635:17931, :18104, :18224, :18464) are drawn with this
+  // dialog still open behind the page alert. It used to close on confirm, which made every one of
+  // them undrawable — the admin was returned to an unchanged page and told in a toast.
+  describe('a dialog that outlives its own answer', () => {
+    const SLACK = 'slack';
+    const installingSlack = marketplace({ installing: [SLACK] });
+    const slackFailed = marketplace({ installError: { registryId: SLACK, errorCode: 40048 } });
+
+    test('confirming does not close it', () => {
+      const { confirm, closed } = render({ registryId: SLACK });
+
+      confirm();
+
+      expect(closed).not.toHaveBeenCalled();
+    });
+
+    test('it says the install is running and refuses a second press', () => {
+      const { confirm, setState, okButton } = render({ registryId: SLACK });
+
+      confirm();
+      setState(installingSlack);
+
+      expect(okButton().text).toBe('Installing…');
+      expect(okButton().disabled).toBe(true);
+    });
+
+    test('it closes once the install has run and nothing failed', () => {
+      const { confirm, setState, closed } = render({ registryId: SLACK });
+
+      confirm();
+      setState(installingSlack);
+      setState(marketplace());
+
+      expect(closed).toHaveBeenCalled();
+    });
+
+    // the window that caught this out before: the saga adds the plugin to the in-flight set a tick
+    // after the action is dispatched, so for one render "not installing" means "not started yet"
+    // and an effect keyed on it alone closes the dialog on the spot
+    test('it does not mistake the tick before the saga runs for a finished install', () => {
+      const { confirm, setState, closed } = render({ registryId: SLACK });
+
+      confirm();
+      setState(marketplace());
+
+      expect(closed).not.toHaveBeenCalled();
+    });
+
+    test('a failure keeps it open, because the page is where the failure is told', () => {
+      const { confirm, setState, closed } = render({ registryId: SLACK });
+
+      confirm();
+      setState(installingSlack);
+      setState(slackFailed);
+
+      expect(closed).not.toHaveBeenCalled();
+    });
+
+    // another plugin's failure is not this dialog's business, and reading it as one would leave
+    // this install's own dialog hanging open forever
+    test('someone else’s failure does not hold it open', () => {
+      const { confirm, setState, closed } = render({ registryId: SLACK });
+
+      confirm();
+      setState(installingSlack);
+      setState(marketplace({ installError: { registryId: 'jira', errorCode: 40048 } }));
+
+      expect(closed).toHaveBeenCalled();
+    });
+
+    // the catalogue raises this dialog without a registryId when the registry gave it no version
+    // list. That path has no failure frame, so it keeps the old behaviour rather than waiting on
+    // an install it cannot recognise — and waiting would leave it open for good.
+    test('without a plugin to watch it closes on confirm, as it always did', () => {
+      const onInstall = jest.fn();
+      const { confirm, closed } = render({ onInstall });
+
+      confirm();
+
+      expect(closed).toHaveBeenCalled();
+      expect(onInstall).toHaveBeenCalledWith('5.7.0');
     });
   });
 });

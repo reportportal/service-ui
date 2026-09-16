@@ -28,6 +28,7 @@ import { PLUGINS_PAGE_EVENTS } from 'components/main/analytics/events';
 import { showModalAction } from 'controllers/modal';
 import { PLUGIN_TIERS } from 'common/constants/pluginTiers';
 import { PluginMarketplaceBlocks } from '../pluginMarketplaceBlocks';
+import { InstallFailureAlert } from '../installFailureAlert';
 import { premiumPromoModal } from '../premiumPromo';
 import styles from './availablePluginDetail.scss';
 
@@ -88,6 +89,7 @@ export const AvailablePluginDetail = ({
   onRetry = () => {},
   installing = false,
   productVersion = null,
+  installError = null,
 }) => {
   const { formatMessage } = useIntl();
   const { trackEvent } = useTracking();
@@ -190,6 +192,17 @@ export const AvailablePluginDetail = ({
         productVersion={productVersion}
         onUseVersion={isLocked ? null : (chosen) => onInstall(plugin, chosen)}
       />
+      {/* All four Install. Failed. frames are drawn over this page rather than an installed one:
+          the install did not happen, so the plugin is still available and the admin is still here.
+          At the foot of the content, clear of the blocks above it. */}
+      {installError?.registryId === plugin.registryId && (
+        <InstallFailureAlert
+          pluginName={title}
+          version={installError.version || version}
+          errorCode={installError.errorCode}
+          reason={installError.error}
+        />
+      )}
     </div>
   );
 };
@@ -197,6 +210,14 @@ export const AvailablePluginDetail = ({
 AvailablePluginDetail.propTypes = {
   installing: PropTypes.bool,
   productVersion: PropTypes.string,
+  /** The last install failure the store holds, drawn only when it is this plugin's. */
+  installError: PropTypes.shape({
+    registryId: PropTypes.string,
+    version: PropTypes.string,
+    errorCode: PropTypes.number,
+    /** the server's own prose, named `error` on the store since the action was written */
+    error: PropTypes.string,
+  }),
   plugin: PropTypes.shape({
     name: PropTypes.string.isRequired,
     tier: PropTypes.string.isRequired,
