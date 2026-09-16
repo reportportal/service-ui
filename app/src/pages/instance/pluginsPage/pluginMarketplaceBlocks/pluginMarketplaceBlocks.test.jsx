@@ -178,11 +178,38 @@ describe('PluginMarketplaceBlocks', () => {
       expect(find(render(), 'pluginScreenshot')).toHaveLength(2);
     });
 
-    // an empty group is absence of data, so it is hidden rather than explained
-    test('the whole block is absent when there are none, not an empty strip', () => {
-      const wrapper = render({ detail: { ...detail, screenshots: offlineDetail.screenshots } });
+    // Plugin Detail. Available. No Screenshots (27364:15219). This used to hide the block, on the
+    // reasoning that an empty group is absence of data — but the two absences are different, and
+    // the frame separates them. The registry answering with none is a fact about the plugin, and
+    // the block says it. A block that is simply gone reads as one still loading.
+    test('the block stays and says so when the plugin published none', () => {
+      const wrapper = render({ detail: { ...detail, screenshots: [] } });
+
+      expect(find(wrapper, 'pluginScreenshots')).not.toHaveLength(0);
+      expect(find(wrapper, 'pluginNoScreenshots').first().text()).toBe(
+        'No screenshots for this plugin.',
+      );
+      expect(find(wrapper, 'pluginScreenshot')).toHaveLength(0);
+    });
+
+    // the other absence: nothing was asked and nothing answered, so an empty state would be a
+    // claim this page cannot make
+    test('the block is absent entirely when the registry was not believed', () => {
+      const wrapper = render({ detail: offlineDetail, offline: true });
 
       expect(find(wrapper, 'pluginScreenshots')).toHaveLength(0);
+      expect(find(wrapper, 'pluginNoScreenshots')).toHaveLength(0);
+    });
+  });
+
+  // Plugin Detail. State. Loading (27399:15410). The design system has no skeleton pattern and the
+  // frame forbids adding one, so an unresolved fetch is an empty column — and the caption is the
+  // only thing separating it from a plugin that genuinely has nothing on it.
+  describe('while the fetch is unresolved', () => {
+    test('the loader names what is being waited for', () => {
+      const wrapper = render({ loading: true });
+
+      expect(find(wrapper, 'pluginDetailLoader').first().text()).toContain('Loading plugin');
     });
   });
 

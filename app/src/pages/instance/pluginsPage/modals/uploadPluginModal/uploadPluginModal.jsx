@@ -164,6 +164,10 @@ export const UploadPluginModal = ({ data: { onImport } }) => {
       files={files}
       onCancel={cancelRequests}
       onSave={saveFiles}
+      // The backend refuses the same (id, version) outright, so this one is not a warning the
+      // admin may override — unlike replacing a different version, which is permitted and only
+      // warned about. Detected at attachment, before anything is sent.
+      submitDisabled={versionExists}
     >
       {versionExists && (
         <div data-automation-id="uploadVersionExistsMessage">

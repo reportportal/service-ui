@@ -48,7 +48,16 @@
 .alert,
 .loader {
   display: flex;
-  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+
+.loader-caption {
+  margin: 0;
+  font-size: 13px;
+  line-height: 20px;
+  color: $COLOR--charcoal-grey;
 }
 
 // The blocks are their own column now, so the alerts inside them fill it rather than centring
@@ -69,6 +78,21 @@
   border: 1px solid $COLOR--e-200;
   border-radius: 8px;
   background-color: $COLOR--white-two;
+}
+
+/* 64px tall, so an optional attachment that is absent takes the same room as one that is present
+   and the blocks below it do not move between two plugins. */
+.block-empty {
+  display: flex;
+  align-items: center;
+  height: 64px;
+  margin: 0;
+  padding: 0 16px;
+  border-radius: 8px;
+  background-color: $COLOR--e-100;
+  font-size: 13px;
+  line-height: 20px;
+  color: $COLOR--charcoal-grey;
 }
 
 .version-row {

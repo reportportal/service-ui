@@ -62,9 +62,16 @@ const messages = defineMessages({
     id: 'ConnectionSection.deleteIntegrationTitle',
     defaultMessage: 'Delete {name}',
   },
+  // Opens on the distinction the product exists to protect: Delete removes one integration, and
+  // the action that removes the plugin is Uninstall. Then the consequence for projects, then what
+  // the plugin page falls back to — an admin who deletes the last one lands on the empty state and
+  // should not have to discover that there.
   deleteIntegrationDescription: {
     id: 'ConnectionSection.deleteIntegrationDescription',
-    defaultMessage: 'Are you sure you want to delete Integration {name}?',
+    defaultMessage:
+      'This deletes one integration, {name}, not the plugin. Projects relying on it fall back to'
+      + ' their own integration, or lose it if they have none. Deleting the last integration leaves'
+      + ' the plugin installed with nothing configured, so it does nothing until another is created.',
   },
 });
 

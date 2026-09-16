@@ -61,6 +61,17 @@ const messages = defineMessages({
     id: 'PluginMarketplaceBlocks.screenshotAlt',
     defaultMessage: 'Plugin screenshot {index}',
   },
+  // No placeholder art and no call to action: the admin has nothing to do here, the author
+  // published none.
+  noScreenshots: {
+    id: 'PluginMarketplaceBlocks.noScreenshots',
+    defaultMessage: 'No screenshots for this plugin.',
+  },
+  // The plugin's own name is part of the unresolved fetch, so it cannot be named here
+  loadingPlugin: {
+    id: 'PluginMarketplaceBlocks.loadingPlugin',
+    defaultMessage: 'Loading plugin…',
+  },
   // the version number is part of the heading, not a line inside the card
   changelogHeader: {
     id: 'PluginMarketplaceBlocks.changelogHeader',
@@ -220,9 +231,13 @@ export const PluginMarketplaceBlocks = ({
           )}
         </>
       )}
+      {/* No skeletons: this design system has no skeleton pattern and the frame says none should be
+          added here. The caption is what tells a reader the empty column is a fetch rather than a
+          plugin with nothing on it. */}
       {loading && (
         <div className={cx('loader')} data-automation-id="pluginDetailLoader">
           <BubblesLoader />
+          <p className={cx('loader-caption')}>{formatMessage(messages.loadingPlugin)}</p>
         </div>
       )}
       {!loading && (
@@ -265,20 +280,30 @@ export const PluginMarketplaceBlocks = ({
               </SystemMessage>
             </div>
           )}
-          {screenshots.length > 0 && (
+          {/* The block stays when the registry answered and the plugin has none. An absent block
+              reads as one still loading; an empty one says the author published no screenshots,
+              which is the fact. Untrusted is the other case and keeps its silence: then nothing is
+              known about screenshots, and an empty state would be a claim. */}
+          {trusted && (
             <section className={cx('block')} data-automation-id="pluginScreenshots">
               <h3 className={cx('block-header')}>{formatMessage(messages.screenshots)}</h3>
-              <div className={cx('screenshot-strip')}>
-                {screenshots.map((url, index) => (
-                  <img
-                    key={url}
-                    className={cx('screenshot')}
-                    data-automation-id="pluginScreenshot"
-                    src={url}
-                    alt={formatMessage(messages.screenshotAlt, { index: index + 1 })}
-                  />
-                ))}
-              </div>
+              {screenshots.length > 0 ? (
+                <div className={cx('screenshot-strip')}>
+                  {screenshots.map((url, index) => (
+                    <img
+                      key={url}
+                      className={cx('screenshot')}
+                      data-automation-id="pluginScreenshot"
+                      src={url}
+                      alt={formatMessage(messages.screenshotAlt, { index: index + 1 })}
+                    />
+                  ))}
+                </div>
+              ) : (
+                <p className={cx('block-empty')} data-automation-id="pluginNoScreenshots">
+                  {formatMessage(messages.noScreenshots)}
+                </p>
+              )}
             </section>
           )}
           {changelog && (

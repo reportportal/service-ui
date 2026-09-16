@@ -18,6 +18,7 @@ import { useEffect, useState, useMemo, useCallback } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
+import { defineMessages, useIntl } from 'react-intl';
 import { BubblesLoader } from '@reportportal/ui-kit';
 import { LDAP } from 'common/constants/pluginNames';
 import { omit } from 'common/utils/omit';
@@ -44,6 +45,19 @@ import { useUserPermissions } from 'hooks/useUserPermissions';
 
 const cx = classNames.bind(styles);
 
+const messages = defineMessages({
+  configurationTitle: {
+    id: 'IntegrationForm.configurationTitle',
+    defaultMessage: 'Configuration',
+  },
+  // Not an empty state and not a call to action: there is no form behind either. The sentence
+  // exists so the heading has something under it, because a heading alone reads as a fault too.
+  nothingToConfigure: {
+    id: 'IntegrationSettings.nothingToConfigure',
+    defaultMessage: 'This plugin has no settings to configure.',
+  },
+});
+
 export const IntegrationSettings = (props) => {
   const {
     data,
@@ -59,6 +73,7 @@ export const IntegrationSettings = (props) => {
     hideInlineForm = false,
   } = props;
   const pluginName = data.integrationType?.name;
+  const { formatMessage } = useIntl();
 
   const [connected, setConnected] = useState(true);
   const [loading, setLoading] = useState(!data.isNew && !preventTestConnection);
@@ -171,6 +186,21 @@ export const IntegrationSettings = (props) => {
               isEmptyConfiguration={isEmptyConfiguration}
               isEditable={canUpdateSettings}
             />
+          )}
+          {/* The third configuration model: a plugin that exposes no settings at all — Telegram
+              posts launch results to a chat and holds nothing instance-level. The heading stays and
+              says so, because a block that is simply absent reads as one that failed to load.
+              `hideInlineForm` is the other reason there is no form here and is not this case: there
+              the configuration lives somewhere else, so claiming there is none would be wrong. */}
+          {!shouldHideInlineForm && !formFieldsComponent && (
+            <div className={cx('no-configuration')} data-automation-id="noConfigurationBlock">
+              <h3 className={cx('no-configuration-header')}>
+                {formatMessage(messages.configurationTitle)}
+              </h3>
+              <p className={cx('no-configuration-info')}>
+                {formatMessage(messages.nothingToConfigure)}
+              </p>
+            </div>
           )}
         </>
       )}

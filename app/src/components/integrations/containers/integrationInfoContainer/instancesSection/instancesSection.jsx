@@ -85,13 +85,18 @@ const messages = defineMessages({
     id: 'InstancesSection.globalIntegrationsDisabledHint',
     defaultMessage: 'Global settings are inactive due to the manual project configuration.',
   },
+  // "Create", not "Add": the same verb the modal's own title uses, so the button and the dialog it
+  // opens name one action.
   addIntegrationButtonTitle: {
     id: 'InstancesSection.addIntegrationButtonTitle',
-    defaultMessage: 'Add integration',
+    defaultMessage: 'Create Integration',
   },
+  // "yet" is the whole point of the sentence — one empty state serves a plugin that will end up
+  // holding one integration and a plugin that will hold many, because with none configured there
+  // is nothing to tell the two apart.
   noGlobalIntegrationMessage: {
     id: 'InstancesSection.noGlobalIntegrationMessage',
-    defaultMessage: 'No global integration',
+    defaultMessage: 'No integrations configured yet',
   },
   allGlobalIntegrations: {
     id: 'InstancesSection.allGlobalIntegrations',

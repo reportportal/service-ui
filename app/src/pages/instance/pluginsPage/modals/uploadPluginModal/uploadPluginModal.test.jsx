@@ -139,6 +139,26 @@ describe('UploadPluginModal', () => {
       expect(find('uploadVersionExistsMessage')).toHaveLength(0);
     });
 
+    // Upload. Failed. Version Exists (27663:18326). The refusal is the backend's and it is
+    // absolute: it rejects the same (id, version) outright, so an active Upload button promises an
+    // action that always fails. This is where it differs from replacing a *different* version,
+    // which the product permits and only warns about.
+    test('the upload button is refused, not merely warned against', () => {
+      const { attach, wrapper } = render([installedJira]);
+
+      attach('jira-5.7.0.jar');
+
+      expect(wrapper.find(UploadModalLayout).prop('submitDisabled')).toBe(true);
+    });
+
+    test('replacing a different version leaves the button live', () => {
+      const { attach, wrapper } = render([installedJira]);
+
+      attach('jira-5.8.0.jar');
+
+      expect(wrapper.find(UploadModalLayout).prop('submitDisabled')).toBe(false);
+    });
+
     test('a failure the instance sent still keeps the generic notification', async () => {
       fetch.mockRejectedValue(registryError('INTERNAL_ERROR', 'Unexpected server error'));
       const { attach, upload, of } = render();
