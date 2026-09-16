@@ -135,6 +135,15 @@ const messages = defineMessages({
     id: 'PluginItem.upgrade',
     defaultMessage: 'Upgrade',
   },
+  // ADR-008. The instance keeps one .jar, and the registry answers 403 for a blocked version, so
+  // leaving one is the one version change that cannot be undone. The dialog is where an admin can
+  // still stop; afterwards there is nowhere to say it.
+  leavingBlockedVersion: {
+    id: 'PluginItem.leavingBlockedVersion',
+    defaultMessage:
+      ' The version you are on now was blocked by the marketplace, so it cannot be installed'
+      + ' again — this upgrade is one-way.',
+  },
   downgradeVersionTitle: {
     id: 'PluginItem.downgradeVersionTitle',
     defaultMessage: 'Downgrade Version',
@@ -156,6 +165,18 @@ const messages = defineMessages({
     id: 'PluginItem.uploadedManually',
     defaultMessage: 'Uploaded Manually',
   },
+  reinstallFromMarketplace: {
+    id: 'PluginItem.reinstallFromMarketplace',
+    defaultMessage: 'You can install it again from the marketplace at any time.',
+  },
+  // The default line is simply false for this plugin: an id the registry never published has no
+  // listing to reinstall from. The way back is the .jar, which the admin has or does not.
+  reinstallFromJar: {
+    id: 'PluginItem.reinstallFromJar',
+    defaultMessage:
+      'This plugin is not in the marketplace, so installing it again means uploading the .jar'
+      + ' once more.',
+  },
 });
 
 // the modal parses its message as markup, so the emphasis has to reach it as a sanitised string
@@ -175,6 +196,18 @@ const bold = (chunks) => DOMPurify.sanitize(`<b>${chunks}</b>`);
  */
 const isUpgradeFrom = (installedVersion, version) =>
   Boolean(installedVersion) && compareVersions(version, installedVersion) > 0;
+
+/**
+ * Whether a version change would strand the admin: the version running now is one the marketplace
+ * blocked, so it answers 403 and cannot be installed again. The instance keeps one .jar, so
+ * leaving it is one-way (ADR-008).
+ *
+ * <p>The block is recorded against the installed version specifically, which is what makes this
+ * answerable at all — a block somewhere else in the history says nothing about going back.
+ */
+const isLeavingBlockedVersion = (row) =>
+  Boolean(row.marketplace?.blocked) &&
+  row.marketplace.blocked.version === (row.details?.version || null);
 
 @injectIntl
 @track()
@@ -411,18 +444,21 @@ export class InstalledTab extends Component {
    * page with nothing saying whether it was about to change. This one stays until the install
    * succeeds, and on failure stays while the page explains.
    */
-  showVersionChangeModal = (registryId, pluginName, version, upgrade, callback) => {
+  showVersionChangeModal = (registryId, pluginName, version, upgrade, callback, leavingBlocked) => {
     const {
       intl: { formatMessage },
     } = this.props;
+    const message =
+      formatMessage(upgrade ? messages.upgradeVersionMessage : messages.downgradeVersionMessage, {
+        pluginName,
+        version,
+        b: bold,
+      }) + (leavingBlocked ? formatMessage(messages.leavingBlockedVersion) : '');
 
     this.props.showModalAction(
       versionChangeModal({
         registryId,
-        message: formatMessage(
-          upgrade ? messages.upgradeVersionMessage : messages.downgradeVersionMessage,
-          { pluginName, version, b: bold },
-        ),
+        message,
         onConfirm: callback,
         title: formatMessage(
           upgrade ? messages.upgradeVersionTitle : messages.downgradeVersionTitle,
@@ -476,6 +512,7 @@ export class InstalledTab extends Component {
             title={getDisplayName(data)}
             headerAction={this.renderUpgradeAction(data)}
             afterTitle={this.renderProvenance(data)}
+            uninstallNote={this.uninstallNote(data)}
           />
         );
       case INSTALLED_PLUGINS_SETTINGS_SUBPAGE:
@@ -635,8 +672,13 @@ export class InstalledTab extends Component {
         this.props.installMarketplacePluginAction(row.registryId, row.latestVersion),
       );
     } else if (action === ROW_ACTIONS.UPDATE) {
-      this.showVersionChangeModal(row.registryId, getDisplayName(row), row.updateAvailable, true, () =>
-        this.props.installMarketplacePluginAction(row.registryId, row.updateAvailable),
+      this.showVersionChangeModal(
+        row.registryId,
+        getDisplayName(row),
+        row.updateAvailable,
+        true,
+        () => this.props.installMarketplacePluginAction(row.registryId, row.updateAvailable),
+        isLeavingBlockedVersion(row),
       );
     } else if (action === ROW_ACTIONS.DISCOVER_PREMIUM) {
       // the same modal the plugin page opens, built in the same place, so one button cannot
@@ -698,6 +740,26 @@ export class InstalledTab extends Component {
    * whether it is healthy. The registry being unreachable produces the same empty block for a
    * different reason, so this is drawn only when the registry answered and had nothing for this id.
    */
+  /**
+   * What the uninstall dialog says about getting the plugin back, which is not the same sentence
+   * for every plugin. A marketplace plugin can be reinstalled whenever; one that was uploaded by
+   * hand comes back only if the admin still holds the .jar.
+   *
+   * <p>Only while the id is unmatched — once the registry publishes it, the plugin is an ordinary
+   * marketplace plugin and the ordinary sentence is true again. With the registry unreachable
+   * neither claim can be made, so nothing is added.
+   */
+  uninstallNote = (data) => {
+    const { formatMessage } = this.props.intl;
+    if (this.props.registryOffline || this.props.catalogueFailed) {
+      return undefined;
+    }
+
+    return formatMessage(
+      data.registryId ? messages.reinstallFromMarketplace : messages.reinstallFromJar,
+    );
+  };
+
   renderProvenance = (data) => {
     const unmatched = !data.registryId;
     if (!unmatched || this.props.registryOffline || this.props.catalogueFailed) {
@@ -758,6 +820,7 @@ export class InstalledTab extends Component {
             version,
             isUpgradeFrom(data.details?.version, version),
             () => this.props.installMarketplacePluginAction(data.registryId, version),
+            isLeavingBlockedVersion(data),
           )
         }
       />

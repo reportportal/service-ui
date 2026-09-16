@@ -33,6 +33,7 @@ import catalogue from 'controllers/plugins/__fixtures__/catalogue.json';
 import catalogueOffline from 'controllers/plugins/__fixtures__/catalogue-offline.json';
 import { PluginsCatalog, ROW_ACTIONS } from '../../pluginsCatalog';
 import { mergeInstalledRows, toAvailableRow } from '../../pluginsCatalog/utils';
+import { IntegrationInfoContainer } from 'components/integrations/containers';
 import { PluginsFilter } from '../../pluginsFilter';
 import { PluginMarketplaceBlocks } from '../../pluginMarketplaceBlocks';
 import { InstalledTab } from './installedTab';
@@ -330,6 +331,19 @@ describe('InstalledTab', () => {
       const alert = (wrapper, id) => wrapper.find(`[data-automation-id="${id}"]`);
 
       /**
+       * Confirm. Uninstall. Uploaded Manually. The default closing line is simply false here: an
+       * id the registry never published has no listing to reinstall from, and telling an admin
+       * otherwise is how a plugin gets uninstalled and never comes back.
+       */
+      test('uninstalling says the way back is the .jar, not the marketplace', () => {
+        const wrapper = openJira();
+        const note = wrapper.find(IntegrationInfoContainer).first().prop('uninstallNote');
+
+        expect(note).toMatch(/uploading the \.jar/i);
+        expect(note).not.toMatch(/from the marketplace at any time/i);
+      });
+
+      /**
        * Plugin Detail. State. Uploaded Manually — two signals, one cause. The badge says what the
        * plugin is; the message says what that means for its versions. Neither is a warning: hand
        * installed is a fact about provenance, not a claim about health, which is why the badge is
@@ -457,6 +471,16 @@ describe('InstalledTab', () => {
     describe('the header offers the upgrade', () => {
       const upgradeAction = (rendered) =>
         rendered.wrapper.find('[data-automation-id="upgradeVersionAction"]').first();
+
+      // once the registry publishes the id, the ordinary sentence is true again
+      test('a marketplace plugin is told it can be reinstalled whenever', () => {
+        const rendered = render();
+        openVersions(rendered);
+
+        expect(
+          rendered.wrapper.find(IntegrationInfoContainer).first().prop('uninstallNote'),
+        ).toMatch(/from the marketplace at any time/i);
+      });
 
       test('the action names the version service-api decided is on offer', () => {
         const rendered = render();
@@ -635,6 +659,19 @@ describe('InstalledTab', () => {
       // the dialog and the versions table now ask one comparator, so a version the old semver
       // coercion truncated to three segments — and then called a downgrade, because the truncation
       // made it equal to the running one — reads as the step forward it is
+      /**
+       * ADR-008. The instance keeps one .jar and the registry answers 403 for a blocked version,
+       * so leaving one is the single version change that cannot be undone. The dialog is the last
+       * place an admin can stop; afterwards there is nowhere left to say it.
+       */
+      test('leaving a blocked version says the upgrade is one-way', () => {
+        const { of } = useVersion('1.6.0');
+
+        // jira's installed 1.5.2 is the version the fixture records as blocked
+        expect(confirmation(of).data.message).toMatch(/one-way/i);
+        expect(confirmation(of).data.message).toMatch(/cannot be installed again/i);
+      });
+
       test('a fourth segment is part of the version, not noise past it', () => {
         const { of } = useVersion('1.5.2.1');
 

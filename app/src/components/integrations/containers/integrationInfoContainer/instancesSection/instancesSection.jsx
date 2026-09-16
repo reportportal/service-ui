@@ -128,6 +128,9 @@ const messages = defineMessages({
 @track()
 export class InstancesSection extends Component {
   static propTypes = {
+    /** Closing sentence of the uninstall dialog — what the way back is, which only the caller
+     * knows. Omitted, the dialog asks and says no more. */
+    uninstallNote: PropTypes.string,
     intl: PropTypes.object.isRequired,
     instanceType: PropTypes.string.isRequired,
     pluginType: PropTypes.string.isRequired,
@@ -216,10 +219,13 @@ export class InstancesSection extends Component {
     this.props.showModalAction({
       id: 'confirmationModal',
       data: {
-        message: formatMessage(messages.uninstallPluginConfirmation, {
-          pluginName: pluginDetails.name || instanceType,
-          b: (chunks) => DOMPurify.sanitize(`<b>${chunks}</b>`),
-        }),
+        // The closing sentence is the caller's, because only it knows where this plugin came
+        // from and therefore what the way back is. Absent, the dialog asks and says no more.
+        message:
+          formatMessage(messages.uninstallPluginConfirmation, {
+            pluginName: pluginDetails.name || instanceType,
+            b: (chunks) => DOMPurify.sanitize(`<b>${chunks}</b>`),
+          }) + (this.props.uninstallNote ? ` ${this.props.uninstallNote}` : ''),
         onConfirm: this.removePlugin,
         title: formatMessage(messages.uninstallPluginTitle),
         confirmText: formatMessage(COMMON_LOCALE_KEYS.UNINSTALL),

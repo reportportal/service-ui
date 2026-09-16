@@ -53,6 +53,8 @@ export class IntegrationInfoContainer extends Component {
     headerAction: PropTypes.node,
     /** A mark beside the plugin's name in the header. */
     afterTitle: PropTypes.node,
+    /** Closing sentence of the uninstall dialog — see the plugins page. */
+    uninstallNote: PropTypes.string,
     /** Overrides the heading, for a caller that knows a better name than the local one. */
     title: PropTypes.string,
   };
@@ -111,6 +113,7 @@ export class IntegrationInfoContainer extends Component {
           isGlobal={isGlobal}
           title={pluginTitle}
           events={events}
+          uninstallNote={this.props.uninstallNote}
         />
       </Fragment>
     );

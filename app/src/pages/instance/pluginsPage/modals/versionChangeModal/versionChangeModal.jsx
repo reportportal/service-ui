@@ -83,8 +83,10 @@ export const VersionChangeModal = ({ data }) => {
     <ModalLayout
       title={title}
       okButton={{
+        // Primary, not danger. Nothing is deleted from the instance: a version is replaced. Red is
+        // reserved for Uninstall, and spending it here would leave nothing louder for the action
+        // that actually removes the plugin.
         text: installing ? formatMessage(messages.working) : confirmText,
-        danger: true,
         disabled: installing,
         onClick: (closeModal) => {
           closeRef.current = closeModal;
