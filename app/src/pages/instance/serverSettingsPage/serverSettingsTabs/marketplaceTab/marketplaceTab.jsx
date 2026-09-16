@@ -26,6 +26,7 @@ import {
   marketplaceLicenceLoadingSelector,
   marketplaceLicenceErrorSelector,
 } from 'controllers/plugins';
+import { showModalAction } from 'controllers/modal';
 import { MarketplaceLicence } from './marketplaceLicence';
 
 export const MarketplaceTab = () => {
@@ -52,6 +53,7 @@ export const MarketplaceTab = () => {
       error={error}
       onSubmit={(credentials) => dispatch(setMarketplaceLicenceAction(credentials))}
       onRemove={() => dispatch(deleteMarketplaceLicenceAction())}
+      showModal={(modal) => dispatch(showModalAction(modal))}
     />
   );
 };

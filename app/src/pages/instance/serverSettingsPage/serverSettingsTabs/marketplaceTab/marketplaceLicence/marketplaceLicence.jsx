@@ -66,14 +66,25 @@ const messages = defineMessages({
     id: 'MarketplaceLicence.remove',
     defaultMessage: 'Remove credentials',
   },
+  removeTitle: {
+    id: 'MarketplaceLicence.removeTitle',
+    defaultMessage: 'Delete License',
+  },
+  // What survives comes first: enforcement lives at download (ADR-011), so an admin about to
+  // delete needs to know their running plugins are not about to stop. The middle sentence is the
+  // rotation gap made visible — the card deletes rather than edits, so replacing a key means
+  // delete then add, and the key cannot be read back to restore if the copy is lost.
   removeConsequence: {
     id: 'MarketplaceLicence.removeConsequence',
     defaultMessage:
-      'Removing the credentials locks every premium plugin again and a premium install is refused as not configured. Plugins already installed keep running.',
+      "Premium plugins already installed keep running. The customer ID and license key will be"
+      + " removed from this instance, and the key isn't shown again after saving, so make sure you"
+      + ' still have your copy. Nothing premium can be installed or upgraded until a license is'
+      + ' added again.',
   },
   confirmRemove: {
     id: 'MarketplaceLicence.confirmRemove',
-    defaultMessage: 'Remove them',
+    defaultMessage: 'Delete',
   },
   cancel: {
     id: 'MarketplaceLicence.cancel',
@@ -116,13 +127,14 @@ export const MarketplaceLicence = ({
   error = null,
   onSubmit = () => {},
   onRemove = () => {},
+  showModal = () => {},
 }) => {
   const { formatMessage } = useIntl();
   const [customerIdValue, setCustomerIdValue] = useState(customerId || '');
   const [privateKey, setPrivateKey] = useState('');
   const [customerIdTouched, setCustomerIdTouched] = useState(false);
   const [privateKeyTouched, setPrivateKeyTouched] = useState(false);
-  const [confirmingRemoval, setConfirmingRemoval] = useState(false);
+
   const [lastCustomerId, setLastCustomerId] = useState(customerId);
   const [saveInFlight, setSaveInFlight] = useState(false);
   // the slice's error is shared with the GET made on mount, so the banner waits for a request
@@ -169,11 +181,28 @@ export const MarketplaceLicence = ({
     setPrivateKeyTouched(false);
   };
 
-  const handleRemove = () => {
-    setConfirmingRemoval(false);
-    setPrivateKey('');
-    setSaved(false);
-    onRemove();
+  /**
+   * The app's own confirmation dialog rather than a panel of this component's own. Nothing here is
+   * recoverable — the key is write-only and cannot be read back — so it belongs in the same dialog
+   * every other irreversible action in the product uses, with the danger button, instead of a
+   * bespoke one an admin has not been trained by the rest of the app to read carefully.
+   */
+  const confirmRemoval = () => {
+    showModal({
+      id: 'confirmationModal',
+      data: {
+        title: formatMessage(messages.removeTitle),
+        message: formatMessage(messages.removeConsequence),
+        confirmText: formatMessage(messages.confirmRemove),
+        cancelText: formatMessage(messages.cancel),
+        dangerConfirm: true,
+        onConfirm: () => {
+          setPrivateKey('');
+          setSaved(false);
+          onRemove();
+        },
+      },
+    });
   };
 
   return (
@@ -248,39 +277,17 @@ export const MarketplaceLicence = ({
           >
             {formatMessage(messages.submit)}
           </Button>
-          {configured && !confirmingRemoval && (
+          {configured && (
             <Button
               variant="ghost"
               disabled={loading}
               data-automation-id="removeLicence"
-              onClick={() => setConfirmingRemoval(true)}
+              onClick={confirmRemoval}
             >
               {formatMessage(messages.remove)}
             </Button>
           )}
         </div>
-        {/* the consequence is stated before it happens, not reported after it */}
-        {confirmingRemoval && (
-          <div className={cx('confirm')} data-automation-id="removeLicenceConfirm">
-            <p className={cx('confirm-body')}>{formatMessage(messages.removeConsequence)}</p>
-            <div className={cx('actions')}>
-              <Button
-                variant="danger"
-                data-automation-id="confirmRemoveLicence"
-                onClick={handleRemove}
-              >
-                {formatMessage(messages.confirmRemove)}
-              </Button>
-              <Button
-                variant="ghost"
-                data-automation-id="cancelRemoveLicence"
-                onClick={() => setConfirmingRemoval(false)}
-              >
-                {formatMessage(messages.cancel)}
-              </Button>
-            </div>
-          </div>
-        )}
       </div>
     </SectionLayout>
   );
@@ -294,4 +301,7 @@ MarketplaceLicence.propTypes = {
   error: PropTypes.string,
   onSubmit: PropTypes.func,
   onRemove: PropTypes.func,
+  /** Raises the app's confirmation dialog. A prop rather than a dispatch of its own, so this stays
+   * a component that renders what it is given. */
+  showModal: PropTypes.func,
 };

@@ -49,6 +49,9 @@ const render = (props = {}) => {
   return { wrapper, find, click, type, blur, valueOf, arrive };
 };
 
+// the dialog is raised through a prop, so what was asked is the payload rather than the DOM
+const confirmOf = (showModal) => showModal.mock.calls[0][0].data.onConfirm;
+
 describe('MarketplaceLicence', () => {
   // the three endpoints are IS_ADMIN, so the section is absent rather than shown disabled
   test('is not rendered for anyone but an admin', () => {
@@ -314,10 +317,11 @@ describe('MarketplaceLicence', () => {
 
   // the removal has its own outcome — the status line — and must not borrow the save's
   test('a removal is never reported as a save', () => {
-    const { find, click, arrive } = render({ configured: true, customerId: 'acme' });
+    const showModal = jest.fn();
+    const { find, click, arrive } = render({ configured: true, customerId: 'acme', showModal });
 
     click('removeLicence');
-    click('confirmRemoveLicence');
+    confirmOf(showModal)();
     arrive({ loading: true });
     arrive({ loading: false, configured: false, customerId: null });
 
@@ -347,36 +351,65 @@ describe('MarketplaceLicence', () => {
     );
   });
 
-  test('removal states the consequence before it happens', () => {
-    const onRemove = jest.fn();
-    const { click, find } = render({ configured: true, customerId: 'acme', onRemove });
+  /**
+   * Confirm. License. Delete. The app's own dialog rather than a panel this component builds
+   * itself: nothing here is recoverable, and an irreversible action should look like every other
+   * irreversible action in the product rather than like something bespoke.
+   */
+  describe('deleting the credentials', () => {
+    const openDialog = () => {
+      const showModal = jest.fn();
+      const onRemove = jest.fn();
+      const { click } = render({ configured: true, customerId: 'acme', onRemove, showModal });
 
-    click('removeLicence');
+      click('removeLicence');
 
-    expect(find('removeLicenceConfirm').first().text()).toMatch(
-      /locks every premium plugin again/i,
-    );
-    expect(onRemove).not.toHaveBeenCalled();
-  });
+      const raised = showModal.mock.calls[0][0];
 
-  test('confirming the removal is what actually removes them', () => {
-    const onRemove = jest.fn();
-    const { click } = render({ configured: true, customerId: 'acme', onRemove });
+      return { raised, data: raised.data, onRemove };
+    };
 
-    click('removeLicence');
-    click('confirmRemoveLicence');
+    test('asks through the shared dialog, with the danger button', () => {
+      const { raised, data } = openDialog();
 
-    expect(onRemove).toHaveBeenCalled();
-  });
+      expect(raised.id).toBe('confirmationModal');
+      expect(data.title).toBe('Delete License');
+      expect(data.dangerConfirm).toBe(true);
+    });
 
-  test('backing out of the removal removes nothing', () => {
-    const onRemove = jest.fn();
-    const { click, find } = render({ configured: true, customerId: 'acme', onRemove });
+    /**
+     * Enforcement lives at registry download (ADR-011), so plugins already installed keep running.
+     * An admin about to delete needs that first — before what stops — or the dialog reads as though
+     * it is about to break what is already working.
+     */
+    test('says what survives before it says what stops', () => {
+      const { data } = openDialog();
+      const survives = data.message.indexOf('already installed keep running');
+      const stops = data.message.indexOf('Nothing premium can be installed');
 
-    click('removeLicence');
-    click('cancelRemoveLicence');
+      expect(survives).toBeGreaterThan(-1);
+      expect(stops).toBeGreaterThan(survives);
+    });
 
-    expect(onRemove).not.toHaveBeenCalled();
-    expect(find('removeLicenceConfirm')).toHaveLength(0);
+    /**
+     * The rotation gap made visible. The card deletes rather than edits, so replacing a key means
+     * delete and then add, and between the two the instance has no licence — with a key that
+     * cannot be read back if the copy is gone.
+     */
+    test('warns that the key cannot be recovered', () => {
+      expect(openDialog().data.message).toMatch(/isn't shown again after saving/i);
+    });
+
+    test('opening it removes nothing on its own', () => {
+      expect(openDialog().onRemove).not.toHaveBeenCalled();
+    });
+
+    test('confirming is what actually removes them', () => {
+      const { data, onRemove } = openDialog();
+
+      data.onConfirm();
+
+      expect(onRemove).toHaveBeenCalled();
+    });
   });
 });
