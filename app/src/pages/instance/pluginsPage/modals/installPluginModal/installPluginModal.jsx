@@ -168,6 +168,16 @@ InstallPluginModal.propTypes = {
  * Opened the way the premium promo is: as an element on the action rather than through the id
  * registry, which needs the module to be imported somewhere unrelated before it can be found.
  */
-export const installPluginModal = ({ pluginName, versions, defaultVersion = null, onInstall }) => ({
-  component: <InstallPluginModal data={{ pluginName, versions, defaultVersion, onInstall }} />,
+export const installPluginModal = ({
+  pluginName,
+  versions,
+  defaultVersion = null,
+  productVersion = null,
+  onInstall,
+}) => ({
+  component: (
+    <InstallPluginModal
+      data={{ pluginName, versions, defaultVersion, productVersion, onInstall }}
+    />
+  ),
 });

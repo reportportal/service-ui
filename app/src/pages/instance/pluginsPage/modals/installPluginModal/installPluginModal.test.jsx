@@ -157,6 +157,23 @@ describe('InstallPluginModal', () => {
     expect(modal.component.props.data.pluginName).toBe('Slack');
   });
 
+  // The caller passes the running release and the frame needs it named: without it the reason on a
+  // disabled version falls back to the vague form, which states the refusal but not the bound the
+  // admin would have to move. Every other test here renders the component directly, so the factory
+  // was the one place that could drop a field and be believed.
+  test('the factory carries every field the dialog is given', () => {
+    const modal = installPluginModal({
+      pluginName: 'Slack',
+      versions: VERSIONS,
+      defaultVersion: '5.6.1',
+      productVersion: '26.1',
+      onInstall: () => {},
+    });
+
+    expect(modal.component.props.data.defaultVersion).toBe('5.6.1');
+    expect(modal.component.props.data.productVersion).toBe('26.1');
+  });
+
   // Install. Select Version. Latest not compatible (27390:15156) — the newest build stays in the
   // list, visibly present and visibly unavailable, and the selection falls to the newest that runs
   describe('a version that does not run here', () => {
