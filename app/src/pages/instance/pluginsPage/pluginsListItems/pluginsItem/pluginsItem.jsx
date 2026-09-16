@@ -91,6 +91,60 @@ const messages = defineMessages({
     id: 'PluginItem.disabledState',
     defaultMessage: 'Disabled',
   },
+  [ROW_STATES.NOT_CONFIGURED]: {
+    id: 'PluginItem.notConfiguredState',
+    defaultMessage: 'Not configured',
+  },
+  notConfiguredHint: {
+    id: 'PluginItem.notConfiguredHint',
+    defaultMessage: 'Configure or add an integration to start using this plugin.',
+  },
+  uploadedManuallyBadge: {
+    id: 'PluginItem.uploadedManuallyBadge',
+    defaultMessage: 'Uploaded Manually',
+  },
+  uploadedManuallyHint: {
+    id: 'PluginItem.uploadedManuallyHint',
+    defaultMessage:
+      'Uploaded manually — the marketplace has no record of this plugin, so no version or security'
+      + ' updates are shown for it.',
+  },
+  // Fixed-shape sentences, deliberately. The operator's own reason is unbounded and belongs on the
+  // plugin page; a list tooltip that can be any length is a list that jumps about. What a reader
+  // needs here is when it happened and where to go for the rest.
+  advisoryHint: {
+    id: 'PluginItem.advisoryHint',
+    defaultMessage:
+      'A security advisory was attached on {date}. Open the plugin page for details.',
+  },
+  advisoryHintUndated: {
+    id: 'PluginItem.advisoryHintUndated',
+    defaultMessage: 'A security advisory is attached. Open the plugin page for details.',
+  },
+  blockedHint: {
+    id: 'PluginItem.blockedHint',
+    defaultMessage:
+      "Blocked on {date}. This version keeps running but can't be reinstalled or downgraded to."
+      + ' Open the plugin page for details.',
+  },
+  blockedHintUndated: {
+    id: 'PluginItem.blockedHintUndated',
+    defaultMessage:
+      "Blocked by the marketplace. This version keeps running but can't be reinstalled or"
+      + ' downgraded to. Open the plugin page for details.',
+  },
+  removedHint: {
+    id: 'PluginItem.removedHint',
+    defaultMessage:
+      'Removed from the marketplace on {date}. It keeps running, but no version can be installed'
+      + ' or rolled back to. Open the plugin page for details.',
+  },
+  removedHintUndated: {
+    id: 'PluginItem.removedHintUndated',
+    defaultMessage:
+      'Removed from the marketplace. It keeps running, but no version can be installed or rolled'
+      + ' back to. Open the plugin page for details.',
+  },
   [ROW_INSTALL_STATES.INSTALLING]: {
     id: 'PluginItem.installingState',
     defaultMessage: 'Installing…',
@@ -144,6 +198,24 @@ const advisoryTone = (severity) =>
   isSevereAdvisory(severity) ? BADGE_TONES.DANGER : BADGE_TONES.WARNING;
 
 const maxVersionLengthForTitle = 17;
+
+const BADGE_HINTS = {
+  [ROW_BADGES.ADVISORY]: [messages.advisoryHint, messages.advisoryHintUndated],
+  [ROW_BADGES.BLOCKED]: [messages.blockedHint, messages.blockedHintUndated],
+  [ROW_BADGES.REMOVED]: [messages.removedHint, messages.removedHintUndated],
+};
+
+/** When the thing the badge is about happened, from whichever block records it. */
+const badgeDate = (marketplace, badge) => {
+  if (badge === ROW_BADGES.ADVISORY) {
+    return marketplace?.advisory?.attachedAt || null;
+  }
+  if (badge === ROW_BADGES.BLOCKED) {
+    return marketplace?.blocked?.blockedAt || null;
+  }
+
+  return marketplace?.removed?.removed || null;
+};
 
 @injectIntl
 export class PluginsItem extends Component {
@@ -202,6 +274,22 @@ export class PluginsItem extends Component {
    * with a newer version the sentence is about an update being held back, and without one it is
    * about the plugin this instance is already running having fallen out of range.
    */
+  /** The fixed-shape sentence a marketplace badge carries, dated where a date exists. */
+  badgeHint = (badge) => {
+    const [dated, undated] = BADGE_HINTS[badge] || [];
+    if (!dated) {
+      return undefined;
+    }
+    const { formatMessage, formatDate } = this.props.intl;
+    const when = badgeDate(this.props.data.marketplace, badge);
+
+    return when
+      ? formatMessage(dated, {
+          date: formatDate(when, { day: 'numeric', month: 'short', year: 'numeric' }),
+        })
+      : formatMessage(undated);
+  };
+
   incompatibilityReason = ({ version, requires, newer }) => {
     const { formatMessage } = this.props.intl;
     const { productVersion } = this.props;
@@ -289,6 +377,19 @@ export class PluginsItem extends Component {
               {/* Amber, beside the version, and it says what the build wants rather than only
                   that something is wrong: the two things a reader needs are the requirement and
                   the release they are on, and neither is anywhere else on the row. */}
+              {/* Hand-installed, said on the row as well as on the plugin page: an admin scanning
+                  a list should not have to open a plugin to learn the marketplace knows nothing
+                  about it. Quiet grey — it is provenance, not a warning. */}
+              {data.handInstalled && (
+                <PluginBadge
+                  tone={BADGE_TONES.NEUTRAL}
+                  data-automation-id="pluginBadge"
+                  data-badge="UPLOADED_MANUALLY"
+                  title={formatMessage(messages.uploadedManuallyHint)}
+                >
+                  {formatMessage(messages.uploadedManuallyBadge)}
+                </PluginBadge>
+              )}
               {incompatible && (
                 <VersionMark
                   tone={VERSION_MARK_TONES.INCOMPATIBLE}
@@ -305,17 +406,17 @@ export class PluginsItem extends Component {
             )}
             {(isInAvailablePluginList || badges.length > 0) && (
               <div className={cx('plugins-badges')}>
-                {isInAvailablePluginList && (
+                {/* Premium on either half of the list: a paid plugin is paid whether it is
+                    installed or on offer, and the badge used to say so on only one of the two.
+                    There is no Free badge — no design row carries one, and a badge that appears
+                    on almost every row tells a reader nothing. */}
+                {tier === PLUGIN_TIERS.PREMIUM && (
                   <PluginBadge
-                    tone={
-                      tier === PLUGIN_TIERS.PREMIUM ? BADGE_TONES.PREMIUM : BADGE_TONES.FREE
-                    }
+                    tone={BADGE_TONES.PREMIUM}
                     data-automation-id="pluginBadge"
                     data-badge={tier}
                   >
-                    {formatMessage(
-                      tier === PLUGIN_TIERS.PREMIUM ? messages.premium : messages.free,
-                    )}
+                    {formatMessage(messages.premium)}
                   </PluginBadge>
                 )}
                 {badges.map((badge) => (
@@ -329,6 +430,7 @@ export class PluginsItem extends Component {
                     data-automation-id="pluginBadge"
                     data-badge={badge}
                     data-severity={badge === ROW_BADGES.ADVISORY ? advisorySeverity : undefined}
+                    title={this.badgeHint(badge)}
                   >
                     {badge === ROW_BADGES.ADVISORY && advisorySeverity
                       ? formatMessage(messages.advisoryBadgeWithSeverity, {
@@ -376,7 +478,16 @@ export class PluginsItem extends Component {
                   have been. */}
               {rowState && (
                 <PluginBadge
-                  tone={BADGE_TONES.NEUTRAL}
+                  tone={
+                    rowState === ROW_STATES.NOT_CONFIGURED
+                      ? BADGE_TONES.WARNING
+                      : BADGE_TONES.NEUTRAL
+                  }
+                  title={
+                    rowState === ROW_STATES.NOT_CONFIGURED
+                      ? formatMessage(messages.notConfiguredHint)
+                      : undefined
+                  }
                   data-automation-id="pluginRowState"
                   data-state={rowState}
                 >

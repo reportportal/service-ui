@@ -74,6 +74,7 @@ export const PluginsCatalog = ({
   installingIds = [],
   installFailedId = null,
   productVersion = null,
+  configuredPlugins = null,
 }) => {
   const { formatMessage } = useIntl();
 
@@ -88,7 +89,12 @@ export const PluginsCatalog = ({
   const marketplaceTrusted = isMarketplaceTrusted({ offline, failed });
   const installedRows = withInstallState(
     filterRows(
-      mergeInstalledRows(installedPlugins, marketplaceInstalled, marketplaceTrusted),
+      mergeInstalledRows(
+        installedPlugins,
+        marketplaceInstalled,
+        marketplaceTrusted,
+        configuredPlugins,
+      ),
       activeCategory,
       query,
     ).sort(sortByGroupAndName),
@@ -212,4 +218,6 @@ PluginsCatalog.propTypes = {
   installFailedId: PropTypes.string,
   /** The ReportPortal release this instance reports, quoted when a row explains a refusal. */
   productVersion: PropTypes.string,
+  /** Names of the plugins that have an integration set up. Null when the answer is not known. */
+  configuredPlugins: PropTypes.arrayOf(PropTypes.string),
 };

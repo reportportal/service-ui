@@ -47,6 +47,8 @@ export const ROW_ACTIONS = {
  */
 export const ROW_STATES = {
   DISABLED: 'DISABLED',
+  /** Installed and switched on, but nothing has been configured, so it cannot actually run. */
+  NOT_CONFIGURED: 'NOT_CONFIGURED',
 };
 
 /**
@@ -54,9 +56,22 @@ export const ROW_STATES = {
  *
  * <p>Read off `enabled === false` rather than `!enabled`: an available row has no such field,
  * and undefined must not read as "switched off".
+ *
+ * <p>Switched off outranks unconfigured, because it is the nearer answer to "why is nothing
+ * happening": a plugin that is off will not run whether or not it is configured, and telling an
+ * admin to go and configure something they have deliberately disabled would send them the wrong
+ * way.
  */
-export const getRowState = (row) =>
-  !isAvailableRow(row) && row.enabled === false ? ROW_STATES.DISABLED : null;
+export const getRowState = (row) => {
+  if (isAvailableRow(row)) {
+    return null;
+  }
+  if (row.enabled === false) {
+    return ROW_STATES.DISABLED;
+  }
+
+  return row.configured === false ? ROW_STATES.NOT_CONFIGURED : null;
+};
 
 /**
  * What is happening to this row's own install. Neither state comes from the catalogue: both are
@@ -194,6 +209,15 @@ export const toInstalledRow = (plugin, mergedEntry, marketplaceTrusted = true) =
     ...plugin,
     kind: ROW_KINDS.INSTALLED,
     marketplace,
+    // The access axis, which an installed row was dropping: a premium plugin is premium whether
+    // it is installed or on offer, and the badge said so on only one of the two.
+    tier: toPluginTier(marketplace?.access),
+    /**
+     * Installed from a .jar rather than from the marketplace. Not simply "has no block": that is
+     * equally true while the registry is unreachable, and calling a plugin hand-installed because
+     * nobody could be asked would be a guess. Only when the registry answered and had nothing.
+     */
+    handInstalled: marketplaceTrusted && !mergedEntry?.marketplace,
     registryId: marketplace?.pluginId || null,
     updateAvailable: marketplace?.updateAvailable?.version || null,
     // the verdict on the newest published version, which is what tells a row that is genuinely
@@ -205,14 +229,25 @@ export const toInstalledRow = (plugin, mergedEntry, marketplaceTrusted = true) =
   };
 };
 
-export const mergeInstalledRows = (plugins, mergedInstalled, marketplaceTrusted = true) =>
-  plugins.map((plugin) =>
-    toInstalledRow(
+/**
+ * @param configuredPlugins names of the plugins that have at least one integration set up. Passing
+ *     nothing means the answer is unknown — not "none configured" — so no row claims to be
+ *     unconfigured on the strength of a list that was never supplied.
+ */
+export const mergeInstalledRows = (
+  plugins,
+  mergedInstalled,
+  marketplaceTrusted = true,
+  configuredPlugins = null,
+) =>
+  plugins.map((plugin) => ({
+    ...toInstalledRow(
       plugin,
       mergedInstalled.find((entry) => entry.name === plugin.name),
       marketplaceTrusted,
     ),
-  );
+    configured: configuredPlugins ? configuredPlugins.includes(plugin.name) : undefined,
+  }));
 
 export const isAvailableRow = (row) => row.kind === ROW_KINDS.AVAILABLE;
 

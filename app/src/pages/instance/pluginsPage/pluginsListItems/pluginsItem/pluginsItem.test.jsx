@@ -157,8 +157,13 @@ describe('PluginsItem', () => {
   });
 
   describe('the one badge a row shows', () => {
+    // the tier badge shares the automation id, so this asks for the marketplace ones specifically
+    const MARKETPLACE_BADGES = ['REMOVED', 'BLOCKED', 'ADVISORY'];
     const badges = (wrapper) =>
-      wrapper.find('span[data-automation-id="pluginBadge"]').map((b) => b.prop('data-badge'));
+      wrapper
+        .find('span[data-automation-id="pluginBadge"]')
+        .map((b) => b.prop('data-badge'))
+        .filter((badge) => MARKETPLACE_BADGES.includes(badge));
     // tone is a PluginBadge prop, so read it off the component rather than the span it renders
     const advisoryBadge = (wrapper) =>
       wrapper.find(PluginBadge).filterWhere((b) => b.prop('data-badge') === 'ADVISORY').first();
@@ -219,11 +224,113 @@ describe('PluginsItem', () => {
     });
   });
 
+  /**
+   * Catalog. Row — Installed · not configured. Installed and switched on, but nothing has been set
+   * up, so the plugin cannot actually run. Without this the row looks ready and the admin finds out
+   * only when whatever they expected to happen does not.
+   */
+  describe('a plugin with nothing configured', () => {
+    const rowWith = (overrides) => ({ ...toInstalledRow(localJira, jira), ...overrides });
+    const state = (wrapper) => find(wrapper, 'pluginRowState').first();
+
+    test('says so where the action would be', () => {
+      const wrapper = render(rowWith({ configured: false }));
+
+      expect(state(wrapper).text()).toBe('Not configured');
+      expect(state(wrapper).prop('tone')).toBe('warning');
+    });
+
+    test('and says what to do about it', () => {
+      expect(state(render(rowWith({ configured: false }))).prop('title')).toBe(
+        'Configure or add an integration to start using this plugin.',
+      );
+    });
+
+    test('a configured plugin says nothing of the sort', () => {
+      expect(find(render(rowWith({ configured: true })), 'pluginRowState')).toHaveLength(0);
+    });
+
+    /**
+     * Switched off outranks unconfigured: a plugin that is off will not run either way, and
+     * sending an admin to configure something they deliberately disabled is the wrong direction.
+     */
+    test('switched off outranks unconfigured', () => {
+      const wrapper = render(rowWith({ configured: false, enabled: false }));
+
+      expect(state(wrapper).text()).toBe('Disabled');
+    });
+
+    // not knowing is not the same as knowing there is none
+    test('an unknown answer makes no claim', () => {
+      expect(find(render(rowWith({ configured: undefined })), 'pluginRowState')).toHaveLength(0);
+    });
+  });
+
+  /**
+   * The operator's own reason for a block or an advisory is unbounded and belongs on the plugin
+   * page; a list tooltip that can be any length is a list that jumps about. What the row carries
+   * instead is a fixed shape: when it happened, and where to go for the rest.
+   */
+  describe('what a marketplace badge says on hover', () => {
+    const hintOf = (wrapper, badge) =>
+      wrapper.find(`span[data-badge="${badge}"]`).first().prop('title');
+
+    test('a blocked row gives the date and points at the plugin page', () => {
+      const hint = hintOf(render(toInstalledRow(localJira, jira)), 'BLOCKED');
+
+      expect(hint).toContain('Mar 12, 2026');
+      expect(hint).toContain('Open the plugin page');
+      // and not the operator's own words, which have no length limit
+      expect(hint).not.toContain('revoked key');
+    });
+
+    test('an advisory row gives the date it was attached', () => {
+      const unblocked = {
+        ...jira,
+        marketplace: { ...jira.marketplace, blocked: null },
+      };
+      const hint = hintOf(render(toInstalledRow(localJira, unblocked)), 'ADVISORY');
+
+      expect(hint).toContain('Mar 12, 2026');
+      expect(hint).toContain('Open the plugin page');
+    });
+
+    test('a date nobody recorded leaves the rest of the sentence standing', () => {
+      const undated = {
+        ...jira,
+        marketplace: { ...jira.marketplace, blocked: { version: '1.5.2' } },
+      };
+      const hint = hintOf(render(toInstalledRow(localJira, undated)), 'BLOCKED');
+
+      expect(hint).toMatch(/blocked by the marketplace/i);
+      expect(hint).toContain('Open the plugin page');
+    });
+  });
+
   // the two axes are drawn as two things, so neither count may be read off the other
   test('the trust mark is not one of the badges beside it', () => {
+    const wrapper = render(toAvailableRow(azure));
+
+    expect(wrapper.find('span[data-badge="premium"]')).toHaveLength(1);
+    expect(find(wrapper, 'pluginTrustMark')).not.toHaveLength(0);
+  });
+
+  /**
+   * There is no Free badge. No design row carries one, and the catalogue SPEC names only the
+   * Premium badge — a badge on almost every row tells a reader nothing, and spends the reader's
+   * attention on the ordinary case.
+   */
+  test('a free plugin carries no tier badge at all', () => {
     const wrapper = render(toAvailableRow(slack));
 
-    expect(wrapper.find('span[data-automation-id="pluginBadge"]')).toHaveLength(1);
-    expect(find(wrapper, 'pluginTrustMark')).not.toHaveLength(0);
+    expect(wrapper.find('span[data-badge="free"]')).toHaveLength(0);
+    expect(wrapper.find('span[data-badge="premium"]')).toHaveLength(0);
+  });
+
+  // the access axis is not a property of where the row sits: a paid plugin is paid once installed
+  test('an installed premium plugin says it is premium, as an available one does', () => {
+    const wrapper = render(toInstalledRow(localJira, jira));
+
+    expect(wrapper.find('span[data-badge="premium"]')).toHaveLength(1);
   });
 });

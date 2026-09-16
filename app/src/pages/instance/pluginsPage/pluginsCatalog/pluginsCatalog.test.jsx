@@ -415,7 +415,10 @@ describe('PluginsCatalog', () => {
       // not one of them and must not be counted as one
       const wrapper = render(failedProps);
 
-      expect(wrapper.find('span[data-automation-id="pluginBadge"]')).toHaveLength(2);
+      // counted by what they are rather than how many: the tier badge shares the automation id,
+      // and this test is about the install failure not joining the registry's own signals
+      expect(wrapper.find('span[data-badge="ADVISORY"]')).toHaveLength(0);
+      expect(wrapper.find('span[data-badge="BLOCKED"]')).toHaveLength(0);
       expect(wrapper.find('span[data-automation-id="pluginRowInstallError"]')).toHaveLength(1);
     });
 
@@ -734,7 +737,7 @@ describe('PluginsCatalog', () => {
   });
 
   describe('an installed plugin the registry could not match', () => {
-    test('is degraded the same way as offline while the registry is online', () => {
+    test('claims no marketplace signal, and says why it has none', () => {
       const wrapper = render({
         availablePlugins: [],
         // gitlab is missing from the merged response altogether; custom-scanner is in it but
@@ -751,13 +754,24 @@ describe('PluginsCatalog', () => {
         'Custom Scanner',
         'Sauce Labs',
       ]);
-      expect(matched.find('span[data-automation-id="pluginBadge"]').length).toBeGreaterThan(0);
+      const signals = (row) =>
+        row.find('span[data-badge="ADVISORY"]').length +
+        row.find('span[data-badge="BLOCKED"]').length +
+        row.find('span[data-badge="REMOVED"]').length;
+
+      expect(signals(matched)).toBeGreaterThan(0);
       expect(matched.find('[data-automation-id="pluginRowAction"]')).toHaveLength(1);
       // neither row may borrow another plugin's signals
-      expect(unmatched.find('span[data-automation-id="pluginBadge"]')).toHaveLength(0);
+      expect(signals(unmatched)).toBe(0);
       expect(unmatched.find('[data-automation-id="pluginRowAction"]')).toHaveLength(0);
-      expect(absent.find('span[data-automation-id="pluginBadge"]')).toHaveLength(0);
+      expect(signals(absent)).toBe(0);
       expect(absent.find('[data-automation-id="pluginRowAction"]')).toHaveLength(0);
+
+      // but silence is not all they say. While the registry is answering, an id it does not list
+      // is a plugin that came from a .jar, and the row says so rather than looking merely empty —
+      // which is what an offline row looks like, for a different reason.
+      expect(unmatched.find('span[data-badge="UPLOADED_MANUALLY"]')).toHaveLength(1);
+      expect(absent.find('span[data-badge="UPLOADED_MANUALLY"]')).toHaveLength(1);
     });
 
     test('an installed plugin that carries a tier field is still an installed row', () => {
@@ -770,9 +784,10 @@ describe('PluginsCatalog', () => {
       const row = group(wrapper, ALL_GROUP_TYPE).find('[data-automation-id="pluginRow"]').at(0);
 
       // BLOCKED rather than ADVISORY because this fixture row is both, and a row shows the worst
-      // one only; what this test is about is that a marketplace badge appears and a tier one does not
+      // one only. What this test is about is that the row stayed an installed row: it is in the
+      // Installed group and offers an update, not an install.
       expect(row.find('span[data-badge="BLOCKED"]')).toHaveLength(1);
-      expect(row.find(`span[data-badge="${PLUGIN_TIERS.PREMIUM}"]`)).toHaveLength(0);
+      expect(group(wrapper, AVAILABLE_PLUGINS_TYPE)).toHaveLength(0);
       expect(actions(group(wrapper, ALL_GROUP_TYPE))).toEqual([ROW_ACTIONS.UPDATE]);
     });
   });

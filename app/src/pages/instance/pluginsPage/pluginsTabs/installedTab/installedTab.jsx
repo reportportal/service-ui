@@ -39,6 +39,7 @@ import {
   marketplaceInstallErrorSelector,
   isPluginUploadAllowedSelector,
   marketplaceProductVersionSelector,
+  globalIntegrationsSelector,
   isMarketplaceRegistryOfflineSelector,
   hasMarketplaceCatalogueFailedSelector,
   fetchMarketplacePluginDetailAction,
@@ -227,6 +228,11 @@ const isLeavingBlockedVersion = (row) =>
     installError: marketplaceInstallErrorSelector(state),
     uploadAllowed: isPluginUploadAllowedSelector(state),
     productVersion: marketplaceProductVersionSelector(state),
+    // A plugin with no integration set up cannot actually run, and the row is where an admin
+    // finds that out. Read from the integrations the app already holds rather than fetched here.
+    configuredPlugins: globalIntegrationsSelector(state).map(
+      (integration) => integration.integrationType?.name,
+    ),
     pluginDetail: marketplacePluginDetailDataSelector(state),
     detailLoading: marketplacePluginDetailLoadingSelector(state),
     detailOffline: isMarketplacePluginDetailOfflineSelector(state),
@@ -271,6 +277,7 @@ export class InstalledTab extends Component {
     }),
     uploadAllowed: PropTypes.bool.isRequired,
   productVersion: PropTypes.string,
+    configuredPlugins: PropTypes.arrayOf(PropTypes.string),
     clearJustInstalledMarketplacePluginAction: PropTypes.func.isRequired,
     showNotification: PropTypes.func,
     pluginDetail: PropTypes.object.isRequired,
@@ -586,6 +593,7 @@ export class InstalledTab extends Component {
                 installingIds={this.props.installingIds}
                 installFailedId={this.props.installFailedId}
                 productVersion={this.props.productVersion}
+                configuredPlugins={this.props.configuredPlugins}
               />
             </div>
           </div>
