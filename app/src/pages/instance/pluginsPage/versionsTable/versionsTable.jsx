@@ -35,6 +35,19 @@ const messages = defineMessages({
     defaultMessage:
       'All versions published to the marketplace. Expand a version for its release notes, where provided.',
   },
+  // The cut is this page's decision, not the registry's, and saying so is not optional: an admin
+  // who sees ten of twenty-four and is told nothing concludes the other fourteen were withdrawn.
+  descriptionTruncated: {
+    id: 'VersionsTable.descriptionTruncated',
+    defaultMessage:
+      'The {shown} most recent versions published to the marketplace. The older ones are still'
+      + ' installable — the list is shortened here, not the history. Expand a version for its'
+      + ' release notes, where provided.',
+  },
+  showAll: {
+    id: 'VersionsTable.showAll',
+    defaultMessage: 'Show All {total} Versions',
+  },
   columnVersion: {
     id: 'VersionsTable.columnVersion',
     defaultMessage: 'Version',
@@ -111,6 +124,14 @@ const messages = defineMessages({
   },
 });
 
+/**
+ * How many rows the table shows before it offers the rest. Ten is the design's number, and the
+ * reason is the page rather than the data: everything below this block — the uninstall action, the
+ * documentation links — has to stay reachable without a long scroll past a history nobody opened
+ * the page for.
+ */
+const MAX_ROWS_BEFORE_TRUNCATION = 10;
+
 const ROW_ACTIONS = {
   INSTALL: 'INSTALL',
   UPGRADE: 'UPGRADE',
@@ -176,6 +197,12 @@ export const VersionsTable = ({
       ? ordered[0].version
       : null;
   const [expanded, setExpanded] = useState(newerThanInstalled);
+  const [showingAll, setShowingAll] = useState(false);
+  // A plugin with two dozen versions would otherwise push the uninstall block and the docs footer
+  // far below the fold, so the page shows the most recent handful and offers the rest. Nothing in
+  // the contract caps the list — the registry sends every version — so this is presentation only.
+  const truncated = !showingAll && ordered.length > MAX_ROWS_BEFORE_TRUNCATION;
+  const shown = truncated ? ordered.slice(0, MAX_ROWS_BEFORE_TRUNCATION) : ordered;
 
   if (versions.length === 0) {
     return null;
@@ -262,13 +289,18 @@ export const VersionsTable = ({
   return (
     <section className={cx('versions-table')} data-automation-id="pluginVersions">
       <h3 className={cx('header')}>{formatMessage(messages.header)}</h3>
-      <p className={cx('description')}>{description || formatMessage(messages.description)}</p>
+      <p className={cx('description')}>
+        {description ||
+          (truncated
+            ? formatMessage(messages.descriptionTruncated, { shown: shown.length })
+            : formatMessage(messages.description))}
+      </p>
       <div className={cx('columns')} data-automation-id="versionsColumns">
         <span className={cx('column')}>{formatMessage(messages.columnVersion)}</span>
         <span className={cx('column')}>{formatMessage(messages.columnReleased)}</span>
         <span />
       </div>
-      {ordered.map((entry) => {
+      {shown.map((entry) => {
         const isOpen = expanded === entry.version;
         const notes = changelog?.version === entry.version ? changelog.lines || [] : [];
 
@@ -337,6 +369,18 @@ export const VersionsTable = ({
           </div>
         );
       })}
+      {/* In place: there is no versions page to navigate to, and an admin comparing two versions
+          should not lose the row they were reading to see the rest. */}
+      {truncated && (
+        <button
+          type="button"
+          className={cx('show-all')}
+          data-automation-id="showAllVersions"
+          onClick={() => setShowingAll(true)}
+        >
+          {formatMessage(messages.showAll, { total: ordered.length })}
+        </button>
+      )}
     </section>
   );
 };

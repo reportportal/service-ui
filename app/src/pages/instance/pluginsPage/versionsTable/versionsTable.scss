@@ -180,3 +180,20 @@
   text-align: center;
   color: var(--rp-ui-color-text-secondary);
 }
+
+// A link rather than a button: it reveals what is already on the page instead of doing anything,
+// and the design draws it as one.
+.show-all {
+  align-self: flex-start;
+  padding: 12px 0 0;
+  border: none;
+  background: none;
+  color: var(--rp-ui-color-topaz);
+  font-size: 13px;
+  line-height: 20px;
+  cursor: pointer;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}

@@ -145,6 +145,84 @@ describe('VersionsTable', () => {
     });
   });
 
+  /**
+   * Versions. History. Full. The registry sends every version; the cut is this page's decision,
+   * because a plugin with two dozen releases would otherwise push the uninstall block and the docs
+   * footer far below the fold.
+   */
+  describe('Versions. History. Full', () => {
+    // newest first once sorted: 5.24.0 down to 5.1.0
+    const many = Array.from({ length: 24 }, (_, i) => ({ version: `5.${i + 1}.0` }));
+
+    test('a long history is shortened to the ten most recent', () => {
+      const wrapper = render({ versions: many });
+
+      expect(rows(wrapper)).toHaveLength(10);
+      expect(rows(wrapper)[0]).toBe('5.24.0');
+      expect(rows(wrapper)[9]).toBe('5.15.0');
+    });
+
+    test('the control says how many there really are', () => {
+      const wrapper = render({ versions: many });
+
+      expect(find(wrapper, 'showAllVersions').first().text()).toBe('Show All 24 Versions');
+    });
+
+    // it reveals what is already on the page: there is no versions page to navigate to, and an
+    // admin comparing two versions should not lose the row they were reading
+    test('showing all expands the table in place', () => {
+      const wrapper = render({ versions: many });
+
+      act(() => {
+        find(wrapper, 'showAllVersions').first().prop('onClick')();
+      });
+      wrapper.update();
+
+      expect(rows(wrapper)).toHaveLength(24);
+      expect(find(wrapper, 'showAllVersions')).toHaveLength(0);
+    });
+
+    /**
+     * Without this an admin who sees ten of twenty-four concludes the other fourteen were
+     * withdrawn. They are still installable; only the list is shortened.
+     */
+    test('the description says the cut is presentational, not a withdrawal', () => {
+      const description = render({ versions: many }).find('p').first().text();
+
+      expect(description).toContain('still');
+      expect(description).toMatch(/installable/i);
+      expect(description).toContain('10');
+    });
+
+    test('and says the ordinary thing again once everything is shown', () => {
+      const wrapper = render({ versions: many });
+
+      act(() => {
+        find(wrapper, 'showAllVersions').first().prop('onClick')();
+      });
+      wrapper.update();
+
+      expect(wrapper.find('p').first().text()).toBe(
+        'All versions published to the marketplace. Expand a version for its release notes, where provided.',
+      );
+    });
+
+    test('a history that fits is not cut, and offers nothing to expand', () => {
+      const wrapper = render({ versions: many.slice(0, 10) });
+
+      expect(rows(wrapper)).toHaveLength(10);
+      expect(find(wrapper, 'showAllVersions')).toHaveLength(0);
+    });
+
+    // ordering is newest first and the running version is marked where it falls, not moved up
+    test('the running version keeps its marker wherever it lands', () => {
+      const wrapper = render({ versions: many, installedVersion: '5.20.0' });
+
+      expect(rows(wrapper)[0]).toBe('5.24.0');
+      expect(find(rowFor(wrapper, '5.20.0'), 'installedVersionMarker')).toHaveLength(1);
+    });
+  });
+
   describe('Versions. Table. Row Expanded', () => {
     const changelog = { version: '5.6.1', lines: ['Restored compatibility.', 'Fixed a duplicate.'] };
 
