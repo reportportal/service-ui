@@ -27,6 +27,7 @@ import {
   INSTALL_MARKETPLACE_PLUGIN,
 } from 'controllers/plugins/constants';
 import { SHOW_MODAL } from 'controllers/modal/constants';
+import { SERVER_SETTINGS_TAB_PAGE } from 'controllers/pages';
 import { PremiumPromoModal } from 'components/premiumPromoModal';
 import { referenceDictionary } from 'common/utils/referenceDictionary';
 import catalogue from 'controllers/plugins/__fixtures__/catalogue.json';
@@ -522,6 +523,70 @@ describe('InstalledTab', () => {
         rendered.wrapper.update();
 
         expect(rendered.wrapper.find('[data-automation-id="upgradeVersionAction"]')).toHaveLength(0);
+      });
+    });
+
+    /**
+     * Plugin Detail. Installed. Premium (27706:18118). Manage License sits left of the toggle and
+     * it is a *route*, not a state: always offered, claiming nothing about the licence. Under
+     * ADR-011 the key is checked at artifact download and nowhere else, so the instance never
+     * learns whether the one it holds still works — which is also why no licence-expiry state
+     * exists anywhere in this design, and why this must not become one.
+     */
+    describe('a premium plugin points at where its licence lives', () => {
+      const manageLicence = (rendered) =>
+        rendered.wrapper.find('[data-automation-id="manageLicenceAction"]');
+
+      // stated rather than taken from the fixture: the access axis is the whole subject here, so
+      // leaving it to a shared row would make this pass for the wrong reason
+      const openWithAccess = (rendered, access) => {
+        rendered.call(PluginsCatalog, 'onInstalledItemClick', {
+          ...jiraRow,
+          marketplace: { ...jiraRow.marketplace, access },
+        });
+        rendered.wrapper.update();
+      };
+      const openPremium = (rendered) => openWithAccess(rendered, 'premium');
+
+      test('the action is offered on a premium plugin', () => {
+        const rendered = render();
+        openPremium(rendered);
+
+        expect(manageLicence(rendered).first().text()).toBe('Manage License');
+      });
+
+      // Premium changes what a plugin costs, not what it does, so every other plugin is left alone
+      test('a plugin nobody pays for is not offered it', () => {
+        const rendered = render();
+        openWithAccess(rendered, 'public');
+
+        expect(manageLicence(rendered)).toHaveLength(0);
+      });
+
+      // it navigates; the plugin page does not administer licences
+      test('pressing it goes to the settings tab and opens no dialog', () => {
+        const rendered = render();
+        openPremium(rendered);
+
+        act(() => {
+          manageLicence(rendered).first().prop('onClick')();
+        });
+
+        expect(rendered.of(SHOW_MODAL)).toHaveLength(0);
+        expect(rendered.of(SERVER_SETTINGS_TAB_PAGE).pop().payload).toEqual({
+          settingsTab: 'marketplace',
+        });
+      });
+
+      // both actions live left of the toggle, and a premium plugin with an update shows both
+      test('it stands beside the upgrade rather than replacing it', () => {
+        const rendered = render();
+        openPremium(rendered);
+
+        expect(manageLicence(rendered)).not.toHaveLength(0);
+        expect(
+          rendered.wrapper.find('[data-automation-id="upgradeVersionAction"]'),
+        ).not.toHaveLength(0);
       });
     });
 

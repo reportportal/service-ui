@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import track from 'react-tracking';
@@ -61,6 +61,9 @@ import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { showModalAction } from 'controllers/modal';
 import { InputDropdown } from 'components/inputs/inputDropdown';
 import { isPluginBuiltin } from 'components/integrations/utils';
+import { PLUGIN_TIERS, toPluginTier } from 'common/constants/pluginTiers';
+import { MARKETPLACE } from 'common/constants/settingsTabs';
+import { SERVER_SETTINGS_TAB_PAGE } from 'controllers/pages';
 import { Button, DownloadIcon } from '@reportportal/ui-kit';
 import {
   INSTALLED_PLUGINS_SUBPAGE,
@@ -163,6 +166,13 @@ const messages = defineMessages({
     id: 'PluginItem.upgradeVersionAction',
     defaultMessage: 'Upgrade Version',
   },
+  // "Manage", not "View" or "Check": it goes to the place the credentials are edited, and it makes
+  // no claim about whether the licence this instance holds is currently good — nothing here can
+  // know that.
+  manageLicence: {
+    id: 'PluginItem.manageLicence',
+    defaultMessage: 'Manage License',
+  },
   uploadedManually: {
     id: 'PluginItem.uploadedManually',
     defaultMessage: 'Uploaded Manually',
@@ -248,11 +258,15 @@ const isLeavingBlockedVersion = (row) =>
     installMarketplacePluginAction,
     clearJustInstalledMarketplacePluginAction,
     fetchMarketplacePluginDetailAction,
+    // Manage License is a route, so it dispatches one. redux-first-router turns a page action into
+    // navigation, which is why there is no history object here.
+    navigateTo: (action) => action,
   },
 )
 export class InstalledTab extends Component {
   static propTypes = {
     intl: PropTypes.object.isRequired,
+    navigateTo: PropTypes.func.isRequired,
     filterItems: PropTypes.array.isRequired,
     showModalAction: PropTypes.func.isRequired,
     tracking: PropTypes.shape({ trackEvent: PropTypes.func }).isRequired,
@@ -554,7 +568,7 @@ export class InstalledTab extends Component {
               </>
             }
             title={getDisplayName(data)}
-            headerAction={this.renderUpgradeAction(data)}
+            headerAction={this.renderHeaderActions(data)}
             afterTitle={this.renderProvenance(data)}
             uninstallNote={this.uninstallNote(data)}
           />
@@ -845,6 +859,60 @@ export class InstalledTab extends Component {
       >
         {this.props.intl.formatMessage(messages.upgradeVersion)}
       </Button>
+    );
+  };
+
+  /**
+   * Manage License, on an installed premium plugin, left of the enable toggle.
+   *
+   * <p>A route rather than a state: always offered, claiming nothing about the licence. It cannot
+   * claim anything — under ADR-011 the key is checked at artifact download and nowhere else, so the
+   * instance never learns whether the one it holds still works. That is also why no licence-expiry
+   * action exists anywhere in this design.
+   *
+   * <p>It navigates; it does not open a dialog. The plugin page does not administer licences, and
+   * there is one place that does. Outline rather than primary, because a navigation should not
+   * carry the weight of a bordered button sitting next to the toggle.
+   */
+  renderManageLicence = (data) => {
+    if (toPluginTier(data.marketplace?.access) !== PLUGIN_TIERS.PREMIUM) {
+      return null;
+    }
+
+    return (
+      <Button
+        variant="ghost"
+        adjustWidthOn="content"
+        data-automation-id="manageLicenceAction"
+        onClick={() =>
+          this.props.navigateTo({
+            type: SERVER_SETTINGS_TAB_PAGE,
+            payload: { settingsTab: MARKETPLACE },
+          })
+        }
+      >
+        {this.props.intl.formatMessage(messages.manageLicence)}
+      </Button>
+    );
+  };
+
+  // Both live left of the toggle, and a premium plugin with an update available shows both.
+  renderHeaderActions = (data) => {
+    const actions = [this.renderManageLicence(data), this.renderUpgradeAction(data)].filter(
+      Boolean,
+    );
+
+    if (actions.length === 0) {
+      return null;
+    }
+
+    return (
+      <div className={cx('header-actions')}>
+        {actions.map((action, index) => (
+          // eslint-disable-next-line react/no-array-index-key
+          <Fragment key={index}>{action}</Fragment>
+        ))}
+      </div>
     );
   };
 

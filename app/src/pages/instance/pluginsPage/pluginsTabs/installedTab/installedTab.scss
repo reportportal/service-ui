@@ -61,3 +61,11 @@
     margin-bottom: 15px;
   }
 }
+
+/* Both header actions sit left of the enable toggle, so they need a gap of their own rather than
+   relying on a slot that was built for one element. */
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
