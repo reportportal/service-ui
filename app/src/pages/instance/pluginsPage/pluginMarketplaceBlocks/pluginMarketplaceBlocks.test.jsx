@@ -263,14 +263,18 @@ describe('PluginMarketplaceBlocks', () => {
       assertNothingClaimed(wrapper);
     });
 
-    test('offline names the host that could not be reached', () => {
+    // the address is not named: ADR-004 lets an enterprise point the instance at its own registry,
+    // so a literal host is least useful to the customers most likely to see this
+    test('offline says so without naming the address', () => {
       const wrapper = render({
         detail: loud,
         offline: true,
         registryHost: offlineDetail.registry.host,
       });
+      const alert = find(wrapper, 'registryOfflineAlert').text();
 
-      expect(find(wrapper, 'registryOfflineAlert').text()).toContain('marketplace.reportportal.io');
+      expect(alert).toMatch(/could not be reached/i);
+      expect(alert).not.toContain('marketplace.reportportal.io');
     });
 
     // the same rule as the catalogue: a failure is not a quieter kind of offline

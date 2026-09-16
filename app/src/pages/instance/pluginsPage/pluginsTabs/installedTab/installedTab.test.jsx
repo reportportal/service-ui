@@ -394,14 +394,16 @@ describe('InstalledTab', () => {
         expect(text).toContain('1.5.2');
       });
 
-      test('an offline registry is named as the reason, with the host', () => {
+      // the reason is the registry, not the plugin — and the address is not named, because an
+      // enterprise may have pointed this instance at a registry of its own (ADR-004)
+      test('an offline registry is named as the reason, without the address', () => {
         const wrapper = openJira(
           marketplaceState({ catalogueState: MARKETPLACE_CATALOGUE_STATE.LOADED_OFFLINE }),
         );
+        const text = alert(wrapper, 'registryOfflineAlert').first().text();
 
-        expect(alert(wrapper, 'registryOfflineAlert').first().text()).toContain(
-          catalogue.registry.host,
-        );
+        expect(text).toMatch(/could not be reached/i);
+        expect(text).not.toContain(catalogue.registry.host);
         expect(alert(wrapper, 'pluginUnmatchedAlert')).toHaveLength(0);
       });
 

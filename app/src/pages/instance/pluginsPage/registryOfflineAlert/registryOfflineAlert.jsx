@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-import PropTypes from 'prop-types';
 import { defineMessages, useIntl } from 'react-intl';
 import classNames from 'classnames/bind';
 import { SystemMessage } from '@reportportal/ui-kit';
@@ -22,21 +21,19 @@ import styles from './registryOfflineAlert.scss';
 
 const cx = classNames.bind(styles);
 
-// The host stays out of the header. SystemMessage title-cases what it is given, which turns a
-// hostname into a different hostname — "marketplace" rendered as "Marketplace" — and the whole
-// point of naming it is that an operator can go and check that exact address.
+// The registry address is deliberately not named, and this used to name it. ADR-004 lets an
+// enterprise point the instance at its own registry, so a literal host is least useful to exactly
+// the customers most likely to see this alert — theirs is not an address anyone recognises, and
+// printing it invites a reader to check the wrong thing. The configured address is in settings,
+// where an operator who wants it already knows to look.
 const messages = defineMessages({
   header: {
     id: 'RegistryOfflineAlert.header',
     defaultMessage: 'The plugin registry could not be reached',
   },
-  unknownHost: {
+  address: {
     id: 'RegistryOfflineAlert.unknownHost',
     defaultMessage: 'The configured registry address did not answer.',
-  },
-  knownHost: {
-    id: 'RegistryOfflineAlert.knownHost',
-    defaultMessage: '{host} did not answer.',
   },
   // The reviewed copy, plus the two things it does not say and this page needs. FR-A-04 requires
   // the all-clear caveat: nothing marketplace-derived is retained while the registry is
@@ -50,21 +47,15 @@ const messages = defineMessages({
   },
 });
 
-export const RegistryOfflineAlert = ({ host = null }) => {
+export const RegistryOfflineAlert = () => {
   const { formatMessage } = useIntl();
 
   return (
     <div className={cx('registry-offline-alert')} data-automation-id="registryOfflineAlert">
       <SystemMessage mode="warning" header={formatMessage(messages.header)}>
-        <span data-automation-id="registryOfflineHost">
-          {host ? formatMessage(messages.knownHost, { host }) : formatMessage(messages.unknownHost)}
-        </span>{' '}
-        {formatMessage(messages.body)}
+        {formatMessage(messages.address)} {formatMessage(messages.body)}
       </SystemMessage>
     </div>
   );
 };
 
-RegistryOfflineAlert.propTypes = {
-  host: PropTypes.string,
-};

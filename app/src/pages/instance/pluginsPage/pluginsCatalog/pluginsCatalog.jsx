@@ -124,7 +124,7 @@ export const PluginsCatalog = ({
           isAlwaysActive
         />
       </div>
-      {offline && <RegistryOfflineAlert host={registryHost} />}
+      {offline && <RegistryOfflineAlert />}
       {failed && <CatalogueUnavailableAlert onRetry={onRetry} />}
       {loading ? (
         <div className={cx('plugins-catalog-loader')} data-automation-id="catalogLoader">

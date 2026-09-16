@@ -191,7 +191,7 @@ export const PluginMarketplaceBlocks = ({
           )}
         </div>
       )}
-      {offline && <RegistryOfflineAlert host={registryHost} />}
+      {offline && <RegistryOfflineAlert />}
       {/* an unmatched plugin is one the catalogue could not place, so that is the request that
           failed; otherwise the failure is this plugin's own detail request */}
       {failed && (

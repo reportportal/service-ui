@@ -607,23 +607,25 @@ describe('PluginsCatalog', () => {
       availablePlugins: catalogueOffline.available,
     };
 
-    test('names the exact host that could not be reached', () => {
+    test('says the registry could not be reached', () => {
       const alert = render(offlineProps).find('[data-automation-id="registryOfflineAlert"]');
 
       expect(alert).toHaveLength(1);
-      expect(alert.text()).toContain('marketplace.reportportal.io');
+      expect(alert.text()).toMatch(/could not be reached/i);
     });
 
-    test('the host is in the body, where nothing re-cases it', () => {
-      // SystemMessage title-cases its header, which rendered "marketplace" as "Marketplace" — a
-      // different hostname, and naming the host is only useful if it is the one to go and check.
-      // .text() reads the DOM, which text-transform never touches, so this cannot be asserted by
-      // reading the string: it has to be asserted by where the string is. Kills moving the host
-      // back into the header.
+    /**
+     * The address is deliberately not named, and this used to name it. ADR-004 lets an enterprise
+     * point the instance at its own registry, so a literal host is least useful to exactly the
+     * customers most likely to see this alert: theirs is not an address anyone recognises, and
+     * printing it invites a reader to go and check the wrong thing.
+     *
+     * Kills putting the host back, in the header or the body.
+     */
+    test('and does not name the address', () => {
       const alert = render(offlineProps).find('[data-automation-id="registryOfflineAlert"]');
-      const header = alert.find('[data-automation-id="registryOfflineHost"]');
 
-      expect(header.text()).toContain('marketplace.reportportal.io');
+      expect(alert.text()).not.toContain('marketplace.reportportal.io');
     });
 
     test('says that the absence of warnings is not an all-clear', () => {
