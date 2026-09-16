@@ -45,6 +45,8 @@ export class InfoSection extends Component {
     data: PropTypes.object.isRequired,
     onToggleActive: PropTypes.func,
     showToggleConfirmationModal: PropTypes.func,
+    /** An action beside the on/off switch — see the plugins page, which puts Upgrade there. */
+    headerAction: PropTypes.node,
     isGlobal: PropTypes.bool,
     pluginDetails: PropTypes.object,
   };
@@ -53,6 +55,7 @@ export class InfoSection extends Component {
     description: '',
     onToggleActive: () => {},
     showToggleConfirmationModal: () => {},
+    headerAction: null,
     isGlobal: false,
     pluginDetails: {},
   };
@@ -160,6 +163,7 @@ export class InfoSection extends Component {
               >
                 <InputSwitcher value={isEnabled} onChange={this.onChangeHandler} />
               </div>
+              {this.props.headerAction}
             </div>
           )}
           <p

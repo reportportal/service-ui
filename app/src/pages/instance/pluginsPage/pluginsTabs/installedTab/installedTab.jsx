@@ -59,6 +59,7 @@ import {
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { showModalAction } from 'controllers/modal';
 import { InputDropdown } from 'components/inputs/inputDropdown';
+import { Button, DownloadIcon } from '@reportportal/ui-kit';
 import {
   INSTALLED_PLUGINS_SUBPAGE,
   INSTALLED_PLUGINS_SETTINGS_SUBPAGE,
@@ -145,6 +146,10 @@ const messages = defineMessages({
   downgrade: {
     id: 'PluginItem.downgrade',
     defaultMessage: 'Downgrade',
+  },
+  upgradeVersion: {
+    id: 'PluginItem.upgradeVersionAction',
+    defaultMessage: 'Upgrade Version',
   },
 });
 
@@ -464,6 +469,7 @@ export class InstalledTab extends Component {
               </>
             }
             title={getDisplayName(data)}
+            headerAction={this.renderUpgradeAction(data)}
           />
         );
       case INSTALLED_PLUGINS_SETTINGS_SUBPAGE:
@@ -666,6 +672,40 @@ export class InstalledTab extends Component {
         errorCode={failure.errorCode}
         reason={failure.error}
       />
+    );
+  };
+
+  /**
+   * Upgrade, in the header, beside the on/off switch.
+   *
+   * <p>There is no "update available" banner in the design and this is why: an available upgrade is
+   * information, not a warning, so it earns an action rather than an alert. The action targets the
+   * newest *compatible* version, which is the same one the top row of the versions table offers —
+   * service-api decides that, and withholds `updateAvailable` when the newest build does not run
+   * here, so the button is absent in exactly the cases where pressing it would fail.
+   */
+  renderUpgradeAction = (data) => {
+    const version = data.marketplace?.updateAvailable?.version;
+    if (!version || !data.registryId) {
+      return null;
+    }
+
+    return (
+      <Button
+        variant="primary"
+        adjustWidthOn="content"
+        icon={<DownloadIcon />}
+        data-automation-id="upgradeVersionAction"
+        data-version={version}
+        disabled={this.props.installingIds.includes(data.registryId)}
+        onClick={() =>
+          this.showVersionChangeModal(data.registryId, getDisplayName(data), version, true, () =>
+            this.props.installMarketplacePluginAction(data.registryId, version),
+          )
+        }
+      >
+        {this.props.intl.formatMessage(messages.upgradeVersion)}
+      </Button>
     );
   };
 

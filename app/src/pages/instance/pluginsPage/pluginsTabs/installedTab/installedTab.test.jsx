@@ -404,6 +404,56 @@ describe('InstalledTab', () => {
       rendered.wrapper.update();
     };
 
+    /**
+     * Plugin Detail. State. Update Available — there is no banner in the design. An available
+     * upgrade is information rather than a warning, so it earns an action in the header beside the
+     * on/off switch, and the versions table opens the newer row to show what is in it.
+     */
+    describe('the header offers the upgrade', () => {
+      const upgradeAction = (rendered) =>
+        rendered.wrapper.find('[data-automation-id="upgradeVersionAction"]').first();
+
+      test('the action names the version service-api decided is on offer', () => {
+        const rendered = render();
+
+        openVersions(rendered);
+
+        // 1.6.0 is what the catalogue's updateAvailable carries for this plugin
+        expect(upgradeAction(rendered).prop('data-version')).toBe('1.6.0');
+      });
+
+      test('pressing it asks before it posts, and posts that version', () => {
+        const rendered = render();
+        openVersions(rendered);
+
+        act(() => {
+          upgradeAction(rendered).prop('onClick')();
+        });
+        confirmation(rendered.of).data.onConfirm();
+
+        expect(rendered.of(INSTALL_MARKETPLACE_PLUGIN).pop().payload).toEqual({
+          registryId: 'plugin-bts-jira',
+          version: '1.6.0',
+        });
+      });
+
+      /**
+       * service-api withholds `updateAvailable` when the newest build does not run on this release,
+       * so the button is absent in exactly the cases where pressing it would fail. The page does
+       * not need its own rule for that, and must not invent one.
+       */
+      test('no update on offer, no action in the header', () => {
+        const rendered = render();
+        rendered.call(PluginsCatalog, 'onInstalledItemClick', {
+          ...jiraRow,
+          marketplace: { ...jiraRow.marketplace, updateAvailable: null },
+        });
+        rendered.wrapper.update();
+
+        expect(rendered.wrapper.find('[data-automation-id="upgradeVersionAction"]')).toHaveLength(0);
+      });
+    });
+
     // Install. Confirm. From Row and Install. Confirm. From Header are the same dialog, and it
     // names the plugin rather than leaving the reader to remember which row they clicked.
     test.each([

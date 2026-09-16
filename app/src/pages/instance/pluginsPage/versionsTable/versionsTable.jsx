@@ -165,7 +165,16 @@ export const VersionsTable = ({
   removed = false,
 }) => {
   const { formatMessage, formatDate } = useIntl();
-  const [expanded, setExpanded] = useState(null);
+  const ordered = sortVersionsNewestFirst(versions);
+  // FR-A-04 asks the detail page to expose the changelog of the version on offer without the reader
+  // having to find it, so the newer row opens on load. Only when there is one: with nothing
+  // installed, or already on the newest build, no row is more interesting than any other and the
+  // table starts closed.
+  const newerThanInstalled =
+    installedVersion && ordered.length > 0 && compareVersions(ordered[0].version, installedVersion) > 0
+      ? ordered[0].version
+      : null;
+  const [expanded, setExpanded] = useState(newerThanInstalled);
 
   if (versions.length === 0) {
     return null;
@@ -254,7 +263,7 @@ export const VersionsTable = ({
         <span className={cx('column')}>{formatMessage(messages.columnReleased)}</span>
         <span />
       </div>
-      {sortVersionsNewestFirst(versions).map((entry) => {
+      {ordered.map((entry) => {
         const isOpen = expanded === entry.version;
         const notes = changelog?.version === entry.version ? changelog.lines || [] : [];
 

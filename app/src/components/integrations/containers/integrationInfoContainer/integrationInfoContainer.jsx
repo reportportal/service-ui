@@ -49,6 +49,8 @@ export class IntegrationInfoContainer extends Component {
     events: PropTypes.object,
     /** Rendered between the plugin header and its integrations — see the plugins page. */
     afterInfoSection: PropTypes.node,
+    /** An action in the header itself, beside the on/off switch. */
+    headerAction: PropTypes.node,
     /** Overrides the heading, for a caller that knows a better name than the local one. */
     title: PropTypes.string,
   };
@@ -91,6 +93,7 @@ export class IntegrationInfoContainer extends Component {
           showToggleConfirmationModal={showToggleConfirmationModal}
           isGlobal={isGlobal}
           pluginDetails={details}
+          headerAction={this.props.headerAction}
         />
         {afterInfoSection}
         <InstancesSection

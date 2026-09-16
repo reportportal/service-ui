@@ -101,6 +101,50 @@ describe('VersionsTable', () => {
     });
   });
 
+  /**
+   * Plugin Detail. State. Update Available. There is no banner in the design: an available upgrade
+   * is information, not a warning, so the page says it by opening the row that matters. FR-A-04
+   * asks the detail page to expose the newer version's changelog, and a reader should not have to
+   * go looking for it.
+   */
+  describe('Plugin Detail. State. Update Available', () => {
+    const changelog = { version: '5.8.0', lines: ['Fixed a crash.', 'Added custom issue types.'] };
+
+    test('the newer row is already open, with its release notes readable', () => {
+      const wrapper = render({ installedVersion: '5.7.0', changelog });
+
+      expect(find(rowFor(wrapper, '5.8.0'), 'versionReleaseNotes')).toHaveLength(1);
+      expect(find(wrapper, 'releaseNoteLine').map((n) => n.text())).toEqual(changelog.lines);
+    });
+
+    test('and it is the only one open', () => {
+      const wrapper = render({ installedVersion: '5.7.0', changelog });
+
+      expect(find(wrapper, 'versionReleaseNotes')).toHaveLength(1);
+    });
+
+    test('already on the newest build, nothing is more interesting than anything else', () => {
+      const wrapper = render({ installedVersion: '5.8.0', changelog });
+
+      expect(find(wrapper, 'versionReleaseNotes')).toHaveLength(0);
+    });
+
+    test('with nothing installed the table starts closed', () => {
+      const wrapper = render({ changelog });
+
+      expect(find(wrapper, 'versionReleaseNotes')).toHaveLength(0);
+    });
+
+    // the row that opened is still a row: it closes like any other
+    test('the opened row can be closed again', () => {
+      const wrapper = render({ installedVersion: '5.7.0', changelog });
+
+      expand(wrapper, '5.8.0');
+
+      expect(find(wrapper, 'versionReleaseNotes')).toHaveLength(0);
+    });
+  });
+
   describe('Versions. Table. Row Expanded', () => {
     const changelog = { version: '5.6.1', lines: ['Restored compatibility.', 'Fixed a duplicate.'] };
 
