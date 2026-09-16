@@ -156,6 +156,73 @@ export const notificationMessages = defineMessages({
     id: 'InstancesSection.removePluginSuccess',
     defaultMessage: 'Plugin has been uninstalled successfully',
   },
+  // Names the version, because install, update and rollback are the same request and only the
+  // version says which of the three just happened.
+  marketplacePluginInstalled: {
+    id: 'PluginsCatalog.marketplacePluginInstalled',
+    defaultMessage: 'Version {version} is now active. The plugin is in Installed plugins.',
+  },
+  updateMarketplaceLicenceSuccess: {
+    id: 'MarketplaceLicence.updateSuccess',
+    defaultMessage: 'Marketplace licence credentials have been saved',
+  },
+  removeMarketplaceLicenceSuccess: {
+    id: 'MarketplaceLicence.removeSuccess',
+    defaultMessage: 'Marketplace licence credentials have been removed',
+  },
+  // the endpoint refuses these bodies outright, so the operator is told what is wrong with the
+  // request rather than that a request failed
+  marketplaceInstallVersionUnknown: {
+    id: 'MarketplaceInstall.versionUnknown',
+    defaultMessage:
+      'This plugin cannot be installed: the registry did not state which version to install',
+  },
+  marketplaceLicenceRefused: {
+    id: 'MarketplaceLicence.refused',
+    defaultMessage:
+      'Enter both a customer ID and a licence key, neither blank and each within the length the registry accepts',
+  },
+  // One per failure the registry names, because the next move differs in every case: renew the
+  // licence, pick another version, upload a jar, or simply wait. Which one is shown is decided in
+  // controllers/plugins from the error code, so these ids are part of that contract.
+  marketplaceInstallLicenceRejected: {
+    id: 'MarketplaceInstall.licenceRejected',
+    defaultMessage:
+      'The marketplace rejected the license on this instance, so nothing was installed. Check the license key in the instance Settings.',
+  },
+  marketplaceInstallVersionBlocked: {
+    id: 'MarketplaceInstall.versionBlocked',
+    defaultMessage:
+      "This version is blocked and can't be installed. Choose another version, or upload a .jar you already have manually.",
+  },
+  marketplaceInstallPluginRemoved: {
+    id: 'MarketplaceInstall.pluginRemoved',
+    defaultMessage:
+      'This plugin was removed from the marketplace, so nothing was installed. The only way to install it now is by uploading a .jar file.',
+  },
+  marketplaceInstallRegistryUnreachable: {
+    id: 'MarketplaceInstall.registryUnreachable',
+    defaultMessage:
+      "Can't connect to the plugin marketplace. Installed plugins keep running, but nothing can be installed until the connection returns.",
+  },
+  marketplaceInstallDownloadFailed: {
+    id: 'MarketplaceInstall.downloadFailed',
+    defaultMessage:
+      "Couldn't install the plugin. The download did not complete, so nothing was installed and the instance is unchanged. Try again in a few minutes.",
+  },
+  marketplaceInstallIncompatible: {
+    id: 'MarketplaceInstall.incompatible',
+    defaultMessage:
+      "This version doesn't run on the ReportPortal release this instance uses, so nothing was installed. Choose a version that supports it.",
+  },
+  // Refused rather than guessed: either the instance cannot say which ReportPortal release it runs,
+  // or the version declares a range that will not parse. Both are the instance's problem rather than
+  // the plugin's, so this points at the instance instead of offering another version.
+  marketplaceInstallCompatibilityUnknown: {
+    id: 'MarketplaceInstall.compatibilityUnknown',
+    defaultMessage:
+      'Compatibility could not be checked, so nothing was installed. Ask an administrator to confirm which ReportPortal release this instance reports.',
+  },
   updateIntegrationSuccess: {
     id: 'IntegrationSettingsContainer.updateIntegrationSuccess',
     defaultMessage: 'Integration has been updated successfully',
@@ -312,7 +379,8 @@ export const notificationMessages = defineMessages({
   },
   testCasesAddedToTestPlanFromLibrarySuccess: {
     id: 'TestPlanDetailsPage.testCasesAddedToTestPlanFromLibrarySuccess',
-    defaultMessage: '{count, plural, one {# Test Case was} other {# Test Cases were}} successfully added to Test Plan.',
+    defaultMessage:
+      '{count, plural, one {# Test Case was} other {# Test Cases were}} successfully added to Test Plan.',
   },
   testCaseUpdatedSuccess: {
     id: 'TestCaseLibraryPage.testCaseUpdatedSuccess',

@@ -23,7 +23,9 @@ import { PageLayout, PageHeader, PageSection } from 'layouts/pageLayout';
 import { PLUGINS_PAGE } from 'components/main/analytics/events';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
 import { createClassnames } from 'common/utils';
+import { useMarketplaceEnabled } from 'hooks/useMarketplaceEnabled';
 import { InstalledTab } from './pluginsTabs/installedTab';
+import { LegacyInstalledTab } from './legacy';
 import styles from './pluginsPage.scss';
 
 const cx = createClassnames(styles);
@@ -38,6 +40,7 @@ const messages = defineMessages({
 export const PluginsPage = () => {
   const { formatMessage } = useIntl();
   const plugins = useSelector(pluginsSelector) as Plugin[];
+  const isMarketplaceEnabled = useMarketplaceEnabled();
 
   useTracking({ page: PLUGINS_PAGE });
 
@@ -55,7 +58,11 @@ export const PluginsPage = () => {
         <PageHeader breadcrumbs={breadcrumbs} />
         <PageSection>
           <div className={cx('page-content')}>
-            <InstalledTab plugins={plugins} filterItems={filterItems} />
+            {isMarketplaceEnabled ? (
+              <InstalledTab plugins={plugins} filterItems={filterItems} />
+            ) : (
+              <LegacyInstalledTab plugins={plugins} filterItems={filterItems} />
+            )}
           </div>
         </PageSection>
       </PageLayout>

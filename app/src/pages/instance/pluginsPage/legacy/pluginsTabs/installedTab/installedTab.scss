@@ -1,0 +1,62 @@
+/*!
+ * Copyright 2019 EPAM Systems
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+.plugins-wrapper {
+  display: flex;
+  justify-content: center;
+  min-height: 500px;
+}
+
+.plugins-content-wrapper {
+  display: flex;
+  justify-content: space-between;
+  gap: 24px;
+  width: 810px;
+  @media (max-width: $SCREEN_SM_MAX) {
+    width: 100%;
+  }
+}
+
+.plugins-sidebar {
+  display: flex;
+  flex-direction: column;
+  min-width: 174px;
+
+  @media (max-width: $SCREEN_XS_MAX) {
+    display: none;
+  }
+}
+
+.plugins-sub-content-wrapper {
+  width: 810px;
+}
+
+.plugins-content {
+  width: 100%;
+  max-width: 570px;
+}
+
+.available-section {
+  margin-bottom: 40px;
+}
+
+.plugins-filter-mobile {
+  display: none;
+  @media (max-width: $SCREEN_XS_MAX) {
+    display: block;
+    margin-bottom: 15px;
+  }
+}

@@ -15,3 +15,4 @@
  */
 
 export { UploadPluginModal } from './uploadPluginModal';
+export { InstallPluginModal, installPluginModal } from './installPluginModal';

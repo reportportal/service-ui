@@ -12,7 +12,9 @@ FROM node:20-alpine AS build-frontend
 RUN mkdir -p /usr/src/app
 WORKDIR /usr/src/app
 COPY ./app/ /usr/src/app/
-RUN export NODE_OPTIONS="--max-old-space-size=4096"
+# ENV, not `RUN export`: each RUN is its own shell, so the exported value was gone before the
+# build below ever started and webpack ran on the default heap.
+ENV NODE_OPTIONS="--max-old-space-size=4096"
 RUN npm ci --legacy-peer-deps && npm run build
 
 FROM nginxinc/nginx-unprivileged:alpine
