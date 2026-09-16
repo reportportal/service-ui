@@ -137,6 +137,7 @@ export const PERMISSIONS_MAP: PermissionsMap = {
       [ACTIONS.SEE_SETTINGS]: false,
       [ACTIONS.SEE_MEMBERS]: false,
       [ACTIONS.MANAGE_EXECUTIONS]: false,
+      [ACTIONS.SEE_ROW_ACTION_MENU]: true,
     },
     [EDITOR]: {
       [ACTIONS.SEE_SETTINGS]: true,
