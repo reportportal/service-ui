@@ -78,8 +78,8 @@ const compareSegments = (left = '0', right = '0') => {
   return restA.localeCompare(restB);
 };
 
-const LOWER_BOUND = /^\s*>=?\s*([0-9][0-9A-Za-z.\-+]*)/;
-const UPPER_BOUND = /^\s*<=?\s*([0-9][0-9A-Za-z.\-+]*)/;
+const LOWER_BOUND = /^\s*>=?\s*(\d[\dA-Za-z.\-+]*)/;
+const UPPER_BOUND = /^\s*<=?\s*(\d[\dA-Za-z.\-+]*)/;
 
 /**
  * A declared range, read for which way it points and what it names.
