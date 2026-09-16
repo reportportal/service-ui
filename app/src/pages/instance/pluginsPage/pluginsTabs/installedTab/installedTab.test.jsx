@@ -329,10 +329,55 @@ describe('InstalledTab', () => {
       };
       const alert = (wrapper, id) => wrapper.find(`[data-automation-id="${id}"]`);
 
-      test('an unmatched plugin says the registry has no entry for it', () => {
+      /**
+       * Plugin Detail. State. Uploaded Manually — two signals, one cause. The badge says what the
+       * plugin is; the message says what that means for its versions. Neither is a warning: hand
+       * installed is a fact about provenance, not a claim about health, which is why the badge is
+       * the quiet grey one and deliberately not a trust tier.
+       */
+      test('it is marked as hand-installed beside its name', () => {
         const wrapper = openJira();
+        const badge = wrapper.find('[data-automation-id="uploadedManuallyBadge"]').first();
 
-        expect(alert(wrapper, 'pluginUnmatchedAlert').first().text()).toMatch(/no entry/i);
+        expect(badge.text()).toBe('Uploaded Manually');
+        expect(badge.prop('tone')).toBe('neutral');
+      });
+
+      /**
+       * The registry being unreachable leaves the same empty block for an entirely different
+       * reason, and calling that plugin hand-installed would be a guess about where it came from.
+       */
+      test('a plugin the registry could not be asked about is not called hand-installed', () => {
+        const rendered = render(
+          marketplaceState({ catalogueState: MARKETPLACE_CATALOGUE_STATE.LOADED_OFFLINE }),
+        );
+        rendered.call(PluginsCatalog, 'onInstalledItemClick', installedRowFrom(catalogueOffline));
+        rendered.wrapper.update();
+
+        expect(rendered.wrapper.find('[data-automation-id="uploadedManuallyBadge"]')).toHaveLength(
+          0,
+        );
+      });
+
+      // one version is all that is known, and it is still the current one
+      test('the versions table shows the single version it knows, and offers nothing', () => {
+        const wrapper = openJira();
+        const rows = wrapper.find('[data-automation-id="pluginVersionRow"]');
+
+        expect(rows.map((r) => r.prop('data-version'))).toEqual(['1.5.2']);
+        expect(wrapper.find('[data-automation-id="installedVersionMarker"]')).not.toHaveLength(0);
+        expect(wrapper.find('[data-automation-id="useVersionAction"]')).toHaveLength(0);
+      });
+
+      test('an unmatched plugin is described as hand-installed, naming its version', () => {
+        const wrapper = openJira();
+        const text = alert(wrapper, 'pluginUnmatchedAlert').first().text();
+
+        // described for what it is — hand-installed — rather than for what the registry lacks,
+        // and it names the version, which is the fact the sentence exists to deliver: it is the
+        // only one that will ever be known here
+        expect(text).toMatch(/installed from a \.jar/i);
+        expect(text).toContain('1.5.2');
       });
 
       test('an offline registry is named as the reason, with the host', () => {

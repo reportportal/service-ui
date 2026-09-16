@@ -101,12 +101,25 @@ const messages = defineMessages({
   // silence would read as "nothing to report", which is a claim this screen cannot make
   unmatchedHeader: {
     id: 'PluginMarketplaceBlocks.unmatchedHeader',
-    defaultMessage: 'The registry has no entry for this plugin',
+    defaultMessage: 'Uploaded manually',
   },
+  // It names the version, because that is the fact the sentence exists to deliver: this is the
+  // only one that will ever be known here. And it describes the plugin for what it is rather than
+  // for what the registry lacks — hand-installed is provenance, not a verdict on its health.
   unmatchedBody: {
     id: 'PluginMarketplaceBlocks.unmatchedBody',
     defaultMessage:
-      'The registry lists no plugin matching this one, so no advisory, block, removal or update can be checked for it and none of its versions, screenshots or changelog can be shown. It keeps running, and uploading a .jar by hand is the only way to change its version.',
+      'This plugin was installed from a .jar file and has no match in the marketplace, so {version} is the only version known here. Changing its version is possible through uploading another .jar.',
+  },
+  unmatchedBodyNoVersion: {
+    id: 'PluginMarketplaceBlocks.unmatchedBodyNoVersion',
+    defaultMessage:
+      'This plugin was installed from a .jar file and has no match in the marketplace, so no other version is known here. Changing its version is possible through uploading another .jar.',
+  },
+  unmatchedVersions: {
+    id: 'PluginMarketplaceBlocks.unmatchedVersions',
+    defaultMessage:
+      "This plugin isn't in the marketplace, so no other versions are listed. Uploading another .jar is the only way to change it.",
   },
   // the same words the catalogue row and the available-plugin page use for the same axis
   premium: {
@@ -186,11 +199,26 @@ export const PluginMarketplaceBlocks = ({
       )}
       {/* offline and failed already say why the registry knows nothing of this plugin */}
       {unmatched && !offline && !failed && (
-        <div className={cx('alert')} data-automation-id="pluginUnmatchedAlert">
-          <SystemMessage mode="info" header={formatMessage(messages.unmatchedHeader)}>
-            {formatMessage(messages.unmatchedBody)}
-          </SystemMessage>
-        </div>
+        <>
+          <div className={cx('alert')} data-automation-id="pluginUnmatchedAlert">
+            <SystemMessage mode="info" header={formatMessage(messages.unmatchedHeader)}>
+              {installedVersion
+                ? formatMessage(messages.unmatchedBody, { version: installedVersion })
+                : formatMessage(messages.unmatchedBodyNoVersion)}
+            </SystemMessage>
+          </div>
+          {/* One row, because one version is all that is known. The table is still the table —
+              the row expands and says it is the current one — it simply has nothing to offer,
+              since changing the version here means uploading another .jar. */}
+          {installedVersion && (
+            <VersionsTable
+              versions={[{ version: installedVersion }]}
+              installedVersion={installedVersion}
+              description={formatMessage(messages.unmatchedVersions)}
+              onUseVersion={null}
+            />
+          )}
+        </>
       )}
       {loading && (
         <div className={cx('loader')} data-automation-id="pluginDetailLoader">

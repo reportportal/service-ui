@@ -163,6 +163,7 @@ export const VersionsTable = ({
   onUseVersion = null,
   installing = false,
   removed = false,
+  description = null,
 }) => {
   const { formatMessage, formatDate } = useIntl();
   const ordered = sortVersionsNewestFirst(versions);
@@ -224,8 +225,12 @@ export const VersionsTable = ({
   );
 
   const renderAction = (entry) => {
+    // "Current version" is a state, not an action: a page that offers no version changes — a
+    // removed plugin, or one that is not in the marketplace at all — still says which version is
+    // running. Only the offers are withheld.
+    const isInstalled = Boolean(installedVersion) && entry.version === installedVersion;
     if (removed || !onUseVersion) {
-      return null;
+      return isInstalled ? renderInstalledState() : null;
     }
     // A blocked version keeps whatever the row would otherwise say — it is still the current one
     // if it is installed — and simply offers nothing. What happened to it is the mark's to explain,
@@ -257,7 +262,7 @@ export const VersionsTable = ({
   return (
     <section className={cx('versions-table')} data-automation-id="pluginVersions">
       <h3 className={cx('header')}>{formatMessage(messages.header)}</h3>
-      <p className={cx('description')}>{formatMessage(messages.description)}</p>
+      <p className={cx('description')}>{description || formatMessage(messages.description)}</p>
       <div className={cx('columns')} data-automation-id="versionsColumns">
         <span className={cx('column')}>{formatMessage(messages.columnVersion)}</span>
         <span className={cx('column')}>{formatMessage(messages.columnReleased)}</span>
@@ -365,4 +370,6 @@ VersionsTable.propTypes = {
   onUseVersion: PropTypes.func,
   installing: PropTypes.bool,
   removed: PropTypes.bool,
+  /** Overrides the standard line under the heading, for a table that is not the usual history. */
+  description: PropTypes.string,
 };

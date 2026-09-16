@@ -288,11 +288,12 @@ describe('PluginMarketplaceBlocks', () => {
 
     // an unmatched plugin was never asked about, so whatever the store still holds is some
     // other plugin's answer
-    test('an unmatched plugin claims nothing and says why', () => {
+    test('an unmatched plugin claims nothing and says what it is instead', () => {
       const wrapper = render({ detail: loud, unmatched: true });
 
       assertNothingClaimed(wrapper);
-      expect(find(wrapper, 'pluginUnmatchedAlert').text()).toMatch(/no entry/i);
+      // described for what it is — hand-installed — rather than for what the registry lacks
+      expect(find(wrapper, 'pluginUnmatchedAlert').text()).toMatch(/installed from a \.jar/i);
     });
 
     test('an unmatched plugin whose registry is down is explained as offline, once', () => {

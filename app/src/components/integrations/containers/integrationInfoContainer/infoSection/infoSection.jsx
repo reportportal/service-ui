@@ -47,6 +47,8 @@ export class InfoSection extends Component {
     showToggleConfirmationModal: PropTypes.func,
     /** An action beside the on/off switch — see the plugins page, which puts Upgrade there. */
     headerAction: PropTypes.node,
+    /** A mark beside the plugin's name — the plugins page puts provenance there. */
+    afterTitle: PropTypes.node,
     isGlobal: PropTypes.bool,
     pluginDetails: PropTypes.object,
   };
@@ -56,6 +58,7 @@ export class InfoSection extends Component {
     onToggleActive: () => {},
     showToggleConfirmationModal: () => {},
     headerAction: null,
+    afterTitle: null,
     isGlobal: false,
     pluginDetails: {},
   };
@@ -137,7 +140,10 @@ export class InfoSection extends Component {
       <div className={cx('info-section')}>
         <PluginIcon className={cx('logo')} pluginData={this.props.data} alt={title} />
         <div className={cx('description-block')}>
-          <h2 className={cx('title')}>{title}</h2>
+          <h2 className={cx('title')}>
+            {title}
+            {this.props.afterTitle}
+          </h2>
           {version && (
             <span className={cx('version')}>{`${formatMessage(messages.version)} ${version}`}</span>
           )}

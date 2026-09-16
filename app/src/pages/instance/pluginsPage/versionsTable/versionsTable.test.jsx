@@ -399,6 +399,22 @@ describe('VersionsTable', () => {
       expect(find(wrapper, 'useVersionAction')).toHaveLength(0);
     });
 
+    // which version is running is a state, not an offer, so a table with nothing to offer still
+    // says it — a plugin that is not in the marketplace has exactly one row and it is the current
+    // one
+    test('a table with nothing to offer still names the running version', () => {
+      const wrapper = render({ onUseVersion: null, installedVersion: '5.7.0' });
+
+      expect(find(rowFor(wrapper, '5.7.0'), 'installedVersionMarker')).toHaveLength(1);
+      expect(find(rowFor(wrapper, '5.8.0'), 'installedVersionMarker')).toHaveLength(0);
+    });
+
+    test('a removed plugin still names the version it is running', () => {
+      const wrapper = render({ removed: true, installedVersion: '5.7.0' });
+
+      expect(find(rowFor(wrapper, '5.7.0'), 'installedVersionMarker')).toHaveLength(1);
+    });
+
     test('while an install is in flight no other version may start one', () => {
       const wrapper = render({ installing: true, installedVersion: '5.7.0' });
 

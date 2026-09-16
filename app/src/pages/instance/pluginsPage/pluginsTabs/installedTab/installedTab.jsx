@@ -74,6 +74,7 @@ import { ActionPanel } from '../../actionPanel';
 import { AvailablePluginDetail } from '../../availablePluginDetail';
 import { PluginsCatalog, ROW_ACTIONS, getDisplayName } from '../../pluginsCatalog';
 import { PluginMarketplaceBlocks } from '../../pluginMarketplaceBlocks';
+import { PluginBadge, BADGE_TONES } from '../../pluginBadge';
 import { compareVersions } from '../../versionsTable/utils';
 import { premiumPromoModal } from '../../premiumPromo';
 import { installPluginModal } from '../../modals/installPluginModal';
@@ -150,6 +151,10 @@ const messages = defineMessages({
   upgradeVersion: {
     id: 'PluginItem.upgradeVersionAction',
     defaultMessage: 'Upgrade Version',
+  },
+  uploadedManually: {
+    id: 'PluginItem.uploadedManually',
+    defaultMessage: 'Uploaded Manually',
   },
 });
 
@@ -470,6 +475,7 @@ export class InstalledTab extends Component {
             }
             title={getDisplayName(data)}
             headerAction={this.renderUpgradeAction(data)}
+            afterTitle={this.renderProvenance(data)}
           />
         );
       case INSTALLED_PLUGINS_SETTINGS_SUBPAGE:
@@ -684,6 +690,27 @@ export class InstalledTab extends Component {
    * service-api decides that, and withholds `updateAvailable` when the newest build does not run
    * here, so the button is absent in exactly the cases where pressing it would fail.
    */
+  /**
+   * Provenance, beside the name: this plugin came from a .jar rather than from the marketplace.
+   *
+   * <p>It is deliberately quiet. It is not a trust tier — no such tier exists — and it is not a
+   * warning either: hand-installed is a fact about where the plugin came from, not a claim about
+   * whether it is healthy. The registry being unreachable produces the same empty block for a
+   * different reason, so this is drawn only when the registry answered and had nothing for this id.
+   */
+  renderProvenance = (data) => {
+    const unmatched = !data.registryId;
+    if (!unmatched || this.props.registryOffline || this.props.catalogueFailed) {
+      return null;
+    }
+
+    return (
+      <PluginBadge tone={BADGE_TONES.NEUTRAL} data-automation-id="uploadedManuallyBadge">
+        {this.props.intl.formatMessage(messages.uploadedManually)}
+      </PluginBadge>
+    );
+  };
+
   renderUpgradeAction = (data) => {
     const version = data.marketplace?.updateAvailable?.version;
     if (!version || !data.registryId) {

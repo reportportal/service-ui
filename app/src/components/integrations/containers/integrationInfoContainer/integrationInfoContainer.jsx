@@ -51,6 +51,8 @@ export class IntegrationInfoContainer extends Component {
     afterInfoSection: PropTypes.node,
     /** An action in the header itself, beside the on/off switch. */
     headerAction: PropTypes.node,
+    /** A mark beside the plugin's name in the header. */
+    afterTitle: PropTypes.node,
     /** Overrides the heading, for a caller that knows a better name than the local one. */
     title: PropTypes.string,
   };
@@ -94,6 +96,7 @@ export class IntegrationInfoContainer extends Component {
           isGlobal={isGlobal}
           pluginDetails={details}
           headerAction={this.props.headerAction}
+          afterTitle={this.props.afterTitle}
         />
         {afterInfoSection}
         <InstancesSection
