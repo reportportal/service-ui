@@ -184,9 +184,6 @@ const testCasesReducer = (state = INITIAL_STATE.testCases, action: TestCasesActi
       return {
         ...state,
         list: state.list.filter(({ id }) => action.payload.testCase.id !== id),
-        page: state.page
-          ? { ...state.page, totalElements: state.page.totalElements - 1 }
-          : state.page,
       };
     }
     case START_LOADING_TEST_CASES:
