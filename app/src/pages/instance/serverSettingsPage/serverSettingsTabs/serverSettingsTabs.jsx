@@ -25,7 +25,6 @@ import {
   ANALYTICS,
   LINKS_AND_BRANDING,
   FEATURES,
-  MARKETPLACE,
 } from 'common/constants/settingsTabs';
 import { NavigationTabs } from 'components/main/navigationTabs';
 import {
@@ -33,12 +32,10 @@ import {
   ADMIN_SERVER_SETTINGS_PAGE_EVENTS,
 } from 'components/main/analytics/events/adminServerSettingsPageEvents';
 import { fetchAppInfoAction } from 'controllers/appInfo';
-import { useMarketplaceEnabled } from 'hooks/useMarketplaceEnabled';
 import { AuthConfigurationTab } from './authConfigurationTab';
 import { AnalyticsTab } from './analyticsTab';
 import { LinksAndBrandingTab } from './linksAndBrandingTab';
 import { FeaturesTab } from './featuresTab';
-import { MarketplaceTab } from './marketplaceTab';
 
 const messages = defineMessages({
   accessConfiguration: {
@@ -57,16 +54,11 @@ const messages = defineMessages({
     id: 'ServerSettingsTabs.features',
     defaultMessage: 'Features',
   },
-  marketplace: {
-    id: 'ServerSettingsTabs.marketplace',
-    defaultMessage: 'Marketplace',
-  },
 });
 
 const ServerSettingsTabs = ({ activeTab = ACCESS_CONFIGURATION, onChangeTab = () => {}, intl }) => {
   const { trackEvent } = useTracking();
   const dispatch = useDispatch();
-  const isMarketplaceEnabled = useMarketplaceEnabled();
 
   useEffect(() => {
     dispatch(fetchAppInfoAction());
@@ -98,14 +90,6 @@ const ServerSettingsTabs = ({ activeTab = ACCESS_CONFIGURATION, onChangeTab = ()
       mobileDisabled: true,
       eventInfo: ADMIN_SERVER_SETTINGS_PAGE_EVENTS.FEATURES_TAB,
     },
-    ...(isMarketplaceEnabled && {
-      [MARKETPLACE]: {
-        name: intl.formatMessage(messages.marketplace),
-        link: createTabLink(MARKETPLACE),
-        component: <MarketplaceTab />,
-        mobileDisabled: true,
-      },
-    }),
     [ANALYTICS]: {
       name: intl.formatMessage(messages.statistics),
       link: createTabLink(ANALYTICS),

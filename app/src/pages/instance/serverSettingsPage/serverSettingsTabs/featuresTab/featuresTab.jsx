@@ -17,6 +17,7 @@
 import React from 'react';
 import classNames from 'classnames/bind';
 import { ImportantLaunches } from './importantLaunches';
+import { PremiumFeaturesContainer } from './premiumFeatures';
 import styles from './featuresTab.scss';
 
 const cx = classNames.bind(styles);
@@ -25,6 +26,11 @@ export const FeaturesTab = () => {
   return (
     <div className={cx('features-tab')}>
       <ImportantLaunches />
+      {/* The licence unlocks an instance capability, which is what this tab is for — beside the
+          retention policy Important Launches extends. Decided on the Vitalik/Vika/Ilya sync and
+          recorded in MARKETPLACE_BRIEF.md §5.3; the Marketplace settings tab was the candidate
+          that call rejected. */}
+      <PremiumFeaturesContainer />
     </div>
   );
 };

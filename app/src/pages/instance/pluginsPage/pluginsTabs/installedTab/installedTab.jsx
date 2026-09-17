@@ -62,7 +62,7 @@ import { showModalAction } from 'controllers/modal';
 import { InputDropdown } from 'components/inputs/inputDropdown';
 import { isPluginBuiltin } from 'components/integrations/utils';
 import { PLUGIN_TIERS, toPluginTier } from 'common/constants/pluginTiers';
-import { MARKETPLACE } from 'common/constants/settingsTabs';
+import { FEATURES } from 'common/constants/settingsTabs';
 import { SERVER_SETTINGS_TAB_PAGE } from 'controllers/pages';
 import { Button, DownloadIcon, SystemMessage } from '@reportportal/ui-kit';
 import {
@@ -901,7 +901,7 @@ export class InstalledTab extends Component {
         onClick={() =>
           this.props.navigateTo({
             type: SERVER_SETTINGS_TAB_PAGE,
-            payload: { settingsTab: MARKETPLACE },
+            payload: { settingsTab: FEATURES },
           })
         }
       >

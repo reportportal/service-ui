@@ -14,4 +14,4 @@
  * limitations under the License.
  */
 
-export { MarketplaceLicence } from './marketplaceLicence';
+export { AddLicenceModal, addLicenceModal, isBase64Shaped } from './addLicenceModal';

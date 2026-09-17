@@ -1,4 +1,4 @@
-/*
+/*!
  * Copyright 2026 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,4 +14,29 @@
  * limitations under the License.
  */
 
-export { MarketplaceTab } from './marketplaceTab';
+.notice {
+  margin-bottom: 24px;
+}
+
+.notice > * {
+  width: 100%;
+}
+
+.field + .field {
+  margin-top: 24px;
+}
+
+/* A delivered key arrives wrapped, so the input shows several lines of it rather than one long
+   scrolling row the admin cannot check against what they pasted. */
+.key-input textarea {
+  min-height: 96px;
+  font-family: $FONT-ROBOTO-REGULAR;
+  resize: vertical;
+}
+
+.error {
+  margin: 16px 0 0;
+  color: $COLOR--red-failed-2;
+  font-size: 13px;
+  line-height: 20px;
+}

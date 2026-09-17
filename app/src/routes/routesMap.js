@@ -75,7 +75,6 @@ import {
   ANALYTICS,
   LINKS_AND_BRANDING,
   FEATURES,
-  MARKETPLACE,
 } from 'common/constants/settingsTabs';
 import { ANONYMOUS_REDIRECT_PATH_STORAGE_KEY, isAuthorizedSelector } from 'controllers/auth';
 import {
@@ -268,7 +267,7 @@ const routesMap = {
     type: SERVER_SETTINGS_TAB_PAGE,
     payload: { settingsTab: ACCESS_CONFIGURATION },
   })),
-  [SERVER_SETTINGS_TAB_PAGE]: `/settings/:settingsTab(${ACCESS_CONFIGURATION}|${FEATURES}|${ANALYTICS}|${LINKS_AND_BRANDING}|${MARKETPLACE})`,
+  [SERVER_SETTINGS_TAB_PAGE]: `/settings/:settingsTab(${ACCESS_CONFIGURATION}|${FEATURES}|${ANALYTICS}|${LINKS_AND_BRANDING})`,
   [PLUGINS_PAGE]: {
     path: '/plugins',
     thunk: (dispatch) => {

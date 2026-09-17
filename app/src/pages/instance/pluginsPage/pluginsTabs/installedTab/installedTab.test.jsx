@@ -624,8 +624,10 @@ describe('InstalledTab', () => {
         });
 
         expect(rendered.of(SHOW_MODAL)).toHaveLength(0);
+        // Server Settings → Features, section Premium Features. Not a Marketplace tab: that was
+        // the candidate the requirements call rejected, and the tab built from it is gone.
         expect(rendered.of(SERVER_SETTINGS_TAB_PAGE).pop().payload).toEqual({
-          settingsTab: 'marketplace',
+          settingsTab: 'features',
         });
       });
 
