@@ -149,14 +149,18 @@ export const UploadPluginModal = ({ data: { onImport, onUploaded = () => {} } })
     onUploaded(response?.id ?? null);
   };
 
-  const onUploadError = (id, err) => {
-    dispatch(
-      showNotification({
-        message: err.message,
-        type: NOTIFICATION_TYPES.ERROR,
-      }),
-    );
-  };
+  /**
+   * Upload. Failed. Generic (27663:18173) names one treatment for a failed transfer: the error
+   * state on the attachment row, which is what the product already does and what `useFilesUpload`
+   * has already set by the time this runs. A toast on top of it reported the same failure twice,
+   * in two places, with the same server prose — and the toast was the half that disappears.
+   *
+   * <p>So nothing is dispatched here. The row keeps the failure, the file stays attached, the
+   * Upload button stays live, and retrying happens from this same dialog, which is the point of
+   * the state. Unlike the install failures, this one deliberately does not send the admin to the
+   * logs either.
+   */
+  const onUploadError = () => {};
 
   const onRemoveFile = (id) => {
     removeFile(id);

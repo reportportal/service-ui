@@ -158,15 +158,57 @@ describe('UploadPluginModal', () => {
 
       expect(wrapper.find(UploadModalLayout).prop('submitDisabled')).toBe(false);
     });
+  });
 
-    test('a failure the instance sent still keeps the generic notification', async () => {
+  /**
+   * Upload. Failed. Generic (27663:18173). The spec names one treatment for a failed transfer —
+   * the error state on the attachment row, which is what the product already does — and this used
+   * to add a toast on top, reporting the same failure twice with the same server prose. The toast
+   * was also the half that disappears.
+   *
+   * Kills re-adding a notification to `onUploadError`.
+   */
+  describe('a transfer that did not complete', () => {
+    const failing = () =>
       fetch.mockRejectedValue(registryError('INTERNAL_ERROR', 'Unexpected server error'));
+
+    test('the row carries the failure, and nothing else is raised', async () => {
+      failing();
+      const { attach, upload, of, wrapper } = render();
+
+      attach('jira-5.7.0.jar');
+      await upload();
+
+      const [file] = wrapper.find(FilesDropzone).first().prop('files');
+
+      expect(file.uploadFailed).toBe(true);
+      expect(of(SHOW_NOTIFICATION)).toHaveLength(0);
+    });
+
+    // retrying from this same dialog is the point of the state, so neither the file nor the
+    // action may go anywhere
+    test('the file stays attached and the upload stays offered', async () => {
+      failing();
+      const { attach, upload, wrapper } = render();
+
+      attach('jira-5.7.0.jar');
+      await upload();
+
+      const [file] = wrapper.find(FilesDropzone).first().prop('files');
+
+      expect(file.file.name).toBe('jira-5.7.0.jar');
+      expect(wrapper.find(UploadModalLayout).prop('submitDisabled')).toBe(false);
+    });
+
+    // a success still says so: dropping the failure toast did not drop the confirmation
+    test('a successful upload is still confirmed', async () => {
+      fetch.mockResolvedValue({ id: 42 });
       const { attach, upload, of } = render();
 
       attach('jira-5.7.0.jar');
       await upload();
 
-      expect(of(SHOW_NOTIFICATION).pop().payload.message).toBe('Unexpected server error');
+      expect(of(SHOW_NOTIFICATION).pop().payload.messageId).toBe('pluginUploaded');
     });
   });
 
