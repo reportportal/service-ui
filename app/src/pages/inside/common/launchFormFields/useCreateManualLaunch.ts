@@ -34,7 +34,7 @@ import { ExtendedTestCase } from 'types/testCase';
 import { ManualLaunchItem } from 'pages/inside/manualLaunchesPage/types';
 import { generateUUID } from './utils';
 import { messages } from './messages';
-import { fetchAllTestCases } from '../testLibrarySidePanel/utils';
+import { fetchAllTestCases, fetchAllTestPlanTestCases } from '../testLibrarySidePanel/utils';
 
 const resolveTestCaseIds = ({
   folderId,
@@ -82,64 +82,109 @@ export const useCreateManualLaunch = (
   const folders = useSelector(foldersSelector);
   const { formatMessage } = useIntl();
 
-  const getTestCasesForSubmit = useCallback(async () => {
-    if (!folderId) {
-      return testCases;
-    }
+  const showLaunchCreationError = useCallback(() => {
+    dispatch(
+      showErrorNotification({
+        message: formatMessage(messages.launchCreationFailed),
+      }),
+    );
+  }, [dispatch, formatMessage]);
 
+  const getTestCasesForSubmit = useCallback(async () => {
     try {
-      return await fetchAllTestCases(projectKey, {
-        'filter.in.testFolderId': getAllSubfolderIds(folderId, folders).join(','),
-        offset: 0,
-        limit: 50,
-      });
+      if (folderId) {
+        return await fetchAllTestCases(projectKey, {
+          'filter.in.testFolderId': getAllSubfolderIds(folderId, folders).join(','),
+          offset: 0,
+          limit: 50,
+        });
+      }
+
+      if (isNumber(testPlanId) && !selectedTestCaseIds?.length) {
+        return await fetchAllTestPlanTestCases(projectKey, testPlanId);
+      }
+
+      return testCases;
     } catch {
-      dispatch(
-        showErrorNotification({
-          message: formatMessage(messages.launchCreationFailed),
-        }),
-      );
+      showLaunchCreationError();
 
       return null;
     }
-  }, [dispatch, folderId, folders, formatMessage, projectKey, testCases]);
+  }, [
+    folderId,
+    folders,
+    projectKey,
+    selectedTestCaseIds,
+    showLaunchCreationError,
+    testCases,
+    testPlanId,
+  ]);
 
   const handleSubmit = useCallback(
     async (formValues: LaunchFormData) => {
       setIsLoading(true);
 
       const resolvedTestPlanId = testPlanId ?? formValues.testPlan?.id;
-      const submitTestCases = await getTestCasesForSubmit();
-
-      if (!submitTestCases) {
-        setIsLoading(false);
-
-        return;
-      }
-
-      const testCaseIds = resolveTestCaseIds({
-        folderId,
-        selectedTestCaseIds,
-        submitTestCases,
-        uncoveredTestsOnly: formValues.uncoveredTestsOnly,
-      });
-
-      if (isEmpty(testCaseIds)) {
-        dispatch(
-          showErrorNotification({
-            message: formatMessage(messages.launchCreationFailed),
-          }),
-        );
-        setIsLoading(false);
-
-        return;
-      }
-
-      const primaryTestCaseName = submitTestCases.find(
-        (testCase) => testCase.id === testCaseIds[0],
-      )?.name;
+      const isWholeTestPlanSubmit =
+        isNumber(resolvedTestPlanId) && !folderId && !selectedTestCaseIds?.length;
 
       try {
+        if (activeMode === LaunchMode.NEW && isWholeTestPlanSubmit) {
+          const launchName = isString(formValues.name) ? formValues.name : '';
+          const launchUuid = generateUUID();
+
+          const launchData: CreateManualLaunchDto = {
+            name: launchName,
+            uuid: launchUuid,
+            startTime: new Date().toISOString(),
+            mode: 'DEFAULT',
+            testCaseIds: [],
+            attributes: formValues.attributes?.filter((attr) => attr.key && attr.value) || [],
+            description: formValues.description || '',
+            ...(isNumber(resolvedTestPlanId) && { testPlan: { id: resolvedTestPlanId } }),
+          };
+
+          await fetch(URLS.manualLaunch(projectKey), {
+            method: 'POST',
+            data: launchData,
+          });
+
+          dispatch(
+            showSuccessNotification({
+              message: formatMessage(messages.launchCreatedSuccess, { launchName }),
+            }),
+          );
+
+          onSubmitSuccess?.(activeMode);
+          onClearSelection?.();
+          dispatch(hideModalAction());
+
+          return;
+        }
+
+        const submitTestCases = await getTestCasesForSubmit();
+
+        if (!submitTestCases) {
+          return;
+        }
+
+        const testCaseIds = resolveTestCaseIds({
+          folderId,
+          selectedTestCaseIds,
+          submitTestCases,
+          uncoveredTestsOnly: formValues.uncoveredTestsOnly,
+        });
+
+        if (isEmpty(testCaseIds)) {
+          showLaunchCreationError();
+
+          return;
+        }
+
+        const primaryTestCaseName = submitTestCases.find(
+          (testCase) => testCase.id === testCaseIds[0],
+        )?.name;
+
         const launchId = isLaunchObject(formValues.name) ? formValues.name.id : selectedLaunchId;
 
         if (activeMode === LaunchMode.EXISTING && launchId) {
@@ -196,7 +241,6 @@ export const useCreateManualLaunch = (
             }),
           );
         } else {
-          setIsLoading(false);
           return;
         }
 
@@ -227,6 +271,7 @@ export const useCreateManualLaunch = (
       dispatch,
       projectKey,
       formatMessage,
+      showLaunchCreationError,
     ],
   );
 

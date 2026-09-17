@@ -15,6 +15,7 @@
  */
 export { fetchAllTestCases } from './fetchAllTestCases';
 export type { TestCasesResponse } from './fetchAllTestCases';
+export { fetchAllTestPlanTestCases } from './fetchAllTestPlanTestCases';
 export { getFolderCacheEntry } from './getFolderCacheEntry';
 export { getAllCheckboxStates } from './selectionUtils';
 export { getAllAddedLeafFolderIds } from './getAllAddedLeafFolderIds';
