@@ -29,7 +29,12 @@ import { foldersSelector } from 'controllers/testCase';
 import { getAllSubfolderIds } from 'common/utils/folderUtils';
 
 import { getIsManualCovered } from 'pages/inside/common/testCaseList/utils';
-import { CreateManualLaunchDto, isLaunchObject, LaunchFormData, LaunchMode } from './types';
+import {
+  CreateManualLaunchDto,
+  isLaunchObject,
+  LaunchFormData,
+  LaunchMode,
+} from './types';
 import { ExtendedTestCase } from 'types/testCase';
 import { ManualLaunchItem } from 'pages/inside/manualLaunchesPage/types';
 import { generateUUID } from './utils';
@@ -64,6 +69,58 @@ const resolveTestCaseIds = ({
     : submitTestCases;
 
   return addedTestCases.map((testCase) => testCase.id);
+};
+
+const buildCreateManualLaunchDto = ({
+  formValues,
+  testCaseIds,
+  testPlanId,
+}: {
+  formValues: LaunchFormData;
+  testCaseIds: number[];
+  testPlanId?: number | null;
+}): CreateManualLaunchDto => ({
+  name: isString(formValues.name) ? formValues.name : '',
+  uuid: generateUUID(),
+  startTime: new Date().toISOString(),
+  mode: 'DEFAULT',
+  testCaseIds,
+  attributes: (formValues.attributes || []).filter((attr) => attr.key && attr.value),
+  description: formValues.description || '',
+  ...(isNumber(testPlanId) && { testPlan: { id: testPlanId } }),
+});
+
+const createNewManualLaunch = async (
+  projectKey: string,
+  launchData: CreateManualLaunchDto,
+): Promise<void> => {
+  await fetch(URLS.manualLaunch(projectKey), {
+    method: 'POST',
+    data: launchData,
+  });
+};
+
+const addTestCasesToExistingLaunch = async (
+  projectKey: string,
+  launchId: number,
+  testCaseIds: number[],
+): Promise<void> => {
+  await fetch(URLS.batchAddTestCasesToLaunch(projectKey, launchId), {
+    method: 'POST',
+    data: { testCaseIds },
+  });
+
+  const launchDetail: ManualLaunchItem = await fetch(
+    URLS.manualLaunchById(projectKey, launchId),
+  );
+  const linkedTestPlanId = launchDetail?.testPlan?.id;
+
+  if (isNumber(linkedTestPlanId)) {
+    await fetch(URLS.testPlanTestCasesBatch(projectKey, linkedTestPlanId), {
+      method: 'POST',
+      data: { testCaseIds },
+    });
+  }
 };
 
 export const useCreateManualLaunch = (
@@ -120,6 +177,12 @@ export const useCreateManualLaunch = (
     testPlanId,
   ]);
 
+  const finishSuccessfully = useCallback(() => {
+    onSubmitSuccess?.(activeMode);
+    onClearSelection?.();
+    dispatch(hideModalAction());
+  }, [activeMode, dispatch, onClearSelection, onSubmitSuccess]);
+
   const handleSubmit = useCallback(
     async (formValues: LaunchFormData) => {
       setIsLoading(true);
@@ -127,83 +190,50 @@ export const useCreateManualLaunch = (
       const resolvedTestPlanId = testPlanId ?? formValues.testPlan?.id;
       const isWholeTestPlanSubmit =
         isNumber(resolvedTestPlanId) && !folderId && !selectedTestCaseIds?.length;
+      const shouldCreateWholePlan =
+        activeMode === LaunchMode.NEW &&
+        isWholeTestPlanSubmit &&
+        !formValues.uncoveredTestsOnly;
 
       try {
-        if (activeMode === LaunchMode.NEW && isWholeTestPlanSubmit) {
-          const launchName = isString(formValues.name) ? formValues.name : '';
-          const launchUuid = generateUUID();
+        let testCaseIds: number[] = [];
+        let primaryTestCaseName: string | undefined;
 
-          const launchData: CreateManualLaunchDto = {
-            name: launchName,
-            uuid: launchUuid,
-            startTime: new Date().toISOString(),
-            mode: 'DEFAULT',
-            testCaseIds: [],
-            attributes: formValues.attributes?.filter((attr) => attr.key && attr.value) || [],
-            description: formValues.description || '',
-            ...(isNumber(resolvedTestPlanId) && { testPlan: { id: resolvedTestPlanId } }),
-          };
+        if (!shouldCreateWholePlan) {
+          const submitTestCases = await getTestCasesForSubmit();
 
-          await fetch(URLS.manualLaunch(projectKey), {
-            method: 'POST',
-            data: launchData,
-          });
-
-          dispatch(
-            showSuccessNotification({
-              message: formatMessage(messages.launchCreatedSuccess, { launchName }),
-            }),
-          );
-
-          onSubmitSuccess?.(activeMode);
-          onClearSelection?.();
-          dispatch(hideModalAction());
-
-          return;
-        }
-
-        const submitTestCases = await getTestCasesForSubmit();
-
-        if (!submitTestCases) {
-          return;
-        }
-
-        const testCaseIds = resolveTestCaseIds({
-          folderId,
-          selectedTestCaseIds,
-          submitTestCases,
-          uncoveredTestsOnly: formValues.uncoveredTestsOnly,
-        });
-
-        if (isEmpty(testCaseIds)) {
-          showLaunchCreationError();
-
-          return;
-        }
-
-        const primaryTestCaseName = submitTestCases.find(
-          (testCase) => testCase.id === testCaseIds[0],
-        )?.name;
-
-        const launchId = isLaunchObject(formValues.name) ? formValues.name.id : selectedLaunchId;
-
-        if (activeMode === LaunchMode.EXISTING && launchId) {
-          await fetch(URLS.batchAddTestCasesToLaunch(projectKey, launchId), {
-            method: 'POST',
-            data: { testCaseIds },
-          });
-
-          const launchDetail: ManualLaunchItem = await fetch(
-            URLS.manualLaunchById(projectKey, launchId),
-          );
-          const linkedTestPlanId = launchDetail?.testPlan?.id;
-
-          if (isNumber(linkedTestPlanId)) {
-            await fetch(URLS.testPlanTestCasesBatch(projectKey, linkedTestPlanId), {
-              method: 'POST',
-              data: { testCaseIds },
-            });
+          if (!submitTestCases) {
+            return;
           }
+
+          testCaseIds = resolveTestCaseIds({
+            folderId,
+            selectedTestCaseIds,
+            submitTestCases,
+            uncoveredTestsOnly: formValues.uncoveredTestsOnly,
+          });
+
+          if (isEmpty(testCaseIds)) {
+            showLaunchCreationError();
+
+            return;
+          }
+
+          primaryTestCaseName = submitTestCases.find(
+            (testCase) => testCase.id === testCaseIds[0],
+          )?.name;
+        }
+
+        if (activeMode === LaunchMode.EXISTING) {
+          const launchId = isLaunchObject(formValues.name)
+            ? formValues.name.id
+            : selectedLaunchId;
+
+          if (!launchId) {
+            return;
+          }
+
+          await addTestCasesToExistingLaunch(projectKey, launchId, testCaseIds);
 
           dispatch(
             showSuccessNotification({
@@ -216,37 +246,26 @@ export const useCreateManualLaunch = (
             }),
           );
         } else if (activeMode === LaunchMode.NEW) {
-          const launchName = isString(formValues.name) ? formValues.name : '';
-          const launchUuid = generateUUID();
-
-          const launchData: CreateManualLaunchDto = {
-            name: launchName,
-            uuid: launchUuid,
-            startTime: new Date().toISOString(),
-            mode: 'DEFAULT',
+          const launchData = buildCreateManualLaunchDto({
+            formValues,
             testCaseIds,
-            attributes: formValues.attributes?.filter((attr) => attr.key && attr.value) || [],
-            description: formValues.description || '',
-            ...(isNumber(resolvedTestPlanId) && { testPlan: { id: resolvedTestPlanId } }),
-          };
-
-          await fetch(URLS.manualLaunch(projectKey), {
-            method: 'POST',
-            data: launchData,
+            testPlanId: resolvedTestPlanId,
           });
+
+          await createNewManualLaunch(projectKey, launchData);
 
           dispatch(
             showSuccessNotification({
-              message: formatMessage(messages.launchCreatedSuccess, { launchName }),
+              message: formatMessage(messages.launchCreatedSuccess, {
+                launchName: launchData.name,
+              }),
             }),
           );
         } else {
           return;
         }
 
-        onSubmitSuccess?.(activeMode);
-        onClearSelection?.();
-        dispatch(hideModalAction());
+        finishSuccessfully();
       } catch (error: unknown) {
         const { message } = (error as Record<string, string>) ?? {};
 
@@ -266,8 +285,7 @@ export const useCreateManualLaunch = (
       selectedTestCaseIds,
       selectedLaunchId,
       activeMode,
-      onClearSelection,
-      onSubmitSuccess,
+      finishSuccessfully,
       dispatch,
       projectKey,
       formatMessage,
