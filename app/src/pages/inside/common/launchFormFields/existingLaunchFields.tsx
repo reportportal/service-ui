@@ -77,6 +77,7 @@ export const ExistingLaunchFields = ({ onLaunchSelect }: ExistingLaunchFieldsPro
         menuClassName={cx('modal-autocomplete-menu')}
         menuPortalRoot={menuPortalRoot}
         dropdownMatchInputWidth
+        withMenuFlip
       />
     );
   };
