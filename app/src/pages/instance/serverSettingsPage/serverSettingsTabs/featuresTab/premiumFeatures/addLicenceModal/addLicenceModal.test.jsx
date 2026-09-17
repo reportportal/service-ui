@@ -169,6 +169,53 @@ describe('AddLicenceModal', () => {
     });
   });
 
+  /**
+   * `Add Modal Required` and `Add Modal Invalid` are one modal at one height — "each failing field
+   * takes the error outline, and its helper line is replaced by the message. The modal does not
+   * grow." Both kit fields stack the two by default, so this is a rule the component has to
+   * enforce rather than inherit.
+   *
+   * Kills passing `helpText` unconditionally, on either field.
+   */
+  describe('a field showing a message does not also show its helper', () => {
+    test('the customer ID replaces its helper', () => {
+      const r = render();
+      r.type('customerIdField', '');
+      r.blur('customerIdField');
+
+      expect(r.field('customerIdField').prop('error')).toBeTruthy();
+      expect(r.field('customerIdField').prop('helpText')).toBeUndefined();
+    });
+
+    test('the key replaces its helper', () => {
+      const r = render();
+      fill(r, { key: 'QUJDREVGR0hJSkt' });
+      r.blur('licenceKeyField');
+
+      expect(r.field('licenceKeyField').prop('error')).toBeTruthy();
+      expect(r.field('licenceKeyField').prop('helpText')).toBeUndefined();
+    });
+
+    // the helper is what the field says when it has nothing to complain about, so it must be
+    // there the rest of the time — this is a replacement, not a removal
+    test('an untouched field still explains itself', () => {
+      const r = render();
+
+      expect(r.field('customerIdField').prop('helpText')).toContain('Delivered together with');
+      expect(r.field('licenceKeyField').prop('helpText')).toContain('Stored encrypted');
+    });
+
+    test('and so does one that has been filled correctly', () => {
+      const r = render();
+      fill(r);
+      r.blur('customerIdField');
+      r.blur('licenceKeyField');
+
+      expect(r.field('customerIdField').prop('helpText')).toContain('Delivered together with');
+      expect(r.field('licenceKeyField').prop('helpText')).toContain('Stored encrypted');
+    });
+  });
+
   // A wrapped key is how a delivered key arrives, and a single-line input mangles it silently.
   // Asserted on the element rather than the component: the kit's flex field is a forwardRef whose
   // display name is minified, and what matters here is what reaches the DOM.

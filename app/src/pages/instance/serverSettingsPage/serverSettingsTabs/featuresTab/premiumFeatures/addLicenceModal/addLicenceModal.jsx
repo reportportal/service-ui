@@ -154,6 +154,15 @@ export const AddLicenceModal = ({ data }) => {
 
   const canSubmit = !customerIdError() && !licenceKeyError();
 
+  // `Add Modal Required` and `Add Modal Invalid` are one modal at one height: each failing field
+  // takes the error outline and its helper line is *replaced* by the message rather than pushed
+  // down by it. Both kit fields stack the two by default — FieldText does it under
+  // `hasDoubleMessage`, and FieldTextFlex has no option at all — so the helper is withheld exactly
+  // while a message is on screen. The error shows only once touched, which is what decides it.
+  const helpUnless = (showing, help) => (showing ? undefined : help);
+  const customerIdShowing = Boolean(customerIdError()) && customerIdTouched;
+  const licenceKeyShowing = Boolean(licenceKeyError()) && licenceKeyTouched;
+
   return (
     <ModalLayout
       title={formatMessage(messages.title)}
@@ -179,8 +188,7 @@ export const AddLicenceModal = ({ data }) => {
           isRequired
           error={customerIdError()}
           touched={customerIdTouched}
-          hasDoubleMessage
-          helpText={formatMessage(messages.customerIdHelp)}
+          helpText={helpUnless(customerIdShowing, formatMessage(messages.customerIdHelp))}
           data-automation-id="customerIdField"
           onBlur={() => setCustomerIdTouched(true)}
           onChange={(event) => setCustomerId(event.target.value)}
@@ -198,7 +206,7 @@ export const AddLicenceModal = ({ data }) => {
           value={licenceKey}
           error={licenceKeyError()}
           touched={licenceKeyTouched}
-          helpText={formatMessage(messages.licenceKeyHelp)}
+          helpText={helpUnless(licenceKeyShowing, formatMessage(messages.licenceKeyHelp))}
           className={cx('key-input')}
           data-automation-id="licenceKeyField"
           onBlur={() => setLicenceKeyTouched(true)}
