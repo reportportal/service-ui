@@ -75,8 +75,15 @@ export const IntegrationSettings = (props) => {
   const pluginName = data.integrationType?.name;
   const { formatMessage } = useIntl();
 
+  // Plugin Detail. Installed. Disabled (27360:14619): "No connection status is shown while the
+  // plugin is off. Connected asserts a live check that is not happening, so the badge is hidden
+  // rather than shown stale." A switched-off plugin is not running, so there is nothing to reach
+  // the external system with — testing would be answering a question nobody asked, and printing
+  // last time's answer is worse than printing none.
+  const pluginOff = data.integrationType?.enabled === false;
+
   const [connected, setConnected] = useState(true);
-  const [loading, setLoading] = useState(!data.isNew && !preventTestConnection);
+  const [loading, setLoading] = useState(!data.isNew && !preventTestConnection && !pluginOff);
   const globalIntegrations = useSelector(namedGlobalIntegrationsSelector);
   const projectIntegrations = useSelector(namedProjectIntegrationsSelector);
   const { organizationSlug, projectSlug } = useSelector(urlOrganizationAndProjectSelector);
@@ -106,7 +113,7 @@ export const IntegrationSettings = (props) => {
   );
 
   const testIntegrationConnection = useCallback(() => {
-    if ('id' in data && !preventTestConnection && pluginName) {
+    if ('id' in data && !preventTestConnection && pluginName && !pluginOff) {
       setLoading(true);
 
       const fetchConnection = getTestIntegrationConnection({
@@ -129,6 +136,7 @@ export const IntegrationSettings = (props) => {
   }, [
     data,
     preventTestConnection,
+    pluginOff,
     isGlobal,
     isOrganizational,
     pluginName,
@@ -166,6 +174,7 @@ export const IntegrationSettings = (props) => {
           <ConnectionSection
             blocked={data.blocked}
             connected={connected}
+            statusUnknown={pluginOff}
             testConnection={testIntegrationConnection}
             onRemoveIntegration={removeIntegration}
             editAuthConfig={editAuthConfig}

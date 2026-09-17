@@ -93,6 +93,8 @@ export class ConnectionSection extends Component {
     testConnection: PropTypes.func,
     blocked: PropTypes.bool,
     connected: PropTypes.bool,
+    /** No connection was tested, so neither verdict may be shown — see the switched-off plugin. */
+    statusUnknown: PropTypes.bool,
     editAuthConfig: PropTypes.object,
     pluginName: PropTypes.string,
     isEditable: PropTypes.bool.isRequired,
@@ -148,6 +150,7 @@ export class ConnectionSection extends Component {
       blocked,
       editAuthConfig,
       connected,
+      statusUnknown,
       projectIntegrations,
       pluginName,
       isEditable,
@@ -163,7 +166,10 @@ export class ConnectionSection extends Component {
 
     return (
       <>
-        {!connected && (
+        {/* Nothing is asserted about a connection nobody tested. A switched-off plugin is not
+            running, so neither the failure banner nor the badge below has anything to report, and
+            printing the last answer is worse than printing none. */}
+        {!connected && !statusUnknown && (
           <div className={cx({ 'with-global-message': blocked })}>
             <SystemMessage
               header={formatMessage(messages.connectionErrorMessage)}
@@ -197,19 +203,21 @@ export class ConnectionSection extends Component {
               >
                 <h1 title={name}>{name}</h1>
               </div>
-              <div
-                className={cx('connection-block', {
-                  'connection-block-failed': !connected,
-                  'connection-block-disabled': blocked && availableProjectIntegrations.length,
-                })}
-              >
-                {Parser(connected ? Tick : ErrorIcon)}
-                <p>
-                  {formatMessage(
-                    connected ? messages.connectedMessage : messages.connectionErrorMessage,
-                  )}
-                </p>
-              </div>
+              {!statusUnknown && (
+                <div
+                  className={cx('connection-block', {
+                    'connection-block-failed': !connected,
+                    'connection-block-disabled': blocked && availableProjectIntegrations.length,
+                  })}
+                >
+                  {Parser(connected ? Tick : ErrorIcon)}
+                  <p>
+                    {formatMessage(
+                      connected ? messages.connectedMessage : messages.connectionErrorMessage,
+                    )}
+                  </p>
+                </div>
+              )}
             </div>
             <p className={cx('created-date-block')}>
               {creator} on {moment(creationDate).format('ll')}

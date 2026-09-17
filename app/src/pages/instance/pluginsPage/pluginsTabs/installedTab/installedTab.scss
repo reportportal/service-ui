@@ -69,3 +69,13 @@
   align-items: center;
   gap: 8px;
 }
+
+/* First thing in the body, so it needs room under the header rather than beside the block after
+   it — and full width, like the marketplace alerts it sits above. */
+.disabled-notice {
+  margin-bottom: 24px;
+}
+
+.disabled-notice > * {
+  width: 100%;
+}

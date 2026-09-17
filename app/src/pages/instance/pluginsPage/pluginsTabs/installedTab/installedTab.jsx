@@ -64,7 +64,7 @@ import { isPluginBuiltin } from 'components/integrations/utils';
 import { PLUGIN_TIERS, toPluginTier } from 'common/constants/pluginTiers';
 import { MARKETPLACE } from 'common/constants/settingsTabs';
 import { SERVER_SETTINGS_TAB_PAGE } from 'controllers/pages';
-import { Button, DownloadIcon } from '@reportportal/ui-kit';
+import { Button, DownloadIcon, SystemMessage } from '@reportportal/ui-kit';
 import {
   INSTALLED_PLUGINS_SUBPAGE,
   INSTALLED_PLUGINS_SETTINGS_SUBPAGE,
@@ -172,6 +172,18 @@ const messages = defineMessages({
   manageLicence: {
     id: 'PluginItem.manageLicence',
     defaultMessage: 'Manage License',
+  },
+  pluginSwitchedOff: {
+    id: 'PluginItem.pluginSwitchedOff',
+    defaultMessage: 'Plugin is switched off',
+  },
+  // kept first, lost second — an admin looking at a page full of settings needs to know they are
+  // still there before they are told they are not in force
+  pluginSwitchedOffBody: {
+    id: 'PluginItem.pluginSwitchedOffBody',
+    defaultMessage:
+      'The configuration below is kept. The plugin does nothing on this instance until it is'
+      + ' switched back on.',
   },
   uploadedManually: {
     id: 'PluginItem.uploadedManually',
@@ -562,6 +574,8 @@ export class InstalledTab extends Component {
             events={PLUGINS_PAGE_EVENTS}
             afterInfoSection={
               <>
+                {/* first in the body, above everything it is describing */}
+                {this.renderDisabledNotice(data)}
                 {this.renderMarketplaceBlocks(data)}
                 {/* at the foot of the content area, clear of the blocks it is reporting on */}
                 {this.renderVersionChangeAlert(data)}
@@ -912,6 +926,43 @@ export class InstalledTab extends Component {
           // eslint-disable-next-line react/no-array-index-key
           <Fragment key={index}>{action}</Fragment>
         ))}
+      </div>
+    );
+  };
+
+  /**
+   * Plugin Detail. Installed. Disabled (27360:14619).
+   *
+   * <p>Names what is kept before what is lost, per D-06: the configuration below survives, and what
+   * stops is the plugin doing anything. Switching off is not uninstalling, and an admin returning
+   * to a page full of settings that are not in force needs the second sentence before they read the
+   * first block.
+   *
+   * <p>Info rather than warning. Nothing is wrong — somebody switched it off on purpose, and the
+   * state is one press from being undone by the toggle in the header above.
+   *
+   * <p>No date: the frame's "switched off on {date}" tooltip is ITERATION 2 in its own spec, for
+   * want of a reliable source, and there is still no field carrying it.
+   */
+  renderDisabledNotice = (data) => {
+    if (data.enabled !== false) {
+      return null;
+    }
+
+    const { formatMessage } = this.props.intl;
+
+    // The tone rides on the wrapper as well as the message, the way the version-change alert
+    // carries its error code: it is the part a reader is meant to take from this, and the kit's own
+    // element is not addressable from outside.
+    return (
+      <div
+        className={cx('disabled-notice')}
+        data-automation-id="pluginDisabledNotice"
+        data-tone="info"
+      >
+        <SystemMessage mode="info" header={formatMessage(messages.pluginSwitchedOff)}>
+          {formatMessage(messages.pluginSwitchedOffBody)}
+        </SystemMessage>
       </div>
     );
   };

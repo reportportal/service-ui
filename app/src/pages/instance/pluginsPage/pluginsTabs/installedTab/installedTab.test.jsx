@@ -527,6 +527,57 @@ describe('InstalledTab', () => {
     });
 
     /**
+     * Plugin Detail. Installed. Disabled (27360:14619). Switching a plugin off is not uninstalling
+     * it, and an admin returning to a page full of settings that are not in force has to be told
+     * which of the two happened — so the notice names what is kept before what is lost (D-06).
+     */
+    describe('a plugin somebody switched off', () => {
+      const notice = (rendered) =>
+        rendered.wrapper.find('[data-automation-id="pluginDisabledNotice"]');
+
+      const openWithEnabled = (rendered, enabled) => {
+        rendered.call(PluginsCatalog, 'onInstalledItemClick', { ...jiraRow, enabled });
+        rendered.wrapper.update();
+      };
+
+      test('the configuration is said to survive before the plugin is said to stop', () => {
+        const rendered = render();
+        openWithEnabled(rendered, false);
+
+        const text = notice(rendered).first().text();
+
+        expect(text).toContain('Plugin is switched off');
+        expect(text.indexOf('configuration below is kept')).toBeLessThan(
+          text.indexOf('does nothing on this instance'),
+        );
+      });
+
+      // nothing is wrong: somebody did this on purpose, and the toggle above undoes it
+      test('it is information, not a warning', () => {
+        const rendered = render();
+        openWithEnabled(rendered, false);
+
+        expect(notice(rendered).first().prop('data-tone')).toBe('info');
+      });
+
+      test('a running plugin says nothing about being switched off', () => {
+        const rendered = render();
+        openWithEnabled(rendered, true);
+
+        expect(notice(rendered)).toHaveLength(0);
+      });
+
+      // the SPEC keeps both available on a switched-off plugin: a version can be changed while it
+      // is off, and that is often exactly why it was switched off
+      test('the versions table is still there', () => {
+        const rendered = render();
+        openWithEnabled(rendered, false);
+
+        expect(rendered.wrapper.find(PluginMarketplaceBlocks)).not.toHaveLength(0);
+      });
+    });
+
+    /**
      * Plugin Detail. Installed. Premium (27706:18118). Manage License sits left of the toggle and
      * it is a *route*, not a state: always offered, claiming nothing about the licence. Under
      * ADR-011 the key is checked at artifact download and nowhere else, so the instance never
