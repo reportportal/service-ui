@@ -40,6 +40,7 @@ export interface StatusConfig {
 export interface ExecutionStatusDropdownProps {
   executionId: number;
   currentStatus: ExecutionStatus;
+  readOnly?: boolean;
 }
 
 export interface ExecutionStatusButtonsProps {

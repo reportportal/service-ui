@@ -254,6 +254,10 @@ $sidebar-width: calc(100vw - 408px);
   display: flex;
   align-items: center;
   justify-content: center;
+
+  &:disabled {
+    cursor: default;
+  }
 }
 
 .execution-actions-cell {

@@ -18,4 +18,5 @@ import { ExecutionStatus } from "pages/inside/manualLaunchesPage/types";
 
 export interface ExecutionStatusChipProps {
   status: ExecutionStatus;
+  disabled?: boolean;
 }

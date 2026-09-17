@@ -41,6 +41,7 @@ import {
   useManualLaunchById,
   useActiveManualLaunchLoading,
 } from 'hooks/useTypedSelector';
+import { useUserPermissions } from 'hooks/useUserPermissions';
 import {
   MANUAL_LAUNCHES_PAGE_EVENTS,
   TEST_EXECUTION_TEMPLATE_TYPE,
@@ -65,6 +66,7 @@ export const ManualLaunchExecutionPage = () => {
   const { formatMessage } = useIntl();
   const { trackEvent } = useTracking();
   const { organizationSlug, projectSlug } = useProjectDetails();
+  const { canManageExecutions } = useUserPermissions();
   const launchId = useManualLaunchId();
   const launch = useManualLaunchById(launchId);
   const isLaunchLoading = useActiveManualLaunchLoading();
@@ -179,16 +181,30 @@ export const ManualLaunchExecutionPage = () => {
 
   const renderHeaderActions = () => {
     if (isInProgress || showStatusButtons) {
+      if (!canManageExecutions) {
+        return null;
+      }
+
       return <ExecutionStatusButtons executionId={execution?.id} />;
     }
 
     if (hasStatus) {
-      return <ExecutionStatusDropdown executionId={execution.id} currentStatus={executionStatus} />;
+      return (
+        <ExecutionStatusDropdown
+          executionId={execution.id}
+          currentStatus={executionStatus}
+          readOnly={!canManageExecutions}
+        />
+      );
     }
 
     return (
       <div className={cx('header-actions')}>
-        <Button className={cx('run-test-button')} onClick={handleRunTestClick}>
+        <Button
+          className={cx('run-test-button')}
+          onClick={handleRunTestClick}
+          disabled={!canManageExecutions}
+        >
           {formatMessage(commonMessages.runTest)}
           <span className={cx('run-test-icon')}>
             <RunManualIcon />

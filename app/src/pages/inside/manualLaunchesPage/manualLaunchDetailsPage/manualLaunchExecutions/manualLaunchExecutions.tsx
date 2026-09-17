@@ -48,6 +48,7 @@ import {
 } from 'controllers/manualLaunch';
 import type { TestCaseExecution } from 'controllers/manualLaunch';
 import { MANUAL_LAUNCHES_PAGE_EVENTS } from 'components/main/analytics/events/ga4Events/manualLaunchesPageEvents';
+import { ExecutionStatus } from 'pages/inside/manualLaunchesPage/types';
 
 import { ManualLaunchExecutionsProps } from './types';
 import { ExecutionStatusChip } from './executionStatusChip';
@@ -70,7 +71,7 @@ export const ManualLaunchExecutions = ({
   const dispatch = useDispatch();
   const { trackEvent } = useTracking();
   const location = useSelector(locationSelector);
-  const { canManageTestCases } = useUserPermissions();
+  const { canManageTestCases, canManageExecutions } = useUserPermissions();
   const [selectedRowIds, setSelectedRowIds] = useState<number[]>([]);
   const launchId = useManualLaunchId();
   const { organizationSlug, projectSlug } = useProjectDetails();
@@ -199,6 +200,29 @@ export const ManualLaunchExecutions = ({
     };
 
     const isSelected = execution.id === selectedExecutionId;
+    const isRunControlDisabled =
+      !canManageExecutions && execution.executionStatus === ExecutionStatus.TO_RUN;
+
+    const statusCell = isRunControlDisabled ? (
+      <button
+        type="button"
+        className={cx('execution-status-cell', 'execution-cell-button')}
+        disabled
+        aria-disabled="true"
+      >
+        <ExecutionStatusChip status={execution.executionStatus} disabled />
+      </button>
+    ) : (
+      <button
+        type="button"
+        className={cx('execution-status-cell', 'execution-cell-button', {
+          selected: isSelected,
+        })}
+        onClick={handleOpenSidePanel}
+      >
+        <ExecutionStatusChip status={execution.executionStatus} />
+      </button>
+    );
 
     return {
       id: execution.id,
@@ -250,17 +274,7 @@ export const ManualLaunchExecutions = ({
       },
       status: {
         content: execution.executionStatus,
-        component: (
-          <button
-            type="button"
-            className={cx('execution-status-cell', 'execution-cell-button', {
-              selected: isSelected,
-            })}
-            onClick={handleOpenSidePanel}
-          >
-            <ExecutionStatusChip status={execution.executionStatus} />
-          </button>
-        ),
+        component: statusCell,
       },
       actions: {
         content: '',
