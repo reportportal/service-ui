@@ -27,7 +27,7 @@ import styles from './executionStatusChip.scss';
 
 const cx = createClassnames(styles);
 
-export const ExecutionStatusChip = memo(({ status }: ExecutionStatusChipProps) => {
+export const ExecutionStatusChip = memo(({ status, disabled = false }: ExecutionStatusChipProps) => {
   const statusKey = status.toUpperCase() as ExecutionStatus;
   const statusClass = STATUS_CLASS_MAP[statusKey];
   const statusIcon = STATUS_ICON_MAP[statusKey] as string;
@@ -37,7 +37,7 @@ export const ExecutionStatusChip = memo(({ status }: ExecutionStatusChipProps) =
   }
 
   return (
-    <div className={cx('execution-status-chip', statusClass)}>
+    <div className={cx('execution-status-chip', statusClass, { disabled })}>
       <div className={cx('status-icon')}>{Parser(statusIcon)}</div>
     </div>
   );

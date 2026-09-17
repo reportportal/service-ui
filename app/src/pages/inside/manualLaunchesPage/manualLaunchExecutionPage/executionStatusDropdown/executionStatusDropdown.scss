@@ -59,6 +59,12 @@
   color: var(--Text-Primary);
   background: var(--rp-ui-base-bg-200);
   cursor: pointer;
+
+  &--read-only {
+    opacity: 0.4;
+    cursor: default;
+    pointer-events: none;
+  }
 }
 
 .status-indicator {
