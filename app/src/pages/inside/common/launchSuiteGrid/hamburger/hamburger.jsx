@@ -252,12 +252,16 @@ export const Hamburger = ({ launch, customProps }) => {
               />
               <HamburgerMenuItem
                 text={formatMessage(messages.patternAnalysis)}
-                title={!enabledPatterns.length && formatMessage(messages.noPatternsEnabled)}
+                title={
+                  !canStartAnalysis
+                    ? formatMessage(messages.noPermissions)
+                    : !enabledPatterns.length && formatMessage(messages.noPatternsEnabled)
+                }
                 onClick={() => {
                   trackEvent(LAUNCHES_PAGE_EVENTS.CLICK_PATTERN_ANALYSIS_LAUNCH_MENU);
                   customProps.onPatternAnalysis(launch);
                 }}
-                disabled={!enabledPatterns.length}
+                disabled={!canStartAnalysis || !enabledPatterns.length}
               />
               <HamburgerMenuItem
                 text={formatMessage(messages.exportReport)}
