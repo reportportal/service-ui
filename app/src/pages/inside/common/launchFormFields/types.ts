@@ -67,7 +67,7 @@ export interface CreateManualLaunchDto {
   testCaseIds: number[];
   attributes: Attribute[];
   description?: string;
-  testPlanId?: number;
+  testPlan?: { id: number };
 }
 
 export interface LaunchFormFieldsProps {
