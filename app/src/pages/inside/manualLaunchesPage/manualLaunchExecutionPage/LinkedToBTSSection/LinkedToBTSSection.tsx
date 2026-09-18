@@ -156,7 +156,7 @@ export const LinkedToBTSSection: FC<LinkedToBTSSectionProps> = ({ execution }) =
             issues={btsIssues}
             className={cx('linked-to-bts-section__issue')}
             onIssueClick={handleIssueClick}
-            onIssueRemove={handleIssueRemove}
+            onIssueRemove={canManageExecutions ? handleIssueRemove : undefined}
           />
         </div>
       )}
