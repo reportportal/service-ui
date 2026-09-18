@@ -28,6 +28,8 @@ import styles from './notificationList.scss';
 
 const cx = classNames.bind(styles);
 
+const NOTIFICATION_PORTAL_ATTR = 'data-notification-portal';
+
 export const notificationMessages = defineMessages({
   successLogin: { id: 'NotificationItem.successLogin', defaultMessage: 'Signed in successfully' },
   failureDefault: {
@@ -535,7 +537,11 @@ export class NotificationList extends PureComponent {
   render() {
     const { formatMessage } = this.props.intl;
     return (
-      <div className={cx('notification-list')} data-automation-id="notificationsContainer">
+      <div
+        className={cx('notification-list')}
+        data-automation-id="notificationsContainer"
+        {...{ [NOTIFICATION_PORTAL_ATTR]: '' }}
+      >
         <TransitionGroup>
           {this.props.notifications.map(
             ({ uid, type, duration, typographyColor, messageId, values, message }) => (
