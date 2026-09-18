@@ -20,6 +20,26 @@
   gap: 16px;
 }
 
+.no-default-properties-message {
+  display: flex;
+  margin-top: 16px;
+  color: var(--rp-ui-base-error);
+  font-family: $FONT-ROBOTO-MEDIUM;
+  font-size: 12px;
+  line-height: 18px;
+}
+
+.icon {
+  display: inline-block;
+  margin-right: 5px;
+
+  svg {
+    width: 16px;
+    height: 16px;
+    fill: var(--rp-ui-base-error);
+  }
+}
+
 .included-data-config {
   display: flex;
   flex-direction: column;

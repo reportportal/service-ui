@@ -460,10 +460,13 @@ const BTSIssuesModalComponent: FC<BTSIssuesModalProps> = ({
     ],
   );
 
+  const isPostIssueWithoutFields =
+    selectedControl === BTSIssueActionTypes.POST && fields.length === 0;
+
   const { okButton, cancelButton, hideModal } = useModalButtons({
     okButtonText: 'OK',
     isLoading,
-    isSubmitButtonDisabled: invalid,
+    isSubmitButtonDisabled: invalid || isPostIssueWithoutFields,
     onSubmit: () => {
       handleSubmit((values: Record<string, unknown>) => {
         const btsActionType: BtsActionType =
@@ -477,6 +480,10 @@ const BTSIssuesModalComponent: FC<BTSIssuesModalProps> = ({
         };
 
         if (selectedControl === BTSIssueActionTypes.POST) {
+          if (fields.length === 0) {
+            return;
+          }
+
           const issueData = prepareDataToSend(values);
           postIssue(issueData, onSuccess);
         } else {
