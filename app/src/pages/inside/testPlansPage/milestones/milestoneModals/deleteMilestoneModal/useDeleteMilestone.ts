@@ -32,7 +32,9 @@ import {
   milestonesPageSelector,
   milestonesSelector,
 } from 'controllers/milestone';
+import { defaultQueryParams, getTestPlansAction } from 'controllers/testPlan';
 import { useProjectDetails } from 'hooks/useTypedSelector';
+import { resetHasTestPlansCache } from 'hooks/useHasTestPlans';
 
 export const useDeleteMilestone = () => {
   const { isLoading, showSpinner, hideSpinner } = useDebouncedSpinner();
@@ -65,6 +67,7 @@ export const useDeleteMilestone = () => {
           messageId: 'milestoneDeletedSuccess',
         }),
       );
+      resetHasTestPlansCache();
 
       const isSingleItemOnTheLastPage =
         milestonesPageData?.number === milestonesPageData?.totalPages && milestones?.length === 1;
@@ -76,6 +79,7 @@ export const useDeleteMilestone = () => {
         push(url);
       } else {
         dispatch(getMilestonesAction(queryParams));
+        dispatch(getTestPlansAction(defaultQueryParams));
       }
     } catch {
       dispatch(
