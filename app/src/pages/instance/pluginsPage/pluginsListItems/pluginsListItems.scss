@@ -24,8 +24,15 @@
   }
 }
 
+// One column. The design is a list of full-width rows, not a grid of cards: 104px rows on a
+// 116px pitch, so the gap is the 12px between them.
 .plugins-content-list {
   display: flex;
-  flex-wrap: wrap;
-  gap: 16px;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.plugins-content-count {
+  color: $COLOR--gray-47;
+  font-family: $FONT-REGULAR;
 }

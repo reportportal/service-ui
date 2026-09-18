@@ -14,7 +14,31 @@
  * limitations under the License.
  */
 
-import { composeAppInfo } from './utils';
+import { composeAppInfo, getMarketplaceOverride } from './utils';
+
+describe('getMarketplaceOverride', () => {
+  afterEach(() => {
+    localStorage.clear();
+  });
+
+  test('is off when the key is absent', () => {
+    expect(getMarketplaceOverride()).toBe(false);
+  });
+
+  test('is on only for the stored value true', () => {
+    localStorage.setItem('marketplace', 'true');
+    expect(getMarketplaceOverride()).toBe(true);
+  });
+
+  test('any other stored value stays off', () => {
+    localStorage.setItem('marketplace', 'false');
+    expect(getMarketplaceOverride()).toBe(false);
+    localStorage.setItem('marketplace', '"yes"');
+    expect(getMarketplaceOverride()).toBe(false);
+    localStorage.setItem('marketplace', 'not-json');
+    expect(getMarketplaceOverride()).toBe(false);
+  });
+});
 
 describe('composeAppInfo', () => {
   test('composes api, ui and jobs from jobsInfo', () => {
