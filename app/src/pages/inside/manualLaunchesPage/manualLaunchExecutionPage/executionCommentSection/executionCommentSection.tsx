@@ -38,6 +38,7 @@ import {
   type TestCaseExecution,
 } from 'controllers/manualLaunch';
 import { useManualLaunchId } from 'hooks/useTypedSelector';
+import { useUserPermissions } from 'hooks/useUserPermissions';
 import { useFileAttachments, type AttachedFileData } from 'hooks/useFileAttachments';
 
 import { messages as statusModalMessages } from '../executionStatusConfirmModal/messages';
@@ -64,6 +65,7 @@ export const ExecutionCommentSection: FC<ExecutionCommentSectionProps> = ({ exec
   const dispatch = useDispatch();
   const projectKey = useSelector(projectKeySelector);
   const launchId = useManualLaunchId();
+  const { canManageExecutions } = useUserPermissions();
 
   const textareaRef = useRef<HTMLTextAreaElement | null>(null);
   useTextareaAutoResize(textareaRef);
@@ -111,12 +113,19 @@ export const ExecutionCommentSection: FC<ExecutionCommentSectionProps> = ({ exec
   );
 
   const handleCommentChange: ChangeEventHandler<HTMLTextAreaElement> = (e) => {
+    if (!canManageExecutions) {
+      return;
+    }
     setComment(e.target.value);
   };
 
   const handleFilesAdded = (
     filesWithValidation: Parameters<typeof handleFilesAddedFromHook>[0],
   ) => {
+    if (!canManageExecutions) {
+      return;
+    }
+
     handleFilesAddedFromHook(filesWithValidation);
 
     if (!launchId || isSaving) return;
@@ -155,6 +164,10 @@ export const ExecutionCommentSection: FC<ExecutionCommentSectionProps> = ({ exec
   };
 
   const handleExistingRemoveWithSave = (id: string | number) => {
+    if (!canManageExecutions) {
+      return;
+    }
+
     handleExistingRemove(id);
     if (!launchId || isSaving) return;
     const nextRemoved = new Set([...removedAttachmentIds, String(id)]);
@@ -196,6 +209,10 @@ export const ExecutionCommentSection: FC<ExecutionCommentSectionProps> = ({ exec
   );
 
   const handleClearLocal = () => {
+    if (!canManageExecutions) {
+      return;
+    }
+
     setComment('');
     setPendingFiles([]);
     setRemovedAttachmentIds(
@@ -205,7 +222,7 @@ export const ExecutionCommentSection: FC<ExecutionCommentSectionProps> = ({ exec
 
   const handleSubmit: FormEventHandler<HTMLFormElement> = (e) => {
     e.preventDefault();
-    if (!launchId || isSaving || !isDirty) return;
+    if (!canManageExecutions || !launchId || isSaving || !isDirty) return;
 
     setIsSaving(true);
     dispatch(
@@ -243,31 +260,36 @@ export const ExecutionCommentSection: FC<ExecutionCommentSectionProps> = ({ exec
               minHeight={EXECUTION_COMMENT_TEXTAREA_MIN_HEIGHT}
               maxLength={EXECUTION_COMMENT_MAX_LENGTH}
               disabled={isSaving}
+              readonly={!canManageExecutions}
               className={cx('execution-comment-section__comment')}
             />
-            <div className={cx('execution-comment-section__counter')}>
-              {comment.length}/{EXECUTION_COMMENT_MAX_LENGTH}
+            {canManageExecutions && (
+              <div className={cx('execution-comment-section__counter')}>
+                {comment.length}/{EXECUTION_COMMENT_MAX_LENGTH}
+              </div>
+            )}
+          </div>
+          {canManageExecutions && (
+            <div className={cx('execution-comment-section__footer')}>
+              <Button
+                type="button"
+                variant="ghost"
+                className={cx('execution-comment-section__clear')}
+                disabled={isSaving || !hasClearableContent}
+                onClick={handleClearLocal}
+              >
+                {formatMessage(messages.clearExecutionComment)}
+              </Button>
+              <Button
+                type="submit"
+                variant="primary"
+                disabled={isSaving || !isDirty}
+                className={cx('execution-comment-section__save')}
+              >
+                {formatMessage(messages.saveExecutionComment)}
+              </Button>
             </div>
-          </div>
-          <div className={cx('execution-comment-section__footer')}>
-            <Button
-              type="button"
-              variant="ghost"
-              className={cx('execution-comment-section__clear')}
-              disabled={isSaving || !hasClearableContent}
-              onClick={handleClearLocal}
-            >
-              {formatMessage(messages.clearExecutionComment)}
-            </Button>
-            <Button
-              type="submit"
-              variant="primary"
-              disabled={isSaving || !isDirty}
-              className={cx('execution-comment-section__save')}
-            >
-              {formatMessage(messages.saveExecutionComment)}
-            </Button>
-          </div>
+          )}
         </div>
         <div className={cx('execution-comment-section__divider')} />
         <div className={cx('execution-comment-section__attachments')}>
@@ -276,39 +298,47 @@ export const ExecutionCommentSection: FC<ExecutionCommentSectionProps> = ({ exec
               variant="overlay"
               maxFileSize={MAX_FILE_SIZE}
               acceptFileMimeTypes={EXECUTION_COMMENT_ACCEPT_MIME_TYPES}
-              isDisabled={isSaving}
+              isDisabled={isSaving || !canManageExecutions}
               onFilesAdded={handleFilesAdded}
               messages={{
                 incorrectFileSize: formatMessage(statusModalMessages.incorrectFileSize),
                 incorrectFileFormat: formatMessage(statusModalMessages.incorrectFileFormat),
               }}
             >
-              <FileDropArea.DropZone className={cx('attachments-block__dropzone')} icon={<div />} />
+              {canManageExecutions && (
+                <FileDropArea.DropZone className={cx('attachments-block__dropzone')} icon={<div />} />
+              )}
               <div className={cx('attachments-block__header')}>
                 <span className={cx('attachments-block__title')}>
                   {formatMessage(commonMessages.attachments)}
                 </span>
-                <div className={cx('attachments-block__add')}>
-                  <span className={cx('attachments-block__hint')}>
-                    <DragAndDropIcon />
-                    <span className={cx('attachments-block__hint-text')}>
-                      {formatMessage(statusModalMessages.dropFilesHere)}
+                {canManageExecutions && (
+                  <div className={cx('attachments-block__add')}>
+                    <span className={cx('attachments-block__hint')}>
+                      <DragAndDropIcon />
+                      <span className={cx('attachments-block__hint-text')}>
+                        {formatMessage(statusModalMessages.dropFilesHere)}
+                      </span>
                     </span>
-                  </span>
-                  <FileDropArea.BrowseButton icon={<PlusIcon />}>
-                    {formatMessage(statusModalMessages.add)}
-                  </FileDropArea.BrowseButton>
-                </div>
+                    <FileDropArea.BrowseButton icon={<PlusIcon />}>
+                      {formatMessage(statusModalMessages.add)}
+                    </FileDropArea.BrowseButton>
+                  </div>
+                )}
               </div>
               {!isEmpty(existingAttachmentsData) && (
                 <FileDropArea.AttachedFilesList
                   className={cx('attachments-block__list')}
                   files={existingAttachmentsData}
-                  onRemoveFile={(id) => handleExistingRemoveWithSave(id)}
+                  onRemoveFile={
+                    canManageExecutions
+                      ? (id) => handleExistingRemoveWithSave(id)
+                      : undefined
+                  }
                   onDownloadFile={handleDownloadFile}
                 />
               )}
-              {!isEmpty(pendingFilesData) && (
+              {canManageExecutions && !isEmpty(pendingFilesData) && (
                 <FileDropArea.AttachedFilesList
                   className={cx('attachments-block__list')}
                   files={pendingFilesData}
@@ -316,8 +346,8 @@ export const ExecutionCommentSection: FC<ExecutionCommentSectionProps> = ({ exec
                   onDownloadFile={handleDownloadFile}
                 />
               )}
-            </FileDropArea>{' '}
-          </div>{' '}
+            </FileDropArea>
+          </div>
         </div>
       </form>
     </section>
