@@ -76,6 +76,7 @@ export const useDeleteMilestone = () => {
         const offset = Number(queryParams.offset) - Number(queryParams.limit);
         const url = `/organizations/${organizationSlug}/projects/${projectSlug}/milestones?offset=${Math.max(0, offset)}&limit=${queryParams.limit}`;
 
+        dispatch(getTestPlansAction(defaultQueryParams));
         push(url);
       } else {
         dispatch(getMilestonesAction(queryParams));
