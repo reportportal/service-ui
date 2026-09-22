@@ -299,7 +299,9 @@ export const URLS = {
   logItemActivity: (projectKey, itemId) =>
     removeTrailingSlash(`${urlBase}${projectKey}/activity/item/${itemId}`),
   testCaseActivity: (projectKey, testCaseId, query = {}) =>
-    removeTrailingSlash(`${urlBase}${projectKey}/activity/test-case/${testCaseId}${getQueryParams(query)}`),
+    removeTrailingSlash(
+      `${urlBase}${projectKey}/activity/test-case/${testCaseId}${getQueryParams(query)}`,
+    ),
   logItemStackTrace: (projectKey, path, pageSize) =>
     `${urlBase}${projectKey}/log${getQueryParams({
       'filter.under.path': path,
@@ -346,6 +348,14 @@ export const URLS = {
 
   appInfoApi: () => `${urlCommonBase}info`,
   appInfoUi: () => `${uiInfoBase}info`,
+
+  // marketplace catalogue: plural, and deliberately not the singular `plugin` above
+  marketplaceCatalogue: ({ q, category } = {}) =>
+    `${urlBase}plugins${getQueryParams({ q: q || undefined, category: category || undefined })}`,
+  marketplacePluginDetail: (registryId) => `${urlBase}plugins/${registryId}`,
+  marketplacePluginInstall: (registryId) => `${urlBase}plugins/${registryId}/install`,
+  // the key goes in through PUT and is never read back: GET answers {configured, customerId}
+  marketplaceLicence: () => `${urlBase}plugins/licence`,
 
   plugin: () => `${urlBase}plugin`,
   pluginById: (pluginId) => `${urlBase}plugin/${pluginId}`,
@@ -400,11 +410,13 @@ export const URLS = {
     `${urlBase}project/${projectKey}/tms/test-plan/${id}/test-case${getQueryParams(query)}`,
   testPlan: (projectKey, query = {}) =>
     `${urlBase}project/${projectKey}/tms/test-plan${getQueryParams(query)}`,
-  testPlanNameSearch: (projectKey) => (search = '') =>
-    `${urlBase}project/${projectKey}/tms/test-plan/name${getQueryParams({
-      limit: 20,
-      ...(search ? { search } : {}),
-    })}`,
+  testPlanNameSearch:
+    (projectKey) =>
+    (search = '') =>
+      `${urlBase}project/${projectKey}/tms/test-plan/name${getQueryParams({
+        limit: 20,
+        ...(search ? { search } : {}),
+      })}`,
   tmsMilestone: (projectKey, query = {}) =>
     `${urlBase}project/${projectKey}/tms/milestone${getQueryParams(query)}`,
   tmsMilestoneById: (projectKey, milestoneId) =>

@@ -1,0 +1,59 @@
+/*!
+ * Copyright 2026 EPAM Systems
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+.plugins-catalog {
+  width: 100%;
+}
+
+.plugins-catalog-search {
+  margin-bottom: 16px;
+}
+
+.plugins-catalog-loader {
+  display: flex;
+  justify-content: center;
+  padding: 48px 0;
+}
+
+.plugins-catalog-group + .plugins-catalog-group {
+  margin-top: 24px;
+}
+
+.plugins-catalog-empty {
+  padding: 48px 0;
+  text-align: center;
+}
+
+.plugins-catalog-empty-title {
+  margin: 0 0 8px;
+  font-family: var(--rp-ui-base-font-family);
+  font-size: 15px;
+  font-weight: 500;
+  line-height: 24px;
+  color: var(--rp-ui-color-text-3);
+}
+
+.plugins-catalog-empty-description {
+  margin: 0 0 16px;
+  font-family: var(--rp-ui-base-font-family);
+  font-size: 13px;
+  line-height: 20px;
+  // --rp-ui-base-gray-47 never existed — it was the app's $COLOR--gray-47 spliced into kit
+  // syntax, so the declaration was invalid at computed-value time and this line quietly
+  // inherited its parent's colour instead of going grey. The kit's own name for secondary
+  // text resolves to e-400 (#8d95a1), which is what the design calls Text/Secondary.
+  color: var(--rp-ui-color-text-secondary);
+}

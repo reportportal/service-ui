@@ -41,6 +41,25 @@ import {
   FETCH_GLOBAL_INTEGRATIONS_SUCCESS,
   REMOVE_GLOBAL_INTEGRATIONS_BY_TYPE_SUCCESS,
   SET_ORGANIZATION_INTEGRATIONS,
+  FETCH_MARKETPLACE_CATALOGUE,
+  FETCH_MARKETPLACE_CATALOGUE_START,
+  FETCH_MARKETPLACE_CATALOGUE_SUCCESS,
+  FETCH_MARKETPLACE_CATALOGUE_ERROR,
+  INSTALL_MARKETPLACE_PLUGIN,
+  INSTALL_MARKETPLACE_PLUGIN_START,
+  INSTALL_MARKETPLACE_PLUGIN_SUCCESS,
+  INSTALL_MARKETPLACE_PLUGIN_ERROR,
+  CLEAR_JUST_INSTALLED_MARKETPLACE_PLUGIN,
+  FETCH_MARKETPLACE_PLUGIN_DETAIL,
+  FETCH_MARKETPLACE_PLUGIN_DETAIL_START,
+  FETCH_MARKETPLACE_PLUGIN_DETAIL_SUCCESS,
+  FETCH_MARKETPLACE_PLUGIN_DETAIL_ERROR,
+  FETCH_MARKETPLACE_LICENCE,
+  FETCH_MARKETPLACE_LICENCE_SUCCESS,
+  SET_MARKETPLACE_LICENCE,
+  DELETE_MARKETPLACE_LICENCE,
+  MARKETPLACE_LICENCE_START,
+  MARKETPLACE_LICENCE_ERROR,
 } from './constants';
 
 export const fetchPluginsAction = () => ({
@@ -185,4 +204,117 @@ export const removeGlobalIntegrationsByTypeSuccessAction = (instanceType) => ({
 export const setOrganizationIntegrationsAction = (organizationIntegrations) => ({
   type: SET_ORGANIZATION_INTEGRATIONS,
   payload: organizationIntegrations,
+});
+
+// `debounced` marks a request the user is still typing into; every other one leaves at once
+export const fetchMarketplaceCatalogueAction = ({ q, category, debounced } = {}) => ({
+  type: FETCH_MARKETPLACE_CATALOGUE,
+  payload: { q, category, debounced },
+});
+
+// carries the filter so the store can remember what the catalogue is showing
+export const fetchMarketplaceCatalogueStartAction = ({ q, category } = {}) => ({
+  type: FETCH_MARKETPLACE_CATALOGUE_START,
+  payload: { q, category },
+});
+
+export const fetchMarketplaceCatalogueSuccessAction = (catalogue) => ({
+  type: FETCH_MARKETPLACE_CATALOGUE_SUCCESS,
+  payload: catalogue,
+});
+
+export const fetchMarketplaceCatalogueErrorAction = (error) => ({
+  type: FETCH_MARKETPLACE_CATALOGUE_ERROR,
+  payload: error,
+});
+
+// install, update and rollback are the same request: only the version differs, and it is required
+export const installMarketplacePluginAction = (registryId, version) => ({
+  type: INSTALL_MARKETPLACE_PLUGIN,
+  payload: { registryId, version },
+});
+
+export const installMarketplacePluginStartAction = (registryId) => ({
+  type: INSTALL_MARKETPLACE_PLUGIN_START,
+  payload: registryId,
+});
+
+export const installMarketplacePluginSuccessAction = (registryId) => ({
+  type: INSTALL_MARKETPLACE_PLUGIN_SUCCESS,
+  payload: registryId,
+});
+
+export const clearJustInstalledMarketplacePluginAction = () => ({
+  type: CLEAR_JUST_INSTALLED_MARKETPLACE_PLUGIN,
+});
+
+/**
+ * @param registryId the plugin the install was for
+ * @param error      what the server said, kept verbatim for the full message
+ * @param errorCode  service-api's `errorCode`, which is what tells the failures apart. Without it
+ *     the store has only prose, and the page could say that something went wrong but not what.
+ * @param version    the version that was refused. Not the plugin's latest: an admin who picked an
+ *     older build from the table must be told which one the marketplace would not serve, and the
+ *     page has no other way to know which one was asked for.
+ */
+export const installMarketplacePluginErrorAction = (
+  registryId,
+  error,
+  errorCode = null,
+  version = null,
+) => ({
+  type: INSTALL_MARKETPLACE_PLUGIN_ERROR,
+  payload: { registryId, error, errorCode, version },
+});
+
+export const fetchMarketplacePluginDetailAction = (registryId) => ({
+  type: FETCH_MARKETPLACE_PLUGIN_DETAIL,
+  payload: registryId,
+});
+
+export const fetchMarketplacePluginDetailStartAction = (registryId) => ({
+  type: FETCH_MARKETPLACE_PLUGIN_DETAIL_START,
+  payload: registryId,
+});
+
+export const fetchMarketplacePluginDetailSuccessAction = (detail) => ({
+  type: FETCH_MARKETPLACE_PLUGIN_DETAIL_SUCCESS,
+  payload: detail,
+});
+
+export const fetchMarketplacePluginDetailErrorAction = (error) => ({
+  type: FETCH_MARKETPLACE_PLUGIN_DETAIL_ERROR,
+  payload: error,
+});
+
+export const fetchMarketplaceLicenceAction = () => ({
+  type: FETCH_MARKETPLACE_LICENCE,
+});
+
+// GET answers {configured, customerId} and nothing else, so nothing else is stored
+export const fetchMarketplaceLicenceSuccessAction = ({ configured, customerId } = {}) => ({
+  type: FETCH_MARKETPLACE_LICENCE_SUCCESS,
+  payload: { configured: Boolean(configured), customerId: customerId || null },
+});
+
+/**
+ * The key travels in the action and no further: the saga hands it to the request and the
+ * reducer never sees this action type, so it cannot end up in a state that outlives the call.
+ */
+export const setMarketplaceLicenceAction = ({ customerId, privateKey }) => ({
+  type: SET_MARKETPLACE_LICENCE,
+  payload: { customerId, privateKey },
+});
+
+export const deleteMarketplaceLicenceAction = () => ({
+  type: DELETE_MARKETPLACE_LICENCE,
+});
+
+export const marketplaceLicenceStartAction = () => ({
+  type: MARKETPLACE_LICENCE_START,
+});
+
+export const marketplaceLicenceErrorAction = (error) => ({
+  type: MARKETPLACE_LICENCE_ERROR,
+  payload: error,
 });
