@@ -20,6 +20,7 @@ import { createClassnames } from 'common/utils';
 import { Legend } from 'components/widgets/common/legend';
 import { echarts } from './echartsSetup';
 import { ECHARTS_THEME } from './configHelpers';
+import { crispSvgSplitLines } from './crispSvgSplitLines';
 import type { EChartCustomData, EChartOptionResult, EChartProps, EChartsOption } from './types';
 import styles from './EChart.scss';
 
@@ -144,7 +145,7 @@ export const EChart = ({
         : undefined;
       chart = echarts.init(node, undefined, {
         height,
-        renderer: 'canvas',
+        renderer: 'svg',
       });
       chartRef.current = chart;
       chartCreatedCallbackRef.current(node, chart, customDataRef.current);
@@ -158,6 +159,10 @@ export const EChart = ({
         chart.dispatchAction({ type: 'legendUnSelect', name });
       });
     }
+
+    requestAnimationFrame(() => {
+      crispSvgSplitLines(chart);
+    });
 
     return undefined;
   }, [
@@ -178,14 +183,24 @@ export const EChart = ({
 
     const resizeObserver = new ResizeObserver(() => {
       const chart = chartRef.current;
-      if (!chart) {
+      if (!chart || typeof chart.resize !== 'function') {
         return;
       }
-      const height = container
-        ? Math.max(container.clientHeight - heightOffset, 0)
-        : undefined;
-      chart.resize(height !== undefined ? { height } : undefined);
-      resizedCallbackRef.current?.();
+
+      try {
+        const height = container
+          ? Math.max(container.clientHeight - heightOffset, 0)
+          : undefined;
+        chart.resize(height !== undefined ? { height } : undefined);
+        requestAnimationFrame(() => {
+          if (chartRef.current === chart) {
+            crispSvgSplitLines(chart);
+          }
+        });
+        resizedCallbackRef.current?.();
+      } catch {
+        // Chart may already be disposed while ResizeObserver is flushing
+      }
     });
 
     resizeObserver.observe(resizeTarget);
@@ -194,6 +209,38 @@ export const EChart = ({
       resizeObserver.disconnect();
     };
   }, [container, heightOffset]);
+
+  useEffect(() => {
+    const chart = chartRef.current;
+    const onChartClick = configData?.onChartClick as
+      | ((params: Record<string, unknown>) => void)
+      | undefined;
+
+    if (!chart || !onChartClick || isPreview) {
+      return undefined;
+    }
+
+    const handleClick = (params: {
+      dataIndex?: number;
+      seriesId?: string;
+      seriesName?: string;
+      name?: string;
+      value?: unknown;
+    }) => {
+      onChartClick({
+        index: params.dataIndex ?? 0,
+        id: params.seriesId || params.seriesName || params.name,
+        value: params.value,
+        name: params.name,
+      });
+    };
+
+    chart.on('click', handleClick);
+
+    return () => {
+      chart.off('click', handleClick);
+    };
+  }, [built, configData?.onChartClick, isPreview]);
 
   useEffect(
     () => () => {

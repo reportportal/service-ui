@@ -14,21 +14,32 @@
  * limitations under the License.
  */
 
-export { EChart } from './EChart';
-export { echarts } from './echartsSetup';
-export { crispSvgSplitLines } from './crispSvgSplitLines';
-export {
-  buildAxisTicks,
-  buildColorMap,
-  buildLegendItems,
-  buildTooltipFormatter,
-  ECHARTS_THEME,
-} from './configHelpers';
-export type {
-  EChartConfigData,
-  EChartCustomData,
-  EChartOptionResult,
-  EChartProps,
-  GetOptionParams,
-  LegendConfig,
-} from './types';
+export const sampleContent = [
+  {
+    id: 'launch-1',
+    name: 'Demo Tests',
+    number: '1',
+    startTime: '1609459200000',
+    values: {
+      '% (Failed+Skipped)/Total': '33.33',
+    },
+  },
+  {
+    id: 'launch-2',
+    name: 'Demo Tests',
+    number: '2',
+    startTime: '1609545600000',
+    values: {
+      '% (Failed+Skipped)/Total': '50',
+    },
+  },
+  {
+    id: 'launch-3',
+    name: 'Demo Tests',
+    number: '3',
+    startTime: '1609632000000',
+    values: {
+      '% (Failed+Skipped)/Total': '25',
+    },
+  },
+];

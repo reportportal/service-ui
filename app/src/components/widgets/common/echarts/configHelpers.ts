@@ -20,7 +20,7 @@ import {
   getLaunchAxisTicks,
   getTimelineAxisTicks,
 } from 'components/widgets/common/utils';
-import { COLOR_BLACK_2, COLOR_WHITE_TWO } from 'common/constants/colors';
+import { COLOR_CHARCOAL_GREY, COLOR_WHITE_TWO } from 'common/constants/colors';
 import type {
   C3ColorFn,
   C3TooltipDataItem,
@@ -122,8 +122,10 @@ export const buildLegendItems = (keys: string[]): string[] => [...keys];
 export const ECHARTS_THEME: EChartsOption = {
   color: [],
   textStyle: {
-    fontFamily: 'OpenSans, sans-serif',
-    color: COLOR_BLACK_2,
+    fontFamily: 'OpenSans',
+    fontSize: 10,
+    fontWeight: 400,
+    color: COLOR_CHARCOAL_GREY,
   },
   grid: {
     containLabel: true,
@@ -138,8 +140,10 @@ export const ECHARTS_THEME: EChartsOption = {
     borderWidth: 0,
     extraCssText: 'box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15); padding: 0;',
     textStyle: {
-      fontFamily: 'OpenSans, sans-serif',
-      color: COLOR_BLACK_2,
+      fontFamily: 'OpenSans',
+      fontSize: 12,
+      fontWeight: 400,
+      color: COLOR_CHARCOAL_GREY,
     },
   },
   legend: {
