@@ -32,27 +32,37 @@ const DEFAULT_LEGEND_CONFIG = {
   legendProps: {} as Record<string, unknown>,
 };
 
-const mergeOption = (option: EChartsOption): EChartsOption => ({
-  ...ECHARTS_THEME,
-  ...option,
-  textStyle: {
-    ...ECHARTS_THEME.textStyle,
-    ...(option.textStyle || {}),
-  },
-  grid: {
-    ...(ECHARTS_THEME.grid as object),
-    ...(option.grid as object),
-  },
-  tooltip: {
-    ...(ECHARTS_THEME.tooltip as object),
-    ...(option.tooltip as object),
-  },
-  legend: {
-    ...(ECHARTS_THEME.legend as object),
-    ...(option.legend as object),
-    show: false,
-  },
-});
+const mergeOption = (option: EChartsOption): EChartsOption => {
+  const themeGrid = ECHARTS_THEME.grid as object;
+  const themeLegend = ECHARTS_THEME.legend as object;
+
+  const grid = Array.isArray(option.grid)
+    ? option.grid.map((item): object => ({ ...themeGrid, ...(item as object) }))
+    : { ...themeGrid, ...(option.grid as object) };
+
+  const legend = Array.isArray(option.legend)
+    ? option.legend.map((item): object => ({
+        ...themeLegend,
+        ...(item as object),
+        show: false,
+      }))
+    : { ...themeLegend, ...(option.legend as object), show: false };
+
+  return {
+    ...ECHARTS_THEME,
+    ...option,
+    textStyle: {
+      ...ECHARTS_THEME.textStyle,
+      ...option.textStyle,
+    },
+    grid,
+    tooltip: {
+      ...(ECHARTS_THEME.tooltip as object),
+      ...(option.tooltip as object),
+    },
+    legend,
+  };
+};
 
 export const EChart = ({
   widget = {},
@@ -139,15 +149,15 @@ export const EChart = ({
       chartRef.current = chart;
       chartCreatedCallbackRef.current(node, chart, customDataRef.current);
       onChartReadyRef.current(chart);
-
-      if (!isPreview && showLegend && !(legendProps as { disabled?: boolean }).disabled) {
-        uncheckedLegendItems.forEach((name) => {
-          chart?.dispatchAction({ type: 'legendUnSelect', name });
-        });
-      }
     }
 
     chart.setOption(built.option, { notMerge: true });
+
+    if (!isPreview && showLegend && !(legendProps as { disabled?: boolean }).disabled) {
+      uncheckedLegendItems.forEach((name) => {
+        chart.dispatchAction({ type: 'legendUnSelect', name });
+      });
+    }
 
     return undefined;
   }, [
@@ -220,6 +230,7 @@ export const EChart = ({
           items={built.legendItems}
           colors={built.colors}
           {...legendProps}
+          uncheckedLegendItems={uncheckedLegendItems}
           onClick={onClickLegendItem}
           onMouseOver={onLegendMouseOver}
           onMouseOut={onLegendMouseOut}

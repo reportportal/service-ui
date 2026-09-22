@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-import type { EChartsOption } from './types';
 import { createTooltipRenderer } from 'components/widgets/common/tooltip';
 import {
   getItemColor,
@@ -26,6 +25,7 @@ import type {
   C3ColorFn,
   C3TooltipDataItem,
   ColorPalette,
+  EChartsOption,
   TooltipComponentType,
   TooltipParamsCalculator,
 } from './types';
@@ -79,7 +79,10 @@ export const buildColorMap = (
 ): Record<string, string> =>
   keys.reduce<Record<string, string>>((acc, key) => {
     if (typeof palette === 'function') {
-      acc[key] = palette(key);
+      const color = palette(key);
+      if (color) {
+        acc[key] = color;
+      }
       return acc;
     }
 
@@ -90,10 +93,8 @@ export const buildColorMap = (
 
     if (defectTypes) {
       acc[key] = getItemColor(key, defectTypes);
-      return acc;
     }
 
-    acc[key] = palette[key];
     return acc;
   }, {});
 

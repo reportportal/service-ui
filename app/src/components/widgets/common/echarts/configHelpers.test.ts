@@ -68,6 +68,12 @@ describe('echarts configHelpers', () => {
         'statistics$defects$pb$total': 'defect-statistics$defects$pb$total',
       });
     });
+
+    test('omits keys without a resolved color', () => {
+      expect(buildColorMap(['known', 'unknown'], { known: '#111' })).toEqual({
+        known: '#111',
+      });
+    });
   });
 
   describe('buildAxisTicks', () => {
