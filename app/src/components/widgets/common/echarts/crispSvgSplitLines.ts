@@ -20,17 +20,7 @@ const HORIZONTAL_PATH_RE =
   /^M\s*([-\d.]+)\s+([-\d.]+)\s*L\s*([-\d.]+)\s+([-\d.]+)\s*$/i;
 
 const COORD_EPS = 0.5;
-/** Allows rematching after a previous device-pixel snap shifted path `d`. */
-const Y_MATCH_EPS = 1;
 const MIN_HORIZONTAL_SPAN = 50;
-
-type AxisLineSegment = {
-  x1: number;
-  y1: number;
-  x2: number;
-  y2: number;
-  stroke: string;
-};
 
 type LineShape = {
   x1?: number;
@@ -39,82 +29,75 @@ type LineShape = {
   y2?: number;
 };
 
-const nearlyEqual = (a: number, b: number, eps: number): boolean => Math.abs(a - b) <= eps;
-
 /**
- * ECharts axis split/axis lines are silent `line` elements. Series use `polyline`
- * (or non-silent paths). Ownership comes from the zrender display list, not stroke.
+ * ZRender SVG painter keeps a VNode tree keyed by Displayable.id.
+ * `elm` is the real SVG node for that displayable — the only ownership link
+ * between an axis/split Line and its path (no public DOM attribute exists).
  */
-const collectAxisOwnedHorizontalLines = (chart: EChartsType): AxisLineSegment[] => {
-  const lines: AxisLineSegment[] = [];
-  const displayList = chart.getZr().storage.getDisplayList(true);
-
-  displayList.forEach((el) => {
-    if (el.type !== 'line' || !el.silent) {
-      return;
-    }
-
-    const shape = (el as { shape?: LineShape }).shape;
-    if (!shape) {
-      return;
-    }
-
-    const { x1, y1, x2, y2 } = shape;
-    if (
-      typeof x1 !== 'number' ||
-      typeof y1 !== 'number' ||
-      typeof x2 !== 'number' ||
-      typeof y2 !== 'number'
-    ) {
-      return;
-    }
-
-    if (Math.abs(y1 - y2) > COORD_EPS) {
-      return;
-    }
-
-    if (Math.abs(x2 - x1) < MIN_HORIZONTAL_SPAN) {
-      return;
-    }
-
-    const stroke = el.style?.stroke;
-    if (typeof stroke !== 'string' || !stroke) {
-      return;
-    }
-
-    lines.push({ x1, y1, x2, y2, stroke });
-  });
-
-  return lines;
+type ZrSvgVNode = {
+  key?: string | number;
+  elm?: Element | null;
+  children?: ZrSvgVNode[] | null;
 };
 
-const pathMatchesAxisLine = (
-  x1: number,
-  y1: number,
-  x2: number,
-  y2: number,
-  line: AxisLineSegment,
-): boolean => {
+type SvgPainter = {
+  _mainVNode?: ZrSvgVNode;
+  _oldVNode?: ZrSvgVNode;
+};
+
+const findSvgElmByZrId = (vnode: ZrSvgVNode | undefined, zrId: number): Element | null => {
+  if (!vnode) {
+    return null;
+  }
+
+  if (vnode.key === zrId || vnode.key === String(zrId)) {
+    return vnode.elm ?? null;
+  }
+
+  const { children } = vnode;
+  if (!children) {
+    return null;
+  }
+
+  for (let i = 0; i < children.length; i += 1) {
+    const found = findSvgElmByZrId(children[i], zrId);
+    if (found) {
+      return found;
+    }
+  }
+
+  return null;
+};
+
+const findOwnedSvgElm = (painter: SvgPainter, zrId: number): Element | null =>
+  findSvgElmByZrId(painter._mainVNode, zrId) ?? findSvgElmByZrId(painter._oldVNode, zrId);
+
+const isHorizontalAxisLine = (shape: LineShape): boolean => {
+  const { x1, y1, x2, y2 } = shape;
+  if (
+    typeof x1 !== 'number' ||
+    typeof y1 !== 'number' ||
+    typeof x2 !== 'number' ||
+    typeof y2 !== 'number'
+  ) {
+    return false;
+  }
+
   if (Math.abs(y1 - y2) > COORD_EPS) {
     return false;
   }
 
-  const yClose =
-    nearlyEqual(y1, line.y1, Y_MATCH_EPS) && nearlyEqual(y2, line.y2, Y_MATCH_EPS);
-  if (!yClose) {
-    return false;
-  }
-
-  return (
-    (nearlyEqual(x1, line.x1, COORD_EPS) && nearlyEqual(x2, line.x2, COORD_EPS)) ||
-    (nearlyEqual(x1, line.x2, COORD_EPS) && nearlyEqual(x2, line.x1, COORD_EPS))
-  );
+  return Math.abs(x2 - x1) >= MIN_HORIZONTAL_SPAN;
 };
 
 /**
  * ECharts SVG split lines sit on fractional coords and look soft with antialiasing.
  * crispEdges alone is uneven on non-1x DPR (e.g. Windows 125%). Snap each
  * horizontal grid stroke to the device pixel grid, then enable crispEdges.
+ *
+ * Only silent zrender `line` displayables (axis / splitLine) are touched; their
+ * SVG nodes are resolved by Displayable.id → painter VNode.key, never by
+ * guessing among path geometry or stroke color.
  */
 export const crispSvgSplitLines = (chart: EChartsType): void => {
   const root = chart.getDom();
@@ -128,20 +111,31 @@ export const crispSvgSplitLines = (chart: EChartsType): void => {
     return;
   }
 
-  const axisLines = collectAxisOwnedHorizontalLines(chart);
-  if (axisLines.length === 0) {
+  const painter = chart.getZr().painter as SvgPainter;
+  if (!painter._mainVNode && !painter._oldVNode) {
     return;
   }
 
   const dpr = window.devicePixelRatio || 1;
-  const matchedPaths = new Set<SVGPathElement>();
+  const displayList = chart.getZr().storage.getDisplayList(true);
 
-  root.querySelectorAll('path').forEach((path) => {
-    if (matchedPaths.has(path)) {
+  displayList.forEach((el) => {
+    if (el.type !== 'line' || !el.silent) {
       return;
     }
 
-    const d = path.getAttribute('d');
+    const shape = (el as { shape?: LineShape }).shape;
+    if (!shape || !isHorizontalAxisLine(shape)) {
+      return;
+    }
+
+    // Ownership: Displayable.id === SVG VNode.key → VNode.elm (not geometry/stroke).
+    const elm = findOwnedSvgElm(painter, el.id);
+    if (!elm || elm.tagName.toLowerCase() !== 'path') {
+      return;
+    }
+
+    const d = elm.getAttribute('d');
     if (!d) {
       return;
     }
@@ -156,25 +150,23 @@ export const crispSvgSplitLines = (chart: EChartsType): void => {
     const x2 = Number(match[3]);
     const y2 = Number(match[4]);
 
-    const axisLine = axisLines.find((line) => pathMatchesAxisLine(x1, y1, x2, y2, line));
-    if (!axisLine) {
+    if (Math.abs(y1 - y2) > COORD_EPS) {
       return;
     }
-
-    matchedPaths.add(path);
 
     const screenY = ctm.d * y1 + ctm.f;
     const snappedScreenY = Math.round(screenY * dpr) / dpr;
     const snappedSvgY = (snappedScreenY - ctm.f) / ctm.d;
+    const stroke = typeof el.style?.stroke === 'string' ? el.style.stroke : '';
 
-    path.setAttribute('d', `M${x1} ${snappedSvgY}L${x2} ${snappedSvgY}`);
+    elm.setAttribute('d', `M${x1} ${snappedSvgY}L${x2} ${snappedSvgY}`);
 
     // Match C3 x-axis domain (shape-rendering: auto) — crispEdges looks ~1 device
     // pixel thin on non-1x DPR, while C3's antialiased stroke reads closer to 2px.
-    if (axisLine.stroke === '#000000') {
-      path.removeAttribute('shape-rendering');
+    if (stroke === '#000000') {
+      elm.removeAttribute('shape-rendering');
     } else {
-      path.setAttribute('shape-rendering', 'crispEdges');
+      elm.setAttribute('shape-rendering', 'crispEdges');
     }
   });
 };
