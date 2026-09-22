@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 EPAM Systems
+ * Copyright 2026 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -52,7 +52,7 @@ export const getOption = ({ content, isPreview, formatMessage }) => {
   content.forEach((item) => {
     const { id, name, number, startTime } = item;
     itemsData.push({ id, name, number, startTime });
-    values.push(parseFloat(item.values[FAILED_SKIPPED_TOTAL]));
+    values.push(Number.parseFloat(item.values[FAILED_SKIPPED_TOTAL]));
   });
 
   const categories = itemsData.map((item) => `# ${item.number}`);

@@ -20,6 +20,28 @@ const HORIZONTAL_PATH_RE =
   /^M\s*([-\d.]+)\s+([-\d.]+)\s*L\s*([-\d.]+)\s+([-\d.]+)\s*$/i;
 
 /**
+ * ECharts axis split/axis lines are silent `line` elements. Series polylines are
+ * not. Collect their stroke colors so we never rewrite plotted series paths.
+ */
+const collectAxisOwnedStrokes = (chart: EChartsType): Set<string> => {
+  const strokes = new Set<string>();
+  const displayList = chart.getZr().storage.getDisplayList(true);
+
+  displayList.forEach((el) => {
+    if (el.type !== 'line' || !el.silent) {
+      return;
+    }
+
+    const stroke = el.style?.stroke;
+    if (typeof stroke === 'string' && stroke) {
+      strokes.add(stroke.toLowerCase());
+    }
+  });
+
+  return strokes;
+};
+
+/**
  * ECharts SVG split lines sit on fractional coords and look soft with antialiasing.
  * crispEdges alone is uneven on non-1x DPR (e.g. Windows 125%). Snap each
  * horizontal grid stroke to the device pixel grid, then enable crispEdges.
@@ -36,9 +58,19 @@ export const crispSvgSplitLines = (chart: EChartsType): void => {
     return;
   }
 
+  const axisOwnedStrokes = collectAxisOwnedStrokes(chart);
+  if (axisOwnedStrokes.size === 0) {
+    return;
+  }
+
   const dpr = window.devicePixelRatio || 1;
 
   root.querySelectorAll('path').forEach((path) => {
+    const stroke = path.getAttribute('stroke');
+    if (!stroke || !axisOwnedStrokes.has(stroke.toLowerCase())) {
+      return;
+    }
+
     const bounds = path.getBoundingClientRect();
     if (bounds.width < 50 || bounds.height >= 2) {
       return;
@@ -66,7 +98,6 @@ export const crispSvgSplitLines = (chart: EChartsType): void => {
     const screenY = ctm.d * y1 + ctm.f;
     const snappedScreenY = Math.round(screenY * dpr) / dpr;
     const snappedSvgY = (snappedScreenY - ctm.f) / ctm.d;
-    const stroke = path.getAttribute('stroke');
 
     path.setAttribute('d', `M${x1} ${snappedSvgY}L${x2} ${snappedSvgY}`);
 
