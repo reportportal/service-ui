@@ -59,8 +59,8 @@ const findSvgElmByZrId = (vnode: ZrSvgVNode | undefined, zrId: number): Element 
     return null;
   }
 
-  for (let i = 0; i < children.length; i += 1) {
-    const found = findSvgElmByZrId(children[i], zrId);
+  for (const child of children) {
+    const found = findSvgElmByZrId(child, zrId);
     if (found) {
       return found;
     }
@@ -131,7 +131,7 @@ export const crispSvgSplitLines = (chart: EChartsType): void => {
 
     // Ownership: Displayable.id === SVG VNode.key → VNode.elm (not geometry/stroke).
     const elm = findOwnedSvgElm(painter, el.id);
-    if (!elm || elm.tagName.toLowerCase() !== 'path') {
+    if (elm?.tagName.toLowerCase() !== 'path') {
       return;
     }
 
