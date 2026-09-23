@@ -15,6 +15,10 @@
  */
 
 import { COLOR_FAILED } from 'common/constants/colors';
+import {
+  expectPreviewModeHidesChart,
+  expectSingleSeriesCustomData,
+} from 'components/widgets/common/echarts/trendChartOptionAssertions';
 import { getOption } from './getOption';
 import { sampleContent } from './fixtures/sampleContent';
 
@@ -70,11 +74,11 @@ describe('failedCasesTrendChart getOption', () => {
         show: true,
       }),
     );
-    expect(option.customData).toMatchObject({
-      colors: { failed: COLOR_FAILED },
-      legendItems: ['failed'],
+    expectSingleSeriesCustomData(option, {
+      seriesId: 'failed',
+      color: COLOR_FAILED,
+      itemsDataLength: 3,
     });
-    expect(option.customData.itemsData).toHaveLength(3);
   });
 
   test('hides axes, tooltip label and reserves no legend space in preview mode', () => {
@@ -84,12 +88,7 @@ describe('failedCasesTrendChart getOption', () => {
       formatMessage,
     });
 
-    expect(option.xAxis.show).toBe(false);
-    expect(option.yAxis.show).toBe(false);
-    expect(option.yAxis.name).toBeUndefined();
-    expect(option.tooltip.show).toBe(false);
-    expect(option.grid.top).toBe(0);
-    expect(option.grid.left).toBe(0);
+    expectPreviewModeHidesChart(option);
   });
 
   test('ends the y-axis exactly at the max value instead of rounding up', () => {
