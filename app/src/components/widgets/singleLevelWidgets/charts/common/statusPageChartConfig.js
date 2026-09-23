@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 EPAM Systems
+ * Copyright 2026 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,11 +15,20 @@
  */
 
 import * as COLORS from 'common/constants/colors';
+import { COLOR_CHARCOAL_GREY, COLOR_GRAY_80 } from 'common/constants/colors';
 import { defineMessages } from 'react-intl';
 import { PERIOD_VALUES_LENGTH, PERIOD_VALUES } from 'common/constants/statusPeriodValues';
 import { createTooltipRenderer } from 'components/widgets/common/tooltip';
+import { buildTooltipFormatter } from 'components/widgets/common/echarts/configHelpers';
 import { messages } from 'components/widgets/common/messages';
 import { IssueTypeStatTooltip } from './issueTypeStatTooltip';
+
+const AXIS_LABEL_STYLE = {
+  fontFamily: 'OpenSans',
+  fontSize: 10,
+  fontWeight: 400,
+  color: COLOR_CHARCOAL_GREY,
+};
 
 const localMessages = defineMessages({
   xAxisWeeksTitle: {
@@ -206,6 +215,195 @@ export const getConfig = ({
     size,
     point: {
       show: isPointsShow,
+    },
+  };
+};
+
+/**
+ * ECharts option builder for status-page usages of investigatedTrendChart.
+ * C3 `getConfig` remains for issuesStatusPageChart until EPMRPP-121492.
+ */
+export const getOption = ({
+  content,
+  formatMessage,
+  interval,
+  chartType = 'bar',
+  isPointsShow = true,
+  isCustomTooltip = false,
+  integerValueType = false,
+  wrapperClassName,
+  isPreview = false,
+}) => {
+  const chartData = {};
+  const colors = {};
+  const itemsData = [];
+
+  const data = content.map((value) => ({
+    date: value.name,
+    values: value.values,
+  }));
+
+  Object.keys(data[0].values).forEach((key) => {
+    const shortKey = key.split('$').pop();
+
+    colors[shortKey] = COLORS[`COLOR_${shortKey.toUpperCase()}`];
+    chartData[shortKey] = [shortKey];
+  });
+
+  data.forEach((item) => {
+    itemsData.push(item.date);
+
+    Object.keys(item.values).forEach((key) => {
+      const shortKey = key.split('$').pop();
+
+      chartData[shortKey].push(Number.parseFloat(item.values[key]));
+    });
+  });
+
+  const itemNames = Object.keys(chartData);
+  const columns = Object.values(chartData);
+  const yTicksValues = integerValueType ? getYTicksValues(columns) : null;
+  const isBar = chartType === 'bar';
+  const series = itemNames.map((name) => {
+    const values = chartData[name].slice(1);
+
+    if (isBar) {
+      return {
+        id: name,
+        name,
+        type: 'bar',
+        stack: 'total',
+        data: values,
+        barWidth: '60%',
+        barCategoryGap: '40%',
+        itemStyle: {
+          color: colors[name],
+        },
+        emphasis: {
+          focus: 'none',
+          itemStyle: {
+            opacity: 0.75,
+          },
+        },
+      };
+    }
+
+    return {
+      id: name,
+      name,
+      type: 'line',
+      stack: 'total',
+      data: values,
+      showSymbol: isPointsShow,
+      symbolSize: 6,
+      areaStyle: {
+        opacity: 0.7,
+      },
+      lineStyle: {
+        width: 1,
+      },
+      itemStyle: {
+        color: colors[name],
+      },
+      emphasis: {
+        focus: 'none',
+        itemStyle: {
+          opacity: 0.75,
+        },
+      },
+    };
+  });
+
+  const yInterval =
+    integerValueType && yTicksValues?.length > 1 ? yTicksValues[1] - yTicksValues[0] : 10;
+
+  let xAxisName;
+  if (!isPreview) {
+    xAxisName =
+      interval === PERIOD_VALUES.ONE_MONTH
+        ? formatMessage(localMessages.xAxisDaysTitle)
+        : formatMessage(localMessages.xAxisWeeksTitle);
+  }
+
+  return {
+    color: itemNames.map((name) => colors[name]),
+    textStyle: AXIS_LABEL_STYLE,
+    grid: {
+      top: 0,
+      left: 35,
+      right: 10,
+      bottom: 0,
+      containLabel: true,
+    },
+    xAxis: {
+      type: 'category',
+      show: !isPreview,
+      data: getCategories(itemsData, interval),
+      boundaryGap: isBar,
+      axisLine: {
+        show: true,
+        lineStyle: {
+          color: COLOR_GRAY_80,
+          width: 1,
+        },
+      },
+      axisTick: {
+        show: false,
+      },
+      axisLabel: {
+        ...AXIS_LABEL_STYLE,
+        margin: 8,
+        interval: 0,
+        hideOverlap: true,
+      },
+      name: xAxisName,
+      nameLocation: 'middle',
+      nameGap: 22,
+      nameTextStyle: AXIS_LABEL_STYLE,
+    },
+    yAxis: {
+      type: 'value',
+      show: !isPreview,
+      min: 0,
+      max: integerValueType ? yTicksValues?.[yTicksValues.length - 1] : 100,
+      interval: integerValueType ? yInterval : 10,
+      axisLabel: {
+        ...AXIS_LABEL_STYLE,
+        margin: 8,
+        formatter: (value) => (integerValueType ? value : `${value}%`),
+      },
+      axisLine: {
+        show: false,
+      },
+      axisTick: {
+        show: false,
+      },
+      splitLine: {
+        show: !isPreview,
+        lineStyle: {
+          color: COLOR_GRAY_80,
+          width: 1,
+        },
+      },
+    },
+    tooltip: {
+      trigger: 'item',
+      show: !isPreview && !isCustomTooltip,
+      formatter: buildTooltipFormatter(IssueTypeStatTooltip, calculateTooltipParams, {
+        itemsData,
+        formatMessage,
+        integerValueType,
+        wrapperClassName,
+      }),
+    },
+    legend: {
+      show: false,
+    },
+    series,
+    customData: {
+      itemsData,
+      colors,
+      legendItems: itemNames,
     },
   };
 };
