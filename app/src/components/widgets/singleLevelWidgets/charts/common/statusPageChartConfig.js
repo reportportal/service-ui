@@ -15,20 +15,18 @@
  */
 
 import * as COLORS from 'common/constants/colors';
-import { COLOR_CHARCOAL_GREY, COLOR_GRAY_80 } from 'common/constants/colors';
+import { COLOR_GRAY_80 } from 'common/constants/colors';
 import { defineMessages } from 'react-intl';
 import { PERIOD_VALUES_LENGTH, PERIOD_VALUES } from 'common/constants/statusPeriodValues';
 import { createTooltipRenderer } from 'components/widgets/common/tooltip';
 import { buildTooltipFormatter } from 'components/widgets/common/echarts/configHelpers';
 import { messages } from 'components/widgets/common/messages';
 import { IssueTypeStatTooltip } from './issueTypeStatTooltip';
-
-const AXIS_LABEL_STYLE = {
-  fontFamily: 'OpenSans',
-  fontSize: 10,
-  fontWeight: 400,
-  color: COLOR_CHARCOAL_GREY,
-};
+import {
+  AXIS_LABEL_STYLE,
+  STACKED_BAR_EMPHASIS,
+  createStackedBarSeries,
+} from './stackedBarSeries';
 
 const localMessages = defineMessages({
   xAxisWeeksTitle: {
@@ -66,6 +64,11 @@ const getYTicksValues = (columns) => {
 
   for (let i = 0; i <= max; i += lineStep) {
     tickValues.push(i);
+  }
+
+  const lastTick = tickValues[tickValues.length - 1];
+  if (lastTick < max) {
+    tickValues.push(lastTick + lineStep);
   }
 
   return tickValues;
@@ -264,55 +267,31 @@ export const getOption = ({
   const columns = Object.values(chartData);
   const yTicksValues = integerValueType ? getYTicksValues(columns) : null;
   const isBar = chartType === 'bar';
-  const series = itemNames.map((name) => {
-    const values = chartData[name].slice(1);
-
-    if (isBar) {
-      return {
+  const dataByName = itemNames.reduce((acc, name) => {
+    acc[name] = chartData[name].slice(1);
+    return acc;
+  }, {});
+  const series = isBar
+    ? createStackedBarSeries(itemNames, dataByName, colors)
+    : itemNames.map((name) => ({
         id: name,
         name,
-        type: 'bar',
+        type: 'line',
         stack: 'total',
-        data: values,
-        barWidth: '60%',
-        barCategoryGap: '40%',
+        data: dataByName[name],
+        showSymbol: isPointsShow,
+        symbolSize: 6,
+        areaStyle: {
+          opacity: 0.7,
+        },
+        lineStyle: {
+          width: 1,
+        },
         itemStyle: {
           color: colors[name],
         },
-        emphasis: {
-          focus: 'none',
-          itemStyle: {
-            opacity: 0.75,
-          },
-        },
-      };
-    }
-
-    return {
-      id: name,
-      name,
-      type: 'line',
-      stack: 'total',
-      data: values,
-      showSymbol: isPointsShow,
-      symbolSize: 6,
-      areaStyle: {
-        opacity: 0.7,
-      },
-      lineStyle: {
-        width: 1,
-      },
-      itemStyle: {
-        color: colors[name],
-      },
-      emphasis: {
-        focus: 'none',
-        itemStyle: {
-          opacity: 0.75,
-        },
-      },
-    };
-  });
+        emphasis: STACKED_BAR_EMPHASIS,
+      }));
 
   const yInterval =
     integerValueType && yTicksValues?.length > 1 ? yTicksValues[1] - yTicksValues[0] : 10;
