@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 EPAM Systems
+ * Copyright 2026 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,12 +14,11 @@
  * limitations under the License.
  */
 
-import React, { Component } from 'react';
+import { useCallback, useMemo } from 'react';
 import PropTypes from 'prop-types';
+import { useIntl } from 'react-intl';
+import { useDispatch, useSelector } from 'react-redux';
 import classNames from 'classnames/bind';
-import { injectIntl } from 'react-intl';
-import { connect } from 'react-redux';
-import * as d3 from 'd3-selection';
 import { ALL } from 'common/constants/reservedFilterIds';
 import { defectLinkSelector, statisticsLinkSelector } from 'controllers/testItem';
 import { defectTypesSelector } from 'controllers/project';
@@ -30,119 +29,87 @@ import {
   getItemNameConfig,
   getChartDefaultProps,
 } from 'components/widgets/common/utils';
-import { ChartContainer } from 'components/widgets/common/c3chart';
-import { getConfig } from './config/getConfig';
+import { EChart } from 'components/widgets/common/echarts';
+import { getOption } from './config/getOption';
 import styles from './launchesComparisonChart.scss';
 
 const cx = classNames.bind(styles);
 
-@injectIntl
-@connect(
-  (state) => ({
-    slugs: urlOrganizationAndProjectSelector(state),
-    defectTypes: defectTypesSelector(state),
-    getDefectLink: defectLinkSelector(state),
-    getStatisticsLink: statisticsLinkSelector(state),
-  }),
-  {
-    navigate: (linkAction) => linkAction,
-  },
-)
-export class LaunchesComparisonChart extends Component {
-  static propTypes = {
-    intl: PropTypes.object.isRequired,
-    navigate: PropTypes.func.isRequired,
-    widget: PropTypes.object.isRequired,
-    defectTypes: PropTypes.object.isRequired,
-    getDefectLink: PropTypes.func.isRequired,
-    getStatisticsLink: PropTypes.func.isRequired,
-    container: PropTypes.instanceOf(Element).isRequired,
-    isPreview: PropTypes.bool,
-    observer: PropTypes.object,
-    uncheckedLegendItems: PropTypes.array,
-    onChangeLegend: PropTypes.func,
-    clickable: PropTypes.bool,
-    slugs: PropTypes.shape({
-      organizationSlug: PropTypes.string.isRequired,
-      projectSlug: PropTypes.string.isRequired,
-    }),
-  };
+export const LaunchesComparisonChart = ({
+  widget,
+  container,
+  isPreview = false,
+  observer = {},
+  heightOffset,
+  uncheckedLegendItems = [],
+  onChangeLegend = () => {},
+  clickable = true,
+}) => {
+  const { formatMessage } = useIntl();
+  const dispatch = useDispatch();
+  const slugs = useSelector(urlOrganizationAndProjectSelector);
+  const defectTypes = useSelector(defectTypesSelector);
+  const getDefectLink = useSelector(defectLinkSelector);
+  const getStatisticsLink = useSelector(statisticsLinkSelector);
 
-  static defaultProps = {
-    isPreview: false,
-    observer: undefined,
-    uncheckedLegendItems: [],
-    onChangeLegend: () => {},
-    clickable: true,
-  };
+  const onChartClick = useCallback(
+    (data) => {
+      const { organizationSlug, projectSlug } = slugs;
+      const nameConfig = getItemNameConfig(data.id);
+      const id = widget.content.result[data.index].id;
+      const defaultParams = getDefaultTestItemLinkParams(projectSlug, ALL, id, organizationSlug);
+      const defectLocators = getDefectTypeLocators(nameConfig, defectTypes);
 
-  onChartCreated = () => {
-    // eslint-disable-next-line func-names
-    d3.selectAll(this.props.container.querySelectorAll('.c3-chart-bar path')).each(function () {
-      const elem = d3.select(this);
-      if (elem.datum().value === 0) {
-        elem.style('stroke-width', '3px');
-      }
-    });
-  };
+      const link = defectLocators
+        ? getDefectLink({ defects: defectLocators, itemId: id })
+        : getStatisticsLink({ statuses: [nameConfig.defectType.toUpperCase()] });
 
-  onChartClick = (data) => {
-    const {
-      widget,
-      getDefectLink,
-      getStatisticsLink,
-      defectTypes,
-      slugs: { organizationSlug, projectSlug },
-    } = this.props;
+      dispatch(Object.assign(link, defaultParams));
+    },
+    [defectTypes, dispatch, getDefectLink, getStatisticsLink, slugs, widget],
+  );
 
-    const nameConfig = getItemNameConfig(data.id);
-    const id = widget.content.result[data.index].id;
-    const defaultParams = getDefaultTestItemLinkParams(projectSlug, ALL, id, organizationSlug);
-    const defectLocators = getDefectTypeLocators(nameConfig, defectTypes);
-
-    const link = defectLocators
-      ? getDefectLink({ defects: defectLocators, itemId: id })
-      : getStatisticsLink({ statuses: [nameConfig.defectType.toUpperCase()] });
-    this.props.navigate(Object.assign(link, defaultParams));
-  };
-
-  getConfigData = () => {
-    const {
-      intl: { formatMessage },
-      widget: { contentParameters },
-      defectTypes,
-      clickable,
-    } = this.props;
-
-    return {
+  const configData = useMemo(
+    () => ({
+      getOption,
       formatMessage,
       defectTypes,
-      getConfig,
-      contentFields: contentParameters.contentFields,
-      onChartClick: clickable ? this.onChartClick : undefined,
-    };
-  };
+      contentFields: widget.contentParameters.contentFields,
+      onChartClick: clickable ? onChartClick : undefined,
+    }),
+    [clickable, defectTypes, formatMessage, onChartClick, widget],
+  );
 
-  render() {
-    const { onChangeLegend, uncheckedLegendItems, clickable } = this.props;
-    const legendConfig = {
+  const legendConfig = useMemo(
+    () => ({
       onChangeLegend,
       showLegend: clickable,
       uncheckedLegendItems,
       legendProps: {
         noTotal: true,
       },
-    };
+    }),
+    [clickable, onChangeLegend, uncheckedLegendItems],
+  );
 
-    return (
-      <div className={cx('launches-comparison-chart')}>
-        <ChartContainer
-          {...getChartDefaultProps(this.props)}
-          legendConfig={legendConfig}
-          configData={this.getConfigData()}
-          chartCreatedCallback={this.onChartCreated}
-        />
-      </div>
-    );
-  }
-}
+  return (
+    <div className={cx('launches-comparison-chart')}>
+      <EChart
+        {...getChartDefaultProps({ widget, container, isPreview, observer, heightOffset })}
+        legendConfig={legendConfig}
+        configData={configData}
+      />
+    </div>
+  );
+};
+
+LaunchesComparisonChart.propTypes = {
+  widget: PropTypes.object.isRequired,
+  container: PropTypes.instanceOf(Element).isRequired,
+  isPreview: PropTypes.bool,
+  observer: PropTypes.object,
+  heightOffset: PropTypes.number,
+  uncheckedLegendItems: PropTypes.array,
+  onChangeLegend: PropTypes.func,
+  clickable: PropTypes.bool,
+};
