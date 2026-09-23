@@ -16,6 +16,8 @@ Each chart widget should expose a pure `getOption(params)` (replacing C3 `getCon
 
 Shared helpers for builders live in `configHelpers.ts` (`buildColorMap`, `buildTooltipFormatter`, `buildAxisTicks`, `buildLegendItems`, `ECHARTS_THEME`). Tooltip bridge reuses `createTooltipRenderer` so existing React tooltip components keep working.
 
+Import helpers from `components/widgets/common/echarts/configHelpers` inside `getOption` modules (not from the package barrel) so Jest does not load `echarts/core` when unit-testing option builders.
+
 ### EChart usage (widget migrations)
 
 ```tsx

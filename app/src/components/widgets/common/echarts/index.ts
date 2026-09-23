@@ -16,6 +16,7 @@
 
 export { EChart } from './EChart';
 export { echarts } from './echartsSetup';
+export { crispSvgSplitLines } from './crispSvgSplitLines';
 export {
   buildAxisTicks,
   buildColorMap,

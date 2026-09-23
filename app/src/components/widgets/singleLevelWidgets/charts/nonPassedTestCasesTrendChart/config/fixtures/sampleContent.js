@@ -14,18 +14,32 @@
  * limitations under the License.
  */
 
-import { messages } from 'components/widgets/common/messages';
-
-export const calculateTooltipParams = (data, color, customProps) => {
-  const { itemsData, formatMessage } = customProps;
-  const { index, id, value } = data[0];
-  const { name, number, startTime } = itemsData[index];
-
-  return {
-    itemName: `${name} #${number}`,
-    startTime: new Date(startTime).getTime(),
-    itemCases: `${Number(value).toFixed(2)}%`,
-    color: color(id),
-    issueStatNameProps: { itemName: formatMessage(messages.failedSkippedTotal) },
-  };
-};
+export const sampleContent = [
+  {
+    id: 'launch-1',
+    name: 'Demo Tests',
+    number: '1',
+    startTime: '1609459200000',
+    values: {
+      '% (Failed+Skipped)/Total': '33.33',
+    },
+  },
+  {
+    id: 'launch-2',
+    name: 'Demo Tests',
+    number: '2',
+    startTime: '1609545600000',
+    values: {
+      '% (Failed+Skipped)/Total': '50',
+    },
+  },
+  {
+    id: 'launch-3',
+    name: 'Demo Tests',
+    number: '3',
+    startTime: '1609632000000',
+    values: {
+      '% (Failed+Skipped)/Total': '25',
+    },
+  },
+];

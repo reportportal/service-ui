@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 EPAM Systems
+ * Copyright 2026 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -34,6 +34,9 @@ export const COLOR_DARK_PASTEL_GREEN = '#5cb755';
 export const COLOR_NOTPASSED = COLOR_FAILED;
 export const COLOR_INVESTIGATED = '#87B87F';
 export const COLOR_BLACK_2 = '#393939';
+export const COLOR_CHARCOAL_GREY = '#464547';
+export const COLOR_GRAY_80 = '#cccccc';
+export const COLOR_BLACK = '#000000';
 export const COLOR_WHITE_TWO = '#ffffff';
 export const COLOR_LAUNCHESQUANTITY = '#0f55ff';
 export const COLOR_BURGUNDY = '#8f0808';

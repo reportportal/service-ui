@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 EPAM Systems
+ * Copyright 2026 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,102 +14,93 @@
  * limitations under the License.
  */
 
-import React, { Component } from 'react';
+import { useCallback, useMemo } from 'react';
 import PropTypes from 'prop-types';
-import { injectIntl } from 'react-intl';
+import { useIntl } from 'react-intl';
+import { useDispatch, useSelector } from 'react-redux';
 import classNames from 'classnames/bind';
-import { ChartContainer } from 'components/widgets/common/c3chart';
+import { EChart } from 'components/widgets/common/echarts';
 import {
   getChartDefaultProps,
   getDefaultTestItemLinkParams,
 } from 'components/widgets/common/utils';
-import { connect } from 'react-redux';
 import { statisticsLinkSelector } from 'controllers/testItem';
 import { urlOrganizationAndProjectSelector } from 'controllers/pages';
 import { FAILED, SKIPPED, INTERRUPTED } from 'common/constants/testStatuses';
-import { getConfig } from './config/getConfig';
+import { getOption } from './config/getOption';
 import styles from './nonPassedTestCasesTrendChart.scss';
 
 const cx = classNames.bind(styles);
 
 const FAILED_SKIPPED_STATISTICS_KEY = 'statistics$executions$failedSkippedTotal';
 
-@injectIntl
-@connect(
-  (state) => ({
-    slugs: urlOrganizationAndProjectSelector(state),
-    getStatisticsLink: statisticsLinkSelector(state),
-  }),
-  {
-    navigate: (linkAction) => linkAction,
-  },
-)
-export class NonPassedTestCasesTrendChart extends Component {
-  static propTypes = {
-    intl: PropTypes.object.isRequired,
-    widget: PropTypes.object.isRequired,
-    container: PropTypes.instanceOf(Element).isRequired,
-    getStatisticsLink: PropTypes.func.isRequired,
-    navigate: PropTypes.func.isRequired,
-    isPreview: PropTypes.bool,
-    height: PropTypes.number,
-    observer: PropTypes.object,
-    slugs: PropTypes.shape({
-      organizationSlug: PropTypes.string.isRequired,
-      projectSlug: PropTypes.string.isRequired,
-    }),
-  };
+export const NonPassedTestCasesTrendChart = ({
+  widget,
+  container,
+  isPreview = false,
+  observer = {},
+  heightOffset,
+}) => {
+  const { formatMessage } = useIntl();
+  const dispatch = useDispatch();
+  const slugs = useSelector(urlOrganizationAndProjectSelector);
+  const getStatisticsLink = useSelector(statisticsLinkSelector);
 
-  static defaultProps = {
-    isPreview: false,
-    height: 0,
-    observer: {},
-  };
+  const onChartClick = useCallback(
+    (data) => {
+      const { organizationSlug, projectSlug } = slugs;
+      const launchIds = widget.content.result.map((item) => item.id);
+      const link = getStatisticsLink({
+        statuses: [FAILED, SKIPPED, INTERRUPTED],
+        types: null,
+      });
+      const navigationParams = getDefaultTestItemLinkParams(
+        projectSlug,
+        widget.appliedFilters[0].id,
+        launchIds[data.index],
+        organizationSlug,
+      );
 
-  onChartClick = (data) => {
-    const {
-      widget,
-      getStatisticsLink,
-      slugs: { organizationSlug, projectSlug },
-    } = this.props;
-    const launchIds = widget.content.result.map((item) => item.id);
-    const link = getStatisticsLink({
-      statuses: [FAILED, SKIPPED, INTERRUPTED],
-      types: null,
-    });
-    const navigationParams = getDefaultTestItemLinkParams(
-      projectSlug,
-      widget.appliedFilters[0].id,
-      launchIds[data.index],
-      organizationSlug,
-    );
-
-    this.props.navigate(Object.assign(link, navigationParams));
-  };
-
-  configData = {
-    getConfig,
-    onChartClick: this.onChartClick,
-    formatMessage: this.props.intl.formatMessage,
-  };
-
-  legendConfig = {
-    showLegend: true,
-    legendProps: {
-      items: [FAILED_SKIPPED_STATISTICS_KEY],
-      disabled: true,
+      dispatch(Object.assign(link, navigationParams));
     },
-  };
+    [dispatch, getStatisticsLink, slugs, widget],
+  );
 
-  render() {
-    return (
-      <div className={cx('non-passed-cases-trend-chart')}>
-        <ChartContainer
-          {...getChartDefaultProps(this.props)}
-          configData={this.configData}
-          legendConfig={this.legendConfig}
-        />
-      </div>
-    );
-  }
-}
+  const configData = useMemo(
+    () => ({
+      getOption,
+      onChartClick,
+      formatMessage,
+    }),
+    [formatMessage, onChartClick],
+  );
+
+  const legendConfig = useMemo(
+    () => ({
+      showLegend: true,
+      legendProps: {
+        items: [FAILED_SKIPPED_STATISTICS_KEY],
+        disabled: true,
+      },
+    }),
+    [],
+  );
+
+  return (
+    <div className={cx('non-passed-cases-trend-chart')}>
+      <EChart
+        {...getChartDefaultProps({ widget, container, isPreview, observer, heightOffset })}
+        configData={configData}
+        legendConfig={legendConfig}
+      />
+    </div>
+  );
+};
+
+NonPassedTestCasesTrendChart.propTypes = {
+  widget: PropTypes.object.isRequired,
+  container: PropTypes.instanceOf(Element).isRequired,
+  isPreview: PropTypes.bool,
+  observer: PropTypes.object,
+  heightOffset: PropTypes.number,
+};
