@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 EPAM Systems
+ * Copyright 2026 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,10 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import React, { Component } from 'react';
+
+import { useCallback, useMemo } from 'react';
 import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
-import { injectIntl } from 'react-intl';
+import { useIntl } from 'react-intl';
+import { useDispatch, useSelector } from 'react-redux';
 import classNames from 'classnames/bind';
 import { CHART_MODES, MODES_VALUES } from 'common/constants/chartModes';
 import {
@@ -37,98 +38,94 @@ import { defectTypesSelector } from 'controllers/project';
 import { urlOrganizationAndProjectSelector } from 'controllers/pages';
 import * as STATUSES from 'common/constants/testStatuses';
 import { ALL } from 'common/constants/reservedFilterIds';
-import { ChartContainer } from 'components/widgets/common/c3chart';
-import { getConfig as getStatusPageModeConfig } from '../common/statusPageChartConfig';
-import { selectConfigFunction } from './config';
+import { EChart } from 'components/widgets/common/echarts';
+import { getOption as getStatusPageOption } from '../common/statusPageChartConfig';
+import { selectOptionFunction } from './config';
 import styles from './investigatedTrendChart.scss';
 
 const cx = classNames.bind(styles);
 
-@injectIntl
-@connect(
-  (state) => ({
-    slugs: urlOrganizationAndProjectSelector(state),
-    defectTypes: defectTypesSelector(state),
-    getDefectLink: defectLinkSelector(state),
-    getStatisticsLink: statisticsLinkSelector(state),
-  }),
-  {
-    navigate: (linkAction) => linkAction,
-    createFilterAction,
-  },
-)
-export class InvestigatedTrendChart extends Component {
-  static propTypes = {
-    intl: PropTypes.object.isRequired,
-    navigate: PropTypes.func.isRequired,
-    widget: PropTypes.object.isRequired,
-    defectTypes: PropTypes.object.isRequired,
-    getDefectLink: PropTypes.func.isRequired,
-    getStatisticsLink: PropTypes.func.isRequired,
-    isPreview: PropTypes.bool,
-    container: PropTypes.instanceOf(Element).isRequired,
-    observer: PropTypes.object,
-    height: PropTypes.number,
-    onStatusPageMode: PropTypes.bool,
-    interval: PropTypes.string,
-    createFilterAction: PropTypes.func,
-    integerValueType: PropTypes.bool,
-    uncheckedLegendItems: PropTypes.array,
-    onChangeLegend: PropTypes.func,
-    slugs: PropTypes.shape({
-      organizationSlug: PropTypes.string.isRequired,
-      projectSlug: PropTypes.string.isRequired,
-    }),
-  };
+export const InvestigatedTrendChart = ({
+  widget,
+  container,
+  isPreview = false,
+  observer = {},
+  heightOffset,
+  onStatusPageMode = false,
+  interval = null,
+  integerValueType = false,
+  uncheckedLegendItems = [],
+  onChangeLegend = () => {},
+}) => {
+  const { formatMessage } = useIntl();
+  const dispatch = useDispatch();
+  const slugs = useSelector(urlOrganizationAndProjectSelector);
+  const defectTypes = useSelector(defectTypesSelector);
+  const getDefectLink = useSelector(defectLinkSelector);
+  const getStatisticsLink = useSelector(statisticsLinkSelector);
 
-  static defaultProps = {
-    navigate: () => {},
-    getDefectLink: () => {},
-    createFilterAction: () => {},
-    isPreview: false,
-    height: 0,
-    observer: {
-      subscribe: () => {},
-      unsubscribe: () => {},
+  const isTimeline = useMemo(
+    () =>
+      Boolean(
+        widget.contentParameters &&
+          widget.contentParameters.widgetOptions.timeline ===
+            MODES_VALUES[CHART_MODES.TIMELINE_MODE],
+      ),
+    [widget.contentParameters],
+  );
+
+  const getDefectTypeLocators = useCallback(
+    (id) => {
+      const investigatedDefectType = [PRODUCT_BUG, AUTOMATION_BUG, SYSTEM_ISSUE, NO_DEFECT];
+      const toInvestigateDefectType = [TO_INVESTIGATE];
+      const defectType = id === 'toInvestigate' ? toInvestigateDefectType : investigatedDefectType;
+
+      return defectType
+        .reduce((acc, currentValue) => acc.concat(defectTypes[currentValue.toUpperCase()]), [])
+        .map((item) => item.locator);
     },
-    onStatusPageMode: false,
-    interval: null,
-    integerValueType: false,
-    uncheckedLegendItems: [],
-    onChangeLegend: () => {},
-  };
+    [defectTypes],
+  );
 
-  onChartClick = (data) =>
-    this.isTimeline ? this.timeLineModeClickHandler(data) : this.launchModeClickHandler(data);
+  const timeLineModeClickHandler = useCallback(
+    (data) => {
+      const chartFilter = widget.appliedFilters[0];
+      const arrResult = Object.keys(widget.content.result).map((item) => item);
+      const itemDate = arrResult[data.index];
+      const newFilter = getUpdatedFilterWithTime(chartFilter, itemDate);
 
-  getDefectTypeLocators = (id) => {
-    const { defectTypes } = this.props;
-    const investigatedDefectType = [PRODUCT_BUG, AUTOMATION_BUG, SYSTEM_ISSUE, NO_DEFECT];
-    const toInvestigateDefectType = [TO_INVESTIGATE];
-    const defectType = id === 'toInvestigate' ? toInvestigateDefectType : investigatedDefectType;
+      dispatch(createFilterAction(newFilter));
+    },
+    [dispatch, widget],
+  );
 
-    return defectType
-      .reduce((acc, currentValue) => acc.concat(defectTypes[currentValue.toUpperCase()]), [])
-      .map((item) => item.locator);
-  };
+  const launchModeClickHandler = useCallback(
+    (data) => {
+      const { organizationSlug, projectSlug } = slugs;
+      const id = widget.content.result[data.index].id;
+      const defaultParams = getDefaultTestItemLinkParams(projectSlug, ALL, id, organizationSlug);
+      const defectTypeLocators = getDefectTypeLocators(data.id);
+      const link = defectTypeLocators
+        ? getDefectLink({ defects: defectTypeLocators, itemId: id })
+        : getStatisticsLink({
+            statuses: [STATUSES.PASSED, STATUSES.FAILED, STATUSES.SKIPPED, STATUSES.INTERRUPTED],
+          });
 
-  getConfigData = () => {
-    const {
-      intl: { formatMessage },
-      widget: { contentParameters },
-      interval,
-      onStatusPageMode,
-      integerValueType,
-    } = this.props;
+      dispatch(Object.assign(link, defaultParams));
+    },
+    [dispatch, getDefectLink, getDefectTypeLocators, getStatisticsLink, slugs, widget],
+  );
 
-    this.isTimeline =
-      contentParameters &&
-      contentParameters.widgetOptions.timeline === MODES_VALUES[CHART_MODES.TIMELINE_MODE];
+  const onChartClick = useCallback(
+    (data) => (isTimeline ? timeLineModeClickHandler(data) : launchModeClickHandler(data)),
+    [isTimeline, launchModeClickHandler, timeLineModeClickHandler],
+  );
 
+  const configData = useMemo(() => {
     if (onStatusPageMode) {
       return {
         formatMessage,
-        getConfig: getStatusPageModeConfig,
+        getOption: getStatusPageOption,
         interval,
         chartType: MODES_VALUES[CHART_MODES.BAR_VIEW],
         integerValueType,
@@ -138,56 +135,48 @@ export class InvestigatedTrendChart extends Component {
 
     return {
       formatMessage,
-      getConfig: selectConfigFunction(this.isTimeline),
-      onChartClick: this.onChartClick,
+      getOption: selectOptionFunction(isTimeline),
+      onChartClick,
     };
-  };
+  }, [
+    formatMessage,
+    integerValueType,
+    interval,
+    isTimeline,
+    onChartClick,
+    onStatusPageMode,
+  ]);
 
-  timeLineModeClickHandler = (data) => {
-    const chartFilter = this.props.widget.appliedFilters[0];
-    const arrResult = Object.keys(this.props.widget.content.result).map((item) => item);
-    const itemDate = arrResult[data.index];
-    const newFilter = getUpdatedFilterWithTime(chartFilter, itemDate);
-
-    this.props.createFilterAction(newFilter);
-  };
-
-  launchModeClickHandler = (data) => {
-    const {
-      widget,
-      getDefectLink,
-      getStatisticsLink,
-      slugs: { organizationSlug, projectSlug },
-    } = this.props;
-    const id = widget.content.result[data.index].id;
-    const defaultParams = getDefaultTestItemLinkParams(projectSlug, ALL, id, organizationSlug);
-    const defectTypeLocators = this.getDefectTypeLocators(data.id);
-    const link = defectTypeLocators
-      ? getDefectLink({ defects: defectTypeLocators, itemId: id })
-      : getStatisticsLink({
-          statuses: [STATUSES.PASSED, STATUSES.FAILED, STATUSES.SKIPPED, STATUSES.INTERRUPTED],
-        });
-
-    this.props.navigate(Object.assign(link, defaultParams));
-  };
-
-  render() {
-    const { onChangeLegend, uncheckedLegendItems, onStatusPageMode } = this.props;
-    const legendConfig = {
+  const legendConfig = useMemo(
+    () => ({
       onChangeLegend,
       showLegend: !onStatusPageMode,
       uncheckedLegendItems,
-    };
+    }),
+    [onChangeLegend, onStatusPageMode, uncheckedLegendItems],
+  );
 
-    return (
-      <div className={cx('investigated-trend-chart', { 'timeline-mode': this.isTimeline })}>
-        <ChartContainer
-          {...getChartDefaultProps(this.props)}
-          className={cx('widget-wrapper')}
-          legendConfig={legendConfig}
-          configData={this.getConfigData()}
-        />
-      </div>
-    );
-  }
-}
+  return (
+    <div className={cx('investigated-trend-chart', { 'timeline-mode': isTimeline })}>
+      <EChart
+        {...getChartDefaultProps({ widget, container, isPreview, observer, heightOffset })}
+        className={cx('widget-wrapper')}
+        legendConfig={legendConfig}
+        configData={configData}
+      />
+    </div>
+  );
+};
+
+InvestigatedTrendChart.propTypes = {
+  widget: PropTypes.object.isRequired,
+  container: PropTypes.instanceOf(Element).isRequired,
+  isPreview: PropTypes.bool,
+  observer: PropTypes.object,
+  heightOffset: PropTypes.number,
+  onStatusPageMode: PropTypes.bool,
+  interval: PropTypes.string,
+  integerValueType: PropTypes.bool,
+  uncheckedLegendItems: PropTypes.array,
+  onChangeLegend: PropTypes.func,
+};

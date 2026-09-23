@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 EPAM Systems
+ * Copyright 2026 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,8 +18,19 @@ import * as COLORS from 'common/constants/colors';
 import { defineMessages } from 'react-intl';
 import { PERIOD_VALUES_LENGTH, PERIOD_VALUES } from 'common/constants/statusPeriodValues';
 import { createTooltipRenderer } from 'components/widgets/common/tooltip';
+import { buildTooltipFormatter } from 'components/widgets/common/echarts/configHelpers';
 import { messages } from 'components/widgets/common/messages';
 import { IssueTypeStatTooltip } from './issueTypeStatTooltip';
+import {
+  AXIS_LABEL_STYLE,
+  STACKED_BAR_EMPHASIS,
+  createStackedBarSeries,
+} from './stackedBarSeries';
+import {
+  buildCategoryXAxis,
+  buildItemTooltip,
+  buildValueYAxis,
+} from './echartsAxisBuilders';
 
 const localMessages = defineMessages({
   xAxisWeeksTitle: {
@@ -57,6 +68,11 @@ const getYTicksValues = (columns) => {
 
   for (let i = 0; i <= max; i += lineStep) {
     tickValues.push(i);
+  }
+
+  const lastTick = tickValues[tickValues.length - 1];
+  if (lastTick < max) {
+    tickValues.push(lastTick + lineStep);
   }
 
   return tickValues;
@@ -206,6 +222,133 @@ export const getConfig = ({
     size,
     point: {
       show: isPointsShow,
+    },
+  };
+};
+
+/**
+ * ECharts option builder for status-page usages of investigatedTrendChart.
+ * C3 `getConfig` remains for issuesStatusPageChart until EPMRPP-121492.
+ */
+export const getOption = ({
+  content,
+  formatMessage,
+  interval,
+  chartType = 'bar',
+  isPointsShow = true,
+  isCustomTooltip = false,
+  integerValueType = false,
+  wrapperClassName,
+  isPreview = false,
+}) => {
+  const chartData = {};
+  const colors = {};
+  const itemsData = [];
+
+  const data = content.map((value) => ({
+    date: value.name,
+    values: value.values,
+  }));
+
+  Object.keys(data[0].values).forEach((key) => {
+    const shortKey = key.split('$').pop();
+
+    colors[shortKey] = COLORS[`COLOR_${shortKey.toUpperCase()}`];
+    chartData[shortKey] = [shortKey];
+  });
+
+  data.forEach((item) => {
+    itemsData.push(item.date);
+
+    Object.keys(item.values).forEach((key) => {
+      const shortKey = key.split('$').pop();
+
+      chartData[shortKey].push(Number.parseFloat(item.values[key]));
+    });
+  });
+
+  const itemNames = Object.keys(chartData);
+  const columns = Object.values(chartData);
+  const yTicksValues = integerValueType ? getYTicksValues(columns) : null;
+  const isBar = chartType === 'bar';
+  const dataByName = itemNames.reduce((acc, name) => {
+    acc[name] = chartData[name].slice(1);
+    return acc;
+  }, {});
+  const series = isBar
+    ? createStackedBarSeries(itemNames, dataByName, colors)
+    : itemNames.map((name) => ({
+        id: name,
+        name,
+        type: 'line',
+        stack: 'total',
+        data: dataByName[name],
+        showSymbol: isPointsShow,
+        symbolSize: 6,
+        areaStyle: {
+          opacity: 0.7,
+        },
+        lineStyle: {
+          width: 1,
+        },
+        itemStyle: {
+          color: colors[name],
+        },
+        emphasis: STACKED_BAR_EMPHASIS,
+      }));
+
+  const yInterval =
+    integerValueType && yTicksValues?.length > 1 ? yTicksValues[1] - yTicksValues[0] : 10;
+
+  let xAxisName;
+  if (!isPreview) {
+    xAxisName =
+      interval === PERIOD_VALUES.ONE_MONTH
+        ? formatMessage(localMessages.xAxisDaysTitle)
+        : formatMessage(localMessages.xAxisWeeksTitle);
+  }
+
+  return {
+    color: itemNames.map((name) => colors[name]),
+    textStyle: AXIS_LABEL_STYLE,
+    grid: {
+      top: 0,
+      left: 35,
+      right: 10,
+      bottom: 0,
+      containLabel: true,
+    },
+    xAxis: buildCategoryXAxis({
+      show: !isPreview,
+      data: getCategories(itemsData, interval),
+      boundaryGap: isBar,
+      name: xAxisName,
+    }),
+    yAxis: buildValueYAxis({
+      show: !isPreview,
+      max: integerValueType ? yTicksValues?.[yTicksValues.length - 1] : 100,
+      interval: integerValueType ? yInterval : 10,
+      axisLabel: {
+        formatter: (value) => (integerValueType ? value : `${value}%`),
+      },
+    }),
+    tooltip: buildItemTooltip({
+      show: !isPreview && !isCustomTooltip,
+      formatter: buildTooltipFormatter(IssueTypeStatTooltip, calculateTooltipParams, {
+        itemsData,
+        formatMessage,
+        integerValueType,
+        wrapperClassName,
+      }),
+    }),
+    legend: {
+      show: false,
+    },
+    series,
+    customData: {
+      itemsData,
+      colors,
+      legendItems: itemNames,
     },
   };
 };
