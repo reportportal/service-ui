@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 EPAM Systems
+ * Copyright 2026 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-import { getLaunchModeConfig } from './launchModeConfig';
-import { getTimelineConfig } from './timelineConfig';
+import { getLaunchModeOption } from './launchModeOption';
+import { getTimelineOption } from './timelineOption';
 
-export const selectConfigFunction = (isTimeline) =>
-  isTimeline ? getTimelineConfig : getLaunchModeConfig;
+export const selectOptionFunction = (isTimeline) =>
+  isTimeline ? getTimelineOption : getLaunchModeOption;
