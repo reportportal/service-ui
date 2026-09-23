@@ -14,24 +14,21 @@
  * limitations under the License.
  */
 
-import { useCallback, useMemo } from 'react';
+import { useMemo } from 'react';
 import PropTypes from 'prop-types';
 import { useIntl } from 'react-intl';
-import { useDispatch, useSelector } from 'react-redux';
 import classNames from 'classnames/bind';
 import { EChart } from 'components/widgets/common/echarts';
-import {
-  getChartDefaultProps,
-  getDefaultTestItemLinkParams,
-} from 'components/widgets/common/utils';
-import { statisticsLinkSelector } from 'controllers/testItem';
-import { urlOrganizationAndProjectSelector } from 'controllers/pages';
+import { getChartDefaultProps } from 'components/widgets/common/utils';
+import { useTrendChartClickNavigation } from 'components/widgets/common/utils/useTrendChartClickNavigation';
 import { FAILED, INTERRUPTED } from 'common/constants/testStatuses';
 import { STATS_FAILED } from 'common/constants/statistics';
 import { getOption } from './config/getOption';
 import styles from './failedCasesTrendChart.scss';
 
 const cx = classNames.bind(styles);
+
+const STATUSES_LINK_PARAMS = { statuses: [FAILED, INTERRUPTED] };
 
 export const FailedCasesTrendChart = ({
   widget,
@@ -41,28 +38,7 @@ export const FailedCasesTrendChart = ({
   heightOffset,
 }) => {
   const { formatMessage } = useIntl();
-  const dispatch = useDispatch();
-  const slugs = useSelector(urlOrganizationAndProjectSelector);
-  const getStatisticsLink = useSelector(statisticsLinkSelector);
-
-  const onChartClick = useCallback(
-    (data) => {
-      const { organizationSlug, projectSlug } = slugs;
-      const launchIds = widget.content.result.map((item) => item.id);
-      const link = getStatisticsLink({
-        statuses: [FAILED, INTERRUPTED],
-      });
-      const navigationParams = getDefaultTestItemLinkParams(
-        projectSlug,
-        widget.appliedFilters[0].id,
-        launchIds[data.index],
-        organizationSlug,
-      );
-
-      dispatch(Object.assign(link, navigationParams));
-    },
-    [dispatch, getStatisticsLink, slugs, widget],
-  );
+  const onChartClick = useTrendChartClickNavigation(widget, STATUSES_LINK_PARAMS);
 
   const configData = useMemo(
     () => ({

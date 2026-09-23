@@ -15,16 +15,11 @@
  */
 
 import { defineMessages } from 'react-intl';
+import { COLOR_FAILED } from 'common/constants/colors';
 import {
-  COLOR_BLACK,
-  COLOR_CHARCOAL_GREY,
-  COLOR_FAILED,
-  COLOR_GRAY_80,
-} from 'common/constants/colors';
-import {
-  buildAxisTicks,
-  buildTooltipFormatter,
-} from 'components/widgets/common/echarts/configHelpers';
+  buildSingleLineTrendOption,
+  buildTrendChartYAxisBase,
+} from 'components/widgets/common/echarts/lineTrendChartOption';
 import { IssueTypeStatTooltip } from '../../common/issueTypeStatTooltip';
 import { calculateTooltipParams, getTicks } from './utils';
 
@@ -36,149 +31,43 @@ const localMessages = defineMessages({
 });
 
 const SERIES_ID = 'failed';
+const Y_AXIS_NAME_GAP = 24;
 
-const AXIS_LABEL_STYLE = {
-  fontFamily: 'OpenSans',
-  fontSize: 10,
-  fontWeight: 400,
-  color: COLOR_CHARCOAL_GREY,
-};
+const buildYAxis = ({ isPreview, values, formatMessage }) => {
+  const bottomExtremum = values.length ? Math.min(...values) : 0;
+  const topExtremum = values.length ? Math.max(...values) : 0;
+  const yAxisTicks = getTicks(bottomExtremum, topExtremum);
 
-export const getOption = ({ content, isPreview, formatMessage }) => {
-  const itemsData = [];
-  const values = [];
-  let topExtremum = 0;
-  let bottomExtremum = Infinity;
-
-  content.forEach((item) => {
-    const { id, name, number, startTime } = item;
-    const value = Number(item.values.total);
-    if (value > topExtremum) {
-      topExtremum = value;
-    }
-    if (value < bottomExtremum) {
-      bottomExtremum = value;
-    }
-    itemsData.push({ id, name, number, startTime });
-    values.push(value);
+  const baseYAxis = buildTrendChartYAxisBase({
+    isPreview,
+    name: formatMessage(localMessages.failedCasesLabel),
+    nameGap: Y_AXIS_NAME_GAP,
   });
 
-  const categories = itemsData.map((item) => `# ${item.number}`);
-  const tickValues = buildAxisTicks(itemsData.length);
-  const yAxisTicks = getTicks(bottomExtremum, topExtremum);
-  const singlePoint = itemsData.length === 1;
-
   return {
-    color: [COLOR_FAILED],
-    textStyle: AXIS_LABEL_STYLE,
-    grid: {
-      top: isPreview ? 0 : 95,
-      left: isPreview ? 0 : 60,
-      right: isPreview ? 0 : 20,
-      bottom: isPreview ? 0 : 30,
-      containLabel: false,
+    ...baseYAxis,
+    min: bottomExtremum,
+    max: topExtremum,
+    axisLabel: {
+      ...baseYAxis.axisLabel,
+      customValues: yAxisTicks,
     },
-    xAxis: {
-      type: 'category',
-      show: !isPreview,
-      data: categories,
-      boundaryGap: true,
-      axisLine: {
-        show: true,
-        onZero: true,
-        lineStyle: {
-          color: COLOR_BLACK,
-          width: 1,
-        },
-      },
-      axisTick: {
-        show: true,
-        interval: 0,
-        alignWithLabel: true,
-        inside: false,
-        length: 6,
-        lineStyle: {
-          color: COLOR_BLACK,
-          width: 1,
-        },
-      },
-      axisLabel: {
-        ...AXIS_LABEL_STYLE,
-        margin: 8,
-        interval: (index) => tickValues.includes(index),
-        hideOverlap: true,
-      },
-    },
-    yAxis: {
-      type: 'value',
-      show: !isPreview,
-      min: bottomExtremum,
-      max: topExtremum,
-      name: isPreview ? undefined : formatMessage(localMessages.failedCasesLabel),
-      nameLocation: 'middle',
-      nameGap: 24,
-      nameRotate: 90,
-      nameTextStyle: {
-        ...AXIS_LABEL_STYLE,
-        fontSize: 12,
-      },
-      axisLabel: {
-        ...AXIS_LABEL_STYLE,
-        margin: 8,
-        customValues: yAxisTicks,
-      },
-      axisLine: {
-        show: false,
-      },
-      axisTick: {
-        show: false,
-        customValues: yAxisTicks,
-      },
-      splitLine: {
-        show: !isPreview,
-        lineStyle: {
-          color: COLOR_GRAY_80,
-          width: 1,
-        },
-      },
-    },
-    tooltip: {
-      trigger: 'axis',
-      show: !isPreview,
-      formatter: buildTooltipFormatter(IssueTypeStatTooltip, calculateTooltipParams, {
-        itemsData,
-        formatMessage,
-      }),
-    },
-    legend: {
-      show: false,
-    },
-    series: [
-      {
-        id: SERIES_ID,
-        name: SERIES_ID,
-        type: 'line',
-        data: values,
-        showSymbol: singlePoint,
-        symbolSize: singlePoint ? 10 : 2,
-        lineStyle: {
-          width: 1,
-        },
-        emphasis: {
-          scale: true,
-          itemStyle: {
-            borderWidth: 2,
-          },
-        },
-        triggerLineEvent: true,
-      },
-    ],
-    customData: {
-      itemsData,
-      colors: {
-        [SERIES_ID]: COLOR_FAILED,
-      },
-      legendItems: [SERIES_ID],
+    axisTick: {
+      ...baseYAxis.axisTick,
+      customValues: yAxisTicks,
     },
   };
 };
+
+export const getOption = ({ content, isPreview, formatMessage }) =>
+  buildSingleLineTrendOption({
+    content,
+    isPreview,
+    formatMessage,
+    seriesId: SERIES_ID,
+    color: COLOR_FAILED,
+    getValue: (item) => Number(item.values.total),
+    buildYAxis,
+    TooltipComponent: IssueTypeStatTooltip,
+    calculateTooltipParams,
+  });
