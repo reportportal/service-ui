@@ -1,4 +1,4 @@
-/*!
+/*
  * Copyright 2026 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,8 +14,32 @@
  * limitations under the License.
  */
 
-.failed-cases-trend-chart {
-  position: relative;
-  width: 100%;
-  height: 100%;
-}
+export const sampleContent = [
+  {
+    id: 'launch-1',
+    name: 'Demo Tests',
+    number: '1',
+    startTime: '1609459200000',
+    values: {
+      total: '3',
+    },
+  },
+  {
+    id: 'launch-2',
+    name: 'Demo Tests',
+    number: '2',
+    startTime: '1609545600000',
+    values: {
+      total: '5',
+    },
+  },
+  {
+    id: 'launch-3',
+    name: 'Demo Tests',
+    number: '3',
+    startTime: '1609632000000',
+    values: {
+      total: '2',
+    },
+  },
+];
