@@ -18,7 +18,7 @@ import { COLOR_FAILED } from 'common/constants/colors';
 import {
   expectPreviewModeHidesChart,
   expectSingleSeriesCustomData,
-} from 'components/widgets/common/echarts/trendChartOptionAssertions';
+} from '../../common/trendChartOptionAssertions';
 import { getOption } from './getOption';
 import { sampleContent } from './fixtures/sampleContent';
 

@@ -25,6 +25,10 @@ export const buildCategoryXAxis = ({
   axisLabelInterval = 0,
   name,
   nameGap = 22,
+  axisLineColor = COLOR_GRAY_80,
+  showAxisTick = false,
+  axisTickColor = COLOR_GRAY_80,
+  axisTickLength = 4,
 }) => ({
   type: 'category',
   show,
@@ -34,12 +38,24 @@ export const buildCategoryXAxis = ({
     show: true,
     ...(onZero ? { onZero: true } : {}),
     lineStyle: {
-      color: COLOR_GRAY_80,
+      color: axisLineColor,
       width: 1,
     },
   },
   axisTick: {
-    show: false,
+    show: showAxisTick,
+    ...(showAxisTick
+      ? {
+          interval: 0,
+          alignWithLabel: true,
+          inside: false,
+          length: axisTickLength,
+          lineStyle: {
+            color: axisTickColor,
+            width: 1,
+          },
+        }
+      : {}),
   },
   axisLabel: {
     ...AXIS_LABEL_STYLE,
@@ -105,6 +121,12 @@ export const buildValueYAxis = ({
 
 export const buildItemTooltip = ({ show, formatter }) => ({
   trigger: 'item',
+  show,
+  formatter,
+});
+
+export const buildAxisTooltip = ({ show, formatter }) => ({
+  trigger: 'axis',
   show,
   formatter,
 });

@@ -18,8 +18,8 @@ import { defineMessages } from 'react-intl';
 import { COLOR_FAILED } from 'common/constants/colors';
 import {
   buildSingleLineTrendOption,
-  buildTrendChartYAxisBase,
-} from 'components/widgets/common/echarts/lineTrendChartOption';
+  buildTrendChartYAxis,
+} from '../../common/lineTrendChartOption';
 import { IssueTypeStatTooltip } from '../../common/issueTypeStatTooltip';
 import { calculateTooltipParams, getTicks } from './utils';
 
@@ -38,25 +38,14 @@ const buildYAxis = ({ isPreview, values, formatMessage }) => {
   const topExtremum = values.length ? Math.max(...values) : 0;
   const yAxisTicks = getTicks(bottomExtremum, topExtremum);
 
-  const baseYAxis = buildTrendChartYAxisBase({
+  return buildTrendChartYAxis({
     isPreview,
     name: formatMessage(localMessages.failedCasesLabel),
     nameGap: Y_AXIS_NAME_GAP,
-  });
-
-  return {
-    ...baseYAxis,
     min: bottomExtremum,
     max: topExtremum,
-    axisLabel: {
-      ...baseYAxis.axisLabel,
-      customValues: yAxisTicks,
-    },
-    axisTick: {
-      ...baseYAxis.axisTick,
-      customValues: yAxisTicks,
-    },
-  };
+    customValues: yAxisTicks,
+  });
 };
 
 export const getOption = ({ content, isPreview, formatMessage }) =>

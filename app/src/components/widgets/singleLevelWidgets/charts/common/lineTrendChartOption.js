@@ -14,22 +14,21 @@
  * limitations under the License.
  */
 
-import { COLOR_BLACK, COLOR_CHARCOAL_GREY, COLOR_GRAY_80 } from 'common/constants/colors';
-import { buildAxisTicks, buildTooltipFormatter } from './configHelpers';
+import { COLOR_BLACK } from 'common/constants/colors';
+import {
+  buildAxisTicks,
+  buildTooltipFormatter,
+} from 'components/widgets/common/echarts/configHelpers';
+import { AXIS_LABEL_STYLE } from './stackedBarSeries';
+import { buildAxisTooltip, buildCategoryXAxis, buildValueYAxis } from './echartsAxisBuilders';
 
 /**
  * Shared building blocks for single-series "line per launch" trend charts
- * (for example failedCasesTrendChart, nonPassedTestCasesTrendChart) so widget
+ * (for example failedCasesTrendChart) on top of the common axis builders
+ * from `echartsAxisBuilders.js` / `stackedBarSeries.js`, so widget
  * `getOption` modules only need to supply what differs: value extraction and
  * the y-axis scale/ticks.
  */
-
-export const TREND_AXIS_LABEL_STYLE = {
-  fontFamily: 'OpenSans',
-  fontSize: 10,
-  fontWeight: 400,
-  color: COLOR_CHARCOAL_GREY,
-};
 
 export const buildTrendChartGrid = (isPreview) => ({
   top: isPreview ? 0 : 95,
@@ -42,68 +41,32 @@ export const buildTrendChartGrid = (isPreview) => ({
 export const buildTrendChartXAxis = ({ categories, isPreview }) => {
   const tickValues = buildAxisTicks(categories.length);
 
-  return {
-    type: 'category',
+  return buildCategoryXAxis({
     show: !isPreview,
     data: categories,
-    boundaryGap: true,
-    axisLine: {
-      show: true,
-      onZero: true,
-      lineStyle: {
-        color: COLOR_BLACK,
-        width: 1,
-      },
-    },
-    axisTick: {
-      show: true,
-      interval: 0,
-      alignWithLabel: true,
-      inside: false,
-      length: 6,
-      lineStyle: {
-        color: COLOR_BLACK,
-        width: 1,
-      },
-    },
-    axisLabel: {
-      ...TREND_AXIS_LABEL_STYLE,
-      margin: 8,
-      interval: (index) => tickValues.includes(index),
-      hideOverlap: true,
-    },
-  };
+    onZero: true,
+    axisLabelInterval: (index) => tickValues.includes(index),
+    axisLineColor: COLOR_BLACK,
+    showAxisTick: true,
+    axisTickColor: COLOR_BLACK,
+    axisTickLength: 6,
+  });
 };
 
-export const buildTrendChartYAxisBase = ({ isPreview, name, nameGap = 32 }) => ({
-  type: 'value',
-  show: !isPreview,
-  name: isPreview ? undefined : name,
-  nameLocation: 'middle',
-  nameGap,
-  nameRotate: 90,
-  nameTextStyle: {
-    ...TREND_AXIS_LABEL_STYLE,
-    fontSize: 12,
-  },
-  axisLabel: {
-    ...TREND_AXIS_LABEL_STYLE,
-    margin: 8,
-  },
-  axisLine: {
-    show: false,
-  },
-  axisTick: {
-    show: false,
-  },
-  splitLine: {
+export const buildTrendChartYAxis = ({ isPreview, name, nameGap = 32, min, max, customValues }) => {
+  const baseYAxis = buildValueYAxis({
     show: !isPreview,
-    lineStyle: {
-      color: COLOR_GRAY_80,
-      width: 1,
-    },
-  },
-});
+    min,
+    max,
+    name: isPreview ? undefined : name,
+    nameGap,
+    axisLabel: customValues ? { customValues } : undefined,
+  });
+
+  return customValues
+    ? { ...baseYAxis, axisTick: { ...baseYAxis.axisTick, customValues } }
+    : baseYAxis;
+};
 
 export const buildTrendChartLineSeries = ({ id, data }) => {
   const singlePoint = data.length === 1;
@@ -134,14 +97,14 @@ export const buildTrendChartTooltip = ({
   calculateTooltipParams,
   itemsData,
   formatMessage,
-}) => ({
-  trigger: 'axis',
-  show: !isPreview,
-  formatter: buildTooltipFormatter(TooltipComponent, calculateTooltipParams, {
-    itemsData,
-    formatMessage,
-  }),
-});
+}) =>
+  buildAxisTooltip({
+    show: !isPreview,
+    formatter: buildTooltipFormatter(TooltipComponent, calculateTooltipParams, {
+      itemsData,
+      formatMessage,
+    }),
+  });
 
 /**
  * Assembles a full ECharts option for a single-series line trend chart.
@@ -173,7 +136,7 @@ export const buildSingleLineTrendOption = ({
 
   return {
     color: [color],
-    textStyle: TREND_AXIS_LABEL_STYLE,
+    textStyle: AXIS_LABEL_STYLE,
     grid: buildTrendChartGrid(isPreview),
     xAxis: buildTrendChartXAxis({ categories, isPreview }),
     yAxis: buildYAxis({ isPreview, values, formatMessage }),
