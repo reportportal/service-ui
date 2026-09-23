@@ -26,6 +26,7 @@ export const buildCategoryXAxis = ({
   name,
   nameGap = 22,
   axisLineColor = COLOR_GRAY_80,
+  showAxisLine = true,
   showAxisTick = false,
   axisTickColor = COLOR_GRAY_80,
   axisTickLength = 4,
@@ -35,7 +36,7 @@ export const buildCategoryXAxis = ({
   data,
   boundaryGap,
   axisLine: {
-    show: true,
+    show: showAxisLine,
     ...(onZero ? { onZero: true } : {}),
     lineStyle: {
       color: axisLineColor,
