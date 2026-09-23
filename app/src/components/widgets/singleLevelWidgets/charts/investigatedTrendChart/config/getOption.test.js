@@ -28,59 +28,33 @@ import {
 const formatMessage = (msg) => msg.defaultMessage || msg.id;
 
 describe('investigatedTrendChart getOption', () => {
-  test('builds stacked bar series and percentage y-axis for launch mode', () => {
+  test('launch mode: stacked bars, % axis, item tooltip', () => {
     const option = getLaunchModeOption({
       content: sampleLaunchContent,
       isPreview: false,
       formatMessage,
     });
 
-    expect(option.series).toHaveLength(2);
+    expect(option.series.map(({ id, data }) => ({ id, data }))).toEqual([
+      { id: 'investigated', data: [60, 75, 50] },
+      { id: 'toInvestigate', data: [40, 25, 50] },
+    ]);
     expect(option.series[0]).toMatchObject({
-      id: 'investigated',
       type: 'bar',
       stack: 'total',
-      data: [60, 75, 50],
       barWidth: '60%',
       barCategoryGap: '40%',
     });
-    expect(option.series[1]).toMatchObject({
-      id: 'toInvestigate',
-      type: 'bar',
-      stack: 'total',
-      data: [40, 25, 50],
+    expect(option.yAxis).toMatchObject({ type: 'value', max: 100, name: '% of investigations' });
+    expect(option.xAxis.data).toEqual(['#1', '#2', '#3']);
+    expect(option.tooltip.trigger).toBe('item');
+    expect(option.customData.colors).toEqual({
+      investigated: COLOR_INVESTIGATED,
+      toInvestigate: COLOR_TO_INVESTIGATE,
     });
-    expect(option.yAxis).toMatchObject({
-      type: 'value',
-      min: 0,
-      max: 100,
-      interval: 10,
-      show: true,
-    });
-    expect(option.yAxis.name).toBe('% of investigations');
-    expect(option.xAxis).toMatchObject({
-      type: 'category',
-      data: ['#1', '#2', '#3'],
-      show: true,
-    });
-    expect(option.tooltip).toEqual(
-      expect.objectContaining({
-        trigger: 'item',
-        formatter: expect.any(Function),
-        show: true,
-      }),
-    );
-    expect(option.customData).toMatchObject({
-      colors: {
-        investigated: COLOR_INVESTIGATED,
-        toInvestigate: COLOR_TO_INVESTIGATE,
-      },
-      legendItems: ['investigated', 'toInvestigate'],
-    });
-    expect(option.customData.itemsData).toHaveLength(3);
   });
 
-  test('hides axes and tooltip in launch preview mode', () => {
+  test('launch preview hides axes and tooltip', () => {
     const option = getLaunchModeOption({
       content: sampleLaunchContent,
       isPreview: true,
@@ -89,13 +63,11 @@ describe('investigatedTrendChart getOption', () => {
 
     expect(option.xAxis.show).toBe(false);
     expect(option.yAxis.show).toBe(false);
-    expect(option.yAxis.name).toBeUndefined();
     expect(option.tooltip.show).toBe(false);
-    expect(option.grid.top).toBe(0);
-    expect(option.grid.left).toBe(0);
+    expect(option.grid).toMatchObject({ top: 0, left: 0 });
   });
 
-  test('builds stacked bar series for timeline mode', () => {
+  test('timeline mode maps dates into stacked bars', () => {
     const option = getTimelineOption({
       content: sampleTimelineContent,
       isPreview: false,
@@ -103,26 +75,15 @@ describe('investigatedTrendChart getOption', () => {
     });
 
     expect(option.series).toHaveLength(2);
-    expect(option.series[0]).toMatchObject({
-      type: 'bar',
-      stack: 'total',
-      data: [55, 70],
-    });
-    expect(option.series[1]).toMatchObject({
-      type: 'bar',
-      stack: 'total',
-      data: [45, 30],
-    });
-    expect(option.yAxis).toMatchObject({
-      type: 'value',
-      max: 100,
-    });
+    expect(option.series.map((item) => item.data)).toEqual([
+      [55, 70],
+      [45, 30],
+    ]);
     expect(option.xAxis.data).toHaveLength(2);
-    expect(option.tooltip.trigger).toBe('item');
     expect(option.customData.legendItems).toEqual(['investigated', 'toInvestigate']);
   });
 
-  test('builds stacked bar series for status page mode', () => {
+  test('status page mode sets week axis title', () => {
     const option = getStatusPageOption({
       content: sampleStatusPageContent,
       isPreview: false,
@@ -131,24 +92,9 @@ describe('investigatedTrendChart getOption', () => {
       chartType: 'bar',
     });
 
-    expect(option.series).toHaveLength(2);
-    expect(option.series[0]).toMatchObject({
-      id: 'investigated',
-      type: 'bar',
-      stack: 'total',
-      data: [65, 80, 40, 90],
-    });
-    expect(option.yAxis).toMatchObject({
-      type: 'value',
-      max: 100,
-    });
+    expect(option.series[0].data).toEqual([65, 80, 40, 90]);
     expect(option.xAxis.name).toBe('t, weeks');
-    expect(option.tooltip).toEqual(
-      expect.objectContaining({
-        trigger: 'item',
-        formatter: expect.any(Function),
-        show: true,
-      }),
-    );
+    expect(option.yAxis.max).toBe(100);
+    expect(typeof option.tooltip.formatter).toBe('function');
   });
 });

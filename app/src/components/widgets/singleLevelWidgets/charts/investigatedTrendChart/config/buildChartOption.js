@@ -14,13 +14,15 @@
  * limitations under the License.
  */
 
-import { COLOR_GRAY_80 } from 'common/constants/colors';
 import { buildTooltipFormatter } from 'components/widgets/common/echarts/configHelpers';
 import { IssueTypeStatTooltip } from '../../common/issueTypeStatTooltip';
-import { AXIS_LABEL_STYLE, createStackedBarSeries } from '../../common/stackedBarSeries';
+import {
+  buildCategoryXAxis,
+  buildItemTooltip,
+  buildValueYAxis,
+} from '../../common/echartsAxisBuilders';
+import { AXIS_LABEL_STYLE } from '../../common/stackedBarSeries';
 import { calculateTooltipParams, localMessages } from './utils';
-
-export { createStackedBarSeries };
 
 export const buildInvestigatedChartOption = ({
   isPreview,
@@ -43,70 +45,24 @@ export const buildInvestigatedChartOption = ({
     bottom: isPreview ? 0 : 40,
     containLabel: false,
   },
-  xAxis: {
-    type: 'category',
+  xAxis: buildCategoryXAxis({
     show: !isPreview,
     data: categories,
-    boundaryGap: true,
-    axisLine: {
-      show: true,
-      onZero: true,
-      lineStyle: {
-        color: COLOR_GRAY_80,
-        width: 1,
-      },
-    },
-    axisTick: {
-      show: false,
-    },
-    axisLabel: {
-      ...AXIS_LABEL_STYLE,
-      margin: 8,
-      interval: (index) => tickValues.includes(index),
-      hideOverlap: true,
-    },
-  },
-  yAxis: {
-    type: 'value',
+    onZero: true,
+    axisLabelInterval: (index) => tickValues.includes(index),
+  }),
+  yAxis: buildValueYAxis({
     show: !isPreview,
-    min: 0,
-    max: 100,
-    interval: 10,
     name: isPreview ? undefined : formatMessage(localMessages.yAxisInvestigationsTitle),
-    nameLocation: 'middle',
-    nameGap: 32,
-    nameRotate: 90,
-    nameTextStyle: {
-      ...AXIS_LABEL_STYLE,
-      fontSize: 12,
-    },
-    axisLabel: {
-      ...AXIS_LABEL_STYLE,
-      margin: 8,
-    },
-    axisLine: {
-      show: false,
-    },
-    axisTick: {
-      show: false,
-    },
-    splitLine: {
-      show: !isPreview,
-      lineStyle: {
-        color: COLOR_GRAY_80,
-        width: 1,
-      },
-    },
-  },
-  tooltip: {
-    trigger: 'item',
+  }),
+  tooltip: buildItemTooltip({
     show: !isPreview,
     formatter: buildTooltipFormatter(IssueTypeStatTooltip, calculateTooltipParams, {
       itemsData,
       formatMessage,
       ...tooltipExtra,
     }),
-  },
+  }),
   legend: {
     show: false,
   },

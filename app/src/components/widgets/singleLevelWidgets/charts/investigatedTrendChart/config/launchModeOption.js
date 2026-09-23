@@ -17,7 +17,8 @@
 import { buildAxisTicks } from 'components/widgets/common/echarts/configHelpers';
 import { transformCategoryLabelByDefault } from 'components/widgets/common/utils';
 import { COLORS } from 'components/widgets/common/constants';
-import { buildInvestigatedChartOption, createStackedBarSeries } from './buildChartOption';
+import { createStackedBarSeries } from '../../common/stackedBarSeries';
+import { buildInvestigatedChartOption } from './buildChartOption';
 
 export const getLaunchModeOption = ({ content, isPreview, formatMessage }) => {
   const sortedResult = [...content].sort((a, b) => {

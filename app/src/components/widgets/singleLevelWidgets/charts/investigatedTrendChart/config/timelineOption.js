@@ -17,7 +17,8 @@
 import moment from 'moment';
 import { buildAxisTicks } from 'components/widgets/common/echarts/configHelpers';
 import { COLORS } from 'components/widgets/common/constants';
-import { buildInvestigatedChartOption, createStackedBarSeries } from './buildChartOption';
+import { createStackedBarSeries } from '../../common/stackedBarSeries';
+import { buildInvestigatedChartOption } from './buildChartOption';
 
 export const getTimelineOption = ({ content, isPreview, formatMessage }) => {
   const chartData = {};

@@ -15,7 +15,6 @@
  */
 
 import * as COLORS from 'common/constants/colors';
-import { COLOR_GRAY_80 } from 'common/constants/colors';
 import { defineMessages } from 'react-intl';
 import { PERIOD_VALUES_LENGTH, PERIOD_VALUES } from 'common/constants/statusPeriodValues';
 import { createTooltipRenderer } from 'components/widgets/common/tooltip';
@@ -27,6 +26,11 @@ import {
   STACKED_BAR_EMPHASIS,
   createStackedBarSeries,
 } from './stackedBarSeries';
+import {
+  buildCategoryXAxis,
+  buildItemTooltip,
+  buildValueYAxis,
+} from './echartsAxisBuilders';
 
 const localMessages = defineMessages({
   xAxisWeeksTitle: {
@@ -314,59 +318,21 @@ export const getOption = ({
       bottom: 0,
       containLabel: true,
     },
-    xAxis: {
-      type: 'category',
+    xAxis: buildCategoryXAxis({
       show: !isPreview,
       data: getCategories(itemsData, interval),
       boundaryGap: isBar,
-      axisLine: {
-        show: true,
-        lineStyle: {
-          color: COLOR_GRAY_80,
-          width: 1,
-        },
-      },
-      axisTick: {
-        show: false,
-      },
-      axisLabel: {
-        ...AXIS_LABEL_STYLE,
-        margin: 8,
-        interval: 0,
-        hideOverlap: true,
-      },
       name: xAxisName,
-      nameLocation: 'middle',
-      nameGap: 22,
-      nameTextStyle: AXIS_LABEL_STYLE,
-    },
-    yAxis: {
-      type: 'value',
+    }),
+    yAxis: buildValueYAxis({
       show: !isPreview,
-      min: 0,
       max: integerValueType ? yTicksValues?.[yTicksValues.length - 1] : 100,
       interval: integerValueType ? yInterval : 10,
       axisLabel: {
-        ...AXIS_LABEL_STYLE,
-        margin: 8,
         formatter: (value) => (integerValueType ? value : `${value}%`),
       },
-      axisLine: {
-        show: false,
-      },
-      axisTick: {
-        show: false,
-      },
-      splitLine: {
-        show: !isPreview,
-        lineStyle: {
-          color: COLOR_GRAY_80,
-          width: 1,
-        },
-      },
-    },
-    tooltip: {
-      trigger: 'item',
+    }),
+    tooltip: buildItemTooltip({
       show: !isPreview && !isCustomTooltip,
       formatter: buildTooltipFormatter(IssueTypeStatTooltip, calculateTooltipParams, {
         itemsData,
@@ -374,7 +340,7 @@ export const getOption = ({
         integerValueType,
         wrapperClassName,
       }),
-    },
+    }),
     legend: {
       show: false,
     },
