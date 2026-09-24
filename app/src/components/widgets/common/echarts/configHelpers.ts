@@ -49,7 +49,9 @@ const getParamValue = (param: EChartsTooltipParam): number | string | null => {
   return param.value ?? null;
 };
 
-const toC3TooltipData = (params: EChartsTooltipParam | EChartsTooltipParam[]): C3TooltipDataItem[] => {
+const toC3TooltipData = (
+  params: EChartsTooltipParam | EChartsTooltipParam[],
+): C3TooltipDataItem[] => {
   const items = Array.isArray(params) ? params : [params];
 
   return items.map((item) => ({
@@ -122,7 +124,7 @@ export const buildLegendItems = (keys: string[]): string[] => [...keys];
 export const ECHARTS_THEME: EChartsOption = {
   color: [],
   textStyle: {
-    fontFamily: 'OpenSans',
+    fontFamily: 'OpenSans, sans-serif',
     fontSize: 10,
     fontWeight: 400,
     color: COLOR_CHARCOAL_GREY,
@@ -140,7 +142,7 @@ export const ECHARTS_THEME: EChartsOption = {
     borderWidth: 0,
     extraCssText: 'box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15); padding: 0;',
     textStyle: {
-      fontFamily: 'OpenSans',
+      fontFamily: 'OpenSans, sans-serif',
       fontSize: 12,
       fontWeight: 400,
       color: COLOR_CHARCOAL_GREY,

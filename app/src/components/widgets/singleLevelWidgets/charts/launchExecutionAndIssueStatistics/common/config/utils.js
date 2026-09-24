@@ -34,8 +34,11 @@ export const getChartData = (data, filter) => {
 };
 
 export const calculateTooltipParams = (data, color, customProps) => {
-  const { defectTypes = {}, formatMessage } = customProps;
-  const { value, ratio, id } = data[0];
+  const { defectTypes = {}, formatMessage, total = 0 } = customProps;
+  const { value, id } = data[0];
+  // ECharts pie tooltip params don't carry C3's `.ratio` — derive it from the
+  // series total instead (passed in via customProps).
+  const ratio = total ? value / total : 0;
 
   return {
     itemsCount: `${value} (${getPercentage(ratio)}%)`,
