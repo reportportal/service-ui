@@ -43,6 +43,10 @@ export const BAR_WIDTH = '18%';
 const getSeriesLabel = (field, formatMessage) =>
   messages[field] ? formatMessage(messages[field]) : field;
 
+// ECharts' own `params.marker` is always a circle; build a square one instead.
+const buildSquareMarker = (color) =>
+  `<span style="display:inline-block;margin-right:6px;width:10px;height:10px;background-color:${color};"></span>`;
+
 const buildTooltipFormatter =
   ({ categories, tooltipContents, scaleName, valuesByField, percentage, formatMessage }) =>
   (params) => {
@@ -57,14 +61,15 @@ const buildTooltipFormatter =
         }
         const label = getSeriesLabel(item.seriesId, formatMessage);
         const percentValue = getPercentageValue(rawValue, valuesByField, item.seriesId, index);
+        const text = percentage
+          ? `${label}: ${percentValue}%`
+          : `${label}: ${rawValue} (${percentValue}%)`;
 
-        return percentage
-          ? `<div>${label}: ${percentValue}%</div>`
-          : `<div>${label}: ${rawValue} (${percentValue}%)</div>`;
+        return `<div>${buildSquareMarker(item.color)}${text}</div>`;
       })
       .join('');
 
-    return `<div>${scaleName}: ${categories[index]}</div>${
+    return `<div style="font-weight: 600;">${scaleName}: ${categories[index]}</div>${
       tooltipContents[index] ? `<div>${tooltipContents[index]}</div>` : ''
     }${rows}`;
   };
@@ -168,7 +173,7 @@ export const getOption = ({
         opacity: isDefect && !focusDefectTypes ? 0.3 : 1,
       },
       emphasis: {
-        focus: 'series',
+        focus: 'none',
       },
     });
   });
@@ -236,8 +241,10 @@ export const getOption = ({
     },
     yAxis,
     tooltip: {
-      trigger: 'axis',
+      trigger: 'item',
       show: !isPreview,
+      axisPointer: { show: false },
+      extraCssText: 'box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15); padding: 6px 6px;',
       formatter: buildTooltipFormatter({
         categories,
         tooltipContents,

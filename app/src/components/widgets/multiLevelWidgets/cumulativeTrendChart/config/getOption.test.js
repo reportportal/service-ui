@@ -214,7 +214,7 @@ describe('cumulativeTrendChart getOption', () => {
     expect(option.grid).toMatchObject({ top: 0, left: 0, right: 0, bottom: 0 });
   });
 
-  test('tooltip formatter reports the title, afterTitle content, and per-series values', () => {
+  test('only shows the tooltip on a bar, with no axis crosshair, via item trigger', () => {
     const option = getOption({
       content: sampleContent,
       contentFields: sampleContentFields,
@@ -224,14 +224,50 @@ describe('cumulativeTrendChart getOption', () => {
       userSettings: {},
     });
 
-    const html = option.tooltip.formatter([
-      { seriesId: 'statistics$executions$passed', dataIndex: 0 },
-      { seriesId: 'statistics$executions$failed', dataIndex: 0 },
-    ]);
+    expect(option.tooltip.trigger).toBe('item');
+    expect(option.tooltip.axisPointer).toEqual({ show: false });
+    // Overrides the shared theme's `padding: 0` so the popover has breathing room.
+    expect(option.tooltip.extraCssText).toContain('padding: 10px 12px');
+  });
 
+  test('tooltip formatter reports the title, afterTitle content, and the hovered bar value with a square color marker', () => {
+    const option = getOption({
+      content: sampleContent,
+      contentFields: sampleContentFields,
+      isPreview: false,
+      formatMessage,
+      attributes,
+      userSettings: {},
+    });
+
+    // 'item' trigger calls the formatter with a single param object, not an array.
+    const html = option.tooltip.formatter({
+      seriesId: 'statistics$executions$passed',
+      dataIndex: 0,
+      color: COLOR_PASSED,
+    });
+
+    // Title is bold, and the row leads with a square (not ECharts' default round) marker.
+    expect(html).toContain('font-weight: 600');
     expect(html).toContain('Build: build-1');
     expect(html).toContain('Build 1');
+    expect(html).toContain(`background-color:${COLOR_PASSED}`);
+    expect(html).not.toContain('border-radius');
     expect(html).toContain('Passed: 6 (60%)');
-    expect(html).toContain('Failed: 3 (30%)');
+  });
+
+  test('never fades other bars when one is hovered', () => {
+    const option = getOption({
+      content: sampleContent,
+      contentFields: sampleContentFields,
+      isPreview: false,
+      formatMessage,
+      attributes,
+      userSettings: {},
+    });
+
+    option.series.forEach((series) => {
+      expect(series.emphasis.focus).toBe('none');
+    });
   });
 });

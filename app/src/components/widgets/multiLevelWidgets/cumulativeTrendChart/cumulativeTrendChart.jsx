@@ -338,12 +338,9 @@ export const CumulativeTrendChart = ({
     chartRef.current = chart;
   }, []);
 
-  // Registered separately (not inside `onChartCreated`, which the EChart wrapper only
-  // invokes once, on chart creation) so the click handlers never close over stale
-  // `content` / `defectTypes` / `popupState` from that first render.
   useEffect(() => {
     const chart = chartRef.current;
-    if (!chart) {
+    if (!chart || chart.isDisposed()) {
       return undefined;
     }
 
@@ -362,8 +359,11 @@ export const CumulativeTrendChart = ({
     chart.getZr().on('click', handleBackgroundClick);
 
     return () => {
+      if (chart.isDisposed()) {
+        return;
+      }
       chart.off('click', handleSeriesClick);
-      chart.getZr().off('click', handleBackgroundClick);
+      chart.getZr()?.off('click', handleBackgroundClick);
     };
   }, [onChartElementClick, hideActionsPopup]);
 
