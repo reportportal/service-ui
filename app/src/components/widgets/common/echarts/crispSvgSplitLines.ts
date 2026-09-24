@@ -91,9 +91,10 @@ const isHorizontalAxisLine = (shape: LineShape): boolean => {
 };
 
 /**
- * ECharts SVG split lines sit on fractional coords and look soft with antialiasing.
- * crispEdges alone is uneven on non-1x DPR (e.g. Windows 125%). Snap each
- * horizontal grid stroke to the device pixel grid, then enable crispEdges.
+ * ECharts SVG split lines sit on fractional coords and look soft/uneven with
+ * antialiasing on non-1x DPR (e.g. Windows 125%). Snap each horizontal grid
+ * stroke to the device pixel grid. Keep shape-rendering unset (C3 uses auto):
+ * crispEdges makes the same #ccc 1px stroke look harder than C3.
  *
  * Only silent zrender `line` displayables (axis / splitLine) are touched; their
  * SVG nodes are resolved by Displayable.id → painter VNode.key, never by
@@ -157,16 +158,11 @@ export const crispSvgSplitLines = (chart: EChartsType): void => {
     const screenY = ctm.d * y1 + ctm.f;
     const snappedScreenY = Math.round(screenY * dpr) / dpr;
     const snappedSvgY = (snappedScreenY - ctm.f) / ctm.d;
-    const stroke = typeof el.style?.stroke === 'string' ? el.style.stroke : '';
 
     elm.setAttribute('d', `M${x1} ${snappedSvgY}L${x2} ${snappedSvgY}`);
 
-    // Match C3 x-axis domain (shape-rendering: auto) — crispEdges looks ~1 device
-    // pixel thin on non-1x DPR, while C3's antialiased stroke reads closer to 2px.
-    if (stroke === '#000000') {
-      elm.removeAttribute('shape-rendering');
-    } else {
-      elm.setAttribute('shape-rendering', 'crispEdges');
-    }
+    // C3 grid/domain use shape-rendering: auto. crispEdges makes the same
+    // #ccc 1px stroke look harder/darker, especially on non-1x DPR.
+    elm.removeAttribute('shape-rendering');
   });
 };
