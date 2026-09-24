@@ -15,7 +15,7 @@
  */
 
 import { COLOR_FAILED, COLOR_PASSED, COLOR_SKIPPED } from 'common/constants/colors';
-import { getOption } from './getOption';
+import { BAR_WIDTH, getOption } from './getOption';
 import { sampleContent, sampleContentFields } from './fixtures/sampleContent';
 
 const formatMessage = (msg) => msg.defaultMessage || msg.id;
@@ -55,7 +55,7 @@ describe('cumulativeTrendChart getOption', () => {
     );
     expect(executionsIndex).toBeLessThan(defectsIndex);
     option.series.forEach((series) => {
-      expect(series.barWidth).toBe('19%');
+      expect(String(series.barWidth)).toBe(BAR_WIDTH);
     });
     expect(option.customData.legendItems).toEqual([
       'statistics$executions$failed',

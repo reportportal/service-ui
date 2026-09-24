@@ -38,7 +38,7 @@ const AXIS_LABEL_STYLE = {
 const STACK_EXECUTIONS = 'executions';
 const STACK_DEFECTS = 'defects';
 // ~60% of what ECharts would auto-size the bar to with two stacks sharing a category.
-const BAR_WIDTH = '18%';
+export const BAR_WIDTH = '18%';
 
 const getSeriesLabel = (field, formatMessage) =>
   messages[field] ? formatMessage(messages[field]) : field;
