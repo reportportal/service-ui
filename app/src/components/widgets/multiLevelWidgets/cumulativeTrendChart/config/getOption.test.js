@@ -227,7 +227,7 @@ describe('cumulativeTrendChart getOption', () => {
     expect(option.tooltip.trigger).toBe('item');
     expect(option.tooltip.axisPointer).toEqual({ show: false });
     // Overrides the shared theme's `padding: 0` so the popover has breathing room.
-    expect(option.tooltip.extraCssText).toContain('padding: 10px 12px');
+    expect(option.tooltip.extraCssText).toContain('padding: 6px 6px');
   });
 
   test('tooltip formatter reports the title, afterTitle content, and the hovered bar value with a square color marker', () => {
