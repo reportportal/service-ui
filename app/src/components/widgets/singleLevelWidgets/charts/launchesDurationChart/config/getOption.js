@@ -25,6 +25,7 @@ import { isValueInterrupted, prepareChartData, calculateTooltipParams } from './
 import { LaunchesDurationTooltip } from './launchesDurationTooltip';
 
 const DISPLAY_TICK_STEP = 0.5;
+const MAX_VALUE_TICKS = 10;
 
 const formatDurationTick = (value, timeTypeValue) =>
   (Number.parseInt(value, 10) / timeTypeValue).toFixed(2);
@@ -34,8 +35,11 @@ export const getOption = ({ content, isPreview, formatMessage }) => {
   const values = chartData.slice(1).map(Number);
   const categories = itemsData.map(transformCategoryLabelByDefault);
   const tickValues = buildAxisTicks(itemsData.length);
-  // C3 value-axis ticks use a 0.5 step in display units (seconds/minutes/hours).
-  const valueAxisInterval = timeType.value * DISPLAY_TICK_STEP;
+  // Base step is 0.5 display units; grow it in 0.5-unit multiples so the tick count stays bounded.
+  const baseStep = timeType.value * DISPLAY_TICK_STEP;
+  const maxValue = Math.max(0, ...values.filter(Number.isFinite));
+  const valueAxisInterval =
+    baseStep * Math.max(1, Math.ceil(maxValue / (baseStep * MAX_VALUE_TICKS)));
 
   const seriesData = values.map((value, index) => ({
     value,

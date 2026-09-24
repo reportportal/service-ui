@@ -17,7 +17,11 @@
 import { COLOR_CHART_DURATION, COLOR_INTERRUPTED } from 'common/constants/colors';
 import { DURATION } from 'components/widgets/common/constants';
 import { getOption } from './getOption';
-import { sampleContent, sampleContentWithInterrupted } from './fixtures/sampleContent';
+import {
+  sampleContent,
+  sampleContentLongMinutes,
+  sampleContentWithInterrupted,
+} from './fixtures/sampleContent';
 
 const formatMessage = (msg) => msg.defaultMessage || msg.id;
 
@@ -91,5 +95,18 @@ describe('launchesDurationChart getOption', () => {
     expect(option.yAxis.show).toBe(false);
     expect(option.tooltip.show).toBe(false);
     expect(option.grid).toMatchObject({ top: 0, left: 0, right: 0, bottom: 0 });
+  });
+
+  test('scales value-axis interval for long durations so tick count stays bounded', () => {
+    const option = getOption({
+      content: sampleContentLongMinutes,
+      isPreview: false,
+      formatMessage,
+    });
+
+    // minutes timeType (value 60000); base 0.5-unit step = 30000ms
+    // 55 min → interval grows to 11 * baseStep instead of ~110 half-minute ticks
+    expect(option.xAxis.name).toBe('minutes');
+    expect(option.xAxis.interval).toBe(330000);
   });
 });

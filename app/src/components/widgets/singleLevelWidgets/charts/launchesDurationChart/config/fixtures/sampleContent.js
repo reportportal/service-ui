@@ -56,3 +56,16 @@ export const sampleContentWithInterrupted = [
     id: '5bb342e50274390001973f69',
   },
 ];
+
+// 55 minutes → minutes time type; fixed 0.5-unit step would produce ~110 ticks
+export const sampleContentLongMinutes = [
+  {
+    duration: String(55 * 60 * 1000),
+    startTime: '1538474734721',
+    endTime: '1538478034721',
+    status: 'PASSED',
+    name: 'Demo Api Tests__ncst',
+    number: '10',
+    id: '5bb342ee0274390001975998',
+  },
+];
