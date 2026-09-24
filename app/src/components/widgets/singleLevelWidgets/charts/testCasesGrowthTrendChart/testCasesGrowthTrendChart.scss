@@ -1,5 +1,5 @@
 /*!
- * Copyright 2019 EPAM Systems
+ * Copyright 2026 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,27 +15,8 @@
  */
 
 .test-cases-growth-trend-chart {
+  position: relative;
+  width: 100%;
+  height: 100%;
   padding-top: 5px;
-
-  :global {
-    svg {
-      .c3-xgrid-focus {
-        display: block;
-      }
-
-      .c3-grid line {
-        stroke: $COLOR--gray-80;
-      }
-    }
-
-    .c3-chart-texts {
-      .c3-texts {
-        .c3-text {
-          fill: $COLOR--charcoal-grey !important;
-          font-family: $FONT-REGULAR;
-          font-size: 10px;
-        }
-      }
-    }
-  }
 }
