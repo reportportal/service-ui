@@ -35,7 +35,7 @@ const prepareChartData = (content) => {
   let maxDuration = 0;
   const itemsData = content.map((item) => {
     const duration = convertSecondsToMilliseconds(item.duration);
-    maxDuration = duration > maxDuration ? duration : maxDuration;
+    maxDuration = Math.max(maxDuration, duration);
     chartData.push(duration);
 
     return { ...item, duration };
