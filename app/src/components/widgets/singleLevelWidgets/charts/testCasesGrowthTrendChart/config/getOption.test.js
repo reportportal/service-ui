@@ -16,6 +16,7 @@
 
 import {
   COLOR_BLACK,
+  COLOR_CHARCOAL_GREY,
   COLOR_DARK_PASTEL_GREEN,
   COLOR_ORANGE_RED,
 } from 'common/constants/colors';
@@ -78,7 +79,7 @@ describe('testCasesGrowthTrendChart getOption', () => {
         lineStyle: { color: COLOR_BLACK, width: 1 },
       },
       axisLabel: {
-        color: COLOR_BLACK,
+        color: COLOR_CHARCOAL_GREY,
         fontSize: 10,
       },
     });
@@ -99,11 +100,11 @@ describe('testCasesGrowthTrendChart getOption', () => {
         },
       },
       nameTextStyle: {
-        color: COLOR_BLACK,
+        color: COLOR_CHARCOAL_GREY,
         fontSize: 10,
       },
       axisLabel: {
-        color: COLOR_BLACK,
+        color: COLOR_CHARCOAL_GREY,
         fontSize: 10,
       },
     });

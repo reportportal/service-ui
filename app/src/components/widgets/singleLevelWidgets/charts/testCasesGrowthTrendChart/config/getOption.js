@@ -39,9 +39,20 @@ import { calculateTooltipParams } from './utils';
 const OFFSET_SERIES_ID = 'offset';
 const BAR_SERIES_ID = 'bar';
 const ZERO_DELTA_SERIES_ID = 'zeroDelta';
-const Y_AXIS_INTERVAL = 2;
 const GRID_DASH = [3, 3];
 const BAR_WIDTH_RATIO = 0.6;
+const Y_AXIS_TICK_TARGET = 15;
+
+const computeYInterval = (max) => {
+  if (max <= 0) return 1;
+  const rough = max / Y_AXIS_TICK_TARGET;
+  if (rough <= 1) return 1;
+  const magnitude = Math.pow(10, Math.floor(Math.log10(rough)));
+  const normalized = rough / magnitude;
+  if (normalized <= 2) return 2 * magnitude;
+  if (normalized <= 5) return 5 * magnitude;
+  return 10 * magnitude;
+};
 
 const getGridBottom = (isTimeline) => (isTimeline ? 50 : 40);
 
@@ -119,7 +130,7 @@ const buildZeroDeltaSeries = (bars, offsets, categories, yAxisMax) => ({
     const lineWidth = slotWidth * BAR_WIDTH_RATIO;
     const coordPoint = api.coord([categoryOrdinal, yValue]);
     const yPixel =
-      coordPoint && !isNaN(coordPoint[1])
+      coordPoint && !Number.isNaN(coordPoint[1])
         ? coordPoint[1]
         : gridY + gridHeight * (1 - yValue / (yAxisMax || 1));
     const y = Math.round(yPixel) + 0.5;
@@ -166,7 +177,8 @@ export const getOption = ({ content, isPreview, formatMessage, isTimeline = fals
   const labelStep = getLabelStep(itemsData.length, isTimeline);
   const barData = bars.map((value, index) => buildBarDataItem(value, positiveTrend[index]));
   const dataMax = offsets.length ? Math.max(...offsets.map((o, i) => o + bars[i])) : 0;
-  const yAxisMax = Math.ceil(dataMax / Y_AXIS_INTERVAL) * Y_AXIS_INTERVAL || Y_AXIS_INTERVAL;
+  const yInterval = computeYInterval(dataMax);
+  const yAxisMax = Math.ceil(dataMax / yInterval) * yInterval || 1;
   const zeroDeltaSeries = buildZeroDeltaSeries(bars, offsets, categories, yAxisMax);
 
   return {
@@ -199,7 +211,7 @@ export const getOption = ({ content, isPreview, formatMessage, isTimeline = fals
       type: 'value',
       show: !isPreview,
       min: 0,
-      interval: Y_AXIS_INTERVAL,
+      interval: yInterval,
       name: isPreview ? undefined : formatMessage(messages.cases),
       nameLocation: 'middle',
       nameGap: 40,
