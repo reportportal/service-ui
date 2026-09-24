@@ -25,6 +25,7 @@ import { MostTimeConsumingTestCasesTooltip } from './mostTimeConsumingTestCasesT
 import { calculateTooltipParams } from './utils';
 
 const DISPLAY_TICK_STEP = 0.1;
+const MAX_VALUE_TICKS = 10;
 
 const formatDurationTick = (value, timeTypeValue) =>
   (Number.parseInt(value, 10) / timeTypeValue).toFixed(2);
@@ -51,8 +52,10 @@ export const getOption = ({ content, isPreview, formatMessage }) => {
   const { timeType, chartData, itemsData = [] } = prepareChartData(content || []);
   const values = chartData.slice(1).map(Number);
   const categories = itemsData.map((_, index) => String(index));
-  const valueAxisInterval = timeType.value * DISPLAY_TICK_STEP;
+  const baseStep = timeType.value * DISPLAY_TICK_STEP;
   const maxValue = Math.max(0, ...values.filter(Number.isFinite));
+  const valueAxisInterval =
+    baseStep * Math.max(1, Math.ceil(maxValue / (baseStep * MAX_VALUE_TICKS)));
 
   const seriesData = values.map((value, index) => {
     const status = itemsData[index]?.status;

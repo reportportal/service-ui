@@ -18,7 +18,7 @@ export const sampleContent = [
   {
     id: 'item-1',
     name: 'slowTestA',
-    duration: 4.607,
+    duration: 0.81,
     status: 'FAILED',
     startTime: 1538474734721,
     path: '1.2.3',
@@ -26,7 +26,7 @@ export const sampleContent = [
   {
     id: 'item-2',
     name: 'slowTestB',
-    duration: 1.526,
+    duration: 0.16,
     status: 'PASSED',
     startTime: 1538474726486,
     path: '1.2.4',
@@ -34,7 +34,7 @@ export const sampleContent = [
   {
     id: 'item-3',
     name: 'slowTestC',
-    duration: 0.83,
+    duration: 0.1,
     status: 'SKIPPED',
     startTime: 1538474725654,
     path: '1.2.5',

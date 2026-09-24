@@ -19,86 +19,86 @@ import { DURATION } from 'components/widgets/common/constants';
 import { getOption } from './getOption';
 import { sampleContent, sampleContentLongMinutes } from './fixtures/sampleContent';
 
-const formatMessage = (msg) => msg.defaultMessage || msg.id;
+const intl = (msg) => msg.defaultMessage || msg.id;
 
-describe('mostTimeConsumingTestCasesChart getOption', () => {
-  test('builds a horizontal duration bar series with status colors', () => {
+describe('mostTimeConsumingTestCasesChart/getOption', () => {
+  it('maps statuses to bar colors and keeps C3-like short-range ticks (0.1s)', () => {
     const option = getOption({
       content: sampleContent,
       isPreview: false,
-      formatMessage,
+      formatMessage: intl,
     });
 
-    expect(option.series).toHaveLength(1);
-    expect(option.series[0]).toMatchObject({
-      id: DURATION,
-      type: 'bar',
-      barWidth: '80%',
-      barCategoryGap: '20%',
-      emphasis: {
-        focus: 'none',
-        itemStyle: { opacity: 0.75 },
-      },
-    });
-    expect(option.series[0].data).toEqual([
-      { value: 4607, itemStyle: { color: COLOR_FAILED } },
-      { value: 1526, itemStyle: { color: COLOR_PASSED } },
-      { value: 830, itemStyle: { color: COLOR_SKIPPED } },
-    ]);
-    expect(option.yAxis).toMatchObject({
-      type: 'category',
-      show: true,
-      inverse: true,
-      data: ['0', '1', '2'],
-      axisLabel: { show: false },
-      splitLine: { show: false },
-      axisTick: {
-        show: true,
-        alignWithLabel: true,
-        inside: true,
-        customValues: ['0', '2'],
-      },
-    });
-    expect(option.xAxis).toMatchObject({
-      type: 'value',
-      show: true,
-      name: 'seconds',
-      min: 0,
-      max: 4607,
-      // 0.1 display-unit step → 100ms when timeType is seconds
-      interval: 100,
-      splitLine: { show: false },
-    });
-    expect(option.xAxis.axisLabel.formatter(4607)).toBe('4.61');
-    expect(option.tooltip).toEqual(
-      expect.objectContaining({ trigger: 'item', formatter: expect.any(Function), show: true }),
+    expect(option.series[0]).toEqual(
+      expect.objectContaining({
+        id: DURATION,
+        type: 'bar',
+        barWidth: '80%',
+        barCategoryGap: '20%',
+        data: [
+          { value: 810, itemStyle: { color: COLOR_FAILED } },
+          { value: 160, itemStyle: { color: COLOR_PASSED } },
+          { value: 100, itemStyle: { color: COLOR_SKIPPED } },
+        ],
+        emphasis: { focus: 'none', itemStyle: { opacity: 0.75 } },
+      }),
     );
+    expect(option.yAxis).toEqual(
+      expect.objectContaining({
+        type: 'category',
+        show: true,
+        inverse: true,
+        data: ['0', '1', '2'],
+        axisLabel: { show: false },
+        splitLine: { show: false },
+        axisTick: expect.objectContaining({
+          show: true,
+          alignWithLabel: true,
+          inside: true,
+          customValues: ['0', '2'],
+        }),
+      }),
+    );
+    expect(option.xAxis).toEqual(
+      expect.objectContaining({
+        type: 'value',
+        show: true,
+        name: 'seconds',
+        min: 0,
+        max: 810,
+        interval: 100,
+        splitLine: { show: false },
+      }),
+    );
+    expect(option.xAxis.axisLabel.formatter(810)).toBe('0.81');
+    expect(option.tooltip.trigger).toBe('item');
+    expect(option.tooltip.show).toBe(true);
     expect(option.customData.itemsData).toHaveLength(3);
-    expect(option.grid).toMatchObject({ top: 40, left: 35, right: 10, bottom: 50 });
+    expect(option.grid).toEqual(
+      expect.objectContaining({ top: 40, left: 35, right: 10, bottom: 50 }),
+    );
   });
 
-  test('hides axes and tooltip and collapses padding in preview mode', () => {
-    const option = getOption({
+  it('collapses chrome in preview', () => {
+    const { xAxis, yAxis, tooltip, grid } = getOption({
       content: sampleContent,
       isPreview: true,
-      formatMessage,
+      formatMessage: intl,
     });
 
-    expect(option.xAxis.show).toBe(false);
-    expect(option.yAxis.show).toBe(false);
-    expect(option.tooltip.show).toBe(false);
-    expect(option.grid).toMatchObject({ top: 0, left: 0, right: 0, bottom: 0 });
+    expect([xAxis.show, yAxis.show, tooltip.show]).toEqual([false, false, false]);
+    expect(grid).toEqual(expect.objectContaining({ top: 0, left: 0, right: 0, bottom: 0 }));
   });
 
-  test('keeps 0.1 display-unit value-axis step for longer durations', () => {
-    const option = getOption({
+  it('grows value-axis interval for long durations to cap tick count', () => {
+    const { xAxis } = getOption({
       content: sampleContentLongMinutes,
       isPreview: false,
-      formatMessage,
+      formatMessage: intl,
     });
 
-    // minutes timeType (value 60000); 0.1 unit → 6000ms
-    expect(option.xAxis.name).toBe('minutes');
-    expect(option.xAxis.interval).toBe(6000);
+    // minutes timeType (60000); base 0.1-unit step = 6000ms; 55 min → 55 * baseStep
+    expect(xAxis.name).toBe('minutes');
+    expect(xAxis.interval).toBe(330000);
   });
 });
