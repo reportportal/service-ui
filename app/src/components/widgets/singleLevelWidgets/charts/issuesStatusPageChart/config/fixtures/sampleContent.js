@@ -1,4 +1,4 @@
-/*!
+/*
  * Copyright 2026 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,15 +14,35 @@
  * limitations under the License.
  */
 
-.issues-status-page-chart {
-  position: relative;
-  width: 100%;
-  height: 100%;
-}
-
-.tooltip-container {
-  max-width: 215px;
-  padding: 5px 10px 5px 10px;
-  font-size: 13px;
-  white-space: nowrap;
-}
+export const sampleContent = [
+  {
+    name: 'Jan 1 - Jan 7',
+    values: {
+      product_bug: '10',
+      automation_bug: '5',
+      system_issue: '3',
+      no_defect: '2',
+      to_investigate: '4',
+    },
+  },
+  {
+    name: 'Jan 8 - Jan 14',
+    values: {
+      product_bug: '8',
+      automation_bug: '6',
+      system_issue: '4',
+      no_defect: '3',
+      to_investigate: '5',
+    },
+  },
+  {
+    name: 'Jan 15 - Jan 21',
+    values: {
+      product_bug: '12',
+      automation_bug: '4',
+      system_issue: '2',
+      no_defect: '1',
+      to_investigate: '7',
+    },
+  },
+];
