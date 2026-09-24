@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 EPAM Systems
+ * Copyright 2026 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,28 +14,48 @@
  * limitations under the License.
  */
 
-import React from 'react';
+import { useCallback, useMemo } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
-import { injectIntl } from 'react-intl';
-import { ChartContainer } from 'components/widgets/common/c3chart';
+import { useIntl } from 'react-intl';
 import { getChartDefaultProps } from 'components/widgets/common/utils';
-import { getConfig } from './config/getConfig';
+import { EChart } from 'components/widgets/common/echarts';
+import { getOption } from './config/getOption';
 import styles from './mostTimeConsumingTestCasesChart.scss';
 
 const cx = classNames.bind(styles);
 
-export const MostTimeConsumingTestCasesChart = injectIntl((props) => {
-  const configData = {
-    formatMessage: props.intl.formatMessage,
-    getConfig,
-    onChartClick: props.onItemClick,
-  };
+export const MostTimeConsumingTestCasesChart = ({
+  widget,
+  container,
+  onItemClick = () => {},
+  isPreview = false,
+  observer = {},
+}) => {
+  const { formatMessage } = useIntl();
+
+  const onChartClick = useCallback(
+    (data) => {
+      const targetItem = widget.content?.result?.[data.index] || {};
+
+      onItemClick(targetItem.id);
+    },
+    [onItemClick, widget],
+  );
+
+  const configData = useMemo(
+    () => ({
+      getOption,
+      formatMessage,
+      onChartClick,
+    }),
+    [formatMessage, onChartClick],
+  );
 
   return (
     <div className={cx('most-time-consuming-chart')}>
-      <ChartContainer
-        {...getChartDefaultProps(props)}
+      <EChart
+        {...getChartDefaultProps({ widget, container, isPreview, observer })}
         legendConfig={{
           showLegend: false,
         }}
@@ -44,16 +64,12 @@ export const MostTimeConsumingTestCasesChart = injectIntl((props) => {
       />
     </div>
   );
-});
+};
+
 MostTimeConsumingTestCasesChart.propTypes = {
   widget: PropTypes.object.isRequired,
   container: PropTypes.instanceOf(Element).isRequired,
   onItemClick: PropTypes.func,
   isPreview: PropTypes.bool,
   observer: PropTypes.object,
-};
-MostTimeConsumingTestCasesChart.defaultProps = {
-  onItemClick: () => {},
-  isPreview: false,
-  observer: {},
 };
