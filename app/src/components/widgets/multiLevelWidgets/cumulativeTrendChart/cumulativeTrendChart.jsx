@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 EPAM Systems
+ * Copyright 2026 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,15 +14,15 @@
  * limitations under the License.
  */
 
-import React, { PureComponent } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import isEqual from 'fast-deep-equal';
-import { connect } from 'react-redux';
-import { injectIntl } from 'react-intl';
+import { useDispatch, useSelector } from 'react-redux';
+import { useIntl } from 'react-intl';
 import { NoDataAvailableMaterializedView } from 'components/widgets/multiLevelWidgets/common/noDataAvailableMaterializedView';
 import { VirtualPopup } from 'components/main/virtualPopup';
-import { ChartJS } from 'components/widgets/common/chartjs';
+import { EChart } from 'components/widgets/common/echarts';
 import { urlOrganizationAndProjectSelector } from 'controllers/pages';
 import {
   defectLinkSelector,
@@ -38,7 +38,8 @@ import { BEFORE_AFTER_METHOD_TYPES_SEQUENCE } from 'common/constants/methodTypes
 import { STATE_READY, DEFECTS, TOTAL_KEY } from 'components/widgets/common/constants';
 import SearchIcon from 'common/img/search-icon-inline.svg';
 import FiltersIcon from 'common/img/filters-icon-inline.svg';
-import { getChartData } from './chartjsConfig';
+import { getOption } from './config/getOption';
+import { EXECUTION_FIELDS, getColorForKey, getDefectFields } from './config/utils';
 import { CumulativeChartLegend } from './legend/cumulativeChartLegend';
 import { ActionsPopup } from './actionsPopup';
 import {
@@ -53,416 +54,372 @@ const cx = classNames.bind(styles);
 const LEGEND_HEIGHT = 45;
 const PRINTED_LEGEND_HEIGHT = 80;
 
-@injectIntl
-@connect(
-  (state) => ({
-    defectTypes: defectTypesSelector(state),
-    getDefectLink: defectLinkSelector(state),
-    getStatisticsLink: statisticsLinkSelector(state),
-    slugs: urlOrganizationAndProjectSelector(state),
-  }),
-  {
-    navigate: (linkAction) => linkAction,
-  },
-)
-export class CumulativeTrendChart extends PureComponent {
-  static propTypes = {
-    intl: PropTypes.object.isRequired,
-    widget: PropTypes.object.isRequired,
-    defectTypes: PropTypes.object.isRequired,
-    getDefectLink: PropTypes.func.isRequired,
-    getStatisticsLink: PropTypes.func.isRequired,
-    navigate: PropTypes.func.isRequired,
-    fetchWidget: PropTypes.func,
-    clearQueryParams: PropTypes.func,
-    onChangeLegend: PropTypes.func,
-    uncheckedLegendItems: PropTypes.array,
-    userSettings: PropTypes.object,
-    isPrintMode: PropTypes.bool,
-    onChangeUserSettings: PropTypes.func,
-    container: PropTypes.instanceOf(Element).isRequired,
-    slugs: PropTypes.shape({
-      organizationSlug: PropTypes.string.isRequired,
-      projectSlug: PropTypes.string.isRequired,
-    }),
-  };
+const getSelectedStatus = (statKey) => {
+  if (!statKey) {
+    return null;
+  }
+  const [, groupKey, statusKey] = statKey.split('$');
 
-  static defaultProps = {
-    fetchWidget: () => {},
-    clearQueryParams: () => {},
-    onChangeLegend: () => {},
-    uncheckedLegendItems: [],
-    userSettings: {},
-    isPrintMode: false,
-    onChangeUserSettings: () => {},
-  };
+  if (groupKey !== 'executions') {
+    return null;
+  }
 
-  state = {
-    legendItems: [],
-    activeAttributes: [],
-    activeAttribute: null,
-    isActionsPopupShown: false,
+  switch (statusKey) {
+    case 'failed':
+      return FAILED;
+    case 'passed':
+      return PASSED;
+    case 'skipped':
+      return SKIPPED;
+    case 'interrupted':
+      return INTERRUPTED;
+    default:
+      return null;
+  }
+};
+
+export const CumulativeTrendChart = ({
+  widget,
+  container,
+  fetchWidget = () => {},
+  clearQueryParams = () => {},
+  onChangeLegend = () => {},
+  uncheckedLegendItems = [],
+  userSettings = {},
+  isPrintMode = false,
+  onChangeUserSettings = () => {},
+}) => {
+  const { formatMessage } = useIntl();
+  const dispatch = useDispatch();
+  const slugs = useSelector(urlOrganizationAndProjectSelector);
+  const defectTypes = useSelector(defectTypesSelector);
+  const getDefectLink = useSelector(defectLinkSelector);
+  const getStatisticsLink = useSelector(statisticsLinkSelector);
+
+  const chartRef = useRef(null);
+  const clickPositionRef = useRef({ left: 0, top: 0 });
+  const prevWidgetOptionsRef = useRef(widget.contentParameters.widgetOptions);
+
+  const [activeAttribute, setActiveAttribute] = useState(null);
+  const [activeAttributes, setActiveAttributes] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [isLegendControlsShown, setLegendControlsShown] = useState(
+    container.offsetWidth >= SCREEN_XS_MAX,
+  );
+  const [popupState, setPopupState] = useState({
+    isShown: false,
     selectedItem: null,
     selectedStatus: null,
     selectedStatKey: null,
     selectedDefectLocators: null,
-    isLegendControlsShown: true,
-    isLoading: false,
-  };
+  });
 
-  componentDidMount = () => {
-    this.getConfig();
-    this.setLegendControlsShown(this.props.container.offsetWidth);
-  };
+  const getLegendHeight = useCallback(
+    () => (isPrintMode ? PRINTED_LEGEND_HEIGHT : LEGEND_HEIGHT),
+    [isPrintMode],
+  );
 
-  componentDidUpdate(prevProps) {
-    if (
-      !isEqual(
-        prevProps.widget.contentParameters.widgetOptions,
-        this.props.widget.contentParameters.widgetOptions,
-      )
-    ) {
-      this.clearAttributes();
-    }
-    if (!isEqual(prevProps.widget, this.props.widget)) {
-      this.getConfig();
-    }
-  }
+  const attributes = widget.contentParameters.widgetOptions.attributes;
+  const contentFields = widget.contentParameters.contentFields;
+  const content = widget.content.result;
+  const widgetState = widget.contentParameters?.widgetOptions.state;
+  const isChartDataAvailable = !!content?.length;
 
-  onChartElementClick = (element, event) => {
-    if (!element) {
-      if (this.state.isActionsPopupShown) {
-        this.hideActionsPopup();
-      }
-      return;
-    }
-    /* eslint no-underscore-dangle: ['error', { 'allow': ['_model'] }] */
-    const elementModel = element._model;
-    this.left = event.offsetX;
-    this.top = event.offsetY + this.getLegendHeight();
-    const selectedItem = this.getSelectedItem(elementModel.label);
-    const selectedStatKey = this.getSelectedStatKey(element);
-    const selectedStatus = this.getSelectedStatus(selectedStatKey);
-    const selectedDefectLocators = this.getSelectedDefectLocators(selectedStatKey);
-
-    this.setState({
-      selectedItem,
-      selectedStatus,
-      selectedStatKey,
-      selectedDefectLocators,
-      isActionsPopupShown: true,
-    });
-  };
-
-  onLegendClick = (fieldName) => {
-    this.props.onChangeLegend(fieldName, this.getConfig);
-  };
-
-  setLegendControlsShown = (chartContainerWidth) => {
-    const isLegendControlsShown = chartContainerWidth >= SCREEN_XS_MAX;
-
-    this.setState({
-      isLegendControlsShown,
-    });
-  };
-
-  getConfig = (options = {}) => {
-    const { uncheckedLegendItems, widget, userSettings } = this.props;
-
-    const { labels, datasets, chartOptions, legendItems } = getChartData(widget, {
-      ...userSettings,
-      options,
-      uncheckedLegendItems,
-      formatMessage: this.props.intl.formatMessage,
-      activeAttribute: this.state.activeAttribute,
-      onResize: this.resizeChart,
-    });
-
-    this.setState({
-      isActionsPopupShown: false,
-      selectedItem: null,
-      selectedStatus: null,
-      selectedStatKey: null,
-      selectedDefectLocators: null,
-      chartData: {
-        labels,
-        datasets,
-      },
-      chartOptions,
-      legendItems,
-    });
-  };
-
-  getLegendHeight = () => (this.props.isPrintMode ? PRINTED_LEGEND_HEIGHT : LEGEND_HEIGHT);
-
-  getAttributes = () => this.props.widget.contentParameters.widgetOptions.attributes;
-
-  getSelectedItem = (focusedAttributeValue) =>
-    this.props.widget.content.result.find((item) => item.attributeValue === focusedAttributeValue);
-
-  getSelectedStatKey = (element) => {
-    const datasetLabel = element?._model?.datasetLabel;
-    if (datasetLabel) {
-      return datasetLabel;
-    }
-    // eslint-disable-next-line no-underscore-dangle
-    const datasetIndex = element?._datasetIndex;
-    return this.state.chartData?.datasets?.[datasetIndex]?.label || null;
-  };
-
-  getSelectedStatus = (statKey) => {
-    if (!statKey) {
-      return null;
-    }
-    const [, groupKey, statusKey] = statKey.split('$');
-
-    if (groupKey !== 'executions') {
-      return null;
-    }
-
-    switch (statusKey) {
-      case 'failed':
-        return FAILED;
-      case 'passed':
-        return PASSED;
-      case 'skipped':
-        return SKIPPED;
-      case 'interrupted':
-        return INTERRUPTED;
-      default:
-        return null;
-    }
-  };
-
-  getSelectedDefectLocators = (statKey) => {
-    if (!statKey) {
-      return null;
-    }
-    const nameConfig = getItemNameConfig(statKey);
-
-    if (nameConfig.itemType !== DEFECTS) {
-      return null;
-    }
-
-    return getDefectTypeLocators(nameConfig, this.props.defectTypes);
-  };
-
-  getPopupActionItems = () => [
-    {
-      id: 'drillDown',
-      icon: SearchIcon,
-      title: 'Drill down',
-      onClick: this.drillDown,
-      disabled: this.getAttributes().length <= this.state.activeAttributes.length + 1,
-    },
-    {
-      id: 'showFilter',
-      icon: FiltersIcon,
-      title: 'Show filter',
-      onClick: this.showFilter,
-    },
-  ];
-
-  resizeChart = (chart) => {
-    const newHeight = this.props.container.offsetHeight - this.getLegendHeight();
-    const newWidth = this.props.container.offsetWidth;
-
-    this.setLegendControlsShown(newWidth);
-
-    /* eslint no-param-reassign: ["error", { "props": false }] */
-    chart.width = newWidth;
-    chart.canvas.width = newWidth;
-    chart.height = newHeight;
-    chart.canvas.height = newHeight;
-    chart.canvas.style.height = `${newHeight}px`;
-    chart.update();
-  };
-
-  updateActiveAttributes = (actionSuccessCallback) => {
-    const { selectedItem, activeAttributes } = this.state;
-    const activeAttribute = {
-      key: this.getAttributes()[activeAttributes.length],
-      value: selectedItem.attributeValue,
-    };
-    const newActiveAttributes = [...activeAttributes, activeAttribute];
-
-    this.setState(
-      {
-        activeAttribute,
-        activeAttributes: newActiveAttributes,
-        isActionsPopupShown: false,
-      },
-      actionSuccessCallback,
-    );
-  };
-
-  drillDown = () => this.updateActiveAttributes(this.fetchWidgetWithActiveAttributes);
-
-  showFilter = () => this.updateActiveAttributes(this.navigateToTestListView);
-
-  userSettingsChangeHandler = (data) => this.props.onChangeUserSettings(data, this.getConfig);
-
-  hideActionsPopup = () =>
-    this.setState({
-      isActionsPopupShown: false,
+  const hideActionsPopup = useCallback(() => {
+    setPopupState({
+      isShown: false,
       selectedItem: null,
       selectedStatus: null,
       selectedStatKey: null,
       selectedDefectLocators: null,
     });
+  }, []);
 
-  fetchWidgetWithActiveAttributes = () => {
-    this.setState({
-      isLoading: true,
-    });
+  const clearAttributes = useCallback(() => {
+    setActiveAttribute(null);
+    setActiveAttributes([]);
+    hideActionsPopup();
+    clearQueryParams();
+  }, [clearQueryParams, hideActionsPopup]);
 
-    this.props
-      .fetchWidget({
-        attributes: this.state.activeAttributes,
-      })
-      .then(() => {
-        this.setState({
-          isLoading: false,
-        });
-      });
-  };
-
-  clearAttributes = () => {
-    this.setState({
-      activeAttribute: null,
-      activeAttributes: [],
-      selectedStatus: null,
-      selectedStatKey: null,
-      selectedDefectLocators: null,
-    });
-
-    this.props.clearQueryParams();
-  };
-
-  closeDetails = () => {
-    const { activeAttributes } = this.state;
-    const newAttributes = activeAttributes.slice(0, -1);
-
-    this.setState({
-      activeAttribute: newAttributes.length > 0 ? newAttributes[newAttributes.length - 1] : null,
-      activeAttributes: newAttributes,
-    });
-  };
-
-  navigateToTestListView = () => {
-    const { selectedItem, activeAttributes, selectedStatus, selectedDefectLocators } = this.state;
-    const {
-      widget,
-      userSettings,
-      getStatisticsLink,
-      getDefectLink,
-      defectTypes,
-      slugs: { organizationSlug, projectSlug },
-    } = this.props;
-    const navigationParams = getDefaultTestItemLinkParams(
-      projectSlug,
-      widget.appliedFilters[0].id,
-      TEST_ITEMS_TYPE_LIST,
-      organizationSlug,
-    );
-    let link;
-
-    if (userSettings.defectTypes) {
-      const namesConfig = Object.keys(selectedItem.content.statistics)
-        .map((item) => getItemNameConfig(item))
-        .filter((item) => item.itemType === DEFECTS && item.locator !== TOTAL_KEY);
-      const defectLocators = namesConfig
-        .map((item) => getDefectTypeLocators(item, defectTypes))
-        .filter(Boolean);
-      link = getDefectLink({
-        defects: selectedDefectLocators?.length ? selectedDefectLocators : defectLocators,
-        itemId: TEST_ITEMS_TYPE_LIST,
-        providerType: PROVIDER_TYPE_WIDGET,
-        widgetId: widget.id,
-        levelAttribute: activeAttributes.map(formatAttribute).join(','),
-        launchesLimit: widget.contentParameters.itemsCount,
-        filterTypes: BEFORE_AFTER_METHOD_TYPES_SEQUENCE,
-        filterType: true,
-      });
-    } else {
-      let statisticsStatuses;
-      if (!selectedStatus) {
-        statisticsStatuses = [PASSED, FAILED, SKIPPED, INTERRUPTED];
-      } else if (selectedStatus === FAILED) {
-        statisticsStatuses = [FAILED, INTERRUPTED];
-      } else {
-        statisticsStatuses = [selectedStatus];
-      }
-      link = getStatisticsLink({
-        ...(selectedDefectLocators?.length && { defects: selectedDefectLocators }),
-        statuses: statisticsStatuses,
-        levelAttribute: activeAttributes.map(formatAttribute).join(','),
-        launchesLimit: widget.contentParameters.itemsCount,
-        providerType: PROVIDER_TYPE_WIDGET,
-        widgetId: widget.id,
-      });
+  useEffect(() => {
+    const nextWidgetOptions = widget.contentParameters.widgetOptions;
+    if (!isEqual(prevWidgetOptionsRef.current, nextWidgetOptions)) {
+      clearAttributes();
     }
+    prevWidgetOptionsRef.current = nextWidgetOptions;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [widget.contentParameters.widgetOptions]);
 
-    this.props.navigate(Object.assign(link, navigationParams));
-  };
+  useEffect(() => {
+    const resizeTarget = container;
+    if (!resizeTarget || typeof ResizeObserver === 'undefined') {
+      return undefined;
+    }
+    const resizeObserver = new ResizeObserver(() => {
+      setLegendControlsShown(resizeTarget.offsetWidth >= SCREEN_XS_MAX);
+    });
+    resizeObserver.observe(resizeTarget);
+    return () => resizeObserver.disconnect();
+  }, [container]);
 
-  render() {
-    const { uncheckedLegendItems, userSettings, container, isPrintMode, widget } = this.props;
-    const {
-      legendItems,
-      chartData,
+  const onLegendClick = useCallback(
+    (fieldName) => {
+      onChangeLegend(fieldName);
+    },
+    [onChangeLegend],
+  );
+
+  const legendItems = userSettings.defectTypes ? getDefectFields(contentFields) : EXECUTION_FIELDS;
+  const legendColors = useMemo(() => {
+    const colors = {};
+    legendItems.forEach((field) => {
+      colors[field] = getColorForKey(field);
+    });
+    return colors;
+  }, [legendItems]);
+
+  const configData = useMemo(
+    () => ({
+      getOption,
+      formatMessage,
+      contentFields,
+      attributes,
       activeAttribute,
-      activeAttributes,
-      isActionsPopupShown,
-      isLegendControlsShown,
-      isLoading,
-    } = this.state;
-    const height = container.offsetHeight - this.getLegendHeight();
-    const width = container.offsetWidth;
-    const isChartDataAvailable = chartData && !!chartData.labels.length;
-    const widgetState = widget.contentParameters?.widgetOptions.state;
+      userSettings,
+      uncheckedLegendItems,
+    }),
+    [formatMessage, contentFields, attributes, activeAttribute, userSettings, uncheckedLegendItems],
+  );
 
-    return this.state.chartData ? (
-      <div className={cx('cumulative-trend-chart')}>
-        <CumulativeChartLegend
-          items={legendItems}
-          attributes={this.getAttributes()}
-          activeAttribute={activeAttribute}
-          activeAttributes={activeAttributes}
-          clearAttributes={this.clearAttributes}
-          onClick={this.onLegendClick}
-          onChangeUserSettings={this.userSettingsChangeHandler}
-          uncheckedLegendItems={uncheckedLegendItems}
-          userSettings={userSettings}
-          isChartDataAvailable={isChartDataAvailable}
-          isPrintMode={isPrintMode}
-          isLegendControlsShown={isLegendControlsShown}
+  const updateActiveAttributes = useCallback(
+    (selectedItem, actionSuccessCallback) => {
+      const newAttribute = {
+        key: attributes[activeAttributes.length],
+        value: selectedItem.attributeValue,
+      };
+      const newActiveAttributes = [...activeAttributes, newAttribute];
+
+      setActiveAttribute(newAttribute);
+      setActiveAttributes(newActiveAttributes);
+      hideActionsPopup();
+      actionSuccessCallback(newActiveAttributes);
+    },
+    [activeAttributes, attributes, hideActionsPopup],
+  );
+
+  const navigateToTestListView = useCallback(
+    (newActiveAttributes) => {
+      const { selectedItem, selectedStatus, selectedDefectLocators } = popupState;
+      const navigationParams = getDefaultTestItemLinkParams(
+        slugs.projectSlug,
+        widget.appliedFilters[0].id,
+        TEST_ITEMS_TYPE_LIST,
+        slugs.organizationSlug,
+      );
+      let link;
+
+      if (userSettings.defectTypes) {
+        const namesConfig = Object.keys(selectedItem.content.statistics)
+          .map((item) => getItemNameConfig(item))
+          .filter((item) => item.itemType === DEFECTS && item.locator !== TOTAL_KEY);
+        const defectLocators = namesConfig
+          .map((item) => getDefectTypeLocators(item, defectTypes))
+          .filter(Boolean);
+        link = getDefectLink({
+          defects: selectedDefectLocators?.length ? selectedDefectLocators : defectLocators,
+          itemId: TEST_ITEMS_TYPE_LIST,
+          providerType: PROVIDER_TYPE_WIDGET,
+          widgetId: widget.id,
+          levelAttribute: newActiveAttributes.map(formatAttribute).join(','),
+          launchesLimit: widget.contentParameters.itemsCount,
+          filterTypes: BEFORE_AFTER_METHOD_TYPES_SEQUENCE,
+          filterType: true,
+        });
+      } else {
+        let statisticsStatuses;
+        if (!selectedStatus) {
+          statisticsStatuses = [PASSED, FAILED, SKIPPED, INTERRUPTED];
+        } else if (selectedStatus === FAILED) {
+          statisticsStatuses = [FAILED, INTERRUPTED];
+        } else {
+          statisticsStatuses = [selectedStatus];
+        }
+        link = getStatisticsLink({
+          ...(selectedDefectLocators?.length && { defects: selectedDefectLocators }),
+          statuses: statisticsStatuses,
+          levelAttribute: newActiveAttributes.map(formatAttribute).join(','),
+          launchesLimit: widget.contentParameters.itemsCount,
+          providerType: PROVIDER_TYPE_WIDGET,
+          widgetId: widget.id,
+        });
+      }
+
+      dispatch(Object.assign(link, navigationParams));
+    },
+    [
+      defectTypes,
+      dispatch,
+      getDefectLink,
+      getStatisticsLink,
+      popupState,
+      slugs,
+      userSettings,
+      widget,
+    ],
+  );
+
+  const fetchWidgetWithActiveAttributes = useCallback(
+    (newActiveAttributes) => {
+      setIsLoading(true);
+      fetchWidget({ attributes: newActiveAttributes }).then(() => {
+        setIsLoading(false);
+      });
+    },
+    [fetchWidget],
+  );
+
+  const drillDown = useCallback(() => {
+    updateActiveAttributes(popupState.selectedItem, fetchWidgetWithActiveAttributes);
+  }, [fetchWidgetWithActiveAttributes, popupState.selectedItem, updateActiveAttributes]);
+
+  const showFilter = useCallback(() => {
+    updateActiveAttributes(popupState.selectedItem, navigateToTestListView);
+  }, [navigateToTestListView, popupState.selectedItem, updateActiveAttributes]);
+
+  const getPopupActionItems = useCallback(
+    () => [
+      {
+        id: 'drillDown',
+        icon: SearchIcon,
+        title: 'Drill down',
+        onClick: drillDown,
+        disabled: attributes.length <= activeAttributes.length + 1,
+      },
+      {
+        id: 'showFilter',
+        icon: FiltersIcon,
+        title: 'Show filter',
+        onClick: showFilter,
+      },
+    ],
+    [activeAttributes.length, attributes.length, drillDown, showFilter],
+  );
+
+  const onChartElementClick = useCallback(
+    (params) => {
+      const dataIndex = params.dataIndex ?? 0;
+      const selectedStatKey = params.seriesId || null;
+      const selectedItem = content[dataIndex];
+      const selectedStatus = getSelectedStatus(selectedStatKey);
+      const nameConfig = selectedStatKey ? getItemNameConfig(selectedStatKey) : {};
+      const selectedDefectLocators =
+        selectedStatKey && nameConfig.itemType === DEFECTS
+          ? getDefectTypeLocators(nameConfig, defectTypes)
+          : null;
+
+      clickPositionRef.current = {
+        left: params.event?.offsetX ?? 0,
+        top: (params.event?.offsetY ?? 0) + getLegendHeight(),
+      };
+
+      setPopupState({
+        isShown: true,
+        selectedItem,
+        selectedStatus,
+        selectedStatKey,
+        selectedDefectLocators,
+      });
+    },
+    [content, defectTypes, getLegendHeight],
+  );
+
+  const onChartCreated = useCallback((node, chart) => {
+    chartRef.current = chart;
+  }, []);
+
+  useEffect(() => {
+    const chart = chartRef.current;
+    if (!chart || chart.isDisposed()) {
+      return undefined;
+    }
+
+    const handleSeriesClick = (params) => {
+      if (params.componentType === 'series') {
+        onChartElementClick(params);
+      }
+    };
+    const handleBackgroundClick = (event) => {
+      if (!event.target) {
+        hideActionsPopup();
+      }
+    };
+
+    chart.on('click', handleSeriesClick);
+    chart.getZr().on('click', handleBackgroundClick);
+
+    return () => {
+      if (chart.isDisposed()) {
+        return;
+      }
+      chart.off('click', handleSeriesClick);
+      chart.getZr()?.off('click', handleBackgroundClick);
+    };
+  }, [onChartElementClick, hideActionsPopup]);
+
+  return (
+    <div className={cx('cumulative-trend-chart')}>
+      <CumulativeChartLegend
+        items={legendItems}
+        colors={legendColors}
+        attributes={attributes}
+        activeAttribute={activeAttribute}
+        activeAttributes={activeAttributes}
+        clearAttributes={clearAttributes}
+        onClick={onLegendClick}
+        onChangeUserSettings={onChangeUserSettings}
+        uncheckedLegendItems={uncheckedLegendItems}
+        userSettings={userSettings}
+        isChartDataAvailable={isChartDataAvailable}
+        isPrintMode={isPrintMode}
+        isLegendControlsShown={isLegendControlsShown}
+      />
+      {isChartDataAvailable && widgetState === STATE_READY && !isLoading ? (
+        <EChart
+          widget={widget}
+          container={container}
+          heightOffset={getLegendHeight()}
+          configData={configData}
+          chartCreatedCallback={onChartCreated}
         />
-        {isChartDataAvailable && widgetState === STATE_READY && !isLoading ? (
-          <ChartJS
-            chartData={chartData}
-            chartOptions={this.state.chartOptions}
-            onChartElementClick={this.onChartElementClick}
-            height={height}
-            width={width}
-          />
-        ) : (
-          <div className={cx('no-data-wrapper')}>
-            <NoDataAvailableMaterializedView state={widgetState} isLoading={isLoading} />
-          </div>
-        )}
-        {isActionsPopupShown && (
-          <VirtualPopup
-            boundariesElement={container}
-            referenceConfig={{
-              className: cx('popup-reference'),
-              style: { left: this.left, top: this.top },
-            }}
-          >
-            <ActionsPopup items={this.getPopupActionItems()} />
-          </VirtualPopup>
-        )}
-      </div>
-    ) : null;
-  }
-}
+      ) : (
+        <div className={cx('no-data-wrapper')}>
+          <NoDataAvailableMaterializedView state={widgetState} isLoading={isLoading} />
+        </div>
+      )}
+      {popupState.isShown && (
+        <VirtualPopup
+          boundariesElement={container}
+          referenceConfig={{
+            className: cx('popup-reference'),
+            style: { left: clickPositionRef.current.left, top: clickPositionRef.current.top },
+          }}
+        >
+          <ActionsPopup items={getPopupActionItems()} />
+        </VirtualPopup>
+      )}
+    </div>
+  );
+};
+
+CumulativeTrendChart.propTypes = {
+  widget: PropTypes.object.isRequired,
+  container: PropTypes.instanceOf(Element).isRequired,
+  fetchWidget: PropTypes.func,
+  clearQueryParams: PropTypes.func,
+  onChangeLegend: PropTypes.func,
+  uncheckedLegendItems: PropTypes.array,
+  userSettings: PropTypes.object,
+  isPrintMode: PropTypes.bool,
+  onChangeUserSettings: PropTypes.func,
+};
