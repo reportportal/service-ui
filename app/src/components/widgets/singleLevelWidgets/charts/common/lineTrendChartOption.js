@@ -31,10 +31,6 @@ import { buildAxisTooltip, buildCategoryXAxis, buildValueYAxis } from './echarts
  */
 
 export const buildTrendChartGrid = (isPreview) => ({
-  // The y-axis is scaled tightly to the data's own min/max (see
-  // `buildTrendChartYAxis`), so a zero-padding grid would pin the highest
-  // and lowest points exactly to the container's edge, clipping their line
-  // and symbol there. A small margin keeps them fully visible in preview too.
   top: isPreview ? 8 : 95,
   left: isPreview ? 8 : 60,
   right: isPreview ? 8 : 20,
@@ -92,9 +88,6 @@ export const buildTrendChartLineSeries = ({ id, data, isPreview }) => {
       },
     },
     triggerLineEvent: true,
-    // The preview in the add/edit widget modal isn't clickable (EChart skips
-    // wiring up the click handler when `isPreview`), so it shouldn't react to
-    // the mouse at all: no pointer cursor, and no dot growing on hover.
     cursor: isPreview ? 'default' : 'pointer',
     silent: isPreview,
   };

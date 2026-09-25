@@ -27,9 +27,6 @@ export const expectPreviewModeHidesChart = (option) => {
   expect(option.yAxis.show).toBe(false);
   expect(option.yAxis.name).toBeUndefined();
   expect(option.tooltip.show).toBe(false);
-  // Preview keeps a small grid margin (unlike the 0 used elsewhere) since
-  // this chart's y-axis is scaled tightly to the data's own min/max, so a
-  // flush edge would clip the highest/lowest point's line and symbol.
   expect(option.grid.top).toBe(8);
   expect(option.grid.left).toBe(8);
 };
