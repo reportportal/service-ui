@@ -212,12 +212,65 @@ export const EChart = ({
 
   useEffect(() => {
     const chart = chartRef.current;
+    const node = chartNodeRef.current;
     const onChartClick = configData?.onChartClick as
       | ((params: Record<string, unknown>) => void)
       | undefined;
 
-    if (!chart || !onChartClick || isPreview) {
+    if (!chart || !node || !onChartClick || isPreview) {
       return undefined;
+    }
+
+    const resolveAxisIndex = (offsetX: number): number | null => {
+      try {
+        const axisIndex = chart.convertFromPixel({ xAxisIndex: 0 }, offsetX);
+        return Number.isInteger(axisIndex) ? axisIndex : null;
+      } catch {
+        return null;
+      }
+    };
+
+    const seriesList =
+      (built?.option?.series as Array<{ id?: string; name?: string; data?: unknown[] }> | undefined) ??
+      [];
+
+    if (seriesList.length === 1) {
+      const [series] = seriesList;
+      const seriesId = series.id ?? series.name;
+
+      const handleDomClick = (event: MouseEvent) => {
+        const rect = node.getBoundingClientRect();
+        const offsetX = event.clientX - rect.left;
+        const offsetY = event.clientY - rect.top;
+
+        let insideGrid = true;
+        try {
+          insideGrid = chart.containPixel({ gridIndex: 0 }, [offsetX, offsetY]);
+        } catch {
+          insideGrid = true;
+        }
+        if (!insideGrid) {
+          return;
+        }
+
+        const index = resolveAxisIndex(offsetX);
+        if (index === null) {
+          return;
+        }
+
+        onChartClick({
+          index,
+          id: seriesId,
+          value: series.data?.[index],
+          name: undefined,
+        });
+      };
+
+      node.addEventListener('click', handleDomClick);
+
+      return () => {
+        node.removeEventListener('click', handleDomClick);
+      };
     }
 
     const handleClick = (params: {
@@ -226,9 +279,19 @@ export const EChart = ({
       seriesName?: string;
       name?: string;
       value?: unknown;
+      event?: { offsetX?: number; offsetY?: number };
     }) => {
+      let index = params.dataIndex ?? 0;
+      const offsetX = params.event?.offsetX;
+      if (offsetX !== undefined) {
+        const axisIndex = resolveAxisIndex(offsetX);
+        if (axisIndex !== null) {
+          index = axisIndex;
+        }
+      }
+
       onChartClick({
-        index: params.dataIndex ?? 0,
+        index,
         id: params.seriesId || params.seriesName || params.name,
         value: params.value,
         name: params.name,
