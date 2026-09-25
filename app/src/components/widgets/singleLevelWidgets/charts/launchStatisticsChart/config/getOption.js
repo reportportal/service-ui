@@ -26,7 +26,7 @@ import { buildItemTooltip } from '../../common/echartsAxisBuilders';
 import { IssueTypeStatTooltip } from '../../common/issueTypeStatTooltip';
 import { getConfigData, calculateTooltipParams } from './utils';
 
-const buildAreaSeries = (itemNames, dataByName, colors, isSingleColumn) =>
+const buildAreaSeries = (itemNames, dataByName, colors) =>
   itemNames.map((name) => ({
     id: name,
     name,
@@ -35,7 +35,7 @@ const buildAreaSeries = (itemNames, dataByName, colors, isSingleColumn) =>
     data: dataByName[name],
     areaStyle: { opacity: 1 },
     lineStyle: { width: 0 },
-    showSymbol: isSingleColumn,
+    showSymbol: false,
     symbolSize: 10,
     smooth: false,
     itemStyle: { color: colors[name] },

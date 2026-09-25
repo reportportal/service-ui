@@ -82,6 +82,7 @@ export const LaunchStatisticsChart = ({
 
   const launchModeClickHandler = useCallback(
     (data) => {
+      if (!widget.content?.result?.[data.index]) return;
       const { organizationSlug, projectSlug } = slugs;
       const id = widget.content.result[data.index].id;
       const defaultParams = getDefaultTestItemLinkParams(projectSlug, ALL, id, organizationSlug);
@@ -91,13 +92,14 @@ export const LaunchStatisticsChart = ({
         ? getDefectLink({ defects: locators, itemId: id })
         : getStatisticsLink({ statuses: getLinkParametersStatuses(nameConfig) });
 
-      dispatch(Object.assign(link, defaultParams));
+      dispatch({ ...link, ...defaultParams });
     },
     [defectTypes, dispatch, getDefectLink, getStatisticsLink, slugs, widget.content],
   );
 
   const timeLineModeClickHandler = useCallback(
     (data) => {
+      if (!widget.appliedFilters?.length) return;
       const { organizationSlug, projectSlug } = slugs;
       const chartFilterId = widget.appliedFilters[0].id;
       const launchesLimit = widget.contentParameters.itemsCount;
@@ -109,7 +111,9 @@ export const LaunchStatisticsChart = ({
         organizationSlug,
       );
       const locators = getDefectTypeLocators(nameConfig, defectTypes);
-      const startDate = getMillisecondsWoTimezone(chartDataRef.current.itemsData[data.index]?.date);
+      const dateValue = chartDataRef.current.itemsData[data.index]?.date;
+      if (!dateValue) return;
+      const startDate = getMillisecondsWoTimezone(dateValue);
       const day = 86400000;
       const endDate = startDate + day;
 
@@ -126,9 +130,9 @@ export const LaunchStatisticsChart = ({
             launchesLimit,
           });
 
-      dispatch(Object.assign(link, defaultParams));
+      dispatch({ ...link, ...defaultParams });
     },
-    [defectTypes, dispatch, getDefectLink, getStatisticsLink, slugs, widget],
+    [defectTypes, dispatch, getDefectLink, getStatisticsLink, slugs, widget.appliedFilters, widget.contentParameters],
   );
 
   const onChartClick = useCallback(
