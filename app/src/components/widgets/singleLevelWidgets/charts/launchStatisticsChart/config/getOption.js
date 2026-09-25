@@ -26,6 +26,14 @@ import { buildAxisTooltip, buildItemTooltip } from '../../common/echartsAxisBuil
 import { IssueTypeStatTooltip } from '../../common/issueTypeStatTooltip';
 import { getConfigData, calculateTooltipParams } from './utils';
 
+const buildAreaTooltipCalculator = (hoveredSeriesRef) => (data, color, customProps) => {
+  const id = hoveredSeriesRef.current;
+  if (!id) return '';
+  const resolved = data.find((d) => d.id === id);
+  if (!resolved) return '';
+  return calculateTooltipParams([resolved], color, customProps);
+};
+
 const buildAreaSeries = (itemNames, dataByName, colors) =>
   itemNames.map((name) => ({
     id: name,
@@ -97,13 +105,7 @@ export const getOption = ({
 
   const tooltipFormatter = buildTooltipFormatter(
     IssueTypeStatTooltip,
-    isActiveAreaView
-      ? (data, color, customProps) => {
-          const id = hoveredSeriesRef.current;
-          const resolved = (id && data.find((d) => d.id === id)) || data[0];
-          return calculateTooltipParams([resolved], color, customProps);
-        }
-      : calculateTooltipParams,
+    isActiveAreaView ? buildAreaTooltipCalculator(hoveredSeriesRef) : calculateTooltipParams,
     { itemsData, isTimeline, formatMessage, defectTypes },
   );
 

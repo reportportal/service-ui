@@ -237,6 +237,70 @@ export const EChart = ({
       (built?.option?.series as Array<{ id?: string; name?: string; data?: unknown[] }> | undefined) ??
       [];
 
+    const hoveredSeriesRef = (customDataRef.current as Record<string, unknown>)
+      .hoveredSeriesRef as { current: string | null } | undefined;
+    const isAreaMode = !!(customDataRef.current as Record<string, unknown>).isAreaMode;
+
+    if (isAreaMode) {
+      const areaCount = seriesList.length;
+
+      const handleAreaMouseOver = (params: { seriesIndex?: number; seriesId?: string; seriesName?: string }) => {
+        const { seriesIndex, seriesId, seriesName } = params;
+        if (hoveredSeriesRef) {
+          hoveredSeriesRef.current = seriesId || seriesName || null;
+        }
+        if (seriesIndex !== undefined) {
+          chart.setOption({
+            series: Array.from({ length: areaCount }, (_, i) => ({
+              areaStyle: { opacity: i === seriesIndex ? 1 : 0.75 },
+            })),
+          });
+        }
+      };
+
+      const handleAreaMouseOut = () => {
+        if (hoveredSeriesRef) {
+          hoveredSeriesRef.current = null;
+        }
+        chart.setOption({
+          series: Array.from({ length: areaCount }, () => ({ areaStyle: { opacity: 0.75 } })),
+        });
+      };
+
+      const handleAreaClick = (params: {
+        dataIndex?: number;
+        seriesId?: string;
+        seriesName?: string;
+        name?: string;
+        value?: unknown;
+        event?: { offsetX?: number };
+      }) => {
+        let index = params.dataIndex ?? 0;
+        const offsetX = params.event?.offsetX;
+        if (offsetX !== undefined) {
+          const axisIndex = resolveAxisIndex(offsetX);
+          if (axisIndex !== null) {
+            index = axisIndex;
+          }
+        }
+        onChartClick({
+          index,
+          id: params.seriesId || params.seriesName || params.name,
+          value: params.value,
+          name: params.name,
+        });
+      };
+
+      chart.on('mouseover', handleAreaMouseOver);
+      chart.on('mouseout', handleAreaMouseOut);
+      chart.on('click', handleAreaClick);
+      return () => {
+        chart.off('mouseover', handleAreaMouseOver);
+        chart.off('mouseout', handleAreaMouseOut);
+        chart.off('click', handleAreaClick);
+      };
+    }
+
     if (seriesList.length === 1) {
       const [series] = seriesList;
       const seriesId = series.id ?? series.name;
@@ -313,46 +377,6 @@ export const EChart = ({
         name: params.name,
       });
     };
-
-    const hoveredSeriesRef = (customDataRef.current as Record<string, unknown>)
-      .hoveredSeriesRef as { current: string | null } | undefined;
-    const isAreaMode = !!(customDataRef.current as Record<string, unknown>).isAreaMode;
-
-    if (isAreaMode) {
-      const areaCount = seriesList.length;
-
-      const handleAreaMouseOver = (params: { seriesIndex?: number; seriesId?: string; seriesName?: string }) => {
-        const { seriesIndex, seriesId, seriesName } = params;
-        if (hoveredSeriesRef) {
-          hoveredSeriesRef.current = seriesId || seriesName || null;
-        }
-        if (seriesIndex !== undefined) {
-          chart.setOption({
-            series: Array.from({ length: areaCount }, (_, i) => ({
-              areaStyle: { opacity: i === seriesIndex ? 1 : 0.75 },
-            })),
-          });
-        }
-      };
-
-      const handleAreaMouseOut = () => {
-        if (hoveredSeriesRef) {
-          hoveredSeriesRef.current = null;
-        }
-        chart.setOption({
-          series: Array.from({ length: areaCount }, () => ({ areaStyle: { opacity: 0.75 } })),
-        });
-      };
-
-      chart.on('mouseover', handleAreaMouseOver);
-      chart.on('mouseout', handleAreaMouseOut);
-      chart.on('click', handleClick);
-      return () => {
-        chart.off('mouseover', handleAreaMouseOver);
-        chart.off('mouseout', handleAreaMouseOut);
-        chart.off('click', handleClick);
-      };
-    }
 
     chart.on('click', handleClick);
 
