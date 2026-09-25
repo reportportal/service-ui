@@ -240,6 +240,7 @@ export const EChart = ({
     if (seriesList.length === 1) {
       const [series] = seriesList;
       const seriesId = series.id ?? series.name;
+      const dataLen = series.data?.length ?? 0;
 
       const handleDomClick = (event: MouseEvent) => {
         const rect = node.getBoundingClientRect();
@@ -256,7 +257,19 @@ export const EChart = ({
           return;
         }
 
-        const index = resolveAxisIndex(offsetX);
+        let index: number | null = null;
+        try {
+          const axisValue = chart.convertFromPixel({ xAxisIndex: 0 }, offsetX);
+          if (Number.isFinite(axisValue)) {
+            const rounded = Math.round(axisValue);
+            if (rounded >= 0 && rounded < dataLen) {
+              index = rounded;
+            }
+          }
+        } catch {
+          // ignore
+        }
+
         if (index === null) {
           return;
         }

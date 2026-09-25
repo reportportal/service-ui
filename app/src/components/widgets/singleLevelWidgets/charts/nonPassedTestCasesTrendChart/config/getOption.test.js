@@ -33,7 +33,10 @@ describe('nonPassedTestCasesTrendChart getOption', () => {
       id: 'notPassed',
       type: 'line',
       data: [33.33, 50, 25],
+      showSymbol: true,
+      symbolSize: 2,
       lineStyle: { width: 1 },
+      cursor: 'pointer',
     });
     expect(option.series[0].areaStyle).toBeUndefined();
     expect(option.yAxis).toMatchObject({
@@ -87,6 +90,8 @@ describe('nonPassedTestCasesTrendChart getOption', () => {
     expect(option.tooltip.show).toBe(false);
     expect(option.grid.top).toBe(0);
     expect(option.grid.left).toBe(0);
+    expect(option.series[0].cursor).toBe('default');
+    expect(option.series[0].silent).toBe(true);
   });
 
   test('shows a larger symbol when there is a single data point', () => {

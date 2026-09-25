@@ -149,18 +149,20 @@ export const getOption = ({ content, isPreview, formatMessage }) => {
         name: SERIES_ID,
         type: 'line',
         data: values,
-        showSymbol: singlePoint,
+        showSymbol: true,
         symbolSize: singlePoint ? 10 : 2,
         lineStyle: {
           width: 1,
         },
         emphasis: {
-          scale: true,
+          scale: 4,
           itemStyle: {
             borderWidth: 2,
           },
         },
         triggerLineEvent: true,
+        cursor: isPreview ? 'default' : 'pointer',
+        silent: isPreview,
       },
     ],
     customData: {
