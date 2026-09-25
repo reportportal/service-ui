@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 EPAM Systems
+ * Copyright 2026 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,9 +14,10 @@
  * limitations under the License.
  */
 
-import React, { Component } from 'react';
+import { useCallback } from 'react';
 import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { useIntl } from 'react-intl';
 import { messages } from 'components/widgets/common/messages';
 import { FAILED, PASSED, INTERRUPTED, SKIPPED } from 'common/constants/testStatuses';
 import { ALL } from 'common/constants/reservedFilterIds';
@@ -29,62 +30,48 @@ import { PassingRateChart } from '../common/passingRateChart';
 const getFilterName = ({ contentParameters, content: { result = {} } = {} } = {}) =>
   `${contentParameters.widgetOptions.launchNameFilter} #${result.number}`;
 
-@connect(
-  (state) => ({
-    slugs: urlOrganizationAndProjectSelector(state),
-    getStatisticsLink: statisticsLinkSelector(state),
-  }),
-  {
-    navigate: (linkAction) => linkAction,
-  },
-)
-export class PassingRatePerLaunch extends Component {
-  static propTypes = {
-    getStatisticsLink: PropTypes.func.isRequired,
-    navigate: PropTypes.func.isRequired,
-    widget: PropTypes.object.isRequired,
-    slugs: PropTypes.shape({
-      organizationSlug: PropTypes.string.isRequired,
-      projectSlug: PropTypes.string.isRequired,
-    }),
-  };
+export const PassingRatePerLaunch = (props) => {
+  const { widget } = props;
+  const { formatMessage } = useIntl();
+  const dispatch = useDispatch();
+  const slugs = useSelector(urlOrganizationAndProjectSelector);
+  const getStatisticsLink = useSelector(statisticsLinkSelector);
 
-  onChartClick = (data) => {
-    const {
-      widget,
-      getStatisticsLink,
-      slugs: { organizationSlug, projectSlug },
-      widget: {
-        contentParameters: {
-          widgetOptions: { excludeSkipped },
-        },
-      },
-    } = this.props;
-    const launchId = widget.content.result.id;
-    const linkCreationParametersForFailed = excludeSkipped
-      ? [FAILED, INTERRUPTED]
-      : [FAILED, INTERRUPTED, SKIPPED];
-    const statuses = data.id === STATS_PASSED ? [PASSED] : linkCreationParametersForFailed;
-    const link = getStatisticsLink({
-      statuses,
-    });
-    const navigationParams = getDefaultTestItemLinkParams(
-      projectSlug,
-      ALL,
-      launchId,
-      organizationSlug,
-    );
+  const onChartClick = useCallback(
+    (data) => {
+      const { organizationSlug, projectSlug } = slugs;
+      const launchId = widget.content.result.id;
+      const { excludeSkipped } = widget.contentParameters.widgetOptions;
+      const linkCreationParametersForFailed = excludeSkipped
+        ? [FAILED, INTERRUPTED]
+        : [FAILED, INTERRUPTED, SKIPPED];
+      const statuses = data.id === STATS_PASSED ? [PASSED] : linkCreationParametersForFailed;
+      const link = getStatisticsLink({ statuses });
+      const navigationParams = getDefaultTestItemLinkParams(
+        projectSlug,
+        ALL,
+        launchId,
+        organizationSlug,
+      );
 
-    this.props.navigate(Object.assign(link, navigationParams));
-  };
-  render() {
-    return (
-      <PassingRateChart
-        {...this.props}
-        filterNameTitle={messages.launchName}
-        filterName={getFilterName(this.props.widget)}
-        onChartClick={this.onChartClick}
-      />
-    );
-  }
-}
+      dispatch(Object.assign(link, navigationParams));
+    },
+    [dispatch, getStatisticsLink, slugs, widget],
+  );
+
+  return (
+    <PassingRateChart
+      {...props}
+      filterNameTitle={messages.launchName}
+      filterName={getFilterName(widget)}
+      onChartClick={onChartClick}
+    />
+  );
+};
+
+PassingRatePerLaunch.propTypes = {
+  widget: PropTypes.object.isRequired,
+  container: PropTypes.instanceOf(Element).isRequired,
+  isPreview: PropTypes.bool,
+  observer: PropTypes.object,
+};
