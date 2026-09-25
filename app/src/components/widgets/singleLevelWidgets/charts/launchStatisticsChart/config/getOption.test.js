@@ -55,7 +55,7 @@ describe('launchStatisticsChart getOption', () => {
     expect(option.customData.legendItems).toHaveLength(3);
   });
 
-  test('area mode: stacked lines with areaStyle', () => {
+  test('area mode: stacked lines with areaStyle, no symbols, interactive line events', () => {
     const option = getOption({
       content: sampleLaunchContent,
       ...BASE_PARAMS,
@@ -65,9 +65,18 @@ describe('launchStatisticsChart getOption', () => {
     expect(option.series[0]).toMatchObject({
       type: 'line',
       stack: 'total',
-      areaStyle: { opacity: 1 },
+      areaStyle: { opacity: 0.75 },
       lineStyle: { width: 0 },
+      symbol: 'none',
+      triggerLineEvent: true,
+      cursor: 'pointer',
+      emphasis: { disabled: true },
     });
+    expect(option.tooltip.trigger).toBe('axis');
+    expect(option.tooltip.axisPointer).toEqual({ type: 'none' });
+    expect(typeof option.tooltip.formatter).toBe('function');
+    expect(option.customData.isAreaMode).toBe(true);
+    expect(option.customData.hoveredSeriesRef).toEqual({ current: null });
   });
 
   test('preview hides axes, tooltip and collapses grid', () => {
