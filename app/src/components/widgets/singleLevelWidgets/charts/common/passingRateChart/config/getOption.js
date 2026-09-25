@@ -54,7 +54,7 @@ const buildBarOption = ({ isPreview, passedValue, notPassedValue, statisticKey, 
     top: isPreview ? 0 : 30,
     left: isPreview ? 0 : 20,
     right: isPreview ? 0 : 20,
-    bottom: isPreview ? 0 : 0,
+    bottom: 0,
     containLabel: false,
   },
   xAxis: {

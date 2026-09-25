@@ -17,7 +17,6 @@
 import { useCallback } from 'react';
 import PropTypes from 'prop-types';
 import { useDispatch, useSelector } from 'react-redux';
-import { useIntl } from 'react-intl';
 import { messages } from 'components/widgets/common/messages';
 import { FAILED, PASSED, INTERRUPTED, SKIPPED } from 'common/constants/testStatuses';
 import { ALL } from 'common/constants/reservedFilterIds';
@@ -32,7 +31,6 @@ const getFilterName = ({ contentParameters, content: { result = {} } = {} } = {}
 
 export const PassingRatePerLaunch = (props) => {
   const { widget } = props;
-  const { formatMessage } = useIntl();
   const dispatch = useDispatch();
   const slugs = useSelector(urlOrganizationAndProjectSelector);
   const getStatisticsLink = useSelector(statisticsLinkSelector);
