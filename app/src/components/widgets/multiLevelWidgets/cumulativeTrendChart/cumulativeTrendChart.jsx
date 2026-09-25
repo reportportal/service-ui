@@ -165,7 +165,7 @@ export const CumulativeTrendChart = ({
 
   const onLegendClick = useCallback(
     (fieldName) => {
-      onChangeLegend(fieldName);
+      onChangeLegend(fieldName, () => {});
     },
     [onChangeLegend],
   );
