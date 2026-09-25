@@ -24,14 +24,8 @@ import { TIME_DATE_FORMAT } from 'common/constants/timeDateFormat';
 import { InputTimeDateRangeMenu } from './inputTimeDateRangeMenu';
 import styles from './inputTimeDateRange.scss';
 
-const DEFAULT_DISPLAY_START_DATE = moment()
-  .startOf('day')
-  .valueOf();
-
-const DEFAULT_DISPLAY_END_DATE =
-  moment()
-    .endOf('day')
-    .valueOf() + 1;
+const getDefaultDisplayStartDate = () => moment().startOf('day').valueOf();
+const getDefaultDisplayEndDate = () => moment().endOf('day').valueOf() + 1;
 
 const cx = classNames.bind(styles);
 const messages = defineMessages({
@@ -125,7 +119,7 @@ export class InputTimeDateRange extends Component {
     const { end, dynamic } = this.props.value;
     this.props.onChange({
       start: moment(m).valueOf(),
-      end: end || DEFAULT_DISPLAY_END_DATE,
+      end: end || getDefaultDisplayEndDate(),
       dynamic,
     });
     this.setState({ customRangeVisited: true });
@@ -134,7 +128,7 @@ export class InputTimeDateRange extends Component {
   handleChangeTo = (m) => {
     const { start, dynamic } = this.props.value;
     this.props.onChange({
-      start: start || DEFAULT_DISPLAY_START_DATE,
+      start: start || getDefaultDisplayStartDate(),
       end: moment(m).valueOf(),
       dynamic,
     });
@@ -144,8 +138,8 @@ export class InputTimeDateRange extends Component {
   handleChangeDynamic = (e) => {
     const { start, end } = this.props.value;
     this.props.onChange({
-      start: start || DEFAULT_DISPLAY_START_DATE,
-      end: end || DEFAULT_DISPLAY_END_DATE,
+      start: start || getDefaultDisplayStartDate(),
+      end: end || getDefaultDisplayEndDate(),
       dynamic: e.target.checked,
     });
     this.props.tracking.trackEvent(this.props.events.getStartTimeDynamicUpdate(e.target.checked));
@@ -167,8 +161,8 @@ export class InputTimeDateRange extends Component {
           handleChangeFrom={this.handleChangeFrom}
           handleChangeTo={this.handleChangeTo}
           handleChangeDynamic={this.handleChangeDynamic}
-          defaultDisplayStartDate={DEFAULT_DISPLAY_START_DATE}
-          defaultDisplayEndDate={DEFAULT_DISPLAY_END_DATE}
+          defaultDisplayStartDate={getDefaultDisplayStartDate()}
+          defaultDisplayEndDate={getDefaultDisplayEndDate()}
           opened={this.state.opened}
           presets={presets}
           value={value}
