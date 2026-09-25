@@ -99,10 +99,18 @@ export const InvestigatedTrendChart = ({
     [dispatch, widget],
   );
 
+  const sortedLaunchResult = useMemo(
+    () =>
+      [...(widget.content?.result ?? [])].sort(
+        (a, b) => new Date(a.startTime) - new Date(b.startTime),
+      ),
+    [widget.content?.result],
+  );
+
   const launchModeClickHandler = useCallback(
     (data) => {
       const { organizationSlug, projectSlug } = slugs;
-      const id = widget.content.result[data.index].id;
+      const id = sortedLaunchResult[data.index].id;
       const defaultParams = getDefaultTestItemLinkParams(projectSlug, ALL, id, organizationSlug);
       const defectTypeLocators = getDefectTypeLocators(data.id);
       const link = defectTypeLocators
@@ -113,7 +121,7 @@ export const InvestigatedTrendChart = ({
 
       dispatch(Object.assign(link, defaultParams));
     },
-    [dispatch, getDefectLink, getDefectTypeLocators, getStatisticsLink, slugs, widget],
+    [dispatch, getDefectLink, getDefectTypeLocators, getStatisticsLink, slugs, sortedLaunchResult],
   );
 
   const onChartClick = useCallback(
