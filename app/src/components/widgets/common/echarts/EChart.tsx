@@ -305,6 +305,10 @@ export const EChart = ({
       const [series] = seriesList;
       const seriesId = series.id ?? series.name;
       const dataLen = series.data?.length ?? 0;
+      const yAxisOption = built?.option?.yAxis;
+      const isHorizontalBar =
+        ((Array.isArray(yAxisOption) ? yAxisOption[0] : yAxisOption) as { type?: string } | undefined)
+          ?.type === 'category';
 
       const handleDomClick = (event: MouseEvent) => {
         const rect = node.getBoundingClientRect();
@@ -323,7 +327,9 @@ export const EChart = ({
 
         let index: number | null = null;
         try {
-          const axisValue = chart.convertFromPixel({ xAxisIndex: 0 }, offsetX);
+          const pixelValue = isHorizontalBar ? offsetY : offsetX;
+          const axisConfig = isHorizontalBar ? { yAxisIndex: 0 } : { xAxisIndex: 0 };
+          const axisValue = chart.convertFromPixel(axisConfig, pixelValue);
           if (Number.isFinite(axisValue)) {
             const rounded = Math.round(axisValue);
             if (rounded >= 0 && rounded < dataLen) {
