@@ -15,7 +15,7 @@
  */
 
 import * as echarts from 'echarts/core';
-import { BarChart, LineChart, PieChart } from 'echarts/charts';
+import { BarChart, CustomChart, LineChart, PieChart } from 'echarts/charts';
 import {
   DataZoomComponent,
   GraphicComponent,
@@ -27,6 +27,7 @@ import { CanvasRenderer, SVGRenderer } from 'echarts/renderers';
 
 echarts.use([
   BarChart,
+  CustomChart,
   LineChart,
   PieChart,
   GridComponent,

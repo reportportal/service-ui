@@ -16,10 +16,13 @@
 
 import { useEffect, useMemo, useRef, type ReactElement } from 'react';
 import type { EChartsType } from 'echarts/core';
+import { CustomChart } from 'echarts/charts';
 import { createClassnames } from 'common/utils';
 import { Legend } from 'components/widgets/common/legend';
 import { echarts } from './echartsSetup';
 import { ECHARTS_THEME } from './configHelpers';
+
+echarts.use([CustomChart]);
 import { crispSvgSplitLines } from './crispSvgSplitLines';
 import type { EChartCustomData, EChartOptionResult, EChartProps, EChartsOption } from './types';
 import styles from './EChart.scss';
