@@ -22,7 +22,7 @@ import {
 } from 'components/widgets/common/echarts/configHelpers';
 import { COLOR_GRAY_80 } from 'common/constants/colors';
 import { AXIS_LABEL_STYLE, createBarSeries } from '../../common/stackedBarSeries';
-import { buildItemTooltip } from '../../common/echartsAxisBuilders';
+import { buildAxisTooltip, buildItemTooltip } from '../../common/echartsAxisBuilders';
 import { IssueTypeStatTooltip } from '../../common/issueTypeStatTooltip';
 import { getConfigData, calculateTooltipParams } from './utils';
 
@@ -33,16 +33,14 @@ const buildAreaSeries = (itemNames, dataByName, colors) =>
     type: 'line',
     stack: 'total',
     data: dataByName[name],
-    areaStyle: { opacity: 1 },
+    areaStyle: { opacity: 0.75 },
     lineStyle: { width: 0 },
-    showSymbol: false,
-    symbolSize: 10,
+    symbol: 'none',
     smooth: false,
+    triggerLineEvent: true,
+    cursor: 'pointer',
     itemStyle: { color: colors[name] },
-    emphasis: {
-      focus: 'none',
-      itemStyle: { opacity: 0.8 },
-    },
+    emphasis: { disabled: true },
   }));
 
 export const getOption = ({
@@ -80,20 +78,38 @@ export const getOption = ({
 
   const tickValues = buildAxisTicks(itemsData.length, isTimeline);
   const isAreaView = widgetViewMode === MODES_VALUES[CHART_MODES.AREA_VIEW];
+  const isActiveAreaView = isAreaView && !isSingleColumn;
   const withZoom = !isPreview && isZoomEnabled;
 
   let gridBottom = 40;
   if (isPreview) gridBottom = 0;
   else if (withZoom) gridBottom = 80;
 
-  const series =
-    isAreaView && !isSingleColumn
-      ? buildAreaSeries(itemNames, dataByName, colors)
-      : createBarSeries(itemNames, dataByName, colors, {
-          stack: 'total',
-          barWidth: '60%',
-          barCategoryGap: '40%',
-        });
+  const series = isActiveAreaView
+    ? buildAreaSeries(itemNames, dataByName, colors)
+    : createBarSeries(itemNames, dataByName, colors, {
+        stack: 'total',
+        barWidth: '60%',
+        barCategoryGap: '40%',
+      });
+
+  const hoveredSeriesRef = isActiveAreaView ? { current: null } : null;
+
+  const tooltipFormatter = buildTooltipFormatter(
+    IssueTypeStatTooltip,
+    isActiveAreaView
+      ? (data, color, customProps) => {
+          const id = hoveredSeriesRef.current;
+          const resolved = (id && data.find((d) => d.id === id)) || data[0];
+          return calculateTooltipParams([resolved], color, customProps);
+        }
+      : calculateTooltipParams,
+    { itemsData, isTimeline, formatMessage, defectTypes },
+  );
+
+  const tooltip = isActiveAreaView
+    ? buildAxisTooltip({ show: !isPreview, formatter: tooltipFormatter, axisPointer: { type: 'none' } })
+    : buildItemTooltip({ show: !isPreview, formatter: tooltipFormatter });
 
   return {
     color: itemNames.map((name) => colors[name]),
@@ -134,15 +150,7 @@ export const getOption = ({
         lineStyle: { color: COLOR_GRAY_80, width: 1 },
       },
     },
-    tooltip: buildItemTooltip({
-      show: !isPreview,
-      formatter: buildTooltipFormatter(IssueTypeStatTooltip, calculateTooltipParams, {
-        itemsData,
-        isTimeline,
-        formatMessage,
-        defectTypes,
-      }),
-    }),
+    tooltip,
     ...(withZoom
       ? {
           dataZoom: [
@@ -172,6 +180,7 @@ export const getOption = ({
       itemsData,
       colors,
       legendItems: itemNames,
+      ...(isActiveAreaView ? { hoveredSeriesRef, isAreaMode: true } : {}),
     },
   };
 };

@@ -126,8 +126,15 @@ export const buildItemTooltip = ({ show, formatter }) => ({
   formatter,
 });
 
-export const buildAxisTooltip = ({ show, formatter }) => ({
+export const buildNoneTooltip = ({ show, formatter }) => ({
+  trigger: 'none',
+  show,
+  formatter,
+});
+
+export const buildAxisTooltip = ({ show, formatter, axisPointer }) => ({
   trigger: 'axis',
   show,
   formatter,
+  ...(axisPointer ? { axisPointer } : {}),
 });

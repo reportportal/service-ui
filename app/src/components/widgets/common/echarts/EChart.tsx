@@ -314,6 +314,46 @@ export const EChart = ({
       });
     };
 
+    const hoveredSeriesRef = (customDataRef.current as Record<string, unknown>)
+      .hoveredSeriesRef as { current: string | null } | undefined;
+    const isAreaMode = !!(customDataRef.current as Record<string, unknown>).isAreaMode;
+
+    if (isAreaMode) {
+      const areaCount = seriesList.length;
+
+      const handleAreaMouseOver = (params: { seriesIndex?: number; seriesId?: string; seriesName?: string }) => {
+        const { seriesIndex, seriesId, seriesName } = params;
+        if (hoveredSeriesRef) {
+          hoveredSeriesRef.current = seriesId || seriesName || null;
+        }
+        if (seriesIndex !== undefined) {
+          chart.setOption({
+            series: Array.from({ length: areaCount }, (_, i) => ({
+              areaStyle: { opacity: i === seriesIndex ? 1 : 0.75 },
+            })),
+          });
+        }
+      };
+
+      const handleAreaMouseOut = () => {
+        if (hoveredSeriesRef) {
+          hoveredSeriesRef.current = null;
+        }
+        chart.setOption({
+          series: Array.from({ length: areaCount }, () => ({ areaStyle: { opacity: 0.75 } })),
+        });
+      };
+
+      chart.on('mouseover', handleAreaMouseOver);
+      chart.on('mouseout', handleAreaMouseOut);
+      chart.on('click', handleClick);
+      return () => {
+        chart.off('mouseover', handleAreaMouseOver);
+        chart.off('mouseout', handleAreaMouseOut);
+        chart.off('click', handleClick);
+      };
+    }
+
     chart.on('click', handleClick);
 
     return () => {
