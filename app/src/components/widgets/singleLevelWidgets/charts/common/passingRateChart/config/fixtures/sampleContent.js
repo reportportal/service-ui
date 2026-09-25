@@ -1,4 +1,4 @@
-/*!
+/*
  * Copyright 2026 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,34 +14,9 @@
  * limitations under the License.
  */
 
-.passing-rate-chart {
-  height: 100%;
-}
-
-.filter-info-block {
-  display: inline-block;
-  width: 100%;
-  max-width: 80%;
-  margin-bottom: 10px;
-  padding: 1px 0;
-  color: $COLOR--gray-47;
-  font-family: $FONT-SEMIBOLD;
-  font-size: 12px;
-  text-align: left;
-
-  .filter-name-title {
-    margin-right: 5px;
-    text-transform: uppercase;
-  }
-
-  .filter-name {
-    display: inline-block;
-    max-width: 73%;
-    overflow: hidden;
-    vertical-align: sub;
-    color: $COLOR--charcoal-grey;
-    font-size: 13px;
-    white-space: nowrap;
-    text-overflow: ellipsis;
-  }
-}
+export const sampleContent = {
+  total: 120,
+  passed: 90,
+  failed: 20,
+  skipped: 10,
+};

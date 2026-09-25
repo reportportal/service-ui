@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 EPAM Systems
+ * Copyright 2026 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-import React, { Component } from 'react';
+import { useCallback } from 'react';
 import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { STATS_PASSED } from 'common/constants/statistics';
 import { PASSED, FAILED, INTERRUPTED, SKIPPED } from 'common/constants/testStatuses';
 import { statisticsLinkSelector, TEST_ITEMS_TYPE_LIST } from 'controllers/testItem';
@@ -25,66 +25,51 @@ import { getDefaultTestItemLinkParams } from 'components/widgets/common/utils';
 import { messages } from 'components/widgets/common/messages';
 import { PassingRateChart } from '../common/passingRateChart';
 
-@connect(
-  (state) => ({
-    slugs: urlOrganizationAndProjectSelector(state),
-    getStatisticsLink: statisticsLinkSelector(state),
-  }),
-  {
-    navigate: (linkAction) => linkAction,
-  },
-)
-export class PassingRateSummary extends Component {
-  static propTypes = {
-    getStatisticsLink: PropTypes.func.isRequired,
-    navigate: PropTypes.func.isRequired,
-    widget: PropTypes.object.isRequired,
-    slugs: PropTypes.shape({
-      organizationSlug: PropTypes.string.isRequired,
-      projectSlug: PropTypes.string.isRequired,
-    }),
-  };
+export const PassingRateSummary = (props) => {
+  const { widget } = props;
+  const dispatch = useDispatch();
+  const slugs = useSelector(urlOrganizationAndProjectSelector);
+  const getStatisticsLink = useSelector(statisticsLinkSelector);
 
-  onChartClick = (data) => {
-    const {
-      widget,
-      getStatisticsLink,
-      widget: {
-        contentParameters: {
-          widgetOptions: { excludeSkipped },
-        },
-      },
-      slugs: { organizationSlug, projectSlug },
-    } = this.props;
+  const onChartClick = useCallback(
+    (data) => {
+      const { organizationSlug, projectSlug } = slugs;
+      const { excludeSkipped } = widget.contentParameters.widgetOptions;
+      const linkCreationParametersForFailed = excludeSkipped
+        ? [FAILED, INTERRUPTED]
+        : [FAILED, INTERRUPTED, SKIPPED];
 
-    const linkCreationParametersForFailed = excludeSkipped
-      ? [FAILED, INTERRUPTED]
-      : [FAILED, INTERRUPTED, SKIPPED];
+      const link = getStatisticsLink({
+        statuses: data.id === STATS_PASSED ? [PASSED] : linkCreationParametersForFailed,
+        launchesLimit: widget.contentParameters.itemsCount,
+      });
+      const navigationParams = getDefaultTestItemLinkParams(
+        projectSlug,
+        widget.appliedFilters[0].id,
+        TEST_ITEMS_TYPE_LIST,
+        organizationSlug,
+      );
 
-    const link = getStatisticsLink({
-      statuses: data.id === STATS_PASSED ? [PASSED] : linkCreationParametersForFailed,
-      launchesLimit: widget.contentParameters.itemsCount,
-    });
-    const navigationParams = getDefaultTestItemLinkParams(
-      projectSlug,
-      widget.appliedFilters[0].id,
-      TEST_ITEMS_TYPE_LIST,
-      organizationSlug,
-    );
+      dispatch(Object.assign(link, navigationParams));
+    },
+    [dispatch, getStatisticsLink, slugs, widget],
+  );
 
-    this.props.navigate(Object.assign(link, navigationParams));
-  };
+  const filterName = widget.appliedFilters[0]?.name;
 
-  getFilterName = ({ appliedFilters = [] }) => appliedFilters[0]?.name;
+  return (
+    <PassingRateChart
+      {...props}
+      filterNameTitle={messages.filterLabel}
+      filterName={filterName}
+      onChartClick={onChartClick}
+    />
+  );
+};
 
-  render() {
-    return (
-      <PassingRateChart
-        {...this.props}
-        filterNameTitle={messages.filterLabel}
-        filterName={this.getFilterName(this.props.widget)}
-        onChartClick={this.onChartClick}
-      />
-    );
-  }
-}
+PassingRateSummary.propTypes = {
+  widget: PropTypes.object.isRequired,
+  container: PropTypes.instanceOf(Element).isRequired,
+  isPreview: PropTypes.bool,
+  observer: PropTypes.object,
+};
