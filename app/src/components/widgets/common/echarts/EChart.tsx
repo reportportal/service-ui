@@ -340,7 +340,7 @@ export const EChart = ({
   };
 
   const onClickLegendItem = (id: string) => {
-    onChangeLegend(id);
+    onChangeLegend(id, () => {});
     chartRef.current?.dispatchAction({ type: 'legendToggleSelect', name: id });
   };
 

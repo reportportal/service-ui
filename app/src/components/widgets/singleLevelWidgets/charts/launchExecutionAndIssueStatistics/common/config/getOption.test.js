@@ -132,6 +132,82 @@ describe('donutChart getOption', () => {
     expect(option.graphic[0].style.text).toBe('90');
   });
 
+  test('omits the pie series and shows a 0 total when every legend item is unchecked', () => {
+    const option = getOption({
+      content: sampleContent,
+      contentFields: sampleContentFields,
+      isPreview: false,
+      formatMessage,
+      configParams: { getColumns: sampleGetColumns },
+      chartText: 'SUM',
+      uncheckedLegendItems: [
+        'statistics$executions$passed',
+        'statistics$executions$failed',
+        'statistics$executions$skipped',
+      ],
+    });
+
+    expect(option.series).toEqual([]);
+    expect(option.graphic[0].style.text).toBe('0');
+    // All three stay selectable in the legend even though none are plotted.
+    expect(option.customData.legendItems).toEqual([
+      'statistics$executions$passed',
+      'statistics$executions$failed',
+      'statistics$executions$skipped',
+    ]);
+  });
+
+  test('drops unchecked items from the pie data instead of leaving them at 0%', () => {
+    const option = getOption({
+      content: sampleContent,
+      contentFields: sampleContentFields,
+      isPreview: false,
+      formatMessage,
+      configParams: { getColumns: sampleGetColumns },
+      chartText: 'SUM',
+      uncheckedLegendItems: ['statistics$executions$skipped'],
+    });
+
+    expect(option.series[0].data.map((item) => item.id)).toEqual([
+      'statistics$executions$passed',
+      'statistics$executions$failed',
+    ]);
+  });
+
+  test('drops 0-value items from the pie data so they get no wedge or label, but keeps them in the legend', () => {
+    const zeroItemGetColumns = () => ({
+      columns: [
+        ['statistics$executions$passed', 60],
+        ['statistics$executions$failed', 30],
+        ['statistics$executions$skipped', 0],
+      ],
+      colors: {
+        statistics$executions$passed: '#56b985',
+        statistics$executions$failed: '#f65e5e',
+        statistics$executions$skipped: '#6d6d6d',
+      },
+    });
+
+    const option = getOption({
+      content: sampleContent,
+      contentFields: sampleContentFields,
+      isPreview: false,
+      formatMessage,
+      configParams: { getColumns: zeroItemGetColumns },
+      chartText: 'SUM',
+    });
+
+    expect(option.series[0].data.map((item) => item.id)).toEqual([
+      'statistics$executions$passed',
+      'statistics$executions$failed',
+    ]);
+    expect(option.customData.legendItems).toEqual([
+      'statistics$executions$passed',
+      'statistics$executions$failed',
+      'statistics$executions$skipped',
+    ]);
+  });
+
   test('shrinks the center label and hides per-slice labels in small-view mode', () => {
     const option = getOption({
       content: sampleContent,

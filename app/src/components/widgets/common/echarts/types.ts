@@ -33,7 +33,7 @@ export interface ChartObserver {
 
 export interface LegendConfig {
   showLegend?: boolean;
-  onChangeLegend?: (id: string) => void;
+  onChangeLegend?: (id: string, callback?: () => void) => void;
   uncheckedLegendItems?: string[];
   legendProps?: Record<string, unknown>;
 }

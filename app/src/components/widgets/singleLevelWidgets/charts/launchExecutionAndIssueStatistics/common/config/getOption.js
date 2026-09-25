@@ -61,19 +61,10 @@ export const getOption = ({
 }) => {
   const { columns, colors } = getColumns(content, contentFields, params);
   const legendItems = columns.map(([id]) => id);
-  const total = columns.reduce((sum, [, value]) => sum + value, 0);
-  // Mirrors the old C3 behavior (`chart.data.shown().reduce(...)`): the center
-  // total and tooltip percentages reflect only the currently checked legend
-  // items, not the full dataset, so unchecking a status/defect type updates
-  // the number instead of leaving it stuck at the full total.
-  const visibleTotal = columns.reduce(
-    (sum, [id, value]) => (uncheckedLegendItems.includes(id) ? sum : sum + value),
-    0,
-  );
-  // Nothing to plot: omit the pie series entirely (not just empty `data`) so
-  // nothing — not even an empty gray ring — renders. Only the center
-  // total/subtitle graphic is left showing.
-  const hasData = total > 0;
+  const visibleColumns = columns.filter(([id]) => !uncheckedLegendItems.includes(id));
+  const visibleTotal = visibleColumns.reduce((sum, [, value]) => sum + value, 0);
+  const hasData = visibleTotal > 0;
+  const plottedColumns = visibleColumns.filter(([, value]) => value > 0);
 
   return {
     color: columns.map(([id]) => colors[id]),
@@ -106,7 +97,7 @@ export const getOption = ({
               scale: !isPreview,
               scaleSize: 4,
             },
-            data: columns.map(([id, value]) => ({
+            data: plottedColumns.map(([id, value]) => ({
               id,
               name: id,
               value,
