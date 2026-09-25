@@ -24,6 +24,8 @@ export {
   buildTooltipFormatter,
   ECHARTS_THEME,
 } from './configHelpers';
+export { buildCenterLabelGraphic } from './centerLabelGraphic';
+export type { CenterLabelGraphicOptions } from './centerLabelGraphic';
 export type {
   EChartConfigData,
   EChartCustomData,

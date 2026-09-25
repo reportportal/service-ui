@@ -1,5 +1,5 @@
 /*!
- * Copyright 2019 EPAM Systems
+ * Copyright 2026 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,35 +17,5 @@
 .donut-chart {
   position: relative;
   width: 100%;
-
-  :global {
-    .c3-chart-arcs-title {
-      font-size: 24px !important;
-      font-weight: bold;
-    }
-  }
-
-  .small-view {
-    :global {
-      .c3-chart-arc {
-        & text {
-          display: none;
-        }
-      }
-
-      .c3-chart-arcs-title {
-        font-size: 12px !important;
-      }
-    }
-  }
-}
-
-.status-page-mode {
-  .small-view {
-    :global {
-      .c3-chart-arcs-title > tspan {
-        font-size: 12px !important;
-      }
-    }
-  }
+  height: 100%;
 }
