@@ -28,10 +28,8 @@ import { getConfigData, calculateTooltipParams } from './utils';
 
 const buildAreaTooltipCalculator = (hoveredSeriesRef) => (data, color, customProps) => {
   const id = hoveredSeriesRef.current;
-  if (!id) return '';
-  const resolved = data.find((d) => d.id === id);
-  if (!resolved) return '';
-  return calculateTooltipParams([resolved], color, customProps);
+  const resolved = id ? data.find((d) => d.id === id) : undefined;
+  return resolved ? calculateTooltipParams([resolved], color, customProps) : {};
 };
 
 const buildAreaSeries = (itemNames, dataByName, colors) =>
