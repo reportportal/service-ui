@@ -27,8 +27,8 @@ export const expectPreviewModeHidesChart = (option) => {
   expect(option.yAxis.show).toBe(false);
   expect(option.yAxis.name).toBeUndefined();
   expect(option.tooltip.show).toBe(false);
-  expect(option.grid.top).toBe(0);
-  expect(option.grid.left).toBe(0);
+  expect(option.grid.top).toBe(8);
+  expect(option.grid.left).toBe(8);
 };
 
 export const expectSingleSeriesCustomData = (option, { seriesId, color, itemsDataLength }) => {

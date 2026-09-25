@@ -38,6 +38,9 @@ describe('failedCasesTrendChart getOption', () => {
       type: 'line',
       data: [3, 5, 2],
       lineStyle: { width: 1 },
+      showSymbol: true,
+      symbolSize: 2,
+      cursor: 'pointer',
     });
     expect(option.series[0].areaStyle).toBeUndefined();
     expect(option.yAxis).toMatchObject({
@@ -116,5 +119,16 @@ describe('failedCasesTrendChart getOption', () => {
       showSymbol: true,
       symbolSize: 10,
     });
+  });
+
+  test('is not interactive in preview mode: default cursor and no hover growth', () => {
+    const option = getOption({
+      content: sampleContent,
+      isPreview: true,
+      formatMessage,
+    });
+
+    expect(option.series[0].cursor).toBe('default');
+    expect(option.series[0].silent).toBe(true);
   });
 });
