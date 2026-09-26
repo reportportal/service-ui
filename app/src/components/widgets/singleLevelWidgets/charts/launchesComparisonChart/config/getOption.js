@@ -67,14 +67,18 @@ export const getOption = ({
   const itemNames = contentFields.filter((key) => key !== TOTAL_EXECUTIONS_KEY).reverse();
   const categories = itemsData.map(transformCategoryLabelByDefault);
 
+  let gridTop = 85;
+  if (isPreview) gridTop = 8;
+  else if (!onChartClick) gridTop = 0;
+
   return {
     color: itemNames.map((name) => colors[name]),
     textStyle: AXIS_LABEL_STYLE,
     grid: {
-      top: isPreview || !onChartClick ? 0 : 85,
+      top: gridTop,
       left: isPreview ? 0 : 60,
       right: isPreview ? 0 : 20,
-      bottom: isPreview ? 0 : 40,
+      bottom: isPreview ? 8 : 40,
       containLabel: false,
     },
     xAxis: buildCategoryXAxis({
@@ -99,9 +103,10 @@ export const getOption = ({
     },
     series: createBarSeries(itemNames, dataByName, colors, {
       barMinHeight: 1,
-      barWidth: 22,
+      barWidth: isPreview ? undefined : 22,
       barCategoryGap: '45%',
       barGap: '0%',
+      silent: isPreview,
     }),
     customData: {
       itemsData,

@@ -92,7 +92,7 @@ describe('launchesComparisonChart getOption', () => {
     expect(skippedSeries.itemStyle.color).toBe(COLOR_SKIPPED);
   });
 
-  test('hides axes and tooltip and collapses padding in preview mode', () => {
+  test('hides axes and tooltip and collapses side padding in preview mode, keeping a small top/bottom gap', () => {
     const option = getOption({
       content: sampleContent,
       contentFields: sampleContentFields,
@@ -105,7 +105,24 @@ describe('launchesComparisonChart getOption', () => {
     expect(option.xAxis.show).toBe(false);
     expect(option.yAxis.show).toBe(false);
     expect(option.tooltip.show).toBe(false);
-    expect(option.grid).toMatchObject({ top: 0, left: 0, right: 0, bottom: 0 });
+    expect(option.grid).toMatchObject({ top: 8, left: 0, right: 0, bottom: 8 });
+  });
+
+  test('lets ECharts auto-size bars and disables hover in preview mode, instead of a fixed width that overflows the thumbnail', () => {
+    const option = getOption({
+      content: sampleContent,
+      contentFields: sampleContentFields,
+      isPreview: true,
+      formatMessage,
+      defectTypes,
+      onChartClick: jest.fn(),
+    });
+
+    option.series.forEach((series) => {
+      expect(series.barWidth).toBeUndefined();
+      expect(series.silent).toBe(true);
+      expect(series.emphasis).toEqual({ disabled: true });
+    });
   });
 
   test('collapses the top padding when the chart is not clickable', () => {

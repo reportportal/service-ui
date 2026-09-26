@@ -45,7 +45,7 @@ export const createBarSeries = (
   itemNames,
   dataByName,
   colors,
-  { stack, barMinHeight, barWidth, barCategoryGap, barGap } = {},
+  { stack, barMinHeight, barWidth, barCategoryGap, barGap, silent } = {},
 ) => {
   const resolvedBarWidth = barWidth ?? (stack ? DEFAULT_STACKED_BAR_WIDTH : undefined);
   const resolvedBarCategoryGap =
@@ -66,11 +66,15 @@ export const createBarSeries = (
     // flat sliver flush with the x-axis (using the series' own fill color),
     // instead of a bordered zero-height rect that reads as a bump above the axis.
     ...(barMinHeight !== undefined ? { barMinHeight } : {}),
+
+    ...(silent ? { silent } : {}),    // In preview, clicks are already disabled by the caller — but without
+    // `silent`, ECharts still runs the hover emphasis below, making bars look
+    // interactive when they aren't.
     data: dataByName[name],
     itemStyle: {
       color: colors[name],
     },
-    emphasis: STACKED_BAR_EMPHASIS,
+    emphasis: silent ? { disabled: true } : STACKED_BAR_EMPHASIS,
   }));
 };
 
