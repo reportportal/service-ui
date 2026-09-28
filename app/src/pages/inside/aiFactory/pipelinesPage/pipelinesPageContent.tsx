@@ -134,7 +134,7 @@ export const PipelinesPageContent = () => {
             </Button>
           }
         />
-        {renderContent()}
+        <div className={cx('page-content')}>{renderContent()}</div>
       </ScrollWrapper>
     </SettingsLayout>
   );

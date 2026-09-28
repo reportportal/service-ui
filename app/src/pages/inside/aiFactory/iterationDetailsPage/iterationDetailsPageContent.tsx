@@ -116,6 +116,10 @@ export const IterationDetailsPageContent = () => {
       onClick: () =>
         dispatch({ type: PROJECT_PIPELINES_PAGE, payload: { organizationSlug, projectSlug } }),
     },
+    {
+      id: 'iteration',
+      title: iteration ? formatMessage(messages.iterationTitle, { number: iteration.number }) : '',
+    },
   ];
 
   const renderBanner = () => {

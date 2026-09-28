@@ -14,6 +14,12 @@
  * limitations under the License.
  */
 
+// Matches PageHeaderWithBreadcrumbsAndActions' own `padding: 16px 32px` so the body content
+// (search box, pipeline groups) lines up with the title/breadcrumb above it.
+.page-content {
+  padding: 16px 32px 24px;
+}
+
 .empty {
   padding: 24px 0;
   color: var(--rp-ui-base-e-300);
@@ -22,5 +28,5 @@
 
 .search {
   max-width: 420px;
-  margin: 16px 0;
+  margin: 0 0 16px;
 }

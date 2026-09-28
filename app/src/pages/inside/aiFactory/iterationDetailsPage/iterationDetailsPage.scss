@@ -14,11 +14,13 @@
  * limitations under the License.
  */
 
+// Matches PageHeaderWithBreadcrumbsAndActions' own `padding: 16px 32px` so the body content
+// (meta, KPIs, banner, stage cards/panels) lines up with the title/breadcrumb above it.
 .content {
   display: flex;
   flex-direction: column;
   gap: 16px;
-  margin-top: 16px;
+  padding: 16px 32px 24px;
 }
 
 .meta {
