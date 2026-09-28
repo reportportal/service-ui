@@ -16,7 +16,7 @@
 
 import { defineMessages, useIntl } from 'react-intl';
 import { createClassnames } from 'common/utils';
-import { Lifecycle } from 'types/aiFactory';
+import { AiLifecycle, Lifecycle } from 'types/aiFactory';
 import styles from './lifecycleBadge.scss';
 
 const cx = createClassnames(styles);
@@ -33,7 +33,7 @@ const messages = defineMessages({
 });
 
 export interface LifecycleBadgeProps {
-  lifecycle: Lifecycle;
+  lifecycle: AiLifecycle;
 }
 
 export const LifecycleBadge = ({ lifecycle }: LifecycleBadgeProps) => {

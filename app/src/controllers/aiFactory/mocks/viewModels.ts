@@ -128,6 +128,11 @@ const toStageRS = (pipeline: MockPipelineSeed, iteration: MockIterationSeed, key
   const summary = stageSummary(iteration, key);
   const cases = listCasesOfIteration(iteration.id);
   const base: StageRS = { ...summary, startedAt: iteration.startedAt, durationMs: seed?.durationMs, tokens: seed?.tokens || [] };
+  if (key === StageKey.CREATE && cases.length) {
+    base.create = {
+      cases: cases.map((c) => ({ name: c.displayId, priority: c.priority, testCaseId: c.id, displayId: c.displayId })),
+    };
+  }
   if (key === StageKey.GRADE && seed) {
     base.grade = {
       suiteScore: seed.suiteScore || 0,

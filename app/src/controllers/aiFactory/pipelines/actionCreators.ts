@@ -14,8 +14,12 @@
  * limitations under the License.
  */
 
-import { GET_PIPELINE_ITERATIONS, GET_PIPELINES } from './constants';
-import { GetPipelineIterationsAction, GetPipelinesAction } from './types';
+import { GET_PIPELINE_ITERATION_DETAILS, GET_PIPELINE_ITERATIONS, GET_PIPELINES } from './constants';
+import {
+  GetPipelineIterationDetailsAction,
+  GetPipelineIterationsAction,
+  GetPipelinesAction,
+} from './types';
 
 export const getPipelinesAction = (): GetPipelinesAction => ({
   type: GET_PIPELINES,
@@ -26,4 +30,12 @@ export const getPipelineIterationsAction = (
 ): GetPipelineIterationsAction => ({
   type: GET_PIPELINE_ITERATIONS,
   payload: { pipelineIds },
+});
+
+export const getPipelineIterationDetailsAction = (
+  pipelineId: number,
+  iterationId: number,
+): GetPipelineIterationDetailsAction => ({
+  type: GET_PIPELINE_ITERATION_DETAILS,
+  payload: { pipelineId, iterationId },
 });

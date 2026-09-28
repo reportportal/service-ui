@@ -15,17 +15,23 @@
  */
 
 import { useIntl } from 'react-intl';
+import { useSelector } from 'react-redux';
+import Link from 'redux-first-router-link';
 
 import { createClassnames, formatCost } from 'common/utils';
-import { IterationStatusBadge, StageStatusDot } from 'pages/inside/aiFactory/common';
-import { AiPipelineType, IterationSummaryRS, PipelineType, StageKey, StageSummaryRS } from 'types/aiFactory';
-
+import { PROJECT_PIPELINE_ITERATION_PAGE, urlOrganizationAndProjectSelector } from 'controllers/pages';
 import {
+  STAGE_LABEL_MESSAGE,
+  IterationStatusBadge,
+  StageStatusDot,
   outcome,
   requirementOrTestCasesLabel,
   stageMetric,
   startedAndDuration,
-} from '../pipelinesListUtils';
+} from 'pages/inside/aiFactory/common';
+import { ProjectDetails } from 'pages/organization/constants';
+import { AiPipelineType, IterationSummaryRS, PipelineType, StageSummaryRS } from 'types/aiFactory';
+
 import { messages } from '../messages';
 import styles from './iterationCard.scss';
 
@@ -36,19 +42,11 @@ export interface IterationCardProps {
   iteration: IterationSummaryRS;
 }
 
-const STAGE_LABEL_MESSAGE: Record<StageKey, keyof typeof messages> = {
-  [StageKey.CREATE]: 'stageCreate',
-  [StageKey.GRADE]: 'stageGrade',
-  [StageKey.UPLOAD]: 'stageUpload',
-  [StageKey.REVIEW]: 'stageReview',
-  [StageKey.PREPARE]: 'stagePrepare',
-  [StageKey.DEVELOP]: 'stageDevelop',
-  [StageKey.AUTOMATION_REVIEW]: 'stageReview',
-  [StageKey.FIX]: 'stageFix',
-};
-
 export const IterationCard = ({ pipelineType, iteration }: IterationCardProps) => {
   const { formatMessage } = useIntl();
+  const { organizationSlug, projectSlug } = useSelector(
+    urlOrganizationAndProjectSelector,
+  ) as ProjectDetails;
 
   const formatStageMetric = (stage: StageSummaryRS): string | null => {
     const metric = stageMetric(stage, iteration.testCasesCount);
@@ -100,9 +98,20 @@ export const IterationCard = ({ pipelineType, iteration }: IterationCardProps) =
     <div className={cx('card')} data-automation-id="iterationCard">
       <div className={cx('card__header')}>
         <IterationStatusBadge status={iteration.status} />
-        <span className={cx('card__title')}>
+        <Link
+          className={cx('card__title')}
+          to={{
+            type: PROJECT_PIPELINE_ITERATION_PAGE,
+            payload: {
+              organizationSlug,
+              projectSlug,
+              pipelineId: iteration.pipelineId,
+              iterationId: iteration.id,
+            },
+          }}
+        >
           {formatMessage(messages.iterationTitle, { number: iteration.number })}
-        </span>
+        </Link>
       </div>
       <div className={cx('card__outcome')}>{outcomeText()}</div>
       <div className={cx('card__meta')}>{metaFields.join(' · ')}</div>
@@ -112,7 +121,7 @@ export const IterationCard = ({ pipelineType, iteration }: IterationCardProps) =
           return (
             <span key={stage.key} className={cx('card__stage-chip')}>
               <StageStatusDot status={stage.status} />
-              {formatMessage(messages[STAGE_LABEL_MESSAGE[stage.key]])}
+              {formatMessage(STAGE_LABEL_MESSAGE[stage.key])}
               {metricLabel ? ` · ${metricLabel}` : ''}
             </span>
           );

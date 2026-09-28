@@ -19,8 +19,14 @@ export {
   PIPELINES_NAMESPACE,
   GET_PIPELINE_ITERATIONS,
   PIPELINE_ITERATIONS_NAMESPACE,
+  GET_PIPELINE_ITERATION_DETAILS,
+  PIPELINE_ITERATION_DETAILS_NAMESPACE,
 } from './constants';
-export { getPipelinesAction, getPipelineIterationsAction } from './actionCreators';
+export {
+  getPipelinesAction,
+  getPipelineIterationsAction,
+  getPipelineIterationDetailsAction,
+} from './actionCreators';
 export { aiFactoryPipelinesSagas } from './sagas';
 export { aiFactoryPipelinesReducer } from './reducer';
 export {
@@ -28,11 +34,14 @@ export {
   pipelinesLoadingSelector,
   pipelineIterationsByPipelineSelector,
   pipelineIterationsLoadingSelector,
+  pipelineIterationDetailsSelector,
+  pipelineIterationDetailsLoadingSelector,
 } from './selectors';
 export type {
   PipelinesState,
   PipelinesSelectorsRootState,
   GetPipelinesAction,
   GetPipelineIterationsAction,
+  GetPipelineIterationDetailsAction,
   IterationsByPipelineId,
 } from './types';

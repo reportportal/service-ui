@@ -32,6 +32,12 @@
   &__title {
     font-weight: var(--rp-ui-base-fw-bold);
     font-size: 14px;
+    color: var(--rp-ui-base-topaz);
+    text-decoration: none;
+
+    &:hover {
+      text-decoration: underline;
+    }
   }
 
   &__outcome {

@@ -14,11 +14,26 @@
  * limitations under the License.
  */
 
-export const GET_PIPELINES = 'getAiFactoryPipelines' as const;
-export const PIPELINES_NAMESPACE = 'aiFactoryPipelines' as const;
+.tile {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 100px;
+  padding: 8px 16px;
+  border-left: 1px solid var(--rp-ui-base-e-100);
 
-export const GET_PIPELINE_ITERATIONS = 'getAiFactoryPipelineIterations' as const;
-export const PIPELINE_ITERATIONS_NAMESPACE = 'aiFactoryPipelineIterations' as const;
+  &:first-child {
+    padding-left: 0;
+    border-left: none;
+  }
 
-export const GET_PIPELINE_ITERATION_DETAILS = 'getAiFactoryPipelineIterationDetails' as const;
-export const PIPELINE_ITERATION_DETAILS_NAMESPACE = 'aiFactoryPipelineIterationDetails' as const;
+  &__label {
+    color: var(--rp-ui-base-e-300);
+    font-size: 12px;
+  }
+
+  &__value {
+    font-weight: var(--rp-ui-base-fw-bold);
+    font-size: 18px;
+  }
+}

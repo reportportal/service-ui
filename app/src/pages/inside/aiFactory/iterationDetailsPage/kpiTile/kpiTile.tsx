@@ -14,11 +14,21 @@
  * limitations under the License.
  */
 
-export const GET_PIPELINES = 'getAiFactoryPipelines' as const;
-export const PIPELINES_NAMESPACE = 'aiFactoryPipelines' as const;
+import { ReactNode } from 'react';
 
-export const GET_PIPELINE_ITERATIONS = 'getAiFactoryPipelineIterations' as const;
-export const PIPELINE_ITERATIONS_NAMESPACE = 'aiFactoryPipelineIterations' as const;
+import { createClassnames } from 'common/utils';
+import styles from './kpiTile.scss';
 
-export const GET_PIPELINE_ITERATION_DETAILS = 'getAiFactoryPipelineIterationDetails' as const;
-export const PIPELINE_ITERATION_DETAILS_NAMESPACE = 'aiFactoryPipelineIterationDetails' as const;
+const cx = createClassnames(styles);
+
+export interface KpiTileProps {
+  label: ReactNode;
+  value: ReactNode;
+}
+
+export const KpiTile = ({ label, value }: KpiTileProps) => (
+  <div className={cx('tile')} data-automation-id="kpiTile">
+    <span className={cx('tile__label')}>{label}</span>
+    <span className={cx('tile__value')}>{value}</span>
+  </div>
+);

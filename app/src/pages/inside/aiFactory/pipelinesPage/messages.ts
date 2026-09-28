@@ -57,34 +57,6 @@ export const messages = defineMessages({
     id: 'PipelinesPage.autoReadyOff',
     defaultMessage: 'Auto-Ready OFF',
   },
-  stageCreate: {
-    id: 'PipelinesPage.stageCreate',
-    defaultMessage: 'Create',
-  },
-  stageGrade: {
-    id: 'PipelinesPage.stageGrade',
-    defaultMessage: 'Grade',
-  },
-  stageUpload: {
-    id: 'PipelinesPage.stageUpload',
-    defaultMessage: 'Upload',
-  },
-  stageReview: {
-    id: 'PipelinesPage.stageReview',
-    defaultMessage: 'Review',
-  },
-  stagePrepare: {
-    id: 'PipelinesPage.stagePrepare',
-    defaultMessage: 'Prepare',
-  },
-  stageDevelop: {
-    id: 'PipelinesPage.stageDevelop',
-    defaultMessage: 'Develop',
-  },
-  stageFix: {
-    id: 'PipelinesPage.stageFix',
-    defaultMessage: 'Fix',
-  },
   stageMetricCases: {
     id: 'PipelinesPage.stageMetricCases',
     defaultMessage: '{count} {count, plural, one {case} other {cases}}',

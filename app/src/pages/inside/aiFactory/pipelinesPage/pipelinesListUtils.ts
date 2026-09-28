@@ -14,15 +14,7 @@
  * limitations under the License.
  */
 
-import { formatDuration } from 'common/utils/timeDateUtils';
-import {
-  AiPipelineType,
-  IterationStatus,
-  IterationSummaryRS,
-  PipelineType,
-  StageKey,
-  StageSummaryRS,
-} from 'types/aiFactory';
+import { IterationSummaryRS } from 'types/aiFactory';
 
 /**
  * Matches a search term against a requirement/pipeline name/iteration number, the same fields
@@ -51,73 +43,4 @@ export const matchesSearch = (
     .toLowerCase();
 
   return haystack.includes(term);
-};
-
-/**
- * `null` when the stage has no metric worth showing next to its label (e.g. a running Prepare
- * stage with no per-case results yet). Returns structured data — the caller formats it via
- * react-intl, since "cases"/"Score"/"Ready" are fixed vocabulary and must be translatable.
- */
-export type StageMetric =
-  | { kind: 'cases'; count: number }
-  | { kind: 'score'; score: number }
-  | { kind: 'ready'; ready: number; total: number };
-
-export const stageMetric = (stage: StageSummaryRS, testCasesCount: number): StageMetric | null => {
-  if (stage.metric === undefined) {
-    return null;
-  }
-  switch (stage.key) {
-    case StageKey.CREATE:
-    case StageKey.UPLOAD:
-      return { kind: 'cases', count: stage.metric };
-    case StageKey.GRADE:
-      return { kind: 'score', score: stage.metric };
-    case StageKey.REVIEW:
-      return { kind: 'ready', ready: stage.metric, total: testCasesCount };
-    default:
-      return null;
-  }
-};
-
-/** Structured outcome data for the iteration card's outcome line — see {@link StageMetric}. */
-export type Outcome =
-  | { kind: 'generationReady'; ready: number; total: number; fixRounds: number }
-  | { kind: 'automationRunning'; total: number }
-  | { kind: 'automationDone'; implemented: number; total: number; launchNumber?: number };
-
-export const outcome = (pipelineType: AiPipelineType, iteration: IterationSummaryRS): Outcome => {
-  if (pipelineType === PipelineType.GENERATION) {
-    return {
-      kind: 'generationReady',
-      ready: iteration.readyCount ?? 0,
-      total: iteration.testCasesCount,
-      fixRounds: iteration.fixRoundsCount ?? 0,
-    };
-  }
-  if (iteration.status === IterationStatus.RUNNING) {
-    return { kind: 'automationRunning', total: iteration.testCasesCount };
-  }
-  return {
-    kind: 'automationDone',
-    implemented: iteration.status === IterationStatus.COMPLETED ? iteration.testCasesCount : 0,
-    total: iteration.testCasesCount,
-    launchNumber: iteration.launch?.number,
-  };
-};
-
-/** "Requirement" meta field: the spec for generation, or a short list of TC ids for automation. */
-export const requirementOrTestCasesLabel = (iteration: IterationSummaryRS): string | undefined => {
-  if (iteration.requirement) {
-    return `${iteration.requirement.specId} · ${iteration.requirement.title}`;
-  }
-  if (iteration.testCases?.length) {
-    return iteration.testCases.map((testCase) => testCase.displayId).join(', ');
-  }
-  return undefined;
-};
-
-export const startedAndDuration = (iteration: IterationSummaryRS): string => {
-  const started = new Date(iteration.startedAt).toLocaleString();
-  return iteration.durationMs ? `${started} · ${formatDuration(iteration.durationMs)}` : started;
 };

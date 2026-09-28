@@ -23,18 +23,21 @@ import { FETCH_START } from 'controllers/fetch/constants';
 import { showErrorNotification } from 'controllers/notification';
 import { projectKeySelector } from 'controllers/project';
 import { LOGOUT } from 'controllers/auth';
-import { IterationPageRS, PipelineRS } from 'types/aiFactory';
+import { IterationPageRS, IterationRS, PipelineRS } from 'types/aiFactory';
 
 import {
+  GET_PIPELINE_ITERATION_DETAILS,
   GET_PIPELINE_ITERATIONS,
   GET_PIPELINES,
+  PIPELINE_ITERATION_DETAILS_NAMESPACE,
   PIPELINE_ITERATIONS_NAMESPACE,
   PIPELINES_NAMESPACE,
 } from './constants';
-import { GetPipelineIterationsAction } from './types';
+import { GetPipelineIterationDetailsAction, GetPipelineIterationsAction } from './types';
 
 let abortController: AbortController | undefined;
 let iterationsAbortController: AbortController | undefined;
+let iterationDetailsAbortController: AbortController | undefined;
 
 function* getPipelines(): Generator {
   const controller = new AbortController();
@@ -145,6 +148,55 @@ function* watchGetPipelineIterations() {
   yield takeEvery(LOGOUT, handleLogoutDuringIterationsFetch);
 }
 
+function* getPipelineIterationDetails(action: GetPipelineIterationDetailsAction): Generator {
+  const controller = new AbortController();
+  iterationDetailsAbortController?.abort();
+  iterationDetailsAbortController = controller;
+
+  try {
+    const projectKey = (yield select(projectKeySelector)) as string;
+    const { pipelineId, iterationId } = action.payload;
+
+    yield put({
+      type: FETCH_START,
+      payload: { projectKey },
+      meta: { namespace: PIPELINE_ITERATION_DETAILS_NAMESPACE },
+    });
+
+    const data = (yield call(fetch, URLS.tmsPipelineIterationById(projectKey, pipelineId, iterationId), {
+      signal: controller.signal,
+    })) as IterationRS;
+
+    yield put(fetchSuccessAction(PIPELINE_ITERATION_DETAILS_NAMESPACE, { data }));
+  } catch (error) {
+    const isCancellation = error instanceof Error && error.message === 'REQUEST_CANCELED';
+
+    if (!isCancellation) {
+      yield put(fetchErrorAction(PIPELINE_ITERATION_DETAILS_NAMESPACE, error));
+      yield put(
+        showErrorNotification({
+          messageId: 'aiFactoryPipelinesLoadingFailed',
+        }),
+      );
+    }
+  }
+}
+
+function handleLogoutDuringIterationDetailsFetch(): void {
+  const controller = iterationDetailsAbortController;
+  iterationDetailsAbortController = undefined;
+  controller?.abort();
+}
+
+function* watchGetPipelineIterationDetails() {
+  yield takeLatest(GET_PIPELINE_ITERATION_DETAILS, getPipelineIterationDetails);
+  yield takeEvery(LOGOUT, handleLogoutDuringIterationDetailsFetch);
+}
+
 export function* aiFactoryPipelinesSagas() {
-  yield all([watchGetPipelines(), watchGetPipelineIterations()]);
+  yield all([
+    watchGetPipelines(),
+    watchGetPipelineIterations(),
+    watchGetPipelineIterationDetails(),
+  ]);
 }

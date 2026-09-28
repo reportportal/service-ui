@@ -31,3 +31,6 @@ export type { ScoreBarProps } from './scoreBar';
 export { DeltaCell } from './deltaCell';
 export type { DeltaCellProps } from './deltaCell';
 export { usePolling } from './hooks';
+export { outcome, requirementOrTestCasesLabel, stageMetric, startedAndDuration } from './iterationFormatUtils';
+export type { Outcome, StageMetric } from './iterationFormatUtils';
+export { stageLabelMessages, STAGE_LABEL_MESSAGE } from './stageLabels';

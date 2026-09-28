@@ -19,9 +19,13 @@ import { combineReducers } from 'redux';
 import { createPageScopedReducer } from 'common/utils/createPageScopedReducer';
 import { fetchReducer } from 'controllers/fetch';
 import { loadingReducer } from 'controllers/loading';
-import { PROJECT_PIPELINES_PAGE } from 'controllers/pages';
+import { PROJECT_PIPELINE_ITERATION_PAGE, PROJECT_PIPELINES_PAGE } from 'controllers/pages';
 
-import { PIPELINE_ITERATIONS_NAMESPACE, PIPELINES_NAMESPACE } from './constants';
+import {
+  PIPELINE_ITERATION_DETAILS_NAMESPACE,
+  PIPELINE_ITERATIONS_NAMESPACE,
+  PIPELINES_NAMESPACE,
+} from './constants';
 
 const reducer = combineReducers({
   data: fetchReducer(PIPELINES_NAMESPACE, { initialState: null, contentPath: 'data' }),
@@ -31,8 +35,16 @@ const reducer = combineReducers({
     contentPath: 'data',
   }),
   iterationsLoading: loadingReducer(PIPELINE_ITERATIONS_NAMESPACE),
+  iterationDetails: fetchReducer(PIPELINE_ITERATION_DETAILS_NAMESPACE, {
+    initialState: null,
+    contentPath: 'data',
+  }),
+  iterationDetailsLoading: loadingReducer(PIPELINE_ITERATION_DETAILS_NAMESPACE),
 });
 
+// Both pages share this state slice, so navigating between them (e.g. a card link into an
+// iteration, then back) does not need to re-fetch what's already loaded.
 export const aiFactoryPipelinesReducer = createPageScopedReducer(reducer, [
   PROJECT_PIPELINES_PAGE,
+  PROJECT_PIPELINE_ITERATION_PAGE,
 ]);

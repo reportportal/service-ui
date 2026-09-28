@@ -16,8 +16,8 @@
 
 import { Action } from 'redux';
 
-import { IterationSummaryRS, PipelineRS } from 'types/aiFactory';
-import { GET_PIPELINE_ITERATIONS, GET_PIPELINES } from './constants';
+import { IterationRS, IterationSummaryRS, PipelineRS } from 'types/aiFactory';
+import { GET_PIPELINE_ITERATION_DETAILS, GET_PIPELINE_ITERATIONS, GET_PIPELINES } from './constants';
 
 /** Iterations of every currently loaded pipeline, keyed by pipeline id. */
 export type IterationsByPipelineId = Record<number, IterationSummaryRS[]>;
@@ -27,6 +27,8 @@ export interface PipelinesState {
   isLoading?: boolean;
   iterationsByPipeline: IterationsByPipelineId | null;
   iterationsLoading?: boolean;
+  iterationDetails: IterationRS | null;
+  iterationDetailsLoading?: boolean;
 }
 
 export interface PipelinesSelectorsRootState {
@@ -37,4 +39,9 @@ export type GetPipelinesAction = Action<typeof GET_PIPELINES>;
 
 export interface GetPipelineIterationsAction extends Action<typeof GET_PIPELINE_ITERATIONS> {
   payload: { pipelineIds: number[] };
+}
+
+export interface GetPipelineIterationDetailsAction
+  extends Action<typeof GET_PIPELINE_ITERATION_DETAILS> {
+  payload: { pipelineId: number; iterationId: number };
 }

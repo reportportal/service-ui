@@ -121,8 +121,9 @@ import {
   PROJECT_MILESTONES_PAGE,
   PROJECT_TEST_PLAN_DETAILS_PAGE,
   PROJECT_PIPELINES_PAGE,
+  PROJECT_PIPELINE_ITERATION_PAGE,
 } from 'controllers/pages/constants';
-import { getPipelinesAction } from 'controllers/aiFactory/pipelines';
+import { getPipelinesAction, getPipelineIterationDetailsAction } from 'controllers/aiFactory/pipelines';
 import { isAiFactoryEnabled } from 'controllers/aiFactory';
 import { DOCUMENTATION } from 'pages/inside/productVersionPage/constants';
 import { pageRendering, ANONYMOUS_ACCESS, ADMIN_ACCESS } from './constants';
@@ -627,6 +628,16 @@ const routesMap = {
       // PipelinesPage itself redirects away when off, but that happens after this thunk runs.
       if (isAiFactoryEnabled()) {
         dispatch(getPipelinesAction());
+      }
+    },
+  },
+  [PROJECT_PIPELINE_ITERATION_PAGE]: {
+    path: '/organizations/:organizationSlug/projects/:projectSlug/pipelines/:pipelineId/iterations/:iterationId',
+    thunk: (dispatch, getState) => {
+      // Same toggle-OFF guard as PROJECT_PIPELINES_PAGE above.
+      if (isAiFactoryEnabled()) {
+        const { pipelineId, iterationId } = getState().location.payload;
+        dispatch(getPipelineIterationDetailsAction(Number(pipelineId), Number(iterationId)));
       }
     },
   },
