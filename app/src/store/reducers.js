@@ -48,6 +48,7 @@ import { exportsReducer } from 'controllers/exports/reducer';
 import { testCaseReducer } from 'controllers/testCase';
 import { testPlanReducer } from 'controllers/testPlan';
 import { milestoneReducer } from 'controllers/milestone';
+import { aiFactoryPipelinesReducer } from 'controllers/aiFactory/pipelines';
 
 export default {
   appInfo: appInfoReducer,
@@ -83,4 +84,5 @@ export default {
   testCase: testCaseReducer,
   testPlan: testPlanReducer,
   milestone: milestoneReducer,
+  aiFactoryPipelines: aiFactoryPipelinesReducer,
 };

@@ -108,6 +108,7 @@ export {
   TEST_CASE_LIBRARY_PAGE,
   PROJECT_MILESTONES_PAGE,
   PROJECT_TEST_PLAN_DETAILS_PAGE,
+  PROJECT_PIPELINES_PAGE,
   APP_LEVEL,
 } from './constants';
 export { NOT_FOUND } from 'redux-first-router';

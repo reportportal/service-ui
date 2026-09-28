@@ -120,7 +120,10 @@ import {
   PRODUCT_VERSION_TAB_PAGE,
   PROJECT_MILESTONES_PAGE,
   PROJECT_TEST_PLAN_DETAILS_PAGE,
+  PROJECT_PIPELINES_PAGE,
 } from 'controllers/pages/constants';
+import { getPipelinesAction } from 'controllers/aiFactory/pipelines';
+import { isAiFactoryEnabled } from 'controllers/aiFactory';
 import { DOCUMENTATION } from 'pages/inside/productVersionPage/constants';
 import { pageRendering, ANONYMOUS_ACCESS, ADMIN_ACCESS } from './constants';
 import { fetchOrganizationEventsDataAction } from 'controllers/instance/actionCreators';
@@ -615,6 +618,16 @@ const routesMap = {
       });
 
       dispatch(getMilestonesAction({ offset, limit }));
+    },
+  },
+  [PROJECT_PIPELINES_PAGE]: {
+    path: '/organizations/:organizationSlug/projects/:projectSlug/pipelines',
+    thunk: (dispatch) => {
+      // Toggle OFF must make no request to the new endpoints (03-frontend-architecture.md §3);
+      // PipelinesPage itself redirects away when off, but that happens after this thunk runs.
+      if (isAiFactoryEnabled()) {
+        dispatch(getPipelinesAction());
+      }
     },
   },
   [PROJECT_TEST_PLAN_DETAILS_PAGE]: {

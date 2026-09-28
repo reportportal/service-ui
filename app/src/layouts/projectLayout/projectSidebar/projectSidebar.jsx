@@ -35,6 +35,7 @@ import {
   PRODUCT_VERSIONS_PAGE,
   TEST_CASE_LIBRARY_PAGE,
   PROJECT_MILESTONES_PAGE,
+  PROJECT_PIPELINES_PAGE,
   MANUAL_LAUNCHES_PAGE,
 } from 'controllers/pages/constants';
 import {
@@ -54,10 +55,12 @@ import ProductVersionsIcon from 'common/img/sidebar/product-versions-inline.svg'
 import TestCaseIcon from 'common/img/sidebar/test-case-icon-inline.svg';
 import MilestonesIcon from 'common/img/sidebar/milestones-icon-inline.svg';
 import TestExecutionsIcon from 'common/img/sidebar/test-executions-icon-inline.svg';
+import PipelinesIcon from 'common/img/sidebar/pipelines-icon-inline.svg';
 import { projectNameSelector } from 'controllers/project';
 import { activeOrganizationNameSelector } from 'controllers/organization';
 import { OrganizationsControlWithPopover } from '../../organizationsControl';
 import { getTmsOverride } from 'controllers/appInfo/utils';
+import { useAiFactoryEnabled } from 'controllers/aiFactory';
 import { PreservedText } from 'components/preservedText';
 import { messages } from '../../messages';
 
@@ -75,6 +78,7 @@ export const ProjectSidebar = ({ onClickNavBtn }) => {
   const organizationName = useSelector(activeOrganizationNameSelector);
   const projectName = useSelector(projectNameSelector);
   const [isOpenOrganizationPopover, setIsOpenOrganizationPopover] = useState(false);
+  const isAiFactoryFeatureEnabled = useAiFactoryEnabled();
 
   const onClickButton = (eventInfo) => {
     onClickNavBtn();
@@ -147,6 +151,24 @@ export const ProjectSidebar = ({ onClickNavBtn }) => {
         message: formatMessage(messages.milestones),
         menuOrder: (menuCounter += menuStep),
       },
+      ...(isAiFactoryFeatureEnabled
+        ? [
+            {
+              onClick: (isSidebarCollapsed) =>
+                onClickButton({
+                  itemName: messages.pipelines.defaultMessage,
+                  isSidebarCollapsed,
+                }),
+              link: {
+                type: PROJECT_PIPELINES_PAGE,
+                payload: { organizationSlug, projectSlug },
+              },
+              icon: PipelinesIcon,
+              message: formatMessage(messages.pipelines),
+              menuOrder: (menuCounter += menuStep),
+            },
+          ]
+        : []),
       {
         onClick: (isSidebarCollapsed) =>
           onClickButton({

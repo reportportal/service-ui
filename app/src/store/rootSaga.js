@@ -43,6 +43,7 @@ import { exportsSagas } from 'controllers/exports/sagas';
 import { testCaseSagas } from 'controllers/testCase';
 import { testPlanSagas } from 'controllers/testPlan';
 import { milestoneSagas } from 'controllers/milestone';
+import { aiFactoryPipelinesSagas } from 'controllers/aiFactory/pipelines';
 import { analyticsSagas } from 'controllers/analytics';
 
 const sagas = [
@@ -74,6 +75,7 @@ const sagas = [
   testCaseSagas,
   testPlanSagas,
   milestoneSagas,
+  aiFactoryPipelinesSagas,
   analyticsSagas,
 ];
 
