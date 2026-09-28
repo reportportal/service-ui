@@ -1,0 +1,78 @@
+/*
+ * Copyright 2026 EPAM Systems
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+.card {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 16px;
+  border: 1px solid var(--rp-ui-base-e-100);
+  border-radius: 8px;
+  font-family: var(--rp-ui-base-font-family);
+
+  &__header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  &__title {
+    font-weight: var(--rp-ui-base-fw-bold);
+    font-size: 14px;
+  }
+
+  &__outcome {
+    font-weight: var(--rp-ui-base-fw-medium);
+    font-size: 13px;
+  }
+
+  &__meta {
+    color: var(--rp-ui-base-e-300);
+    font-size: 12px;
+  }
+
+  &__stages {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  &__stage-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 8px;
+    background-color: var(--rp-ui-base-bg-100);
+    border-radius: 6px;
+    font-size: 12px;
+    white-space: nowrap;
+  }
+
+  &__attributes {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+
+  &__attribute-chip {
+    padding: 2px 8px;
+    border: 1px solid var(--rp-ui-base-e-100);
+    border-radius: 10px;
+    color: var(--rp-ui-base-e-300);
+    font-size: 11px;
+    white-space: nowrap;
+  }
+}

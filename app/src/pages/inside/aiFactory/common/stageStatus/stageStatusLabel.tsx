@@ -16,7 +16,7 @@
 
 import { defineMessages, useIntl } from 'react-intl';
 import { createClassnames } from 'common/utils';
-import { StageStatus } from 'types/aiFactory';
+import { AiStageStatus, StageStatus } from 'types/aiFactory';
 import { STAGE_STATUS_VARIANT } from './stageStatusVariant';
 import styles from './stageStatus.scss';
 
@@ -53,7 +53,7 @@ const messages = defineMessages({
   },
 });
 
-const MESSAGE_BY_STATUS: Record<StageStatus, { id: string; defaultMessage: string }> = {
+const MESSAGE_BY_STATUS: Record<AiStageStatus, { id: string; defaultMessage: string }> = {
   [StageStatus.PENDING]: messages.pending,
   [StageStatus.RUNNING]: messages.running,
   [StageStatus.IN_PROGRESS]: messages.inProgress,
@@ -64,7 +64,7 @@ const MESSAGE_BY_STATUS: Record<StageStatus, { id: string; defaultMessage: strin
 };
 
 export interface StageStatusLabelProps {
-  status: StageStatus;
+  status: AiStageStatus;
 }
 
 export const StageStatusLabel = ({ status }: StageStatusLabelProps) => {

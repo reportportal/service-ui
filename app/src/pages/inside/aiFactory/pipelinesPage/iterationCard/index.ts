@@ -14,13 +14,5 @@
  * limitations under the License.
  */
 
-.empty {
-  padding: 24px 0;
-  color: var(--rp-ui-base-e-300);
-  font-family: var(--rp-ui-base-font-family);
-}
-
-.search {
-  max-width: 420px;
-  margin: 16px 0;
-}
+export { IterationCard } from './iterationCard';
+export type { IterationCardProps } from './iterationCard';

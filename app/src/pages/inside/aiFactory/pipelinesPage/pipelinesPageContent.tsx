@@ -14,24 +14,30 @@
  * limitations under the License.
  */
 
+import { ChangeEvent, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useIntl } from 'react-intl';
-import { Button, RefreshIcon } from '@reportportal/ui-kit';
+import { Button, FieldText, RefreshIcon, SearchIcon } from '@reportportal/ui-kit';
 
 import { createClassnames } from 'common/utils';
 import { PROJECT_DASHBOARD_PAGE, urlOrganizationAndProjectSelector } from 'controllers/pages';
 import { projectNameSelector } from 'controllers/project';
 import { ProjectDetails } from 'pages/organization/constants';
 import {
+  getPipelineIterationsAction,
   getPipelinesAction,
-  pipelinesSelector,
+  pipelineIterationsByPipelineSelector,
+  pipelineIterationsLoadingSelector,
   pipelinesLoadingSelector,
+  pipelinesSelector,
 } from 'controllers/aiFactory/pipelines';
 import { SettingsLayout } from 'layouts/settingsLayout';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
 import { SpinningPreloader } from 'components/preloaders/spinningPreloader';
 
 import { PageHeaderWithBreadcrumbsAndActions } from '../../common/pageHeaderWithBreadcrumbsAndActions';
+import { PipelineGroup } from './pipelineGroup';
+import { matchesSearch } from './pipelinesListUtils';
 import { messages } from './messages';
 import styles from './pipelinesPage.scss';
 
@@ -46,6 +52,16 @@ export const PipelinesPageContent = () => {
   ) as ProjectDetails;
   const pipelines = useSelector(pipelinesSelector);
   const isLoading = useSelector(pipelinesLoadingSelector);
+  const iterationsByPipeline = useSelector(pipelineIterationsByPipelineSelector);
+  const iterationsLoading = useSelector(pipelineIterationsLoadingSelector);
+  const [search, setSearch] = useState('');
+
+  useEffect(() => {
+    if (pipelines && pipelines.length > 0) {
+      dispatch(getPipelineIterationsAction(pipelines.map((pipeline) => pipeline.id)));
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [pipelines]);
 
   const breadcrumbDescriptors = [
     {
@@ -62,20 +78,42 @@ export const PipelinesPageContent = () => {
     }
 
     if (!pipelines || pipelines.length === 0) {
-      return <p className={cx('empty')}>{formatMessage(messages.noPipelines)}</p>;
+      return (
+        <div className={cx('empty')}>
+          <p>{formatMessage(messages.noPipelines)}</p>
+          <p>{formatMessage(messages.noPipelinesHint)}</p>
+        </div>
+      );
     }
 
     return (
-      <ul className={cx('list')} data-automation-id="pipelinesList">
-        {pipelines.map((pipeline) => (
-          <li key={pipeline.id} className={cx('list__item')}>
-            <span className={cx('list__name')}>{pipeline.name}</span>
-            <span className={cx('list__meta')}>
-              {formatMessage(messages.iterationsCount, { count: pipeline.iterationsCount })}
-            </span>
-          </li>
-        ))}
-      </ul>
+      <>
+        <FieldText
+          value={search}
+          onChange={(event: ChangeEvent<HTMLInputElement>) => setSearch(event.target.value)}
+          onClear={() => setSearch('')}
+          placeholder={formatMessage(messages.searchPlaceholder)}
+          startIcon={<SearchIcon />}
+          className={cx('search')}
+          maxLength={256}
+          clearable
+        />
+        {pipelines.map((pipeline) => {
+          const iterations = iterationsByPipeline?.[pipeline.id];
+          const filtered = iterations?.filter((iteration) =>
+            matchesSearch(iteration, pipeline.name, search),
+          );
+          return (
+            <PipelineGroup
+              key={pipeline.id}
+              pipeline={pipeline}
+              iterations={filtered}
+              isLoading={iterationsLoading}
+              isSearching={Boolean(search.trim())}
+            />
+          );
+        })}
+      </>
     );
   };
 

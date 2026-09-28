@@ -3,14 +3,14 @@
 > **Single source of truth for progress.** Update at the start and end of every task / session.
 > Legend: ⬜ todo · 🟨 in progress · 🟦 in review · ✅ done · ⛔ blocked · ➖ skipped
 
-**Last updated:** 2026-09-28 · **Branch:** `EPMRPP-121765-foundation` (off `bootcamp-prototype`) · **Phase:** 1 in progress (T1.1 done)
+**Last updated:** 2026-09-28 · **Branch:** `EPMRPP-121765-foundation` (off `bootcamp-prototype`) · **Phase:** 1 in progress (T1.1, T1.2 done)
 
 ## Now / next
 
 | | |
 |---|---|
-| Current task | T1.1 routes + sidebar item + `controllers/aiFactory/pipelines` — implemented, not yet committed |
-| Next task | T1.2 iterations list (collapsible pipeline groups, cards, search) — under EPMRPP-121765, story 002 |
+| Current task | T1.2 iterations list (collapsible pipeline groups, cards, search) — implemented, not yet committed |
+| Next task | T1.3 iteration details + stage panels — under EPMRPP-121765, story 002/003/016 |
 | Blockers | none. One untracked scratch file `app/src/common/__urls-smoke.test.js` needs manual deletion (permission guard blocks `rm` for the assistant) |
 | Waiting on answers | Q-ORG-04b demo date, Q-ORG-07 demo project for seeding, Q-BE-01 (F8 contract shape), BA questions in 06 |
 | Standing rules | Toggle OFF = no change to current functionality (03 §3) · branch from `bootcamp-prototype`, PR back into it · `[FE]` sub-task per story, created **when that story starts**, assignee Saveli_Savich@epam.com · after every task record the senior-developer hour estimate **in [08-estimations.md](08-estimations.md)** |
@@ -29,7 +29,7 @@ Estimates are **not** kept here — they live in [08-estimations.md](08-estimati
 | T0.6 | Shared atoms + usePolling | all | ✅ | EPMRPP-121765 | `EPMRPP-121765-foundation` (not yet committed) | `pages/inside/aiFactory/common/` (`LifecycleBadge`, `AiChip`, `ScoreChip`, `CostLabel`, `IterationStatusBadge`, `StageStatusDot`/`Label`, `ScoreBar`, `DeltaCell`) + `usePolling` hook; neutral colours per Q-FE-05, direction colour only on `DeltaCell`; 43 tests |
 | T0.7 | Permissions helpers | 005, 012, 013 | ✅ | EPMRPP-121765 | `EPMRPP-121765-foundation` (not yet committed) | F15: extended the real ACL (`common/constants/permissions.ts`) with `REVIEW_AI_TEST_CASES`/`AUTOMATE_TEST_CASES` (Editor+) and `MANAGE_PIPELINE_SETTINGS` (org MANAGER+ / instance ADMINISTRATOR only, Q-BE-10); `canReviewAiTestCases`/`canAutomateTestCases`/`canManagePipelineSettings` in `common/utils/permissions/`; 4-case matrix test |
 | T1.1 | Routes + sidebar + pipelines controller | 002 | ✅ | EPMRPP-121765 (existing sub-task already covers story 002 — no new one needed) | `EPMRPP-121765-foundation` (not yet committed) | `controllers/aiFactory/pipelines/` (mirrors `controllers/milestone`), `PROJECT_PIPELINES_PAGE` route (toggle-gated at the thunk), sidebar item before Test Case Library (Q-FE-08), minimal page shell |
-| T1.2 | Iterations list | 002, 016 | ⬜ | EPMRPP-121765 | | |
+| T1.2 | Iterations list | 002, 016 | ✅ | EPMRPP-121765 | `EPMRPP-121765-foundation` (not yet committed) | Collapsible `PipelineGroup` + `IterationCard`, client-side search, `GET_PIPELINE_ITERATIONS` (one saga fetching both pipelines' iterations, no per-id dynamic map — see 08-estimations deviation notes) |
 | T1.3 | Iteration details + stage panels | 003, 006, 016 | ⬜ | | | |
 | T2.1 | Lifecycle display + history + toast | 007 | ⬜ | | | Q-BA-01 |
 | T2.2 | Library columns + AI chip + flags | 008 | ⬜ | | | |
@@ -57,7 +57,7 @@ Estimates are **not** kept here — they live in [08-estimations.md](08-estimati
 ## Estimates
 
 All senior-developer hour estimates and the phase roll-up: **[08-estimations.md](08-estimations.md)**.
-Current total recorded: **87 h** (T0.1–T0.7 + T1.1, 8/32 tasks — Phase 0 done, Phase 1 started) of a planned **564 h ≈ 14 weeks**.
+Current total recorded: **107 h** (T0.1–T0.7 + T1.1–T1.2, 9/32 tasks — Phase 0 done, Phase 1 2/3 done) of a planned **564 h ≈ 14 weeks**.
 
 ## Session log
 
@@ -65,6 +65,7 @@ Append one line per working session (newest first): date · who · what changed 
 
 | Date | Who | What | Next |
 |------|-----|------|------|
+| 2026-09-28 | Claude + Saveli | T1.2 implemented: the Pipelines page now shows real content — collapsible `PipelineGroup`s (repo, iteration count, "Auto-Ready ON ≥ N" for generation) each containing `IterationCard`s (status badge, outcome line, meta row, stage chips with dot + metric, attribute chips), plus a client-side search box filtering by requirement/iteration #/pipeline name. Extended `controllers/aiFactory/pipelines/` with a second saga (`GET_PIPELINE_ITERATIONS`, one `yield all([...])` fetching both pipelines' iterations in parallel, reduced into a `{ [pipelineId]: IterationSummaryRS[] }` map) — checked first that no dynamic-id-keyed reducer or fan-out saga exists anywhere else in the codebase to copy, then judged that the real problem (2 known pipelines) didn't need that machinery. Along the way, fixed a real typing gap in three T0.6 atoms (`IterationStatusBadge`, `StageStatusDot`, `StageStatusLabel`): they were typed against the nominal enum instead of the `Ai*` string-literal alias the DTOs actually use, only surfacing now that real DTOs are wired through for the first time. 17 new tests for the pure formatting/search logic (`pipelinesListUtils.ts`); no tests for the two new page components, matching `milestonesPage.tsx`/`productVersionsPage.jsx`'s own precedent. Full app suite (737 tests) still green. Not yet committed | commit T1.2, then T1.3 iteration details |
 | 2026-09-28 | Claude + Saveli | T1.1 implemented, starting Phase 1: the existing `[FE]` sub-task EPMRPP-121765 already covers story 002 (it was created as "Pipelines iterations list + FE foundation"), so no new Jira sub-task was needed. Built `controllers/aiFactory/pipelines/` (constants, types, actionCreators, sagas, reducer, selectors — mirrors `controllers/milestone`'s saga-driven-list convention exactly; P1 `GET tms/pipeline` returns a flat array, no pagination), the `PROJECT_PIPELINES_PAGE` route in both `routes/routesMap.js` (path + toggle-gated thunk) and `routes/constants.js` (component), the sidebar item (new icon, message, conditional spread placed before Test Case Library per Q-FE-08), wired the reducer/saga into the store, and a minimal page shell (header, Refresh, loading/empty/list of pipeline name + iteration count — the full iteration-card UI is T1.2). No tests added for the saga/reducer/selectors/sidebar item, matching this codebase's own precedent (`controllers/milestone`, `controllers/testPlan` and `projectSidebar.jsx` have none either). Full app suite (719 tests) still green. Not yet committed | commit T1.1, then T1.2 iterations list |
 | 2026-09-28 | Claude + Saveli | T0.7 implemented, closing Phase 0: extended the existing ACL (`common/constants/permissions.ts`, already used app-wide) with 3 new `ACTIONS` and their grants — `REVIEW_AI_TEST_CASES`/`AUTOMATE_TEST_CASES` at the same level as `MANAGE_TEST_CASES` (Editor+), `MANAGE_PIPELINE_SETTINGS` only for org `MANAGER`/instance `ADMINISTRATOR` (Q-BE-10, "PM and above" — the real role model has no separate PM/ADMIN project role, so this needed no new role, just leaving EDITOR/VIEWER ungranted) — plus the 3 matching `canX` exports in `common/utils/permissions/`. `useUserPermissions` (used everywhere else in the app) picks them up automatically. 4-test matrix, all green; full app suite (719 tests) still green. Not yet committed | commit T0.7, then T1.1 (needs its own `[FE]` sub-task under EPMRPP-121704, story 002) |
 | 2026-09-28 | Claude + Saveli | T0.6 implemented: `pages/inside/aiFactory/common/` atoms (`LifecycleBadge`, `AiChip`, `ScoreChip`, `CostLabel`, `IterationStatusBadge`, `StageStatusDot`/`StageStatusLabel`, `ScoreBar`, `DeltaCell`) and `usePolling` hook (`common/hooks/`), each following an existing codebase pattern (`integrationStatusBadge`, `progressBar`, `useFileUploadProgressSimulation`); neutral bar/chip colours (Q-FE-05), direction colouring reserved for `DeltaCell` (Compare only). First TS tests in the repo for a `useIntl`-consuming component and for a hook — added a minimal ambient `enzyme` type shim to `types/global.d.ts` (no `@types/enzyme`: it conflicts with this repo's React 18 types) and a `ConditionalTooltip` mock to dodge the ESM-only `@reportportal/ui-kit` build Jest can't transform. 43 tests across 9 suites, all green; full app suite (715 tests) still green. Not yet committed | commit T0.6, then T0.7 permissions helpers |

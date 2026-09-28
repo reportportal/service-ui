@@ -17,10 +17,16 @@
 import type { PipelinesSelectorsRootState, PipelinesState } from './types';
 
 export const pipelinesStateSelector = (state: PipelinesSelectorsRootState): PipelinesState =>
-  state.aiFactoryPipelines || { data: null };
+  state.aiFactoryPipelines || { data: null, iterationsByPipeline: null };
 
 export const pipelinesLoadingSelector = (state: PipelinesSelectorsRootState): boolean =>
   Boolean(pipelinesStateSelector(state).isLoading);
 
 export const pipelinesSelector = (state: PipelinesSelectorsRootState) =>
   pipelinesStateSelector(state).data;
+
+export const pipelineIterationsLoadingSelector = (state: PipelinesSelectorsRootState): boolean =>
+  Boolean(pipelinesStateSelector(state).iterationsLoading);
+
+export const pipelineIterationsByPipelineSelector = (state: PipelinesSelectorsRootState) =>
+  pipelinesStateSelector(state).iterationsByPipeline;

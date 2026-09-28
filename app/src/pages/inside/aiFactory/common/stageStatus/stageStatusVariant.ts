@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { StageStatus } from 'types/aiFactory';
+import { AiStageStatus, StageStatus } from 'types/aiFactory';
 
 /**
  * Shared colour grouping for {@link StageStatusDot} and {@link StageStatusLabel}: `RUNNING` and
@@ -22,7 +22,7 @@ import { StageStatus } from 'types/aiFactory';
  * the two enum members exist because generation and automation stages use different vocabulary
  * (types/aiFactory.ts `StageStatus`).
  */
-export const STAGE_STATUS_VARIANT: Record<StageStatus, string> = {
+export const STAGE_STATUS_VARIANT: Record<AiStageStatus, string> = {
   [StageStatus.PENDING]: 'pending',
   [StageStatus.RUNNING]: 'active',
   [StageStatus.IN_PROGRESS]: 'active',

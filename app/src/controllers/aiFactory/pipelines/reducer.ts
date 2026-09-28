@@ -21,11 +21,16 @@ import { fetchReducer } from 'controllers/fetch';
 import { loadingReducer } from 'controllers/loading';
 import { PROJECT_PIPELINES_PAGE } from 'controllers/pages';
 
-import { PIPELINES_NAMESPACE } from './constants';
+import { PIPELINE_ITERATIONS_NAMESPACE, PIPELINES_NAMESPACE } from './constants';
 
 const reducer = combineReducers({
   data: fetchReducer(PIPELINES_NAMESPACE, { initialState: null, contentPath: 'data' }),
   isLoading: loadingReducer(PIPELINES_NAMESPACE),
+  iterationsByPipeline: fetchReducer(PIPELINE_ITERATIONS_NAMESPACE, {
+    initialState: null,
+    contentPath: 'data',
+  }),
+  iterationsLoading: loadingReducer(PIPELINE_ITERATIONS_NAMESPACE),
 });
 
 export const aiFactoryPipelinesReducer = createPageScopedReducer(reducer, [

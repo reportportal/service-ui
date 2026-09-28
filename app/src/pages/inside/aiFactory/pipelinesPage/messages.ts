@@ -25,12 +25,104 @@ export const messages = defineMessages({
     id: 'PipelinesPage.refreshPage',
     defaultMessage: 'Refresh',
   },
+  searchPlaceholder: {
+    id: 'PipelinesPage.searchPlaceholder',
+    defaultMessage: 'Search by requirement, iteration # or pipeline name',
+  },
   noPipelines: {
     id: 'PipelinesPage.noPipelines',
-    defaultMessage: 'No pipelines found',
+    defaultMessage: 'No pipeline iterations yet',
+  },
+  noPipelinesHint: {
+    id: 'PipelinesPage.noPipelinesHint',
+    defaultMessage: 'Iterations appear here once a pipeline runs',
+  },
+  noIterationsMatch: {
+    id: 'PipelinesPage.noIterationsMatch',
+    defaultMessage: 'No iterations match',
   },
   iterationsCount: {
     id: 'PipelinesPage.iterationsCount',
     defaultMessage: '{count} {count, plural, one {iteration} other {iterations}}',
+  },
+  iterationTitle: {
+    id: 'PipelinesPage.iterationTitle',
+    defaultMessage: 'Iteration #{number}',
+  },
+  autoReadyOn: {
+    id: 'PipelinesPage.autoReadyOn',
+    defaultMessage: 'Auto-Ready ON ≥ {threshold}',
+  },
+  autoReadyOff: {
+    id: 'PipelinesPage.autoReadyOff',
+    defaultMessage: 'Auto-Ready OFF',
+  },
+  stageCreate: {
+    id: 'PipelinesPage.stageCreate',
+    defaultMessage: 'Create',
+  },
+  stageGrade: {
+    id: 'PipelinesPage.stageGrade',
+    defaultMessage: 'Grade',
+  },
+  stageUpload: {
+    id: 'PipelinesPage.stageUpload',
+    defaultMessage: 'Upload',
+  },
+  stageReview: {
+    id: 'PipelinesPage.stageReview',
+    defaultMessage: 'Review',
+  },
+  stagePrepare: {
+    id: 'PipelinesPage.stagePrepare',
+    defaultMessage: 'Prepare',
+  },
+  stageDevelop: {
+    id: 'PipelinesPage.stageDevelop',
+    defaultMessage: 'Develop',
+  },
+  stageFix: {
+    id: 'PipelinesPage.stageFix',
+    defaultMessage: 'Fix',
+  },
+  stageMetricCases: {
+    id: 'PipelinesPage.stageMetricCases',
+    defaultMessage: '{count} {count, plural, one {case} other {cases}}',
+  },
+  stageMetricScore: {
+    id: 'PipelinesPage.stageMetricScore',
+    defaultMessage: 'Score {score}',
+  },
+  stageMetricReady: {
+    id: 'PipelinesPage.stageMetricReady',
+    defaultMessage: '{ready}/{total} Ready',
+  },
+  outcomeReady: {
+    id: 'PipelinesPage.outcomeReady',
+    defaultMessage: '{ready} of {total} Ready',
+  },
+  outcomeFixRounds: {
+    id: 'PipelinesPage.outcomeFixRounds',
+    defaultMessage: ' · {count} {count, plural, one {fix round} other {fix rounds}}',
+  },
+  outcomeAutomating: {
+    id: 'PipelinesPage.outcomeAutomating',
+    defaultMessage: 'Automating {count} {count, plural, one {test case} other {test cases}}',
+  },
+  outcomeImplemented: {
+    id: 'PipelinesPage.outcomeImplemented',
+    defaultMessage: '{implemented} of {total} implemented',
+  },
+  outcomeLaunch: {
+    id: 'PipelinesPage.outcomeLaunch',
+    defaultMessage: ' · Launch #{number}',
+  },
+  metaTestCasesCount: {
+    id: 'PipelinesPage.metaTestCasesCount',
+    defaultMessage: '{count} Test Cases',
+  },
+  metaSuiteScore: {
+    id: 'PipelinesPage.metaSuiteScore',
+    defaultMessage: 'Suite score {score}',
   },
 });

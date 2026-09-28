@@ -16,7 +16,7 @@
 
 import { defineMessages, useIntl } from 'react-intl';
 import { createClassnames } from 'common/utils';
-import { IterationStatus } from 'types/aiFactory';
+import { AiIterationStatus, IterationStatus } from 'types/aiFactory';
 import styles from './iterationStatusBadge.scss';
 
 const cx = createClassnames(styles);
@@ -40,14 +40,14 @@ const messages = defineMessages({
   },
 });
 
-const VARIANT_BY_STATUS: Record<IterationStatus, string> = {
+const VARIANT_BY_STATUS: Record<AiIterationStatus, string> = {
   [IterationStatus.RUNNING]: 'running',
   [IterationStatus.IN_REVIEW]: 'in-review',
   [IterationStatus.COMPLETED]: 'completed',
   [IterationStatus.FAILED]: 'failed',
 };
 
-const MESSAGE_BY_STATUS: Record<IterationStatus, { id: string; defaultMessage: string }> = {
+const MESSAGE_BY_STATUS: Record<AiIterationStatus, { id: string; defaultMessage: string }> = {
   [IterationStatus.RUNNING]: messages.running,
   [IterationStatus.IN_REVIEW]: messages.inReview,
   [IterationStatus.COMPLETED]: messages.completed,
@@ -55,7 +55,7 @@ const MESSAGE_BY_STATUS: Record<IterationStatus, { id: string; defaultMessage: s
 };
 
 export interface IterationStatusBadgeProps {
-  status: IterationStatus;
+  status: AiIterationStatus;
 }
 
 export const IterationStatusBadge = ({ status }: IterationStatusBadgeProps) => {

@@ -14,13 +14,25 @@
  * limitations under the License.
  */
 
-export { GET_PIPELINES, PIPELINES_NAMESPACE } from './constants';
-export { getPipelinesAction } from './actionCreators';
+export {
+  GET_PIPELINES,
+  PIPELINES_NAMESPACE,
+  GET_PIPELINE_ITERATIONS,
+  PIPELINE_ITERATIONS_NAMESPACE,
+} from './constants';
+export { getPipelinesAction, getPipelineIterationsAction } from './actionCreators';
 export { aiFactoryPipelinesSagas } from './sagas';
 export { aiFactoryPipelinesReducer } from './reducer';
-export { pipelinesSelector, pipelinesLoadingSelector } from './selectors';
+export {
+  pipelinesSelector,
+  pipelinesLoadingSelector,
+  pipelineIterationsByPipelineSelector,
+  pipelineIterationsLoadingSelector,
+} from './selectors';
 export type {
   PipelinesState,
   PipelinesSelectorsRootState,
   GetPipelinesAction,
+  GetPipelineIterationsAction,
+  IterationsByPipelineId,
 } from './types';

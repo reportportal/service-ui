@@ -15,14 +15,14 @@
  */
 
 import { createClassnames } from 'common/utils';
-import { StageStatus } from 'types/aiFactory';
+import { AiStageStatus } from 'types/aiFactory';
 import { STAGE_STATUS_VARIANT } from './stageStatusVariant';
 import styles from './stageStatus.scss';
 
 const cx = createClassnames(styles);
 
 export interface StageStatusDotProps {
-  status: StageStatus;
+  status: AiStageStatus;
 }
 
 export const StageStatusDot = ({ status }: StageStatusDotProps) => (

@@ -23,11 +23,18 @@ import { FETCH_START } from 'controllers/fetch/constants';
 import { showErrorNotification } from 'controllers/notification';
 import { projectKeySelector } from 'controllers/project';
 import { LOGOUT } from 'controllers/auth';
-import { PipelineRS } from 'types/aiFactory';
+import { IterationPageRS, PipelineRS } from 'types/aiFactory';
 
-import { GET_PIPELINES, PIPELINES_NAMESPACE } from './constants';
+import {
+  GET_PIPELINE_ITERATIONS,
+  GET_PIPELINES,
+  PIPELINE_ITERATIONS_NAMESPACE,
+  PIPELINES_NAMESPACE,
+} from './constants';
+import { GetPipelineIterationsAction } from './types';
 
 let abortController: AbortController | undefined;
+let iterationsAbortController: AbortController | undefined;
 
 function* getPipelines(): Generator {
   const controller = new AbortController();
@@ -77,6 +84,67 @@ function* watchGetPipelines() {
   yield takeEvery(LOGOUT, handleLogoutDuringPipelinesFetch);
 }
 
+function* getPipelineIterations(action: GetPipelineIterationsAction): Generator {
+  const controller = new AbortController();
+  iterationsAbortController?.abort();
+  iterationsAbortController = controller;
+
+  try {
+    const projectKey = (yield select(projectKeySelector)) as string;
+    const { pipelineIds } = action.payload;
+
+    yield put({
+      type: FETCH_START,
+      payload: { projectKey },
+      meta: { namespace: PIPELINE_ITERATIONS_NAMESPACE },
+    });
+
+    const pages = (yield all(
+      pipelineIds.map((pipelineId) =>
+        call(fetch, URLS.tmsPipelineIterations(projectKey, pipelineId), {
+          signal: controller.signal,
+        }),
+      ),
+    )) as IterationPageRS[];
+
+    const byPipelineId = pipelineIds.reduce<Record<number, IterationPageRS['content']>>(
+      (acc, pipelineId, index) => {
+        acc[pipelineId] = pages[index].content;
+        return acc;
+      },
+      {},
+    );
+
+    yield put(
+      fetchSuccessAction(PIPELINE_ITERATIONS_NAMESPACE, {
+        data: byPipelineId,
+      }),
+    );
+  } catch (error) {
+    const isCancellation = error instanceof Error && error.message === 'REQUEST_CANCELED';
+
+    if (!isCancellation) {
+      yield put(fetchErrorAction(PIPELINE_ITERATIONS_NAMESPACE, error));
+      yield put(
+        showErrorNotification({
+          messageId: 'aiFactoryPipelinesLoadingFailed',
+        }),
+      );
+    }
+  }
+}
+
+function handleLogoutDuringIterationsFetch(): void {
+  const controller = iterationsAbortController;
+  iterationsAbortController = undefined;
+  controller?.abort();
+}
+
+function* watchGetPipelineIterations() {
+  yield takeLatest(GET_PIPELINE_ITERATIONS, getPipelineIterations);
+  yield takeEvery(LOGOUT, handleLogoutDuringIterationsFetch);
+}
+
 export function* aiFactoryPipelinesSagas() {
-  yield all([watchGetPipelines()]);
+  yield all([watchGetPipelines(), watchGetPipelineIterations()]);
 }

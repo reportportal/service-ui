@@ -16,3 +16,6 @@
 
 export const GET_PIPELINES = 'getAiFactoryPipelines' as const;
 export const PIPELINES_NAMESPACE = 'aiFactoryPipelines' as const;
+
+export const GET_PIPELINE_ITERATIONS = 'getAiFactoryPipelineIterations' as const;
+export const PIPELINE_ITERATIONS_NAMESPACE = 'aiFactoryPipelineIterations' as const;
