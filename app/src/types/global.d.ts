@@ -56,3 +56,30 @@ declare module '*.jpeg' {
   const value: string;
   export default value;
 }
+
+// `enzyme` ships no type declarations and `@types/enzyme` conflicts with this repo's React 18
+// types (its `ReactElement` generics reject elements typed against the newer `@types/react`).
+// This is a minimal, permissive shim covering the wrapper methods actually used in tests, so
+// enzyme imports resolve to real types instead of an implicit `error`/`any`.
+declare module 'enzyme' {
+  import { ReactElement } from 'react';
+
+  export interface CommonWrapper {
+    find(selector: unknown): CommonWrapper;
+    text(): string;
+    html(): string;
+    prop(key: string): unknown;
+    props(): Record<string, unknown>;
+    hasClass(className: string): boolean;
+    setProps(props: Record<string, unknown>): CommonWrapper;
+    unmount(): CommonWrapper;
+    length: number;
+  }
+
+  export type ShallowWrapper = CommonWrapper;
+  export type ReactWrapper = CommonWrapper;
+
+  export function shallow(node: ReactElement): ShallowWrapper;
+  export function mount(node: ReactElement): ReactWrapper;
+  export function configure(config: Record<string, unknown>): void;
+}

@@ -3,14 +3,14 @@
 > **Single source of truth for progress.** Update at the start and end of every task / session.
 > Legend: ⬜ todo · 🟨 in progress · 🟦 in review · ✅ done · ⛔ blocked · ➖ skipped
 
-**Last updated:** 2026-09-28 · **Branch:** `EPMRPP-121765-foundation` (off `bootcamp-prototype`) · **Phase:** 0 (foundation, T0.1–T0.5 done)
+**Last updated:** 2026-09-28 · **Branch:** `EPMRPP-121765-foundation` (off `bootcamp-prototype`) · **Phase:** 0 (foundation, T0.1–T0.6 done)
 
 ## Now / next
 
 | | |
 |---|---|
-| Current task | T0.5 mock backend — implemented, tested (52 tests), not yet pushed |
-| Next task | T0.6 shared UI atoms + `usePolling` — under EPMRPP-121765 |
+| Current task | T0.6 shared UI atoms + `usePolling` — implemented, tested (43 tests), not yet committed |
+| Next task | T0.7 permissions helpers — under EPMRPP-121765 |
 | Blockers | none. One untracked scratch file `app/src/common/__urls-smoke.test.js` needs manual deletion (permission guard blocks `rm` for the assistant) |
 | Waiting on answers | Q-ORG-04b demo date, Q-ORG-07 demo project for seeding, Q-BE-01 (F8 contract shape), BA questions in 06 |
 | Standing rules | Toggle OFF = no change to current functionality (03 §3) · branch from `bootcamp-prototype`, PR back into it · `[FE]` sub-task per story, created **when that story starts**, assignee Saveli_Savich@epam.com · after every task record the senior-developer hour estimate **in [08-estimations.md](08-estimations.md)** |
@@ -26,7 +26,7 @@ Estimates are **not** kept here — they live in [08-estimations.md](08-estimati
 | T0.3 | Types + format utils | 001 | ✅ | EPMRPP-121765 | `EPMRPP-121765-foundation` (committed, not pushed) | `types/aiFactory.ts` (mirrors 05 §1–8), `common/utils/aiFactoryFormatUtils.ts` (`formatCost`, `formatTokens`); reuses existing `formatDuration` |
 | T0.4 | URL helpers | all | ✅ | EPMRPP-121765 | `EPMRPP-121765-foundation` (committed, not pushed) | new block in `common/urls.js`: `tmsPipeline*`, `testCaseAi`/`Lifecycle*`/`ReviewComment*`/`FixRounds`, `tmsAutomation*` (P/C/L/R/F/A ids from 05) |
 | T0.5 | Mock backend (adapter, DB, seed, engine, overlay) | 001, 006 | ✅ | EPMRPP-121765 | `EPMRPP-121765-foundation` (committed, not pushed) | `controllers/aiFactory/mocks/` (seedData, db, engine, viewModels, handlers, overlay, index) + wired into `index.jsx` behind the toggle; 52 tests across 5 suites; README. Seeding real cases and scenario-edit detection deferred to Q-ORG-07 |
-| T0.6 | Shared atoms + usePolling | all | ⬜ | EPMRPP-121765 | | |
+| T0.6 | Shared atoms + usePolling | all | ✅ | EPMRPP-121765 | `EPMRPP-121765-foundation` (not yet committed) | `pages/inside/aiFactory/common/` (`LifecycleBadge`, `AiChip`, `ScoreChip`, `CostLabel`, `IterationStatusBadge`, `StageStatusDot`/`Label`, `ScoreBar`, `DeltaCell`) + `usePolling` hook; neutral colours per Q-FE-05, direction colour only on `DeltaCell`; 43 tests |
 | T0.7 | Permissions helpers | 005, 012, 013 | ⬜ | EPMRPP-121765 | | F15 |
 | T1.1 | Routes + sidebar + pipelines controller | 002 | ⬜ | EPMRPP-121765 | | |
 | T1.2 | Iterations list | 002, 016 | ⬜ | EPMRPP-121765 | | |
@@ -57,7 +57,7 @@ Estimates are **not** kept here — they live in [08-estimations.md](08-estimati
 ## Estimates
 
 All senior-developer hour estimates and the phase roll-up: **[08-estimations.md](08-estimations.md)**.
-Current total recorded: **56 h** (T0.1–T0.5, 5/32 tasks) of a planned **564 h ≈ 14 weeks**.
+Current total recorded: **70 h** (T0.1–T0.6, 6/32 tasks) of a planned **564 h ≈ 14 weeks**.
 
 ## Session log
 
@@ -65,6 +65,7 @@ Append one line per working session (newest first): date · who · what changed 
 
 | Date | Who | What | Next |
 |------|-----|------|------|
+| 2026-09-28 | Claude + Saveli | T0.6 implemented: `pages/inside/aiFactory/common/` atoms (`LifecycleBadge`, `AiChip`, `ScoreChip`, `CostLabel`, `IterationStatusBadge`, `StageStatusDot`/`StageStatusLabel`, `ScoreBar`, `DeltaCell`) and `usePolling` hook (`common/hooks/`), each following an existing codebase pattern (`integrationStatusBadge`, `progressBar`, `useFileUploadProgressSimulation`); neutral bar/chip colours (Q-FE-05), direction colouring reserved for `DeltaCell` (Compare only). First TS tests in the repo for a `useIntl`-consuming component and for a hook — added a minimal ambient `enzyme` type shim to `types/global.d.ts` (no `@types/enzyme`: it conflicts with this repo's React 18 types) and a `ConditionalTooltip` mock to dodge the ESM-only `@reportportal/ui-kit` build Jest can't transform. 43 tests across 9 suites, all green; full app suite (715 tests) still green. Not yet committed | commit T0.6, then T0.7 permissions helpers |
 | 2026-09-28 | Claude + Saveli | T0.2/T0.3/T0.4 committed individually. T0.5 implemented: full mock backend under `controllers/aiFactory/mocks/` (seedData, db, engine, viewModels, handlers for all 16 P/C/L/R/F/A routes, overlay merge + interceptor, index install, README) and wired into `index.jsx` behind the toggle. Confirmed the remote dev backend is reachable (spike); a live-shape check needs a real browser login, so `overlay.ts` is verified against a fixture built from `types/testCase.ts` instead. 52 tests across 5 suites, all green; full app suite (672 tests) still green. Committed on `EPMRPP-121765-foundation` | T0.6 shared UI atoms |
 | 2026-09-28 | Claude + Saveli | T0.4 implemented: new URL-helper block in `common/urls.js` (`tmsPipeline`, `tmsPipelineIterations`, `tmsPipelineIterationById`, `tmsPipelineSettings`, `testCaseAi`, `testCaseLifecycle`, `testCaseLifecycleBatch`, `testCaseReviewComments`, `testCaseReviewCommentById`, `discardTestCaseReviewComments`, `testCaseFixRounds`, `tmsAutomationEnvironments`, `tmsAutomation`), each commented with its 05 contract id. No test file (matches: `urls.js` has zero existing test coverage in this codebase); verified with a throwaway smoke test, deleted after. Lint clean | commit T0.4, then T0.5 mock backend |
 | 2026-09-28 | Claude + Saveli | T0.3 implemented: `types/aiFactory.ts` (enums + RS/Payload types mirroring 05 §1–8), `common/utils/aiFactoryFormatUtils.ts` (`formatCost`, `formatTokens`, unit-tested); reused the existing `formatDuration`. Same branch `EPMRPP-121765-foundation` (renamed from `-feature-toggle`: it now covers the whole Phase 0 foundation, one commit per task — see the branching note below). Lint/type-check/tests clean | commit T0.3, then T0.4 URL helpers |
