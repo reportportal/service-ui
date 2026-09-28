@@ -34,15 +34,22 @@
   &__item {
     display: flex;
     flex-direction: column;
-    gap: 4px;
-    min-width: 96px;
-    padding: 8px 12px;
+    align-items: flex-start;
+    gap: 6px;
+    min-width: 110px;
+    padding: 10px 14px;
     background-color: var(--rp-ui-base-bg-000);
     border: 1px solid var(--rp-ui-base-e-100);
     border-radius: 8px;
+    box-shadow: var(--rp-ui-base-shadow);
     cursor: pointer;
     font-family: var(--rp-ui-base-font-family);
     text-align: left;
+    transition: border-color 0.15s ease;
+
+    &:hover {
+      border-color: var(--rp-ui-base-e-300);
+    }
 
     &--selected {
       border-color: var(--rp-ui-base-topaz);

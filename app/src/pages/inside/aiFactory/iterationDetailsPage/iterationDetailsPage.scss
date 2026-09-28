@@ -14,8 +14,14 @@
  * limitations under the License.
  */
 
+.content {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-top: 16px;
+}
+
 .meta {
-  margin-top: 4px;
   color: var(--rp-ui-base-e-300);
   font-family: var(--rp-ui-base-font-family);
   font-size: 13px;
@@ -41,5 +47,12 @@
 .kpis {
   display: flex;
   flex-wrap: wrap;
-  margin: 16px 0;
+  gap: 8px;
+}
+
+.panel-card {
+  padding: 16px;
+  background-color: var(--rp-ui-base-bg-000);
+  border-radius: 4px;
+  box-shadow: var(--rp-ui-base-shadow);
 }

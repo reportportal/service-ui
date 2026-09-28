@@ -23,11 +23,19 @@
 }
 
 .label {
+  display: inline-flex;
+  align-items: center;
+  height: 20px;
+  padding: 0 8px;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  box-sizing: border-box;
   font-family: var(--rp-ui-base-font-family);
   font-weight: var(--rp-ui-base-fw-medium);
   font-size: 12px;
   line-height: 1;
   white-space: nowrap;
+  flex-shrink: 0;
 }
 
 .pending {
@@ -53,4 +61,16 @@
 .skipped {
   background-color: var(--rp-ui-base-e-200);
   color: var(--rp-ui-base-e-200);
+}
+
+// The variant classes above set `background-color` for `.dot`'s solid fill. `.label` shares the
+// same classes only for the `color`; as an outline pill (like IterationStatusBadge/LifecycleBadge)
+// it must not inherit that fill, or the text renders invisible on top of its own background.
+.label.pending,
+.label.active,
+.label.done,
+.label.failed,
+.label.skipped {
+  background-color: transparent;
+  border-color: currentColor;
 }

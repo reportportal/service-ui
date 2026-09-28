@@ -14,12 +14,13 @@
  * limitations under the License.
  */
 
-import { ChangeEvent, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useIntl } from 'react-intl';
-import { Button, FieldText, RefreshIcon, SearchIcon } from '@reportportal/ui-kit';
+import { Button, RefreshIcon } from '@reportportal/ui-kit';
 
 import { createClassnames } from 'common/utils';
+import { SearchField } from 'components/fields/searchField';
 import { PROJECT_DASHBOARD_PAGE, urlOrganizationAndProjectSelector } from 'controllers/pages';
 import { projectNameSelector } from 'controllers/project';
 import { ProjectDetails } from 'pages/organization/constants';
@@ -88,15 +89,13 @@ export const PipelinesPageContent = () => {
 
     return (
       <>
-        <FieldText
-          value={search}
-          onChange={(event: ChangeEvent<HTMLInputElement>) => setSearch(event.target.value)}
-          onClear={() => setSearch('')}
+        <SearchField
+          searchValue={search}
+          setSearchValue={setSearch}
+          onFilterChange={setSearch}
           placeholder={formatMessage(messages.searchPlaceholder)}
-          startIcon={<SearchIcon />}
           className={cx('search')}
-          maxLength={256}
-          clearable
+          isAlwaysActive
         />
         {pipelines.map((pipeline) => {
           const iterations = iterationsByPipeline?.[pipeline.id];

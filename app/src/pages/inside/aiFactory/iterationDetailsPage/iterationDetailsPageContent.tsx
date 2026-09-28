@@ -186,35 +186,43 @@ export const IterationDetailsPageContent = () => {
             </Button>
           }
         />
-        <div className={cx('meta')}>
-          {[iteration.trigger, iteration.model, iteration.environment].filter(Boolean).join(' · ')}
-        </div>
-        {iteration.attributes.length > 0 && (
-          <div className={cx('attributes')}>
-            {iteration.attributes.map((attribute) => (
-              <span key={attribute.key} className={cx('attributes__chip')}>
-                {`${attribute.key}: ${attribute.value}`}
-              </span>
+        <div className={cx('content')}>
+          <div>
+            <div className={cx('meta')}>
+              {[iteration.trigger, iteration.model, iteration.environment].filter(Boolean).join(' · ')}
+            </div>
+            {iteration.attributes.length > 0 && (
+              <div className={cx('attributes')}>
+                {iteration.attributes.map((attribute) => (
+                  <span key={attribute.key} className={cx('attributes__chip')}>
+                    {`${attribute.key}: ${attribute.value}`}
+                  </span>
+                ))}
+              </div>
+            )}
+          </div>
+          <div className={cx('kpis')}>
+            {buildKpis(pipeline.type, iteration).map((kpi) => (
+              <KpiTile
+                key={kpi.key}
+                label={formatMessage(messages[kpi.key as keyof typeof messages])}
+                value={kpi.key === 'kpiCost' ? formatCost(kpi.value as number) : kpi.value}
+              />
             ))}
           </div>
-        )}
-        <div className={cx('kpis')}>
-          {buildKpis(pipeline.type, iteration).map((kpi) => (
-            <KpiTile
-              key={kpi.key}
-              label={formatMessage(messages[kpi.key as keyof typeof messages])}
-              value={kpi.key === 'kpiCost' ? formatCost(kpi.value as number) : kpi.value}
-            />
-          ))}
+          {renderBanner()}
+          <StageCards
+            stages={iteration.stages}
+            testCasesCount={iteration.testCasesCount}
+            selectedStage={selectedStage || defaultStageKey(pipeline.type)}
+            onSelect={setSelectedStage}
+          />
+          {currentStage && (
+            <div className={cx('panel-card')}>
+              <StagePanels stage={currentStage} iteration={iteration} />
+            </div>
+          )}
         </div>
-        {renderBanner()}
-        <StageCards
-          stages={iteration.stages}
-          testCasesCount={iteration.testCasesCount}
-          selectedStage={selectedStage || defaultStageKey(pipeline.type)}
-          onSelect={setSelectedStage}
-        />
-        {currentStage && <StagePanels stage={currentStage} iteration={iteration} />}
       </ScrollWrapper>
     </SettingsLayout>
   );
