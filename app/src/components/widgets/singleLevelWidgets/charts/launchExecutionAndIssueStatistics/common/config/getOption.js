@@ -23,8 +23,17 @@ const DONUT_RADIUS = ['40%', '68%'];
 const DONUT_CENTER_Y = 60;
 const DONUT_RADIUS_SMALL = ['30%', '50%'];
 const DONUT_CENTER_Y_SMALL = 70;
-const DONUT_LABEL_CENTER_Y = DONUT_CENTER_Y - 4;
-const DONUT_LABEL_CENTER_Y_SMALL = DONUT_CENTER_Y_SMALL - 4;
+// Preview never has a legend to clear (see `centerY` below), so it can use
+// more of its box than the general "small" ring size, which is sized to
+// leave room for one — bigger overall, and a bit thinner (a smaller gap
+// between the two radii) than the full-widget ring.
+const DONUT_RADIUS_PREVIEW = ['52%', '86%'];
+// ECharts always places `inside` pie labels at the exact middle of the ring
+// band, with no setting to shift them along the radius. To pull the slice
+// percentages a bit closer to the center without changing the visible ring,
+// they're drawn on a second, invisible pie whose band is biased inward
+// (mid-radius 52% instead of the ring's 54%).
+const DONUT_LABEL_RADIUS = ['40%', '64%'];
 
 /**
  * `createTooltipRenderer` expects C3-shaped `{index, id, value, name}` data
@@ -64,47 +73,90 @@ export const getOption = ({
   const visibleTotal = visibleColumns.reduce((sum, [, value]) => sum + value, 0);
   const hasData = visibleTotal > 0;
   const plottedColumns = visibleColumns.filter(([, value]) => value > 0);
+  // The small-view center push-down exists to clear the legend above the
+  // ring — but the legend never renders in preview (add/edit widget modal
+  // thumbnails), so pushing the ring down there just runs it off the bottom
+  // of the small preview box instead. Preview always gets the true center.
+  const centerY = small && !isPreview ? DONUT_CENTER_Y_SMALL : DONUT_CENTER_Y;
+  let radius = small ? DONUT_RADIUS_SMALL : DONUT_RADIUS;
+  if (isPreview) radius = DONUT_RADIUS_PREVIEW;
+  const showSliceLabels = !isPreview && !small;
+  const pieData = plottedColumns.map(([id, value]) => ({
+    id,
+    name: id,
+    value,
+    itemStyle: { color: colors[id] },
+  }));
+
+  const ringSeries = {
+    type: 'pie',
+    radius,
+    center: ['50%', `${centerY}%`],
+    avoidLabelOverlap: false,
+    silent: isPreview,
+    label: {
+      show: false,
+    },
+    labelLine: {
+      show: false,
+    },
+    itemStyle: {
+      borderColor: '#fff',
+      borderWidth: isPreview ? 0 : 2,
+    },
+    emphasis: {
+      // Only when the ring is the sole series (small view): when the
+      // percentage labels are drawn by the separate `sliceLabelSeries`
+      // below, that series doesn't grow with the ring on hover (it's
+      // silent/emphasis-disabled, so it can't react to the ring's hover
+      // state), so scaling the ring here would visibly detach the label
+      // from its slice for as long as it's hovered.
+      scale: !isPreview && !showSliceLabels,
+      scaleSize: 4,
+    },
+    data: pieData,
+  };
+
+  const sliceLabelSeries = {
+    type: 'pie',
+    radius: DONUT_LABEL_RADIUS,
+    center: ['50%', `${centerY}%`],
+    avoidLabelOverlap: false,
+    // Purely a label carrier: never hit-tested, so hover, tooltip and clicks
+    // all go to the real ring underneath.
+    silent: true,
+    z: 3,
+    label: {
+      show: true,
+      position: 'inside',
+      // `{d}%` rounds to a whole number; a formatter function gives
+      // one decimal place instead (e.g. "100.0%", not "100%").
+      formatter: (params) => `${params.percent.toFixed(1)}%`,
+      color: '#fff',
+      fontSize: 13,
+      fontWeight: 400,
+      align: 'center',
+      verticalAlign: 'middle',
+    },
+    labelLine: {
+      show: false,
+    },
+    itemStyle: {
+      color: 'transparent',
+      borderWidth: 0,
+    },
+    emphasis: {
+      disabled: true,
+    },
+    data: pieData.map(({ id, name, value }) => ({ id, name, value })),
+  };
+
+  let series = [];
+  if (hasData) series = showSliceLabels ? [ringSeries, sliceLabelSeries] : [ringSeries];
 
   return {
     color: columns.map(([id]) => colors[id]),
-    series: hasData
-      ? [
-          {
-            type: 'pie',
-            radius: small ? DONUT_RADIUS_SMALL : DONUT_RADIUS,
-            center: ['50%', `${small ? DONUT_CENTER_Y_SMALL : DONUT_CENTER_Y}%`],
-            avoidLabelOverlap: false,
-            silent: isPreview,
-            label: {
-              show: !isPreview && !small,
-              position: 'inside',
-              // `{d}%` rounds to a whole number; a formatter function gives
-              // one decimal place instead (e.g. "100.0%", not "100%").
-              formatter: (params) => `${params.percent.toFixed(1)}%`,
-              color: '#fff',
-              fontSize: 13,
-              fontWeight: 400,
-            },
-            labelLine: {
-              show: false,
-            },
-            itemStyle: {
-              borderColor: '#fff',
-              borderWidth: isPreview ? 0 : 2,
-            },
-            emphasis: {
-              scale: !isPreview,
-              scaleSize: 4,
-            },
-            data: plottedColumns.map(([id, value]) => ({
-              id,
-              name: id,
-              value,
-              itemStyle: { color: colors[id] },
-            })),
-          },
-        ]
-      : [],
+    series,
     tooltip: {
       trigger: 'item',
       show: !isPreview,
@@ -113,14 +165,29 @@ export const getOption = ({
     legend: {
       show: false,
     },
-    graphic: isPreview
-      ? []
-      : buildCenterLabelGraphic({
-          value: visibleTotal,
-          subtitle: chartText,
-          small,
-          centerY: small ? DONUT_LABEL_CENTER_Y_SMALL : DONUT_LABEL_CENTER_Y,
-        }),
+    // Shown in preview too (a thumbnail with no numbers in it isn't a
+    // meaningful preview) — always at the smaller font size there, since
+    // the bigger preview ring (see `DONUT_RADIUS_PREVIEW`) leaves less
+    // room in the hole for it than `small`'s own container-size check
+    // would otherwise assume.
+    graphic: buildCenterLabelGraphic({
+      value: visibleTotal,
+      subtitle: chartText,
+      small: small || isPreview,
+      // A bit above the ring's own center — as a pair, the value/subtitle
+      // text otherwise reads as sitting a bit low against the ring's
+      // visual middle. Preview's bigger ring (see `DONUT_RADIUS_PREVIEW`)
+      // needs a bit more of a nudge than the full widget.
+      centerY: isPreview ? centerY - 4 : centerY - 2,
+      // Preview's ring/hole is bigger (see `DONUT_RADIUS_PREVIEW`) so it can
+      // take a bit more breathing room between the two lines; the full
+      // widget keeps the tighter default gap.
+      gap: isPreview ? 6 : 4,
+      // Smaller than the general `small` tier (15/13) — preview is a fixed,
+      // tiny thumbnail regardless of how `small` was computed.
+      valueFontSize: isPreview ? 12 : undefined,
+      subtitleFontSize: isPreview ? 10 : undefined,
+    }),
     customData: {
       itemsData: content,
       colors,
