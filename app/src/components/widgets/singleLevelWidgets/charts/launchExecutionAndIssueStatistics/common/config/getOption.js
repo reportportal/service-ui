@@ -19,13 +19,12 @@ import { buildCenterLabelGraphic } from 'components/widgets/common/echarts/cente
 import { IssueTypeStatTooltip } from '../../../common/issueTypeStatTooltip';
 import { calculateTooltipParams } from './utils';
 
-const DONUT_RADIUS = ['51%', '86%'];
-// Nudges the ring down a bit so the top of the donut doesn't sit flush
-// against the legend/title above it.
+const DONUT_RADIUS = ['40%', '68%'];
 const DONUT_CENTER_Y = 60;
-// The center value/subtitle text sits a bit higher than the ring's own
-// center — kept as its own constant so the two can be tuned independently.
+const DONUT_RADIUS_SMALL = ['30%', '50%'];
+const DONUT_CENTER_Y_SMALL = 70;
 const DONUT_LABEL_CENTER_Y = DONUT_CENTER_Y - 4;
+const DONUT_LABEL_CENTER_Y_SMALL = DONUT_CENTER_Y_SMALL - 4;
 
 /**
  * `createTooltipRenderer` expects C3-shaped `{index, id, value, name}` data
@@ -61,19 +60,10 @@ export const getOption = ({
 }) => {
   const { columns, colors } = getColumns(content, contentFields, params);
   const legendItems = columns.map(([id]) => id);
-  const total = columns.reduce((sum, [, value]) => sum + value, 0);
-  // Mirrors the old C3 behavior (`chart.data.shown().reduce(...)`): the center
-  // total and tooltip percentages reflect only the currently checked legend
-  // items, not the full dataset, so unchecking a status/defect type updates
-  // the number instead of leaving it stuck at the full total.
-  const visibleTotal = columns.reduce(
-    (sum, [id, value]) => (uncheckedLegendItems.includes(id) ? sum : sum + value),
-    0,
-  );
-  // Nothing to plot: omit the pie series entirely (not just empty `data`) so
-  // nothing — not even an empty gray ring — renders. Only the center
-  // total/subtitle graphic is left showing.
-  const hasData = total > 0;
+  const visibleColumns = columns.filter(([id]) => !uncheckedLegendItems.includes(id));
+  const visibleTotal = visibleColumns.reduce((sum, [, value]) => sum + value, 0);
+  const hasData = visibleTotal > 0;
+  const plottedColumns = visibleColumns.filter(([, value]) => value > 0);
 
   return {
     color: columns.map(([id]) => colors[id]),
@@ -81,8 +71,8 @@ export const getOption = ({
       ? [
           {
             type: 'pie',
-            radius: DONUT_RADIUS,
-            center: ['50%', `${DONUT_CENTER_Y}%`],
+            radius: small ? DONUT_RADIUS_SMALL : DONUT_RADIUS,
+            center: ['50%', `${small ? DONUT_CENTER_Y_SMALL : DONUT_CENTER_Y}%`],
             avoidLabelOverlap: false,
             silent: isPreview,
             label: {
@@ -106,7 +96,7 @@ export const getOption = ({
               scale: !isPreview,
               scaleSize: 4,
             },
-            data: columns.map(([id, value]) => ({
+            data: plottedColumns.map(([id, value]) => ({
               id,
               name: id,
               value,
@@ -129,7 +119,7 @@ export const getOption = ({
           value: visibleTotal,
           subtitle: chartText,
           small,
-          centerY: DONUT_LABEL_CENTER_Y,
+          centerY: small ? DONUT_LABEL_CENTER_Y_SMALL : DONUT_LABEL_CENTER_Y,
         }),
     customData: {
       itemsData: content,
