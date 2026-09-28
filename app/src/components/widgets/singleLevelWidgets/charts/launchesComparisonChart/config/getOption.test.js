@@ -38,20 +38,22 @@ describe('launchesComparisonChart getOption', () => {
       { id: 'statistics$executions$passed', data: [60, 75] },
     ]);
     option.series.forEach((series) => {
-      // Grouped (non-stacked) series get their own thin, explicit width and
-      // a wider category gap so bars sit thin, side by side, with visible
-      // spacing between launches — not stacked-bar defaults. `barGap: '0%'`
-      // removes the gap between bars within the same launch, so only
-      // `barCategoryGap` separates different launches. `barMinHeight: 1`
-      // keeps a zero-value bar a visible, colored 1px sliver flush with the
-      // x-axis, instead of fully invisible or a taller, bump-like bar.
+      // Grouped (non-stacked) series get no fixed width (so ECharts can grow
+      // them when other statuses get unchecked, and so they fit a small
+      // preview thumbnail) and a wider category gap so bars sit thin, side
+      // by side, with visible spacing between launches — not stacked-bar
+      // defaults. `barGap: '0%'` removes the gap between bars within the
+      // same launch, so only `barCategoryGap` separates different launches.
+      // `barMinHeight: 1` keeps a zero-value bar a visible, colored 1px
+      // sliver flush with the x-axis, instead of fully invisible or a
+      // taller, bump-like bar.
       expect(series).toMatchObject({
         type: 'bar',
-        barWidth: 22,
         barCategoryGap: '45%',
         barGap: '0%',
         barMinHeight: 1,
       });
+      expect(series.barWidth).toBeUndefined();
       expect(series.stack).toBeUndefined();
     });
     expect(option.customData.legendItems).toEqual([
@@ -92,7 +94,7 @@ describe('launchesComparisonChart getOption', () => {
     expect(skippedSeries.itemStyle.color).toBe(COLOR_SKIPPED);
   });
 
-  test('hides axes and tooltip and collapses padding in preview mode', () => {
+  test('hides axes and tooltip and collapses side padding in preview mode, keeping a small top/bottom gap', () => {
     const option = getOption({
       content: sampleContent,
       contentFields: sampleContentFields,
@@ -105,7 +107,46 @@ describe('launchesComparisonChart getOption', () => {
     expect(option.xAxis.show).toBe(false);
     expect(option.yAxis.show).toBe(false);
     expect(option.tooltip.show).toBe(false);
-    expect(option.grid).toMatchObject({ top: 0, left: 0, right: 0, bottom: 0 });
+    expect(option.grid).toMatchObject({ top: 8, left: 0, right: 0, bottom: 8 });
+  });
+
+  test('disables hover in preview mode', () => {
+    const option = getOption({
+      content: sampleContent,
+      contentFields: sampleContentFields,
+      isPreview: true,
+      formatMessage,
+      defectTypes,
+      onChartClick: jest.fn(),
+    });
+
+    option.series.forEach((series) => {
+      expect(series.silent).toBe(true);
+      expect(series.emphasis).toEqual({ disabled: true });
+    });
+  });
+
+  test('drops unchecked statuses from the series so ECharts regrows the remaining bars, instead of just hiding them at a fixed width', () => {
+    const option = getOption({
+      content: sampleContent,
+      contentFields: sampleContentFields,
+      isPreview: false,
+      formatMessage,
+      defectTypes,
+      onChartClick: jest.fn(),
+      uncheckedLegendItems: ['statistics$executions$skipped'],
+    });
+
+    expect(option.series.map((series) => series.id)).toEqual([
+      'statistics$executions$failed',
+      'statistics$executions$passed',
+    ]);
+    // All three stay selectable in the legend even though one isn't plotted.
+    expect(option.customData.legendItems).toEqual([
+      'statistics$executions$skipped',
+      'statistics$executions$failed',
+      'statistics$executions$passed',
+    ]);
   });
 
   test('collapses the top padding when the chart is not clickable', () => {

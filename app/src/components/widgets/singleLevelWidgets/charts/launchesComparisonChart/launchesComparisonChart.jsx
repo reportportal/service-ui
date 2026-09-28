@@ -76,8 +76,9 @@ export const LaunchesComparisonChart = ({
       defectTypes,
       contentFields: widget.contentParameters.contentFields,
       onChartClick: clickable ? onChartClick : undefined,
+      uncheckedLegendItems,
     }),
-    [clickable, defectTypes, formatMessage, onChartClick, widget],
+    [clickable, defectTypes, formatMessage, onChartClick, widget, uncheckedLegendItems],
   );
 
   const legendConfig = useMemo(

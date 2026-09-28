@@ -42,6 +42,7 @@ export const getOption = ({
   formatMessage,
   defectTypes,
   onChartClick,
+  uncheckedLegendItems = [],
 }) => {
   const itemsData = [];
   const dataByName = {};
@@ -65,16 +66,26 @@ export const getOption = ({
   });
 
   const itemNames = contentFields.filter((key) => key !== TOTAL_EXECUTIONS_KEY).reverse();
+  // Unlike a stacked chart, these bars are grouped side by side, so how many
+  // are checked changes how wide each one should be — dropping unchecked
+  // ones here (rather than only toggling their series' visibility) lets
+  // ECharts redistribute the freed-up width across what's left, instead of
+  // leaving the remaining bars stuck at a fixed size.
+  const plottedItemNames = itemNames.filter((name) => !uncheckedLegendItems.includes(name));
   const categories = itemsData.map(transformCategoryLabelByDefault);
 
+  let gridTop = 85;
+  if (isPreview) gridTop = 8;
+  else if (!onChartClick) gridTop = 0;
+
   return {
-    color: itemNames.map((name) => colors[name]),
+    color: plottedItemNames.map((name) => colors[name]),
     textStyle: AXIS_LABEL_STYLE,
     grid: {
-      top: isPreview || !onChartClick ? 0 : 85,
+      top: gridTop,
       left: isPreview ? 0 : 60,
       right: isPreview ? 0 : 20,
-      bottom: isPreview ? 0 : 40,
+      bottom: isPreview ? 8 : 40,
       containLabel: false,
     },
     xAxis: buildCategoryXAxis({
@@ -97,11 +108,15 @@ export const getOption = ({
     legend: {
       show: false,
     },
-    series: createBarSeries(itemNames, dataByName, colors, {
+    series: createBarSeries(plottedItemNames, dataByName, colors, {
       barMinHeight: 1,
-      barWidth: 22,
+      // No fixed width: a fixed pixel doesn't fit the tiny preview thumbnail
+      // once there's more than a couple of launches, and it also doesn't let
+      // bars grow back to fill the freed-up space when items get unchecked
+      // above — auto-dividing the category slot handles both.
       barCategoryGap: '45%',
       barGap: '0%',
+      silent: isPreview,
     }),
     customData: {
       itemsData,
