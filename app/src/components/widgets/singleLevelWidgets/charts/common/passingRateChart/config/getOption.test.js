@@ -138,4 +138,38 @@ describe('passingRateChart getOption', () => {
       expect(outerPct).toBeGreaterThan(innerPct);
     });
   });
+
+  describe('edge case: total === 0', () => {
+    const zeroContent = { total: 0, passed: 0, failed: 0, skipped: 0 };
+
+    test('bar mode does not produce NaN labels', () => {
+      const option = getOption({
+        content: zeroContent,
+        isPreview: false,
+        formatMessage,
+        viewMode: MODES_VALUES[CHART_MODES.BAR_VIEW],
+        excludeSkipped: false,
+      });
+
+      const label0 = option.series[0].label.formatter();
+      const label1 = option.series[1].label.formatter();
+
+      expect(label0).not.toContain('NaN');
+      expect(label1).not.toContain('NaN');
+    });
+
+    test('pie mode does not produce NaN labels', () => {
+      const option = getOption({
+        content: zeroContent,
+        isPreview: false,
+        formatMessage,
+        viewMode: MODES_VALUES[CHART_MODES.PIE_VIEW],
+        excludeSkipped: false,
+      });
+
+      const labelResult = option.series[0].label.formatter({ value: 0, percent: 10 });
+
+      expect(labelResult).not.toContain('NaN');
+    });
+  });
 });
