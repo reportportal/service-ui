@@ -43,7 +43,7 @@ describe('donutChart getOption', () => {
       chartText: 'SUM',
     });
 
-    expect(option.series).toHaveLength(1);
+    expect(option.series).toHaveLength(2);
     expect(option.series[0]).toMatchObject({
       type: 'pie',
       radius: ['40%', '68%'],
@@ -75,18 +75,43 @@ describe('donutChart getOption', () => {
     // must fall through to each data point's own name, not the series id.
     expect(option.series[0].id).toBeUndefined();
     expect(option.series[0].name).toBeUndefined();
+    // The ring's own hover-grow effect is off whenever the separate label
+    // series is also rendered: that series can't react to the ring's hover
+    // state, so scaling the ring here would visibly detach the percentage
+    // label from its slice while hovered.
+    expect(option.series[0].emphasis.scale).toBe(false);
+    // The visible ring draws no labels itself...
+    expect(option.series[0].label.show).toBe(false);
+    expect(option.series[0].labelLine.show).toBe(false);
+    // ...they're carried by an invisible, non-interactive pie whose band is
+    // biased inward, so the percentages sit a bit closer to the center than
+    // the ring's own mid-radius, without changing the ring's thickness.
+    const labelSeries = option.series[1];
+    expect(labelSeries).toMatchObject({
+      type: 'pie',
+      radius: ['40%', '64%'],
+      center: ['50%', '60%'],
+      silent: true,
+      itemStyle: { color: 'transparent', borderWidth: 0 },
+      emphasis: { disabled: true },
+    });
+    expect(labelSeries.data.map(({ id, value }) => ({ id, value }))).toEqual(
+      option.series[0].data.map(({ id, value }) => ({ id, value })),
+    );
     // Percentage labels sit inside each slice, not floating outside with leader
-    // lines, and are regular weight (not bold).
-    expect(option.series[0].label).toMatchObject({
+    // lines, are regular weight (not bold), and centered on their anchor.
+    expect(labelSeries.label).toMatchObject({
       show: true,
       position: 'inside',
       fontSize: 13,
       fontWeight: 400,
+      align: 'center',
+      verticalAlign: 'middle',
     });
     // One decimal place (e.g. "100.0%"), not the whole-number rounding of `{d}%`.
-    expect(option.series[0].label.formatter({ percent: 100 })).toBe('100.0%');
-    expect(option.series[0].label.formatter({ percent: 33.333 })).toBe('33.3%');
-    expect(option.series[0].labelLine.show).toBe(false);
+    expect(labelSeries.label.formatter({ percent: 100 })).toBe('100.0%');
+    expect(labelSeries.label.formatter({ percent: 33.333 })).toBe('33.3%');
+    expect(labelSeries.labelLine.show).toBe(false);
     expect(option.customData.legendItems).toEqual([
       'statistics$executions$passed',
       'statistics$executions$failed',
@@ -112,9 +137,10 @@ describe('donutChart getOption', () => {
       fontWeight: 700,
       fill: '#666666',
     });
-    // Sits a bit higher than the ring's own center (60%), not on top of it.
-    expect(option.graphic[0].top).toBe('52%');
-    expect(option.graphic[1].top).toBe('60%');
+    // Centered as a pair a couple points above the ring's own true center
+    // (60%), not flush on it.
+    expect(option.graphic[0].top).toBe('54%');
+    expect(option.graphic[1].top).toBe('62%');
   });
 
   test('excludes unchecked legend items from the center total, like the old chart.data.shown() total', () => {
@@ -222,6 +248,10 @@ describe('donutChart getOption', () => {
     expect(option.graphic[0].style.fontSize).toBe(15);
     expect(option.series[0].label.show).toBe(false);
     expect(option.series[0].labelLine.show).toBe(false);
+    // No separate label series in small-view mode (only the ring itself),
+    // so there's nothing for the hover-grow effect to detach from.
+    expect(option.series).toHaveLength(1);
+    expect(option.series[0].emphasis.scale).toBe(true);
   });
 
   test('shrinks and lowers the ring itself in small-view mode, not just its labels', () => {
@@ -250,7 +280,7 @@ describe('donutChart getOption', () => {
     expect(smallOption.series[0].center).not.toEqual(normalOption.series[0].center);
   });
 
-  test('hides labels, graphic and tooltip, and makes the pie non-interactive in preview mode', () => {
+  test('hides per-slice labels and tooltip and makes the pie non-interactive in preview mode, but still shows the center total', () => {
     const option = getOption({
       content: sampleContent,
       contentFields: sampleContentFields,
@@ -262,8 +292,59 @@ describe('donutChart getOption', () => {
 
     expect(option.series[0].silent).toBe(true);
     expect(option.series[0].label.show).toBe(false);
-    expect(option.graphic).toEqual([]);
     expect(option.tooltip.show).toBe(false);
+    // A preview with no numbers in it isn't a meaningful preview.
+    expect(option.graphic).toHaveLength(2);
+    expect(option.graphic[0].style.text).toBe('100');
+    expect(option.graphic[1].style.text).toBe('SUM');
+    // A dedicated, smaller preview font — preview is a fixed, tiny
+    // thumbnail regardless of how `small` (a container-size check) is
+    // computed, so it doesn't just fall back to the general small tier.
+    expect(option.graphic[0].style.fontSize).toBe(12);
+    expect(option.graphic[1].style.fontSize).toBe(10);
+  });
+
+  test('centers the ring in preview mode even when small, since no legend renders there to clear', () => {
+    const option = getOption({
+      content: sampleContent,
+      contentFields: sampleContentFields,
+      isPreview: true,
+      formatMessage,
+      configParams: { getColumns: sampleGetColumns },
+      chartText: 'SUM',
+      small: true,
+    });
+
+    expect(option.series[0].center).toEqual(['50%', '60%']);
+    // Value/subtitle pair centered as a pair further above the ring's own
+    // center (60%) than in the full widget, not pushed down by the
+    // small-view legend clearance offset.
+    expect(option.graphic[0].top).toBe('50%');
+    expect(option.graphic[1].top).toBe('62%');
+  });
+
+  test('uses a bigger ring in preview than the general small-view size, since preview never needs legend clearance', () => {
+    const smallOption = getOption({
+      content: sampleContent,
+      contentFields: sampleContentFields,
+      isPreview: false,
+      formatMessage,
+      configParams: { getColumns: sampleGetColumns },
+      chartText: 'SUM',
+      small: true,
+    });
+    const previewOption = getOption({
+      content: sampleContent,
+      contentFields: sampleContentFields,
+      isPreview: true,
+      formatMessage,
+      configParams: { getColumns: sampleGetColumns },
+      chartText: 'SUM',
+      small: true,
+    });
+
+    expect(previewOption.series[0].radius).toEqual(['52%', '86%']);
+    expect(previewOption.series[0].radius).not.toEqual(smallOption.series[0].radius);
   });
 
   test('omits the pie series entirely (not even an empty ring) when every column is zero', () => {
