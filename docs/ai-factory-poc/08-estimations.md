@@ -30,7 +30,7 @@ Filled in as tasks complete. `—` = not done yet.
 | T0.1 | Requirements digest + plan docs | 0 | — | **20** | 12 | 6 | 2 | 2026-09-25 |
 | T0.2 | Feature toggle | 0 | S (8) | **3** | 0.5 | 1.5 | 1 | 2026-09-28 |
 | T0.3 | Types + format utils | 0 | S (8) | **5** | 1.5 | 2.5 | 1 | 2026-09-28 |
-| T0.4 | URL helpers | 0 | S (8) | — | | | | |
+| T0.4 | URL helpers | 0 | S (8) | **2** | 0.5 | 1 | 0.5 | 2026-09-28 |
 | T0.5 | Mock backend (adapter, DB, seed, engine, overlay) | 0 | L (36) | — | | | | |
 | T0.6 | Shared atoms + usePolling | 0 | M (20) | — | | | | |
 | T0.7 | Permissions helpers | 0 | S (8) | — | | | | |
@@ -66,14 +66,14 @@ Filled in as tasks complete. `—` = not done yet.
 
 | Phase | Tasks | Planned (h) | Actual so far (h) | Done / total | Δ |
 |-------|-------|-------------|-------------------|--------------|---|
-| 0 · Foundation | T0.2–T0.7 (+T0.1 planning) | 88 (+20 planning) | 28 | 3 / 7 | T0.2 −5 h, T0.3 ≈ planned (see deviation notes) |
+| 0 · Foundation | T0.2–T0.7 (+T0.1 planning) | 88 (+20 planning) | 30 | 4 / 7 | T0.2 −5 h, T0.4 −6 h, T0.3 ≈ planned (see deviation notes) |
 | 1 · Pipelines | T1.1–T1.3 | 92 | 0 | 0 / 3 | — |
 | 2 · Library | T2.1–T2.6 | 108 | 0 | 0 / 6 | — |
 | 3 · Review loop | T3.1–T3.4 | 100 | 0 | 0 / 4 | — |
 | 4 · Gate & compare | T4.1–T4.3 | 60 | 0 | 0 / 3 | — |
 | 5 · Automation | T5.1–T5.4 | 56 | 0 | 0 / 4 | — |
 | 6 · Hardening | T6.1–T6.5 | 40 | 0 | 0 / 5 | — |
-| **Total** | | **544 h + 20 h planning = 564 h** | **28** | 3 / 32 | — |
+| **Total** | | **544 h + 20 h planning = 564 h** | **30** | 4 / 32 | — |
 
 **564 h ≈ 70,5 working days ≈ 14 working weeks** for one developer at 8 h/day.
 This prices every task at its nominal size, so it is the pessimistic end; the earlier
@@ -86,6 +86,7 @@ if the trend holds, apply the scope cut list in the [README](README.md#scope-cut
 |------|---------|--------|-----|
 | T0.2 Feature toggle | 8 h (S) | 3 h | Smaller than typical S: no Redux state, no server flag to integrate against (F11 still open), and the pattern (`getTmsOverride`) already existed in the codebase to copy. Re-check whether other "S" foundation tasks with a close existing pattern (e.g. T0.7 permissions) should also be sized down. |
 | T0.3 Types + format utils | 8 h (S) | 5 h | Close to planned: the contract (05) was already fully designed, so this was transcription into ~30 TS interfaces/enums plus two small formatters — mechanical but sizeable (one ~350-line file). |
+| T0.4 URL helpers | 8 h (S) | 2 h | Pure string-template functions with zero logic, one clear existing pattern to copy (100+ neighbours in the same file), and the endpoint list was already finalized in 05. No test file needed (no precedent for testing `urls.js` in this codebase). |
 
 ## Estimate log
 
@@ -93,6 +94,7 @@ Newest first. One line per estimate recorded.
 
 | Date | Task | Hours | Note |
 |------|------|-------|------|
+| 2026-09-28 | T0.4 URL helpers | 2 | 0.5 h picking names against the existing `tms*`/`testCase*` conventions in `common/urls.js` · 1 h writing 13 URL-helper functions with a traceability comment (05 contract id) on each · 0.5 h verifying every one resolves correctly with a throwaway smoke test (deleted, not committed — no existing test file for `urls.js` to extend) |
 | 2026-09-28 | T0.3 Types + format utils | 5 | 1.5 h re-deriving the exact contract shapes from 05 and picking a naming convention consistent with the codebase (enum + `${Enum}` alias, `*RS`/`*Payload`, following `controllers/milestone/constants.ts`) · 2.5 h writing `types/aiFactory.ts` (~30 interfaces/enums across all 8 contract sections) and `aiFactoryFormatUtils.ts` (`formatCost`, `formatTokens`) · 1 h tests, lint, type-check, docs update. Reused the existing `formatDuration` instead of duplicating it |
 | 2026-09-28 | T0.2 Feature toggle | 3 | 0.5 h finding the `getTmsOverride`/`getStorageItem` pattern to copy · 1.5 h writing `featureFlag.ts` + `index.ts` + unit tests (5 cases: default, true, false, malformed value, storage throws) · 1 h lint/type-check/test fixes and docs update. No UI consumer yet (that's T1.1/T1.2 wiring it into the sidebar and routes) |
 | 2026-09-25 | T0.1 Requirements digest + plan docs | 20 | 12 h reading (epic, 5 features, 17 stories, prototype incl. its JS data model, 4 flows, scope review, TMS code map) · 6 h writing docs 00–07 · 2 h Jira helper + token debugging. No planned size: this task was created together with the plan |

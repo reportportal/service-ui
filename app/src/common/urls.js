@@ -458,4 +458,40 @@ export const URLS = {
     `${urlBase}project/${projectKey}/tms/attribute/key${getQueryParams(query)}`,
   tmsAttributeValuesSearch: (projectKey, query = {}) =>
     `${urlBase}project/${projectKey}/tms/attribute/value${getQueryParams(query)}`,
+
+  // AI Factory · DF Bootcamp 2026 PoC (Jira epic EPMRPP-118192). This is a FRONTEND PROPOSAL,
+  // not an agreed backend contract (open ask F8) — mocked until the endpoint status board in
+  // docs/ai-factory-poc/05-backend-contract.md §0 says integrated. IDs below (P*, C*, L*, R*,
+  // F*, A*) refer to that document's sections.
+  tmsPipeline: (projectKey) => `${urlBase}project/${projectKey}/tms/pipeline`, // P1
+  tmsPipelineIterations: (projectKey, pipelineId, query = {}) =>
+    `${urlBase}project/${projectKey}/tms/pipeline/${pipelineId}/iteration${getQueryParams(query)}`, // P2
+  tmsPipelineIterationById: (projectKey, pipelineId, iterationId) =>
+    `${urlBase}project/${projectKey}/tms/pipeline/${pipelineId}/iteration/${iterationId}`, // P3
+  tmsPipelineSettings: (projectKey, pipelineId) =>
+    `${urlBase}project/${projectKey}/tms/pipeline/${pipelineId}/settings`, // P4
+
+  testCaseAi: (projectKey, testCaseId) =>
+    `${urlBase}project/${projectKey}/tms/test-case/${testCaseId}/ai`, // C2
+
+  testCaseLifecycle: (projectKey, testCaseId) =>
+    `${urlBase}project/${projectKey}/tms/test-case/${testCaseId}/lifecycle`, // L1
+  testCaseLifecycleBatch: (projectKey) =>
+    `${urlBase}project/${projectKey}/tms/test-case/lifecycle/batch`, // L2
+
+  testCaseReviewComments: (projectKey, testCaseId) =>
+    `${urlBase}project/${projectKey}/tms/test-case/${testCaseId}/review-comment`, // R1
+  testCaseReviewCommentById: (projectKey, testCaseId, commentId) =>
+    `${urlBase}project/${projectKey}/tms/test-case/${testCaseId}/review-comment/${commentId}`, // R2
+  discardTestCaseReviewComments: (projectKey, testCaseId) =>
+    `${urlBase}project/${projectKey}/tms/test-case/${testCaseId}/review-comment${getQueryParams({
+      state: 'PENDING',
+    })}`, // R3
+
+  testCaseFixRounds: (projectKey, testCaseId) =>
+    `${urlBase}project/${projectKey}/tms/test-case/${testCaseId}/fix-round`, // F1 (POST) / F2 (GET)
+
+  tmsAutomationEnvironments: (projectKey) =>
+    `${urlBase}project/${projectKey}/tms/automation/environment`, // A1
+  tmsAutomation: (projectKey) => `${urlBase}project/${projectKey}/tms/automation`, // A2
 };
