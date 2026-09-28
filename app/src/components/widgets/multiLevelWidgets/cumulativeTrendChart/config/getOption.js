@@ -39,6 +39,7 @@ const STACK_EXECUTIONS = 'executions';
 const STACK_DEFECTS = 'defects';
 // ~60% of what ECharts would auto-size the bar to with two stacks sharing a category.
 export const BAR_WIDTH = '18%';
+export const BAR_WIDTH_SEPARATE = '5%';
 
 const getSeriesLabel = (field, formatMessage) =>
   messages[field] ? formatMessage(messages[field]) : field;
@@ -166,7 +167,7 @@ export const getOption = ({
       type: 'bar',
       data: displayValuesByField[field],
       stack,
-      barWidth: BAR_WIDTH,
+      barWidth: separate ? BAR_WIDTH_SEPARATE : BAR_WIDTH,
       barCategoryGap: '35%',
       itemStyle: {
         color: getColorForKey(field),

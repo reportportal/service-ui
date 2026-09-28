@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 EPAM Systems
+ * Copyright 2026 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,119 +14,114 @@
  * limitations under the License.
  */
 
-import React, { Component } from 'react';
+import { useCallback, useEffect, useMemo, useRef } from 'react';
 import PropTypes from 'prop-types';
-import { injectIntl } from 'react-intl';
-import * as d3 from 'd3-selection';
 import classNames from 'classnames/bind';
+import { useIntl } from 'react-intl';
+import { CHART_MODES, MODES_VALUES } from 'common/constants/chartModes';
 import { STATS_FAILED, STATS_PASSED } from 'common/constants/statistics';
-import { ChartContainer } from 'components/widgets/common/c3chart';
+import { EChart } from 'components/widgets/common/echarts';
 import { getChartDefaultProps } from 'components/widgets/common/utils';
-import { getConfig, NOT_PASSED_STATISTICS_KEY } from './config/getConfig';
+import { getOption, NOT_PASSED_STATISTICS_KEY } from './config/getOption';
 import styles from './passingRateChart.scss';
 
 const cx = classNames.bind(styles);
 
-@injectIntl
-export class PassingRateChart extends Component {
-  static propTypes = {
-    intl: PropTypes.object.isRequired,
-    widget: PropTypes.object.isRequired,
-    container: PropTypes.instanceOf(Element).isRequired,
-    isPreview: PropTypes.bool,
-    observer: PropTypes.object,
-    filterNameTitle: PropTypes.object,
-    filterName: PropTypes.string,
-    onChartClick: PropTypes.func,
-  };
+export const PassingRateChart = ({
+  widget,
+  container,
+  isPreview = false,
+  observer = {},
+  filterNameTitle = {},
+  filterName = '',
+  onChartClick = () => {},
+}) => {
+  const { formatMessage } = useIntl();
+  const chartRef = useRef(null);
 
-  static defaultProps = {
-    isPreview: false,
-    observer: {},
-    filterNameTitle: {},
-    filterName: '',
-    onChartClick: () => {},
-  };
+  const { excludeSkipped, viewMode } = widget.contentParameters.widgetOptions;
+  const isBarMode = viewMode === MODES_VALUES[CHART_MODES.BAR_VIEW];
+  const statisticKey = excludeSkipped ? STATS_FAILED : NOT_PASSED_STATISTICS_KEY;
 
-  onChartCreated = (node) => {
-    this.node = node;
-    this.resizeHelper();
-  };
+  const onChartCreated = useCallback((_, chart) => {
+    chartRef.current = chart;
+  }, []);
 
-  getConfigData = () => {
-    const {
-      intl: { formatMessage },
-      widget: { contentParameters },
-      onChartClick,
-    } = this.props;
+  // Pie/donut: register click directly so params.name (slice name = stat key)
+  // is used, not params.seriesId which resolves to the series-level id.
+  useEffect(() => {
+    const chart = chartRef.current;
+    if (!chart || chart.isDisposed() || isPreview || isBarMode) {
+      return undefined;
+    }
 
-    return {
-      formatMessage,
-      getConfig,
-      onChartClick,
-      viewMode: contentParameters.widgetOptions.viewMode,
-      excludeSkipped: contentParameters.widgetOptions.excludeSkipped,
-      onRendered: this.resizeHelper,
+    const handleClick = (params) => {
+      if (params.componentType === 'series') {
+        onChartClick({ id: params.name });
+      }
     };
-  };
 
-  getCustomBlock = () => {
-    const {
-      intl: { formatMessage },
-      filterNameTitle,
-      filterName,
-    } = this.props;
+    chart.on('click', handleClick);
+    return () => {
+      if (!chart.isDisposed()) {
+        chart.off('click', handleClick);
+      }
+    };
+  }, [isBarMode, isPreview, onChartClick]);
 
-    return (
+  const customBlock = useMemo(
+    () => (
       <div className={cx('filter-info-block')}>
-        <span className={cx('filter-name-title')}>{formatMessage(filterNameTitle)}</span>
+        {filterNameTitle?.id && (
+          <span className={cx('filter-name-title')}>{formatMessage(filterNameTitle)}</span>
+        )}
         <span className={cx('filter-name')}>{filterName}</span>
       </div>
-    );
-  };
+    ),
+    [filterName, filterNameTitle, formatMessage],
+  );
 
-  resizeHelper = () => {
-    if (!this.node || this.props.isPreview) {
-      return;
-    }
-    const nodeElement = this.node;
+  const configData = useMemo(
+    () => ({
+      getOption,
+      formatMessage,
+      viewMode,
+      excludeSkipped,
+      ...(isBarMode ? { onChartClick } : {}),
+    }),
+    [excludeSkipped, formatMessage, isBarMode, onChartClick, viewMode],
+  );
 
-    // eslint-disable-next-line func-names
-    d3.selectAll(nodeElement.querySelectorAll('.bar .c3-chart-texts .c3-text')).each(function (d) {
-      const selector = `c3-target-${d.id}`;
-      const barBox = d3.selectAll(nodeElement.getElementsByClassName(selector)).node().getBBox();
-      const textElement = d3.select(this).node();
-      const textBox = textElement.getBBox();
-      let x = barBox.x + barBox.width / 2 - textBox.width / 2;
-      if (d.id === STATS_PASSED && x < 5) x = 5;
-      if (d.id === NOT_PASSED_STATISTICS_KEY && x + textBox.width > barBox.x + barBox.width)
-        x = barBox.x + barBox.width - textBox.width - 5;
-      textElement.setAttribute('x', `${x}`);
-    });
-  };
-
-  render() {
-    const { widget } = this.props;
-    const viewMode = widget.contentParameters.widgetOptions.viewMode;
-    const excludeSkipped = widget.contentParameters.widgetOptions.excludeSkipped;
-    const items = [STATS_PASSED, excludeSkipped ? STATS_FAILED : NOT_PASSED_STATISTICS_KEY];
-    const legendConfig = {
+  const legendConfig = useMemo(
+    () => ({
       showLegend: true,
       legendProps: {
-        items,
+        items: [STATS_PASSED, statisticKey],
         clickable: false,
-        customBlock: this.getCustomBlock(),
+        customBlock,
       },
-    };
+    }),
+    [customBlock, statisticKey],
+  );
 
-    return (
-      <ChartContainer
-        {...getChartDefaultProps(this.props)}
-        className={`${cx('passing-rate-chart')} ${viewMode}`}
+  return (
+    <div className={cx('passing-rate-chart', viewMode)}>
+      <EChart
+        {...getChartDefaultProps({ widget, container, isPreview, observer })}
         legendConfig={legendConfig}
-        configData={this.getConfigData()}
-        chartCreatedCallback={this.onChartCreated}
+        configData={configData}
+        chartCreatedCallback={onChartCreated}
       />
-    );
-  }
-}
+    </div>
+  );
+};
+
+PassingRateChart.propTypes = {
+  widget: PropTypes.object.isRequired,
+  container: PropTypes.instanceOf(Element).isRequired,
+  isPreview: PropTypes.bool,
+  observer: PropTypes.object,
+  filterNameTitle: PropTypes.object,
+  filterName: PropTypes.string,
+  onChartClick: PropTypes.func,
+};
