@@ -83,3 +83,8 @@ export const canCreateManualLaunch = checkPermission(ACTIONS.CREATE_MANUAL_LAUNC
 export const canManageTestCases = checkPermission(ACTIONS.MANAGE_TEST_CASES);
 export const canManageTestPlans = checkPermission(ACTIONS.MANAGE_TEST_PLANS);
 export const canManageExecutions = checkPermission(ACTIONS.MANAGE_EXECUTIONS);
+
+// AI FACTORY FEATURES (PoC, EPMRPP-118192, F15):
+export const canReviewAiTestCases = checkPermission(ACTIONS.REVIEW_AI_TEST_CASES);
+export const canAutomateTestCases = checkPermission(ACTIONS.AUTOMATE_TEST_CASES);
+export const canManagePipelineSettings = checkPermission(ACTIONS.MANAGE_PIPELINE_SETTINGS);

@@ -33,7 +33,7 @@ Filled in as tasks complete. `—` = not done yet.
 | T0.4 | URL helpers | 0 | S (8) | **2** | 0.5 | 1 | 0.5 | 2026-09-28 |
 | T0.5 | Mock backend (adapter, DB, seed, engine, overlay) | 0 | L (36) | **26** | 3 | 18 | 5 | 2026-09-28 |
 | T0.6 | Shared atoms + usePolling | 0 | M (20) | **14** | 3 | 7 | 4 | 2026-09-28 |
-| T0.7 | Permissions helpers | 0 | S (8) | — | | | | |
+| T0.7 | Permissions helpers | 0 | S (8) | **3** | 1 | 1.5 | 0.5 | 2026-09-28 |
 | T1.1 | Routes + sidebar + pipelines controller | 1 | M (20) | — | | | | |
 | T1.2 | Iterations list | 1 | L (36) | — | | | | |
 | T1.3 | Iteration details + stage panels | 1 | L (36) | — | | | | |
@@ -66,14 +66,14 @@ Filled in as tasks complete. `—` = not done yet.
 
 | Phase | Tasks | Planned (h) | Actual so far (h) | Done / total | Δ |
 |-------|-------|-------------|-------------------|--------------|---|
-| 0 · Foundation | T0.2–T0.7 (+T0.1 planning) | 88 (+20 planning) | 70 | 6 / 7 | T0.2 −5 h, T0.4 −6 h, T0.5 −10 h, T0.6 −6 h, T0.3 ≈ planned (see deviation notes) |
+| 0 · Foundation | T0.2–T0.7 (+T0.1 planning) | 88 (+20 planning) | 73 | 7 / 7 | T0.2 −5 h, T0.4 −6 h, T0.5 −10 h, T0.6 −6 h, T0.7 −5 h, T0.3 ≈ planned (see deviation notes) |
 | 1 · Pipelines | T1.1–T1.3 | 92 | 0 | 0 / 3 | — |
 | 2 · Library | T2.1–T2.6 | 108 | 0 | 0 / 6 | — |
 | 3 · Review loop | T3.1–T3.4 | 100 | 0 | 0 / 4 | — |
 | 4 · Gate & compare | T4.1–T4.3 | 60 | 0 | 0 / 3 | — |
 | 5 · Automation | T5.1–T5.4 | 56 | 0 | 0 / 4 | — |
 | 6 · Hardening | T6.1–T6.5 | 40 | 0 | 0 / 5 | — |
-| **Total** | | **544 h + 20 h planning = 564 h** | **70** | 6 / 32 | — |
+| **Total** | | **544 h + 20 h planning = 564 h** | **73** | 7 / 32 | — |
 
 **564 h ≈ 70,5 working days ≈ 14 working weeks** for one developer at 8 h/day.
 This prices every task at its nominal size, so it is the pessimistic end; the earlier
@@ -88,6 +88,7 @@ if the trend holds, apply the scope cut list in the [README](README.md#scope-cut
 | T0.3 Types + format utils | 8 h (S) | 5 h | Close to planned: the contract (05) was already fully designed, so this was transcription into ~30 TS interfaces/enums plus two small formatters — mechanical but sizeable (one ~350-line file). |
 | T0.4 URL helpers | 8 h (S) | 2 h | Pure string-template functions with zero logic, one clear existing pattern to copy (100+ neighbours in the same file), and the endpoint list was already finalized in 05. No test file needed (no precedent for testing `urls.js` in this codebase). |
 | T0.5 Mock backend | 36 h (L) | 26 h | Below planned mainly because the contract (05) and the codebase's own DTO-naming convention (`controllers/milestone/constants.ts`) removed most of the design decisions before writing code; the size still landed close to L because of the sheer surface (16 routes, two async simulations, an overlay merge, 52 tests). The largest real gap from the plan: seeding real cases into a project and detecting a live scenario edit are deferred to Q-ORG-07, so `overlay.ts`'s live-backend half is typed and unit-tested but not exercised end-to-end. |
+| T0.7 Permissions helpers | 8 h (S) | 3 h | Below planned: the ACL system (`common/constants/permissions.ts`, `createCheckPermission`) already existed and already had a same-level precedent (`MANAGE_TEST_CASES`) to mirror exactly; adding three `ACTIONS` entries and three `canX` exports was mechanical. The only design call was mapping "Project Manager and above" (Q-BE-10) onto the real role model, which turned out to need no new role at all — the existing checker already grants org `MANAGER` (and instance `ADMINISTRATOR`) everything before it even looks at the project role, so `MANAGE_PIPELINE_SETTINGS` only needed to be left ungranted for `EDITOR`/`VIEWER`. |
 | T0.6 Shared atoms + usePolling | 20 h (M) | 14 h | Below planned: 9 small presentational atoms plus one hook is a lot of files but each is a few lines, and the codebase already had a close pattern for every one of them (`integrationStatusBadge`, `progressBar`, `useFileUploadProgressSimulation`). Real, unplanned cost showed up in tooling, not design: this is the first TS test in the repo to mount/shallow-render a component that calls `useIntl()` or imports something that pulls in `@reportportal/ui-kit`, and the first to unit-test a hook — neither had a working pattern to copy, so time went into finding one (mocking `react-intl`'s `useIntl`, mocking `ConditionalTooltip` to dodge an ESM-only dependency Jest can't transform, and adding a minimal ambient `enzyme` type shim to `types/global.d.ts` since `@types/enzyme` conflicts with this repo's React 18 types). Those three fixes are now reusable by every later AI Factory test. |
 
 ## Estimate log
@@ -96,6 +97,7 @@ Newest first. One line per estimate recorded.
 
 | Date | Task | Hours | Note |
 |------|------|-------|------|
+| 2026-09-28 | T0.7 Permissions helpers | 3 | 1 h reading the real ACL system (`common/constants/permissions.ts`, `createCheckPermission`, `userRolesSelector`, `types/roles.ts`) and confirming there is no separate "Project Manager" project role to map Q-BE-10 onto · 1.5 h adding `REVIEW_AI_TEST_CASES`, `AUTOMATE_TEST_CASES`, `MANAGE_PIPELINE_SETTINGS` to `ACTIONS`/`PERMISSIONS_MAP` (Editor+ for the first two, org `MANAGER`+ only for settings) and the matching `canReviewAiTestCases`/`canAutomateTestCases`/`canManagePipelineSettings` exports (`permissions.ts` + `index.ts`) · 0.5 h a 4-case unit test on the matrix (ADMINISTRATOR, org MANAGER, project EDITOR, project VIEWER) plus lint/type-check. `useUserPermissions` picks the three up automatically (it maps over every `permissions.ts` export); no UI to wire yet — that starts at T3.4/T6.1 |
 | 2026-09-28 | T0.6 Shared atoms + usePolling | 14 | 3 h finding patterns to copy (`integrationStatusBadge`, `progressBar`, `useFileUploadProgressSimulation`) and picking the token/colour mapping for each status enum · 7 h writing `LifecycleBadge`, `AiChip`, `ScoreChip`, `CostLabel`, `IterationStatusBadge`, `StageStatusDot`/`StageStatusLabel`, `ScoreBar`, `DeltaCell` (all under `pages/inside/aiFactory/common/`) and `usePolling` (`common/hooks/`), each with its `.scss` (neutral, non-traffic-light colours per Q-FE-05, direction colouring only on `DeltaCell` for Compare) · 4 h tests (43 across 9 suites) and fixing three first-of-their-kind tooling gaps: mocking `useIntl`/`ConditionalTooltip` so a component test doesn't need the real, Jest-untransformable `@reportportal/ui-kit` ESM build, a `jest.mock` variable-hoisting bug, and an ambient `enzyme` type shim in `types/global.d.ts` (no `@types/enzyme` install — it conflicts with the repo's React 18 types). Full app suite (715 tests) still green afterward |
 | 2026-09-28 | T0.5 Mock backend | 26 | 3 h re-deriving internal record shapes from the contract and designing the hydrate/view-model split · 18 h writing `seedData.ts` (8 cases, 4 iterations, plan, launch), `db.ts` (hydration, persistence, mutators), `engine.ts` (status derivation, Auto-Ready, cost, automation skip rules), `viewModels.ts` (DTO projection), `handlers.ts` (16 routes + fix-round/automation `setTimeout` simulations), `overlay.ts` (merge + interceptor), `index.ts`, wiring into `index.jsx`, README · 5 h tests (engine, viewModels, handlers smoke test with fake timers, overlay) and fixing lint/type issues surfaced along the way (a real TS narrowing quirk under this repo's `strict: false`, `no-unsafe-enum-comparison`, `no-plusplus`). Full app test suite (672 tests) still green afterward |
 | 2026-09-28 | T0.4 URL helpers | 2 | 0.5 h picking names against the existing `tms*`/`testCase*` conventions in `common/urls.js` · 1 h writing 13 URL-helper functions with a traceability comment (05 contract id) on each · 0.5 h verifying every one resolves correctly with a throwaway smoke test (deleted, not committed — no existing test file for `urls.js` to extend) |
