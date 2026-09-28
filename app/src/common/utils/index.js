@@ -75,3 +75,4 @@ export { copyToClipboard } from './clipboard';
 export { getRouterParams } from './getRouterParams';
 export { convertBytesToMB } from './convertBytesToMB';
 export { highlightText } from './textHighlight';
+export { formatCost, formatTokens } from './aiFactoryFormatUtils';

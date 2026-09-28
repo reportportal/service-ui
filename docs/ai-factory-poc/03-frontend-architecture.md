@@ -213,7 +213,7 @@ When a user has no permission, the UI shows controls as hidden or read-only: com
 | `StageStatusDot` + `StageStatusLabel` (Pending, Running, Passed, Failed, In progress, Done, Skipped) | — | Review shows Done, not Passed |
 | `ScoreBar` (share of max) | check `testPlansTable/progressBar` first | no pass/fail colours on criteria ❓ the prototype colours bars by share; the requirement forbids "traffic-light verdicts" → use a single neutral colour (Q-FE-05) |
 | `DeltaCell` (better/worse colouring) | — | Compare only |
-| `formatTokens` (k / M), `formatCost`, `formatDuration` | `common/utils` | unit-tested |
+| `formatTokens` (k / M), `formatCost` | `common/utils/aiFactoryFormatUtils.ts` | unit-tested; `formatDuration` (ms → `1d 2h 3m`) already exists in `common/utils/timeDateUtils.js` and is reused as-is, not duplicated |
 
 ## 9. Testing strategy
 - Unit tests (Jest + jsdom, existing setup) for: engine rules, formatters, delta direction, the
