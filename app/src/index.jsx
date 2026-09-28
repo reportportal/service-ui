@@ -17,11 +17,14 @@
 import React from 'react';
 import { createRoot } from 'react-dom/client';
 import { Provider } from 'react-redux';
+import axios from 'axios';
 
 import { createHashHistory } from 'history';
 import qhistory from 'qhistory';
 import { stringify, parse } from 'qs';
 import 'common/polyfills';
+
+import { isAiFactoryEnabled } from 'controllers/aiFactory';
 
 import 'reset-css/reset.css';
 import 'common/css/fonts/fonts.scss';
@@ -62,10 +65,30 @@ const rerenderApp = (TheApp) => {
   );
 };
 
-if (module.hot) {
-  module.hot.accept('./app', () => {
-    const app = require('./app').default; // eslint-disable-line global-require
-    rerenderApp(app);
-  });
+const startApp = () => {
+  if (module.hot) {
+    module.hot.accept('./app', () => {
+      const app = require('./app').default; // eslint-disable-line global-require
+      rerenderApp(app);
+    });
+  }
+  rerenderApp(App);
+};
+
+// AI Factory · DF Bootcamp 2026 PoC (Jira epic EPMRPP-118192). With the feature toggle off
+// (the default), nothing here runs: no chunk is fetched, no mock adapter is installed. See
+// docs/ai-factory-poc/03-frontend-architecture.md §3-4.
+if (!process.env.production && isAiFactoryEnabled()) {
+  import(/* webpackChunkName: "ai-factory-mocks" */ 'controllers/aiFactory/mocks')
+    .then(({ installAiFactoryMocks, isAiFactoryMocksEnabled }) => {
+      if (isAiFactoryMocksEnabled()) {
+        installAiFactoryMocks(axios);
+      }
+    })
+    .catch(() => {
+      // the mocks are a dev convenience — never block the app on them
+    })
+    .finally(startApp);
+} else {
+  startApp();
 }
-rerenderApp(App);
