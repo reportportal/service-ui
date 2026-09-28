@@ -15,7 +15,7 @@
  */
 
 import { COLOR_FAILED, COLOR_PASSED, COLOR_SKIPPED } from 'common/constants/colors';
-import { BAR_WIDTH, getOption } from './getOption';
+import { BAR_WIDTH, BAR_WIDTH_SEPARATE, getOption } from './getOption';
 import { sampleContent, sampleContentFields } from './fixtures/sampleContent';
 
 const formatMessage = (msg) => msg.defaultMessage || msg.id;
@@ -179,6 +179,7 @@ describe('cumulativeTrendChart getOption', () => {
 
     option.series.forEach((series) => {
       expect(series.stack).toBeUndefined();
+      expect(String(series.barWidth)).toBe(BAR_WIDTH_SEPARATE);
     });
   });
 
