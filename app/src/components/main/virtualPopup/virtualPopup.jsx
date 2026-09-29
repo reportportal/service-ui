@@ -27,16 +27,18 @@ export class VirtualPopup extends PureComponent {
     }),
     children: PropTypes.element,
     boundariesElement: PropTypes.oneOfType([PropTypes.instanceOf(Element), PropTypes.string]),
+    zIndex: PropTypes.number,
   };
 
   static defaultProps = {
     referenceConfig: {},
     children: null,
     boundariesElement: 'scrollParent',
+    zIndex: undefined,
   };
 
   render() {
-    const { referenceConfig, children, boundariesElement } = this.props;
+    const { referenceConfig, children, boundariesElement, zIndex } = this.props;
 
     return (
       <Manager>
@@ -50,7 +52,11 @@ export class VirtualPopup extends PureComponent {
           }}
         >
           {({ ref, style, placement, scheduleUpdate }) => (
-            <div ref={ref} style={style} data-placement={placement}>
+            <div
+              ref={ref}
+              style={zIndex === undefined ? style : { ...style, zIndex }}
+              data-placement={placement}
+            >
               <PopupContentWrapper
                 scheduleUpdate={scheduleUpdate}
                 referencePosition={referenceConfig.style}

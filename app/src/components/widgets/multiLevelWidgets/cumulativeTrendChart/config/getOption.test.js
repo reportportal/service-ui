@@ -14,8 +14,14 @@
  * limitations under the License.
  */
 
-import { COLOR_FAILED, COLOR_PASSED, COLOR_SKIPPED } from 'common/constants/colors';
-import { BAR_WIDTH, BAR_WIDTH_SEPARATE, getOption } from './getOption';
+import { COLOR_BLACK, COLOR_FAILED, COLOR_PASSED, COLOR_SKIPPED } from 'common/constants/colors';
+import {
+  BAR_WIDTH,
+  BAR_WIDTH_SEPARATE,
+  BAR_WIDTH_WITH_TOTAL,
+  getBarsLeftOffset,
+  getOption,
+} from './getOption';
 import { sampleContent, sampleContentFields } from './fixtures/sampleContent';
 
 const formatMessage = (msg) => msg.defaultMessage || msg.id;
@@ -87,7 +93,54 @@ describe('cumulativeTrendChart getOption', () => {
     expect(byId['statistics$executions$failed'].data).toEqual([30, 25]);
     // Defect percentage denominator is the sum of defect fields, not the execution total.
     expect(byId['statistics$defects$product_bug$total'].data).toEqual([66.67, 60]);
+    // The "%" belongs on the y-axis ticks, not on the bars themselves.
     expect(option.yAxis).toMatchObject({ type: 'value', min: 0, max: 100, show: true });
+    expect(option.yAxis.axisLabel.formatter).toBe('{value}%');
+    expect(byId['statistics$executions$passed'].label).toBeUndefined();
+  });
+
+  test('steps the count y-axis by 2, and the percentage one by 10 (0-100 over 10 ticks)', () => {
+    const counts = getOption({
+      content: sampleContent,
+      contentFields: sampleContentFields,
+      isPreview: false,
+      formatMessage,
+      attributes,
+      userSettings: { percentage: false },
+    });
+    const percentages = getOption({
+      content: sampleContent,
+      contentFields: sampleContentFields,
+      isPreview: false,
+      formatMessage,
+      attributes,
+      userSettings: { percentage: true },
+    });
+
+    expect(counts.yAxis.interval).toBe(2);
+    expect(percentages.yAxis.interval).toBe(10);
+  });
+
+  test('caps bar width in absolute pixels, so a few categories can\'t stretch bars far past what looks right', () => {
+    const stacked = getOption({
+      content: sampleContent,
+      contentFields: sampleContentFields,
+      isPreview: false,
+      formatMessage,
+      attributes,
+      userSettings: { separate: false },
+    });
+    const separate = getOption({
+      content: sampleContent,
+      contentFields: sampleContentFields,
+      isPreview: false,
+      formatMessage,
+      attributes,
+      userSettings: { separate: true },
+    });
+
+    stacked.series.forEach((series) => expect(series.barMaxWidth).toBe(90));
+    separate.series.forEach((series) => expect(series.barMaxWidth).toBe(36));
   });
 
   test('only plots defect bars, at full opacity, when "Defect Types" focus is on', () => {
@@ -113,7 +166,7 @@ describe('cumulativeTrendChart getOption', () => {
     ]);
   });
 
-  test('adds an invisible total series with a value label instead of the chartjs-plugin-datalabels total', () => {
+  test('adds the total as a custom-rendered series, decoupled from the real bars\' shared layout', () => {
     const option = getOption({
       content: sampleContent,
       contentFields: sampleContentFields,
@@ -125,16 +178,131 @@ describe('cumulativeTrendChart getOption', () => {
 
     const totalSeries = option.series.find((series) => series.id === 'statistics$executions$total');
 
-    expect(totalSeries).toMatchObject({
-      type: 'bar',
-      barWidth: 0,
-      silent: true,
-      itemStyle: { color: 'transparent' },
+    // `custom`, not `bar`: a `bar` series sharing the category axis would
+    // force ECharts to recompute the *whole* shared bar-group layout for
+    // every series in it (including the real bars) whenever the total's own
+    // width/gap changes. `custom` draws exactly what `renderItem` returns
+    // and never joins that shared calculation.
+    expect(totalSeries.type).toBe('custom');
+    // Required for `api.coord`/`api.barLayout` inside `renderItem` to
+    // resolve against the chart's real x/y axes.
+    expect(totalSeries.coordinateSystem).toBe('cartesian2d');
+    expect(totalSeries.itemStyle).toMatchObject({ color: COLOR_BLACK });
+    expect(typeof totalSeries.renderItem).toBe('function');
+    // Absolute counts, paired with their category index — even in
+    // percentage mode, since "100%" alone wouldn't say much.
+    expect(totalSeries.data).toEqual([
+      [0, 100],
+      [1, 100],
+    ]);
+  });
+
+  test('renderItem draws the line just left of the real bars\' left edge, with the total centered above it', () => {
+    const option = getOption({
+      content: sampleContent,
+      contentFields: sampleContentFields,
+      isPreview: false,
+      formatMessage,
+      attributes,
+      userSettings: { showTotal: true },
     });
-    expect(totalSeries.label.show).toBe(true);
-    // The label always shows the absolute count, even in percentage mode.
-    expect(totalSeries.label.formatter({ dataIndex: 0 })).toBe(10);
-    expect(totalSeries.label.formatter({ dataIndex: 1 })).toBe(20);
+
+    const totalSeries = option.series.find((series) => series.id === 'statistics$executions$total');
+
+    const api = {
+      value: (dimIndex) => (dimIndex === 0 ? 0 : 10),
+      coord: ([, value]) => [500, 200 - value],
+      size: () => [400, 0],
+    };
+
+    const result = totalSeries.renderItem({}, api);
+
+    const line = result.children.find((child) => child.type === 'line');
+    const text = result.children.find((child) => child.type === 'text');
+    // Two stacks, each 14% of 400 = 56px, 10% (5.6px) gap between them:
+    // 117.6px total, so the bars start 58.8px left of center; the line sits
+    // a further 6px left of that.
+    expect(line.shape.x1).toBeCloseTo(500 - 58.8 - 6);
+    expect(line.shape.x2).toBeCloseTo(500 - 58.8 - 6);
+    expect(text.x).toBeCloseTo(line.shape.x1);
+    expect(text.style).toMatchObject({ text: '10', align: 'center', verticalAlign: 'bottom' });
+  });
+
+  test('getBarsLeftOffset mirrors ECharts\' bar layout, including the pixel max-width cap', () => {
+    expect(
+      getBarsLeftOffset({ bandWidth: 400, groupCount: 2, barWidthPercent: BAR_WIDTH_WITH_TOTAL, barMaxWidth: 90 }),
+    ).toBeCloseTo(-58.8);
+    // 14% of 1000 = 140px, capped to 90px per bar.
+    expect(
+      getBarsLeftOffset({ bandWidth: 1000, groupCount: 2, barWidthPercent: BAR_WIDTH_WITH_TOTAL, barMaxWidth: 90 }),
+    ).toBeCloseTo(-94.5);
+    // Every visible field is its own group when "Separate" is on.
+    expect(
+      getBarsLeftOffset({ bandWidth: 400, groupCount: 5, barWidthPercent: BAR_WIDTH_SEPARATE, barMaxWidth: 36 }),
+    ).toBeCloseTo(-(5 * 20 + 4 * 2) / 2);
+    expect(
+      getBarsLeftOffset({ bandWidth: 400, groupCount: 0, barWidthPercent: BAR_WIDTH_WITH_TOTAL, barMaxWidth: 90 }),
+    ).toBe(0);
+  });
+
+  test('centers the line on the category when every field is unchecked, so there\'s nothing to line up against', () => {
+    const option = getOption({
+      content: sampleContent,
+      contentFields: sampleContentFields,
+      isPreview: false,
+      formatMessage,
+      attributes,
+      userSettings: { showTotal: true, defectTypes: true },
+      uncheckedLegendItems: [
+        'statistics$defects$product_bug$total',
+        'statistics$defects$automation_bug$total',
+      ],
+    });
+
+    const totalSeries = option.series.find((series) => series.id === 'statistics$executions$total');
+    const api = { value: () => 0, coord: () => [100, 0], size: () => [400, 0] };
+
+    const result = totalSeries.renderItem({}, api);
+
+    expect(result.children.find((child) => child.type === 'line').shape.x1).toBe(100 - 6);
+  });
+
+  test('makes the regular bars thinner when totals are shown, without giving them a barGap that would shift their group', () => {
+    const withoutTotal = getOption({
+      content: sampleContent,
+      contentFields: sampleContentFields,
+      isPreview: false,
+      formatMessage,
+      attributes,
+      userSettings: { showTotal: false },
+    });
+    const withTotal = getOption({
+      content: sampleContent,
+      contentFields: sampleContentFields,
+      isPreview: false,
+      formatMessage,
+      attributes,
+      userSettings: { showTotal: true },
+    });
+    const withTotalSeparate = getOption({
+      content: sampleContent,
+      contentFields: sampleContentFields,
+      isPreview: false,
+      formatMessage,
+      attributes,
+      userSettings: { showTotal: true, separate: true },
+    });
+
+    withoutTotal.series.forEach((series) => expect(String(series.barWidth)).toBe(BAR_WIDTH));
+    withTotal.series
+      .filter((series) => series.id !== 'statistics$executions$total')
+      .forEach((series) => {
+        expect(String(series.barWidth)).toBe(BAR_WIDTH_WITH_TOTAL);
+        expect(series.barGap).toBeUndefined();
+      });
+    withTotalSeparate.series
+      .filter((series) => series.id !== 'statistics$executions$total')
+      .forEach((series) => expect(String(series.barWidth)).toBe(BAR_WIDTH_SEPARATE));
   });
 
   test('omits the total series entirely when "Totals" is off', () => {
@@ -225,6 +393,11 @@ describe('cumulativeTrendChart getOption', () => {
       userSettings: {},
     });
 
+    // Always `item`, in every mode: with two stacks (executions, defects)
+    // sitting next to each other in the same category, an `axis` trigger
+    // would report both stacks together instead of just the hovered one —
+    // the formatter itself expands the hovered field out to the rest of
+    // its own stack (see the next test), so `item` is enough.
     expect(option.tooltip.trigger).toBe('item');
     expect(option.tooltip.axisPointer).toEqual({ show: false });
     // Overrides the shared theme's `padding: 0` so the popover has breathing room.
@@ -241,7 +414,6 @@ describe('cumulativeTrendChart getOption', () => {
       userSettings: {},
     });
 
-    // 'item' trigger calls the formatter with a single param object, not an array.
     const html = option.tooltip.formatter({
       seriesId: 'statistics$executions$passed',
       dataIndex: 0,
@@ -255,6 +427,80 @@ describe('cumulativeTrendChart getOption', () => {
     expect(html).toContain(`background-color:${COLOR_PASSED}`);
     expect(html).not.toContain('border-radius');
     expect(html).toContain('Passed: 6 (60%)');
+  });
+
+  test('expands the hovered field out to the rest of its own stack, not the unrelated stack next to it', () => {
+    const option = getOption({
+      content: sampleContent,
+      contentFields: sampleContentFields,
+      isPreview: false,
+      formatMessage,
+      attributes,
+      userSettings: {},
+    });
+
+    // Only ECharts gives us info about the hovered item — everything else
+    // in its stack has to be looked up from the raw data ourselves.
+    const html = option.tooltip.formatter({
+      seriesId: 'statistics$executions$failed',
+      dataIndex: 0,
+      color: COLOR_FAILED,
+    });
+
+    // Every execution status shows, since they're all in the hovered field's
+    // own stack...
+    expect(html).toContain('Passed: 6 (60%)');
+    expect(html).toContain('Failed: 3 (30%)');
+    expect(html).toContain('Skipped: 1 (10%)');
+    // ...but nothing from the unrelated defects stack sitting next to it.
+    expect(html).not.toContain('Product bug');
+    expect(html).not.toContain('Automation bug');
+  });
+
+  test('only shows the hovered field on its own when bars are separate, not the rest of the (dropped) stack', () => {
+    const option = getOption({
+      content: sampleContent,
+      contentFields: sampleContentFields,
+      isPreview: false,
+      formatMessage,
+      attributes,
+      userSettings: { separate: true },
+    });
+
+    const html = option.tooltip.formatter({
+      seriesId: 'statistics$executions$failed',
+      dataIndex: 0,
+      color: COLOR_FAILED,
+    });
+
+    expect(html).toContain('Failed: 3 (30%)');
+    expect(html).not.toContain('Passed');
+    expect(html).not.toContain('Skipped');
+  });
+
+  test('tooltip formatter shows the total as its own bold row when the total line itself is hovered', () => {
+    const option = getOption({
+      content: sampleContent,
+      contentFields: sampleContentFields,
+      isPreview: false,
+      formatMessage,
+      attributes,
+      userSettings: { showTotal: true },
+    });
+
+    const html = option.tooltip.formatter({
+      seriesId: 'statistics$executions$total',
+      dataIndex: 0,
+      color: COLOR_BLACK,
+    });
+
+    // The total is always 100% of itself, and nothing else from the
+    // category shows alongside it.
+    expect(html).toContain('Total: 10 (100%)');
+    expect(html).not.toContain('Passed');
+    const totalRowIndex = html.indexOf('Total: 10');
+    const totalRowStart = html.lastIndexOf('<div', totalRowIndex);
+    expect(html.slice(totalRowStart, totalRowIndex)).toContain('font-weight: 600');
   });
 
   test('never fades other bars when one is hovered', () => {

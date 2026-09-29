@@ -37,9 +37,27 @@ const AXIS_LABEL_STYLE = {
 
 const STACK_EXECUTIONS = 'executions';
 const STACK_DEFECTS = 'defects';
-// ~60% of what ECharts would auto-size the bar to with two stacks sharing a category.
 export const BAR_WIDTH = '18%';
+export const BAR_WIDTH_WITH_TOTAL = '14%';
 export const BAR_WIDTH_SEPARATE = '5%';
+const BAR_MAX_WIDTH = 90;
+const BAR_MAX_WIDTH_SEPARATE = 36;
+const TOTAL_LINE_WIDTH = 2;
+const TOTAL_LINE_GAP = 6;
+// ECharts' own default gap between bar groups in a category, as a fraction
+// of the bar width (`defaultBarGap` on bar series).
+const DEFAULT_BAR_GAP_RATIO = 0.1;
+
+// Mirrors ECharts' own bar layout math. Can't use `api.barLayout` here: it
+// doesn't resolve percentage `barWidth` values, so it returns NaN offsets.
+export const getBarsLeftOffset = ({ bandWidth, groupCount, barWidthPercent, barMaxWidth }) => {
+  if (!groupCount) {
+    return 0;
+  }
+  const width = Math.min((parseFloat(barWidthPercent) / 100) * bandWidth, barMaxWidth);
+  const totalWidth = groupCount * width + (groupCount - 1) * width * DEFAULT_BAR_GAP_RATIO;
+  return -totalWidth / 2;
+};
 
 const getSeriesLabel = (field, formatMessage) =>
   messages[field] ? formatMessage(messages[field]) : field;
@@ -49,24 +67,56 @@ const buildSquareMarker = (color) =>
   `<span style="display:inline-block;margin-right:6px;width:10px;height:10px;background-color:${color};"></span>`;
 
 const buildTooltipFormatter =
-  ({ categories, tooltipContents, scaleName, valuesByField, percentage, formatMessage }) =>
+  ({
+    categories,
+    tooltipContents,
+    scaleName,
+    valuesByField,
+    percentage,
+    formatMessage,
+    separate,
+    executionFields,
+    defectFields,
+  }) =>
   (params) => {
-    const items = Array.isArray(params) ? params : [params];
-    const index = items[0]?.dataIndex ?? 0;
-    const rows = items
-      .filter((item) => item.seriesId !== TOTAL_FIELD)
-      .map((item) => {
-        const rawValue = valuesByField[item.seriesId]?.[index];
+    const item = Array.isArray(params) ? params[0] : params;
+    const index = item?.dataIndex ?? 0;
+    const hoveredField = item?.seriesId;
+    const isTotal = hoveredField === TOTAL_FIELD;
+
+    let fieldsToShow;
+    if (isTotal) {
+      fieldsToShow = [TOTAL_FIELD];
+    } else if (separate) {
+      fieldsToShow = [hoveredField];
+    } else {
+      fieldsToShow = defectFields.includes(hoveredField) ? defectFields : executionFields;
+    }
+
+    const rows = fieldsToShow
+      .map((field) => {
+        const isFieldTotal = field === TOTAL_FIELD;
+        const rawValue = valuesByField[field]?.[index];
         if (!rawValue) {
           return '';
         }
-        const label = getSeriesLabel(item.seriesId, formatMessage);
-        const percentValue = getPercentageValue(rawValue, valuesByField, item.seriesId, index);
-        const text = percentage
-          ? `${label}: ${percentValue}%`
-          : `${label}: ${rawValue} (${percentValue}%)`;
+        const label = getSeriesLabel(field, formatMessage);
+        // The total is always 100% of itself, and keeps its absolute count
+        // even in percentage mode, since "100%" alone wouldn't say much.
+        const percentValue = isFieldTotal
+          ? 100
+          : getPercentageValue(rawValue, valuesByField, field, index);
+        const text =
+          percentage && !isFieldTotal
+            ? `${label}: ${percentValue}%`
+            : `${label}: ${rawValue} (${percentValue}%)`;
+        // Only the hovered field's color comes from ECharts; every other row
+        // needs its color looked up the same way the series was colored.
+        const color = field === hoveredField ? item.color : getColorForKey(field);
 
-        return `<div>${buildSquareMarker(item.color)}${text}</div>`;
+        return `<div${isFieldTotal ? ' style="font-weight: 600;"' : ''}>${buildSquareMarker(
+          color,
+        )}${text}</div>`;
       })
       .join('');
 
@@ -128,22 +178,66 @@ export const getOption = ({
   const series = [];
 
   if (showTotal) {
+    const visibleFields = plottedFields.filter((field) => !uncheckedLegendItems.includes(field));
+    const groupCount = separate
+      ? visibleFields.length
+      : new Set(
+          visibleFields.map((field) => (defectFields.includes(field) ? STACK_DEFECTS : STACK_EXECUTIONS)),
+        ).size;
+    const groupBarWidth = separate ? BAR_WIDTH_SEPARATE : BAR_WIDTH_WITH_TOTAL;
+    const groupBarMaxWidth = separate ? BAR_MAX_WIDTH_SEPARATE : BAR_MAX_WIDTH;
+
     series.push({
       id: TOTAL_FIELD,
       name: TOTAL_FIELD,
-      type: 'bar',
-      data: displayValuesByField[TOTAL_FIELD],
-      barWidth: 0,
-      silent: true,
-      itemStyle: { color: 'transparent' },
-      label: {
-        show: !isPreview,
-        position: 'top',
-        color: COLOR_BLACK,
-        fontFamily: 'OpenSans',
-        fontSize: 12,
-        formatter: (params) => absTotals[params.dataIndex],
+      // `custom`, not `bar`: a `bar` series shares one layout calculation
+      // with every other bar in the category, so giving it its own `barGap`
+      // would also shift the real bars. `custom` draws exactly what
+      // `renderItem` returns and never joins that calculation.
+      type: 'custom',
+      coordinateSystem: 'cartesian2d',
+      silent: isPreview,
+      itemStyle: { color: COLOR_BLACK },
+      renderItem: (params, api) => {
+        const categoryIndex = api.value(0);
+        const value = api.value(1);
+        const start = api.coord([categoryIndex, 0]);
+        const end = api.coord([categoryIndex, value]);
+        const leftOffset = getBarsLeftOffset({
+          bandWidth: api.size([1, 0])[0],
+          groupCount,
+          barWidthPercent: groupBarWidth,
+          barMaxWidth: groupBarMaxWidth,
+        });
+        const x = start[0] + leftOffset - TOTAL_LINE_GAP;
+
+        return {
+          type: 'group',
+          children: [
+            {
+              type: 'line',
+              shape: { x1: x, y1: start[1], x2: x, y2: end[1] },
+              style: { stroke: COLOR_BLACK, lineWidth: TOTAL_LINE_WIDTH },
+            },
+            isPreview
+              ? null
+              : {
+                  type: 'text',
+                  x,
+                  y: end[1] - 2,
+                  style: {
+                    text: String(absTotals[categoryIndex]),
+                    fill: COLOR_BLACK,
+                    fontFamily: 'OpenSans',
+                    fontSize: 12,
+                    align: 'center',
+                    verticalAlign: 'bottom',
+                  },
+                },
+          ].filter(Boolean),
+        };
       },
+      data: displayValuesByField[TOTAL_FIELD].map((value, index) => [index, value]),
     });
   }
 
@@ -152,13 +246,16 @@ export const getOption = ({
       return;
     }
     const isDefect = defectFields.includes(field);
-    // Not "separate": every execution status stacks into one bar, every
-    // defect field into a second bar next to it (two bars per category) —
-    // matches the original Chart.js layout. "Separate" drops the stack so
-    // each field draws its own individual bar instead.
     let stack;
     if (!separate) {
       stack = isDefect ? STACK_DEFECTS : STACK_EXECUTIONS;
+    }
+
+    let barWidth = BAR_WIDTH;
+    if (separate) {
+      barWidth = BAR_WIDTH_SEPARATE;
+    } else if (showTotal) {
+      barWidth = BAR_WIDTH_WITH_TOTAL;
     }
 
     series.push({
@@ -167,7 +264,8 @@ export const getOption = ({
       type: 'bar',
       data: displayValuesByField[field],
       stack,
-      barWidth: separate ? BAR_WIDTH_SEPARATE : BAR_WIDTH,
+      barWidth,
+      barMaxWidth: separate ? BAR_MAX_WIDTH_SEPARATE : BAR_MAX_WIDTH,
       barCategoryGap: '35%',
       itemStyle: {
         color: getColorForKey(field),
@@ -191,7 +289,7 @@ export const getOption = ({
         nameGap: 32,
         nameRotate: 90,
         nameTextStyle: { ...AXIS_LABEL_STYLE, fontSize: 12 },
-        axisLabel: { ...AXIS_LABEL_STYLE, fontSize: 12, margin: 4 },
+        axisLabel: { ...AXIS_LABEL_STYLE, fontSize: 12, margin: 4, formatter: '{value}%' },
         axisLine: { show: false },
         axisTick: { show: false },
         splitLine: { show: !isPreview, lineStyle: { color: COLOR_GRAY_80, width: 1 } },
@@ -200,6 +298,7 @@ export const getOption = ({
         type: 'value',
         show: !isPreview,
         min: 0,
+        interval: 2,
         axisLabel: { ...AXIS_LABEL_STYLE, fontSize: 12, margin: 4 },
         axisLine: { show: false },
         axisTick: { show: false },
@@ -242,6 +341,9 @@ export const getOption = ({
     },
     yAxis,
     tooltip: {
+      // `item`, not `axis`: with two stacks sitting next to each other in
+      // the same category, an axis trigger would report both together. The
+      // formatter expands the hovered field out to its own stack instead.
       trigger: 'item',
       show: !isPreview,
       axisPointer: { show: false },
@@ -253,6 +355,9 @@ export const getOption = ({
         valuesByField,
         percentage,
         formatMessage,
+        separate,
+        executionFields,
+        defectFields,
       }),
     },
     legend: {
