@@ -54,7 +54,7 @@ export const getBarsLeftOffset = ({ bandWidth, groupCount, barWidthPercent, barM
   if (!groupCount) {
     return 0;
   }
-  const width = Math.min((parseFloat(barWidthPercent) / 100) * bandWidth, barMaxWidth);
+  const width = Math.min((Number.parseFloat(barWidthPercent) / 100) * bandWidth, barMaxWidth);
   const totalWidth = groupCount * width + (groupCount - 1) * width * DEFAULT_BAR_GAP_RATIO;
   return -totalWidth / 2;
 };
@@ -125,6 +125,125 @@ const buildTooltipFormatter =
     }${rows}`;
   };
 
+const buildTotalSeries = ({ visibleFields, defectFields, separate, isPreview, absTotals, data }) => {
+  const groupCount = separate
+    ? visibleFields.length
+    : new Set(
+        visibleFields.map((field) => (defectFields.includes(field) ? STACK_DEFECTS : STACK_EXECUTIONS)),
+      ).size;
+  const barWidthPercent = separate ? BAR_WIDTH_SEPARATE : BAR_WIDTH_WITH_TOTAL;
+  const barMaxWidth = separate ? BAR_MAX_WIDTH_SEPARATE : BAR_MAX_WIDTH;
+
+  return {
+    id: TOTAL_FIELD,
+    name: TOTAL_FIELD,
+    // `custom`, not `bar`: a `bar` series shares one layout calculation
+    // with every other bar in the category, so giving it its own `barGap`
+    // would also shift the real bars. `custom` draws exactly what
+    // `renderItem` returns and never joins that calculation.
+    type: 'custom',
+    coordinateSystem: 'cartesian2d',
+    silent: isPreview,
+    itemStyle: { color: COLOR_BLACK },
+    renderItem: (params, api) => {
+      const categoryIndex = api.value(0);
+      const start = api.coord([categoryIndex, 0]);
+      const end = api.coord([categoryIndex, api.value(1)]);
+      const leftOffset = getBarsLeftOffset({
+        bandWidth: api.size([1, 0])[0],
+        groupCount,
+        barWidthPercent,
+        barMaxWidth,
+      });
+      const x = start[0] + leftOffset - TOTAL_LINE_GAP;
+      const line = {
+        type: 'line',
+        shape: { x1: x, y1: start[1], x2: x, y2: end[1] },
+        style: { stroke: COLOR_BLACK, lineWidth: TOTAL_LINE_WIDTH },
+      };
+      const label = {
+        type: 'text',
+        x,
+        y: end[1] - 2,
+        style: {
+          text: String(absTotals[categoryIndex]),
+          fill: COLOR_BLACK,
+          fontFamily: 'OpenSans',
+          fontSize: 12,
+          align: 'center',
+          verticalAlign: 'bottom',
+        },
+      };
+
+      return { type: 'group', children: isPreview ? [line] : [line, label] };
+    },
+    data: data.map((value, index) => [index, value]),
+  };
+};
+
+const getBarWidth = (separate, showTotal) => {
+  if (separate) {
+    return BAR_WIDTH_SEPARATE;
+  }
+  return showTotal ? BAR_WIDTH_WITH_TOTAL : BAR_WIDTH;
+};
+
+const buildBarSeries = ({ field, isDefect, data, separate, showTotal, focusDefectTypes }) => {
+  let stack;
+  if (!separate) {
+    stack = isDefect ? STACK_DEFECTS : STACK_EXECUTIONS;
+  }
+
+  return {
+    id: field,
+    name: field,
+    type: 'bar',
+    data,
+    stack,
+    barWidth: getBarWidth(separate, showTotal),
+    barMaxWidth: separate ? BAR_MAX_WIDTH_SEPARATE : BAR_MAX_WIDTH,
+    barCategoryGap: '35%',
+    itemStyle: {
+      color: getColorForKey(field),
+      opacity: isDefect && !focusDefectTypes ? 0.3 : 1,
+    },
+    emphasis: {
+      focus: 'none',
+    },
+  };
+};
+
+const buildYAxis = ({ percentage, isPreview, formatMessage }) => {
+  const common = {
+    type: 'value',
+    show: !isPreview,
+    min: 0,
+    axisLine: { show: false },
+    axisTick: { show: false },
+    splitLine: { show: !isPreview, lineStyle: { color: COLOR_GRAY_80, width: 1 } },
+  };
+
+  if (!percentage) {
+    return {
+      ...common,
+      interval: 2,
+      axisLabel: { ...AXIS_LABEL_STYLE, fontSize: 12, margin: 4 },
+    };
+  }
+
+  return {
+    ...common,
+    max: 100,
+    interval: 10,
+    name: isPreview ? undefined : `% ${formatMessage(messages.ofTestCases)}`,
+    nameLocation: 'middle',
+    nameGap: 32,
+    nameRotate: 90,
+    nameTextStyle: { ...AXIS_LABEL_STYLE, fontSize: 12 },
+    axisLabel: { ...AXIS_LABEL_STYLE, fontSize: 12, margin: 4, formatter: '{value}%' },
+  };
+};
+
 export const getOption = ({
   content,
   isPreview,
@@ -175,136 +294,33 @@ export const getOption = ({
     colors[field] = getColorForKey(field);
   });
 
-  const series = [];
+  const visibleFields = plottedFields.filter((field) => !uncheckedLegendItems.includes(field));
+  const series = [
+    ...(showTotal
+      ? [
+          buildTotalSeries({
+            visibleFields,
+            defectFields,
+            separate,
+            isPreview,
+            absTotals,
+            data: displayValuesByField[TOTAL_FIELD],
+          }),
+        ]
+      : []),
+    ...visibleFields.map((field) =>
+      buildBarSeries({
+        field,
+        isDefect: defectFields.includes(field),
+        data: displayValuesByField[field],
+        separate,
+        showTotal,
+        focusDefectTypes,
+      }),
+    ),
+  ];
 
-  if (showTotal) {
-    const visibleFields = plottedFields.filter((field) => !uncheckedLegendItems.includes(field));
-    const groupCount = separate
-      ? visibleFields.length
-      : new Set(
-          visibleFields.map((field) => (defectFields.includes(field) ? STACK_DEFECTS : STACK_EXECUTIONS)),
-        ).size;
-    const groupBarWidth = separate ? BAR_WIDTH_SEPARATE : BAR_WIDTH_WITH_TOTAL;
-    const groupBarMaxWidth = separate ? BAR_MAX_WIDTH_SEPARATE : BAR_MAX_WIDTH;
-
-    series.push({
-      id: TOTAL_FIELD,
-      name: TOTAL_FIELD,
-      // `custom`, not `bar`: a `bar` series shares one layout calculation
-      // with every other bar in the category, so giving it its own `barGap`
-      // would also shift the real bars. `custom` draws exactly what
-      // `renderItem` returns and never joins that calculation.
-      type: 'custom',
-      coordinateSystem: 'cartesian2d',
-      silent: isPreview,
-      itemStyle: { color: COLOR_BLACK },
-      renderItem: (params, api) => {
-        const categoryIndex = api.value(0);
-        const value = api.value(1);
-        const start = api.coord([categoryIndex, 0]);
-        const end = api.coord([categoryIndex, value]);
-        const leftOffset = getBarsLeftOffset({
-          bandWidth: api.size([1, 0])[0],
-          groupCount,
-          barWidthPercent: groupBarWidth,
-          barMaxWidth: groupBarMaxWidth,
-        });
-        const x = start[0] + leftOffset - TOTAL_LINE_GAP;
-
-        return {
-          type: 'group',
-          children: [
-            {
-              type: 'line',
-              shape: { x1: x, y1: start[1], x2: x, y2: end[1] },
-              style: { stroke: COLOR_BLACK, lineWidth: TOTAL_LINE_WIDTH },
-            },
-            isPreview
-              ? null
-              : {
-                  type: 'text',
-                  x,
-                  y: end[1] - 2,
-                  style: {
-                    text: String(absTotals[categoryIndex]),
-                    fill: COLOR_BLACK,
-                    fontFamily: 'OpenSans',
-                    fontSize: 12,
-                    align: 'center',
-                    verticalAlign: 'bottom',
-                  },
-                },
-          ].filter(Boolean),
-        };
-      },
-      data: displayValuesByField[TOTAL_FIELD].map((value, index) => [index, value]),
-    });
-  }
-
-  plottedFields.forEach((field) => {
-    if (uncheckedLegendItems.includes(field)) {
-      return;
-    }
-    const isDefect = defectFields.includes(field);
-    let stack;
-    if (!separate) {
-      stack = isDefect ? STACK_DEFECTS : STACK_EXECUTIONS;
-    }
-
-    let barWidth = BAR_WIDTH;
-    if (separate) {
-      barWidth = BAR_WIDTH_SEPARATE;
-    } else if (showTotal) {
-      barWidth = BAR_WIDTH_WITH_TOTAL;
-    }
-
-    series.push({
-      id: field,
-      name: field,
-      type: 'bar',
-      data: displayValuesByField[field],
-      stack,
-      barWidth,
-      barMaxWidth: separate ? BAR_MAX_WIDTH_SEPARATE : BAR_MAX_WIDTH,
-      barCategoryGap: '35%',
-      itemStyle: {
-        color: getColorForKey(field),
-        opacity: isDefect && !focusDefectTypes ? 0.3 : 1,
-      },
-      emphasis: {
-        focus: 'none',
-      },
-    });
-  });
-
-  const yAxis = percentage
-    ? {
-        type: 'value',
-        show: !isPreview,
-        min: 0,
-        max: 100,
-        interval: 10,
-        name: isPreview ? undefined : `% ${formatMessage(messages.ofTestCases)}`,
-        nameLocation: 'middle',
-        nameGap: 32,
-        nameRotate: 90,
-        nameTextStyle: { ...AXIS_LABEL_STYLE, fontSize: 12 },
-        axisLabel: { ...AXIS_LABEL_STYLE, fontSize: 12, margin: 4, formatter: '{value}%' },
-        axisLine: { show: false },
-        axisTick: { show: false },
-        splitLine: { show: !isPreview, lineStyle: { color: COLOR_GRAY_80, width: 1 } },
-      }
-    : {
-        type: 'value',
-        show: !isPreview,
-        min: 0,
-        interval: 2,
-        axisLabel: { ...AXIS_LABEL_STYLE, fontSize: 12, margin: 4 },
-        axisLine: { show: false },
-        axisTick: { show: false },
-        splitLine: { show: !isPreview, lineStyle: { color: COLOR_GRAY_80, width: 1 } },
-      };
-
+  const yAxis = buildYAxis({ percentage, isPreview, formatMessage });
   const tickValues = buildAxisTicks(categories.length);
 
   return {
