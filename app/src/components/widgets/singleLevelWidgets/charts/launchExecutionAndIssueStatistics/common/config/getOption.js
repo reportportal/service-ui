@@ -27,7 +27,8 @@ const DONUT_CENTER_Y_SMALL = 70;
 // more of its box than the general "small" ring size, which is sized to
 // leave room for one — bigger overall, and a bit thinner (a smaller gap
 // between the two radii) than the full-widget ring.
-const DONUT_RADIUS_PREVIEW = ['52%', '86%'];
+const DONUT_RADIUS_PREVIEW = ['48%', '82%'];
+const DONUT_CENTER_Y_PREVIEW = 50;
 // ECharts always places `inside` pie labels at the exact middle of the ring
 // band, with no setting to shift them along the radius. To pull the slice
 // percentages a bit closer to the center without changing the visible ring,
@@ -73,11 +74,10 @@ export const getOption = ({
   const visibleTotal = visibleColumns.reduce((sum, [, value]) => sum + value, 0);
   const hasData = visibleTotal > 0;
   const plottedColumns = visibleColumns.filter(([, value]) => value > 0);
-  // The small-view center push-down exists to clear the legend above the
-  // ring — but the legend never renders in preview (add/edit widget modal
-  // thumbnails), so pushing the ring down there just runs it off the bottom
-  // of the small preview box instead. Preview always gets the true center.
-  const centerY = small && !isPreview ? DONUT_CENTER_Y_SMALL : DONUT_CENTER_Y;
+  // The center push-down only exists to clear the legend above the ring,
+  // which never renders in preview, so preview is truly centered in its box.
+  let centerY = small ? DONUT_CENTER_Y_SMALL : DONUT_CENTER_Y;
+  if (isPreview) centerY = DONUT_CENTER_Y_PREVIEW;
   let radius = small ? DONUT_RADIUS_SMALL : DONUT_RADIUS;
   if (isPreview) radius = DONUT_RADIUS_PREVIEW;
   const showSliceLabels = !isPreview && !small;
