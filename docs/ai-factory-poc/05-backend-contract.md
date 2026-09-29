@@ -18,28 +18,34 @@ Update this table when an endpoint moves. Legend: 🟡 mocked · 🔵 BE in prog
 
 | # | Endpoint | Story | Mock | BE | FE integrated |
 |---|----------|-------|------|----|---------------|
-| P1 | `GET tms/pipeline` | 002 | ☐ | ☐ | ☐ |
-| P2 | `GET tms/pipeline/{pipelineId}/iteration` | 002 | ☐ | ☐ | ☐ |
-| P3 | `GET tms/pipeline/{pipelineId}/iteration/{iterationId}` | 003, 016 | ☐ | ☐ | ☐ |
-| P4 | `GET/PUT tms/pipeline/{pipelineId}/settings` | 005 | ☐ | ☐ | ☐ |
-| C1 | TestCase DTO extensions (list + details) | 007, 008 | ☐ | ☐ | ☐ |
-| C2 | `GET tms/test-case/{id}/ai` | 009, 010, 012, 017 | ☐ | ☐ | ☐ |
+| P1 | `GET tms/pipeline` | 002 | 🟡 | ☐ | ☐ |
+| P2 | `GET tms/pipeline/{pipelineId}/iteration` | 002 | 🟡 | ☐ | ☐ |
+| P3 | `GET tms/pipeline/{pipelineId}/iteration/{iterationId}` | 003, 016 | 🟡 | ☐ | ☐ |
+| P4 | `GET/PUT tms/pipeline/{pipelineId}/settings` | 005 | 🟡 | ☐ | ☐ |
+| C1 | TestCase DTO extensions (list + details) | 007, 008 | 🟡\* | ☐ | ☐ |
+| C2 | `GET tms/test-case/{id}/ai` | 009, 010, 012, 017 | 🟡 | ☐ | ☐ |
 | C3 | List filters `lifecycle`, `ai`, `iterationId` + review-queue count | 008 | ☐ | ☐ | ☐ |
-| L1 | `POST tms/test-case/{id}/lifecycle` | 013 | ☐ | ☐ | ☐ |
-| L2 | `POST tms/test-case/lifecycle/batch` | 008, 013 | ☐ | ☐ | ☐ |
-| L3 | Scenario edit → Draft / Obsolete (existing `PUT tms/test-case/{id}`) + `promoteToReady` | 007, 013 | ☐ | ☐ | ☐ |
-| R1 | `GET/POST tms/test-case/{id}/review-comment` | 011 | ☐ | ☐ | ☐ |
-| R2 | `DELETE tms/test-case/{id}/review-comment/{commentId}` | 011 | ☐ | ☐ | ☐ |
-| R3 | `DELETE tms/test-case/{id}/review-comment?state=PENDING` (discard) | 011 | ☐ | ☐ | ☐ |
-| F1 | `POST tms/test-case/{id}/fix-round` (Push to agent) | 012 | ☐ | ☐ | ☐ |
-| F2 | `GET tms/test-case/{id}/fix-round` | 012 | ☐ | ☐ | ☐ |
+| L1 | `POST tms/test-case/{id}/lifecycle` | 013 | 🟡 | ☐ | ☐ |
+| L2 | `POST tms/test-case/lifecycle/batch` | 008, 013 | 🟡 | ☐ | ☐ |
+| L3 | Scenario edit → Draft / Obsolete (existing `PUT tms/test-case/{id}`) + `promoteToReady` | 007, 013 | 🟡\* | ☐ | ☐ |
+| R1 | `GET/POST tms/test-case/{id}/review-comment` | 011 | 🟡 | ☐ | ☐ |
+| R2 | `DELETE tms/test-case/{id}/review-comment/{commentId}` | 011 | 🟡 | ☐ | ☐ |
+| R3 | `DELETE tms/test-case/{id}/review-comment?state=PENDING` (discard) | 011 | 🟡 | ☐ | ☐ |
+| F1 | `POST tms/test-case/{id}/fix-round` (Push to agent) | 012 | 🟡 | ☐ | ☐ |
+| F2 | `GET tms/test-case/{id}/fix-round` | 012 | 🟡 | ☐ | ☐ |
 | G1 | Ready-only gate on add-to-plan / add-to-launch (single + batch) | 014 | ☐ | ☐ | ☐ |
 | G2 | Test plan DTO: `draftTestCasesCount`, `launchBlocked` | 014 | ☐ | ☐ | ☐ |
-| A1 | `GET tms/automation/environment` | 015 | ☐ | ☐ | ☐ |
-| A2 | `POST tms/automation` | 015 | ☐ | ☐ | ☐ |
+| A1 | `GET tms/automation/environment` | 015 | 🟡 | ☐ | ☐ |
+| A2 | `POST tms/automation` | 015 | 🟡 | ☐ | ☐ |
 | A3 | Test item DTO: `tmsTestCase { id, displayId }` | 017 | ☐ | ☐ | ☐ |
 | X1 | CI → RP reporting (iteration, stages, grade doc, tokens) | 001, 006, 016 | ⚪ | ☐ | ⚪ |
 | X2 | RP → GitLab trigger (fix job, automation job) | 012, 015 | ⚪ | ☐ | ⚪ |
+
+\* Types exist and the DTO fields/merge logic are implemented (`overlay.ts`), but exercising them
+end-to-end needs real AI-marked cases in a project, which needs Q-ORG-07 answered first (mock
+seeding writes to a shared dev backend). C3, G1, G2 and A3 are the same story: the shape is typed
+but nothing yet calls it, since they extend endpoints the mock doesn't own (Library filters, plan
+gate, launch test items).
 
 ---
 

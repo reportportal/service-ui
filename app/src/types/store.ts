@@ -42,6 +42,7 @@ export interface LocationQuery {
   filterStartTimeTo?: string;
   filterTestPlan?: string;
   filterCompositeAttribute?: string;
+  stage?: string; // AI Factory PoC, EPMRPP-118192 — preselects a stage card on the iteration details page
 }
 
 export interface BaseAppState {

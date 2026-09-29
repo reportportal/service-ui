@@ -15,8 +15,8 @@
 | Assignee | **Saveli_Savich@epam.com** (the script assigns the token owner by default, which is the same person; set `JIRA_ASSIGNEE` if the Jira username differs) |
 | Description | FE scope (T-ids), link to this folder, mock/BE status, notes |
 | Status flow | as in [docs/11-JIRA.md](../11-JIRA.md): In Progress → Code review (PR link in comments) → Testing |
-| Branch | from `bootcamp-prototype`: `EPMRPP-<subtask>-<short-desc>`, one per plan task |
-| PR | into `bootcamp-prototype`, title `EPMRPP-<subtask> \|\| <summary>` (repo convention, e.g. `EPMRPP-121541 \|\| Invalidate …`) |
+| Branch | from `bootcamp-prototype`: `EPMRPP-<subtask>-<short-desc>`. **In practice** (2026-09-28): while nothing under a sub-task is pushed yet, small same-sub-task tasks stack as separate commits on one branch (e.g. all of Phase 0 on `EPMRPP-121765-foundation`), so branching doesn't outrun the base before there's anything to review. Once a branch is pushed / has an open PR, the **next** task for that sub-task starts a fresh branch from `bootcamp-prototype` instead of stacking further |
+| PR | into `bootcamp-prototype`, title `EPMRPP-<subtask> \|\| <summary>` (repo convention, e.g. `EPMRPP-121541 \|\| Invalidate …`); one PR can cover several commits/tasks when they share a branch as above |
 
 ## Story → sub-task registry
 

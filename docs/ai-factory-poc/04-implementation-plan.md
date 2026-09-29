@@ -53,8 +53,13 @@ The method and the sizes (S = 8 h, M = 20 h, L = 36 h) are defined in 08.
 | T0.6 | Shared atoms: `LifecycleBadge`, `AiChip`, `ScoreChip`, `CostLabel`, `IterationStatusBadge`, `StageStatusDot/Label`, `ScoreBar`, `DeltaCell`, `usePolling` | all | M | T0.3 | component tests; light/dark via UI-kit tokens |
 | T0.7 | Permissions: `ACTIONS` + helpers (`canReviewAiTestCases`, `canManagePipelineSettings`, `canAutomateTestCases`) | 005, 012, 013 (F15) | S | — | unit tests on the matrix |
 
-**Spike first (½ day inside T0.5):** check that the overlay works on the real TMS dev backend, covering the list and details enrichment and
-the detection of scenario edits. If it fails, fall back to mode B (full mock) and log it in 06.
+**Spike outcome (2026-09-28):** the remote dev backend (`PROXY_PATH`) is reachable and `/api/info` answers as expected —
+mode A (overlay) is viable. Authenticating from a script to fetch a live `TestCase` response for a byte-for-byte
+shape check was not completed (the OAuth2 password grant needs a real browser session, not a bare curl call), so
+`overlay.ts`'s merge logic is verified with a fabricated `TestCase`-shaped fixture instead (`overlay.test.ts`) —
+built directly from the existing `types/testCase.ts`, which already reflects what the real UI parses in production.
+Actually seeding AI-marked cases into a real project, and detecting a real scenario edit, are deferred until
+Q-ORG-07 (target project/folder) is answered — see `controllers/aiFactory/mocks/README.md`.
 
 ## Phase 1 — Factory visible: Pipelines (US-002, 003, 016 view)
 

@@ -70,6 +70,8 @@ import {
   TEST_CASE_DETAILS_PAGE,
   PROJECT_MILESTONES_PAGE,
   PROJECT_TEST_PLAN_DETAILS_PAGE,
+  PROJECT_PIPELINES_PAGE,
+  PROJECT_PIPELINE_ITERATION_PAGE,
   MANUAL_LAUNCHES_PAGE,
   MANUAL_LAUNCH_DETAILS_PAGE,
   MANUAL_LAUNCH_EXECUTION_PAGE,
@@ -88,6 +90,8 @@ import { OrganizationSettingsPage } from 'pages/organization/organizationSetting
 import { OrganizationEventsPage } from 'pages/organization/organizationEventsPage';
 import { ProductVersionsPage } from 'pages/inside/productVersionsPage/productVersionsPage';
 import { TestCaseDetailsPage, TestCaseLibraryPageWrapper } from 'pages/inside/testCaseLibraryPage';
+import { PipelinesPage } from 'pages/inside/aiFactory/pipelinesPage';
+import { IterationDetailsPage } from 'pages/inside/aiFactory/iterationDetailsPage';
 
 export const ANONYMOUS_ACCESS = 'anonymous';
 export const ADMIN_ACCESS = 'admin';
@@ -239,6 +243,18 @@ export const pageRendering = {
     component: ProjectUiExtensionPage,
     layout: ProjectLayout,
     rawContent: true,
+  },
+  [PROJECT_PIPELINES_PAGE]: {
+    component: PipelinesPage,
+    layout: ProjectLayout,
+    rawContent: true,
+    isTMS: true,
+  },
+  [PROJECT_PIPELINE_ITERATION_PAGE]: {
+    component: IterationDetailsPage,
+    layout: ProjectLayout,
+    rawContent: true,
+    isTMS: true,
   },
   [TEST_CASE_LIBRARY_PAGE]: {
     component: TestCaseLibraryPageWrapper,

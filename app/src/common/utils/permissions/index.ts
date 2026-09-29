@@ -73,6 +73,11 @@ export {
   canCreateManualLaunch,
   canManageTestCases,
   canManageTestPlans,
+
+  // AI FACTORY FEATURES:
+  canReviewAiTestCases,
+  canAutomateTestCases,
+  canManagePipelineSettings,
 } from './permissions';
 
 export { getRoleTitle, getRoleBadgesData, getOrgRoleTitle } from './getRoleTitle';

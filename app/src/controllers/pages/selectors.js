@@ -73,6 +73,10 @@ export const pageSelector = (state) => pageNames[state.location.type] || NO_PAGE
 export const projectSectionSelector = (state) => payloadSelector(state).projectSection || '';
 export const querySelector = createSelector(locationSelector, (location) => location.query || {});
 
+// AI Factory PoC, EPMRPP-118192
+export const pipelineIdSelector = (state) => Number(payloadSelector(state).pipelineId) || null;
+export const iterationIdSelector = (state) => Number(payloadSelector(state).iterationId) || null;
+
 const commonPagePropertiesSelector = (query, namespace, mapping = undefined) => {
   if (!query) {
     return {};

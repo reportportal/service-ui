@@ -84,3 +84,5 @@ Owner groups: **ORG** (team or organisation, asked to the FE lead), **BA** (requ
 | 2026-09-25 | Q-ORG-02b | `[FE]` sub-tasks are created **one at a time, when the story starts** (not in advance). First one: EPMRPP-121765 under US-002 | Saveli Savich |
 | 2026-09-25 | EST | **After every task, record the hours a senior human FE developer would need** for the delivered result. All estimations live in **08-estimations.md** and nowhere else | Saveli Savich |
 | 2026-09-25 | Q-ORG-05 | Jira PAT renewed; sub-task creation via the script works | Saveli Savich |
+| 2026-09-28 | — | Mode A (overlay) confirmed viable: the remote dev backend is reachable and `/api/info` answers as expected. A live authenticated shape check needs a real browser login, not a bare script; `overlay.ts` is verified against a fixture instead — see T0.5 in 00-status and 08-estimations | Claude + Saveli |
+| 2026-09-28 | — | Seeding real AI-marked cases and detecting a live scenario edit are **deferred until Q-ORG-07 is answered** (target project/folder for a shared dev backend write) | Claude + Saveli |

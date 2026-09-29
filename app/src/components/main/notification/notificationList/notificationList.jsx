@@ -516,6 +516,10 @@ export const notificationMessages = defineMessages({
     id: 'TestCasesTags.update.deleteTagsSuccess',
     defaultMessage: 'Tags for selected test cases have been updated successfully!',
   },
+  aiFactoryPipelinesLoadingFailed: {
+    id: 'AiFactoryPipelines.loadingFailed',
+    defaultMessage: 'Failed to load pipelines. Please try again',
+  },
 });
 
 @injectIntl
