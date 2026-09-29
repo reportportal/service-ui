@@ -42,3 +42,5 @@ release/
 graphify-out
 
 .env
+.agents/
+.codex/
