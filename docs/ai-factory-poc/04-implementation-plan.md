@@ -135,11 +135,14 @@ T0.5 (mocks) and T0.6 (atoms) are prerequisites for everything, so finish them f
 
 ## Jira mapping (FE sub-task parents)
 
-| Story | Jira parent | FE tasks → one `[FE]` sub-task per story (decided), assignee Saveli_Savich@epam.com |
+Each `[FE]` sub-task is capped at **36 h (≈ 5 SP)** and assigned to Saveli_Savich@epam.com.
+Split a story or cross-cutting scope further when its estimate exceeds that ceiling.
+
+| Story | Jira parent | FE tasks / sub-task allocation |
 |-------|-------------|------------------------------------------------------------|
-| 001 | EPMRPP-121674 | T0.3, T0.5 (data model + mock backend) |
-| 002 | EPMRPP-121704 | T1.1, T1.2 (+ T0.2, T0.4, T0.6 foundation if no separate task) |
-| 003 | EPMRPP-121705 | T1.3 |
+| 001 | EPMRPP-121674 | T0.5 traceability → EPMRPP-121833 (stored as a split sibling under EPMRPP-121704) |
+| 002 | EPMRPP-121704 | T0.2–T0.4, T0.6–T0.7 → EPMRPP-121829; T0.5 → EPMRPP-121833; T1.1–T1.2 → EPMRPP-121765; T1.3 → EPMRPP-121834 |
+| 003 | EPMRPP-121705 | T1.3 traceability → EPMRPP-121834 (stored as a split sibling under EPMRPP-121704) |
 | 004 | EPMRPP-121706 | T4.3 |
 | 005 | EPMRPP-121673 | T3.4, T0.7 |
 | 006 | EPMRPP-121675 | (display covered by T1.3) — no FE sub-task unless asked |
