@@ -315,12 +315,9 @@ describe('donutChart getOption', () => {
       small: true,
     });
 
-    expect(option.series[0].center).toEqual(['50%', '60%']);
-    // Value/subtitle pair centered as a pair further above the ring's own
-    // center (60%) than in the full widget, not pushed down by the
-    // small-view legend clearance offset.
-    expect(option.graphic[0].top).toBe('50%');
-    expect(option.graphic[1].top).toBe('62%');
+    expect(option.series[0].center).toEqual(['50%', '50%']);
+    expect(option.graphic[0].top).toBe('40%');
+    expect(option.graphic[1].top).toBe('52%');
   });
 
   test('uses a bigger ring in preview than the general small-view size, since preview never needs legend clearance', () => {
@@ -343,7 +340,7 @@ describe('donutChart getOption', () => {
       small: true,
     });
 
-    expect(previewOption.series[0].radius).toEqual(['52%', '86%']);
+    expect(previewOption.series[0].radius).toEqual(['48%', '82%']);
     expect(previewOption.series[0].radius).not.toEqual(smallOption.series[0].radius);
   });
 

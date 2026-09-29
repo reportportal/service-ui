@@ -53,6 +53,7 @@ const cx = classNames.bind(styles);
 
 const LEGEND_HEIGHT = 45;
 const PRINTED_LEGEND_HEIGHT = 80;
+const ACTIONS_POPUP_Z_INDEX = 9999999;
 
 const getSelectedStatus = (statKey) => {
   if (!statKey) {
@@ -404,6 +405,7 @@ export const CumulativeTrendChart = ({
             className: cx('popup-reference'),
             style: { left: clickPositionRef.current.left, top: clickPositionRef.current.top },
           }}
+          zIndex={ACTIONS_POPUP_Z_INDEX}
         >
           <ActionsPopup items={getPopupActionItems()} />
         </VirtualPopup>
