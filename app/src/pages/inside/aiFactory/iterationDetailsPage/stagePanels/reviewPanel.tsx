@@ -18,7 +18,7 @@ import { MessageDescriptor, useIntl } from 'react-intl';
 
 import { createClassnames, formatCost } from 'common/utils';
 import { LifecycleBadge } from 'pages/inside/aiFactory/common';
-import { AiFixRoundStatus, EvaluationState, FixRoundStatus, StageRS } from 'types/aiFactory';
+import { AiFixRoundStatus, EvaluationState, FixRoundStatus, ReviewCaseSummaryRS, StageRS } from 'types/aiFactory';
 
 import { CaseLink } from './caseLink';
 import { messages } from '../messages';
@@ -36,6 +36,18 @@ const FIX_ROUND_STATUS_MESSAGE: Record<AiFixRoundStatus, MessageDescriptor> = {
 export interface ReviewPanelProps {
   stage: StageRS;
 }
+
+const evaluationCellMessage = (c: ReviewCaseSummaryRS) => {
+  if (c.fixRunning) {
+    return messages.reviewFixRunning;
+  }
+  if (!c.evaluationState) {
+    return undefined;
+  }
+  return c.evaluationState === EvaluationState.OBSOLETE
+    ? messages.reviewEvaluationObsolete
+    : messages.reviewEvaluationEvaluated;
+};
 
 export const ReviewPanel = ({ stage }: ReviewPanelProps) => {
   const { formatMessage } = useIntl();
@@ -60,29 +72,23 @@ export const ReviewPanel = ({ stage }: ReviewPanelProps) => {
           </tr>
         </thead>
         <tbody>
-          {cases.map((c) => (
-            <tr key={c.testCaseId}>
-              <td>
-                <CaseLink testCaseId={c.testCaseId} name={c.name} />
-              </td>
-              <td>
-                <LifecycleBadge lifecycle={c.lifecycle} />
-              </td>
-              <td>{c.madeReadyBy ?? ''}</td>
-              <td>{c.unsentComments}</td>
-              <td>{c.currentScore ?? ''}</td>
-              <td>
-                {c.fixRunning
-                  ? formatMessage(messages.reviewFixRunning)
-                  : c.evaluationState &&
-                    formatMessage(
-                      c.evaluationState === EvaluationState.OBSOLETE
-                        ? messages.reviewEvaluationObsolete
-                        : messages.reviewEvaluationEvaluated,
-                    )}
-              </td>
-            </tr>
-          ))}
+          {cases.map((c) => {
+            const evaluationMessage = evaluationCellMessage(c);
+            return (
+              <tr key={c.testCaseId}>
+                <td>
+                  <CaseLink testCaseId={c.testCaseId} name={c.name} />
+                </td>
+                <td>
+                  <LifecycleBadge lifecycle={c.lifecycle} />
+                </td>
+                <td>{c.madeReadyBy ?? ''}</td>
+                <td>{c.unsentComments}</td>
+                <td>{c.currentScore ?? ''}</td>
+                <td>{evaluationMessage ? formatMessage(evaluationMessage) : ''}</td>
+              </tr>
+            );
+          })}
         </tbody>
       </table>
 

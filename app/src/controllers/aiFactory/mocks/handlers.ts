@@ -52,7 +52,7 @@ import { MockCaseRecord } from './types';
 export const SIMULATED_DELAY_MS = 1500;
 
 const url = (config: AxiosRequestConfig) => config.url || '';
-const query = (config: AxiosRequestConfig) => new URL(url(config), 'http://mock').searchParams;
+const query = (config: AxiosRequestConfig) => new URL(url(config), 'https://mock').searchParams;
 const body = <T>(config: AxiosRequestConfig): T =>
   (typeof config.data === 'string' ? JSON.parse(config.data) : config.data || {}) as T;
 const notFound = (): [number, { errorCode: number; message: string }] => [404, { errorCode: 40404, message: 'Not found' }];

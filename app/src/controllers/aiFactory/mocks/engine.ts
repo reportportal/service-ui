@@ -59,7 +59,7 @@ export const getStageSeed = (iteration: MockIterationSeed, key: StageKey): MockS
 export const deriveStageStatus = (iteration: MockIterationSeed, key: StageKey): AiStageStatus => {
   if (key === StageKey.REVIEW) {
     const upload = iteration.stages.upload;
-    if (!upload || upload.status !== StageStatus.PASSED) {
+    if (upload?.status !== StageStatus.PASSED) {
       return StageStatus.PENDING;
     }
     const cases = listCasesOfIteration(iteration.id);
@@ -83,7 +83,7 @@ export const deriveIterationStatus = (pipeline: MockPipelineSeed, iteration: Moc
     return IterationStatus.COMPLETED;
   }
   const upload = iteration.stages.upload;
-  if (!upload || upload.status !== StageStatus.PASSED) {
+  if (upload?.status !== StageStatus.PASSED) {
     return IterationStatus.RUNNING;
   }
   return deriveStageStatus(iteration, StageKey.REVIEW) === StageStatus.DONE
@@ -161,8 +161,7 @@ export const applyAutoReady = (caseRecord: MockCaseRecord, settings: { autoReady
     !settings.autoReady ||
     !caseRecord.ai ||
     caseRecord.lifecycle !== Lifecycle.DRAFT ||
-    !caseRecord.evaluation ||
-    caseRecord.evaluation.state !== EvaluationState.EVALUATED ||
+    caseRecord.evaluation?.state !== EvaluationState.EVALUATED ||
     caseRecord.fixRoundRunning ||
     pendingCommentsCount(caseRecord) > 0 ||
     score === undefined ||
