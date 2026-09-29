@@ -42,8 +42,9 @@ built on mocks that follow a proposed API contract. That contract is handed to B
 - **Feature toggle is mandatory.** Everything new is behind `localStorage.show_ai_factory_poc = 'true'` (default OFF).
   **Toggle OFF = the product behaves exactly as on `develop`**: no new UI, requests, rules or mocks (see the checklist in 03 §3).
   Mocks load only when the toggle is ON, in dev builds (`localStorage.ai_factory_mocks = 'false'` disables them).
-- **Process:** branch per task from `bootcamp-prototype` → PR back into it; `[FE]` Jira sub-task per story, created when that story
-  starts and assigned to Saveli_Savich@epam.com; run locally (`npm run dev`) against the remote backend.
+- **Process:** branch per task from `bootcamp-prototype` → PR back into it; each `[FE]` Jira sub-task is capped at
+  **36 h (≈ 5 SP)**, created when needed and assigned to Saveli_Savich@epam.com; run locally (`npm run dev`)
+  against the remote backend.
 - **Every finished task gets a senior-developer hour estimate** — how long a human senior FE dev would need for the
   delivered result — written **only** to [08-estimations.md](08-estimations.md) and rolled up per phase there.
 

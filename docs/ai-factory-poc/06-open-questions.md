@@ -86,3 +86,4 @@ Owner groups: **ORG** (team or organisation, asked to the FE lead), **BA** (requ
 | 2026-09-25 | Q-ORG-05 | Jira PAT renewed; sub-task creation via the script works | Saveli Savich |
 | 2026-09-28 | — | Mode A (overlay) confirmed viable: the remote dev backend is reachable and `/api/info` answers as expected. A live authenticated shape check needs a real browser login, not a bare script; `overlay.ts` is verified against a fixture instead — see T0.5 in 00-status and 08-estimations | Claude + Saveli |
 | 2026-09-28 | — | Seeding real AI-marked cases and detecting a live scenario edit are **deferred until Q-ORG-07 is answered** (target project/folder for a shared dev backend write) | Claude + Saveli |
+| 2026-09-29 | Q-ORG-02c | Supersedes the one-sub-task-per-story granularity: every `[FE]` sub-task is capped at **36 h (≈ 5 SP)**; split stories and cross-cutting work into cohesive scopes when needed | Saveli Savich |

@@ -8,7 +8,7 @@ Without --yes the script only prints what it would create (dry run).
 Credentials are read from JIRA_ENV_FILE, or else from the first of service-ui/.env, ../prism-ui/.env.local that has a token:
   JIRA_URL, JIRA_API_TOKEN (Personal Access Token, sent as Bearer), optional JIRA_ASSIGNEE (Jira username),
   optional JIRA_SUBTASK_TYPE (default: auto-detected sub-task issue type).
-Idempotent: if the parent already has a sub-task whose summary starts with "[FE]", it is reported and nothing is created.
+Idempotent: if the parent already has a sub-task with the same full "[FE]" summary, it is reported and nothing is created.
 """
 import argparse
 import json
@@ -94,9 +94,10 @@ def main():
     fields = parent['fields']
     print('Authenticated as %s · parent %s "%s"' % (me.get('name'), args.parent, fields['summary']))
 
+    target_summary = '%s %s' % (PREFIX, args.title)
     for sub in fields.get('subtasks', []):
         summary = sub['fields']['summary']
-        if summary.startswith(PREFIX):
+        if summary == target_summary:
             print('Exists: %s "%s" [%s]' % (sub['key'], summary, sub['fields']['status']['name']))
             return
 
@@ -108,7 +109,7 @@ def main():
         'project': {'key': project_key},
         'parent': {'key': args.parent},
         'issuetype': {'name': subtask_type(env, project_key)},
-        'summary': '%s %s' % (PREFIX, args.title),
+        'summary': target_summary,
         'description': description,
         'labels': LABELS,
     }}

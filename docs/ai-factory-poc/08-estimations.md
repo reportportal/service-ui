@@ -18,6 +18,18 @@ working by hand, to produce the result that was actually delivered?** It is not 
 | When | Right after the task meets its DoD, before moving on |
 | Planned sizes | S = 8 h · M = 20 h · L = 36 h (from [04](04-implementation-plan.md)) |
 
+For Jira delivery scope, **5 SP is treated as approximately 36 hours maximum**. A larger story or
+cross-cutting scope must be split into cohesive `[FE]` sub-tasks before work continues.
+
+## Jira delivery scopes
+
+| Jira | Scope | Tasks | Actual estimate | Ceiling |
+|------|-------|-------|-----------------|---------|
+| [EPMRPP-121829](https://jiraeu.epam.com/browse/EPMRPP-121829) | Shared frontend foundation | T0.2–T0.4, T0.6–T0.7 | 27 h | ≤ 36 h |
+| [EPMRPP-121833](https://jiraeu.epam.com/browse/EPMRPP-121833) | Mock backend | T0.5 | 26 h | ≤ 36 h |
+| [EPMRPP-121765](https://jiraeu.epam.com/browse/EPMRPP-121765) | Pipelines routes and iterations list | T1.1–T1.2 | 34 h | ≤ 36 h |
+| [EPMRPP-121834](https://jiraeu.epam.com/browse/EPMRPP-121834) | Iteration details by stage | T1.3 | 30 h | ≤ 36 h |
+
 If an estimate differs from the planned size by more than ~30 %, write why in *Deviation notes*
 and re-check the remaining sizes.
 
