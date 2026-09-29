@@ -19,6 +19,7 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { CHARTS, NoDataAvailable } from 'components/widgets';
 import { SpinningPreloader } from 'components/preloaders/spinningPreloader';
+import { LAUNCH_EXECUTION_AND_ISSUE_STATISTICS } from 'common/constants/widgetTypes';
 import { WIDGETS_STATIC_PREVIEWS } from '../widgets';
 import { isWidgetDataAvailable } from '../utils';
 import styles from './widgetPreview.scss';
@@ -87,7 +88,17 @@ export class WidgetPreview extends PureComponent {
   render = () => (
     <div
       ref={this.widgetContainerRef}
-      className={cx('widget-preview', { table: !!this.getWidgetStaticPreview() }, this.props.className)}
+      className={cx(
+        'widget-preview',
+        {
+          table: !!this.getWidgetStaticPreview(),
+          // The donut ring fills most of its box, so the default top margin
+          // (meant for chart types with axes/labels needing breathing room)
+          // just eats into the little vertical space this preview has.
+          donut: this.props.widgetType === LAUNCH_EXECUTION_AND_ISSUE_STATISTICS,
+        },
+        this.props.className,
+      )}
     >
       {this.getWidgetContent()}
     </div>

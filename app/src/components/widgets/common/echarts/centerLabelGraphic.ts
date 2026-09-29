@@ -29,6 +29,12 @@ export interface CenterLabelGraphicOptions {
   subtitleColor?: string;
   /** Vertical center (0-100, as a % of the chart area) — match the pie/donut's own `center`. */
   centerY?: number;
+  /** Vertical distance (in the same 0-100 % units as `centerY`) between the value/subtitle pair and their shared center. */
+  gap?: number;
+  /** Overrides the `small`-derived font size for the value line. */
+  valueFontSize?: number;
+  /** Overrides the `small`-derived font size for the subtitle line. */
+  subtitleFontSize?: number;
 }
 
 /**
@@ -48,9 +54,10 @@ export const buildCenterLabelGraphic = ({
   valueColor = COLOR_BLACK,
   subtitleColor = DEFAULT_SUBTITLE_COLOR,
   centerY = 50,
+  gap = 4,
+  valueFontSize = small ? 15 : 25,
+  subtitleFontSize = small ? 13 : 23,
 }: CenterLabelGraphicOptions) => {
-  const valueFontSize = small ? 15 : 25;
-  const subtitleFontSize = small ? 13 : 23;
 
   const graphics = [
     {
@@ -58,7 +65,7 @@ export const buildCenterLabelGraphic = ({
       silent: true,
       z: 10,
       left: 'center',
-      top: subtitle ? `${centerY - 4}%` : `${centerY}%`,
+      top: subtitle ? `${centerY - gap}%` : `${centerY}%`,
       style: {
         text: String(value),
         fontFamily: 'sans-serif',
@@ -77,7 +84,7 @@ export const buildCenterLabelGraphic = ({
       silent: true,
       z: 10,
       left: 'center',
-      top: `${centerY + 4}%`,
+      top: `${centerY + gap}%`,
       style: {
         text: subtitle,
         fontFamily: 'sans-serif',
