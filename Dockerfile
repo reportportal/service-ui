@@ -1,6 +1,6 @@
 # Only for technical/build aims, built image will be with nginxinc/nginx-unprivileged:alpine according to the last step
 
-FROM alpine:3.20.3 AS generate-build-info
+FROM alpine:3.23.3 AS generate-build-info
 RUN mkdir -p /usr/src/app/build
 WORKDIR /usr/src
 ARG APP_VERSION=develop
@@ -15,15 +15,19 @@ COPY ./app/ /usr/src/app/
 RUN export NODE_OPTIONS="--max-old-space-size=4096"
 RUN npm ci --legacy-peer-deps && npm run build
 
-FROM nginxinc/nginx-unprivileged:alpine
+FROM nginxinc/nginx-unprivileged:1.30.4-alpine3.24
 
 USER root
+
+# Refresh OS packages in the runtime image to pick up Alpine security fixes.
+RUN apk update && apk upgrade --no-cache
 
 COPY --from=build-frontend /usr/src/app/build /usr/share/nginx/html
 COPY --from=generate-build-info /usr/src/app/build /usr/share/nginx/html
 COPY config.template.json /usr/share/nginx/html/config.template.json
 
-RUN rm /etc/nginx/conf.d/default.conf
+RUN rm /etc/nginx/conf.d/default.conf \
+    && mkdir -p /etc/nginx/extra-conf.d
 COPY nginx.conf /etc/nginx/nginx.conf.template
 
 COPY entrypoint.sh /entrypoint.sh
