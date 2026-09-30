@@ -22,9 +22,11 @@
   align-self: flex-start;
 
   // TODO: refactor this in the future, it is better to exclude empty spaces from the svg
-  svg {
+  svg,
+  img {
     width: 48px;
     height: 40px;
+    object-fit: contain;
   }
 }
 

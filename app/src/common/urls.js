@@ -347,6 +347,8 @@ export const URLS = {
   appInfoApi: () => `${urlCommonBase}info`,
   appInfoUi: () => `${uiInfoBase}info`,
 
+  grafanaSession: () => `${urlBase}integration/grafana/session`,
+
   plugin: () => `${urlBase}plugin`,
   pluginById: (pluginId) => `${urlBase}plugin/${pluginId}`,
   pluginPublic: () => `${urlBase}plugin/public`,
