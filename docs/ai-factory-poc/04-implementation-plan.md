@@ -69,7 +69,7 @@ Q-ORG-07 (target project/folder) is answered — see `controllers/aiFactory/mock
 | T1.2 | Iterations list: collapsible pipeline groups (header meta, Auto-Ready ON ≥ T), iteration cards (status, outcome, meta, stage chips, attribute chips), search, Refresh, "No iterations match", empty state, entry points for Compare and Settings | 002, 016 | L | T1.1, T0.6 | prototype walkthrough step 1 reproduced |
 | T1.3 | Iteration details: header + KPIs + actions, status banner (+ Open review queue deep link), stage cards (default Grade / Develop), panels Create / Grade (expandable reasons) / Upload / Review (+ fix-rounds table) / automation per-case panels (Prepare note, Skipped), token usage, polling while running | 003, 006 (display), 016 | L | T1.2 | walkthrough steps 2–4 reproduced; running gen #3 updates by polling |
 | **T1.2u** ⬜ | **Rework (not started, needs go-ahead):** Pipeline group header shows **"Not connected to CI" / "CI connection failed"** (depends on T3.6 landing first) | 002, 019 | S | T1.2, T3.6 | see 01 §3a G1 |
-| **T1.3u** ⬜ | **Rework (not started, needs go-ahead):** status banner wording for Completed/Running(names the stage)/Failed; Review panel polls while `IN_REVIEW` too, not only `RUNNING`; Create panel gets per-case status/duration (+ `StageRS.create` type field); fix-round result wording incl. **Auto-Ready** outcome and "Failed — Test Case not found"; Upload result wording alignment | 003 | S | T1.3 | see 01 §3a G2–G6; full diff table there |
+| **T1.3u** ✅ | **Rework, done:** status banner wording for Completed/Running(names the stage)/Failed; Review panel polls while `IN_REVIEW` too, not only `RUNNING`; Create panel gets per-case status/duration + CI job/duration footer; fix-round result wording incl. **Auto-Ready** outcome; Upload result wording alignment | 003 | S | T1.3 | see 01 §3a G2–G6; full diff table there. EPMRPP-121977, branch `EPMRPP-121977-iteration-details-rework` |
 
 ## Phase 2 — Cases in the Library (US-007, 008, 009, 010)
 
@@ -153,7 +153,7 @@ Split a story or cross-cutting scope further when its estimate exceeds that ceil
 |-------|-------------|------------------------------------------------------------|
 | 001 | EPMRPP-121674 | T0.5 traceability → EPMRPP-121833 (stored as a split sibling under EPMRPP-121704) |
 | 002 | EPMRPP-121704 | T0.2–T0.4, T0.6–T0.7 → EPMRPP-121829; T0.5 → EPMRPP-121833; T1.1–T1.2 → EPMRPP-121765; T1.3 → EPMRPP-121834 |
-| 003 | EPMRPP-121705 | T1.3 traceability → EPMRPP-121834 (stored as a split sibling under EPMRPP-121704) |
+| 003 | EPMRPP-121705 | T1.3 traceability → EPMRPP-121834 (stored as a split sibling under EPMRPP-121704); T1.3u → EPMRPP-121977 |
 | 004 | EPMRPP-121706 | T4.3 |
 | 005 | EPMRPP-121673 | T3.4, T0.7 |
 | 006 | EPMRPP-121675 | (display covered by T1.3) — no FE sub-task unless asked |

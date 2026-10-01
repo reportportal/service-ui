@@ -29,6 +29,7 @@ cross-cutting scope must be split into cohesive `[FE]` sub-tasks before work con
 | [EPMRPP-121833](https://jiraeu.epam.com/browse/EPMRPP-121833) | Mock backend | T0.5 | 26 h | ≤ 36 h |
 | [EPMRPP-121765](https://jiraeu.epam.com/browse/EPMRPP-121765) | Pipelines routes and iterations list | T1.1–T1.2 | 34 h | ≤ 36 h |
 | [EPMRPP-121834](https://jiraeu.epam.com/browse/EPMRPP-121834) | Iteration details by stage | T1.3 | 30 h | ≤ 36 h |
+| [EPMRPP-121977](https://jiraeu.epam.com/browse/EPMRPP-121977) | Iteration details rework (2026-09-29 audit) | T1.3u | 6 h | ≤ 36 h |
 
 If an estimate differs from the planned size by more than ~30 %, write why in *Deviation notes*
 and re-check the remaining sizes.
@@ -50,7 +51,7 @@ Filled in as tasks complete. `—` = not done yet.
 | T1.2 | Iterations list | 1 | L (36) | **20** | 3 | 13 | 4 | 2026-09-28 |
 | T1.3 | Iteration details + stage panels | 1 | L (36) | **30** | 4 | 21 | 5 | 2026-09-28 |
 | T1.2u | Rework: CI-connection badge on the pipeline group header | 1 | S (8) | — | | | | |
-| T1.3u | Rework: banner wording, live-polling fix, Create panel columns, fix-round/upload wording | 1 | S (8) | — | | | | |
+| T1.3u | Rework: banner wording, live-polling fix, Create panel columns, fix-round/upload wording | 1 | S (8) | **6** | 1 | 4 | 1 | 2026-10-01 |
 | T2.1 | Lifecycle display + history + toast | 2 | M (20) | — | | | | |
 | T2.2 | Library columns + AI chip + flags | 2 | M (20) | — | | | | |
 | T2.3 | Quick filters + Review queue + iteration chip | 2 | M (20) | — | | | | |
@@ -84,13 +85,13 @@ Filled in as tasks complete. `—` = not done yet.
 | Phase | Tasks | Planned (h) | Actual so far (h) | Done / total | Δ |
 |-------|-------|-------------|-------------------|--------------|---|
 | 0 · Foundation | T0.2–T0.7 (+T0.1 planning) | 88 (+20 planning) | 73 | 7 / 7 | T0.2 −5 h, T0.4 −6 h, T0.5 −10 h, T0.6 −6 h, T0.7 −5 h, T0.3 ≈ planned (see deviation notes) |
-| 1 · Pipelines | T1.1–T1.3, **T1.2u, T1.3u** | 108 | 64 | 3 / 5 | T1.1 −6 h, T1.2 −16 h, T1.3 −6 h; T1.2u/T1.3u new (audit 2026-09-29), not started |
+| 1 · Pipelines | T1.1–T1.3, **T1.2u, T1.3u** | 108 | 70 | 4 / 5 | T1.1 −6 h, T1.2 −16 h, T1.3 −6 h, T1.3u −2 h; T1.2u still not started, blocked on T3.6 |
 | 2 · Library | T2.1–T2.6 | 108 | 0 | 0 / 6 | — |
 | 3 · Review loop | T3.1–T3.4, **T3.6** | 120 | 0 | 0 / 5 | T3.6 new (audit 2026-09-29, US-019) |
 | 4 · Gate & compare | T4.1–T4.3, **T4.4** | 80 | 0 | 0 / 4 | T4.4 new (audit 2026-09-29, US-020) |
 | 5 · Automation | T5.1–T5.4 | 56 | 0 | 0 / 4 | — |
 | 6 · Hardening | T6.1–T6.5, **T6.6** | 48 | 0 | 0 / 6 | T6.6 new (audit 2026-09-29, US-018 FE-owned slice) |
-| **Total** | | **608 h + 20 h planning = 628 h** | **137** | 10 / 37 | — |
+| **Total** | | **608 h + 20 h planning = 628 h** | **143** | 11 / 37 | — |
 
 **628 h ≈ 78,5 working days ≈ 15,7 working weeks** for one developer at 8 h/day. The jump from 564 h is
 the 2026-09-29 audit's 3 new stories (018/019/020) plus the two not-yet-started rework tasks it surfaced

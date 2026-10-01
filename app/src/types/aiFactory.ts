@@ -312,7 +312,16 @@ export interface StageRS extends StageSummaryRS {
   durationMs?: number;
   ciJob?: CiLinkRS;
   tokens: TokenUsageRS[]; // per model
-  create?: { cases: { name: string; priority: string; testCaseId?: number; displayId?: string }[] };
+  create?: {
+    cases: {
+      name: string;
+      priority: string;
+      testCaseId?: number;
+      displayId?: string;
+      status?: AiStageStatus;
+      durationMs?: number;
+    }[];
+  };
   grade?: GradeDocumentRS;
   upload?: { results: UploadCaseResultRS[]; threshold: number };
   review?: { cases: ReviewCaseSummaryRS[]; fixRounds: FixRoundRS[] };

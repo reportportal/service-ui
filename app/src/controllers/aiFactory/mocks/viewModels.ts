@@ -28,6 +28,7 @@ import {
   ReviewCaseSummaryRS,
   StageKey,
   StageRS,
+  StageStatus,
   StageSummaryRS,
   TestCaseAiExtension,
   TestCaseAiRS,
@@ -127,10 +128,24 @@ const toStageRS = (pipeline: MockPipelineSeed, iteration: MockIterationSeed, key
   const seed = getStageSeed(iteration, key);
   const summary = stageSummary(iteration, key);
   const cases = listCasesOfIteration(iteration.id);
-  const base: StageRS = { ...summary, startedAt: iteration.startedAt, durationMs: seed?.durationMs, tokens: seed?.tokens || [] };
+  const base: StageRS = {
+    ...summary,
+    startedAt: iteration.startedAt,
+    durationMs: seed?.durationMs,
+    ciJob: iteration.ciPipeline,
+    tokens: seed?.tokens || [],
+  };
   if (key === StageKey.CREATE && cases.length) {
+    const perCaseDurationMs = seed?.durationMs ? Math.round(seed.durationMs / cases.length) : undefined;
     base.create = {
-      cases: cases.map((c) => ({ name: c.displayId, priority: c.priority, testCaseId: c.id, displayId: c.displayId })),
+      cases: cases.map((c) => ({
+        name: c.displayId,
+        priority: c.priority,
+        testCaseId: c.id,
+        displayId: c.displayId,
+        status: StageStatus.PASSED,
+        durationMs: perCaseDurationMs,
+      })),
     };
   }
   if (key === StageKey.GRADE && seed) {
