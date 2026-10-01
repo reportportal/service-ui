@@ -44,8 +44,8 @@ Owner groups: **ORG** (team or organisation, asked to the FE lead), **BA** (requ
 | Q-BE-06 | Is the "What the agent changed" snapshot stored by the BE (before / after scenario)? | Yes, `lastAgentChange` in C2 |
 | Q-BE-07 | Do batch add-to-plan / add-to-launch return a `skipped` part for Draft cases? | FE pre-filters; the BE rejects |
 | Q-BE-08 | Mapping from the automation `testCaseId` (string) → Library numeric id for Launch links | `tmsTestCase` on the test item (A3) |
-| Q-BE-09 | F11: is the feature flag a server feature, a project attribute or nullable fields? | A localStorage toggle on the FE for now; only `featureFlag.ts` changes when the BE decides |
-| Q-BE-10 | F15: how does "Project Manager and above" map onto the current roles (org MANAGER / project MEMBER + EDITOR / VIEWER / ADMIN)? | Settings: ADMIN + org MANAGER; review actions: same as `MANAGE_TEST_CASES` |
+| ~~Q-BE-09~~ | ~~F11: is the feature flag a server feature, a project attribute or nullable fields?~~ → **resolved 2026-09-29** via D14: UI flag OFF by default, switched by an Administrator, backend additive | — |
+| ~~Q-BE-10~~ | ~~F15: how does "Project Manager and above" map onto the current roles?~~ → **resolved 2026-09-29** via D15: Editor — review actions; Organization Manager/Administrator — Pipeline settings, CI connection, Re-run/Retry. Matches T0.7 exactly | — |
 
 ## FE: our own decisions (defaults applied, revisit if needed)
 
@@ -87,3 +87,4 @@ Owner groups: **ORG** (team or organisation, asked to the FE lead), **BA** (requ
 | 2026-09-28 | — | Mode A (overlay) confirmed viable: the remote dev backend is reachable and `/api/info` answers as expected. A live authenticated shape check needs a real browser login, not a bare script; `overlay.ts` is verified against a fixture instead — see T0.5 in 00-status and 08-estimations | Claude + Saveli |
 | 2026-09-28 | — | Seeding real AI-marked cases and detecting a live scenario edit are **deferred until Q-ORG-07 is answered** (target project/folder for a shared dev backend write) | Claude + Saveli |
 | 2026-09-29 | Q-ORG-02c | Supersedes the one-sub-task-per-story granularity: every `[FE]` sub-task is capped at **36 h (≈ 5 SP)**; split stories and cross-cutting work into cohesive scopes when needed | Saveli Savich |
+| 2026-09-29 | D11–D19 | Requirements audit accepted: iteration-per-folder upload (D11), fix-round case identity by Library id (D12), automation Launch/MR semantics (D13), AI Factory flag = D14 (resolves Q-BE-09), roles = D15 (resolves Q-BE-10), all 20 stories in scope incl. 3 new ones — 018 NFR, 019 Connect pipeline to CI, 020 Re-run/Retry (D16), pipeline-as-entity BE modelling (D17), retry-inside-Create (D18), Re-run/Retry scope (D19). Full detail + FE-impact table: [01 §3a](01-knowledge-base.md#3a-requirements-audit-update-2026-09-29--supersedes-nothing-above-adds-to-it). New rework tasks T1.2u/T1.3u logged in 04, **not implemented — pending go-ahead** | audit (Claude, requested by Anatolii Fedosik) |

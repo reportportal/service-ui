@@ -49,6 +49,8 @@ Filled in as tasks complete. `—` = not done yet.
 | T1.1 | Routes + sidebar + pipelines controller | 1 | M (20) | **14** | 3 | 9 | 2 | 2026-09-28 |
 | T1.2 | Iterations list | 1 | L (36) | **20** | 3 | 13 | 4 | 2026-09-28 |
 | T1.3 | Iteration details + stage panels | 1 | L (36) | **30** | 4 | 21 | 5 | 2026-09-28 |
+| T1.2u | Rework: CI-connection badge on the pipeline group header | 1 | S (8) | — | | | | |
+| T1.3u | Rework: banner wording, live-polling fix, Create panel columns, fix-round/upload wording | 1 | S (8) | — | | | | |
 | T2.1 | Lifecycle display + history + toast | 2 | M (20) | — | | | | |
 | T2.2 | Library columns + AI chip + flags | 2 | M (20) | — | | | | |
 | T2.3 | Quick filters + Review queue + iteration chip | 2 | M (20) | — | | | | |
@@ -59,9 +61,11 @@ Filled in as tasks complete. `—` = not done yet.
 | T3.2 | Approve / Mark as ready (+ bulk, Edit Scenario) | 3 | M (20) | — | | | | |
 | T3.3 | Push to agent + fix round states + diff modal | 3 | L (36) | — | | | | |
 | T3.4 | Pipeline settings modal | 3 | S (8) | — | | | | |
+| T3.6 | CI connection section in Pipeline settings | 3 | M (20) | — | | | | |
 | T4.1 | Ready-only gate + In plan · Launch blocked | 4 | M (20) | — | | | | |
 | T4.2 | Test Plan page launch-blocked banner | 4 | M (20) | — | | | | |
 | T4.3 | Compare iterations | 4 | M (20) | — | | | | |
+| T4.4 | Re-run iteration + Retry failed stage | 4 | M (20) | — | | | | |
 | T5.1 | Automate action + Send to automation dialog | 5 | M (20) | — | | | | |
 | T5.2 | Automation iteration progress | 5 | S (8) | — | | | | |
 | T5.3 | Automation section on case | 5 | S (8) | — | | | | |
@@ -71,6 +75,7 @@ Filled in as tasks complete. `—` = not done yet.
 | T6.3 | i18n, a11y, responsive | 6 | S (8) | — | | | | |
 | T6.4 | Demo rehearsal (parity checklist) | 6 | S (8) | — | | | | |
 | T6.5 | Toggle-OFF regression pass | 6 | S (8) | — | | | | |
+| T6.6 | NFR pass (FE-owned items from US-018) | 6 | S (8) | — | | | | |
 
 ## Phase roll-up
 
@@ -79,15 +84,17 @@ Filled in as tasks complete. `—` = not done yet.
 | Phase | Tasks | Planned (h) | Actual so far (h) | Done / total | Δ |
 |-------|-------|-------------|-------------------|--------------|---|
 | 0 · Foundation | T0.2–T0.7 (+T0.1 planning) | 88 (+20 planning) | 73 | 7 / 7 | T0.2 −5 h, T0.4 −6 h, T0.5 −10 h, T0.6 −6 h, T0.7 −5 h, T0.3 ≈ planned (see deviation notes) |
-| 1 · Pipelines | T1.1–T1.3 | 92 | 64 | 3 / 3 | T1.1 −6 h, T1.2 −16 h, T1.3 −6 h |
+| 1 · Pipelines | T1.1–T1.3, **T1.2u, T1.3u** | 108 | 64 | 3 / 5 | T1.1 −6 h, T1.2 −16 h, T1.3 −6 h; T1.2u/T1.3u new (audit 2026-09-29), not started |
 | 2 · Library | T2.1–T2.6 | 108 | 0 | 0 / 6 | — |
-| 3 · Review loop | T3.1–T3.4 | 100 | 0 | 0 / 4 | — |
-| 4 · Gate & compare | T4.1–T4.3 | 60 | 0 | 0 / 3 | — |
+| 3 · Review loop | T3.1–T3.4, **T3.6** | 120 | 0 | 0 / 5 | T3.6 new (audit 2026-09-29, US-019) |
+| 4 · Gate & compare | T4.1–T4.3, **T4.4** | 80 | 0 | 0 / 4 | T4.4 new (audit 2026-09-29, US-020) |
 | 5 · Automation | T5.1–T5.4 | 56 | 0 | 0 / 4 | — |
-| 6 · Hardening | T6.1–T6.5 | 40 | 0 | 0 / 5 | — |
-| **Total** | | **544 h + 20 h planning = 564 h** | **137** | 10 / 32 | — |
+| 6 · Hardening | T6.1–T6.5, **T6.6** | 48 | 0 | 0 / 6 | T6.6 new (audit 2026-09-29, US-018 FE-owned slice) |
+| **Total** | | **608 h + 20 h planning = 628 h** | **137** | 10 / 37 | — |
 
-**564 h ≈ 70,5 working days ≈ 14 working weeks** for one developer at 8 h/day.
+**628 h ≈ 78,5 working days ≈ 15,7 working weeks** for one developer at 8 h/day. The jump from 564 h is
+the 2026-09-29 audit's 3 new stories (018/019/020) plus the two not-yet-started rework tasks it surfaced
+on already-shipped work (T1.2u, T1.3u) — see [01 §3a](01-knowledge-base.md#3a-requirements-audit-update-2026-09-29--supersedes-nothing-above-adds-to-it).
 This prices every task at its nominal size, so it is the pessimistic end; the earlier
 headline of 9–11 weeks assumed a faster pace on the small tasks. Re-check after phase 1 and,
 if the trend holds, apply the scope cut list in the [README](README.md#scope-cut-list-if-the-demo-date-is-tight).
