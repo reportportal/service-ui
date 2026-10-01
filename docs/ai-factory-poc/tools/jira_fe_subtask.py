@@ -57,6 +57,36 @@ def request(env, method, path, body=None, allow_error=False):
         sys.exit('Jira %s %s -> HTTP %s: %s' % (method, path, err.code, err.read().decode('utf-8')[:500]))
 
 
+def load_credentials():
+    env_files = [os.environ['JIRA_ENV_FILE']] if os.environ.get('JIRA_ENV_FILE') else DEFAULT_ENV_FILES
+    env = {}
+    for path in env_files:
+        env = load_env(path)
+        if env.get('JIRA_API_TOKEN'):
+            break
+    if not env.get('JIRA_URL') or not env.get('JIRA_API_TOKEN'):
+        sys.exit('JIRA_URL / JIRA_API_TOKEN not found (env file or environment)')
+    return env
+
+
+def read_description(desc_arg, parent):
+    """Reads --desc from disk, restricted to inside the repo (no arbitrary/absolute paths —
+    this script can be invoked by an AI agent, whose arguments must not be trusted to read
+    whatever file a crafted prompt points it at)."""
+    if not desc_arg:
+        return (
+            'Frontend part of %s.\n\nPlan and status: service-ui `docs/ai-factory-poc/` (00-status.md, 04-implementation-plan.md).'
+            % parent)
+    allowed_root = os.path.realpath(REPO_ROOT)
+    desc_path = os.path.realpath(os.path.join(allowed_root, desc_arg))
+    if os.path.commonpath([allowed_root, desc_path]) != allowed_root:
+        sys.exit('--desc must be a file inside the repository: %s' % desc_arg)
+    if not os.path.isfile(desc_path):
+        sys.exit('--desc file not found: %s' % desc_arg)
+    with open(desc_path, encoding='utf-8') as handle:
+        return handle.read()
+
+
 def subtask_type(env, project_key):
     if env.get('JIRA_SUBTASK_TYPE'):
         return env['JIRA_SUBTASK_TYPE']
@@ -80,14 +110,7 @@ def main():
     parser.add_argument('--yes', action='store_true', help='Actually create the issue (default: dry run)')
     args = parser.parse_args()
 
-    env_files = [os.environ['JIRA_ENV_FILE']] if os.environ.get('JIRA_ENV_FILE') else DEFAULT_ENV_FILES
-    env = {}
-    for path in env_files:
-        env = load_env(path)
-        if env.get('JIRA_API_TOKEN'):
-            break
-    if not env.get('JIRA_URL') or not env.get('JIRA_API_TOKEN'):
-        sys.exit('JIRA_URL / JIRA_API_TOKEN not found (env file or environment)')
+    env = load_credentials()
 
     me = request(env, 'GET', '/rest/api/2/myself')
     parent = request(env, 'GET', '/rest/api/2/issue/%s?fields=summary,project,subtasks' % args.parent)
@@ -102,16 +125,7 @@ def main():
             return
 
     project_key = fields['project']['key']
-    if args.desc:
-        desc_path = os.path.realpath(args.desc)
-        if not os.path.isfile(desc_path):
-            sys.exit('--desc file not found: %s' % args.desc)
-        with open(desc_path, encoding='utf-8') as handle:
-            description = handle.read()
-    else:
-        description = (
-            'Frontend part of %s.\n\nPlan and status: service-ui `docs/ai-factory-poc/` (00-status.md, 04-implementation-plan.md).'
-            % args.parent)
+    description = read_description(args.desc, args.parent)
     payload = {'fields': {
         'project': {'key': project_key},
         'parent': {'key': args.parent},
