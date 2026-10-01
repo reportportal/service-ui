@@ -102,9 +102,16 @@ def main():
             return
 
     project_key = fields['project']['key']
-    description = open(args.desc, encoding='utf-8').read() if args.desc else (
-        'Frontend part of %s.\n\nPlan and status: service-ui `docs/ai-factory-poc/` (00-status.md, 04-implementation-plan.md).'
-        % args.parent)
+    if args.desc:
+        desc_path = os.path.realpath(args.desc)
+        if not os.path.isfile(desc_path):
+            sys.exit('--desc file not found: %s' % args.desc)
+        with open(desc_path, encoding='utf-8') as handle:
+            description = handle.read()
+    else:
+        description = (
+            'Frontend part of %s.\n\nPlan and status: service-ui `docs/ai-factory-poc/` (00-status.md, 04-implementation-plan.md).'
+            % args.parent)
     payload = {'fields': {
         'project': {'key': project_key},
         'parent': {'key': args.parent},
