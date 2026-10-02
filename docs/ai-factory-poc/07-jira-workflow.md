@@ -32,7 +32,7 @@ Keep this in sync with 00-status (the status file is the source of truth for pro
 | 006 | EPMRPP-121675 | — | (no FE sub-task by default) |
 | 007 | EPMRPP-121676 | **[EPMRPP-121982](https://jiraeu.epam.com/browse/EPMRPP-121982)** 🟨 | `[FE] Draft/Ready lifecycle display and history` (T2.1) |
 | 008 | EPMRPP-121677 | **[EPMRPP-121987](https://jiraeu.epam.com/browse/EPMRPP-121987)** 🟨 · **[EPMRPP-122016](https://jiraeu.epam.com/browse/EPMRPP-122016)** 🟨 | `[FE] Library AI quality columns and row flags` (T2.2) · `[FE] Library quick filters and review queue` (T2.3) |
-| 009 | EPMRPP-121678 | — | `[FE] AI evaluation panel` |
+| 009 | EPMRPP-121678 | **[EPMRPP-122022](https://jiraeu.epam.com/browse/EPMRPP-122022)** 🟨 | `[FE] AI evaluation panel` (T2.5) |
 | 010 | EPMRPP-121679 | — | `[FE] Generation cost and iteration links` |
 | 011 | EPMRPP-121681 | — | `[FE] Review comments on steps` |
 | 012 | EPMRPP-121703 | — | `[FE] Push review comments to agent` |

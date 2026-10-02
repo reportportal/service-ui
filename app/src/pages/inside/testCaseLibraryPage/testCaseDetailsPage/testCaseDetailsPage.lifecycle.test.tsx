@@ -21,7 +21,8 @@ import { useAiFactoryEnabled } from 'controllers/aiFactory';
 import { projectKeySelector } from 'controllers/project';
 import { isLoadingTestCaseDetailsSelector, testCaseDetailsSelector } from 'controllers/testCase';
 import { useUserPermissions } from 'hooks/useUserPermissions';
-import { LifecycleHistory } from 'pages/inside/aiFactory/lifecycle';
+import { LifecycleHistory, useTestCaseAi } from 'pages/inside/aiFactory/lifecycle';
+import { EvaluationPanel } from 'pages/inside/aiFactory/evaluation';
 import { useAddTestCasesToTestPlanModal } from 'pages/inside/testCaseLibraryPage/addTestCasesToTestPlanModal/useAddTestCasesToTestPlanModal';
 import { Lifecycle } from 'types/aiFactory';
 import type { ExtendedTestCase } from 'types/testCase';
@@ -51,7 +52,10 @@ jest.mock('react-intl', () => ({
 jest.mock('react-redux', () => ({ useSelector: jest.fn() }));
 jest.mock('react-tracking', () => ({ useTracking: () => ({ trackEvent: jest.fn() }) }));
 jest.mock('common/utils', () => ({
-  createClassnames: () => (...classNames: string[]) => classNames.filter(Boolean).join(' '),
+  createClassnames:
+    () =>
+    (...classNames: string[]) =>
+      classNames.filter(Boolean).join(' '),
 }));
 jest.mock('components/collapsibleSection', () => ({
   CollapsibleSectionWithHeaderControl: 'CollapsibleSectionWithHeaderControl',
@@ -67,8 +71,12 @@ jest.mock('controllers/testCase', () => ({
   isLoadingTestCaseDetailsSelector: jest.fn(),
   testCaseDetailsSelector: jest.fn(),
 }));
+jest.mock('pages/inside/aiFactory/evaluation', () => ({ EvaluationPanel: 'EvaluationPanel' }));
 jest.mock('hooks/useUserPermissions', () => ({ useUserPermissions: jest.fn() }));
-jest.mock('pages/inside/aiFactory/lifecycle', () => ({ LifecycleHistory: 'LifecycleHistory' }));
+jest.mock('pages/inside/aiFactory/lifecycle', () => ({
+  LifecycleHistory: 'LifecycleHistory',
+  useTestCaseAi: jest.fn(),
+}));
 jest.mock('pages/inside/common/attachmentsWithSlider', () => ({
   AttachmentsWithSlider: 'AttachmentsWithSlider',
 }));
@@ -124,6 +132,12 @@ const renderPage = (isEnabled: boolean) => {
   } as ReturnType<typeof useUserPermissions>);
   jest.mocked(useAddTestCasesToTestPlanModal).mockReturnValue({ openModal: jest.fn() });
   jest.mocked(useDescriptionModal).mockReturnValue({ openModal: jest.fn() });
+  jest.mocked(useTestCaseAi).mockReturnValue({
+    data: null,
+    isLoading: false,
+    isError: false,
+    reload: jest.fn(),
+  });
   jest.mocked(useTestCaseTags).mockReturnValue({
     addTag: jest.fn(() => Promise.resolve()),
     removeTag: jest.fn(() => Promise.resolve()),
@@ -151,15 +165,32 @@ describe('TestCaseDetailsPage lifecycle history', () => {
     expect(wrapper.find(LifecycleHistory)).toHaveLength(0);
   });
 
+  test('shares one AI details request between evaluation and lifecycle history', () => {
+    selectedTestCase = {
+      ...testCase,
+      ai: {
+        generatedByIteration: { pipelineId: 1, iterationId: 101, number: 1 },
+        modifiedByAgent: false,
+        factoryKey: 'REQ-1::Lifecycle case',
+      },
+    };
+
+    const wrapper = renderPage(true);
+
+    expect(useTestCaseAi).toHaveBeenCalledWith('demo', 42, true, 100);
+    expect(wrapper.find(EvaluationPanel)).toHaveLength(1);
+    expect(wrapper.find(EvaluationPanel).prop('aiDetailsState')).toBe(
+      wrapper.find(LifecycleHistory).prop('aiDetailsState'),
+    );
+  });
+
   test('remounts History when updatedAt changes while lifecycle stays Draft', () => {
     const wrapper = renderPage(true);
     const initialHistory = wrapper.find(LifecycleHistory) as unknown as LifecycleHistoryWrapper;
 
     expect(initialHistory.key()).toBe('42-DRAFT-100');
     expect(initialHistory.props()).toMatchObject({
-      projectKey: 'demo',
-      testCaseId: 42,
-      isEnabled: true,
+      aiDetailsState: expect.objectContaining({ data: null, isLoading: false, isError: false }),
     });
 
     selectedTestCase = { ...testCase, updatedAt: 200 };
@@ -167,5 +198,6 @@ describe('TestCaseDetailsPage lifecycle history', () => {
     const refreshedHistory = wrapper.find(LifecycleHistory) as unknown as LifecycleHistoryWrapper;
 
     expect(refreshedHistory.key()).toBe('42-DRAFT-200');
+    expect(useTestCaseAi).toHaveBeenLastCalledWith('demo', 42, true, 200);
   });
 });
