@@ -15,7 +15,7 @@
  */
 
 import { IterationRS, IterationStatus, Lifecycle, PipelineType, StageKey, StageStatus } from 'types/aiFactory';
-import { buildKpis, defaultStageKey, draftCasesCount, failedStage } from './iterationDetailsUtils';
+import { buildKpis, defaultStageKey, draftCasesCount, failedStage, runningStage } from './iterationDetailsUtils';
 
 const baseIteration: IterationRS = {
   id: 101,
@@ -115,5 +115,21 @@ describe('failedStage', () => {
       ),
     };
     expect(failedStage(gradeFailed)).toBeUndefined();
+  });
+});
+
+describe('runningStage', () => {
+  test('finds the stage currently Running or In progress — names it in the Running banner (01 §3a G2)', () => {
+    const running = {
+      ...baseIteration,
+      stages: baseIteration.stages.map((s) =>
+        s.key === StageKey.GRADE ? { ...s, status: StageStatus.RUNNING } : s,
+      ),
+    };
+    expect(runningStage(running)?.key).toBe(StageKey.GRADE);
+  });
+
+  test('is undefined when no stage is running', () => {
+    expect(runningStage(baseIteration)).toBeUndefined();
   });
 });

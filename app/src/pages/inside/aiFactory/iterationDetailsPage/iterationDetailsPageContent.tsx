@@ -41,7 +41,7 @@ import { projectNameSelector } from 'controllers/project';
 import { SettingsLayout } from 'layouts/settingsLayout';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
 import { SpinningPreloader } from 'components/preloaders/spinningPreloader';
-import { usePolling } from 'pages/inside/aiFactory/common';
+import { STAGE_LABEL_MESSAGE, usePolling } from 'pages/inside/aiFactory/common';
 import { ProjectDetails } from 'pages/organization/constants';
 import { AiStageKey, IterationStatus, StageKey } from 'types/aiFactory';
 
@@ -49,7 +49,7 @@ import { PageHeaderWithBreadcrumbsAndActions } from '../../common/pageHeaderWith
 import { KpiTile } from './kpiTile';
 import { StageCards } from './stageCards';
 import { StagePanels } from './stagePanels';
-import { buildKpis, defaultStageKey, draftCasesCount, failedStage } from './iterationDetailsUtils';
+import { buildKpis, defaultStageKey, draftCasesCount, runningStage } from './iterationDetailsUtils';
 import { messages } from './messages';
 import styles from './iterationDetailsPage.scss';
 
@@ -100,7 +100,7 @@ export const IterationDetailsPageContent = () => {
   usePolling(
     () => dispatch(getPipelineIterationDetailsAction(pipelineId, iterationId)),
     ITERATION_POLL_INTERVAL_MS,
-    iteration?.status === IterationStatus.RUNNING,
+    iteration?.status === IterationStatus.RUNNING || iteration?.status === IterationStatus.IN_REVIEW,
   );
 
   const breadcrumbDescriptors = [
@@ -126,36 +126,44 @@ export const IterationDetailsPageContent = () => {
     if (!iteration) {
       return null;
     }
-    if (iteration.status === IterationStatus.RUNNING) {
-      return <SystemMessage mode="info">{formatMessage(messages.bannerRunning)}</SystemMessage>;
+    switch (iteration.status) {
+      case IterationStatus.RUNNING: {
+        const running = runningStage(iteration);
+        return (
+          <SystemMessage mode="info">
+            {running
+              ? formatMessage(messages.bannerRunningStage, {
+                  stage: formatMessage(STAGE_LABEL_MESSAGE[running.key]),
+                })
+              : formatMessage(messages.bannerRunning)}
+          </SystemMessage>
+        );
+      }
+      case IterationStatus.COMPLETED:
+        return <SystemMessage mode="info">{formatMessage(messages.bannerCompleted)}</SystemMessage>;
+      case IterationStatus.IN_REVIEW: {
+        const draftCount = draftCasesCount(iteration);
+        return (
+          <SystemMessage mode="info">
+            {formatMessage(messages.bannerInReview, { count: draftCount })}
+            {' · '}
+            <Link
+              to={{
+                type: TEST_CASE_LIBRARY_PAGE,
+                payload: { organizationSlug, projectSlug },
+                query: { lifecycle: 'DRAFT', ai: 'AI', iteration: String(iteration.id) },
+              }}
+            >
+              {formatMessage(messages.openReviewQueue)}
+            </Link>
+          </SystemMessage>
+        );
+      }
+      case IterationStatus.FAILED:
+        return <SystemMessage mode="error">{formatMessage(messages.bannerFailedGeneric)}</SystemMessage>;
+      default:
+        return null;
     }
-    if (iteration.status === IterationStatus.IN_REVIEW) {
-      const draftCount = draftCasesCount(iteration);
-      return (
-        <SystemMessage mode="info">
-          {formatMessage(messages.bannerInReview, { count: draftCount })}
-          {' · '}
-          <Link
-            to={{
-              type: TEST_CASE_LIBRARY_PAGE,
-              payload: { organizationSlug, projectSlug },
-              query: { lifecycle: 'DRAFT', ai: 'AI', iteration: String(iteration.id) },
-            }}
-          >
-            {formatMessage(messages.openReviewQueue)}
-          </Link>
-        </SystemMessage>
-      );
-    }
-    if (iteration.status === IterationStatus.FAILED) {
-      const failing = failedStage(iteration);
-      return (
-        <SystemMessage mode="error">
-          {failing?.failureReason || formatMessage(messages.bannerFailedGeneric)}
-        </SystemMessage>
-      );
-    }
-    return null;
   };
 
   if (isLoading && !iteration) {

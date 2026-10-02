@@ -68,6 +68,8 @@ Q-ORG-07 (target project/folder) is answered — see `controllers/aiFactory/mock
 | T1.1 | Routes + sidebar item **Pipelines** + page shell + `controllers/aiFactory/pipelines` (saga, reducer, selectors) | 002 | M | T0.2, T0.4, T0.5 | the route loads data; the item is hidden when the flag is off |
 | T1.2 | Iterations list: collapsible pipeline groups (header meta, Auto-Ready ON ≥ T), iteration cards (status, outcome, meta, stage chips, attribute chips), search, Refresh, "No iterations match", empty state, entry points for Compare and Settings | 002, 016 | L | T1.1, T0.6 | prototype walkthrough step 1 reproduced |
 | T1.3 | Iteration details: header + KPIs + actions, status banner (+ Open review queue deep link), stage cards (default Grade / Develop), panels Create / Grade (expandable reasons) / Upload / Review (+ fix-rounds table) / automation per-case panels (Prepare note, Skipped), token usage, polling while running | 003, 006 (display), 016 | L | T1.2 | walkthrough steps 2–4 reproduced; running gen #3 updates by polling |
+| **T1.2u** ⬜ | **Rework (not started, needs go-ahead):** Pipeline group header shows **"Not connected to CI" / "CI connection failed"** (depends on T3.6 landing first) | 002, 019 | S | T1.2, T3.6 | see 01 §3a G1 |
+| **T1.3u** ✅ | **Rework, done:** status banner wording for Completed/Running(names the stage)/Failed; Review panel polls while `IN_REVIEW` too, not only `RUNNING`; Create panel gets per-case status/duration + CI job/duration footer; fix-round result wording incl. **Auto-Ready** outcome; Upload result wording alignment | 003 | S | T1.3 | see 01 §3a G2–G6; full diff table there. EPMRPP-121977, branch `EPMRPP-121977-iteration-details-rework` |
 
 ## Phase 2 — Cases in the Library (US-007, 008, 009, 010)
 
@@ -80,7 +82,7 @@ Q-ORG-07 (target project/folder) is answered — see `controllers/aiFactory/mock
 | T2.5 | **AI evaluation** panel on details: total, 6 criteria rows (score/max + bar), expandable failure reasons, Evaluated / Obsolete line, rubric help modal, `★ N` in the header | 009 | M | T0.6 | walkthrough step 9; no PASS/FAIL anywhere |
 | T2.6 | **Generation cost** panel (≈ total, iteration share with formula, fix rounds, tokens, model) + **Pipeline** links section (source → Grade, fix round → Review) | 010 | S | T2.5 | walkthrough step 10 (TC103 ≈ $0.54) |
 
-## Phase 3 — Review loop (US-011, 013, 005, 012)
+## Phase 3 — Review loop (US-011, 013, 005, 012, 019)
 
 | ID | Task | Stories | Size | Depends | Output / DoD |
 |----|------|---------|------|---------|--------------|
@@ -88,14 +90,16 @@ Q-ORG-07 (target project/folder) is answered — see `controllers/aiFactory/mock
 | T3.2 | Approve / Mark as ready: shared `ApproveButton` (header + side panel footer; disabled with hints; obsolete confirmation), bulk **Approve** with skip report, Edit Scenario hint + checkbox "…along with these changes" (Draft only), toasts | 013, 007, 008 | M | T3.1, T2.4 | walkthrough steps 13, 15; bulk skips are named |
 | T3.3 | Push to agent: start a fix round (error path: comments stay not sent), "Agent is fixing… · Fix round K" locked state (Approve / Push / Edit Scenario disabled), polling, success (new evaluation, Draft, addressed comments, cost, Auto-Ready result toast), GRADE_FAILED, FAILED (push again / discard), **What the agent changed** modal | 012, 005 | L | T3.1, T3.2, T2.6 | walkthrough step 12 (TC106 success, TC107 failure) |
 | T3.4 | Pipeline settings modal: Auto-Ready toggle + threshold (0–100 integer validation), read-only without permission, "applies from next upload" note, automation pipeline "no settings", entry from the list + iteration | 005 | S | T1.2, T0.7 | walkthrough step 6 |
+| T3.6 | **New (2026-09-29 audit).** CI connection section inside Pipeline settings: repository / branch / trigger credential (masked after save, never re-shown) / jobs / models / environments; **Test connection**; connection states Not connected / Connected / Connection failed; Organization Manager/Administrator only (D15); disables Push to agent / Automate / Re-run / Retry elsewhere with the "ask an Organization Manager" hint when not connected | 019 | M | T3.4, T0.7 | US-AI-FCTRY-019 ACs; UI↔API contract co-authored by Saveli Savich (see 01 §3a) must exist first |
 
-## Phase 4 — Gate and compare (US-014, 004)
+## Phase 4 — Gate and compare (US-014, 004, 020)
 
 | ID | Task | Stories | Size | Depends | Output / DoD |
 |----|------|---------|------|---------|--------------|
 | T4.1 | Ready-only gate: Add to Launch / Add to Test Plan disabled for Draft (header, side panel, bulk with skip report) with exact hints; **In plan · Launch blocked** banner on the case page and side panel | 014 | M | T2.1, T2.4 | walkthrough steps 8, 15 (TC108 banner) |
 | T4.2 | Test Plan page: Draft badges on plan cases, **Launch** disabled + banner "Launch blocked: N Draft Test Cases" with links (not prototyped — keep it minimal, ❓ Q-BA-04) | 014 | M | T4.1 | approve the Draft → Launch enabled |
 | T4.3 | Compare iterations page: pipeline / baseline / candidate selects (pipeline change resets to the latest two), stage row with costs, metrics table with Δ and direction colouring, "Different requirements" note, entries from the list + "Compare with previous" | 004 | M | T1.3 | walkthrough step 5 (score +4 better, cost +$0.13 worse) |
+| T4.4 | **New (2026-09-29 audit).** **Re-run** an iteration (header action, dialog with read-only requirement + environment + model select, creates a new iteration in its own folder, offers "Compare with Iteration #N" when done) and **Retry** a failed Create/Upload stage (stage card + panel action, same iteration, keeps attempt history "Attempt K of N", cost accumulates); both gated on CI connection (T3.6) and Organization Manager/Administrator (D15); disabled while Running | 020 | M | T3.6, T1.3u | US-AI-FCTRY-020 ACs; UI↔API contract co-authored by Saveli Savich (see 01 §3a) must exist first |
 
 ## Phase 5 — Automation (US-015, 016, 017)
 
@@ -115,6 +119,7 @@ Q-ORG-07 (target project/folder) is answered — see `controllers/aiFactory/mock
 | T6.3 | i18n extraction (`npm run manage:translations`), a11y pass (focus, aria for icons and threads), 360 px side panel | S | — |
 | T6.4 | Demo rehearsal: run the 18-step parity checklist end to end, reset demo | S | checklist ticked |
 | T6.5 | Toggle-OFF regression pass: with the toggle OFF, walk the Library, side panel, details, Edit Scenario, Test Plans, Manual Launches and Launches; compare against `develop` | S | no difference; repeat before each merge of `bootcamp-prototype` |
+| T6.6 | **New (2026-09-29 audit, US-018).** NFR pass on FE-owned items only: masked-credential display (T3.6), keyboard reachability + accessible names for new actions (Approve, Push to agent, Automate, Discard, Re-run, Retry), 1280 px minimum width incl. the 360 px side-panel footer check, cost always 2-decimal USD labelled as a pipeline estimate | S | US-018 ACs that are FE's to own; the rest (security, reliability, perf, audit, data) is BE/ops, tracked in the requirements repo, not here |
 
 ---
 
@@ -133,13 +138,22 @@ T0.6 ─┘               │                  └─ T3.4 (+T0.7) │
 Order for one developer: Phase 0 → Phase 1 → Phase 2 → Phase 3 → Phase 4 → Phase 5, with T6.x running continuously.
 T0.5 (mocks) and T0.6 (atoms) are prerequisites for everything, so finish them first.
 
+**New tasks from the 2026-09-29 audit** (not yet in the graph above): `T3.6` depends on `T3.4` + `T0.7`;
+`T4.4` depends on `T3.6` + `T1.3u`; `T1.2u` depends on `T1.2` + `T3.6`; `T1.3u` depends only on `T1.3`
+(no new dependency). `T1.2u`/`T1.3u` are rework of already-shipped code and are **not started** —
+see [01 §3a](01-knowledge-base.md#3a-requirements-audit-update-2026-09-29--supersedes-nothing-above-adds-to-it)
+for the exact diff before picking them up.
+
 ## Jira mapping (FE sub-task parents)
 
-| Story | Jira parent | FE tasks → one `[FE]` sub-task per story (decided), assignee Saveli_Savich@epam.com |
+Each `[FE]` sub-task is capped at **36 h (≈ 5 SP)** and assigned to Saveli_Savich@epam.com.
+Split a story or cross-cutting scope further when its estimate exceeds that ceiling.
+
+| Story | Jira parent | FE tasks / sub-task allocation |
 |-------|-------------|------------------------------------------------------------|
-| 001 | EPMRPP-121674 | T0.3, T0.5 (data model + mock backend) |
-| 002 | EPMRPP-121704 | T1.1, T1.2 (+ T0.2, T0.4, T0.6 foundation if no separate task) |
-| 003 | EPMRPP-121705 | T1.3 |
+| 001 | EPMRPP-121674 | T0.5 traceability → EPMRPP-121833 (stored as a split sibling under EPMRPP-121704) |
+| 002 | EPMRPP-121704 | T0.2–T0.4, T0.6–T0.7 → EPMRPP-121829; T0.5 → EPMRPP-121833; T1.1–T1.2 → EPMRPP-121765; T1.3 → EPMRPP-121834 |
+| 003 | EPMRPP-121705 | T1.3 traceability → EPMRPP-121834 (stored as a split sibling under EPMRPP-121704); T1.3u → EPMRPP-121977 |
 | 004 | EPMRPP-121706 | T4.3 |
 | 005 | EPMRPP-121673 | T3.4, T0.7 |
 | 006 | EPMRPP-121675 | (display covered by T1.3) — no FE sub-task unless asked |
@@ -154,6 +168,9 @@ T0.5 (mocks) and T0.6 (atoms) are prerequisites for everything, so finish them f
 | 015 | EPMRPP-121671 | T5.1 |
 | 016 | EPMRPP-121672 | T5.2 |
 | 017 | EPMRPP-121680 | T5.3, T5.4 |
+| 018 | EPMRPP-121841 | T6.6 (FE-owned NFR items only) — `[FE]` sub-task not yet created (created when the task starts, per standing rule) |
+| 019 | EPMRPP-121842 | T3.6, T1.2u (partial) — `[FE]` sub-task not yet created |
+| 020 | EPMRPP-121843 | T4.4 — `[FE]` sub-task not yet created |
 
 ---
 

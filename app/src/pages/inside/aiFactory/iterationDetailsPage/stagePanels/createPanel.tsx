@@ -14,9 +14,11 @@
  * limitations under the License.
  */
 
+import { ReactNode } from 'react';
 import { useIntl } from 'react-intl';
 
-import { createClassnames } from 'common/utils';
+import { createClassnames, formatDuration } from 'common/utils';
+import { StageStatusLabel } from 'pages/inside/aiFactory/common';
 import { StageRS } from 'types/aiFactory';
 
 import { CaseLink } from './caseLink';
@@ -36,24 +38,56 @@ export const CreatePanel = ({ stage }: CreatePanelProps) => {
     return null;
   }
 
+  const footer = [
+    stage.durationMs !== undefined
+      ? { key: 'duration', node: formatMessage(messages.createStageDuration, { duration: formatDuration(stage.durationMs) }) }
+      : undefined,
+    stage.ciJob
+      ? {
+          key: 'ciJob',
+          node: (
+            <a href={stage.ciJob.url} target="_blank" rel="noreferrer">
+              {formatMessage(messages.createCiJobLink)}
+            </a>
+          ),
+        }
+      : undefined,
+  ].filter(Boolean) as { key: string; node: ReactNode }[];
+
   return (
-    <table className={cx('table')} data-automation-id="createPanelTable">
-      <thead>
-        <tr>
-          <th>{formatMessage(messages.createColumnName)}</th>
-          <th>{formatMessage(messages.createColumnPriority)}</th>
-        </tr>
-      </thead>
-      <tbody>
-        {stage.create.cases.map((c) => (
-          <tr key={c.testCaseId ?? c.name}>
-            <td>
-              <CaseLink testCaseId={c.testCaseId} name={c.name} />
-            </td>
-            <td>{c.priority}</td>
+    <>
+      <table className={cx('table')} data-automation-id="createPanelTable">
+        <thead>
+          <tr>
+            <th>{formatMessage(messages.createColumnName)}</th>
+            <th>{formatMessage(messages.createColumnPriority)}</th>
+            <th>{formatMessage(messages.createColumnStatus)}</th>
+            <th>{formatMessage(messages.createColumnDuration)}</th>
           </tr>
-        ))}
-      </tbody>
-    </table>
+        </thead>
+        <tbody>
+          {stage.create.cases.map((c) => (
+            <tr key={c.testCaseId ?? c.name}>
+              <td>
+                <CaseLink testCaseId={c.testCaseId} name={c.name} />
+              </td>
+              <td>{c.priority}</td>
+              <td>{c.status ? <StageStatusLabel status={c.status} /> : ''}</td>
+              <td>{c.durationMs !== undefined ? formatDuration(c.durationMs) : ''}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+      {footer.length > 0 && (
+        <p className={cx('note')}>
+          {footer.map(({ key, node }, index) => (
+            <span key={key}>
+              {index > 0 ? ' · ' : ''}
+              {node}
+            </span>
+          ))}
+        </p>
+      )}
+    </>
   );
 };

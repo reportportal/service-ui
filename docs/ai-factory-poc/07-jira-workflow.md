@@ -1,14 +1,14 @@
 # 07 · Jira workflow
 
 - Epic: [EPMRPP-118192](https://jiraeu.epam.com/browse/EPMRPP-118192) (AI Factory EDD Bootcamp PoC).
-- Rule: **before starting work on a story, create its frontend sub-task** in the story's Jira issue
+- Rule: **before starting a frontend scope, create its frontend sub-task** in the relevant story's Jira issue
   (if one doesn't exist) and record the key in [00-status.md](00-status.md).
 
 ## Conventions (decided 2026-09-25)
 
 | Item | Convention |
 |------|------------|
-| Granularity | One `[FE]` sub-task per story; the plan tasks (T-ids) are listed in its description. Phase 0 goes under US-002 (EPMRPP-121704) |
+| Granularity | A `[FE]` sub-task must be no larger than **36 h (≈ 5 SP)**. Split a story or cross-cutting foundation into multiple cohesive sub-tasks when needed; list the covered T-ids in each description |
 | When to create | **One at a time, when work on that story starts** — not in advance (decided 2026-09-25) |
 | Summary | `[FE] <short scope>` e.g. `[FE] Pipelines iterations list` |
 | Labels | `ai-factory-poc`, `frontend` |
@@ -24,9 +24,9 @@ Keep this in sync with 00-status (the status file is the source of truth for pro
 
 | Story | Parent | FE sub-task | Title to use |
 |-------|--------|-------------|--------------|
-| 001 | EPMRPP-121674 | — | `[FE] AI Factory data model and mock backend` (covered by EPMRPP-121765) |
-| 002 | EPMRPP-121704 | **[EPMRPP-121765](https://jiraeu.epam.com/browse/EPMRPP-121765)** ✅ | `[FE] Pipelines iterations list + FE foundation` (holds Phase 0: T0.2–T0.7, T1.1–T1.2) |
-| 003 | EPMRPP-121705 | — | `[FE] Iteration details by stage` |
+| 001 | EPMRPP-121674 | covered by **[EPMRPP-121833](https://jiraeu.epam.com/browse/EPMRPP-121833)** under EPMRPP-121704 | `[FE] AI Factory mock backend` (T0.5) |
+| 002 | EPMRPP-121704 | **[EPMRPP-121829](https://jiraeu.epam.com/browse/EPMRPP-121829)** ✅ · **[EPMRPP-121833](https://jiraeu.epam.com/browse/EPMRPP-121833)** ✅ · **[EPMRPP-121765](https://jiraeu.epam.com/browse/EPMRPP-121765)** ✅ · **[EPMRPP-121834](https://jiraeu.epam.com/browse/EPMRPP-121834)** ✅ | Foundation · mock backend · pipelines routes/list · iteration details |
+| 003 | EPMRPP-121705 | covered by **[EPMRPP-121834](https://jiraeu.epam.com/browse/EPMRPP-121834)** under EPMRPP-121704 | `[FE] Iteration details by stage` (T1.3) |
 | 004 | EPMRPP-121706 | — | `[FE] Compare two iterations` |
 | 005 | EPMRPP-121673 | — | `[FE] Pipeline settings: Auto-Ready` |
 | 006 | EPMRPP-121675 | — | (no FE sub-task by default) |
@@ -60,6 +60,7 @@ python3 docs/ai-factory-poc/tools/jira_fe_subtask.py EPMRPP-121704 "Pipelines it
 Optional env: `JIRA_ENV_FILE` (another env file), `JIRA_ASSIGNEE` (Jira username),
 `JIRA_SUBTASK_TYPE` (if auto-detection of the sub-task type fails).
 
-The script is idempotent (it will not create a second `[FE]` sub-task) and never edits existing issues.
+The script is idempotent by exact `[FE]` summary, so one story may hold several independently sized
+frontend sub-tasks without creating duplicates. It never edits existing issues.
 For an AI agent working on the plan: always run the dry run first, show it to the user, and
 create only after confirmation.

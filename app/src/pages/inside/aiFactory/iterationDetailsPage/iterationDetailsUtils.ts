@@ -59,3 +59,9 @@ export const failedStage = (iteration: IterationRS) =>
       (stage.key === StageKey.CREATE || stage.key === StageKey.UPLOAD) &&
       stage.status === StageStatus.FAILED,
   );
+
+/** The stage currently in progress — names it in the Running banner (01 §3a G2). */
+export const runningStage = (iteration: IterationRS) =>
+  iteration.stages.find(
+    (stage) => stage.status === StageStatus.RUNNING || stage.status === StageStatus.IN_PROGRESS,
+  );

@@ -18,7 +18,14 @@ import { MessageDescriptor, useIntl } from 'react-intl';
 
 import { createClassnames, formatCost } from 'common/utils';
 import { LifecycleBadge } from 'pages/inside/aiFactory/common';
-import { AiFixRoundStatus, EvaluationState, FixRoundStatus, ReviewCaseSummaryRS, StageRS } from 'types/aiFactory';
+import {
+  AiFixRoundStatus,
+  EvaluationState,
+  FixRoundRS,
+  FixRoundStatus,
+  ReviewCaseSummaryRS,
+  StageRS,
+} from 'types/aiFactory';
 
 import { CaseLink } from './caseLink';
 import { messages } from '../messages';
@@ -32,6 +39,12 @@ const FIX_ROUND_STATUS_MESSAGE: Record<AiFixRoundStatus, MessageDescriptor> = {
   [FixRoundStatus.GRADE_FAILED]: messages.fixRoundStatusGradeFailed,
   [FixRoundStatus.FAILED]: messages.fixRoundStatusFailed,
 };
+
+/** Auto-Ready (D12/G5) is its own outcome, not a plain Passed round. */
+const fixRoundStatusMessage = (round: FixRoundRS) =>
+  round.status === FixRoundStatus.PASSED && round.autoReadyPromoted
+    ? messages.fixRoundStatusAutoReady
+    : FIX_ROUND_STATUS_MESSAGE[round.status];
 
 export interface ReviewPanelProps {
   stage: StageRS;
@@ -115,7 +128,7 @@ export const ReviewPanel = ({ stage }: ReviewPanelProps) => {
                 </td>
                 <td>{round.round}</td>
                 <td>
-                  {formatMessage(FIX_ROUND_STATUS_MESSAGE[round.status])}
+                  {formatMessage(fixRoundStatusMessage(round))}
                   {round.failureReason ? ` — ${round.failureReason}` : ''}
                 </td>
                 <td>{round.pushedBy}</td>

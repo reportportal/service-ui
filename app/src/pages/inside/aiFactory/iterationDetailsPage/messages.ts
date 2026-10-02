@@ -57,6 +57,14 @@ export const messages = defineMessages({
     id: 'IterationDetailsPage.bannerRunning',
     defaultMessage: 'This iteration is running. The page updates automatically.',
   },
+  bannerRunningStage: {
+    id: 'IterationDetailsPage.bannerRunningStage',
+    defaultMessage: '{stage} is running. The page updates automatically.',
+  },
+  bannerCompleted: {
+    id: 'IterationDetailsPage.bannerCompleted',
+    defaultMessage: 'All Test Cases of this iteration are Ready',
+  },
   bannerInReview: {
     id: 'IterationDetailsPage.bannerInReview',
     defaultMessage:
@@ -68,7 +76,7 @@ export const messages = defineMessages({
   },
   bannerFailedGeneric: {
     id: 'IterationDetailsPage.bannerFailedGeneric',
-    defaultMessage: 'This iteration failed.',
+    defaultMessage: 'A stage failed — see the stage panel',
   },
   stageNotStarted: {
     id: 'IterationDetailsPage.stageNotStarted',
@@ -89,6 +97,22 @@ export const messages = defineMessages({
   createColumnPriority: {
     id: 'IterationDetailsPage.createColumnPriority',
     defaultMessage: 'Priority',
+  },
+  createColumnStatus: {
+    id: 'IterationDetailsPage.createColumnStatus',
+    defaultMessage: 'Status',
+  },
+  createColumnDuration: {
+    id: 'IterationDetailsPage.createColumnDuration',
+    defaultMessage: 'Duration',
+  },
+  createCiJobLink: {
+    id: 'IterationDetailsPage.createCiJobLink',
+    defaultMessage: 'CI job',
+  },
+  createStageDuration: {
+    id: 'IterationDetailsPage.createStageDuration',
+    defaultMessage: 'Duration: {duration}',
   },
   gradeSuiteScore: {
     id: 'IterationDetailsPage.gradeSuiteScore',
@@ -136,11 +160,11 @@ export const messages = defineMessages({
   },
   uploadResultCreatedDraft: {
     id: 'IterationDetailsPage.uploadResultCreatedDraft',
-    defaultMessage: 'Created as Draft',
+    defaultMessage: 'Created · Draft',
   },
   uploadResultCreatedReadyAuto: {
     id: 'IterationDetailsPage.uploadResultCreatedReadyAuto',
-    defaultMessage: 'Created as Ready (Auto-Ready)',
+    defaultMessage: 'Created · Ready (Auto-Ready)',
   },
   uploadResultFailed: {
     id: 'IterationDetailsPage.uploadResultFailed',
@@ -212,7 +236,11 @@ export const messages = defineMessages({
   },
   fixRoundStatusPassed: {
     id: 'IterationDetailsPage.fixRoundStatusPassed',
-    defaultMessage: 'Passed',
+    defaultMessage: 'Fix ✓ · Grade ✓ · Updated',
+  },
+  fixRoundStatusAutoReady: {
+    id: 'IterationDetailsPage.fixRoundStatusAutoReady',
+    defaultMessage: 'Auto-Ready',
   },
   fixRoundStatusGradeFailed: {
     id: 'IterationDetailsPage.fixRoundStatusGradeFailed',

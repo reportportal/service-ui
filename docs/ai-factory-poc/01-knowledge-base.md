@@ -7,7 +7,7 @@
 | Item | Value |
 |------|-------|
 | Source of truth | `EPM-RPP/reportportal-requirements` → [`domains/projects/df_bootcamp_2026`](https://git.epam.com/EPM-RPP/reportportal-requirements/-/tree/main/domains/projects/df_bootcamp_2026) |
-| Snapshot used | `main`, 2026-09-23 (epic v0.4, features/stories v0.1–0.2) |
+| Snapshot used | `main`, **2026-09-29** (re-synced after the requirements audit; see §3a). Stories 001–017 unchanged in number/Jira id from the 2026-09-23 snapshot; **3 new stories added: 018 (NFR), 019 (Connect pipeline to CI), 020 (Re-run/Retry)** |
 | Jira epic | [EPMRPP-118192](https://jiraeu.epam.com/browse/EPMRPP-118192) — bootcamp PoC, **not** product release 26.1 |
 | Requirements owner | Anatolii Fedosik |
 | UX reference | `html_prototype/ai-factory-bootcamp-poc-prototype.html` (single file, mock data, walkthrough of 18 steps) |
@@ -57,6 +57,60 @@ this in ReportPortal yet → the UI is built on mocks first.
 | D8 | Push to agent → RP starts the fix job → case updated in Library → Auto-Ready may promote again. Works on Draft **and** Ready. |
 | D9 | Automation in scope: **Automate** in the Library → automation pipeline → Launch linked to iteration and case. |
 | D10 | Test Plan and Launch accept **only Ready**. **Compare** two iterations is in scope. |
+
+## 3a. Requirements audit update (2026-09-29) — supersedes nothing above, adds to it
+
+Source: [DF_BOOTCAMP_2026_REQUIREMENTS_AUDIT_2026-09-29.md](https://git.epam.com/EPM-RPP/reportportal-requirements/-/blob/main/domains/projects/df_bootcamp_2026/docs/audits/DF_BOOTCAMP_2026_REQUIREMENTS_AUDIT_2026-09-29.md)
+(Claude, at Anatolii Fedosik's request) and `_index.md`'s own "Decisions (requirements audit 2026-09-29)"
+line, which records D11–D19 as **accepted**, not merely proposed. Our own story numbers (001–017) and
+Jira ids are unchanged from the 2026-09-23 snapshot our plan was built against — confirmed field by
+field against the current `_index.md`. **New scope: 3 stories** (US-018 NFR, US-019 Connect pipeline to
+CI, US-020 Re-run/Retry an iteration), all with real Jira ids (EPMRPP-121841/842/843).
+
+| # | Decision | FE impact |
+|---|----------|-----------|
+| D11 | Each iteration uploads into its own Library folder `…/iteration-<N>` (fixes: re-running the same requirement no longer conflicts on Upload) | Mostly BE/mock; `IterationRS.libraryFolder` already models this. No FE rework |
+| D12 | A fix round changes only the pushed case (by **Library id**, title may change, never create/split/delete); comments become **Addressed** or **Not addressed** (with the agent's reason) | **New comment outcome** `NOT_ADDRESSED` not in our `CommentState` enum yet — affects T3.1 (not built). No rework of done work |
+| D13 | The final passing automation run is the Launch; status **Automated** carries the MR state (Open/Merged), **Failed** on MR closed; `Last result` comes from *any* Launch, not only AI Factory's | Affects `AutomationStatus`/types and T5.2–T5.4 (not built). No rework of done work |
+| D14 | AI Factory UI flag, OFF by default, switched by an Administrator; backend additive (a case without lifecycle = Ready); lifecycle only in projects that use the factory | **Matches what T0.2 already does** (client-side toggle for the PoC). Resolves old Q-BE-09/F11 — see 06 |
+| D15 | Roles: **Editor** — review actions; **Organization Manager / Administrator** — Pipeline settings, CI connection, Re-run/Retry | **Matches what T0.7 already built exactly.** Resolves old Q-BE-10/F15 — see 06 |
+| D16 | All stories 001–020 are in the bootcamp scope (no MVP cut line) | Plan gets 3 new task-worthy stories (018/019/020), no scope removed |
+| D17 | Backend stores an iteration as a record of a new generic **pipeline** entity, not a Launch | Backend data modelling only; our `PipelineRS`/`IterationRS` types already keep these separate. No FE change |
+| D18 | The pipeline may retry *inside* Create; Grade reports what is actually uploaded | Feeds US-020 (Retry) — not built yet |
+| D19 | **Re-run** (new iteration, same requirement, optionally a different model) and **Retry** (re-run one failed stage, same iteration) are both in scope via ReportPortal; re-grading / restart-from-any-stage stays out | New story US-020 — **adds actions to the already-built iteration header and stage cards (T1.3)** |
+
+### New stories (not in the original 17)
+
+| Story | Jira | Summary | Depends on | Maps to |
+|-------|------|---------|------------|---------|
+| US-018 | [EPMRPP-121841](https://jiraeu.epam.com/browse/EPMRPP-121841) | Meet the PoC's NFRs (security, reliability, idempotency, concurrency, perf envelope, audit, data, compatibility, observability, a11y) | — | Mostly BE/ops; FE-relevant items (masked credential display, keyboard reachability, 1280 px width) roll into T3.6 (new, CI connection) and T6.3 |
+| US-019 | [EPMRPP-121842](https://jiraeu.epam.com/browse/EPMRPP-121842) | Connect a pipeline to its CI (repository, branch, trigger credential, jobs, models, environments) — a **CI connection** section inside Pipeline settings (US-005); "Not connected to CI" shown on the Pipelines list | T0.7 (roles), T3.4 (Pipeline settings modal, not built) | New task **T3.6** |
+| US-020 | [EPMRPP-121843](https://jiraeu.epam.com/browse/EPMRPP-121843) | **Re-run** a generation iteration (new iteration, optionally a different model) from the iteration header; **Retry** a failed Create/Upload stage card in place | US-019, US-003/T1.3 | New task **T4.4** |
+
+**Contract authorship note:** three story files (US-002, US-003, US-020) now explicitly name
+**Saveli Savich** (alongside Hleb Mashkanov) as the author of the UI↔API contract to be written under
+`reportportal-requirements/domains/projects/df_bootcamp_2026/contracts/`, required *before development
+starts* on those stories. This is a requirements-repo deliverable, not a `service-ui` one — flagged here,
+not started by the FE plan on its own initiative.
+
+### Deltas against already-shipped T1.2 (Pipelines list) and T1.3 (Iteration details)
+
+Checked field-by-field against the current US-002 v0.3 and US-003 v0.3 (both `last_updated: 2026-09-29`).
+Everything else in both stories matches what's built. **No code has been changed for any of this** —
+see the new `T1.2u` / `T1.3u` rework tasks in [04-implementation-plan.md](04-implementation-plan.md),
+which need your go-ahead before implementation.
+
+| # | Story | What changed | Current T1.2/T1.3 behaviour | Gap |
+|---|-------|--------------|------------------------------|-----|
+| G1 | 002 | Pipeline group header must show **"Not connected to CI" / "CI connection failed"** when it applies (US-019) | Header shows repo, iteration count, Auto-Ready only | New field (depends on US-019/T3.6 landing first) |
+| G2 | 003 | **Status banner** wording is now specified per status: `Completed` → "All Test Cases of this iteration are Ready"; `Running` → names **the running stage**; `Failed` → "A stage failed — see the stage panel" | We show no banner for Completed; a generic "This iteration is running" for Running; the failing stage's own `failureReason` text for Failed | Banner text/coverage gap — straightforward copy fix |
+| G3 | 003 | "The Review card and panel **update as soon as a case changes lifecycle or a fix round changes state, without a new CI report**" | Polling (`usePolling`, 5 s) only runs while `status === RUNNING`; it stops once the iteration reaches `IN_REVIEW`, so Library-side changes (Approve, a fix round) don't refresh the open Review panel without a manual Refresh | **Functional gap**, not just wording — polling condition needs to also cover `IN_REVIEW` |
+| G4 | 003 | **Create panel** rows need **status and duration** per case, plus below: agent/model, duration, token usage by type, cost, CI job link | Our `CreatePanel`/`StageRS.create.cases` only carry `name`/`priority`/`testCaseId`/`displayId` — no per-case status/duration | Needs a `types/aiFactory.ts` (`StageRS.create`) field addition + mock + `CreatePanel` update |
+| G5 | 003 | Fix-round **result** column now lists specific strings: "running", "**Fix ✓ · Grade ✓ · Updated**", "**Auto-Ready**" (as its own outcome, using the already-modelled `autoReadyPromoted` flag), "Fixed · Grade failed", "Failed", "**Failed — Test Case not found**" (D12: case deleted mid-round) | `ReviewPanel` maps `FixRoundStatus` to generic "Running"/"Passed"/"Fixed · Grade failed"/"Failed" and never reads `autoReadyPromoted` | Wording + one more branch (Auto-Ready) needed; "Test Case not found" can likely reuse the existing `failureReason` string, to confirm |
+| G6 | 003 | Upload result strings: "**Created · Draft**", "**Created · Ready (Auto-Ready)**", "Failed — \<reason\>" | We render "Created as Draft" / "Created as Ready (Auto-Ready)" / "Failed — \<reason\>" | Wording-only (one is an exact match already) |
+| G7 | 003 | Header actions **Compare with previous** and **Pipeline settings** (automation pipeline: CI connection only) belong on the iteration header | Deliberately deferred (T4.3/T3.4/T3.6 don't exist yet) | Not a gap yet — becomes one once those tasks ship; no action now |
+| G8 | 003 | "**When US-020 is delivered**: a failed Create/Upload card shows **Retry**, the header shows **Re-run**" | Not built (correctly — the story itself gates this on US-020) | Scope of the new **T4.4** task, not a T1.3 gap today |
+
 
 ## 4. Business rules the UI must enforce / display
 
