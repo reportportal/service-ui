@@ -23,6 +23,8 @@ import { isLoadingTestCaseDetailsSelector, testCaseDetailsSelector } from 'contr
 import { useUserPermissions } from 'hooks/useUserPermissions';
 import { LifecycleHistory, useTestCaseAi } from 'pages/inside/aiFactory/lifecycle';
 import { EvaluationPanel } from 'pages/inside/aiFactory/evaluation';
+import { GenerationCost } from 'pages/inside/aiFactory/generationCost';
+import { PipelineLinks } from 'pages/inside/aiFactory/pipelineLinks';
 import { useAddTestCasesToTestPlanModal } from 'pages/inside/testCaseLibraryPage/addTestCasesToTestPlanModal/useAddTestCasesToTestPlanModal';
 import { Lifecycle } from 'types/aiFactory';
 import type { ExtendedTestCase } from 'types/testCase';
@@ -72,11 +74,13 @@ jest.mock('controllers/testCase', () => ({
   testCaseDetailsSelector: jest.fn(),
 }));
 jest.mock('pages/inside/aiFactory/evaluation', () => ({ EvaluationPanel: 'EvaluationPanel' }));
+jest.mock('pages/inside/aiFactory/generationCost', () => ({ GenerationCost: 'GenerationCost' }));
 jest.mock('hooks/useUserPermissions', () => ({ useUserPermissions: jest.fn() }));
 jest.mock('pages/inside/aiFactory/lifecycle', () => ({
   LifecycleHistory: 'LifecycleHistory',
   useTestCaseAi: jest.fn(),
 }));
+jest.mock('pages/inside/aiFactory/pipelineLinks', () => ({ PipelineLinks: 'PipelineLinks' }));
 jest.mock('pages/inside/common/attachmentsWithSlider', () => ({
   AttachmentsWithSlider: 'AttachmentsWithSlider',
 }));
@@ -165,7 +169,7 @@ describe('TestCaseDetailsPage lifecycle history', () => {
     expect(wrapper.find(LifecycleHistory)).toHaveLength(0);
   });
 
-  test('shares one AI details request between evaluation and lifecycle history', () => {
+  test('shares one AI details request between all AI details sections', () => {
     selectedTestCase = {
       ...testCase,
       ai: {
@@ -179,7 +183,15 @@ describe('TestCaseDetailsPage lifecycle history', () => {
 
     expect(useTestCaseAi).toHaveBeenCalledWith('demo', 42, true, 100);
     expect(wrapper.find(EvaluationPanel)).toHaveLength(1);
+    expect(wrapper.find(GenerationCost)).toHaveLength(1);
+    expect(wrapper.find(PipelineLinks)).toHaveLength(1);
     expect(wrapper.find(EvaluationPanel).prop('aiDetailsState')).toBe(
+      wrapper.find(LifecycleHistory).prop('aiDetailsState'),
+    );
+    expect(wrapper.find(GenerationCost).prop('aiDetailsState')).toBe(
+      wrapper.find(LifecycleHistory).prop('aiDetailsState'),
+    );
+    expect(wrapper.find(PipelineLinks).prop('aiDetailsState')).toBe(
       wrapper.find(LifecycleHistory).prop('aiDetailsState'),
     );
   });

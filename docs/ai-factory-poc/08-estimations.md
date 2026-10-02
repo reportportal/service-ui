@@ -35,6 +35,7 @@ cross-cutting scope must be split into cohesive `[FE]` sub-tasks before work con
 | [EPMRPP-122016](https://jiraeu.epam.com/browse/EPMRPP-122016) | Library quick filters and review queue | T2.3 | 20 h | ≤ 36 h |
 | [EPMRPP-122022](https://jiraeu.epam.com/browse/EPMRPP-122022) | AI evaluation panel | T2.5 | 20 h | ≤ 36 h |
 | [EPMRPP-122024](https://jiraeu.epam.com/browse/EPMRPP-122024) | Library side panel additions | T2.4 | 20 h | ≤ 36 h |
+| [EPMRPP-122025](https://jiraeu.epam.com/browse/EPMRPP-122025) | Generation cost and iteration links | T2.6 | 8 h | ≤ 36 h |
 
 If an estimate differs from the planned size by more than ~30 %, write why in *Deviation notes*
 and re-check the remaining sizes.
@@ -62,7 +63,7 @@ Filled in as tasks complete. `—` = not done yet.
 | T2.3 | Quick filters + Review queue + iteration chip | 2 | M (20) | **20** | 4 | 9 | 7 | 2026-10-02 |
 | T2.4 | Side panel additions | 2 | M (20) | **20** | 4 | 10 | 6 | 2026-10-02 |
 | T2.5 | AI evaluation panel + rubric | 2 | M (20) | **20** | 4 | 10 | 6 | 2026-10-02 |
-| T2.6 | Generation cost + pipeline links | 2 | S (8) | — | | | | |
+| T2.6 | Generation cost + pipeline links | 2 | S (8) | **8** | 2 | 4 | 2 | 2026-10-02 |
 | T3.1 | Review comments + AI review strip | 3 | L (36) | — | | | | |
 | T3.2 | Approve / Mark as ready (+ bulk, Edit Scenario) | 3 | M (20) | — | | | | |
 | T3.3 | Push to agent + fix round states + diff modal | 3 | L (36) | — | | | | |
