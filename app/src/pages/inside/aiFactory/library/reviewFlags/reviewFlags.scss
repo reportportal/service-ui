@@ -14,41 +14,20 @@
  * limitations under the License.
  */
 
-.drag-handle {
+.review-flags {
   display: flex;
   align-items: center;
-  justify-content: center;
-  width: 32px;
-  height: 32px;
-  cursor: grab;
-  position: absolute;
-  left: 100%;
-  padding: 8px;
-  top: 50%;
-  transform: translateY(-50%);
-  z-index: 2;
-  opacity: 0;
+  flex-wrap: wrap;
+  gap: 4px 8px;
+  font-family: var(--rp-ui-base-font-family);
+  font-size: 12px;
+  line-height: 18px;
+}
 
-  :global(.test-case-table-row-global):hover &,
-  &:hover {
-    opacity: 1;
-  }
+.review-flags__comments {
+  color: var(--rp-ui-base-a-yellow-600);
+}
 
-  svg {
-    width: 16px;
-    height: 16px;
-    pointer-events: none;
-  }
-
-  svg path {
-    fill: var(--rp-ui-base-e-300);
-  }
-
-  &:hover svg path {
-    fill: var(--rp-ui-base-topaz-hover);
-  }
-
-  &:active {
-    cursor: grabbing;
-  }
+.review-flags__fixing {
+  color: var(--rp-ui-base-topaz);
 }

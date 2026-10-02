@@ -13,6 +13,7 @@
 | UX reference | `html_prototype/ai-factory-bootcamp-poc-prototype.html` (single file, mock data, walkthrough of 18 steps) |
 | Flows | `html_prototype/flows/A…D.mermaid` (global, review in Library, fix round, pipelines owner) |
 | Scope review | `html_prototype/scope-review-2026-09-23.md` (31 fixed inconsistencies, coverage matrix) |
+| Published API snapshot | [TMS OpenAPI UI](http://tms.epmrpp.reportportal.io/ui/#organizations/my-organization/projects/superadmin-personal/api), backend build/branch **`feature-pipelines-2767`**, inspected **2026-10-02**; operation and schema details are recorded in [05-backend-contract.md](05-backend-contract.md) |
 
 ---
 
@@ -25,8 +26,13 @@ comments → Push to agent → fix → re-grade) → **Ready** (Approve or Auto-
 (Prepare → Develop → Review → Fix) → Launch result shown on the Test Case.
 
 Two factories exist in GitLab CI today (`rp-tests` for generation, `rp-ui-autotests` for
-automation). They do **not** report to ReportPortal yet. There is **no backend** for any of
-this in ReportPortal yet → the UI is built on mocks first.
+automation). They do **not** report to ReportPortal yet. There is **no confirmed ReportPortal
+backend contract** for the Test Case lifecycle/AI review flow yet, so that part of the UI remains
+mock-first.
+However, the 2026-10-02 TMS OpenAPI publishes the Pipeline iteration/stage operations and a
+project-scoped Quality Standard resource. The completed FE is **not live-integrated** with those
+operations yet; published availability must not be confused with an integrated or production-ready
+end-to-end flow.
 
 ## 2. Glossary
 
@@ -111,6 +117,41 @@ which need your go-ahead before implementation.
 | G7 | 003 | Header actions **Compare with previous** and **Pipeline settings** (automation pipeline: CI connection only) belong on the iteration header | Deliberately deferred (T4.3/T3.4/T3.6 don't exist yet) | Not a gap yet — becomes one once those tasks ship; no action now |
 | G8 | 003 | "**When US-020 is delivered**: a failed Create/Upload card shows **Retry**, the header shows **Re-run**" | Not built (correctly — the story itself gates this on US-020) | Scope of the new **T4.4** task, not a T1.3 gap today |
 
+## 3b. Published API discovery (2026-10-02)
+
+**Source and version.** The facts in this section come from the live
+[TMS OpenAPI UI](http://tms.epmrpp.reportportal.io/ui/#organizations/my-organization/projects/superadmin-personal/api)
+served by backend build/branch `feature-pipelines-2767` and inspected on 2026-10-02. This is a
+point-in-time discovery snapshot, not evidence that Service UI already consumes the contracts.
+Exact paths, methods and DTO notes belong to [05-backend-contract.md](05-backend-contract.md); this
+section records only product/planning impact.
+
+**Published facts.** The API exposes Pipeline operations to list definitions, list iterations,
+read iteration details, create an iteration, retry one stage, update a pipeline definition's
+Auto-Ready settings and compare iterations. It also exposes project Quality Standard GET, create,
+update and delete operations. The published Pipeline paths omit the `/tms` namespace assumed by the
+PoC and the published DTOs do not match the current mock/view-model DTOs one-for-one.
+
+**Still unconfirmed.** No published Test Case lifecycle/AI evaluation, review-comment, fix-round or
+automation contract was established by this audit. Therefore T2.1 and T2.2 remain correctly
+mock/overlay-backed; they must not start speculative live requests merely because Pipeline and
+Quality Standard endpoints now exist.
+
+| Plan item | What can be used now | Decision / boundary |
+|-----------|----------------------|---------------------|
+| T1.1–T1.3 · Pipeline fixtures, list and iteration details | Pipeline list, iteration list and iteration-detail GET operations are **adapter candidates** | Integrate through an OpenAPI DTO → existing UI view-model adapter; do not replace the stable UI types with raw generated DTOs |
+| T2.1 · Lifecycle and history | Not covered by the discovered operations | Preserve completed behaviour and toggle-OFF/no-request guarantees; await a confirmed Test Case lifecycle contract |
+| T2.2 · AI quality and row flags | Not covered by the discovered operations | Preserve completed behaviour; Pipeline/Quality Standard responses are not a substitute for per-case evaluation, cost, origin or review state |
+| T2.5 · Evaluation/rubric display | Quality Standard GET is **partial input**: current standard name/top-level description plus arbitrary criteria `id`, `name`, `maxPoints` and `sequence` | It does not guarantee the fixed six criteria, per-criterion descriptions, a version/snapshot link or association with a historical evaluation. Historical display must rely on the evaluation snapshot/contract and must never recalculate old scores from the mutable current standard |
+| T3.4 · Pipeline settings | Pipeline PATCH publishes the Auto-Ready update operation | Use this operation when the task is implemented, behind the existing permissions and feature flag |
+| T4.3 · Compare iterations | Server-side compare GET is published | Prefer the server result through a normalization adapter; do not duplicate comparison business rules in components |
+| T4.4 · Re-run / Retry | Create-iteration POST and stage-retry POST are published | These are candidates for the two explicitly planned actions; exact request validation and allowed stage/status rules come from the contract |
+| Quality Standard management | GET/POST/PUT/DELETE are published | CRUD availability does **not** silently add a Quality Standard management UI to the current FE scope; that needs its own approved story, permissions and UX |
+
+Where the table says “candidate” or “prefer”, that is an FE integration inference based on the
+published operation purpose. It is not a claim that authentication, permissions, deployment,
+error semantics or end-to-end CI reporting have been accepted.
+
 
 ## 4. Business rules the UI must enforce / display
 
@@ -177,7 +218,13 @@ which need your go-ahead before implementation.
 - No PASS/FAIL, no traffic-light verdicts (bars show share only).
 - Evaluated line: "Evaluated · Iteration #N · <date>" or "… · Fix round K · <date>".
 - Obsolete: gray score + "Obsolete — scenario changed after evaluation". Not used by Auto-Ready.
-- Help icon → rubric description (not configurable in RP).
+- Help icon → rubric/criterion description. The rubric is now known to be project-configurable
+  through the Quality Standard API, but its GET contract exposes only the current standard's
+  name/top-level description and criterion id/name/max-points/order. It supplies no per-criterion
+  descriptions, version/snapshot link or historical-evaluation association. Therefore historical
+  UI must use the rubric snapshot supplied by the future evaluation contract; until that exists,
+  do not present current-standard metadata as the rubric that produced an old score and never
+  reinterpret an old score using today's mutable standard.
 
 ### 4.6 Cost (US-010)
 - AI cases only. `≈ $X.XX`, note "Approximate: share of iteration cost".

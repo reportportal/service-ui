@@ -14,41 +14,15 @@
  * limitations under the License.
  */
 
-.drag-handle {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 32px;
-  height: 32px;
-  cursor: grab;
-  position: absolute;
-  left: 100%;
-  padding: 8px;
-  top: 50%;
-  transform: translateY(-50%);
-  z-index: 2;
-  opacity: 0;
+import { defineMessages } from 'react-intl';
 
-  :global(.test-case-table-row-global):hover &,
-  &:hover {
-    opacity: 1;
-  }
-
-  svg {
-    width: 16px;
-    height: 16px;
-    pointer-events: none;
-  }
-
-  svg path {
-    fill: var(--rp-ui-base-e-300);
-  }
-
-  &:hover svg path {
-    fill: var(--rp-ui-base-topaz-hover);
-  }
-
-  &:active {
-    cursor: grabbing;
-  }
-}
+export const messages = defineMessages({
+  unsentComments: {
+    id: 'ReviewFlags.unsentComments',
+    defaultMessage: '{count} {count, plural, one {comment} other {comments}} not sent',
+  },
+  agentFixing: {
+    id: 'ReviewFlags.agentFixing',
+    defaultMessage: 'Agent fixing',
+  },
+});
