@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+import { type ReactNode } from 'react';
 import { MessageDescriptor, useIntl } from 'react-intl';
 
 import { createClassnames } from 'common/utils';
@@ -27,9 +28,17 @@ interface ScenarioProps {
   precondition?: string;
   instructions?: string;
   expectedResult?: string;
+  preconditionReviewControl?: ReactNode;
+  scenarioReviewControl?: ReactNode;
 }
 
-export const Scenario = ({ precondition, instructions, expectedResult }: ScenarioProps) => {
+export const Scenario = ({
+  precondition,
+  instructions,
+  expectedResult,
+  preconditionReviewControl,
+  scenarioReviewControl,
+}: ScenarioProps) => {
   const { formatMessage } = useIntl();
   const getSubScenario = ({ header, value }: { header: MessageDescriptor; value?: string }) =>
     value ? (
@@ -41,18 +50,26 @@ export const Scenario = ({ precondition, instructions, expectedResult }: Scenari
 
   return (
     <section className={cx('scenario')}>
-      {getSubScenario({
-        header: commonMessages.precondition,
-        value: precondition,
-      })}
-      {getSubScenario({
-        header: commonMessages.instructions,
-        value: instructions,
-      })}
-      {getSubScenario({
-        header: commonMessages.expectedResult,
-        value: expectedResult,
-      })}
+      {preconditionReviewControl && precondition ? (
+        <div className={cx('scenario__review-block')}>
+          {getSubScenario({ header: commonMessages.precondition, value: precondition })}
+          {preconditionReviewControl}
+        </div>
+      ) : (
+        getSubScenario({ header: commonMessages.precondition, value: precondition })
+      )}
+      {scenarioReviewControl && (instructions || expectedResult) ? (
+        <div className={cx('scenario__review-block')}>
+          {getSubScenario({ header: commonMessages.instructions, value: instructions })}
+          {getSubScenario({ header: commonMessages.expectedResult, value: expectedResult })}
+          {scenarioReviewControl}
+        </div>
+      ) : (
+        <>
+          {getSubScenario({ header: commonMessages.instructions, value: instructions })}
+          {getSubScenario({ header: commonMessages.expectedResult, value: expectedResult })}
+        </>
+      )}
     </section>
   );
 };

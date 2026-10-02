@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+import { type ReactNode } from 'react';
 import { useIntl } from 'react-intl';
 import { isEmpty } from 'es-toolkit/compat';
 
@@ -32,13 +33,14 @@ interface PreconditionProps {
     value?: string;
     attachments?: Attachment[];
   };
+  reviewControl?: ReactNode;
 }
 
-export const Precondition = ({ preconditions }: PreconditionProps) => {
+export const Precondition = ({ preconditions, reviewControl }: PreconditionProps) => {
   const { formatMessage } = useIntl();
 
   return (
-    <section className={cx('precondition')}>
+    <section className={cx('precondition', { 'precondition--reviewable': Boolean(reviewControl) })}>
       <div className={cx('precondition__type')}>P</div>
       <div className={cx('precondition__content')}>
         {preconditions.value && (
@@ -56,6 +58,7 @@ export const Precondition = ({ preconditions }: PreconditionProps) => {
           </div>
         )}
       </div>
+      {reviewControl}
     </section>
   );
 };

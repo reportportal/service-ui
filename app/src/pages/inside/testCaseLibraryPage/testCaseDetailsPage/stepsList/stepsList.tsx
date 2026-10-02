@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+import { type ReactNode } from 'react';
 import { useIntl } from 'react-intl';
 
 import { createClassnames } from 'common/utils';
@@ -28,9 +29,10 @@ const cx = createClassnames(styles);
 
 interface StepsListProps {
   steps: StepProp[];
+  renderReviewControl?: (stepId: number) => ReactNode;
 }
 
-export const StepsList = ({ steps }: StepsListProps) => {
+export const StepsList = ({ steps, renderReviewControl }: StepsListProps) => {
   const { formatMessage } = useIntl();
 
   return (
@@ -54,6 +56,7 @@ export const StepsList = ({ steps }: StepsListProps) => {
             expectedResult={step.expectedResult}
             instructions={step.instructions}
             attachments={step.attachments}
+            reviewControl={renderReviewControl?.(step.id)}
           />
         ))}
       </ul>
