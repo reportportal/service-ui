@@ -135,12 +135,17 @@ export const getOption = ({ content, isPreview, formatMessage }) => {
         show: false,
       },
     },
-    tooltip: buildItemTooltip({
-      show: !isPreview,
-      formatter: buildTooltipFormatter(MostTimeConsumingTestCasesTooltip, calculateTooltipParams, {
-        itemsData,
+    tooltip: {
+      ...buildItemTooltip({
+        show: !isPreview,
+        formatter: buildTooltipFormatter(
+          MostTimeConsumingTestCasesTooltip,
+          calculateTooltipParams,
+          { itemsData },
+        ),
       }),
-    }),
+      extraCssText: 'box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15); padding: 0; white-space: normal;',
+    },
     legend: {
       show: false,
     },
