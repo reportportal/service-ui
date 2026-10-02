@@ -81,6 +81,12 @@
   width: 100%;
 }
 
+.lifecycle-cell {
+  display: flex;
+  align-items: center;
+  min-height: 44px;
+}
+
 .loading {
   display: flex;
   align-items: center;

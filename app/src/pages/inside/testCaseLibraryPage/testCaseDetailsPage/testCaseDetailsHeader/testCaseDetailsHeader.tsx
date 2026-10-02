@@ -38,12 +38,14 @@ import { PopoverItem } from 'pages/common/popoverControl/popoverControl';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { REVERSED_DATE_FORMAT } from 'common/constants/timeDateFormat';
 import { showModalAction } from 'controllers/modal';
+import { useAiFactoryEnabled } from 'controllers/aiFactory';
 import { TEST_CASE_LIBRARY_PAGE, urlOrganizationAndProjectSelector } from 'controllers/pages';
 import { useUserPermissions } from 'hooks/useUserPermissions';
 import { useHasTestPlans } from 'hooks/useHasTestPlans';
 import { PriorityIcon } from 'pages/inside/common/priorityIcon';
 import { testCaseLibraryBreadcrumbsSelector } from 'controllers/pages/selectors';
 import { ExecutionEstimationTime } from 'pages/inside/common/executionEstimationTime';
+import { LifecycleBadge } from 'pages/inside/aiFactory/common';
 import type { ExtendedTestCase, TestCasePriority } from 'types/testCase';
 
 import { messages } from './messages';
@@ -85,6 +87,7 @@ export const TestCaseDetailsHeader = ({
   const { openModal: openDuplicateSelectedTestCaseModal } = useDuplicateSelectedTestCaseModal();
   const { openModal: openEditScenarioModal } = useEditScenarioModal();
   const { hasTestPlans } = useHasTestPlans();
+  const isAiFactoryEnabled = useAiFactoryEnabled();
 
   const breadcrumbsTitles = {
     mainTitle: formatMessage(commonMessages.testCaseLibraryBreadcrumb),
@@ -94,8 +97,7 @@ export const TestCaseDetailsHeader = ({
   const breadcrumbs = useSelector(testCaseLibraryBreadcrumbsSelector(breadcrumbsTitles));
   const testCaseBusinessId = testCase.displayId;
 
-  const testCasePriority = (testCase.priority?.toLowerCase() ??
-    'unspecified') as TestCasePriority;
+  const testCasePriority = (testCase.priority?.toLowerCase() ?? 'unspecified') as TestCasePriority;
 
   const handleHistoryOfActions = () => {
     trackEvent(
@@ -193,6 +195,9 @@ export const TestCaseDetailsHeader = ({
         <span className={cx('header__title-text')} title={testCase.name}>
           {testCase.name}
         </span>
+        {isAiFactoryEnabled && testCase.lifecycle && (
+          <LifecycleBadge lifecycle={testCase.lifecycle} />
+        )}
         {canManageTestCases && (
           <button
             type="button"

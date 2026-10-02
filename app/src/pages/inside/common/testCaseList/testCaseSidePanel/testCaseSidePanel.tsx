@@ -45,9 +45,15 @@ import { ExpandedTextSection } from 'components/fields/expandedTextSection';
 import { FolderBreadcrumbs } from 'components/folderBreadcrumbs';
 import { useUserPermissions } from 'hooks/useUserPermissions';
 import { TEST_CASE_LIBRARY_PAGE, urlOrganizationAndProjectSelector } from 'controllers/pages';
+import { useAiFactoryEnabled } from 'controllers/aiFactory';
 import { AdaptiveTagList } from 'pages/inside/productVersionPage/linkedTestCasesTab/tagList';
 import { AttachmentList } from 'pages/inside/common/attachmentList';
-import { ManualScenario, ExtendedTestCase, Requirement, TestCaseManualScenario } from 'types/testCase';
+import {
+  ManualScenario,
+  ExtendedTestCase,
+  Requirement,
+  TestCaseManualScenario,
+} from 'types/testCase';
 import { useAddTestCasesToTestPlanModal } from 'pages/inside/testCaseLibraryPage/addTestCasesToTestPlanModal/useAddTestCasesToTestPlanModal';
 import { commonMessages as testCaseLibraryCommonMessages } from 'pages/inside/testCaseLibraryPage/commonMessages';
 import { useEditTestCaseModal } from 'pages/inside/testCaseLibraryPage/createTestCaseModal';
@@ -56,6 +62,7 @@ import { useMoveTestCaseModal } from 'pages/inside/testCaseLibraryPage/moveTestC
 import { useDuplicateSelectedTestCaseModal } from 'pages/inside/testCaseLibraryPage/duplicateSelectedTestCaseModal';
 import { AddToLaunchButton } from 'pages/inside/testCaseLibraryPage/addToLaunchButton';
 import { ExecutionEstimationTime } from 'pages/inside/common/executionEstimationTime';
+import { LifecycleBadge } from 'pages/inside/aiFactory/common';
 
 import { RequirementsList } from '../../requirementsList/requirementsList';
 import { TestCaseMenuAction } from '../types';
@@ -164,6 +171,7 @@ export const TestCaseSidePanel = memo(
     const { openModal: openMoveTestCaseModal } = useMoveTestCaseModal();
     const { openModal: openDuplicateSelectedTestCaseModal } = useDuplicateSelectedTestCaseModal();
     const { hasTestPlans } = useHasTestPlans();
+    const isAiFactoryEnabled = useAiFactoryEnabled();
 
     const folderId = testCase?.testFolder?.id;
 
@@ -273,6 +281,11 @@ export const TestCaseSidePanel = memo(
               <span className={cx('test-name')} title={testCase.name}>
                 {testCase.name}
               </span>
+              {isAiFactoryEnabled && testCase.lifecycle && (
+                <span className={cx('lifecycle-badge')}>
+                  <LifecycleBadge lifecycle={testCase.lifecycle} />
+                </span>
+              )}
             </div>
             <button
               type="button"
