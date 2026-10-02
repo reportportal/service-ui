@@ -20,7 +20,9 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useAiFactoryEnabled } from 'controllers/aiFactory';
 import { useHasTestPlans } from 'hooks/useHasTestPlans';
 import { useUserPermissions } from 'hooks/useUserPermissions';
-import { LifecycleBadge, ScoreChip } from 'pages/inside/aiFactory/common';
+import { AiChip, LifecycleBadge, ScoreChip } from 'pages/inside/aiFactory/common';
+import { EvaluationMini } from 'pages/inside/aiFactory/evaluation';
+import { ReviewFlags } from 'pages/inside/aiFactory/library/reviewFlags';
 import { useDeleteTestCaseModal } from 'pages/inside/testCaseLibraryPage/deleteTestCaseModal';
 import { useDuplicateSelectedTestCaseModal } from 'pages/inside/testCaseLibraryPage/duplicateSelectedTestCaseModal';
 import { useEditScenarioModal } from 'pages/inside/testCaseLibraryPage/editScenarioModal';
@@ -99,6 +101,7 @@ jest.mock('controllers/pages', () => ({
   urlOrganizationAndProjectSelector: jest.fn(),
 }));
 jest.mock('controllers/pages/selectors', () => ({ testCaseLibraryBreadcrumbsSelector: jest.fn() }));
+jest.mock('controllers/project', () => ({ projectKeySelector: jest.fn() }));
 jest.mock('hooks/useHasTestPlans', () => ({ useHasTestPlans: jest.fn() }));
 jest.mock('hooks/useUserPermissions', () => ({ useUserPermissions: jest.fn() }));
 jest.mock('pages/common/popoverControl', () => ({ PopoverControl: 'PopoverControl' }));
@@ -150,6 +153,15 @@ jest.mock('pages/inside/common/testCaseList/utils', () => ({
 jest.mock('pages/inside/common/testCaseList/testCaseSidePanel/scenario', () => ({
   Scenario: 'Scenario',
 }));
+jest.mock('pages/inside/aiFactory/evaluation', () => ({ EvaluationMini: 'EvaluationMini' }));
+jest.mock('pages/inside/aiFactory/lifecycle', () => ({
+  useTestCaseAi: jest.fn(() => ({
+    data: null,
+    isLoading: false,
+    isError: false,
+    reload: jest.fn(),
+  })),
+}));
 
 const openModal = jest.fn();
 const testCase = {
@@ -162,7 +174,13 @@ const testCase = {
   attributes: [],
   testFolder: { id: 7 },
   lifecycle: Lifecycle.READY,
+  ai: {
+    generatedByIteration: { pipelineId: 17, iterationId: 103, number: 4 },
+    modifiedByAgent: false,
+    factoryKey: 'spec::case',
+  },
   evaluationSummary: { totalScore: 82, state: EvaluationState.EVALUATED },
+  review: { unsentCommentsCount: 1 },
   manualScenario: {
     manualScenarioType: TestCaseManualScenario.TEXT,
     attachments: [],
@@ -220,4 +238,17 @@ describe('lifecycle badges in test case hosts', () => {
       expect(header.find(ScoreChip)).toHaveLength(expectedCount);
     },
   );
+
+  test('renders the AI side-panel summary and mini evaluation only when enabled', () => {
+    const enabledPanel = renderHosts(true).sidePanel;
+    const disabledPanel = renderHosts(false).sidePanel;
+
+    expect(enabledPanel.find('[data-automation-id="ai-status-row"]')).toHaveLength(1);
+    expect(enabledPanel.find(AiChip)).toHaveLength(1);
+    expect(enabledPanel.find(ScoreChip)).toHaveLength(1);
+    expect(enabledPanel.find(ReviewFlags)).toHaveLength(1);
+    expect(enabledPanel.find(EvaluationMini)).toHaveLength(1);
+    expect(disabledPanel.find('[data-automation-id="ai-status-row"]')).toHaveLength(0);
+    expect(disabledPanel.find(EvaluationMini)).toHaveLength(0);
+  });
 });

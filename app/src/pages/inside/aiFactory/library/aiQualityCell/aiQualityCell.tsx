@@ -36,11 +36,11 @@ export interface AiQualityCellProps {
   costSummary?: TestCaseAiExtension['costSummary'];
 }
 
-interface IterationLinkProps {
+export interface AiIterationLinkProps {
   iteration: NonNullable<TestCaseAiExtension['ai']>['generatedByIteration'];
 }
 
-const IterationLink = ({ iteration }: IterationLinkProps) => {
+export const AiIterationLink = ({ iteration }: AiIterationLinkProps) => {
   const { formatMessage } = useIntl();
   const { organizationSlug, projectSlug } = useSelector(
     urlOrganizationAndProjectSelector,
@@ -83,7 +83,7 @@ export const AiQualityCell = ({ ai, evaluationSummary, costSummary }: AiQualityC
         obsolete={evaluationSummary.state === EvaluationState.OBSOLETE}
       />
       {costSummary?.approxTotal !== undefined && <CostLabel amount={costSummary.approxTotal} />}
-      {iteration && <IterationLink iteration={iteration} />}
+      {iteration && <AiIterationLink iteration={iteration} />}
     </div>
   );
 };
