@@ -14,14 +14,19 @@
  * limitations under the License.
  */
 
-import { shallow } from 'enzyme';
+import { shallow, type ShallowWrapper } from 'enzyme';
 
-import { CostLabel, ScoreBar } from 'pages/inside/aiFactory/common';
+import { CostLabel } from 'pages/inside/aiFactory/common';
 import { AiIterationLink } from 'pages/inside/aiFactory/library/aiQualityCell';
 import type { TestCaseAiLoadState } from 'pages/inside/aiFactory/lifecycle';
 import { CriterionKey, EvaluationState } from 'types/aiFactory';
 
 import { EvaluationMini } from './evaluationMini';
+import {
+  EvaluationContentState,
+  type EvaluationContentStateProps,
+} from './evaluationShared';
+import { normalizeCriteria } from './evaluationUtils';
 
 jest.mock('@reportportal/ui-kit', () => ({ BubblesLoader: 'BubblesLoader', Button: 'Button' }));
 jest.mock('react-intl', () => ({
@@ -53,6 +58,11 @@ jest.mock('pages/inside/aiFactory/library/aiQualityCell', () => ({
 
 const iteration = { pipelineId: 17, iterationId: 103, number: 4 };
 const reload = jest.fn();
+const renderContent = (wrapper: ShallowWrapper) => {
+  const props = wrapper.find('EvaluationContentState').props() as unknown as EvaluationContentStateProps;
+
+  return shallow(<EvaluationContentState {...props} />);
+};
 const readyState: TestCaseAiLoadState = {
   data: {
     evaluation: {
@@ -87,11 +97,16 @@ describe('EvaluationMini', () => {
 
   test('renders ordered criterion bars, cost, and source iteration link', () => {
     const wrapper = shallow(<EvaluationMini aiDetailsState={readyState} iteration={iteration} />);
+    const content = renderContent(wrapper);
+    const criteria = normalizeCriteria(readyState.data?.evaluation?.criteria);
 
-    expect(wrapper.find(ScoreBar)).toHaveLength(2);
-    expect(wrapper.text().indexOf('Atomicity')).toBeLessThan(wrapper.text().indexOf('Coherence'));
-    expect(wrapper.find(CostLabel).prop('amount')).toBe(0.54);
-    expect(wrapper.find(AiIterationLink).prop('iteration')).toEqual(iteration);
+    expect(content.find('CriterionScore')).toHaveLength(2);
+    expect(criteria.map(({ key }) => key)).toEqual([
+      CriterionKey.ATOMICITY,
+      CriterionKey.COHERENCE,
+    ]);
+    expect(content.find(CostLabel).prop('amount')).toBe(0.54);
+    expect(content.find(AiIterationLink).prop('iteration')).toEqual(iteration);
   });
 
   test('renders the loading state accessibly', () => {
@@ -101,8 +116,9 @@ describe('EvaluationMini', () => {
         iteration={iteration}
       />,
     );
+    const content = renderContent(wrapper);
 
-    expect(wrapper.find('output').prop('aria-label')).toBe('Loading AI evaluation');
+    expect(content.find('output').prop('aria-label')).toBe('Loading AI evaluation');
   });
 
   test('renders an error with retry', () => {
@@ -112,11 +128,12 @@ describe('EvaluationMini', () => {
         iteration={iteration}
       />,
     );
+    const content = renderContent(wrapper);
 
-    const handleRetry = wrapper.find('Button').prop('onClick') as () => void;
+    const handleRetry = content.find('Button').prop('onClick') as () => void;
     handleRetry();
 
-    expect(wrapper.find('[role="alert"]')).toHaveLength(1);
+    expect(content.find('[role="alert"]')).toHaveLength(1);
     expect(reload).toHaveBeenCalledTimes(1);
   });
 });
