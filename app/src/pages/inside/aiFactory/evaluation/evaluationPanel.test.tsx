@@ -15,7 +15,7 @@
  */
 
 import type { ReactElement } from 'react';
-import { shallow } from 'enzyme';
+import { shallow, type ShallowWrapper } from 'enzyme';
 
 import { CollapsibleSectionWithHeaderControl } from 'components/collapsibleSection';
 import { ScoreChip } from 'pages/inside/aiFactory/common';
@@ -23,6 +23,10 @@ import type { TestCaseAiLoadState } from 'pages/inside/aiFactory/lifecycle';
 import { CriterionKey, EvaluationState } from 'types/aiFactory';
 
 import { EvaluationPanel } from './evaluationPanel';
+import {
+  EvaluationContentState,
+  type EvaluationContentStateProps,
+} from './evaluationShared';
 import { useRubricModal } from './useRubricModal';
 
 jest.mock('@reportportal/ui-kit', () => ({
@@ -62,6 +66,11 @@ jest.mock('./useRubricModal', () => ({ useRubricModal: jest.fn() }));
 
 const reload = jest.fn();
 const openRubricModal = jest.fn();
+const renderContent = (wrapper: ShallowWrapper) => {
+  const props = wrapper.find('EvaluationContentState').props() as unknown as EvaluationContentStateProps;
+
+  return shallow(<EvaluationContentState {...props} />);
+};
 const evaluatedState: TestCaseAiLoadState = {
   data: {
     pipelineLinks: [],
@@ -94,12 +103,13 @@ describe('EvaluationPanel', () => {
 
   test('renders the total, criterion, source, and expandable failure reasons', () => {
     const wrapper = shallow(<EvaluationPanel aiDetailsState={evaluatedState} />);
+    const content = renderContent(wrapper);
 
     expect(wrapper.find(CollapsibleSectionWithHeaderControl).prop('isInitiallyExpanded')).toBe(
       true,
     );
     expect(wrapper.find(ScoreChip).props()).toEqual({ score: 81, obsolete: false });
-    expect(wrapper.text()).toContain('Iteration #1');
+    expect(content.text()).toContain('Iteration #1');
 
     const criterionProps = wrapper.find('CriterionRow').props();
     expect(criterionProps).toMatchObject({
@@ -129,28 +139,31 @@ describe('EvaluationPanel', () => {
       },
     } as TestCaseAiLoadState;
     const wrapper = shallow(<EvaluationPanel aiDetailsState={aiDetailsState} />);
+    const content = renderContent(wrapper);
 
     expect(wrapper.find(ScoreChip).prop('obsolete')).toBe(true);
-    expect(wrapper.text()).toContain('Obsolete — scenario changed after evaluation');
-    expect(wrapper.text()).not.toContain('PASS');
-    expect(wrapper.text()).not.toContain('FAIL');
+    expect(content.text()).toContain('Obsolete — scenario changed after evaluation');
+    expect(content.text()).not.toContain('PASS');
+    expect(content.text()).not.toContain('FAIL');
   });
 
   test('renders an accessible loading state', () => {
     const wrapper = shallow(
       <EvaluationPanel aiDetailsState={{ ...evaluatedState, data: null, isLoading: true }} />,
     );
+    const content = renderContent(wrapper);
 
-    expect(wrapper.find('output').prop('aria-label')).toBe('Loading AI evaluation');
+    expect(content.find('output').prop('aria-label')).toBe('Loading AI evaluation');
   });
 
   test('renders an error and retries the shared request', () => {
     const wrapper = shallow(
       <EvaluationPanel aiDetailsState={{ ...evaluatedState, data: null, isError: true }} />,
     );
+    const content = renderContent(wrapper);
 
-    expect(wrapper.find('[role="alert"]').text()).toContain('AI evaluation could not be loaded');
-    const retryButton = wrapper.find('[data-automation-id="retry-ai-evaluation"]').props();
+    expect(content.find('[role="alert"]').text()).toContain('AI evaluation could not be loaded');
+    const retryButton = content.find('[data-automation-id="retry-ai-evaluation"]').props();
     (retryButton.onClick as () => void)();
     expect(reload).toHaveBeenCalledTimes(1);
   });

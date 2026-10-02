@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { memo, useRef, useState } from 'react';
+import { Fragment, memo, useRef, useState } from 'react';
 import { useIntl, MessageDescriptor } from 'react-intl';
 import { useSelector, useDispatch } from 'react-redux';
 import { useTracking } from 'react-tracking';
@@ -46,6 +46,7 @@ import { FolderBreadcrumbs } from 'components/folderBreadcrumbs';
 import { useUserPermissions } from 'hooks/useUserPermissions';
 import { TEST_CASE_LIBRARY_PAGE, urlOrganizationAndProjectSelector } from 'controllers/pages';
 import { useAiFactoryEnabled } from 'controllers/aiFactory';
+import { projectKeySelector } from 'controllers/project';
 import { AdaptiveTagList } from 'pages/inside/productVersionPage/linkedTestCasesTab/tagList';
 import { AttachmentList } from 'pages/inside/common/attachmentList';
 import {
@@ -62,7 +63,11 @@ import { useMoveTestCaseModal } from 'pages/inside/testCaseLibraryPage/moveTestC
 import { useDuplicateSelectedTestCaseModal } from 'pages/inside/testCaseLibraryPage/duplicateSelectedTestCaseModal';
 import { AddToLaunchButton } from 'pages/inside/testCaseLibraryPage/addToLaunchButton';
 import { ExecutionEstimationTime } from 'pages/inside/common/executionEstimationTime';
-import { LifecycleBadge } from 'pages/inside/aiFactory/common';
+import { AiChip, LifecycleBadge, ScoreChip } from 'pages/inside/aiFactory/common';
+import { EvaluationMini } from 'pages/inside/aiFactory/evaluation';
+import { ReviewFlags } from 'pages/inside/aiFactory/library/reviewFlags';
+import { useTestCaseAi } from 'pages/inside/aiFactory/lifecycle';
+import { EvaluationState, Lifecycle } from 'types/aiFactory';
 
 import { RequirementsList } from '../../requirementsList/requirementsList';
 import { TestCaseMenuAction } from '../types';
@@ -172,6 +177,13 @@ export const TestCaseSidePanel = memo(
     const { openModal: openDuplicateSelectedTestCaseModal } = useDuplicateSelectedTestCaseModal();
     const { hasTestPlans } = useHasTestPlans();
     const isAiFactoryEnabled = useAiFactoryEnabled();
+    const projectKey = useSelector(projectKeySelector);
+    const aiDetailsState = useTestCaseAi(
+      projectKey,
+      testCase?.id ?? 0,
+      isAiFactoryEnabled && Boolean(testCase?.ai),
+      testCase?.updatedAt,
+    );
 
     const folderId = testCase?.testFolder?.id;
 
@@ -182,6 +194,14 @@ export const TestCaseSidePanel = memo(
     }
 
     const testCaseBusinessId = testCase.displayId;
+    const generatedByIterationMessage = testCase.ai?.modifiedByAgent
+      ? messages.generatedByIterationModified
+      : messages.generatedByIteration;
+    const generatedByIterationTooltip = testCase.ai?.generatedByIteration
+      ? formatMessage(generatedByIterationMessage, {
+          number: testCase.ai.generatedByIteration.number,
+        })
+      : undefined;
 
     const trackSidePanelMenu = (elementName: TestCaseMenuElementName) => {
       trackEvent(TEST_CASE_LIBRARY_EVENTS.clickSidePanelMenu(elementName));
@@ -281,11 +301,6 @@ export const TestCaseSidePanel = memo(
               <span className={cx('test-name')} title={testCase.name}>
                 {testCase.name}
               </span>
-              {isAiFactoryEnabled && testCase.lifecycle && (
-                <span className={cx('lifecycle-badge')}>
-                  <LifecycleBadge lifecycle={testCase.lifecycle} />
-                </span>
-              )}
             </div>
             <button
               type="button"
@@ -322,6 +337,24 @@ export const TestCaseSidePanel = memo(
                 <span className={cx('meta-value')}>{formatTimestamp(testCase.createdAt)}</span>
               </div>
             </div>
+            {isAiFactoryEnabled && testCase.lifecycle && (
+              <div className={cx('ai-status')} data-automation-id="ai-status-row">
+                <LifecycleBadge lifecycle={testCase.lifecycle} />
+                {generatedByIterationTooltip && (
+                  <AiChip tooltip={generatedByIterationTooltip} />
+                )}
+                {testCase.evaluationSummary && (
+                  <ScoreChip
+                    score={testCase.evaluationSummary.totalScore}
+                    obsolete={testCase.evaluationSummary.state === EvaluationState.OBSOLETE}
+                  />
+                )}
+                {testCase.ai && <ReviewFlags review={testCase.review} />}
+              </div>
+            )}
+            {isAiFactoryEnabled && testCase.lifecycle === Lifecycle.DRAFT && (
+              <p className={cx('draft-hint')}>{formatMessage(messages.draftHint)}</p>
+            )}
             <div className={cx('meta-row')}>
               {!!testCase?.lastExecution?.startedAt && (
                 <div className={cx('meta-item-row')}>
@@ -346,14 +379,21 @@ export const TestCaseSidePanel = memo(
             testCaseDescription: testCase.description,
             requirements: testCase?.manualScenario?.requirements || [],
           }).map(({ titleKey, defaultMessageKey, childComponent }) => (
-            <CollapsibleSection
-              key={titleKey}
-              title={safeGetMessage(titleKey, formatMessage)}
-              defaultMessage={safeGetMessage(defaultMessageKey, formatMessage)}
-              isInitiallyExpanded={!!childComponent}
-            >
-              {childComponent}
-            </CollapsibleSection>
+            <Fragment key={titleKey}>
+              <CollapsibleSection
+                title={safeGetMessage(titleKey, formatMessage)}
+                defaultMessage={safeGetMessage(defaultMessageKey, formatMessage)}
+                isInitiallyExpanded={!!childComponent}
+              >
+                {childComponent}
+              </CollapsibleSection>
+              {titleKey === 'tags' && isAiFactoryEnabled && testCase.ai && (
+                <EvaluationMini
+                  aiDetailsState={aiDetailsState}
+                  iteration={testCase.ai.generatedByIteration}
+                />
+              )}
+            </Fragment>
           ))}
         </div>
         <div className={cx('footer')}>
