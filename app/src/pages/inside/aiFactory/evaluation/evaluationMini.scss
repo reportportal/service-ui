@@ -1,0 +1,74 @@
+/*
+ * Copyright 2026 EPAM Systems
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+.evaluation-mini {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  color: var(--rp-ui-base-almost-black);
+  font-family: $FONT-ROBOTO-REGULAR;
+  font-size: 13px;
+  line-height: 20px;
+
+  &__criteria {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px 16px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  &__criterion {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    min-width: 0;
+  }
+
+  &__criterion-heading,
+  &__meta,
+  &__state {
+    display: flex;
+    align-items: center;
+  }
+
+  &__criterion-heading {
+    justify-content: space-between;
+    gap: 8px;
+  }
+
+  &__meta {
+    flex-wrap: wrap;
+    gap: 4px 12px;
+    color: var(--rp-ui-base-e-400);
+    font-size: 12px;
+    line-height: 18px;
+  }
+
+  &__state {
+    justify-content: center;
+    gap: 8px;
+    min-height: 48px;
+    color: var(--rp-ui-base-e-400);
+  }
+}
+
+@media (max-width: 420px) {
+  .evaluation-mini__criteria {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
