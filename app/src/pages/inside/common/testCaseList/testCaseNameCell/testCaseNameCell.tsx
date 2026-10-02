@@ -14,10 +14,17 @@
  * limitations under the License.
  */
 
+import { useIntl } from 'react-intl';
+
 import { createClassnames, highlightText } from 'common/utils';
+import type { TestCaseAiExtension } from 'types/aiFactory';
 import { AdaptiveTagList } from 'pages/inside/productVersionPage/linkedTestCasesTab/tagList';
 import { PriorityIcon } from 'pages/inside/common/priorityIcon';
+import { AiChip } from 'pages/inside/aiFactory/common';
+import { ReviewFlags } from 'pages/inside/aiFactory/library';
 import type { TestCasePriority } from 'types/testCase';
+
+import { messages } from './messages';
 
 import styles from './testCaseNameCell.scss';
 
@@ -29,6 +36,8 @@ interface TestCaseNameCellProps {
   name: string;
   tags: string[];
   searchQuery?: string;
+  ai?: TestCaseAiExtension['ai'];
+  review?: TestCaseAiExtension['review'];
 }
 
 export const TestCaseNameCell = ({
@@ -37,8 +46,19 @@ export const TestCaseNameCell = ({
   name,
   tags,
   searchQuery,
+  ai,
+  review,
 }: TestCaseNameCellProps) => {
+  const { formatMessage } = useIntl();
   const title = `${displayId} ${name}`;
+  const generatedByIterationTooltip = ai?.generatedByIteration
+    ? formatMessage(
+        ai.modifiedByAgent ? messages.generatedByIterationModified : messages.generatedByIteration,
+        {
+          number: ai.generatedByIteration.number,
+        },
+      )
+    : undefined;
 
   return (
     <div className={cx('name-section')}>
@@ -48,6 +68,11 @@ export const TestCaseNameCell = ({
           <span className={cx('business-id')}>
             {highlightText(displayId, searchQuery || '', cx('highlight'))}
           </span>
+          {generatedByIterationTooltip && (
+            <div className={cx('ai-chip')}>
+              <AiChip tooltip={generatedByIterationTooltip} />
+            </div>
+          )}
           <span className={cx('test-name')}>
             {highlightText(name, searchQuery || '', cx('highlight'))}
           </span>
@@ -55,6 +80,7 @@ export const TestCaseNameCell = ({
         <div className={cx('tags-section')}>
           <AdaptiveTagList tags={tags} isShowAllView />
         </div>
+        {ai && <ReviewFlags review={review} />}
       </div>
     </div>
   );

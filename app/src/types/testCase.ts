@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import type { AiLifecycle } from 'types/aiFactory';
+import type { TestCaseAiExtension } from 'types/aiFactory';
 
 export type TestCasePriority = 'blocker' | 'critical' | 'high' | 'medium' | 'low' | 'unspecified';
 
@@ -98,7 +98,7 @@ export interface ManualScenario {
   attachments?: Attachment[];
 }
 
-export interface TestCase {
+export interface TestCase extends Partial<TestCaseAiExtension> {
   id: number;
   displayId: string;
   name: string;
@@ -115,7 +115,6 @@ export interface TestCase {
   lastExecution?: Execution;
   tags?: { key: string }[];
   manualScenario?: ManualScenario;
-  lifecycle?: AiLifecycle;
 }
 
 export interface ExtendedTestCase extends TestCase {

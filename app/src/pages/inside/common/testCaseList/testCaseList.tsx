@@ -34,6 +34,7 @@ import { TEST_CASE_LIBRARY_PAGE, PROJECT_TEST_PLAN_DETAILS_PAGE } from 'controll
 import { TMS_INSTANCE_KEY } from 'pages/inside/common/constants';
 import { TestPlanSidePanel } from 'pages/inside/testPlansPage/testPlanSidePanel';
 import { LifecycleBadge } from 'pages/inside/aiFactory/common';
+import { AiQualityCell } from 'pages/inside/aiFactory/library';
 import { EmptyPageState } from 'pages/common';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import NoResultsIcon from 'common/img/newIcons/no-results-icon-inline.svg';
@@ -82,7 +83,7 @@ export const TestCaseList = memo(
 
     const isTestLibraryRoute = location.type === TEST_CASE_LIBRARY_PAGE;
     const isTestPlanRoute = location.type === PROJECT_TEST_PLAN_DETAILS_PAGE;
-    const shouldShowLifecycle =
+    const shouldShowAiFactoryData =
       isAiFactoryEnabled &&
       isTestLibraryRoute &&
       testCases.some(({ lifecycle }) => Boolean(lifecycle));
@@ -146,19 +147,27 @@ export const TestCaseList = memo(
       name: {
         content: testCase.name,
         component: (
-          <button
-            type="button"
-            className={cx('cell-wrapper', { selected: testCase.id === selectedTestCaseId })}
-            onClick={() => handleRowOpen(testCase.id)}
-          >
+          <div className={cx('cell-wrapper', { selected: testCase.id === selectedTestCaseId })}>
+            <button
+              type="button"
+              className={cx('cell-open-area')}
+              title={`${testCase.displayId} ${testCase.name}`}
+              aria-label={formatMessage(messages.openTestCase, {
+                displayId: testCase.displayId,
+                name: testCase.name,
+              })}
+              onClick={() => handleRowOpen(testCase.id)}
+            />
             <DraggableTestCaseNameCell
               testCase={testCase}
               priority={testCase.priority?.toLowerCase() as TestCasePriority}
               name={testCase.name}
               tags={testCase?.attributes?.map(({ key }) => key)}
               searchQuery={searchQuery}
+              ai={shouldShowAiFactoryData ? testCase.ai : undefined}
+              review={shouldShowAiFactoryData ? testCase.review : undefined}
             />
-          </button>
+          </div>
         ),
       },
       lastExecution: {
@@ -171,7 +180,7 @@ export const TestCaseList = memo(
           />
         ),
       },
-      ...(shouldShowLifecycle && {
+      ...(shouldShowAiFactoryData && {
         status: {
           content: testCase.lifecycle ?? '',
           component: testCase.lifecycle ? (
@@ -179,6 +188,16 @@ export const TestCaseList = memo(
               <LifecycleBadge lifecycle={testCase.lifecycle} />
             </div>
           ) : null,
+        },
+        aiQuality: {
+          content: testCase.evaluationSummary?.totalScore ?? '',
+          component: (
+            <AiQualityCell
+              ai={testCase.ai}
+              evaluationSummary={testCase.evaluationSummary}
+              costSummary={testCase.costSummary}
+            />
+          ),
         },
       }),
     }));
@@ -191,12 +210,18 @@ export const TestCaseList = memo(
     };
 
     const fixedColumns = [
-      ...(shouldShowLifecycle
+      ...(shouldShowAiFactoryData
         ? [
             {
               key: 'status',
               header: formatMessage(messages.statusHeader),
               width: 120,
+              align: 'left' as const,
+            },
+            {
+              key: 'aiQuality',
+              header: formatMessage(messages.aiQualityHeader),
+              width: 184,
               align: 'left' as const,
             },
           ]

@@ -75,10 +75,22 @@
 }
 
 .cell-wrapper {
+  position: relative;
+  width: 100%;
+}
+
+.cell-open-area {
   @include mixins.button-reset;
 
-  /* Component-specific styles */
+  position: absolute;
+  inset: 0;
+  z-index: 1;
   width: 100%;
+
+  &:focus-visible {
+    outline: 2px solid var(--rp-ui-base-topaz-focused);
+    outline-offset: -2px;
+  }
 }
 
 .lifecycle-cell {
