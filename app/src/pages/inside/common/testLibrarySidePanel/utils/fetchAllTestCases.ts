@@ -14,15 +14,21 @@
  * limitations under the License.
  */
 
+import { isEmpty } from 'es-toolkit/compat';
+
 import { fetch } from 'common/utils';
 import { URLS } from 'common/urls';
 import { TestCase } from 'types/testCase';
 import { Page } from 'types/common';
 
+import { chunkIdsForQueryFilter } from './chunkIdsForQueryFilter';
+
 export interface TestCasesResponse {
   content: TestCase[];
   page: Page;
 }
+
+export const TEST_FOLDER_ID_IN_FILTER_KEY = 'filter.in.testFolderId';
 
 export const fetchAllTestCases = async (
   projectKey: string,
@@ -41,4 +47,28 @@ export const fetchAllTestCases = async (
   }
 
   return testCases;
+};
+
+export const fetchAllTestCasesByFolderIds = async (
+  projectKey: string,
+  folderIds: number[],
+  params: Record<string, string | number> = {},
+): Promise<TestCase[]> => {
+  if (isEmpty(folderIds)) {
+    return [];
+  }
+
+  const folderIdChunks = chunkIdsForQueryFilter(folderIds);
+  const testCaseChunks = await Promise.all(
+    folderIdChunks.map((folderIdChunk) =>
+      fetchAllTestCases(projectKey, {
+        offset: 0,
+        limit: 50,
+        ...params,
+        [TEST_FOLDER_ID_IN_FILTER_KEY]: folderIdChunk.join(','),
+      }),
+    ),
+  );
+
+  return testCaseChunks.flat();
 };
