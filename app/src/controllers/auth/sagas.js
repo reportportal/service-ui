@@ -80,14 +80,11 @@ import { tokenSelector } from './selectors';
 
 // TODO: clear cookie on logout
 function* handleLogout({ payload }) {
-  try {
-    yield call(fetch, URLS.grafanaSession(), {
-      method: 'DELETE',
-      timeout: GRAFANA_SESSION_REVOKE_TIMEOUT,
-    });
-  } catch (error) {
-    console.error('Failed to revoke Grafana session on logout', error);
-  }
+  // JWT is still in axios.defaults.headers here (resetTokenAction hasn't fired yet).
+  fetch(URLS.grafanaSession(), {
+    method: 'DELETE',
+    timeout: GRAFANA_SESSION_REVOKE_TIMEOUT,
+  }).catch((error) => console.error('Failed to revoke Grafana session on logout', error));
 
   yield put(resetTokenAction());
   yield put(fetchPublicPluginsAction());
