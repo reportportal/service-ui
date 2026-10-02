@@ -25,10 +25,15 @@ import { MostTimeConsumingTestCasesTooltip } from './mostTimeConsumingTestCasesT
 import { calculateTooltipParams } from './utils';
 
 const DISPLAY_TICK_STEP = 0.1;
-const MAX_VALUE_TICKS = 10;
+const MAX_VALUE_TICKS = 40;
 
 const formatDurationTick = (value, timeTypeValue) =>
   (Number.parseInt(value, 10) / timeTypeValue).toFixed(2);
+
+const isOnInterval = (value, interval) => {
+  const steps = value / interval;
+  return Math.abs(steps - Math.round(steps)) < 1e-6;
+};
 
 const prepareChartData = (content) => {
   const chartData = [DURATION];
@@ -93,7 +98,8 @@ export const getOption = ({ content, isPreview, formatMessage }) => {
       axisLabel: {
         ...AXIS_LABEL_STYLE,
         margin: 8,
-        formatter: (value) => formatDurationTick(value, timeType.value),
+        formatter: (value) =>
+          isOnInterval(value, valueAxisInterval) ? formatDurationTick(value, timeType.value) : '',
       },
       axisLine: {
         show: true,
@@ -118,21 +124,21 @@ export const getOption = ({ content, isPreview, formatMessage }) => {
         show: false,
       },
       axisTick: {
-        show: !isPreview,
+        show: false,
         alignWithLabel: true,
-        inside: true,
-        customValues: categories.filter((_, index) => index % 2 === 0),
-        length: 10000,
-        lineStyle: {
-          color: COLORS.COLOR_GRAY_80,
-          width: 1,
-        },
       },
       axisLabel: {
         show: false,
       },
       splitLine: {
-        show: false,
+        show: !isPreview,
+        alignWithLabel: true,
+        showMaxLine: false,
+        interval: (index) => index % 2 === 0,
+        lineStyle: {
+          color: COLORS.COLOR_GRAY_80,
+          width: 1,
+        },
       },
     },
     tooltip: {
