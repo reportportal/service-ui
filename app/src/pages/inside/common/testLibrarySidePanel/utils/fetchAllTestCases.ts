@@ -29,6 +29,7 @@ export interface TestCasesResponse {
 }
 
 export const TEST_FOLDER_ID_IN_FILTER_KEY = 'filter.in.testFolderId';
+export const MAX_CONCURRENT_FOLDER_CHUNK_FETCHES = 5;
 
 export const fetchAllTestCases = async (
   projectKey: string,
@@ -49,6 +50,40 @@ export const fetchAllTestCases = async (
   return testCases;
 };
 
+const fetchFolderIdChunks = async (
+  projectKey: string,
+  folderIdChunks: number[][],
+  params: Record<string, string | number>,
+  startIndex = 0,
+): Promise<TestCase[]> => {
+  if (startIndex >= folderIdChunks.length) {
+    return [];
+  }
+
+  const batch = folderIdChunks.slice(
+    startIndex,
+    startIndex + MAX_CONCURRENT_FOLDER_CHUNK_FETCHES,
+  );
+  const batchResults = await Promise.all(
+    batch.map((folderIdChunk) =>
+      fetchAllTestCases(projectKey, {
+        offset: 0,
+        limit: 50,
+        ...params,
+        [TEST_FOLDER_ID_IN_FILTER_KEY]: folderIdChunk.join(','),
+      }),
+    ),
+  );
+  const remainingResults = await fetchFolderIdChunks(
+    projectKey,
+    folderIdChunks,
+    params,
+    startIndex + MAX_CONCURRENT_FOLDER_CHUNK_FETCHES,
+  );
+
+  return [...batchResults.flat(), ...remainingResults];
+};
+
 export const fetchAllTestCasesByFolderIds = async (
   projectKey: string,
   folderIds: number[],
@@ -58,17 +93,5 @@ export const fetchAllTestCasesByFolderIds = async (
     return [];
   }
 
-  const folderIdChunks = chunkIdsForQueryFilter(folderIds);
-  const testCaseChunks = await Promise.all(
-    folderIdChunks.map((folderIdChunk) =>
-      fetchAllTestCases(projectKey, {
-        offset: 0,
-        limit: 50,
-        ...params,
-        [TEST_FOLDER_ID_IN_FILTER_KEY]: folderIdChunk.join(','),
-      }),
-    ),
-  );
-
-  return testCaseChunks.flat();
+  return fetchFolderIdChunks(projectKey, chunkIdsForQueryFilter(folderIds), params);
 };
