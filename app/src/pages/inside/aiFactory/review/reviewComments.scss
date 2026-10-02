@@ -1,0 +1,135 @@
+/*
+ * Copyright 2026 EPAM Systems
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ */
+
+.review-strip {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  padding: 12px 16px;
+  border: 1px solid var(--rp-ui-base-e-100);
+  border-radius: 4px;
+  background-color: var(--rp-ui-base-bg-100);
+  font-family: var(--rp-ui-base-font-family);
+  font-size: 13px;
+  line-height: 20px;
+
+  &__summary,
+  &__actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  &__actions {
+    margin-left: auto;
+  }
+
+  &__error {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    gap: 8px;
+    color: var(--rp-ui-base-error);
+  }
+}
+
+.review-target {
+  flex: 0 0 100%;
+  width: 100%;
+
+  &__trigger {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    min-height: 28px;
+    padding: 4px 8px;
+    border: 0;
+    border-radius: 4px;
+    background: transparent;
+    color: var(--rp-ui-base-e-400);
+    cursor: pointer;
+
+    img {
+      width: 16px;
+      height: 16px;
+    }
+
+    &--pending {
+      color: var(--rp-ui-base-a-yellow-600);
+    }
+  }
+
+  &__thread {
+    padding: 12px 16px;
+    border-top: 1px solid var(--rp-ui-base-e-100);
+    font-family: var(--rp-ui-base-font-family);
+    font-size: 13px;
+    line-height: 20px;
+  }
+
+  &__comment {
+    padding: 8px 0;
+    border-bottom: 1px solid var(--rp-ui-base-e-100);
+
+    p {
+      margin: 4px 0 0;
+      white-space: pre-wrap;
+      overflow-wrap: anywhere;
+    }
+  }
+
+  &__reason {
+    color: var(--rp-ui-base-e-400);
+  }
+
+  &__comment-header {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
+    color: var(--rp-ui-base-e-400);
+  }
+
+  &__delete {
+    display: inline-flex;
+    margin-left: auto;
+    padding: 4px;
+    border: 0;
+    background: transparent;
+    cursor: pointer;
+  }
+
+  &__composer {
+    display: grid;
+    gap: 8px;
+    padding-top: 12px;
+
+    textarea {
+      min-height: 72px;
+      resize: vertical;
+      padding: 8px;
+      border: 1px solid var(--rp-ui-base-e-200);
+      border-radius: 4px;
+      color: var(--rp-ui-base-almost-black);
+      font: inherit;
+    }
+  }
+}
+
+@media (max-width: 720px) {
+  .review-strip__actions {
+    width: 100%;
+    margin-left: 0;
+  }
+}
