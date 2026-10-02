@@ -21,19 +21,11 @@ import type { TestCaseAiLoadState } from 'pages/inside/aiFactory/lifecycle';
 import { PipelineLinks } from './pipelineLinks';
 
 jest.mock('@reportportal/ui-kit', () => ({ BubblesLoader: 'BubblesLoader', Button: 'Button' }));
-jest.mock('react-intl', () => ({
-  defineMessages: (messages: unknown) => messages,
-  useIntl: () => ({
-    formatMessage: (
-      message: { defaultMessage: string },
-      values: Record<string, string | number> = {},
-    ) =>
-      Object.entries(values).reduce(
-        (text, [key, value]) => text.replace(`{${key}}`, String(value)),
-        message.defaultMessage,
-      ),
-  }),
-}));
+jest.mock('react-intl', () =>
+  jest.requireActual<typeof import('../aiFactoryTestUtils')>(
+    'pages/inside/aiFactory/aiFactoryTestUtils',
+  ).reactIntlTestMock,
+);
 jest.mock('react-redux', () => ({ useSelector: jest.fn() }));
 jest.mock('redux-first-router-link', () => 'Link');
 jest.mock('controllers/pages', () => ({
