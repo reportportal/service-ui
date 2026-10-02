@@ -22,6 +22,7 @@ import { useHasTestPlans } from 'hooks/useHasTestPlans';
 import { useUserPermissions } from 'hooks/useUserPermissions';
 import { AiChip, LifecycleBadge, ScoreChip } from 'pages/inside/aiFactory/common';
 import { EvaluationMini } from 'pages/inside/aiFactory/evaluation';
+import { ApproveButton } from 'pages/inside/aiFactory/approval';
 import { ReviewFlags } from 'pages/inside/aiFactory/library/reviewFlags';
 import { useDeleteTestCaseModal } from 'pages/inside/testCaseLibraryPage/deleteTestCaseModal';
 import { useDuplicateSelectedTestCaseModal } from 'pages/inside/testCaseLibraryPage/duplicateSelectedTestCaseModal';
@@ -102,6 +103,7 @@ jest.mock('controllers/pages', () => ({
 }));
 jest.mock('controllers/pages/selectors', () => ({ testCaseLibraryBreadcrumbsSelector: jest.fn() }));
 jest.mock('controllers/project', () => ({ projectKeySelector: jest.fn() }));
+jest.mock('controllers/testCase', () => ({ GET_TEST_CASE_DETAILS: 'GET_TEST_CASE_DETAILS' }));
 jest.mock('hooks/useHasTestPlans', () => ({ useHasTestPlans: jest.fn() }));
 jest.mock('hooks/useUserPermissions', () => ({ useUserPermissions: jest.fn() }));
 jest.mock('pages/common/popoverControl', () => ({ PopoverControl: 'PopoverControl' }));
@@ -154,6 +156,7 @@ jest.mock('pages/inside/common/testCaseList/testCaseSidePanel/scenario', () => (
   Scenario: 'Scenario',
 }));
 jest.mock('pages/inside/aiFactory/evaluation', () => ({ EvaluationMini: 'EvaluationMini' }));
+jest.mock('pages/inside/aiFactory/approval', () => ({ ApproveButton: 'ApproveButton' }));
 jest.mock('pages/inside/aiFactory/lifecycle', () => ({
   useTestCaseAi: jest.fn(() => ({
     data: null,
@@ -161,6 +164,9 @@ jest.mock('pages/inside/aiFactory/lifecycle', () => ({
     isError: false,
     reload: jest.fn(),
   })),
+}));
+jest.mock('pages/inside/testCaseLibraryPage/hooks/useRefetchCurrentTestCases', () => ({
+  useRefetchCurrentTestCases: jest.fn(() => jest.fn()),
 }));
 
 const openModal = jest.fn();
@@ -188,12 +194,17 @@ const testCase = {
   },
 } as unknown as ExtendedTestCase;
 
-const renderHosts = (isEnabled: boolean) => {
+const renderHosts = (
+  isEnabled: boolean,
+  caseToRender: ExtendedTestCase = testCase,
+  canReviewAiTestCases = false,
+) => {
   jest.mocked(useAiFactoryEnabled).mockReturnValue(isEnabled);
   jest.mocked(useDispatch).mockReturnValue(jest.fn());
   jest.mocked(useSelector).mockReturnValue({ organizationSlug: 'org', projectSlug: 'project' });
   jest.mocked(useUserPermissions).mockReturnValue({
     canManageTestCases: false,
+    canReviewAiTestCases,
   } as ReturnType<typeof useUserPermissions>);
   jest.mocked(useHasTestPlans).mockReturnValue({
     hasTestPlans: false,
@@ -207,8 +218,8 @@ const renderHosts = (isEnabled: boolean) => {
   jest.mocked(useAddTestCasesToTestPlanModal).mockReturnValue({ openModal });
 
   return {
-    header: shallow(<TestCaseDetailsHeader testCase={testCase} onAddToTestPlan={jest.fn()} />),
-    sidePanel: shallow(<TestCaseSidePanel testCase={testCase} isVisible onClose={jest.fn()} />),
+    header: shallow(<TestCaseDetailsHeader testCase={caseToRender} onAddToTestPlan={jest.fn()} />),
+    sidePanel: shallow(<TestCaseSidePanel testCase={caseToRender} isVisible onClose={jest.fn()} />),
   };
 };
 
@@ -250,5 +261,19 @@ describe('lifecycle badges in test case hosts', () => {
     expect(enabledPanel.find(EvaluationMini)).toHaveLength(1);
     expect(disabledPanel.find('[data-automation-id="ai-status-row"]')).toHaveLength(0);
     expect(disabledPanel.find(EvaluationMini)).toHaveLength(0);
+  });
+
+  test('renders approval in both hosts only for a permitted Draft case', () => {
+    const draftCase = { ...testCase, lifecycle: Lifecycle.DRAFT };
+    const permitted = renderHosts(true, draftCase, true);
+    const viewer = renderHosts(true, draftCase, false);
+    const toggleOff = renderHosts(false, draftCase, true);
+
+    expect(permitted.header.find(ApproveButton)).toHaveLength(1);
+    expect(permitted.sidePanel.find(ApproveButton)).toHaveLength(1);
+    expect(viewer.header.find(ApproveButton)).toHaveLength(0);
+    expect(viewer.sidePanel.find(ApproveButton)).toHaveLength(0);
+    expect(toggleOff.header.find(ApproveButton)).toHaveLength(0);
+    expect(toggleOff.sidePanel.find(ApproveButton)).toHaveLength(0);
   });
 });

@@ -121,10 +121,10 @@ describe('useTestCaseMutations lifecycle notifications', () => {
       expectedMessageId: 'testCaseScenarioChangedToDraft',
     },
     {
-      description: 'keeps the generic message for another lifecycle result',
+      description: 'uses the Ready message for TO_READY while AI Factory is enabled',
       isEnabled: true,
       lifecycleChanged: 'TO_READY' as const,
-      expectedMessageId: 'testCaseUpdatedSuccess',
+      expectedMessageId: 'testCaseScenarioChangedToReady',
     },
     {
       description: 'keeps the generic message for TO_DRAFT while AI Factory is disabled',

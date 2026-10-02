@@ -14,7 +14,8 @@
  * limitations under the License.
  */
 
-import { processFolder } from './testCaseUtils';
+import { buildTestCaseData, processFolder } from './testCaseUtils';
+import { ManualScenarioType, type CreateTestCaseFormData } from '../types';
 
 describe('processFolder', () => {
   it('sends testFolderId when the selected folder has an id', () => {
@@ -63,6 +64,27 @@ describe('processFolder', () => {
 
     expect(result.payload).toEqual({
       testFolder: { name: 'New folder', parentTestFolderId: 0 },
+    });
+  });
+});
+
+describe('buildTestCaseData', () => {
+  const payload = {
+    name: 'Case',
+    folder: { id: 52, name: 'Test', description: 'Test', fullPath: 'Test' },
+    manualScenarioType: ManualScenarioType.TEXT,
+    attributes: [],
+  } as CreateTestCaseFormData;
+  const scenario = {
+    manualScenarioType: ManualScenarioType.TEXT,
+    executionEstimationTime: 0,
+    requirements: [],
+  };
+
+  it('adds promoteToReady only when the Edit Scenario control supplied it', () => {
+    expect(buildTestCaseData(payload, scenario, [])).not.toHaveProperty('promoteToReady');
+    expect(buildTestCaseData({ ...payload, promoteToReady: true }, scenario, [])).toMatchObject({
+      promoteToReady: true,
     });
   });
 });

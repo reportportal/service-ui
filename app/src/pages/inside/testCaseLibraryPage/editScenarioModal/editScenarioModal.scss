@@ -28,4 +28,27 @@
     position: relative;
     overflow: auto;
   }
+
+  &__lifecycle-hint,
+  &__ready-hint {
+    margin: 0;
+    color: var(--rp-ui-base-e-400);
+    font-family: $FONT-ROBOTO-REGULAR;
+    font-size: 13px;
+    line-height: 20px;
+  }
+
+  &__lifecycle-hint {
+    margin-bottom: 16px;
+    padding: 12px;
+    background-color: var(--rp-ui-base-bg-200);
+    border-radius: 4px;
+  }
+
+  &__ready-control {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    margin-top: 16px;
+  }
 }

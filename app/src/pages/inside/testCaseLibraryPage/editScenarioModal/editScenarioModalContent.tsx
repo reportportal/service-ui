@@ -14,7 +14,8 @@
  * limitations under the License.
  */
 
-import { Modal } from '@reportportal/ui-kit';
+import { type ChangeEvent } from 'react';
+import { Checkbox, Modal } from '@reportportal/ui-kit';
 
 import { createClassnames } from 'common/utils';
 import { ModalLoadingOverlay } from 'components/modalLoadingOverlay';
@@ -31,7 +32,7 @@ import styles from './editScenarioModal.scss';
 
 const cx = createClassnames(styles);
 
-const EditScenarioModalContentInner = ({
+export const EditScenarioModalContentInner = ({
   title,
   submitButtonText,
   isLoading,
@@ -40,6 +41,11 @@ const EditScenarioModalContentInner = ({
   pristine,
   allowCloseOutside: allowCloseOutsideFromProps,
   handleSubmit,
+  lifecycleHint,
+  promoteToReadyLabel,
+  promoteToReadyDisabledHint,
+  promoteToReadyValue = false,
+  onPromoteToReadyChange,
 }: EditScenarioModalContentProps) => {
   const { hasBlockingAttachments } = useAttachmentValidation();
   const { okButton, cancelButton, handleClose, handleFormSubmit } = useModalActions({
@@ -63,10 +69,31 @@ const EditScenarioModalContentInner = ({
       scrollable
     >
       <div className={cx('scenario-edit-modal__wrapper')}>
+        {lifecycleHint && (
+          <p className={cx('scenario-edit-modal__lifecycle-hint')}>{lifecycleHint}</p>
+        )}
         <form onSubmit={handleFormSubmit}>
           <div className={cx('scenario-edit-modal__form-container')}>
             <ScenarioFields formName={formName} />
           </div>
+          {promoteToReadyLabel && (
+            <div className={cx('scenario-edit-modal__ready-control')}>
+              <Checkbox
+                value={promoteToReadyValue}
+                disabled={Boolean(promoteToReadyDisabledHint)}
+                onChange={(event: ChangeEvent<HTMLInputElement>) =>
+                  onPromoteToReadyChange?.(event.target.checked)
+                }
+              >
+                {promoteToReadyLabel}
+              </Checkbox>
+              {promoteToReadyDisabledHint && (
+                <p className={cx('scenario-edit-modal__ready-hint')}>
+                  {promoteToReadyDisabledHint}
+                </p>
+              )}
+            </div>
+          )}
         </form>
         <ModalLoadingOverlay isVisible={isLoading} />
       </div>

@@ -53,6 +53,7 @@ import { useURLBoundPagination } from 'pages/inside/common/testCaseList/useURLBo
 import { useProjectDetails } from 'hooks/useTypedSelector';
 import { useAiFactoryEnabled } from 'controllers/aiFactory';
 import { getTestCaseAiQueryParams } from 'controllers/testCase/actionCreators';
+import { BulkApproveButton } from 'pages/inside/aiFactory/approval';
 import {
   QuickFilters,
   useIterationNumber,
@@ -70,6 +71,7 @@ import { useBatchDeleteTestCasesModal } from './batchDeleteTestCasesModal';
 import { useMoveTestCaseModal } from '../moveTestCaseModal';
 import { useBatchEditTagsModal } from './batchEditTagsModal';
 import { useAddToLaunchModal } from '../addToLaunchModal';
+import { useRefetchCurrentTestCases } from '../hooks/useRefetchCurrentTestCases';
 
 import styles from './allTestCasesPage.scss';
 
@@ -113,9 +115,10 @@ export const AllTestCasesPage = ({
   const { openModal: openBatchDeleteTestCasesModal } = useBatchDeleteTestCasesModal();
   const { openModal: openMoveTestCaseModal } = useMoveTestCaseModal();
   const { openModal: openBatchEditTagsModal } = useBatchEditTagsModal();
-  const { canManageTestCases } = useUserPermissions();
+  const { canManageTestCases, canReviewAiTestCases } = useUserPermissions();
   const { hasTestPlans } = useHasTestPlans();
   const isAiFactoryEnabled = useAiFactoryEnabled();
+  const refetchCurrentTestCases = useRefetchCurrentTestCases();
   const { lifecycle, ai, iteration } = getTestCaseAiQueryParams(query);
   const hasAiFilters = Boolean(lifecycle || ai || iteration);
   const iterationNumber = useIterationNumber(
@@ -313,6 +316,15 @@ export const AllTestCasesPage = ({
                 <MeatballMenuIcon />
               </Button>
             </PopoverControl>
+            {isAiFactoryEnabled && canReviewAiTestCases && (
+              <BulkApproveButton
+                testCaseIds={selectedRowIds}
+                onSuccess={() => {
+                  onClearSelection();
+                  refetchCurrentTestCases();
+                }}
+              />
+            )}
             <Button variant="ghost" onClick={handleOpenMoveTestCaseModal}>
               {formatMessage(messages.moveToFolder)}
             </Button>
