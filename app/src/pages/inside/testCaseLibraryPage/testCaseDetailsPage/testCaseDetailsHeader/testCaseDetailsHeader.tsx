@@ -39,6 +39,7 @@ import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { REVERSED_DATE_FORMAT } from 'common/constants/timeDateFormat';
 import { showModalAction } from 'controllers/modal';
 import { useAiFactoryEnabled } from 'controllers/aiFactory';
+import { GET_TEST_CASE_DETAILS } from 'controllers/testCase';
 import { TEST_CASE_LIBRARY_PAGE, urlOrganizationAndProjectSelector } from 'controllers/pages';
 import { useUserPermissions } from 'hooks/useUserPermissions';
 import { useHasTestPlans } from 'hooks/useHasTestPlans';
@@ -46,7 +47,8 @@ import { PriorityIcon } from 'pages/inside/common/priorityIcon';
 import { testCaseLibraryBreadcrumbsSelector } from 'controllers/pages/selectors';
 import { ExecutionEstimationTime } from 'pages/inside/common/executionEstimationTime';
 import { LifecycleBadge, ScoreChip } from 'pages/inside/aiFactory/common';
-import { EvaluationState } from 'types/aiFactory';
+import { ApproveButton } from 'pages/inside/aiFactory/approval';
+import { EvaluationState, Lifecycle } from 'types/aiFactory';
 import type { ExtendedTestCase, TestCasePriority } from 'types/testCase';
 
 import { messages } from './messages';
@@ -78,7 +80,7 @@ export const TestCaseDetailsHeader = ({
 }: TestCaseDetailsHeaderProps) => {
   const { formatMessage } = useIntl();
   const { trackEvent } = useTracking();
-  const { canManageTestCases } = useUserPermissions();
+  const { canManageTestCases, canReviewAiTestCases } = useUserPermissions();
   const { organizationSlug, projectSlug } = useSelector(
     urlOrganizationAndProjectSelector,
   ) as ProjectDetails;
@@ -272,6 +274,16 @@ export const TestCaseDetailsHeader = ({
               )}
             </>
           )}
+          {isAiFactoryEnabled &&
+            canReviewAiTestCases &&
+            testCase.lifecycle === Lifecycle.DRAFT && (
+              <ApproveButton
+                testCase={testCase}
+                onSuccess={() =>
+                  dispatch({ type: GET_TEST_CASE_DETAILS, payload: { testCaseId: testCase.id } })
+                }
+              />
+            )}
         </div>
       </div>
     </div>

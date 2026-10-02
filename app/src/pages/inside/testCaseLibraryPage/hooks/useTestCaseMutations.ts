@@ -167,10 +167,12 @@ export const useTestCaseMutations = (testCaseId?: number) => {
         }
 
         dispatch(hideModalAction());
-        const successMessageId =
-          isAiFactoryEnabled && response?.lifecycleChanged === 'TO_DRAFT'
-            ? 'testCaseScenarioChangedToDraft'
-            : options.successMessageId;
+        let successMessageId = options.successMessageId;
+        if (isAiFactoryEnabled && response?.lifecycleChanged === 'TO_DRAFT') {
+          successMessageId = 'testCaseScenarioChangedToDraft';
+        } else if (isAiFactoryEnabled && response?.lifecycleChanged === 'TO_READY') {
+          successMessageId = 'testCaseScenarioChangedToReady';
+        }
 
         showSuccessNotification({ messageId: successMessageId });
 

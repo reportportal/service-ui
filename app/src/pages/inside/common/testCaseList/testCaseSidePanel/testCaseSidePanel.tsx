@@ -65,8 +65,10 @@ import { AddToLaunchButton } from 'pages/inside/testCaseLibraryPage/addToLaunchB
 import { ExecutionEstimationTime } from 'pages/inside/common/executionEstimationTime';
 import { AiChip, LifecycleBadge, ScoreChip } from 'pages/inside/aiFactory/common';
 import { EvaluationMini } from 'pages/inside/aiFactory/evaluation';
+import { ApproveButton } from 'pages/inside/aiFactory/approval';
 import { ReviewFlags } from 'pages/inside/aiFactory/library/reviewFlags';
 import { useTestCaseAi } from 'pages/inside/aiFactory/lifecycle';
+import { useRefetchCurrentTestCases } from 'pages/inside/testCaseLibraryPage/hooks/useRefetchCurrentTestCases';
 import { EvaluationState, Lifecycle } from 'types/aiFactory';
 
 import { RequirementsList } from '../../requirementsList/requirementsList';
@@ -163,7 +165,7 @@ export const TestCaseSidePanel = memo(
   ({ testCase, isVisible, onClose }: TestCaseSidePanelProps) => {
     const dispatch = useDispatch();
     const { trackEvent } = useTracking();
-    const { canManageTestCases } = useUserPermissions();
+    const { canManageTestCases, canReviewAiTestCases } = useUserPermissions();
     const { organizationSlug, projectSlug } = useSelector(
       urlOrganizationAndProjectSelector,
     ) as ProjectDetails;
@@ -184,6 +186,7 @@ export const TestCaseSidePanel = memo(
       isAiFactoryEnabled && Boolean(testCase?.ai),
       testCase?.updatedAt,
     );
+    const refetchCurrentTestCases = useRefetchCurrentTestCases();
 
     const folderId = testCase?.testFolder?.id;
 
@@ -457,6 +460,15 @@ export const TestCaseSidePanel = memo(
               )}
             </>
           )}
+          {isAiFactoryEnabled &&
+            canReviewAiTestCases &&
+            testCase.lifecycle === Lifecycle.DRAFT && (
+              <ApproveButton
+                testCase={testCase}
+                className={cx('action-button', 'last-button')}
+                onSuccess={refetchCurrentTestCases}
+              />
+            )}
         </div>
       </div>
     );
