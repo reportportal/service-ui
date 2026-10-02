@@ -18,19 +18,11 @@ import type { TestCaseAiLoadState } from 'pages/inside/aiFactory/lifecycle';
 import { GenerationCost } from './generationCost';
 
 jest.mock('@reportportal/ui-kit', () => ({ BubblesLoader: 'BubblesLoader', Button: 'Button' }));
-jest.mock('react-intl', () => ({
-  defineMessages: (messages: unknown) => messages,
-  useIntl: () => ({
-    formatMessage: (
-      message: { defaultMessage: string },
-      values: Record<string, string | number> = {},
-    ) =>
-      Object.entries(values).reduce(
-        (text, [key, value]) => text.replace(`{${key}}`, String(value)),
-        message.defaultMessage,
-      ),
-  }),
-}));
+jest.mock('react-intl', () =>
+  jest.requireActual<typeof import('../aiFactoryTestUtils')>(
+    'pages/inside/aiFactory/aiFactoryTestUtils',
+  ).reactIntlTestMock,
+);
 jest.mock('components/collapsibleSection', () => ({ CollapsibleSection: 'CollapsibleSection' }));
 
 const reload = jest.fn();
