@@ -15,6 +15,7 @@
  */
 
 .precondition {
+  position: relative;
   display: flex;
   min-width: 0;
   background-color: var(--rp-ui-base-bg-000);
@@ -39,6 +40,10 @@
     & > div:first-child:not(:last-child) {
       border-bottom: 1px solid var(--rp-ui-base-e-100);
     }
+  }
+
+  &--reviewable &__content {
+    padding-right: 48px;
   }
 
   &__value {

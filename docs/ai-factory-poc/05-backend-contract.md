@@ -352,7 +352,7 @@ type EvaluationState = 'EVALUATED' | 'OBSOLETE';
 type CriterionKey = 'atomicity' | 'clear_steps' | 'expected_results'
                   | 'no_invented_logic' | 'no_invented_ui' | 'coherence';        // max 15/20/20/20/15/10
 type CommentTargetType = 'PRECONDITION' | 'STEP' | 'TEXT_SCENARIO';
-type CommentState = 'PENDING' | 'SENT' | 'ADDRESSED';
+type CommentState = 'PENDING' | 'SENT' | 'ADDRESSED' | 'NOT_ADDRESSED';
 type FixRoundStatus = 'RUNNING' | 'PASSED' | 'GRADE_FAILED' | 'FAILED';
 type AutomationStatus = 'NOT_AUTOMATED' | 'IN_PROGRESS' | 'AUTOMATED' | 'FAILED';
 type LifecycleReason = 'CREATED' | 'UPLOADED' | 'MIGRATED' | 'APPROVED' | 'MARKED_AS_READY'
@@ -545,7 +545,8 @@ interface ReviewCommentRS {
   author: { id: number; name: string };
   createdAt: number;
   state: CommentState;
-  fixRound?: number;                                      // when SENT/ADDRESSED
+  fixRound?: number;                                      // when SENT/ADDRESSED/NOT_ADDRESSED
+  reason?: string;                                        // agent explanation when NOT_ADDRESSED
   canDelete: boolean;                                     // own + PENDING
 }
 ```

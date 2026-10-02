@@ -25,6 +25,7 @@ import { LifecycleHistory, useTestCaseAi } from 'pages/inside/aiFactory/lifecycl
 import { EvaluationPanel } from 'pages/inside/aiFactory/evaluation';
 import { GenerationCost } from 'pages/inside/aiFactory/generationCost';
 import { PipelineLinks } from 'pages/inside/aiFactory/pipelineLinks';
+import { ReviewStrip, useReviewComments } from 'pages/inside/aiFactory/review';
 import { useAddTestCasesToTestPlanModal } from 'pages/inside/testCaseLibraryPage/addTestCasesToTestPlanModal/useAddTestCasesToTestPlanModal';
 import { Lifecycle } from 'types/aiFactory';
 import type { ExtendedTestCase } from 'types/testCase';
@@ -32,6 +33,7 @@ import type { ExtendedTestCase } from 'types/testCase';
 import { useDescriptionModal } from './descriptionModal';
 import { TestCaseDetailsPage } from './testCaseDetailsPage';
 import { useTestCaseTags } from './useTestCaseTags';
+import { checkScenario } from './utils';
 
 jest.mock('@reportportal/ui-kit', () => ({
   BubblesLoader: 'BubblesLoader',
@@ -81,6 +83,11 @@ jest.mock('pages/inside/aiFactory/lifecycle', () => ({
   useTestCaseAi: jest.fn(),
 }));
 jest.mock('pages/inside/aiFactory/pipelineLinks', () => ({ PipelineLinks: 'PipelineLinks' }));
+jest.mock('pages/inside/aiFactory/review', () => ({
+  ReviewStrip: 'ReviewStrip',
+  ReviewTarget: 'ReviewTarget',
+  useReviewComments: jest.fn(),
+}));
 jest.mock('pages/inside/common/attachmentsWithSlider', () => ({
   AttachmentsWithSlider: 'AttachmentsWithSlider',
 }));
@@ -142,6 +149,16 @@ const renderPage = (isEnabled: boolean) => {
     isError: false,
     reload: jest.fn(),
   });
+  jest.mocked(useReviewComments).mockReturnValue({
+    comments: [],
+    isLoading: false,
+    isError: false,
+    isMutating: false,
+    reload: jest.fn(),
+    addComment: jest.fn(() => Promise.resolve()),
+    deleteComment: jest.fn(() => Promise.resolve()),
+    discardPending: jest.fn(() => Promise.resolve()),
+  });
   jest.mocked(useTestCaseTags).mockReturnValue({
     addTag: jest.fn(() => Promise.resolve()),
     removeTag: jest.fn(() => Promise.resolve()),
@@ -160,6 +177,7 @@ interface LifecycleHistoryWrapper {
 describe('TestCaseDetailsPage lifecycle history', () => {
   beforeEach(() => {
     jest.clearAllMocks();
+    jest.mocked(checkScenario).mockReturnValue(true);
     selectedTestCase = testCase;
   });
 
@@ -211,5 +229,30 @@ describe('TestCaseDetailsPage lifecycle history', () => {
 
     expect(refreshedHistory.key()).toBe('42-DRAFT-200');
     expect(useTestCaseAi).toHaveBeenLastCalledWith('demo', 42, true, 200);
+  });
+
+  test('mounts review comments only for an AI case while the feature is enabled', () => {
+    jest.mocked(checkScenario).mockReturnValue(false);
+    selectedTestCase = {
+      ...testCase,
+      ai: {
+        generatedByIteration: { pipelineId: 1, iterationId: 101, number: 1 },
+        modifiedByAgent: false,
+        factoryKey: 'REQ-1::Lifecycle case',
+      },
+      manualScenario: {
+        manualScenarioType: 'TEXT',
+        requirements: [],
+        instructions: 'Open the Library',
+        expectedResult: 'The Library is displayed',
+      },
+    } as unknown as ExtendedTestCase;
+
+    const enabledPage = renderPage(true);
+    const disabledPage = renderPage(false);
+
+    expect(useReviewComments).toHaveBeenCalledWith('demo', 42, true);
+    expect(enabledPage.find(ReviewStrip)).toHaveLength(1);
+    expect(disabledPage.find(ReviewStrip)).toHaveLength(0);
   });
 });
