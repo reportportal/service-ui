@@ -26,7 +26,7 @@ import { Lifecycle, LifecycleReason } from 'types/aiFactory';
 import type { AiLifecycle, AiLifecycleReason } from 'types/aiFactory';
 
 import { messages } from './messages';
-import { useTestCaseAi } from './useTestCaseAi';
+import type { TestCaseAiLoadState } from './useTestCaseAi';
 
 import styles from './lifecycleHistory.scss';
 
@@ -99,9 +99,7 @@ const normalizeHistory = (value: unknown): NormalizedHistoryEntry[] =>
     : [];
 
 interface LifecycleHistoryProps {
-  projectKey: string;
-  testCaseId: number;
-  isEnabled: boolean;
+  aiDetailsState: TestCaseAiLoadState;
 }
 
 interface HistoryEntryProps {
@@ -136,9 +134,9 @@ const HistoryEntry = ({ entry }: HistoryEntryProps) => {
   );
 };
 
-export const LifecycleHistory = ({ projectKey, testCaseId, isEnabled }: LifecycleHistoryProps) => {
+export const LifecycleHistory = ({ aiDetailsState }: LifecycleHistoryProps) => {
   const { formatMessage } = useIntl();
-  const { data, isLoading, isError, reload } = useTestCaseAi(projectKey, testCaseId, isEnabled);
+  const { data, isLoading, isError, reload } = aiDetailsState;
   const history = normalizeHistory(data?.lifecycleHistory).reverse();
 
   let content = history.length ? (

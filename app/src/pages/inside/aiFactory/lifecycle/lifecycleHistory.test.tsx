@@ -19,6 +19,7 @@ import { shallow } from 'enzyme';
 import { Button } from '@reportportal/ui-kit';
 
 import { CollapsibleSection } from 'components/collapsibleSection';
+import type { TestCaseAiRS } from 'types/aiFactory';
 import {
   Lifecycle,
   LifecycleActorType,
@@ -27,7 +28,7 @@ import {
 } from 'types/aiFactory';
 
 import { LifecycleHistory } from './lifecycleHistory';
-import { useTestCaseAi } from './useTestCaseAi';
+import type { TestCaseAiLoadState } from './useTestCaseAi';
 
 jest.mock('@reportportal/ui-kit', () => ({
   BubblesLoader: 'BubblesLoader',
@@ -49,10 +50,8 @@ jest.mock('react-intl', () => ({
       ),
   }),
 }));
-jest.mock('./useTestCaseAi', () => ({ useTestCaseAi: jest.fn() }));
-
 const reload = jest.fn();
-const baseHookResult = {
+const baseAiDetailsState: TestCaseAiLoadState = {
   data: null,
   isLoading: false,
   isError: false,
@@ -79,17 +78,10 @@ const history: LifecycleHistoryEntryRS[] = [
 describe('LifecycleHistory', () => {
   beforeEach(() => {
     jest.clearAllMocks();
-    jest.mocked(useTestCaseAi).mockReturnValue(baseHookResult);
-  });
-
-  test('passes request identity and enabled state to the data hook', () => {
-    shallow(<LifecycleHistory projectKey="demo" testCaseId={42} isEnabled={false} />);
-
-    expect(useTestCaseAi).toHaveBeenCalledWith('demo', 42, false);
   });
 
   test('renders the collapsed empty state when there is no lifecycle history', () => {
-    const wrapper = shallow(<LifecycleHistory projectKey="demo" testCaseId={42} isEnabled />);
+    const wrapper = shallow(<LifecycleHistory aiDetailsState={baseAiDetailsState} />);
 
     expect(wrapper.find(CollapsibleSection).props()).toMatchObject({
       title: 'History',
@@ -100,11 +92,11 @@ describe('LifecycleHistory', () => {
   });
 
   test('renders lifecycle history newest first and expands the section', () => {
-    jest.mocked(useTestCaseAi).mockReturnValue({
-      ...baseHookResult,
+    const aiDetailsState = {
+      ...baseAiDetailsState,
       data: { pipelineLinks: [], lifecycleHistory: history },
-    });
-    const wrapper = shallow(<LifecycleHistory projectKey="demo" testCaseId={42} isEnabled />);
+    };
+    const wrapper = shallow(<LifecycleHistory aiDetailsState={aiDetailsState} />);
     const list = wrapper.find(CollapsibleSection).prop('children') as ReactElement<{
       children: ReactNode;
     }>;
@@ -124,8 +116,8 @@ describe('LifecycleHistory', () => {
   });
 
   test('drops invalid transitions and falls back for unknown optional fields', () => {
-    jest.mocked(useTestCaseAi).mockReturnValue({
-      ...baseHookResult,
+    const aiDetailsState = {
+      ...baseAiDetailsState,
       data: {
         pipelineLinks: [],
         lifecycleHistory: [
@@ -133,10 +125,10 @@ describe('LifecycleHistory', () => {
           { to: 'UNKNOWN' },
           { to: Lifecycle.READY, reason: 'FUTURE_REASON', actor: null, at: 'invalid' },
         ],
-      } as unknown as NonNullable<ReturnType<typeof useTestCaseAi>['data']>,
-    });
+      } as unknown as TestCaseAiRS,
+    };
 
-    const wrapper = shallow(<LifecycleHistory projectKey="demo" testCaseId={42} isEnabled />);
+    const wrapper = shallow(<LifecycleHistory aiDetailsState={aiDetailsState} />);
     const list = wrapper.find(CollapsibleSection).prop('children') as ReactElement<{
       children: ReactNode;
     }>;
@@ -150,8 +142,8 @@ describe('LifecycleHistory', () => {
   });
 
   test('does not render time for a finite timestamp outside the JavaScript Date range', () => {
-    jest.mocked(useTestCaseAi).mockReturnValue({
-      ...baseHookResult,
+    const aiDetailsState = {
+      ...baseAiDetailsState,
       data: {
         pipelineLinks: [],
         lifecycleHistory: [
@@ -163,9 +155,9 @@ describe('LifecycleHistory', () => {
           },
         ],
       },
-    });
+    };
 
-    const wrapper = shallow(<LifecycleHistory projectKey="demo" testCaseId={42} isEnabled />);
+    const wrapper = shallow(<LifecycleHistory aiDetailsState={aiDetailsState} />);
     const list = wrapper.find(CollapsibleSection).prop('children') as ReactElement<{
       children: ReactNode;
     }>;
@@ -177,16 +169,18 @@ describe('LifecycleHistory', () => {
   });
 
   test('renders an accessible loading state', () => {
-    jest.mocked(useTestCaseAi).mockReturnValue({ ...baseHookResult, isLoading: true });
-    const wrapper = shallow(<LifecycleHistory projectKey="demo" testCaseId={42} isEnabled />);
+    const wrapper = shallow(
+      <LifecycleHistory aiDetailsState={{ ...baseAiDetailsState, isLoading: true }} />,
+    );
 
     expect(wrapper.find('output').prop('aria-label')).toBe('Loading lifecycle history');
     expect(wrapper.find(CollapsibleSection).prop('isInitiallyExpanded')).toBe(true);
   });
 
   test('renders an error and retries the request', () => {
-    jest.mocked(useTestCaseAi).mockReturnValue({ ...baseHookResult, isError: true });
-    const wrapper = shallow(<LifecycleHistory projectKey="demo" testCaseId={42} isEnabled />);
+    const wrapper = shallow(
+      <LifecycleHistory aiDetailsState={{ ...baseAiDetailsState, isError: true }} />,
+    );
 
     expect(wrapper.find('[role="alert"]').text()).toContain(
       'Lifecycle history could not be loaded',

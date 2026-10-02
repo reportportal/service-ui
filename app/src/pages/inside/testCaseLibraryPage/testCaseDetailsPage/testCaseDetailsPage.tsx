@@ -36,7 +36,8 @@ import { useAiFactoryEnabled } from 'controllers/aiFactory';
 import { projectKeySelector } from 'controllers/project';
 import { isLoadingTestCaseDetailsSelector, testCaseDetailsSelector } from 'controllers/testCase';
 import { commonMessages } from 'pages/inside/common/common-messages';
-import { LifecycleHistory } from 'pages/inside/aiFactory/lifecycle';
+import { EvaluationPanel } from 'pages/inside/aiFactory/evaluation';
+import { LifecycleHistory, useTestCaseAi } from 'pages/inside/aiFactory/lifecycle';
 import { ManualScenario, Tag, TestCaseManualScenario } from 'types/testCase';
 
 import { TestCaseDetailsHeader } from './testCaseDetailsHeader';
@@ -185,6 +186,12 @@ export const TestCaseDetailsPage = () => {
   const isAiFactoryEnabled = useAiFactoryEnabled();
 
   const testCaseId = testCaseDetails?.id || 0;
+  const aiDetailsState = useTestCaseAi(
+    projectKey,
+    testCaseId,
+    isAiFactoryEnabled && Boolean(testCaseDetails?.lifecycle),
+    testCaseDetails?.updatedAt,
+  );
 
   const {
     addTag,
@@ -284,12 +291,13 @@ export const TestCaseDetailsPage = () => {
                 {childComponent}
               </CollapsibleSectionWithHeaderControl>
             ))}
+            {isAiFactoryEnabled && testCaseDetails.ai && (
+              <EvaluationPanel aiDetailsState={aiDetailsState} />
+            )}
             {isAiFactoryEnabled && testCaseDetails.lifecycle && (
               <LifecycleHistory
                 key={`${testCaseDetails.id}-${testCaseDetails.lifecycle}-${testCaseDetails.updatedAt}`}
-                projectKey={projectKey}
-                testCaseId={testCaseDetails.id}
-                isEnabled
+                aiDetailsState={aiDetailsState}
               />
             )}
           </div>

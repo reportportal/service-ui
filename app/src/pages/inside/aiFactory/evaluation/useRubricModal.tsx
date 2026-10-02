@@ -14,6 +14,12 @@
  * limitations under the License.
  */
 
-export { LifecycleHistory } from './lifecycleHistory';
-export { useTestCaseAi } from './useTestCaseAi';
-export type { TestCaseAiLoadState } from './useTestCaseAi';
+import { useModal } from 'common/hooks';
+
+import { AI_EVALUATION_RUBRIC_MODAL_KEY, RubricModal, type RubricModalData } from './rubricModal';
+
+export const useRubricModal = () =>
+  useModal<RubricModalData>({
+    modalKey: AI_EVALUATION_RUBRIC_MODAL_KEY,
+    renderModal: (data) => <RubricModal data={data} />,
+  });

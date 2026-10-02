@@ -14,6 +14,5 @@
  * limitations under the License.
  */
 
-export { LifecycleHistory } from './lifecycleHistory';
-export { useTestCaseAi } from './useTestCaseAi';
-export type { TestCaseAiLoadState } from './useTestCaseAi';
+export { EvaluationPanel } from './evaluationPanel';
+export type { EvaluationPanelProps } from './evaluationPanel';

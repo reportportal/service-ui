@@ -45,7 +45,8 @@ import { useHasTestPlans } from 'hooks/useHasTestPlans';
 import { PriorityIcon } from 'pages/inside/common/priorityIcon';
 import { testCaseLibraryBreadcrumbsSelector } from 'controllers/pages/selectors';
 import { ExecutionEstimationTime } from 'pages/inside/common/executionEstimationTime';
-import { LifecycleBadge } from 'pages/inside/aiFactory/common';
+import { LifecycleBadge, ScoreChip } from 'pages/inside/aiFactory/common';
+import { EvaluationState } from 'types/aiFactory';
 import type { ExtendedTestCase, TestCasePriority } from 'types/testCase';
 
 import { messages } from './messages';
@@ -197,6 +198,12 @@ export const TestCaseDetailsHeader = ({
         </span>
         {isAiFactoryEnabled && testCase.lifecycle && (
           <LifecycleBadge lifecycle={testCase.lifecycle} />
+        )}
+        {isAiFactoryEnabled && testCase.evaluationSummary && (
+          <ScoreChip
+            score={testCase.evaluationSummary.totalScore}
+            obsolete={testCase.evaluationSummary.state === EvaluationState.OBSOLETE}
+          />
         )}
         {canManageTestCases && (
           <button
