@@ -16,6 +16,7 @@
 
 import { TestCase } from 'types/testCase';
 import { Page } from 'types/common';
+import type { LocationQuery } from 'types/store';
 
 import {
   GET_FOLDERS,
@@ -33,6 +34,7 @@ import {
   START_LOADING_TEST_CASES,
   STOP_LOADING_TEST_CASES,
   SET_TEST_CASES,
+  CLEAR_TEST_CASES,
   RENAME_FOLDER,
   RENAME_FOLDER_SUCCESS,
   MOVE_FOLDER_SUCCESS,
@@ -49,9 +51,9 @@ import {
   STOP_LOADING_FILTERED_FOLDERS,
   CLEAR_FILTERED_FOLDERS,
 } from './constants';
-import { Folder, TransformedFolder } from './types';
+import { Folder, TestCaseAiFilterParams, TransformedFolder } from './types';
 
-export interface GetTestCasesByFolderIdParams {
+export interface GetTestCasesByFolderIdParams extends TestCaseAiFilterParams {
   folderId: number;
   offset: number;
   limit: number;
@@ -60,13 +62,41 @@ export interface GetTestCasesByFolderIdParams {
   filterTags?: string;
 }
 
-export interface GetAllTestCases {
+export interface GetAllTestCases extends TestCaseAiFilterParams {
   offset: number;
   limit: number;
   testCasesSearchParams?: string;
   filterPriorities?: string;
   filterTags?: string;
 }
+
+const isValidIteration = (iteration?: string) => {
+  if (typeof iteration !== 'string' || !/^[1-9]\d*$/.test(iteration)) {
+    return false;
+  }
+
+  return Number.isSafeInteger(Number(iteration));
+};
+
+export const getTestCaseAiQueryParams = (
+  query?: LocationQuery,
+): Pick<LocationQuery, 'lifecycle' | 'ai' | 'iteration'> => ({
+  ...(query?.lifecycle === 'DRAFT' || query?.lifecycle === 'READY'
+    ? { lifecycle: query.lifecycle }
+    : {}),
+  ...(query?.ai === 'AI' || query?.ai === 'NO_AI' ? { ai: query.ai } : {}),
+  ...(isValidIteration(query?.iteration) ? { iteration: query?.iteration } : {}),
+});
+
+export const getTestCaseAiFilterParams = (query?: LocationQuery): TestCaseAiFilterParams => {
+  const aiQueryParams = getTestCaseAiQueryParams(query);
+
+  return {
+    ...(aiQueryParams.lifecycle ? { lifecycle: aiQueryParams.lifecycle } : {}),
+    ...(aiQueryParams.ai ? { hasAi: aiQueryParams.ai === 'AI' } : {}),
+    ...(aiQueryParams.iteration ? { iterationId: Number(aiQueryParams.iteration) } : {}),
+  };
+};
 
 export interface CreateFolderParams {
   folderName: string;
@@ -129,6 +159,10 @@ export const stopLoadingTestCasesAction = () => ({
 export const setTestCasesAction = (testCases: { content: TestCase[]; page: Page | null }) => ({
   type: SET_TEST_CASES,
   payload: testCases,
+});
+
+export const clearTestCasesAction = () => ({
+  type: CLEAR_TEST_CASES,
 });
 
 export const startCreatingFolderAction = () => ({

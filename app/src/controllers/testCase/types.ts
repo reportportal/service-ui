@@ -15,6 +15,7 @@
  */
 
 import { Action } from 'redux';
+import type { AiLifecycle } from 'types/aiFactory';
 import {
   GET_FOLDERS,
   CREATE_FOLDER,
@@ -51,7 +52,13 @@ export interface FolderWithFullPath {
   fullPath: string;
 }
 
-export interface GetAllTestCases {
+export interface TestCaseAiFilterParams {
+  lifecycle?: AiLifecycle;
+  hasAi?: boolean;
+  iterationId?: number;
+}
+
+export interface GetAllTestCases extends TestCaseAiFilterParams {
   offset: number;
   limit: number;
   testCasesSearchParams?: string;
