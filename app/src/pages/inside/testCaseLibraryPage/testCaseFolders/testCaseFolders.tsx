@@ -37,8 +37,15 @@ import {
   testCasesSelector,
   foldersSelector,
   testCasesPageSelector,
+  successfulTestCasesLoadRevisionSelector,
   FolderWithFullPath,
 } from 'controllers/testCase';
+import {
+  getTestCaseAiFilterParams,
+  getTestCaseAiQueryParams,
+} from 'controllers/testCase/actionCreators';
+import { useAiFactoryEnabled } from 'controllers/aiFactory';
+import { projectKeySelector } from 'controllers/project';
 import {
   locationSelector,
   TEST_CASE_LIBRARY_PAGE,
@@ -59,6 +66,7 @@ import { userIdSelector } from 'controllers/user';
 import { ExtendedTestCase } from 'types/testCase';
 import { findFolderById } from 'pages/inside/common/hooks';
 import type { NotificationMessageKey } from 'common/hooks/useNotification';
+import { useReviewQueueCount } from 'pages/inside/aiFactory/library';
 
 import { ExpandedOptions } from '../../common/expandedOptions';
 import { commonMessages } from '../commonMessages';
@@ -77,6 +85,7 @@ const cx = createClassnames(styles);
 
 export const TestCaseFolders = () => {
   const { formatMessage } = useIntl();
+  const isAiFactoryFeatureEnabled = useAiFactoryEnabled();
   const { trackEvent } = useTracking();
   const dispatch = useDispatch();
   const { openModal: openCreateFolderModal } = useCreateFolderModal();
@@ -101,14 +110,21 @@ export const TestCaseFolders = () => {
   const isLoadingTestCases = useSelector(isLoadingTestCasesSelector);
   const testCases = useSelector(testCasesSelector);
   const testCasesPageData = useSelector(testCasesPageSelector);
+  const successfulLoadRevision = useSelector(successfulTestCasesLoadRevisionSelector);
   const organizationSlug = useSelector(urlOrganizationSlugSelector);
   const projectSlug = useSelector(urlProjectSlugSelector);
+  const projectKey = useSelector(projectKeySelector);
   const initialFolders = useSelector(foldersSelector);
   const folders = useSelector(transformedFoldersSelector);
   const areFoldersLoading = useSelector(areFoldersLoadingSelector);
   const { query } = useSelector(locationSelector);
   const userId = useSelector(userIdSelector) as string;
   const { canManageTestCases } = useUserPermissions();
+  const reviewQueueCount = useReviewQueueCount(
+    projectKey,
+    isAiFactoryFeatureEnabled,
+    successfulLoadRevision,
+  );
 
   const urlFolderIdNumber = Number(urlFolderId);
   const activeFolder = useMemo(
@@ -124,8 +140,9 @@ export const TestCaseFolders = () => {
       testCasesSearchParams: query?.testCasesSearchParams,
       filterPriorities: query?.filterPriorities,
       filterTags: query?.filterTags,
+      ...(isAiFactoryFeatureEnabled ? getTestCaseAiFilterParams(query) : {}),
     }),
-    [query, savedLimit],
+    [isAiFactoryFeatureEnabled, query, savedLimit],
   );
 
   const searchExtraFilters = useMemo(
@@ -142,6 +159,9 @@ export const TestCaseFolders = () => {
         queryParams.testCasesSearchParams ?? '',
         queryParams.filterPriorities ?? '',
         queryParams.filterTags ?? '',
+        queryParams.lifecycle ?? '',
+        queryParams.hasAi === undefined ? '' : String(queryParams.hasAi),
+        queryParams.iterationId ?? '',
       ].join('|'),
     [
       urlFolderId,
@@ -150,6 +170,9 @@ export const TestCaseFolders = () => {
       queryParams.testCasesSearchParams,
       queryParams.filterPriorities,
       queryParams.filterTags,
+      queryParams.lifecycle,
+      queryParams.hasAi,
+      queryParams.iterationId,
     ],
   );
   const [loadedQueryKey, setLoadedQueryKey] = useState<string | null>(null);
@@ -175,16 +198,10 @@ export const TestCaseFolders = () => {
         ...(query?.testCasesSearchParams && { testCasesSearchParams: query.testCasesSearchParams }),
         ...(query?.filterPriorities && { filterPriorities: query.filterPriorities }),
         ...(query?.filterTags && { filterTags: query.filterTags }),
+        ...(isAiFactoryFeatureEnabled ? getTestCaseAiQueryParams(query) : {}),
       },
     });
-  }, [
-    dispatch,
-    organizationSlug,
-    projectSlug,
-    query?.testCasesSearchParams,
-    query?.filterPriorities,
-    query?.filterTags,
-  ]);
+  }, [dispatch, isAiFactoryFeatureEnabled, organizationSlug, projectSlug, query]);
 
   useEffect(() => {
     if (urlFolderId && !activeFolder) {
@@ -222,6 +239,9 @@ export const TestCaseFolders = () => {
     queryParams.testCasesSearchParams,
     queryParams.filterPriorities,
     queryParams.filterTags,
+    queryParams.lifecycle,
+    queryParams.hasAi,
+    queryParams.iterationId,
   ]);
 
   const handleFolderClick = (id: number) => {
@@ -318,6 +338,7 @@ export const TestCaseFolders = () => {
         testCasesPageData={testCasesPageData}
         instanceKey={TMS_INSTANCE_KEY.TEST_CASE}
         isLoading={isLoadingTestCases || isTestCasesQueryStale || areFoldersLoading}
+        reviewQueueCount={reviewQueueCount}
       />
     </ExpandedOptions>
   );

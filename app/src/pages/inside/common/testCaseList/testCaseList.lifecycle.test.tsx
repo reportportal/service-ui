@@ -113,9 +113,10 @@ const renderList = (
   isEnabled: boolean,
   routeType: string,
   testCases: ExtendedTestCase[] = [testCase],
+  options: { hasAiFilters?: boolean; query?: Record<string, string> } = {},
 ) => {
   jest.mocked(useAiFactoryEnabled).mockReturnValue(isEnabled);
-  jest.mocked(useSelector).mockReturnValue({ type: routeType, query: {} });
+  jest.mocked(useSelector).mockReturnValue({ type: routeType, query: options.query ?? {} });
   jest.mocked(useUserPermissions).mockReturnValue({
     canManageTestCases: true,
   } as ReturnType<typeof useUserPermissions>);
@@ -128,6 +129,7 @@ const renderList = (
       selectedRows={[]}
       instanceKey={TMS_INSTANCE_KEY.TEST_CASE}
       handleSelectedRows={jest.fn()}
+      hasAiFilters={options.hasAiFilters}
     />,
   );
 };
@@ -221,5 +223,33 @@ describe('TestCaseList lifecycle column', () => {
     expect(typeof openButton.prop('onClick')).toBe('function');
     expect(openButton.find('DraggableTestCaseNameCell')).toHaveLength(0);
     expect(nameCell.find('DraggableTestCaseNameCell')).toHaveLength(1);
+  });
+
+  test('renders the exact AI-filter empty state without a generic description', () => {
+    const wrapper = renderList(true, TEST_CASE_LIBRARY_PAGE, [], { hasAiFilters: true });
+    const emptyState = wrapper.find('EmptyPageState');
+
+    expect(emptyState).toHaveLength(1);
+    expect(emptyState.props()).toMatchObject({
+      label: 'No Test Cases match these filters',
+      description: undefined,
+    });
+    expect(wrapper.find(Table)).toHaveLength(0);
+  });
+
+  test.each([
+    ['the AI Factory feature is disabled', false, TEST_CASE_LIBRARY_PAGE],
+    ['the list belongs to a Test Plan', true, PROJECT_TEST_PLAN_DETAILS_PAGE],
+  ])('keeps the standard filtered empty state when %s', (_label, isEnabled, routeType) => {
+    const wrapper = renderList(isEnabled, routeType, [], {
+      query: { testCasesSearchParams: 'missing' },
+    });
+    const emptyState = wrapper.find('EmptyPageState');
+
+    expect(emptyState.props()).toMatchObject({
+      label: 'No results found',
+      description:
+        "Your search or filter criteria didn't match any results. Please try different keywords or adjust your filter settings.",
+    });
   });
 });

@@ -468,6 +468,8 @@ export const URLS = {
     `${urlBase}project/${projectKey}/tms/pipeline/${pipelineId}/iteration${getQueryParams(query)}`, // P2
   tmsPipelineIterationById: (projectKey, pipelineId, iterationId) =>
     `${urlBase}project/${projectKey}/tms/pipeline/${pipelineId}/iteration/${iterationId}`, // P3
+  pipelineIterationById: (projectKey, iterationId) =>
+    `${urlBase}project/${projectKey}/pipeline/iteration/${iterationId}`, // LP3
   tmsPipelineSettings: (projectKey, pipelineId) =>
     `${urlBase}project/${projectKey}/tms/pipeline/${pipelineId}/settings`, // P4
 

@@ -38,6 +38,7 @@ import {
   SET_EXPANDED_FOLDER_IDS,
   SET_FOLDERS_FETCHED,
   SET_TEST_CASES,
+  CLEAR_TEST_CASES,
   START_CREATING_FOLDER,
   START_LOADING_FOLDER,
   START_LOADING_TEST_CASES,
@@ -84,6 +85,7 @@ export type InitialStateType = {
     isLoading: boolean;
     list: TestCase[];
     page: Page | null;
+    successfulLoadRevision: number;
   };
 };
 
@@ -103,6 +105,7 @@ export const INITIAL_STATE: InitialStateType = {
     isLoading: false,
     list: [],
     page: null,
+    successfulLoadRevision: 0,
   },
 };
 
@@ -167,7 +170,8 @@ const areFoldersFetchedReducer = (
 };
 
 type TestCasesAction =
-  | { type: typeof SET_TEST_CASES; payload?: { content: TestCase[]; page: Page } }
+  | { type: typeof SET_TEST_CASES; payload?: { content: TestCase[]; page: Page | null } }
+  | { type: typeof CLEAR_TEST_CASES }
   | { type: typeof DELETE_TEST_CASE_SUCCESS; payload: DeleteTestCaseParams }
   | { type: typeof START_LOADING_TEST_CASES }
   | { type: typeof STOP_LOADING_TEST_CASES };
@@ -179,6 +183,13 @@ const testCasesReducer = (state = INITIAL_STATE.testCases, action: TestCasesActi
         ...state,
         list: Array.isArray(action.payload?.content) ? action.payload.content : [],
         page: action.payload?.page || null,
+        successfulLoadRevision: (state.successfulLoadRevision ?? 0) + 1,
+      };
+    case CLEAR_TEST_CASES:
+      return {
+        ...state,
+        list: [],
+        page: null,
       };
     case DELETE_TEST_CASE_SUCCESS: {
       return {

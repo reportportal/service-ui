@@ -27,6 +27,9 @@ import type {
 import type { UserState } from 'controllers/user/types';
 import type { NotificationState } from 'controllers/notification/types';
 import type { ModalState } from 'controllers/modal/types';
+import type { AiLifecycle } from 'types/aiFactory';
+
+export type TestCaseAiPresenceFilter = 'AI' | 'NO_AI';
 
 export interface LocationQuery {
   offset?: string;
@@ -42,6 +45,9 @@ export interface LocationQuery {
   filterStartTimeTo?: string;
   filterTestPlan?: string;
   filterCompositeAttribute?: string;
+  lifecycle?: AiLifecycle;
+  ai?: TestCaseAiPresenceFilter;
+  iteration?: string;
   stage?: string; // AI Factory PoC, EPMRPP-118192 — preselects a stage card on the iteration details page
 }
 

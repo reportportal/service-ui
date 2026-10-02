@@ -55,9 +55,13 @@ export const testCasesSelector = (state: RootState): TestCase[] =>
 export const testCasesPageSelector = (state: RootState): Page | null =>
   state.testCase?.testCases?.page || null;
 
+export const successfulTestCasesLoadRevisionSelector = (state: RootState): number =>
+  state.testCase?.testCases?.successfulLoadRevision || 0;
+
 export const testCaseDetailsSelector = (state: RootState) => state.testCase?.details?.data;
 
-export const isLoadingTestCaseDetailsSelector = (state: RootState) => state.testCase?.details?.loading || false;
+export const isLoadingTestCaseDetailsSelector = (state: RootState) =>
+  state.testCase?.details?.loading || false;
 
 export const transformedFoldersSelector = createSelector(
   foldersSelector,
