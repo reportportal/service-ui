@@ -58,6 +58,7 @@ interface TestCaseListProps {
   selectable?: boolean;
   instanceKey: TMS_INSTANCE_KEY;
   handleSelectedRows: (rows: SelectedTestCaseRow[]) => void;
+  hasAiFilters?: boolean;
 }
 
 export const TestCaseList = memo(
@@ -70,6 +71,7 @@ export const TestCaseList = memo(
     selectable = true,
     instanceKey,
     handleSelectedRows,
+    hasAiFilters = false,
   }: TestCaseListProps) => {
     const { formatMessage } = useIntl();
     const { trackEvent } = useTracking();
@@ -237,7 +239,8 @@ export const TestCaseList = memo(
     const hasActiveSearchOrFilters =
       !!location?.query?.testCasesSearchParams ||
       !!location?.query?.filterPriorities ||
-      !!location?.query?.filterTags;
+      !!location?.query?.filterTags ||
+      hasAiFilters;
     const showNoSearchResults = !isLoading && isEmpty(testCases) && hasActiveSearchOrFilters;
 
     return (
@@ -262,8 +265,12 @@ export const TestCaseList = memo(
                 <div className={cx('no-results-message')}>
                   {hasActiveSearchOrFilters ? (
                     <EmptyPageState
-                      label={formatMessage(COMMON_LOCALE_KEYS.NO_RESULTS)}
-                      description={formatMessage(messages.noResultsDescription)}
+                      label={formatMessage(
+                        hasAiFilters ? messages.noResultsAiFilters : COMMON_LOCALE_KEYS.NO_RESULTS,
+                      )}
+                      description={
+                        hasAiFilters ? undefined : formatMessage(messages.noResultsDescription)
+                      }
                       emptyIcon={NoResultsIcon as unknown as string}
                     />
                   ) : (

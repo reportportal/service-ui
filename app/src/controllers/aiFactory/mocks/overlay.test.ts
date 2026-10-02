@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import axios from 'axios';
+import axios, { AxiosHeaders } from 'axios';
 import MockAdapter from 'axios-mock-adapter';
 import {
   AutomationStatus,
@@ -28,7 +28,11 @@ import {
 import { ManualScenario, TestCase, TestCaseManualScenario } from 'types/testCase';
 import { findCase, resetMockDb } from './db';
 import { installAiFactoryHandlers } from './handlers';
-import { installOverlayInterceptor, mergeAiFields } from './overlay';
+import {
+  C3_OVERLAY_ERROR_CODE,
+  installOverlayInterceptor,
+  mergeAiFields,
+} from './overlay';
 
 const TEST_CASE_URL = '/api/v1/project/demo/tms/test-case/555';
 
@@ -157,6 +161,226 @@ describe('installOverlayInterceptor', () => {
 
     const { data } = await http.get<{ content: (TestCase & { lifecycle?: string })[] }>('/api/v1/project/demo/tms/test-case');
     expect(data.content.map((c) => c.lifecycle)).toEqual(['READY', 'DRAFT']);
+
+    mock.restore();
+  });
+
+  test('filters a complete first page and recomputes its pagination metadata', async () => {
+    const { http, mock } = setupOverlay();
+    const url = '/api/v1/project/demo/tms/test-case';
+    const content = ['TC101', 'TC103', 'TC105', 'TC106'].map((displayId, index) =>
+      realTestCase(displayId, undefined, index + 1),
+    );
+    mock.onGet(`${url}?offset=0&limit=1000`).reply(200, {
+      content,
+      page: { number: 1, size: 20, totalElements: 4, totalPages: 1 },
+    });
+
+    const { data } = await http.get<{ content: TestCase[]; page: { totalElements: number } }>(url, {
+      params: {
+        'filter.eq.lifecycle': Lifecycle.DRAFT,
+        'filter.eq.ai': true,
+        'filter.eq.iterationId': 102,
+      },
+    });
+
+    expect(data.content.map(({ displayId }) => displayId)).toEqual(['TC106']);
+    expect(data.page.totalElements).toBe(1);
+
+    mock.restore();
+  });
+
+  test('loads and filters the complete backend dataset before applying pagination', async () => {
+    const { http, mock } = setupOverlay();
+    const url = '/api/v1/project/demo/tms/test-case';
+    mock.onGet(`${url}?limit=1000&offset=0`).reply(200, {
+      content: [realTestCase('TC101'), realTestCase('TC103')],
+      page: { number: 0, size: 2, totalElements: 8, totalPages: 4 },
+    });
+    mock.onGet(`${url}?limit=2&offset=2`).reply(200, {
+      content: [realTestCase('TC102'), realTestCase('TC104')],
+      page: { number: 2, size: 2, totalElements: 8, totalPages: 4 },
+    });
+    mock.onGet(`${url}?limit=2&offset=4`).reply(200, {
+      content: [realTestCase('TC105'), realTestCase('TC106')],
+      page: { number: 3, size: 2, totalElements: 8, totalPages: 4 },
+    });
+    mock.onGet(`${url}?limit=2&offset=6`).reply(200, {
+      content: [realTestCase('TC107'), realTestCase('TC108')],
+      page: { number: 4, size: 2, totalElements: 8, totalPages: 4 },
+    });
+
+    const { data } = await http.get<{ content: TestCase[]; page: { totalElements: number } }>(url, {
+      params: { limit: 2, offset: 2, 'filter.eq.lifecycle': Lifecycle.DRAFT },
+    });
+
+    expect(data.content.map(({ displayId }) => displayId)).toEqual(['TC106', 'TC107']);
+    expect(data.page.totalElements).toBe(5);
+
+    mock.restore();
+  });
+
+  test('rejects filtered responses without pagination metadata', async () => {
+    const { http, mock } = setupOverlay();
+    const url = '/api/v1/project/demo/tms/test-case';
+    mock.onGet(`${url}?offset=0&limit=1000`).reply(200, {
+      content: [realTestCase('TC101'), realTestCase('TC103')],
+    });
+
+    await expect(
+      http.get(url, { params: { 'filter.eq.lifecycle': Lifecycle.DRAFT } }),
+    ).rejects.toThrow('AI Factory mock requires pagination metadata to filter Test Cases');
+
+    mock.restore();
+  });
+
+  test('rejects a filtered response when all declared pages cannot be loaded', async () => {
+    const { http, mock } = setupOverlay();
+    const url = '/api/v1/project/demo/tms/test-case';
+    mock.onGet(`${url}?offset=0&limit=1000`).reply(200, {
+      content: [realTestCase('TC101')],
+      page: { number: 1, size: 1, totalElements: 3, totalPages: 2 },
+    });
+    mock.onGet(`${url}?offset=1&limit=1`).reply(200, {
+      content: [realTestCase('TC103')],
+      page: { number: 2, size: 1, totalElements: 3, totalPages: 2 },
+    });
+
+    await expect(
+      http.get(url, { params: { 'filter.eq.lifecycle': Lifecycle.DRAFT } }),
+    ).rejects.toThrow('AI Factory mock could not load the complete Test Case dataset');
+
+    mock.restore();
+  });
+
+  test.each([
+    ['record ceiling', 5001, 6],
+    ['page ceiling', 11, 11],
+  ])('rejects pagination metadata above the development %s', async (_description, totalElements, totalPages) => {
+    const { http, mock } = setupOverlay();
+    const url = '/api/v1/project/demo/tms/test-case';
+    mock.onGet(`${url}?offset=0&limit=1000`).reply(200, {
+      content: [realTestCase('TC103')],
+      page: { number: 1, size: 1000, totalElements, totalPages },
+    });
+
+    await expect(
+      http.get(url, { params: { 'filter.eq.lifecycle': Lifecycle.DRAFT } }),
+    ).rejects.toMatchObject({
+      code: C3_OVERLAY_ERROR_CODE,
+      name: 'C3OverlayError',
+    });
+
+    mock.restore();
+  });
+
+  test.each([
+    ['zero limit', { limit: 0 }],
+    ['oversized limit', { limit: 1001 }],
+    ['negative offset', { offset: -1 }],
+    ['oversized offset', { offset: 5001 }],
+  ])('rejects unsafe params-object pagination: %s', async (_description, pagination) => {
+    const { http, mock } = setupOverlay();
+
+    await expect(
+      http.get('/api/v1/project/demo/tms/test-case', {
+        params: {
+          limit: 20,
+          offset: 0,
+          'filter.eq.lifecycle': Lifecycle.DRAFT,
+          ...pagination,
+        },
+      }),
+    ).rejects.toMatchObject({
+      code: C3_OVERLAY_ERROR_CODE,
+      name: 'C3OverlayError',
+    });
+    expect(mock.history.get).toHaveLength(0);
+
+    mock.restore();
+  });
+
+  test('propagates the original AbortSignal and stops before the next page after abort', async () => {
+    const { http, mock } = setupOverlay();
+    const controller = new AbortController();
+    const url = '/api/v1/project/demo/tms/test-case';
+    let propagatedSignal: AbortSignal | undefined;
+    let propagatedAuthorization: unknown;
+    let finalPageRequests = 0;
+    mock.onGet(`${url}?offset=0&limit=1000`).reply(200, {
+      content: [realTestCase('TC101')],
+      page: { number: 1, size: 1, totalElements: 3, totalPages: 3 },
+    });
+    mock.onGet(`${url}?offset=1&limit=1`).reply((config) => {
+      propagatedSignal = config.signal as AbortSignal;
+      propagatedAuthorization = AxiosHeaders.from(config.headers).get('Authorization');
+      controller.abort();
+      return [200, {
+        content: [realTestCase('TC103')],
+        page: { number: 2, size: 1, totalElements: 3, totalPages: 3 },
+      }];
+    });
+    mock.onGet(`${url}?offset=2&limit=1`).reply(() => {
+      finalPageRequests += 1;
+      return [200, {
+        content: [realTestCase('TC104')],
+        page: { number: 3, size: 1, totalElements: 3, totalPages: 3 },
+      }];
+    });
+
+    await expect(
+      http.get(url, {
+        params: { 'filter.eq.lifecycle': Lifecycle.DRAFT },
+        headers: { Authorization: 'Bearer demo-token' },
+        signal: controller.signal,
+      }),
+    ).rejects.toBeDefined();
+    expect(propagatedSignal).toBe(controller.signal);
+    expect(propagatedAuthorization).toBe('Bearer demo-token');
+    expect(finalPageRequests).toBe(0);
+
+    mock.restore();
+  });
+
+  test('overrides only metadata for the dedicated review-queue count request', async () => {
+    const { http, mock } = setupOverlay();
+    const url =
+      '/api/v1/project/demo/tms/test-case?limit=1&offset=0&filter.eq.lifecycle=DRAFT&filter.eq.ai=true';
+    mock.onGet('/api/v1/project/demo/tms/test-case?limit=1&offset=0').reply(200, {
+      content: [realTestCase('TC101')],
+      page: { number: 1, size: 1, totalElements: 37, totalPages: 37 },
+    });
+
+    const { data } = await http.get<{
+      content: (TestCase & { lifecycle?: Lifecycle })[];
+      page: { totalElements: number; totalPages: number };
+    }>(url);
+
+    expect(data.content).toHaveLength(1);
+    expect(data.content[0]).toMatchObject({ displayId: 'TC101', lifecycle: Lifecycle.READY });
+    expect(data.page).toMatchObject({ totalElements: 5, totalPages: 5 });
+    expect(mock.history.get[0].url).not.toContain('filter.eq.lifecycle');
+    expect(mock.history.get[0].url).not.toContain('filter.eq.ai');
+
+    mock.restore();
+  });
+
+  test('does not override metadata for a scoped review-queue request', async () => {
+    const { http, mock } = setupOverlay();
+    const url =
+      '/api/v1/project/demo/tms/test-case?limit=1&filter.eq.lifecycle=DRAFT&filter.eq.ai=true&filter.eq.testFolderId=42';
+    mock
+      .onGet(
+        '/api/v1/project/demo/tms/test-case?limit=1000&filter.eq.testFolderId=42&offset=0',
+      )
+      .reply(200, {
+      content: [realTestCase('TC106')],
+        page: { number: 1, size: 1, totalElements: 1, totalPages: 1 },
+      });
+
+    const { data } = await http.get<{ page: { totalElements: number } }>(url);
+
+    expect(data.page.totalElements).toBe(1);
 
     mock.restore();
   });

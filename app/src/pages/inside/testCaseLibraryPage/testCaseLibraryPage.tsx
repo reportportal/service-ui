@@ -37,6 +37,8 @@ import ImportIcon from 'common/img/import-thin-inline.svg';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { SEARCH_DELAY } from 'common/constants/delayTime';
 import { projectNameSelector } from 'controllers/project';
+import { useAiFactoryEnabled } from 'controllers/aiFactory';
+import { getTestCaseAiQueryParams } from 'controllers/testCase/actionCreators';
 import {
   PROJECT_DASHBOARD_PAGE,
   urlOrganizationAndProjectSelector,
@@ -98,6 +100,7 @@ export const TestCaseLibraryPage = () => {
   }, [location?.query?.filterPriorities, location?.query?.filterTags]);
 
   const { canManageTestCases } = useUserPermissions();
+  const isAiFactoryEnabled = useAiFactoryEnabled();
   const projectLink = { type: PROJECT_DASHBOARD_PAGE, payload: { organizationSlug, projectSlug } };
   const hasFolders = !isEmpty(folders);
   const isSearchLoading =
@@ -171,15 +174,18 @@ export const TestCaseLibraryPage = () => {
     !!location?.query?.testCasesSearchParams ||
     !!location?.query?.filterPriorities ||
     !!location?.query?.filterTags;
+  const hasActiveAiFilters =
+    isAiFactoryEnabled && Object.keys(getTestCaseAiQueryParams(location?.query)).length > 0;
+  const shouldShowTestCaseFolders = hasFolders || hasActiveSearchOrFilters || hasActiveAiFilters;
 
-  const showEmptyState = !areFoldersLoading && !hasFolders && !hasActiveSearchOrFilters;
+  const showEmptyState = !areFoldersLoading && !shouldShowTestCaseFolders;
 
   const renderContent = () => {
     if (areFoldersLoading) {
       return <BubblesLoader />;
     }
 
-    if (hasFolders || hasActiveSearchOrFilters) {
+    if (shouldShowTestCaseFolders) {
       return <TestCaseFolders />;
     }
 
@@ -266,7 +272,7 @@ export const TestCaseLibraryPage = () => {
           </div>
           <div
             className={cx('test-case-library-page__content', {
-              'test-case-library-page__content--no-padding': hasFolders || hasActiveSearchOrFilters,
+              'test-case-library-page__content--no-padding': shouldShowTestCaseFolders,
               'test-case-library-page__content--empty': showEmptyState,
             })}
           >

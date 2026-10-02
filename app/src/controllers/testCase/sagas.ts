@@ -67,6 +67,7 @@ import {
   TestCaseDetailsAction,
   GetFoldersAction,
   GetFilteredFoldersAction,
+  TestCaseAiFilterParams,
 } from './types';
 import {
   setFoldersFetchedAction,
@@ -85,6 +86,7 @@ import {
   setFilteredFoldersAction,
   startLoadingFilteredFoldersAction,
   stopLoadingFilteredFoldersAction,
+  clearTestCasesAction,
 } from './actionCreators';
 import { getAllFolderIdsToDelete } from 'common/utils/folderUtils';
 import { fetchAllFolders } from './utils/fetchAllFolders';
@@ -100,12 +102,28 @@ import {
 } from 'controllers/pages';
 import { MANUAL_LAUNCH_FOLDER_SEARCH_FILTER_KEY } from 'controllers/manualLaunch/constants';
 
+const hasValidAiFilters = ({ lifecycle, hasAi, iterationId }: TestCaseAiFilterParams): boolean =>
+  lifecycle === 'DRAFT' ||
+  lifecycle === 'READY' ||
+  typeof hasAi === 'boolean' ||
+  (Number.isSafeInteger(iterationId) && Number(iterationId) > 0);
+
 function* getTestCasesByFolderId(action: GetTestCasesByFolderIdAction): Generator {
   yield put(startLoadingTestCasesAction());
+  const hasAiFilters = hasValidAiFilters(action.payload);
 
   try {
-    const { folderId, offset, limit, testCasesSearchParams, filterPriorities, filterTags } =
-      action.payload;
+    const {
+      folderId,
+      offset,
+      limit,
+      testCasesSearchParams,
+      filterPriorities,
+      filterTags,
+      lifecycle,
+      hasAi,
+      iterationId,
+    } = action.payload;
     const projectKey = (yield select(projectKeySelector)) as string;
     const result = (yield call(
       fetch,
@@ -113,6 +131,9 @@ function* getTestCasesByFolderId(action: GetTestCasesByFolderIdAction): Generato
         'filter.eq.testFolderId': folderId,
         'filter.cnt.name': testCasesSearchParams,
         ...buildTestCaseFilterParams(filterPriorities, filterTags),
+        'filter.eq.lifecycle': lifecycle,
+        'filter.eq.ai': hasAi,
+        'filter.eq.iterationId': iterationId,
         offset,
         limit,
       }),
@@ -123,6 +144,10 @@ function* getTestCasesByFolderId(action: GetTestCasesByFolderIdAction): Generato
 
     yield put(setTestCasesAction(result));
   } catch {
+    if (hasAiFilters) {
+      yield put(clearTestCasesAction());
+    }
+
     yield put(
       showErrorNotification({
         messageId: 'errorOccurredTryAgain',
@@ -175,9 +200,19 @@ function* getTestCaseDetails(action: TestCaseDetailsAction) {
 
 function* getAllTestCases(action: GetAllTestCasesAction): Generator {
   yield put(startLoadingTestCasesAction());
+  const hasAiFilters = hasValidAiFilters(action.payload);
 
   try {
-    const { offset, limit, testCasesSearchParams, filterPriorities, filterTags } = action.payload;
+    const {
+      offset,
+      limit,
+      testCasesSearchParams,
+      filterPriorities,
+      filterTags,
+      lifecycle,
+      hasAi,
+      iterationId,
+    } = action.payload;
     const projectKey = (yield select(projectKeySelector)) as string;
     const result = (yield call(
       fetch,
@@ -186,6 +221,9 @@ function* getAllTestCases(action: GetAllTestCasesAction): Generator {
         limit,
         'filter.cnt.name': testCasesSearchParams,
         ...buildTestCaseFilterParams(filterPriorities, filterTags),
+        'filter.eq.lifecycle': lifecycle,
+        'filter.eq.ai': hasAi,
+        'filter.eq.iterationId': iterationId,
       }),
     )) as {
       content: TestCase[];
@@ -193,6 +231,10 @@ function* getAllTestCases(action: GetAllTestCasesAction): Generator {
     };
     yield put(setTestCasesAction(result));
   } catch {
+    if (hasAiFilters) {
+      yield put(clearTestCasesAction());
+    }
+
     yield put(
       showErrorNotification({
         messageId: 'errorOccurredTryAgain',
