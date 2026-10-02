@@ -32,8 +32,11 @@ import { AdaptiveTagList } from 'pages/inside/productVersionPage/linkedTestCases
 import { RequirementsList } from 'pages/inside/common/requirementsList/requirementsList';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { useUserPermissions } from 'hooks/useUserPermissions';
+import { useAiFactoryEnabled } from 'controllers/aiFactory';
+import { projectKeySelector } from 'controllers/project';
 import { isLoadingTestCaseDetailsSelector, testCaseDetailsSelector } from 'controllers/testCase';
 import { commonMessages } from 'pages/inside/common/common-messages';
+import { LifecycleHistory } from 'pages/inside/aiFactory/lifecycle';
 import { ManualScenario, Tag, TestCaseManualScenario } from 'types/testCase';
 
 import { TestCaseDetailsHeader } from './testCaseDetailsHeader';
@@ -178,6 +181,8 @@ export const TestCaseDetailsPage = () => {
 
   const testCaseDetails = useSelector(testCaseDetailsSelector);
   const isLoadingTestCaseDetails = useSelector(isLoadingTestCaseDetailsSelector);
+  const projectKey = useSelector(projectKeySelector);
+  const isAiFactoryEnabled = useAiFactoryEnabled();
 
   const testCaseId = testCaseDetails?.id || 0;
 
@@ -279,6 +284,14 @@ export const TestCaseDetailsPage = () => {
                 {childComponent}
               </CollapsibleSectionWithHeaderControl>
             ))}
+            {isAiFactoryEnabled && testCaseDetails.lifecycle && (
+              <LifecycleHistory
+                key={`${testCaseDetails.id}-${testCaseDetails.lifecycle}-${testCaseDetails.updatedAt}`}
+                projectKey={projectKey}
+                testCaseId={testCaseDetails.id}
+                isEnabled
+              />
+            )}
           </div>
           <ScrollWrapper>
             <div

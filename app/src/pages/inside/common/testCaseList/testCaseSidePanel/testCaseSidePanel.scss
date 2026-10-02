@@ -141,6 +141,12 @@
     overflow-wrap: anywhere;
   }
 
+  .lifecycle-badge {
+    display: flex;
+    flex-shrink: 0;
+    margin-top: 5px;
+  }
+
   .close-button {
     background: none;
     border: none;

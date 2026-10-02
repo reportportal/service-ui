@@ -25,12 +25,14 @@
   box-shadow: var(--rp-ui-base-shadow);
 
   &__label {
-    color: var(--rp-ui-base-e-300);
+    color: var(--rp-ui-base-e-400);
     font-size: 12px;
+    line-height: 18px;
   }
 
   &__value {
     font-weight: var(--rp-ui-base-fw-bold);
     font-size: 18px;
+    line-height: 24px;
   }
 }

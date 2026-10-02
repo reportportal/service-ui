@@ -14,22 +14,5 @@
  * limitations under the License.
  */
 
-@use '../../../../common/css/mixins';
-
-.header-actions {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-
-  @include mixins.header-toolbar-search-button;
-}
-
-.page-content {
-  padding: 16px 32px 24px;
-}
-
-.empty {
-  padding: 24px 0;
-  color: var(--rp-ui-base-e-300);
-  font-family: var(--rp-ui-base-font-family);
-}
+export { LifecycleHistory } from './lifecycleHistory';
+export { useTestCaseAi } from './useTestCaseAi';

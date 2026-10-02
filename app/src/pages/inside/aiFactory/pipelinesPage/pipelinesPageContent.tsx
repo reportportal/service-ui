@@ -89,14 +89,6 @@ export const PipelinesPageContent = () => {
 
     return (
       <>
-        <SearchField
-          searchValue={search}
-          setSearchValue={setSearch}
-          onFilterChange={setSearch}
-          placeholder={formatMessage(messages.searchPlaceholder)}
-          className={cx('search')}
-          isAlwaysActive
-        />
         {pipelines.map((pipeline) => {
           const iterations = iterationsByPipeline?.[pipeline.id];
           const filtered = iterations?.filter((iteration) =>
@@ -123,15 +115,23 @@ export const PipelinesPageContent = () => {
           title={formatMessage(messages.pageTitle)}
           breadcrumbDescriptors={breadcrumbDescriptors}
           actions={
-            <Button
-              variant="text"
-              data-automation-id="refreshPipelinesButton"
-              icon={<RefreshIcon />}
-              disabled={isLoading}
-              onClick={() => dispatch(getPipelinesAction())}
-            >
-              {formatMessage(messages.refreshPage)}
-            </Button>
+            <div className={cx('header-actions')}>
+              <SearchField
+                searchValue={search}
+                setSearchValue={setSearch}
+                onFilterChange={setSearch}
+                placeholder={formatMessage(messages.searchPlaceholder)}
+              />
+              <Button
+                variant="text"
+                data-automation-id="refreshPipelinesButton"
+                icon={<RefreshIcon />}
+                disabled={isLoading}
+                onClick={() => dispatch(getPipelinesAction())}
+              >
+                {formatMessage(messages.refreshPage)}
+              </Button>
+            </div>
           }
         />
         <div className={cx('page-content')}>{renderContent()}</div>

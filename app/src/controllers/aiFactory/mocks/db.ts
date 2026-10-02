@@ -21,7 +21,13 @@
  */
 
 import { getStorageItem, setStorageItem } from 'common/utils/storageUtils';
-import { AutomationStatus, Lifecycle, LifecycleActorType, LifecycleReason } from 'types/aiFactory';
+import {
+  AutomationStatus,
+  EvaluationState,
+  Lifecycle,
+  LifecycleActorType,
+  LifecycleReason,
+} from 'types/aiFactory';
 import { CASES, ITERATIONS, LAUNCHES, PIPELINES, PLANS } from './seedData';
 import {
   MockCaseRecord,
@@ -124,6 +130,7 @@ const loadPersisted = (): MockDb | null => {
 };
 
 let state: MockDb = loadPersisted() || cloneSeed();
+const caseAliases = new Map<number, number>();
 
 export const persist = (): void => {
   try {
@@ -136,6 +143,7 @@ export const persist = (): void => {
 /** Discards persisted state and reloads the seed — the "Reset demo" action. */
 export const resetMockDb = (): void => {
   state = cloneSeed();
+  caseAliases.clear();
   persist();
 };
 
@@ -150,8 +158,32 @@ export const listIterations = (pipelineId?: number) =>
     .filter((i) => pipelineId === undefined || i.pipelineId === pipelineId)
     .sort((a, b) => b.number - a.number);
 
-export const findCase = (idOrDisplayId: number | string): MockCaseRecord | undefined =>
-  state.cases.find((c) => c.id === idOrDisplayId || c.displayId === idOrDisplayId);
+const toNumericCaseId = (idOrDisplayId: number | string): number | undefined => {
+  const value = typeof idOrDisplayId === 'number' ? idOrDisplayId : Number(idOrDisplayId);
+  return Number.isSafeInteger(value) && String(value) === String(idOrDisplayId) ? value : undefined;
+};
+
+export const findCase = (idOrDisplayId: number | string): MockCaseRecord | undefined => {
+  if (typeof idOrDisplayId === 'string') {
+    const displayIdMatch = state.cases.find((c) => c.displayId === idOrDisplayId);
+    if (displayIdMatch) {
+      return displayIdMatch;
+    }
+    const numericId = toNumericCaseId(idOrDisplayId);
+    const aliasedCaseId = numericId === undefined ? undefined : caseAliases.get(numericId);
+    const aliasedCase = state.cases.find((c) => c.id === aliasedCaseId);
+    return aliasedCase ?? state.cases.find((c) => c.id === numericId);
+  }
+  const seededCase = state.cases.find((c) => c.id === idOrDisplayId);
+  const aliasedCaseId = caseAliases.get(idOrDisplayId);
+  return seededCase ?? state.cases.find((c) => c.id === aliasedCaseId);
+};
+
+export const registerCaseAlias = (realCaseId: number, caseRecord: MockCaseRecord): void => {
+  if (Number.isSafeInteger(realCaseId)) {
+    caseAliases.set(realCaseId, caseRecord.id);
+  }
+};
 
 export const listCasesOfIteration = (iterationId: number): MockCaseRecord[] =>
   state.cases.filter((c) => c.ai?.iterationId === iterationId);
@@ -189,4 +221,20 @@ export const recordLifecycleChange = (
   const from = caseRecord.lifecycle;
   caseRecord.lifecycle = to;
   caseRecord.lifecycleHistory.push({ from, to, reason, details, actor, at: Date.now() });
+};
+
+export const recordScenarioChange = (caseRecord: MockCaseRecord): boolean => {
+  const wasReady = caseRecord.lifecycle === Lifecycle.READY;
+  if (caseRecord.evaluation) {
+    caseRecord.evaluation.state = EvaluationState.OBSOLETE;
+  }
+  if (caseRecord.automation) {
+    caseRecord.automation.scenarioChangedAfterAutomation = true;
+  }
+  recordLifecycleChange(caseRecord, Lifecycle.DRAFT, LifecycleReason.SCENARIO_CHANGED, {
+    type: LifecycleActorType.USER,
+    name: 'You',
+  });
+  persist();
+  return wasReady;
 };

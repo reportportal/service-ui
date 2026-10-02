@@ -28,7 +28,7 @@
   }
 
   &__arrow {
-    color: var(--rp-ui-base-e-300);
+    color: var(--rp-ui-base-e-400);
   }
 
   &__item {
@@ -36,7 +36,9 @@
     flex-direction: column;
     align-items: flex-start;
     gap: 6px;
-    min-width: 110px;
+    box-sizing: border-box;
+    flex: 0 0 110px;
+    width: 110px;
     padding: 10px 14px;
     background-color: var(--rp-ui-base-bg-000);
     border: 1px solid var(--rp-ui-base-e-100);
@@ -44,6 +46,7 @@
     box-shadow: var(--rp-ui-base-shadow);
     cursor: pointer;
     font-family: var(--rp-ui-base-font-family);
+    color: var(--rp-ui-base-almost-black);
     text-align: left;
     transition: border-color 0.15s ease;
 
@@ -69,7 +72,7 @@
   }
 
   &__item-metric {
-    color: var(--rp-ui-base-e-300);
+    color: var(--rp-ui-base-e-400);
     font-size: 12px;
   }
 }

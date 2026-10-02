@@ -37,6 +37,10 @@ export const messages = defineMessages({
     id: 'TestCaseList.executionHeader',
     defaultMessage: 'Last execution',
   },
+  statusHeader: {
+    id: 'TestCaseList.statusHeader',
+    defaultMessage: 'Status',
+  },
   duplicate: {
     id: 'TestCaseList.duplicate',
     defaultMessage: 'Duplicate',

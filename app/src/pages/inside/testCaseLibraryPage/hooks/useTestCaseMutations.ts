@@ -21,10 +21,12 @@ import { isEmpty } from 'es-toolkit/compat';
 import { projectKeySelector } from 'controllers/project';
 import { FolderWithFullPath, GET_TEST_CASE_DETAILS } from 'controllers/testCase';
 import { hideModalAction } from 'controllers/modal';
+import { useAiFactoryEnabled } from 'controllers/aiFactory';
 import { fetch } from 'common/utils';
 import { useDebouncedSpinner, useNotification } from 'common/hooks';
 import { NotificationMessageKey } from 'common/hooks/useNotification';
 import { URLS } from 'common/urls';
+import { ScenarioUpdateRS } from 'types/aiFactory';
 import { Attribute } from 'types/testCase';
 
 import { CreateTestCaseFormData } from '../types';
@@ -37,7 +39,7 @@ import { NewFolderData } from '../utils/getFolderFromFormValues';
 import { useFolderActions } from './useFolderActions';
 import { useRefetchCurrentTestCases } from './useRefetchCurrentTestCases';
 
-export interface TestCaseResponse {
+export interface TestCaseResponse extends Partial<ScenarioUpdateRS> {
   id?: number;
   testFolder?: {
     id: number;
@@ -62,6 +64,7 @@ export interface UpdateTestCasePayload {
 }
 
 export const useTestCaseMutations = (testCaseId?: number) => {
+  const isAiFactoryEnabled = useAiFactoryEnabled();
   const { isLoading, showSpinner, hideSpinner } = useDebouncedSpinner();
   const dispatch = useDispatch();
   const projectKey = useSelector(projectKeySelector);
@@ -159,8 +162,17 @@ export const useTestCaseMutations = (testCaseId?: number) => {
           dispatch({ type: GET_TEST_CASE_DETAILS, payload: { testCaseId } });
         }
 
+        if (isAiFactoryEnabled && options.method === 'PUT' && !options.isDetailsPage) {
+          refetchCurrentTestCases();
+        }
+
         dispatch(hideModalAction());
-        showSuccessNotification({ messageId: options.successMessageId });
+        const successMessageId =
+          isAiFactoryEnabled && response?.lifecycleChanged === 'TO_DRAFT'
+            ? 'testCaseScenarioChangedToDraft'
+            : options.successMessageId;
+
+        showSuccessNotification({ messageId: successMessageId });
 
         if (!options.isDetailsPage && options.method === 'POST') {
           completeFolderDestination({
@@ -187,6 +199,8 @@ export const useTestCaseMutations = (testCaseId?: number) => {
       showSuccessNotification,
       showErrorNotification,
       testCaseId,
+      isAiFactoryEnabled,
+      refetchCurrentTestCases,
     ],
   );
 

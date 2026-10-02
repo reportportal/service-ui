@@ -40,7 +40,7 @@ export const AutomationPerCasePanel = ({ stage }: AutomationPerCasePanelProps) =
   return (
     <div className={cx('panel')} data-automation-id="automationPerCasePanel">
       {stage.key === StageKey.PREPARE && <p className={cx('note')}>{formatMessage(messages.automationPrepareNote)}</p>}
-      <table className={cx('table')}>
+      <table className={cx('table', 'automation-table')}>
         <thead>
           <tr>
             <th>{formatMessage(messages.gradeColumnCase)}</th>

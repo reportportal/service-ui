@@ -25,6 +25,7 @@ import { DragLayer } from '@reportportal/ui-kit/sortable';
 
 import { TEST_CASE_LIBRARY_EVENTS } from 'analyticsEvents/testCaseLibraryPageEvents';
 import { createClassnames } from 'common/utils';
+import { useAiFactoryEnabled } from 'controllers/aiFactory';
 import type { ExtendedTestCase, TestCasePriority } from 'types/testCase';
 import { useUserPermissions } from 'hooks/useUserPermissions';
 import { SelectedTestCaseRow } from './types';
@@ -32,6 +33,7 @@ import { locationSelector } from 'controllers/pages/typed-selectors';
 import { TEST_CASE_LIBRARY_PAGE, PROJECT_TEST_PLAN_DETAILS_PAGE } from 'controllers/pages';
 import { TMS_INSTANCE_KEY } from 'pages/inside/common/constants';
 import { TestPlanSidePanel } from 'pages/inside/testPlansPage/testPlanSidePanel';
+import { LifecycleBadge } from 'pages/inside/aiFactory/common';
 import { EmptyPageState } from 'pages/common';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import NoResultsIcon from 'common/img/newIcons/no-results-icon-inline.svg';
@@ -73,12 +75,17 @@ export const TestCaseList = memo(
     const location = useSelector(locationSelector);
     const [selectedTestCaseId, setSelectedTestCaseId] = useState<number | null>(null);
     const { canManageTestCases } = useUserPermissions();
+    const isAiFactoryEnabled = useAiFactoryEnabled();
     const isSelectable = selectable && canManageTestCases;
 
     const searchQuery = location?.query?.testCasesSearchParams || '';
 
     const isTestLibraryRoute = location.type === TEST_CASE_LIBRARY_PAGE;
     const isTestPlanRoute = location.type === PROJECT_TEST_PLAN_DETAILS_PAGE;
+    const shouldShowLifecycle =
+      isAiFactoryEnabled &&
+      isTestLibraryRoute &&
+      testCases.some(({ lifecycle }) => Boolean(lifecycle));
 
     const handleRowOpen = (testCaseId: number) => {
       if (isTestLibraryRoute && selectedTestCaseId !== testCaseId) {
@@ -164,6 +171,16 @@ export const TestCaseList = memo(
           />
         ),
       },
+      ...(shouldShowLifecycle && {
+        status: {
+          content: testCase.lifecycle ?? '',
+          component: testCase.lifecycle ? (
+            <div className={cx('lifecycle-cell')}>
+              <LifecycleBadge lifecycle={testCase.lifecycle} />
+            </div>
+          ) : null,
+        },
+      }),
     }));
 
     const primaryColumn = {
@@ -174,6 +191,16 @@ export const TestCaseList = memo(
     };
 
     const fixedColumns = [
+      ...(shouldShowLifecycle
+        ? [
+            {
+              key: 'status',
+              header: formatMessage(messages.statusHeader),
+              width: 120,
+              align: 'left' as const,
+            },
+          ]
+        : []),
       {
         key: 'lastExecution',
         header: formatMessage(messages.executionHeader),

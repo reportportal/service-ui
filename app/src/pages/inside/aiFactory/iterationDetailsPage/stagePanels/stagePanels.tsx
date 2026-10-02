@@ -58,7 +58,7 @@ export const StagePanels = ({ stage, iteration }: StagePanelsProps) => {
   const body = renderStageBody(stage, iteration);
 
   return (
-    <div data-automation-id="stagePanels">
+    <div className={cx('stage-panels')} data-automation-id="stagePanels">
       {stage.status === StageStatus.FAILED && stage.failureReason && (
         <SystemMessage mode="error">{stage.failureReason}</SystemMessage>
       )}
