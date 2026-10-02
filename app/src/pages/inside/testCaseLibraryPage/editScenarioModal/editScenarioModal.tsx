@@ -104,10 +104,13 @@ const EditScenarioModalComponent = ({
   const hasLifecycle = isAiFactoryEnabled && Boolean(testCase?.lifecycle);
   const isDraft = testCase?.lifecycle === Lifecycle.DRAFT;
   const lifecycleHint = hasLifecycle && !isDraft ? formatMessage(messages.readyScenarioHint) : undefined;
-  const promoteToReadyLabel =
-    hasLifecycle && isDraft && canReviewAiTestCases
-      ? formatMessage(testCase?.ai ? messages.approveWithChanges : messages.markReadyWithChanges)
-      : undefined;
+  let promoteToReadyLabel: string | undefined;
+  if (hasLifecycle && isDraft && canReviewAiTestCases) {
+    const labelMessage = testCase?.ai
+      ? messages.approveWithChanges
+      : messages.markReadyWithChanges;
+    promoteToReadyLabel = formatMessage(labelMessage);
+  }
   let promoteToReadyDisabledHint: string | undefined;
   if (testCase?.ai && testCase.review?.fixRound) {
     promoteToReadyDisabledHint = formatMessage(messages.fixRunningHint);
