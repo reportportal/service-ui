@@ -36,7 +36,7 @@ export const TokenUsage = ({ tokens }: TokenUsageProps) => {
   }
 
   return (
-    <div data-automation-id="tokenUsage">
+    <div className={cx('token-usage')} data-automation-id="tokenUsage">
       <p className={cx('note')}>{formatMessage(messages.tokenUsageTitle)}</p>
       {tokens.map((usage) => (
         <p key={usage.model} className={cx('note')}>

@@ -14,8 +14,16 @@
  * limitations under the License.
  */
 
-// Matches PageHeaderWithBreadcrumbsAndActions' own `padding: 16px 32px` so the body content
-// (search box, pipeline groups) lines up with the title/breadcrumb above it.
+@use '../../../../common/css/mixins';
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+
+  @include mixins.header-toolbar-search-button;
+}
+
 .page-content {
   padding: 16px 32px 24px;
 }
@@ -24,9 +32,4 @@
   padding: 24px 0;
   color: var(--rp-ui-base-e-300);
   font-family: var(--rp-ui-base-font-family);
-}
-
-.search {
-  max-width: 420px;
-  margin: 0 0 16px;
 }
