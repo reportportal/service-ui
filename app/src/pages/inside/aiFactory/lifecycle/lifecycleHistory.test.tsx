@@ -180,7 +180,7 @@ describe('LifecycleHistory', () => {
     jest.mocked(useTestCaseAi).mockReturnValue({ ...baseHookResult, isLoading: true });
     const wrapper = shallow(<LifecycleHistory projectKey="demo" testCaseId={42} isEnabled />);
 
-    expect(wrapper.find('[role="status"]').prop('aria-label')).toBe('Loading lifecycle history');
+    expect(wrapper.find('output').prop('aria-label')).toBe('Loading lifecycle history');
     expect(wrapper.find(CollapsibleSection).prop('isInitiallyExpanded')).toBe(true);
   });
 

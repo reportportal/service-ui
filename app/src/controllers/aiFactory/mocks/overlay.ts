@@ -113,13 +113,12 @@ const toScenarioFields = (value: unknown): ScenarioFields | undefined => {
 };
 
 const parsePayload = (data: unknown): ScenarioUpdatePayload => {
-  let parsed = data;
   try {
-    parsed = typeof data === 'string' ? JSON.parse(data) : data;
+    const parsed = typeof data === 'string' ? JSON.parse(data) : data;
+    return isRecord(parsed) ? { manualScenario: parsed.manualScenario } : {};
   } catch {
     return {};
   }
-  return isRecord(parsed) ? { manualScenario: parsed.manualScenario } : {};
 };
 
 const isScenarioChanged = (before?: ScenarioFields, after?: ScenarioFields): boolean =>

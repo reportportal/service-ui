@@ -154,13 +154,9 @@ export const LifecycleHistory = ({ projectKey, testCaseId, isEnabled }: Lifecycl
 
   if (isLoading) {
     content = (
-      <div
-        className={cx('history__state')}
-        role="status"
-        aria-label={formatMessage(messages.loading)}
-      >
+      <output className={cx('history__state')} aria-label={formatMessage(messages.loading)}>
         <BubblesLoader />
-      </div>
+      </output>
     );
   } else if (isError) {
     content = (
