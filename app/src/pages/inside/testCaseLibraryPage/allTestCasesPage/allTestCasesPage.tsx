@@ -39,7 +39,12 @@ import { TMS_INSTANCE_KEY } from 'pages/inside/common/constants';
 import { SelectedTestCaseRow } from 'pages/inside/common/testCaseList/types';
 import { PopoverControl, PopoverItem } from 'pages/common/popoverControl/popoverControl';
 import { showModalAction } from 'controllers/modal';
-import { locationQuerySelector, payloadSelector, urlFolderIdSelector } from 'controllers/pages';
+import {
+  locationQuerySelector,
+  payloadSelector,
+  updatePagePropertiesAction,
+  urlFolderIdSelector,
+} from 'controllers/pages';
 import { foldersSelector } from 'controllers/testCase';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { useUserPermissions } from 'hooks/useUserPermissions';
@@ -47,7 +52,6 @@ import { useHasTestPlans } from 'hooks/useHasTestPlans';
 import { useURLBoundPagination } from 'pages/inside/common/testCaseList/useURLBoundPagination';
 import { useProjectDetails } from 'hooks/useTypedSelector';
 import { useAiFactoryEnabled } from 'controllers/aiFactory';
-import { updatePagePropertiesAction } from 'controllers/pages';
 import { getTestCaseAiQueryParams } from 'controllers/testCase/actionCreators';
 import {
   QuickFilters,

@@ -61,6 +61,85 @@ interface TestCaseListProps {
   hasAiFilters?: boolean;
 }
 
+interface ToggleRowSelectionParams {
+  id: number | string;
+  testCases: ExtendedTestCase[];
+  selectedRows: SelectedTestCaseRow[];
+  handleSelectedRows: (rows: SelectedTestCaseRow[]) => void;
+}
+
+const toggleRowSelection = ({
+  id,
+  testCases,
+  selectedRows,
+  handleSelectedRows,
+}: ToggleRowSelectionParams) => {
+  const testCase = testCases.find((item) => item.id === id);
+
+  if (!testCase) {
+    return;
+  }
+
+  const isCurrentlySelected = selectedRows.some((row) => row.id === id);
+  const nextSelectedRows = isCurrentlySelected
+    ? selectedRows.filter((row) => row.id !== id)
+    : [
+        ...selectedRows,
+        { id: testCase.id, folderId: testCase.testFolder.id, name: testCase.name },
+      ];
+
+  handleSelectedRows(nextSelectedRows);
+};
+
+interface ToggleAllRowsSelectionParams {
+  testCases: ExtendedTestCase[];
+  selectedRowIds: (number | string)[];
+  selectedRows: SelectedTestCaseRow[];
+  handleSelectedRows: (rows: SelectedTestCaseRow[]) => void;
+}
+
+const toggleAllRowsSelection = ({
+  testCases,
+  selectedRowIds,
+  selectedRows,
+  handleSelectedRows,
+}: ToggleAllRowsSelectionParams) => {
+  const currentPageTestCaseIds = testCases.map(({ id }) => id);
+  const isAllCurrentPageSelected = currentPageTestCaseIds.every((testCaseId) =>
+    selectedRowIds.includes(testCaseId),
+  );
+  const nextSelectedRows = isAllCurrentPageSelected
+    ? selectedRows.filter((row) => !currentPageTestCaseIds.includes(row.id))
+    : [
+        ...selectedRows,
+        ...testCases
+          .filter((testCase) => !selectedRowIds.includes(testCase.id))
+          .map((testCase) => ({
+            id: testCase.id,
+            folderId: testCase.testFolder.id,
+            name: testCase.name,
+          })),
+      ];
+
+  handleSelectedRows(nextSelectedRows);
+};
+
+const hasAiFactoryData = (
+  isAiFactoryEnabled: boolean,
+  isTestLibraryRoute: boolean,
+  testCases: ExtendedTestCase[],
+) =>
+  isAiFactoryEnabled &&
+  isTestLibraryRoute &&
+  testCases.some(({ lifecycle }) => Boolean(lifecycle));
+
+const hasActiveFilters = (
+  searchParams: unknown,
+  priorities: unknown,
+  tags: unknown,
+  hasAiFilters: boolean,
+) => Boolean(searchParams || priorities || tags || hasAiFilters);
+
 export const TestCaseList = memo(
   ({
     testCases,
@@ -85,10 +164,11 @@ export const TestCaseList = memo(
 
     const isTestLibraryRoute = location.type === TEST_CASE_LIBRARY_PAGE;
     const isTestPlanRoute = location.type === PROJECT_TEST_PLAN_DETAILS_PAGE;
-    const shouldShowAiFactoryData =
-      isAiFactoryEnabled &&
-      isTestLibraryRoute &&
-      testCases.some(({ lifecycle }) => Boolean(lifecycle));
+    const shouldShowAiFactoryData = hasAiFactoryData(
+      isAiFactoryEnabled,
+      isTestLibraryRoute,
+      testCases,
+    );
 
     const handleRowOpen = (testCaseId: number) => {
       if (isTestLibraryRoute && selectedTestCaseId !== testCaseId) {
@@ -102,44 +182,11 @@ export const TestCaseList = memo(
     };
 
     const handleRowSelect = (id: number | string) => {
-      const testCase = testCases.find((testCase) => testCase.id === id);
-
-      if (!testCase) {
-        return;
-      }
-
-      const isCurrentlySelected = selectedRows.some((row) => row.id === id);
-
-      handleSelectedRows(
-        isCurrentlySelected
-          ? selectedRows.filter((row) => row.id !== id)
-          : [
-              ...selectedRows,
-              { id: testCase.id, folderId: testCase.testFolder.id, name: testCase.name },
-            ],
-      );
+      toggleRowSelection({ id, testCases, selectedRows, handleSelectedRows });
     };
 
     const handleSelectAll = () => {
-      const currentPageTestCaseIds = testCases.map(({ id }) => id);
-      const isAllCurrentPageSelected = currentPageTestCaseIds.every((testCaseId) =>
-        selectedRowIds.includes(testCaseId),
-      );
-
-      const newSelectedRows = isAllCurrentPageSelected
-        ? selectedRows.filter((row) => !currentPageTestCaseIds.includes(row.id))
-        : [
-            ...selectedRows,
-            ...testCases
-              .filter((testCase) => !selectedRowIds.includes(testCase.id))
-              .map((testCase) => ({
-                id: testCase.id,
-                folderId: testCase.testFolder.id,
-                name: testCase.name,
-              })),
-          ];
-
-      handleSelectedRows(newSelectedRows);
+      toggleAllRowsSelection({ testCases, selectedRowIds, selectedRows, handleSelectedRows });
     };
 
     const selectedTestPlan = testCases.find((testCase) => testCase.id === selectedTestCaseId);
@@ -236,11 +283,12 @@ export const TestCaseList = memo(
       },
     ];
 
-    const hasActiveSearchOrFilters =
-      !!location?.query?.testCasesSearchParams ||
-      !!location?.query?.filterPriorities ||
-      !!location?.query?.filterTags ||
-      hasAiFilters;
+    const hasActiveSearchOrFilters = hasActiveFilters(
+      location?.query?.testCasesSearchParams,
+      location?.query?.filterPriorities,
+      location?.query?.filterTags,
+      hasAiFilters,
+    );
     const showNoSearchResults = !isLoading && isEmpty(testCases) && hasActiveSearchOrFilters;
 
     return (
