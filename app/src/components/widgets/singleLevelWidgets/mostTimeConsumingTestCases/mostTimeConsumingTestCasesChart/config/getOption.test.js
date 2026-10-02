@@ -50,15 +50,12 @@ describe('mostTimeConsumingTestCasesChart/getOption', () => {
         inverse: true,
         data: ['0', '1', '2'],
         axisLabel: { show: false },
-        splitLine: { show: false },
-        axisTick: expect.objectContaining({
-          show: true,
-          alignWithLabel: true,
-          inside: true,
-          customValues: ['0', '2'],
-        }),
+        splitLine: expect.objectContaining({ show: true }),
+        axisTick: { show: false, alignWithLabel: true },
       }),
     );
+    expect([0, 1, 2].filter(option.yAxis.splitLine.interval)).toEqual([0, 2]);
+    expect(option.yAxis.splitLine.showMaxLine).toBe(false);
     expect(option.xAxis).toEqual(
       expect.objectContaining({
         type: 'value',
@@ -70,7 +67,8 @@ describe('mostTimeConsumingTestCasesChart/getOption', () => {
         splitLine: { show: false },
       }),
     );
-    expect(option.xAxis.axisLabel.formatter(810)).toBe('0.81');
+    expect(option.xAxis.axisLabel.formatter(800)).toBe('0.80');
+    expect(option.xAxis.axisLabel.formatter(810)).toBe('');
     expect(option.tooltip.trigger).toBe('item');
     expect(option.tooltip.show).toBe(true);
     expect(option.customData.itemsData).toHaveLength(3);
@@ -99,6 +97,6 @@ describe('mostTimeConsumingTestCasesChart/getOption', () => {
 
     // minutes timeType (60000); base 0.1-unit step = 6000ms; 55 min → 55 * baseStep
     expect(xAxis.name).toBe('minutes');
-    expect(xAxis.interval).toBe(330000);
+    expect(xAxis.interval).toBe(6000 * Math.ceil(55 / 4));
   });
 });

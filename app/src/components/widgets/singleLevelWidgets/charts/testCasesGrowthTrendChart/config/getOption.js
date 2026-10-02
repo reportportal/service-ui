@@ -211,6 +211,7 @@ export const getOption = ({ content, isPreview, formatMessage, isTimeline = fals
       type: 'value',
       show: !isPreview,
       min: 0,
+      max: yAxisMax,
       interval: yInterval,
       name: isPreview ? undefined : formatMessage(messages.cases),
       nameLocation: 'middle',
@@ -220,6 +221,7 @@ export const getOption = ({ content, isPreview, formatMessage, isTimeline = fals
       axisLabel: {
         ...AXIS_LABEL_STYLE,
         margin: 8,
+        formatter: (value) => (value === yAxisMax && yAxisMax > dataMax ? "" : String(value)),
       },
       axisLine: {
         show: true,
@@ -238,6 +240,7 @@ export const getOption = ({ content, isPreview, formatMessage, isTimeline = fals
       },
       splitLine: {
         show: !isPreview,
+        showMaxLine: false,
         lineStyle: {
           color: COLOR_GRAY_80,
           width: 1,
