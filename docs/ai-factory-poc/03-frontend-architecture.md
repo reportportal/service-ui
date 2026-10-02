@@ -1,13 +1,18 @@
-# 03 · Frontend architecture (mock-first)
+# 03 · Frontend architecture (mock-first, live-contract ready)
 
-Status: **proposal v0.1**. Items marked ❓ wait for a decision in
+Status: **proposal v0.2**, updated after the 2026-10-02
+[TMS OpenAPI](http://tms.epmrpp.reportportal.io/ui/#organizations/my-organization/projects/superadmin-personal/api)
+audit (`feature-pipelines-2767`). Items marked ❓ wait for a decision in
 [06-open-questions.md](06-open-questions.md).
 
 ## 1. Principles
 
-1. **Contract-first mocks.** The UI calls real URL helpers (`common/urls.js`) with the DTOs proposed in
-   [05-backend-contract.md](05-backend-contract.md). Mocks answer at the **HTTP level**, so moving
-   to the real backend means switching off a handler. No component or saga code changes.
+1. **Contract-first mocks with an explicit live adapter.** The UI currently calls the proposal
+   URL helpers (`common/urls.js`) and consumes the stable PoC view models in `types/aiFactory.ts`.
+   The published Pipeline paths and schemas differ from that proposal, so live integration is not
+   just “switch off a handler”. Raw OpenAPI DTOs must be normalized at the controller/service
+   boundary before reducers, selectors and components see them. Exact contract details live in
+   [05-backend-contract.md](05-backend-contract.md).
 2. **Backend rules live in the mock layer, not in components.** Auto-Ready, iteration status,
    Ready → Draft on scenario change, fix-round results, cost shares and Obsolete are **backend
    behaviour**. The mock engine simulates them. Components only render DTO fields (`lifecycle`,
@@ -27,11 +32,13 @@ Status: **proposal v0.1**. Items marked ❓ wait for a decision in
 
 ```
 app/src/
-├── types/aiFactory.ts                      # domain + DTO types (mirror of 05-backend-contract)
+├── types/aiFactory.ts                      # stable AI Factory UI/domain view models
 ├── common/urls.js                          # + AI Factory URL block (aiFactory*)
 ├── controllers/aiFactory/
 │   ├── pipelines/                          # list, iteration, compare — saga-driven
-│   │   ├── actionCreators.ts constants.ts reducer.ts sagas.ts selectors.ts types.ts index.ts
+│   │   ├── contracts/                      # raw generated/declared OpenAPI DTOs; no UI imports
+│   │   ├── adapters/                       # raw DTO validation + normalization to UI view models
+│   │   └── actionCreators.ts constants.ts reducer.ts sagas.ts selectors.ts types.ts index.ts
 │   ├── featureFlag.ts                      # isAiFactoryEnabled / useAiFactoryEnabled
 │   └── mocks/                              # mock backend (dev + opt-in demo)
 │       ├── index.ts                        # installAiFactoryMocks(axios)
@@ -107,9 +114,16 @@ the feature switched off safely.
   a dynamic `import()`, so it becomes a separate chunk that is never fetched unless enabled. Decided: the PoC
   runs **locally only** (`npm run dev` with the remote backend via `PROXY_PATH`), so mocks never ship to a
   deployed environment.
-- **Per-endpoint switch.** Each handler group has a key (`pipelines`, `testCaseAi`,
-  `comments`, …). `ai_factory_mocks_off=comments,pipelines` disables selected groups once the
-  real BE endpoints exist. This allows gradual integration.
+- **Current limitation — one global mock switch.** `ai_factory_mocks=false` disables the entire
+  AI Factory mock adapter and overlay. There is no implemented `ai_factory_mocks_off` group list,
+  despite the earlier proposal. That prevents a safe incremental state such as live Pipelines plus
+  mocked Test Case lifecycle/AI data.
+- **Required before incremental live integration.** Split installation/registration by contract
+  group (at minimum `pipelines`, `qualityStandard`, `testCaseAi`, `comments`, `fixRounds`,
+  `automation`, `overlay`) and allow each group to be mock or passthrough independently. Defaults
+  must keep today's all-mocked local demo intact. A live group must have no matching mock handler;
+  an unconfirmed group remains mocked. Do not partially disable the global adapter until this
+  selection is implemented and tested.
 
 ### 4.2 Two data modes (decided: **A · Overlay**, 2026-09-25)
 
@@ -118,7 +132,7 @@ fallback if the overlay spike fails.
 
 | Mode | What is real | What is mocked | Use for |
 |------|--------------|----------------|---------|
-| **A · Overlay (chosen)** | Existing TMS endpoints (folders, test cases, plans, launches) against a real dev backend | New resources (pipelines, iterations, comments, fix rounds, settings, automation) + **AI/lifecycle fields merged into real test-case DTOs** by `overlay.ts` (response interceptor keyed by test-case `id`) | Realistic demo on real TMS data; exercises real Library code paths |
+| **A · Overlay (chosen)** | Existing TMS endpoints (folders, test cases, plans, launches). Published Pipeline and Quality Standard operations become eligible one group at a time only after adapters and group switching exist | Unconfirmed Test Case lifecycle/AI, comments, fix rounds and automation resources + **AI/lifecycle fields merged into real test-case DTOs** by `overlay.ts` (response interceptor keyed by test-case `id`); Pipelines remain mocked today | Realistic demo on real TMS data; exercises real Library code paths without pretending raw live DTOs equal PoC view models |
 | **B · Full mock** | nothing TMS | also mocks `tms/folder`, `tms/test-case` list/details | Working without any TMS backend |
 
 In overlay mode:
@@ -158,12 +172,84 @@ Fix rounds and automation are asynchronous. The UI polls:
 Use one hook `usePolling(fn, { interval, enabled })` in `pages/inside/aiFactory/common/hooks/`.
 Switching to push (websocket) later is transparent to the components.
 
+### 4.5 Live-contract boundary (2026-10-02)
+
+The live API source is the
+[TMS OpenAPI UI](http://tms.epmrpp.reportportal.io/ui/#organizations/my-organization/projects/superadmin-personal/api)
+on `feature-pipelines-2767`. The following is the required integration shape; endpoint/schema
+details stay centralized in [05-backend-contract.md](05-backend-contract.md).
+
+```text
+HTTP / raw OpenAPI DTO
+  -> runtime boundary validation
+  -> operation-specific normalization adapter
+  -> existing PipelineRS / IterationRS / compare / settings view model
+  -> reducer, selector, component
+```
+
+- Raw contract DTOs are transport-only. Components, reducers and selectors do not import them.
+- Validate that collection containers are arrays before mapping. Missing optional arrays normalize
+  to safe empty arrays only when the contract permits absence; a malformed non-array is an error,
+  not silently accepted data.
+- Validate identifiers and required scalar fields before constructing links or dispatching data.
+  Optional numbers/strings stay absent when the UI can render an explicit unavailable state.
+- Map published enums through exhaustive adapters. Unknown Pipeline, iteration, stage or result
+  values must produce an observable unsupported/error state and telemetry, not be cast into the
+  closed PoC enums.
+- Treat every response field as untrusted. In particular, validate `resultRef`, `runUrl` and
+  `triggeredRunUrl` before rendering a link: allow only an internal relative route or an explicitly
+  approved HTTPS host/scheme. Invalid, unapproved or non-HTTP(S) values remain visible as plain
+  non-clickable text where useful; never pass them directly to link/navigation components.
+- Keep cost, duration, token usage, scores and status derivations server-owned. The adapter changes
+  representation, not business meaning.
+- Quality Standard GET supplies only partial current-project configuration: standard name and
+  top-level description plus arbitrary criterion `id`, `name`, `maxPoints` and `sequence`. It has
+  no per-criterion descriptions, fixed-six guarantee, version/snapshot link or historical
+  evaluation association. T2.5 must get historical rubric data from the evaluation snapshot/contract
+  and must never recalculate historical results from the mutable current standard.
+- T2.1/T2.2 remain on the existing mock/overlay contracts because this audit did not confirm their
+  Test Case lifecycle/AI endpoints. With `show_ai_factory_poc` OFF they continue to render no new UI
+  and issue **no new requests**, including no speculative Pipeline or Quality Standard request.
+
+### 4.6 Live security gates
+
+- **Transport gate:** do not send bearer credentials or enable any live Pipeline/Quality Standard
+  integration until the target is available through trusted HTTPS. Never disable TLS certificate
+  or hostname verification, accept a self-signed/untrusted certificate in application code, or
+  downgrade to HTTP as a workaround. Until trusted HTTPS exists, keep that contract group mocked.
+- **Authorization boundary:** every read and mutation must be authorized server-side against the
+  authenticated user, `projectKey`, pipeline/iteration/stage/test-case resource and requested
+  action, with deny-by-default behaviour. The feature flag, hidden/disabled controls and client-side
+  role helpers are UX/convenience guards only; they are not security controls and must never be the
+  sole authorization check.
+- Mutation adapters must not broaden authority: identifiers come from validated route/state data,
+  the client must not infer cross-project access, and 401/403 responses stay explicit failures
+  without optimistic local success.
+
+Published operation → FE ownership mapping (paths shown for routing clarity; schemas stay in
+[05-backend-contract.md](05-backend-contract.md)):
+
+| Capability | Published operation | FE boundary / state |
+|------------|---------------------|---------------------|
+| Pipeline definitions | `GET /v1/project/{projectKey}/pipeline` | pipeline saga → list adapter → existing pipeline reducer |
+| Pipeline iterations | `GET /v1/project/{projectKey}/pipeline/{pipelineId}/iteration` | pipeline saga → page adapter → iterations-by-pipeline state |
+| Iteration details | `GET /v1/project/{projectKey}/pipeline/iteration/{iterationId}` | pipeline saga → detail adapter → iteration-details state; unlike the mock URL, no `pipelineId` path segment |
+| Compare | `GET /v1/project/{projectKey}/pipeline/iteration/{iterationId}/compare` | compare route/controller → compare adapter → normalized comparison state |
+| Auto-Ready settings | `PATCH /v1/project/{projectKey}/pipeline/{pipelineId}` | settings mutation → patch-request adapter; invalidate pipeline and affected iteration queries/state |
+| Re-run / create iteration | `POST /v1/project/{projectKey}/pipeline/iteration` | T4.4 mutation → create-request adapter; navigate/refetch using the returned iteration identity |
+| Retry stage | `POST /v1/project/{projectKey}/pipeline/iteration/{iterationId}/stage/{stageId}/retry` | T4.4 mutation → retry-request adapter; refetch that iteration after success |
+| Current project rubric metadata | `GET /v1/project/{projectKey}/tms/quality-standard` | T2.5 query → quality-standard adapter → partial current-standard model; historical evaluation rubric still requires its own snapshot/contract |
+| Quality Standard management | `POST`, `PUT`, `DELETE /v1/project/{projectKey}/tms/quality-standard` | No current FE owner: published capability only, pending separately approved management scope |
+
 ## 5. State management
 
 | Data | Where | Why |
 |------|-------|-----|
-| Pipelines list, iteration details, compare pair | `controllers/aiFactory/pipelines` (saga, reducer) — loaded by route thunks | route data, like Milestones or Test Plan |
-| Pipeline settings | hook `usePipelineSettings` (fetch + mutate) | a modal-scoped read and write |
+| Pipelines list and iteration details | `controllers/aiFactory/pipelines` (saga, reducer) — loaded by route thunks; published list/detail DTOs pass through adapters first | route data, like Milestones or Test Plan; T1.1–T1.3 are live-integration candidates, not integrated today |
+| Compare pair/result | `controllers/aiFactory/pipelines` or a dedicated compare slice; call the published server compare GET and normalize its result | compare is a route-level server-owned calculation; components render normalized deltas |
+| Pipeline settings | hook `usePipelineSettings` (fetch + mutate); Auto-Ready writes use the published Pipeline PATCH through an adapter | modal-scoped read/write; keep permissions and feature flag at the action boundary |
+| Create iteration / retry stage | task-scoped mutation hooks or controller actions; published create-iteration POST and stage-retry POST | T4.4 actions; invalidate/refetch the affected pipeline/iteration after success |
+| Project Quality Standard | query hook/service backed by published Quality Standard GET; normalize its limited current-standard fields | partial candidate for T2.5 only. It cannot supply per-criterion descriptions or historical snapshots; published POST/PUT/DELETE do not create FE management scope |
 | Test-case AI info (evaluation, cost, comments, fix round, automation, history) | hook `useTestCaseAi(testCaseId)` in the details page and side panel; list fields come in the list DTO | per-case, mutation-heavy; the existing TMS details page uses hooks |
 | Lifecycle mutations (approve, mark ready, bulk) | hook `useLifecycleActions` → then re-dispatch the existing list/details refresh (`useRefetchCurrentTestCases`, `GET_TEST_CASE_DETAILS`) | reuse the existing refresh paths |
 | Comments, push, discard | hook `useReviewComments(testCaseId)` | local |

@@ -47,9 +47,9 @@ The method and the sizes (S = 8 h, M = 20 h, L = 36 h) are defined in 08.
 |----|------|---------|------|---------|--------------|
 | T0.1 | Requirements digest and plan docs (this folder) | all | S | — | docs reviewed by the team |
 | T0.2 | Feature toggle `show_ai_factory_poc` (default OFF) + `isAiFactoryEnabled()` / `useAiFactoryEnabled()`; route guard helper for the Pipelines thunks; the toggle-OFF test pattern (test util that renders with the toggle on / off) | all (F11) | S | — | `controllers/aiFactory/featureFlag.ts` + unit tests; the OFF checklist in 03 §3 is the review checklist from now on |
-| T0.3 | Domain and DTO types `types/aiFactory.ts` (mirror of 05) + format utils (`formatCost`, `formatTokens`, `formatDuration`) | 001, all | S | T0.1 | types compile; utils have unit tests |
+| T0.3 | Legacy/mock PoC view-model and proposal DTO types in `types/aiFactory.ts` + format utils (`formatCost`, `formatTokens`, `formatDuration`) | 001, all | S | T0.1 | types compile; utils have unit tests. These types do not mirror the revised 05 live raw OpenAPI schemas; T6.2 adds that adapter boundary |
 | T0.4 | URL helpers in `common/urls.js` (P*, C*, L*, R*, F*, A*) | all | S | T0.3 | one helper per contract endpoint |
-| T0.5 | Mock backend: adapter install, DB + seed (port of the prototype data), engine (status, Auto-Ready, fix-round and automation simulation), overlay for TMS test cases, localStorage persistence, Reset demo, per-group switches | 001, 006 + all | L | T0.3, T0.4 | every contract endpoint answers on mocks; smoke test; README in `controllers/aiFactory/mocks/` |
+| T0.5 | Mock backend: adapter install, DB + seed (port of the prototype data), engine (status, Auto-Ready, fix-round and automation simulation), overlay for TMS test cases, localStorage persistence and Reset demo | 001, 006 + all | L | T0.3, T0.4 | every proposal endpoint answers on mocks; smoke test; README in `controllers/aiFactory/mocks/`. The delivered mock/live switch is global; per-group switching is still pending T6.2 |
 | T0.6 | Shared atoms: `LifecycleBadge`, `AiChip`, `ScoreChip`, `CostLabel`, `IterationStatusBadge`, `StageStatusDot/Label`, `ScoreBar`, `DeltaCell`, `usePolling` | all | M | T0.3 | component tests; light/dark via UI-kit tokens |
 | T0.7 | Permissions: `ACTIONS` + helpers (`canReviewAiTestCases`, `canManagePipelineSettings`, `canAutomateTestCases`) | 005, 012, 013 (F15) | S | — | unit tests on the matrix |
 
@@ -60,6 +60,14 @@ shape check was not completed (the OAuth2 password grant needs a real browser se
 built directly from the existing `types/testCase.ts`, which already reflects what the real UI parses in production.
 Actually seeding AI-marked cases into a real project, and detecting a real scenario edit, are deferred until
 Q-ORG-07 (target project/folder) is answered — see `controllers/aiFactory/mocks/README.md`.
+
+**Live-contract alignment note (2026-10-02):** T0.3–T0.5 and T1.1–T1.3 remain completed
+mock/proposal-UI delivery; the newly published Pipeline OpenAPI does not reopen or invalidate those tasks.
+Its paths and raw DTOs differ from the proposal contract, so adopting it is a separate T6.2 integration slice
+with explicit adapters and regression coverage. Source: [live OpenAPI document](http://tms.epmrpp.reportportal.io/api/api-docs).
+The published origin is currently plain HTTP, so authenticated live adoption is blocked until a trusted HTTPS
+endpoint exists; bearer tokens must never be sent with TLS verification bypassed. For every mutation, backend
+authentication and authorization remain mandatory—FE permission checks are gating/disabled-state UX only.
 
 ## Phase 1 — Factory visible: Pipelines (US-002, 003, 016 view)
 
@@ -79,7 +87,7 @@ Q-ORG-07 (target project/folder) is answered — see `controllers/aiFactory/mock
 | T2.2 | Library list: columns **Status** and **AI quality** (`★ N` / obsolete, `≈ $`, `Iteration #N ↗`, "—"), AI chip + tooltip next to the ID, row flags (unsent comments, agent fixing) | 008 | M | T2.1 | walkthrough step 7 (list part) |
 | T2.3 | Quick filters Status × AI (AND), preset **Review queue · N**, removable **Iteration #N** chip, Clear, URL-bound (`lifecycle`, `ai`, `iteration`), empty result text | 008 | M | T2.2 | deep link from the iteration works; filters survive a reload |
 | T2.4 | Side panel additions: status row (badge, AI chip, score, unsent count), Draft hint, **AI evaluation** mini section (bars, cost, iteration link), footer layout for Draft (disabled add buttons + tooltips, primary slot for Approve), check at 360 px | 008, 009, 014 | M | T2.2, T2.5 | walkthrough step 8 |
-| T2.5 | **AI evaluation** panel on details: total, 6 criteria rows (score/max + bar), expandable failure reasons, Evaluated / Obsolete line, rubric help modal, `★ N` in the header | 009 | M | T0.6 | walkthrough step 9; no PASS/FAIL anywhere |
+| T2.5 | **AI evaluation** panel on details: total, 6 criteria rows (score/max + bar), expandable failure reasons, Evaluated / Obsolete line, rubric help modal, `★ N` in the header; when live integration lands, `GET /v1/project/{projectKey}/tms/quality-standard` is only a partial source for the current rubric (standard name/top-level description and ordered criterion names/maxima) | 009 | M | T0.6 | walkthrough step 9; no PASS/FAIL anywhere; retain blockers for criterion descriptions, rubric version/snapshot and historical evaluation linkage. Absence/error states remain explicit. Quality Standard create/update/delete UI requires separate product scope and backend authorization |
 | T2.6 | **Generation cost** panel (≈ total, iteration share with formula, fix rounds, tokens, model) + **Pipeline** links section (source → Grade, fix round → Review) | 010 | S | T2.5 | walkthrough step 10 (TC103 ≈ $0.54) |
 
 ## Phase 3 — Review loop (US-011, 013, 005, 012, 019)
@@ -89,7 +97,7 @@ Q-ORG-07 (target project/folder) is answered — see `controllers/aiFactory/mock
 | T3.1 | Review comments: comment icon with count (orange/gray) on the Precondition + each Step (Steps) / Precondition + Instructions-Expected block (Text), thread (author, time, state, delete own pending, input + Add), **AI review strip** (lifecycle, N not sent, Discard with confirmation, Push to agent · N with disabled hint), AI cases only, read-only while fixing | 011 | L | T2.5 | walkthrough steps 11, 14 |
 | T3.2 | Approve / Mark as ready: shared `ApproveButton` (header + side panel footer; disabled with hints; obsolete confirmation), bulk **Approve** with skip report, Edit Scenario hint + checkbox "…along with these changes" (Draft only), toasts | 013, 007, 008 | M | T3.1, T2.4 | walkthrough steps 13, 15; bulk skips are named |
 | T3.3 | Push to agent: start a fix round (error path: comments stay not sent), "Agent is fixing… · Fix round K" locked state (Approve / Push / Edit Scenario disabled), polling, success (new evaluation, Draft, addressed comments, cost, Auto-Ready result toast), GRADE_FAILED, FAILED (push again / discard), **What the agent changed** modal | 012, 005 | L | T3.1, T3.2, T2.6 | walkthrough step 12 (TC106 success, TC107 failure) |
-| T3.4 | Pipeline settings modal: Auto-Ready toggle + threshold (0–100 integer validation), read-only without permission, "applies from next upload" note, automation pipeline "no settings", entry from the list + iteration | 005 | S | T1.2, T0.7 | walkthrough step 6 |
+| T3.4 | Pipeline settings modal: Auto-Ready toggle + threshold (0–100 integer validation), read-only without permission, "applies from next upload" note, automation pipeline "no settings", entry from the list + iteration; persist supported settings through `PATCH /v1/project/{projectKey}/pipeline/{pipelineId}` | 005 | S | T1.2, T0.7 | walkthrough step 6; confirm PATCH read-back and validation semantics before wiring. FE gating is UX only; the backend must authenticate and authorize the mutation |
 | T3.6 | **New (2026-09-29 audit).** CI connection section inside Pipeline settings: repository / branch / trigger credential (masked after save, never re-shown) / jobs / models / environments; **Test connection**; connection states Not connected / Connected / Connection failed; Organization Manager/Administrator only (D15); disables Push to agent / Automate / Re-run / Retry elsewhere with the "ask an Organization Manager" hint when not connected | 019 | M | T3.4, T0.7 | US-AI-FCTRY-019 ACs; UI↔API contract co-authored by Saveli Savich (see 01 §3a) must exist first |
 
 ## Phase 4 — Gate and compare (US-014, 004, 020)
@@ -98,8 +106,8 @@ Q-ORG-07 (target project/folder) is answered — see `controllers/aiFactory/mock
 |----|------|---------|------|---------|--------------|
 | T4.1 | Ready-only gate: Add to Launch / Add to Test Plan disabled for Draft (header, side panel, bulk with skip report) with exact hints; **In plan · Launch blocked** banner on the case page and side panel | 014 | M | T2.1, T2.4 | walkthrough steps 8, 15 (TC108 banner) |
 | T4.2 | Test Plan page: Draft badges on plan cases, **Launch** disabled + banner "Launch blocked: N Draft Test Cases" with links (not prototyped — keep it minimal, ❓ Q-BA-04) | 014 | M | T4.1 | approve the Draft → Launch enabled |
-| T4.3 | Compare iterations page: pipeline / baseline / candidate selects (pipeline change resets to the latest two), stage row with costs, metrics table with Δ and direction colouring, "Different requirements" note, entries from the list + "Compare with previous" | 004 | M | T1.3 | walkthrough step 5 (score +4 better, cost +$0.13 worse) |
-| T4.4 | **New (2026-09-29 audit).** **Re-run** an iteration (header action, dialog with read-only requirement + environment + model select, creates a new iteration in its own folder, offers "Compare with Iteration #N" when done) and **Retry** a failed Create/Upload stage (stage card + panel action, same iteration, keeps attempt history "Attempt K of N", cost accumulates); both gated on CI connection (T3.6) and Organization Manager/Administrator (D15); disabled while Running | 020 | M | T3.6, T1.3u | US-AI-FCTRY-020 ACs; UI↔API contract co-authored by Saveli Savich (see 01 §3a) must exist first |
+| T4.3 | Compare iterations page: pipeline / baseline / candidate selects (pipeline change resets to the latest two), stage row with costs, metrics table with Δ and direction colouring, "Different requirements" note, entries from the list + "Compare with previous"; consume server compare `GET /v1/project/{projectKey}/pipeline/iteration/{iterationId}/compare` with required `with=<iterationId>` | 004 | M | T1.3 | walkthrough step 5 (score +4 better, cost +$0.13 worse); server response supersedes the earlier FE-only delta decision |
+| T4.4 | **New (2026-09-29 audit).** **Re-run** an iteration (header action, dialog with read-only requirement + environment + model select, creates a new iteration in its own folder through `POST /v1/project/{projectKey}/pipeline/iteration`, offers "Compare with Iteration #N" when done) and **Retry** a failed Create/Upload stage through `POST /v1/project/{projectKey}/pipeline/iteration/{iterationId}/stage/{stageId}/retry` (same iteration, keeps attempt history "Attempt K of N", cost accumulates); both gated on CI connection (T3.6) and Organization Manager/Administrator (D15); disabled while Running | 020 | M | T3.6, T1.3u | US-AI-FCTRY-020 ACs; confirm idempotency and attempt-history semantics before wiring. FE gating is UX only; the backend must authenticate and authorize both mutations |
 
 ## Phase 5 — Automation (US-015, 016, 017)
 
@@ -115,7 +123,7 @@ Q-ORG-07 (target project/folder) is answered — see `controllers/aiFactory/mock
 | ID | Task | Size | Output |
 |----|------|------|--------|
 | T6.1 | Roles / read-only states everywhere (F15) | S | permission matrix test |
-| T6.2 | Switch endpoint groups from mock to real as the BE lands (per-group switch), update the status board in 05 | per group S | the 05 table goes 🟢 |
+| T6.2 | Switch endpoint groups from mock to real as the BE lands: keep per-group rollout, align live paths/schemas, introduce raw OpenAPI DTO → stable UI-model adapters, and update the status board in 05 | per group S | each group goes 🟢 only after adapter tests, toggle-OFF regression, and live error/absence handling; Pipeline GETs and Quality Standard GET are the first published candidates |
 | T6.3 | i18n extraction (`npm run manage:translations`), a11y pass (focus, aria for icons and threads), 360 px side panel | S | — |
 | T6.4 | Demo rehearsal: run the 18-step parity checklist end to end, reset demo | S | checklist ticked |
 | T6.5 | Toggle-OFF regression pass: with the toggle OFF, walk the Library, side panel, details, Edit Scenario, Test Plans, Manual Launches and Launches; compare against `develop` | S | no difference; repeat before each merge of `bootcamp-prototype` |

@@ -51,13 +51,13 @@ export const TestCaseNameCell = ({
 }: TestCaseNameCellProps) => {
   const { formatMessage } = useIntl();
   const title = `${displayId} ${name}`;
+  const generatedByIterationMessage = ai?.modifiedByAgent
+    ? messages.generatedByIterationModified
+    : messages.generatedByIteration;
   const generatedByIterationTooltip = ai?.generatedByIteration
-    ? formatMessage(
-        ai.modifiedByAgent ? messages.generatedByIterationModified : messages.generatedByIteration,
-        {
-          number: ai.generatedByIteration.number,
-        },
-      )
+    ? formatMessage(generatedByIterationMessage, {
+        number: ai.generatedByIteration.number,
+      })
     : undefined;
 
   return (
