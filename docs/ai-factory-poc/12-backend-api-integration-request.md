@@ -58,7 +58,7 @@ request.
 | **LP1 — List pipeline definitions:** `GET /v1/project/{projectKey}/pipeline` | `200 PipelineRS[]` | Project Pipeline list | Candidate after P0 and required pipeline identity/type fields are agreed | P1 |
 | **LP2 — List iterations of one pipeline:** `GET /v1/project/{projectKey}/pipeline/{pipelineId}/iteration` | `200 PipelineIterationSummaryRS[]` (plain array) | Pipeline list/history | Candidate after P0, bounds/order and iteration invariants are agreed | P1 |
 | **LP3 — Get one iteration with stages:** `GET /v1/project/{projectKey}/pipeline/iteration/{iterationId}` | `200 PipelineIterationDetailRS` | Iteration detail | Candidate first as generic detail; specialized panels require typed stage results | P2 |
-| **LP4 — Compare two iterations of the same pipeline:** `GET /v1/project/{projectKey}/pipeline/iteration/{iterationId}/compare?with={iterationId}` | `200 PipelineCompareRS` | Iteration comparison | Candidate first as neutral status/identity comparison; typed KPI deltas deferred | P4 |
+| **LP4 — Compare two iterations of the same pipeline:** `GET /v1/project/{projectKey}/pipeline/iteration/{iterationId}/compare?with={otherIterationId}` | `200 PipelineCompareRS` | Iteration comparison | Candidate first as neutral status/identity comparison; typed KPI deltas deferred | P4 |
 | **LP5 — Update Auto-Ready settings:** `PATCH /v1/project/{projectKey}/pipeline/{pipelineId}` | `200 PipelineRS` | Pipeline settings UI | Blocked on validation, patch/null, authorization and concurrency semantics | P5 |
 | **LP6 — Create a pipeline iteration and its stages:** `POST /v1/project/{projectKey}/pipeline/iteration` | `201 PipelineIterationDetailRS` | CI/agent producer according to published description | Producer contract needs clarification; not approved as UI Re-run | Deferred for UI Re-run |
 | **LP7 — Trigger CI rerun for one stage:** `POST /v1/project/{projectKey}/pipeline/iteration/{iterationId}/stage/{stageId}/retry` | `202 PipelineStageRetryRS` | Authorized Pipeline Retry action | Blocked on eligibility, attempt identity, duplicate behavior and post-`202` refresh | P5 |
@@ -153,7 +153,9 @@ Suggested status values: `Open`, `In discussion`, `Accepted`, `Implemented`, `Re
 | BE-019 | LP6 pipeline/rerun invariants | Pipeline identified by name; `rerun` and `rerunOfIterationId` rules absent | Rename/duplicates and cross-pipeline rerun chains are possible | Define name uniqueness/case/rename/create-on-submit behavior or use immutable ID; require same-project/same-pipeline source and define root-vs-previous rerun linkage | Deferred for UI | LP6 |  | Open |  |  |
 | BE-020 | LP6 idempotency/atomicity/timing | `201` detail; no replay, atomicity or processing-state semantics | Producer retries may duplicate partial iterations/stages | Define idempotency key/natural identity, replay window, same-key/different-body conflict, transaction boundary, recovery, and whether `201` is final persistence or `202` asynchronous acceptance | Deferred for UI | LP6 producer acceptance |  | Open |  |  |
 | BE-021 | LP7 eligibility | Stage has optional retry metadata; response fields optional | UI cannot know who/what is retryable or track accepted attempt | Define eligible stage/status/provider/role rules; require response `stageId`, status and attempt/job identity; define unavailable CI-provider failure | P5 | LP7 |  | Open |  |  |
-| BE-022 | LP7 duplicate and post-`202` behavior | No idempotency/duplicate/polling contract | Double clicks may start duplicate jobs; accepted work may never refresh correctly | Define duplicate/in-flight behavior and conflict/idempotency response; state whether body may be empty; define resource to poll after `202` and expected transition timing | P5 | LP7 |  | Open |  |  |
+| BE-022 | LP7 duplicate and post-`202` behavior | No idempotency/duplicate/polling contract | Double clicks may start duplicate jobs; accepted work may never refresh correctly | Define duplicate/in-flight behavior and conflict/idempotency response; define resource to poll after `202` and expected transition timing | P5 | LP7 |  | Open |  |  |
+| BE-022A | LP7 request body | A JSON `PipelineStageRetryRQ` with optional `comment` is documented, but the request body itself is not marked required | Clients cannot know whether omitting the body and sending `{}` are both valid, or how an optional comment is validated | State whether a request body is required; separately define behavior for no body, `{}`, `{"comment":"..."}`, blank comment, null comment and invalid/oversized comment, including content type and validation errors | P5 | LP7 request construction |  | Open |  |  |
+| BE-022B | LP7 `202` response body | OpenAPI documents `202 PipelineStageRetryRS`, whose fields are optional | Clients cannot know whether every accepted retry has a JSON representation or whether `202` may legally have no response body | Confirm whether every `202` returns `PipelineStageRetryRS` and which fields are required; if a bodyless `202` is valid, document its content type/body semantics and the authoritative resource/identity used for subsequent polling | P5 | LP7 response handling |  | Open |  |  |
 | BE-023 | QS1 response / absence | Current standard fields are optional; no-standard behavior unclear | Cannot distinguish unconfigured project from error/invalid payload | Guarantee standard/criterion invariants in section 3.1; define no-standard status/body; define timestamps' type/unit and read roles | P3 | QS1 |  | Open |  |  |
 | BE-024 | QS1 criterion content | Criterion has name/maxPoints/sequence but no criterion description | UI cannot show criterion guidance from the contract | Confirm a name-only current rubric is intentional, or add a criterion description field; frontend will not invent descriptions | P3 | QS1 content parity |  | Open |  |  |
 | BE-025 | QS1 historical meaning | Only current mutable standard is exposed; no version/snapshot link to a grade | Past evaluations cannot be reproduced against the correct rubric | Keep QS1 labelled current-only; separately design immutable version or embedded snapshot linked to each historical grade | Future | Historical grading |  | Open |  |  |
@@ -162,20 +164,24 @@ Suggested status values: `Open`, `In discussion`, `Accepted`, `Implemented`, `Re
 
 ## 5. Authorization and ownership matrix to approve
 
-The following are the only currently known product-role decisions. Blank cells are intentionally open and must not
-be inferred. Frontend controls are UX only; Backend remains the authorization boundary.
+The following are the only currently known product-role decisions. Unresolved role cells are marked
+`Decision required`; blank Backend-confirmation cells are awaiting an answer. Frontend controls are UX only;
+Backend remains the authorization boundary.
+
+Role-cell legend: `Allowed`, `Denied`, `Decision required`, `Not applicable`. `Decision required` means that access
+has not been agreed and must not be interpreted as public or permitted access.
 
 | Capability / operation | Editor | Organization Manager | Administrator | Project/resource ownership rule | Backend confirmation |
 |---|:---:|:---:|:---:|---|---|
-| Review actions outside these 11 endpoints | Allowed by known product decision | _Not specified here_ | _Not specified here_ | BE to define for the owning review resource |  |
-| Read Pipelines: LP1–LP4 | Open | Open | Open | Must require project membership and prevent cross-project resource access |  |
-| Update Pipeline settings: LP5 | Not allowed by known product decision | Allowed | Allowed | Must verify target pipeline belongs to the requested project |  |
-| Connect Pipeline to CI | Not allowed by known product decision | Allowed | Allowed | Exact endpoint/resource ownership to be defined |  |
-| User-facing Re-run | Not allowed by known product decision | Allowed | Allowed | Must not imply permission to call CI/agent ingestion LP6 |  |
-| Retry one stage: LP7 | Not allowed by known product decision | Allowed | Allowed | Must verify project, iteration and stage ownership and current eligibility |  |
-| Read Quality Standard: QS1 | Open | Open | Open | Must require project membership |  |
-| Create/update/delete Quality Standard: QS2–QS4 | Open | Open | Open | Product approval plus server-side project ownership and audit required |  |
-| CI/agent iteration submission: LP6 | Not applicable until caller class is defined | Not implied | Not implied | Prefer dedicated least-privilege machine/service authority scoped to project/pipeline |  |
+| Review actions outside these 11 endpoints | Allowed | Decision required | Decision required | BE to define for the owning review resource |  |
+| Read Pipelines: LP1–LP4 | Decision required | Decision required | Decision required | Must require project membership and prevent cross-project resource access |  |
+| Update Pipeline settings: LP5 | Denied | Allowed | Allowed | Must verify target pipeline belongs to the requested project |  |
+| Connect Pipeline to CI | Denied | Allowed | Allowed | Exact endpoint/resource ownership to be defined |  |
+| User-facing Re-run | Denied | Allowed | Allowed | Must not imply permission to call CI/agent ingestion LP6 |  |
+| Retry one stage: LP7 | Denied | Allowed | Allowed | Must verify project, iteration and stage ownership and current eligibility |  |
+| Read Quality Standard: QS1 | Decision required | Decision required | Decision required | Must require project membership |  |
+| Create/update/delete Quality Standard: QS2–QS4 | Decision required | Decision required | Decision required | Product approval plus server-side project ownership and audit required |  |
+| CI/agent iteration submission: LP6 | Not applicable | Not applicable | Not applicable | Prefer dedicated least-privilege machine/service authority scoped to project/pipeline |  |
 
 Please add any real ReportPortal role not shown here only through an explicit Product decision; do not widen access
 because a role is absent from this table.
@@ -196,57 +202,41 @@ produce malformed success responses.
 | LP4 | Valid comparison, empty comparison, cross-pipeline request and missing iteration; after metric agreement, higher/lower/non-evaluative examples | BE-003, BE-014, BE-015 |
 | LP5 | Successful full response; invalid threshold; forbidden; stale/conflict; not found | BE-003, BE-006, BE-016, BE-017 |
 | LP6 | First submission; exact replay; same idempotency key/different body; invalid pipeline; invalid rerun combinations; cross-project source; forbidden caller | BE-003, BE-006, BE-018–BE-020 |
-| LP7 | Accepted retry; non-retryable stage; duplicate/in-flight request; forbidden caller; CI-provider failure; empty body only if it is valid by agreement | BE-003–BE-006, BE-021, BE-022 |
+| LP7 request | No request body; `{}`; valid optional comment; blank/null/invalid/oversized comment; unsupported content type, with the exact accepted/rejected behavior agreed in advance | BE-003, BE-006, BE-022A |
+| LP7 response | Accepted retry returning `PipelineStageRetryRS`; if contractually supported, separately capture accepted retry with no response body; non-retryable stage; duplicate/in-flight request; forbidden caller; CI-provider failure | BE-003–BE-006, BE-021, BE-022, BE-022B |
 | QS1 | No standard, minimum valid standard and representative full current standard | BE-002, BE-003, BE-006, BE-023, BE-024 |
 | QS2–QS4 | When management is approved: create/update/delete success, already-exists, invalid criteria, conflict, forbidden and referenced-delete behavior | BE-003, BE-006, BE-026, BE-027 |
 | Common security | Missing/expired/invalid token; permitted and denied project/resource combinations; cross-project identifier attempt | BE-001, BE-003, BE-006, BE-007 |
 
 ## 7. Acceptance and validation checklist
 
-This checklist defines how the agreed backend behavior will be accepted. Evidence should reference the decision IDs
-and the exact API build tested.
+The following QA-authored scenarios define the minimum acceptance set. Each execution must identify the exact API
+build and OpenAPI version under test. “Automated” means a repeatable API/contract check; manual review supplements but
+does not replace authorization or schema assertions.
 
-### 7.1 Foundation and security
+### 7.1 QA acceptance scenarios
 
-- [ ] **BE-001:** OpenAPI and authenticated smoke tests are available through trusted HTTPS; certificate validation
-  stays enabled; bearer tokens are never sent over the published HTTP origin.
-- [ ] **BE-002/BE-008:** Deployed responses validate against the versioned OpenAPI and the required/nullability matrix;
-  breaking-change policy and build identity are recorded.
-- [ ] **BE-003:** Every endpoint's agreed absent, validation, conflict, throttling and server errors return the agreed
-  status/envelope, correlation ID and retryability without leaking sensitive data.
-- [ ] **BE-006:** Allowed roles succeed and denied/cross-project/direct API requests fail server-side for every enabled
-  operation; hiding a frontend control is not used as authorization evidence.
-- [ ] **BE-007:** References follow the agreed formats. Disallowed schemes/hosts and malformed internal references are
-  rejected or remain non-clickable; no credential-bearing URL is returned.
+| ID | Precondition / input | Expected API and integration behavior | Traceability | Suggested automation |
+|---|---|---|---|---|
+| QA-BE-01 | Use a trusted HTTPS endpoint, then attempt HTTP, invalid-certificate and unapproved-origin access with an authenticated client | Only trusted HTTPS succeeds with certificate validation enabled; no bearer token, credential-bearing URL or sensitive query value appears in logs, evidence or errors | BE-001, BE-007 | Automated transport/security check plus log review |
+| QA-BE-02 | Validate minimum, representative and agreed optional-field success payloads; separately exercise missing required identity, wrong type, invalid date and malformed nested entity fixtures | Deployed success payloads conform to required/nullability rules; malformed data is rejected or isolated to the affected entity and never becomes valid state through invented defaults | BE-002 | Automated schema/contract checks |
+| QA-BE-03 | Call each enabled operation with missing, expired and invalid tokens; allowed and denied roles; foreign-project pipeline, iteration, stage and standard IDs | Authentication returns the agreed `401`; denied roles and cross-project/resource access return the agreed `403` or non-disclosing not-found response; no foreign resource data or existence detail leaks | BE-003, BE-006 | Automated API authorization matrix |
+| QA-BE-04 | Trigger each agreed absent, validation, conflict, throttling and server-failure condition | Status and error envelope match the endpoint contract and include stable machine code, safe message, correlation ID and retryability; `429` includes the agreed `Retry-After` behavior | BE-003 | Automated negative API checks |
+| QA-BE-05 | Request LP1 and LP2 for zero, one, typical and maximum supported datasets, including duplicate-looking names and mixed statuses | LP1 identities/names/types satisfy invariants; LP2 remains within the agreed bound and deterministic order, with stable iteration ownership and numbering | BE-009, BE-010, BE-011 | Automated API/contract checks |
+| QA-BE-06 | Advance iterations and stages through every allowed status transition; provide terminal states and an unknown future enum value | Transitions and terminal states follow the approved matrix; polling stops at terminal state; unknown values remain neutral/unknown and are never interpreted as Passed | BE-004, BE-005 | Automated state-transition checks |
+| QA-BE-07 | Return LP3 with multiple ordered stages, nested relationships, known and forward-compatible stage keys; include duplicate/missing IDs or sequences in negative fixtures | Valid stage IDs, keys and sequences are stable and uniquely ordered; route/project ownership is preserved; invalid stage identity/order is rejected or isolated; non-terminal detail refresh follows the polling/backoff contract | BE-004, BE-005, BE-012, BE-013 | Automated API/contract and polling checks |
+| QA-BE-08 | Compare valid same-pipeline iterations, empty deltas, missing iterations and cross-pipeline IDs while metrics remain object-only or otherwise unagreed | Opaque metrics do not produce KPI, token or cost claims; permitted comparison is identity/status-only and neutral; invalid or cross-pipeline comparison follows the agreed error contract | BE-014, BE-015 | Automated API assertions plus presentation review |
+| QA-BE-09 | Submit LP5 valid values, boundary/invalid thresholds, invalid field combinations, omitted/null fields and two concurrent updates using the agreed revision mechanism | Validation and PATCH merge semantics match the contract; stale updates fail deterministically without lost data; success returns or allows retrieval of authoritative stored state and audit metadata | BE-016, BE-017 | Automated API validation/concurrency checks |
+| QA-BE-10 | Invoke LP6 using allowed machine/service authority and forbidden interactive/wrong-project callers; use existing, renamed, duplicate-case and unknown pipeline identities | Only the agreed caller class succeeds; pipeline resolution follows immutable-ID or explicit name rules; forbidden callers and ambiguous/unknown identities fail without creating an iteration | BE-006, BE-018, BE-019 | Automated API authorization/identity checks |
+| QA-BE-11 | Submit LP6 first request, exact replay, same idempotency key with a different body, valid and invalid rerun combinations, cross-pipeline/project source, and simulated partial failure | Replay and conflict behavior match the contract; rerun linkage is valid and scoped; no duplicate/partial iteration escapes the atomicity rule; `201`/`202`, recovery and polling semantics match the agreed timing model | BE-018, BE-019, BE-020 | Automated API idempotency/transaction checks |
+| QA-BE-12 | Invoke LP7 with no request body, `{}`, valid comment, blank/null comment, invalid/oversized comment and unsupported content type | Each request form is accepted or rejected exactly as documented, with the agreed validation status and stable error envelope | BE-003, BE-022A | Automated request-contract checks |
+| QA-BE-13 | Retry eligible and ineligible stages; repeat/double-submit while in flight; exercise both structured and, only if agreed, bodyless `202` variants | Eligibility and authorization are enforced; duplicates follow the idempotency/conflict rule; accepted retry exposes the agreed attempt/polling identity, and subsequent LP3 state follows documented transitions | BE-006, BE-021, BE-022, BE-022B | Automated API idempotency/polling checks |
+| QA-BE-14 | Request QS1 for no configured standard, minimum valid standard and representative full standard with ordered criteria | Absence is distinguishable from failure; valid identity, criterion and timestamp invariants hold; the response is presented only as the current rubric, with no invented criterion description | BE-002, BE-023, BE-024, BE-025 | Automated API/contract checks plus label review |
+| QA-BE-15 | Inspect enabled endpoint scope before Product approval, then exercise future QS2–QS4 and historical-grade scenarios only after their decisions are accepted | QS2–QS4 management is unavailable in current scope; no mutable current standard is claimed as historical evidence; future writes/deletes enforce scoring, concurrency, audit, reference and immutable-history rules | BE-025, BE-026, BE-027 | Automated scope/API checks plus Product/QA sign-off |
+| QA-BE-16 | Return HTTPS allowed/disallowed hosts, HTTP, protocol-relative, credential-bearing, malformed internal paths, `javascript:` and `data:` values in every reference field | Only approved HTTPS hosts and documented internal routes are actionable; every unsafe or malformed reference is rejected or remains non-clickable text and is never treated as markup | BE-007, BE-013, BE-021 | Automated reference-security checks |
+| QA-BE-17 | Execute the complete applicable scenario set against the payload pack and deployed API advertised for sign-off; then compare build/version identifiers and compatibility policy | OpenAPI, payloads, contract results and environment identify the same deployed build; drift or an unannounced breaking change blocks sign-off | BE-008 | Automated provenance/version check plus release review |
 
-### 7.2 Pipeline reads and progress
-
-- [ ] **BE-004/BE-005:** Each status follows the agreed transition/terminal matrix; polling/backoff stops on terminal
-  state and respects throttling guidance.
-- [ ] **BE-009:** LP1 returns stable required IDs/names/types and agreed settings/repository null semantics.
-- [ ] **BE-010/BE-011:** LP2 empty, typical and maximum datasets preserve the agreed order/bounds and iteration
-  ownership/identity invariants.
-- [ ] **BE-012/BE-013:** LP3 stage IDs, keys and sequences are unique/stable; unknown future stage keys remain
-  representable; Test Case and CI identifiers follow the agreed reference contract.
-- [ ] **BE-014:** Typed/discriminated metrics validate against OpenAPI and produce the agreed units, token totals and
-  money aggregation. Until then, acceptance explicitly expects those values to be omitted from the UI.
-- [ ] **BE-015:** LP4 rejects or explicitly represents missing/cross-pipeline comparisons and does not imply metric
-  direction before that semantic is agreed.
-
-### 7.3 Mutations
-
-- [ ] **BE-016/BE-017:** LP5 validates bounds/combinations, preserves omitted fields according to PATCH semantics,
-  returns the agreed full/partial representation and prevents stale lost updates.
-- [ ] **BE-018–BE-020:** Before any LP6 consumer is enabled, caller class, purpose, pipeline identity, rerun invariants,
-  idempotent replay, same-key conflict, atomicity and synchronous/asynchronous timing all pass the payload scenarios.
-- [ ] **BE-021/BE-022:** LP7 enforces eligibility and role/ownership, returns attempt identity, handles duplicate/in-flight
-  requests deterministically and exposes the agreed post-`202` polling target.
-- [ ] **BE-023/BE-024:** QS1 distinguishes “not configured” from failure, returns ordered valid criteria and supports the
-  explicitly agreed name-only or description-bearing current-rubric presentation.
-- [ ] **BE-025–BE-027:** No historical claim or QS2–QS4 management release occurs until immutable rubric linkage,
-  scoring/concurrency/audit and delete semantics relevant to that release are accepted.
-
-### 7.4 Evidence required for sign-off
+### 7.2 Evidence required for sign-off
 
 - [ ] OpenAPI URL and exact version/build under test.
 - [ ] Completed decision/action and authorization tables.
