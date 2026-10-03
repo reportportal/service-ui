@@ -11,3 +11,5 @@
 export { ReviewStrip, ReviewTarget } from './reviewComments';
 export { useReviewComments } from './useReviewComments';
 export type { ReviewCommentsLoadState } from './useReviewComments';
+export { useFixRound } from './useFixRound';
+export type { FixRoundLoadState } from './useFixRound';

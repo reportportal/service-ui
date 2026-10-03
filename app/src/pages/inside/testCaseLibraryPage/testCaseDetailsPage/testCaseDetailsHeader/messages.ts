@@ -25,4 +25,8 @@ export const messages = defineMessages({
     id: 'EditTestCasePage.id',
     defaultMessage: 'ID:',
   },
+  editScenarioFixRunning: {
+    id: 'TestCaseDetailsHeader.editScenarioFixRunning',
+    defaultMessage: 'Edit Scenario is unavailable while the agent is fixing this Test Case',
+  },
 });

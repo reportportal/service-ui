@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-import { type ReactNode } from 'react';
+import { type ReactNode, useCallback } from 'react';
 import { isEmpty } from 'es-toolkit/compat';
 import { noop } from 'es-toolkit';
 import { useIntl } from 'react-intl';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useTracking } from 'react-tracking';
 import { BubblesLoader, Button, EditIcon, PlusIcon } from '@reportportal/ui-kit';
 
@@ -34,7 +34,11 @@ import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { useUserPermissions } from 'hooks/useUserPermissions';
 import { useAiFactoryEnabled } from 'controllers/aiFactory';
 import { projectKeySelector } from 'controllers/project';
-import { isLoadingTestCaseDetailsSelector, testCaseDetailsSelector } from 'controllers/testCase';
+import {
+  GET_TEST_CASE_DETAILS,
+  isLoadingTestCaseDetailsSelector,
+  testCaseDetailsSelector,
+} from 'controllers/testCase';
 import { commonMessages } from 'pages/inside/common/common-messages';
 import { EvaluationPanel } from 'pages/inside/aiFactory/evaluation';
 import { GenerationCost } from 'pages/inside/aiFactory/generationCost';
@@ -43,6 +47,7 @@ import { PipelineLinks } from 'pages/inside/aiFactory/pipelineLinks';
 import {
   ReviewStrip,
   ReviewTarget,
+  useFixRound,
   useReviewComments,
   type ReviewCommentsLoadState,
 } from 'pages/inside/aiFactory/review';
@@ -231,6 +236,7 @@ const MAIN_CONTENT_COLLAPSIBLE_SECTIONS_CONFIG = ({
 export const TestCaseDetailsPage = () => {
   const { formatMessage } = useIntl();
   const { trackEvent } = useTracking();
+  const dispatch = useDispatch();
   const { canManageTestCases, canReviewAiTestCases } = useUserPermissions();
   const { openModal: openAddTestCasesToTestPlanModal } = useAddTestCasesToTestPlanModal();
   const { openModal: openDescriptionModal } = useDescriptionModal();
@@ -249,6 +255,18 @@ export const TestCaseDetailsPage = () => {
   );
   const isAiReviewEnabled = isAiFactoryEnabled && Boolean(testCaseDetails?.ai);
   const reviewState = useReviewComments(projectKey, testCaseId, isAiReviewEnabled);
+  const refreshAfterFixRoundStart = useCallback(() => {
+    reviewState.reload();
+  }, [reviewState]);
+  const refreshAfterFixRound = useCallback(() => {
+    reviewState.reload();
+    aiDetailsState.reload();
+    dispatch({ type: GET_TEST_CASE_DETAILS, payload: { testCaseId } });
+  }, [aiDetailsState, dispatch, reviewState, testCaseId]);
+  const fixRoundState = useFixRound(projectKey, testCaseId, isAiReviewEnabled, {
+    onStarted: refreshAfterFixRoundStart,
+    onFinished: refreshAfterFixRound,
+  });
 
   const {
     addTag,
@@ -299,8 +317,22 @@ export const TestCaseDetailsPage = () => {
   const tags = attributes.map(({ key }) => key);
 
   const isScenarioEmpty = checkScenario(testCaseDetails?.manualScenario);
-  const isFixRunning = Boolean(testCaseDetails.review?.fixRound);
+  const isFixRunning =
+    fixRoundState.current?.status === 'RUNNING' || Boolean(testCaseDetails.review?.fixRound);
   const isReviewReadOnly = isFixRunning || !canReviewAiTestCases;
+  const renderedTestCase = isFixRunning
+    ? {
+        ...testCaseDetails,
+        review: {
+          ...testCaseDetails.review,
+          unsentCommentsCount: testCaseDetails.review?.unsentCommentsCount ?? 0,
+          fixRound: {
+            number: fixRoundState.current?.round ?? testCaseDetails.review?.fixRound?.number ?? 1,
+            status: 'RUNNING' as const,
+          },
+        },
+      }
+    : testCaseDetails;
 
   const mainContent = isScenarioEmpty ? (
     <DetailsEmptyState testCase={testCaseDetails} />
@@ -312,6 +344,8 @@ export const TestCaseDetailsPage = () => {
           reviewState={reviewState}
           isReadOnly={isReviewReadOnly}
           readOnlyReason={isFixRunning ? 'FIX_RUNNING' : 'NO_PERMISSION'}
+          fixRoundState={fixRoundState}
+          lastAgentChange={aiDetailsState.data?.lastAgentChange}
         />
       )}
       {MAIN_CONTENT_COLLAPSIBLE_SECTIONS_CONFIG({
@@ -337,7 +371,7 @@ export const TestCaseDetailsPage = () => {
         <div className={cx('page')}>
           <TestCaseDetailsHeader
             className={cx('page__header')}
-            testCase={testCaseDetails}
+            testCase={renderedTestCase}
             onAddToTestPlan={handleAddToTestPlan}
             onMenuAction={noop}
             isScenarioEmpty={isScenarioEmpty}
