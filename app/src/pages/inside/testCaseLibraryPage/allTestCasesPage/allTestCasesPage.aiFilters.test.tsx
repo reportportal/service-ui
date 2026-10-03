@@ -63,8 +63,16 @@ jest.mock('react-redux', () => ({ useDispatch: jest.fn(), useSelector: jest.fn()
 jest.mock('react-intl', () => ({
   defineMessages: (messages: unknown) => messages,
   useIntl: () => ({
-    formatMessage: (message: { defaultMessage?: string; id?: string }) =>
-      message.defaultMessage ?? message.id ?? '',
+    formatMessage: (
+      message: { defaultMessage?: string; id?: string },
+      values?: Record<string, unknown>,
+    ) => {
+      const cases = values?.cases;
+      return (message.defaultMessage ?? message.id ?? '').replace(
+        '{cases}',
+        typeof cases === 'string' ? cases : '{cases}',
+      );
+    },
   }),
 }));
 jest.mock('react-tracking', () => ({ useTracking: () => ({ trackEvent: jest.fn() }) }));
@@ -76,6 +84,9 @@ jest.mock('common/utils', () => ({
 }));
 jest.mock('controllers/aiFactory', () => ({ useAiFactoryEnabled: jest.fn() }));
 jest.mock('controllers/modal', () => ({ showModalAction: jest.fn() }));
+jest.mock('controllers/notification', () => ({
+  showWarningNotification: (payload: unknown) => ({ type: 'WARNING', payload }),
+}));
 jest.mock('controllers/pages', () => ({
   locationQuerySelector: jest.fn(),
   payloadSelector: jest.fn(),
@@ -119,6 +130,8 @@ jest.mock('./batchEditTagsModal', () => ({ useBatchEditTagsModal: jest.fn() }));
 jest.mock('./changePriorityModal', () => ({ CHANGE_PRIORITY_MODAL_KEY: 'changePriorityModal' }));
 
 const dispatch = jest.fn();
+const openAddToLaunchModal = jest.fn();
+const openAddToTestPlanModal = jest.fn();
 let query: Record<string, string> = {};
 
 const testCase = {
@@ -126,6 +139,8 @@ const testCase = {
   displayId: 'TC1',
   name: 'Generated case',
   testFolder: { id: 7 },
+  lifecycle: Lifecycle.READY,
+  manualScenario: { preconditions: { value: 'Given a user' }, steps: [] },
   ai: {
     generatedByIteration: { pipelineId: 1, iterationId: 103, number: 4 },
     modifiedByAgent: false,
@@ -137,6 +152,7 @@ const renderPage = (
   isAiFactoryEnabled: boolean,
   testCases: TestCase[] = [testCase],
   canReviewAiTestCases = false,
+  hasTestPlans = false,
 ) => {
   jest.mocked(useAiFactoryEnabled).mockReturnValue(isAiFactoryEnabled);
   jest.mocked(useIterationNumber).mockReturnValue(4);
@@ -176,11 +192,13 @@ const renderPage = (
       canReviewAiTestCases,
     } as ReturnType<typeof useUserPermissions>);
   jest.mocked(useHasTestPlans).mockReturnValue({
-    hasTestPlans: false,
+    hasTestPlans,
     isCheckingTestPlansExistence: false,
   });
-  jest.mocked(useAddTestCasesToTestPlanModal).mockReturnValue({ openModal: jest.fn() });
-  jest.mocked(useAddToLaunchModal).mockReturnValue({ openModal: jest.fn() });
+  jest.mocked(useAddTestCasesToTestPlanModal).mockReturnValue({
+    openModal: openAddToTestPlanModal,
+  });
+  jest.mocked(useAddToLaunchModal).mockReturnValue({ openModal: openAddToLaunchModal });
   jest.mocked(useBatchDuplicateTestCasesModal).mockReturnValue({ openModal: jest.fn() });
   jest.mocked(useBatchDeleteTestCasesModal).mockReturnValue({ openModal: jest.fn() });
   jest.mocked(useMoveTestCaseModal).mockReturnValue({ openModal: jest.fn() });
@@ -211,6 +229,55 @@ describe('AllTestCasesPage AI filters', () => {
 
     expect(permitted.find(BulkApproveButton)).toHaveLength(1);
     expect(renderPage(false, [testCase], true).find(BulkApproveButton)).toHaveLength(0);
+  });
+
+  test('bulk Test Plan action sends only Ready cases and names skipped Draft cases', () => {
+    const draftCase = {
+      ...testCase,
+      id: 2,
+      displayId: 'TC2',
+      name: 'Draft case',
+      lifecycle: Lifecycle.DRAFT,
+    };
+    const wrapper = renderPage(true, [testCase, draftCase], false, true);
+    const selectRows = wrapper.find(TestCaseList).prop('handleSelectedRows') as (
+      rows: { id: number; folderId: number }[],
+    ) => void;
+    selectRows([
+      { id: testCase.id, folderId: testCase.testFolder.id },
+      { id: draftCase.id, folderId: draftCase.testFolder.id },
+    ]);
+
+    const addToTestPlan = wrapper.find('[data-automation-id="bulk-add-to-test-plan"]');
+    (addToTestPlan.prop('onClick') as () => void)();
+
+    expect(openAddToTestPlanModal).toHaveBeenCalledWith({ selectedTestCaseIds: [testCase.id] });
+    expect(dispatch).toHaveBeenCalledWith({
+      type: 'WARNING',
+      payload: { message: 'Skipped Draft Test Cases: TC2 — Draft case' },
+    });
+  });
+
+  test('bulk gates are disabled for an all-Draft selection only while the feature is enabled', () => {
+    const draftCase = { ...testCase, lifecycle: Lifecycle.DRAFT };
+    const enabled = renderPage(true, [draftCase], false, true);
+    const selection = [{ id: draftCase.id, folderId: draftCase.testFolder.id }];
+
+    (enabled.find(TestCaseList).prop('handleSelectedRows') as (rows: typeof selection) => void)(
+      selection,
+    );
+    expect(
+      enabled.find({ content: 'Only Ready Test Cases can be added to a Test Plan' }),
+    ).toHaveLength(1);
+
+    const disabled = renderPage(false, [draftCase], false, true);
+    (disabled.find(TestCaseList).prop('handleSelectedRows') as (rows: typeof selection) => void)(
+      selection,
+    );
+
+    expect(
+      disabled.find('[data-automation-id="bulk-add-to-test-plan"]').prop('disabled'),
+    ).not.toBe(true);
   });
 
   test('normalizes URL filter values and resolves the iteration number', () => {

@@ -68,6 +68,11 @@ import { EvaluationMini } from 'pages/inside/aiFactory/evaluation';
 import { ApproveButton } from 'pages/inside/aiFactory/approval';
 import { ReviewFlags } from 'pages/inside/aiFactory/library/reviewFlags';
 import { useTestCaseAi } from 'pages/inside/aiFactory/lifecycle';
+import {
+  isDraftGateActive,
+  LaunchBlockedBanner,
+  readyOnlyMessages,
+} from 'pages/inside/aiFactory/readyOnlyGate';
 import { useRefetchCurrentTestCases } from 'pages/inside/testCaseLibraryPage/hooks/useRefetchCurrentTestCases';
 import { EvaluationState, Lifecycle } from 'types/aiFactory';
 
@@ -179,6 +184,7 @@ export const TestCaseSidePanel = memo(
     const { openModal: openDuplicateSelectedTestCaseModal } = useDuplicateSelectedTestCaseModal();
     const { hasTestPlans } = useHasTestPlans();
     const isAiFactoryEnabled = useAiFactoryEnabled();
+    const isDraft = isDraftGateActive(isAiFactoryEnabled, testCase?.lifecycle);
     const projectKey = useSelector(projectKeySelector);
     const aiDetailsState = useTestCaseAi(
       projectKey,
@@ -356,7 +362,10 @@ export const TestCaseSidePanel = memo(
               </div>
             )}
             {isAiFactoryEnabled && testCase.lifecycle === Lifecycle.DRAFT && (
-              <p className={cx('draft-hint')}>{formatMessage(messages.draftHint)}</p>
+              <>
+                <p className={cx('draft-hint')}>{formatMessage(messages.draftHint)}</p>
+                <LaunchBlockedBanner plans={testCase.blockedPlans ?? []} />
+              </>
             )}
             <div className={cx('meta-row')}>
               {!!testCase?.lastExecution?.startedAt && (
@@ -429,9 +438,10 @@ export const TestCaseSidePanel = memo(
               <AddToLaunchButton
                 manualScenario={testCase?.manualScenario}
                 testCaseId={testCase.id}
+                lifecycle={testCase.lifecycle}
                 place={TEST_CASE_PLACE.SIDE_PANEL}
               />
-              {hasTestPlans ? (
+              {hasTestPlans && !isDraft ? (
                 <Button
                   variant="primary"
                   className={cx('action-button', 'last-button')}
@@ -446,7 +456,11 @@ export const TestCaseSidePanel = memo(
                   portalRoot={document.body}
                   zIndex={OVERLAY_PANEL_Z_INDEX + 1}
                   placement="top"
-                  content={formatMessage(testCaseLibraryCommonMessages.noTestPlanCreated)}
+                  content={formatMessage(
+                    isDraft
+                      ? readyOnlyMessages.testPlanDraftHint
+                      : testCaseLibraryCommonMessages.noTestPlanCreated,
+                  )}
                 >
                   <Button
                     variant="primary"

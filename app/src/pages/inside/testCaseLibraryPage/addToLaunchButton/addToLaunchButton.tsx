@@ -26,8 +26,14 @@ import {
   TEST_CASE_PLACE,
 } from 'analyticsEvents/testCaseLibraryPageEvents';
 import { ManualScenario } from 'types/testCase';
+import type { AiLifecycle } from 'types/aiFactory';
 import { createClassnames } from 'common/utils';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
+import { useAiFactoryEnabled } from 'controllers/aiFactory';
+import {
+  isDraftGateActive,
+  readyOnlyMessages,
+} from 'pages/inside/aiFactory/readyOnlyGate';
 import { useAddToLaunchModal } from '../addToLaunchModal';
 import { isManualScenarioEmpty } from './isManualScenarioEmpty';
 
@@ -38,19 +44,24 @@ const cx = createClassnames(styles);
 interface AddToLaunchButtonProps {
   testCaseId: number;
   manualScenario?: ManualScenario;
+  lifecycle?: AiLifecycle;
   place: AddToLaunchPlace;
 }
 
 export const AddToLaunchButton = ({
   testCaseId,
   manualScenario,
+  lifecycle,
   place,
 }: AddToLaunchButtonProps) => {
   const { formatMessage } = useIntl();
   const { trackEvent } = useTracking();
   const { openModal: openAddToLaunchModal } = useAddToLaunchModal();
+  const isAiFactoryEnabled = useAiFactoryEnabled();
 
-  const isDisabled = useMemo(() => isManualScenarioEmpty(manualScenario), [manualScenario]);
+  const isScenarioEmpty = useMemo(() => isManualScenarioEmpty(manualScenario), [manualScenario]);
+  const isDraft = isDraftGateActive(isAiFactoryEnabled, lifecycle);
+  const isDisabled = isScenarioEmpty || isDraft;
 
   const handleAddToLaunchClick = () => {
     if (place === TEST_CASE_PLACE.SIDE_PANEL) {
@@ -83,7 +94,11 @@ export const AddToLaunchButton = ({
   return isDisabled ? (
     <Tooltip
       placement="bottom"
-      content={formatMessage(COMMON_LOCALE_KEYS.ADD_TO_LAUNCH_TOOLTIP_TEXT)}
+      content={formatMessage(
+        isDraft
+          ? readyOnlyMessages.launchDraftHint
+          : COMMON_LOCALE_KEYS.ADD_TO_LAUNCH_TOOLTIP_TEXT,
+      )}
       wrapperClassName={cx('tooltip-wrapper')}
       width={205}
     >

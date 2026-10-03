@@ -44,6 +44,7 @@ import { EvaluationPanel } from 'pages/inside/aiFactory/evaluation';
 import { GenerationCost } from 'pages/inside/aiFactory/generationCost';
 import { LifecycleHistory, useTestCaseAi } from 'pages/inside/aiFactory/lifecycle';
 import { PipelineLinks } from 'pages/inside/aiFactory/pipelineLinks';
+import { LaunchBlockedBanner } from 'pages/inside/aiFactory/readyOnlyGate';
 import {
   ReviewStrip,
   ReviewTarget,
@@ -51,7 +52,7 @@ import {
   useReviewComments,
   type ReviewCommentsLoadState,
 } from 'pages/inside/aiFactory/review';
-import { CommentTargetType } from 'types/aiFactory';
+import { CommentTargetType, Lifecycle } from 'types/aiFactory';
 import { ManualScenario, Tag, TestCaseManualScenario } from 'types/testCase';
 
 import { TestCaseDetailsHeader } from './testCaseDetailsHeader';
@@ -334,7 +335,7 @@ export const TestCaseDetailsPage = () => {
       }
     : testCaseDetails;
 
-  const mainContent = isScenarioEmpty ? (
+  const testCaseContent = isScenarioEmpty ? (
     <DetailsEmptyState testCase={testCaseDetails} />
   ) : (
     <>
@@ -362,6 +363,14 @@ export const TestCaseDetailsPage = () => {
           {childComponent}
         </CollapsibleSectionWithHeaderControl>
       ))}
+    </>
+  );
+  const mainContent = (
+    <>
+      {isAiFactoryEnabled && testCaseDetails.lifecycle === Lifecycle.DRAFT && (
+        <LaunchBlockedBanner plans={testCaseDetails.blockedPlans ?? []} />
+      )}
+      {testCaseContent}
     </>
   );
 

@@ -72,7 +72,7 @@ the proposed behavior locally; it must not be read as backend availability or in
 | L3 | Existing scenario update extensions and `promoteToReady` | 007, 013 | ✅\* | ❌ | ❌ |
 | R1–R3 | Review comment read/create/delete/discard | 011 | ✅ | ❌ | ❌ |
 | F1–F2 | Fix-round start/read | 012 | ✅ | ❌ | ❌ |
-| G1–G2 | Ready-only gates and test-plan DTO extensions | 014 | ❌ | ❌ | ❌ |
+| G1–G2 | Ready-only gates and test-plan DTO extensions | 014 | ⚠️ FE guard + C1 mock data only | ❌ | ❌ |
 | A1–A2 | Automation environment/start | 015 | ✅ | ❌ | ❌ |
 | A3 | Test item `tmsTestCase` extension | 017 | ❌ | ❌ | ❌ |
 
@@ -593,6 +593,10 @@ Outcomes the FE must render: PASSED (case updated, Draft, new evaluation, Auto-R
   ❓ The current batch responses need a `skipped` part. The FE also pre-filters, so this rule is defence in depth.
 - G2: the test plan DTO adds `draftTestCasesCount: number` and `launchBlocked: boolean`. Plan test-case rows carry
   `lifecycle` (C1). Launching a plan with Draft cases → `409 { reason: 'PLAN_HAS_DRAFT_CASES', testCaseIds }`.
+
+T4.1 now implements the feature-flagged FE guard: single Draft actions are disabled, mixed bulk requests are
+pre-filtered to Ready IDs with named skip feedback, and C1 `blockedPlans` renders the case-level blocked banner.
+This is UX enforcement only; live G1 rejection and a backend-returned batch `skipped` result remain required.
 
 ## 8. Provisional Automation contract (US-015, 016, 017)
 
