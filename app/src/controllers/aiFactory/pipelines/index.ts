@@ -21,11 +21,16 @@ export {
   PIPELINE_ITERATIONS_NAMESPACE,
   GET_PIPELINE_ITERATION_DETAILS,
   PIPELINE_ITERATION_DETAILS_NAMESPACE,
+  GET_PIPELINE_COMPARISON,
+  CLEAR_PIPELINE_COMPARISON,
+  PIPELINE_COMPARISON_NAMESPACE,
 } from './constants';
 export {
   getPipelinesAction,
   getPipelineIterationsAction,
   getPipelineIterationDetailsAction,
+  getPipelineComparisonAction,
+  clearPipelineComparisonAction,
 } from './actionCreators';
 export { aiFactoryPipelinesSagas } from './sagas';
 export { aiFactoryPipelinesReducer } from './reducer';
@@ -36,6 +41,9 @@ export {
   pipelineIterationsLoadingSelector,
   pipelineIterationDetailsSelector,
   pipelineIterationDetailsLoadingSelector,
+  pipelineComparisonSelector,
+  pipelineComparisonLoadingSelector,
+  pipelineComparisonErrorSelector,
 } from './selectors';
 export type {
   PipelinesState,
@@ -44,4 +52,6 @@ export type {
   GetPipelineIterationsAction,
   GetPipelineIterationDetailsAction,
   IterationsByPipelineId,
+  GetPipelineComparisonAction,
+  ClearPipelineComparisonAction,
 } from './types';

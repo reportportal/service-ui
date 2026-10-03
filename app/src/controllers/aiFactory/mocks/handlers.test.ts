@@ -30,6 +30,7 @@ import {
   IterationPageRS,
   IterationRS,
   LifecycleBatchRS,
+  PipelineCompareRS,
   PipelineRS,
   PipelineSettingsRS,
   ReviewCommentRS,
@@ -60,7 +61,9 @@ describe('pipelines (P1-P4)', () => {
   });
 
   test('P2 lists gen-1 first when sorted, and search filters by requirement', async () => {
-    const { data } = await http.get<IterationPageRS>(URLS.tmsPipelineIterations(PROJECT, 1, { search: 'BLK' }));
+    const { data } = await http.get<IterationPageRS>(
+      URLS.tmsPipelineIterations(PROJECT, 1, { search: 'BLK' }),
+    );
     expect(data.content).toHaveLength(1);
     expect(data.content[0].requirement?.specId).toBe('US-TMS-BLK-001');
   });
@@ -71,7 +74,9 @@ describe('pipelines (P1-P4)', () => {
   });
 
   test('P3 404s for an unknown iteration', async () => {
-    const res = await http.get(URLS.tmsPipelineIterationById(PROJECT, 1, 999), { validateStatus: () => true });
+    const res = await http.get(URLS.tmsPipelineIterationById(PROJECT, 1, 999), {
+      validateStatus: () => true,
+    });
     expect(res.status).toBe(404);
   });
 
@@ -99,6 +104,39 @@ describe('pipelines (P1-P4)', () => {
     const after = await http.get<PipelineSettingsRS>(URLS.tmsPipelineSettings(PROJECT, 1));
     expect(after.data).toEqual({ autoReady: false, threshold: 80, editable: true });
   });
+
+  test('LP4 uses the path iteration as candidate and the required with query as baseline', async () => {
+    const { data } = await http.get<PipelineCompareRS>(
+      URLS.pipelineIterationComparison(PROJECT, 103, 102),
+    );
+
+    expect(mock.history.get[0].url).toContain('/pipeline/iteration/103/compare?with=102');
+    expect(data.mock).toEqual({
+      kind: 'REPORTPORTAL_AI_FACTORY_COMPARE_DEMO',
+      version: 1,
+    });
+    expect(data.current).toMatchObject({ id: 103, pipelineId: 1, iterationNumber: 3 });
+    expect(data.previous).toMatchObject({ id: 102, pipelineId: 1, iterationNumber: 2 });
+    expect(data.current?.mockMetrics).toEqual(
+      expect.objectContaining({
+        testCasesCount: expect.any(Number),
+        autoReadyPromotedCount: expect.any(Number),
+      }),
+    );
+    expect(data.previous?.mockMetrics?.criterionAverages).toEqual(
+      expect.objectContaining({ atomicity: expect.any(Number) }),
+    );
+  });
+
+  test.each([
+    ['/api/v1/project/demo_project/pipeline/iteration/103/compare', 'missing baseline'],
+    [URLS.pipelineIterationComparison(PROJECT, 103, 103), 'same iteration'],
+    [URLS.pipelineIterationComparison(PROJECT, 201, 103), 'cross-pipeline pair'],
+  ])('LP4 rejects a %s (%s)', async (url, _description) => {
+    const response = await http.get(url, { validateStatus: () => true });
+
+    expect(response.status).toBe(400);
+  });
 });
 
 describe('test-case AI (C2)', () => {
@@ -112,18 +150,27 @@ describe('test-case AI (C2)', () => {
 
 describe('lifecycle (L1-L2)', () => {
   test('L1 Approve on a Draft AI case with no unsent comments succeeds', async () => {
-    const { data } = await http.post<TestCaseAiExtension>(URLS.testCaseLifecycle(PROJECT, 'TC104'), { action: 'APPROVE' });
+    const { data } = await http.post<TestCaseAiExtension>(
+      URLS.testCaseLifecycle(PROJECT, 'TC104'),
+      { action: 'APPROVE' },
+    );
     expect(data.lifecycle).toBe('READY');
   });
 
   test('L1 rejects Approve while a comment is unsent', async () => {
-    const res = await http.post<{ reason: string }>(URLS.testCaseLifecycle(PROJECT, 'TC106'), { action: 'APPROVE' }, { validateStatus: () => true });
+    const res = await http.post<{ reason: string }>(
+      URLS.testCaseLifecycle(PROJECT, 'TC106'),
+      { action: 'APPROVE' },
+      { validateStatus: () => true },
+    );
     expect(res.status).toBe(409);
     expect(res.data.reason).toBe('UNSENT_COMMENTS');
   });
 
   test('L2 batch approves eligible cases and skips the rest', async () => {
-    const { data } = await http.post<LifecycleBatchRS>(URLS.testCaseLifecycleBatch(PROJECT), { testCaseIds: [1004, 1006] });
+    const { data } = await http.post<LifecycleBatchRS>(URLS.testCaseLifecycleBatch(PROJECT), {
+      testCaseIds: [1004, 1006],
+    });
     expect(data.updated).toEqual([{ id: 1004, reason: 'APPROVED' }]);
     expect(data.skipped).toEqual([{ id: 1006, displayId: 'TC106', reason: 'UNSENT_COMMENTS' }]);
   });
@@ -131,19 +178,29 @@ describe('lifecycle (L1-L2)', () => {
 
 describe('review comments (R1-R3)', () => {
   test('R1 add then list, R2 delete own pending, R3 discard all', async () => {
-    const added = await http.post<ReviewCommentRS>(URLS.testCaseReviewComments(PROJECT, 'TC104'), { target: { type: 'TEXT_SCENARIO' }, text: 'Please clarify.' });
+    const added = await http.post<ReviewCommentRS>(URLS.testCaseReviewComments(PROJECT, 'TC104'), {
+      target: { type: 'TEXT_SCENARIO' },
+      text: 'Please clarify.',
+    });
     expect(added.data.state).toBe('PENDING');
 
     const listed = await http.get<ReviewCommentRS[]>(URLS.testCaseReviewComments(PROJECT, 'TC104'));
     expect(listed.data).toHaveLength(1);
 
     await http.delete(URLS.testCaseReviewCommentById(PROJECT, 'TC104', added.data.id));
-    const afterDelete = await http.get<ReviewCommentRS[]>(URLS.testCaseReviewComments(PROJECT, 'TC104'));
+    const afterDelete = await http.get<ReviewCommentRS[]>(
+      URLS.testCaseReviewComments(PROJECT, 'TC104'),
+    );
     expect(afterDelete.data).toHaveLength(0);
 
-    await http.post(URLS.testCaseReviewComments(PROJECT, 'TC104'), { target: { type: 'TEXT_SCENARIO' }, text: 'Another one.' });
+    await http.post(URLS.testCaseReviewComments(PROJECT, 'TC104'), {
+      target: { type: 'TEXT_SCENARIO' },
+      text: 'Another one.',
+    });
     await http.delete(URLS.discardTestCaseReviewComments(PROJECT, 'TC104'));
-    const afterDiscard = await http.get<ReviewCommentRS[]>(URLS.testCaseReviewComments(PROJECT, 'TC104'));
+    const afterDiscard = await http.get<ReviewCommentRS[]>(
+      URLS.testCaseReviewComments(PROJECT, 'TC104'),
+    );
     expect(afterDiscard.data).toHaveLength(0);
   });
 });
@@ -162,18 +219,29 @@ describe('fix rounds (F1-F2)', () => {
 
     jest.advanceTimersByTime(SIMULATED_DELAY_MS + 100);
     const done = await http.get<FixRoundRS[]>(URLS.testCaseFixRounds(PROJECT, 'TC106'));
-    expect(done.data[0]).toMatchObject({ status: 'PASSED', scoreBefore: 81, autoReadyPromoted: true });
+    expect(done.data[0]).toMatchObject({
+      status: 'PASSED',
+      scoreBefore: 81,
+      autoReadyPromoted: true,
+    });
     expect(done.data[0].scoreAfter).toBeGreaterThan(81);
   });
 
   test('F1 rejects a push with no unsent comments', async () => {
-    const res = await http.post<{ reason: string }>(URLS.testCaseFixRounds(PROJECT, 'TC101'), undefined, { validateStatus: () => true });
+    const res = await http.post<{ reason: string }>(
+      URLS.testCaseFixRounds(PROJECT, 'TC101'),
+      undefined,
+      { validateStatus: () => true },
+    );
     expect(res.status).toBe(409);
     expect(res.data.reason).toBe('NO_UNSENT_COMMENTS');
   });
 
   test('TC107 fails once (job timeout) then succeeds on the next push', async () => {
-    await http.post(URLS.testCaseReviewComments(PROJECT, 'TC107'), { target: { type: 'TEXT_SCENARIO' }, text: 'Fix it.' });
+    await http.post(URLS.testCaseReviewComments(PROJECT, 'TC107'), {
+      target: { type: 'TEXT_SCENARIO' },
+      text: 'Fix it.',
+    });
     await http.post(URLS.testCaseFixRounds(PROJECT, 'TC107'));
     jest.advanceTimersByTime(SIMULATED_DELAY_MS + 100);
     const afterFail = await http.get<FixRoundRS[]>(URLS.testCaseFixRounds(PROJECT, 'TC107'));
@@ -186,7 +254,10 @@ describe('fix rounds (F1-F2)', () => {
   });
 
   test('TC105 keeps the fix and marks the previous evaluation obsolete when grading fails', async () => {
-    await http.post(URLS.testCaseReviewComments(PROJECT, 'TC105'), { target: { type: 'TEXT_SCENARIO' }, text: 'Clarify the result.' });
+    await http.post(URLS.testCaseReviewComments(PROJECT, 'TC105'), {
+      target: { type: 'TEXT_SCENARIO' },
+      text: 'Clarify the result.',
+    });
     await http.post(URLS.testCaseFixRounds(PROJECT, 'TC105'));
     jest.advanceTimersByTime(SIMULATED_DELAY_MS + 100);
 
@@ -203,12 +274,18 @@ describe('automation (A1-A2)', () => {
   afterEach(() => jest.useRealTimers());
 
   test('A1 lists environments', async () => {
-    const { data } = await http.get<AutomationEnvironmentsRS>(URLS.tmsAutomationEnvironments(PROJECT));
+    const { data } = await http.get<AutomationEnvironmentsRS>(
+      URLS.tmsAutomationEnvironments(PROJECT),
+    );
     expect(data.default).toBe('beta5');
   });
 
   test('A2 accepts Ready cases, skips Draft, and the iteration completes', async () => {
-    const res = await http.post<AutomateAcceptedRS>(URLS.tmsAutomation(PROJECT), { testCaseIds: [1005, 1006], environment: 'beta5', confirmReautomate: false });
+    const res = await http.post<AutomateAcceptedRS>(URLS.tmsAutomation(PROJECT), {
+      testCaseIds: [1005, 1006],
+      environment: 'beta5',
+      confirmReautomate: false,
+    });
     expect(res.status).toBe(202);
     expect(res.data.accepted).toEqual([1005]);
     expect(res.data.skipped).toEqual([{ id: 1006, displayId: 'TC106', reason: 'NOT_READY' }]);

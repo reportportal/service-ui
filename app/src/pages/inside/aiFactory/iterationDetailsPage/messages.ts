@@ -25,6 +25,10 @@ export const messages = defineMessages({
     id: 'IterationDetailsPage.refresh',
     defaultMessage: 'Refresh',
   },
+  compareWithPrevious: {
+    id: 'IterationDetailsPage.compareWithPrevious',
+    defaultMessage: 'Compare with previous',
+  },
   iterationTitle: {
     id: 'IterationDetailsPage.iterationTitle',
     defaultMessage: 'Iteration #{number}',

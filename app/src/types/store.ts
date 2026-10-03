@@ -49,6 +49,9 @@ export interface LocationQuery {
   ai?: TestCaseAiPresenceFilter;
   iteration?: string;
   stage?: string; // AI Factory PoC, EPMRPP-118192 — preselects a stage card on the iteration details page
+  pipeline?: string;
+  baseline?: string;
+  candidate?: string;
 }
 
 export interface BaseAppState {

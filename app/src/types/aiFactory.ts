@@ -342,6 +342,132 @@ export type IterationPageRS = {
   page: Page;
 };
 
+/** Raw LP4 status. Live Pipeline compare DTOs keep all fields optional. */
+export type LivePipelineStatus = 'PENDING' | 'PASSED' | 'FAILED' | 'NEEDS_HUMAN';
+export type ComparisonMode = 'mock-rich' | 'status-only';
+export type ComparisonIterationStatus = AiIterationStatus | 'UNKNOWN';
+export type ComparisonStageStatus = AiStageStatus | 'UNKNOWN';
+
+export type PipelineMetricValue =
+  | string
+  | number
+  | boolean
+  | null
+  | PipelineMetricValue[]
+  | { [key: string]: PipelineMetricValue };
+export type PipelineMetrics = Record<string, PipelineMetricValue>;
+
+export interface PipelineCompareIterationRS {
+  id?: number;
+  pipelineId?: number;
+  pipelineName?: string;
+  iterationNumber?: number;
+  status?: string;
+  metrics?: PipelineMetrics;
+  attributes?: Record<string, string>;
+  startedAt?: string;
+  finishedAt?: string;
+  durationMillis?: number;
+  stages?: PipelineCompareStageRS[];
+  mockMetrics?: PipelineCompareMockIterationMetricsRS;
+}
+
+export interface PipelineCompareStageRS {
+  stageKey?: string;
+  sequence?: number;
+  status?: string;
+  metrics?: PipelineMetrics;
+  mockMetrics?: PipelineCompareMockStageMetricsRS;
+}
+
+export interface PipelineCompareStageDeltaEntryRS {
+  status?: string;
+  metrics?: PipelineMetrics;
+  mockMetrics?: PipelineCompareMockStageMetricsRS;
+}
+
+export interface PipelineCompareMockStageMetricsRS {
+  metric?: number;
+  cost?: number;
+  durationMs?: number;
+}
+
+export interface PipelineCompareMockIterationMetricsRS {
+  requirement?: ComparisonRequirement;
+  testCasesCount: number;
+  suiteScore?: number;
+  readyCount?: number;
+  fixRoundsCount?: number;
+  autoReadyPromotedCount?: number;
+  criterionAverages?: Record<AiCriterionKey, number>;
+  costTotal: number;
+  durationMs?: number;
+}
+
+export interface PipelineCompareMockDescriptorRS {
+  kind: 'REPORTPORTAL_AI_FACTORY_COMPARE_DEMO';
+  version: 1;
+}
+
+export interface PipelineCompareStageDeltaRS {
+  stageKey?: string;
+  current?: PipelineCompareStageDeltaEntryRS;
+  previous?: PipelineCompareStageDeltaEntryRS;
+}
+
+/** Raw response of LP4. `current` is the path iteration; `previous` is the required `with`. */
+export interface PipelineCompareRS {
+  current?: PipelineCompareIterationRS;
+  previous?: PipelineCompareIterationRS;
+  stageDeltas?: PipelineCompareStageDeltaRS[];
+  mock?: PipelineCompareMockDescriptorRS;
+}
+
+export interface ComparisonIteration {
+  id: number;
+  number: number;
+  status: ComparisonIterationStatus;
+  requirement?: ComparisonRequirement;
+  testCasesCount?: number;
+  suiteScore?: number;
+  readyCount?: number;
+  fixRoundsCount?: number;
+  autoReadyPromotedCount?: number;
+  criterionAverages?: Record<AiCriterionKey, number>;
+  costTotal?: number;
+  durationMs?: number;
+}
+
+export interface ComparisonRequirement {
+  specId: string;
+  title?: string;
+  jiraKey?: string;
+}
+
+export interface ComparisonStageEntry {
+  status: ComparisonStageStatus;
+  metric?: number;
+  cost?: number;
+  durationMs?: number;
+}
+
+export interface ComparisonStage {
+  key: string;
+  sequence?: number;
+  baseline?: ComparisonStageEntry;
+  candidate?: ComparisonStageEntry;
+}
+
+/** Stable UI model produced from the optional/open-ended LP4 response. */
+export interface PipelineComparison {
+  mode: ComparisonMode;
+  pipelineId: number;
+  baseline: ComparisonIteration;
+  candidate: ComparisonIteration;
+  hasDifferentRequirements: boolean;
+  stages: ComparisonStage[];
+}
+
 /** LP5 request DTO. The UI view model remains `PipelineSettingsRS`. */
 export interface PipelineSettingsPatchRQ {
   autoReadyEnabled: boolean;

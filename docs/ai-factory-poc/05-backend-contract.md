@@ -48,7 +48,7 @@ and remain an open backend/product agreement.
 | LP1 | `GET /v1/project/{projectKey}/pipeline` | `200 PipelineRS[]` | ✅ | ✅ | ⚠️ legacy P1 | ❌ |
 | LP2 | `GET /v1/project/{projectKey}/pipeline/{pipelineId}/iteration` | `200 PipelineIterationSummaryRS[]` | ✅ | ✅ | ⚠️ legacy P2 | ❌ |
 | LP3 | `GET /v1/project/{projectKey}/pipeline/iteration/{iterationId}` | `200 PipelineIterationDetailRS` | ✅ | ✅ | ⚠️ legacy P3 | ❌ |
-| LP4 | `GET /v1/project/{projectKey}/pipeline/iteration/{iterationId}/compare?with={otherIterationId}` | `200 PipelineCompareRS` | ✅ | ✅ | ❌ | ❌ |
+| LP4 | `GET /v1/project/{projectKey}/pipeline/iteration/{iterationId}/compare?with={otherIterationId}` | `200 PipelineCompareRS` | ✅ | ✅ | ✅ same-path mock + raw-response adapter (T4.3 complete) | ❌ |
 | LP5 | `PATCH /v1/project/{projectKey}/pipeline/{pipelineId}` | `200 PipelineRS` | ✅ | ✅ | ✅ same-path mock adapter; legacy P4 retained | ✅ T3.4 |
 | LP6 | `POST /v1/project/{projectKey}/pipeline/iteration` | `201 PipelineIterationDetailRS` | ✅ | ✅ | ❌ | ❌ |
 | LP7 | `POST /v1/project/{projectKey}/pipeline/iteration/{iterationId}/stage/{stageId}/retry` | `202 PipelineStageRetryRS` | ✅ | ✅ | ❌ | ❌ |
@@ -316,7 +316,7 @@ produce it. It therefore supports only the current-rubric portion of T2.5, not r
 | Iteration list | `Page<IterationSummaryRS>` plus search/offset/limit | Plain `PipelineIterationSummaryRS[]`; no documented query parameters | Add client-side adaptation/paging or agree backend pagination before replacing the mock. |
 | Status | UI-specific running/review/completed and stage variants | `PENDING | PASSED | FAILED | NEEDS_HUMAN` for iteration and stage | Map live status into existing presentation states; do not cast directly. |
 | Settings | `GET/PUT .../{id}/settings`, `{ autoReady, threshold }` | `PATCH .../{pipelineId}`, `{ autoReadyEnabled, autoReadyThreshold? }` | Replace settings mutation through an adapter; no standalone live settings GET exists. |
-| Compare | FE compares two details; optional proposal | Dedicated server `GET .../{iterationId}/compare?with=...` | T4.3 should use the server response and normalise missing fields. |
+| Compare | FE compares two details; optional proposal | Dedicated server `GET .../{iterationId}/compare?with=...` | T4.3 calls the exact live path through a raw-response adapter and validates the selected iteration/pipeline identities; the mock intercepts that path. Live metric keys and direction semantics remain unverified. |
 | CI reporting | Reference-only proposal | Create iteration (`201`) and retry stage (`202`) are documented | Keep out of current read-only screens; use in T4.4 when its workflow is designed. |
 | Rich UI fields | Typed fields for requirement, model, environment, cost, score, tokens, stage panels | Open-ended `metrics`/`attributes` and generic result/CI objects | Define and agree metric/attribute keys; adapt raw DTOs at one boundary. |
 
@@ -334,7 +334,17 @@ produce it. It therefore supports only the current-rubric portion of T2.5, not r
   `{ autoReadyEnabled, autoReadyThreshold }`, ignores the mutation response, and refreshes the Pipeline list as the
   authoritative read-back. The same-path mock adapter keeps the PoC deterministic; production validation,
   authorization and concurrency semantics remain open in 12.
-- **T4.3:** use LP4 for comparison rather than fetching two details and assuming client-only comparison.
+- **T4.3:** frontend PoC implementation is complete on EPMRPP-122034. It uses LP4 rather than fetching two details and
+  assuming client-only comparison: the candidate is the path `{iterationId}`, the baseline is the required `with`
+  query value, and the adapter rejects missing/mismatched iteration or pipeline identities before updating UI state.
+  Rich demo data is accepted only when the response carries the private versioned marker
+  `mock.kind = REPORTPORTAL_AI_FACTORY_COMPARE_DEMO` and `mock.version = 1`. Under that marker, the same-path mock
+  supplies private `mockMetrics` containing `testCasesCount`, `suiteScore`, `readyCount`, `fixRoundsCount`,
+  `costTotal`, `durationMs`, stage metric/cost/duration, all six criterion averages and the Auto-Ready promoted
+  count. The marker and every `mockMetrics` field are PoC-private and are **not published LP4 fields**. An unmarked
+  live LP4 response is therefore normalised as status-only and neutral: the frontend does not infer rich KPIs,
+  costs, criterion averages, Auto-Ready counts or evaluative delta direction from opaque live `metrics`. BE-014 and
+  BE-015 remain open; live KPI/cost deltas and evaluative colouring must not be signed off from mock evidence.
 - **T4.4:** LP6 and LP7 provide the documented create-iteration and retry-stage operations; their user flow,
   permissions and error handling still need requirements.
 

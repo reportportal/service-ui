@@ -17,7 +17,12 @@
 import type { PipelinesSelectorsRootState, PipelinesState } from './types';
 
 export const pipelinesStateSelector = (state: PipelinesSelectorsRootState): PipelinesState =>
-  state.aiFactoryPipelines || { data: null, iterationsByPipeline: null, iterationDetails: null };
+  state.aiFactoryPipelines || {
+    data: null,
+    iterationsByPipeline: null,
+    iterationDetails: null,
+    comparison: null,
+  };
 
 export const pipelinesLoadingSelector = (state: PipelinesSelectorsRootState): boolean =>
   Boolean(pipelinesStateSelector(state).isLoading);
@@ -37,3 +42,12 @@ export const pipelineIterationDetailsLoadingSelector = (
 
 export const pipelineIterationDetailsSelector = (state: PipelinesSelectorsRootState) =>
   pipelinesStateSelector(state).iterationDetails;
+
+export const pipelineComparisonSelector = (state: PipelinesSelectorsRootState) =>
+  pipelinesStateSelector(state).comparison;
+
+export const pipelineComparisonLoadingSelector = (state: PipelinesSelectorsRootState): boolean =>
+  Boolean(pipelinesStateSelector(state).comparisonLoading);
+
+export const pipelineComparisonErrorSelector = (state: PipelinesSelectorsRootState): boolean =>
+  Boolean(pipelinesStateSelector(state).comparisonError);

@@ -122,8 +122,12 @@ import {
   PROJECT_TEST_PLAN_DETAILS_PAGE,
   PROJECT_PIPELINES_PAGE,
   PROJECT_PIPELINE_ITERATION_PAGE,
+  PROJECT_PIPELINE_COMPARISON_PAGE,
 } from 'controllers/pages/constants';
-import { getPipelinesAction, getPipelineIterationDetailsAction } from 'controllers/aiFactory/pipelines';
+import {
+  getPipelinesAction,
+  getPipelineIterationDetailsAction,
+} from 'controllers/aiFactory/pipelines';
 import { isAiFactoryEnabled } from 'controllers/aiFactory';
 import { DOCUMENTATION } from 'pages/inside/productVersionPage/constants';
 import { pageRendering, ANONYMOUS_ACCESS, ADMIN_ACCESS } from './constants';
@@ -626,6 +630,14 @@ const routesMap = {
     thunk: (dispatch) => {
       // Toggle OFF must make no request to the new endpoints (03-frontend-architecture.md §3);
       // PipelinesPage itself redirects away when off, but that happens after this thunk runs.
+      if (isAiFactoryEnabled()) {
+        dispatch(getPipelinesAction());
+      }
+    },
+  },
+  [PROJECT_PIPELINE_COMPARISON_PAGE]: {
+    path: '/organizations/:organizationSlug/projects/:projectSlug/pipelines/compare',
+    thunk: (dispatch) => {
       if (isAiFactoryEnabled()) {
         dispatch(getPipelinesAction());
       }
