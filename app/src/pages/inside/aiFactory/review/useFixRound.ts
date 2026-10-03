@@ -186,7 +186,7 @@ export const useFixRound = (
     try {
       const response = await fetch<FixRoundRS>(url, { method: 'POST' });
       const round = normalizeFixRound(response);
-      if (!round || round.status !== FixRoundStatus.RUNNING) {
+      if (round?.status !== FixRoundStatus.RUNNING) {
         throw new Error('Invalid fix-round response');
       }
       observedRunningRound.current = round.round;
