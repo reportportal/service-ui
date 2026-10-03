@@ -37,7 +37,7 @@ Keep this in sync with 00-status (the status file is the source of truth for pro
 | 011 | EPMRPP-121681 | **[EPMRPP-122027](https://jiraeu.epam.com/browse/EPMRPP-122027)** 🟨 | `[FE] Review comments and AI review strip` (T3.1) |
 | 012 | EPMRPP-121703 | — | `[FE] Push review comments to agent` |
 | 013 | EPMRPP-121682 | **[EPMRPP-122029](https://jiraeu.epam.com/browse/EPMRPP-122029)** 🟨 | `[FE] Approve and mark as ready` (T3.2) |
-| 014 | EPMRPP-121683 | — | `[FE] Ready-only Test Plan and Launch gate` |
+| 014 | EPMRPP-121683 | **[EPMRPP-122032](https://jiraeu.epam.com/browse/EPMRPP-122032)** 🟨 | `[FE] Ready-only Test Plan and Launch gate` (T4.1) |
 | 015 | EPMRPP-121671 | — | `[FE] Send Ready Test Cases to automation` |
 | 016 | EPMRPP-121672 | — | `[FE] Automation iteration view` |
 | 017 | EPMRPP-121680 | — | `[FE] Automation results on Test Case` |

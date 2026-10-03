@@ -25,6 +25,7 @@ import { LifecycleHistory, useTestCaseAi } from 'pages/inside/aiFactory/lifecycl
 import { EvaluationPanel } from 'pages/inside/aiFactory/evaluation';
 import { GenerationCost } from 'pages/inside/aiFactory/generationCost';
 import { PipelineLinks } from 'pages/inside/aiFactory/pipelineLinks';
+import { LaunchBlockedBanner } from 'pages/inside/aiFactory/readyOnlyGate';
 import { ReviewStrip, useFixRound, useReviewComments } from 'pages/inside/aiFactory/review';
 import { useAddTestCasesToTestPlanModal } from 'pages/inside/testCaseLibraryPage/addTestCasesToTestPlanModal/useAddTestCasesToTestPlanModal';
 import { Lifecycle } from 'types/aiFactory';
@@ -40,6 +41,7 @@ jest.mock('@reportportal/ui-kit', () => ({
   Button: 'Button',
   EditIcon: 'EditIcon',
   PlusIcon: 'PlusIcon',
+  SystemMessage: 'SystemMessage',
 }));
 jest.mock(
   'analyticsEvents/testCaseLibraryPageEvents',
@@ -194,6 +196,18 @@ describe('TestCaseDetailsPage lifecycle history', () => {
     const wrapper = renderPage(false);
 
     expect(wrapper.find(LifecycleHistory)).toHaveLength(0);
+  });
+
+  test('shows the blocked-plan banner for a planned Draft case only while enabled', () => {
+    selectedTestCase = {
+      ...testCase,
+      blockedPlans: [{ id: 7, name: 'Release regression' }],
+    };
+
+    expect(renderPage(true).find(LaunchBlockedBanner).prop('plans')).toEqual(
+      selectedTestCase.blockedPlans,
+    );
+    expect(renderPage(false).find(LaunchBlockedBanner)).toHaveLength(0);
   });
 
   test('shares one AI details request between all AI details sections', () => {
