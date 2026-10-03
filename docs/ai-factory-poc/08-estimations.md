@@ -37,6 +37,7 @@ cross-cutting scope must be split into cohesive `[FE]` sub-tasks before work con
 | [EPMRPP-122024](https://jiraeu.epam.com/browse/EPMRPP-122024) | Library side panel additions | T2.4 | 20 h | ≤ 36 h |
 | [EPMRPP-122025](https://jiraeu.epam.com/browse/EPMRPP-122025) | Generation cost and iteration links | T2.6 | 8 h | ≤ 36 h |
 | [EPMRPP-122027](https://jiraeu.epam.com/browse/EPMRPP-122027) | Review comments and AI review strip | T3.1 | 30 h | ≤ 36 h |
+| [EPMRPP-122029](https://jiraeu.epam.com/browse/EPMRPP-122029) | Approve and mark as ready | T3.2 | 20 h | ≤ 36 h |
 
 If an estimate differs from the planned size by more than ~30 %, write why in *Deviation notes*
 and re-check the remaining sizes.
@@ -66,7 +67,7 @@ Filled in as tasks complete. `—` = not done yet.
 | T2.5 | AI evaluation panel + rubric | 2 | M (20) | **20** | 4 | 10 | 6 | 2026-10-02 |
 | T2.6 | Generation cost + pipeline links | 2 | S (8) | **8** | 2 | 4 | 2 | 2026-10-02 |
 | T3.1 | Review comments + AI review strip | 3 | L (36) | **30** | 5 | 18 | 7 | 2026-10-02 |
-| T3.2 | Approve / Mark as ready (+ bulk, Edit Scenario) | 3 | M (20) | — | | | | |
+| T3.2 | Approve / Mark as ready (+ bulk, Edit Scenario) | 3 | M (20) | **20** | 4 | 10 | 6 | 2026-10-02 |
 | T3.3 | Push to agent + fix round states + diff modal | 3 | L (36) | — | | | | |
 | T3.4 | Pipeline settings modal | 3 | S (8) | — | | | | |
 | T3.6 | CI connection section in Pipeline settings | 3 | M (20) | — | | | | |
@@ -94,11 +95,11 @@ Filled in as tasks complete. `—` = not done yet.
 | 0 · Foundation | T0.2–T0.7 (+T0.1 planning) | 88 (+20 planning) | 73 | 7 / 7 | T0.2 −5 h, T0.4 −6 h, T0.5 −10 h, T0.6 −6 h, T0.7 −5 h, T0.3 ≈ planned (see deviation notes) |
 | 1 · Pipelines | T1.1–T1.3, **T1.2u, T1.3u** | 108 | 70 | 4 / 5 | T1.1 −6 h, T1.2 −16 h, T1.3 −6 h, T1.3u −2 h; T1.2u still not started, blocked on T3.6 |
 | 2 · Library | T2.1–T2.6 | 108 | 108 | 6 / 6 | T2.1–T2.5 ≈ planned; T2.6 ≈ planned |
-| 3 · Review loop | T3.1–T3.4, **T3.6** | 120 | 30 | 1 / 5 | T3.1 −6 h; T3.6 new (audit 2026-09-29, US-019) |
+| 3 · Review loop | T3.1–T3.4, **T3.6** | 120 | 50 | 2 / 5 | T3.1 −6 h; T3.2 ≈ planned; T3.6 new (audit 2026-09-29, US-019) |
 | 4 · Gate & compare | T4.1–T4.3, **T4.4** | 80 | 0 | 0 / 4 | T4.4 new (audit 2026-09-29, US-020) |
 | 5 · Automation | T5.1–T5.4 | 56 | 0 | 0 / 4 | — |
 | 6 · Hardening | T6.1–T6.5, **T6.6** | 48 | 0 | 0 / 6 | T6.6 new (audit 2026-09-29, US-018 FE-owned slice) |
-| **Total** | | **608 h + 20 h planning = 628 h** | **281** | 18 / 37 | — |
+| **Total** | | **608 h + 20 h planning = 628 h** | **301** | 19 / 37 | — |
 
 **628 h ≈ 78,5 working days ≈ 15,7 working weeks** for one developer at 8 h/day. The jump from 564 h is
 the 2026-09-29 audit's 3 new stories (018/019/020) plus the two not-yet-started rework tasks it surfaced

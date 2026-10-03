@@ -143,5 +143,6 @@ export const buildTestCaseData = (
     priority: payload.priority?.toUpperCase(),
     manualScenario,
     attributes: mapAttributesForApi(attributes),
+    ...(payload.promoteToReady !== undefined && { promoteToReady: payload.promoteToReady }),
   };
 };

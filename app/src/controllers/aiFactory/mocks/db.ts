@@ -223,7 +223,10 @@ export const recordLifecycleChange = (
   caseRecord.lifecycleHistory.push({ from, to, reason, details, actor, at: Date.now() });
 };
 
-export const recordScenarioChange = (caseRecord: MockCaseRecord): boolean => {
+export const recordScenarioChange = (
+  caseRecord: MockCaseRecord,
+  promoteToReady = false,
+): 'TO_DRAFT' | 'TO_READY' | null => {
   const wasReady = caseRecord.lifecycle === Lifecycle.READY;
   if (caseRecord.evaluation) {
     caseRecord.evaluation.state = EvaluationState.OBSOLETE;
@@ -231,10 +234,22 @@ export const recordScenarioChange = (caseRecord: MockCaseRecord): boolean => {
   if (caseRecord.automation) {
     caseRecord.automation.scenarioChangedAfterAutomation = true;
   }
-  recordLifecycleChange(caseRecord, Lifecycle.DRAFT, LifecycleReason.SCENARIO_CHANGED, {
-    type: LifecycleActorType.USER,
-    name: 'You',
-  });
+  let reason = LifecycleReason.SCENARIO_CHANGED;
+  if (promoteToReady) {
+    reason = caseRecord.ai
+      ? LifecycleReason.APPROVED_WITH_CHANGES
+      : LifecycleReason.MARKED_AS_READY_WITH_CHANGES;
+  }
+  recordLifecycleChange(
+    caseRecord,
+    promoteToReady ? Lifecycle.READY : Lifecycle.DRAFT,
+    reason,
+    {
+      type: LifecycleActorType.USER,
+      name: 'You',
+    },
+  );
   persist();
-  return wasReady;
+  if (promoteToReady) return 'TO_READY';
+  return wasReady ? 'TO_DRAFT' : null;
 };

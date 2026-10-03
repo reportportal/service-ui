@@ -324,6 +324,10 @@ export const notificationMessages = defineMessages({
     id: 'TestCaseLibraryPage.testCaseScenarioChangedToDraft',
     defaultMessage: 'Scenario changed — status set to Draft',
   },
+  testCaseScenarioChangedToReady: {
+    id: 'TestCaseLibraryPage.testCaseScenarioChangedToReady',
+    defaultMessage: 'Scenario changed — status set to Ready',
+  },
   testCaseMovedSuccess: {
     id: 'TestCaseLibraryPage.testCaseMovedSuccess',
     defaultMessage: 'Test Case has been moved successfully.',

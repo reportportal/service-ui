@@ -99,6 +99,7 @@ export interface CreateTestCaseFormData {
   textAttachments?: Attachment[];
   tags?: Tag[];
   attributes?: Attribute[];
+  promoteToReady?: boolean;
 }
 
 export interface TestStep {
