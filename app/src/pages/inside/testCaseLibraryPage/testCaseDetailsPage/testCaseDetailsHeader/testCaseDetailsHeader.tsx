@@ -48,6 +48,10 @@ import { testCaseLibraryBreadcrumbsSelector } from 'controllers/pages/selectors'
 import { ExecutionEstimationTime } from 'pages/inside/common/executionEstimationTime';
 import { LifecycleBadge, ScoreChip } from 'pages/inside/aiFactory/common';
 import { ApproveButton } from 'pages/inside/aiFactory/approval';
+import {
+  isDraftGateActive,
+  readyOnlyMessages,
+} from 'pages/inside/aiFactory/readyOnlyGate';
 import { EvaluationState, Lifecycle } from 'types/aiFactory';
 import type { ExtendedTestCase, TestCasePriority } from 'types/testCase';
 
@@ -92,6 +96,7 @@ export const TestCaseDetailsHeader = ({
   const { hasTestPlans } = useHasTestPlans();
   const isAiFactoryEnabled = useAiFactoryEnabled();
   const isFixRunning = Boolean(testCase.review?.fixRound);
+  const isDraft = isDraftGateActive(isAiFactoryEnabled, testCase.lifecycle);
 
   const breadcrumbsTitles = {
     mainTitle: formatMessage(commonMessages.testCaseLibraryBreadcrumb),
@@ -267,14 +272,20 @@ export const TestCaseDetailsHeader = ({
               <AddToLaunchButton
                 manualScenario={testCase?.manualScenario}
                 testCaseId={testCase.id}
+                lifecycle={testCase.lifecycle}
                 place={TEST_CASE_PLACE.DETAILS_PAGE}
               />
-              {hasTestPlans ? (
+              {hasTestPlans && !isDraft ? (
                 <Button onClick={onAddToTestPlan} variant="primary">
                   {formatMessage(COMMON_LOCALE_KEYS.ADD_TO_TEST_PLAN)}
                 </Button>
               ) : (
-                <Tooltip placement="top" content={formatMessage(commonMessages.noTestPlanCreated)}>
+                <Tooltip
+                  placement="top"
+                  content={formatMessage(
+                    isDraft ? readyOnlyMessages.testPlanDraftHint : commonMessages.noTestPlanCreated,
+                  )}
+                >
                   <Button variant="primary" disabled>
                     {formatMessage(COMMON_LOCALE_KEYS.ADD_TO_TEST_PLAN)}
                   </Button>
