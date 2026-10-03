@@ -120,6 +120,40 @@ export const installAiFactoryHandlers = (mock: MockAdapter): void => {
     return [200, pipeline.settings];
   });
 
+  // LP5 — PATCH pipeline/{id}; live Auto-Ready field names adapted to the PoC view model.
+  mock.onPatch(/\/pipeline\/(\d+)$/).reply((config) => {
+    const [, pipelineId] = url(config).match(/\/pipeline\/(\d+)/);
+    const pipeline = findPipeline(Number(pipelineId));
+    if (!pipeline?.settings) return notFound();
+    const payload = body<{ autoReadyEnabled: boolean; autoReadyThreshold?: number }>(config);
+    const threshold = payload.autoReadyThreshold;
+    if (
+      typeof payload.autoReadyEnabled !== 'boolean' ||
+      typeof threshold !== 'number' ||
+      !Number.isInteger(threshold) ||
+      threshold < 0 ||
+      threshold > 100
+    ) {
+      return [400, { errorCode: 40001, message: 'Threshold must be a whole number from 0 to 100' }];
+    }
+    pipeline.settings = {
+      ...pipeline.settings,
+      autoReady: payload.autoReadyEnabled,
+      threshold,
+    };
+    persist();
+    return [
+      200,
+      {
+        id: pipeline.id,
+        name: pipeline.name,
+        autoReadyEnabled: pipeline.settings.autoReady,
+        autoReadyThreshold: pipeline.settings.threshold,
+        iterationsCount: listIterations(pipeline.id).length,
+      },
+    ];
+  });
+
   // C2 — GET tms/test-case/{id}/ai
   mock.onGet(/\/tms\/test-case\/([^/]+)\/ai$/).reply((config) => {
     const [, id] = url(config).match(/\/tms\/test-case\/([^/]+)\/ai/);

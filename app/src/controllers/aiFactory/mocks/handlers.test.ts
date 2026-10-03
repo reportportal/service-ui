@@ -75,15 +75,29 @@ describe('pipelines (P1-P4)', () => {
     expect(res.status).toBe(404);
   });
 
-  test('P4 GET/PUT settings, with validation', async () => {
+  test('LP5 PATCH updates settings through the live contract, with validation', async () => {
     const before = await http.get<PipelineSettingsRS>(URLS.tmsPipelineSettings(PROJECT, 1));
     expect(before.data).toMatchObject({ autoReady: true, threshold: 90 });
 
-    const invalid = await http.put(URLS.tmsPipelineSettings(PROJECT, 1), { autoReady: true, threshold: 101 }, { validateStatus: () => true });
+    const invalid = await http.patch(
+      URLS.pipelineById(PROJECT, 1),
+      { autoReadyEnabled: true, autoReadyThreshold: 101 },
+      { validateStatus: () => true },
+    );
     expect(invalid.status).toBe(400);
 
-    const ok = await http.put<PipelineSettingsRS>(URLS.tmsPipelineSettings(PROJECT, 1), { autoReady: false, threshold: 80 });
-    expect(ok.data).toEqual({ autoReady: false, threshold: 80, editable: true });
+    const ok = await http.patch(URLS.pipelineById(PROJECT, 1), {
+      autoReadyEnabled: false,
+      autoReadyThreshold: 80,
+    });
+    expect(ok.data).toMatchObject({
+      id: 1,
+      autoReadyEnabled: false,
+      autoReadyThreshold: 80,
+    });
+
+    const after = await http.get<PipelineSettingsRS>(URLS.tmsPipelineSettings(PROJECT, 1));
+    expect(after.data).toEqual({ autoReady: false, threshold: 80, editable: true });
   });
 });
 

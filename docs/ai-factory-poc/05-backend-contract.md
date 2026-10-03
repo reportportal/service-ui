@@ -49,7 +49,7 @@ and remain an open backend/product agreement.
 | LP2 | `GET /v1/project/{projectKey}/pipeline/{pipelineId}/iteration` | `200 PipelineIterationSummaryRS[]` | ✅ | ✅ | ⚠️ legacy P2 | ❌ |
 | LP3 | `GET /v1/project/{projectKey}/pipeline/iteration/{iterationId}` | `200 PipelineIterationDetailRS` | ✅ | ✅ | ⚠️ legacy P3 | ❌ |
 | LP4 | `GET /v1/project/{projectKey}/pipeline/iteration/{iterationId}/compare?with={otherIterationId}` | `200 PipelineCompareRS` | ✅ | ✅ | ❌ | ❌ |
-| LP5 | `PATCH /v1/project/{projectKey}/pipeline/{pipelineId}` | `200 PipelineRS` | ✅ | ✅ | ⚠️ legacy P4 uses GET/PUT settings | ❌ |
+| LP5 | `PATCH /v1/project/{projectKey}/pipeline/{pipelineId}` | `200 PipelineRS` | ✅ | ✅ | ✅ same-path mock adapter; legacy P4 retained | ✅ T3.4 |
 | LP6 | `POST /v1/project/{projectKey}/pipeline/iteration` | `201 PipelineIterationDetailRS` | ✅ | ✅ | ❌ | ❌ |
 | LP7 | `POST /v1/project/{projectKey}/pipeline/iteration/{iterationId}/stage/{stageId}/retry` | `202 PipelineStageRetryRS` | ✅ | ✅ | ❌ | ❌ |
 | QS1 | `GET /v1/project/{projectKey}/tms/quality-standard` | `200 TmsQualityStandardRS` | ✅ | ✅ | ❌ | ❌ |
@@ -330,7 +330,10 @@ produce it. It therefore supports only the current-rubric portion of T2.5, not r
 - **T2.5:** QS1 is a candidate for reading the current project rubric, but only partially supports the story:
   per-criterion descriptions, version/snapshot identity and historical evaluation association are absent. CRUD UI
   and permission behavior still require product scope and backend agreement before QS2–QS4 are consumed.
-- **T3.4:** use LP5 (`PATCH`) for Auto-Ready settings rather than the legacy settings endpoint.
+- **T3.4:** integrated through LP5 (`PATCH`) for Auto-Ready settings. The UI sends
+  `{ autoReadyEnabled, autoReadyThreshold }`, ignores the mutation response, and refreshes the Pipeline list as the
+  authoritative read-back. The same-path mock adapter keeps the PoC deterministic; production validation,
+  authorization and concurrency semantics remain open in 12.
 - **T4.3:** use LP4 for comparison rather than fetching two details and assuming client-only comparison.
 - **T4.4:** LP6 and LP7 provide the documented create-iteration and retry-stage operations; their user flow,
   permissions and error handling still need requirements.
@@ -443,11 +446,13 @@ interface GradeDocumentRS {
 }
 ```
 
-### Legacy P4 `GET | PUT tms/pipeline/{pipelineId}/settings`
+### LP5 mock adapter and legacy P4 settings endpoint
 
-The mock accepts `{ autoReady: boolean, threshold: number }` and returns `PipelineSettingsRS`. This is not
-the live LP5 path or body. The mock validates an integer threshold in `0..100`; the audited live OpenAPI does
-not publish equivalent min/max constraints for `autoReadyThreshold`.
+T3.4 uses the live LP5 path and body in both modes. The mock maps
+`{ autoReadyEnabled, autoReadyThreshold }` to the stable PoC settings view model, validates an integer threshold in
+`0..100`, persists it and returns a live-shaped Pipeline response. The audited live OpenAPI does not publish
+equivalent min/max constraints, so production semantics are still tracked as BE-016. Legacy P4 `GET | PUT
+tms/pipeline/{pipelineId}/settings` remains available only for older mock consumers and is not used by T3.4.
 
 ## 3. Provisional Test Case extensions (US-007, 008, 009, 010)
 

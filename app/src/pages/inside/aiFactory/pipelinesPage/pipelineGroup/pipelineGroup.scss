@@ -20,12 +20,20 @@
   &__header {
     display: flex;
     align-items: center;
-    gap: 12px;
     width: 100%;
     padding: 12px 0;
+    border-bottom: 1px solid var(--rp-ui-base-e-100);
+  }
+
+  &__toggle {
+    display: flex;
+    flex: 1;
+    align-items: center;
+    gap: 12px;
+    min-width: 0;
+    padding: 0;
     background: none;
     border: none;
-    border-bottom: 1px solid var(--rp-ui-base-e-100);
     cursor: pointer;
     font-family: var(--rp-ui-base-font-family);
     text-align: left;
