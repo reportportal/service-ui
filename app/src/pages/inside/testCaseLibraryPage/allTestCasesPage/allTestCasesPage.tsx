@@ -135,9 +135,13 @@ export const AllTestCasesPage = ({
 
   const isAnyRowSelected = !isEmpty(selectedRows);
   const selectedRowIds = useMemo(() => selectedRows.map((row) => row.id), [selectedRows]);
+  const selectedTestCases = useMemo(
+    () => selectedRows.map((row) => testCases.find(({ id }) => id === row.id) ?? row),
+    [selectedRows, testCases],
+  );
   const { eligibleIds, skippedDrafts } = useMemo(
-    () => partitionReadyOnlySelection(selectedRowIds, testCases, isAiFactoryEnabled),
-    [isAiFactoryEnabled, selectedRowIds, testCases],
+    () => partitionReadyOnlySelection(selectedRowIds, selectedTestCases, isAiFactoryEnabled),
+    [isAiFactoryEnabled, selectedRowIds, selectedTestCases],
   );
   const hasOnlyDraftsSelected = skippedDrafts.length > 0 && eligibleIds.length === 0;
 

@@ -18,6 +18,7 @@ export { LaunchBlockedBanner } from './launchBlockedBanner';
 export { messages as readyOnlyMessages } from './messages';
 export {
   formatSkippedDrafts,
+  getTestPlanLaunchGate,
   isDraftGateActive,
   partitionReadyOnlySelection,
 } from './readyOnlyGateUtils';

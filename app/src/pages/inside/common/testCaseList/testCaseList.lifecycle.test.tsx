@@ -25,6 +25,7 @@ import { TMS_INSTANCE_KEY } from 'pages/inside/common/constants';
 import { Lifecycle } from 'types/aiFactory';
 import { EvaluationState } from 'types/aiFactory';
 import type { ExtendedTestCase } from 'types/testCase';
+import type { SelectedTestCaseRow } from './types';
 
 import { TestCaseList } from './testCaseList';
 
@@ -55,7 +56,10 @@ jest.mock('react-intl', () => ({
   }),
 }));
 jest.mock('common/utils', () => ({
-  createClassnames: () => (...classNames: string[]) => classNames.filter(Boolean).join(' '),
+  createClassnames:
+    () =>
+    (...classNames: string[]) =>
+      classNames.filter(Boolean).join(' '),
 }));
 jest.mock('controllers/aiFactory', () => ({ useAiFactoryEnabled: jest.fn() }));
 jest.mock('controllers/pages', () => ({
@@ -113,7 +117,11 @@ const renderList = (
   isEnabled: boolean,
   routeType: string,
   testCases: ExtendedTestCase[] = [testCase],
-  options: { hasAiFilters?: boolean; query?: Record<string, string> } = {},
+  options: {
+    handleSelectedRows?: (rows: SelectedTestCaseRow[]) => void;
+    hasAiFilters?: boolean;
+    query?: Record<string, string>;
+  } = {},
 ) => {
   jest.mocked(useAiFactoryEnabled).mockReturnValue(isEnabled);
   jest.mocked(useSelector).mockReturnValue({ type: routeType, query: options.query ?? {} });
@@ -128,7 +136,7 @@ const renderList = (
       selectedRowIds={[]}
       selectedRows={[]}
       instanceKey={TMS_INSTANCE_KEY.TEST_CASE}
-      handleSelectedRows={jest.fn()}
+      handleSelectedRows={options.handleSelectedRows ?? jest.fn()}
       hasAiFilters={options.hasAiFilters}
     />,
   );
@@ -158,15 +166,24 @@ describe('TestCaseList lifecycle column', () => {
     jest.clearAllMocks();
   });
 
-  test.each([
-    { description: 'the feature is disabled', isEnabled: false, route: TEST_CASE_LIBRARY_PAGE },
-    { description: 'the current route is a test plan', isEnabled: true, route: PROJECT_TEST_PLAN_DETAILS_PAGE },
-  ])('omits Status when $description', ({ isEnabled, route }) => {
-    const table = getTableProps(isEnabled, route, [aiTestCase]);
+  test('omits Status and AI quality when the feature is disabled', () => {
+    const table = getTableProps(false, TEST_CASE_LIBRARY_PAGE, [aiTestCase]);
 
     expect(table.fixedColumns.map(({ key }) => key)).not.toContain('status');
     expect(table.fixedColumns.map(({ key }) => key)).not.toContain('aiQuality');
     expect(table.data[0].status).toBeUndefined();
+    expect(table.data[0].aiQuality).toBeUndefined();
+    expect(getNameCellProps(table.data[0].name.component)).toMatchObject({
+      ai: undefined,
+      review: undefined,
+    });
+  });
+
+  test('shows only the Status column for Test Plan cases', () => {
+    const table = getTableProps(true, PROJECT_TEST_PLAN_DETAILS_PAGE, [aiTestCase]);
+
+    expect(table.fixedColumns.map(({ key }) => key)).toEqual(['status', 'lastExecution']);
+    expect(table.data[0].status?.content).toBe(Lifecycle.READY);
     expect(table.data[0].aiQuality).toBeUndefined();
     expect(getNameCellProps(table.data[0].name.component)).toMatchObject({
       ai: undefined,
@@ -190,7 +207,9 @@ describe('TestCaseList lifecycle column', () => {
     const table = getTableProps(true, TEST_CASE_LIBRARY_PAGE, [aiTestCase, manualTestCase]);
     const aiNameProps = getNameCellProps(table.data[0].name.component);
     const manualNameProps = getNameCellProps(table.data[1].name.component);
-    const aiQualityProps = shallow(table.data[0].aiQuality?.component).find('AiQualityCell').props();
+    const aiQualityProps = shallow(table.data[0].aiQuality?.component)
+      .find('AiQualityCell')
+      .props();
     const manualQualityProps = shallow(table.data[1].aiQuality?.component)
       .find('AiQualityCell')
       .props();
@@ -223,6 +242,24 @@ describe('TestCaseList lifecycle column', () => {
     expect(typeof openButton.prop('onClick')).toBe('function');
     expect(openButton.find('DraggableTestCaseNameCell')).toHaveLength(0);
     expect(nameCell.find('DraggableTestCaseNameCell')).toHaveLength(1);
+  });
+
+  test('retains lifecycle metadata when a row is selected across Test Plan pages', () => {
+    const handleSelectedRows = jest.fn();
+    const wrapper = renderList(true, PROJECT_TEST_PLAN_DETAILS_PAGE, [manualTestCase], {
+      handleSelectedRows,
+    });
+    const toggleRow = wrapper.find(Table).prop('onToggleRowSelection') as (id: number) => void;
+
+    toggleRow(manualTestCase.id);
+
+    expect(handleSelectedRows).toHaveBeenCalledWith([
+      expect.objectContaining({
+        id: manualTestCase.id,
+        displayId: manualTestCase.displayId,
+        lifecycle: Lifecycle.DRAFT,
+      }),
+    ]);
   });
 
   test('renders the exact AI-filter empty state without a generic description', () => {

@@ -19,6 +19,7 @@ import type { TestCase } from 'types/testCase';
 
 import {
   formatSkippedDrafts,
+  getTestPlanLaunchGate,
   isDraftGateActive,
   partitionReadyOnlySelection,
 } from './readyOnlyGateUtils';
@@ -59,5 +60,37 @@ describe('ready-only gate utils', () => {
 
   test('formats every skipped Draft with its business id and name', () => {
     expect(formatSkippedDrafts([draftCase])).toBe('TC2 — Draft case');
+  });
+
+  test('uses the plan-level G2 gate and maps Draft links to loaded real case ids', () => {
+    expect(
+      getTestPlanLaunchGate(
+        true,
+        {
+          draftTestCasesCount: 1,
+          draftTestCases: [{ id: 1002, displayId: 'TC2' }],
+          launchBlocked: true,
+        },
+        [readyCase, draftCase],
+      ),
+    ).toEqual({
+      draftCount: 1,
+      draftTestCases: [{ id: 2, displayId: 'TC2' }],
+      isBlocked: true,
+    });
+  });
+
+  test('falls back to loaded C1 rows when G2 data is not available', () => {
+    expect(getTestPlanLaunchGate(true, undefined, [readyCase, draftCase])).toEqual({
+      draftCount: 1,
+      draftTestCases: [{ id: 2, displayId: 'TC2' }],
+      isBlocked: true,
+    });
+  });
+
+  test('preserves the current Test Plan behavior while the feature is disabled', () => {
+    expect(
+      getTestPlanLaunchGate(false, { draftTestCasesCount: 1, launchBlocked: true }, [draftCase]),
+    ).toEqual({ draftCount: 0, draftTestCases: [], isBlocked: false });
   });
 });

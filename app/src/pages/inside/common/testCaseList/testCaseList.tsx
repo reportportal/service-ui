@@ -83,7 +83,16 @@ const toggleRowSelection = ({
   const isCurrentlySelected = selectedRows.some((row) => row.id === id);
   const nextSelectedRows = isCurrentlySelected
     ? selectedRows.filter((row) => row.id !== id)
-    : [...selectedRows, { id: testCase.id, folderId: testCase.testFolder.id, name: testCase.name }];
+    : [
+        ...selectedRows,
+        {
+          id: testCase.id,
+          folderId: testCase.testFolder.id,
+          displayId: testCase.displayId,
+          lifecycle: testCase.lifecycle,
+          name: testCase.name,
+        },
+      ];
 
   handleSelectedRows(nextSelectedRows);
 };
@@ -114,6 +123,8 @@ const toggleAllRowsSelection = ({
           .map((testCase) => ({
             id: testCase.id,
             folderId: testCase.testFolder.id,
+            displayId: testCase.displayId,
+            lifecycle: testCase.lifecycle,
             name: testCase.name,
           })),
       ];
@@ -121,12 +132,12 @@ const toggleAllRowsSelection = ({
   handleSelectedRows(nextSelectedRows);
 };
 
-const hasAiFactoryData = (
+const hasLifecycleData = (
   isAiFactoryEnabled: boolean,
-  isTestLibraryRoute: boolean,
+  isSupportedRoute: boolean,
   testCases: ExtendedTestCase[],
 ) =>
-  isAiFactoryEnabled && isTestLibraryRoute && testCases.some(({ lifecycle }) => Boolean(lifecycle));
+  isAiFactoryEnabled && isSupportedRoute && testCases.some(({ lifecycle }) => Boolean(lifecycle));
 
 const hasActiveFilters = (
   searchParams: unknown,
@@ -141,7 +152,8 @@ interface CreateTableDataParams {
   instanceKey: TMS_INSTANCE_KEY;
   searchQuery: string;
   selectedTestCaseId: number | null;
-  shouldShowAiFactoryData: boolean;
+  shouldShowAiQuality: boolean;
+  shouldShowLifecycle: boolean;
   testCases: ExtendedTestCase[];
 }
 
@@ -151,7 +163,8 @@ const createTableData = ({
   instanceKey,
   searchQuery,
   selectedTestCaseId,
-  shouldShowAiFactoryData,
+  shouldShowAiQuality,
+  shouldShowLifecycle,
   testCases,
 }: CreateTableDataParams) =>
   testCases.map((testCase) => ({
@@ -176,8 +189,8 @@ const createTableData = ({
             name={testCase.name}
             tags={testCase?.attributes?.map(({ key }) => key)}
             searchQuery={searchQuery}
-            ai={shouldShowAiFactoryData ? testCase.ai : undefined}
-            review={shouldShowAiFactoryData ? testCase.review : undefined}
+            ai={shouldShowAiQuality ? testCase.ai : undefined}
+            review={shouldShowAiQuality ? testCase.review : undefined}
           />
         </div>
       ),
@@ -192,7 +205,7 @@ const createTableData = ({
         />
       ),
     },
-    ...(shouldShowAiFactoryData && {
+    ...(shouldShowLifecycle && {
       status: {
         content: testCase.lifecycle ?? '',
         component: testCase.lifecycle ? (
@@ -201,6 +214,8 @@ const createTableData = ({
           </div>
         ) : null,
       },
+    }),
+    ...(shouldShowAiQuality && {
       aiQuality: {
         content: testCase.evaluationSummary?.totalScore ?? '',
         component: (
@@ -217,9 +232,10 @@ const createTableData = ({
 const createFixedColumns = (
   formatMessage: IntlShape['formatMessage'],
   instanceKey: TMS_INSTANCE_KEY,
-  shouldShowAiFactoryData: boolean,
+  shouldShowAiQuality: boolean,
+  shouldShowLifecycle: boolean,
 ) => [
-  ...(shouldShowAiFactoryData
+  ...(shouldShowLifecycle
     ? [
         {
           key: 'status',
@@ -227,6 +243,10 @@ const createFixedColumns = (
           width: 120,
           align: 'left' as const,
         },
+      ]
+    : []),
+  ...(shouldShowAiQuality
+    ? [
         {
           key: 'aiQuality',
           header: formatMessage(messages.aiQualityHeader),
@@ -359,11 +379,12 @@ export const TestCaseList = memo(
 
     const isTestLibraryRoute = location.type === TEST_CASE_LIBRARY_PAGE;
     const isTestPlanRoute = location.type === PROJECT_TEST_PLAN_DETAILS_PAGE;
-    const shouldShowAiFactoryData = hasAiFactoryData(
+    const shouldShowLifecycle = hasLifecycleData(
       isAiFactoryEnabled,
-      isTestLibraryRoute,
+      isTestLibraryRoute || isTestPlanRoute,
       testCases,
     );
+    const shouldShowAiQuality = shouldShowLifecycle && isTestLibraryRoute;
 
     const handleRowOpen = (testCaseId: number) => {
       if (isTestLibraryRoute && selectedTestCaseId !== testCaseId) {
@@ -392,7 +413,8 @@ export const TestCaseList = memo(
       instanceKey,
       searchQuery,
       selectedTestCaseId,
-      shouldShowAiFactoryData,
+      shouldShowAiQuality,
+      shouldShowLifecycle,
       testCases,
     });
 
@@ -403,7 +425,12 @@ export const TestCaseList = memo(
       align: 'left' as const,
     };
 
-    const fixedColumns = createFixedColumns(formatMessage, instanceKey, shouldShowAiFactoryData);
+    const fixedColumns = createFixedColumns(
+      formatMessage,
+      instanceKey,
+      shouldShowAiQuality,
+      shouldShowLifecycle,
+    );
 
     const hasActiveSearchOrFilters = hasActiveFilters(
       location?.query?.testCasesSearchParams,
