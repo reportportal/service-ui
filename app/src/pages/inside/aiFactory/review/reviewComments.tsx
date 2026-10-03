@@ -301,10 +301,10 @@ export const ReviewStrip = ({
         </Tooltip>
       </div>
       {isRunning && (
-        <div className={cx('review-strip__status')} role="status">
+        <output className={cx('review-strip__status')}>
           <BubblesLoader />
           <strong>{formatMessage(messages.fixing, { round: fixRoundState.current?.round })}</strong>
-        </div>
+        </output>
       )}
       {hasFailed && (
         <div className={cx('review-strip__status', 'review-strip__status--failed')} role="alert">

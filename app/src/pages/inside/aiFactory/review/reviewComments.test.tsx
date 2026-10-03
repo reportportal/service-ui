@@ -231,7 +231,7 @@ describe('AI review comments', () => {
       />,
     );
 
-    expect(wrapper.find('[role="status"]').text()).toContain('Agent is fixing');
+    expect(wrapper.find('output').text()).toContain('Agent is fixing');
     expect(wrapper.find('[data-automation-id="push-review-comments"]').prop('disabled')).toBe(true);
   });
 });
