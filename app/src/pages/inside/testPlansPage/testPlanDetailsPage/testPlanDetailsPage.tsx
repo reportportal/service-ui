@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useIntl } from 'react-intl';
 import { useDispatch, useSelector } from 'react-redux';
 import { isEmpty } from 'es-toolkit/compat';
@@ -28,6 +28,7 @@ import {
 } from 'analyticsEvents/testPlansPageEvents';
 import { createClassnames } from 'common/utils';
 import { SEARCH_DELAY } from 'common/constants/delayTime';
+import { useAiFactoryEnabled } from 'controllers/aiFactory';
 import { SettingsLayout } from 'layouts/settingsLayout';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
 import {
@@ -63,6 +64,11 @@ import {
 import { SearchField } from 'components/fields/searchField';
 import { TestCasePageDefaultValues } from 'pages/inside/common/testCaseList/constants';
 import { messages as testCaseListMessages } from 'pages/inside/common/testCaseList/messages';
+import {
+  TestPlanLaunchBlockedBanner,
+  TestPlanLaunchButton,
+} from 'pages/inside/aiFactory/readyOnlyGate/testPlanLaunchGuard';
+import { getTestPlanLaunchGate } from 'pages/inside/aiFactory/readyOnlyGate';
 
 import { TestLibrarySidePanel } from '../../common/testLibrarySidePanel';
 import { PageHeaderWithBreadcrumbsAndActions } from '../../common/pageHeaderWithBreadcrumbsAndActions';
@@ -99,6 +105,15 @@ export const TestPlanDetailsPage = () => {
   const isTestPlanTestCasesLoading = useTestPlanTestCasesLoading();
   const testPlanFolders = useTestPlanFolders();
   const testCases = useTestPlanSelector(testPlanTestCasesSelector);
+  const isAiFactoryEnabled = useAiFactoryEnabled();
+  const {
+    draftCount: draftTestCasesCount,
+    draftTestCases: draftTestCaseLinks,
+    isBlocked: isLaunchBlocked,
+  } = useMemo(
+    () => getTestPlanLaunchGate(isAiFactoryEnabled, testPlan, testCases ?? []),
+    [isAiFactoryEnabled, testCases, testPlan],
+  );
 
   const location = useSelector(locationSelector);
   const isAuthorized = useSelector(isAuthorizedSelector);
@@ -306,13 +321,12 @@ export const TestPlanDetailsPage = () => {
             </Button>
           )}
           {canCreateManualLaunch && (
-            <Button
-              variant="primary"
-              data-automation-id="createLaunchButton"
+            <TestPlanLaunchButton
+              draftCount={draftTestCasesCount}
+              isBlocked={isLaunchBlocked}
+              label={formatMessage(messages.addToLaunch)}
               onClick={handleOpenCreateLaunchModal}
-            >
-              {formatMessage(messages.addToLaunch)}
-            </Button>
+            />
           )}
         </>
       )}
@@ -345,6 +359,13 @@ export const TestPlanDetailsPage = () => {
             actions={renderActions()}
             actionsClassName={cx('test-plan-details-page__header-actions')}
           />
+          <div className={cx('test-plan-details-page__launch-blocked-banner')}>
+            <TestPlanLaunchBlockedBanner
+              draftCount={draftTestCasesCount}
+              draftTestCases={draftTestCaseLinks}
+              isBlocked={isLaunchBlocked}
+            />
+          </div>
           <div className={cx('test-plan-details-page__content')}>{renderContent()}</div>
         </div>
       </ScrollWrapper>

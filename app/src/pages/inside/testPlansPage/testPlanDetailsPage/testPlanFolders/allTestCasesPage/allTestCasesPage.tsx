@@ -16,10 +16,10 @@
 
 import { useState, useMemo } from 'react';
 import { useIntl } from 'react-intl';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useTracking } from 'react-tracking';
 import { isEmpty } from 'es-toolkit/compat';
-import { Pagination, Button, Selection } from '@reportportal/ui-kit';
+import { Pagination, Button, Selection, Tooltip } from '@reportportal/ui-kit';
 
 import {
   TEST_PLANS_PAGE_EVENTS,
@@ -27,6 +27,8 @@ import {
   ACTION_SOURCE,
 } from 'analyticsEvents/testPlansPageEvents';
 import { createClassnames } from 'common/utils';
+import { useAiFactoryEnabled } from 'controllers/aiFactory';
+import { showWarningNotification } from 'controllers/notification';
 import { TestCaseList } from 'pages/inside/common/testCaseList';
 import { ITEMS_PER_PAGE_OPTIONS } from 'pages/inside/common/testCaseList/constants';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
@@ -40,6 +42,11 @@ import {
 import { payloadSelector } from 'controllers/pages';
 import { useProjectDetails, useTestPlanId } from 'hooks/useTypedSelector';
 import { useURLBoundPagination } from 'pages/inside/common/testCaseList/useURLBoundPagination';
+import {
+  formatSkippedDrafts,
+  partitionReadyOnlySelection,
+  readyOnlyMessages,
+} from 'pages/inside/aiFactory/readyOnlyGate';
 
 import { useRemoveTestCasesFromTestPlanModal } from '../../../testPlanModals';
 import { removeTestCasesFromTestPlanMessages } from '../../../testPlanModals/removeTestCasesFromTestPlanModal/messages';
@@ -56,7 +63,9 @@ export const AllTestCasesPage = ({
   folderName,
 }: AllTestCasesPageProps) => {
   const { formatMessage } = useIntl();
+  const dispatch = useDispatch();
   const { trackEvent } = useTracking();
+  const isAiFactoryEnabled = useAiFactoryEnabled();
   const testPlansTestCasesPageData = useSelector(testPlanTestCasesPageSelector);
   const payload = useSelector(payloadSelector);
   const { organizationSlug, projectSlug } = useProjectDetails();
@@ -73,6 +82,15 @@ export const AllTestCasesPage = ({
 
   const [selectedRows, setSelectedRows] = useState<SelectedTestCaseRow[]>([]);
   const selectedRowIds = useMemo(() => selectedRows.map((row) => row.id), [selectedRows]);
+  const selectedTestCases = useMemo(
+    () => selectedRows.map((row) => testCases.find(({ id }) => id === row.id) ?? row),
+    [selectedRows, testCases],
+  );
+  const { eligibleIds, skippedDrafts } = useMemo(
+    () => partitionReadyOnlySelection(selectedRowIds, selectedTestCases, isAiFactoryEnabled),
+    [isAiFactoryEnabled, selectedRowIds, selectedTestCases],
+  );
+  const hasOnlyDraftsSelected = skippedDrafts.length > 0 && eligibleIds.length === 0;
   const onClearSelection = () => setSelectedRows([]);
 
   const { openModal: openRemoveTestCasesModal } = useRemoveTestCasesFromTestPlanModal();
@@ -81,7 +99,7 @@ export const AllTestCasesPage = ({
       ? ACTION_SOURCE.BULK
       : ACTION_SOURCE.SINGLE;
   const { openModal: openAddToLaunchModal } = useAddTestCasesToLaunchModal({
-    selectedRowsIds: selectedRowIds,
+    selectedRowsIds: eligibleIds,
     testCases,
     testPlanId,
     onClearSelection,
@@ -104,8 +122,28 @@ export const AllTestCasesPage = ({
     if (selectedRowIds.length >= BULK_ADD_TO_LAUNCH_MIN_SELECTION) {
       trackEvent(TEST_PLANS_PAGE_EVENTS.clickStartBulkAddToLaunch(selectedRowIds.length));
     }
+    if (skippedDrafts.length) {
+      dispatch(
+        showWarningNotification({
+          message: formatMessage(readyOnlyMessages.bulkSkipped, {
+            cases: formatSkippedDrafts(skippedDrafts),
+          }),
+        }),
+      );
+    }
     openAddToLaunchModal();
   };
+
+  const addToLaunchButton = (
+    <Button
+      variant="primary"
+      onClick={handleOpenAddToLaunchModal}
+      disabled={hasOnlyDraftsSelected}
+      data-automation-id="test-plan-add-selected-to-launch"
+    >
+      {formatMessage(COMMON_LOCALE_KEYS.ADD_TO_LAUNCH)}
+    </Button>
+  );
 
   return (
     <>
@@ -152,9 +190,13 @@ export const AllTestCasesPage = ({
             >
               {formatMessage(removeTestCasesFromTestPlanMessages.removeFromTestPlanTitle)}
             </Button>
-            <Button variant="primary" onClick={handleOpenAddToLaunchModal}>
-              {formatMessage(COMMON_LOCALE_KEYS.ADD_TO_LAUNCH)}
-            </Button>
+            {hasOnlyDraftsSelected ? (
+              <Tooltip placement="top" content={formatMessage(readyOnlyMessages.launchDraftHint)}>
+                {addToLaunchButton}
+              </Tooltip>
+            ) : (
+              addToLaunchButton
+            )}
           </div>
         </div>
       )}

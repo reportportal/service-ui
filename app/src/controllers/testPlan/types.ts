@@ -34,6 +34,9 @@ export type TestPlanDto = EntityWithDisplayId & {
   description?: string;
   attributes?: Attribute[];
   milestoneId?: number;
+  draftTestCasesCount?: number;
+  draftTestCases?: { id: number; displayId: string }[];
+  launchBlocked?: boolean;
 };
 
 export type TestPlanFoldersDto = {
