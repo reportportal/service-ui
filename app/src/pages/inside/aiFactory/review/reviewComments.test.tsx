@@ -11,11 +11,12 @@
 import { act, type ChangeEvent } from 'react';
 import { shallow } from 'enzyme';
 
-import { CommentState, CommentTargetType, Lifecycle } from 'types/aiFactory';
+import { CommentState, CommentTargetType, FixRoundStatus, Lifecycle } from 'types/aiFactory';
 import type { ReviewCommentRS } from 'types/aiFactory';
 
 import { ReviewStrip, ReviewTarget } from './reviewComments';
 import type { ReviewCommentsLoadState } from './useReviewComments';
+import type { FixRoundLoadState } from './useFixRound';
 
 jest.mock('@reportportal/ui-kit', () => ({
   BubblesLoader: () => <span>BubblesLoader</span>,
@@ -99,6 +100,16 @@ const createReviewState = (
   ...overrides,
 });
 
+const createFixRoundState = (overrides: Partial<FixRoundLoadState> = {}): FixRoundLoadState => ({
+  current: null,
+  isLoading: false,
+  isStarting: false,
+  isError: false,
+  start: jest.fn(() => Promise.resolve()),
+  reload: jest.fn(),
+  ...overrides,
+});
+
 describe('AI review comments', () => {
   beforeEach(() => {
     jest.clearAllMocks();
@@ -160,7 +171,13 @@ describe('AI review comments', () => {
   test('discards pending comments only after confirmation', async () => {
     const reviewState = createReviewState();
     jest.spyOn(window, 'confirm').mockReturnValue(true);
-    const wrapper = shallow(<ReviewStrip lifecycle={Lifecycle.DRAFT} reviewState={reviewState} />);
+    const wrapper = shallow(
+      <ReviewStrip
+        lifecycle={Lifecycle.DRAFT}
+        reviewState={reviewState}
+        fixRoundState={createFixRoundState()}
+      />,
+    );
 
     await act(async () => {
       const discard = wrapper
@@ -176,7 +193,13 @@ describe('AI review comments', () => {
 
   test('offers retry when loading comments fails', () => {
     const reviewState = createReviewState({ comments: [], isError: true });
-    const wrapper = shallow(<ReviewStrip lifecycle={Lifecycle.READY} reviewState={reviewState} />);
+    const wrapper = shallow(
+      <ReviewStrip
+        lifecycle={Lifecycle.READY}
+        reviewState={reviewState}
+        fixRoundState={createFixRoundState()}
+      />,
+    );
 
     const retry = wrapper
       .find('[data-automation-id="retry-review-comments"]')
@@ -184,5 +207,31 @@ describe('AI review comments', () => {
     retry();
 
     expect(reviewState.reload).toHaveBeenCalledTimes(1);
+  });
+
+  test('shows the locked state while a fix round is running', () => {
+    const fixRoundState = createFixRoundState({
+      current: {
+        round: 3,
+        testCaseId: 42,
+        displayId: 'TC106',
+        status: FixRoundStatus.RUNNING,
+        pushedBy: 'Reviewer',
+        pushedAt: 100,
+        commentsCount: 1,
+      },
+    });
+    const wrapper = shallow(
+      <ReviewStrip
+        lifecycle={Lifecycle.DRAFT}
+        reviewState={createReviewState()}
+        isReadOnly
+        readOnlyReason="FIX_RUNNING"
+        fixRoundState={fixRoundState}
+      />,
+    );
+
+    expect(wrapper.find('output').text()).toContain('Agent is fixing');
+    expect(wrapper.find('[data-automation-id="push-review-comments"]').prop('disabled')).toBe(true);
   });
 });

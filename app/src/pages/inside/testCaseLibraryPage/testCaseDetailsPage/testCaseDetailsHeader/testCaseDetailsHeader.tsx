@@ -91,6 +91,7 @@ export const TestCaseDetailsHeader = ({
   const { openModal: openEditScenarioModal } = useEditScenarioModal();
   const { hasTestPlans } = useHasTestPlans();
   const isAiFactoryEnabled = useAiFactoryEnabled();
+  const isFixRunning = Boolean(testCase.review?.fixRound);
 
   const breadcrumbsTitles = {
     mainTitle: formatMessage(commonMessages.testCaseLibraryBreadcrumb),
@@ -252,9 +253,16 @@ export const TestCaseDetailsHeader = ({
           {canManageTestCases && (
             <>
               {!isScenarioEmpty && (
-                <Button onClick={handleEditScenario} variant="ghost">
-                  {formatMessage(commonMessages.editScenario)}
-                </Button>
+                <Tooltip
+                  placement="top"
+                  content={isFixRunning ? formatMessage(messages.editScenarioFixRunning) : ''}
+                >
+                  <span>
+                    <Button onClick={handleEditScenario} variant="ghost" disabled={isFixRunning}>
+                      {formatMessage(commonMessages.editScenario)}
+                    </Button>
+                  </span>
+                </Tooltip>
               )}
               <AddToLaunchButton
                 manualScenario={testCase?.manualScenario}
@@ -274,16 +282,14 @@ export const TestCaseDetailsHeader = ({
               )}
             </>
           )}
-          {isAiFactoryEnabled &&
-            canReviewAiTestCases &&
-            testCase.lifecycle === Lifecycle.DRAFT && (
-              <ApproveButton
-                testCase={testCase}
-                onSuccess={() =>
-                  dispatch({ type: GET_TEST_CASE_DETAILS, payload: { testCaseId: testCase.id } })
-                }
-              />
-            )}
+          {isAiFactoryEnabled && canReviewAiTestCases && testCase.lifecycle === Lifecycle.DRAFT && (
+            <ApproveButton
+              testCase={testCase}
+              onSuccess={() =>
+                dispatch({ type: GET_TEST_CASE_DETAILS, payload: { testCaseId: testCase.id } })
+              }
+            />
+          )}
         </div>
       </div>
     </div>

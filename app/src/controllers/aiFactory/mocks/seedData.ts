@@ -176,6 +176,9 @@ export const SCRIPTED_FIX_FAILURE: Record<string, string> = {
   TC107: 'job timeout',
 };
 
+/** Keeps the updated scenario but makes its re-grade fail, covering the F2 GRADE_FAILED outcome. */
+export const SCRIPTED_GRADE_FAILURE = new Set(['TC105']);
+
 export const CASES: MockCaseSeed[] = [
   {
     id: 1001,

@@ -37,10 +37,6 @@ export const messages = defineMessages({
     id: 'AiReview.push',
     defaultMessage: 'Push to agent · {count}',
   },
-  pushUnavailable: {
-    id: 'AiReview.pushUnavailable',
-    defaultMessage: 'Push to agent will be available after the fix-round workflow is connected',
-  },
   addAtLeastOne: {
     id: 'AiReview.addAtLeastOne',
     defaultMessage: 'Add at least one review comment',
@@ -104,5 +100,77 @@ export const messages = defineMessages({
   mutationError: {
     id: 'AiReview.mutationError',
     defaultMessage: 'The review comment could not be updated. Please try again.',
+  },
+  fixing: {
+    id: 'AiReview.fixing',
+    defaultMessage: 'Agent is fixing… · Fix round {round}',
+  },
+  fixStartFailed: {
+    id: 'AiReview.fixStartFailed',
+    defaultMessage: 'The fix round could not be started. Your comments were not sent.',
+  },
+  fixPassed: {
+    id: 'AiReview.fixPassed',
+    defaultMessage: 'Fix round {round} finished. The Test Case returned to Draft.',
+  },
+  fixPassedAutoReady: {
+    id: 'AiReview.fixPassedAutoReady',
+    defaultMessage: 'Fix round {round} finished and Auto-Ready promoted the Test Case.',
+  },
+  fixGradeFailed: {
+    id: 'AiReview.fixGradeFailed',
+    defaultMessage: 'Fix round {round} updated the scenario, but grading failed.',
+  },
+  fixFailed: {
+    id: 'AiReview.fixFailed',
+    defaultMessage: 'Fix round {round} failed. The Test Case was not changed.',
+  },
+  failedActions: {
+    id: 'AiReview.failedActions',
+    defaultMessage: 'The agent could not apply these comments. Push again or discard them.',
+  },
+  pushAgain: {
+    id: 'AiReview.pushAgain',
+    defaultMessage: 'Push again',
+  },
+  whatChanged: {
+    id: 'AiReview.whatChanged',
+    defaultMessage: 'What the agent changed',
+  },
+  changesTitle: {
+    id: 'AiReview.changesTitle',
+    defaultMessage: 'What the agent changed · Fix round {round}',
+  },
+  scoreChange: {
+    id: 'AiReview.scoreChange',
+    defaultMessage: 'AI quality score: {before} → {after}',
+  },
+  before: {
+    id: 'AiReview.before',
+    defaultMessage: 'Before',
+  },
+  after: {
+    id: 'AiReview.after',
+    defaultMessage: 'After',
+  },
+  precondition: {
+    id: 'AiReview.precondition',
+    defaultMessage: 'Precondition',
+  },
+  instructions: {
+    id: 'AiReview.instructions',
+    defaultMessage: 'Instructions',
+  },
+  expectedResult: {
+    id: 'AiReview.expectedResult',
+    defaultMessage: 'Expected result',
+  },
+  noScenarioContent: {
+    id: 'AiReview.noScenarioContent',
+    defaultMessage: 'Scenario details are not available for this snapshot.',
+  },
+  close: {
+    id: 'AiReview.close',
+    defaultMessage: 'Close',
   },
 });

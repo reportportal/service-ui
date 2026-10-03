@@ -38,6 +38,7 @@ cross-cutting scope must be split into cohesive `[FE]` sub-tasks before work con
 | [EPMRPP-122025](https://jiraeu.epam.com/browse/EPMRPP-122025) | Generation cost and iteration links | T2.6 | 8 h | ≤ 36 h |
 | [EPMRPP-122027](https://jiraeu.epam.com/browse/EPMRPP-122027) | Review comments and AI review strip | T3.1 | 30 h | ≤ 36 h |
 | [EPMRPP-122029](https://jiraeu.epam.com/browse/EPMRPP-122029) | Approve and mark as ready | T3.2 | 20 h | ≤ 36 h |
+| [EPMRPP-122030](https://jiraeu.epam.com/browse/EPMRPP-122030) | Push review comments to agent | T3.3 | 30 h | ≤ 36 h |
 
 If an estimate differs from the planned size by more than ~30 %, write why in *Deviation notes*
 and re-check the remaining sizes.
@@ -68,7 +69,7 @@ Filled in as tasks complete. `—` = not done yet.
 | T2.6 | Generation cost + pipeline links | 2 | S (8) | **8** | 2 | 4 | 2 | 2026-10-02 |
 | T3.1 | Review comments + AI review strip | 3 | L (36) | **30** | 5 | 18 | 7 | 2026-10-02 |
 | T3.2 | Approve / Mark as ready (+ bulk, Edit Scenario) | 3 | M (20) | **20** | 4 | 10 | 6 | 2026-10-02 |
-| T3.3 | Push to agent + fix round states + diff modal | 3 | L (36) | — | | | | |
+| T3.3 | Push to agent + fix round states + diff modal | 3 | L (36) | **30** | 5 | 18 | 7 | 2026-10-03 |
 | T3.4 | Pipeline settings modal | 3 | S (8) | — | | | | |
 | T3.6 | CI connection section in Pipeline settings | 3 | M (20) | — | | | | |
 | T4.1 | Ready-only gate + In plan · Launch blocked | 4 | M (20) | — | | | | |
@@ -95,11 +96,11 @@ Filled in as tasks complete. `—` = not done yet.
 | 0 · Foundation | T0.2–T0.7 (+T0.1 planning) | 88 (+20 planning) | 73 | 7 / 7 | T0.2 −5 h, T0.4 −6 h, T0.5 −10 h, T0.6 −6 h, T0.7 −5 h, T0.3 ≈ planned (see deviation notes) |
 | 1 · Pipelines | T1.1–T1.3, **T1.2u, T1.3u** | 108 | 70 | 4 / 5 | T1.1 −6 h, T1.2 −16 h, T1.3 −6 h, T1.3u −2 h; T1.2u still not started, blocked on T3.6 |
 | 2 · Library | T2.1–T2.6 | 108 | 108 | 6 / 6 | T2.1–T2.5 ≈ planned; T2.6 ≈ planned |
-| 3 · Review loop | T3.1–T3.4, **T3.6** | 120 | 50 | 2 / 5 | T3.1 −6 h; T3.2 ≈ planned; T3.6 new (audit 2026-09-29, US-019) |
+| 3 · Review loop | T3.1–T3.4, **T3.6** | 120 | 80 | 3 / 5 | T3.1 −6 h; T3.2 ≈ planned; T3.3 −6 h; T3.6 new (audit 2026-09-29, US-019) |
 | 4 · Gate & compare | T4.1–T4.3, **T4.4** | 80 | 0 | 0 / 4 | T4.4 new (audit 2026-09-29, US-020) |
 | 5 · Automation | T5.1–T5.4 | 56 | 0 | 0 / 4 | — |
 | 6 · Hardening | T6.1–T6.5, **T6.6** | 48 | 0 | 0 / 6 | T6.6 new (audit 2026-09-29, US-018 FE-owned slice) |
-| **Total** | | **608 h + 20 h planning = 628 h** | **301** | 19 / 37 | — |
+| **Total** | | **608 h + 20 h planning = 628 h** | **331** | 20 / 37 | — |
 
 **628 h ≈ 78,5 working days ≈ 15,7 working weeks** for one developer at 8 h/day. The jump from 564 h is
 the 2026-09-29 audit's 3 new stories (018/019/020) plus the two not-yet-started rework tasks it surfaced
@@ -128,6 +129,7 @@ Newest first. One line per estimate recorded.
 
 | Date | Task | Hours | Note |
 |------|------|-------|------|
+| 2026-10-03 | T3.3 Push to agent + fix round states + diff modal | 30 | 5 h requirements/F1-F2 lifecycle/UI-pattern research and Jira scope · 18 h implementation: start + stale-response-safe polling hook, immediate comment refresh, running locks, PASSED/GRADE_FAILED/FAILED outcome handling, Auto-Ready notification, retry/discard controls, responsive before/after modal and complete mock simulations · 7 h tests/review: hook/UI/host and all-outcome endpoint coverage, type/ESLint/diff checks, Node 20 dev compile, authenticated Library smoke test and removal of unrelated formatter churn found in self-review |
 | 2026-10-02 | T2.4 Library side panel additions | 20 | 4 h requirements/component/API boundary research and Jira scope · 10 h implementation: feature-flagged status row, Draft hint, C2 hook reuse, compact ordered evaluation bars/cost/iteration link, explicit states, reusable iteration link export and responsive 360 px layout · 6 h tests/review: focused host/mini/link coverage, full 117-suite / 931-test regression, type/ESLint/Stylelint/diff checks, dev compile, live base-panel smoke test and contract-boundary remediation |
 | 2026-10-02 | T2.5 AI evaluation panel + rubric | 20 | 4 h requirements/API/UI-pattern research and Jira scope · 10 h implementation: shared guarded C2 details request, header score, ordered neutral criterion bars, expandable reasons, source/fix-round/date/obsolete metadata, error/empty/loading states, historical-snapshot rubric modal and i18n/styles · 6 h tests/review: 26 focused tests, full 116-suite / 927-test regression, type/ESLint/Stylelint/diff checks, dev compile, browser toggle-ON verification, and remediation of the rubric-description contract mismatch found during self-review |
 | 2026-10-02 | T2.3 Quick filters + Review queue + iteration chip | 20 | 4 h research: US-008/C3, Library navigation/refetch/pagination, URL-state and mock-overlay paths, Jira scope · 9 h implementation: feature-flagged Status/AI segmented filters, Review queue/count, iteration chip/LP3 label lookup, `lifecycle`/`ai`/`iteration` URL preservation, Redux request plumbing, provisional C3 query forwarding and complete-page mock filtering · 4 h tests: URL parsing/navigation, reducers/sagas, overlay/count, hooks/components, toggle-OFF and full 114-suite regression · 3 h remediation and review: stale-request/count safety, truthful partial-page pagination, malformed-input handling, empty-state cleanup, type/lint/style checks and manual runtime QA |

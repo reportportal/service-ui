@@ -25,6 +25,7 @@ import { AxiosRequestConfig } from 'axios';
 import {
   AutomationStatus,
   EvaluationState,
+  FixRoundRS,
   FixRoundStatus,
   IterationPageRS,
   Lifecycle,
@@ -45,7 +46,7 @@ import {
 } from './db';
 import { applyAutoReady, automateSkipReason } from './engine';
 import { toIterationRS, toIterationSummaryRS, toPipelineRS, toTestCaseAiExtension, toTestCaseAiRS } from './viewModels';
-import { SCRIPTED_FIX_FAILURE } from './seedData';
+import { SCRIPTED_FIX_FAILURE, SCRIPTED_GRADE_FAILURE } from './seedData';
 import { MockCaseRecord } from './types';
 
 /** Real network delay would make a demo feel too instant; this makes fix rounds/automation feel real. */
@@ -221,6 +222,7 @@ export const installAiFactoryHandlers = (mock: MockAdapter): void => {
     if (c.fixRoundRunning) return conflict('FIX_RUNNING');
     const round = nextFixRoundNumber(c);
     pending.forEach((comment) => { comment.state = 'SENT'; comment.fixRound = round; });
+    c.lastAgentChange = undefined;
     c.fixRoundRunning = { round, startedAt: Date.now() };
     persist();
     startFixRoundSimulation(c, round);
@@ -260,13 +262,33 @@ function startFixRoundSimulation(c: MockCaseRecord, round: number): void {
     const scriptedFailure = SCRIPTED_FIX_FAILURE[c.displayId];
     if (scriptedFailure && !c.failedOnce) {
       c.failedOnce = true;
-      c.comments.forEach((cm) => { if (cm.state === 'SENT') cm.state = 'PENDING'; });
+      const commentsCount = c.comments.filter((cm) => cm.state === 'SENT').length;
+      c.comments.forEach((cm) => {
+        if (cm.state === 'SENT') {
+          cm.state = 'PENDING';
+          cm.fixRound = undefined;
+        }
+      });
+      c.fixRounds.push({ round, testCaseId: c.id, displayId: c.displayId, status: FixRoundStatus.FAILED, pushedBy: 'You', pushedAt: c.fixRoundRunning.startedAt, finishedAt: Date.now(), commentsCount, failureReason: scriptedFailure });
       c.fixRoundRunning = undefined;
       persist();
       return;
     }
     const before = c.evaluation ? { ...c.evaluation } : undefined;
     const scoreBefore = before ? before.criteria.reduce((s, cr) => s + cr.score, 0) : 0;
+    if (SCRIPTED_GRADE_FAILURE.has(c.displayId)) {
+      c.evaluation = before && { ...before, state: EvaluationState.OBSOLETE };
+      c.comments.forEach((cm) => { if (cm.state === 'SENT') cm.state = 'ADDRESSED'; });
+      recordLifecycleChange(c, Lifecycle.DRAFT, LifecycleReason.AGENT_FIX, { type: LifecycleActorType.PIPELINE, name: 'Test case generation' }, `Fix round ${round} — grade failed`);
+      if (c.ai) c.ai.modifiedByAgent = true;
+      const commentsCount = c.comments.filter((cm) => cm.fixRound === round).length;
+      const cost = 0.19 + 0.03 * commentsCount;
+      c.fixRounds.push({ round, testCaseId: c.id, displayId: c.displayId, status: FixRoundStatus.GRADE_FAILED, pushedBy: 'You', pushedAt: c.fixRoundRunning.startedAt, finishedAt: Date.now(), commentsCount, scoreBefore, cost });
+      c.lastAgentChange = { round, scoreBefore, before: { steps: [] }, after: { steps: [] } };
+      c.fixRoundRunning = undefined;
+      persist();
+      return;
+    }
     const bump = 12;
     const criteria = (before?.criteria || []).map((cr) => ({ ...cr, score: Math.min(cr.maxScore, cr.score + Math.round(bump / 6)), failureReasons: [] }));
     const scoreAfter = criteria.reduce((s, cr) => s + cr.score, 0);
@@ -276,12 +298,13 @@ function startFixRoundSimulation(c: MockCaseRecord, round: number): void {
     recordLifecycleChange(c, Lifecycle.DRAFT, LifecycleReason.AGENT_FIX, { type: LifecycleActorType.PIPELINE, name: 'Test case generation' }, `Fix round ${round} (${scoreBefore} → ${scoreAfter})${wasReady ? ' — returned to Draft' : ''}`);
     if (c.ai) c.ai.modifiedByAgent = true;
     const cost = 0.19 + 0.03 * c.comments.filter((cm) => cm.fixRound === round).length;
-    c.fixRounds.push({ round, testCaseId: c.id, displayId: c.displayId, status: FixRoundStatus.PASSED, pushedBy: 'You', pushedAt: c.fixRoundRunning.startedAt, finishedAt: Date.now(), commentsCount: c.comments.filter((cm) => cm.fixRound === round).length, scoreBefore, scoreAfter, cost });
+    const completedRound: FixRoundRS = { round, testCaseId: c.id, displayId: c.displayId, status: FixRoundStatus.PASSED, pushedBy: 'You', pushedAt: c.fixRoundRunning.startedAt, finishedAt: Date.now(), commentsCount: c.comments.filter((cm) => cm.fixRound === round).length, scoreBefore, scoreAfter, cost };
+    c.fixRounds.push(completedRound);
     c.lastAgentChange = { round, scoreBefore, scoreAfter, before: { steps: [] }, after: { steps: [] } };
     c.fixRoundRunning = undefined;
     const iteration = c.ai ? findIteration(c.ai.iterationId) : undefined;
     const pipeline = iteration ? findPipeline(iteration.pipelineId) : undefined;
-    if (pipeline?.settings) applyAutoReady(c, pipeline.settings);
+    if (pipeline?.settings) completedRound.autoReadyPromoted = applyAutoReady(c, pipeline.settings);
     persist();
   }, SIMULATED_DELAY_MS);
 }
