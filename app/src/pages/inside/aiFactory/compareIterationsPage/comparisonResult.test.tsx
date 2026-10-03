@@ -241,10 +241,10 @@ describe('ComparisonResult', () => {
     const wrapper = shallow(<ComparisonResult comparison={comparison()} />);
 
     expect(wrapper.props()).toMatchObject({
-      role: 'status',
       'aria-live': 'polite',
       'aria-atomic': 'true',
     });
+    expect(wrapper.prop('role')).toBeUndefined();
   });
 
   test.each(['__proto__', 'constructor', 'toString'])(

@@ -310,7 +310,8 @@ describe('CompareIterationsPageContent', () => {
   test('renders loading while pipelines or selected iterations are being fetched', () => {
     wrapper = renderPage({ pipelines: null, pipelinesLoading: true });
     const pipelineLoadingState = wrapper.find('.state--loading');
-    expect(pipelineLoadingState.props()).toMatchObject({ role: 'status', 'aria-live': 'polite' });
+    expect(pipelineLoadingState.prop('aria-live')).toBe('polite');
+    expect(pipelineLoadingState.prop('role')).toBeUndefined();
 
     wrapper.unmount();
     wrapper = renderPage({
@@ -326,10 +327,10 @@ describe('CompareIterationsPageContent', () => {
 
     expect(wrapper.find(SystemMessage).prop('mode')).toBe('error');
     expect(wrapper.find('[aria-live="assertive"]').props()).toMatchObject({
-      role: 'status',
       'aria-live': 'assertive',
       'aria-atomic': 'true',
     });
+    expect(wrapper.find('[aria-live="assertive"]').prop('role')).toBeUndefined();
     expect(wrapper.find(SystemMessage).prop('children')).toEqual(
       expect.arrayContaining(['The comparison could not be loaded.']),
     );

@@ -144,6 +144,7 @@
 }
 
 .state {
+  display: block;
   padding: 24px 0;
   color: var(--rp-ui-base-e-400);
 
@@ -153,6 +154,10 @@
     align-items: center;
     gap: 8px;
   }
+}
+
+.state-output {
+  display: block;
 }
 
 .error-action {

@@ -126,7 +126,7 @@ export const ComparisonResult = ({ comparison }: ComparisonResultProps) => {
   };
 
   return (
-    <div className={cx('result')} role="status" aria-live="polite" aria-atomic="true">
+    <output className={cx('result')} aria-live="polite" aria-atomic="true">
       {comparison.hasDifferentRequirements && (
         <SystemMessage mode="warning">
           {intl.formatMessage(messages.differentRequirements)}
@@ -209,6 +209,6 @@ export const ComparisonResult = ({ comparison }: ComparisonResultProps) => {
           </div>
         </section>
       )}
-    </div>
+    </output>
   );
 };

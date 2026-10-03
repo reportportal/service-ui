@@ -149,10 +149,9 @@ export const CompareIterationsPageContent = () => {
       label: formatMessage(messages.iterationOption, { number: item.number }),
     })) ?? [];
   const comparisonMatchesSelection = Boolean(
-    comparison &&
-    comparison.pipelineId === pipelineId &&
-    comparison.baseline.id === baselineId &&
-    comparison.candidate.id === candidateId,
+    comparison?.pipelineId === pipelineId &&
+      comparison?.baseline.id === baselineId &&
+      comparison?.candidate.id === candidateId,
   );
 
   const breadcrumbDescriptors = [
@@ -179,43 +178,43 @@ export const CompareIterationsPageContent = () => {
   const renderState = () => {
     if ((isPipelinesLoading && !pipelines) || (isIterationsLoading && !iterations)) {
       return (
-        <div className={cx('state', 'state--loading')} role="status" aria-live="polite">
+        <output className={cx('state', 'state--loading')} aria-live="polite">
           <SpinningPreloader />
           <span>{formatMessage(messages.loading)}</span>
-        </div>
+        </output>
       );
     }
     if (!pipelines?.length) {
       return (
-        <div className={cx('state')} role="status">
+        <output className={cx('state')}>
           {formatMessage(messages.noPipelines)}
-        </div>
+        </output>
       );
     }
     if (!pipelineId || !pipeline) {
       return (
-        <div className={cx('state')} role="status">
+        <output className={cx('state')}>
           {formatMessage(messages.invalidSelection)}
-        </div>
+        </output>
       );
     }
     if (!iterations || iterations.length < 2) {
       return (
-        <div className={cx('state')} role="status">
+        <output className={cx('state')}>
           {formatMessage(messages.notEnoughIterations)}
-        </div>
+        </output>
       );
     }
     if (!hasValidPair) {
       return (
-        <div className={cx('state')} role="status">
+        <output className={cx('state')}>
           {formatMessage(messages.invalidSelection)}
-        </div>
+        </output>
       );
     }
     if (hasComparisonError) {
       return (
-        <div role="status" aria-live="assertive" aria-atomic="true">
+        <output className={cx('state-output')} aria-live="assertive" aria-atomic="true">
           <SystemMessage mode="error">
             {formatMessage(messages.comparisonError)}
             <div className={cx('error-action')}>
@@ -228,15 +227,15 @@ export const CompareIterationsPageContent = () => {
               </Button>
             </div>
           </SystemMessage>
-        </div>
+        </output>
       );
     }
     if (isComparisonLoading || !comparisonMatchesSelection) {
       return (
-        <div className={cx('state', 'state--loading')} role="status" aria-live="polite">
+        <output className={cx('state', 'state--loading')} aria-live="polite">
           <SpinningPreloader />
           <span>{formatMessage(messages.loading)}</span>
-        </div>
+        </output>
       );
     }
     return comparison ? <ComparisonResult comparison={comparison} /> : null;
