@@ -58,7 +58,7 @@ describe('Test Plan launch guard', () => {
     const links = wrapper.find(Link);
 
     expect(wrapper.find(SystemMessage).text()).toContain('Launch blocked: 2 Draft Test Cases');
-    expect(links.length).toBe(2);
+    expect(links).toHaveLength(2);
     expect(wrapper.text()).toContain('TC108');
     expect(wrapper.text()).toContain('TC109');
 
