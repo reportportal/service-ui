@@ -342,9 +342,10 @@ export type IterationPageRS = {
   page: Page;
 };
 
-export interface PipelineSettingsPayload {
-  autoReady: boolean;
-  threshold: number;
+/** LP5 request DTO. The UI view model remains `PipelineSettingsRS`. */
+export interface PipelineSettingsPatchRQ {
+  autoReadyEnabled: boolean;
+  autoReadyThreshold?: number;
 }
 
 /* ------------------------------------------------------------------------------------------ *

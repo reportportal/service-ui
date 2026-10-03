@@ -28,7 +28,7 @@ Keep this in sync with 00-status (the status file is the source of truth for pro
 | 002 | EPMRPP-121704 | **[EPMRPP-121829](https://jiraeu.epam.com/browse/EPMRPP-121829)** ✅ · **[EPMRPP-121833](https://jiraeu.epam.com/browse/EPMRPP-121833)** ✅ · **[EPMRPP-121765](https://jiraeu.epam.com/browse/EPMRPP-121765)** ✅ · **[EPMRPP-121834](https://jiraeu.epam.com/browse/EPMRPP-121834)** ✅ | Foundation · mock backend · pipelines routes/list · iteration details |
 | 003 | EPMRPP-121705 | covered by **[EPMRPP-121834](https://jiraeu.epam.com/browse/EPMRPP-121834)** under EPMRPP-121704 | `[FE] Iteration details by stage` (T1.3) |
 | 004 | EPMRPP-121706 | — | `[FE] Compare two iterations` |
-| 005 | EPMRPP-121673 | — | `[FE] Pipeline settings: Auto-Ready` |
+| 005 | EPMRPP-121673 | **[EPMRPP-122031](https://jiraeu.epam.com/browse/EPMRPP-122031)** 🟨 | `[FE] Pipeline settings: Auto-Ready` (T3.4) |
 | 006 | EPMRPP-121675 | — | (no FE sub-task by default) |
 | 007 | EPMRPP-121676 | **[EPMRPP-121982](https://jiraeu.epam.com/browse/EPMRPP-121982)** 🟨 | `[FE] Draft/Ready lifecycle display and history` (T2.1) |
 | 008 | EPMRPP-121677 | **[EPMRPP-121987](https://jiraeu.epam.com/browse/EPMRPP-121987)** 🟨 · **[EPMRPP-122016](https://jiraeu.epam.com/browse/EPMRPP-122016)** 🟨 · **[EPMRPP-122024](https://jiraeu.epam.com/browse/EPMRPP-122024)** 🟨 | `[FE] Library AI quality columns and row flags` (T2.2) · `[FE] Library quick filters and review queue` (T2.3) · `[FE] Library side panel additions` (T2.4) |

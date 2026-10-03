@@ -25,6 +25,12 @@
   font-family: var(--rp-ui-base-font-family);
 }
 
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
 .meta {
   color: var(--rp-ui-base-e-400);
   font-size: 13px;
