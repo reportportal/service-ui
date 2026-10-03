@@ -25,7 +25,7 @@ import { LifecycleHistory, useTestCaseAi } from 'pages/inside/aiFactory/lifecycl
 import { EvaluationPanel } from 'pages/inside/aiFactory/evaluation';
 import { GenerationCost } from 'pages/inside/aiFactory/generationCost';
 import { PipelineLinks } from 'pages/inside/aiFactory/pipelineLinks';
-import { ReviewStrip, useReviewComments } from 'pages/inside/aiFactory/review';
+import { ReviewStrip, useFixRound, useReviewComments } from 'pages/inside/aiFactory/review';
 import { useAddTestCasesToTestPlanModal } from 'pages/inside/testCaseLibraryPage/addTestCasesToTestPlanModal/useAddTestCasesToTestPlanModal';
 import { Lifecycle } from 'types/aiFactory';
 import type { ExtendedTestCase } from 'types/testCase';
@@ -53,7 +53,7 @@ jest.mock('react-intl', () => ({
       message.defaultMessage ?? message.id ?? '',
   }),
 }));
-jest.mock('react-redux', () => ({ useSelector: jest.fn() }));
+jest.mock('react-redux', () => ({ useDispatch: () => jest.fn(), useSelector: jest.fn() }));
 jest.mock('react-tracking', () => ({ useTracking: () => ({ trackEvent: jest.fn() }) }));
 jest.mock('common/utils', () => ({
   createClassnames:
@@ -86,6 +86,7 @@ jest.mock('pages/inside/aiFactory/pipelineLinks', () => ({ PipelineLinks: 'Pipel
 jest.mock('pages/inside/aiFactory/review', () => ({
   ReviewStrip: 'ReviewStrip',
   ReviewTarget: 'ReviewTarget',
+  useFixRound: jest.fn(),
   useReviewComments: jest.fn(),
 }));
 jest.mock('pages/inside/common/attachmentsWithSlider', () => ({
@@ -158,6 +159,14 @@ const renderPage = (isEnabled: boolean) => {
     addComment: jest.fn(() => Promise.resolve()),
     deleteComment: jest.fn(() => Promise.resolve()),
     discardPending: jest.fn(() => Promise.resolve()),
+  });
+  jest.mocked(useFixRound).mockReturnValue({
+    current: null,
+    isLoading: false,
+    isStarting: false,
+    isError: false,
+    start: jest.fn(() => Promise.resolve()),
+    reload: jest.fn(),
   });
   jest.mocked(useTestCaseTags).mockReturnValue({
     addTag: jest.fn(() => Promise.resolve()),

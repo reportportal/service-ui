@@ -16,17 +16,24 @@
 
 import { useMemo, useState } from 'react';
 import { useIntl } from 'react-intl';
-import { BubblesLoader, Button, DeleteIcon, Tooltip } from '@reportportal/ui-kit';
+import { BubblesLoader, Button, DeleteIcon, Modal, Tooltip } from '@reportportal/ui-kit';
 
 import CommentIcon from 'common/img/comment-inline.svg';
 import { createClassnames } from 'common/utils';
 import { fromNowFormat } from 'common/utils/timeDateUtils';
 import { LifecycleBadge } from 'pages/inside/aiFactory/common';
-import { CommentState, CommentTargetType } from 'types/aiFactory';
-import type { AiCommentState, ReviewCommentRS, ReviewCommentTarget } from 'types/aiFactory';
+import { CommentState, CommentTargetType, FixRoundStatus } from 'types/aiFactory';
+import type {
+  AiCommentState,
+  ReviewCommentRS,
+  ReviewCommentTarget,
+  ScenarioSnapshot,
+  TestCaseAiRS,
+} from 'types/aiFactory';
 
 import { messages } from './messages';
 import type { ReviewCommentsLoadState } from './useReviewComments';
+import type { FixRoundLoadState } from './useFixRound';
 
 import styles from './reviewComments.scss';
 
@@ -166,20 +173,68 @@ interface ReviewStripProps {
   reviewState: ReviewCommentsLoadState;
   isReadOnly?: boolean;
   readOnlyReason?: 'FIX_RUNNING' | 'NO_PERMISSION';
+  fixRoundState: FixRoundLoadState;
+  lastAgentChange?: TestCaseAiRS['lastAgentChange'];
 }
+
+interface ScenarioSnapshotViewProps {
+  snapshot: ScenarioSnapshot;
+}
+
+const ScenarioSnapshotView = ({ snapshot }: ScenarioSnapshotViewProps) => {
+  const { formatMessage } = useIntl();
+  const hasContent = Boolean(
+    snapshot.precondition ||
+    snapshot.instructions ||
+    snapshot.expectedResult ||
+    snapshot.steps?.length,
+  );
+
+  if (!hasContent) return <p>{formatMessage(messages.noScenarioContent)}</p>;
+
+  return (
+    <div className={cx('agent-changes__scenario')}>
+      {snapshot.precondition && (
+        <section>
+          <strong>{formatMessage(messages.precondition)}</strong>
+          <p>{snapshot.precondition}</p>
+        </section>
+      )}
+      {(snapshot.instructions || snapshot.expectedResult) && (
+        <section>
+          <strong>{formatMessage(messages.instructions)}</strong>
+          <p>{snapshot.instructions}</p>
+          <strong>{formatMessage(messages.expectedResult)}</strong>
+          <p>{snapshot.expectedResult}</p>
+        </section>
+      )}
+      {snapshot.steps?.map((step) => (
+        <section key={step.position}>
+          <strong>{`${step.position}. ${formatMessage(messages.instructions)}`}</strong>
+          <p>{step.instructions}</p>
+          <strong>{formatMessage(messages.expectedResult)}</strong>
+          <p>{step.expectedResult}</p>
+        </section>
+      ))}
+    </div>
+  );
+};
 
 export const ReviewStrip = ({
   lifecycle,
   reviewState,
   isReadOnly = false,
   readOnlyReason,
+  fixRoundState,
+  lastAgentChange,
 }: ReviewStripProps) => {
   const { formatMessage } = useIntl();
   const [mutationError, setMutationError] = useState(false);
+  const [isChangesVisible, setIsChangesVisible] = useState(false);
   const pendingCount = reviewState.comments.filter(
     (comment) => comment.state === CommentState.PENDING,
   ).length;
-  let pushHint = formatMessage(messages.pushUnavailable);
+  let pushHint = '';
   if (isReadOnly) {
     pushHint = formatMessage(
       readOnlyReason === 'NO_PERMISSION' ? messages.permissionHint : messages.fixingHint,
@@ -197,6 +252,15 @@ export const ReviewStrip = ({
     } catch {
       setMutationError(true);
     }
+  };
+
+  const isRunning = fixRoundState.current?.status === FixRoundStatus.RUNNING;
+  const hasFailed = fixRoundState.current?.status === FixRoundStatus.FAILED && pendingCount > 0;
+  const canPush = pendingCount > 0 && !isReadOnly && !fixRoundState.isStarting;
+
+  const push = async () => {
+    setMutationError(false);
+    await fixRoundState.start();
   };
 
   return (
@@ -225,12 +289,57 @@ export const ReviewStrip = ({
         )}
         <Tooltip content={pushHint} placement="top">
           <span>
-            <Button variant="primary" disabled>
+            <Button
+              variant="primary"
+              disabled={!canPush}
+              data-automation-id="push-review-comments"
+              onClick={() => void push()}
+            >
               {formatMessage(messages.push, { count: pendingCount })}
             </Button>
           </span>
         </Tooltip>
       </div>
+      {isRunning && (
+        <div className={cx('review-strip__status')} role="status">
+          <BubblesLoader />
+          <strong>{formatMessage(messages.fixing, { round: fixRoundState.current?.round })}</strong>
+        </div>
+      )}
+      {hasFailed && (
+        <div className={cx('review-strip__status', 'review-strip__status--failed')} role="alert">
+          <span>{formatMessage(messages.failedActions)}</span>
+          <Button
+            variant="text"
+            adjustWidthOn="content"
+            disabled={!canPush}
+            data-automation-id="push-review-comments-again"
+            onClick={() => void push()}
+          >
+            {formatMessage(messages.pushAgain)}
+          </Button>
+          <Button
+            variant="text-danger"
+            adjustWidthOn="content"
+            disabled={reviewState.isMutating}
+            onClick={() => void discard()}
+          >
+            {formatMessage(messages.discard)}
+          </Button>
+        </div>
+      )}
+      {lastAgentChange && !isRunning && (
+        <div className={cx('review-strip__status')}>
+          <Button
+            variant="text"
+            adjustWidthOn="content"
+            data-automation-id="show-agent-changes"
+            onClick={() => setIsChangesVisible(true)}
+          >
+            {formatMessage(messages.whatChanged)}
+          </Button>
+        </div>
+      )}
       {reviewState.isError && (
         <div className={cx('review-strip__error')} role="alert">
           <span>{formatMessage(messages.loadError)}</span>
@@ -245,6 +354,38 @@ export const ReviewStrip = ({
         </div>
       )}
       {mutationError && <div role="alert">{formatMessage(messages.mutationError)}</div>}
+      {fixRoundState.isError && (
+        <div className={cx('review-strip__error')} role="alert">
+          {formatMessage(messages.fixStartFailed)}
+        </div>
+      )}
+      {isChangesVisible && lastAgentChange && (
+        <Modal
+          title={formatMessage(messages.changesTitle, { round: lastAgentChange.round })}
+          okButton={{
+            children: formatMessage(messages.close),
+            onClick: () => setIsChangesVisible(false),
+          }}
+          onClose={() => setIsChangesVisible(false)}
+        >
+          <p className={cx('agent-changes__score')}>
+            {formatMessage(messages.scoreChange, {
+              before: lastAgentChange.scoreBefore,
+              after: lastAgentChange.scoreAfter ?? '—',
+            })}
+          </p>
+          <div className={cx('agent-changes__columns')}>
+            <section>
+              <h3>{formatMessage(messages.before)}</h3>
+              <ScenarioSnapshotView snapshot={lastAgentChange.before} />
+            </section>
+            <section>
+              <h3>{formatMessage(messages.after)}</h3>
+              <ScenarioSnapshotView snapshot={lastAgentChange.after} />
+            </section>
+          </div>
+        </Modal>
+      )}
     </section>
   );
 };

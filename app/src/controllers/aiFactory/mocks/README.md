@@ -67,9 +67,8 @@ import('controllers/aiFactory/mocks').then(m => m.resetMockDb());
 - **Case lookup accepts either a numeric id or a `displayId`** in the mock (`findCase`), which is
   more lenient than the real backend will be — convenient for tests, not a claim about the final
   contract.
-- **Fix-round "grade failed" outcome (F1/F2 `GRADE_FAILED`)** is defined in the contract and typed,
-  but the simulation only exercises `PASSED` and the scripted `FAILED` (TC107). Add a second
-  scripted case if a demo step needs to show it.
+- **Fix-round outcomes:** TC106 exercises `PASSED`, TC107 fails once with `FAILED` and succeeds on
+  retry, and TC105 exercises `GRADE_FAILED` after a review comment is added.
 
 ## Tests
 
