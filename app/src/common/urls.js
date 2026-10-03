@@ -470,6 +470,10 @@ export const URLS = {
     `${urlBase}project/${projectKey}/tms/pipeline/${pipelineId}/iteration/${iterationId}`, // P3
   pipelineIterationById: (projectKey, iterationId) =>
     `${urlBase}project/${projectKey}/pipeline/iteration/${iterationId}`, // LP3
+  pipelineIterationComparison: (projectKey, iterationId, withIterationId) =>
+    `${urlBase}project/${projectKey}/pipeline/iteration/${iterationId}/compare${getQueryParams({
+      with: withIterationId,
+    })}`, // LP4
   pipelineById: (projectKey, pipelineId) =>
     `${urlBase}project/${projectKey}/pipeline/${pipelineId}`, // LP5
   tmsPipelineSettings: (projectKey, pipelineId) =>

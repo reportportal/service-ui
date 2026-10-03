@@ -30,6 +30,7 @@ import {
 } from 'controllers/aiFactory/pipelines';
 import {
   PROJECT_DASHBOARD_PAGE,
+  PROJECT_PIPELINE_COMPARISON_PAGE,
   PROJECT_PIPELINES_PAGE,
   TEST_CASE_LIBRARY_PAGE,
   iterationIdSelector,
@@ -101,7 +102,8 @@ export const IterationDetailsPageContent = () => {
   usePolling(
     () => dispatch(getPipelineIterationDetailsAction(pipelineId, iterationId)),
     ITERATION_POLL_INTERVAL_MS,
-    iteration?.status === IterationStatus.RUNNING || iteration?.status === IterationStatus.IN_REVIEW,
+    iteration?.status === IterationStatus.RUNNING ||
+      iteration?.status === IterationStatus.IN_REVIEW,
   );
 
   const breadcrumbDescriptors = [
@@ -161,7 +163,9 @@ export const IterationDetailsPageContent = () => {
         );
       }
       case IterationStatus.FAILED:
-        return <SystemMessage mode="error">{formatMessage(messages.bannerFailedGeneric)}</SystemMessage>;
+        return (
+          <SystemMessage mode="error">{formatMessage(messages.bannerFailedGeneric)}</SystemMessage>
+        );
       default:
         return null;
     }
@@ -179,7 +183,8 @@ export const IterationDetailsPageContent = () => {
     return null;
   }
 
-  const currentStage = iteration.stages.find((stage) => stage.key === selectedStage) || iteration.stages[0];
+  const currentStage =
+    iteration.stages.find((stage) => stage.key === selectedStage) || iteration.stages[0];
 
   return (
     <SettingsLayout>
@@ -189,6 +194,25 @@ export const IterationDetailsPageContent = () => {
           breadcrumbDescriptors={breadcrumbDescriptors}
           actions={
             <div className={cx('header-actions')}>
+              {iteration.previousIterationId !== undefined && (
+                <Button
+                  variant="text"
+                  data-automation-id="compareWithPreviousButton"
+                  onClick={() =>
+                    dispatch({
+                      type: PROJECT_PIPELINE_COMPARISON_PAGE,
+                      payload: { organizationSlug, projectSlug },
+                      query: {
+                        pipeline: String(pipelineId),
+                        baseline: String(iteration.previousIterationId),
+                        candidate: String(iterationId),
+                      },
+                    })
+                  }
+                >
+                  {formatMessage(messages.compareWithPrevious)}
+                </Button>
+              )}
               <PipelineSettingsButton pipeline={pipeline} />
               <Button
                 variant="text"
@@ -205,7 +229,9 @@ export const IterationDetailsPageContent = () => {
         <div className={cx('content')}>
           <div>
             <div className={cx('meta')}>
-              {[iteration.trigger, iteration.model, iteration.environment].filter(Boolean).join(' · ')}
+              {[iteration.trigger, iteration.model, iteration.environment]
+                .filter(Boolean)
+                .join(' · ')}
             </div>
             {iteration.attributes.length > 0 && (
               <div className={cx('attributes')}>

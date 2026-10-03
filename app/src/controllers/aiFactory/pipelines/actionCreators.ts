@@ -14,8 +14,16 @@
  * limitations under the License.
  */
 
-import { GET_PIPELINE_ITERATION_DETAILS, GET_PIPELINE_ITERATIONS, GET_PIPELINES } from './constants';
 import {
+  CLEAR_PIPELINE_COMPARISON,
+  GET_PIPELINE_COMPARISON,
+  GET_PIPELINE_ITERATION_DETAILS,
+  GET_PIPELINE_ITERATIONS,
+  GET_PIPELINES,
+} from './constants';
+import {
+  ClearPipelineComparisonAction,
+  GetPipelineComparisonAction,
   GetPipelineIterationDetailsAction,
   GetPipelineIterationsAction,
   GetPipelinesAction,
@@ -38,4 +46,17 @@ export const getPipelineIterationDetailsAction = (
 ): GetPipelineIterationDetailsAction => ({
   type: GET_PIPELINE_ITERATION_DETAILS,
   payload: { pipelineId, iterationId },
+});
+
+export const getPipelineComparisonAction = (
+  pipelineId: number,
+  candidateIterationId: number,
+  baselineIterationId: number,
+): GetPipelineComparisonAction => ({
+  type: GET_PIPELINE_COMPARISON,
+  payload: { pipelineId, candidateIterationId, baselineIterationId },
+});
+
+export const clearPipelineComparisonAction = (): ClearPipelineComparisonAction => ({
+  type: CLEAR_PIPELINE_COMPARISON,
 });

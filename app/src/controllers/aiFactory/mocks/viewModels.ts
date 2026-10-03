@@ -20,11 +20,17 @@
  */
 
 import {
+  AiIterationStatus,
+  AiStageStatus,
+  CriterionKey,
   IterationRS,
   IterationSummaryRS,
   Lifecycle,
   PipelineRS,
   PipelineType,
+  PipelineCompareIterationRS,
+  PipelineCompareRS,
+  LivePipelineStatus,
   ReviewCaseSummaryRS,
   StageKey,
   StageRS,
@@ -195,6 +201,128 @@ export const toIterationRS = (pipeline: MockPipelineSeed, iteration: MockIterati
   autoReadyPromotedCount: pipeline.type === PipelineType.GENERATION ? autoReadyPromotedCount(iteration.id) : undefined,
   stages: stageOrder(pipeline.type).map((key) => toStageRS(pipeline, iteration, key)),
 });
+
+const toLiveStatus = (status: AiIterationStatus | AiStageStatus): LivePipelineStatus => {
+  const value: string = status;
+  if (value === 'FAILED') {
+    return 'FAILED';
+  }
+  if (value === 'PASSED' || value === 'DONE' || value === 'COMPLETED') {
+    return 'PASSED';
+  }
+  if (value === 'IN_PROGRESS' || value === 'IN_REVIEW') {
+    return 'NEEDS_HUMAN';
+  }
+  return 'PENDING';
+};
+
+const toCompareIterationRS = (
+  pipeline: MockPipelineSeed,
+  iteration: MockIterationSeed,
+): PipelineCompareIterationRS => {
+  const summary = toIterationSummaryRS(pipeline, iteration);
+  const detail = toIterationRS(pipeline, iteration);
+  return {
+    id: summary.id,
+    pipelineId: summary.pipelineId,
+    pipelineName: pipeline.name,
+    iterationNumber: summary.number,
+    status: toLiveStatus(summary.status),
+    metrics: {
+      testCasesCount: summary.testCasesCount,
+      suiteScore: summary.suiteScore ?? null,
+      readyCount: summary.readyCount ?? null,
+      fixRoundsCount: summary.fixRoundsCount ?? null,
+      costTotal: summary.costTotal,
+    },
+    attributes: {
+      ...(summary.requirement
+        ? {
+            spec: summary.requirement.specId,
+            requirementTitle: summary.requirement.title,
+            jira: summary.requirement.jiraKey ?? '',
+          }
+        : {}),
+    },
+    durationMillis: summary.durationMs,
+    mockMetrics: {
+      requirement: summary.requirement,
+      testCasesCount: summary.testCasesCount,
+      suiteScore: summary.suiteScore,
+      readyCount: summary.readyCount,
+      fixRoundsCount: summary.fixRoundsCount,
+      autoReadyPromotedCount:
+        pipeline.type === PipelineType.GENERATION
+          ? autoReadyPromotedCount(iteration.id)
+          : undefined,
+      criterionAverages: getCriterionAverages(iteration.id),
+      costTotal: summary.costTotal,
+      durationMs: summary.durationMs,
+    },
+    stages: detail.stages.map((stage, sequence) => ({
+      stageKey: stage.key,
+      sequence,
+      status: toLiveStatus(stage.status),
+      metrics: {
+        metric: stage.metric ?? null,
+        cost: stage.cost,
+        durationMs: stage.durationMs ?? null,
+      },
+      mockMetrics: {
+        metric: stage.metric,
+        cost: stage.cost,
+        durationMs: stage.durationMs,
+      },
+    })),
+  };
+};
+
+function getCriterionAverages(
+  iterationId: number,
+): Record<CriterionKey, number> | undefined {
+  const cases = listCasesOfIteration(iterationId).filter((item) => item.evaluation);
+  if (!cases.length) return undefined;
+  return Object.fromEntries(
+    Object.values(CriterionKey).map((key) => {
+      const total = cases.reduce(
+        (sum, item) =>
+          sum + (item.evaluation?.criteria.find((criterion) => criterion.key === key)?.score ?? 0),
+        0,
+      );
+      return [key, total / cases.length];
+    }),
+  ) as Record<CriterionKey, number>;
+}
+
+export const toPipelineCompareRS = (
+  pipeline: MockPipelineSeed,
+  candidate: MockIterationSeed,
+  baseline: MockIterationSeed,
+): PipelineCompareRS => {
+  const current = toCompareIterationRS(pipeline, candidate);
+  const previous = toCompareIterationRS(pipeline, baseline);
+  const previousByKey = new Map(previous.stages?.map((stage) => [stage.stageKey, stage]));
+  return {
+    mock: { kind: 'REPORTPORTAL_AI_FACTORY_COMPARE_DEMO', version: 1 },
+    current,
+    previous,
+    stageDeltas: current.stages?.map((stage) => ({
+      stageKey: stage.stageKey,
+      current: {
+        status: stage.status,
+        metrics: stage.metrics,
+        mockMetrics: stage.mockMetrics,
+      },
+      previous: previousByKey.get(stage.stageKey)
+        ? {
+            status: previousByKey.get(stage.stageKey)?.status,
+            metrics: previousByKey.get(stage.stageKey)?.metrics,
+            mockMetrics: previousByKey.get(stage.stageKey)?.mockMetrics,
+          }
+        : undefined,
+    })),
+  };
+};
 
 export const toTestCaseAiExtension = (c: MockCaseRecord, pipeline?: MockPipelineSeed, iteration?: MockIterationSeed): TestCaseAiExtension => ({
   lifecycle: c.lifecycle,

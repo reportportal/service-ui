@@ -16,8 +16,14 @@
 
 import { Action } from 'redux';
 
-import { IterationRS, IterationSummaryRS, PipelineRS } from 'types/aiFactory';
-import { GET_PIPELINE_ITERATION_DETAILS, GET_PIPELINE_ITERATIONS, GET_PIPELINES } from './constants';
+import { IterationRS, IterationSummaryRS, PipelineComparison, PipelineRS } from 'types/aiFactory';
+import {
+  CLEAR_PIPELINE_COMPARISON,
+  GET_PIPELINE_COMPARISON,
+  GET_PIPELINE_ITERATION_DETAILS,
+  GET_PIPELINE_ITERATIONS,
+  GET_PIPELINES,
+} from './constants';
 
 /** Iterations of every currently loaded pipeline, keyed by pipeline id. */
 export type IterationsByPipelineId = Record<number, IterationSummaryRS[]>;
@@ -29,6 +35,9 @@ export interface PipelinesState {
   iterationsLoading?: boolean;
   iterationDetails: IterationRS | null;
   iterationDetailsLoading?: boolean;
+  comparison: PipelineComparison | null;
+  comparisonLoading?: boolean;
+  comparisonError?: boolean;
 }
 
 export interface PipelinesSelectorsRootState {
@@ -45,3 +54,13 @@ export interface GetPipelineIterationDetailsAction
   extends Action<typeof GET_PIPELINE_ITERATION_DETAILS> {
   payload: { pipelineId: number; iterationId: number };
 }
+
+export interface GetPipelineComparisonAction extends Action<typeof GET_PIPELINE_COMPARISON> {
+  payload: {
+    pipelineId: number;
+    candidateIterationId: number;
+    baselineIterationId: number;
+  };
+}
+
+export type ClearPipelineComparisonAction = Action<typeof CLEAR_PIPELINE_COMPARISON>;

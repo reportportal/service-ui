@@ -21,7 +21,11 @@ import { Button, RefreshIcon } from '@reportportal/ui-kit';
 
 import { createClassnames } from 'common/utils';
 import { SearchField } from 'components/fields/searchField';
-import { PROJECT_DASHBOARD_PAGE, urlOrganizationAndProjectSelector } from 'controllers/pages';
+import {
+  PROJECT_DASHBOARD_PAGE,
+  PROJECT_PIPELINE_COMPARISON_PAGE,
+  urlOrganizationAndProjectSelector,
+} from 'controllers/pages';
 import { projectNameSelector } from 'controllers/project';
 import { ProjectDetails } from 'pages/organization/constants';
 import {
@@ -116,6 +120,18 @@ export const PipelinesPageContent = () => {
           breadcrumbDescriptors={breadcrumbDescriptors}
           actions={
             <div className={cx('header-actions')}>
+              <Button
+                variant="text"
+                data-automation-id="compareIterationsButton"
+                onClick={() =>
+                  dispatch({
+                    type: PROJECT_PIPELINE_COMPARISON_PAGE,
+                    payload: { organizationSlug, projectSlug },
+                  })
+                }
+              >
+                {formatMessage(messages.compareIterations)}
+              </Button>
               <SearchField
                 searchValue={search}
                 setSearchValue={setSearch}

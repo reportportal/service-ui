@@ -72,6 +72,7 @@ import {
   PROJECT_TEST_PLAN_DETAILS_PAGE,
   PROJECT_PIPELINES_PAGE,
   PROJECT_PIPELINE_ITERATION_PAGE,
+  PROJECT_PIPELINE_COMPARISON_PAGE,
   MANUAL_LAUNCHES_PAGE,
   MANUAL_LAUNCH_DETAILS_PAGE,
   MANUAL_LAUNCH_EXECUTION_PAGE,
@@ -92,6 +93,7 @@ import { ProductVersionsPage } from 'pages/inside/productVersionsPage/productVer
 import { TestCaseDetailsPage, TestCaseLibraryPageWrapper } from 'pages/inside/testCaseLibraryPage';
 import { PipelinesPage } from 'pages/inside/aiFactory/pipelinesPage';
 import { IterationDetailsPage } from 'pages/inside/aiFactory/iterationDetailsPage';
+import { CompareIterationsPage } from 'pages/inside/aiFactory/compareIterationsPage';
 
 export const ANONYMOUS_ACCESS = 'anonymous';
 export const ADMIN_ACCESS = 'admin';
@@ -252,6 +254,12 @@ export const pageRendering = {
   },
   [PROJECT_PIPELINE_ITERATION_PAGE]: {
     component: IterationDetailsPage,
+    layout: ProjectLayout,
+    rawContent: true,
+    isTMS: true,
+  },
+  [PROJECT_PIPELINE_COMPARISON_PAGE]: {
+    component: CompareIterationsPage,
     layout: ProjectLayout,
     rawContent: true,
     isTMS: true,

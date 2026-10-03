@@ -25,6 +25,10 @@ export const messages = defineMessages({
     id: 'PipelinesPage.refreshPage',
     defaultMessage: 'Refresh',
   },
+  compareIterations: {
+    id: 'PipelinesPage.compareIterations',
+    defaultMessage: 'Compare iterations',
+  },
   searchPlaceholder: {
     id: 'PipelinesPage.searchPlaceholder',
     defaultMessage: 'Search by requirement, iteration # or pipeline name',
