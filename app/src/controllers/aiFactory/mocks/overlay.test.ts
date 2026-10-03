@@ -32,6 +32,7 @@ import {
   C3_OVERLAY_ERROR_CODE,
   installOverlayInterceptor,
   mergeAiFields,
+  mergeTestPlanAiFields,
 } from './overlay';
 
 const TEST_CASE_URL = '/api/v1/project/demo/tms/test-case/555';
@@ -101,6 +102,22 @@ describe('mergeAiFields', () => {
   });
 });
 
+describe('mergeTestPlanAiFields', () => {
+  test('adds the G2 launch gate fields for a seeded plan', () => {
+    expect(mergeTestPlanAiFields({ id: 1, name: 'TMS regression · Sprint 42' })).toMatchObject({
+      draftTestCasesCount: 1,
+      draftTestCases: [{ id: 1008, displayId: 'TC108' }],
+      launchBlocked: true,
+    });
+  });
+
+  test('leaves an unrelated plan unchanged', () => {
+    const plan = { id: 999, name: 'Unrelated plan' };
+
+    expect(mergeTestPlanAiFields(plan)).toEqual(plan);
+  });
+});
+
 describe('installOverlayInterceptor', () => {
   test('enriches a test-case details response', async () => {
     const { http, mock } = setupOverlay();
@@ -161,6 +178,30 @@ describe('installOverlayInterceptor', () => {
 
     const { data } = await http.get<{ content: (TestCase & { lifecycle?: string })[] }>('/api/v1/project/demo/tms/test-case');
     expect(data.content.map((c) => c.lifecycle)).toEqual(['READY', 'DRAFT']);
+
+    mock.restore();
+  });
+
+  test('enriches Test Plan details and its Test Case list', async () => {
+    const { http, mock } = setupOverlay();
+    const planUrl = '/api/v1/project/demo/tms/test-plan/1';
+    const casesUrl = `${planUrl}/test-case`;
+    mock.onGet(planUrl).reply(200, { id: 1, name: 'TMS regression · Sprint 42' });
+    mock.onGet(casesUrl).reply(200, {
+      content: [realTestCase('TC105'), realTestCase('TC108')],
+      page: { number: 1, size: 20, totalElements: 2, totalPages: 1 },
+    });
+
+    const plan = await http.get<{ draftTestCasesCount?: number; launchBlocked?: boolean }>(planUrl);
+    const testCases = await http.get<{ content: (TestCase & { lifecycle?: Lifecycle })[] }>(
+      casesUrl,
+    );
+
+    expect(plan.data).toMatchObject({ draftTestCasesCount: 1, launchBlocked: true });
+    expect(testCases.data.content.map(({ lifecycle }) => lifecycle)).toEqual([
+      Lifecycle.READY,
+      Lifecycle.DRAFT,
+    ]);
 
     mock.restore();
   });

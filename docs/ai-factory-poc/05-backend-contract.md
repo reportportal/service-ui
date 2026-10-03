@@ -591,12 +591,19 @@ Outcomes the FE must render: PASSED (case updated, Draft, new evaluation, Auto-R
 - G1: the existing add-to-test-plan and add-to-launch endpoints (single + batch) reject Draft cases:
   single → `409 { reason: 'NOT_READY' }`; batch → `{ added: [...], skipped: [{ id, reason: 'NOT_READY' }] }`.
   ❓ The current batch responses need a `skipped` part. The FE also pre-filters, so this rule is defence in depth.
-- G2: the test plan DTO adds `draftTestCasesCount: number` and `launchBlocked: boolean`. Plan test-case rows carry
-  `lifecycle` (C1). Launching a plan with Draft cases → `409 { reason: 'PLAN_HAS_DRAFT_CASES', testCaseIds }`.
+- G2: the test plan DTO adds `draftTestCasesCount: number`, `draftTestCases: { id: number; displayId: string }[]`
+  and `launchBlocked: boolean`. The compact Draft references are required because the banner links every blocked
+  case while the regular plan-case collection is paginated. Plan test-case rows carry `lifecycle` (C1). Launching
+  a plan with Draft cases → `409 { reason: 'PLAN_HAS_DRAFT_CASES', testCaseIds }`.
 
 T4.1 now implements the feature-flagged FE guard: single Draft actions are disabled, mixed bulk requests are
 pre-filtered to Ready IDs with named skip feedback, and C1 `blockedPlans` renders the case-level blocked banner.
 This is UX enforcement only; live G1 rejection and a backend-returned batch `skipped` result remain required.
+
+T4.2 consumes G2 on the Test Plan page: it renders the blocked banner and links, disables whole-plan Launch,
+and reuses C1 for Draft row badges. The mock overlay supplies G2 and enriches Test Plan case-list rows. Until
+the live G2 contract lands, loaded C1 rows are a safe fallback but cannot prove that an off-page Draft does not
+exist; the fallback is UX-only and the backend 409 remains mandatory authorization and integrity enforcement.
 
 ## 8. Provisional Automation contract (US-015, 016, 017)
 
