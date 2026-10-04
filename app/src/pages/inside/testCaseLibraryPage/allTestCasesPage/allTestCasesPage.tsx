@@ -97,6 +97,78 @@ interface AllTestCasesPageProps {
   reviewQueueCount?: number;
 }
 
+interface BulkAutomationActionProps {
+  canAutomateTestCases: boolean;
+  disabledMessage: string;
+  hasEligibleCases: boolean;
+  isAiFactoryEnabled: boolean;
+  label: string;
+  onClick: () => void;
+}
+
+const renderBulkAutomationAction = ({
+  canAutomateTestCases,
+  disabledMessage,
+  hasEligibleCases,
+  isAiFactoryEnabled,
+  label,
+  onClick,
+}: BulkAutomationActionProps) => {
+  if (!isAiFactoryEnabled || !canAutomateTestCases) {
+    return null;
+  }
+
+  if (hasEligibleCases) {
+    return (
+      <Button
+        variant="ghost"
+        onClick={onClick}
+        data-automation-id="bulk-automate-test-cases"
+      >
+        {label}
+      </Button>
+    );
+  }
+
+  return (
+    <Tooltip
+      wrapperClassName={cx('tooltip-wrapper')}
+      placement="top"
+      content={disabledMessage}
+    >
+      <Button variant="ghost" disabled data-automation-id="bulk-automate-test-cases">
+        {label}
+      </Button>
+    </Tooltip>
+  );
+};
+
+interface FolderEmptyStateVisibility {
+  hasAiFilters: boolean;
+  hasPriorityFilter: boolean;
+  hasSearchQuery: boolean;
+  hasTagFilter: boolean;
+  hasTestCases: boolean;
+  isAiFactoryEnabled: boolean;
+  isLoading: boolean;
+}
+
+const shouldShowFolderEmptyState = ({
+  hasAiFilters,
+  hasPriorityFilter,
+  hasSearchQuery,
+  hasTagFilter,
+  hasTestCases,
+  isAiFactoryEnabled,
+  isLoading,
+}: FolderEmptyStateVisibility) =>
+  !hasTestCases &&
+  !isLoading &&
+  !hasSearchQuery &&
+  !hasPriorityFilter &&
+  !hasTagFilter &&
+  (!isAiFactoryEnabled || !hasAiFilters);
+
 export const AllTestCasesPage = ({
   testCases,
   isLoading,
@@ -306,12 +378,15 @@ export const AllTestCasesPage = ({
   };
 
   if (
-    isEmpty(testCases) &&
-    !isLoading &&
-    !query?.testCasesSearchParams &&
-    !query?.filterPriorities &&
-    !query?.filterTags &&
-    !(isAiFactoryEnabled && hasAiFilters)
+    shouldShowFolderEmptyState({
+      hasAiFilters,
+      hasPriorityFilter: Boolean(query?.filterPriorities),
+      hasSearchQuery: Boolean(query?.testCasesSearchParams),
+      hasTagFilter: Boolean(query?.filterTags),
+      hasTestCases: !isEmpty(testCases),
+      isAiFactoryEnabled,
+      isLoading,
+    })
   ) {
     return <FolderEmptyState folderTitle={folderTitle} />;
   }
@@ -382,27 +457,14 @@ export const AllTestCasesPage = ({
                 }}
               />
             )}
-            {isAiFactoryEnabled &&
-              canAutomateTestCases &&
-              (automationSelection.eligible.length > 0 ? (
-                <Button
-                  variant="ghost"
-                  onClick={handleOpenAutomationModal}
-                  data-automation-id="bulk-automate-test-cases"
-                >
-                  {formatMessage(automationMessages.automate)}
-                </Button>
-              ) : (
-                <Tooltip
-                  wrapperClassName={cx('tooltip-wrapper')}
-                  placement="top"
-                  content={formatMessage(automationDisabledMessage)}
-                >
-                  <Button variant="ghost" disabled data-automation-id="bulk-automate-test-cases">
-                    {formatMessage(automationMessages.automate)}
-                  </Button>
-                </Tooltip>
-              ))}
+            {renderBulkAutomationAction({
+              canAutomateTestCases,
+              disabledMessage: formatMessage(automationDisabledMessage),
+              hasEligibleCases: automationSelection.eligible.length > 0,
+              isAiFactoryEnabled,
+              label: formatMessage(automationMessages.automate),
+              onClick: handleOpenAutomationModal,
+            })}
             <Button variant="ghost" onClick={handleOpenMoveTestCaseModal}>
               {formatMessage(messages.moveToFolder)}
             </Button>
