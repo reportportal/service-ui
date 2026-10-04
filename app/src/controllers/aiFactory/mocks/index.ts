@@ -25,22 +25,12 @@
 
 import { AxiosInstance } from 'axios';
 import MockAdapter from 'axios-mock-adapter';
-import { getStorageItem } from 'common/utils/storageUtils';
 import { installAiFactoryHandlers } from './handlers';
 import { installOverlayInterceptor } from './overlay';
 
-const MOCKS_STORAGE_KEY = 'ai_factory_mocks';
-
-/** Mocks are on by default whenever the feature toggle is on; `'false'` opts back out per group is a later refinement. */
-export const isAiFactoryMocksEnabled = (): boolean => {
-  try {
-    return getStorageItem(MOCKS_STORAGE_KEY) !== false;
-  } catch {
-    return true;
-  }
-};
-
 let installed = false;
+
+export const isAiFactoryMockRuntimeInstalled = (): boolean => installed;
 
 /**
  * Installs the mock adapter (routes every AI Factory endpoint, `onNoMatch: 'passthrough'` for
@@ -52,12 +42,13 @@ export const installAiFactoryMocks = (http: AxiosInstance): MockAdapter | undefi
   if (installed) {
     return undefined;
   }
-  installed = true;
   const mock = new MockAdapter(http, { onNoMatch: 'passthrough' });
   installAiFactoryHandlers(mock);
   installOverlayInterceptor(http);
+  installed = true;
   return mock;
 };
 
+export { isAiFactoryMocksEnabled } from '../mockMode';
 export { resetMockDb } from './db';
 export { mergeAiFields } from './overlay';
