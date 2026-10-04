@@ -46,6 +46,7 @@ import {
   persist,
   plansBlockedByCase,
   recordLifecycleChange,
+  reviewCommentsForCase,
 } from './db';
 import { applyAutoReady, automateSkipReason } from './engine';
 import {
@@ -56,7 +57,11 @@ import {
   toTestCaseAiExtension,
   toTestCaseAiRS,
 } from './viewModels';
-import { SCRIPTED_FIX_FAILURE, SCRIPTED_GRADE_FAILURE } from './seedData';
+import {
+  SCRIPTED_FIX_FAILURE,
+  SCRIPTED_FIX_SCORE,
+  SCRIPTED_GRADE_FAILURE,
+} from './seedData';
 import { MockCaseRecord, MockIterationSeed, MockStageSeed } from './types';
 
 /** Real network delay would make a demo feel too instant; this makes fix rounds/automation feel real. */
@@ -254,8 +259,9 @@ export const installAiFactoryHandlers = (mock: MockAdapter): void => {
   // R1 — GET/POST tms/test-case/{id}/review-comment ; R2/R3 — DELETE (with or without a commentId)
   mock.onGet(/\/tms\/test-case\/([^/]+)\/review-comment$/).reply((config) => {
     const [, id] = url(config).match(/\/tms\/test-case\/([^/]+)\/review-comment/);
-    const c = findCase(decodeURIComponent(id));
-    return c ? [200, c.comments] : notFound();
+    const caseId = decodeURIComponent(id);
+    const c = findCase(caseId);
+    return c ? [200, reviewCommentsForCase(caseId, c)] : notFound();
   });
   mock.onPost(/\/tms\/test-case\/([^/]+)\/review-comment$/).reply((config) => {
     const [, id] = url(config).match(/\/tms\/test-case\/([^/]+)\/review-comment/);
@@ -284,7 +290,7 @@ export const installAiFactoryHandlers = (mock: MockAdapter): void => {
       c.comments = c.comments.filter((x) => x.state !== 'PENDING');
     }
     persist();
-    return [200, c.comments];
+    return [200, reviewCommentsForCase(decodeURIComponent(m[1]), c)];
   });
 
   // F1/F2 — POST/GET tms/test-case/{id}/fix-round
@@ -407,7 +413,15 @@ function startFixRoundSimulation(c: MockCaseRecord, round: number): void {
     }
     const bump = 12;
     const criteria = (before?.criteria || []).map((cr) => ({ ...cr, score: Math.min(cr.maxScore, cr.score + Math.round(bump / 6)), failureReasons: [] }));
-    const scoreAfter = criteria.reduce((s, cr) => s + cr.score, 0);
+    const scriptedScore = SCRIPTED_FIX_SCORE[c.displayId];
+    let scoreAfter = criteria.reduce((s, cr) => s + cr.score, 0);
+    if (scriptedScore && scoreAfter < scriptedScore) {
+      const criterion = criteria.find((candidate) => candidate.score < candidate.maxScore);
+      if (criterion) {
+        criterion.score += Math.min(scriptedScore - scoreAfter, criterion.maxScore - criterion.score);
+        scoreAfter = criteria.reduce((sum, candidate) => sum + candidate.score, 0);
+      }
+    }
     c.evaluation = { criteria, evaluatedAt: Date.now(), state: EvaluationState.EVALUATED, sourceFixRound: round };
     c.comments.forEach((cm) => { if (cm.state === 'SENT') cm.state = 'ADDRESSED'; });
     const wasReady = c.lifecycle === Lifecycle.READY;

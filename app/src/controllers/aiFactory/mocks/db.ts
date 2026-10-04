@@ -131,6 +131,7 @@ const loadPersisted = (): MockDb | null => {
 
 let state: MockDb = loadPersisted() || cloneSeed();
 const caseAliases = new Map<number, number>();
+const caseReviewStepIds = new Map<number, number[]>();
 
 export const persist = (): void => {
   try {
@@ -150,12 +151,14 @@ export const resetMockDb = (): boolean => {
   }
   state = nextState;
   caseAliases.clear();
+  caseReviewStepIds.clear();
   return true;
 };
 
 export const reloadMockDb = (): void => {
   state = loadPersisted() || cloneSeed();
   caseAliases.clear();
+  caseReviewStepIds.clear();
 };
 
 export const getDb = (): MockDb => state;
@@ -192,10 +195,38 @@ export const findCase = (idOrDisplayId: number | string): MockCaseRecord | undef
   return seededCase ?? state.cases.find((c) => c.id === aliasedCaseId);
 };
 
-export const registerCaseAlias = (realCaseId: number, caseRecord: MockCaseRecord): void => {
+export const registerCaseAlias = (
+  realCaseId: number,
+  caseRecord: MockCaseRecord,
+  reviewStepIds?: number[],
+): void => {
   if (Number.isSafeInteger(realCaseId)) {
     caseAliases.set(realCaseId, caseRecord.id);
+    if (reviewStepIds) {
+      caseReviewStepIds.set(realCaseId, reviewStepIds);
+    }
   }
+};
+
+export const reviewCommentsForCase = (
+  idOrDisplayId: number | string,
+  caseRecord: MockCaseRecord,
+): MockCaseRecord['comments'] => {
+  const numericId = toNumericCaseId(idOrDisplayId);
+  const reviewStepIds = numericId === undefined ? undefined : caseReviewStepIds.get(numericId);
+  if (!reviewStepIds?.length) return caseRecord.comments;
+
+  return caseRecord.comments.map((comment) => {
+    if (
+      comment.target.type !== 'STEP' ||
+      reviewStepIds.includes(comment.target.stepId)
+    ) {
+      return comment;
+    }
+    const logicalIndex = Math.max(0, comment.target.stepId ?? 0);
+    const stepId = reviewStepIds[Math.min(logicalIndex, reviewStepIds.length - 1)];
+    return { ...comment, target: { ...comment.target, stepId } };
+  });
 };
 
 export const listCasesOfIteration = (iterationId: number): MockCaseRecord[] => {

@@ -177,6 +177,11 @@ export const SCRIPTED_FIX_FAILURE: Record<string, string> = {
   TC107: 'job timeout',
 };
 
+/** Exact scores required by the approved demo script after a successful fix round. */
+export const SCRIPTED_FIX_SCORE: Record<string, number> = {
+  TC106: 92,
+};
+
 /** Keeps the updated scenario but makes its re-grade fail, covering the F2 GRADE_FAILED outcome. */
 export const SCRIPTED_GRADE_FAILURE = new Set(['TC105']);
 
@@ -265,6 +270,7 @@ export const CASES: MockCaseSeed[] = [
     ai: { iterationId: GEN2_ID, modifiedByAgent: false, factoryKey: 'US-TMS-BLK-001::search-filters-test-plans' },
     evaluation: { criteria: buildCriteria([8, 14, 12, 12, 12, 8]), evaluatedAt: Date.parse('2026-09-21T14:09:00Z'), state: EvaluationState.EVALUATED, sourceFixRound: undefined },
     lifecycleHistory: [{ to: Lifecycle.DRAFT, reason: LifecycleReason.UPLOADED, details: '66 < 90', actor: { type: LifecycleActorType.PIPELINE, name: 'Test case generation' } }],
+    pendingComments: [{ target: { type: CommentTargetType.STEP, stepId: 0 }, text: 'Clarify which Test Plan fields the search must match before re-running the scenario.', author: 'Helen Bobrova' }],
   },
   {
     id: 1008,

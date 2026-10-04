@@ -251,9 +251,9 @@ describe('fix rounds (F1-F2)', () => {
     expect(done.data[0]).toMatchObject({
       status: 'PASSED',
       scoreBefore: 81,
+      scoreAfter: 92,
       autoReadyPromoted: true,
     });
-    expect(done.data[0].scoreAfter).toBeGreaterThan(81);
   });
 
   test('F1 rejects a push with no unsent comments', async () => {
@@ -267,10 +267,12 @@ describe('fix rounds (F1-F2)', () => {
   });
 
   test('TC107 fails once (job timeout) then succeeds on the next push', async () => {
-    await http.post(URLS.testCaseReviewComments(PROJECT, 'TC107'), {
-      target: { type: 'TEXT_SCENARIO' },
-      text: 'Fix it.',
-    });
+    const comments = await http.get<ReviewCommentRS[]>(
+      URLS.testCaseReviewComments(PROJECT, 'TC107'),
+    );
+    expect(comments.data).toHaveLength(1);
+    expect(comments.data[0]).toMatchObject({ state: 'PENDING' });
+
     await http.post(URLS.testCaseFixRounds(PROJECT, 'TC107'));
     jest.advanceTimersByTime(SIMULATED_DELAY_MS + 100);
     const afterFail = await http.get<FixRoundRS[]>(URLS.testCaseFixRounds(PROJECT, 'TC107'));

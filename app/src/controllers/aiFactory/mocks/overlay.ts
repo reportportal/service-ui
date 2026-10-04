@@ -121,7 +121,10 @@ export const mergeAiFields = (testCase: TestCase): TestCase & Partial<TestCaseAi
   if (!record) {
     return testCase; // no matching mock record — the toggle-OFF/no-data guard in components handles this too
   }
-  registerCaseAlias(testCase.id, record);
+  const reviewStepIds = testCase.manualScenario?.steps
+    .map(({ id }) => id)
+    .filter((id): id is number => Number.isSafeInteger(id));
+  registerCaseAlias(testCase.id, record, reviewStepIds);
   const iteration = record.ai ? findIteration(record.ai.iterationId) : undefined;
   const pipeline = iteration ? findPipeline(iteration.pipelineId) : undefined;
   return {

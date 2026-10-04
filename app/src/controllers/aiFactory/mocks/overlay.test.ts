@@ -16,12 +16,14 @@
 
 import axios, { AxiosHeaders } from 'axios';
 import MockAdapter from 'axios-mock-adapter';
+import { URLS } from 'common/urls';
 import {
   AutomationStatus,
   EvaluationState,
   Lifecycle,
   LifecycleActorType,
   LifecycleReason,
+  ReviewCommentRS,
   ScenarioUpdateRS,
   TestCaseAiRS,
 } from 'types/aiFactory';
@@ -146,6 +148,28 @@ describe('installOverlayInterceptor', () => {
         expect.objectContaining({ to: Lifecycle.READY, reason: LifecycleReason.AUTO_READY }),
       ]),
     });
+
+    mock.restore();
+  });
+
+  test('maps a seeded logical comment target to a visible remote step without replacing the scenario', async () => {
+    const { http, mock } = setupOverlay();
+    installAiFactoryHandlers(mock);
+    const scenario = originalScenario();
+    scenario.steps[0].id = 73;
+    mock.onGet(TEST_CASE_URL).reply(200, realTestCase('TC106', scenario));
+
+    const { data: testCase } = await http.get<TestCase>(TEST_CASE_URL);
+    const { data: comments } = await http.get<ReviewCommentRS[]>(
+      URLS.testCaseReviewComments('demo', testCase.id),
+    );
+    const { data: canonicalComments } = await http.get<ReviewCommentRS[]>(
+      URLS.testCaseReviewComments('demo', 'TC106'),
+    );
+
+    expect(testCase.manualScenario).toEqual(scenario);
+    expect(comments[0].target).toEqual({ type: 'STEP', stepId: 73 });
+    expect(canonicalComments[0].target).toEqual({ type: 'STEP', stepId: 2 });
 
     mock.restore();
   });
