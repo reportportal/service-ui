@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { Fragment, useState } from 'react';
+import { Fragment, useId, useState } from 'react';
 import { MessageDescriptor, useIntl } from 'react-intl';
 import { ArrowDownIcon } from '@reportportal/ui-kit';
 
@@ -44,6 +44,7 @@ export interface GradePanelProps {
 export const GradePanel = ({ stage }: GradePanelProps) => {
   const { formatMessage } = useIntl();
   const [expanded, setExpanded] = useState<Set<string>>(new Set());
+  const panelId = useId();
 
   if (!stage.grade) {
     return null;
@@ -63,54 +64,73 @@ export const GradePanel = ({ stage }: GradePanelProps) => {
 
   return (
     <div className={cx('panel')} data-automation-id="gradePanel">
-      <p className={cx('note')}>{formatMessage(messages.gradeSuiteScore, { score: stage.grade.suiteScore })}</p>
+      <p className={cx('note')}>
+        {formatMessage(messages.gradeSuiteScore, { score: stage.grade.suiteScore })}
+      </p>
       {stage.grade.error && <p className={cx('note')}>{stage.grade.error}</p>}
       <table className={cx('table')}>
         <thead>
           <tr>
-            <th />
-            <th>{formatMessage(messages.gradeColumnCase)}</th>
-            <th>{formatMessage(messages.gradeColumnScore)}</th>
+            <th scope="col" aria-label={formatMessage(messages.gradeColumnDetails)} />
+            <th scope="col">{formatMessage(messages.gradeColumnCase)}</th>
+            <th scope="col">{formatMessage(messages.gradeColumnScore)}</th>
           </tr>
         </thead>
         <tbody>
-          {stage.grade.cases.map((c) => {
+          {stage.grade.cases.map((c, index) => {
             const rowKey = String(c.testCaseId ?? c.name);
             const isExpanded = expanded.has(rowKey);
+            const detailsId = `${panelId}-case-${index}`;
             return (
               <Fragment key={rowKey}>
                 <tr>
-                  <td className={cx('expandRow')} onClick={() => toggle(rowKey)} data-automation-id={`gradeRowToggle-${rowKey}`}>
-                    <ArrowDownIcon style={{ transform: isExpanded ? 'rotate(180deg)' : undefined }} />
+                  <td>
+                    <button
+                      type="button"
+                      className={cx('expandRow')}
+                      aria-label={formatMessage(messages.gradeCaseDetails, { name: c.name })}
+                      aria-expanded={isExpanded}
+                      aria-controls={detailsId}
+                      onClick={() => toggle(rowKey)}
+                      data-automation-id={`gradeRowToggle-${rowKey}`}
+                    >
+                      <ArrowDownIcon
+                        aria-hidden="true"
+                        style={{ transform: isExpanded ? 'rotate(180deg)' : undefined }}
+                      />
+                    </button>
                   </td>
                   <td>
                     <CaseLink testCaseId={c.testCaseId} name={c.name} />
                   </td>
                   <td>{c.totalScore}</td>
                 </tr>
-                {isExpanded && (
-                  <tr>
-                    <td />
-                    <td colSpan={2}>
-                      <div className={cx('criteria')}>
-                        {c.criteria.map((criterion) => (
-                          <div key={criterion.key} className={cx('criterionRow')}>
-                            <span>{formatMessage(CRITERION_MESSAGE[criterion.key])}</span>
-                            <span>{`${criterion.score}/${criterion.maxScore}`}</span>
-                            <ScoreBar value={criterion.score} max={criterion.maxScore} />
-                            {criterion.score < criterion.maxScore && criterion.failureReasons.length > 0 && (
+                <tr
+                  id={detailsId}
+                  hidden={!isExpanded}
+                  data-automation-id={`gradeRowDetails-${rowKey}`}
+                >
+                  <td />
+                  <td colSpan={2}>
+                    <div className={cx('criteria')}>
+                      {c.criteria.map((criterion) => (
+                        <div key={criterion.key} className={cx('criterionRow')}>
+                          <span>{formatMessage(CRITERION_MESSAGE[criterion.key])}</span>
+                          <span>{`${criterion.score}/${criterion.maxScore}`}</span>
+                          <ScoreBar value={criterion.score} max={criterion.maxScore} />
+                          {criterion.score < criterion.maxScore &&
+                            criterion.failureReasons.length > 0 && (
                               <ul className={cx('failureReasons')}>
                                 {criterion.failureReasons.map((reason) => (
                                   <li key={reason}>{reason}</li>
                                 ))}
                               </ul>
                             )}
-                          </div>
-                        ))}
-                      </div>
-                    </td>
-                  </tr>
-                )}
+                        </div>
+                      ))}
+                    </div>
+                  </td>
+                </tr>
               </Fragment>
             );
           })}

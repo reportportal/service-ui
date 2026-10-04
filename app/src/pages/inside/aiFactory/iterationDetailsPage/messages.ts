@@ -166,6 +166,14 @@ export const messages = defineMessages({
     id: 'IterationDetailsPage.gradeColumnCase',
     defaultMessage: 'Case',
   },
+  gradeColumnDetails: {
+    id: 'IterationDetailsPage.gradeColumnDetails',
+    defaultMessage: 'Details',
+  },
+  gradeCaseDetails: {
+    id: 'IterationDetailsPage.gradeCaseDetails',
+    defaultMessage: 'Toggle score details for {name}',
+  },
   gradeColumnScore: {
     id: 'IterationDetailsPage.gradeColumnScore',
     defaultMessage: 'Score',

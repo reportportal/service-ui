@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { useMemo, useState } from 'react';
+import { useId, useMemo, useState } from 'react';
 import { useIntl } from 'react-intl';
 import { BubblesLoader, Button, DeleteIcon, Modal, Tooltip } from '@reportportal/ui-kit';
 
@@ -69,11 +69,16 @@ export const ReviewTarget = ({ target, reviewState, isReadOnly = false }: Review
   const [isOpen, setIsOpen] = useState(false);
   const [text, setText] = useState('');
   const [mutationError, setMutationError] = useState(false);
+  const uniqueId = useId();
   const comments = useMemo(
     () => reviewState.comments.filter((comment) => matchesTarget(comment, target)),
     [reviewState.comments, target],
   );
   const hasPending = comments.some((comment) => comment.state === CommentState.PENDING);
+  const targetId = `${target.type.toLowerCase()}-${target.stepId ?? 'case'}-${uniqueId}`;
+  const triggerId = `review-comment-trigger-${targetId}`;
+  const threadId = `review-comment-thread-${targetId}`;
+  const composerId = `review-comment-${targetId}`;
 
   const submitComment = async () => {
     if (isReadOnly) return;
@@ -108,7 +113,9 @@ export const ReviewTarget = ({ target, reviewState, isReadOnly = false }: Review
         className={cx('review-target__trigger', {
           'review-target__trigger--pending': hasPending,
         })}
+        id={triggerId}
         aria-expanded={isOpen}
+        aria-controls={threadId}
         aria-label={formatMessage(messages.commentCount, { count: comments.length })}
         data-automation-id={`review-comment-toggle-${target.type}-${target.stepId ?? 'case'}`}
         disabled={reviewState.isLoading}
@@ -118,7 +125,12 @@ export const ReviewTarget = ({ target, reviewState, isReadOnly = false }: Review
         <span>{comments.length}</span>
       </button>
       {isOpen && (
-        <div className={cx('review-target__thread')}>
+        <div
+          id={threadId}
+          className={cx('review-target__thread')}
+          role="region"
+          aria-labelledby={triggerId}
+        >
           {comments.map((comment) => (
             <article key={comment.id} className={cx('review-target__comment')}>
               <div className={cx('review-target__comment-header')}>
@@ -143,11 +155,9 @@ export const ReviewTarget = ({ target, reviewState, isReadOnly = false }: Review
           ))}
           {!isReadOnly && (
             <div className={cx('review-target__composer')}>
-              <label htmlFor={`review-comment-${target.type}-${target.stepId ?? 'case'}`}>
-                {formatMessage(messages.addCommentLabel)}
-              </label>
+              <label htmlFor={composerId}>{formatMessage(messages.addCommentLabel)}</label>
               <textarea
-                id={`review-comment-${target.type}-${target.stepId ?? 'case'}`}
+                id={composerId}
                 value={text}
                 maxLength={1000}
                 placeholder={formatMessage(messages.placeholder)}
@@ -278,9 +288,12 @@ export const ReviewStrip = ({
         <strong>{formatMessage(messages.reviewComments)}</strong>
         <span>{formatMessage(messages.notSentCount, { count: pendingCount })}</span>
         {reviewState.isLoading && (
-          <output aria-label={formatMessage(messages.loading)}>
+          <span className={cx('review-strip__loading')}>
             <BubblesLoader />
-          </output>
+            <output className={cx('visually-hidden')} aria-live="polite" aria-atomic="true">
+              {formatMessage(messages.loading)}
+            </output>
+          </span>
         )}
       </div>
       <div className={cx('review-strip__actions')}>
@@ -309,14 +322,20 @@ export const ReviewStrip = ({
         </Tooltip>
       </div>
       {isRunning && (
-        <output className={cx('review-strip__status')}>
+        <div className={cx('review-strip__status')}>
           <BubblesLoader />
-          <strong>{formatMessage(messages.fixing, { round: fixRoundState.current?.round })}</strong>
-        </output>
+          <output aria-live="polite" aria-atomic="true">
+            <strong>
+              {formatMessage(messages.fixing, { round: fixRoundState.current?.round })}
+            </strong>
+          </output>
+        </div>
       )}
       {hasFailed && (
-        <div className={cx('review-strip__status', 'review-strip__status--failed')} role="alert">
-          <span>{formatMessage(messages.failedActions)}</span>
+        <div className={cx('review-strip__status', 'review-strip__status--failed')}>
+          <output aria-live="assertive" aria-atomic="true">
+            {formatMessage(messages.failedActions)}
+          </output>
           {!isReadOnly && (
             <>
               <Button

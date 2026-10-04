@@ -86,8 +86,20 @@
 }
 
 .expandRow {
-  padding: 4px 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px;
+  border: 0;
+  border-radius: 4px;
+  background: transparent;
+  color: inherit;
   cursor: pointer;
+
+  &:focus-visible {
+    outline: 2px solid var(--rp-ui-base-topaz);
+    outline-offset: 2px;
+  }
 }
 
 .criteria {

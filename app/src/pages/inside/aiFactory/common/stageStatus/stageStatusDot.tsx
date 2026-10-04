@@ -14,8 +14,12 @@
  * limitations under the License.
  */
 
+import { useIntl } from 'react-intl';
+
 import { createClassnames } from 'common/utils';
 import { AiStageStatus } from 'types/aiFactory';
+
+import { STAGE_STATUS_MESSAGE } from './stageStatusMessages';
 import { STAGE_STATUS_VARIANT } from './stageStatusVariant';
 import styles from './stageStatus.scss';
 
@@ -23,11 +27,19 @@ const cx = createClassnames(styles);
 
 export interface StageStatusDotProps {
   status: AiStageStatus;
+  isDecorative?: boolean;
 }
 
-export const StageStatusDot = ({ status }: StageStatusDotProps) => (
-  <span
-    className={cx('dot', STAGE_STATUS_VARIANT[status])}
-    data-automation-id="stageStatusDot"
-  />
-);
+export const StageStatusDot = ({ status, isDecorative = false }: StageStatusDotProps) => {
+  const { formatMessage } = useIntl();
+
+  return (
+    <span
+      className={cx('dot', STAGE_STATUS_VARIANT[status])}
+      role={isDecorative ? undefined : 'img'}
+      aria-label={isDecorative ? undefined : formatMessage(STAGE_STATUS_MESSAGE[status])}
+      aria-hidden={isDecorative || undefined}
+      data-automation-id="stageStatusDot"
+    />
+  );
+};

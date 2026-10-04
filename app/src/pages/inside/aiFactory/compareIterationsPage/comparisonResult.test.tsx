@@ -237,13 +237,12 @@ describe('ComparisonResult', () => {
     expect(wrapper.find(DeltaCell)).toHaveLength(0);
   });
 
-  test('announces the completed comparison as one polite atomic live region', () => {
+  test('keeps the completed comparison outside a live region', () => {
     const wrapper = shallow(<ComparisonResult comparison={comparison()} />);
 
-    expect(wrapper.props()).toMatchObject({
-      'aria-live': 'polite',
-      'aria-atomic': 'true',
-    });
+    expect(wrapper.hasClass('result')).toBe(true);
+    expect(wrapper.prop('aria-live')).toBeUndefined();
+    expect(wrapper.prop('aria-atomic')).toBeUndefined();
     expect(wrapper.prop('role')).toBeUndefined();
   });
 

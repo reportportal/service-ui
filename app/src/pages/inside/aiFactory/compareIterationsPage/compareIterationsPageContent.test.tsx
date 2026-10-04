@@ -322,8 +322,12 @@ describe('CompareIterationsPageContent', () => {
   test('renders loading while pipelines or selected iterations are being fetched', () => {
     wrapper = renderPage({ pipelines: null, pipelinesLoading: true });
     const pipelineLoadingState = wrapper.find('.state--loading');
-    expect(pipelineLoadingState.prop('aria-live')).toBe('polite');
-    expect(pipelineLoadingState.prop('role')).toBeUndefined();
+    const loadingAnnouncement = pipelineLoadingState.find('output');
+    expect(loadingAnnouncement.props()).toMatchObject({
+      'aria-live': 'polite',
+      'aria-atomic': 'true',
+    });
+    expect(loadingAnnouncement.prop('role')).toBeUndefined();
 
     wrapper.unmount();
     wrapper = renderPage({
@@ -343,8 +347,8 @@ describe('CompareIterationsPageContent', () => {
       'aria-atomic': 'true',
     });
     expect(wrapper.find('[aria-live="assertive"]').prop('role')).toBeUndefined();
-    expect(wrapper.find(SystemMessage).prop('children')).toEqual(
-      expect.arrayContaining(['The comparison could not be loaded.']),
+    expect(wrapper.find('[aria-live="assertive"]').prop('children')).toBe(
+      'The comparison could not be loaded.',
     );
     (wrapper.find(Button).prop('onClick') as () => void)();
     expect(getPipelineComparisonAction).toHaveBeenLastCalledWith(1, 103, 102);

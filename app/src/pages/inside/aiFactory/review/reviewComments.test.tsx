@@ -127,7 +127,19 @@ describe('AI review comments', () => {
     const openThread = wrapper
       .find('[data-automation-id="review-comment-toggle-STEP-7"]')
       .prop('onClick') as () => void;
+    const trigger = wrapper.find('[data-automation-id="review-comment-toggle-STEP-7"]');
+    const threadId = trigger.prop('aria-controls');
+    expect(trigger.prop('aria-expanded')).toBe(false);
     openThread();
+    expect(wrapper.find('[data-automation-id="review-comment-toggle-STEP-7"]').prop('aria-expanded')).toBe(
+      true,
+    );
+    const thread = wrapper.find('[role="region"]');
+    expect(thread.props()).toMatchObject({
+      id: threadId,
+      role: 'region',
+      'aria-labelledby': trigger.prop('id'),
+    });
     expect(wrapper.text()).toContain('Use the Library label');
     expect(wrapper.text()).toContain('The source requirement uses the original name');
     expect(wrapper.text()).not.toContain('Different step');

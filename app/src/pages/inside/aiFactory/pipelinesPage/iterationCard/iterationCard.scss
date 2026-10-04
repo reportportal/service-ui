@@ -30,10 +30,12 @@
   }
 
   &__title {
+    min-width: 0;
     font-weight: var(--rp-ui-base-fw-bold);
     font-size: 14px;
     color: var(--rp-ui-base-topaz);
     text-decoration: none;
+    overflow-wrap: anywhere;
 
     &:hover {
       text-decoration: underline;
@@ -61,6 +63,7 @@
   &__meta {
     color: var(--rp-ui-base-e-300);
     font-size: 12px;
+    overflow-wrap: anywhere;
   }
 
   &__stages {
@@ -73,11 +76,14 @@
     display: inline-flex;
     align-items: center;
     gap: 6px;
+    box-sizing: border-box;
+    min-width: 0;
     padding: 4px 8px;
     background-color: var(--rp-ui-base-bg-100);
     border-radius: 6px;
     font-size: 12px;
-    white-space: nowrap;
+    max-width: 100%;
+    overflow-wrap: anywhere;
   }
 
   &__attributes {
@@ -87,11 +93,13 @@
   }
 
   &__attribute-chip {
+    box-sizing: border-box;
+    max-width: 100%;
     padding: 2px 8px;
     border: 1px solid var(--rp-ui-base-e-100);
     border-radius: 10px;
     color: var(--rp-ui-base-e-300);
     font-size: 11px;
-    white-space: nowrap;
+    overflow-wrap: anywhere;
   }
 }

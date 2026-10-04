@@ -17,7 +17,12 @@
 import { useIntl } from 'react-intl';
 
 import { createClassnames } from 'common/utils';
-import { STAGE_LABEL_MESSAGE, StageStatusDot, StageStatusLabel, stageMetric } from 'pages/inside/aiFactory/common';
+import {
+  STAGE_LABEL_MESSAGE,
+  StageStatusDot,
+  StageStatusLabel,
+  stageMetric,
+} from 'pages/inside/aiFactory/common';
 import { AiStageKey, StageRS } from 'types/aiFactory';
 
 import styles from './stageCards.scss';
@@ -31,7 +36,12 @@ export interface StageCardsProps {
   onSelect: (stage: AiStageKey) => void;
 }
 
-export const StageCards = ({ stages, testCasesCount, selectedStage, onSelect }: StageCardsProps) => {
+export const StageCards = ({
+  stages,
+  testCasesCount,
+  selectedStage,
+  onSelect,
+}: StageCardsProps) => {
   const { formatMessage } = useIntl();
 
   return (
@@ -49,16 +59,25 @@ export const StageCards = ({ stages, testCasesCount, selectedStage, onSelect }: 
 
         return (
           <div key={stage.key} className={cx('stage-cards__item-wrapper')}>
-            {index > 0 && <span className={cx('stage-cards__arrow')}>{'→'}</span>}
+            {index > 0 && (
+              <span className={cx('stage-cards__arrow')} aria-hidden="true">
+                {'→'}
+              </span>
+            )}
             <button
               type="button"
-              className={cx('stage-cards__item', { 'stage-cards__item--selected': stage.key === selectedStage })}
+              className={cx('stage-cards__item', {
+                'stage-cards__item--selected': stage.key === selectedStage,
+              })}
+              aria-pressed={stage.key === selectedStage}
               onClick={() => onSelect(stage.key)}
               data-automation-id={`stageCard-${stage.key}`}
             >
               <div className={cx('stage-cards__item-header')}>
-                <StageStatusDot status={stage.status} />
-                <span className={cx('stage-cards__item-label')}>{formatMessage(STAGE_LABEL_MESSAGE[stage.key])}</span>
+                <StageStatusDot status={stage.status} isDecorative />
+                <span className={cx('stage-cards__item-label')}>
+                  {formatMessage(STAGE_LABEL_MESSAGE[stage.key])}
+                </span>
               </div>
               <StageStatusLabel status={stage.status} />
               {metricLabel && <span className={cx('stage-cards__item-metric')}>{metricLabel}</span>}

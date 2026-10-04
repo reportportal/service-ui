@@ -193,34 +193,36 @@ export const CompareIterationsPageContent = () => {
   const renderState = () => {
     if ((isPipelinesLoading && !pipelines) || (isIterationsLoading && !iterations)) {
       return (
-        <output className={cx('state', 'state--loading')} aria-live="polite">
+        <div className={cx('state', 'state--loading')}>
           <SpinningPreloader />
-          <span>{formatMessage(messages.loading)}</span>
-        </output>
+          <output aria-live="polite" aria-atomic="true">
+            {formatMessage(messages.loading)}
+          </output>
+        </div>
       );
     }
     if (!isComparisonAvailable) {
-      return (
-        <output className={cx('state')}>{formatMessage(messages.comparisonUnavailable)}</output>
-      );
+      return <div className={cx('state')}>{formatMessage(messages.comparisonUnavailable)}</div>;
     }
     if (!pipelines?.length) {
-      return <output className={cx('state')}>{formatMessage(messages.noPipelines)}</output>;
+      return <div className={cx('state')}>{formatMessage(messages.noPipelines)}</div>;
     }
     if (!pipelineId || !pipeline) {
-      return <output className={cx('state')}>{formatMessage(messages.invalidSelection)}</output>;
+      return <div className={cx('state')}>{formatMessage(messages.invalidSelection)}</div>;
     }
     if (!iterations || iterations.length < 2) {
-      return <output className={cx('state')}>{formatMessage(messages.notEnoughIterations)}</output>;
+      return <div className={cx('state')}>{formatMessage(messages.notEnoughIterations)}</div>;
     }
     if (!hasValidPair) {
-      return <output className={cx('state')}>{formatMessage(messages.invalidSelection)}</output>;
+      return <div className={cx('state')}>{formatMessage(messages.invalidSelection)}</div>;
     }
     if (hasComparisonError) {
       return (
-        <output className={cx('state-output')} aria-live="assertive" aria-atomic="true">
+        <div className={cx('state-output')}>
           <SystemMessage mode="error">
-            {formatMessage(messages.comparisonError)}
+            <output aria-live="assertive" aria-atomic="true">
+              {formatMessage(messages.comparisonError)}
+            </output>
             <div className={cx('error-action')}>
               <Button
                 variant="text"
@@ -231,15 +233,17 @@ export const CompareIterationsPageContent = () => {
               </Button>
             </div>
           </SystemMessage>
-        </output>
+        </div>
       );
     }
     if (isComparisonLoading || !comparisonMatchesSelection) {
       return (
-        <output className={cx('state', 'state--loading')} aria-live="polite">
+        <div className={cx('state', 'state--loading')}>
           <SpinningPreloader />
-          <span>{formatMessage(messages.loading)}</span>
-        </output>
+          <output aria-live="polite" aria-atomic="true">
+            {formatMessage(messages.loading)}
+          </output>
+        </div>
       );
     }
     return comparison ? <ComparisonResult comparison={comparison} /> : null;

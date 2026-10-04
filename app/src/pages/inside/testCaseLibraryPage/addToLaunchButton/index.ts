@@ -14,4 +14,7 @@
  * limitations under the License.
  */
 
-export { AddToLaunchButton } from './addToLaunchButton';
+export { AddToLaunchButton, AddToLaunchButtonView } from './addToLaunchButton';
+export type { AddToLaunchButtonProps } from './addToLaunchButton';
+export { useAddToLaunchAction } from './useAddToLaunchAction';
+export type { AddToLaunchAction } from './useAddToLaunchAction';

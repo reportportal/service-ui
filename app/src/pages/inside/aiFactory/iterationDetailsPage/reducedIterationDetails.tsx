@@ -72,9 +72,11 @@ export const ReducedIterationDetails = ({
   if (hasError || isUnavailable || !iteration) {
     return (
       <SettingsLayout>
-        <output className={cx('state')} aria-live={hasError ? 'assertive' : 'polite'}>
+        <div className={cx('state')}>
           <SystemMessage mode={hasError ? 'error' : 'info'}>
-            {formatMessage(hasError ? messages.detailError : messages.detailUnavailable)}
+            <output aria-live={hasError ? 'assertive' : 'polite'} aria-atomic="true">
+              {formatMessage(hasError ? messages.detailError : messages.detailUnavailable)}
+            </output>
             <div className={cx('error-action')}>
               <Button
                 variant="text"
@@ -85,7 +87,7 @@ export const ReducedIterationDetails = ({
               </Button>
             </div>
           </SystemMessage>
-        </output>
+        </div>
       </SettingsLayout>
     );
   }
@@ -126,7 +128,7 @@ export const ReducedIterationDetails = ({
               ? formatMessage(messages.noStages)
               : iteration.stages.map((stage) => (
                   <div key={stage.id} className={cx('reduced-stage')}>
-                    <span>{stage.label}</span>
+                    <span className={cx('reduced-stage__label')}>{stage.label}</span>
                     <span className={cx('reduced-stage__status')}>
                       {formatMessage(messages[STATUS_MESSAGES[stage.status]])}
                     </span>

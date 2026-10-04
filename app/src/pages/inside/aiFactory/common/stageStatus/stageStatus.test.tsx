@@ -41,6 +41,16 @@ describe('StageStatusDot', () => {
     const wrapper = shallow(<StageStatusDot status={status} />);
 
     expect(wrapper.hasClass(variant)).toBe(true);
+    expect(wrapper.prop('role')).toBe('img');
+    expect(wrapper.prop('aria-label')).toEqual(expect.any(String));
+  });
+
+  test('hides the dot from assistive technology when a visible status label is present', () => {
+    const wrapper = shallow(<StageStatusDot status={StageStatus.PASSED} isDecorative />);
+
+    expect(wrapper.prop('aria-hidden')).toBe(true);
+    expect(wrapper.prop('role')).toBeUndefined();
+    expect(wrapper.prop('aria-label')).toBeUndefined();
   });
 });
 

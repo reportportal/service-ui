@@ -54,6 +54,11 @@
       border-color: var(--rp-ui-base-e-300);
     }
 
+    &:focus-visible {
+      outline: 2px solid var(--rp-ui-base-topaz);
+      outline-offset: 2px;
+    }
+
     &--selected {
       border-color: var(--rp-ui-base-topaz);
       box-shadow: 0 0 0 1px var(--rp-ui-base-topaz);
@@ -64,11 +69,14 @@
     display: flex;
     align-items: center;
     gap: 6px;
+    min-width: 0;
   }
 
   &__item-label {
+    min-width: 0;
     font-weight: var(--rp-ui-base-fw-bold);
     font-size: 13px;
+    overflow-wrap: anywhere;
   }
 
   &__item-metric {

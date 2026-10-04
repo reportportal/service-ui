@@ -61,7 +61,10 @@ import { useEditTestCaseModal } from 'pages/inside/testCaseLibraryPage/createTes
 import { useDeleteTestCaseModal } from 'pages/inside/testCaseLibraryPage/deleteTestCaseModal';
 import { useMoveTestCaseModal } from 'pages/inside/testCaseLibraryPage/moveTestCaseModal/useMoveTestCaseModal';
 import { useDuplicateSelectedTestCaseModal } from 'pages/inside/testCaseLibraryPage/duplicateSelectedTestCaseModal';
-import { AddToLaunchButton } from 'pages/inside/testCaseLibraryPage/addToLaunchButton';
+import {
+  AddToLaunchButtonView,
+  useAddToLaunchAction,
+} from 'pages/inside/testCaseLibraryPage/addToLaunchButton';
 import { ExecutionEstimationTime } from 'pages/inside/common/executionEstimationTime';
 import { AiChip, LifecycleBadge, ScoreChip } from 'pages/inside/aiFactory/common';
 import { EvaluationMini } from 'pages/inside/aiFactory/evaluation';
@@ -193,6 +196,12 @@ export const TestCaseSidePanel = memo(
       testCase?.updatedAt,
     );
     const refetchCurrentTestCases = useRefetchCurrentTestCases();
+    const addToLaunchAction = useAddToLaunchAction({
+      testCaseId: testCase?.id ?? 0,
+      manualScenario: testCase?.manualScenario,
+      lifecycle: testCase?.lifecycle,
+      place: TEST_CASE_PLACE.SIDE_PANEL,
+    });
 
     const folderId = testCase?.testFolder?.id;
 
@@ -231,7 +240,7 @@ export const TestCaseSidePanel = memo(
       action,
     }));
 
-    const menuItems = createTestCaseMenuItems(
+    const defaultMenuItems = createTestCaseMenuItems(
       formatMessage,
       {
         [TestCaseMenuAction.EDIT]: handleEditTestCase,
@@ -261,6 +270,21 @@ export const TestCaseSidePanel = memo(
       },
       getExcludedActionsFromPermissionMap(permissionMap),
     );
+    const menuItems = canManageTestCases
+      ? [
+          ...defaultMenuItems,
+          {
+            label: addToLaunchAction.label,
+            className: cx('narrow-add-to-launch-item'),
+            disabled: addToLaunchAction.isDisabled,
+            tooltip: addToLaunchAction.disabledHint,
+            onClick: () => {
+              addToLaunchAction.onClick();
+              setIsMenuOpen(false);
+            },
+          },
+        ]
+      : defaultMenuItems;
 
     const handleThreeDotsClick = () => {
       setIsMenuOpen(!isMenuOpen);
@@ -415,12 +439,14 @@ export const TestCaseSidePanel = memo(
             isOpened={isMenuOpen}
             setIsOpened={setIsMenuOpen}
           >
-            <Tooltip placement="top" content={formatMessage(messages.moreActionsTooltip)}>
+            <Tooltip placement="top" content={formatMessage(commonMessages.moreActions)}>
               <Button
                 variant="ghost"
                 icon={<MeatballMenuIcon />}
                 className={cx('action-button', 'more-actions-button')}
                 onClick={handleThreeDotsClick}
+                aria-label={formatMessage(commonMessages.moreActions)}
+                aria-expanded={isMenuOpen}
                 data-automation-id="test-case-more-actions"
               />
             </Tooltip>
@@ -435,12 +461,9 @@ export const TestCaseSidePanel = memo(
           </Button>
           {canManageTestCases && (
             <>
-              <AddToLaunchButton
-                manualScenario={testCase?.manualScenario}
-                testCaseId={testCase.id}
-                lifecycle={testCase.lifecycle}
-                place={TEST_CASE_PLACE.SIDE_PANEL}
-              />
+              <div className={cx('footer-add-to-launch')}>
+                <AddToLaunchButtonView {...addToLaunchAction} />
+              </div>
               {hasTestPlans && !isDraft ? (
                 <Button
                   variant="primary"
