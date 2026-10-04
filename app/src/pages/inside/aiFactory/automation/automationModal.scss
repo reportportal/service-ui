@@ -1,0 +1,56 @@
+/*
+ * Copyright 2026 EPAM Systems
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ */
+
+.automation-modal {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  width: 440px;
+  max-width: 100%;
+  font-family: $FONT-ROBOTO-REGULAR;
+  font-size: 13px;
+  line-height: 20px;
+  color: var(--rp-ui-base-almost-black);
+
+  &__summary,
+  &__hint {
+    margin: 0;
+  }
+
+  &__environment {
+    width: 100%;
+  }
+
+  &__list-title,
+  &__skipped-title {
+    margin: 0 0 8px;
+    font-family: $FONT-ROBOTO-MEDIUM;
+    font-size: 13px;
+  }
+
+  &__case-list,
+  &__skipped-list {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    margin: 0;
+    padding-left: 20px;
+  }
+
+  &__skipped-reason {
+    color: var(--rp-ui-base-e-400);
+  }
+
+  &__confirmation {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+}

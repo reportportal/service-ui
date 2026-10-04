@@ -42,6 +42,7 @@ import {
 import { commonMessages } from 'pages/inside/common/common-messages';
 import { EvaluationPanel } from 'pages/inside/aiFactory/evaluation';
 import { GenerationCost } from 'pages/inside/aiFactory/generationCost';
+import { AutomationSection } from 'pages/inside/aiFactory/automation';
 import { LifecycleHistory, useTestCaseAi } from 'pages/inside/aiFactory/lifecycle';
 import { PipelineLinks } from 'pages/inside/aiFactory/pipelineLinks';
 import { LaunchBlockedBanner } from 'pages/inside/aiFactory/readyOnlyGate';
@@ -238,7 +239,7 @@ export const TestCaseDetailsPage = () => {
   const { formatMessage } = useIntl();
   const { trackEvent } = useTracking();
   const dispatch = useDispatch();
-  const { canManageTestCases, canReviewAiTestCases } = useUserPermissions();
+  const { canAutomateTestCases, canManageTestCases, canReviewAiTestCases } = useUserPermissions();
   const { openModal: openAddTestCasesToTestPlanModal } = useAddTestCasesToTestPlanModal();
   const { openModal: openDescriptionModal } = useDescriptionModal();
 
@@ -264,6 +265,10 @@ export const TestCaseDetailsPage = () => {
     aiDetailsState.reload();
     dispatch({ type: GET_TEST_CASE_DETAILS, payload: { testCaseId } });
   }, [aiDetailsState, dispatch, reviewState, testCaseId]);
+  const refreshAfterAutomationStart = useCallback(() => {
+    aiDetailsState.reload();
+    dispatch({ type: GET_TEST_CASE_DETAILS, payload: { testCaseId } });
+  }, [aiDetailsState, dispatch, testCaseId]);
   const fixRoundState = useFixRound(projectKey, testCaseId, isAiReviewEnabled, {
     onStarted: refreshAfterFixRoundStart,
     onFinished: refreshAfterFixRound,
@@ -411,6 +416,12 @@ export const TestCaseDetailsPage = () => {
                 <GenerationCost aiDetailsState={aiDetailsState} />
                 <PipelineLinks aiDetailsState={aiDetailsState} />
               </>
+            )}
+            {isAiFactoryEnabled && canAutomateTestCases && (
+              <AutomationSection
+                testCase={renderedTestCase}
+                onSuccess={refreshAfterAutomationStart}
+              />
             )}
             {isAiFactoryEnabled && testCaseDetails.lifecycle && (
               <LifecycleHistory

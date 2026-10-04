@@ -25,6 +25,7 @@ import MockAdapter from 'axios-mock-adapter';
 import { URLS } from 'common/urls';
 import {
   AutomateAcceptedRS,
+  AutomationStatus,
   AutomationEnvironmentsRS,
   FixRoundRS,
   IterationPageRS,
@@ -37,7 +38,7 @@ import {
   TestCaseAiExtension,
   TestCaseAiRS,
 } from 'types/aiFactory';
-import { resetMockDb } from './db';
+import { findCase, resetMockDb } from './db';
 import { installAiFactoryHandlers, SIMULATED_DELAY_MS } from './handlers';
 
 const PROJECT = 'demo_project';
@@ -278,6 +279,98 @@ describe('automation (A1-A2)', () => {
       URLS.tmsAutomationEnvironments(PROJECT),
     );
     expect(data.default).toBe('beta5');
+  });
+
+  test.each([
+    [{ testCaseIds: [], environment: 'beta5', confirmReautomate: false }, 'empty IDs'],
+    [{ testCaseIds: [1005, 1005], environment: 'beta5', confirmReautomate: false }, 'duplicate IDs'],
+    [{ testCaseIds: [1005], environment: 'unknown', confirmReautomate: false }, 'unknown environment'],
+    [{ testCaseIds: [1005], environment: 'beta5' }, 'missing confirmation'],
+  ])('A2 rejects an invalid payload with %s (%s)', async (payload, _description) => {
+    const response = await http.post(URLS.tmsAutomation(PROJECT), payload, {
+      validateStatus: () => true,
+    });
+
+    expect(response.status).toBe(400);
+    expect(response.data).toMatchObject({
+      errorCode: 40002,
+      message: 'Invalid automation request',
+    });
+  });
+
+  test('A2 names already automated case IDs in 409 then accepts the confirmed retry', async () => {
+    const payload = {
+      testCaseIds: [1001],
+      environment: 'qa',
+      confirmReautomate: false,
+    };
+    const conflictResponse = await http.post(URLS.tmsAutomation(PROJECT), payload, {
+      validateStatus: () => true,
+    });
+
+    expect(conflictResponse.status).toBe(409);
+    expect(conflictResponse.data).toEqual({
+      reason: 'ALREADY_AUTOMATED_CONFIRM_REQUIRED',
+      testCaseIds: [1001],
+    });
+
+    const confirmed = await http.post<AutomateAcceptedRS>(URLS.tmsAutomation(PROJECT), {
+      ...payload,
+      confirmReautomate: true,
+    });
+    expect(confirmed.status).toBe(202);
+    expect(confirmed.data.accepted).toEqual([1001]);
+    expect(findCase(1001).automation?.status).toBe(AutomationStatus.IN_PROGRESS);
+  });
+
+  test('A2 rejects an unknown case without enumerating valid IDs', async () => {
+    const response = await http.post(
+      URLS.tmsAutomation(PROJECT),
+      { testCaseIds: [9999], environment: 'beta5', confirmReautomate: false },
+      { validateStatus: () => true },
+    );
+
+    expect(response.status).toBe(400);
+    expect(response.data).toEqual({
+      errorCode: 40002,
+      message: 'Invalid automation request',
+    });
+    expect(JSON.stringify(response.data)).not.toContain('1005');
+  });
+
+  test('A2 skips fix-running and automation-in-progress cases with deterministic reasons', async () => {
+    findCase(1006).fixRoundRunning = { round: 1, startedAt: Date.now() };
+    findCase(1007).automation = {
+      status: AutomationStatus.IN_PROGRESS,
+      iterationId: 201,
+      scenarioChangedAfterAutomation: false,
+    };
+
+    const response = await http.post<AutomateAcceptedRS>(URLS.tmsAutomation(PROJECT), {
+      testCaseIds: [1005, 1006, 1007],
+      environment: 'dev5',
+      confirmReautomate: false,
+    });
+
+    expect(response.data.accepted).toEqual([1005]);
+    expect(response.data.skipped).toEqual([
+      { id: 1006, displayId: 'TC106', reason: 'FIX_RUNNING' },
+      { id: 1007, displayId: 'TC107', reason: 'AUTOMATION_IN_PROGRESS' },
+    ]);
+  });
+
+  test('A2 rejects an all-ineligible selection without creating an iteration', async () => {
+    const response = await http.post(
+      URLS.tmsAutomation(PROJECT),
+      { testCaseIds: [1006, 1007], environment: 'beta5', confirmReautomate: false },
+      { validateStatus: () => true },
+    );
+
+    expect(response.status).toBe(400);
+    expect(response.data).toEqual({
+      errorCode: 40001,
+      message: 'No Ready Test Cases to automate',
+    });
   });
 
   test('A2 accepts Ready cases, skips Draft, and the iteration completes', async () => {

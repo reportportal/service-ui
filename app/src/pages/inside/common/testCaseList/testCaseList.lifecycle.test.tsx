@@ -22,7 +22,7 @@ import { useAiFactoryEnabled } from 'controllers/aiFactory';
 import { PROJECT_TEST_PLAN_DETAILS_PAGE, TEST_CASE_LIBRARY_PAGE } from 'controllers/pages';
 import { useUserPermissions } from 'hooks/useUserPermissions';
 import { TMS_INSTANCE_KEY } from 'pages/inside/common/constants';
-import { Lifecycle } from 'types/aiFactory';
+import { AutomationStatus, Lifecycle } from 'types/aiFactory';
 import { EvaluationState } from 'types/aiFactory';
 import type { ExtendedTestCase } from 'types/testCase';
 import type { SelectedTestCaseRow } from './types';
@@ -97,13 +97,18 @@ const ai = {
   modifiedByAgent: false,
   factoryKey: 'spec::case',
 };
-const review = { unsentCommentsCount: 2 };
+const review = {
+  unsentCommentsCount: 2,
+  fixRound: { number: 3, status: 'RUNNING' as const },
+};
+const automation = { status: AutomationStatus.AUTOMATED };
 const aiTestCase = {
   ...testCase,
   ai,
   evaluationSummary: { totalScore: 82, state: EvaluationState.EVALUATED },
   costSummary: { approxTotal: 0.42 },
   review,
+  automation,
 };
 const manualTestCase = {
   ...testCase,
@@ -121,6 +126,8 @@ const renderList = (
     handleSelectedRows?: (rows: SelectedTestCaseRow[]) => void;
     hasAiFilters?: boolean;
     query?: Record<string, string>;
+    selectedRowIds?: number[];
+    selectedRows?: SelectedTestCaseRow[];
   } = {},
 ) => {
   jest.mocked(useAiFactoryEnabled).mockReturnValue(isEnabled);
@@ -133,8 +140,8 @@ const renderList = (
     <TestCaseList
       testCases={testCases}
       folderTitle="All cases"
-      selectedRowIds={[]}
-      selectedRows={[]}
+      selectedRowIds={options.selectedRowIds ?? []}
+      selectedRows={options.selectedRows ?? []}
       instanceKey={TMS_INSTANCE_KEY.TEST_CASE}
       handleSelectedRows={options.handleSelectedRows ?? jest.fn()}
       hasAiFilters={options.hasAiFilters}
@@ -244,20 +251,50 @@ describe('TestCaseList lifecycle column', () => {
     expect(nameCell.find('DraggableTestCaseNameCell')).toHaveLength(1);
   });
 
-  test('retains lifecycle metadata when a row is selected across Test Plan pages', () => {
+  test('retains lifecycle, review and automation metadata when a row is selected', () => {
     const handleSelectedRows = jest.fn();
-    const wrapper = renderList(true, PROJECT_TEST_PLAN_DETAILS_PAGE, [manualTestCase], {
+    const wrapper = renderList(true, PROJECT_TEST_PLAN_DETAILS_PAGE, [aiTestCase], {
       handleSelectedRows,
     });
     const toggleRow = wrapper.find(Table).prop('onToggleRowSelection') as (id: number) => void;
 
-    toggleRow(manualTestCase.id);
+    toggleRow(aiTestCase.id);
 
     expect(handleSelectedRows).toHaveBeenCalledWith([
       expect.objectContaining({
-        id: manualTestCase.id,
-        displayId: manualTestCase.displayId,
-        lifecycle: Lifecycle.DRAFT,
+        id: aiTestCase.id,
+        displayId: aiTestCase.displayId,
+        lifecycle: Lifecycle.READY,
+        review,
+        automation,
+      }),
+    ]);
+  });
+
+  test('keeps prior-page snapshots and includes review and automation when selecting a page', () => {
+    const handleSelectedRows = jest.fn();
+    const previousPageRow: SelectedTestCaseRow = {
+      id: 99,
+      folderId: 9,
+      displayId: 'TC99',
+      lifecycle: Lifecycle.READY,
+      review: { unsentCommentsCount: 1 },
+      automation: { status: AutomationStatus.IN_PROGRESS },
+    };
+    const wrapper = renderList(true, TEST_CASE_LIBRARY_PAGE, [aiTestCase], {
+      handleSelectedRows,
+      selectedRowIds: [previousPageRow.id],
+      selectedRows: [previousPageRow],
+    });
+
+    (wrapper.find(Table).prop('onToggleAllRowsSelection') as () => void)();
+
+    expect(handleSelectedRows).toHaveBeenCalledWith([
+      previousPageRow,
+      expect.objectContaining({
+        id: aiTestCase.id,
+        review,
+        automation,
       }),
     ]);
   });

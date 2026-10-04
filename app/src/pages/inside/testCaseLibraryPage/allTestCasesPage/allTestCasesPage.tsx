@@ -56,6 +56,12 @@ import { useAiFactoryEnabled } from 'controllers/aiFactory';
 import { getTestCaseAiQueryParams } from 'controllers/testCase/actionCreators';
 import { BulkApproveButton } from 'pages/inside/aiFactory/approval';
 import {
+  automationDisabledMessages,
+  automationMessages,
+  partitionAutomationSelection,
+  useAutomationModal,
+} from 'pages/inside/aiFactory/automation';
+import {
   formatSkippedDrafts,
   partitionReadyOnlySelection,
   readyOnlyMessages,
@@ -121,7 +127,8 @@ export const AllTestCasesPage = ({
   const { openModal: openBatchDeleteTestCasesModal } = useBatchDeleteTestCasesModal();
   const { openModal: openMoveTestCaseModal } = useMoveTestCaseModal();
   const { openModal: openBatchEditTagsModal } = useBatchEditTagsModal();
-  const { canManageTestCases, canReviewAiTestCases } = useUserPermissions();
+  const { openModal: openAutomationModal } = useAutomationModal();
+  const { canAutomateTestCases, canManageTestCases, canReviewAiTestCases } = useUserPermissions();
   const { hasTestPlans } = useHasTestPlans();
   const isAiFactoryEnabled = useAiFactoryEnabled();
   const refetchCurrentTestCases = useRefetchCurrentTestCases();
@@ -139,6 +146,16 @@ export const AllTestCasesPage = ({
     () => selectedRows.map((row) => testCases.find(({ id }) => id === row.id) ?? row),
     [selectedRows, testCases],
   );
+  const automationSelection = useMemo(
+    () => partitionAutomationSelection(selectedTestCases),
+    [selectedTestCases],
+  );
+  const automationDisabledMessage = useMemo(() => {
+    const reasons = new Set(automationSelection.skipped.map(({ reason }) => reason));
+    if (reasons.size !== 1) return automationMessages.unavailableSelection;
+
+    return automationDisabledMessages[[...reasons][0]];
+  }, [automationSelection.skipped]);
   const { eligibleIds, skippedDrafts } = useMemo(
     () => partitionReadyOnlySelection(selectedRowIds, selectedTestCases, isAiFactoryEnabled),
     [isAiFactoryEnabled, selectedRowIds, selectedTestCases],
@@ -273,6 +290,17 @@ export const AllTestCasesPage = ({
     });
   }, [trackBulkOperation, selectedRows, openMoveTestCaseModal, selectedRowIds, onClearSelection]);
 
+  const handleOpenAutomationModal = useCallback(() => {
+    openAutomationModal({
+      testCases: selectedTestCases,
+      onSuccess: ({ accepted }) => {
+        const acceptedIds = new Set(accepted);
+        setSelectedRows((rows) => rows.filter(({ id }) => !acceptedIds.has(id)));
+        refetchCurrentTestCases();
+      },
+    });
+  }, [openAutomationModal, refetchCurrentTestCases, selectedTestCases]);
+
   const handleQuickFiltersChange = (value: QuickFiltersValue) => {
     dispatch(updatePagePropertiesAction({ ...value, ...TestCasePageDefaultValues }));
   };
@@ -354,6 +382,27 @@ export const AllTestCasesPage = ({
                 }}
               />
             )}
+            {isAiFactoryEnabled &&
+              canAutomateTestCases &&
+              (automationSelection.eligible.length > 0 ? (
+                <Button
+                  variant="ghost"
+                  onClick={handleOpenAutomationModal}
+                  data-automation-id="bulk-automate-test-cases"
+                >
+                  {formatMessage(automationMessages.automate)}
+                </Button>
+              ) : (
+                <Tooltip
+                  wrapperClassName={cx('tooltip-wrapper')}
+                  placement="top"
+                  content={formatMessage(automationDisabledMessage)}
+                >
+                  <Button variant="ghost" disabled data-automation-id="bulk-automate-test-cases">
+                    {formatMessage(automationMessages.automate)}
+                  </Button>
+                </Tooltip>
+              ))}
             <Button variant="ghost" onClick={handleOpenMoveTestCaseModal}>
               {formatMessage(messages.moveToFolder)}
             </Button>

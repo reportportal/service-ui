@@ -58,6 +58,7 @@ import { MockCaseRecord } from './types';
 
 /** Real network delay would make a demo feel too instant; this makes fix rounds/automation feel real. */
 export const SIMULATED_DELAY_MS = 1500;
+const AUTOMATION_ENVIRONMENTS = ['beta5', 'qa', 'dev5'];
 
 const url = (config: AxiosRequestConfig) => config.url || '';
 const query = (config: AxiosRequestConfig) => new URL(url(config), 'https://mock').searchParams;
@@ -65,6 +66,26 @@ const body = <T>(config: AxiosRequestConfig): T =>
   (typeof config.data === 'string' ? JSON.parse(config.data) : config.data || {}) as T;
 const notFound = (): [number, { errorCode: number; message: string }] => [404, { errorCode: 40404, message: 'Not found' }];
 const conflict = (reason: string): [number, { reason: string }] => [409, { reason }];
+
+interface AutomationPayload {
+  testCaseIds: number[];
+  environment: string;
+  confirmReautomate: boolean;
+}
+
+const isAutomationPayload = (value: unknown): value is AutomationPayload => {
+  if (typeof value !== 'object' || value === null) return false;
+  const payload = value as Record<string, unknown>;
+  return (
+    Array.isArray(payload.testCaseIds) &&
+    payload.testCaseIds.length > 0 &&
+    payload.testCaseIds.every((id) => typeof id === 'number' && Number.isSafeInteger(id) && id > 0) &&
+    new Set(payload.testCaseIds).size === payload.testCaseIds.length &&
+    typeof payload.environment === 'string' &&
+    AUTOMATION_ENVIRONMENTS.includes(payload.environment) &&
+    typeof payload.confirmReautomate === 'boolean'
+  );
+};
 
 const caseWithExtension = (c: MockCaseRecord) => {
   const iteration = c.ai ? findIteration(c.ai.iterationId) : undefined;
@@ -290,18 +311,29 @@ export const installAiFactoryHandlers = (mock: MockAdapter): void => {
   });
 
   // A1 — GET tms/automation/environment
-  mock.onGet(/\/tms\/automation\/environment$/).reply(() => [200, { environments: ['beta5', 'qa', 'dev5'], default: 'beta5' }]);
+  mock.onGet(/\/tms\/automation\/environment$/).reply(() => [200, { environments: AUTOMATION_ENVIRONMENTS, default: 'beta5' }]);
 
   // A2 — POST tms/automation
   mock.onPost(/\/tms\/automation$/).reply((config) => {
-    const payload = body<{ testCaseIds: number[]; environment: string; confirmReautomate: boolean }>(config);
+    let payload: unknown;
+    try {
+      payload = body<unknown>(config);
+    } catch {
+      return [400, { errorCode: 40002, message: 'Invalid automation request' }];
+    }
+    if (!isAutomationPayload(payload)) return [400, { errorCode: 40002, message: 'Invalid automation request' }];
+    if (payload.testCaseIds.some((id) => !findCase(id))) {
+      return [400, { errorCode: 40002, message: 'Invalid automation request' }];
+    }
     const accepted: number[] = [];
     const skipped: { id: number; displayId: string; reason: string }[] = [];
-    const again = payload.testCaseIds.filter((id) => findCase(id)?.automation?.status === AutomationStatus.AUTOMATED);
-    if (again.length && !payload.confirmReautomate) return conflict('ALREADY_AUTOMATED_CONFIRM_REQUIRED');
+    const again = payload.testCaseIds.filter((id) => {
+      const c = findCase(id);
+      return c?.automation?.status === AutomationStatus.AUTOMATED && automateSkipReason(c) === null;
+    });
+    if (again.length && !payload.confirmReautomate) return [409, { reason: 'ALREADY_AUTOMATED_CONFIRM_REQUIRED', testCaseIds: again }];
     payload.testCaseIds.forEach((id) => {
       const c = findCase(id);
-      if (!c) return;
       const reason = automateSkipReason(c);
       if (reason) {
         skipped.push({ id, displayId: c.displayId, reason });

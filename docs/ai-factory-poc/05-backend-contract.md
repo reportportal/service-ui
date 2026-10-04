@@ -617,6 +617,11 @@ exist; the fallback is UX-only and the backend 409 remains mandatory authorizati
 
 ## 8. Provisional Automation contract (US-015, 016, 017)
 
+**Frontend standing (2026-10-04):** T5.1 consumes A1/A2 through strict response normalizers and the AI Factory
+mock overlay. The feature-gated details, section and bulk entry points make no A1/A2 request when the flag is
+off. This is not live integration: A1/A2 are absent from the audited published OpenAPI and remain provisional
+until backend paths, schemas, authorization and error semantics are published and verified.
+
 - A1 `GET tms/automation/environment` → `{ environments: string[]; default: string }` (default `beta5`).
 - A2 `POST tms/automation` body `{ testCaseIds: number[]; environment: string; confirmReautomate: boolean }` →
   `202 { iteration: { pipelineId, iterationId, number }; accepted: number[]; skipped: { id, displayId, reason: SkipReason }[] }`;

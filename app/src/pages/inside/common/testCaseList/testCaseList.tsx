@@ -91,6 +91,8 @@ const toggleRowSelection = ({
           displayId: testCase.displayId,
           lifecycle: testCase.lifecycle,
           name: testCase.name,
+          review: testCase.review,
+          automation: testCase.automation,
         },
       ];
 
@@ -126,6 +128,8 @@ const toggleAllRowsSelection = ({
             displayId: testCase.displayId,
             lifecycle: testCase.lifecycle,
             name: testCase.name,
+            review: testCase.review,
+            automation: testCase.automation,
           })),
       ];
 

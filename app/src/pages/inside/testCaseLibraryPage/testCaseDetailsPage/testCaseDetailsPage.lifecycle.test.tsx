@@ -24,6 +24,7 @@ import { useUserPermissions } from 'hooks/useUserPermissions';
 import { LifecycleHistory, useTestCaseAi } from 'pages/inside/aiFactory/lifecycle';
 import { EvaluationPanel } from 'pages/inside/aiFactory/evaluation';
 import { GenerationCost } from 'pages/inside/aiFactory/generationCost';
+import { AutomationSection } from 'pages/inside/aiFactory/automation';
 import { PipelineLinks } from 'pages/inside/aiFactory/pipelineLinks';
 import { LaunchBlockedBanner } from 'pages/inside/aiFactory/readyOnlyGate';
 import { ReviewStrip, useFixRound, useReviewComments } from 'pages/inside/aiFactory/review';
@@ -79,6 +80,7 @@ jest.mock('controllers/testCase', () => ({
 }));
 jest.mock('pages/inside/aiFactory/evaluation', () => ({ EvaluationPanel: 'EvaluationPanel' }));
 jest.mock('pages/inside/aiFactory/generationCost', () => ({ GenerationCost: 'GenerationCost' }));
+jest.mock('pages/inside/aiFactory/automation', () => ({ AutomationSection: 'AutomationSection' }));
 jest.mock('hooks/useUserPermissions', () => ({ useUserPermissions: jest.fn() }));
 jest.mock('pages/inside/aiFactory/lifecycle', () => ({
   LifecycleHistory: 'LifecycleHistory',
@@ -132,8 +134,9 @@ const testCase = {
 } as unknown as ExtendedTestCase;
 
 let selectedTestCase = testCase;
+const aiDetailsReload = jest.fn();
 
-const renderPage = (isEnabled: boolean) => {
+const renderPage = (isEnabled: boolean, canAutomateTestCases = false) => {
   jest.mocked(useAiFactoryEnabled).mockReturnValue(isEnabled);
   jest.mocked(useSelector).mockImplementation((selector) => {
     if (selector === testCaseDetailsSelector) return selectedTestCase;
@@ -142,6 +145,7 @@ const renderPage = (isEnabled: boolean) => {
     return undefined;
   });
   jest.mocked(useUserPermissions).mockReturnValue({
+    canAutomateTestCases,
     canManageTestCases: false,
   } as ReturnType<typeof useUserPermissions>);
   jest.mocked(useAddTestCasesToTestPlanModal).mockReturnValue({ openModal: jest.fn() });
@@ -150,7 +154,7 @@ const renderPage = (isEnabled: boolean) => {
     data: null,
     isLoading: false,
     isError: false,
-    reload: jest.fn(),
+    reload: aiDetailsReload,
   });
   jest.mocked(useReviewComments).mockReturnValue({
     comments: [],
@@ -196,6 +200,20 @@ describe('TestCaseDetailsPage lifecycle history', () => {
     const wrapper = renderPage(false);
 
     expect(wrapper.find(LifecycleHistory)).toHaveLength(0);
+  });
+
+  test('mounts Automation only when both the feature and permission are enabled', () => {
+    expect(renderPage(true, true).find(AutomationSection).prop('testCase')).toBe(testCase);
+    expect(renderPage(false, true).find(AutomationSection)).toHaveLength(0);
+    expect(renderPage(true, false).find(AutomationSection)).toHaveLength(0);
+  });
+
+  test('refreshes AI and test-case details after automation starts', () => {
+    const wrapper = renderPage(true, true);
+
+    (wrapper.find(AutomationSection).prop('onSuccess') as () => void)();
+
+    expect(aiDetailsReload).toHaveBeenCalled();
   });
 
   test('shows the blocked-plan banner for a planned Draft case only while enabled', () => {

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import type { AiLifecycle } from 'types/aiFactory';
+import type { AiAutomationStatus, AiLifecycle, TestCaseAiExtension } from 'types/aiFactory';
 
 export interface FilterOption {
   label: string;
@@ -35,4 +35,6 @@ export interface SelectedTestCaseRow {
   displayId?: string;
   lifecycle?: AiLifecycle;
   name?: string;
+  review?: TestCaseAiExtension['review'];
+  automation?: { status: AiAutomationStatus };
 }

@@ -14,6 +14,7 @@
 | Labels | `ai-factory-poc`, `frontend` |
 | Assignee | **Saveli_Savich@epam.com** (the script assigns the token owner by default, which is the same person; set `JIRA_ASSIGNEE` if the Jira username differs) |
 | Description | FE scope (T-ids), link to this folder, mock/BE status, notes |
+| Estimate | Set **Original Estimate when the sub-task is created** and immediately add a Jira comment with the research / implementation / validation breakdown. The value must match [08-estimations.md](08-estimations.md) and remain ≤ 36 h |
 | Status flow | as in [docs/11-JIRA.md](../11-JIRA.md): In Progress → Code review (PR link in comments) → Testing |
 | Branch | from `bootcamp-prototype`: `EPMRPP-<subtask>-<short-desc>`. **In practice** (2026-09-28): while nothing under a sub-task is pushed yet, small same-sub-task tasks stack as separate commits on one branch (e.g. all of Phase 0 on `EPMRPP-121765-foundation`), so branching doesn't outrun the base before there's anything to review. Once a branch is pushed / has an open PR, the **next** task for that sub-task starts a fresh branch from `bootcamp-prototype` instead of stacking further |
 | PR | into `bootcamp-prototype`, title `EPMRPP-<subtask> \|\| <summary>` (repo convention, e.g. `EPMRPP-121541 \|\| Invalidate …`); one PR can cover several commits/tasks when they share a branch as above |
@@ -38,7 +39,7 @@ Keep this in sync with 00-status (the status file is the source of truth for pro
 | 012 | EPMRPP-121703 | — | `[FE] Push review comments to agent` |
 | 013 | EPMRPP-121682 | **[EPMRPP-122029](https://jiraeu.epam.com/browse/EPMRPP-122029)** 🟨 | `[FE] Approve and mark as ready` (T3.2) |
 | 014 | EPMRPP-121683 | **[EPMRPP-122032](https://jiraeu.epam.com/browse/EPMRPP-122032)** 🟨 · **[EPMRPP-122033](https://jiraeu.epam.com/browse/EPMRPP-122033)** 🟨 | `[FE] Ready-only Test Plan and Launch gate` (T4.1) · `[FE] Test Plan launch-blocked state` (T4.2) |
-| 015 | EPMRPP-121671 | — | `[FE] Send Ready Test Cases to automation` |
+| 015 | EPMRPP-121671 | **[EPMRPP-122035](https://jiraeu.epam.com/browse/EPMRPP-122035)** 🟨 | `[FE] Send Ready Test Cases to automation` (T5.1) |
 | 016 | EPMRPP-121672 | — | `[FE] Automation iteration view` |
 | 017 | EPMRPP-121680 | — | `[FE] Automation results on Test Case` |
 
@@ -51,16 +52,23 @@ The PAT was renewed on 2026-09-25 and works. If it returns **HTTP 401** again, g
 
 ```bash
 # dry run (prints the payload, checks auth and whether an [FE] sub-task already exists)
-python3 docs/ai-factory-poc/tools/jira_fe_subtask.py EPMRPP-121704 "Pipelines iterations list"
+python3 docs/ai-factory-poc/tools/jira_fe_subtask.py EPMRPP-121704 "Pipelines iterations list" \
+  --estimate-hours 20 \
+  --estimate-comment "4 h research and Jira scope; 10 h implementation; 6 h tests and review"
 
 # create
-python3 docs/ai-factory-poc/tools/jira_fe_subtask.py EPMRPP-121704 "Pipelines iterations list" --yes
+python3 docs/ai-factory-poc/tools/jira_fe_subtask.py EPMRPP-121704 "Pipelines iterations list" \
+  --estimate-hours 20 \
+  --estimate-comment "4 h research and Jira scope; 10 h implementation; 6 h tests and review" \
+  --yes
 ```
 
 Optional env: `JIRA_ENV_FILE` (another env file), `JIRA_ASSIGNEE` (Jira username),
 `JIRA_SUBTASK_TYPE` (if auto-detection of the sub-task type fails).
 
 The script is idempotent by exact `[FE]` summary, so one story may hold several independently sized
-frontend sub-tasks without creating duplicates. It never edits existing issues.
+frontend sub-tasks without creating duplicates. For an existing exact match, `--yes` synchronizes its Original
+Estimate and adds the exact breakdown comment only once. Estimate arguments are mandatory so a new sub-task can
+never be created by this workflow without both pieces of planning evidence.
 For an AI agent working on the plan: always run the dry run first, show it to the user, and
 create only after confirmation.

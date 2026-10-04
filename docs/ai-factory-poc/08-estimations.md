@@ -80,7 +80,7 @@ Filled in as tasks complete. `—` = not done yet.
 | T4.2 | Test Plan page launch-blocked banner | 4 | M (20) | **20** | 4 | 10 | 6 | 2026-10-03 |
 | T4.3 | Compare iterations | 4 | M (20) | **20** | 4 | 10 | 6 | 2026-10-03 |
 | T4.4 | Re-run iteration + Retry failed stage | 4 | M (20) | — | | | | |
-| T5.1 | Automate action + Send to automation dialog | 5 | M (20) | — | | | | |
+| T5.1 | Automate action + Send to automation dialog | 5 | M (20) | **20** | 4 | 10 | 6 | 2026-10-04 |
 | T5.2 | Automation iteration progress | 5 | S (8) | — | | | | |
 | T5.3 | Automation section on case | 5 | S (8) | — | | | | |
 | T5.4 | Launch ↔ case links | 5 | M (20) | — | | | | |
@@ -102,9 +102,9 @@ Filled in as tasks complete. `—` = not done yet.
 | 2 · Library | T2.1–T2.6 | 108 | 108 | 6 / 6 | T2.1–T2.5 ≈ planned; T2.6 ≈ planned |
 | 3 · Review loop | T3.1–T3.4, **T3.6** | 120 | 88 | 4 / 5 | T3.1 −6 h; T3.2 ≈ planned; T3.3 −6 h; T3.4 ≈ planned; T3.6 new (audit 2026-09-29, US-019) |
 | 4 · Gate & compare | T4.1–T4.3, **T4.4** | 80 | 60 | 3 / 4 | T4.1–T4.3 ≈ planned; T4.4 new (audit 2026-09-29, US-020) and remains blocked on T3.6 plus its UI↔API contract |
-| 5 · Automation | T5.1–T5.4 | 56 | 0 | 0 / 4 | — |
+| 5 · Automation | T5.1–T5.4 | 56 | 20 | 1 / 4 | T5.1 ≈ planned |
 | 6 · Hardening | T6.1–T6.5, **T6.6** | 48 | 0 | 0 / 6 | T6.6 new (audit 2026-09-29, US-018 FE-owned slice) |
-| **Total** | | **608 h + 20 h planning = 628 h** | **399** | 24 / 37 | — |
+| **Total** | | **608 h + 20 h planning = 628 h** | **419** | 25 / 37 | — |
 
 **628 h ≈ 78,5 working days ≈ 15,7 working weeks** for one developer at 8 h/day. The jump from 564 h is
 the 2026-09-29 audit's 3 new stories (018/019/020) plus the two not-yet-started rework tasks it surfaced
@@ -133,6 +133,7 @@ Newest first. One line per estimate recorded.
 
 | Date | Task | Hours | Note |
 |------|------|-------|------|
+| 2026-10-04 | T5.1 Automate action + Send to automation dialog | 20 | 4 h requirements/A1-A2 contract, details/bulk/selection and modal-pattern research plus Jira scope · 10 h implementation: shared eligibility and strict request-correlated normalization, environment/request hook with stale-response guards, localized responsive modal and minimal Automation section, details-menu and Library-bulk entry points, authoritative partial-result feedback, accepted-only selection clearing, cross-page review/automation snapshots, deterministic mock validation and persistent confirmation flow · 6 h tests/review: focused 10 suites / 139 tests, full 143 suites / 1153 tests, type-check, full lint with baseline warnings only, diff-check, independent code/security PASS and contract/status documentation. A1/A2 remain provisional mock-only APIs; T5.2 polling is excluded |
 | 2026-10-03 | T4.3 Compare iterations | 20 | 4 h requirements/LP4 contract and existing Pipeline route/state research plus Jira scope · 10 h implementation: feature-gated comparison route, URL-bound pipeline/baseline/candidate selectors and latest-pair reset, list/detail entry points, comparison state/saga, exact-path LP4 identity-validating adapter, status-only neutral live fallback, private versioned mock metrics, stage/KPI/six-criterion/Auto-Ready presentation and responsive states · 6 h tests/review: 7 focused suites / 91 tests, full 138 suites / 1072 tests, type-check, focused ESLint, targeted Stylelint, production build, clean dev compile, diff-check, senior code/security PASS and contract documentation. Runtime visual QA reached the localhost login page, but the session had expired; no credentials were copied |
 | 2026-10-03 | T4.2 Test Plan page launch-blocked banner | 20 | 4 h requirements/Q-BA-04/Test Plan pagination and G2 boundary research plus Jira scope · 10 h implementation: G2 DTO/mock overlay, C1 enrichment for plan rows, Draft status column, linked warning banner, whole-plan Launch gate, Ready-only selected-row gate with cross-page lifecycle metadata and toggle-OFF parity · 6 h tests/review: guard/overlay/list/selection coverage, focused and Test Plan+Library+AI regression, type/ESLint/Stylelint/build/diff checks and contract documentation |
 | 2026-10-03 | T4.1 Ready-only gate + In plan · Launch blocked | 20 | 4 h requirements/action-path/C1-G1 boundary research and Jira scope · 10 h implementation: shared feature-flagged Draft policy, exact single-action hints in details/side panel, Ready-only mixed bulk IDs with named skips, all-Draft disablement, plan-name banners and automation IDs · 6 h tests/review: utility/button/host/bulk/banner coverage, 268-test Library+AI regression, type/ESLint/build/dev compile/diff checks and contract documentation. Browser visual QA was blocked at the expired localhost login session; no cross-origin live token was copied |
