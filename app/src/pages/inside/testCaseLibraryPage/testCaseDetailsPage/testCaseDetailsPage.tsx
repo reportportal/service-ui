@@ -55,7 +55,12 @@ import {
   useReviewComments,
   type ReviewCommentsLoadState,
 } from 'pages/inside/aiFactory/review';
-import { AutomationStatus, CommentTargetType, Lifecycle } from 'types/aiFactory';
+import {
+  AutomationStatus,
+  CommentTargetType,
+  Lifecycle,
+  type AiAutomationStatus,
+} from 'types/aiFactory';
 import { ManualScenario, Tag, TestCaseManualScenario } from 'types/testCase';
 import type { ProjectDetails } from 'pages/organization/constants';
 
@@ -82,6 +87,39 @@ import styles from './testCaseDetailsPage.scss';
 
 const cx = createClassnames(styles);
 const AUTOMATION_POLL_INTERVAL_MS = 3000;
+
+interface AutomationPollingCriteria {
+  isAiFactoryEnabled: boolean;
+  projectKey?: string;
+  testCaseId: number;
+  testCaseAutomationStatus?: AiAutomationStatus;
+  aiAutomationStatus?: AiAutomationStatus;
+  isAiDetailsLoading: boolean;
+  isTestCaseDetailsLoading: boolean;
+}
+
+const shouldPollAutomation = ({
+  isAiFactoryEnabled,
+  projectKey,
+  testCaseId,
+  testCaseAutomationStatus,
+  aiAutomationStatus,
+  isAiDetailsLoading,
+  isTestCaseDetailsLoading,
+}: AutomationPollingCriteria) => {
+  const isAutomationRunning = [testCaseAutomationStatus, aiAutomationStatus].includes(
+    AutomationStatus.IN_PROGRESS,
+  );
+
+  return (
+    isAiFactoryEnabled &&
+    Boolean(projectKey) &&
+    Boolean(testCaseId) &&
+    isAutomationRunning &&
+    !isAiDetailsLoading &&
+    !isTestCaseDetailsLoading
+  );
+};
 
 const SIDEBAR_COLLAPSIBLE_SECTIONS_CONFIG = ({
   canManageTestCases,
@@ -275,9 +313,15 @@ export const TestCaseDetailsPage = () => {
     aiDetailsState.reload();
     dispatch({ type: GET_TEST_CASE_DETAILS, payload: { testCaseId } });
   }, [aiDetailsState, dispatch, testCaseId]);
-  const isAutomationRunning =
-    testCaseDetails?.automation?.status === AutomationStatus.IN_PROGRESS ||
-    automationDetails?.status === AutomationStatus.IN_PROGRESS;
+  const isAutomationPollingEnabled = shouldPollAutomation({
+    isAiFactoryEnabled,
+    projectKey,
+    testCaseId,
+    testCaseAutomationStatus: testCaseDetails?.automation?.status,
+    aiAutomationStatus: automationDetails?.status,
+    isAiDetailsLoading: aiDetailsState.isLoading,
+    isTestCaseDetailsLoading: isLoadingTestCaseDetails,
+  });
 
   usePolling(
     () => {
@@ -285,12 +329,7 @@ export const TestCaseDetailsPage = () => {
       return POLLING_REQUEST_STARTED;
     },
     AUTOMATION_POLL_INTERVAL_MS,
-    isAiFactoryEnabled &&
-      Boolean(projectKey) &&
-      Boolean(testCaseId) &&
-      isAutomationRunning &&
-      !aiDetailsState.isLoading &&
-      !isLoadingTestCaseDetails,
+    isAutomationPollingEnabled,
   );
   const fixRoundState = useFixRound(projectKey, testCaseId, isAiReviewEnabled, {
     onStarted: refreshAfterFixRoundStart,

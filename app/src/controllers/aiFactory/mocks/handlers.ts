@@ -126,7 +126,7 @@ export const installAiFactoryHandlers = (mock: MockAdapter): void => {
     const m = url(config).match(/\/tms\/pipeline\/(\d+)\/iteration\/(\d+)/);
     const pipeline = findPipeline(Number(m[1]));
     const iteration = findIteration(Number(m[2]));
-    if (!pipeline || !iteration || iteration.pipelineId !== pipeline.id) return notFound();
+    if (!pipeline || iteration?.pipelineId !== pipeline.id) return notFound();
     return [200, toIterationRS(pipeline, iteration)];
   });
 
