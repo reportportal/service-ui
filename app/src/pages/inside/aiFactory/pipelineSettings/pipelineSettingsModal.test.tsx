@@ -16,9 +16,10 @@
 
 import { act } from 'react';
 import { shallow } from 'enzyme';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch, useSelector, useStore } from 'react-redux';
 import { Button, FieldText, Modal, SystemMessage, Toggle } from '@reportportal/ui-kit';
 
+import { URLS } from 'common/urls';
 import { fetch } from 'common/utils';
 import { getPipelinesAction } from 'controllers/aiFactory/pipelines';
 import { useUserPermissions } from 'hooks/useUserPermissions';
@@ -26,6 +27,10 @@ import { PipelineRS, PipelineType } from 'types/aiFactory';
 
 import { PipelineSettingsButton } from './pipelineSettingsButton';
 import { PipelineSettingsModalContent } from './pipelineSettingsModal';
+import {
+  getPipelineSettingsProvenance,
+  type PipelineSettingsState,
+} from './pipelineSettingsProvenance';
 import { usePipelineSettingsModal } from './usePipelineSettingsModal';
 
 jest.mock('@reportportal/ui-kit', () => ({
@@ -42,13 +47,31 @@ jest.mock(
       'pages/inside/aiFactory/aiFactoryTestUtils',
     ).reactIntlTestMock,
 );
-jest.mock('react-redux', () => ({ useDispatch: jest.fn(), useSelector: jest.fn() }));
+jest.mock('react-redux', () => ({
+  useDispatch: jest.fn(),
+  useSelector: jest.fn(),
+  useStore: jest.fn(),
+}));
 jest.mock('common/utils', () => ({
   createClassnames: () => (...classNames: string[]) => classNames.filter(Boolean).join(' '),
   fetch: jest.fn(),
 }));
-jest.mock('controllers/aiFactory/pipelines', () => ({
-  getPipelinesAction: jest.fn(() => ({ type: 'GET_PIPELINES' })),
+jest.mock('controllers/aiFactory/pipelines', () => {
+  return {
+    getPipelinesAction: jest.fn(() => ({ type: 'GET_PIPELINES' })),
+    pipelineCatalogProjectKeySelector: (state: PipelineSettingsState) =>
+      state.aiFactoryPipelines?.catalogProjectKey ?? null,
+    pipelineCatalogRequestIdSelector: (state: PipelineSettingsState) =>
+      state.aiFactoryPipelines?.catalogRequestId ?? null,
+    pipelineCatalogTransportSelector: (state: PipelineSettingsState) =>
+      state.aiFactoryPipelines?.transport ?? 'mock',
+    pipelineCatalogVersionSelector: (state: PipelineSettingsState) =>
+      state.aiFactoryPipelines?.catalogVersion ?? 0,
+    pipelinesSelector: (state: PipelineSettingsState) => state.aiFactoryPipelines?.data ?? null,
+  };
+});
+jest.mock('controllers/project', () => ({
+  projectKeySelector: (state: PipelineSettingsState) => state.project?.info?.projectKey ?? '',
 }));
 jest.mock('controllers/modal', () => ({
   hideModalAction: () => ({ type: 'HIDE_MODAL' }),
@@ -58,7 +81,6 @@ jest.mock('controllers/notification', () => ({
   showErrorNotification: (payload: unknown) => ({ type: 'ERROR', payload }),
   showSuccessNotification: (payload: unknown) => ({ type: 'SUCCESS', payload }),
 }));
-jest.mock('controllers/project', () => ({ projectKeySelector: jest.fn() }));
 jest.mock('hooks/useUserPermissions', () => ({ useUserPermissions: jest.fn() }));
 jest.mock('./usePipelineSettingsModal', () => ({ usePipelineSettingsModal: jest.fn() }));
 
@@ -82,20 +104,75 @@ const generationPipeline: PipelineRS = {
   settings: { autoReady: true, threshold: 90, editable: true },
 };
 
-const renderModal = (pipeline = generationPipeline, canManagePipelineSettings = true) => {
+const createSettingsState = (
+  projectKey: string,
+  pipeline: PipelineRS,
+  transport: 'mock' | 'live' = 'mock',
+  catalogVersion = 1,
+  catalogRequestId = 1,
+): PipelineSettingsState => ({
+  project: { info: { projectKey } },
+  aiFactoryPipelines: {
+    data: [pipeline],
+    transport,
+    catalogVersion,
+    catalogRequestId,
+    catalogProjectKey: projectKey,
+    iterationsByPipeline: null,
+    iterationsLoadingByPipeline: {},
+    iterationsErrorByPipeline: {},
+    iterationRequestIdByPipeline: {},
+    iterationDetails: null,
+    comparison: null,
+  },
+});
+
+let storeState: PipelineSettingsState;
+
+const renderModal = (
+  pipeline = generationPipeline,
+  canManagePipelineSettings = true,
+  transport: 'mock' | 'live' = 'mock',
+  catalogVersion = 1,
+  catalogProjectKey: string | null = 'demo_project',
+  catalogRequestId = 1,
+  projectKey = 'demo_project',
+) => {
+  storeState = createSettingsState(
+    projectKey,
+    pipeline,
+    transport,
+    catalogVersion,
+    catalogRequestId,
+  );
+  storeState.aiFactoryPipelines = {
+    ...storeState.aiFactoryPipelines,
+    catalogProjectKey,
+  };
+  const provenance = getPipelineSettingsProvenance(storeState, pipeline) ?? undefined;
   jest.mocked(useDispatch).mockReturnValue(dispatch);
-  jest.mocked(useSelector).mockReturnValue('demo_project');
+  jest
+    .mocked(useSelector)
+    .mockImplementation(((selector: (state: PipelineSettingsState) => unknown) =>
+      selector(storeState)) as typeof useSelector);
+  jest.mocked(useStore).mockReturnValue({
+    getState: () => storeState,
+  } as ReturnType<typeof useStore>);
   jest.mocked(useUserPermissions).mockReturnValue({
     canManagePipelineSettings,
   } as ReturnType<typeof useUserPermissions>);
 
-  return shallow(<PipelineSettingsModalContent data={{ pipeline }} />);
+  return shallow(<PipelineSettingsModalContent data={{ pipeline, provenance }} />);
 };
 
 describe('pipeline settings', () => {
   beforeEach(() => {
     jest.clearAllMocks();
     jest.mocked(usePipelineSettingsModal).mockReturnValue({ openModal });
+    storeState = createSettingsState('demo_project', generationPipeline);
+    jest.mocked(useStore).mockReturnValue({
+      getState: () => storeState,
+    } as ReturnType<typeof useStore>);
   });
 
   test('opens the global modal with the selected pipeline', () => {
@@ -104,12 +181,28 @@ describe('pipeline settings', () => {
 
     onClick();
 
-    expect(openModal).toHaveBeenCalledWith({ pipeline: generationPipeline });
+    expect(openModal).toHaveBeenCalledWith({
+      pipeline: generationPipeline,
+      provenance: {
+        projectKey: 'demo_project',
+        catalogTransport: 'mock',
+        catalogVersion: 1,
+        catalogRequestId: 1,
+      },
+    });
   });
 
   test('PATCHes LP5 using live field names and refreshes the pipeline list', async () => {
     fetchMock.mockResolvedValue({});
-    const wrapper = renderModal();
+    const wrapper = renderModal(
+      generationPipeline,
+      true,
+      'mock',
+      1,
+      'project_a',
+      7,
+      'project_a',
+    );
 
     act(() => {
       const onChange = wrapper.find(Toggle).prop('onChange') as (
@@ -127,7 +220,7 @@ describe('pipeline settings', () => {
       await Promise.resolve();
     });
 
-    expect(fetchMock).toHaveBeenCalledWith(expect.stringContaining('/pipeline/1'), {
+    expect(fetchMock).toHaveBeenCalledWith(URLS.pipelineById('project_a', 1), {
       method: 'PATCH',
       data: { autoReadyEnabled: false, autoReadyThreshold: 90 },
     });
@@ -161,6 +254,59 @@ describe('pipeline settings', () => {
     expect(wrapper.find(SystemMessage)).toHaveLength(1);
     expect(wrapper.find(Toggle).prop('disabled')).toBe(true);
     expect(wrapper.find(FieldText).prop('disabled')).toBe(true);
+  });
+
+  test('refuses the settings save request boundary for a non-mock catalog', () => {
+    const wrapper = renderModal(generationPipeline, true, 'live');
+
+    expect(wrapper.find(Modal).prop('okButton')).toBeUndefined();
+    expect(wrapper.find(SystemMessage)).toHaveLength(1);
+    expect(wrapper.find(Toggle).prop('disabled')).toBe(true);
+    expect(wrapper.find(FieldText).prop('disabled')).toBe(true);
+    expect(fetchMock).not.toHaveBeenCalled();
+  });
+
+  test.each([
+    ['unresolved catalog', 0, 'demo_project'],
+    ['catalog from another project', 1, 'other_project'],
+  ])('refuses settings save for %s', (_description, version, catalogProjectKey) => {
+    const wrapper = renderModal(generationPipeline, true, 'mock', version, catalogProjectKey);
+
+    expect(wrapper.find(Modal).prop('okButton')).toBeUndefined();
+    expect(wrapper.find(SystemMessage)).toHaveLength(1);
+    expect(fetchMock).not.toHaveBeenCalled();
+  });
+
+  test('stays read-only and refuses a captured save after navigation to another catalog', async () => {
+    const wrapper = renderModal(
+      generationPipeline,
+      true,
+      'mock',
+      9,
+      'project_a',
+      11,
+      'project_a',
+    );
+    act(() => {
+      const onChange = wrapper.find(Toggle).prop('onChange') as (
+        event: { target: { checked: boolean } },
+      ) => void;
+      onChange({ target: { checked: false } });
+    });
+    const capturedSave = (wrapper.find(Modal).prop('okButton') as ModalButtonProps).onClick;
+    const projectBPipeline = { ...generationPipeline };
+
+    storeState = createSettingsState('project_b', projectBPipeline, 'mock', 9, 11);
+    wrapper.setProps({});
+
+    expect(wrapper.find(Modal).prop('okButton')).toBeUndefined();
+    expect(wrapper.find(SystemMessage)).toHaveLength(1);
+
+    await act(async () => {
+      capturedSave?.();
+      await Promise.resolve();
+    });
+    expect(fetchMock).not.toHaveBeenCalled();
   });
 
   test('explains that automation pipelines have no settings in the PoC', () => {

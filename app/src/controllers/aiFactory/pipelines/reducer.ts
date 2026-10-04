@@ -17,8 +17,9 @@
 import { Action, combineReducers } from 'redux';
 
 import { createPageScopedReducer } from 'common/utils/createPageScopedReducer';
+import { LOGOUT } from 'controllers/auth';
 import { fetchReducer } from 'controllers/fetch';
-import { FETCH_ERROR, FETCH_SUCCESS } from 'controllers/fetch/constants';
+import { FETCH_ERROR, FETCH_START, FETCH_SUCCESS } from 'controllers/fetch/constants';
 import { loadingReducer } from 'controllers/loading';
 import {
   PROJECT_PIPELINE_COMPARISON_PAGE,
@@ -35,11 +36,131 @@ import {
   PIPELINE_ITERATIONS_NAMESPACE,
   PIPELINES_NAMESPACE,
 } from './constants';
+import {
+  IterationsByPipelineId,
+  IterationsErrorByPipelineId,
+  IterationsLoadingByPipelineId,
+  PipelineIterationItem,
+  PipelinesState,
+} from './types';
+import { PipelineCatalogTransport } from './transport';
 
 interface PipelineReducerAction extends Action<string> {
-  payload?: { data?: PipelineComparison };
-  meta?: { namespace?: string };
+  payload?: { data?: unknown };
+  meta?: {
+    namespace?: string;
+    pipelineId?: number;
+    transport?: PipelineCatalogTransport;
+    transportFallback?: boolean;
+    isCancellation?: boolean;
+    requestId?: number;
+    catalogVersion?: number;
+    catalogRequestId?: number;
+    projectKey?: string;
+  };
 }
+
+const isPipelineIterationsAction = (action: PipelineReducerAction): boolean =>
+  action.meta?.namespace === PIPELINE_ITERATIONS_NAMESPACE &&
+  typeof action.meta.pipelineId === 'number';
+
+const iterationsByPipelineReducer = (
+  state: IterationsByPipelineId | null = null,
+  action: PipelineReducerAction,
+): IterationsByPipelineId | null => {
+  if (!isPipelineIterationsAction(action) || action.type !== FETCH_SUCCESS) {
+    return state;
+  }
+  return {
+    ...state,
+    [action.meta.pipelineId]: (action.payload?.data as PipelineIterationItem[]) ?? [],
+  };
+};
+
+const iterationsLoadingByPipelineReducer = (
+  state: IterationsLoadingByPipelineId = {},
+  action: PipelineReducerAction,
+): IterationsLoadingByPipelineId => {
+  if (!isPipelineIterationsAction(action)) {
+    return state;
+  }
+  if (![FETCH_START, FETCH_SUCCESS, FETCH_ERROR].includes(action.type)) {
+    return state;
+  }
+  return {
+    ...state,
+    [action.meta.pipelineId]: action.type === FETCH_START,
+  };
+};
+
+const iterationsErrorByPipelineReducer = (
+  state: IterationsErrorByPipelineId = {},
+  action: PipelineReducerAction,
+): IterationsErrorByPipelineId => {
+  if (!isPipelineIterationsAction(action)) {
+    return state;
+  }
+  if (![FETCH_START, FETCH_SUCCESS, FETCH_ERROR].includes(action.type)) {
+    return state;
+  }
+  return {
+    ...state,
+    [action.meta.pipelineId]: action.type === FETCH_ERROR && !action.meta.isCancellation,
+  };
+};
+
+const transportReducer = (
+  state: PipelineCatalogTransport = 'mock',
+  action: PipelineReducerAction,
+): PipelineCatalogTransport =>
+  action.type === FETCH_SUCCESS && action.meta?.namespace === PIPELINES_NAMESPACE
+    ? (action.meta.transport ?? 'mock')
+    : state;
+
+const transportFallbackReducer = (state = false, action: PipelineReducerAction): boolean =>
+  action.type === FETCH_SUCCESS && action.meta?.namespace === PIPELINES_NAMESPACE
+    ? Boolean(action.meta.transportFallback)
+    : state;
+
+const catalogVersionReducer = (state = 0, action: PipelineReducerAction): number => {
+  if (action.meta?.namespace !== PIPELINES_NAMESPACE) {
+    return state;
+  }
+  if (action.type === FETCH_START) {
+    return 0;
+  }
+  return action.type === FETCH_SUCCESS ? (action.meta.catalogRequestId ?? state) : state;
+};
+
+const catalogRequestIdReducer = (
+  state: number | null = null,
+  action: PipelineReducerAction,
+): number | null =>
+  action.meta?.namespace === PIPELINES_NAMESPACE && action.type === FETCH_START
+    ? (action.meta.catalogRequestId ?? null)
+    : state;
+
+const catalogProjectKeyReducer = (
+  state: string | null = null,
+  action: PipelineReducerAction,
+): string | null =>
+  action.meta?.namespace === PIPELINES_NAMESPACE && action.type === FETCH_START
+    ? (action.meta.projectKey ?? null)
+    : state;
+
+const iterationRequestIdByPipelineReducer = (
+  state: Record<number, number> = {},
+  action: PipelineReducerAction,
+): Record<number, number> => {
+  if (
+    !isPipelineIterationsAction(action) ||
+    action.type !== FETCH_START ||
+    typeof action.meta.requestId !== 'number'
+  ) {
+    return state;
+  }
+  return { ...state, [action.meta.pipelineId]: action.meta.requestId };
+};
 
 const comparisonReducer = (
   state: PipelineComparison | null = null,
@@ -51,7 +172,9 @@ const comparisonReducer = (
   if (action.meta?.namespace !== PIPELINE_COMPARISON_NAMESPACE) {
     return state;
   }
-  return action.type === FETCH_SUCCESS ? (action.payload?.data ?? null) : null;
+  return action.type === FETCH_SUCCESS
+    ? ((action.payload?.data as PipelineComparison | undefined) ?? null)
+    : null;
 };
 
 const comparisonLoadingBaseReducer = loadingReducer(PIPELINE_COMPARISON_NAMESPACE);
@@ -71,14 +194,18 @@ const comparisonErrorReducer = (state = false, action: PipelineReducerAction): b
   return action.type === FETCH_ERROR ? true : state;
 };
 
-const reducer = combineReducers({
+const combinedReducer = combineReducers({
   data: fetchReducer(PIPELINES_NAMESPACE, { initialState: null, contentPath: 'data' }),
   isLoading: loadingReducer(PIPELINES_NAMESPACE),
-  iterationsByPipeline: fetchReducer(PIPELINE_ITERATIONS_NAMESPACE, {
-    initialState: null,
-    contentPath: 'data',
-  }),
-  iterationsLoading: loadingReducer(PIPELINE_ITERATIONS_NAMESPACE),
+  transport: transportReducer,
+  transportFallback: transportFallbackReducer,
+  catalogVersion: catalogVersionReducer,
+  catalogRequestId: catalogRequestIdReducer,
+  catalogProjectKey: catalogProjectKeyReducer,
+  iterationsByPipeline: iterationsByPipelineReducer,
+  iterationsLoadingByPipeline: iterationsLoadingByPipelineReducer,
+  iterationsErrorByPipeline: iterationsErrorByPipelineReducer,
+  iterationRequestIdByPipeline: iterationRequestIdByPipelineReducer,
   iterationDetails: fetchReducer(PIPELINE_ITERATION_DETAILS_NAMESPACE, {
     initialState: null,
     contentPath: 'data',
@@ -88,6 +215,93 @@ const reducer = combineReducers({
   comparisonLoading: comparisonLoadingReducer,
   comparisonError: comparisonErrorReducer,
 });
+type CombinedPipelinesState = ReturnType<typeof combinedReducer>;
+
+const isPipelineCatalogAction = (action: PipelineReducerAction): boolean =>
+  action.meta?.namespace === PIPELINES_NAMESPACE &&
+  [FETCH_START, FETCH_SUCCESS, FETCH_ERROR].includes(action.type);
+
+const isCurrentCatalogRequest = (
+  state: PipelinesState,
+  action: PipelineReducerAction,
+): boolean => {
+  if (!isPipelineCatalogAction(action)) {
+    return true;
+  }
+  if (
+    typeof action.meta?.catalogRequestId !== 'number' ||
+    typeof action.meta.projectKey !== 'string'
+  ) {
+    return false;
+  }
+  if (action.type === FETCH_START) {
+    return state.catalogRequestId === null || action.meta.catalogRequestId > state.catalogRequestId;
+  }
+  return (
+    action.meta.catalogRequestId === state.catalogRequestId &&
+    action.meta.projectKey === state.catalogProjectKey
+  );
+};
+
+const isCurrentIterationRequest = (
+  state: PipelinesState,
+  action: PipelineReducerAction,
+): boolean => {
+  if (!isPipelineIterationsAction(action)) {
+    return true;
+  }
+  if (
+    action.meta.catalogVersion !== state.catalogVersion ||
+    action.meta.transport !== state.transport ||
+    typeof action.meta.requestId !== 'number'
+  ) {
+    return false;
+  }
+  const currentRequestId = state.iterationRequestIdByPipeline[action.meta.pipelineId];
+  return action.type === FETCH_START
+    ? currentRequestId === undefined || action.meta.requestId > currentRequestId
+    : action.meta.requestId === currentRequestId;
+};
+
+const reducer = (
+  state: PipelinesState | undefined,
+  action: PipelineReducerAction,
+): PipelinesState => {
+  const initialState = combinedReducer(undefined, { type: '@@INIT' }) as PipelinesState;
+  if (action.type === LOGOUT) {
+    return initialState;
+  }
+  const currentState = state ?? initialState;
+  if (
+    !isCurrentCatalogRequest(currentState, action) ||
+    !isCurrentIterationRequest(currentState, action)
+  ) {
+    return currentState;
+  }
+  const nextState = combinedReducer(
+    state as CombinedPipelinesState | undefined,
+    action,
+  ) as PipelinesState;
+  const shouldResetCatalogData =
+    action.meta?.namespace === PIPELINES_NAMESPACE &&
+    (action.type === FETCH_START || action.type === FETCH_SUCCESS);
+  if (!shouldResetCatalogData) {
+    return nextState;
+  }
+  return {
+    ...nextState,
+    data: action.type === FETCH_START ? null : nextState.data,
+    iterationsByPipeline: null,
+    iterationsLoadingByPipeline: {},
+    iterationsErrorByPipeline: {},
+    iterationRequestIdByPipeline: {},
+    iterationDetails: null,
+    iterationDetailsLoading: false,
+    comparison: null,
+    comparisonLoading: false,
+    comparisonError: false,
+  };
+};
 
 // Both pages share this state slice, so navigating between them (e.g. a card link into an
 // iteration, then back) does not need to re-fetch what's already loaded.

@@ -4,7 +4,7 @@
 >
 > **Audience:** ReportPortal Backend/API owners, Platform/Security, Frontend, QA, Product and AI Factory PoC stakeholders
 >
-> **Audit baseline:** OpenAPI 3.0.1, `info.version: feature-pipelines-2767`, server `/api`, audited 2026-10-02
+> **Audit baseline:** OpenAPI 3.0.1, `info.version: feature-pipelines-2767`, server `/api`, re-audited 2026-10-04 with no material drift from 2026-10-02
 >
 > **Published specification:** [OpenAPI JSON](http://tms.epmrpp.reportportal.io/api/api-docs) · [Swagger UI](http://tms.epmrpp.reportportal.io/ui/#organizations/my-organization/projects/superadmin-personal/api)
 >
@@ -21,6 +21,11 @@ The published API is a useful foundation, but a direct frontend cutover is not s
 identity fields optional, exposes generic object-valued metrics, does not define status transitions, polling,
 operation-specific errors, concurrency/idempotency or an operation-by-role authorization matrix. In addition, the
 published discovery origin is plain HTTP while all operations inherit bearer JWT authentication.
+
+Frontend EPMRPP-122040 now provides a mock-default, hard fail-closed LP1/LP2 DTO/adapter/transport foundation.
+This does not change the requested backend decisions or constitute a live rollout: trusted HTTPS, read roles,
+requiredness/status semantics and Product/QA approval of the reduced catalog UI are still required before the live
+gate can be opened. LP3 and Quality Standard are not integrated by that scope.
 
 The recommended sequence is:
 

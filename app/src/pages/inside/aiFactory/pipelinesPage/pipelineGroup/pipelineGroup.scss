@@ -76,3 +76,12 @@
   color: var(--rp-ui-base-e-300);
   font-family: var(--rp-ui-base-font-family);
 }
+
+.error {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 16px 0;
+  color: var(--rp-ui-base-error);
+  font-family: var(--rp-ui-base-font-family);
+}

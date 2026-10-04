@@ -31,8 +31,12 @@ import { ProjectDetails } from 'pages/organization/constants';
 import {
   getPipelineIterationsAction,
   getPipelinesAction,
+  isReducedPipeline,
+  isReducedPipelineIteration,
+  pipelineCatalogTransportSelector,
   pipelineIterationsByPipelineSelector,
-  pipelineIterationsLoadingSelector,
+  pipelineIterationsErrorByPipelineSelector,
+  pipelineIterationsLoadingByPipelineSelector,
   pipelinesLoadingSelector,
   pipelinesSelector,
 } from 'controllers/aiFactory/pipelines';
@@ -61,15 +65,20 @@ export const PipelinesPageContent = () => {
   const pipelines = useSelector(pipelinesSelector);
   const isLoading = useSelector(pipelinesLoadingSelector);
   const iterationsByPipeline = useSelector(pipelineIterationsByPipelineSelector);
-  const iterationsLoading = useSelector(pipelineIterationsLoadingSelector);
+  const iterationsLoadingByPipeline =
+    useSelector(pipelineIterationsLoadingByPipelineSelector) ?? {};
+  const iterationsErrorByPipeline = useSelector(pipelineIterationsErrorByPipelineSelector) ?? {};
+  const transport = useSelector(pipelineCatalogTransportSelector) ?? 'mock';
   const [search, setSearch] = useState('');
   const pipelineIds = pipelines?.map((pipeline) => pipeline.id) ?? [];
   const hasRunningAutomationIteration = Boolean(
     pipelines?.some(
       (pipeline) =>
+        !isReducedPipeline(pipeline) &&
         pipeline.type === PipelineType.AUTOMATION &&
         iterationsByPipeline?.[pipeline.id]?.some(
-          (iteration) => iteration.status === IterationStatus.RUNNING,
+          (iteration) =>
+            !isReducedPipelineIteration(iteration) && iteration.status === IterationStatus.RUNNING,
         ),
     ),
   );
@@ -87,7 +96,11 @@ export const PipelinesPageContent = () => {
       return POLLING_REQUEST_STARTED;
     },
     ITERATIONS_POLL_INTERVAL_MS,
-    hasRunningAutomationIteration && !isLoading && !iterationsLoading && pipelineIds.length > 0,
+    transport === 'mock' &&
+      hasRunningAutomationIteration &&
+      !isLoading &&
+      !Object.values(iterationsLoadingByPipeline).some(Boolean) &&
+      pipelineIds.length > 0,
   );
 
   const breadcrumbDescriptors = [
@@ -125,8 +138,10 @@ export const PipelinesPageContent = () => {
               key={pipeline.id}
               pipeline={pipeline}
               iterations={filtered}
-              isLoading={iterationsLoading}
+              isLoading={Boolean(iterationsLoadingByPipeline[pipeline.id])}
+              hasError={Boolean(iterationsErrorByPipeline[pipeline.id])}
               isSearching={Boolean(search.trim())}
+              onRetry={() => dispatch(getPipelineIterationsAction([pipeline.id]))}
             />
           );
         })}
@@ -145,6 +160,7 @@ export const PipelinesPageContent = () => {
               <Button
                 variant="text"
                 data-automation-id="compareIterationsButton"
+                disabled={transport !== 'mock'}
                 onClick={() =>
                   dispatch({
                     type: PROJECT_PIPELINE_COMPARISON_PAGE,

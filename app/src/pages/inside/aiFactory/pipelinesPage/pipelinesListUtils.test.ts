@@ -59,4 +59,19 @@ describe('matchesSearch', () => {
   test('does not match unrelated text', () => {
     expect(matchesSearch(baseIteration, 'Test case generation', 'nothing here')).toBe(false);
   });
+
+  test.each(['scheduled', 'review'])('matches reduced iteration field "%s"', (search) => {
+    const reducedIteration = {
+      kind: 'reduced' as const,
+      id: 102,
+      pipelineId: 2,
+      number: 4,
+      status: 'UNKNOWN' as const,
+      trigger: 'Scheduled run',
+      attributes: [],
+      stages: [{ key: 'review', label: 'Review', status: 'UNKNOWN' as const }],
+    };
+
+    expect(matchesSearch(reducedIteration, 'Live pipeline', search)).toBe(true);
+  });
 });

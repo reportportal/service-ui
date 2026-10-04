@@ -19,7 +19,14 @@ import type { PipelinesSelectorsRootState, PipelinesState } from './types';
 export const pipelinesStateSelector = (state: PipelinesSelectorsRootState): PipelinesState =>
   state.aiFactoryPipelines || {
     data: null,
+    transport: 'mock',
+    catalogVersion: 0,
+    catalogRequestId: null,
+    catalogProjectKey: null,
     iterationsByPipeline: null,
+    iterationsLoadingByPipeline: {},
+    iterationsErrorByPipeline: {},
+    iterationRequestIdByPipeline: {},
     iterationDetails: null,
     comparison: null,
   };
@@ -31,7 +38,31 @@ export const pipelinesSelector = (state: PipelinesSelectorsRootState) =>
   pipelinesStateSelector(state).data;
 
 export const pipelineIterationsLoadingSelector = (state: PipelinesSelectorsRootState): boolean =>
-  Boolean(pipelinesStateSelector(state).iterationsLoading);
+  Object.values(pipelinesStateSelector(state).iterationsLoadingByPipeline).some(Boolean);
+
+export const pipelineIterationsLoadingByPipelineSelector = (state: PipelinesSelectorsRootState) =>
+  pipelinesStateSelector(state).iterationsLoadingByPipeline;
+
+export const pipelineIterationsErrorByPipelineSelector = (state: PipelinesSelectorsRootState) =>
+  pipelinesStateSelector(state).iterationsErrorByPipeline;
+
+export const pipelineCatalogTransportSelector = (state: PipelinesSelectorsRootState) =>
+  pipelinesStateSelector(state).transport;
+
+export const pipelineCatalogTransportFallbackSelector = (
+  state: PipelinesSelectorsRootState,
+): boolean => Boolean(pipelinesStateSelector(state).transportFallback);
+
+export const pipelineCatalogVersionSelector = (state: PipelinesSelectorsRootState): number =>
+  pipelinesStateSelector(state).catalogVersion;
+
+export const pipelineCatalogRequestIdSelector = (
+  state: PipelinesSelectorsRootState,
+): number | null => pipelinesStateSelector(state).catalogRequestId;
+
+export const pipelineCatalogProjectKeySelector = (
+  state: PipelinesSelectorsRootState,
+): string | null => pipelinesStateSelector(state).catalogProjectKey;
 
 export const pipelineIterationsByPipelineSelector = (state: PipelinesSelectorsRootState) =>
   pipelinesStateSelector(state).iterationsByPipeline;

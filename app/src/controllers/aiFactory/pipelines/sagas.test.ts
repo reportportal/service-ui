@@ -14,9 +14,99 @@
  * limitations under the License.
  */
 
+import { runSaga } from 'redux-saga';
+
+import { URLS } from 'common/urls';
+import { fetch } from 'common/utils';
+import { FETCH_ERROR, FETCH_START, FETCH_SUCCESS } from 'controllers/fetch/constants';
 import { CriterionKey, PipelineCompareRS, StageKey, StageStatus } from 'types/aiFactory';
 
-import { normalizePipelineComparison } from './sagas';
+import {
+  getPipelineIterationDetailsAction,
+  getPipelineIterationsAction,
+} from './actionCreators';
+import {
+  PIPELINE_ITERATION_DETAILS_NAMESPACE,
+  PIPELINE_ITERATIONS_NAMESPACE,
+} from './constants';
+import { aiFactoryPipelinesSagas, normalizePipelineComparison } from './sagas';
+import { getPipelineCatalogTransport } from './transport';
+
+jest.mock('common/utils', () => {
+  const actual = jest.requireActual<typeof import('common/utils')>('common/utils');
+
+  return { ...actual, fetch: jest.fn() };
+});
+jest.mock('./transport', () => {
+  const actual = jest.requireActual<typeof import('./transport')>('./transport');
+
+  return { ...actual, getPipelineCatalogTransport: jest.fn(actual.getPipelineCatalogTransport) };
+});
+
+const fetchMock = fetch as jest.MockedFunction<
+  (url: string, params?: Record<string, unknown>) => Promise<unknown>
+>;
+
+interface SagaStateOptions {
+  transport?: 'mock' | 'live';
+  catalogVersion?: number;
+  catalogProjectKey?: string | null;
+}
+
+const createSagaState = ({
+  transport = 'mock',
+  catalogVersion = 0,
+  catalogProjectKey = null,
+}: SagaStateOptions = {}) => ({
+  project: { info: { projectKey: 'demo' } },
+  aiFactoryPipelines: {
+    data: [],
+    transport,
+    catalogVersion,
+    catalogRequestId: catalogVersion > 0 ? catalogVersion : null,
+    catalogProjectKey,
+    iterationsByPipeline: null,
+    iterationsLoadingByPipeline: {},
+    iterationsErrorByPipeline: {},
+    iterationRequestIdByPipeline: {},
+    iterationDetails: null,
+    comparison: null,
+  },
+});
+
+const startPipelineSagas = (
+  state: ReturnType<typeof createSagaState>,
+  onDispatch: (action: unknown) => void = () => undefined,
+) => {
+  const subscribers: Array<(action: unknown) => void> = [];
+  const dispatched: unknown[] = [];
+  const task = runSaga(
+    {
+      subscribe: (subscriber: (action: unknown) => void) => {
+        subscribers.push(subscriber);
+        return () => {
+          const index = subscribers.indexOf(subscriber);
+          if (index >= 0) subscribers.splice(index, 1);
+        };
+      },
+      dispatch: (action) => {
+        dispatched.push(action);
+        onDispatch(action);
+      },
+      getState: () => state,
+    },
+    aiFactoryPipelinesSagas,
+  );
+
+  return {
+    dispatched,
+    dispatch: (action: unknown) => subscribers.slice().forEach((subscriber) => subscriber(action)),
+    stop: async () => {
+      task.cancel();
+      await task.done;
+    },
+  };
+};
 
 const response = (overrides: Partial<PipelineCompareRS> = {}): PipelineCompareRS => ({
   current: {
@@ -144,8 +234,188 @@ describe('normalizePipelineComparison', () => {
     expect(result.stages.map(({ key }) => key)).toEqual([StageKey.GRADE, StageKey.CREATE]);
     expect(result.stages.find(({ key }) => key === String(StageKey.GRADE))?.candidate).toEqual({
       status: StageStatus.PASSED,
-    });
   });
+});
+
+describe('pipeline transport saga boundaries', () => {
+  beforeEach(() => {
+    jest.clearAllMocks();
+    localStorage.clear();
+  });
+
+  test('uses Redux catalog provenance for detail requests instead of mutable storage', async () => {
+    localStorage.setItem('ai_factory_transport', JSON.stringify({ pipelineCatalog: 'live' }));
+    fetchMock.mockResolvedValue({ id: 103, pipelineId: 7, number: 3 });
+    let notifyComplete: () => void = () => undefined;
+    const complete = new Promise<void>((resolve) => {
+      notifyComplete = resolve;
+    });
+    const harness = startPipelineSagas(
+      createSagaState({ transport: 'mock', catalogVersion: 1, catalogProjectKey: 'demo' }),
+      (action) => {
+      const candidate = action as { type?: string; meta?: { namespace?: string } };
+      if (
+        candidate.type === FETCH_SUCCESS &&
+        candidate.meta?.namespace === PIPELINE_ITERATION_DETAILS_NAMESPACE
+      ) {
+        notifyComplete();
+      }
+      },
+    );
+
+    await Promise.resolve();
+    harness.dispatch(getPipelineIterationDetailsAction(7, 103));
+    await complete;
+
+    expect(fetchMock).toHaveBeenCalledWith(URLS.tmsPipelineIterationById('demo', 7, 103), {
+      signal: expect.any(AbortSignal),
+    });
+    expect(getPipelineCatalogTransport).not.toHaveBeenCalled();
+    expect(fetchMock).toHaveBeenCalledTimes(1);
+    await harness.stop();
+  });
+
+  test.each([
+    ['unresolved catalog', createSagaState()],
+    [
+      'catalog from another project',
+      createSagaState({ transport: 'mock', catalogVersion: 1, catalogProjectKey: 'other' }),
+    ],
+    [
+      'non-mock catalog',
+      createSagaState({ transport: 'live', catalogVersion: 1, catalogProjectKey: 'demo' }),
+    ],
+  ])('blocks direct P3 for %s', async (_description, state) => {
+    const harness = startPipelineSagas(state);
+
+    await Promise.resolve();
+    harness.dispatch(getPipelineIterationDetailsAction(7, 103));
+    await Promise.resolve();
+    await Promise.resolve();
+
+    expect(fetchMock).not.toHaveBeenCalled();
+    expect(harness.dispatched).not.toContainEqual(
+      expect.objectContaining({
+        meta: expect.objectContaining({ namespace: PIPELINE_ITERATION_DETAILS_NAMESPACE }),
+      }),
+    );
+    await harness.stop();
+  });
+
+  test('runs sibling LP2 requests independently without aborting the first request', async () => {
+    const resolvers: Array<(value: { content: unknown[] }) => void> = [];
+    let notifyStarted: () => void = () => undefined;
+    const bothStarted = new Promise<void>((resolve) => {
+      notifyStarted = resolve;
+    });
+    let successfulRequests = 0;
+    let notifyComplete: () => void = () => undefined;
+    const bothComplete = new Promise<void>((resolve) => {
+      notifyComplete = resolve;
+    });
+    fetchMock.mockImplementation(
+      () =>
+        new Promise((resolve) => {
+          resolvers.push(resolve as (value: { content: unknown[] }) => void);
+          if (resolvers.length === 2) notifyStarted();
+        }),
+    );
+    const harness = startPipelineSagas(
+      createSagaState({ transport: 'mock', catalogVersion: 7, catalogProjectKey: 'demo' }),
+      (action) => {
+        const candidate = action as { type?: string; meta?: { namespace?: string } };
+        if (
+          candidate.type === FETCH_SUCCESS &&
+          candidate.meta?.namespace === PIPELINE_ITERATIONS_NAMESPACE
+        ) {
+          successfulRequests += 1;
+          if (successfulRequests === 2) notifyComplete();
+        }
+      },
+    );
+
+    await Promise.resolve();
+    harness.dispatch(getPipelineIterationsAction([1]));
+    harness.dispatch(getPipelineIterationsAction([2]));
+    await bothStarted;
+
+    const firstSignal = fetchMock.mock.calls[0][1]?.signal as AbortSignal;
+    const secondSignal = fetchMock.mock.calls[1][1]?.signal as AbortSignal;
+    expect(firstSignal.aborted).toBe(false);
+    expect(secondSignal.aborted).toBe(false);
+    expect(fetchMock.mock.calls.map(([url]) => url)).toEqual([
+      URLS.tmsPipelineIterations('demo', 1),
+      URLS.tmsPipelineIterations('demo', 2),
+    ]);
+
+    resolvers.forEach((resolve) => resolve({ content: [] }));
+    await bothComplete;
+    const iterationActions = harness.dispatched.filter((action) => {
+      const candidate = action as { meta?: { namespace?: string } };
+      return candidate.meta?.namespace === PIPELINE_ITERATIONS_NAMESPACE;
+    }) as Array<{
+      type: string;
+      meta: { pipelineId: number; requestId: number; catalogVersion: number; transport: string };
+    }>;
+    const starts = iterationActions.filter(({ type }) => type !== FETCH_SUCCESS);
+    const successes = iterationActions.filter(({ type }) => type === FETCH_SUCCESS);
+
+    expect(starts).toHaveLength(2);
+    expect(successes).toHaveLength(2);
+    expect(starts.map(({ meta }) => meta.pipelineId)).toEqual([1, 2]);
+    expect(new Set(starts.map(({ meta }) => meta.requestId))).toHaveProperty('size', 2);
+    expect(starts.every(({ meta }) => meta.catalogVersion === 7)).toBe(true);
+    expect(starts.every(({ meta }) => meta.transport === 'mock')).toBe(true);
+    await harness.stop();
+  });
+
+  test.each([
+    ['stale', false],
+    ['current', true],
+  ])('%s LP2 failure emits the expected global notification', async (_description, isCurrent) => {
+    fetchMock.mockRejectedValue(new Error('request failed'));
+    const state = createSagaState({
+      transport: 'mock',
+      catalogVersion: 7,
+      catalogProjectKey: 'demo',
+    });
+    let notifyFailureHandled: () => void = () => undefined;
+    const failureHandled = new Promise<void>((resolve) => {
+      notifyFailureHandled = resolve;
+    });
+    const harness = startPipelineSagas(state, (action) => {
+      const candidate = action as {
+        type?: string;
+        meta?: { namespace?: string; pipelineId?: number; requestId?: number };
+      };
+      if (
+        candidate.meta?.namespace === PIPELINE_ITERATIONS_NAMESPACE &&
+        candidate.meta.pipelineId === 1 &&
+        candidate.meta.requestId !== undefined
+      ) {
+        if (candidate.type === FETCH_START) {
+          state.aiFactoryPipelines.iterationRequestIdByPipeline[1] = isCurrent
+            ? candidate.meta.requestId
+            : candidate.meta.requestId + 1;
+        }
+        if (candidate.type === FETCH_ERROR) notifyFailureHandled();
+      }
+    });
+
+    await Promise.resolve();
+    harness.dispatch(getPipelineIterationsAction([1]));
+    await failureHandled;
+    await Promise.resolve();
+    await Promise.resolve();
+
+    const notifications = harness.dispatched.filter((action) => {
+      const candidate = action as { payload?: { messageId?: string } };
+      return candidate.payload?.messageId === 'aiFactoryPipelinesLoadingFailed';
+    });
+    expect(notifications).toHaveLength(isCurrent ? 1 : 0);
+    await harness.stop();
+  });
+});
 
   test('enables mock-rich metrics, requirements, criterion averages, and Auto-Ready only with marker', () => {
     const result = normalizePipelineComparison(richResponse(), 1, 102, 101);

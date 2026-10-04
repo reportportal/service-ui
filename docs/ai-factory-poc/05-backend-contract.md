@@ -7,13 +7,17 @@
 
 ## 0. Sources, scope and status legend
 
-- Audited on **2026-10-02** from [OpenAPI JSON](http://tms.epmrpp.reportportal.io/api/api-docs) and the
+- Audited on **2026-10-04** from [OpenAPI JSON](http://tms.epmrpp.reportportal.io/api/api-docs) and the
   [interactive API UI](http://tms.epmrpp.reportportal.io/ui/#organizations/my-organization/projects/superadmin-personal/api).
+- The 2026-10-04 re-audit found **no material OpenAPI drift** from the 2026-10-02 baseline: the
+  published version, paths, schemas, authentication inheritance and missing response `required` declarations
+  remain unchanged.
 - Published document: OpenAPI `3.0.1`, `info.version = feature-pipelines-2767`, server `/api`.
 - Global authentication: HTTP bearer token, `bearerFormat: JWT`. Every operation listed here inherits it.
-- **Transport-security blocker:** the currently published documentation source is available over plain HTTP.
-  Never send a bearer JWT to that origin. Live authenticated integration remains blocked until the backend is
-  exposed through a trusted HTTPS endpoint with a valid certificate. Production integration must be HTTPS-only;
+- **Transport-security blocker:** the currently published documentation source is available over plain HTTP, while
+  the HTTPS endpoint did not present a locally trusted certificate chain during the 2026-10-04 re-audit. Never send
+  a bearer JWT to the HTTP origin. Live authenticated integration remains blocked until the backend is exposed
+  through a trusted HTTPS endpoint with a valid certificate. Production integration must be HTTPS-only;
   certificate validation must not be disabled or bypassed.
 - The audit inspected documentation only. It did **not** execute endpoint requests; in particular, no
   mutating `POST`, `PUT`, `PATCH` or `DELETE` operation was invoked.
@@ -45,8 +49,8 @@ and remain an open backend/product agreement.
 
 | ID | Method and path below `/api` | Success | Live documented | Schema verified | Mock implemented | FE consumes live |
 |---|---|---:|:---:|:---:|:---:|:---:|
-| LP1 | `GET /v1/project/{projectKey}/pipeline` | `200 PipelineRS[]` | ✅ | ✅ | ⚠️ legacy P1 | ❌ |
-| LP2 | `GET /v1/project/{projectKey}/pipeline/{pipelineId}/iteration` | `200 PipelineIterationSummaryRS[]` | ✅ | ✅ | ⚠️ legacy P2 | ❌ |
+| LP1 | `GET /v1/project/{projectKey}/pipeline` | `200 PipelineRS[]` | ✅ | ✅ | ⚠️ legacy P1 + G1 raw adapter foundation | ❌ |
+| LP2 | `GET /v1/project/{projectKey}/pipeline/{pipelineId}/iteration` | `200 PipelineIterationSummaryRS[]` | ✅ | ✅ | ⚠️ legacy P2 + G1 raw adapter foundation | ❌ |
 | LP3 | `GET /v1/project/{projectKey}/pipeline/iteration/{iterationId}` | `200 PipelineIterationDetailRS` | ✅ | ✅ | ⚠️ legacy P3 | ❌ |
 | LP4 | `GET /v1/project/{projectKey}/pipeline/iteration/{iterationId}/compare?with={otherIterationId}` | `200 PipelineCompareRS` | ✅ | ✅ | ✅ same-path mock + raw-response adapter (T4.3 complete) | ❌ |
 | LP5 | `PATCH /v1/project/{projectKey}/pipeline/{pipelineId}` | `200 PipelineRS` | ✅ | ✅ | ✅ same-path mock adapter; legacy P4 retained | ✅ T3.4 |
@@ -322,9 +326,17 @@ produce it. It therefore supports only the current-rubric portion of T2.5, not r
 
 ### 2.2 What can safely be used now
 
-- **T1.1–T1.3:** the three live GET operations LP1–LP3 are integration candidates, but only behind a raw DTO
-  adapter that provides defaults for optional fields and maps live statuses/metrics/attributes to current UI view models.
-  They are not drop-in replacements for the mock endpoints.
+- **T1.1–T1.2 / T6.2-G1:** EPMRPP-122040 implements the canonical LP1/LP2 URL, raw DTO adapter,
+  explicit reduced catalog models, per-group transport provenance and isolated per-pipeline loading/error
+  foundation. The transport remains mock by default and a requested live mode fails closed behind a hard rollout
+  gate. Therefore LP1/LP2 remain `FE consumes live = ❌`; this foundation is not an authenticated live rollout.
+  Enablement still requires trusted HTTPS, agreed backend read roles, requiredness/status decisions and Product/QA
+  approval of the reduced UI. Rich mock-only fields are omitted rather than invented. Foundation validation passed
+  type-check, full Jest (152 suites / 1364 tests), full lint (exit 0 with 201 existing warnings), code validation,
+  security validation and diff-check. Browser/runtime validation was not performed.
+- **T1.3 / LP3:** remains a future integration group after G1. EPMRPP-122040 does not integrate LP3, and
+  detail/compare/settings entry points are guarded against mixing future live catalog identities with mock-only
+  downstream data.
 - **T2.1/T2.2:** not covered. Pipeline and Quality Standard schemas contain no Test Case lifecycle, AI evaluation,
   origin, cost, unsent-comment or agent-fixing fields. C/L/R/F/A contracts remain provisional.
 - **T2.5:** QS1 is a candidate for reading the current project rubric, but only partially supports the story:
@@ -671,5 +683,6 @@ Launch delivery and identity correlation remain unverified.
 
 | Date | Change | Agreed with |
 |------|--------|-------------|
+| 2026-10-04 | v0.3 re-audited the published OpenAPI with no material drift; recorded the automatically validated EPMRPP-122040 LP1/LP2 DTO/adapter/transport foundation as mock-default and hard fail-closed for live mode. No LP3 or Quality Standard integration, live rollout or browser/runtime validation is claimed | Published OpenAPI `feature-pipelines-2767` plus frontend branch evidence |
 | 2026-10-02 | v0.2 audited published Pipeline and Quality Standard OpenAPI; separated verified raw DTOs from legacy/mock and provisional contracts; no endpoint calls executed | Published OpenAPI `feature-pipelines-2767` (documentation evidence only) |
 | 2026-09-25 | v0.1 initial FE proposal | — |

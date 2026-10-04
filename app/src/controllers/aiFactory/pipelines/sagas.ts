@@ -19,7 +19,7 @@ import { call, select, all, put, takeEvery, takeLatest } from 'redux-saga/effect
 import { URLS } from 'common/urls';
 import { fetch } from 'common/utils';
 import { fetchSuccessAction, fetchErrorAction } from 'controllers/fetch';
-import { FETCH_START } from 'controllers/fetch/constants';
+import { FETCH_ERROR, FETCH_START, FETCH_SUCCESS } from 'controllers/fetch/constants';
 import { showErrorNotification } from 'controllers/notification';
 import { projectKeySelector } from 'controllers/project';
 import { LOGOUT } from 'controllers/auth';
@@ -48,6 +48,8 @@ import {
   StageStatus,
 } from 'types/aiFactory';
 
+import { adaptLivePipelineIterations, adaptLivePipelines } from './liveAdapters';
+
 import {
   CLEAR_PIPELINE_COMPARISON,
   GET_PIPELINE_COMPARISON,
@@ -63,10 +65,24 @@ import {
   GetPipelineComparisonAction,
   GetPipelineIterationDetailsAction,
   GetPipelineIterationsAction,
+  PipelinesState,
 } from './types';
+import {
+  pipelineCatalogProjectKeySelector,
+  pipelineCatalogTransportSelector,
+  pipelineCatalogVersionSelector,
+  pipelinesStateSelector,
+} from './selectors';
+import {
+  getPipelineCatalogTransport,
+  isMockDownstreamCompatible,
+  PipelineCatalogTransport,
+} from './transport';
 
 let abortController: AbortController | undefined;
-let iterationsAbortController: AbortController | undefined;
+let pipelineCatalogRequestId = 0;
+const iterationsAbortControllers = new Set<AbortController>();
+let pipelineIterationsRequestId = 0;
 let iterationDetailsAbortController: AbortController | undefined;
 let comparisonAbortController: AbortController | undefined;
 
@@ -393,31 +409,54 @@ export const normalizePipelineComparison = (
 function* getPipelines(): Generator {
   const controller = new AbortController();
   abortController?.abort();
+  iterationsAbortControllers.forEach((iterationsController) => iterationsController.abort());
+  iterationsAbortControllers.clear();
+  iterationDetailsAbortController?.abort();
+  comparisonAbortController?.abort();
   abortController = controller;
+  pipelineCatalogRequestId += 1;
+  const catalogRequestId = pipelineCatalogRequestId;
+  let projectKey = '';
 
   try {
-    const projectKey = (yield select(projectKeySelector)) as string;
+    projectKey = (yield select(projectKeySelector)) as string;
+    const transport = getPipelineCatalogTransport();
+    const meta = {
+      namespace: PIPELINES_NAMESPACE,
+      catalogRequestId,
+      projectKey,
+      transport: transport.mode,
+      transportFallback: transport.isFallback,
+    };
 
     yield put({
       type: FETCH_START,
       payload: { projectKey },
-      meta: { namespace: PIPELINES_NAMESPACE },
+      meta,
     });
 
-    const data = (yield call(fetch, URLS.tmsPipeline(projectKey), {
-      signal: controller.signal,
-    })) as PipelineRS[];
+    const rawData = (yield call(
+      fetch,
+      transport.mode === 'live' ? URLS.pipelineCatalog(projectKey) : URLS.tmsPipeline(projectKey),
+      { signal: controller.signal },
+    )) as unknown;
+    const data =
+      transport.mode === 'live' ? adaptLivePipelines(rawData) : (rawData as PipelineRS[]);
 
-    yield put(
-      fetchSuccessAction(PIPELINES_NAMESPACE, {
-        data,
-      }),
-    );
+    yield put({
+      type: FETCH_SUCCESS,
+      payload: { data },
+      meta,
+    });
   } catch (error) {
     const isCancellation = error instanceof Error && error.message === 'REQUEST_CANCELED';
+    const meta = { namespace: PIPELINES_NAMESPACE, catalogRequestId, projectKey };
+    yield put({ type: FETCH_ERROR, payload: error, error: true, meta });
+    const state = (yield select(pipelinesStateSelector)) as PipelinesState;
+    const isCurrentRequest =
+      state.catalogRequestId === catalogRequestId && state.catalogProjectKey === projectKey;
 
-    if (!isCancellation) {
-      yield put(fetchErrorAction(PIPELINES_NAMESPACE, error));
+    if (!isCancellation && isCurrentRequest) {
       yield put(
         showErrorNotification({
           messageId: 'aiFactoryPipelinesLoadingFailed',
@@ -438,42 +477,104 @@ function* watchGetPipelines() {
   yield takeEvery(LOGOUT, handleLogoutDuringPipelinesFetch);
 }
 
+interface PipelineIterationsRequest {
+  projectKey: string;
+  pipelineId: number;
+  transport: PipelineCatalogTransport;
+  catalogVersion: number;
+  requestId: number;
+  signal: AbortSignal;
+}
+
+interface PipelineIterationsResult {
+  pipelineId: number;
+  hasError: boolean;
+}
+
+function* fetchPipelineIterations({
+  projectKey,
+  pipelineId,
+  transport,
+  catalogVersion,
+  requestId,
+  signal,
+}: PipelineIterationsRequest): Generator {
+  const meta = {
+    namespace: PIPELINE_ITERATIONS_NAMESPACE,
+    pipelineId,
+    transport,
+    catalogVersion,
+    requestId,
+  };
+  yield put({ type: FETCH_START, payload: { projectKey }, meta });
+
+  try {
+    const rawData = (yield call(
+      fetch,
+      transport === 'live'
+        ? URLS.pipelineCatalogIterations(projectKey, pipelineId)
+        : URLS.tmsPipelineIterations(projectKey, pipelineId),
+      { signal },
+    )) as unknown;
+    const data =
+      transport === 'live'
+        ? adaptLivePipelineIterations(rawData, pipelineId)
+        : (rawData as IterationPageRS).content;
+    yield put({ type: FETCH_SUCCESS, payload: { data }, meta });
+    return { pipelineId, hasError: false };
+  } catch (error) {
+    const isCancellation = error instanceof Error && error.message === 'REQUEST_CANCELED';
+    yield put({
+      type: FETCH_ERROR,
+      payload: error,
+      error: true,
+      meta: { ...meta, isCancellation },
+    });
+    return { pipelineId, hasError: !isCancellation };
+  }
+}
+
 function* getPipelineIterations(action: GetPipelineIterationsAction): Generator {
   const controller = new AbortController();
-  iterationsAbortController?.abort();
-  iterationsAbortController = controller;
+  iterationsAbortControllers.add(controller);
+  pipelineIterationsRequestId += 1;
+  const requestId = pipelineIterationsRequestId;
 
   try {
     const projectKey = (yield select(projectKeySelector)) as string;
-    const { pipelineIds } = action.payload;
-
-    yield put({
-      type: FETCH_START,
-      payload: { projectKey },
-      meta: { namespace: PIPELINE_ITERATIONS_NAMESPACE },
-    });
-
-    const pages = (yield all(
+    const transport = (yield select(pipelineCatalogTransportSelector)) as PipelineCatalogTransport;
+    const catalogVersion = (yield select(pipelineCatalogVersionSelector)) as number;
+    const pipelineIds = Array.from(
+      new Set(
+        action.payload.pipelineIds.filter(
+          (pipelineId) => Number.isSafeInteger(pipelineId) && pipelineId > 0,
+        ),
+      ),
+    );
+    const results = (yield all(
       pipelineIds.map((pipelineId) =>
-        call(fetch, URLS.tmsPipelineIterations(projectKey, pipelineId), {
+        call(fetchPipelineIterations, {
+          projectKey,
+          pipelineId,
+          transport,
+          catalogVersion,
+          requestId,
           signal: controller.signal,
         }),
       ),
-    )) as IterationPageRS[];
+    )) as PipelineIterationsResult[];
 
-    const byPipelineId = pipelineIds.reduce<Record<number, IterationPageRS['content']>>(
-      (acc, pipelineId, index) => {
-        acc[pipelineId] = pages[index].content;
-        return acc;
-      },
-      {},
+    const state = (yield select(pipelinesStateSelector)) as PipelinesState;
+    const hasCurrentFailure = results.some(
+      ({ pipelineId, hasError }) =>
+        hasError &&
+        state.catalogVersion === catalogVersion &&
+        state.transport === transport &&
+        state.iterationRequestIdByPipeline[pipelineId] === requestId,
     );
-
-    yield put(
-      fetchSuccessAction(PIPELINE_ITERATIONS_NAMESPACE, {
-        data: byPipelineId,
-      }),
-    );
+    if (hasCurrentFailure) {
+      yield put(showErrorNotification({ messageId: 'aiFactoryPipelinesLoadingFailed' }));
+    }
   } catch (error) {
     const isCancellation = error instanceof Error && error.message === 'REQUEST_CANCELED';
 
@@ -485,17 +586,18 @@ function* getPipelineIterations(action: GetPipelineIterationsAction): Generator 
         }),
       );
     }
+  } finally {
+    iterationsAbortControllers.delete(controller);
   }
 }
 
 function handleLogoutDuringIterationsFetch(): void {
-  const controller = iterationsAbortController;
-  iterationsAbortController = undefined;
-  controller?.abort();
+  iterationsAbortControllers.forEach((controller) => controller.abort());
+  iterationsAbortControllers.clear();
 }
 
 function* watchGetPipelineIterations() {
-  yield takeLatest(GET_PIPELINE_ITERATIONS, getPipelineIterations);
+  yield takeEvery(GET_PIPELINE_ITERATIONS, getPipelineIterations);
   yield takeEvery(LOGOUT, handleLogoutDuringIterationsFetch);
 }
 
@@ -506,7 +608,18 @@ function* getPipelineIterationDetails(action: GetPipelineIterationDetailsAction)
 
   try {
     const projectKey = (yield select(projectKeySelector)) as string;
+    const transport = (yield select(pipelineCatalogTransportSelector)) as PipelineCatalogTransport;
+    const catalogVersion = (yield select(pipelineCatalogVersionSelector)) as number;
+    const catalogProjectKey = (yield select(pipelineCatalogProjectKeySelector)) as string | null;
     const { pipelineId, iterationId } = action.payload;
+
+    if (
+      catalogVersion <= 0 ||
+      catalogProjectKey !== projectKey ||
+      !isMockDownstreamCompatible(transport)
+    ) {
+      return;
+    }
 
     yield put({
       type: FETCH_START,
@@ -514,9 +627,13 @@ function* getPipelineIterationDetails(action: GetPipelineIterationDetailsAction)
       meta: { namespace: PIPELINE_ITERATION_DETAILS_NAMESPACE },
     });
 
-    const data = (yield call(fetch, URLS.tmsPipelineIterationById(projectKey, pipelineId, iterationId), {
-      signal: controller.signal,
-    })) as IterationRS;
+    const data = (yield call(
+      fetch,
+      URLS.tmsPipelineIterationById(projectKey, pipelineId, iterationId),
+      {
+        signal: controller.signal,
+      },
+    )) as IterationRS;
 
     yield put(fetchSuccessAction(PIPELINE_ITERATION_DETAILS_NAMESPACE, { data }));
   } catch (error) {
@@ -551,12 +668,17 @@ function* getPipelineComparison(action: GetPipelineComparisonAction): Generator 
 
   try {
     const projectKey = (yield select(projectKeySelector)) as string;
+    const transport = (yield select(pipelineCatalogTransportSelector)) as PipelineCatalogTransport;
     const { pipelineId, candidateIterationId, baselineIterationId } = action.payload;
     yield put({
       type: FETCH_START,
       payload: { projectKey },
       meta: { namespace: PIPELINE_COMPARISON_NAMESPACE },
     });
+    if (!isMockDownstreamCompatible(transport)) {
+      throw new Error('Pipeline comparison transport is unavailable');
+    }
+
     const raw = (yield call(
       fetch,
       URLS.pipelineIterationComparison(projectKey, candidateIterationId, baselineIterationId),

@@ -24,8 +24,13 @@ import { createClassnames, formatCost } from 'common/utils';
 import {
   getPipelineIterationDetailsAction,
   getPipelinesAction,
+  isReducedPipeline,
+  pipelineCatalogProjectKeySelector,
+  pipelineCatalogTransportSelector,
+  pipelineCatalogVersionSelector,
   pipelineIterationDetailsLoadingSelector,
   pipelineIterationDetailsSelector,
+  pipelinesLoadingSelector,
   pipelinesSelector,
 } from 'controllers/aiFactory/pipelines';
 import {
@@ -38,7 +43,7 @@ import {
   querySelector,
   urlOrganizationAndProjectSelector,
 } from 'controllers/pages';
-import { projectNameSelector } from 'controllers/project';
+import { projectKeySelector, projectNameSelector } from 'controllers/project';
 import { SettingsLayout } from 'layouts/settingsLayout';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
 import { SpinningPreloader } from 'components/preloaders/spinningPreloader';
@@ -69,6 +74,7 @@ export const IterationDetailsPageContent = () => {
   const { formatMessage } = useIntl();
   const dispatch = useDispatch();
   const projectName = useSelector(projectNameSelector);
+  const projectKey = useSelector(projectKeySelector);
   const { organizationSlug, projectSlug } = useSelector(
     urlOrganizationAndProjectSelector,
   ) as ProjectDetails;
@@ -76,19 +82,63 @@ export const IterationDetailsPageContent = () => {
   const iterationId = useSelector(iterationIdSelector);
   const query = useSelector(querySelector);
   const pipelines = useSelector(pipelinesSelector);
+  const catalogProjectKey = useSelector(pipelineCatalogProjectKeySelector);
+  const catalogTransport = useSelector(pipelineCatalogTransportSelector);
+  const catalogVersion = useSelector(pipelineCatalogVersionSelector);
   const iteration = useSelector(pipelineIterationDetailsSelector);
   const isLoading = useSelector(pipelineIterationDetailsLoadingSelector);
+  const isCatalogLoading = useSelector(pipelinesLoadingSelector);
 
-  const pipeline = pipelines?.find((p) => p.id === pipelineId);
+  const hasCurrentCatalog = catalogVersion > 0 && catalogProjectKey === projectKey;
+  const pipelineCandidate = hasCurrentCatalog
+    ? pipelines?.find((item) => item.id === pipelineId)
+    : undefined;
+  const pipeline =
+    pipelineCandidate && !isReducedPipeline(pipelineCandidate) ? pipelineCandidate : undefined;
+  const isReducedCatalogPipeline = Boolean(
+    pipelineCandidate && isReducedPipeline(pipelineCandidate),
+  );
   const [selectedStage, setSelectedStage] = useState<AiStageKey | null>(null);
   const hasInitializedStage = useRef(false);
+  const catalogRequestProjectRef = useRef<string | null>(null);
+  const detailRequestKeyRef = useRef<string | null>(null);
 
   useEffect(() => {
-    if (!pipelines) {
+    if (!hasCurrentCatalog && catalogRequestProjectRef.current !== projectKey) {
+      catalogRequestProjectRef.current = projectKey;
       dispatch(getPipelinesAction());
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [dispatch, hasCurrentCatalog, projectKey]);
+
+  useEffect(() => {
+    const requestKey = `${catalogVersion}:${pipelineId}:${iterationId}`;
+    const hasCurrentIteration =
+      iteration?.id === iterationId && iteration.pipelineId === pipelineId;
+    if (
+      catalogVersion <= 0 ||
+      catalogProjectKey !== projectKey ||
+      catalogTransport !== 'mock' ||
+      !pipeline ||
+      isLoading ||
+      hasCurrentIteration ||
+      detailRequestKeyRef.current === requestKey
+    ) {
+      return;
+    }
+    detailRequestKeyRef.current = requestKey;
+    dispatch(getPipelineIterationDetailsAction(pipelineId, iterationId));
+  }, [
+    catalogProjectKey,
+    catalogTransport,
+    catalogVersion,
+    dispatch,
+    isLoading,
+    iteration,
+    iterationId,
+    pipeline,
+    pipelineId,
+    projectKey,
+  ]);
 
   useEffect(() => {
     if (hasInitializedStage.current || !pipeline) {
@@ -179,10 +229,18 @@ export const IterationDetailsPageContent = () => {
     }
   };
 
-  if (isLoading && !iteration) {
+  if ((isCatalogLoading || isLoading) && !iteration) {
     return (
       <SettingsLayout>
         <SpinningPreloader />
+      </SettingsLayout>
+    );
+  }
+
+  if (isReducedCatalogPipeline) {
+    return (
+      <SettingsLayout>
+        <SystemMessage mode="info">{formatMessage(messages.detailUnavailable)}</SystemMessage>
       </SettingsLayout>
     );
   }

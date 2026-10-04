@@ -22,6 +22,7 @@ import {
   clearPipelineComparisonAction,
   getPipelineComparisonAction,
   getPipelineIterationsAction,
+  pipelineCatalogTransportSelector,
   pipelineComparisonErrorSelector,
   pipelineComparisonLoadingSelector,
   pipelineComparisonSelector,
@@ -94,6 +95,15 @@ jest.mock('controllers/aiFactory/pipelines', () => ({
     type: 'GET_ITERATIONS',
     payload: { pipelineIds },
   })),
+  isRichPipeline: jest.fn(
+    (pipeline: unknown) =>
+      typeof pipeline !== 'object' || pipeline === null || !('kind' in pipeline),
+  ),
+  isRichPipelineIteration: jest.fn(
+    (iteration: unknown) =>
+      typeof iteration !== 'object' || iteration === null || !('kind' in iteration),
+  ),
+  pipelineCatalogTransportSelector: jest.fn(),
   pipelineComparisonErrorSelector: jest.fn(),
   pipelineComparisonLoadingSelector: jest.fn(),
   pipelineComparisonSelector: jest.fn(),
@@ -170,6 +180,7 @@ type SelectorValues = {
   comparison?: PipelineComparison | null;
   comparisonLoading?: boolean;
   comparisonError?: boolean;
+  transport?: 'mock' | 'live';
 };
 
 interface DropdownProps {
@@ -190,6 +201,7 @@ const renderPage = (values: SelectorValues = {}): ReactWrapper => {
     [urlOrganizationAndProjectSelector, { organizationSlug: 'org', projectSlug: 'project' }],
     [querySelector, values.query ?? { pipeline: '1', baseline: '102', candidate: '103' }],
     [pipelinesSelector, values.pipelines === undefined ? [generationPipeline] : values.pipelines],
+    [pipelineCatalogTransportSelector, values.transport ?? 'mock'],
     [pipelinesLoadingSelector, values.pipelinesLoading ?? false],
     [
       pipelineIterationsByPipelineSelector,
@@ -336,5 +348,16 @@ describe('CompareIterationsPageContent', () => {
     );
     (wrapper.find(Button).prop('onClick') as () => void)();
     expect(getPipelineComparisonAction).toHaveBeenLastCalledWith(1, 103, 102);
+  });
+
+  test('blocks mock comparison requests when the catalog provenance is live', () => {
+    wrapper = renderPage({ transport: 'live' });
+
+    expect(wrapper.find('.state').prop('children')).toBe(
+      'Comparison is unavailable for this pipeline source',
+    );
+    expect(getPipelineComparisonAction).not.toHaveBeenCalled();
+    expect(getPipelineIterationsAction).not.toHaveBeenCalled();
+    expect(clearPipelineComparisonAction).toHaveBeenCalledTimes(1);
   });
 });

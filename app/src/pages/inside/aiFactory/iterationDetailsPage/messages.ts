@@ -17,6 +17,10 @@
 import { defineMessages } from 'react-intl';
 
 export const messages = defineMessages({
+  detailUnavailable: {
+    id: 'IterationDetailsPage.detailUnavailable',
+    defaultMessage: 'Iteration details are unavailable for this pipeline source',
+  },
   pipelinesBreadcrumb: {
     id: 'IterationDetailsPage.pipelinesBreadcrumb',
     defaultMessage: 'Pipelines',
