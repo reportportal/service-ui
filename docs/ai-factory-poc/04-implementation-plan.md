@@ -128,7 +128,7 @@ authentication and authorization remain mandatory—FE permission checks are gat
 | T6.2-G3+ | Continue endpoint groups independently after their contracts and rollout gates are ready; QS1 remains a separate current-standard read candidate | per group S–M | every group goes 🟢 only after its adapter tests, toggle-OFF regression, live error/absence handling and backend/product blockers are closed |
 | T6.3 ✅ | Bounded source-level i18n audit, accessibility pass for current AI Factory controls (accessible names/semantics/keyboard behavior), and 360 px Test Case side-panel responsiveness. Excludes T3.6 credential controls, T4.4 Re-run/Retry controls, cost-formatting work and the full 1280 px T6.6 NFR pass | S | EPMRPP-122042; focused 9 suites / 62 tests and full Jest 156 suites / 1421 tests PASS with the existing open-handle warning; Node 20 type-check PASS; full lint exit 0 with 199 warnings; diff-check PASS; code validator final PASS after one Major `aria-haspopup` mismatch fix; security validator PASS with no findings. Runtime dev compile succeeded; authenticated 360 px browser validation was not performed because the browser reached only localhost login. `manage:translations:test` remains blocked by repository-wide existing duplicate/unstable localization data; no generated locale changes or localization-sync claim |
 | T6.4-P ✅ | Prerequisite only: supported local mock `Reset demo` action plus a repeatable rehearsal runbook with environment/data preflight, evidence capture, stop/no-write rules and post-run ownership boundaries | S | EPMRPP-122045; actual 8 h split 2 h research / 4 h implementation / 2 h validation. Focused reset 3 suites / 27 tests and full Jest 158 suites / 1439 tests PASS; Node 20 type-check PASS; full lint exit 0 with 121 existing ESLint warnings and 199 existing Stylelint warnings; diff-check and independent code validation PASS. One Major security TOCTOU finding was fixed with post-import/reset and post-import/install state rechecks; security recheck PASS with no findings. Authenticated browser/T6.4 rehearsal not executed; no remote data mutated. Does not complete T6.4 or change the checklist below; Q-ORG-07 remains a hard stop |
-| T6.4 | Demo rehearsal: run the 18-step parity checklist end to end, reset demo | S | checklist ticked |
+| T6.4 ✅ | Demo rehearsal: run the 18-step parity checklist end to end, reset demo | S | EPMRPP-122046; [dated evidence](14-demo-rehearsal-2026-10-04.md) records 15 PASS / 2 FAIL / 0 BLOCKED / 1 N/A. Exact TC101–TC108 identities were found by pagination/display id. Failures: TC106 lacks the expected step-3 pending-comment target; local Push produced `81 → 91` rather than `81 → 92`, and TC107 had no pending comment to trigger the timeout path. Reset demo passed before and after; no remote writes occurred |
 | T6.5 | Toggle-OFF regression pass: with the toggle OFF, walk the Library, side panel, details, Edit Scenario, Test Plans, Manual Launches and Launches; compare against `develop` | S | no difference; repeat before each merge of `bootcamp-prototype` |
 | T6.6 | **New (2026-09-29 audit, US-018).** NFR pass on FE-owned items only: masked-credential display (T3.6), keyboard reachability + accessible names for new actions (Approve, Push to agent, Automate, Discard, Re-run, Retry), 1280 px minimum width incl. the 360 px side-panel footer check, cost always 2-decimal USD labelled as a pipeline estimate | S | US-018 ACs that are FE's to own; the rest (security, reliability, perf, audit, data) is BE/ops, tracked in the requirements repo, not here |
 
@@ -163,7 +163,7 @@ Split a story or cross-cutting scope further when its estimate exceeds that ceil
 | Story | Jira parent | FE tasks / sub-task allocation |
 |-------|-------------|------------------------------------------------------------|
 | 001 | EPMRPP-121674 | T0.5 traceability → EPMRPP-121833 (stored as a split sibling under EPMRPP-121704) |
-| 002 | EPMRPP-121704 | T0.2–T0.4, T0.6–T0.7 → EPMRPP-121829; T0.5 → EPMRPP-121833; T1.1–T1.2 → EPMRPP-121765; T1.3 → EPMRPP-121834; T6.2-G1 LP1/LP2 foundation → EPMRPP-122040; T6.2-G2 LP3 generic detail → EPMRPP-122041; T6.3 AI Factory i18n/a11y/360 px hardening → EPMRPP-122042; T6.4-P demo reset/runbook prerequisite → EPMRPP-122045 |
+| 002 | EPMRPP-121704 | T0.2–T0.4, T0.6–T0.7 → EPMRPP-121829; T0.5 → EPMRPP-121833; T1.1–T1.2 → EPMRPP-121765; T1.3 → EPMRPP-121834; T6.2-G1 LP1/LP2 foundation → EPMRPP-122040; T6.2-G2 LP3 generic detail → EPMRPP-122041; T6.3 AI Factory i18n/a11y/360 px hardening → EPMRPP-122042; T6.4-P demo reset/runbook prerequisite → EPMRPP-122045; T6.4 rehearsal → EPMRPP-122046 |
 | 003 | EPMRPP-121705 | T1.3 traceability → EPMRPP-121834 (stored as a split sibling under EPMRPP-121704); T1.3u → EPMRPP-121977 |
 | 004 | EPMRPP-121706 | T4.3 |
 | 005 | EPMRPP-121673 | T3.4, T0.7 |
@@ -191,21 +191,21 @@ The 18 walkthrough steps of the prototype, reproduced in the real UI on mocks.
 
 | # | Step | Tasks | ✔ |
 |---|------|-------|---|
-| 1 | Pipelines: list with both pipelines, cards with status, requirement, stages, score, cost | T1.2 | ☐ |
-| 2 | Iteration #1 · Grade: per-case scores, expandable reasons, no PASS/FAIL | T1.3 | ☐ |
-| 3 | Upload panel: Draft / Ready (Auto-Ready), "Auto-Ready: 2 of 4 promoted (threshold 90)" | T1.3 | ☐ |
-| 4 | Review panel: who made Ready, unsent comments, fix rounds with cost | T1.3 | ☐ |
-| 5 | Compare #1 vs #2: suite +4 better, cost +$0.13 worse, duration delta | T4.3 | ☐ |
+| 1 | Pipelines: list with both pipelines, cards with status, requirement, stages, score, cost | T1.2 | ✅ |
+| 2 | Iteration #1 · Grade: per-case scores, expandable reasons, no PASS/FAIL | T1.3 | ✅ |
+| 3 | Upload panel: Draft / Ready (Auto-Ready), "Auto-Ready: 2 of 4 promoted (threshold 90)" | T1.3 | ✅ |
+| 4 | Review panel: who made Ready, unsent comments, fix rounds with cost | T1.3 | ✅ |
+| 5 | Compare #1 vs #2: suite +4 better, cost +$0.13 worse, duration delta | T4.3 | ✅ |
 | 6 | Pipeline settings: toggle + threshold 90, validation, read-only note | T3.4 | ✅ |
-| 7 | Library review queue: Status / AI quality columns, AI chip, quick filters, preset | T2.2, T2.3 | ☐ |
-| 8 | Side panel TC106: status row, AI evaluation, disabled add buttons, Approve primary | T2.4, T4.1 | ☐ |
-| 9 | Case page TC106 (Steps): AI evaluation panel with reasons | T2.5 | ☐ |
-| 10 | TC103 cost ≈ $0.54 = share $0.32 + fix round $0.22, links | T2.6 | ☐ |
-| 11 | TC106 step 3 comment thread, strip "1 not sent", Approve disabled, Discard | T3.1 | ☐ |
-| 12 | Push to agent TC106 → 81 → 92 → Auto-Ready; TC107 first push fails | T3.3 | ☐ |
-| 13 | TC103 (88 < 90) Draft: Approve in the header; add buttons disabled | T3.2, T4.1 | ☐ |
-| 14 | TC104 Text template: comments on Precondition / scenario block | T3.1 | ☐ |
-| 15 | Edit Scenario TC108: hint + "Approve along with these changes"; In plan · Launch blocked | T3.2, T4.1 | ☐ |
-| 16 | TC105 ⋯ → Automate → dialog → automation iteration (Fix Skipped) | T5.1, T5.2 | ☐ |
-| 17 | TC101 Automation section: Automated, last result Passed, links | T5.3 | ✅ |
+| 7 | Library review queue: Status / AI quality columns, AI chip, quick filters, preset | T2.2, T2.3 | ✅ |
+| 8 | Side panel TC106: status row, AI evaluation, disabled add buttons, Approve primary | T2.4, T4.1 | ☑ desktop + 360 px |
+| 9 | Case page TC106 (Steps): AI evaluation panel with reasons | T2.5 | ☑ |
+| 10 | TC103 cost ≈ $0.54 = share $0.32 + fix round $0.22, links | T2.6 | ☑ |
+| 11 | TC106 step 3 comment thread, strip "1 not sent", Approve disabled, Discard | T3.1 | ❌ remote scenario has one step; visible targets show 0 comments |
+| 12 | Push to agent TC106 → 81 → 92 → Auto-Ready; TC107 first push fails | T3.3 | ❌ TC106 ended at 91; TC107 Push unavailable with 0 pending comments |
+| 13 | TC103 (88 < 90) Draft: Approve in the header; add buttons disabled | T3.2, T4.1 | ☑ |
+| 14 | TC104 Text template: comments on Precondition / scenario block | T3.1 | ☑ |
+| 15 | Edit Scenario TC108: hint + "Approve along with these changes"; In plan · Launch blocked | T3.2, T4.1 | ☑ no remote save |
+| 16 | TC105 ⋯ → Automate → dialog → automation iteration (Fix Skipped) | T5.1, T5.2 | ☑ local mock only |
+| 17 | TC101 Automation section: Automated, last result Passed, links | T5.3 | ☑ |
 | 18 | (User flows tab: prototype only, not built in the product) | — | n/a |

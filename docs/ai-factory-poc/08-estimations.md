@@ -49,6 +49,7 @@ cross-cutting scope must be split into cohesive `[FE]` sub-tasks before work con
 | [EPMRPP-122041](https://jiraeu.epam.com/browse/EPMRPP-122041) | Pipeline LP3 generic-detail transport and adapter foundation | T6.2-G2 | 20 h | ≤ 36 h |
 | [EPMRPP-122042](https://jiraeu.epam.com/browse/EPMRPP-122042) | AI Factory accessibility and responsive hardening | T6.3 | 8 h | ≤ 36 h |
 | [EPMRPP-122045](https://jiraeu.epam.com/browse/EPMRPP-122045) | AI Factory demo reset and rehearsal prerequisite | T6.4-P | 8 h | ≤ 36 h |
+| [EPMRPP-122046](https://jiraeu.epam.com/browse/EPMRPP-122046) | AI Factory demo rehearsal | T6.4 | 8 h | ≤ 36 h |
 
 If an estimate differs from the planned size by more than ~30 %, write why in *Deviation notes*
 and re-check the remaining sizes.
@@ -95,7 +96,7 @@ Filled in as tasks complete. `—` = not done yet.
 | T6.2-G2 | Pipeline LP3 generic-detail transport and adapter foundation (mock-default; live gate closed) | 6 | M (20) | **20** | 4 | 10 | 6 | 2026-10-04 |
 | T6.3 | Source-level i18n audit, current-control accessibility and 360 px side-panel responsiveness | 6 | S (8) | **8** | 2 | 4 | 2 | 2026-10-04 |
 | T6.4-P | Local mock Reset demo + rehearsal runbook prerequisite | 6 | S (8) | **8** | 2 | 4 | 2 | 2026-10-04 |
-| T6.4 | Demo rehearsal (parity checklist) | 6 | S (8) | — | | | | |
+| T6.4 | Demo rehearsal (parity checklist) | 6 | S (8) | **8** | 2 | 4 | 2 | 2026-10-04 |
 | T6.5 | Toggle-OFF regression pass | 6 | S (8) | — | | | | |
 | T6.6 | NFR pass (FE-owned items from US-018) | 6 | S (8) | — | | | | |
 
@@ -111,8 +112,8 @@ Filled in as tasks complete. `—` = not done yet.
 | 3 · Review loop | T3.1–T3.4, **T3.6** | 120 | 88 | 4 / 5 | T3.1 −6 h; T3.2 ≈ planned; T3.3 −6 h; T3.4 ≈ planned; T3.6 new (audit 2026-09-29, US-019) |
 | 4 · Gate & compare | T4.1–T4.3, **T4.4** | 80 | 60 | 3 / 4 | T4.1–T4.3 ≈ planned; T4.4 new (audit 2026-09-29, US-020) and remains blocked on T3.6 plus its UI↔API contract |
 | 5 · Automation | T5.1–T5.4 | 56 | 56 | 4 / 4 | T5.1–T5.4 ≈ planned and implemented; T5.4 live runtime depends on A3/root-Launch attribute delivery |
-| 6 · Hardening | T6.1, T6.2-G1–G2, T6.3, **T6.4-P**, T6.4–T6.5, **T6.6** | 88 | 64 | 5 / 8 | T6.4-P is completed and validated; T6.4 remains a separate todo rehearsal |
-| **Total** | | **648 h + 20 h planning = 668 h** | **519** | 33 / 39 | — |
+| 6 · Hardening | T6.1, T6.2-G1–G2, T6.3, **T6.4-P**, T6.4–T6.5, **T6.6** | 88 | 72 | 6 / 8 | T6.4 completed with 15 PASS / 2 FAIL / 0 BLOCKED / 1 N/A; full-green rerun needs TC106/TC107 remote-row/mock fixture alignment |
+| **Total** | | **648 h + 20 h planning = 668 h** | **527** | 34 / 39 | — |
 
 **668 h = 83.5 working days = 16.7 working weeks** for one developer at 8 h/day. The prior 628 h baseline
 already included the 2026-09-29 audit's 3 new stories (018/019/020) plus the two rework tasks it surfaced;
@@ -143,6 +144,7 @@ Newest first. One line per estimate recorded.
 
 | Date | Task | Hours | Note |
 |------|------|-------|------|
+| 2026-10-04 | T6.4 Demo rehearsal | 8 | 2 h research/preflight: created Jira EPMRPP-122046 with estimate/comment, verified exact branch/HEAD, dependencies, Node/proxy/auth/project/role, local mock baseline and Q-ORG-07 boundary · 4 h execution: authenticated Node 20 localhost rehearsal across Pipelines, TC101–TC108 and desktop/360 px case surfaces; local Push/Automate/Reset only · 2 h validation/reporting: corrected the initial name-search assumption through display-id pagination, confirmed 15 PASS / 2 FAIL / 0 BLOCKED / 1 N/A, verified remote GETs only, stopped the server and synchronized status/plan/Jira/evidence docs. Failures: TC106 pending-comment target mismatch and TC106/TC107 Push-fixture mismatch; see [dated evidence](14-demo-rehearsal-2026-10-04.md) |
 | 2026-10-04 | T6.4-P Demo reset + rehearsal runbook prerequisite | 8 | 2 h research: audited local mock persistence/reset behavior, false seeding/floating-menu claims, Q-ORG-07 and rehearsal safety boundaries · 4 h implementation: supported local Reset demo UI, fail-closed mock-runtime checks, emergency localStorage fallback documentation and the 18-step preflight/evidence/reset runbook · 2 h validation: focused reset 3 suites / 27 tests and full Jest 158 suites / 1439 tests PASS; Node 20 type-check PASS; full `npm run lint` exit 0 with 121 existing ESLint warnings and 199 existing Stylelint warnings; diff-check PASS; independent code validator PASS with no findings. Security validation initially found one Major TOCTOU issue; post-import/reset and post-import/install state rechecks fixed it, and security recheck passed with no findings. Authenticated browser/T6.4 rehearsal was not executed and no remote data was mutated. This completes only the prerequisite; T6.4 remains todo and Q-ORG-07 remains a hard stop |
 | 2026-10-04 | T6.3 AI Factory i18n, accessibility and 360 px responsiveness | 8 | 2 h research: source-level i18n audit, current AI control semantics/keyboard behavior, existing 360 px side-panel layout and bounded scope · 4 h implementation: accessible names and semantics for current controls, keyboard-safe actions, localized source messages and 360 px overflow/layout fixes without T3.6/T4.4/T6.6 expansion · 2 h validation: focused 9 suites / 62 tests and full Jest 156 suites / 1421 tests PASS with the existing open-handle warning; Node 20 type-check PASS; full lint exit 0 with 199 warnings; diff-check PASS; code validator final PASS after one Major `aria-haspopup` mismatch was fixed; security validator PASS with no findings. Runtime dev compilation succeeded, but browser validation reached only localhost login, so authenticated 360 px side-panel visual validation was not performed. `manage:translations:test` fails on the repository-wide existing duplicate/unstable localization backlog; no generated locale changes are committed and localization synchronization is not claimed |
 | 2026-10-04 | T6.2-G2 Pipeline LP3 generic-detail foundation | 20 | 4 h research: audited LP3 OpenAPI shape, legacy rich P3 coupling, detail/list/Library entry points and G1 provenance boundary · 10 h implementation: strict raw-to-reduced LP3 adapter, independent detail transport/provenance and stale guards, canonical live URL behind the closed gate, reduced generic detail UI/card route, and project/version-guarded cached Library label lookup with the direct LP3 leak removed · 6 h validation: focused Jest 8 suites / 171 tests PASS before review remediation; post-race focused saga 32/32 PASS; final full Jest 154 suites / 1417 tests PASS with the repository open-handle warning after success; Node 20 type-check PASS; full lint exit 0 with 201 existing warnings; diff-check PASS; senior code validator final PASS after one Major race was fixed and regression-tested; security validator PASS with no Critical/Major/Minor findings. Browser/runtime and live-backend validation were not performed. Mock remains default and live mode remains hard closed; rich KPI/cost/token/Test Case/CI/retry semantics, live polling and QS1 are excluded |
