@@ -85,7 +85,7 @@ Filled in as tasks complete. `—` = not done yet.
 | T5.1 | Automate action + Send to automation dialog | 5 | M (20) | **20** | 4 | 10 | 6 | 2026-10-04 |
 | T5.2 | Automation iteration progress | 5 | S (8) | **8** | 2 | 4 | 2 | 2026-10-04 |
 | T5.3 | Automation section on case | 5 | S (8) | **8** | 2 | 4 | 2 | 2026-10-04 |
-| T5.4 | Launch ↔ case links | 5 | M (20) | — | | | | |
+| T5.4 | Launch ↔ case links | 5 | M (20) | **20** | 4 | 10 | 6 | 2026-10-04 |
 | T6.1 | Roles / read-only states | 6 | S (8) | — | | | | |
 | T6.2 | BE integration per endpoint group | 6 | S (8) ×N | — | | | | |
 | T6.3 | i18n, a11y, responsive | 6 | S (8) | — | | | | |
@@ -104,9 +104,9 @@ Filled in as tasks complete. `—` = not done yet.
 | 2 · Library | T2.1–T2.6 | 108 | 108 | 6 / 6 | T2.1–T2.5 ≈ planned; T2.6 ≈ planned |
 | 3 · Review loop | T3.1–T3.4, **T3.6** | 120 | 88 | 4 / 5 | T3.1 −6 h; T3.2 ≈ planned; T3.3 −6 h; T3.4 ≈ planned; T3.6 new (audit 2026-09-29, US-019) |
 | 4 · Gate & compare | T4.1–T4.3, **T4.4** | 80 | 60 | 3 / 4 | T4.1–T4.3 ≈ planned; T4.4 new (audit 2026-09-29, US-020) and remains blocked on T3.6 plus its UI↔API contract |
-| 5 · Automation | T5.1–T5.4 | 56 | 36 | 3 / 4 | T5.1–T5.3 ≈ planned and validated; T5.4 remains next |
+| 5 · Automation | T5.1–T5.4 | 56 | 56 | 4 / 4 | T5.1–T5.4 ≈ planned and implemented; T5.4 live runtime depends on A3/root-Launch attribute delivery |
 | 6 · Hardening | T6.1–T6.5, **T6.6** | 48 | 0 | 0 / 6 | T6.6 new (audit 2026-09-29, US-018 FE-owned slice) |
-| **Total** | | **608 h + 20 h planning = 628 h** | **435** | 27 / 37 | — |
+| **Total** | | **608 h + 20 h planning = 628 h** | **455** | 28 / 37 | — |
 
 **628 h ≈ 78,5 working days ≈ 15,7 working weeks** for one developer at 8 h/day. The jump from 564 h is
 the 2026-09-29 audit's 3 new stories (018/019/020) plus the two not-yet-started rework tasks it surfaced
@@ -135,6 +135,7 @@ Newest first. One line per estimate recorded.
 
 | Date | Task | Hours | Note |
 |------|------|-------|------|
+| 2026-10-04 | T5.4 Launch ↔ case links | 20 | 4 h research: US-017/A3, legacy Item info/details/ParentInfo host paths, route context and Q-FE-07 boundary plus Jira scope · 10 h implementation: shared feature-gated viewer renderer, strict positive-safe-integer A3 and unique root-Launch `pipeline:<pipelineId>/<iterationId>` parsing, internal Library/iteration navigation, hierarchy-derived single-parent root signalling across ParentInfo hosts and fail-closed toggle/context/malformed handling · 6 h validation: component-fixture integration without a fake Launch controller/API; focused 4 suites / 64 tests and full Node 20 Jest 149 suites / 1273 tests PASS; full `npm run lint` exit 0 with 201 existing warnings; type-check, scoped ESLint/Stylelint, diff-check and senior code/security final rechecks PASS. Browser/runtime walkthrough was not performed; live A3/Launch attribute delivery remains provisional and unverified |
 | 2026-10-04 | T5.3 Automation section on case | 8 | 2 h research: US-017/D13/C2 contract, existing Test Case details loading/polling and internal route patterns, Jira scope · 4 h implementation: four-state viewer-readable Automation results, last result/optional defect type, safe internal iteration and filtered Launch navigation, provisional MR id/state without external URL trust, scenario-change warning, last-good-preserving loading/error/retry and mock projection · 2 h validation: focused lifecycle/section/mock coverage; full Node 20 Jest 145 suites / 1209 tests PASS; full `npm run lint` exit 0 with 201 existing warnings; type-check, diff-check and senior code/security final rechecks PASS. Browser/runtime walkthrough was not performed. C2 remains mock-only and T5.4 backlinks are excluded |
 | 2026-10-04 | T5.2 Automation iteration progress | 8 | 2 h research: US-016/C2/A1-A2 boundary, case/pipeline refresh paths, permission split and Jira scope · 4 h implementation: viewer-readable in-progress iteration link, guarded case polling, automation-only Pipelines refresh, hidden-tab-aware non-overlap shared polling, mock Prepare → Develop → Automation Review → Fix/Skipped progression, iteration membership/projection, canonical/internal + requested/external ID persistence across reload, public CaseLink identity and persisted-simulation rehydration · 2 h validation: polling generation/loading-cycle regression coverage; Node 20.19.1 full Jest 145 suites / 1191 tests PASS; full `npm run lint` exit 0 with existing baseline warnings only; type-check, diff-check and senior code/security rechecks PASS. Browser/runtime visual walkthrough was not performed. A1/A2/C2 remain provisional mock-only contracts; no live-backend integration is claimed |
 | 2026-10-04 | T5.1 Automate action + Send to automation dialog | 20 | 4 h requirements/A1-A2 contract, details/bulk/selection and modal-pattern research plus Jira scope · 10 h implementation: shared eligibility and strict request-correlated normalization, environment/request hook with stale-response guards, localized responsive modal and minimal Automation section, details-menu and Library-bulk entry points, authoritative partial-result feedback, accepted-only selection clearing, cross-page review/automation snapshots, deterministic mock validation and persistent confirmation flow · 6 h tests/review: focused 10 suites / 139 tests, full 143 suites / 1153 tests, type-check, full lint with baseline warnings only, diff-check, independent code/security PASS and contract/status documentation. A1/A2 remain provisional mock-only APIs; T5.2 polling is excluded |

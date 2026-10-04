@@ -638,7 +638,10 @@ public CaseLink identity, projects the real created iteration identity through C
 simulations when handlers are installed again. The feature-gated details, section and bulk entry
 points make no A1/A2 request when the flag is off. This is not live integration: A1/A2 and C2 are absent from the
 audited published OpenAPI and remain provisional until backend paths, schemas, authorization and error semantics
-are published and verified.
+are published and verified. T5.4 adds no endpoint: existing Launch surfaces consume only the additive A3 field
+and root Launch attribute described below. Both inputs are validated at the render boundary and fail closed; no
+fake Launch request/controller is installed. Component-fixture coverage proves the wiring, but real CI-reported
+Launch delivery and identity correlation remain unverified.
 
 - A1 `GET tms/automation/environment` → `{ environments: string[]; default: string }` (default `beta5`).
 - A2 `POST tms/automation` body `{ testCaseIds: number[]; environment: string; confirmReautomate: boolean }` →
@@ -647,8 +650,13 @@ are published and verified.
   `502 { reason: 'JOB_START_FAILED' }`.
   The FE computes the skip lists for the dialog from C1 fields. The BE re-validates.
 - A3: the test item DTO (Launch pages) adds `tmsTestCase?: { id: number; displayId: string }` when the reported
-  `testCaseId` matches a Library case. It powers the "Library Test Case ↗" link.
-- The Launch carries the attribute `pipeline:<iteration>`, so the FE can render a link to the automation iteration.
+  `testCaseId` matches a Library case. `id` must be a positive safe integer and `displayId` a non-empty string.
+  It powers the internal "Library Test Case ↗" link; missing or invalid data renders no link.
+- The root Launch carries exactly one key/value attribute `pipeline:<pipelineId>/<iterationId>` (key `pipeline`,
+  value `<pipelineId>/<iterationId>`). Both IDs must be positive safe integers. Missing, duplicate, malformed or
+  incomplete attributes render no link. The FE parses this contract only when the existing parent hierarchy has
+  exactly one entry (the root Launch), independent of its displayed-child level or an empty result page. Nested
+  suite/test attributes are never parsed, and the valid contract creates only an internal Pipeline iteration route.
 
 ## 9. Not consumed by the FE (reference only)
 

@@ -85,7 +85,7 @@ Source: [live OpenAPI document](http://tms.epmrpp.reportportal.io/api/api-docs) 
 | ~~Q-FE-04~~ | ~~The Compare page computes deltas on the FE from two iteration DTOs~~ → **superseded 2026-10-02** by the published server compare operation with required `with=<iterationId>` | T4.3 consumes the server comparison response; FE formatting and safe fallbacks only |
 | Q-FE-05 | Neutral colour for criterion bars (no red / amber / green) | AC "no traffic-light verdicts" |
 | Q-FE-06 | Mock DB persisted in localStorage + Reset demo | Demo survives a reload |
-| Q-FE-07 | A Launch for automation results in mock mode: a mock "Launch" record shown on the case / iteration only; the real Launches page integration is done when the BE and CI report real launches | Not worth faking the whole Launches module |
+| ~~Q-FE-07~~ | ~~A Launch for automation results in mock mode~~ → **resolved 2026-10-04**: T5.4 validates the link renderer through component fixtures on the existing real Item info, details-modal and root-Launch ParentInfo hosts. It does not intercept or fabricate the Launch controller/API | Real end-to-end Launch verification waits for CI/BE to report A3 and `pipeline:<pipelineId>/<iterationId>` on an actual Launch |
 | Q-FE-08 | Pipelines sidebar item placed before Test Case Library | Prototype order |
 
 ## DES: design

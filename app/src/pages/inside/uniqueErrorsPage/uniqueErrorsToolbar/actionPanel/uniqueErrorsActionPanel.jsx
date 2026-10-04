@@ -21,7 +21,11 @@ import classNames from 'classnames/bind';
 import { connect } from 'react-redux';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import RefreshIcon from 'common/img/refresh-inline.svg';
-import { breadcrumbsSelector, restorePathAction } from 'controllers/testItem';
+import {
+  breadcrumbsSelector,
+  isRootLaunchParentSelector,
+  restorePathAction,
+} from 'controllers/testItem';
 import { Breadcrumbs, breadcrumbDescriptorShape } from 'components/main/breadcrumbs';
 import { GhostButton } from 'components/buttons/ghostButton';
 import { ParentInfo } from 'pages/inside/common/infoLine/parentInfo';
@@ -58,6 +62,7 @@ const cx = classNames.bind(styles);
     isBtsPluginsExist: isBtsPluginsExistSelector(state),
     enabledBtsPlugins: enabledBtsPluginsSelector(state),
     lastOperation: lastOperationSelector(state),
+    isLaunchRoot: isRootLaunchParentSelector(state),
     accountRole: userAccountRoleSelector(state),
     projectRole: activeProjectRoleSelector(state),
     userRoles: userRolesSelector(state),
@@ -88,6 +93,7 @@ export class UniqueErrorsActionPanel extends Component {
     intl: PropTypes.object.isRequired,
     isBtsPluginsExist: PropTypes.bool,
     lastOperation: PropTypes.object,
+    isLaunchRoot: PropTypes.bool,
     onDelete: PropTypes.func,
     onEditDefects: PropTypes.func,
     onEditItems: PropTypes.func,
@@ -120,6 +126,7 @@ export class UniqueErrorsActionPanel extends Component {
     includeInAutoAnalysisAction: () => {},
     isBtsPluginsExist: false,
     lastOperation: {},
+    isLaunchRoot: false,
     onDelete: () => {},
     onEditDefects: () => {},
     onEditItems: () => {},
@@ -255,6 +262,7 @@ export class UniqueErrorsActionPanel extends Component {
       hasErrors,
       hasValidItems,
       userRoles,
+      isLaunchRoot,
     } = this.props;
     const itemsActionDescriptors = this.getItemsActionDescriptors();
     const canManageItems = canWorkWithTests(userRoles);
@@ -284,7 +292,7 @@ export class UniqueErrorsActionPanel extends Component {
           </GhostButton>
         )}
         <div className={cx('action-buttons')}>
-          {parentItem && <ParentInfo parentItem={parentItem} />}
+          {parentItem && <ParentInfo parentItem={parentItem} isLaunchRoot={isLaunchRoot} />}
           {canManageItems && (
             <div className={cx('action-button', 'mobile-hidden')}>
               <GhostMenuButton

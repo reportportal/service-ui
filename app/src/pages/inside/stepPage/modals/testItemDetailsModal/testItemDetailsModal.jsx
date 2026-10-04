@@ -50,6 +50,7 @@ import { TestParameters } from 'pages/inside/common/testParameters';
 import { commonValidators, validate } from 'common/utils/validation';
 import { ContainerWithTabs } from 'components/main/containerWithTabs';
 import { StackTrace } from 'pages/inside/common/stackTrace';
+import { AiFactoryBacklink } from 'pages/inside/aiFactory/backlinks';
 import { FieldErrorHint } from 'components/fields/fieldErrorHint';
 import { projectKeySelector } from 'controllers/project';
 import { messages } from './messages';
@@ -229,6 +230,7 @@ export class TestItemDetailsModal extends Component {
         <ModalField label={intl.formatMessage(messages.testCaseId)}>
           <div className={cx('id')}>{item.testCaseId}</div>
         </ModalField>
+        <AiFactoryBacklink host="testItem" placement="details" testCase={item.tmsTestCase} />
         <ModalField label={intl.formatMessage(messages.duration)}>
           {getDuration(new Date(item.startTime).getTime(), new Date(item.endTime).getTime())}
         </ModalField>

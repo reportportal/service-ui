@@ -17,6 +17,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
+import { AiFactoryBacklink } from 'pages/inside/aiFactory/backlinks';
 import { Duration } from './duration';
 import { Owner } from './owner';
 import { Attributes } from './attributes';
@@ -25,7 +26,7 @@ import styles from './parentInfo.scss';
 
 const cx = classNames.bind(styles);
 
-export const ParentInfo = ({ parentItem }) => (
+export const ParentInfo = ({ parentItem, isLaunchRoot }) => (
   <div className={cx('parent-info')}>
     <div className={cx('icon-holder')}>
       <Duration
@@ -50,12 +51,15 @@ export const ParentInfo = ({ parentItem }) => (
         <Description description={parentItem.description} />
       </div>
     )}
+    {isLaunchRoot && <AiFactoryBacklink host="launchRoot" attributes={parentItem.attributes} />}
   </div>
 );
 ParentInfo.propTypes = {
+  isLaunchRoot: PropTypes.bool,
   parentItem: PropTypes.object,
 };
 ParentInfo.defaultProps = {
+  isLaunchRoot: false,
   parentItem: {
     attributes: [],
   },
