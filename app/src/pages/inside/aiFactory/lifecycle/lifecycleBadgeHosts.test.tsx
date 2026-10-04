@@ -101,25 +101,13 @@ jest.mock('componentLibrary/breadcrumbs', () => ({ Breadcrumbs: 'Breadcrumbs' })
 jest.mock('controllers/aiFactory', () => ({ useAiFactoryEnabled: jest.fn() }));
 jest.mock('controllers/modal', () => ({ showModalAction: jest.fn() }));
 jest.mock('controllers/pages', () => {
-  const {
-    createQueryParametersSelector,
-    filterIdSelector,
-    pagePropertiesSelector,
-    pageSelector,
-  } = jest.requireActual<typeof import('controllers/pages/selectors')>('controllers/pages/selectors');
-  const { payloadSelector } =
-    jest.requireActual<typeof import('controllers/pages/typed-selectors')>(
-      'controllers/pages/typed-selectors',
-    );
+  const { launchPageControllerMock } = jest.requireActual<
+    typeof import('pages/inside/aiFactory/testUtils/launchPageControllerMock')
+  >('pages/inside/aiFactory/testUtils/launchPageControllerMock');
 
   return {
-    PROJECT_LAUNCHES_PAGE: 'PROJECT_LAUNCHES_PAGE',
+    ...launchPageControllerMock,
     TEST_CASE_LIBRARY_PAGE: 'TEST_CASE_LIBRARY_PAGE',
-    createQueryParametersSelector,
-    filterIdSelector,
-    pagePropertiesSelector,
-    pageSelector,
-    payloadSelector,
     urlOrganizationAndProjectSelector: jest.fn(),
   };
 });

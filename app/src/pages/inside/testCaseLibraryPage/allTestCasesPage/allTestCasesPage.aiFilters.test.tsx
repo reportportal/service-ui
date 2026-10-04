@@ -98,20 +98,13 @@ jest.mock('controllers/notification', () => ({
   showWarningNotification: (payload: unknown) => ({ type: 'WARNING', payload }),
 }));
 jest.mock('controllers/pages', () => {
-  const {
-    createQueryParametersSelector,
-    filterIdSelector,
-    pagePropertiesSelector,
-    pageSelector,
-  } = jest.requireActual<typeof import('controllers/pages/selectors')>('controllers/pages/selectors');
+  const { launchPageControllerMock } = jest.requireActual<
+    typeof import('pages/inside/aiFactory/testUtils/launchPageControllerMock')
+  >('pages/inside/aiFactory/testUtils/launchPageControllerMock');
 
   return {
-    PROJECT_LAUNCHES_PAGE: 'PROJECT_LAUNCHES_PAGE',
-    createQueryParametersSelector,
-    filterIdSelector,
+    ...launchPageControllerMock,
     locationQuerySelector: jest.fn(),
-    pagePropertiesSelector,
-    pageSelector,
     payloadSelector: jest.fn(),
     updatePagePropertiesAction: (payload: unknown) => ({
       type: 'updatePagePropertiesAction',
