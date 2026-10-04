@@ -15,6 +15,7 @@
  */
 
 import {
+  adaptLivePipelineIterationDetail,
   adaptLivePipelineIterations,
   adaptLivePipelines,
   isReducedPipeline,
@@ -188,10 +189,7 @@ describe('live pipeline catalog adapters', () => {
     ['stage bound', Array.from({ length: 101 }, (_, index) => ({ stageKey: `stage-${index}` }))],
   ])('rejects LP2 stages with %s', (_description, stages) => {
     expect(() =>
-      adaptLivePipelineIterations(
-        [{ id: 103, pipelineId: 7, iterationNumber: 2, stages }],
-        7,
-      ),
+      adaptLivePipelineIterations([{ id: 103, pipelineId: 7, iterationNumber: 2, stages }], 7),
     ).toThrow('Invalid pipeline iteration entity');
   });
 
@@ -257,5 +255,191 @@ describe('live pipeline catalog adapters', () => {
     expect(isRichPipeline(richPipeline)).toBe(true);
     expect(isReducedPipelineIteration(richIteration)).toBe(false);
     expect(isRichPipelineIteration(richIteration)).toBe(true);
+  });
+
+  describe('LP3 iteration detail', () => {
+    const minimalDetail = {
+      id: 103,
+      pipelineId: 7,
+      iterationNumber: 3,
+    };
+
+    test('adapts a valid minimal detail without inventing optional or rich fields', () => {
+      expect(adaptLivePipelineIterationDetail(minimalDetail, 7, 103)).toEqual({
+        kind: 'reduced',
+        id: 103,
+        pipelineId: 7,
+        number: 3,
+        status: 'UNKNOWN',
+        trigger: undefined,
+        startedAt: undefined,
+        finishedAt: undefined,
+        durationMs: undefined,
+        attributes: [],
+        stages: [],
+        pipelineName: undefined,
+        createdAt: undefined,
+      });
+    });
+
+    test('adapts safe full detail, sorts stages and attributes, and excludes opaque rich fields', () => {
+      const result = adaptLivePipelineIterationDetail(
+        {
+          ...minimalDetail,
+          pipelineName: '  Release validation  ',
+          status: 'FUTURE_STATUS',
+          trigger: ' CI ',
+          startedAt: '2026-10-04T10:00:00.000Z',
+          finishedAt: '2026-10-04T10:01:00.000Z',
+          createdAt: '2026-10-04T09:59:00.000Z',
+          durationMillis: 60_000,
+          attributes: { zeta: ' last ', alpha: ' first ' },
+          metrics: { suiteScore: 99, costTotal: 12 },
+          repository: 'must-not-leak',
+          stages: [
+            {
+              id: 12,
+              stageKey: 'review',
+              shortName: ' Review ',
+              sequence: 2,
+              status: 'NEEDS_HUMAN',
+              attributes: { hidden: 'value' },
+              result: { findings: 2 },
+              testCaseIds: [1, 2],
+              metrics: { cost: 4 },
+              ci: { run: 9 },
+              lastRetriedAt: '2026-10-04T11:00:00.000Z',
+              lastRetriedBy: 'admin',
+            },
+            {
+              id: 11,
+              stageKey: 'prepare',
+              name: ' Prepare ',
+              sequence: 1,
+              status: 'PASSED',
+            },
+          ],
+        },
+        7,
+        103,
+      );
+
+      expect(result).toEqual({
+        kind: 'reduced',
+        id: 103,
+        pipelineId: 7,
+        number: 3,
+        pipelineName: 'Release validation',
+        status: 'UNKNOWN',
+        trigger: 'CI',
+        startedAt: Date.parse('2026-10-04T10:00:00.000Z'),
+        finishedAt: Date.parse('2026-10-04T10:01:00.000Z'),
+        createdAt: Date.parse('2026-10-04T09:59:00.000Z'),
+        durationMs: 60_000,
+        attributes: [
+          { key: 'alpha', value: 'first' },
+          { key: 'zeta', value: 'last' },
+        ],
+        stages: [
+          { id: 11, key: 'prepare', label: 'Prepare', sequence: 1, status: 'PASSED' },
+          { id: 12, key: 'review', label: 'Review', sequence: 2, status: 'NEEDS_HUMAN' },
+        ],
+      });
+      expect(result).not.toHaveProperty('metrics');
+      expect(result).not.toHaveProperty('repository');
+      expect(result.stages[1]).not.toHaveProperty('attributes');
+      expect(result.stages[1]).not.toHaveProperty('result');
+      expect(result.stages[1]).not.toHaveProperty('testCaseIds');
+      expect(result.stages[1]).not.toHaveProperty('metrics');
+      expect(result.stages[1]).not.toHaveProperty('ci');
+      expect(result.stages[1]).not.toHaveProperty('lastRetriedAt');
+      expect(result.stages[1]).not.toHaveProperty('lastRetriedBy');
+    });
+
+    test.each([
+      ['non-object response', null, 7, 103],
+      ['wrong pipeline identity', { ...minimalDetail, pipelineId: 8 }, 7, 103],
+      ['wrong iteration identity', { ...minimalDetail, id: 104 }, 7, 103],
+      ['invalid expected pipeline identity', minimalDetail, 0, 103],
+      ['invalid expected iteration identity', minimalDetail, 7, -1],
+      ['string response identity', { ...minimalDetail, id: '103' }, 7, 103],
+      ['invalid iteration number', { ...minimalDetail, iterationNumber: 0 }, 7, 103],
+      ['invalid duration type', { ...minimalDetail, durationMillis: '60000' }, 7, 103],
+      ['invalid created date', { ...minimalDetail, createdAt: 'not-a-date' }, 7, 103],
+      ['invalid started date', { ...minimalDetail, startedAt: 'not-a-date' }, 7, 103],
+      ['invalid pipeline name', { ...minimalDetail, pipelineName: 'x'.repeat(256) }, 7, 103],
+      ['non-object attributes', { ...minimalDetail, attributes: [] }, 7, 103],
+      [
+        'unsafe attribute key',
+        { ...minimalDetail, attributes: JSON.parse('{"constructor":"unsafe"}') },
+        7,
+        103,
+      ],
+      ['invalid stage collection type', { ...minimalDetail, stages: {} }, 7, 103],
+      [
+        'oversized stage collection',
+        {
+          ...minimalDetail,
+          stages: Array.from({ length: 101 }, (_, index) => ({
+            id: index + 1,
+            stageKey: `stage-${index}`,
+            sequence: index,
+          })),
+        },
+        7,
+        103,
+      ],
+    ])('rejects detail with %s', (_description, payload, pipelineId, iterationId) => {
+      expect(() => adaptLivePipelineIterationDetail(payload, pipelineId, iterationId)).toThrow();
+    });
+
+    test.each([
+      ['a missing id', [{ stageKey: 'prepare', sequence: 1 }]],
+      ['a missing sequence', [{ id: 1, stageKey: 'prepare' }]],
+      ['a negative sequence', [{ id: 1, stageKey: 'prepare', sequence: -1 }]],
+      [
+        'duplicate ids',
+        [
+          { id: 1, stageKey: 'prepare', sequence: 1 },
+          { id: 1, stageKey: 'review', sequence: 2 },
+        ],
+      ],
+      [
+        'duplicate keys',
+        [
+          { id: 1, stageKey: 'prepare', sequence: 1 },
+          { id: 2, stageKey: 'prepare', sequence: 2 },
+        ],
+      ],
+      [
+        'duplicate sequences',
+        [
+          { id: 1, stageKey: 'prepare', sequence: 1 },
+          { id: 2, stageKey: 'review', sequence: 1 },
+        ],
+      ],
+    ])('rejects detail stages with %s', (_description, stages) => {
+      expect(() => adaptLivePipelineIterationDetail({ ...minimalDetail, stages }, 7, 103)).toThrow(
+        'Invalid pipeline iteration detail response',
+      );
+    });
+
+    test.each(['FUTURE', 'passed', null, undefined])(
+      'normalizes future or unsupported detail status %p to UNKNOWN',
+      (status) => {
+        const detail = adaptLivePipelineIterationDetail(
+          {
+            ...minimalDetail,
+            status,
+            stages: [{ id: 1, stageKey: 'future', sequence: 1, status }],
+          },
+          7,
+          103,
+        );
+
+        expect(detail.status).toBe('UNKNOWN');
+        expect(detail.stages[0].status).toBe('UNKNOWN');
+      },
+    );
   });
 });

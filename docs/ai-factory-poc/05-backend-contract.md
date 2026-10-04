@@ -51,7 +51,7 @@ and remain an open backend/product agreement.
 |---|---|---:|:---:|:---:|:---:|:---:|
 | LP1 | `GET /v1/project/{projectKey}/pipeline` | `200 PipelineRS[]` | ✅ | ✅ | ⚠️ legacy P1 + G1 raw adapter foundation | ❌ |
 | LP2 | `GET /v1/project/{projectKey}/pipeline/{pipelineId}/iteration` | `200 PipelineIterationSummaryRS[]` | ✅ | ✅ | ⚠️ legacy P2 + G1 raw adapter foundation | ❌ |
-| LP3 | `GET /v1/project/{projectKey}/pipeline/iteration/{iterationId}` | `200 PipelineIterationDetailRS` | ✅ | ✅ | ⚠️ legacy P3 | ❌ |
+| LP3 | `GET /v1/project/{projectKey}/pipeline/iteration/{iterationId}` | `200 PipelineIterationDetailRS` | ✅ | ✅ | ⚠️ legacy rich P3 + G2 raw/reduced adapter foundation | ❌ |
 | LP4 | `GET /v1/project/{projectKey}/pipeline/iteration/{iterationId}/compare?with={otherIterationId}` | `200 PipelineCompareRS` | ✅ | ✅ | ✅ same-path mock + raw-response adapter (T4.3 complete) | ❌ |
 | LP5 | `PATCH /v1/project/{projectKey}/pipeline/{pipelineId}` | `200 PipelineRS` | ✅ | ✅ | ✅ same-path mock adapter; legacy P4 retained | ✅ T3.4 |
 | LP6 | `POST /v1/project/{projectKey}/pipeline/iteration` | `201 PipelineIterationDetailRS` | ✅ | ✅ | ❌ | ❌ |
@@ -334,9 +334,20 @@ produce it. It therefore supports only the current-rubric portion of T2.5, not r
   approval of the reduced UI. Rich mock-only fields are omitted rather than invented. Foundation validation passed
   type-check, full Jest (152 suites / 1364 tests), full lint (exit 0 with 201 existing warnings), code validation,
   security validation and diff-check. Browser/runtime validation was not performed.
-- **T1.3 / LP3:** remains a future integration group after G1. EPMRPP-122040 does not integrate LP3, and
-  detail/compare/settings entry points are guarded against mixing future live catalog identities with mock-only
-  downstream data.
+- **T1.3 / T6.2-G2 / LP3:** EPMRPP-122041 implements the canonical iteration-only URL in the hard-closed live
+  branch, a strict raw DTO → reduced-detail adapter, separate detail transport/provenance and request/catalog/project
+  stale guards, plus a dedicated reduced detail presentation. The reduced model exposes only validated generic
+  iteration identity/status/timing, validated safe string attributes and ordered stage identity/key/sequence/status.
+  It intentionally discards generic `metrics`, `result`, `testCaseIds`, `ci`, retry fields and all rich PoC panel semantics. Rich legacy
+  P3 remains the mock-default branch. Reduced cards navigate to reduced detail; the Library iteration-number chip
+  uses only project/catalog-version-matching cached list metadata and no longer issues LP3 directly. LP3 remains
+  `FE consumes live = ❌`: the live gate is hard closed, no authenticated backend/browser validation or live polling
+  was performed, and trusted HTTPS, read roles, status/requiredness/polling decisions plus Product/QA approval remain
+  rollout blockers. Final validation passed: focused Jest 8 suites / 171 tests before review remediation,
+  post-race focused saga 32/32, final full Jest 154 suites / 1417 tests (with the repository open-handle warning
+  after success), Node 20 type-check, full lint exit 0 with 201 existing warnings and diff-check. Senior code
+  validation passed after one Major detail-request race was fixed and regression-tested; security validation passed
+  with no Critical/Major/Minor findings.
 - **T2.1/T2.2:** not covered. Pipeline and Quality Standard schemas contain no Test Case lifecycle, AI evaluation,
   origin, cost, unsent-comment or agent-fixing fields. C/L/R/F/A contracts remain provisional.
 - **T2.5:** QS1 is a candidate for reading the current project rubric, but only partially supports the story:
@@ -683,6 +694,7 @@ Launch delivery and identity correlation remain unverified.
 
 | Date | Change | Agreed with |
 |------|--------|-------------|
+| 2026-10-04 | v0.4 recorded the implemented and automatically validated EPMRPP-122041 LP3 generic-detail DTO/adapter/transport foundation, separate detail provenance/stale guards, reduced-detail presentation and removal of the Library direct-detail request. The live gate remains hard closed; no live rollout, backend/browser validation, rich detail parity, live polling or Quality Standard integration is claimed | Published OpenAPI `feature-pipelines-2767` plus frontend branch evidence |
 | 2026-10-04 | v0.3 re-audited the published OpenAPI with no material drift; recorded the automatically validated EPMRPP-122040 LP1/LP2 DTO/adapter/transport foundation as mock-default and hard fail-closed for live mode. No LP3 or Quality Standard integration, live rollout or browser/runtime validation is claimed | Published OpenAPI `feature-pipelines-2767` plus frontend branch evidence |
 | 2026-10-02 | v0.2 audited published Pipeline and Quality Standard OpenAPI; separated verified raw DTOs from legacy/mock and provisional contracts; no endpoint calls executed | Published OpenAPI `feature-pipelines-2767` (documentation evidence only) |
 | 2026-09-25 | v0.1 initial FE proposal | — |

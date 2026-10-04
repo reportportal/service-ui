@@ -15,10 +15,17 @@
  */
 
 import { useIntl } from 'react-intl';
+import { useSelector } from 'react-redux';
+import Link from 'redux-first-router-link';
 
 import { createClassnames } from 'common/utils';
 import { formatDuration } from 'common/utils/timeDateUtils';
 import { ReducedPipelineIteration, ReducedPipelineStatus } from 'controllers/aiFactory/pipelines';
+import {
+  PROJECT_PIPELINE_ITERATION_PAGE,
+  urlOrganizationAndProjectSelector,
+} from 'controllers/pages';
+import { ProjectDetails } from 'pages/organization/constants';
 
 import { messages } from '../messages';
 import styles from './iterationCard.scss';
@@ -39,6 +46,9 @@ export interface ReducedIterationCardProps {
 
 export const ReducedIterationCard = ({ iteration }: ReducedIterationCardProps) => {
   const { formatMessage } = useIntl();
+  const { organizationSlug, projectSlug } = useSelector(
+    urlOrganizationAndProjectSelector,
+  ) as ProjectDetails;
   const statusLabel = (status: ReducedPipelineStatus) =>
     formatMessage(messages[STATUS_MESSAGE_KEYS[status]]);
   const metaFields = [
@@ -51,9 +61,20 @@ export const ReducedIterationCard = ({ iteration }: ReducedIterationCardProps) =
     <div className={cx('card')} data-automation-id="reducedIterationCard">
       <div className={cx('card__header')}>
         <span className={cx('card__neutral-status')}>{statusLabel(iteration.status)}</span>
-        <span className={cx('card__plain-title')}>
+        <Link
+          className={cx('card__title')}
+          to={{
+            type: PROJECT_PIPELINE_ITERATION_PAGE,
+            payload: {
+              organizationSlug,
+              projectSlug,
+              pipelineId: iteration.pipelineId,
+              iterationId: iteration.id,
+            },
+          }}
+        >
           {formatMessage(messages.iterationTitle, { number: iteration.number })}
-        </span>
+        </Link>
       </div>
       {metaFields.length > 0 && <div className={cx('card__meta')}>{metaFields.join(' · ')}</div>}
       {iteration.stages.length > 0 && (

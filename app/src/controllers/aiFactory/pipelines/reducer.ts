@@ -25,8 +25,9 @@ import {
   PROJECT_PIPELINE_COMPARISON_PAGE,
   PROJECT_PIPELINE_ITERATION_PAGE,
   PROJECT_PIPELINES_PAGE,
+  TEST_CASE_LIBRARY_PAGE,
 } from 'controllers/pages';
-import { PipelineComparison } from 'types/aiFactory';
+import { IterationRS, PipelineComparison } from 'types/aiFactory';
 
 import {
   CLEAR_PIPELINE_COMPARISON,
@@ -43,7 +44,8 @@ import {
   PipelineIterationItem,
   PipelinesState,
 } from './types';
-import { PipelineCatalogTransport } from './transport';
+import { ReducedPipelineIterationDetail } from './liveAdapters';
+import { PipelineCatalogTransport, PipelineDetailTransport } from './transport';
 
 interface PipelineReducerAction extends Action<string> {
   payload?: { data?: unknown };
@@ -57,7 +59,22 @@ interface PipelineReducerAction extends Action<string> {
     catalogVersion?: number;
     catalogRequestId?: number;
     projectKey?: string;
+    iterationId?: number;
+    catalogTransport?: PipelineCatalogTransport;
+    detailTransport?: PipelineDetailTransport;
+    isUnavailable?: boolean;
   };
+}
+
+interface PipelineDetailMeta {
+  requestId: number;
+  projectKey: string;
+  pipelineId: number;
+  iterationId: number;
+  catalogVersion: number;
+  catalogRequestId: number;
+  catalogTransport: PipelineCatalogTransport;
+  detailTransport: PipelineDetailTransport;
 }
 
 const isPipelineIterationsAction = (action: PipelineReducerAction): boolean =>
@@ -162,6 +179,51 @@ const iterationRequestIdByPipelineReducer = (
   return { ...state, [action.meta.pipelineId]: action.meta.requestId };
 };
 
+const isPipelineDetailAction = (action: PipelineReducerAction): boolean =>
+  action.meta?.namespace === PIPELINE_ITERATION_DETAILS_NAMESPACE &&
+  [FETCH_START, FETCH_SUCCESS, FETCH_ERROR].includes(action.type);
+
+const iterationDetailsReducer = (
+  state: IterationRS | ReducedPipelineIterationDetail | null = null,
+  action: PipelineReducerAction,
+): IterationRS | ReducedPipelineIterationDetail | null => {
+  if (!isPipelineDetailAction(action)) {
+    return state;
+  }
+  return action.type === FETCH_SUCCESS
+    ? ((action.payload?.data as IterationRS | ReducedPipelineIterationDetail | undefined) ?? null)
+    : null;
+};
+
+const iterationDetailsLoadingReducer = (state = false, action: PipelineReducerAction): boolean =>
+  isPipelineDetailAction(action) ? action.type === FETCH_START : state;
+
+const iterationDetailsErrorReducer = (state = false, action: PipelineReducerAction): boolean =>
+  isPipelineDetailAction(action)
+    ? action.type === FETCH_ERROR && !action.meta?.isCancellation && !action.meta?.isUnavailable
+    : state;
+
+const iterationDetailsUnavailableReducer = (
+  state = false,
+  action: PipelineReducerAction,
+): boolean =>
+  isPipelineDetailAction(action)
+    ? action.type === FETCH_ERROR && Boolean(action.meta?.isUnavailable)
+    : state;
+
+const detailMetaReducer =
+  <T extends keyof NonNullable<PipelineReducerAction['meta']>>(
+    key: T,
+    initialState: NonNullable<PipelineReducerAction['meta']>[T] | null,
+  ) =>
+  (
+    state: NonNullable<PipelineReducerAction['meta']>[T] | null = initialState,
+    action: PipelineReducerAction,
+  ) =>
+    isPipelineDetailAction(action) && action.type === FETCH_START
+      ? (action.meta?.[key] ?? initialState)
+      : state;
+
 const comparisonReducer = (
   state: PipelineComparison | null = null,
   action: PipelineReducerAction,
@@ -206,11 +268,18 @@ const combinedReducer = combineReducers({
   iterationsLoadingByPipeline: iterationsLoadingByPipelineReducer,
   iterationsErrorByPipeline: iterationsErrorByPipelineReducer,
   iterationRequestIdByPipeline: iterationRequestIdByPipelineReducer,
-  iterationDetails: fetchReducer(PIPELINE_ITERATION_DETAILS_NAMESPACE, {
-    initialState: null,
-    contentPath: 'data',
-  }),
-  iterationDetailsLoading: loadingReducer(PIPELINE_ITERATION_DETAILS_NAMESPACE),
+  iterationDetails: iterationDetailsReducer,
+  iterationDetailsLoading: iterationDetailsLoadingReducer,
+  iterationDetailsError: iterationDetailsErrorReducer,
+  iterationDetailsUnavailable: iterationDetailsUnavailableReducer,
+  detailRequestId: detailMetaReducer('requestId', null),
+  detailProjectKey: detailMetaReducer('projectKey', null),
+  detailPipelineId: detailMetaReducer('pipelineId', null),
+  detailIterationId: detailMetaReducer('iterationId', null),
+  detailCatalogTransport: detailMetaReducer('catalogTransport', null),
+  detailCatalogVersion: detailMetaReducer('catalogVersion', 0),
+  detailCatalogRequestId: detailMetaReducer('catalogRequestId', null),
+  detailTransport: detailMetaReducer('detailTransport', null),
   comparison: comparisonReducer,
   comparisonLoading: comparisonLoadingReducer,
   comparisonError: comparisonErrorReducer,
@@ -221,10 +290,7 @@ const isPipelineCatalogAction = (action: PipelineReducerAction): boolean =>
   action.meta?.namespace === PIPELINES_NAMESPACE &&
   [FETCH_START, FETCH_SUCCESS, FETCH_ERROR].includes(action.type);
 
-const isCurrentCatalogRequest = (
-  state: PipelinesState,
-  action: PipelineReducerAction,
-): boolean => {
+const isCurrentCatalogRequest = (state: PipelinesState, action: PipelineReducerAction): boolean => {
   if (!isPipelineCatalogAction(action)) {
     return true;
   }
@@ -263,6 +329,49 @@ const isCurrentIterationRequest = (
     : action.meta.requestId === currentRequestId;
 };
 
+const getPipelineDetailMeta = (action: PipelineReducerAction): PipelineDetailMeta | null => {
+  const meta = action.meta;
+  if (
+    typeof meta?.requestId !== 'number' ||
+    typeof meta.projectKey !== 'string' ||
+    typeof meta.pipelineId !== 'number' ||
+    typeof meta.iterationId !== 'number' ||
+    typeof meta.catalogVersion !== 'number' ||
+    typeof meta.catalogRequestId !== 'number' ||
+    !meta.catalogTransport ||
+    !meta.detailTransport
+  ) {
+    return null;
+  }
+  return meta as PipelineDetailMeta;
+};
+
+const matchesDetailCatalog = (state: PipelinesState, meta: PipelineDetailMeta): boolean =>
+  meta.projectKey === state.catalogProjectKey &&
+  meta.catalogTransport === state.transport &&
+  meta.catalogVersion === state.catalogVersion &&
+  meta.catalogRequestId === state.catalogRequestId;
+
+const matchesDetailRequest = (state: PipelinesState, meta: PipelineDetailMeta): boolean =>
+  meta.requestId === state.detailRequestId &&
+  meta.projectKey === state.detailProjectKey &&
+  meta.pipelineId === state.detailPipelineId &&
+  meta.iterationId === state.detailIterationId &&
+  meta.catalogTransport === state.detailCatalogTransport &&
+  meta.catalogVersion === state.detailCatalogVersion &&
+  meta.catalogRequestId === state.detailCatalogRequestId &&
+  meta.detailTransport === state.detailTransport;
+
+const isCurrentDetailRequest = (state: PipelinesState, action: PipelineReducerAction): boolean => {
+  if (!isPipelineDetailAction(action)) return true;
+  const meta = getPipelineDetailMeta(action);
+  if (!meta || !matchesDetailCatalog(state, meta)) return false;
+  if (action.type === FETCH_START) {
+    return state.detailRequestId == null || meta.requestId > state.detailRequestId;
+  }
+  return matchesDetailRequest(state, meta);
+};
+
 const reducer = (
   state: PipelinesState | undefined,
   action: PipelineReducerAction,
@@ -274,7 +383,8 @@ const reducer = (
   const currentState = state ?? initialState;
   if (
     !isCurrentCatalogRequest(currentState, action) ||
-    !isCurrentIterationRequest(currentState, action)
+    !isCurrentIterationRequest(currentState, action) ||
+    !isCurrentDetailRequest(currentState, action)
   ) {
     return currentState;
   }
@@ -297,6 +407,16 @@ const reducer = (
     iterationRequestIdByPipeline: {},
     iterationDetails: null,
     iterationDetailsLoading: false,
+    iterationDetailsError: false,
+    iterationDetailsUnavailable: false,
+    detailRequestId: null,
+    detailProjectKey: null,
+    detailPipelineId: null,
+    detailIterationId: null,
+    detailCatalogTransport: null,
+    detailCatalogVersion: 0,
+    detailCatalogRequestId: null,
+    detailTransport: null,
     comparison: null,
     comparisonLoading: false,
     comparisonError: false,
@@ -309,4 +429,5 @@ export const aiFactoryPipelinesReducer = createPageScopedReducer(reducer, [
   PROJECT_PIPELINES_PAGE,
   PROJECT_PIPELINE_ITERATION_PAGE,
   PROJECT_PIPELINE_COMPARISON_PAGE,
+  TEST_CASE_LIBRARY_PAGE,
 ]);

@@ -24,8 +24,12 @@ import {
   GET_PIPELINE_ITERATIONS,
   GET_PIPELINES,
 } from './constants';
-import type { ReducedPipeline, ReducedPipelineIteration } from './liveAdapters';
-import type { PipelineCatalogTransport } from './transport';
+import type {
+  ReducedPipeline,
+  ReducedPipelineIteration,
+  ReducedPipelineIterationDetail,
+} from './liveAdapters';
+import type { PipelineCatalogTransport, PipelineDetailTransport } from './transport';
 
 export type PipelineCatalogItem = PipelineRS | ReducedPipeline;
 export type PipelineIterationItem = IterationSummaryRS | ReducedPipelineIteration;
@@ -45,8 +49,18 @@ export interface PipelinesState {
   iterationsLoadingByPipeline: IterationsLoadingByPipelineId;
   iterationsErrorByPipeline: IterationsErrorByPipelineId;
   iterationRequestIdByPipeline: Record<number, number>;
-  iterationDetails: IterationRS | null;
+  iterationDetails: IterationRS | ReducedPipelineIterationDetail | null;
   iterationDetailsLoading?: boolean;
+  iterationDetailsError?: boolean;
+  iterationDetailsUnavailable?: boolean;
+  detailRequestId?: number | null;
+  detailProjectKey?: string | null;
+  detailPipelineId?: number | null;
+  detailIterationId?: number | null;
+  detailCatalogTransport?: PipelineCatalogTransport | null;
+  detailCatalogVersion?: number;
+  detailCatalogRequestId?: number | null;
+  detailTransport?: PipelineDetailTransport | null;
   comparison: PipelineComparison | null;
   comparisonLoading?: boolean;
   comparisonError?: boolean;

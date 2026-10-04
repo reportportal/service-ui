@@ -17,12 +17,18 @@
 import { fetchErrorAction, fetchSuccessAction } from 'controllers/fetch';
 import { FETCH_ERROR, FETCH_START, FETCH_SUCCESS } from 'controllers/fetch/constants';
 import { LOGOUT } from 'controllers/auth';
-import { CLEAR_PAGE_STATE, PROJECT_DASHBOARD_PAGE, PROJECT_PIPELINES_PAGE } from 'controllers/pages';
+import {
+  CLEAR_PAGE_STATE,
+  PROJECT_DASHBOARD_PAGE,
+  PROJECT_PIPELINES_PAGE,
+  PROJECT_PIPELINE_ITERATION_PAGE,
+} from 'controllers/pages';
 import { PipelineComparison } from 'types/aiFactory';
 
 import { getPipelineComparisonAction, clearPipelineComparisonAction } from './actionCreators';
 import {
   PIPELINE_COMPARISON_NAMESPACE,
+  PIPELINE_ITERATION_DETAILS_NAMESPACE,
   PIPELINE_ITERATIONS_NAMESPACE,
   PIPELINES_NAMESPACE,
 } from './constants';
@@ -140,10 +146,7 @@ describe('aiFactoryPipelinesReducer catalog provenance', () => {
   });
 
   test('stores the resolved transport and whether configuration fell back', () => {
-    const loading = aiFactoryPipelinesReducer(
-      undefined,
-      catalogAction(FETCH_START, 1, 'demo'),
-    );
+    const loading = aiFactoryPipelinesReducer(undefined, catalogAction(FETCH_START, 1, 'demo'));
     const state = aiFactoryPipelinesReducer(loading, {
       ...catalogAction(FETCH_SUCCESS, 1, 'demo', []),
       meta: {
@@ -229,9 +232,9 @@ describe('aiFactoryPipelinesReducer catalog provenance', () => {
     expect(
       aiFactoryPipelinesReducer(current, catalogAction(FETCH_SUCCESS, 1, 'first', [{ id: 1 }])),
     ).toBe(current);
-    expect(
-      aiFactoryPipelinesReducer(current, catalogAction(FETCH_ERROR, 1, 'first')),
-    ).toBe(current);
+    expect(aiFactoryPipelinesReducer(current, catalogAction(FETCH_ERROR, 1, 'first'))).toBe(
+      current,
+    );
   });
 
   test.each([
@@ -311,10 +314,7 @@ describe('aiFactoryPipelinesReducer per-pipeline iteration state', () => {
   test('preserves successful siblings when another pipeline fails', () => {
     const firstPipelineIterations = [{ kind: 'reduced', id: 101, pipelineId: 1, number: 1 }];
     const secondPipelineIterations = [{ kind: 'reduced', id: 201, pipelineId: 2, number: 1 }];
-    let state = aiFactoryPipelinesReducer(
-      undefined,
-      fetchAction(FETCH_START, 1),
-    ) as PipelinesState;
+    let state = aiFactoryPipelinesReducer(undefined, fetchAction(FETCH_START, 1)) as PipelinesState;
     state = aiFactoryPipelinesReducer(state, fetchAction(FETCH_START, 2));
     state = aiFactoryPipelinesReducer(
       state,
@@ -411,6 +411,172 @@ describe('aiFactoryPipelinesReducer per-pipeline iteration state', () => {
       iterationsByPipeline: { 1: [] },
       iterationsLoadingByPipeline: { 1: false },
       iterationsErrorByPipeline: { 1: false },
+    });
+  });
+});
+
+describe('aiFactoryPipelinesReducer iteration detail provenance', () => {
+  const catalogAction = (type: typeof FETCH_START | typeof FETCH_SUCCESS, data?: unknown[]) => ({
+    type,
+    payload: data === undefined ? undefined : { data },
+    meta: {
+      namespace: PIPELINES_NAMESPACE,
+      catalogRequestId: 5,
+      projectKey: 'demo',
+      transport: 'live' as const,
+      transportFallback: false,
+    },
+  });
+  const detailMeta = {
+    namespace: PIPELINE_ITERATION_DETAILS_NAMESPACE,
+    requestId: 11,
+    projectKey: 'demo',
+    pipelineId: 7,
+    iterationId: 103,
+    catalogTransport: 'live' as const,
+    catalogVersion: 5,
+    catalogRequestId: 5,
+    detailTransport: 'live' as const,
+  };
+  const detail = {
+    kind: 'reduced' as const,
+    id: 103,
+    pipelineId: 7,
+    number: 3,
+    status: 'PASSED' as const,
+    attributes: [],
+    stages: [],
+  };
+
+  const createCatalogState = () => {
+    const loading = aiFactoryPipelinesReducer(undefined, catalogAction(FETCH_START));
+    return aiFactoryPipelinesReducer(
+      loading,
+      catalogAction(FETCH_SUCCESS, [{ kind: 'reduced', id: 7, name: 'Pipeline' }]),
+    ) as PipelinesState;
+  };
+
+  const detailAction = (
+    type: typeof FETCH_START | typeof FETCH_SUCCESS | typeof FETCH_ERROR,
+    meta: Record<string, unknown> = detailMeta,
+  ) => ({
+    type,
+    payload: type === FETCH_SUCCESS ? { data: detail } : undefined,
+    meta,
+  });
+
+  test('accepted detail START clears old detail and records the complete request provenance', () => {
+    const staleDetailState = {
+      ...createCatalogState(),
+      iterationDetails: { ...detail, id: 102 },
+      iterationDetailsError: true,
+      iterationDetailsUnavailable: true,
+    } as PipelinesState;
+
+    const state = aiFactoryPipelinesReducer(
+      staleDetailState,
+      detailAction(FETCH_START),
+    ) as PipelinesState;
+
+    expect(state).toMatchObject({
+      iterationDetails: null,
+      iterationDetailsLoading: true,
+      iterationDetailsError: false,
+      iterationDetailsUnavailable: false,
+      detailRequestId: 11,
+      detailProjectKey: 'demo',
+      detailPipelineId: 7,
+      detailIterationId: 103,
+      detailCatalogTransport: 'live',
+      detailCatalogVersion: 5,
+      detailCatalogRequestId: 5,
+      detailTransport: 'live',
+    });
+  });
+
+  test('accepts only the matching detail success and exposes its reduced payload', () => {
+    const loading = aiFactoryPipelinesReducer(
+      createCatalogState(),
+      detailAction(FETCH_START),
+    ) as PipelinesState;
+
+    const state = aiFactoryPipelinesReducer(loading, detailAction(FETCH_SUCCESS)) as PipelinesState;
+
+    expect(state).toMatchObject({
+      iterationDetails: detail,
+      iterationDetailsLoading: false,
+      iterationDetailsError: false,
+      iterationDetailsUnavailable: false,
+    });
+  });
+
+  test.each([
+    ['request id', { requestId: 12 }],
+    ['project', { projectKey: 'other-project' }],
+    ['pipeline identity', { pipelineId: 8 }],
+    ['iteration identity', { iterationId: 104 }],
+    ['catalog transport', { catalogTransport: 'mock' as const }],
+    ['catalog version', { catalogVersion: 6 }],
+    ['catalog request', { catalogRequestId: 6 }],
+    ['detail transport', { detailTransport: 'unavailable' as const }],
+  ])('ignores stale detail success and error with mismatched %s', (_description, overrides) => {
+    const loading = aiFactoryPipelinesReducer(
+      createCatalogState(),
+      detailAction(FETCH_START),
+    ) as PipelinesState;
+    const staleMeta = { ...detailMeta, ...overrides };
+
+    expect(aiFactoryPipelinesReducer(loading, detailAction(FETCH_SUCCESS, staleMeta))).toBe(
+      loading,
+    );
+    expect(aiFactoryPipelinesReducer(loading, detailAction(FETCH_ERROR, staleMeta))).toBe(loading);
+  });
+
+  test.each([
+    ['ordinary failure', {}, true, false],
+    ['unavailable transport', { isUnavailable: true }, false, true],
+    ['request cancellation', { isCancellation: true }, false, false],
+  ])(
+    'records %s without retaining stale detail data',
+    (_description, flags, expectedError, expectedUnavailable) => {
+      const loading = aiFactoryPipelinesReducer(
+        createCatalogState(),
+        detailAction(FETCH_START),
+      ) as PipelinesState;
+      const state = aiFactoryPipelinesReducer(loading, {
+        ...detailAction(FETCH_ERROR),
+        meta: { ...detailMeta, ...flags },
+      }) as PipelinesState;
+
+      expect(state).toMatchObject({
+        iterationDetails: null,
+        iterationDetailsLoading: false,
+        iterationDetailsError: expectedError,
+        iterationDetailsUnavailable: expectedUnavailable,
+      });
+    },
+  );
+
+  test('rejects a stale completion after the iteration route leaves the scoped workflow', () => {
+    const loading = aiFactoryPipelinesReducer(
+      createCatalogState(),
+      detailAction(FETCH_START),
+    ) as PipelinesState;
+    const reset = aiFactoryPipelinesReducer(loading, {
+      type: CLEAR_PAGE_STATE,
+      payload: {
+        oldPage: PROJECT_PIPELINE_ITERATION_PAGE,
+        newPage: PROJECT_DASHBOARD_PAGE,
+      },
+    }) as PipelinesState;
+
+    expect(aiFactoryPipelinesReducer(reset, detailAction(FETCH_SUCCESS))).toBe(reset);
+    expect(aiFactoryPipelinesReducer(reset, detailAction(FETCH_ERROR))).toBe(reset);
+    expect(reset).toMatchObject({
+      catalogVersion: 0,
+      catalogRequestId: null,
+      iterationDetails: null,
+      detailRequestId: null,
     });
   });
 });

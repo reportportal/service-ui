@@ -48,6 +48,8 @@ export {
   pipelineCatalogProjectKeySelector,
   pipelineIterationDetailsSelector,
   pipelineIterationDetailsLoadingSelector,
+  pipelineIterationDetailsErrorSelector,
+  pipelineIterationDetailsUnavailableSelector,
   pipelineComparisonSelector,
   pipelineComparisonLoadingSelector,
   pipelineComparisonErrorSelector,
@@ -66,10 +68,12 @@ export type {
   GetPipelineComparisonAction,
   ClearPipelineComparisonAction,
 } from './types';
-export type { PipelineCatalogTransport } from './transport';
+export type { PipelineCatalogTransport, PipelineDetailTransport } from './transport';
 export type {
   ReducedPipeline,
   ReducedPipelineIteration,
+  ReducedPipelineIterationDetail,
+  ReducedPipelineDetailStage,
   ReducedPipelineStage,
   ReducedPipelineStatus,
 } from './liveAdapters';

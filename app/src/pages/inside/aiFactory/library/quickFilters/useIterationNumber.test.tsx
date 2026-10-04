@@ -14,18 +14,29 @@
  * limitations under the License.
  */
 
-import { act, useEffect } from 'react';
+import { useEffect } from 'react';
 import { mount } from 'enzyme';
 import { useSelector } from 'react-redux';
 
-import { URLS } from 'common/urls';
-import { ERROR_CANCELED, fetch } from 'common/utils';
+import { fetch } from 'common/utils';
+import {
+  pipelineCatalogProjectKeySelector,
+  pipelineCatalogVersionSelector,
+  pipelineIterationDetailsSelector,
+  pipelineIterationsByPipelineSelector,
+} from 'controllers/aiFactory/pipelines';
 import { projectKeySelector } from 'controllers/project';
 import type { TestCase } from 'types/testCase';
 
 import { useIterationNumber } from './useIterationNumber';
 
 jest.mock('react-redux', () => ({ useSelector: jest.fn() }));
+jest.mock('controllers/aiFactory/pipelines', () => ({
+  pipelineCatalogProjectKeySelector: jest.fn(),
+  pipelineCatalogVersionSelector: jest.fn(),
+  pipelineIterationDetailsSelector: jest.fn(),
+  pipelineIterationsByPipelineSelector: jest.fn(),
+}));
 jest.mock('controllers/project', () => ({ projectKeySelector: jest.fn() }));
 jest.mock('common/utils', () => {
   const actual = jest.requireActual<typeof import('common/utils')>('common/utils');
@@ -55,15 +66,6 @@ const Harness = ({
   return null;
 };
 
-const deferred = <T,>() => {
-  let resolve: (value: T) => void = () => undefined;
-  const promise = new Promise<T>((promiseResolve) => {
-    resolve = promiseResolve;
-  });
-
-  return { promise, resolve };
-};
-
 const generatedCase = (iterationId: number, number?: number) =>
   ({
     id: 1,
@@ -75,222 +77,131 @@ const generatedCase = (iterationId: number, number?: number) =>
     },
   }) as TestCase;
 
-const flushPromises = async () => {
-  await act(async () => {
-    await Promise.resolve();
-  });
-};
+interface SelectorState {
+  projectKey: string;
+  catalogProjectKey: string | null;
+  catalogVersion: number;
+  details: Record<string, unknown> | null;
+  iterationsByPipeline: Record<number, Array<Record<string, unknown>>> | null;
+}
 
-describe('useIterationNumber direct LP3 lookup', () => {
-  const fetchMock = fetch as unknown as jest.Mock;
-  let projectKey = 'demo';
+describe('useIterationNumber validated cached metadata', () => {
+  const state: SelectorState = {
+    projectKey: 'demo',
+    catalogProjectKey: 'demo',
+    catalogVersion: 3,
+    details: null,
+    iterationsByPipeline: null,
+  };
 
   beforeEach(() => {
     jest.clearAllMocks();
-    projectKey = 'demo';
+    Object.assign(state, {
+      projectKey: 'demo',
+      catalogProjectKey: 'demo',
+      catalogVersion: 3,
+      details: null,
+      iterationsByPipeline: null,
+    });
     jest.mocked(useSelector).mockImplementation((selector) => {
-      if (selector === projectKeySelector) return projectKey;
+      if (selector === projectKeySelector) return state.projectKey;
+      if (selector === pipelineCatalogProjectKeySelector) return state.catalogProjectKey;
+      if (selector === pipelineCatalogVersionSelector) return state.catalogVersion;
+      if (selector === pipelineIterationDetailsSelector) return state.details;
+      if (selector === pipelineIterationsByPipelineSelector) return state.iterationsByPipeline;
       return undefined;
     });
   });
 
-  test('uses loaded case data without requesting LP3 metadata', () => {
+  const renderResult = (iteration?: string, canLoadMetadata = true, testCases: TestCase[] = []) => {
     let result: number | undefined;
-
-    mount(
+    const wrapper = mount(
       <Harness
-        iteration="103"
-        testCases={[generatedCase(103, 4)]}
-        canLoadMetadata
+        iteration={iteration}
+        canLoadMetadata={canLoadMetadata}
+        testCases={testCases}
         onResult={(value) => {
           result = value;
         }}
       />,
     );
+    return { getResult: () => result, wrapper };
+  };
 
-    expect(result).toBe(4);
+  test('prefers the iteration number already attached to a loaded test case', () => {
+    state.details = { id: 103, pipelineId: 7, number: 9 };
+    const { getResult, wrapper } = renderResult('103', true, [generatedCase(103, 4)]);
+
+    expect(getResult()).toBe(4);
     expect(fetch).not.toHaveBeenCalled();
+    wrapper.unmount();
   });
 
   test.each([
-    ['metadata loading is disabled', '103', false, 'demo'],
-    ['the project key is empty', '103', true, ''],
-    ['the iteration is empty', undefined, true, 'demo'],
-    ['the iteration is zero', '0', true, 'demo'],
-    ['the iteration is negative', '-1', true, 'demo'],
-    ['the iteration is fractional', '1.5', true, 'demo'],
-    ['the iteration is exponential notation', '1e3', true, 'demo'],
-    ['the iteration exceeds safe integer range', '9007199254740992', true, 'demo'],
+    ['the matching LP3 detail', { details: { id: 103, pipelineId: 7, number: 7 } }, 7],
+    [
+      'a matching LP2 summary',
+      { iterationsByPipeline: { 7: [{ id: 103, pipelineId: 7, number: 8 }] } },
+      8,
+    ],
   ])(
-    'returns unresolved without a request when %s',
-    (_description, iteration, canLoadMetadata, nextProjectKey) => {
-      let result: number | undefined = 99;
-      projectKey = nextProjectKey;
+    'uses %s from the same-project validated catalog cache',
+    (_description, overrides, expected) => {
+      Object.assign(state, overrides);
 
-      mount(
-        <Harness
-          iteration={iteration}
-          canLoadMetadata={canLoadMetadata}
-          onResult={(value) => {
-            result = value;
-          }}
-        />,
-      );
+      const { getResult, wrapper } = renderResult('103');
 
-      expect(result).toBeUndefined();
+      expect(getResult()).toBe(expected);
       expect(fetch).not.toHaveBeenCalled();
+      wrapper.unmount();
     },
   );
 
-  test('loads the exact project-scoped LP3 URL and exposes only the validated number', async () => {
-    const cancel = jest.fn();
-    let result: number | undefined;
-    fetchMock.mockImplementationOnce(
-      (_url: string, options: { abort?: (cancelRequest: () => void) => void }) => {
-        options.abort?.(cancel);
-        return Promise.resolve({ id: 103, iterationNumber: 7 });
-      },
-    );
+  test.each([
+    ['metadata loading is disabled', { canLoadMetadata: false }],
+    ['the catalog is unresolved', { catalogVersion: 0 }],
+    ['the catalog belongs to another project', { catalogProjectKey: 'other-project' }],
+    ['the current project key is empty', { projectKey: '' }],
+    ['the detail identity differs', { details: { id: 104, number: 7 } }],
+    ['the cached number is not positive', { details: { id: 103, number: 0 } }],
+    ['the cached number is fractional', { details: { id: 103, number: 1.5 } }],
+    ['the cached number is not numeric', { details: { id: 103, number: '7' } }],
+  ])('does not expose cached metadata when %s', (_description, overrides) => {
+    state.details = { id: 103, pipelineId: 7, number: 7 };
+    Object.assign(state, overrides);
 
-    const wrapper = mount(
-      <Harness
-        iteration="103"
-        canLoadMetadata
-        onResult={(value) => {
-          result = value;
-        }}
-      />,
-    );
+    const canLoadMetadata =
+      'canLoadMetadata' in overrides ? Boolean(overrides.canLoadMetadata) : true;
+    const { getResult, wrapper } = renderResult('103', canLoadMetadata);
 
-    expect(result).toBeUndefined();
-    expect(fetch).toHaveBeenCalledWith(
-      URLS.pipelineIterationById('demo', 103),
-      expect.objectContaining({ abort: expect.any(Function) }),
-    );
-    expect(jest.mocked(fetch).mock.calls[0][0]).toBe(
-      '../api/v1/project/demo/pipeline/iteration/103',
-    );
-
-    await flushPromises();
-    expect(result).toBe(7);
-
+    expect(getResult()).toBeUndefined();
+    expect(fetch).not.toHaveBeenCalled();
     wrapper.unmount();
-    expect(cancel).toHaveBeenCalledTimes(1);
   });
 
-  test.each([
-    ['a mismatched id', { id: 104, iterationNumber: 7 }],
-    ['a string id', { id: '103', iterationNumber: 7 }],
-    ['a missing id', { iterationNumber: 7 }],
-    ['a zero number', { id: 103, iterationNumber: 0 }],
-    ['a negative number', { id: 103, iterationNumber: -1 }],
-    ['a fractional number', { id: 103, iterationNumber: 1.5 }],
-    ['a string number', { id: 103, iterationNumber: '7' }],
-    ['an unsafe number', { id: 103, iterationNumber: 9007199254740992 }],
-  ])('keeps the number unresolved for %s', async (_description, response) => {
-    let result: number | undefined;
-    fetchMock.mockResolvedValueOnce(response);
+  test.each([undefined, '', '0', '-1', '1.5', '1e3', '9007199254740992', 'not-an-id'])(
+    'does not perform a direct LP3 request for invalid iteration query %p',
+    (iteration) => {
+      state.details = { id: 103, pipelineId: 7, number: 7 };
 
-    mount(
-      <Harness
-        iteration="103"
-        canLoadMetadata
-        onResult={(value) => {
-          result = value;
-        }}
-      />,
-    );
-    await flushPromises();
+      const { getResult, wrapper } = renderResult(iteration);
 
-    expect(result).toBeUndefined();
-  });
+      expect(getResult()).toBeUndefined();
+      expect(fetch).not.toHaveBeenCalled();
+      wrapper.unmount();
+    },
+  );
 
-  test.each([
-    ['a failed request', () => Promise.reject(new Error('network failed'))],
-    ['a canceled request', () => Promise.reject(new Error(ERROR_CANCELED))],
-  ])('keeps the number unresolved after %s', async (_description, createResponse) => {
-    let result: number | undefined;
-    fetchMock.mockImplementationOnce(() => createResponse());
+  test('reacts to a newly cached same-project summary without issuing network traffic', () => {
+    const results: Array<number | undefined> = [];
+    const onResult = (value?: number) => results.push(value);
+    const wrapper = mount(<Harness iteration="103" canLoadMetadata onResult={onResult} />);
 
-    mount(
-      <Harness
-        iteration="103"
-        canLoadMetadata
-        onResult={(value) => {
-          result = value;
-        }}
-      />,
-    );
-    await flushPromises();
-
-    expect(result).toBeUndefined();
-  });
-
-  test('ignores an aborted stale-project response that resolves after the new project', async () => {
-    const first = deferred<{ id: number; iterationNumber: number }>();
-    const second = deferred<{ id: number; iterationNumber: number }>();
-    const cancelFirst = jest.fn();
-    const results: (number | undefined)[] = [];
-    const onResult = (value?: number) => {
-      results.push(value);
-    };
-    fetchMock
-      .mockImplementationOnce(
-        (_url: string, options: { abort?: (cancelRequest: () => void) => void }) => {
-          options.abort?.(cancelFirst);
-          return first.promise;
-        },
-      )
-      .mockReturnValueOnce(second.promise);
-    const wrapper = mount(
-      <Harness iteration="103" canLoadMetadata onResult={onResult} />,
-    );
-
-    projectKey = 'other-project';
+    state.iterationsByPipeline = { 7: [{ id: 103, pipelineId: 7, number: 11 }] };
     wrapper.setProps({ iteration: '103', canLoadMetadata: true, onResult });
 
-    expect(cancelFirst).toHaveBeenCalledTimes(1);
-    expect(jest.mocked(fetch).mock.calls[1][0]).toBe(
-      '../api/v1/project/other-project/pipeline/iteration/103',
-    );
-
-    await act(async () => {
-      second.resolve({ id: 103, iterationNumber: 8 });
-      await second.promise;
-    });
-    expect(results.at(-1)).toBe(8);
-
-    await act(async () => {
-      first.resolve({ id: 103, iterationNumber: 7 });
-      await first.promise;
-    });
-    expect(results.at(-1)).toBe(8);
-  });
-
-  test('ignores an aborted stale-iteration response that resolves last', async () => {
-    const first = deferred<{ id: number; iterationNumber: number }>();
-    const second = deferred<{ id: number; iterationNumber: number }>();
-    const results: (number | undefined)[] = [];
-    const onResult = (value?: number) => {
-      results.push(value);
-    };
-    fetchMock.mockReturnValueOnce(first.promise).mockReturnValueOnce(second.promise);
-    const wrapper = mount(
-      <Harness iteration="103" canLoadMetadata onResult={onResult} />,
-    );
-
-    wrapper.setProps({ iteration: '104', canLoadMetadata: true, onResult });
-
-    await act(async () => {
-      second.resolve({ id: 104, iterationNumber: 9 });
-      await second.promise;
-    });
-    expect(results.at(-1)).toBe(9);
-
-    await act(async () => {
-      first.resolve({ id: 103, iterationNumber: 7 });
-      await first.promise;
-    });
-    expect(results.at(-1)).toBe(9);
+    expect(results.at(-1)).toBe(11);
+    expect(fetch).not.toHaveBeenCalled();
+    wrapper.unmount();
   });
 });

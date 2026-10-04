@@ -15,10 +15,13 @@ import {
   getPipelineIterationDetailsAction,
   getPipelinesAction,
   pipelineCatalogProjectKeySelector,
+  pipelineCatalogRequestIdSelector,
   pipelineCatalogTransportSelector,
   pipelineCatalogVersionSelector,
+  pipelineIterationDetailsErrorSelector,
   pipelineIterationDetailsLoadingSelector,
   pipelineIterationDetailsSelector,
+  pipelineIterationDetailsUnavailableSelector,
   pipelinesLoadingSelector,
   pipelinesSelector,
 } from 'controllers/aiFactory/pipelines';
@@ -33,6 +36,7 @@ import { POLLING_REQUEST_STARTED, usePolling } from 'pages/inside/aiFactory/comm
 import { IterationStatus, PipelineType, type IterationRS, type PipelineRS } from 'types/aiFactory';
 
 import { IterationDetailsPageContent } from './iterationDetailsPageContent';
+import { ReducedIterationDetails } from './reducedIterationDetails';
 
 jest.mock('@reportportal/ui-kit', () => ({
   Button: 'Button',
@@ -62,14 +66,16 @@ jest.mock('controllers/aiFactory/pipelines', () => ({
   })),
   getPipelinesAction: jest.fn(() => ({ type: 'GET_PIPELINES' })),
   isReducedPipeline: jest.fn(
-    (pipeline: unknown) =>
-      typeof pipeline === 'object' && pipeline !== null && 'kind' in pipeline,
+    (pipeline: unknown) => typeof pipeline === 'object' && pipeline !== null && 'kind' in pipeline,
   ),
   pipelineCatalogProjectKeySelector: jest.fn(),
+  pipelineCatalogRequestIdSelector: jest.fn(),
   pipelineCatalogTransportSelector: jest.fn(),
   pipelineCatalogVersionSelector: jest.fn(),
+  pipelineIterationDetailsErrorSelector: jest.fn(),
   pipelineIterationDetailsLoadingSelector: jest.fn(),
   pipelineIterationDetailsSelector: jest.fn(),
+  pipelineIterationDetailsUnavailableSelector: jest.fn(),
   pipelinesLoadingSelector: jest.fn(),
   pipelinesSelector: jest.fn(),
 }));
@@ -127,9 +133,12 @@ interface CatalogOptions {
   projectKey?: string;
   catalogProjectKey?: string | null;
   catalogVersion?: number;
+  catalogRequestId?: number | null;
   catalogTransport?: 'mock' | 'live';
   catalogLoading?: boolean;
-  iteration?: IterationRS | null;
+  iteration?: IterationRS | Record<string, unknown> | null;
+  detailError?: boolean;
+  detailUnavailable?: boolean;
 }
 
 let selectorValues: Map<unknown, unknown>;
@@ -142,9 +151,12 @@ const renderPage = (
     projectKey = 'demo',
     catalogProjectKey = 'demo',
     catalogVersion = 1,
+    catalogRequestId = 1,
     catalogTransport = 'mock',
     catalogLoading = false,
     iteration = createIteration(status),
+    detailError = false,
+    detailUnavailable = false,
   }: CatalogOptions = {},
   shouldMount = false,
 ) => {
@@ -157,10 +169,13 @@ const renderPage = (
     [querySelector, {}],
     [pipelinesSelector, pipelines],
     [pipelineCatalogProjectKeySelector, catalogProjectKey],
+    [pipelineCatalogRequestIdSelector, catalogRequestId],
     [pipelineCatalogTransportSelector, catalogTransport],
     [pipelineCatalogVersionSelector, catalogVersion],
     [pipelineIterationDetailsSelector, iteration],
     [pipelineIterationDetailsLoadingSelector, isLoading],
+    [pipelineIterationDetailsErrorSelector, detailError],
+    [pipelineIterationDetailsUnavailableSelector, detailUnavailable],
     [pipelinesLoadingSelector, catalogLoading],
   ]);
   jest.mocked(useDispatch).mockReturnValue(dispatch as unknown as ReturnType<typeof useDispatch>);
@@ -235,26 +250,93 @@ describe('IterationDetailsPageContent polling', () => {
     wrapper.unmount();
   });
 
-  test('blocks rich detail UI for a reduced live catalog pipeline', () => {
-    const wrapper = renderPage(IterationStatus.COMPLETED, false, [
-      { kind: 'reduced', id: 7, name: 'Live pipeline' },
-    ]);
-
-    expect(wrapper.find('SystemMessage').prop('mode')).toBe('info');
-    expect(wrapper.find('SystemMessage').prop('children')).toBe(
-      'Iteration details are unavailable for this pipeline source',
+  test('requests generic detail for a reduced catalog and renders only the reduced-detail surface', () => {
+    const wrapper = renderPage(
+      IterationStatus.COMPLETED,
+      false,
+      [{ kind: 'reduced', id: 7, name: 'Live pipeline' }],
+      {
+        catalogTransport: 'live',
+        iteration: null,
+        detailUnavailable: true,
+      },
     );
-    expect(getPipelineIterationDetailsAction).not.toHaveBeenCalled();
+
+    expect(wrapper.find(ReducedIterationDetails)).toHaveLength(1);
+    expect(wrapper.find(ReducedIterationDetails).props()).toMatchObject({
+      iteration: null,
+      hasError: false,
+      isUnavailable: true,
+      onRetry: expect.any(Function),
+    });
+    expect(wrapper.find('KpiTile')).toHaveLength(0);
+    expect(wrapper.find('StageCards')).toHaveLength(0);
+    expect(wrapper.find('StagePanels')).toHaveLength(0);
+    expect(wrapper.find('PipelineSettingsButton')).toHaveLength(0);
+    expect(usePolling).toHaveBeenLastCalledWith(expect.any(Function), 5000, false);
+    const onRetry = wrapper.find(ReducedIterationDetails).prop('onRetry') as () => void;
+    onRetry();
+    expect(getPipelineIterationDetailsAction).toHaveBeenCalledWith(7, 103);
+    expect(dispatch).toHaveBeenCalledWith({
+      type: 'GET_PIPELINE_ITERATION_DETAILS',
+      payload: { pipelineId: 7, iterationId: 103 },
+    });
+    wrapper.unmount();
+  });
+
+  test('passes validated reduced LP3 detail through without enabling rich controls or polling', () => {
+    const reducedDetail = {
+      kind: 'reduced',
+      id: 103,
+      pipelineId: 7,
+      number: 3,
+      status: 'PASSED',
+      attributes: [],
+      stages: [],
+    };
+    const wrapper = renderPage(
+      IterationStatus.COMPLETED,
+      false,
+      [{ kind: 'reduced', id: 7, name: 'Live pipeline' }],
+      { catalogTransport: 'live', iteration: reducedDetail },
+    );
+
+    expect(wrapper.find(ReducedIterationDetails).prop('iteration')).toBe(reducedDetail);
+    expect(wrapper.find('KpiTile')).toHaveLength(0);
+    expect(wrapper.find('StagePanels')).toHaveLength(0);
+    expect(wrapper.find('PipelineSettingsButton')).toHaveLength(0);
+    expect(usePolling).toHaveBeenLastCalledWith(expect.any(Function), 5000, false);
+    wrapper.unmount();
+  });
+
+  test('renders an announced loading state while reduced detail is pending', () => {
+    const wrapper = renderPage(
+      IterationStatus.COMPLETED,
+      true,
+      [{ kind: 'reduced', id: 7, name: 'Live pipeline' }],
+      { catalogTransport: 'live', iteration: null },
+    );
+
+    expect(wrapper.find('output').prop('aria-live')).toBe('polite');
+    expect(wrapper.find('SpinningPreloader')).toHaveLength(1);
+    expect(wrapper.find('output').text()).toContain('Loading iteration details');
+    expect(wrapper.find(ReducedIterationDetails)).toHaveLength(0);
     wrapper.unmount();
   });
 
   test('loads LP1 once per project, hides prior-project data, and requests detail once after provenance is established', () => {
     const staleIteration = createIteration(IterationStatus.COMPLETED);
-    const wrapper = renderPage(IterationStatus.COMPLETED, false, [richPipeline], {
-      catalogProjectKey: 'previous-project',
-      catalogVersion: 8,
-      iteration: staleIteration,
-    }, true);
+    const wrapper = renderPage(
+      IterationStatus.COMPLETED,
+      false,
+      [richPipeline],
+      {
+        catalogProjectKey: 'previous-project',
+        catalogVersion: 8,
+        iteration: staleIteration,
+      },
+      true,
+    );
 
     expect(getPipelinesAction).toHaveBeenCalledTimes(1);
     expect(dispatch).toHaveBeenCalledWith({ type: 'GET_PIPELINES' });
@@ -266,6 +348,7 @@ describe('IterationDetailsPageContent polling', () => {
 
     selectorValues.set(pipelineCatalogProjectKeySelector, 'demo');
     selectorValues.set(pipelineCatalogVersionSelector, 9);
+    selectorValues.set(pipelineCatalogRequestIdSelector, 9);
     selectorValues.set(pipelineIterationDetailsSelector, null);
     wrapper.setProps({});
 

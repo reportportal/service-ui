@@ -17,6 +17,7 @@
 import {
   AI_FACTORY_TRANSPORT_STORAGE_KEY,
   getPipelineCatalogTransport,
+  getPipelineDetailTransport,
   isMockDownstreamCompatible,
 } from './transport';
 
@@ -28,10 +29,7 @@ describe('pipeline catalog transport', () => {
   test.each([
     [undefined, { mode: 'mock', requestedMode: 'mock', isFallback: false }],
     [{}, { mode: 'mock', requestedMode: 'mock', isFallback: false }],
-    [
-      { pipelineCatalog: 'mock' },
-      { mode: 'mock', requestedMode: 'mock', isFallback: false },
-    ],
+    [{ pipelineCatalog: 'mock' }, { mode: 'mock', requestedMode: 'mock', isFallback: false }],
   ])('defaults to mock for configuration %p', (config, expected) => {
     if (config !== undefined) {
       localStorage.setItem(AI_FACTORY_TRANSPORT_STORAGE_KEY, JSON.stringify(config));
@@ -40,20 +38,18 @@ describe('pipeline catalog transport', () => {
     expect(getPipelineCatalogTransport()).toEqual(expected);
   });
 
-  test.each([
-    [],
-    'live',
-    { pipelineCatalog: true },
-    { pipelineCatalog: 'unsupported' },
-  ])('fails closed to mock for malformed configuration %p', (config) => {
-    localStorage.setItem(AI_FACTORY_TRANSPORT_STORAGE_KEY, JSON.stringify(config));
+  test.each([[], 'live', { pipelineCatalog: true }, { pipelineCatalog: 'unsupported' }])(
+    'fails closed to mock for malformed configuration %p',
+    (config) => {
+      localStorage.setItem(AI_FACTORY_TRANSPORT_STORAGE_KEY, JSON.stringify(config));
 
-    expect(getPipelineCatalogTransport()).toEqual({
-      mode: 'mock',
-      requestedMode: 'invalid',
-      isFallback: true,
-    });
-  });
+      expect(getPipelineCatalogTransport()).toEqual({
+        mode: 'mock',
+        requestedMode: 'invalid',
+        isFallback: true,
+      });
+    },
+  );
 
   test('fails closed to mock when stored JSON cannot be parsed', () => {
     localStorage.setItem(AI_FACTORY_TRANSPORT_STORAGE_KEY, '{invalid');
@@ -81,5 +77,10 @@ describe('pipeline catalog transport', () => {
   test('allows mock downstream endpoints only for a mock catalog', () => {
     expect(isMockDownstreamCompatible('mock')).toBe(true);
     expect(isMockDownstreamCompatible('live')).toBe(false);
+  });
+
+  test('keeps mock P3 compatible and denies live LP3 until its independent rollout gate opens', () => {
+    expect(getPipelineDetailTransport('mock')).toBe('mock');
+    expect(getPipelineDetailTransport('live')).toBe('unavailable');
   });
 });

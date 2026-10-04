@@ -40,6 +40,15 @@ export interface LivePipelineStageRaw {
   metrics?: unknown;
 }
 
+export interface LivePipelineStageDetailRaw extends LivePipelineStageRaw {
+  attributes?: unknown;
+  result?: unknown;
+  testCaseIds?: unknown;
+  ci?: unknown;
+  lastRetriedAt?: unknown;
+  lastRetriedBy?: unknown;
+}
+
 export interface LivePipelineIterationRaw {
   id?: unknown;
   pipelineId?: unknown;
@@ -60,6 +69,10 @@ export interface LivePipelineIterationRaw {
   createdAt?: unknown;
 }
 
+export interface LivePipelineIterationDetailRaw extends LivePipelineIterationRaw {
+  stages?: unknown;
+}
+
 export interface ReducedPipeline {
   kind: 'reduced';
   id: number;
@@ -77,6 +90,17 @@ export interface ReducedPipelineStage {
   label: string;
   sequence?: number;
   status: ReducedPipelineStatus;
+}
+
+export interface ReducedPipelineDetailStage extends ReducedPipelineStage {
+  id: number;
+  sequence: number;
+}
+
+export interface ReducedPipelineIterationDetail extends Omit<ReducedPipelineIteration, 'stages'> {
+  pipelineName?: string;
+  createdAt?: number;
+  stages: ReducedPipelineDetailStage[];
 }
 
 export interface ReducedPipelineIteration {
@@ -198,6 +222,16 @@ const adaptStage = (value: unknown): ReducedPipelineStage | null => {
   };
 };
 
+const adaptDetailStage = (value: unknown): ReducedPipelineDetailStage | null => {
+  const raw = asRecord(value);
+  const stage = adaptStage(value);
+  const id = raw ? asPositiveInteger(raw.id) : null;
+  if (!stage || !id || stage.sequence === undefined) {
+    return null;
+  }
+  return { ...stage, id, sequence: stage.sequence };
+};
+
 const adaptStages = (value: unknown): ReducedPipelineStage[] | null => {
   if (value === undefined) {
     return [];
@@ -219,6 +253,33 @@ const adaptStages = (value: unknown): ReducedPipelineStage[] | null => {
       (first.sequence ?? Number.MAX_SAFE_INTEGER) - (second.sequence ?? Number.MAX_SAFE_INTEGER);
     return sequenceDifference || first.key.localeCompare(second.key);
   });
+};
+
+const adaptDetailStages = (value: unknown): ReducedPipelineDetailStage[] | null => {
+  if (value === undefined) {
+    return [];
+  }
+  if (!Array.isArray(value) || value.length > MAX_STAGES) {
+    return null;
+  }
+  const stages = value.map(adaptDetailStage);
+  if (stages.some((stage) => !stage)) {
+    return null;
+  }
+  const normalized = stages;
+  const ids = normalized.map(({ id }) => id);
+  const keys = normalized.map(({ key }) => key);
+  const sequences = normalized.map(({ sequence }) => sequence);
+  if (
+    new Set(ids).size !== normalized.length ||
+    new Set(keys).size !== normalized.length ||
+    new Set(sequences).size !== normalized.length
+  ) {
+    return null;
+  }
+  return [...normalized].sort(
+    (first, second) => first.sequence - second.sequence || first.key.localeCompare(second.key),
+  );
 };
 
 const adaptPipeline = (value: unknown): ReducedPipeline | null => {
@@ -337,4 +398,33 @@ export const adaptLivePipelineIterations = (
     throw new Error('Duplicate pipeline iteration id');
   }
   return normalized;
+};
+
+export const adaptLivePipelineIterationDetail = (
+  value: unknown,
+  expectedPipelineId: number,
+  expectedIterationId: number,
+): ReducedPipelineIterationDetail => {
+  if (
+    asPositiveInteger(expectedPipelineId) !== expectedPipelineId ||
+    asPositiveInteger(expectedIterationId) !== expectedIterationId
+  ) {
+    throw new Error('Invalid expected pipeline iteration identity');
+  }
+  const raw = asRecord(value);
+  const iteration = adaptIteration(value, expectedPipelineId);
+  const pipelineName = raw ? asTrimmedString(raw.pipelineName, MAX_NAME_LENGTH) : undefined;
+  const createdAt = raw ? asTimestamp(raw.createdAt) : undefined;
+  const stages = raw ? adaptDetailStages(raw.stages) : null;
+  if (
+    !raw ||
+    !iteration ||
+    iteration.id !== expectedIterationId ||
+    (raw.pipelineName !== undefined && pipelineName === undefined) ||
+    (raw.createdAt !== undefined && createdAt === undefined) ||
+    !stages
+  ) {
+    throw new Error('Invalid pipeline iteration detail response');
+  }
+  return { ...iteration, pipelineName, createdAt, stages };
 };

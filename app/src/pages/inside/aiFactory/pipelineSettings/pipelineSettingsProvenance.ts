@@ -72,11 +72,14 @@ export const matchesPipelineSettingsProvenance = (
 ): boolean => {
   const currentProvenance = getPipelineSettingsProvenance(state, pipeline);
 
-  return Boolean(
-    currentProvenance &&
-      currentProvenance.projectKey === openingProvenance?.projectKey &&
-      currentProvenance.catalogTransport === openingProvenance?.catalogTransport &&
-      currentProvenance.catalogVersion === openingProvenance?.catalogVersion &&
-      currentProvenance.catalogRequestId === openingProvenance?.catalogRequestId,
+  if (!currentProvenance || !openingProvenance) {
+    return false;
+  }
+
+  return (
+    currentProvenance.projectKey === openingProvenance.projectKey &&
+    currentProvenance.catalogTransport === openingProvenance.catalogTransport &&
+    currentProvenance.catalogVersion === openingProvenance.catalogVersion &&
+    currentProvenance.catalogRequestId === openingProvenance.catalogRequestId
   );
 };
