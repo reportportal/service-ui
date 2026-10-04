@@ -418,8 +418,7 @@ export const adaptLivePipelineIterationDetail = (
   const stages = raw ? adaptDetailStages(raw.stages) : null;
   if (
     !raw ||
-    !iteration ||
-    iteration.id !== expectedIterationId ||
+    iteration?.id !== expectedIterationId ||
     (raw.pipelineName !== undefined && pipelineName === undefined) ||
     (raw.createdAt !== undefined && createdAt === undefined) ||
     !stages
