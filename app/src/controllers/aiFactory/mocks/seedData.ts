@@ -25,6 +25,7 @@
 import { TestCasePriority } from 'types/testCase';
 import {
   AutomationStatus,
+  MergeRequestState,
   CommentTargetType,
   CriterionKey,
   EvaluationState,
@@ -155,7 +156,7 @@ export const ITERATIONS: MockIterationSeed[] = [
     startedAt: Date.parse('2026-09-21T16:02:00Z'),
     durationMs: 2_180_000,
     ciPipeline: { id: '#1291650', url: '#' },
-    mergeRequest: { id: '!212', url: '#' },
+    mergeRequest: { id: '!212', url: '#', state: MergeRequestState.OPEN },
     launch: { id: 9001, name: 'RP UI Test @implement_test', number: 12 },
     stages: {
       prepare: { status: 'PASSED', durationMs: 190_000, cost: 0.31, tokens: [{ model: 'default', input: 88000, cacheRead: 510000, cacheWrite: 22000, output: 9400, cost: 0.31 }], perCase: { 1001: 'Enriched · 3 steps, post conditions added', 1002: 'Enriched · 3 steps, post conditions added' } },
@@ -202,7 +203,7 @@ export const CASES: MockCaseSeed[] = [
     ai: { iterationId: GEN1_ID, modifiedByAgent: false, factoryKey: 'US-TMS-MIG-001::create-modal-opens' },
     evaluation: { criteria: buildCriteria([15, 20, 17, 20, 11, 8]), evaluatedAt: Date.parse('2026-09-19T10:22:00Z'), state: EvaluationState.EVALUATED, sourceFixRound: undefined },
     lifecycleHistory: readyHistory(91),
-    automation: { status: AutomationStatus.AUTOMATED, iterationId: AUTO1_ID, launch: { id: 9001, name: 'RP UI Test @implement_test', number: 12 }, lastResult: { status: 'PASSED' } },
+    automation: { status: AutomationStatus.AUTOMATED, iterationId: AUTO1_ID, launch: { id: 9001, name: 'RP UI Test @implement_test', number: 12 }, lastResult: { status: 'FAILED', defectType: 'Product bug' } },
   },
   {
     id: 1003,

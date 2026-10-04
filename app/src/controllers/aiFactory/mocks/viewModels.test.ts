@@ -14,7 +14,13 @@
  * limitations under the License.
  */
 
-import { IterationStatus, Lifecycle, StageKey } from 'types/aiFactory';
+import {
+  AutomationStatus,
+  IterationStatus,
+  Lifecycle,
+  MergeRequestState,
+  StageKey,
+} from 'types/aiFactory';
 import { findCase, findIteration, findPipeline, resetMockDb } from './db';
 import {
   toIterationRS,
@@ -172,14 +178,46 @@ describe('toTestCaseAiRS', () => {
     expect(rs.cost?.fixRounds).toEqual([{ round: 1, amount: 0.22 }]);
   });
 
-  test('TC101 automation link is projected from its automation iteration', () => {
+  test('TC101 terminal automation result and merge request are projected from its iteration', () => {
     const c = findCase('TC101');
     const rs = toTestCaseAiRS(c, findPipeline(1), findIteration(101));
 
-    expect(rs.automation?.iteration).toEqual({
-      pipelineId: 2,
-      iterationId: 201,
-      number: 1,
+    expect(rs.automation).toMatchObject({
+      status: AutomationStatus.AUTOMATED,
+      iteration: {
+        pipelineId: 2,
+        iterationId: 201,
+        number: 1,
+      },
+      launch: { id: 9001, name: 'RP UI Test @implement_test', number: 12 },
+      mergeRequest: { id: '!212', state: MergeRequestState.OPEN },
+      lastResult: { status: 'PASSED' },
+    });
+  });
+
+  test('TC102 exposes the optional defect type from its failed last result', () => {
+    const rs = toTestCaseAiRS(findCase('TC102'), findPipeline(1), findIteration(101));
+
+    expect(rs.automation?.lastResult).toEqual({
+      status: 'FAILED',
+      defectType: 'Product bug',
+    });
+  });
+
+  test('falls back to a closed merge request for failed legacy automation data', () => {
+    const c = findCase('TC101');
+    const iteration = findIteration(201);
+    if (!c.automation || !iteration.mergeRequest) {
+      throw new Error('Expected seeded automation and merge request');
+    }
+    c.automation.status = AutomationStatus.FAILED;
+    iteration.mergeRequest.state = undefined;
+
+    const rs = toTestCaseAiRS(c, findPipeline(1), findIteration(101));
+
+    expect(rs.automation?.mergeRequest).toEqual({
+      id: '!212',
+      state: MergeRequestState.CLOSED,
     });
   });
 });

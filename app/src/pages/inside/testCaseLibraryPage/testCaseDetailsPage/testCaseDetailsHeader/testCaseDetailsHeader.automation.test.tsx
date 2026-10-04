@@ -55,6 +55,9 @@ jest.mock('react-intl', () => ({
   }),
 }));
 jest.mock('common/utils', () => ({
+  queueReducers:
+    jest.requireActual<typeof import('common/utils/queueReducers')>('common/utils/queueReducers')
+      .queueReducers,
   createClassnames:
     () =>
     (...classNames: string[]) =>
@@ -65,11 +68,31 @@ jest.mock('componentLibrary/breadcrumbs', () => ({ Breadcrumbs: 'Breadcrumbs' })
 });
 jest.mock('controllers/aiFactory', () => ({ useAiFactoryEnabled: jest.fn() }));
 jest.mock('controllers/modal', () => ({ showModalAction: jest.fn() }));
-jest.mock('controllers/pages', () => ({
-  TEST_CASE_LIBRARY_PAGE: 'TEST_CASE_LIBRARY_PAGE',
-  urlOrganizationAndProjectSelector: jest.fn(),
-}));
+jest.mock('controllers/pages', () => {
+  const {
+    createQueryParametersSelector,
+    filterIdSelector,
+    pagePropertiesSelector,
+    pageSelector,
+  } = jest.requireActual<typeof import('controllers/pages/selectors')>('controllers/pages/selectors');
+  const { payloadSelector } =
+    jest.requireActual<typeof import('controllers/pages/typed-selectors')>(
+      'controllers/pages/typed-selectors',
+    );
+
+  return {
+    PROJECT_LAUNCHES_PAGE: 'PROJECT_LAUNCHES_PAGE',
+    TEST_CASE_LIBRARY_PAGE: 'TEST_CASE_LIBRARY_PAGE',
+    createQueryParametersSelector,
+    filterIdSelector,
+    pagePropertiesSelector,
+    pageSelector,
+    payloadSelector,
+    urlOrganizationAndProjectSelector: jest.fn(),
+  };
+});
 jest.mock('controllers/pages/selectors', () => ({
+  ...jest.requireActual<object>('controllers/pages/selectors'),
   testCaseLibraryBreadcrumbsSelector: jest.fn(() => jest.fn()),
 }));
 jest.mock('controllers/testCase', () => ({ GET_TEST_CASE_DETAILS: 'GET_TEST_CASE_DETAILS' }));

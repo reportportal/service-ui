@@ -32,6 +32,7 @@ import {
   IterationPageRS,
   IterationRS,
   LifecycleBatchRS,
+  MergeRequestState,
   PipelineCompareRS,
   PipelineRS,
   PipelineSettingsRS,
@@ -168,6 +169,11 @@ describe('test-case AI (C2)', () => {
     expect(data.evaluation?.totalScore).toBe(94);
     expect(data.cost?.approxTotal).toBeGreaterThan(0);
     expect(data.pipelineLinks[0]).toMatchObject({ iterationNumber: 1, stage: 'GRADE' });
+    expect(data.automation).toMatchObject({
+      status: AutomationStatus.AUTOMATED,
+      mergeRequest: { id: '!212', state: MergeRequestState.OPEN },
+      lastResult: { status: 'PASSED' },
+    });
   });
 });
 
@@ -492,6 +498,10 @@ describe('automation (A1-A2)', () => {
     expect(automatedCase.data.automation).toMatchObject({
       status: AutomationStatus.AUTOMATED,
       iteration: { pipelineId, iterationId, number },
+      mergeRequest: {
+        id: `!${iterationId}`,
+        state: MergeRequestState.OPEN,
+      },
       lastResult: { status: 'PASSED' },
     });
   });

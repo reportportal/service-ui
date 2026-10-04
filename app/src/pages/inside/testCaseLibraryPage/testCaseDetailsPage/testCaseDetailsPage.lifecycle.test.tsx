@@ -145,6 +145,8 @@ const testCase = {
 let selectedTestCase = testCase;
 let selectedAiDetails: TestCaseAiRS | null = null;
 let testCaseDetailsLoading = false;
+let aiDetailsLoading = false;
+let aiDetailsError = false;
 const aiDetailsReload = jest.fn();
 
 const renderPage = (isEnabled: boolean, canAutomateTestCases = false) => {
@@ -166,8 +168,8 @@ const renderPage = (isEnabled: boolean, canAutomateTestCases = false) => {
   jest.mocked(useDescriptionModal).mockReturnValue({ openModal: jest.fn() });
   jest.mocked(useTestCaseAi).mockReturnValue({
     data: selectedAiDetails,
-    isLoading: false,
-    isError: false,
+    isLoading: aiDetailsLoading,
+    isError: aiDetailsError,
     reload: aiDetailsReload,
   });
   jest.mocked(useReviewComments).mockReturnValue({
@@ -210,6 +212,8 @@ describe('TestCaseDetailsPage lifecycle history', () => {
     selectedTestCase = testCase;
     selectedAiDetails = null;
     testCaseDetailsLoading = false;
+    aiDetailsLoading = false;
+    aiDetailsError = false;
   });
 
   test('does not mount History while the feature is disabled', () => {
@@ -243,6 +247,81 @@ describe('TestCaseDetailsPage lifecycle history', () => {
       canAutomate: false,
       organizationSlug: 'my-organization',
       projectSlug: 'demo-project',
+    });
+  });
+
+  test.each([AutomationStatus.AUTOMATED, AutomationStatus.FAILED])(
+    'shows the terminal %s result to a viewer without granting the Automate action',
+    (status) => {
+      selectedAiDetails = {
+        pipelineLinks: [],
+        lifecycleHistory: [],
+        automation: {
+          status,
+          lastResult: { status: status === AutomationStatus.AUTOMATED ? 'PASSED' : 'FAILED' },
+          scenarioChangedAfterAutomation: false,
+        },
+      };
+
+      const section = renderPage(true, false).find(AutomationSection);
+
+      expect(section).toHaveLength(1);
+      expect(section.props()).toMatchObject({
+        automation: selectedAiDetails.automation,
+        canAutomate: false,
+      });
+    },
+  );
+
+  test('keeps terminal automation hidden when the feature flag is disabled', () => {
+    selectedAiDetails = {
+      pipelineLinks: [],
+      lifecycleHistory: [],
+      automation: {
+        status: AutomationStatus.AUTOMATED,
+        lastResult: { status: 'PASSED' },
+        scenarioChangedAfterAutomation: false,
+      },
+    };
+
+    expect(renderPage(false, false).find(AutomationSection)).toHaveLength(0);
+  });
+
+  test.each([
+    { state: 'loading', isLoading: true, isError: false },
+    { state: 'error', isLoading: false, isError: true },
+  ])('shows the initial AI $state state to a viewer and wires retry', ({ isLoading, isError }) => {
+    aiDetailsLoading = isLoading;
+    aiDetailsError = isError;
+
+    const section = renderPage(true, false).find(AutomationSection);
+
+    expect(section).toHaveLength(1);
+    expect(section.props()).toMatchObject({
+      automation: undefined,
+      canAutomate: false,
+      isLoading,
+      isError,
+      onRetry: aiDetailsReload,
+    });
+  });
+
+  test('passes retained automation data through while the AI request refreshes', () => {
+    selectedAiDetails = {
+      pipelineLinks: [],
+      lifecycleHistory: [],
+      automation: {
+        status: AutomationStatus.AUTOMATED,
+        lastResult: { status: 'PASSED' },
+        scenarioChangedAfterAutomation: false,
+      },
+    };
+    aiDetailsLoading = true;
+
+    expect(renderPage(true, false).find(AutomationSection).props()).toMatchObject({
+      automation: selectedAiDetails.automation,
+      isLoading: true,
+      isError: false,
     });
   });
 

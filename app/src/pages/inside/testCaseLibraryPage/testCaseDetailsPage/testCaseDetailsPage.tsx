@@ -480,15 +480,21 @@ export const TestCaseDetailsPage = () => {
               </>
             )}
             {isAiFactoryEnabled &&
+              testCaseDetails.lifecycle &&
               (canAutomateTestCases ||
-                (automationDetails?.status === AutomationStatus.IN_PROGRESS &&
-                  Boolean(automationDetails.iteration))) && (
+                Boolean(aiDetailsState.data) ||
+                aiDetailsState.isLoading ||
+                aiDetailsState.isError) && (
                 <AutomationSection
                   testCase={renderedTestCase}
                   automation={automationDetails}
                   canAutomate={canAutomateTestCases}
                   organizationSlug={projectRoute?.organizationSlug}
                   projectSlug={projectRoute?.projectSlug}
+                  isLoading={aiDetailsState.isLoading}
+                  isError={aiDetailsState.isError}
+                  hasLoadedData={Boolean(aiDetailsState.data)}
+                  onRetry={aiDetailsState.reload}
                   onSuccess={refreshAfterAutomationStart}
                 />
               )}

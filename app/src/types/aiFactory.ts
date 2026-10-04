@@ -132,6 +132,13 @@ export enum AutomationStatus {
 }
 export type AiAutomationStatus = `${AutomationStatus}`;
 
+export enum MergeRequestState {
+  OPEN = 'OPEN',
+  MERGED = 'MERGED',
+  CLOSED = 'CLOSED',
+}
+export type AiMergeRequestState = `${MergeRequestState}`;
+
 export enum LifecycleReason {
   CREATED = 'CREATED',
   UPLOADED = 'UPLOADED',
@@ -243,7 +250,7 @@ export interface IterationSummaryRS {
   readyCount?: number; // GENERATION
   fixRoundsCount?: number; // GENERATION
   launch?: { id: number; name: string; number: number }; // AUTOMATION
-  mergeRequest?: { id: string; url: string }; // AUTOMATION
+  mergeRequest?: { id: string; url: string; state?: AiMergeRequestState }; // AUTOMATION
   ciPipeline: CiLinkRS;
   attributes: AttributeRS[]; // env, spec, jira, ci, mr, folder
   stages: StageSummaryRS[]; // ordered
@@ -536,6 +543,7 @@ export interface TestCaseAiRS {
     status: AiAutomationStatus;
     iteration?: { pipelineId: number; iterationId: number; number: number };
     launch?: { id: number; name: string; number: number };
+    mergeRequest?: { id: string; state: AiMergeRequestState };
     lastResult?: { status: 'PASSED' | 'FAILED'; defectType?: string };
     scenarioChangedAfterAutomation: boolean;
   };

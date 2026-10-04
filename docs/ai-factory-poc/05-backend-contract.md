@@ -510,6 +510,7 @@ interface TestCaseAiRS {
     status: AutomationStatus;
     iteration?: { pipelineId: number; iterationId: number; number: number };
     launch?: { id: number; name: string; number: number };
+    mergeRequest?: { id: string; state: 'OPEN' | 'MERGED' | 'CLOSED' };
     lastResult?: { status: 'PASSED' | 'FAILED'; defectType?: string };
     scenarioChangedAfterAutomation: boolean;
   };
@@ -519,6 +520,15 @@ interface TestCaseAiRS {
 type ScenarioSnapshot = { precondition?: string; steps?: { position: number; instructions: string; expectedResult: string }[];
                           instructions?: string; expectedResult?: string };
 ```
+
+T5.3 currently consumes this C2 automation block through the mock overlay only. `mergeRequest`
+is a provisional projection required by accepted decision D13: `AUTOMATED` may carry `OPEN` or
+`MERGED`, while an MR closed without a passing final run is represented as `FAILED` with `CLOSED`.
+`lastResult` is independent from the AI Factory iteration and must describe the latest Launch of
+any origin. The FE validates internal numeric route identities before linking to an iteration or
+Launch and deliberately renders no external MR URL until the backend publishes the field and the
+product agrees a trusted HTTPS scheme/host allowlist. Absence of optional data is valid; malformed
+or unauthorized identities must not be exposed as navigable links.
 
 ### C3 — Library list filters
 

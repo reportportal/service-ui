@@ -23,6 +23,7 @@
 import {
   AiStageStatus,
   AutomationStatus,
+  MergeRequestState,
   EvaluationState,
   FixRoundRS,
   GradeCriterionRS,
@@ -71,7 +72,7 @@ export interface MockIterationSeed {
   durationMs?: number;
   ciPipeline: { id: string; url: string };
   folderPath?: string; // generation
-  mergeRequest?: { id: string; url: string }; // automation
+  mergeRequest?: { id: string; url: string; state?: MergeRequestState }; // automation
   launch?: { id: number; name: string; number: number }; // automation
   stages: {
     create?: MockStageSeed;

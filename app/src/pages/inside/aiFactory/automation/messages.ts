@@ -35,9 +35,77 @@ export const messages = defineMessages({
     id: 'AiFactoryAutomation.inProgress',
     defaultMessage: 'In progress',
   },
+  notAutomated: {
+    id: 'AiFactoryAutomation.notAutomated',
+    defaultMessage: 'Not automated',
+  },
+  automated: {
+    id: 'AiFactoryAutomation.automated',
+    defaultMessage: 'Automated',
+  },
+  failed: {
+    id: 'AiFactoryAutomation.failed',
+    defaultMessage: 'Failed',
+  },
+  unknownStatus: {
+    id: 'AiFactoryAutomation.unknownStatus',
+    defaultMessage: 'Unknown',
+  },
+  status: {
+    id: 'AiFactoryAutomation.status',
+    defaultMessage: 'Status',
+  },
   iteration: {
     id: 'AiFactoryAutomation.iteration',
     defaultMessage: 'Iteration #{number}',
+  },
+  launch: {
+    id: 'AiFactoryAutomation.launch',
+    defaultMessage: 'Launch #{number}',
+  },
+  mergeRequest: {
+    id: 'AiFactoryAutomation.mergeRequest',
+    defaultMessage: 'Merge request',
+  },
+  mergeRequestOpen: {
+    id: 'AiFactoryAutomation.mergeRequestOpen',
+    defaultMessage: 'Open',
+  },
+  mergeRequestMerged: {
+    id: 'AiFactoryAutomation.mergeRequestMerged',
+    defaultMessage: 'Merged',
+  },
+  mergeRequestClosed: {
+    id: 'AiFactoryAutomation.mergeRequestClosed',
+    defaultMessage: 'Closed',
+  },
+  lastResult: {
+    id: 'AiFactoryAutomation.lastResult',
+    defaultMessage: 'Last result',
+  },
+  passed: {
+    id: 'AiFactoryAutomation.passed',
+    defaultMessage: 'Passed',
+  },
+  defectType: {
+    id: 'AiFactoryAutomation.defectType',
+    defaultMessage: 'Defect type: {type}',
+  },
+  scenarioChanged: {
+    id: 'AiFactoryAutomation.scenarioChanged',
+    defaultMessage: 'Scenario changed after automation',
+  },
+  loadingResults: {
+    id: 'AiFactoryAutomation.loadingResults',
+    defaultMessage: 'Loading automation results',
+  },
+  updatingResults: {
+    id: 'AiFactoryAutomation.updatingResults',
+    defaultMessage: 'Updating automation results',
+  },
+  loadResultsFailed: {
+    id: 'AiFactoryAutomation.loadResultsFailed',
+    defaultMessage: 'Automation results could not be loaded. Try again.',
   },
   environment: {
     id: 'AiFactoryAutomation.environment',

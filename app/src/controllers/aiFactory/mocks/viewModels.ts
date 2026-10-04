@@ -22,10 +22,12 @@
 import {
   AiIterationStatus,
   AiStageStatus,
+  AutomationStatus,
   CriterionKey,
   IterationRS,
   IterationSummaryRS,
   Lifecycle,
+  MergeRequestState,
   PipelineRS,
   PipelineType,
   PipelineCompareIterationRS,
@@ -479,6 +481,16 @@ const toAutomationRS = (c: MockCaseRecord): TestCaseAiRS['automation'] => {
         }
       : undefined,
     launch: c.automation.launch,
+    mergeRequest: automationIteration?.mergeRequest
+      ? {
+          id: automationIteration.mergeRequest.id,
+          state:
+            automationIteration.mergeRequest.state ??
+            (c.automation.status === AutomationStatus.FAILED
+              ? MergeRequestState.CLOSED
+              : MergeRequestState.OPEN),
+        }
+      : undefined,
     lastResult: c.automation.lastResult,
     scenarioChangedAfterAutomation: c.automation.scenarioChangedAfterAutomation,
   };

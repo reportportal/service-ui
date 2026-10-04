@@ -31,6 +31,7 @@ import {
   Lifecycle,
   LifecycleActorType,
   LifecycleReason,
+  MergeRequestState,
   StageKey,
   StageStatus,
 } from 'types/aiFactory';
@@ -471,6 +472,11 @@ const completeAutomationIteration = (iteration: MockIterationSeed, caseIds: numb
     number: 100 + iteration.id,
   };
   iteration.launch = launch;
+  iteration.mergeRequest = {
+    id: `!${iteration.id}`,
+    url: '#',
+    state: MergeRequestState.OPEN,
+  };
   iteration.durationMs = Math.max(0, Date.now() - iteration.startedAt);
   caseIds.forEach((id) => {
     const caseRecord = findCase(id);

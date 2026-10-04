@@ -84,6 +84,9 @@ jest.mock('react-intl', () => ({
 }));
 jest.mock('react-tracking', () => ({ useTracking: () => ({ trackEvent: jest.fn() }) }));
 jest.mock('common/utils', () => ({
+  queueReducers:
+    jest.requireActual<typeof import('common/utils/queueReducers')>('common/utils/queueReducers')
+      .queueReducers,
   createClassnames: () => (...classNames: unknown[]) =>
     classNames
       .filter((className): className is string => typeof className === 'string' && !!className)
@@ -94,12 +97,30 @@ jest.mock('controllers/modal', () => ({ showModalAction: jest.fn() }));
 jest.mock('controllers/notification', () => ({
   showWarningNotification: (payload: unknown) => ({ type: 'WARNING', payload }),
 }));
-jest.mock('controllers/pages', () => ({
-  locationQuerySelector: jest.fn(),
-  payloadSelector: jest.fn(),
-  updatePagePropertiesAction: (payload: unknown) => ({ type: 'updatePagePropertiesAction', payload }),
-  urlFolderIdSelector: jest.fn(),
-}));
+jest.mock('controllers/pages', () => {
+  const {
+    createQueryParametersSelector,
+    filterIdSelector,
+    pagePropertiesSelector,
+    pageSelector,
+  } = jest.requireActual<typeof import('controllers/pages/selectors')>('controllers/pages/selectors');
+
+  return {
+    PROJECT_LAUNCHES_PAGE: 'PROJECT_LAUNCHES_PAGE',
+    createQueryParametersSelector,
+    filterIdSelector,
+    locationQuerySelector: jest.fn(),
+    pagePropertiesSelector,
+    pageSelector,
+    payloadSelector: jest.fn(),
+    updatePagePropertiesAction: (payload: unknown) => ({
+      type: 'updatePagePropertiesAction',
+      payload,
+    }),
+    urlFolderIdSelector: jest.fn(),
+    urlOrganizationAndProjectSelector: jest.fn(),
+  };
+});
 jest.mock('controllers/testCase', () => ({ foldersSelector: jest.fn() }));
 jest.mock('hooks/useHasTestPlans', () => ({ useHasTestPlans: jest.fn() }));
 jest.mock('hooks/useTypedSelector', () => ({ useProjectDetails: jest.fn() }));
