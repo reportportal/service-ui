@@ -274,18 +274,22 @@ Add to `controllers/pages/constants.js`, `routes/routesMap.js` and `routes/const
 - Link to a case → `TEST_CASE_LIBRARY_PAGE` with `testCasePageRoute: test-cases/<id>`.
 - Link to an iteration stage → `AI_PIPELINE_ITERATION_PAGE` with `?stage=grade|review|develop`.
 
-## 7. Permissions (F15 is open)
+## 7. Permissions (D15/F15 FE matrix accepted)
 
 Add to `common/constants/permissions.ts` (`ACTIONS` + `PERMISSIONS_MAP`) and
 `common/utils/permissions/permissions.ts`:
 
-| Action | Proposal | Helper |
+| Action | Accepted FE role matrix | Helper |
 |--------|----------|--------|
-| `REVIEW_AI_TEST_CASES` (comment, push, approve, mark ready) | same as `MANAGE_TEST_CASES` (Editor+) | `canReviewAiTestCases` |
-| `MANAGE_AI_PIPELINE_SETTINGS` | Project Manager+ ❓ map to org `MANAGER` / ADMIN (Q-BE-10) | `canManagePipelineSettings` |
-| `AUTOMATE_TEST_CASES` | Editor+ | `canAutomateTestCases` |
+| `REVIEW_AI_TEST_CASES` (comment, push, approve, mark ready) | Editor, Organization Manager, Administrator | `canReviewAiTestCases` |
+| `MANAGE_PIPELINE_SETTINGS` | Organization Manager, Administrator | `canManagePipelineSettings` |
+| `AUTOMATE_TEST_CASES` | Editor, Organization Manager, Administrator | `canAutomateTestCases` |
 
-When a user has no permission, the UI shows controls as hidden or read-only: comments are read-only, there are no Approve or Push buttons, and settings are read-only.
+Viewer-readable data remains visible without a mutation permission. When a user has no permission, the UI hides
+mutation controls or keeps the surface read-only, and the underlying hook independently refuses the request. T6.1
+applies this defence-in-depth rule to lifecycle, review-comment, fix-round and automation mutations, including stale
+or directly mounted controls. These frontend checks are not the security boundary: backend deny-by-default
+authorization, project/resource ownership checks and exact live read-role behavior remain open integration requirements.
 
 ## 8. Shared UI atoms (Phase 0, T0.6)
 

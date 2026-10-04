@@ -122,7 +122,7 @@ authentication and authorization remain mandatory—FE permission checks are gat
 
 | ID | Task | Size | Output |
 |----|------|------|--------|
-| T6.1 | Roles / read-only states everywhere (F15) | S | permission matrix test |
+| T6.1 ✅ | Roles / read-only states everywhere (accepted D15/F15): Editor, Organization Manager and Administrator may review/approve/push/automate; Organization Manager and Administrator may manage Pipeline settings; Viewer is read-only. Guard both rendered controls and mutation/request hooks so stale or directly mounted UI fails closed without a request | S | EPMRPP-122039; focused 10 suites / 80 tests and full Node 20 Jest 149 suites / 1282 tests PASS; full lint exit 0 with 201 existing warnings; root type-check/diff-check and senior code/security validators PASS with no Major/Critical findings. Browser/runtime walkthrough not performed. FE gating is UX/defence-in-depth only; backend authorization and live read-role semantics remain open |
 | T6.2 | Switch endpoint groups from mock to real as the BE lands: keep per-group rollout, align live paths/schemas, introduce raw OpenAPI DTO → stable UI-model adapters, and update the status board in 05 | per group S | each group goes 🟢 only after adapter tests, toggle-OFF regression, and live error/absence handling; Pipeline GETs and Quality Standard GET are the first published candidates |
 | T6.3 | i18n extraction (`npm run manage:translations`), a11y pass (focus, aria for icons and threads), 360 px side panel | S | — |
 | T6.4 | Demo rehearsal: run the 18-step parity checklist end to end, reset demo | S | checklist ticked |

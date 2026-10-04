@@ -13,6 +13,7 @@ import { mount, type ReactWrapper } from 'enzyme';
 
 import { URLS } from 'common/urls';
 import { fetch } from 'common/utils';
+import { useUserPermissions } from 'hooks/useUserPermissions';
 import type { AutomatePayload } from 'types/aiFactory';
 
 import { useAutomationRequest } from './useAutomationRequest';
@@ -21,6 +22,7 @@ jest.mock('common/utils', () => ({
   ERROR_CANCELED: 'REQUEST_CANCELED',
   fetch: jest.fn(),
 }));
+jest.mock('hooks/useUserPermissions', () => ({ useUserPermissions: jest.fn() }));
 
 type HookResult = ReturnType<typeof useAutomationRequest>;
 
@@ -76,6 +78,9 @@ describe('useAutomationRequest', () => {
   beforeEach(() => {
     jest.clearAllMocks();
     fetchMock.mockReset();
+    jest.mocked(useUserPermissions).mockReturnValue({
+      canAutomateTestCases: true,
+    } as ReturnType<typeof useUserPermissions>);
   });
 
   afterEach(() => {
@@ -104,6 +109,27 @@ describe('useAutomationRequest', () => {
       error: null,
       reautomationRequiredIds: [],
     });
+
+    await act(async () => {
+      expect(await result.start(payload)).toBeNull();
+    });
+    expect(fetchMock).not.toHaveBeenCalled();
+  });
+
+  test('does not load environments or start automation for a viewer', async () => {
+    jest.mocked(useUserPermissions).mockReturnValue({
+      canAutomateTestCases: false,
+    } as ReturnType<typeof useUserPermissions>);
+
+    await renderHook();
+
+    expect(result).toMatchObject({
+      environments: null,
+      isLoadingEnvironments: false,
+      isStarting: false,
+      error: null,
+    });
+    expect(fetchMock).not.toHaveBeenCalled();
 
     await act(async () => {
       expect(await result.start(payload)).toBeNull();

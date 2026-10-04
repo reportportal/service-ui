@@ -12,6 +12,7 @@ import { act, useEffect } from 'react';
 import { mount } from 'enzyme';
 
 import { fetch } from 'common/utils';
+import { useUserPermissions } from 'hooks/useUserPermissions';
 import { usePolling } from 'pages/inside/aiFactory/common';
 import { FixRoundStatus } from 'types/aiFactory';
 
@@ -21,6 +22,7 @@ jest.mock('common/utils', () => ({
   ERROR_CANCELED: 'REQUEST_CANCELED',
   fetch: jest.fn(),
 }));
+jest.mock('hooks/useUserPermissions', () => ({ useUserPermissions: jest.fn() }));
 jest.mock('controllers/notification', () => ({
   showErrorNotification: (payload: unknown) => ({ type: 'ERROR', payload }),
   showSuccessNotification: (payload: unknown) => ({ type: 'SUCCESS', payload }),
@@ -74,6 +76,9 @@ const runningRound = {
 describe('useFixRound', () => {
   beforeEach(() => {
     jest.clearAllMocks();
+    jest.mocked(useUserPermissions).mockReturnValue({
+      canReviewAiTestCases: true,
+    } as ReturnType<typeof useUserPermissions>);
   });
 
   test('starts a fix round after loading its history', async () => {
@@ -136,5 +141,28 @@ describe('useFixRound', () => {
 
     expect(latestState(onState).current).toEqual(passedRound);
     expect(onFinished).toHaveBeenCalledWith(passedRound);
+  });
+
+  test('keeps fix-round history readable but does not start a round for a viewer', async () => {
+    const onState = jest.fn<void, [FixRoundLoadState]>();
+    jest.mocked(useUserPermissions).mockReturnValue({
+      canReviewAiTestCases: false,
+    } as ReturnType<typeof useUserPermissions>);
+    fetchMock.mockResolvedValueOnce([runningRound]);
+
+    await act(async () => {
+      mount(<Probe onState={onState} />);
+      await Promise.resolve();
+    });
+
+    expect(latestState(onState).current).toEqual(runningRound);
+    expect(fetchMock).toHaveBeenCalledTimes(1);
+
+    await act(async () => {
+      await latestState(onState).start();
+    });
+
+    expect(fetchMock).toHaveBeenCalledTimes(1);
+    expect(latestState(onState).isStarting).toBe(false);
   });
 });

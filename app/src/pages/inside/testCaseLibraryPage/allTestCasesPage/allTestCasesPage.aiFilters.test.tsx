@@ -18,21 +18,14 @@ import { shallow } from 'enzyme';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { useAiFactoryEnabled } from 'controllers/aiFactory';
-import {
-  locationQuerySelector,
-  payloadSelector,
-  urlFolderIdSelector,
-} from 'controllers/pages';
+import { locationQuerySelector, payloadSelector, urlFolderIdSelector } from 'controllers/pages';
 import { foldersSelector } from 'controllers/testCase';
 import { useUserPermissions } from 'hooks/useUserPermissions';
 import { useHasTestPlans } from 'hooks/useHasTestPlans';
 import { useProjectDetails } from 'hooks/useTypedSelector';
 import { QuickFilters, useIterationNumber } from 'pages/inside/aiFactory/library';
 import { BulkApproveButton } from 'pages/inside/aiFactory/approval';
-import {
-  useAutomationModal,
-  type AutomationCandidate,
-} from 'pages/inside/aiFactory/automation';
+import { useAutomationModal, type AutomationCandidate } from 'pages/inside/aiFactory/automation';
 import type { AutomateAcceptedRS } from 'types/aiFactory';
 import { TMS_INSTANCE_KEY } from 'pages/inside/common/constants';
 import { TestCaseList } from 'pages/inside/common/testCaseList';
@@ -84,13 +77,15 @@ jest.mock('react-intl', () => ({
 }));
 jest.mock('react-tracking', () => ({ useTracking: () => ({ trackEvent: jest.fn() }) }));
 jest.mock('common/utils', () => ({
-  queueReducers:
-    jest.requireActual<typeof import('common/utils/queueReducers')>('common/utils/queueReducers')
-      .queueReducers,
-  createClassnames: () => (...classNames: unknown[]) =>
-    classNames
-      .filter((className): className is string => typeof className === 'string' && !!className)
-      .join(' '),
+  queueReducers: jest.requireActual<typeof import('common/utils/queueReducers')>(
+    'common/utils/queueReducers',
+  ).queueReducers,
+  createClassnames:
+    () =>
+    (...classNames: unknown[]) =>
+      classNames
+        .filter((className): className is string => typeof className === 'string' && !!className)
+        .join(' '),
 }));
 jest.mock('controllers/aiFactory', () => ({ useAiFactoryEnabled: jest.fn() }));
 jest.mock('controllers/modal', () => ({ showModalAction: jest.fn() }));
@@ -219,13 +214,11 @@ const renderPage = (
     pageSize: 50,
     totalPages: 1,
   });
-  jest
-    .mocked(useUserPermissions)
-    .mockReturnValue({
-      canAutomateTestCases,
-      canManageTestCases: false,
-      canReviewAiTestCases,
-    } as ReturnType<typeof useUserPermissions>);
+  jest.mocked(useUserPermissions).mockReturnValue({
+    canAutomateTestCases,
+    canManageTestCases: false,
+    canReviewAiTestCases,
+  } as ReturnType<typeof useUserPermissions>);
   jest.mocked(useHasTestPlans).mockReturnValue({
     hasTestPlans,
     isCheckingTestPlansExistence: false,
@@ -235,9 +228,7 @@ const renderPage = (
   });
   jest.mocked(useAddToLaunchModal).mockReturnValue({ openModal: openAddToLaunchModal });
   jest.mocked(useAutomationModal).mockReturnValue({ openModal: openAutomationModal });
-  jest
-    .mocked(useRefetchCurrentTestCases)
-    .mockReturnValue(refetchCurrentTestCases);
+  jest.mocked(useRefetchCurrentTestCases).mockReturnValue(refetchCurrentTestCases);
   jest.mocked(useBatchDuplicateTestCasesModal).mockReturnValue({ openModal: jest.fn() });
   jest.mocked(useBatchDeleteTestCasesModal).mockReturnValue({ openModal: jest.fn() });
   jest.mocked(useMoveTestCaseModal).mockReturnValue({ openModal: jest.fn() });
@@ -291,8 +282,29 @@ describe('AllTestCasesPage AI filters', () => {
     expect(refetchCurrentTestCases).toHaveBeenCalled();
     expect(permitted.find('[data-automation-id="bulk-automate-test-cases"]')).toHaveLength(0);
 
-    expect(renderPage(false, [testCase], false, false, true).find('[data-automation-id="bulk-automate-test-cases"]')).toHaveLength(0);
-    expect(renderPage(true, [testCase], false, false, false).find('[data-automation-id="bulk-automate-test-cases"]')).toHaveLength(0);
+    expect(
+      renderPage(false, [testCase], false, false, true).find(
+        '[data-automation-id="bulk-automate-test-cases"]',
+      ),
+    ).toHaveLength(0);
+    expect(
+      renderPage(true, [testCase], false, false, false).find(
+        '[data-automation-id="bulk-automate-test-cases"]',
+      ),
+    ).toHaveLength(0);
+  });
+
+  test('does not expose bulk Approve or Automate to a viewer with selected rows', () => {
+    const wrapper = renderPage(true, [testCase], false, false, false);
+    const selection = [{ id: testCase.id, folderId: testCase.testFolder.id }];
+
+    (wrapper.find(TestCaseList).prop('handleSelectedRows') as (rows: typeof selection) => void)(
+      selection,
+    );
+
+    expect(wrapper.find(BulkApproveButton)).toHaveLength(0);
+    expect(wrapper.find('[data-automation-id="bulk-automate-test-cases"]')).toHaveLength(0);
+    expect(openAutomationModal).not.toHaveBeenCalled();
   });
 
   test('clears only backend-accepted rows and retains client and backend skips', () => {
@@ -304,13 +316,7 @@ describe('AllTestCasesPage AI filters', () => {
       name: 'Draft client skip',
       lifecycle: Lifecycle.DRAFT,
     };
-    const wrapper = renderPage(
-      true,
-      [testCase, backendSkipped, clientSkipped],
-      false,
-      false,
-      true,
-    );
+    const wrapper = renderPage(true, [testCase, backendSkipped, clientSkipped], false, false, true);
     const selection = [testCase, backendSkipped, clientSkipped].map(({ id, testFolder }) => ({
       id,
       folderId: testFolder.id,
@@ -319,8 +325,9 @@ describe('AllTestCasesPage AI filters', () => {
       selection,
     );
 
-    (wrapper.find('[data-automation-id="bulk-automate-test-cases"]').prop('onClick') as () =>
-      void)();
+    (
+      wrapper.find('[data-automation-id="bulk-automate-test-cases"]').prop('onClick') as () => void
+    )();
     const modalData = openAutomationModal.mock.calls[0][0];
     expect(modalData.testCases).toEqual([testCase, backendSkipped, clientSkipped]);
 
@@ -399,9 +406,9 @@ describe('AllTestCasesPage AI filters', () => {
       selection,
     );
 
-    expect(
-      disabled.find('[data-automation-id="bulk-add-to-test-plan"]').prop('disabled'),
-    ).not.toBe(true);
+    expect(disabled.find('[data-automation-id="bulk-add-to-test-plan"]').prop('disabled')).not.toBe(
+      true,
+    );
   });
 
   test('normalizes URL filter values and resolves the iteration number', () => {
