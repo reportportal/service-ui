@@ -67,6 +67,12 @@ describe('pipeline settings provenance', () => {
     expect(matchesPipelineSettingsProvenance(state, pipeline, provenance ?? undefined)).toBe(true);
   });
 
+  test('rejects matching when opening provenance is missing', () => {
+    expect(matchesPipelineSettingsProvenance(createState('project_a', pipeline), pipeline)).toBe(
+      false,
+    );
+  });
+
   test.each([
     ['same version and request id in another project', createState('project_b', { ...pipeline })],
     ['another catalog request', createState('project_a', pipeline, 5, 9)],

@@ -74,10 +74,9 @@ export const matchesPipelineSettingsProvenance = (
 
   return Boolean(
     currentProvenance &&
-      openingProvenance &&
-      currentProvenance.projectKey === openingProvenance.projectKey &&
-      currentProvenance.catalogTransport === openingProvenance.catalogTransport &&
-      currentProvenance.catalogVersion === openingProvenance.catalogVersion &&
-      currentProvenance.catalogRequestId === openingProvenance.catalogRequestId,
+      currentProvenance.projectKey === openingProvenance?.projectKey &&
+      currentProvenance.catalogTransport === openingProvenance?.catalogTransport &&
+      currentProvenance.catalogVersion === openingProvenance?.catalogVersion &&
+      currentProvenance.catalogRequestId === openingProvenance?.catalogRequestId,
   );
 };

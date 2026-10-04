@@ -168,12 +168,11 @@ const adaptAttributes = (value: unknown): Array<{ key: string; value: string }> 
   ) {
     return null;
   }
-  return entries
-    .sort(([firstKey], [secondKey]) => firstKey.localeCompare(secondKey))
-    .map(([key, attributeValue]) => ({
-      key: key.trim(),
-      value: (attributeValue as string).trim(),
-    }));
+  entries.sort(([firstKey], [secondKey]) => firstKey.localeCompare(secondKey));
+  return entries.map(([key, attributeValue]) => ({
+    key: key.trim(),
+    value: (attributeValue as string).trim(),
+  }));
 };
 
 const adaptStage = (value: unknown): ReducedPipelineStage | null => {
