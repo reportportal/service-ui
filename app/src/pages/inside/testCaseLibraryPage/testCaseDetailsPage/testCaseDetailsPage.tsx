@@ -98,6 +98,15 @@ interface AutomationPollingCriteria {
   isTestCaseDetailsLoading: boolean;
 }
 
+interface AutomationSectionVisibilityCriteria {
+  isAiFactoryEnabled: boolean;
+  hasLifecycle: boolean;
+  canAutomate: boolean;
+  hasLoadedData: boolean;
+  isLoading: boolean;
+  isError: boolean;
+}
+
 const shouldPollAutomation = ({
   isAiFactoryEnabled,
   projectKey,
@@ -120,6 +129,18 @@ const shouldPollAutomation = ({
     !isTestCaseDetailsLoading
   );
 };
+
+const shouldShowAutomationSection = ({
+  isAiFactoryEnabled,
+  hasLifecycle,
+  canAutomate,
+  hasLoadedData,
+  isLoading,
+  isError,
+}: AutomationSectionVisibilityCriteria) =>
+  isAiFactoryEnabled &&
+  hasLifecycle &&
+  (canAutomate || hasLoadedData || isLoading || isError);
 
 const SIDEBAR_COLLAPSIBLE_SECTIONS_CONFIG = ({
   canManageTestCases,
@@ -322,6 +343,14 @@ export const TestCaseDetailsPage = () => {
     isAiDetailsLoading: aiDetailsState.isLoading,
     isTestCaseDetailsLoading: isLoadingTestCaseDetails,
   });
+  const isAutomationSectionVisible = shouldShowAutomationSection({
+    isAiFactoryEnabled,
+    hasLifecycle: Boolean(testCaseDetails?.lifecycle),
+    canAutomate: canAutomateTestCases,
+    hasLoadedData: Boolean(aiDetailsState.data),
+    isLoading: aiDetailsState.isLoading,
+    isError: aiDetailsState.isError,
+  });
 
   usePolling(
     () => {
@@ -479,25 +508,20 @@ export const TestCaseDetailsPage = () => {
                 <PipelineLinks aiDetailsState={aiDetailsState} />
               </>
             )}
-            {isAiFactoryEnabled &&
-              testCaseDetails.lifecycle &&
-              (canAutomateTestCases ||
-                Boolean(aiDetailsState.data) ||
-                aiDetailsState.isLoading ||
-                aiDetailsState.isError) && (
-                <AutomationSection
-                  testCase={renderedTestCase}
-                  automation={automationDetails}
-                  canAutomate={canAutomateTestCases}
-                  organizationSlug={projectRoute?.organizationSlug}
-                  projectSlug={projectRoute?.projectSlug}
-                  isLoading={aiDetailsState.isLoading}
-                  isError={aiDetailsState.isError}
-                  hasLoadedData={Boolean(aiDetailsState.data)}
-                  onRetry={aiDetailsState.reload}
-                  onSuccess={refreshAfterAutomationStart}
-                />
-              )}
+            {isAutomationSectionVisible && (
+              <AutomationSection
+                testCase={renderedTestCase}
+                automation={automationDetails}
+                canAutomate={canAutomateTestCases}
+                organizationSlug={projectRoute?.organizationSlug}
+                projectSlug={projectRoute?.projectSlug}
+                isLoading={aiDetailsState.isLoading}
+                isError={aiDetailsState.isError}
+                hasLoadedData={Boolean(aiDetailsState.data)}
+                onRetry={aiDetailsState.reload}
+                onSuccess={refreshAfterAutomationStart}
+              />
+            )}
             {isAiFactoryEnabled && testCaseDetails.lifecycle && (
               <LifecycleHistory
                 key={`${testCaseDetails.id}-${testCaseDetails.lifecycle}-${testCaseDetails.updatedAt}`}
