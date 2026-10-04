@@ -134,12 +134,12 @@ describe('AI review comments', () => {
     expect(wrapper.find('[data-automation-id="review-comment-toggle-STEP-7"]').prop('aria-expanded')).toBe(
       true,
     );
-    const thread = wrapper.find('[role="region"]');
+    const thread = wrapper.find('section');
     expect(thread.props()).toMatchObject({
       id: threadId,
-      role: 'region',
       'aria-labelledby': trigger.prop('id'),
     });
+    expect(thread.prop('role')).toBeUndefined();
     expect(wrapper.text()).toContain('Use the Library label');
     expect(wrapper.text()).toContain('The source requirement uses the original name');
     expect(wrapper.text()).not.toContain('Different step');

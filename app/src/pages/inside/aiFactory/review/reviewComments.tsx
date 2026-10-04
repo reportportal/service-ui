@@ -125,10 +125,9 @@ export const ReviewTarget = ({ target, reviewState, isReadOnly = false }: Review
         <span>{comments.length}</span>
       </button>
       {isOpen && (
-        <div
+        <section
           id={threadId}
           className={cx('review-target__thread')}
-          role="region"
           aria-labelledby={triggerId}
         >
           {comments.map((comment) => (
@@ -176,7 +175,7 @@ export const ReviewTarget = ({ target, reviewState, isReadOnly = false }: Review
             </div>
           )}
           {mutationError && <div role="alert">{formatMessage(messages.mutationError)}</div>}
-        </div>
+        </section>
       )}
     </div>
   );

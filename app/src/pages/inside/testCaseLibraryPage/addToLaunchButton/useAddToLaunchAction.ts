@@ -80,11 +80,12 @@ export const useAddToLaunchAction = ({
     });
   };
 
-  const disabledHint = isDisabled
-    ? formatMessage(
-        isDraft ? readyOnlyMessages.launchDraftHint : COMMON_LOCALE_KEYS.ADD_TO_LAUNCH_TOOLTIP_TEXT,
-      )
-    : undefined;
+  let disabledHint: string | undefined;
+  if (isDraft) {
+    disabledHint = formatMessage(readyOnlyMessages.launchDraftHint);
+  } else if (isScenarioEmpty) {
+    disabledHint = formatMessage(COMMON_LOCALE_KEYS.ADD_TO_LAUNCH_TOOLTIP_TEXT);
+  }
 
   return {
     label: formatMessage(COMMON_LOCALE_KEYS.ADD_TO_LAUNCH),

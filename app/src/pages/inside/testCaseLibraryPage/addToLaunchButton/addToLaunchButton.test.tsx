@@ -52,14 +52,18 @@ const scenario = {
   steps: [],
 } as unknown as ManualScenario;
 
-const renderButton = (isEnabled: boolean, lifecycle = Lifecycle.DRAFT) => {
+const renderButton = (
+  isEnabled: boolean,
+  lifecycle = Lifecycle.DRAFT,
+  manualScenario: ManualScenario | undefined = scenario,
+) => {
   jest.mocked(useAiFactoryEnabled).mockReturnValue(isEnabled);
   jest.mocked(useAddToLaunchModal).mockReturnValue({ openModal: jest.fn() });
 
   return shallow(
     <AddToLaunchButton
       testCaseId={1}
-      manualScenario={scenario}
+      manualScenario={manualScenario}
       lifecycle={lifecycle}
       place="details_page"
     />,
@@ -85,5 +89,14 @@ describe('AddToLaunchButton ready-only gate', () => {
 
   test('allows a Ready case while the feature is enabled', () => {
     expect(renderButton(true, Lifecycle.READY).find(Button).prop('disabled')).toBe(false);
+  });
+
+  test('keeps a Ready case without scenario details disabled with the scenario hint', () => {
+    const wrapper = renderButton(true, Lifecycle.READY, {} as ManualScenario);
+
+    expect(wrapper.find(Button).prop('disabled')).toBe(true);
+    expect(wrapper.find(Tooltip).prop('content')).toBe(
+      'Add scenario details to be able to add this test case to launch',
+    );
   });
 });
