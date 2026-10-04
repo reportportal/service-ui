@@ -58,7 +58,7 @@ export const parsePipelineIterationIdentity = (
     return null;
   }
 
-  const match = pipelineAttributes[0].value.match(PIPELINE_IDENTITY_PATTERN);
+  const match = PIPELINE_IDENTITY_PATTERN.exec(pipelineAttributes[0].value);
   if (!match) {
     return null;
   }
