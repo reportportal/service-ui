@@ -16,14 +16,19 @@
 
 import { useEffect, useRef } from 'react';
 
-/**
- * Calls `callback` every `intervalMs` while `enabled` is true (Q-BE-05: polling is the PoC's
- * stand-in for a push notification while an iteration or fix round is running). The caller is
- * responsible for turning `enabled` off once the polled resource reaches a terminal state —
- * switching to a websocket later only means replacing this hook's body, not its call sites.
- */
-export const usePolling = (callback: () => void, intervalMs: number, enabled: boolean): void => {
+type PollingCallback = () => unknown;
+
+export const POLLING_REQUEST_STARTED = 'POLLING_REQUEST_STARTED' as const;
+
+export const usePolling = (
+  callback: PollingCallback,
+  intervalMs: number,
+  enabled: boolean,
+): void => {
   const callbackRef = useRef(callback);
+  const generationRef = useRef(0);
+  const isPromisePendingRef = useRef(false);
+  const isExternalRequestPendingRef = useRef(false);
 
   useEffect(() => {
     callbackRef.current = callback;
@@ -31,11 +36,38 @@ export const usePolling = (callback: () => void, intervalMs: number, enabled: bo
 
   useEffect(() => {
     if (!enabled) {
+      isExternalRequestPendingRef.current = false;
       return undefined;
     }
 
-    const intervalId = setInterval(() => callbackRef.current(), intervalMs);
+    generationRef.current += 1;
+    const generation = generationRef.current;
+    const poll = () => {
+      if (document.hidden || isPromisePendingRef.current || isExternalRequestPendingRef.current) {
+        return;
+      }
 
-    return () => clearInterval(intervalId);
-  }, [intervalMs, enabled]);
+      const result = callbackRef.current();
+      if (result === POLLING_REQUEST_STARTED) {
+        isExternalRequestPendingRef.current = true;
+      } else if (result instanceof Promise) {
+        isPromisePendingRef.current = true;
+        const releaseRequest = () => {
+          if (generationRef.current === generation) {
+            isPromisePendingRef.current = false;
+          }
+        };
+        void result.then(releaseRequest, releaseRequest);
+      }
+    };
+    const intervalId = setInterval(poll, intervalMs);
+
+    return () => {
+      clearInterval(intervalId);
+      if (generationRef.current === generation) {
+        generationRef.current += 1;
+        isPromisePendingRef.current = false;
+      }
+    };
+  }, [enabled, intervalMs]);
 };

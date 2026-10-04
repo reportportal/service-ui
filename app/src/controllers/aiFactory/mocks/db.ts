@@ -147,11 +147,18 @@ export const resetMockDb = (): void => {
   persist();
 };
 
+export const reloadMockDb = (): void => {
+  state = loadPersisted() || cloneSeed();
+  caseAliases.clear();
+};
+
 export const getDb = (): MockDb => state;
 
-export const findPipeline = (pipelineId: number) => state.pipelines.find((p) => p.id === pipelineId);
+export const findPipeline = (pipelineId: number) =>
+  state.pipelines.find((p) => p.id === pipelineId);
 
-export const findIteration = (iterationId: number) => state.iterations.find((i) => i.id === iterationId);
+export const findIteration = (iterationId: number) =>
+  state.iterations.find((i) => i.id === iterationId);
 
 export const listIterations = (pipelineId?: number) =>
   state.iterations
@@ -185,12 +192,20 @@ export const registerCaseAlias = (realCaseId: number, caseRecord: MockCaseRecord
   }
 };
 
-export const listCasesOfIteration = (iterationId: number): MockCaseRecord[] =>
-  state.cases.filter((c) => c.ai?.iterationId === iterationId);
+export const listCasesOfIteration = (iterationId: number): MockCaseRecord[] => {
+  const iteration = findIteration(iterationId);
+  if (iteration?.testCaseIds) {
+    return iteration.testCaseIds
+      .map((testCaseId) => findCase(testCaseId))
+      .filter((caseRecord): caseRecord is MockCaseRecord => Boolean(caseRecord));
+  }
+  return state.cases.filter((caseRecord) => caseRecord.ai?.iterationId === iterationId);
+};
 
 export const findPlan = (planId: number) => state.plans.find((p) => p.id === planId);
 
-export const plansBlockedByCase = (caseId: number) => state.plans.filter((p) => p.testCaseIds.includes(caseId));
+export const plansBlockedByCase = (caseId: number) =>
+  state.plans.filter((p) => p.testCaseIds.includes(caseId));
 
 export const findLaunch = (launchId: number) => state.launches.find((l) => l.id === launchId);
 
@@ -201,7 +216,8 @@ export const nextCommentId = (): number => {
 };
 
 export const nextFixRoundNumber = (caseRecord: MockCaseRecord): number =>
-  Math.max(0, ...caseRecord.fixRounds.map((r) => r.round), caseRecord.fixRoundRunning?.round || 0) + 1;
+  Math.max(0, ...caseRecord.fixRounds.map((r) => r.round), caseRecord.fixRoundRunning?.round || 0) +
+  1;
 
 export const setAutomationInProgress = (caseRecord: MockCaseRecord, iterationId: number): void => {
   caseRecord.automation = {
@@ -240,15 +256,10 @@ export const recordScenarioChange = (
       ? LifecycleReason.APPROVED_WITH_CHANGES
       : LifecycleReason.MARKED_AS_READY_WITH_CHANGES;
   }
-  recordLifecycleChange(
-    caseRecord,
-    promoteToReady ? Lifecycle.READY : Lifecycle.DRAFT,
-    reason,
-    {
-      type: LifecycleActorType.USER,
-      name: 'You',
-    },
-  );
+  recordLifecycleChange(caseRecord, promoteToReady ? Lifecycle.READY : Lifecycle.DRAFT, reason, {
+    type: LifecycleActorType.USER,
+    name: 'You',
+  });
   persist();
   if (promoteToReady) return 'TO_READY';
   return wasReady ? 'TO_DRAFT' : null;

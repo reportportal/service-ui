@@ -33,6 +33,7 @@ import { RequirementsList } from 'pages/inside/common/requirementsList/requireme
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { useUserPermissions } from 'hooks/useUserPermissions';
 import { useAiFactoryEnabled } from 'controllers/aiFactory';
+import { urlOrganizationAndProjectSelector } from 'controllers/pages';
 import { projectKeySelector } from 'controllers/project';
 import {
   GET_TEST_CASE_DETAILS,
@@ -43,6 +44,7 @@ import { commonMessages } from 'pages/inside/common/common-messages';
 import { EvaluationPanel } from 'pages/inside/aiFactory/evaluation';
 import { GenerationCost } from 'pages/inside/aiFactory/generationCost';
 import { AutomationSection } from 'pages/inside/aiFactory/automation';
+import { POLLING_REQUEST_STARTED, usePolling } from 'pages/inside/aiFactory/common';
 import { LifecycleHistory, useTestCaseAi } from 'pages/inside/aiFactory/lifecycle';
 import { PipelineLinks } from 'pages/inside/aiFactory/pipelineLinks';
 import { LaunchBlockedBanner } from 'pages/inside/aiFactory/readyOnlyGate';
@@ -53,8 +55,9 @@ import {
   useReviewComments,
   type ReviewCommentsLoadState,
 } from 'pages/inside/aiFactory/review';
-import { CommentTargetType, Lifecycle } from 'types/aiFactory';
+import { AutomationStatus, CommentTargetType, Lifecycle } from 'types/aiFactory';
 import { ManualScenario, Tag, TestCaseManualScenario } from 'types/testCase';
+import type { ProjectDetails } from 'pages/organization/constants';
 
 import { TestCaseDetailsHeader } from './testCaseDetailsHeader';
 import { useAddTestCasesToTestPlanModal } from '../addTestCasesToTestPlanModal/useAddTestCasesToTestPlanModal';
@@ -78,6 +81,7 @@ import { checkScenario } from './utils';
 import styles from './testCaseDetailsPage.scss';
 
 const cx = createClassnames(styles);
+const AUTOMATION_POLL_INTERVAL_MS = 3000;
 
 const SIDEBAR_COLLAPSIBLE_SECTIONS_CONFIG = ({
   canManageTestCases,
@@ -246,6 +250,7 @@ export const TestCaseDetailsPage = () => {
   const testCaseDetails = useSelector(testCaseDetailsSelector);
   const isLoadingTestCaseDetails = useSelector(isLoadingTestCaseDetailsSelector);
   const projectKey = useSelector(projectKeySelector);
+  const projectRoute = useSelector(urlOrganizationAndProjectSelector) as ProjectDetails | undefined;
   const isAiFactoryEnabled = useAiFactoryEnabled();
 
   const testCaseId = testCaseDetails?.id || 0;
@@ -255,6 +260,7 @@ export const TestCaseDetailsPage = () => {
     isAiFactoryEnabled && Boolean(testCaseDetails?.lifecycle),
     testCaseDetails?.updatedAt,
   );
+  const automationDetails = aiDetailsState.data?.automation;
   const isAiReviewEnabled = isAiFactoryEnabled && Boolean(testCaseDetails?.ai);
   const reviewState = useReviewComments(projectKey, testCaseId, isAiReviewEnabled);
   const refreshAfterFixRoundStart = useCallback(() => {
@@ -269,6 +275,23 @@ export const TestCaseDetailsPage = () => {
     aiDetailsState.reload();
     dispatch({ type: GET_TEST_CASE_DETAILS, payload: { testCaseId } });
   }, [aiDetailsState, dispatch, testCaseId]);
+  const isAutomationRunning =
+    testCaseDetails?.automation?.status === AutomationStatus.IN_PROGRESS ||
+    automationDetails?.status === AutomationStatus.IN_PROGRESS;
+
+  usePolling(
+    () => {
+      refreshAfterAutomationStart();
+      return POLLING_REQUEST_STARTED;
+    },
+    AUTOMATION_POLL_INTERVAL_MS,
+    isAiFactoryEnabled &&
+      Boolean(projectKey) &&
+      Boolean(testCaseId) &&
+      isAutomationRunning &&
+      !aiDetailsState.isLoading &&
+      !isLoadingTestCaseDetails,
+  );
   const fixRoundState = useFixRound(projectKey, testCaseId, isAiReviewEnabled, {
     onStarted: refreshAfterFixRoundStart,
     onFinished: refreshAfterFixRound,
@@ -417,12 +440,19 @@ export const TestCaseDetailsPage = () => {
                 <PipelineLinks aiDetailsState={aiDetailsState} />
               </>
             )}
-            {isAiFactoryEnabled && canAutomateTestCases && (
-              <AutomationSection
-                testCase={renderedTestCase}
-                onSuccess={refreshAfterAutomationStart}
-              />
-            )}
+            {isAiFactoryEnabled &&
+              (canAutomateTestCases ||
+                (automationDetails?.status === AutomationStatus.IN_PROGRESS &&
+                  Boolean(automationDetails.iteration))) && (
+                <AutomationSection
+                  testCase={renderedTestCase}
+                  automation={automationDetails}
+                  canAutomate={canAutomateTestCases}
+                  organizationSlug={projectRoute?.organizationSlug}
+                  projectSlug={projectRoute?.projectSlug}
+                  onSuccess={refreshAfterAutomationStart}
+                />
+              )}
             {isAiFactoryEnabled && testCaseDetails.lifecycle && (
               <LifecycleHistory
                 key={`${testCaseDetails.id}-${testCaseDetails.lifecycle}-${testCaseDetails.updatedAt}`}

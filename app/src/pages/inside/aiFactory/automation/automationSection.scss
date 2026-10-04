@@ -14,6 +14,22 @@
   align-items: flex-start;
   gap: 8px;
 
+  &__status {
+    font-family: $FONT-ROBOTO-REGULAR;
+    font-size: 13px;
+    line-height: 20px;
+    color: var(--rp-ui-base-almost-black);
+  }
+
+  &__iteration-link {
+    color: var(--rp-ui-base-topaz);
+    text-decoration: none;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+
   &__hint {
     margin: 0;
     font-family: $FONT-ROBOTO-REGULAR;

@@ -31,6 +31,14 @@ export const messages = defineMessages({
     id: 'AiFactoryAutomation.sectionTitle',
     defaultMessage: 'Automation',
   },
+  inProgress: {
+    id: 'AiFactoryAutomation.inProgress',
+    defaultMessage: 'In progress',
+  },
+  iteration: {
+    id: 'AiFactoryAutomation.iteration',
+    defaultMessage: 'Iteration #{number}',
+  },
   environment: {
     id: 'AiFactoryAutomation.environment',
     defaultMessage: 'Environment',
@@ -113,7 +121,8 @@ export const messages = defineMessages({
   },
   startedWithSkipped: {
     id: 'AiFactoryAutomation.startedWithSkipped',
-    defaultMessage: 'Automation iteration #{number} started for {count} Test Cases. Skipped: {cases}',
+    defaultMessage:
+      'Automation iteration #{number} started for {count} Test Cases. Skipped: {cases}',
   },
   retry: {
     id: 'AiFactoryAutomation.retry',

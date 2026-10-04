@@ -39,6 +39,8 @@ import {
 import { SettingsLayout } from 'layouts/settingsLayout';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
 import { SpinningPreloader } from 'components/preloaders/spinningPreloader';
+import { POLLING_REQUEST_STARTED, usePolling } from 'pages/inside/aiFactory/common';
+import { IterationStatus, PipelineType } from 'types/aiFactory';
 
 import { PageHeaderWithBreadcrumbsAndActions } from '../../common/pageHeaderWithBreadcrumbsAndActions';
 import { PipelineGroup } from './pipelineGroup';
@@ -47,6 +49,7 @@ import { messages } from './messages';
 import styles from './pipelinesPage.scss';
 
 const cx = createClassnames(styles);
+const ITERATIONS_POLL_INTERVAL_MS = 5000;
 
 export const PipelinesPageContent = () => {
   const { formatMessage } = useIntl();
@@ -60,6 +63,16 @@ export const PipelinesPageContent = () => {
   const iterationsByPipeline = useSelector(pipelineIterationsByPipelineSelector);
   const iterationsLoading = useSelector(pipelineIterationsLoadingSelector);
   const [search, setSearch] = useState('');
+  const pipelineIds = pipelines?.map((pipeline) => pipeline.id) ?? [];
+  const hasRunningAutomationIteration = Boolean(
+    pipelines?.some(
+      (pipeline) =>
+        pipeline.type === PipelineType.AUTOMATION &&
+        iterationsByPipeline?.[pipeline.id]?.some(
+          (iteration) => iteration.status === IterationStatus.RUNNING,
+        ),
+    ),
+  );
 
   useEffect(() => {
     if (pipelines && pipelines.length > 0) {
@@ -67,6 +80,15 @@ export const PipelinesPageContent = () => {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pipelines]);
+
+  usePolling(
+    () => {
+      dispatch(getPipelineIterationsAction(pipelineIds));
+      return POLLING_REQUEST_STARTED;
+    },
+    ITERATIONS_POLL_INTERVAL_MS,
+    hasRunningAutomationIteration && !isLoading && !iterationsLoading && pipelineIds.length > 0,
+  );
 
   const breadcrumbDescriptors = [
     {

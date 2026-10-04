@@ -80,6 +80,7 @@ jest.mock('react-intl', () => ({
   }),
 }));
 jest.mock('react-redux', () => ({ useDispatch: jest.fn(), useSelector: jest.fn() }));
+jest.mock('redux-first-router-link', () => 'Link');
 jest.mock('react-tracking', () => ({ useTracking: () => ({ trackEvent: jest.fn() }) }));
 jest.mock('common/hooks', () => ({ useOnClickOutside: jest.fn() }));
 jest.mock('common/utils', () => ({

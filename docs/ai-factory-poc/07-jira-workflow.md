@@ -40,7 +40,7 @@ Keep this in sync with 00-status (the status file is the source of truth for pro
 | 013 | EPMRPP-121682 | **[EPMRPP-122029](https://jiraeu.epam.com/browse/EPMRPP-122029)** 🟨 | `[FE] Approve and mark as ready` (T3.2) |
 | 014 | EPMRPP-121683 | **[EPMRPP-122032](https://jiraeu.epam.com/browse/EPMRPP-122032)** 🟨 · **[EPMRPP-122033](https://jiraeu.epam.com/browse/EPMRPP-122033)** 🟨 | `[FE] Ready-only Test Plan and Launch gate` (T4.1) · `[FE] Test Plan launch-blocked state` (T4.2) |
 | 015 | EPMRPP-121671 | **[EPMRPP-122035](https://jiraeu.epam.com/browse/EPMRPP-122035)** 🟨 | `[FE] Send Ready Test Cases to automation` (T5.1) |
-| 016 | EPMRPP-121672 | — | `[FE] Automation iteration view` |
+| 016 | EPMRPP-121672 | **[EPMRPP-122036](https://jiraeu.epam.com/browse/EPMRPP-122036)** ✅ | `[FE] Automation iteration view` (T5.2), branch `EPMRPP-122036-automation-iteration-view`; Original Estimate 8 h with 2 h research / 4 h implementation / 2 h validation comment |
 | 017 | EPMRPP-121680 | — | `[FE] Automation results on Test Case` |
 
 ## Creating a sub-task
