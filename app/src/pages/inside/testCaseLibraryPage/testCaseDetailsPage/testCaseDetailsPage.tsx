@@ -37,7 +37,9 @@ import { projectKeySelector } from 'controllers/project';
 import { isLoadingTestCaseDetailsSelector, testCaseDetailsSelector } from 'controllers/testCase';
 import { commonMessages } from 'pages/inside/common/common-messages';
 import { EvaluationPanel } from 'pages/inside/aiFactory/evaluation';
+import { GenerationCost } from 'pages/inside/aiFactory/generationCost';
 import { LifecycleHistory, useTestCaseAi } from 'pages/inside/aiFactory/lifecycle';
+import { PipelineLinks } from 'pages/inside/aiFactory/pipelineLinks';
 import { ManualScenario, Tag, TestCaseManualScenario } from 'types/testCase';
 
 import { TestCaseDetailsHeader } from './testCaseDetailsHeader';
@@ -292,7 +294,11 @@ export const TestCaseDetailsPage = () => {
               </CollapsibleSectionWithHeaderControl>
             ))}
             {isAiFactoryEnabled && testCaseDetails.ai && (
-              <EvaluationPanel aiDetailsState={aiDetailsState} />
+              <>
+                <EvaluationPanel aiDetailsState={aiDetailsState} />
+                <GenerationCost aiDetailsState={aiDetailsState} />
+                <PipelineLinks aiDetailsState={aiDetailsState} />
+              </>
             )}
             {isAiFactoryEnabled && testCaseDetails.lifecycle && (
               <LifecycleHistory
