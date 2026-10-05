@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { useState } from 'react';
+import { type ReactNode, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { useIntl } from 'react-intl';
 import { Dropdown, Modal, SystemMessage } from '@reportportal/ui-kit';
@@ -30,6 +30,8 @@ import { messages } from './messages';
 import styles from './rerunModal.scss';
 
 const cx = createClassnames(styles);
+
+const renderStrong = (chunks: ReactNode) => <strong>{chunks}</strong>;
 
 export const ITERATION_RERUN_MODAL_KEY = 'aiFactoryIterationRerunModal';
 
@@ -63,7 +65,7 @@ export const IterationRerunModalContent = ({
           {formatMessage(messages.description, {
             pipeline: pipeline.name,
             number: iteration.number,
-            strong: (chunks) => <strong>{chunks}</strong>,
+            strong: renderStrong,
           })}
         </p>
         <dl className={cx('rerun-modal__details')}>

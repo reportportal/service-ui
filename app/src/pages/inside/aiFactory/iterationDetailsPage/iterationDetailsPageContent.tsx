@@ -35,6 +35,7 @@ import {
   pipelineIterationDetailsUnavailableSelector,
   pipelinesLoadingSelector,
   pipelinesSelector,
+  PipelineCatalogItem,
   ReducedPipelineIterationDetail,
 } from 'controllers/aiFactory/pipelines';
 import {
@@ -60,7 +61,7 @@ import {
   usePolling,
 } from 'pages/inside/aiFactory/common';
 import { ProjectDetails } from 'pages/organization/constants';
-import { AiStageKey, IterationRS, IterationStatus, StageKey } from 'types/aiFactory';
+import { AiStageKey, IterationRS, IterationStatus, PipelineRS, StageKey } from 'types/aiFactory';
 
 import { PageHeaderWithBreadcrumbsAndActions } from '../../common/pageHeaderWithBreadcrumbsAndActions';
 import { PipelineSettingsButton } from '../pipelineSettings';
@@ -83,6 +84,26 @@ const isReducedDetail = (
   iteration: IterationRS | ReducedPipelineIterationDetail | null,
 ): iteration is ReducedPipelineIterationDetail =>
   Boolean(iteration && 'kind' in iteration && iteration.kind === 'reduced');
+
+const resolvePipelineCatalog = (
+  pipelines: PipelineCatalogItem[] | null,
+  pipelineId: number,
+  catalogVersion: number,
+  catalogProjectKey: string | null,
+  projectKey: string,
+) => {
+  const hasCurrentCatalog = catalogVersion > 0 && catalogProjectKey === projectKey;
+  const pipelineCandidate = hasCurrentCatalog
+    ? pipelines?.find((item) => item.id === pipelineId)
+    : undefined;
+  const pipeline: PipelineRS | undefined =
+    pipelineCandidate && !isReducedPipeline(pipelineCandidate) ? pipelineCandidate : undefined;
+  const isReducedCatalogPipeline = Boolean(
+    pipelineCandidate && isReducedPipeline(pipelineCandidate),
+  );
+
+  return { hasCurrentCatalog, pipelineCandidate, pipeline, isReducedCatalogPipeline };
+};
 
 export const IterationDetailsPageContent = () => {
   const { formatMessage } = useIntl();
@@ -110,15 +131,14 @@ export const IterationDetailsPageContent = () => {
   const currentIteration =
     iteration?.id === iterationId && iteration.pipelineId === pipelineId ? iteration : null;
 
-  const hasCurrentCatalog = catalogVersion > 0 && catalogProjectKey === projectKey;
-  const pipelineCandidate = hasCurrentCatalog
-    ? pipelines?.find((item) => item.id === pipelineId)
-    : undefined;
-  const pipeline =
-    pipelineCandidate && !isReducedPipeline(pipelineCandidate) ? pipelineCandidate : undefined;
-  const isReducedCatalogPipeline = Boolean(
-    pipelineCandidate && isReducedPipeline(pipelineCandidate),
-  );
+  const { hasCurrentCatalog, pipelineCandidate, pipeline, isReducedCatalogPipeline } =
+    resolvePipelineCatalog(
+      pipelines,
+      pipelineId,
+      catalogVersion,
+      catalogProjectKey,
+      projectKey,
+    );
   const [selectedStage, setSelectedStage] = useState<AiStageKey | null>(null);
   const hasInitializedStage = useRef(false);
   const catalogRequestProjectRef = useRef<string | null>(null);

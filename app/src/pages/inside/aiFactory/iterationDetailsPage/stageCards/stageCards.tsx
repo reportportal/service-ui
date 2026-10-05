@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { useIntl } from 'react-intl';
+import { type IntlShape, useIntl } from 'react-intl';
 import { RerunIcon } from '@reportportal/ui-kit';
 
 import { createClassnames, formatCost, formatDuration } from 'common/utils';
@@ -30,6 +30,100 @@ import { messages } from '../messages';
 import styles from './stageCards.scss';
 
 const cx = createClassnames(styles);
+
+type FormatMessage = IntlShape['formatMessage'];
+
+interface StageCardCopyOptions {
+  stage: StageRS;
+  testCasesCount: number;
+  readyCount: number;
+  fixRoundsCount: number;
+  autoReadyPromotedCount: number;
+  formatMessage: FormatMessage;
+}
+
+interface StageCardCopy {
+  summary: string;
+  description: string | null;
+}
+
+const getCreateStageCopy = ({
+  testCasesCount,
+  formatMessage,
+}: StageCardCopyOptions): StageCardCopy => ({
+  summary: formatMessage(messages.stageCasesCreated, { count: testCasesCount }),
+  description: formatMessage(messages.stageCreateDescription),
+});
+
+const getGradeStageCopy = ({
+  stage,
+  testCasesCount,
+  formatMessage,
+}: StageCardCopyOptions): StageCardCopy => ({
+  summary: formatMessage(
+    stage.status === StageStatus.RUNNING ? messages.stageGrading : messages.stageCasesGraded,
+    { count: testCasesCount },
+  ),
+  description: null,
+});
+
+const getUploadStageCopy = ({
+  stage,
+  testCasesCount,
+  autoReadyPromotedCount,
+  formatMessage,
+}: StageCardCopyOptions): StageCardCopy => ({
+  summary: formatMessage(
+    stage.status === StageStatus.PENDING
+      ? messages.stageWaitingForGrade
+      : messages.stageCasesUploaded,
+    { count: testCasesCount },
+  ),
+  description:
+    stage.status === StageStatus.PASSED
+      ? formatMessage(messages.stageAutoReady, { count: autoReadyPromotedCount })
+      : null,
+});
+
+const getReviewStageCopy = ({
+  stage,
+  testCasesCount,
+  readyCount,
+  fixRoundsCount,
+  formatMessage,
+}: StageCardCopyOptions): StageCardCopy => ({
+  summary: formatMessage(
+    stage.status === StageStatus.PENDING ? messages.stageWaitingForUpload : messages.stageReady,
+    { ready: readyCount, total: testCasesCount },
+  ),
+  description:
+    stage.status === StageStatus.PENDING
+      ? null
+      : formatMessage(messages.stageFixRounds, { count: fixRoundsCount }),
+});
+
+const getStageCardCopy = (options: StageCardCopyOptions): StageCardCopy => {
+  const { stage, testCasesCount, formatMessage } = options;
+  if (stage.status === StageStatus.FAILED && stage.failureReason) {
+    return { summary: stage.failureReason, description: null };
+  }
+
+  switch (stage.key) {
+    case StageKey.CREATE:
+      return getCreateStageCopy(options);
+    case StageKey.GRADE:
+      return getGradeStageCopy(options);
+    case StageKey.UPLOAD:
+      return getUploadStageCopy(options);
+    case StageKey.REVIEW:
+      return getReviewStageCopy(options);
+    default:
+      return {
+        summary: formatMessage(messages.stageTestCases, { count: testCasesCount }),
+        description: null,
+      };
+  }
+};
 
 export interface StageCardsProps {
   stages: StageRS[];
@@ -55,41 +149,14 @@ export const StageCards = ({
   return (
     <div className={cx('stage-cards')} data-automation-id="stageCards">
       {stages.map((stage, index) => {
-        let summary = formatMessage(messages.stageTestCases, { count: testCasesCount });
-        let description: string | null = null;
-
-        if (stage.key === StageKey.CREATE) {
-          summary = formatMessage(messages.stageCasesCreated, { count: testCasesCount });
-          description = formatMessage(messages.stageCreateDescription);
-        } else if (stage.key === StageKey.GRADE) {
-          summary =
-            stage.status === StageStatus.RUNNING
-              ? formatMessage(messages.stageGrading)
-              : formatMessage(messages.stageCasesGraded, { count: testCasesCount });
-        } else if (stage.key === StageKey.UPLOAD) {
-          summary =
-            stage.status === StageStatus.PENDING
-              ? formatMessage(messages.stageWaitingForGrade)
-              : formatMessage(messages.stageCasesUploaded, { count: testCasesCount });
-          if (stage.status === StageStatus.PASSED) {
-            description = formatMessage(messages.stageAutoReady, {
-              count: autoReadyPromotedCount,
-            });
-          }
-        } else if (stage.key === StageKey.REVIEW) {
-          summary =
-            stage.status === StageStatus.PENDING
-              ? formatMessage(messages.stageWaitingForUpload)
-              : formatMessage(messages.stageReady, { ready: readyCount, total: testCasesCount });
-          if (stage.status !== StageStatus.PENDING) {
-            description = formatMessage(messages.stageFixRounds, { count: fixRoundsCount });
-          }
-        }
-
-        if (stage.status === StageStatus.FAILED && stage.failureReason) {
-          summary = stage.failureReason;
-          description = null;
-        }
+        const { summary, description } = getStageCardCopy({
+          stage,
+          testCasesCount,
+          readyCount,
+          fixRoundsCount,
+          autoReadyPromotedCount,
+          formatMessage,
+        });
 
         return (
           <div key={stage.key} className={cx('stage-cards__item-wrapper')}>
