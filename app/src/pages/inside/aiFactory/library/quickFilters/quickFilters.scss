@@ -1,0 +1,121 @@
+/*
+ * Copyright 2026 EPAM Systems
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+@use '../../../../../common/css/mixins';
+
+.quick-filters {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 16px;
+  width: 100%;
+  padding-bottom: 16px;
+}
+
+.filter-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.filter-label {
+  color: var(--rp-ui-base-e-400);
+  font-family: $FONT-ROBOTO-REGULAR;
+  font-size: 13px;
+  line-height: 20px;
+}
+
+.segmented-control {
+  width: auto;
+}
+
+.review-queue,
+.clear {
+  @include mixins.button-reset;
+
+  color: var(--rp-ui-base-topaz);
+  font-family: $FONT-ROBOTO-MEDIUM;
+  font-size: 13px;
+  line-height: 20px;
+}
+
+.review-queue {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 32px;
+  padding: 6px 12px;
+  border: 1px solid var(--rp-ui-base-e-200);
+  border-radius: 4px;
+
+  &--active {
+    border-color: var(--rp-ui-base-topaz);
+    background: var(--rp-ui-base-bg-200);
+  }
+}
+
+.iteration-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 28px;
+  padding: 4px 6px 4px 10px;
+  border-radius: 14px;
+  background: var(--rp-ui-base-bg-200);
+  color: var(--rp-ui-base-almost-black);
+  font-family: $FONT-ROBOTO-REGULAR;
+  font-size: 13px;
+  line-height: 20px;
+}
+
+.remove-iteration {
+  @include mixins.button-reset;
+
+  display: inline-flex;
+  width: 20px;
+  height: 20px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+
+  svg {
+    width: 12px;
+    height: 12px;
+  }
+
+  &:hover {
+    background: var(--rp-ui-base-e-100);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--rp-ui-base-topaz-focused);
+  }
+}
+
+.clear {
+  margin-left: auto;
+}
+
+.review-queue:hover,
+.clear:hover {
+  color: var(--rp-ui-base-topaz-hover);
+}
+
+.review-queue:focus-visible,
+.clear:focus-visible {
+  outline: 2px solid var(--rp-ui-base-topaz-focused);
+  outline-offset: 2px;
+}

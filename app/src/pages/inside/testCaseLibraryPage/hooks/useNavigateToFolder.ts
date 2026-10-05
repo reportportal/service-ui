@@ -20,8 +20,11 @@ import { useDispatch, useSelector } from 'react-redux';
 import {
   getTestCaseByFolderIdAction,
   expandFoldersToLevelAction,
+  getTestCaseAiFilterParams,
+  getTestCaseAiQueryParams,
 } from 'controllers/testCase/actionCreators';
 import { testCasesPageSelector, foldersSelector } from 'controllers/testCase';
+import { useAiFactoryEnabled } from 'controllers/aiFactory';
 import {
   TEST_CASE_LIBRARY_PAGE,
   urlOrganizationAndProjectSelector,
@@ -41,6 +44,7 @@ interface NavigateToFolderParams {
 
 export const useNavigateToFolder = () => {
   const dispatch = useDispatch();
+  const isAiFactoryFeatureEnabled = useAiFactoryEnabled();
   const urlFolderId = useSelector(urlFolderIdSelector);
   const testCasesPageData = useSelector(testCasesPageSelector);
   const folders = useSelector(foldersSelector);
@@ -70,6 +74,7 @@ export const useNavigateToFolder = () => {
             testCasesSearchParams: query?.testCasesSearchParams,
             filterPriorities: query?.filterPriorities,
             filterTags: query?.filterTags,
+            ...(isAiFactoryFeatureEnabled ? getTestCaseAiFilterParams(query) : {}),
           }),
         );
       } else {
@@ -81,9 +86,12 @@ export const useNavigateToFolder = () => {
             projectSlug,
           },
           query: {
-            ...(query?.testCasesSearchParams && { testCasesSearchParams: query.testCasesSearchParams }),
+            ...(query?.testCasesSearchParams && {
+              testCasesSearchParams: query.testCasesSearchParams,
+            }),
             ...(query?.filterPriorities && { filterPriorities: query.filterPriorities }),
             ...(query?.filterTags && { filterTags: query.filterTags }),
+            ...(isAiFactoryFeatureEnabled ? getTestCaseAiQueryParams(query) : {}),
           },
         });
       }
@@ -92,7 +100,16 @@ export const useNavigateToFolder = () => {
         expandFoldersToLevel(parentIdToExpand);
       }
     },
-    [urlFolderId, testCasesPageData, query, dispatch, organizationSlug, projectSlug, expandFoldersToLevel],
+    [
+      urlFolderId,
+      testCasesPageData,
+      query,
+      isAiFactoryFeatureEnabled,
+      dispatch,
+      organizationSlug,
+      projectSlug,
+      expandFoldersToLevel,
+    ],
   );
 
   const navigateToFolderAfterAction = useCallback(

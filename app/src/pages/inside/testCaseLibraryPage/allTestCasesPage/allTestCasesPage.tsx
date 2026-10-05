@@ -39,13 +39,25 @@ import { TMS_INSTANCE_KEY } from 'pages/inside/common/constants';
 import { SelectedTestCaseRow } from 'pages/inside/common/testCaseList/types';
 import { PopoverControl, PopoverItem } from 'pages/common/popoverControl/popoverControl';
 import { showModalAction } from 'controllers/modal';
-import { locationQuerySelector, payloadSelector, urlFolderIdSelector } from 'controllers/pages';
+import {
+  locationQuerySelector,
+  payloadSelector,
+  updatePagePropertiesAction,
+  urlFolderIdSelector,
+} from 'controllers/pages';
 import { foldersSelector } from 'controllers/testCase';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { useUserPermissions } from 'hooks/useUserPermissions';
 import { useHasTestPlans } from 'hooks/useHasTestPlans';
 import { useURLBoundPagination } from 'pages/inside/common/testCaseList/useURLBoundPagination';
 import { useProjectDetails } from 'hooks/useTypedSelector';
+import { useAiFactoryEnabled } from 'controllers/aiFactory';
+import { getTestCaseAiQueryParams } from 'controllers/testCase/actionCreators';
+import {
+  QuickFilters,
+  useIterationNumber,
+  type QuickFiltersValue,
+} from 'pages/inside/aiFactory/library';
 
 import { CHANGE_PRIORITY_MODAL_KEY } from './changePriorityModal';
 import { messages } from './messages';
@@ -68,6 +80,7 @@ interface AllTestCasesPageProps {
   testCasesPageData: Page;
   isLoading: boolean;
   instanceKey: TMS_INSTANCE_KEY;
+  reviewQueueCount?: number;
 }
 
 export const AllTestCasesPage = ({
@@ -75,6 +88,7 @@ export const AllTestCasesPage = ({
   isLoading,
   instanceKey,
   testCasesPageData,
+  reviewQueueCount,
 }: AllTestCasesPageProps) => {
   const { formatMessage } = useIntl();
   const { trackEvent } = useTracking();
@@ -101,6 +115,14 @@ export const AllTestCasesPage = ({
   const { openModal: openBatchEditTagsModal } = useBatchEditTagsModal();
   const { canManageTestCases } = useUserPermissions();
   const { hasTestPlans } = useHasTestPlans();
+  const isAiFactoryEnabled = useAiFactoryEnabled();
+  const { lifecycle, ai, iteration } = getTestCaseAiQueryParams(query);
+  const hasAiFilters = Boolean(lifecycle || ai || iteration);
+  const iterationNumber = useIterationNumber(
+    isAiFactoryEnabled ? iteration : undefined,
+    testCases,
+    !isLoading,
+  );
 
   const isAnyRowSelected = !isEmpty(selectedRows);
   const selectedRowIds = useMemo(() => selectedRows.map((row) => row.id), [selectedRows]);
@@ -114,7 +136,9 @@ export const AllTestCasesPage = ({
       return false;
     }
 
-    return loadedSelectedTestCases.every((testCase) => isManualScenarioEmpty(testCase.manualScenario));
+    return loadedSelectedTestCases.every((testCase) =>
+      isManualScenarioEmpty(testCase.manualScenario),
+    );
   }, [selectedRowIds, testCases]);
 
   const trackBulkOperation = useCallback(
@@ -217,12 +241,17 @@ export const AllTestCasesPage = ({
     });
   }, [trackBulkOperation, selectedRows, openMoveTestCaseModal, selectedRowIds, onClearSelection]);
 
+  const handleQuickFiltersChange = (value: QuickFiltersValue) => {
+    dispatch(updatePagePropertiesAction({ ...value, ...TestCasePageDefaultValues }));
+  };
+
   if (
     isEmpty(testCases) &&
     !isLoading &&
     !query?.testCasesSearchParams &&
     !query?.filterPriorities &&
-    !query?.filterTags
+    !query?.filterTags &&
+    !(isAiFactoryEnabled && hasAiFilters)
   ) {
     return <FolderEmptyState folderTitle={folderTitle} />;
   }
@@ -235,6 +264,16 @@ export const AllTestCasesPage = ({
           isAnyRowSelected ? 'all-test-cases-page__with-panel' : '',
         )}
       >
+        {isAiFactoryEnabled && (
+          <QuickFilters
+            lifecycle={lifecycle}
+            ai={ai}
+            iteration={iteration}
+            iterationNumber={iterationNumber}
+            reviewQueueCount={reviewQueueCount}
+            onChange={handleQuickFiltersChange}
+          />
+        )}
         <TestCaseList
           testCases={testCases}
           isLoading={isLoading}
@@ -243,6 +282,7 @@ export const AllTestCasesPage = ({
           folderTitle={folderTitle}
           instanceKey={instanceKey}
           handleSelectedRows={handleSelectedRows}
+          hasAiFilters={isAiFactoryEnabled && hasAiFilters}
         />
       </div>
       {Boolean(testCasesPageData?.totalElements) && (

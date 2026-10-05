@@ -23,6 +23,7 @@ API contract; a live Pipeline and Quality Standard API subset is documented but 
 | [08-estimations.md](08-estimations.md) | **All estimations**: method, per-task senior-developer hours, phase roll-up, deviation notes, log | after every finished task |
 | [10-backend-integration-contract.md](10-backend-integration-contract.md) | Actionable FE/BE integration gaps, decisions, security/readiness gates and acceptance criteria | API contract or integration decision changes |
 | [11-backend-integration-contract-test-cases.md](11-backend-integration-contract-test-cases.md) | Risk-based QA cases and traceability for the backend integration contract and rollout groups G1–G9 | contract acceptance criteria, rollout decisions or coverage change |
+| [12-backend-api-integration-request.md](12-backend-api-integration-request.md) | Shareable backend handoff snapshot; not a source of truth — synchronize it from [10](10-backend-integration-contract.md) before sending | before sending to Backend, or when Backend records answers/sign-off |
 | [tools/jira_fe_subtask.py](tools/jira_fe_subtask.py) | Creates the `[FE]` sub-task of a story (dry run by default) | — |
 
 ## How to resume work (humans and AI agents)

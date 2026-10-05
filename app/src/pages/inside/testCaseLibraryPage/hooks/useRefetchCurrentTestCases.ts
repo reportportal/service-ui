@@ -17,23 +17,33 @@
 import { useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
-import { urlFolderIdSelector } from 'controllers/pages';
+import { locationQuerySelector, urlFolderIdSelector } from 'controllers/pages';
 import {
   testCasesPageSelector,
   getTestCaseByFolderIdAction,
   getAllTestCasesAction,
 } from 'controllers/testCase';
+import { getTestCaseAiFilterParams } from 'controllers/testCase/actionCreators';
+import { useAiFactoryEnabled } from 'controllers/aiFactory';
 import { getTestCaseRequestParams } from '../utils';
 import { useLastItemOnThePage } from './useLastItemOnThePage';
 
 export const useRefetchCurrentTestCases = (numberOfLastElements?: number) => {
   const dispatch = useDispatch();
   const urlFolderId = useSelector(urlFolderIdSelector);
+  const query = useSelector(locationQuerySelector);
   const testCasesPageData = useSelector(testCasesPageSelector);
+  const isAiFactoryFeatureEnabled = useAiFactoryEnabled();
   const { updateUrl, isSingleItemOnTheLastPage } = useLastItemOnThePage({ numberOfLastElements });
 
   return useCallback(() => {
     const paginationParams = getTestCaseRequestParams(testCasesPageData);
+    const filterParams = {
+      testCasesSearchParams: query?.testCasesSearchParams,
+      filterPriorities: query?.filterPriorities,
+      filterTags: query?.filterTags,
+      ...(isAiFactoryFeatureEnabled ? getTestCaseAiFilterParams(query) : {}),
+    };
 
     if (isSingleItemOnTheLastPage) {
       updateUrl();
@@ -46,10 +56,19 @@ export const useRefetchCurrentTestCases = (numberOfLastElements?: number) => {
         getTestCaseByFolderIdAction({
           folderId: Number(urlFolderId),
           ...paginationParams,
+          ...filterParams,
         }),
       );
     } else {
-      dispatch(getAllTestCasesAction(paginationParams));
+      dispatch(getAllTestCasesAction({ ...paginationParams, ...filterParams }));
     }
-  }, [dispatch, urlFolderId, testCasesPageData, isSingleItemOnTheLastPage, updateUrl]);
+  }, [
+    dispatch,
+    urlFolderId,
+    testCasesPageData,
+    isSingleItemOnTheLastPage,
+    updateUrl,
+    query,
+    isAiFactoryFeatureEnabled,
+  ]);
 };

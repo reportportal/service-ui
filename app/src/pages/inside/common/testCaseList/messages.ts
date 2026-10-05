@@ -78,4 +78,8 @@ export const messages = defineMessages({
     defaultMessage:
       "Your search or filter criteria didn't match any results. Please try different keywords or adjust your filter settings.",
   },
+  noResultsAiFilters: {
+    id: 'TestCaseList.noResultsAiFilters',
+    defaultMessage: 'No Test Cases match these filters',
+  },
 });

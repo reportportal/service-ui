@@ -35,6 +35,7 @@ export interface TestCaseState {
     isLoading?: boolean;
     list?: TestCase[];
     page: Page | null;
+    successfulLoadRevision?: number;
   };
   details?: {
     data?: ExtendedTestCase;

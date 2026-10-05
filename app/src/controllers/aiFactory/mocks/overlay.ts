@@ -28,17 +28,32 @@
  * present only once someone creates cases with those names in the target project).
  */
 
-import { AxiosInstance, AxiosResponse } from 'axios';
+import {
+  AxiosInstance,
+  AxiosRequestConfig,
+  AxiosResponse,
+  InternalAxiosRequestConfig,
+} from 'axios';
+import { Page } from 'types/common';
 import { ScenarioUpdateRS, TestCaseAiExtension } from 'types/aiFactory';
 import { TestCase, TestCaseManualScenario } from 'types/testCase';
 import {
   findCase,
   findIteration,
   findPipeline,
+  getDb,
   plansBlockedByCase,
   recordScenarioChange,
   registerCaseAlias,
 } from './db';
+import {
+  applyReviewQueueCount,
+  countReviewQueueCases,
+  filterCompleteTestCaseList,
+  isReviewQueueCountRequest,
+  matchesLibraryFilters,
+  parseLibraryFilters,
+} from './libraryFilters';
 import { toTestCaseAiExtension } from './viewModels';
 
 type ScenarioFields = {
@@ -52,6 +67,45 @@ type ScenarioFields = {
 type ScenarioUpdatePayload = {
   manualScenario?: unknown;
 };
+
+interface FilterRequestContext {
+  filters: ReturnType<typeof parseLibraryFilters>;
+  headers?: AxiosRequestConfig['headers'];
+  isCountProbe: boolean;
+  limit?: number;
+  offset: number;
+  signal?: AxiosRequestConfig['signal'];
+  url: string;
+}
+
+type FilterRequestConfig = InternalAxiosRequestConfig & {
+  aiFactoryFilterContext?: FilterRequestContext;
+};
+
+interface PagedTestCaseList {
+  content: TestCase[];
+  page: Page;
+}
+
+const FETCH_PAGE_SIZE = 1000;
+const MAX_FILTER_PAGES = 10;
+const MAX_FILTER_RECORDS = 5000;
+const C3_FILTER_KEYS = [
+  'filter.eq.lifecycle',
+  'filter.eq.ai',
+  'filter.eq.iterationId',
+];
+
+export const C3_OVERLAY_ERROR_CODE = 'AI_FACTORY_C3_OVERLAY_FAILED';
+
+export class C3OverlayError extends Error {
+  readonly code = C3_OVERLAY_ERROR_CODE;
+
+  constructor(message: string) {
+    super(message);
+    this.name = 'C3OverlayError';
+  }
+}
 
 export const mergeAiFields = (testCase: TestCase): TestCase & Partial<TestCaseAiExtension> => {
   const record = findCase(testCase.displayId);
@@ -71,6 +125,9 @@ export const mergeAiFields = (testCase: TestCase): TestCase & Partial<TestCaseAi
 const isTestCaseList = (data: unknown): data is { content: TestCase[] } =>
   Boolean(data) && Array.isArray((data as { content?: unknown }).content);
 
+const isPagedTestCaseList = (data: unknown): data is PagedTestCaseList =>
+  isTestCaseList(data) && Boolean((data as { page?: unknown }).page);
+
 const isTestCase = (data: unknown): data is TestCase =>
   Boolean(data) && typeof (data as TestCase).displayId === 'string';
 
@@ -78,6 +135,75 @@ const isRecord = (value: unknown): value is Record<string, unknown> =>
   typeof value === 'object' && value !== null && !Array.isArray(value);
 
 const hasInvalidText = (value: unknown): boolean => value != null && typeof value !== 'string';
+
+const numericParam = (value: unknown): number | undefined => {
+  if (typeof value === 'number') {
+    return Number.isSafeInteger(value) && value >= 0 ? value : undefined;
+  }
+  if (typeof value !== 'string' || !/^\d+$/.test(value)) return undefined;
+  const parsed = Number(value);
+  return Number.isSafeInteger(parsed) ? parsed : undefined;
+};
+
+const mergedRequestParams = (config: AxiosRequestConfig): URLSearchParams => {
+  const [, query = ''] = (config.url ?? '').split('?');
+  const params = new URLSearchParams(query);
+  if (isRecord(config.params)) {
+    Object.entries(config.params).forEach(([key, value]) => {
+      if (typeof value === 'string' || typeof value === 'number' || typeof value === 'boolean') {
+        params.set(key, String(value));
+      }
+    });
+  }
+  return params;
+};
+
+const toCanonicalUrl = (config: AxiosRequestConfig, fetchCompleteDataset: boolean): string => {
+  const [path] = (config.url ?? '').split('?');
+  const params = mergedRequestParams(config);
+  C3_FILTER_KEYS.forEach((key) => params.delete(key));
+  if (fetchCompleteDataset) {
+    params.set('offset', '0');
+    params.set('limit', String(FETCH_PAGE_SIZE));
+  }
+  return `${path}?${params.toString()}`;
+};
+
+const prepareFilterRequest = (config: FilterRequestConfig): FilterRequestConfig => {
+  const filters = parseLibraryFilters(config);
+  if (!isTestCaseListUrl(config.url) || !hasLibraryFilters(filters)) return config;
+  const isCountProbe = isReviewQueueCountRequest(config, filters);
+  const params = mergedRequestParams(config);
+  const rawLimit = params.get('limit');
+  const rawOffset = params.get('offset');
+  const limit = numericParam(rawLimit);
+  const offset = numericParam(params.get('offset')) ?? 0;
+  if ((rawLimit !== null && (!limit || limit > FETCH_PAGE_SIZE)) ||
+      (rawOffset !== null && (numericParam(rawOffset) === undefined || offset > MAX_FILTER_RECORDS))) {
+    throw new C3OverlayError('AI Factory mock received unsafe pagination parameters');
+  }
+  const url = toCanonicalUrl(config, !isCountProbe);
+  return {
+    ...config,
+    url,
+    params: undefined,
+    aiFactoryFilterContext: {
+      filters,
+      headers: config.headers,
+      isCountProbe,
+      limit,
+      offset,
+      signal: config.signal,
+      url,
+    },
+  };
+};
+
+const isTestCaseListUrl = (url?: string): boolean =>
+  /\/tms\/test-case(?:\?|$)/.test(url ?? '');
+
+const hasLibraryFilters = (filters: ReturnType<typeof parseLibraryFilters>): boolean =>
+  filters.lifecycle !== undefined || filters.ai !== undefined || filters.iterationId !== undefined;
 
 const isScenarioStep = (value: unknown): value is Record<string, unknown> =>
   isRecord(value) && !hasInvalidText(value.instructions) && !hasInvalidText(value.expectedResult);
@@ -163,17 +289,162 @@ const mergeUpdatedTestCase = (
   return { ...response, data: isUpdate ? { ...data, lifecycleChanged } : data };
 };
 
+const pageUrl = (url: string, offset: number, limit: number): string => {
+  const [path, query = ''] = url.split('?');
+  const params = new URLSearchParams(query);
+  params.set('offset', String(offset));
+  params.set('limit', String(limit));
+  return `${path}?${params.toString()}`;
+};
+
+const isValidPagination = (page: Page, contentLength: number): boolean =>
+  Number.isSafeInteger(page.number) &&
+  page.number >= 0 &&
+  Number.isSafeInteger(page.size) &&
+  page.size > 0 &&
+  page.size <= FETCH_PAGE_SIZE &&
+  Number.isSafeInteger(page.totalElements) &&
+  page.totalElements >= 0 &&
+  page.totalElements <= MAX_FILTER_RECORDS &&
+  Number.isSafeInteger(page.totalPages) &&
+  page.totalPages >= 0 &&
+  page.totalPages <= MAX_FILTER_PAGES &&
+  contentLength <= page.size;
+
+const validatePage = (data: PagedTestCaseList, expected?: Page): void => {
+  if (!isValidPagination(data.page, data.content.length)) {
+    throw new C3OverlayError('AI Factory mock received invalid pagination metadata');
+  }
+  if (
+    expected &&
+    (data.page.size !== expected.size ||
+      data.page.totalElements !== expected.totalElements ||
+      data.page.totalPages !== expected.totalPages)
+  ) {
+    throw new C3OverlayError('AI Factory mock received inconsistent pagination metadata');
+  }
+};
+
+const throwIfAborted = (signal?: AxiosRequestConfig['signal']): void => {
+  if (!signal?.aborted) return;
+  const error = new Error('AI Factory mock filtering was aborted');
+  error.name = 'AbortError';
+  throw error;
+};
+
+const fetchPageContent = async (
+  http: AxiosInstance,
+  page: Page,
+  context: FilterRequestContext,
+  index: number,
+  completeContent: TestCase[],
+): Promise<TestCase[]> => {
+  if (index >= page.totalPages) return completeContent;
+  throwIfAborted(context.signal);
+  const { data } = await http.get<PagedTestCaseList>(
+    pageUrl(context.url, index * page.size, page.size),
+    { headers: context.headers, signal: context.signal },
+  );
+  throwIfAborted(context.signal);
+  validatePage(data, page);
+  return fetchPageContent(http, page, context, index + 1, [...completeContent, ...data.content]);
+};
+
+const fetchRemainingContent = async (
+  http: AxiosInstance,
+  response: AxiosResponse<PagedTestCaseList>,
+  context: FilterRequestContext,
+): Promise<TestCase[]> => {
+  const { page, content } = response.data;
+  validatePage(response.data);
+  throwIfAborted(context.signal);
+  if (page.totalPages <= 1) return content;
+  return fetchPageContent(http, page, context, 1, content);
+};
+
+const filteredPageData = (
+  content: TestCase[],
+  page: Page,
+  context: FilterRequestContext,
+): PagedTestCaseList => {
+  const filtered = content.filter((testCase) =>
+    matchesLibraryFilters(testCase, context.filters),
+  );
+  const limit = context.limit ?? page.size;
+  const pagedContent = filtered.slice(context.offset, context.offset + limit);
+  return {
+    content: pagedContent,
+    page: {
+      number: Math.floor(context.offset / limit) + 1,
+      size: limit,
+      totalElements: filtered.length,
+      totalPages: limit > 0 ? Math.ceil(filtered.length / limit) : 0,
+    },
+  };
+};
+
+const filterOwnedDataset = async (
+  http: AxiosInstance,
+  response: AxiosResponse<PagedTestCaseList>,
+  context: FilterRequestContext,
+): Promise<AxiosResponse<PagedTestCaseList>> => {
+  const content = await fetchRemainingContent(http, response, context);
+  if (content.length !== response.data.page.totalElements) {
+    throw new C3OverlayError('AI Factory mock could not load the complete Test Case dataset');
+  }
+  return { ...response, data: filteredPageData(content, response.data.page, context) };
+};
+
 /** Enriches `GET tms/test-case` (list) and `GET tms/test-case/{id}` (details) responses in place. */
 export const installOverlayInterceptor = (http: AxiosInstance): number => {
   const scenarios = new Map<string, ScenarioFields>();
 
-  return http.interceptors.response.use((response: AxiosResponse) => {
+  http.interceptors.request.use((config) => prepareFilterRequest(config));
+
+  return http.interceptors.response.use(async (response: AxiosResponse) => {
     if (!/\/tms\/test-case(\/|\?|$)/.test(response.config.url || '')) {
       return response;
     }
     if (isTestCaseList(response.data)) {
       response.data.content.forEach((testCase) => rememberScenario(scenarios, testCase));
-      return { ...response, data: { ...response.data, content: response.data.content.map(mergeAiFields) } };
+      const filters = parseLibraryFilters(response.config);
+      const context = (response.config as FilterRequestConfig).aiFactoryFilterContext;
+      if (context) {
+        if (context.isCountProbe) {
+          const countedData = applyReviewQueueCount(
+            response.data,
+            countReviewQueueCases(getDb().cases),
+          );
+          return {
+            ...response,
+            data: { ...countedData, content: countedData.content.map(mergeAiFields) },
+          };
+        }
+        if (!isPagedTestCaseList(response.data)) {
+          throw new C3OverlayError(
+            'AI Factory mock requires pagination metadata to filter Test Cases',
+          );
+        }
+        const filteredResponse = await filterOwnedDataset(
+          http,
+          response as AxiosResponse<PagedTestCaseList>,
+          context,
+        );
+        return {
+          ...filteredResponse,
+          data: {
+            ...filteredResponse.data,
+            content: filteredResponse.data.content.map(mergeAiFields),
+          },
+        };
+      }
+      const filteredData = isReviewQueueCountRequest(response.config, filters)
+        ? applyReviewQueueCount(response.data, countReviewQueueCases(getDb().cases))
+        : filterCompleteTestCaseList(response.data, filters);
+      return {
+        ...response,
+        data: { ...filteredData, content: filteredData.content.map(mergeAiFields) },
+      };
     }
     if (isTestCase(response.data)) {
       return mergeUpdatedTestCase(response, response.data, scenarios);
