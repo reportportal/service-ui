@@ -15,7 +15,7 @@
  */
 
 import { useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch, useSelector, useStore } from 'react-redux';
 import { useIntl } from 'react-intl';
 import { FieldText, Modal, SystemMessage, Toggle } from '@reportportal/ui-kit';
 
@@ -27,11 +27,15 @@ import { createClassnames, fetch } from 'common/utils';
 import { getPipelinesAction } from 'controllers/aiFactory/pipelines';
 import { hideModalAction, withModal } from 'controllers/modal';
 import { showErrorNotification, showSuccessNotification } from 'controllers/notification';
-import { projectKeySelector } from 'controllers/project';
 import { useUserPermissions } from 'hooks/useUserPermissions';
 import { PipelineRS, PipelineType } from 'types/aiFactory';
 
 import { messages } from './messages';
+import {
+  matchesPipelineSettingsProvenance,
+  type PipelineSettingsCatalogProvenance,
+  type PipelineSettingsState,
+} from './pipelineSettingsProvenance';
 import { parseThreshold, toPipelineSettingsPatch } from './pipelineSettingsUtils';
 import styles from './pipelineSettings.scss';
 
@@ -41,14 +45,18 @@ export const PIPELINE_SETTINGS_MODAL_KEY = 'pipelineSettingsModal';
 
 export interface PipelineSettingsModalData {
   pipeline: PipelineRS;
+  provenance?: PipelineSettingsCatalogProvenance;
 }
 
 export const PipelineSettingsModalContent = ({
-  data: { pipeline },
+  data: { pipeline, provenance },
 }: UseModalData<PipelineSettingsModalData>) => {
   const { formatMessage } = useIntl();
   const dispatch = useDispatch();
-  const projectKey = useSelector(projectKeySelector);
+  const store = useStore<PipelineSettingsState>();
+  const hasMatchingProvenance = useSelector((state: PipelineSettingsState) =>
+    matchesPipelineSettingsProvenance(state, pipeline, provenance),
+  );
   const { canManagePipelineSettings } = useUserPermissions();
   const [isSaving, setIsSaving] = useState(false);
   const [autoReadyEnabled, setAutoReadyEnabled] = useState(
@@ -59,10 +67,12 @@ export const PipelineSettingsModalContent = ({
   );
 
   const isGeneration = pipeline.type === PipelineType.GENERATION;
+  const sourceProjectKey = provenance?.projectKey;
   const canEdit = Boolean(
     isGeneration &&
       pipeline.settings &&
       pipeline.settings.editable !== false &&
+      hasMatchingProvenance &&
       canManagePipelineSettings,
   );
   const threshold = parseThreshold(thresholdValue);
@@ -78,13 +88,18 @@ export const PipelineSettingsModalContent = ({
   };
 
   const save = async () => {
-    if (!canEdit || threshold === null) {
+    if (
+      !matchesPipelineSettingsProvenance(store.getState(), pipeline, provenance) ||
+      !canEdit ||
+      !sourceProjectKey ||
+      threshold === null
+    ) {
       return;
     }
 
     setIsSaving(true);
     try {
-      await fetch(URLS.pipelineById(projectKey, pipeline.id), {
+      await fetch(URLS.pipelineById(sourceProjectKey, pipeline.id), {
         method: 'PATCH',
         data: toPipelineSettingsPatch(autoReadyEnabled, threshold),
       });

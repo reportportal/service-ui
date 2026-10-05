@@ -26,6 +26,9 @@ import {
   clearPipelineComparisonAction,
   getPipelineComparisonAction,
   getPipelineIterationsAction,
+  isRichPipeline,
+  isRichPipelineIteration,
+  pipelineCatalogTransportSelector,
   pipelineComparisonErrorSelector,
   pipelineComparisonLoadingSelector,
   pipelineComparisonSelector,
@@ -62,6 +65,7 @@ export const CompareIterationsPageContent = () => {
   ) as ProjectDetails;
   const query = useSelector(querySelector);
   const pipelines = useSelector(pipelinesSelector);
+  const pipelineCatalogTransport = useSelector(pipelineCatalogTransportSelector) ?? 'mock';
   const isPipelinesLoading = useSelector(pipelinesLoadingSelector);
   const iterationsByPipeline = useSelector(pipelineIterationsByPipelineSelector);
   const isIterationsLoading = useSelector(pipelineIterationsLoadingSelector);
@@ -71,27 +75,38 @@ export const CompareIterationsPageContent = () => {
   const pipelineId = parseQueryId(query.pipeline);
   const baselineId = parseQueryId(query.baseline);
   const candidateId = parseQueryId(query.candidate);
-  const pipeline = pipelines?.find((item) => item.id === pipelineId);
-  const iterations = pipelineId ? iterationsByPipeline?.[pipelineId] : undefined;
+  const isComparisonAvailable = pipelineCatalogTransport === 'mock';
+  const pipeline = isComparisonAvailable
+    ? pipelines?.filter(isRichPipeline).find((item) => item.id === pipelineId)
+    : undefined;
+  const pipelineIterations = pipelineId ? iterationsByPipeline?.[pipelineId] : undefined;
+  const iterations = pipelineIterations?.filter(isRichPipelineIteration);
 
   useEffect(() => {
-    if (!pipelines || query.pipeline !== undefined) {
+    if (!isComparisonAvailable || !pipelines || query.pipeline !== undefined) {
       return;
     }
-    const defaultPipeline = pipelines.find((item) => item.iterationsCount >= 2) ?? pipelines[0];
+    const richPipelines = pipelines.filter(isRichPipeline);
+    const defaultPipeline =
+      richPipelines.find((item) => item.iterationsCount >= 2) ?? richPipelines[0];
     if (defaultPipeline) {
       dispatch(updatePagePropertiesAction({ pipeline: defaultPipeline.id }));
     }
-  }, [dispatch, pipelines, query.pipeline]);
+  }, [dispatch, isComparisonAvailable, pipelines, query.pipeline]);
 
   useEffect(() => {
-    if (pipelineId && pipeline && !iterations) {
+    if (isComparisonAvailable && pipelineId && pipeline && !iterations) {
       dispatch(getPipelineIterationsAction([pipelineId]));
     }
-  }, [dispatch, iterations, pipeline, pipelineId]);
+  }, [dispatch, isComparisonAvailable, iterations, pipeline, pipelineId]);
 
   useEffect(() => {
-    if (!iterations || query.baseline !== undefined || query.candidate !== undefined) {
+    if (
+      !isComparisonAvailable ||
+      !iterations ||
+      query.baseline !== undefined ||
+      query.candidate !== undefined
+    ) {
       return;
     }
     const pair = getLatestPair(iterations);
@@ -103,7 +118,7 @@ export const CompareIterationsPageContent = () => {
         }),
       );
     }
-  }, [dispatch, iterations, query.baseline, query.candidate]);
+  }, [dispatch, isComparisonAvailable, iterations, query.baseline, query.candidate]);
 
   const hasValidPair = Boolean(
     pipeline &&
@@ -116,12 +131,12 @@ export const CompareIterationsPageContent = () => {
   );
 
   useEffect(() => {
-    if (pipelineId && baselineId && candidateId && hasValidPair) {
+    if (isComparisonAvailable && pipelineId && baselineId && candidateId && hasValidPair) {
       dispatch(getPipelineComparisonAction(pipelineId, candidateId, baselineId));
       return;
     }
     dispatch(clearPipelineComparisonAction());
-  }, [baselineId, candidateId, dispatch, hasValidPair, pipelineId]);
+  }, [baselineId, candidateId, dispatch, hasValidPair, isComparisonAvailable, pipelineId]);
 
   useEffect(
     () => () => {
@@ -150,8 +165,8 @@ export const CompareIterationsPageContent = () => {
     })) ?? [];
   const comparisonMatchesSelection = Boolean(
     comparison?.pipelineId === pipelineId &&
-      comparison?.baseline.id === baselineId &&
-      comparison?.candidate.id === candidateId,
+    comparison?.baseline.id === baselineId &&
+    comparison?.candidate.id === candidateId,
   );
 
   const breadcrumbDescriptors = [
@@ -184,33 +199,22 @@ export const CompareIterationsPageContent = () => {
         </output>
       );
     }
-    if (!pipelines?.length) {
+    if (!isComparisonAvailable) {
       return (
-        <output className={cx('state')}>
-          {formatMessage(messages.noPipelines)}
-        </output>
+        <output className={cx('state')}>{formatMessage(messages.comparisonUnavailable)}</output>
       );
+    }
+    if (!pipelines?.length) {
+      return <output className={cx('state')}>{formatMessage(messages.noPipelines)}</output>;
     }
     if (!pipelineId || !pipeline) {
-      return (
-        <output className={cx('state')}>
-          {formatMessage(messages.invalidSelection)}
-        </output>
-      );
+      return <output className={cx('state')}>{formatMessage(messages.invalidSelection)}</output>;
     }
     if (!iterations || iterations.length < 2) {
-      return (
-        <output className={cx('state')}>
-          {formatMessage(messages.notEnoughIterations)}
-        </output>
-      );
+      return <output className={cx('state')}>{formatMessage(messages.notEnoughIterations)}</output>;
     }
     if (!hasValidPair) {
-      return (
-        <output className={cx('state')}>
-          {formatMessage(messages.invalidSelection)}
-        </output>
-      );
+      return <output className={cx('state')}>{formatMessage(messages.invalidSelection)}</output>;
     }
     if (hasComparisonError) {
       return (

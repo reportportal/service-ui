@@ -39,8 +39,17 @@ export {
   pipelinesLoadingSelector,
   pipelineIterationsByPipelineSelector,
   pipelineIterationsLoadingSelector,
+  pipelineIterationsLoadingByPipelineSelector,
+  pipelineIterationsErrorByPipelineSelector,
+  pipelineCatalogTransportSelector,
+  pipelineCatalogTransportFallbackSelector,
+  pipelineCatalogVersionSelector,
+  pipelineCatalogRequestIdSelector,
+  pipelineCatalogProjectKeySelector,
   pipelineIterationDetailsSelector,
   pipelineIterationDetailsLoadingSelector,
+  pipelineIterationDetailsErrorSelector,
+  pipelineIterationDetailsUnavailableSelector,
   pipelineComparisonSelector,
   pipelineComparisonLoadingSelector,
   pipelineComparisonErrorSelector,
@@ -52,6 +61,25 @@ export type {
   GetPipelineIterationsAction,
   GetPipelineIterationDetailsAction,
   IterationsByPipelineId,
+  IterationsLoadingByPipelineId,
+  IterationsErrorByPipelineId,
+  PipelineCatalogItem,
+  PipelineIterationItem,
   GetPipelineComparisonAction,
   ClearPipelineComparisonAction,
 } from './types';
+export type { PipelineCatalogTransport, PipelineDetailTransport } from './transport';
+export type {
+  ReducedPipeline,
+  ReducedPipelineIteration,
+  ReducedPipelineIterationDetail,
+  ReducedPipelineDetailStage,
+  ReducedPipelineStage,
+  ReducedPipelineStatus,
+} from './liveAdapters';
+export {
+  isReducedPipeline,
+  isReducedPipelineIteration,
+  isRichPipeline,
+  isRichPipelineIteration,
+} from './liveAdapters';

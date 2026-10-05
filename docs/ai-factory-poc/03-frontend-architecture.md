@@ -132,7 +132,7 @@ fallback if the overlay spike fails.
 
 | Mode | What is real | What is mocked | Use for |
 |------|--------------|----------------|---------|
-| **A · Overlay (chosen)** | Existing TMS endpoints (folders, test cases, plans, launches). Published Pipeline and Quality Standard operations become eligible one group at a time only after adapters and group switching exist | Unconfirmed Test Case lifecycle/AI, comments, fix rounds and automation resources + **AI/lifecycle fields merged into real test-case DTOs** by `overlay.ts` (response interceptor keyed by test-case `id`); Pipelines remain mocked today | Realistic demo on real TMS data; exercises real Library code paths without pretending raw live DTOs equal PoC view models |
+| **A · Overlay (chosen)** | Existing TMS endpoints (folders, test cases, plans, launches). Published Pipeline and Quality Standard operations become eligible one group at a time only after adapters and group switching exist | Unconfirmed Test Case lifecycle/AI, comments, fix rounds and automation resources + **AI/lifecycle fields merged into real test-case DTOs** by `overlay.ts` (response interceptor keyed by test-case `id`); Pipelines remain mock-default, with hard-closed LP1/LP2 and LP3 live gates | Realistic demo on real TMS data; exercises real Library code paths without pretending raw live DTOs equal PoC view models |
 | **B · Full mock** | nothing TMS | also mocks `tms/folder`, `tms/test-case` list/details | Working without any TMS backend |
 
 In overlay mode:
@@ -245,7 +245,7 @@ Published operation → FE ownership mapping (paths shown for routing clarity; s
 
 | Data | Where | Why |
 |------|-------|-----|
-| Pipelines list and iteration details | `controllers/aiFactory/pipelines` (saga, reducer) — loaded by route thunks; published list/detail DTOs pass through adapters first | route data, like Milestones or Test Plan; T1.1–T1.3 are live-integration candidates, not integrated today |
+| Pipelines list and iteration details | `controllers/aiFactory/pipelines` (saga, reducer) — loaded by route thunks; published list/detail DTOs pass through separate strict reduced adapters. Catalog and detail transports carry independent provenance while detail requests additionally bind project, pipeline, iteration, catalog version/request and request identity; mismatched/stale completions are ignored | route data, like Milestones or Test Plan; G1/G2 foundations are mock-default and hard closed for live mode. Rich mock P3 and reduced LP3 never share presentation data |
 | Compare pair/result | `controllers/aiFactory/pipelines` or a dedicated compare slice; call the published server compare GET and normalize its result | compare is a route-level server-owned calculation; components render normalized deltas |
 | Pipeline settings | hook `usePipelineSettings` (fetch + mutate); Auto-Ready writes use the published Pipeline PATCH through an adapter | modal-scoped read/write; keep permissions and feature flag at the action boundary |
 | Create iteration / retry stage | task-scoped mutation hooks or controller actions; published create-iteration POST and stage-retry POST | T4.4 actions; invalidate/refetch the affected pipeline/iteration after success |
@@ -255,6 +255,11 @@ Published operation → FE ownership mapping (paths shown for routing clarity; s
 | Comments, push, discard | hook `useReviewComments(testCaseId)` | local |
 | Automate | hook `useAutomate()` + `automateModal` | local |
 | Library quick filters | **URL query** (`lifecycle`, `ai`, `iteration`) via `updatePagePropertiesAction`, like `filterPriorities` | shareable queue link (US-008) |
+
+The Library iteration chip is not a detail owner. It resolves the display number only from cached catalog metadata
+whose project and catalog version still match the current page; it does not issue LP3 directly. A reduced iteration
+card owns navigation to the reduced-detail route, while the existing rich mock card continues to own the rich P3
+screen. This prevents a lightweight label lookup from bypassing the LP3 transport/provenance boundary.
 
 ## 6. Routing
 

@@ -101,4 +101,36 @@ export const messages = defineMessages({
     id: 'PipelinesPage.metaSuiteScore',
     defaultMessage: 'Suite score {score}',
   },
+  repositoryNotProvided: {
+    id: 'PipelinesPage.repositoryNotProvided',
+    defaultMessage: 'Repository not provided',
+  },
+  iterationsUnavailable: {
+    id: 'PipelinesPage.iterationsUnavailable',
+    defaultMessage: 'Iterations are temporarily unavailable',
+  },
+  retry: {
+    id: 'PipelinesPage.retry',
+    defaultMessage: 'Retry',
+  },
+  liveStatusPending: {
+    id: 'PipelinesPage.liveStatusPending',
+    defaultMessage: 'Pending',
+  },
+  liveStatusPassed: {
+    id: 'PipelinesPage.liveStatusPassed',
+    defaultMessage: 'Passed',
+  },
+  liveStatusFailed: {
+    id: 'PipelinesPage.liveStatusFailed',
+    defaultMessage: 'Failed',
+  },
+  liveStatusNeedsHuman: {
+    id: 'PipelinesPage.liveStatusNeedsHuman',
+    defaultMessage: 'Needs human review',
+  },
+  liveStatusUnknown: {
+    id: 'PipelinesPage.liveStatusUnknown',
+    defaultMessage: 'Unknown',
+  },
 });
