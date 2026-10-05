@@ -16,7 +16,7 @@
 
 import { shallow } from 'enzyme';
 
-import { AiChip } from 'pages/inside/aiFactory/common';
+import { AiChip } from 'pages/inside/aiFactory/common/aiChip';
 import { ReviewFlags } from 'pages/inside/aiFactory/library';
 
 import { TestCaseNameCell } from './testCaseNameCell';
@@ -29,13 +29,21 @@ jest.mock('react-intl', () => ({
   }),
 }));
 jest.mock('common/utils', () => ({
-  createClassnames: () => (...classNames: string[]) => classNames.filter(Boolean).join(' '),
+  createClassnames:
+    () =>
+    (...classNames: string[]) =>
+      classNames.filter(Boolean).join(' '),
   highlightText: (text: string) => text,
 }));
 jest.mock('pages/inside/productVersionPage/linkedTestCasesTab/tagList', () => ({
   AdaptiveTagList: 'AdaptiveTagList',
 }));
 jest.mock('pages/inside/common/priorityIcon', () => ({ PriorityIcon: 'PriorityIcon' }));
+jest.mock('pages/inside/aiFactory/common', () => ({
+  AiChip: jest.requireActual<typeof import('pages/inside/aiFactory/common/aiChip')>(
+    'pages/inside/aiFactory/common/aiChip',
+  ).AiChip,
+}));
 jest.mock('pages/inside/aiFactory/library', () => ({ ReviewFlags: 'ReviewFlags' }));
 jest.mock('components/main/conditionalTooltip', () => ({
   ConditionalTooltip: 'ConditionalTooltip',

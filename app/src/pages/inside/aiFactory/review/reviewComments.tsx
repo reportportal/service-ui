@@ -340,7 +340,7 @@ export const ReviewStrip = ({
             adjustWidthOn="content"
             disabled={reviewState.isMutating}
             data-automation-id="discard-review-comments"
-            onClick={() => void discard()}
+            onClick={discard}
           >
             {formatMessage(messages.discard)}
           </Button>
@@ -388,7 +388,7 @@ export const ReviewStrip = ({
                 variant="text-danger"
                 adjustWidthOn="content"
                 disabled={reviewState.isMutating}
-                onClick={() => void discard()}
+                onClick={discard}
               >
                 {formatMessage(messages.discard)}
               </Button>
