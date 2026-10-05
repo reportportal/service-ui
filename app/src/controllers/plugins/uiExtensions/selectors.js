@@ -45,6 +45,7 @@ import {
   PLUGIN_TYPE_REMOTE,
   PLUGIN_TYPE_EXTENSION,
   REMOTE_EXTENSION_POINT_PROJECT_PAGE,
+  REMOTE_EXTENSION_POINT_ADMIN_PAGE,
   MANIFEST_OVERRIDES_KEY,
   MANIFEST_OVERRIDE_DISABLE_POPUP_CONTENT_KEY,
 } from './constants';
@@ -116,6 +117,7 @@ export const uiExtensionOrganizationSettingsTabsSelector = createExtensionSelect
 );
 export const uiExtensionAdminPagesSelector = createExtensionSelectorByExtensionPoints([
   EXTENSION_TYPE_ADMIN_PAGE,
+  REMOTE_EXTENSION_POINT_ADMIN_PAGE,
 ]);
 export const uiExtensionSidebarComponentsSelector = createExtensionSelectorByExtensionPoints([
   EXTENSION_TYPE_SIDEBAR_COMPONENT,

@@ -22,7 +22,7 @@ import { FieldFilterEntity } from 'components/fields/fieldFilterEntity';
 import { InputTimeDateRange } from 'components/inputs/inputTimeDateRange';
 import { CONDITION_BETWEEN } from 'components/filterEntities/constants';
 
-const endOfToday = moment().add(1, 'days').startOf('day').valueOf();
+const getEndOfToday = () => moment().add(1, 'days').startOf('day').valueOf();
 
 export const getTimeDateRangePresets = () => [
   {
@@ -33,7 +33,7 @@ export const getTimeDateRangePresets = () => [
     ),
     getValue: () => ({
       start: moment().startOf('day').valueOf(),
-      end: endOfToday,
+      end: getEndOfToday(),
       dynamic: true,
     }),
   },
@@ -45,7 +45,7 @@ export const getTimeDateRangePresets = () => [
     ),
     getValue: () => ({
       start: moment().startOf('day').subtract(1, 'days').valueOf(),
-      end: endOfToday,
+      end: getEndOfToday(),
       dynamic: true,
     }),
   },
@@ -57,7 +57,7 @@ export const getTimeDateRangePresets = () => [
     ),
     getValue: () => ({
       start: moment().startOf('day').subtract(7, 'days').valueOf(),
-      end: endOfToday,
+      end: getEndOfToday(),
       dynamic: true,
     }),
   },
@@ -69,19 +69,17 @@ export const getTimeDateRangePresets = () => [
     ),
     getValue: () => ({
       start: moment().startOf('day').subtract(30, 'days').valueOf(),
-      end: endOfToday,
+      end: getEndOfToday(),
       dynamic: true,
     }),
   },
 ];
 
-const utcString = moment().format('ZZ');
-
 const formatValue = ({ start, end, dynamic }) => {
   if (!dynamic) {
     return `${start},${end}`;
   }
-  return `${getMinutesFromTimestamp(start)};${getMinutesFromTimestamp(end)};${utcString}`;
+  return `${getMinutesFromTimestamp(start)};${getMinutesFromTimestamp(end)};${moment().format('ZZ')}`;
 };
 
 export const EntityItemStartTime = ({

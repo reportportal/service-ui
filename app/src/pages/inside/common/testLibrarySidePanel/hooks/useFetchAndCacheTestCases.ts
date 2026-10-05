@@ -23,7 +23,7 @@ import { projectKeySelector } from 'controllers/project';
 import { TestCase } from 'types/testCase';
 
 import { FolderTestCases, SetState } from '../testLibraryPanelContext';
-import { fetchAllTestCases, getFolderCacheEntry, getSelectableIdsForFolders } from '../utils';
+import { fetchAllTestCasesByFolderIds, getFolderCacheEntry, getSelectableIdsForFolders } from '../utils';
 
 export interface FetchAndCacheResult {
   selectableIds: number[];
@@ -47,19 +47,16 @@ export const useFetchAndCacheTestCases = ({
         return { selectableIds: [], newCacheEntries: new Map() };
       }
 
-      const folderIdsString = uncachedFolderIds.join(',');
       const shouldFetchTestPlanTestCases = testPlanId != null && !isEmpty(uncachedFolderIds);
 
       const [allTestCases, testPlanTestCases] = await Promise.all([
-        fetchAllTestCases(projectKey, {
-          'filter.in.testFolderId': folderIdsString,
+        fetchAllTestCasesByFolderIds(projectKey, uncachedFolderIds, {
           offset: 0,
           limit: 50,
         }),
         shouldFetchTestPlanTestCases
-          ? fetchAllTestCases(projectKey, {
+          ? fetchAllTestCasesByFolderIds(projectKey, uncachedFolderIds, {
               'filter.eq.testPlanId': testPlanId,
-              'filter.in.testFolderId': folderIdsString,
               offset: 0,
               limit: 200,
             })

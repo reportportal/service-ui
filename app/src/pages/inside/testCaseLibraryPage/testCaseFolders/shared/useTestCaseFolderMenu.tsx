@@ -35,7 +35,7 @@ import { useHasTestPlans } from 'hooks/useHasTestPlans';
 import { PopoverItem } from 'pages/common/popoverControl';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { getAllSubfolderIds } from 'common/utils/folderUtils';
-import { fetchAllTestCases } from 'pages/inside/common/testLibrarySidePanel/utils';
+import { fetchAllTestCasesByFolderIds } from 'pages/inside/common/testLibrarySidePanel/utils';
 
 import { useAddToLaunchModal } from '../../addToLaunchModal';
 import { useAddTestCasesToTestPlanModal } from '../../addTestCasesToTestPlanModal/useAddTestCasesToTestPlanModal';
@@ -102,8 +102,7 @@ export const useTestCaseFolderMenu = ({
     let isCancelled = false;
     const folderIds = getAllSubfolderIds(folder.id, allFolders);
 
-    fetchAllTestCases(projectKey, {
-      'filter.in.testFolderId': folderIds.join(','),
+    fetchAllTestCasesByFolderIds(projectKey, folderIds, {
       offset: 0,
       limit: 50,
     })
