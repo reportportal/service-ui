@@ -14,41 +14,7 @@
  * limitations under the License.
  */
 
-.drag-handle {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 32px;
-  height: 32px;
-  cursor: grab;
-  position: absolute;
-  left: 100%;
-  padding: 8px;
-  top: 50%;
-  transform: translateY(-50%);
-  z-index: 2;
-  opacity: 0;
-
-  :global(.test-case-table-row-global):hover &,
-  &:hover {
-    opacity: 1;
-  }
-
-  svg {
-    width: 16px;
-    height: 16px;
-    pointer-events: none;
-  }
-
-  svg path {
-    fill: var(--rp-ui-base-e-300);
-  }
-
-  &:hover svg path {
-    fill: var(--rp-ui-base-topaz-hover);
-  }
-
-  &:active {
-    cursor: grabbing;
-  }
-}
+export { AiQualityCell } from './aiQualityCell';
+export type { AiQualityCellProps } from './aiQualityCell';
+export { ReviewFlags } from './reviewFlags';
+export type { ReviewFlagsProps } from './reviewFlags';

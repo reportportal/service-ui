@@ -1,8 +1,8 @@
 # AI Factory · DF Bootcamp 2026 PoC — frontend workspace
 
 This folder is the working memory of the frontend part of the PoC: it records what we build, why, in which
-order, how far we are and what we still need from the backend. **No backend exists yet**, so the UI is
-built on mocks that follow a proposed API contract. That contract is handed to BE for integration.
+order, how far we are and what we still need from the backend. The UI is built on mocks that follow a proposed
+API contract; a live Pipeline and Quality Standard API subset is documented but not yet integrated.
 
 - Jira epic: [EPMRPP-118192](https://jiraeu.epam.com/browse/EPMRPP-118192)
 - Requirements (source of truth): [`reportportal-requirements/domains/projects/df_bootcamp_2026`](https://git.epam.com/EPM-RPP/reportportal-requirements/-/tree/main/domains/projects/df_bootcamp_2026)
@@ -21,6 +21,8 @@ built on mocks that follow a proposed API contract. That contract is handed to B
 | [06-open-questions.md](06-open-questions.md) | Questions (ORG / BA / BE / FE / DES) with defaults + decisions log | question raised or answered |
 | [07-jira-workflow.md](07-jira-workflow.md) | Sub-task conventions, story → sub-task registry, helper script | sub-task created |
 | [08-estimations.md](08-estimations.md) | **All estimations**: method, per-task senior-developer hours, phase roll-up, deviation notes, log | after every finished task |
+| [10-backend-integration-contract.md](10-backend-integration-contract.md) | Actionable FE/BE integration gaps, decisions, security/readiness gates and acceptance criteria | API contract or integration decision changes |
+| [11-backend-integration-contract-test-cases.md](11-backend-integration-contract-test-cases.md) | Risk-based QA cases and traceability for the backend integration contract and rollout groups G1–G9 | contract acceptance criteria, rollout decisions or coverage change |
 | [tools/jira_fe_subtask.py](tools/jira_fe_subtask.py) | Creates the `[FE]` sub-task of a story (dry run by default) | — |
 
 ## How to resume work (humans and AI agents)

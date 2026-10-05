@@ -41,6 +41,14 @@ export const messages = defineMessages({
     id: 'TestCaseList.statusHeader',
     defaultMessage: 'Status',
   },
+  aiQualityHeader: {
+    id: 'TestCaseList.aiQualityHeader',
+    defaultMessage: 'AI quality',
+  },
+  openTestCase: {
+    id: 'TestCaseList.openTestCase',
+    defaultMessage: 'Open test case {displayId}: {name}',
+  },
   duplicate: {
     id: 'TestCaseList.duplicate',
     defaultMessage: 'Duplicate',

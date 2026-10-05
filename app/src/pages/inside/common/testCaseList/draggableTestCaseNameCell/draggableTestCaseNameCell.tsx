@@ -18,6 +18,7 @@ import { useMemo } from 'react';
 import { DragNDropIcon } from '@reportportal/ui-kit';
 
 import { createClassnames } from 'common/utils';
+import type { TestCaseAiExtension } from 'types/aiFactory';
 import type { ExtendedTestCase, TestCasePriority } from 'types/testCase';
 import { EXTERNAL_TREE_DROP_TYPE } from 'pages/inside/common/expandedOptions/constants';
 import { useUserPermissions } from 'hooks/useUserPermissions';
@@ -43,6 +44,8 @@ interface DraggableTestCaseNameCellProps {
   name: string;
   tags: string[];
   searchQuery?: string;
+  ai?: TestCaseAiExtension['ai'];
+  review?: TestCaseAiExtension['review'];
 }
 
 export const DraggableTestCaseNameCell = ({
@@ -51,6 +54,8 @@ export const DraggableTestCaseNameCell = ({
   name,
   tags,
   searchQuery,
+  ai,
+  review,
 }: DraggableTestCaseNameCellProps) => {
   const { canManageTestCases } = useUserPermissions();
 
@@ -80,6 +85,8 @@ export const DraggableTestCaseNameCell = ({
         name={name}
         tags={tags}
         searchQuery={searchQuery}
+        ai={ai}
+        review={review}
       />
       {canManageTestCases && (
         <div className={cx('drag-handle')} onMouseDown={handleDragHandleMouseDown}>

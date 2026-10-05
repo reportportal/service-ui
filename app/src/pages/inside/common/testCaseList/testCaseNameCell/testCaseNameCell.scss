@@ -49,6 +49,12 @@
   color: var(--Text-Secondary, var(--rp-ui-base-e-400));
 }
 
+.ai-chip {
+  position: relative;
+  z-index: 2;
+  display: inline-flex;
+}
+
 .test-name {
   flex: 1;
   min-width: 0;
