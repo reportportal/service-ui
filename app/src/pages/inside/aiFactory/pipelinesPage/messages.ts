@@ -122,6 +122,10 @@ export const messages = defineMessages({
     id: 'PipelinesPage.metaSuiteScore',
     defaultMessage: 'Suite score {score}',
   },
+  metaPipelineEstimate: {
+    id: 'PipelinesPage.metaPipelineEstimate',
+    defaultMessage: 'Pipeline estimate {cost}',
+  },
   repositoryNotProvided: {
     id: 'PipelinesPage.repositoryNotProvided',
     defaultMessage: 'Repository not provided',

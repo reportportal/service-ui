@@ -17,7 +17,10 @@
 import { defineMessages } from 'react-intl';
 
 export const messages = defineMessages({
-  title: { id: 'GenerationCost.title', defaultMessage: 'Generation cost' },
+  title: {
+    id: 'GenerationCost.title',
+    defaultMessage: 'Generation cost · Pipeline estimate',
+  },
   empty: { id: 'GenerationCost.empty', defaultMessage: 'No generation cost available' },
   loading: { id: 'GenerationCost.loading', defaultMessage: 'Loading generation cost' },
   loadError: {
@@ -32,7 +35,7 @@ export const messages = defineMessages({
   },
   shareFormula: {
     id: 'GenerationCost.shareFormula',
-    defaultMessage: '{baseCost} ÷ {casesCount} cases = {amount}',
+    defaultMessage: 'Pipeline estimate: {baseCost} ÷ {casesCount} cases = {amount}',
   },
   fixRound: { id: 'GenerationCost.fixRound', defaultMessage: 'Fix round {number}' },
   tokenUsage: { id: 'GenerationCost.tokenUsage', defaultMessage: 'Token usage' },

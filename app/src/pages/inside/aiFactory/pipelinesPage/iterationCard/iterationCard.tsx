@@ -90,7 +90,7 @@ export const IterationCard = ({ pipelineType, iteration }: IterationCardProps) =
     pipelineType === PipelineType.GENERATION && iteration.suiteScore !== undefined
       ? formatMessage(messages.metaSuiteScore, { score: iteration.suiteScore })
       : undefined,
-    formatCost(iteration.costTotal),
+    formatMessage(messages.metaPipelineEstimate, { cost: formatCost(iteration.costTotal) }),
     startedAndDuration(iteration),
   ].filter(Boolean);
 

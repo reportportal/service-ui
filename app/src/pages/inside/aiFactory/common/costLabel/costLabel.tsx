@@ -14,7 +14,11 @@
  * limitations under the License.
  */
 
+import { useIntl } from 'react-intl';
+
 import { formatCost } from 'common/utils';
+
+import { messages } from './messages';
 
 export interface CostLabelProps {
   /** Cost in USD, as supplied by the pipeline (docs/ai-factory-poc/01-knowledge-base.md §4.6). */
@@ -26,8 +30,13 @@ export interface CostLabelProps {
   approx?: boolean;
 }
 
-export const CostLabel = ({ amount, approx = true }: CostLabelProps) => (
-  <span data-automation-id="costLabel">
-    {approx ? `≈ ${formatCost(amount)}` : formatCost(amount)}
-  </span>
-);
+export const CostLabel = ({ amount, approx = true }: CostLabelProps) => {
+  const { formatMessage } = useIntl();
+  const formattedAmount = approx ? `≈ ${formatCost(amount)}` : formatCost(amount);
+
+  return (
+    <span data-automation-id="costLabel">
+      {formatMessage(messages.pipelineEstimate, { amount: formattedAmount })}
+    </span>
+  );
+};

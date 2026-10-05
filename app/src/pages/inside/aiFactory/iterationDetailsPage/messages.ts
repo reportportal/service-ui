@@ -95,7 +95,7 @@ export const messages = defineMessages({
   },
   kpiCost: {
     id: 'IterationDetailsPage.kpiCost',
-    defaultMessage: 'Cost',
+    defaultMessage: 'Pipeline estimate',
   },
   bannerRunning: {
     id: 'IterationDetailsPage.bannerRunning',
@@ -276,7 +276,7 @@ export const messages = defineMessages({
   },
   fixRoundsColumnCost: {
     id: 'IterationDetailsPage.fixRoundsColumnCost',
-    defaultMessage: 'Cost',
+    defaultMessage: 'Pipeline estimate',
   },
   fixRoundScoreChange: {
     id: 'IterationDetailsPage.fixRoundScoreChange',
@@ -321,6 +321,6 @@ export const messages = defineMessages({
   tokenUsageLine: {
     id: 'IterationDetailsPage.tokenUsageLine',
     defaultMessage:
-      '{model}: {input} in · {cacheRead} cache read · {cacheWrite} cache write · {output} out · {cost}',
+      '{model}: {input} in · {cacheRead} cache read · {cacheWrite} cache write · {output} out · Pipeline estimate {cost}',
   },
 });

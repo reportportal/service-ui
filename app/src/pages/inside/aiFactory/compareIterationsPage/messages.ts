@@ -124,7 +124,7 @@ export const messages = defineMessages({
   },
   metricCost: {
     id: 'CompareIterationsPage.metricCost',
-    defaultMessage: 'Cost',
+    defaultMessage: 'Pipeline estimate',
   },
   metricDuration: {
     id: 'CompareIterationsPage.metricDuration',
@@ -132,7 +132,7 @@ export const messages = defineMessages({
   },
   stageCost: {
     id: 'CompareIterationsPage.stageCost',
-    defaultMessage: 'Cost {cost}',
+    defaultMessage: 'Pipeline estimate {cost}',
   },
   stageDuration: {
     id: 'CompareIterationsPage.stageDuration',
