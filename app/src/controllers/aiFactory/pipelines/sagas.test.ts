@@ -21,16 +21,10 @@ import { fetch } from 'common/utils';
 import { FETCH_ERROR, FETCH_START, FETCH_SUCCESS } from 'controllers/fetch/constants';
 import { CriterionKey, PipelineCompareRS, StageKey, StageStatus } from 'types/aiFactory';
 
-import {
-  getPipelineIterationDetailsAction,
-  getPipelineIterationsAction,
-} from './actionCreators';
-import {
-  PIPELINE_ITERATION_DETAILS_NAMESPACE,
-  PIPELINE_ITERATIONS_NAMESPACE,
-} from './constants';
+import { getPipelineIterationDetailsAction, getPipelineIterationsAction } from './actionCreators';
+import { PIPELINE_ITERATION_DETAILS_NAMESPACE, PIPELINE_ITERATIONS_NAMESPACE } from './constants';
 import { aiFactoryPipelinesSagas, normalizePipelineComparison } from './sagas';
-import { getPipelineCatalogTransport } from './transport';
+import { getPipelineCatalogTransport, getPipelineDetailTransport } from './transport';
 
 jest.mock('common/utils', () => {
   const actual = jest.requireActual<typeof import('common/utils')>('common/utils');
@@ -40,7 +34,11 @@ jest.mock('common/utils', () => {
 jest.mock('./transport', () => {
   const actual = jest.requireActual<typeof import('./transport')>('./transport');
 
-  return { ...actual, getPipelineCatalogTransport: jest.fn(actual.getPipelineCatalogTransport) };
+  return {
+    ...actual,
+    getPipelineCatalogTransport: jest.fn(actual.getPipelineCatalogTransport),
+    getPipelineDetailTransport: jest.fn(actual.getPipelineDetailTransport),
+  };
 });
 
 const fetchMock = fetch as jest.MockedFunction<
@@ -234,188 +232,390 @@ describe('normalizePipelineComparison', () => {
     expect(result.stages.map(({ key }) => key)).toEqual([StageKey.GRADE, StageKey.CREATE]);
     expect(result.stages.find(({ key }) => key === String(StageKey.GRADE))?.candidate).toEqual({
       status: StageStatus.PASSED,
-  });
-});
-
-describe('pipeline transport saga boundaries', () => {
-  beforeEach(() => {
-    jest.clearAllMocks();
-    localStorage.clear();
-  });
-
-  test('uses Redux catalog provenance for detail requests instead of mutable storage', async () => {
-    localStorage.setItem('ai_factory_transport', JSON.stringify({ pipelineCatalog: 'live' }));
-    fetchMock.mockResolvedValue({ id: 103, pipelineId: 7, number: 3 });
-    let notifyComplete: () => void = () => undefined;
-    const complete = new Promise<void>((resolve) => {
-      notifyComplete = resolve;
     });
-    const harness = startPipelineSagas(
-      createSagaState({ transport: 'mock', catalogVersion: 1, catalogProjectKey: 'demo' }),
-      (action) => {
-      const candidate = action as { type?: string; meta?: { namespace?: string } };
-      if (
-        candidate.type === FETCH_SUCCESS &&
-        candidate.meta?.namespace === PIPELINE_ITERATION_DETAILS_NAMESPACE
-      ) {
-        notifyComplete();
-      }
+  });
+
+  describe('pipeline transport saga boundaries', () => {
+    beforeEach(() => {
+      jest.clearAllMocks();
+      localStorage.clear();
+      jest
+        .mocked(getPipelineDetailTransport)
+        .mockImplementation(
+          jest.requireActual<typeof import('./transport')>('./transport')
+            .getPipelineDetailTransport,
+        );
+    });
+
+    test('uses Redux catalog provenance for detail requests instead of mutable storage', async () => {
+      localStorage.setItem('ai_factory_transport', JSON.stringify({ pipelineCatalog: 'live' }));
+      fetchMock.mockResolvedValue({ id: 103, pipelineId: 7, number: 3 });
+      let notifyComplete: () => void = () => undefined;
+      const complete = new Promise<void>((resolve) => {
+        notifyComplete = resolve;
+      });
+      const harness = startPipelineSagas(
+        createSagaState({ transport: 'mock', catalogVersion: 1, catalogProjectKey: 'demo' }),
+        (action) => {
+          const candidate = action as { type?: string; meta?: { namespace?: string } };
+          if (
+            candidate.type === FETCH_SUCCESS &&
+            candidate.meta?.namespace === PIPELINE_ITERATION_DETAILS_NAMESPACE
+          ) {
+            notifyComplete();
+          }
+        },
+      );
+
+      await Promise.resolve();
+      harness.dispatch(getPipelineIterationDetailsAction(7, 103));
+      await complete;
+
+      expect(fetchMock).toHaveBeenCalledWith(URLS.tmsPipelineIterationById('demo', 7, 103), {
+        signal: expect.any(AbortSignal),
+      });
+      expect(getPipelineCatalogTransport).not.toHaveBeenCalled();
+      expect(fetchMock).toHaveBeenCalledTimes(1);
+      await harness.stop();
+    });
+
+    test.each([
+      ['unresolved catalog', createSagaState()],
+      [
+        'catalog from another project',
+        createSagaState({ transport: 'mock', catalogVersion: 1, catalogProjectKey: 'other' }),
+      ],
+    ])('blocks direct P3 for %s', async (_description, state) => {
+      const harness = startPipelineSagas(state);
+
+      await Promise.resolve();
+      harness.dispatch(getPipelineIterationDetailsAction(7, 103));
+      await Promise.resolve();
+      await Promise.resolve();
+
+      expect(fetchMock).not.toHaveBeenCalled();
+      expect(harness.dispatched).not.toContainEqual(
+        expect.objectContaining({
+          meta: expect.objectContaining({ namespace: PIPELINE_ITERATION_DETAILS_NAMESPACE }),
+        }),
+      );
+      await harness.stop();
+    });
+
+    test('fails a live-catalog detail request closed without network traffic or a global error', async () => {
+      const harness = startPipelineSagas(
+        createSagaState({ transport: 'live', catalogVersion: 1, catalogProjectKey: 'demo' }),
+      );
+
+      await Promise.resolve();
+      harness.dispatch(getPipelineIterationDetailsAction(7, 103));
+      await Promise.resolve();
+      await Promise.resolve();
+
+      expect(fetchMock).not.toHaveBeenCalled();
+      const detailActions = harness.dispatched.filter((action) => {
+        const candidate = action as { meta?: { namespace?: string } };
+        return candidate.meta?.namespace === PIPELINE_ITERATION_DETAILS_NAMESPACE;
+      }) as Array<{ type: string; meta: Record<string, unknown> }>;
+      expect(detailActions).toHaveLength(2);
+      expect(detailActions[0]).toMatchObject({
+        type: FETCH_START,
+        meta: {
+          projectKey: 'demo',
+          pipelineId: 7,
+          iterationId: 103,
+          catalogTransport: 'live',
+          catalogVersion: 1,
+          catalogRequestId: 1,
+          detailTransport: 'unavailable',
+        },
+      });
+      expect(detailActions[1]).toMatchObject({
+        type: FETCH_ERROR,
+        error: true,
+        meta: { isUnavailable: true, detailTransport: 'unavailable' },
+      });
+      expect(harness.dispatched).not.toContainEqual(
+        expect.objectContaining({
+          payload: expect.objectContaining({ messageId: 'aiFactoryPipelinesLoadingFailed' }),
+        }),
+      );
+      await harness.stop();
+    });
+
+    test('uses the canonical project-scoped LP3 URL only when live detail rollout is approved', async () => {
+      jest.mocked(getPipelineDetailTransport).mockReturnValue('live');
+      fetchMock.mockResolvedValue({
+        id: 103,
+        pipelineId: 7,
+        iterationNumber: 3,
+        stages: [],
+      });
+      let notifyComplete: () => void = () => undefined;
+      const complete = new Promise<void>((resolve) => {
+        notifyComplete = resolve;
+      });
+      const harness = startPipelineSagas(
+        createSagaState({ transport: 'live', catalogVersion: 1, catalogProjectKey: 'demo' }),
+        (action) => {
+          const candidate = action as { type?: string; meta?: { namespace?: string } };
+          if (
+            candidate.type === FETCH_SUCCESS &&
+            candidate.meta?.namespace === PIPELINE_ITERATION_DETAILS_NAMESPACE
+          ) {
+            notifyComplete();
+          }
+        },
+      );
+
+      await Promise.resolve();
+      harness.dispatch(getPipelineIterationDetailsAction(7, 103));
+      await complete;
+
+      expect(fetchMock).toHaveBeenCalledTimes(1);
+      expect(fetchMock).toHaveBeenCalledWith(URLS.pipelineIterationById('demo', 103), {
+        signal: expect.any(AbortSignal),
+      });
+      expect(fetchMock).not.toHaveBeenCalledWith(
+        URLS.tmsPipelineIterationById('demo', 7, 103),
+        expect.anything(),
+      );
+      expect(harness.dispatched).toContainEqual(
+        expect.objectContaining({
+          type: FETCH_SUCCESS,
+          payload: {
+            data: expect.objectContaining({
+              kind: 'reduced',
+              id: 103,
+              pipelineId: 7,
+              number: 3,
+            }),
+          },
+          meta: expect.objectContaining({ detailTransport: 'live' }),
+        }),
+      );
+      await harness.stop();
+    });
+
+    test.each([
+      ['invalid pipeline identity', 0, 103],
+      ['invalid iteration identity', 7, Number.NaN],
+    ])(
+      'rejects %s before creating detail state or traffic',
+      async (_description, pipelineId, iterationId) => {
+        const harness = startPipelineSagas(
+          createSagaState({ transport: 'mock', catalogVersion: 1, catalogProjectKey: 'demo' }),
+        );
+
+        await Promise.resolve();
+        harness.dispatch(getPipelineIterationDetailsAction(pipelineId, iterationId));
+        await Promise.resolve();
+
+        expect(fetchMock).not.toHaveBeenCalled();
+        expect(harness.dispatched).toEqual([]);
+        await harness.stop();
       },
     );
 
-    await Promise.resolve();
-    harness.dispatch(getPipelineIterationDetailsAction(7, 103));
-    await complete;
-
-    expect(fetchMock).toHaveBeenCalledWith(URLS.tmsPipelineIterationById('demo', 7, 103), {
-      signal: expect.any(AbortSignal),
-    });
-    expect(getPipelineCatalogTransport).not.toHaveBeenCalled();
-    expect(fetchMock).toHaveBeenCalledTimes(1);
-    await harness.stop();
-  });
-
-  test.each([
-    ['unresolved catalog', createSagaState()],
-    [
-      'catalog from another project',
-      createSagaState({ transport: 'mock', catalogVersion: 1, catalogProjectKey: 'other' }),
-    ],
-    [
-      'non-mock catalog',
-      createSagaState({ transport: 'live', catalogVersion: 1, catalogProjectKey: 'demo' }),
-    ],
-  ])('blocks direct P3 for %s', async (_description, state) => {
-    const harness = startPipelineSagas(state);
-
-    await Promise.resolve();
-    harness.dispatch(getPipelineIterationDetailsAction(7, 103));
-    await Promise.resolve();
-    await Promise.resolve();
-
-    expect(fetchMock).not.toHaveBeenCalled();
-    expect(harness.dispatched).not.toContainEqual(
-      expect.objectContaining({
-        meta: expect.objectContaining({ namespace: PIPELINE_ITERATION_DETAILS_NAMESPACE }),
-      }),
-    );
-    await harness.stop();
-  });
-
-  test('runs sibling LP2 requests independently without aborting the first request', async () => {
-    const resolvers: Array<(value: { content: unknown[] }) => void> = [];
-    let notifyStarted: () => void = () => undefined;
-    const bothStarted = new Promise<void>((resolve) => {
-      notifyStarted = resolve;
-    });
-    let successfulRequests = 0;
-    let notifyComplete: () => void = () => undefined;
-    const bothComplete = new Promise<void>((resolve) => {
-      notifyComplete = resolve;
-    });
-    fetchMock.mockImplementation(
-      () =>
-        new Promise((resolve) => {
-          resolvers.push(resolve as (value: { content: unknown[] }) => void);
-          if (resolvers.length === 2) notifyStarted();
-        }),
-    );
-    const harness = startPipelineSagas(
-      createSagaState({ transport: 'mock', catalogVersion: 7, catalogProjectKey: 'demo' }),
-      (action) => {
+    test('keeps a pending valid detail request alive across invalid and unresolved actions and accepts the next valid request', async () => {
+      const state = createSagaState({
+        transport: 'mock',
+        catalogVersion: 1,
+        catalogProjectKey: 'demo',
+      });
+      const resolvers: Array<(value: { id: number; pipelineId: number; number: number }) => void> =
+        [];
+      const startedResolvers: Array<() => void> = [];
+      const startedPromises = [0, 1].map(
+        (index) =>
+          new Promise<void>((resolve) => {
+            startedResolvers[index] = resolve;
+          }),
+      );
+      const successfulRequestResolvers: Array<() => void> = [];
+      const successfulRequestPromises = [0, 1].map(
+        (index) =>
+          new Promise<void>((resolve) => {
+            successfulRequestResolvers[index] = resolve;
+          }),
+      );
+      fetchMock.mockImplementation(
+        () =>
+          new Promise((resolve) => {
+            const requestIndex = resolvers.length;
+            resolvers.push(
+              resolve as (value: { id: number; pipelineId: number; number: number }) => void,
+            );
+            startedResolvers[requestIndex]();
+          }),
+      );
+      let successfulRequests = 0;
+      const harness = startPipelineSagas(state, (action) => {
         const candidate = action as { type?: string; meta?: { namespace?: string } };
         if (
           candidate.type === FETCH_SUCCESS &&
-          candidate.meta?.namespace === PIPELINE_ITERATIONS_NAMESPACE
+          candidate.meta?.namespace === PIPELINE_ITERATION_DETAILS_NAMESPACE
         ) {
+          successfulRequestResolvers[successfulRequests]();
           successfulRequests += 1;
-          if (successfulRequests === 2) notifyComplete();
         }
-      },
-    );
+      });
 
-    await Promise.resolve();
-    harness.dispatch(getPipelineIterationsAction([1]));
-    harness.dispatch(getPipelineIterationsAction([2]));
-    await bothStarted;
+      await Promise.resolve();
+      harness.dispatch(getPipelineIterationDetailsAction(7, 103));
+      await startedPromises[0];
+      const firstSignal = fetchMock.mock.calls[0][1]?.signal as AbortSignal;
 
-    const firstSignal = fetchMock.mock.calls[0][1]?.signal as AbortSignal;
-    const secondSignal = fetchMock.mock.calls[1][1]?.signal as AbortSignal;
-    expect(firstSignal.aborted).toBe(false);
-    expect(secondSignal.aborted).toBe(false);
-    expect(fetchMock.mock.calls.map(([url]) => url)).toEqual([
-      URLS.tmsPipelineIterations('demo', 1),
-      URLS.tmsPipelineIterations('demo', 2),
-    ]);
+      harness.dispatch(getPipelineIterationDetailsAction(0, 103));
+      state.aiFactoryPipelines.catalogVersion = 0;
+      harness.dispatch(getPipelineIterationDetailsAction(7, 104));
+      await Promise.resolve();
+      await Promise.resolve();
 
-    resolvers.forEach((resolve) => resolve({ content: [] }));
-    await bothComplete;
-    const iterationActions = harness.dispatched.filter((action) => {
-      const candidate = action as { meta?: { namespace?: string } };
-      return candidate.meta?.namespace === PIPELINE_ITERATIONS_NAMESPACE;
-    }) as Array<{
-      type: string;
-      meta: { pipelineId: number; requestId: number; catalogVersion: number; transport: string };
-    }>;
-    const starts = iterationActions.filter(({ type }) => type !== FETCH_SUCCESS);
-    const successes = iterationActions.filter(({ type }) => type === FETCH_SUCCESS);
+      expect(fetchMock).toHaveBeenCalledTimes(1);
+      expect(firstSignal.aborted).toBe(false);
 
-    expect(starts).toHaveLength(2);
-    expect(successes).toHaveLength(2);
-    expect(starts.map(({ meta }) => meta.pipelineId)).toEqual([1, 2]);
-    expect(new Set(starts.map(({ meta }) => meta.requestId))).toHaveProperty('size', 2);
-    expect(starts.every(({ meta }) => meta.catalogVersion === 7)).toBe(true);
-    expect(starts.every(({ meta }) => meta.transport === 'mock')).toBe(true);
-    await harness.stop();
-  });
+      state.aiFactoryPipelines.catalogVersion = 1;
+      resolvers[0]({ id: 103, pipelineId: 7, number: 3 });
+      await successfulRequestPromises[0];
+      expect(firstSignal.aborted).toBe(false);
 
-  test.each([
-    ['stale', false],
-    ['current', true],
-  ])('%s LP2 failure emits the expected global notification', async (_description, isCurrent) => {
-    fetchMock.mockRejectedValue(new Error('request failed'));
-    const state = createSagaState({
-      transport: 'mock',
-      catalogVersion: 7,
-      catalogProjectKey: 'demo',
+      harness.dispatch(getPipelineIterationDetailsAction(7, 104));
+      await startedPromises[1];
+      const secondSignal = fetchMock.mock.calls[1][1]?.signal as AbortSignal;
+      expect(secondSignal.aborted).toBe(false);
+
+      resolvers[1]({ id: 104, pipelineId: 7, number: 4 });
+      await successfulRequestPromises[1];
+
+      const detailActions = harness.dispatched.filter((action) => {
+        const candidate = action as { meta?: { namespace?: string } };
+        return candidate.meta?.namespace === PIPELINE_ITERATION_DETAILS_NAMESPACE;
+      }) as Array<{ type: string; meta: { iterationId: number } }>;
+      expect(detailActions.map(({ type, meta }) => [type, meta.iterationId])).toEqual([
+        [FETCH_START, 103],
+        [FETCH_SUCCESS, 103],
+        [FETCH_START, 104],
+        [FETCH_SUCCESS, 104],
+      ]);
+      expect(detailActions).not.toContainEqual(expect.objectContaining({ type: FETCH_ERROR }));
+      await harness.stop();
     });
-    let notifyFailureHandled: () => void = () => undefined;
-    const failureHandled = new Promise<void>((resolve) => {
-      notifyFailureHandled = resolve;
+
+    test('runs sibling LP2 requests independently without aborting the first request', async () => {
+      const resolvers: Array<(value: { content: unknown[] }) => void> = [];
+      let notifyStarted: () => void = () => undefined;
+      const bothStarted = new Promise<void>((resolve) => {
+        notifyStarted = resolve;
+      });
+      let successfulRequests = 0;
+      let notifyComplete: () => void = () => undefined;
+      const bothComplete = new Promise<void>((resolve) => {
+        notifyComplete = resolve;
+      });
+      fetchMock.mockImplementation(
+        () =>
+          new Promise((resolve) => {
+            resolvers.push(resolve as (value: { content: unknown[] }) => void);
+            if (resolvers.length === 2) notifyStarted();
+          }),
+      );
+      const harness = startPipelineSagas(
+        createSagaState({ transport: 'mock', catalogVersion: 7, catalogProjectKey: 'demo' }),
+        (action) => {
+          const candidate = action as { type?: string; meta?: { namespace?: string } };
+          if (
+            candidate.type === FETCH_SUCCESS &&
+            candidate.meta?.namespace === PIPELINE_ITERATIONS_NAMESPACE
+          ) {
+            successfulRequests += 1;
+            if (successfulRequests === 2) notifyComplete();
+          }
+        },
+      );
+
+      await Promise.resolve();
+      harness.dispatch(getPipelineIterationsAction([1]));
+      harness.dispatch(getPipelineIterationsAction([2]));
+      await bothStarted;
+
+      const firstSignal = fetchMock.mock.calls[0][1]?.signal as AbortSignal;
+      const secondSignal = fetchMock.mock.calls[1][1]?.signal as AbortSignal;
+      expect(firstSignal.aborted).toBe(false);
+      expect(secondSignal.aborted).toBe(false);
+      expect(fetchMock.mock.calls.map(([url]) => url)).toEqual([
+        URLS.tmsPipelineIterations('demo', 1),
+        URLS.tmsPipelineIterations('demo', 2),
+      ]);
+
+      resolvers.forEach((resolve) => resolve({ content: [] }));
+      await bothComplete;
+      const iterationActions = harness.dispatched.filter((action) => {
+        const candidate = action as { meta?: { namespace?: string } };
+        return candidate.meta?.namespace === PIPELINE_ITERATIONS_NAMESPACE;
+      }) as Array<{
+        type: string;
+        meta: { pipelineId: number; requestId: number; catalogVersion: number; transport: string };
+      }>;
+      const starts = iterationActions.filter(({ type }) => type !== FETCH_SUCCESS);
+      const successes = iterationActions.filter(({ type }) => type === FETCH_SUCCESS);
+
+      expect(starts).toHaveLength(2);
+      expect(successes).toHaveLength(2);
+      expect(starts.map(({ meta }) => meta.pipelineId)).toEqual([1, 2]);
+      expect(new Set(starts.map(({ meta }) => meta.requestId))).toHaveProperty('size', 2);
+      expect(starts.every(({ meta }) => meta.catalogVersion === 7)).toBe(true);
+      expect(starts.every(({ meta }) => meta.transport === 'mock')).toBe(true);
+      await harness.stop();
     });
-    const harness = startPipelineSagas(state, (action) => {
-      const candidate = action as {
-        type?: string;
-        meta?: { namespace?: string; pipelineId?: number; requestId?: number };
-      };
-      if (
-        candidate.meta?.namespace === PIPELINE_ITERATIONS_NAMESPACE &&
-        candidate.meta.pipelineId === 1 &&
-        candidate.meta.requestId !== undefined
-      ) {
-        if (candidate.type === FETCH_START) {
-          state.aiFactoryPipelines.iterationRequestIdByPipeline[1] = isCurrent
-            ? candidate.meta.requestId
-            : candidate.meta.requestId + 1;
+
+    test.each([
+      ['stale', false],
+      ['current', true],
+    ])('%s LP2 failure emits the expected global notification', async (_description, isCurrent) => {
+      fetchMock.mockRejectedValue(new Error('request failed'));
+      const state = createSagaState({
+        transport: 'mock',
+        catalogVersion: 7,
+        catalogProjectKey: 'demo',
+      });
+      let notifyFailureHandled: () => void = () => undefined;
+      const failureHandled = new Promise<void>((resolve) => {
+        notifyFailureHandled = resolve;
+      });
+      const harness = startPipelineSagas(state, (action) => {
+        const candidate = action as {
+          type?: string;
+          meta?: { namespace?: string; pipelineId?: number; requestId?: number };
+        };
+        if (
+          candidate.meta?.namespace === PIPELINE_ITERATIONS_NAMESPACE &&
+          candidate.meta.pipelineId === 1 &&
+          candidate.meta.requestId !== undefined
+        ) {
+          if (candidate.type === FETCH_START) {
+            state.aiFactoryPipelines.iterationRequestIdByPipeline[1] = isCurrent
+              ? candidate.meta.requestId
+              : candidate.meta.requestId + 1;
+          }
+          if (candidate.type === FETCH_ERROR) notifyFailureHandled();
         }
-        if (candidate.type === FETCH_ERROR) notifyFailureHandled();
-      }
-    });
+      });
 
-    await Promise.resolve();
-    harness.dispatch(getPipelineIterationsAction([1]));
-    await failureHandled;
-    await Promise.resolve();
-    await Promise.resolve();
+      await Promise.resolve();
+      harness.dispatch(getPipelineIterationsAction([1]));
+      await failureHandled;
+      await Promise.resolve();
+      await Promise.resolve();
 
-    const notifications = harness.dispatched.filter((action) => {
-      const candidate = action as { payload?: { messageId?: string } };
-      return candidate.payload?.messageId === 'aiFactoryPipelinesLoadingFailed';
+      const notifications = harness.dispatched.filter((action) => {
+        const candidate = action as { payload?: { messageId?: string } };
+        return candidate.payload?.messageId === 'aiFactoryPipelinesLoadingFailed';
+      });
+      expect(notifications).toHaveLength(isCurrent ? 1 : 0);
+      await harness.stop();
     });
-    expect(notifications).toHaveLength(isCurrent ? 1 : 0);
-    await harness.stop();
   });
-});
 
   test('enables mock-rich metrics, requirements, criterion averages, and Auto-Ready only with marker', () => {
     const result = normalizePipelineComparison(richResponse(), 1, 102, 101);

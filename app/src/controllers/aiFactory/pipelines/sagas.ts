@@ -48,7 +48,11 @@ import {
   StageStatus,
 } from 'types/aiFactory';
 
-import { adaptLivePipelineIterations, adaptLivePipelines } from './liveAdapters';
+import {
+  adaptLivePipelineIterationDetail,
+  adaptLivePipelineIterations,
+  adaptLivePipelines,
+} from './liveAdapters';
 
 import {
   CLEAR_PIPELINE_COMPARISON,
@@ -69,14 +73,17 @@ import {
 } from './types';
 import {
   pipelineCatalogProjectKeySelector,
+  pipelineCatalogRequestIdSelector,
   pipelineCatalogTransportSelector,
   pipelineCatalogVersionSelector,
   pipelinesStateSelector,
 } from './selectors';
 import {
   getPipelineCatalogTransport,
+  getPipelineDetailTransport,
   isMockDownstreamCompatible,
   PipelineCatalogTransport,
+  PipelineDetailTransport,
 } from './transport';
 
 let abortController: AbortController | undefined;
@@ -84,7 +91,20 @@ let pipelineCatalogRequestId = 0;
 const iterationsAbortControllers = new Set<AbortController>();
 let pipelineIterationsRequestId = 0;
 let iterationDetailsAbortController: AbortController | undefined;
+let iterationDetailsRequestId = 0;
 let comparisonAbortController: AbortController | undefined;
+
+interface PipelineDetailRequestMeta {
+  namespace: typeof PIPELINE_ITERATION_DETAILS_NAMESPACE;
+  requestId: number;
+  projectKey: string;
+  pipelineId: number;
+  iterationId: number;
+  catalogTransport: PipelineCatalogTransport;
+  catalogVersion: number;
+  catalogRequestId: number;
+  detailTransport: PipelineDetailTransport;
+}
 
 const LIVE_ITERATION_STATUS: Record<LivePipelineStatus, AiIterationStatus> = {
   PENDING: IterationStatus.RUNNING,
@@ -135,7 +155,10 @@ const CANONICAL_STAGE_ORDER = [
 const hasOwn = (value: object, key: PropertyKey): boolean =>
   Boolean(Object.prototype.hasOwnProperty.call(value, key));
 
-const normalizeStatus = <T>(statuses: Record<LivePipelineStatus, T>, value?: string): T | 'UNKNOWN' =>
+const normalizeStatus = <T>(
+  statuses: Record<LivePipelineStatus, T>,
+  value?: string,
+): T | 'UNKNOWN' =>
   typeof value === 'string' && hasOwn(statuses, value)
     ? statuses[value as LivePipelineStatus]
     : 'UNKNOWN';
@@ -169,10 +192,13 @@ const normalizeCriterionAverages = (
   values?: Record<CriterionKey, number>,
 ): Record<CriterionKey, number> | undefined => {
   if (!values) return undefined;
-  const entries = Object.values(CriterionKey).map((key) => [
-    key,
-    hasOwn(values, key) ? validNumber(values[key], 0, CRITERION_MAX[key]) : undefined,
-  ] as const);
+  const entries = Object.values(CriterionKey).map(
+    (key) =>
+      [
+        key,
+        hasOwn(values, key) ? validNumber(values[key], 0, CRITERION_MAX[key]) : undefined,
+      ] as const,
+  );
   return entries.some(([, value]) => value === undefined)
     ? undefined
     : (Object.fromEntries(entries) as Record<CriterionKey, number>);
@@ -189,8 +215,7 @@ const normalizeRichIteration = (
     testCasesCount,
     suiteScore: validNumber(metrics?.suiteScore, 0, 100),
     readyCount:
-      readyCount !== undefined &&
-      (testCasesCount === undefined || readyCount <= testCasesCount)
+      readyCount !== undefined && (testCasesCount === undefined || readyCount <= testCasesCount)
         ? readyCount
         : undefined,
     fixRoundsCount: validCount(metrics?.fixRoundsCount),
@@ -276,7 +301,10 @@ interface OrderedStageMap<T> {
   order: string[];
 }
 
-const addStageEntry = <T extends { stageKey?: string }>(result: OrderedStageMap<T>, entry: T): void => {
+const addStageEntry = <T extends { stageKey?: string }>(
+  result: OrderedStageMap<T>,
+  entry: T,
+): void => {
   const key = normalizeComparisonStageKey(entry.stageKey);
   if (!key) {
     return;
@@ -601,51 +629,115 @@ function* watchGetPipelineIterations() {
   yield takeEvery(LOGOUT, handleLogoutDuringIterationsFetch);
 }
 
+const isPositiveIdentity = (value: number): boolean => Number.isSafeInteger(value) && value > 0;
+
+function* createPipelineDetailMeta(
+  action: GetPipelineIterationDetailsAction,
+): Generator<unknown, PipelineDetailRequestMeta | undefined> {
+  const projectKey = (yield select(projectKeySelector)) as string;
+  const catalogTransport = (yield select(
+    pipelineCatalogTransportSelector,
+  )) as PipelineCatalogTransport;
+  const catalogVersion = (yield select(pipelineCatalogVersionSelector)) as number;
+  const catalogRequestId = (yield select(pipelineCatalogRequestIdSelector)) as number | null;
+  const catalogProjectKey = (yield select(pipelineCatalogProjectKeySelector)) as string | null;
+  const { pipelineId, iterationId } = action.payload;
+  if (
+    catalogVersion <= 0 ||
+    catalogRequestId === null ||
+    catalogProjectKey !== projectKey ||
+    !isPositiveIdentity(pipelineId) ||
+    !isPositiveIdentity(iterationId)
+  ) {
+    return undefined;
+  }
+  iterationDetailsRequestId += 1;
+  return {
+    namespace: PIPELINE_ITERATION_DETAILS_NAMESPACE,
+    requestId: iterationDetailsRequestId,
+    projectKey,
+    pipelineId,
+    iterationId,
+    catalogTransport,
+    catalogVersion,
+    catalogRequestId,
+    detailTransport: getPipelineDetailTransport(catalogTransport),
+  };
+}
+
+function* fetchPipelineIterationDetail(
+  meta: PipelineDetailRequestMeta,
+  signal: AbortSignal,
+): Generator<unknown, IterationRS | ReturnType<typeof adaptLivePipelineIterationDetail>> {
+  const rawData = (yield call(
+    fetch,
+    meta.detailTransport === 'live'
+      ? URLS.pipelineIterationById(meta.projectKey, meta.iterationId)
+      : URLS.tmsPipelineIterationById(meta.projectKey, meta.pipelineId, meta.iterationId),
+    { signal },
+  )) as unknown;
+  return meta.detailTransport === 'live'
+    ? adaptLivePipelineIterationDetail(rawData, meta.pipelineId, meta.iterationId)
+    : (rawData as IterationRS);
+}
+
+function* handlePipelineDetailFailure(
+  error: unknown,
+  requestMeta: PipelineDetailRequestMeta,
+): Generator {
+  const isCancellation = error instanceof Error && error.message === 'REQUEST_CANCELED';
+  yield put({
+    type: FETCH_ERROR,
+    payload: error,
+    error: true,
+    meta: { ...requestMeta, isCancellation },
+  });
+  const state = (yield select(pipelinesStateSelector)) as PipelinesState;
+  const isCurrentRequest =
+    state.detailRequestId === requestMeta.requestId &&
+    state.detailProjectKey === requestMeta.projectKey &&
+    state.detailCatalogVersion === requestMeta.catalogVersion &&
+    state.detailCatalogRequestId === requestMeta.catalogRequestId;
+  if (!isCancellation && isCurrentRequest) {
+    yield put(showErrorNotification({ messageId: 'aiFactoryPipelinesLoadingFailed' }));
+  }
+}
+
 function* getPipelineIterationDetails(action: GetPipelineIterationDetailsAction): Generator {
+  const requestMeta = (yield call(createPipelineDetailMeta, action)) as
+    | PipelineDetailRequestMeta
+    | undefined;
+  if (!requestMeta) return;
+
   const controller = new AbortController();
   iterationDetailsAbortController?.abort();
   iterationDetailsAbortController = controller;
 
   try {
-    const projectKey = (yield select(projectKeySelector)) as string;
-    const transport = (yield select(pipelineCatalogTransportSelector)) as PipelineCatalogTransport;
-    const catalogVersion = (yield select(pipelineCatalogVersionSelector)) as number;
-    const catalogProjectKey = (yield select(pipelineCatalogProjectKeySelector)) as string | null;
-    const { pipelineId, iterationId } = action.payload;
-
-    if (
-      catalogVersion <= 0 ||
-      catalogProjectKey !== projectKey ||
-      !isMockDownstreamCompatible(transport)
-    ) {
-      return;
-    }
-
     yield put({
       type: FETCH_START,
-      payload: { projectKey },
-      meta: { namespace: PIPELINE_ITERATION_DETAILS_NAMESPACE },
+      payload: { projectKey: requestMeta.projectKey },
+      meta: requestMeta,
     });
 
-    const data = (yield call(
-      fetch,
-      URLS.tmsPipelineIterationById(projectKey, pipelineId, iterationId),
-      {
-        signal: controller.signal,
-      },
-    )) as IterationRS;
-
-    yield put(fetchSuccessAction(PIPELINE_ITERATION_DETAILS_NAMESPACE, { data }));
+    if (requestMeta.detailTransport === 'unavailable') {
+      yield put({
+        type: FETCH_ERROR,
+        payload: new Error('Pipeline iteration detail transport is unavailable'),
+        error: true,
+        meta: { ...requestMeta, isUnavailable: true },
+      });
+      return;
+    }
+    const data = (yield call(fetchPipelineIterationDetail, requestMeta, controller.signal)) as
+      | IterationRS
+      | ReturnType<typeof adaptLivePipelineIterationDetail>;
+    yield put({ type: FETCH_SUCCESS, payload: { data }, meta: requestMeta });
   } catch (error) {
-    const isCancellation = error instanceof Error && error.message === 'REQUEST_CANCELED';
-
-    if (!isCancellation) {
-      yield put(fetchErrorAction(PIPELINE_ITERATION_DETAILS_NAMESPACE, error));
-      yield put(
-        showErrorNotification({
-          messageId: 'aiFactoryPipelinesLoadingFailed',
-        }),
-      );
+    yield call(handlePipelineDetailFailure, error, requestMeta);
+  } finally {
+    if (iterationDetailsAbortController === controller) {
+      iterationDetailsAbortController = undefined;
     }
   }
 }
@@ -657,7 +749,7 @@ function handleLogoutDuringIterationDetailsFetch(): void {
 }
 
 function* watchGetPipelineIterationDetails() {
-  yield takeLatest(GET_PIPELINE_ITERATION_DETAILS, getPipelineIterationDetails);
+  yield takeEvery(GET_PIPELINE_ITERATION_DETAILS, getPipelineIterationDetails);
   yield takeEvery(LOGOUT, handleLogoutDuringIterationDetailsFetch);
 }
 

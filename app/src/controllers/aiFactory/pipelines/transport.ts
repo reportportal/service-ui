@@ -19,6 +19,7 @@ import { getStorageItem } from 'common/utils/storageUtils';
 export const AI_FACTORY_TRANSPORT_STORAGE_KEY = 'ai_factory_transport';
 
 export type PipelineCatalogTransport = 'mock' | 'live';
+export type PipelineDetailTransport = PipelineCatalogTransport | 'unavailable';
 type RequestedPipelineCatalogTransport = PipelineCatalogTransport | 'invalid';
 
 interface AiFactoryTransportConfig {
@@ -32,6 +33,7 @@ export interface PipelineCatalogTransportConfig {
 }
 
 const LIVE_PIPELINE_CATALOG_ROLLOUT_APPROVED = false;
+const LIVE_PIPELINE_DETAIL_ROLLOUT_APPROVED = false;
 
 const readRequestedMode = (): RequestedPipelineCatalogTransport => {
   try {
@@ -66,3 +68,12 @@ export const getPipelineCatalogTransport = (): PipelineCatalogTransportConfig =>
 
 export const isMockDownstreamCompatible = (mode: PipelineCatalogTransport): boolean =>
   mode === 'mock';
+
+export const getPipelineDetailTransport = (
+  catalogTransport: PipelineCatalogTransport,
+): PipelineDetailTransport => {
+  if (catalogTransport === 'mock') {
+    return 'mock';
+  }
+  return LIVE_PIPELINE_DETAIL_ROLLOUT_APPROVED ? 'live' : 'unavailable';
+};

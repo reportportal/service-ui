@@ -28,6 +28,16 @@ export const pipelinesStateSelector = (state: PipelinesSelectorsRootState): Pipe
     iterationsErrorByPipeline: {},
     iterationRequestIdByPipeline: {},
     iterationDetails: null,
+    iterationDetailsError: false,
+    iterationDetailsUnavailable: false,
+    detailRequestId: null,
+    detailProjectKey: null,
+    detailPipelineId: null,
+    detailIterationId: null,
+    detailCatalogTransport: null,
+    detailCatalogVersion: 0,
+    detailCatalogRequestId: null,
+    detailTransport: null,
     comparison: null,
   };
 
@@ -73,6 +83,14 @@ export const pipelineIterationDetailsLoadingSelector = (
 
 export const pipelineIterationDetailsSelector = (state: PipelinesSelectorsRootState) =>
   pipelinesStateSelector(state).iterationDetails;
+
+export const pipelineIterationDetailsErrorSelector = (
+  state: PipelinesSelectorsRootState,
+): boolean => Boolean(pipelinesStateSelector(state).iterationDetailsError);
+
+export const pipelineIterationDetailsUnavailableSelector = (
+  state: PipelinesSelectorsRootState,
+): boolean => Boolean(pipelinesStateSelector(state).iterationDetailsUnavailable);
 
 export const pipelineComparisonSelector = (state: PipelinesSelectorsRootState) =>
   pipelinesStateSelector(state).comparison;
