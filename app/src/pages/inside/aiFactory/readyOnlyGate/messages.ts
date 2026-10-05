@@ -33,4 +33,8 @@ export const messages = defineMessages({
     id: 'ReadyOnlyGate.launchBlocked',
     defaultMessage: 'In plan · Launch blocked — {plans}',
   },
+  testPlanLaunchBlocked: {
+    id: 'ReadyOnlyGate.testPlanLaunchBlocked',
+    defaultMessage: 'Launch blocked: {count} Draft Test {count, plural, one {Case} other {Cases}}',
+  },
 });

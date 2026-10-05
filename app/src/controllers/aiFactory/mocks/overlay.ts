@@ -35,7 +35,7 @@ import {
   InternalAxiosRequestConfig,
 } from 'axios';
 import { Page } from 'types/common';
-import { ScenarioUpdateRS, TestCaseAiExtension } from 'types/aiFactory';
+import { Lifecycle, ScenarioUpdateRS, TestCaseAiExtension } from 'types/aiFactory';
 import { TestCase, TestCaseManualScenario } from 'types/testCase';
 import {
   findCase,
@@ -88,6 +88,14 @@ interface PagedTestCaseList {
   page: Page;
 }
 
+interface TestPlanDetails {
+  id: number;
+  name: string;
+  draftTestCasesCount?: number;
+  draftTestCases?: { id: number; displayId: string }[];
+  launchBlocked?: boolean;
+}
+
 const FETCH_PAGE_SIZE = 1000;
 const MAX_FILTER_PAGES = 10;
 const MAX_FILTER_RECORDS = 5000;
@@ -123,6 +131,24 @@ export const mergeAiFields = (testCase: TestCase): TestCase & Partial<TestCaseAi
   };
 };
 
+export const mergeTestPlanAiFields = (testPlan: TestPlanDetails): TestPlanDetails => {
+  const plan = getDb().plans.find(({ name }) => name === testPlan.name);
+  if (!plan) {
+    return testPlan;
+  }
+  const draftTestCases = plan.testCaseIds
+    .map((testCaseId) => findCase(testCaseId))
+    .filter((testCase) => testCase?.lifecycle === Lifecycle.DRAFT)
+    .map(({ id, displayId }) => ({ id, displayId }));
+
+  return {
+    ...testPlan,
+    draftTestCasesCount: draftTestCases.length,
+    draftTestCases,
+    launchBlocked: draftTestCases.length > 0,
+  };
+};
+
 const isTestCaseList = (data: unknown): data is { content: TestCase[] } =>
   Boolean(data) && Array.isArray((data as { content?: unknown }).content);
 
@@ -131,6 +157,17 @@ const isPagedTestCaseList = (data: unknown): data is PagedTestCaseList =>
 
 const isTestCase = (data: unknown): data is TestCase =>
   Boolean(data) && typeof (data as TestCase).displayId === 'string';
+
+const isTestPlanDetails = (data: unknown): data is TestPlanDetails =>
+  Boolean(data) &&
+  typeof (data as TestPlanDetails).id === 'number' &&
+  typeof (data as TestPlanDetails).name === 'string';
+
+const isTestPlanDetailsUrl = (url?: string): boolean =>
+  /\/tms\/test-plan\/[^/?]+(?:\?|$)/.test(url ?? '');
+
+const isTestCaseResponseUrl = (url?: string): boolean =>
+  /\/tms\/(?:test-case|test-plan\/[^/]+\/test-case)(?:\/|\?|$)/.test(url ?? '');
 
 const isRecord = (value: unknown): value is Record<string, unknown> =>
   typeof value === 'object' && value !== null && !Array.isArray(value);
@@ -402,14 +439,17 @@ const filterOwnedDataset = async (
   return { ...response, data: filteredPageData(content, response.data.page, context) };
 };
 
-/** Enriches `GET tms/test-case` (list) and `GET tms/test-case/{id}` (details) responses in place. */
+/** Enriches Test Case and Test Plan responses with the provisional C1/G2 contract fields. */
 export const installOverlayInterceptor = (http: AxiosInstance): number => {
   const scenarios = new Map<string, ScenarioFields>();
 
   http.interceptors.request.use((config) => prepareFilterRequest(config));
 
   return http.interceptors.response.use(async (response: AxiosResponse) => {
-    if (!/\/tms\/test-case(\/|\?|$)/.test(response.config.url || '')) {
+    if (isTestPlanDetailsUrl(response.config.url) && isTestPlanDetails(response.data)) {
+      return { ...response, data: mergeTestPlanAiFields(response.data) };
+    }
+    if (!isTestCaseResponseUrl(response.config.url)) {
       return response;
     }
     if (isTestCaseList(response.data)) {

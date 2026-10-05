@@ -17,19 +17,32 @@
 import { Lifecycle, type AiLifecycle } from 'types/aiFactory';
 import type { TestCase } from 'types/testCase';
 
+export type ReadyOnlyTestCase = Pick<TestCase, 'id'> &
+  Partial<Pick<TestCase, 'displayId' | 'lifecycle' | 'name'>>;
+
 export interface ReadyOnlySelection {
   eligibleIds: number[];
-  skippedDrafts: TestCase[];
+  skippedDrafts: ReadyOnlyTestCase[];
 }
 
-export const isDraftGateActive = (
-  isAiFactoryEnabled: boolean,
-  lifecycle?: AiLifecycle,
-): boolean => isAiFactoryEnabled && lifecycle === Lifecycle.DRAFT;
+interface TestPlanLaunchGateSource {
+  draftTestCasesCount?: number;
+  draftTestCases?: { id: number; displayId: string }[];
+  launchBlocked?: boolean;
+}
+
+export interface TestPlanLaunchGate {
+  draftCount: number;
+  draftTestCases: { id: number; displayId: string }[];
+  isBlocked: boolean;
+}
+
+export const isDraftGateActive = (isAiFactoryEnabled: boolean, lifecycle?: AiLifecycle): boolean =>
+  isAiFactoryEnabled && lifecycle === Lifecycle.DRAFT;
 
 export const partitionReadyOnlySelection = (
   selectedIds: number[],
-  testCases: TestCase[],
+  testCases: ReadyOnlyTestCase[],
   isAiFactoryEnabled: boolean,
 ): ReadyOnlySelection => {
   if (!isAiFactoryEnabled) {
@@ -37,7 +50,7 @@ export const partitionReadyOnlySelection = (
   }
 
   const testCasesById = new Map(testCases.map((testCase) => [testCase.id, testCase]));
-  const skippedDrafts: TestCase[] = [];
+  const skippedDrafts: ReadyOnlyTestCase[] = [];
   const eligibleIds = selectedIds.filter((id) => {
     const testCase = testCasesById.get(id);
     if (testCase?.lifecycle === Lifecycle.DRAFT) {
@@ -51,5 +64,35 @@ export const partitionReadyOnlySelection = (
   return { eligibleIds, skippedDrafts };
 };
 
-export const formatSkippedDrafts = (testCases: TestCase[]): string =>
-  testCases.map(({ displayId, name }) => `${displayId} — ${name}`).join(', ');
+export const formatSkippedDrafts = (testCases: ReadyOnlyTestCase[]): string =>
+  testCases
+    .map(({ displayId, id, name }) => [displayId ?? id, name].filter(Boolean).join(' — '))
+    .join(', ');
+
+export const getTestPlanLaunchGate = (
+  isAiFactoryEnabled: boolean,
+  testPlan: TestPlanLaunchGateSource | null | undefined,
+  loadedTestCases: TestCase[],
+): TestPlanLaunchGate => {
+  if (!isAiFactoryEnabled) {
+    return { draftCount: 0, draftTestCases: [], isBlocked: false };
+  }
+
+  const loadedDrafts = loadedTestCases.filter(({ lifecycle }) => lifecycle === Lifecycle.DRAFT);
+  const contractDrafts = testPlan?.draftTestCases ?? loadedDrafts;
+  const draftTestCases = contractDrafts.map((draftTestCase) => {
+    const loadedTestCase = loadedTestCases.find(
+      ({ displayId }) => displayId === draftTestCase.displayId,
+    );
+    return loadedTestCase
+      ? { id: loadedTestCase.id, displayId: loadedTestCase.displayId }
+      : { id: draftTestCase.id, displayId: draftTestCase.displayId };
+  });
+  const draftCount = testPlan?.draftTestCasesCount ?? loadedDrafts.length;
+
+  return {
+    draftCount,
+    draftTestCases,
+    isBlocked: testPlan?.launchBlocked ?? draftCount > 0,
+  };
+};
