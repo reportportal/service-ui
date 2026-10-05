@@ -46,6 +46,7 @@ import { ProjectDetails } from 'pages/organization/constants';
 import { AiStageKey, IterationStatus, StageKey } from 'types/aiFactory';
 
 import { PageHeaderWithBreadcrumbsAndActions } from '../../common/pageHeaderWithBreadcrumbsAndActions';
+import { PipelineSettingsButton } from '../pipelineSettings';
 import { KpiTile } from './kpiTile';
 import { StageCards } from './stageCards';
 import { StagePanels } from './stagePanels';
@@ -187,15 +188,18 @@ export const IterationDetailsPageContent = () => {
           title={formatMessage(messages.iterationTitle, { number: iteration.number })}
           breadcrumbDescriptors={breadcrumbDescriptors}
           actions={
-            <Button
-              variant="text"
-              data-automation-id="refreshIterationButton"
-              icon={<RefreshIcon />}
-              disabled={isLoading}
-              onClick={() => dispatch(getPipelineIterationDetailsAction(pipelineId, iterationId))}
-            >
-              {formatMessage(messages.refresh)}
-            </Button>
+            <div className={cx('header-actions')}>
+              <PipelineSettingsButton pipeline={pipeline} />
+              <Button
+                variant="text"
+                data-automation-id="refreshIterationButton"
+                icon={<RefreshIcon />}
+                disabled={isLoading}
+                onClick={() => dispatch(getPipelineIterationDetailsAction(pipelineId, iterationId))}
+              >
+                {formatMessage(messages.refresh)}
+              </Button>
+            </div>
           }
         />
         <div className={cx('content')}>

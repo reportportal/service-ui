@@ -22,6 +22,7 @@ import { createClassnames } from 'common/utils';
 import { SpinningPreloader } from 'components/preloaders/spinningPreloader';
 import { IterationSummaryRS, PipelineRS, PipelineType } from 'types/aiFactory';
 
+import { PipelineSettingsButton } from '../../pipelineSettings';
 import { IterationCard } from '../iterationCard';
 import { messages } from '../messages';
 import styles from './pipelineGroup.scss';
@@ -61,27 +62,31 @@ export const PipelineGroup = ({ pipeline, iterations, isLoading, isSearching }: 
 
   return (
     <section className={cx('group')} data-automation-id="pipelineGroup">
-      <button
-        type="button"
-        className={cx('group__header')}
-        onClick={() => setIsOpen(!isOpen)}
-        data-automation-id="pipelineGroupHeader"
-      >
-        <ArrowDownIcon className={cx('group__chevron', { 'group__chevron--open': isOpen })} />
-        <span className={cx('group__name')}>{pipeline.name}</span>
-        <span className={cx('group__meta')}>{pipeline.repository}</span>
-        <span className={cx('group__meta')}>
-          {formatMessage(messages.iterationsCount, { count: pipeline.iterationsCount })}
-        </span>
-        {pipeline.type === PipelineType.GENERATION && pipeline.settings && (
+      <div className={cx('group__header')}>
+        <button
+          type="button"
+          className={cx('group__toggle')}
+          onClick={() => setIsOpen(!isOpen)}
+          data-automation-id="pipelineGroupHeader"
+          aria-expanded={isOpen}
+        >
+          <ArrowDownIcon className={cx('group__chevron', { 'group__chevron--open': isOpen })} />
+          <span className={cx('group__name')}>{pipeline.name}</span>
+          <span className={cx('group__meta')}>{pipeline.repository}</span>
           <span className={cx('group__meta')}>
-            {formatMessage(
-              pipeline.settings.autoReady ? messages.autoReadyOn : messages.autoReadyOff,
-              { threshold: pipeline.settings.threshold },
-            )}
+            {formatMessage(messages.iterationsCount, { count: pipeline.iterationsCount })}
           </span>
-        )}
-      </button>
+          {pipeline.type === PipelineType.GENERATION && pipeline.settings && (
+            <span className={cx('group__meta')}>
+              {formatMessage(
+                pipeline.settings.autoReady ? messages.autoReadyOn : messages.autoReadyOff,
+                { threshold: pipeline.settings.threshold },
+              )}
+            </span>
+          )}
+        </button>
+        <PipelineSettingsButton pipeline={pipeline} />
+      </div>
       {isOpen && <div className={cx('group__body')}>{renderBody()}</div>}
     </section>
   );
