@@ -19,6 +19,9 @@
   height: 140px;
   margin-top: 25px;
   background-color: $COLOR--white-four;
+  // The preview is purely illustrative: no hover/click/cursor feedback on chart elements.
+  pointer-events: none;
+  cursor: default;
 
   svg {
     width: 100%;
