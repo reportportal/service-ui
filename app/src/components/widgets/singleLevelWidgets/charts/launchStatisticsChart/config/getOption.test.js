@@ -68,6 +68,7 @@ describe('launchStatisticsChart getOption', () => {
       areaStyle: { opacity: 0.75 },
       lineStyle: { width: 0 },
       symbol: 'none',
+      smooth: true,
       triggerLineEvent: true,
       cursor: 'pointer',
       emphasis: { disabled: true },
