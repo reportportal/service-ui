@@ -20,6 +20,7 @@
 | Mutable Quality Standard presented as historical evidence | Misleading audit and grading results | High; current-only label and G9 immutability tests |
 | Undocumented metrics interpreted as KPI/cost | Factually wrong comparison or cost | High; opaque-metric and neutral-comparison tests |
 | Untrusted API link rendered as navigation/HTML | XSS, phishing or credential leakage | High; URL-policy unit and component tests |
+| CI connection implemented from an invented API or secret-bearing read DTO | Credential disclosure, unauthorized CI changes or false downstream capability | Critical; requirements/OpenAPI readiness gate plus secret-redaction, role, isolation, concurrency and browser tests |
 
 ### Test levels
 
@@ -57,6 +58,12 @@
 | BackendIntegration_6 | AC1 | TC-BIC-020 |
 | BackendIntegration_6 | AC2–AC5 | TC-BIC-023 |
 | BackendIntegration_6 | AC6 | TC-BIC-008, 020, 035 |
+| T3.6 capability projection | Minimal broad-consumer status versus privileged full configuration; exact roles, org/project membership and cross-project denial | TC-CIC-032–033, 035 |
+| T3.6 freshness and revocation | Material save/rotation invalidates Connected; expiry/revocation/disconnect and immediate downstream rechecks | TC-CIC-034–035 |
+| T3.6 idempotency | Header key format/scope/fingerprint/retention, in-progress replay and same-key conflict/version interaction | TC-CIC-036–037 |
+| T3.6 secret boundary and input safety | Vault boundary, least privilege, pre-WAF/APM redaction, hostile text/control/Unicode/HTML handling and output encoding | TC-CIC-038–039 |
+| T3.6 lifecycle/validation decisions | Single state enum, 15-minute bounded freshness TTL, atomic rotation/disconnect and concrete UTF-8/ID/URL/label rules | TC-CIC-034–039 |
+| T3.6 concrete input/idempotency rules | Credential/project/provider grammar, collection limits, UUIDv4 requirements, one active probe and crash replay | TC-CIC-040–044 |
 
 ### 2.2 Rollout-group coverage
 
@@ -71,6 +78,7 @@
 | G7 Current Quality Standard read | TC-BIC-028, 029, 033 | Execute after QS1 DoR; current-only behavior |
 | G8 Quality Standard management | TC-BIC-030, 031, 033 | Future/blocked until a Product-approved management story |
 | G9 Historical grading association | TC-BIC-032, 033 | Future/blocked until immutable snapshot/version contract exists |
+| G10 Pipeline CI connection | TC-BIC-036 plus TC-CIC-001–044 in [19](19-ci-connection-api-contract-request.md#11-contract-validation-cases) | Future/blocked until the accepted requirements-repo contract, published API, sanitized payload pack and role/security evidence exist |
 
 ## 3. Contract and adapter cases
 
@@ -389,13 +397,13 @@
 
 - **Related AC:** BackendIntegration_4 AC1–AC3
 - **Traceability:** EP-09, D-07; G4, G5
-- **Pre-conditions:** D-07 is approved; accounts exist for Editor, Organization Manager, Administrator and a denied identity.
+- **Pre-conditions:** D-07 is approved; accounts exist for Editor, Organization Manager, Instance Administrator and a denied identity.
 - **Role:** Each listed role
 - **Steps:**
   1. Inspect Pipeline settings, Retry, Re-run and any approved controls for each role.
   2. Manipulate the client to reveal or invoke a forbidden control.
   3. Send the same request directly to the API.
-- **Expected Result:** Organization Manager/Administrator receive only accepted Pipeline capabilities; Editor lacks settings/Retry/Re-run; client manipulation cannot bypass server authorization; forbidden requests return the agreed `403`.
+- **Expected Result:** Organization Manager/Instance Administrator receive only accepted Pipeline capabilities; Editor lacks settings/Retry/Re-run; client manipulation cannot bypass server authorization; forbidden requests return the agreed `403`.
 - **Priority:** Critical
 - **Risk Level:** Unauthorized mutation
 - **Automation suitability:** High — role-based browser plus direct API suite
@@ -434,7 +442,7 @@
 - **Related AC:** BackendIntegration_4 AC4–AC5, AC9
 - **Traceability:** EP-05, EP-06, PL-04, PL-05, D-08; G4
 - **Pre-conditions:** G4 DoR complete; approved threshold, capability and version/ETag or conflict behavior.
-- **Role:** Organization Manager or Administrator
+- **Role:** Organization Manager or Instance Administrator
 - **Steps:**
   1. Submit a valid settings change and verify the control is disabled in flight.
   2. Modify the same Pipeline from a second client, then submit stale data from the first.
@@ -450,7 +458,7 @@
 - **Related AC:** BackendIntegration_4 AC4, AC6, AC9
 - **Traceability:** EP-06, EP-07, ST-06, ST-07, D-08; G5
 - **Pre-conditions:** Retryable-state, permission, attempt identity and idempotency/conflict rules are approved.
-- **Role:** Organization Manager or Administrator
+- **Role:** Organization Manager or Instance Administrator
 - **Steps:**
   1. Retry an eligible stage and double-submit while the first request is in flight.
   2. Retry an ineligible/terminal stage and a stage from another project.
@@ -466,7 +474,7 @@
 - **Related AC:** BackendIntegration_4 AC7–AC8
 - **Traceability:** LP6-01, LP6-02, D-13; G6
 - **Pre-conditions:** D-13 remains Open or defines LP6 as ingestion; network observer installed.
-- **Role:** Organization Manager or Administrator
+- **Role:** Organization Manager or Instance Administrator
 - **Steps:**
   1. Open a live iteration and inspect Re-run/CI controls.
   2. Attempt invocation through visible UI, deep link and client-state manipulation.
@@ -528,7 +536,7 @@
 - **Related AC:** BackendIntegration_2 AC2; BackendIntegration_4 AC10
 - **Traceability:** D-14; G8
 - **Pre-conditions:** Current T6.2 build with feature flag and any existing integration flags enabled.
-- **Role:** Editor, Organization Manager and Administrator
+- **Role:** Editor, Organization Manager and Instance Administrator
 - **Steps:**
   1. Search navigation, menus, dialogs and transport configuration for Quality Standard management.
   2. Manipulate client routes/state to attempt opening management controls.
@@ -615,6 +623,31 @@
 - **Risk Level:** Secret leakage or untriageable failures
 - **Automation suitability:** High — log/telemetry assertions plus manual observability smoke
 
+### TC-BIC-036: CI connection runtime implementation is blocked until its contract is authoritative
+
+- **Related AC:** BackendIntegration_4 AC1–AC4, AC8–AC9; BackendIntegration_6 AC1, AC6
+- **Traceability:** EP-11; G10; [CIConnection_1–6](19-ci-connection-api-contract-request.md#4-functional-requirements-table)
+- **Pre-conditions:** A candidate T3.6 implementation or rollout request exists.
+- **Role:** QA lead / requirements owner
+- **Steps:**
+  1. Locate the merged source-of-truth contract under
+     `reportportal-requirements/domains/projects/df_bootcamp_2026/contracts/` and its US-019 link.
+  2. Compare the deployed trusted-HTTPS OpenAPI endpoint methods, paths, required DTO fields, write-only credential
+     semantics, status/error/concurrency/idempotency rules and authorization matrix with that contract.
+  3. Confirm the sanitized success/error payload pack and allowed/denied role plus two-project isolation accounts
+     exist.
+  4. Map every applicable TC-CIC-001–044 case from [19](19-ci-connection-api-contract-request.md) to automated or
+     integration evidence.
+  5. If any prerequisite is absent or contradictory, inspect the UI/network to confirm no CI connection runtime or
+     dependent capability has been enabled from the proposal alone.
+- **Expected Result:** T3.6 stays blocked until the requirements contract, deployed API and evidence agree. A proposal
+  in `service-ui`, stage-level LP3/LP7 CI metadata, or LP6/LP7 availability cannot be used as proof of a CI connection
+  contract. No placeholder/real credential appears in read payloads, logs or evidence.
+- **Priority:** Critical
+- **Risk Level:** Invented integration, credential leakage or unauthorized CI execution
+- **Automation suitability:** Partial — schema/evidence comparison can be automated; requirements/security sign-off is
+  manual
+
 ## 7. Cross-feature and exploratory coverage
 
 ### Cross-feature matrix
@@ -647,6 +680,9 @@
 - G6 cannot be executed until D-13 resolves whether LP6 is ingestion or a command and D-08 defines idempotency.
 - G8 is deliberately out of current T6.2 scope; TC-BIC-031 is a future specification, not current coverage.
 - G9 cannot be executed until the grading-result snapshot/version contract exists.
+- G10 cannot be executed until the accepted requirements-repo CI connection contract, matching published API,
+  trusted HTTPS target, sanitized payload pack and role/security fixtures exist. The `service-ui` proposal in 19 is
+  not an implementation contract by itself.
 - Performance thresholds beyond D-02/D-06, accessibility and visual parity belong to their feature/NFR suites; this
   contract suite checks only integration-specific behavior.
 
@@ -655,3 +691,4 @@
 | Date | Change |
 |---|---|
 | 2026-10-02 | Initial risk-based suite for validated contract v1, covering BackendIntegration_1–6 and G1–G9. |
+| 2026-10-05 | Added the G10 CI connection readiness gate and linked the detailed proposed TC-CIC-001–044 validation matrix without claiming a published or agreed API. |

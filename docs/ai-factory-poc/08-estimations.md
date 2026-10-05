@@ -40,6 +40,7 @@ cross-cutting scope must be split into cohesive `[FE]` sub-tasks before work con
 | [EPMRPP-122029](https://jiraeu.epam.com/browse/EPMRPP-122029) | Approve and mark as ready | T3.2 | 20 h | ≤ 36 h |
 | [EPMRPP-122030](https://jiraeu.epam.com/browse/EPMRPP-122030) | Push review comments to agent | T3.3 | 30 h | ≤ 36 h |
 | [EPMRPP-122031](https://jiraeu.epam.com/browse/EPMRPP-122031) | Pipeline settings: Auto-Ready | T3.4 | 8 h | ≤ 36 h |
+| [EPMRPP-122050](https://jiraeu.epam.com/browse/EPMRPP-122050) | CI connection contract readiness handoff | T3.6 | 12 h | ≤ 36 h |
 | [EPMRPP-122032](https://jiraeu.epam.com/browse/EPMRPP-122032) | Ready-only Test Plan and Launch gate | T4.1 | 20 h | ≤ 36 h |
 | [EPMRPP-122033](https://jiraeu.epam.com/browse/EPMRPP-122033) | Test Plan launch-blocked state | T4.2 | 20 h | ≤ 36 h |
 | [EPMRPP-122034](https://jiraeu.epam.com/browse/EPMRPP-122034) | Compare two iterations | T4.3 | 20 h | ≤ 36 h |
@@ -85,7 +86,7 @@ Filled in as tasks complete. `—` = not done yet.
 | T3.2 | Approve / Mark as ready (+ bulk, Edit Scenario) | 3 | M (20) | **20** | 4 | 10 | 6 | 2026-10-02 |
 | T3.3 | Push to agent + fix round states + diff modal | 3 | L (36) | **30** | 5 | 18 | 7 | 2026-10-03 |
 | T3.4 | Pipeline settings modal | 3 | S (8) | **8** | 2 | 4 | 2 | 2026-10-03 |
-| T3.6 | CI connection section in Pipeline settings | 3 | M (20) | — | | | | |
+| T3.6 | CI connection contract readiness handoff (runtime remains blocked) | 3 | M (20) | **12** | 4 | 5 | 3 | 2026-10-05 |
 | T4.1 | Ready-only gate + In plan · Launch blocked | 4 | M (20) | **20** | 4 | 10 | 6 | 2026-10-03 |
 | T4.2 | Test Plan page launch-blocked banner | 4 | M (20) | **20** | 4 | 10 | 6 | 2026-10-03 |
 | T4.3 | Compare iterations | 4 | M (20) | **20** | 4 | 10 | 6 | 2026-10-03 |
@@ -113,16 +114,17 @@ Filled in as tasks complete. `—` = not done yet.
 | 0 · Foundation | T0.2–T0.7 (+T0.1 planning) | 88 (+20 planning) | 73 | 7 / 7 | T0.2 −5 h, T0.4 −6 h, T0.5 −10 h, T0.6 −6 h, T0.7 −5 h, T0.3 ≈ planned (see deviation notes) |
 | 1 · Pipelines | T1.1–T1.3, **T1.2u, T1.3u** | 108 | 70 | 4 / 5 | T1.1 −6 h, T1.2 −16 h, T1.3 −6 h, T1.3u −2 h; T1.2u still not started, blocked on T3.6 |
 | 2 · Library | T2.1–T2.6 | 108 | 108 | 6 / 6 | T2.1–T2.5 ≈ planned; T2.6 ≈ planned |
-| 3 · Review loop | T3.1–T3.4, **T3.6** | 120 | 88 | 4 / 5 | T3.1 −6 h; T3.2 ≈ planned; T3.3 −6 h; T3.4 ≈ planned; T3.6 new (audit 2026-09-29, US-019) |
+| 3 · Review loop | T3.1–T3.4, **T3.6** | 132 | 100 | 4 / 5 | T3.1 −6 h; T3.2 ≈ planned; T3.3 −6 h; T3.4 ≈ planned; T3.6 contract-readiness slice 12 h (4 research / 5 contract / 3 validation), while runtime remains blocked |
 | 4 · Gate & compare | T4.1–T4.3, **T4.4** | 80 | 60 | 3 / 4 | T4.1–T4.3 ≈ planned; T4.4 new (audit 2026-09-29, US-020) and remains blocked on T3.6 plus its UI↔API contract |
 | 5 · Automation | T5.1–T5.4 | 56 | 56 | 4 / 4 | T5.1–T5.4 ≈ planned and implemented; T5.4 live runtime depends on A3/root-Launch attribute delivery |
 | 6 · Hardening | T6.1, T6.2-G1–G2, T6.3, **T6.4-P**, T6.4, **T6.4-F**, T6.5, **T6.6-A** | 100 | 100 | 8 / 9 | T6.6-A is complete; T6.4-F clean-seed TC107 browser evidence remains deferred until resetting browser-local demo state is allowed |
-| **Total** | | **660 h + 20 h planning = 680 h** | **555** | 36 / 40 | — |
+| **Total** | | **672 h + 20 h planning = 692 h** | **567** | 36 / 40 | — |
 
-**680 h = 85 working days = 17 working weeks** for one developer at 8 h/day. The prior 628 h baseline
+**692 h = 86.5 working days = 17.3 working weeks** for one developer at 8 h/day. The prior 628 h baseline
 already included the 2026-09-29 audit's 3 new stories (018/019/020) plus the two rework tasks it surfaced;
-the additional 40 h is the T6.2-G1 revision from nominal S (8 h) to the scoped 20 h LP1/LP2 foundation plus
-the independently scoped 20 h T6.2-G2 LP3 generic-detail foundation plus the 8 h T6.4-P prerequisite — see
+the previously added T6.2-G1 revision from nominal S (8 h) to the scoped 20 h LP1/LP2 foundation, the independently
+scoped 20 h T6.2-G2 LP3 generic-detail foundation and the 8 h T6.4-P prerequisite remain included; the current
+roll-up additionally records the 12 h T3.6 contract-readiness slice — see
 [01 §3a](01-knowledge-base.md#3a-requirements-audit-update-2026-09-29--supersedes-nothing-above-adds-to-it).
 This prices every task at its nominal size, so it is the pessimistic end; the earlier
 headline of 9–11 weeks assumed a faster pace on the small tasks. Re-check after phase 1 and,
@@ -148,6 +150,7 @@ Newest first. One line per estimate recorded.
 
 | Date | Task | Hours | Note |
 |------|------|-------|------|
+| 2026-10-05 | T3.6 CI connection contract readiness | 12 | Jira EPMRPP-122050 was created with the 12 h estimate and breakdown comment. Documentation-only slice: 4 h research of US-019 and published API gaps; 5 h proposed endpoint/DTO, identity, roles, write-only credential, state/error, concurrency/idempotency, audit/redaction, HTTPS/URL policy and downstream-gating contract; 3 h validation by synchronizing 00/04/05/07/08/10/11/12/19 and running `git diff --check`. No runtime implementation or backend API call, agreement, credential or demo mutation. Runtime T3.6 remains blocked until the accepted contract is merged into `reportportal-requirements/.../contracts/` and matching OpenAPI/evidence exist. |
 | 2026-10-05 | T6.6-A AI Factory implemented-surface NFR hardening | 8 | Jira EPMRPP-122049 created under US-018 with Original/Remaining Estimate 8 h and an immediate 2 h research / 4 h implementation / 2 h validation breakdown. Authenticated audit confirmed the existing actions already use accessible native-button semantics, 1280 px AI Factory pages have no horizontal overflow and the 360 px side-panel footer remains usable. Localized pipeline-estimate wording was added across implemented cost surfaces while retaining two-decimal USD formatting. Focused 7 suites / 39 tests and full Jest 158 suites / 1440 tests PASS; Node 20 type-check and full lint PASS with 199 existing warnings; no demo-fixture or browser-local demo-state mutation. See [evidence](18-nfr-hardening-evidence-2026-10-05.md) |
 | 2026-10-05 | T6.5 AI Factory toggle-OFF regression | 8 | Jira EPMRPP-122048 created with Original/Remaining Estimate 8 h and an immediate breakdown comment: 2 h research for toggle-OFF entry points and fetched `origin/develop` baseline · 4 h authenticated read-only comparison across Library, side panel, Test Case details, Edit Scenario, Test Plans, Manual Launches and Launches · 2 h validation/reporting. Focused Node 20 Jest passed 14 suites / 106 tests; browser accessible-label sets matched exactly except React-generated field tokens; only baseline GET traffic occurred; no AI-only UI/request leaked and no production-code remediation was required. Browser-local demo data remained unchanged. See [dated evidence](16-toggle-off-regression-2026-10-05.md) |
 | 2026-10-05 | T6.4-F AI Factory demo fixture alignment | 12 | Jira EPMRPP-122047 created with Original/Remaining Estimate 12 h and an immediate breakdown comment: 3 h research for remote scenario shapes, alias/target mapping, fix-score semantics and persistence boundaries · 6 h implementation for visible per-alias target normalization without scenario replacement, seeded TC107 timeout state, exact TC106 score and regression fixtures · 3 h validation/reporting: focused 2 suites / 66 tests and full 158 suites / 1440 tests PASS; type-check, focused/full lint, diff-check and Node 20 dev compile PASS; authenticated TC106 pending target PASS; remote proxy traffic contained GETs only. The user requested preserving current demo data, so Reset/Push and the clean-seed TC107 browser timeout rerun remain open; see [dated evidence](15-demo-fixture-alignment-2026-10-05.md) |
