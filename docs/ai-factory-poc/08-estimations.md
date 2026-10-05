@@ -51,6 +51,7 @@ cross-cutting scope must be split into cohesive `[FE]` sub-tasks before work con
 | [EPMRPP-122045](https://jiraeu.epam.com/browse/EPMRPP-122045) | AI Factory demo reset and rehearsal prerequisite | T6.4-P | 8 h | ≤ 36 h |
 | [EPMRPP-122046](https://jiraeu.epam.com/browse/EPMRPP-122046) | AI Factory demo rehearsal | T6.4 | 8 h | ≤ 36 h |
 | [EPMRPP-122047](https://jiraeu.epam.com/browse/EPMRPP-122047) | AI Factory demo fixture alignment | T6.4-F | 12 h | ≤ 36 h |
+| [EPMRPP-122048](https://jiraeu.epam.com/browse/EPMRPP-122048) | AI Factory toggle-OFF regression | T6.5 | 8 h | ≤ 36 h |
 
 If an estimate differs from the planned size by more than ~30 %, write why in *Deviation notes*
 and re-check the remaining sizes.
@@ -99,7 +100,7 @@ Filled in as tasks complete. `—` = not done yet.
 | T6.4-P | Local mock Reset demo + rehearsal runbook prerequisite | 6 | S (8) | **8** | 2 | 4 | 2 | 2026-10-04 |
 | T6.4 | Demo rehearsal (parity checklist) | 6 | S (8) | **8** | 2 | 4 | 2 | 2026-10-04 |
 | T6.4-F | Align TC106/TC107 review and fix fixtures; rerun failed rehearsal steps | 6 | S (12) | **12** | 3 | 6 | 3 | 2026-10-05 |
-| T6.5 | Toggle-OFF regression pass | 6 | S (8) | — | | | | |
+| T6.5 | Toggle-OFF regression pass | 6 | S (8) | **8** | 2 | 4 | 2 | 2026-10-05 |
 | T6.6 | NFR pass (FE-owned items from US-018) | 6 | S (8) | — | | | | |
 
 ## Phase roll-up
@@ -114,8 +115,8 @@ Filled in as tasks complete. `—` = not done yet.
 | 3 · Review loop | T3.1–T3.4, **T3.6** | 120 | 88 | 4 / 5 | T3.1 −6 h; T3.2 ≈ planned; T3.3 −6 h; T3.4 ≈ planned; T3.6 new (audit 2026-09-29, US-019) |
 | 4 · Gate & compare | T4.1–T4.3, **T4.4** | 80 | 60 | 3 / 4 | T4.1–T4.3 ≈ planned; T4.4 new (audit 2026-09-29, US-020) and remains blocked on T3.6 plus its UI↔API contract |
 | 5 · Automation | T5.1–T5.4 | 56 | 56 | 4 / 4 | T5.1–T5.4 ≈ planned and implemented; T5.4 live runtime depends on A3/root-Launch attribute delivery |
-| 6 · Hardening | T6.1, T6.2-G1–G2, T6.3, **T6.4-P**, T6.4, **T6.4-F**, T6.5, **T6.6** | 100 | 84 | 6 / 9 | T6.4-F is in progress to close the two TC106/TC107 parity failures without remote scenario mutation |
-| **Total** | | **660 h + 20 h planning = 680 h** | **539** | 34 / 40 | — |
+| 6 · Hardening | T6.1, T6.2-G1–G2, T6.3, **T6.4-P**, T6.4, **T6.4-F**, T6.5, **T6.6** | 100 | 92 | 7 / 9 | T6.4-F clean-seed TC107 browser evidence remains deferred; T6.5 toggle-OFF comparison passed against `origin/develop` at `fee530755` |
+| **Total** | | **660 h + 20 h planning = 680 h** | **547** | 35 / 40 | — |
 
 **680 h = 85 working days = 17 working weeks** for one developer at 8 h/day. The prior 628 h baseline
 already included the 2026-09-29 audit's 3 new stories (018/019/020) plus the two rework tasks it surfaced;
@@ -146,6 +147,7 @@ Newest first. One line per estimate recorded.
 
 | Date | Task | Hours | Note |
 |------|------|-------|------|
+| 2026-10-05 | T6.5 AI Factory toggle-OFF regression | 8 | Jira EPMRPP-122048 created with Original/Remaining Estimate 8 h and an immediate breakdown comment: 2 h research for toggle-OFF entry points and fetched `origin/develop` baseline · 4 h authenticated read-only comparison across Library, side panel, Test Case details, Edit Scenario, Test Plans, Manual Launches and Launches · 2 h validation/reporting. Focused Node 20 Jest passed 14 suites / 106 tests; browser accessible-label sets matched exactly except React-generated field tokens; only baseline GET traffic occurred; no AI-only UI/request leaked and no production-code remediation was required. Browser-local demo data remained unchanged. See [dated evidence](16-toggle-off-regression-2026-10-05.md) |
 | 2026-10-05 | T6.4-F AI Factory demo fixture alignment | 12 | Jira EPMRPP-122047 created with Original/Remaining Estimate 12 h and an immediate breakdown comment: 3 h research for remote scenario shapes, alias/target mapping, fix-score semantics and persistence boundaries · 6 h implementation for visible per-alias target normalization without scenario replacement, seeded TC107 timeout state, exact TC106 score and regression fixtures · 3 h validation/reporting: focused 2 suites / 66 tests and full 158 suites / 1440 tests PASS; type-check, focused/full lint, diff-check and Node 20 dev compile PASS; authenticated TC106 pending target PASS; remote proxy traffic contained GETs only. The user requested preserving current demo data, so Reset/Push and the clean-seed TC107 browser timeout rerun remain open; see [dated evidence](15-demo-fixture-alignment-2026-10-05.md) |
 | 2026-10-04 | T6.4 Demo rehearsal | 8 | 2 h research/preflight: created Jira EPMRPP-122046 with estimate/comment, verified exact branch/HEAD, dependencies, Node/proxy/auth/project/role, local mock baseline and Q-ORG-07 boundary · 4 h execution: authenticated Node 20 localhost rehearsal across Pipelines, TC101–TC108 and desktop/360 px case surfaces; local Push/Automate/Reset only · 2 h validation/reporting: corrected the initial name-search assumption through display-id pagination, confirmed 15 PASS / 2 FAIL / 0 BLOCKED / 1 N/A, verified remote GETs only, stopped the server and synchronized status/plan/Jira/evidence docs. Failures: TC106 pending-comment target mismatch and TC106/TC107 Push-fixture mismatch; see [dated evidence](14-demo-rehearsal-2026-10-04.md) |
 | 2026-10-04 | T6.4-P Demo reset + rehearsal runbook prerequisite | 8 | 2 h research: audited local mock persistence/reset behavior, false seeding/floating-menu claims, Q-ORG-07 and rehearsal safety boundaries · 4 h implementation: supported local Reset demo UI, fail-closed mock-runtime checks, emergency localStorage fallback documentation and the 18-step preflight/evidence/reset runbook · 2 h validation: focused reset 3 suites / 27 tests and full Jest 158 suites / 1439 tests PASS; Node 20 type-check PASS; full `npm run lint` exit 0 with 121 existing ESLint warnings and 199 existing Stylelint warnings; diff-check PASS; independent code validator PASS with no findings. Security validation initially found one Major TOCTOU issue; post-import/reset and post-import/install state rechecks fixed it, and security recheck passed with no findings. Authenticated browser/T6.4 rehearsal was not executed and no remote data was mutated. This completes only the prerequisite; T6.4 remains todo and Q-ORG-07 remains a hard stop |
