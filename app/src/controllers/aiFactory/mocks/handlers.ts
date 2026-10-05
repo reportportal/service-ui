@@ -132,7 +132,7 @@ export const installAiFactoryHandlers = (mock: MockAdapter): void => {
     const m = url(config).match(/\/tms\/pipeline\/(\d+)\/iteration\/(\d+)/);
     const pipeline = findPipeline(Number(m[1]));
     const iteration = findIteration(Number(m[2]));
-    if (!pipeline || iteration?.pipelineId !== pipeline.id) return notFound();
+    if (!iteration || iteration.pipelineId !== pipeline?.id) return notFound();
     return [200, toIterationRS(pipeline, iteration)];
   });
 
@@ -378,37 +378,46 @@ export const installAiFactoryHandlers = (mock: MockAdapter): void => {
   resumeAutomationSimulations();
 };
 
+function failScriptedFixRound(c: MockCaseRecord, round: number, failureReason: string): void {
+  c.failedOnce = true;
+  const commentsCount = c.comments.filter((cm) => cm.state === 'SENT').length;
+  c.comments.forEach((cm) => {
+    if (cm.state === 'SENT') {
+      cm.state = 'PENDING';
+      cm.fixRound = undefined;
+    }
+  });
+  c.fixRounds.push({ round, testCaseId: c.id, displayId: c.displayId, status: FixRoundStatus.FAILED, pushedBy: 'You', pushedAt: c.fixRoundRunning.startedAt, finishedAt: Date.now(), commentsCount, failureReason });
+  c.fixRoundRunning = undefined;
+  persist();
+}
+
+function failScriptedGrade(c: MockCaseRecord, round: number, scoreBefore: number): void {
+  const before = c.evaluation ? { ...c.evaluation } : undefined;
+  c.evaluation = before && { ...before, state: EvaluationState.OBSOLETE };
+  c.comments.forEach((cm) => { if (cm.state === 'SENT') cm.state = 'ADDRESSED'; });
+  recordLifecycleChange(c, Lifecycle.DRAFT, LifecycleReason.AGENT_FIX, { type: LifecycleActorType.PIPELINE, name: 'Test case generation' }, `Fix round ${round} — grade failed`);
+  if (c.ai) c.ai.modifiedByAgent = true;
+  const commentsCount = c.comments.filter((cm) => cm.fixRound === round).length;
+  const cost = 0.19 + 0.03 * commentsCount;
+  c.fixRounds.push({ round, testCaseId: c.id, displayId: c.displayId, status: FixRoundStatus.GRADE_FAILED, pushedBy: 'You', pushedAt: c.fixRoundRunning.startedAt, finishedAt: Date.now(), commentsCount, scoreBefore, cost });
+  c.lastAgentChange = { round, scoreBefore, before: { steps: [] }, after: { steps: [] } };
+  c.fixRoundRunning = undefined;
+  persist();
+}
+
 /** Fix round: Fix → Grade → update. Mirrors docs/ai-factory-poc/01-knowledge-base.md §4.8. */
 function startFixRoundSimulation(c: MockCaseRecord, round: number): void {
   setTimeout(() => {
     const scriptedFailure = SCRIPTED_FIX_FAILURE[c.displayId];
     if (scriptedFailure && !c.failedOnce) {
-      c.failedOnce = true;
-      const commentsCount = c.comments.filter((cm) => cm.state === 'SENT').length;
-      c.comments.forEach((cm) => {
-        if (cm.state === 'SENT') {
-          cm.state = 'PENDING';
-          cm.fixRound = undefined;
-        }
-      });
-      c.fixRounds.push({ round, testCaseId: c.id, displayId: c.displayId, status: FixRoundStatus.FAILED, pushedBy: 'You', pushedAt: c.fixRoundRunning.startedAt, finishedAt: Date.now(), commentsCount, failureReason: scriptedFailure });
-      c.fixRoundRunning = undefined;
-      persist();
+      failScriptedFixRound(c, round, scriptedFailure);
       return;
     }
     const before = c.evaluation ? { ...c.evaluation } : undefined;
     const scoreBefore = before ? before.criteria.reduce((s, cr) => s + cr.score, 0) : 0;
     if (SCRIPTED_GRADE_FAILURE.has(c.displayId)) {
-      c.evaluation = before && { ...before, state: EvaluationState.OBSOLETE };
-      c.comments.forEach((cm) => { if (cm.state === 'SENT') cm.state = 'ADDRESSED'; });
-      recordLifecycleChange(c, Lifecycle.DRAFT, LifecycleReason.AGENT_FIX, { type: LifecycleActorType.PIPELINE, name: 'Test case generation' }, `Fix round ${round} — grade failed`);
-      if (c.ai) c.ai.modifiedByAgent = true;
-      const commentsCount = c.comments.filter((cm) => cm.fixRound === round).length;
-      const cost = 0.19 + 0.03 * commentsCount;
-      c.fixRounds.push({ round, testCaseId: c.id, displayId: c.displayId, status: FixRoundStatus.GRADE_FAILED, pushedBy: 'You', pushedAt: c.fixRoundRunning.startedAt, finishedAt: Date.now(), commentsCount, scoreBefore, cost });
-      c.lastAgentChange = { round, scoreBefore, before: { steps: [] }, after: { steps: [] } };
-      c.fixRoundRunning = undefined;
-      persist();
+      failScriptedGrade(c, round, scoreBefore);
       return;
     }
     const bump = 12;
