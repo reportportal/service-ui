@@ -148,7 +148,7 @@ describe('fix rounds (F1-F2)', () => {
 
     jest.advanceTimersByTime(SIMULATED_DELAY_MS + 100);
     const done = await http.get<FixRoundRS[]>(URLS.testCaseFixRounds(PROJECT, 'TC106'));
-    expect(done.data[0]).toMatchObject({ status: 'PASSED', scoreBefore: 81 });
+    expect(done.data[0]).toMatchObject({ status: 'PASSED', scoreBefore: 81, autoReadyPromoted: true });
     expect(done.data[0].scoreAfter).toBeGreaterThan(81);
   });
 
@@ -163,12 +163,24 @@ describe('fix rounds (F1-F2)', () => {
     await http.post(URLS.testCaseFixRounds(PROJECT, 'TC107'));
     jest.advanceTimersByTime(SIMULATED_DELAY_MS + 100);
     const afterFail = await http.get<FixRoundRS[]>(URLS.testCaseFixRounds(PROJECT, 'TC107'));
-    expect(afterFail.data).toHaveLength(0); // failed round is not recorded; comments are pending again
+    expect(afterFail.data[0]).toMatchObject({ status: 'FAILED', failureReason: 'job timeout' });
 
     await http.post(URLS.testCaseFixRounds(PROJECT, 'TC107'));
     jest.advanceTimersByTime(SIMULATED_DELAY_MS + 100);
     const afterRetry = await http.get<FixRoundRS[]>(URLS.testCaseFixRounds(PROJECT, 'TC107'));
-    expect(afterRetry.data[0].status).toBe('PASSED');
+    expect(afterRetry.data.map(({ status }) => status)).toEqual(['FAILED', 'PASSED']);
+  });
+
+  test('TC105 keeps the fix and marks the previous evaluation obsolete when grading fails', async () => {
+    await http.post(URLS.testCaseReviewComments(PROJECT, 'TC105'), { target: { type: 'TEXT_SCENARIO' }, text: 'Clarify the result.' });
+    await http.post(URLS.testCaseFixRounds(PROJECT, 'TC105'));
+    jest.advanceTimersByTime(SIMULATED_DELAY_MS + 100);
+
+    const rounds = await http.get<FixRoundRS[]>(URLS.testCaseFixRounds(PROJECT, 'TC105'));
+    const details = await http.get<TestCaseAiRS>(URLS.testCaseAi(PROJECT, 'TC105'));
+    expect(rounds.data[0].status).toBe('GRADE_FAILED');
+    expect(details.data.evaluation?.state).toBe('OBSOLETE');
+    expect(details.data.lastAgentChange).toMatchObject({ round: 1, scoreBefore: 93 });
   });
 });
 
@@ -192,4 +204,3 @@ describe('automation (A1-A2)', () => {
     expect(c.data.automation?.status).toBe('AUTOMATED');
   });
 });
-
