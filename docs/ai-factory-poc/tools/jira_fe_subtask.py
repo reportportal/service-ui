@@ -81,10 +81,16 @@ def read_description(desc_arg, parent):
             'Frontend part of %s.\n\nPlan and status: service-ui `docs/ai-factory-poc/` (00-status.md, 04-implementation-plan.md).'
             % parent)
     allowed_root = os.path.realpath(REPO_ROOT)
-    desc_path = os.path.realpath(os.path.join(allowed_root, desc_arg))
-    if os.path.commonpath([allowed_root, desc_path]) != allowed_root:
+    requested = os.path.realpath(os.path.join(allowed_root, desc_arg))
+    if os.path.commonpath([allowed_root, requested]) != allowed_root:
         sys.exit('--desc must be a file inside the repository: %s' % desc_arg)
-    if not os.path.isfile(desc_path):
+    # Open only a path taken from the repo's own directory listing, never the raw argument.
+    parent_dir = os.path.dirname(requested)
+    desc_path = next(
+        (os.path.join(parent_dir, name) for name in (os.listdir(parent_dir) if os.path.isdir(parent_dir) else [])
+         if os.path.join(parent_dir, name) == requested and os.path.isfile(requested)),
+        None)
+    if desc_path is None:
         sys.exit('--desc file not found: %s' % desc_arg)
     with open(desc_path, encoding='utf-8') as handle:
         return handle.read()
