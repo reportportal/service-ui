@@ -13,8 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-export { fetchAllTestCases } from './fetchAllTestCases';
+export { fetchAllTestCases, fetchAllTestCasesByFolderIds } from './fetchAllTestCases';
 export type { TestCasesResponse } from './fetchAllTestCases';
+export { chunkIdsForQueryFilter } from './chunkIdsForQueryFilter';
 export { fetchAllTestPlanTestCases } from './fetchAllTestPlanTestCases';
 export { getFolderCacheEntry } from './getFolderCacheEntry';
 export { getAllCheckboxStates } from './selectionUtils';

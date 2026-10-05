@@ -54,8 +54,8 @@ import SettingsIcon from 'common/img/sidebar/settings-icon-inline.svg';
 import ProductVersionsIcon from 'common/img/sidebar/product-versions-inline.svg';
 import TestCaseIcon from 'common/img/sidebar/test-case-icon-inline.svg';
 import MilestonesIcon from 'common/img/sidebar/milestones-icon-inline.svg';
-import TestExecutionsIcon from 'common/img/sidebar/test-executions-icon-inline.svg';
 import PipelinesIcon from 'common/img/sidebar/pipelines-icon-inline.svg';
+import TestExecutionsIcon from 'common/img/sidebar/test-executions-icon-inline.svg';
 import { projectNameSelector } from 'controllers/project';
 import { activeOrganizationNameSelector } from 'controllers/organization';
 import { OrganizationsControlWithPopover } from '../../organizationsControl';
@@ -71,6 +71,7 @@ const DEBUG_MENU_ORDER = 90;
 
 export const ProjectSidebar = ({ onClickNavBtn }) => {
   const { trackEvent } = useTracking();
+  const isAiFactoryFeatureEnabled = useAiFactoryEnabled();
   const { formatMessage } = useIntl();
   const sidebarExtensions = useSelector(uiExtensionSidebarComponentsSelector);
   const projectPageExtensions = useSelector(uiExtensionProjectPagesSelector);
@@ -78,7 +79,6 @@ export const ProjectSidebar = ({ onClickNavBtn }) => {
   const organizationName = useSelector(activeOrganizationNameSelector);
   const projectName = useSelector(projectNameSelector);
   const [isOpenOrganizationPopover, setIsOpenOrganizationPopover] = useState(false);
-  const isAiFactoryFeatureEnabled = useAiFactoryEnabled();
 
   const onClickButton = (eventInfo) => {
     onClickNavBtn();
@@ -91,37 +91,10 @@ export const ProjectSidebar = ({ onClickNavBtn }) => {
     let menuCounter = 0;
     const menuStep = 10;
     const isShowInProgressTmsFeatures = Boolean(getTmsOverride());
-
-    menuCounter += menuStep;
-    const dashboardsMenuOrder = menuCounter;
-    menuCounter += menuStep;
-    const launchesMenuOrder = menuCounter;
-    menuCounter = TEST_EXECUTIONS_MENU_ORDER;
-    const testExecutionsMenuOrder = menuCounter;
-    menuCounter += menuStep;
-    const manualLaunchesMenuOrder = menuCounter;
-    menuCounter += menuStep;
-    const milestonesMenuOrder = menuCounter;
-    let pipelinesMenuOrder;
-    if (isAiFactoryFeatureEnabled) {
+    const nextMenuOrder = () => {
       menuCounter += menuStep;
-      pipelinesMenuOrder = menuCounter;
-    }
-    menuCounter += menuStep;
-    const testCaseLibraryMenuOrder = menuCounter;
-    let productVersionsMenuOrder;
-    if (isShowInProgressTmsFeatures) {
-      menuCounter += menuStep;
-      productVersionsMenuOrder = menuCounter;
-    }
-    menuCounter = DEBUG_MENU_ORDER;
-    const debugMenuOrder = menuCounter;
-    menuCounter += menuStep;
-    const filtersMenuOrder = menuCounter;
-    menuCounter += menuStep;
-    const projectTeamMenuOrder = menuCounter;
-    menuCounter += menuStep;
-    const projectsSettingsMenuOrder = menuCounter;
+      return menuCounter;
+    };
 
     const sidebarItems = [
       {
@@ -130,7 +103,7 @@ export const ProjectSidebar = ({ onClickNavBtn }) => {
         link: { type: PROJECT_DASHBOARD_PAGE, payload: { organizationSlug, projectSlug } },
         icon: DashboardIcon,
         message: formatMessage(messages.dashboards),
-        menuOrder: dashboardsMenuOrder,
+        menuOrder: nextMenuOrder(),
       },
       {
         onClick: (isSidebarCollapsed) =>
@@ -141,7 +114,7 @@ export const ProjectSidebar = ({ onClickNavBtn }) => {
         },
         icon: LaunchesIcon,
         message: formatMessage(messages.launches),
-        menuOrder: launchesMenuOrder,
+        menuOrder: nextMenuOrder(),
       },
       {
         onClick: (isSidebarCollapsed) =>
@@ -152,7 +125,7 @@ export const ProjectSidebar = ({ onClickNavBtn }) => {
         },
         icon: TestExecutionsIcon,
         message: formatMessage(messages.testExecutions),
-        menuOrder: testExecutionsMenuOrder,
+        menuOrder: (menuCounter = TEST_EXECUTIONS_MENU_ORDER),
       },
       {
         onClick: (isSidebarCollapsed) =>
@@ -166,7 +139,7 @@ export const ProjectSidebar = ({ onClickNavBtn }) => {
         },
         icon: ManualLaunchesIcon,
         message: formatMessage(messages.manualLaunches),
-        menuOrder: manualLaunchesMenuOrder,
+        menuOrder: nextMenuOrder(),
       },
       {
         onClick: (isSidebarCollapsed) =>
@@ -180,7 +153,7 @@ export const ProjectSidebar = ({ onClickNavBtn }) => {
         },
         icon: MilestonesIcon,
         message: formatMessage(messages.milestones),
-        menuOrder: milestonesMenuOrder,
+        menuOrder: nextMenuOrder(),
       },
       ...(isAiFactoryFeatureEnabled
         ? [
@@ -196,7 +169,7 @@ export const ProjectSidebar = ({ onClickNavBtn }) => {
               },
               icon: PipelinesIcon,
               message: formatMessage(messages.pipelines),
-              menuOrder: pipelinesMenuOrder,
+              menuOrder: nextMenuOrder(),
             },
           ]
         : []),
@@ -212,7 +185,7 @@ export const ProjectSidebar = ({ onClickNavBtn }) => {
         },
         icon: TestCaseIcon,
         message: formatMessage(messages.testCaseLibrary),
-        menuOrder: testCaseLibraryMenuOrder,
+        menuOrder: nextMenuOrder(),
       },
       ...(isShowInProgressTmsFeatures
         ? [
@@ -228,7 +201,7 @@ export const ProjectSidebar = ({ onClickNavBtn }) => {
               },
               icon: ProductVersionsIcon,
               message: formatMessage(messages.productVersions),
-              menuOrder: productVersionsMenuOrder,
+              menuOrder: nextMenuOrder(),
             },
           ]
         : []),
@@ -241,7 +214,7 @@ export const ProjectSidebar = ({ onClickNavBtn }) => {
         },
         icon: DebugIcon,
         message: formatMessage(messages.debugMode),
-        menuOrder: debugMenuOrder,
+        menuOrder: (menuCounter = DEBUG_MENU_ORDER),
       },
       {
         onClick: (isSidebarCollapsed) =>
@@ -249,7 +222,7 @@ export const ProjectSidebar = ({ onClickNavBtn }) => {
         link: { type: PROJECT_FILTERS_PAGE, payload: { organizationSlug, projectSlug } },
         icon: FiltersIcon,
         message: formatMessage(messages.filters),
-        menuOrder: filtersMenuOrder,
+        menuOrder: nextMenuOrder(),
       },
       {
         onClick: (isSidebarCollapsed) =>
@@ -260,7 +233,7 @@ export const ProjectSidebar = ({ onClickNavBtn }) => {
         },
         icon: MembersIcon,
         message: formatMessage(messages.projectTeam),
-        menuOrder: projectTeamMenuOrder,
+        menuOrder: nextMenuOrder(),
       },
       {
         onClick: (isSidebarCollapsed) =>
@@ -271,7 +244,7 @@ export const ProjectSidebar = ({ onClickNavBtn }) => {
         },
         icon: SettingsIcon,
         message: formatMessage(messages.projectsSettings),
-        menuOrder: projectsSettingsMenuOrder,
+        menuOrder: nextMenuOrder(),
       },
     ];
 
@@ -287,9 +260,6 @@ export const ProjectSidebar = ({ onClickNavBtn }) => {
           return [];
         }
         const itemName = iconName || itemTitle;
-        if (!menuOrder) {
-          menuCounter += menuStep;
-        }
         return [
           {
             name: [pluginName, extensionName, slug || name, url].filter(Boolean).join(':'),
@@ -300,21 +270,18 @@ export const ProjectSidebar = ({ onClickNavBtn }) => {
             },
             icon: iconSvg,
             message: itemTitle,
-            menuOrder: menuOrder || menuCounter,
+            menuOrder: menuOrder ?? nextMenuOrder(),
           },
         ];
       },
     );
 
-    const uiExtensionItems = sidebarExtensions.map((extension) => {
-      menuCounter += menuStep;
-      return {
-        name: extension.name,
-        component: <ExtensionLoader extension={extension} />,
-        onClick: onClickNavBtn,
-        menuOrder: menuCounter,
-      };
-    });
+    const uiExtensionItems = sidebarExtensions.map((extension) => ({
+      name: extension.name,
+      component: <ExtensionLoader extension={extension} />,
+      onClick: onClickNavBtn,
+      menuOrder: nextMenuOrder(),
+    }));
 
     return [...sidebarItems, ...pluginPageItems, ...uiExtensionItems].sort(
       (a, b) => a.menuOrder - b.menuOrder,

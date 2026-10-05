@@ -17,14 +17,19 @@
 @use '../sidebarItemFocus' as *;
 
 .btn-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  align-self: flex-start;
+  flex-shrink: 0;
   width: 48px;
   height: 40px;
-  align-self: flex-start;
 
-  // TODO: refactor this in the future, it is better to exclude empty spaces from the svg
-  svg {
-    width: 48px;
-    height: 40px;
+  svg,
+  img {
+    width: 20px;
+    height: 20px;
+    object-fit: contain;
   }
 }
 
