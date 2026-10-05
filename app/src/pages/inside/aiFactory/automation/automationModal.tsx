@@ -26,6 +26,7 @@ import { createClassnames } from 'common/utils';
 import { hideModalAction } from 'controllers/modal';
 import { showSuccessNotification, showWarningNotification } from 'controllers/notification';
 import { projectKeySelector } from 'controllers/project/selectors/typed-selectors';
+import { useUserPermissions } from 'hooks/useUserPermissions';
 import { AutomationStatus, type AutomateAcceptedRS } from 'types/aiFactory';
 
 import {
@@ -60,6 +61,7 @@ export const AutomationModalContent = ({
   const { formatMessage } = useIntl();
   const dispatch = useDispatch();
   const projectKey = useSelector(projectKeySelector);
+  const { canAutomateTestCases } = useUserPermissions();
   const selection = useMemo(() => partitionAutomationSelection(testCases), [testCases]);
   const [environment, setEnvironment] = useState('');
   const [isReautomationConfirmed, setIsReautomationConfirmed] = useState(false);
@@ -81,7 +83,7 @@ export const AutomationModalContent = ({
   };
 
   const start = async () => {
-    if (!selectedEnvironment || !selection.eligible.length) {
+    if (!canAutomateTestCases || !selectedEnvironment || !selection.eligible.length) {
       return;
     }
 
@@ -126,6 +128,7 @@ export const AutomationModalContent = ({
   };
 
   const isSubmitDisabled =
+    !canAutomateTestCases ||
     request.isStarting ||
     request.isLoadingEnvironments ||
     !selectedEnvironment ||

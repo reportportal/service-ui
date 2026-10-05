@@ -234,4 +234,29 @@ describe('AI review comments', () => {
     expect(wrapper.find('output').text()).toContain('Agent is fixing');
     expect(wrapper.find('[data-automation-id="push-review-comments"]').prop('disabled')).toBe(true);
   });
+
+  test('does not expose Discard after a failed fix round in read-only mode', () => {
+    const wrapper = shallow(
+      <ReviewStrip
+        lifecycle={Lifecycle.DRAFT}
+        reviewState={createReviewState()}
+        isReadOnly
+        readOnlyReason="NO_PERMISSION"
+        fixRoundState={createFixRoundState({
+          current: {
+            round: 3,
+            testCaseId: 42,
+            displayId: 'TC106',
+            status: FixRoundStatus.FAILED,
+            pushedBy: 'Reviewer',
+            pushedAt: 100,
+            commentsCount: 1,
+          },
+        })}
+      />,
+    );
+
+    expect(wrapper.find('Button[variant="text-danger"]')).toHaveLength(0);
+    expect(wrapper.find('[data-automation-id="push-review-comments-again"]')).toHaveLength(0);
+  });
 });

@@ -76,6 +76,8 @@ export const ReviewTarget = ({ target, reviewState, isReadOnly = false }: Review
   const hasPending = comments.some((comment) => comment.state === CommentState.PENDING);
 
   const submitComment = async () => {
+    if (isReadOnly) return;
+
     const trimmedText = text.trim();
     if (!trimmedText) return;
 
@@ -89,6 +91,8 @@ export const ReviewTarget = ({ target, reviewState, isReadOnly = false }: Review
   };
 
   const deleteComment = async (commentId: number) => {
+    if (isReadOnly) return;
+
     setMutationError(false);
     try {
       await reviewState.deleteComment(commentId);
@@ -244,6 +248,8 @@ export const ReviewStrip = ({
   }
 
   const discard = async () => {
+    if (isReadOnly) return;
+
     if (!window.confirm(formatMessage(messages.discardConfirmation))) return;
 
     setMutationError(false);
@@ -259,6 +265,8 @@ export const ReviewStrip = ({
   const canPush = pendingCount > 0 && !isReadOnly && !fixRoundState.isStarting;
 
   const push = async () => {
+    if (isReadOnly) return;
+
     setMutationError(false);
     await fixRoundState.start();
   };
@@ -309,23 +317,27 @@ export const ReviewStrip = ({
       {hasFailed && (
         <div className={cx('review-strip__status', 'review-strip__status--failed')} role="alert">
           <span>{formatMessage(messages.failedActions)}</span>
-          <Button
-            variant="text"
-            adjustWidthOn="content"
-            disabled={!canPush}
-            data-automation-id="push-review-comments-again"
-            onClick={() => void push()}
-          >
-            {formatMessage(messages.pushAgain)}
-          </Button>
-          <Button
-            variant="text-danger"
-            adjustWidthOn="content"
-            disabled={reviewState.isMutating}
-            onClick={() => void discard()}
-          >
-            {formatMessage(messages.discard)}
-          </Button>
+          {!isReadOnly && (
+            <>
+              <Button
+                variant="text"
+                adjustWidthOn="content"
+                disabled={!canPush}
+                data-automation-id="push-review-comments-again"
+                onClick={() => void push()}
+              >
+                {formatMessage(messages.pushAgain)}
+              </Button>
+              <Button
+                variant="text-danger"
+                adjustWidthOn="content"
+                disabled={reviewState.isMutating}
+                onClick={() => void discard()}
+              >
+                {formatMessage(messages.discard)}
+              </Button>
+            </>
+          )}
         </div>
       )}
       {lastAgentChange && !isRunning && (

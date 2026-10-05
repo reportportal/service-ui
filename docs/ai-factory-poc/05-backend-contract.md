@@ -7,13 +7,17 @@
 
 ## 0. Sources, scope and status legend
 
-- Audited on **2026-10-02** from [OpenAPI JSON](http://tms.epmrpp.reportportal.io/api/api-docs) and the
+- Audited on **2026-10-04** from [OpenAPI JSON](http://tms.epmrpp.reportportal.io/api/api-docs) and the
   [interactive API UI](http://tms.epmrpp.reportportal.io/ui/#organizations/my-organization/projects/superadmin-personal/api).
+- The 2026-10-04 re-audit found **no material OpenAPI drift** from the 2026-10-02 baseline: the
+  published version, paths, schemas, authentication inheritance and missing response `required` declarations
+  remain unchanged.
 - Published document: OpenAPI `3.0.1`, `info.version = feature-pipelines-2767`, server `/api`.
 - Global authentication: HTTP bearer token, `bearerFormat: JWT`. Every operation listed here inherits it.
-- **Transport-security blocker:** the currently published documentation source is available over plain HTTP.
-  Never send a bearer JWT to that origin. Live authenticated integration remains blocked until the backend is
-  exposed through a trusted HTTPS endpoint with a valid certificate. Production integration must be HTTPS-only;
+- **Transport-security blocker:** the currently published documentation source is available over plain HTTP, while
+  the HTTPS endpoint did not present a locally trusted certificate chain during the 2026-10-04 re-audit. Never send
+  a bearer JWT to the HTTP origin. Live authenticated integration remains blocked until the backend is exposed
+  through a trusted HTTPS endpoint with a valid certificate. Production integration must be HTTPS-only;
   certificate validation must not be disabled or bypassed.
 - The audit inspected documentation only. It did **not** execute endpoint requests; in particular, no
   mutating `POST`, `PUT`, `PATCH` or `DELETE` operation was invoked.
@@ -45,9 +49,9 @@ and remain an open backend/product agreement.
 
 | ID | Method and path below `/api` | Success | Live documented | Schema verified | Mock implemented | FE consumes live |
 |---|---|---:|:---:|:---:|:---:|:---:|
-| LP1 | `GET /v1/project/{projectKey}/pipeline` | `200 PipelineRS[]` | ✅ | ✅ | ⚠️ legacy P1 | ❌ |
-| LP2 | `GET /v1/project/{projectKey}/pipeline/{pipelineId}/iteration` | `200 PipelineIterationSummaryRS[]` | ✅ | ✅ | ⚠️ legacy P2 | ❌ |
-| LP3 | `GET /v1/project/{projectKey}/pipeline/iteration/{iterationId}` | `200 PipelineIterationDetailRS` | ✅ | ✅ | ⚠️ legacy P3 | ❌ |
+| LP1 | `GET /v1/project/{projectKey}/pipeline` | `200 PipelineRS[]` | ✅ | ✅ | ⚠️ legacy P1 + G1 raw adapter foundation | ❌ |
+| LP2 | `GET /v1/project/{projectKey}/pipeline/{pipelineId}/iteration` | `200 PipelineIterationSummaryRS[]` | ✅ | ✅ | ⚠️ legacy P2 + G1 raw adapter foundation | ❌ |
+| LP3 | `GET /v1/project/{projectKey}/pipeline/iteration/{iterationId}` | `200 PipelineIterationDetailRS` | ✅ | ✅ | ⚠️ legacy rich P3 + G2 raw/reduced adapter foundation | ❌ |
 | LP4 | `GET /v1/project/{projectKey}/pipeline/iteration/{iterationId}/compare?with={otherIterationId}` | `200 PipelineCompareRS` | ✅ | ✅ | ✅ same-path mock + raw-response adapter (T4.3 complete) | ❌ |
 | LP5 | `PATCH /v1/project/{projectKey}/pipeline/{pipelineId}` | `200 PipelineRS` | ✅ | ✅ | ✅ same-path mock adapter; legacy P4 retained | ✅ T3.4 |
 | LP6 | `POST /v1/project/{projectKey}/pipeline/iteration` | `201 PipelineIterationDetailRS` | ✅ | ✅ | ❌ | ❌ |
@@ -322,9 +326,28 @@ produce it. It therefore supports only the current-rubric portion of T2.5, not r
 
 ### 2.2 What can safely be used now
 
-- **T1.1–T1.3:** the three live GET operations LP1–LP3 are integration candidates, but only behind a raw DTO
-  adapter that provides defaults for optional fields and maps live statuses/metrics/attributes to current UI view models.
-  They are not drop-in replacements for the mock endpoints.
+- **T1.1–T1.2 / T6.2-G1:** EPMRPP-122040 implements the canonical LP1/LP2 URL, raw DTO adapter,
+  explicit reduced catalog models, per-group transport provenance and isolated per-pipeline loading/error
+  foundation. The transport remains mock by default and a requested live mode fails closed behind a hard rollout
+  gate. Therefore LP1/LP2 remain `FE consumes live = ❌`; this foundation is not an authenticated live rollout.
+  Enablement still requires trusted HTTPS, agreed backend read roles, requiredness/status decisions and Product/QA
+  approval of the reduced UI. Rich mock-only fields are omitted rather than invented. Foundation validation passed
+  type-check, full Jest (152 suites / 1364 tests), full lint (exit 0 with 201 existing warnings), code validation,
+  security validation and diff-check. Browser/runtime validation was not performed.
+- **T1.3 / T6.2-G2 / LP3:** EPMRPP-122041 implements the canonical iteration-only URL in the hard-closed live
+  branch, a strict raw DTO → reduced-detail adapter, separate detail transport/provenance and request/catalog/project
+  stale guards, plus a dedicated reduced detail presentation. The reduced model exposes only validated generic
+  iteration identity/status/timing, validated safe string attributes and ordered stage identity/key/sequence/status.
+  It intentionally discards generic `metrics`, `result`, `testCaseIds`, `ci`, retry fields and all rich PoC panel semantics. Rich legacy
+  P3 remains the mock-default branch. Reduced cards navigate to reduced detail; the Library iteration-number chip
+  uses only project/catalog-version-matching cached list metadata and no longer issues LP3 directly. LP3 remains
+  `FE consumes live = ❌`: the live gate is hard closed, no authenticated backend/browser validation or live polling
+  was performed, and trusted HTTPS, read roles, status/requiredness/polling decisions plus Product/QA approval remain
+  rollout blockers. Final validation passed: focused Jest 8 suites / 171 tests before review remediation,
+  post-race focused saga 32/32, final full Jest 154 suites / 1417 tests (with the repository open-handle warning
+  after success), Node 20 type-check, full lint exit 0 with 201 existing warnings and diff-check. Senior code
+  validation passed after one Major detail-request race was fixed and regression-tested; security validation passed
+  with no Critical/Major/Minor findings.
 - **T2.1/T2.2:** not covered. Pipeline and Quality Standard schemas contain no Test Case lifecycle, AI evaluation,
   origin, cost, unsent-comment or agent-fixing fields. C/L/R/F/A contracts remain provisional.
 - **T2.5:** QS1 is a candidate for reading the current project rubric, but only partially supports the story:
@@ -638,7 +661,10 @@ public CaseLink identity, projects the real created iteration identity through C
 simulations when handlers are installed again. The feature-gated details, section and bulk entry
 points make no A1/A2 request when the flag is off. This is not live integration: A1/A2 and C2 are absent from the
 audited published OpenAPI and remain provisional until backend paths, schemas, authorization and error semantics
-are published and verified.
+are published and verified. T5.4 adds no endpoint: existing Launch surfaces consume only the additive A3 field
+and root Launch attribute described below. Both inputs are validated at the render boundary and fail closed; no
+fake Launch request/controller is installed. Component-fixture coverage proves the wiring, but real CI-reported
+Launch delivery and identity correlation remain unverified.
 
 - A1 `GET tms/automation/environment` → `{ environments: string[]; default: string }` (default `beta5`).
 - A2 `POST tms/automation` body `{ testCaseIds: number[]; environment: string; confirmReautomate: boolean }` →
@@ -647,8 +673,13 @@ are published and verified.
   `502 { reason: 'JOB_START_FAILED' }`.
   The FE computes the skip lists for the dialog from C1 fields. The BE re-validates.
 - A3: the test item DTO (Launch pages) adds `tmsTestCase?: { id: number; displayId: string }` when the reported
-  `testCaseId` matches a Library case. It powers the "Library Test Case ↗" link.
-- The Launch carries the attribute `pipeline:<iteration>`, so the FE can render a link to the automation iteration.
+  `testCaseId` matches a Library case. `id` must be a positive safe integer and `displayId` a non-empty string.
+  It powers the internal "Library Test Case ↗" link; missing or invalid data renders no link.
+- The root Launch carries exactly one key/value attribute `pipeline:<pipelineId>/<iterationId>` (key `pipeline`,
+  value `<pipelineId>/<iterationId>`). Both IDs must be positive safe integers. Missing, duplicate, malformed or
+  incomplete attributes render no link. The FE parses this contract only when the existing parent hierarchy has
+  exactly one entry (the root Launch), independent of its displayed-child level or an empty result page. Nested
+  suite/test attributes are never parsed, and the valid contract creates only an internal Pipeline iteration route.
 
 ## 9. Not consumed by the FE (reference only)
 
@@ -663,5 +694,7 @@ are published and verified.
 
 | Date | Change | Agreed with |
 |------|--------|-------------|
+| 2026-10-04 | v0.4 recorded the implemented and automatically validated EPMRPP-122041 LP3 generic-detail DTO/adapter/transport foundation, separate detail provenance/stale guards, reduced-detail presentation and removal of the Library direct-detail request. The live gate remains hard closed; no live rollout, backend/browser validation, rich detail parity, live polling or Quality Standard integration is claimed | Published OpenAPI `feature-pipelines-2767` plus frontend branch evidence |
+| 2026-10-04 | v0.3 re-audited the published OpenAPI with no material drift; recorded the automatically validated EPMRPP-122040 LP1/LP2 DTO/adapter/transport foundation as mock-default and hard fail-closed for live mode. No LP3 or Quality Standard integration, live rollout or browser/runtime validation is claimed | Published OpenAPI `feature-pipelines-2767` plus frontend branch evidence |
 | 2026-10-02 | v0.2 audited published Pipeline and Quality Standard OpenAPI; separated verified raw DTOs from legacy/mock and provisional contracts; no endpoint calls executed | Published OpenAPI `feature-pipelines-2767` (documentation evidence only) |
 | 2026-09-25 | v0.1 initial FE proposal | — |

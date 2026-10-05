@@ -26,6 +26,7 @@ import {
   showWarningNotification,
 } from 'controllers/notification';
 import { projectKeySelector } from 'controllers/project';
+import { useUserPermissions } from 'hooks/useUserPermissions';
 import {
   LifecycleAction,
   LifecycleRejectReason,
@@ -108,6 +109,7 @@ export const useLifecycleActions = ({
   const { formatMessage } = useIntl();
   const dispatch = useDispatch();
   const projectKey = useSelector(projectKeySelector);
+  const { canReviewAiTestCases } = useUserPermissions();
   const [isLoading, setIsLoading] = useState(false);
 
   const updateLifecycle = useCallback(
@@ -115,6 +117,11 @@ export const useLifecycleActions = ({
       testCase: LifecycleTestCase,
       confirmObsolete = false,
     ): Promise<LifecycleUpdateResult> => {
+      if (!canReviewAiTestCases) {
+        dispatch(showErrorNotification({ message: formatMessage(messages.noPermission) }));
+        return 'FAILED';
+      }
+
       const payload: LifecyclePayload = {
         action: testCase.ai ? LifecycleAction.APPROVE : LifecycleAction.MARK_AS_READY,
         ...(confirmObsolete && { confirmObsolete: true }),
@@ -157,11 +164,15 @@ export const useLifecycleActions = ({
         setIsLoading(false);
       }
     },
-    [dispatch, formatMessage, onSingleSuccess, projectKey],
+    [canReviewAiTestCases, dispatch, formatMessage, onSingleSuccess, projectKey],
   );
 
   const updateLifecycleBatch = useCallback(
     async (testCaseIds: number[]): Promise<LifecycleBatchRS | null> => {
+      if (!canReviewAiTestCases || testCaseIds.length === 0) {
+        return null;
+      }
+
       setIsLoading(true);
       try {
         const rawResponse = await fetch<LifecycleBatchRS>(
@@ -203,7 +214,7 @@ export const useLifecycleActions = ({
         setIsLoading(false);
       }
     },
-    [dispatch, formatMessage, onBatchSuccess, projectKey],
+    [canReviewAiTestCases, dispatch, formatMessage, onBatchSuccess, projectKey],
   );
 
   return { isLoading, updateLifecycle, updateLifecycleBatch };

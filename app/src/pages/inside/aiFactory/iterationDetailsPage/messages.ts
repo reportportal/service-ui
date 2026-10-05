@@ -17,6 +17,46 @@
 import { defineMessages } from 'react-intl';
 
 export const messages = defineMessages({
+  detailUnavailable: {
+    id: 'IterationDetailsPage.detailUnavailable',
+    defaultMessage: 'Iteration details are unavailable for this pipeline source',
+  },
+  detailLoading: {
+    id: 'IterationDetailsPage.detailLoading',
+    defaultMessage: 'Loading iteration details…',
+  },
+  detailError: {
+    id: 'IterationDetailsPage.detailError',
+    defaultMessage: 'Iteration details could not be loaded',
+  },
+  retry: {
+    id: 'IterationDetailsPage.retry',
+    defaultMessage: 'Retry',
+  },
+  liveStatusPending: {
+    id: 'IterationDetailsPage.liveStatusPending',
+    defaultMessage: 'Pending',
+  },
+  liveStatusPassed: {
+    id: 'IterationDetailsPage.liveStatusPassed',
+    defaultMessage: 'Passed',
+  },
+  liveStatusFailed: {
+    id: 'IterationDetailsPage.liveStatusFailed',
+    defaultMessage: 'Failed',
+  },
+  liveStatusNeedsHuman: {
+    id: 'IterationDetailsPage.liveStatusNeedsHuman',
+    defaultMessage: 'Needs human review',
+  },
+  liveStatusUnknown: {
+    id: 'IterationDetailsPage.liveStatusUnknown',
+    defaultMessage: 'Unknown',
+  },
+  noStages: {
+    id: 'IterationDetailsPage.noStages',
+    defaultMessage: 'No stages are available for this iteration',
+  },
   pipelinesBreadcrumb: {
     id: 'IterationDetailsPage.pipelinesBreadcrumb',
     defaultMessage: 'Pipelines',

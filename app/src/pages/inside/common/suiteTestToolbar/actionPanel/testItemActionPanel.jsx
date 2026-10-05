@@ -20,7 +20,12 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { useDispatch, useSelector } from 'react-redux';
 import { FormattedMessage, useIntl } from 'react-intl';
-import { breadcrumbsSelector, levelSelector, restorePathAction } from 'controllers/testItem';
+import {
+  breadcrumbsSelector,
+  isRootLaunchParentSelector,
+  levelSelector,
+  restorePathAction,
+} from 'controllers/testItem';
 import { userRolesSelector } from 'controllers/pages';
 import {
   availableBtsIntegrationsSelector,
@@ -64,6 +69,7 @@ export const TestItemActionPanel = ({
 }) => {
   const breadcrumbs = useSelector(breadcrumbsSelector);
   const level = useSelector(levelSelector);
+  const isLaunchRoot = useSelector(isRootLaunchParentSelector);
   const btsIntegrations = useSelector(availableBtsIntegrationsSelector);
   const userRoles = useSelector(userRolesSelector);
   const { canBulkEditItems, canWorkWithTests } = useUserPermissions();
@@ -169,7 +175,7 @@ export const TestItemActionPanel = ({
         </GhostButton>
       )}
       <div className={cx('action-buttons')}>
-        {parentItem && <ParentInfo parentItem={parentItem} />}
+        {parentItem && <ParentInfo parentItem={parentItem} isLaunchRoot={isLaunchRoot} />}
         {canWorkWithTests && (
           <div className={cx('action-button', 'mobile-hidden')}>
             <GhostMenuButton

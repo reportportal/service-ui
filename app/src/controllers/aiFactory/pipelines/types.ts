@@ -24,17 +24,43 @@ import {
   GET_PIPELINE_ITERATIONS,
   GET_PIPELINES,
 } from './constants';
+import type {
+  ReducedPipeline,
+  ReducedPipelineIteration,
+  ReducedPipelineIterationDetail,
+} from './liveAdapters';
+import type { PipelineCatalogTransport, PipelineDetailTransport } from './transport';
 
-/** Iterations of every currently loaded pipeline, keyed by pipeline id. */
-export type IterationsByPipelineId = Record<number, IterationSummaryRS[]>;
+export type PipelineCatalogItem = PipelineRS | ReducedPipeline;
+export type PipelineIterationItem = IterationSummaryRS | ReducedPipelineIteration;
+export type IterationsByPipelineId = Record<number, PipelineIterationItem[]>;
+export type IterationsLoadingByPipelineId = Record<number, boolean>;
+export type IterationsErrorByPipelineId = Record<number, boolean>;
 
 export interface PipelinesState {
-  data: PipelineRS[] | null;
+  data: PipelineCatalogItem[] | null;
   isLoading?: boolean;
+  transport: PipelineCatalogTransport;
+  transportFallback?: boolean;
+  catalogVersion: number;
+  catalogRequestId: number | null;
+  catalogProjectKey: string | null;
   iterationsByPipeline: IterationsByPipelineId | null;
-  iterationsLoading?: boolean;
-  iterationDetails: IterationRS | null;
+  iterationsLoadingByPipeline: IterationsLoadingByPipelineId;
+  iterationsErrorByPipeline: IterationsErrorByPipelineId;
+  iterationRequestIdByPipeline: Record<number, number>;
+  iterationDetails: IterationRS | ReducedPipelineIterationDetail | null;
   iterationDetailsLoading?: boolean;
+  iterationDetailsError?: boolean;
+  iterationDetailsUnavailable?: boolean;
+  detailRequestId?: number | null;
+  detailProjectKey?: string | null;
+  detailPipelineId?: number | null;
+  detailIterationId?: number | null;
+  detailCatalogTransport?: PipelineCatalogTransport | null;
+  detailCatalogVersion?: number;
+  detailCatalogRequestId?: number | null;
+  detailTransport?: PipelineDetailTransport | null;
   comparison: PipelineComparison | null;
   comparisonLoading?: boolean;
   comparisonError?: boolean;
@@ -50,8 +76,9 @@ export interface GetPipelineIterationsAction extends Action<typeof GET_PIPELINE_
   payload: { pipelineIds: number[] };
 }
 
-export interface GetPipelineIterationDetailsAction
-  extends Action<typeof GET_PIPELINE_ITERATION_DETAILS> {
+export interface GetPipelineIterationDetailsAction extends Action<
+  typeof GET_PIPELINE_ITERATION_DETAILS
+> {
   payload: { pipelineId: number; iterationId: number };
 }
 

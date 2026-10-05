@@ -45,6 +45,8 @@ cross-cutting scope must be split into cohesive `[FE]` sub-tasks before work con
 | [EPMRPP-122034](https://jiraeu.epam.com/browse/EPMRPP-122034) | Compare two iterations | T4.3 | 20 h | ≤ 36 h |
 | [EPMRPP-122036](https://jiraeu.epam.com/browse/EPMRPP-122036) | Automation iteration view | T5.2 | 8 h | ≤ 36 h |
 | [EPMRPP-122037](https://jiraeu.epam.com/browse/EPMRPP-122037) | Automation results on Test Case | T5.3 | 8 h | ≤ 36 h |
+| [EPMRPP-122040](https://jiraeu.epam.com/browse/EPMRPP-122040) | Pipeline catalog LP1/LP2 transport and adapter foundation | T6.2-G1 | 20 h | ≤ 36 h |
+| [EPMRPP-122041](https://jiraeu.epam.com/browse/EPMRPP-122041) | Pipeline LP3 generic-detail transport and adapter foundation | T6.2-G2 | 20 h | ≤ 36 h |
 
 If an estimate differs from the planned size by more than ~30 %, write why in *Deviation notes*
 and re-check the remaining sizes.
@@ -85,9 +87,10 @@ Filled in as tasks complete. `—` = not done yet.
 | T5.1 | Automate action + Send to automation dialog | 5 | M (20) | **20** | 4 | 10 | 6 | 2026-10-04 |
 | T5.2 | Automation iteration progress | 5 | S (8) | **8** | 2 | 4 | 2 | 2026-10-04 |
 | T5.3 | Automation section on case | 5 | S (8) | **8** | 2 | 4 | 2 | 2026-10-04 |
-| T5.4 | Launch ↔ case links | 5 | M (20) | — | | | | |
-| T6.1 | Roles / read-only states | 6 | S (8) | — | | | | |
-| T6.2 | BE integration per endpoint group | 6 | S (8) ×N | — | | | | |
+| T5.4 | Launch ↔ case links | 5 | M (20) | **20** | 4 | 10 | 6 | 2026-10-04 |
+| T6.1 | Roles / read-only states | 6 | S (8) | **8** | 2 | 4 | 2 | 2026-10-04 |
+| T6.2-G1 | Pipeline catalog LP1/LP2 transport and adapter foundation (mock-default; live gate closed) | 6 | M (20) | **20** | 4 | 10 | 6 | 2026-10-04 |
+| T6.2-G2 | Pipeline LP3 generic-detail transport and adapter foundation (mock-default; live gate closed) | 6 | M (20) | **20** | 4 | 10 | 6 | 2026-10-04 |
 | T6.3 | i18n, a11y, responsive | 6 | S (8) | — | | | | |
 | T6.4 | Demo rehearsal (parity checklist) | 6 | S (8) | — | | | | |
 | T6.5 | Toggle-OFF regression pass | 6 | S (8) | — | | | | |
@@ -104,13 +107,15 @@ Filled in as tasks complete. `—` = not done yet.
 | 2 · Library | T2.1–T2.6 | 108 | 108 | 6 / 6 | T2.1–T2.5 ≈ planned; T2.6 ≈ planned |
 | 3 · Review loop | T3.1–T3.4, **T3.6** | 120 | 88 | 4 / 5 | T3.1 −6 h; T3.2 ≈ planned; T3.3 −6 h; T3.4 ≈ planned; T3.6 new (audit 2026-09-29, US-019) |
 | 4 · Gate & compare | T4.1–T4.3, **T4.4** | 80 | 60 | 3 / 4 | T4.1–T4.3 ≈ planned; T4.4 new (audit 2026-09-29, US-020) and remains blocked on T3.6 plus its UI↔API contract |
-| 5 · Automation | T5.1–T5.4 | 56 | 36 | 3 / 4 | T5.1–T5.3 ≈ planned and validated; T5.4 remains next |
-| 6 · Hardening | T6.1–T6.5, **T6.6** | 48 | 0 | 0 / 6 | T6.6 new (audit 2026-09-29, US-018 FE-owned slice) |
-| **Total** | | **608 h + 20 h planning = 628 h** | **435** | 27 / 37 | — |
+| 5 · Automation | T5.1–T5.4 | 56 | 56 | 4 / 4 | T5.1–T5.4 ≈ planned and implemented; T5.4 live runtime depends on A3/root-Launch attribute delivery |
+| 6 · Hardening | T6.1, T6.2-G1–G2, T6.3–T6.5, **T6.6** | 80 | 48 | 3 / 7 | T6.1 and the mock-default, live-gated T6.2-G1/G2 foundations are completed and automatically validated; T6.6 new (audit 2026-09-29, US-018 FE-owned slice) |
+| **Total** | | **640 h + 20 h planning = 660 h** | **503** | 31 / 38 | — |
 
-**628 h ≈ 78,5 working days ≈ 15,7 working weeks** for one developer at 8 h/day. The jump from 564 h is
-the 2026-09-29 audit's 3 new stories (018/019/020) plus the two not-yet-started rework tasks it surfaced
-on already-shipped work (T1.2u, T1.3u) — see [01 §3a](01-knowledge-base.md#3a-requirements-audit-update-2026-09-29--supersedes-nothing-above-adds-to-it).
+**660 h = 82.5 working days = 16.5 working weeks** for one developer at 8 h/day. The prior 628 h baseline
+already included the 2026-09-29 audit's 3 new stories (018/019/020) plus the two rework tasks it surfaced;
+the additional 32 h is the T6.2-G1 revision from nominal S (8 h) to the scoped 20 h LP1/LP2 foundation plus
+the independently scoped 20 h T6.2-G2 LP3 generic-detail foundation — see
+[01 §3a](01-knowledge-base.md#3a-requirements-audit-update-2026-09-29--supersedes-nothing-above-adds-to-it).
 This prices every task at its nominal size, so it is the pessimistic end; the earlier
 headline of 9–11 weeks assumed a faster pace on the small tasks. Re-check after phase 1 and,
 if the trend holds, apply the scope cut list in the [README](README.md#scope-cut-list-if-the-demo-date-is-tight).
@@ -135,6 +140,10 @@ Newest first. One line per estimate recorded.
 
 | Date | Task | Hours | Note |
 |------|------|-------|------|
+| 2026-10-04 | T6.2-G2 Pipeline LP3 generic-detail foundation | 20 | 4 h research: audited LP3 OpenAPI shape, legacy rich P3 coupling, detail/list/Library entry points and G1 provenance boundary · 10 h implementation: strict raw-to-reduced LP3 adapter, independent detail transport/provenance and stale guards, canonical live URL behind the closed gate, reduced generic detail UI/card route, and project/version-guarded cached Library label lookup with the direct LP3 leak removed · 6 h validation: focused Jest 8 suites / 171 tests PASS before review remediation; post-race focused saga 32/32 PASS; final full Jest 154 suites / 1417 tests PASS with the repository open-handle warning after success; Node 20 type-check PASS; full lint exit 0 with 201 existing warnings; diff-check PASS; senior code validator final PASS after one Major race was fixed and regression-tested; security validator PASS with no Critical/Major/Minor findings. Browser/runtime and live-backend validation were not performed. Mock remains default and live mode remains hard closed; rich KPI/cost/token/Test Case/CI/retry semantics, live polling and QS1 are excluded |
+| 2026-10-04 | T6.2-G1 Pipeline catalog LP1/LP2 foundation | 20 | 4 h research: audited LP1/LP2 OpenAPI DTOs, current mock/view-model boundary, downstream identity coupling and rollout blockers · 10 h implementation: canonical LP1/LP2 URLs, strict raw-response adapters, explicit reduced catalog models, per-group mock-default transport provenance, per-pipeline loading/error isolation and fail-closed detail/compare/settings guards · 6 h validation: type-check PASS; full Jest 152 suites / 1364 tests PASS; full lint exit 0 with 201 existing warnings; code validator, security validator and diff-check PASS. Browser/runtime validation was not performed. The live gate remains closed; this is not a live rollout, LP3 or Quality Standard integration. Trusted HTTPS, read roles, requiredness/status decisions and Product/QA reduced-UI approval remain blocking |
+| 2026-10-04 | T6.1 Roles / read-only states | 8 | 2 h research: accepted D15/F15 matrix, real permission helpers, rendered-control and direct-hook mutation paths, Jira scope · 4 h implementation: fail-closed lifecycle/review/fix-round/automation request guards, permission-gated Approve/bulk/automation modal controls, Viewer failed-round read-only handling and empty-bulk protection · 2 h validation: focused 10 suites / 80 tests and full Node 20 Jest 149 suites / 1282 tests PASS; full `npm run lint` exit 0 with 201 existing warnings; root type-check and diff-check PASS; senior code and security validators PASS with no Major/Critical findings. Browser/runtime walkthrough was not performed. FE checks are UX/defence-in-depth; backend authorization and exact live read-role semantics remain open |
+| 2026-10-04 | T5.4 Launch ↔ case links | 20 | 4 h research: US-017/A3, legacy Item info/details/ParentInfo host paths, route context and Q-FE-07 boundary plus Jira scope · 10 h implementation: shared feature-gated viewer renderer, strict positive-safe-integer A3 and unique root-Launch `pipeline:<pipelineId>/<iterationId>` parsing, internal Library/iteration navigation, hierarchy-derived single-parent root signalling across ParentInfo hosts and fail-closed toggle/context/malformed handling · 6 h validation: component-fixture integration without a fake Launch controller/API; focused 4 suites / 64 tests and full Node 20 Jest 149 suites / 1273 tests PASS; full `npm run lint` exit 0 with 201 existing warnings; type-check, scoped ESLint/Stylelint, diff-check and senior code/security final rechecks PASS. Browser/runtime walkthrough was not performed; live A3/Launch attribute delivery remains provisional and unverified |
 | 2026-10-04 | T5.3 Automation section on case | 8 | 2 h research: US-017/D13/C2 contract, existing Test Case details loading/polling and internal route patterns, Jira scope · 4 h implementation: four-state viewer-readable Automation results, last result/optional defect type, safe internal iteration and filtered Launch navigation, provisional MR id/state without external URL trust, scenario-change warning, last-good-preserving loading/error/retry and mock projection · 2 h validation: focused lifecycle/section/mock coverage; full Node 20 Jest 145 suites / 1209 tests PASS; full `npm run lint` exit 0 with 201 existing warnings; type-check, diff-check and senior code/security final rechecks PASS. Browser/runtime walkthrough was not performed. C2 remains mock-only and T5.4 backlinks are excluded |
 | 2026-10-04 | T5.2 Automation iteration progress | 8 | 2 h research: US-016/C2/A1-A2 boundary, case/pipeline refresh paths, permission split and Jira scope · 4 h implementation: viewer-readable in-progress iteration link, guarded case polling, automation-only Pipelines refresh, hidden-tab-aware non-overlap shared polling, mock Prepare → Develop → Automation Review → Fix/Skipped progression, iteration membership/projection, canonical/internal + requested/external ID persistence across reload, public CaseLink identity and persisted-simulation rehydration · 2 h validation: polling generation/loading-cycle regression coverage; Node 20.19.1 full Jest 145 suites / 1191 tests PASS; full `npm run lint` exit 0 with existing baseline warnings only; type-check, diff-check and senior code/security rechecks PASS. Browser/runtime visual walkthrough was not performed. A1/A2/C2 remain provisional mock-only contracts; no live-backend integration is claimed |
 | 2026-10-04 | T5.1 Automate action + Send to automation dialog | 20 | 4 h requirements/A1-A2 contract, details/bulk/selection and modal-pattern research plus Jira scope · 10 h implementation: shared eligibility and strict request-correlated normalization, environment/request hook with stale-response guards, localized responsive modal and minimal Automation section, details-menu and Library-bulk entry points, authoritative partial-result feedback, accepted-only selection clearing, cross-page review/automation snapshots, deterministic mock validation and persistent confirmation flow · 6 h tests/review: focused 10 suites / 139 tests, full 143 suites / 1153 tests, type-check, full lint with baseline warnings only, diff-check, independent code/security PASS and contract/status documentation. A1/A2 remain provisional mock-only APIs; T5.2 polling is excluded |

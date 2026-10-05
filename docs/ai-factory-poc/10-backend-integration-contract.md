@@ -7,6 +7,10 @@
 > The schema inventory and TypeScript-like raw DTOs remain in
 > [05-backend-contract.md](05-backend-contract.md). This file adds the integration gaps, ownership, blocking
 > level and readiness gates; it does not redefine the published OpenAPI.
+>
+> **Frontend implementation note (2026-10-04):** EPMRPP-122041 implements the mock-default, hard-closed G2
+> LP3 generic-detail adapter/transport/provenance foundation. This does not change this contract's proposed
+> status, resolve any decision below or constitute an authenticated live rollout.
 
 ## 1. Problem Statement table
 
@@ -176,7 +180,7 @@ lower or neither is better.
 | Group | Endpoints/capability | Current scope | Applicable blocker/decision IDs | Applicable degraded items and exact reduced behavior | Explicitly not gating this group |
 |---|---|---|---|---|---|
 | G1 Pipeline catalog | LP1, LP2 | Candidate staged integration | EP-03, EP-04, EP-08, EP-09, PL-01, PL-02, IT-02, D-12 | EP-05: one generic read-failure state where no stable specific code exists. EP-10: healthy pipeline groups remain visible with an inline failed-group state and group retry. PL-03: repository displays “Not provided”. IT-03: omit unresolved actor/model/environment metadata. IT-04: reduced cards omit requirement/test-case references, score, ready/fix counts, launch/MR/CI and metric KPIs unless supplied by agreed typed fields. IT-06: omit cost. ST-01: unknown/non-specialized stages use validated generic labels/order. ST-03: metrics remain opaque and stage summaries are status-only. | LP5–LP7, QS2–QS4, QS-03 |
-| G2 Pipeline generic detail | LP3, after G1 | Candidate only with Product-approved generic view | EP-04, EP-07, EP-08, EP-09, IT-02, ST-01, ST-02, D-12 | EP-05: generic read-failure state where no stable specific code exists. PL-03: repository displays “Not provided”. IT-03: omit unresolved actor/model/environment metadata. IT-04: omit unsupported header KPIs/references. IT-06: omit cost. ST-03: metrics remain opaque and no metric KPI is rendered. ST-04: specialized Create/Grade/Upload/Review/per-case panels stay off; show validated generic stage identity/status only. ST-05: token-usage footer is hidden. ST-07: references render as text only unless they pass the agreed typed-reference and route/host policy. | LP5–LP7, QS2–QS4, QS-03 |
+| G2 Pipeline generic detail | LP3, after G1 | FE foundation implemented in EPMRPP-122041; candidate rollout only with Product-approved generic view and all applicable blockers closed | EP-04, EP-07, EP-08, EP-09, IT-02, ST-01, ST-02, D-12 | EP-05: generic read-failure state where no stable specific code exists. PL-03: repository displays “Not provided”. IT-03: omit unresolved actor/model/environment metadata. IT-04: omit unsupported header KPIs/references. IT-06: omit cost. ST-03: metrics remain opaque and no metric KPI is rendered. ST-04: specialized Create/Grade/Upload/Review/per-case panels stay off; show validated generic stage identity/status only. ST-05: token-usage footer is hidden. ST-07: references render as text only unless they pass the agreed typed-reference and route/host policy. The current foundation additionally keeps the live gate closed and performs no live polling. | LP5–LP7, QS2–QS4, QS-03 |
 | G3 Pipeline comparison | LP4, after G2 | Proposed first rollout: neutral comparison; approval pending | EP-04, EP-08, EP-09, IT-07, ST-03, IT-06, D-05, D-12 | EP-05: generic comparison failure where no stable specific code exists. IT-03/IT-04: omit unresolved metadata and rich KPI comparison. ST-03/D-05: omit metric values/deltas; show current/previous stage status only with neutral styling and no direction, verdict or better/worse wording. IT-06: omit cost and cost delta. ST-05: omit token comparison. | LP5–LP7, QS2–QS4 |
 | G4 Pipeline settings | LP5 | Candidate only for Organization Manager/Administrator | EP-04, EP-05, EP-06, EP-08, EP-09, PL-04, PL-05 | None. Settings mutation requires the complete agreed validation, permission and concurrency contract. | LP6, LP7, QS1–QS4 |
 | G5 Stage Retry | LP7 | Candidate only for Organization Manager/Administrator | EP-04, EP-05, EP-06, EP-07, EP-08, EP-09, ST-06, D-08, D-12 | ST-07: `triggeredRunUrl` and other references are non-clickable text unless they pass the agreed typed-reference and route/host policy; retry success/status remains available without navigation. | LP5, LP6, QS1–QS4 |
@@ -485,6 +489,7 @@ An endpoint group is integrated only when:
 
 | Date | Change |
 |---|---|
+| 2026-10-04 | Recorded the implemented and automatically validated EPMRPP-122041 G2 LP3 generic-detail foundation and its closed rollout boundary: strict reduced adapter, separate detail provenance/stale guards and reduced presentation exist, while every G2 decision/blocker remains open and no live backend/browser validation or polling is claimed. |
 | 2026-10-02 | QA iteration 2: made G3 comparison status-only and neutral pending metric/cost semantics, and added group-specific degraded behavior plus Product/QA evidence gates for G1–G9. |
 | 2026-10-02 | QA iteration 1: clarified LP6 producer/Re-run semantics, corrected role names, split Quality Standard scopes, added rollout-group blocker dependencies, strengthened metric typing and separated BE captures from FE negative fixtures. |
 | 2026-10-02 | Initial proposed FE/BE integration contract based on OpenAPI `feature-pipelines-2767` and the implemented mock-backed UI. |

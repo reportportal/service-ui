@@ -28,6 +28,7 @@ import RightArrowIcon from 'common/img/arrow-right-small-inline.svg';
 import RefreshIcon from 'common/img/refresh-icon-inline.svg';
 import {
   breadcrumbsSelector,
+  isRootLaunchParentSelector,
   namespaceSelector,
   fetchTestItemsFromLogPageAction,
   restorePathAction,
@@ -74,6 +75,7 @@ const messages = defineMessages({
     previousLinkDisable: disablePrevItemLinkSelector(state),
     nextLinkDisable: disableNextItemLinkSelector(state),
     includeAllLaunches: includeAllLaunchesSelector(state),
+    isLaunchRoot: isRootLaunchParentSelector(state),
   }),
   {
     setIncludeAllLaunchesAction,
@@ -108,6 +110,7 @@ export class LogToolbar extends Component {
     nextLinkDisable: PropTypes.bool,
     fetchTestItems: PropTypes.func,
     logViewMode: PropTypes.string,
+    isLaunchRoot: PropTypes.bool,
     restorePath: PropTypes.func,
     parentItem: PropTypes.object,
     debugMode: PropTypes.bool,
@@ -126,6 +129,7 @@ export class LogToolbar extends Component {
     nextLinkDisable: false,
     fetchTestItems: () => {},
     logViewMode: DETAILED_LOG_VIEW,
+    isLaunchRoot: false,
     restorePath: () => {},
     parentItem: null,
     className: '',
@@ -170,6 +174,7 @@ export class LogToolbar extends Component {
       restorePath,
       parentItem,
       includeAllLaunches,
+      isLaunchRoot,
       debugMode,
       className,
     } = this.props;
@@ -218,7 +223,7 @@ export class LogToolbar extends Component {
               </div>
             </>
           ) : (
-            parentItem && <ParentInfo parentItem={parentItem} />
+            parentItem && <ParentInfo parentItem={parentItem} isLaunchRoot={isLaunchRoot} />
           )}
           <div className={cx('action-button')}>
             <GhostButton icon={RefreshIcon} onClick={onRefresh} transparentBackground>

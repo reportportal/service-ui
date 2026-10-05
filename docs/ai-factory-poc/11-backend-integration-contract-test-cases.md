@@ -63,7 +63,7 @@
 | Group | Primary cases | Required execution state |
 |---|---|---|
 | G1 Pipeline catalog | TC-BIC-001, 003–006, 013–016, 033 | Execute after G1 DoR |
-| G2 Pipeline generic detail | TC-BIC-007, 013–018, 023, 033 | Execute after G1 and G2 DoR |
+| G2 Pipeline generic detail | TC-BIC-007, 013–018, 023, 033 | EPMRPP-122041 automated FE foundation coverage complete; authenticated/live execution remains blocked until G1 and G2 DoR |
 | G3 Pipeline comparison | TC-BIC-019, 033 | Execute only after D-05 degraded option and D-12 evidence are approved |
 | G4 Pipeline settings | TC-BIC-021, 022, 024, 033 | Execute after permission, validation and concurrency decisions |
 | G5 Stage Retry | TC-BIC-017, 021–023, 025, 033 | Execute after retry/idempotency decisions |
@@ -177,7 +177,9 @@
   1. Request LP3 using only the route's `iterationId` in the live URL.
   2. Adapt a matching response.
   3. Repeat with a different returned `pipelineId` and with the agreed invalid/missing identity fixture.
-- **Expected Result:** Matching data renders. Mismatched identity fails closed with an invalid-resource state and never renders another pipeline's detail; the client never adds `pipelineId` to the canonical LP3 path.
+  4. Delay the response, then change project, catalog version/request or detail route before it completes.
+  5. Open the Library with an iteration filter and verify its iteration-number label lookup against cached catalog metadata.
+- **Expected Result:** Matching data renders. Mismatched identity fails closed with an invalid-resource state and never renders another pipeline's detail; the client never adds `pipelineId` to the canonical LP3 path. Stale completions cannot replace current detail state. Library label lookup accepts only matching project/catalog-version metadata and never issues LP3 directly.
 - **Priority:** Critical
 - **Risk Level:** Cross-pipeline data confusion or leakage
 - **Automation suitability:** Full — service/component integration
