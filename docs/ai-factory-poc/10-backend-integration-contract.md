@@ -8,9 +8,11 @@
 > [05-backend-contract.md](05-backend-contract.md). This file adds the integration gaps, ownership, blocking
 > level and readiness gates; it does not redefine the published OpenAPI.
 >
-> **Frontend implementation note (2026-10-04):** EPMRPP-122041 implements the mock-default, hard-closed G2
+> **Frontend implementation note (updated 2026-10-05):** EPMRPP-122041 implements the mock-default, hard-closed G2
 > LP3 generic-detail adapter/transport/provenance foundation. This does not change this contract's proposed
-> status, resolve any decision below or constitute an authenticated live rollout.
+> status, resolve any decision below or constitute an authenticated live rollout. EPMRPP-122052 additionally
+> implements disabled, mock-backed Re-run and failed-Upload Retry presentation shells. They send no mutation and
+> do not prove LP6 interactive-command semantics, LP7 readiness or an Upload rollback/attempt-history contract.
 
 ## 1. Problem Statement table
 
@@ -19,12 +21,13 @@
 | 1 | 2026-10-02 | The implemented AI Factory UI consumes a rich, legacy mock contract, while the published Pipeline API uses different paths, response envelopes, statuses and DTO fields. Directly switching URLs would cause invalid rendering and runtime failures. | [OpenAPI JSON](http://tms.epmrpp.reportportal.io/api/api-docs), [05](05-backend-contract.md), current `service-ui` code | FE analysis | Agree a raw API contract, explicit mappings and a staged switch from mocks to live reads. | [EPMRPP-118192](https://jiraeu.epam.com/browse/EPMRPP-118192) |
 | 2 | 2026-10-02 | The Quality Standard API exposes the current rubric and conditional CRUD operations but does not identify the rubric/version used for historical grades. | OpenAPI `feature-pipelines-2767`, [05 §1.5](05-backend-contract.md#15-quality-standard-requests-and-responses) | FE analysis | Separate current-rubric read-only display, future management and reproducible historical evaluation into independent scopes. | [EPMRPP-118192](https://jiraeu.epam.com/browse/EPMRPP-118192) |
 | 3 | 2026-10-02 | The currently published API URL is HTTP while all operations inherit bearer JWT authentication. | OpenAPI server and security scheme | FE analysis | A trusted same-origin HTTPS route is required before authenticated browser acceptance testing. | [EPMRPP-118192](https://jiraeu.epam.com/browse/EPMRPP-118192) |
+| 4 | 2026-10-05 | T6.7 exposes a user Re-run modal and failed-Upload Retry presentation, but LP6 is described as CI/agent submission, LP7 has no attempt-history contract and LP3 has no typed Upload rollback result. | [T6.7 evidence](20-visual-alignment-evidence-2026-10-05.md), [05 §2.3](05-backend-contract.md#23-t67-provisional-re-run-and-failed-upload-presentation-contract) | FE analysis | Agree a separate interactive Re-run capability/command and atomic Upload retry-attempt semantics before enabling either action. | [EPMRPP-121843](https://jiraeu.epam.com/browse/EPMRPP-121843) |
 
 ## 2. Assumptions and agreements table
 
 | # | Assumptions and agreements |
 |---:|---|
-| 1 | The audited baseline is OpenAPI `3.0.1`, `info.version = feature-pipelines-2767`, server `/api`, inspected on 2026-10-02. A later document must be diffed against this baseline. |
+| 1 | The audited baseline is OpenAPI `3.0.1`, `info.version = feature-pipelines-2767`, server `/api`, inspected on 2026-10-02 and re-audited on 2026-10-05 with no material drift. A later document must be diffed against this baseline. |
 | 2 | “Observed” means present in the published OpenAPI. It does not prove that an authenticated request has succeeded in the target environment. No mutating endpoint was invoked during discovery. |
 | 3 | Live API DTOs are transport types. The FE must validate and adapt them into existing view models; raw responses must not be cast directly to `PipelineRS`, `IterationSummaryRS` or `IterationRS`. |
 | 4 | The existing mock remains the accepted PoC fallback until every hard blocker for the selected endpoint group is closed. Unknown data is displayed as unavailable/unknown; it is never invented or silently coerced. |
@@ -32,6 +35,7 @@
 | 6 | Live authenticated browser traffic is permitted only through trusted HTTPS with certificate validation enabled. Tokens must never be sent to the currently documented plain-HTTP origin. |
 | 7 | Pipeline reads/mutations and Quality Standard read are independently releasable groups. Quality Standard CRUD is a conditional future group. Enabling one group must not disable the Test Case AI overlay or unrelated mocks. |
 | 8 | This proposal becomes an agreed contract for a rollout group only after the backend/API owner and Product resolve every **blocker/decision ID applicable to that approved group** in §5.6 and record the decision in §9. Blockers in a future or excluded group do not block an independent group. |
+| 9 | T6.7 controls are contract probes only: Re-run confirmation and Retry Upload remain disabled, use mock presentation data and issue no LP6/LP7 request. |
 
 ## 3. Designs table
 
@@ -105,6 +109,7 @@ Blocking levels:
 | EP-09 | Project/resource permission requirements are undocumented beyond possible `403`. | FE can hide feature UI by flag/role. | Unauthorized read or mutation could occur if BE trusts the UI. | Product defines roles; BE enforces project membership plus resource-level authorization and denies by default; QA receives allowed/denied accounts. | Product + BE + QA | Hard blocker |
 | EP-10 | LP1/LP2 are fan-out reads in the current UI. | A single rejected `Promise.all`/saga call fails all pipeline iterations. | One inaccessible/broken pipeline hides healthy pipelines. | FE isolates errors per pipeline and offers per-group retry; Product confirms partial-results behavior. | FE + Product | Degraded |
 | EP-11 | No Pipeline CI connection read/save/test endpoint or DTO is present in the audited OpenAPI. | US-019 requires repository, branch, write-only credential, jobs, models, environments, three aggregate states and D15 Organization Manager/Instance Administrator mutation roles. | FE cannot safely implement T3.6, T1.2u state or CI-dependent action gating without inventing transport, secret and authorization semantics. | Resolve the decisions and acceptance boundary in [19-ci-connection-api-contract-request.md](19-ci-connection-api-contract-request.md), merge the accepted contract into the requirements repository and publish matching OpenAPI before runtime T3.6. | Product + BE + Security + QA | Hard blocker for T3.6/T1.2u and CI-dependent actions |
+| EP-12 | No interactive Re-run capability/options endpoint or command contract is published. | T6.7 mock `PipelineRS.rerunOptions` supplies Model/Environment arrays to a disabled modal. | FE could hardcode stale choices, expose ingestion authority or create a duplicate/wrong iteration. | Publish server-owned stable values/labels/defaults/availability and a project/Pipeline-scoped command returning the new iteration identity; LP6 may be used only if its interactive caller and command semantics are explicitly approved. | Product + BE + Security | Hard blocker for user Re-run |
 
 ### 5.2 Pipeline list and iteration mapping gaps
 
@@ -134,6 +139,7 @@ Blocking levels:
 | ST-05 | Token usage by model includes input/cache/output and cost. | No typed token usage. | The footer shown in the PoC cannot be reproduced or audited. | BE adds typed usage with integer token counts, amount/currency and aggregation semantics, or Product removes it from live mode. | BE + Product | Degraded |
 | ST-06 | Retry control needs stable eligibility and attempt feedback. | Stage has `ci.retryable?`, last retry metadata; LP7 returns optional `stageId`, `status`, `triggeredRunUrl`. | Eligibility, duplicate attempts and post-202 refresh are underspecified. | BE makes returned `stageId`/`status` required, defines retryable state/permission and attempt identity; FE refreshes LP3 according to polling contract. | BE + FE | Hard blocker for retry |
 | ST-07 | Stage/test-case links must target existing internal routes. | `testCaseIds?: string[]`, `resultRef?`, URLs in CI/retry. | ID kind and navigation target are undefined; values may be malicious. | BE documents identifier formats and reference types. FE validates references per BackendIntegration_6 in §6 and renders invalid/unapproved values as plain text. | BE + FE | Hard blocker for clickable links; Non-blocking for text |
+| ST-08 | Failed Upload is all-or-nothing and Retry exposes ordered attempts. | LP3 has generic result/CI fields; LP7 returns only optional stage/status/run URL. T6.7 mock displays one failure reason and one CI job. | FE cannot prove that no cases were written, distinguish retry attempts, identify downstream reset or audit per-attempt/accumulated cost. | BE guarantees an atomic Library transaction and publishes typed Upload outcome plus ordered attempt number/ID, status/timestamps, safe reason/code, CI job, rollback result, downstream reset and cost/token semantics. | BE + Product + QA | Hard blocker for failed-Upload detail and Retry Upload |
 
 ### 5.4 Quality Standard gaps
 
@@ -156,6 +162,10 @@ evidence of an **iteration/result submission API**, not evidence of a user execu
 must not claim that LP6 powers the UI <Re-run> action. Re-run remains unavailable in live mode until the questions
 below are resolved or BE publishes a separate command endpoint.
 
+T6.7 now provides concrete presentation evidence only: the modal displays mock Model/Environment choices but keeps
+confirmation disabled and explicitly refuses LP6; the failed-Upload panel keeps Retry disabled. This does not close
+any LP6/LP7 decision.
+
 | ID | Unresolved contract point | Impact | Required decision or action | Owner | Level |
 |---|---|---|---|---|---|
 | LP6-01 | Is LP6 ingestion of externally executed results, a command that starts execution, or both? | FE could duplicate records instead of starting work, or expose a privileged producer API to users. | BE states one unambiguous purpose. If LP6 is ingestion, publish a separate Re-run command with request/response semantics; FE never calls ingestion to simulate Re-run. | BE + Product | Hard blocker for Re-run and LP6 consumer integration |
@@ -164,6 +174,7 @@ below are resolved or BE publishes a separate command endpoint.
 | LP6-04 | `rerun?` and `rerunOfIterationId?` invariants are undocumented. | Orphan/cross-project/cross-pipeline links and ambiguous rerun chains are possible. | BE requires a valid same-project/same-pipeline source when `rerun=true`, rejects `rerunOfIterationId` otherwise, defines whether reruns point to the root or immediate predecessor and returns stable validation/not-found/conflict errors. | BE | Hard blocker |
 | LP6-05 | No idempotency key or duplicate-submission rule is documented. | CI retries can create duplicate iterations and stages. | BE defines an idempotency key/natural producer identity, replay window and same-key/different-body conflict behavior. | BE | Hard blocker |
 | LP6-06 | LP6 returns `201` detail, but persistence/execution timing is undocumented. | Callers cannot know whether stages/results are final, partially persisted or merely accepted. | BE defines whether `201` means synchronously persisted submission or changes to `202` for asynchronous processing; document atomicity, polling/resource location and failure recovery. | BE | Hard blocker |
+| LP6-07 | No authoritative source or validation contract exists for Re-run Model/Environment choices. | Mock arrays can drift from CI capabilities and forged/stale values may be submitted. | BE publishes stable machine values plus labels, defaults and availability; the interactive command revalidates them against the current connected CI capability. Do not add mock `rerunOptions` to LP1 by implication. | BE + Product | Hard blocker for user Re-run |
 
 ### 5.6 Blocker applicability by rollout group
 
@@ -178,17 +189,21 @@ Product/BE accepting that explicit omission, and Product/QA recording approval a
 richer comparison requires conforming ST-03 metric types plus per-metric direction semantics, including whether higher,
 lower or neither is better.
 
+G10 is reserved for the separate US-019 Pipeline CI connection readiness group defined in
+[19](19-ci-connection-api-contract-request.md). G11 below consumes that capability but does not redefine it.
+
 | Group | Endpoints/capability | Current scope | Applicable blocker/decision IDs | Applicable degraded items and exact reduced behavior | Explicitly not gating this group |
 |---|---|---|---|---|---|
 | G1 Pipeline catalog | LP1, LP2 | Candidate staged integration | EP-03, EP-04, EP-08, EP-09, PL-01, PL-02, IT-02, D-12 | EP-05: one generic read-failure state where no stable specific code exists. EP-10: healthy pipeline groups remain visible with an inline failed-group state and group retry. PL-03: repository displays “Not provided”. IT-03: omit unresolved actor/model/environment metadata. IT-04: reduced cards omit requirement/test-case references, score, ready/fix counts, launch/MR/CI and metric KPIs unless supplied by agreed typed fields. IT-06: omit cost. ST-01: unknown/non-specialized stages use validated generic labels/order. ST-03: metrics remain opaque and stage summaries are status-only. | LP5–LP7, QS2–QS4, QS-03 |
 | G2 Pipeline generic detail | LP3, after G1 | FE foundation implemented in EPMRPP-122041; candidate rollout only with Product-approved generic view and all applicable blockers closed | EP-04, EP-07, EP-08, EP-09, IT-02, ST-01, ST-02, D-12 | EP-05: generic read-failure state where no stable specific code exists. PL-03: repository displays “Not provided”. IT-03: omit unresolved actor/model/environment metadata. IT-04: omit unsupported header KPIs/references. IT-06: omit cost. ST-03: metrics remain opaque and no metric KPI is rendered. ST-04: specialized Create/Grade/Upload/Review/per-case panels stay off; show validated generic stage identity/status only. ST-05: token-usage footer is hidden. ST-07: references render as text only unless they pass the agreed typed-reference and route/host policy. The current foundation additionally keeps the live gate closed and performs no live polling. | LP5–LP7, QS2–QS4, QS-03 |
 | G3 Pipeline comparison | LP4, after G2 | Proposed first rollout: neutral comparison; approval pending | EP-04, EP-08, EP-09, IT-07, ST-03, IT-06, D-05, D-12 | EP-05: generic comparison failure where no stable specific code exists. IT-03/IT-04: omit unresolved metadata and rich KPI comparison. ST-03/D-05: omit metric values/deltas; show current/previous stage status only with neutral styling and no direction, verdict or better/worse wording. IT-06: omit cost and cost delta. ST-05: omit token comparison. | LP5–LP7, QS2–QS4 |
 | G4 Pipeline settings | LP5 | Candidate only for Organization Manager/Instance Administrator | EP-04, EP-05, EP-06, EP-08, EP-09, PL-04, PL-05 | None. Settings mutation requires the complete agreed validation, permission and concurrency contract. | LP6, LP7, QS1–QS4 |
-| G5 Stage Retry | LP7 | Candidate only for Organization Manager/Instance Administrator | EP-04, EP-05, EP-06, EP-07, EP-08, EP-09, ST-06, D-08, D-12 | ST-07: `triggeredRunUrl` and other references are non-clickable text unless they pass the agreed typed-reference and route/host policy; retry success/status remains available without navigation. | LP5, LP6, QS1–QS4 |
+| G5 Stage Retry | LP7 | Candidate only for Organization Manager/Instance Administrator; T6.7 Retry Upload is disabled presentation only | EP-04, EP-05, EP-06, EP-07, EP-08, EP-09, ST-06, ST-08, D-08, D-18, D-12 | ST-07: `triggeredRunUrl` and other references are non-clickable text unless they pass the agreed typed-reference and route/host policy; retry success/status remains available without navigation. No degradation is allowed for Upload atomicity or attempt identity/history. | LP5, LP6, QS1–QS4 |
 | G6 Iteration submission | LP6 agent/CI producer | Not a UI Re-run contract; independent producer integration | EP-04, EP-05, EP-08, EP-09, LP6-01–LP6-06, D-08, D-13 | None. Producer identity, authorization, rerun invariants, idempotency, atomicity and timing must be complete. | LP5, LP7, QS1–QS4 |
 | G7 Current Quality Standard read | QS1 | Current T6.2 read-only candidate | EP-04, EP-08, EP-09, QS-01, D-12 | EP-05: generic unavailable state where no stable absence/error code exists. QS-02: show criterion name only and do not invent explanatory text. QS-07: hide created/updated timestamps until their unit is defined. | QS2–QS4, QS-03–QS-06, QS-08, QS-09 |
 | G8 Quality Standard management | QS2, QS3, QS4 | Excluded from current T6.2; requires Product-approved story | EP-04, EP-05, EP-06, EP-08, EP-09, QS-01, QS-04, QS-05, QS-06, QS-08, QS-09, D-12, D-14 | QS-02: a future story may approve name-only criteria and must not invent descriptions. QS-07: hide audit timestamps until their unit is defined. No degradation is allowed for permissions, concurrency, score invariants or delete semantics. | Pipeline groups and QS-03; implementation must not start from API availability alone |
 | G9 Historical grading association | Version/snapshot plus grading result contract | Independent future capability | QS-03, D-09, D-12 | QS-02: if Product explicitly approves, historical snapshots may show criterion names without descriptions and must state that no criterion explanation was stored. No degradation is allowed for immutable version/snapshot association. | QS1 current-rubric read |
+| G11 User-facing Re-run | Interactive command plus Model/Environment capability source | T6.7 shell exists but confirmation is disabled; executable T4.4 remains blocked | EP-04, EP-05, EP-06, EP-07, EP-08, EP-09, EP-11, EP-12, LP6-01, LP6-02, LP6-04–LP6-07, D-07, D-13, D-15, D-18 | None. Caller separation, option validation, fresh CI capability, source/new-iteration identity, idempotency and source immutability must be complete. | G6 producer integration, QS1–QS4 |
 
 ## 6. Functional Requirements table
 
@@ -200,6 +215,7 @@ lower or neither is better.
 | BackendIntegration_4 | Authorized mutations | Apply exact role rules, caller separation, concurrency and deterministic errors to Pipeline mutations and any separately approved future Quality Standard management. | To be added by QA | Proposed |
 | BackendIntegration_5 | Historical grading integrity | Conditional future capability: associate evaluation output with an immutable Quality Standard version/snapshot without blocking QS1 current-rubric read. | To be added by QA | Future proposal |
 | BackendIntegration_6 | Secure references and transport | Use trusted HTTPS and validate every backend-provided navigation reference. | To be added by QA | Proposed |
+| BackendIntegration_7 | Re-run and Upload retry integrity | Keep interactive Re-run separate from ingestion; validate server-owned options; preserve source iterations; guarantee atomic Upload rollback and auditable retry attempts. | TC-BIC-037, TC-BIC-038 | Future/blocked |
 
 ### BackendIntegration_1 — Raw contract boundary
 
@@ -330,6 +346,30 @@ actions granted to my exact role **So that** review and Pipeline operations cann
 5. Invalid/unapproved references render as non-clickable text and never as HTML.
 6. Logs, telemetry, fixtures and screenshots do not expose bearer tokens or confidential URL query data.
 
+### BackendIntegration_7 — Re-run and Upload retry integrity
+
+**User Story:** **As an** authorized Pipeline manager **I want to** Re-run an iteration or retry a failed Upload
+**So that** a new execution is intentional, source data is preserved and every retry is auditable.
+
+**Pre-condition:** D-13, D-15 and D-18 are accepted; the authoritative CI capability contract and trusted-HTTPS
+command API are published with sanitized payloads and allowed/denied test accounts.
+
+**Acceptance Criteria:**
+
+1. Re-run options come from a project/Pipeline-scoped server capability with stable machine values, labels, defaults
+   and availability; the command rejects stale or forged values.
+2. Interactive Re-run authority is separate from CI/agent ingestion authority unless Backend explicitly documents
+   one endpoint with distinct caller classes and least privilege.
+3. One accepted Re-run creates exactly one new same-Pipeline, same-requirement iteration linked to the source; it
+   never mutates the source iteration or its Library cases.
+4. Re-run and Retry require a fresh connected CI capability and are idempotent or deterministically conflict-safe.
+5. Failed Upload is atomic: none of that attempt's cases become visible in the Library.
+6. Retry is allowed only for an eligible failed stage, creates a stable ordered attempt record and preserves prior
+   attempts with status/timestamps, safe failure, CI job and cost/token accounting.
+7. Backend defines and returns which downstream stages are reset or re-executed; FE refreshes the authoritative
+   iteration after acceptance and never synthesizes attempt history from one stage snapshot.
+8. T6.7 final actions stay disabled and issue no LP6/LP7 request until AC1–AC7 have approved evidence.
+
 ## 7. Frontend implementation obligations
 
 1. Add live URL builders beside the legacy/mock builders; do not repurpose a mock path while its handler is active.
@@ -354,6 +394,8 @@ actions granted to my exact role **So that** review and Pipeline operations cann
 5. Provide polling, terminal-state, retry, concurrency and idempotency semantics.
 6. Provide the sanitized success/error payload pack in §10 from the same deployed version.
 7. Preserve backward compatibility for the agreed PoC window or publish a versioned breaking-change notice.
+8. For user Re-run and Upload retry, publish server-owned capability options, interactive caller semantics, atomic
+   rollback, ordered attempt history, downstream reset and per-attempt/accumulated cost rules before enabling T4.4.
 
 ## 9. Required decision register
 
@@ -379,6 +421,7 @@ for an excluded/future group does not block an independent group.
 | D-12 | Which exact degraded behaviors are accepted for a rollout? | Approve each item in that group's “Applicable degraded items and exact reduced behavior” cell in §5.6; link Product approval plus QA scenario/evidence for every item. Approval is group-specific and cannot be reused implicitly by another group. | Product + QA | Open per group |
 | D-13 | What is LP6 and how does a user Re-run start? | Define LP6 as ingestion or execution command, caller class, pipeline identity, rerun invariants and response timing; if ingestion, publish a separate Re-run command | BE + Product + Security | Open |
 | D-14 | Is Quality Standard management in current scope? | Decided for T6.2: QS1 read-only may roll out independently; QS2–QS4 remain excluded until a Product-approved management story defines UX, permissions and ACs | Product | Decided 2026-10-02 |
+| D-18 | What exact contract enables T6.7 Re-run/Retry presentation? | User Re-run: authoritative Model/Environment capabilities plus a dedicated interactive command or explicitly approved LP6 semantics, fresh CI gating, source/new identity and idempotency. Upload Retry: atomic rollback, typed failure and ordered attempts/jobs with downstream and cost/token rules. | Product + BE + Security + QA | Open |
 
 Record an approved option, decision date, Jira/ADR link and approver in this table; do not replace evidence with a
 verbal agreement.
@@ -403,11 +446,17 @@ environment, with tokens, personal data and sensitive repository details removed
    same idempotency key with different body; invalid pipeline identity; every invalid `rerun`/`rerunOfIterationId`
    combination; same-project and cross-project source; synchronous or asynchronous response chosen in D-13.
 7. LP7: success plus actual not-retryable, duplicate/in-flight, forbidden and CI-provider failure errors.
+   Include a failed all-or-nothing Upload with zero Library writes, multiple ordered attempts/jobs, downstream reset
+   behavior and per-attempt/accumulated cost and token examples.
 8. QS1: absent standard, minimum valid standard and representative full current standard.
 9. QS2–QS4 only after G8 is Product-approved: success plus actual invalid criterion, duplicate sequence/name if
    forbidden, concurrent update, referenced delete and forbidden errors.
 10. Authentication: expired/invalid token response; authorization: allowed and denied project/resource combinations.
 11. For every error: HTTP status, content type, stable machine code, localized-safe message fields and correlation ID.
+12. User-facing Re-run, before G11: zero/one/many capability options with stable values/labels/defaults and unavailable
+    choices; accepted new-iteration response; stale/forged option; disconnected/revoked CI; forbidden/cross-project
+    caller; exact replay and same-key/different-body conflict. This pack is separate from LP6 producer captures unless
+    D-13 explicitly approves one endpoint for both caller classes.
 
 Captures must be versioned with the OpenAPI commit/build identifier. BE is **not** asked to produce or capture a
 malformed success response; such data would contradict the agreed backend contract.
@@ -469,6 +518,7 @@ An endpoint group is integrated only when:
 | Mutable Quality Standard is presented as historical evidence. | Reviewers interpret past grades against the wrong rubric. | Immutable snapshot/version association and honest current-only label until available. |
 | Browser uses the documented HTTP origin for convenience. | Bearer-token disclosure. | HTTPS readiness gate; fail closed; no TLS bypass. |
 | Partial fan-out failure is handled as global failure. | One pipeline hides all data. | Per-pipeline state and retry. |
+| Disabled T6.7 controls are mistaken for an executable contract. | Browser calls LP6 ingestion or presents a Retry whose rollback/attempt semantics are false. | Keep final actions disabled until G5/G11 DoR; require D-18 and TC-BIC-037/038 evidence. |
 
 ## 14. Alternative Approaches
 
@@ -491,11 +541,16 @@ An endpoint group is integrated only when:
 6. Which Product story, UX and audit requirements will authorize the future G8 Quality Standard management scope?
 7. Which audit/event service records LP5, LP7 and QS2–QS4 actor/time changes?
 8. What correlation header/field should FE surface when reporting a backend failure?
+9. Which endpoint returns authoritative Re-run Model/Environment capabilities, and which interactive command starts
+   a new same-requirement iteration without mutating the source?
+10. What exact database transaction boundary proves failed Upload writes zero Library cases, and how are retry
+    attempts, downstream re-execution and accumulated cost represented?
 
 ## Changelog
 
 | Date | Change |
 |---|---|
+| 2026-10-05 | Re-audited OpenAPI with no material drift and synchronized T6.7 presentation evidence: added EP-12, ST-08, LP6-07, G11, BackendIntegration_7 and D-18 for server-owned Re-run options/command, source immutability, atomic failed-Upload rollback and ordered retry attempts. The Re-run and Retry Upload controls remain disabled and no LP6/LP7 integration is claimed. |
 | 2026-10-04 | Recorded the implemented and automatically validated EPMRPP-122041 G2 LP3 generic-detail foundation and its closed rollout boundary: strict reduced adapter, separate detail provenance/stale guards and reduced presentation exist, while every G2 decision/blocker remains open and no live backend/browser validation or polling is claimed. |
 | 2026-10-02 | QA iteration 2: made G3 comparison status-only and neutral pending metric/cost semantics, and added group-specific degraded behavior plus Product/QA evidence gates for G1–G9. |
 | 2026-10-02 | QA iteration 1: clarified LP6 producer/Re-run semantics, corrected role names, split Quality Standard scopes, added rollout-group blocker dependencies, strengthened metric typing and separated BE captures from FE negative fixtures. |

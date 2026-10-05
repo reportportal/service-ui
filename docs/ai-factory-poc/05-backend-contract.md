@@ -1,14 +1,15 @@
 # 05 · AI Factory backend integration contract
 
 > **Status: implementation-aligned contract, partly published and partly provisional.** This is the consolidated
-> backend contract required by every AI Factory surface implemented through **T6.6-A**. Pipeline and Quality
+> backend contract required by every AI Factory surface implemented through **T6.7**. Pipeline and Quality
 > Standard operations marked **Published** come from the live OpenAPI document. Test Case AI, lifecycle, review,
 > fix-round, Ready-only gate, automation and backlink operations remain frontend proposals unless explicitly
 > marked otherwise. A published operation, an implemented frontend adapter and a production-ready live rollout
 > are three different states and are tracked separately below.
 >
-> **Not included as implemented:** T3.6 CI connection, T1.2u CI-state badges and T4.4 Re-run/Retry UI are not
-> implemented. LP6/LP7 are documented for future use only; this file does not claim their user workflows exist.
+> **Not included as an executable integration:** T3.6 CI connection, T1.2u CI-state badges and T4.4 Re-run/Retry
+> commands are not implemented. T6.7 added disabled, mock-backed Re-run and failed-Upload Retry presentation
+> shells only. They send no mutation and do not prove that LP6 is a browser Re-run command or that LP7 is ready.
 
 ## 0. Sources, scope and status legend
 
@@ -73,8 +74,8 @@ and remain an open backend/product agreement.
 | LP3 | `GET /v1/project/{projectKey}/pipeline/iteration/{iterationId}` | `200 PipelineIterationDetailRS` | ✅ | T6.2-G2 strict raw adapter + reduced detail | Legacy rich P3 while mock mode is active | 🔒 hard closed |
 | LP4 | `GET /v1/project/{projectKey}/pipeline/iteration/{iterationId}/compare?with={otherIterationId}` | `200 PipelineCompareRS` | ✅ | T4.3 exact-path adapter; status-only for unmarked raw data | Same-path rich mock | 🔒 disabled with live catalog |
 | LP5 | `PATCH /v1/project/{projectKey}/pipeline/{pipelineId}` | `200 PipelineRS` | ✅ | T3.4 canonical request/body; UI currently requires mock-catalog provenance | Same-path mock in development | 🔒 not enabled from live catalog |
-| LP6 | `POST /v1/project/{projectKey}/pipeline/iteration` | `201 PipelineIterationDetailRS` | ✅ | None; T4.4 not implemented | None | ❌ |
-| LP7 | `POST /v1/project/{projectKey}/pipeline/iteration/{iterationId}/stage/{stageId}/retry` | `202 PipelineStageRetryRS` | ✅ | None; T4.4 not implemented | None | ❌ |
+| LP6 | `POST /v1/project/{projectKey}/pipeline/iteration` | `201 PipelineIterationDetailRS` | ✅ | No request integration; disabled Re-run shell explicitly refuses LP6 | Mock-only option display | ❌ |
+| LP7 | `POST /v1/project/{projectKey}/pipeline/iteration/{iterationId}/stage/{stageId}/retry` | `202 PipelineStageRetryRS` | ✅ | No request integration; disabled failed-Upload Retry shell only | Mock-only failure display | ❌ |
 | QS1 | `GET /v1/project/{projectKey}/tms/quality-standard` | `200 TmsQualityStandardRS` | ✅ | None; partial future rubric candidate | None | ❌ |
 | QS2 | `POST /v1/project/{projectKey}/tms/quality-standard` | `201 TmsQualityStandardRS` | ✅ | None | None | ❌ |
 | QS3 | `PUT /v1/project/{projectKey}/tms/quality-standard` | `200 TmsQualityStandardRS` | ✅ | None | None | ❌ |
@@ -143,6 +144,7 @@ remain open Backend/Security/Product decisions, not runtime facts.
 | Roles/read-only hardening (T6.1) | Server authorization for every read/mutation | FE checks exist but are never the security boundary. |
 | Demo reset/rehearsal and toggle-OFF regression (T6.4-P–T6.5) | No backend endpoint | Reset is browser-local mock storage only. It never seeds, restores or deletes remote data. |
 | Accessibility/responsiveness/NFR hardening (T6.3, T6.6-A) | Stable absence/error semantics; money provenance | No new endpoint. All cost fields are pipeline-supplied estimated USD, shown to two decimals. |
+| Visual alignment and failed-Upload/Re-run shells (T6.7) | Existing rich P1–P3/C2 fields plus provisional Re-run option, rollback and retry-attempt semantics | No new live integration. Re-run confirmation and Retry Upload are disabled; no LP6/LP7 request is sent. |
 
 ### 0.5 Normative cross-cutting rules
 
@@ -454,10 +456,43 @@ produce it. It therefore supports only the current-rubric portion of T2.5, not r
   live LP4 response is therefore normalised as status-only and neutral: the frontend does not infer rich KPIs,
   costs, criterion averages, Auto-Ready counts or evaluative delta direction from opaque live `metrics`. BE-014 and
   BE-015 remain open; live KPI/cost deltas and evaluative colouring must not be signed off from mock evidence.
-- **T4.4:** LP6 and LP7 provide the documented create-iteration and retry-stage operations; their user flow,
-  permissions and error handling still need requirements.
+- **T4.4/T6.7:** LP6 and LP7 provide published create-iteration and retry-stage operations, while T6.7 adds only
+  disabled interaction shells. The Re-run modal reads mock `rerunOptions`, identifies the source requirement and
+  iteration, and states that it does not call LP6. A failed Upload renders rollback text, the current stage-specific
+  CI job and a disabled Retry Upload action. No command handler, request adapter or mutation is present. The
+  user-facing Re-run command, option source, Upload atomicity, retry eligibility, attempt identity/history,
+  permissions, idempotency and post-acceptance refresh must be agreed before T4.4 can start.
 
-### 2.3 Legacy/mock frontend enums and view models
+### 2.3 T6.7 provisional Re-run and failed-Upload presentation contract
+
+T6.7 makes the following backend needs visible without claiming that they are published or executable:
+
+- **Re-run is a user command, not ingestion.** It creates a new iteration for the same requirement and Pipeline;
+  the source iteration and its Library cases remain unchanged. The response must identify the new iteration and
+  its `rerunOfIterationId`. LP6 may be used only if Backend explicitly defines it as this interactive command;
+  otherwise Backend must publish a separate endpoint.
+- **Options are server-owned capabilities.** The selectable model and environment values must come from the
+  authoritative CI/Pipeline capability contract, carry stable machine values plus display labels, define default
+  selection and availability, and be revalidated by the command. The mock-only `PipelineRS.rerunOptions` shape
+  below is presentation evidence, not approval to add these arrays to LP1.
+- **Re-run is permission- and connection-gated.** Organization Manager/Instance Administrator is the current
+  proposed Product role set. The server must also verify current project/Pipeline ownership and a fresh connected
+  CI capability at command time. Duplicate submissions require an idempotency key and deterministic replay or
+  conflict behavior.
+- **Upload is all or nothing.** A failed Upload must not expose any of that attempt's generated cases through the
+  Test Case Library. LP3, or an agreed typed stage-result resource, must provide a safe structured failure reason
+  and the exact Upload attempt/job identity. Backend must define the transaction boundary, rollback guarantee and
+  recovery behavior rather than relying on display text.
+- **Retry Upload stays in the same iteration.** Only an eligible failed stage may be retried; an already passed
+  stage cannot be retried. The accepted retry must identify a new attempt, preserve prior attempts for audit, and
+  define which downstream stages are reset/re-executed. LP7 authorization, idempotency/conflict and post-`202`
+  polling rules remain mandatory.
+- **Attempt history is structured.** The current shell can display one attempt from `StageRS.ciJob` and
+  `failureReason`, but the live contract must return ordered attempt records with attempt identity/number, status,
+  timestamps, safe reason/code, CI job reference and cost/token inclusion rules. The frontend must not synthesize
+  attempt `#1` from an undifferentiated stage snapshot after live enablement.
+
+### 2.4 Legacy/mock frontend enums and view models
 
 The remainder of this document is retained as the current PoC view-model/provisional contract. It is useful
 for existing UI behavior and mocks but must not be presented as the live raw DTO.
@@ -496,6 +531,10 @@ interface PipelineRS {
   repository: string;
   iterationsCount: number;
   settings?: PipelineSettingsRS;
+  rerunOptions?: {
+    models: string[];
+    environments: string[];
+  }; // mock/provisional visual shell only; final source/shape belongs to the US-019/US-020 contract
 }
 interface PipelineSettingsRS { autoReady: boolean; threshold: number; editable: boolean; }
 ```
@@ -610,7 +649,15 @@ interface TestCaseAiRS {
     tokens: { input: number; cacheRead: number; cacheWrite: number; output: number };
     model: string;
   };
-  pipelineLinks: { pipelineId: number; iterationId: number; iterationNumber: number; stage: StageKey; fixRound?: number }[];
+  pipelineLinks: {
+    pipelineId: number;
+    pipelineName?: string;              // display context only; immutable pipelineId remains the route identity
+    iterationId: number;
+    iterationNumber: number;
+    requirementId?: string;             // display context only; not used as an authorization boundary
+    stage: StageKey;
+    fixRound?: number;
+  }[];
   lastAgentChange?: {                                    // "What the agent changed", until the next round
     round: number; scoreBefore: number; scoreAfter?: number;
     before: ScenarioSnapshot; after: ScenarioSnapshot;
@@ -895,7 +942,8 @@ The following published or proposed scopes are also intentionally not represente
 
 - T3.6 Pipeline CI connection (repository, branch, credential, jobs, models, environments, connection test/state).
 - T1.2u Pipeline connection-state badges and dependent action gating.
-- T4.4 Re-run through LP6 and Retry through LP7, including attempt history, idempotency and accumulated costs.
+- T4.4 executable Re-run/Retry commands, including the accepted option source, attempt history, idempotency and
+  accumulated-cost semantics. T6.7 contains disabled presentation shells only.
 - QS1–QS4 Quality Standard consumption/management and immutable historical rubric linkage.
 - Remote demo seeding/reset. `Reset demo` resets browser-local mock storage only and never mutates backend data.
 
@@ -928,6 +976,7 @@ An endpoint group is ready for live enablement only when all applicable items ar
 | Automation validation | `pages/inside/aiFactory/automation/{useAutomationRequest,automationUtils}.ts` |
 | Ready-only gates | `pages/inside/aiFactory/readyOnlyGate/` |
 | Launch/Test Case backlink validation | `pages/inside/aiFactory/backlinks/` |
+| Disabled Re-run and failed-Upload Retry shells | `pages/inside/aiFactory/iterationDetailsPage/{rerun,stagePanels/uploadPanel.tsx}` |
 | Permission model | `common/constants/permissions.ts` and `common/utils/permissions/` |
 | Toggle/mock installation | `controllers/aiFactory/{featureFlag,mockMode}.ts`, `index.jsx` |
 
@@ -935,6 +984,7 @@ An endpoint group is ready for live enablement only when all applicable items ar
 
 | Date | Change | Agreed with |
 |------|--------|-------------|
+| 2026-10-05 | v1.1 aligned the contract with T6.7: recorded disabled Re-run/Retry presentation shells without claiming LP6/LP7 integration; added the mock-only Re-run option projection, user-command/CI-capability requirements, Upload rollback and structured retry-attempt rules; synchronized C2 Pipeline link labels (`pipelineName`, `requirementId`) | Current frontend implementation only; Backend/Product/Security decisions remain open |
 | 2026-10-05 | v1.0 fully aligned the contract with all implemented T0–T6.6-A scopes; separated published, implemented, mock-owned and live-rollout states; corrected LP4/LP5 live availability; added C/L/R/F/G/A coverage, role matrix, polling/refetch rules, normalized errors, strict validation, NFR/security rules, deferred scopes and backend delivery gates. Re-audited live OpenAPI with no material drift | Published OpenAPI `feature-pipelines-2767` plus current frontend implementation |
 | 2026-10-04 | v0.4 recorded the implemented and automatically validated EPMRPP-122041 LP3 generic-detail DTO/adapter/transport foundation, separate detail provenance/stale guards, reduced-detail presentation and removal of the Library direct-detail request. The live gate remains hard closed; no live rollout, backend/browser validation, rich detail parity, live polling or Quality Standard integration is claimed | Published OpenAPI `feature-pipelines-2767` plus frontend branch evidence |
 | 2026-10-04 | v0.3 re-audited the published OpenAPI with no material drift; recorded the automatically validated EPMRPP-122040 LP1/LP2 DTO/adapter/transport foundation as mock-default and hard fail-closed for live mode. No LP3 or Quality Standard integration, live rollout or browser/runtime validation is claimed | Published OpenAPI `feature-pipelines-2767` plus frontend branch evidence |
