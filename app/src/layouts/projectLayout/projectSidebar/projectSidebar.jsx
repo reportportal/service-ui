@@ -291,9 +291,6 @@ export const ProjectSidebar = ({ onClickNavBtn }) => {
           return [];
         }
         const itemName = iconName || itemTitle;
-        if (!menuOrder) {
-          menuCounter += menuStep;
-        }
         return [
           {
             name: [pluginName, extensionName, slug || name, url].filter(Boolean).join(':'),
