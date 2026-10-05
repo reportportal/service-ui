@@ -50,6 +50,76 @@ const buildAreaSeries = (itemNames, dataByName, colors, isPreview) =>
     emphasis: { disabled: true },
   }));
 
+const buildDataByName = (chartDataOrdered) =>
+  Object.fromEntries(chartDataOrdered.map((col) => [col[0], col.slice(1)]));
+
+const buildCategory = (item, isTimeline) => {
+  if (!isTimeline) {
+    return `#${item.number}`;
+  }
+  const day = moment(item.date).format('dddd').substring(0, 3);
+  return `${day}, ${item.date}`;
+};
+
+const getGridBottom = (isPreview, withZoom) => {
+  if (isPreview) return 0;
+  return withZoom ? 80 : 40;
+};
+
+const buildGrid = (isPreview, withZoom) => ({
+  top: isPreview ? 0 : 85,
+  left: isPreview ? 0 : 40,
+  right: isPreview ? 0 : 30,
+  bottom: getGridBottom(isPreview, withZoom),
+  containLabel: false,
+});
+
+const buildDataZoom = () => [
+  { type: 'inside', zoomRate: 0.02, throttle: 100 },
+  {
+    type: 'slider',
+    height: 30,
+    bottom: 10,
+    showDataShadow: true,
+    fillerColor: 'rgba(130, 146, 204, 0.15)',
+    borderColor: COLOR_GRAY_80,
+    dataBackground: {
+      areaStyle: { color: '#d0d8e8', opacity: 0.8 },
+      lineStyle: { color: '#b0bad0', width: 1 },
+    },
+    selectedDataBackground: {
+      areaStyle: { color: '#b0bad0', opacity: 0.6 },
+      lineStyle: { color: '#8292cc', width: 1 },
+    },
+  },
+];
+
+const buildSeries = ({ isActiveAreaView, isPreview, itemNames, dataByName, colors }) =>
+  isActiveAreaView
+    ? buildAreaSeries(itemNames, dataByName, colors, isPreview)
+    : createBarSeries(itemNames, dataByName, colors, {
+        silent: isPreview,
+        stack: 'total',
+        barWidth: '60%',
+        barCategoryGap: '40%',
+      });
+
+const buildTooltip = ({ isActiveAreaView, isPreview, hoveredSeriesRef, tooltipData }) => {
+  const baseFormatter = buildTooltipFormatter(
+    IssueTypeStatTooltip,
+    isActiveAreaView ? buildAreaTooltipCalculator(hoveredSeriesRef) : calculateTooltipParams,
+    tooltipData,
+  );
+
+  if (!isActiveAreaView) {
+    return buildItemTooltip({ show: !isPreview, formatter: baseFormatter });
+  }
+
+  // In area view the axis tooltip fires anywhere in the grid; show nothing unless an area is hovered.
+  const formatter = (params) => (hoveredSeriesRef.current ? baseFormatter(params) : '');
+  return buildAxisTooltip({ show: !isPreview, formatter, axisPointer: { type: 'none' } });
+};
+
 export const getOption = ({
   content,
   isPreview,
@@ -70,63 +140,18 @@ export const getOption = ({
     isTimeline,
   });
 
-  const dataByName = {};
-  chartDataOrdered.forEach((col) => {
-    dataByName[col[0]] = col.slice(1);
-  });
-
-  const categories = itemsData.map((item) => {
-    if (isTimeline) {
-      const day = moment(item.date).format('dddd').substring(0, 3);
-      return `${day}, ${item.date}`;
-    }
-    return `#${item.number}`;
-  });
-
+  const dataByName = buildDataByName(chartDataOrdered);
+  const categories = itemsData.map((item) => buildCategory(item, isTimeline));
   const tickValues = buildAxisTicks(itemsData.length, isTimeline);
-  const isAreaView = widgetViewMode === MODES_VALUES[CHART_MODES.AREA_VIEW];
-  const isActiveAreaView = isAreaView && !isSingleColumn;
+  const isActiveAreaView =
+    widgetViewMode === MODES_VALUES[CHART_MODES.AREA_VIEW] && !isSingleColumn;
   const withZoom = !isPreview && isZoomEnabled;
-
-  let gridBottom = 40;
-  if (isPreview) gridBottom = 0;
-  else if (withZoom) gridBottom = 80;
-
-  const series = isActiveAreaView
-    ? buildAreaSeries(itemNames, dataByName, colors, isPreview)
-    : createBarSeries(itemNames, dataByName, colors, {
-        silent: isPreview,
-        stack: 'total',
-        barWidth: '60%',
-        barCategoryGap: '40%',
-      });
-
   const hoveredSeriesRef = isActiveAreaView ? { current: null } : null;
-
-  const baseTooltipFormatter = buildTooltipFormatter(
-    IssueTypeStatTooltip,
-    isActiveAreaView ? buildAreaTooltipCalculator(hoveredSeriesRef) : calculateTooltipParams,
-    { itemsData, isTimeline, formatMessage, defectTypes },
-  );
-  // In area view the axis tooltip fires anywhere in the grid; show nothing unless an area is hovered.
-  const tooltipFormatter = isActiveAreaView
-    ? (params) => (hoveredSeriesRef.current ? baseTooltipFormatter(params) : '')
-    : baseTooltipFormatter;
-
-  const tooltip = isActiveAreaView
-    ? buildAxisTooltip({ show: !isPreview, formatter: tooltipFormatter, axisPointer: { type: 'none' } })
-    : buildItemTooltip({ show: !isPreview, formatter: tooltipFormatter });
 
   return {
     color: itemNames.map((name) => colors[name]),
     textStyle: AXIS_LABEL_STYLE,
-    grid: {
-      top: isPreview ? 0 : 85,
-      left: isPreview ? 0 : 40,
-      right: isPreview ? 0 : 30,
-      bottom: gridBottom,
-      containLabel: false,
-    },
+    grid: buildGrid(isPreview, withZoom),
     xAxis: {
       type: 'category',
       show: !isPreview,
@@ -156,32 +181,15 @@ export const getOption = ({
         lineStyle: { color: COLOR_GRAY_80, width: 1 },
       },
     },
-    tooltip,
-    ...(withZoom
-      ? {
-          dataZoom: [
-            { type: 'inside', zoomRate: 0.02, throttle: 100 },
-            {
-              type: 'slider',
-              height: 30,
-              bottom: 10,
-              showDataShadow: true,
-              fillerColor: 'rgba(130, 146, 204, 0.15)',
-              borderColor: COLOR_GRAY_80,
-              dataBackground: {
-                areaStyle: { color: '#d0d8e8', opacity: 0.8 },
-                lineStyle: { color: '#b0bad0', width: 1 },
-              },
-              selectedDataBackground: {
-                areaStyle: { color: '#b0bad0', opacity: 0.6 },
-                lineStyle: { color: '#8292cc', width: 1 },
-              },
-            },
-          ],
-        }
-      : {}),
+    tooltip: buildTooltip({
+      isActiveAreaView,
+      isPreview,
+      hoveredSeriesRef,
+      tooltipData: { itemsData, isTimeline, formatMessage, defectTypes },
+    }),
+    ...(withZoom ? { dataZoom: buildDataZoom() } : {}),
     legend: { show: false },
-    series,
+    series: buildSeries({ isActiveAreaView, isPreview, itemNames, dataByName, colors }),
     customData: {
       itemsData,
       colors,
