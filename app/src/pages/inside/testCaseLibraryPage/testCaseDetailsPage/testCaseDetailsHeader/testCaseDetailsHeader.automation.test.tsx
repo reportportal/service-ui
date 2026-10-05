@@ -45,6 +45,7 @@ jest.mock(
 jest.mock('html-react-parser', () => ({ __esModule: true, default: () => null }));
 jest.mock('react-copy-to-clipboard', () => ({ CopyToClipboard: 'CopyToClipboard' }));
 jest.mock('react-redux', () => ({ useDispatch: jest.fn(), useSelector: jest.fn() }));
+jest.mock('redux-first-router-link', () => 'Link');
 jest.mock('react-tracking', () => ({ useTracking: () => ({ trackEvent: jest.fn() }) }));
 jest.mock('react-intl', () => ({
   defineMessages: (messages: unknown) => messages,

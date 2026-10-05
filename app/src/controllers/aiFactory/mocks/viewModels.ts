@@ -39,7 +39,7 @@ import {
   TestCaseAiExtension,
   TestCaseAiRS,
 } from 'types/aiFactory';
-import { findCase, listCasesOfIteration } from './db';
+import { findCase, findIteration, listCasesOfIteration } from './db';
 import {
   autoReadyPromotedCount,
   caseCost,
@@ -64,6 +64,13 @@ export const toPipelineRS = (pipeline: MockPipelineSeed, iterationsCount: number
   settings: pipeline.settings,
 });
 
+const publicTestCaseId = (iteration: MockIterationSeed, canonicalId: number): number => {
+  const caseIndex = iteration.testCaseIds?.indexOf(canonicalId) ?? -1;
+  return caseIndex >= 0
+    ? iteration.requestedTestCaseIds?.[caseIndex] ?? canonicalId
+    : canonicalId;
+};
+
 const stageSummary = (iteration: MockIterationSeed, key: StageKey): StageSummaryRS => {
   const seed = getStageSeed(iteration, key);
   const cases = listCasesOfIteration(iteration.id);
@@ -77,17 +84,26 @@ const stageSummary = (iteration: MockIterationSeed, key: StageKey): StageSummary
     key,
     status: deriveStageStatus(iteration, key),
     metric: metricByKey[key],
-    cost: key === StageKey.REVIEW ? cases.reduce((s, c) => s + c.fixRounds.reduce((a, r) => a + (r.cost || 0), 0), 0) : seed?.cost || 0,
+    cost:
+      key === StageKey.REVIEW
+        ? cases.reduce((s, c) => s + c.fixRounds.reduce((a, r) => a + (r.cost || 0), 0), 0)
+        : seed?.cost || 0,
   };
 };
 
-export const toIterationSummaryRS = (pipeline: MockPipelineSeed, iteration: MockIterationSeed): IterationSummaryRS => ({
+export const toIterationSummaryRS = (
+  pipeline: MockPipelineSeed,
+  iteration: MockIterationSeed,
+): IterationSummaryRS => ({
   id: iteration.id,
   pipelineId: iteration.pipelineId,
   number: iteration.number,
   status: deriveIterationStatus(pipeline, iteration),
   requirement: iteration.requirement,
-  testCases: iteration.testCaseIds?.map((id) => ({ id, displayId: findCase(id)?.displayId || String(id) })),
+  testCases: iteration.testCaseIds?.map((canonicalId) => ({
+    id: publicTestCaseId(iteration, canonicalId),
+    displayId: findCase(canonicalId)?.displayId || String(canonicalId),
+  })),
   trigger: iteration.trigger,
   startedBy: iteration.startedBy,
   model: iteration.model,
@@ -107,7 +123,12 @@ export const toIterationSummaryRS = (pipeline: MockPipelineSeed, iteration: Mock
   ciPipeline: iteration.ciPipeline,
   attributes: [
     { key: 'env', value: iteration.environment },
-    ...(iteration.requirement ? [{ key: 'spec', value: iteration.requirement.specId }, { key: 'jira', value: iteration.requirement.jiraKey || '' }] : []),
+    ...(iteration.requirement
+      ? [
+          { key: 'spec', value: iteration.requirement.specId },
+          { key: 'jira', value: iteration.requirement.jiraKey || '' },
+        ]
+      : []),
     ...(iteration.mergeRequest ? [{ key: 'mr', value: iteration.mergeRequest.id }] : []),
     { key: 'ci', value: iteration.ciPipeline.id },
   ].filter((a) => a.value),
@@ -130,7 +151,11 @@ const toReviewCaseSummary = (c: MockCaseRecord): ReviewCaseSummaryRS => {
   };
 };
 
-const toStageRS = (pipeline: MockPipelineSeed, iteration: MockIterationSeed, key: StageKey): StageRS => {
+const toStageRS = (
+  pipeline: MockPipelineSeed,
+  iteration: MockIterationSeed,
+  key: StageKey,
+): StageRS => {
   const seed = getStageSeed(iteration, key);
   const summary = stageSummary(iteration, key);
   const cases = listCasesOfIteration(iteration.id);
@@ -142,7 +167,9 @@ const toStageRS = (pipeline: MockPipelineSeed, iteration: MockIterationSeed, key
     tokens: seed?.tokens || [],
   };
   if (key === StageKey.CREATE && cases.length) {
-    const perCaseDurationMs = seed?.durationMs ? Math.round(seed.durationMs / cases.length) : undefined;
+    const perCaseDurationMs = seed?.durationMs
+      ? Math.round(seed.durationMs / cases.length)
+      : undefined;
     base.create = {
       cases: cases.map((c) => ({
         name: c.displayId,
@@ -158,7 +185,13 @@ const toStageRS = (pipeline: MockPipelineSeed, iteration: MockIterationSeed, key
     base.grade = {
       suiteScore: seed.suiteScore || 0,
       warnings: [],
-      cases: cases.map((c) => ({ name: c.displayId, testCaseId: c.id, displayId: c.displayId, totalScore: totalScore(c) || 0, criteria: c.evaluation?.criteria || [] })),
+      cases: cases.map((c) => ({
+        name: c.displayId,
+        testCaseId: c.id,
+        displayId: c.displayId,
+        totalScore: totalScore(c) || 0,
+        criteria: c.evaluation?.criteria || [],
+      })),
     };
   }
   if (key === StageKey.UPLOAD && seed) {
@@ -176,11 +209,25 @@ const toStageRS = (pipeline: MockPipelineSeed, iteration: MockIterationSeed, key
   if (key === StageKey.REVIEW) {
     base.review = {
       cases: cases.map(toReviewCaseSummary),
-      fixRounds: cases.flatMap((c) => [...c.fixRounds, ...(c.fixRoundRunning ? [runningFixRoundRS(c)] : [])]),
+      fixRounds: cases.flatMap((c) => [
+        ...c.fixRounds,
+        ...(c.fixRoundRunning ? [runningFixRoundRS(c)] : []),
+      ]),
     };
   }
   if (pipeline.type === PipelineType.AUTOMATION && seed?.perCase) {
-    base.perCase = Object.entries(seed.perCase).map(([id, result]) => ({ testCaseId: Number(id), displayId: `TC${id}`, name: `TC${id}`, status: summary.status, result }));
+    base.perCase = Object.entries(seed.perCase).map(([id, result]) => {
+      const canonicalId = Number(id);
+      const caseRecord = findCase(canonicalId);
+      const displayId = caseRecord?.displayId ?? String(canonicalId);
+      return {
+        testCaseId: publicTestCaseId(iteration, canonicalId),
+        displayId,
+        name: displayId,
+        status: summary.status,
+        result,
+      };
+    });
   }
   return base;
 };
@@ -195,10 +242,16 @@ const runningFixRoundRS = (c: MockCaseRecord) => ({
   commentsCount: c.comments.filter((x) => x.state === 'SENT').length,
 });
 
-export const toIterationRS = (pipeline: MockPipelineSeed, iteration: MockIterationSeed): IterationRS => ({
+export const toIterationRS = (
+  pipeline: MockPipelineSeed,
+  iteration: MockIterationSeed,
+): IterationRS => ({
   ...toIterationSummaryRS(pipeline, iteration),
-  libraryFolder: iteration.folderPath ? { id: iteration.id, path: iteration.folderPath } : undefined,
-  autoReadyPromotedCount: pipeline.type === PipelineType.GENERATION ? autoReadyPromotedCount(iteration.id) : undefined,
+  libraryFolder: iteration.folderPath
+    ? { id: iteration.id, path: iteration.folderPath }
+    : undefined,
+  autoReadyPromotedCount:
+    pipeline.type === PipelineType.GENERATION ? autoReadyPromotedCount(iteration.id) : undefined,
   stages: stageOrder(pipeline.type).map((key) => toStageRS(pipeline, iteration, key)),
 });
 
@@ -277,9 +330,7 @@ const toCompareIterationRS = (
   };
 };
 
-function getCriterionAverages(
-  iterationId: number,
-): Record<CriterionKey, number> | undefined {
+function getCriterionAverages(iterationId: number): Record<CriterionKey, number> | undefined {
   const cases = listCasesOfIteration(iterationId).filter((item) => item.evaluation);
   if (!cases.length) return undefined;
   return Object.fromEntries(
@@ -324,26 +375,51 @@ export const toPipelineCompareRS = (
   };
 };
 
-export const toTestCaseAiExtension = (c: MockCaseRecord, pipeline?: MockPipelineSeed, iteration?: MockIterationSeed): TestCaseAiExtension => ({
+export const toTestCaseAiExtension = (
+  c: MockCaseRecord,
+  pipeline?: MockPipelineSeed,
+  iteration?: MockIterationSeed,
+): TestCaseAiExtension => ({
   lifecycle: c.lifecycle,
   ai:
     c.ai && iteration
-      ? { generatedByIteration: { pipelineId: iteration.pipelineId, iterationId: iteration.id, number: iteration.number }, modifiedByAgent: c.ai.modifiedByAgent, factoryKey: c.ai.factoryKey }
+      ? {
+          generatedByIteration: {
+            pipelineId: iteration.pipelineId,
+            iterationId: iteration.id,
+            number: iteration.number,
+          },
+          modifiedByAgent: c.ai.modifiedByAgent,
+          factoryKey: c.ai.factoryKey,
+        }
       : undefined,
   evaluationSummary: c.evaluation && { totalScore: totalScore(c) || 0, state: c.evaluation.state },
   costSummary: c.ai && iteration ? { approxTotal: caseCost(c, iteration) } : undefined,
-  review: { unsentCommentsCount: unsentCommentsCount(c), fixRound: c.fixRoundRunning ? { number: c.fixRoundRunning.round, status: 'RUNNING' } : undefined },
+  review: {
+    unsentCommentsCount: unsentCommentsCount(c),
+    fixRound: c.fixRoundRunning
+      ? { number: c.fixRoundRunning.round, status: 'RUNNING' }
+      : undefined,
+  },
   automation: c.automation && { status: c.automation.status },
   blockedPlans: undefined, // filled by the caller, which has the plan list (db.plansBlockedByCase)
 });
 
-export const toTestCaseAiRS = (c: MockCaseRecord, pipeline?: MockPipelineSeed, iteration?: MockIterationSeed): TestCaseAiRS => ({
+export const toTestCaseAiRS = (
+  c: MockCaseRecord,
+  pipeline?: MockPipelineSeed,
+  iteration?: MockIterationSeed,
+): TestCaseAiRS => ({
   evaluation:
     c.evaluation && iteration
       ? {
           totalScore: totalScore(c) || 0,
           state: c.evaluation.state,
-          source: { iterationId: iteration.id, iterationNumber: iteration.number, fixRound: c.evaluation.sourceFixRound },
+          source: {
+            iterationId: iteration.id,
+            iterationNumber: iteration.number,
+            fixRound: c.evaluation.sourceFixRound,
+          },
           evaluatedAt: c.evaluation.evaluatedAt,
           criteria: c.evaluation.criteria,
         }
@@ -354,7 +430,12 @@ export const toTestCaseAiRS = (c: MockCaseRecord, pipeline?: MockPipelineSeed, i
           const share = caseShare(c, iteration);
           return {
             approxTotal: caseCost(c, iteration),
-            iterationShare: { iterationNumber: iteration.number, amount: share.amount, iterationBaseCost: share.amount * share.casesCount, casesCount: share.casesCount },
+            iterationShare: {
+              iterationNumber: iteration.number,
+              amount: share.amount,
+              iterationBaseCost: share.amount * share.casesCount,
+              casesCount: share.casesCount,
+            },
             fixRounds: c.fixRounds.map((r) => ({ round: r.round, amount: r.cost || 0 })),
             tokens: share.tokens,
             model: iteration.model,
@@ -363,17 +444,42 @@ export const toTestCaseAiRS = (c: MockCaseRecord, pipeline?: MockPipelineSeed, i
       : undefined,
   pipelineLinks: iteration
     ? [
-        { pipelineId: iteration.pipelineId, iterationId: iteration.id, iterationNumber: iteration.number, stage: StageKey.GRADE },
-        ...c.fixRounds.map((r) => ({ pipelineId: iteration.pipelineId, iterationId: iteration.id, iterationNumber: iteration.number, stage: StageKey.REVIEW, fixRound: r.round })),
+        {
+          pipelineId: iteration.pipelineId,
+          iterationId: iteration.id,
+          iterationNumber: iteration.number,
+          stage: StageKey.GRADE,
+        },
+        ...c.fixRounds.map((r) => ({
+          pipelineId: iteration.pipelineId,
+          iterationId: iteration.id,
+          iterationNumber: iteration.number,
+          stage: StageKey.REVIEW,
+          fixRound: r.round,
+        })),
       ]
     : [],
   lastAgentChange: c.lastAgentChange,
-  automation: c.automation && {
+  automation: toAutomationRS(c),
+  lifecycleHistory: c.lifecycleHistory,
+});
+
+const toAutomationRS = (c: MockCaseRecord): TestCaseAiRS['automation'] => {
+  if (!c.automation) return undefined;
+  const automationIteration = c.automation.iterationId
+    ? findIteration(c.automation.iterationId)
+    : undefined;
+  return {
     status: c.automation.status,
-    iteration: c.automation.iterationId ? { pipelineId: 2, iterationId: c.automation.iterationId, number: 1 } : undefined,
+    iteration: automationIteration
+      ? {
+          pipelineId: automationIteration.pipelineId,
+          iterationId: automationIteration.id,
+          number: automationIteration.number,
+        }
+      : undefined,
     launch: c.automation.launch,
     lastResult: c.automation.lastResult,
     scenarioChangedAfterAutomation: c.automation.scenarioChangedAfterAutomation,
-  },
-  lifecycleHistory: c.lifecycleHistory,
-});
+  };
+};

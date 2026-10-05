@@ -14,4 +14,4 @@
  * limitations under the License.
  */
 
-export { usePolling } from './usePolling';
+export { POLLING_REQUEST_STARTED, usePolling } from './usePolling';

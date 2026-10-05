@@ -145,6 +145,56 @@ describe('useTestCaseAi', () => {
     expect(hookResult).toMatchObject({ data: currentResponse, isLoading: false, isError: false });
   });
 
+  test.each(['success', 'error'] as const)(
+    'ignores stale %s after the project key changes',
+    async (staleOutcome) => {
+      const staleRequest = createDeferred<TestCaseAiRS>();
+      const currentRequest = createDeferred<TestCaseAiRS>();
+      const currentResponse = createResponse();
+      fetchMock
+        .mockReturnValueOnce(staleRequest.promise)
+        .mockReturnValueOnce(currentRequest.promise);
+      wrapper = mount(
+        <Harness
+          projectKey="first-project"
+          testCaseId={42}
+          isEnabled
+          onResult={captureHookResult}
+        />,
+      );
+
+      wrapper.setProps({ projectKey: 'second-project' });
+      await act(async () => {
+        if (staleOutcome === 'success') {
+          staleRequest.resolve(createResponse());
+          await staleRequest.promise;
+        } else {
+          staleRequest.reject(new Error('Stale project error'));
+          await staleRequest.promise.catch(() => undefined);
+        }
+      });
+
+      expect(fetch).toHaveBeenNthCalledWith(
+        1,
+        URLS.testCaseAi('first-project', 42),
+        expect.objectContaining({ abort: expect.any(Function) }),
+      );
+      expect(fetch).toHaveBeenNthCalledWith(
+        2,
+        URLS.testCaseAi('second-project', 42),
+        expect.objectContaining({ abort: expect.any(Function) }),
+      );
+      expect(hookResult).toMatchObject({ data: null, isLoading: true, isError: false });
+
+      await act(async () => {
+        currentRequest.resolve(currentResponse);
+        await currentRequest.promise;
+      });
+      expect(hookResult.data).toBe(currentResponse);
+      expect(hookResult).toMatchObject({ isLoading: false, isError: false });
+    },
+  );
+
   test('starts a fresh request when the test case resource version changes', () => {
     fetchMock.mockReturnValue(new Promise(() => {}));
     wrapper = mount(
@@ -182,5 +232,64 @@ describe('useTestCaseAi', () => {
     });
     expect(fetch).toHaveBeenCalledTimes(2);
     expect(hookResult).toMatchObject({ data: retryResponse, isLoading: false, isError: false });
+  });
+
+  test('keeps last-good data for the same resource while a reload is pending and after it fails', async () => {
+    const response = createResponse();
+    const reloadRequest = createDeferred<TestCaseAiRS>();
+    fetchMock.mockResolvedValueOnce(response).mockReturnValueOnce(reloadRequest.promise);
+    wrapper = mount(
+      <Harness projectKey="demo" testCaseId={42} isEnabled onResult={captureHookResult} />,
+    );
+    await act(async () => {
+      await Promise.resolve();
+    });
+
+    act(() => hookResult.reload());
+    expect(hookResult).toMatchObject({ data: response, isLoading: true, isError: false });
+
+    await act(async () => {
+      reloadRequest.reject(new Error('Network error'));
+      await reloadRequest.promise.catch(() => undefined);
+    });
+    expect(hookResult).toMatchObject({ data: response, isLoading: false, isError: true });
+  });
+
+  test('does not carry last-good data to another test-case resource', async () => {
+    const response = createResponse();
+    const nextRequest = createDeferred<TestCaseAiRS>();
+    fetchMock.mockResolvedValueOnce(response).mockReturnValueOnce(nextRequest.promise);
+    wrapper = mount(
+      <Harness projectKey="demo" testCaseId={41} isEnabled onResult={captureHookResult} />,
+    );
+    await act(async () => {
+      await Promise.resolve();
+    });
+
+    wrapper.setProps({ testCaseId: 42 });
+
+    expect(hookResult).toMatchObject({ data: null, isLoading: true, isError: false });
+  });
+
+  test('ignores a stale rejection after the requested resource changes', async () => {
+    const staleRequest = createDeferred<TestCaseAiRS>();
+    const currentResponse = createResponse();
+    fetchMock.mockReturnValueOnce(staleRequest.promise).mockResolvedValueOnce(currentResponse);
+    wrapper = mount(
+      <Harness projectKey="demo" testCaseId={41} isEnabled onResult={captureHookResult} />,
+    );
+
+    wrapper.setProps({ testCaseId: 42 });
+    await act(async () => {
+      staleRequest.reject(new Error('Stale network error'));
+      await staleRequest.promise.catch(() => undefined);
+      await Promise.resolve();
+    });
+
+    expect(hookResult).toMatchObject({
+      data: currentResponse,
+      isLoading: false,
+      isError: false,
+    });
   });
 });

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
 import { URLS } from 'common/urls';
 import { ERROR_CANCELED, fetch } from 'common/utils';
@@ -22,6 +22,7 @@ import type { TestCaseAiRS } from 'types/aiFactory';
 
 interface TestCaseAiState {
   data: TestCaseAiRS | null;
+  resourceKey: string;
   requestKey: string;
   isError: boolean;
 }
@@ -35,6 +36,7 @@ export interface TestCaseAiLoadState {
 
 const INITIAL_STATE: TestCaseAiState = {
   data: null,
+  resourceKey: '',
   requestKey: '',
   isError: false,
 };
@@ -47,7 +49,9 @@ export const useTestCaseAi = (
 ): TestCaseAiLoadState => {
   const [state, setState] = useState<TestCaseAiState>(INITIAL_STATE);
   const [requestIndex, setRequestIndex] = useState(0);
-  const requestKey = `${projectKey}:${testCaseId}:${resourceVersion ?? ''}:${requestIndex}`;
+  const activeRequestRef = useRef('');
+  const resourceKey = `${projectKey}:${testCaseId}`;
+  const requestKey = `${resourceKey}:${resourceVersion ?? ''}:${requestIndex}`;
 
   const reload = useCallback(() => {
     setRequestIndex((currentIndex) => currentIndex + 1);
@@ -55,9 +59,11 @@ export const useTestCaseAi = (
 
   useEffect(() => {
     if (!isEnabled || !projectKey || !testCaseId) {
+      activeRequestRef.current = '';
       return undefined;
     }
 
+    activeRequestRef.current = requestKey;
     let cancelRequest = () => {};
 
     void fetch<TestCaseAiRS>(URLS.testCaseAi(projectKey, testCaseId), {
@@ -65,23 +71,42 @@ export const useTestCaseAi = (
         cancelRequest = cancel;
       },
     })
-      .then((data) => setState({ data, requestKey, isError: false }))
+      .then((data) => {
+        if (activeRequestRef.current === requestKey) {
+          setState({ data, resourceKey, requestKey, isError: false });
+        }
+      })
       .catch((error: unknown) => {
-        if (error instanceof Error && error.message === ERROR_CANCELED) {
+        if (
+          activeRequestRef.current !== requestKey ||
+          (error instanceof Error && error.message === ERROR_CANCELED)
+        ) {
           return;
         }
-        setState({ data: null, requestKey, isError: true });
+        setState((currentState) => ({
+          data: currentState.resourceKey === resourceKey ? currentState.data : null,
+          resourceKey,
+          requestKey,
+          isError: true,
+        }));
       });
 
-    return cancelRequest;
-  }, [isEnabled, projectKey, requestKey, testCaseId]);
+    return () => {
+      if (activeRequestRef.current === requestKey) {
+        activeRequestRef.current = '';
+      }
+      cancelRequest();
+    };
+  }, [isEnabled, projectKey, requestKey, resourceKey, testCaseId]);
 
   const isCurrentRequest = state.requestKey === requestKey;
+  const isCurrentResource =
+    isEnabled && Boolean(projectKey) && Boolean(testCaseId) && state.resourceKey === resourceKey;
 
   return {
-    data: isCurrentRequest ? state.data : null,
+    data: isCurrentResource ? state.data : null,
     isLoading: isEnabled && Boolean(projectKey) && Boolean(testCaseId) && !isCurrentRequest,
-    isError: isCurrentRequest && state.isError,
+    isError: isCurrentResource && isCurrentRequest && state.isError,
     reload,
   };
 };

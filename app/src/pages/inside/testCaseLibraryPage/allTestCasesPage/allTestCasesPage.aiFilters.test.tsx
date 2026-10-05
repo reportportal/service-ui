@@ -66,6 +66,7 @@ jest.mock(
   { virtual: true },
 );
 jest.mock('react-redux', () => ({ useDispatch: jest.fn(), useSelector: jest.fn() }));
+jest.mock('redux-first-router-link', () => 'Link');
 jest.mock('react-intl', () => ({
   defineMessages: (messages: unknown) => messages,
   useIntl: () => ({

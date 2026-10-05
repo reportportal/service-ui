@@ -62,6 +62,7 @@ export interface MockIterationSeed {
   number: number;
   requirement?: { specId: string; title: string; jiraKey?: string };
   testCaseIds?: number[]; // automation
+  requestedTestCaseIds?: number[]; // automation public identities, aligned with testCaseIds
   trigger: string;
   startedBy: string;
   model: string;
