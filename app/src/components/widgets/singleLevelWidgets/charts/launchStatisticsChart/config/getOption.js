@@ -32,7 +32,7 @@ const buildAreaTooltipCalculator = (hoveredSeriesRef) => (data, color, customPro
   return resolved ? calculateTooltipParams([resolved], color, customProps) : {};
 };
 
-const buildAreaSeries = (itemNames, dataByName, colors) =>
+const buildAreaSeries = (itemNames, dataByName, colors, isPreview) =>
   itemNames.map((name) => ({
     id: name,
     name,
@@ -42,9 +42,10 @@ const buildAreaSeries = (itemNames, dataByName, colors) =>
     areaStyle: { opacity: 0.75 },
     lineStyle: { width: 0 },
     symbol: 'none',
-    smooth: false,
+    smooth: true,
     triggerLineEvent: true,
-    cursor: 'pointer',
+    silent: isPreview,
+    cursor: isPreview ? 'default' : 'pointer',
     itemStyle: { color: colors[name] },
     emphasis: { disabled: true },
   }));
@@ -92,8 +93,9 @@ export const getOption = ({
   else if (withZoom) gridBottom = 80;
 
   const series = isActiveAreaView
-    ? buildAreaSeries(itemNames, dataByName, colors)
+    ? buildAreaSeries(itemNames, dataByName, colors, isPreview)
     : createBarSeries(itemNames, dataByName, colors, {
+        silent: isPreview,
         stack: 'total',
         barWidth: '60%',
         barCategoryGap: '40%',
@@ -101,11 +103,15 @@ export const getOption = ({
 
   const hoveredSeriesRef = isActiveAreaView ? { current: null } : null;
 
-  const tooltipFormatter = buildTooltipFormatter(
+  const baseTooltipFormatter = buildTooltipFormatter(
     IssueTypeStatTooltip,
     isActiveAreaView ? buildAreaTooltipCalculator(hoveredSeriesRef) : calculateTooltipParams,
     { itemsData, isTimeline, formatMessage, defectTypes },
   );
+  // In area view the axis tooltip fires anywhere in the grid; show nothing unless an area is hovered.
+  const tooltipFormatter = isActiveAreaView
+    ? (params) => (hoveredSeriesRef.current ? baseTooltipFormatter(params) : '')
+    : baseTooltipFormatter;
 
   const tooltip = isActiveAreaView
     ? buildAxisTooltip({ show: !isPreview, formatter: tooltipFormatter, axisPointer: { type: 'none' } })
@@ -180,6 +186,7 @@ export const getOption = ({
       itemsData,
       colors,
       legendItems: itemNames,
+      ...(withZoom ? { resizeCursor: true } : {}),
       ...(isActiveAreaView ? { hoveredSeriesRef, isAreaMode: true } : {}),
     },
   };

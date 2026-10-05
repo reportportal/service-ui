@@ -178,6 +178,46 @@ export const EChart = ({
     uncheckedLegendItems,
   ]);
 
+  // Opt-in (customData.resizeCursor): charts with drag-to-scroll show the horizontal-resize
+  // cursor as the default over the plot area; hovering a series element keeps the pointer.
+  useEffect(() => {
+    const chart = chartRef.current;
+    if (!chart || isPreview || !built?.customData?.resizeCursor) {
+      return undefined;
+    }
+
+    const zr = chart.getZr();
+    let timer: ReturnType<typeof setTimeout> | undefined;
+    const handleMouseMove = (event: { target?: unknown; offsetX: number; offsetY: number }) => {
+      let insideGrid = false;
+      try {
+        insideGrid = chart.containPixel({ gridIndex: 0 }, [event.offsetX, event.offsetY]);
+      } catch {
+        insideGrid = false;
+      }
+      // Deferred so it runs after zrender applies its own cursor for this event.
+      clearTimeout(timer);
+      timer = setTimeout(() => {
+        if (chart.isDisposed()) {
+          return;
+        }
+        if (!event.target && insideGrid) {
+          zr.setCursorStyle('ew-resize');
+        } else if (event.target && insideGrid) {
+          zr.setCursorStyle('pointer');
+        }
+      }, 0);
+    };
+
+    zr.on('mousemove', handleMouseMove);
+    return () => {
+      clearTimeout(timer);
+      if (!chart.isDisposed()) {
+        zr.off('mousemove', handleMouseMove);
+      }
+    };
+  }, [built, isPreview]);
+
   useEffect(() => {
     const resizeTarget = container || chartNodeRef.current;
     if (!resizeTarget || typeof ResizeObserver === 'undefined') {
