@@ -141,10 +141,16 @@ export const persist = (): void => {
 };
 
 /** Discards persisted state and reloads the seed — the "Reset demo" action. */
-export const resetMockDb = (): void => {
-  state = cloneSeed();
+export const resetMockDb = (): boolean => {
+  const nextState = cloneSeed();
+  try {
+    setStorageItem(STORAGE_KEY, nextState);
+  } catch {
+    return false;
+  }
+  state = nextState;
   caseAliases.clear();
-  persist();
+  return true;
 };
 
 export const reloadMockDb = (): void => {

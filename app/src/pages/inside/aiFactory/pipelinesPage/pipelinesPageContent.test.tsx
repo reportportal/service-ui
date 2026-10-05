@@ -8,11 +8,15 @@
  * http://www.apache.org/licenses/LICENSE-2.0
  */
 
-import { shallow } from 'enzyme';
+import type { ReactElement } from 'react';
+import { shallow, type ShallowWrapper } from 'enzyme';
 import { useDispatch, useSelector } from 'react-redux';
 
+import { isAiFactoryDemoResetAvailable } from 'controllers/aiFactory';
+import { isAiFactoryMockRuntimeInstalled, resetMockDb } from 'controllers/aiFactory/mocks';
 import {
   getPipelineIterationsAction,
+  getPipelinesAction,
   pipelineCatalogTransportSelector,
   pipelineIterationsByPipelineSelector,
   pipelineIterationsErrorByPipelineSelector,
@@ -20,6 +24,8 @@ import {
   pipelinesLoadingSelector,
   pipelinesSelector,
 } from 'controllers/aiFactory/pipelines';
+import { showModalAction } from 'controllers/modal';
+import { showErrorNotification, showSuccessNotification } from 'controllers/notification';
 import { urlOrganizationAndProjectSelector } from 'controllers/pages';
 import { projectNameSelector } from 'controllers/project';
 import { POLLING_REQUEST_STARTED, usePolling } from 'pages/inside/aiFactory/common';
@@ -44,6 +50,11 @@ jest.mock(
     ).reactIntlTestMock,
 );
 jest.mock('react-redux', () => ({ useDispatch: jest.fn(), useSelector: jest.fn() }));
+jest.mock('controllers/aiFactory', () => ({ isAiFactoryDemoResetAvailable: jest.fn() }));
+jest.mock('controllers/aiFactory/mocks', () => ({
+  isAiFactoryMockRuntimeInstalled: jest.fn(),
+  resetMockDb: jest.fn(),
+}));
 jest.mock('common/utils', () => ({
   createClassnames:
     () =>
@@ -62,8 +73,7 @@ jest.mock('controllers/aiFactory/pipelines', () => ({
   })),
   getPipelinesAction: jest.fn(() => ({ type: 'GET_PIPELINES' })),
   isReducedPipeline: jest.fn(
-    (pipeline: unknown) =>
-      typeof pipeline === 'object' && pipeline !== null && 'kind' in pipeline,
+    (pipeline: unknown) => typeof pipeline === 'object' && pipeline !== null && 'kind' in pipeline,
   ),
   isReducedPipelineIteration: jest.fn(
     (iteration: unknown) =>
@@ -82,6 +92,13 @@ jest.mock('controllers/pages', () => ({
   urlOrganizationAndProjectSelector: jest.fn(),
 }));
 jest.mock('controllers/project', () => ({ projectNameSelector: jest.fn() }));
+jest.mock('controllers/modal', () => ({
+  showModalAction: jest.fn((payload: unknown) => ({ type: 'SHOW_MODAL', payload })),
+}));
+jest.mock('controllers/notification', () => ({
+  showErrorNotification: jest.fn((payload: unknown) => ({ type: 'ERROR', payload })),
+  showSuccessNotification: jest.fn((payload: unknown) => ({ type: 'SUCCESS', payload })),
+}));
 jest.mock('layouts/settingsLayout', () => ({ SettingsLayout: 'SettingsLayout' }));
 jest.mock('pages/inside/aiFactory/common', () => ({
   POLLING_REQUEST_STARTED: 'POLLING_REQUEST_STARTED',
@@ -150,7 +167,7 @@ const renderPage = ({
   iterationsLoadingByPipeline = {},
   iterationsErrorByPipeline = {},
   transport = 'mock',
-}: RenderOptions = {}) => {
+}: RenderOptions = {}): ShallowWrapper => {
   selectorValues = new Map<unknown, unknown>([
     [projectNameSelector, 'Demo'],
     [urlOrganizationAndProjectSelector, { organizationSlug: 'org', projectSlug: 'project' }],
@@ -170,9 +187,18 @@ const renderPage = ({
   return shallow(<PipelinesPageContent />);
 };
 
+const getHeaderActions = (wrapper: ShallowWrapper): ShallowWrapper =>
+  shallow(wrapper.find('PageHeaderWithBreadcrumbsAndActions').prop('actions') as ReactElement);
+
+const clickResetButton = (actions: ShallowWrapper) =>
+  (actions.find('[data-automation-id="resetAiFactoryDemoButton"]').prop('onClick') as () => void)();
+
 describe('PipelinesPageContent polling', () => {
   beforeEach(() => {
     jest.clearAllMocks();
+    jest.mocked(isAiFactoryDemoResetAvailable).mockReturnValue(false);
+    jest.mocked(isAiFactoryMockRuntimeInstalled).mockReturnValue(true);
+    jest.mocked(resetMockDb).mockReturnValue(true);
   });
 
   test('polls all pipeline summaries every 5 seconds while automation is running', () => {
@@ -304,6 +330,131 @@ describe('PipelinesPageContent polling', () => {
     });
 
     expect(usePolling).toHaveBeenLastCalledWith(expect.any(Function), 5000, false);
+    wrapper.unmount();
+  });
+
+});
+
+describe('PipelinesPageContent demo reset', () => {
+  beforeEach(() => {
+    jest.clearAllMocks();
+    jest.mocked(isAiFactoryDemoResetAvailable).mockReturnValue(true);
+    jest.mocked(isAiFactoryMockRuntimeInstalled).mockReturnValue(true);
+    jest.mocked(resetMockDb).mockReturnValue(true);
+  });
+
+  test('does not render reset when the guarded mock mode is unavailable', () => {
+    jest.mocked(isAiFactoryDemoResetAvailable).mockReturnValue(false);
+
+    const wrapper = renderPage();
+    const actions = getHeaderActions(wrapper);
+
+    expect(actions.find('[data-automation-id="resetAiFactoryDemoButton"]')).toHaveLength(0);
+    wrapper.unmount();
+  });
+
+  test('renders a disabled reset action while pipelines are loading', () => {
+    const wrapper = renderPage({ pipelinesLoading: true });
+    const actions = getHeaderActions(wrapper);
+
+    expect(actions.find('[data-automation-id="resetAiFactoryDemoButton"]').prop('disabled')).toBe(
+      true,
+    );
+    wrapper.unmount();
+  });
+
+  test('opens a destructive local-only confirmation', () => {
+    const wrapper = renderPage();
+    const actions = getHeaderActions(wrapper);
+
+    clickResetButton(actions);
+
+    expect(showModalAction).toHaveBeenCalledWith({
+      id: 'confirmationModal',
+      data: expect.objectContaining({
+        title: 'Reset the AI Factory demo?',
+        message:
+          'This resets only local AI Factory demo data. It cannot undo changes already made in the real TMS.',
+        dangerConfirm: true,
+        onConfirm: expect.any(Function),
+      }),
+    });
+    wrapper.unmount();
+  });
+
+  test('resets local state, clears search and refreshes only the pipeline catalog', async () => {
+    const wrapper = renderPage();
+    let actions = getHeaderActions(wrapper);
+    const searchField = actions.find('SearchField');
+    (searchField.prop('setSearchValue') as (value: string) => void)('changed');
+    actions = getHeaderActions(wrapper);
+    clickResetButton(actions);
+    const modalPayload = jest.mocked(showModalAction).mock.calls[0][0] as {
+      data: { onConfirm: () => void };
+    };
+    dispatch.mockClear();
+
+    modalPayload.data.onConfirm();
+    await Promise.resolve();
+    await Promise.resolve();
+
+    expect(resetMockDb).toHaveBeenCalledTimes(1);
+    expect(getPipelinesAction).toHaveBeenCalledTimes(1);
+    expect(showSuccessNotification).toHaveBeenCalledWith({
+      message: 'The local AI Factory demo was reset.',
+    });
+    expect(dispatch).toHaveBeenCalledTimes(2);
+    expect(getHeaderActions(wrapper).find('SearchField').prop('searchValue')).toBe('');
+    wrapper.unmount();
+  });
+
+  test.each([
+    ['runtime is not installed', false, true],
+    ['reset persistence fails', true, false],
+  ])('reports an error and does not refresh when %s', async (_label, runtimeInstalled, resetOk) => {
+    jest.mocked(isAiFactoryMockRuntimeInstalled).mockReturnValue(runtimeInstalled);
+    jest.mocked(resetMockDb).mockReturnValue(resetOk);
+    const wrapper = renderPage();
+    const actions = getHeaderActions(wrapper);
+    clickResetButton(actions);
+    const modalPayload = jest.mocked(showModalAction).mock.calls[0][0] as {
+      data: { onConfirm: () => void };
+    };
+    jest.mocked(getPipelinesAction).mockClear();
+
+    modalPayload.data.onConfirm();
+    await Promise.resolve();
+    await Promise.resolve();
+
+    expect(showErrorNotification).toHaveBeenCalledWith({
+      message: 'The local AI Factory demo could not be reset.',
+    });
+    expect(getPipelinesAction).not.toHaveBeenCalled();
+    wrapper.unmount();
+  });
+
+  test('rechecks the reset gate after loading the mock runtime', async () => {
+    jest
+      .mocked(isAiFactoryDemoResetAvailable)
+      .mockReturnValueOnce(true)
+      .mockReturnValueOnce(true)
+      .mockReturnValueOnce(false);
+    const wrapper = renderPage();
+    const actions = getHeaderActions(wrapper);
+    clickResetButton(actions);
+    const modalPayload = jest.mocked(showModalAction).mock.calls[0][0] as {
+      data: { onConfirm: () => void };
+    };
+
+    modalPayload.data.onConfirm();
+    await Promise.resolve();
+    await Promise.resolve();
+
+    expect(resetMockDb).not.toHaveBeenCalled();
+    expect(showErrorNotification).toHaveBeenCalledWith({
+      message: 'The local AI Factory demo could not be reset.',
+    });
+    expect(getPipelinesAction).not.toHaveBeenCalled();
     wrapper.unmount();
   });
 });

@@ -14,13 +14,15 @@
  * limitations under the License.
  */
 
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useIntl } from 'react-intl';
 import { Button, RefreshIcon } from '@reportportal/ui-kit';
 
 import { createClassnames } from 'common/utils';
+import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { SearchField } from 'components/fields/searchField';
+import { isAiFactoryDemoResetAvailable } from 'controllers/aiFactory';
 import {
   PROJECT_DASHBOARD_PAGE,
   PROJECT_PIPELINE_COMPARISON_PAGE,
@@ -40,6 +42,8 @@ import {
   pipelinesLoadingSelector,
   pipelinesSelector,
 } from 'controllers/aiFactory/pipelines';
+import { showModalAction } from 'controllers/modal';
+import { showErrorNotification, showSuccessNotification } from 'controllers/notification';
 import { SettingsLayout } from 'layouts/settingsLayout';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
 import { SpinningPreloader } from 'components/preloaders/spinningPreloader';
@@ -68,8 +72,12 @@ export const PipelinesPageContent = () => {
   const iterationsLoadingByPipeline =
     useSelector(pipelineIterationsLoadingByPipelineSelector) ?? {};
   const iterationsErrorByPipeline = useSelector(pipelineIterationsErrorByPipelineSelector) ?? {};
-  const transport = useSelector(pipelineCatalogTransportSelector) ?? 'mock';
+  const catalogTransport = useSelector(pipelineCatalogTransportSelector);
+  const transport = catalogTransport ?? 'mock';
   const [search, setSearch] = useState('');
+  const transportRef = useRef(catalogTransport);
+  transportRef.current = catalogTransport;
+  const isDemoResetAvailable = isAiFactoryDemoResetAvailable(catalogTransport);
   const pipelineIds = pipelines?.map((pipeline) => pipeline.id) ?? [];
   const hasRunningAutomationIteration = Boolean(
     pipelines?.some(
@@ -111,6 +119,59 @@ export const PipelinesPageContent = () => {
         dispatch({ type: PROJECT_DASHBOARD_PAGE, payload: { organizationSlug, projectSlug } }),
     },
   ];
+
+  const notifyResetError = () => {
+    dispatch(
+      showErrorNotification({
+        message: formatMessage(messages.resetDemoError),
+      }),
+    );
+  };
+
+  const resetDemo = async () => {
+    if (!isAiFactoryDemoResetAvailable(transportRef.current)) {
+      notifyResetError();
+      return;
+    }
+    try {
+      const { isAiFactoryMockRuntimeInstalled, resetMockDb } = await import(
+        /* webpackChunkName: "ai-factory-mocks" */ 'controllers/aiFactory/mocks'
+      );
+      if (
+        !isAiFactoryDemoResetAvailable(transportRef.current) ||
+        !isAiFactoryMockRuntimeInstalled() ||
+        !resetMockDb()
+      ) {
+        notifyResetError();
+        return;
+      }
+      setSearch('');
+      dispatch(getPipelinesAction());
+      dispatch(
+        showSuccessNotification({
+          message: formatMessage(messages.resetDemoSuccess),
+        }),
+      );
+    } catch {
+      notifyResetError();
+    }
+  };
+
+  const openResetDemoConfirmation = () => {
+    dispatch(
+      showModalAction({
+        id: 'confirmationModal',
+        data: {
+          title: formatMessage(messages.resetDemoTitle),
+          message: formatMessage(messages.resetDemoConfirmation),
+          confirmText: formatMessage(COMMON_LOCALE_KEYS.RESET),
+          cancelText: formatMessage(COMMON_LOCALE_KEYS.CANCEL),
+          dangerConfirm: true,
+          onConfirm: () => void resetDemo(),
+        },
+      }),
+    );
+  };
 
   const renderContent = () => {
     if (isLoading && !pipelines) {
@@ -176,6 +237,16 @@ export const PipelinesPageContent = () => {
                 onFilterChange={setSearch}
                 placeholder={formatMessage(messages.searchPlaceholder)}
               />
+              {isDemoResetAvailable && (
+                <Button
+                  variant="text"
+                  data-automation-id="resetAiFactoryDemoButton"
+                  disabled={isLoading}
+                  onClick={openResetDemoConfirmation}
+                >
+                  {formatMessage(messages.resetDemo)}
+                </Button>
+              )}
               <Button
                 variant="text"
                 data-automation-id="refreshPipelinesButton"

@@ -24,7 +24,7 @@ import qhistory from 'qhistory';
 import { stringify, parse } from 'qs';
 import 'common/polyfills';
 
-import { isAiFactoryEnabled } from 'controllers/aiFactory';
+import { isAiFactoryEnabled, isAiFactoryMocksEnabled } from 'controllers/aiFactory';
 
 import 'reset-css/reset.css';
 import 'common/css/fonts/fonts.scss';
@@ -78,10 +78,14 @@ const startApp = () => {
 // AI Factory · DF Bootcamp 2026 PoC (Jira epic EPMRPP-118192). With the feature toggle off
 // (the default), nothing here runs: no chunk is fetched, no mock adapter is installed. See
 // docs/ai-factory-poc/03-frontend-architecture.md §3-4.
-if (!process.env.production && isAiFactoryEnabled()) {
+if (process.env.NODE_ENV === 'development' && isAiFactoryEnabled() && isAiFactoryMocksEnabled()) {
   import(/* webpackChunkName: "ai-factory-mocks" */ 'controllers/aiFactory/mocks')
-    .then(({ installAiFactoryMocks, isAiFactoryMocksEnabled }) => {
-      if (isAiFactoryMocksEnabled()) {
+    .then(({ installAiFactoryMocks }) => {
+      if (
+        process.env.NODE_ENV === 'development' &&
+        isAiFactoryEnabled() &&
+        isAiFactoryMocksEnabled()
+      ) {
         installAiFactoryMocks(axios);
       }
     })

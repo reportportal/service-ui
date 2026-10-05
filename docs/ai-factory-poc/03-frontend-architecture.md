@@ -137,13 +137,10 @@ fallback if the overlay spike fails.
 
 In overlay mode:
 - Unknown test-case ids default to `lifecycle: READY, ai: null`, which is the migration rule from US-007.
-- **Seeding real cases.** The mock "Simulate generation iteration" action (a dev button on Pipelines)
-  calls the **real** `POST tms/test-case` to create the prototype's cases in a folder, then
-  registers them in the mock DB as AI cases with their evaluation and cost. This mirrors the
-  real Upload stage (US-006).
-  ⚠ **The remote backend is shared.** Seeding runs only on an explicit click, only into a dedicated demo
-  project / folder (e.g. `AI Factory demo`), and asks for confirmation. Mocks never delete real data.
-  "Reset demo" clears only the local mock DB.
+- **No real-case seeding exists.** `seedData.ts` seeds only the browser-local mock DB. The overlay can enrich
+  existing remote Test Cases only when their `displayId` already matches TC101–TC108. There is no implemented
+  "Simulate generation iteration" button or remote `POST tms/test-case` seeding flow. Q-ORG-07 must be answered
+  before any separate tool or operator creates remote demo cases; until then the rehearsal stops without writes.
 - **Scenario-edit detection.** A request interceptor sees successful `PUT/PATCH tms/test-case/{id}`
   calls and compares precondition, steps, instructions and expected result with the previous snapshot. When they changed,
   the engine sets `DRAFT` and `evaluation.state = OBSOLETE` and writes a history entry. Name, priority,
@@ -161,8 +158,11 @@ In overlay mode:
 - `startAutomation(caseIds, env)` → the stages progress one by one → a Launch record is created (mock) →
   `automation.status = AUTOMATED`.
 - Cost helpers: `iterationShare = (create + grade + upload) / n`, `caseCost = share + Σ fixRounds`.
-- Persistence in localStorage (`ai_factory_mock_db_v1`) plus **Reset demo**, available in dev
-  from a small floating dev menu on the Pipelines page.
+- Persistence in localStorage (`ai_factory_mock_db_v1`) plus the supported **Reset demo** action on the
+  Pipelines page. Reset restores the local mock seed only; it does not delete, modify or restore remote TMS
+  Test Cases, plans or launches. If the UI action is unavailable during emergency recovery, use
+  `localStorage.removeItem('ai_factory_mock_db_v1'); location.reload()` in the same localhost origin.
+  There is no floating dev menu.
 
 ### 4.4 Async and polling
 Fix rounds and automation are asynchronous. The UI polls:

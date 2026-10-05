@@ -25,6 +25,27 @@ export const messages = defineMessages({
     id: 'PipelinesPage.refreshPage',
     defaultMessage: 'Refresh',
   },
+  resetDemo: {
+    id: 'PipelinesPage.resetDemo',
+    defaultMessage: 'Reset demo',
+  },
+  resetDemoTitle: {
+    id: 'PipelinesPage.resetDemoTitle',
+    defaultMessage: 'Reset the AI Factory demo?',
+  },
+  resetDemoConfirmation: {
+    id: 'PipelinesPage.resetDemoConfirmation',
+    defaultMessage:
+      'This resets only local AI Factory demo data. It cannot undo changes already made in the real TMS.',
+  },
+  resetDemoSuccess: {
+    id: 'PipelinesPage.resetDemoSuccess',
+    defaultMessage: 'The local AI Factory demo was reset.',
+  },
+  resetDemoError: {
+    id: 'PipelinesPage.resetDemoError',
+    defaultMessage: 'The local AI Factory demo could not be reset.',
+  },
   compareIterations: {
     id: 'PipelinesPage.compareIterations',
     defaultMessage: 'Compare iterations',

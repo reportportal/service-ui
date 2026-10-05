@@ -44,7 +44,13 @@ project — that writes to a shared dev backend, and the target project/folder i
 enriches responses for cases that happen to share a `displayId` with the seed (`TC101`…`TC108`).
 Detecting a real scenario edit (`SCENARIO_CHANGED`) is deferred for the same reason.
 
-## Demo controls (browser console)
+## Demo controls
+
+Use the supported **Reset demo** action on the Pipelines page to restore `seedData.ts`. It resets only
+the browser-local mock database for the current localhost origin. It does not delete, modify or restore
+remote Test Cases, plans or launches. There is no floating dev menu and no implemented remote seeding action.
+
+Browser console setup:
 
 ```js
 // enable the feature + mocks, then reload
@@ -53,9 +59,14 @@ localStorage.setItem('show_ai_factory_poc', 'true'); location.reload();
 // disable mocks but keep the toggle on (once real BE endpoints exist for a group)
 localStorage.setItem('ai_factory_mocks', 'false'); location.reload();
 
-// reset all mock data back to the seed
-import('controllers/aiFactory/mocks').then(m => m.resetMockDb());
+// emergency local reset only, when the UI action cannot be used
+localStorage.removeItem('ai_factory_mock_db_v1'); location.reload();
 ```
+
+The emergency command works because the next load falls back to the compiled seed. It is not a remote rollback.
+If TC101–TC108 do not already exist in the selected remote project, stop the rehearsal steps that need those
+Library rows. Do not create them on the shared backend until Q-ORG-07 names an approved project/folder and a
+separate owner/runbook defines creation and restoration.
 
 ## Known simplifications (see docs/ai-factory-poc/06-open-questions.md for the rest)
 

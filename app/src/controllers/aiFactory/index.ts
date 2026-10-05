@@ -15,3 +15,8 @@
  */
 
 export { AI_FACTORY_POC_STORAGE_KEY, isAiFactoryEnabled, useAiFactoryEnabled } from './featureFlag';
+export {
+  AI_FACTORY_MOCKS_STORAGE_KEY,
+  isAiFactoryDemoResetAvailable,
+  isAiFactoryMocksEnabled,
+} from './mockMode';
