@@ -18,6 +18,13 @@ import { shallow } from 'enzyme';
 import { IterationStatus } from 'types/aiFactory';
 import { IterationStatusBadge } from './iterationStatusBadge';
 
+jest.mock('@reportportal/ui-kit', () => ({
+  ErrorIcon: 'ErrorIcon',
+  RefreshIcon: 'RefreshIcon',
+  StatusSuccessIcon: 'StatusSuccessIcon',
+  WarningIcon: 'WarningIcon',
+}));
+
 // jest.requireActual's generic defaults to `any` — the standard Jest idiom for partial mocks.
 // eslint-disable-next-line @typescript-eslint/no-unsafe-return
 jest.mock('react-intl', () => ({
@@ -37,5 +44,12 @@ describe('IterationStatusBadge', () => {
     const wrapper = shallow(<IterationStatusBadge status={status} />);
 
     expect(wrapper.find('[data-automation-id="iterationStatusBadge"]').text()).toBe(label);
+  });
+
+  test('adds the status icon only when requested', () => {
+    expect(shallow(<IterationStatusBadge status={IterationStatus.FAILED} />).find('ErrorIcon')).toHaveLength(0);
+    expect(
+      shallow(<IterationStatusBadge status={IterationStatus.FAILED} showIcon />).find('ErrorIcon'),
+    ).toHaveLength(1);
   });
 });

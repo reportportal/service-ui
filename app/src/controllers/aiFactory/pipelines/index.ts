@@ -21,11 +21,16 @@ export {
   PIPELINE_ITERATIONS_NAMESPACE,
   GET_PIPELINE_ITERATION_DETAILS,
   PIPELINE_ITERATION_DETAILS_NAMESPACE,
+  GET_PIPELINE_COMPARISON,
+  CLEAR_PIPELINE_COMPARISON,
+  PIPELINE_COMPARISON_NAMESPACE,
 } from './constants';
 export {
   getPipelinesAction,
   getPipelineIterationsAction,
   getPipelineIterationDetailsAction,
+  getPipelineComparisonAction,
+  clearPipelineComparisonAction,
 } from './actionCreators';
 export { aiFactoryPipelinesSagas } from './sagas';
 export { aiFactoryPipelinesReducer } from './reducer';
@@ -34,8 +39,20 @@ export {
   pipelinesLoadingSelector,
   pipelineIterationsByPipelineSelector,
   pipelineIterationsLoadingSelector,
+  pipelineIterationsLoadingByPipelineSelector,
+  pipelineIterationsErrorByPipelineSelector,
+  pipelineCatalogTransportSelector,
+  pipelineCatalogTransportFallbackSelector,
+  pipelineCatalogVersionSelector,
+  pipelineCatalogRequestIdSelector,
+  pipelineCatalogProjectKeySelector,
   pipelineIterationDetailsSelector,
   pipelineIterationDetailsLoadingSelector,
+  pipelineIterationDetailsErrorSelector,
+  pipelineIterationDetailsUnavailableSelector,
+  pipelineComparisonSelector,
+  pipelineComparisonLoadingSelector,
+  pipelineComparisonErrorSelector,
 } from './selectors';
 export type {
   PipelinesState,
@@ -44,4 +61,25 @@ export type {
   GetPipelineIterationsAction,
   GetPipelineIterationDetailsAction,
   IterationsByPipelineId,
+  IterationsLoadingByPipelineId,
+  IterationsErrorByPipelineId,
+  PipelineCatalogItem,
+  PipelineIterationItem,
+  GetPipelineComparisonAction,
+  ClearPipelineComparisonAction,
 } from './types';
+export type { PipelineCatalogTransport, PipelineDetailTransport } from './transport';
+export type {
+  ReducedPipeline,
+  ReducedPipelineIteration,
+  ReducedPipelineIterationDetail,
+  ReducedPipelineDetailStage,
+  ReducedPipelineStage,
+  ReducedPipelineStatus,
+} from './liveAdapters';
+export {
+  isReducedPipeline,
+  isReducedPipelineIteration,
+  isRichPipeline,
+  isRichPipelineIteration,
+} from './liveAdapters';

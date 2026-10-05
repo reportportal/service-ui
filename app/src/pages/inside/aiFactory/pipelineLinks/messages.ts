@@ -27,4 +27,24 @@ export const messages = defineMessages({
   },
   grade: { id: 'PipelineLinks.grade', defaultMessage: 'Grade' },
   review: { id: 'PipelineLinks.review', defaultMessage: 'Review' },
+  sourceIteration: {
+    id: 'PipelineLinks.sourceIteration',
+    defaultMessage: '{pipeline} · Iteration #{number}',
+  },
+  fixRoundIteration: {
+    id: 'PipelineLinks.fixRoundIteration',
+    defaultMessage: 'Iteration #{number} · Fix round {round}',
+  },
+  createdFrom: {
+    id: 'PipelineLinks.createdFrom',
+    defaultMessage: 'created · {requirement}',
+  },
+  pipelineFallback: {
+    id: 'PipelineLinks.pipelineFallback',
+    defaultMessage: 'Test case generation',
+  },
+  requirementUnknown: {
+    id: 'PipelineLinks.requirementUnknown',
+    defaultMessage: 'Requirement unavailable',
+  },
 });

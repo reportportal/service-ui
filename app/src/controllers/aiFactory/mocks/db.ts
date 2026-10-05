@@ -38,7 +38,7 @@ import {
   MockPlanSeed,
 } from './types';
 
-const STORAGE_KEY = 'ai_factory_mock_db_v1';
+const STORAGE_KEY = 'ai_factory_mock_db_v5';
 /** Spread seeded history entries evenly over the 24h before their case's evaluation time. */
 const HISTORY_SPREAD_MS = 60 * 60 * 1000;
 
@@ -90,6 +90,8 @@ const hydrateCase = (seed: MockCaseSeed): MockCaseRecord => {
   return {
     id: seed.id,
     displayId: seed.displayId,
+    name: seed.name ?? seed.displayId,
+    availableInLibrary: seed.availableInLibrary ?? true,
     priority: seed.priority,
     template: seed.template,
     stepsCount: seed.stepsCount,
@@ -131,6 +133,7 @@ const loadPersisted = (): MockDb | null => {
 
 let state: MockDb = loadPersisted() || cloneSeed();
 const caseAliases = new Map<number, number>();
+const caseReviewStepIds = new Map<number, number[]>();
 
 export const persist = (): void => {
   try {
@@ -141,17 +144,32 @@ export const persist = (): void => {
 };
 
 /** Discards persisted state and reloads the seed — the "Reset demo" action. */
-export const resetMockDb = (): void => {
-  state = cloneSeed();
+export const resetMockDb = (): boolean => {
+  const nextState = cloneSeed();
+  try {
+    setStorageItem(STORAGE_KEY, nextState);
+  } catch {
+    return false;
+  }
+  state = nextState;
   caseAliases.clear();
-  persist();
+  caseReviewStepIds.clear();
+  return true;
+};
+
+export const reloadMockDb = (): void => {
+  state = loadPersisted() || cloneSeed();
+  caseAliases.clear();
+  caseReviewStepIds.clear();
 };
 
 export const getDb = (): MockDb => state;
 
-export const findPipeline = (pipelineId: number) => state.pipelines.find((p) => p.id === pipelineId);
+export const findPipeline = (pipelineId: number) =>
+  state.pipelines.find((p) => p.id === pipelineId);
 
-export const findIteration = (iterationId: number) => state.iterations.find((i) => i.id === iterationId);
+export const findIteration = (iterationId: number) =>
+  state.iterations.find((i) => i.id === iterationId);
 
 export const listIterations = (pipelineId?: number) =>
   state.iterations
@@ -179,18 +197,54 @@ export const findCase = (idOrDisplayId: number | string): MockCaseRecord | undef
   return seededCase ?? state.cases.find((c) => c.id === aliasedCaseId);
 };
 
-export const registerCaseAlias = (realCaseId: number, caseRecord: MockCaseRecord): void => {
+export const registerCaseAlias = (
+  realCaseId: number,
+  caseRecord: MockCaseRecord,
+  reviewStepIds?: number[],
+): void => {
   if (Number.isSafeInteger(realCaseId)) {
     caseAliases.set(realCaseId, caseRecord.id);
+    if (reviewStepIds) {
+      caseReviewStepIds.set(realCaseId, reviewStepIds);
+    }
   }
 };
 
-export const listCasesOfIteration = (iterationId: number): MockCaseRecord[] =>
-  state.cases.filter((c) => c.ai?.iterationId === iterationId);
+export const reviewCommentsForCase = (
+  idOrDisplayId: number | string,
+  caseRecord: MockCaseRecord,
+): MockCaseRecord['comments'] => {
+  const numericId = toNumericCaseId(idOrDisplayId);
+  const reviewStepIds = numericId === undefined ? undefined : caseReviewStepIds.get(numericId);
+  if (!reviewStepIds?.length) return caseRecord.comments;
+
+  return caseRecord.comments.map((comment) => {
+    if (
+      comment.target.type !== 'STEP' ||
+      reviewStepIds.includes(comment.target.stepId)
+    ) {
+      return comment;
+    }
+    const logicalIndex = Math.max(0, comment.target.stepId ?? 0);
+    const stepId = reviewStepIds[Math.min(logicalIndex, reviewStepIds.length - 1)];
+    return { ...comment, target: { ...comment.target, stepId } };
+  });
+};
+
+export const listCasesOfIteration = (iterationId: number): MockCaseRecord[] => {
+  const iteration = findIteration(iterationId);
+  if (iteration?.testCaseIds) {
+    return iteration.testCaseIds
+      .map((testCaseId) => findCase(testCaseId))
+      .filter((caseRecord): caseRecord is MockCaseRecord => Boolean(caseRecord));
+  }
+  return state.cases.filter((caseRecord) => caseRecord.ai?.iterationId === iterationId);
+};
 
 export const findPlan = (planId: number) => state.plans.find((p) => p.id === planId);
 
-export const plansBlockedByCase = (caseId: number) => state.plans.filter((p) => p.testCaseIds.includes(caseId));
+export const plansBlockedByCase = (caseId: number) =>
+  state.plans.filter((p) => p.testCaseIds.includes(caseId));
 
 export const findLaunch = (launchId: number) => state.launches.find((l) => l.id === launchId);
 
@@ -201,7 +255,8 @@ export const nextCommentId = (): number => {
 };
 
 export const nextFixRoundNumber = (caseRecord: MockCaseRecord): number =>
-  Math.max(0, ...caseRecord.fixRounds.map((r) => r.round), caseRecord.fixRoundRunning?.round || 0) + 1;
+  Math.max(0, ...caseRecord.fixRounds.map((r) => r.round), caseRecord.fixRoundRunning?.round || 0) +
+  1;
 
 export const setAutomationInProgress = (caseRecord: MockCaseRecord, iterationId: number): void => {
   caseRecord.automation = {
@@ -240,15 +295,10 @@ export const recordScenarioChange = (
       ? LifecycleReason.APPROVED_WITH_CHANGES
       : LifecycleReason.MARKED_AS_READY_WITH_CHANGES;
   }
-  recordLifecycleChange(
-    caseRecord,
-    promoteToReady ? Lifecycle.READY : Lifecycle.DRAFT,
-    reason,
-    {
-      type: LifecycleActorType.USER,
-      name: 'You',
-    },
-  );
+  recordLifecycleChange(caseRecord, promoteToReady ? Lifecycle.READY : Lifecycle.DRAFT, reason, {
+    type: LifecycleActorType.USER,
+    name: 'You',
+  });
   persist();
   if (promoteToReady) return 'TO_READY';
   return wasReady ? 'TO_DRAFT' : null;

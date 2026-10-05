@@ -19,6 +19,7 @@ import { useIntl } from 'react-intl';
 import { Button, Modal, Tooltip } from '@reportportal/ui-kit';
 
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
+import { useUserPermissions } from 'hooks/useUserPermissions';
 import type { ExtendedTestCase } from 'types/testCase';
 
 import { messages } from './messages';
@@ -32,6 +33,7 @@ interface ApproveButtonProps {
 
 export const ApproveButton = ({ testCase, onSuccess, className }: ApproveButtonProps) => {
   const { formatMessage } = useIntl();
+  const { canReviewAiTestCases } = useUserPermissions();
   const [isConfirmationVisible, setIsConfirmationVisible] = useState(false);
   const { isLoading, updateLifecycle } = useLifecycleActions({ onSingleSuccess: onSuccess });
   const isAiCase = Boolean(testCase.ai);
@@ -51,6 +53,8 @@ export const ApproveButton = ({ testCase, onSuccess, className }: ApproveButtonP
       setIsConfirmationVisible(false);
     }
   };
+
+  if (!canReviewAiTestCases) return null;
 
   const button = (
     <Button

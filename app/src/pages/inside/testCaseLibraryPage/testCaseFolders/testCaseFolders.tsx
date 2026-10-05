@@ -38,6 +38,7 @@ import {
   foldersSelector,
   testCasesPageSelector,
   successfulTestCasesLoadRevisionSelector,
+  settledTestCasesRevisionSelector,
   FolderWithFullPath,
 } from 'controllers/testCase';
 import {
@@ -111,6 +112,7 @@ export const TestCaseFolders = () => {
   const testCases = useSelector(testCasesSelector);
   const testCasesPageData = useSelector(testCasesPageSelector);
   const successfulLoadRevision = useSelector(successfulTestCasesLoadRevisionSelector);
+  const settledRevision = useSelector(settledTestCasesRevisionSelector);
   const organizationSlug = useSelector(urlOrganizationSlugSelector);
   const projectSlug = useSelector(urlProjectSlugSelector);
   const projectKey = useSelector(projectKeySelector);
@@ -176,14 +178,21 @@ export const TestCaseFolders = () => {
     ],
   );
   const [loadedQueryKey, setLoadedQueryKey] = useState<string | null>(null);
-  const prevIsLoadingRef = useRef(isLoadingTestCases);
+  const requestQueryKeyRef = useRef(currentQueryKey);
+
+  // Keep the latest URL query key. Settlement must follow SET/CLEAR (settledRevision),
+  // not STOP_LOADING — takeLatest cancellation also stops loading and would mark the
+  // next page as loaded while Redux still holds the previous rows. With takeLatest,
+  // a successful SET always belongs to the latest dispatched query.
+  useEffect(() => {
+    requestQueryKeyRef.current = currentQueryKey;
+  }, [currentQueryKey]);
 
   useEffect(() => {
-    if (prevIsLoadingRef.current && !isLoadingTestCases) {
-      setLoadedQueryKey(currentQueryKey);
+    if (settledRevision > 0) {
+      setLoadedQueryKey(requestQueryKeyRef.current);
     }
-    prevIsLoadingRef.current = isLoadingTestCases;
-  }, [isLoadingTestCases, currentQueryKey]);
+  }, [settledRevision]);
 
   const isTestCasesQueryStale = loadedQueryKey !== currentQueryKey;
 

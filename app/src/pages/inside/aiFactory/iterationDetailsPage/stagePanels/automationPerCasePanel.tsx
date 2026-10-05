@@ -39,7 +39,9 @@ export const AutomationPerCasePanel = ({ stage }: AutomationPerCasePanelProps) =
 
   return (
     <div className={cx('panel')} data-automation-id="automationPerCasePanel">
-      {stage.key === StageKey.PREPARE && <p className={cx('note')}>{formatMessage(messages.automationPrepareNote)}</p>}
+      {stage.key === StageKey.PREPARE && (
+        <p className={cx('note')}>{formatMessage(messages.automationPrepareNote)}</p>
+      )}
       <table className={cx('table', 'automation-table')}>
         <thead>
           <tr>
@@ -55,7 +57,8 @@ export const AutomationPerCasePanel = ({ stage }: AutomationPerCasePanelProps) =
                 <CaseLink testCaseId={c.testCaseId} name={c.name} />
               </td>
               <td>
-                <StageStatusDot status={c.status} /> <StageStatusLabel status={c.status} />
+                <StageStatusDot status={c.status} isDecorative />{' '}
+                <StageStatusLabel status={c.status} />
               </td>
               <td>{c.result}</td>
             </tr>

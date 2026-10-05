@@ -17,6 +17,8 @@
 import { useIntl } from 'react-intl';
 import { Button } from '@reportportal/ui-kit';
 
+import { useUserPermissions } from 'hooks/useUserPermissions';
+
 import { messages } from './messages';
 import { useLifecycleActions } from './useLifecycleActions';
 
@@ -27,9 +29,12 @@ interface BulkApproveButtonProps {
 
 export const BulkApproveButton = ({ testCaseIds, onSuccess }: BulkApproveButtonProps) => {
   const { formatMessage } = useIntl();
+  const { canReviewAiTestCases } = useUserPermissions();
   const { isLoading, updateLifecycleBatch } = useLifecycleActions({
     onBatchSuccess: onSuccess,
   });
+
+  if (!canReviewAiTestCases) return null;
 
   return (
     <Button

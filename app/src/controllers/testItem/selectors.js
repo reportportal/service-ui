@@ -84,6 +84,10 @@ export const queryParametersSelector = createQueryParametersSelector({
   defaultSorting: DEFAULT_SORTING,
 });
 export const parentItemsSelector = (state) => domainSelector(state).parentItems || [];
+export const isRootLaunchParentSelector = createSelector(
+  parentItemsSelector,
+  (parentItems) => parentItems.length === 1,
+);
 export const createParentItemsSelector = (offset = 0) =>
   createSelector(parentItemsSelector, defectTypesSelector, (parentItems, defectTypes) =>
     normalizeTestItem(parentItems[parentItems.length - 1 - offset], defectTypes),

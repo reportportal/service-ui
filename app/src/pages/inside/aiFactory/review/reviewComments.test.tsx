@@ -9,8 +9,10 @@
  */
 
 import { act, type ChangeEvent } from 'react';
+import { useDispatch } from 'react-redux';
 import { shallow } from 'enzyme';
 
+import { showModalAction } from 'controllers/modal';
 import { CommentState, CommentTargetType, FixRoundStatus, Lifecycle } from 'types/aiFactory';
 import type { ReviewCommentRS } from 'types/aiFactory';
 
@@ -27,6 +29,10 @@ jest.mock('@reportportal/ui-kit', () => ({
   ),
   DeleteIcon: () => <span>DeleteIcon</span>,
   Tooltip: ({ children }: { children: React.ReactNode }) => <>{children}</>,
+}));
+jest.mock('react-redux', () => ({ useDispatch: jest.fn() }));
+jest.mock('controllers/modal', () => ({
+  showModalAction: jest.fn((payload: unknown) => ({ type: 'SHOW_MODAL', payload })),
 }));
 jest.mock('common/img/comment-inline.svg', () => 'comment.svg');
 jest.mock('common/utils', () => ({
@@ -111,8 +117,11 @@ const createFixRoundState = (overrides: Partial<FixRoundLoadState> = {}): FixRou
 });
 
 describe('AI review comments', () => {
+  const dispatch = jest.fn();
+
   beforeEach(() => {
     jest.clearAllMocks();
+    jest.mocked(useDispatch).mockReturnValue(dispatch);
   });
 
   test('shows only the selected target thread and adds trimmed text', async () => {
@@ -127,7 +136,19 @@ describe('AI review comments', () => {
     const openThread = wrapper
       .find('[data-automation-id="review-comment-toggle-STEP-7"]')
       .prop('onClick') as () => void;
+    const trigger = wrapper.find('[data-automation-id="review-comment-toggle-STEP-7"]');
+    const threadId = trigger.prop('aria-controls');
+    expect(trigger.prop('aria-expanded')).toBe(false);
     openThread();
+    expect(wrapper.find('[data-automation-id="review-comment-toggle-STEP-7"]').prop('aria-expanded')).toBe(
+      true,
+    );
+    const thread = wrapper.find('section');
+    expect(thread.props()).toMatchObject({
+      id: threadId,
+      'aria-labelledby': trigger.prop('id'),
+    });
+    expect(thread.prop('role')).toBeUndefined();
     expect(wrapper.text()).toContain('Use the Library label');
     expect(wrapper.text()).toContain('The source requirement uses the original name');
     expect(wrapper.text()).not.toContain('Different step');
@@ -150,6 +171,20 @@ describe('AI review comments', () => {
     });
   });
 
+  test('can expose the precondition composer initially for the review design', () => {
+    const wrapper = shallow(
+      <ReviewTarget
+        target={{ type: CommentTargetType.PRECONDITION }}
+        reviewState={createReviewState({ comments: [] })}
+        isInitiallyOpen
+      />,
+    );
+
+    expect(wrapper.find('section')).toHaveLength(1);
+    expect(wrapper.text()).toContain('No review comments yet');
+    expect(wrapper.find('textarea').prop('placeholder')).toBe('What should the agent change here?');
+  });
+
   test('makes an open thread read-only while a fix is running', () => {
     const wrapper = shallow(
       <ReviewTarget
@@ -170,7 +205,6 @@ describe('AI review comments', () => {
 
   test('discards pending comments only after confirmation', async () => {
     const reviewState = createReviewState();
-    jest.spyOn(window, 'confirm').mockReturnValue(true);
     const wrapper = shallow(
       <ReviewStrip
         lifecycle={Lifecycle.DRAFT}
@@ -179,15 +213,30 @@ describe('AI review comments', () => {
       />,
     );
 
+    const discard = wrapper
+      .find('[data-automation-id="discard-review-comments"]')
+      .prop('onClick') as () => void;
+    discard();
+
+    expect(showModalAction).toHaveBeenCalledWith({
+      id: 'confirmationModal',
+      data: expect.objectContaining({
+        title: 'Discard comments',
+        message: 'Discard all unsent review comments?',
+        dangerConfirm: true,
+        onConfirm: expect.any(Function),
+      }),
+    });
+    expect(reviewState.discardPending).not.toHaveBeenCalled();
+
+    const modalPayload = jest.mocked(showModalAction).mock.calls[0][0] as {
+      data: { onConfirm: () => void };
+    };
     await act(async () => {
-      const discard = wrapper
-        .find('[data-automation-id="discard-review-comments"]')
-        .prop('onClick') as () => void;
-      discard();
+      modalPayload.data.onConfirm();
       await Promise.resolve();
     });
 
-    expect(window.confirm).toHaveBeenCalledWith('Discard all unsent review comments?');
     expect(reviewState.discardPending).toHaveBeenCalledTimes(1);
   });
 
@@ -233,5 +282,30 @@ describe('AI review comments', () => {
 
     expect(wrapper.find('output').text()).toContain('Agent is fixing');
     expect(wrapper.find('[data-automation-id="push-review-comments"]').prop('disabled')).toBe(true);
+  });
+
+  test('does not expose Discard after a failed fix round in read-only mode', () => {
+    const wrapper = shallow(
+      <ReviewStrip
+        lifecycle={Lifecycle.DRAFT}
+        reviewState={createReviewState()}
+        isReadOnly
+        readOnlyReason="NO_PERMISSION"
+        fixRoundState={createFixRoundState({
+          current: {
+            round: 3,
+            testCaseId: 42,
+            displayId: 'TC106',
+            status: FixRoundStatus.FAILED,
+            pushedBy: 'Reviewer',
+            pushedAt: 100,
+            commentsCount: 1,
+          },
+        })}
+      />,
+    );
+
+    expect(wrapper.find('Button[variant="text-danger"]')).toHaveLength(0);
+    expect(wrapper.find('[data-automation-id="push-review-comments-again"]')).toHaveLength(0);
   });
 });

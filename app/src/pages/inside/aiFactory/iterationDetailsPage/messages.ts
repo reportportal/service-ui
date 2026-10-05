@@ -17,6 +17,46 @@
 import { defineMessages } from 'react-intl';
 
 export const messages = defineMessages({
+  detailUnavailable: {
+    id: 'IterationDetailsPage.detailUnavailable',
+    defaultMessage: 'Iteration details are unavailable for this pipeline source',
+  },
+  detailLoading: {
+    id: 'IterationDetailsPage.detailLoading',
+    defaultMessage: 'Loading iteration details…',
+  },
+  detailError: {
+    id: 'IterationDetailsPage.detailError',
+    defaultMessage: 'Iteration details could not be loaded',
+  },
+  retry: {
+    id: 'IterationDetailsPage.retry',
+    defaultMessage: 'Retry',
+  },
+  liveStatusPending: {
+    id: 'IterationDetailsPage.liveStatusPending',
+    defaultMessage: 'Pending',
+  },
+  liveStatusPassed: {
+    id: 'IterationDetailsPage.liveStatusPassed',
+    defaultMessage: 'Passed',
+  },
+  liveStatusFailed: {
+    id: 'IterationDetailsPage.liveStatusFailed',
+    defaultMessage: 'Failed',
+  },
+  liveStatusNeedsHuman: {
+    id: 'IterationDetailsPage.liveStatusNeedsHuman',
+    defaultMessage: 'Needs human review',
+  },
+  liveStatusUnknown: {
+    id: 'IterationDetailsPage.liveStatusUnknown',
+    defaultMessage: 'Unknown',
+  },
+  noStages: {
+    id: 'IterationDetailsPage.noStages',
+    defaultMessage: 'No stages are available for this iteration',
+  },
   pipelinesBreadcrumb: {
     id: 'IterationDetailsPage.pipelinesBreadcrumb',
     defaultMessage: 'Pipelines',
@@ -25,9 +65,65 @@ export const messages = defineMessages({
     id: 'IterationDetailsPage.refresh',
     defaultMessage: 'Refresh',
   },
+  compareWithPrevious: {
+    id: 'IterationDetailsPage.compareWithPrevious',
+    defaultMessage: 'Compare with previous',
+  },
+  rerun: {
+    id: 'IterationDetailsPage.rerun',
+    defaultMessage: 'Re-run',
+  },
+  rerunPermissionUnavailable: {
+    id: 'IterationDetailsPage.rerunPermissionUnavailable',
+    defaultMessage: 'Re-run is available to Organization Managers and Administrators',
+  },
   iterationTitle: {
     id: 'IterationDetailsPage.iterationTitle',
     defaultMessage: 'Iteration #{number}',
+  },
+  iterationBadge: {
+    id: 'IterationDetailsPage.iterationBadge',
+    defaultMessage: 'Iteration',
+  },
+  summaryLabel: {
+    id: 'IterationDetailsPage.summaryLabel',
+    defaultMessage: 'Iteration summary',
+  },
+  metaRequirement: {
+    id: 'IterationDetailsPage.metaRequirement',
+    defaultMessage: 'Requirement',
+  },
+  metaTestCases: {
+    id: 'IterationDetailsPage.metaTestCases',
+    defaultMessage: 'Test Cases',
+  },
+  metaTrigger: {
+    id: 'IterationDetailsPage.metaTrigger',
+    defaultMessage: 'Trigger',
+  },
+  metaStartedBy: {
+    id: 'IterationDetailsPage.metaStartedBy',
+    defaultMessage: 'Started by',
+  },
+  metaModel: {
+    id: 'IterationDetailsPage.metaModel',
+    defaultMessage: 'Model',
+  },
+  metaEnvironment: {
+    id: 'IterationDetailsPage.metaEnvironment',
+    defaultMessage: 'Environment',
+  },
+  metaStarted: {
+    id: 'IterationDetailsPage.metaStarted',
+    defaultMessage: 'Started',
+  },
+  metaCiPipeline: {
+    id: 'IterationDetailsPage.metaCiPipeline',
+    defaultMessage: 'CI pipeline',
+  },
+  stagesTitle: {
+    id: 'IterationDetailsPage.stagesTitle',
+    defaultMessage: 'Stages',
   },
   kpiTestCases: {
     id: 'IterationDetailsPage.kpiTestCases',
@@ -51,7 +147,7 @@ export const messages = defineMessages({
   },
   kpiCost: {
     id: 'IterationDetailsPage.kpiCost',
-    defaultMessage: 'Cost',
+    defaultMessage: 'Pipeline estimate',
   },
   bannerRunning: {
     id: 'IterationDetailsPage.bannerRunning',
@@ -77,6 +173,119 @@ export const messages = defineMessages({
   bannerFailedGeneric: {
     id: 'IterationDetailsPage.bannerFailedGeneric',
     defaultMessage: 'A stage failed — see the stage panel',
+  },
+  stageCasesCreated: {
+    id: 'IterationDetailsPage.stageCasesCreated',
+    defaultMessage: '{count} Test Cases created',
+  },
+  stageCreateDescription: {
+    id: 'IterationDetailsPage.stageCreateDescription',
+    defaultMessage: 'Self-review and self-fix included',
+  },
+  stageCasesGraded: {
+    id: 'IterationDetailsPage.stageCasesGraded',
+    defaultMessage: '{count} cases graded',
+  },
+  stageGrading: {
+    id: 'IterationDetailsPage.stageGrading',
+    defaultMessage: 'Grading Test Cases…',
+  },
+  stageCasesUploaded: {
+    id: 'IterationDetailsPage.stageCasesUploaded',
+    defaultMessage: '{count} uploaded as Draft',
+  },
+  stageAutoReady: {
+    id: 'IterationDetailsPage.stageAutoReady',
+    defaultMessage: 'Auto-Ready → Ready: {count}',
+  },
+  stageReady: {
+    id: 'IterationDetailsPage.stageReady',
+    defaultMessage: '{ready} / {total} Ready',
+  },
+  stageFixRounds: {
+    id: 'IterationDetailsPage.stageFixRounds',
+    defaultMessage: '{count} fix round(s) · in the Library',
+  },
+  stageWaitingForGrade: {
+    id: 'IterationDetailsPage.stageWaitingForGrade',
+    defaultMessage: 'Waiting for Grade',
+  },
+  stageWaitingForUpload: {
+    id: 'IterationDetailsPage.stageWaitingForUpload',
+    defaultMessage: 'Waiting for Upload',
+  },
+  stageTestCases: {
+    id: 'IterationDetailsPage.stageTestCases',
+    defaultMessage: '{count} Test Case(s)',
+  },
+  retryStageUnavailable: {
+    id: 'IterationDetailsPage.retryStageUnavailable',
+    defaultMessage: 'Retry requires the CI retry contract and a connected pipeline',
+  },
+  retryStage: {
+    id: 'IterationDetailsPage.retryStage',
+    defaultMessage: 'Retry {stage}',
+  },
+  uploadRollbackWarning: {
+    id: 'IterationDetailsPage.uploadRollbackWarning',
+    defaultMessage: '{reason}. Upload is all or nothing: the Library is unchanged.',
+  },
+  retryUploadDescription: {
+    id: 'IterationDetailsPage.retryUploadDescription',
+    defaultMessage:
+      'Runs this stage again inside Iteration #{number}; the stages after it follow (US-020). A stage that passed cannot be retried.',
+  },
+  retryUpload: {
+    id: 'IterationDetailsPage.retryUpload',
+    defaultMessage: 'Retry Upload',
+  },
+  uploadAttempt: {
+    id: 'IterationDetailsPage.uploadAttempt',
+    defaultMessage: 'Attempt',
+  },
+  uploadAttemptNumber: {
+    id: 'IterationDetailsPage.uploadAttemptNumber',
+    defaultMessage: '#{number}',
+  },
+  uploadAttemptStatus: {
+    id: 'IterationDetailsPage.uploadAttemptStatus',
+    defaultMessage: 'Status',
+  },
+  uploadAttemptCiJob: {
+    id: 'IterationDetailsPage.uploadAttemptCiJob',
+    defaultMessage: 'CI job',
+  },
+  uploadAttemptReason: {
+    id: 'IterationDetailsPage.uploadAttemptReason',
+    defaultMessage: 'Reason',
+  },
+  stageDetailsTitle: {
+    id: 'IterationDetailsPage.stageDetailsTitle',
+    defaultMessage: 'Stage details',
+  },
+  stageDetailsStage: {
+    id: 'IterationDetailsPage.stageDetailsStage',
+    defaultMessage: 'Stage',
+  },
+  stageDetailsStatus: {
+    id: 'IterationDetailsPage.stageDetailsStatus',
+    defaultMessage: 'Status',
+  },
+  stageDetailsDuration: {
+    id: 'IterationDetailsPage.stageDetailsDuration',
+    defaultMessage: 'Duration',
+  },
+  stageDetailsCiJob: {
+    id: 'IterationDetailsPage.stageDetailsCiJob',
+    defaultMessage: 'CI job',
+  },
+  stageDetailsModel: {
+    id: 'IterationDetailsPage.stageDetailsModel',
+    defaultMessage: 'Model',
+  },
+  stageDetailsCost: {
+    id: 'IterationDetailsPage.stageDetailsCost',
+    defaultMessage: 'Cost',
   },
   stageNotStarted: {
     id: 'IterationDetailsPage.stageNotStarted',
@@ -118,9 +327,17 @@ export const messages = defineMessages({
     id: 'IterationDetailsPage.gradeSuiteScore',
     defaultMessage: 'Suite score {score}',
   },
+  gradeSuiteScoreSummary: {
+    id: 'IterationDetailsPage.gradeSuiteScoreSummary',
+    defaultMessage: 'Suite score {score} / 100 (mean of cases) · evaluation only',
+  },
   gradeColumnCase: {
     id: 'IterationDetailsPage.gradeColumnCase',
     defaultMessage: 'Case',
+  },
+  gradeCaseDetails: {
+    id: 'IterationDetailsPage.gradeCaseDetails',
+    defaultMessage: 'Toggle score details for {name}',
   },
   gradeColumnScore: {
     id: 'IterationDetailsPage.gradeColumnScore',
@@ -129,6 +346,11 @@ export const messages = defineMessages({
   gradeNoFailureReasons: {
     id: 'IterationDetailsPage.gradeNoFailureReasons',
     defaultMessage: 'At max score — nothing to explain',
+  },
+  gradeLegend: {
+    id: 'IterationDetailsPage.gradeLegend',
+    defaultMessage:
+      'A = Atomicity · CS = Clear steps · CER = Clear expected results · NIL = No invented logic · NIU = No invented UI · C = Coherence. Select a row for the failure reasons. Scores only — no pass/fail.',
   },
   criterionAtomicity: {
     id: 'IterationDetailsPage.criterionAtomicity',
@@ -224,7 +446,7 @@ export const messages = defineMessages({
   },
   fixRoundsColumnCost: {
     id: 'IterationDetailsPage.fixRoundsColumnCost',
-    defaultMessage: 'Cost',
+    defaultMessage: 'Pipeline estimate',
   },
   fixRoundScoreChange: {
     id: 'IterationDetailsPage.fixRoundScoreChange',
@@ -266,9 +488,33 @@ export const messages = defineMessages({
     id: 'IterationDetailsPage.tokenUsageTitle',
     defaultMessage: 'Token usage',
   },
+  tokenUsageModel: {
+    id: 'IterationDetailsPage.tokenUsageModel',
+    defaultMessage: 'Model',
+  },
+  tokenUsageInput: {
+    id: 'IterationDetailsPage.tokenUsageInput',
+    defaultMessage: 'Input',
+  },
+  tokenUsageCacheRead: {
+    id: 'IterationDetailsPage.tokenUsageCacheRead',
+    defaultMessage: 'Cache read',
+  },
+  tokenUsageCacheWrite: {
+    id: 'IterationDetailsPage.tokenUsageCacheWrite',
+    defaultMessage: 'Cache write',
+  },
+  tokenUsageOutput: {
+    id: 'IterationDetailsPage.tokenUsageOutput',
+    defaultMessage: 'Output',
+  },
+  tokenUsageCost: {
+    id: 'IterationDetailsPage.tokenUsageCost',
+    defaultMessage: 'Est. cost',
+  },
   tokenUsageLine: {
     id: 'IterationDetailsPage.tokenUsageLine',
     defaultMessage:
-      '{model}: {input} in · {cacheRead} cache read · {cacheWrite} cache write · {output} out · {cost}',
+      '{model}: {input} in · {cacheRead} cache read · {cacheWrite} cache write · {output} out · Pipeline estimate {cost}',
   },
 });

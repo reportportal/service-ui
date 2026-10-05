@@ -15,11 +15,16 @@
  */
 
 import { useIntl } from 'react-intl';
-import { Button } from '@reportportal/ui-kit';
+import { useStore } from 'react-redux';
+import { Button, ConfigurationIcon } from '@reportportal/ui-kit';
 
 import { PipelineRS } from 'types/aiFactory';
 
 import { messages } from './messages';
+import {
+  getPipelineSettingsProvenance,
+  type PipelineSettingsState,
+} from './pipelineSettingsProvenance';
 import { usePipelineSettingsModal } from './usePipelineSettingsModal';
 
 export interface PipelineSettingsButtonProps {
@@ -29,13 +34,25 @@ export interface PipelineSettingsButtonProps {
 export const PipelineSettingsButton = ({ pipeline }: PipelineSettingsButtonProps) => {
   const { formatMessage } = useIntl();
   const { openModal } = usePipelineSettingsModal();
+  const store = useStore<PipelineSettingsState>();
+
+  const openSettings = () => {
+    const provenance = getPipelineSettingsProvenance(store.getState(), pipeline);
+
+    if (!provenance) {
+      return;
+    }
+
+    openModal({ pipeline, provenance });
+  };
 
   return (
     <Button
       variant="text"
       adjustWidthOn="content"
+      icon={<ConfigurationIcon />}
       data-automation-id={`pipelineSettingsButton-${pipeline.id}`}
-      onClick={() => openModal({ pipeline })}
+      onClick={openSettings}
     >
       {formatMessage(messages.action)}
     </Button>

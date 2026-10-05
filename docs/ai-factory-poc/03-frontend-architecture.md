@@ -132,18 +132,15 @@ fallback if the overlay spike fails.
 
 | Mode | What is real | What is mocked | Use for |
 |------|--------------|----------------|---------|
-| **A · Overlay (chosen)** | Existing TMS endpoints (folders, test cases, plans, launches). Published Pipeline and Quality Standard operations become eligible one group at a time only after adapters and group switching exist | Unconfirmed Test Case lifecycle/AI, comments, fix rounds and automation resources + **AI/lifecycle fields merged into real test-case DTOs** by `overlay.ts` (response interceptor keyed by test-case `id`); Pipelines remain mocked today | Realistic demo on real TMS data; exercises real Library code paths without pretending raw live DTOs equal PoC view models |
+| **A · Overlay (chosen)** | Existing TMS endpoints (folders, test cases, plans, launches). Published Pipeline and Quality Standard operations become eligible one group at a time only after adapters and group switching exist | Unconfirmed Test Case lifecycle/AI, comments, fix rounds and automation resources + **AI/lifecycle fields merged into real test-case DTOs** by `overlay.ts` (response interceptor keyed by test-case `id`); Pipelines remain mock-default, with hard-closed LP1/LP2 and LP3 live gates | Realistic demo on real TMS data; exercises real Library code paths without pretending raw live DTOs equal PoC view models |
 | **B · Full mock** | nothing TMS | also mocks `tms/folder`, `tms/test-case` list/details | Working without any TMS backend |
 
 In overlay mode:
 - Unknown test-case ids default to `lifecycle: READY, ai: null`, which is the migration rule from US-007.
-- **Seeding real cases.** The mock "Simulate generation iteration" action (a dev button on Pipelines)
-  calls the **real** `POST tms/test-case` to create the prototype's cases in a folder, then
-  registers them in the mock DB as AI cases with their evaluation and cost. This mirrors the
-  real Upload stage (US-006).
-  ⚠ **The remote backend is shared.** Seeding runs only on an explicit click, only into a dedicated demo
-  project / folder (e.g. `AI Factory demo`), and asks for confirmation. Mocks never delete real data.
-  "Reset demo" clears only the local mock DB.
+- **No real-case seeding exists.** `seedData.ts` seeds only the browser-local mock DB. The overlay can enrich
+  existing remote Test Cases only when their `displayId` already matches TC101–TC108. There is no implemented
+  "Simulate generation iteration" button or remote `POST tms/test-case` seeding flow. Q-ORG-07 must be answered
+  before any separate tool or operator creates remote demo cases; until then the rehearsal stops without writes.
 - **Scenario-edit detection.** A request interceptor sees successful `PUT/PATCH tms/test-case/{id}`
   calls and compares precondition, steps, instructions and expected result with the previous snapshot. When they changed,
   the engine sets `DRAFT` and `evaluation.state = OBSOLETE` and writes a history entry. Name, priority,
@@ -161,8 +158,11 @@ In overlay mode:
 - `startAutomation(caseIds, env)` → the stages progress one by one → a Launch record is created (mock) →
   `automation.status = AUTOMATED`.
 - Cost helpers: `iterationShare = (create + grade + upload) / n`, `caseCost = share + Σ fixRounds`.
-- Persistence in localStorage (`ai_factory_mock_db_v1`) plus **Reset demo**, available in dev
-  from a small floating dev menu on the Pipelines page.
+- Persistence in localStorage (`ai_factory_mock_db_v1`) plus the supported **Reset demo** action on the
+  Pipelines page. Reset restores the local mock seed only; it does not delete, modify or restore remote TMS
+  Test Cases, plans or launches. If the UI action is unavailable during emergency recovery, use
+  `localStorage.removeItem('ai_factory_mock_db_v1'); location.reload()` in the same localhost origin.
+  There is no floating dev menu.
 
 ### 4.4 Async and polling
 Fix rounds and automation are asynchronous. The UI polls:
@@ -245,7 +245,7 @@ Published operation → FE ownership mapping (paths shown for routing clarity; s
 
 | Data | Where | Why |
 |------|-------|-----|
-| Pipelines list and iteration details | `controllers/aiFactory/pipelines` (saga, reducer) — loaded by route thunks; published list/detail DTOs pass through adapters first | route data, like Milestones or Test Plan; T1.1–T1.3 are live-integration candidates, not integrated today |
+| Pipelines list and iteration details | `controllers/aiFactory/pipelines` (saga, reducer) — loaded by route thunks; published list/detail DTOs pass through separate strict reduced adapters. Catalog and detail transports carry independent provenance while detail requests additionally bind project, pipeline, iteration, catalog version/request and request identity; mismatched/stale completions are ignored | route data, like Milestones or Test Plan; G1/G2 foundations are mock-default and hard closed for live mode. Rich mock P3 and reduced LP3 never share presentation data |
 | Compare pair/result | `controllers/aiFactory/pipelines` or a dedicated compare slice; call the published server compare GET and normalize its result | compare is a route-level server-owned calculation; components render normalized deltas |
 | Pipeline settings | hook `usePipelineSettings` (fetch + mutate); Auto-Ready writes use the published Pipeline PATCH through an adapter | modal-scoped read/write; keep permissions and feature flag at the action boundary |
 | Create iteration / retry stage | task-scoped mutation hooks or controller actions; published create-iteration POST and stage-retry POST | T4.4 actions; invalidate/refetch the affected pipeline/iteration after success |
@@ -255,6 +255,11 @@ Published operation → FE ownership mapping (paths shown for routing clarity; s
 | Comments, push, discard | hook `useReviewComments(testCaseId)` | local |
 | Automate | hook `useAutomate()` + `automateModal` | local |
 | Library quick filters | **URL query** (`lifecycle`, `ai`, `iteration`) via `updatePagePropertiesAction`, like `filterPriorities` | shareable queue link (US-008) |
+
+The Library iteration chip is not a detail owner. It resolves the display number only from cached catalog metadata
+whose project and catalog version still match the current page; it does not issue LP3 directly. A reduced iteration
+card owns navigation to the reduced-detail route, while the existing rich mock card continues to own the rich P3
+screen. This prevents a lightweight label lookup from bypassing the LP3 transport/provenance boundary.
 
 ## 6. Routing
 
@@ -274,18 +279,22 @@ Add to `controllers/pages/constants.js`, `routes/routesMap.js` and `routes/const
 - Link to a case → `TEST_CASE_LIBRARY_PAGE` with `testCasePageRoute: test-cases/<id>`.
 - Link to an iteration stage → `AI_PIPELINE_ITERATION_PAGE` with `?stage=grade|review|develop`.
 
-## 7. Permissions (F15 is open)
+## 7. Permissions (D15/F15 FE matrix accepted)
 
 Add to `common/constants/permissions.ts` (`ACTIONS` + `PERMISSIONS_MAP`) and
 `common/utils/permissions/permissions.ts`:
 
-| Action | Proposal | Helper |
+| Action | Accepted FE role matrix | Helper |
 |--------|----------|--------|
-| `REVIEW_AI_TEST_CASES` (comment, push, approve, mark ready) | same as `MANAGE_TEST_CASES` (Editor+) | `canReviewAiTestCases` |
-| `MANAGE_AI_PIPELINE_SETTINGS` | Project Manager+ ❓ map to org `MANAGER` / ADMIN (Q-BE-10) | `canManagePipelineSettings` |
-| `AUTOMATE_TEST_CASES` | Editor+ | `canAutomateTestCases` |
+| `REVIEW_AI_TEST_CASES` (comment, push, approve, mark ready) | Editor, Organization Manager, Administrator | `canReviewAiTestCases` |
+| `MANAGE_PIPELINE_SETTINGS` | Organization Manager, Administrator | `canManagePipelineSettings` |
+| `AUTOMATE_TEST_CASES` | Editor, Organization Manager, Administrator | `canAutomateTestCases` |
 
-When a user has no permission, the UI shows controls as hidden or read-only: comments are read-only, there are no Approve or Push buttons, and settings are read-only.
+Viewer-readable data remains visible without a mutation permission. When a user has no permission, the UI hides
+mutation controls or keeps the surface read-only, and the underlying hook independently refuses the request. T6.1
+applies this defence-in-depth rule to lifecycle, review-comment, fix-round and automation mutations, including stale
+or directly mounted controls. These frontend checks are not the security boundary: backend deny-by-default
+authorization, project/resource ownership checks and exact live read-role behavior remain open integration requirements.
 
 ## 8. Shared UI atoms (Phase 0, T0.6)
 

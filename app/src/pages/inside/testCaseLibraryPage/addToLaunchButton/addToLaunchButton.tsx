@@ -14,91 +14,47 @@
  * limitations under the License.
  */
 
-import { useMemo } from 'react';
-import { useIntl } from 'react-intl';
-import { useTracking } from 'react-tracking';
 import { Button, Tooltip } from '@reportportal/ui-kit';
 
-import {
-  AddToLaunchPlace,
-  SIDE_PANEL_QUICK_ACTION_ELEMENT_NAME,
-  TEST_CASE_LIBRARY_EVENTS,
-  TEST_CASE_PLACE,
-} from 'analyticsEvents/testCaseLibraryPageEvents';
+import { AddToLaunchPlace } from 'analyticsEvents/testCaseLibraryPageEvents';
 import { ManualScenario } from 'types/testCase';
 import type { AiLifecycle } from 'types/aiFactory';
 import { createClassnames } from 'common/utils';
-import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
-import { useAiFactoryEnabled } from 'controllers/aiFactory';
-import {
-  isDraftGateActive,
-  readyOnlyMessages,
-} from 'pages/inside/aiFactory/readyOnlyGate';
-import { useAddToLaunchModal } from '../addToLaunchModal';
-import { isManualScenarioEmpty } from './isManualScenarioEmpty';
+
+import { AddToLaunchAction, useAddToLaunchAction } from './useAddToLaunchAction';
 
 import styles from './addToLaunchButton.scss';
 
 const cx = createClassnames(styles);
 
-interface AddToLaunchButtonProps {
+export interface AddToLaunchButtonProps {
   testCaseId: number;
   manualScenario?: ManualScenario;
   lifecycle?: AiLifecycle;
   place: AddToLaunchPlace;
 }
 
-export const AddToLaunchButton = ({
-  testCaseId,
-  manualScenario,
-  lifecycle,
-  place,
-}: AddToLaunchButtonProps) => {
-  const { formatMessage } = useIntl();
-  const { trackEvent } = useTracking();
-  const { openModal: openAddToLaunchModal } = useAddToLaunchModal();
-  const isAiFactoryEnabled = useAiFactoryEnabled();
-
-  const isScenarioEmpty = useMemo(() => isManualScenarioEmpty(manualScenario), [manualScenario]);
-  const isDraft = isDraftGateActive(isAiFactoryEnabled, lifecycle);
-  const isDisabled = isScenarioEmpty || isDraft;
-
-  const handleAddToLaunchClick = () => {
-    if (place === TEST_CASE_PLACE.SIDE_PANEL) {
-      trackEvent(
-        TEST_CASE_LIBRARY_EVENTS.clickSidePanelQuickAction(
-          SIDE_PANEL_QUICK_ACTION_ELEMENT_NAME.ADD_TO_LAUNCH,
-          testCaseId?.toString(),
-        ),
-      );
-    }
-
-    openAddToLaunchModal({
-      selectedTestCaseIds: [testCaseId],
-      isUncoveredTestsCheckboxAvailable: false,
-      place,
-    });
-  };
-
+const renderAddToLaunchButton = ({
+  label,
+  isDisabled,
+  disabledHint,
+  onClick,
+}: AddToLaunchAction) => {
   const buttonComponent = (
     <Button
       variant="ghost"
-      onClick={handleAddToLaunchClick}
+      onClick={onClick}
       data-automation-id="test-case-add-to-launch"
       disabled={isDisabled}
     >
-      {formatMessage(COMMON_LOCALE_KEYS.ADD_TO_LAUNCH)}
+      {label}
     </Button>
   );
 
   return isDisabled ? (
     <Tooltip
       placement="bottom"
-      content={formatMessage(
-        isDraft
-          ? readyOnlyMessages.launchDraftHint
-          : COMMON_LOCALE_KEYS.ADD_TO_LAUNCH_TOOLTIP_TEXT,
-      )}
+      content={disabledHint}
       wrapperClassName={cx('tooltip-wrapper')}
       width={205}
     >
@@ -107,4 +63,12 @@ export const AddToLaunchButton = ({
   ) : (
     buttonComponent
   );
+};
+
+export const AddToLaunchButtonView = (props: AddToLaunchAction) => renderAddToLaunchButton(props);
+
+export const AddToLaunchButton = (props: AddToLaunchButtonProps) => {
+  const action = useAddToLaunchAction(props);
+
+  return renderAddToLaunchButton(action);
 };

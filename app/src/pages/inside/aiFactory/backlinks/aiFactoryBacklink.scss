@@ -1,0 +1,49 @@
+/*
+ * Copyright 2026 EPAM Systems
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ */
+
+.ai-factory-backlink {
+  color: var(--rp-ui-base-topaz);
+  font-family: $FONT-ROBOTO-REGULAR;
+  font-size: 12px;
+  line-height: 20px;
+  text-decoration: none;
+  white-space: nowrap;
+
+  &:visited {
+    color: var(--rp-ui-base-topaz);
+  }
+
+  &--test-item {
+    margin-right: 20px;
+  }
+
+  &--launch-root {
+    display: inline-block;
+    margin-right: 10px;
+    line-height: 28px;
+    text-transform: none;
+  }
+
+  &--details {
+    display: block;
+    margin-right: 0;
+    margin-bottom: 22px;
+    line-height: 16px;
+  }
+
+  &:hover {
+    color: var(--rp-ui-base-topaz-hover);
+    text-decoration: underline;
+  }
+
+  &:active {
+    color: var(--rp-ui-base-topaz-pressed);
+  }
+}

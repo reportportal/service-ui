@@ -26,22 +26,36 @@
   }
 
   &__item {
-    justify-content: space-between;
-    gap: 12px;
+    align-items: flex-start;
   }
 
-  &__label {
-    color: var(--rp-ui-base-almost-black);
+  &__content {
+    min-width: 0;
   }
 
   &__link {
     color: var(--rp-ui-base-topaz);
-    text-align: right;
     text-decoration: none;
 
+    &:visited {
+      color: var(--rp-ui-base-topaz);
+    }
+
     &:hover {
+      color: var(--rp-ui-base-topaz-hover);
       text-decoration: underline;
     }
+
+    &:active {
+      color: var(--rp-ui-base-topaz-pressed);
+    }
+  }
+
+  &__meta {
+    margin-top: 2px;
+    color: var(--rp-ui-base-e-400);
+    font-size: 12px;
+    line-height: 18px;
   }
 
   &__state {

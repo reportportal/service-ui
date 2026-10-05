@@ -49,9 +49,12 @@ import { ExecutionEstimationTime } from 'pages/inside/common/executionEstimation
 import { LifecycleBadge, ScoreChip } from 'pages/inside/aiFactory/common';
 import { ApproveButton } from 'pages/inside/aiFactory/approval';
 import {
-  isDraftGateActive,
-  readyOnlyMessages,
-} from 'pages/inside/aiFactory/readyOnlyGate';
+  automationDisabledMessages,
+  automationMessages,
+  getAutomationSkipReason,
+  useAutomationModal,
+} from 'pages/inside/aiFactory/automation';
+import { isDraftGateActive, readyOnlyMessages } from 'pages/inside/aiFactory/readyOnlyGate';
 import { EvaluationState, Lifecycle } from 'types/aiFactory';
 import type { ExtendedTestCase, TestCasePriority } from 'types/testCase';
 
@@ -84,7 +87,7 @@ export const TestCaseDetailsHeader = ({
 }: TestCaseDetailsHeaderProps) => {
   const { formatMessage } = useIntl();
   const { trackEvent } = useTracking();
-  const { canManageTestCases, canReviewAiTestCases } = useUserPermissions();
+  const { canAutomateTestCases, canManageTestCases, canReviewAiTestCases } = useUserPermissions();
   const { organizationSlug, projectSlug } = useSelector(
     urlOrganizationAndProjectSelector,
   ) as ProjectDetails;
@@ -93,10 +96,12 @@ export const TestCaseDetailsHeader = ({
   const { openModal: openDeleteTestCaseModal } = useDeleteTestCaseModal();
   const { openModal: openDuplicateSelectedTestCaseModal } = useDuplicateSelectedTestCaseModal();
   const { openModal: openEditScenarioModal } = useEditScenarioModal();
+  const { openModal: openAutomationModal } = useAutomationModal();
   const { hasTestPlans } = useHasTestPlans();
   const isAiFactoryEnabled = useAiFactoryEnabled();
   const isFixRunning = Boolean(testCase.review?.fixRound);
   const isDraft = isDraftGateActive(isAiFactoryEnabled, testCase.lifecycle);
+  const automationDisabledReason = getAutomationSkipReason(testCase);
 
   const breadcrumbsTitles = {
     mainTitle: formatMessage(commonMessages.testCaseLibraryBreadcrumb),
@@ -154,23 +159,49 @@ export const TestCaseDetailsHeader = ({
     return moment(date).format(REVERSED_DATE_FORMAT as string);
   };
 
-  const items: PopoverItem[] = canManageTestCases
-    ? [
-        {
-          label: formatMessage(commonMessages.historyOfActions),
-          onClick: handleHistoryOfActions,
-        },
-        {
-          label: formatMessage(COMMON_LOCALE_KEYS.DUPLICATE),
-          onClick: handleDuplicateTestCase,
-        },
-        {
-          label: formatMessage(COMMON_LOCALE_KEYS.DELETE),
-          variant: 'destructive',
-          onClick: handleDeleteTestCase,
-        },
-      ]
-    : [];
+  const automationDisabledMessage = automationDisabledReason
+    ? automationDisabledMessages[automationDisabledReason]
+    : null;
+
+  const handleAutomate = () => {
+    openAutomationModal({
+      testCases: [testCase],
+      onSuccess: () =>
+        dispatch({ type: GET_TEST_CASE_DETAILS, payload: { testCaseId: testCase.id } }),
+    });
+  };
+
+  const items: PopoverItem[] = [
+    ...(isAiFactoryEnabled && canAutomateTestCases
+      ? [
+          {
+            label: formatMessage(automationMessages.automate),
+            disabled: Boolean(automationDisabledReason),
+            tooltip: automationDisabledMessage
+              ? formatMessage(automationDisabledMessage)
+              : undefined,
+            onClick: handleAutomate,
+          },
+        ]
+      : []),
+    ...(canManageTestCases
+      ? [
+          {
+            label: formatMessage(commonMessages.historyOfActions),
+            onClick: handleHistoryOfActions,
+          },
+          {
+            label: formatMessage(COMMON_LOCALE_KEYS.DUPLICATE),
+            onClick: handleDuplicateTestCase,
+          },
+          {
+            label: formatMessage(COMMON_LOCALE_KEYS.DELETE),
+            variant: 'destructive' as const,
+            onClick: handleDeleteTestCase,
+          },
+        ]
+      : []),
+  ];
 
   const handleEditScenario = () => {
     trackEvent(TEST_CASE_LIBRARY_EVENTS.clickEditTestCaseFromDetails(testCaseIdString));

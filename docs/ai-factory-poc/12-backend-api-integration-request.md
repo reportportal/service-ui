@@ -1,40 +1,71 @@
-# Backend API integration request — Pipelines and Quality Standard
+# AI Factory backend API integration request
 
 > **Status:** Proposed — not yet agreed or approved
 >
 > **Audience:** ReportPortal Backend/API owners, Platform/Security, Frontend, QA, Product and AI Factory PoC stakeholders
 >
-> **Audit baseline:** OpenAPI 3.0.1, `info.version: feature-pipelines-2767`, server `/api`, audited 2026-10-02
+> **Audit baseline:** OpenAPI 3.0.1, `info.version: feature-pipelines-2767`, server `/api`, re-audited 2026-10-05 with no material drift from 2026-10-02
 >
 > **Published specification:** [OpenAPI JSON](http://tms.epmrpp.reportportal.io/api/api-docs) · [Swagger UI](http://tms.epmrpp.reportportal.io/ui/#organizations/my-organization/projects/superadmin-personal/api)
 >
 > **Related initiative:** [EPMRPP-118192](https://jiraeu.epam.com/browse/EPMRPP-118192)
 
-This document is a self-contained request for the backend contract needed to integrate the published Pipeline and
-Quality Standard APIs into `service-ui`. Please record answers, status, target version/build and supporting
-OpenAPI/ADR links directly in the decision table in section 4. Once agreed, this document can be used as the
-implementation and acceptance sign-off artifact.
+**Send this file to the Backend/API owner as the primary hand-off.** It consolidates the decisions and deliverables
+required to replace AI Factory development mocks with backend contracts. Attach or link
+[05-backend-contract.md](05-backend-contract.md) for complete DTOs, implemented-consumer traceability and raw
+OpenAPI mappings. The decision source is [10-backend-integration-contract.md](10-backend-integration-contract.md)
+and its QA coverage is [11-backend-integration-contract-test-cases.md](11-backend-integration-contract-test-cases.md);
+use [19-ci-connection-api-contract-request.md](19-ci-connection-api-contract-request.md) for the separate US-019 CI
+connection decision.
+
+Please record answers, status, target version/build and supporting OpenAPI/ADR links directly in the decision table
+in section 4. Once agreed and reflected in the authoritative requirements repository and OpenAPI, this document can
+be used as the implementation and acceptance sign-off artifact.
 
 ## 1. Executive assessment
 
-The published API is a useful foundation, but a direct frontend cutover is not safe yet. The current OpenAPI leaves
+The published Pipeline/Quality Standard API is a useful foundation, but a direct frontend cutover is not safe yet.
+The implemented AI Factory UI also depends on Test Case AI, lifecycle, review/fix-round, Ready-only gate,
+automation and backlink contracts that are **absent** from the audited OpenAPI. The current OpenAPI leaves
 identity fields optional, exposes generic object-valued metrics, does not define status transitions, polling,
 operation-specific errors, concurrency/idempotency or an operation-by-role authorization matrix. In addition, the
 published discovery origin is plain HTTP while all operations inherit bearer JWT authentication.
+
+Frontend EPMRPP-122040 provides a mock-default, hard fail-closed LP1/LP2 DTO/adapter/transport foundation, and
+EPMRPP-122041 adds the corresponding LP3 generic-detail foundation: a strict reduced adapter, separate detail
+transport/provenance with stale guards, canonical iteration-only live URL behind the closed gate and an honest
+reduced-detail presentation. This does not change the requested backend decisions or constitute a live rollout:
+trusted HTTPS, read roles, requiredness/status/polling semantics and Product/QA approval of the reduced catalog and
+detail UI are still required before either live gate can be opened. No authenticated backend/browser validation or
+live polling has been performed; rich KPI/cost/token/Test Case/CI/retry semantics remain excluded. Quality Standard
+is not integrated by either scope. The LP3 foundation passed focused, full, type, lint, diff, senior code and
+security validation after one Major request-race finding was fixed and regression-tested; this automated evidence
+does not replace the still-blocked authenticated backend/browser acceptance.
+
+Frontend EPMRPP-122052 adds presentation evidence for the still-blocked US-020 flow: a Re-run modal with
+mock-supplied Model/Environment choices and a failed-Upload panel with rollback, current CI job and Retry Upload
+affordances. Both final actions are disabled and send no request. This makes the missing command/capability and
+attempt-history contracts concrete; it does not complete T4.4, enable LP6/LP7 or establish LP6 as an interactive
+Re-run command.
 
 The recommended sequence is:
 
 1. **P0 — Foundation:** trusted HTTPS/same-origin access, required/nullability rules, errors, authorization, status
    semantics, polling and safe link/reference rules.
-2. **P1 — Pipeline definitions and iteration lists:** LP1 and LP2.
-3. **P2 — Generic iteration detail:** LP3, initially without untyped KPI/cost parity.
-4. **P3 — Current Quality Standard read:** QS1 as an independent, read-only capability clearly labelled as the
+2. **P0-TC — Implemented Test Case workflows:** agree and publish C1–C3, L1–L3, R1–R3, F1–F2, G1–G2 and A1–A3
+   as independently releasable endpoint/DTO groups.
+3. **P1 — Pipeline definitions and iteration lists:** LP1 and LP2.
+4. **P2 — Generic iteration detail:** LP3, initially without untyped KPI/cost parity.
+5. **P3 — Current Quality Standard read:** QS1 as an independent, read-only capability clearly labelled as the
    current rubric.
-5. **P4 — Neutral comparison:** LP4 may initially show identity/status changes only; metric deltas remain omitted
+6. **P4 — Neutral comparison:** LP4 may initially show identity/status changes only; metric deltas remain omitted
    until typed metric and direction semantics are agreed.
-6. **P5 — Pipeline settings and stage retry:** LP5 and LP7 after authorization, validation, concurrency and retry
+7. **P5 — Pipeline settings and stage retry:** LP5 and LP7 after authorization, validation, concurrency and retry
    semantics are complete.
-7. **Deferred:** LP6 as a browser Re-run action; QS2–QS4 management; historical Quality Standard association.
+8. **Separate blocked contract:** US-019 CI connection from 19; it gates T3.6/T1.2u and dependent actions.
+9. **Separate blocked command contract:** US-020 user-facing Re-run, including server-owned Model/Environment
+   capabilities; LP6 ingestion must not be assumed to satisfy it.
+10. **Deferred:** QS2–QS4 management and historical Quality Standard association.
 
 Important scope statements:
 
@@ -45,7 +76,20 @@ Important scope statements:
 - **LP6 is currently described as an iteration creation endpoint called by CI/the agent.** The frontend must not call
   it as a user-facing Re-run command unless Backend explicitly confirms command semantics, caller authorization and
   all rerun/idempotency invariants. If LP6 is ingestion, a separate Re-run command is required.
+- **T6.7 Re-run and Retry Upload controls are contract probes only.** Re-run confirmation and Retry Upload are
+  disabled; the frontend sends neither LP6 nor LP7. Mock `rerunOptions`, rollback text and a single CI job are
+  presentation fixtures, not a backend DTO agreement.
+- **The C/L/R/F/G/A/U contracts are implemented frontend expectations, not published backend facts.** Backend should
+  accept them, propose equivalent normative paths/DTOs preserving the invariants, or explicitly defer each group.
 - This audit was documentation-only. No authenticated calls and no mutating calls were executed.
+
+### Related contract-readiness handoffs
+
+| Capability | Published API status | Contract handoff | Implementation status |
+|---|---|---|---|
+| Complete AI Factory contract | LP1–LP7 and QS1–QS4 are published; C/L/R/F/G/A/U are absent | [Implementation-aligned contract](05-backend-contract.md) — complete DTOs, mock/live status, roles, polling, errors and source traceability | T0–T6.7 frontend surfaces are represented; T6.7 command affordances are disabled and most Test Case/automation workflows remain mock-only until backend publication |
+| US-019 Pipeline CI connection | No read/save/test endpoint or DTO is present in the audited OpenAPI | [CI connection API contract request](19-ci-connection-api-contract-request.md) — proposed endpoint/DTO, write-only credential, state, permission, concurrency, audit, URL-security and downstream-gating decisions | EPMRPP-122050 completes documentation only. T3.6 remains blocked until the agreed source of truth is merged in `reportportal-requirements/.../contracts/` and a matching API is published |
+| Contract validation | Published and provisional groups require negative, role, isolation and drift evidence | [Backend integration contract test cases](11-backend-integration-contract-test-cases.md) | Test plan exists; execution requires an identified backend build and sanitized payload pack |
 
 ## 2. Published endpoint inventory and requested readiness
 
@@ -57,9 +101,9 @@ request.
 |---|---|---|---|---|
 | **LP1 — List pipeline definitions:** `GET /v1/project/{projectKey}/pipeline` | `200 PipelineRS[]` | Project Pipeline list | Candidate after P0 and required pipeline identity/type fields are agreed | P1 |
 | **LP2 — List iterations of one pipeline:** `GET /v1/project/{projectKey}/pipeline/{pipelineId}/iteration` | `200 PipelineIterationSummaryRS[]` (plain array) | Pipeline list/history | Candidate after P0, bounds/order and iteration invariants are agreed | P1 |
-| **LP3 — Get one iteration with stages:** `GET /v1/project/{projectKey}/pipeline/iteration/{iterationId}` | `200 PipelineIterationDetailRS` | Iteration detail | Candidate first as generic detail; specialized panels require typed stage results | P2 |
-| **LP4 — Compare two iterations of the same pipeline:** `GET /v1/project/{projectKey}/pipeline/iteration/{iterationId}/compare?with={otherIterationId}` | `200 PipelineCompareRS` | Iteration comparison | Candidate first as neutral status/identity comparison; typed KPI deltas deferred | P4 |
-| **LP5 — Update Auto-Ready settings:** `PATCH /v1/project/{projectKey}/pipeline/{pipelineId}` | `200 PipelineRS` | Pipeline settings UI | FE PoC wired in T3.4 with 0–100 client validation and list refresh; production rollout remains blocked on validation, patch/null, authorization and concurrency semantics | P5 |
+| **LP3 — Get one iteration with stages:** `GET /v1/project/{projectKey}/pipeline/iteration/{iterationId}` | `200 PipelineIterationDetailRS` | Iteration detail | FE generic-detail foundation exists behind a hard-closed live gate; rollout still requires P0 decisions and Product/QA approval, while specialized panels require typed stage results | P2 |
+| **LP4 — Compare two iterations of the same pipeline:** `GET /v1/project/{projectKey}/pipeline/iteration/{iterationId}/compare?with={otherIterationId}` | `200 PipelineCompareRS` | Iteration comparison | T4.3 PoC calls this exact path through an identity-validating adapter and a same-path mock. Production remains a candidate first as neutral status/identity comparison; typed KPI/cost deltas and evaluative direction remain deferred until BE-014/BE-015 are closed | P4 |
+| **LP5 — Update Auto-Ready settings:** `PATCH /v1/project/{projectKey}/pipeline/{pipelineId}` | `200 PipelineRS` | Pipeline settings UI | T3.4 implements the canonical request/body with 0–100 client validation and list refresh, but the current modal requires mock-catalog provenance and is not enabled from a live catalog. Rollout additionally requires validation, patch/null, authorization, concurrency and live-provenance decisions | P5 |
 | **LP6 — Create a pipeline iteration and its stages:** `POST /v1/project/{projectKey}/pipeline/iteration` | `201 PipelineIterationDetailRS` | CI/agent producer according to published description | Producer contract needs clarification; not approved as UI Re-run | Deferred for UI Re-run |
 | **LP7 — Trigger CI rerun for one stage:** `POST /v1/project/{projectKey}/pipeline/iteration/{iterationId}/stage/{stageId}/retry` | `202 PipelineStageRetryRS` | Authorized Pipeline Retry action | Blocked on eligibility, attempt identity, duplicate behavior and post-`202` refresh | P5 |
 | **QS1 — Get the project's Quality Standard:** `GET /v1/project/{projectKey}/tms/quality-standard` | `200 TmsQualityStandardRS` | Current-rubric read-only UI | Independent candidate after required fields, absence and read roles are agreed | P3 |
@@ -69,6 +113,31 @@ request.
 
 The OpenAPI currently documents `400`, `401`, `403` and `500` for these operations. It does not document stable
 resource-specific `404`, conflict/idempotency `409`, semantic-validation `422` or throttling `429` behavior.
+
+### 2.1 Frontend-required contracts absent from the published OpenAPI
+
+Paths below are relative to `/api/v1/project/{projectKey}/`. They are implemented frontend/mock expectations from
+[05](05-backend-contract.md), not claims about existing backend endpoints. Backend should accept these shapes or
+publish equivalent normative contracts that preserve the documented behavior and migration path.
+
+| Group | Requested operation/extension | Implemented consumer | Backend response requested |
+|---|---|---|---|
+| C1 | Add lifecycle, AI origin, evaluation/cost summary, review/fix, automation and blocked-plan fields to Test Case list/details/plan rows | Library, details, side panel, gates, automation dialog | Confirm additive DTO placement, requiredness, absence semantics and list/detail consistency |
+| C2 | `GET tms/test-case/{id}/ai` | Evaluation, cost, lifecycle history, agent diff, automation result/progress | Publish the complete project-scoped response or an equivalent split resource with snapshot consistency |
+| C3 | `filter.eq.lifecycle`, `filter.eq.ai`, `filter.eq.iterationId` plus review-queue total on Test Case list/count | Library quick filters and Review queue | Implement server-side AND filtering, pagination/count semantics and maximum bounds |
+| L1–L2 | Single and batch lifecycle mutation | Approve / Mark as ready | Publish actions, exact updated/skipped partition, stable conflict reasons and authorization |
+| L3 | Existing scenario update extension `promoteToReady` and response `lifecycleChanged` | Edit Scenario | Guarantee atomic scenario/lifecycle/evaluation/automation/history transition semantics |
+| R1–R3 | List/create/delete/discard review comments | AI review strip | Define target identity, ownership, states, delete eligibility and fix-running conflicts |
+| F1–F2 | Start and read/poll fix rounds | Push to agent | Define accepted/terminal states, comment transitions, job-start failure, score/cost result and idempotency |
+| G1–G2 | Ready-only add/launch enforcement and Test Plan Draft summary | Test Case and Test Plan launch gates | Enforce server-side rejection and return compact complete Draft references across pagination |
+| A1–A2 | Read automation environments and start automation | Send to automation and live progress | Publish environment source, exact accepted/skipped partition, re-automation confirmation and job-start errors |
+| A3 | Test item `tmsTestCase` reference and root Launch `pipeline` attribute | Launch ↔ Library/Pipeline backlinks | Confirm reporting owner, identity types, absence/duplicate policy and safe internal-link correlation |
+| U1 | User-facing Re-run command plus allowed Model/Environment capability values | Disabled T6.7 Re-run modal | Publish an interactive command distinct from ingestion unless LP6 is explicitly redefined; return stable option values/labels/defaults and the new iteration identity |
+| U2 | Typed failed-Upload result and ordered retry-attempt history across LP3/LP7 or an equivalent resource | Failed-Upload panel and disabled Retry Upload | Guarantee all-or-nothing Library persistence; publish structured failure, attempt/job identity, downstream reset rules, cost/token accounting and post-`202` polling |
+
+Requested first response from Backend for every row: **Accept**, **Replace with equivalent contract** (attach the
+exact proposed path/DTO), or **Defer** (owner, reason, dependency and target date). Silence or mock behavior is not
+backend agreement.
 
 ## 3. Observed contract versus integration need
 
@@ -83,6 +152,8 @@ the published OpenAPI. Backend may confirm the proposed names or provide equival
 | Iteration | Stable non-null `id`; owning `pipelineId`; positive/stable `iterationNumber`; `status`; valid created/started/completed timestamps when applicable; actor identity contract | Route ownership validation, ordering, polling and audit presentation |
 | Stage | Stable non-null `id`; unique non-blank `stageKey` within the iteration; unique `sequence`; `status`; owning iteration/pipeline derivable or explicit | Stable ordered detail rendering and safe retry targeting |
 | Retry response | Required `stageId`; accepted `status`; stable attempt/job identity; optional validated run reference | Confirm the accepted action and track the correct attempt after `202` |
+| Re-run capability/command | Stable Model/Environment machine values and labels; explicit defaults/availability; source iteration and immutable Pipeline identity; accepted command returns the new iteration identity and source linkage | Populate options without hardcoding, prevent stale/forged choices and navigate/poll the correct new iteration |
+| Upload attempt | Stable attempt identity/number; status and timestamps; structured safe failure code/reason; validated CI job reference; explicit cost/token inclusion and rollback outcome | Render truthful attempt history and prove that a failed all-or-nothing Upload left the Library unchanged |
 | Quality Standard | Stable standard `id`; non-blank `name`; optional top-level description with defined null semantics; timestamps with defined format/unit if exposed | Correct current-rubric identity and presentation |
 | Quality Standard criterion | Stable `id`; non-blank `name`; positive/defined `maxPoints`; unique deterministic `sequence` | Deterministic ordered rubric and total score calculation |
 
@@ -161,6 +232,16 @@ Suggested status values: `Open`, `In discussion`, `Accepted`, `Implemented`, `Re
 | BE-025 | QS1 historical meaning | Only current mutable standard is exposed; no version/snapshot link to a grade | Past evaluations cannot be reproduced against the correct rubric | Keep QS1 labelled current-only; separately design immutable version or embedded snapshot linked to each historical grade | Future | Historical grading |  | Open |  |  |
 | BE-026 | QS2/QS3 writes | Create-vs-update distinction, score invariants, concurrency, permissions/audit are incomplete | Invalid or lost rubric changes are possible | Before management scope: define existence conflicts, name/sequence uniqueness, max/total score rules, null/replace semantics, version/ETag and audit behavior | Deferred | QS2/QS3 |  | Open |  |  |
 | BE-027 | QS4 delete | `200` without body; referenced-standard and audit semantics absent | Historical integrity or ambiguous result is possible | Define soft/hard delete, referenced-standard protection, idempotent repeat behavior, success status/body, permissions and audit event | Deferred | QS4 |  | Open |  |  |
+| BE-028 | C1/C2/C3 Test Case AI read model | Required fields and filters exist only in FE types/mocks | Library/details may display incomplete, stale or unpageable AI data | Accept or replace C1–C3; publish DTO placement, snapshot consistency, server-side filtering/counting, bounds and absence/error semantics; for C2 `pipelineLinks`, confirm immutable route IDs plus optional display-only `pipelineName` and `requirementId` | P0-TC | T2.1–T2.6, T5.1–T5.3 |  | Open |  |  |
+| BE-029 | L1–L3 lifecycle transactions | Lifecycle actions and scenario coupling exist only in FE proposal | Concurrent edits may lose state or leave lifecycle/evaluation/automation inconsistent | Publish atomic single/batch/scenario transitions, stable conflicts, obsolete confirmation, exact result partitions and optimistic-concurrency behavior | P0-TC | T2.1, T3.2 |  | Open |  |  |
+| BE-030 | R1–R3 review comments | Comment targets, ownership and states are provisional | Comments may attach to the wrong scenario element or be deleted without authority | Publish stable target identity, author/ownership, state machine, delete/discard rules, pagination/order and fix-running conflicts | P0-TC | T3.1 |  | Open |  |  |
+| BE-031 | F1–F2 fix rounds | Start/poll/result semantics are mock-only | Duplicate jobs, lost comments or incorrect lifecycle/evaluation/cost are possible | Publish idempotent start, polling resource, terminal states, comment rollback/commit, score/evaluation/lifecycle effects, cost provenance and downstream failures | P0-TC | T3.3 |  | Open |  |  |
+| BE-032 | G1–G2 Ready-only enforcement | FE guards exist; server contract is absent | Direct requests or off-page Draft cases can bypass launch integrity | Enforce Ready-only rules server-side; publish batch skips, complete Test Plan Draft summary and `PLAN_HAS_DRAFT_CASES` conflict | P0-TC | T4.1–T4.2 |  | Open |  |  |
+| BE-033 | A1–A2 automation | Environment/start contract is mock-only | Wrong environment, duplicate automation or dishonest accepted/skipped feedback is possible | Publish environment source and bounds, exact accepted/skipped partition, re-automation confirmation, idempotency, connection/permission gates and job-start failures | P0-TC | T5.1–T5.3 |  | Open |  |  |
+| BE-034 | A3 Launch/Test Case backlinks | Test item field and root Launch attribute are fixture-only | Links can be missing, ambiguous, cross-project or spoofed | Confirm reporting producer and immutable identity correlation; publish additive DTO/attribute rules, absence/duplicate behavior and project isolation | P0-TC | T5.4 |  | Open |  |  |
+| BE-035 | US-019 CI connection | No published read/save/test contract | T3.6, T1.2u and server-authoritative dependent-action gating cannot start safely | Resolve and publish the accepted contract from 19, including write-only credential, roles, state, concurrency, audit and safe provider access | Separate blocker | T3.6/T1.2u; Push/Automate/Re-run/Retry gating |  | Open |  |  |
+| BE-036 | US-020 user-facing Re-run | T6.7 has a disabled modal using mock `PipelineRS.rerunOptions`; LP6 is described as CI/agent creation | The browser may call an ingestion API, hardcode stale options or create a duplicate/wrong iteration | Publish a dedicated interactive Re-run command, or explicitly redefine LP6 for this caller; define capability/options source, stable values/labels/defaults, same-requirement/source-link invariants, role/CI gates, idempotency and the accepted/new-iteration response | Separate blocker | T4.4 Re-run |  | Open |  |  |
+| BE-037 | Failed Upload rollback and Retry attempt history | T6.7 displays one mock failure reason and stage CI job; LP3 has no typed Upload result and LP7 lacks attempt history/downstream semantics | UI cannot prove rollback, distinguish attempts or account for retried downstream work/cost | Guarantee atomic all-or-nothing Library write; publish typed failure code/reason, ordered attempt/job records, retry eligibility, downstream reset/re-execution, accumulated cost/token rules and authoritative post-`202` refresh | P5 | T4.4 Retry Upload and failed LP3 detail |  | Open |  |  |
 
 ## 5. Authorization and ownership matrix to approve
 
@@ -171,17 +252,21 @@ Backend remains the authorization boundary.
 Role-cell legend: `Allowed`, `Denied`, `Decision required`, `Not applicable`. `Decision required` means that access
 has not been agreed and must not be interpreted as public or permitted access.
 
-| Capability / operation | Editor | Organization Manager | Administrator | Project/resource ownership rule | Backend confirmation |
-|---|:---:|:---:|:---:|---|---|
-| Review actions outside these 11 endpoints | Allowed | Decision required | Decision required | BE to define for the owning review resource |  |
-| Read Pipelines: LP1–LP4 | Decision required | Decision required | Decision required | Must require project membership and prevent cross-project resource access |  |
-| Update Pipeline settings: LP5 | Denied | Allowed | Allowed | Must verify target pipeline belongs to the requested project |  |
-| Connect Pipeline to CI | Denied | Allowed | Allowed | Exact endpoint/resource ownership to be defined |  |
-| User-facing Re-run | Denied | Allowed | Allowed | Must not imply permission to call CI/agent ingestion LP6 |  |
-| Retry one stage: LP7 | Denied | Allowed | Allowed | Must verify project, iteration and stage ownership and current eligibility |  |
-| Read Quality Standard: QS1 | Decision required | Decision required | Decision required | Must require project membership |  |
-| Create/update/delete Quality Standard: QS2–QS4 | Decision required | Decision required | Decision required | Product approval plus server-side project ownership and audit required |  |
-| CI/agent iteration submission: LP6 | Not applicable | Not applicable | Not applicable | Prefer dedicated least-privilege machine/service authority scoped to project/pipeline |  |
+| Capability / operation | Viewer | Editor | Organization Manager | Instance Administrator | Project/resource ownership rule | Backend confirmation |
+|---|:---:|:---:|:---:|:---:|---|---|
+| Read Test Case AI data: C1–C3/C2 | Decision required | Decision required | Decision required | Decision required | Must require project membership and Test Case visibility; no cross-project identity leakage |  |
+| Review comments, lifecycle and fix rounds: R/L/F | Denied | Allowed | Allowed | Allowed | Must verify project, Test Case, comment ownership and current lifecycle/fix state |  |
+| Start automation: A2 | Denied | Allowed | Allowed | Allowed | Must verify project, every Test Case, Ready/fix/automation state and effective CI capability |  |
+| Ready-only enforcement: G1–G2 | Existing add/launch permission plus mandatory Ready validation | Same | Same | Same | Server must validate every requested/plan case, including off-page rows |  |
+| Read Launch/Test Case backlinks: A3 | Decision required | Decision required | Decision required | Decision required | Only return links visible to the caller in the same project context |  |
+| Read Pipelines: LP1–LP4 | Decision required | Decision required | Decision required | Decision required | Must require project membership and prevent cross-project resource access |  |
+| Update Pipeline settings: LP5 | Denied | Denied | Allowed | Allowed | Must verify target pipeline belongs to the requested project |  |
+| Connect Pipeline to CI | Denied | Denied | Allowed | Allowed | Exact endpoint/resource ownership to be defined |  |
+| User-facing Re-run | Denied | Denied | Allowed | Allowed | Must not imply permission to call CI/agent ingestion LP6 |  |
+| Retry one stage: LP7 | Denied | Denied | Allowed | Allowed | Must verify project, iteration and stage ownership and current eligibility |  |
+| Read Quality Standard: QS1 | Decision required | Decision required | Decision required | Decision required | Must require project membership |  |
+| Create/update/delete Quality Standard: QS2–QS4 | Decision required | Decision required | Decision required | Decision required | Product approval plus server-side project ownership and audit required |  |
+| CI/agent iteration submission: LP6 | Not applicable | Not applicable | Not applicable | Not applicable | Prefer dedicated least-privilege machine/service authority scoped to project/pipeline |  |
 
 Please add any real ReportPortal role not shown here only through an explicit Product decision; do not widen access
 because a role is absent from this table.
@@ -204,8 +289,17 @@ produce malformed success responses.
 | LP6 | First submission; exact replay; same idempotency key/different body; invalid pipeline; invalid rerun combinations; cross-project source; forbidden caller | BE-003, BE-006, BE-018–BE-020 |
 | LP7 request | No request body; `{}`; valid optional comment; blank/null/invalid/oversized comment; unsupported content type, with the exact accepted/rejected behavior agreed in advance | BE-003, BE-006, BE-022A |
 | LP7 response | Accepted retry returning `PipelineStageRetryRS`; if contractually supported, separately capture accepted retry with no response body; non-retryable stage; duplicate/in-flight request; forbidden caller; CI-provider failure | BE-003–BE-006, BE-021, BE-022, BE-022B |
+| User-facing Re-run | Capability response with zero/one/many Model and Environment options, explicit defaults and temporarily unavailable choices; accepted command, exact replay, changed-body replay, stale option, disconnected CI, forbidden caller and cross-project/source iteration | BE-003, BE-006, BE-035, BE-036 |
+| Failed Upload / Retry history | Failed attempt with confirmed rollback and zero Library writes; multiple ordered attempts with distinct CI jobs; passed/ineligible stage; downstream reset/re-execution; accumulated and per-attempt cost/token examples | BE-003–BE-006, BE-021, BE-022, BE-037 |
 | QS1 | No standard, minimum valid standard and representative full current standard | BE-002, BE-003, BE-006, BE-023, BE-024 |
 | QS2–QS4 | When management is approved: create/update/delete success, already-exists, invalid criteria, conflict, forbidden and referenced-delete behavior | BE-003, BE-006, BE-026, BE-027 |
+| C1–C3 | Manual and AI cases; absent/complete/obsolete evaluation; list/detail parity; each filter alone and combined; empty/multi-page/count results | BE-002, BE-003, BE-006, BE-028 |
+| L1–L3 | Single/batch success, every stable skip/conflict, obsolete confirmation, concurrent scenario edit and atomic promote-to-Ready | BE-003, BE-006, BE-029 |
+| R1–R3 | Every target/state, empty/multiple comments, own/foreign delete, discard, fix-running conflict and stale scenario target | BE-003, BE-006, BE-030 |
+| F1–F2 | Accepted/running/PASSED/GRADE_FAILED/FAILED, duplicate start, no comments, downstream failure, comment rollback and cost/evaluation/lifecycle effects | BE-003, BE-006, BE-031 |
+| G1–G2 | Single and mixed batch, off-page Draft case, zero/one/many plan Drafts, concurrent lifecycle change and launch conflict | BE-003, BE-006, BE-032 |
+| A1–A3 | Environment absence/default/bounds; full/partial automation acceptance; re-automation conflict; in-progress/terminal projection; valid/absent/malformed/duplicate backlinks | BE-003, BE-006, BE-033, BE-034 |
+| CI connection | Use the sanitized pack and redaction requirements from 19; never include real or placeholder credentials in read/evidence payloads | BE-001, BE-003, BE-006, BE-007, BE-035 |
 | Common security | Missing/expired/invalid token; permitted and denied project/resource combinations; cross-project identifier attempt | BE-001, BE-003, BE-006, BE-007 |
 
 ## 7. Acceptance and validation checklist
@@ -235,6 +329,11 @@ does not replace authorization or schema assertions.
 | QA-BE-15 | Inspect enabled endpoint scope before Product approval, then exercise future QS2–QS4 and historical-grade scenarios only after their decisions are accepted | QS2–QS4 management is unavailable in current scope; no mutable current standard is claimed as historical evidence; future writes/deletes enforce scoring, concurrency, audit, reference and immutable-history rules | BE-025, BE-026, BE-027 | Automated scope/API checks plus Product/QA sign-off |
 | QA-BE-16 | Return HTTPS allowed/disallowed hosts, HTTP, protocol-relative, credential-bearing, malformed internal paths, `javascript:` and `data:` values in every reference field | Only approved HTTPS hosts and documented internal routes are actionable; every unsafe or malformed reference is rejected or remains non-clickable text and is never treated as markup | BE-007, BE-013, BE-021 | Automated reference-security checks |
 | QA-BE-17 | Execute the complete applicable scenario set against the payload pack and deployed API advertised for sign-off; then compare build/version identifiers and compatibility policy | OpenAPI, payloads, contract results and environment identify the same deployed build; drift or an unannounced breaking change blocks sign-off | BE-008 | Automated provenance/version check plus release review |
+| QA-BE-18 | Execute C1–C3, L1–L3, R1–R3 and F1–F2 success/conflict/concurrency cases from the sanitized pack | Test Case list/details/C2 remain snapshot-consistent; lifecycle, comments and fix rounds follow the accepted atomic state machines and exact result partitions | BE-028–BE-031 | Automated API/contract/state-transition checks |
+| QA-BE-19 | Execute G1–G2 and A1–A3 with mixed/off-page/cross-project resources, partial automation acceptance and malformed backlink identities | Draft cases cannot bypass server gates; automation partitions every requested ID exactly; backlink data is project-safe and malformed/duplicate identity fails closed | BE-032–BE-034 | Automated API authorization/integrity checks plus navigation review |
+| QA-BE-20 | Attempt T3.6 or dependent CI gating before and after the requirements/OpenAPI/payload prerequisites in 19 are satisfied | Runtime CI integration stays disabled while the contract is only proposed; after approval, write-only credentials, roles, isolation, concurrency and downstream capabilities match the authoritative contract | BE-035 | Readiness gate plus automated security/contract suite from 19 |
+| QA-BE-21 | Open Re-run capabilities for zero/one/many options, then submit as allowed/denied roles with a valid, stale and forged option; repeat the same command and replay its idempotency key with a changed body | Options are server-owned and scoped; only an authorized caller with a fresh connected CI capability succeeds; exact replay is deterministic, changed-body replay conflicts, and success creates one new same-requirement iteration while leaving the source unchanged | BE-006, BE-035, BE-036 | Automated capability/authorization/idempotency checks plus presentation review |
+| QA-BE-22 | Fail Upload before commit, during an atomic write and after a retry is accepted; inspect Library visibility and ordered attempt history; retry a passed/ineligible stage and repeat an in-flight retry | Every failed all-or-nothing attempt leaves zero partial Library cases; attempts/jobs/reasons and cost/token accounting are stable and ordered; invalid or duplicate retries fail per contract; accepted retry refreshes the correct iteration and only the documented downstream stages | BE-021, BE-022, BE-037 | Automated transaction, retry and polling checks plus Library integrity assertion |
 
 ### 7.2 Evidence required for sign-off
 
@@ -272,6 +371,9 @@ Please use this section for the consolidated decision after filling section 4.
 | QA owner |  |
 | Frontend owner |  |
 | Agreed endpoint scope for first integration |  |
+| C/L/R/F/G/A disposition (`Accept` / `Replace` / `Defer`) |  |
+| CI connection contract disposition |  |
+| US-020 Re-run/Retry contract disposition |  |
 | Explicitly deferred scope |  |
 | OpenAPI version / backend build |  |
 | Trusted HTTPS base URL |  |
@@ -291,3 +393,11 @@ Please use this section for the consolidated decision after filling section 4.
 | Product |  |  |  |  |
 | QA |  |  |  |  |
 | Frontend |  |  |  |  |
+
+## 10. Changelog
+
+| Date | Change |
+|---|---|
+| 2026-10-05 | Synchronized the hand-off with T6.7. Recorded that Re-run and Retry Upload are disabled presentation shells; added the user-facing Re-run capability/command decision, failed-Upload atomic rollback and structured attempt-history decision, C2 backlink display context, payload requirements and QA-BE-21/22. No LP6/LP7 integration is claimed. |
+| 2026-10-05 | Expanded the sendable backend hand-off from Pipeline/Quality Standard only to the complete implemented AI Factory contract. Added C/L/R/F/G/A inventory and decisions, corrected LP5 live availability, linked the detailed 05/11/19 artifacts, and extended payload, authorization, QA and sign-off requirements. Re-audited published OpenAPI with no material drift. |
+| 2026-10-02 | Initial Pipeline and Quality Standard backend integration request. |

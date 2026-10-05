@@ -15,9 +15,11 @@
  */
 
 import { MessageDescriptor, useIntl } from 'react-intl';
+import { Button, RerunIcon, SystemMessage } from '@reportportal/ui-kit';
 
 import { createClassnames } from 'common/utils';
-import { AiUploadResult, IterationRS, StageRS, UploadResult } from 'types/aiFactory';
+import { StageStatusLabel } from 'pages/inside/aiFactory/common';
+import { AiUploadResult, IterationRS, StageRS, StageStatus, UploadResult } from 'types/aiFactory';
 
 import { CaseLink } from './caseLink';
 import { messages } from '../messages';
@@ -34,12 +36,66 @@ const UPLOAD_RESULT_MESSAGE: Record<AiUploadResult, MessageDescriptor> = {
 export interface UploadPanelProps {
   stage: StageRS;
   autoReadyPromotedCount?: IterationRS['autoReadyPromotedCount'];
+  iterationNumber: IterationRS['number'];
 }
 
-export const UploadPanel = ({ stage, autoReadyPromotedCount }: UploadPanelProps) => {
+export const UploadPanel = ({
+  stage,
+  autoReadyPromotedCount,
+  iterationNumber,
+}: UploadPanelProps) => {
   const { formatMessage } = useIntl();
 
-  if (!stage.upload) {
+  if (stage.status === StageStatus.FAILED) {
+    return (
+      <div className={cx('panel', 'failed-upload')} data-automation-id="failedUploadPanel">
+        {stage.failureReason && (
+          <SystemMessage mode="warning">
+            {formatMessage(messages.uploadRollbackWarning, { reason: stage.failureReason })}
+          </SystemMessage>
+        )}
+        <table className={cx('table', 'attempt-table')}>
+          <thead>
+            <tr>
+              <th>{formatMessage(messages.uploadAttempt)}</th>
+              <th>{formatMessage(messages.uploadAttemptStatus)}</th>
+              <th>{formatMessage(messages.uploadAttemptCiJob)}</th>
+              <th>{formatMessage(messages.uploadAttemptReason)}</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>{formatMessage(messages.uploadAttemptNumber, { number: 1 })}</td>
+              <td><StageStatusLabel status={stage.status} /></td>
+              <td>
+                {stage.ciJob ? (
+                  <a href={stage.ciJob.url} target="_blank" rel="noreferrer">
+                    {stage.ciJob.id}
+                  </a>
+                ) : '—'}
+              </td>
+              <td>{stage.failureReason ?? '—'}</td>
+            </tr>
+          </tbody>
+        </table>
+        <div className={cx('retry-row')}>
+          <Button
+            variant="primary"
+            adjustWidthOn="content"
+            icon={<RerunIcon />}
+            disabled
+            title={formatMessage(messages.retryStageUnavailable)}
+            data-automation-id="retryUploadButton"
+          >
+            {formatMessage(messages.retryUpload)}
+          </Button>
+          <span>{formatMessage(messages.retryUploadDescription, { number: iterationNumber })}</span>
+        </div>
+      </div>
+    );
+  }
+
+  if (!stage.upload || stage.status !== StageStatus.PASSED) {
     return null;
   }
 

@@ -14,6 +14,7 @@
 | Labels | `ai-factory-poc`, `frontend` |
 | Assignee | **Saveli_Savich@epam.com** (the script assigns the token owner by default, which is the same person; set `JIRA_ASSIGNEE` if the Jira username differs) |
 | Description | FE scope (T-ids), link to this folder, mock/BE status, notes |
+| Estimate | Set **Original Estimate when the sub-task is created** and immediately add a Jira comment with the research / implementation / validation breakdown. The value must match [08-estimations.md](08-estimations.md) and remain ≤ 36 h |
 | Status flow | as in [docs/11-JIRA.md](../11-JIRA.md): In Progress → Code review (PR link in comments) → Testing |
 | Branch | from `bootcamp-prototype`: `EPMRPP-<subtask>-<short-desc>`. **In practice** (2026-09-28): while nothing under a sub-task is pushed yet, small same-sub-task tasks stack as separate commits on one branch (e.g. all of Phase 0 on `EPMRPP-121765-foundation`), so branching doesn't outrun the base before there's anything to review. Once a branch is pushed / has an open PR, the **next** task for that sub-task starts a fresh branch from `bootcamp-prototype` instead of stacking further |
 | PR | into `bootcamp-prototype`, title `EPMRPP-<subtask> \|\| <summary>` (repo convention, e.g. `EPMRPP-121541 \|\| Invalidate …`); one PR can cover several commits/tasks when they share a branch as above |
@@ -25,9 +26,9 @@ Keep this in sync with 00-status (the status file is the source of truth for pro
 | Story | Parent | FE sub-task | Title to use |
 |-------|--------|-------------|--------------|
 | 001 | EPMRPP-121674 | covered by **[EPMRPP-121833](https://jiraeu.epam.com/browse/EPMRPP-121833)** under EPMRPP-121704 | `[FE] AI Factory mock backend` (T0.5) |
-| 002 | EPMRPP-121704 | **[EPMRPP-121829](https://jiraeu.epam.com/browse/EPMRPP-121829)** ✅ · **[EPMRPP-121833](https://jiraeu.epam.com/browse/EPMRPP-121833)** ✅ · **[EPMRPP-121765](https://jiraeu.epam.com/browse/EPMRPP-121765)** ✅ · **[EPMRPP-121834](https://jiraeu.epam.com/browse/EPMRPP-121834)** ✅ | Foundation · mock backend · pipelines routes/list · iteration details |
+| 002 | EPMRPP-121704 | **[EPMRPP-121829](https://jiraeu.epam.com/browse/EPMRPP-121829)** ✅ · **[EPMRPP-121833](https://jiraeu.epam.com/browse/EPMRPP-121833)** ✅ · **[EPMRPP-121765](https://jiraeu.epam.com/browse/EPMRPP-121765)** ✅ · **[EPMRPP-121834](https://jiraeu.epam.com/browse/EPMRPP-121834)** ✅ · **[EPMRPP-122039](https://jiraeu.epam.com/browse/EPMRPP-122039)** ✅ · **[EPMRPP-122040](https://jiraeu.epam.com/browse/EPMRPP-122040)** ✅ · **[EPMRPP-122041](https://jiraeu.epam.com/browse/EPMRPP-122041)** ✅ · **[EPMRPP-122042](https://jiraeu.epam.com/browse/EPMRPP-122042)** ✅ · **[EPMRPP-122045](https://jiraeu.epam.com/browse/EPMRPP-122045)** ✅ · **[EPMRPP-122046](https://jiraeu.epam.com/browse/EPMRPP-122046)** ✅ · **[EPMRPP-122047](https://jiraeu.epam.com/browse/EPMRPP-122047)** 🟨 · **[EPMRPP-122048](https://jiraeu.epam.com/browse/EPMRPP-122048)** ✅ | Foundation · mock backend · pipelines routes/list · iteration details · T6.1 roles/read-only hardening · T6.2-G1/G2 foundations · T6.3 accessibility/responsive hardening · T6.4-P demo reset/runbook prerequisite · T6.4 rehearsal · T6.4-F demo fixture alignment · `[FE] AI Factory toggle-OFF regression` (T6.5), branch `EPMRPP-122048-ai-factory-toggle-off-regression`; Original Estimate 8 h with an immediate 2 h research / 4 h regression-remediation / 2 h validation comment. Authenticated read-only comparison against fetched `origin/develop` passed; no production-code remediation or demo-data mutation was required; see [dated evidence](16-toggle-off-regression-2026-10-05.md) |
 | 003 | EPMRPP-121705 | covered by **[EPMRPP-121834](https://jiraeu.epam.com/browse/EPMRPP-121834)** under EPMRPP-121704 | `[FE] Iteration details by stage` (T1.3) |
-| 004 | EPMRPP-121706 | — | `[FE] Compare two iterations` |
+| 004 | EPMRPP-121706 | **[EPMRPP-122034](https://jiraeu.epam.com/browse/EPMRPP-122034)** 🟨 | `[FE] Compare two iterations` (T4.3), branch `EPMRPP-122034-compare-iterations` |
 | 005 | EPMRPP-121673 | **[EPMRPP-122031](https://jiraeu.epam.com/browse/EPMRPP-122031)** 🟨 | `[FE] Pipeline settings: Auto-Ready` (T3.4) |
 | 006 | EPMRPP-121675 | — | (no FE sub-task by default) |
 | 007 | EPMRPP-121676 | **[EPMRPP-121982](https://jiraeu.epam.com/browse/EPMRPP-121982)** 🟨 | `[FE] Draft/Ready lifecycle display and history` (T2.1) |
@@ -38,9 +39,11 @@ Keep this in sync with 00-status (the status file is the source of truth for pro
 | 012 | EPMRPP-121703 | — | `[FE] Push review comments to agent` |
 | 013 | EPMRPP-121682 | **[EPMRPP-122029](https://jiraeu.epam.com/browse/EPMRPP-122029)** 🟨 | `[FE] Approve and mark as ready` (T3.2) |
 | 014 | EPMRPP-121683 | **[EPMRPP-122032](https://jiraeu.epam.com/browse/EPMRPP-122032)** 🟨 · **[EPMRPP-122033](https://jiraeu.epam.com/browse/EPMRPP-122033)** 🟨 | `[FE] Ready-only Test Plan and Launch gate` (T4.1) · `[FE] Test Plan launch-blocked state` (T4.2) |
-| 015 | EPMRPP-121671 | — | `[FE] Send Ready Test Cases to automation` |
-| 016 | EPMRPP-121672 | — | `[FE] Automation iteration view` |
-| 017 | EPMRPP-121680 | — | `[FE] Automation results on Test Case` |
+| 015 | EPMRPP-121671 | **[EPMRPP-122035](https://jiraeu.epam.com/browse/EPMRPP-122035)** 🟨 | `[FE] Send Ready Test Cases to automation` (T5.1) |
+| 016 | EPMRPP-121672 | **[EPMRPP-122036](https://jiraeu.epam.com/browse/EPMRPP-122036)** ✅ | `[FE] Automation iteration view` (T5.2), branch `EPMRPP-122036-automation-iteration-view`; Original Estimate 8 h with 2 h research / 4 h implementation / 2 h validation comment |
+| 017 | EPMRPP-121680 | **[EPMRPP-122037](https://jiraeu.epam.com/browse/EPMRPP-122037)** ✅ · **[EPMRPP-122038](https://jiraeu.epam.com/browse/EPMRPP-122038)** ✅ | `[FE] Automation results on Test Case` (T5.3), branch `EPMRPP-122037-automation-results`; Original Estimate 8 h with 2 h research / 4 h implementation / 2 h validation comment · `[FE] Launch and Test Case backlinks` (T5.4), branch `EPMRPP-122038-launch-case-backlinks`; Original Estimate 20 h with 4 h research / 10 h implementation / 6 h validation comment; focused 4 suites / 64 tests and full 149 suites / 1273 tests PASS, full lint exit 0 with 201 existing warnings, type-check/diff-check and senior code/security final rechecks PASS; component-fixture integration only, no fake Launch controller/API; live A3/Launch attribute delivery remains unverified |
+| 018 | EPMRPP-121841 | **[EPMRPP-122049](https://jiraeu.epam.com/browse/EPMRPP-122049)** ✅ | `[FE] AI Factory implemented-surface NFR hardening` (T6.6-A), branch `EPMRPP-122049-ai-factory-nfr-hardening`; Original Estimate 8 h with an immediate 2 h research / 4 h implementation / 2 h validation comment. Existing actions/layouts passed; implemented cost surfaces now identify two-decimal USD values as pipeline estimates. Masked credentials and Re-run/Retry stay with their unimplemented T3.6/T4.4 controls |
+| 019 | EPMRPP-121842 | **[EPMRPP-122050](https://jiraeu.epam.com/browse/EPMRPP-122050)** 🟦 · **[EPMRPP-122068](https://jiraeu.epam.com/browse/EPMRPP-122068)** ⬜ | `[FE] CI connection contract readiness` (T3.6), branch `EPMRPP-122050-ai-factory-ci-contract`; Original Estimate 12 h with an immediate 4 h research / 5 h contract / 3 h validation breakdown. Documentation-only handoff in [19](19-ci-connection-api-contract-request.md) · `[FE] CI connection settings UI and integration`, Original Estimate 24 h with an immediate 5 h research / 13 h implementation / 6 h validation breakdown. Runtime task is deliberately not started until the accepted backend contract and matching OpenAPI are published. |
 
 ## Creating a sub-task
 
@@ -51,16 +54,23 @@ The PAT was renewed on 2026-09-25 and works. If it returns **HTTP 401** again, g
 
 ```bash
 # dry run (prints the payload, checks auth and whether an [FE] sub-task already exists)
-python3 docs/ai-factory-poc/tools/jira_fe_subtask.py EPMRPP-121704 "Pipelines iterations list"
+python3 docs/ai-factory-poc/tools/jira_fe_subtask.py EPMRPP-121704 "Pipelines iterations list" \
+  --estimate-hours 20 \
+  --estimate-comment "4 h research and Jira scope; 10 h implementation; 6 h tests and review"
 
 # create
-python3 docs/ai-factory-poc/tools/jira_fe_subtask.py EPMRPP-121704 "Pipelines iterations list" --yes
+python3 docs/ai-factory-poc/tools/jira_fe_subtask.py EPMRPP-121704 "Pipelines iterations list" \
+  --estimate-hours 20 \
+  --estimate-comment "4 h research and Jira scope; 10 h implementation; 6 h tests and review" \
+  --yes
 ```
 
 Optional env: `JIRA_ENV_FILE` (another env file), `JIRA_ASSIGNEE` (Jira username),
 `JIRA_SUBTASK_TYPE` (if auto-detection of the sub-task type fails).
 
 The script is idempotent by exact `[FE]` summary, so one story may hold several independently sized
-frontend sub-tasks without creating duplicates. It never edits existing issues.
+frontend sub-tasks without creating duplicates. For an existing exact match, `--yes` synchronizes its Original
+Estimate and adds the exact breakdown comment only once. Estimate arguments are mandatory so a new sub-task can
+never be created by this workflow without both pieces of planning evidence.
 For an AI agent working on the plan: always run the dry run first, show it to the user, and
 create only after confirmation.

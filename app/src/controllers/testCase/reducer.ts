@@ -86,6 +86,7 @@ export type InitialStateType = {
     list: TestCase[];
     page: Page | null;
     successfulLoadRevision: number;
+    settledRevision: number;
   };
 };
 
@@ -106,6 +107,7 @@ export const INITIAL_STATE: InitialStateType = {
     list: [],
     page: null,
     successfulLoadRevision: 0,
+    settledRevision: 0,
   },
 };
 
@@ -184,12 +186,14 @@ const testCasesReducer = (state = INITIAL_STATE.testCases, action: TestCasesActi
         list: Array.isArray(action.payload?.content) ? action.payload.content : [],
         page: action.payload?.page || null,
         successfulLoadRevision: (state.successfulLoadRevision ?? 0) + 1,
+        settledRevision: (state.settledRevision ?? 0) + 1,
       };
     case CLEAR_TEST_CASES:
       return {
         ...state,
         list: [],
         page: null,
+        settledRevision: (state.settledRevision ?? 0) + 1,
       };
     case DELETE_TEST_CASE_SUCCESS: {
       return {

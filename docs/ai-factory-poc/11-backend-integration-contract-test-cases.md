@@ -4,8 +4,8 @@
 > [10-backend-integration-contract.md](10-backend-integration-contract.md). They do not make an Open decision
 > executable: a rollout group stays blocked until its §5.6 blockers and decisions satisfy the Definition of Ready.
 >
-> Cases marked **Future/blocked** are specifications for G8/G9 or unresolved LP6 behavior. They must not be used as
-> evidence that those capabilities are currently implemented.
+> Cases marked **Future/blocked** are specifications for G8/G9, unresolved LP6 behavior or the T6.7 Re-run/Retry
+> shells. They must not be used as evidence that those capabilities are currently implemented.
 
 ## 1. Test strategy and risk priorities
 
@@ -20,6 +20,8 @@
 | Mutable Quality Standard presented as historical evidence | Misleading audit and grading results | High; current-only label and G9 immutability tests |
 | Undocumented metrics interpreted as KPI/cost | Factually wrong comparison or cost | High; opaque-metric and neutral-comparison tests |
 | Untrusted API link rendered as navigation/HTML | XSS, phishing or credential leakage | High; URL-policy unit and component tests |
+| CI connection implemented from an invented API or secret-bearing read DTO | Credential disclosure, unauthorized CI changes or false downstream capability | Critical; requirements/OpenAPI readiness gate plus secret-redaction, role, isolation, concurrency and browser tests |
+| Disabled T6.7 Re-run/Retry shell treated as an executable contract | Browser uses LP6 ingestion, accepts stale options, partially uploads cases or loses attempt history | Critical; command/capability separation, atomic rollback and ordered-attempt API tests before enabling either action |
 
 ### Test levels
 
@@ -57,20 +59,30 @@
 | BackendIntegration_6 | AC1 | TC-BIC-020 |
 | BackendIntegration_6 | AC2–AC5 | TC-BIC-023 |
 | BackendIntegration_6 | AC6 | TC-BIC-008, 020, 035 |
+| BackendIntegration_7 | AC1–AC4 | TC-BIC-037 |
+| BackendIntegration_7 | AC5–AC8 | TC-BIC-038 |
+| T3.6 capability projection | Minimal broad-consumer status versus privileged full configuration; exact roles, org/project membership and cross-project denial | TC-CIC-032–033, 035 |
+| T3.6 freshness and revocation | Material save/rotation invalidates Connected; expiry/revocation/disconnect and immediate downstream rechecks | TC-CIC-034–035 |
+| T3.6 idempotency | Header key format/scope/fingerprint/retention, in-progress replay and same-key conflict/version interaction | TC-CIC-036–037 |
+| T3.6 secret boundary and input safety | Vault boundary, least privilege, pre-WAF/APM redaction, hostile text/control/Unicode/HTML handling and output encoding | TC-CIC-038–039 |
+| T3.6 lifecycle/validation decisions | Single state enum, 15-minute bounded freshness TTL, atomic rotation/disconnect and concrete UTF-8/ID/URL/label rules | TC-CIC-034–039 |
+| T3.6 concrete input/idempotency rules | Credential/project/provider grammar, collection limits, UUIDv4 requirements, one active probe and crash replay | TC-CIC-040–044 |
 
 ### 2.2 Rollout-group coverage
 
 | Group | Primary cases | Required execution state |
 |---|---|---|
 | G1 Pipeline catalog | TC-BIC-001, 003–006, 013–016, 033 | Execute after G1 DoR |
-| G2 Pipeline generic detail | TC-BIC-007, 013–018, 023, 033 | Execute after G1 and G2 DoR |
+| G2 Pipeline generic detail | TC-BIC-007, 013–018, 023, 033 | EPMRPP-122041 automated FE foundation coverage complete; authenticated/live execution remains blocked until G1 and G2 DoR |
 | G3 Pipeline comparison | TC-BIC-019, 033 | Execute only after D-05 degraded option and D-12 evidence are approved |
 | G4 Pipeline settings | TC-BIC-021, 022, 024, 033 | Execute after permission, validation and concurrency decisions |
-| G5 Stage Retry | TC-BIC-017, 021–023, 025, 033 | Execute after retry/idempotency decisions |
+| G5 Stage Retry | TC-BIC-017, 021–023, 025, 033, 038 | Execute after retry/idempotency, Upload atomicity and attempt-history decisions |
 | G6 Iteration submission | TC-BIC-026, 027, 033 | Future/blocked until D-08 and D-13 are resolved |
 | G7 Current Quality Standard read | TC-BIC-028, 029, 033 | Execute after QS1 DoR; current-only behavior |
 | G8 Quality Standard management | TC-BIC-030, 031, 033 | Future/blocked until a Product-approved management story |
 | G9 Historical grading association | TC-BIC-032, 033 | Future/blocked until immutable snapshot/version contract exists |
+| G10 Pipeline CI connection | TC-BIC-036 plus TC-CIC-001–044 in [19](19-ci-connection-api-contract-request.md#11-contract-validation-cases) | Future/blocked until the accepted requirements-repo contract, published API, sanitized payload pack and role/security evidence exist |
+| G11 User-facing Re-run | TC-BIC-033, 036–038 | Future/blocked; the T6.7 modal confirmation remains disabled until D-13/D-15/D-18, the authoritative capability/command API and CI readiness evidence exist |
 
 ## 3. Contract and adapter cases
 
@@ -177,7 +189,9 @@
   1. Request LP3 using only the route's `iterationId` in the live URL.
   2. Adapt a matching response.
   3. Repeat with a different returned `pipelineId` and with the agreed invalid/missing identity fixture.
-- **Expected Result:** Matching data renders. Mismatched identity fails closed with an invalid-resource state and never renders another pipeline's detail; the client never adds `pipelineId` to the canonical LP3 path.
+  4. Delay the response, then change project, catalog version/request or detail route before it completes.
+  5. Open the Library with an iteration filter and verify its iteration-number label lookup against cached catalog metadata.
+- **Expected Result:** Matching data renders. Mismatched identity fails closed with an invalid-resource state and never renders another pipeline's detail; the client never adds `pipelineId` to the canonical LP3 path. Stale completions cannot replace current detail state. Library label lookup accepts only matching project/catalog-version metadata and never issues LP3 directly.
 - **Priority:** Critical
 - **Risk Level:** Cross-pipeline data confusion or leakage
 - **Automation suitability:** Full — service/component integration
@@ -387,13 +401,13 @@
 
 - **Related AC:** BackendIntegration_4 AC1–AC3
 - **Traceability:** EP-09, D-07; G4, G5
-- **Pre-conditions:** D-07 is approved; accounts exist for Editor, Organization Manager, Administrator and a denied identity.
+- **Pre-conditions:** D-07 is approved; accounts exist for Editor, Organization Manager, Instance Administrator and a denied identity.
 - **Role:** Each listed role
 - **Steps:**
   1. Inspect Pipeline settings, Retry, Re-run and any approved controls for each role.
   2. Manipulate the client to reveal or invoke a forbidden control.
   3. Send the same request directly to the API.
-- **Expected Result:** Organization Manager/Administrator receive only accepted Pipeline capabilities; Editor lacks settings/Retry/Re-run; client manipulation cannot bypass server authorization; forbidden requests return the agreed `403`.
+- **Expected Result:** Organization Manager/Instance Administrator receive only accepted Pipeline capabilities; Editor lacks settings/Retry/Re-run; client manipulation cannot bypass server authorization; forbidden requests return the agreed `403`.
 - **Priority:** Critical
 - **Risk Level:** Unauthorized mutation
 - **Automation suitability:** High — role-based browser plus direct API suite
@@ -432,7 +446,7 @@
 - **Related AC:** BackendIntegration_4 AC4–AC5, AC9
 - **Traceability:** EP-05, EP-06, PL-04, PL-05, D-08; G4
 - **Pre-conditions:** G4 DoR complete; approved threshold, capability and version/ETag or conflict behavior.
-- **Role:** Organization Manager or Administrator
+- **Role:** Organization Manager or Instance Administrator
 - **Steps:**
   1. Submit a valid settings change and verify the control is disabled in flight.
   2. Modify the same Pipeline from a second client, then submit stale data from the first.
@@ -448,7 +462,7 @@
 - **Related AC:** BackendIntegration_4 AC4, AC6, AC9
 - **Traceability:** EP-06, EP-07, ST-06, ST-07, D-08; G5
 - **Pre-conditions:** Retryable-state, permission, attempt identity and idempotency/conflict rules are approved.
-- **Role:** Organization Manager or Administrator
+- **Role:** Organization Manager or Instance Administrator
 - **Steps:**
   1. Retry an eligible stage and double-submit while the first request is in flight.
   2. Retry an ineligible/terminal stage and a stage from another project.
@@ -464,7 +478,7 @@
 - **Related AC:** BackendIntegration_4 AC7–AC8
 - **Traceability:** LP6-01, LP6-02, D-13; G6
 - **Pre-conditions:** D-13 remains Open or defines LP6 as ingestion; network observer installed.
-- **Role:** Organization Manager or Administrator
+- **Role:** Organization Manager or Instance Administrator
 - **Steps:**
   1. Open a live iteration and inspect Re-run/CI controls.
   2. Attempt invocation through visible UI, deep link and client-state manipulation.
@@ -526,7 +540,7 @@
 - **Related AC:** BackendIntegration_2 AC2; BackendIntegration_4 AC10
 - **Traceability:** D-14; G8
 - **Pre-conditions:** Current T6.2 build with feature flag and any existing integration flags enabled.
-- **Role:** Editor, Organization Manager and Administrator
+- **Role:** Editor, Organization Manager and Instance Administrator
 - **Steps:**
   1. Search navigation, menus, dialogs and transport configuration for Quality Standard management.
   2. Manipulate client routes/state to attempt opening management controls.
@@ -571,11 +585,11 @@
 ### TC-BIC-033: Group readiness rejects missing blocker or degradation evidence
 
 - **Related AC:** BackendIntegration_2 pre-condition; all requirements' applicable pre-conditions
-- **Traceability:** §5.6, D-12, DoR 1–8; G1–G9
+- **Traceability:** §5.6, D-12, DoR 1–8; G1–G11
 - **Pre-conditions:** A readiness record can be assembled for each group.
 - **Role:** QA lead/Product approver
 - **Steps:**
-  1. For each G1–G9 row, map every listed blocker/decision and degraded item to its dated decision, owner and Jira/ADR/evidence link.
+  1. For each applicable G1–G11 row, map every listed blocker/decision and degraded item to its dated decision, owner and Jira/ADR/evidence link.
   2. Remove one blocker resolution, Product approval or QA scenario and repeat the readiness review.
   3. Verify unrelated future-group decisions are not incorrectly required.
 - **Expected Result:** A group is Ready only when every applicable item is resolved and every degradation is individually approved with QA evidence. Missing or unlisted degradation blocks rollout; unrelated future blockers do not.
@@ -586,7 +600,7 @@
 ### TC-BIC-034: Definition of Done is evidenced per group
 
 - **Related AC:** All functional requirements
-- **Traceability:** DoD 1–9; G1–G9
+- **Traceability:** DoD 1–9; G1–G11
 - **Pre-conditions:** Candidate group implementation and approved deployed API build are available.
 - **Role:** QA lead
 - **Steps:**
@@ -613,6 +627,76 @@
 - **Risk Level:** Secret leakage or untriageable failures
 - **Automation suitability:** High — log/telemetry assertions plus manual observability smoke
 
+### TC-BIC-036: CI connection runtime implementation is blocked until its contract is authoritative
+
+- **Related AC:** BackendIntegration_4 AC1–AC4, AC8–AC9; BackendIntegration_6 AC1, AC6
+- **Traceability:** EP-11; G10; [CIConnection_1–6](19-ci-connection-api-contract-request.md#4-functional-requirements-table)
+- **Pre-conditions:** A candidate T3.6 implementation or rollout request exists.
+- **Role:** QA lead / requirements owner
+- **Steps:**
+  1. Locate the merged source-of-truth contract under
+     `reportportal-requirements/domains/projects/df_bootcamp_2026/contracts/` and its US-019 link.
+  2. Compare the deployed trusted-HTTPS OpenAPI endpoint methods, paths, required DTO fields, write-only credential
+     semantics, status/error/concurrency/idempotency rules and authorization matrix with that contract.
+  3. Confirm the sanitized success/error payload pack and allowed/denied role plus two-project isolation accounts
+     exist.
+  4. Map every applicable TC-CIC-001–044 case from [19](19-ci-connection-api-contract-request.md) to automated or
+     integration evidence.
+  5. If any prerequisite is absent or contradictory, inspect the UI/network to confirm no CI connection runtime or
+     dependent capability has been enabled from the proposal alone.
+- **Expected Result:** T3.6 stays blocked until the requirements contract, deployed API and evidence agree. A proposal
+  in `service-ui`, stage-level LP3/LP7 CI metadata, or LP6/LP7 availability cannot be used as proof of a CI connection
+  contract. No placeholder/real credential appears in read payloads, logs or evidence.
+- **Priority:** Critical
+- **Risk Level:** Invented integration, credential leakage or unauthorized CI execution
+- **Automation suitability:** Partial — schema/evidence comparison can be automated; requirements/security sign-off is
+  manual
+
+### TC-BIC-037: User Re-run uses authoritative capabilities and creates one linked iteration
+
+- **Related AC:** BackendIntegration_7 AC1–AC4, AC8
+- **Traceability:** EP-11, EP-12, LP6-01, LP6-02, LP6-04–LP6-07, D-13, D-15, D-18; G11
+- **Pre-conditions:** **Future/blocked** until the accepted US-019/US-020 contracts, deployed trusted-HTTPS capability
+  and command API, sanitized payloads and permitted/denied accounts exist. The T6.7 confirmation stays disabled.
+- **Role:** Organization Manager, Instance Administrator, denied Editor/Viewer and machine producer identities
+- **Steps:**
+  1. Read Re-run capabilities for zero, one and multiple Model/Environment options; record stable machine values,
+     labels, defaults, availability, project/Pipeline scope and current CI freshness.
+  2. Submit with an allowed option, then with a stale, unavailable, forged and cross-project option as each role.
+  3. Repeat the accepted command with the same idempotency key/body, then reuse the key with a changed body.
+  4. Compare source and returned iterations, requirement identity, Pipeline ownership, Library cases and source link.
+  5. Attempt the browser command with LP6 producer-only authority and attempt LP6 ingestion with a browser role.
+- **Expected Result:** Only an approved interactive role with fresh connected CI and valid current options succeeds.
+  Exactly one new same-Pipeline/same-requirement iteration is created and linked to the unchanged source. Exact replay
+  is deterministic; changed-body replay conflicts. Interactive and producer authority do not leak across caller
+  classes. Before this evidence exists, the modal sends no LP6 or alternative command request.
+- **Priority:** Critical
+- **Risk Level:** Producer-authority escalation, duplicate/wrong iteration or source mutation
+- **Automation suitability:** High once unblocked — capability/authorization/idempotency API suite plus browser network assertion
+
+### TC-BIC-038: Failed Upload rolls back atomically and Retry preserves ordered attempts
+
+- **Related AC:** BackendIntegration_7 AC4–AC8
+- **Traceability:** ST-06, ST-08, D-08, D-18; G5, G11
+- **Pre-conditions:** **Future/blocked** until typed Upload result/attempt DTOs, transaction boundary, LP7 eligibility,
+  idempotency, downstream reset and cost/token rules are published. The T6.7 Retry Upload action stays disabled.
+- **Role:** Organization Manager, Instance Administrator and denied Editor/Viewer
+- **Steps:**
+  1. Force Upload failure before commit and during the documented atomic Library write; query every generated case
+     through Library list/details/filter endpoints and inspect the iteration Upload result.
+  2. Retry the eligible failed Upload, double-submit while it is in flight and repeat the same request according to
+     the agreed idempotency mechanism.
+  3. Attempt Retry for a passed/ineligible stage, wrong project/iteration/stage and denied role.
+  4. Poll the authoritative iteration and inspect ordered attempt IDs/numbers, statuses/timestamps, safe reasons,
+     CI jobs, rollback outcome, downstream stage states and per-attempt/accumulated cost/token totals.
+- **Expected Result:** Every failed all-or-nothing attempt exposes zero partial Library cases. Only the eligible,
+  authorized retry is accepted; duplicates and invalid targets follow deterministic conflict/denial rules. Prior
+  attempts remain ordered and auditable, the documented downstream stages alone are reset/re-executed, and totals
+  reconcile without FE-synthesized attempt data. Before this evidence exists, Retry Upload sends no LP7 request.
+- **Priority:** Critical
+- **Risk Level:** Partial Library corruption, duplicate CI execution or misleading audit/cost data
+- **Automation suitability:** High once unblocked — transaction/integrity API tests, polling tests and browser network assertion
+
 ## 7. Cross-feature and exploratory coverage
 
 ### Cross-feature matrix
@@ -624,6 +708,8 @@
 | LP3/LP4 identity mismatch | Project/route isolation | TC-BIC-007 and 022: never render another Pipeline/project |
 | LP5 Auto-Ready update | Pipeline list/detail | TC-BIC-024: server state is refetched and reconciled |
 | LP7 Retry | Detail polling and navigation | TC-BIC-017, 023 and 025: one poll chain, safe link, refreshed stage |
+| User Re-run | Source iteration, CI connection and Library | TC-BIC-036–037: fresh capability, one new linked iteration, unchanged source and no producer-authority leak |
+| Failed Upload Retry | Test Case Library, downstream stages and cost | TC-BIC-038: zero partial cases, ordered attempts and contract-defined re-execution/accounting |
 | QS1 read | Historical evaluation | TC-BIC-028 and 032: current rubric is never presented as historical evidence |
 | Rollback a live group | Unrelated mock and user state | TC-BIC-012: no overlay/preference/mock-data loss |
 
@@ -645,6 +731,12 @@
 - G6 cannot be executed until D-13 resolves whether LP6 is ingestion or a command and D-08 defines idempotency.
 - G8 is deliberately out of current T6.2 scope; TC-BIC-031 is a future specification, not current coverage.
 - G9 cannot be executed until the grading-result snapshot/version contract exists.
+- G10 cannot be executed until the accepted requirements-repo CI connection contract, matching published API,
+  trusted HTTPS target, sanitized payload pack and role/security fixtures exist. The `service-ui` proposal in 19 is
+  not an implementation contract by itself.
+- G11 and executable T6.7 Re-run/Retry cannot be executed until D-13/D-15/D-18, the authoritative Re-run capability
+  and command contract, typed Upload rollback/attempt contract and G10 freshness evidence exist. The current modal
+  confirmation and Retry Upload button are disabled presentation evidence only.
 - Performance thresholds beyond D-02/D-06, accessibility and visual parity belong to their feature/NFR suites; this
   contract suite checks only integration-specific behavior.
 
@@ -653,3 +745,5 @@
 | Date | Change |
 |---|---|
 | 2026-10-02 | Initial risk-based suite for validated contract v1, covering BackendIntegration_1–6 and G1–G9. |
+| 2026-10-05 | Added the G10 CI connection readiness gate and linked the detailed proposed TC-CIC-001–044 validation matrix without claiming a published or agreed API. |
+| 2026-10-05 | Added T6.7 coverage for BackendIntegration_7/G11: TC-BIC-037 validates server-owned Re-run options, caller separation, idempotency and unchanged source; TC-BIC-038 validates atomic failed-Upload rollback, LP7 eligibility, ordered attempts, downstream reset and cost/token accounting. Both remain future/blocked. |

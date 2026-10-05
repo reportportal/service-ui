@@ -18,7 +18,7 @@ import { mount, type ReactWrapper } from 'enzyme';
 import { usePolling } from './usePolling';
 
 interface HarnessProps {
-  callback: () => void;
+  callback: () => unknown;
   intervalMs: number;
   enabled: boolean;
 }
@@ -33,6 +33,7 @@ describe('usePolling', () => {
 
   beforeEach(() => {
     jest.useFakeTimers();
+    Object.defineProperty(document, 'hidden', { configurable: true, value: false });
   });
 
   afterEach(() => {
@@ -104,5 +105,80 @@ describe('usePolling', () => {
     jest.advanceTimersByTime(9000);
 
     expect(callback).not.toHaveBeenCalled();
+  });
+
+  test('does not poll while the document is hidden and resumes on a later interval', () => {
+    const callback = jest.fn();
+    wrapper = mount(<Harness callback={callback} intervalMs={3000} enabled />);
+
+    Object.defineProperty(document, 'hidden', { configurable: true, value: true });
+    jest.advanceTimersByTime(3000);
+    expect(callback).not.toHaveBeenCalled();
+
+    Object.defineProperty(document, 'hidden', { configurable: true, value: false });
+    jest.advanceTimersByTime(3000);
+    expect(callback).toHaveBeenCalledTimes(1);
+  });
+
+  test('does not start an overlapping poll while the previous promise is pending', async () => {
+    let resolveRequest!: () => void;
+    const request = new Promise<void>((resolve) => {
+      resolveRequest = resolve;
+    });
+    const callback = jest.fn(() => request);
+    wrapper = mount(<Harness callback={callback} intervalMs={3000} enabled />);
+
+    jest.advanceTimersByTime(9000);
+    expect(callback).toHaveBeenCalledTimes(1);
+
+    await Promise.resolve().then(resolveRequest);
+    jest.advanceTimersByTime(3000);
+    expect(callback).toHaveBeenCalledTimes(2);
+  });
+
+  test('releases the overlap guard after a rejected poll', async () => {
+    const callback = jest
+      .fn<Promise<void>, []>()
+      .mockRejectedValueOnce(new Error('Network error'))
+      .mockResolvedValue(undefined);
+    wrapper = mount(<Harness callback={callback} intervalMs={3000} enabled />);
+
+    jest.advanceTimersByTime(3000);
+    await Promise.resolve();
+    jest.advanceTimersByTime(3000);
+
+    expect(callback).toHaveBeenCalledTimes(2);
+  });
+
+  test('does not let an old request release the overlap guard for a newer polling generation', async () => {
+    let resolveOldRequest!: () => void;
+    let resolveNewRequest!: () => void;
+    const oldRequest = new Promise<void>((resolve) => {
+      resolveOldRequest = resolve;
+    });
+    const newRequest = new Promise<void>((resolve) => {
+      resolveNewRequest = resolve;
+    });
+    const callback = jest
+      .fn<Promise<void> | undefined, []>()
+      .mockReturnValueOnce(oldRequest)
+      .mockReturnValueOnce(newRequest);
+    wrapper = mount(<Harness callback={callback} intervalMs={3000} enabled />);
+
+    jest.advanceTimersByTime(3000);
+    wrapper.setProps({ enabled: false });
+    wrapper.setProps({ enabled: true });
+    jest.advanceTimersByTime(3000);
+    expect(callback).toHaveBeenCalledTimes(2);
+
+    resolveOldRequest();
+    await oldRequest;
+    jest.advanceTimersByTime(3000);
+    expect(callback).toHaveBeenCalledTimes(2);
+
+    resolveNewRequest();
+    await newRequest;
+    jest.advanceTimersByTime(3000);
+    expect(callback).toHaveBeenCalledTimes(3);
   });
 });

@@ -13,6 +13,7 @@
   align-items: center;
   flex-wrap: wrap;
   gap: 12px;
+  min-height: 64px;
   padding: 12px 16px;
   border: 1px solid var(--rp-ui-base-e-100);
   border-radius: 4px;
@@ -28,8 +29,17 @@
     gap: 12px;
   }
 
+  &__summary {
+    flex-wrap: wrap;
+  }
+
   &__actions {
     margin-left: auto;
+  }
+
+  &__loading {
+    display: inline-flex;
+    align-items: center;
   }
 
   &__error {
@@ -116,7 +126,8 @@
     color: var(--rp-ui-base-e-400);
     cursor: pointer;
 
-    img {
+    &-icon,
+    &-icon svg {
       width: 16px;
       height: 16px;
     }
@@ -124,19 +135,29 @@
     &--pending {
       color: var(--rp-ui-base-a-yellow-600);
     }
+
+    &:focus-visible {
+      outline: 2px solid var(--rp-ui-base-topaz);
+      outline-offset: 2px;
+    }
   }
 
   &__thread {
+    box-sizing: border-box;
     padding: 12px 16px;
     border-top: 1px solid var(--rp-ui-base-e-100);
+    background-color: var(--rp-ui-base-bg-100);
     font-family: var(--rp-ui-base-font-family);
     font-size: 13px;
     line-height: 20px;
   }
 
   &__comment {
-    padding: 8px 0;
-    border-bottom: 1px solid var(--rp-ui-base-e-100);
+    margin-bottom: 8px;
+    padding: 8px 10px;
+    border: 1px solid var(--rp-ui-base-a-yellow-600);
+    border-radius: 3px;
+    background-color: var(--rp-ui-base-bg-000);
 
     p {
       margin: 4px 0 0;
@@ -164,23 +185,60 @@
     border: 0;
     background: transparent;
     cursor: pointer;
+
+    &:focus-visible {
+      outline: 2px solid var(--rp-ui-base-topaz);
+      outline-offset: 2px;
+    }
   }
 
   &__composer {
     display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: start;
     gap: 8px;
     padding-top: 12px;
 
+    label {
+      grid-column: 1 / -1;
+    }
+
     textarea {
-      min-height: 72px;
+      box-sizing: border-box;
+      min-height: 56px;
+      height: 56px;
       resize: vertical;
       padding: 8px;
       border: 1px solid var(--rp-ui-base-e-200);
       border-radius: 4px;
       color: var(--rp-ui-base-almost-black);
       font: inherit;
+      line-height: 20px;
+
+      &:focus-visible {
+        outline: 2px solid var(--rp-ui-base-topaz);
+        outline-offset: 2px;
+      }
     }
   }
+
+  &__empty {
+    margin: 0;
+    color: var(--rp-ui-base-e-400);
+    font-size: 12px;
+  }
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
 }
 
 @media (max-width: 720px) {

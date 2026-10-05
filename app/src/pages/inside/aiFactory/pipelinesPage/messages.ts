@@ -25,6 +25,31 @@ export const messages = defineMessages({
     id: 'PipelinesPage.refreshPage',
     defaultMessage: 'Refresh',
   },
+  resetDemo: {
+    id: 'PipelinesPage.resetDemo',
+    defaultMessage: 'Reset demo',
+  },
+  resetDemoTitle: {
+    id: 'PipelinesPage.resetDemoTitle',
+    defaultMessage: 'Reset the AI Factory demo?',
+  },
+  resetDemoConfirmation: {
+    id: 'PipelinesPage.resetDemoConfirmation',
+    defaultMessage:
+      'This resets only local AI Factory demo data. It cannot undo changes already made in the real TMS.',
+  },
+  resetDemoSuccess: {
+    id: 'PipelinesPage.resetDemoSuccess',
+    defaultMessage: 'The local AI Factory demo was reset.',
+  },
+  resetDemoError: {
+    id: 'PipelinesPage.resetDemoError',
+    defaultMessage: 'The local AI Factory demo could not be reset.',
+  },
+  compareIterations: {
+    id: 'PipelinesPage.compareIterations',
+    defaultMessage: 'Compare iterations',
+  },
   searchPlaceholder: {
     id: 'PipelinesPage.searchPlaceholder',
     defaultMessage: 'Search by requirement, iteration # or pipeline name',
@@ -96,5 +121,73 @@ export const messages = defineMessages({
   metaSuiteScore: {
     id: 'PipelinesPage.metaSuiteScore',
     defaultMessage: 'Suite score {score}',
+  },
+  metaPipelineEstimate: {
+    id: 'PipelinesPage.metaPipelineEstimate',
+    defaultMessage: 'Pipeline estimate {cost}',
+  },
+  metaRequirementLabel: {
+    id: 'PipelinesPage.metaRequirementLabel',
+    defaultMessage: 'Requirement:',
+  },
+  metaTriggerLabel: {
+    id: 'PipelinesPage.metaTriggerLabel',
+    defaultMessage: 'Trigger:',
+  },
+  metaModelLabel: {
+    id: 'PipelinesPage.metaModelLabel',
+    defaultMessage: 'Model:',
+  },
+  metaTestCasesLabel: {
+    id: 'PipelinesPage.metaTestCasesLabel',
+    defaultMessage: 'Test Cases:',
+  },
+  metaCasesLabel: {
+    id: 'PipelinesPage.metaCasesLabel',
+    defaultMessage: 'Cases:',
+  },
+  metaSuiteScoreLabel: {
+    id: 'PipelinesPage.metaSuiteScoreLabel',
+    defaultMessage: 'Suite score:',
+  },
+  metaCostLabel: {
+    id: 'PipelinesPage.metaCostLabel',
+    defaultMessage: 'Cost:',
+  },
+  metaStartedLabel: {
+    id: 'PipelinesPage.metaStartedLabel',
+    defaultMessage: 'Started:',
+  },
+  repositoryNotProvided: {
+    id: 'PipelinesPage.repositoryNotProvided',
+    defaultMessage: 'Repository not provided',
+  },
+  iterationsUnavailable: {
+    id: 'PipelinesPage.iterationsUnavailable',
+    defaultMessage: 'Iterations are temporarily unavailable',
+  },
+  retry: {
+    id: 'PipelinesPage.retry',
+    defaultMessage: 'Retry',
+  },
+  liveStatusPending: {
+    id: 'PipelinesPage.liveStatusPending',
+    defaultMessage: 'Pending',
+  },
+  liveStatusPassed: {
+    id: 'PipelinesPage.liveStatusPassed',
+    defaultMessage: 'Passed',
+  },
+  liveStatusFailed: {
+    id: 'PipelinesPage.liveStatusFailed',
+    defaultMessage: 'Failed',
+  },
+  liveStatusNeedsHuman: {
+    id: 'PipelinesPage.liveStatusNeedsHuman',
+    defaultMessage: 'Needs human review',
+  },
+  liveStatusUnknown: {
+    id: 'PipelinesPage.liveStatusUnknown',
+    defaultMessage: 'Unknown',
   },
 });

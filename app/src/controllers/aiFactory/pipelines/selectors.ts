@@ -17,7 +17,29 @@
 import type { PipelinesSelectorsRootState, PipelinesState } from './types';
 
 export const pipelinesStateSelector = (state: PipelinesSelectorsRootState): PipelinesState =>
-  state.aiFactoryPipelines || { data: null, iterationsByPipeline: null, iterationDetails: null };
+  state.aiFactoryPipelines || {
+    data: null,
+    transport: 'mock',
+    catalogVersion: 0,
+    catalogRequestId: null,
+    catalogProjectKey: null,
+    iterationsByPipeline: null,
+    iterationsLoadingByPipeline: {},
+    iterationsErrorByPipeline: {},
+    iterationRequestIdByPipeline: {},
+    iterationDetails: null,
+    iterationDetailsError: false,
+    iterationDetailsUnavailable: false,
+    detailRequestId: null,
+    detailProjectKey: null,
+    detailPipelineId: null,
+    detailIterationId: null,
+    detailCatalogTransport: null,
+    detailCatalogVersion: 0,
+    detailCatalogRequestId: null,
+    detailTransport: null,
+    comparison: null,
+  };
 
 export const pipelinesLoadingSelector = (state: PipelinesSelectorsRootState): boolean =>
   Boolean(pipelinesStateSelector(state).isLoading);
@@ -26,7 +48,31 @@ export const pipelinesSelector = (state: PipelinesSelectorsRootState) =>
   pipelinesStateSelector(state).data;
 
 export const pipelineIterationsLoadingSelector = (state: PipelinesSelectorsRootState): boolean =>
-  Boolean(pipelinesStateSelector(state).iterationsLoading);
+  Object.values(pipelinesStateSelector(state).iterationsLoadingByPipeline).some(Boolean);
+
+export const pipelineIterationsLoadingByPipelineSelector = (state: PipelinesSelectorsRootState) =>
+  pipelinesStateSelector(state).iterationsLoadingByPipeline;
+
+export const pipelineIterationsErrorByPipelineSelector = (state: PipelinesSelectorsRootState) =>
+  pipelinesStateSelector(state).iterationsErrorByPipeline;
+
+export const pipelineCatalogTransportSelector = (state: PipelinesSelectorsRootState) =>
+  pipelinesStateSelector(state).transport;
+
+export const pipelineCatalogTransportFallbackSelector = (
+  state: PipelinesSelectorsRootState,
+): boolean => Boolean(pipelinesStateSelector(state).transportFallback);
+
+export const pipelineCatalogVersionSelector = (state: PipelinesSelectorsRootState): number =>
+  pipelinesStateSelector(state).catalogVersion;
+
+export const pipelineCatalogRequestIdSelector = (
+  state: PipelinesSelectorsRootState,
+): number | null => pipelinesStateSelector(state).catalogRequestId;
+
+export const pipelineCatalogProjectKeySelector = (
+  state: PipelinesSelectorsRootState,
+): string | null => pipelinesStateSelector(state).catalogProjectKey;
 
 export const pipelineIterationsByPipelineSelector = (state: PipelinesSelectorsRootState) =>
   pipelinesStateSelector(state).iterationsByPipeline;
@@ -37,3 +83,20 @@ export const pipelineIterationDetailsLoadingSelector = (
 
 export const pipelineIterationDetailsSelector = (state: PipelinesSelectorsRootState) =>
   pipelinesStateSelector(state).iterationDetails;
+
+export const pipelineIterationDetailsErrorSelector = (
+  state: PipelinesSelectorsRootState,
+): boolean => Boolean(pipelinesStateSelector(state).iterationDetailsError);
+
+export const pipelineIterationDetailsUnavailableSelector = (
+  state: PipelinesSelectorsRootState,
+): boolean => Boolean(pipelinesStateSelector(state).iterationDetailsUnavailable);
+
+export const pipelineComparisonSelector = (state: PipelinesSelectorsRootState) =>
+  pipelinesStateSelector(state).comparison;
+
+export const pipelineComparisonLoadingSelector = (state: PipelinesSelectorsRootState): boolean =>
+  Boolean(pipelinesStateSelector(state).comparisonLoading);
+
+export const pipelineComparisonErrorSelector = (state: PipelinesSelectorsRootState): boolean =>
+  Boolean(pipelinesStateSelector(state).comparisonError);

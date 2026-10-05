@@ -43,6 +43,7 @@ import StarIcon from 'common/img/star-inline.svg';
 import AgenticIcon from 'common/img/agentic-icon-inline.svg';
 import SauceLabsIcon from 'common/img/plugins/sauce-labs-gray-inline.svg';
 import { NameLink } from 'pages/inside/common/nameLink';
+import { AiFactoryBacklink } from 'pages/inside/aiFactory/backlinks';
 import { DurationBlock } from 'pages/inside/common/durationBlock';
 import { withTooltip } from 'components/main/tooltips/tooltip';
 import { TextTooltip } from 'components/main/tooltips/textTooltip';
@@ -205,6 +206,7 @@ export class ItemInfo extends Component {
         </div>
 
         <div className={cx('additional-info')}>
+          <AiFactoryBacklink host="testItem" testCase={value.tmsTestCase} />
           {value.retentionPolicy === RETENTION_POLICY.IMPORTANT && (
             <span className={cx('retention-policy')}>
               <div className={cx('star-icon')}>{Parser(StarIcon)}</div>

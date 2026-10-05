@@ -14,27 +14,41 @@
  * limitations under the License.
  */
 
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useIntl } from 'react-intl';
 import { Button, RefreshIcon } from '@reportportal/ui-kit';
 
 import { createClassnames } from 'common/utils';
+import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { SearchField } from 'components/fields/searchField';
-import { PROJECT_DASHBOARD_PAGE, urlOrganizationAndProjectSelector } from 'controllers/pages';
+import { isAiFactoryDemoResetAvailable } from 'controllers/aiFactory';
+import {
+  PROJECT_DASHBOARD_PAGE,
+  PROJECT_PIPELINE_COMPARISON_PAGE,
+  urlOrganizationAndProjectSelector,
+} from 'controllers/pages';
 import { projectNameSelector } from 'controllers/project';
 import { ProjectDetails } from 'pages/organization/constants';
 import {
   getPipelineIterationsAction,
   getPipelinesAction,
+  isReducedPipeline,
+  isReducedPipelineIteration,
+  pipelineCatalogTransportSelector,
   pipelineIterationsByPipelineSelector,
-  pipelineIterationsLoadingSelector,
+  pipelineIterationsErrorByPipelineSelector,
+  pipelineIterationsLoadingByPipelineSelector,
   pipelinesLoadingSelector,
   pipelinesSelector,
 } from 'controllers/aiFactory/pipelines';
+import { showModalAction } from 'controllers/modal';
+import { showErrorNotification, showSuccessNotification } from 'controllers/notification';
 import { SettingsLayout } from 'layouts/settingsLayout';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
 import { SpinningPreloader } from 'components/preloaders/spinningPreloader';
+import { POLLING_REQUEST_STARTED, usePolling } from 'pages/inside/aiFactory/common';
+import { IterationStatus, PipelineType } from 'types/aiFactory';
 
 import { PageHeaderWithBreadcrumbsAndActions } from '../../common/pageHeaderWithBreadcrumbsAndActions';
 import { PipelineGroup } from './pipelineGroup';
@@ -43,6 +57,7 @@ import { messages } from './messages';
 import styles from './pipelinesPage.scss';
 
 const cx = createClassnames(styles);
+const ITERATIONS_POLL_INTERVAL_MS = 5000;
 
 export const PipelinesPageContent = () => {
   const { formatMessage } = useIntl();
@@ -54,8 +69,27 @@ export const PipelinesPageContent = () => {
   const pipelines = useSelector(pipelinesSelector);
   const isLoading = useSelector(pipelinesLoadingSelector);
   const iterationsByPipeline = useSelector(pipelineIterationsByPipelineSelector);
-  const iterationsLoading = useSelector(pipelineIterationsLoadingSelector);
+  const iterationsLoadingByPipeline =
+    useSelector(pipelineIterationsLoadingByPipelineSelector) ?? {};
+  const iterationsErrorByPipeline = useSelector(pipelineIterationsErrorByPipelineSelector) ?? {};
+  const catalogTransport = useSelector(pipelineCatalogTransportSelector);
+  const transport = catalogTransport ?? 'mock';
   const [search, setSearch] = useState('');
+  const transportRef = useRef(catalogTransport);
+  transportRef.current = catalogTransport;
+  const isDemoResetAvailable = isAiFactoryDemoResetAvailable(catalogTransport);
+  const pipelineIds = pipelines?.map((pipeline) => pipeline.id) ?? [];
+  const hasRunningAutomationIteration = Boolean(
+    pipelines?.some(
+      (pipeline) =>
+        !isReducedPipeline(pipeline) &&
+        pipeline.type === PipelineType.AUTOMATION &&
+        iterationsByPipeline?.[pipeline.id]?.some(
+          (iteration) =>
+            !isReducedPipelineIteration(iteration) && iteration.status === IterationStatus.RUNNING,
+        ),
+    ),
+  );
 
   useEffect(() => {
     if (pipelines && pipelines.length > 0) {
@@ -63,6 +97,19 @@ export const PipelinesPageContent = () => {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pipelines]);
+
+  usePolling(
+    () => {
+      dispatch(getPipelineIterationsAction(pipelineIds));
+      return POLLING_REQUEST_STARTED;
+    },
+    ITERATIONS_POLL_INTERVAL_MS,
+    transport === 'mock' &&
+      hasRunningAutomationIteration &&
+      !isLoading &&
+      !Object.values(iterationsLoadingByPipeline).some(Boolean) &&
+      pipelineIds.length > 0,
+  );
 
   const breadcrumbDescriptors = [
     {
@@ -72,6 +119,59 @@ export const PipelinesPageContent = () => {
         dispatch({ type: PROJECT_DASHBOARD_PAGE, payload: { organizationSlug, projectSlug } }),
     },
   ];
+
+  const notifyResetError = () => {
+    dispatch(
+      showErrorNotification({
+        message: formatMessage(messages.resetDemoError),
+      }),
+    );
+  };
+
+  const resetDemo = async () => {
+    if (!isAiFactoryDemoResetAvailable(transportRef.current)) {
+      notifyResetError();
+      return;
+    }
+    try {
+      const { isAiFactoryMockRuntimeInstalled, resetMockDb } = await import(
+        /* webpackChunkName: "ai-factory-mocks" */ 'controllers/aiFactory/mocks'
+      );
+      if (
+        !isAiFactoryDemoResetAvailable(transportRef.current) ||
+        !isAiFactoryMockRuntimeInstalled() ||
+        !resetMockDb()
+      ) {
+        notifyResetError();
+        return;
+      }
+      setSearch('');
+      dispatch(getPipelinesAction());
+      dispatch(
+        showSuccessNotification({
+          message: formatMessage(messages.resetDemoSuccess),
+        }),
+      );
+    } catch {
+      notifyResetError();
+    }
+  };
+
+  const openResetDemoConfirmation = () => {
+    dispatch(
+      showModalAction({
+        id: 'confirmationModal',
+        data: {
+          title: formatMessage(messages.resetDemoTitle),
+          message: formatMessage(messages.resetDemoConfirmation),
+          confirmText: formatMessage(COMMON_LOCALE_KEYS.RESET),
+          cancelText: formatMessage(COMMON_LOCALE_KEYS.CANCEL),
+          dangerConfirm: true,
+          onConfirm: () => void resetDemo(),
+        },
+      }),
+    );
+  };
 
   const renderContent = () => {
     if (isLoading && !pipelines) {
@@ -99,8 +199,10 @@ export const PipelinesPageContent = () => {
               key={pipeline.id}
               pipeline={pipeline}
               iterations={filtered}
-              isLoading={iterationsLoading}
+              isLoading={Boolean(iterationsLoadingByPipeline[pipeline.id])}
+              hasError={Boolean(iterationsErrorByPipeline[pipeline.id])}
               isSearching={Boolean(search.trim())}
+              onRetry={() => dispatch(getPipelineIterationsAction([pipeline.id]))}
             />
           );
         })}
@@ -114,14 +216,41 @@ export const PipelinesPageContent = () => {
         <PageHeaderWithBreadcrumbsAndActions
           title={formatMessage(messages.pageTitle)}
           breadcrumbDescriptors={breadcrumbDescriptors}
-          actions={
-            <div className={cx('header-actions')}>
-              <SearchField
-                searchValue={search}
-                setSearchValue={setSearch}
-                onFilterChange={setSearch}
-                placeholder={formatMessage(messages.searchPlaceholder)}
-              />
+        />
+        <div className={cx('page-content')}>
+          <div className={cx('toolbar')} data-automation-id="pipelinesToolbar">
+            <SearchField
+              searchValue={search}
+              setSearchValue={setSearch}
+              onFilterChange={setSearch}
+              placeholder={formatMessage(messages.searchPlaceholder)}
+              className={cx('search')}
+              isAlwaysActive
+            />
+            <div className={cx('toolbar__actions')}>
+              <Button
+                variant="text"
+                data-automation-id="compareIterationsButton"
+                disabled={transport !== 'mock'}
+                onClick={() =>
+                  dispatch({
+                    type: PROJECT_PIPELINE_COMPARISON_PAGE,
+                    payload: { organizationSlug, projectSlug },
+                  })
+                }
+              >
+                {formatMessage(messages.compareIterations)}
+              </Button>
+              {isDemoResetAvailable && (
+                <Button
+                  variant="text"
+                  data-automation-id="resetAiFactoryDemoButton"
+                  disabled={isLoading}
+                  onClick={openResetDemoConfirmation}
+                >
+                  {formatMessage(messages.resetDemo)}
+                </Button>
+              )}
               <Button
                 variant="text"
                 data-automation-id="refreshPipelinesButton"
@@ -132,9 +261,9 @@ export const PipelinesPageContent = () => {
                 {formatMessage(messages.refreshPage)}
               </Button>
             </div>
-          }
-        />
-        <div className={cx('page-content')}>{renderContent()}</div>
+          </div>
+          {renderContent()}
+        </div>
       </ScrollWrapper>
     </SettingsLayout>
   );

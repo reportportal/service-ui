@@ -22,7 +22,11 @@ import { FormattedMessage } from 'react-intl';
 import track from 'react-tracking';
 import RefreshIcon from 'common/img/refresh-inline.svg';
 import { HISTORY_PAGE_EVENTS } from 'components/main/analytics/events';
-import { breadcrumbsSelector, restorePathAction } from 'controllers/testItem';
+import {
+  breadcrumbsSelector,
+  isRootLaunchParentSelector,
+  restorePathAction,
+} from 'controllers/testItem';
 import { isEmptyHistorySelector } from 'controllers/itemsHistory';
 import { Breadcrumbs, breadcrumbDescriptorShape } from 'components/main/breadcrumbs';
 import { GhostButton } from 'components/buttons/ghostButton';
@@ -38,6 +42,7 @@ const cx = classNames.bind(styles);
   (state) => ({
     breadcrumbs: breadcrumbsSelector(state),
     isEmptyHistory: isEmptyHistorySelector(state),
+    isLaunchRoot: isRootLaunchParentSelector(state),
     userRoles: userRolesSelector(state),
   }),
   {
@@ -57,6 +62,7 @@ export class HistoryActionPanel extends Component {
     hasErrors: PropTypes.bool,
     showBreadcrumbs: PropTypes.bool,
     isEmptyHistory: PropTypes.bool,
+    isLaunchRoot: PropTypes.bool,
     parentItem: PropTypes.object,
     userRoles: PropTypes.object,
     onRefresh: PropTypes.func,
@@ -69,6 +75,7 @@ export class HistoryActionPanel extends Component {
     buttons: [],
     hasErrors: false,
     isEmptyHistory: false,
+    isLaunchRoot: false,
     showBreadcrumbs: true,
     parentItem: null,
     onRefresh: () => {},
@@ -89,6 +96,7 @@ export class HistoryActionPanel extends Component {
       buttons,
       customBlock,
       isEmptyHistory,
+      isLaunchRoot,
       parentItem,
       userRoles,
     } = this.props;
@@ -112,7 +120,7 @@ export class HistoryActionPanel extends Component {
         )}
         {customBlock}
         <div className={cx('action-buttons')}>
-          {parentItem && <ParentInfo parentItem={parentItem} />}
+          {parentItem && <ParentInfo parentItem={parentItem} isLaunchRoot={isLaunchRoot} />}
           {canManageTestItems && (
             <div className={cx('action-button')}>
               <CompareWithFilterControl disabled={!showBreadcrumbs || isEmptyHistory} />

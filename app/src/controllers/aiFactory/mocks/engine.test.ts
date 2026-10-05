@@ -15,7 +15,7 @@
  */
 
 import { formatCost } from 'common/utils/aiFactoryFormatUtils';
-import { EvaluationState, IterationStatus, Lifecycle } from 'types/aiFactory';
+import { AutomationStatus, EvaluationState, IterationStatus, Lifecycle } from 'types/aiFactory';
 import { findCase, findIteration, findPipeline, resetMockDb } from './db';
 import { applyAutoReady, automateSkipReason, caseCost, deriveIterationStatus, readyCount, totalScore } from './engine';
 import { MockCaseRecord } from './types';
@@ -129,6 +129,23 @@ describe('automateSkipReason', () => {
 
   test('a Draft case cannot be automated', () => {
     expect(automateSkipReason(findCase('TC106'))).toBe('NOT_READY');
+  });
+
+  test('uses fix-running before automation-running and lifecycle reasons', () => {
+    const blocked = draftEvaluatedCase({
+      fixRoundRunning: { round: 1, startedAt: Date.now() },
+      automation: {
+        status: AutomationStatus.IN_PROGRESS,
+        iterationId: 201,
+        scenarioChangedAfterAutomation: false,
+      },
+    });
+
+    expect(automateSkipReason(blocked)).toBe('FIX_RUNNING');
+    blocked.fixRoundRunning = undefined;
+    expect(automateSkipReason(blocked)).toBe('AUTOMATION_IN_PROGRESS');
+    blocked.automation = undefined;
+    expect(automateSkipReason(blocked)).toBe('NOT_READY');
   });
 });
 

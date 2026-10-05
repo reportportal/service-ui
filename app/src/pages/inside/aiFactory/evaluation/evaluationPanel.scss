@@ -25,7 +25,6 @@
 
   &__total,
   &__criterion-heading,
-  &__meta,
   &__state {
     display: flex;
     align-items: center;
@@ -38,7 +37,39 @@
   }
 
   &__total {
+    align-items: baseline;
+  }
+
+  &__score {
+    display: flex;
+    align-items: baseline;
+    gap: 6px;
+
+    strong {
+      font-family: $FONT-ROBOTO-MEDIUM;
+      font-size: 28px;
+      line-height: 34px;
+    }
+
+    span {
+      color: var(--rp-ui-base-e-400);
+      font-size: 13px;
+    }
+  }
+
+  &__badge {
+    padding: 2px 6px;
+    border-radius: 2px;
+    background-color: var(--rp-ui-base-topaz);
+    color: var(--rp-ui-base-bg-000);
     font-family: $FONT-ROBOTO-MEDIUM;
+    font-size: 10px;
+    line-height: 16px;
+    text-transform: uppercase;
+
+    &--obsolete {
+      background-color: var(--rp-ui-base-e-300);
+    }
   }
 
   &__criteria {
@@ -56,45 +87,85 @@
     gap: 6px;
   }
 
-  &__reasons-toggle {
-    display: flex;
-    align-items: center;
-    align-self: flex-start;
-    gap: 4px;
+  &__criterion-heading {
+    width: 100%;
     padding: 0;
-    color: var(--rp-ui-base-topaz);
     border: 0;
     background: transparent;
-    font-family: inherit;
-    font-size: 12px;
-    line-height: 18px;
-    cursor: pointer;
+    color: inherit;
+    font: inherit;
+    text-align: left;
+
+    &--expandable {
+      cursor: pointer;
+
+      &:focus-visible {
+        outline: 2px solid var(--rp-ui-base-topaz);
+        outline-offset: 2px;
+      }
+    }
   }
 
-  &__reasons-icon {
-    width: 16px;
-    height: 16px;
+  &__criterion-name {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  &__criterion-icon {
+    width: 14px;
+    height: 14px;
+    flex-shrink: 0;
+    color: var(--rp-ui-base-e-300);
+    fill: currentColor;
     transform: rotate(-90deg);
+    transition: transform 0.15s ease;
+
+    :global(path) {
+      fill: currentColor;
+    }
 
     &.expanded {
       transform: rotate(0deg);
+    }
+
+    &.hidden {
+      visibility: hidden;
     }
   }
 
   &__reasons {
     margin: 0;
-    padding-left: 20px;
-    color: var(--rp-ui-base-e-400);
+    margin-top: -2px;
+    padding: 8px 12px 8px 28px;
+    border-bottom: 1px solid var(--rp-ui-base-e-100);
+    color: var(--rp-ui-base-almost-black);
     font-size: 12px;
     line-height: 18px;
   }
 
   &__meta {
+    display: flex;
+    align-items: baseline;
     flex-wrap: wrap;
     gap: 4px;
     color: var(--rp-ui-base-e-400);
     font-size: 12px;
     line-height: 18px;
+  }
+
+  &__time {
+    display: contents;
+
+    > :global(div) {
+      display: inline;
+      min-height: 0 !important;
+      color: inherit !important;
+      font-family: inherit !important;
+      font-size: inherit !important;
+      line-height: inherit !important;
+      vertical-align: baseline;
+    }
   }
 
   &__obsolete {

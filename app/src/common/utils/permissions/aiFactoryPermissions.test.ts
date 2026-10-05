@@ -36,8 +36,8 @@ describe('AI Factory permissions (F15)', () => {
     expect(canManagePipelineSettings(userRoles)).toBe(true);
   });
 
-  test('org MANAGER can do everything ("Project Manager and above", Q-BE-10)', () => {
-    const userRoles = roles('USER', 'MANAGER', 'EDITOR');
+  test('org MANAGER can do everything even with project VIEWER (Q-BE-10)', () => {
+    const userRoles = roles('USER', 'MANAGER', 'VIEWER');
 
     expect(canReviewAiTestCases(userRoles)).toBe(true);
     expect(canAutomateTestCases(userRoles)).toBe(true);

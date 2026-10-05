@@ -59,7 +59,7 @@ describe('GenerationCost', () => {
     expect(
       wrapper.find('[data-automation-id="generation-cost-total"]').find(CostLabel).props(),
     ).toEqual({ amount: 0.54 });
-    expect(content.text()).toContain('$1.60 ÷ 5 cases = $0.32');
+    expect(content.text()).toContain('Pipeline estimate: $1.60 ÷ 5 cases = $0.32');
     expect(content.text()).toContain('Fix round 1');
     expect(content.text()).toContain('Input 14.0k · Cache read 902.0k');
     expect(content.text()).toContain('Model: default');

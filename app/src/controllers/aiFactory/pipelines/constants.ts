@@ -22,3 +22,7 @@ export const PIPELINE_ITERATIONS_NAMESPACE = 'aiFactoryPipelineIterations' as co
 
 export const GET_PIPELINE_ITERATION_DETAILS = 'getAiFactoryPipelineIterationDetails' as const;
 export const PIPELINE_ITERATION_DETAILS_NAMESPACE = 'aiFactoryPipelineIterationDetails' as const;
+
+export const GET_PIPELINE_COMPARISON = 'getAiFactoryPipelineComparison' as const;
+export const CLEAR_PIPELINE_COMPARISON = 'clearAiFactoryPipelineComparison' as const;
+export const PIPELINE_COMPARISON_NAMESPACE = 'aiFactoryPipelineComparison' as const;

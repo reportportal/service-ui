@@ -16,17 +16,18 @@
 
 import { useState } from 'react';
 import { useIntl } from 'react-intl';
-import { ArrowDownIcon, Button, InfoIcon } from '@reportportal/ui-kit';
+import { Button, ChevronDownDropdownIcon, InfoIcon } from '@reportportal/ui-kit';
 
 import { createClassnames } from 'common/utils';
 import { AbsRelTime } from 'components/main/absRelTime';
 import { CollapsibleSectionWithHeaderControl } from 'components/collapsibleSection';
-import { ScoreChip } from 'pages/inside/aiFactory/common';
+import { ScoreBar } from 'pages/inside/aiFactory/common';
 import type { TestCaseAiLoadState } from 'pages/inside/aiFactory/lifecycle';
 import { EvaluationState } from 'types/aiFactory';
 import type { GradeCriterionRS } from 'types/aiFactory';
 
-import { CriterionScore, renderEvaluationContent } from './evaluationShared';
+import { CRITERION_MESSAGE } from './criterionMessages';
+import { renderEvaluationContent } from './evaluationShared';
 import { normalizeCriteria } from './evaluationUtils';
 import { messages } from './messages';
 import { useRubricModal } from './useRubricModal';
@@ -45,32 +46,46 @@ const CriterionRow = ({ criterion, isExpanded, onToggle }: CriterionRowProps) =>
   const { formatMessage } = useIntl();
   const reasons = criterion.failureReasons.filter((reason) => typeof reason === 'string' && reason);
   const canExpand = criterion.score < criterion.maxScore && reasons.length > 0;
+  const headingContent = (
+    <>
+      <span className={cx('evaluation__criterion-name')}>
+        <ChevronDownDropdownIcon
+          className={cx('evaluation__criterion-icon', {
+            expanded: isExpanded,
+            hidden: !canExpand,
+          })}
+          aria-hidden="true"
+        />
+        {formatMessage(CRITERION_MESSAGE[criterion.key])}
+      </span>
+      <span>{`${criterion.score} / ${criterion.maxScore}`}</span>
+    </>
+  );
 
   return (
     <li className={cx('evaluation__criterion')}>
-      <CriterionScore
-        criterion={criterion}
-        headingClassName={cx('evaluation__criterion-heading')}
-      />
-      {canExpand && (
-        <>
-          <button
-            type="button"
-            className={cx('evaluation__reasons-toggle')}
-            onClick={onToggle}
-            aria-expanded={isExpanded}
-          >
-            <ArrowDownIcon className={cx('evaluation__reasons-icon', { expanded: isExpanded })} />
-            {formatMessage(messages.reasons, { count: reasons.length })}
-          </button>
-          {isExpanded && (
-            <ul className={cx('evaluation__reasons')}>
-              {reasons.map((reason) => (
-                <li key={reason}>{reason}</li>
-              ))}
-            </ul>
+      {canExpand ? (
+        <button
+          type="button"
+          className={cx(
+            'evaluation__criterion-heading',
+            'evaluation__criterion-heading--expandable',
           )}
-        </>
+          onClick={onToggle}
+          aria-expanded={isExpanded}
+        >
+          {headingContent}
+        </button>
+      ) : (
+        <div className={cx('evaluation__criterion-heading')}>{headingContent}</div>
+      )}
+      <ScoreBar value={criterion.score} max={criterion.maxScore} />
+      {isExpanded && (
+        <ul className={cx('evaluation__reasons')}>
+          {reasons.map((reason) => (
+            <li key={reason}>{reason}</li>
+          ))}
+        </ul>
       )}
     </li>
   );
@@ -103,22 +118,22 @@ export const EvaluationPanel = ({ aiDetailsState }: EvaluationPanelProps) => {
   const evaluationContent = evaluation ? (
     <div className={cx('evaluation')} data-automation-id="aiEvaluationPanel">
       <div className={cx('evaluation__total')}>
-        <span>{formatMessage(messages.totalScore)}</span>
-        <ScoreChip
-          score={evaluation.totalScore}
-          obsolete={evaluation.state === EvaluationState.OBSOLETE}
-        />
+        <div className={cx('evaluation__score')}>
+          <strong>{evaluation.totalScore}</strong>
+          <span>/ 100</span>
+        </div>
+        <span
+          className={cx('evaluation__badge', {
+            'evaluation__badge--obsolete': evaluation.state === EvaluationState.OBSOLETE,
+          })}
+        >
+          {formatMessage(
+            evaluation.state === EvaluationState.OBSOLETE
+              ? messages.obsoleteBadge
+              : messages.evaluated,
+          )}
+        </span>
       </div>
-      <ul className={cx('evaluation__criteria')}>
-        {criteria.map((criterion) => (
-          <CriterionRow
-            key={criterion.key}
-            criterion={criterion}
-            isExpanded={expandedCriteria.has(criterion.key)}
-            onToggle={() => toggleCriterion(criterion.key)}
-          />
-        ))}
-      </ul>
       <div className={cx('evaluation__meta')}>
         <span>{formatMessage(messages.evaluated)}</span>
         <span aria-hidden="true">·</span>
@@ -132,8 +147,20 @@ export const EvaluationPanel = ({ aiDetailsState }: EvaluationPanelProps) => {
           </>
         )}
         <span aria-hidden="true">·</span>
-        <AbsRelTime startTime={evaluation.evaluatedAt} />
+        <span className={cx('evaluation__time')}>
+          <AbsRelTime startTime={evaluation.evaluatedAt} />
+        </span>
       </div>
+      <ul className={cx('evaluation__criteria')}>
+        {criteria.map((criterion) => (
+          <CriterionRow
+            key={criterion.key}
+            criterion={criterion}
+            isExpanded={expandedCriteria.has(criterion.key)}
+            onToggle={() => toggleCriterion(criterion.key)}
+          />
+        ))}
+      </ul>
       {evaluation.state === EvaluationState.OBSOLETE && (
         <p className={cx('evaluation__obsolete')}>{formatMessage(messages.obsolete)}</p>
       )}

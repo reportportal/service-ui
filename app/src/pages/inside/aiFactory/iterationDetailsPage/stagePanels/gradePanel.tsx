@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-import { Fragment, useState } from 'react';
+import { Fragment, useId, useState } from 'react';
 import { MessageDescriptor, useIntl } from 'react-intl';
-import { ArrowDownIcon } from '@reportportal/ui-kit';
+import { ChevronDownDropdownIcon } from '@reportportal/ui-kit';
 
 import { createClassnames } from 'common/utils';
 import { ScoreBar } from 'pages/inside/aiFactory/common';
@@ -37,6 +37,17 @@ const CRITERION_MESSAGE: Record<AiCriterionKey, MessageDescriptor> = {
   [CriterionKey.COHERENCE]: messages.criterionCoherence,
 };
 
+const CRITERION_SHORT_LABEL: Record<AiCriterionKey, string> = {
+  [CriterionKey.ATOMICITY]: 'A',
+  [CriterionKey.CLEAR_STEPS]: 'CS',
+  [CriterionKey.EXPECTED_RESULTS]: 'CER',
+  [CriterionKey.NO_INVENTED_LOGIC]: 'NIL',
+  [CriterionKey.NO_INVENTED_UI]: 'NIU',
+  [CriterionKey.COHERENCE]: 'C',
+};
+
+const GRADE_DETAIL_COL_SPAN = Object.values(CriterionKey).length + 2;
+
 export interface GradePanelProps {
   stage: StageRS;
 }
@@ -44,6 +55,7 @@ export interface GradePanelProps {
 export const GradePanel = ({ stage }: GradePanelProps) => {
   const { formatMessage } = useIntl();
   const [expanded, setExpanded] = useState<Set<string>>(new Set());
+  const panelId = useId();
 
   if (!stage.grade) {
     return null;
@@ -63,59 +75,98 @@ export const GradePanel = ({ stage }: GradePanelProps) => {
 
   return (
     <div className={cx('panel')} data-automation-id="gradePanel">
-      <p className={cx('note')}>{formatMessage(messages.gradeSuiteScore, { score: stage.grade.suiteScore })}</p>
       {stage.grade.error && <p className={cx('note')}>{stage.grade.error}</p>}
-      <table className={cx('table')}>
+      <table className={cx('table', 'grade-table')}>
         <thead>
           <tr>
-            <th />
-            <th>{formatMessage(messages.gradeColumnCase)}</th>
-            <th>{formatMessage(messages.gradeColumnScore)}</th>
+            <th scope="col">{formatMessage(messages.gradeColumnCase)}</th>
+            {Object.values(CriterionKey).map((key) => {
+              const maxScore = stage.grade?.cases[0]?.criteria.find(
+                (criterion) => criterion.key === key,
+              )?.maxScore;
+              return (
+                <th
+                  key={key}
+                  scope="col"
+                  className={cx('scoreCell')}
+                  title={formatMessage(CRITERION_MESSAGE[key])}
+                >
+                  {`${CRITERION_SHORT_LABEL[key]} /${maxScore ?? '—'}`}
+                </th>
+              );
+            })}
+            <th scope="col" className={cx('scoreCell')}>
+              {formatMessage(messages.gradeColumnScore)} /100
+            </th>
           </tr>
         </thead>
         <tbody>
-          {stage.grade.cases.map((c) => {
+          {stage.grade.cases.map((c, index) => {
             const rowKey = String(c.testCaseId ?? c.name);
             const isExpanded = expanded.has(rowKey);
+            const detailsId = `${panelId}-case-${index}`;
             return (
               <Fragment key={rowKey}>
                 <tr>
-                  <td className={cx('expandRow')} onClick={() => toggle(rowKey)} data-automation-id={`gradeRowToggle-${rowKey}`}>
-                    <ArrowDownIcon style={{ transform: isExpanded ? 'rotate(180deg)' : undefined }} />
-                  </td>
                   <td>
-                    <CaseLink testCaseId={c.testCaseId} name={c.name} />
+                    <div className={cx('caseCell')}>
+                      <button
+                        type="button"
+                        className={cx('expandRow')}
+                        aria-label={formatMessage(messages.gradeCaseDetails, { name: c.name })}
+                        aria-expanded={isExpanded}
+                        aria-controls={detailsId}
+                        onClick={() => toggle(rowKey)}
+                        data-automation-id={`gradeRowToggle-${rowKey}`}
+                      >
+                        <ChevronDownDropdownIcon
+                          aria-hidden="true"
+                          className={cx('expandRow__icon', {
+                            'expandRow__icon--expanded': isExpanded,
+                          })}
+                        />
+                      </button>
+                      <CaseLink testCaseId={c.testCaseId} name={c.name} />
+                    </div>
                   </td>
-                  <td>{c.totalScore}</td>
+                  {Object.values(CriterionKey).map((key) => (
+                    <td key={key} className={cx('scoreCell')}>
+                      {c.criteria.find((criterion) => criterion.key === key)?.score ?? '—'}
+                    </td>
+                  ))}
+                  <td className={cx('scoreCell')}><strong>{c.totalScore}</strong></td>
                 </tr>
-                {isExpanded && (
-                  <tr>
-                    <td />
-                    <td colSpan={2}>
-                      <div className={cx('criteria')}>
-                        {c.criteria.map((criterion) => (
-                          <div key={criterion.key} className={cx('criterionRow')}>
-                            <span>{formatMessage(CRITERION_MESSAGE[criterion.key])}</span>
-                            <span>{`${criterion.score}/${criterion.maxScore}`}</span>
-                            <ScoreBar value={criterion.score} max={criterion.maxScore} />
-                            {criterion.score < criterion.maxScore && criterion.failureReasons.length > 0 && (
+                <tr
+                  id={detailsId}
+                  hidden={!isExpanded}
+                  data-automation-id={`gradeRowDetails-${rowKey}`}
+                >
+                  <td colSpan={GRADE_DETAIL_COL_SPAN}>
+                    <div className={cx('criteria')}>
+                      {c.criteria.map((criterion) => (
+                        <div key={criterion.key} className={cx('criterionRow')}>
+                          <span>{formatMessage(CRITERION_MESSAGE[criterion.key])}</span>
+                          <span>{`${criterion.score}/${criterion.maxScore}`}</span>
+                          <ScoreBar value={criterion.score} max={criterion.maxScore} />
+                          {criterion.score < criterion.maxScore &&
+                            criterion.failureReasons.length > 0 && (
                               <ul className={cx('failureReasons')}>
                                 {criterion.failureReasons.map((reason) => (
                                   <li key={reason}>{reason}</li>
                                 ))}
                               </ul>
                             )}
-                          </div>
-                        ))}
-                      </div>
-                    </td>
-                  </tr>
-                )}
+                        </div>
+                      ))}
+                    </div>
+                  </td>
+                </tr>
               </Fragment>
             );
           })}
         </tbody>
       </table>
+      <p className={cx('note')}>{formatMessage(messages.gradeLegend)}</p>
     </div>
   );
 };

@@ -56,7 +56,7 @@ export const CreatePanel = ({ stage }: CreatePanelProps) => {
 
   return (
     <>
-      <table className={cx('table')} data-automation-id="createPanelTable">
+      <table className={cx('table', 'create-table')} data-automation-id="createPanelTable">
         <thead>
           <tr>
             <th>{formatMessage(messages.createColumnName)}</th>

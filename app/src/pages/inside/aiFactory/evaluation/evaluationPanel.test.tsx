@@ -18,7 +18,6 @@ import type { ReactElement } from 'react';
 import { shallow, type ShallowWrapper } from 'enzyme';
 
 import { CollapsibleSectionWithHeaderControl } from 'components/collapsibleSection';
-import { ScoreChip } from 'pages/inside/aiFactory/common';
 import type { TestCaseAiLoadState } from 'pages/inside/aiFactory/lifecycle';
 import { CriterionKey, EvaluationState } from 'types/aiFactory';
 
@@ -30,9 +29,9 @@ import {
 import { useRubricModal } from './useRubricModal';
 
 jest.mock('@reportportal/ui-kit', () => ({
-  ArrowDownIcon: 'ArrowDownIcon',
   BubblesLoader: 'BubblesLoader',
   Button: 'Button',
+  ChevronDownDropdownIcon: 'ChevronDownDropdownIcon',
   InfoIcon: 'InfoIcon',
 }));
 jest.mock('react-intl', () => ({
@@ -108,7 +107,7 @@ describe('EvaluationPanel', () => {
     expect(wrapper.find(CollapsibleSectionWithHeaderControl).prop('isInitiallyExpanded')).toBe(
       true,
     );
-    expect(wrapper.find(ScoreChip).props()).toEqual({ score: 81, obsolete: false });
+    expect(content.text()).toContain('81/ 100Evaluated');
     expect(content.text()).toContain('Iteration #1');
 
     const criterionProps = wrapper.find('CriterionRow').props();
@@ -141,7 +140,7 @@ describe('EvaluationPanel', () => {
     const wrapper = shallow(<EvaluationPanel aiDetailsState={aiDetailsState} />);
     const content = renderContent(wrapper);
 
-    expect(wrapper.find(ScoreChip).prop('obsolete')).toBe(true);
+    expect(content.text()).toContain('Obsolete');
     expect(content.text()).toContain('Obsolete — scenario changed after evaluation');
     expect(content.text()).not.toContain('PASS');
     expect(content.text()).not.toContain('FAIL');

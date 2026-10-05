@@ -14,15 +14,19 @@
  * limitations under the License.
  */
 
-import { useMemo, useState } from 'react';
+import { useId, useMemo, useState } from 'react';
+import parse from 'html-react-parser';
+import { useDispatch } from 'react-redux';
 import { useIntl } from 'react-intl';
 import { BubblesLoader, Button, DeleteIcon, Modal, Tooltip } from '@reportportal/ui-kit';
 
+import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import CommentIcon from 'common/img/comment-inline.svg';
 import { createClassnames } from 'common/utils';
 import { fromNowFormat } from 'common/utils/timeDateUtils';
+import { showModalAction } from 'controllers/modal';
 import { LifecycleBadge } from 'pages/inside/aiFactory/common';
-import { CommentState, CommentTargetType, FixRoundStatus } from 'types/aiFactory';
+import { CommentState, CommentTargetType, FixRoundStatus, Lifecycle } from 'types/aiFactory';
 import type {
   AiCommentState,
   ReviewCommentRS,
@@ -62,20 +66,33 @@ interface ReviewTargetProps {
   target: ReviewCommentTarget;
   reviewState: ReviewCommentsLoadState;
   isReadOnly?: boolean;
+  isInitiallyOpen?: boolean;
 }
 
-export const ReviewTarget = ({ target, reviewState, isReadOnly = false }: ReviewTargetProps) => {
+export const ReviewTarget = ({
+  target,
+  reviewState,
+  isReadOnly = false,
+  isInitiallyOpen = false,
+}: ReviewTargetProps) => {
   const { formatMessage } = useIntl();
-  const [isOpen, setIsOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(isInitiallyOpen);
   const [text, setText] = useState('');
   const [mutationError, setMutationError] = useState(false);
+  const uniqueId = useId();
   const comments = useMemo(
     () => reviewState.comments.filter((comment) => matchesTarget(comment, target)),
     [reviewState.comments, target],
   );
   const hasPending = comments.some((comment) => comment.state === CommentState.PENDING);
+  const targetId = `${target.type.toLowerCase()}-${target.stepId ?? 'case'}-${uniqueId}`;
+  const triggerId = `review-comment-trigger-${targetId}`;
+  const threadId = `review-comment-thread-${targetId}`;
+  const composerId = `review-comment-${targetId}`;
 
   const submitComment = async () => {
+    if (isReadOnly) return;
+
     const trimmedText = text.trim();
     if (!trimmedText) return;
 
@@ -89,6 +106,8 @@ export const ReviewTarget = ({ target, reviewState, isReadOnly = false }: Review
   };
 
   const deleteComment = async (commentId: number) => {
+    if (isReadOnly) return;
+
     setMutationError(false);
     try {
       await reviewState.deleteComment(commentId);
@@ -104,17 +123,25 @@ export const ReviewTarget = ({ target, reviewState, isReadOnly = false }: Review
         className={cx('review-target__trigger', {
           'review-target__trigger--pending': hasPending,
         })}
+        id={triggerId}
         aria-expanded={isOpen}
+        aria-controls={threadId}
         aria-label={formatMessage(messages.commentCount, { count: comments.length })}
         data-automation-id={`review-comment-toggle-${target.type}-${target.stepId ?? 'case'}`}
         disabled={reviewState.isLoading}
         onClick={() => setIsOpen((open) => !open)}
       >
-        <img src={CommentIcon} alt="" aria-hidden="true" />
+        <span className={cx('review-target__trigger-icon')} aria-hidden="true">
+          {parse(CommentIcon)}
+        </span>
         <span>{comments.length}</span>
       </button>
       {isOpen && (
-        <div className={cx('review-target__thread')}>
+        <section
+          id={threadId}
+          className={cx('review-target__thread')}
+          aria-labelledby={triggerId}
+        >
           {comments.map((comment) => (
             <article key={comment.id} className={cx('review-target__comment')}>
               <div className={cx('review-target__comment-header')}>
@@ -137,13 +164,15 @@ export const ReviewTarget = ({ target, reviewState, isReadOnly = false }: Review
               {comment.reason && <p className={cx('review-target__reason')}>{comment.reason}</p>}
             </article>
           ))}
+          {!comments.length && (
+            <p className={cx('review-target__empty')}>{formatMessage(messages.noCommentsYet)}</p>
+          )}
           {!isReadOnly && (
             <div className={cx('review-target__composer')}>
-              <label htmlFor={`review-comment-${target.type}-${target.stepId ?? 'case'}`}>
-                {formatMessage(messages.addCommentLabel)}
-              </label>
+              <label htmlFor={composerId}>{formatMessage(messages.addCommentLabel)}</label>
               <textarea
-                id={`review-comment-${target.type}-${target.stepId ?? 'case'}`}
+                id={composerId}
+                rows={2}
                 value={text}
                 maxLength={1000}
                 placeholder={formatMessage(messages.placeholder)}
@@ -162,7 +191,7 @@ export const ReviewTarget = ({ target, reviewState, isReadOnly = false }: Review
             </div>
           )}
           {mutationError && <div role="alert">{formatMessage(messages.mutationError)}</div>}
-        </div>
+        </section>
       )}
     </div>
   );
@@ -229,6 +258,7 @@ export const ReviewStrip = ({
   lastAgentChange,
 }: ReviewStripProps) => {
   const { formatMessage } = useIntl();
+  const dispatch = useDispatch();
   const [mutationError, setMutationError] = useState(false);
   const [isChangesVisible, setIsChangesVisible] = useState(false);
   const pendingCount = reviewState.comments.filter(
@@ -243,9 +273,7 @@ export const ReviewStrip = ({
     pushHint = formatMessage(messages.addAtLeastOne);
   }
 
-  const discard = async () => {
-    if (!window.confirm(formatMessage(messages.discardConfirmation))) return;
-
+  const performDiscard = async () => {
     setMutationError(false);
     try {
       await reviewState.discardPending();
@@ -254,11 +282,31 @@ export const ReviewStrip = ({
     }
   };
 
+  const discard = () => {
+    if (isReadOnly) return;
+
+    dispatch(
+      showModalAction({
+        id: 'confirmationModal',
+        data: {
+          title: formatMessage(messages.discard),
+          message: formatMessage(messages.discardConfirmation),
+          confirmText: formatMessage(COMMON_LOCALE_KEYS.DISCARD),
+          cancelText: formatMessage(COMMON_LOCALE_KEYS.CANCEL),
+          dangerConfirm: true,
+          onConfirm: () => void performDiscard(),
+        },
+      }),
+    );
+  };
+
   const isRunning = fixRoundState.current?.status === FixRoundStatus.RUNNING;
   const hasFailed = fixRoundState.current?.status === FixRoundStatus.FAILED && pendingCount > 0;
   const canPush = pendingCount > 0 && !isReadOnly && !fixRoundState.isStarting;
 
   const push = async () => {
+    if (isReadOnly) return;
+
     setMutationError(false);
     await fixRoundState.start();
   };
@@ -267,12 +315,22 @@ export const ReviewStrip = ({
     <section className={cx('review-strip')} data-automation-id="ai-review-strip">
       <div className={cx('review-strip__summary')}>
         <LifecycleBadge lifecycle={lifecycle} />
-        <strong>{formatMessage(messages.reviewComments)}</strong>
-        <span>{formatMessage(messages.notSentCount, { count: pendingCount })}</span>
+        <strong>
+          {formatMessage(
+            lifecycle === Lifecycle.DRAFT ? messages.aiReview : messages.reviewComments,
+          )}
+        </strong>
+        <span>
+          {lifecycle === Lifecycle.DRAFT && `${formatMessage(messages.reviewComments)} · `}
+          {formatMessage(messages.notSentCount, { count: pendingCount })}
+        </span>
         {reviewState.isLoading && (
-          <output aria-label={formatMessage(messages.loading)}>
+          <span className={cx('review-strip__loading')}>
             <BubblesLoader />
-          </output>
+            <output className={cx('visually-hidden')} aria-live="polite" aria-atomic="true">
+              {formatMessage(messages.loading)}
+            </output>
+          </span>
         )}
       </div>
       <div className={cx('review-strip__actions')}>
@@ -301,31 +359,41 @@ export const ReviewStrip = ({
         </Tooltip>
       </div>
       {isRunning && (
-        <output className={cx('review-strip__status')}>
+        <div className={cx('review-strip__status')}>
           <BubblesLoader />
-          <strong>{formatMessage(messages.fixing, { round: fixRoundState.current?.round })}</strong>
-        </output>
+          <output aria-live="polite" aria-atomic="true">
+            <strong>
+              {formatMessage(messages.fixing, { round: fixRoundState.current?.round })}
+            </strong>
+          </output>
+        </div>
       )}
       {hasFailed && (
-        <div className={cx('review-strip__status', 'review-strip__status--failed')} role="alert">
-          <span>{formatMessage(messages.failedActions)}</span>
-          <Button
-            variant="text"
-            adjustWidthOn="content"
-            disabled={!canPush}
-            data-automation-id="push-review-comments-again"
-            onClick={() => void push()}
-          >
-            {formatMessage(messages.pushAgain)}
-          </Button>
-          <Button
-            variant="text-danger"
-            adjustWidthOn="content"
-            disabled={reviewState.isMutating}
-            onClick={() => void discard()}
-          >
-            {formatMessage(messages.discard)}
-          </Button>
+        <div className={cx('review-strip__status', 'review-strip__status--failed')}>
+          <output aria-live="assertive" aria-atomic="true">
+            {formatMessage(messages.failedActions)}
+          </output>
+          {!isReadOnly && (
+            <>
+              <Button
+                variant="text"
+                adjustWidthOn="content"
+                disabled={!canPush}
+                data-automation-id="push-review-comments-again"
+                onClick={() => void push()}
+              >
+                {formatMessage(messages.pushAgain)}
+              </Button>
+              <Button
+                variant="text-danger"
+                adjustWidthOn="content"
+                disabled={reviewState.isMutating}
+                onClick={() => void discard()}
+              >
+                {formatMessage(messages.discard)}
+              </Button>
+            </>
+          )}
         </div>
       )}
       {lastAgentChange && !isRunning && (

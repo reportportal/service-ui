@@ -45,6 +45,24 @@ describe('test case successful load revision', () => {
     expect(secondSuccess.testCases.successfulLoadRevision).toBe(2);
   });
 
+  test('increments settled revision on both successful set and clear', () => {
+    const initialState = testCaseReducer(undefined, { type: '@@INIT' });
+    const firstSuccess = testCaseReducer(
+      initialState,
+      setTestCasesAction({ content: [], page }),
+    );
+    const cleared = testCaseReducer(firstSuccess, clearTestCasesAction());
+    const secondSuccess = testCaseReducer(
+      cleared,
+      setTestCasesAction({ content: [], page }),
+    );
+
+    expect(initialState.testCases.settledRevision).toBe(0);
+    expect(firstSuccess.testCases.settledRevision).toBe(1);
+    expect(cleared.testCases.settledRevision).toBe(2);
+    expect(secondSuccess.testCases.settledRevision).toBe(3);
+  });
+
   test('clears stale list and page without changing the successful revision', () => {
     const staleState = {
       ...testCaseReducer(undefined, { type: '@@INIT' }),
@@ -53,6 +71,7 @@ describe('test case successful load revision', () => {
         list: [{ id: 17 }],
         page,
         successfulLoadRevision: 4,
+        settledRevision: 4,
       },
     } as ReturnType<typeof testCaseReducer>;
 
@@ -63,6 +82,7 @@ describe('test case successful load revision', () => {
       list: [],
       page: null,
       successfulLoadRevision: 4,
+      settledRevision: 5,
     });
   });
 });

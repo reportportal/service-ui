@@ -36,6 +36,8 @@ export interface TestCaseState {
     list?: TestCase[];
     page: Page | null;
     successfulLoadRevision?: number;
+    /** Increments on SET and CLEAR — use for query-staleness, not review-queue refresh. */
+    settledRevision?: number;
   };
   details?: {
     data?: ExtendedTestCase;

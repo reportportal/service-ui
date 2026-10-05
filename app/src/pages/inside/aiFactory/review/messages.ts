@@ -21,6 +21,10 @@ export const messages = defineMessages({
     id: 'AiReview.reviewComments',
     defaultMessage: 'Review comments',
   },
+  aiReview: {
+    id: 'AiReview.aiReview',
+    defaultMessage: 'AI review',
+  },
   notSentCount: {
     id: 'AiReview.notSentCount',
     defaultMessage: '{count} not sent',
@@ -59,7 +63,11 @@ export const messages = defineMessages({
   },
   placeholder: {
     id: 'AiReview.placeholder',
-    defaultMessage: 'Describe what the agent should change',
+    defaultMessage: 'What should the agent change here?',
+  },
+  noCommentsYet: {
+    id: 'AiReview.noCommentsYet',
+    defaultMessage: 'No review comments yet. Tell the agent what to change here.',
   },
   add: {
     id: 'AiReview.add',

@@ -52,6 +52,7 @@ export {
   namespaceSelector,
   parentItemSelector,
   parentItemsSelector,
+  isRootLaunchParentSelector,
   createParentItemsSelector,
   breadcrumbsSelector,
   nameLinkSelector,

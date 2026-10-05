@@ -28,7 +28,7 @@ export interface KpiTileProps {
 
 export const KpiTile = ({ label, value }: KpiTileProps) => (
   <div className={cx('tile')} data-automation-id="kpiTile">
-    <span className={cx('tile__label')}>{label}</span>
     <span className={cx('tile__value')}>{value}</span>
+    <span className={cx('tile__label')}>{label}</span>
   </div>
 );

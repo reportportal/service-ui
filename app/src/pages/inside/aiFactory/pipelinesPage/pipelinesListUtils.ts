@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { IterationSummaryRS } from 'types/aiFactory';
+import { isReducedPipelineIteration, PipelineIterationItem } from 'controllers/aiFactory/pipelines';
 
 /**
  * Matches a search term against a requirement/pipeline name/iteration number, the same fields
@@ -23,7 +23,7 @@ import { IterationSummaryRS } from 'types/aiFactory';
  * once and filtering in memory reproduces the same result without a request per keystroke.
  */
 export const matchesSearch = (
-  iteration: IterationSummaryRS,
+  iteration: PipelineIterationItem,
   pipelineName: string,
   search: string,
 ): boolean => {
@@ -31,13 +31,10 @@ export const matchesSearch = (
     return true;
   }
   const term = search.trim().toLowerCase();
-  const haystack = [
-    pipelineName,
-    `#${iteration.number}`,
-    iteration.requirement?.specId,
-    iteration.requirement?.title,
-    iteration.requirement?.jiraKey,
-  ]
+  const reducedFields = isReducedPipelineIteration(iteration)
+    ? [iteration.trigger, ...iteration.stages.map((stage) => stage.label)]
+    : [iteration.requirement?.specId, iteration.requirement?.title, iteration.requirement?.jiraKey];
+  const haystack = [pipelineName, `#${iteration.number}`, ...reducedFields]
     .filter(Boolean)
     .join(' ')
     .toLowerCase();

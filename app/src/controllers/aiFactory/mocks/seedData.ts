@@ -25,6 +25,7 @@
 import { TestCasePriority } from 'types/testCase';
 import {
   AutomationStatus,
+  MergeRequestState,
   CommentTargetType,
   CriterionKey,
   EvaluationState,
@@ -48,6 +49,10 @@ export const PIPELINES: MockPipelineSeed[] = [
     name: 'Test case generation',
     repository: 'EPM-RPP/rp-tests',
     settings: { autoReady: true, threshold: 90, editable: true },
+    rerunOptions: {
+      models: ['auto (default)', 'model-A', 'model-B'],
+      environments: ['beta5', 'qa', 'dev5'],
+    },
   },
   {
     id: 2,
@@ -67,8 +72,18 @@ const CRITERIA_MAX: Record<CriterionKey, number> = {
 };
 const CRITERIA_ORDER = Object.keys(CRITERIA_MAX) as CriterionKey[];
 
+const buildFailureReasons = (
+  score: number,
+  maxScore: number,
+  reason?: string | string[] | null,
+): string[] => {
+  if (score >= maxScore) return [];
+  if (Array.isArray(reason)) return reason;
+  return [reason || 'Not observable from the requirement.'];
+};
+
 /** Mirrors the prototype's `mkEval`: below max ⇒ needs a reason, at max ⇒ none. */
-export const buildCriteria = (scores: number[], reasons: (string | null)[] = []) =>
+export const buildCriteria = (scores: number[], reasons: (string | string[] | null)[] = []) =>
   CRITERIA_ORDER.map((key, i) => {
     const score = scores[i];
     const maxScore = CRITERIA_MAX[key];
@@ -77,13 +92,14 @@ export const buildCriteria = (scores: number[], reasons: (string | null)[] = [])
       key,
       score,
       maxScore,
-      failureReasons: score < maxScore ? [reason || 'Not observable from the requirement.'] : [],
+      failureReasons: buildFailureReasons(score, maxScore, reason),
     };
   });
 
 const GEN1_ID = 101;
 const GEN2_ID = 102;
 const GEN3_ID = 103;
+const GEN4_ID = 104;
 const AUTO1_ID = 201;
 
 export const ITERATIONS: MockIterationSeed[] = [
@@ -144,6 +160,75 @@ export const ITERATIONS: MockIterationSeed[] = [
     },
   },
   {
+    id: GEN4_ID,
+    pipelineId: 1,
+    number: 4,
+    requirement: {
+      specId: 'US-TMS-EXP-002',
+      title: 'Editor can export Test Cases to CSV',
+      jiraKey: 'EPMRPP-107118',
+    },
+    trigger: 'Web form · REQUIREMENT',
+    startedBy: 'Vadzim Hushchanskou',
+    model: 'auto (default)',
+    environment: 'beta5',
+    startedAt: Date.parse('2026-10-04T14:20:00Z'),
+    durationMs: 485_000,
+    ciPipeline: { id: '#1301188', url: '#' },
+    folderPath: 'tms/export/testcase/iteration-4',
+    stages: {
+      create: {
+        status: 'PASSED',
+        durationMs: 312_000,
+        cost: 0.71,
+        tokens: [
+          {
+            model: 'default',
+            input: 246000,
+            cacheRead: 1730000,
+            cacheWrite: 68200,
+            output: 33400,
+            cost: 0.71,
+          },
+        ],
+      },
+      grade: {
+        status: 'PASSED',
+        durationMs: 111_000,
+        cost: 0.24,
+        tokens: [
+          {
+            model: 'default',
+            input: 80100,
+            cacheRead: 505000,
+            cacheWrite: 17600,
+            output: 10200,
+            cost: 0.24,
+          },
+        ],
+        suiteScore: 90,
+      },
+      upload: {
+        status: 'FAILED',
+        durationMs: 62_000,
+        cost: 0.01,
+        tokens: [
+          {
+            model: 'auto (default)',
+            input: 4100,
+            cacheRead: 15000,
+            cacheWrite: 0,
+            output: 0,
+            cost: 0.01,
+          },
+        ],
+        ciJob: { id: '#8930412', url: '#' },
+        threshold: 90,
+        failureReason: 'Library unreachable (HTTP 503) — nothing written, rolled back',
+      },
+    },
+  },
+  {
     id: AUTO1_ID,
     pipelineId: 2,
     number: 1,
@@ -155,7 +240,7 @@ export const ITERATIONS: MockIterationSeed[] = [
     startedAt: Date.parse('2026-09-21T16:02:00Z'),
     durationMs: 2_180_000,
     ciPipeline: { id: '#1291650', url: '#' },
-    mergeRequest: { id: '!212', url: '#' },
+    mergeRequest: { id: '!212', url: '#', state: MergeRequestState.OPEN },
     launch: { id: 9001, name: 'RP UI Test @implement_test', number: 12 },
     stages: {
       prepare: { status: 'PASSED', durationMs: 190_000, cost: 0.31, tokens: [{ model: 'default', input: 88000, cacheRead: 510000, cacheWrite: 22000, output: 9400, cost: 0.31 }], perCase: { 1001: 'Enriched · 3 steps, post conditions added', 1002: 'Enriched · 3 steps, post conditions added' } },
@@ -174,6 +259,11 @@ const readyHistory = (score: number, threshold = 90) => [
 /** Simulates one scripted failure, like the prototype's `FAIL_ONCE` — used by the engine (T3.3). */
 export const SCRIPTED_FIX_FAILURE: Record<string, string> = {
   TC107: 'job timeout',
+};
+
+/** Exact scores required by the approved demo script after a successful fix round. */
+export const SCRIPTED_FIX_SCORE: Record<string, number> = {
+  TC106: 92,
 };
 
 /** Keeps the updated scenario but makes its re-grade fail, covering the F2 GRADE_FAILED outcome. */
@@ -202,7 +292,7 @@ export const CASES: MockCaseSeed[] = [
     ai: { iterationId: GEN1_ID, modifiedByAgent: false, factoryKey: 'US-TMS-MIG-001::create-modal-opens' },
     evaluation: { criteria: buildCriteria([15, 20, 17, 20, 11, 8]), evaluatedAt: Date.parse('2026-09-19T10:22:00Z'), state: EvaluationState.EVALUATED, sourceFixRound: undefined },
     lifecycleHistory: readyHistory(91),
-    automation: { status: AutomationStatus.AUTOMATED, iterationId: AUTO1_ID, launch: { id: 9001, name: 'RP UI Test @implement_test', number: 12 }, lastResult: { status: 'PASSED' } },
+    automation: { status: AutomationStatus.AUTOMATED, iterationId: AUTO1_ID, launch: { id: 9001, name: 'RP UI Test @implement_test', number: 12 }, lastResult: { status: 'FAILED', defectType: 'Product bug' } },
   },
   {
     id: 1003,
@@ -250,9 +340,38 @@ export const CASES: MockCaseSeed[] = [
     stepsCount: 3,
     lifecycle: Lifecycle.DRAFT,
     ai: { iterationId: GEN2_ID, modifiedByAgent: false, factoryKey: 'US-TMS-BLK-001::bulk-action-disabled' },
-    evaluation: { criteria: buildCriteria([15, 16, 14, 16, 12, 8]), evaluatedAt: Date.parse('2026-09-21T14:09:00Z'), state: EvaluationState.EVALUATED, sourceFixRound: undefined },
+    evaluation: {
+      criteria: buildCriteria(
+        [15, 16, 14, 16, 12, 8],
+        [
+          null,
+          [
+            'The bulk-action step does not say which Test Case is selected.',
+            'The transition after clearing the selection is not described.',
+          ],
+          'The expected result does not confirm that bulk actions disappear after clearing the selection.',
+          'The scenario assumes a previously selected row without establishing it.',
+          'The bulk action label and its disabled state are not named.',
+          'Selection and cleanup are not linked into one continuous flow.',
+        ],
+      ),
+      evaluatedAt: Date.parse('2026-09-21T14:09:00Z'),
+      state: EvaluationState.EVALUATED,
+      sourceFixRound: undefined,
+    },
     lifecycleHistory: [{ to: Lifecycle.DRAFT, reason: LifecycleReason.UPLOADED, details: '81 < 90', actor: { type: LifecycleActorType.PIPELINE, name: 'Test case generation' } }],
-    pendingComments: [{ target: { type: CommentTargetType.STEP, stepId: 2 }, text: 'The bulk panel appears only after a selection. Select and clear a case, then check the action.', author: 'Helen Bobrova' }],
+    pendingComments: [
+      {
+        target: { type: CommentTargetType.PRECONDITION },
+        text: 'Split this case: one for the disabled action and one for the hidden panel.',
+        author: 'Helen Bobrova',
+      },
+      {
+        target: { type: CommentTargetType.STEP, stepId: 2 },
+        text: 'The bulk panel appears only after a selection. Select and clear a case, then check the action.',
+        author: 'Helen Bobrova',
+      },
+    ],
   },
   {
     id: 1007,
@@ -264,6 +383,7 @@ export const CASES: MockCaseSeed[] = [
     ai: { iterationId: GEN2_ID, modifiedByAgent: false, factoryKey: 'US-TMS-BLK-001::search-filters-test-plans' },
     evaluation: { criteria: buildCriteria([8, 14, 12, 12, 12, 8]), evaluatedAt: Date.parse('2026-09-21T14:09:00Z'), state: EvaluationState.EVALUATED, sourceFixRound: undefined },
     lifecycleHistory: [{ to: Lifecycle.DRAFT, reason: LifecycleReason.UPLOADED, details: '66 < 90', actor: { type: LifecycleActorType.PIPELINE, name: 'Test case generation' } }],
+    pendingComments: [{ target: { type: CommentTargetType.STEP, stepId: 0 }, text: 'Clarify which Test Plan fields the search must match before re-running the scenario.', author: 'Helen Bobrova' }],
   },
   {
     id: 1008,
@@ -280,6 +400,69 @@ export const CASES: MockCaseSeed[] = [
       { to: Lifecycle.DRAFT, reason: LifecycleReason.SCENARIO_CHANGED, actor: { type: LifecycleActorType.USER, name: 'Helen Bobrova' } },
     ],
     blockedPlanIds: [1],
+  },
+  {
+    id: 1009,
+    displayId: 'TC109',
+    name: "Test Case Library. Export. 'Export' downloads the selected Test Cases as a CSV file",
+    availableInLibrary: false,
+    priority: 'critical' as TestCasePriority,
+    template: 'STEPS',
+    stepsCount: 4,
+    lifecycle: Lifecycle.DRAFT,
+    ai: {
+      iterationId: GEN4_ID,
+      modifiedByAgent: false,
+      factoryKey: 'US-TMS-EXP-002::export-selected-cases',
+    },
+    evaluation: {
+      criteria: buildCriteria([15, 20, 18, 20, 14, 9]),
+      evaluatedAt: Date.parse('2026-10-04T14:26:00Z'),
+      state: EvaluationState.EVALUATED,
+    },
+    lifecycleHistory: [],
+  },
+  {
+    id: 1010,
+    displayId: 'TC110',
+    name: 'Test Case Library. Export. The CSV contains the name, priority, steps and expected results columns',
+    availableInLibrary: false,
+    priority: 'high' as TestCasePriority,
+    template: 'STEPS',
+    stepsCount: 3,
+    lifecycle: Lifecycle.DRAFT,
+    ai: {
+      iterationId: GEN4_ID,
+      modifiedByAgent: false,
+      factoryKey: 'US-TMS-EXP-002::csv-columns',
+    },
+    evaluation: {
+      criteria: buildCriteria([13, 18, 16, 18, 12, 8]),
+      evaluatedAt: Date.parse('2026-10-04T14:26:00Z'),
+      state: EvaluationState.EVALUATED,
+    },
+    lifecycleHistory: [],
+  },
+  {
+    id: 1011,
+    displayId: 'TC111',
+    name: "Test Case Library. Export. 'Export' is disabled when no Test Case is selected",
+    availableInLibrary: false,
+    priority: 'medium' as TestCasePriority,
+    template: 'STEPS',
+    stepsCount: 3,
+    lifecycle: Lifecycle.DRAFT,
+    ai: {
+      iterationId: GEN4_ID,
+      modifiedByAgent: false,
+      factoryKey: 'US-TMS-EXP-002::export-disabled',
+    },
+    evaluation: {
+      criteria: buildCriteria([15, 17, 17, 17, 13, 9]),
+      evaluatedAt: Date.parse('2026-10-04T14:26:00Z'),
+      state: EvaluationState.EVALUATED,
+    },
+    lifecycleHistory: [],
   },
 ];
 

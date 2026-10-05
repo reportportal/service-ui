@@ -28,6 +28,10 @@ import { LaunchBlockedBanner } from 'pages/inside/aiFactory/readyOnlyGate';
 import { useDeleteTestCaseModal } from 'pages/inside/testCaseLibraryPage/deleteTestCaseModal';
 import { useDuplicateSelectedTestCaseModal } from 'pages/inside/testCaseLibraryPage/duplicateSelectedTestCaseModal';
 import { useEditScenarioModal } from 'pages/inside/testCaseLibraryPage/editScenarioModal';
+import {
+  AddToLaunchButtonView,
+  useAddToLaunchAction,
+} from 'pages/inside/testCaseLibraryPage/addToLaunchButton';
 import { useAddTestCasesToTestPlanModal } from 'pages/inside/testCaseLibraryPage/addTestCasesToTestPlanModal/useAddTestCasesToTestPlanModal';
 import { useEditTestCaseModal } from 'pages/inside/testCaseLibraryPage/createTestCaseModal';
 import { useMoveTestCaseModal } from 'pages/inside/testCaseLibraryPage/moveTestCaseModal/useMoveTestCaseModal';
@@ -65,7 +69,7 @@ jest.mock(
       HISTORY: 'HISTORY',
       MOVE_TO: 'MOVE_TO',
     },
-    TEST_CASE_PLACE: { DETAILS_PAGE: 'DETAILS_PAGE' },
+    TEST_CASE_PLACE: { DETAILS_PAGE: 'DETAILS_PAGE', SIDE_PANEL: 'SIDE_PANEL' },
   }),
   { virtual: true },
 );
@@ -80,6 +84,7 @@ jest.mock('react-intl', () => ({
   }),
 }));
 jest.mock('react-redux', () => ({ useDispatch: jest.fn(), useSelector: jest.fn() }));
+jest.mock('redux-first-router-link', () => 'Link');
 jest.mock('react-tracking', () => ({ useTracking: () => ({ trackEvent: jest.fn() }) }));
 jest.mock('common/hooks', () => ({ useOnClickOutside: jest.fn() }));
 jest.mock('common/utils', () => ({
@@ -99,11 +104,21 @@ jest.mock('componentLibrary/breadcrumbs', () => ({ Breadcrumbs: 'Breadcrumbs' })
 });
 jest.mock('controllers/aiFactory', () => ({ useAiFactoryEnabled: jest.fn() }));
 jest.mock('controllers/modal', () => ({ showModalAction: jest.fn() }));
-jest.mock('controllers/pages', () => ({
-  TEST_CASE_LIBRARY_PAGE: 'TEST_CASE_LIBRARY_PAGE',
-  urlOrganizationAndProjectSelector: jest.fn(),
+jest.mock('controllers/pages', () => {
+  const { launchPageControllerMock } = jest.requireActual<
+    typeof import('pages/inside/aiFactory/testUtils/launchPageControllerMock')
+  >('pages/inside/aiFactory/testUtils/launchPageControllerMock');
+
+  return {
+    ...launchPageControllerMock,
+    TEST_CASE_LIBRARY_PAGE: 'TEST_CASE_LIBRARY_PAGE',
+    urlOrganizationAndProjectSelector: jest.fn(),
+  };
+});
+jest.mock('controllers/pages/selectors', () => ({
+  ...jest.requireActual<object>('controllers/pages/selectors'),
+  testCaseLibraryBreadcrumbsSelector: jest.fn(),
 }));
-jest.mock('controllers/pages/selectors', () => ({ testCaseLibraryBreadcrumbsSelector: jest.fn() }));
 jest.mock('controllers/project', () => ({ projectKeySelector: jest.fn() }));
 jest.mock('controllers/testCase', () => ({ GET_TEST_CASE_DETAILS: 'GET_TEST_CASE_DETAILS' }));
 jest.mock('hooks/useHasTestPlans', () => ({ useHasTestPlans: jest.fn() }));
@@ -123,6 +138,8 @@ jest.mock('pages/inside/productVersionPage/linkedTestCasesTab/tagList', () => ({
 }));
 jest.mock('pages/inside/testCaseLibraryPage/addToLaunchButton', () => ({
   AddToLaunchButton: 'AddToLaunchButton',
+  AddToLaunchButtonView: 'AddToLaunchButtonView',
+  useAddToLaunchAction: jest.fn(),
 }));
 jest.mock(
   'pages/inside/testCaseLibraryPage/addTestCasesToTestPlanModal/useAddTestCasesToTestPlanModal',
@@ -220,6 +237,11 @@ const renderHosts = (
   jest.mocked(useEditTestCaseModal).mockReturnValue({ openModal });
   jest.mocked(useMoveTestCaseModal).mockReturnValue({ openModal });
   jest.mocked(useAddTestCasesToTestPlanModal).mockReturnValue({ openModal });
+  jest.mocked(useAddToLaunchAction).mockReturnValue({
+    label: 'Add to Launch',
+    isDisabled: false,
+    onClick: jest.fn(),
+  });
 
   return {
     header: shallow(<TestCaseDetailsHeader testCase={caseToRender} onAddToTestPlan={jest.fn()} />),
@@ -296,6 +318,29 @@ describe('lifecycle badges in test case hosts', () => {
     expect(header.find(readyOnlyTooltip)).toHaveLength(1);
     expect(sidePanel.find(readyOnlyTooltip)).toHaveLength(1);
     expect(sidePanel.find(LaunchBlockedBanner).prop('plans')).toEqual(draftCase.blockedPlans);
+  });
+
+  test('exposes accessible side-panel actions and reuses Add to Launch in the narrow menu', () => {
+    const { sidePanel } = renderHosts(true, testCase, false, true);
+    const moreActions = sidePanel.find('[data-automation-id="test-case-more-actions"]');
+    const menuItems = sidePanel.find('PopoverControl').prop('items') as Array<{
+      label: string;
+      className?: string;
+      disabled?: boolean;
+      onClick?: () => void;
+    }>;
+
+    expect(moreActions.props()).toMatchObject({
+      'aria-label': 'More actions',
+      'aria-expanded': false,
+    });
+    expect(moreActions.prop('aria-haspopup')).toBeUndefined();
+    expect(menuItems).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({ label: 'Add to Launch', disabled: false }),
+      ]),
+    );
+    expect(sidePanel.find(AddToLaunchButtonView)).toHaveLength(1);
   });
 
   test('keeps the closed side panel safe when no Test Case is selected', () => {

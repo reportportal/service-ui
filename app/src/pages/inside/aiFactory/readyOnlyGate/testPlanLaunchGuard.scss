@@ -17,7 +17,16 @@
   color: var(--rp-ui-base-topaz);
   text-decoration: none;
 
+  &:visited {
+    color: var(--rp-ui-base-topaz);
+  }
+
   &:hover {
+    color: var(--rp-ui-base-topaz-hover);
     text-decoration: underline;
+  }
+
+  &:active {
+    color: var(--rp-ui-base-topaz-pressed);
   }
 }

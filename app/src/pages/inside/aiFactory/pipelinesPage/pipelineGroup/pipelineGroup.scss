@@ -41,12 +41,14 @@
 
   &__chevron {
     flex-shrink: 0;
-    width: 16px;
-    height: 16px;
+    width: 14px;
+    height: 14px;
+    color: var(--rp-ui-base-e-400);
+    transform: rotate(-90deg);
     transition: transform 0.15s ease;
 
     &--open {
-      transform: rotate(180deg);
+      transform: rotate(0);
     }
   }
 
@@ -74,5 +76,14 @@
 .empty {
   padding: 16px 0;
   color: var(--rp-ui-base-e-300);
+  font-family: var(--rp-ui-base-font-family);
+}
+
+.error {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 16px 0;
+  color: var(--rp-ui-base-error);
   font-family: var(--rp-ui-base-font-family);
 }

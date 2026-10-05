@@ -14,14 +14,24 @@
  * limitations under the License.
  */
 
-@use '../../../../common/css/mixins';
-
-.header-actions {
+.toolbar {
   display: flex;
   align-items: center;
-  gap: 12px;
+  justify-content: space-between;
+  gap: 24px;
+  margin-bottom: 16px;
 
-  @include mixins.header-toolbar-search-button;
+  &__actions {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 12px;
+  }
+}
+
+.search {
+  width: 320px;
+  flex: 0 1 320px;
 }
 
 .page-content {
@@ -32,4 +42,22 @@
   padding: 24px 0;
   color: var(--rp-ui-base-e-300);
   font-family: var(--rp-ui-base-font-family);
+}
+
+@media (max-width: 768px) {
+  .toolbar {
+    align-items: stretch;
+    flex-direction: column;
+    gap: 12px;
+
+    &__actions {
+      justify-content: flex-start;
+      flex-wrap: wrap;
+    }
+  }
+
+  .search {
+    width: 100%;
+    flex-basis: auto;
+  }
 }

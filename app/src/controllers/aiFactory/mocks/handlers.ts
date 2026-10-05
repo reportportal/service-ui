@@ -31,6 +31,9 @@ import {
   Lifecycle,
   LifecycleActorType,
   LifecycleReason,
+  MergeRequestState,
+  StageKey,
+  StageStatus,
 } from 'types/aiFactory';
 import {
   findCase,
@@ -43,14 +46,27 @@ import {
   persist,
   plansBlockedByCase,
   recordLifecycleChange,
+  reviewCommentsForCase,
 } from './db';
 import { applyAutoReady, automateSkipReason } from './engine';
-import { toIterationRS, toIterationSummaryRS, toPipelineRS, toTestCaseAiExtension, toTestCaseAiRS } from './viewModels';
-import { SCRIPTED_FIX_FAILURE, SCRIPTED_GRADE_FAILURE } from './seedData';
-import { MockCaseRecord } from './types';
+import {
+  toIterationRS,
+  toIterationSummaryRS,
+  toPipelineCompareRS,
+  toPipelineRS,
+  toTestCaseAiExtension,
+  toTestCaseAiRS,
+} from './viewModels';
+import {
+  SCRIPTED_FIX_FAILURE,
+  SCRIPTED_FIX_SCORE,
+  SCRIPTED_GRADE_FAILURE,
+} from './seedData';
+import { MockCaseRecord, MockIterationSeed, MockStageSeed } from './types';
 
 /** Real network delay would make a demo feel too instant; this makes fix rounds/automation feel real. */
 export const SIMULATED_DELAY_MS = 1500;
+const AUTOMATION_ENVIRONMENTS = ['beta5', 'qa', 'dev5'];
 
 const url = (config: AxiosRequestConfig) => config.url || '';
 const query = (config: AxiosRequestConfig) => new URL(url(config), 'https://mock').searchParams;
@@ -58,6 +74,26 @@ const body = <T>(config: AxiosRequestConfig): T =>
   (typeof config.data === 'string' ? JSON.parse(config.data) : config.data || {}) as T;
 const notFound = (): [number, { errorCode: number; message: string }] => [404, { errorCode: 40404, message: 'Not found' }];
 const conflict = (reason: string): [number, { reason: string }] => [409, { reason }];
+
+interface AutomationPayload {
+  testCaseIds: number[];
+  environment: string;
+  confirmReautomate: boolean;
+}
+
+const isAutomationPayload = (value: unknown): value is AutomationPayload => {
+  if (typeof value !== 'object' || value === null) return false;
+  const payload = value as Record<string, unknown>;
+  return (
+    Array.isArray(payload.testCaseIds) &&
+    payload.testCaseIds.length > 0 &&
+    payload.testCaseIds.every((id) => typeof id === 'number' && Number.isSafeInteger(id) && id > 0) &&
+    new Set(payload.testCaseIds).size === payload.testCaseIds.length &&
+    typeof payload.environment === 'string' &&
+    AUTOMATION_ENVIRONMENTS.includes(payload.environment) &&
+    typeof payload.confirmReautomate === 'boolean'
+  );
+};
 
 const caseWithExtension = (c: MockCaseRecord) => {
   const iteration = c.ai ? findIteration(c.ai.iterationId) : undefined;
@@ -96,7 +132,7 @@ export const installAiFactoryHandlers = (mock: MockAdapter): void => {
     const m = url(config).match(/\/tms\/pipeline\/(\d+)\/iteration\/(\d+)/);
     const pipeline = findPipeline(Number(m[1]));
     const iteration = findIteration(Number(m[2]));
-    if (!pipeline || !iteration) return notFound();
+    if (!pipeline || iteration?.pipelineId !== pipeline.id) return notFound();
     return [200, toIterationRS(pipeline, iteration)];
   });
 
@@ -154,6 +190,25 @@ export const installAiFactoryHandlers = (mock: MockAdapter): void => {
     ];
   });
 
+  // LP4 — GET pipeline/iteration/{iterationId}/compare?with={otherIterationId}
+  mock.onGet(/\/pipeline\/iteration\/(\d+)\/compare(?:\?.*)?$/).reply((config) => {
+    const [, candidateIdValue] = url(config).match(/\/pipeline\/iteration\/(\d+)\/compare/);
+    const baselineIdValue = query(config).get('with');
+    const candidateId = Number(candidateIdValue);
+    const baselineId = Number(baselineIdValue);
+    if (!baselineIdValue || !Number.isSafeInteger(baselineId) || candidateId === baselineId) {
+      return [400, { errorCode: 40001, message: 'Two different iteration ids are required' }];
+    }
+    const candidate = findIteration(candidateId);
+    const baseline = findIteration(baselineId);
+    if (!candidate || !baseline) return notFound();
+    if (candidate.pipelineId !== baseline.pipelineId) {
+      return [400, { errorCode: 40001, message: 'Iterations must belong to the same pipeline' }];
+    }
+    const pipeline = findPipeline(candidate.pipelineId);
+    return pipeline ? [200, toPipelineCompareRS(pipeline, candidate, baseline)] : notFound();
+  });
+
   // C2 — GET tms/test-case/{id}/ai
   mock.onGet(/\/tms\/test-case\/([^/]+)\/ai$/).reply((config) => {
     const [, id] = url(config).match(/\/tms\/test-case\/([^/]+)\/ai/);
@@ -204,8 +259,9 @@ export const installAiFactoryHandlers = (mock: MockAdapter): void => {
   // R1 — GET/POST tms/test-case/{id}/review-comment ; R2/R3 — DELETE (with or without a commentId)
   mock.onGet(/\/tms\/test-case\/([^/]+)\/review-comment$/).reply((config) => {
     const [, id] = url(config).match(/\/tms\/test-case\/([^/]+)\/review-comment/);
-    const c = findCase(decodeURIComponent(id));
-    return c ? [200, c.comments] : notFound();
+    const caseId = decodeURIComponent(id);
+    const c = findCase(caseId);
+    return c ? [200, reviewCommentsForCase(caseId, c)] : notFound();
   });
   mock.onPost(/\/tms\/test-case\/([^/]+)\/review-comment$/).reply((config) => {
     const [, id] = url(config).match(/\/tms\/test-case\/([^/]+)\/review-comment/);
@@ -234,7 +290,7 @@ export const installAiFactoryHandlers = (mock: MockAdapter): void => {
       c.comments = c.comments.filter((x) => x.state !== 'PENDING');
     }
     persist();
-    return [200, c.comments];
+    return [200, reviewCommentsForCase(decodeURIComponent(m[1]), c)];
   });
 
   // F1/F2 — POST/GET tms/test-case/{id}/fix-round
@@ -264,18 +320,29 @@ export const installAiFactoryHandlers = (mock: MockAdapter): void => {
   });
 
   // A1 — GET tms/automation/environment
-  mock.onGet(/\/tms\/automation\/environment$/).reply(() => [200, { environments: ['beta5', 'qa', 'dev5'], default: 'beta5' }]);
+  mock.onGet(/\/tms\/automation\/environment$/).reply(() => [200, { environments: AUTOMATION_ENVIRONMENTS, default: 'beta5' }]);
 
   // A2 — POST tms/automation
   mock.onPost(/\/tms\/automation$/).reply((config) => {
-    const payload = body<{ testCaseIds: number[]; environment: string; confirmReautomate: boolean }>(config);
+    let payload: unknown;
+    try {
+      payload = body<unknown>(config);
+    } catch {
+      return [400, { errorCode: 40002, message: 'Invalid automation request' }];
+    }
+    if (!isAutomationPayload(payload)) return [400, { errorCode: 40002, message: 'Invalid automation request' }];
+    if (payload.testCaseIds.some((id) => !findCase(id))) {
+      return [400, { errorCode: 40002, message: 'Invalid automation request' }];
+    }
     const accepted: number[] = [];
     const skipped: { id: number; displayId: string; reason: string }[] = [];
-    const again = payload.testCaseIds.filter((id) => findCase(id)?.automation?.status === AutomationStatus.AUTOMATED);
-    if (again.length && !payload.confirmReautomate) return conflict('ALREADY_AUTOMATED_CONFIRM_REQUIRED');
+    const again = payload.testCaseIds.filter((id) => {
+      const c = findCase(id);
+      return c?.automation?.status === AutomationStatus.AUTOMATED && automateSkipReason(c) === null;
+    });
+    if (again.length && !payload.confirmReautomate) return [409, { reason: 'ALREADY_AUTOMATED_CONFIRM_REQUIRED', testCaseIds: again }];
     payload.testCaseIds.forEach((id) => {
       const c = findCase(id);
-      if (!c) return;
       const reason = automateSkipReason(c);
       if (reason) {
         skipped.push({ id, displayId: c.displayId, reason });
@@ -284,10 +351,31 @@ export const installAiFactoryHandlers = (mock: MockAdapter): void => {
       }
     });
     if (!accepted.length) return [400, { errorCode: 40001, message: 'No Ready Test Cases to automate' }];
-    const iterationId = startAutomationSimulation(accepted, payload.environment);
+    const canonicalCaseIds = accepted.flatMap((id) => {
+      const caseRecord = findCase(id);
+      return caseRecord ? [caseRecord.id] : [];
+    });
+    const iteration = startAutomationSimulation(
+      canonicalCaseIds,
+      accepted,
+      payload.environment,
+    );
     persist();
-    return [202, { iteration: { pipelineId: 2, iterationId, number: findIteration(iterationId).number }, accepted, skipped }];
+    return [
+      202,
+      {
+        iteration: {
+          pipelineId: iteration.pipelineId,
+          iterationId: iteration.id,
+          number: iteration.number,
+        },
+        accepted,
+        skipped,
+      },
+    ];
   });
+
+  resumeAutomationSimulations();
 };
 
 /** Fix round: Fix → Grade → update. Mirrors docs/ai-factory-poc/01-knowledge-base.md §4.8. */
@@ -325,7 +413,15 @@ function startFixRoundSimulation(c: MockCaseRecord, round: number): void {
     }
     const bump = 12;
     const criteria = (before?.criteria || []).map((cr) => ({ ...cr, score: Math.min(cr.maxScore, cr.score + Math.round(bump / 6)), failureReasons: [] }));
-    const scoreAfter = criteria.reduce((s, cr) => s + cr.score, 0);
+    const scriptedScore = SCRIPTED_FIX_SCORE[c.displayId];
+    let scoreAfter = criteria.reduce((s, cr) => s + cr.score, 0);
+    if (scriptedScore && scoreAfter < scriptedScore) {
+      const criterion = criteria.find((candidate) => candidate.score < candidate.maxScore);
+      if (criterion) {
+        criterion.score += Math.min(scriptedScore - scoreAfter, criterion.maxScore - criterion.score);
+        scoreAfter = criteria.reduce((sum, candidate) => sum + candidate.score, 0);
+      }
+    }
     c.evaluation = { criteria, evaluatedAt: Date.now(), state: EvaluationState.EVALUATED, sourceFixRound: round };
     c.comments.forEach((cm) => { if (cm.state === 'SENT') cm.state = 'ADDRESSED'; });
     const wasReady = c.lifecycle === Lifecycle.READY;
@@ -343,47 +439,151 @@ function startFixRoundSimulation(c: MockCaseRecord, round: number): void {
   }, SIMULATED_DELAY_MS);
 }
 
+const AUTOMATION_STEPS: {
+  field: keyof MockIterationSeed['stages'];
+  key: StageKey;
+  unitCost: number;
+}[] = [
+  { field: 'prepare', key: StageKey.PREPARE, unitCost: 0.28 },
+  { field: 'develop', key: StageKey.DEVELOP, unitCost: 0.92 },
+  { field: 'automationReview', key: StageKey.AUTOMATION_REVIEW, unitCost: 0.24 },
+  { field: 'fix', key: StageKey.FIX, unitCost: 0 },
+];
+
+const activeAutomationIterations = new Map<number, MockIterationSeed>();
+
+const deactivateAutomationIteration = (iteration: MockIterationSeed): void => {
+  if (activeAutomationIterations.get(iteration.id) === iteration) {
+    activeAutomationIterations.delete(iteration.id);
+  }
+};
+
+const stageResult = (step: (typeof AUTOMATION_STEPS)[number]): string =>
+  step.key === StageKey.FIX ? 'Skipped · review was clean' : 'Done';
+
+const completedAutomationStage = (
+  step: (typeof AUTOMATION_STEPS)[number],
+  caseIds: number[],
+): MockStageSeed => ({
+  status: step.key === StageKey.FIX ? StageStatus.SKIPPED : StageStatus.PASSED,
+  durationMs: 60_000,
+  cost: step.unitCost * caseIds.length,
+  tokens: [],
+  perCase: Object.fromEntries(caseIds.map((id) => [id, stageResult(step)])),
+});
+
+const runningAutomationStage = (): MockStageSeed => ({
+  status: StageStatus.RUNNING,
+  durationMs: 0,
+  cost: 0,
+  tokens: [],
+});
+
+const completeAutomationIteration = (iteration: MockIterationSeed, caseIds: number[]): void => {
+  const launch = {
+    id: 9000 + iteration.id,
+    name: 'RP UI Test @implement_test',
+    number: 100 + iteration.id,
+  };
+  iteration.launch = launch;
+  iteration.mergeRequest = {
+    id: `!${iteration.id}`,
+    url: '#',
+    state: MergeRequestState.OPEN,
+  };
+  iteration.durationMs = Math.max(0, Date.now() - iteration.startedAt);
+  caseIds.forEach((id) => {
+    const caseRecord = findCase(id);
+    if (!caseRecord) return;
+    caseRecord.automation = {
+      status: AutomationStatus.AUTOMATED,
+      iterationId: iteration.id,
+      launch,
+      lastResult: { status: 'PASSED' },
+      scenarioChangedAfterAutomation: false,
+    };
+  });
+};
+
+const scheduleAutomationStep = (
+  iteration: MockIterationSeed,
+  caseIds: number[],
+  stepIndex: number,
+): void => {
+  activeAutomationIterations.set(iteration.id, iteration);
+  setTimeout(() => {
+    const currentIteration = findIteration(iteration.id);
+    if (!currentIteration || currentIteration !== iteration) {
+      deactivateAutomationIteration(iteration);
+      return;
+    }
+    const step = AUTOMATION_STEPS[stepIndex];
+    currentIteration.stages[step.field] = completedAutomationStage(step, caseIds);
+    const nextStep = AUTOMATION_STEPS[stepIndex + 1];
+    if (nextStep) {
+      currentIteration.stages[nextStep.field] = runningAutomationStage();
+      persist();
+      scheduleAutomationStep(currentIteration, caseIds, stepIndex + 1);
+      return;
+    }
+    completeAutomationIteration(currentIteration, caseIds);
+    deactivateAutomationIteration(iteration);
+    persist();
+  }, SIMULATED_DELAY_MS);
+};
+
+const runningAutomationStepIndex = (iteration: MockIterationSeed): number =>
+  AUTOMATION_STEPS.findIndex(
+    ({ field }) => iteration.stages[field]?.status === StageStatus.RUNNING,
+  );
+
+const resumeAutomationSimulations = (): void => {
+  listIterations()
+    .filter((iteration) => iteration.testCaseIds?.length)
+    .forEach((iteration) => {
+      const runningIndex = runningAutomationStepIndex(iteration);
+      if (runningIndex < 0 || activeAutomationIterations.get(iteration.id) === iteration) {
+        return;
+      }
+      scheduleAutomationStep(iteration, iteration.testCaseIds ?? [], runningIndex);
+    });
+};
+
 /** Automation: Prepare → Develop → Review → Fix (skipped when the review is clean). */
-function startAutomationSimulation(caseIds: number[], environment: string): number {
+function startAutomationSimulation(
+  caseIds: number[],
+  requestedCaseIds: number[],
+  environment: string,
+): MockIterationSeed {
   const pipelineId = 2;
   const existing = listIterations(pipelineId);
   const number = (existing[0]?.number || 0) + 1;
   const iterationId = 200 + number * 1000; // keeps mock ids away from the seed's 201
-  getDb().iterations.push({
+  const iteration: MockIterationSeed = {
     id: iterationId,
     pipelineId,
     number,
     testCaseIds: caseIds,
+    requestedTestCaseIds: requestedCaseIds,
     trigger: 'Automate · Test Case Library',
     startedBy: 'You',
     model: 'auto (default)',
     environment,
     startedAt: Date.now(),
     ciPipeline: { id: `#${iterationId}`, url: '#' },
-    stages: { prepare: { status: 'RUNNING' as never, durationMs: 0, cost: 0, tokens: [] } },
-  });
+    stages: { prepare: runningAutomationStage() },
+  };
+  getDb().iterations.push(iteration);
   caseIds.forEach((id) => {
     const c = findCase(id);
-    c.automation = { status: AutomationStatus.IN_PROGRESS, iterationId, scenarioChangedAfterAutomation: false };
+    if (!c) return;
+    c.automation = {
+      status: AutomationStatus.IN_PROGRESS,
+      iterationId,
+      scenarioChangedAfterAutomation: false,
+    };
   });
-  const steps: [string, number, boolean?][] = [['prepare', 0.28], ['develop', 0.92], ['automationReview', 0.24], ['fix', 0]];
-  steps.forEach(([stage, unitCost], i) => {
-    setTimeout(() => {
-      const iteration = findIteration(iterationId);
-      const stages = iteration.stages as Record<string, { status: string; durationMs: number; cost: number; tokens: unknown[]; perCase?: Record<number, string> }>;
-      stages[stage] = { status: stage === 'fix' && unitCost === 0 ? 'SKIPPED' : 'PASSED', durationMs: 60_000, cost: unitCost * caseIds.length, tokens: [], perCase: Object.fromEntries(caseIds.map((id) => [id, stage === 'fix' && unitCost === 0 ? 'Skipped · review was clean' : 'Done'])) };
-      const next = steps[i + 1];
-      if (next) stages[next[0]] = { status: 'RUNNING', durationMs: 0, cost: 0, tokens: [] };
-      else {
-        const launch = { id: 9000 + iterationId, name: 'RP UI Test @implement_test', number: 100 + iterationId };
-        iteration.launch = launch;
-        caseIds.forEach((id) => {
-          const c = findCase(id);
-          c.automation = { status: AutomationStatus.AUTOMATED, iterationId, launch, lastResult: { status: 'PASSED' }, scenarioChangedAfterAutomation: false };
-        });
-      }
-      persist();
-    }, SIMULATED_DELAY_MS * (i + 1));
-  });
-  return iterationId;
+  activeAutomationIterations.delete(iteration.id);
+  scheduleAutomationStep(iteration, caseIds, 0);
+  return iteration;
 }

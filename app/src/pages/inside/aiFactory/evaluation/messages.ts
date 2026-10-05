@@ -53,6 +53,10 @@ export const messages = defineMessages({
     id: 'AiEvaluationPanel.evaluated',
     defaultMessage: 'Evaluated',
   },
+  obsoleteBadge: {
+    id: 'AiEvaluationPanel.obsoleteBadge',
+    defaultMessage: 'Obsolete',
+  },
   iteration: {
     id: 'AiEvaluationPanel.iteration',
     defaultMessage: 'Iteration #{number}',

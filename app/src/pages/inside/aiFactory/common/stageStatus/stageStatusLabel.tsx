@@ -14,54 +14,16 @@
  * limitations under the License.
  */
 
-import { defineMessages, useIntl } from 'react-intl';
+import { useIntl } from 'react-intl';
+
 import { createClassnames } from 'common/utils';
-import { AiStageStatus, StageStatus } from 'types/aiFactory';
+import { AiStageStatus } from 'types/aiFactory';
+
+import { STAGE_STATUS_MESSAGE } from './stageStatusMessages';
 import { STAGE_STATUS_VARIANT } from './stageStatusVariant';
 import styles from './stageStatus.scss';
 
 const cx = createClassnames(styles);
-
-const messages = defineMessages({
-  pending: {
-    id: 'StageStatusLabel.pending',
-    defaultMessage: 'Pending',
-  },
-  running: {
-    id: 'StageStatusLabel.running',
-    defaultMessage: 'Running',
-  },
-  inProgress: {
-    id: 'StageStatusLabel.inProgress',
-    defaultMessage: 'In progress',
-  },
-  passed: {
-    id: 'StageStatusLabel.passed',
-    defaultMessage: 'Passed',
-  },
-  done: {
-    id: 'StageStatusLabel.done',
-    defaultMessage: 'Done',
-  },
-  failed: {
-    id: 'StageStatusLabel.failed',
-    defaultMessage: 'Failed',
-  },
-  skipped: {
-    id: 'StageStatusLabel.skipped',
-    defaultMessage: 'Skipped',
-  },
-});
-
-const MESSAGE_BY_STATUS: Record<AiStageStatus, { id: string; defaultMessage: string }> = {
-  [StageStatus.PENDING]: messages.pending,
-  [StageStatus.RUNNING]: messages.running,
-  [StageStatus.IN_PROGRESS]: messages.inProgress,
-  [StageStatus.PASSED]: messages.passed,
-  [StageStatus.DONE]: messages.done,
-  [StageStatus.FAILED]: messages.failed,
-  [StageStatus.SKIPPED]: messages.skipped,
-};
 
 export interface StageStatusLabelProps {
   status: AiStageStatus;
@@ -75,7 +37,7 @@ export const StageStatusLabel = ({ status }: StageStatusLabelProps) => {
       className={cx('label', STAGE_STATUS_VARIANT[status])}
       data-automation-id="stageStatusLabel"
     >
-      {formatMessage(MESSAGE_BY_STATUS[status])}
+      {formatMessage(STAGE_STATUS_MESSAGE[status])}
     </span>
   );
 };

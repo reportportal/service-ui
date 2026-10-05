@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+import { Fragment } from 'react';
 import { useIntl } from 'react-intl';
 import { useSelector } from 'react-redux';
 import Link from 'redux-first-router-link';
@@ -25,12 +26,19 @@ import {
   IterationStatusBadge,
   StageStatusDot,
   outcome,
-  requirementOrTestCasesLabel,
   stageMetric,
   startedAndDuration,
 } from 'pages/inside/aiFactory/common';
 import { ProjectDetails } from 'pages/organization/constants';
-import { AiPipelineType, IterationSummaryRS, PipelineType, StageSummaryRS } from 'types/aiFactory';
+import {
+  AiPipelineType,
+  IterationStatus,
+  IterationSummaryRS,
+  PipelineType,
+  StageKey,
+  StageStatus,
+  StageSummaryRS,
+} from 'types/aiFactory';
 
 import { messages } from '../messages';
 import styles from './iterationCard.scss';
@@ -49,7 +57,20 @@ export const IterationCard = ({ pipelineType, iteration }: IterationCardProps) =
   ) as ProjectDetails;
 
   const formatStageMetric = (stage: StageSummaryRS): string | null => {
-    const metric = stageMetric(stage, iteration.testCasesCount);
+    let metric = stageMetric(stage, iteration.testCasesCount);
+    if (!metric && stage.key === StageKey.CREATE) {
+      metric = { kind: 'cases', count: iteration.testCasesCount };
+    } else if (!metric && stage.key === StageKey.UPLOAD && stage.status === StageStatus.PASSED) {
+      metric = { kind: 'cases', count: iteration.testCasesCount };
+    } else if (!metric && stage.key === StageKey.GRADE && iteration.suiteScore !== undefined) {
+      metric = { kind: 'score', score: iteration.suiteScore };
+    } else if (!metric && stage.key === StageKey.REVIEW && iteration.readyCount !== undefined) {
+      metric = {
+        kind: 'ready',
+        ready: iteration.readyCount,
+        total: iteration.testCasesCount,
+      };
+    }
     if (!metric) {
       return null;
     }
@@ -65,8 +86,9 @@ export const IterationCard = ({ pipelineType, iteration }: IterationCardProps) =
     }
   };
 
+  const outcomeData = outcome(pipelineType, iteration);
   const outcomeText = () => {
-    const data = outcome(pipelineType, iteration);
+    const data = outcomeData;
     if (data.kind === 'generationReady') {
       const fixRoundsSuffix =
         data.fixRounds > 0 ? formatMessage(messages.outcomeFixRounds, { count: data.fixRounds }) : '';
@@ -83,47 +105,117 @@ export const IterationCard = ({ pipelineType, iteration }: IterationCardProps) =
   };
 
   const metaFields = [
-    requirementOrTestCasesLabel(iteration),
-    iteration.trigger,
-    iteration.model,
-    formatMessage(messages.metaTestCasesCount, { count: iteration.testCasesCount }),
-    pipelineType === PipelineType.GENERATION && iteration.suiteScore !== undefined
-      ? formatMessage(messages.metaSuiteScore, { score: iteration.suiteScore })
+    iteration.requirement
+      ? {
+          key: 'requirement',
+          label: formatMessage(messages.metaRequirementLabel),
+          value: `${iteration.requirement.specId} · ${iteration.requirement.title}`,
+        }
       : undefined,
-    formatCost(iteration.costTotal),
-    startedAndDuration(iteration),
-  ].filter(Boolean);
+    iteration.testCases?.length
+      ? {
+          key: 'testCases',
+          label: formatMessage(messages.metaCasesLabel),
+          value: iteration.testCases.map(({ displayId }) => displayId).join(', '),
+        }
+      : undefined,
+    {
+      key: 'trigger',
+      label: formatMessage(messages.metaTriggerLabel),
+      value: iteration.trigger,
+    },
+    {
+      key: 'model',
+      label: formatMessage(messages.metaModelLabel),
+      value: iteration.model,
+    },
+    {
+      key: 'testCasesCount',
+      label: formatMessage(messages.metaTestCasesLabel),
+      value: String(iteration.testCasesCount),
+    },
+    pipelineType === PipelineType.GENERATION && iteration.suiteScore !== undefined
+      ? {
+          key: 'suiteScore',
+          label: formatMessage(messages.metaSuiteScoreLabel),
+          value: String(iteration.suiteScore),
+        }
+      : undefined,
+    {
+      key: 'cost',
+      label: formatMessage(messages.metaCostLabel),
+      value: formatCost(iteration.costTotal),
+    },
+    {
+      key: 'started',
+      label: formatMessage(messages.metaStartedLabel),
+      value: startedAndDuration(iteration),
+    },
+  ].filter((field): field is { key: string; label: string; value: string } => Boolean(field));
+
+  let outcomeVariant = 'neutral';
+  if (iteration.status === IterationStatus.FAILED) {
+    outcomeVariant = 'failed';
+  } else if (outcomeData.kind === 'generationReady' && outcomeData.ready > 0) {
+    outcomeVariant = 'ready';
+  } else if (iteration.status === IterationStatus.RUNNING) {
+    outcomeVariant = 'active';
+  } else if (iteration.status === IterationStatus.COMPLETED) {
+    outcomeVariant = 'done';
+  }
+
+  const iterationTitle = formatMessage(messages.iterationTitle, { number: iteration.number });
 
   return (
-    <div className={cx('card')} data-automation-id="iterationCard">
+    <Link
+      className={cx('card')}
+      data-automation-id="iterationCard"
+      aria-label={iterationTitle}
+      to={{
+        type: PROJECT_PIPELINE_ITERATION_PAGE,
+        payload: {
+          organizationSlug,
+          projectSlug,
+          pipelineId: iteration.pipelineId,
+          iterationId: iteration.id,
+        },
+      }}
+    >
       <div className={cx('card__header')}>
         <IterationStatusBadge status={iteration.status} />
-        <Link
-          className={cx('card__title')}
-          to={{
-            type: PROJECT_PIPELINE_ITERATION_PAGE,
-            payload: {
-              organizationSlug,
-              projectSlug,
-              pipelineId: iteration.pipelineId,
-              iterationId: iteration.id,
-            },
-          }}
-        >
-          {formatMessage(messages.iterationTitle, { number: iteration.number })}
-        </Link>
+        <span className={cx('card__title')}>{iterationTitle}</span>
+        <div className={cx('card__outcome', `card__outcome--${outcomeVariant}`)}>
+          {outcomeText()}
+        </div>
       </div>
-      <div className={cx('card__outcome')}>{outcomeText()}</div>
-      <div className={cx('card__meta')}>{metaFields.join(' · ')}</div>
+      <div className={cx('card__meta')}>
+        {metaFields.map((field) => (
+          <span key={field.key} className={cx('card__meta-field')}>
+            <span className={cx('card__meta-label')}>{field.label}</span>
+            <span className={cx('card__meta-value')}>{field.value}</span>
+          </span>
+        ))}
+      </div>
       <div className={cx('card__stages')}>
-        {iteration.stages.map((stage) => {
+        {iteration.stages.map((stage, index) => {
           const metricLabel = formatStageMetric(stage);
           return (
-            <span key={stage.key} className={cx('card__stage-chip')}>
-              <StageStatusDot status={stage.status} />
-              {formatMessage(STAGE_LABEL_MESSAGE[stage.key])}
-              {metricLabel ? ` · ${metricLabel}` : ''}
-            </span>
+            <Fragment key={stage.key}>
+              {index > 0 && (
+                <span className={cx('card__stage-arrow')} aria-hidden="true">
+                  →
+                </span>
+              )}
+              <span className={cx('card__stage-chip')}>
+                <StageStatusDot status={stage.status} />
+                <span className={cx('card__stage-label')}>
+                  {formatMessage(STAGE_LABEL_MESSAGE[stage.key])}
+                </span>
+                {metricLabel && (
+                  <span className={cx('card__stage-metric')}>{metricLabel}</span>
+                )}
+              </span>
+            </Fragment>
           );
         })}
       </div>
@@ -131,11 +223,12 @@ export const IterationCard = ({ pipelineType, iteration }: IterationCardProps) =
         <div className={cx('card__attributes')}>
           {iteration.attributes.map((attribute) => (
             <span key={attribute.key} className={cx('card__attribute-chip')}>
-              {`${attribute.key}: ${attribute.value}`}
+              <span className={cx('card__attribute-key')}>{`${attribute.key}:`}</span>
+              <span className={cx('card__attribute-value')}>{attribute.value}</span>
             </span>
           ))}
         </div>
       )}
-    </div>
+    </Link>
   );
 };

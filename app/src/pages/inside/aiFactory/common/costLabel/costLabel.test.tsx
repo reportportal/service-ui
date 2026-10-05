@@ -17,16 +17,22 @@
 import { shallow } from 'enzyme';
 import { CostLabel } from './costLabel';
 
+jest.mock('react-intl', () =>
+  jest.requireActual<typeof import('../../aiFactoryTestUtils')>(
+    'pages/inside/aiFactory/aiFactoryTestUtils',
+  ).reactIntlTestMock,
+);
+
 describe('CostLabel', () => {
   test('prefixes with "≈" by default', () => {
     const wrapper = shallow(<CostLabel amount={0.5432} />);
 
-    expect(wrapper.text()).toBe('≈ $0.54');
+    expect(wrapper.text()).toBe('Pipeline estimate · ≈ $0.54');
   });
 
   test('renders an exact figure when approx is false', () => {
     const wrapper = shallow(<CostLabel amount={0.5432} approx={false} />);
 
-    expect(wrapper.text()).toBe('$0.54');
+    expect(wrapper.text()).toBe('Pipeline estimate · $0.54');
   });
 });
