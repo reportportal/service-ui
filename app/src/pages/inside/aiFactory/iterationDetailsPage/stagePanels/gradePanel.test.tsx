@@ -20,7 +20,9 @@ import { CriterionKey, StageKey, StageStatus, type StageRS } from 'types/aiFacto
 
 import { GradePanel } from './gradePanel';
 
-jest.mock('@reportportal/ui-kit', () => ({ ArrowDownIcon: 'ArrowDownIcon' }));
+jest.mock('@reportportal/ui-kit', () => ({
+  ChevronDownDropdownIcon: 'ChevronDownDropdownIcon',
+}));
 jest.mock('react-intl', () => ({
   defineMessages: (messages: unknown) => messages,
   useIntl: () => ({

@@ -82,6 +82,7 @@ export const matchesLibraryFilters = (
   filters: LibraryFilters,
 ): boolean => {
   const record = findCase(testCase.displayId);
+  if (record?.availableInLibrary === false) return false;
   if (filters.lifecycle !== undefined && record?.lifecycle !== filters.lifecycle) return false;
   if (filters.ai !== undefined && Boolean(record?.ai) !== filters.ai) return false;
   if (filters.iterationId !== undefined && record?.ai?.iterationId !== filters.iterationId) return false;

@@ -117,7 +117,7 @@ export class C3OverlayError extends Error {
 
 export const mergeAiFields = (testCase: TestCase): TestCase & Partial<TestCaseAiExtension> => {
   const record = findCase(testCase.displayId);
-  if (!record) {
+  if (!record || record.availableInLibrary === false) {
     return testCase; // no matching mock record — the toggle-OFF/no-data guard in components handles this too
   }
   const reviewStepIds = testCase.manualScenario?.steps
@@ -393,6 +393,8 @@ const fetchRemainingContent = async (
 
   while (collected.length < page.totalElements) {
     throwIfAborted(context.signal);
+    // Each offset depends on the previous response size, so these requests must stay sequential.
+    // eslint-disable-next-line no-await-in-loop
     const { data } = await http.get<PagedTestCaseList>(
       pageUrl(context.url, nextOffset, requestSize),
       { headers: context.headers, signal: context.signal },

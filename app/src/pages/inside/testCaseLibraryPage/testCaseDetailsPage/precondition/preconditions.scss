@@ -27,6 +27,10 @@
   font-weight: 400;
   color: var(--rp-ui-base-almost-black);
 
+  &--reviewable {
+    flex-wrap: wrap;
+  }
+
   &__type {
     padding: 16px 12px;
     border-right: 1px solid var(--rp-ui-base-e-100);
@@ -43,6 +47,7 @@
   }
 
   &--reviewable &__content {
+    flex: 1 1 0;
     padding-right: 48px;
   }
 

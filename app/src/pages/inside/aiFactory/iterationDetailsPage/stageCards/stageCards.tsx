@@ -15,16 +15,18 @@
  */
 
 import { useIntl } from 'react-intl';
+import { RerunIcon } from '@reportportal/ui-kit';
 
-import { createClassnames } from 'common/utils';
+import { createClassnames, formatCost, formatDuration } from 'common/utils';
 import {
+  ScoreBar,
   STAGE_LABEL_MESSAGE,
   StageStatusDot,
   StageStatusLabel,
-  stageMetric,
 } from 'pages/inside/aiFactory/common';
-import { AiStageKey, StageRS } from 'types/aiFactory';
+import { AiStageKey, StageKey, StageRS, StageStatus } from 'types/aiFactory';
 
+import { messages } from '../messages';
 import styles from './stageCards.scss';
 
 const cx = createClassnames(styles);
@@ -32,6 +34,9 @@ const cx = createClassnames(styles);
 export interface StageCardsProps {
   stages: StageRS[];
   testCasesCount: number;
+  readyCount?: number;
+  fixRoundsCount?: number;
+  autoReadyPromotedCount?: number;
   selectedStage: AiStageKey;
   onSelect: (stage: AiStageKey) => void;
 }
@@ -39,6 +44,9 @@ export interface StageCardsProps {
 export const StageCards = ({
   stages,
   testCasesCount,
+  readyCount = 0,
+  fixRoundsCount = 0,
+  autoReadyPromotedCount = 0,
   selectedStage,
   onSelect,
 }: StageCardsProps) => {
@@ -47,14 +55,40 @@ export const StageCards = ({
   return (
     <div className={cx('stage-cards')} data-automation-id="stageCards">
       {stages.map((stage, index) => {
-        const metric = stageMetric(stage, testCasesCount);
-        let metricLabel: string | null = null;
-        if (metric?.kind === 'cases') {
-          metricLabel = String(metric.count);
-        } else if (metric?.kind === 'score') {
-          metricLabel = String(metric.score);
-        } else if (metric?.kind === 'ready') {
-          metricLabel = `${metric.ready}/${metric.total}`;
+        let summary = formatMessage(messages.stageTestCases, { count: testCasesCount });
+        let description: string | null = null;
+
+        if (stage.key === StageKey.CREATE) {
+          summary = formatMessage(messages.stageCasesCreated, { count: testCasesCount });
+          description = formatMessage(messages.stageCreateDescription);
+        } else if (stage.key === StageKey.GRADE) {
+          summary =
+            stage.status === StageStatus.RUNNING
+              ? formatMessage(messages.stageGrading)
+              : formatMessage(messages.stageCasesGraded, { count: testCasesCount });
+        } else if (stage.key === StageKey.UPLOAD) {
+          summary =
+            stage.status === StageStatus.PENDING
+              ? formatMessage(messages.stageWaitingForGrade)
+              : formatMessage(messages.stageCasesUploaded, { count: testCasesCount });
+          if (stage.status === StageStatus.PASSED) {
+            description = formatMessage(messages.stageAutoReady, {
+              count: autoReadyPromotedCount,
+            });
+          }
+        } else if (stage.key === StageKey.REVIEW) {
+          summary =
+            stage.status === StageStatus.PENDING
+              ? formatMessage(messages.stageWaitingForUpload)
+              : formatMessage(messages.stageReady, { ready: readyCount, total: testCasesCount });
+          if (stage.status !== StageStatus.PENDING) {
+            description = formatMessage(messages.stageFixRounds, { count: fixRoundsCount });
+          }
+        }
+
+        if (stage.status === StageStatus.FAILED && stage.failureReason) {
+          summary = stage.failureReason;
+          description = null;
         }
 
         return (
@@ -78,9 +112,44 @@ export const StageCards = ({
                 <span className={cx('stage-cards__item-label')}>
                   {formatMessage(STAGE_LABEL_MESSAGE[stage.key])}
                 </span>
+                <StageStatusLabel status={stage.status} />
               </div>
-              <StageStatusLabel status={stage.status} />
-              {metricLabel && <span className={cx('stage-cards__item-metric')}>{metricLabel}</span>}
+              <span
+                className={cx('stage-cards__item-summary', {
+                  'stage-cards__item-summary--failed': stage.status === StageStatus.FAILED,
+                })}
+              >
+                {summary}
+              </span>
+              {stage.key === StageKey.GRADE && stage.grade && (
+                <div className={cx('stage-cards__score')}>
+                  <ScoreBar value={stage.grade.suiteScore} max={100} />
+                  <strong>{stage.grade.suiteScore}</strong>
+                </div>
+              )}
+              {stage.key === StageKey.REVIEW && stage.status !== StageStatus.PENDING && (
+                <ScoreBar value={readyCount} max={testCasesCount || 1} />
+              )}
+              {description && (
+                <span className={cx('stage-cards__item-description')}>{description}</span>
+              )}
+              {stage.status === StageStatus.FAILED &&
+                (stage.key === StageKey.CREATE || stage.key === StageKey.UPLOAD) && (
+                  <span
+                    className={cx('stage-cards__retry')}
+                    title={formatMessage(messages.retryStageUnavailable)}
+                  >
+                    <RerunIcon aria-hidden="true" />
+                    {formatMessage(messages.retryStage, {
+                      stage: formatMessage(STAGE_LABEL_MESSAGE[stage.key]),
+                    })}
+                  </span>
+                )}
+              <span className={cx('stage-cards__item-footer')}>
+                {stage.durationMs !== undefined && formatDuration(stage.durationMs)}
+                {stage.durationMs !== undefined && ' · '}
+                {formatCost(stage.cost)}
+              </span>
             </button>
           </div>
         );

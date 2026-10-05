@@ -171,6 +171,20 @@ describe('AI review comments', () => {
     });
   });
 
+  test('can expose the precondition composer initially for the review design', () => {
+    const wrapper = shallow(
+      <ReviewTarget
+        target={{ type: CommentTargetType.PRECONDITION }}
+        reviewState={createReviewState({ comments: [] })}
+        isInitiallyOpen
+      />,
+    );
+
+    expect(wrapper.find('section')).toHaveLength(1);
+    expect(wrapper.text()).toContain('No review comments yet');
+    expect(wrapper.find('textarea').prop('placeholder')).toBe('What should the agent change here?');
+  });
+
   test('makes an open thread read-only while a fix is running', () => {
     const wrapper = shallow(
       <ReviewTarget

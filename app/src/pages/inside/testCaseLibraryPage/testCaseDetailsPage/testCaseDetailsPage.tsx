@@ -224,6 +224,7 @@ const MAIN_CONTENT_COLLAPSIBLE_SECTIONS_CONFIG = ({
                     target={{ type: CommentTargetType.PRECONDITION }}
                     reviewState={reviewState}
                     isReadOnly={isReviewReadOnly}
+                    isInitiallyOpen
                   />
                 )
               }
@@ -267,6 +268,7 @@ const MAIN_CONTENT_COLLAPSIBLE_SECTIONS_CONFIG = ({
                   target={{ type: CommentTargetType.PRECONDITION }}
                   reviewState={reviewState}
                   isReadOnly={isReviewReadOnly}
+                  isInitiallyOpen
                 />
               )
             }
@@ -276,6 +278,7 @@ const MAIN_CONTENT_COLLAPSIBLE_SECTIONS_CONFIG = ({
                   target={{ type: CommentTargetType.TEXT_SCENARIO }}
                   reviewState={reviewState}
                   isReadOnly={isReviewReadOnly}
+                  isInitiallyOpen
                 />
               )
             }

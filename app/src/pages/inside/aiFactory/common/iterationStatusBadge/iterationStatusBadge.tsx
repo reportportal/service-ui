@@ -14,9 +14,13 @@
  * limitations under the License.
  */
 
+import { ComponentType, SVGProps } from 'react';
 import { defineMessages, useIntl } from 'react-intl';
+import { ErrorIcon, RefreshIcon, StatusSuccessIcon, WarningIcon } from '@reportportal/ui-kit';
+
 import { createClassnames } from 'common/utils';
 import { AiIterationStatus, IterationStatus } from 'types/aiFactory';
+
 import styles from './iterationStatusBadge.scss';
 
 const cx = createClassnames(styles);
@@ -54,18 +58,28 @@ const MESSAGE_BY_STATUS: Record<AiIterationStatus, { id: string; defaultMessage:
   [IterationStatus.FAILED]: messages.failed,
 };
 
+const ICON_BY_STATUS: Record<AiIterationStatus, ComponentType<SVGProps<SVGSVGElement>>> = {
+  [IterationStatus.RUNNING]: RefreshIcon,
+  [IterationStatus.IN_REVIEW]: WarningIcon,
+  [IterationStatus.COMPLETED]: StatusSuccessIcon,
+  [IterationStatus.FAILED]: ErrorIcon,
+};
+
 export interface IterationStatusBadgeProps {
   status: AiIterationStatus;
+  showIcon?: boolean;
 }
 
-export const IterationStatusBadge = ({ status }: IterationStatusBadgeProps) => {
+export const IterationStatusBadge = ({ status, showIcon = false }: IterationStatusBadgeProps) => {
   const { formatMessage } = useIntl();
+  const StatusIcon = ICON_BY_STATUS[status];
 
   return (
     <span
       className={cx('badge', VARIANT_BY_STATUS[status])}
       data-automation-id="iterationStatusBadge"
     >
+      {showIcon && <StatusIcon className={cx('badge__icon')} aria-hidden="true" />}
       {formatMessage(MESSAGE_BY_STATUS[status])}
     </span>
   );

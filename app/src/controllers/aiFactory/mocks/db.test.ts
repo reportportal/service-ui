@@ -16,7 +16,7 @@
 
 import { findCase, getDb, persist, registerCaseAlias, reloadMockDb, resetMockDb } from './db';
 
-const STORAGE_KEY = 'ai_factory_mock_db_v1';
+const STORAGE_KEY = 'ai_factory_mock_db_v5';
 const UNRELATED_STORAGE_KEY = 'unrelated_setting';
 
 describe('AI Factory mock database reset', () => {

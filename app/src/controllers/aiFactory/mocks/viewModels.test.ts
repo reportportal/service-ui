@@ -139,11 +139,11 @@ describe('toPipelineCompareRS', () => {
 });
 
 describe('toTestCaseAiExtension', () => {
-  test('TC106 shows one unsent comment and no fix running', () => {
+  test('TC106 shows both design-fixture comments and no fix running', () => {
     const c = findCase('TC106');
     const ext = toTestCaseAiExtension(c, findPipeline(1), findIteration(102));
     expect(ext.lifecycle).toBe(Lifecycle.DRAFT);
-    expect(ext.review?.unsentCommentsCount).toBe(1);
+    expect(ext.review?.unsentCommentsCount).toBe(2);
     expect(ext.review?.fixRound).toBeUndefined();
   });
 
@@ -163,8 +163,10 @@ describe('toTestCaseAiRS', () => {
     expect(rs.evaluation?.totalScore).toBe(94);
     expect(rs.pipelineLinks[0]).toEqual({
       pipelineId: 1,
+      pipelineName: 'Test case generation',
       iterationId: 101,
       iterationNumber: 1,
+      requirementId: 'US-TMS-MIG-001',
       stage: StageKey.GRADE,
     });
   });

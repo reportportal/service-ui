@@ -196,6 +196,10 @@ export interface PipelineRS {
   repository: string; // "EPM-RPP/rp-tests"
   iterationsCount: number;
   settings?: PipelineSettingsRS; // GENERATION only
+  rerunOptions?: {
+    models: string[];
+    environments: string[];
+  }; // mock/provisional until the US-020 command contract is accepted
 }
 
 export interface AttributeRS {
@@ -526,8 +530,10 @@ export interface TestCaseAiRS {
   };
   pipelineLinks: {
     pipelineId: number;
+    pipelineName?: string;
     iterationId: number;
     iterationNumber: number;
+    requirementId?: string;
     stage: AiStageKey;
     fixRound?: number;
   }[];

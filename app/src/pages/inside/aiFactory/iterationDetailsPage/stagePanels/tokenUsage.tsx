@@ -37,18 +37,22 @@ export const TokenUsage = ({ tokens }: TokenUsageProps) => {
 
   return (
     <div className={cx('token-usage')} data-automation-id="tokenUsage">
-      <p className={cx('note')}>{formatMessage(messages.tokenUsageTitle)}</p>
+      <h2 className={cx('aside-title')}>{formatMessage(messages.tokenUsageTitle)}</h2>
       {tokens.map((usage) => (
-        <p key={usage.model} className={cx('note')}>
-          {formatMessage(messages.tokenUsageLine, {
-            model: usage.model,
-            input: formatTokens(usage.input),
-            cacheRead: formatTokens(usage.cacheRead),
-            cacheWrite: formatTokens(usage.cacheWrite),
-            output: formatTokens(usage.output),
-            cost: formatCost(usage.cost),
-          })}
-        </p>
+        <dl key={usage.model} className={cx('details-list')}>
+          <dt>{formatMessage(messages.tokenUsageModel)}</dt>
+          <dd>{usage.model}</dd>
+          <dt>{formatMessage(messages.tokenUsageInput)}</dt>
+          <dd>{formatTokens(usage.input)}</dd>
+          <dt>{formatMessage(messages.tokenUsageCacheRead)}</dt>
+          <dd>{formatTokens(usage.cacheRead)}</dd>
+          <dt>{formatMessage(messages.tokenUsageCacheWrite)}</dt>
+          <dd>{formatTokens(usage.cacheWrite)}</dd>
+          <dt>{formatMessage(messages.tokenUsageOutput)}</dt>
+          <dd>{formatTokens(usage.output)}</dd>
+          <dt>{formatMessage(messages.tokenUsageCost)}</dt>
+          <dd>{formatCost(usage.cost)}</dd>
+        </dl>
       ))}
     </div>
   );

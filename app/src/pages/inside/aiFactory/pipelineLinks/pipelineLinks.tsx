@@ -49,32 +49,40 @@ export const PipelineLinks = ({ aiDetailsState }: PipelineLinksProps) => {
           key={`${link.pipelineId}-${link.iterationId}-${link.stage}-${link.fixRound ?? 'source'}`}
           className={cx('pipeline-links__item')}
         >
-          <span className={cx('pipeline-links__label')}>
-            {link.fixRound === undefined
-              ? formatMessage(messages.source)
-              : formatMessage(messages.fixRound, { number: link.fixRound })}
-          </span>
-          <Link
-            className={cx('pipeline-links__link')}
-            data-automation-id={`pipeline-link-${link.stage}-${link.fixRound ?? 'source'}`}
-            to={{
-              type: PROJECT_PIPELINE_ITERATION_PAGE,
-              payload: {
-                organizationSlug,
-                projectSlug,
-                pipelineId: link.pipelineId,
-                iterationId: link.iterationId,
-              },
-              query: { stage: link.stage },
-            }}
-          >
-            {formatMessage(messages.iterationStage, {
-              number: link.iterationNumber,
-              stage: formatMessage(
-                link.stage === StageKey.GRADE ? messages.grade : messages.review,
-              ),
-            })}
-          </Link>
+          <div className={cx('pipeline-links__content')}>
+            <Link
+              className={cx('pipeline-links__link')}
+              data-automation-id={`pipeline-link-${link.stage}-${link.fixRound ?? 'source'}`}
+              to={{
+                type: PROJECT_PIPELINE_ITERATION_PAGE,
+                payload: {
+                  organizationSlug,
+                  projectSlug,
+                  pipelineId: link.pipelineId,
+                  iterationId: link.iterationId,
+                },
+                query: { stage: link.stage },
+              }}
+            >
+              {link.fixRound === undefined
+                ? formatMessage(messages.sourceIteration, {
+                    pipeline: link.pipelineName ?? formatMessage(messages.pipelineFallback),
+                    number: link.iterationNumber,
+                  })
+                : formatMessage(messages.fixRoundIteration, {
+                    number: link.iterationNumber,
+                    round: link.fixRound,
+                  })}
+              <span aria-hidden="true"> ↗</span>
+            </Link>
+            <div className={cx('pipeline-links__meta')}>
+              {link.fixRound === undefined
+                ? formatMessage(messages.createdFrom, {
+                    requirement: link.requirementId ?? formatMessage(messages.requirementUnknown),
+                  })
+                : formatMessage(messages.review)}
+            </div>
+          </div>
         </li>
       ))}
     </ul>

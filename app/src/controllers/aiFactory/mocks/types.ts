@@ -45,6 +45,7 @@ export interface MockPipelineSeed {
   name: string;
   repository: string;
   settings?: { autoReady: boolean; threshold: number; editable: boolean };
+  rerunOptions?: { models: string[]; environments: string[] };
 }
 
 export interface MockStageSeed {
@@ -52,9 +53,11 @@ export interface MockStageSeed {
   durationMs: number;
   cost: number;
   tokens: TokenUsageRS[];
+  ciJob?: { id: string; url: string };
   suiteScore?: number; // grade
   threshold?: number; // upload
   perCase?: Record<number, string>; // automation stages
+  failureReason?: string;
 }
 
 export interface MockIterationSeed {
@@ -115,6 +118,8 @@ export interface MockPendingCommentSeed {
 export interface MockCaseSeed {
   id: number;
   displayId: string;
+  name?: string;
+  availableInLibrary?: boolean;
   priority: TestCasePriority;
   template: 'TEXT' | 'STEPS';
   stepsCount: number;
@@ -141,6 +146,8 @@ export interface MockCaseSeed {
 export interface MockCaseRecord {
   id: number;
   displayId: string;
+  name?: string;
+  availableInLibrary?: boolean;
   priority: TestCasePriority;
   template: 'TEXT' | 'STEPS';
   stepsCount: number;

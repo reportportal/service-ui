@@ -27,13 +27,16 @@ export const buildKpis = (pipelineType: AiPipelineType, iteration: IterationRS):
   const kpis: KpiItem[] = [{ key: 'kpiTestCases', value: iteration.testCasesCount }];
   if (pipelineType === PipelineType.GENERATION) {
     if (iteration.suiteScore !== undefined) {
-      kpis.push({ key: 'kpiSuiteScore', value: iteration.suiteScore });
+      kpis.push({ key: 'kpiSuiteScore', value: `${iteration.suiteScore} / 100` });
     }
     if (iteration.autoReadyPromotedCount !== undefined) {
-      kpis.push({ key: 'kpiAutoReadyPromoted', value: iteration.autoReadyPromotedCount });
+      kpis.push({
+        key: 'kpiAutoReadyPromoted',
+        value: `${iteration.autoReadyPromotedCount} of ${iteration.testCasesCount}`,
+      });
     }
     if (iteration.readyCount !== undefined) {
-      kpis.push({ key: 'kpiReadyNow', value: iteration.readyCount });
+      kpis.push({ key: 'kpiReadyNow', value: `${iteration.readyCount} / ${iteration.testCasesCount}` });
     }
     if (iteration.fixRoundsCount !== undefined) {
       kpis.push({ key: 'kpiFixRounds', value: iteration.fixRoundsCount });

@@ -16,7 +16,7 @@
 
 import { useIntl } from 'react-intl';
 import { useStore } from 'react-redux';
-import { Button } from '@reportportal/ui-kit';
+import { Button, ConfigurationIcon } from '@reportportal/ui-kit';
 
 import { PipelineRS } from 'types/aiFactory';
 
@@ -50,6 +50,7 @@ export const PipelineSettingsButton = ({ pipeline }: PipelineSettingsButtonProps
     <Button
       variant="text"
       adjustWidthOn="content"
+      icon={<ConfigurationIcon />}
       data-automation-id={`pipelineSettingsButton-${pipeline.id}`}
       onClick={openSettings}
     >

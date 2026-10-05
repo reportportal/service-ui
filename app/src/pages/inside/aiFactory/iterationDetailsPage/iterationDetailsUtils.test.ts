@@ -70,9 +70,9 @@ describe('buildKpis', () => {
   test('includes all generation KPIs when present', () => {
     expect(buildKpis(PipelineType.GENERATION, baseIteration)).toEqual([
       { key: 'kpiTestCases', value: 4 },
-      { key: 'kpiSuiteScore', value: 79 },
-      { key: 'kpiAutoReadyPromoted', value: 1 },
-      { key: 'kpiReadyNow', value: 2 },
+      { key: 'kpiSuiteScore', value: '79 / 100' },
+      { key: 'kpiAutoReadyPromoted', value: '1 of 4' },
+      { key: 'kpiReadyNow', value: '2 / 4' },
       { key: 'kpiFixRounds', value: 1 },
       { key: 'kpiCost', value: 1.27 },
     ]);

@@ -20,6 +20,7 @@ import { StageKey, StageStatus, type StageRS } from 'types/aiFactory';
 
 import { StageCards } from './stageCards';
 
+jest.mock('@reportportal/ui-kit', () => ({ RerunIcon: 'RerunIcon' }));
 jest.mock('pages/inside/aiFactory/common', () => ({
   STAGE_LABEL_MESSAGE: {
     CREATE: { defaultMessage: 'Create' },

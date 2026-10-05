@@ -8,6 +8,7 @@
  * http://www.apache.org/licenses/LICENSE-2.0
  */
 
+import type { ReactElement } from 'react';
 import { mount, shallow } from 'enzyme';
 import { useDispatch, useSelector } from 'react-redux';
 
@@ -32,15 +33,19 @@ import {
   urlOrganizationAndProjectSelector,
 } from 'controllers/pages';
 import { projectKeySelector, projectNameSelector } from 'controllers/project';
+import { useUserPermissions } from 'hooks/useUserPermissions';
 import { POLLING_REQUEST_STARTED, usePolling } from 'pages/inside/aiFactory/common';
 import { IterationStatus, PipelineType, type IterationRS, type PipelineRS } from 'types/aiFactory';
 
 import { IterationDetailsPageContent } from './iterationDetailsPageContent';
 import { ReducedIterationDetails } from './reducedIterationDetails';
+import { useIterationRerunModal } from './rerun';
 
 jest.mock('@reportportal/ui-kit', () => ({
   Button: 'Button',
+  CycleArrowsIcon: 'CycleArrowsIcon',
   RefreshIcon: 'RefreshIcon',
+  RerunIcon: 'RerunIcon',
   SystemMessage: 'SystemMessage',
 }));
 jest.mock(
@@ -93,13 +98,16 @@ jest.mock('controllers/project', () => ({
   projectKeySelector: jest.fn(),
   projectNameSelector: jest.fn(),
 }));
+jest.mock('hooks/useUserPermissions', () => ({ useUserPermissions: jest.fn() }));
 jest.mock('components/preloaders/spinningPreloader', () => ({
   SpinningPreloader: 'SpinningPreloader',
 }));
 jest.mock('layouts/settingsLayout', () => ({ SettingsLayout: 'SettingsLayout' }));
 jest.mock('pages/inside/aiFactory/common', () => ({
+  IterationStatusBadge: 'IterationStatusBadge',
   POLLING_REQUEST_STARTED: 'POLLING_REQUEST_STARTED',
   STAGE_LABEL_MESSAGE: {},
+  startedAndDuration: jest.fn(() => 'started'),
   usePolling: jest.fn(),
 }));
 jest.mock('../../common/pageHeaderWithBreadcrumbsAndActions', () => ({
@@ -109,14 +117,24 @@ jest.mock('../pipelineSettings', () => ({ PipelineSettingsButton: 'PipelineSetti
 jest.mock('./kpiTile', () => ({ KpiTile: 'KpiTile' }));
 jest.mock('./stageCards', () => ({ StageCards: 'StageCards' }));
 jest.mock('./stagePanels', () => ({ StagePanels: 'StagePanels' }));
+jest.mock('./rerun', () => ({ useIterationRerunModal: jest.fn() }));
 
 const dispatch = jest.fn();
+const openRerunModal = jest.fn();
 const createIteration = (status: IterationStatus): IterationRS =>
   ({
     id: 103,
     pipelineId: 7,
     number: 3,
     status,
+    trigger: 'Web form · REQUIREMENT',
+    startedBy: 'Demo user',
+    model: 'auto (default)',
+    environment: 'beta5',
+    startedAt: Date.now(),
+    testCasesCount: 0,
+    costTotal: 0,
+    ciPipeline: { id: '#1', url: '#' },
     attributes: [],
     stages: [],
   }) as IterationRS;
@@ -127,6 +145,7 @@ const richPipeline: PipelineRS = {
   name: 'Generation',
   repository: 'repo',
   iterationsCount: 1,
+  rerunOptions: { models: ['auto (default)'], environments: ['beta5'] },
 };
 
 interface CatalogOptions {
@@ -179,6 +198,10 @@ const renderPage = (
     [pipelinesLoadingSelector, catalogLoading],
   ]);
   jest.mocked(useDispatch).mockReturnValue(dispatch as unknown as ReturnType<typeof useDispatch>);
+  jest.mocked(useUserPermissions).mockReturnValue({
+    canManagePipelineSettings: true,
+  } as ReturnType<typeof useUserPermissions>);
+  jest.mocked(useIterationRerunModal).mockReturnValue({ openModal: openRerunModal });
   jest
     .mocked(useSelector)
     .mockImplementation(((selector: unknown) =>
@@ -210,6 +233,20 @@ describe('IterationDetailsPageContent polling', () => {
       wrapper.unmount();
     },
   );
+
+  test('opens the Re-run modal with the current pipeline and iteration', () => {
+    const iteration = createIteration(IterationStatus.FAILED);
+    const wrapper = renderPage(IterationStatus.FAILED, false, [richPipeline], { iteration });
+    const actions = wrapper.find('PageHeaderWithBreadcrumbsAndActions').prop('actions');
+    const rerunButton = shallow(actions as ReactElement).find(
+      '[data-automation-id="rerunIterationButton"]',
+    );
+
+    expect(rerunButton.prop('disabled')).toBe(false);
+    (rerunButton.prop('onClick') as () => void)();
+    expect(openRerunModal).toHaveBeenCalledWith({ pipeline: richPipeline, iteration });
+    wrapper.unmount();
+  });
 
   test('re-arms polling after loading completes without duplicate dispatches', () => {
     const wrapper = renderPage(IterationStatus.RUNNING);

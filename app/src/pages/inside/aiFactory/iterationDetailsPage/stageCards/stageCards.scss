@@ -16,34 +16,38 @@
 
 .stage-cards {
   display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 4px;
-  margin: 16px 0;
+  align-items: stretch;
+  gap: 8px;
+  overflow-x: auto;
+  padding: 2px;
 
   &__item-wrapper {
     display: flex;
     align-items: center;
-    gap: 4px;
+    gap: 8px;
+    min-width: 0;
+    flex: 1 0 220px;
   }
 
   &__arrow {
-    color: var(--rp-ui-base-e-400);
+    flex: 0 0 auto;
+    align-self: center;
+    color: var(--rp-ui-base-e-300);
+    font-size: 16px;
   }
 
   &__item {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    gap: 6px;
+    gap: 8px;
     box-sizing: border-box;
-    flex: 0 0 110px;
-    width: 110px;
-    padding: 10px 14px;
+    width: 100%;
+    min-height: 140px;
+    padding: 14px;
     background-color: var(--rp-ui-base-bg-000);
     border: 1px solid var(--rp-ui-base-e-100);
     border-radius: 4px;
-    box-shadow: var(--rp-ui-base-shadow);
     cursor: pointer;
     font-family: var(--rp-ui-base-font-family);
     color: var(--rp-ui-base-almost-black);
@@ -69,7 +73,12 @@
     display: flex;
     align-items: center;
     gap: 6px;
+    width: 100%;
     min-width: 0;
+
+    :global([data-automation-id='stageStatusLabel']) {
+      margin-left: auto;
+    }
   }
 
   &__item-label {
@@ -79,8 +88,65 @@
     overflow-wrap: anywhere;
   }
 
-  &__item-metric {
-    color: var(--rp-ui-base-e-400);
+  &__item-summary {
+    min-height: 18px;
     font-size: 12px;
+    line-height: 18px;
+
+    &--failed {
+      color: var(--rp-ui-base-error);
+    }
+  }
+
+  &__item-description,
+  &__item-footer {
+    color: var(--rp-ui-base-e-400);
+    font-size: 11px;
+    line-height: 16px;
+  }
+
+  &__item-footer {
+    margin-top: auto;
+  }
+
+  &__score {
+    display: grid;
+    grid-template-columns: minmax(80px, 1fr) auto;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    font-size: 12px;
+  }
+
+  &__retry {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    color: var(--rp-ui-base-topaz);
+    font-size: 11px;
+    line-height: 16px;
+
+    svg {
+      width: 12px;
+      height: 12px;
+    }
+  }
+}
+
+@media (max-width: 960px) {
+  .stage-cards {
+    display: grid;
+    grid-template-columns: 1fr;
+
+    &__item-wrapper {
+      display: grid;
+      grid-template-columns: 1fr;
+      width: 100%;
+    }
+
+    &__arrow {
+      justify-self: center;
+      transform: rotate(90deg);
+    }
   }
 }

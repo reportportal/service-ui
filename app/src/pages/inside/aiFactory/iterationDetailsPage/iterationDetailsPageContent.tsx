@@ -17,7 +17,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useIntl } from 'react-intl';
-import { Button, RefreshIcon, SystemMessage } from '@reportportal/ui-kit';
+import { Button, CycleArrowsIcon, RefreshIcon, RerunIcon } from '@reportportal/ui-kit';
 import Link from 'redux-first-router-link';
 
 import { createClassnames, formatCost } from 'common/utils';
@@ -48,12 +48,15 @@ import {
   urlOrganizationAndProjectSelector,
 } from 'controllers/pages';
 import { projectKeySelector, projectNameSelector } from 'controllers/project';
+import { useUserPermissions } from 'hooks/useUserPermissions';
 import { SettingsLayout } from 'layouts/settingsLayout';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
 import { SpinningPreloader } from 'components/preloaders/spinningPreloader';
 import {
   POLLING_REQUEST_STARTED,
   STAGE_LABEL_MESSAGE,
+  IterationStatusBadge,
+  startedAndDuration,
   usePolling,
 } from 'pages/inside/aiFactory/common';
 import { ProjectDetails } from 'pages/organization/constants';
@@ -66,6 +69,7 @@ import { StageCards } from './stageCards';
 import { StagePanels } from './stagePanels';
 import { buildKpis, defaultStageKey, draftCasesCount, runningStage } from './iterationDetailsUtils';
 import { messages } from './messages';
+import { useIterationRerunModal } from './rerun';
 import { ReducedIterationDetails } from './reducedIterationDetails';
 import styles from './iterationDetailsPage.scss';
 
@@ -83,6 +87,8 @@ const isReducedDetail = (
 export const IterationDetailsPageContent = () => {
   const { formatMessage } = useIntl();
   const dispatch = useDispatch();
+  const { canManagePipelineSettings } = useUserPermissions();
+  const { openModal: openRerunModal } = useIterationRerunModal();
   const projectName = useSelector(projectNameSelector);
   const projectKey = useSelector(projectKeySelector);
   const { organizationSlug, projectSlug } = useSelector(
@@ -200,28 +206,32 @@ export const IterationDetailsPageContent = () => {
   ];
 
   const renderBanner = (richIteration: IterationRS) => {
+    let content;
     switch (richIteration.status) {
       case IterationStatus.RUNNING: {
         const running = runningStage(richIteration);
-        return (
-          <SystemMessage mode="info">
+        content = (
+          <>
             {running
               ? formatMessage(messages.bannerRunningStage, {
                   stage: formatMessage(STAGE_LABEL_MESSAGE[running.key]),
                 })
               : formatMessage(messages.bannerRunning)}
-          </SystemMessage>
+          </>
         );
+        break;
       }
       case IterationStatus.COMPLETED:
-        return <SystemMessage mode="info">{formatMessage(messages.bannerCompleted)}</SystemMessage>;
+        content = formatMessage(messages.bannerCompleted);
+        break;
       case IterationStatus.IN_REVIEW: {
         const draftCount = draftCasesCount(richIteration);
-        return (
-          <SystemMessage mode="info">
+        content = (
+          <>
             {formatMessage(messages.bannerInReview, { count: draftCount })}
             {' · '}
             <Link
+              className={cx('text-link')}
               to={{
                 type: TEST_CASE_LIBRARY_PAGE,
                 payload: { organizationSlug, projectSlug },
@@ -230,16 +240,29 @@ export const IterationDetailsPageContent = () => {
             >
               {formatMessage(messages.openReviewQueue)}
             </Link>
-          </SystemMessage>
+          </>
         );
+        break;
       }
       case IterationStatus.FAILED:
-        return (
-          <SystemMessage mode="error">{formatMessage(messages.bannerFailedGeneric)}</SystemMessage>
-        );
+        content = formatMessage(messages.bannerFailedGeneric);
+        break;
       default:
         return null;
     }
+
+    const statusClass = richIteration.status.toLowerCase().replace('_', '-');
+    return (
+      <output className={cx('status-banner', `status-banner--${statusClass}`)} aria-live="polite">
+        <IterationStatusBadge status={richIteration.status} />
+        <strong className={cx('status-banner__title')}>
+          {`${pipeline?.name ?? ''} / ${formatMessage(messages.iterationTitle, {
+            number: richIteration.number,
+          })}`}
+        </strong>
+        <span className={cx('status-banner__message')}>{content}</span>
+      </output>
+    );
   };
 
   const retryDetail = () => {
@@ -275,6 +298,48 @@ export const IterationDetailsPageContent = () => {
 
   const richIteration = currentIteration;
 
+  const metaFields = [
+    richIteration.requirement
+      ? {
+          key: 'requirement',
+          label: formatMessage(messages.metaRequirement),
+          value: `${richIteration.requirement.specId} · ${richIteration.requirement.title}`,
+        }
+      : undefined,
+    richIteration.testCases?.length
+      ? {
+          key: 'testCases',
+          label: formatMessage(messages.metaTestCases),
+          value: richIteration.testCases.map(({ displayId }) => displayId).join(', '),
+        }
+      : undefined,
+    {
+      key: 'trigger',
+      label: formatMessage(messages.metaTrigger),
+      value: richIteration.trigger,
+    },
+    {
+      key: 'startedBy',
+      label: formatMessage(messages.metaStartedBy),
+      value: richIteration.startedBy,
+    },
+    {
+      key: 'model',
+      label: formatMessage(messages.metaModel),
+      value: richIteration.model,
+    },
+    {
+      key: 'environment',
+      label: formatMessage(messages.metaEnvironment),
+      value: richIteration.environment,
+    },
+    {
+      key: 'started',
+      label: formatMessage(messages.metaStarted),
+      value: startedAndDuration(richIteration),
+    },
+  ].filter((field): field is { key: string; label: string; value: string } => Boolean(field));
+
   const currentStage =
     richIteration.stages.find((stage) => stage.key === selectedStage) || richIteration.stages[0];
 
@@ -282,7 +347,15 @@ export const IterationDetailsPageContent = () => {
     <SettingsLayout>
       <ScrollWrapper resetRequired>
         <PageHeaderWithBreadcrumbsAndActions
-          title={formatMessage(messages.iterationTitle, { number: richIteration.number })}
+          title={`${pipeline.name} · ${formatMessage(messages.iterationTitle, {
+            number: richIteration.number,
+          })}`}
+          titleAddon={
+            <div className={cx('title-badges')}>
+              <span className={cx('iteration-badge')}>{formatMessage(messages.iterationBadge)}</span>
+              <IterationStatusBadge status={richIteration.status} showIcon />
+            </div>
+          }
           breadcrumbDescriptors={breadcrumbDescriptors}
           actions={
             <div className={cx('header-actions')}>
@@ -290,6 +363,7 @@ export const IterationDetailsPageContent = () => {
                 <Button
                   variant="text"
                   data-automation-id="compareWithPreviousButton"
+                  icon={<CycleArrowsIcon />}
                   onClick={() =>
                     dispatch({
                       type: PROJECT_PIPELINE_COMPARISON_PAGE,
@@ -305,6 +379,20 @@ export const IterationDetailsPageContent = () => {
                   {formatMessage(messages.compareWithPrevious)}
                 </Button>
               )}
+              <Button
+                variant="text"
+                data-automation-id="rerunIterationButton"
+                icon={<RerunIcon />}
+                disabled={!canManagePipelineSettings || !pipeline.rerunOptions}
+                title={
+                  canManagePipelineSettings
+                    ? undefined
+                    : formatMessage(messages.rerunPermissionUnavailable)
+                }
+                onClick={() => openRerunModal({ pipeline, iteration: richIteration })}
+              >
+                {formatMessage(messages.rerun)}
+              </Button>
               <PipelineSettingsButton pipeline={pipeline} />
               <Button
                 variant="text"
@@ -319,38 +407,54 @@ export const IterationDetailsPageContent = () => {
           }
         />
         <div className={cx('content')}>
-          <div>
+          <section className={cx('summary-card')} aria-label={formatMessage(messages.summaryLabel)}>
             <div className={cx('meta')}>
-              {[richIteration.trigger, richIteration.model, richIteration.environment]
-                .filter(Boolean)
-                .join(' · ')}
+              {metaFields.map((field) => (
+                <span key={field.key} className={cx('meta__field')}>
+                  <span className={cx('meta__label')}>{`${field.label}:`}</span>
+                  <span className={cx('meta__value')}>{field.value}</span>
+                </span>
+              ))}
+              <span className={cx('meta__field')}>
+                <span className={cx('meta__label')}>{`${formatMessage(messages.metaCiPipeline)}:`}</span>
+                <a href={richIteration.ciPipeline.url} target="_blank" rel="noreferrer">
+                  {richIteration.ciPipeline.id}
+                </a>
+              </span>
             </div>
             {richIteration.attributes.length > 0 && (
               <div className={cx('attributes')}>
                 {richIteration.attributes.map((attribute) => (
                   <span key={attribute.key} className={cx('attributes__chip')}>
-                    {`${attribute.key}: ${attribute.value}`}
+                    <span className={cx('attributes__key')}>{`${attribute.key}:`}</span>
+                    <span className={cx('attributes__value')}>{attribute.value}</span>
                   </span>
                 ))}
               </div>
             )}
-          </div>
-          <div className={cx('kpis')}>
-            {buildKpis(pipeline.type, richIteration).map((kpi) => (
-              <KpiTile
-                key={kpi.key}
-                label={formatMessage(messages[kpi.key as keyof typeof messages])}
-                value={kpi.key === 'kpiCost' ? formatCost(kpi.value as number) : kpi.value}
-              />
-            ))}
-          </div>
+            <div className={cx('kpis')}>
+              {buildKpis(pipeline.type, richIteration).map((kpi) => (
+                <KpiTile
+                  key={kpi.key}
+                  label={formatMessage(messages[kpi.key as keyof typeof messages])}
+                  value={kpi.key === 'kpiCost' ? formatCost(kpi.value as number) : kpi.value}
+                />
+              ))}
+            </div>
+          </section>
           {renderBanner(richIteration)}
-          <StageCards
-            stages={richIteration.stages}
-            testCasesCount={richIteration.testCasesCount}
-            selectedStage={selectedStage || defaultStageKey(pipeline.type)}
-            onSelect={setSelectedStage}
-          />
+          <section className={cx('stage-card-section')}>
+            <h2 className={cx('section-title')}>{formatMessage(messages.stagesTitle)}</h2>
+            <StageCards
+              stages={richIteration.stages}
+              testCasesCount={richIteration.testCasesCount}
+              readyCount={richIteration.readyCount}
+              fixRoundsCount={richIteration.fixRoundsCount}
+              autoReadyPromotedCount={richIteration.autoReadyPromotedCount}
+              selectedStage={selectedStage || defaultStageKey(pipeline.type)}
+              onSelect={setSelectedStage}
+            />
+          </section>
           {currentStage && (
             <div className={cx('panel-card')}>
               <StagePanels stage={currentStage} iteration={richIteration} />

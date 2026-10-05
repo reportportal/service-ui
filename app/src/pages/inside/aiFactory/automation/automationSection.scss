@@ -48,8 +48,17 @@
     text-decoration: none;
     overflow-wrap: anywhere;
 
+    &:visited {
+      color: var(--rp-ui-base-topaz);
+    }
+
     &:hover {
+      color: var(--rp-ui-base-topaz-hover);
       text-decoration: underline;
+    }
+
+    &:active {
+      color: var(--rp-ui-base-topaz-pressed);
     }
   }
 

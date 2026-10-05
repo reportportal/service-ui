@@ -35,6 +35,7 @@ import { usePipelineSettingsModal } from './usePipelineSettingsModal';
 
 jest.mock('@reportportal/ui-kit', () => ({
   Button: 'Button',
+  ConfigurationIcon: 'ConfigurationIcon',
   FieldText: 'FieldText',
   Modal: 'Modal',
   SystemMessage: 'SystemMessage',

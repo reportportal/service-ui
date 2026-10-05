@@ -93,7 +93,7 @@ describe('mergeAiFields', () => {
       lifecycle: 'DRAFT',
       ai: { modifiedByAgent: false },
       evaluationSummary: { totalScore: 81, state: 'EVALUATED' },
-      review: { unsentCommentsCount: 1 },
+      review: { unsentCommentsCount: 2 },
     });
   });
 
@@ -106,7 +106,7 @@ describe('mergeAiFields', () => {
       preconditions: { value: 'Precondition' },
       instructions: 'Instructions',
       expectedResult: 'Expected result',
-    });
+    } as ManualScenario);
 
     expect(() => mergeAiFields(real)).not.toThrow();
     expect(mergeAiFields(real)).toMatchObject({
@@ -188,8 +188,14 @@ describe('installOverlayInterceptor', () => {
     );
 
     expect(testCase.manualScenario).toEqual(scenario);
-    expect(comments[0].target).toEqual({ type: 'STEP', stepId: 73 });
-    expect(canonicalComments[0].target).toEqual({ type: 'STEP', stepId: 2 });
+    expect(comments.map(({ target }) => target)).toEqual([
+      { type: 'PRECONDITION' },
+      { type: 'STEP', stepId: 73 },
+    ]);
+    expect(canonicalComments.map(({ target }) => target)).toEqual([
+      { type: 'PRECONDITION' },
+      { type: 'STEP', stepId: 2 },
+    ]);
 
     mock.restore();
   });

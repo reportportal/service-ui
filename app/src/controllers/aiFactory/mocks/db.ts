@@ -38,7 +38,7 @@ import {
   MockPlanSeed,
 } from './types';
 
-const STORAGE_KEY = 'ai_factory_mock_db_v1';
+const STORAGE_KEY = 'ai_factory_mock_db_v5';
 /** Spread seeded history entries evenly over the 24h before their case's evaluation time. */
 const HISTORY_SPREAD_MS = 60 * 60 * 1000;
 
@@ -90,6 +90,8 @@ const hydrateCase = (seed: MockCaseSeed): MockCaseRecord => {
   return {
     id: seed.id,
     displayId: seed.displayId,
+    name: seed.name ?? seed.displayId,
+    availableInLibrary: seed.availableInLibrary ?? true,
     priority: seed.priority,
     template: seed.template,
     stepsCount: seed.stepsCount,

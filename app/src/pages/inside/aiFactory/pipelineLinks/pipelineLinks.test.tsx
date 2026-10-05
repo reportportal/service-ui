@@ -38,7 +38,14 @@ const state: TestCaseAiLoadState = {
   data: {
     lifecycleHistory: [],
     pipelineLinks: [
-      { pipelineId: 1, iterationId: 101, iterationNumber: 1, stage: StageKey.GRADE },
+      {
+        pipelineId: 1,
+        pipelineName: 'Test case generation',
+        iterationId: 101,
+        iterationNumber: 1,
+        requirementId: 'US-TMS-MIG-001',
+        stage: StageKey.GRADE,
+      },
       {
         pipelineId: 1,
         iterationId: 101,
@@ -72,7 +79,7 @@ describe('PipelineLinks', () => {
     const fixRoundLink = wrapper.find('[data-automation-id="pipeline-link-REVIEW-1"]');
 
     expect(links).toHaveLength(2);
-    expect(sourceLink.text()).toBe('Iteration #1 · Grade');
+    expect(sourceLink.text()).toBe('Test case generation · Iteration #1 ↗');
     expect(sourceLink.prop('to')).toEqual({
       type: PROJECT_PIPELINE_ITERATION_PAGE,
       payload: {
@@ -83,9 +90,11 @@ describe('PipelineLinks', () => {
       },
       query: { stage: StageKey.GRADE },
     });
-    expect(fixRoundLink.text()).toBe('Iteration #1 · Review');
+    expect(fixRoundLink.text()).toBe('Iteration #1 · Fix round 1 ↗');
     expect(fixRoundLink.prop('to')).toMatchObject({ query: { stage: StageKey.REVIEW } });
     expect(content.text()).toContain('Fix round 1');
+    expect(content.text()).toContain('created · US-TMS-MIG-001');
+    expect(content.text()).toContain('Review');
   });
 
   test('passes no content to the collapsible section when links are unavailable', () => {

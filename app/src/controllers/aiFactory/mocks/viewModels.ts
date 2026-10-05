@@ -41,7 +41,7 @@ import {
   TestCaseAiExtension,
   TestCaseAiRS,
 } from 'types/aiFactory';
-import { findCase, findIteration, listCasesOfIteration } from './db';
+import { findCase, findIteration, listCasesOfIteration, listIterations } from './db';
 import {
   autoReadyPromotedCount,
   caseCost,
@@ -64,6 +64,7 @@ export const toPipelineRS = (pipeline: MockPipelineSeed, iterationsCount: number
   repository: pipeline.repository,
   iterationsCount,
   settings: pipeline.settings,
+  rerunOptions: pipeline.rerunOptions,
 });
 
 const publicTestCaseId = (iteration: MockIterationSeed, canonicalId: number): number => {
@@ -142,7 +143,7 @@ const toReviewCaseSummary = (c: MockCaseRecord): ReviewCaseSummaryRS => {
   return {
     testCaseId: c.id,
     displayId: c.displayId,
-    name: c.displayId,
+    name: c.name || c.displayId,
     lifecycle: c.lifecycle,
     madeReadyBy: c.lifecycle === Lifecycle.READY ? readyEntry?.actor.name : undefined,
     madeReadyAt: c.lifecycle === Lifecycle.READY ? readyEntry?.at : undefined,
@@ -165,8 +166,9 @@ const toStageRS = (
     ...summary,
     startedAt: iteration.startedAt,
     durationMs: seed?.durationMs,
-    ciJob: iteration.ciPipeline,
+    ciJob: seed?.ciJob ?? iteration.ciPipeline,
     tokens: seed?.tokens || [],
+    failureReason: seed?.failureReason,
   };
   if (key === StageKey.CREATE && cases.length) {
     const perCaseDurationMs = seed?.durationMs
@@ -174,7 +176,7 @@ const toStageRS = (
       : undefined;
     base.create = {
       cases: cases.map((c) => ({
-        name: c.displayId,
+        name: c.name || c.displayId,
         priority: c.priority,
         testCaseId: c.id,
         displayId: c.displayId,
@@ -188,7 +190,7 @@ const toStageRS = (
       suiteScore: seed.suiteScore || 0,
       warnings: [],
       cases: cases.map((c) => ({
-        name: c.displayId,
+        name: c.name || c.displayId,
         testCaseId: c.id,
         displayId: c.displayId,
         totalScore: totalScore(c) || 0,
@@ -200,7 +202,7 @@ const toStageRS = (
     base.upload = {
       threshold: seed.threshold || 90,
       results: cases.map((c) => ({
-        name: c.displayId,
+        name: c.name || c.displayId,
         testCaseId: c.id,
         displayId: c.displayId,
         result: c.lifecycle === Lifecycle.READY ? 'CREATED_READY_AUTO' : 'CREATED_DRAFT',
@@ -254,6 +256,9 @@ export const toIterationRS = (
     : undefined,
   autoReadyPromotedCount:
     pipeline.type === PipelineType.GENERATION ? autoReadyPromotedCount(iteration.id) : undefined,
+  previousIterationId: listIterations(iteration.pipelineId).find(
+    (candidate) => candidate.number === iteration.number - 1,
+  )?.id,
   stages: stageOrder(pipeline.type).map((key) => toStageRS(pipeline, iteration, key)),
 });
 
@@ -448,14 +453,18 @@ export const toTestCaseAiRS = (
     ? [
         {
           pipelineId: iteration.pipelineId,
+          pipelineName: pipeline?.name,
           iterationId: iteration.id,
           iterationNumber: iteration.number,
+          requirementId: iteration.requirement?.specId,
           stage: StageKey.GRADE,
         },
         ...c.fixRounds.map((r) => ({
           pipelineId: iteration.pipelineId,
+          pipelineName: pipeline?.name,
           iterationId: iteration.id,
           iterationNumber: iteration.number,
+          requirementId: iteration.requirement?.specId,
           stage: StageKey.REVIEW,
           fixRound: r.round,
         })),

@@ -15,6 +15,7 @@
  */
 
 import { useId, useMemo, useState } from 'react';
+import parse from 'html-react-parser';
 import { useDispatch } from 'react-redux';
 import { useIntl } from 'react-intl';
 import { BubblesLoader, Button, DeleteIcon, Modal, Tooltip } from '@reportportal/ui-kit';
@@ -25,7 +26,7 @@ import { createClassnames } from 'common/utils';
 import { fromNowFormat } from 'common/utils/timeDateUtils';
 import { showModalAction } from 'controllers/modal';
 import { LifecycleBadge } from 'pages/inside/aiFactory/common';
-import { CommentState, CommentTargetType, FixRoundStatus } from 'types/aiFactory';
+import { CommentState, CommentTargetType, FixRoundStatus, Lifecycle } from 'types/aiFactory';
 import type {
   AiCommentState,
   ReviewCommentRS,
@@ -65,11 +66,17 @@ interface ReviewTargetProps {
   target: ReviewCommentTarget;
   reviewState: ReviewCommentsLoadState;
   isReadOnly?: boolean;
+  isInitiallyOpen?: boolean;
 }
 
-export const ReviewTarget = ({ target, reviewState, isReadOnly = false }: ReviewTargetProps) => {
+export const ReviewTarget = ({
+  target,
+  reviewState,
+  isReadOnly = false,
+  isInitiallyOpen = false,
+}: ReviewTargetProps) => {
   const { formatMessage } = useIntl();
-  const [isOpen, setIsOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(isInitiallyOpen);
   const [text, setText] = useState('');
   const [mutationError, setMutationError] = useState(false);
   const uniqueId = useId();
@@ -124,7 +131,9 @@ export const ReviewTarget = ({ target, reviewState, isReadOnly = false }: Review
         disabled={reviewState.isLoading}
         onClick={() => setIsOpen((open) => !open)}
       >
-        <img src={CommentIcon} alt="" aria-hidden="true" />
+        <span className={cx('review-target__trigger-icon')} aria-hidden="true">
+          {parse(CommentIcon)}
+        </span>
         <span>{comments.length}</span>
       </button>
       {isOpen && (
@@ -155,11 +164,15 @@ export const ReviewTarget = ({ target, reviewState, isReadOnly = false }: Review
               {comment.reason && <p className={cx('review-target__reason')}>{comment.reason}</p>}
             </article>
           ))}
+          {!comments.length && (
+            <p className={cx('review-target__empty')}>{formatMessage(messages.noCommentsYet)}</p>
+          )}
           {!isReadOnly && (
             <div className={cx('review-target__composer')}>
               <label htmlFor={composerId}>{formatMessage(messages.addCommentLabel)}</label>
               <textarea
                 id={composerId}
+                rows={2}
                 value={text}
                 maxLength={1000}
                 placeholder={formatMessage(messages.placeholder)}
@@ -302,8 +315,15 @@ export const ReviewStrip = ({
     <section className={cx('review-strip')} data-automation-id="ai-review-strip">
       <div className={cx('review-strip__summary')}>
         <LifecycleBadge lifecycle={lifecycle} />
-        <strong>{formatMessage(messages.reviewComments)}</strong>
-        <span>{formatMessage(messages.notSentCount, { count: pendingCount })}</span>
+        <strong>
+          {formatMessage(
+            lifecycle === Lifecycle.DRAFT ? messages.aiReview : messages.reviewComments,
+          )}
+        </strong>
+        <span>
+          {lifecycle === Lifecycle.DRAFT && `${formatMessage(messages.reviewComments)} · `}
+          {formatMessage(messages.notSentCount, { count: pendingCount })}
+        </span>
         {reviewState.isLoading && (
           <span className={cx('review-strip__loading')}>
             <BubblesLoader />
