@@ -16,33 +16,69 @@
 
 import { useState } from 'react';
 import { useIntl } from 'react-intl';
-import { ArrowDownIcon } from '@reportportal/ui-kit';
+import { ArrowDownIcon, Button } from '@reportportal/ui-kit';
 
 import { createClassnames } from 'common/utils';
 import { SpinningPreloader } from 'components/preloaders/spinningPreloader';
-import { IterationSummaryRS, PipelineRS, PipelineType } from 'types/aiFactory';
+import {
+  isReducedPipeline,
+  isReducedPipelineIteration,
+  PipelineCatalogItem,
+  PipelineIterationItem,
+} from 'controllers/aiFactory/pipelines';
+import { PipelineType } from 'types/aiFactory';
 
 import { PipelineSettingsButton } from '../../pipelineSettings';
 import { IterationCard } from '../iterationCard';
+import { ReducedIterationCard } from '../iterationCard/reducedIterationCard';
 import { messages } from '../messages';
 import styles from './pipelineGroup.scss';
 
 const cx = createClassnames(styles);
 
 export interface PipelineGroupProps {
-  pipeline: PipelineRS;
-  iterations: IterationSummaryRS[] | undefined;
+  pipeline: PipelineCatalogItem;
+  iterations: PipelineIterationItem[] | undefined;
   isLoading: boolean;
+  hasError: boolean;
   isSearching: boolean;
+  onRetry: () => void;
 }
 
-export const PipelineGroup = ({ pipeline, iterations, isLoading, isSearching }: PipelineGroupProps) => {
+export const PipelineGroup = ({
+  pipeline,
+  iterations,
+  isLoading,
+  hasError,
+  isSearching,
+  onRetry,
+}: PipelineGroupProps) => {
   const { formatMessage } = useIntl();
   const [isOpen, setIsOpen] = useState(true);
+
+  const renderIteration = (iteration: PipelineIterationItem) => {
+    if (isReducedPipelineIteration(iteration)) {
+      return <ReducedIterationCard key={iteration.id} iteration={iteration} />;
+    }
+    if (isReducedPipeline(pipeline)) {
+      return null;
+    }
+    return <IterationCard key={iteration.id} pipelineType={pipeline.type} iteration={iteration} />;
+  };
 
   const renderBody = () => {
     if (isLoading && !iterations) {
       return <SpinningPreloader />;
+    }
+    if (hasError) {
+      return (
+        <div className={cx('error')}>
+          <span>{formatMessage(messages.iterationsUnavailable)}</span>
+          <Button variant="text" onClick={onRetry} data-automation-id="retryPipelineIterations">
+            {formatMessage(messages.retry)}
+          </Button>
+        </div>
+      );
     }
     if (!iterations || iterations.length === 0) {
       return (
@@ -51,13 +87,7 @@ export const PipelineGroup = ({ pipeline, iterations, isLoading, isSearching }: 
         </p>
       );
     }
-    return (
-      <div className={cx('cards')}>
-        {iterations.map((iteration) => (
-          <IterationCard key={iteration.id} pipelineType={pipeline.type} iteration={iteration} />
-        ))}
-      </div>
-    );
+    return <div className={cx('cards')}>{iterations.map(renderIteration)}</div>;
   };
 
   return (
@@ -72,20 +102,28 @@ export const PipelineGroup = ({ pipeline, iterations, isLoading, isSearching }: 
         >
           <ArrowDownIcon className={cx('group__chevron', { 'group__chevron--open': isOpen })} />
           <span className={cx('group__name')}>{pipeline.name}</span>
-          <span className={cx('group__meta')}>{pipeline.repository}</span>
           <span className={cx('group__meta')}>
-            {formatMessage(messages.iterationsCount, { count: pipeline.iterationsCount })}
+            {isReducedPipeline(pipeline)
+              ? formatMessage(messages.repositoryNotProvided)
+              : pipeline.repository}
           </span>
-          {pipeline.type === PipelineType.GENERATION && pipeline.settings && (
+          {pipeline.iterationsCount !== undefined && (
             <span className={cx('group__meta')}>
-              {formatMessage(
-                pipeline.settings.autoReady ? messages.autoReadyOn : messages.autoReadyOff,
-                { threshold: pipeline.settings.threshold },
-              )}
+              {formatMessage(messages.iterationsCount, { count: pipeline.iterationsCount })}
             </span>
           )}
+          {!isReducedPipeline(pipeline) &&
+            pipeline.type === PipelineType.GENERATION &&
+            pipeline.settings && (
+              <span className={cx('group__meta')}>
+                {formatMessage(
+                  pipeline.settings.autoReady ? messages.autoReadyOn : messages.autoReadyOff,
+                  { threshold: pipeline.settings.threshold },
+                )}
+              </span>
+            )}
         </button>
-        <PipelineSettingsButton pipeline={pipeline} />
+        {!isReducedPipeline(pipeline) && <PipelineSettingsButton pipeline={pipeline} />}
       </div>
       {isOpen && <div className={cx('group__body')}>{renderBody()}</div>}
     </section>

@@ -13,8 +13,10 @@ import { useDispatch, useSelector } from 'react-redux';
 
 import {
   getPipelineIterationsAction,
+  pipelineCatalogTransportSelector,
   pipelineIterationsByPipelineSelector,
-  pipelineIterationsLoadingSelector,
+  pipelineIterationsErrorByPipelineSelector,
+  pipelineIterationsLoadingByPipelineSelector,
   pipelinesLoadingSelector,
   pipelinesSelector,
 } from 'controllers/aiFactory/pipelines';
@@ -59,8 +61,18 @@ jest.mock('controllers/aiFactory/pipelines', () => ({
     payload: { pipelineIds },
   })),
   getPipelinesAction: jest.fn(() => ({ type: 'GET_PIPELINES' })),
+  isReducedPipeline: jest.fn(
+    (pipeline: unknown) =>
+      typeof pipeline === 'object' && pipeline !== null && 'kind' in pipeline,
+  ),
+  isReducedPipelineIteration: jest.fn(
+    (iteration: unknown) =>
+      typeof iteration === 'object' && iteration !== null && 'kind' in iteration,
+  ),
+  pipelineCatalogTransportSelector: jest.fn(),
   pipelineIterationsByPipelineSelector: jest.fn(),
-  pipelineIterationsLoadingSelector: jest.fn(),
+  pipelineIterationsErrorByPipelineSelector: jest.fn(),
+  pipelineIterationsLoadingByPipelineSelector: jest.fn(),
   pipelinesLoadingSelector: jest.fn(),
   pipelinesSelector: jest.fn(),
 }));
@@ -109,16 +121,35 @@ interface RenderOptions {
   pipelines?: PipelineRS[];
   iterationsByPipeline?: Record<number, IterationSummaryRS[]>;
   pipelinesLoading?: boolean;
-  iterationsLoading?: boolean;
+  iterationsLoadingByPipeline?: Record<number, boolean>;
+  iterationsErrorByPipeline?: Record<number, boolean>;
+  transport?: 'mock' | 'live';
 }
 
 let selectorValues: Map<unknown, unknown>;
+
+interface PipelineGroupTestProps {
+  pipeline: PipelineRS;
+  isLoading: boolean;
+  hasError: boolean;
+  onRetry: () => void;
+}
+
+interface PipelineGroupTestNode {
+  props: () => PipelineGroupTestProps;
+}
+
+interface PipelineGroupTestCollection {
+  at: (index: number) => PipelineGroupTestNode;
+}
 
 const renderPage = ({
   pipelines = [generationPipeline, automationPipeline],
   iterationsByPipeline = {},
   pipelinesLoading = false,
-  iterationsLoading = false,
+  iterationsLoadingByPipeline = {},
+  iterationsErrorByPipeline = {},
+  transport = 'mock',
 }: RenderOptions = {}) => {
   selectorValues = new Map<unknown, unknown>([
     [projectNameSelector, 'Demo'],
@@ -126,7 +157,9 @@ const renderPage = ({
     [pipelinesSelector, pipelines],
     [pipelinesLoadingSelector, pipelinesLoading],
     [pipelineIterationsByPipelineSelector, iterationsByPipeline],
-    [pipelineIterationsLoadingSelector, iterationsLoading],
+    [pipelineIterationsLoadingByPipelineSelector, iterationsLoadingByPipeline],
+    [pipelineIterationsErrorByPipelineSelector, iterationsErrorByPipeline],
+    [pipelineCatalogTransportSelector, transport],
   ]);
   jest.mocked(useDispatch).mockReturnValue(dispatch as unknown as ReturnType<typeof useDispatch>);
   jest
@@ -171,12 +204,12 @@ describe('PipelinesPageContent polling', () => {
     expect(firstPoll?.()).toBe(POLLING_REQUEST_STARTED);
     expect(dispatch).toHaveBeenCalledTimes(1);
 
-    selectorValues.set(pipelineIterationsLoadingSelector, true);
+    selectorValues.set(pipelineIterationsLoadingByPipelineSelector, { 2: true });
     wrapper.setProps({});
     expect(usePolling).toHaveBeenLastCalledWith(expect.any(Function), 5000, false);
     expect(dispatch).toHaveBeenCalledTimes(1);
 
-    selectorValues.set(pipelineIterationsLoadingSelector, false);
+    selectorValues.set(pipelineIterationsLoadingByPipelineSelector, { 2: false });
     wrapper.setProps({});
     const rearmedPoll = jest.mocked(usePolling).mock.calls.at(-1)?.[0];
     expect(usePolling).toHaveBeenLastCalledWith(expect.any(Function), 5000, true);
@@ -210,11 +243,62 @@ describe('PipelinesPageContent polling', () => {
   );
 
   test.each([
-    { pipelinesLoading: true, iterationsLoading: false },
-    { pipelinesLoading: false, iterationsLoading: true },
+    { pipelinesLoading: true, iterationsLoadingByPipeline: {} },
+    { pipelinesLoading: false, iterationsLoadingByPipeline: { 2: true } },
   ])('pauses polling while data is loading %#', (loadingState) => {
     const wrapper = renderPage({
       ...loadingState,
+      pipelines: [automationPipeline],
+      iterationsByPipeline: { 2: [createIteration(2, IterationStatus.RUNNING)] },
+    });
+
+    expect(usePolling).toHaveBeenLastCalledWith(expect.any(Function), 5000, false);
+    wrapper.unmount();
+  });
+
+  test('keeps rich mock pipelines rendered with independent loading and error states', () => {
+    const wrapper = renderPage({
+      iterationsByPipeline: {
+        1: [createIteration(1, IterationStatus.COMPLETED)],
+        2: [createIteration(2, IterationStatus.FAILED)],
+      },
+      iterationsLoadingByPipeline: { 1: true, 2: false },
+      iterationsErrorByPipeline: { 1: false, 2: true },
+    });
+    const groups = wrapper.find('PipelineGroup');
+    const testGroups = groups as unknown as PipelineGroupTestCollection;
+
+    expect(groups).toHaveLength(2);
+    expect(testGroups.at(0).props()).toMatchObject({
+      pipeline: generationPipeline,
+      isLoading: true,
+      hasError: false,
+    });
+    expect(testGroups.at(1).props()).toMatchObject({
+      pipeline: automationPipeline,
+      isLoading: false,
+      hasError: true,
+    });
+    wrapper.unmount();
+  });
+
+  test('retries only the failed pipeline group', () => {
+    const wrapper = renderPage({ iterationsErrorByPipeline: { 2: true } });
+    const groups = wrapper.find('PipelineGroup') as unknown as PipelineGroupTestCollection;
+
+    groups.at(1).props().onRetry();
+
+    expect(getPipelineIterationsAction).toHaveBeenLastCalledWith([2]);
+    expect(dispatch).toHaveBeenLastCalledWith({
+      type: 'GET_PIPELINE_ITERATIONS',
+      payload: { pipelineIds: [2] },
+    });
+    wrapper.unmount();
+  });
+
+  test('does not poll mock endpoints when catalog provenance is live', () => {
+    const wrapper = renderPage({
+      transport: 'live',
       pipelines: [automationPipeline],
       iterationsByPipeline: { 2: [createIteration(2, IterationStatus.RUNNING)] },
     });

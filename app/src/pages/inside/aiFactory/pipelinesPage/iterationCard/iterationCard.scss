@@ -40,6 +40,19 @@
     }
   }
 
+  &__plain-title {
+    font-weight: var(--rp-ui-base-fw-bold);
+    font-size: 14px;
+  }
+
+  &__neutral-status {
+    padding: 2px 8px;
+    border: 1px solid var(--rp-ui-base-e-200);
+    border-radius: 10px;
+    color: var(--rp-ui-base-e-400);
+    font-size: 12px;
+  }
+
   &__outcome {
     font-weight: var(--rp-ui-base-fw-medium);
     font-size: 13px;

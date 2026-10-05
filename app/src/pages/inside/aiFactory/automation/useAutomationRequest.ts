@@ -18,6 +18,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 
 import { URLS } from 'common/urls';
 import { ERROR_CANCELED, fetch } from 'common/utils';
+import { useUserPermissions } from 'hooks/useUserPermissions';
 import type {
   AutomateAcceptedRS,
   AutomatePayload,
@@ -78,6 +79,8 @@ export const useAutomationRequest = (
   projectKey: string,
   isEnabled: boolean,
 ): AutomationRequestState => {
+  const { canAutomateTestCases } = useUserPermissions();
+  const isRequestEnabled = isEnabled && canAutomateTestCases;
   const [environments, setEnvironments] = useState<AutomationEnvironmentsRS | null>(null);
   const [isLoadingEnvironments, setIsLoadingEnvironments] = useState(false);
   const [isStarting, setIsStarting] = useState(false);
@@ -98,7 +101,7 @@ export const useAutomationRequest = (
     setIsStarting(false);
     setReautomationRequiredIds([]);
 
-    if (!isEnabled || !projectKey) {
+    if (!isRequestEnabled || !projectKey) {
       setIsLoadingEnvironments(false);
       setError(null);
       return undefined;
@@ -147,11 +150,11 @@ export const useAutomationRequest = (
         requestGeneration.current += 1;
       }
     };
-  }, [isEnabled, projectKey, requestIndex]);
+  }, [isRequestEnabled, projectKey, requestIndex]);
 
   const start = useCallback(
     async (payload: AutomatePayload) => {
-      if (!isEnabled || !projectKey) {
+      if (!isRequestEnabled || !projectKey) {
         return null;
       }
       if (!environments?.environments.includes(payload.environment)) {
@@ -216,7 +219,7 @@ export const useAutomationRequest = (
         }
       }
     },
-    [environments, isEnabled, projectKey],
+    [environments, isRequestEnabled, projectKey],
   );
 
   return {

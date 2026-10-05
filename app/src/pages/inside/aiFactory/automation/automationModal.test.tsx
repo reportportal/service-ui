@@ -12,13 +12,11 @@ import { act } from 'react';
 import { shallow } from 'enzyme';
 import { useDispatch, useSelector } from 'react-redux';
 
+import { useUserPermissions } from 'hooks/useUserPermissions';
 import { AutomationStatus, Lifecycle } from 'types/aiFactory';
 
 import { AutomationModalContent, type AutomationModalData } from './automationModal';
-import {
-  useAutomationRequest,
-  type AutomationRequestState,
-} from './useAutomationRequest';
+import { useAutomationRequest, type AutomationRequestState } from './useAutomationRequest';
 
 jest.mock('@reportportal/ui-kit', () => ({
   Button: 'Button',
@@ -28,6 +26,7 @@ jest.mock('@reportportal/ui-kit', () => ({
   SystemMessage: 'SystemMessage',
 }));
 jest.mock('react-redux', () => ({ useDispatch: jest.fn(), useSelector: jest.fn() }));
+jest.mock('hooks/useUserPermissions', () => ({ useUserPermissions: jest.fn() }));
 jest.mock('react-intl', () => ({
   defineMessages: (messages: unknown) => messages,
   useIntl: () => ({
@@ -74,9 +73,7 @@ const accepted = {
   skipped: [],
 };
 
-const requestState = (
-  overrides: Partial<AutomationRequestState> = {},
-): AutomationRequestState => ({
+const requestState = (overrides: Partial<AutomationRequestState> = {}): AutomationRequestState => ({
   environments: { environments: ['beta5', 'qa'], default: 'beta5' },
   isLoadingEnvironments: false,
   isStarting: false,
@@ -97,6 +94,9 @@ const renderModal = (data: AutomationModalData, state = requestState()) => {
 describe('AutomationModalContent', () => {
   beforeEach(() => {
     jest.clearAllMocks();
+    jest.mocked(useUserPermissions).mockReturnValue({
+      canAutomateTestCases: true,
+    } as ReturnType<typeof useUserPermissions>);
     jest.mocked(useDispatch).mockReturnValue(dispatch);
     jest.mocked(useSelector).mockReturnValue('demo');
   });
@@ -133,6 +133,23 @@ describe('AutomationModalContent', () => {
       payload: { message: 'Automation iteration #7 started for 1 Test Cases' },
     });
     expect(dispatch).toHaveBeenLastCalledWith({ type: 'HIDE_MODAL' });
+  });
+
+  test('keeps a directly mounted modal read-only for a viewer', async () => {
+    jest.mocked(useUserPermissions).mockReturnValue({
+      canAutomateTestCases: false,
+    } as ReturnType<typeof useUserPermissions>);
+    const wrapper = renderModal({ testCases: [candidate] });
+    const modal = wrapper.find('Modal');
+
+    expect(useAutomationRequest).toHaveBeenCalledWith('demo', true);
+    expect(modal.prop('okButton')).toMatchObject({ disabled: true });
+
+    await act(async () => {
+      (modal.prop('okButton') as { onClick: () => void }).onClick();
+      await Promise.resolve();
+    });
+    expect(start).not.toHaveBeenCalled();
   });
 
   test('uses responsive modal and case-list classes', () => {
@@ -180,9 +197,11 @@ describe('AutomationModalContent', () => {
     expect(wrapper.find('Modal').prop('okButton')).toMatchObject({ disabled: true });
 
     act(() => {
-      (wrapper.find('Checkbox').prop('onChange') as (event: {
-        target: { checked: boolean };
-      }) => void)({ target: { checked: true } });
+      (
+        wrapper.find('Checkbox').prop('onChange') as (event: {
+          target: { checked: boolean };
+        }) => void
+      )({ target: { checked: true } });
     });
     expect(wrapper.find('Modal').prop('okButton')).toMatchObject({ disabled: false });
 
@@ -213,9 +232,11 @@ describe('AutomationModalContent', () => {
     expect(wrapper.find('Checkbox').text()).toContain('TC42 · Checkout');
 
     act(() => {
-      (wrapper.find('Checkbox').prop('onChange') as (event: {
-        target: { checked: boolean };
-      }) => void)({ target: { checked: true } });
+      (
+        wrapper.find('Checkbox').prop('onChange') as (event: {
+          target: { checked: boolean };
+        }) => void
+      )({ target: { checked: true } });
     });
     await act(async () => {
       (wrapper.find('Modal').prop('okButton') as { onClick: () => void }).onClick();
@@ -281,8 +302,11 @@ describe('AutomationModalContent', () => {
       requestState({ environments: null, error: 'ENVIRONMENTS_LOAD_FAILED' }),
     );
 
-    (wrapper.find('[data-automation-id="retryAutomationEnvironments"]').prop('onClick') as () =>
-      void)();
+    (
+      wrapper
+        .find('[data-automation-id="retryAutomationEnvironments"]')
+        .prop('onClick') as () => void
+    )();
 
     expect(reloadEnvironments).toHaveBeenCalled();
     expect(wrapper.find('Modal').prop('okButton')).toMatchObject({ disabled: true });
@@ -299,10 +323,7 @@ describe('AutomationModalContent', () => {
   });
 
   test('prevents closing while A2 is in flight and closes otherwise', () => {
-    const starting = renderModal(
-      { testCases: [candidate] },
-      requestState({ isStarting: true }),
-    );
+    const starting = renderModal({ testCases: [candidate] }, requestState({ isStarting: true }));
     (starting.find('Modal').prop('onClose') as () => void)();
     expect(dispatch).not.toHaveBeenCalled();
     expect(starting.find('Modal').props()).toMatchObject({

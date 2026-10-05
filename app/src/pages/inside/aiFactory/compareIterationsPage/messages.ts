@@ -17,6 +17,10 @@
 import { defineMessages } from 'react-intl';
 
 export const messages = defineMessages({
+  comparisonUnavailable: {
+    id: 'CompareIterationsPage.comparisonUnavailable',
+    defaultMessage: 'Comparison is unavailable for this pipeline source',
+  },
   pageTitle: {
     id: 'CompareIterationsPage.pageTitle',
     defaultMessage: 'Compare iterations',

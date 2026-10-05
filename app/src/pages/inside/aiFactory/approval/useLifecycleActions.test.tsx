@@ -13,6 +13,7 @@ import { mount, type ReactWrapper } from 'enzyme';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { fetch } from 'common/utils';
+import { useUserPermissions } from 'hooks/useUserPermissions';
 import { LifecycleRejectReason } from 'types/aiFactory';
 
 import { useLifecycleActions } from './useLifecycleActions';
@@ -21,7 +22,10 @@ jest.mock('react-redux', () => ({ useDispatch: jest.fn(), useSelector: jest.fn()
 jest.mock('react-intl', () => ({
   defineMessages: (messages: unknown) => messages,
   useIntl: () => ({
-    formatMessage: (message: { defaultMessage: string }, values?: Record<string, string | number>) =>
+    formatMessage: (
+      message: { defaultMessage: string },
+      values?: Record<string, string | number>,
+    ) =>
       Object.entries(values ?? {}).reduce(
         (text, [key, value]) => text.replace(`{${key}}`, `${value}`),
         message.defaultMessage,
@@ -29,6 +33,7 @@ jest.mock('react-intl', () => ({
   }),
 }));
 jest.mock('common/utils', () => ({ fetch: jest.fn() }));
+jest.mock('hooks/useUserPermissions', () => ({ useUserPermissions: jest.fn() }));
 jest.mock('controllers/project', () => ({ projectKeySelector: jest.fn() }));
 jest.mock('controllers/notification', () => ({
   showErrorNotification: (payload: unknown) => ({ type: 'ERROR', payload }),
@@ -56,9 +61,10 @@ describe('useLifecycleActions', () => {
 
   beforeEach(() => {
     jest.clearAllMocks();
-    jest
-      .mocked(useDispatch)
-      .mockReturnValue(dispatch as unknown as ReturnType<typeof useDispatch>);
+    jest.mocked(useUserPermissions).mockReturnValue({
+      canReviewAiTestCases: true,
+    } as ReturnType<typeof useUserPermissions>);
+    jest.mocked(useDispatch).mockReturnValue(dispatch as unknown as ReturnType<typeof useDispatch>);
     jest.mocked(useSelector).mockReturnValue('demo');
     wrapper = mount(<Harness />);
   });
@@ -130,5 +136,30 @@ describe('useLifecycleActions', () => {
 
     expect(updateResult).toBeNull();
     expect(dispatch).toHaveBeenCalledWith(expect.objectContaining({ type: 'ERROR' }));
+  });
+
+  test('does not send lifecycle mutations for a viewer even when the hook is called directly', async () => {
+    wrapper?.unmount();
+    jest.mocked(useUserPermissions).mockReturnValue({
+      canReviewAiTestCases: false,
+    } as ReturnType<typeof useUserPermissions>);
+    wrapper = mount(<Harness />);
+
+    let singleResult;
+    let bulkResult;
+    await act(async () => {
+      singleResult = await result.updateLifecycle({ id: 42, ai: {} });
+      bulkResult = await result.updateLifecycleBatch([41, 42]);
+    });
+
+    expect(singleResult).toBe('FAILED');
+    expect(bulkResult).toBeNull();
+    expect(fetchMock).not.toHaveBeenCalled();
+    expect(dispatch).toHaveBeenCalledWith(
+      expect.objectContaining({
+        type: 'ERROR',
+        payload: { message: 'You do not have permission to update this Test Case.' },
+      }),
+    );
   });
 });

@@ -24,9 +24,18 @@ import { createClassnames, formatCost } from 'common/utils';
 import {
   getPipelineIterationDetailsAction,
   getPipelinesAction,
+  isReducedPipeline,
+  pipelineCatalogProjectKeySelector,
+  pipelineCatalogRequestIdSelector,
+  pipelineCatalogTransportSelector,
+  pipelineCatalogVersionSelector,
   pipelineIterationDetailsLoadingSelector,
+  pipelineIterationDetailsErrorSelector,
   pipelineIterationDetailsSelector,
+  pipelineIterationDetailsUnavailableSelector,
+  pipelinesLoadingSelector,
   pipelinesSelector,
+  ReducedPipelineIterationDetail,
 } from 'controllers/aiFactory/pipelines';
 import {
   PROJECT_DASHBOARD_PAGE,
@@ -38,7 +47,7 @@ import {
   querySelector,
   urlOrganizationAndProjectSelector,
 } from 'controllers/pages';
-import { projectNameSelector } from 'controllers/project';
+import { projectKeySelector, projectNameSelector } from 'controllers/project';
 import { SettingsLayout } from 'layouts/settingsLayout';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
 import { SpinningPreloader } from 'components/preloaders/spinningPreloader';
@@ -48,7 +57,7 @@ import {
   usePolling,
 } from 'pages/inside/aiFactory/common';
 import { ProjectDetails } from 'pages/organization/constants';
-import { AiStageKey, IterationStatus, StageKey } from 'types/aiFactory';
+import { AiStageKey, IterationRS, IterationStatus, StageKey } from 'types/aiFactory';
 
 import { PageHeaderWithBreadcrumbsAndActions } from '../../common/pageHeaderWithBreadcrumbsAndActions';
 import { PipelineSettingsButton } from '../pipelineSettings';
@@ -57,6 +66,7 @@ import { StageCards } from './stageCards';
 import { StagePanels } from './stagePanels';
 import { buildKpis, defaultStageKey, draftCasesCount, runningStage } from './iterationDetailsUtils';
 import { messages } from './messages';
+import { ReducedIterationDetails } from './reducedIterationDetails';
 import styles from './iterationDetailsPage.scss';
 
 const cx = createClassnames(styles);
@@ -65,10 +75,16 @@ const ITERATION_POLL_INTERVAL_MS = 5000;
 
 const STAGE_KEYS = new Set<string>(Object.values(StageKey));
 
+const isReducedDetail = (
+  iteration: IterationRS | ReducedPipelineIterationDetail | null,
+): iteration is ReducedPipelineIterationDetail =>
+  Boolean(iteration && 'kind' in iteration && iteration.kind === 'reduced');
+
 export const IterationDetailsPageContent = () => {
   const { formatMessage } = useIntl();
   const dispatch = useDispatch();
   const projectName = useSelector(projectNameSelector);
+  const projectKey = useSelector(projectKeySelector);
   const { organizationSlug, projectSlug } = useSelector(
     urlOrganizationAndProjectSelector,
   ) as ProjectDetails;
@@ -76,19 +92,66 @@ export const IterationDetailsPageContent = () => {
   const iterationId = useSelector(iterationIdSelector);
   const query = useSelector(querySelector);
   const pipelines = useSelector(pipelinesSelector);
+  const catalogProjectKey = useSelector(pipelineCatalogProjectKeySelector);
+  const catalogTransport = useSelector(pipelineCatalogTransportSelector);
+  const catalogVersion = useSelector(pipelineCatalogVersionSelector);
+  const catalogRequestId = useSelector(pipelineCatalogRequestIdSelector);
   const iteration = useSelector(pipelineIterationDetailsSelector);
   const isLoading = useSelector(pipelineIterationDetailsLoadingSelector);
+  const hasDetailError = useSelector(pipelineIterationDetailsErrorSelector);
+  const isDetailUnavailable = useSelector(pipelineIterationDetailsUnavailableSelector);
+  const isCatalogLoading = useSelector(pipelinesLoadingSelector);
+  const currentIteration =
+    iteration?.id === iterationId && iteration.pipelineId === pipelineId ? iteration : null;
 
-  const pipeline = pipelines?.find((p) => p.id === pipelineId);
+  const hasCurrentCatalog = catalogVersion > 0 && catalogProjectKey === projectKey;
+  const pipelineCandidate = hasCurrentCatalog
+    ? pipelines?.find((item) => item.id === pipelineId)
+    : undefined;
+  const pipeline =
+    pipelineCandidate && !isReducedPipeline(pipelineCandidate) ? pipelineCandidate : undefined;
+  const isReducedCatalogPipeline = Boolean(
+    pipelineCandidate && isReducedPipeline(pipelineCandidate),
+  );
   const [selectedStage, setSelectedStage] = useState<AiStageKey | null>(null);
   const hasInitializedStage = useRef(false);
+  const catalogRequestProjectRef = useRef<string | null>(null);
+  const detailRequestKeyRef = useRef<string | null>(null);
 
   useEffect(() => {
-    if (!pipelines) {
+    if (!hasCurrentCatalog && catalogRequestProjectRef.current !== projectKey) {
+      catalogRequestProjectRef.current = projectKey;
       dispatch(getPipelinesAction());
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [dispatch, hasCurrentCatalog, projectKey]);
+
+  useEffect(() => {
+    const requestKey = `${projectKey}:${catalogTransport}:${catalogVersion}:${catalogRequestId}:${pipelineId}:${iterationId}`;
+    if (
+      catalogVersion <= 0 ||
+      catalogProjectKey !== projectKey ||
+      !pipelineCandidate ||
+      isLoading ||
+      currentIteration ||
+      detailRequestKeyRef.current === requestKey
+    ) {
+      return;
+    }
+    detailRequestKeyRef.current = requestKey;
+    dispatch(getPipelineIterationDetailsAction(pipelineId, iterationId));
+  }, [
+    catalogProjectKey,
+    catalogRequestId,
+    catalogTransport,
+    catalogVersion,
+    dispatch,
+    isLoading,
+    currentIteration,
+    iterationId,
+    pipelineCandidate,
+    pipelineId,
+    projectKey,
+  ]);
 
   useEffect(() => {
     if (hasInitializedStage.current || !pipeline) {
@@ -110,8 +173,9 @@ export const IterationDetailsPageContent = () => {
     },
     ITERATION_POLL_INTERVAL_MS,
     !isLoading &&
-      (iteration?.status === IterationStatus.RUNNING ||
-        iteration?.status === IterationStatus.IN_REVIEW),
+      Boolean(pipeline) &&
+      (currentIteration?.status === IterationStatus.RUNNING ||
+        currentIteration?.status === IterationStatus.IN_REVIEW),
   );
 
   const breadcrumbDescriptors = [
@@ -129,17 +193,16 @@ export const IterationDetailsPageContent = () => {
     },
     {
       id: 'iteration',
-      title: iteration ? formatMessage(messages.iterationTitle, { number: iteration.number }) : '',
+      title: currentIteration
+        ? formatMessage(messages.iterationTitle, { number: currentIteration.number })
+        : '',
     },
   ];
 
-  const renderBanner = () => {
-    if (!iteration) {
-      return null;
-    }
-    switch (iteration.status) {
+  const renderBanner = (richIteration: IterationRS) => {
+    switch (richIteration.status) {
       case IterationStatus.RUNNING: {
-        const running = runningStage(iteration);
+        const running = runningStage(richIteration);
         return (
           <SystemMessage mode="info">
             {running
@@ -153,7 +216,7 @@ export const IterationDetailsPageContent = () => {
       case IterationStatus.COMPLETED:
         return <SystemMessage mode="info">{formatMessage(messages.bannerCompleted)}</SystemMessage>;
       case IterationStatus.IN_REVIEW: {
-        const draftCount = draftCasesCount(iteration);
+        const draftCount = draftCasesCount(richIteration);
         return (
           <SystemMessage mode="info">
             {formatMessage(messages.bannerInReview, { count: draftCount })}
@@ -162,7 +225,7 @@ export const IterationDetailsPageContent = () => {
               to={{
                 type: TEST_CASE_LIBRARY_PAGE,
                 payload: { organizationSlug, projectSlug },
-                query: { lifecycle: 'DRAFT', ai: 'AI', iteration: String(iteration.id) },
+                query: { lifecycle: 'DRAFT', ai: 'AI', iteration: String(richIteration.id) },
               }}
             >
               {formatMessage(messages.openReviewQueue)}
@@ -179,30 +242,51 @@ export const IterationDetailsPageContent = () => {
     }
   };
 
-  if (isLoading && !iteration) {
+  const retryDetail = () => {
+    dispatch(getPipelineIterationDetailsAction(pipelineId, iterationId));
+  };
+
+  if ((isCatalogLoading || isLoading) && !currentIteration) {
     return (
       <SettingsLayout>
-        <SpinningPreloader />
+        <output className={cx('state')} aria-live="polite">
+          <SpinningPreloader />
+          <span>{formatMessage(messages.detailLoading)}</span>
+        </output>
       </SettingsLayout>
     );
   }
 
-  if (!iteration || !pipeline) {
+  if (isReducedCatalogPipeline) {
+    return (
+      <ReducedIterationDetails
+        iteration={isReducedDetail(currentIteration) ? currentIteration : null}
+        hasError={hasDetailError}
+        isUnavailable={isDetailUnavailable}
+        breadcrumbDescriptors={breadcrumbDescriptors}
+        onRetry={retryDetail}
+      />
+    );
+  }
+
+  if (!currentIteration || isReducedDetail(currentIteration) || !pipeline) {
     return null;
   }
 
+  const richIteration = currentIteration;
+
   const currentStage =
-    iteration.stages.find((stage) => stage.key === selectedStage) || iteration.stages[0];
+    richIteration.stages.find((stage) => stage.key === selectedStage) || richIteration.stages[0];
 
   return (
     <SettingsLayout>
       <ScrollWrapper resetRequired>
         <PageHeaderWithBreadcrumbsAndActions
-          title={formatMessage(messages.iterationTitle, { number: iteration.number })}
+          title={formatMessage(messages.iterationTitle, { number: richIteration.number })}
           breadcrumbDescriptors={breadcrumbDescriptors}
           actions={
             <div className={cx('header-actions')}>
-              {iteration.previousIterationId !== undefined && (
+              {richIteration.previousIterationId !== undefined && (
                 <Button
                   variant="text"
                   data-automation-id="compareWithPreviousButton"
@@ -212,7 +296,7 @@ export const IterationDetailsPageContent = () => {
                       payload: { organizationSlug, projectSlug },
                       query: {
                         pipeline: String(pipelineId),
-                        baseline: String(iteration.previousIterationId),
+                        baseline: String(richIteration.previousIterationId),
                         candidate: String(iterationId),
                       },
                     })
@@ -237,13 +321,13 @@ export const IterationDetailsPageContent = () => {
         <div className={cx('content')}>
           <div>
             <div className={cx('meta')}>
-              {[iteration.trigger, iteration.model, iteration.environment]
+              {[richIteration.trigger, richIteration.model, richIteration.environment]
                 .filter(Boolean)
                 .join(' · ')}
             </div>
-            {iteration.attributes.length > 0 && (
+            {richIteration.attributes.length > 0 && (
               <div className={cx('attributes')}>
-                {iteration.attributes.map((attribute) => (
+                {richIteration.attributes.map((attribute) => (
                   <span key={attribute.key} className={cx('attributes__chip')}>
                     {`${attribute.key}: ${attribute.value}`}
                   </span>
@@ -252,7 +336,7 @@ export const IterationDetailsPageContent = () => {
             )}
           </div>
           <div className={cx('kpis')}>
-            {buildKpis(pipeline.type, iteration).map((kpi) => (
+            {buildKpis(pipeline.type, richIteration).map((kpi) => (
               <KpiTile
                 key={kpi.key}
                 label={formatMessage(messages[kpi.key as keyof typeof messages])}
@@ -260,16 +344,16 @@ export const IterationDetailsPageContent = () => {
               />
             ))}
           </div>
-          {renderBanner()}
+          {renderBanner(richIteration)}
           <StageCards
-            stages={iteration.stages}
-            testCasesCount={iteration.testCasesCount}
+            stages={richIteration.stages}
+            testCasesCount={richIteration.testCasesCount}
             selectedStage={selectedStage || defaultStageKey(pipeline.type)}
             onSelect={setSelectedStage}
           />
           {currentStage && (
             <div className={cx('panel-card')}>
-              <StagePanels stage={currentStage} iteration={iteration} />
+              <StagePanels stage={currentStage} iteration={richIteration} />
             </div>
           )}
         </div>

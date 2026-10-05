@@ -14,28 +14,17 @@
  * limitations under the License.
  */
 
-import { useEffect, useMemo, useState } from 'react';
+import { useMemo } from 'react';
 import { useSelector } from 'react-redux';
 
-import { URLS } from 'common/urls';
-import { ERROR_CANCELED, fetch } from 'common/utils';
+import {
+  pipelineCatalogProjectKeySelector,
+  pipelineCatalogVersionSelector,
+  pipelineIterationDetailsSelector,
+  pipelineIterationsByPipelineSelector,
+} from 'controllers/aiFactory/pipelines';
 import { projectKeySelector } from 'controllers/project';
 import type { TestCase } from 'types/testCase';
-
-interface PipelineIterationDetails {
-  id?: unknown;
-  iterationNumber?: unknown;
-}
-
-interface IterationNumberState {
-  number?: number;
-  requestKey: string;
-}
-
-const INITIAL_STATE: IterationNumberState = {
-  number: undefined,
-  requestKey: '',
-};
 
 const toPositiveSafeInteger = (value: unknown) =>
   typeof value === 'number' && Number.isSafeInteger(value) && value > 0 ? value : undefined;
@@ -54,57 +43,50 @@ const findNumberInCases = (testCases: TestCase[], iterationId: number) =>
       ?.generatedByIteration.number,
   );
 
-const getIterationNumber = (response: PipelineIterationDetails, iterationId: number) =>
-  toPositiveSafeInteger(response.id) === iterationId
-    ? toPositiveSafeInteger(response.iterationNumber)
-    : undefined;
+const getLoadedIterationNumber = (
+  iterationId: number,
+  details: ReturnType<typeof pipelineIterationDetailsSelector>,
+  iterationsByPipeline: ReturnType<typeof pipelineIterationsByPipelineSelector>,
+) => {
+  if (details?.id === iterationId) {
+    return toPositiveSafeInteger(details.number);
+  }
+  const summary = Object.values(iterationsByPipeline ?? {})
+    .flat()
+    .find(({ id }) => id === iterationId);
+  return toPositiveSafeInteger(summary?.number);
+};
 
 export const useIterationNumber = (
   iteration?: string,
   testCases: TestCase[] = [],
   canLoadMetadata = false,
 ) => {
+  const details = useSelector(pipelineIterationDetailsSelector);
+  const iterationsByPipeline = useSelector(pipelineIterationsByPipelineSelector);
+  const catalogProjectKey = useSelector(pipelineCatalogProjectKeySelector);
+  const catalogVersion = useSelector(pipelineCatalogVersionSelector);
   const projectKey = useSelector(projectKeySelector);
-  const [state, setState] = useState<IterationNumberState>(INITIAL_STATE);
   const iterationId = parseIterationId(iteration);
   const numberFromCases = useMemo(
     () => (iterationId ? findNumberInCases(testCases, iterationId) : undefined),
     [iterationId, testCases],
   );
-  const requestKey =
-    canLoadMetadata && projectKey && iterationId && !numberFromCases
-      ? `${projectKey}:${iterationId}`
-      : '';
+  const numberFromLoadedMetadata = useMemo(
+    () =>
+      canLoadMetadata && iterationId && catalogVersion > 0 && catalogProjectKey === projectKey
+        ? getLoadedIterationNumber(iterationId, details, iterationsByPipeline)
+        : undefined,
+    [
+      canLoadMetadata,
+      catalogProjectKey,
+      catalogVersion,
+      details,
+      iterationId,
+      iterationsByPipeline,
+      projectKey,
+    ],
+  );
 
-  useEffect(() => {
-    if (!requestKey || !iterationId) {
-      return undefined;
-    }
-
-    let isActive = true;
-    let cancelRequest = () => {};
-
-    void fetch<PipelineIterationDetails>(URLS.pipelineIterationById(projectKey, iterationId), {
-      abort: (cancel) => {
-        cancelRequest = cancel;
-      },
-    })
-      .then((response) => {
-        if (isActive) {
-          setState({ number: getIterationNumber(response, iterationId), requestKey });
-        }
-      })
-      .catch((error: unknown) => {
-        if (isActive && !(error instanceof Error && error.message === ERROR_CANCELED)) {
-          setState({ number: undefined, requestKey });
-        }
-      });
-
-    return () => {
-      isActive = false;
-      cancelRequest();
-    };
-  }, [iterationId, projectKey, requestKey]);
-
-  return numberFromCases ?? (state.requestKey === requestKey ? state.number : undefined);
+  return numberFromCases ?? numberFromLoadedMetadata;
 };

@@ -12,6 +12,7 @@ import { act, useEffect } from 'react';
 import { mount } from 'enzyme';
 
 import { fetch } from 'common/utils';
+import { useUserPermissions } from 'hooks/useUserPermissions';
 import { CommentState, CommentTargetType } from 'types/aiFactory';
 
 import { useReviewComments } from './useReviewComments';
@@ -21,6 +22,7 @@ jest.mock('common/utils', () => ({
   ERROR_CANCELED: 'REQUEST_CANCELED',
   fetch: jest.fn(),
 }));
+jest.mock('hooks/useUserPermissions', () => ({ useUserPermissions: jest.fn() }));
 
 const fetchMock = fetch as jest.MockedFunction<
   (url: string, params?: Record<string, unknown>) => Promise<unknown>
@@ -46,6 +48,9 @@ const latestState = (onState: jest.Mock<void, [ReviewCommentsLoadState]>) => {
 describe('useReviewComments', () => {
   beforeEach(() => {
     jest.clearAllMocks();
+    jest.mocked(useUserPermissions).mockReturnValue({
+      canReviewAiTestCases: true,
+    } as ReturnType<typeof useUserPermissions>);
   });
 
   test('loads comments and reloads after adding one', async () => {
@@ -97,5 +102,36 @@ describe('useReviewComments', () => {
 
     expect(fetchMock).not.toHaveBeenCalled();
     expect(latestState(onState).isLoading).toBe(false);
+  });
+
+  test('keeps comments readable but blocks every review mutation for a viewer', async () => {
+    const onState = jest.fn<void, [ReviewCommentsLoadState]>();
+    jest.mocked(useUserPermissions).mockReturnValue({
+      canReviewAiTestCases: false,
+    } as ReturnType<typeof useUserPermissions>);
+    fetchMock.mockResolvedValueOnce([]);
+
+    await act(async () => {
+      mount(<Probe onState={onState} />);
+      await Promise.resolve();
+    });
+
+    expect(fetchMock).toHaveBeenCalledTimes(1);
+    expect(fetchMock).toHaveBeenCalledWith(
+      expect.stringContaining('/review-comment'),
+      expect.objectContaining({ abort: expect.any(Function) }),
+    );
+
+    await act(async () => {
+      await latestState(onState).addComment({
+        target: { type: CommentTargetType.PRECONDITION },
+        text: 'Must not be sent',
+      });
+      await latestState(onState).deleteComment(7);
+      await latestState(onState).discardPending();
+    });
+
+    expect(fetchMock).toHaveBeenCalledTimes(1);
+    expect(latestState(onState).isMutating).toBe(false);
   });
 });

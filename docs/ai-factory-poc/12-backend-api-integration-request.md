@@ -4,7 +4,7 @@
 >
 > **Audience:** ReportPortal Backend/API owners, Platform/Security, Frontend, QA, Product and AI Factory PoC stakeholders
 >
-> **Audit baseline:** OpenAPI 3.0.1, `info.version: feature-pipelines-2767`, server `/api`, audited 2026-10-02
+> **Audit baseline:** OpenAPI 3.0.1, `info.version: feature-pipelines-2767`, server `/api`, re-audited 2026-10-04 with no material drift from 2026-10-02
 >
 > **Published specification:** [OpenAPI JSON](http://tms.epmrpp.reportportal.io/api/api-docs) · [Swagger UI](http://tms.epmrpp.reportportal.io/ui/#organizations/my-organization/projects/superadmin-personal/api)
 >
@@ -21,6 +21,17 @@ The published API is a useful foundation, but a direct frontend cutover is not s
 identity fields optional, exposes generic object-valued metrics, does not define status transitions, polling,
 operation-specific errors, concurrency/idempotency or an operation-by-role authorization matrix. In addition, the
 published discovery origin is plain HTTP while all operations inherit bearer JWT authentication.
+
+Frontend EPMRPP-122040 provides a mock-default, hard fail-closed LP1/LP2 DTO/adapter/transport foundation, and
+EPMRPP-122041 adds the corresponding LP3 generic-detail foundation: a strict reduced adapter, separate detail
+transport/provenance with stale guards, canonical iteration-only live URL behind the closed gate and an honest
+reduced-detail presentation. This does not change the requested backend decisions or constitute a live rollout:
+trusted HTTPS, read roles, requiredness/status/polling semantics and Product/QA approval of the reduced catalog and
+detail UI are still required before either live gate can be opened. No authenticated backend/browser validation or
+live polling has been performed; rich KPI/cost/token/Test Case/CI/retry semantics remain excluded. Quality Standard
+is not integrated by either scope. The LP3 foundation passed focused, full, type, lint, diff, senior code and
+security validation after one Major request-race finding was fixed and regression-tested; this automated evidence
+does not replace the still-blocked authenticated backend/browser acceptance.
 
 The recommended sequence is:
 
@@ -57,7 +68,7 @@ request.
 |---|---|---|---|---|
 | **LP1 — List pipeline definitions:** `GET /v1/project/{projectKey}/pipeline` | `200 PipelineRS[]` | Project Pipeline list | Candidate after P0 and required pipeline identity/type fields are agreed | P1 |
 | **LP2 — List iterations of one pipeline:** `GET /v1/project/{projectKey}/pipeline/{pipelineId}/iteration` | `200 PipelineIterationSummaryRS[]` (plain array) | Pipeline list/history | Candidate after P0, bounds/order and iteration invariants are agreed | P1 |
-| **LP3 — Get one iteration with stages:** `GET /v1/project/{projectKey}/pipeline/iteration/{iterationId}` | `200 PipelineIterationDetailRS` | Iteration detail | Candidate first as generic detail; specialized panels require typed stage results | P2 |
+| **LP3 — Get one iteration with stages:** `GET /v1/project/{projectKey}/pipeline/iteration/{iterationId}` | `200 PipelineIterationDetailRS` | Iteration detail | FE generic-detail foundation exists behind a hard-closed live gate; rollout still requires P0 decisions and Product/QA approval, while specialized panels require typed stage results | P2 |
 | **LP4 — Compare two iterations of the same pipeline:** `GET /v1/project/{projectKey}/pipeline/iteration/{iterationId}/compare?with={otherIterationId}` | `200 PipelineCompareRS` | Iteration comparison | T4.3 PoC calls this exact path through an identity-validating adapter and a same-path mock. Production remains a candidate first as neutral status/identity comparison; typed KPI/cost deltas and evaluative direction remain deferred until BE-014/BE-015 are closed | P4 |
 | **LP5 — Update Auto-Ready settings:** `PATCH /v1/project/{projectKey}/pipeline/{pipelineId}` | `200 PipelineRS` | Pipeline settings UI | FE PoC wired in T3.4 with 0–100 client validation and list refresh; production rollout remains blocked on validation, patch/null, authorization and concurrency semantics | P5 |
 | **LP6 — Create a pipeline iteration and its stages:** `POST /v1/project/{projectKey}/pipeline/iteration` | `201 PipelineIterationDetailRS` | CI/agent producer according to published description | Producer contract needs clarification; not approved as UI Re-run | Deferred for UI Re-run |

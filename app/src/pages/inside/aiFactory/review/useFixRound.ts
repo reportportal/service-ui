@@ -25,6 +25,7 @@ import {
   showSuccessNotification,
   showWarningNotification,
 } from 'controllers/notification';
+import { useUserPermissions } from 'hooks/useUserPermissions';
 import { FixRoundStatus, type FixRoundRS } from 'types/aiFactory';
 import { usePolling } from 'pages/inside/aiFactory/common';
 
@@ -89,6 +90,7 @@ export const useFixRound = (
 ): FixRoundLoadState => {
   const { formatMessage } = useIntl();
   const dispatch = useDispatch();
+  const { canReviewAiTestCases } = useUserPermissions();
   const [current, setCurrent] = useState<FixRoundRS | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [isStarting, setIsStarting] = useState(false);
@@ -180,6 +182,8 @@ export const useFixRound = (
   usePolling(() => void load(), POLLING_INTERVAL_MS, current?.status === FixRoundStatus.RUNNING);
 
   const start = useCallback(async () => {
+    if (!canReviewAiTestCases || !isEnabled || !projectKey || !testCaseId) return;
+
     requestSequence.current += 1;
     setIsStarting(true);
     setIsError(false);
@@ -199,7 +203,7 @@ export const useFixRound = (
     } finally {
       setIsStarting(false);
     }
-  }, [dispatch, formatMessage, url]);
+  }, [canReviewAiTestCases, dispatch, formatMessage, isEnabled, projectKey, testCaseId, url]);
 
   return {
     current: isEnabled ? current : null,

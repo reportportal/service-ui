@@ -18,6 +18,7 @@ import { useCallback, useEffect, useState } from 'react';
 
 import { URLS } from 'common/urls';
 import { ERROR_CANCELED, fetch } from 'common/utils';
+import { useUserPermissions } from 'hooks/useUserPermissions';
 import { CommentState, CommentTargetType } from 'types/aiFactory';
 import type {
   AiCommentState,
@@ -112,6 +113,7 @@ export const useReviewComments = (
   testCaseId: number,
   isEnabled: boolean,
 ): ReviewCommentsLoadState => {
+  const { canReviewAiTestCases } = useUserPermissions();
   const [state, setState] = useState<ReviewCommentsState>(INITIAL_STATE);
   const [requestIndex, setRequestIndex] = useState(0);
   const [isMutating, setIsMutating] = useState(false);
@@ -154,26 +156,36 @@ export const useReviewComments = (
   }, []);
 
   const addComment = useCallback(
-    (payload: ReviewCommentPayload) => mutate(() => fetch(url, { method: 'POST', data: payload })),
-    [mutate, url],
+    async (payload: ReviewCommentPayload) => {
+      if (!canReviewAiTestCases) return;
+
+      await mutate(() => fetch(url, { method: 'POST', data: payload }));
+    },
+    [canReviewAiTestCases, mutate, url],
   );
 
   const deleteComment = useCallback(
-    (commentId: number) =>
-      mutate(() =>
+    async (commentId: number) => {
+      if (!canReviewAiTestCases) return;
+
+      await mutate(() =>
         fetch(URLS.testCaseReviewCommentById(projectKey, testCaseId, commentId), {
           method: 'DELETE',
         }),
-      ),
-    [mutate, projectKey, testCaseId],
+      );
+    },
+    [canReviewAiTestCases, mutate, projectKey, testCaseId],
   );
 
   const discardPending = useCallback(
-    () =>
-      mutate(() =>
+    async () => {
+      if (!canReviewAiTestCases) return;
+
+      await mutate(() =>
         fetch(URLS.discardTestCaseReviewComments(projectKey, testCaseId), { method: 'DELETE' }),
-      ),
-    [mutate, projectKey, testCaseId],
+      );
+    },
+    [canReviewAiTestCases, mutate, projectKey, testCaseId],
   );
 
   const isCurrentRequest = state.requestKey === requestKey;

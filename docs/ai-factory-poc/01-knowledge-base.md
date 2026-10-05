@@ -186,7 +186,7 @@ error semantics or end-to-end CI reporting have been accepted.
   case to Draft and makes the evaluation obsolete.
 - Bulk Approve: all selected Draft cases without unsent comments / running fix → Ready
   (AI → "Approved", manual → "Marked as ready"); skipped ones named in a message.
-- Proposed roles: Editor+ (F15, open).
+- Accepted D15/F15 FE roles: Editor, Organization Manager and Administrator. Viewer remains read-only.
 
 ### 4.3 Ready-only gate (US-014)
 - Add to Test Plan on Draft → disabled, "Only Ready Test Cases can be added to a Test Plan".
@@ -205,7 +205,8 @@ error semantics or end-to-end CI reporting have been accepted.
   evaluation Evaluated (not Obsolete), total ≥ threshold, no unsent comments, no fix running.
 - Never demotes; changing the setting does not re-evaluate existing cases.
 - Validation: "Threshold must be a whole number from 0 to 100".
-- Editable by Project Manager+ (proposal, F15); others read-only; change recorded in activity.
+- Editable by Organization Manager / Administrator (accepted D15/F15 FE matrix); Editor and Viewer are read-only;
+  change recorded in activity.
 - History: "Draft → Ready · Auto-Ready (S ≥ T)", actor **Auto-Ready**.
 - **This logic runs on the backend.** UI only shows results; mocks simulate it.
 
@@ -322,7 +323,7 @@ error semantics or end-to-end CI reporting have been accepted.
 | F12 | RP → GitLab job trigger (fix, automation) + CI → RP transport (Vadim) | FE only calls RP endpoints (`push`, `automate`); async status via polling |
 | F13 | Library source adapter / Library id for `rp-ui-autotests` (Vadim) | None directly |
 | F14 | Auto-Ready default ON for new pipeline (Anatolii / Teodor) | Settings form default |
-| F15 | Roles: approve / push Editor+, Pipeline settings PM+ (Anatolii) | Permission helpers, read-only UI |
+| F15 | **Accepted by D15:** review / approve / push / automate — Editor, Organization Manager, Administrator; Pipeline settings — Organization Manager, Administrator; Viewer — read-only | Permission helpers plus UI and request-boundary guards. Backend authorization and exact live read-role semantics remain open |
 | F16 | Automation MR stays a GitLab code review (Anatolii / Vadim) | None |
 
 ## 6. Outside MVP (don't build)
