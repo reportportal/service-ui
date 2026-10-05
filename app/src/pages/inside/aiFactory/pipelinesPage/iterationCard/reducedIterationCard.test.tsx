@@ -84,7 +84,8 @@ describe('ReducedIterationCard', () => {
         iterationId: 103,
       },
     });
-    expect(wrapper.find('Link').text()).toBe('Iteration #3');
+    expect(wrapper.find('Link').prop('aria-label')).toBe('Iteration #3');
+    expect(wrapper.text()).toContain('Iteration #3');
     expect(wrapper.text()).toContain('Passed');
     expect(wrapper.text()).toContain('CI');
     expect(wrapper.text()).toContain('60000 ms');

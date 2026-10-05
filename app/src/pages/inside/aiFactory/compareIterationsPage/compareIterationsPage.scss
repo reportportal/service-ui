@@ -61,7 +61,7 @@
   min-width: 180px;
   padding: 12px 16px;
   border: 1px solid var(--rp-ui-base-e-100);
-  border-radius: 8px;
+  border-radius: 4px;
   font-weight: var(--rp-ui-base-fw-medium);
 }
 
@@ -74,7 +74,7 @@
 .stage {
   padding: 16px;
   border: 1px solid var(--rp-ui-base-e-100);
-  border-radius: 8px;
+  border-radius: 4px;
   background-color: var(--rp-ui-base-bg-000);
 
   &__title {
@@ -111,7 +111,7 @@
 .table-wrapper {
   overflow-x: auto;
   border: 1px solid var(--rp-ui-base-e-100);
-  border-radius: 8px;
+  border-radius: 4px;
 }
 
 .table {

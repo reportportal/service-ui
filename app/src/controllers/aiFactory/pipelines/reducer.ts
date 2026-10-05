@@ -190,9 +190,17 @@ const iterationDetailsReducer = (
   if (!isPipelineDetailAction(action)) {
     return state;
   }
-  return action.type === FETCH_SUCCESS
-    ? ((action.payload?.data as IterationRS | ReducedPipelineIterationDetail | undefined) ?? null)
-    : null;
+  if (action.type === FETCH_SUCCESS) {
+    return (action.payload?.data as IterationRS | ReducedPipelineIterationDetail | undefined) ?? null;
+  }
+  if (
+    action.type === FETCH_START &&
+    state?.pipelineId === action.meta?.pipelineId &&
+    state.id === action.meta.iterationId
+  ) {
+    return state;
+  }
+  return null;
 };
 
 const iterationDetailsLoadingReducer = (state = false, action: PipelineReducerAction): boolean =>

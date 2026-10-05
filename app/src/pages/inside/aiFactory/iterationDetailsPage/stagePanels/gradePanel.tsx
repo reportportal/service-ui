@@ -71,7 +71,7 @@ export const GradePanel = ({ stage }: GradePanelProps) => {
       <table className={cx('table')}>
         <thead>
           <tr>
-            <th scope="col" aria-label={formatMessage(messages.gradeColumnDetails)} />
+            <th className={cx('iconCell')} scope="col" aria-label={formatMessage(messages.gradeColumnDetails)} />
             <th scope="col">{formatMessage(messages.gradeColumnCase)}</th>
             <th scope="col">{formatMessage(messages.gradeColumnScore)}</th>
           </tr>
@@ -84,7 +84,7 @@ export const GradePanel = ({ stage }: GradePanelProps) => {
             return (
               <Fragment key={rowKey}>
                 <tr>
-                  <td>
+                  <td className={cx('iconCell')}>
                     <button
                       type="button"
                       className={cx('expandRow')}

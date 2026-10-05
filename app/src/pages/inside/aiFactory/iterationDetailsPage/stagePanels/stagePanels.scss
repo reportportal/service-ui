@@ -47,6 +47,7 @@
     border-bottom: 1px solid var(--rp-ui-base-e-100);
     vertical-align: top;
   }
+
 }
 
 .automation-table {
@@ -55,6 +56,14 @@
   th {
     width: 33.333%;
   }
+}
+
+.iconCell {
+  box-sizing: border-box;
+  width: 48px;
+  padding-right: 8px;
+  padding-left: 8px;
+  text-align: center;
 }
 
 .caseLink {

@@ -15,12 +15,15 @@
  */
 
 import { useId, useMemo, useState } from 'react';
+import { useDispatch } from 'react-redux';
 import { useIntl } from 'react-intl';
 import { BubblesLoader, Button, DeleteIcon, Modal, Tooltip } from '@reportportal/ui-kit';
 
+import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import CommentIcon from 'common/img/comment-inline.svg';
 import { createClassnames } from 'common/utils';
 import { fromNowFormat } from 'common/utils/timeDateUtils';
+import { showModalAction } from 'controllers/modal';
 import { LifecycleBadge } from 'pages/inside/aiFactory/common';
 import { CommentState, CommentTargetType, FixRoundStatus } from 'types/aiFactory';
 import type {
@@ -242,6 +245,7 @@ export const ReviewStrip = ({
   lastAgentChange,
 }: ReviewStripProps) => {
   const { formatMessage } = useIntl();
+  const dispatch = useDispatch();
   const [mutationError, setMutationError] = useState(false);
   const [isChangesVisible, setIsChangesVisible] = useState(false);
   const pendingCount = reviewState.comments.filter(
@@ -256,17 +260,31 @@ export const ReviewStrip = ({
     pushHint = formatMessage(messages.addAtLeastOne);
   }
 
-  const discard = async () => {
-    if (isReadOnly) return;
-
-    if (!window.confirm(formatMessage(messages.discardConfirmation))) return;
-
+  const performDiscard = async () => {
     setMutationError(false);
     try {
       await reviewState.discardPending();
     } catch {
       setMutationError(true);
     }
+  };
+
+  const discard = () => {
+    if (isReadOnly) return;
+
+    dispatch(
+      showModalAction({
+        id: 'confirmationModal',
+        data: {
+          title: formatMessage(messages.discard),
+          message: formatMessage(messages.discardConfirmation),
+          confirmText: formatMessage(COMMON_LOCALE_KEYS.DISCARD),
+          cancelText: formatMessage(COMMON_LOCALE_KEYS.CANCEL),
+          dangerConfirm: true,
+          onConfirm: () => void performDiscard(),
+        },
+      }),
+    );
   };
 
   const isRunning = fixRoundState.current?.status === FixRoundStatus.RUNNING;

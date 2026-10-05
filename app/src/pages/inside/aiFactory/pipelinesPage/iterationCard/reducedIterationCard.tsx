@@ -57,24 +57,26 @@ export const ReducedIterationCard = ({ iteration }: ReducedIterationCardProps) =
     iteration.durationMs !== undefined ? formatDuration(iteration.durationMs) : undefined,
   ].filter(Boolean);
 
+  const iterationTitle = formatMessage(messages.iterationTitle, { number: iteration.number });
+
   return (
-    <div className={cx('card')} data-automation-id="reducedIterationCard">
+    <Link
+      className={cx('card')}
+      data-automation-id="reducedIterationCard"
+      aria-label={iterationTitle}
+      to={{
+        type: PROJECT_PIPELINE_ITERATION_PAGE,
+        payload: {
+          organizationSlug,
+          projectSlug,
+          pipelineId: iteration.pipelineId,
+          iterationId: iteration.id,
+        },
+      }}
+    >
       <div className={cx('card__header')}>
         <span className={cx('card__neutral-status')}>{statusLabel(iteration.status)}</span>
-        <Link
-          className={cx('card__title')}
-          to={{
-            type: PROJECT_PIPELINE_ITERATION_PAGE,
-            payload: {
-              organizationSlug,
-              projectSlug,
-              pipelineId: iteration.pipelineId,
-              iterationId: iteration.id,
-            },
-          }}
-        >
-          {formatMessage(messages.iterationTitle, { number: iteration.number })}
-        </Link>
+        <span className={cx('card__title')}>{iterationTitle}</span>
       </div>
       {metaFields.length > 0 && <div className={cx('card__meta')}>{metaFields.join(' · ')}</div>}
       {iteration.stages.length > 0 && (
@@ -86,6 +88,6 @@ export const ReducedIterationCard = ({ iteration }: ReducedIterationCardProps) =
           ))}
         </div>
       )}
-    </div>
+    </Link>
   );
 };

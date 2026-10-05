@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+import { Fragment } from 'react';
 import { useIntl } from 'react-intl';
 import { useSelector } from 'react-redux';
 import Link from 'redux-first-router-link';
@@ -92,38 +93,57 @@ export const IterationCard = ({ pipelineType, iteration }: IterationCardProps) =
       : undefined,
     formatMessage(messages.metaPipelineEstimate, { cost: formatCost(iteration.costTotal) }),
     startedAndDuration(iteration),
-  ].filter(Boolean);
+  ].filter((field): field is string => Boolean(field));
+
+  const iterationTitle = formatMessage(messages.iterationTitle, { number: iteration.number });
 
   return (
-    <div className={cx('card')} data-automation-id="iterationCard">
+    <Link
+      className={cx('card')}
+      data-automation-id="iterationCard"
+      aria-label={iterationTitle}
+      to={{
+        type: PROJECT_PIPELINE_ITERATION_PAGE,
+        payload: {
+          organizationSlug,
+          projectSlug,
+          pipelineId: iteration.pipelineId,
+          iterationId: iteration.id,
+        },
+      }}
+    >
       <div className={cx('card__header')}>
         <IterationStatusBadge status={iteration.status} />
-        <Link
-          className={cx('card__title')}
-          to={{
-            type: PROJECT_PIPELINE_ITERATION_PAGE,
-            payload: {
-              organizationSlug,
-              projectSlug,
-              pipelineId: iteration.pipelineId,
-              iterationId: iteration.id,
-            },
-          }}
-        >
-          {formatMessage(messages.iterationTitle, { number: iteration.number })}
-        </Link>
+        <span className={cx('card__title')}>{iterationTitle}</span>
+        <div className={cx('card__outcome')}>{outcomeText()}</div>
       </div>
-      <div className={cx('card__outcome')}>{outcomeText()}</div>
-      <div className={cx('card__meta')}>{metaFields.join(' · ')}</div>
+      <div className={cx('card__meta')}>
+        {metaFields.map((field) => (
+          <span key={field} className={cx('card__meta-field')}>
+            {field}
+          </span>
+        ))}
+      </div>
       <div className={cx('card__stages')}>
-        {iteration.stages.map((stage) => {
+        {iteration.stages.map((stage, index) => {
           const metricLabel = formatStageMetric(stage);
           return (
-            <span key={stage.key} className={cx('card__stage-chip')}>
-              <StageStatusDot status={stage.status} />
-              {formatMessage(STAGE_LABEL_MESSAGE[stage.key])}
-              {metricLabel ? ` · ${metricLabel}` : ''}
-            </span>
+            <Fragment key={stage.key}>
+              {index > 0 && (
+                <span className={cx('card__stage-arrow')} aria-hidden="true">
+                  →
+                </span>
+              )}
+              <span className={cx('card__stage-chip')}>
+                <StageStatusDot status={stage.status} />
+                <span className={cx('card__stage-label')}>
+                  {formatMessage(STAGE_LABEL_MESSAGE[stage.key])}
+                </span>
+                {metricLabel && (
+                  <span className={cx('card__stage-metric')}>{metricLabel}</span>
+                )}
+              </span>
+            </Fragment>
           );
         })}
       </div>
@@ -136,6 +156,6 @@ export const IterationCard = ({ pipelineType, iteration }: IterationCardProps) =
           ))}
         </div>
       )}
-    </div>
+    </Link>
   );
 };

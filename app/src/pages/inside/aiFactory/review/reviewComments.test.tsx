@@ -9,8 +9,10 @@
  */
 
 import { act, type ChangeEvent } from 'react';
+import { useDispatch } from 'react-redux';
 import { shallow } from 'enzyme';
 
+import { showModalAction } from 'controllers/modal';
 import { CommentState, CommentTargetType, FixRoundStatus, Lifecycle } from 'types/aiFactory';
 import type { ReviewCommentRS } from 'types/aiFactory';
 
@@ -27,6 +29,10 @@ jest.mock('@reportportal/ui-kit', () => ({
   ),
   DeleteIcon: () => <span>DeleteIcon</span>,
   Tooltip: ({ children }: { children: React.ReactNode }) => <>{children}</>,
+}));
+jest.mock('react-redux', () => ({ useDispatch: jest.fn() }));
+jest.mock('controllers/modal', () => ({
+  showModalAction: jest.fn((payload: unknown) => ({ type: 'SHOW_MODAL', payload })),
 }));
 jest.mock('common/img/comment-inline.svg', () => 'comment.svg');
 jest.mock('common/utils', () => ({
@@ -111,8 +117,11 @@ const createFixRoundState = (overrides: Partial<FixRoundLoadState> = {}): FixRou
 });
 
 describe('AI review comments', () => {
+  const dispatch = jest.fn();
+
   beforeEach(() => {
     jest.clearAllMocks();
+    jest.mocked(useDispatch).mockReturnValue(dispatch);
   });
 
   test('shows only the selected target thread and adds trimmed text', async () => {
@@ -182,7 +191,6 @@ describe('AI review comments', () => {
 
   test('discards pending comments only after confirmation', async () => {
     const reviewState = createReviewState();
-    jest.spyOn(window, 'confirm').mockReturnValue(true);
     const wrapper = shallow(
       <ReviewStrip
         lifecycle={Lifecycle.DRAFT}
@@ -191,15 +199,30 @@ describe('AI review comments', () => {
       />,
     );
 
+    const discard = wrapper
+      .find('[data-automation-id="discard-review-comments"]')
+      .prop('onClick') as () => void;
+    discard();
+
+    expect(showModalAction).toHaveBeenCalledWith({
+      id: 'confirmationModal',
+      data: expect.objectContaining({
+        title: 'Discard comments',
+        message: 'Discard all unsent review comments?',
+        dangerConfirm: true,
+        onConfirm: expect.any(Function),
+      }),
+    });
+    expect(reviewState.discardPending).not.toHaveBeenCalled();
+
+    const modalPayload = jest.mocked(showModalAction).mock.calls[0][0] as {
+      data: { onConfirm: () => void };
+    };
     await act(async () => {
-      const discard = wrapper
-        .find('[data-automation-id="discard-review-comments"]')
-        .prop('onClick') as () => void;
-      discard();
+      modalPayload.data.onConfirm();
       await Promise.resolve();
     });
 
-    expect(window.confirm).toHaveBeenCalledWith('Discard all unsent review comments?');
     expect(reviewState.discardPending).toHaveBeenCalledTimes(1);
   });
 

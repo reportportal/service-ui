@@ -494,6 +494,26 @@ describe('aiFactoryPipelinesReducer iteration detail provenance', () => {
     });
   });
 
+  test('keeps the current detail mounted while the same iteration is refreshed', () => {
+    const currentDetail = { ...detail, id: 103, pipelineId: 7 };
+    const loadedState = {
+      ...createCatalogState(),
+      iterationDetails: currentDetail,
+    } as PipelinesState;
+
+    const state = aiFactoryPipelinesReducer(
+      loadedState,
+      detailAction(FETCH_START),
+    ) as PipelinesState;
+
+    expect(state).toMatchObject({
+      iterationDetails: currentDetail,
+      iterationDetailsLoading: true,
+      iterationDetailsError: false,
+      iterationDetailsUnavailable: false,
+    });
+  });
+
   test('accepts only the matching detail success and exposes its reduced payload', () => {
     const loading = aiFactoryPipelinesReducer(
       createCatalogState(),
