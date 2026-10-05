@@ -20,7 +20,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useAiFactoryEnabled } from 'controllers/aiFactory';
 import { useHasTestPlans } from 'hooks/useHasTestPlans';
 import { useUserPermissions } from 'hooks/useUserPermissions';
-import { LifecycleBadge } from 'pages/inside/aiFactory/common';
+import { LifecycleBadge, ScoreChip } from 'pages/inside/aiFactory/common';
 import { useDeleteTestCaseModal } from 'pages/inside/testCaseLibraryPage/deleteTestCaseModal';
 import { useDuplicateSelectedTestCaseModal } from 'pages/inside/testCaseLibraryPage/duplicateSelectedTestCaseModal';
 import { useEditScenarioModal } from 'pages/inside/testCaseLibraryPage/editScenarioModal';
@@ -29,7 +29,7 @@ import { useEditTestCaseModal } from 'pages/inside/testCaseLibraryPage/createTes
 import { useMoveTestCaseModal } from 'pages/inside/testCaseLibraryPage/moveTestCaseModal/useMoveTestCaseModal';
 import { TestCaseSidePanel } from 'pages/inside/common/testCaseList/testCaseSidePanel';
 import { TestCaseDetailsHeader } from 'pages/inside/testCaseLibraryPage/testCaseDetailsPage/testCaseDetailsHeader';
-import { Lifecycle } from 'types/aiFactory';
+import { EvaluationState, Lifecycle } from 'types/aiFactory';
 import { TestCaseManualScenario, type ExtendedTestCase } from 'types/testCase';
 
 jest.mock('@reportportal/ui-kit', () => ({
@@ -43,7 +43,10 @@ jest.mock('@reportportal/ui-kit', () => ({
 jest.mock(
   'analyticsEvents/testCaseLibraryPageEvents',
   () => ({
-    SIDE_PANEL_QUICK_ACTION_ELEMENT_NAME: { OPEN_DETAILS: 'OPEN_DETAILS', ADD_TO_TEST_PLAN: 'ADD_TO_TEST_PLAN' },
+    SIDE_PANEL_QUICK_ACTION_ELEMENT_NAME: {
+      OPEN_DETAILS: 'OPEN_DETAILS',
+      ADD_TO_TEST_PLAN: 'ADD_TO_TEST_PLAN',
+    },
     TEST_CASE_LIBRARY_EVENTS: {
       clickEditTestCaseFromDetails: jest.fn(),
       clickSidePanelMenu: jest.fn(),
@@ -76,7 +79,10 @@ jest.mock('react-tracking', () => ({ useTracking: () => ({ trackEvent: jest.fn()
 jest.mock('common/hooks', () => ({ useOnClickOutside: jest.fn() }));
 jest.mock('common/utils', () => ({
   copyToClipboard: jest.fn(() => Promise.resolve()),
-  createClassnames: () => (...classNames: string[]) => classNames.filter(Boolean).join(' '),
+  createClassnames:
+    () =>
+    (...classNames: string[]) =>
+      classNames.filter(Boolean).join(' '),
 }));
 jest.mock('components/collapsibleSection', () => ({ CollapsibleSection: 'CollapsibleSection' }));
 jest.mock('components/fields/expandedTextSection', () => ({
@@ -156,6 +162,7 @@ const testCase = {
   attributes: [],
   testFolder: { id: 7 },
   lifecycle: Lifecycle.READY,
+  evaluationSummary: { totalScore: 82, state: EvaluationState.EVALUATED },
   manualScenario: {
     manualScenarioType: TestCaseManualScenario.TEXT,
     attachments: [],
@@ -182,12 +189,8 @@ const renderHosts = (isEnabled: boolean) => {
   jest.mocked(useAddTestCasesToTestPlanModal).mockReturnValue({ openModal });
 
   return {
-    header: shallow(
-      <TestCaseDetailsHeader testCase={testCase} onAddToTestPlan={jest.fn()} />,
-    ),
-    sidePanel: shallow(
-      <TestCaseSidePanel testCase={testCase} isVisible onClose={jest.fn()} />,
-    ),
+    header: shallow(<TestCaseDetailsHeader testCase={testCase} onAddToTestPlan={jest.fn()} />),
+    sidePanel: shallow(<TestCaseSidePanel testCase={testCase} isVisible onClose={jest.fn()} />),
   };
 };
 
@@ -205,4 +208,16 @@ describe('lifecycle badges in test case hosts', () => {
     expect(header.find(LifecycleBadge)).toHaveLength(expectedCount);
     expect(sidePanel.find(LifecycleBadge)).toHaveLength(expectedCount);
   });
+
+  test.each([
+    { isEnabled: false, expectedCount: 0 },
+    { isEnabled: true, expectedCount: 1 },
+  ])(
+    'renders the header score only when feature enabled is $isEnabled',
+    ({ isEnabled, expectedCount }) => {
+      const { header } = renderHosts(isEnabled);
+
+      expect(header.find(ScoreChip)).toHaveLength(expectedCount);
+    },
+  );
 });

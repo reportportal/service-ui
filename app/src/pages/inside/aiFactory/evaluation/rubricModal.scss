@@ -14,6 +14,34 @@
  * limitations under the License.
  */
 
-export { LifecycleHistory } from './lifecycleHistory';
-export { useTestCaseAi } from './useTestCaseAi';
-export type { TestCaseAiLoadState } from './useTestCaseAi';
+.rubric {
+  color: var(--rp-ui-base-almost-black);
+  font-family: $FONT-ROBOTO-REGULAR;
+  font-size: 13px;
+  line-height: 20px;
+
+  &__intro {
+    margin: 0;
+  }
+
+  &__criteria {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin: 16px 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  &__criterion-title {
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+    font-family: $FONT-ROBOTO-MEDIUM;
+  }
+
+  &__note {
+    margin-top: 8px;
+    color: var(--rp-ui-base-e-400);
+  }
+}

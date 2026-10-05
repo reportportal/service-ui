@@ -26,16 +26,28 @@ interface TestCaseAiState {
   isError: boolean;
 }
 
+export interface TestCaseAiLoadState {
+  data: TestCaseAiRS | null;
+  isLoading: boolean;
+  isError: boolean;
+  reload: () => void;
+}
+
 const INITIAL_STATE: TestCaseAiState = {
   data: null,
   requestKey: '',
   isError: false,
 };
 
-export const useTestCaseAi = (projectKey: string, testCaseId: number, isEnabled: boolean) => {
+export const useTestCaseAi = (
+  projectKey: string,
+  testCaseId: number,
+  isEnabled: boolean,
+  resourceVersion?: number,
+): TestCaseAiLoadState => {
   const [state, setState] = useState<TestCaseAiState>(INITIAL_STATE);
   const [requestIndex, setRequestIndex] = useState(0);
-  const requestKey = `${projectKey}:${testCaseId}:${requestIndex}`;
+  const requestKey = `${projectKey}:${testCaseId}:${resourceVersion ?? ''}:${requestIndex}`;
 
   const reload = useCallback(() => {
     setRequestIndex((currentIndex) => currentIndex + 1);

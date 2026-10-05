@@ -32,6 +32,7 @@ interface HarnessProps {
   projectKey: string;
   testCaseId: number;
   isEnabled: boolean;
+  resourceVersion?: number;
   onResult: (result: HookResult) => void;
 }
 
@@ -58,8 +59,14 @@ const createResponse = (): TestCaseAiRS => ({
 
 let hookResult: HookResult;
 
-const Harness = ({ projectKey, testCaseId, isEnabled, onResult }: HarnessProps) => {
-  const result = useTestCaseAi(projectKey, testCaseId, isEnabled);
+const Harness = ({
+  projectKey,
+  testCaseId,
+  isEnabled,
+  resourceVersion,
+  onResult,
+}: HarnessProps) => {
+  const result = useTestCaseAi(projectKey, testCaseId, isEnabled, resourceVersion);
 
   useEffect(() => onResult(result), [onResult, result]);
 
@@ -136,6 +143,23 @@ describe('useTestCaseAi', () => {
       await secondRequest.promise;
     });
     expect(hookResult).toMatchObject({ data: currentResponse, isLoading: false, isError: false });
+  });
+
+  test('starts a fresh request when the test case resource version changes', () => {
+    fetchMock.mockReturnValue(new Promise(() => {}));
+    wrapper = mount(
+      <Harness
+        projectKey="demo"
+        testCaseId={42}
+        isEnabled
+        resourceVersion={100}
+        onResult={captureHookResult}
+      />,
+    );
+
+    wrapper.setProps({ resourceVersion: 200 });
+
+    expect(fetch).toHaveBeenCalledTimes(2);
   });
 
   test('exposes an error and starts a fresh request when reloaded', async () => {
