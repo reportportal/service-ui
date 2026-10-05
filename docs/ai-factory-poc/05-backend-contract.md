@@ -617,6 +617,19 @@ exist; the fallback is UX-only and the backend 409 remains mandatory authorizati
 
 ## 8. Provisional Automation contract (US-015, 016, 017)
 
+**Frontend standing (2026-10-04):** T5.1 consumes A1/A2 through strict response normalizers and the AI Factory
+mock overlay. T5.2 uses the provisional C2 `automation` projection to show the running iteration on Test Case
+details and refreshes the existing Pipeline projections while that automation iteration is running. Progress and
+the iteration link are viewer-readable; the Automate mutation remains permission-gated. Polling pauses in hidden
+tabs, does not overlap an outstanding async request and is disabled while the corresponding view is already
+loading. The mock advances Prepare → Develop → Automation Review → Fix (Skipped when review is clean), records
+iteration-to-case membership, preserves canonical/internal and requested/external case IDs across reload, exposes
+public CaseLink identity, projects the real created iteration identity through C2 and resumes persisted in-progress
+simulations when handlers are installed again. The feature-gated details, section and bulk entry
+points make no A1/A2 request when the flag is off. This is not live integration: A1/A2 and C2 are absent from the
+audited published OpenAPI and remain provisional until backend paths, schemas, authorization and error semantics
+are published and verified.
+
 - A1 `GET tms/automation/environment` → `{ environments: string[]; default: string }` (default `beta5`).
 - A2 `POST tms/automation` body `{ testCaseIds: number[]; environment: string; confirmReautomate: boolean }` →
   `202 { iteration: { pipelineId, iterationId, number }; accepted: number[]; skipped: { id, displayId, reason: SkipReason }[] }`;

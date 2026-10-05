@@ -2,13 +2,15 @@
 """Create (or find) the frontend sub-task of an AI Factory PoC story in Jira.
 
 Usage:
-  python3 docs/ai-factory-poc/tools/jira_fe_subtask.py EPMRPP-121704 "Pipelines list" [--desc FILE] [--yes]
+  python3 docs/ai-factory-poc/tools/jira_fe_subtask.py EPMRPP-121704 "Pipelines list" \
+    --estimate-hours 20 --estimate-comment "4 h research; 10 h implementation; 6 h validation" [--desc FILE] [--yes]
 
 Without --yes the script only prints what it would create (dry run).
 Credentials are read from JIRA_ENV_FILE, or else from the first of service-ui/.env, ../prism-ui/.env.local that has a token:
   JIRA_URL, JIRA_API_TOKEN (Personal Access Token, sent as Bearer), optional JIRA_ASSIGNEE (Jira username),
   optional JIRA_SUBTASK_TYPE (default: auto-detected sub-task issue type).
-Idempotent: if the parent already has a sub-task with the same full "[FE]" summary, it is reported and nothing is created.
+Idempotent: if the parent already has a sub-task with the same full "[FE]" summary, no duplicate issue or
+estimate comment is created. With --yes, the existing issue's Original Estimate is synchronized.
 """
 import argparse
 import json
@@ -24,6 +26,7 @@ DEFAULT_ENV_FILES = [
 ]
 PREFIX = '[FE]'
 LABELS = ['ai-factory-poc', 'frontend']
+ESTIMATE_COMMENT_PREFIX = 'Frontend estimate:'
 
 
 def load_env(path):
@@ -102,13 +105,61 @@ def subtask_type(env, project_key):
     return 'Sub-task'
 
 
+def positive_hours(value):
+    try:
+        hours = float(value)
+    except ValueError as error:
+        raise argparse.ArgumentTypeError('must be a number') from error
+    if hours <= 0 or not hours.is_integer():
+        raise argparse.ArgumentTypeError('must be a positive whole number of hours')
+    return int(hours)
+
+
+def estimate_text(hours):
+    return '%sh' % hours
+
+
+def estimate_comment(hours, detail):
+    return '%s %s\n\n%s' % (ESTIMATE_COMMENT_PREFIX, estimate_text(hours), detail.strip())
+
+
+def ensure_estimate(env, issue_key, hours, detail):
+    """Synchronize Original Estimate and add one idempotent breakdown comment."""
+    issue = request(env, 'GET', '/rest/api/2/issue/%s?fields=timetracking,comment' % issue_key)
+    expected_seconds = hours * 60 * 60
+    actual_seconds = (issue.get('fields', {}).get('timetracking') or {}).get('originalEstimateSeconds')
+    if actual_seconds != expected_seconds:
+        request(env, 'PUT', '/rest/api/2/issue/%s' % issue_key, {
+            'fields': {'timetracking': {'originalEstimate': estimate_text(hours)}}
+        })
+        print('Set Original Estimate on %s: %s' % (issue_key, estimate_text(hours)))
+    else:
+        print('Original Estimate already set on %s: %s' % (issue_key, estimate_text(hours)))
+
+    body = estimate_comment(hours, detail)
+    comments = ((issue.get('fields', {}).get('comment') or {}).get('comments') or [])
+    if any(comment.get('body') == body for comment in comments):
+        print('Estimate comment already exists on %s.' % issue_key)
+        return
+    request(env, 'POST', '/rest/api/2/issue/%s/comment' % issue_key, {'body': body})
+    print('Added estimate breakdown comment to %s.' % issue_key)
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument('parent', help='Story key, e.g. EPMRPP-121704')
     parser.add_argument('title', help='Short FE scope title, e.g. "Pipelines list"')
     parser.add_argument('--desc', help='File with the sub-task description (Jira wiki markup)')
+    parser.add_argument('--estimate-hours', required=True, type=positive_hours,
+                        help='Required Original Estimate in whole hours, capped at 36')
+    parser.add_argument('--estimate-comment', required=True,
+                        help='Required Jira comment with the research / implementation / validation breakdown')
     parser.add_argument('--yes', action='store_true', help='Actually create the issue (default: dry run)')
     args = parser.parse_args()
+    if args.estimate_hours > 36:
+        parser.error('--estimate-hours must be no larger than 36')
+    if not args.estimate_comment.strip():
+        parser.error('--estimate-comment must not be empty')
 
     env = load_credentials()
 
@@ -122,6 +173,12 @@ def main():
         summary = sub['fields']['summary']
         if summary == target_summary:
             print('Exists: %s "%s" [%s]' % (sub['key'], summary, sub['fields']['status']['name']))
+            if not args.yes:
+                print('DRY RUN — would ensure Original Estimate %s and comment:\n%s' % (
+                    estimate_text(args.estimate_hours), estimate_comment(args.estimate_hours, args.estimate_comment)))
+                print('Re-run with --yes to apply it to the existing issue.')
+                return
+            ensure_estimate(env, sub['key'], args.estimate_hours, args.estimate_comment)
             return
 
     project_key = fields['project']['key']
@@ -133,6 +190,7 @@ def main():
         'summary': target_summary,
         'description': description,
         'labels': LABELS,
+        'timetracking': {'originalEstimate': estimate_text(args.estimate_hours)},
     }}
     assignee = env.get('JIRA_ASSIGNEE') or me.get('name')
     if assignee:
@@ -140,11 +198,14 @@ def main():
 
     if not args.yes:
         print('DRY RUN — would create:\n' + json.dumps(payload, indent=2, ensure_ascii=False))
+        print('Then add estimate breakdown comment:\n' + estimate_comment(
+            args.estimate_hours, args.estimate_comment))
         print('Re-run with --yes to create it.')
         return
 
     created = request(env, 'POST', '/rest/api/2/issue', payload)
     print('Created %s → %s/browse/%s' % (created['key'], env['JIRA_URL'].rstrip('/'), created['key']))
+    ensure_estimate(env, created['key'], args.estimate_hours, args.estimate_comment)
 
 
 if __name__ == '__main__':

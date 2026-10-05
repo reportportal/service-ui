@@ -82,6 +82,16 @@ describe('toIterationRS', () => {
       ]),
     );
   });
+
+  test('auto-1 stage rows use the Test Case Library display IDs', () => {
+    const rs = toIterationRS(findPipeline(2), findIteration(201));
+    const prepare = rs.stages.find((stage) => stage.key === StageKey.PREPARE);
+
+    expect(prepare?.perCase).toEqual([
+      expect.objectContaining({ testCaseId: 1001, displayId: 'TC101', name: 'TC101' }),
+      expect.objectContaining({ testCaseId: 1002, displayId: 'TC102', name: 'TC102' }),
+    ]);
+  });
 });
 
 describe('toPipelineCompareRS', () => {
@@ -160,5 +170,16 @@ describe('toTestCaseAiRS', () => {
       expect.arrayContaining([expect.objectContaining({ stage: StageKey.REVIEW, fixRound: 1 })]),
     );
     expect(rs.cost?.fixRounds).toEqual([{ round: 1, amount: 0.22 }]);
+  });
+
+  test('TC101 automation link is projected from its automation iteration', () => {
+    const c = findCase('TC101');
+    const rs = toTestCaseAiRS(c, findPipeline(1), findIteration(101));
+
+    expect(rs.automation?.iteration).toEqual({
+      pipelineId: 2,
+      iterationId: 201,
+      number: 1,
+    });
   });
 });

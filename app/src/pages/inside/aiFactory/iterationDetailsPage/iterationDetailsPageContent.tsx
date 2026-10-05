@@ -42,7 +42,11 @@ import { projectNameSelector } from 'controllers/project';
 import { SettingsLayout } from 'layouts/settingsLayout';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
 import { SpinningPreloader } from 'components/preloaders/spinningPreloader';
-import { STAGE_LABEL_MESSAGE, usePolling } from 'pages/inside/aiFactory/common';
+import {
+  POLLING_REQUEST_STARTED,
+  STAGE_LABEL_MESSAGE,
+  usePolling,
+} from 'pages/inside/aiFactory/common';
 import { ProjectDetails } from 'pages/organization/constants';
 import { AiStageKey, IterationStatus, StageKey } from 'types/aiFactory';
 
@@ -100,10 +104,14 @@ export const IterationDetailsPageContent = () => {
   }, [pipeline, query.stage]);
 
   usePolling(
-    () => dispatch(getPipelineIterationDetailsAction(pipelineId, iterationId)),
+    () => {
+      dispatch(getPipelineIterationDetailsAction(pipelineId, iterationId));
+      return POLLING_REQUEST_STARTED;
+    },
     ITERATION_POLL_INTERVAL_MS,
-    iteration?.status === IterationStatus.RUNNING ||
-      iteration?.status === IterationStatus.IN_REVIEW,
+    !isLoading &&
+      (iteration?.status === IterationStatus.RUNNING ||
+        iteration?.status === IterationStatus.IN_REVIEW),
   );
 
   const breadcrumbDescriptors = [

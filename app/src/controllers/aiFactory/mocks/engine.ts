@@ -183,9 +183,9 @@ export const unsentCommentsCount = pendingCommentsCount;
 
 /** `null` = can be automated; otherwise the reason it must be skipped. */
 export const automateSkipReason = (caseRecord: MockCaseRecord): 'NOT_READY' | 'FIX_RUNNING' | 'AUTOMATION_IN_PROGRESS' | null => {
-  if (caseRecord.lifecycle !== Lifecycle.READY) return 'NOT_READY';
   if (caseRecord.fixRoundRunning) return 'FIX_RUNNING';
   if (caseRecord.automation?.status === AutomationStatus.IN_PROGRESS) return 'AUTOMATION_IN_PROGRESS';
+  if (caseRecord.lifecycle !== Lifecycle.READY) return 'NOT_READY';
   return null;
 };
 

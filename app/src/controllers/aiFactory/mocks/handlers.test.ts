@@ -25,8 +25,10 @@ import MockAdapter from 'axios-mock-adapter';
 import { URLS } from 'common/urls';
 import {
   AutomateAcceptedRS,
+  AutomationStatus,
   AutomationEnvironmentsRS,
   FixRoundRS,
+  IterationStatus,
   IterationPageRS,
   IterationRS,
   LifecycleBatchRS,
@@ -37,7 +39,13 @@ import {
   TestCaseAiExtension,
   TestCaseAiRS,
 } from 'types/aiFactory';
-import { resetMockDb } from './db';
+import {
+  findCase,
+  findIteration,
+  registerCaseAlias,
+  reloadMockDb,
+  resetMockDb,
+} from './db';
 import { installAiFactoryHandlers, SIMULATED_DELAY_MS } from './handlers';
 
 const PROJECT = 'demo_project';
@@ -52,6 +60,13 @@ beforeEach(() => {
 });
 
 afterEach(() => mock.restore());
+
+const reloadPersistedHandlers = (): void => {
+  reloadMockDb();
+  mock.restore();
+  mock = new MockAdapter(http);
+  installAiFactoryHandlers(mock);
+};
 
 describe('pipelines (P1-P4)', () => {
   test('P1 lists both pipelines', async () => {
@@ -77,6 +92,14 @@ describe('pipelines (P1-P4)', () => {
     const res = await http.get(URLS.tmsPipelineIterationById(PROJECT, 1, 999), {
       validateStatus: () => true,
     });
+    expect(res.status).toBe(404);
+  });
+
+  test('P3 rejects an iteration that belongs to another pipeline', async () => {
+    const res = await http.get(URLS.tmsPipelineIterationById(PROJECT, 1, 201), {
+      validateStatus: () => true,
+    });
+
     expect(res.status).toBe(404);
   });
 
@@ -271,13 +294,114 @@ describe('fix rounds (F1-F2)', () => {
 
 describe('automation (A1-A2)', () => {
   beforeEach(() => jest.useFakeTimers());
-  afterEach(() => jest.useRealTimers());
+  afterEach(() => {
+    jest.clearAllTimers();
+    jest.useRealTimers();
+  });
 
   test('A1 lists environments', async () => {
     const { data } = await http.get<AutomationEnvironmentsRS>(
       URLS.tmsAutomationEnvironments(PROJECT),
     );
     expect(data.default).toBe('beta5');
+  });
+
+  test.each([
+    [{ testCaseIds: [], environment: 'beta5', confirmReautomate: false }, 'empty IDs'],
+    [
+      { testCaseIds: [1005, 1005], environment: 'beta5', confirmReautomate: false },
+      'duplicate IDs',
+    ],
+    [
+      { testCaseIds: [1005], environment: 'unknown', confirmReautomate: false },
+      'unknown environment',
+    ],
+    [{ testCaseIds: [1005], environment: 'beta5' }, 'missing confirmation'],
+  ])('A2 rejects an invalid payload with %s (%s)', async (payload, _description) => {
+    const response = await http.post(URLS.tmsAutomation(PROJECT), payload, {
+      validateStatus: () => true,
+    });
+
+    expect(response.status).toBe(400);
+    expect(response.data).toMatchObject({
+      errorCode: 40002,
+      message: 'Invalid automation request',
+    });
+  });
+
+  test('A2 names already automated case IDs in 409 then accepts the confirmed retry', async () => {
+    const payload = {
+      testCaseIds: [1001],
+      environment: 'qa',
+      confirmReautomate: false,
+    };
+    const conflictResponse = await http.post(URLS.tmsAutomation(PROJECT), payload, {
+      validateStatus: () => true,
+    });
+
+    expect(conflictResponse.status).toBe(409);
+    expect(conflictResponse.data).toEqual({
+      reason: 'ALREADY_AUTOMATED_CONFIRM_REQUIRED',
+      testCaseIds: [1001],
+    });
+
+    const confirmed = await http.post<AutomateAcceptedRS>(URLS.tmsAutomation(PROJECT), {
+      ...payload,
+      confirmReautomate: true,
+    });
+    expect(confirmed.status).toBe(202);
+    expect(confirmed.data.accepted).toEqual([1001]);
+    expect(findCase(1001).automation?.status).toBe(AutomationStatus.IN_PROGRESS);
+  });
+
+  test('A2 rejects an unknown case without enumerating valid IDs', async () => {
+    const response = await http.post(
+      URLS.tmsAutomation(PROJECT),
+      { testCaseIds: [9999], environment: 'beta5', confirmReautomate: false },
+      { validateStatus: () => true },
+    );
+
+    expect(response.status).toBe(400);
+    expect(response.data).toEqual({
+      errorCode: 40002,
+      message: 'Invalid automation request',
+    });
+    expect(JSON.stringify(response.data)).not.toContain('1005');
+  });
+
+  test('A2 skips fix-running and automation-in-progress cases with deterministic reasons', async () => {
+    findCase(1006).fixRoundRunning = { round: 1, startedAt: Date.now() };
+    findCase(1007).automation = {
+      status: AutomationStatus.IN_PROGRESS,
+      iterationId: 201,
+      scenarioChangedAfterAutomation: false,
+    };
+
+    const response = await http.post<AutomateAcceptedRS>(URLS.tmsAutomation(PROJECT), {
+      testCaseIds: [1005, 1006, 1007],
+      environment: 'dev5',
+      confirmReautomate: false,
+    });
+
+    expect(response.data.accepted).toEqual([1005]);
+    expect(response.data.skipped).toEqual([
+      { id: 1006, displayId: 'TC106', reason: 'FIX_RUNNING' },
+      { id: 1007, displayId: 'TC107', reason: 'AUTOMATION_IN_PROGRESS' },
+    ]);
+  });
+
+  test('A2 rejects an all-ineligible selection without creating an iteration', async () => {
+    const response = await http.post(
+      URLS.tmsAutomation(PROJECT),
+      { testCaseIds: [1006, 1007], environment: 'beta5', confirmReautomate: false },
+      { validateStatus: () => true },
+    );
+
+    expect(response.status).toBe(400);
+    expect(response.data).toEqual({
+      errorCode: 40001,
+      message: 'No Ready Test Cases to automate',
+    });
   });
 
   test('A2 accepts Ready cases, skips Draft, and the iteration completes', async () => {
@@ -293,5 +417,178 @@ describe('automation (A1-A2)', () => {
     jest.advanceTimersByTime(SIMULATED_DELAY_MS * 4 + 100);
     const c = await http.get<TestCaseAiRS>(URLS.testCaseAi(PROJECT, 'TC105'));
     expect(c.data.automation?.status).toBe('AUTOMATED');
+  });
+
+  test('P2, P3 and C2 expose ordered live progress and the actual iteration identity', async () => {
+    const accepted = await http.post<AutomateAcceptedRS>(URLS.tmsAutomation(PROJECT), {
+      testCaseIds: [1005],
+      environment: 'qa',
+      confirmReautomate: false,
+    });
+    const { pipelineId, iterationId, number } = accepted.data.iteration;
+
+    const initialList = await http.get<IterationPageRS>(
+      URLS.tmsPipelineIterations(PROJECT, pipelineId),
+    );
+    const initial = initialList.data.content.find(({ id }) => id === iterationId);
+    expect(initial).toMatchObject({
+      pipelineId,
+      number,
+      status: 'RUNNING',
+    });
+    expect(initial?.durationMs).toBeUndefined();
+    expect(initial?.stages.map(({ key, status }) => [key, status])).toEqual([
+      ['PREPARE', 'RUNNING'],
+      ['DEVELOP', 'PENDING'],
+      ['AUTOMATION_REVIEW', 'PENDING'],
+      ['FIX', 'PENDING'],
+    ]);
+
+    const inProgressCase = await http.get<TestCaseAiRS>(URLS.testCaseAi(PROJECT, 'TC105'));
+    expect(inProgressCase.data.automation).toMatchObject({
+      status: AutomationStatus.IN_PROGRESS,
+      iteration: { pipelineId, iterationId, number },
+    });
+
+    jest.advanceTimersByTime(SIMULATED_DELAY_MS + 100);
+    const firstTransition = await http.get<IterationRS>(
+      URLS.tmsPipelineIterationById(PROJECT, pipelineId, iterationId),
+    );
+    expect(firstTransition.data.stages.map(({ status }) => status)).toEqual([
+      'PASSED',
+      'RUNNING',
+      'PENDING',
+      'PENDING',
+    ]);
+    expect(firstTransition.data.stages[0].perCase).toEqual([
+      {
+        testCaseId: 1005,
+        displayId: 'TC105',
+        name: 'TC105',
+        status: 'PASSED',
+        result: 'Done',
+      },
+    ]);
+
+    jest.advanceTimersByTime(SIMULATED_DELAY_MS * 3 + 100);
+    const completed = await http.get<IterationRS>(
+      URLS.tmsPipelineIterationById(PROJECT, pipelineId, iterationId),
+    );
+    expect(completed.data.status).toBe('COMPLETED');
+    expect(completed.data.durationMs).toBeGreaterThan(0);
+    expect(completed.data.stages.map(({ status }) => status)).toEqual([
+      'PASSED',
+      'PASSED',
+      'PASSED',
+      'SKIPPED',
+    ]);
+    expect(completed.data.stages[3].perCase?.[0]).toMatchObject({
+      displayId: 'TC105',
+      name: 'TC105',
+      result: 'Skipped · review was clean',
+    });
+
+    const automatedCase = await http.get<TestCaseAiRS>(URLS.testCaseAi(PROJECT, 'TC105'));
+    expect(automatedCase.data.automation).toMatchObject({
+      status: AutomationStatus.AUTOMATED,
+      iteration: { pipelineId, iterationId, number },
+      lastResult: { status: 'PASSED' },
+    });
+  });
+
+  test('rehydrates persisted running automation and resumes it after handler reload', async () => {
+    const accepted = await http.post<AutomateAcceptedRS>(URLS.tmsAutomation(PROJECT), {
+      testCaseIds: [1005],
+      environment: 'qa',
+      confirmReautomate: false,
+    });
+    const { pipelineId, iterationId } = accepted.data.iteration;
+    reloadPersistedHandlers();
+
+    const rehydratedIteration = await http.get<IterationRS>(
+      URLS.tmsPipelineIterationById(PROJECT, pipelineId, iterationId),
+    );
+    const rehydratedCase = await http.get<TestCaseAiRS>(URLS.testCaseAi(PROJECT, 'TC105'));
+    expect(rehydratedIteration.data).toMatchObject({
+      id: iterationId,
+      status: IterationStatus.RUNNING,
+    });
+    expect(rehydratedCase.data.automation).toMatchObject({
+      status: AutomationStatus.IN_PROGRESS,
+      iteration: { pipelineId, iterationId },
+    });
+
+    jest.advanceTimersByTime(SIMULATED_DELAY_MS * 4 + 100);
+
+    const resumedIteration = await http.get<IterationRS>(
+      URLS.tmsPipelineIterationById(PROJECT, pipelineId, iterationId),
+    );
+    const resumedCase = await http.get<TestCaseAiRS>(URLS.testCaseAi(PROJECT, 'TC105'));
+    expect(resumedIteration.data.status).toBe(IterationStatus.COMPLETED);
+    expect(resumedIteration.data.stages.map(({ status }) => status)).toEqual([
+      'PASSED',
+      'PASSED',
+      'PASSED',
+      'SKIPPED',
+    ]);
+    expect(resumedCase.data.automation).toMatchObject({
+      status: AutomationStatus.AUTOMATED,
+      iteration: { pipelineId, iterationId },
+      lastResult: { status: 'PASSED' },
+    });
+  });
+
+  test('resetting while automation is pending makes the delayed callback a no-op', async () => {
+    await http.post(URLS.tmsAutomation(PROJECT), {
+      testCaseIds: [1005],
+      environment: 'beta5',
+      confirmReautomate: false,
+    });
+
+    resetMockDb();
+
+    expect(() => jest.advanceTimersByTime(SIMULATED_DELAY_MS + 100)).not.toThrow();
+    expect(findCase(1005).automation).toBeUndefined();
+  });
+
+  test('persisted automation resumes with canonical case IDs after aliases are lost', async () => {
+    const externalCaseId = 55_005;
+    const canonicalCase = findCase(1005);
+    if (!canonicalCase) throw new Error('Expected seeded TC105');
+    registerCaseAlias(externalCaseId, canonicalCase);
+    const accepted = await http.post<AutomateAcceptedRS>(URLS.tmsAutomation(PROJECT), {
+      testCaseIds: [1006, externalCaseId],
+      environment: 'beta5',
+      confirmReautomate: false,
+    });
+    const { pipelineId, iterationId } = accepted.data.iteration;
+
+    expect(accepted.data.accepted).toEqual([externalCaseId]);
+    expect(accepted.data.skipped).toEqual([
+      { id: 1006, displayId: 'TC106', reason: 'NOT_READY' },
+    ]);
+
+    reloadPersistedHandlers();
+    expect(findIteration(iterationId)).toMatchObject({
+      testCaseIds: [1005],
+      requestedTestCaseIds: [externalCaseId],
+    });
+    jest.advanceTimersByTime(SIMULATED_DELAY_MS * 4 + 100);
+
+    const completed = await http.get<IterationRS>(
+      URLS.tmsPipelineIterationById(PROJECT, pipelineId, iterationId),
+    );
+    expect(completed.data.testCases).toEqual([{ id: externalCaseId, displayId: 'TC105' }]);
+    expect(completed.data.stages[0].perCase).toEqual([
+      expect.objectContaining({
+        testCaseId: externalCaseId,
+        displayId: 'TC105',
+        name: 'TC105',
+      }),
+    ]);
+    expect(findCase(1005).automation).toMatchObject({
+      status: AutomationStatus.AUTOMATED,
+      iterationId,
+    });
   });
 });

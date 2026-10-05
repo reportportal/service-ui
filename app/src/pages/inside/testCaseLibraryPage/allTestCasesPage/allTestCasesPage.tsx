@@ -56,6 +56,12 @@ import { useAiFactoryEnabled } from 'controllers/aiFactory';
 import { getTestCaseAiQueryParams } from 'controllers/testCase/actionCreators';
 import { BulkApproveButton } from 'pages/inside/aiFactory/approval';
 import {
+  automationDisabledMessages,
+  automationMessages,
+  partitionAutomationSelection,
+  useAutomationModal,
+} from 'pages/inside/aiFactory/automation';
+import {
   formatSkippedDrafts,
   partitionReadyOnlySelection,
   readyOnlyMessages,
@@ -91,6 +97,78 @@ interface AllTestCasesPageProps {
   reviewQueueCount?: number;
 }
 
+interface BulkAutomationActionProps {
+  canAutomateTestCases: boolean;
+  disabledMessage: string;
+  hasEligibleCases: boolean;
+  isAiFactoryEnabled: boolean;
+  label: string;
+  onClick: () => void;
+}
+
+const renderBulkAutomationAction = ({
+  canAutomateTestCases,
+  disabledMessage,
+  hasEligibleCases,
+  isAiFactoryEnabled,
+  label,
+  onClick,
+}: BulkAutomationActionProps) => {
+  if (!isAiFactoryEnabled || !canAutomateTestCases) {
+    return null;
+  }
+
+  if (hasEligibleCases) {
+    return (
+      <Button
+        variant="ghost"
+        onClick={onClick}
+        data-automation-id="bulk-automate-test-cases"
+      >
+        {label}
+      </Button>
+    );
+  }
+
+  return (
+    <Tooltip
+      wrapperClassName={cx('tooltip-wrapper')}
+      placement="top"
+      content={disabledMessage}
+    >
+      <Button variant="ghost" disabled data-automation-id="bulk-automate-test-cases">
+        {label}
+      </Button>
+    </Tooltip>
+  );
+};
+
+interface FolderEmptyStateVisibility {
+  hasAiFilters: boolean;
+  hasPriorityFilter: boolean;
+  hasSearchQuery: boolean;
+  hasTagFilter: boolean;
+  hasTestCases: boolean;
+  isAiFactoryEnabled: boolean;
+  isLoading: boolean;
+}
+
+const shouldShowFolderEmptyState = ({
+  hasAiFilters,
+  hasPriorityFilter,
+  hasSearchQuery,
+  hasTagFilter,
+  hasTestCases,
+  isAiFactoryEnabled,
+  isLoading,
+}: FolderEmptyStateVisibility) =>
+  !hasTestCases &&
+  !isLoading &&
+  !hasSearchQuery &&
+  !hasPriorityFilter &&
+  !hasTagFilter &&
+  (!isAiFactoryEnabled || !hasAiFilters);
+
 export const AllTestCasesPage = ({
   testCases,
   isLoading,
@@ -121,7 +199,8 @@ export const AllTestCasesPage = ({
   const { openModal: openBatchDeleteTestCasesModal } = useBatchDeleteTestCasesModal();
   const { openModal: openMoveTestCaseModal } = useMoveTestCaseModal();
   const { openModal: openBatchEditTagsModal } = useBatchEditTagsModal();
-  const { canManageTestCases, canReviewAiTestCases } = useUserPermissions();
+  const { openModal: openAutomationModal } = useAutomationModal();
+  const { canAutomateTestCases, canManageTestCases, canReviewAiTestCases } = useUserPermissions();
   const { hasTestPlans } = useHasTestPlans();
   const isAiFactoryEnabled = useAiFactoryEnabled();
   const refetchCurrentTestCases = useRefetchCurrentTestCases();
@@ -139,6 +218,16 @@ export const AllTestCasesPage = ({
     () => selectedRows.map((row) => testCases.find(({ id }) => id === row.id) ?? row),
     [selectedRows, testCases],
   );
+  const automationSelection = useMemo(
+    () => partitionAutomationSelection(selectedTestCases),
+    [selectedTestCases],
+  );
+  const automationDisabledMessage = useMemo(() => {
+    const reasons = new Set(automationSelection.skipped.map(({ reason }) => reason));
+    if (reasons.size !== 1) return automationMessages.unavailableSelection;
+
+    return automationDisabledMessages[[...reasons][0]];
+  }, [automationSelection.skipped]);
   const { eligibleIds, skippedDrafts } = useMemo(
     () => partitionReadyOnlySelection(selectedRowIds, selectedTestCases, isAiFactoryEnabled),
     [isAiFactoryEnabled, selectedRowIds, selectedTestCases],
@@ -273,17 +362,31 @@ export const AllTestCasesPage = ({
     });
   }, [trackBulkOperation, selectedRows, openMoveTestCaseModal, selectedRowIds, onClearSelection]);
 
+  const handleOpenAutomationModal = useCallback(() => {
+    openAutomationModal({
+      testCases: selectedTestCases,
+      onSuccess: ({ accepted }) => {
+        const acceptedIds = new Set(accepted);
+        setSelectedRows((rows) => rows.filter(({ id }) => !acceptedIds.has(id)));
+        refetchCurrentTestCases();
+      },
+    });
+  }, [openAutomationModal, refetchCurrentTestCases, selectedTestCases]);
+
   const handleQuickFiltersChange = (value: QuickFiltersValue) => {
     dispatch(updatePagePropertiesAction({ ...value, ...TestCasePageDefaultValues }));
   };
 
   if (
-    isEmpty(testCases) &&
-    !isLoading &&
-    !query?.testCasesSearchParams &&
-    !query?.filterPriorities &&
-    !query?.filterTags &&
-    !(isAiFactoryEnabled && hasAiFilters)
+    shouldShowFolderEmptyState({
+      hasAiFilters,
+      hasPriorityFilter: Boolean(query?.filterPriorities),
+      hasSearchQuery: Boolean(query?.testCasesSearchParams),
+      hasTagFilter: Boolean(query?.filterTags),
+      hasTestCases: !isEmpty(testCases),
+      isAiFactoryEnabled,
+      isLoading,
+    })
   ) {
     return <FolderEmptyState folderTitle={folderTitle} />;
   }
@@ -354,6 +457,14 @@ export const AllTestCasesPage = ({
                 }}
               />
             )}
+            {renderBulkAutomationAction({
+              canAutomateTestCases,
+              disabledMessage: formatMessage(automationDisabledMessage),
+              hasEligibleCases: automationSelection.eligible.length > 0,
+              isAiFactoryEnabled,
+              label: formatMessage(automationMessages.automate),
+              onClick: handleOpenAutomationModal,
+            })}
             <Button variant="ghost" onClick={handleOpenMoveTestCaseModal}>
               {formatMessage(messages.moveToFolder)}
             </Button>
