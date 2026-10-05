@@ -45,7 +45,7 @@ export const PassingRateSummary = (props) => {
       });
       const navigationParams = getDefaultTestItemLinkParams(
         projectSlug,
-        widget.appliedFilters[0].id,
+        widget.appliedFilters?.[0]?.id,
         TEST_ITEMS_TYPE_LIST,
         organizationSlug,
       );
@@ -55,7 +55,7 @@ export const PassingRateSummary = (props) => {
     [dispatch, getStatisticsLink, slugs, widget],
   );
 
-  const filterName = widget.appliedFilters[0]?.name;
+  const filterName = widget.appliedFilters?.[0]?.name;
 
   return (
     <PassingRateChart

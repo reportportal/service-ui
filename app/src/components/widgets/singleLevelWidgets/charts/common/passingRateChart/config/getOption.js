@@ -133,9 +133,11 @@ const buildPieOption = ({
 
   // Assuming landscape orientation (width >= height), min(W,H) = H, so radius % is of H/2.
   const containerHeight = size?.height ?? 320;
-  const usableHeight = Math.max(containerHeight - LEGEND_HEIGHT_PX, 0);
+  // The legend is not rendered in preview, so don't reserve space for it.
+  const legendHeight = isPreview ? 0 : LEGEND_HEIGHT_PX;
+  const usableHeight = Math.max(containerHeight - legendHeight, 0);
   // Center of the usable area below the legend.
-  const centerYPct = Math.round(((LEGEND_HEIGHT_PX + usableHeight / 2) / containerHeight) * 100);
+  const centerYPct = Math.round(((legendHeight + usableHeight / 2) / containerHeight) * 100);
   // Outer radius: fill 95% of the half-usable-height, expressed as % of H/2.
   const outerPct = Math.max(20, Math.round((usableHeight / 2 / (containerHeight / 2)) * 91));
   // Preserve the original inner/outer ratio (51/86 ≈ 0.593) for the donut hole.
