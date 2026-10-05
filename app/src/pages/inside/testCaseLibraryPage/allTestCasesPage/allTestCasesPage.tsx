@@ -39,6 +39,7 @@ import { TMS_INSTANCE_KEY } from 'pages/inside/common/constants';
 import { SelectedTestCaseRow } from 'pages/inside/common/testCaseList/types';
 import { PopoverControl, PopoverItem } from 'pages/common/popoverControl/popoverControl';
 import { showModalAction } from 'controllers/modal';
+import { showWarningNotification } from 'controllers/notification';
 import {
   locationQuerySelector,
   payloadSelector,
@@ -54,6 +55,11 @@ import { useProjectDetails } from 'hooks/useTypedSelector';
 import { useAiFactoryEnabled } from 'controllers/aiFactory';
 import { getTestCaseAiQueryParams } from 'controllers/testCase/actionCreators';
 import { BulkApproveButton } from 'pages/inside/aiFactory/approval';
+import {
+  formatSkippedDrafts,
+  partitionReadyOnlySelection,
+  readyOnlyMessages,
+} from 'pages/inside/aiFactory/readyOnlyGate';
 import {
   QuickFilters,
   useIterationNumber,
@@ -129,20 +135,25 @@ export const AllTestCasesPage = ({
 
   const isAnyRowSelected = !isEmpty(selectedRows);
   const selectedRowIds = useMemo(() => selectedRows.map((row) => row.id), [selectedRows]);
+  const { eligibleIds, skippedDrafts } = useMemo(
+    () => partitionReadyOnlySelection(selectedRowIds, testCases, isAiFactoryEnabled),
+    [isAiFactoryEnabled, selectedRowIds, testCases],
+  );
+  const hasOnlyDraftsSelected = skippedDrafts.length > 0 && eligibleIds.length === 0;
 
   const isAddToLaunchDisabled = useMemo(() => {
-    const loadedSelectedTestCases = selectedRowIds
+    const loadedEligibleTestCases = eligibleIds
       .map((id) => testCases.find((testCase) => testCase.id === id))
       .filter((testCase): testCase is TestCase => Boolean(testCase));
 
-    if (isEmpty(loadedSelectedTestCases)) {
-      return false;
+    if (isEmpty(loadedEligibleTestCases)) {
+      return hasOnlyDraftsSelected;
     }
 
-    return loadedSelectedTestCases.every((testCase) =>
+    return loadedEligibleTestCases.every((testCase) =>
       isManualScenarioEmpty(testCase.manualScenario),
     );
-  }, [selectedRowIds, testCases]);
+  }, [eligibleIds, hasOnlyDraftsSelected, testCases]);
 
   const trackBulkOperation = useCallback(
     (elementName: TestCaseBulkOperationElementName) => {
@@ -152,6 +163,18 @@ export const AllTestCasesPage = ({
   );
 
   const onClearSelection = useCallback(() => setSelectedRows([]), []);
+
+  const notifySkippedDrafts = useCallback(() => {
+    if (skippedDrafts.length) {
+      dispatch(
+        showWarningNotification({
+          message: formatMessage(readyOnlyMessages.bulkSkipped, {
+            cases: formatSkippedDrafts(skippedDrafts),
+          }),
+        }),
+      );
+    }
+  }, [dispatch, formatMessage, skippedDrafts]);
 
   const handleSelectedRows = (rows: SelectedTestCaseRow[]) => setSelectedRows(rows);
 
@@ -220,17 +243,19 @@ export const AllTestCasesPage = ({
 
   const handleOpenAddToTestPlanModal = useCallback(() => {
     trackBulkOperation(TEST_CASE_BULK_OPERATION_ELEMENT_NAME.ADD_TO_TEST_PLAN);
-    openAddToTestPlanModal({ selectedTestCaseIds: selectedRowIds });
-  }, [selectedRowIds, openAddToTestPlanModal, trackBulkOperation]);
+    notifySkippedDrafts();
+    openAddToTestPlanModal({ selectedTestCaseIds: eligibleIds });
+  }, [eligibleIds, notifySkippedDrafts, openAddToTestPlanModal, trackBulkOperation]);
 
   const handleOpenAddToLaunchModal = useCallback(() => {
     trackBulkOperation(TEST_CASE_BULK_OPERATION_ELEMENT_NAME.ADD_TO_LAUNCH);
+    notifySkippedDrafts();
     openAddToLaunchModal({
-      selectedTestCaseIds: selectedRowIds,
+      selectedTestCaseIds: eligibleIds,
       onClearSelection,
       isUncoveredTestsCheckboxAvailable: false,
     });
-  }, [openAddToLaunchModal, onClearSelection, selectedRowIds, trackBulkOperation]);
+  }, [eligibleIds, notifySkippedDrafts, onClearSelection, openAddToLaunchModal, trackBulkOperation]);
 
   const handleOpenMoveTestCaseModal = useCallback(() => {
     trackBulkOperation(TEST_CASE_BULK_OPERATION_ELEMENT_NAME.MOVE_TO_FOLDER);
@@ -332,28 +357,45 @@ export const AllTestCasesPage = ({
               <Tooltip
                 wrapperClassName={cx('tooltip-wrapper')}
                 placement="top"
-                content={formatMessage(COMMON_LOCALE_KEYS.ADD_TO_LAUNCH_TOOLTIP_TEXT)}
+                content={formatMessage(
+                  hasOnlyDraftsSelected
+                    ? readyOnlyMessages.launchDraftHint
+                    : COMMON_LOCALE_KEYS.ADD_TO_LAUNCH_TOOLTIP_TEXT,
+                )}
               >
-                <Button variant="ghost" disabled>
+                <Button variant="ghost" disabled data-automation-id="bulk-add-to-launch">
                   {formatMessage(COMMON_LOCALE_KEYS.ADD_TO_LAUNCH)}
                 </Button>
               </Tooltip>
             ) : (
-              <Button variant="ghost" onClick={handleOpenAddToLaunchModal}>
+              <Button
+                variant="ghost"
+                onClick={handleOpenAddToLaunchModal}
+                data-automation-id="bulk-add-to-launch"
+              >
                 {formatMessage(COMMON_LOCALE_KEYS.ADD_TO_LAUNCH)}
               </Button>
             )}
-            {hasTestPlans ? (
-              <Button onClick={handleOpenAddToTestPlanModal}>
+            {hasTestPlans && !hasOnlyDraftsSelected ? (
+              <Button
+                onClick={handleOpenAddToTestPlanModal}
+                data-automation-id="bulk-add-to-test-plan"
+              >
                 {formatMessage(COMMON_LOCALE_KEYS.ADD_TO_TEST_PLAN)}
               </Button>
             ) : (
               <Tooltip
                 wrapperClassName={cx('tooltip-wrapper')}
                 placement="top"
-                content={formatMessage(commonMessages.noTestPlanCreated)}
+                content={formatMessage(
+                  hasOnlyDraftsSelected
+                    ? readyOnlyMessages.testPlanDraftHint
+                    : commonMessages.noTestPlanCreated,
+                )}
               >
-                <Button disabled>{formatMessage(COMMON_LOCALE_KEYS.ADD_TO_TEST_PLAN)}</Button>
+                <Button disabled data-automation-id="bulk-add-to-test-plan">
+                  {formatMessage(COMMON_LOCALE_KEYS.ADD_TO_TEST_PLAN)}
+                </Button>
               </Tooltip>
             )}
           </div>

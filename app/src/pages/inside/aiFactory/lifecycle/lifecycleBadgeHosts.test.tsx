@@ -24,6 +24,7 @@ import { AiChip, LifecycleBadge, ScoreChip } from 'pages/inside/aiFactory/common
 import { EvaluationMini } from 'pages/inside/aiFactory/evaluation';
 import { ApproveButton } from 'pages/inside/aiFactory/approval';
 import { ReviewFlags } from 'pages/inside/aiFactory/library/reviewFlags';
+import { LaunchBlockedBanner } from 'pages/inside/aiFactory/readyOnlyGate';
 import { useDeleteTestCaseModal } from 'pages/inside/testCaseLibraryPage/deleteTestCaseModal';
 import { useDuplicateSelectedTestCaseModal } from 'pages/inside/testCaseLibraryPage/duplicateSelectedTestCaseModal';
 import { useEditScenarioModal } from 'pages/inside/testCaseLibraryPage/editScenarioModal';
@@ -41,6 +42,7 @@ jest.mock('@reportportal/ui-kit', () => ({
   CopyIcon: 'CopyIcon',
   MeatballMenuIcon: 'MeatballMenuIcon',
   RerunIcon: 'RerunIcon',
+  SystemMessage: 'SystemMessage',
   Tooltip: 'Tooltip',
 }));
 jest.mock(
@@ -198,16 +200,18 @@ const renderHosts = (
   isEnabled: boolean,
   caseToRender: ExtendedTestCase = testCase,
   canReviewAiTestCases = false,
+  canManageTestCases = false,
+  hasTestPlans = false,
 ) => {
   jest.mocked(useAiFactoryEnabled).mockReturnValue(isEnabled);
   jest.mocked(useDispatch).mockReturnValue(jest.fn());
   jest.mocked(useSelector).mockReturnValue({ organizationSlug: 'org', projectSlug: 'project' });
   jest.mocked(useUserPermissions).mockReturnValue({
-    canManageTestCases: false,
+    canManageTestCases,
     canReviewAiTestCases,
   } as ReturnType<typeof useUserPermissions>);
   jest.mocked(useHasTestPlans).mockReturnValue({
-    hasTestPlans: false,
+    hasTestPlans,
     isCheckingTestPlansExistence: false,
   });
   jest.mocked(useDeleteTestCaseModal).mockReturnValue({ openModal });
@@ -275,5 +279,32 @@ describe('lifecycle badges in test case hosts', () => {
     expect(viewer.sidePanel.find(ApproveButton)).toHaveLength(0);
     expect(toggleOff.header.find(ApproveButton)).toHaveLength(0);
     expect(toggleOff.sidePanel.find(ApproveButton)).toHaveLength(0);
+  });
+
+  test('gates Test Plan actions and shows the blocked-plan banner for a planned Draft case', () => {
+    const draftCase = {
+      ...testCase,
+      lifecycle: Lifecycle.DRAFT,
+      blockedPlans: [{ id: 7, name: 'Release regression' }],
+    };
+    const { header, sidePanel } = renderHosts(true, draftCase, false, true, true);
+
+    const readyOnlyTooltip = {
+      content: 'Only Ready Test Cases can be added to a Test Plan',
+    };
+
+    expect(header.find(readyOnlyTooltip)).toHaveLength(1);
+    expect(sidePanel.find(readyOnlyTooltip)).toHaveLength(1);
+    expect(sidePanel.find(LaunchBlockedBanner).prop('plans')).toEqual(draftCase.blockedPlans);
+  });
+
+  test('keeps the closed side panel safe when no Test Case is selected', () => {
+    renderHosts(true);
+
+    const wrapper = shallow(
+      <TestCaseSidePanel testCase={null} isVisible={false} onClose={jest.fn()} />,
+    );
+
+    expect(wrapper.html()).toBeNull();
   });
 });
