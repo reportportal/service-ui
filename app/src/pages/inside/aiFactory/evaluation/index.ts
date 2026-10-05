@@ -16,3 +16,5 @@
 
 export { EvaluationPanel } from './evaluationPanel';
 export type { EvaluationPanelProps } from './evaluationPanel';
+export { EvaluationMini } from './evaluationMini';
+export type { EvaluationMiniProps } from './evaluationMini';

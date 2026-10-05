@@ -14,5 +14,5 @@
  * limitations under the License.
  */
 
-export { AiQualityCell } from './aiQualityCell';
-export type { AiQualityCellProps } from './aiQualityCell';
+export { AiIterationLink, AiQualityCell } from './aiQualityCell';
+export type { AiIterationLinkProps, AiQualityCellProps } from './aiQualityCell';

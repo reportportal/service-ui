@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-export { AiQualityCell } from './aiQualityCell';
-export type { AiQualityCellProps } from './aiQualityCell';
+export { AiIterationLink, AiQualityCell } from './aiQualityCell';
+export type { AiIterationLinkProps, AiQualityCellProps } from './aiQualityCell';
 export { ReviewFlags } from './reviewFlags';
 export type { ReviewFlagsProps } from './reviewFlags';
 export { QuickFilters, useIterationNumber } from './quickFilters';
