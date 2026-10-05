@@ -97,6 +97,26 @@ describe('mergeAiFields', () => {
     });
   });
 
+  test('merges a matching TEXT case that has no steps array (TC101)', () => {
+    const real = realTestCase('TC101', {
+      id: 1091,
+      manualScenarioType: TestCaseManualScenario.TEXT,
+      executionEstimationTime: 8,
+      requirements: [],
+      preconditions: { value: 'Precondition' },
+      instructions: 'Instructions',
+      expectedResult: 'Expected result',
+    });
+
+    expect(() => mergeAiFields(real)).not.toThrow();
+    expect(mergeAiFields(real)).toMatchObject({
+      id: 555,
+      displayId: 'TC101',
+      lifecycle: Lifecycle.READY,
+      evaluationSummary: { totalScore: 94, state: EvaluationState.EVALUATED },
+    });
+  });
+
   test('a Ready case merges with no blockedPlans', () => {
     const merged = mergeAiFields(realTestCase('TC101'));
     expect(merged.lifecycle).toBe('READY');
@@ -310,6 +330,10 @@ describe('installOverlayInterceptor', () => {
       content: [realTestCase('TC103')],
       page: { number: 2, size: 1, totalElements: 3, totalPages: 2 },
     });
+    mock.onGet(`${url}?offset=2&limit=1`).reply(200, {
+      content: [],
+      page: { number: 3, size: 1, totalElements: 3, totalPages: 2 },
+    });
 
     await expect(
       http.get(url, { params: { 'filter.eq.lifecycle': Lifecycle.DRAFT } }),
@@ -318,15 +342,12 @@ describe('installOverlayInterceptor', () => {
     mock.restore();
   });
 
-  test.each([
-    ['record ceiling', 5001, 6],
-    ['page ceiling', 11, 11],
-  ])('rejects pagination metadata above the development %s', async (_description, totalElements, totalPages) => {
+  test('rejects pagination metadata above the development record ceiling', async () => {
     const { http, mock } = setupOverlay();
     const url = '/api/v1/project/demo/tms/test-case';
     mock.onGet(`${url}?offset=0&limit=1000`).reply(200, {
       content: [realTestCase('TC103')],
-      page: { number: 1, size: 1000, totalElements, totalPages },
+      page: { number: 1, size: 1000, totalElements: 5001, totalPages: 6 },
     });
 
     await expect(
@@ -335,6 +356,35 @@ describe('installOverlayInterceptor', () => {
       code: C3_OVERLAY_ERROR_CODE,
       name: 'C3OverlayError',
     });
+
+    mock.restore();
+  });
+
+  test('loads more than ten backend pages when totalElements stays within the record ceiling', async () => {
+    const { http, mock } = setupOverlay();
+    const url = '/api/v1/project/demo/tms/test-case';
+    const totalElements = 12;
+    const pageSize = 1;
+    mock.onGet(`${url}?limit=1000&offset=0`).reply(200, {
+      content: [realTestCase('TC101', undefined, 1)],
+      page: { number: 1, size: pageSize, totalElements, totalPages: totalElements },
+    });
+    for (let offset = 1; offset < totalElements; offset += 1) {
+      const displayId = `TC${String(101 + (offset % 8)).padStart(3, '0')}`;
+      mock.onGet(`${url}?limit=${pageSize}&offset=${offset}`).reply(200, {
+        content: [realTestCase(displayId, undefined, offset + 1)],
+        page: { number: offset + 1, size: pageSize, totalElements, totalPages: totalElements },
+      });
+    }
+
+    const { data } = await http.get<{ content: TestCase[]; page: { totalElements: number; totalPages: number } }>(
+      url,
+      { params: { limit: 5, offset: 0, 'filter.eq.ai': true } },
+    );
+
+    // All twelve rows reuse seed displayIds TC101–TC108, so the AI filter keeps the full set.
+    expect(data.page).toMatchObject({ totalElements: 12, totalPages: 3 });
+    expect(data.content).toHaveLength(5);
 
     mock.restore();
   });

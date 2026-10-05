@@ -183,6 +183,19 @@ export const CompareIterationsPageContent = () => {
         dispatch({ type: PROJECT_PIPELINES_PAGE, payload: { organizationSlug, projectSlug } }),
     },
   ];
+  if (pipeline) {
+    breadcrumbDescriptors.push({
+      id: 'pipeline',
+      title: pipeline.name,
+      onClick: () =>
+        dispatch({ type: PROJECT_PIPELINES_PAGE, payload: { organizationSlug, projectSlug } }),
+    });
+  }
+  breadcrumbDescriptors.push({
+    id: 'comparison',
+    title: formatMessage(messages.pageTitle),
+    onClick: undefined,
+  });
 
   const retryComparison = () => {
     if (pipelineId && baselineId && candidateId && hasValidPair) {

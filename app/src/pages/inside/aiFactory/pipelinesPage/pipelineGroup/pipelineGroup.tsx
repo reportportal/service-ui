@@ -16,7 +16,7 @@
 
 import { useState } from 'react';
 import { useIntl } from 'react-intl';
-import { ArrowDownIcon, Button } from '@reportportal/ui-kit';
+import { Button, ChevronDownDropdownIcon } from '@reportportal/ui-kit';
 
 import { createClassnames } from 'common/utils';
 import { SpinningPreloader } from 'components/preloaders/spinningPreloader';
@@ -100,7 +100,9 @@ export const PipelineGroup = ({
           data-automation-id="pipelineGroupHeader"
           aria-expanded={isOpen}
         >
-          <ArrowDownIcon className={cx('group__chevron', { 'group__chevron--open': isOpen })} />
+          <ChevronDownDropdownIcon
+            className={cx('group__chevron', { 'group__chevron--open': isOpen })}
+          />
           <span className={cx('group__name')}>{pipeline.name}</span>
           <span className={cx('group__meta')}>
             {isReducedPipeline(pipeline)

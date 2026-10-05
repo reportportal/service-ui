@@ -126,6 +126,38 @@ export const messages = defineMessages({
     id: 'PipelinesPage.metaPipelineEstimate',
     defaultMessage: 'Pipeline estimate {cost}',
   },
+  metaRequirementLabel: {
+    id: 'PipelinesPage.metaRequirementLabel',
+    defaultMessage: 'Requirement:',
+  },
+  metaTriggerLabel: {
+    id: 'PipelinesPage.metaTriggerLabel',
+    defaultMessage: 'Trigger:',
+  },
+  metaModelLabel: {
+    id: 'PipelinesPage.metaModelLabel',
+    defaultMessage: 'Model:',
+  },
+  metaTestCasesLabel: {
+    id: 'PipelinesPage.metaTestCasesLabel',
+    defaultMessage: 'Test Cases:',
+  },
+  metaCasesLabel: {
+    id: 'PipelinesPage.metaCasesLabel',
+    defaultMessage: 'Cases:',
+  },
+  metaSuiteScoreLabel: {
+    id: 'PipelinesPage.metaSuiteScoreLabel',
+    defaultMessage: 'Suite score:',
+  },
+  metaCostLabel: {
+    id: 'PipelinesPage.metaCostLabel',
+    defaultMessage: 'Cost:',
+  },
+  metaStartedLabel: {
+    id: 'PipelinesPage.metaStartedLabel',
+    defaultMessage: 'Started:',
+  },
   repositoryNotProvided: {
     id: 'PipelinesPage.repositoryNotProvided',
     defaultMessage: 'Repository not provided',

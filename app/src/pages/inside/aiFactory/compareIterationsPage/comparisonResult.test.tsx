@@ -110,12 +110,27 @@ interface ElementCollection {
 describe('ComparisonResult', () => {
   test('renders the exact warning when iterations reference different requirements', () => {
     const wrapper = shallow(
-      <ComparisonResult comparison={comparison({ hasDifferentRequirements: true })} />,
+      <ComparisonResult
+        comparison={comparison({
+          baseline: {
+            id: 101,
+            number: 1,
+            status: IterationStatus.IN_REVIEW,
+            requirement: { specId: 'US-TMS-MIG-001' },
+          },
+          candidate: {
+            id: 102,
+            number: 2,
+            status: IterationStatus.COMPLETED,
+            requirement: { specId: 'US-TMS-BLK-001' },
+          },
+          hasDifferentRequirements: true,
+        })}
+      />,
     );
 
-    expect(wrapper.find(SystemMessage).prop('mode')).toBe('warning');
-    expect(wrapper.find(SystemMessage).text()).toBe(
-      'Different requirements — compare trends, not individual cases',
+    expect(wrapper.find('[data-automation-id="requirementsWarning"]').text()).toBe(
+      'Different requirements (US-TMS-MIG-001 vs US-TMS-BLK-001) — compare trends, not individual cases.',
     );
   });
 
@@ -187,8 +202,8 @@ describe('ComparisonResult', () => {
       />,
     );
 
-    expect(wrapper.find(SystemMessage).text()).toBe(
-      'Different requirements — compare trends, not individual cases',
+    expect(wrapper.find('[data-automation-id="requirementsWarning"]').text()).toBe(
+      'Different requirements (— vs —) — compare trends, not individual cases.',
     );
     expect(wrapper.text()).toContain(
       'No comparable stage or metric data is available for these iterations.',

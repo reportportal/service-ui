@@ -128,9 +128,14 @@ export const ComparisonResult = ({ comparison }: ComparisonResultProps) => {
   return (
     <div className={cx('result')}>
       {comparison.hasDifferentRequirements && (
-        <SystemMessage mode="warning">
-          {intl.formatMessage(messages.differentRequirements)}
-        </SystemMessage>
+        <div className={cx('requirements-warning')} data-automation-id="requirementsWarning">
+          {intl.formatMessage(messages.differentRequirements, {
+            baseline:
+              comparison.baseline.requirement?.specId ?? intl.formatMessage(messages.unavailable),
+            candidate:
+              comparison.candidate.requirement?.specId ?? intl.formatMessage(messages.unavailable),
+          })}
+        </div>
       )}
       {!isRich && (
         <SystemMessage mode="info">

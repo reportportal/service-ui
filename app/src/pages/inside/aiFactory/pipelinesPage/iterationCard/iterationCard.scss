@@ -21,7 +21,7 @@
   box-sizing: border-box;
   padding: 16px;
   background-color: var(--rp-ui-base-bg-000);
-  border-radius: 8px;
+  border-radius: 4px;
   box-shadow: var(--rp-ui-base-shadow);
   font-family: var(--rp-ui-base-font-family);
   color: inherit;
@@ -73,6 +73,19 @@
     font-size: 13px;
     line-height: 20px;
     text-align: right;
+
+    &--ready,
+    &--done {
+      color: var(--rp-ui-base-test-execution-status-passed);
+    }
+
+    &--active {
+      color: var(--rp-ui-base-topaz);
+    }
+
+    &--failed {
+      color: var(--rp-ui-base-error);
+    }
   }
 
   &__meta {
@@ -88,12 +101,21 @@
   &__meta-field {
     display: inline-flex;
     align-items: center;
+    gap: 3px;
 
     &:not(:last-child)::after {
       content: '·';
       margin: 0 6px;
       color: var(--rp-ui-base-e-200);
     }
+  }
+
+  &__meta-label {
+    color: var(--rp-ui-base-e-400);
+  }
+
+  &__meta-value {
+    color: var(--rp-ui-base-almost-black);
   }
 
   &__stages {
@@ -116,6 +138,11 @@
     border: 1px solid var(--rp-ui-base-e-100);
     border-radius: 4px;
     font-size: 12px;
+
+    :global([data-automation-id='stageStatusDot']) {
+      width: 9px;
+      height: 9px;
+    }
   }
 
   &__stage-label {
@@ -132,7 +159,8 @@
   &__stage-arrow {
     flex: 0 0 auto;
     color: var(--rp-ui-base-e-300);
-    font-size: 14px;
+    font-size: 13px;
+    line-height: 1;
   }
 
   &__attributes {
@@ -142,15 +170,24 @@
   }
 
   &__attribute-chip {
+    display: inline-flex;
+    gap: 3px;
     box-sizing: border-box;
     max-width: 100%;
     padding: 3px 8px;
     background-color: var(--rp-ui-base-bg-100);
     border-radius: 2px;
-    color: var(--rp-ui-base-e-400);
     font-size: 11px;
     line-height: 16px;
     overflow-wrap: anywhere;
+  }
+
+  &__attribute-key {
+    color: var(--rp-ui-base-e-400);
+  }
+
+  &__attribute-value {
+    color: var(--rp-ui-base-almost-black);
   }
 }
 

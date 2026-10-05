@@ -216,8 +216,18 @@ export const PipelinesPageContent = () => {
         <PageHeaderWithBreadcrumbsAndActions
           title={formatMessage(messages.pageTitle)}
           breadcrumbDescriptors={breadcrumbDescriptors}
-          actions={
-            <div className={cx('header-actions')}>
+        />
+        <div className={cx('page-content')}>
+          <div className={cx('toolbar')} data-automation-id="pipelinesToolbar">
+            <SearchField
+              searchValue={search}
+              setSearchValue={setSearch}
+              onFilterChange={setSearch}
+              placeholder={formatMessage(messages.searchPlaceholder)}
+              className={cx('search')}
+              isAlwaysActive
+            />
+            <div className={cx('toolbar__actions')}>
               <Button
                 variant="text"
                 data-automation-id="compareIterationsButton"
@@ -231,12 +241,6 @@ export const PipelinesPageContent = () => {
               >
                 {formatMessage(messages.compareIterations)}
               </Button>
-              <SearchField
-                searchValue={search}
-                setSearchValue={setSearch}
-                onFilterChange={setSearch}
-                placeholder={formatMessage(messages.searchPlaceholder)}
-              />
               {isDemoResetAvailable && (
                 <Button
                   variant="text"
@@ -257,9 +261,9 @@ export const PipelinesPageContent = () => {
                 {formatMessage(messages.refreshPage)}
               </Button>
             </div>
-          }
-        />
-        <div className={cx('page-content')}>{renderContent()}</div>
+          </div>
+          {renderContent()}
+        </div>
       </ScrollWrapper>
     </SettingsLayout>
   );

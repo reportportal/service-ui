@@ -149,9 +149,15 @@
   .ai-status {
     display: flex;
     align-items: center;
-    flex-wrap: wrap;
+    flex-wrap: nowrap;
     gap: 4px 8px;
     min-height: 20px;
+
+    > :global([class*='tooltip-wrapper']) {
+      display: inline-flex;
+      width: auto;
+      flex-shrink: 0;
+    }
   }
 
   .draft-hint {

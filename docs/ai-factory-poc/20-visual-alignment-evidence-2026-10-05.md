@@ -21,10 +21,10 @@ no prototype-only hardcoded palette or replacement page component was introduced
 | Surface | Browser evidence | Result |
 |---------|------------------|--------|
 | Project sidebar | Authenticated localhost sidebar with Pipelines active | Fixed: the Pipelines glyph geometry is centered in the shared 48 x 40 px icon canvas, matching the alignment of the surrounding application navigation icons. |
-| Pipelines list | Authenticated localhost mock catalog with both generation and automation groups | Fixed: iteration cards now use the application's white surface/shadow treatment, 4 px radius, stronger header/outcome hierarchy, wrapping metadata, equal-width stage steps with explicit flow arrows, and compact rectangular attribute tags. Existing `SearchField`, buttons, status badges, and status dots remain reused. |
+| Pipelines list | Authenticated localhost mock catalog with both generation and automation groups | Fixed: iteration cards use the application's white surface/shadow treatment and 4 px radius; group disclosure uses the standard compact chevron (down when open, right when closed); Ready/running/failed outcomes use the existing status palette; Requirement, Trigger, Model, counts, score, cost, and start time are readable key/value pairs; attribute keys and values have separate emphasis; stage steps keep status dots and expose available case/score/ready metrics. The standard always-expanded `SearchField` now sits in a dedicated content toolbar below the page title, left-aligned opposite Compare/Reset/Refresh actions like the supplied mock, and was browser-tested by filtering for `US-TMS-BLK-001`. |
 | Iteration details | Running iteration 103 and in-review iteration 102 | Fixed: header/body alignment, KPI tiles, banner, equal stage-card widths, tables, token-usage line height, and panel surfaces follow application patterns. The shared card radius was normalized from 8 px to 4 px, the grade disclosure column is fixed at 48 px, and an expanded grade row remained open across the next 5-second background poll. |
-| Compare iterations | Default comparison for iterations 102/103 | Pass: selectors, warning, stage grid, metrics table, typography, and wrapping are consistent. Card/table radius was normalized to the same 4 px application value. |
-| Test Case Library shell | Authenticated Library list with expandable icon search and AI quick filters | Pass: the existing application component/layout is retained; no replacement search or custom page chrome was introduced. |
+| Compare iterations | Default comparison for iterations 102/103 | Fixed: the different-requirements notice is a compact 44 px warning surface with both requirement IDs, a warning-tinted background, and a 3 px accent line; breadcrumbs now expose Project → Pipelines → selected pipeline → Compare iterations navigation; the Metrics table uses a white application surface with the shared 4 px border treatment. Selectors, stage grid, typography, and wrapping remain consistent with the application. |
+| Test Case Library shell | Authenticated Library list with AI-only filter and TC102 side panel | Fixed: the existing application component/layout is retained; no replacement search or custom page chrome was introduced. AI quality now has 8 px block padding and vertically centered wrapped content, so the score is not pressed against the card edge. The side-panel Ready, AI and score badges remain on one line; a scoped override prevents the UI-kit tooltip wrapper from occupying the full 515 px row. Browser geometry confirmed an 8 px table inset and a single 20 px-high badge row. |
 | Test Case AI details, review, cost, lifecycle, automation | Pipeline case links for demo IDs 1005–1008 | Not visually revalidated: the mock iteration links target local demo IDs that do not exist as real TMS cases in `superadmin-personal`, so the Library redirects with its standard missing-item alert. The overlay intentionally enriches matching real `TC101`–`TC108` display IDs and does not seed them. This is the existing Q-ORG-07/runtime-fixture boundary, not hidden by this visual change. |
 
 ## Validation
@@ -32,6 +32,9 @@ no prototype-only hardcoded palette or replacement page component was introduced
 - Node 20.19.1 dev compilation: PASS.
 - Focused visual Jest: 3 suites / 30 tests: PASS.
 - Pipeline reducer and grade disclosure Jest: 2 suites / 33 tests: PASS.
+- Pipeline card/search follow-up Jest: 2 suites / 50 tests: PASS.
+- Compare iterations visual/navigation Jest: 2 suites / 23 tests: PASS.
+- Test Library AI-quality/sidebar follow-up Jest: 2 suites / 16 tests: PASS.
 - TypeScript `tsc --noEmit`: PASS.
 - Focused ESLint: PASS.
 - Stylelint: exit 0 with the repository's existing 199 warnings and no errors.

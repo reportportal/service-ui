@@ -8,7 +8,6 @@
  * http://www.apache.org/licenses/LICENSE-2.0
  */
 
-import type { ReactElement } from 'react';
 import { shallow, type ShallowWrapper } from 'enzyme';
 import { useDispatch, useSelector } from 'react-redux';
 
@@ -188,7 +187,7 @@ const renderPage = ({
 };
 
 const getHeaderActions = (wrapper: ShallowWrapper): ShallowWrapper =>
-  shallow(wrapper.find('PageHeaderWithBreadcrumbsAndActions').prop('actions') as ReactElement);
+  wrapper.find('[data-automation-id="pipelinesToolbar"]');
 
 const clickResetButton = (actions: ShallowWrapper) =>
   (actions.find('[data-automation-id="resetAiFactoryDemoButton"]').prop('onClick') as () => void)();
@@ -360,6 +359,17 @@ describe('PipelinesPageContent demo reset', () => {
     expect(actions.find('[data-automation-id="resetAiFactoryDemoButton"]').prop('disabled')).toBe(
       true,
     );
+    wrapper.unmount();
+  });
+
+  test('keeps the pipeline search field visibly expanded', () => {
+    const wrapper = renderPage();
+    const searchField = getHeaderActions(wrapper).find('SearchField');
+
+    expect(searchField.props()).toMatchObject({
+      isAlwaysActive: true,
+      placeholder: 'Search by requirement, iteration # or pipeline name',
+    });
     wrapper.unmount();
   });
 

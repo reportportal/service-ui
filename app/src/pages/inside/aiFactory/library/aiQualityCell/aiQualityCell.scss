@@ -17,8 +17,11 @@
 .quality-cell {
   display: flex;
   align-items: center;
+  align-content: center;
   flex-wrap: wrap;
   min-height: 44px;
+  padding: 8px 0;
+  box-sizing: border-box;
   gap: 4px 8px;
   color: var(--rp-ui-base-e-400);
   font-family: var(--rp-ui-base-font-family);

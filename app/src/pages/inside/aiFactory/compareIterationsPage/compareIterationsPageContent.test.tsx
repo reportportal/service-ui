@@ -124,7 +124,19 @@ jest.mock('layouts/settingsLayout', () => ({
   SettingsLayout: ({ children }: { children?: React.ReactNode }) => children,
 }));
 jest.mock('pages/inside/common/pageHeaderWithBreadcrumbsAndActions', () => ({
-  PageHeaderWithBreadcrumbsAndActions: () => <div data-testid="page-header" />,
+  PageHeaderWithBreadcrumbsAndActions: ({
+    breadcrumbDescriptors,
+  }: {
+    breadcrumbDescriptors: Array<{ id: string; title: string; onClick?: () => void }>;
+  }) => (
+    <nav data-testid="page-header">
+      {breadcrumbDescriptors.map(({ id, title, onClick }) => (
+        <button key={id} type="button" onClick={onClick}>
+          {title}
+        </button>
+      ))}
+    </nav>
+  ),
 }));
 jest.mock('./comparisonResult', () => ({
   ComparisonResult: () => <div data-testid="comparison-result" />,
@@ -193,6 +205,14 @@ interface TestNode {
 
 interface TestNodeCollection {
   at: (index: number) => TestNode;
+}
+
+interface BreadcrumbButtonNode {
+  props: () => { children: string; onClick?: () => void };
+}
+
+interface BreadcrumbButtonCollection {
+  at: (index: number) => BreadcrumbButtonNode;
 }
 
 const renderPage = (values: SelectorValues = {}): ReactWrapper => {
@@ -317,6 +337,24 @@ describe('CompareIterationsPageContent', () => {
     wrapper = renderPage({ comparison: loadedComparison });
 
     expect(wrapper.find(ComparisonResult).prop('comparison')).toBe(loadedComparison);
+  });
+
+  test('renders project, pipelines, selected pipeline, and current-page breadcrumbs', () => {
+    wrapper = renderPage({ comparison: loadedComparison });
+    const breadcrumbs = wrapper.find('[data-testid="page-header"]');
+    const breadcrumbButtons = breadcrumbs.find('button') as unknown as BreadcrumbButtonCollection;
+
+    expect([0, 1, 2, 3].map((index) => breadcrumbButtons.at(index).props().children)).toEqual([
+      'Demo',
+      'Pipelines',
+      'Generation',
+      'Compare iterations',
+    ]);
+    breadcrumbButtons.at(2).props().onClick?.();
+    expect(dispatch).toHaveBeenCalledWith({
+      type: 'PROJECT_PIPELINES_PAGE',
+      payload: { organizationSlug: 'org', projectSlug: 'project' },
+    });
   });
 
   test('renders loading while pipelines or selected iterations are being fetched', () => {

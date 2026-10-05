@@ -58,6 +58,9 @@ export const testCasesPageSelector = (state: RootState): Page | null =>
 export const successfulTestCasesLoadRevisionSelector = (state: RootState): number =>
   state.testCase?.testCases?.successfulLoadRevision || 0;
 
+export const settledTestCasesRevisionSelector = (state: RootState): number =>
+  state.testCase?.testCases?.settledRevision || 0;
+
 export const testCaseDetailsSelector = (state: RootState) => state.testCase?.details?.data;
 
 export const isLoadingTestCaseDetailsSelector = (state: RootState) =>

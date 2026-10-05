@@ -97,7 +97,6 @@ interface TestPlanDetails {
 }
 
 const FETCH_PAGE_SIZE = 1000;
-const MAX_FILTER_PAGES = 10;
 const MAX_FILTER_RECORDS = 5000;
 const C3_FILTER_KEYS = [
   'filter.eq.lifecycle',
@@ -122,7 +121,7 @@ export const mergeAiFields = (testCase: TestCase): TestCase & Partial<TestCaseAi
     return testCase; // no matching mock record — the toggle-OFF/no-data guard in components handles this too
   }
   const reviewStepIds = testCase.manualScenario?.steps
-    .map(({ id }) => id)
+    ?.map(({ id }) => id)
     .filter((id): id is number => Number.isSafeInteger(id));
   registerCaseAlias(testCase.id, record, reviewStepIds);
   const iteration = record.ai ? findIteration(record.ai.iterationId) : undefined;
@@ -355,19 +354,13 @@ const isValidPagination = (page: Page, contentLength: number): boolean =>
   page.totalElements <= MAX_FILTER_RECORDS &&
   Number.isSafeInteger(page.totalPages) &&
   page.totalPages >= 0 &&
-  page.totalPages <= MAX_FILTER_PAGES &&
   contentLength <= page.size;
 
 const validatePage = (data: PagedTestCaseList, expected?: Page): void => {
   if (!isValidPagination(data.page, data.content.length)) {
     throw new C3OverlayError('AI Factory mock received invalid pagination metadata');
   }
-  if (
-    expected &&
-    (data.page.size !== expected.size ||
-      data.page.totalElements !== expected.totalElements ||
-      data.page.totalPages !== expected.totalPages)
-  ) {
+  if (expected && data.page.totalElements !== expected.totalElements) {
     throw new C3OverlayError('AI Factory mock received inconsistent pagination metadata');
   }
 };
@@ -379,24 +372,12 @@ const throwIfAborted = (signal?: AxiosRequestConfig['signal']): void => {
   throw error;
 };
 
-const fetchPageContent = async (
-  http: AxiosInstance,
-  page: Page,
-  context: FilterRequestContext,
-  index: number,
-  completeContent: TestCase[],
-): Promise<TestCase[]> => {
-  if (index >= page.totalPages) return completeContent;
-  throwIfAborted(context.signal);
-  const { data } = await http.get<PagedTestCaseList>(
-    pageUrl(context.url, index * page.size, page.size),
-    { headers: context.headers, signal: context.signal },
-  );
-  throwIfAborted(context.signal);
-  validatePage(data, page);
-  return fetchPageContent(http, page, context, index + 1, [...completeContent, ...data.content]);
-};
-
+/**
+ * Walks the real TMS list by offset until `totalElements` items are collected.
+ * Does not trust `totalPages` alone — some backends ignore a large `limit` and keep a
+ * small page size while still advertising a multi-page total (or a single-page total
+ * with a truncated first page). Cap at {@link MAX_FILTER_RECORDS}.
+ */
 const fetchRemainingContent = async (
   http: AxiosInstance,
   response: AxiosResponse<PagedTestCaseList>,
@@ -405,8 +386,33 @@ const fetchRemainingContent = async (
   const { page, content } = response.data;
   validatePage(response.data);
   throwIfAborted(context.signal);
-  if (page.totalPages <= 1) return content;
-  return fetchPageContent(http, page, context, 1, content);
+
+  let collected = content;
+  let nextOffset = content.length;
+  const requestSize = page.size;
+
+  while (collected.length < page.totalElements) {
+    throwIfAborted(context.signal);
+    const { data } = await http.get<PagedTestCaseList>(
+      pageUrl(context.url, nextOffset, requestSize),
+      { headers: context.headers, signal: context.signal },
+    );
+    throwIfAborted(context.signal);
+    if (!isPagedTestCaseList(data)) {
+      throw new C3OverlayError('AI Factory mock received invalid pagination metadata');
+    }
+    validatePage(data, page);
+    if (data.content.length === 0) {
+      break;
+    }
+    collected = collected.concat(data.content);
+    nextOffset += data.content.length;
+    if (collected.length > MAX_FILTER_RECORDS) {
+      throw new C3OverlayError('AI Factory mock received invalid pagination metadata');
+    }
+  }
+
+  return collected;
 };
 
 const filteredPageData = (

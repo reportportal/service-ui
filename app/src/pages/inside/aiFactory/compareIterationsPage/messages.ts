@@ -75,7 +75,8 @@ export const messages = defineMessages({
   },
   differentRequirements: {
     id: 'CompareIterationsPage.differentRequirements',
-    defaultMessage: 'Different requirements — compare trends, not individual cases',
+    defaultMessage:
+      'Different requirements ({baseline} vs {candidate}) — compare trends, not individual cases.',
   },
   statusOnlyExplanation: {
     id: 'CompareIterationsPage.statusOnlyExplanation',
