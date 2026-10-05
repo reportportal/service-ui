@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+import { type ReactNode } from 'react';
 import { isEmpty } from 'es-toolkit/compat';
 import { useIntl } from 'react-intl';
 
@@ -33,9 +34,16 @@ interface StepProps {
   instructions?: string;
   expectedResult?: string;
   attachments: Attachment[];
+  reviewControl?: ReactNode;
 }
 
-export const Step = ({ index, instructions = '', expectedResult = '', attachments }: StepProps) => {
+export const Step = ({
+  index,
+  instructions = '',
+  expectedResult = '',
+  attachments,
+  reviewControl,
+}: StepProps) => {
   const { formatMessage } = useIntl();
 
   if (!hasStepContent({ instructions, expectedResult, attachments })) {
@@ -43,7 +51,7 @@ export const Step = ({ index, instructions = '', expectedResult = '', attachment
   }
 
   return (
-    <li className={cx('step')}>
+    <li className={cx('step', { 'step--reviewable': Boolean(reviewControl) })}>
       <div className={cx('step__number')}>{index}</div>
       <div className={cx('step__content')}>
         {(instructions || expectedResult) && (
@@ -64,6 +72,7 @@ export const Step = ({ index, instructions = '', expectedResult = '', attachment
           </div>
         )}
       </div>
+      {reviewControl}
     </li>
   );
 };

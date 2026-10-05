@@ -40,6 +40,13 @@ import { EvaluationPanel } from 'pages/inside/aiFactory/evaluation';
 import { GenerationCost } from 'pages/inside/aiFactory/generationCost';
 import { LifecycleHistory, useTestCaseAi } from 'pages/inside/aiFactory/lifecycle';
 import { PipelineLinks } from 'pages/inside/aiFactory/pipelineLinks';
+import {
+  ReviewStrip,
+  ReviewTarget,
+  useReviewComments,
+  type ReviewCommentsLoadState,
+} from 'pages/inside/aiFactory/review';
+import { CommentTargetType } from 'types/aiFactory';
 import { ManualScenario, Tag, TestCaseManualScenario } from 'types/testCase';
 
 import { TestCaseDetailsHeader } from './testCaseDetailsHeader';
@@ -115,8 +122,12 @@ const SIDEBAR_COLLAPSIBLE_SECTIONS_CONFIG = ({
 
 const MAIN_CONTENT_COLLAPSIBLE_SECTIONS_CONFIG = ({
   manualScenario,
+  reviewState,
+  isReviewReadOnly,
 }: {
   manualScenario: ManualScenario;
+  reviewState?: ReviewCommentsLoadState;
+  isReviewReadOnly?: boolean;
 }) => {
   const sections = [
     {
@@ -135,14 +146,38 @@ const MAIN_CONTENT_COLLAPSIBLE_SECTIONS_CONFIG = ({
         defaultMessage: messages.noPrecondition,
         childComponent: hasStepsPreconditionContent(manualScenario?.preconditions) &&
           manualScenario?.preconditions && (
-            <Precondition preconditions={manualScenario.preconditions} />
+            <Precondition
+              preconditions={manualScenario.preconditions}
+              reviewControl={
+                reviewState && (
+                  <ReviewTarget
+                    target={{ type: CommentTargetType.PRECONDITION }}
+                    reviewState={reviewState}
+                    isReadOnly={isReviewReadOnly}
+                  />
+                )
+              }
+            />
           ),
       },
       {
         titleKey: 'steps',
         defaultMessage: messages.noSteps,
         childComponent: manualScenario?.steps?.some(hasStepContent) && (
-          <StepsList steps={manualScenario.steps.filter(hasStepContent)} />
+          <StepsList
+            steps={manualScenario.steps.filter(hasStepContent)}
+            renderReviewControl={
+              reviewState
+                ? (stepId) => (
+                    <ReviewTarget
+                      target={{ type: CommentTargetType.STEP, stepId }}
+                      reviewState={reviewState}
+                      isReadOnly={isReviewReadOnly}
+                    />
+                  )
+                : undefined
+            }
+          />
         ),
       },
     );
@@ -156,6 +191,24 @@ const MAIN_CONTENT_COLLAPSIBLE_SECTIONS_CONFIG = ({
             expectedResult={manualScenario.expectedResult}
             instructions={manualScenario.instructions}
             precondition={manualScenario.preconditions?.value}
+            preconditionReviewControl={
+              reviewState && (
+                <ReviewTarget
+                  target={{ type: CommentTargetType.PRECONDITION }}
+                  reviewState={reviewState}
+                  isReadOnly={isReviewReadOnly}
+                />
+              )
+            }
+            scenarioReviewControl={
+              reviewState && (
+                <ReviewTarget
+                  target={{ type: CommentTargetType.TEXT_SCENARIO }}
+                  reviewState={reviewState}
+                  isReadOnly={isReviewReadOnly}
+                />
+              )
+            }
           />
         ),
       },
@@ -178,7 +231,7 @@ const MAIN_CONTENT_COLLAPSIBLE_SECTIONS_CONFIG = ({
 export const TestCaseDetailsPage = () => {
   const { formatMessage } = useIntl();
   const { trackEvent } = useTracking();
-  const { canManageTestCases } = useUserPermissions();
+  const { canManageTestCases, canReviewAiTestCases } = useUserPermissions();
   const { openModal: openAddTestCasesToTestPlanModal } = useAddTestCasesToTestPlanModal();
   const { openModal: openDescriptionModal } = useDescriptionModal();
 
@@ -194,6 +247,8 @@ export const TestCaseDetailsPage = () => {
     isAiFactoryEnabled && Boolean(testCaseDetails?.lifecycle),
     testCaseDetails?.updatedAt,
   );
+  const isAiReviewEnabled = isAiFactoryEnabled && Boolean(testCaseDetails?.ai);
+  const reviewState = useReviewComments(projectKey, testCaseId, isAiReviewEnabled);
 
   const {
     addTag,
@@ -244,22 +299,36 @@ export const TestCaseDetailsPage = () => {
   const tags = attributes.map(({ key }) => key);
 
   const isScenarioEmpty = checkScenario(testCaseDetails?.manualScenario);
+  const isFixRunning = Boolean(testCaseDetails.review?.fixRound);
+  const isReviewReadOnly = isFixRunning || !canReviewAiTestCases;
 
   const mainContent = isScenarioEmpty ? (
     <DetailsEmptyState testCase={testCaseDetails} />
   ) : (
-    MAIN_CONTENT_COLLAPSIBLE_SECTIONS_CONFIG({
-      manualScenario: testCaseDetails.manualScenario,
-    }).map(({ titleKey, defaultMessage, childComponent }) => (
-      <CollapsibleSectionWithHeaderControl
-        key={titleKey}
-        title={formatMessage(commonMessages[titleKey])}
-        defaultMessage={formatMessage(defaultMessage)}
-        isInitiallyExpanded={!!childComponent}
-      >
-        {childComponent}
-      </CollapsibleSectionWithHeaderControl>
-    ))
+    <>
+      {isAiReviewEnabled && testCaseDetails.lifecycle && (
+        <ReviewStrip
+          lifecycle={testCaseDetails.lifecycle}
+          reviewState={reviewState}
+          isReadOnly={isReviewReadOnly}
+          readOnlyReason={isFixRunning ? 'FIX_RUNNING' : 'NO_PERMISSION'}
+        />
+      )}
+      {MAIN_CONTENT_COLLAPSIBLE_SECTIONS_CONFIG({
+        manualScenario: testCaseDetails.manualScenario,
+        reviewState: isAiReviewEnabled ? reviewState : undefined,
+        isReviewReadOnly,
+      }).map(({ titleKey, defaultMessage, childComponent }) => (
+        <CollapsibleSectionWithHeaderControl
+          key={titleKey}
+          title={formatMessage(commonMessages[titleKey])}
+          defaultMessage={formatMessage(defaultMessage)}
+          isInitiallyExpanded={!!childComponent}
+        >
+          {childComponent}
+        </CollapsibleSectionWithHeaderControl>
+      ))}
+    </>
   );
 
   return (

@@ -112,6 +112,7 @@ export enum CommentState {
   PENDING = 'PENDING',
   SENT = 'SENT',
   ADDRESSED = 'ADDRESSED',
+  NOT_ADDRESSED = 'NOT_ADDRESSED',
 }
 export type AiCommentState = `${CommentState}`;
 
@@ -489,7 +490,8 @@ export interface ReviewCommentRS {
   author: { id: number; name: string };
   createdAt: number;
   state: AiCommentState;
-  fixRound?: number; // when SENT/ADDRESSED
+  fixRound?: number; // when SENT/ADDRESSED/NOT_ADDRESSED
+  reason?: string; // agent explanation when NOT_ADDRESSED
   canDelete: boolean; // own + PENDING
 }
 
