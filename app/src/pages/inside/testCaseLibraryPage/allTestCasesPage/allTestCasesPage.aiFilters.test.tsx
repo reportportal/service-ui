@@ -28,6 +28,7 @@ import { useUserPermissions } from 'hooks/useUserPermissions';
 import { useHasTestPlans } from 'hooks/useHasTestPlans';
 import { useProjectDetails } from 'hooks/useTypedSelector';
 import { QuickFilters, useIterationNumber } from 'pages/inside/aiFactory/library';
+import { BulkApproveButton } from 'pages/inside/aiFactory/approval';
 import { TMS_INSTANCE_KEY } from 'pages/inside/common/constants';
 import { TestCaseList } from 'pages/inside/common/testCaseList';
 import { useURLBoundPagination } from 'pages/inside/common/testCaseList/useURLBoundPagination';
@@ -92,6 +93,9 @@ jest.mock('pages/inside/aiFactory/library', () => ({
   QuickFilters: 'QuickFilters',
   useIterationNumber: jest.fn(),
 }));
+jest.mock('pages/inside/aiFactory/approval', () => ({
+  BulkApproveButton: 'BulkApproveButton',
+}));
 jest.mock('pages/inside/common/testCaseList', () => ({ TestCaseList: 'TestCaseList' }));
 jest.mock('pages/inside/common/testCaseList/useURLBoundPagination', () => ({
   useURLBoundPagination: jest.fn(),
@@ -104,6 +108,9 @@ jest.mock('../emptyState/folder/folderEmptyState', () => ({
   FolderEmptyState: 'FolderEmptyState',
 }));
 jest.mock('../moveTestCaseModal', () => ({ useMoveTestCaseModal: jest.fn() }));
+jest.mock('../hooks/useRefetchCurrentTestCases', () => ({
+  useRefetchCurrentTestCases: jest.fn(() => jest.fn()),
+}));
 jest.mock('./batchDeleteTestCasesModal', () => ({ useBatchDeleteTestCasesModal: jest.fn() }));
 jest.mock('./batchDuplicateTestCasesModal', () => ({
   useBatchDuplicateTestCasesModal: jest.fn(),
@@ -126,7 +133,11 @@ const testCase = {
   },
 } as unknown as TestCase;
 
-const renderPage = (isAiFactoryEnabled: boolean, testCases: TestCase[] = [testCase]) => {
+const renderPage = (
+  isAiFactoryEnabled: boolean,
+  testCases: TestCase[] = [testCase],
+  canReviewAiTestCases = false,
+) => {
   jest.mocked(useAiFactoryEnabled).mockReturnValue(isAiFactoryEnabled);
   jest.mocked(useIterationNumber).mockReturnValue(4);
   jest.mocked(useDispatch).mockReturnValue(dispatch);
@@ -160,7 +171,10 @@ const renderPage = (isAiFactoryEnabled: boolean, testCases: TestCase[] = [testCa
   });
   jest
     .mocked(useUserPermissions)
-    .mockReturnValue({ canManageTestCases: false } as ReturnType<typeof useUserPermissions>);
+    .mockReturnValue({
+      canManageTestCases: false,
+      canReviewAiTestCases,
+    } as ReturnType<typeof useUserPermissions>);
   jest.mocked(useHasTestPlans).mockReturnValue({
     hasTestPlans: false,
     isCheckingTestPlansExistence: false,
@@ -186,6 +200,17 @@ describe('AllTestCasesPage AI filters', () => {
   beforeEach(() => {
     jest.clearAllMocks();
     query = {};
+  });
+
+  test('shows bulk Approve only for a permitted selection while the feature is enabled', () => {
+    const permitted = renderPage(true, [testCase], true);
+    const selectRows = permitted.find(TestCaseList).prop('handleSelectedRows') as (
+      rows: { id: number; folderId: number }[],
+    ) => void;
+    selectRows([{ id: testCase.id, folderId: testCase.testFolder.id }]);
+
+    expect(permitted.find(BulkApproveButton)).toHaveLength(1);
+    expect(renderPage(false, [testCase], true).find(BulkApproveButton)).toHaveLength(0);
   });
 
   test('normalizes URL filter values and resolves the iteration number', () => {

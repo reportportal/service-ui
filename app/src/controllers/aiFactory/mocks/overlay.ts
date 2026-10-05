@@ -66,6 +66,7 @@ type ScenarioFields = {
 
 type ScenarioUpdatePayload = {
   manualScenario?: unknown;
+  promoteToReady?: boolean;
 };
 
 interface FilterRequestContext {
@@ -241,7 +242,12 @@ const toScenarioFields = (value: unknown): ScenarioFields | undefined => {
 const parsePayload = (data: unknown): ScenarioUpdatePayload => {
   try {
     const parsed = typeof data === 'string' ? JSON.parse(data) : data;
-    return isRecord(parsed) ? { manualScenario: parsed.manualScenario } : {};
+    return isRecord(parsed)
+      ? {
+          manualScenario: parsed.manualScenario,
+          promoteToReady: parsed.promoteToReady === true,
+        }
+      : {};
   } catch {
     return {};
   }
@@ -278,11 +284,12 @@ const mergeUpdatedTestCase = (
   const isUpdate = response.config.method?.toLowerCase() === 'put';
   const key = decodeCaseKey(testCaseKeyFromUrl(response));
   const before = key ? scenarios.get(key) : undefined;
-  const after = toScenarioFields(parsePayload(response.config.data).manualScenario);
+  const payload = parsePayload(response.config.data);
+  const after = toScenarioFields(payload.manualScenario);
   const record = findCase(testCase.displayId);
   const lifecycleChanged: ScenarioUpdateRS['lifecycleChanged'] =
-    isUpdate && record && isScenarioChanged(before, after) && recordScenarioChange(record)
-      ? 'TO_DRAFT'
+    isUpdate && record && isScenarioChanged(before, after)
+      ? recordScenarioChange(record, payload.promoteToReady)
       : null;
   rememberScenario(scenarios, testCase);
   const data = mergeAiFields(testCase);

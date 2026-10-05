@@ -589,4 +589,33 @@ describe('installOverlayInterceptor', () => {
 
     mock.restore();
   });
+
+  test('keeps an edited Draft AI case Ready when promoteToReady is requested', async () => {
+    const { http, mock } = setupOverlay();
+    const before = originalScenario();
+    const after = { ...before, preconditions: { value: 'The user is an administrator' } };
+    const record = findCase('TC103');
+
+    mock.onGet(TEST_CASE_URL).reply(200, realTestCase('TC103', before));
+    mock.onPut(TEST_CASE_URL).reply(200, realTestCase('TC103', after));
+
+    await http.get(TEST_CASE_URL);
+    const { data } = await http.put<TestCase & ScenarioUpdateRS>(TEST_CASE_URL, {
+      manualScenario: after,
+      promoteToReady: true,
+    });
+
+    expect(data).toMatchObject({
+      lifecycleChanged: 'TO_READY',
+      lifecycle: Lifecycle.READY,
+      evaluationSummary: { state: EvaluationState.OBSOLETE },
+    });
+    expect(record?.lifecycleHistory.at(-1)).toMatchObject({
+      from: Lifecycle.DRAFT,
+      to: Lifecycle.READY,
+      reason: LifecycleReason.APPROVED_WITH_CHANGES,
+    });
+
+    mock.restore();
+  });
 });

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { useCallback } from 'react';
+import { useCallback, useState } from 'react';
 import { useIntl } from 'react-intl';
 import { useTracking } from 'react-tracking';
 import { useSelector } from 'react-redux';
@@ -26,7 +26,10 @@ import {
 } from 'analyticsEvents/testCaseLibraryPageEvents';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { withModal } from 'controllers/modal';
+import { useAiFactoryEnabled } from 'controllers/aiFactory';
 import { UseModalData } from 'common/hooks';
+import { useUserPermissions } from 'hooks/useUserPermissions';
+import { Lifecycle } from 'types/aiFactory';
 
 import { commonMessages } from '../commonMessages';
 import { CreateTestCaseFormData } from '../types';
@@ -43,6 +46,7 @@ import {
 import { EditScenarioModalContent } from './editScenarioModalContent';
 import { EDIT_SCENARIO_MODAL_KEY, EDIT_SCENARIO_FORM_NAME } from './constants';
 import { EditScenarioModalProps } from './types';
+import { messages } from './messages';
 
 const EditScenarioModalComponent = ({
   data,
@@ -56,6 +60,9 @@ const EditScenarioModalComponent = ({
   const testCase = data?.testCase;
 
   const { formatMessage } = useIntl();
+  const [promoteToReady, setPromoteToReady] = useState(false);
+  const isAiFactoryEnabled = useAiFactoryEnabled();
+  const { canReviewAiTestCases } = useUserPermissions();
   const { trackEvent } = useTracking();
   const { isLoading: isEditTestCaseLoading, editTestCase } = useTestCase(testCase?.id);
   const initialFormValues = useSelector(
@@ -70,7 +77,11 @@ const EditScenarioModalComponent = ({
 
   const handleUpdate = useCallback(
     async (formData: CreateTestCaseFormData): Promise<void> => {
-      const response = await editTestCase(formData, testCase?.testFolder?.id, true);
+      const response = await editTestCase(
+        promoteToReady ? { ...formData, promoteToReady: true } : formData,
+        testCase?.testFolder?.id,
+        true,
+      );
 
       if (response && testCase?.id) {
         trackEvent(
@@ -86,10 +97,26 @@ const EditScenarioModalComponent = ({
         );
       }
     },
-    [editTestCase, testCase, trackEvent, initialFormValues],
+    [editTestCase, testCase, trackEvent, initialFormValues, promoteToReady],
   );
 
   const isSaveDisabled = !isInitialized || pristine || invalid;
+  const hasLifecycle = isAiFactoryEnabled && Boolean(testCase?.lifecycle);
+  const isDraft = testCase?.lifecycle === Lifecycle.DRAFT;
+  const lifecycleHint = hasLifecycle && !isDraft ? formatMessage(messages.readyScenarioHint) : undefined;
+  let promoteToReadyLabel: string | undefined;
+  if (hasLifecycle && isDraft && canReviewAiTestCases) {
+    const labelMessage = testCase?.ai
+      ? messages.approveWithChanges
+      : messages.markReadyWithChanges;
+    promoteToReadyLabel = formatMessage(labelMessage);
+  }
+  let promoteToReadyDisabledHint: string | undefined;
+  if (testCase?.ai && testCase.review?.fixRound) {
+    promoteToReadyDisabledHint = formatMessage(messages.fixRunningHint);
+  } else if (testCase?.ai && testCase.review?.unsentCommentsCount) {
+    promoteToReadyDisabledHint = formatMessage(messages.unsentCommentsHint);
+  }
 
   return (
     <EditScenarioModalContent
@@ -101,6 +128,11 @@ const EditScenarioModalComponent = ({
       isLoading={isEditTestCaseLoading}
       onSubmitHandler={handleUpdate}
       formName={EDIT_SCENARIO_FORM_NAME}
+      lifecycleHint={lifecycleHint}
+      promoteToReadyLabel={promoteToReadyLabel}
+      promoteToReadyDisabledHint={promoteToReadyDisabledHint}
+      promoteToReadyValue={promoteToReady}
+      onPromoteToReadyChange={setPromoteToReady}
     />
   );
 };
