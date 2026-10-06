@@ -20,6 +20,7 @@ import urllib.error
 import urllib.request
 
 REPO_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', '..'))
+DESC_DIR = os.path.join(REPO_ROOT, 'docs', 'ai-factory-poc')
 DEFAULT_ENV_FILES = [
     os.path.join(REPO_ROOT, '.env'),                           # service-ui/.env
     os.path.join(REPO_ROOT, '..', 'prism-ui', '.env.local'),   # fallback
@@ -80,12 +81,15 @@ def read_description(desc_arg, parent):
         return (
             'Frontend part of %s.\n\nPlan and status: service-ui `docs/ai-factory-poc/` (00-status.md, 04-implementation-plan.md).'
             % parent)
-    allowed_root = os.path.realpath(REPO_ROOT)
-    desc_path = os.path.realpath(os.path.join(allowed_root, desc_arg))
-    if os.path.commonpath([allowed_root, desc_path]) != allowed_root:
-        sys.exit('--desc must be a file inside the repository: %s' % desc_arg)
-    if not os.path.isfile(desc_path):
-        sys.exit('--desc file not found: %s' % desc_arg)
+    # Only a bare file name inside DESC_DIR is accepted: directory parts of the argument are
+    # dropped, and the opened path is taken from the directory listing, never from the argument.
+    desc_name = os.path.basename(desc_arg)
+    desc_path = next(
+        (os.path.join(DESC_DIR, name) for name in os.listdir(DESC_DIR)
+         if name == desc_name and os.path.isfile(os.path.join(DESC_DIR, name))),
+        None)
+    if desc_path is None:
+        sys.exit('--desc must be an existing file name inside %s: %s' % (DESC_DIR, desc_arg))
     with open(desc_path, encoding='utf-8') as handle:
         return handle.read()
 

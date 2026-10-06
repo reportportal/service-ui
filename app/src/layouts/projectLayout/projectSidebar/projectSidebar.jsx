@@ -91,6 +91,10 @@ export const ProjectSidebar = ({ onClickNavBtn }) => {
     let menuCounter = 0;
     const menuStep = 10;
     const isShowInProgressTmsFeatures = Boolean(getTmsOverride());
+    const nextMenuOrder = () => {
+      menuCounter += menuStep;
+      return menuCounter;
+    };
 
     menuCounter += menuStep;
     const dashboardsMenuOrder = menuCounter;
@@ -287,9 +291,6 @@ export const ProjectSidebar = ({ onClickNavBtn }) => {
           return [];
         }
         const itemName = iconName || itemTitle;
-        if (!menuOrder) {
-          menuCounter += menuStep;
-        }
         return [
           {
             name: [pluginName, extensionName, slug || name, url].filter(Boolean).join(':'),
@@ -300,21 +301,18 @@ export const ProjectSidebar = ({ onClickNavBtn }) => {
             },
             icon: iconSvg,
             message: itemTitle,
-            menuOrder: menuOrder || menuCounter,
+            menuOrder: menuOrder ?? nextMenuOrder(),
           },
         ];
       },
     );
 
-    const uiExtensionItems = sidebarExtensions.map((extension) => {
-      menuCounter += menuStep;
-      return {
-        name: extension.name,
-        component: <ExtensionLoader extension={extension} />,
-        onClick: onClickNavBtn,
-        menuOrder: menuCounter,
-      };
-    });
+    const uiExtensionItems = sidebarExtensions.map((extension) => ({
+      name: extension.name,
+      component: <ExtensionLoader extension={extension} />,
+      onClick: onClickNavBtn,
+      menuOrder: nextMenuOrder(),
+    }));
 
     return [...sidebarItems, ...pluginPageItems, ...uiExtensionItems].sort(
       (a, b) => a.menuOrder - b.menuOrder,

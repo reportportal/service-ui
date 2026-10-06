@@ -39,7 +39,7 @@ import { ExtendedTestCase } from 'types/testCase';
 import { ManualLaunchItem } from 'pages/inside/manualLaunchesPage/types';
 import { generateUUID } from './utils';
 import { messages } from './messages';
-import { fetchAllTestCases, fetchAllTestPlanTestCases } from '../testLibrarySidePanel/utils';
+import { fetchAllTestCasesByFolderIds, fetchAllTestPlanTestCases } from '../testLibrarySidePanel/utils';
 
 const resolveTestCaseIds = ({
   folderId,
@@ -150,11 +150,7 @@ export const useCreateManualLaunch = (
   const getTestCasesForSubmit = useCallback(async () => {
     try {
       if (folderId) {
-        return await fetchAllTestCases(projectKey, {
-          'filter.in.testFolderId': getAllSubfolderIds(folderId, folders).join(','),
-          offset: 0,
-          limit: 50,
-        });
+        return await fetchAllTestCasesByFolderIds(projectKey, getAllSubfolderIds(folderId, folders));
       }
 
       if (isNumber(testPlanId) && !selectedTestCaseIds?.length) {
