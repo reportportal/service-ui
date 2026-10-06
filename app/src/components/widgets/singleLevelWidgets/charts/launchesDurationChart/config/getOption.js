@@ -61,6 +61,8 @@ export const getOption = ({ content, isPreview, formatMessage }) => {
   const valueAxisInterval =
     maxValue > 0 ? getNiceTickStep(maxValue, VALUE_AXIS_TICKS_COUNT) : timeType.value * DISPLAY_TICK_STEP;
 
+  const isMaxOnTick = maxValue % valueAxisInterval === 0;
+
   const seriesData = values.map((value, index) => ({
     value,
     itemStyle: {
@@ -93,6 +95,7 @@ export const getOption = ({ content, isPreview, formatMessage }) => {
       axisLabel: {
         ...AXIS_LABEL_STYLE,
         margin: 8,
+        showMaxLabel: isMaxOnTick,
         formatter: (value) => formatDurationTick(value, timeType.value),
       },
       axisLine: {
@@ -107,6 +110,7 @@ export const getOption = ({ content, isPreview, formatMessage }) => {
       },
       splitLine: {
         show: !isPreview,
+        showMaxLine: isMaxOnTick,
         lineStyle: {
           color: COLOR_GRAY_80,
           width: 1,

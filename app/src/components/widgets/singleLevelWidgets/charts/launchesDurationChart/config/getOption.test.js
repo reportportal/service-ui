@@ -108,6 +108,9 @@ describe('launchesDurationChart getOption', () => {
     expect(option.xAxis.name).toBe('minutes');
     expect(option.xAxis.max).toBe(3300000);
     expect(option.xAxis.interval).toBe(500000);
+    // 3,300,000 is not a multiple of 500,000, so the extra line/label at max is hidden
+    expect(option.xAxis.splitLine.showMaxLine).toBe(false);
+    expect(option.xAxis.axisLabel.showMaxLabel).toBe(false);
     // minutes timeType (60000 ms): 500,000 ms → "8.33"
     expect(option.xAxis.axisLabel.formatter(500000)).toBe('8.33');
   });
