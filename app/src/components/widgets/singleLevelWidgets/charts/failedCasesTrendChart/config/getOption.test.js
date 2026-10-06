@@ -39,7 +39,7 @@ describe('failedCasesTrendChart getOption', () => {
       data: [3, 5, 2],
       lineStyle: { width: 1 },
       showSymbol: true,
-      symbolSize: 2,
+      symbolSize: 1.2,
       cursor: 'pointer',
     });
     expect(option.series[0].areaStyle).toBeUndefined();
@@ -117,7 +117,7 @@ describe('failedCasesTrendChart getOption', () => {
 
     expect(option.series[0]).toMatchObject({
       showSymbol: true,
-      symbolSize: 10,
+      symbolSize: 6,
     });
   });
 

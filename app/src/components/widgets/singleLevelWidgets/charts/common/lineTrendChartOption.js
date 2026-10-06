@@ -30,13 +30,22 @@ import { buildAxisTooltip, buildCategoryXAxis, buildValueYAxis } from './echarts
  * the y-axis scale/ticks.
  */
 
+// Preview has no axes, so it needs explicit padding to keep the line and dots off the edges.
+const PREVIEW_GRID_PADDING = 12;
+
 export const buildTrendChartGrid = (isPreview) => ({
-  top: isPreview ? 8 : 95,
-  left: isPreview ? 8 : 60,
-  right: isPreview ? 8 : 20,
-  bottom: isPreview ? 8 : 30,
+  top: isPreview ? PREVIEW_GRID_PADDING : 95,
+  left: isPreview ? PREVIEW_GRID_PADDING : 60,
+  right: isPreview ? PREVIEW_GRID_PADDING : 20,
+  bottom: isPreview ? PREVIEW_GRID_PADDING : 30,
   containLabel: false,
 });
+
+// The preview is much smaller than the real chart, so its dots are scaled down proportionally.
+export const getTrendChartSymbolSize = (isPreview, singlePoint) => {
+  if (singlePoint) return isPreview ? 3 : 6;
+  return isPreview ? 0.5 : 1.2;
+};
 
 export const buildTrendChartXAxis = ({ categories, isPreview }) => {
   const tickValues = buildAxisTicks(categories.length);
@@ -77,7 +86,7 @@ export const buildTrendChartLineSeries = ({ id, data, isPreview }) => {
     type: 'line',
     data,
     showSymbol: true,
-    symbolSize: singlePoint ? 10 : 2,
+    symbolSize: getTrendChartSymbolSize(isPreview, singlePoint),
     lineStyle: {
       width: 1,
     },

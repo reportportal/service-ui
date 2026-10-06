@@ -26,6 +26,7 @@ import {
   buildTooltipFormatter,
 } from 'components/widgets/common/echarts/configHelpers';
 import { IssueTypeStatTooltip } from '../../common/issueTypeStatTooltip';
+import { buildTrendChartGrid, getTrendChartSymbolSize } from '../../common/lineTrendChartOption';
 import { calculateTooltipParams } from './utils';
 
 const localMessages = defineMessages({
@@ -62,13 +63,7 @@ export const getOption = ({ content, isPreview, formatMessage }) => {
   return {
     color: [COLOR_FAILEDSKIPPEDTOTAL],
     textStyle: AXIS_LABEL_STYLE,
-    grid: {
-      top: isPreview ? 0 : 95,
-      left: isPreview ? 0 : 60,
-      right: isPreview ? 0 : 20,
-      bottom: isPreview ? 0 : 30,
-      containLabel: false,
-    },
+    grid: buildTrendChartGrid(isPreview),
     xAxis: {
       type: 'category',
       show: !isPreview,
@@ -150,7 +145,7 @@ export const getOption = ({ content, isPreview, formatMessage }) => {
         type: 'line',
         data: values,
         showSymbol: true,
-        symbolSize: singlePoint ? 10 : 2,
+        symbolSize: getTrendChartSymbolSize(isPreview, singlePoint),
         lineStyle: {
           width: 1,
         },
