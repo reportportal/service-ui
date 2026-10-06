@@ -34,7 +34,7 @@ describe('nonPassedTestCasesTrendChart getOption', () => {
       type: 'line',
       data: [33.33, 50, 25],
       showSymbol: true,
-      symbolSize: 2,
+      symbolSize: 1.2,
       lineStyle: { width: 1 },
       cursor: 'pointer',
     });
@@ -88,8 +88,8 @@ describe('nonPassedTestCasesTrendChart getOption', () => {
     expect(option.yAxis.show).toBe(false);
     expect(option.yAxis.name).toBeUndefined();
     expect(option.tooltip.show).toBe(false);
-    expect(option.grid.top).toBe(0);
-    expect(option.grid.left).toBe(0);
+    expect(option.grid.top).toBe(12);
+    expect(option.grid.left).toBe(12);
     expect(option.series[0].cursor).toBe('default');
     expect(option.series[0].silent).toBe(true);
   });
@@ -103,7 +103,7 @@ describe('nonPassedTestCasesTrendChart getOption', () => {
 
     expect(option.series[0]).toMatchObject({
       showSymbol: true,
-      symbolSize: 10,
+      symbolSize: 6,
     });
   });
 });
