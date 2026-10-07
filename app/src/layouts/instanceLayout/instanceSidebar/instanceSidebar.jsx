@@ -26,9 +26,15 @@ import {
   ALL_USERS_PAGE,
   USER_PROFILE_PAGE,
   ORGANIZATIONS_PAGE,
+  PLUGIN_UI_EXTENSION_ADMIN_PAGE,
 } from 'controllers/pages/constants';
 import { SIDEBAR_EVENTS } from 'components/main/analytics/events';
-import { uiExtensionAdminSidebarComponentsSelector } from 'controllers/plugins/uiExtensions';
+import {
+  uiExtensionAdminSidebarComponentsSelector,
+  uiExtensionAdminPagesSelector,
+} from 'controllers/plugins/uiExtensions';
+import { PLUGIN_TYPE_REMOTE } from 'controllers/plugins/uiExtensions/constants';
+import { RemotePluginIcon } from 'components/integrations/elements/pluginIcon/remotePluginIcon';
 import { AppSidebar } from 'layouts/common/appSidebar';
 import { ExtensionLoader } from 'components/extensionLoader';
 import OrganizationsIcon from 'common/img/sidebar/organizations-icon-inline.svg';
@@ -49,6 +55,7 @@ export const InstanceSidebar = ({ onClickNavBtn }) => {
   const userRoles = useSelector(userRolesSelector);
   const { canSeeSidebarOptions, canSeeInstanceLevelPluginsPages } = useUserPermissions();
   const sidebarExtensions = useSelector(uiExtensionAdminSidebarComponentsSelector);
+  const adminPageExtensions = useSelector(uiExtensionAdminPagesSelector);
   const assignedOrganizations = useSelector(assignedOrganizationsSelector);
   const noAssignedOrganizations =
     Object.keys(assignedOrganizations).length === 0 && userRoles.userRole !== ADMINISTRATOR;
@@ -61,6 +68,13 @@ export const InstanceSidebar = ({ onClickNavBtn }) => {
   };
 
   const getSidebarItems = () => {
+    let menuCounter = 0;
+    const menuStep = 10;
+    const nextMenuOrder = () => {
+      menuCounter += menuStep;
+      return menuCounter;
+    };
+
     const sidebarItems = [
       {
         onClick: (isSidebarCollapsed) =>
@@ -68,6 +82,7 @@ export const InstanceSidebar = ({ onClickNavBtn }) => {
         link: { type: ORGANIZATIONS_PAGE },
         icon: OrganizationsIcon,
         message: formatMessage(messages.organizations),
+        menuOrder: nextMenuOrder(),
       },
     ];
 
@@ -79,6 +94,7 @@ export const InstanceSidebar = ({ onClickNavBtn }) => {
           link: { type: ALL_USERS_PAGE },
           icon: UsersIcon,
           message: formatMessage(messages.allUsers),
+          menuOrder: nextMenuOrder(),
         },
         {
           onClick: (isSidebarCollapsed) =>
@@ -86,6 +102,7 @@ export const InstanceSidebar = ({ onClickNavBtn }) => {
           link: { type: SERVER_SETTINGS_PAGE },
           icon: SettingsIcon,
           message: formatMessage(messages.settings),
+          menuOrder: nextMenuOrder(),
         },
         {
           onClick: (isSidebarCollapsed) =>
@@ -93,6 +110,7 @@ export const InstanceSidebar = ({ onClickNavBtn }) => {
           link: { type: PLUGINS_PAGE },
           icon: PluginsIcon,
           message: formatMessage(messages.plugins),
+          menuOrder: nextMenuOrder(),
         },
       );
     }
@@ -103,10 +121,28 @@ export const InstanceSidebar = ({ onClickNavBtn }) => {
           name: extension.name,
           component: <ExtensionLoader extension={extension} />,
           onClick: onClickNavBtn,
+          menuOrder: extension.payload?.menuOrder ?? nextMenuOrder(),
         });
       });
 
-    return noAssignedOrganizations ? [] : sidebarItems;
+    canSeeInstanceLevelPluginsPages &&
+      adminPageExtensions
+        .filter(({ pluginType, payload }) => pluginType === PLUGIN_TYPE_REMOTE && payload.icon)
+        .forEach(({ payload }) =>
+          sidebarItems.push({
+            onClick: (isSidebarCollapsed) =>
+              onClickButton({ itemName: payload.title || payload.name, isSidebarCollapsed }),
+            link: {
+              type: PLUGIN_UI_EXTENSION_ADMIN_PAGE,
+              payload: { pluginPage: payload.slug },
+            },
+            icon: <RemotePluginIcon icon={payload.icon} />,
+            message: payload.title || payload.name,
+            menuOrder: payload.menuOrder ?? nextMenuOrder(),
+          }),
+        );
+
+    return noAssignedOrganizations ? [] : sidebarItems.sort((a, b) => a.menuOrder - b.menuOrder);
   };
 
   const link = { type: ORGANIZATIONS_PAGE };

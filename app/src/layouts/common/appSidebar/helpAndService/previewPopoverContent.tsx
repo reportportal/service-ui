@@ -29,20 +29,10 @@ interface PreviewPopoverProps {
   title: string;
   isFaqTouched: boolean;
   onClick?: VoidFn;
-  focusVariant?: 'default' | 'sidebar';
 }
 
-export const PreviewPopover = ({
-  title,
-  isFaqTouched,
-  onClick,
-  focusVariant = 'default',
-}: PreviewPopoverProps) => (
-  <button
-    type="button"
-    className={cx('service-wrapper', `focus-${focusVariant}`)}
-    onClick={onClick}
-  >
+export const PreviewPopover = ({ title, isFaqTouched, onClick }: PreviewPopoverProps) => (
+  <button type="button" className={cx('service-wrapper')} onClick={onClick}>
     <span className={cx('service-block', { untouched: !isFaqTouched })}>
       <i>{Parser(HelpIcon)}</i>
     </span>

@@ -87,6 +87,10 @@ export const ProjectSidebar = ({ onClickNavBtn }) => {
     let menuCounter = 0;
     const menuStep = 10;
     const isShowInProgressTmsFeatures = Boolean(getTmsOverride());
+    const nextMenuOrder = () => {
+      menuCounter += menuStep;
+      return menuCounter;
+    };
 
     const sidebarItems = [
       {
@@ -95,7 +99,7 @@ export const ProjectSidebar = ({ onClickNavBtn }) => {
         link: { type: PROJECT_DASHBOARD_PAGE, payload: { organizationSlug, projectSlug } },
         icon: DashboardIcon,
         message: formatMessage(messages.dashboards),
-        menuOrder: (menuCounter += menuStep),
+        menuOrder: nextMenuOrder(),
       },
       {
         onClick: (isSidebarCollapsed) =>
@@ -106,7 +110,7 @@ export const ProjectSidebar = ({ onClickNavBtn }) => {
         },
         icon: LaunchesIcon,
         message: formatMessage(messages.launches),
-        menuOrder: (menuCounter += menuStep),
+        menuOrder: nextMenuOrder(),
       },
       {
         onClick: (isSidebarCollapsed) =>
@@ -131,7 +135,7 @@ export const ProjectSidebar = ({ onClickNavBtn }) => {
         },
         icon: ManualLaunchesIcon,
         message: formatMessage(messages.manualLaunches),
-        menuOrder: (menuCounter += menuStep),
+        menuOrder: nextMenuOrder(),
       },
       {
         onClick: (isSidebarCollapsed) =>
@@ -145,7 +149,7 @@ export const ProjectSidebar = ({ onClickNavBtn }) => {
         },
         icon: MilestonesIcon,
         message: formatMessage(messages.milestones),
-        menuOrder: (menuCounter += menuStep),
+        menuOrder: nextMenuOrder(),
       },
       {
         onClick: (isSidebarCollapsed) =>
@@ -159,7 +163,7 @@ export const ProjectSidebar = ({ onClickNavBtn }) => {
         },
         icon: TestCaseIcon,
         message: formatMessage(messages.testCaseLibrary),
-        menuOrder: (menuCounter += menuStep),
+        menuOrder: nextMenuOrder(),
       },
       ...(isShowInProgressTmsFeatures
         ? [
@@ -175,7 +179,7 @@ export const ProjectSidebar = ({ onClickNavBtn }) => {
               },
               icon: ProductVersionsIcon,
               message: formatMessage(messages.productVersions),
-              menuOrder: (menuCounter += menuStep),
+              menuOrder: nextMenuOrder(),
             },
           ]
         : []),
@@ -196,7 +200,7 @@ export const ProjectSidebar = ({ onClickNavBtn }) => {
         link: { type: PROJECT_FILTERS_PAGE, payload: { organizationSlug, projectSlug } },
         icon: FiltersIcon,
         message: formatMessage(messages.filters),
-        menuOrder: (menuCounter += menuStep),
+        menuOrder: nextMenuOrder(),
       },
       {
         onClick: (isSidebarCollapsed) =>
@@ -207,7 +211,7 @@ export const ProjectSidebar = ({ onClickNavBtn }) => {
         },
         icon: MembersIcon,
         message: formatMessage(messages.projectTeam),
-        menuOrder: (menuCounter += menuStep),
+        menuOrder: nextMenuOrder(),
       },
       {
         onClick: (isSidebarCollapsed) =>
@@ -218,7 +222,7 @@ export const ProjectSidebar = ({ onClickNavBtn }) => {
         },
         icon: SettingsIcon,
         message: formatMessage(messages.projectsSettings),
-        menuOrder: (menuCounter += menuStep),
+        menuOrder: nextMenuOrder(),
       },
     ];
 
@@ -244,7 +248,7 @@ export const ProjectSidebar = ({ onClickNavBtn }) => {
             },
             icon: iconSvg,
             message: itemTitle,
-            menuOrder: menuOrder || (menuCounter += menuStep),
+            menuOrder: menuOrder ?? nextMenuOrder(),
           },
         ];
       },
@@ -254,7 +258,7 @@ export const ProjectSidebar = ({ onClickNavBtn }) => {
       name: extension.name,
       component: <ExtensionLoader extension={extension} />,
       onClick: onClickNavBtn,
-      menuOrder: (menuCounter += menuStep),
+      menuOrder: nextMenuOrder(),
     }));
 
     return [...sidebarItems, ...pluginPageItems, ...uiExtensionItems].sort(
