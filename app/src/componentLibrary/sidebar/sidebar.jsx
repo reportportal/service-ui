@@ -185,7 +185,6 @@ export const Sidebar = ({
         link={link}
         onClick={handleClick}
         message={message}
-        focusVariant={isInPopover ? 'default' : 'sidebar'}
       />
     );
   };

@@ -32,9 +32,9 @@ export const SidebarButton = ({
   isNav,
   secondaryMessage,
   variant,
-  focusVariant,
+  className,
 }) => {
-  const buttonClassName = cx('sidebar-button', `variant-${variant}`, `focus-${focusVariant}`);
+  const buttonClassName = cx('sidebar-button', `variant-${variant}`, className);
 
   const linkBody = (
     <>
@@ -74,12 +74,12 @@ SidebarButton.propTypes = {
   isNav: PropTypes.bool,
   secondaryMessage: PropTypes.string,
   variant: PropTypes.oneOf(['default', 'error', 'warning']),
-  focusVariant: PropTypes.oneOf(['default', 'sidebar']),
+  className: PropTypes.string,
 };
 
 SidebarButton.defaultProps = {
   isNav: true,
   secondaryMessage: '',
   variant: 'default',
-  focusVariant: 'sidebar',
+  className: '',
 };
