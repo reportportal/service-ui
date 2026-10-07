@@ -22,7 +22,7 @@ import { sampleContent, sampleContentLongMinutes } from './fixtures/sampleConten
 const intl = (msg) => msg.defaultMessage || msg.id;
 
 describe('mostTimeConsumingTestCasesChart/getOption', () => {
-  it('maps statuses to bar colors and keeps C3-like short-range ticks (0.1s)', () => {
+  it('maps statuses to bar colors and keeps short-range ticks (0.1s)', () => {
     const option = getOption({
       content: sampleContent,
       isPreview: false,

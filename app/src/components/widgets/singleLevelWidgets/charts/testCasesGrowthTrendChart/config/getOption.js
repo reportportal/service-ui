@@ -102,7 +102,7 @@ const formatBarLabel = (value, dataIndex, positiveTrend, labelStep) => {
 };
 
 /**
- * C3 draws a 1px stroke centered on the stack top for delta=0.
+ * A 1px stroke centered on the stack top is expected for delta=0.
  * barMinHeight grows upward from that point and sits above the grid — use a
  * custom 1px line on the exact y instead.
  *

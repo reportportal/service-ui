@@ -39,10 +39,9 @@ export interface CenterLabelGraphicOptions {
 
 /**
  * Builds an ECharts `graphic` array that renders a value (and optional subtitle)
- * centered over a pie/donut/gauge chart. Replaces the old C3 pattern of reaching
- * into the rendered SVG (`.c3-chart-arcs-title`) with d3-selection after every
- * render — the graphic is plain declarative option state, so it just updates
- * with the rest of the chart on `setOption`.
+ * centered over a pie/donut/gauge chart. The graphic is plain declarative option
+ * state (no manual SVG/DOM patching after render), so it just updates with the
+ * rest of the chart on `setOption`.
  *
  * Shared across donut-style charts (see `donutChart`) and reused by the
  * passing-rate charts (EPMRPP-121493 / EPMRPP-121494).

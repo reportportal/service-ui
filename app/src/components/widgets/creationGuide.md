@@ -1,25 +1,28 @@
-## **C3.js widget creation guide**
+## **ECharts widget creation guide**
 
-C3.js-based widgets created using the common `ChartContainer` component.
+ECharts-based widgets are created using the common `EChart` component (`components/widgets/common/echarts`).
 
-`ChartContainer` is a shell for the `C3Chart` component with the common methods:
+`EChart` is a React wrapper around the ECharts instance (SVG renderer) with the common methods:
 
-- for resizing the widget;
-- managing user legends;
-- calculating the position of tooltips.
+- for resizing the widget (`ResizeObserver`);
+- managing user legends (`legendConfig`);
+- handling chart clicks (`onChartClick` passed through `configData`).
 
-To create a new widget, you must define a `getConfig` function that will return a c3.js configuration object with an additional `customData` field.
-`customData` field may contain `legendItems` (for charts with legend) and other configuration related fields.
-You can paste here any necessary data to get them in the new chart component,
+To create a new widget, you must define a `getOption` function that will return an ECharts option object with an additional `customData` field.
+`getOption` receives `content` (the widget API result), `isPreview`, `size: { height }` and all other fields passed in `configData` (f.e. `formatMessage`).
+`customData` field may contain `legendItems` (for charts with legend), `colors` and other configuration related fields.
+You can paste here any necessary data to get them in the new chart component (it is passed to `chartCreatedCallback`),
 f.e. for creating custom tooltip mechanism (see the `launchStatisticsChart`, `issuesStatusPageChart`).
 
 ```
-getConfig = ({ content, isPreview, formatMessage, positionCallback, size, ... }) =>
-    ({ customData: { legendItems, ... }, ...config });
+getOption = ({ content, isPreview, size, formatMessage, ... }) =>
+    ({ customData: { legendItems, ... }, ...option });
 ```
 
-In config, to create tooltips, you should use the `createTooltipRenderer` function, which gets:
+In option, to create tooltips, you should use the `buildTooltipFormatter` function (from `components/widgets/common/echarts/configHelpers`), which gets:
 
 - tooltip component;
 - `calculateTooltipParams` function (to calculate params for tooltip component based on chart data);
 - object with custom parameters that your tooltip uses.
+
+See `components/widgets/common/echarts/README.md` for the `EChart` usage example and `getOption` unit-testing guidelines.

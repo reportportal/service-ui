@@ -74,7 +74,7 @@ describe('launchesComparisonChart getOption', () => {
     );
   });
 
-  test('keeps a zero-value bar visible as a colored sliver, no d3 post-render pass', () => {
+  test('keeps a zero-value bar visible as a colored sliver, no post-render DOM patching', () => {
     const option = getOption({
       content: sampleContent,
       contentFields: sampleContentFields,

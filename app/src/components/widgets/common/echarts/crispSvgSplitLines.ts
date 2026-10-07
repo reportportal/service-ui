@@ -93,8 +93,8 @@ const isHorizontalAxisLine = (shape: LineShape): boolean => {
 /**
  * ECharts SVG split lines sit on fractional coords and look soft/uneven with
  * antialiasing on non-1x DPR (e.g. Windows 125%). Snap each horizontal grid
- * stroke to the device pixel grid. Keep shape-rendering unset (C3 uses auto):
- * crispEdges makes the same #ccc 1px stroke look harder than C3.
+ * stroke to the device pixel grid. Keep shape-rendering unset (browser default
+ * `auto`): crispEdges makes the same #ccc 1px stroke look harder.
  *
  * Only silent zrender `line` displayables (axis / splitLine) are touched; their
  * SVG nodes are resolved by Displayable.id → painter VNode.key, never by
@@ -161,7 +161,7 @@ export const crispSvgSplitLines = (chart: EChartsType): void => {
 
     elm.setAttribute('d', `M${x1} ${snappedSvgY}L${x2} ${snappedSvgY}`);
 
-    // C3 grid/domain use shape-rendering: auto. crispEdges makes the same
+    // Grid/domain lines should use shape-rendering: auto. crispEdges makes the same
     // #ccc 1px stroke look harder/darker, especially on non-1x DPR.
     elm.removeAttribute('shape-rendering');
   });

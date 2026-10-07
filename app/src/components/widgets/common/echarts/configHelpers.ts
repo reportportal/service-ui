@@ -22,11 +22,11 @@ import {
 } from 'components/widgets/common/utils';
 import { COLOR_CHARCOAL_GREY, COLOR_WHITE_TWO } from 'common/constants/colors';
 import type {
-  C3ColorFn,
-  C3TooltipDataItem,
   ColorPalette,
   EChartsOption,
+  TooltipColorFn,
   TooltipComponentType,
+  TooltipDataItem,
   TooltipParamsCalculator,
 } from './types';
 
@@ -49,9 +49,9 @@ const getParamValue = (param: EChartsTooltipParam): number | string | null => {
   return param.value ?? null;
 };
 
-const toC3TooltipData = (
+const toTooltipData = (
   params: EChartsTooltipParam | EChartsTooltipParam[],
-): C3TooltipDataItem[] => {
+): TooltipDataItem[] => {
   const items = Array.isArray(params) ? params : [params];
 
   return items.map((item) => ({
@@ -62,8 +62,8 @@ const toC3TooltipData = (
   }));
 };
 
-const toC3ColorFn =
-  (params: EChartsTooltipParam | EChartsTooltipParam[]): C3ColorFn =>
+const toTooltipColorFn =
+  (params: EChartsTooltipParam | EChartsTooltipParam[]): TooltipColorFn =>
   (id: string) => {
     const items = Array.isArray(params) ? params : [params];
     const match = items.find((item) => getSeriesKey(item) === id);
@@ -101,7 +101,7 @@ export const buildColorMap = (
   }, {});
 
 /**
- * Adapts existing C3-style tooltip calculators / React tooltip components
+ * Adapts existing tooltip calculators / React tooltip components
  * to an ECharts `tooltip.formatter` that returns static HTML.
  */
 export const buildTooltipFormatter = (
@@ -109,10 +109,10 @@ export const buildTooltipFormatter = (
   paramsCalculator: TooltipParamsCalculator,
   extraData: Record<string, unknown> = {},
 ) => {
-  const c3Contents = createTooltipRenderer(TooltipComponent, paramsCalculator, extraData);
+  const tooltipContents = createTooltipRenderer(TooltipComponent, paramsCalculator, extraData);
 
   return (params: EChartsTooltipParam | EChartsTooltipParam[]): string =>
-    c3Contents(toC3TooltipData(params), null, null, toC3ColorFn(params));
+    tooltipContents(toTooltipData(params), null, null, toTooltipColorFn(params));
 };
 
 export const buildAxisTicks = (count: number, isTimeline = false): number[] =>
@@ -120,7 +120,7 @@ export const buildAxisTicks = (count: number, isTimeline = false): number[] =>
 
 export const buildLegendItems = (keys: string[]): string[] => [...keys];
 
-/** Shared visual defaults aligned with current C3 chart look. */
+/** Shared visual defaults for ECharts-based widgets. */
 export const ECHARTS_THEME: EChartsOption = {
   color: [],
   textStyle: {

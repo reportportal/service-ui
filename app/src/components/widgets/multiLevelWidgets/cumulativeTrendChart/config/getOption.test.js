@@ -28,7 +28,7 @@ const formatMessage = (msg) => msg.defaultMessage || msg.id;
 const attributes = ['build'];
 
 describe('cumulativeTrendChart getOption', () => {
-  test('plots one bar series per execution status, in absolute counts, with no chart.js/datalabels involved', () => {
+  test('plots one bar series per execution status, in absolute counts', () => {
     const option = getOption({
       content: sampleContent,
       contentFields: sampleContentFields,

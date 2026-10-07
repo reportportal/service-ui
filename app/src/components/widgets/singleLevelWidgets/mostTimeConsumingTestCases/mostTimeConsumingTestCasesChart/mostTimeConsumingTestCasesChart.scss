@@ -19,7 +19,7 @@
   width: 100%;
   height: 100%;
 
-  // C3 .c3-xgrid uses shape-rendering: auto; ECharts defaults to crispEdges,
+  // Grid lines should use shape-rendering: auto; ECharts defaults to crispEdges,
   // which makes the same #ccc 1px stroke look harder/darker.
   :global {
     svg path[stroke='#cccccc'] {

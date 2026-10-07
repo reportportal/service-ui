@@ -37,7 +37,7 @@ const DONUT_CENTER_Y_PREVIEW = 50;
 const DONUT_LABEL_RADIUS = ['40%', '64%'];
 
 /**
- * `createTooltipRenderer` expects C3-shaped `{index, id, value, name}` data
+ * `createTooltipRenderer` expects `{index, id, value, name}` data
  * and a `color(id)` lookup. A pie/donut chart has one series with many data
  * points, so — unlike the shared `buildTooltipFormatter` bridge, which reads
  * `seriesId`/`seriesName` first — the useful id here is always the hovered

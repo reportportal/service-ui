@@ -82,18 +82,18 @@ export interface EChartProps {
 
 export type ColorPalette = Record<string, string> | ((key: string) => string);
 
-export type C3TooltipDataItem = {
+export type TooltipDataItem = {
   index: number;
   id: string;
   value: number | string | null;
   name?: string;
 };
 
-export type C3ColorFn = (id: string) => string | undefined;
+export type TooltipColorFn = (id: string) => string | undefined;
 
 export type TooltipParamsCalculator = (
-  data: C3TooltipDataItem[],
-  color: C3ColorFn,
+  data: TooltipDataItem[],
+  color: TooltipColorFn,
   customProps: Record<string, unknown>,
 ) => Record<string, unknown>;
 
