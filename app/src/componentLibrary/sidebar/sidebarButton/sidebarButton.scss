@@ -34,7 +34,8 @@
 }
 
 .title-container {
-  width: 280px;
+  flex: 1;
+  min-width: 0;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
@@ -63,7 +64,7 @@
   display: flex;
   align-items: center;
   width: 100%;
-  height: 40px;
+  min-height: 40px;
   flex-shrink: 0;
   box-sizing: border-box;
   color: var(--rp-ui-base-dark-e-100);
@@ -71,25 +72,9 @@
   text-align: center;
   border-radius: 4px;
   outline: none;
+  @include sidebar-item-focus-visible;
 
-  &.focus-sidebar {
-    @include sidebar-item-focus-visible;
-  }
-
-  &.focus-default {
-    .title-container {
-      width: auto;
-      flex: 1;
-      min-width: 0;
-    }
-
-    &:focus-visible {
-      box-shadow: inset 0 0 0 2px var(--rp-ui-base-topaz-focused);
-      background-color: transparent;
-    }
-  }
-
-  &.focus-sidebar:focus-visible {
+  &:focus-visible {
     background-color: transparent;
   }
 
