@@ -88,15 +88,29 @@ describe('mostTimeConsumingTestCasesChart/getOption', () => {
     expect(grid).toEqual(expect.objectContaining({ top: 0, left: 0, right: 0, bottom: 0 }));
   });
 
-  it('grows value-axis interval for long durations to cap tick count', () => {
+  it('uses a nice 1/2/5 x 10^n value-axis step for ~10 ticks (same as before the migration)', () => {
     const { xAxis } = getOption({
       content: sampleContentLongMinutes,
       isPreview: false,
       formatMessage: intl,
     });
 
-    // minutes timeType (60000); base 0.1-unit step = 6000ms; 55 min → 55 * baseStep
+    // max 55 min = 3,300,000 ms → raw step 330,000 → nice step 500,000 (7 ticks)
     expect(xAxis.name).toBe('minutes');
-    expect(xAxis.interval).toBe(6000 * Math.ceil(55 / 4));
+    expect(xAxis.interval).toBe(500000);
+  });
+
+  it('matches the pre-migration ticks for a 600,000 s (~166.67 h) max: 0, 13.89, 27.78 ...', () => {
+    const { xAxis } = getOption({
+      content: [{ ...sampleContent[0], duration: 600000 }],
+      isPreview: false,
+      formatMessage: intl,
+    });
+
+    // hours timeType (3,600,000 ms); 6e8 / 10 = 6e7 → nice step 5e7 ms = 13.89 h
+    expect(xAxis.interval).toBe(50000000);
+    expect(xAxis.axisLabel.formatter(50000000)).toBe('13.89');
+    expect(xAxis.axisLabel.formatter(100000000)).toBe('27.78');
+    expect(xAxis.axisLabel.formatter(600000000)).toBe('166.67');
   });
 });
