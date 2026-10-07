@@ -15,7 +15,11 @@
  */
 
 import * as COLORS from 'common/constants/colors';
-import { getTimeType, convertSecondsToMilliseconds } from 'components/widgets/common/utils';
+import {
+  getTimeType,
+  convertSecondsToMilliseconds,
+  getNiceTickStep,
+} from 'components/widgets/common/utils';
 import { buildTooltipFormatter } from 'components/widgets/common/echarts/configHelpers';
 import { messages } from 'components/widgets/common/messages';
 import { DURATION } from 'components/widgets/common/constants';
@@ -25,10 +29,10 @@ import { MostTimeConsumingTestCasesTooltip } from './mostTimeConsumingTestCasesT
 import { calculateTooltipParams } from './utils';
 
 const DISPLAY_TICK_STEP = 0.1;
-const MAX_VALUE_TICKS = 40;
+const VALUE_AXIS_TICKS_COUNT = 10;
 
 const formatDurationTick = (value, timeTypeValue) =>
-  (Number.parseInt(value, 10) / timeTypeValue).toFixed(2);
+  (Number(value) / timeTypeValue).toFixed(2);
 
 const isOnInterval = (value, interval) => {
   const steps = value / interval;
@@ -57,10 +61,11 @@ export const getOption = ({ content, isPreview, formatMessage }) => {
   const { timeType, chartData, itemsData = [] } = prepareChartData(content || []);
   const values = chartData.slice(1).map(Number);
   const categories = itemsData.map((_, index) => String(index));
-  const baseStep = timeType.value * DISPLAY_TICK_STEP;
   const maxValue = Math.max(0, ...values.filter(Number.isFinite));
   const valueAxisInterval =
-    baseStep * Math.max(1, Math.ceil(maxValue / (baseStep * MAX_VALUE_TICKS)));
+    maxValue > 0
+      ? getNiceTickStep(maxValue, VALUE_AXIS_TICKS_COUNT)
+      : timeType.value * DISPLAY_TICK_STEP;
 
   const seriesData = values.map((value, index) => {
     const status = itemsData[index]?.status;

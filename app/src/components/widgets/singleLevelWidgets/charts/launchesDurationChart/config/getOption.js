@@ -20,7 +20,7 @@ import {
   COLOR_GRAY_80,
   COLOR_INTERRUPTED,
 } from 'common/constants/colors';
-import { transformCategoryLabelByDefault } from 'components/widgets/common/utils';
+import { getNiceTickStep, transformCategoryLabelByDefault } from 'components/widgets/common/utils';
 import { buildAxisTicks, buildTooltipFormatter } from 'components/widgets/common/echarts/configHelpers';
 import { messages } from 'components/widgets/common/messages';
 import { DURATION } from 'components/widgets/common/constants';
@@ -31,21 +31,6 @@ import { LaunchesDurationTooltip } from './launchesDurationTooltip';
 
 const DISPLAY_TICK_STEP = 0.5;
 const VALUE_AXIS_TICKS_COUNT = 10;
-
-const getNiceTickStep = (max, count) => {
-  const rawStep = max / count;
-  const power = Math.floor(Math.log10(rawStep));
-  const error = rawStep / 10 ** power;
-  let factor = 1;
-  if (error >= Math.sqrt(50)) {
-    factor = 10;
-  } else if (error >= Math.sqrt(10)) {
-    factor = 5;
-  } else if (error >= Math.sqrt(2)) {
-    factor = 2;
-  }
-  return factor * 10 ** power;
-};
 
 const formatDurationTick = (value, timeTypeValue) =>
   (Number(value) / timeTypeValue).toFixed(2);
