@@ -79,6 +79,7 @@ import {
   SET_TOKEN,
   LOGIN_SUCCESS,
   ANONYMOUS_REDIRECT_PATH_STORAGE_KEY,
+  GRAFANA_SESSION_REVOKE_TIMEOUT,
 } from './constants';
 import { tokenSelector, lastFailedLoginTimeSelector, failedLoginAttemptsSelector } from './selectors';
 
@@ -99,6 +100,15 @@ function* handleLogout({ payload }) {
   const token = yield select(tokenSelector);
   if (!token) {
     return;
+  }
+
+  try {
+    yield call(fetch, URLS.grafanaSession(), {
+      method: 'DELETE',
+      timeout: GRAFANA_SESSION_REVOKE_TIMEOUT,
+    });
+  } catch (error) {
+    console.error('Failed to revoke Grafana session on logout', error);
   }
 
   yield call(logoutOnServer, payload);

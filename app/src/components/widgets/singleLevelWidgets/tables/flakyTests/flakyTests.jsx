@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 EPAM Systems
+ * Copyright 2026 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,11 +14,16 @@
  * limitations under the License.
  */
 
-import React, { Component } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import { defineMessages } from 'react-intl';
-import { connect } from 'react-redux';
+import { useSelector } from 'react-redux';
+import { useTracking } from 'react-tracking';
+import { actionToPath, history, selectLocationState } from 'redux-first-router';
+import qs from 'qs';
 import { testCaseNameLinkSelector } from 'controllers/testItem';
+import { activeDashboardIdSelector } from 'controllers/pages';
+import { WIDGETS_EVENTS } from 'components/main/analytics/events/ga4Events/dashboardsPageEvents';
 import { TestsTableWidget } from '../components/testsTableWidget';
 import * as cfg from './flakyTestsCfg';
 
@@ -45,41 +50,31 @@ const titleMessages = defineMessages({
   },
 });
 
-@connect(
-  (state) => ({
-    getTestCaseNameLink: testCaseNameLinkSelector(state),
-  }),
-  { navigate: (linkAction) => linkAction },
-)
-export class FlakyTests extends Component {
-  static propTypes = {
-    widget: PropTypes.object.isRequired,
-    navigate: PropTypes.func.isRequired,
-    getTestCaseNameLink: PropTypes.func.isRequired,
-  };
+const prepareWidgetData = ({ flaky }) =>
+  flaky.map((item) => ({ ...item, statuses: [...item.statuses].reverse() }));
 
-  prepareWidgetData = ({ flaky }) =>
-    flaky.map((item) => ({ ...item, statuses: [...item.statuses].reverse() }));
+const getMatrixTooltip = (count, total, formatMessage) => {
+  return formatMessage(titleMessages.flakyTestsMatrixTooltip, {
+    statusNumber: count,
+    statusChange: formatMessage(count === 1 ? titleMessages.change : titleMessages.changes),
+    possibleTimes: formatMessage(
+      total === 1 ? titleMessages.possible : titleMessages.possibleTimes,
+    ),
+    possibleNumber: total,
+  });
+};
 
-  getMatrixTooltip = (count, total, formatMessage) => {
-    return formatMessage(titleMessages.flakyTestsMatrixTooltip, {
-      statusNumber: count,
-      statusChange: formatMessage(count === 1 ? titleMessages.change : titleMessages.changes),
-      possibleTimes: formatMessage(
-        total === 1 ? titleMessages.possible : titleMessages.possibleTimes,
-      ),
-      possibleNumber: total,
-    });
-  };
+export const FlakyTests = ({ widget }) => {
+  const getTestCaseNameLink = useSelector(testCaseNameLinkSelector);
+  const dashboardId = useSelector(activeDashboardIdSelector);
+  const location = useSelector(selectLocationState);
+  const { routesMap } = location;
+  const { trackEvent } = useTracking();
 
-  itemClickHandler = (row) => {
+  const itemClickHandler = (row) => {
     const {
-      widget: {
-        content: { latestLaunch = {} },
-      },
-      getTestCaseNameLink,
-      navigate,
-    } = this.props;
+      content: { latestLaunch = {} },
+    } = widget;
     const uniqueId = row?.uniqueId;
     const launchId = row?.launchId ?? latestLaunch.id;
     if (!uniqueId || launchId == null) {
@@ -88,24 +83,29 @@ export class FlakyTests extends Component {
     const testItemIds = String(launchId);
     const link = getTestCaseNameLink({ uniqueId, testItemIds });
 
-    navigate(link);
+    trackEvent(WIDGETS_EVENTS.clickOnFlakyTestCaseName(dashboardId));
+
+    const path = actionToPath(link, routesMap, qs);
+    const url = history().createHref({ pathname: path });
+    window.open(url, '_blank', 'noopener,noreferrer');
   };
 
-  render() {
-    const {
-      widget: { content },
-    } = this.props;
+  const { content } = widget;
 
-    return (
-      <TestsTableWidget
-        tests={this.prepareWidgetData(content)}
-        launch={content.latestLaunch}
-        columns={cfg.columns}
-        getMatrixTooltip={this.getMatrixTooltip}
-        onItemClick={this.itemClickHandler}
-        passFullRowOnItemClick
-        omitLaunchExecutionNumber
-      />
-    );
-  }
-}
+  return (
+    <TestsTableWidget
+      tests={prepareWidgetData(content)}
+      launch={content.latestLaunch}
+      columns={cfg.columns}
+      getMatrixTooltip={getMatrixTooltip}
+      onItemClick={itemClickHandler}
+      opensLinkInNewTab
+      passFullRowOnItemClick
+      omitLaunchExecutionNumber
+    />
+  );
+};
+
+FlakyTests.propTypes = {
+  widget: PropTypes.object.isRequired,
+};

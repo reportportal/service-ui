@@ -19,6 +19,7 @@ import classNames from 'classnames/bind';
 import { NavLink } from 'components/main/navLink';
 import Link from 'redux-first-router-link';
 import Parser from 'html-react-parser';
+import { isString } from 'common/utils';
 import styles from './sidebarButton.scss';
 
 const cx = classNames.bind(styles);
@@ -31,13 +32,13 @@ export const SidebarButton = ({
   isNav,
   secondaryMessage,
   variant,
-  focusVariant,
+  className,
 }) => {
-  const buttonClassName = cx('sidebar-button', `variant-${variant}`, `focus-${focusVariant}`);
+  const buttonClassName = cx('sidebar-button', `variant-${variant}`, className);
 
   const linkBody = (
     <>
-      <i className={cx('btn-icon')}>{Parser(icon)}</i>
+      <i className={cx('btn-icon')}>{isString(icon) ? Parser(icon) : icon}</i>
       <div className={cx('title-container')}>
         <span className={cx('title')}>{message}</span>
         {secondaryMessage && <span className={cx('sub-title')}>{secondaryMessage}</span>}
@@ -66,19 +67,19 @@ export const SidebarButton = ({
 };
 
 SidebarButton.propTypes = {
-  icon: PropTypes.string.isRequired,
+  icon: PropTypes.oneOfType([PropTypes.string, PropTypes.node]).isRequired,
   onClick: PropTypes.func.isRequired,
   message: PropTypes.string.isRequired,
   link: PropTypes.oneOfType([PropTypes.object, PropTypes.string]).isRequired,
   isNav: PropTypes.bool,
   secondaryMessage: PropTypes.string,
   variant: PropTypes.oneOf(['default', 'error', 'warning']),
-  focusVariant: PropTypes.oneOf(['default', 'sidebar']),
+  className: PropTypes.string,
 };
 
 SidebarButton.defaultProps = {
   isNav: true,
   secondaryMessage: '',
   variant: 'default',
-  focusVariant: 'sidebar',
+  className: '',
 };
