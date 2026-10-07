@@ -4,7 +4,7 @@ Shared chart infrastructure for the Apache ECharts migration (epic EPMRPP-119525
 
 | Export          | Purpose                                                                                         |
 | --------------- | ----------------------------------------------------------------------------------------------- |
-| `EChart`        | React wrapper (`EChart.tsx`) — replaces `ChartContainer` / `C3Chart`                            |
+| `EChart`        | React wrapper (`EChart.tsx`) — the common chart container for all widgets                       |
 | `configHelpers` | `buildColorMap`, `buildTooltipFormatter`, `buildAxisTicks`, `buildLegendItems`, `ECHARTS_THEME` |
 | `echarts`       | Tree-shaken `echarts/core` instance from `echartsSetup.ts`                                      |
 
@@ -12,7 +12,7 @@ See also: [MANUAL_SMOKE_CHECKLIST.md](./MANUAL_SMOKE_CHECKLIST.md).
 
 ## Unit-testing `getOption()`
 
-Each chart widget should expose a pure `getOption(params)` (replacing C3 `getConfig`) that builds an ECharts option object. Cover it with Jest next to the config module — same style as existing widget utils tests (for example `launchesDurationChart/config/utils.test.js`).
+Each chart widget should expose a pure `getOption(params)` that builds an ECharts option object. Cover it with Jest next to the config module — same style as existing widget utils tests (for example `launchesDurationChart/config/utils.test.js`).
 
 Shared helpers for builders live in `configHelpers.ts` (`buildColorMap`, `buildTooltipFormatter`, `buildAxisTicks`, `buildLegendItems`, `ECHARTS_THEME`). Tooltip bridge reuses `createTooltipRenderer` so existing React tooltip components keep working.
 

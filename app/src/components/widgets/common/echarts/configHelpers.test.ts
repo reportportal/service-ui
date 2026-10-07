@@ -96,7 +96,7 @@ describe('echarts configHelpers', () => {
   });
 
   describe('buildTooltipFormatter', () => {
-    test('adapts ECharts params to C3-style calculator and returns HTML', () => {
+    test('adapts ECharts params to the tooltip calculator and returns HTML', () => {
       const formatter = buildTooltipFormatter(
         () => null,
         (data, color) => ({

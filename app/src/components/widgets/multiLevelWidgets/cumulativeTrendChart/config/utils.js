@@ -37,7 +37,7 @@ export const getScaleName = (attributes, activeAttribute) =>
 /**
  * Percentage of `value` against the relevant total at `index`: the sum of
  * all defect fields when `field` is a defect, otherwise the total dataset's
- * own value at that index — mirrors the original Chart.js widget's math.
+ * own value at that index.
  */
 export const getPercentageValue = (value, valuesByField, field, index) => {
   const isDefectField = /defects/.test(field);

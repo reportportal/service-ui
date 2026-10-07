@@ -20,7 +20,7 @@ Mark N/A when the widget has no legend, no click navigation, or no tooltip by de
 
 1. Copy the table into the PR description (or link this file).
 2. Fill Pass / N/A per row for the migrated widget.
-3. Note environment (local / stage) and any known visual diffs vs C3 (antialiasing, etc.).
+3. Note environment (local / stage) and any known visual diffs vs the previous release (antialiasing, etc.).
 
 ## Out of scope
 

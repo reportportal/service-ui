@@ -119,7 +119,7 @@ describe('donutChart getOption', () => {
     ]);
   });
 
-  test('renders the total and subtitle as a graphic overlay instead of a d3 DOM patch', () => {
+  test('renders the total and subtitle as a graphic overlay instead of a manual DOM patch', () => {
     const option = getOption({
       content: sampleContent,
       contentFields: sampleContentFields,
