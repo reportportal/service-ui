@@ -87,7 +87,8 @@
   }
 }
 
-.tooltip-wrapper {
+.tooltip-wrapper.tooltip-wrapper {
+  width: fit-content;
   height: 16px;
 }
 

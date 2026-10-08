@@ -19,7 +19,7 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import Parser from 'html-react-parser';
 import { useIntl } from 'react-intl';
-import { withTooltip } from 'componentLibrary/tooltip';
+import { Tooltip } from '@reportportal/ui-kit';
 import OpenIcon from 'common/img/open-in-new-tab-inline.svg';
 import ErrorIcon from 'common/img/newIcons/error-inline.svg';
 import VectorIcon from 'common/img/newIcons/vector-inline.svg';
@@ -30,7 +30,7 @@ import { LOGIN_PAGE_EVENTS } from 'components/main/analytics/events/ga4Events/lo
 import styles from './serviceVersion.scss';
 
 const cx = classNames.bind(styles);
-
+const tooltipRoot = document.getElementById('tooltip-root');
 const ErrorTooltip = ({ formatMessage }) => (
   <>
     <div className={cx('tooltip-title')}>{formatMessage(messages.serviceIsUnavailable)}</div>
@@ -48,13 +48,18 @@ const ErrorIconShow = () => {
   return <i>{Parser(ErrorIcon)}</i>;
 };
 
-const ErrorWithTooltip = withTooltip({
-  ContentComponent: ErrorTooltip,
-  tooltipWrapperClassName: cx('tooltip-wrapper'),
-  side: 'top',
-  arrowPosition: 'middle',
-  width: 240,
-})(ErrorIconShow);
+const ErrorWithTooltip = ({ formatMessage }) => (
+  <Tooltip
+    content={<ErrorTooltip formatMessage={formatMessage} />}
+    wrapperClassName={cx('tooltip-wrapper')}
+    placement="top"
+    width={240}
+    wrapperTabIndex={-1}
+    portalRoot={tooltipRoot}
+  >
+    <ErrorIconShow />
+  </Tooltip>
+);
 
 ErrorWithTooltip.propTypes = {
   formatMessage: PropTypes.func.isRequired,
@@ -77,13 +82,18 @@ const VectorIconShow = () => {
   return <i>{Parser(VectorIcon)}</i>;
 };
 
-const VectorWithTooltip = withTooltip({
-  ContentComponent: VectorTooltip,
-  tooltipWrapperClassName: cx('tooltip-wrapper'),
-  side: 'top',
-  arrowPosition: 'middle',
-  width: 240,
-})(VectorIconShow);
+const VectorWithTooltip = ({ formatMessage }) => (
+  <Tooltip
+    content={<VectorTooltip formatMessage={formatMessage} />}
+    wrapperClassName={cx('tooltip-wrapper')}
+    placement="top"
+    width={240}
+    wrapperTabIndex={-1}
+    portalRoot={tooltipRoot}
+  >
+    <VectorIconShow />
+  </Tooltip>
+);
 
 VectorWithTooltip.propTypes = {
   formatMessage: PropTypes.func.isRequired,

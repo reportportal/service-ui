@@ -34,7 +34,7 @@
   width: 16px;
   height: 16px;
 
-  svg {
+  .eye-icon svg {
     width: 16px;
     height: 16px;
 
@@ -47,7 +47,7 @@
     opacity: 0.4;
     cursor: default;
 
-    svg path {
+    .eye-icon svg path {
       fill: $COLOR--e-300;
     }
   }
