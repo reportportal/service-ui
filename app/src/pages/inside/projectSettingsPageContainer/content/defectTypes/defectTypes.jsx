@@ -23,10 +23,9 @@ import classNames from 'classnames/bind';
 import Parser from 'html-react-parser';
 import { addDefectTypeAction, defectTypesSelector } from 'controllers/project';
 import { DEFECT_TYPES_SEQUENCE } from 'common/constants/defectTypes';
-import { Button, SystemMessage } from '@reportportal/ui-kit';
+import { Button, SystemMessage, Tooltip } from '@reportportal/ui-kit';
 import CreateDefectIcon from 'common/img/newIcons/create-subtype-inline.svg';
 import DefectGroupIcon from 'common/img/newIcons/defect-group-inline.svg';
-import { withTooltip } from 'componentLibrary/tooltip';
 import { showModalAction } from 'controllers/modal';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { PROJECT_SETTINGS_DEFECT_TYPES_EVENTS } from 'analyticsEvents/projectSettingsPageEvents';
@@ -48,20 +47,24 @@ CreateDefectTooltip.propTypes = {
   formatMessage: PropTypes.func.isRequired,
 };
 
-const CreateDefect = withTooltip({
-  ContentComponent: CreateDefectTooltip,
-  side: 'bottom',
-  dynamicWidth: true,
-})(({ onClick, disabled }) => (
-  <i
-    className={cx('group-create', { disabled })}
-    onClick={onClick}
-    onKeyDown={onClick}
-    data-automation-id={'createDefectTypeIcon'}
+const CreateDefect = ({ formatMessage, onClick, disabled }) => (
+  <Tooltip
+    content={<CreateDefectTooltip formatMessage={formatMessage} />}
+    wrapperClassName={cx('tooltip-wrapper')}
+    placement="bottom"
+    dynamicWidth
+    wrapperTabIndex={-1}
   >
-    {Parser(CreateDefectIcon)}
-  </i>
-));
+    <i
+      className={cx('group-create', { disabled })}
+      onClick={onClick}
+      onKeyDown={onClick}
+      data-automation-id={'createDefectTypeIcon'}
+    >
+      {Parser(CreateDefectIcon)}
+    </i>
+  </Tooltip>
+);
 CreateDefect.propTypes = {
   formatMessage: PropTypes.func.isRequired,
   onClick: PropTypes.func.isRequired,

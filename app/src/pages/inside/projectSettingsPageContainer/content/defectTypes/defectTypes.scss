@@ -93,6 +93,11 @@ $DEFECT_NAME_PADDING: 16px;
   font-size: 15px;
 }
 
+.tooltip-wrapper.tooltip-wrapper {
+  width: fit-content;
+  height: 16px;
+}
+
 .group-create {
   @include fill-svg($COLOR--e-300);
   position: relative;

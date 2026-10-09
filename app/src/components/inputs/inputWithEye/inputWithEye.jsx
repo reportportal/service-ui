@@ -19,31 +19,31 @@ import classNames from 'classnames/bind';
 import Parser from 'html-react-parser';
 import EyeIcon from 'common/img/newIcons/eye-inline.svg';
 import CrossEyeIcon from 'common/img/newIcons/cross-eye-inline.svg';
-import { withTooltip } from 'componentLibrary/tooltip';
+import { Tooltip } from '@reportportal/ui-kit';
 import React from 'react';
 import { messages } from './messages';
 import styles from './inputWithEye.scss';
 
 const cx = classNames.bind(styles);
 
-const EyeComponent = ({ value }) => Parser(value ? EyeIcon : CrossEyeIcon);
+const EyeComponent = ({ value }) => (
+  <span className={cx('eye-icon')}>{Parser(value ? EyeIcon : CrossEyeIcon)}</span>
+);
 EyeComponent.propTypes = {
   value: PropTypes.string.isRequired,
 };
 
-const EyeTooltip = ({ formatMessage, value }) => (
-  <span>{formatMessage(value ? messages.hideTooltip : messages.showTooltip)}</span>
+const EyeComponentWithTooltip = ({ formatMessage, value }) => (
+  <Tooltip
+    content={<span>{formatMessage(value ? messages.hideTooltip : messages.showTooltip)}</span>}
+    placement="bottom"
+    dynamicWidth
+    minWidth={0}
+    wrapperTabIndex={-1}
+  >
+    <EyeComponent value={value} />
+  </Tooltip>
 );
-EyeTooltip.propTypes = {
-  formatMessage: PropTypes.func.isRequired,
-  value: PropTypes.string.isRequired,
-};
-
-const EyeComponentWithTooltip = withTooltip({
-  ContentComponent: EyeTooltip,
-  side: 'bottom',
-  dynamicWidth: true,
-})(({ value }) => <EyeComponent value={value} />);
 EyeComponentWithTooltip.propTypes = {
   formatMessage: PropTypes.func.isRequired,
   value: PropTypes.string.isRequired,
