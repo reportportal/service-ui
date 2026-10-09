@@ -16,6 +16,7 @@
 
 import React, { useState } from 'react';
 import classNames from 'classnames/bind';
+import { PLUGIN_TYPE_REMOTE } from 'controllers/plugins/uiExtensions/constants';
 import { uiExtensionAdminPagesSelector } from 'controllers/plugins/uiExtensions';
 import { useActivePluginPageExtension } from 'controllers/plugins/uiExtensions/hooks';
 import { Header } from 'pages/inside/projectSettingsPageContainer/header';
@@ -28,6 +29,10 @@ const cx = classNames.bind(styles);
 export const AdminUiExtensionPage = () => {
   const extension = useActivePluginPageExtension(uiExtensionAdminPagesSelector);
   const [headerNodes, setHeaderNodes] = useState({});
+
+  if (extension?.pluginType === PLUGIN_TYPE_REMOTE) {
+    return <ExtensionLoader extension={extension} silentOnError={false} withPreloader />;
+  }
 
   let pageLayout = null;
 

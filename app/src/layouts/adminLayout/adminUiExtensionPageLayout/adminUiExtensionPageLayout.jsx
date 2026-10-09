@@ -15,14 +15,22 @@
  */
 
 import PropTypes from 'prop-types';
+import { PLUGIN_TYPE_REMOTE } from 'controllers/plugins/uiExtensions/constants';
+import { uiExtensionAdminPagesSelector } from 'controllers/plugins/uiExtensions';
+import { useActivePluginPageExtension } from 'controllers/plugins/uiExtensions/hooks';
 import { Layout } from 'layouts/common/layout';
 import { AdminSidebar } from '../adminSidebar';
 
-export const AdminUiExtensionPageLayout = ({ children }) => (
-  <Layout isExtensionPage Sidebar={AdminSidebar}>
-    {children}
-  </Layout>
-);
+export const AdminUiExtensionPageLayout = ({ children }) => {
+  const extension = useActivePluginPageExtension(uiExtensionAdminPagesSelector);
+  const isRemotePluginPage = extension?.pluginType === PLUGIN_TYPE_REMOTE;
+
+  return (
+    <Layout isExtensionPage Sidebar={AdminSidebar} rawContent={isRemotePluginPage}>
+      {children}
+    </Layout>
+  );
+};
 AdminUiExtensionPageLayout.propTypes = {
   children: PropTypes.node,
 };

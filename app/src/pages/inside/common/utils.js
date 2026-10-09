@@ -151,6 +151,7 @@ export const getGroupedDefectTypesOptions = (
   let defectTypesOptions = [];
   defectTypesSequence.forEach((defectTypeId) => {
     const defectTypeGroup = defectTypes[defectTypeId];
+    if (!defectTypeGroup?.length) return;
     defectTypesOptions.push({
       label: formatMessage(defectTypesLocalization[`${defectTypeGroup[0].typeRef}_TOTAL`]),
       value: `${DEFECT_STATISTICS_BASE}${defectTypeGroup[0].typeRef.toLowerCase()}$total`,

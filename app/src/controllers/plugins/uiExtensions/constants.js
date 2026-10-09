@@ -39,6 +39,7 @@ export const EXTENSION_TYPE_TEST_ITEM_DETAILS_ADDON = 'uiExtension:testItemDetai
 export const EXTENSION_TYPE_PROJECT_PAGE = 'uiExtension:projectPage';
 
 export const REMOTE_EXTENSION_POINT_PROJECT_PAGE = 'projectPages';
+export const REMOTE_EXTENSION_POINT_ADMIN_PAGE = 'adminPages';
 // plugin commands
 export const COMMAND_GET_ISSUE_TYPES = 'getIssueTypes';
 export const COMMAND_GET_ISSUE_FIELDS = 'getIssueFields';

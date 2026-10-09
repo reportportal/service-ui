@@ -32,3 +32,5 @@ export const GRANT_TYPES = {
 };
 
 export const ANONYMOUS_REDIRECT_PATH_STORAGE_KEY = 'anonymousRedirectPath';
+
+export const GRAFANA_SESSION_REVOKE_TIMEOUT = 2000;
