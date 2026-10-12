@@ -102,14 +102,11 @@ function* handleLogout({ payload }) {
     return;
   }
 
-  try {
-    yield call(fetch, URLS.grafanaSession(), {
-      method: 'DELETE',
-      timeout: GRAFANA_SESSION_REVOKE_TIMEOUT,
-    });
-  } catch (error) {
-    console.error('Failed to revoke Grafana session on logout', error);
-  }
+  // JWT is still in axios.defaults.headers here (resetTokenAction hasn't fired yet).
+  fetch(URLS.grafanaSession(), {
+    method: 'DELETE',
+    timeout: GRAFANA_SESSION_REVOKE_TIMEOUT,
+  }).catch((error) => console.error('Failed to revoke Grafana session on logout', error));
 
   yield call(logoutOnServer, payload);
   yield put(resetTokenAction());
