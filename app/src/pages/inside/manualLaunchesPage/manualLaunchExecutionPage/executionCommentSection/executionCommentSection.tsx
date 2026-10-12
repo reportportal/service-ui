@@ -106,11 +106,7 @@ export const ExecutionCommentSection: FC<ExecutionCommentSectionProps> = ({ exec
     );
   }, [comment, pendingFiles, removedAttachmentIds, savedComment]);
 
-  const hasClearableContent = useMemo(
-    () =>
-      !isEmpty(comment.trim()) || !isEmpty(pendingFiles) || !isEmpty(visibleExistingAttachments),
-    [comment, pendingFiles, visibleExistingAttachments],
-  );
+  const hasClearableContent = useMemo(() => !isEmpty(comment.trim()), [comment]);
 
   const handleCommentChange: ChangeEventHandler<HTMLTextAreaElement> = (e) => {
     if (!canManageExecutions) {
@@ -208,15 +204,34 @@ export const ExecutionCommentSection: FC<ExecutionCommentSectionProps> = ({ exec
     [projectKey],
   );
 
-  const handleClearLocal = () => {
-    if (!canManageExecutions) {
+  const handleClearComment = () => {
+    if (!canManageExecutions || isSaving) {
       return;
     }
 
     setComment('');
-    setPendingFiles([]);
-    setRemovedAttachmentIds(
-      new Set((execution.executionComment?.attachments ?? []).map((a) => String(a.id))),
+
+    if (!launchId || !savedComment.trim()) {
+      return;
+    }
+
+    setIsSaving(true);
+    dispatch(
+      updateManualLaunchExecutionCommentAction({
+        projectKey,
+        launchId,
+        executionId: execution.id,
+        executionStatus: execution.executionStatus,
+        comment: '',
+        existingAttachments: execution.executionComment?.attachments ?? [],
+        newFiles: [],
+        removedAttachmentIds: [],
+        btsTickets: execution.btsTickets,
+        onSuccess: () => {
+          trackEvent(MANUAL_LAUNCHES_PAGE_EVENTS.CLICK_SAVE_EXECUTION_COMMENT);
+        },
+        onFinally: () => setIsSaving(false),
+      }),
     );
   };
 
@@ -276,7 +291,7 @@ export const ExecutionCommentSection: FC<ExecutionCommentSectionProps> = ({ exec
                 variant="ghost"
                 className={cx('execution-comment-section__clear')}
                 disabled={isSaving || !hasClearableContent}
-                onClick={handleClearLocal}
+                onClick={handleClearComment}
               >
                 {formatMessage(messages.clearExecutionComment)}
               </Button>
