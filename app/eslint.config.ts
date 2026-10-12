@@ -117,6 +117,9 @@ export default defineConfig([
       '@typescript-eslint/no-unsafe-call': 'off',
       '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
       'react/jsx-filename-extension': ['error', { extensions: ['.tsx'] }],
+      // typescript-eslint 8.71 reports many more cases than 8.35
+      '@typescript-eslint/no-unnecessary-type-assertion': 'warn',
+      '@typescript-eslint/no-unsafe-enum-comparison': 'warn',
     },
     settings: { react: { version: 'detect' } },
   },
