@@ -19,6 +19,7 @@ import {
   AUTH_SUCCESS,
   LOGIN,
   LOGOUT,
+  LOGOUT_COMPLETE,
   SET_TOKEN,
   DEFAULT_TOKEN,
   SET_LAST_FAILED_LOGIN_TIME,
@@ -44,6 +45,8 @@ export const loginSuccessAction = (token) => ({
 });
 
 export const logoutAction = (redirectedPage) => ({ type: LOGOUT, payload: redirectedPage });
+
+export const logoutCompleteAction = () => ({ type: LOGOUT_COMPLETE });
 
 export const setTokenAction = (token) => ({
   type: SET_TOKEN,
