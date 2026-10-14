@@ -283,6 +283,7 @@ export const ImportTestCaseModal = ({
       title={formatMessage(commonMessages.importTestCases)}
       okButton={{
         ...okButton,
+        'aria-label': isImportingTestCases ? formatMessage(COMMON_LOCALE_KEYS.IMPORT) : undefined,
         children: isImportingTestCases ? (
           <BubblesLoader />
         ) : (
