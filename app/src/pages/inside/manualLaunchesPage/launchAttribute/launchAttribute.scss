@@ -23,6 +23,9 @@
   border-radius: 6px;
   gap: 8px;
   width: max-content;
+  max-width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
   height: 28px;
   font-family: $FONT-ROBOTO-REGULAR;
 }
@@ -40,11 +43,20 @@
 
 .attribute-key {
   font-weight: 500;
-  flex-shrink: 0;
+  flex: 0 1 auto;
+  max-width: 50%;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .attribute-value {
-  word-break: break-word;
+  flex: 0 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .remove-button {

@@ -39,7 +39,7 @@ export const LaunchAttribute = ({ attributeKey, value, onRemove }: LaunchAttribu
 
   return (
     <div className={cx('launch-attribute')}>
-      <div className={cx('attribute-content')}>
+      <div className={cx('attribute-content')} title={[attributeKey, value].filter(Boolean).join(': ')}>
         {attributeKey && <span className={cx('attribute-key')}>{attributeKey}:</span>}
         {value && <span className={cx('attribute-value')}>{value}</span>}
       </div>
@@ -50,7 +50,7 @@ export const LaunchAttribute = ({ attributeKey, value, onRemove }: LaunchAttribu
           onClick={onRemove}
           data-automation-id="remove-launch-attribute"
         >
-          {Parser(CrossIcon as unknown as string)}
+          {Parser(CrossIcon)}
         </button>
       )}
     </div>
