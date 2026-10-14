@@ -43,7 +43,8 @@
 
 .attribute-key {
   font-weight: 500;
-  flex: 0 1 auto;
+  // short keys are never truncated; only keys longer than 50% get an ellipsis
+  flex: 0 0 auto;
   max-width: 50%;
   min-width: 0;
   overflow: hidden;
@@ -57,6 +58,17 @@
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+
+.tooltip-wrapper {
+  min-width: 0;
+  max-width: 100%;
+}
+
+.tooltip-content {
+  white-space: normal;
+  word-break: break-all;
+  overflow-wrap: anywhere;
 }
 
 .remove-button {
