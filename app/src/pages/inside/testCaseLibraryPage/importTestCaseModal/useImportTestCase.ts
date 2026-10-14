@@ -10,6 +10,9 @@ import { URLS } from 'common/urls';
 import { useDebouncedSpinner, useNotification } from 'common/hooks';
 import { Folder, FolderWithFullPath, foldersSelector } from 'controllers/testCase';
 import { createFoldersBatchSuccessAction } from 'controllers/testCase/actionCreators';
+import { NAMESPACE } from 'controllers/testCase/constants';
+import { fetchAllFolders } from 'controllers/testCase/utils/fetchAllFolders';
+import { fetchSuccessAction } from 'controllers/fetch';
 import { useNavigateToFolder } from '../hooks/useNavigateToFolder';
 import { NewFolderData, isNewFolderData } from '../utils/getFolderFromFormValues';
 import { messages } from './messages';
@@ -100,11 +103,17 @@ export const useImportTestCase = () => {
           data: formData,
         });
 
-        const existingFolderIds = new Set(existingFolders.map(({ id }) => id));
-        const newFolders = createdFolders.filter(({ id }) => !existingFolderIds.has(id));
+        try {
+          const updatedFolders = await fetchAllFolders({ projectKey });
 
-        if (!isEmpty(newFolders)) {
-          dispatch(createFoldersBatchSuccessAction(newFolders));
+          dispatch(fetchSuccessAction(NAMESPACE, { content: updatedFolders }));
+        } catch {
+          const existingFolderIds = new Set(existingFolders.map(({ id }) => id));
+          const newFolders = createdFolders.filter(({ id }) => !existingFolderIds.has(id));
+
+          if (!isEmpty(newFolders)) {
+            dispatch(createFoldersBatchSuccessAction(newFolders));
+          }
         }
 
         const targetFolderId =
