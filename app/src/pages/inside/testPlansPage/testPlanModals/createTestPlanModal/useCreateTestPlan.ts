@@ -28,6 +28,7 @@ import { showSuccessNotification, showErrorNotification } from 'controllers/noti
 import { defaultQueryParams, getTestPlansAction } from 'controllers/testPlan';
 import type { TestPlanDto } from 'controllers/testPlan/types';
 import { getMilestonesAction } from 'controllers/milestone';
+import { resetHasTestPlansCache } from 'hooks/useHasTestPlans';
 
 import { TestPlanFormValues } from '../testPlanModal';
 
@@ -88,6 +89,7 @@ export const useCreateTestPlan = ({ milestoneId }: CreateTestPlanModalData = {})
       dispatch(getTestPlansAction(queryParams));
       if (isNotNil(milestoneId)) {
         dispatch(getMilestonesAction());
+        resetHasTestPlansCache();
       }
     } catch {
       dispatch(

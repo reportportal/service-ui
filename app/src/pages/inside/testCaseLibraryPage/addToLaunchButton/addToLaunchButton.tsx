@@ -18,7 +18,6 @@ import { useMemo } from 'react';
 import { useIntl } from 'react-intl';
 import { useTracking } from 'react-tracking';
 import { Button, Tooltip } from '@reportportal/ui-kit';
-import { isEmpty } from 'es-toolkit/compat';
 
 import {
   AddToLaunchPlace,
@@ -26,10 +25,11 @@ import {
   TEST_CASE_LIBRARY_EVENTS,
   TEST_CASE_PLACE,
 } from 'analyticsEvents/testCaseLibraryPageEvents';
-import { ManualScenario, TestCaseManualScenario } from 'types/testCase';
+import { ManualScenario } from 'types/testCase';
 import { createClassnames } from 'common/utils';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { useAddToLaunchModal } from '../addToLaunchModal';
+import { isManualScenarioEmpty } from './isManualScenarioEmpty';
 
 import styles from './addToLaunchButton.scss';
 
@@ -50,34 +50,7 @@ export const AddToLaunchButton = ({
   const { trackEvent } = useTracking();
   const { openModal: openAddToLaunchModal } = useAddToLaunchModal();
 
-  const isDisabled = useMemo(() => {
-    if (isEmpty(manualScenario)) {
-      return true;
-    }
-
-    const hasContent = ({ instructions, expectedResult, attachments }) =>
-      !isEmpty(instructions) || !isEmpty(expectedResult) || !isEmpty(attachments);
-
-    if (manualScenario.manualScenarioType === TestCaseManualScenario.TEXT) {
-      const { preconditions, instructions, expectedResult } = manualScenario;
-
-      return (
-        isEmpty(preconditions?.value) &&
-        !hasContent({
-          instructions,
-          expectedResult,
-          attachments: preconditions?.attachments,
-        })
-      );
-    }
-
-    return (
-      isEmpty(manualScenario.steps) ||
-      !manualScenario.steps.some(({ instructions, expectedResult, attachments }) =>
-        hasContent({ instructions, expectedResult, attachments }),
-      )
-    );
-  }, [manualScenario]);
+  const isDisabled = useMemo(() => isManualScenarioEmpty(manualScenario), [manualScenario]);
 
   const handleAddToLaunchClick = () => {
     if (place === TEST_CASE_PLACE.SIDE_PANEL) {

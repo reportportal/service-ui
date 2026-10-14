@@ -16,7 +16,7 @@
 
 .container {
   background-color: $COLOR--white-two;
-  padding: 0 135px 0 115px;
+  max-width: 1370px;
 
   .content-wrapper {
     display: flex;
@@ -24,7 +24,7 @@
     justify-content: space-between;
     width: 100%;
     height: 100%;
-    max-width: 1370px;
+    max-width: 1120px;
     margin: 0 auto;
     .section-wrapper {
       padding: 0 30px;

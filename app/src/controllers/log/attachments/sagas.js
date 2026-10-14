@@ -123,10 +123,10 @@ function* openImageModalsWorker(data) {
 /* BINARY */
 function* openBinaryModalWorker(data) {
   const binaryData = yield call(fetchFileData, data);
-  const content =
-    data.extension === JSON_TYPE && !isTextWithJson(data.contentType)
-      ? JSON.stringify(binaryData, null, 4)
-      : binaryData;
+  const shouldStringify =
+    typeof binaryData !== 'string' ||
+    (data.extension === JSON_TYPE && !isTextWithJson(data.contentType));
+  const content = shouldStringify ? JSON.stringify(binaryData, null, 4) : binaryData;
   yield put(
     showModalAction({
       id: ATTACHMENT_CODE_MODAL_ID,

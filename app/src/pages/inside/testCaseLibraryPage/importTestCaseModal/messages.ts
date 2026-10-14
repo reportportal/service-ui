@@ -29,7 +29,7 @@ export const messages = defineMessages({
   },
   incorrectFileSize: {
     id: 'ImportTestCaseModal.incorrectFileSize',
-    defaultMessage: 'File size exceeds the limit',
+    defaultMessage: 'File size exceeds the {size} MB limit.',
   },
   dropCsvOr: { id: 'ImportTestCaseModal.dropCsvOr', defaultMessage: 'Drop .CSV file or' },
   browse: { id: 'ImportTestCaseModal.browse', defaultMessage: 'Browse' },

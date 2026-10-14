@@ -41,6 +41,10 @@ export const messages = defineMessages({
     id: 'BTSIssuesModal.postIssueFailed',
     defaultMessage: 'Failed to post issue',
   },
+  noDefaultPropertiesMessage: {
+    id: 'PostIssueModal.noDefaultPropertiesMessage',
+    defaultMessage: 'Configure Bug Tracking System integration default properties to post bugs',
+  },
   linkIssueSuccess: {
     id: 'BTSIssuesModal.linkIssueSuccess',
     defaultMessage: 'The issue was successfully linked with BTS tiket',

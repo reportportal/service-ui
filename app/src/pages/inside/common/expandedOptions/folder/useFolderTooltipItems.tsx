@@ -23,10 +23,11 @@ interface UseFolderTooltipProps {
   activeFolder: number | null;
   setAllTestCases: () => void;
   instanceKey?: TMS_INSTANCE_KEY;
+  isMenuOpen?: boolean;
 }
 
 export const useFolderTooltipItems = (props: UseFolderTooltipProps) => {
-  const { testCaseFolderTooltipItems } = useTestCaseFolderMenu(props);
+  const { testCaseFolderTooltipItems, isMenuContentLoading } = useTestCaseFolderMenu(props);
 
   const tooltipItemsByInstance: Partial<
     Record<TMS_INSTANCE_KEY, typeof testCaseFolderTooltipItems>
@@ -34,5 +35,8 @@ export const useFolderTooltipItems = (props: UseFolderTooltipProps) => {
     [TMS_INSTANCE_KEY.TEST_CASE]: testCaseFolderTooltipItems,
   };
 
-  return tooltipItemsByInstance[props.instanceKey];
+  const items = tooltipItemsByInstance[props.instanceKey];
+  const isLoading = props.instanceKey === TMS_INSTANCE_KEY.TEST_CASE ? isMenuContentLoading : false;
+
+  return { items, isLoading };
 };

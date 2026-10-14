@@ -15,11 +15,13 @@
  */
 
 import type { ReactElement } from 'react';
+import { useSelector } from 'react-redux';
 
 import { createClassnames } from 'common/utils';
 import { URLS } from 'common/urls';
 import DefaultUserImage from 'common/img/default-user-avatar.png';
 import { Image } from 'components/main/image';
+import { idSelector, photoTimeStampSelector } from 'controllers/user';
 
 import styles from './userAvatar.scss';
 
@@ -40,7 +42,11 @@ export const UserAvatar = ({
   thumbnail = false,
   timestamp,
 }: UserAvatarProps): ReactElement => {
-  const src = URLS.userAvatar(userId, thumbnail, timestamp);
+  const currentUserId = useSelector(idSelector);
+  const photoTimeStamp = useSelector(photoTimeStampSelector);
+  const isCurrentUser = currentUserId === userId;
+  const cacheBustTimestamp = timestamp ?? (thumbnail && isCurrentUser ? photoTimeStamp : undefined);
+  const src = URLS.userAvatar(userId, thumbnail, cacheBustTimestamp);
 
   return (
     <div className={cx('user-avatar', className)}>

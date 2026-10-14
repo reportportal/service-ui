@@ -307,10 +307,10 @@ export const TestCaseFolders = () => {
       setAllTestCases={navigateToAllTestCases}
       onFolderClick={handleFolderClick}
       renderCreateFolderButton={renderCreateFolderButton}
-      onMoveFolder={handleMoveFolder}
-      onDuplicateFolder={handleDuplicateFolder}
-      onMoveTestCase={handleMoveTestCase}
-      onDuplicateTestCase={handleDuplicateTestCase}
+      onMoveFolder={canManageTestCases ? handleMoveFolder : undefined}
+      onDuplicateFolder={canManageTestCases ? handleDuplicateFolder : undefined}
+      onMoveTestCase={canManageTestCases ? handleMoveTestCase : undefined}
+      onDuplicateTestCase={canManageTestCases ? handleDuplicateTestCase : undefined}
       onFolderTreeViewControl={handleFolderTreeViewControl}
     >
       <AllTestCasesPage

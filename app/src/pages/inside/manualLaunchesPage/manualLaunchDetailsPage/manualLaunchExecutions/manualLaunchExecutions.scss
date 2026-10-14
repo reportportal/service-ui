@@ -95,8 +95,12 @@ $sidebar-width: calc(100vw - 408px);
 }
 
 .executions-table {
-  margin-left: -32px;
-  width: calc(100% + 32px);
+  width: 100%;
+
+  &_selectable {
+    margin-left: -32px;
+    width: calc(100% + 32px);
+  }
 
   :global([class*='_header-cell_']) {
     font-family: var(--rp-ui-base-font-family);
@@ -250,6 +254,10 @@ $sidebar-width: calc(100vw - 408px);
   display: flex;
   align-items: center;
   justify-content: center;
+
+  &:disabled {
+    cursor: default;
+  }
 }
 
 .execution-actions-cell {

@@ -29,6 +29,7 @@ export const LOGIN_LOCKOUT_BLOCK_DURATION_SEC = 30;
 export const MAX_FAILED_LOGIN_ATTEMPTS = 4;
 export const AUTH_ERROR = 'authErrorAction';
 export const LOGOUT = 'logoutAction';
+export const LOGOUT_COMPLETE = 'logoutCompleteAction';
 export const LOGIN = 'loginAction';
 export const LOGIN_SUCCESS = 'loginSuccessAction';
 export const SET_TOKEN = 'setToken';
@@ -37,3 +38,5 @@ export const GRANT_TYPES = {
 };
 
 export const ANONYMOUS_REDIRECT_PATH_STORAGE_KEY = 'anonymousRedirectPath';
+
+export const GRAFANA_SESSION_REVOKE_TIMEOUT = 2000;

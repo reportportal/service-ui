@@ -28,9 +28,9 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 39px;
+  width: auto;
   height: 20px;
-  padding: 2px 8px;
+  padding: 1px 7px;
   border: 1px solid var(--rp-ui-base-test-execution-status-passed);
   border-radius: 6px;
   color: var(--rp-ui-base-test-execution-status-passed);

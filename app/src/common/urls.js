@@ -349,6 +349,8 @@ export const URLS = {
   appInfoApi: () => `${urlCommonBase}info`,
   appInfoUi: () => `${uiInfoBase}info`,
 
+  grafanaSession: () => `${urlBase}integration/grafana/session`,
+
   // marketplace catalogue: plural, and deliberately not the singular `plugin` above
   marketplaceCatalogue: ({ q, category } = {}) =>
     `${urlBase}plugins${getQueryParams({ q: q || undefined, category: category || undefined })}`,

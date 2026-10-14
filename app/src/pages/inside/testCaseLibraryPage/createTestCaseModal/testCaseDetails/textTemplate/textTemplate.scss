@@ -30,3 +30,13 @@
     }
   }
 }
+
+.field {
+  height: auto;
+
+  > span {
+    top: auto;
+    bottom: 6px;
+    margin-top: 0;
+  }
+}

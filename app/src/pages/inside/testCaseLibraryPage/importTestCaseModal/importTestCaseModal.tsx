@@ -5,8 +5,8 @@ import { useIntl } from 'react-intl';
 import { useTracking } from 'react-tracking';
 import { format } from 'date-fns';
 import { isEmpty } from 'es-toolkit/compat';
-import { Modal, FileDropArea, AddCsvIcon, ExternalLinkIcon } from '@reportportal/ui-kit';
-import { MIME_TYPES, MimeType, FileWithValidation } from '@reportportal/ui-kit/fileDropArea';
+import { BubblesLoader, Modal, FileDropArea, AddCsvIcon, ExternalLinkIcon } from '@reportportal/ui-kit';
+import { MimeType, FileWithValidation } from '@reportportal/ui-kit/fileDropArea';
 import { AttachmentFile } from '@reportportal/ui-kit/fileDropArea/attachedFilesList';
 
 import {
@@ -47,9 +47,9 @@ export type ImportTestCaseModalData = {
 };
 
 const cx = createClassnames(styles);
-const MAX_FILE_SIZE_MB = 10;
+const MAX_FILE_SIZE_MB = 32;
 const MAX_FILE_SIZE_BYTES = MAX_FILE_SIZE_MB * 1024 * 1024;
-const CSV_MIME_TYPES: MimeType[] = [MIME_TYPES.csv, MIME_TYPES.xls, MIME_TYPES.plain];
+const CSV_ACCEPT_TYPES: MimeType[] = ['.csv' as MimeType];
 const TEMPLATE_FILE_NAME = 'test-case-import-template.csv';
 const TEMPLATE_CSV_CONTENT = [
   'summary,description,priority,preconditions,requirements,test steps,expected result',
@@ -281,7 +281,15 @@ export const ImportTestCaseModal = ({
   return (
     <Modal
       title={formatMessage(commonMessages.importTestCases)}
-      okButton={okButton}
+      okButton={{
+        ...okButton,
+        'aria-label': isImportingTestCases ? formatMessage(COMMON_LOCALE_KEYS.IMPORT) : undefined,
+        children: isImportingTestCases ? (
+          <BubblesLoader />
+        ) : (
+          okButton.children
+        ),
+      }}
       className={cx('import-test-case-modal')}
       cancelButton={cancelButton}
       onClose={hideModal}
@@ -306,9 +314,11 @@ export const ImportTestCaseModal = ({
             <FileDropArea
               messages={{
                 incorrectFileFormat: formatMessage(messages.incorrectFileFormat),
-                incorrectFileSize: formatMessage(messages.incorrectFileSize),
+                incorrectFileSize: formatMessage(messages.incorrectFileSize, {
+                  size: MAX_FILE_SIZE_MB,
+                }),
               }}
-              acceptFileMimeTypes={CSV_MIME_TYPES}
+              acceptFileMimeTypes={CSV_ACCEPT_TYPES}
               maxFileSize={MAX_FILE_SIZE_BYTES}
               isMultipleFiles={false}
               onFilesAdded={handleFilesAdded}

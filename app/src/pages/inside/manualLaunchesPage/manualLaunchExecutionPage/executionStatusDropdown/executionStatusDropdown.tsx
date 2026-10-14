@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { FC, useState } from 'react';
+import { useState, type ReactElement } from 'react';
 import { useIntl } from 'react-intl';
 import Parser from 'html-react-parser';
 
@@ -32,10 +32,11 @@ import styles from './executionStatusDropdown.scss';
 
 const cx = createClassnames(styles);
 
-export const ExecutionStatusDropdown: FC<ExecutionStatusDropdownProps> = ({
+export const ExecutionStatusDropdown = ({
   executionId,
   currentStatus,
-}) => {
+  readOnly = false,
+}: ExecutionStatusDropdownProps): ReactElement | null => {
   const { formatMessage } = useIntl();
   const [isOpened, setIsOpened] = useState(false);
 
@@ -46,29 +47,43 @@ export const ExecutionStatusDropdown: FC<ExecutionStatusDropdownProps> = ({
     return null;
   }
 
+  const statusContent = (
+    <>
+      <span className={cx('status-indicator', `status-indicator--${statusKey}`)} />
+      {formatMessage(currentConfig.label)}
+      {!readOnly && (
+        <span className={cx('arrow-icon', { rotated: isOpened })}>
+          {Parser(ArrowDownIcon as unknown as string)}
+        </span>
+      )}
+    </>
+  );
+
   return (
     <div className={cx('execution-status-dropdown')}>
       <span className={cx('label')}>{formatMessage(messages.currentExecutionStatus)}</span>
-      <ExecutionStatusPopover
-        executionId={executionId}
-        currentStatus={currentStatus}
-        isOpened={isOpened}
-        setIsOpened={setIsOpened}
-        place={MANUAL_LAUNCHES_PLACE.TEST_EXECUTION_PAGE}
-      >
-        <button
-          type="button"
-          className={cx('status-button', {
-            open: isOpened,
-          })}
+      {readOnly ? (
+        <div className={cx('status-button', 'status-button--read-only')} aria-disabled="true">
+          {statusContent}
+        </div>
+      ) : (
+        <ExecutionStatusPopover
+          executionId={executionId}
+          currentStatus={currentStatus}
+          isOpened={isOpened}
+          setIsOpened={setIsOpened}
+          place={MANUAL_LAUNCHES_PLACE.TEST_EXECUTION_PAGE}
         >
-          <span className={cx('status-indicator', `status-indicator--${statusKey}`)} />
-          {formatMessage(currentConfig.label)}
-          <span className={cx('arrow-icon', { rotated: isOpened })}>
-            {Parser(ArrowDownIcon as unknown as string)}
-          </span>
-        </button>
-      </ExecutionStatusPopover>
+          <button
+            type="button"
+            className={cx('status-button', {
+              open: isOpened,
+            })}
+          >
+            {statusContent}
+          </button>
+        </ExecutionStatusPopover>
+      )}
     </div>
   );
 };

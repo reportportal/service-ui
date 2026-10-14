@@ -96,6 +96,7 @@ const AddTestCasesToLaunchModalComponent = ({
     <BaseLaunchModal
       {...reduxFormProps}
       testCases={testCases}
+      selectedTestCaseIds={selectedRowsIds}
       testPlanId={Number(testPlanId)}
       modalTitle={formatMessage(messages.addToLaunch)}
       okButtonText={COMMON_LOCALE_KEYS.ADD}

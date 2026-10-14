@@ -83,7 +83,7 @@ export type InitialStateType = {
   testCases: {
     isLoading: boolean;
     list: TestCase[];
-    page: Page[];
+    page: Page | null;
   };
 };
 

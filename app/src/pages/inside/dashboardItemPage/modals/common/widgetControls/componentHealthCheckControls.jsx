@@ -148,7 +148,7 @@ export class ComponentHealthCheckControls extends Component {
     const prevFilterId = prevProps?.widgetSettings?.filters?.[0]?.value;
     const currentFilterId = this.props.widgetSettings?.filters?.[0]?.value;
 
-    if (prevProps && prevFilterId !== currentFilterId) {
+    if (prevFilterId && currentFilterId && prevFilterId !== currentFilterId) {
       this.props.changeField('contentParameters.widgetOptions.attributeKeys', [
         DEFAULT_ATTRIBUTE_KEY,
       ]);

@@ -44,7 +44,7 @@ export const TextTemplate = ({ formName }: TextTemplateProps) => {
   return (
     <div className={cx('text-template')}>
       <FieldProvider name="instructions">
-        <FieldErrorHint>
+        <FieldErrorHint className={cx('field')}>
           <FieldTextFlex
             label={formatMessage(messages.instructions)}
             placeholder={formatMessage(messages.enterInstructions)}
@@ -53,7 +53,7 @@ export const TextTemplate = ({ formName }: TextTemplateProps) => {
         </FieldErrorHint>
       </FieldProvider>
       <FieldProvider name="expectedResult">
-        <FieldErrorHint>
+        <FieldErrorHint className={cx('field')}>
           <FieldTextFlex
             label={formatMessage(messages.expectedResult)}
             placeholder={formatMessage(messages.enterExpectedResult)}

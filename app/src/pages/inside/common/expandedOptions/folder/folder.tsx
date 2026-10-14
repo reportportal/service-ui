@@ -99,11 +99,12 @@ export const Folder = ({
   const hasIndirectMatch =
     searchQuery && !isDirectMatch && (childrenMatch || hasAncestorDirectMatch);
 
-  const tooltipItems = useFolderTooltipItems({
+  const { items: tooltipItems, isLoading: isTooltipItemsLoading } = useFolderTooltipItems({
     folder,
     activeFolder: activeFolderId,
     setAllTestCases,
     instanceKey,
+    isMenuOpen: areToolsOpen,
   });
 
   useEffect(() => {
@@ -185,6 +186,7 @@ export const Folder = ({
             >
               <PopoverControl
                 items={tooltipItems}
+                isLoading={isTooltipItemsLoading}
                 isOpened={areToolsOpen}
                 setIsOpened={setAreToolsOpen}
                 placement="bottom-end"

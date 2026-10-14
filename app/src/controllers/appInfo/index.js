@@ -28,6 +28,7 @@ export {
   instanceIdSelector,
   analyticsEnabledSelector,
   analyzerExtensionsSelector,
+  isAnalyzerAvailableSelector,
   isOldHistorySelector,
   flushDataInSelector,
   isDemoInstanceSelector,

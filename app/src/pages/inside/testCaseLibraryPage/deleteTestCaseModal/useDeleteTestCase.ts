@@ -28,7 +28,7 @@ import {
 } from 'controllers/pages';
 import { TestCase } from 'types/testCase';
 
-import { useLastItemOnThePage } from '../hooks/useLastItemOnThePage';
+import { useRefetchCurrentTestCases } from '../hooks/useRefetchCurrentTestCases';
 import { useFolderCounterUpdate } from '../hooks/useFolderCounterUpdate';
 
 export const useDeleteTestCase = ({ isDetailsPage = false } = {}) => {
@@ -37,7 +37,7 @@ export const useDeleteTestCase = ({ isDetailsPage = false } = {}) => {
   const projectKey = useSelector(projectKeySelector);
   const organizationSlug = useSelector(urlOrganizationSlugSelector);
   const projectSlug = useSelector(urlProjectSlugSelector);
-  const { updateUrl, isSingleItemOnTheLastPage } = useLastItemOnThePage();
+  const refetchCurrentTestCases = useRefetchCurrentTestCases();
   const { updateFolderCounter } = useFolderCounterUpdate();
   const { showSuccessNotification, showErrorNotification } = useNotification();
 
@@ -54,10 +54,6 @@ export const useDeleteTestCase = ({ isDetailsPage = false } = {}) => {
       dispatch(hideModalAction());
       showSuccessNotification({ messageId: 'testCaseDeletedSuccess' });
 
-      if (isSingleItemOnTheLastPage && !isDetailsPage) {
-        updateUrl();
-      }
-
       if (isDetailsPage) {
         dispatch({
           type: TEST_CASE_LIBRARY_PAGE,
@@ -66,6 +62,8 @@ export const useDeleteTestCase = ({ isDetailsPage = false } = {}) => {
             projectSlug,
           },
         });
+      } else {
+        refetchCurrentTestCases();
       }
     } catch (error: unknown) {
       showErrorNotification({

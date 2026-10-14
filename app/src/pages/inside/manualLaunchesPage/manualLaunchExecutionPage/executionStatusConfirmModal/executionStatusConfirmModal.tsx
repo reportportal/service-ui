@@ -63,6 +63,7 @@ import {
   EXECUTION_STATUS_CONFIRM_FORM_NAME,
   STATUS_CONFIG,
 } from '../constants';
+import { EXECUTION_COMMENT_MAX_LENGTH } from '../executionCommentSection/constants';
 import { messages } from './messages';
 import { messages as commonMessages } from '../messages';
 import { useBTSIssuesModal } from '../BTSIssuesModal/useBTSIssuesModal';
@@ -231,6 +232,8 @@ const ExecutionStatusConfirmModalComponent: FC<
                     placeholder={formatMessage(messages.commentPlaceholder)}
                     value=""
                     minHeight={100}
+                    maxLength={EXECUTION_COMMENT_MAX_LENGTH}
+                    maxLengthDisplay={EXECUTION_COMMENT_MAX_LENGTH}
                   />
                 </FieldErrorHint>
               </FieldProvider>

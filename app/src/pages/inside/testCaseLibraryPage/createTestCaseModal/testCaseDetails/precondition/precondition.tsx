@@ -18,7 +18,12 @@ import { defineMessages, useIntl } from 'react-intl';
 import { FieldProvider } from 'components/fields/fieldProvider';
 import { FieldErrorHint } from 'components/fields/fieldErrorHint';
 import { FieldTextFlex } from '@reportportal/ui-kit';
+import { createClassnames } from 'common/utils';
 import { PRECONDITION_FIELD_MAX_LENGTH } from '../../constants';
+
+import styles from './precondition.scss';
+
+const cx = createClassnames(styles);
 
 const messages = defineMessages({
   enterPrecondition: {
@@ -36,7 +41,7 @@ export const Precondition = () => {
 
   return (
     <FieldProvider name="precondition">
-      <FieldErrorHint>
+      <FieldErrorHint className={cx('field')}>
         <FieldTextFlex
           label={formatMessage(messages.precondition)}
           placeholder={formatMessage(messages.enterPrecondition)}

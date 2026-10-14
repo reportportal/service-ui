@@ -19,6 +19,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const webpack = require('webpack');
 const WebpackNotifierPlugin = require('webpack-notifier');
 const ModuleFederationPlugin = require('webpack/lib/container/ModuleFederationPlugin');
+const FontPreloadPlugin = require('./fontPreloadPlugin');
 const pjson = require('../package.json');
 
 module.exports = {
@@ -93,6 +94,7 @@ module.exports = {
       filename: 'index.html',
       favicon: path.resolve(__dirname, '../src/common/img/favicon.ico'),
     }),
+    new FontPreloadPlugin(),
     new webpack.ProvidePlugin({
       React: 'react',
       Utils: 'common/utils',

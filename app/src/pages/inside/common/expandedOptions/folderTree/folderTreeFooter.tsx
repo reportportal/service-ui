@@ -33,6 +33,7 @@ interface FolderTreeFooterProps {
   isFlatView: boolean;
   isExpandAllDisabled: boolean;
   isCollapseAllDisabled: boolean;
+  showBottomFade?: boolean;
   onFlatViewChange: (value: boolean) => void;
   onExpandAll: VoidFn;
   onCollapseAll: VoidFn;
@@ -43,6 +44,7 @@ export const FolderTreeFooter = ({
   isFlatView,
   isExpandAllDisabled,
   isCollapseAllDisabled,
+  showBottomFade = false,
   onFlatViewChange,
   onExpandAll,
   onCollapseAll,
@@ -69,7 +71,11 @@ export const FolderTreeFooter = ({
   };
 
   return (
-    <div className={cx('folder-tree-footer')}>
+    <div
+      className={cx('folder-tree-footer', {
+        'folder-tree-footer--fade-bottom': showBottomFade,
+      })}
+    >
       <Toggle
         value={isFlatView}
         className={cx('folder-tree-footer__toggle')}

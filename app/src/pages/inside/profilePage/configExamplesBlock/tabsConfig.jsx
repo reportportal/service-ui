@@ -187,6 +187,8 @@ const nodejsConfig = () => ({
         <a
           className={cx('link')}
           href="https://github.com/reportportal/client-javascript#already-implemented-listeners"
+          target="_blank"
+          rel="noopener noreferrer"
         >
           test framework integration
         </a>{' '}

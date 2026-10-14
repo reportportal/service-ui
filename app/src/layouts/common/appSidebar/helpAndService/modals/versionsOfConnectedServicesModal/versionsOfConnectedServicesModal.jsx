@@ -23,7 +23,7 @@ import { Modal } from '@reportportal/ui-kit';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import Logo from 'common/img/logo.svg';
 import OpenIcon from 'common/img/open-in-new-tab-inline.svg';
-import { appInfoSelector } from 'controllers/appInfo';
+import { analyzerExtensionsSelector, appInfoSelector } from 'controllers/appInfo';
 import { hideModalAction, withModal } from 'controllers/modal';
 import { servicesUpdate } from 'common/utils/referenceDictionary';
 import { LinkItem } from 'layouts/common/appSidebar/helpAndService/linkItem';
@@ -44,6 +44,7 @@ const VersionsOfConnectedServices = ({ data: { latestServiceVersions, analyticsC
   const { formatMessage } = useIntl();
   const { trackEvent } = useTracking();
   const appInfo = useSelector(appInfoSelector);
+  const analyzers = useSelector(analyzerExtensionsSelector);
   const hideModal = () => dispatch(hideModalAction());
   const releaseNotesCategory = analyticsCategory || SIDEBAR_CATEGORY;
   const productVersionLabel = formatMessage(messages.productVersion, { version: PRODUCT_VERSION });
@@ -74,13 +75,14 @@ const VersionsOfConnectedServices = ({ data: { latestServiceVersions, analyticsC
       });
     });
 
-    const analyzer = appInfo.api?.extensions?.analyzers[0];
+    const analyzer = analyzers.find((item) => !!item.available) || analyzers[0];
 
     if (analyzer) {
       versionsServices.push({
         name: 'Service Analyzer',
         version: analyzer.version,
         linkTo: servicesUpdate.analyzer,
+        isUnavailable: !analyzer.available,
       });
     }
 

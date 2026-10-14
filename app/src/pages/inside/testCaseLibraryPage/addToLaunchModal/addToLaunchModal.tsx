@@ -33,7 +33,8 @@ import {
   LaunchMode,
   INITIAL_LAUNCH_FORM_VALUES,
 } from 'pages/inside/common/launchFormFields';
-import { testCasesSelector } from 'controllers/testCase';
+import { testCaseDetailsSelector, testCasesSelector } from 'controllers/testCase';
+import { ExtendedTestCase } from 'types/testCase';
 
 import { AddToLaunchModalProps } from './types';
 import { messages } from './messages';
@@ -45,6 +46,26 @@ const cx = createClassnames(styles);
 const BoldTestCasesCount = (parts: ReactNode[]) => (
   <b className={cx('selected-test-cases')}>{parts}</b>
 );
+
+const resolveSelectedTestCases = ({
+  selectedTestCaseIds,
+  allTestCases,
+  testCaseDetails,
+}: {
+  selectedTestCaseIds: number[];
+  allTestCases: ExtendedTestCase[];
+  testCaseDetails?: ExtendedTestCase | null;
+}): ExtendedTestCase[] => {
+  const testCasesById = new Map(allTestCases.map((testCase) => [testCase.id, testCase]));
+
+  if (testCaseDetails?.id) {
+    testCasesById.set(testCaseDetails.id, testCaseDetails);
+  }
+
+  return selectedTestCaseIds.map(
+    (id) => testCasesById.get(id) ?? ({ id } as ExtendedTestCase),
+  );
+};
 
 const AddToLaunchModalComponent = ({
   folderId,
@@ -58,6 +79,7 @@ const AddToLaunchModalComponent = ({
   const { formatMessage } = useIntl();
   const { trackEvent } = useTracking();
   const allTestCases = useSelector(testCasesSelector);
+  const testCaseDetails = useSelector(testCaseDetailsSelector);
 
   const isFromFolder = folderId !== undefined;
 
@@ -65,8 +87,12 @@ const AddToLaunchModalComponent = ({
     () =>
       isFromFolder
         ? []
-        : allTestCases.filter((testCase) => (selectedTestCaseIds || []).includes(testCase.id)),
-    [allTestCases, isFromFolder, selectedTestCaseIds],
+        : resolveSelectedTestCases({
+            selectedTestCaseIds: selectedTestCaseIds || [],
+            allTestCases,
+            testCaseDetails,
+          }),
+    [allTestCases, isFromFolder, selectedTestCaseIds, testCaseDetails],
   );
 
   const count = isFromFolder ? (itemCount ?? 0) : selectedTestCaseIds.length;
@@ -111,6 +137,7 @@ const AddToLaunchModalComponent = ({
     <BaseLaunchModal
       {...reduxFormProps}
       testCases={testCases}
+      selectedTestCaseIds={isFromFolder ? undefined : selectedTestCaseIds}
       folderId={folderId}
       modalTitle={formatMessage(messages.addToLaunch)}
       okButtonText={COMMON_LOCALE_KEYS.ADD}

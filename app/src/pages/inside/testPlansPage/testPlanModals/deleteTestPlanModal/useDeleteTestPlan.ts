@@ -33,6 +33,7 @@ import {
   testPlansSelector,
 } from 'controllers/testPlan';
 import { useProjectDetails } from 'hooks/useTypedSelector';
+import { resetHasTestPlansCache } from 'hooks/useHasTestPlans';
 
 interface UseDeleteTestPlanOptions {
   onSuccess?: VoidFn;
@@ -61,6 +62,7 @@ export const useDeleteTestPlan = ({ onSuccess = noop }: UseDeleteTestPlanOptions
           messageId: 'testPlanDeletedSuccess',
         }),
       );
+      resetHasTestPlansCache();
 
       const isSingleItemOnTheLastPage =
         testPlanListPagination != null &&

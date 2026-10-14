@@ -92,8 +92,8 @@ VectorWithTooltip.propTypes = {
 export const ServiceVersion = ({ service, content, analyticsCategory }) => {
   const { formatMessage } = useIntl();
   const { trackEvent } = useTracking();
-  const { name, version, linkTo, isNewVersion } = service;
-  const isError = !version;
+  const { name, version, linkTo, isNewVersion, isUnavailable } = service;
+  const isError = !version || isUnavailable;
 
   const handleUpdateClick = () => {
     trackEvent(LOGIN_PAGE_EVENTS.clickOnServiceUpdateLink(analyticsCategory, name));

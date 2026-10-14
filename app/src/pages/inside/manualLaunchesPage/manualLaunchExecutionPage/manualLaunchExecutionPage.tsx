@@ -41,6 +41,7 @@ import {
   useManualLaunchById,
   useActiveManualLaunchLoading,
 } from 'hooks/useTypedSelector';
+import { useUserPermissions } from 'hooks/useUserPermissions';
 import {
   MANUAL_LAUNCHES_PAGE_EVENTS,
   TEST_EXECUTION_TEMPLATE_TYPE,
@@ -65,6 +66,7 @@ export const ManualLaunchExecutionPage = () => {
   const { formatMessage } = useIntl();
   const { trackEvent } = useTracking();
   const { organizationSlug, projectSlug } = useProjectDetails();
+  const { canManageExecutions } = useUserPermissions();
   const launchId = useManualLaunchId();
   const launch = useManualLaunchById(launchId);
   const isLaunchLoading = useActiveManualLaunchLoading();
@@ -73,6 +75,8 @@ export const ManualLaunchExecutionPage = () => {
   const isExecutionLoading = useSelector(isLoadingActiveManualLaunchExecutionSelector);
   const availableBtsIntegrations = useSelector(availableBtsIntegrationsSelector);
   const [showStatusButtons, setShowStatusButtons] = useState(false);
+  const [resetScroll, setResetScroll] = useState(false);
+  const prevExecutionIdRef = useRef<number | undefined>(undefined);
 
   const launchName = launch?.name ?? '';
 
@@ -136,6 +140,16 @@ export const ManualLaunchExecutionPage = () => {
     setShowStatusButtons(false);
   }, [execution?.id, hasStatus]);
 
+  useEffect(() => {
+    if (isLaunchLoading || isExecutionLoading) {
+      return;
+    }
+    if (execution?.id !== undefined && execution.id !== prevExecutionIdRef.current) {
+      prevExecutionIdRef.current = execution.id;
+      setResetScroll(true);
+    }
+  }, [execution?.id, isLaunchLoading, isExecutionLoading]);
+
   const lastViewedExecutionRef = useRef<{ id: number; type: string } | null>(null);
 
   useEffect(() => {
@@ -167,16 +181,30 @@ export const ManualLaunchExecutionPage = () => {
 
   const renderHeaderActions = () => {
     if (isInProgress || showStatusButtons) {
+      if (!canManageExecutions) {
+        return null;
+      }
+
       return <ExecutionStatusButtons executionId={execution?.id} />;
     }
 
     if (hasStatus) {
-      return <ExecutionStatusDropdown executionId={execution.id} currentStatus={executionStatus} />;
+      return (
+        <ExecutionStatusDropdown
+          executionId={execution.id}
+          currentStatus={executionStatus}
+          readOnly={!canManageExecutions}
+        />
+      );
     }
 
     return (
       <div className={cx('header-actions')}>
-        <Button className={cx('run-test-button')} onClick={handleRunTestClick}>
+        <Button
+          className={cx('run-test-button')}
+          onClick={handleRunTestClick}
+          disabled={!canManageExecutions}
+        >
           {formatMessage(commonMessages.runTest)}
           <span className={cx('run-test-icon')}>
             <RunManualIcon />
@@ -197,7 +225,7 @@ export const ManualLaunchExecutionPage = () => {
   if (!execution || isEmpty(execution)) {
     return (
       <SettingsLayout>
-        <ScrollWrapper resetRequired>
+        <ScrollWrapper resetRequired={resetScroll} onReset={() => setResetScroll(false)}>
           <div
             className={cx('manual-launch-execution-page', 'manual-launch-execution-page--empty')}
           >
@@ -205,6 +233,7 @@ export const ManualLaunchExecutionPage = () => {
               <PageHeaderWithBreadcrumbsAndActions
                 title=""
                 breadcrumbDescriptors={breadcrumbDescriptors}
+                titleTailNumChars={0}
               />
             </div>
             <div className={cx('empty-message')}>{formatMessage(messages.executionNotFound)}</div>
@@ -230,13 +259,14 @@ export const ManualLaunchExecutionPage = () => {
 
   return (
     <SettingsLayout>
-      <ScrollWrapper resetRequired>
+      <ScrollWrapper resetRequired={resetScroll} onReset={() => setResetScroll(false)}>
         <div className={cx('manual-launch-execution-page')}>
           <div className={cx('manual-launch-execution-page__header')}>
             <PageHeaderWithBreadcrumbsAndActions
               title={executionTitle}
               breadcrumbDescriptors={breadcrumbDescriptors}
               actions={renderHeaderActions()}
+              titleTailNumChars={0}
             />
           </div>
           <div className={cx('manual-launch-execution-page__content')}>

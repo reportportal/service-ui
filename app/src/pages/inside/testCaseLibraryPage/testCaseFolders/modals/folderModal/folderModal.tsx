@@ -50,11 +50,12 @@ interface FolderModalConfig {
 }
 
 type FolderModalProps = FolderModalConfig &
-  Pick<InjectedFormProps<unknown>, 'dirty' | 'handleSubmit' | 'change'>;
+  Pick<InjectedFormProps<unknown>, 'dirty' | 'invalid' | 'handleSubmit' | 'change'>;
 
 export const FolderModal = ({
   title,
   dirty,
+  invalid,
   isLoading,
   isToggled,
   toggleLabel,
@@ -79,9 +80,11 @@ export const FolderModal = ({
     children: formatMessage(COMMON_LOCALE_KEYS.CREATE),
     onClick: handleSubmit(onSubmit) as () => void,
     disabled:
-      isLoading || parentFolderFieldName === PARENT_FOLDER_FIELD
+      isLoading ||
+      invalid ||
+      (parentFolderFieldName === PARENT_FOLDER_FIELD
         ? isToggled && !formValues?.[parentFolderFieldName as keyof FolderFormValues]
-        : false,
+        : false),
     'data-automation-id': 'submitButton',
   };
 

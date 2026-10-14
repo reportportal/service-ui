@@ -1,9 +1,11 @@
 import { FC, memo, useMemo } from 'react';
 import { useIntl } from 'react-intl';
+import Parser from 'html-react-parser';
 import { isEmpty } from 'es-toolkit/compat';
 import { Checkbox, Dropdown, FieldText } from '@reportportal/ui-kit';
 
 import { createClassnames } from 'common/utils';
+import ErrorInlineIcon from 'common/img/error-inline.svg';
 import { BtsIntegrationSelector } from 'pages/inside/common/btsIntegrationSelector';
 import { commonMessages } from 'pages/inside/common/common-messages';
 import { FieldErrorHint, FieldProvider } from 'components/fields';
@@ -14,6 +16,7 @@ import {
   INCLUDE_LOGS_KEY,
 } from 'pages/inside/stepPage/modals/postIssueModal/constants';
 
+import { messages } from '../messages';
 import { DynamicField, BTSIntegration } from '../types';
 
 import styles from './PostBTSIssueForm.scss';
@@ -122,14 +125,20 @@ export const PostBTSIssueForm: FC<PostBTSIssueFormProps> = ({
         onChangePluginName={onChangePlugin}
         theme="light"
       />
-      <div className={cx('dynamic-fields')}>
-        {!isEmpty(fields) &&
-          fields.map((field) => (
+      {isEmpty(fields) ? (
+        <div className={cx('no-default-properties-message')}>
+          <div className={cx('icon')}>{Parser(ErrorInlineIcon)}</div>
+          <span>{formatMessage(messages.noDefaultPropertiesMessage)}</span>
+        </div>
+      ) : (
+        <div className={cx('dynamic-fields')}>
+          {fields.map((field) => (
             <div key={field.id}>
               <DynamicFormField field={field} defaultOptionValueKey={defaultOptionValueKey} />
             </div>
           ))}
-      </div>
+        </div>
+      )}
       <div className={cx('included-data-config')}>
         {dataFieldsConfig.map((item) => (
           <FieldProvider key={item.name} name={item.name} format={Boolean}>

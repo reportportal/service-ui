@@ -106,6 +106,12 @@ export const WIDGETS_EVENTS = {
     type: 'most_failed_test_cases',
     number: dashboardId,
   }),
+  clickOnFlakyTestCaseName: (dashboardId) => ({
+    ...getBasicClickEventParameters(DASHBOARDS),
+    element_name: 'test_name',
+    type: 'flaky_test_cases',
+    number: dashboardId,
+  }),
   clickOnIssueTicket: (dashboardId) => (pluginName) => ({
     ...getBasicClickEventParameters(DASHBOARDS),
     element_name: 'issue_ticket',

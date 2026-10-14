@@ -73,6 +73,7 @@ export const TestCaseList = memo(
     const location = useSelector(locationSelector);
     const [selectedTestCaseId, setSelectedTestCaseId] = useState<number | null>(null);
     const { canManageTestCases } = useUserPermissions();
+    const isSelectable = selectable && canManageTestCases;
 
     const searchQuery = location?.query?.testCasesSearchParams || '';
 
@@ -234,7 +235,7 @@ export const TestCaseList = memo(
                   }}
                 />
                 <Table
-                  selectable={selectable && canManageTestCases}
+                  selectable={isSelectable}
                   onToggleRowSelection={handleRowSelect}
                   selectedRowIds={selectedRowIds}
                   data={tableData}
@@ -242,7 +243,9 @@ export const TestCaseList = memo(
                   primaryColumn={primaryColumn}
                   sortableColumns={[]}
                   onToggleAllRowsSelection={handleSelectAll}
-                  className={cx('test-case-table')}
+                  className={cx('test-case-table', {
+                    'test-case-table_selectable': isSelectable,
+                  })}
                   rowClassName={`${cx('test-case-table-row')} test-case-table-row-global`}
                   isSelectAllCheckboxAlwaysVisible
                 />

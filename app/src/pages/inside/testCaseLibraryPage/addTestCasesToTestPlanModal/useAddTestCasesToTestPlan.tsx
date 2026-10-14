@@ -33,7 +33,7 @@ import type { TestPlanDto } from 'controllers/testPlan/types';
 import { foldersSelector } from 'controllers/testCase';
 import { getAllSubfolderIds } from 'common/utils/folderUtils';
 
-import { fetchAllTestCases } from '../../common/testLibrarySidePanel/utils';
+import { fetchAllTestCasesByFolderIds } from '../../common/testLibrarySidePanel/utils';
 import {
   AddTestCasesToTestPlanFormData,
   AddTestCasesToTestPlanModalData,
@@ -86,11 +86,10 @@ export const useAddTestCasesToTestPlan = ({
       setIsFetchingTestCases(true);
 
       try {
-        const testCases = await fetchAllTestCases(projectKey, {
-          'filter.in.testFolderId': getAllSubfolderIds(folderId, folders).join(','),
-          offset: 0,
-          limit: 50,
-        });
+        const testCases = await fetchAllTestCasesByFolderIds(
+          projectKey,
+          getAllSubfolderIds(folderId, folders),
+        );
         const testCaseIds = testCases.map(({ id }) => id);
 
         return {

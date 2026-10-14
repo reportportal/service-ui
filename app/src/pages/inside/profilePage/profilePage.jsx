@@ -21,7 +21,7 @@ import { defineMessages, injectIntl } from 'react-intl';
 import classNames from 'classnames/bind';
 import { connect } from 'react-redux';
 import { PageLayout, PageHeader } from 'layouts/pageLayout';
-import { PROFILE_PAGE } from 'components/main/analytics/events';
+import { PROFILE_PAGE, PROFILE_PAGE_EVENTS } from 'components/main/analytics/events';
 import {
   userProfileRouteSelector,
   urlOrganizationSlugSelector,
@@ -36,6 +36,7 @@ import {
   API_KEYS_ROUTE,
   CONFIG_EXAMPLES_ROUTE,
   ASSIGNMENTS_ROUTE,
+  MCP_ROUTE,
 } from 'common/constants/userProfileRoutes';
 import { DeleteAccountBlock } from 'pages/inside/profilePage/deleteAccountBlock';
 import { PROFILE_EVENTS } from 'analyticsEvents/profilePageEvent';
@@ -44,6 +45,7 @@ import { ApiKeys } from './apiKeys';
 import { AssignedProjectsBlock } from './assignedProjectsBlock';
 import { ConfigExamplesBlock } from './configExamplesBlock';
 import { LocalizationBlock } from './localizationBlock';
+import { McpBlock } from './mcpBlock';
 import styles from './profilePage.scss';
 
 const cx = classNames.bind(styles);
@@ -64,6 +66,10 @@ const messages = defineMessages({
   profilePageConfigurationExamplesTab: {
     id: 'ProfilePage.configurationExamples',
     defaultMessage: 'Configuration examples',
+  },
+  profilePageMcpTab: {
+    id: 'ProfilePage.mcp',
+    defaultMessage: 'MCP',
   },
 });
 
@@ -133,6 +139,7 @@ export class ProfilePage extends Component {
         name: formatMessage(messages.profilePageProjectAssignmentTab),
         link: this.getRouteLink(ASSIGNMENTS_ROUTE),
         component: <AssignedProjectsBlock />,
+        eventInfo: PROFILE_PAGE_EVENTS.clickProfilePageTab('assignments'),
       },
       [API_KEYS_ROUTE]: {
         name: formatMessage(messages.profilePageProjectApiKeysTab),
@@ -144,6 +151,13 @@ export class ProfilePage extends Component {
         name: formatMessage(messages.profilePageConfigurationExamplesTab),
         link: this.getRouteLink(CONFIG_EXAMPLES_ROUTE),
         component: <ConfigExamplesBlock />,
+        eventInfo: PROFILE_PAGE_EVENTS.clickProfilePageTab('configuration_examples'),
+      },
+      [MCP_ROUTE]: {
+        name: formatMessage(messages.profilePageMcpTab),
+        link: this.getRouteLink(MCP_ROUTE),
+        component: <McpBlock />,
+        eventInfo: PROFILE_PAGE_EVENTS.clickProfilePageTab('mcp'),
       },
     };
   };

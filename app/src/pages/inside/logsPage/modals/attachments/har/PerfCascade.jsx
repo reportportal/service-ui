@@ -21,6 +21,23 @@ import 'perf-cascade/dist/perf-cascade.css';
 import { NoItemMessage } from 'components/main/noItemMessage';
 import DOMPurify from 'dompurify';
 
+// perf-cascade injects HAR string values into the DOM via innerHTML, including lazily on row click,
+// so the data has to be sanitized before it reaches the renderer
+const sanitizeHarData = (value) => {
+  if (typeof value === 'string') {
+    return DOMPurify.sanitize(value);
+  }
+  if (Array.isArray(value)) {
+    return value.map(sanitizeHarData);
+  }
+  if (value && typeof value === 'object') {
+    return Object.fromEntries(
+      Object.entries(value).map(([key, item]) => [key, sanitizeHarData(item)]),
+    );
+  }
+  return value;
+};
+
 export class PerfCascade extends Component {
   static propTypes = {
     harData: PropTypes.object.isRequired,
@@ -38,7 +55,7 @@ export class PerfCascade extends Component {
   componentDidMount() {
     let perfCascadeSvg;
     try {
-      perfCascadeSvg = fromHar(DOMPurify.sanitize(this.props.harData));
+      perfCascadeSvg = fromHar(sanitizeHarData(this.props.harData));
       this.myRef.current.appendChild(perfCascadeSvg);
     } catch (e) {
       this.showErrorMessage();

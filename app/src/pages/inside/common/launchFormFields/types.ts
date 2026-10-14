@@ -67,7 +67,7 @@ export interface CreateManualLaunchDto {
   testCaseIds: number[];
   attributes: Attribute[];
   description?: string;
-  testPlanId?: number;
+  testPlan?: { id: number };
 }
 
 export interface LaunchFormFieldsProps {
@@ -114,6 +114,7 @@ export interface NewLaunchFieldsProps {
 
 export interface BaseLaunchModalProps {
   testCases: ExtendedTestCase[];
+  selectedTestCaseIds?: number[];
   folderId?: number;
   testPlanId?: number;
   modalTitle: string;

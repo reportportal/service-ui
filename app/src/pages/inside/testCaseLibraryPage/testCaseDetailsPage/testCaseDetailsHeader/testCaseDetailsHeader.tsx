@@ -20,7 +20,7 @@ import Parser from 'html-react-parser';
 import { useDispatch, useSelector } from 'react-redux';
 import { useTracking } from 'react-tracking';
 import moment from 'moment';
-import { BreadcrumbsTreeIcon, Button, MeatballMenuIcon } from '@reportportal/ui-kit';
+import { BreadcrumbsTreeIcon, Button, MeatballMenuIcon, Tooltip } from '@reportportal/ui-kit';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 
 import {
@@ -40,6 +40,7 @@ import { REVERSED_DATE_FORMAT } from 'common/constants/timeDateFormat';
 import { showModalAction } from 'controllers/modal';
 import { TEST_CASE_LIBRARY_PAGE, urlOrganizationAndProjectSelector } from 'controllers/pages';
 import { useUserPermissions } from 'hooks/useUserPermissions';
+import { useHasTestPlans } from 'hooks/useHasTestPlans';
 import { PriorityIcon } from 'pages/inside/common/priorityIcon';
 import { testCaseLibraryBreadcrumbsSelector } from 'controllers/pages/selectors';
 import { ExecutionEstimationTime } from 'pages/inside/common/executionEstimationTime';
@@ -83,6 +84,7 @@ export const TestCaseDetailsHeader = ({
   const { openModal: openDeleteTestCaseModal } = useDeleteTestCaseModal();
   const { openModal: openDuplicateSelectedTestCaseModal } = useDuplicateSelectedTestCaseModal();
   const { openModal: openEditScenarioModal } = useEditScenarioModal();
+  const { hasTestPlans } = useHasTestPlans();
 
   const breadcrumbsTitles = {
     mainTitle: formatMessage(commonMessages.testCaseLibraryBreadcrumb),
@@ -245,9 +247,17 @@ export const TestCaseDetailsHeader = ({
                 testCaseId={testCase.id}
                 place={TEST_CASE_PLACE.DETAILS_PAGE}
               />
-              <Button onClick={onAddToTestPlan} variant="primary">
-                {formatMessage(COMMON_LOCALE_KEYS.ADD_TO_TEST_PLAN)}
-              </Button>
+              {hasTestPlans ? (
+                <Button onClick={onAddToTestPlan} variant="primary">
+                  {formatMessage(COMMON_LOCALE_KEYS.ADD_TO_TEST_PLAN)}
+                </Button>
+              ) : (
+                <Tooltip placement="top" content={formatMessage(commonMessages.noTestPlanCreated)}>
+                  <Button variant="primary" disabled>
+                    {formatMessage(COMMON_LOCALE_KEYS.ADD_TO_TEST_PLAN)}
+                  </Button>
+                </Tooltip>
+              )}
             </>
           )}
         </div>

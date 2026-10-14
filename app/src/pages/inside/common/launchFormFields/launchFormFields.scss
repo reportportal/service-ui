@@ -30,6 +30,11 @@
 
 .modal-autocomplete-menu {
   z-index: $Z-INDEX-MODAL-POPUP;
+
+  :global(.rc-scrollbars-container),
+  :global(.rc-scrollbars-view) {
+    max-height: 210px !important;
+  }
 }
 
 .description-field {

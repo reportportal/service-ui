@@ -16,6 +16,7 @@
 
 .step {
   display: flex;
+  min-width: 0;
   background-color: var(--rp-ui-base-bg-000);
   border-radius: 4px;
   color: var(--rp-ui-base-almost-black);
@@ -33,6 +34,7 @@
 
   &__content {
     flex-grow: 1;
+    min-width: 0;
 
     & > div:first-child:not(:last-child) {
       border-bottom: 1px solid var(--rp-ui-base-e-100);
@@ -41,13 +43,16 @@
 
   &__description {
     display: flex;
+    min-width: 0;
   }
 
   &__instruction,
   &__expected-result {
     padding: 16px;
     width: 50%;
+    min-width: 0;
     white-space: pre-wrap;
+    overflow-wrap: anywhere;
   }
 
   &__attachments-wrapper {

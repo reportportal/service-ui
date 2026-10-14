@@ -26,18 +26,18 @@
   background-color: var(--rp-ui-base-bg-000);
   box-sizing: border-box;
 
-  &::before {
+  &--fade-bottom::before {
     content: '';
     position: absolute;
     bottom: 102%;
     left: 0;
-    right: 0;
-    height: 36px;
+    right: var(--folder-tree-scrollbar-gutter, 0px);
+    height: 48px;
     pointer-events: none;
     background: linear-gradient(
       360deg,
       var(--rp-ui-base-bg-000) 0%,
-      color-mix(in srgb, var(--rp-ui-base-bg-000), transparent) 100%
+      color-mix(in srgb, var(--rp-ui-base-bg-000) 0%, transparent) 100%
     );
   }
 

@@ -43,6 +43,7 @@ export const EXTENSION_TYPE_LOG_TAB = 'uiExtension:logTab';
 export const EXTENSION_TYPE_PROJECT_PAGE = 'uiExtension:projectPage';
 
 export const REMOTE_EXTENSION_POINT_PROJECT_PAGE = 'projectPages';
+export const REMOTE_EXTENSION_POINT_ADMIN_PAGE = 'adminPages';
 // plugin commands
 export const COMMAND_GET_ISSUE_TYPES = 'getIssueTypes';
 export const COMMAND_GET_ISSUE_FIELDS = 'getIssueFields';

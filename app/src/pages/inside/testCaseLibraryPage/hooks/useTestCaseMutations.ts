@@ -162,7 +162,7 @@ export const useTestCaseMutations = (testCaseId?: number) => {
         dispatch(hideModalAction());
         showSuccessNotification({ messageId: options.successMessageId });
 
-        if (!options.isDetailsPage) {
+        if (!options.isDetailsPage && options.method === 'POST') {
           completeFolderDestination({
             newFolderDetails,
             existingFolderId,

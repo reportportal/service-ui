@@ -104,6 +104,7 @@ import {
   API_KEYS_ROUTE,
   CONFIG_EXAMPLES_ROUTE,
   ASSIGNMENTS_ROUTE,
+  MCP_ROUTE,
 } from 'common/constants/userProfileRoutes';
 import { parseQueryToFilterEntityAction } from 'controllers/filter/actionCreators';
 import { fetchFilteredOrganizationsAction } from 'controllers/instance/organizations';
@@ -228,7 +229,7 @@ const routesMap = {
     payload: { profileRoute: ASSIGNMENTS_ROUTE },
   })),
 
-  [USER_PROFILE_SUB_PAGE]: `/userProfile/:profileRoute(${ASSIGNMENTS_ROUTE}|${API_KEYS_ROUTE}|${CONFIG_EXAMPLES_ROUTE})`,
+  [USER_PROFILE_SUB_PAGE]: `/userProfile/:profileRoute(${ASSIGNMENTS_ROUTE}|${API_KEYS_ROUTE}|${CONFIG_EXAMPLES_ROUTE}|${MCP_ROUTE})`,
 
   [USER_PROFILE_PAGE_ORGANIZATION_LEVEL]: redirectRoute(
     '/organizations/:organizationSlug/userProfile',
@@ -238,7 +239,7 @@ const routesMap = {
     }),
   ),
 
-  [USER_PROFILE_SUB_PAGE_ORGANIZATION_LEVEL]: `/organizations/:organizationSlug/userProfile/:profileRoute(${ASSIGNMENTS_ROUTE}|${API_KEYS_ROUTE}|${CONFIG_EXAMPLES_ROUTE})`,
+  [USER_PROFILE_SUB_PAGE_ORGANIZATION_LEVEL]: `/organizations/:organizationSlug/userProfile/:profileRoute(${ASSIGNMENTS_ROUTE}|${API_KEYS_ROUTE}|${CONFIG_EXAMPLES_ROUTE}|${MCP_ROUTE})`,
 
   [USER_PROFILE_PAGE_PROJECT_LEVEL]: redirectRoute(
     '/organizations/:organizationSlug/projects/:projectSlug/userProfile',
@@ -248,7 +249,7 @@ const routesMap = {
     }),
   ),
 
-  [USER_PROFILE_SUB_PAGE_PROJECT_LEVEL]: `/organizations/:organizationSlug/projects/:projectSlug/userProfile/:profileRoute(${ASSIGNMENTS_ROUTE}|${API_KEYS_ROUTE}|${CONFIG_EXAMPLES_ROUTE})`,
+  [USER_PROFILE_SUB_PAGE_PROJECT_LEVEL]: `/organizations/:organizationSlug/projects/:projectSlug/userProfile/:profileRoute(${ASSIGNMENTS_ROUTE}|${API_KEYS_ROUTE}|${CONFIG_EXAMPLES_ROUTE}|${MCP_ROUTE})`,
 
   API_PAGE_INSTANCE_LEVEL: '/api',
   API_PAGE_ORGANIZATION_LEVEL: '/organizations/:organizationSlug/api',
