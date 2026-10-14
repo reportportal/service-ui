@@ -5,7 +5,7 @@ import { useIntl } from 'react-intl';
 import { useTracking } from 'react-tracking';
 import { format } from 'date-fns';
 import { isEmpty } from 'es-toolkit/compat';
-import { Modal, FileDropArea, AddCsvIcon, ExternalLinkIcon } from '@reportportal/ui-kit';
+import { BubblesLoader, Modal, FileDropArea, AddCsvIcon, ExternalLinkIcon } from '@reportportal/ui-kit';
 import { MimeType, FileWithValidation } from '@reportportal/ui-kit/fileDropArea';
 import { AttachmentFile } from '@reportportal/ui-kit/fileDropArea/attachedFilesList';
 
@@ -281,7 +281,14 @@ export const ImportTestCaseModal = ({
   return (
     <Modal
       title={formatMessage(commonMessages.importTestCases)}
-      okButton={okButton}
+      okButton={{
+        ...okButton,
+        children: isImportingTestCases ? (
+          <BubblesLoader />
+        ) : (
+          okButton.children
+        ),
+      }}
       className={cx('import-test-case-modal')}
       cancelButton={cancelButton}
       onClose={hideModal}
