@@ -48,7 +48,6 @@ export const LaunchAttribute = ({ attributeKey, value, onRemove }: LaunchAttribu
       placement="top"
       width={TOOLTIP_WIDTH}
       wrapperClassName={cx('tooltip-wrapper')}
-      tooltipClassName={cx('custom-tooltip')}
       contentClassName={cx('tooltip-content')}
     >
       <div className={cx('launch-attribute')}>
