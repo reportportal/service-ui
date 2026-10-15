@@ -40,6 +40,7 @@ import {
   GITHUB,
   TEST_EXECUTION,
   ORGANIZATION,
+  ORGANIZATION_DASHBOARDS,
   TEAMS,
 } from 'common/constants/pluginNames';
 
@@ -228,5 +229,13 @@ export const AVAILABLE_PLUGINS_CATALOG: AvailablePlugin[] = [
     details: { name: 'Organizations' },
     description:
       'Reinforce your ReportPortal instance with Organizations plugin. Enable administrators to create and manage organizations, structure projects and users under organizational boundaries, and browse, search, filter, and export the organization list from the instance level.',
+  },
+  {
+    name: ORGANIZATION_DASHBOARDS,
+    tier: PLUGIN_TIERS.PREMIUM,
+    groupType: OTHER_GROUP_TYPE,
+    details: { name: 'Organization Dashboards' },
+    description:
+      'Reinforce your ReportPortal instance with Organization Dashboards plugin. Enable organization-level dashboards to track progress across projects and visualize portfolio metrics from a single place.',
   },
 ];
