@@ -40,6 +40,7 @@ export const LDAP = 'ldap';
 export const GITHUB = 'github';
 export const EPAM = 'epam';
 export const ORGANIZATION = 'organization';
+export const ORGANIZATION_DASHBOARDS = 'organization-dashboards';
 export const QUALITY_GATE = 'quality gate';
 export const TEST_EXECUTION = 'test-execution';
 export const TEAMS = 'teams';
