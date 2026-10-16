@@ -41,6 +41,7 @@ export const EXTENSION_TYPE_LOG_STACKTRACE_ADDON = 'uiExtension:logStacktraceAdd
 export const EXTENSION_TYPE_TEST_ITEM_DETAILS_ADDON = 'uiExtension:testItemDetailsAddon';
 export const EXTENSION_TYPE_LOG_TAB = 'uiExtension:logTab';
 export const EXTENSION_TYPE_PROJECT_PAGE = 'uiExtension:projectPage';
+export const EXTENSION_TYPE_ORGANIZATION_PAGE = 'uiExtension:organizationPage';
 
 export const REMOTE_EXTENSION_POINT_PROJECT_PAGE = 'projectPages';
 export const REMOTE_EXTENSION_POINT_ADMIN_PAGE = 'adminPages';
