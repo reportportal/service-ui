@@ -1,5 +1,5 @@
 /*!
- * Copyright 2019 EPAM Systems
+ * Copyright 2026 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,23 +15,7 @@
  */
 
 .passing-rate-chart {
-  :global {
-    .c3-chart-text text,
-    .c3-chart-text .c3-text,
-    .c3-chart-arc text {
-      display: inline-block !important;
-      font-family: $FONT-SEMIBOLD;
-      font-size: 13px;
-      fill: $COLOR--white-two !important;
-    }
-    .c3-grid line {
-      stroke: transparent;
-    }
-
-    .c3-event-rect {
-      cursor: pointer;
-    }
-  }
+  height: 100%;
 }
 
 .filter-info-block {

@@ -147,3 +147,5 @@ export const MARKETPLACE_LICENCE_MAX_LENGTHS = {
   customerId: 255,
   privateKey: 512,
 } as const;
+
+export const ORGANIZATION_DASHBOARDS_PAGE_SLUG = 'dashboards';

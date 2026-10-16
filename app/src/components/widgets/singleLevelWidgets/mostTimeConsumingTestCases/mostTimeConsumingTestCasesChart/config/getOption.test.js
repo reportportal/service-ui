@@ -1,0 +1,116 @@
+/*
+ * Copyright 2026 EPAM Systems
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+import { COLOR_FAILED, COLOR_PASSED, COLOR_SKIPPED } from 'common/constants/colors';
+import { DURATION } from 'components/widgets/common/constants';
+import { getOption } from './getOption';
+import { sampleContent, sampleContentLongMinutes } from './fixtures/sampleContent';
+
+const intl = (msg) => msg.defaultMessage || msg.id;
+
+describe('mostTimeConsumingTestCasesChart/getOption', () => {
+  it('maps statuses to bar colors and keeps short-range ticks (0.1s)', () => {
+    const option = getOption({
+      content: sampleContent,
+      isPreview: false,
+      formatMessage: intl,
+    });
+
+    expect(option.series[0]).toEqual(
+      expect.objectContaining({
+        id: DURATION,
+        type: 'bar',
+        barWidth: '80%',
+        barCategoryGap: '20%',
+        data: [
+          { value: 810, itemStyle: { color: COLOR_FAILED } },
+          { value: 160, itemStyle: { color: COLOR_PASSED } },
+          { value: 100, itemStyle: { color: COLOR_SKIPPED } },
+        ],
+        emphasis: { focus: 'none', itemStyle: { opacity: 0.75 } },
+      }),
+    );
+    expect(option.yAxis).toEqual(
+      expect.objectContaining({
+        type: 'category',
+        show: true,
+        inverse: true,
+        data: ['0', '1', '2'],
+        axisLabel: { show: false },
+        splitLine: expect.objectContaining({ show: true }),
+        axisTick: { show: false, alignWithLabel: true },
+      }),
+    );
+    expect([0, 1, 2].filter(option.yAxis.splitLine.interval)).toEqual([0, 2]);
+    expect(option.yAxis.splitLine.showMaxLine).toBe(false);
+    expect(option.xAxis).toEqual(
+      expect.objectContaining({
+        type: 'value',
+        show: true,
+        name: 'seconds',
+        min: 0,
+        max: 810,
+        interval: 100,
+        splitLine: { show: false },
+      }),
+    );
+    expect(option.xAxis.axisLabel.formatter(800)).toBe('0.80');
+    expect(option.xAxis.axisLabel.formatter(810)).toBe('');
+    expect(option.tooltip.trigger).toBe('item');
+    expect(option.tooltip.show).toBe(true);
+    expect(option.customData.itemsData).toHaveLength(3);
+    expect(option.grid).toEqual(
+      expect.objectContaining({ top: 40, left: 35, right: 10, bottom: 50 }),
+    );
+  });
+
+  it('collapses chrome in preview', () => {
+    const { xAxis, yAxis, tooltip, grid } = getOption({
+      content: sampleContent,
+      isPreview: true,
+      formatMessage: intl,
+    });
+
+    expect([xAxis.show, yAxis.show, tooltip.show]).toEqual([false, false, false]);
+    expect(grid).toEqual(expect.objectContaining({ top: 0, left: 0, right: 0, bottom: 0 }));
+  });
+
+  it('uses a nice 1/2/5 x 10^n value-axis step for ~10 ticks (same as before the migration)', () => {
+    const { xAxis } = getOption({
+      content: sampleContentLongMinutes,
+      isPreview: false,
+      formatMessage: intl,
+    });
+
+    // max 55 min = 3,300,000 ms → raw step 330,000 → nice step 500,000 (7 ticks)
+    expect(xAxis.name).toBe('minutes');
+    expect(xAxis.interval).toBe(500000);
+  });
+
+  it('matches the pre-migration ticks for a 600,000 s (~166.67 h) max: 0, 13.89, 27.78 ...', () => {
+    const { xAxis } = getOption({
+      content: [{ ...sampleContent[0], duration: 600000 }],
+      isPreview: false,
+      formatMessage: intl,
+    });
+
+    // hours timeType (3,600,000 ms); 6e8 / 10 = 6e7 → nice step 5e7 ms = 13.89 h
+    expect(xAxis.interval).toBe(50000000);
+    expect(xAxis.axisLabel.formatter(50000000)).toBe('13.89');
+    expect(xAxis.axisLabel.formatter(100000000)).toBe('27.78');
+    expect(xAxis.axisLabel.formatter(600000000)).toBe('166.67');
+  });
+});

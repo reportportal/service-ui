@@ -53,6 +53,7 @@ import {
   PLUGIN_UI_EXTENSION_ADMIN_PAGE,
   ACCOUNT_REMOVED_PAGE,
   PROJECT_PLUGIN_PAGE,
+  ORGANIZATION_PLUGIN_PAGE,
   ORGANIZATION_PROJECTS_PAGE,
   ORGANIZATION_USERS_PAGE,
   ORGANIZATION_SETTINGS_PAGE,
@@ -557,6 +558,8 @@ const routesMap = {
     },
   },
   [PLUGIN_UI_EXTENSION_ADMIN_PAGE]: '/plugin/:pluginPage/:pluginRoute*',
+  [ORGANIZATION_PLUGIN_PAGE]:
+    '/organizations/:organizationSlug/plugin/:pluginPage/:pluginRoute*',
   [PROJECT_PLUGIN_PAGE]:
     '/organizations/:organizationSlug/projects/:projectSlug/plugin/:pluginPage/:pluginRoute*',
   [TEST_CASE_LIBRARY_PAGE]: {

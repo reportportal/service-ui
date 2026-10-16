@@ -42,6 +42,7 @@ import {
   EXTENSION_TYPE_LOG_TAB,
   EXTENSION_TYPE_TEST_ITEM_DETAILS_ADDON,
   EXTENSION_TYPE_PROJECT_PAGE,
+  EXTENSION_TYPE_ORGANIZATION_PAGE,
   PLUGIN_TYPE_REMOTE,
   PLUGIN_TYPE_EXTENSION,
   REMOTE_EXTENSION_POINT_PROJECT_PAGE,
@@ -160,6 +161,9 @@ export const uiExtensionRegistrationPageSelector = createExtensionSelectorByExte
 export const uiExtensionProjectPagesSelector = createExtensionSelectorByExtensionPoints([
   EXTENSION_TYPE_PROJECT_PAGE,
   REMOTE_EXTENSION_POINT_PROJECT_PAGE,
+]);
+export const uiExtensionOrganizationPagesSelector = createExtensionSelectorByExtensionPoints([
+  EXTENSION_TYPE_ORGANIZATION_PAGE,
 ]);
 
 export const makeDecisionDefectCommentAddonSelector = createExtensionSelectorByExtensionPoints([

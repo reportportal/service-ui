@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 EPAM Systems
+ * Copyright 2026 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,142 +14,108 @@
  * limitations under the License.
  */
 
-import React, { Component } from 'react';
+import { useCallback, useMemo } from 'react';
 import PropTypes from 'prop-types';
+import { useIntl } from 'react-intl';
+import { useDispatch, useSelector } from 'react-redux';
 import classNames from 'classnames/bind';
-import { connect } from 'react-redux';
-import * as d3 from 'd3-selection';
-import { injectIntl } from 'react-intl';
 import { statisticsLinkSelector } from 'controllers/testItem';
 import { createFilterAction } from 'controllers/filter';
 import * as STATUSES from 'common/constants/testStatuses';
 import { CHART_MODES, MODES_VALUES } from 'common/constants/chartModes';
 import { ALL } from 'common/constants/reservedFilterIds';
-import { ChartContainer } from 'components/widgets/common/c3chart';
+import { EChart } from 'components/widgets/common/echarts';
 import {
   getUpdatedFilterWithTime,
   getChartDefaultProps,
   getDefaultTestItemLinkParams,
 } from 'components/widgets/common/utils';
 import { urlOrganizationAndProjectSelector } from 'controllers/pages';
-import { getConfig } from './config/getConfig';
+import { getOption } from './config/getOption';
 import styles from './testCasesGrowthTrendChart.scss';
 
 const cx = classNames.bind(styles);
 
-@connect(
-  (state) => ({
-    slugs: urlOrganizationAndProjectSelector(state),
-    getStatisticsLink: statisticsLinkSelector(state),
-  }),
-  {
-    createFilterAction,
-    navigate: (linkAction) => linkAction,
-  },
-)
-@injectIntl
-export class TestCasesGrowthTrendChart extends Component {
-  static propTypes = {
-    intl: PropTypes.object.isRequired,
-    widget: PropTypes.object.isRequired,
-    container: PropTypes.instanceOf(Element).isRequired,
-    getStatisticsLink: PropTypes.func.isRequired,
-    navigate: PropTypes.func.isRequired,
-    createFilterAction: PropTypes.func.isRequired,
-    isPreview: PropTypes.bool,
-    height: PropTypes.number,
-    observer: PropTypes.object,
-    slugs: PropTypes.shape({
-      organizationSlug: PropTypes.string.isRequired,
-      projectSlug: PropTypes.string.isRequired,
-    }),
-  };
+export const TestCasesGrowthTrendChart = ({
+  widget,
+  container,
+  isPreview = false,
+  observer = {},
+  heightOffset,
+}) => {
+  const { formatMessage } = useIntl();
+  const dispatch = useDispatch();
+  const slugs = useSelector(urlOrganizationAndProjectSelector);
+  const getStatisticsLink = useSelector(statisticsLinkSelector);
 
-  static defaultProps = {
-    isPreview: false,
-    height: 0,
-    observer: {},
-  };
+  const isTimeline = useMemo(
+    () =>
+      Boolean(
+        widget.contentParameters &&
+          widget.contentParameters.widgetOptions.timeline ===
+            MODES_VALUES[CHART_MODES.TIMELINE_MODE],
+      ),
+    [widget.contentParameters],
+  );
 
-  onChartCreated = (element) => {
-    this.node = element;
-    this.restoreBars();
-  };
+  const timeLineModeClickHandler = useCallback(
+    (data) => {
+      const chartFilter = widget.appliedFilters[0];
+      const arrResult = Object.keys(widget.content.result).map((item) => item);
+      const itemDate = arrResult[data.index];
+      const newFilter = getUpdatedFilterWithTime(chartFilter, itemDate);
 
-  onChartClick = (data) =>
-    this.isTimeline ? this.timeLineModeClickHandler(data) : this.launchModeClickHandler(data);
+      dispatch(createFilterAction(newFilter));
+    },
+    [dispatch, widget],
+  );
 
-  getConfigData = () => {
-    const {
-      intl: { formatMessage },
-      widget: { contentParameters },
-    } = this.props;
+  const launchModeClickHandler = useCallback(
+    (data) => {
+      const { organizationSlug, projectSlug } = slugs;
+      const id = widget.content.result[data.index].id;
+      const defaultParams = getDefaultTestItemLinkParams(projectSlug, ALL, id, organizationSlug);
+      const statisticsLink = getStatisticsLink({
+        statuses: [STATUSES.PASSED, STATUSES.FAILED, STATUSES.SKIPPED, STATUSES.INTERRUPTED],
+      });
 
-    this.isTimeline =
-      contentParameters &&
-      contentParameters.widgetOptions.timeline === MODES_VALUES[CHART_MODES.TIMELINE_MODE];
+      dispatch(Object.assign(statisticsLink, defaultParams));
+    },
+    [dispatch, getStatisticsLink, slugs, widget],
+  );
 
-    return {
-      getConfig,
+  const onChartClick = useCallback(
+    (data) => (isTimeline ? timeLineModeClickHandler(data) : launchModeClickHandler(data)),
+    [isTimeline, launchModeClickHandler, timeLineModeClickHandler],
+  );
+
+  const configData = useMemo(
+    () => ({
+      getOption,
       formatMessage,
-      isTimeline: this.isTimeline,
-      onChartClick: this.onChartClick,
-      onRendered: this.restoreBars,
-    };
-  };
+      isTimeline,
+      onChartClick,
+    }),
+    [formatMessage, isTimeline, onChartClick],
+  );
 
-  restoreBars = () => {
-    if (!this.node) {
-      return;
-    }
-
-    const barPathSelector = '.c3-bars-bar path';
-    const barPaths = d3.select(this.node).selectAll(barPathSelector);
-    barPaths.each((pathData, i) => {
-      const elem = d3.select(this.node).select(`${barPathSelector}.c3-bar-${i}`);
-      if (pathData.value === 0) {
-        elem
-          .style('stroke-width', '1px')
-          .style('stroke', '#464547')
-          .style('shape-rendering', 'initial');
-      }
-    });
-  };
-
-  timeLineModeClickHandler = (data) => {
-    const chartFilter = this.props.widget.appliedFilters[0];
-    const arrResult = Object.keys(this.props.widget.content.result).map((item) => item);
-    const itemDate = arrResult[data.index];
-    const newFilter = getUpdatedFilterWithTime(chartFilter, itemDate);
-
-    this.props.createFilterAction(newFilter);
-  };
-
-  launchModeClickHandler = (data) => {
-    const {
-      widget,
-      getStatisticsLink,
-      slugs: { organizationSlug, projectSlug },
-    } = this.props;
-    const id = widget.content.result[data.index].id;
-    const defaultParams = getDefaultTestItemLinkParams(projectSlug, ALL, id, organizationSlug);
-    const statisticsLink = getStatisticsLink({
-      statuses: [STATUSES.PASSED, STATUSES.FAILED, STATUSES.SKIPPED, STATUSES.INTERRUPTED],
-    });
-    this.props.navigate(Object.assign(statisticsLink, defaultParams));
-  };
-
-  render() {
-    return (
-      <ChartContainer
-        {...getChartDefaultProps(this.props)}
-        configData={this.getConfigData()}
-        className={cx('test-cases-growth-trend-chart')}
+  return (
+    <div className={cx('test-cases-growth-trend-chart')}>
+      <EChart
+        {...getChartDefaultProps({ widget, container, isPreview, observer, heightOffset })}
+        configData={configData}
         legendConfig={{
           showLegend: false,
         }}
-        chartCreatedCallback={this.onChartCreated}
       />
-    );
-  }
-}
+    </div>
+  );
+};
+
+TestCasesGrowthTrendChart.propTypes = {
+  widget: PropTypes.object.isRequired,
+  container: PropTypes.instanceOf(Element).isRequired,
+  isPreview: PropTypes.bool,
+  observer: PropTypes.object,
+  heightOffset: PropTypes.number,
+};

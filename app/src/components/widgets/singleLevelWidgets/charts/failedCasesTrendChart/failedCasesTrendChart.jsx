@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 EPAM Systems
+ * Copyright 2026 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,100 +14,67 @@
  * limitations under the License.
  */
 
-import React, { Component } from 'react';
+import { useMemo } from 'react';
 import PropTypes from 'prop-types';
-import { injectIntl } from 'react-intl';
+import { useIntl } from 'react-intl';
 import classNames from 'classnames/bind';
-import { connect } from 'react-redux';
-import { statisticsLinkSelector } from 'controllers/testItem';
-import { urlOrganizationAndProjectSelector } from 'controllers/pages';
+import { EChart } from 'components/widgets/common/echarts';
+import { getChartDefaultProps } from 'components/widgets/common/utils';
+import { useTrendChartClickNavigation } from 'components/widgets/common/utils/useTrendChartClickNavigation';
 import { FAILED, INTERRUPTED } from 'common/constants/testStatuses';
 import { STATS_FAILED } from 'common/constants/statistics';
-import { ChartContainer } from 'components/widgets/common/c3chart';
-import {
-  getChartDefaultProps,
-  getDefaultTestItemLinkParams,
-} from 'components/widgets/common/utils';
-import { getConfig } from './config/getConfig';
+import { getOption } from './config/getOption';
 import styles from './failedCasesTrendChart.scss';
 
 const cx = classNames.bind(styles);
 
-@injectIntl
-@connect(
-  (state) => ({
-    slugs: urlOrganizationAndProjectSelector(state),
-    getStatisticsLink: statisticsLinkSelector(state),
-  }),
-  {
-    navigate: (linkAction) => linkAction,
-  },
-)
-export class FailedCasesTrendChart extends Component {
-  static propTypes = {
-    intl: PropTypes.object.isRequired,
-    widget: PropTypes.object.isRequired,
-    container: PropTypes.instanceOf(Element).isRequired,
-    getStatisticsLink: PropTypes.func.isRequired,
-    navigate: PropTypes.func.isRequired,
-    isPreview: PropTypes.bool,
-    height: PropTypes.number,
-    observer: PropTypes.object,
-    slugs: PropTypes.shape({
-      organizationSlug: PropTypes.string.isRequired,
-      projectSlug: PropTypes.string.isRequired,
+const STATUSES_LINK_PARAMS = { statuses: [FAILED, INTERRUPTED] };
+
+export const FailedCasesTrendChart = ({
+  widget,
+  container,
+  isPreview = false,
+  observer = {},
+  heightOffset,
+}) => {
+  const { formatMessage } = useIntl();
+  const onChartClick = useTrendChartClickNavigation(widget, STATUSES_LINK_PARAMS);
+
+  const configData = useMemo(
+    () => ({
+      getOption,
+      onChartClick,
+      formatMessage,
     }),
-  };
+    [formatMessage, onChartClick],
+  );
 
-  static defaultProps = {
-    isPreview: false,
-    height: 0,
-    observer: {},
-  };
+  const legendConfig = useMemo(
+    () => ({
+      showLegend: true,
+      legendProps: {
+        items: [STATS_FAILED],
+        disabled: true,
+      },
+    }),
+    [],
+  );
 
-  onChartClick = (data) => {
-    const {
-      widget,
-      getStatisticsLink,
-      slugs: { organizationSlug, projectSlug },
-    } = this.props;
-    const launchIds = widget.content.result.map((item) => item.id);
-    const link = getStatisticsLink({
-      statuses: [FAILED, INTERRUPTED],
-    });
-    const navigationParams = getDefaultTestItemLinkParams(
-      projectSlug,
-      widget.appliedFilters[0].id,
-      launchIds[data.index],
-      organizationSlug,
-    );
+  return (
+    <div className={cx('failed-cases-trend-chart')}>
+      <EChart
+        {...getChartDefaultProps({ widget, container, isPreview, observer, heightOffset })}
+        configData={configData}
+        legendConfig={legendConfig}
+      />
+    </div>
+  );
+};
 
-    this.props.navigate(Object.assign(link, navigationParams));
-  };
-
-  configData = {
-    getConfig,
-    onChartClick: this.onChartClick,
-    formatMessage: this.props.intl.formatMessage,
-  };
-
-  legendConfig = {
-    showLegend: true,
-    legendProps: {
-      items: [STATS_FAILED],
-      disabled: true,
-    },
-  };
-
-  render() {
-    return (
-      <div className={cx('failed-cases-trend-chart')}>
-        <ChartContainer
-          {...getChartDefaultProps(this.props)}
-          configData={this.configData}
-          legendConfig={this.legendConfig}
-        />
-      </div>
-    );
-  }
-}
+FailedCasesTrendChart.propTypes = {
+  widget: PropTypes.object.isRequired,
+  container: PropTypes.instanceOf(Element).isRequired,
+  isPreview: PropTypes.bool,
+  observer: PropTypes.object,
+  heightOffset: PropTypes.number,
+};

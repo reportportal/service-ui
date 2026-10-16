@@ -105,6 +105,7 @@ import {
   activeProjectRoleSelector,
   userRolesSelector,
   ORGANIZATION_SETTINGS_TAB_PAGE,
+  ORGANIZATION_PLUGIN_PAGE,
   ORGANIZATION_PROJECTS_PAGE,
   ORGANIZATIONS_PAGE,
   PROJECT_DASHBOARD_PAGE,
@@ -113,7 +114,11 @@ import {
   locationSelector,
 } from 'controllers/pages';
 import { attributesArray, isNotEmptyArray } from 'common/utils/validation/validate';
-import { canDeleteTestItem, canUpdateSettings } from 'common/utils/permissions';
+import {
+  canDeleteTestItem,
+  canUpdateSettings,
+  canUpdateOrganizationSettings,
+} from 'common/utils/permissions';
 import {
   requiredField,
   btsUrl,
@@ -237,7 +242,9 @@ import {
 } from 'pages/inside/projectSettingsPageContainer/content/elements';
 import { EmptyStatePage } from 'pages/inside/common/emptyStatePage';
 import { QualityGatesPromoLayout } from 'pages/inside/projectSettingsPageContainer/content/qualityGates/qualityGatesPromoLayout';
+import { OrganizationDashboardsPromoLayout } from 'pages/organization/organizationUiExtensionPage/organizationDashboardsPromoPage/organizationDashboardsPromoLayout';
 import { messages as qualityGatesMessages } from 'pages/inside/projectSettingsPageContainer/content/qualityGates/messages';
+import { messages as organizationDashboardsMessages } from 'pages/organization/organizationUiExtensionPage/organizationDashboardsPromoPage/messages';
 import { AsyncAutocomplete as AsyncAutocompleteField } from 'componentLibrary/autocompletes/asyncAutocomplete';
 import { AsyncAutocompleteV2 } from 'componentLibrary/autocompletes/asyncAutocompleteV2';
 import { AttributeListFormField } from 'components/containers/AttributeListFormField';
@@ -356,6 +363,7 @@ export const createImportProps = (pluginName) => ({
     Toggle,
     EmptyStatePage,
     QualityGatesPromoLayout,
+    OrganizationDashboardsPromoLayout,
     Dropdown,
     FieldNumber,
     SystemMessage,
@@ -398,6 +406,7 @@ export const createImportProps = (pluginName) => ({
     SECRET_FIELDS_KEY,
     BTS_FIELDS_FORM,
     ORGANIZATION_SETTINGS_TAB_PAGE,
+    ORGANIZATION_PLUGIN_PAGE,
     ORGANIZATION_PROJECTS_PAGE,
     ORGANIZATIONS_PAGE,
     PROJECT_DASHBOARD_PAGE,
@@ -511,8 +520,10 @@ export const createImportProps = (pluginName) => ({
     removeSessionItem,
     canDeleteTestItem,
     canUpdateSettings,
+    canUpdateOrganizationSettings,
     referenceDictionary,
     qualityGatesMessages,
+    organizationDashboardsMessages,
   },
   validators: {
     attributesArray,

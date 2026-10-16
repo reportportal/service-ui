@@ -40,6 +40,7 @@ import {
   GITHUB,
   TEST_EXECUTION,
   ORGANIZATION,
+  ORGANIZATION_DASHBOARDS,
 } from 'common/constants/pluginNames';
 
 export const PLUGIN_TIERS = {
@@ -169,5 +170,11 @@ export const AVAILABLE_PLUGINS_CATALOG: AvailablePlugin[] = [
     tier: PLUGIN_TIERS.PREMIUM,
     groupType: OTHER_GROUP_TYPE,
     details: { name: 'Organizations' },
+  },
+  {
+    name: ORGANIZATION_DASHBOARDS,
+    tier: PLUGIN_TIERS.PREMIUM,
+    groupType: OTHER_GROUP_TYPE,
+    details: { name: 'Organization Dashboards' },
   },
 ];

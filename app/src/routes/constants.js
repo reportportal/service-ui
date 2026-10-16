@@ -53,6 +53,7 @@ import {
   OAUTH_SUCCESS,
   PLUGIN_UI_EXTENSION_ADMIN_PAGE,
   PROJECT_PLUGIN_PAGE,
+  ORGANIZATION_PLUGIN_PAGE,
   UNIQUE_ERRORS_PAGE,
   ACCOUNT_REMOVED_PAGE,
   USER_PROFILE_PAGE,
@@ -77,6 +78,7 @@ import {
 import { AdminUiExtensionPage } from 'pages/instance/adminUiExtensionPage';
 import { AccountRemovedPage } from 'pages/outside/accountRemovedPage';
 import { ProjectUiExtensionPage } from 'pages/inside/projectUiExtensionPage';
+import { OrganizationUiExtensionPage } from 'pages/organization/organizationUiExtensionPage';
 import { OrganizationProjectsPage } from 'pages/organization/organizationProjectsPage';
 import { ProjectTeamPage } from 'pages/organization/projectTeamPage';
 import { ProjectLayout } from 'layouts/projectLayout';
@@ -156,7 +158,7 @@ export const pageRendering = {
     layout: OrganizationLayout,
     rawContent: true,
   },
-  PROJECT_DASHBOARD_PAGE: { component: DashboardPage, layout: ProjectLayout },
+  PROJECT_DASHBOARD_PAGE: { component: DashboardPage, layout: ProjectLayout, rawContent: true },
   PROJECT_DASHBOARD_ITEM_PAGE: { component: DashboardItemPage, layout: ProjectLayout },
   PROJECT_DASHBOARD_PRINT_PAGE: { component: DashboardPrintPage, layout: EmptyLayout },
   PROJECT_FILTERS_PAGE: { component: FiltersPage, layout: ProjectLayout },
@@ -238,6 +240,11 @@ export const pageRendering = {
   [PROJECT_PLUGIN_PAGE]: {
     component: ProjectUiExtensionPage,
     layout: ProjectLayout,
+    rawContent: true,
+  },
+  [ORGANIZATION_PLUGIN_PAGE]: {
+    component: OrganizationUiExtensionPage,
+    layout: OrganizationLayout,
     rawContent: true,
   },
   [TEST_CASE_LIBRARY_PAGE]: {

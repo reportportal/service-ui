@@ -23,24 +23,31 @@ import {
   ORGANIZATION_PROJECTS_PAGE,
   ORGANIZATION_USERS_PAGE,
   ORGANIZATION_SETTINGS_PAGE,
+  ORGANIZATION_PLUGIN_PAGE,
   USER_PROFILE_PAGE_ORGANIZATION_LEVEL,
   ORGANIZATIONS_PAGE,
 } from 'controllers/pages/constants';
-import { uiExtensionOrganizationSidebarComponentsSelector } from 'controllers/plugins/uiExtensions';
+import {
+  uiExtensionOrganizationPagesSelector,
+  uiExtensionOrganizationSidebarComponentsSelector,
+} from 'controllers/plugins/uiExtensions';
 import { AppSidebar } from 'layouts/common/appSidebar';
 import { ExtensionLoader } from 'components/extensionLoader';
 import MembersIcon from 'common/img/sidebar/members-icon-inline.svg';
 import SettingsIcon from 'common/img/sidebar/settings-icon-inline.svg';
 import ProjectsIcon from 'common/img/sidebar/projects-icon-inline.svg';
+import DashboardIcon from 'common/img/sidebar/dashboard-icon-inline.svg';
 import {
   activeOrganizationNameSelector,
   activeOrganizationSelector,
 } from 'controllers/organization';
 import { SIDEBAR_EVENTS } from 'components/main/analytics/events';
 import { PreservedText } from 'components/preservedText';
+import { useUserPermissions } from 'hooks/useUserPermissions';
+import { ORGANIZATION_DASHBOARDS_PAGE_SLUG } from 'controllers/plugins';
 import { OrganizationsControlWithPopover } from '../../organizationsControl';
 import { messages } from '../../messages';
-import { useUserPermissions } from 'hooks/useUserPermissions';
+
 const ORGANIZATION_CONTROL = 'Organization control';
 
 export const OrganizationSidebar = ({ onClickNavBtn }) => {
@@ -48,6 +55,7 @@ export const OrganizationSidebar = ({ onClickNavBtn }) => {
   const { canSeeOrganizationMembers } = useUserPermissions();
   const { formatMessage } = useIntl();
   const sidebarExtensions = useSelector(uiExtensionOrganizationSidebarComponentsSelector);
+  const organizationPageExtensions = useSelector(uiExtensionOrganizationPagesSelector);
   const organizationSlug = useSelector(activeOrganizationSelector)?.slug;
   const organizationName = useSelector(activeOrganizationNameSelector);
   const [isOpenOrganizationPopover, setIsOpenOrganizationPopover] = useState(false);
@@ -58,13 +66,35 @@ export const OrganizationSidebar = ({ onClickNavBtn }) => {
   };
 
   const getSidebarItems = () => {
+    let menuCounter = 0;
+    const menuStep = 10;
+    const nextMenuOrder = () => {
+      menuCounter += menuStep;
+      return menuCounter;
+    };
+
     const sidebarItems = [
+      {
+        onClick: (isSidebarCollapsed) =>
+          onClickButton({
+            itemName: messages.organizationDashboards.defaultMessage,
+            isSidebarCollapsed,
+          }),
+        link: {
+          type: ORGANIZATION_PLUGIN_PAGE,
+          payload: { organizationSlug, pluginPage: ORGANIZATION_DASHBOARDS_PAGE_SLUG },
+        },
+        icon: DashboardIcon,
+        message: formatMessage(messages.organizationDashboards),
+        menuOrder: nextMenuOrder(),
+      },
       {
         onClick: (isSidebarCollapsed) =>
           onClickButton({ itemName: messages.projects.defaultMessage, isSidebarCollapsed }),
         link: { type: ORGANIZATION_PROJECTS_PAGE, payload: { organizationSlug } },
         icon: ProjectsIcon,
         message: formatMessage(messages.projects),
+        menuOrder: nextMenuOrder(),
       },
       ...(canSeeOrganizationMembers
         ? [
@@ -77,6 +107,7 @@ export const OrganizationSidebar = ({ onClickNavBtn }) => {
               },
               icon: MembersIcon,
               message: formatMessage(messages.users),
+              menuOrder: nextMenuOrder(),
             },
           ]
         : []),
@@ -92,8 +123,38 @@ export const OrganizationSidebar = ({ onClickNavBtn }) => {
         },
         icon: SettingsIcon,
         message: formatMessage(messages.organizationSettings),
+        menuOrder: nextMenuOrder(),
       },
     ];
+
+    sidebarItems.push(
+      ...organizationPageExtensions.flatMap(({ payload, pluginName, name: extensionName }) => {
+        const { icon, slug, name, title, iconName, menuOrder } = payload;
+        if ((slug || name) === ORGANIZATION_DASHBOARDS_PAGE_SLUG) {
+          return [];
+        }
+        const iconSvg = icon?.content || icon?.svg;
+        const itemTitle = title || icon?.title || name;
+        if (!iconSvg || !itemTitle) {
+          return [];
+        }
+        const itemName = iconName || itemTitle;
+
+        return [
+          {
+            name: [pluginName, extensionName, slug || name].filter(Boolean).join(':'),
+            onClick: (isSidebarCollapsed) => onClickButton({ itemName, isSidebarCollapsed }),
+            link: {
+              type: ORGANIZATION_PLUGIN_PAGE,
+              payload: { organizationSlug, pluginPage: slug || name },
+            },
+            icon: iconSvg,
+            message: itemTitle,
+            menuOrder: menuOrder ?? nextMenuOrder(),
+          },
+        ];
+      }),
+    );
 
     sidebarExtensions.forEach((extension) => {
       const itemName = extension.payload?.iconName;
@@ -103,10 +164,11 @@ export const OrganizationSidebar = ({ onClickNavBtn }) => {
         component: <ExtensionLoader extension={extension} />,
         onClick: (isSidebarCollapsed) =>
           itemName ? onClickButton({ itemName, isSidebarCollapsed }) : onClickNavBtn(),
+        menuOrder: extension.payload?.menuOrder ?? nextMenuOrder(),
       });
     });
 
-    return sidebarItems;
+    return sidebarItems.sort((a, b) => a.menuOrder - b.menuOrder);
   };
 
   const link = { type: ORGANIZATIONS_PAGE };

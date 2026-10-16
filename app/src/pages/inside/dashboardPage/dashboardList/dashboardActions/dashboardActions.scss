@@ -1,0 +1,46 @@
+/*!
+ * Copyright 2025 EPAM Systems
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+@use '../../../../../common/css/mixins';
+
+// the popover wrapper is inline-block, in a block parent it would get the text line height (taller than the icon)
+.dashboard-actions {
+  // positioned (without z-index) so it is painted above the stretched link of the card, which comes earlier in the DOM;
+  // a z-index here would create a stacking context and the next card's button would be painted above an open menu
+  position: relative;
+  display: flex;
+
+  &__trigger {
+    @include mixins.button-reset;
+
+    display: flex;
+  }
+
+  // the menu width as in the old dropdown (the ui-kit popover is as narrow as its content)
+  &__popover {
+    // doubled class to win over the ui-kit popover styles
+    &.dashboard-actions__popover {
+      width: 290px;
+      max-width: none;
+    }
+  }
+
+  svg {
+    display: block;
+    width: 16px;
+    height: 16px;
+  }
+}

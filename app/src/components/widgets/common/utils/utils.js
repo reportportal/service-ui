@@ -158,3 +158,18 @@ export const getTimeType = (max) => {
 };
 
 export const convertSecondsToMilliseconds = (seconds) => seconds * 1000;
+
+export const getNiceTickStep = (max, count) => {
+  const rawStep = max / count;
+  const power = Math.floor(Math.log10(rawStep));
+  const error = rawStep / 10 ** power;
+  let factor = 1;
+  if (error >= Math.sqrt(50)) {
+    factor = 10;
+  } else if (error >= Math.sqrt(10)) {
+    factor = 5;
+  } else if (error >= Math.sqrt(2)) {
+    factor = 2;
+  }
+  return factor * 10 ** power;
+};

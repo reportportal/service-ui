@@ -66,6 +66,16 @@ export const referenceDictionary = {
     'https://reportportal.io/pricing/saas/?utm_source=trigger&utm_medium=product&utm_campaign=promo_page&utm_content=cloud_version',
   rpExplorePremiumFeaturesCloud:
     'https://reportportal.io/docs/terms-and-conditions/PremiumFeatures/?utm_source=trigger&utm_medium=product&utm_campaign=promo_page&utm_content=cloud_version',
+  rpExploreBillingPlansOrgDashboards:
+    'https://reportportal.io/pricing/saas/?utm_source=trigger&utm_medium=product&utm_campaign=promo_page&utm_content=odb',
+  rpExplorePremiumFeaturesOrgDashboards:
+    'https://reportportal.io/docs/premium-features/?utm_source=trigger&utm_medium=product&utm_campaign=promo_page&utm_content=odb',
+  rpOrgDashboardsDocs:
+    'https://reportportal.io/docs/?utm_source=trigger&utm_medium=product&utm_campaign=promo_page&utm_content=odb',
+  rpExplorePlansOrgDashboards:
+    'https://reportportal.io/pricing/saas/?utm_source=trigger&utm_medium=product&utm_campaign=premium_popup&utm_content=odb',
+  rpContactUsOrgDashboards:
+    'https://reportportal.io/contact-us/general/?utm_source=trigger&utm_medium=product&utm_campaign=premium_popup&utm_content=odb',
 };
 
 export const docsReferences = {

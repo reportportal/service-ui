@@ -15,7 +15,12 @@
  */
 
 export { pluginsReducer } from './reducer';
-export { SECRET_FIELDS_KEY, MARKETPLACE_CATALOGUE_STATE, REGISTRY_STATUS } from './constants';
+export {
+  SECRET_FIELDS_KEY,
+  MARKETPLACE_CATALOGUE_STATE,
+  REGISTRY_STATUS,
+  ORGANIZATION_DASHBOARDS_PAGE_SLUG,
+} from './constants';
 export {
   fetchPluginsAction,
   fetchPublicPluginsAction,

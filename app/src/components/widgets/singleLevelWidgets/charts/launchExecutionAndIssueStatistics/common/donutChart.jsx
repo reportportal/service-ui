@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 EPAM Systems
+ * Copyright 2026 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,12 +14,11 @@
  * limitations under the License.
  */
 
-import React, { Component } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
-import { injectIntl } from 'react-intl';
-import * as d3 from 'd3-selection';
+import { useIntl } from 'react-intl';
+import { useDispatch, useSelector } from 'react-redux';
 import classNames from 'classnames/bind';
-import { connect } from 'react-redux';
 import { ALL } from 'common/constants/reservedFilterIds';
 import { TEST_ITEMS_TYPE_LIST } from 'controllers/testItem';
 import { userFiltersSelector } from 'controllers/project';
@@ -29,212 +28,185 @@ import {
   getChartDefaultProps,
   getDefaultTestItemLinkParams,
 } from 'components/widgets/common/utils';
-import { ChartContainer } from 'components/widgets/common/c3chart';
-import { getConfig } from './config/getConfig';
+import { EChart } from 'components/widgets/common/echarts';
+import { getOption } from './config/getOption';
 import { isSmallDonutChartView } from './config/utils';
 import styles from './donutChart.scss';
 
 const cx = classNames.bind(styles);
 
-@connect(
-  (state) => ({
-    slugs: urlOrganizationAndProjectSelector(state),
-    launchFilters: userFiltersSelector(state),
-  }),
-  {
-    navigate: (linkAction) => linkAction,
-  },
-)
-@injectIntl
-export class DonutChart extends Component {
-  static propTypes = {
-    intl: PropTypes.object.isRequired,
-    widget: PropTypes.object.isRequired,
-    isPreview: PropTypes.bool,
-    navigate: PropTypes.func.isRequired,
-    container: PropTypes.instanceOf(Element).isRequired,
-    uncheckedLegendItems: PropTypes.array,
-    onChangeLegend: PropTypes.func,
-    onStatusPageMode: PropTypes.bool,
-    launchFilters: PropTypes.array,
-    heightOffset: PropTypes.number,
-    getLink: PropTypes.func,
-    configParams: PropTypes.object,
-    chartText: PropTypes.string,
-    slugs: PropTypes.shape({
-      organizationSlug: PropTypes.string.isRequired,
-      projectSlug: PropTypes.string.isRequired,
-    }),
-  };
+export const DonutChart = ({
+  widget,
+  isPreview = false,
+  container,
+  observer,
+  uncheckedLegendItems = [],
+  onChangeLegend = () => {},
+  onStatusPageMode = false,
+  heightOffset = 0,
+  getLink = () => {},
+  configParams = {},
+  chartText = '',
+}) => {
+  const { formatMessage } = useIntl();
+  const dispatch = useDispatch();
+  const slugs = useSelector(urlOrganizationAndProjectSelector);
+  const launchFilters = useSelector(userFiltersSelector);
 
-  static defaultProps = {
-    isPreview: false,
-    uncheckedLegendItems: [],
-    onStatusPageMode: false,
-    launchFilters: [],
-    configParams: {},
-    heightOffset: 0,
-    chartText: '',
-    onChangeLegend: () => {},
-    getLink: () => {},
-  };
+  const chartRef = useRef(null);
+  const [isSmallView, setIsSmallView] = useState(false);
 
-  componentWillUnmount() {
-    this.chart = null;
-  }
-
-  onChartCreated = (node, chart) => {
-    this.node = node;
-    this.chart = chart;
-
-    const { onStatusPageMode, chartText } = this.props;
-
-    if (!onStatusPageMode) {
-      const height = this.getChartSize().height;
-      this.chart.resize({ height });
+  useEffect(() => {
+    if (!container || typeof ResizeObserver === 'undefined') {
+      return undefined;
     }
 
-    this.renderTotalLabel();
+    const updateSmallView = () => {
+      setIsSmallView(
+        isSmallDonutChartView(container.offsetHeight - heightOffset, container.offsetWidth),
+      );
+    };
 
-    d3.select(chart.element)
-      .select('.c3-chart-arcs-title')
-      .attr('dy', onStatusPageMode ? -5 : -15)
-      .append('tspan')
-      .attr('dy', onStatusPageMode || this.checkIfTheSmallView() ? 15 : 30)
-      .attr('x', 0)
-      .attr('fill', '#666')
-      .text(chartText);
+    updateSmallView();
 
-    this.forceUpdateChart();
-  };
+    const resizeObserver = new ResizeObserver(updateSmallView);
+    resizeObserver.observe(container);
 
-  onChartClick = (d) => {
-    const {
-      widget: {
+    return () => resizeObserver.disconnect();
+  }, [container, heightOffset]);
+
+  const getDefaultItemsTypeListLinkParams = useCallback(
+    (activeFilterId) => ({
+      payload: {
+        projectSlug: slugs.projectSlug,
+        filterId: activeFilterId,
+        testItemIds: TEST_ITEMS_TYPE_LIST,
+        organizationSlug: slugs.organizationSlug,
+      },
+      type: TEST_ITEM_PAGE,
+    }),
+    [slugs],
+  );
+
+  const onChartClick = useCallback(
+    (params) => {
+      const {
         appliedFilters,
         contentParameters,
         content: { result = [] },
-      },
-      launchFilters,
-      getLink,
-      slugs: { organizationSlug, projectSlug },
-    } = this.props;
+      } = widget;
+      const nameConfig = getItemNameConfig(params.name);
+      const id = (result[0] || result).id;
+      let navigationParams;
+      let linkParams;
 
-    const nameConfig = getItemNameConfig(d.id);
-    const id = (result[0] || result).id;
-    let navigationParams;
-    let linkParams = {};
+      if (!id) {
+        const appliedWidgetFilterId = appliedFilters[0].id;
+        const launchesLimit = contentParameters.itemsCount;
+        const isLatest = contentParameters.widgetOptions.latest;
+        const activeFilter = launchFilters.find((filter) => filter.id === appliedWidgetFilterId);
+        const activeFilterId = activeFilter?.id || appliedWidgetFilterId;
 
-    if (!id) {
-      const appliedWidgetFilterId = appliedFilters[0].id;
-      const launchesLimit = contentParameters.itemsCount;
-      const isLatest = contentParameters.widgetOptions.latest;
-      const activeFilter = launchFilters.filter((filter) => filter.id === appliedWidgetFilterId)[0];
-      const activeFilterId = activeFilter?.id || appliedWidgetFilterId;
+        linkParams = { isListType: true, launchesLimit, isLatest };
+        navigationParams = getDefaultItemsTypeListLinkParams(activeFilterId);
+      } else {
+        linkParams = { isListType: false, itemId: id };
+        navigationParams = getDefaultTestItemLinkParams(
+          slugs.projectSlug,
+          ALL,
+          id,
+          slugs.organizationSlug,
+        );
+      }
 
-      linkParams = {
-        isListType: true,
-        launchesLimit,
-        isLatest,
-      };
-      navigationParams = this.getDefaultItemsTypeListLinkParams(activeFilterId);
-    } else {
-      linkParams = {
-        isListType: false,
-        itemId: id,
-      };
-      navigationParams = getDefaultTestItemLinkParams(projectSlug, ALL, id, organizationSlug);
+      const link = getLink(nameConfig, linkParams);
+
+      dispatch(Object.assign(link, navigationParams));
+    },
+    [dispatch, getDefaultItemsTypeListLinkParams, getLink, launchFilters, slugs, widget],
+  );
+
+  const onChartCreated = useCallback((node, chart) => {
+    chartRef.current = chart;
+  }, []);
+
+  // Registered separately (not inside `onChartCreated`, which the EChart wrapper
+  // only invokes once, on chart creation) so the handler never closes over a
+  // stale `widget`/`launchFilters`. Reads `params.name` directly: a donut has
+  // one series with many data points, so the generic wrapper's seriesId-first
+  // id resolution would otherwise resolve to the (intentionally unset) series
+  // id instead of the clicked slice — see `getOption.js`.
+  useEffect(() => {
+    const chart = chartRef.current;
+    if (onStatusPageMode || isPreview || !chart || chart.isDisposed()) {
+      return undefined;
     }
-    const link = getLink(nameConfig, linkParams);
 
-    this.props.navigate(Object.assign(link, navigationParams));
-  };
-
-  getDefaultItemsTypeListLinkParams = (activeFilterId) => {
-    const {
-      slugs: { organizationSlug, projectSlug },
-    } = this.props;
-
-    return {
-      payload: {
-        projectSlug,
-        filterId: activeFilterId,
-        testItemIds: TEST_ITEMS_TYPE_LIST,
-        organizationSlug,
-      },
-      type: TEST_ITEM_PAGE,
+    const handleClick = (params) => {
+      if (params.componentType === 'series') {
+        onChartClick(params);
+      }
     };
-  };
 
-  getConfigData = () => {
-    const {
-      intl: { formatMessage },
-      widget: { contentParameters },
-      configParams = {},
-      onStatusPageMode,
-    } = this.props;
+    chart.on('click', handleClick);
 
-    return {
-      getConfig,
+    return () => {
+      if (chart.isDisposed()) {
+        return;
+      }
+      chart.off('click', handleClick);
+    };
+  }, [isPreview, onChartClick, onStatusPageMode]);
+
+  const configData = useMemo(
+    () => ({
+      getOption,
       formatMessage,
+      contentFields: widget.contentParameters.contentFields,
       configParams,
-      contentFields: contentParameters.contentFields,
-      onChartClick: onStatusPageMode ? undefined : this.onChartClick,
-      onRendered: this.renderTotalLabel,
-    };
-  };
+      chartText,
+      small: isSmallView,
+      uncheckedLegendItems,
+    }),
+    [formatMessage, widget, configParams, chartText, isSmallView, uncheckedLegendItems],
+  );
 
-  getChartSize = () => {
-    const { container, heightOffset } = this.props;
-
-    return {
-      height: container.offsetHeight - heightOffset,
-      width: container.offsetWidth,
-    };
-  };
-
-  checkIfTheSmallView = () => {
-    const size = this.getChartSize();
-
-    return size ? isSmallDonutChartView(size.height, size.width) : false;
-  };
-
-  forceUpdateChart = () => {
-    this.forceUpdate();
-  };
-
-  renderTotalLabel = () => {
-    if (this.node && this.chart) {
-      const titleNode = this.node.querySelector('.c3-chart-arcs-title').childNodes[0];
-      titleNode.textContent = this.chart.data
-        .shown()
-        .reduce((acc, dataItem) => acc + dataItem.values[0].value, 0);
-    }
-  };
-
-  render() {
-    const { uncheckedLegendItems, onChangeLegend, onStatusPageMode } = this.props;
-    const legendConfig = {
+  const legendConfig = useMemo(
+    () => ({
       showLegend: !onStatusPageMode,
       onChangeLegend,
       uncheckedLegendItems,
-    };
+    }),
+    [onStatusPageMode, onChangeLegend, uncheckedLegendItems],
+  );
 
-    return (
-      <div
-        className={cx('donut-chart', {
-          'status-page-mode': onStatusPageMode,
-        })}
-      >
-        <ChartContainer
-          {...getChartDefaultProps(this.props)}
-          configData={this.getConfigData()}
-          legendConfig={legendConfig}
-          chartCreatedCallback={this.onChartCreated}
-          className={cx({ 'small-view': this.checkIfTheSmallView() })}
-          resizedCallback={this.forceUpdateChart}
-        />
-      </div>
-    );
-  }
-}
+  return (
+    <div
+      className={cx('donut-chart', {
+        'status-page-mode': onStatusPageMode,
+        'small-view': isSmallView,
+      })}
+    >
+      <EChart
+        {...getChartDefaultProps({ widget, container, isPreview, observer, heightOffset })}
+        configData={configData}
+        legendConfig={legendConfig}
+        chartCreatedCallback={onChartCreated}
+      />
+    </div>
+  );
+};
+
+DonutChart.propTypes = {
+  widget: PropTypes.object.isRequired,
+  container: PropTypes.instanceOf(Element).isRequired,
+  isPreview: PropTypes.bool,
+  observer: PropTypes.object,
+  uncheckedLegendItems: PropTypes.array,
+  onChangeLegend: PropTypes.func,
+  onStatusPageMode: PropTypes.bool,
+  heightOffset: PropTypes.number,
+  getLink: PropTypes.func,
+  configParams: PropTypes.object,
+  chartText: PropTypes.string,
+};

@@ -39,6 +39,7 @@ import docs from './img/test-case-empty-state-inline.svg';
 import flag from './img/test-plans-empty-state-inline.svg';
 import loop from './img/loop-empty-state-inline.svg';
 import plugins from './img/plugins-empty-state-inline.svg';
+import dashboards from './img/dashboards-empty-state-inline.svg';
 
 const cx = classNames.bind(styles);
 
@@ -54,6 +55,7 @@ const images = {
   flag,
   loop,
   plugins,
+  dashboards,
 };
 
 export const EmptyStatePage = ({
@@ -132,6 +134,7 @@ EmptyStatePage.propTypes = {
     'flag',
     'loop',
     'plugins',
+    'dashboards',
   ]),
   documentationDataAutomationId: PropTypes.string,
   buttons: PropTypes.arrayOf(

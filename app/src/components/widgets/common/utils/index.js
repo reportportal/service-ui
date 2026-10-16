@@ -30,4 +30,5 @@ export {
   getDefaultTestItemLinkParams,
   getTimeType,
   convertSecondsToMilliseconds,
+  getNiceTickStep,
 } from './utils';
