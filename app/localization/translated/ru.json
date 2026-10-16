@@ -1,5 +1,13 @@
 {
   "AALabel.investigatedByAA": "Проанализировано Авто-Анализом",
+  "DashboardEmptyResults.emptyActionText": "Создать панель управления",
+  "DashboardEmptyResults.emptyHeadline": "Панели управления ещё не созданы",
+  "DashboardEmptyResults.emptyText": "Отслеживайте прогресс и достижения вашего проекта, создав первую панель управления.",
+  "DashboardEmptyResults.emptyTextViewer": "Панели управления появятся здесь после того, как их создадут участники команды с правами редактирования. Обратитесь к своему менеджеру, если вам нужен доступ к созданию панелей управления.",
+  "DashboardPage.projectDashboardsTitle": "Панели управления проекта",
+  "DashboardPageToolbar.createDashboard": "Создать панель управления",
+  "DashboardPageToolbar.panelView": "Вид панелей",
+  "DashboardPageToolbar.tableView": "Табличный вид",
   "ServiceUnavailableScreen.descriptionApi": "Похоже, что Service API сейчас может быть недоступен. Обновите страницу через некоторое время или обратитесь за помощью к системному администратору.",
   "ServiceUnavailableScreen.footer": "Вы также можете обратиться к нашим <installationGuides>руководствам по установке</installationGuides>, чтобы проверить корректность развертывания, или в наш <slackChannel>канал Slack</slackChannel> для советов от сообщества.",
   "ServiceUnavailableScreen.refreshPage": "Обновить страницу",

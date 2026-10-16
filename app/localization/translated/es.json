@@ -1,5 +1,13 @@
 {
   "AALabel.investigatedByAA": "Analizado por Auto-Análisis",
+  "DashboardEmptyResults.emptyActionText": "Crear panel de control",
+  "DashboardEmptyResults.emptyHeadline": "Aún no se han creado paneles de control",
+  "DashboardEmptyResults.emptyText": "Haga un seguimiento del progreso y los logros de su proyecto creando su primer panel de control.",
+  "DashboardEmptyResults.emptyTextViewer": "Los paneles de control aparecerán aquí cuando los creen miembros del equipo con permisos de edición. Póngase en contacto con su responsable si necesita acceso para crear paneles de control.",
+  "DashboardPage.projectDashboardsTitle": "Paneles de control del proyecto",
+  "DashboardPageToolbar.createDashboard": "Crear panel de control",
+  "DashboardPageToolbar.panelView": "Vista de paneles",
+  "DashboardPageToolbar.tableView": "Vista de tabla",
   "ServiceUnavailableScreen.descriptionApi": "Parece que Service API podría no estar disponible en este momento. Actualice la página después de un tiempo o contacte con su administrador del sistema para obtener ayuda.",
   "ServiceUnavailableScreen.footer": "También puede consultar nuestras <installationGuides>guías de instalación</installationGuides> para comprobar la corrección del despliegue o nuestro <slackChannel>canal de Slack</slackChannel> para recibir consejos de la comunidad.",
   "ServiceUnavailableScreen.refreshPage": "Actualizar página",

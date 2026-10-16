@@ -19,7 +19,14 @@ import track from 'react-tracking';
 import { connect } from 'react-redux';
 import { injectIntl, defineMessages } from 'react-intl';
 import PropTypes from 'prop-types';
-import { PageLayout, PageHeader, PageSection } from 'layouts/pageLayout';
+import classNames from 'classnames/bind';
+import { Pagination } from '@reportportal/ui-kit';
+import { SettingsLayout } from 'layouts/settingsLayout';
+import { ScrollWrapper } from 'components/main/scrollWrapper';
+import { PreservedText } from 'components/preservedText';
+import { PageHeaderWithBreadcrumbsAndActions } from 'pages/inside/common/pageHeaderWithBreadcrumbsAndActions';
+import { projectNameSelector } from 'controllers/project';
+import { PROJECT_DASHBOARD_PAGE, urlOrganizationAndProjectSelector } from 'controllers/pages';
 import {
   changeVisibilityTypeAction,
   deleteDashboardAction,
@@ -34,20 +41,27 @@ import {
   dashboardPaginationSelector,
 } from 'controllers/dashboard';
 import { DEFAULT_PAGINATION, PAGE_KEY, SIZE_KEY, withPagination } from 'controllers/pagination';
-import { PaginationToolbar } from 'components/main/paginationToolbar';
+import { DEFAULT_PAGE_SIZE_OPTIONS } from 'controllers/members/constants';
+import { messages as paginationMessages } from 'hooks/usePagination';
 import { DASHBOARD_EVENTS, DASHBOARDS } from 'analyticsEvents/dashboardsPageEvents';
 import { userInfoSelector } from 'controllers/user';
 import { showModalAction } from 'controllers/modal';
 import { withFilter } from 'controllers/filter';
-import { DashboardPageHeader } from 'pages/inside/common/dashboardPageHeader';
 import { DeleteDashboardConfirmationMessage } from 'pages/inside/common/modals/deleteDashboardConfirmationMessage';
 import { DashboardList } from './dashboardList';
 import { DashboardPageToolbar } from './dashboardPageToolbar';
+import styles from './dashboardPage.scss';
+
+const cx = classNames.bind(styles);
 
 const messages = defineMessages({
   pageTitle: {
     id: 'DashboardPage.title',
     defaultMessage: 'All Dashboards',
+  },
+  projectDashboardsTitle: {
+    id: 'DashboardPage.projectDashboardsTitle',
+    defaultMessage: 'Project Dashboards',
   },
   noResults: {
     id: 'DashboardPage.noResults',
@@ -78,6 +92,8 @@ const messages = defineMessages({
     dashboardItems: dashboardItemsSelector(state),
     userInfo: userInfoSelector(state),
     loading: loadingSelector(state),
+    projectName: projectNameSelector(state),
+    slugs: urlOrganizationAndProjectSelector(state),
   }),
   {
     changeVisibilityType: changeVisibilityTypeAction,
@@ -108,6 +124,11 @@ export class DashboardPage extends Component {
     onFilterChange: PropTypes.func,
     changeVisibilityType: PropTypes.func,
     loading: PropTypes.bool,
+    projectName: PropTypes.string,
+    slugs: PropTypes.shape({
+      organizationSlug: PropTypes.string,
+      projectSlug: PropTypes.string,
+    }),
     pageCount: PropTypes.number,
     activePage: PropTypes.number,
     itemCount: PropTypes.number,
@@ -130,12 +151,34 @@ export class DashboardPage extends Component {
     onFilterChange: () => {},
     changeVisibilityType: () => {},
     loading: false,
+    projectName: '',
+    slugs: {},
     pageCount: null,
     activePage: DEFAULT_PAGINATION[PAGE_KEY],
     itemCount: null,
     pageSize: DEFAULT_PAGINATION[SIZE_KEY],
     onChangePage: () => {},
     onChangePageSize: () => {},
+  };
+
+  state = {
+    resetScroll: false,
+  };
+
+  componentDidUpdate(prevProps) {
+    const { activePage, pageSize, filter } = this.props;
+
+    if (
+      prevProps.activePage !== activePage ||
+      prevProps.pageSize !== pageSize ||
+      prevProps.filter !== filter
+    ) {
+      this.setState({ resetScroll: true });
+    }
+  }
+
+  onScrollReset = () => {
+    this.setState({ resetScroll: false });
   };
 
   onDeleteDashboardItem = (item) => {
@@ -206,11 +249,33 @@ export class DashboardPage extends Component {
     });
   };
 
-  getBreadcrumbs = () => [
-    {
-      title: this.props.intl.formatMessage(messages.pageTitle),
-    },
-  ];
+  getBreadcrumbDescriptors = () => {
+    const {
+      projectName,
+      slugs: { organizationSlug, projectSlug },
+    } = this.props;
+
+    return [
+      {
+        id: 'project',
+        title: <PreservedText>{projectName}</PreservedText>,
+        link: { type: PROJECT_DASHBOARD_PAGE, payload: { organizationSlug, projectSlug } },
+      },
+    ];
+  };
+
+  getPaginationCaptions = () => {
+    const { formatMessage } = this.props.intl;
+
+    return {
+      items: formatMessage(paginationMessages.items),
+      of: formatMessage(paginationMessages.of),
+      page: formatMessage(paginationMessages.page),
+      goTo: formatMessage(paginationMessages.goToPage),
+      goAction: formatMessage(paginationMessages.go),
+      perPage: formatMessage(paginationMessages.perPage),
+    };
+  };
 
   toggleGridView = () => {
     this.props.changeVisibilityType(DASHBOARDS_GRID_VIEW);
@@ -222,6 +287,7 @@ export class DashboardPage extends Component {
 
   render() {
     const {
+      intl,
       gridType,
       userInfo,
       onFilterChange,
@@ -236,43 +302,57 @@ export class DashboardPage extends Component {
       onChangePageSize,
     } = this.props;
 
+    // no dashboards at all: the empty state has its own create button, the header controls are hidden
+    const isEmptyState = !dashboardItems.length && !filter && !loading;
+
     return (
-      <PageLayout>
-        <PageHeader breadcrumbs={this.getBreadcrumbs()}>
-          <DashboardPageHeader />
-        </PageHeader>
-        <PageSection>
-          <DashboardPageToolbar
-            initialValues={{ filter }}
-            onFilterChange={onFilterChange}
-            isSearchDisabled={!dashboardItems.length && !filter && !loading}
-            onGridViewToggle={this.toggleGridView}
-            onTableViewToggle={this.toggleTableView}
-            gridType={gridType}
+      <SettingsLayout>
+        <ScrollWrapper resetRequired={this.state.resetScroll} onReset={this.onScrollReset}>
+          <PageHeaderWithBreadcrumbsAndActions
+            title={intl.formatMessage(messages.projectDashboardsTitle)}
+            breadcrumbDescriptors={this.getBreadcrumbDescriptors()}
+            actions={
+              !isEmptyState && (
+                <DashboardPageToolbar
+                  filter={filter}
+                  gridType={gridType}
+                  onFilterChange={onFilterChange}
+                  onGridViewToggle={this.toggleGridView}
+                  onTableViewToggle={this.toggleTableView}
+                  onAddItem={this.onAddDashboardItem}
+                />
+              )
+            }
           />
-          <DashboardList
-            dashboardItems={dashboardItems}
-            gridType={gridType}
-            userInfo={userInfo}
-            loading={loading}
-            onDeleteItem={this.onDeleteDashboardItem}
-            onDuplicate={this.onDuplicateDashboardItem}
-            onEditItem={this.onEditDashboardItem}
-            onAddItem={this.onAddDashboardItem}
-            filter={filter}
-          />
-          {!!pageCount && !loading && (
-            <PaginationToolbar
-              activePage={activePage}
-              itemCount={itemCount}
-              pageCount={pageCount}
-              pageSize={pageSize}
-              onChangePage={onChangePage}
-              onChangePageSize={onChangePageSize}
+          <div className={cx('content-wrapper', { 'content-wrapper--loading': loading })}>
+            <DashboardList
+              dashboardItems={dashboardItems}
+              gridType={gridType}
+              userInfo={userInfo}
+              loading={loading}
+              onDeleteItem={this.onDeleteDashboardItem}
+              onDuplicate={this.onDuplicateDashboardItem}
+              onEditItem={this.onEditDashboardItem}
+              onAddItem={this.onAddDashboardItem}
+              filter={filter}
             />
+          </div>
+          {!!pageCount && !loading && (
+            <div className={cx('pagination')}>
+              <Pagination
+                activePage={activePage}
+                totalPages={pageCount}
+                totalItems={itemCount}
+                pageSize={pageSize}
+                pageSizeOptions={DEFAULT_PAGE_SIZE_OPTIONS}
+                captions={this.getPaginationCaptions()}
+                changePage={onChangePage}
+                changePageSize={onChangePageSize}
+              />
+            </div>
           )}
-        </PageSection>
-      </PageLayout>
+        </ScrollWrapper>
+      </SettingsLayout>
     );
   }
 }

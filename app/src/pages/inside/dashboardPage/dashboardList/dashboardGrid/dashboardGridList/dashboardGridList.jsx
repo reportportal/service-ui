@@ -34,24 +34,26 @@ export const DashboardGridList = ({
   filter,
   ...rest
 }) => {
-  const noItems = loading ? (
-    <SpinningPreloader />
-  ) : (
-    <EmptyDashboards filter={filter} action={onAddItem} />
-  );
+  // the loader and the empty states are rendered outside of the cards grid, same as in the table view
+  if (loading) {
+    return <SpinningPreloader />;
+  }
+
+  if (!dashboardList.length) {
+    return <EmptyDashboards filter={filter} action={onAddItem} />;
+  }
+
   return (
     <div className={cx('dashboard-grid-body')}>
-      {!loading && dashboardList.length
-        ? dashboardList.map((item) => (
-            <DashboardGridItem
-              key={item.id}
-              item={item}
-              onEdit={onEditItem}
-              onDelete={onDeleteItem}
-              {...rest}
-            />
-          ))
-        : noItems}
+      {dashboardList.map((item) => (
+        <DashboardGridItem
+          key={item.id}
+          item={item}
+          onEdit={onEditItem}
+          onDelete={onDeleteItem}
+          {...rest}
+        />
+      ))}
     </div>
   );
 };
