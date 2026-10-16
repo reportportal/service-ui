@@ -17,6 +17,7 @@
 import { getStorageItem } from 'common/utils/storageUtils';
 
 const SHOW_IN_PROGRESS_TMS_FEATURES_STORAGE_KEY = 'show_in_progress_tms_features';
+const MARKETPLACE_STORAGE_KEY = 'marketplace';
 const OVERRIDE_ENABLED = true;
 const OVERRIDE_DISABLED = false;
 
@@ -28,6 +29,15 @@ export const getTmsOverride = () => {
     return isValidOverride ? override : null;
   } catch (e) {
     return null;
+  }
+};
+
+// Off by default; enable with localStorage.setItem('marketplace', 'true')
+export const getMarketplaceOverride = () => {
+  try {
+    return getStorageItem(MARKETPLACE_STORAGE_KEY) === true;
+  } catch (e) {
+    return false;
   }
 };
 

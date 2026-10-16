@@ -1,0 +1,133 @@
+/*!
+ * Copyright 2026 EPAM Systems
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+.premium-features {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* One centred line and one action: the state almost every instance is in, and the only question
+   it has to answer is whether the admin needs a licence at all. */
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 0;
+  text-align: center;
+}
+
+.empty-message {
+  margin: 0;
+  max-width: 62ch;
+  color: $COLOR--charcoal-grey;
+  font-size: 13px;
+  line-height: 20px;
+}
+
+.licence-card {
+  display: flex;
+  align-items: flex-start;
+  gap: 48px;
+  padding: 16px;
+  border: 1px solid $COLOR--e-200;
+  border-radius: 8px;
+  background-color: $COLOR--white-two;
+}
+
+.column {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+
+.label {
+  color: $COLOR--e-400;
+  font-size: 11px;
+  line-height: 16px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.value {
+  color: $COLOR--almost-black;
+  font-size: 13px;
+  line-height: 20px;
+  overflow-wrap: anywhere;
+}
+
+/* The stored key is never returned, so this stands for a value rather than showing one. */
+.masked {
+  letter-spacing: 0.12em;
+}
+
+.delete {
+  margin-left: auto;
+  padding: 0;
+  border: none;
+  background: none;
+  cursor: pointer;
+  line-height: 0;
+
+  svg {
+    width: 16px;
+    height: 16px;
+    fill: $COLOR--e-400;
+  }
+
+  &:hover:not(:disabled) svg {
+    fill: $COLOR--red-failed-2;
+  }
+
+  &:disabled {
+    cursor: default;
+    opacity: 0.5;
+  }
+}
+
+/* Under the card, at the content edge: it belongs to the licence, not to the section. */
+.renewal-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: $COLOR--topaz-2;
+  font-size: 13px;
+  line-height: 20px;
+  text-decoration: none;
+
+  svg {
+    width: 16px;
+    height: 16px;
+    fill: $COLOR--topaz-2;
+  }
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+.saved > * {
+  width: 100%;
+}
+
+.error {
+  margin: 0;
+  color: $COLOR--red-failed-2;
+  font-size: 13px;
+  line-height: 20px;
+}

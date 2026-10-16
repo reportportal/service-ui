@@ -37,6 +37,7 @@ export const UploadModalLayout = ({
   onCancel,
   importConfirmationWarning,
   uploadButtonTitle,
+  submitDisabled = false,
 }) => {
   const { formatMessage } = useIntl();
 
@@ -59,7 +60,9 @@ export const UploadModalLayout = ({
 
     return {
       text,
-      disabled: isLoading,
+      // Once the upload has finished the same button is OK and must still close the dialog, so a
+      // caller's refusal only applies while it is still the Upload button.
+      disabled: isLoading || (submitDisabled && !uploadFinished),
       onClick: submitHandler,
     };
   };
@@ -102,6 +105,9 @@ UploadModalLayout.propTypes = {
   children: PropTypes.node,
   onSave: PropTypes.func,
   onCancel: PropTypes.func,
+  /** Refuses the upload for a reason only the caller knows — the file is valid and attached, but
+   * the server would reject it, so an active button would promise an action that always fails. */
+  submitDisabled: PropTypes.bool,
 };
 UploadModalLayout.defaultProps = {
   children: null,

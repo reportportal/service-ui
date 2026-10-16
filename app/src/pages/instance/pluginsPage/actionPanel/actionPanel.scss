@@ -14,38 +14,12 @@
  * limitations under the License.
  */
 
+// flex: none because this sits beside the category chips in the page header, and a flex item
+// shrinks below its content by default: the chips took the room and "Upload plugin" wrapped
+// onto two lines. The button's own adjustWidthOn cannot help while its parent is being squeezed.
 .action-panel {
+  flex: none;
   display: flex;
-  flex-direction: column;
-  gap: 8px;
-  margin-top: 40px;
-}
-
-.action-panel-title {
-  font-size: 16px;
-  line-height: normal;
-  font-family: $FONT-BOLD;
-  color: $COLOR--black-2;
-}
-
-.action-panel-description {
-  font-size: 12px;
-  line-height: 18px;
-  font-family: $FONT-REGULAR;
-  color: $COLOR--gray-47;
-  max-width: 174px;
-}
-
-.action-buttons {
-  display: flex;
-  flex-direction: column;
-  margin-top: 8px;
-
-  .action-button {
-    margin-top: 10px;
-
-    &:first-child {
-      margin-top: 0;
-    }
-  }
+  align-items: center;
+  gap: 10px;
 }

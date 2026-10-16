@@ -22,18 +22,20 @@
 
 .plugins-content-wrapper {
   display: flex;
-  justify-content: space-between;
+  flex-direction: column;
   gap: 24px;
-  width: 810px;
+  width: 820px;
   @media (max-width: $SCREEN_SM_MAX) {
     width: 100%;
   }
 }
 
-.plugins-sidebar {
+// Chips on the left, Upload Plugin on the right, both above the list.
+.plugins-header {
   display: flex;
-  flex-direction: column;
-  min-width: 174px;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
 
   @media (max-width: $SCREEN_XS_MAX) {
     display: none;
@@ -41,7 +43,7 @@
 }
 
 .plugins-sub-content-wrapper {
-  width: 810px;
+  width: 820px;
 
   @media (max-width: $SCREEN_SM_MAX) {
     width: 100%;
@@ -50,11 +52,6 @@
 
 .plugins-content {
   width: 100%;
-  max-width: 570px;
-}
-
-.available-section {
-  margin-bottom: 40px;
 }
 
 .plugins-filter-mobile {
@@ -63,4 +60,22 @@
     display: block;
     margin-bottom: 15px;
   }
+}
+
+/* Both header actions sit left of the enable toggle, so they need a gap of their own rather than
+   relying on a slot that was built for one element. */
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* First thing in the body, so it needs room under the header rather than beside the block after
+   it — and full width, like the marketplace alerts it sits above. */
+.disabled-notice {
+  margin-bottom: 24px;
+}
+
+.disabled-notice > * {
+  width: 100%;
 }

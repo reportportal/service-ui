@@ -85,13 +85,18 @@ const messages = defineMessages({
     id: 'InstancesSection.globalIntegrationsDisabledHint',
     defaultMessage: 'Global settings are inactive due to the manual project configuration.',
   },
+  // "Create", not "Add": the same verb the modal's own title uses, so the button and the dialog it
+  // opens name one action.
   addIntegrationButtonTitle: {
     id: 'InstancesSection.addIntegrationButtonTitle',
-    defaultMessage: 'Add integration',
+    defaultMessage: 'Create Integration',
   },
+  // "yet" is the whole point of the sentence — one empty state serves a plugin that will end up
+  // holding one integration and a plugin that will hold many, because with none configured there
+  // is nothing to tell the two apart.
   noGlobalIntegrationMessage: {
     id: 'InstancesSection.noGlobalIntegrationMessage',
-    defaultMessage: 'No global integration',
+    defaultMessage: 'No integrations configured yet',
   },
   allGlobalIntegrations: {
     id: 'InstancesSection.allGlobalIntegrations',
@@ -108,7 +113,19 @@ const messages = defineMessages({
   uninstallPluginNote: {
     id: 'InstancesSection.uninstallPluginNote',
     defaultMessage:
-      'Remove this plugin from the ReportPortal and revoke all access and authorizations.',
+      'Remove this plugin from the instance and revoke all access and authorizations.',
+  },
+  // States the fact rather than the refusal: a bundled plugin is part of the instance, so there is
+  // nothing here that could be removed and nothing the admin should go looking for elsewhere.
+  uninstallBuiltinNote: {
+    id: 'InstancesSection.uninstallBuiltinNote',
+    defaultMessage:
+      'This plugin ships with ReportPortal and is part of the instance, so it cannot be removed.'
+      + ' Switch it off above if you do not want it used.',
+  },
+  uninstallBuiltinHint: {
+    id: 'InstancesSection.uninstallBuiltinHint',
+    defaultMessage: 'Bundled with ReportPortal — it was not installed and cannot be uninstalled',
   },
 });
 
@@ -128,6 +145,9 @@ const messages = defineMessages({
 @track()
 export class InstancesSection extends Component {
   static propTypes = {
+    /** Closing sentence of the uninstall dialog — what the way back is, which only the caller
+     * knows. Omitted, the dialog asks and says no more. */
+    uninstallNote: PropTypes.string,
     intl: PropTypes.object.isRequired,
     instanceType: PropTypes.string.isRequired,
     pluginType: PropTypes.string.isRequired,
@@ -216,10 +236,13 @@ export class InstancesSection extends Component {
     this.props.showModalAction({
       id: 'confirmationModal',
       data: {
-        message: formatMessage(messages.uninstallPluginConfirmation, {
-          pluginName: pluginDetails.name || instanceType,
-          b: (chunks) => DOMPurify.sanitize(`<b>${chunks}</b>`),
-        }),
+        // The closing sentence is the caller's, because only it knows where this plugin came
+        // from and therefore what the way back is. Absent, the dialog asks and says no more.
+        message:
+          formatMessage(messages.uninstallPluginConfirmation, {
+            pluginName: pluginDetails.name || instanceType,
+            b: (chunks) => DOMPurify.sanitize(`<b>${chunks}</b>`),
+          }) + (this.props.uninstallNote ? ` ${this.props.uninstallNote}` : ''),
         onConfirm: this.removePlugin,
         title: formatMessage(messages.uninstallPluginTitle),
         confirmText: formatMessage(COMMON_LOCALE_KEYS.UNINSTALL),
@@ -355,19 +378,28 @@ export class InstancesSection extends Component {
             )}
           </Fragment>
         )}
-        {isGlobal && !this.builtin && (
+        {/* Installed. Core (27032:9148): a bundled plugin cannot be uninstalled, and the block used
+            to be omitted for it — which leaves an admin looking for the control and finding
+            nothing, with no way to learn why. STATUS_SYSTEM.md §5 puts the reason in one place: the
+            disabled action itself, with its tooltip. */}
+        {isGlobal && (
           <Fragment>
             <h3 className={cx('uninstall-plugin-title')}>
               {formatMessage(messages.uninstallPluginTitle)}
             </h3>
             <p className={cx('uninstall-plugin-note')}>
-              {formatMessage(messages.uninstallPluginNote)}
+              {formatMessage(
+                this.builtin ? messages.uninstallBuiltinNote : messages.uninstallPluginNote,
+              )}
             </p>
             <BigButton
               className={cx('uninstall-plugin-button')}
               color={'tomato'}
               roundedCorners
-              onClick={this.removePluginClickHandler}
+              disabled={this.builtin}
+              title={this.builtin ? formatMessage(messages.uninstallBuiltinHint) : undefined}
+              data-automation-id="uninstallPluginButton"
+              onClick={this.builtin ? undefined : this.removePluginClickHandler}
             >
               {formatMessage(COMMON_LOCALE_KEYS.UNINSTALL)}
             </BigButton>

@@ -1,0 +1,366 @@
+/*
+ * Copyright 2026 EPAM Systems
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+import { ALL_GROUP_TYPE } from 'common/constants/pluginsGroupTypes';
+import { PLUGIN_FILTER_GROUP_VALUES } from 'common/constants/pluginsFilter';
+import {
+  PLUGIN_ACCESS_TIERS,
+  PLUGIN_TIERS,
+  toPluginTier,
+  toTrustTier,
+} from 'common/constants/pluginTiers';
+import { compareVersions } from '../versionsTable/utils';
+
+export const PREMIUM_ACCESS = PLUGIN_ACCESS_TIERS.PREMIUM;
+
+/** What a row is, stated outright: no row may be classified by a field it happens to carry. */
+export const ROW_KINDS = {
+  INSTALLED: 'INSTALLED',
+  AVAILABLE: 'AVAILABLE',
+};
+
+/** The three mutually exclusive row actions. Uninstall lives on the plugin page, not here. */
+export const ROW_ACTIONS = {
+  INSTALL: 'INSTALL',
+  UPDATE: 'UPDATE',
+  DISCOVER_PREMIUM: 'DISCOVER_PREMIUM',
+};
+
+/**
+ * The row's own state, as opposed to anything the registry said. Local and always knowable, so
+ * unlike the marketplace signals it survives an unreachable registry — the toggle that used to
+ * carry it did too. It takes the action slot: a plugin that is switched off has nothing to
+ * offer there, and the design shows the state where the action would have been.
+ */
+export const ROW_STATES = {
+  DISABLED: 'DISABLED',
+  /** Installed and switched on, but nothing has been configured, so it cannot actually run. */
+  NOT_CONFIGURED: 'NOT_CONFIGURED',
+};
+
+/**
+ * What the row shows instead of an action, or null when it should show the action.
+ *
+ * <p>Read off `enabled === false` rather than `!enabled`: an available row has no such field,
+ * and undefined must not read as "switched off".
+ *
+ * <p>Switched off outranks unconfigured, because it is the nearer answer to "why is nothing
+ * happening": a plugin that is off will not run whether or not it is configured, and telling an
+ * admin to go and configure something they have deliberately disabled would send them the wrong
+ * way.
+ */
+export const getRowState = (row) => {
+  if (isAvailableRow(row)) {
+    return null;
+  }
+  if (row.enabled === false) {
+    return ROW_STATES.DISABLED;
+  }
+
+  return row.configured === false ? ROW_STATES.NOT_CONFIGURED : null;
+};
+
+/**
+ * What is happening to this row's own install. Neither state comes from the catalogue: both are
+ * this session's, keyed on the registry id — the id an install is requested with — so a row
+ * without one can be in neither.
+ */
+export const ROW_INSTALL_STATES = {
+  INSTALLING: 'INSTALLING',
+  FAILED: 'FAILED',
+};
+
+const installStateOf = (registryId, isInstalling, failedRegistryId) => {
+  if (!registryId) {
+    return null;
+  }
+  // starting an install clears the failure, so no row is ever in both states at once
+  if (isInstalling(registryId)) {
+    return ROW_INSTALL_STATES.INSTALLING;
+  }
+
+  return registryId === failedRegistryId ? ROW_INSTALL_STATES.FAILED : null;
+};
+
+/**
+ * Stamps each row with its install state, which is how it reaches the row: the list between the
+ * catalogue and the row passes `items` through and nothing else.
+ */
+export const withInstallState = (
+  rows,
+  { isInstalling = () => false, failedRegistryId = null } = {},
+) =>
+  rows.map((row) => {
+    const installState = installStateOf(row.registryId, isInstalling, failedRegistryId);
+
+    return installState ? { ...row, installState } : row;
+  });
+
+/** The stamp above, read the way a row's other states are read. */
+export const getRowInstallState = (row) => row.installState || null;
+
+/** Marketplace-sourced signals a row can carry. All of them are unverifiable while offline. */
+export const ROW_BADGES = {
+  ADVISORY: 'ADVISORY',
+  BLOCKED: 'BLOCKED',
+  REMOVED: 'REMOVED',
+};
+
+/**
+ * The name to print for a row.
+ *
+ * <p>ReportPortal's own label first — it is what every other screen calls this plugin — then the
+ * registry's, then the identifier. The middle step is what stops a PF4J id like `jira` or `ldap`
+ * being printed in a list where the row beside it says "Azure DevOps": those plugins carry no
+ * local display name at all, and the registry is the only place one exists.
+ */
+export const getDisplayName = ({ details, marketplace, name }) =>
+  details?.name || marketplace?.name || name || '';
+
+/** The one-line description under the name. Available rows carry their own; installed rows read
+ * the registry's, which is absent while offline or unmatched — and then the row simply has none. */
+export const getDescription = ({ description, marketplace }) =>
+  description || marketplace?.description || '';
+
+/**
+ * Who wrote the plugin, per the registry.
+ *
+ * <p>`uploadedBy` first, because for a hand-uploaded plugin that is the only fact anyone has.
+ * Then the registry's author. There is deliberately no third fallback: the row used to end in
+ * `|| 'ReportPortal'`, which printed a false attribution on every third-party plugin in the
+ * catalogue. An unknown author is unknown, and the line is left out.
+ */
+export const getAuthor = ({ uploadedBy, author, marketplace }) =>
+  uploadedBy || author || marketplace?.author || '';
+
+/**
+ * Whether the registry half of a response may be believed. Offline the registry never answered,
+ * and after a failure nothing answered at all, so in neither case is any marketplace-sourced
+ * signal verifiable. An unmatched plugin has no registry half at all: it was never asked about,
+ * so whatever the store still holds belongs to some other plugin. The catalogue and the plugin
+ * page share this one rule so the two screens cannot come to disagree about what they claim.
+ */
+export const isMarketplaceTrusted = ({ offline = false, failed = false, unmatched = false } = {}) =>
+  !offline && !failed && !unmatched;
+
+const groupRank = (groupType) => {
+  const idx = PLUGIN_FILTER_GROUP_VALUES.indexOf(groupType);
+  return idx < 0 ? PLUGIN_FILTER_GROUP_VALUES.length : idx;
+};
+
+export const sortByGroupAndName = (a, b) =>
+  groupRank(a.groupType) - groupRank(b.groupType) ||
+  getDisplayName(a).localeCompare(getDisplayName(b));
+
+export const sortByTierGroupAndName = (a, b) =>
+  (a.tier !== PLUGIN_TIERS.PREMIUM) - (b.tier !== PLUGIN_TIERS.PREMIUM) || sortByGroupAndName(a, b);
+
+/** An `available` entry of GET /v1/plugins turned into the row shape the list renders. */
+export const toAvailableRow = (entry) => ({
+  kind: ROW_KINDS.AVAILABLE,
+  registryId: entry.id,
+  name: entry.name,
+  details: { name: entry.name, version: entry.latestVersion },
+  description: entry.description,
+  author: entry.author || null,
+  groupType: entry.groupType,
+  latestVersion: entry.latestVersion,
+  contactUrl: entry.contactUrl || null,
+  locked: Boolean(entry.locked),
+  // service-api's verdict on `latestVersion`, and the range behind it. Carried through as it
+  // arrived rather than coerced to a boolean: the server serialises with NON_NULL, so "could not
+  // decide" reaches us as nothing at all, and that has to stay distinguishable from "no".
+  compatible: entry.compatible,
+  requires: entry.requires || null,
+  // the two registry axes, kept apart: `tier` is `access`, `trust` is the wire's own `tier`
+  tier: toPluginTier(entry.access),
+  trust: toTrustTier(entry.tier),
+});
+
+/**
+ * A locally installed plugin plus its marketplace block. The block is null while the registry
+ * is offline and for a plugin the registry could not match, and in both cases nothing
+ * marketplace-sourced can be claimed about the row.
+ *
+ * `marketplaceTrusted` is false whenever the registry-sourced half of the catalogue is not
+ * something this screen can vouch for. The block is then dropped here rather than trusted to
+ * arrive empty: the backend nulling it is a contract, not a guarantee the UI may lean on.
+ *
+ * The registry id is read from inside the block, which is where the wire carries it: it is a
+ * marketplace-sourced fact, so a row without a block has no known registry id at all.
+ */
+export const toInstalledRow = (plugin, mergedEntry, marketplaceTrusted = true) => {
+  const marketplace = (marketplaceTrusted && mergedEntry?.marketplace) || null;
+
+  return {
+    ...plugin,
+    kind: ROW_KINDS.INSTALLED,
+    marketplace,
+    // The access axis, which an installed row was dropping: a premium plugin is premium whether
+    // it is installed or on offer, and the badge said so on only one of the two.
+    tier: toPluginTier(marketplace?.access),
+    /**
+     * Installed from a .jar rather than from the marketplace. Not simply "has no block": that is
+     * equally true while the registry is unreachable, and calling a plugin hand-installed because
+     * nobody could be asked would be a guess. Only when the registry answered and had nothing.
+     */
+    handInstalled: marketplaceTrusted && !mergedEntry?.marketplace,
+    registryId: marketplace?.pluginId || null,
+    updateAvailable: marketplace?.updateAvailable?.version || null,
+    // the verdict on the newest published version, which is what tells a row that is genuinely
+    // current apart from one whose update is being withheld: `updateAvailable` is null in both
+    compatible: marketplace?.compatible,
+    requires: marketplace?.requires || null,
+    // who wrote it is the registry's claim like every other one here, so it goes with the block
+    trust: toTrustTier(marketplace?.tier),
+  };
+};
+
+/**
+ * @param configuredPlugins names of the plugins that have at least one integration set up. Passing
+ *     nothing means the answer is unknown — not "none configured" — so no row claims to be
+ *     unconfigured on the strength of a list that was never supplied.
+ */
+export const mergeInstalledRows = (
+  plugins,
+  mergedInstalled,
+  marketplaceTrusted = true,
+  configuredPlugins = null,
+) =>
+  plugins.map((plugin) => ({
+    ...toInstalledRow(
+      plugin,
+      mergedInstalled.find((entry) => entry.name === plugin.name),
+      marketplaceTrusted,
+    ),
+    configured: configuredPlugins ? configuredPlugins.includes(plugin.name) : undefined,
+  }));
+
+export const isAvailableRow = (row) => row.kind === ROW_KINDS.AVAILABLE;
+
+export const isDegradedRow = (row) => !isAvailableRow(row) && !row.marketplace;
+
+export const getRowAction = (row) => {
+  if (isAvailableRow(row)) {
+    // a premium plugin with no licence configured can only be enquired about, not installed
+    return row.locked ? ROW_ACTIONS.DISCOVER_PREMIUM : ROW_ACTIONS.INSTALL;
+  }
+
+  // on an installed row every remaining signal is read straight out of the marketplace block,
+  // so a row without one offers nothing: none of it is verifiable
+  return row.marketplace?.updateAvailable ? ROW_ACTIONS.UPDATE : null;
+};
+
+/**
+ * What a row may say about the newest published build not running on this release, or null when
+ * it may say nothing.
+ *
+ * <p>Only an explicit `false` is a refusal. service-api serialises with NON_NULL, so a verdict it
+ * could not reach arrives as no field at all, and the causes are an instance that does not know
+ * its own release, a version that declares no range, and a range that will not parse. Reading any
+ * of those as "incompatible" would mark every plugin in the catalogue unusable on an instance that
+ * simply never configured `rp.product.version`.
+ *
+ * <p>`newer` separates the two things a refusal can mean on an installed row. With a newer version
+ * published, the row is holding back an update the instance cannot take — the state that was
+ * indistinguishable from being up to date, because `updateAvailable` is absent either way. Without
+ * one, the plugin this instance is actually running is the one out of range, which is a different
+ * sentence and not an offer of anything.
+ */
+export const getRowIncompatibility = (row) => {
+  if (row.compatible !== false) {
+    return null;
+  }
+
+  if (isAvailableRow(row)) {
+    return { version: row.latestVersion || null, requires: row.requires || null, newer: false };
+  }
+
+  const latest = row.marketplace?.latestVersion || null;
+  const installed = row.details?.version || null;
+
+  return {
+    version: latest,
+    requires: row.requires || null,
+    newer: Boolean(latest && installed && compareVersions(latest, installed) > 0),
+  };
+};
+
+/** Badges an installed row shows; the tier badge of an available row is rendered from `tier`. */
+/**
+ * The one badge a row shows, or none.
+ *
+ * <p>A row can be several bad things at once — the checked-in catalogue fixture has a plugin that
+ * is both blocked and under an advisory — and it used to print a pill for each. The spec asks for
+ * one badge at the highest severity, and it is right to: three pills on one row make the reader
+ * rank them, and the ranking is not theirs to do. Removal outranks a block, which outranks an
+ * advisory, because that is the order in which the row stops being usable at all.
+ *
+ * <p>Returns an array so callers stay unchanged, but it holds at most one entry.
+ */
+export const getRowBadges = (row) => {
+  if (isAvailableRow(row) || isDegradedRow(row)) {
+    return [];
+  }
+
+  const { advisory, blocked, removed } = row.marketplace;
+  const worst =
+    (removed && ROW_BADGES.REMOVED) ||
+    (blocked && ROW_BADGES.BLOCKED) ||
+    (advisory && ROW_BADGES.ADVISORY) ||
+    null;
+
+  return worst ? [worst] : [];
+};
+
+/** Severities the registry publishes, ordered as it defines them. */
+export const ADVISORY_SEVERITIES = {
+  LOW: 'low',
+  MEDIUM: 'medium',
+  HIGH: 'high',
+  CRITICAL: 'critical',
+};
+
+const SEVERE_ADVISORY = new Set([ADVISORY_SEVERITIES.HIGH, ADVISORY_SEVERITIES.CRITICAL]);
+
+/**
+ * The severity of the advisory on a row, lowercased, or null when there is none to read.
+ *
+ * <p>The row used to read the advisory object as a boolean, so a `low` and a `critical` advisory
+ * were the same amber pill. The detail page has said the severity all along; the row is where an
+ * admin scanning a list decides what to open first, which is exactly where it mattered most.
+ */
+export const getRowAdvisorySeverity = (row) => {
+  const severity = row.marketplace?.advisory?.severity;
+
+  return typeof severity === 'string' && severity.trim() ? severity.trim().toLowerCase() : null;
+};
+
+/** Whether that severity is one a row should shout about rather than merely mark. */
+export const isSevereAdvisory = (severity) => SEVERE_ADVISORY.has(severity);
+
+const matchesCategory = (row, category) =>
+  category === ALL_GROUP_TYPE || row.groupType === category;
+
+const matchesQuery = (row, query) => {
+  const normalized = query.trim().toLowerCase();
+
+  return !normalized || getDisplayName(row).toLowerCase().includes(normalized);
+};
+
+/** The chip and the query narrow both groups the same way. */
+export const filterRows = (rows, category, query) =>
+  rows.filter((row) => matchesCategory(row, category) && matchesQuery(row, query));

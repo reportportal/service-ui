@@ -1,0 +1,199 @@
+/*!
+ * Copyright 2026 EPAM Systems
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+.versions-table {
+  margin-top: 32px;
+}
+
+.header {
+  margin: 0 0 4px;
+  font-family: var(--rp-ui-base-font-family);
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 24px;
+  color: var(--rp-ui-color-text-primary);
+}
+
+.description {
+  margin: 0 0 16px;
+  font-family: var(--rp-ui-base-font-family);
+  font-size: 13px;
+  line-height: 20px;
+  color: var(--rp-ui-color-text-secondary);
+}
+
+// one grid shared by the header row and every version row, so the columns line up without
+// measuring anything
+.columns,
+.row {
+  display: grid;
+  grid-template-columns: minmax(0, 2fr) minmax(0, 2fr) minmax(0, 1fr);
+  align-items: center;
+  gap: 8px;
+}
+
+.columns {
+  padding: 0 8px 8px;
+  border-bottom: 1px solid var(--rp-ui-color-line-primary);
+}
+
+.column {
+  font-family: var(--rp-ui-base-font-family);
+  font-size: 12px;
+  line-height: 16px;
+  color: var(--rp-ui-color-text-secondary);
+}
+
+.version:not(:last-child) {
+  border-bottom: 1px solid var(--rp-ui-color-line-primary);
+}
+
+.row {
+  padding: 10px 8px;
+}
+
+.cell {
+  font-family: var(--rp-ui-base-font-family);
+  font-size: 13px;
+  line-height: 20px;
+  color: var(--rp-ui-color-text-primary);
+  min-width: 0;
+}
+
+.version-cell {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.date-cell {
+  color: var(--rp-ui-color-text-primary);
+}
+
+.action-cell {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.chevron {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  padding: 0;
+  border: none;
+  background: none;
+  cursor: pointer;
+  color: var(--rp-ui-color-text-secondary);
+  transform: rotate(-90deg);
+  transition: transform 0.15s ease;
+
+  &.open {
+    transform: rotate(0deg);
+  }
+
+  svg {
+    width: 12px;
+    height: 12px;
+  }
+}
+
+.number {
+  white-space: nowrap;
+}
+
+.mark {
+  display: inline-flex;
+  align-items: center;
+
+  svg {
+    width: 14px;
+    height: 14px;
+  }
+
+  // amber: this build does not run here. red: it runs, but is under an advisory. Two different
+  // questions, so never the same colour.
+  &.incompatible svg {
+    fill: var(--rp-ui-color-warning);
+  }
+
+  &.advisory svg {
+    fill: var(--rp-ui-color-error);
+  }
+}
+
+.state {
+  font-family: var(--rp-ui-base-font-family);
+  font-size: 13px;
+  line-height: 20px;
+  color: var(--rp-ui-color-text-secondary);
+  white-space: nowrap;
+
+  &.blocked {
+    color: var(--rp-ui-color-error);
+  }
+}
+
+.notes {
+  padding: 0 8px 16px 34px;
+}
+
+.notes-header {
+  margin: 0 0 8px;
+  font-family: var(--rp-ui-base-font-family);
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 20px;
+  color: var(--rp-ui-color-text-primary);
+}
+
+.notes-line {
+  margin: 0 0 4px;
+  font-family: var(--rp-ui-base-font-family);
+  font-size: 13px;
+  line-height: 20px;
+  color: var(--rp-ui-color-text-primary);
+}
+
+.notes-empty {
+  margin: 0;
+  padding: 12px 16px;
+  border-radius: 4px;
+  background: var(--rp-ui-color-bg-secondary);
+  font-family: var(--rp-ui-base-font-family);
+  font-size: 13px;
+  line-height: 20px;
+  text-align: center;
+  color: var(--rp-ui-color-text-secondary);
+}
+
+// A link rather than a button: it reveals what is already on the page instead of doing anything,
+// and the design draws it as one.
+.show-all {
+  align-self: flex-start;
+  padding: 12px 0 0;
+  border: none;
+  background: none;
+  color: var(--rp-ui-color-topaz);
+  font-size: 13px;
+  line-height: 20px;
+  cursor: pointer;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
