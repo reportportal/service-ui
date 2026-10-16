@@ -101,4 +101,8 @@ export const messages = defineMessages({
     id: 'OrganizationSidebar.settingsBtn',
     defaultMessage: 'Organization Settings',
   },
+  organizationDashboards: {
+    id: 'OrganizationSidebar.organizationDashboardsBtn',
+    defaultMessage: 'Organization Dashboards',
+  },
 });
