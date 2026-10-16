@@ -1,5 +1,5 @@
 /*!
- * Copyright 2019 EPAM Systems
+ * Copyright 2025 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,50 +14,46 @@
  * limitations under the License.
  */
 
-.input {
-  width: 310px;
-  @media (max-width: $SCREEN_SM_MAX) {
-    width: 100%;
-  }
-}
+@use '../../../../common/css/mixins';
 
-.tool-bar {
-  position: relative;
+.dashboard-page-toolbar {
   display: flex;
-  justify-content: space-between;
-  padding: 20px;
-  background-color: $COLOR--white-two;
+  align-items: center;
 
-  @media (max-width: $SCREEN_SM_MAX) {
-    display: none;
+  @include mixins.header-toolbar-search-button;
+}
+
+// 24px after the search, no gap between the two buttons, 32px before the create button
+.view-switch {
+  display: flex;
+  margin-left: 24px;
+
+  &--with-action {
+    margin-right: 32px;
   }
 }
 
-.buttons {
-  button {
-    margin: 0 5px;
-  }
+.view-button {
+  @include mixins.header-toolbar-filter-button;
 
-  @media (max-width: $SCREEN_SM_MAX) {
-    padding: 10px;
-  }
-}
+  // the view icons are drawn on a 40x36 canvas with their own spacing
+  padding: 0;
+  width: 40px;
+  height: 36px;
 
-.active-grid {
-  button:nth-of-type(1) {
-    background-color: $COLOR--topaz;
-
-    path {
-      fill: $COLOR--white-two !important;
-    }
+  svg {
+    width: 40px;
+    height: 36px;
   }
 }
 
-.active-table {
-  button:nth-of-type(2) {
-    background-color: $COLOR--topaz;
-    path {
-      fill: $COLOR--white-two !important;
-    }
+// the plus icon is 15x15, the button icon box is 16x16 by default
+.create-button.create-button [class*='icon'] {
+  width: 15px;
+  height: 15px;
+
+  svg {
+    width: 15px;
+    height: 15px;
   }
 }

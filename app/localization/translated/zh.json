@@ -1,5 +1,13 @@
 {
   "AALabel.investigatedByAA": "通过自动分析服务进行分析",
+  "DashboardEmptyResults.emptyActionText": "创建报告面板",
+  "DashboardEmptyResults.emptyHeadline": "尚未创建报告面板",
+  "DashboardEmptyResults.emptyText": "创建您的第一个报告面板，跟踪项目进度与成果。",
+  "DashboardEmptyResults.emptyTextViewer": "团队中具有编辑权限的成员创建报告面板后将显示在此处。如需创建报告面板的权限，请联系您的经理。",
+  "DashboardPage.projectDashboardsTitle": "项目报告面板",
+  "DashboardPageToolbar.createDashboard": "创建报告面板",
+  "DashboardPageToolbar.panelView": "面板视图",
+  "DashboardPageToolbar.tableView": "表格视图",
   "ServiceUnavailableScreen.descriptionApi": "Service API 当前可能不可用。请稍后刷新页面，或联系系统管理员获取帮助。",
   "ServiceUnavailableScreen.footer": "您还可以参考我们的<installationGuides>安装指南</installationGuides>以检查部署是否正确，或访问我们的<slackChannel>Slack 频道</slackChannel>获取社区建议。",
   "ServiceUnavailableScreen.refreshPage": "刷新页面",

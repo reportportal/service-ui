@@ -1,5 +1,13 @@
 {
   "AALabel.investigatedByAA": "Прааналізавана Аўта-аналізам",
+  "DashboardEmptyResults.emptyActionText": "Стварыць панэль кіравання",
+  "DashboardEmptyResults.emptyHeadline": "Панэлі кіравання яшчэ не створаны",
+  "DashboardEmptyResults.emptyText": "Адсочвайце прагрэс і дасягненні вашага праекта, стварыўшы першую панэль кіравання.",
+  "DashboardEmptyResults.emptyTextViewer": "Панэлі кіравання з'явяцца тут, калі іх створаць удзельнікі каманды з правамі рэдагавання. Звярніцеся да свайго менеджара, калі вам патрэбны доступ да стварэння панэляў кіравання.",
+  "DashboardPage.projectDashboardsTitle": "Панэлі кіравання праекта",
+  "DashboardPageToolbar.createDashboard": "Стварыць панэль кіравання",
+  "DashboardPageToolbar.panelView": "Выгляд панэляў",
+  "DashboardPageToolbar.tableView": "Табліцавы выгляд",
   "ServiceUnavailableScreen.descriptionApi": "Падобна, што Service API зараз можа быць недаступны. Абнавіце старонку праз некаторы час або звярніцеся па дапамогу да сістэмнага адміністратара.",
   "ServiceUnavailableScreen.footer": "Вы таксама можаце звярнуцца да нашых <installationGuides>інструкцый па ўсталяванні</installationGuides>, каб праверыць карэктнасць разгортвання, або ў наш <slackChannel>канал Slack</slackChannel> для парад ад супольнасці.",
   "ServiceUnavailableScreen.refreshPage": "Абнавіць старонку",
