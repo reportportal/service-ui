@@ -53,6 +53,7 @@ import { ACTIVITY_TIMESTAMP } from 'controllers/user/constants';
 import {
   authSuccessAction,
   resetTokenAction,
+  logoutCompleteAction,
   setTokenAction,
   setLastFailedLoginTimeAction,
   setFailedLoginAttemptsAction,
@@ -99,27 +100,27 @@ function* logoutOnServer(redirectedPage) {
 function* handleLogout({ payload }) {
   const token = yield select(tokenSelector);
   if (!token) {
+    yield put(logoutCompleteAction());
     return;
   }
 
-  try {
-    yield call(fetch, URLS.grafanaSession(), {
-      method: 'DELETE',
-      timeout: GRAFANA_SESSION_REVOKE_TIMEOUT,
-    });
-  } catch (error) {
-    console.error('Failed to revoke Grafana session on logout', error);
-  }
+  // JWT is still in axios.defaults.headers here (resetTokenAction hasn't fired yet).
+  fetch(URLS.grafanaSession(), {
+    method: 'DELETE',
+    timeout: GRAFANA_SESSION_REVOKE_TIMEOUT,
+  }).catch((error) => console.error('Failed to revoke Grafana session on logout', error));
 
   yield call(logoutOnServer, payload);
   yield put(resetTokenAction());
-  yield put(fetchPublicPluginsAction());
-  yield put(fetchAppInfoAction());
   yield put(
     redirect({
       type: payload || LOGIN_PAGE,
     }),
   );
+  // the store is cleared only after leaving the page, otherwise it re-renders with empty data
+  yield put(logoutCompleteAction());
+  yield put(fetchPublicPluginsAction());
+  yield put(fetchAppInfoAction());
   yield put(
     showNotification({
       messageId: 'infoLogout',

@@ -17,12 +17,15 @@
 import Parser from 'html-react-parser';
 import { isEmpty } from 'es-toolkit/compat';
 
+import { Tooltip } from '@reportportal/ui-kit';
 import { createClassnames } from 'common/utils';
 import CrossIcon from 'common/img/cross-icon-inline.svg';
 
 import styles from './launchAttribute.scss';
 
 const cx = createClassnames(styles);
+
+const TOOLTIP_WIDTH = 200;
 
 interface LaunchAttributeProps {
   attributeKey: string;
@@ -37,22 +40,32 @@ export const LaunchAttribute = ({ attributeKey, value, onRemove }: LaunchAttribu
     return null;
   }
 
+  const fullText = [attributeKey, value].filter(Boolean).join(': ');
+
   return (
-    <div className={cx('launch-attribute')}>
-      <div className={cx('attribute-content')}>
-        {attributeKey && <span className={cx('attribute-key')}>{attributeKey}:</span>}
-        {value && <span className={cx('attribute-value')}>{value}</span>}
+    <Tooltip
+      content={fullText}
+      placement="top"
+      width={TOOLTIP_WIDTH}
+      wrapperClassName={cx('tooltip-wrapper')}
+      contentClassName={cx('tooltip-content')}
+    >
+      <div className={cx('launch-attribute')}>
+        <div className={cx('attribute-content')}>
+          {attributeKey && <span className={cx('attribute-key')}>{attributeKey}:</span>}
+          {value && <span className={cx('attribute-value')}>{value}</span>}
+        </div>
+        {onRemove && (
+          <button
+            type="button"
+            className={cx('remove-button')}
+            onClick={onRemove}
+            data-automation-id="remove-launch-attribute"
+          >
+            {Parser(CrossIcon)}
+          </button>
+        )}
       </div>
-      {onRemove && (
-        <button
-          type="button"
-          className={cx('remove-button')}
-          onClick={onRemove}
-          data-automation-id="remove-launch-attribute"
-        >
-          {Parser(CrossIcon as unknown as string)}
-        </button>
-      )}
-    </div>
+    </Tooltip>
   );
 };
