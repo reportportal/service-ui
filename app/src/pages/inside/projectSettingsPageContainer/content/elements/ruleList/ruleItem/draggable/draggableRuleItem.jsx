@@ -18,7 +18,7 @@ import React, { useMemo, useState } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { useDrag, useDrop } from 'react-dnd';
-import { withTooltip } from 'componentLibrary/tooltip';
+import { Tooltip } from '@reportportal/ui-kit';
 import { RuleItem, ruleItemPropTypes, ruleItemDefaultProps } from '../plain';
 import { RULE_DRAG_SOURCE_TYPE } from './constants';
 import styles from './draggableRuleItem.scss';
@@ -82,11 +82,20 @@ export const DraggableRuleItem = ({
   const DragControlComponent = useMemo(
     () =>
       dragControlTooltipContent
-        ? withTooltip({
-            ContentComponent: dragControlTooltipContent,
-            width: 250,
-            tooltipWrapperClassName: cx('tooltip-wrapper'),
-          })(DragControl)
+        ? (props) => {
+            const TooltipContent = dragControlTooltipContent;
+
+            return (
+              <Tooltip
+                content={<TooltipContent {...props} />}
+                width={250}
+                wrapperClassName={cx('tooltip-wrapper')}
+                wrapperTabIndex={-1}
+              >
+                <DragControl {...props} />
+              </Tooltip>
+            );
+          }
         : DragControl,
     [dragControlTooltipContent],
   );

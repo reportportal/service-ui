@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 EPAM Systems
+ * Copyright 2026 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,86 +14,76 @@
  * limitations under the License.
  */
 
-import React, { Component } from 'react';
+import { useCallback, useMemo } from 'react';
 import PropTypes from 'prop-types';
-import { injectIntl } from 'react-intl';
-import { connect } from 'react-redux';
+import { useIntl } from 'react-intl';
+import { useDispatch, useSelector } from 'react-redux';
 import classNames from 'classnames/bind';
 import { urlOrganizationAndProjectSelector } from 'controllers/pages';
-import { ChartContainer } from 'components/widgets/common/c3chart';
 import {
   getChartDefaultProps,
   getDefaultTestItemLinkParams,
 } from 'components/widgets/common/utils';
 import { ALL } from 'common/constants/reservedFilterIds';
-import { getConfig } from './config/getConfig';
+import { EChart } from 'components/widgets/common/echarts';
+import { getOption } from './config/getOption';
 import styles from './launchesDurationChart.scss';
 
 const cx = classNames.bind(styles);
 
-@injectIntl
-@connect(
-  (state) => ({
-    slugs: urlOrganizationAndProjectSelector(state),
-  }),
-  {
-    navigate: (linkAction) => linkAction,
-  },
-)
-export class LaunchesDurationChart extends Component {
-  static propTypes = {
-    intl: PropTypes.object.isRequired,
-    navigate: PropTypes.func.isRequired,
-    widget: PropTypes.object.isRequired,
-    container: PropTypes.instanceOf(Element).isRequired,
-    isPreview: PropTypes.bool,
-    height: PropTypes.number,
-    observer: PropTypes.object,
-    slugs: PropTypes.shape({
-      organizationSlug: PropTypes.string.isRequired,
-      projectSlug: PropTypes.string.isRequired,
+export const LaunchesDurationChart = ({
+  widget,
+  container,
+  isPreview = false,
+  observer = {},
+  heightOffset,
+}) => {
+  const { formatMessage } = useIntl();
+  const dispatch = useDispatch();
+  const slugs = useSelector(urlOrganizationAndProjectSelector);
+
+  const onChartClick = useCallback(
+    (data) => {
+      const { organizationSlug, projectSlug } = slugs;
+      const link = getDefaultTestItemLinkParams(
+        projectSlug,
+        ALL,
+        `${widget.content.result[data.index].id}`,
+        organizationSlug,
+      );
+
+      dispatch(link);
+    },
+    [dispatch, slugs, widget],
+  );
+
+  const configData = useMemo(
+    () => ({
+      getOption,
+      formatMessage,
+      onChartClick,
     }),
-  };
+    [formatMessage, onChartClick],
+  );
 
-  static defaultProps = {
-    isPreview: false,
-    height: 0,
-    observer: {},
-  };
+  return (
+    <div className={cx('launches-duration-chart')}>
+      <EChart
+        {...getChartDefaultProps({ widget, container, isPreview, observer, heightOffset })}
+        className={cx('widget-wrapper')}
+        configData={configData}
+        legendConfig={{
+          showLegend: false,
+        }}
+      />
+    </div>
+  );
+};
 
-  onChartClick = (data) => {
-    const {
-      widget: { content },
-      slugs: { organizationSlug, projectSlug },
-    } = this.props;
-    const link = getDefaultTestItemLinkParams(
-      projectSlug,
-      ALL,
-      `${content.result[data.index].id}`,
-      organizationSlug,
-    );
-
-    this.props.navigate(link);
-  };
-
-  configData = {
-    getConfig,
-    formatMessage: this.props.intl.formatMessage,
-    onChartClick: this.onChartClick,
-  };
-
-  render() {
-    return (
-      <div className={cx('launches-duration-chart')}>
-        <ChartContainer
-          {...getChartDefaultProps(this.props)}
-          className={cx('widget-wrapper')}
-          configData={this.configData}
-          legendConfig={{
-            showLegend: false,
-          }}
-        />
-      </div>
-    );
-  }
-}
+LaunchesDurationChart.propTypes = {
+  widget: PropTypes.object.isRequired,
+  container: PropTypes.instanceOf(Element).isRequired,
+  isPreview: PropTypes.bool,
+  observer: PropTypes.object,
+  heightOffset: PropTypes.number,
+};
