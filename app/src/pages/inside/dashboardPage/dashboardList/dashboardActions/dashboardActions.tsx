@@ -21,6 +21,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useTracking } from 'react-tracking';
 import { MeatballMenuIcon } from '@reportportal/ui-kit';
 
+import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { URLS } from 'common/urls';
 import { createClassnames, fetch, copyToClipboard } from 'common/utils';
 import { useCanLockDashboard } from 'common/hooks/useCanLockDashboard';
@@ -62,13 +63,18 @@ export const DashboardActions = ({
   const { id, locked } = item;
   const canModify = canWorkWithDashboard && !(locked && !canLock);
 
+  const fetchDashboardConfig = () => {
+    const configPromise = fetch(URLS.dashboardConfig(activeProjectKey, id));
+
+    // the promise may stay unused if the user never copies the config
+    configPromise.catch(noop);
+
+    return configPromise;
+  };
+
   const prefetchDashboardConfig = () => {
     if (dashboardConfigPromise === null) {
-      const configPromise = fetch(URLS.dashboardConfig(activeProjectKey, id));
-
-      // the promise may stay unused if the user never copies the config
-      configPromise.catch(noop);
-      setDashboardConfigPromise(configPromise);
+      setDashboardConfigPromise(fetchDashboardConfig());
     }
   };
 
@@ -83,7 +89,8 @@ export const DashboardActions = ({
 
   const copyConfig = async () => {
     try {
-      const config = await dashboardConfigPromise;
+      // the menu can be reopened without leaving the wrapper, then there is no prefetched promise
+      const config = await (dashboardConfigPromise ?? fetchDashboardConfig());
 
       await copyToClipboard(JSON.stringify(config));
       dispatch(showSuccessNotification({ messageId: 'dashboardConfigurationCopied' }));
@@ -135,9 +142,14 @@ export const DashboardActions = ({
         actions={actions}
         className={cx('dashboard-actions__popover')}
         trigger={
-          <span className={cx('dashboard-actions__trigger')} onClick={handleTriggerClick}>
+          <button
+            type="button"
+            className={cx('dashboard-actions__trigger')}
+            aria-label={formatMessage(COMMON_LOCALE_KEYS.ACTIONS)}
+            onClick={handleTriggerClick}
+          >
             <MeatballMenuIcon />
-          </span>
+          </button>
         }
       />
     </div>

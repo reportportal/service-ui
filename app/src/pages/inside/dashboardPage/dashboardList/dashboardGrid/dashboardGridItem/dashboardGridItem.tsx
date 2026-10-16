@@ -26,11 +26,11 @@ import { getDashboardItemPageLinkSelector } from 'controllers/dashboard/selector
 import { NavLink } from 'components/main/navLink';
 import { DASHBOARD_EVENTS } from 'analyticsEvents/dashboardsPageEvents';
 import { LockedDashboardTooltip } from 'pages/inside/common/lockedDashboardTooltip';
-import { LockedIcon } from 'pages/inside/common/lockedIcon';
 import OwnerIcon from 'pages/inside/dashboardPage/img/owner-inline.svg';
 
 import { DashboardActionHandlers, DashboardItem } from '../../../types';
 import { DashboardActions } from '../../dashboardActions';
+import { DashboardLockedIcon } from '../../dashboardLockedIcon';
 
 import styles from './dashboardGridItem.scss';
 
@@ -90,12 +90,6 @@ export const DashboardGridItem = ({
     <div className={cx('dashboard-card')}>
       <div className={cx('dashboard-card__header')}>
         <div className={cx('dashboard-card__name-cell')}>
-          {locked && (
-            <LockedDashboardTooltip locked={locked}>
-              {/* TODO: replace with the locked indicator icon from Figma */}
-              <LockedIcon className={cx('dashboard-card__locked')} />
-            </LockedDashboardTooltip>
-          )}
           <NavLink
             to={dashboardLink}
             className={cx('dashboard-card__name')}
@@ -105,6 +99,11 @@ export const DashboardGridItem = ({
               {name}
             </span>
           </NavLink>
+          {locked && (
+            <LockedDashboardTooltip locked={locked}>
+              <DashboardLockedIcon className={cx('dashboard-card__locked')} />
+            </LockedDashboardTooltip>
+          )}
         </div>
         <DashboardActions
           item={item}

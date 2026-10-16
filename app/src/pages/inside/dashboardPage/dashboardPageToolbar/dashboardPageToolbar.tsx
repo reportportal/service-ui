@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { noop } from 'es-toolkit';
 import Parser from 'html-react-parser';
 import { defineMessages, useIntl } from 'react-intl';
@@ -91,11 +91,22 @@ export const DashboardPageToolbar = ({
   const loading = useSelector(loadingSelector);
   const totalDashboards = useSelector(totalDashboardsSelector);
   const [searchValue, setSearchValue] = useState(filter);
+  // the last value sent from this input, the filter is applied with a delay
+  const sentFilterRef = useRef(filter);
+
+  useEffect(() => {
+    // sync only the changes made outside of the input, so the typed text is not overwritten
+    if (filter !== sentFilterRef.current) {
+      sentFilterRef.current = filter;
+      setSearchValue(filter);
+    }
+  }, [filter]);
 
   const isLimitReached = totalDashboards >= DASHBOARDS_LIMIT;
 
   const handleFilterChange = (value: string) => {
     if (validate.searchFilter(value)) {
+      sentFilterRef.current = value;
       onFilterChange(value);
     }
   };

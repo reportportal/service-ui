@@ -161,6 +161,26 @@ export class DashboardPage extends Component {
     onChangePageSize: () => {},
   };
 
+  state = {
+    resetScroll: false,
+  };
+
+  componentDidUpdate(prevProps) {
+    const { activePage, pageSize, filter } = this.props;
+
+    if (
+      prevProps.activePage !== activePage ||
+      prevProps.pageSize !== pageSize ||
+      prevProps.filter !== filter
+    ) {
+      this.setState({ resetScroll: true });
+    }
+  }
+
+  onScrollReset = () => {
+    this.setState({ resetScroll: false });
+  };
+
   onDeleteDashboardItem = (item) => {
     const {
       intl: { formatMessage },
@@ -287,7 +307,7 @@ export class DashboardPage extends Component {
 
     return (
       <SettingsLayout>
-        <ScrollWrapper resetRequired>
+        <ScrollWrapper resetRequired={this.state.resetScroll} onReset={this.onScrollReset}>
           <PageHeaderWithBreadcrumbsAndActions
             title={intl.formatMessage(messages.projectDashboardsTitle)}
             breadcrumbDescriptors={this.getBreadcrumbDescriptors()}

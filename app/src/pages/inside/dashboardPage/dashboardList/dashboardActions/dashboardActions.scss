@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+@use '../../../../../common/css/mixins';
+
 // the popover wrapper is inline-block, in a block parent it would get the text line height (taller than the icon)
 .dashboard-actions {
   // positioned (without z-index) so it is painted above the stretched link of the card, which comes earlier in the DOM;
@@ -22,6 +24,8 @@
   display: flex;
 
   &__trigger {
+    @include mixins.button-reset;
+
     display: flex;
   }
 

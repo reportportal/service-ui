@@ -27,11 +27,11 @@ import { SpinningPreloader } from 'components/preloaders/spinningPreloader';
 import { NavLink } from 'components/main/navLink';
 import { DASHBOARD_EVENTS } from 'analyticsEvents/dashboardsPageEvents';
 import { LockedDashboardTooltip } from 'pages/inside/common/lockedDashboardTooltip';
-import { LockedIcon } from 'pages/inside/common/lockedIcon';
 
 import { DashboardActionHandlers, DashboardItem } from '../../types';
 import { EmptyDashboards } from '../EmptyDashboards';
 import { DashboardActions } from '../dashboardActions';
+import { DashboardLockedIcon } from '../dashboardLockedIcon';
 import { messages } from './messages';
 
 import styles from './dashboardTable.scss';
@@ -83,12 +83,6 @@ export const DashboardTable = ({
             component: (
               <div className={cx('name-column')}>
                 <div className={cx('name-cell')}>
-                  {locked && (
-                    <LockedDashboardTooltip locked={locked}>
-                      {/* TODO: replace with the locked indicator icon from Figma */}
-                      <LockedIcon />
-                    </LockedDashboardTooltip>
-                  )}
                   <NavLink
                     className={cx('name')}
                     to={getLink(id)}
@@ -97,6 +91,11 @@ export const DashboardTable = ({
                   >
                     {name}
                   </NavLink>
+                  {locked && (
+                    <LockedDashboardTooltip locked={locked}>
+                      <DashboardLockedIcon />
+                    </LockedDashboardTooltip>
+                  )}
                 </div>
                 {isExpanded && <p className={cx('description')}>{description}</p>}
               </div>
