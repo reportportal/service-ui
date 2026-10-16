@@ -21,6 +21,7 @@ export {
   testItemDetailsAddonSelector,
   uiExtensionLogTabSelector,
   uiExtensionProjectPagesSelector,
+  uiExtensionOrganizationPagesSelector,
   extensionManifestSelector,
   extensionManifestsLoadPendingSelector,
   disablePluginPopupContentSelector,

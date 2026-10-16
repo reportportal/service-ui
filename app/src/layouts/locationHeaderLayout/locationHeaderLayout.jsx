@@ -25,10 +25,11 @@ const cx = classNames.bind(styles);
 
 export const LocationHeaderLayout = ({
   title,
-  children,
+  children = null,
   breadcrumbs,
   tree,
-  className,
+  className = '',
+  headerClassName = '',
   titleEllipsis = true,
 }) => {
   const isLastClickable = Boolean(breadcrumbs?.[breadcrumbs.length - 1]?.link);
@@ -47,7 +48,7 @@ export const LocationHeaderLayout = ({
           isSingleItemClickable={isSingleItemClickable}
         />
       )}
-      <div className={cx('header')}>
+      <div className={cx('header', headerClassName)}>
         {(title ?? '').trim() ? (
           <span className={cx('title', { 'title--no-ellipsis': !titleEllipsis })}>{title}</span>
         ) : null}
@@ -58,7 +59,7 @@ export const LocationHeaderLayout = ({
 };
 
 const breadcrumbItemShape = {
-  title: PropTypes.string.isRequired,
+  title: PropTypes.oneOfType([PropTypes.string, PropTypes.node]).isRequired,
   link: PropTypes.shape({
     type: PropTypes.string.isRequired,
     payload: PropTypes.object,
@@ -78,11 +79,6 @@ LocationHeaderLayout.propTypes = {
   breadcrumbs: PropTypes.arrayOf(breadcrumbItemPropType),
   tree: PropTypes.arrayOf(treeItemPropType),
   className: PropTypes.string,
+  headerClassName: PropTypes.string,
   titleEllipsis: PropTypes.bool,
-};
-
-LocationHeaderLayout.defaultProps = {
-  children: null,
-  className: '',
-  titleEllipsis: true,
 };

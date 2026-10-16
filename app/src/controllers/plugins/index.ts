@@ -15,7 +15,8 @@
  */
 
 export { pluginsReducer } from './reducer';
-export { SECRET_FIELDS_KEY } from './constants';
+export { SECRET_FIELDS_KEY, ORGANIZATION_DASHBOARDS_PAGE_SLUG } from './constants';
+
 export {
   fetchPluginsAction,
   fetchPublicPluginsAction,

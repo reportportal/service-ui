@@ -54,3 +54,5 @@ export const ORGANIZATION_INTEGRATIONS = 'organizationIntegrations';
 export const PUBLIC_PLUGINS = 'publicPlugins';
 
 export const SECRET_FIELDS_KEY = 'rp_secretFieldsToClear';
+
+export const ORGANIZATION_DASHBOARDS_PAGE_SLUG = 'dashboards';
