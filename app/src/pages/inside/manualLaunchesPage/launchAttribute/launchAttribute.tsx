@@ -51,7 +51,9 @@ export const LaunchAttribute = ({ attributeKey, value, onRemove }: LaunchAttribu
     check();
 
     if (typeof ResizeObserver === 'undefined') {
-      return undefined;
+      window.addEventListener('resize', check);
+
+      return () => window.removeEventListener('resize', check);
     }
 
     const observer = new ResizeObserver(check);
