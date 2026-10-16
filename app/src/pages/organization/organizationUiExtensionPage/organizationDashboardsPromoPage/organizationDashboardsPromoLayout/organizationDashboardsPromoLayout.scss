@@ -37,6 +37,11 @@
   line-height: 42px;
   margin-top: 54px;
   color: var(--rp-ui-base-e-400);
+  text-align: center;
+
+  @media (max-width: 787px) {
+    margin-top: 0;
+  }
 }
 
 .description {
@@ -53,38 +58,17 @@
   margin-top: 24px;
 }
 
-.bg-image {
+.bg-image-wrapper {
+  width: 100%;
+  max-width: 726px;
   margin-top: 24px;
-  max-width: 100%;
+}
+
+.bg-image {
+  display: block;
+  width: 100%;
   height: auto;
   aspect-ratio: 726 / 531;
-}
-
-.footer {
-  margin-top: -168px;
-}
-
-.help-titles {
-  > div > div {
-    min-width: 0;
-    gap: 4px;
-  }
-
-  a {
-    display: inline;
-    height: auto;
-    line-height: 16px;
-
-    > span {
-      display: inline;
-      white-space: normal;
-      overflow-wrap: break-word;
-    }
-
-    > i {
-      display: inline-block;
-      vertical-align: middle;
-      margin-left: 8px;
-    }
-  }
+  // -168px at max width 726px; scales with image width
+  margin-bottom: calc(-168 / 726 * 100%);
 }

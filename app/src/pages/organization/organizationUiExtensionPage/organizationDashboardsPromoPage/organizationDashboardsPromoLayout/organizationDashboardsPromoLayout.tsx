@@ -95,14 +95,14 @@ export const OrganizationDashboardsPromoLayout = ({
             </Button>
           </div>
         )}
-        <img
-          className={cx('bg-image')}
-          src={bgImage as unknown as string}
-          alt={formatMessage(messages.promoImageAlt)}
-        />
-        <div className={cx('footer')}>
-          <HelpPanel items={helpItems} className={cx('help-titles')} />
+        <div className={cx('bg-image-wrapper')}>
+          <img
+            className={cx('bg-image')}
+            src={bgImage as unknown as string}
+            alt={formatMessage(messages.promoImageAlt)}
+          />
         </div>
+        <HelpPanel items={helpItems} />
       </div>
     </ScrollWrapper>
   );
