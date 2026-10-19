@@ -34,6 +34,7 @@ import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { EmptyPageState } from 'pages/common';
 import NoResultsIcon from 'common/img/newIcons/no-results-icon-inline.svg';
 import { assignedProjectsSelector } from 'controllers/user';
+import { mapProjectsWithAssignedRoles } from './mapProjectsWithAssignedRoles';
 import { useUserPermissions } from 'hooks/useUserPermissions';
 import { ProjectsPageHeader } from './projectsPageHeader';
 import EmptyIcon from './img/empty-projects-icon-inline.svg';
@@ -75,16 +76,7 @@ const OrganizationProjectsPageComponent = ({
   const projects = useSelector(projectsSelector);
   const assignedProjects = useSelector(assignedProjectsSelector);
 
-  const projectsWithAssignedRoles = projects.map((project) => {
-    const assignedProject = Object.values(assignedProjects || {}).find(
-      (assigned) => assigned.projectSlug === project.slug,
-    );
-
-    return {
-      ...project,
-      role: assignedProject?.projectRole,
-    };
-  });
+  const projectsWithAssignedRoles = mapProjectsWithAssignedRoles(projects, assignedProjects);
 
   const [searchValue, setSearchValue] = useState(null);
   const [appliedFiltersCount, setAppliedFiltersCount] = useState(0);
