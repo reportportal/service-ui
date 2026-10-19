@@ -95,12 +95,59 @@ export interface ReducedIterationDetailsProps {
   onBack?: () => void;
 }
 
+type GenerationStageKind = 'create' | 'grade' | 'upload';
+
+const GENERATION_SECTION_SHAPES: Record<GenerationStageKind, { key: string; columns: string[] }> = {
+  create: { key: 'authoredCases', columns: ['name', 'status'] },
+  grade: { key: 'gradedCases', columns: ['name', 'total'] },
+  upload: { key: 'uploadReport', columns: ['testCase', 'result'] },
+};
+
+const getGenerationStageKind = (
+  pipelineType: string | undefined,
+  stage: ReducedPipelineDetailStage,
+): GenerationStageKind | undefined => {
+  if (pipelineType !== 'TEST_CASE_GENERATION' || !stage.stageKey) return undefined;
+  const key = stage.stageKey.toLowerCase();
+  return key === 'create' || key === 'grade' || key === 'upload' ? key : undefined;
+};
+
+const getGenerationSectionKind = (
+  section: ReducedPipelineSection,
+  stageKind: GenerationStageKind | undefined,
+): GenerationStageKind | undefined => {
+  if (!stageKind || section.role !== 'RESULT') return undefined;
+  const expected = GENERATION_SECTION_SHAPES[stageKind];
+  const columns = new Set(section.columns.map(({ key }) => key));
+  return section.key === expected.key && expected.columns.every((key) => columns.has(key))
+    ? stageKind
+    : undefined;
+};
+
+const renderGenerationHighlights = (
+  stage: ReducedPipelineDetailStage,
+  stageKind: GenerationStageKind | undefined,
+) => {
+  const highlights = stageKind ? stage.attributes?.filter(({ type }) => type === 'META') : [];
+  return highlights?.length ? (
+    <dl className={cx('generation-highlights')} data-automation-id="generationStageHighlights">
+      {highlights.map((attribute) => (
+        <div key={attribute.key} className={cx('generation-highlights__item')}>
+          <dt>{attribute.label ?? attribute.key}</dt>
+          <dd title={attribute.value}>{attribute.value}</dd>
+        </div>
+      ))}
+    </dl>
+  ) : null;
+};
+
 const renderReducedStageSection = (
   section: ReducedPipelineSection,
   scoreDetailsLabel: string,
   stageId: number,
   expandedRows: Set<string>,
   onToggleDetails: (rowKey: string) => void,
+  generationKind?: GenerationStageKind,
 ) => {
   if (
     section.key === 'tokenUsage' &&
@@ -142,7 +189,12 @@ const renderReducedStageSection = (
   return (
     <section
       key={section.key}
-      className={cx('reduced-section', { 'reduced-section--grade': section.key === 'gradedCases' })}
+      className={cx('reduced-section', {
+        'reduced-section--grade': section.key === 'gradedCases',
+        'reduced-section--create': generationKind === 'create',
+        'reduced-section--upload': generationKind === 'upload',
+      })}
+      data-automation-id={generationKind ? `live-${generationKind}-results` : undefined}
     >
       <h3>{section.title}</h3>
       <div className={cx('reduced-section__scroll')}>
@@ -418,7 +470,7 @@ const renderReducedStageCards = (
                     </span>
                   </span>
                   {stage.message && (
-                    <strong className={cardCx('stage-cards__item-summary')}>{stage.message}</strong>
+                    <span className={cardCx('stage-cards__item-summary')}>{stage.message}</span>
                   )}
                   {stage.summary && (
                     <span className={cardCx('stage-cards__item-description')}>{stage.summary}</span>
@@ -456,10 +508,14 @@ const renderReducedStagePanel = (
   expandedRows: Set<string>,
   onToggleDetails: (rowKey: string) => void,
   formatMessage: ReturnType<typeof useIntl>['formatMessage'],
+  generationKind?: GenerationStageKind,
 ) => (
   <div className={cx('panel-card')} data-automation-id="reducedStagePanel">
     <div className={panelCx('stage-panels')}>
-      <section className={panelCx('stage-panels__main')}>
+      <section
+        className={panelCx('stage-panels__main')}
+        data-automation-id={generationKind ? `live-${generationKind}-panel` : undefined}
+      >
         <div className={panelCx('panel-heading')}>
           <h2>{currentStage.label}</h2>
           <span
@@ -478,6 +534,7 @@ const renderReducedStagePanel = (
         {currentStage.message && (
           <p className={cx('reduced-stage__message')}>{currentStage.message}</p>
         )}
+        {renderGenerationHighlights(currentStage, generationKind)}
         {currentStage.sections
           ?.filter(({ role }) => role === 'RESULT')
           .map((section) =>
@@ -487,6 +544,7 @@ const renderReducedStagePanel = (
               currentStage.id,
               expandedRows,
               onToggleDetails,
+              getGenerationSectionKind(section, generationKind),
             ),
           )}
       </section>
@@ -548,12 +606,14 @@ const renderReducedStagePanel = (
               </dd>
             </Fragment>
           ))}
-          {currentStage.attributes?.map((attribute) => (
-            <Fragment key={attribute.key}>
-              <dt title={attribute.description}>{attribute.label ?? attribute.key}</dt>
-              <dd>{attribute.value}</dd>
-            </Fragment>
-          ))}
+          {currentStage.attributes
+            ?.filter(({ type }) => !generationKind || type !== 'META')
+            .map((attribute) => (
+              <Fragment key={attribute.key}>
+                <dt title={attribute.description}>{attribute.label ?? attribute.key}</dt>
+                <dd>{attribute.value}</dd>
+              </Fragment>
+            ))}
         </dl>
         {currentStage.sections?.some(({ role }) => role === 'DETAILS') && (
           <div
@@ -790,7 +850,13 @@ export const ReducedIterationDetails = ({
           ))}
           {renderReducedStageCards(iteration, currentStage, setSelectedStageId, formatMessage)}
           {currentStage &&
-            renderReducedStagePanel(currentStage, expandedRows, toggleRowDetails, formatMessage)}
+            renderReducedStagePanel(
+              currentStage,
+              expandedRows,
+              toggleRowDetails,
+              formatMessage,
+              getGenerationStageKind(iteration.pipelineType, currentStage),
+            )}
           <details className={cx('reduced-api-fields')}>
             <summary>{formatMessage(messages.validatedApiFields)}</summary>
             <pre>{JSON.stringify(mappedFields, null, 2)}</pre>

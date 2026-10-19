@@ -75,6 +75,7 @@ export interface LivePipelineIterationRaw {
   id?: unknown;
   pipelineId?: unknown;
   pipelineName?: unknown;
+  pipelineType?: unknown;
   iterationNumber?: unknown;
   status?: unknown;
   statusCategory?: unknown;
@@ -141,6 +142,7 @@ export interface ReducedPipeline {
 
 export interface ReducedPipelineStage {
   key: string;
+  stageKey?: string;
   label: string;
   sequence?: number;
   status: ReducedPipelineStatus;
@@ -167,6 +169,7 @@ export interface ReducedPipelineDetailStage extends ReducedPipelineStage {
 
 export interface ReducedPipelineIterationDetail extends Omit<ReducedPipelineIteration, 'stages'> {
   pipelineName?: string;
+  pipelineType?: string;
   createdAt?: number;
   startedBy?: string;
   warnings?: string[];
@@ -633,6 +636,7 @@ const adaptStage = (value: unknown): ReducedPipelineStage | null => {
 
   return {
     key,
+    ...(reportedKey ? { stageKey: reportedKey } : {}),
     label,
     sequence,
     status: asStatus(raw.statusCategory ?? raw.status),
@@ -982,6 +986,7 @@ export const adaptLivePipelineIterationDetail = (
   const raw = asRecord(value);
   const iteration = adaptIteration(value, expectedPipelineId);
   const pipelineName = raw ? asTrimmedString(raw.pipelineName, MAX_NAME_LENGTH) : undefined;
+  const pipelineType = raw ? asTrimmedString(raw.pipelineType, MAX_KEY_LENGTH) : undefined;
   const createdAt = raw ? asTimestamp(raw.createdAt) : undefined;
   const startedByRaw = raw && asRecord(raw.startedBy);
   const startedBy = startedByRaw
@@ -1021,6 +1026,7 @@ export const adaptLivePipelineIterationDetail = (
     !raw ||
     iteration?.id !== expectedIterationId ||
     (raw.pipelineName !== undefined && pipelineName === undefined) ||
+    (raw.pipelineType !== undefined && pipelineType === undefined) ||
     (raw.createdAt !== undefined && createdAt === undefined) ||
     (raw.startedBy !== undefined && !startedBy) ||
     !warningDetails ||
@@ -1032,6 +1038,7 @@ export const adaptLivePipelineIterationDetail = (
   return {
     ...iteration,
     pipelineName,
+    ...(pipelineType ? { pipelineType } : {}),
     createdAt,
     ...(startedBy ? { startedBy } : {}),
     ...(warningDetails.length
