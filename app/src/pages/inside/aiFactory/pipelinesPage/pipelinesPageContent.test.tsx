@@ -16,12 +16,17 @@ import { isAiFactoryMockRuntimeInstalled, resetMockDb } from 'controllers/aiFact
 import {
   getPipelineIterationsAction,
   getPipelinesAction,
+  pipelineCatalogErrorSelector,
+  pipelineCatalogPageSelector,
+  pipelineCatalogSearchSelector,
   pipelineCatalogTransportSelector,
+  pipelineIterationPagesSelector,
   pipelineIterationsByPipelineSelector,
   pipelineIterationsErrorByPipelineSelector,
   pipelineIterationsLoadingByPipelineSelector,
   pipelinesLoadingSelector,
   pipelinesSelector,
+  type PipelinePageState,
 } from 'controllers/aiFactory/pipelines';
 import { showModalAction } from 'controllers/modal';
 import { showErrorNotification, showSuccessNotification } from 'controllers/notification';
@@ -66,11 +71,14 @@ jest.mock('components/preloaders/spinningPreloader', () => ({
   SpinningPreloader: 'SpinningPreloader',
 }));
 jest.mock('controllers/aiFactory/pipelines', () => ({
-  getPipelineIterationsAction: jest.fn((pipelineIds: number[]) => ({
+  getPipelineIterationsAction: jest.fn((pipelineIds: number[], page = {}) => ({
     type: 'GET_PIPELINE_ITERATIONS',
-    payload: { pipelineIds },
+    payload: { pipelineIds, ...page },
   })),
-  getPipelinesAction: jest.fn(() => ({ type: 'GET_PIPELINES' })),
+  getPipelinesAction: jest.fn((page?: unknown) => ({
+    type: 'GET_PIPELINES',
+    ...(page ? { payload: page } : {}),
+  })),
   isReducedPipeline: jest.fn(
     (pipeline: unknown) => typeof pipeline === 'object' && pipeline !== null && 'kind' in pipeline,
   ),
@@ -79,6 +87,10 @@ jest.mock('controllers/aiFactory/pipelines', () => ({
       typeof iteration === 'object' && iteration !== null && 'kind' in iteration,
   ),
   pipelineCatalogTransportSelector: jest.fn(),
+  pipelineCatalogErrorSelector: jest.fn(),
+  pipelineCatalogPageSelector: jest.fn(),
+  pipelineCatalogSearchSelector: jest.fn(),
+  pipelineIterationPagesSelector: jest.fn(),
   pipelineIterationsByPipelineSelector: jest.fn(),
   pipelineIterationsErrorByPipelineSelector: jest.fn(),
   pipelineIterationsLoadingByPipelineSelector: jest.fn(),
@@ -107,6 +119,7 @@ jest.mock('../../common/pageHeaderWithBreadcrumbsAndActions', () => ({
   PageHeaderWithBreadcrumbsAndActions: 'PageHeaderWithBreadcrumbsAndActions',
 }));
 jest.mock('./pipelineGroup', () => ({ PipelineGroup: 'PipelineGroup' }));
+jest.mock('./pageControls/pageControls', () => ({ PageControls: 'PageControls' }));
 
 const dispatch = jest.fn();
 const generationPipeline: PipelineRS = {
@@ -134,21 +147,29 @@ const createIteration = (pipelineId: number, status: IterationStatus): Iteration
   }) as IterationSummaryRS;
 
 interface RenderOptions {
-  pipelines?: PipelineRS[];
+  pipelines?: PipelineRS[] | null;
   iterationsByPipeline?: Record<number, IterationSummaryRS[]>;
   pipelinesLoading?: boolean;
   iterationsLoadingByPipeline?: Record<number, boolean>;
   iterationsErrorByPipeline?: Record<number, boolean>;
-  transport?: 'mock' | 'live';
+  transport?: 'mock' | 'live' | 'postman-demo';
+  catalogPage?: PipelinePageState | null;
+  catalogSearch?: string;
+  catalogError?: boolean;
+  iterationPages?: Record<number, PipelinePageState>;
 }
 
 let selectorValues: Map<unknown, unknown>;
 
 interface PipelineGroupTestProps {
   pipeline: PipelineRS;
+  iterations?: IterationSummaryRS[];
   isLoading: boolean;
   hasError: boolean;
   onRetry: () => void;
+  page?: PipelinePageState;
+  onPageChange?: (offset: number) => void;
+  isSearching?: boolean;
 }
 
 interface PipelineGroupTestNode {
@@ -166,6 +187,10 @@ const renderPage = ({
   iterationsLoadingByPipeline = {},
   iterationsErrorByPipeline = {},
   transport = 'mock',
+  catalogPage = null,
+  catalogSearch = '',
+  catalogError = false,
+  iterationPages = {},
 }: RenderOptions = {}): ShallowWrapper => {
   selectorValues = new Map<unknown, unknown>([
     [projectNameSelector, 'Demo'],
@@ -176,6 +201,10 @@ const renderPage = ({
     [pipelineIterationsLoadingByPipelineSelector, iterationsLoadingByPipeline],
     [pipelineIterationsErrorByPipelineSelector, iterationsErrorByPipeline],
     [pipelineCatalogTransportSelector, transport],
+    [pipelineCatalogErrorSelector, catalogError],
+    [pipelineCatalogPageSelector, catalogPage],
+    [pipelineCatalogSearchSelector, catalogSearch],
+    [pipelineIterationPagesSelector, iterationPages],
   ]);
   jest.mocked(useDispatch).mockReturnValue(dispatch as unknown as ReturnType<typeof useDispatch>);
   jest
@@ -198,6 +227,120 @@ describe('PipelinesPageContent polling', () => {
     jest.mocked(isAiFactoryDemoResetAvailable).mockReturnValue(false);
     jest.mocked(isAiFactoryMockRuntimeInstalled).mockReturnValue(true);
     jest.mocked(resetMockDb).mockReturnValue(true);
+  });
+
+  test('labels a Postman fallback catalog as demo data', () => {
+    const wrapper = renderPage({ transport: 'postman-demo' });
+
+    expect(wrapper.find('output').text()).toContain('Demo data from the Postman collection');
+    expect(usePolling).toHaveBeenLastCalledWith(expect.any(Function), 5000, false);
+    wrapper.unmount();
+  });
+
+  test('shows an inline retry when the catalog request fails', () => {
+    const wrapper = renderPage({ pipelines: null, catalogError: true });
+    expect(wrapper.text()).toContain('Pipelines are temporarily unavailable');
+    (wrapper.find('.catalog-error').find('Button').prop('onClick') as () => void)();
+    expect(getPipelinesAction).toHaveBeenLastCalledWith(undefined);
+    wrapper.unmount();
+  });
+
+  test('requests LP1 and LP2 pages while retaining iterations of a matching pipeline', () => {
+    const catalogPage: PipelinePageState = {
+      number: 1,
+      size: 1,
+      totalElements: 2,
+      totalPages: 2,
+      offset: 0,
+    };
+    const iterationPage: PipelinePageState = {
+      number: 2,
+      size: 1,
+      totalElements: 2,
+      totalPages: 2,
+      offset: 1,
+    };
+    const iteration = createIteration(1, IterationStatus.COMPLETED);
+    const wrapper = renderPage({
+      transport: 'live',
+      catalogPage,
+      catalogSearch: 'Generation',
+      iterationPages: { 1: iterationPage },
+      iterationsByPipeline: { 1: [iteration] },
+    });
+    const firstGroup = (wrapper.find('PipelineGroup') as unknown as PipelineGroupTestCollection).at(
+      0,
+    );
+    expect(firstGroup.props().iterations).toEqual([iteration]);
+    expect(firstGroup.props().page).toEqual(iterationPage);
+
+    firstGroup.props().onPageChange?.(0);
+    expect(getPipelineIterationsAction).toHaveBeenLastCalledWith([1], {
+      search: '',
+      offset: 0,
+      limit: 1,
+    });
+    const catalogControls = wrapper.find('PageControls');
+    (catalogControls.prop('onPageChange') as (offset: number) => void)(1);
+    expect(getPipelinesAction).toHaveBeenLastCalledWith({
+      search: 'Generation',
+      offset: 1,
+      limit: 1,
+    });
+    wrapper.unmount();
+  });
+
+  test('does not filter LP2 iterations when the pipeline name matched LP1 search', () => {
+    const page: PipelinePageState = {
+      number: 1,
+      size: 100,
+      totalElements: 101,
+      totalPages: 2,
+      offset: 0,
+    };
+    const wrapper = renderPage({
+      transport: 'live',
+      catalogSearch: 'Generation',
+      iterationPages: { 1: page },
+    });
+    const firstGroup = (wrapper.find('PipelineGroup') as unknown as PipelineGroupTestCollection).at(
+      0,
+    );
+    expect(firstGroup.props().isSearching).toBe(false);
+    firstGroup.props().onPageChange?.(100);
+    expect(getPipelineIterationsAction).toHaveBeenLastCalledWith([1], {
+      search: '',
+      offset: 100,
+      limit: 100,
+    });
+    wrapper.unmount();
+  });
+
+  test('hides a live pipeline returned by LP1 for an iteration-field match', () => {
+    const wrapper = renderPage({ transport: 'live', catalogSearch: '#1' });
+
+    expect(wrapper.find('PipelineGroup')).toHaveLength(0);
+    expect(wrapper.text()).toContain('No pipelines match');
+    expect(getPipelineIterationsAction).not.toHaveBeenCalled();
+    wrapper.unmount();
+  });
+
+  test('filters mock pipelines by name and keeps all their iterations', () => {
+    const iteration = createIteration(1, IterationStatus.COMPLETED);
+    const wrapper = renderPage({ iterationsByPipeline: { 1: [iteration] } });
+
+    (
+      getHeaderActions(wrapper).find('SearchField').prop('setSearchValue') as (
+        value: string,
+      ) => void
+    )('Generation');
+
+    const groups = wrapper.find('PipelineGroup') as unknown as PipelineGroupTestCollection & {
+      length: number;
+    };
+    expect(groups).toHaveLength(1);
+    expect(groups.at(0).props().iterations).toEqual([iteration]);
+    wrapper.unmount();
   });
 
   test('polls all pipeline summaries every 5 seconds while automation is running', () => {
@@ -331,7 +474,6 @@ describe('PipelinesPageContent polling', () => {
     expect(usePolling).toHaveBeenLastCalledWith(expect.any(Function), 5000, false);
     wrapper.unmount();
   });
-
 });
 
 describe('PipelinesPageContent demo reset', () => {
@@ -368,7 +510,7 @@ describe('PipelinesPageContent demo reset', () => {
 
     expect(searchField.props()).toMatchObject({
       isAlwaysActive: true,
-      placeholder: 'Search by requirement, iteration # or pipeline name',
+      placeholder: 'Search by pipeline name',
     });
     wrapper.unmount();
   });

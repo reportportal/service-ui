@@ -21,6 +21,11 @@ export const messages = defineMessages({
     id: 'PipelinesPage.pageTitle',
     defaultMessage: 'Pipelines',
   },
+  temporaryPostmanData: {
+    id: 'PipelinesPage.temporaryPostmanData',
+    defaultMessage:
+      'Demo data from the Postman collection is shown because the API catalog is empty.',
+  },
   refreshPage: {
     id: 'PipelinesPage.refreshPage',
     defaultMessage: 'Refresh',
@@ -52,7 +57,7 @@ export const messages = defineMessages({
   },
   searchPlaceholder: {
     id: 'PipelinesPage.searchPlaceholder',
-    defaultMessage: 'Search by requirement, iteration # or pipeline name',
+    defaultMessage: 'Search by pipeline name',
   },
   noPipelines: {
     id: 'PipelinesPage.noPipelines',
@@ -66,6 +71,30 @@ export const messages = defineMessages({
     id: 'PipelinesPage.noIterationsMatch',
     defaultMessage: 'No iterations match',
   },
+  noPipelinesMatch: {
+    id: 'PipelinesPage.noPipelinesMatch',
+    defaultMessage: 'No pipelines match',
+  },
+  pipelinesUnavailable: {
+    id: 'PipelinesPage.pipelinesUnavailable',
+    defaultMessage: 'Pipelines are temporarily unavailable',
+  },
+  paginationLabel: {
+    id: 'PipelinesPage.paginationLabel',
+    defaultMessage: 'Pages',
+  },
+  previousPage: {
+    id: 'PipelinesPage.previousPage',
+    defaultMessage: 'Previous',
+  },
+  nextPage: {
+    id: 'PipelinesPage.nextPage',
+    defaultMessage: 'Next',
+  },
+  pageCount: {
+    id: 'PipelinesPage.pageCount',
+    defaultMessage: 'Page {current} of {total}',
+  },
   iterationsCount: {
     id: 'PipelinesPage.iterationsCount',
     defaultMessage: '{count} {count, plural, one {iteration} other {iterations}}',
@@ -73,6 +102,10 @@ export const messages = defineMessages({
   iterationTitle: {
     id: 'PipelinesPage.iterationTitle',
     defaultMessage: 'Iteration #{number}',
+  },
+  pipelineIterationTitle: {
+    id: 'PipelinesPage.pipelineIterationTitle',
+    defaultMessage: '{pipelineName} · Iteration #{number}',
   },
   autoReadyOn: {
     id: 'PipelinesPage.autoReadyOn',
@@ -174,6 +207,14 @@ export const messages = defineMessages({
     id: 'PipelinesPage.liveStatusPending',
     defaultMessage: 'Pending',
   },
+  liveStatusRunning: {
+    id: 'PipelinesPage.liveStatusRunning',
+    defaultMessage: 'Running',
+  },
+  liveStatusWaiting: {
+    id: 'PipelinesPage.liveStatusWaiting',
+    defaultMessage: 'Waiting',
+  },
   liveStatusPassed: {
     id: 'PipelinesPage.liveStatusPassed',
     defaultMessage: 'Passed',
@@ -185,6 +226,10 @@ export const messages = defineMessages({
   liveStatusNeedsHuman: {
     id: 'PipelinesPage.liveStatusNeedsHuman',
     defaultMessage: 'Needs human review',
+  },
+  liveStatusSkipped: {
+    id: 'PipelinesPage.liveStatusSkipped',
+    defaultMessage: 'Skipped',
   },
   liveStatusUnknown: {
     id: 'PipelinesPage.liveStatusUnknown',

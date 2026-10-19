@@ -25,12 +25,14 @@ import {
   isReducedPipelineIteration,
   PipelineCatalogItem,
   PipelineIterationItem,
+  PipelinePageState,
 } from 'controllers/aiFactory/pipelines';
 import { PipelineType } from 'types/aiFactory';
 
 import { PipelineSettingsButton } from '../../pipelineSettings';
 import { IterationCard } from '../iterationCard';
 import { ReducedIterationCard } from '../iterationCard/reducedIterationCard';
+import { PageControls } from '../pageControls/pageControls';
 import { messages } from '../messages';
 import styles from './pipelineGroup.scss';
 
@@ -43,6 +45,8 @@ export interface PipelineGroupProps {
   hasError: boolean;
   isSearching: boolean;
   onRetry: () => void;
+  page?: PipelinePageState;
+  onPageChange?: (offset: number) => void;
 }
 
 export const PipelineGroup = ({
@@ -52,22 +56,33 @@ export const PipelineGroup = ({
   hasError,
   isSearching,
   onRetry,
+  page,
+  onPageChange,
 }: PipelineGroupProps) => {
   const { formatMessage } = useIntl();
   const [isOpen, setIsOpen] = useState(true);
 
   const renderIteration = (iteration: PipelineIterationItem) => {
     if (isReducedPipelineIteration(iteration)) {
-      return <ReducedIterationCard key={iteration.id} iteration={iteration} />;
+      return (
+        <ReducedIterationCard key={iteration.id} iteration={iteration} pipelineName={pipeline.name} />
+      );
     }
     if (isReducedPipeline(pipeline)) {
       return null;
     }
-    return <IterationCard key={iteration.id} pipelineType={pipeline.type} iteration={iteration} />;
+    return (
+      <IterationCard
+        key={iteration.id}
+        pipelineType={pipeline.type}
+        iteration={iteration}
+        pipelineName={pipeline.name}
+      />
+    );
   };
 
   const renderBody = () => {
-    if (isLoading && !iterations) {
+    if (isLoading && (!iterations || isReducedPipeline(pipeline))) {
       return <SpinningPreloader />;
     }
     if (hasError) {
@@ -87,7 +102,14 @@ export const PipelineGroup = ({
         </p>
       );
     }
-    return <div className={cx('cards')}>{iterations.map(renderIteration)}</div>;
+    return (
+      <>
+        <div className={cx('cards')}>{iterations.map(renderIteration)}</div>
+        {page && onPageChange && (
+          <PageControls page={page} isLoading={isLoading} onPageChange={onPageChange} />
+        )}
+      </>
+    );
   };
 
   return (
@@ -106,12 +128,19 @@ export const PipelineGroup = ({
           <span className={cx('group__name')}>{pipeline.name}</span>
           <span className={cx('group__meta')}>
             {isReducedPipeline(pipeline)
-              ? formatMessage(messages.repositoryNotProvided)
+              ? pipeline.repository ?? formatMessage(messages.repositoryNotProvided)
               : pipeline.repository}
           </span>
           {pipeline.iterationsCount !== undefined && (
             <span className={cx('group__meta')}>
               {formatMessage(messages.iterationsCount, { count: pipeline.iterationsCount })}
+            </span>
+          )}
+          {isReducedPipeline(pipeline) && pipeline.autoReady && (
+            <span className={cx('group__meta')}>
+              {pipeline.autoReady.enabled && pipeline.autoReady.threshold !== undefined
+                ? formatMessage(messages.autoReadyOn, { threshold: pipeline.autoReady.threshold })
+                : formatMessage(messages.autoReadyOff)}
             </span>
           )}
           {!isReducedPipeline(pipeline) &&

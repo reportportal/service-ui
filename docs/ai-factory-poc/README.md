@@ -26,6 +26,7 @@ API contract; a live Pipeline and Quality Standard API subset is documented but 
 | [12-backend-api-integration-request.md](12-backend-api-integration-request.md) | Shareable backend handoff snapshot; not a source of truth — synchronize it from [10](10-backend-integration-contract.md) before sending | before sending to Backend, or when Backend records answers/sign-off |
 | [13-demo-rehearsal-runbook.md](13-demo-rehearsal-runbook.md) | Local-only preflight, reset, evidence and stop/no-write procedure for the 18-step demo rehearsal | before and during each T6.4 rehearsal |
 | [14-demo-rehearsal-2026-10-04.md](14-demo-rehearsal-2026-10-04.md) | Dated T6.4 rehearsal evidence: 15 PASS, 2 TC106/TC107 parity failures, 0 BLOCKED, 1 N/A, no remote writes | immutable evidence for the 2026-10-04 rehearsal |
+| [23-temporary-solutions-register.md](23-temporary-solutions-register.md) | **Temporary mocks and workarounds**: location, replacement task and removal condition | every real API integration slice and final mock cleanup |
 | [tools/jira_fe_subtask.py](tools/jira_fe_subtask.py) | Creates the `[FE]` sub-task of a story (dry run by default) | — |
 
 ## How to resume work (humans and AI agents)

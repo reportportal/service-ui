@@ -74,6 +74,21 @@ describe('pipeline catalog transport', () => {
     });
   });
 
+  test('allows the explicit temporary Postman fallback transport', () => {
+    localStorage.setItem(
+      AI_FACTORY_TRANSPORT_STORAGE_KEY,
+      JSON.stringify({ pipelineCatalog: 'postman-demo' }),
+    );
+
+    expect(getPipelineCatalogTransport()).toEqual({
+      mode: 'postman-demo',
+      requestedMode: 'postman-demo',
+      isFallback: false,
+    });
+    expect(isMockDownstreamCompatible('postman-demo')).toBe(false);
+    expect(getPipelineDetailTransport('postman-demo')).toBe('postman-demo');
+  });
+
   test('allows mock downstream endpoints only for a mock catalog', () => {
     expect(isMockDownstreamCompatible('mock')).toBe(true);
     expect(isMockDownstreamCompatible('live')).toBe(false);
@@ -82,5 +97,14 @@ describe('pipeline catalog transport', () => {
   test('keeps mock P3 compatible and denies live LP3 until its independent rollout gate opens', () => {
     expect(getPipelineDetailTransport('mock')).toBe('mock');
     expect(getPipelineDetailTransport('live')).toBe('unavailable');
+  });
+
+  test('allows read-only LP3 only when a non-empty live catalog came from explicit demo mode', () => {
+    localStorage.setItem(
+      AI_FACTORY_TRANSPORT_STORAGE_KEY,
+      JSON.stringify({ pipelineCatalog: 'postman-demo' }),
+    );
+    expect(getPipelineDetailTransport('live')).toBe('live');
+    expect(getPipelineDetailTransport('postman-demo')).toBe('postman-demo');
   });
 });

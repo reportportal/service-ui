@@ -37,6 +37,14 @@ export const messages = defineMessages({
     id: 'IterationDetailsPage.liveStatusPending',
     defaultMessage: 'Pending',
   },
+  liveStatusRunning: {
+    id: 'IterationDetailsPage.liveStatusRunning',
+    defaultMessage: 'Running',
+  },
+  liveStatusWaiting: {
+    id: 'IterationDetailsPage.liveStatusWaiting',
+    defaultMessage: 'Waiting',
+  },
   liveStatusPassed: {
     id: 'IterationDetailsPage.liveStatusPassed',
     defaultMessage: 'Passed',
@@ -49,6 +57,10 @@ export const messages = defineMessages({
     id: 'IterationDetailsPage.liveStatusNeedsHuman',
     defaultMessage: 'Needs human review',
   },
+  liveStatusSkipped: {
+    id: 'IterationDetailsPage.liveStatusSkipped',
+    defaultMessage: 'Skipped',
+  },
   liveStatusUnknown: {
     id: 'IterationDetailsPage.liveStatusUnknown',
     defaultMessage: 'Unknown',
@@ -56,6 +68,10 @@ export const messages = defineMessages({
   noStages: {
     id: 'IterationDetailsPage.noStages',
     defaultMessage: 'No stages are available for this iteration',
+  },
+  scoreDetails: {
+    id: 'IterationDetailsPage.scoreDetails',
+    defaultMessage: 'Score details',
   },
   pipelinesBreadcrumb: {
     id: 'IterationDetailsPage.pipelinesBreadcrumb',

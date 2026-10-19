@@ -1,0 +1,90 @@
+{
+  "id": 31,
+  "pipelineId": 7,
+  "pipelineName": "Test case generation",
+  "pipelineType": "TEST_CASE_GENERATION",
+  "iterationNumber": 1,
+  "status": "In review",
+  "statusCategory": "WAITING",
+  "attributes": [
+    {
+      "key": "suiteScore",
+      "label": "Suite score",
+      "value": "79",
+      "valueType": "SCORE"
+    }
+  ],
+  "startedAt": "2026-09-19T10:13:00Z",
+  "finishedAt": "2026-09-19T10:22:40Z",
+  "durationMillis": 580000,
+  "createdAt": "2026-09-19T10:13:01Z",
+  "stages": [
+    {
+      "id": 101,
+      "name": "Create",
+      "sequence": 1,
+      "attempt": 1,
+      "status": "Passed",
+      "statusCategory": "PASSED",
+      "ownedBy": "PIPELINE",
+      "affectsIterationStatus": true,
+      "summary": "Cases generated",
+      "sections": [
+        {
+          "key": "generated_cases",
+          "title": "Generated cases",
+          "role": "RESULT",
+          "columns": [
+            {
+              "key": "title",
+              "label": "Title",
+              "valueType": "TEXT"
+            }
+          ],
+          "rows": [
+            {
+              "key": "case-1",
+              "cells": {
+                "title": {
+                  "value": "Example generated case"
+                }
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 102,
+      "name": "Grade",
+      "sequence": 2,
+      "attempt": 1,
+      "status": "Passed",
+      "statusCategory": "PASSED",
+      "ownedBy": "PIPELINE",
+      "affectsIterationStatus": true
+    },
+    {
+      "id": 103,
+      "name": "Upload",
+      "sequence": 3,
+      "attempt": 1,
+      "status": "Passed",
+      "statusCategory": "PASSED",
+      "ownedBy": "PIPELINE",
+      "affectsIterationStatus": true
+    },
+    {
+      "id": 104,
+      "name": "Review",
+      "sequence": 4,
+      "attempt": 1,
+      "status": "In progress",
+      "statusCategory": "WAITING",
+      "ownedBy": "REPORTPORTAL",
+      "affectsIterationStatus": true,
+      "message": "Draft Test Cases wait for review"
+    }
+  ],
+  "warnings": []
+}

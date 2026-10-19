@@ -16,12 +16,15 @@
 
 import { IterationSummaryRS, LivePipelineStatus, PipelineRS } from 'types/aiFactory';
 
-export type ReducedPipelineStatus = LivePipelineStatus | 'UNKNOWN';
+export type ReducedPipelineStatus = LivePipelineStatus | 'RUNNING' | 'WAITING' | 'SKIPPED' | 'UNKNOWN';
 
 export interface LivePipelineRaw {
   id?: unknown;
   name?: unknown;
   description?: unknown;
+  type?: unknown;
+  attributes?: unknown;
+  settings?: unknown;
   autoReadyEnabled?: unknown;
   autoReadyThreshold?: unknown;
   iterationsCount?: unknown;
@@ -37,7 +40,14 @@ export interface LivePipelineStageRaw {
   sequence?: unknown;
   parentStageId?: unknown;
   status?: unknown;
+  statusCategory?: unknown;
   metrics?: unknown;
+  summary?: unknown;
+  message?: unknown;
+  attributes?: unknown;
+  durationMillis?: unknown;
+  sections?: unknown;
+  links?: unknown;
 }
 
 export interface LivePipelineStageDetailRaw extends LivePipelineStageRaw {
@@ -55,6 +65,7 @@ export interface LivePipelineIterationRaw {
   pipelineName?: unknown;
   iterationNumber?: unknown;
   status?: unknown;
+  statusCategory?: unknown;
   metrics?: unknown;
   attributes?: unknown;
   trigger?: unknown;
@@ -67,6 +78,31 @@ export interface LivePipelineIterationRaw {
   durationMillis?: unknown;
   createdBy?: unknown;
   createdAt?: unknown;
+  startedBy?: unknown;
+  warnings?: unknown;
+}
+
+export interface ReducedPipelineAttribute {
+  key: string;
+  value: string;
+  label?: string;
+  description?: string;
+  type?: 'META' | 'TAG' | 'NONE';
+  valueType?: string;
+  url?: string;
+  order?: number;
+}
+
+export interface ReducedPipelineSection {
+  key: string;
+  title: string;
+  role: 'RESULT' | 'DETAILS';
+  columns: Array<{ key: string; label: string }>;
+  rows: Array<{
+    key: string;
+    cells: Record<string, string>;
+    details: Array<{ heading: string; items: string[] }>;
+  }>;
 }
 
 export interface LivePipelineIterationDetailRaw extends LivePipelineIterationRaw {
@@ -78,6 +114,8 @@ export interface ReducedPipeline {
   id: number;
   name: string;
   description?: string;
+  type?: string;
+  repository?: string;
   iterationsCount?: number;
   autoReady?: {
     enabled: boolean;
@@ -90,16 +128,25 @@ export interface ReducedPipelineStage {
   label: string;
   sequence?: number;
   status: ReducedPipelineStatus;
+  statusText?: string;
+  summary?: string;
+  message?: string;
+  attributes?: ReducedPipelineAttribute[];
+  durationMs?: number;
+  links?: Array<{ type: string; label: string; url: string }>;
 }
 
 export interface ReducedPipelineDetailStage extends ReducedPipelineStage {
   id: number;
   sequence: number;
+  sections?: ReducedPipelineSection[];
 }
 
 export interface ReducedPipelineIterationDetail extends Omit<ReducedPipelineIteration, 'stages'> {
   pipelineName?: string;
   createdAt?: number;
+  startedBy?: string;
+  warnings?: string[];
   stages: ReducedPipelineDetailStage[];
 }
 
@@ -109,11 +156,12 @@ export interface ReducedPipelineIteration {
   pipelineId: number;
   number: number;
   status: ReducedPipelineStatus;
+  statusText?: string;
   trigger?: string;
   startedAt?: number;
   finishedAt?: number;
   durationMs?: number;
-  attributes: Array<{ key: string; value: string }>;
+  attributes: ReducedPipelineAttribute[];
   stages: ReducedPipelineStage[];
 }
 
@@ -132,15 +180,37 @@ export const isRichPipelineIteration = (
   iteration: IterationSummaryRS | ReducedPipelineIteration,
 ): iteration is IterationSummaryRS => !isReducedPipelineIteration(iteration);
 
-const LIVE_STATUSES = new Set<string>(['PENDING', 'PASSED', 'FAILED', 'NEEDS_HUMAN']);
+const LIVE_STATUSES = new Set<string>([
+  'PENDING',
+  'RUNNING',
+  'WAITING',
+  'PASSED',
+  'FAILED',
+  'SKIPPED',
+  'NEEDS_HUMAN',
+]);
 const UNSAFE_ATTRIBUTE_KEYS = new Set(['__proto__', 'constructor', 'prototype']);
 const MAX_PIPELINES = 100;
 const MAX_ITERATIONS = 1000;
+const MAX_PAGE_SIZE = 200;
 const MAX_STAGES = 100;
 const MAX_ATTRIBUTES = 100;
 const MAX_NAME_LENGTH = 255;
 const MAX_KEY_LENGTH = 128;
 const MAX_TEXT_LENGTH = 2000;
+
+export interface LivePage {
+  number: number;
+  size: number;
+  totalElements: number;
+  totalPages: number;
+  hasNext?: boolean;
+}
+
+export interface LivePipelinePage<T> {
+  content: T[];
+  page: LivePage;
+}
 
 const asRecord = (value: unknown): Record<string, unknown> | null =>
   typeof value === 'object' && value !== null && !Array.isArray(value)
@@ -152,6 +222,58 @@ const asPositiveInteger = (value: unknown): number | null =>
 
 const asNonNegativeInteger = (value: unknown): number | undefined =>
   typeof value === 'number' && Number.isSafeInteger(value) && value >= 0 ? value : undefined;
+
+const asPage = (value: unknown): LivePage | null => {
+  const page = asRecord(value);
+  if (!page) {
+    return null;
+  }
+  const number = asPositiveInteger(page.number);
+  const size = asPositiveInteger(page.size);
+  const totalElements = asNonNegativeInteger(page.totalElements);
+  const totalPages = asNonNegativeInteger(page.totalPages);
+  const rawHasNext = page.hasNext;
+  if (
+    !number ||
+    !size ||
+    totalElements === undefined ||
+    totalPages === undefined ||
+    (rawHasNext !== undefined && typeof rawHasNext !== 'boolean')
+  ) {
+    return null;
+  }
+  const hasNext = typeof rawHasNext === 'boolean' ? rawHasNext : undefined;
+  return { number, size, totalElements, totalPages, ...(hasNext === undefined ? {} : { hasNext }) };
+};
+
+const isCompleteSinglePage = (page: LivePage | null, contentLength: number): boolean => {
+  if (!page) {
+    return false;
+  }
+  return page.number === 1 &&
+    contentLength <= page.size &&
+    page.totalPages <= 1 &&
+    page.hasNext !== true &&
+    page.totalElements === contentLength;
+};
+
+const asPageEnvelope = (value: unknown, maxItems: number): LivePipelinePage<unknown> | null => {
+  const response = asRecord(value);
+  const page = response ? asPage(response.page) : null;
+  const content = response?.content;
+  if (!page || !Array.isArray(content) || page.size > maxItems || content.length > maxItems ||
+    content.length > page.size || page.totalElements < content.length ||
+    page.totalPages !== Math.ceil(page.totalElements / page.size) ||
+    (page.hasNext !== undefined && page.hasNext !== (page.number < page.totalPages)) ||
+    (page.totalPages === 0 && page.number !== 1) ||
+    (page.totalPages > 0 && page.number > page.totalPages) ||
+    (page.number < page.totalPages && content.length !== page.size) ||
+    (page.number === page.totalPages &&
+      (page.number - 1) * page.size + content.length !== page.totalElements)) {
+    return null;
+  }
+  return { content, page };
+};
 
 const asTrimmedString = (value: unknown, maxLength = MAX_TEXT_LENGTH): string | undefined => {
   if (typeof value !== 'string') {
@@ -170,11 +292,66 @@ const asTimestamp = (value: unknown): number | undefined => {
 };
 
 const asStatus = (value: unknown): ReducedPipelineStatus =>
-  typeof value === 'string' && LIVE_STATUSES.has(value) ? (value as LivePipelineStatus) : 'UNKNOWN';
+  typeof value === 'string' && LIVE_STATUSES.has(value)
+    ? (value as ReducedPipelineStatus)
+    : 'UNKNOWN';
 
-const adaptAttributes = (value: unknown): Array<{ key: string; value: string }> | null => {
+const adaptAttributeEntry = (entry: unknown): ReducedPipelineAttribute | null => {
+  const raw = asRecord(entry);
+  const key = raw && asTrimmedString(raw.key, MAX_KEY_LENGTH);
+  const attributeValue = raw && asTrimmedString(raw.value, MAX_TEXT_LENGTH);
+  if (!raw || !key || !attributeValue || UNSAFE_ATTRIBUTE_KEYS.has(key)) {
+    return null;
+  }
+  const type = asTrimmedString(raw.type, MAX_KEY_LENGTH);
+  const label = asTrimmedString(raw.label, MAX_NAME_LENGTH);
+  const description = asTrimmedString(raw.description);
+  const valueType = asTrimmedString(raw.valueType, MAX_KEY_LENGTH);
+  const url = asTrimmedString(raw.url);
+  const order = asNonNegativeInteger(raw.order);
+  const validType = ['META', 'TAG', 'NONE'].includes(type ?? '')
+    ? (type as ReducedPipelineAttribute['type'])
+    : undefined;
+  const optionalFields = [
+    [raw.type, validType],
+    [raw.label, label],
+    [raw.description, description],
+    [raw.valueType, valueType],
+    [raw.url, url],
+    [raw.order, order],
+  ];
+  if (optionalFields.some(([original, parsed]) => original !== undefined && parsed === undefined)) {
+    return null;
+  }
+  return {
+    key,
+    value: attributeValue,
+    ...(validType ? { type: validType } : {}),
+    ...(label ? { label } : {}),
+    ...(description ? { description } : {}),
+    ...(valueType ? { valueType } : {}),
+    ...(url ? { url } : {}),
+    ...(order !== undefined ? { order } : {}),
+  };
+};
+
+const adaptAttributes = (value: unknown): ReducedPipelineAttribute[] | null => {
   if (value === undefined) {
     return [];
+  }
+  if (Array.isArray(value)) {
+    if (value.length > MAX_ATTRIBUTES) {
+      return null;
+    }
+    const attributes = value.map(adaptAttributeEntry);
+    if (attributes.some((attribute) => !attribute)) {
+      return null;
+    }
+    const normalized = attributes;
+    if (new Set(normalized.map(({ key }) => key)).size !== normalized.length) {
+      return null;
+    }
+    return normalized.sort((first, second) => first.key.localeCompare(second.key));
   }
   const attributes = asRecord(value);
   if (!attributes) {
@@ -199,18 +376,165 @@ const adaptAttributes = (value: unknown): Array<{ key: string; value: string }> 
   }));
 };
 
+const asCellText = (value: unknown): string | undefined => {
+  const cell = asRecord(value);
+  const content = cell ? cell.value : value;
+  if (content === null || content === '') {
+    return '';
+  }
+  return typeof content === 'number' && Number.isFinite(content)
+    ? String(content)
+    : asTrimmedString(content);
+};
+
+const adaptSectionColumns = (value: unknown): ReducedPipelineSection['columns'] | null => {
+  if (!Array.isArray(value) || value.length > 30) {
+    return null;
+  }
+  const columns: ReducedPipelineSection['columns'] = [];
+  for (const entry of value) {
+    const column = asRecord(entry);
+    const key = column && asTrimmedString(column.key, MAX_KEY_LENGTH);
+    const label = column && asTrimmedString(column.label, MAX_NAME_LENGTH);
+    if (!key || !label || UNSAFE_ATTRIBUTE_KEYS.has(key)) {
+      return null;
+    }
+    columns.push({ key, label });
+  }
+  return new Set(columns.map(({ key }) => key)).size === columns.length ? columns : null;
+};
+
+const adaptSectionDetails = (
+  value: unknown,
+): ReducedPipelineSection['rows'][number]['details'] | null => {
+  const rawDetails = value === undefined ? [] : value;
+  if (!Array.isArray(rawDetails) || rawDetails.length > 30) {
+    return null;
+  }
+  const details: ReducedPipelineSection['rows'][number]['details'] = [];
+  for (const entry of rawDetails) {
+    const detail = asRecord(entry);
+    const heading = detail && asTrimmedString(detail.heading, MAX_NAME_LENGTH);
+    if (!heading || !Array.isArray(detail?.items) || detail.items.length > 30) {
+      return null;
+    }
+    const items = detail.items.map((entryText) => asTrimmedString(entryText));
+    if (items.some((entryText) => !entryText)) {
+      return null;
+    }
+    details.push({ heading, items });
+  }
+  return details;
+};
+
+const adaptSectionRow = (
+  value: unknown,
+  columns: ReducedPipelineSection['columns'],
+): ReducedPipelineSection['rows'][number] | null => {
+  const row = asRecord(value);
+  const key = row && asTrimmedString(row.key, MAX_KEY_LENGTH);
+  const cells = row && asRecord(row.cells);
+  if (!row || !key || !cells || Object.keys(cells).length > 30) {
+    return null;
+  }
+  const displayCells: Record<string, string> = {};
+  for (const column of columns) {
+    const cell = cells[column.key];
+    if (cell !== undefined) {
+      const displayValue = asCellText(cell);
+      if (displayValue === undefined) {
+        return null;
+      }
+      displayCells[column.key] = displayValue;
+    }
+  }
+  const details = adaptSectionDetails(row.details);
+  return details ? { key, cells: displayCells, details } : null;
+};
+
+const adaptSection = (value: unknown): ReducedPipelineSection | null => {
+  const section = asRecord(value);
+  const key = section && asTrimmedString(section.key, MAX_KEY_LENGTH);
+  const title = section && asTrimmedString(section.title, MAX_NAME_LENGTH);
+  const role = section?.role;
+  const columns = adaptSectionColumns(section?.columns);
+  const rawRows = section?.rows;
+  if (!key || !title || (role !== 'RESULT' && role !== 'DETAILS') ||
+    !columns || !Array.isArray(rawRows) || rawRows.length > 200) {
+    return null;
+  }
+  const rows = rawRows.map((row) => adaptSectionRow(row, columns));
+  if (rows.some((row) => !row)) {
+    return null;
+  }
+  const normalizedRows = rows;
+  if (new Set(normalizedRows.map(({ key: rowKey }) => rowKey)).size !== normalizedRows.length) {
+    return null;
+  }
+  return { key, title, role, columns, rows: normalizedRows };
+};
+
+const adaptSections = (value: unknown): ReducedPipelineSection[] | null => {
+  if (value === undefined) {
+    return [];
+  }
+  if (!Array.isArray(value) || value.length > 20) {
+    return null;
+  }
+  const sections = value.map(adaptSection);
+  if (sections.some((section) => !section)) {
+    return null;
+  }
+  const normalized = sections;
+  return new Set(normalized.map(({ key }) => key)).size === normalized.length ? normalized : null;
+};
+
+const adaptLinks = (value: unknown): ReducedPipelineStage['links'] | null => {
+  if (value === undefined) {
+    return [];
+  }
+  if (!Array.isArray(value) || value.length > 20) {
+    return null;
+  }
+  const links = value.map((item) => {
+    const link = asRecord(item);
+    const type = link && asTrimmedString(link.type, MAX_KEY_LENGTH);
+    const label = link && asTrimmedString(link.label, MAX_NAME_LENGTH);
+    const url = link && asTrimmedString(link.url);
+    return type && label && url ? { type, label, url } : null;
+  });
+  return links.some((link) => !link) ? null : links;
+};
+
 const adaptStage = (value: unknown): ReducedPipelineStage | null => {
   const raw = asRecord(value);
   if (!raw) {
     return null;
   }
-  const key = asTrimmedString(raw.stageKey, MAX_KEY_LENGTH);
+  const id = asPositiveInteger(raw.id);
+  const reportedKey = asTrimmedString(raw.stageKey, MAX_KEY_LENGTH);
+  const key = reportedKey ?? (id ? `stage-${id}` : undefined);
   const label =
     asTrimmedString(raw.shortName, MAX_NAME_LENGTH) ??
     asTrimmedString(raw.name, MAX_NAME_LENGTH) ??
     key;
   const sequence = asNonNegativeInteger(raw.sequence);
-  if (!key || !label || (raw.sequence !== undefined && sequence === undefined)) {
+  const summary = asTrimmedString(raw.summary, MAX_NAME_LENGTH);
+  const message = asTrimmedString(raw.message);
+  const durationMs = asNonNegativeInteger(raw.durationMillis);
+  const attributes = adaptAttributes(raw.attributes);
+  const links = adaptLinks(raw.links);
+  if (
+    !key ||
+    !label ||
+    (raw.stageKey !== undefined && !reportedKey) ||
+    (raw.sequence !== undefined && sequence === undefined) ||
+    (raw.summary !== undefined && !summary) ||
+    (raw.message !== undefined && !message) ||
+    (raw.durationMillis !== undefined && durationMs === undefined) ||
+    !attributes ||
+    !links
+  ) {
     return null;
   }
 
@@ -218,7 +542,15 @@ const adaptStage = (value: unknown): ReducedPipelineStage | null => {
     key,
     label,
     sequence,
-    status: asStatus(raw.status),
+    status: asStatus(raw.statusCategory ?? raw.status),
+    ...(raw.statusCategory !== undefined
+      ? { statusText: asTrimmedString(raw.status, MAX_NAME_LENGTH) }
+      : {}),
+    ...(summary ? { summary } : {}),
+    ...(message ? { message } : {}),
+    ...(attributes.length ? { attributes } : {}),
+    ...(durationMs !== undefined ? { durationMs } : {}),
+    ...(links.length ? { links } : {}),
   };
 };
 
@@ -226,10 +558,11 @@ const adaptDetailStage = (value: unknown): ReducedPipelineDetailStage | null => 
   const raw = asRecord(value);
   const stage = adaptStage(value);
   const id = raw ? asPositiveInteger(raw.id) : null;
-  if (!stage || !id || stage.sequence === undefined) {
+  const sections = raw ? adaptSections(raw.sections) : null;
+  if (!stage || !id || stage.sequence === undefined || !sections) {
     return null;
   }
-  return { ...stage, id, sequence: stage.sequence };
+  return { ...stage, id, sequence: stage.sequence, ...(sections.length ? { sections } : {}) };
 };
 
 const adaptStages = (value: unknown): ReducedPipelineStage[] | null => {
@@ -290,17 +623,28 @@ const adaptPipeline = (value: unknown): ReducedPipeline | null => {
   const id = asPositiveInteger(raw.id);
   const name = asTrimmedString(raw.name, MAX_NAME_LENGTH);
   const description = asTrimmedString(raw.description, MAX_TEXT_LENGTH);
+  const type = asTrimmedString(raw.type, MAX_KEY_LENGTH);
+  const attributes = adaptAttributes(raw.attributes);
+  const repository = attributes?.find(({ key }) => key === 'repository')?.value;
+  const settings = raw.settings === undefined ? undefined : asRecord(raw.settings);
+  const nestedAutoReady = settings?.autoReady === undefined ? undefined : asRecord(settings.autoReady);
   if (!id || !name) {
     return null;
   }
-  const isAutoReadyConfigured = typeof raw.autoReadyEnabled === 'boolean';
+  const autoReadyEnabled = nestedAutoReady?.enabled ?? raw.autoReadyEnabled;
+  const rawAutoReadyThreshold = nestedAutoReady?.threshold ?? raw.autoReadyThreshold;
+  const isAutoReadyConfigured = typeof autoReadyEnabled === 'boolean';
   const iterationsCount = asNonNegativeInteger(raw.iterationsCount);
-  const autoReadyThreshold = asNonNegativeInteger(raw.autoReadyThreshold);
+  const autoReadyThreshold = asNonNegativeInteger(rawAutoReadyThreshold);
   if (
+    !attributes ||
+    (raw.type !== undefined && type === undefined) ||
+    (raw.settings !== undefined && !settings) ||
+    (settings?.autoReady !== undefined && !nestedAutoReady) ||
     (raw.iterationsCount !== undefined && iterationsCount === undefined) ||
     (raw.description !== undefined && description === undefined) ||
-    (raw.autoReadyEnabled !== undefined && !isAutoReadyConfigured) ||
-    (raw.autoReadyThreshold !== undefined &&
+    (autoReadyEnabled !== undefined && !isAutoReadyConfigured) ||
+    (rawAutoReadyThreshold !== undefined &&
       (!isAutoReadyConfigured || autoReadyThreshold === undefined || autoReadyThreshold > 100))
   ) {
     return null;
@@ -311,10 +655,12 @@ const adaptPipeline = (value: unknown): ReducedPipeline | null => {
     id,
     name,
     description,
+    ...(type ? { type } : {}),
+    ...(repository ? { repository } : {}),
     iterationsCount,
     autoReady: isAutoReadyConfigured
       ? {
-          enabled: raw.autoReadyEnabled as boolean,
+          enabled: autoReadyEnabled,
           threshold: autoReadyThreshold,
         }
       : undefined,
@@ -337,6 +683,7 @@ const adaptIteration = (
   const startedAt = asTimestamp(raw.startedAt);
   const finishedAt = asTimestamp(raw.finishedAt);
   const attributes = adaptAttributes(raw.attributes);
+  const attributeTrigger = attributes?.find(({ key }) => key === 'trigger')?.value;
   const stages = adaptStages(raw.stages);
   if (
     !id ||
@@ -357,8 +704,11 @@ const adaptIteration = (
     id,
     pipelineId,
     number,
-    status: asStatus(raw.status),
-    trigger,
+    status: asStatus(raw.statusCategory ?? raw.status),
+    ...(raw.statusCategory !== undefined
+      ? { statusText: asTrimmedString(raw.status, MAX_NAME_LENGTH) }
+      : {}),
+    trigger: trigger ?? attributeTrigger,
     startedAt,
     finishedAt,
     durationMs,
@@ -368,10 +718,17 @@ const adaptIteration = (
 };
 
 export const adaptLivePipelines = (value: unknown): ReducedPipeline[] => {
-  if (!Array.isArray(value) || value.length > MAX_PIPELINES) {
+  const response = asRecord(value);
+  const page = response ? asPage(response.page) : null;
+  const content = response ? response.content : value;
+  if (
+    !Array.isArray(content) ||
+    content.length > MAX_PIPELINES ||
+    (response && !isCompleteSinglePage(page, content.length))
+  ) {
     throw new Error('Invalid pipeline catalog response');
   }
-  const pipelines = value.map(adaptPipeline);
+  const pipelines = content.map(adaptPipeline);
   if (pipelines.some((pipeline) => !pipeline)) {
     throw new Error('Invalid pipeline catalog entity');
   }
@@ -382,14 +739,36 @@ export const adaptLivePipelines = (value: unknown): ReducedPipeline[] => {
   return normalized;
 };
 
+export const adaptLivePipelinesPage = (value: unknown): LivePipelinePage<ReducedPipeline> => {
+  const envelope = asPageEnvelope(value, MAX_PAGE_SIZE);
+  if (!envelope) {
+    throw new Error('Invalid pipeline catalog response');
+  }
+  const content = envelope.content.map(adaptPipeline);
+  if (content.some((pipeline) => !pipeline)) {
+    throw new Error('Invalid pipeline catalog entity');
+  }
+  if (new Set(content.map(({ id }) => id)).size !== content.length) {
+    throw new Error('Duplicate pipeline id');
+  }
+  return { content, page: envelope.page };
+};
+
 export const adaptLivePipelineIterations = (
   value: unknown,
   pipelineId: number,
 ): ReducedPipelineIteration[] => {
-  if (!Array.isArray(value) || value.length > MAX_ITERATIONS) {
+  const response = asRecord(value);
+  const page = response ? asPage(response.page) : null;
+  const content = response ? response.content : value;
+  if (
+    !Array.isArray(content) ||
+    content.length > MAX_ITERATIONS ||
+    (response && !isCompleteSinglePage(page, content.length))
+  ) {
     throw new Error('Invalid pipeline iteration list response');
   }
-  const iterations = value.map((iteration) => adaptIteration(iteration, pipelineId));
+  const iterations = content.map((iteration) => adaptIteration(iteration, pipelineId));
   if (iterations.some((iteration) => !iteration)) {
     throw new Error('Invalid pipeline iteration entity');
   }
@@ -398,6 +777,24 @@ export const adaptLivePipelineIterations = (
     throw new Error('Duplicate pipeline iteration id');
   }
   return normalized;
+};
+
+export const adaptLivePipelineIterationsPage = (
+  value: unknown,
+  pipelineId: number,
+): LivePipelinePage<ReducedPipelineIteration> => {
+  const envelope = asPageEnvelope(value, MAX_PAGE_SIZE);
+  if (!envelope) {
+    throw new Error('Invalid pipeline iteration list response');
+  }
+  const content = envelope.content.map((iteration) => adaptIteration(iteration, pipelineId));
+  if (content.some((iteration) => !iteration)) {
+    throw new Error('Invalid pipeline iteration entity');
+  }
+  if (new Set(content.map(({ id }) => id)).size !== content.length) {
+    throw new Error('Duplicate pipeline iteration id');
+  }
+  return { content, page: envelope.page };
 };
 
 export const adaptLivePipelineIterationDetail = (
@@ -415,15 +812,31 @@ export const adaptLivePipelineIterationDetail = (
   const iteration = adaptIteration(value, expectedPipelineId);
   const pipelineName = raw ? asTrimmedString(raw.pipelineName, MAX_NAME_LENGTH) : undefined;
   const createdAt = raw ? asTimestamp(raw.createdAt) : undefined;
+  const startedByRaw = raw && asRecord(raw.startedBy);
+  const startedBy = startedByRaw
+    ? asTrimmedString(startedByRaw.fullName, MAX_NAME_LENGTH) ??
+      asTrimmedString(startedByRaw.login, MAX_NAME_LENGTH)
+    : undefined;
+  const rawWarnings = raw?.warnings === undefined ? [] : raw.warnings;
+  const warnings = Array.isArray(rawWarnings) && rawWarnings.length <= 20
+    ? rawWarnings.map((warning) => {
+      const entry = asRecord(warning);
+      return entry && asTrimmedString(entry.message);
+    })
+    : null;
   const stages = raw ? adaptDetailStages(raw.stages) : null;
   if (
     !raw ||
     iteration?.id !== expectedIterationId ||
     (raw.pipelineName !== undefined && pipelineName === undefined) ||
     (raw.createdAt !== undefined && createdAt === undefined) ||
+    (raw.startedBy !== undefined && !startedBy) ||
+    !warnings ||
+    warnings.some((warning) => !warning) ||
     !stages
   ) {
     throw new Error('Invalid pipeline iteration detail response');
   }
-  return { ...iteration, pipelineName, createdAt, stages };
+  return { ...iteration, pipelineName, createdAt, ...(startedBy ? { startedBy } : {}),
+    ...(warnings.length ? { warnings } : {}), stages };
 };

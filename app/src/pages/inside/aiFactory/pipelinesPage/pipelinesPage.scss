@@ -38,9 +38,25 @@
   padding: 16px 32px 24px;
 }
 
+.demo-notice {
+  display: block;
+  margin: 0 0 16px;
+  color: var(--rp-ui-base-e-300);
+  font-family: var(--rp-ui-base-font-family);
+}
+
 .empty {
   padding: 24px 0;
   color: var(--rp-ui-base-e-300);
+  font-family: var(--rp-ui-base-font-family);
+}
+
+.catalog-error {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 24px 0;
+  color: var(--rp-ui-base-error);
   font-family: var(--rp-ui-base-font-family);
 }
 

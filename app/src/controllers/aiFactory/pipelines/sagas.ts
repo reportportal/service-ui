@@ -50,9 +50,16 @@ import {
 
 import {
   adaptLivePipelineIterationDetail,
-  adaptLivePipelineIterations,
-  adaptLivePipelines,
+  adaptLivePipelineIterationsPage,
+  adaptLivePipelinesPage,
+  type LivePage,
 } from './liveAdapters';
+import {
+  getPostmanDemoDetail,
+  getPostmanDemoIterations,
+  getPostmanDemoPipelines,
+  isEmptySuccessfulPipelineCatalog,
+} from './temporaryPostmanFallback';
 
 import {
   CLEAR_PIPELINE_COMPARISON,
@@ -69,6 +76,9 @@ import {
   GetPipelineComparisonAction,
   GetPipelineIterationDetailsAction,
   GetPipelineIterationsAction,
+  GetPipelinesAction,
+  PipelineCatalogItem,
+  PipelinePageRequest,
   PipelinesState,
 } from './types';
 import {
@@ -434,7 +444,58 @@ export const normalizePipelineComparison = (
   };
 };
 
-function* getPipelines(): Generator {
+const resolvePageRequest = (request?: PipelinePageRequest) => {
+  const offset = request?.offset ?? 0;
+  const limit = request?.limit ?? 100;
+  const search = request?.search?.trim() ?? '';
+  if (
+    !Number.isSafeInteger(offset) ||
+    offset < 0 ||
+    !Number.isSafeInteger(limit) ||
+    limit < 1 ||
+    limit > 200
+  ) {
+    throw new Error('Invalid pipeline page request');
+  }
+  const hasQuery =
+    request?.offset !== undefined || request?.limit !== undefined || request?.search !== undefined;
+  const query = hasQuery ? { offset, limit, ...(search ? { search } : {}) } : {};
+  return { offset, search, query };
+};
+
+interface PipelineCatalogResult {
+  data: PipelineCatalogItem[];
+  page?: LivePage & { offset: number };
+  transport: PipelineCatalogTransport;
+}
+
+const resolvePipelineCatalogResult = (
+  rawData: unknown,
+  transport: PipelineCatalogTransport,
+  offset: number,
+  search: string,
+  status = 0,
+): PipelineCatalogResult => {
+  if (
+    transport === 'postman-demo' &&
+    !search &&
+    offset === 0 &&
+    isEmptySuccessfulPipelineCatalog(status, rawData)
+  ) {
+    return { data: getPostmanDemoPipelines(), transport };
+  }
+  if (transport === 'mock') {
+    return { data: rawData as PipelineRS[], transport };
+  }
+
+  const result = adaptLivePipelinesPage(rawData);
+  if (result.page.number !== Math.floor(offset / result.page.size) + 1) {
+    throw new Error('Unexpected pipeline catalog page');
+  }
+  return { data: result.content, page: { ...result.page, offset }, transport: 'live' };
+};
+
+function* getPipelines(action: GetPipelinesAction): Generator {
   const controller = new AbortController();
   abortController?.abort();
   iterationsAbortControllers.forEach((iterationsController) => iterationsController.abort());
@@ -449,12 +510,14 @@ function* getPipelines(): Generator {
   try {
     projectKey = (yield select(projectKeySelector)) as string;
     const transport = getPipelineCatalogTransport();
+    const { offset, search, query } = resolvePageRequest(action.payload);
     const meta = {
       namespace: PIPELINES_NAMESPACE,
       catalogRequestId,
       projectKey,
       transport: transport.mode,
       transportFallback: transport.isFallback,
+      search,
     };
 
     yield put({
@@ -463,22 +526,44 @@ function* getPipelines(): Generator {
       meta,
     });
 
-    const rawData = (yield call(
-      fetch,
-      transport.mode === 'live' ? URLS.pipelineCatalog(projectKey) : URLS.tmsPipeline(projectKey),
-      { signal: controller.signal },
-    )) as unknown;
-    const data =
-      transport.mode === 'live' ? adaptLivePipelines(rawData) : (rawData as PipelineRS[]);
+    let rawData: unknown;
+    let status = 0;
+    if (transport.mode === 'postman-demo') {
+      const response = (yield call(
+        fetch,
+        URLS.pipelineCatalog(projectKey, query),
+        { signal: controller.signal },
+        true,
+      )) as { status: number; data: unknown };
+      rawData = response.data;
+      status = response.status;
+    } else {
+      rawData = (yield call(
+        fetch,
+        transport.mode === 'live'
+          ? URLS.pipelineCatalog(projectKey, query)
+          : URLS.tmsPipeline(projectKey),
+        { signal: controller.signal },
+      )) as unknown;
+    }
+    const {
+      data,
+      page,
+      transport: resolvedTransport,
+    } = resolvePipelineCatalogResult(rawData, transport.mode, offset, search, status);
 
     yield put({
       type: FETCH_SUCCESS,
-      payload: { data },
-      meta,
+      payload: { data, page },
+      meta: {
+        ...meta,
+        transport: resolvedTransport,
+        transportFallback: transport.isFallback || resolvedTransport === 'postman-demo',
+      },
     });
   } catch (error) {
     const isCancellation = error instanceof Error && error.message === 'REQUEST_CANCELED';
-    const meta = { namespace: PIPELINES_NAMESPACE, catalogRequestId, projectKey };
+    const meta = { namespace: PIPELINES_NAMESPACE, catalogRequestId, projectKey, isCancellation };
     yield put({ type: FETCH_ERROR, payload: error, error: true, meta });
     const state = (yield select(pipelinesStateSelector)) as PipelinesState;
     const isCurrentRequest =
@@ -512,6 +597,7 @@ interface PipelineIterationsRequest {
   catalogVersion: number;
   requestId: number;
   signal: AbortSignal;
+  pageRequest: PipelinePageRequest;
 }
 
 interface PipelineIterationsResult {
@@ -526,6 +612,7 @@ function* fetchPipelineIterations({
   catalogVersion,
   requestId,
   signal,
+  pageRequest,
 }: PipelineIterationsRequest): Generator {
   const meta = {
     namespace: PIPELINE_ITERATIONS_NAMESPACE,
@@ -537,18 +624,31 @@ function* fetchPipelineIterations({
   yield put({ type: FETCH_START, payload: { projectKey }, meta });
 
   try {
-    const rawData = (yield call(
-      fetch,
-      transport === 'live'
-        ? URLS.pipelineCatalogIterations(projectKey, pipelineId)
-        : URLS.tmsPipelineIterations(projectKey, pipelineId),
-      { signal },
-    )) as unknown;
-    const data =
-      transport === 'live'
-        ? adaptLivePipelineIterations(rawData, pipelineId)
-        : (rawData as IterationPageRS).content;
-    yield put({ type: FETCH_SUCCESS, payload: { data }, meta });
+    let data;
+    let page;
+    if (transport === 'postman-demo') {
+      data = getPostmanDemoIterations(pipelineId);
+    } else {
+      const { offset, query } = resolvePageRequest(pageRequest);
+      const rawData = (yield call(
+        fetch,
+        transport === 'live'
+          ? URLS.pipelineCatalogIterations(projectKey, pipelineId, query)
+          : URLS.tmsPipelineIterations(projectKey, pipelineId),
+        { signal },
+      )) as unknown;
+      if (transport === 'live') {
+        const result = adaptLivePipelineIterationsPage(rawData, pipelineId);
+        if (result.page.number !== Math.floor(offset / result.page.size) + 1) {
+          throw new Error('Unexpected pipeline iteration page');
+        }
+        data = result.content;
+        page = { ...result.page, offset };
+      } else {
+        data = (rawData as IterationPageRS).content;
+      }
+    }
+    yield put({ type: FETCH_SUCCESS, payload: { data, page }, meta });
     return { pipelineId, hasError: false };
   } catch (error) {
     const isCancellation = error instanceof Error && error.message === 'REQUEST_CANCELED';
@@ -588,6 +688,7 @@ function* getPipelineIterations(action: GetPipelineIterationsAction): Generator 
           catalogVersion,
           requestId,
           signal: controller.signal,
+          pageRequest: action.payload,
         }),
       ),
     )) as PipelineIterationsResult[];
@@ -669,6 +770,9 @@ function* fetchPipelineIterationDetail(
   meta: PipelineDetailRequestMeta,
   signal: AbortSignal,
 ): Generator<unknown, IterationRS | ReturnType<typeof adaptLivePipelineIterationDetail>> {
+  if (meta.detailTransport === 'postman-demo') {
+    return getPostmanDemoDetail(meta.pipelineId, meta.iterationId);
+  }
   const rawData = (yield call(
     fetch,
     meta.detailTransport === 'live'

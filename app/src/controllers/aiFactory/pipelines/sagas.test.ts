@@ -21,10 +21,22 @@ import { fetch } from 'common/utils';
 import { FETCH_ERROR, FETCH_START, FETCH_SUCCESS } from 'controllers/fetch/constants';
 import { CriterionKey, PipelineCompareRS, StageKey, StageStatus } from 'types/aiFactory';
 
-import { getPipelineIterationDetailsAction, getPipelineIterationsAction } from './actionCreators';
-import { PIPELINE_ITERATION_DETAILS_NAMESPACE, PIPELINE_ITERATIONS_NAMESPACE } from './constants';
+import {
+  getPipelineIterationDetailsAction,
+  getPipelineIterationsAction,
+  getPipelinesAction,
+} from './actionCreators';
+import {
+  PIPELINE_ITERATION_DETAILS_NAMESPACE,
+  PIPELINE_ITERATIONS_NAMESPACE,
+  PIPELINES_NAMESPACE,
+} from './constants';
 import { aiFactoryPipelinesSagas, normalizePipelineComparison } from './sagas';
-import { getPipelineCatalogTransport, getPipelineDetailTransport } from './transport';
+import {
+  getPipelineCatalogTransport,
+  getPipelineDetailTransport,
+  PipelineCatalogTransport,
+} from './transport';
 
 jest.mock('common/utils', () => {
   const actual = jest.requireActual<typeof import('common/utils')>('common/utils');
@@ -46,7 +58,7 @@ const fetchMock = fetch as jest.MockedFunction<
 >;
 
 interface SagaStateOptions {
-  transport?: 'mock' | 'live';
+  transport?: PipelineCatalogTransport;
   catalogVersion?: number;
   catalogProjectKey?: string | null;
 }
@@ -245,6 +257,156 @@ describe('normalizePipelineComparison', () => {
           jest.requireActual<typeof import('./transport')>('./transport')
             .getPipelineDetailTransport,
         );
+    });
+
+    test.each([
+      [
+        'empty',
+        { content: [], page: { number: 1, size: 100, totalElements: 0, totalPages: 0 } },
+        'postman-demo',
+        'Test case generation',
+      ],
+      [
+        'nonempty',
+        {
+          content: [{ id: 9, name: 'Real pipeline' }],
+          page: { number: 1, size: 100, totalElements: 1, totalPages: 1 },
+        },
+        'live',
+        'Real pipeline',
+      ],
+    ])('uses %s LP1 data in the explicit Postman mode', async (_case, payload, mode, name) => {
+      localStorage.setItem('ai_factory_transport', JSON.stringify({ pipelineCatalog: 'postman-demo' }));
+      fetchMock.mockResolvedValue({ status: 200, data: payload });
+      let notifyComplete: () => void = () => undefined;
+      const complete = new Promise<void>((resolve) => {
+        notifyComplete = resolve;
+      });
+      const harness = startPipelineSagas(createSagaState(), (action) => {
+        const candidate = action as { type?: string; meta?: { namespace?: string } };
+        if (candidate.type === FETCH_SUCCESS && candidate.meta?.namespace === PIPELINES_NAMESPACE) {
+          notifyComplete();
+        }
+      });
+
+      await Promise.resolve();
+      harness.dispatch(getPipelinesAction());
+      await complete;
+
+      expect(fetchMock).toHaveBeenCalledTimes(1);
+      expect(fetchMock).toHaveBeenCalledWith(
+        URLS.pipelineCatalog('demo'),
+        { signal: expect.any(AbortSignal) },
+        true,
+      );
+      expect(harness.dispatched).toContainEqual(
+        expect.objectContaining({
+          type: FETCH_SUCCESS,
+          payload: expect.objectContaining({ data: [expect.objectContaining({ name })] }),
+          meta: expect.objectContaining({ namespace: PIPELINES_NAMESPACE, transport: mode }),
+        }),
+      );
+      await harness.stop();
+    });
+
+    test('does not use the Postman fixture when the LP1 request fails', async () => {
+      localStorage.setItem('ai_factory_transport', JSON.stringify({ pipelineCatalog: 'postman-demo' }));
+      fetchMock.mockRejectedValue(new Error('backend unavailable'));
+      let notifyComplete: () => void = () => undefined;
+      const complete = new Promise<void>((resolve) => {
+        notifyComplete = resolve;
+      });
+      const harness = startPipelineSagas(createSagaState(), (action) => {
+        const candidate = action as { type?: string; meta?: { namespace?: string } };
+        if (candidate.type === FETCH_ERROR && candidate.meta?.namespace === PIPELINES_NAMESPACE) {
+          notifyComplete();
+        }
+      });
+
+      await Promise.resolve();
+      harness.dispatch(getPipelinesAction());
+      await complete;
+
+      expect(harness.dispatched).not.toContainEqual(
+        expect.objectContaining({ type: FETCH_SUCCESS, meta: { namespace: PIPELINES_NAMESPACE } }),
+      );
+      await harness.stop();
+    });
+
+    test('sends LP1 search and offset and keeps an empty search result live', async () => {
+      localStorage.setItem('ai_factory_transport', JSON.stringify({ pipelineCatalog: 'postman-demo' }));
+      fetchMock.mockResolvedValue({
+        status: 200,
+        data: { content: [], page: { number: 1, size: 100, totalElements: 0, totalPages: 0 } },
+      });
+      let notifyComplete: () => void = () => undefined;
+      const complete = new Promise<void>((resolve) => { notifyComplete = resolve; });
+      const harness = startPipelineSagas(createSagaState(), (action) => {
+        const candidate = action as { type?: string; meta?: { namespace?: string } };
+        if (candidate.type === FETCH_SUCCESS && candidate.meta?.namespace === PIPELINES_NAMESPACE) {
+          notifyComplete();
+        }
+      });
+
+      await Promise.resolve();
+      harness.dispatch(getPipelinesAction({ search: 'missing', offset: 0, limit: 100 }));
+      await complete;
+
+      expect(fetchMock).toHaveBeenCalledWith(
+        URLS.pipelineCatalog('demo', { offset: 0, limit: 100, search: 'missing' }),
+        { signal: expect.any(AbortSignal) },
+        true,
+      );
+      expect(harness.dispatched).toContainEqual(expect.objectContaining({
+        type: FETCH_SUCCESS,
+        payload: { data: [], page: { number: 1, size: 100, totalElements: 0, totalPages: 0, offset: 0 } },
+        meta: expect.objectContaining({ transport: 'live', search: 'missing' }),
+      }));
+      await harness.stop();
+    });
+
+    test('serves matching Postman iteration and detail without hitting legacy mock URLs', async () => {
+      let successes = 0;
+      let notifyComplete: () => void = () => undefined;
+      const complete = new Promise<void>((resolve) => {
+        notifyComplete = resolve;
+      });
+      const harness = startPipelineSagas(
+        createSagaState({ transport: 'postman-demo', catalogVersion: 1, catalogProjectKey: 'demo' }),
+        (action) => {
+          const candidate = action as { type?: string; meta?: { namespace?: string } };
+          if (
+            candidate.type === FETCH_SUCCESS &&
+            (candidate.meta?.namespace === PIPELINE_ITERATIONS_NAMESPACE ||
+              candidate.meta?.namespace === PIPELINE_ITERATION_DETAILS_NAMESPACE)
+          ) {
+            successes += 1;
+            if (successes === 2) notifyComplete();
+          }
+        },
+      );
+
+      await Promise.resolve();
+      harness.dispatch(getPipelineIterationsAction([1]));
+      harness.dispatch(getPipelineIterationDetailsAction(1, 101));
+      await complete;
+
+      expect(fetchMock).not.toHaveBeenCalled();
+      expect(harness.dispatched).toContainEqual(
+        expect.objectContaining({
+          type: FETCH_SUCCESS,
+          payload: { data: [expect.objectContaining({ id: 101, pipelineId: 1 })] },
+          meta: expect.objectContaining({ namespace: PIPELINE_ITERATIONS_NAMESPACE }),
+        }),
+      );
+      expect(harness.dispatched).toContainEqual(
+        expect.objectContaining({
+          type: FETCH_SUCCESS,
+          payload: { data: expect.objectContaining({ id: 101, pipelineId: 1 }) },
+          meta: expect.objectContaining({ namespace: PIPELINE_ITERATION_DETAILS_NAMESPACE }),
+        }),
+      );
+      await harness.stop();
     });
 
     test('uses Redux catalog provenance for detail requests instead of mutable storage', async () => {
@@ -566,6 +728,40 @@ describe('normalizePipelineComparison', () => {
       expect(new Set(starts.map(({ meta }) => meta.requestId))).toHaveProperty('size', 2);
       expect(starts.every(({ meta }) => meta.catalogVersion === 7)).toBe(true);
       expect(starts.every(({ meta }) => meta.transport === 'mock')).toBe(true);
+      await harness.stop();
+    });
+
+    test('sends LP2 search and page offset for a single pipeline', async () => {
+      fetchMock.mockResolvedValue({
+        content: [{ id: 102, pipelineId: 1, iterationNumber: 2, status: 'Passed' }],
+        page: { number: 2, size: 1, totalElements: 2, totalPages: 2 },
+      });
+      let notifyComplete: () => void = () => undefined;
+      const complete = new Promise<void>((resolve) => { notifyComplete = resolve; });
+      const harness = startPipelineSagas(
+        createSagaState({ transport: 'live', catalogVersion: 7, catalogProjectKey: 'demo' }),
+        (action) => {
+          const candidate = action as { type?: string; meta?: { namespace?: string } };
+          if (candidate.type === FETCH_SUCCESS &&
+            candidate.meta?.namespace === PIPELINE_ITERATIONS_NAMESPACE) notifyComplete();
+        },
+      );
+
+      await Promise.resolve();
+      harness.dispatch(getPipelineIterationsAction([1], { search: '#2', offset: 1, limit: 1 }));
+      await complete;
+
+      expect(fetchMock).toHaveBeenCalledWith(
+        URLS.pipelineCatalogIterations('demo', 1, { offset: 1, limit: 1, search: '#2' }),
+        { signal: expect.any(AbortSignal) },
+      );
+      expect(harness.dispatched).toContainEqual(expect.objectContaining({
+        type: FETCH_SUCCESS,
+        payload: {
+          data: [expect.objectContaining({ id: 102, pipelineId: 1 })],
+          page: { number: 2, size: 1, totalElements: 2, totalPages: 2, offset: 1 },
+        },
+      }));
       await harness.stop();
     });
 

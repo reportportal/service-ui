@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+import { Fragment } from 'react';
 import { useIntl } from 'react-intl';
 import { useSelector } from 'react-redux';
 import Link from 'redux-first-router-link';
@@ -27,6 +28,7 @@ import {
 } from 'controllers/pages';
 import { ProjectDetails } from 'pages/organization/constants';
 
+import { getReducedStatusVariant } from '../../common/reducedStatusVariant';
 import { messages } from '../messages';
 import styles from './iterationCard.scss';
 
@@ -34,30 +36,66 @@ const cx = createClassnames(styles);
 
 const STATUS_MESSAGE_KEYS: Record<ReducedPipelineStatus, keyof typeof messages> = {
   PENDING: 'liveStatusPending',
+  RUNNING: 'liveStatusRunning',
+  WAITING: 'liveStatusWaiting',
   PASSED: 'liveStatusPassed',
   FAILED: 'liveStatusFailed',
   NEEDS_HUMAN: 'liveStatusNeedsHuman',
+  SKIPPED: 'liveStatusSkipped',
   UNKNOWN: 'liveStatusUnknown',
 };
 
 export interface ReducedIterationCardProps {
   iteration: ReducedPipelineIteration;
+  pipelineName: string;
 }
 
-export const ReducedIterationCard = ({ iteration }: ReducedIterationCardProps) => {
+export const ReducedIterationCard = ({ iteration, pipelineName }: ReducedIterationCardProps) => {
   const { formatMessage } = useIntl();
   const { organizationSlug, projectSlug } = useSelector(
     urlOrganizationAndProjectSelector,
   ) as ProjectDetails;
   const statusLabel = (status: ReducedPipelineStatus) =>
     formatMessage(messages[STATUS_MESSAGE_KEYS[status]]);
+  const attributeValue = (key: string) =>
+    iteration.attributes.find((attribute) => attribute.key === key)?.value;
   const metaFields = [
-    iteration.trigger,
-    iteration.startedAt ? new Date(iteration.startedAt).toLocaleString() : undefined,
-    iteration.durationMs !== undefined ? formatDuration(iteration.durationMs) : undefined,
-  ].filter(Boolean);
+    { label: formatMessage(messages.metaRequirementLabel), value: attributeValue('requirement') },
+    { label: formatMessage(messages.metaTriggerLabel), value: iteration.trigger },
+    { label: formatMessage(messages.metaModelLabel), value: attributeValue('model') },
+    { label: formatMessage(messages.metaTestCasesLabel), value: attributeValue('testCases') },
+    { label: formatMessage(messages.metaSuiteScoreLabel), value: attributeValue('suiteScore') },
+    { label: formatMessage(messages.metaCostLabel), value: attributeValue('cost') },
+    {
+      label: formatMessage(messages.metaStartedLabel),
+      value:
+        iteration.startedAt !== undefined
+          ? new Date(iteration.startedAt).toLocaleString()
+          : undefined,
+    },
+    {
+      value: iteration.durationMs !== undefined ? formatDuration(iteration.durationMs) : undefined,
+    },
+  ].filter((field) => field.value);
+  const currentStage = [...iteration.stages]
+    .reverse()
+    .find(
+      (stage) =>
+        stage.attributes?.some((attribute) => attribute.key === 'ready') &&
+        stage.attributes?.some((attribute) => attribute.key === 'total'),
+    );
+  const ready = currentStage?.attributes?.find((attribute) => attribute.key === 'ready')?.value;
+  const total = currentStage?.attributes?.find((attribute) => attribute.key === 'total')?.value;
+  const outcome =
+    ready !== undefined && total !== undefined
+      ? formatMessage(messages.outcomeReady, { ready, total })
+      : undefined;
+  const tags = iteration.attributes.filter((attribute) => attribute.type === 'TAG');
 
-  const iterationTitle = formatMessage(messages.iterationTitle, { number: iteration.number });
+  const iterationTitle = formatMessage(messages.pipelineIterationTitle, {
+    pipelineName,
+    number: iteration.number,
+  });
 
   return (
     <Link
@@ -75,15 +113,65 @@ export const ReducedIterationCard = ({ iteration }: ReducedIterationCardProps) =
       }}
     >
       <div className={cx('card__header')}>
-        <span className={cx('card__neutral-status')}>{statusLabel(iteration.status)}</span>
-        <span className={cx('card__title')}>{iterationTitle}</span>
+        <span
+          className={cx(
+            'card__neutral-status',
+            `status--${getReducedStatusVariant(iteration.status)}`,
+          )}
+        >
+          {iteration.statusText ?? statusLabel(iteration.status)}
+        </span>
+        <span className={cx('card__title')}>
+          {pipelineName} ·{' '}
+          <span className={cx('card__title-iteration')}>
+            {formatMessage(messages.iterationTitle, { number: iteration.number })}
+          </span>
+        </span>
+        {outcome && <span className={cx('card__outcome')}>{outcome}</span>}
       </div>
-      {metaFields.length > 0 && <div className={cx('card__meta')}>{metaFields.join(' · ')}</div>}
+      {metaFields.length > 0 && (
+        <div className={cx('card__meta')}>
+          {metaFields.map(({ label, value }) => (
+            <span key={label ?? 'duration'} className={cx('card__meta-field')}>
+              {label && <span className={cx('card__meta-label')}>{label}</span>}
+              <span className={cx('card__meta-value')}>{value}</span>
+            </span>
+          ))}
+        </div>
+      )}
       {iteration.stages.length > 0 && (
         <div className={cx('card__stages')}>
-          {iteration.stages.map((stage) => (
-            <span key={stage.key} className={cx('card__stage-chip')}>
-              {stage.label} · {statusLabel(stage.status)}
+          {iteration.stages.map((stage, index) => (
+            <Fragment key={stage.key}>
+              {index > 0 && (
+                <span className={cx('card__stage-arrow')} aria-hidden="true">
+                  →
+                </span>
+              )}
+              <span className={cx('card__stage-chip', 'card__stage-chip--reduced')}>
+                <span
+                  className={cx(
+                    'card__stage-dot',
+                    `status--${getReducedStatusVariant(stage.status)}`,
+                  )}
+                  aria-hidden="true"
+                />
+                <span className={cx('card__stage-label')}>{stage.label}</span>
+                {' · '}
+                <span className={cx('card__stage-metric')}>
+                  {stage.summary ?? stage.statusText ?? statusLabel(stage.status)}
+                </span>
+              </span>
+            </Fragment>
+          ))}
+        </div>
+      )}
+      {tags.length > 0 && (
+        <div className={cx('card__attributes')}>
+          {tags.map((attribute) => (
+            <span key={attribute.key} className={cx('card__attribute-chip')}>
+              <span className={cx('card__attribute-key')}>{attribute.key}:</span>
+              <span className={cx('card__attribute-value')}>{attribute.value}</span>
             </span>
           ))}
         </div>

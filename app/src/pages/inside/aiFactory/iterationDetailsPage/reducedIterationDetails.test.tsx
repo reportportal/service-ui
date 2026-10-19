@@ -118,7 +118,8 @@ describe('ReducedIterationDetails', () => {
     });
     expect(wrapper.find('[data-automation-id="reducedIterationDetails"]')).toHaveLength(1);
     expect(wrapper.text()).toContain('Passed');
-    expect(wrapper.text()).toContain('Release validation · CI');
+    expect(wrapper.text()).toContain('Release validation');
+    expect(wrapper.text()).toContain('Trigger:CI');
     expect(wrapper.text()).toContain('60000 ms');
     expect(wrapper.text()).toContain('branch: main');
     expect(wrapper.text()).toContain('PreparePassed');
@@ -135,6 +136,73 @@ describe('ReducedIterationDetails', () => {
     const handleRefresh = refreshWrapper.prop('onClick') as () => void;
     handleRefresh();
     expect(onRetry).toHaveBeenCalledTimes(1);
+  });
+
+  test('uses backend categories for the reduced detail status colors', () => {
+    const wrapper = shallow(
+      <ReducedIterationDetails
+        iteration={detail({
+          status: 'WAITING',
+          statusText: 'In review',
+          stages: [
+            { id: 11, key: 'create', label: 'Create', sequence: 1, status: 'PASSED' },
+            {
+              id: 12,
+              key: 'review',
+              label: 'Review',
+              sequence: 2,
+              status: 'WAITING',
+              statusText: 'In progress',
+            },
+          ],
+        })}
+        hasError={false}
+        isUnavailable={false}
+        breadcrumbDescriptors={breadcrumbDescriptors}
+        onRetry={jest.fn()}
+      />,
+    );
+
+    expect(wrapper.find('.reduced-status').hasClass('reduced-status--waiting')).toBe(true);
+    expect(wrapper.find('.reduced-stage__status.reduced-stage__status--done')).toHaveLength(1);
+    expect(wrapper.find('.reduced-stage__status.reduced-stage__status--waiting')).toHaveLength(1);
+    expect(wrapper.text()).toContain('In review');
+    expect(wrapper.text()).toContain('In progress');
+  });
+
+  test('renders LP3 totals, waiting message, and section cells from the API', () => {
+    const wrapper = shallow(<ReducedIterationDetails
+      iteration={detail({
+        startedBy: 'Anatolii Fedosik',
+        attributes: [
+          { key: 'requirement', value: 'US-TMS-MIG-001', description: 'Empty state' },
+          { key: 'testCases', value: '4' },
+          { key: 'readyNow', value: '2' },
+          { key: 'suiteScore', value: '79' },
+        ],
+        stages: [
+          { id: 11, key: 'grade', label: 'Grade', sequence: 1, status: 'PASSED',
+            summary: '79', durationMs: 151000, sections: [{
+              key: 'gradedCases', title: 'Graded test cases', role: 'RESULT',
+              columns: [{ key: 'name', label: 'Name' }, { key: 'total', label: 'TOTAL /100' }],
+              rows: [{ key: 'case-1', cells: { name: 'Empty state', total: '94' },
+                details: [{ heading: 'Clear steps', items: ['Name the message'] }] }],
+            }] },
+          { id: 12, key: 'review', label: 'Review', sequence: 2, status: 'WAITING',
+            message: '2 Draft Test Cases wait for review' },
+        ],
+      })}
+      hasError={false} isUnavailable={false}
+      breadcrumbDescriptors={breadcrumbDescriptors} onRetry={jest.fn()}
+    />);
+
+    expect(wrapper.text()).toContain('US-TMS-MIG-001 · Empty state');
+    expect(wrapper.text()).toContain('Anatolii Fedosik');
+    expect(wrapper.text()).toContain('2 / 4');
+    expect(wrapper.text()).toContain('2 Draft Test Cases wait for review');
+    expect(wrapper.text()).toContain('Graded test cases');
+    expect(wrapper.text()).toContain('94');
+    expect(wrapper.text()).toContain('Name the message');
   });
 
   test('renders an explicit empty-stage message without leaking absent optional metadata', () => {
