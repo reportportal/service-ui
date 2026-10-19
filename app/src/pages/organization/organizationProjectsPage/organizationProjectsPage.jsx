@@ -34,6 +34,12 @@ import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { EmptyPageState } from 'pages/common';
 import NoResultsIcon from 'common/img/newIcons/no-results-icon-inline.svg';
 import { assignedProjectsSelector } from 'controllers/user';
+import { querySelector } from 'controllers/organization/projects/selectors';
+import {
+  LAST_RUN_DATE_FILTER_NAME,
+  LAUNCHES_FILTER_NAME,
+  TEAMMATES_FILTER_NAME,
+} from 'components/main/filterButton';
 import { useUserPermissions } from 'hooks/useUserPermissions';
 import { ProjectsPageHeader } from './projectsPageHeader';
 import EmptyIcon from './img/empty-projects-icon-inline.svg';
@@ -46,6 +52,7 @@ import {
   NAMESPACE,
   DEFAULT_SORT_COLUMN,
   SORTING_KEY,
+  SEARCH_KEY,
 } from 'controllers/organization/projects/constants';
 import styles from './organizationProjectsPage.scss';
 
@@ -86,8 +93,21 @@ const OrganizationProjectsPageComponent = ({
     };
   });
 
-  const [searchValue, setSearchValue] = useState(null);
-  const [appliedFiltersCount, setAppliedFiltersCount] = useState(0);
+  const urlQuery = useSelector(querySelector);
+
+  const [searchValue, setSearchValue] = useState(() => {
+    const searchQueryKey = Object.keys(urlQuery).find(
+      (key) => key.toLowerCase() === SEARCH_KEY.toLowerCase(),
+    );
+
+    return searchQueryKey ? urlQuery[searchQueryKey] : null;
+  });
+  const [appliedFiltersCount, setAppliedFiltersCount] = useState(
+    () =>
+      [LAST_RUN_DATE_FILTER_NAME, LAUNCHES_FILTER_NAME, TEAMMATES_FILTER_NAME].filter((name) =>
+        Object.keys(urlQuery).some((key) => key.endsWith(`.${name}`)),
+      ).length,
+  );
 
   const shouldShowHeaderActions = itemCount > 0 || searchValue !== null || appliedFiltersCount > 0;
 
