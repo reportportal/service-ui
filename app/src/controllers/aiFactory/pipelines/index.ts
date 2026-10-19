@@ -53,6 +53,10 @@ export {
   pipelineIterationDetailsLoadingSelector,
   pipelineIterationDetailsErrorSelector,
   pipelineIterationDetailsUnavailableSelector,
+  pipelineIterationDetailsFailureKindSelector,
+  pipelineIterationDetailProjectKeySelector,
+  pipelineIterationDetailPipelineIdSelector,
+  pipelineIterationDetailIterationIdSelector,
   pipelineComparisonSelector,
   pipelineComparisonLoadingSelector,
   pipelineComparisonErrorSelector,
@@ -76,6 +80,7 @@ export type {
 export type { PipelineCatalogTransport, PipelineDetailTransport } from './transport';
 export type {
   ReducedPipeline,
+  ReducedPipelineAttribute,
   ReducedPipelineIteration,
   ReducedPipelineIterationDetail,
   ReducedPipelineDetailStage,

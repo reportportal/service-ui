@@ -540,6 +540,7 @@ describe('aiFactoryPipelinesReducer iteration detail provenance', () => {
     const loadedState = {
       ...createCatalogState(),
       iterationDetails: currentDetail,
+      detailProjectKey: 'demo',
     } as PipelinesState;
 
     const state = aiFactoryPipelinesReducer(
@@ -552,6 +553,20 @@ describe('aiFactoryPipelinesReducer iteration detail provenance', () => {
       iterationDetailsLoading: true,
       iterationDetailsError: false,
       iterationDetailsUnavailable: false,
+    });
+  });
+
+  test('clears the previous project detail when the same ids are requested in another project', () => {
+    const directMeta = { ...detailMeta, catalogVersion: 0, catalogRequestId: 0 };
+    const firstLoading = aiFactoryPipelinesReducer(undefined, detailAction(FETCH_START, directMeta));
+    const firstLoaded = aiFactoryPipelinesReducer(firstLoading, detailAction(FETCH_SUCCESS, directMeta));
+    const nextMeta = { ...directMeta, projectKey: 'other-project', requestId: 12 };
+    const secondLoading = aiFactoryPipelinesReducer(firstLoaded, detailAction(FETCH_START, nextMeta));
+
+    expect(secondLoading).toMatchObject({
+      iterationDetails: null,
+      iterationDetailsLoading: true,
+      detailProjectKey: 'other-project',
     });
   });
 
@@ -568,6 +583,37 @@ describe('aiFactoryPipelinesReducer iteration detail provenance', () => {
       iterationDetailsLoading: false,
       iterationDetailsError: false,
       iterationDetailsUnavailable: false,
+    });
+  });
+
+  test('accepts a direct LP3 request without a loaded catalog and rejects an older project response', () => {
+    const directMeta = { ...detailMeta, catalogVersion: 0, catalogRequestId: 0 };
+    const initial = aiFactoryPipelinesReducer(undefined, { type: '@@INIT' });
+    const loading = aiFactoryPipelinesReducer(initial, detailAction(FETCH_START, directMeta));
+    expect(loading).toMatchObject({ detailProjectKey: 'demo', iterationDetailsLoading: true });
+
+    const nextMeta = { ...directMeta, requestId: 12, projectKey: 'other-project' };
+    const nextLoading = aiFactoryPipelinesReducer(loading, detailAction(FETCH_START, nextMeta));
+    expect(aiFactoryPipelinesReducer(nextLoading, detailAction(FETCH_SUCCESS, directMeta)))
+      .toBe(nextLoading);
+    expect(aiFactoryPipelinesReducer(nextLoading, detailAction(FETCH_SUCCESS, nextMeta)))
+      .toMatchObject({ iterationDetails: detail, detailProjectKey: 'other-project' });
+  });
+
+  test.each([
+    ['forbidden', 'forbidden'],
+    ['missing', 'notFound'],
+  ] as const)('tracks %s detail errors for the current request', (_description, detailFailureKind) => {
+    const directMeta = { ...detailMeta, catalogVersion: 0, catalogRequestId: 0 };
+    const loading = aiFactoryPipelinesReducer(undefined, detailAction(FETCH_START, directMeta));
+    const failed = aiFactoryPipelinesReducer(loading, detailAction(FETCH_ERROR, {
+      ...directMeta,
+      detailFailureKind,
+    }));
+    expect(failed).toMatchObject({
+      iterationDetails: null,
+      iterationDetailsFailureKind: detailFailureKind,
+      iterationDetailsLoading: false,
     });
   });
 

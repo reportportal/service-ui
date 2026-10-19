@@ -127,7 +127,16 @@ export const ReducedIterationCard = ({ iteration, pipelineName }: ReducedIterati
             {formatMessage(messages.iterationTitle, { number: iteration.number })}
           </span>
         </span>
-        {outcome && <span className={cx('card__outcome')}>{outcome}</span>}
+        {outcome && (
+          <span
+            className={cx(
+              'card__outcome',
+              `card__outcome--${getReducedStatusVariant(iteration.status)}`,
+            )}
+          >
+            {outcome}
+          </span>
+        )}
       </div>
       {metaFields.length > 0 && (
         <div className={cx('card__meta')}>

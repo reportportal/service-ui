@@ -107,7 +107,8 @@ describe('ReducedIterationCard', () => {
           attributes: [],
           stages: [
             { key: 'create', label: 'Create', status: 'PASSED', statusText: 'Passed' },
-            { key: 'review', label: 'Review', status: 'WAITING', statusText: 'In progress' },
+            { key: 'review', label: 'Review', status: 'WAITING', statusText: 'In progress',
+              attributes: [{ key: 'ready', value: '3' }, { key: 'total', value: '4' }] },
           ],
         }}
       />,
@@ -116,6 +117,7 @@ describe('ReducedIterationCard', () => {
     expect(wrapper.find('.card__neutral-status').hasClass('status--waiting')).toBe(true);
     expect(wrapper.find('.card__stage-dot.status--done')).toHaveLength(1);
     expect(wrapper.find('.card__stage-dot.status--waiting')).toHaveLength(1);
+    expect(wrapper.find('.card__outcome.card__outcome--waiting').text()).toBe('3 of 4 Ready');
     expect(wrapper.text()).toContain('In review');
     expect(wrapper.text()).toContain('Review · In progress');
     expect(wrapper.find('.card__stage-arrow')).toHaveLength(1);
@@ -139,6 +141,7 @@ describe('ReducedIterationCard', () => {
     expect(wrapper.text()).toContain('US-TMS-MIG-001');
     expect(wrapper.text()).toContain('Suite score:79');
     expect(wrapper.text()).toContain('2 of 4 Ready');
+    expect(wrapper.find('.card__outcome.card__outcome--done').text()).toBe('2 of 4 Ready');
     expect(wrapper.text()).toContain('Review · 2/4 Ready');
     expect(wrapper.text()).toContain('ci:#1284551');
   });

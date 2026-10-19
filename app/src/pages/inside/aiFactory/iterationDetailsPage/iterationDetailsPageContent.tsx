@@ -33,6 +33,10 @@ import {
   pipelineIterationDetailsErrorSelector,
   pipelineIterationDetailsSelector,
   pipelineIterationDetailsUnavailableSelector,
+  pipelineIterationDetailsFailureKindSelector,
+  pipelineIterationDetailProjectKeySelector,
+  pipelineIterationDetailPipelineIdSelector,
+  pipelineIterationDetailIterationIdSelector,
   pipelinesLoadingSelector,
   pipelinesSelector,
   PipelineCatalogItem,
@@ -127,9 +131,24 @@ export const IterationDetailsPageContent = () => {
   const isLoading = useSelector(pipelineIterationDetailsLoadingSelector);
   const hasDetailError = useSelector(pipelineIterationDetailsErrorSelector);
   const isDetailUnavailable = useSelector(pipelineIterationDetailsUnavailableSelector);
+  const detailFailureKind = useSelector(pipelineIterationDetailsFailureKindSelector);
+  const detailProjectKey = useSelector(pipelineIterationDetailProjectKeySelector);
+  const detailPipelineId = useSelector(pipelineIterationDetailPipelineIdSelector);
+  const detailIterationId = useSelector(pipelineIterationDetailIterationIdSelector);
   const isCatalogLoading = useSelector(pipelinesLoadingSelector);
+  const isLiveTransport = catalogTransport === 'live';
+  const hasValidRoute =
+    Number.isSafeInteger(pipelineId) && pipelineId > 0 &&
+    Number.isSafeInteger(iterationId) && iterationId > 0;
+  const detailMatchesRoute =
+    detailProjectKey === projectKey &&
+    detailPipelineId === pipelineId &&
+    detailIterationId === iterationId;
   const currentIteration =
-    iteration?.id === iterationId && iteration.pipelineId === pipelineId ? iteration : null;
+    (!isLiveTransport || detailMatchesRoute) &&
+    iteration?.id === iterationId && iteration.pipelineId === pipelineId
+      ? iteration
+      : null;
 
   const { hasCurrentCatalog, pipelineCandidate, pipeline, isReducedCatalogPipeline } =
     resolvePipelineCatalog(
@@ -145,19 +164,27 @@ export const IterationDetailsPageContent = () => {
   const detailRequestKeyRef = useRef<string | null>(null);
 
   useEffect(() => {
-    if (!hasCurrentCatalog && catalogRequestProjectRef.current !== projectKey) {
+    if (
+      !isLiveTransport &&
+      projectKey &&
+      !hasCurrentCatalog &&
+      catalogRequestProjectRef.current !== projectKey
+    ) {
       catalogRequestProjectRef.current = projectKey;
       dispatch(getPipelinesAction());
     }
-  }, [dispatch, hasCurrentCatalog, projectKey]);
+  }, [dispatch, hasCurrentCatalog, isLiveTransport, projectKey]);
 
   useEffect(() => {
-    const requestKey = `${projectKey}:${catalogTransport}:${catalogVersion}:${catalogRequestId}:${pipelineId}:${iterationId}`;
+    const requestKey = isLiveTransport
+      ? `${projectKey}:live:${pipelineId}:${iterationId}`
+      : `${projectKey}:${catalogTransport}:${catalogVersion}:${catalogRequestId}:${pipelineId}:${iterationId}`;
     if (
-      catalogVersion <= 0 ||
-      catalogProjectKey !== projectKey ||
-      !pipelineCandidate ||
-      isLoading ||
+      !projectKey ||
+      !hasValidRoute ||
+      (!isLiveTransport &&
+        (catalogVersion <= 0 || catalogProjectKey !== projectKey || !pipelineCandidate)) ||
+      (detailMatchesRoute && isLoading) ||
       currentIteration ||
       detailRequestKeyRef.current === requestKey
     ) {
@@ -172,6 +199,9 @@ export const IterationDetailsPageContent = () => {
     catalogVersion,
     dispatch,
     isLoading,
+    isLiveTransport,
+    hasValidRoute,
+    detailMatchesRoute,
     currentIteration,
     iterationId,
     pipelineCandidate,
@@ -198,7 +228,8 @@ export const IterationDetailsPageContent = () => {
       return POLLING_REQUEST_STARTED;
     },
     ITERATION_POLL_INTERVAL_MS,
-    !isLoading &&
+    !isLiveTransport &&
+      !isLoading &&
       Boolean(pipeline) &&
       (currentIteration?.status === IterationStatus.RUNNING ||
         currentIteration?.status === IterationStatus.IN_REVIEW),
@@ -289,7 +320,30 @@ export const IterationDetailsPageContent = () => {
     dispatch(getPipelineIterationDetailsAction(pipelineId, iterationId));
   };
 
-  if ((isCatalogLoading || isLoading) && !currentIteration) {
+  const backToPipelines = () => {
+    dispatch({ type: PROJECT_PIPELINES_PAGE, payload: { organizationSlug, projectSlug } });
+  };
+
+  if (isLiveTransport && !hasValidRoute) {
+    return (
+      <ReducedIterationDetails
+        iteration={null}
+        hasError={false}
+        isUnavailable={false}
+        isInvalidRoute
+        breadcrumbDescriptors={breadcrumbDescriptors}
+        requestedStage={typeof query.stage === 'string' ? query.stage : undefined}
+        onRetry={retryDetail}
+        onBack={backToPipelines}
+      />
+    );
+  }
+
+  const isDetailPending =
+    (!isLiveTransport && isCatalogLoading) ||
+    (detailMatchesRoute && isLoading) ||
+    (isLiveTransport && !detailMatchesRoute);
+  if (isDetailPending && !currentIteration) {
     return (
       <SettingsLayout>
         <output className={cx('state')} aria-live="polite">
@@ -300,14 +354,17 @@ export const IterationDetailsPageContent = () => {
     );
   }
 
-  if (isReducedCatalogPipeline) {
+  if (isLiveTransport || isReducedCatalogPipeline) {
     return (
       <ReducedIterationDetails
         iteration={isReducedDetail(currentIteration) ? currentIteration : null}
-        hasError={hasDetailError}
-        isUnavailable={isDetailUnavailable}
+        hasError={detailMatchesRoute && hasDetailError}
+        isUnavailable={detailMatchesRoute && isDetailUnavailable}
+        failureKind={detailMatchesRoute ? detailFailureKind : null}
         breadcrumbDescriptors={breadcrumbDescriptors}
+        requestedStage={typeof query.stage === 'string' ? query.stage : undefined}
         onRetry={retryDetail}
+        onBack={backToPipelines}
       />
     );
   }

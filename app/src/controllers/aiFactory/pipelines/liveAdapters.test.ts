@@ -37,10 +37,12 @@ describe('live pipeline catalog adapters', () => {
   });
 
   test('rejects incomplete nonfinal LP1 pages', () => {
-    expect(() => adaptLivePipelinesPage({
-      content: [{ id: 7, name: 'Test case generation' }],
-      page: { number: 1, size: 100, totalElements: 101, totalPages: 2 },
-    })).toThrow('Invalid pipeline catalog response');
+    expect(() =>
+      adaptLivePipelinesPage({
+        content: [{ id: 7, name: 'Test case generation' }],
+        page: { number: 1, size: 100, totalElements: 101, totalPages: 2 },
+      }),
+    ).toThrow('Invalid pipeline catalog response');
   });
 
   test('adapts the backend journey LP1 page without inventing repository or settings fields', () => {
@@ -96,59 +98,211 @@ describe('live pipeline catalog adapters', () => {
   });
 
   test('preserves typed LP2 visual fields and derives trigger from iteration attributes', () => {
-    const [iteration] = adaptLivePipelineIterations([{ id: 31, pipelineId: 7,
-      iterationNumber: 1, status: 'In review', statusCategory: 'WAITING',
-      attributes: [
-        { key: 'trigger', label: 'Trigger', value: 'Web form', type: 'META', order: 2 },
-        { key: 'ci', label: 'CI pipeline', value: '#1284551', type: 'TAG',
-          valueType: 'LINK', url: 'https://gitlab.epam.com/pipeline/1284551' },
+    const [iteration] = adaptLivePipelineIterations(
+      [
+        {
+          id: 31,
+          pipelineId: 7,
+          iterationNumber: 1,
+          status: 'In review',
+          statusCategory: 'WAITING',
+          attributes: [
+            { key: 'trigger', label: 'Trigger', value: 'Web form', type: 'META', order: 2 },
+            {
+              key: 'ci',
+              label: 'CI pipeline',
+              value: '#1284551',
+              type: 'TAG',
+              valueType: 'LINK',
+              url: 'https://gitlab.epam.com/pipeline/1284551',
+            },
+          ],
+          stages: [
+            {
+              id: 104,
+              name: 'Review',
+              sequence: 4,
+              status: 'In progress',
+              statusCategory: 'WAITING',
+              summary: '2/4 Ready',
+              message: '2 Draft Test Cases wait for review',
+              attributes: [
+                { key: 'ready', value: '2', type: 'NONE' },
+                { key: 'total', value: '4', type: 'NONE' },
+              ],
+            },
+          ],
+        },
       ],
-      stages: [{ id: 104, name: 'Review', sequence: 4, status: 'In progress',
-        statusCategory: 'WAITING', summary: '2/4 Ready',
-        message: '2 Draft Test Cases wait for review',
-        attributes: [
-          { key: 'ready', value: '2', type: 'NONE' },
-          { key: 'total', value: '4', type: 'NONE' },
-        ] }],
-    }], 7);
+      7,
+    );
 
     expect(iteration.trigger).toBe('Web form');
-    expect(iteration.attributes).toContainEqual({ key: 'trigger', label: 'Trigger',
-      value: 'Web form', type: 'META', order: 2 });
-    expect(iteration.attributes).toContainEqual({ key: 'ci', label: 'CI pipeline',
-      value: '#1284551', type: 'TAG', valueType: 'LINK',
-      url: 'https://gitlab.epam.com/pipeline/1284551' });
-    expect(iteration.stages[0]).toMatchObject({ summary: '2/4 Ready',
-      message: '2 Draft Test Cases wait for review', attributes: [
+    expect(iteration.attributes).toContainEqual({
+      key: 'trigger',
+      label: 'Trigger',
+      value: 'Web form',
+      type: 'META',
+      order: 2,
+    });
+    expect(iteration.attributes).toContainEqual({
+      key: 'ci',
+      label: 'CI pipeline',
+      value: '#1284551',
+      type: 'TAG',
+      valueType: 'LINK',
+      url: 'https://gitlab.epam.com/pipeline/1284551',
+    });
+    expect(iteration.stages[0]).toMatchObject({
+      summary: '2/4 Ready',
+      message: '2 Draft Test Cases wait for review',
+      attributes: [
         { key: 'ready', value: '2', type: 'NONE' },
         { key: 'total', value: '4', type: 'NONE' },
-      ] });
+      ],
+    });
   });
 
   test('preserves LP3 section tables and score explanations', () => {
-    const detail = adaptLivePipelineIterationDetail({ id: 31, pipelineId: 7,
-      iterationNumber: 1, status: 'In review', statusCategory: 'WAITING',
-      startedBy: { fullName: 'Anatolii Fedosik' },
-      warnings: [{ code: 'RELATED_ENTITY_NOT_FOUND', message: 'Related entities not found' }],
-      stages: [{ id: 101, name: 'Grade', sequence: 2, status: 'Passed',
-        statusCategory: 'PASSED', durationMillis: 151000,
-        links: [{ type: 'RUN', label: '#8812301', url: 'https://gitlab.epam.com/jobs/8812301' }],
-        sections: [{ key: 'gradedCases', title: 'Graded test cases', role: 'RESULT',
-          columns: [{ key: 'name', label: 'Name' }, { key: 'total', label: 'TOTAL /100' }],
-          rows: [{ key: 'case-1', cells: { name: { value: 'Empty state' }, total: 94 },
-            details: [{ heading: 'Clear steps', items: ['Name the message'] }] }],
-        }],
-      }],
-    }, 7, 31);
+    const detail = adaptLivePipelineIterationDetail(
+      {
+        id: 31,
+        pipelineId: 7,
+        iterationNumber: 1,
+        status: 'In review',
+        statusCategory: 'WAITING',
+        startedBy: { fullName: 'Anatolii Fedosik' },
+        warnings: [{ code: 'RELATED_ENTITY_NOT_FOUND', message: 'Related entities not found' }],
+        stages: [
+          {
+            id: 101,
+            name: 'Grade',
+            sequence: 2,
+            status: 'Passed',
+            statusCategory: 'PASSED',
+            durationMillis: 151000,
+            links: [
+              { type: 'RUN', label: '#8812301', url: 'https://gitlab.epam.com/jobs/8812301' },
+            ],
+            sections: [
+              {
+                key: 'gradedCases',
+                title: 'Graded test cases',
+                role: 'RESULT',
+                columns: [
+                  { key: 'name', label: 'Name' },
+                  { key: 'total', label: 'TOTAL /100' },
+                ],
+                rows: [
+                  {
+                    key: 'case-1',
+                    cells: { name: { value: 'Empty state' }, total: 94 },
+                    details: [{ heading: 'Clear steps', items: ['Name the message'] }],
+                  },
+                ],
+              },
+            ],
+          },
+        ],
+      },
+      7,
+      31,
+    );
 
     expect(detail.startedBy).toBe('Anatolii Fedosik');
     expect(detail.warnings).toEqual(['Related entities not found']);
+    expect(detail.warningDetails).toEqual([
+      {
+        code: 'RELATED_ENTITY_NOT_FOUND',
+        message: 'Related entities not found',
+      },
+    ]);
     expect(detail.stages[0].durationMs).toBe(151000);
-    expect(detail.stages[0].links).toEqual([{ type: 'RUN', label: '#8812301',
-      url: 'https://gitlab.epam.com/jobs/8812301' }]);
-    expect(detail.stages[0].sections?.[0].rows[0]).toEqual({ key: 'case-1',
+    expect(detail.stages[0].links).toEqual([
+      { type: 'RUN', label: '#8812301', url: 'https://gitlab.epam.com/jobs/8812301' },
+    ]);
+    expect(detail.stages[0].sections?.[0].rows[0]).toEqual({
+      key: 'case-1',
       cells: { name: 'Empty state', total: '94' },
       details: [{ heading: 'Clear steps', items: ['Name the message'] }],
+    });
+  });
+
+  test('keeps documented LP3 stage facts and safe table targets for the detail view', () => {
+    const detail = adaptLivePipelineIterationDetail(
+      {
+        id: 31,
+        pipelineId: 7,
+        iterationNumber: 1,
+        attributes: [
+          { key: 'suiteScore', value: '79', comparisonKey: false, direction: 'HIGHER_BETTER' },
+        ],
+        stages: [
+          {
+            id: 101,
+            name: 'Create',
+            sequence: 1,
+            status: 'Passed',
+            attempt: 2,
+            ownedBy: 'PIPELINE',
+            affectsIterationStatus: true,
+            retryable: false,
+            startedAt: '2026-09-19T10:13:00Z',
+            finishedAt: '2026-09-19T10:19:02Z',
+            relatedEntities: [{ entityType: 'TEST_CASE', entityId: 'TC101' }],
+            sections: [
+              {
+                key: 'authoredCases',
+                title: 'Authored cases',
+                role: 'RESULT',
+                columns: [{ key: 'libraryId', label: 'Library id', valueType: 'TEXT' }],
+                rows: [
+                  {
+                    key: 'case-1',
+                    cells: {
+                      libraryId: {
+                        value: 'TC101',
+                        target: { entityType: 'TEST_CASE', entityId: 'TC101' },
+                      },
+                    },
+                  },
+                ],
+              },
+            ],
+          },
+        ],
+        warnings: [
+          {
+            code: 'RELATED_ENTITY_NOT_FOUND',
+            message: 'Not linked',
+            stageId: 101,
+            entityType: 'TEST_CASE',
+            entityIds: ['TC404'],
+          },
+        ],
+      },
+      7,
+      31,
+    );
+
+    expect(detail.attributes[0]).toMatchObject({
+      comparisonKey: false,
+      direction: 'HIGHER_BETTER',
+    });
+    expect(detail.stages[0]).toMatchObject({
+      attempt: 2,
+      ownedBy: 'PIPELINE',
+      affectsIterationStatus: true,
+      retryable: false,
+      relatedEntities: [{ entityType: 'TEST_CASE', entityId: 'TC101' }],
+    });
+    expect(detail.stages[0].sections?.[0].rows[0].cellLinks).toEqual({
+      libraryId: { entityType: 'TEST_CASE', entityId: 'TC101' },
+    });
+    expect(detail.warningDetails?.[0]).toMatchObject({
+      code: 'RELATED_ENTITY_NOT_FOUND',
+      stageId: 101,
+      entityIds: ['TC404'],
     });
   });
 
@@ -344,17 +498,27 @@ describe('live pipeline catalog adapters', () => {
 
   test('preserves LP2 page metadata and rejects incomplete pages', () => {
     const iteration = { id: 12, pipelineId: 7, iterationNumber: 2, status: 'Passed' };
-    expect(adaptLivePipelineIterationsPage({
-      content: [iteration],
-      page: { number: 2, size: 1, totalElements: 2, totalPages: 2 },
-    }, 7)).toEqual({
+    expect(
+      adaptLivePipelineIterationsPage(
+        {
+          content: [iteration],
+          page: { number: 2, size: 1, totalElements: 2, totalPages: 2 },
+        },
+        7,
+      ),
+    ).toEqual({
       content: [expect.objectContaining({ id: 12, pipelineId: 7 })],
       page: { number: 2, size: 1, totalElements: 2, totalPages: 2 },
     });
-    expect(() => adaptLivePipelineIterationsPage({
-      content: [iteration],
-      page: { number: 1, size: 100, totalElements: 101, totalPages: 2 },
-    }, 7)).toThrow('Invalid pipeline iteration list response');
+    expect(() =>
+      adaptLivePipelineIterationsPage(
+        {
+          content: [iteration],
+          page: { number: 1, size: 100, totalElements: 101, totalPages: 2 },
+        },
+        7,
+      ),
+    ).toThrow('Invalid pipeline iteration list response');
   });
 
   test('rejects an incomplete or multi-page LP2 response', () => {
@@ -514,10 +678,11 @@ describe('live pipeline catalog adapters', () => {
         stages: [],
         pipelineName: undefined,
         createdAt: undefined,
+        rawResponse: minimalDetail,
       });
     });
 
-    test('adapts safe full detail, sorts stages and attributes, and excludes opaque rich fields', () => {
+    test('keeps opaque fields out of the normalized view while retaining the full response', () => {
       const result = adaptLivePipelineIterationDetail(
         {
           ...minimalDetail,
@@ -586,6 +751,7 @@ describe('live pipeline catalog adapters', () => {
             attributes: [{ key: 'hidden', value: 'value' }],
           },
         ],
+        rawResponse: expect.objectContaining({ repository: 'must-not-leak' }),
       });
       expect(result).not.toHaveProperty('metrics');
       expect(result).not.toHaveProperty('repository');

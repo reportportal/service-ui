@@ -86,3 +86,22 @@
     height: 36px;
   }
 }
+
+@media (max-width: 1360px) {
+  .page-header-with-breadcrumbs-and-actions {
+    &__title-row--stack-actions {
+      flex-direction: column;
+      align-items: stretch;
+      gap: 8px;
+    }
+
+    &__title-row--stack-actions &__title-group {
+      flex: none;
+    }
+
+    &__title-row--stack-actions &__actions {
+      height: auto;
+      justify-content: flex-end;
+    }
+  }
+}

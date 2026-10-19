@@ -88,6 +88,10 @@
       color: var(--rp-ui-base-topaz);
     }
 
+    &--waiting {
+      color: var(--rp-ui-base-a-yellow-600);
+    }
+
     &--failed {
       color: var(--rp-ui-base-error);
     }

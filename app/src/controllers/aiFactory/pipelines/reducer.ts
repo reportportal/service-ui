@@ -64,6 +64,7 @@ interface PipelineReducerAction extends Action<string> {
     catalogTransport?: PipelineCatalogTransport;
     detailTransport?: PipelineDetailTransport;
     isUnavailable?: boolean;
+    detailFailureKind?: 'forbidden' | 'notFound';
   };
 }
 
@@ -261,6 +262,14 @@ const iterationDetailsUnavailableReducer = (
     ? action.type === FETCH_ERROR && Boolean(action.meta?.isUnavailable)
     : state;
 
+const iterationDetailsFailureKindReducer = (
+  state: 'forbidden' | 'notFound' | null = null,
+  action: PipelineReducerAction,
+): 'forbidden' | 'notFound' | null => {
+  if (!isPipelineDetailAction(action)) return state;
+  return action.type === FETCH_ERROR ? (action.meta?.detailFailureKind ?? null) : null;
+};
+
 const detailMetaReducer =
   <T extends keyof NonNullable<PipelineReducerAction['meta']>>(
     key: T,
@@ -325,6 +334,7 @@ const combinedReducer = combineReducers({
   iterationDetailsLoading: iterationDetailsLoadingReducer,
   iterationDetailsError: iterationDetailsErrorReducer,
   iterationDetailsUnavailable: iterationDetailsUnavailableReducer,
+  iterationDetailsFailureKind: iterationDetailsFailureKindReducer,
   detailRequestId: detailMetaReducer('requestId', null),
   detailProjectKey: detailMetaReducer('projectKey', null),
   detailPipelineId: detailMetaReducer('pipelineId', null),
@@ -399,11 +409,17 @@ const getPipelineDetailMeta = (action: PipelineReducerAction): PipelineDetailMet
   return meta as PipelineDetailMeta;
 };
 
-const matchesDetailCatalog = (state: PipelinesState, meta: PipelineDetailMeta): boolean =>
-  meta.projectKey === state.catalogProjectKey &&
-  meta.catalogTransport === state.transport &&
-  meta.catalogVersion === state.catalogVersion &&
-  meta.catalogRequestId === state.catalogRequestId;
+const matchesDetailCatalog = (state: PipelinesState, meta: PipelineDetailMeta): boolean => {
+  if (meta.catalogTransport === 'live' && meta.catalogVersion === 0 && meta.catalogRequestId === 0) {
+    return state.transport === 'live';
+  }
+  return (
+    meta.projectKey === state.catalogProjectKey &&
+    meta.catalogTransport === state.transport &&
+    meta.catalogVersion === state.catalogVersion &&
+    meta.catalogRequestId === state.catalogRequestId
+  );
+};
 
 const matchesDetailRequest = (state: PipelinesState, meta: PipelineDetailMeta): boolean =>
   meta.requestId === state.detailRequestId &&
@@ -445,6 +461,13 @@ const reducer = (
     state as CombinedPipelinesState | undefined,
     action,
   ) as PipelinesState;
+  if (
+    isPipelineDetailAction(action) &&
+    action.type === FETCH_START &&
+    currentState.detailProjectKey !== action.meta?.projectKey
+  ) {
+    return { ...nextState, iterationDetails: null };
+  }
   const shouldResetCatalogData =
     action.meta?.namespace === PIPELINES_NAMESPACE &&
     (action.type === FETCH_START || action.type === FETCH_SUCCESS);
@@ -463,6 +486,7 @@ const reducer = (
     iterationDetailsLoading: false,
     iterationDetailsError: false,
     iterationDetailsUnavailable: false,
+    iterationDetailsFailureKind: null,
     detailRequestId: null,
     detailProjectKey: null,
     detailPipelineId: null,

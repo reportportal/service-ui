@@ -23,6 +23,10 @@ import {
   pipelineIterationDetailsLoadingSelector,
   pipelineIterationDetailsSelector,
   pipelineIterationDetailsUnavailableSelector,
+  pipelineIterationDetailsFailureKindSelector,
+  pipelineIterationDetailProjectKeySelector,
+  pipelineIterationDetailPipelineIdSelector,
+  pipelineIterationDetailIterationIdSelector,
   pipelinesLoadingSelector,
   pipelinesSelector,
 } from 'controllers/aiFactory/pipelines';
@@ -81,6 +85,10 @@ jest.mock('controllers/aiFactory/pipelines', () => ({
   pipelineIterationDetailsLoadingSelector: jest.fn(),
   pipelineIterationDetailsSelector: jest.fn(),
   pipelineIterationDetailsUnavailableSelector: jest.fn(),
+  pipelineIterationDetailsFailureKindSelector: jest.fn(),
+  pipelineIterationDetailProjectKeySelector: jest.fn(),
+  pipelineIterationDetailPipelineIdSelector: jest.fn(),
+  pipelineIterationDetailIterationIdSelector: jest.fn(),
   pipelinesLoadingSelector: jest.fn(),
   pipelinesSelector: jest.fn(),
 }));
@@ -100,9 +108,13 @@ jest.mock('controllers/project', () => ({
 }));
 jest.mock('hooks/useUserPermissions', () => ({ useUserPermissions: jest.fn() }));
 jest.mock('components/preloaders/spinningPreloader', () => ({
-  SpinningPreloader: 'SpinningPreloader',
+  SpinningPreloader: function SpinningPreloader() { return <span data-automation-id="loadingSpinner" />; },
 }));
-jest.mock('layouts/settingsLayout', () => ({ SettingsLayout: 'SettingsLayout' }));
+jest.mock('layouts/settingsLayout', () => ({
+  SettingsLayout: function SettingsLayout({ children }: { children: ReactElement }) {
+    return <div>{children}</div>;
+  },
+}));
 jest.mock('pages/inside/aiFactory/common', () => ({
   IterationStatusBadge: 'IterationStatusBadge',
   POLLING_REQUEST_STARTED: 'POLLING_REQUEST_STARTED',
@@ -118,6 +130,9 @@ jest.mock('./kpiTile', () => ({ KpiTile: 'KpiTile' }));
 jest.mock('./stageCards', () => ({ StageCards: 'StageCards' }));
 jest.mock('./stagePanels', () => ({ StagePanels: 'StagePanels' }));
 jest.mock('./rerun', () => ({ useIterationRerunModal: jest.fn() }));
+jest.mock('./reducedIterationDetails', () => ({
+  ReducedIterationDetails: function ReducedIterationDetails() { return null; },
+}));
 
 const dispatch = jest.fn();
 const openRerunModal = jest.fn();
@@ -158,6 +173,10 @@ interface CatalogOptions {
   iteration?: IterationRS | Record<string, unknown> | null;
   detailError?: boolean;
   detailUnavailable?: boolean;
+  detailFailureKind?: 'forbidden' | 'notFound' | null;
+  detailProjectKey?: string | null;
+  routePipelineId?: number | null;
+  routeIterationId?: number | null;
 }
 
 let selectorValues: Map<unknown, unknown>;
@@ -176,6 +195,10 @@ const renderPage = (
     iteration = createIteration(status),
     detailError = false,
     detailUnavailable = false,
+    detailFailureKind = null,
+    detailProjectKey = projectKey,
+    routePipelineId = 7,
+    routeIterationId = 103,
   }: CatalogOptions = {},
   shouldMount = false,
 ) => {
@@ -183,8 +206,8 @@ const renderPage = (
     [projectNameSelector, 'Demo'],
     [projectKeySelector, projectKey],
     [urlOrganizationAndProjectSelector, { organizationSlug: 'org', projectSlug: 'project' }],
-    [pipelineIdSelector, 7],
-    [iterationIdSelector, 103],
+    [pipelineIdSelector, routePipelineId],
+    [iterationIdSelector, routeIterationId],
     [querySelector, {}],
     [pipelinesSelector, pipelines],
     [pipelineCatalogProjectKeySelector, catalogProjectKey],
@@ -195,6 +218,10 @@ const renderPage = (
     [pipelineIterationDetailsLoadingSelector, isLoading],
     [pipelineIterationDetailsErrorSelector, detailError],
     [pipelineIterationDetailsUnavailableSelector, detailUnavailable],
+    [pipelineIterationDetailsFailureKindSelector, detailFailureKind],
+    [pipelineIterationDetailProjectKeySelector, detailProjectKey],
+    [pipelineIterationDetailPipelineIdSelector, 7],
+    [pipelineIterationDetailIterationIdSelector, 103],
     [pipelinesLoadingSelector, catalogLoading],
   ]);
   jest.mocked(useDispatch).mockReturnValue(dispatch as unknown as ReturnType<typeof useDispatch>);
@@ -358,6 +385,64 @@ describe('IterationDetailsPageContent polling', () => {
     expect(wrapper.find('SpinningPreloader')).toHaveLength(1);
     expect(wrapper.find('output').text()).toContain('Loading iteration details');
     expect(wrapper.find(ReducedIterationDetails)).toHaveLength(0);
+    wrapper.unmount();
+  });
+
+  test('requests live LP3 from a direct link without loading LP1', () => {
+    const wrapper = renderPage(IterationStatus.COMPLETED, false, null, {
+      catalogTransport: 'live',
+      catalogProjectKey: null,
+      catalogVersion: 0,
+      catalogRequestId: null,
+      iteration: null,
+      detailProjectKey: null,
+    }, true);
+
+    expect(getPipelinesAction).not.toHaveBeenCalled();
+    expect(getPipelineIterationDetailsAction).toHaveBeenCalledTimes(1);
+    expect(getPipelineIterationDetailsAction).toHaveBeenCalledWith(7, 103);
+    expect(wrapper.find('SpinningPreloader')).toHaveLength(1);
+    wrapper.unmount();
+  });
+
+  test('hides detail from another project even when its iteration ids match', () => {
+    const wrapper = renderPage(IterationStatus.COMPLETED, false, null, {
+      catalogTransport: 'live',
+      iteration: { kind: 'reduced', id: 103, pipelineId: 7, number: 3,
+        status: 'PASSED', attributes: [], stages: [] },
+      detailProjectKey: 'previous-project',
+    });
+
+    expect(wrapper.find(ReducedIterationDetails)).toHaveLength(0);
+    expect(wrapper.find('SpinningPreloader')).toHaveLength(1);
+    wrapper.unmount();
+  });
+
+  test('renders an invalid live route without sending a detail request', () => {
+    const wrapper = renderPage(IterationStatus.COMPLETED, false, null, {
+      catalogTransport: 'live',
+      routePipelineId: null,
+      iteration: null,
+    }, true);
+
+    expect(getPipelineIterationDetailsAction).not.toHaveBeenCalled();
+    expect(wrapper.find(ReducedIterationDetails).prop('isInvalidRoute')).toBe(true);
+    wrapper.unmount();
+  });
+
+  test('passes a forbidden response to the reduced detail state', () => {
+    const wrapper = renderPage(IterationStatus.COMPLETED, false, null, {
+      catalogTransport: 'live',
+      iteration: null,
+      detailError: true,
+      detailFailureKind: 'forbidden',
+    });
+
+    expect(wrapper.find(ReducedIterationDetails).props()).toMatchObject({
+      iteration: null,
+      hasError: true,
+      failureKind: 'forbidden',
+    });
     wrapper.unmount();
   });
 

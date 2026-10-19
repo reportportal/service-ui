@@ -67,6 +67,7 @@ export interface PipelinesState {
   iterationDetailsLoading?: boolean;
   iterationDetailsError?: boolean;
   iterationDetailsUnavailable?: boolean;
+  iterationDetailsFailureKind?: 'forbidden' | 'notFound' | null;
   detailRequestId?: number | null;
   detailProjectKey?: string | null;
   detailPipelineId?: number | null;

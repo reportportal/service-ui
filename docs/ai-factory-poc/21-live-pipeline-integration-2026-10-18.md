@@ -69,6 +69,12 @@ The FE currently expects root arrays for LP1/LP2, flat settings, an object of st
 
 ## Validation for each slice
 
+### LP3 local implementation checkpoint (2026-10-19)
+
+The live iteration page now requests `GET /api/v1/project/{key}/pipeline/iteration/{id}` directly from its route. It validates positive pipeline/iteration IDs and the returned identity, so a deep link works even if LP1 is empty, paginated past that pipeline or has not loaded. Detail state retains the project and request identity; late responses from an earlier route or project cannot replace the current detail. Invalid addresses, empty 200/204 responses, 403 and 404 have explicit inline states. Expected permission/missing responses do not produce a global error toast. The reduced view continues to show only adapted API fields; external stage URLs remain text pending a trusted link policy. Live polling remains off pending agreed backend rules. Focused saga/reducer/page tests and type-check pass locally; deployed 403/404/empty captures, trusted HTTPS and backend SHA are still missing.
+
+The follow-up live LP3 view restores the prototype's summary card, status banner, horizontal selectable stage cards and split stage panel. Values come from the LP3 response: attributes/KPIs, stage summaries, messages, cost and duration, RESULT tables and DETAILS tables. Collapsed `Mapped API fields` and `Full API response` sections expose the validated adapter output and the original LP3 JSON separately; raw fields never drive actions or links. The adapter now preserves documented attempt/owner/timing/retryable/related-entity facts, attribute comparison metadata, table cell targets and structured warnings. An authenticated localhost proxy run showed the live case on pipeline 1/iteration 1 and verified selecting Grade changes the panel. No mock values were introduced into LP3. Trusted deployment and policy gates above still apply.
+
 Use the backend-owned captures plus malformed/forward-compatible FE fixtures; check toggle-OFF parity, mock rollback, project changes, stale requests, empty/error/forbidden states, pagination, untrusted links, and the slice's user-visible mapping. Run focused Jest, Node 20 type-check and relevant lint. A live rollout additionally requires authenticated browser requests to the trusted deployed build and QA evidence; fixture tests alone do not establish it.
 
 ## Implementation checkpoint

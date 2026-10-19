@@ -34,6 +34,7 @@ export const pipelinesStateSelector = (state: PipelinesSelectorsRootState): Pipe
     iterationDetails: null,
     iterationDetailsError: false,
     iterationDetailsUnavailable: false,
+    iterationDetailsFailureKind: null,
     detailRequestId: null,
     detailProjectKey: null,
     detailPipelineId: null,
@@ -103,6 +104,18 @@ export const pipelineIterationDetailsErrorSelector = (
 export const pipelineIterationDetailsUnavailableSelector = (
   state: PipelinesSelectorsRootState,
 ): boolean => Boolean(pipelinesStateSelector(state).iterationDetailsUnavailable);
+
+export const pipelineIterationDetailsFailureKindSelector = (state: PipelinesSelectorsRootState) =>
+  pipelinesStateSelector(state).iterationDetailsFailureKind ?? null;
+
+export const pipelineIterationDetailProjectKeySelector = (state: PipelinesSelectorsRootState) =>
+  pipelinesStateSelector(state).detailProjectKey ?? null;
+
+export const pipelineIterationDetailPipelineIdSelector = (state: PipelinesSelectorsRootState) =>
+  pipelinesStateSelector(state).detailPipelineId ?? null;
+
+export const pipelineIterationDetailIterationIdSelector = (state: PipelinesSelectorsRootState) =>
+  pipelinesStateSelector(state).detailIterationId ?? null;
 
 export const pipelineComparisonSelector = (state: PipelinesSelectorsRootState) =>
   pipelinesStateSelector(state).comparison;

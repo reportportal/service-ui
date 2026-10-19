@@ -48,6 +48,7 @@ export class ScrollWrapper extends Component {
     withBackToTop: PropTypes.bool,
     withFooter: PropTypes.bool,
     resetRequired: PropTypes.bool,
+    thinScrollbars: PropTypes.bool,
     onReset: PropTypes.func,
     className: PropTypes.string,
     classNameBackToTop: PropTypes.string,
@@ -77,6 +78,7 @@ export class ScrollWrapper extends Component {
     withBackToTop: false,
     withFooter: false,
     resetRequired: false,
+    thinScrollbars: false,
     onReset: () => {},
     backToTopEventEnabled: false,
     scrollContainerRef: null,
@@ -195,7 +197,7 @@ export class ScrollWrapper extends Component {
       // base props are defined. For more info see https://github.com/malte-wessel/react-custom-scrollbars/blob/master/docs/API.md
       <Scrollbars
         ref={this.setupRef}
-        className={cx('scroll-component', this.props.className)}
+        className={cx('scroll-component', { 'scroll-component--thin': this.props.thinScrollbars }, this.props.className)}
         autoHide={this.props.autoHide}
         autoHeight={this.props.autoHeight}
         autoHeightMin={this.props.autoHeightMin}

@@ -324,7 +324,7 @@ describe('normalizePipelineComparison', () => {
     test('uses real LP2 and LP3 endpoints for a resolved catalog', async () => {
       fetchMock.mockImplementation((url) => Promise.resolve(
         url.includes('/iteration/')
-          ? { id: 103, pipelineId: 7, iterationNumber: 3, stages: [] }
+          ? { status: 200, data: { id: 103, pipelineId: 7, iterationNumber: 3, stages: [] } }
           : { content: [], page: { number: 1, size: 100, totalElements: 0, totalPages: 0 } },
       ));
       let successes = 0;
@@ -358,6 +358,67 @@ describe('normalizePipelineComparison', () => {
         payload: { data: expect.objectContaining({ kind: 'reduced', id: 103 }) },
         meta: expect.objectContaining({ namespace: PIPELINE_ITERATION_DETAILS_NAMESPACE }),
       }));
+      await harness.stop();
+    });
+
+    test('loads LP3 directly before the catalog has been fetched', async () => {
+      fetchMock.mockResolvedValue({
+        status: 200,
+        data: { id: 103, pipelineId: 7, iterationNumber: 3, stages: [] },
+      });
+      let finish: () => void = () => undefined;
+      const complete = new Promise<void>((resolve) => { finish = resolve; });
+      const harness = startPipelineSagas(createSagaState(), (action) => {
+        const candidate = action as { type?: string; meta?: { namespace?: string } };
+        if (candidate.type === FETCH_SUCCESS &&
+          candidate.meta?.namespace === PIPELINE_ITERATION_DETAILS_NAMESPACE) finish();
+      });
+
+      await Promise.resolve();
+      harness.dispatch(getPipelineIterationDetailsAction(7, 103));
+      await complete;
+
+      expect(fetchMock).toHaveBeenCalledWith(
+        URLS.pipelineIterationById('demo', 103),
+        expect.objectContaining({ signal: expect.any(AbortSignal), validateStatus: expect.any(Function) }),
+        true,
+      );
+      expect(harness.dispatched).toContainEqual(expect.objectContaining({
+        type: FETCH_SUCCESS,
+        payload: { data: expect.objectContaining({ id: 103, pipelineId: 7, kind: 'reduced' }) },
+        meta: expect.objectContaining({ catalogVersion: 0, catalogRequestId: 0 }),
+      }));
+      await harness.stop();
+    });
+
+    test.each([
+      [403, null, 'forbidden'],
+      [404, null, 'notFound'],
+      [204, null, null],
+      [200, {}, null],
+    ])('handles LP3 HTTP %s with empty or denied data as an inline state', async (status, data, detailFailureKind) => {
+      fetchMock.mockResolvedValue({ status, data });
+      let finish: () => void = () => undefined;
+      const complete = new Promise<void>((resolve) => { finish = resolve; });
+      const harness = startPipelineSagas(createSagaState(), (action) => {
+        const candidate = action as { type?: string; meta?: { namespace?: string } };
+        if (candidate.type === FETCH_ERROR &&
+          candidate.meta?.namespace === PIPELINE_ITERATION_DETAILS_NAMESPACE) finish();
+      });
+
+      await Promise.resolve();
+      harness.dispatch(getPipelineIterationDetailsAction(7, 103));
+      await complete;
+
+      expect(harness.dispatched).toContainEqual(expect.objectContaining({
+        type: FETCH_ERROR,
+        meta: expect.objectContaining({
+          namespace: PIPELINE_ITERATION_DETAILS_NAMESPACE,
+          silent: true,
+          ...(detailFailureKind ? { detailFailureKind } : { isUnavailable: true }),
+        }),
+      }));
+      expect(harness.dispatched).not.toContainEqual(expect.objectContaining({ type: FETCH_SUCCESS }));
       await harness.stop();
     });
     test.each([
