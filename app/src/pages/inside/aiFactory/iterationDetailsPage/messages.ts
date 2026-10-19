@@ -117,10 +117,6 @@ export const messages = defineMessages({
     id: 'IterationDetailsPage.rerunUnavailable',
     defaultMessage: 'Re-run is not available yet',
   },
-  pipelineSettingsUnavailable: {
-    id: 'IterationDetailsPage.pipelineSettingsUnavailable',
-    defaultMessage: 'Pipeline settings are not available yet',
-  },
   rerunPermissionUnavailable: {
     id: 'IterationDetailsPage.rerunPermissionUnavailable',
     defaultMessage: 'Re-run is available to Organization Managers and Administrators',

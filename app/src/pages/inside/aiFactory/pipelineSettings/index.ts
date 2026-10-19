@@ -16,3 +16,4 @@
 
 export { PipelineSettingsButton } from './pipelineSettingsButton';
 export type { PipelineSettingsButtonProps } from './pipelineSettingsButton';
+export { LivePipelineSettingsButton } from './livePipelineSettings';

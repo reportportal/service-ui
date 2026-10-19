@@ -243,9 +243,9 @@ describe('aiFactoryPipelinesReducer catalog provenance', () => {
       iterationRequestIdByPipeline: {},
       iterationDetails: null,
       iterationDetailsLoading: false,
-      comparison: null,
-      comparisonLoading: false,
-      comparisonError: false,
+      comparison,
+      comparisonLoading: true,
+      comparisonError: true,
     });
 
     const refreshed = aiFactoryPipelinesReducer(
@@ -260,7 +260,28 @@ describe('aiFactoryPipelinesReducer catalog provenance', () => {
       iterationsLoadingByPipeline: {},
       iterationsErrorByPipeline: {},
       iterationRequestIdByPipeline: {},
+      comparison,
+      comparisonLoading: true,
+      comparisonError: true,
     });
+  });
+
+  test('keeps an LP4 error when LP1 succeeds after the comparison request', () => {
+    const catalogLoading = aiFactoryPipelinesReducer(
+      undefined,
+      catalogAction(FETCH_START, 1, 'demo'),
+    ) as PipelinesState;
+    const comparisonFailed = aiFactoryPipelinesReducer(
+      catalogLoading,
+      fetchErrorAction(PIPELINE_COMPARISON_NAMESPACE, new Error('Not found')),
+    ) as PipelinesState;
+    const catalogLoaded = aiFactoryPipelinesReducer(
+      comparisonFailed,
+      catalogAction(FETCH_SUCCESS, 1, 'demo', []),
+    ) as PipelinesState;
+
+    expect(catalogLoaded.comparisonError).toBe(true);
+    expect(catalogLoaded.comparisonLoading).toBe(false);
   });
 
   test('ignores stale LP1 success and error after a project change', () => {

@@ -18,7 +18,6 @@ import { ComponentProps, Fragment, ReactNode, useState } from 'react';
 import { useIntl } from 'react-intl';
 import {
   Button,
-  ConfigurationIcon,
   CycleArrowsIcon,
   RefreshIcon,
   RerunIcon,
@@ -39,7 +38,8 @@ import { SettingsLayout } from 'layouts/settingsLayout';
 import { ScoreBar } from 'pages/inside/aiFactory/common';
 
 import { getReducedStatusVariant } from '../common/reducedStatusVariant';
-import { messages as pipelineSettingsMessages } from '../pipelineSettings/messages';
+import { LivePipelineSettingsButton } from '../pipelineSettings';
+import { LiveReviewCases } from './liveReviewCases/liveReviewCases';
 import { PageHeaderWithBreadcrumbsAndActions } from '../../common/pageHeaderWithBreadcrumbsAndActions';
 import { KpiTile } from './kpiTile';
 import { CaseLink } from './stagePanels/caseLink';
@@ -93,6 +93,8 @@ export interface ReducedIterationDetailsProps {
   requestedStage?: string;
   onRetry: () => void;
   onBack?: () => void;
+  onCompare?: (pipelineId: number, iterationId: number) => void;
+  projectKey?: string;
 }
 
 type GenerationStageKind = 'create' | 'grade' | 'upload';
@@ -509,6 +511,7 @@ const renderReducedStagePanel = (
   onToggleDetails: (rowKey: string) => void,
   formatMessage: ReturnType<typeof useIntl>['formatMessage'],
   generationKind?: GenerationStageKind,
+  reviewContent?: ReactNode,
 ) => (
   <div className={cx('panel-card')} data-automation-id="reducedStagePanel">
     <div className={panelCx('stage-panels')}>
@@ -547,6 +550,7 @@ const renderReducedStagePanel = (
               getGenerationSectionKind(section, generationKind),
             ),
           )}
+        {reviewContent}
       </section>
       <aside className={panelCx('stage-panels__aside')}>
         <h2 className={panelCx('aside-title')}>{formatMessage(messages.stageDetailsTitle)}</h2>
@@ -694,6 +698,8 @@ export const ReducedIterationDetails = ({
   requestedStage,
   onRetry,
   onBack,
+  onCompare,
+  projectKey,
 }: ReducedIterationDetailsProps) => {
   const { formatMessage } = useIntl();
   const [selectedStageId, setSelectedStageId] = useState<number | null>(null);
@@ -718,6 +724,23 @@ export const ReducedIterationDetails = ({
   const metadata = buildReducedMetadata(iteration, formatMessage);
   const kpis = buildReducedKpis(iteration, formatMessage);
   const currentStage = findSelectedStage(iteration.stages, selectedStageId, requestedStage);
+  const linkedCaseIds = Array.from(
+    new Set(
+      iteration.stages.flatMap((stage) =>
+        (stage.relatedEntities ?? [])
+          .filter(
+            ({ entityType, entityId }) => entityType === 'TEST_CASE' && entityId.length <= 128,
+          )
+          .map(({ entityId }) => entityId),
+      ),
+    ),
+  );
+  const isReviewStage = Boolean(
+    currentStage &&
+    (currentStage.stageKey?.toLowerCase() === 'review' ||
+      (currentStage.ownedBy === 'REPORTPORTAL' &&
+        currentStage.attributes?.some(({ key }) => key === 'ready'))),
+  );
   const bannerStage = iteration.stages.find(
     (stage) =>
       ['RUNNING', 'WAITING', 'NEEDS_HUMAN', 'FAILED'].includes(stage.status) && stage.message,
@@ -725,6 +748,12 @@ export const ReducedIterationDetails = ({
   const statusVariant = getReducedStatusVariant(iteration.status);
   const statusText =
     iteration.statusText ?? formatMessage(messages[STATUS_MESSAGES[iteration.status]]);
+  let compareTitle: string | undefined;
+  if (iteration.number <= 1) {
+    compareTitle = formatMessage(messages.noPreviousIteration);
+  } else if (!onCompare) {
+    compareTitle = formatMessage(messages.compareUnavailable);
+  }
   const pipelinePrefix = iteration.pipelineName ? `${iteration.pipelineName} · ` : '';
   const title = `${pipelinePrefix}${formatMessage(messages.iterationTitle, {
     number: iteration.number,
@@ -748,18 +777,15 @@ export const ReducedIterationDetails = ({
           stackActionsAtNarrowWidth
           actions={
             <div className={cx('header-actions', 'header-actions--reduced')}>
-              <span
-                title={formatMessage(
-                  iteration.number <= 1
-                    ? messages.noPreviousIteration
-                    : messages.compareUnavailable,
-                )}
-              >
+              <span title={compareTitle}>
                 <Button
                   variant="text"
                   data-automation-id="compareWithPreviousButton"
                   icon={<CycleArrowsIcon />}
-                  disabled
+                  disabled={iteration.number <= 1 || !onCompare}
+                  onClick={
+                    onCompare ? () => onCompare(iteration.pipelineId, iteration.id) : undefined
+                  }
                 >
                   {formatMessage(messages.compareWithPrevious)}
                 </Button>
@@ -774,16 +800,7 @@ export const ReducedIterationDetails = ({
                   {formatMessage(messages.rerun)}
                 </Button>
               </span>
-              <span title={formatMessage(messages.pipelineSettingsUnavailable)}>
-                <Button
-                  variant="text"
-                  data-automation-id={`pipelineSettingsButton-${iteration.pipelineId}`}
-                  icon={<ConfigurationIcon />}
-                  disabled
-                >
-                  {formatMessage(pipelineSettingsMessages.action)}
-                </Button>
-              </span>
+              <LivePipelineSettingsButton pipelineId={iteration.pipelineId} />
               <Button
                 variant="text"
                 data-automation-id="refreshReducedIterationButton"
@@ -856,6 +873,9 @@ export const ReducedIterationDetails = ({
               toggleRowDetails,
               formatMessage,
               getGenerationStageKind(iteration.pipelineType, currentStage),
+              isReviewStage && projectKey ? (
+                <LiveReviewCases displayIds={linkedCaseIds} projectKey={projectKey} />
+              ) : undefined,
             )}
           <details className={cx('reduced-api-fields')}>
             <summary>{formatMessage(messages.validatedApiFields)}</summary>

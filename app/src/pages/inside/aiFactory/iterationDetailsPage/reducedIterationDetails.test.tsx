@@ -22,6 +22,8 @@ import type {
   ReducedPipelineIterationDetail,
 } from 'controllers/aiFactory/pipelines';
 
+import { LivePipelineSettingsButton } from '../pipelineSettings';
+import { LiveReviewCases } from './liveReviewCases/liveReviewCases';
 import { CaseLink } from './stagePanels/caseLink';
 import { ReducedIterationDetails } from './reducedIterationDetails';
 
@@ -56,6 +58,9 @@ jest.mock('components/main/scrollWrapper', () => ({ ScrollWrapper: 'ScrollWrappe
 jest.mock('layouts/settingsLayout', () => ({ SettingsLayout: 'SettingsLayout' }));
 jest.mock('../../common/pageHeaderWithBreadcrumbsAndActions', () => ({
   PageHeaderWithBreadcrumbsAndActions: 'PageHeaderWithBreadcrumbsAndActions',
+}));
+jest.mock('../pipelineSettings', () => ({
+  LivePipelineSettingsButton: 'LivePipelineSettingsButton',
 }));
 
 const breadcrumbDescriptors = [{ id: 'iteration', title: 'Iteration #3' }];
@@ -172,24 +177,63 @@ describe('ReducedIterationDetails', () => {
     const actionWrapper = shallow(actions);
     const compare = actionWrapper.find('[data-automation-id="compareWithPreviousButton"]');
     const rerun = actionWrapper.find('[data-automation-id="rerunIterationButton"]');
-    const settings = actionWrapper.find('[data-automation-id="pipelineSettingsButton-7"]');
     expect(compare.text()).toBe('Compare with previous');
     expect(rerun.text()).toBe('Re-run');
-    expect(settings.text()).toBe('Pipeline settings');
-    [compare, rerun, settings].forEach((button) => {
+    expect(actionWrapper.find(LivePipelineSettingsButton).prop('pipelineId')).toBe(7);
+    [compare, rerun].forEach((button) => {
       expect(button.prop('disabled')).toBe(true);
       expect(button.prop('onClick')).toBeUndefined();
     });
     expect(actionWrapper.find('span[title="Comparison is not available yet"]')).toHaveLength(1);
     expect(actionWrapper.find('span[title="Re-run is not available yet"]')).toHaveLength(1);
-    expect(
-      actionWrapper.find('span[title="Pipeline settings are not available yet"]'),
-    ).toHaveLength(1);
     const refresh = actionWrapper.find('[data-automation-id="refreshReducedIterationButton"]');
     expect(refresh.prop('disabled')).toBeUndefined();
     const handleRefresh = refresh.prop('onClick') as () => void;
     handleRefresh();
     expect(onRetry).toHaveBeenCalledTimes(1);
+  });
+
+  test('opens live comparison and joins Review cases only from linked Test Case IDs', () => {
+    const onCompare = jest.fn();
+    const wrapper = shallow(
+      <ReducedIterationDetails
+        iteration={detail({
+          pipelineType: 'TEST_CASE_GENERATION',
+          stages: [
+            {
+              id: 11,
+              key: 'upload',
+              label: 'Upload',
+              sequence: 1,
+              status: 'PASSED',
+              relatedEntities: [{ entityType: 'TEST_CASE', entityId: 'TC101' }],
+            },
+            {
+              id: 12,
+              key: 'review',
+              stageKey: 'review',
+              label: 'Review',
+              sequence: 2,
+              status: 'WAITING',
+              ownedBy: 'REPORTPORTAL',
+            },
+          ],
+        })}
+        hasError={false}
+        isUnavailable={false}
+        breadcrumbDescriptors={breadcrumbDescriptors}
+        requestedStage="review"
+        projectKey="project"
+        onRetry={jest.fn()}
+        onCompare={onCompare}
+      />,
+    );
+    expect(wrapper.find(LiveReviewCases).prop('displayIds')).toEqual(['TC101']);
+    const actions = wrapper.find('PageHeaderWithBreadcrumbsAndActions').prop('actions') as ReactElement;
+    const compare = shallow(actions).find('[data-automation-id="compareWithPreviousButton"]');
+    expect(compare.prop('disabled')).toBe(false);
+    (compare.prop('onClick') as () => void)();
+    expect(onCompare).toHaveBeenCalledWith(7, 103);
   });
 
   test.each([
