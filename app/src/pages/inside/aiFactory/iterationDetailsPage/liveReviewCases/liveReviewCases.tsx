@@ -49,15 +49,24 @@ export const LiveReviewCases = ({ displayIds, projectKey }: LiveReviewCasesProps
   const results = response?.requestKey === requestKey ? response.results : null;
 
   useEffect(() => {
-    if (!projectKey || !displayIds.length || displayIds.length > MAX_CASES) return;
+    const requestedIds = JSON.parse(idsKey) as string[];
+    if (!projectKey || !requestedIds.length || requestedIds.length > MAX_CASES) return;
     const controller = new AbortController();
-    getLiveLibraryCases(projectKey, JSON.parse(idsKey) as string[], controller.signal).then(
+    getLiveLibraryCases(projectKey, requestedIds, controller.signal).then(
       (data) => {
         if (!controller.signal.aborted) setResponse({ requestKey, results: data });
       },
+      () => {
+        if (!controller.signal.aborted) {
+          setResponse({
+            requestKey,
+            results: requestedIds.map((displayId) => ({ displayId, testCase: null })),
+          });
+        }
+      },
     );
     return () => controller.abort();
-  }, [projectKey, idsKey, requestKey, displayIds.length]);
+  }, [projectKey, idsKey, requestKey]);
 
   return (
     <section className={cx('live-review-cases')} data-automation-id="liveReviewCases">
