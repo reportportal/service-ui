@@ -22,6 +22,7 @@ import { createClassnames } from 'common/utils';
 import { formatDuration } from 'common/utils/timeDateUtils';
 import {
   ReducedPipelineIterationDetail,
+  ReducedPipelineSection,
   ReducedPipelineStatus,
 } from 'controllers/aiFactory/pipelines';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
@@ -56,6 +57,37 @@ export interface ReducedIterationDetailsProps {
   breadcrumbDescriptors: BreadcrumbDescriptors;
   onRetry: () => void;
 }
+
+const renderReducedStageSection = (section: ReducedPipelineSection, scoreDetailsLabel: string) => (
+  <section key={section.key} className={cx('reduced-section')}>
+    <h3>{section.title}</h3>
+    <div className={cx('reduced-section__scroll')}>
+      <table>
+        <thead><tr>{section.columns.map((column) => (
+          <th key={column.key} scope="col">{column.label}</th>
+        ))}</tr></thead>
+        <tbody>{section.rows.map((row) => (
+          <tr key={row.key}>{section.columns.map((column) => (
+            <td key={column.key}>
+              {row.cells[column.key] ?? ''}
+              {column.key === section.columns[0]?.key && row.details.length > 0 && (
+                <details>
+                  <summary>{scoreDetailsLabel}</summary>
+                  {row.details.map((detail) => (
+                    <div key={detail.heading}>
+                      <strong>{detail.heading}</strong>
+                      <ul>{detail.items.map((item) => <li key={item}>{item}</li>)}</ul>
+                    </div>
+                  ))}
+                </details>
+              )}
+            </td>
+          ))}</tr>
+        ))}</tbody>
+      </table>
+    </div>
+  </section>
+);
 
 export const ReducedIterationDetails = ({
   iteration,
@@ -206,36 +238,9 @@ export const ReducedIterationDetails = ({
                         ))}
                       </div>
                     )}
-                    {stage.sections?.map((section) => (
-                      <section key={section.key} className={cx('reduced-section')}>
-                        <h3>{section.title}</h3>
-                        <div className={cx('reduced-section__scroll')}>
-                          <table>
-                            <thead><tr>{section.columns.map((column) => (
-                              <th key={column.key} scope="col">{column.label}</th>
-                            ))}</tr></thead>
-                            <tbody>{section.rows.map((row) => (
-                              <tr key={row.key}>{section.columns.map((column) => (
-                                <td key={column.key}>
-                                  {row.cells[column.key] ?? ''}
-                                  {column.key === section.columns[0]?.key && row.details.length > 0 && (
-                                    <details>
-                                      <summary>{formatMessage(messages.scoreDetails)}</summary>
-                                      {row.details.map((detail) => (
-                                        <div key={detail.heading}>
-                                          <strong>{detail.heading}</strong>
-                                          <ul>{detail.items.map((item) => <li key={item}>{item}</li>)}</ul>
-                                        </div>
-                                      ))}
-                                    </details>
-                                  )}
-                                </td>
-                              ))}</tr>
-                            ))}</tbody>
-                          </table>
-                        </div>
-                      </section>
-                    ))}
+                    {stage.sections?.map((section) =>
+                      renderReducedStageSection(section, formatMessage(messages.scoreDetails)),
+                    )}
                   </div>
                 ))}
           </div>

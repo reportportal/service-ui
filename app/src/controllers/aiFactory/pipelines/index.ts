@@ -75,6 +75,7 @@ export type {
   ReducedPipelineIterationDetail,
   ReducedPipelineDetailStage,
   ReducedPipelineStage,
+  ReducedPipelineSection,
   ReducedPipelineStatus,
 } from './liveAdapters';
 export {

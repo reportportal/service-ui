@@ -219,9 +219,9 @@ export const PipelinesPageContent = () => {
         />
         <div className={cx('page-content')}>
           {transport === 'postman-demo' && (
-            <p className={cx('demo-notice')} role="status">
+            <output className={cx('demo-notice')}>
               {formatMessage(messages.temporaryPostmanData)}
-            </p>
+            </output>
           )}
           <div className={cx('toolbar')} data-automation-id="pipelinesToolbar">
             <SearchField

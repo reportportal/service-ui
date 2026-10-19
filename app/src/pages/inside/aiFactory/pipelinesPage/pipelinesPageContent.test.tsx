@@ -203,7 +203,7 @@ describe('PipelinesPageContent polling', () => {
   test('labels a Postman fallback catalog as demo data', () => {
     const wrapper = renderPage({ transport: 'postman-demo' });
 
-    expect(wrapper.find('[role="status"]').text()).toContain('Demo data from the Postman collection');
+    expect(wrapper.find('output').text()).toContain('Demo data from the Postman collection');
     expect(usePolling).toHaveBeenLastCalledWith(expect.any(Function), 5000, false);
     wrapper.unmount();
   });

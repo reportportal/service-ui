@@ -240,6 +240,17 @@ const asPage = (value: unknown): LivePage | null => {
   return { number, size, totalElements, totalPages, ...(hasNext === undefined ? {} : { hasNext }) };
 };
 
+const isCompleteSinglePage = (page: LivePage | null, contentLength: number): boolean => {
+  if (!page) {
+    return false;
+  }
+  return page.number === 1 &&
+    contentLength <= page.size &&
+    page.totalPages <= 1 &&
+    page.hasNext !== true &&
+    page.totalElements === contentLength;
+};
+
 const asTrimmedString = (value: unknown, maxLength = MAX_TEXT_LENGTH): string | undefined => {
   if (typeof value !== 'string') {
     return undefined;
@@ -261,6 +272,45 @@ const asStatus = (value: unknown): ReducedPipelineStatus =>
     ? (value as ReducedPipelineStatus)
     : 'UNKNOWN';
 
+const adaptAttributeEntry = (entry: unknown): ReducedPipelineAttribute | null => {
+  const raw = asRecord(entry);
+  const key = raw && asTrimmedString(raw.key, MAX_KEY_LENGTH);
+  const attributeValue = raw && asTrimmedString(raw.value, MAX_TEXT_LENGTH);
+  if (!raw || !key || !attributeValue || UNSAFE_ATTRIBUTE_KEYS.has(key)) {
+    return null;
+  }
+  const type = asTrimmedString(raw.type, MAX_KEY_LENGTH);
+  const label = asTrimmedString(raw.label, MAX_NAME_LENGTH);
+  const description = asTrimmedString(raw.description);
+  const valueType = asTrimmedString(raw.valueType, MAX_KEY_LENGTH);
+  const url = asTrimmedString(raw.url);
+  const order = asNonNegativeInteger(raw.order);
+  const validType = ['META', 'TAG', 'NONE'].includes(type ?? '')
+    ? (type as ReducedPipelineAttribute['type'])
+    : undefined;
+  const optionalFields = [
+    [raw.type, validType],
+    [raw.label, label],
+    [raw.description, description],
+    [raw.valueType, valueType],
+    [raw.url, url],
+    [raw.order, order],
+  ];
+  if (optionalFields.some(([original, parsed]) => original !== undefined && parsed === undefined)) {
+    return null;
+  }
+  return {
+    key,
+    value: attributeValue,
+    ...(validType ? { type: validType } : {}),
+    ...(label ? { label } : {}),
+    ...(description ? { description } : {}),
+    ...(valueType ? { valueType } : {}),
+    ...(url ? { url } : {}),
+    ...(order !== undefined ? { order } : {}),
+  };
+};
+
 const adaptAttributes = (value: unknown): ReducedPipelineAttribute[] | null => {
   if (value === undefined) {
     return [];
@@ -269,44 +319,11 @@ const adaptAttributes = (value: unknown): ReducedPipelineAttribute[] | null => {
     if (value.length > MAX_ATTRIBUTES) {
       return null;
     }
-    const attributes = value.map((entry) => {
-      const raw = asRecord(entry);
-      const key = raw && asTrimmedString(raw.key, MAX_KEY_LENGTH);
-      const attributeValue = raw && asTrimmedString(raw.value, MAX_TEXT_LENGTH);
-      if (!key || !attributeValue || UNSAFE_ATTRIBUTE_KEYS.has(key)) {
-        return null;
-      }
-      const type = raw && asTrimmedString(raw.type, MAX_KEY_LENGTH);
-      const label = raw && asTrimmedString(raw.label, MAX_NAME_LENGTH);
-      const description = raw && asTrimmedString(raw.description);
-      const valueType = raw && asTrimmedString(raw.valueType, MAX_KEY_LENGTH);
-      const url = raw && asTrimmedString(raw.url);
-      const order = raw && asNonNegativeInteger(raw.order);
-      if (
-        (raw?.type !== undefined && !['META', 'TAG', 'NONE'].includes(type ?? '')) ||
-        (raw?.label !== undefined && !label) ||
-        (raw?.description !== undefined && !description) ||
-        (raw?.valueType !== undefined && !valueType) ||
-        (raw?.url !== undefined && !url) ||
-        (raw?.order !== undefined && order === undefined)
-      ) {
-        return null;
-      }
-      return {
-        key,
-        value: attributeValue,
-        ...(type ? { type: type as ReducedPipelineAttribute['type'] } : {}),
-        ...(label ? { label } : {}),
-        ...(description ? { description } : {}),
-        ...(valueType ? { valueType } : {}),
-        ...(url ? { url } : {}),
-        ...(order !== undefined ? { order } : {}),
-      };
-    });
+    const attributes = value.map(adaptAttributeEntry);
     if (attributes.some((attribute) => !attribute)) {
       return null;
     }
-    const normalized = attributes as ReducedPipelineAttribute[];
+    const normalized = attributes;
     if (new Set(normalized.map(({ key }) => key)).size !== normalized.length) {
       return null;
     }
@@ -346,6 +363,93 @@ const asCellText = (value: unknown): string | undefined => {
     : asTrimmedString(content);
 };
 
+const adaptSectionColumns = (value: unknown): ReducedPipelineSection['columns'] | null => {
+  if (!Array.isArray(value) || value.length > 30) {
+    return null;
+  }
+  const columns: ReducedPipelineSection['columns'] = [];
+  for (const entry of value) {
+    const column = asRecord(entry);
+    const key = column && asTrimmedString(column.key, MAX_KEY_LENGTH);
+    const label = column && asTrimmedString(column.label, MAX_NAME_LENGTH);
+    if (!key || !label || UNSAFE_ATTRIBUTE_KEYS.has(key)) {
+      return null;
+    }
+    columns.push({ key, label });
+  }
+  return new Set(columns.map(({ key }) => key)).size === columns.length ? columns : null;
+};
+
+const adaptSectionDetails = (
+  value: unknown,
+): ReducedPipelineSection['rows'][number]['details'] | null => {
+  const rawDetails = value === undefined ? [] : value;
+  if (!Array.isArray(rawDetails) || rawDetails.length > 30) {
+    return null;
+  }
+  const details: ReducedPipelineSection['rows'][number]['details'] = [];
+  for (const entry of rawDetails) {
+    const detail = asRecord(entry);
+    const heading = detail && asTrimmedString(detail.heading, MAX_NAME_LENGTH);
+    if (!heading || !Array.isArray(detail?.items) || detail.items.length > 30) {
+      return null;
+    }
+    const items = detail.items.map((entryText) => asTrimmedString(entryText));
+    if (items.some((entryText) => !entryText)) {
+      return null;
+    }
+    details.push({ heading, items });
+  }
+  return details;
+};
+
+const adaptSectionRow = (
+  value: unknown,
+  columns: ReducedPipelineSection['columns'],
+): ReducedPipelineSection['rows'][number] | null => {
+  const row = asRecord(value);
+  const key = row && asTrimmedString(row.key, MAX_KEY_LENGTH);
+  const cells = row && asRecord(row.cells);
+  if (!row || !key || !cells || Object.keys(cells).length > 30) {
+    return null;
+  }
+  const displayCells: Record<string, string> = {};
+  for (const column of columns) {
+    const cell = cells[column.key];
+    if (cell !== undefined) {
+      const displayValue = asCellText(cell);
+      if (displayValue === undefined) {
+        return null;
+      }
+      displayCells[column.key] = displayValue;
+    }
+  }
+  const details = adaptSectionDetails(row.details);
+  return details ? { key, cells: displayCells, details } : null;
+};
+
+const adaptSection = (value: unknown): ReducedPipelineSection | null => {
+  const section = asRecord(value);
+  const key = section && asTrimmedString(section.key, MAX_KEY_LENGTH);
+  const title = section && asTrimmedString(section.title, MAX_NAME_LENGTH);
+  const role = section?.role;
+  const columns = adaptSectionColumns(section?.columns);
+  const rawRows = section?.rows;
+  if (!key || !title || (role !== 'RESULT' && role !== 'DETAILS') ||
+    !columns || !Array.isArray(rawRows) || rawRows.length > 200) {
+    return null;
+  }
+  const rows = rawRows.map((row) => adaptSectionRow(row, columns));
+  if (rows.some((row) => !row)) {
+    return null;
+  }
+  const normalizedRows = rows;
+  if (new Set(normalizedRows.map(({ key: rowKey }) => rowKey)).size !== normalizedRows.length) {
+    return null;
+  }
+  return { key, title, role, columns, rows: normalizedRows };
+};
+
 const adaptSections = (value: unknown): ReducedPipelineSection[] | null => {
   if (value === undefined) {
     return [];
@@ -353,74 +457,12 @@ const adaptSections = (value: unknown): ReducedPipelineSection[] | null => {
   if (!Array.isArray(value) || value.length > 20) {
     return null;
   }
-  const sections: ReducedPipelineSection[] = [];
-  for (const item of value) {
-    const section = asRecord(item);
-    const key = section && asTrimmedString(section.key, MAX_KEY_LENGTH);
-    const title = section && asTrimmedString(section.title, MAX_NAME_LENGTH);
-    const role = section?.role;
-    if (!section || !key || !title || (role !== 'RESULT' && role !== 'DETAILS') ||
-      !Array.isArray(section.columns) || section.columns.length > 30 ||
-      !Array.isArray(section.rows) || section.rows.length > 200) {
-      return null;
-    }
-    const columns: ReducedPipelineSection['columns'] = [];
-    for (const entry of section.columns) {
-      const column = asRecord(entry);
-      const columnKey = column && asTrimmedString(column.key, MAX_KEY_LENGTH);
-      const label = column && asTrimmedString(column.label, MAX_NAME_LENGTH);
-      if (!columnKey || !label || UNSAFE_ATTRIBUTE_KEYS.has(columnKey)) {
-        return null;
-      }
-      columns.push({ key: columnKey, label });
-    }
-    if (new Set(columns.map(({ key: columnKey }) => columnKey)).size !== columns.length) {
-      return null;
-    }
-    const rows: ReducedPipelineSection['rows'] = [];
-    for (const entry of section.rows) {
-      const row = asRecord(entry);
-      const rowKey = row && asTrimmedString(row.key, MAX_KEY_LENGTH);
-      const cells = row && asRecord(row.cells);
-      if (!rowKey || !cells || Object.keys(cells).length > 30) {
-        return null;
-      }
-      const displayCells: Record<string, string> = {};
-      for (const column of columns) {
-        const cell = cells[column.key];
-        if (cell !== undefined) {
-          const displayValue = asCellText(cell);
-          if (displayValue === undefined) {
-            return null;
-          }
-          displayCells[column.key] = displayValue;
-        }
-      }
-      const rawDetails = row.details === undefined ? [] : row.details;
-      if (!Array.isArray(rawDetails) || rawDetails.length > 30) {
-        return null;
-      }
-      const details: ReducedPipelineSection['rows'][number]['details'] = [];
-      for (const entryDetail of rawDetails) {
-        const detail = asRecord(entryDetail);
-        const heading = detail && asTrimmedString(detail.heading, MAX_NAME_LENGTH);
-        if (!heading || !Array.isArray(detail?.items) || detail.items.length > 30) {
-          return null;
-        }
-        const items = detail.items.map((entryText) => asTrimmedString(entryText));
-        if (items.some((entryText) => !entryText)) {
-          return null;
-        }
-        details.push({ heading, items });
-      }
-      rows.push({ key: rowKey, cells: displayCells, details });
-    }
-    if (new Set(rows.map(({ key: rowKey }) => rowKey)).size !== rows.length) {
-      return null;
-    }
-    sections.push({ key, title, role, columns, rows });
+  const sections = value.map(adaptSection);
+  if (sections.some((section) => !section)) {
+    return null;
   }
-  return new Set(sections.map(({ key }) => key)).size === sections.length ? sections : null;
+  const normalized = sections;
+  return new Set(normalized.map(({ key }) => key)).size === normalized.length ? normalized : null;
 };
 
 const adaptLinks = (value: unknown): ReducedPipelineStage['links'] | null => {
@@ -658,13 +700,7 @@ export const adaptLivePipelines = (value: unknown): ReducedPipeline[] => {
   if (
     !Array.isArray(content) ||
     content.length > MAX_PIPELINES ||
-    (response &&
-      (!page ||
-        page.number !== 1 ||
-        content.length > page.size ||
-        page.totalPages > 1 ||
-        page.hasNext === true ||
-        page.totalElements !== content.length))
+    (response && !isCompleteSinglePage(page, content.length))
   ) {
     throw new Error('Invalid pipeline catalog response');
   }
@@ -689,13 +725,7 @@ export const adaptLivePipelineIterations = (
   if (
     !Array.isArray(content) ||
     content.length > MAX_ITERATIONS ||
-    (response &&
-      (!page ||
-        page.number !== 1 ||
-        content.length > page.size ||
-        page.totalPages > 1 ||
-        page.hasNext === true ||
-        page.totalElements !== content.length))
+    (response && !isCompleteSinglePage(page, content.length))
   ) {
     throw new Error('Invalid pipeline iteration list response');
   }
