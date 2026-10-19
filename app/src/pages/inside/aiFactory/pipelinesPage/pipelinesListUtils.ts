@@ -14,36 +14,5 @@
  * limitations under the License.
  */
 
-import { isReducedPipelineIteration, PipelineIterationItem } from 'controllers/aiFactory/pipelines';
-
-/**
- * Matches a search term against a requirement/pipeline name/iteration number, the same fields
- * P2's `search` param matches server-side (01-knowledge-base.md §4.10). Done client-side here:
- * the mock dataset (and the real one, for a while) is small enough that fetching every iteration
- * once and filtering in memory reproduces the same result without a request per keystroke.
- */
-export const matchesSearch = (
-  iteration: PipelineIterationItem,
-  pipelineName: string,
-  search: string,
-): boolean => {
-  if (!search.trim()) {
-    return true;
-  }
-  const term = search.trim().toLowerCase();
-  const reducedFields = isReducedPipelineIteration(iteration)
-    ? [
-        iteration.trigger,
-        ...iteration.attributes
-          .filter(({ key }) => key === 'requirement')
-          .map(({ value }) => value),
-        ...iteration.stages.map((stage) => stage.label),
-      ]
-    : [iteration.requirement?.specId, iteration.requirement?.title, iteration.requirement?.jiraKey];
-  const haystack = [pipelineName, `#${iteration.number}`, ...reducedFields]
-    .filter(Boolean)
-    .join(' ')
-    .toLowerCase();
-
-  return haystack.includes(term);
-};
+export const matchesPipelineName = (pipelineName: string, search: string): boolean =>
+  pipelineName.toLowerCase().includes(search.trim().toLowerCase());

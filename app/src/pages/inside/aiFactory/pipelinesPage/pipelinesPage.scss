@@ -51,6 +51,15 @@
   font-family: var(--rp-ui-base-font-family);
 }
 
+.catalog-error {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 24px 0;
+  color: var(--rp-ui-base-error);
+  font-family: var(--rp-ui-base-font-family);
+}
+
 @media (max-width: 768px) {
   .toolbar {
     align-items: stretch;

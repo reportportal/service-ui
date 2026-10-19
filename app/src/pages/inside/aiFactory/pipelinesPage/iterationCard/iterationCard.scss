@@ -47,10 +47,15 @@
 
   &__title {
     min-width: 0;
-    font-weight: var(--rp-ui-base-fw-bold);
-    font-size: 14px;
+    font-weight: var(--rp-ui-base-fw-medium);
+    font-size: 18px;
     color: var(--rp-ui-base-almost-black);
     overflow-wrap: anywhere;
+  }
+
+  &__title-iteration {
+    color: var(--rp-ui-base-e-400);
+    font-weight: var(--rp-ui-base-fw-regular);
   }
 
   &__plain-title {

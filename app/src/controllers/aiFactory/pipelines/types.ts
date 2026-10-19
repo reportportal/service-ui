@@ -25,6 +25,7 @@ import {
   GET_PIPELINES,
 } from './constants';
 import type {
+  LivePage,
   ReducedPipeline,
   ReducedPipelineIteration,
   ReducedPipelineIterationDetail,
@@ -37,15 +38,29 @@ export type IterationsByPipelineId = Record<number, PipelineIterationItem[]>;
 export type IterationsLoadingByPipelineId = Record<number, boolean>;
 export type IterationsErrorByPipelineId = Record<number, boolean>;
 
+export interface PipelinePageRequest {
+  offset?: number;
+  limit?: number;
+  search?: string;
+}
+
+export interface PipelinePageState extends LivePage {
+  offset: number;
+}
+
 export interface PipelinesState {
   data: PipelineCatalogItem[] | null;
   isLoading?: boolean;
+  catalogError?: boolean;
   transport: PipelineCatalogTransport;
   transportFallback?: boolean;
   catalogVersion: number;
   catalogRequestId: number | null;
   catalogProjectKey: string | null;
+  catalogPage?: PipelinePageState | null;
+  catalogSearch?: string;
   iterationsByPipeline: IterationsByPipelineId | null;
+  iterationPagesByPipeline?: Record<number, PipelinePageState>;
   iterationsLoadingByPipeline: IterationsLoadingByPipelineId;
   iterationsErrorByPipeline: IterationsErrorByPipelineId;
   iterationRequestIdByPipeline: Record<number, number>;
@@ -70,10 +85,12 @@ export interface PipelinesSelectorsRootState {
   aiFactoryPipelines?: PipelinesState;
 }
 
-export type GetPipelinesAction = Action<typeof GET_PIPELINES>;
+export interface GetPipelinesAction extends Action<typeof GET_PIPELINES> {
+  payload?: PipelinePageRequest;
+}
 
 export interface GetPipelineIterationsAction extends Action<typeof GET_PIPELINE_ITERATIONS> {
-  payload: { pipelineIds: number[] };
+  payload: { pipelineIds: number[] } & PipelinePageRequest;
 }
 
 export interface GetPipelineIterationDetailsAction extends Action<

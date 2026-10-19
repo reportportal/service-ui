@@ -192,18 +192,24 @@ const LIVE_STATUSES = new Set<string>([
 const UNSAFE_ATTRIBUTE_KEYS = new Set(['__proto__', 'constructor', 'prototype']);
 const MAX_PIPELINES = 100;
 const MAX_ITERATIONS = 1000;
+const MAX_PAGE_SIZE = 200;
 const MAX_STAGES = 100;
 const MAX_ATTRIBUTES = 100;
 const MAX_NAME_LENGTH = 255;
 const MAX_KEY_LENGTH = 128;
 const MAX_TEXT_LENGTH = 2000;
 
-interface LivePage {
+export interface LivePage {
   number: number;
   size: number;
   totalElements: number;
   totalPages: number;
   hasNext?: boolean;
+}
+
+export interface LivePipelinePage<T> {
+  content: T[];
+  page: LivePage;
 }
 
 const asRecord = (value: unknown): Record<string, unknown> | null =>
@@ -249,6 +255,24 @@ const isCompleteSinglePage = (page: LivePage | null, contentLength: number): boo
     page.totalPages <= 1 &&
     page.hasNext !== true &&
     page.totalElements === contentLength;
+};
+
+const asPageEnvelope = (value: unknown, maxItems: number): LivePipelinePage<unknown> | null => {
+  const response = asRecord(value);
+  const page = response ? asPage(response.page) : null;
+  const content = response?.content;
+  if (!page || !Array.isArray(content) || page.size > maxItems || content.length > maxItems ||
+    content.length > page.size || page.totalElements < content.length ||
+    page.totalPages !== Math.ceil(page.totalElements / page.size) ||
+    (page.hasNext !== undefined && page.hasNext !== (page.number < page.totalPages)) ||
+    (page.totalPages === 0 && page.number !== 1) ||
+    (page.totalPages > 0 && page.number > page.totalPages) ||
+    (page.number < page.totalPages && content.length !== page.size) ||
+    (page.number === page.totalPages &&
+      (page.number - 1) * page.size + content.length !== page.totalElements)) {
+    return null;
+  }
+  return { content, page };
 };
 
 const asTrimmedString = (value: unknown, maxLength = MAX_TEXT_LENGTH): string | undefined => {
@@ -715,6 +739,21 @@ export const adaptLivePipelines = (value: unknown): ReducedPipeline[] => {
   return normalized;
 };
 
+export const adaptLivePipelinesPage = (value: unknown): LivePipelinePage<ReducedPipeline> => {
+  const envelope = asPageEnvelope(value, MAX_PAGE_SIZE);
+  if (!envelope) {
+    throw new Error('Invalid pipeline catalog response');
+  }
+  const content = envelope.content.map(adaptPipeline);
+  if (content.some((pipeline) => !pipeline)) {
+    throw new Error('Invalid pipeline catalog entity');
+  }
+  if (new Set(content.map(({ id }) => id)).size !== content.length) {
+    throw new Error('Duplicate pipeline id');
+  }
+  return { content, page: envelope.page };
+};
+
 export const adaptLivePipelineIterations = (
   value: unknown,
   pipelineId: number,
@@ -738,6 +777,24 @@ export const adaptLivePipelineIterations = (
     throw new Error('Duplicate pipeline iteration id');
   }
   return normalized;
+};
+
+export const adaptLivePipelineIterationsPage = (
+  value: unknown,
+  pipelineId: number,
+): LivePipelinePage<ReducedPipelineIteration> => {
+  const envelope = asPageEnvelope(value, MAX_PAGE_SIZE);
+  if (!envelope) {
+    throw new Error('Invalid pipeline iteration list response');
+  }
+  const content = envelope.content.map((iteration) => adaptIteration(iteration, pipelineId));
+  if (content.some((iteration) => !iteration)) {
+    throw new Error('Invalid pipeline iteration entity');
+  }
+  if (new Set(content.map(({ id }) => id)).size !== content.length) {
+    throw new Error('Duplicate pipeline iteration id');
+  }
+  return { content, page: envelope.page };
 };
 
 export const adaptLivePipelineIterationDetail = (

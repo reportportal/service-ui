@@ -27,17 +27,20 @@ import {
   GetPipelineIterationDetailsAction,
   GetPipelineIterationsAction,
   GetPipelinesAction,
+  PipelinePageRequest,
 } from './types';
 
-export const getPipelinesAction = (): GetPipelinesAction => ({
+export const getPipelinesAction = (page?: PipelinePageRequest): GetPipelinesAction => ({
   type: GET_PIPELINES,
+  ...(page ? { payload: page } : {}),
 });
 
 export const getPipelineIterationsAction = (
   pipelineIds: number[],
+  page: PipelinePageRequest = {},
 ): GetPipelineIterationsAction => ({
   type: GET_PIPELINE_ITERATIONS,
-  payload: { pipelineIds },
+  payload: { pipelineIds, ...page },
 });
 
 export const getPipelineIterationDetailsAction = (

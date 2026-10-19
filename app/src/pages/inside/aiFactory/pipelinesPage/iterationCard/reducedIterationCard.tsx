@@ -47,9 +47,10 @@ const STATUS_MESSAGE_KEYS: Record<ReducedPipelineStatus, keyof typeof messages> 
 
 export interface ReducedIterationCardProps {
   iteration: ReducedPipelineIteration;
+  pipelineName: string;
 }
 
-export const ReducedIterationCard = ({ iteration }: ReducedIterationCardProps) => {
+export const ReducedIterationCard = ({ iteration, pipelineName }: ReducedIterationCardProps) => {
   const { formatMessage } = useIntl();
   const { organizationSlug, projectSlug } = useSelector(
     urlOrganizationAndProjectSelector,
@@ -67,21 +68,34 @@ export const ReducedIterationCard = ({ iteration }: ReducedIterationCardProps) =
     { label: formatMessage(messages.metaCostLabel), value: attributeValue('cost') },
     {
       label: formatMessage(messages.metaStartedLabel),
-      value: iteration.startedAt !== undefined ? new Date(iteration.startedAt).toLocaleString() : undefined,
+      value:
+        iteration.startedAt !== undefined
+          ? new Date(iteration.startedAt).toLocaleString()
+          : undefined,
     },
-    { value: iteration.durationMs !== undefined ? formatDuration(iteration.durationMs) : undefined },
+    {
+      value: iteration.durationMs !== undefined ? formatDuration(iteration.durationMs) : undefined,
+    },
   ].filter((field) => field.value);
-  const currentStage = [...iteration.stages].reverse().find((stage) =>
-    stage.attributes?.some((attribute) => attribute.key === 'ready') &&
-    stage.attributes?.some((attribute) => attribute.key === 'total'));
+  const currentStage = [...iteration.stages]
+    .reverse()
+    .find(
+      (stage) =>
+        stage.attributes?.some((attribute) => attribute.key === 'ready') &&
+        stage.attributes?.some((attribute) => attribute.key === 'total'),
+    );
   const ready = currentStage?.attributes?.find((attribute) => attribute.key === 'ready')?.value;
   const total = currentStage?.attributes?.find((attribute) => attribute.key === 'total')?.value;
-  const outcome = ready !== undefined && total !== undefined
-    ? formatMessage(messages.outcomeReady, { ready, total })
-    : undefined;
+  const outcome =
+    ready !== undefined && total !== undefined
+      ? formatMessage(messages.outcomeReady, { ready, total })
+      : undefined;
   const tags = iteration.attributes.filter((attribute) => attribute.type === 'TAG');
 
-  const iterationTitle = formatMessage(messages.iterationTitle, { number: iteration.number });
+  const iterationTitle = formatMessage(messages.pipelineIterationTitle, {
+    pipelineName,
+    number: iteration.number,
+  });
 
   return (
     <Link
@@ -107,7 +121,12 @@ export const ReducedIterationCard = ({ iteration }: ReducedIterationCardProps) =
         >
           {iteration.statusText ?? statusLabel(iteration.status)}
         </span>
-        <span className={cx('card__title')}>{iterationTitle}</span>
+        <span className={cx('card__title')}>
+          {pipelineName} ·{' '}
+          <span className={cx('card__title-iteration')}>
+            {formatMessage(messages.iterationTitle, { number: iteration.number })}
+          </span>
+        </span>
         {outcome && <span className={cx('card__outcome')}>{outcome}</span>}
       </div>
       {metaFields.length > 0 && (
