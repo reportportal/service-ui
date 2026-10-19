@@ -47,6 +47,16 @@ export class IntegrationInfoContainer extends Component {
     removePluginSuccessCallback: PropTypes.func,
     isGlobal: PropTypes.bool,
     events: PropTypes.object,
+    /** Rendered between the plugin header and its integrations — see the plugins page. */
+    afterInfoSection: PropTypes.node,
+    /** An action in the header itself, beside the on/off switch. */
+    headerAction: PropTypes.node,
+    /** A mark beside the plugin's name in the header. */
+    afterTitle: PropTypes.node,
+    /** Closing sentence of the uninstall dialog — see the plugins page. */
+    uninstallNote: PropTypes.string,
+    /** Overrides the heading, for a caller that knows a better name than the local one. */
+    title: PropTypes.string,
   };
 
   static defaultProps = {
@@ -54,6 +64,8 @@ export class IntegrationInfoContainer extends Component {
     removePluginSuccessCallback: () => {},
     isGlobal: false,
     events: {},
+    afterInfoSection: null,
+    title: null,
   };
 
   render() {
@@ -68,8 +80,10 @@ export class IntegrationInfoContainer extends Component {
       isGlobal,
       showToggleConfirmationModal,
       events,
+      afterInfoSection,
+      title,
     } = this.props;
-    const pluginTitle = details.name || name;
+    const pluginTitle = title || details.name || name;
 
     return (
       <Fragment>
@@ -83,7 +97,10 @@ export class IntegrationInfoContainer extends Component {
           showToggleConfirmationModal={showToggleConfirmationModal}
           isGlobal={isGlobal}
           pluginDetails={details}
+          headerAction={this.props.headerAction}
+          afterTitle={this.props.afterTitle}
         />
+        {afterInfoSection}
         <InstancesSection
           pluginDetails={details}
           globalIntegrations={globalIntegrations}
@@ -96,6 +113,7 @@ export class IntegrationInfoContainer extends Component {
           isGlobal={isGlobal}
           title={pluginTitle}
           events={events}
+          uninstallNote={this.props.uninstallNote}
         />
       </Fragment>
     );

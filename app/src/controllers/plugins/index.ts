@@ -15,8 +15,12 @@
  */
 
 export { pluginsReducer } from './reducer';
-export { SECRET_FIELDS_KEY, ORGANIZATION_DASHBOARDS_PAGE_SLUG } from './constants';
-
+export {
+  SECRET_FIELDS_KEY,
+  MARKETPLACE_CATALOGUE_STATE,
+  REGISTRY_STATUS,
+  ORGANIZATION_DASHBOARDS_PAGE_SLUG,
+} from './constants';
 export {
   fetchPluginsAction,
   fetchPublicPluginsAction,
@@ -31,6 +35,13 @@ export {
   updateIntegrationAction,
   setProjectIntegrationsAction,
   setOrganizationIntegrationsAction,
+  fetchMarketplaceCatalogueAction,
+  installMarketplacePluginAction,
+  clearJustInstalledMarketplacePluginAction,
+  fetchMarketplacePluginDetailAction,
+  fetchMarketplaceLicenceAction,
+  setMarketplaceLicenceAction,
+  deleteMarketplaceLicenceAction,
 } from './actionCreators';
 export {
   filterAvailablePlugins,
@@ -62,6 +73,33 @@ export {
   globalIntegrationsSelector,
   pluginsLoadingSelector,
   organizationPluginSelector,
+  marketplaceCatalogueStateSelector,
+  marketplaceInstalledPluginsSelector,
+  marketplaceAvailablePluginsSelector,
+  marketplaceRegistrySelector,
+  marketplaceRegistryHostSelector,
+  marketplaceCatalogueLoadingSelector,
+  isMarketplaceRegistryOfflineSelector,
+  hasMarketplaceCatalogueFailedSelector,
+  marketplaceCatalogueErrorSelector,
+  marketplacePluginUpdateVersionSelector,
+  hasMarketplacePluginUpdateSelector,
+  marketplaceInstallingPluginsSelector,
+  marketplaceInstallErrorSelector,
+  marketplaceCatalogueQuerySelector,
+  justInstalledMarketplacePluginSelector,
+  isPluginUploadAllowedSelector,
+  marketplaceProductVersionSelector,
+  marketplacePluginDetailStateSelector,
+  marketplacePluginDetailLoadingSelector,
+  isMarketplacePluginDetailOfflineSelector,
+  hasMarketplacePluginDetailFailedSelector,
+  marketplacePluginDetailRegistryHostSelector,
+  marketplacePluginDetailDataSelector,
+  isMarketplaceLicenceConfiguredSelector,
+  marketplaceLicenceCustomerIdSelector,
+  marketplaceLicenceLoadingSelector,
+  marketplaceLicenceErrorSelector,
 } from './selectors';
 export { pluginSagas } from './sagas';
 export {

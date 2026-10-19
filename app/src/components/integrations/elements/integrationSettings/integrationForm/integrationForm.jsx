@@ -22,7 +22,6 @@ import track from 'react-tracking';
 import classNames from 'classnames/bind';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { Button } from '@reportportal/ui-kit';
-import { isIntegrationSupportsMultipleInstances } from 'components/integrations/utils';
 import { PLUGINS_PAGE_EVENTS } from 'components/main/analytics/events';
 import { IntegrationAnalyticsContext } from 'components/integrations/integrationAnalyticsContext';
 import { removeNoneValues } from 'components/fields/dynamicFieldsSection/utils';
@@ -82,6 +81,25 @@ export class IntegrationForm extends Component {
     metaData: {},
   };
 
+  /**
+   * Plugin Detail. Integration. Connection Error (27468:15575): the configuration block is open in
+   * edit mode there, where Integration. Detail shows it read-only behind an Edit button. It is a
+   * third state of the block rather than an inconsistency — an admin who arrived at a broken
+   * integration came to change something, and making them press Edit first is a step that exists
+   * only because the form defaults to read.
+   *
+   * <p>It has to happen here rather than in the initial state: the connection is tested after
+   * mount, so `connected` is still true when this component is first constructed.
+   *
+   * <p>Only on the transition, and only into edit. A connection that recovers does not close a form
+   * the admin may have started typing into.
+   */
+  componentDidUpdate(prevProps) {
+    if (prevProps.connected && !this.props.connected && this.state.disabled) {
+      this.setState({ disabled: false });
+    }
+  }
+
   toggleDisabled = () => {
     if (this.props.dirty && !this.state.disabled) {
       this.props.reset();
@@ -134,11 +152,8 @@ export class IntegrationForm extends Component {
       pluginName,
       isEditable,
     } = this.props;
-    const isSupportsMultipleInstances = isIntegrationSupportsMultipleInstances(pluginName);
-
     const { disabled } = this.state;
     const isConfigurationNotSpecified = (blocked || !isEditable) && isEmptyConfiguration;
-    const shouldFieldsBeHidden = !connected && isSupportsMultipleInstances;
 
     return (
       <form
@@ -147,71 +162,59 @@ export class IntegrationForm extends Component {
         })}
         data-automation-id="fieldsConfigurationForm"
       >
-        {!shouldFieldsBeHidden && (
+        {isConfigurationNotSpecified ? (
+          <p className={cx('configuration-not-specified-info')}>
+            {formatMessage(messages.configurationNotSpecifiedInfo)}
+          </p>
+        ) : (
           <>
-            {isConfigurationNotSpecified ? (
-              <p className={cx('configuration-not-specified-info')}>
-                {formatMessage(messages.configurationNotSpecifiedInfo)}
-              </p>
+            <h3 className={cx('block-header')}>{formatMessage(messages.configurationTitle)}</h3>
+            <div className={cx('integration-form-fields')}>
+              <FieldsComponent
+                initialize={initialize}
+                change={change}
+                integrationId={id}
+                initialData={integrationParameters}
+                pluginDetails={integrationType.details}
+                disabled={disabled}
+                updateMetaData={this.updateMetaData}
+                isGlobal={isGlobal}
+                pluginName={pluginName}
+              />
+            </div>
+          </>
+        )}
+        {!blocked && isEditable && (
+          <div className={cx('controls-block')}>
+            {disabled ? (
+              <Button onClick={this.toggleDisabled} data-automation-id="editConfigurationButton">
+                {formatMessage(COMMON_LOCALE_KEYS.EDIT)}
+              </Button>
             ) : (
-              <>
-                <h3 className={cx('block-header')}>{formatMessage(messages.configurationTitle)}</h3>
-                <div className={cx('integration-form-fields')}>
-                  {!shouldFieldsBeHidden && (
-                    <FieldsComponent
-                      initialize={initialize}
-                      change={change}
-                      integrationId={id}
-                      initialData={integrationParameters}
-                      pluginDetails={integrationType.details}
-                      disabled={disabled}
-                      updateMetaData={this.updateMetaData}
-                      isGlobal={isGlobal}
-                      pluginName={pluginName}
-                    />
-                  )}
-                </div>
-              </>
-            )}
-            {!blocked && isEditable && (
-              <div className={cx('controls-block')}>
-                {disabled ? (
+              <div className={cx('control-buttons-block')}>
+                <div className={cx('button-container')}>
                   <Button
-                    onClick={this.toggleDisabled}
-                    disabled={shouldFieldsBeHidden}
-                    data-automation-id="editConfigurationButton"
+                    onClick={handleSubmit(this.submitIntegration)}
+                    data-automation-id="submitConfigurationButton"
                   >
-                    {formatMessage(COMMON_LOCALE_KEYS.EDIT)}
+                    {formatMessage(COMMON_LOCALE_KEYS.SUBMIT)}
                   </Button>
-                ) : (
-                  <div className={cx('control-buttons-block')}>
-                    <div className={cx('button-container')}>
-                      <Button
-                        onClick={handleSubmit(this.submitIntegration)}
-                        disabled={shouldFieldsBeHidden}
-                        data-automation-id="submitConfigurationButton"
-                      >
-                        {formatMessage(COMMON_LOCALE_KEYS.SUBMIT)}
-                      </Button>
-                    </div>
+                </div>
 
-                    {!isEmptyConfiguration && (
-                      <div className={cx('button-container')}>
-                        <Button
-                          variant="ghost"
-                          onClick={this.toggleDisabled}
-                          disabled={shouldFieldsBeHidden}
-                          data-automation-id="cancelConfigurationButton"
-                        >
-                          {formatMessage(COMMON_LOCALE_KEYS.CANCEL)}
-                        </Button>
-                      </div>
-                    )}
+                {!isEmptyConfiguration && (
+                  <div className={cx('button-container')}>
+                    <Button
+                      variant="ghost"
+                      onClick={this.toggleDisabled}
+                      data-automation-id="cancelConfigurationButton"
+                    >
+                      {formatMessage(COMMON_LOCALE_KEYS.CANCEL)}
+                    </Button>
                   </div>
                 )}
               </div>
             )}
-          </>
+          </div>
         )}
       </form>
     );

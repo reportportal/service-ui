@@ -78,7 +78,7 @@ export const DropdownOption = ({
         hidden,
         'sub-option': subOption,
       })}
-      title={disabled && title}
+      title={disabled ? title : undefined}
     >
       {renderOptionComponent()}
     </div>

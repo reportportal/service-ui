@@ -1,0 +1,41 @@
+/*!
+ * Copyright 2026 EPAM Systems
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+.plugin-trust-mark {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  align-self: center;
+  flex: none;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  color: $COLOR--white-two;
+  font-size: 10px;
+  line-height: 1;
+  font-family: $FONT-SEMIBOLD;
+  cursor: default;
+}
+
+.official {
+  background-color: $COLOR--topaz;
+}
+
+// Grey, not a second brand colour: a reviewed third party is neither a warning nor an
+// endorsement, and the design gives it the quieter of the two marks.
+.partner {
+  background-color: $COLOR--gray-60;
+}

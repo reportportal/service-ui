@@ -18,6 +18,7 @@ import { useEffect, useState, useMemo, useCallback } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
+import { defineMessages, useIntl } from 'react-intl';
 import { BubblesLoader } from '@reportportal/ui-kit';
 import { LDAP } from 'common/constants/pluginNames';
 import { omit } from 'common/utils/omit';
@@ -44,6 +45,19 @@ import { useUserPermissions } from 'hooks/useUserPermissions';
 
 const cx = classNames.bind(styles);
 
+const messages = defineMessages({
+  configurationTitle: {
+    id: 'IntegrationForm.configurationTitle',
+    defaultMessage: 'Configuration',
+  },
+  // Not an empty state and not a call to action: there is no form behind either. The sentence
+  // exists so the heading has something under it, because a heading alone reads as a fault too.
+  nothingToConfigure: {
+    id: 'IntegrationSettings.nothingToConfigure',
+    defaultMessage: 'This plugin has no settings to configure.',
+  },
+});
+
 export const IntegrationSettings = (props) => {
   const {
     data,
@@ -59,9 +73,17 @@ export const IntegrationSettings = (props) => {
     hideInlineForm = false,
   } = props;
   const pluginName = data.integrationType?.name;
+  const { formatMessage } = useIntl();
+
+  // Plugin Detail. Installed. Disabled (27360:14619): "No connection status is shown while the
+  // plugin is off. Connected asserts a live check that is not happening, so the badge is hidden
+  // rather than shown stale." A switched-off plugin is not running, so there is nothing to reach
+  // the external system with — testing would be answering a question nobody asked, and printing
+  // last time's answer is worse than printing none.
+  const pluginOff = data.integrationType?.enabled === false;
 
   const [connected, setConnected] = useState(true);
-  const [loading, setLoading] = useState(!data.isNew && !preventTestConnection);
+  const [loading, setLoading] = useState(!data.isNew && !preventTestConnection && !pluginOff);
   const globalIntegrations = useSelector(namedGlobalIntegrationsSelector);
   const projectIntegrations = useSelector(namedProjectIntegrationsSelector);
   const { organizationSlug, projectSlug } = useSelector(urlOrganizationAndProjectSelector);
@@ -91,7 +113,7 @@ export const IntegrationSettings = (props) => {
   );
 
   const testIntegrationConnection = useCallback(() => {
-    if ('id' in data && !preventTestConnection && pluginName) {
+    if ('id' in data && !preventTestConnection && pluginName && !pluginOff) {
       setLoading(true);
 
       const fetchConnection = getTestIntegrationConnection({
@@ -114,6 +136,7 @@ export const IntegrationSettings = (props) => {
   }, [
     data,
     preventTestConnection,
+    pluginOff,
     isGlobal,
     isOrganizational,
     pluginName,
@@ -151,6 +174,7 @@ export const IntegrationSettings = (props) => {
           <ConnectionSection
             blocked={data.blocked}
             connected={connected}
+            statusUnknown={pluginOff}
             testConnection={testIntegrationConnection}
             onRemoveIntegration={removeIntegration}
             editAuthConfig={editAuthConfig}
@@ -171,6 +195,21 @@ export const IntegrationSettings = (props) => {
               isEmptyConfiguration={isEmptyConfiguration}
               isEditable={canUpdateSettings}
             />
+          )}
+          {/* The third configuration model: a plugin that exposes no settings at all — Telegram
+              posts launch results to a chat and holds nothing instance-level. The heading stays and
+              says so, because a block that is simply absent reads as one that failed to load.
+              `hideInlineForm` is the other reason there is no form here and is not this case: there
+              the configuration lives somewhere else, so claiming there is none would be wrong. */}
+          {!shouldHideInlineForm && !formFieldsComponent && (
+            <div className={cx('no-configuration')} data-automation-id="noConfigurationBlock">
+              <h3 className={cx('no-configuration-header')}>
+                {formatMessage(messages.configurationTitle)}
+              </h3>
+              <p className={cx('no-configuration-info')}>
+                {formatMessage(messages.nothingToConfigure)}
+              </p>
+            </div>
           )}
         </>
       )}

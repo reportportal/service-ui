@@ -28,3 +28,20 @@
 .center {
   margin: 0 auto;
 }
+
+/* Matches the Configuration heading the inline form draws, so a plugin with settings and one
+   without put the same heading in the same place. */
+.no-configuration-header {
+  margin: 0 0 16px;
+  color: $COLOR--almost-black;
+  font-size: 15px;
+  line-height: 24px;
+  font-family: $FONT-ROBOTO-MEDIUM;
+}
+
+.no-configuration-info {
+  margin: 0;
+  color: $COLOR--charcoal-grey;
+  font-size: 13px;
+  line-height: 20px;
+}
