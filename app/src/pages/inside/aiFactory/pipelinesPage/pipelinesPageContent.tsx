@@ -35,7 +35,11 @@ import {
   getPipelinesAction,
   isReducedPipeline,
   isReducedPipelineIteration,
+  pipelineCatalogErrorSelector,
+  pipelineCatalogPageSelector,
+  pipelineCatalogSearchSelector,
   pipelineCatalogTransportSelector,
+  pipelineIterationPagesSelector,
   pipelineIterationsByPipelineSelector,
   pipelineIterationsErrorByPipelineSelector,
   pipelineIterationsLoadingByPipelineSelector,
@@ -52,12 +56,15 @@ import { IterationStatus, PipelineType } from 'types/aiFactory';
 
 import { PageHeaderWithBreadcrumbsAndActions } from '../../common/pageHeaderWithBreadcrumbsAndActions';
 import { PipelineGroup } from './pipelineGroup';
-import { matchesSearch } from './pipelinesListUtils';
+import { PageControls } from './pageControls/pageControls';
+import { matchesPipelineName } from './pipelinesListUtils';
 import { messages } from './messages';
 import styles from './pipelinesPage.scss';
 
 const cx = createClassnames(styles);
 const ITERATIONS_POLL_INTERVAL_MS = 5000;
+const LIVE_PAGE_SIZE = 100;
+const SEARCH_DELAY_MS = 300;
 
 export const PipelinesPageContent = () => {
   const { formatMessage } = useIntl();
@@ -73,8 +80,13 @@ export const PipelinesPageContent = () => {
     useSelector(pipelineIterationsLoadingByPipelineSelector) ?? {};
   const iterationsErrorByPipeline = useSelector(pipelineIterationsErrorByPipelineSelector) ?? {};
   const catalogTransport = useSelector(pipelineCatalogTransportSelector);
+  const catalogError = useSelector(pipelineCatalogErrorSelector);
+  const catalogPage = useSelector(pipelineCatalogPageSelector);
+  const catalogSearch = useSelector(pipelineCatalogSearchSelector);
+  const iterationPages = useSelector(pipelineIterationPagesSelector);
   const transport = catalogTransport ?? 'mock';
   const [search, setSearch] = useState('');
+  const [serverSearch, setServerSearch] = useState('');
   const transportRef = useRef(catalogTransport);
   transportRef.current = catalogTransport;
   const isDemoResetAvailable = isAiFactoryDemoResetAvailable(catalogTransport);
@@ -92,11 +104,34 @@ export const PipelinesPageContent = () => {
   );
 
   useEffect(() => {
-    if (pipelines && pipelines.length > 0) {
-      dispatch(getPipelineIterationsAction(pipelines.map((pipeline) => pipeline.id)));
+    const timeout = window.setTimeout(() => setServerSearch(search.trim()), SEARCH_DELAY_MS);
+    return () => window.clearTimeout(timeout);
+  }, [search]);
+
+  useEffect(() => {
+    if (transport === 'live' && serverSearch !== catalogSearch) {
+      dispatch(getPipelinesAction({ search: serverSearch, offset: 0, limit: LIVE_PAGE_SIZE }));
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [pipelines]);
+  }, [catalogSearch, dispatch, serverSearch, transport]);
+
+  useEffect(() => {
+    if (pipelines && pipelines.length > 0) {
+      const ids = pipelines
+        .filter(
+          (pipeline) => transport !== 'live' || matchesPipelineName(pipeline.name, catalogSearch),
+        )
+        .map((pipeline) => pipeline.id);
+      if (transport === 'live') {
+        if (ids.length) {
+          dispatch(
+            getPipelineIterationsAction(ids, { search: '', offset: 0, limit: LIVE_PAGE_SIZE }),
+          );
+        }
+      } else {
+        dispatch(getPipelineIterationsAction(ids));
+      }
+    }
+  }, [catalogSearch, dispatch, pipelines, transport]);
 
   usePolling(
     () => {
@@ -173,36 +208,85 @@ export const PipelinesPageContent = () => {
     );
   };
 
+  const refreshCatalog = () =>
+    dispatch(
+      getPipelinesAction(
+        transport === 'live'
+          ? {
+              search: catalogSearch,
+              offset: catalogPage?.offset ?? 0,
+              limit: catalogPage?.size ?? LIVE_PAGE_SIZE,
+            }
+          : undefined,
+      ),
+    );
+
   const renderContent = () => {
     if (isLoading && !pipelines) {
       return <SpinningPreloader />;
     }
 
-    if (!pipelines || pipelines.length === 0) {
+    if (catalogError && !pipelines) {
+      return (
+        <div className={cx('catalog-error')}>
+          <span>{formatMessage(messages.pipelinesUnavailable)}</span>
+          <Button variant="text" onClick={refreshCatalog}>
+            {formatMessage(messages.retry)}
+          </Button>
+        </div>
+      );
+    }
+
+    const nameSearch = transport === 'live' ? catalogSearch : search;
+    const visiblePipelines = pipelines?.filter((pipeline) =>
+      matchesPipelineName(pipeline.name, nameSearch),
+    );
+
+    if (!visiblePipelines || visiblePipelines.length === 0) {
       return (
         <div className={cx('empty')}>
-          <p>{formatMessage(messages.noPipelines)}</p>
-          <p>{formatMessage(messages.noPipelinesHint)}</p>
+          <p>
+            {formatMessage(nameSearch.trim() ? messages.noPipelinesMatch : messages.noPipelines)}
+          </p>
+          {!nameSearch.trim() && <p>{formatMessage(messages.noPipelinesHint)}</p>}
         </div>
       );
     }
 
     return (
       <>
-        {pipelines.map((pipeline) => {
+        {visiblePipelines.map((pipeline) => {
           const iterations = iterationsByPipeline?.[pipeline.id];
-          const filtered = iterations?.filter((iteration) =>
-            matchesSearch(iteration, pipeline.name, search),
-          );
+          const page = transport === 'live' ? iterationPages?.[pipeline.id] : undefined;
           return (
             <PipelineGroup
               key={pipeline.id}
               pipeline={pipeline}
-              iterations={filtered}
+              iterations={iterations}
               isLoading={Boolean(iterationsLoadingByPipeline[pipeline.id])}
               hasError={Boolean(iterationsErrorByPipeline[pipeline.id])}
-              isSearching={Boolean(search.trim())}
-              onRetry={() => dispatch(getPipelineIterationsAction([pipeline.id]))}
+              isSearching={false}
+              onRetry={() =>
+                dispatch(
+                  transport === 'live'
+                    ? getPipelineIterationsAction([pipeline.id], {
+                        search: '',
+                        offset: page?.offset ?? 0,
+                        limit: page?.size ?? LIVE_PAGE_SIZE,
+                      })
+                    : getPipelineIterationsAction([pipeline.id]),
+                )
+              }
+              page={page}
+              onPageChange={(offset) =>
+                dispatch(
+                  getPipelineIterationsAction([pipeline.id], {
+                    search: '',
+                    offset,
+                    limit: page?.size ?? LIVE_PAGE_SIZE,
+                  }),
+                )
+              }
             />
           );
         })}
@@ -261,13 +345,28 @@ export const PipelinesPageContent = () => {
                 data-automation-id="refreshPipelinesButton"
                 icon={<RefreshIcon />}
                 disabled={isLoading}
-                onClick={() => dispatch(getPipelinesAction())}
+                onClick={refreshCatalog}
               >
                 {formatMessage(messages.refreshPage)}
               </Button>
             </div>
           </div>
           {renderContent()}
+          {transport === 'live' && catalogPage && (
+            <PageControls
+              page={catalogPage}
+              isLoading={isLoading}
+              onPageChange={(offset) =>
+                dispatch(
+                  getPipelinesAction({
+                    search: catalogSearch,
+                    offset,
+                    limit: catalogPage.size,
+                  }),
+                )
+              }
+            />
+          )}
         </div>
       </ScrollWrapper>
     </SettingsLayout>

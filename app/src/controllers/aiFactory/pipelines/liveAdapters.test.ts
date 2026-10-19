@@ -17,7 +17,9 @@
 import {
   adaptLivePipelineIterationDetail,
   adaptLivePipelineIterations,
+  adaptLivePipelineIterationsPage,
   adaptLivePipelines,
+  adaptLivePipelinesPage,
   isReducedPipeline,
   isReducedPipelineIteration,
   isRichPipeline,
@@ -25,6 +27,22 @@ import {
 } from './liveAdapters';
 
 describe('live pipeline catalog adapters', () => {
+  test('preserves complete LP1 page metadata for server pagination', () => {
+    const page = adaptLivePipelinesPage({
+      content: [{ id: 7, name: 'Test case generation' }],
+      page: { number: 2, size: 1, totalElements: 2, totalPages: 2 },
+    });
+    expect(page.content).toEqual([expect.objectContaining({ id: 7 })]);
+    expect(page.page).toEqual({ number: 2, size: 1, totalElements: 2, totalPages: 2 });
+  });
+
+  test('rejects incomplete nonfinal LP1 pages', () => {
+    expect(() => adaptLivePipelinesPage({
+      content: [{ id: 7, name: 'Test case generation' }],
+      page: { number: 1, size: 100, totalElements: 101, totalPages: 2 },
+    })).toThrow('Invalid pipeline catalog response');
+  });
+
   test('adapts the backend journey LP1 page without inventing repository or settings fields', () => {
     expect(
       adaptLivePipelines({
@@ -322,6 +340,21 @@ describe('live pipeline catalog adapters', () => {
         ],
       },
     ]);
+  });
+
+  test('preserves LP2 page metadata and rejects incomplete pages', () => {
+    const iteration = { id: 12, pipelineId: 7, iterationNumber: 2, status: 'Passed' };
+    expect(adaptLivePipelineIterationsPage({
+      content: [iteration],
+      page: { number: 2, size: 1, totalElements: 2, totalPages: 2 },
+    }, 7)).toEqual({
+      content: [expect.objectContaining({ id: 12, pipelineId: 7 })],
+      page: { number: 2, size: 1, totalElements: 2, totalPages: 2 },
+    });
+    expect(() => adaptLivePipelineIterationsPage({
+      content: [iteration],
+      page: { number: 1, size: 100, totalElements: 101, totalPages: 2 },
+    }, 7)).toThrow('Invalid pipeline iteration list response');
   });
 
   test('rejects an incomplete or multi-page LP2 response', () => {

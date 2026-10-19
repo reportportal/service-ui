@@ -36,7 +36,11 @@ export { aiFactoryPipelinesSagas } from './sagas';
 export { aiFactoryPipelinesReducer } from './reducer';
 export {
   pipelinesSelector,
+  pipelineCatalogPageSelector,
+  pipelineCatalogSearchSelector,
+  pipelineIterationPagesSelector,
   pipelinesLoadingSelector,
+  pipelineCatalogErrorSelector,
   pipelineIterationsByPipelineSelector,
   pipelineIterationsLoadingSelector,
   pipelineIterationsLoadingByPipelineSelector,
@@ -64,6 +68,8 @@ export type {
   IterationsLoadingByPipelineId,
   IterationsErrorByPipelineId,
   PipelineCatalogItem,
+  PipelinePageRequest,
+  PipelinePageState,
   PipelineIterationItem,
   GetPipelineComparisonAction,
   ClearPipelineComparisonAction,

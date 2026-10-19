@@ -20,10 +20,14 @@ export const pipelinesStateSelector = (state: PipelinesSelectorsRootState): Pipe
   state.aiFactoryPipelines || {
     data: null,
     transport: 'mock',
+    catalogError: false,
     catalogVersion: 0,
     catalogRequestId: null,
     catalogProjectKey: null,
+    catalogPage: null,
+    catalogSearch: '',
     iterationsByPipeline: null,
+    iterationPagesByPipeline: {},
     iterationsLoadingByPipeline: {},
     iterationsErrorByPipeline: {},
     iterationRequestIdByPipeline: {},
@@ -44,8 +48,20 @@ export const pipelinesStateSelector = (state: PipelinesSelectorsRootState): Pipe
 export const pipelinesLoadingSelector = (state: PipelinesSelectorsRootState): boolean =>
   Boolean(pipelinesStateSelector(state).isLoading);
 
+export const pipelineCatalogErrorSelector = (state: PipelinesSelectorsRootState): boolean =>
+  Boolean(pipelinesStateSelector(state).catalogError);
+
 export const pipelinesSelector = (state: PipelinesSelectorsRootState) =>
   pipelinesStateSelector(state).data;
+
+export const pipelineCatalogPageSelector = (state: PipelinesSelectorsRootState) =>
+  pipelinesStateSelector(state).catalogPage ?? null;
+
+export const pipelineCatalogSearchSelector = (state: PipelinesSelectorsRootState) =>
+  pipelinesStateSelector(state).catalogSearch ?? '';
+
+export const pipelineIterationPagesSelector = (state: PipelinesSelectorsRootState) =>
+  pipelinesStateSelector(state).iterationPagesByPipeline ?? {};
 
 export const pipelineIterationsLoadingSelector = (state: PipelinesSelectorsRootState): boolean =>
   Object.values(pipelinesStateSelector(state).iterationsLoadingByPipeline).some(Boolean);

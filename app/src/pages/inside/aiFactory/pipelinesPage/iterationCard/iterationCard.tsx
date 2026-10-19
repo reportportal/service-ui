@@ -20,7 +20,10 @@ import { useSelector } from 'react-redux';
 import Link from 'redux-first-router-link';
 
 import { createClassnames, formatCost } from 'common/utils';
-import { PROJECT_PIPELINE_ITERATION_PAGE, urlOrganizationAndProjectSelector } from 'controllers/pages';
+import {
+  PROJECT_PIPELINE_ITERATION_PAGE,
+  urlOrganizationAndProjectSelector,
+} from 'controllers/pages';
 import {
   STAGE_LABEL_MESSAGE,
   IterationStatusBadge,
@@ -48,9 +51,10 @@ const cx = createClassnames(styles);
 export interface IterationCardProps {
   pipelineType: AiPipelineType;
   iteration: IterationSummaryRS;
+  pipelineName: string;
 }
 
-export const IterationCard = ({ pipelineType, iteration }: IterationCardProps) => {
+export const IterationCard = ({ pipelineType, iteration, pipelineName }: IterationCardProps) => {
   const { formatMessage } = useIntl();
   const { organizationSlug, projectSlug } = useSelector(
     urlOrganizationAndProjectSelector,
@@ -80,7 +84,10 @@ export const IterationCard = ({ pipelineType, iteration }: IterationCardProps) =
       case 'score':
         return formatMessage(messages.stageMetricScore, { score: metric.score });
       case 'ready':
-        return formatMessage(messages.stageMetricReady, { ready: metric.ready, total: metric.total });
+        return formatMessage(messages.stageMetricReady, {
+          ready: metric.ready,
+          total: metric.total,
+        });
       default:
         return null;
     }
@@ -91,7 +98,9 @@ export const IterationCard = ({ pipelineType, iteration }: IterationCardProps) =
     const data = outcomeData;
     if (data.kind === 'generationReady') {
       const fixRoundsSuffix =
-        data.fixRounds > 0 ? formatMessage(messages.outcomeFixRounds, { count: data.fixRounds }) : '';
+        data.fixRounds > 0
+          ? formatMessage(messages.outcomeFixRounds, { count: data.fixRounds })
+          : '';
       return `${formatMessage(messages.outcomeReady, { ready: data.ready, total: data.total })}${fixRoundsSuffix}`;
     }
     if (data.kind === 'automationRunning') {
@@ -164,7 +173,10 @@ export const IterationCard = ({ pipelineType, iteration }: IterationCardProps) =
     outcomeVariant = 'done';
   }
 
-  const iterationTitle = formatMessage(messages.iterationTitle, { number: iteration.number });
+  const iterationTitle = formatMessage(messages.pipelineIterationTitle, {
+    pipelineName,
+    number: iteration.number,
+  });
 
   return (
     <Link
@@ -183,7 +195,12 @@ export const IterationCard = ({ pipelineType, iteration }: IterationCardProps) =
     >
       <div className={cx('card__header')}>
         <IterationStatusBadge status={iteration.status} />
-        <span className={cx('card__title')}>{iterationTitle}</span>
+        <span className={cx('card__title')}>
+          {pipelineName} ·{' '}
+          <span className={cx('card__title-iteration')}>
+            {formatMessage(messages.iterationTitle, { number: iteration.number })}
+          </span>
+        </span>
         <div className={cx('card__outcome', `card__outcome--${outcomeVariant}`)}>
           {outcomeText()}
         </div>
@@ -211,9 +228,7 @@ export const IterationCard = ({ pipelineType, iteration }: IterationCardProps) =
                 <span className={cx('card__stage-label')}>
                   {formatMessage(STAGE_LABEL_MESSAGE[stage.key])}
                 </span>
-                {metricLabel && (
-                  <span className={cx('card__stage-metric')}>{metricLabel}</span>
-                )}
+                {metricLabel && <span className={cx('card__stage-metric')}>{metricLabel}</span>}
               </span>
             </Fragment>
           );

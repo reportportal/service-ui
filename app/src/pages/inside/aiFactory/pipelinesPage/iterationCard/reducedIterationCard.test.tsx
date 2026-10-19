@@ -61,6 +61,7 @@ describe('ReducedIterationCard', () => {
   test('links a reduced iteration card to its generic detail route with exact identities', () => {
     const wrapper = shallow(
       <ReducedIterationCard
+        pipelineName="Release validation"
         iteration={{
           kind: 'reduced',
           id: 103,
@@ -84,8 +85,8 @@ describe('ReducedIterationCard', () => {
         iterationId: 103,
       },
     });
-    expect(wrapper.find('Link').prop('aria-label')).toBe('Iteration #3');
-    expect(wrapper.text()).toContain('Iteration #3');
+    expect(wrapper.find('Link').prop('aria-label')).toBe('Release validation · Iteration #3');
+    expect(wrapper.text()).toContain('Release validation · Iteration #3');
     expect(wrapper.text()).toContain('Passed');
     expect(wrapper.text()).toContain('CI');
     expect(wrapper.text()).toContain('60000 ms');
@@ -95,6 +96,7 @@ describe('ReducedIterationCard', () => {
   test('colors the backend categories while preserving their display text', () => {
     const wrapper = shallow(
       <ReducedIterationCard
+        pipelineName="Release validation"
         iteration={{
           kind: 'reduced',
           id: 1,
@@ -120,7 +122,7 @@ describe('ReducedIterationCard', () => {
   });
 
   test('renders LP2 metadata, Review result, stage summary, and TAG values', () => {
-    const wrapper = shallow(<ReducedIterationCard iteration={{
+    const wrapper = shallow(<ReducedIterationCard pipelineName="Release validation" iteration={{
       kind: 'reduced', id: 31, pipelineId: 7, number: 1, status: 'PASSED',
       attributes: [
         { key: 'requirement', value: 'US-TMS-MIG-001', type: 'META' },

@@ -128,6 +128,55 @@ describe('aiFactoryPipelinesReducer comparison state', () => {
 });
 
 describe('aiFactoryPipelinesReducer catalog provenance', () => {
+  test('marks a current LP1 failure and clears the error on retry', () => {
+    const meta = { namespace: PIPELINES_NAMESPACE, catalogRequestId: 1, projectKey: 'demo' };
+    const started = aiFactoryPipelinesReducer(undefined, { type: FETCH_START, meta }) as PipelinesState;
+    const failed = aiFactoryPipelinesReducer(started, {
+      type: FETCH_ERROR, payload: new Error('failed'), meta,
+    }) as PipelinesState;
+    expect(failed.catalogError).toBe(true);
+    const retrying = aiFactoryPipelinesReducer(failed, {
+      type: FETCH_START, meta: { ...meta, catalogRequestId: 2 },
+    }) as PipelinesState;
+    expect(retrying.catalogError).toBe(false);
+  });
+
+  test('stores LP1 and LP2 page state and clears it for a new catalog query', () => {
+    const catalogStart = {
+      type: FETCH_START,
+      meta: { namespace: PIPELINES_NAMESPACE, catalogRequestId: 1, projectKey: 'demo',
+        transport: 'live', search: 'first' },
+    };
+    const started = aiFactoryPipelinesReducer(undefined, catalogStart) as PipelinesState;
+    const catalogLoaded = aiFactoryPipelinesReducer(started, {
+      type: FETCH_SUCCESS,
+      payload: { data: [{ id: 1, name: 'First' }],
+        page: { number: 1, size: 1, totalElements: 2, totalPages: 2, offset: 0 } },
+      meta: catalogStart.meta,
+    }) as PipelinesState;
+    const iterationsStarted = aiFactoryPipelinesReducer(catalogLoaded, {
+      type: FETCH_START,
+      meta: { namespace: PIPELINE_ITERATIONS_NAMESPACE, pipelineId: 1, transport: 'live',
+        catalogVersion: 1, requestId: 1 },
+    }) as PipelinesState;
+    const iterationsLoaded = aiFactoryPipelinesReducer(iterationsStarted, {
+      type: FETCH_SUCCESS,
+      payload: { data: [], page: { number: 2, size: 1, totalElements: 2, totalPages: 2, offset: 1 } },
+      meta: { namespace: PIPELINE_ITERATIONS_NAMESPACE, pipelineId: 1, transport: 'live',
+        catalogVersion: 1, requestId: 1 },
+    }) as PipelinesState;
+    expect(iterationsLoaded.catalogPage?.totalElements).toBe(2);
+    expect(iterationsLoaded.iterationPagesByPipeline?.[1]?.offset).toBe(1);
+
+    const next = aiFactoryPipelinesReducer(iterationsLoaded, {
+      ...catalogStart,
+      meta: { ...catalogStart.meta, catalogRequestId: 2, search: 'second' },
+    }) as PipelinesState;
+    expect(next.catalogSearch).toBe('second');
+    expect(next.catalogPage).toBeNull();
+    expect(next.iterationPagesByPipeline).toEqual({});
+  });
+
   const catalogAction = (
     type: typeof FETCH_START | typeof FETCH_SUCCESS | typeof FETCH_ERROR,
     catalogRequestId: number,

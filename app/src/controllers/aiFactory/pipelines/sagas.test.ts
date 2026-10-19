@@ -302,7 +302,7 @@ describe('normalizePipelineComparison', () => {
       expect(harness.dispatched).toContainEqual(
         expect.objectContaining({
           type: FETCH_SUCCESS,
-          payload: { data: [expect.objectContaining({ name })] },
+          payload: expect.objectContaining({ data: [expect.objectContaining({ name })] }),
           meta: expect.objectContaining({ namespace: PIPELINES_NAMESPACE, transport: mode }),
         }),
       );
@@ -330,6 +330,38 @@ describe('normalizePipelineComparison', () => {
       expect(harness.dispatched).not.toContainEqual(
         expect.objectContaining({ type: FETCH_SUCCESS, meta: { namespace: PIPELINES_NAMESPACE } }),
       );
+      await harness.stop();
+    });
+
+    test('sends LP1 search and offset and keeps an empty search result live', async () => {
+      localStorage.setItem('ai_factory_transport', JSON.stringify({ pipelineCatalog: 'postman-demo' }));
+      fetchMock.mockResolvedValue({
+        status: 200,
+        data: { content: [], page: { number: 1, size: 100, totalElements: 0, totalPages: 0 } },
+      });
+      let notifyComplete: () => void = () => undefined;
+      const complete = new Promise<void>((resolve) => { notifyComplete = resolve; });
+      const harness = startPipelineSagas(createSagaState(), (action) => {
+        const candidate = action as { type?: string; meta?: { namespace?: string } };
+        if (candidate.type === FETCH_SUCCESS && candidate.meta?.namespace === PIPELINES_NAMESPACE) {
+          notifyComplete();
+        }
+      });
+
+      await Promise.resolve();
+      harness.dispatch(getPipelinesAction({ search: 'missing', offset: 0, limit: 100 }));
+      await complete;
+
+      expect(fetchMock).toHaveBeenCalledWith(
+        URLS.pipelineCatalog('demo', { offset: 0, limit: 100, search: 'missing' }),
+        { signal: expect.any(AbortSignal) },
+        true,
+      );
+      expect(harness.dispatched).toContainEqual(expect.objectContaining({
+        type: FETCH_SUCCESS,
+        payload: { data: [], page: { number: 1, size: 100, totalElements: 0, totalPages: 0, offset: 0 } },
+        meta: expect.objectContaining({ transport: 'live', search: 'missing' }),
+      }));
       await harness.stop();
     });
 
@@ -696,6 +728,40 @@ describe('normalizePipelineComparison', () => {
       expect(new Set(starts.map(({ meta }) => meta.requestId))).toHaveProperty('size', 2);
       expect(starts.every(({ meta }) => meta.catalogVersion === 7)).toBe(true);
       expect(starts.every(({ meta }) => meta.transport === 'mock')).toBe(true);
+      await harness.stop();
+    });
+
+    test('sends LP2 search and page offset for a single pipeline', async () => {
+      fetchMock.mockResolvedValue({
+        content: [{ id: 102, pipelineId: 1, iterationNumber: 2, status: 'Passed' }],
+        page: { number: 2, size: 1, totalElements: 2, totalPages: 2 },
+      });
+      let notifyComplete: () => void = () => undefined;
+      const complete = new Promise<void>((resolve) => { notifyComplete = resolve; });
+      const harness = startPipelineSagas(
+        createSagaState({ transport: 'live', catalogVersion: 7, catalogProjectKey: 'demo' }),
+        (action) => {
+          const candidate = action as { type?: string; meta?: { namespace?: string } };
+          if (candidate.type === FETCH_SUCCESS &&
+            candidate.meta?.namespace === PIPELINE_ITERATIONS_NAMESPACE) notifyComplete();
+        },
+      );
+
+      await Promise.resolve();
+      harness.dispatch(getPipelineIterationsAction([1], { search: '#2', offset: 1, limit: 1 }));
+      await complete;
+
+      expect(fetchMock).toHaveBeenCalledWith(
+        URLS.pipelineCatalogIterations('demo', 1, { offset: 1, limit: 1, search: '#2' }),
+        { signal: expect.any(AbortSignal) },
+      );
+      expect(harness.dispatched).toContainEqual(expect.objectContaining({
+        type: FETCH_SUCCESS,
+        payload: {
+          data: [expect.objectContaining({ id: 102, pipelineId: 1 })],
+          page: { number: 2, size: 1, totalElements: 2, totalPages: 2, offset: 1 },
+        },
+      }));
       await harness.stop();
     });
 
