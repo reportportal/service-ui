@@ -26,6 +26,7 @@ import {
   loadingSelector,
   projectsSelector,
   projectsPaginationSelector,
+  querySelector
 } from 'controllers/organization/projects/selectors';
 import { activeOrganizationLoadingSelector } from 'controllers/organization/selectors';
 import { showModalAction } from 'controllers/modal';
@@ -35,7 +36,6 @@ import { EmptyPageState } from 'pages/common';
 import NoResultsIcon from 'common/img/newIcons/no-results-icon-inline.svg';
 import { assignedProjectsSelector } from 'controllers/user';
 import { mapProjectsWithAssignedRoles } from './mapProjectsWithAssignedRoles';
-import { querySelector } from 'controllers/organization/projects/selectors';
 import {
   LAST_RUN_DATE_FILTER_NAME,
   LAUNCHES_FILTER_NAME,
