@@ -798,6 +798,7 @@ describe('live pipeline catalog adapters', () => {
       ['invalid created date', { ...minimalDetail, createdAt: 'not-a-date' }, 7, 103],
       ['invalid started date', { ...minimalDetail, startedAt: 'not-a-date' }, 7, 103],
       ['invalid pipeline name', { ...minimalDetail, pipelineName: 'x'.repeat(256) }, 7, 103],
+      ['invalid pipeline type', { ...minimalDetail, pipelineType: '' }, 7, 103],
       ['invalid attribute array', { ...minimalDetail, attributes: [7] }, 7, 103],
       [
         'unsafe attribute key',
