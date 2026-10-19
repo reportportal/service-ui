@@ -53,7 +53,10 @@ export class ScrollWrapper extends Component {
     className: PropTypes.string,
     classNameBackToTop: PropTypes.string,
     backToTopEventEnabled: PropTypes.bool,
-    scrollContainerRef: PropTypes.oneOfType([PropTypes.func, PropTypes.shape({ current: PropTypes.any })]),
+    scrollContainerRef: PropTypes.oneOfType([
+      PropTypes.func,
+      PropTypes.shape({ current: PropTypes.any }),
+    ]),
   };
   static defaultProps = {
     initialScrollRight: false,
@@ -65,8 +68,12 @@ export class ScrollWrapper extends Component {
     autoHeightMin: 0,
     autoHeightMax: '100%',
     autoHideTimeout: 500,
-    renderTrackHorizontal: (props) => <div {...props} className={cx('track-horizontal')} />,
-    renderTrackVertical: (props) => <div {...props} className={cx('track-vertical')} />,
+    renderTrackHorizontal: (props) => (
+      <div {...props} style={{ ...props.style, height: 8 }} className={cx('track-horizontal')} />
+    ),
+    renderTrackVertical: (props) => (
+      <div {...props} style={{ ...props.style, width: 8 }} className={cx('track-vertical')} />
+    ),
     renderThumbHorizontal: (props) => <div {...props} className={cx('thumb-horizontal')} />,
     renderThumbVertical: (props) => <div {...props} className={cx('thumb-vertical')} />,
     renderView: ({ withFooter, ...props }) => (
@@ -86,6 +93,14 @@ export class ScrollWrapper extends Component {
   state = {
     showButton: false,
   };
+
+  renderThinTrackHorizontal = (props) => (
+    <div {...props} style={{ ...props.style, height: 5 }} className={cx('track-horizontal')} />
+  );
+
+  renderThinTrackVertical = (props) => (
+    <div {...props} style={{ ...props.style, width: 5 }} className={cx('track-vertical')} />
+  );
 
   componentDidMount() {
     this.props.initialScrollRight && this.scrollbars.scrollToRight();
@@ -197,14 +212,24 @@ export class ScrollWrapper extends Component {
       // base props are defined. For more info see https://github.com/malte-wessel/react-custom-scrollbars/blob/master/docs/API.md
       <Scrollbars
         ref={this.setupRef}
-        className={cx('scroll-component', { 'scroll-component--thin': this.props.thinScrollbars }, this.props.className)}
+        className={cx(
+          'scroll-component',
+          { 'scroll-component--thin': this.props.thinScrollbars },
+          this.props.className,
+        )}
         autoHide={this.props.autoHide}
         autoHeight={this.props.autoHeight}
         autoHeightMin={this.props.autoHeightMin}
         autoHeightMax={this.props.autoHeightMax}
         autoHideTimeout={this.props.autoHideTimeout}
-        renderTrackHorizontal={this.props.renderTrackHorizontal}
-        renderTrackVertical={this.props.renderTrackVertical}
+        renderTrackHorizontal={
+          this.props.thinScrollbars
+            ? this.renderThinTrackHorizontal
+            : this.props.renderTrackHorizontal
+        }
+        renderTrackVertical={
+          this.props.thinScrollbars ? this.renderThinTrackVertical : this.props.renderTrackVertical
+        }
         renderThumbHorizontal={this.props.renderThumbHorizontal}
         renderThumbVertical={this.props.renderThumbVertical}
         renderView={this.renderView}

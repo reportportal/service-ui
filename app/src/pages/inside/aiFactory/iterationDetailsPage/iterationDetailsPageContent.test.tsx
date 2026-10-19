@@ -108,7 +108,9 @@ jest.mock('controllers/project', () => ({
 }));
 jest.mock('hooks/useUserPermissions', () => ({ useUserPermissions: jest.fn() }));
 jest.mock('components/preloaders/spinningPreloader', () => ({
-  SpinningPreloader: function SpinningPreloader() { return <span data-automation-id="loadingSpinner" />; },
+  SpinningPreloader: function SpinningPreloader() {
+    return <span data-automation-id="loadingSpinner" />;
+  },
 }));
 jest.mock('layouts/settingsLayout', () => ({
   SettingsLayout: function SettingsLayout({ children }: { children: ReactElement }) {
@@ -131,7 +133,9 @@ jest.mock('./stageCards', () => ({ StageCards: 'StageCards' }));
 jest.mock('./stagePanels', () => ({ StagePanels: 'StagePanels' }));
 jest.mock('./rerun', () => ({ useIterationRerunModal: jest.fn() }));
 jest.mock('./reducedIterationDetails', () => ({
-  ReducedIterationDetails: function ReducedIterationDetails() { return null; },
+  ReducedIterationDetails: function ReducedIterationDetails() {
+    return null;
+  },
 }));
 
 const dispatch = jest.fn();
@@ -264,7 +268,11 @@ describe('IterationDetailsPageContent polling', () => {
   test('opens the Re-run modal with the current pipeline and iteration', () => {
     const iteration = createIteration(IterationStatus.FAILED);
     const wrapper = renderPage(IterationStatus.FAILED, false, [richPipeline], { iteration });
-    const actions = wrapper.find('PageHeaderWithBreadcrumbsAndActions').prop('actions');
+    const richElement = (
+      wrapper.find('RichIterationDetails') as unknown as { getElement: () => ReactElement }
+    ).getElement();
+    const richContent = shallow(richElement);
+    const actions = richContent.find('PageHeaderWithBreadcrumbsAndActions').prop('actions');
     const rerunButton = shallow(actions as ReactElement).find(
       '[data-automation-id="rerunIterationButton"]',
     );
@@ -389,14 +397,20 @@ describe('IterationDetailsPageContent polling', () => {
   });
 
   test('requests live LP3 from a direct link without loading LP1', () => {
-    const wrapper = renderPage(IterationStatus.COMPLETED, false, null, {
-      catalogTransport: 'live',
-      catalogProjectKey: null,
-      catalogVersion: 0,
-      catalogRequestId: null,
-      iteration: null,
-      detailProjectKey: null,
-    }, true);
+    const wrapper = renderPage(
+      IterationStatus.COMPLETED,
+      false,
+      null,
+      {
+        catalogTransport: 'live',
+        catalogProjectKey: null,
+        catalogVersion: 0,
+        catalogRequestId: null,
+        iteration: null,
+        detailProjectKey: null,
+      },
+      true,
+    );
 
     expect(getPipelinesAction).not.toHaveBeenCalled();
     expect(getPipelineIterationDetailsAction).toHaveBeenCalledTimes(1);
@@ -408,8 +422,15 @@ describe('IterationDetailsPageContent polling', () => {
   test('hides detail from another project even when its iteration ids match', () => {
     const wrapper = renderPage(IterationStatus.COMPLETED, false, null, {
       catalogTransport: 'live',
-      iteration: { kind: 'reduced', id: 103, pipelineId: 7, number: 3,
-        status: 'PASSED', attributes: [], stages: [] },
+      iteration: {
+        kind: 'reduced',
+        id: 103,
+        pipelineId: 7,
+        number: 3,
+        status: 'PASSED',
+        attributes: [],
+        stages: [],
+      },
       detailProjectKey: 'previous-project',
     });
 
@@ -419,11 +440,17 @@ describe('IterationDetailsPageContent polling', () => {
   });
 
   test('renders an invalid live route without sending a detail request', () => {
-    const wrapper = renderPage(IterationStatus.COMPLETED, false, null, {
-      catalogTransport: 'live',
-      routePipelineId: null,
-      iteration: null,
-    }, true);
+    const wrapper = renderPage(
+      IterationStatus.COMPLETED,
+      false,
+      null,
+      {
+        catalogTransport: 'live',
+        routePipelineId: null,
+        iteration: null,
+      },
+      true,
+    );
 
     expect(getPipelineIterationDetailsAction).not.toHaveBeenCalled();
     expect(wrapper.find(ReducedIterationDetails).prop('isInvalidRoute')).toBe(true);

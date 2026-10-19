@@ -483,6 +483,47 @@ const adaptSectionDetails = (
   return details;
 };
 
+const adaptCellLink = (
+  cell: unknown,
+): NonNullable<ReducedPipelineSection['rows'][number]['cellLinks']>[string] | null => {
+  const cellRecord = asRecord(cell);
+  if (cellRecord?.url === undefined && cellRecord?.target === undefined) {
+    return {};
+  }
+  const url = asTrimmedString(cellRecord.url);
+  const target = asRecord(cellRecord.target);
+  const entityType = target && asTrimmedString(target.entityType, MAX_KEY_LENGTH);
+  const entityId = target && asTrimmedString(target.entityId, MAX_KEY_LENGTH);
+  if (
+    (cellRecord.url !== undefined && !url) ||
+    (cellRecord.target !== undefined && (!entityType || !entityId))
+  ) {
+    return null;
+  }
+  return {
+    ...(url ? { url } : {}),
+    ...(entityType && entityId ? { entityType, entityId } : {}),
+  };
+};
+
+const adaptSectionCells = (
+  cells: Record<string, unknown>,
+  columns: ReducedPipelineSection['columns'],
+): Pick<ReducedPipelineSection['rows'][number], 'cells' | 'cellLinks'> | null => {
+  const displayCells: Record<string, string> = {};
+  const cellLinks: NonNullable<ReducedPipelineSection['rows'][number]['cellLinks']> = {};
+  for (const { key } of columns) {
+    const cell = cells[key];
+    if (cell === undefined) continue;
+    const displayValue = asCellText(cell);
+    const link = adaptCellLink(cell);
+    if (displayValue === undefined || !link) return null;
+    displayCells[key] = displayValue;
+    if (Object.keys(link).length) cellLinks[key] = link;
+  }
+  return { cells: displayCells, ...(Object.keys(cellLinks).length ? { cellLinks } : {}) };
+};
+
 const adaptSectionRow = (
   value: unknown,
   columns: ReducedPipelineSection['columns'],
@@ -493,39 +534,9 @@ const adaptSectionRow = (
   if (!row || !key || !cells || Object.keys(cells).length > 30) {
     return null;
   }
-  const displayCells: Record<string, string> = {};
-  const cellLinks: NonNullable<ReducedPipelineSection['rows'][number]['cellLinks']> = {};
-  for (const column of columns) {
-    const cell = cells[column.key];
-    if (cell !== undefined) {
-      const displayValue = asCellText(cell);
-      if (displayValue === undefined) {
-        return null;
-      }
-      displayCells[column.key] = displayValue;
-      const cellRecord = asRecord(cell);
-      if (cellRecord?.url !== undefined || cellRecord?.target !== undefined) {
-        const url = asTrimmedString(cellRecord.url);
-        const target = asRecord(cellRecord.target);
-        const entityType = target && asTrimmedString(target.entityType, MAX_KEY_LENGTH);
-        const entityId = target && asTrimmedString(target.entityId, MAX_KEY_LENGTH);
-        if (
-          (cellRecord.url !== undefined && !url) ||
-          (cellRecord.target !== undefined && (!entityType || !entityId))
-        ) {
-          return null;
-        }
-        cellLinks[column.key] = {
-          ...(url ? { url } : {}),
-          ...(entityType && entityId ? { entityType, entityId } : {}),
-        };
-      }
-    }
-  }
+  const adaptedCells = adaptSectionCells(cells, columns);
   const details = adaptSectionDetails(row.details);
-  return details
-    ? { key, cells: displayCells, details, ...(Object.keys(cellLinks).length ? { cellLinks } : {}) }
-    : null;
+  return adaptedCells && details ? { key, ...adaptedCells, details } : null;
 };
 
 const adaptSection = (value: unknown): ReducedPipelineSection | null => {
@@ -676,45 +687,50 @@ const adaptEntityIds = (value: unknown): string[] | null => {
   return entityIds;
 };
 
+const adaptDetailStageMetadata = (raw: Record<string, unknown>) => {
+  const attempt = asPositiveInteger(raw.attempt);
+  const ownedBy = asTrimmedString(raw.ownedBy, MAX_KEY_LENGTH);
+  const startedAt = asTimestamp(raw.startedAt);
+  const finishedAt = asTimestamp(raw.finishedAt);
+  const relatedEntities = adaptRelatedEntities(raw.relatedEntities);
+  if (
+    !relatedEntities ||
+    (raw.attempt !== undefined && !attempt) ||
+    (raw.ownedBy !== undefined && !ownedBy) ||
+    (raw.startedAt !== undefined && startedAt === undefined) ||
+    (raw.finishedAt !== undefined && finishedAt === undefined) ||
+    (raw.affectsIterationStatus !== undefined && typeof raw.affectsIterationStatus !== 'boolean') ||
+    (raw.retryable !== undefined && typeof raw.retryable !== 'boolean')
+  ) {
+    return null;
+  }
+  return {
+    ...(attempt ? { attempt } : {}),
+    ...(ownedBy ? { ownedBy } : {}),
+    ...(typeof raw.affectsIterationStatus === 'boolean'
+      ? { affectsIterationStatus: raw.affectsIterationStatus }
+      : {}),
+    ...(typeof raw.retryable === 'boolean' ? { retryable: raw.retryable } : {}),
+    ...(startedAt !== undefined ? { startedAt } : {}),
+    ...(finishedAt !== undefined ? { finishedAt } : {}),
+    ...(relatedEntities.length ? { relatedEntities } : {}),
+  };
+};
+
 const adaptDetailStage = (value: unknown): ReducedPipelineDetailStage | null => {
   const raw = asRecord(value);
   const stage = adaptStage(value);
   const id = raw ? asPositiveInteger(raw.id) : null;
   const sections = raw ? adaptSections(raw.sections) : null;
-  const attempt = raw ? asPositiveInteger(raw.attempt) : null;
-  const ownedBy = raw ? asTrimmedString(raw.ownedBy, MAX_KEY_LENGTH) : undefined;
-  const startedAt = raw ? asTimestamp(raw.startedAt) : undefined;
-  const finishedAt = raw ? asTimestamp(raw.finishedAt) : undefined;
-  const relatedEntities = adaptRelatedEntities(raw?.relatedEntities);
-  if (
-    !stage ||
-    !id ||
-    stage.sequence === undefined ||
-    !sections ||
-    !relatedEntities ||
-    (raw?.attempt !== undefined && !attempt) ||
-    (raw?.ownedBy !== undefined && !ownedBy) ||
-    (raw?.startedAt !== undefined && startedAt === undefined) ||
-    (raw?.finishedAt !== undefined && finishedAt === undefined) ||
-    (raw?.affectsIterationStatus !== undefined &&
-      typeof raw.affectsIterationStatus !== 'boolean') ||
-    (raw?.retryable !== undefined && typeof raw.retryable !== 'boolean')
-  ) {
+  const metadata = raw && adaptDetailStageMetadata(raw);
+  if (!stage || !id || stage.sequence === undefined || !sections || !metadata) {
     return null;
   }
   return {
     ...stage,
     id,
     sequence: stage.sequence,
-    ...(attempt ? { attempt } : {}),
-    ...(ownedBy ? { ownedBy } : {}),
-    ...(typeof raw?.affectsIterationStatus === 'boolean'
-      ? { affectsIterationStatus: raw.affectsIterationStatus }
-      : {}),
-    ...(typeof raw?.retryable === 'boolean' ? { retryable: raw.retryable } : {}),
-    ...(startedAt !== undefined ? { startedAt } : {}),
-    ...(finishedAt !== undefined ? { finishedAt } : {}),
-    ...(relatedEntities.length ? { relatedEntities } : {}),
+    ...metadata,
     ...(sections.length ? { sections } : {}),
   };
 };

@@ -402,10 +402,6 @@
     }
   }
 
-  &__score-cell {
-    text-align: right !important;
-  }
-
   &__total-cell {
     font-family: $FONT-ROBOTO-BOLD;
     font-weight: normal;
@@ -475,6 +471,11 @@
     border-bottom: 1px solid var(--rp-ui-base-e-100);
     text-align: left;
     vertical-align: top;
+  }
+
+  th.reduced-section__score-cell,
+  td.reduced-section__score-cell {
+    text-align: right;
   }
 
   th {

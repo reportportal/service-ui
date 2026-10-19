@@ -286,6 +286,298 @@ const isHttpUrl = (value: string) => {
   }
 };
 
+const buildReducedMetadata = (
+  iteration: ReducedPipelineIterationDetail,
+  formatMessage: ReturnType<typeof useIntl>['formatMessage'],
+) => {
+  const attributeValue = (key: string) =>
+    iteration.attributes.find((attribute) => attribute.key === key)?.value;
+  const requirement = iteration.attributes.find((attribute) => attribute.key === 'requirement');
+  const metadata = [
+    {
+      label: formatMessage(messages.metaRequirement),
+      value:
+        requirement?.value &&
+        [requirement.value, requirement.description].filter(Boolean).join(' · '),
+    },
+    { label: formatMessage(messages.metaTrigger), value: iteration.trigger },
+    { label: formatMessage(messages.metaStartedBy), value: iteration.startedBy },
+    { label: formatMessage(messages.metaModel), value: attributeValue('model') },
+    { label: formatMessage(messages.metaEnvironment), value: attributeValue('env') },
+    { label: formatMessage(messages.metaCiPipeline), value: attributeValue('ci') },
+    {
+      label: formatMessage(messages.metaStarted),
+      value:
+        iteration.startedAt !== undefined
+          ? new Date(iteration.startedAt).toLocaleString()
+          : undefined,
+    },
+    {
+      label: formatMessage(messages.metaFinished),
+      value:
+        iteration.finishedAt !== undefined
+          ? new Date(iteration.finishedAt).toLocaleString()
+          : undefined,
+    },
+    {
+      label: formatMessage(messages.metaCreated),
+      value:
+        iteration.createdAt !== undefined
+          ? new Date(iteration.createdAt).toLocaleString()
+          : undefined,
+    },
+    {
+      label: formatMessage(messages.stageDetailsDuration),
+      value: iteration.durationMs !== undefined ? formatDuration(iteration.durationMs) : undefined,
+    },
+  ].filter((field) => field.value);
+  return metadata;
+};
+
+const buildReducedKpis = (
+  iteration: ReducedPipelineIterationDetail,
+  formatMessage: ReturnType<typeof useIntl>['formatMessage'],
+) => {
+  const attributeValue = (key: string) =>
+    iteration.attributes.find((attribute) => attribute.key === key)?.value;
+  const testCases = attributeValue('testCases');
+  const suiteScore = numericAttribute(iteration.attributes, 'suiteScore');
+  const cost = numericAttribute(iteration.attributes, 'cost');
+  const kpis = [
+    { label: formatMessage(messages.kpiTestCases), value: testCases },
+    {
+      label: formatMessage(messages.kpiSuiteScore),
+      value: suiteScore !== undefined ? `${suiteScore} / 100` : attributeValue('suiteScore'),
+    },
+    {
+      label: formatMessage(messages.kpiAutoReadyPromoted),
+      value:
+        attributeValue('autoReadyPromoted') && testCases
+          ? `${attributeValue('autoReadyPromoted')} / ${testCases}`
+          : attributeValue('autoReadyPromoted'),
+    },
+    {
+      label: formatMessage(messages.kpiReadyNow),
+      value:
+        attributeValue('readyNow') && testCases
+          ? `${attributeValue('readyNow')} / ${testCases}`
+          : attributeValue('readyNow'),
+    },
+    { label: formatMessage(messages.kpiFixRounds), value: attributeValue('fixRounds') },
+    {
+      label: formatMessage(messages.kpiCost),
+      value: cost !== undefined ? formatCost(cost) : attributeValue('cost'),
+    },
+  ].filter((field) => field.value);
+  return kpis;
+};
+
+const renderReducedStageCards = (
+  iteration: ReducedPipelineIterationDetail,
+  currentStage: ReducedPipelineDetailStage | undefined,
+  onSelect: (stageId: number) => void,
+  formatMessage: ReturnType<typeof useIntl>['formatMessage'],
+) => {
+  return (
+    <section className={cx('stage-card-section')}>
+      <h2 className={cx('section-title')}>{formatMessage(messages.stagesTitle)}</h2>
+      {iteration.stages.length === 0 ? (
+        formatMessage(messages.noStages)
+      ) : (
+        <div className={cardCx('stage-cards')} data-automation-id="reducedStageCards">
+          {iteration.stages.map((stage, index) => {
+            const suiteScore = numericAttribute(stage.attributes, 'suiteScore');
+            const readyCount = numericAttribute(stage.attributes, 'ready');
+            const totalCount = numericAttribute(stage.attributes, 'total');
+            const stageCost = numericAttribute(stage.attributes, 'cost');
+            return (
+              <div key={stage.id} className={cardCx('stage-cards__item-wrapper')}>
+                {index > 0 && (
+                  <span className={cardCx('stage-cards__arrow')} aria-hidden="true">
+                    →
+                  </span>
+                )}
+                <button
+                  type="button"
+                  className={cardCx('stage-cards__item', {
+                    'stage-cards__item--selected': stage.id === currentStage?.id,
+                  })}
+                  aria-pressed={stage.id === currentStage?.id}
+                  onClick={() => onSelect(stage.id)}
+                  data-automation-id={`reducedStageCard-${stage.id}`}
+                >
+                  <span className={cardCx('stage-cards__item-header')}>
+                    <strong className={cardCx('stage-cards__item-label')}>{stage.label}</strong>
+                    <span
+                      className={cx(
+                        'reduced-stage__status',
+                        `reduced-stage__status--${getReducedStatusVariant(stage.status)}`,
+                      )}
+                    >
+                      {stage.statusText ?? formatMessage(messages[STATUS_MESSAGES[stage.status]])}
+                    </span>
+                  </span>
+                  {stage.message && (
+                    <strong className={cardCx('stage-cards__item-summary')}>{stage.message}</strong>
+                  )}
+                  {stage.summary && (
+                    <span className={cardCx('stage-cards__item-description')}>{stage.summary}</span>
+                  )}
+                  {stage.attributes
+                    ?.filter(({ type }) => type === 'META')
+                    .map((attribute) => (
+                      <span key={attribute.key} className={cardCx('stage-cards__item-description')}>
+                        {attribute.label ?? attribute.key}: {attribute.value}
+                      </span>
+                    ))}
+                  {suiteScore !== undefined && <ScoreBar value={suiteScore} max={100} />}
+                  {readyCount !== undefined && totalCount !== undefined && (
+                    <ScoreBar value={readyCount} max={totalCount} />
+                  )}
+                  {(stage.durationMs !== undefined || stageCost !== undefined) && (
+                    <span className={cardCx('stage-cards__item-footer')}>
+                      {stage.durationMs !== undefined ? formatDuration(stage.durationMs) : ''}
+                      {stage.durationMs !== undefined && stageCost !== undefined ? ' · ' : ''}
+                      {stageCost !== undefined ? formatCost(stageCost) : ''}
+                    </span>
+                  )}
+                </button>
+              </div>
+            );
+          })}
+        </div>
+      )}
+    </section>
+  );
+};
+
+const renderReducedStagePanel = (
+  currentStage: ReducedPipelineDetailStage,
+  expandedRows: Set<string>,
+  onToggleDetails: (rowKey: string) => void,
+  formatMessage: ReturnType<typeof useIntl>['formatMessage'],
+) => (
+  <div className={cx('panel-card')} data-automation-id="reducedStagePanel">
+    <div className={panelCx('stage-panels')}>
+      <section className={panelCx('stage-panels__main')}>
+        <div className={panelCx('panel-heading')}>
+          <h2>{currentStage.label}</h2>
+          <span
+            className={cx(
+              'reduced-stage__status',
+              `reduced-stage__status--${getReducedStatusVariant(currentStage.status)}`,
+            )}
+          >
+            {currentStage.statusText ??
+              formatMessage(messages[STATUS_MESSAGES[currentStage.status]])}
+          </span>
+          {currentStage.summary && (
+            <span className={panelCx('panel-heading__summary')}>{currentStage.summary}</span>
+          )}
+        </div>
+        {currentStage.message && (
+          <p className={cx('reduced-stage__message')}>{currentStage.message}</p>
+        )}
+        {currentStage.sections
+          ?.filter(({ role }) => role === 'RESULT')
+          .map((section) =>
+            renderReducedStageSection(
+              section,
+              formatMessage(messages.scoreDetails),
+              currentStage.id,
+              expandedRows,
+              onToggleDetails,
+            ),
+          )}
+      </section>
+      <aside className={panelCx('stage-panels__aside')}>
+        <h2 className={panelCx('aside-title')}>{formatMessage(messages.stageDetailsTitle)}</h2>
+        <dl className={panelCx('details-list')}>
+          <dt>{formatMessage(messages.stageDetailsStage)}</dt>
+          <dd>{currentStage.label}</dd>
+          <dt>{formatMessage(messages.stageDetailsStatus)}</dt>
+          <dd>
+            {currentStage.statusText ??
+              formatMessage(messages[STATUS_MESSAGES[currentStage.status]])}
+          </dd>
+          <dt>{formatMessage(messages.stageDetailsDuration)}</dt>
+          <dd>
+            {currentStage.durationMs !== undefined ? formatDuration(currentStage.durationMs) : '—'}
+          </dd>
+          {currentStage.attempt !== undefined && (
+            <>
+              <dt>{formatMessage(messages.stageAttempt)}</dt>
+              <dd>{currentStage.attempt}</dd>
+            </>
+          )}
+          {currentStage.ownedBy && (
+            <>
+              <dt>{formatMessage(messages.stageOwner)}</dt>
+              <dd>{currentStage.ownedBy}</dd>
+            </>
+          )}
+          {currentStage.startedAt !== undefined && (
+            <>
+              <dt>{formatMessage(messages.metaStarted)}</dt>
+              <dd>{new Date(currentStage.startedAt).toLocaleString()}</dd>
+            </>
+          )}
+          {currentStage.finishedAt !== undefined && (
+            <>
+              <dt>{formatMessage(messages.metaFinished)}</dt>
+              <dd>{new Date(currentStage.finishedAt).toLocaleString()}</dd>
+            </>
+          )}
+          {Boolean(currentStage.relatedEntities?.length) && (
+            <>
+              <dt>{formatMessage(messages.stageRelatedEntities)}</dt>
+              <dd>{currentStage.relatedEntities.map(({ entityId }) => entityId).join(', ')}</dd>
+            </>
+          )}
+          {currentStage.links?.map((link) => (
+            <Fragment key={`${link.type}-${link.url}`}>
+              <dt>{link.type === 'RUN' ? formatMessage(messages.stageDetailsCiJob) : link.type}</dt>
+              <dd>
+                {link.type === 'RUN' && isHttpUrl(link.url) ? (
+                  <a href={link.url} target="_blank" rel="noopener noreferrer">
+                    {link.label}
+                  </a>
+                ) : (
+                  link.label
+                )}
+              </dd>
+            </Fragment>
+          ))}
+          {currentStage.attributes?.map((attribute) => (
+            <Fragment key={attribute.key}>
+              <dt title={attribute.description}>{attribute.label ?? attribute.key}</dt>
+              <dd>{attribute.value}</dd>
+            </Fragment>
+          ))}
+        </dl>
+        {currentStage.sections?.some(({ role }) => role === 'DETAILS') && (
+          <div
+            className={cx('detail-sections-card')}
+            data-automation-id="reducedStageDetailSections"
+          >
+            {currentStage.sections
+              .filter(({ role }) => role === 'DETAILS')
+              .map((section) =>
+                renderReducedStageSection(
+                  section,
+                  formatMessage(messages.scoreDetails),
+                  currentStage.id,
+                  expandedRows,
+                  onToggleDetails,
+                ),
+              )}
+          </div>
+        )}
+      </aside>
+    </div>
+  </div>
+);
+
 export const ReducedIterationDetails = ({
   iteration,
   hasError,
@@ -344,76 +636,8 @@ export const ReducedIterationDetails = ({
   }
 
   const { rawResponse, ...mappedFields } = iteration;
-  const attributeValue = (key: string) =>
-    iteration.attributes.find((attribute) => attribute.key === key)?.value;
-  const requirement = iteration.attributes.find((attribute) => attribute.key === 'requirement');
-  const metadata = [
-    {
-      label: formatMessage(messages.metaRequirement),
-      value:
-        requirement?.value &&
-        [requirement.value, requirement.description].filter(Boolean).join(' · '),
-    },
-    { label: formatMessage(messages.metaTrigger), value: iteration.trigger },
-    { label: formatMessage(messages.metaStartedBy), value: iteration.startedBy },
-    { label: formatMessage(messages.metaModel), value: attributeValue('model') },
-    { label: formatMessage(messages.metaEnvironment), value: attributeValue('env') },
-    { label: formatMessage(messages.metaCiPipeline), value: attributeValue('ci') },
-    {
-      label: formatMessage(messages.metaStarted),
-      value:
-        iteration.startedAt !== undefined
-          ? new Date(iteration.startedAt).toLocaleString()
-          : undefined,
-    },
-    {
-      label: formatMessage(messages.metaFinished),
-      value:
-        iteration.finishedAt !== undefined
-          ? new Date(iteration.finishedAt).toLocaleString()
-          : undefined,
-    },
-    {
-      label: formatMessage(messages.metaCreated),
-      value:
-        iteration.createdAt !== undefined
-          ? new Date(iteration.createdAt).toLocaleString()
-          : undefined,
-    },
-    {
-      label: formatMessage(messages.stageDetailsDuration),
-      value: iteration.durationMs !== undefined ? formatDuration(iteration.durationMs) : undefined,
-    },
-  ].filter((field) => field.value);
-  const testCases = attributeValue('testCases');
-  const suiteScore = numericAttribute(iteration.attributes, 'suiteScore');
-  const cost = numericAttribute(iteration.attributes, 'cost');
-  const kpis = [
-    { label: formatMessage(messages.kpiTestCases), value: testCases },
-    {
-      label: formatMessage(messages.kpiSuiteScore),
-      value: suiteScore !== undefined ? `${suiteScore} / 100` : attributeValue('suiteScore'),
-    },
-    {
-      label: formatMessage(messages.kpiAutoReadyPromoted),
-      value:
-        attributeValue('autoReadyPromoted') && testCases
-          ? `${attributeValue('autoReadyPromoted')} / ${testCases}`
-          : attributeValue('autoReadyPromoted'),
-    },
-    {
-      label: formatMessage(messages.kpiReadyNow),
-      value:
-        attributeValue('readyNow') && testCases
-          ? `${attributeValue('readyNow')} / ${testCases}`
-          : attributeValue('readyNow'),
-    },
-    { label: formatMessage(messages.kpiFixRounds), value: attributeValue('fixRounds') },
-    {
-      label: formatMessage(messages.kpiCost),
-      value: cost !== undefined ? formatCost(cost) : attributeValue('cost'),
-    },
-  ].filter((field) => field.value);
+  const metadata = buildReducedMetadata(iteration, formatMessage);
+  const kpis = buildReducedKpis(iteration, formatMessage);
   const currentStage = findSelectedStage(iteration.stages, selectedStageId, requestedStage);
   const bannerStage = iteration.stages.find(
     (stage) =>
@@ -422,10 +646,10 @@ export const ReducedIterationDetails = ({
   const statusVariant = getReducedStatusVariant(iteration.status);
   const statusText =
     iteration.statusText ?? formatMessage(messages[STATUS_MESSAGES[iteration.status]]);
-  const title = `${iteration.pipelineName ? `${iteration.pipelineName} · ` : ''}${formatMessage(
-    messages.iterationTitle,
-    { number: iteration.number },
-  )}`;
+  const pipelinePrefix = iteration.pipelineName ? `${iteration.pipelineName} · ` : '';
+  const title = `${pipelinePrefix}${formatMessage(messages.iterationTitle, {
+    number: iteration.number,
+  })}`;
   return (
     <SettingsLayout>
       <ScrollWrapper key={`${iteration.pipelineId}-${iteration.id}`} thinScrollbars>
@@ -447,7 +671,9 @@ export const ReducedIterationDetails = ({
             <div className={cx('header-actions', 'header-actions--reduced')}>
               <span
                 title={formatMessage(
-                  iteration.number <= 1 ? messages.noPreviousIteration : messages.compareUnavailable,
+                  iteration.number <= 1
+                    ? messages.noPreviousIteration
+                    : messages.compareUnavailable,
                 )}
               >
                 <Button
@@ -543,222 +769,9 @@ export const ReducedIterationDetails = ({
               {warning}
             </p>
           ))}
-          <section className={cx('stage-card-section')}>
-            <h2 className={cx('section-title')}>{formatMessage(messages.stagesTitle)}</h2>
-            {iteration.stages.length === 0 ? (
-              formatMessage(messages.noStages)
-            ) : (
-              <div className={cardCx('stage-cards')} data-automation-id="reducedStageCards">
-                {iteration.stages.map((stage, index) => {
-                  const suiteScore = numericAttribute(stage.attributes, 'suiteScore');
-                  const readyCount = numericAttribute(stage.attributes, 'ready');
-                  const totalCount = numericAttribute(stage.attributes, 'total');
-                  const stageCost = numericAttribute(stage.attributes, 'cost');
-                  return (
-                    <div key={stage.id} className={cardCx('stage-cards__item-wrapper')}>
-                      {index > 0 && (
-                        <span className={cardCx('stage-cards__arrow')} aria-hidden="true">
-                          →
-                        </span>
-                      )}
-                      <button
-                        type="button"
-                        className={cardCx('stage-cards__item', {
-                          'stage-cards__item--selected': stage.id === currentStage?.id,
-                        })}
-                        aria-pressed={stage.id === currentStage?.id}
-                        onClick={() => setSelectedStageId(stage.id)}
-                        data-automation-id={`reducedStageCard-${stage.id}`}
-                      >
-                        <span className={cardCx('stage-cards__item-header')}>
-                          <strong className={cardCx('stage-cards__item-label')}>
-                            {stage.label}
-                          </strong>
-                          <span
-                            className={cx(
-                              'reduced-stage__status',
-                              `reduced-stage__status--${getReducedStatusVariant(stage.status)}`,
-                            )}
-                          >
-                            {stage.statusText ??
-                              formatMessage(messages[STATUS_MESSAGES[stage.status]])}
-                          </span>
-                        </span>
-                        {stage.message && (
-                          <strong className={cardCx('stage-cards__item-summary')}>
-                            {stage.message}
-                          </strong>
-                        )}
-                        {stage.summary && (
-                          <span className={cardCx('stage-cards__item-description')}>
-                            {stage.summary}
-                          </span>
-                        )}
-                        {stage.attributes
-                          ?.filter(({ type }) => type === 'META')
-                          .map((attribute) => (
-                            <span
-                              key={attribute.key}
-                              className={cardCx('stage-cards__item-description')}
-                            >
-                              {attribute.label ?? attribute.key}: {attribute.value}
-                            </span>
-                          ))}
-                        {suiteScore !== undefined && <ScoreBar value={suiteScore} max={100} />}
-                        {readyCount !== undefined && totalCount !== undefined && (
-                          <ScoreBar value={readyCount} max={totalCount} />
-                        )}
-                        {(stage.durationMs !== undefined || stageCost !== undefined) && (
-                          <span className={cardCx('stage-cards__item-footer')}>
-                            {stage.durationMs !== undefined ? formatDuration(stage.durationMs) : ''}
-                            {stage.durationMs !== undefined && stageCost !== undefined ? ' · ' : ''}
-                            {stageCost !== undefined ? formatCost(stageCost) : ''}
-                          </span>
-                        )}
-                      </button>
-                    </div>
-                  );
-                })}
-              </div>
-            )}
-          </section>
-          {currentStage && (
-            <>
-              <div className={cx('panel-card')} data-automation-id="reducedStagePanel">
-                <div className={panelCx('stage-panels')}>
-                  <section className={panelCx('stage-panels__main')}>
-                    <div className={panelCx('panel-heading')}>
-                      <h2>{currentStage.label}</h2>
-                      <span
-                        className={cx(
-                          'reduced-stage__status',
-                          `reduced-stage__status--${getReducedStatusVariant(currentStage.status)}`,
-                        )}
-                      >
-                        {currentStage.statusText ??
-                          formatMessage(messages[STATUS_MESSAGES[currentStage.status]])}
-                      </span>
-                      {currentStage.summary && (
-                        <span className={panelCx('panel-heading__summary')}>
-                          {currentStage.summary}
-                        </span>
-                      )}
-                    </div>
-                    {currentStage.message && (
-                      <p className={cx('reduced-stage__message')}>{currentStage.message}</p>
-                    )}
-                    {currentStage.sections
-                      ?.filter(({ role }) => role === 'RESULT')
-                      .map((section) =>
-                        renderReducedStageSection(
-                          section,
-                          formatMessage(messages.scoreDetails),
-                          currentStage.id,
-                          expandedRows,
-                          toggleRowDetails,
-                        ),
-                      )}
-                  </section>
-                  <aside className={panelCx('stage-panels__aside')}>
-                    <h2 className={panelCx('aside-title')}>
-                      {formatMessage(messages.stageDetailsTitle)}
-                    </h2>
-                    <dl className={panelCx('details-list')}>
-                      <dt>{formatMessage(messages.stageDetailsStage)}</dt>
-                      <dd>{currentStage.label}</dd>
-                      <dt>{formatMessage(messages.stageDetailsStatus)}</dt>
-                      <dd>
-                        {currentStage.statusText ??
-                          formatMessage(messages[STATUS_MESSAGES[currentStage.status]])}
-                      </dd>
-                      <dt>{formatMessage(messages.stageDetailsDuration)}</dt>
-                      <dd>
-                        {currentStage.durationMs !== undefined
-                          ? formatDuration(currentStage.durationMs)
-                          : '—'}
-                      </dd>
-                      {currentStage.attempt !== undefined && (
-                        <>
-                          <dt>{formatMessage(messages.stageAttempt)}</dt>
-                          <dd>{currentStage.attempt}</dd>
-                        </>
-                      )}
-                      {currentStage.ownedBy && (
-                        <>
-                          <dt>{formatMessage(messages.stageOwner)}</dt>
-                          <dd>{currentStage.ownedBy}</dd>
-                        </>
-                      )}
-                      {currentStage.startedAt !== undefined && (
-                        <>
-                          <dt>{formatMessage(messages.metaStarted)}</dt>
-                          <dd>{new Date(currentStage.startedAt).toLocaleString()}</dd>
-                        </>
-                      )}
-                      {currentStage.finishedAt !== undefined && (
-                        <>
-                          <dt>{formatMessage(messages.metaFinished)}</dt>
-                          <dd>{new Date(currentStage.finishedAt).toLocaleString()}</dd>
-                        </>
-                      )}
-                      {Boolean(currentStage.relatedEntities?.length) && (
-                        <>
-                          <dt>{formatMessage(messages.stageRelatedEntities)}</dt>
-                          <dd>
-                            {currentStage.relatedEntities
-                              .map(({ entityId }) => entityId)
-                              .join(', ')}
-                          </dd>
-                        </>
-                      )}
-                      {currentStage.links?.map((link) => (
-                        <Fragment key={`${link.type}-${link.url}`}>
-                          <dt>
-                            {link.type === 'RUN'
-                              ? formatMessage(messages.stageDetailsCiJob)
-                              : link.type}
-                          </dt>
-                          <dd>
-                            {link.type === 'RUN' && isHttpUrl(link.url) ? (
-                              <a href={link.url} target="_blank" rel="noopener noreferrer">
-                                {link.label}
-                              </a>
-                            ) : (
-                              link.label
-                            )}
-                          </dd>
-                        </Fragment>
-                      ))}
-                      {currentStage.attributes?.map((attribute) => (
-                        <Fragment key={attribute.key}>
-                          <dt title={attribute.description}>{attribute.label ?? attribute.key}</dt>
-                          <dd>{attribute.value}</dd>
-                        </Fragment>
-                      ))}
-                    </dl>
-                    {currentStage.sections?.some(({ role }) => role === 'DETAILS') && (
-                      <div
-                        className={cx('detail-sections-card')}
-                        data-automation-id="reducedStageDetailSections"
-                      >
-                        {currentStage.sections
-                          .filter(({ role }) => role === 'DETAILS')
-                          .map((section) =>
-                            renderReducedStageSection(
-                              section,
-                              formatMessage(messages.scoreDetails),
-                              currentStage.id,
-                              expandedRows,
-                              toggleRowDetails,
-                            ),
-                          )}
-                      </div>
-                    )}
-                  </aside>
-                </div>
-              </div>
-            </>
-          )}
+          {renderReducedStageCards(iteration, currentStage, setSelectedStageId, formatMessage)}
+          {currentStage &&
+            renderReducedStagePanel(currentStage, expandedRows, toggleRowDetails, formatMessage)}
           <details className={cx('reduced-api-fields')}>
             <summary>{formatMessage(messages.validatedApiFields)}</summary>
             <pre>{JSON.stringify(mappedFields, null, 2)}</pre>
