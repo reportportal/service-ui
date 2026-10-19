@@ -163,6 +163,51 @@ const shouldPollIteration = (
   (iteration?.status === IterationStatus.RUNNING ||
     iteration?.status === IterationStatus.IN_REVIEW);
 
+const resolveDetailRouteState = ({
+  pipelineId,
+  iterationId,
+  projectKey,
+  detailProjectKey,
+  detailPipelineId,
+  detailIterationId,
+  iteration,
+  isLiveTransport,
+  isCatalogLoading,
+  isLoading,
+}: {
+  pipelineId: number;
+  iterationId: number;
+  projectKey: string;
+  detailProjectKey: string | null;
+  detailPipelineId: number | null;
+  detailIterationId: number | null;
+  iteration: PipelineIteration | null;
+  isLiveTransport: boolean;
+  isCatalogLoading: boolean;
+  isLoading: boolean;
+}) => {
+  const hasValidRoute =
+    Number.isSafeInteger(pipelineId) &&
+    pipelineId > 0 &&
+    Number.isSafeInteger(iterationId) &&
+    iterationId > 0;
+  const detailMatchesRoute =
+    detailProjectKey === projectKey &&
+    detailPipelineId === pipelineId &&
+    detailIterationId === iterationId;
+  const currentIteration =
+    (!isLiveTransport || detailMatchesRoute) &&
+    iteration?.id === iterationId &&
+    iteration.pipelineId === pipelineId
+      ? iteration
+      : null;
+  const isDetailPending =
+    (!isLiveTransport && isCatalogLoading) ||
+    (detailMatchesRoute && isLoading) ||
+    (isLiveTransport && !detailMatchesRoute);
+  return { hasValidRoute, detailMatchesRoute, currentIteration, isDetailPending };
+};
+
 interface DetailRequestOptions {
   dispatch: ReturnType<typeof useDispatch>;
   projectKey: string;
@@ -545,21 +590,19 @@ export const IterationDetailsPageContent = () => {
   const detailIterationId = useSelector(pipelineIterationDetailIterationIdSelector);
   const isCatalogLoading = useSelector(pipelinesLoadingSelector);
   const isLiveTransport = catalogTransport === 'live';
-  const hasValidRoute =
-    Number.isSafeInteger(pipelineId) &&
-    pipelineId > 0 &&
-    Number.isSafeInteger(iterationId) &&
-    iterationId > 0;
-  const detailMatchesRoute =
-    detailProjectKey === projectKey &&
-    detailPipelineId === pipelineId &&
-    detailIterationId === iterationId;
-  const currentIteration =
-    (!isLiveTransport || detailMatchesRoute) &&
-    iteration?.id === iterationId &&
-    iteration.pipelineId === pipelineId
-      ? iteration
-      : null;
+  const { hasValidRoute, detailMatchesRoute, currentIteration, isDetailPending } =
+    resolveDetailRouteState({
+      pipelineId,
+      iterationId,
+      projectKey,
+      detailProjectKey,
+      detailPipelineId,
+      detailIterationId,
+      iteration,
+      isLiveTransport,
+      isCatalogLoading,
+      isLoading,
+    });
 
   const { hasCurrentCatalog, pipelineCandidate, pipeline, isReducedCatalogPipeline } =
     resolvePipelineCatalog(pipelines, pipelineId, catalogVersion, catalogProjectKey, projectKey);
@@ -649,10 +692,6 @@ export const IterationDetailsPageContent = () => {
     );
   }
 
-  const isDetailPending =
-    (!isLiveTransport && isCatalogLoading) ||
-    (detailMatchesRoute && isLoading) ||
-    (isLiveTransport && !detailMatchesRoute);
   if (isDetailPending && !currentIteration) {
     return (
       <SettingsLayout>
