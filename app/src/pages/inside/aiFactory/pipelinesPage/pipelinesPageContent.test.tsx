@@ -338,7 +338,7 @@ describe('PipelinesPageContent polling', () => {
     const groups = wrapper.find('PipelineGroup') as unknown as PipelineGroupTestCollection & {
       length: number;
     };
-    expect(groups.length).toBe(1);
+    expect(groups).toHaveLength(1);
     expect(groups.at(0).props().iterations).toEqual([iteration]);
     wrapper.unmount();
   });

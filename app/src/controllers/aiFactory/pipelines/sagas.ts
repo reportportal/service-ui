@@ -52,6 +52,7 @@ import {
   adaptLivePipelineIterationDetail,
   adaptLivePipelineIterationsPage,
   adaptLivePipelinesPage,
+  type LivePage,
 } from './liveAdapters';
 import {
   getPostmanDemoDetail,
@@ -76,6 +77,7 @@ import {
   GetPipelineIterationDetailsAction,
   GetPipelineIterationsAction,
   GetPipelinesAction,
+  PipelineCatalogItem,
   PipelinePageRequest,
   PipelinesState,
 } from './types';
@@ -446,14 +448,51 @@ const resolvePageRequest = (request?: PipelinePageRequest) => {
   const offset = request?.offset ?? 0;
   const limit = request?.limit ?? 100;
   const search = request?.search?.trim() ?? '';
-  if (!Number.isSafeInteger(offset) || offset < 0 ||
-    !Number.isSafeInteger(limit) || limit < 1 || limit > 200) {
+  if (
+    !Number.isSafeInteger(offset) ||
+    offset < 0 ||
+    !Number.isSafeInteger(limit) ||
+    limit < 1 ||
+    limit > 200
+  ) {
     throw new Error('Invalid pipeline page request');
   }
-  const hasQuery = request?.offset !== undefined || request?.limit !== undefined ||
-    request?.search !== undefined;
+  const hasQuery =
+    request?.offset !== undefined || request?.limit !== undefined || request?.search !== undefined;
   const query = hasQuery ? { offset, limit, ...(search ? { search } : {}) } : {};
   return { offset, search, query };
+};
+
+interface PipelineCatalogResult {
+  data: PipelineCatalogItem[];
+  page?: LivePage & { offset: number };
+  transport: PipelineCatalogTransport;
+}
+
+const resolvePipelineCatalogResult = (
+  rawData: unknown,
+  transport: PipelineCatalogTransport,
+  offset: number,
+  search: string,
+  status = 0,
+): PipelineCatalogResult => {
+  if (
+    transport === 'postman-demo' &&
+    !search &&
+    offset === 0 &&
+    isEmptySuccessfulPipelineCatalog(status, rawData)
+  ) {
+    return { data: getPostmanDemoPipelines(), transport };
+  }
+  if (transport === 'mock') {
+    return { data: rawData as PipelineRS[], transport };
+  }
+
+  const result = adaptLivePipelinesPage(rawData);
+  if (result.page.number !== Math.floor(offset / result.page.size) + 1) {
+    throw new Error('Unexpected pipeline catalog page');
+  }
+  return { data: result.content, page: { ...result.page, offset }, transport: 'live' };
 };
 
 function* getPipelines(action: GetPipelinesAction): Generator {
@@ -487,9 +526,8 @@ function* getPipelines(action: GetPipelinesAction): Generator {
       meta,
     });
 
-    let data;
-    let page;
-    let resolvedTransport = transport.mode;
+    let rawData: unknown;
+    let status = 0;
     if (transport.mode === 'postman-demo') {
       const response = (yield call(
         fetch,
@@ -497,34 +535,22 @@ function* getPipelines(action: GetPipelinesAction): Generator {
         { signal: controller.signal },
         true,
       )) as { status: number; data: unknown };
-      if (!search && offset === 0 && isEmptySuccessfulPipelineCatalog(response.status, response.data)) {
-        data = getPostmanDemoPipelines();
-      } else {
-        const result = adaptLivePipelinesPage(response.data);
-        if (result.page.number !== Math.floor(offset / result.page.size) + 1) {
-          throw new Error('Unexpected pipeline catalog page');
-        }
-        data = result.content;
-        page = { ...result.page, offset };
-        resolvedTransport = 'live';
-      }
+      rawData = response.data;
+      status = response.status;
     } else {
-      const rawData = (yield call(
+      rawData = (yield call(
         fetch,
-        transport.mode === 'live' ? URLS.pipelineCatalog(projectKey, query) : URLS.tmsPipeline(projectKey),
+        transport.mode === 'live'
+          ? URLS.pipelineCatalog(projectKey, query)
+          : URLS.tmsPipeline(projectKey),
         { signal: controller.signal },
       )) as unknown;
-      if (transport.mode === 'live') {
-        const result = adaptLivePipelinesPage(rawData);
-        if (result.page.number !== Math.floor(offset / result.page.size) + 1) {
-          throw new Error('Unexpected pipeline catalog page');
-        }
-        data = result.content;
-        page = { ...result.page, offset };
-      } else {
-        data = rawData as PipelineRS[];
-      }
     }
+    const {
+      data,
+      page,
+      transport: resolvedTransport,
+    } = resolvePipelineCatalogResult(rawData, transport.mode, offset, search, status);
 
     yield put({
       type: FETCH_SUCCESS,

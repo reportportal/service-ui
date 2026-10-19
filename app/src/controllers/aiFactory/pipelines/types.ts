@@ -25,12 +25,12 @@ import {
   GET_PIPELINES,
 } from './constants';
 import type {
+  LivePage,
   ReducedPipeline,
   ReducedPipelineIteration,
   ReducedPipelineIterationDetail,
 } from './liveAdapters';
 import type { PipelineCatalogTransport, PipelineDetailTransport } from './transport';
-import type { LivePage } from './liveAdapters';
 
 export type PipelineCatalogItem = PipelineRS | ReducedPipeline;
 export type PipelineIterationItem = IterationSummaryRS | ReducedPipelineIteration;
