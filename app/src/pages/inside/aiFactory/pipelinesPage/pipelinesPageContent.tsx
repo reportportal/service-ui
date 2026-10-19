@@ -218,6 +218,11 @@ export const PipelinesPageContent = () => {
           breadcrumbDescriptors={breadcrumbDescriptors}
         />
         <div className={cx('page-content')}>
+          {transport === 'postman-demo' && (
+            <p className={cx('demo-notice')} role="status">
+              {formatMessage(messages.temporaryPostmanData)}
+            </p>
+          )}
           <div className={cx('toolbar')} data-automation-id="pipelinesToolbar">
             <SearchField
               searchValue={search}

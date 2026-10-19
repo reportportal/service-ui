@@ -74,4 +74,18 @@ describe('matchesSearch', () => {
 
     expect(matchesSearch(reducedIteration, 'Live pipeline', search)).toBe(true);
   });
+
+  test('matches the requirement attribute of a reduced iteration', () => {
+    const reducedIteration = {
+      kind: 'reduced' as const,
+      id: 101,
+      pipelineId: 1,
+      number: 1,
+      status: 'NEEDS_HUMAN' as const,
+      attributes: [{ key: 'requirement', value: 'US-TMS-MIG-001' }],
+      stages: [],
+    };
+
+    expect(matchesSearch(reducedIteration, 'Test case generation', 'US-TMS-MIG-001')).toBe(true);
+  });
 });

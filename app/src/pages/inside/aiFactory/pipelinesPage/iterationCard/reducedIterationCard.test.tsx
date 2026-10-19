@@ -91,4 +91,53 @@ describe('ReducedIterationCard', () => {
     expect(wrapper.text()).toContain('60000 ms');
     expect(wrapper.text()).toContain('Prepare · Passed');
   });
+
+  test('colors the backend categories while preserving their display text', () => {
+    const wrapper = shallow(
+      <ReducedIterationCard
+        iteration={{
+          kind: 'reduced',
+          id: 1,
+          pipelineId: 1,
+          number: 1,
+          status: 'WAITING',
+          statusText: 'In review',
+          attributes: [],
+          stages: [
+            { key: 'create', label: 'Create', status: 'PASSED', statusText: 'Passed' },
+            { key: 'review', label: 'Review', status: 'WAITING', statusText: 'In progress' },
+          ],
+        }}
+      />,
+    );
+
+    expect(wrapper.find('.card__neutral-status').hasClass('status--waiting')).toBe(true);
+    expect(wrapper.find('.card__stage-dot.status--done')).toHaveLength(1);
+    expect(wrapper.find('.card__stage-dot.status--waiting')).toHaveLength(1);
+    expect(wrapper.text()).toContain('In review');
+    expect(wrapper.text()).toContain('Review · In progress');
+    expect(wrapper.find('.card__stage-arrow')).toHaveLength(1);
+  });
+
+  test('renders LP2 metadata, Review result, stage summary, and TAG values', () => {
+    const wrapper = shallow(<ReducedIterationCard iteration={{
+      kind: 'reduced', id: 31, pipelineId: 7, number: 1, status: 'PASSED',
+      attributes: [
+        { key: 'requirement', value: 'US-TMS-MIG-001', type: 'META' },
+        { key: 'testCases', value: '4', type: 'META' },
+        { key: 'suiteScore', value: '79', type: 'META' },
+        { key: 'ci', value: '#1284551', type: 'TAG' },
+      ],
+      stages: [{ key: 'review', label: 'Review', status: 'PASSED',
+        summary: '2/4 Ready', attributes: [
+          { key: 'ready', value: '2' }, { key: 'total', value: '4' },
+        ] }],
+    }} />);
+
+    expect(wrapper.text()).toContain('US-TMS-MIG-001');
+    expect(wrapper.text()).toContain('Suite score:79');
+    expect(wrapper.text()).toContain('2 of 4 Ready');
+    expect(wrapper.text()).toContain('Review · 2/4 Ready');
+    expect(wrapper.text()).toContain('ci:#1284551');
+  });
 });

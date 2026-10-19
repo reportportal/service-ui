@@ -60,6 +60,20 @@ cross-cutting scope must be split into cohesive `[FE]` sub-tasks before work con
 If an estimate differs from the planned size by more than ~30 %, write why in *Deviation notes*
 and re-check the remaining sizes.
 
+## Live Pipeline integration planned scopes (2026-10-18)
+
+These are **planned Original Estimates**, not actual delivered hours. Each Jira issue has the matching research / implementation / validation comment. The backend verification and external waiting time are excluded from FE effort.
+
+| Jira | Scope | Planned | Research | Implementation | Validation |
+|---|---|---:|---:|---:|---:|
+| [EPMRPP-122411](https://jiraeu.epam.com/browse/EPMRPP-122411) | Contract and deployed payload verification | 8 h | 3 h | 3 h | 2 h |
+| [EPMRPP-122412](https://jiraeu.epam.com/browse/EPMRPP-122412) | LP1/LP2 catalog and iteration list | 20 h | 4 h | 11 h | 5 h |
+| [EPMRPP-122413](https://jiraeu.epam.com/browse/EPMRPP-122413) | LP3 core detail | 20 h | 4 h | 11 h | 5 h |
+| [EPMRPP-122414](https://jiraeu.epam.com/browse/EPMRPP-122414) | Generation stage panels | 32 h | 5 h | 20 h | 7 h |
+| [EPMRPP-122415](https://jiraeu.epam.com/browse/EPMRPP-122415) | Auto-Ready settings | 16 h | 3 h | 9 h | 4 h |
+| [EPMRPP-122416](https://jiraeu.epam.com/browse/EPMRPP-122416) | Review and Library case join | 28 h | 5 h | 17 h | 6 h |
+| [EPMRPP-122417](https://jiraeu.epam.com/browse/EPMRPP-122417) | Pipeline comparison | 16 h | 3 h | 9 h | 4 h |
+
 ## Per-task estimates
 
 Filled in as tasks complete. `—` = not done yet.

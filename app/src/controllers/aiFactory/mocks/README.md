@@ -1,5 +1,8 @@
 # AI Factory mock backend
 
+Runtime mock groups and their removal conditions are tracked in
+[`docs/ai-factory-poc/23-temporary-solutions-register.md`](../../../../../docs/ai-factory-poc/23-temporary-solutions-register.md).
+
 Implements every endpoint in [`docs/ai-factory-poc/05-backend-contract.md`](../../../../../docs/ai-factory-poc/05-backend-contract.md)
 on top of [`axios-mock-adapter`](https://github.com/ctimmerm/axios-mock-adapter), so the UI can be
 built against a real HTTP contract before the backend exists. See

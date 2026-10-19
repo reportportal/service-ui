@@ -47,6 +47,20 @@ Keep this in sync with 00-status (the status file is the source of truth for pro
 
 ## Creating a sub-task
 
+### Live Pipeline integration exceptions (2026-10-18)
+
+The user explicitly requested tasks for every stage in advance. These seven tasks were created with Original Estimate and the research / implementation / validation comment at creation time; each remains within the 36 h limit. See [00-status.md](00-status.md) for progress and [08-estimations.md](08-estimations.md) for planned hours.
+
+| Scope | Story parent | FE sub-task |
+|---|---|---|
+| Contract verification | EPMRPP-121704 | [EPMRPP-122411](https://jiraeu.epam.com/browse/EPMRPP-122411) |
+| Catalog and iteration list | EPMRPP-121704 | [EPMRPP-122412](https://jiraeu.epam.com/browse/EPMRPP-122412) |
+| Core detail | EPMRPP-121705 | [EPMRPP-122413](https://jiraeu.epam.com/browse/EPMRPP-122413) |
+| Generation stage panels | EPMRPP-121705 | [EPMRPP-122414](https://jiraeu.epam.com/browse/EPMRPP-122414) |
+| Auto-Ready settings | EPMRPP-121673 | [EPMRPP-122415](https://jiraeu.epam.com/browse/EPMRPP-122415) |
+| Review and Library join | EPMRPP-121677 | [EPMRPP-122416](https://jiraeu.epam.com/browse/EPMRPP-122416) |
+| Comparison | EPMRPP-121706 | [EPMRPP-122417](https://jiraeu.epam.com/browse/EPMRPP-122417) |
+
 Token: `JIRA_API_TOKEN` (Personal Access Token, sent as `Bearer`) and `JIRA_URL`. They are read from
 `service-ui/.env` first, then `../prism-ui/.env.local`.
 The PAT was renewed on 2026-09-25 and works. If it returns **HTTP 401** again, generate a new one in Jira

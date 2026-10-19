@@ -1,0 +1,82 @@
+# Live Pipeline integration: 2026-10-18 assessment and work plan
+
+## Evidence boundary
+
+`/Users/Saveli_Savich/Downloads/pipeline-iteration-e2e-journey.md` describes one `TEST_CASE_GENERATION` iteration from backend branch `feature/pipelines`, backed by `PipelineIterationE2eIntegrationTest`. It is a backend implementation example, not an approved deployed API contract. Its example IDs, values, costs, dates and external links are fixtures; they must not be used as production defaults. The document's suggested GAP fixes are proposals, not instructions to the frontend.
+
+The prior [10-backend-integration-contract.md](10-backend-integration-contract.md) and the `liveAdapters.ts` foundation reflect an older LP1-LP3 shape. The new example changes response envelopes, typed attributes, status categories, pipeline type and stage content. On 2026-10-18 an unauthenticated HTTP OpenAPI read from `tms.epmrpp.reportportal.io` returned version `feature-pipelines-2876`: LP1 and LP2 now declare page envelopes, LP3 declares the new detail DTO and all three paths match the journey. LP1/LP2 page wrappers themselves have no `required` list in OpenAPI; LP1 requires only `id`, `name`, `iterationsCount`, while LP2 requires identity, stages, status and statusCategory. The stage summary/detail DTOs require `id`, `name`, `sequence`, status/statusCategory, attempt and ownedBy, but expose no `stageKey`. `settings` is an untyped object in LP1/LP5. This confirms schema drift, not authenticated payload behavior.
+
+The HTTPS endpoint failed certificate validation. On 2026-10-18 the user pointed to the project's Swagger UI, which already had Bearer authorization. A read-only LP1 GET through that UI returned one authenticated, empty response over HTTP; no token value was copied into the repository. A trusted authenticated non-empty payload and rollout are still unverified.
+
+### EPMRPP-122411 source and deployment audit
+
+| Evidence | Verified result | Limit |
+|---|---|---|
+| Backend `feature/pipelines` source | [Commit `3e9a6454e0b5755cb2b2f44ccb305c01f3356d4f`](https://github.com/reportportal/service-api/commit/3e9a6454e0b5755cb2b2f44ccb305c01f3356d4f), committed 2026-10-17, contains `PipelineController`, DTOs, services and `PipelineIterationE2eIntegrationTest`. | The supplied journey file is not present in this checkout; its scenario is supported by the named integration test, but the file itself is separately supplied evidence. |
+| Deployed OpenAPI | Unauthenticated `GET http://tms.epmrpp.reportportal.io/api/api-docs` on 2026-10-18 returned `feature-pipelines-2876`; downloaded JSON SHA-256: `2ce553356e46ec529286798ead31e6db5658a5d861859824972ca73eede40526`. LP1–LP3 paths and response schema names match the source. | The OpenAPI version is a build label, not a Git SHA. It does not prove that the deployed code is the pinned commit. The document was served over HTTP. |
+| Transport | `http://.../ui/` returned 200 without HTTPS redirect. TLS for the same host presented `CN=TRAEFIK DEFAULT CERT`, self-signed; `curl` rejected the chain. | The Swagger GET used its already-authorized Bearer context over HTTP. No `.env` credential was read or typed, but this does not meet the trusted-HTTPS rollout gate. |
+| Authenticated LP1 empty case | In the supplied Swagger UI at `#/organizations/my-organization/projects/superadmin-personal/api`, `GET /api/v1/project/superadmin_personal/pipeline?limit=100&offset=0` returned HTTP 200: `{"content":[],"page":{"number":1,"size":100,"totalElements":0,"totalPages":0}}`. | The project has no pipelines, so it cannot provide a non-empty LP1 or LP2/LP3 capture. The Swagger-generated `Example Value` is synthetic (it shows `page.number: 0` and `hasNext`) and must not be confused with this response. |
+
+**Resolved from the pinned source (pending deployed-build confirmation):**
+
+| Area | Source contract and FE consequence |
+|---|---|
+| LP1/LP2 access | `GET` methods require `ALLOWED_TO_VIEW_PROJECT`; LP3 `GET` has the same guard. LP5 settings `PATCH` requires `ALLOWED_TO_EDIT_PROJECT`. These are project permissions, not a client-only role check. Exact deployed 401/403 bodies still need captures. |
+| LP1 page | `offset` counts skipped items; default 0. `limit` defaults to 100 and is capped at 200. Sort is pipeline `name`, then `id`. `search` matches pipeline name or any iteration's searchable attributes/number, case-insensitively. |
+| LP2 page | Same bounds, newest `iterationNumber` first. `search` matches iteration attribute values or exact number (leading `#` accepted). Repeated/comma-separated `status` filters use normalized categories; repeated `attribute=key:value` filters are ANDed, exact on the value. A malformed attribute filter returns a bad-request error in the controller. |
+| Page metadata | Backend `PagedResourcesAssembler` emits `{content,page}` with 1-based `page.number`, `size`, `totalElements`, `totalPages`. It does not populate `hasNext` for these page conversions; calculate next offset from total and returned content. The OpenAPI wrapper does not mark these fields required, so a malformed live response must still fail closed in FE. |
+| Status | The reported `status` is display text; `statusCategory` is the stable enum `PENDING/RUNNING/WAITING/PASSED/FAILED/SKIPPED/UNKNOWN`. Unknown text remains visible with neutral color. Aggregation priority is `FAILED > RUNNING > WAITING > PENDING > PASSED`; `SKIPPED`/`UNKNOWN` stages are ignored for the usual aggregate. FE must not infer categories from translated labels. |
+| LP3 stage identity | Reporting accepts `stageKey`, but `PipelineStageSummaryRS` and `PipelineStageRS` responses expose only stage `id`, `name`, `sequence` and other metadata. A stable semantic key for specialized panels remains absent. |
+| Settings | Source applies a top-level merge to `settings`, then validators; it has no exposed revision/ETag or compare-and-swap precondition. The journey and integration tests verify valid `autoReady.enabled=true, threshold=90` and rejection when threshold is absent. Concurrent-editor behavior is therefore still a product/backend decision. |
+
+The source paths for this audit are [`PipelineController`](https://github.com/reportportal/service-api/blob/3e9a6454e0b5755cb2b2f44ccb305c01f3356d4f/src/main/java/com/epam/reportportal/base/core/aifactory/controller/PipelineController.java), [`PipelinePaging`](https://github.com/reportportal/service-api/blob/3e9a6454e0b5755cb2b2f44ccb305c01f3356d4f/src/main/java/com/epam/reportportal/base/core/aifactory/service/PipelinePaging.java), [`PipelineSpecifications`](https://github.com/reportportal/service-api/blob/3e9a6454e0b5755cb2b2f44ccb305c01f3356d4f/src/main/java/com/epam/reportportal/base/infrastructure/persistence/dao/aifactory/PipelineSpecifications.java), [`PagedResourcesAssembler`](https://github.com/reportportal/service-api/blob/3e9a6454e0b5755cb2b2f44ccb305c01f3356d4f/src/main/java/com/epam/reportportal/base/ws/converter/PagedResourcesAssembler.java) and [`StatusCategory`](https://github.com/reportportal/service-api/blob/3e9a6454e0b5755cb2b2f44ccb305c01f3356d4f/src/main/java/com/epam/reportportal/base/core/aifactory/enums/StatusCategory.java).
+
+The [LP1–LP3 source-example pack](pipeline-contract-fixtures/README.md) contains three small JSON examples for adapter work. Each passed validation against its operation's HTTP 200 schema from the observed OpenAPI using the repo's Ajv installation. This is structural validation only; the pack is explicitly **not** an authenticated deployed capture.
+
+## Source-to-frontend mapping
+
+| API from the backend example | Data already described | Required FE adaptation |
+|---|---|---|
+| `GET /v1/project/{key}/pipeline?offset=&limit=&search=` | `content[]` with `id`, `name`, `type`, `attributes[]`, `iterationsCount`, optional `settings.autoReady`; `page` | Validate page envelope; map `TEST_CASE_GENERATION`; extract repository by attribute key; preserve missing settings; implement server pagination/search. |
+| `GET /v1/project/{key}/pipeline/{id}/iteration?...` | `content[]` summaries with `status`, `statusCategory`, attribute arrays, stages, summary text, times; newest first | Fetch per expanded group, preserve page metadata, map category and display text separately, avoid treating missing fields as zero. |
+| `GET /v1/project/{key}/pipeline/iteration/{id}` | full iteration and stages, `sections`, attributes, links, related entities, warnings | Validate project/pipeline/iteration identity; provide generic detail first, then map keyed sections to Create/Grade/Upload. |
+| `PATCH /v1/project/{key}/pipeline/{id}` | nested `settings.autoReady.enabled/threshold` | Separate live request mapping and permissions; handle validation, concurrency and errors before enabling. |
+| Library test-case API | numeric `id`, display `displayId`, origin/status/scores on create/generation | Confirm live read/filter API and numeric route identity before Review/Upload case join. |
+
+The FE currently expects root arrays for LP1/LP2, flat settings, an object of string attributes and the old four-status enum. The new response cannot be consumed by merely opening the gates in `controllers/aiFactory/pipelines/transport.ts`. Mock handlers and the real Test Case overlay must remain independent from live Pipeline transport.
+
+## Decisions and evidence needed from Backend/Product/QA
+
+1. Exact deployed backend build/commit and matching trusted HTTPS OpenAPI URL, plus sanitized non-empty LP1/LP2/LP3 success and error captures from that build. A working certificate chain is required before rollout/browser validation.
+2. Stable `stageKey` in stage **responses**. It appears in reporting requests but is absent from the example GET stage objects; `name`/`sequence` cannot safely select a specialized panel.
+3. Confirm on the deployed build the source-verified page bounds, search/filter, ordering and project permissions above; capture a multi-page response before enabling live catalog pagination.
+4. Exact deployed 400/401/403/404/409/429 bodies and settings concurrency behavior. The source has project view/edit guards and a top-level settings merge, but no revision precondition.
+5. Product-approved terminal states, polling interval/backoff, and whether Review may return from Completed to In review after a Library lifecycle change. The source category enum and aggregation are now known.
+6. Library read/filter contract for an iteration's cases, numeric ID lookup for `TEST_CASE` display IDs, and trusted internal/external link rules.
+7. Exact LP4 compare response and same-pipeline constraints; user Re-run command and failed-Upload Retry remain separate contracts.
+
+## Ordered FE slices
+
+| Jira | Slice | Acceptance boundary |
+|---|---|---|
+| [EPMRPP-122411](https://jiraeu.epam.com/browse/EPMRPP-122411) | Contract verification | Reconcile the backend example with deployed evidence, record the answers above and a conforming payload pack. Environment failures are recorded without claiming live readiness. |
+| [EPMRPP-122412](https://jiraeu.epam.com/browse/EPMRPP-122412) | LP1/LP2 | Strict adapters, per-group loading/error, server pagination/search, no mixed mock/live values. Keep mock default until runtime gates are met. |
+| [EPMRPP-122413](https://jiraeu.epam.com/browse/EPMRPP-122413) | LP3 core | Identity/status/metadata/stage summary with safe reduced states. No invented KPI, CI, case or cost data. |
+| [EPMRPP-122414](https://jiraeu.epam.com/browse/EPMRPP-122414) | Generation panels | Render Create/Grade/Upload from validated `sections` and attributes; Review aggregate only. Require stable stage keys. |
+| [EPMRPP-122415](https://jiraeu.epam.com/browse/EPMRPP-122415) | Settings | Mutation only after role, validation and concurrency contract is verified. |
+| [EPMRPP-122416](https://jiraeu.epam.com/browse/EPMRPP-122416) | Review/Library | Authoritative per-case join and Review queue only after Library contract and identifier mapping are verified. |
+| [EPMRPP-122417](https://jiraeu.epam.com/browse/EPMRPP-122417) | Compare | Live comparison only after LP4 response and identity semantics are verified. |
+
+## Validation for each slice
+
+Use the backend-owned captures plus malformed/forward-compatible FE fixtures; check toggle-OFF parity, mock rollback, project changes, stale requests, empty/error/forbidden states, pagination, untrusted links, and the slice's user-visible mapping. Run focused Jest, Node 20 type-check and relevant lint. A live rollout additionally requires authenticated browser requests to the trusted deployed build and QA evidence; fixture tests alone do not establish it.
+
+## Implementation checkpoint
+
+The LP1 adapter now accepts the backend journey's single-page `content/page` response, typed attribute array and nested Auto-Ready setting while retaining the prior array shape for compatibility. It extracts repository text for the reduced group header and rejects a multi-page response until catalog pagination is implemented, preventing a partial catalog from appearing complete. The live transport gates remain closed. Contract fixture tests, type-check and targeted lint pass; LP2, LP3, server pagination and authenticated non-empty runtime checks remain pending.
+
+**2026-10-19 checkpoint:** In the explicit `postman-demo` override, a nonempty LP1 now leads to real LP2 cards and a read-only LP3 detail request. The normal live rollout gates and mock default remain unchanged. An authenticated local-proxy browser run showed nonempty LP1/LP2/LP3 for `superadmin_personal`: the card renders API metadata, stage summaries, Review ready/total and TAG values; LP3 renders metadata, totals, stage messages/attributes, warnings, CI job labels, RESULT/DETAILS tables and row explanations. The UI does not synthesize fix rounds or Library lifecycle values. External links are text pending a trusted scheme/host and target contract. The browser run proves local-proxy behavior only; the HTTPS/deployed-SHA, error, pagination and broader permission gates remain open.
+
+## Task 1 completion gate
+
+Source/OpenAPI reconciliation and structural validation of the source-example pack are complete at the pinned source SHA above. The Swagger read confirms only the deployed LP1 **empty** shape. EPMRPP-122411 remains **in progress** until a trusted HTTPS endpoint or trusted corporate CA and the deployed backend SHA are available, then authenticated non-empty LP1/LP2/LP3, forbidden/error and multi-page captures can be compared with that SHA. No static example from the journey or local adapter test is labeled a deployed payload. The next FE slices may use the pinned source as provisional implementation input while their live switches stay closed.

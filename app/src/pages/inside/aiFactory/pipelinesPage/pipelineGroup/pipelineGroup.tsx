@@ -106,12 +106,19 @@ export const PipelineGroup = ({
           <span className={cx('group__name')}>{pipeline.name}</span>
           <span className={cx('group__meta')}>
             {isReducedPipeline(pipeline)
-              ? formatMessage(messages.repositoryNotProvided)
+              ? pipeline.repository ?? formatMessage(messages.repositoryNotProvided)
               : pipeline.repository}
           </span>
           {pipeline.iterationsCount !== undefined && (
             <span className={cx('group__meta')}>
               {formatMessage(messages.iterationsCount, { count: pipeline.iterationsCount })}
+            </span>
+          )}
+          {isReducedPipeline(pipeline) && pipeline.autoReady && (
+            <span className={cx('group__meta')}>
+              {pipeline.autoReady.enabled && pipeline.autoReady.threshold !== undefined
+                ? formatMessage(messages.autoReadyOn, { threshold: pipeline.autoReady.threshold })
+                : formatMessage(messages.autoReadyOff)}
             </span>
           )}
           {!isReducedPipeline(pipeline) &&

@@ -32,7 +32,13 @@ export const matchesSearch = (
   }
   const term = search.trim().toLowerCase();
   const reducedFields = isReducedPipelineIteration(iteration)
-    ? [iteration.trigger, ...iteration.stages.map((stage) => stage.label)]
+    ? [
+        iteration.trigger,
+        ...iteration.attributes
+          .filter(({ key }) => key === 'requirement')
+          .map(({ value }) => value),
+        ...iteration.stages.map((stage) => stage.label),
+      ]
     : [iteration.requirement?.specId, iteration.requirement?.title, iteration.requirement?.jiraKey];
   const haystack = [pipelineName, `#${iteration.number}`, ...reducedFields]
     .filter(Boolean)

@@ -60,7 +60,7 @@
 
   &__neutral-status {
     padding: 2px 8px;
-    border: 1px solid var(--rp-ui-base-e-200);
+    border: 1px solid currentColor;
     border-radius: 10px;
     color: var(--rp-ui-base-e-400);
     font-size: 12px;
@@ -143,6 +143,22 @@
       width: 9px;
       height: 9px;
     }
+
+    &--reduced {
+      flex: 0 0 auto;
+      width: auto;
+      min-width: 136px;
+      white-space: nowrap;
+    }
+  }
+
+  &__stage-dot {
+    display: inline-block;
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    background-color: currentColor;
+    flex-shrink: 0;
   }
 
   &__stage-label {
@@ -189,6 +205,28 @@
   &__attribute-value {
     color: var(--rp-ui-base-almost-black);
   }
+}
+
+.status--pending,
+.status--skipped,
+.status--unknown {
+  color: var(--rp-ui-base-e-400);
+}
+
+.status--active {
+  color: var(--rp-ui-base-topaz);
+}
+
+.status--waiting {
+  color: var(--rp-ui-base-a-yellow-600);
+}
+
+.status--done {
+  color: var(--rp-ui-base-test-execution-status-passed);
+}
+
+.status--failed {
+  color: var(--rp-ui-base-error);
 }
 
 @media (max-width: 720px) {

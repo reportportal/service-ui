@@ -21,6 +21,10 @@ export const messages = defineMessages({
     id: 'PipelinesPage.pageTitle',
     defaultMessage: 'Pipelines',
   },
+  temporaryPostmanData: {
+    id: 'PipelinesPage.temporaryPostmanData',
+    defaultMessage: 'Demo data from the Postman collection is shown because the API catalog is empty.',
+  },
   refreshPage: {
     id: 'PipelinesPage.refreshPage',
     defaultMessage: 'Refresh',
@@ -174,6 +178,14 @@ export const messages = defineMessages({
     id: 'PipelinesPage.liveStatusPending',
     defaultMessage: 'Pending',
   },
+  liveStatusRunning: {
+    id: 'PipelinesPage.liveStatusRunning',
+    defaultMessage: 'Running',
+  },
+  liveStatusWaiting: {
+    id: 'PipelinesPage.liveStatusWaiting',
+    defaultMessage: 'Waiting',
+  },
   liveStatusPassed: {
     id: 'PipelinesPage.liveStatusPassed',
     defaultMessage: 'Passed',
@@ -185,6 +197,10 @@ export const messages = defineMessages({
   liveStatusNeedsHuman: {
     id: 'PipelinesPage.liveStatusNeedsHuman',
     defaultMessage: 'Needs human review',
+  },
+  liveStatusSkipped: {
+    id: 'PipelinesPage.liveStatusSkipped',
+    defaultMessage: 'Skipped',
   },
   liveStatusUnknown: {
     id: 'PipelinesPage.liveStatusUnknown',

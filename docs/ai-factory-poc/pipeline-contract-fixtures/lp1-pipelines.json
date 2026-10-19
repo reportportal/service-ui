@@ -1,0 +1,32 @@
+{
+  "content": [
+    {
+      "id": 7,
+      "name": "Test case generation",
+      "type": "TEST_CASE_GENERATION",
+      "attributes": [
+        {
+          "key": "repository",
+          "label": "Repository",
+          "value": "example/rp-tests",
+          "type": "META",
+          "valueType": "TEXT"
+        }
+      ],
+      "settings": {
+        "autoReady": {
+          "enabled": true,
+          "threshold": 90
+        }
+      },
+      "iterationsCount": 1,
+      "createdAt": "2026-09-19T10:13:01Z"
+    }
+  ],
+  "page": {
+    "number": 1,
+    "size": 100,
+    "totalElements": 1,
+    "totalPages": 1
+  }
+}

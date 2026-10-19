@@ -18,7 +18,7 @@ import { getStorageItem } from 'common/utils/storageUtils';
 
 export const AI_FACTORY_TRANSPORT_STORAGE_KEY = 'ai_factory_transport';
 
-export type PipelineCatalogTransport = 'mock' | 'live';
+export type PipelineCatalogTransport = 'mock' | 'live' | 'postman-demo';
 export type PipelineDetailTransport = PipelineCatalogTransport | 'unavailable';
 type RequestedPipelineCatalogTransport = PipelineCatalogTransport | 'invalid';
 
@@ -49,7 +49,10 @@ const readRequestedMode = (): RequestedPipelineCatalogTransport => {
     if (config.pipelineCatalog === undefined || config.pipelineCatalog === 'mock') {
       return 'mock';
     }
-    return config.pipelineCatalog === 'live' ? 'live' : 'invalid';
+    if (config.pipelineCatalog === 'live' || config.pipelineCatalog === 'postman-demo') {
+      return config.pipelineCatalog;
+    }
+    return 'invalid';
   } catch {
     return 'invalid';
   }
@@ -58,9 +61,15 @@ const readRequestedMode = (): RequestedPipelineCatalogTransport => {
 export const getPipelineCatalogTransport = (): PipelineCatalogTransportConfig => {
   const requestedMode = readRequestedMode();
   const canUseLive = requestedMode === 'live' && LIVE_PIPELINE_CATALOG_ROLLOUT_APPROVED;
+  let mode: PipelineCatalogTransport = 'mock';
+  if (requestedMode === 'postman-demo') {
+    mode = 'postman-demo';
+  } else if (canUseLive) {
+    mode = 'live';
+  }
 
   return {
-    mode: canUseLive ? 'live' : 'mock',
+    mode,
     requestedMode,
     isFallback: requestedMode === 'invalid' || (requestedMode === 'live' && !canUseLive),
   };
@@ -74,6 +83,14 @@ export const getPipelineDetailTransport = (
 ): PipelineDetailTransport => {
   if (catalogTransport === 'mock') {
     return 'mock';
+  }
+  if (catalogTransport === 'postman-demo') {
+    return 'postman-demo';
+  }
+  // The explicit demo mode may inspect a non-empty live catalog and its read-only LP3 detail.
+  // Keep the normal live rollout gate independent until the deployment checks are complete.
+  if (catalogTransport === 'live' && readRequestedMode() === 'postman-demo') {
+    return 'live';
   }
   return LIVE_PIPELINE_DETAIL_ROLLOUT_APPROVED ? 'live' : 'unavailable';
 };

@@ -53,6 +53,12 @@ import {
   adaptLivePipelineIterations,
   adaptLivePipelines,
 } from './liveAdapters';
+import {
+  getPostmanDemoDetail,
+  getPostmanDemoIterations,
+  getPostmanDemoPipelines,
+  isEmptySuccessfulPipelineCatalog,
+} from './temporaryPostmanFallback';
 
 import {
   CLEAR_PIPELINE_COMPARISON,
@@ -463,18 +469,38 @@ function* getPipelines(): Generator {
       meta,
     });
 
-    const rawData = (yield call(
-      fetch,
-      transport.mode === 'live' ? URLS.pipelineCatalog(projectKey) : URLS.tmsPipeline(projectKey),
-      { signal: controller.signal },
-    )) as unknown;
-    const data =
-      transport.mode === 'live' ? adaptLivePipelines(rawData) : (rawData as PipelineRS[]);
+    let data;
+    let resolvedTransport = transport.mode;
+    if (transport.mode === 'postman-demo') {
+      const response = (yield call(
+        fetch,
+        URLS.pipelineCatalog(projectKey),
+        { signal: controller.signal },
+        true,
+      )) as { status: number; data: unknown };
+      if (isEmptySuccessfulPipelineCatalog(response.status, response.data)) {
+        data = getPostmanDemoPipelines();
+      } else {
+        data = adaptLivePipelines(response.data);
+        resolvedTransport = 'live';
+      }
+    } else {
+      const rawData = (yield call(
+        fetch,
+        transport.mode === 'live' ? URLS.pipelineCatalog(projectKey) : URLS.tmsPipeline(projectKey),
+        { signal: controller.signal },
+      )) as unknown;
+      data = transport.mode === 'live' ? adaptLivePipelines(rawData) : (rawData as PipelineRS[]);
+    }
 
     yield put({
       type: FETCH_SUCCESS,
       payload: { data },
-      meta,
+      meta: {
+        ...meta,
+        transport: resolvedTransport,
+        transportFallback: transport.isFallback || resolvedTransport === 'postman-demo',
+      },
     });
   } catch (error) {
     const isCancellation = error instanceof Error && error.message === 'REQUEST_CANCELED';
@@ -537,17 +563,22 @@ function* fetchPipelineIterations({
   yield put({ type: FETCH_START, payload: { projectKey }, meta });
 
   try {
-    const rawData = (yield call(
-      fetch,
-      transport === 'live'
-        ? URLS.pipelineCatalogIterations(projectKey, pipelineId)
-        : URLS.tmsPipelineIterations(projectKey, pipelineId),
-      { signal },
-    )) as unknown;
-    const data =
-      transport === 'live'
-        ? adaptLivePipelineIterations(rawData, pipelineId)
-        : (rawData as IterationPageRS).content;
+    let data;
+    if (transport === 'postman-demo') {
+      data = getPostmanDemoIterations(pipelineId);
+    } else {
+      const rawData = (yield call(
+        fetch,
+        transport === 'live'
+          ? URLS.pipelineCatalogIterations(projectKey, pipelineId)
+          : URLS.tmsPipelineIterations(projectKey, pipelineId),
+        { signal },
+      )) as unknown;
+      data =
+        transport === 'live'
+          ? adaptLivePipelineIterations(rawData, pipelineId)
+          : (rawData as IterationPageRS).content;
+    }
     yield put({ type: FETCH_SUCCESS, payload: { data }, meta });
     return { pipelineId, hasError: false };
   } catch (error) {
@@ -669,6 +700,9 @@ function* fetchPipelineIterationDetail(
   meta: PipelineDetailRequestMeta,
   signal: AbortSignal,
 ): Generator<unknown, IterationRS | ReturnType<typeof adaptLivePipelineIterationDetail>> {
+  if (meta.detailTransport === 'postman-demo') {
+    return getPostmanDemoDetail(meta.pipelineId, meta.iterationId);
+  }
   const rawData = (yield call(
     fetch,
     meta.detailTransport === 'live'
