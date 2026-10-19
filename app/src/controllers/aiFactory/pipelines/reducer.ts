@@ -54,7 +54,6 @@ interface PipelineReducerAction extends Action<string> {
     namespace?: string;
     pipelineId?: number;
     transport?: PipelineCatalogTransport;
-    transportFallback?: boolean;
     isCancellation?: boolean;
     requestId?: number;
     catalogVersion?: number;
@@ -175,16 +174,11 @@ const iterationsErrorByPipelineReducer = (
 };
 
 const transportReducer = (
-  state: PipelineCatalogTransport = 'mock',
+  state: PipelineCatalogTransport = 'live',
   action: PipelineReducerAction,
 ): PipelineCatalogTransport =>
   action.type === FETCH_SUCCESS && action.meta?.namespace === PIPELINES_NAMESPACE
-    ? (action.meta.transport ?? 'mock')
-    : state;
-
-const transportFallbackReducer = (state = false, action: PipelineReducerAction): boolean =>
-  action.type === FETCH_SUCCESS && action.meta?.namespace === PIPELINES_NAMESPACE
-    ? Boolean(action.meta.transportFallback)
+    ? (action.meta.transport ?? 'live')
     : state;
 
 const catalogVersionReducer = (state = 0, action: PipelineReducerAction): number => {
@@ -317,7 +311,6 @@ const combinedReducer = combineReducers({
   isLoading: loadingReducer(PIPELINES_NAMESPACE),
   catalogError: catalogErrorReducer,
   transport: transportReducer,
-  transportFallback: transportFallbackReducer,
   catalogVersion: catalogVersionReducer,
   catalogRequestId: catalogRequestIdReducer,
   catalogProjectKey: catalogProjectKeyReducer,

@@ -189,25 +189,20 @@ describe('aiFactoryPipelinesReducer catalog provenance', () => {
       namespace: PIPELINES_NAMESPACE,
       catalogRequestId,
       projectKey,
-      transport: 'mock' as const,
-      transportFallback: false,
+      transport: 'live' as const,
     },
   });
 
-  test('stores the resolved transport and whether configuration fell back', () => {
+  test('stores live catalog provenance', () => {
     const loading = aiFactoryPipelinesReducer(undefined, catalogAction(FETCH_START, 1, 'demo'));
-    const state = aiFactoryPipelinesReducer(loading, {
-      ...catalogAction(FETCH_SUCCESS, 1, 'demo', []),
-      meta: {
-        ...catalogAction(FETCH_SUCCESS, 1, 'demo').meta,
-        transportFallback: true,
-      },
-    }) as PipelinesState;
+    const state = aiFactoryPipelinesReducer(
+      loading,
+      catalogAction(FETCH_SUCCESS, 1, 'demo', []),
+    ) as PipelinesState;
 
     expect(state).toMatchObject({
       data: [],
-      transport: 'mock',
-      transportFallback: true,
+      transport: 'live',
       catalogVersion: 1,
       catalogProjectKey: 'demo',
       catalogRequestId: 1,
@@ -324,7 +319,6 @@ describe('aiFactoryPipelinesReducer catalog provenance', () => {
     const current = {
       ...aiFactoryPipelinesReducer(undefined, { type: 'unrelated' }),
       transport: 'live' as const,
-      transportFallback: true,
     };
 
     const state = aiFactoryPipelinesReducer(current, {
@@ -334,7 +328,6 @@ describe('aiFactoryPipelinesReducer catalog provenance', () => {
     }) as PipelinesState;
 
     expect(state.transport).toBe('live');
-    expect(state.transportFallback).toBe(true);
   });
 });
 
@@ -346,7 +339,7 @@ describe('aiFactoryPipelinesReducer per-pipeline iteration state', () => {
     isCancellation = false,
     requestId = pipelineId,
     catalogVersion = 0,
-    transport: 'mock' | 'live' = 'mock',
+    transport: 'mock' | 'live' = 'live',
   ) => ({
     type,
     payload: data === undefined ? undefined : { data },
@@ -418,9 +411,9 @@ describe('aiFactoryPipelinesReducer per-pipeline iteration state', () => {
   });
 
   test.each([
-    ['request id', { requestId: 10, catalogVersion: 0, transport: 'mock' as const }],
-    ['catalog version', { requestId: 11, catalogVersion: 1, transport: 'mock' as const }],
-    ['transport', { requestId: 11, catalogVersion: 0, transport: 'live' as const }],
+    ['request id', { requestId: 10, catalogVersion: 0, transport: 'live' as const }],
+    ['catalog version', { requestId: 11, catalogVersion: 1, transport: 'live' as const }],
+    ['transport', { requestId: 11, catalogVersion: 0, transport: 'mock' as const }],
   ])('ignores a stale LP2 completion with mismatched %s', (_field, staleMeta) => {
     let state = aiFactoryPipelinesReducer(
       undefined,
@@ -473,7 +466,6 @@ describe('aiFactoryPipelinesReducer iteration detail provenance', () => {
       catalogRequestId: 5,
       projectKey: 'demo',
       transport: 'live' as const,
-      transportFallback: false,
     },
   });
   const detailMeta = {

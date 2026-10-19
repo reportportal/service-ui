@@ -29,12 +29,9 @@ import {
   AutomationEnvironmentsRS,
   FixRoundRS,
   IterationStatus,
-  IterationPageRS,
-  IterationRS,
   LifecycleBatchRS,
   MergeRequestState,
   PipelineCompareRS,
-  PipelineRS,
   PipelineSettingsRS,
   ReviewCommentRS,
   TestCaseAiExtension,
@@ -43,11 +40,13 @@ import {
 import {
   findCase,
   findIteration,
+  findPipeline,
   registerCaseAlias,
   reloadMockDb,
   resetMockDb,
 } from './db';
 import { installAiFactoryHandlers, SIMULATED_DELAY_MS } from './handlers';
+import { toIterationRS, toIterationSummaryRS } from './viewModels';
 
 const PROJECT = 'demo_project';
 let http: ReturnType<typeof axios.create>;
@@ -69,41 +68,7 @@ const reloadPersistedHandlers = (): void => {
   installAiFactoryHandlers(mock);
 };
 
-describe('pipelines (P1-P4)', () => {
-  test('P1 lists both pipelines', async () => {
-    const { data } = await http.get<PipelineRS[]>(URLS.tmsPipeline(PROJECT));
-    expect(data).toHaveLength(2);
-    expect(data[0]).toMatchObject({ name: 'Test case generation', settings: { threshold: 90 } });
-  });
-
-  test('P2 lists gen-1 first when sorted, and search filters by requirement', async () => {
-    const { data } = await http.get<IterationPageRS>(
-      URLS.tmsPipelineIterations(PROJECT, 1, { search: 'BLK' }),
-    );
-    expect(data.content).toHaveLength(1);
-    expect(data.content[0].requirement?.specId).toBe('US-TMS-BLK-001');
-  });
-
-  test('P3 returns iteration details with stages', async () => {
-    const { data } = await http.get<IterationRS>(URLS.tmsPipelineIterationById(PROJECT, 1, 101));
-    expect(data.stages.map((s) => s.key)).toEqual(['CREATE', 'GRADE', 'UPLOAD', 'REVIEW']);
-  });
-
-  test('P3 404s for an unknown iteration', async () => {
-    const res = await http.get(URLS.tmsPipelineIterationById(PROJECT, 1, 999), {
-      validateStatus: () => true,
-    });
-    expect(res.status).toBe(404);
-  });
-
-  test('P3 rejects an iteration that belongs to another pipeline', async () => {
-    const res = await http.get(URLS.tmsPipelineIterationById(PROJECT, 1, 201), {
-      validateStatus: () => true,
-    });
-
-    expect(res.status).toBe(404);
-  });
-
+describe('pipeline settings and comparison mocks', () => {
   test('LP5 PATCH updates settings through the live contract, with validation', async () => {
     const before = await http.get<PipelineSettingsRS>(URLS.tmsPipelineSettings(PROJECT, 1));
     expect(before.data).toMatchObject({ autoReady: true, threshold: 90 });
@@ -435,10 +400,7 @@ describe('automation (A1-A2)', () => {
     });
     const { pipelineId, iterationId, number } = accepted.data.iteration;
 
-    const initialList = await http.get<IterationPageRS>(
-      URLS.tmsPipelineIterations(PROJECT, pipelineId),
-    );
-    const initial = initialList.data.content.find(({ id }) => id === iterationId);
+    const initial = toIterationSummaryRS(findPipeline(pipelineId), findIteration(iterationId));
     expect(initial).toMatchObject({
       pipelineId,
       number,
@@ -459,16 +421,14 @@ describe('automation (A1-A2)', () => {
     });
 
     jest.advanceTimersByTime(SIMULATED_DELAY_MS + 100);
-    const firstTransition = await http.get<IterationRS>(
-      URLS.tmsPipelineIterationById(PROJECT, pipelineId, iterationId),
-    );
-    expect(firstTransition.data.stages.map(({ status }) => status)).toEqual([
+    const firstTransition = toIterationRS(findPipeline(pipelineId), findIteration(iterationId));
+    expect(firstTransition.stages.map(({ status }) => status)).toEqual([
       'PASSED',
       'RUNNING',
       'PENDING',
       'PENDING',
     ]);
-    expect(firstTransition.data.stages[0].perCase).toEqual([
+    expect(firstTransition.stages[0].perCase).toEqual([
       {
         testCaseId: 1005,
         displayId: 'TC105',
@@ -479,18 +439,16 @@ describe('automation (A1-A2)', () => {
     ]);
 
     jest.advanceTimersByTime(SIMULATED_DELAY_MS * 3 + 100);
-    const completed = await http.get<IterationRS>(
-      URLS.tmsPipelineIterationById(PROJECT, pipelineId, iterationId),
-    );
-    expect(completed.data.status).toBe('COMPLETED');
-    expect(completed.data.durationMs).toBeGreaterThan(0);
-    expect(completed.data.stages.map(({ status }) => status)).toEqual([
+    const completed = toIterationRS(findPipeline(pipelineId), findIteration(iterationId));
+    expect(completed.status).toBe('COMPLETED');
+    expect(completed.durationMs).toBeGreaterThan(0);
+    expect(completed.stages.map(({ status }) => status)).toEqual([
       'PASSED',
       'PASSED',
       'PASSED',
       'SKIPPED',
     ]);
-    expect(completed.data.stages[3].perCase?.[0]).toMatchObject({
+    expect(completed.stages[3].perCase?.[0]).toMatchObject({
       displayId: 'TC105',
       name: 'TC105',
       result: 'Skipped · review was clean',
@@ -517,11 +475,9 @@ describe('automation (A1-A2)', () => {
     const { pipelineId, iterationId } = accepted.data.iteration;
     reloadPersistedHandlers();
 
-    const rehydratedIteration = await http.get<IterationRS>(
-      URLS.tmsPipelineIterationById(PROJECT, pipelineId, iterationId),
-    );
+    const rehydratedIteration = toIterationRS(findPipeline(pipelineId), findIteration(iterationId));
     const rehydratedCase = await http.get<TestCaseAiRS>(URLS.testCaseAi(PROJECT, 'TC105'));
-    expect(rehydratedIteration.data).toMatchObject({
+    expect(rehydratedIteration).toMatchObject({
       id: iterationId,
       status: IterationStatus.RUNNING,
     });
@@ -532,12 +488,10 @@ describe('automation (A1-A2)', () => {
 
     jest.advanceTimersByTime(SIMULATED_DELAY_MS * 4 + 100);
 
-    const resumedIteration = await http.get<IterationRS>(
-      URLS.tmsPipelineIterationById(PROJECT, pipelineId, iterationId),
-    );
+    const resumedIteration = toIterationRS(findPipeline(pipelineId), findIteration(iterationId));
     const resumedCase = await http.get<TestCaseAiRS>(URLS.testCaseAi(PROJECT, 'TC105'));
-    expect(resumedIteration.data.status).toBe(IterationStatus.COMPLETED);
-    expect(resumedIteration.data.stages.map(({ status }) => status)).toEqual([
+    expect(resumedIteration.status).toBe(IterationStatus.COMPLETED);
+    expect(resumedIteration.stages.map(({ status }) => status)).toEqual([
       'PASSED',
       'PASSED',
       'PASSED',
@@ -587,11 +541,9 @@ describe('automation (A1-A2)', () => {
     });
     jest.advanceTimersByTime(SIMULATED_DELAY_MS * 4 + 100);
 
-    const completed = await http.get<IterationRS>(
-      URLS.tmsPipelineIterationById(PROJECT, pipelineId, iterationId),
-    );
-    expect(completed.data.testCases).toEqual([{ id: externalCaseId, displayId: 'TC105' }]);
-    expect(completed.data.stages[0].perCase).toEqual([
+    const completed = toIterationRS(findPipeline(pipelineId), findIteration(iterationId));
+    expect(completed.testCases).toEqual([{ id: externalCaseId, displayId: 'TC105' }]);
+    expect(completed.stages[0].perCase).toEqual([
       expect.objectContaining({
         testCaseId: externalCaseId,
         displayId: 'TC105',

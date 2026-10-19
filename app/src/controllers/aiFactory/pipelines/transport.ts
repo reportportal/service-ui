@@ -14,83 +14,20 @@
  * limitations under the License.
  */
 
-import { getStorageItem } from 'common/utils/storageUtils';
-
-export const AI_FACTORY_TRANSPORT_STORAGE_KEY = 'ai_factory_transport';
-
-export type PipelineCatalogTransport = 'mock' | 'live' | 'postman-demo';
-export type PipelineDetailTransport = PipelineCatalogTransport | 'unavailable';
-type RequestedPipelineCatalogTransport = PipelineCatalogTransport | 'invalid';
-
-interface AiFactoryTransportConfig {
-  pipelineCatalog?: unknown;
-}
+// `mock` remains in the type while other AI Factory features use it to guard
+// mock-only actions. LP1-LP3 always select the live transport.
+export type PipelineCatalogTransport = 'mock' | 'live';
+export type PipelineDetailTransport = 'live';
 
 export interface PipelineCatalogTransportConfig {
   mode: PipelineCatalogTransport;
-  requestedMode: RequestedPipelineCatalogTransport;
-  isFallback: boolean;
 }
 
-const LIVE_PIPELINE_CATALOG_ROLLOUT_APPROVED = false;
-const LIVE_PIPELINE_DETAIL_ROLLOUT_APPROVED = false;
-
-const readRequestedMode = (): RequestedPipelineCatalogTransport => {
-  try {
-    const storedConfig = getStorageItem(AI_FACTORY_TRANSPORT_STORAGE_KEY) as unknown;
-    if (storedConfig === null) {
-      return 'mock';
-    }
-    if (typeof storedConfig !== 'object' || Array.isArray(storedConfig)) {
-      return 'invalid';
-    }
-    const config = storedConfig as AiFactoryTransportConfig;
-
-    if (config.pipelineCatalog === undefined || config.pipelineCatalog === 'mock') {
-      return 'mock';
-    }
-    if (config.pipelineCatalog === 'live' || config.pipelineCatalog === 'postman-demo') {
-      return config.pipelineCatalog;
-    }
-    return 'invalid';
-  } catch {
-    return 'invalid';
-  }
-};
-
-export const getPipelineCatalogTransport = (): PipelineCatalogTransportConfig => {
-  const requestedMode = readRequestedMode();
-  const canUseLive = requestedMode === 'live' && LIVE_PIPELINE_CATALOG_ROLLOUT_APPROVED;
-  let mode: PipelineCatalogTransport = 'mock';
-  if (requestedMode === 'postman-demo') {
-    mode = 'postman-demo';
-  } else if (canUseLive) {
-    mode = 'live';
-  }
-
-  return {
-    mode,
-    requestedMode,
-    isFallback: requestedMode === 'invalid' || (requestedMode === 'live' && !canUseLive),
-  };
-};
+export const getPipelineCatalogTransport = (): PipelineCatalogTransportConfig => ({ mode: 'live' });
 
 export const isMockDownstreamCompatible = (mode: PipelineCatalogTransport): boolean =>
   mode === 'mock';
 
 export const getPipelineDetailTransport = (
-  catalogTransport: PipelineCatalogTransport,
-): PipelineDetailTransport => {
-  if (catalogTransport === 'mock') {
-    return 'mock';
-  }
-  if (catalogTransport === 'postman-demo') {
-    return 'postman-demo';
-  }
-  // The explicit demo mode may inspect a non-empty live catalog and its read-only LP3 detail.
-  // Keep the normal live rollout gate independent until the deployment checks are complete.
-  if (catalogTransport === 'live' && readRequestedMode() === 'postman-demo') {
-    return 'live';
-  }
-  return LIVE_PIPELINE_DETAIL_ROLLOUT_APPROVED ? 'live' : 'unavailable';
-};
+  _catalogTransport: PipelineCatalogTransport,
+): PipelineDetailTransport => 'live';

@@ -15,96 +15,24 @@
  */
 
 import {
-  AI_FACTORY_TRANSPORT_STORAGE_KEY,
   getPipelineCatalogTransport,
   getPipelineDetailTransport,
   isMockDownstreamCompatible,
 } from './transport';
 
-describe('pipeline catalog transport', () => {
-  beforeEach(() => {
+describe('pipeline read transport', () => {
+  test.each([null, 'mock', 'postman-demo', 'live'])('always uses LP1-LP3 API with %s stored', (mode) => {
     localStorage.clear();
-  });
-
-  test.each([
-    [undefined, { mode: 'mock', requestedMode: 'mock', isFallback: false }],
-    [{}, { mode: 'mock', requestedMode: 'mock', isFallback: false }],
-    [{ pipelineCatalog: 'mock' }, { mode: 'mock', requestedMode: 'mock', isFallback: false }],
-  ])('defaults to mock for configuration %p', (config, expected) => {
-    if (config !== undefined) {
-      localStorage.setItem(AI_FACTORY_TRANSPORT_STORAGE_KEY, JSON.stringify(config));
+    if (mode) {
+      localStorage.setItem('ai_factory_transport', JSON.stringify({ pipelineCatalog: mode }));
     }
 
-    expect(getPipelineCatalogTransport()).toEqual(expected);
-  });
-
-  test.each([[], 'live', { pipelineCatalog: true }, { pipelineCatalog: 'unsupported' }])(
-    'fails closed to mock for malformed configuration %p',
-    (config) => {
-      localStorage.setItem(AI_FACTORY_TRANSPORT_STORAGE_KEY, JSON.stringify(config));
-
-      expect(getPipelineCatalogTransport()).toEqual({
-        mode: 'mock',
-        requestedMode: 'invalid',
-        isFallback: true,
-      });
-    },
-  );
-
-  test('fails closed to mock when stored JSON cannot be parsed', () => {
-    localStorage.setItem(AI_FACTORY_TRANSPORT_STORAGE_KEY, '{invalid');
-
-    expect(getPipelineCatalogTransport()).toEqual({
-      mode: 'mock',
-      requestedMode: 'invalid',
-      isFallback: true,
-    });
-  });
-
-  test('keeps live traffic disabled behind the hard rollout gate', () => {
-    localStorage.setItem(
-      AI_FACTORY_TRANSPORT_STORAGE_KEY,
-      JSON.stringify({ pipelineCatalog: 'live' }),
-    );
-
-    expect(getPipelineCatalogTransport()).toEqual({
-      mode: 'mock',
-      requestedMode: 'live',
-      isFallback: true,
-    });
-  });
-
-  test('allows the explicit temporary Postman fallback transport', () => {
-    localStorage.setItem(
-      AI_FACTORY_TRANSPORT_STORAGE_KEY,
-      JSON.stringify({ pipelineCatalog: 'postman-demo' }),
-    );
-
-    expect(getPipelineCatalogTransport()).toEqual({
-      mode: 'postman-demo',
-      requestedMode: 'postman-demo',
-      isFallback: false,
-    });
-    expect(isMockDownstreamCompatible('postman-demo')).toBe(false);
-    expect(getPipelineDetailTransport('postman-demo')).toBe('postman-demo');
-  });
-
-  test('allows mock downstream endpoints only for a mock catalog', () => {
-    expect(isMockDownstreamCompatible('mock')).toBe(true);
-    expect(isMockDownstreamCompatible('live')).toBe(false);
-  });
-
-  test('keeps mock P3 compatible and denies live LP3 until its independent rollout gate opens', () => {
-    expect(getPipelineDetailTransport('mock')).toBe('mock');
-    expect(getPipelineDetailTransport('live')).toBe('unavailable');
-  });
-
-  test('allows read-only LP3 only when a non-empty live catalog came from explicit demo mode', () => {
-    localStorage.setItem(
-      AI_FACTORY_TRANSPORT_STORAGE_KEY,
-      JSON.stringify({ pipelineCatalog: 'postman-demo' }),
-    );
+    expect(getPipelineCatalogTransport()).toEqual({ mode: 'live' });
     expect(getPipelineDetailTransport('live')).toBe('live');
-    expect(getPipelineDetailTransport('postman-demo')).toBe('postman-demo');
+  });
+
+  test('keeps mock-only downstream actions closed for a live catalog', () => {
+    expect(isMockDownstreamCompatible('live')).toBe(false);
+    expect(isMockDownstreamCompatible('mock')).toBe(true);
   });
 });

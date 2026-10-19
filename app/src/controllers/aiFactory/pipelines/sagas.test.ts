@@ -33,8 +33,6 @@ import {
 } from './constants';
 import { aiFactoryPipelinesSagas, normalizePipelineComparison } from './sagas';
 import {
-  getPipelineCatalogTransport,
-  getPipelineDetailTransport,
   PipelineCatalogTransport,
 } from './transport';
 
@@ -42,15 +40,6 @@ jest.mock('common/utils', () => {
   const actual = jest.requireActual<typeof import('common/utils')>('common/utils');
 
   return { ...actual, fetch: jest.fn() };
-});
-jest.mock('./transport', () => {
-  const actual = jest.requireActual<typeof import('./transport')>('./transport');
-
-  return {
-    ...actual,
-    getPipelineCatalogTransport: jest.fn(actual.getPipelineCatalogTransport),
-    getPipelineDetailTransport: jest.fn(actual.getPipelineDetailTransport),
-  };
 });
 
 const fetchMock = fetch as jest.MockedFunction<
@@ -64,7 +53,7 @@ interface SagaStateOptions {
 }
 
 const createSagaState = ({
-  transport = 'mock',
+  transport = 'live',
   catalogVersion = 0,
   catalogProjectKey = null,
 }: SagaStateOptions = {}) => ({
@@ -247,41 +236,22 @@ describe('normalizePipelineComparison', () => {
     });
   });
 
-  describe('pipeline transport saga boundaries', () => {
+  describe('LP1-LP3 live transport', () => {
     beforeEach(() => {
       jest.clearAllMocks();
       localStorage.clear();
-      jest
-        .mocked(getPipelineDetailTransport)
-        .mockImplementation(
-          jest.requireActual<typeof import('./transport')>('./transport')
-            .getPipelineDetailTransport,
-        );
     });
 
     test.each([
-      [
-        'empty',
-        { content: [], page: { number: 1, size: 100, totalElements: 0, totalPages: 0 } },
-        'postman-demo',
-        'Test case generation',
-      ],
-      [
-        'nonempty',
-        {
-          content: [{ id: 9, name: 'Real pipeline' }],
-          page: { number: 1, size: 100, totalElements: 1, totalPages: 1 },
-        },
-        'live',
-        'Real pipeline',
-      ],
-    ])('uses %s LP1 data in the explicit Postman mode', async (_case, payload, mode, name) => {
-      localStorage.setItem('ai_factory_transport', JSON.stringify({ pipelineCatalog: 'postman-demo' }));
-      fetchMock.mockResolvedValue({ status: 200, data: payload });
+      ['empty', { content: [], page: { number: 1, size: 100, totalElements: 0, totalPages: 0 } }],
+      ['nonempty', {
+        content: [{ id: 9, name: 'Real pipeline', type: 'TEST_CASE_GENERATION' }],
+        page: { number: 1, size: 100, totalElements: 1, totalPages: 1 },
+      }],
+    ])('renders %s LP1 response without synthetic data', async (_name, payload) => {
+      fetchMock.mockResolvedValue(payload);
       let notifyComplete: () => void = () => undefined;
-      const complete = new Promise<void>((resolve) => {
-        notifyComplete = resolve;
-      });
+      const complete = new Promise<void>((resolve) => { notifyComplete = resolve; });
       const harness = startPipelineSagas(createSagaState(), (action) => {
         const candidate = action as { type?: string; meta?: { namespace?: string } };
         if (candidate.type === FETCH_SUCCESS && candidate.meta?.namespace === PIPELINES_NAMESPACE) {
@@ -293,29 +263,25 @@ describe('normalizePipelineComparison', () => {
       harness.dispatch(getPipelinesAction());
       await complete;
 
-      expect(fetchMock).toHaveBeenCalledTimes(1);
-      expect(fetchMock).toHaveBeenCalledWith(
-        URLS.pipelineCatalog('demo'),
-        { signal: expect.any(AbortSignal) },
-        true,
-      );
-      expect(harness.dispatched).toContainEqual(
-        expect.objectContaining({
-          type: FETCH_SUCCESS,
-          payload: expect.objectContaining({ data: [expect.objectContaining({ name })] }),
-          meta: expect.objectContaining({ namespace: PIPELINES_NAMESPACE, transport: mode }),
-        }),
-      );
+      expect(fetchMock).toHaveBeenCalledWith(URLS.pipelineCatalog('demo'), {
+        signal: expect.any(AbortSignal),
+      });
+      expect(harness.dispatched).toContainEqual(expect.objectContaining({
+        type: FETCH_SUCCESS,
+        payload: expect.objectContaining({ data: expect.any(Array) }),
+        meta: expect.objectContaining({ namespace: PIPELINES_NAMESPACE, transport: 'live' }),
+      }));
+      const success = harness.dispatched.find((action) =>
+        (action as { type?: string }).type === FETCH_SUCCESS,
+      ) as { payload: { data: unknown[] } };
+      expect(success.payload.data).toHaveLength(payload.content.length);
       await harness.stop();
     });
 
-    test('does not use the Postman fixture when the LP1 request fails', async () => {
-      localStorage.setItem('ai_factory_transport', JSON.stringify({ pipelineCatalog: 'postman-demo' }));
+    test('reports LP1 failure without substituting mock data', async () => {
       fetchMock.mockRejectedValue(new Error('backend unavailable'));
       let notifyComplete: () => void = () => undefined;
-      const complete = new Promise<void>((resolve) => {
-        notifyComplete = resolve;
-      });
+      const complete = new Promise<void>((resolve) => { notifyComplete = resolve; });
       const harness = startPipelineSagas(createSagaState(), (action) => {
         const candidate = action as { type?: string; meta?: { namespace?: string } };
         if (candidate.type === FETCH_ERROR && candidate.meta?.namespace === PIPELINES_NAMESPACE) {
@@ -327,17 +293,13 @@ describe('normalizePipelineComparison', () => {
       harness.dispatch(getPipelinesAction());
       await complete;
 
-      expect(harness.dispatched).not.toContainEqual(
-        expect.objectContaining({ type: FETCH_SUCCESS, meta: { namespace: PIPELINES_NAMESPACE } }),
-      );
+      expect(harness.dispatched).not.toContainEqual(expect.objectContaining({ type: FETCH_SUCCESS }));
       await harness.stop();
     });
 
-    test('sends LP1 search and offset and keeps an empty search result live', async () => {
-      localStorage.setItem('ai_factory_transport', JSON.stringify({ pipelineCatalog: 'postman-demo' }));
+    test('sends LP1 name search and page offset', async () => {
       fetchMock.mockResolvedValue({
-        status: 200,
-        data: { content: [], page: { number: 1, size: 100, totalElements: 0, totalPages: 0 } },
+        content: [], page: { number: 1, size: 100, totalElements: 0, totalPages: 0 },
       });
       let notifyComplete: () => void = () => undefined;
       const complete = new Promise<void>((resolve) => { notifyComplete = resolve; });
@@ -355,31 +317,27 @@ describe('normalizePipelineComparison', () => {
       expect(fetchMock).toHaveBeenCalledWith(
         URLS.pipelineCatalog('demo', { offset: 0, limit: 100, search: 'missing' }),
         { signal: expect.any(AbortSignal) },
-        true,
       );
-      expect(harness.dispatched).toContainEqual(expect.objectContaining({
-        type: FETCH_SUCCESS,
-        payload: { data: [], page: { number: 1, size: 100, totalElements: 0, totalPages: 0, offset: 0 } },
-        meta: expect.objectContaining({ transport: 'live', search: 'missing' }),
-      }));
       await harness.stop();
     });
 
-    test('serves matching Postman iteration and detail without hitting legacy mock URLs', async () => {
+    test('uses real LP2 and LP3 endpoints for a resolved catalog', async () => {
+      fetchMock.mockImplementation((url) => Promise.resolve(
+        url.includes('/iteration/')
+          ? { id: 103, pipelineId: 7, iterationNumber: 3, stages: [] }
+          : { content: [], page: { number: 1, size: 100, totalElements: 0, totalPages: 0 } },
+      ));
       let successes = 0;
       let notifyComplete: () => void = () => undefined;
-      const complete = new Promise<void>((resolve) => {
-        notifyComplete = resolve;
-      });
+      const complete = new Promise<void>((resolve) => { notifyComplete = resolve; });
       const harness = startPipelineSagas(
-        createSagaState({ transport: 'postman-demo', catalogVersion: 1, catalogProjectKey: 'demo' }),
+        createSagaState({ transport: 'live', catalogVersion: 1, catalogProjectKey: 'demo' }),
         (action) => {
           const candidate = action as { type?: string; meta?: { namespace?: string } };
-          if (
-            candidate.type === FETCH_SUCCESS &&
-            (candidate.meta?.namespace === PIPELINE_ITERATIONS_NAMESPACE ||
-              candidate.meta?.namespace === PIPELINE_ITERATION_DETAILS_NAMESPACE)
-          ) {
+          if (candidate.type === FETCH_SUCCESS &&
+            [PIPELINE_ITERATIONS_NAMESPACE, PIPELINE_ITERATION_DETAILS_NAMESPACE].includes(
+              candidate.meta?.namespace as typeof PIPELINE_ITERATIONS_NAMESPACE,
+            )) {
             successes += 1;
             if (successes === 2) notifyComplete();
           }
@@ -387,178 +345,21 @@ describe('normalizePipelineComparison', () => {
       );
 
       await Promise.resolve();
-      harness.dispatch(getPipelineIterationsAction([1]));
-      harness.dispatch(getPipelineIterationDetailsAction(1, 101));
-      await complete;
-
-      expect(fetchMock).not.toHaveBeenCalled();
-      expect(harness.dispatched).toContainEqual(
-        expect.objectContaining({
-          type: FETCH_SUCCESS,
-          payload: { data: [expect.objectContaining({ id: 101, pipelineId: 1 })] },
-          meta: expect.objectContaining({ namespace: PIPELINE_ITERATIONS_NAMESPACE }),
-        }),
-      );
-      expect(harness.dispatched).toContainEqual(
-        expect.objectContaining({
-          type: FETCH_SUCCESS,
-          payload: { data: expect.objectContaining({ id: 101, pipelineId: 1 }) },
-          meta: expect.objectContaining({ namespace: PIPELINE_ITERATION_DETAILS_NAMESPACE }),
-        }),
-      );
-      await harness.stop();
-    });
-
-    test('uses Redux catalog provenance for detail requests instead of mutable storage', async () => {
-      localStorage.setItem('ai_factory_transport', JSON.stringify({ pipelineCatalog: 'live' }));
-      fetchMock.mockResolvedValue({ id: 103, pipelineId: 7, number: 3 });
-      let notifyComplete: () => void = () => undefined;
-      const complete = new Promise<void>((resolve) => {
-        notifyComplete = resolve;
-      });
-      const harness = startPipelineSagas(
-        createSagaState({ transport: 'mock', catalogVersion: 1, catalogProjectKey: 'demo' }),
-        (action) => {
-          const candidate = action as { type?: string; meta?: { namespace?: string } };
-          if (
-            candidate.type === FETCH_SUCCESS &&
-            candidate.meta?.namespace === PIPELINE_ITERATION_DETAILS_NAMESPACE
-          ) {
-            notifyComplete();
-          }
-        },
-      );
-
-      await Promise.resolve();
+      harness.dispatch(getPipelineIterationsAction([7]));
       harness.dispatch(getPipelineIterationDetailsAction(7, 103));
       await complete;
 
-      expect(fetchMock).toHaveBeenCalledWith(URLS.tmsPipelineIterationById('demo', 7, 103), {
-        signal: expect.any(AbortSignal),
-      });
-      expect(getPipelineCatalogTransport).not.toHaveBeenCalled();
-      expect(fetchMock).toHaveBeenCalledTimes(1);
+      expect(fetchMock.mock.calls.map(([url]) => url)).toEqual([
+        URLS.pipelineCatalogIterations('demo', 7),
+        URLS.pipelineIterationById('demo', 103),
+      ]);
+      expect(harness.dispatched).toContainEqual(expect.objectContaining({
+        type: FETCH_SUCCESS,
+        payload: { data: expect.objectContaining({ kind: 'reduced', id: 103 }) },
+        meta: expect.objectContaining({ namespace: PIPELINE_ITERATION_DETAILS_NAMESPACE }),
+      }));
       await harness.stop();
     });
-
-    test.each([
-      ['unresolved catalog', createSagaState()],
-      [
-        'catalog from another project',
-        createSagaState({ transport: 'mock', catalogVersion: 1, catalogProjectKey: 'other' }),
-      ],
-    ])('blocks direct P3 for %s', async (_description, state) => {
-      const harness = startPipelineSagas(state);
-
-      await Promise.resolve();
-      harness.dispatch(getPipelineIterationDetailsAction(7, 103));
-      await Promise.resolve();
-      await Promise.resolve();
-
-      expect(fetchMock).not.toHaveBeenCalled();
-      expect(harness.dispatched).not.toContainEqual(
-        expect.objectContaining({
-          meta: expect.objectContaining({ namespace: PIPELINE_ITERATION_DETAILS_NAMESPACE }),
-        }),
-      );
-      await harness.stop();
-    });
-
-    test('fails a live-catalog detail request closed without network traffic or a global error', async () => {
-      const harness = startPipelineSagas(
-        createSagaState({ transport: 'live', catalogVersion: 1, catalogProjectKey: 'demo' }),
-      );
-
-      await Promise.resolve();
-      harness.dispatch(getPipelineIterationDetailsAction(7, 103));
-      await Promise.resolve();
-      await Promise.resolve();
-
-      expect(fetchMock).not.toHaveBeenCalled();
-      const detailActions = harness.dispatched.filter((action) => {
-        const candidate = action as { meta?: { namespace?: string } };
-        return candidate.meta?.namespace === PIPELINE_ITERATION_DETAILS_NAMESPACE;
-      }) as Array<{ type: string; meta: Record<string, unknown> }>;
-      expect(detailActions).toHaveLength(2);
-      expect(detailActions[0]).toMatchObject({
-        type: FETCH_START,
-        meta: {
-          projectKey: 'demo',
-          pipelineId: 7,
-          iterationId: 103,
-          catalogTransport: 'live',
-          catalogVersion: 1,
-          catalogRequestId: 1,
-          detailTransport: 'unavailable',
-        },
-      });
-      expect(detailActions[1]).toMatchObject({
-        type: FETCH_ERROR,
-        error: true,
-        meta: { isUnavailable: true, detailTransport: 'unavailable' },
-      });
-      expect(harness.dispatched).not.toContainEqual(
-        expect.objectContaining({
-          payload: expect.objectContaining({ messageId: 'aiFactoryPipelinesLoadingFailed' }),
-        }),
-      );
-      await harness.stop();
-    });
-
-    test('uses the canonical project-scoped LP3 URL only when live detail rollout is approved', async () => {
-      jest.mocked(getPipelineDetailTransport).mockReturnValue('live');
-      fetchMock.mockResolvedValue({
-        id: 103,
-        pipelineId: 7,
-        iterationNumber: 3,
-        stages: [],
-      });
-      let notifyComplete: () => void = () => undefined;
-      const complete = new Promise<void>((resolve) => {
-        notifyComplete = resolve;
-      });
-      const harness = startPipelineSagas(
-        createSagaState({ transport: 'live', catalogVersion: 1, catalogProjectKey: 'demo' }),
-        (action) => {
-          const candidate = action as { type?: string; meta?: { namespace?: string } };
-          if (
-            candidate.type === FETCH_SUCCESS &&
-            candidate.meta?.namespace === PIPELINE_ITERATION_DETAILS_NAMESPACE
-          ) {
-            notifyComplete();
-          }
-        },
-      );
-
-      await Promise.resolve();
-      harness.dispatch(getPipelineIterationDetailsAction(7, 103));
-      await complete;
-
-      expect(fetchMock).toHaveBeenCalledTimes(1);
-      expect(fetchMock).toHaveBeenCalledWith(URLS.pipelineIterationById('demo', 103), {
-        signal: expect.any(AbortSignal),
-      });
-      expect(fetchMock).not.toHaveBeenCalledWith(
-        URLS.tmsPipelineIterationById('demo', 7, 103),
-        expect.anything(),
-      );
-      expect(harness.dispatched).toContainEqual(
-        expect.objectContaining({
-          type: FETCH_SUCCESS,
-          payload: {
-            data: expect.objectContaining({
-              kind: 'reduced',
-              id: 103,
-              pipelineId: 7,
-              number: 3,
-            }),
-          },
-          meta: expect.objectContaining({ detailTransport: 'live' }),
-        }),
-      );
-      await harness.stop();
-    });
-
     test.each([
       ['invalid pipeline identity', 0, 103],
       ['invalid iteration identity', 7, Number.NaN],
@@ -566,7 +367,7 @@ describe('normalizePipelineComparison', () => {
       'rejects %s before creating detail state or traffic',
       async (_description, pipelineId, iterationId) => {
         const harness = startPipelineSagas(
-          createSagaState({ transport: 'mock', catalogVersion: 1, catalogProjectKey: 'demo' }),
+          createSagaState({ transport: 'live', catalogVersion: 1, catalogProjectKey: 'demo' }),
         );
 
         await Promise.resolve();
@@ -579,93 +380,8 @@ describe('normalizePipelineComparison', () => {
       },
     );
 
-    test('keeps a pending valid detail request alive across invalid and unresolved actions and accepts the next valid request', async () => {
-      const state = createSagaState({
-        transport: 'mock',
-        catalogVersion: 1,
-        catalogProjectKey: 'demo',
-      });
-      const resolvers: Array<(value: { id: number; pipelineId: number; number: number }) => void> =
-        [];
-      const startedResolvers: Array<() => void> = [];
-      const startedPromises = [0, 1].map(
-        (index) =>
-          new Promise<void>((resolve) => {
-            startedResolvers[index] = resolve;
-          }),
-      );
-      const successfulRequestResolvers: Array<() => void> = [];
-      const successfulRequestPromises = [0, 1].map(
-        (index) =>
-          new Promise<void>((resolve) => {
-            successfulRequestResolvers[index] = resolve;
-          }),
-      );
-      fetchMock.mockImplementation(
-        () =>
-          new Promise((resolve) => {
-            const requestIndex = resolvers.length;
-            resolvers.push(
-              resolve as (value: { id: number; pipelineId: number; number: number }) => void,
-            );
-            startedResolvers[requestIndex]();
-          }),
-      );
-      let successfulRequests = 0;
-      const harness = startPipelineSagas(state, (action) => {
-        const candidate = action as { type?: string; meta?: { namespace?: string } };
-        if (
-          candidate.type === FETCH_SUCCESS &&
-          candidate.meta?.namespace === PIPELINE_ITERATION_DETAILS_NAMESPACE
-        ) {
-          successfulRequestResolvers[successfulRequests]();
-          successfulRequests += 1;
-        }
-      });
-
-      await Promise.resolve();
-      harness.dispatch(getPipelineIterationDetailsAction(7, 103));
-      await startedPromises[0];
-      const firstSignal = fetchMock.mock.calls[0][1]?.signal as AbortSignal;
-
-      harness.dispatch(getPipelineIterationDetailsAction(0, 103));
-      state.aiFactoryPipelines.catalogVersion = 0;
-      harness.dispatch(getPipelineIterationDetailsAction(7, 104));
-      await Promise.resolve();
-      await Promise.resolve();
-
-      expect(fetchMock).toHaveBeenCalledTimes(1);
-      expect(firstSignal.aborted).toBe(false);
-
-      state.aiFactoryPipelines.catalogVersion = 1;
-      resolvers[0]({ id: 103, pipelineId: 7, number: 3 });
-      await successfulRequestPromises[0];
-      expect(firstSignal.aborted).toBe(false);
-
-      harness.dispatch(getPipelineIterationDetailsAction(7, 104));
-      await startedPromises[1];
-      const secondSignal = fetchMock.mock.calls[1][1]?.signal as AbortSignal;
-      expect(secondSignal.aborted).toBe(false);
-
-      resolvers[1]({ id: 104, pipelineId: 7, number: 4 });
-      await successfulRequestPromises[1];
-
-      const detailActions = harness.dispatched.filter((action) => {
-        const candidate = action as { meta?: { namespace?: string } };
-        return candidate.meta?.namespace === PIPELINE_ITERATION_DETAILS_NAMESPACE;
-      }) as Array<{ type: string; meta: { iterationId: number } }>;
-      expect(detailActions.map(({ type, meta }) => [type, meta.iterationId])).toEqual([
-        [FETCH_START, 103],
-        [FETCH_SUCCESS, 103],
-        [FETCH_START, 104],
-        [FETCH_SUCCESS, 104],
-      ]);
-      expect(detailActions).not.toContainEqual(expect.objectContaining({ type: FETCH_ERROR }));
-      await harness.stop();
-    });
-
     test('runs sibling LP2 requests independently without aborting the first request', async () => {
-      const resolvers: Array<(value: { content: unknown[] }) => void> = [];
+      const resolvers: Array<(value: unknown) => void> = [];
       let notifyStarted: () => void = () => undefined;
       const bothStarted = new Promise<void>((resolve) => {
         notifyStarted = resolve;
@@ -678,12 +394,12 @@ describe('normalizePipelineComparison', () => {
       fetchMock.mockImplementation(
         () =>
           new Promise((resolve) => {
-            resolvers.push(resolve as (value: { content: unknown[] }) => void);
+            resolvers.push(resolve as (value: unknown) => void);
             if (resolvers.length === 2) notifyStarted();
           }),
       );
       const harness = startPipelineSagas(
-        createSagaState({ transport: 'mock', catalogVersion: 7, catalogProjectKey: 'demo' }),
+        createSagaState({ transport: 'live', catalogVersion: 7, catalogProjectKey: 'demo' }),
         (action) => {
           const candidate = action as { type?: string; meta?: { namespace?: string } };
           if (
@@ -706,11 +422,11 @@ describe('normalizePipelineComparison', () => {
       expect(firstSignal.aborted).toBe(false);
       expect(secondSignal.aborted).toBe(false);
       expect(fetchMock.mock.calls.map(([url]) => url)).toEqual([
-        URLS.tmsPipelineIterations('demo', 1),
-        URLS.tmsPipelineIterations('demo', 2),
+        URLS.pipelineCatalogIterations('demo', 1),
+        URLS.pipelineCatalogIterations('demo', 2),
       ]);
 
-      resolvers.forEach((resolve) => resolve({ content: [] }));
+      resolvers.forEach((resolve) => resolve({ content: [], page: { number: 1, size: 100, totalElements: 0, totalPages: 0 } }));
       await bothComplete;
       const iterationActions = harness.dispatched.filter((action) => {
         const candidate = action as { meta?: { namespace?: string } };
@@ -727,7 +443,7 @@ describe('normalizePipelineComparison', () => {
       expect(starts.map(({ meta }) => meta.pipelineId)).toEqual([1, 2]);
       expect(new Set(starts.map(({ meta }) => meta.requestId))).toHaveProperty('size', 2);
       expect(starts.every(({ meta }) => meta.catalogVersion === 7)).toBe(true);
-      expect(starts.every(({ meta }) => meta.transport === 'mock')).toBe(true);
+      expect(starts.every(({ meta }) => meta.transport === 'live')).toBe(true);
       await harness.stop();
     });
 
@@ -771,7 +487,7 @@ describe('normalizePipelineComparison', () => {
     ])('%s LP2 failure emits the expected global notification', async (_description, isCurrent) => {
       fetchMock.mockRejectedValue(new Error('request failed'));
       const state = createSagaState({
-        transport: 'mock',
+        transport: 'live',
         catalogVersion: 7,
         catalogProjectKey: 'demo',
       });

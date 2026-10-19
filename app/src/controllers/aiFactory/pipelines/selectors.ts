@@ -19,7 +19,7 @@ import type { PipelinesSelectorsRootState, PipelinesState } from './types';
 export const pipelinesStateSelector = (state: PipelinesSelectorsRootState): PipelinesState =>
   state.aiFactoryPipelines || {
     data: null,
-    transport: 'mock',
+    transport: 'live',
     catalogError: false,
     catalogVersion: 0,
     catalogRequestId: null,
@@ -74,10 +74,6 @@ export const pipelineIterationsErrorByPipelineSelector = (state: PipelinesSelect
 
 export const pipelineCatalogTransportSelector = (state: PipelinesSelectorsRootState) =>
   pipelinesStateSelector(state).transport;
-
-export const pipelineCatalogTransportFallbackSelector = (
-  state: PipelinesSelectorsRootState,
-): boolean => Boolean(pipelinesStateSelector(state).transportFallback);
 
 export const pipelineCatalogVersionSelector = (state: PipelinesSelectorsRootState): number =>
   pipelinesStateSelector(state).catalogVersion;

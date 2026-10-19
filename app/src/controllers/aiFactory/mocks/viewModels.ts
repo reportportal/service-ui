@@ -28,7 +28,6 @@ import {
   IterationSummaryRS,
   Lifecycle,
   MergeRequestState,
-  PipelineRS,
   PipelineType,
   PipelineCompareIterationRS,
   PipelineCompareRS,
@@ -56,16 +55,6 @@ import {
   unsentCommentsCount,
 } from './engine';
 import { MockCaseRecord, MockIterationSeed, MockPipelineSeed } from './types';
-
-export const toPipelineRS = (pipeline: MockPipelineSeed, iterationsCount: number): PipelineRS => ({
-  id: pipeline.id,
-  type: pipeline.type,
-  name: pipeline.name,
-  repository: pipeline.repository,
-  iterationsCount,
-  settings: pipeline.settings,
-  rerunOptions: pipeline.rerunOptions,
-});
 
 const publicTestCaseId = (iteration: MockIterationSeed, canonicalId: number): number => {
   const caseIndex = iteration.testCaseIds?.indexOf(canonicalId) ?? -1;

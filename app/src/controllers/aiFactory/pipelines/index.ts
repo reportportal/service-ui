@@ -46,7 +46,6 @@ export {
   pipelineIterationsLoadingByPipelineSelector,
   pipelineIterationsErrorByPipelineSelector,
   pipelineCatalogTransportSelector,
-  pipelineCatalogTransportFallbackSelector,
   pipelineCatalogVersionSelector,
   pipelineCatalogRequestIdSelector,
   pipelineCatalogProjectKeySelector,

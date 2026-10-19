@@ -53,7 +53,6 @@ export interface PipelinesState {
   isLoading?: boolean;
   catalogError?: boolean;
   transport: PipelineCatalogTransport;
-  transportFallback?: boolean;
   catalogVersion: number;
   catalogRequestId: number | null;
   catalogProjectKey: string | null;
