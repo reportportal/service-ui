@@ -84,8 +84,10 @@ const ITERATION_POLL_INTERVAL_MS = 5000;
 
 const STAGE_KEYS = new Set<string>(Object.values(StageKey));
 
+type PipelineIteration = IterationRS | ReducedPipelineIterationDetail;
+
 const isReducedDetail = (
-  iteration: IterationRS | ReducedPipelineIterationDetail | null,
+  iteration: PipelineIteration | null,
 ): iteration is ReducedPipelineIterationDetail =>
   Boolean(iteration && 'kind' in iteration && iteration.kind === 'reduced');
 
@@ -130,7 +132,7 @@ const shouldRequestDetail = ({
   pipelineCandidate: PipelineCatalogItem | undefined;
   detailMatchesRoute: boolean;
   isLoading: boolean;
-  currentIteration: IterationRS | ReducedPipelineIterationDetail | null;
+  currentIteration: PipelineIteration | null;
   requestKey: string;
   lastRequestKey: string | null;
 }) =>
@@ -153,13 +155,106 @@ const shouldPollIteration = (
   isLiveTransport: boolean,
   isLoading: boolean,
   pipeline: PipelineRS | undefined,
-  iteration: IterationRS | ReducedPipelineIterationDetail | null,
+  iteration: PipelineIteration | null,
 ) =>
   !isLiveTransport &&
   !isLoading &&
   Boolean(pipeline) &&
   (iteration?.status === IterationStatus.RUNNING ||
     iteration?.status === IterationStatus.IN_REVIEW);
+
+interface DetailRequestOptions {
+  dispatch: ReturnType<typeof useDispatch>;
+  projectKey: string;
+  pipelineId: number;
+  iterationId: number;
+  isLiveTransport: boolean;
+  hasCurrentCatalog: boolean;
+  catalogTransport: string;
+  catalogVersion: number;
+  catalogRequestId: number | null;
+  catalogProjectKey: string | null;
+  pipelineCandidate: PipelineCatalogItem | undefined;
+  hasValidRoute: boolean;
+  detailMatchesRoute: boolean;
+  isLoading: boolean;
+  currentIteration: PipelineIteration | null;
+}
+
+const useIterationDetailRequests = ({
+  dispatch,
+  projectKey,
+  pipelineId,
+  iterationId,
+  isLiveTransport,
+  hasCurrentCatalog,
+  catalogTransport,
+  catalogVersion,
+  catalogRequestId,
+  catalogProjectKey,
+  pipelineCandidate,
+  hasValidRoute,
+  detailMatchesRoute,
+  isLoading,
+  currentIteration,
+}: DetailRequestOptions) => {
+  const catalogRequestProjectRef = useRef<string | null>(null);
+  const detailRequestKeyRef = useRef<string | null>(null);
+
+  useEffect(() => {
+    if (
+      shouldRequestCatalog(
+        isLiveTransport,
+        projectKey,
+        hasCurrentCatalog,
+        catalogRequestProjectRef.current,
+      )
+    ) {
+      catalogRequestProjectRef.current = projectKey;
+      dispatch(getPipelinesAction());
+    }
+  }, [dispatch, hasCurrentCatalog, isLiveTransport, projectKey]);
+
+  useEffect(() => {
+    const requestKey = isLiveTransport
+      ? `${projectKey}:live:${pipelineId}:${iterationId}`
+      : `${projectKey}:${catalogTransport}:${catalogVersion}:${catalogRequestId}:${pipelineId}:${iterationId}`;
+    if (
+      !shouldRequestDetail({
+        projectKey,
+        hasValidRoute,
+        isLiveTransport,
+        catalogVersion,
+        catalogProjectKey,
+        pipelineCandidate,
+        detailMatchesRoute,
+        isLoading,
+        currentIteration,
+        requestKey,
+        lastRequestKey: detailRequestKeyRef.current,
+      })
+    ) {
+      return;
+    }
+    detailRequestKeyRef.current = requestKey;
+    dispatch(getPipelineIterationDetailsAction(pipelineId, iterationId));
+  }, [
+    catalogProjectKey,
+    catalogRequestId,
+    catalogTransport,
+    catalogVersion,
+    dispatch,
+    isLoading,
+    isLiveTransport,
+    hasValidRoute,
+    detailMatchesRoute,
+    currentIteration,
+    iterationId,
+    pipelineCandidate,
+    pipelineId,
+    projectKey,
+  ]);
+};
 
 interface RichIterationDetailsProps {
   richIteration: IterationRS;
@@ -470,62 +565,23 @@ export const IterationDetailsPageContent = () => {
     resolvePipelineCatalog(pipelines, pipelineId, catalogVersion, catalogProjectKey, projectKey);
   const [selectedStage, setSelectedStage] = useState<AiStageKey | null>(null);
   const hasInitializedStage = useRef(false);
-  const catalogRequestProjectRef = useRef<string | null>(null);
-  const detailRequestKeyRef = useRef<string | null>(null);
-
-  useEffect(() => {
-    if (
-      shouldRequestCatalog(
-        isLiveTransport,
-        projectKey,
-        hasCurrentCatalog,
-        catalogRequestProjectRef.current,
-      )
-    ) {
-      catalogRequestProjectRef.current = projectKey;
-      dispatch(getPipelinesAction());
-    }
-  }, [dispatch, hasCurrentCatalog, isLiveTransport, projectKey]);
-
-  useEffect(() => {
-    const requestKey = isLiveTransport
-      ? `${projectKey}:live:${pipelineId}:${iterationId}`
-      : `${projectKey}:${catalogTransport}:${catalogVersion}:${catalogRequestId}:${pipelineId}:${iterationId}`;
-    if (
-      !shouldRequestDetail({
-        projectKey,
-        hasValidRoute,
-        isLiveTransport,
-        catalogVersion,
-        catalogProjectKey,
-        pipelineCandidate,
-        detailMatchesRoute,
-        isLoading,
-        currentIteration,
-        requestKey,
-        lastRequestKey: detailRequestKeyRef.current,
-      })
-    ) {
-      return;
-    }
-    detailRequestKeyRef.current = requestKey;
-    dispatch(getPipelineIterationDetailsAction(pipelineId, iterationId));
-  }, [
-    catalogProjectKey,
-    catalogRequestId,
+  useIterationDetailRequests({
+    dispatch,
+    projectKey,
+    pipelineId,
+    iterationId,
+    isLiveTransport,
+    hasCurrentCatalog,
     catalogTransport,
     catalogVersion,
-    dispatch,
-    isLoading,
-    isLiveTransport,
+    catalogRequestId,
+    catalogProjectKey,
+    pipelineCandidate,
     hasValidRoute,
     detailMatchesRoute,
+    isLoading,
     currentIteration,
-    iterationId,
-    pipelineCandidate,
-    pipelineId,
-    projectKey,
-  ]);
+  });
 
   useEffect(() => {
     if (hasInitializedStage.current || !pipeline) {
