@@ -109,6 +109,58 @@ const resolvePipelineCatalog = (
   return { hasCurrentCatalog, pipelineCandidate, pipeline, isReducedCatalogPipeline };
 };
 
+const shouldRequestDetail = ({
+  projectKey,
+  hasValidRoute,
+  isLiveTransport,
+  catalogVersion,
+  catalogProjectKey,
+  pipelineCandidate,
+  detailMatchesRoute,
+  isLoading,
+  currentIteration,
+  requestKey,
+  lastRequestKey,
+}: {
+  projectKey: string;
+  hasValidRoute: boolean;
+  isLiveTransport: boolean;
+  catalogVersion: number;
+  catalogProjectKey: string | null;
+  pipelineCandidate: PipelineCatalogItem | undefined;
+  detailMatchesRoute: boolean;
+  isLoading: boolean;
+  currentIteration: IterationRS | ReducedPipelineIterationDetail | null;
+  requestKey: string;
+  lastRequestKey: string | null;
+}) =>
+  Boolean(projectKey) &&
+  hasValidRoute &&
+  (isLiveTransport ||
+    (catalogVersion > 0 && catalogProjectKey === projectKey && pipelineCandidate)) &&
+  !(detailMatchesRoute && isLoading) &&
+  !currentIteration &&
+  lastRequestKey !== requestKey;
+
+const shouldRequestCatalog = (
+  isLiveTransport: boolean,
+  projectKey: string,
+  hasCurrentCatalog: boolean,
+  lastProjectKey: string | null,
+) => !isLiveTransport && Boolean(projectKey) && !hasCurrentCatalog && lastProjectKey !== projectKey;
+
+const shouldPollIteration = (
+  isLiveTransport: boolean,
+  isLoading: boolean,
+  pipeline: PipelineRS | undefined,
+  iteration: IterationRS | ReducedPipelineIterationDetail | null,
+) =>
+  !isLiveTransport &&
+  !isLoading &&
+  Boolean(pipeline) &&
+  (iteration?.status === IterationStatus.RUNNING ||
+    iteration?.status === IterationStatus.IN_REVIEW);
+
 interface RichIterationDetailsProps {
   richIteration: IterationRS;
   pipeline: PipelineRS;
@@ -423,10 +475,12 @@ export const IterationDetailsPageContent = () => {
 
   useEffect(() => {
     if (
-      !isLiveTransport &&
-      projectKey &&
-      !hasCurrentCatalog &&
-      catalogRequestProjectRef.current !== projectKey
+      shouldRequestCatalog(
+        isLiveTransport,
+        projectKey,
+        hasCurrentCatalog,
+        catalogRequestProjectRef.current,
+      )
     ) {
       catalogRequestProjectRef.current = projectKey;
       dispatch(getPipelinesAction());
@@ -438,13 +492,19 @@ export const IterationDetailsPageContent = () => {
       ? `${projectKey}:live:${pipelineId}:${iterationId}`
       : `${projectKey}:${catalogTransport}:${catalogVersion}:${catalogRequestId}:${pipelineId}:${iterationId}`;
     if (
-      !projectKey ||
-      !hasValidRoute ||
-      (!isLiveTransport &&
-        (catalogVersion <= 0 || catalogProjectKey !== projectKey || !pipelineCandidate)) ||
-      (detailMatchesRoute && isLoading) ||
-      currentIteration ||
-      detailRequestKeyRef.current === requestKey
+      !shouldRequestDetail({
+        projectKey,
+        hasValidRoute,
+        isLiveTransport,
+        catalogVersion,
+        catalogProjectKey,
+        pipelineCandidate,
+        detailMatchesRoute,
+        isLoading,
+        currentIteration,
+        requestKey,
+        lastRequestKey: detailRequestKeyRef.current,
+      })
     ) {
       return;
     }
@@ -486,11 +546,7 @@ export const IterationDetailsPageContent = () => {
       return POLLING_REQUEST_STARTED;
     },
     ITERATION_POLL_INTERVAL_MS,
-    !isLiveTransport &&
-      !isLoading &&
-      Boolean(pipeline) &&
-      (currentIteration?.status === IterationStatus.RUNNING ||
-        currentIteration?.status === IterationStatus.IN_REVIEW),
+    shouldPollIteration(isLiveTransport, isLoading, pipeline, currentIteration),
   );
 
   const breadcrumbDescriptors = [

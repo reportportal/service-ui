@@ -578,6 +578,52 @@ const renderReducedStagePanel = (
   </div>
 );
 
+const renderReducedDetailError = (
+  {
+    isInvalidRoute,
+    failureKind,
+    hasError,
+    onBack,
+    onRetry,
+  }: Pick<
+    ReducedIterationDetailsProps,
+    'isInvalidRoute' | 'failureKind' | 'hasError' | 'onBack' | 'onRetry'
+  >,
+  formatMessage: ReturnType<typeof useIntl>['formatMessage'],
+) => {
+  let message = messages.detailUnavailable;
+  if (isInvalidRoute) message = messages.detailInvalidRoute;
+  else if (failureKind === 'forbidden') message = messages.detailForbidden;
+  else if (failureKind === 'notFound') message = messages.detailNotFound;
+  else if (hasError) message = messages.detailError;
+  const shouldGoBack = isInvalidRoute || Boolean(failureKind);
+  return (
+    <SettingsLayout>
+      <div className={cx('state')}>
+        <SystemMessage mode={hasError || isInvalidRoute || failureKind ? 'error' : 'info'}>
+          <output
+            aria-live={hasError || isInvalidRoute || failureKind ? 'assertive' : 'polite'}
+            aria-atomic="true"
+          >
+            {formatMessage(message)}
+          </output>
+          <div className={cx('error-action')}>
+            <Button
+              variant="text"
+              data-automation-id={
+                shouldGoBack ? 'backToPipelinesButton' : 'retryReducedIterationButton'
+              }
+              onClick={shouldGoBack ? onBack : onRetry}
+            >
+              {formatMessage(shouldGoBack ? messages.backToPipelines : messages.retry)}
+            </Button>
+          </div>
+        </SystemMessage>
+      </div>
+    </SettingsLayout>
+  );
+};
+
 export const ReducedIterationDetails = ({
   iteration,
   hasError,
@@ -602,36 +648,9 @@ export const ReducedIterationDetails = ({
     });
   };
   if (hasError || isUnavailable || !iteration || isInvalidRoute || failureKind) {
-    let message = messages.detailUnavailable;
-    if (isInvalidRoute) message = messages.detailInvalidRoute;
-    else if (failureKind === 'forbidden') message = messages.detailForbidden;
-    else if (failureKind === 'notFound') message = messages.detailNotFound;
-    else if (hasError) message = messages.detailError;
-    const shouldGoBack = isInvalidRoute || Boolean(failureKind);
-    return (
-      <SettingsLayout>
-        <div className={cx('state')}>
-          <SystemMessage mode={hasError || isInvalidRoute || failureKind ? 'error' : 'info'}>
-            <output
-              aria-live={hasError || isInvalidRoute || failureKind ? 'assertive' : 'polite'}
-              aria-atomic="true"
-            >
-              {formatMessage(message)}
-            </output>
-            <div className={cx('error-action')}>
-              <Button
-                variant="text"
-                data-automation-id={
-                  shouldGoBack ? 'backToPipelinesButton' : 'retryReducedIterationButton'
-                }
-                onClick={shouldGoBack ? onBack : onRetry}
-              >
-                {formatMessage(shouldGoBack ? messages.backToPipelines : messages.retry)}
-              </Button>
-            </div>
-          </SystemMessage>
-        </div>
-      </SettingsLayout>
+    return renderReducedDetailError(
+      { isInvalidRoute, failureKind, hasError, onBack, onRetry },
+      formatMessage,
     );
   }
 
