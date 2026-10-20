@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 EPAM Systems
+ * Copyright 2026 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,6 +25,7 @@ import { addDashboardAction } from 'controllers/dashboard';
 import { showModalAction } from 'controllers/modal';
 import { withTooltip } from 'components/main/tooltips/tooltip';
 import { DASHBOARD_EVENTS } from 'analyticsEvents/dashboardsPageEvents';
+import { AddEditModal } from 'pages/inside/dashboardPage/modals';
 import AddDashboardIcon from './img/ic-add-dash-inline.svg';
 import styles from './addDashboardButton.scss';
 
@@ -79,13 +80,7 @@ export class AddDashboardButton extends Component {
   onAddDashboardItem = () => {
     const { showModal, addDashboard, tracking } = this.props;
     tracking.trackEvent(DASHBOARD_EVENTS.CLICK_ON_ADD_NEW_DASHBOARD_BTN);
-    showModal({
-      id: 'dashboardAddEditModal',
-      data: {
-        onSubmit: addDashboard,
-        type: 'add',
-      },
-    });
+    showModal({ component: <AddEditModal onSubmit={addDashboard} type="add" /> });
   };
 
   render() {
