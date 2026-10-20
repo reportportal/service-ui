@@ -135,11 +135,9 @@ export const SuitesPageWrapped = ({
 
   useEffect(() => {
     return () => {
-      if (selectedSuites.length > 0) {
-        dispatch(unselectAllSuitesAction());
-      }
+      dispatch(unselectAllSuitesAction());
     };
-  }, [selectedSuites, dispatch]);
+  }, [dispatch]);
 
   return (
     <PageLayout>
