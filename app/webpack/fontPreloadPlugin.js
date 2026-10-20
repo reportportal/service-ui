@@ -18,7 +18,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 // ui-kit (used by TMS pages) ships only TTF files, which are requested once the CSS is injected
 const UI_KIT_TTF_REGEXP =
-  /(^|\/)(Roboto-(Regular|Medium|Bold)|OpenSans-(Regular|Medium|Semibold))\.[0-9a-f]+\.ttf$/;
+  /(^|\/)(Roboto-(Regular|Medium|Bold)|OpenSans-(Regular|Medium|Semibold|Bold))\.[0-9a-f]+\.ttf$/;
 
 const getFontType = (name) => (name.endsWith('.woff2') ? 'font/woff2' : 'font/ttf');
 
