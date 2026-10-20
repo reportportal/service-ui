@@ -18,7 +18,7 @@ built against a real HTTP contract before the backend exists. See
 | `db.ts` | In-memory store: hydrates the seed, persists to `localStorage`, exposes finders and mutators |
 | `engine.ts` | Pure backend rules: `deriveIterationStatus`, `applyAutoReady`, `caseCost`, `automateSkipReason`, … |
 | `viewModels.ts` | Projects `db.ts` records into the contract's `*RS` DTOs |
-| `handlers.ts` | Registers remaining P4/LP4/LP5/C/L/R/F/A endpoints on a `MockAdapter`; simulates fix rounds and automation with `setTimeout` |
+| `handlers.ts` | Registers remaining P4/LP5/C/L/R/F/A endpoints on a `MockAdapter`; LP1–LP4 pass through to the real API; simulates fix rounds and automation with `setTimeout` |
 | `overlay.ts` | Merges AI/lifecycle fields onto **real** TMS test-case responses, matched by `displayId` (Mode A — see below) |
 | `index.ts` | `installAiFactoryMocks(axiosInstance)` — the only thing outside this folder should import |
 

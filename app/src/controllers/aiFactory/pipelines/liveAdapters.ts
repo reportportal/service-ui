@@ -16,7 +16,12 @@
 
 import { IterationSummaryRS, LivePipelineStatus, PipelineRS } from 'types/aiFactory';
 
-export type ReducedPipelineStatus = LivePipelineStatus | 'RUNNING' | 'WAITING' | 'SKIPPED' | 'UNKNOWN';
+export type ReducedPipelineStatus =
+  | LivePipelineStatus
+  | 'RUNNING'
+  | 'WAITING'
+  | 'SKIPPED'
+  | 'UNKNOWN';
 
 export interface LivePipelineRaw {
   id?: unknown;
@@ -48,6 +53,13 @@ export interface LivePipelineStageRaw {
   durationMillis?: unknown;
   sections?: unknown;
   links?: unknown;
+  attempt?: unknown;
+  ownedBy?: unknown;
+  affectsIterationStatus?: unknown;
+  retryable?: unknown;
+  startedAt?: unknown;
+  finishedAt?: unknown;
+  relatedEntities?: unknown;
 }
 
 export interface LivePipelineStageDetailRaw extends LivePipelineStageRaw {
@@ -63,6 +75,7 @@ export interface LivePipelineIterationRaw {
   id?: unknown;
   pipelineId?: unknown;
   pipelineName?: unknown;
+  pipelineType?: unknown;
   iterationNumber?: unknown;
   status?: unknown;
   statusCategory?: unknown;
@@ -91,16 +104,20 @@ export interface ReducedPipelineAttribute {
   valueType?: string;
   url?: string;
   order?: number;
+  comparisonKey?: boolean;
+  direction?: string;
+  rollup?: string;
 }
 
 export interface ReducedPipelineSection {
   key: string;
   title: string;
   role: 'RESULT' | 'DETAILS';
-  columns: Array<{ key: string; label: string }>;
+  columns: Array<{ key: string; label: string; valueType?: string }>;
   rows: Array<{
     key: string;
     cells: Record<string, string>;
+    cellLinks?: Record<string, { url?: string; entityType?: string; entityId?: string }>;
     details: Array<{ heading: string; items: string[] }>;
   }>;
 }
@@ -125,6 +142,7 @@ export interface ReducedPipeline {
 
 export interface ReducedPipelineStage {
   key: string;
+  stageKey?: string;
   label: string;
   sequence?: number;
   status: ReducedPipelineStatus;
@@ -139,15 +157,31 @@ export interface ReducedPipelineStage {
 export interface ReducedPipelineDetailStage extends ReducedPipelineStage {
   id: number;
   sequence: number;
+  attempt?: number;
+  ownedBy?: string;
+  affectsIterationStatus?: boolean;
+  retryable?: boolean;
+  startedAt?: number;
+  finishedAt?: number;
+  relatedEntities?: Array<{ entityType: string; entityId: string }>;
   sections?: ReducedPipelineSection[];
 }
 
 export interface ReducedPipelineIterationDetail extends Omit<ReducedPipelineIteration, 'stages'> {
   pipelineName?: string;
+  pipelineType?: string;
   createdAt?: number;
   startedBy?: string;
   warnings?: string[];
+  warningDetails?: Array<{
+    code?: string;
+    message: string;
+    stageId?: number;
+    entityType?: string;
+    entityIds?: string[];
+  }>;
   stages: ReducedPipelineDetailStage[];
+  rawResponse?: Record<string, unknown>;
 }
 
 export interface ReducedPipelineIteration {
@@ -250,26 +284,34 @@ const isCompleteSinglePage = (page: LivePage | null, contentLength: number): boo
   if (!page) {
     return false;
   }
-  return page.number === 1 &&
+  return (
+    page.number === 1 &&
     contentLength <= page.size &&
     page.totalPages <= 1 &&
     page.hasNext !== true &&
-    page.totalElements === contentLength;
+    page.totalElements === contentLength
+  );
 };
 
 const asPageEnvelope = (value: unknown, maxItems: number): LivePipelinePage<unknown> | null => {
   const response = asRecord(value);
   const page = response ? asPage(response.page) : null;
   const content = response?.content;
-  if (!page || !Array.isArray(content) || page.size > maxItems || content.length > maxItems ||
-    content.length > page.size || page.totalElements < content.length ||
+  if (
+    !page ||
+    !Array.isArray(content) ||
+    page.size > maxItems ||
+    content.length > maxItems ||
+    content.length > page.size ||
+    page.totalElements < content.length ||
     page.totalPages !== Math.ceil(page.totalElements / page.size) ||
-    (page.hasNext !== undefined && page.hasNext !== (page.number < page.totalPages)) ||
+    (page.hasNext !== undefined && page.hasNext !== page.number < page.totalPages) ||
     (page.totalPages === 0 && page.number !== 1) ||
     (page.totalPages > 0 && page.number > page.totalPages) ||
     (page.number < page.totalPages && content.length !== page.size) ||
     (page.number === page.totalPages &&
-      (page.number - 1) * page.size + content.length !== page.totalElements)) {
+      (page.number - 1) * page.size + content.length !== page.totalElements)
+  ) {
     return null;
   }
   return { content, page };
@@ -309,6 +351,9 @@ const adaptAttributeEntry = (entry: unknown): ReducedPipelineAttribute | null =>
   const valueType = asTrimmedString(raw.valueType, MAX_KEY_LENGTH);
   const url = asTrimmedString(raw.url);
   const order = asNonNegativeInteger(raw.order);
+  const comparisonKey = raw.comparisonKey;
+  const direction = asTrimmedString(raw.direction, MAX_KEY_LENGTH);
+  const rollup = asTrimmedString(raw.rollup, MAX_KEY_LENGTH);
   const validType = ['META', 'TAG', 'NONE'].includes(type ?? '')
     ? (type as ReducedPipelineAttribute['type'])
     : undefined;
@@ -319,8 +364,13 @@ const adaptAttributeEntry = (entry: unknown): ReducedPipelineAttribute | null =>
     [raw.valueType, valueType],
     [raw.url, url],
     [raw.order, order],
+    [raw.direction, direction],
+    [raw.rollup, rollup],
   ];
-  if (optionalFields.some(([original, parsed]) => original !== undefined && parsed === undefined)) {
+  if (
+    optionalFields.some(([original, parsed]) => original !== undefined && parsed === undefined) ||
+    (comparisonKey !== undefined && typeof comparisonKey !== 'boolean')
+  ) {
     return null;
   }
   return {
@@ -332,6 +382,9 @@ const adaptAttributeEntry = (entry: unknown): ReducedPipelineAttribute | null =>
     ...(valueType ? { valueType } : {}),
     ...(url ? { url } : {}),
     ...(order !== undefined ? { order } : {}),
+    ...(typeof comparisonKey === 'boolean' ? { comparisonKey } : {}),
+    ...(direction ? { direction } : {}),
+    ...(rollup ? { rollup } : {}),
   };
 };
 
@@ -396,10 +449,16 @@ const adaptSectionColumns = (value: unknown): ReducedPipelineSection['columns'] 
     const column = asRecord(entry);
     const key = column && asTrimmedString(column.key, MAX_KEY_LENGTH);
     const label = column && asTrimmedString(column.label, MAX_NAME_LENGTH);
-    if (!key || !label || UNSAFE_ATTRIBUTE_KEYS.has(key)) {
+    const valueType = column && asTrimmedString(column.valueType, MAX_KEY_LENGTH);
+    if (
+      !key ||
+      !label ||
+      UNSAFE_ATTRIBUTE_KEYS.has(key) ||
+      (column?.valueType !== undefined && !valueType)
+    ) {
       return null;
     }
-    columns.push({ key, label });
+    columns.push({ key, label, ...(valueType ? { valueType } : {}) });
   }
   return new Set(columns.map(({ key }) => key)).size === columns.length ? columns : null;
 };
@@ -427,6 +486,47 @@ const adaptSectionDetails = (
   return details;
 };
 
+const adaptCellLink = (
+  cell: unknown,
+): NonNullable<ReducedPipelineSection['rows'][number]['cellLinks']>[string] | null => {
+  const cellRecord = asRecord(cell);
+  if (cellRecord?.url === undefined && cellRecord?.target === undefined) {
+    return {};
+  }
+  const url = asTrimmedString(cellRecord.url);
+  const target = asRecord(cellRecord.target);
+  const entityType = target && asTrimmedString(target.entityType, MAX_KEY_LENGTH);
+  const entityId = target && asTrimmedString(target.entityId, MAX_KEY_LENGTH);
+  if (
+    (cellRecord.url !== undefined && !url) ||
+    (cellRecord.target !== undefined && (!entityType || !entityId))
+  ) {
+    return null;
+  }
+  return {
+    ...(url ? { url } : {}),
+    ...(entityType && entityId ? { entityType, entityId } : {}),
+  };
+};
+
+const adaptSectionCells = (
+  cells: Record<string, unknown>,
+  columns: ReducedPipelineSection['columns'],
+): Pick<ReducedPipelineSection['rows'][number], 'cells' | 'cellLinks'> | null => {
+  const displayCells: Record<string, string> = {};
+  const cellLinks: NonNullable<ReducedPipelineSection['rows'][number]['cellLinks']> = {};
+  for (const { key } of columns) {
+    const cell = cells[key];
+    if (cell === undefined) continue;
+    const displayValue = asCellText(cell);
+    const link = adaptCellLink(cell);
+    if (displayValue === undefined || !link) return null;
+    displayCells[key] = displayValue;
+    if (Object.keys(link).length) cellLinks[key] = link;
+  }
+  return { cells: displayCells, ...(Object.keys(cellLinks).length ? { cellLinks } : {}) };
+};
+
 const adaptSectionRow = (
   value: unknown,
   columns: ReducedPipelineSection['columns'],
@@ -437,19 +537,9 @@ const adaptSectionRow = (
   if (!row || !key || !cells || Object.keys(cells).length > 30) {
     return null;
   }
-  const displayCells: Record<string, string> = {};
-  for (const column of columns) {
-    const cell = cells[column.key];
-    if (cell !== undefined) {
-      const displayValue = asCellText(cell);
-      if (displayValue === undefined) {
-        return null;
-      }
-      displayCells[column.key] = displayValue;
-    }
-  }
+  const adaptedCells = adaptSectionCells(cells, columns);
   const details = adaptSectionDetails(row.details);
-  return details ? { key, cells: displayCells, details } : null;
+  return adaptedCells && details ? { key, ...adaptedCells, details } : null;
 };
 
 const adaptSection = (value: unknown): ReducedPipelineSection | null => {
@@ -459,8 +549,14 @@ const adaptSection = (value: unknown): ReducedPipelineSection | null => {
   const role = section?.role;
   const columns = adaptSectionColumns(section?.columns);
   const rawRows = section?.rows;
-  if (!key || !title || (role !== 'RESULT' && role !== 'DETAILS') ||
-    !columns || !Array.isArray(rawRows) || rawRows.length > 200) {
+  if (
+    !key ||
+    !title ||
+    (role !== 'RESULT' && role !== 'DETAILS') ||
+    !columns ||
+    !Array.isArray(rawRows) ||
+    rawRows.length > 200
+  ) {
     return null;
   }
   const rows = rawRows.map((row) => adaptSectionRow(row, columns));
@@ -540,6 +636,7 @@ const adaptStage = (value: unknown): ReducedPipelineStage | null => {
 
   return {
     key,
+    ...(reportedKey ? { stageKey: reportedKey } : {}),
     label,
     sequence,
     status: asStatus(raw.statusCategory ?? raw.status),
@@ -554,15 +651,92 @@ const adaptStage = (value: unknown): ReducedPipelineStage | null => {
   };
 };
 
+const adaptRelatedEntities = (
+  value: unknown,
+): NonNullable<ReducedPipelineDetailStage['relatedEntities']> | null => {
+  if (value === undefined) {
+    return [];
+  }
+  if (!Array.isArray(value) || value.length > 200) {
+    return null;
+  }
+  const entities: NonNullable<ReducedPipelineDetailStage['relatedEntities']> = [];
+  for (const entry of value) {
+    const entity = asRecord(entry);
+    const entityType = entity && asTrimmedString(entity.entityType, MAX_KEY_LENGTH);
+    const entityId = entity && asTrimmedString(entity.entityId, MAX_KEY_LENGTH);
+    if (!entityType || !entityId) {
+      return null;
+    }
+    entities.push({ entityType, entityId });
+  }
+  return entities;
+};
+
+const adaptEntityIds = (value: unknown): string[] | null => {
+  if (value === undefined) {
+    return [];
+  }
+  if (!Array.isArray(value) || value.length > 100) {
+    return null;
+  }
+  const entityIds: string[] = [];
+  for (const id of value) {
+    const entityId = asTrimmedString(id, MAX_KEY_LENGTH);
+    if (!entityId) {
+      return null;
+    }
+    entityIds.push(entityId);
+  }
+  return entityIds;
+};
+
+const adaptDetailStageMetadata = (raw: Record<string, unknown>) => {
+  const attempt = asPositiveInteger(raw.attempt);
+  const ownedBy = asTrimmedString(raw.ownedBy, MAX_KEY_LENGTH);
+  const startedAt = asTimestamp(raw.startedAt);
+  const finishedAt = asTimestamp(raw.finishedAt);
+  const relatedEntities = adaptRelatedEntities(raw.relatedEntities);
+  if (
+    !relatedEntities ||
+    (raw.attempt !== undefined && !attempt) ||
+    (raw.ownedBy !== undefined && !ownedBy) ||
+    (raw.startedAt !== undefined && startedAt === undefined) ||
+    (raw.finishedAt !== undefined && finishedAt === undefined) ||
+    (raw.affectsIterationStatus !== undefined && typeof raw.affectsIterationStatus !== 'boolean') ||
+    (raw.retryable !== undefined && typeof raw.retryable !== 'boolean')
+  ) {
+    return null;
+  }
+  return {
+    ...(attempt ? { attempt } : {}),
+    ...(ownedBy ? { ownedBy } : {}),
+    ...(typeof raw.affectsIterationStatus === 'boolean'
+      ? { affectsIterationStatus: raw.affectsIterationStatus }
+      : {}),
+    ...(typeof raw.retryable === 'boolean' ? { retryable: raw.retryable } : {}),
+    ...(startedAt !== undefined ? { startedAt } : {}),
+    ...(finishedAt !== undefined ? { finishedAt } : {}),
+    ...(relatedEntities.length ? { relatedEntities } : {}),
+  };
+};
+
 const adaptDetailStage = (value: unknown): ReducedPipelineDetailStage | null => {
   const raw = asRecord(value);
   const stage = adaptStage(value);
   const id = raw ? asPositiveInteger(raw.id) : null;
   const sections = raw ? adaptSections(raw.sections) : null;
-  if (!stage || !id || stage.sequence === undefined || !sections) {
+  const metadata = raw && adaptDetailStageMetadata(raw);
+  if (!stage || !id || stage.sequence === undefined || !sections || !metadata) {
     return null;
   }
-  return { ...stage, id, sequence: stage.sequence, ...(sections.length ? { sections } : {}) };
+  return {
+    ...stage,
+    id,
+    sequence: stage.sequence,
+    ...metadata,
+    ...(sections.length ? { sections } : {}),
+  };
 };
 
 const adaptStages = (value: unknown): ReducedPipelineStage[] | null => {
@@ -627,7 +801,8 @@ const adaptPipeline = (value: unknown): ReducedPipeline | null => {
   const attributes = adaptAttributes(raw.attributes);
   const repository = attributes?.find(({ key }) => key === 'repository')?.value;
   const settings = raw.settings === undefined ? undefined : asRecord(raw.settings);
-  const nestedAutoReady = settings?.autoReady === undefined ? undefined : asRecord(settings.autoReady);
+  const nestedAutoReady =
+    settings?.autoReady === undefined ? undefined : asRecord(settings.autoReady);
   if (!id || !name) {
     return null;
   }
@@ -797,6 +972,31 @@ export const adaptLivePipelineIterationsPage = (
   return { content, page: envelope.page };
 };
 
+const adaptDetailMetadata = (raw: Record<string, unknown>) => {
+  const pipelineName = asTrimmedString(raw.pipelineName, MAX_NAME_LENGTH);
+  const pipelineType = asTrimmedString(raw.pipelineType, MAX_KEY_LENGTH);
+  const createdAt = asTimestamp(raw.createdAt);
+  const startedByRaw = asRecord(raw.startedBy);
+  const startedBy = startedByRaw
+    ? (asTrimmedString(startedByRaw.fullName, MAX_NAME_LENGTH) ??
+      asTrimmedString(startedByRaw.login, MAX_NAME_LENGTH))
+    : undefined;
+  if (
+    (raw.pipelineName !== undefined && pipelineName === undefined) ||
+    (raw.pipelineType !== undefined && pipelineType === undefined) ||
+    (raw.createdAt !== undefined && createdAt === undefined) ||
+    (raw.startedBy !== undefined && !startedBy)
+  ) {
+    return null;
+  }
+  return {
+    pipelineName,
+    ...(pipelineType ? { pipelineType } : {}),
+    createdAt,
+    ...(startedBy ? { startedBy } : {}),
+  };
+};
+
 export const adaptLivePipelineIterationDetail = (
   value: unknown,
   expectedPipelineId: number,
@@ -810,33 +1010,56 @@ export const adaptLivePipelineIterationDetail = (
   }
   const raw = asRecord(value);
   const iteration = adaptIteration(value, expectedPipelineId);
-  const pipelineName = raw ? asTrimmedString(raw.pipelineName, MAX_NAME_LENGTH) : undefined;
-  const createdAt = raw ? asTimestamp(raw.createdAt) : undefined;
-  const startedByRaw = raw && asRecord(raw.startedBy);
-  const startedBy = startedByRaw
-    ? asTrimmedString(startedByRaw.fullName, MAX_NAME_LENGTH) ??
-      asTrimmedString(startedByRaw.login, MAX_NAME_LENGTH)
-    : undefined;
+  const metadata = raw ? adaptDetailMetadata(raw) : null;
   const rawWarnings = raw?.warnings === undefined ? [] : raw.warnings;
-  const warnings = Array.isArray(rawWarnings) && rawWarnings.length <= 20
-    ? rawWarnings.map((warning) => {
-      const entry = asRecord(warning);
-      return entry && asTrimmedString(entry.message);
-    })
-    : null;
+  const warningDetails =
+    Array.isArray(rawWarnings) && rawWarnings.length <= 20
+      ? rawWarnings.map((warning) => {
+          const entry = asRecord(warning);
+          const message = entry && asTrimmedString(entry.message);
+          const code = entry && asTrimmedString(entry.code, MAX_KEY_LENGTH);
+          const stageId = entry && asPositiveInteger(entry.stageId);
+          const entityType = entry && asTrimmedString(entry.entityType, MAX_KEY_LENGTH);
+          const entityIds = adaptEntityIds(entry?.entityIds);
+          if (
+            !message ||
+            !entityIds ||
+            (entry?.code !== undefined && !code) ||
+            (entry?.stageId !== undefined && !stageId) ||
+            (entry?.entityType !== undefined && !entityType)
+          ) {
+            return null;
+          }
+          return {
+            message,
+            ...(code ? { code } : {}),
+            ...(stageId ? { stageId } : {}),
+            ...(entityType ? { entityType } : {}),
+            ...(entityIds.length ? { entityIds } : {}),
+          };
+        })
+      : null;
   const stages = raw ? adaptDetailStages(raw.stages) : null;
   if (
     !raw ||
     iteration?.id !== expectedIterationId ||
-    (raw.pipelineName !== undefined && pipelineName === undefined) ||
-    (raw.createdAt !== undefined && createdAt === undefined) ||
-    (raw.startedBy !== undefined && !startedBy) ||
-    !warnings ||
-    warnings.some((warning) => !warning) ||
+    !metadata ||
+    !warningDetails ||
+    warningDetails.some((warning) => !warning) ||
     !stages
   ) {
     throw new Error('Invalid pipeline iteration detail response');
   }
-  return { ...iteration, pipelineName, createdAt, ...(startedBy ? { startedBy } : {}),
-    ...(warnings.length ? { warnings } : {}), stages };
+  return {
+    ...iteration,
+    ...metadata,
+    ...(warningDetails.length
+      ? {
+          warnings: warningDetails.map(({ message }) => message),
+          warningDetails,
+        }
+      : {}),
+    stages,
+    rawResponse: raw,
+  };
 };

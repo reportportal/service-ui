@@ -19,7 +19,7 @@
   grid-template-columns: minmax(0, 2fr) minmax(230px, 0.8fr);
   gap: 36px;
   color: var(--rp-ui-base-almost-black);
-  font-family: var(--rp-ui-base-font-family);
+  font-family: $FONT-ROBOTO-REGULAR;
 
   &__main,
   &__aside {
@@ -54,7 +54,8 @@
 
   h2 {
     margin: 0;
-    font-weight: var(--rp-ui-base-fw-bold);
+    font-family: $FONT-ROBOTO-BOLD;
+    font-weight: normal;
     font-size: 15px;
     line-height: 24px;
   }
@@ -68,7 +69,8 @@
 
 .aside-title {
   margin: 0 0 12px;
-  font-weight: var(--rp-ui-base-fw-bold);
+  font-family: $FONT-ROBOTO-BOLD;
+  font-weight: normal;
   font-size: 15px;
   line-height: 24px;
 }
@@ -112,7 +114,8 @@
     padding: 8px 12px;
     color: var(--rp-ui-base-e-400);
     border-bottom: 1px solid var(--rp-ui-base-e-100);
-    font-weight: var(--rp-ui-base-fw-medium);
+    font-family: $FONT-ROBOTO-MEDIUM;
+    font-weight: normal;
     text-align: left;
   }
 
@@ -192,10 +195,21 @@
 .table a,
 .note a,
 .details-list a,
+.link {
+  text-decoration: none;
+}
+
+.caseLink {
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.table a,
+.note a,
+.details-list a,
 .link,
 .caseLink {
   color: var(--rp-ui-base-topaz);
-  text-decoration: none;
 
   &:visited {
     color: var(--rp-ui-base-topaz);

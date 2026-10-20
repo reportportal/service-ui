@@ -15,12 +15,12 @@
  */
 
 /**
- * Smoke test: every endpoint of docs/ai-factory-poc/05-backend-contract.md answers on the mocks.
+ * Smoke test: remaining mock endpoints answer locally while live Pipeline endpoints pass through.
  * Uses a scratch axios instance (never the app's global one) so this never touches real network
  * code paths. Async simulations (fix round, automation) are advanced with fake timers.
  */
 
-import axios from 'axios';
+import axios, { InternalAxiosRequestConfig } from 'axios';
 import MockAdapter from 'axios-mock-adapter';
 import { URLS } from 'common/urls';
 import {
@@ -31,7 +31,6 @@ import {
   IterationStatus,
   LifecycleBatchRS,
   MergeRequestState,
-  PipelineCompareRS,
   PipelineSettingsRS,
   ReviewCommentRS,
   TestCaseAiExtension,
@@ -68,7 +67,7 @@ const reloadPersistedHandlers = (): void => {
   installAiFactoryHandlers(mock);
 };
 
-describe('pipeline settings and comparison mocks', () => {
+describe('pipeline settings mocks and live comparison routing', () => {
   test('LP5 PATCH updates settings through the live contract, with validation', async () => {
     const before = await http.get<PipelineSettingsRS>(URLS.tmsPipelineSettings(PROJECT, 1));
     expect(before.data).toMatchObject({ autoReady: true, threshold: 90 });
@@ -94,37 +93,28 @@ describe('pipeline settings and comparison mocks', () => {
     expect(after.data).toEqual({ autoReady: false, threshold: 80, editable: true });
   });
 
-  test('LP4 uses the path iteration as candidate and the required with query as baseline', async () => {
-    const { data } = await http.get<PipelineCompareRS>(
-      URLS.pipelineIterationComparison(PROJECT, 103, 102),
-    );
+  test('LP4 passes through the dev mock adapter to the HTTP adapter', async () => {
+    const networkAdapter = jest.fn((config: InternalAxiosRequestConfig) => Promise.resolve({
+      data: { source: 'backend' },
+      status: 200,
+      statusText: 'OK',
+      headers: {},
+      config,
+    }));
+    const client = axios.create({ adapter: networkAdapter });
+    const passthroughMock = new MockAdapter(client, { onNoMatch: 'passthrough' });
+    installAiFactoryHandlers(passthroughMock);
 
-    expect(mock.history.get[0].url).toContain('/pipeline/iteration/103/compare?with=102');
-    expect(data.mock).toEqual({
-      kind: 'REPORTPORTAL_AI_FACTORY_COMPARE_DEMO',
-      version: 1,
-    });
-    expect(data.current).toMatchObject({ id: 103, pipelineId: 1, iterationNumber: 3 });
-    expect(data.previous).toMatchObject({ id: 102, pipelineId: 1, iterationNumber: 2 });
-    expect(data.current?.mockMetrics).toEqual(
-      expect.objectContaining({
-        testCasesCount: expect.any(Number),
-        autoReadyPromotedCount: expect.any(Number),
-      }),
-    );
-    expect(data.previous?.mockMetrics?.criterionAverages).toEqual(
-      expect.objectContaining({ atomicity: expect.any(Number) }),
-    );
-  });
+    try {
+      const url = URLS.pipelineIterationComparison(PROJECT, 2, 1);
+      const response = await client.get(url);
 
-  test.each([
-    ['/api/v1/project/demo_project/pipeline/iteration/103/compare', 'missing baseline'],
-    [URLS.pipelineIterationComparison(PROJECT, 103, 103), 'same iteration'],
-    [URLS.pipelineIterationComparison(PROJECT, 201, 103), 'cross-pipeline pair'],
-  ])('LP4 rejects a %s (%s)', async (url, _description) => {
-    const response = await http.get(url, { validateStatus: () => true });
-
-    expect(response.status).toBe(400);
+      expect(response.data).toEqual({ source: 'backend' });
+      expect(networkAdapter).toHaveBeenCalledTimes(1);
+      expect(networkAdapter.mock.calls[0][0].url).toBe(url);
+    } finally {
+      passthroughMock.restore();
+    }
   });
 });
 

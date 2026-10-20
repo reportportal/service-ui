@@ -53,6 +53,10 @@ export {
   pipelineIterationDetailsLoadingSelector,
   pipelineIterationDetailsErrorSelector,
   pipelineIterationDetailsUnavailableSelector,
+  pipelineIterationDetailsFailureKindSelector,
+  pipelineIterationDetailProjectKeySelector,
+  pipelineIterationDetailPipelineIdSelector,
+  pipelineIterationDetailIterationIdSelector,
   pipelineComparisonSelector,
   pipelineComparisonLoadingSelector,
   pipelineComparisonErrorSelector,
@@ -70,12 +74,14 @@ export type {
   PipelinePageRequest,
   PipelinePageState,
   PipelineIterationItem,
+  PipelineComparisonResult,
   GetPipelineComparisonAction,
   ClearPipelineComparisonAction,
 } from './types';
 export type { PipelineCatalogTransport, PipelineDetailTransport } from './transport';
 export type {
   ReducedPipeline,
+  ReducedPipelineAttribute,
   ReducedPipelineIteration,
   ReducedPipelineIterationDetail,
   ReducedPipelineDetailStage,
@@ -83,6 +89,7 @@ export type {
   ReducedPipelineSection,
   ReducedPipelineStatus,
 } from './liveAdapters';
+export type { LiveComparisonStage, LivePipelineComparison } from './liveCompareAdapter';
 export {
   isReducedPipeline,
   isReducedPipelineIteration,

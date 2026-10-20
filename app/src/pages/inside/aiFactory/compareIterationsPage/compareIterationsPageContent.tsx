@@ -26,13 +26,14 @@ import {
   clearPipelineComparisonAction,
   getPipelineComparisonAction,
   getPipelineIterationsAction,
-  isRichPipeline,
-  isRichPipelineIteration,
-  pipelineCatalogTransportSelector,
+  getPipelinesAction,
+  pipelineCatalogErrorSelector,
+  pipelineCatalogProjectKeySelector,
   pipelineComparisonErrorSelector,
   pipelineComparisonLoadingSelector,
   pipelineComparisonSelector,
   pipelineIterationsByPipelineSelector,
+  pipelineIterationsErrorByPipelineSelector,
   pipelineIterationsLoadingSelector,
   pipelinesLoadingSelector,
   pipelinesSelector,
@@ -44,7 +45,7 @@ import {
   updatePagePropertiesAction,
   urlOrganizationAndProjectSelector,
 } from 'controllers/pages';
-import { projectNameSelector } from 'controllers/project';
+import { projectKeySelector, projectNameSelector } from 'controllers/project';
 import { SettingsLayout } from 'layouts/settingsLayout';
 import { PageHeaderWithBreadcrumbsAndActions } from 'pages/inside/common/pageHeaderWithBreadcrumbsAndActions';
 import { ProjectDetails } from 'pages/organization/constants';
@@ -60,83 +61,110 @@ export const CompareIterationsPageContent = () => {
   const { formatMessage } = useIntl();
   const dispatch = useDispatch();
   const projectName = useSelector(projectNameSelector);
+  const projectKey = useSelector(projectKeySelector);
   const { organizationSlug, projectSlug } = useSelector(
     urlOrganizationAndProjectSelector,
   ) as ProjectDetails;
   const query = useSelector(querySelector);
-  const pipelines = useSelector(pipelinesSelector);
-  const pipelineCatalogTransport = useSelector(pipelineCatalogTransportSelector) ?? 'mock';
+  const loadedPipelines = useSelector(pipelinesSelector);
+  const catalogProjectKey = useSelector(pipelineCatalogProjectKeySelector);
+  const pipelines = catalogProjectKey === projectKey ? loadedPipelines : null;
+  const hasCatalogError = useSelector(pipelineCatalogErrorSelector);
   const isPipelinesLoading = useSelector(pipelinesLoadingSelector);
   const iterationsByPipeline = useSelector(pipelineIterationsByPipelineSelector);
   const isIterationsLoading = useSelector(pipelineIterationsLoadingSelector);
+  const iterationsErrors = useSelector(pipelineIterationsErrorByPipelineSelector);
   const comparison = useSelector(pipelineComparisonSelector);
   const isComparisonLoading = useSelector(pipelineComparisonLoadingSelector);
   const hasComparisonError = useSelector(pipelineComparisonErrorSelector);
   const pipelineId = parseQueryId(query.pipeline);
   const baselineId = parseQueryId(query.baseline);
   const candidateId = parseQueryId(query.candidate);
-  const isComparisonAvailable = pipelineCatalogTransport === 'mock';
-  const pipeline = isComparisonAvailable
-    ? pipelines?.filter(isRichPipeline).find((item) => item.id === pipelineId)
-    : undefined;
-  const pipelineIterations = pipelineId ? iterationsByPipeline?.[pipelineId] : undefined;
-  const iterations = pipelineIterations?.filter(isRichPipelineIteration);
-
-  useEffect(() => {
-    if (!isComparisonAvailable || !pipelines || query.pipeline !== undefined) {
-      return;
-    }
-    const richPipelines = pipelines.filter(isRichPipeline);
-    const defaultPipeline =
-      richPipelines.find((item) => item.iterationsCount >= 2) ?? richPipelines[0];
-    if (defaultPipeline) {
-      dispatch(updatePagePropertiesAction({ pipeline: defaultPipeline.id }));
-    }
-  }, [dispatch, isComparisonAvailable, pipelines, query.pipeline]);
-
-  useEffect(() => {
-    if (isComparisonAvailable && pipelineId && pipeline && !iterations) {
-      dispatch(getPipelineIterationsAction([pipelineId]));
-    }
-  }, [dispatch, isComparisonAvailable, iterations, pipeline, pipelineId]);
+  const pipeline = pipelines?.find((item) => item.id === pipelineId);
+  const pipelineIterations =
+    pipelineId && catalogProjectKey === projectKey ? iterationsByPipeline?.[pipelineId] : undefined;
+  const iterations = pipelineIterations;
 
   useEffect(() => {
     if (
-      !isComparisonAvailable ||
-      !iterations ||
-      query.baseline !== undefined ||
-      query.candidate !== undefined
+      !pipelines &&
+      !isPipelinesLoading &&
+      (catalogProjectKey !== projectKey || !hasCatalogError)
     ) {
+      dispatch(getPipelinesAction());
+    }
+  }, [catalogProjectKey, dispatch, hasCatalogError, isPipelinesLoading, pipelines, projectKey]);
+
+  useEffect(() => {
+    if (!pipelines || query.pipeline !== undefined) {
       return;
     }
-    const pair = getLatestPair(iterations);
+    const defaultPipeline =
+      pipelines.find((item) => (item.iterationsCount ?? 0) >= 2) ?? pipelines[0];
+    if (defaultPipeline) {
+      dispatch(updatePagePropertiesAction({ pipeline: defaultPipeline.id }));
+    }
+  }, [dispatch, pipelines, query.pipeline]);
+
+  useEffect(() => {
+    if (
+      pipelineId &&
+      catalogProjectKey === projectKey &&
+      !iterations &&
+      !isIterationsLoading &&
+      !iterationsErrors?.[pipelineId]
+    ) {
+      dispatch(getPipelineIterationsAction([pipelineId], { offset: 0, limit: 200 }));
+    }
+  }, [
+    catalogProjectKey,
+    dispatch,
+    isIterationsLoading,
+    iterations,
+    iterationsErrors,
+    pipelineId,
+    projectKey,
+  ]);
+
+  useEffect(() => {
+    if (!iterations || query.baseline !== undefined) {
+      return;
+    }
+    const selectedCandidate = candidateId
+      ? iterations.find((item) => item.id === candidateId)
+      : undefined;
+    const previous = selectedCandidate
+      ? [...iterations]
+          .filter((item) => item.number < selectedCandidate.number)
+          .sort((left, right) => right.number - left.number)[0]
+      : undefined;
+    let pair: { baselineId: number; candidateId: number } | null = null;
+    if (selectedCandidate && previous) {
+      pair = { baselineId: previous.id, candidateId: selectedCandidate.id };
+    } else if (!candidateId) {
+      pair = getLatestPair(iterations);
+    }
     if (pair) {
       dispatch(
         updatePagePropertiesAction({
           baseline: pair.baselineId,
-          candidate: pair.candidateId,
+          ...(query.candidate === undefined ? { candidate: pair.candidateId } : {}),
         }),
       );
     }
-  }, [dispatch, isComparisonAvailable, iterations, query.baseline, query.candidate]);
+  }, [candidateId, dispatch, iterations, query.baseline, query.candidate]);
 
   const hasValidPair = Boolean(
-    pipeline &&
-    iterations &&
-    baselineId &&
-    candidateId &&
-    baselineId !== candidateId &&
-    iterations.some((item) => item.id === baselineId) &&
-    iterations.some((item) => item.id === candidateId),
+    pipelineId && baselineId && candidateId && baselineId !== candidateId,
   );
 
   useEffect(() => {
-    if (isComparisonAvailable && pipelineId && baselineId && candidateId && hasValidPair) {
+    if (pipelineId && baselineId && candidateId && hasValidPair) {
       dispatch(getPipelineComparisonAction(pipelineId, candidateId, baselineId));
       return;
     }
     dispatch(clearPipelineComparisonAction());
-  }, [baselineId, candidateId, dispatch, hasValidPair, isComparisonAvailable, pipelineId]);
+  }, [baselineId, candidateId, dispatch, hasValidPair, pipelineId]);
 
   useEffect(
     () => () => {
@@ -165,6 +193,7 @@ export const CompareIterationsPageContent = () => {
     })) ?? [];
   const comparisonMatchesSelection = Boolean(
     comparison?.pipelineId === pipelineId &&
+    (comparison?.mode !== 'live' || comparison.projectKey === projectKey) &&
     comparison?.baseline.id === baselineId &&
     comparison?.candidate.id === candidateId,
   );
@@ -204,7 +233,10 @@ export const CompareIterationsPageContent = () => {
   };
 
   const renderState = () => {
-    if ((isPipelinesLoading && !pipelines) || (isIterationsLoading && !iterations)) {
+    if (
+      !hasValidPair &&
+      ((isPipelinesLoading && !pipelines) || (isIterationsLoading && !iterations))
+    ) {
       return (
         <div className={cx('state', 'state--loading')}>
           <SpinningPreloader />
@@ -214,16 +246,13 @@ export const CompareIterationsPageContent = () => {
         </div>
       );
     }
-    if (!isComparisonAvailable) {
-      return <div className={cx('state')}>{formatMessage(messages.comparisonUnavailable)}</div>;
-    }
-    if (!pipelines?.length) {
+    if (!pipelines?.length && !hasValidPair) {
       return <div className={cx('state')}>{formatMessage(messages.noPipelines)}</div>;
     }
-    if (!pipelineId || !pipeline) {
+    if (!pipelineId || (!pipeline && !hasValidPair)) {
       return <div className={cx('state')}>{formatMessage(messages.invalidSelection)}</div>;
     }
-    if (!iterations || iterations.length < 2) {
+    if (iterations && iterations.length < 2 && !hasValidPair) {
       return <div className={cx('state')}>{formatMessage(messages.notEnoughIterations)}</div>;
     }
     if (!hasValidPair) {

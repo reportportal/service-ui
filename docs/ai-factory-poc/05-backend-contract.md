@@ -10,6 +10,12 @@
 > **Not included as an executable integration:** T3.6 CI connection, T1.2u CI-state badges and T4.4 Re-run/Retry
 > commands are not implemented. T6.7 added disabled, mock-backed Re-run and failed-Upload Retry presentation
 > shells only. They send no mutation and do not prove that LP6 is a browser Re-run command or that LP7 is ready.
+>
+> **LP3 update (2026-10-19):** §1.4 and the original inventory describe the historical
+> `feature-pipelines-2767` contract. The current LP3 response and frontend integration are recorded in
+> §0.1.1 below. The remaining LP1/LP2 and other historical sections require separate reconciliation;
+> [21-live-pipeline-integration-2026-10-18.md](21-live-pipeline-integration-2026-10-18.md) tracks the
+> current LP1–LP3 evidence and unresolved deployment checks.
 
 ## 0. Sources, scope and status legend
 
@@ -71,7 +77,7 @@ and remain an open backend/product agreement.
 |---|---|---:|:---:|:---:|:---:|:---:|
 | LP1 | `GET /v1/project/{projectKey}/pipeline` | `200 PipelineRS[]` | ✅ | T6.2-G1 strict raw adapter + reduced catalog | Legacy P1 while mock mode is active | 🔒 hard closed |
 | LP2 | `GET /v1/project/{projectKey}/pipeline/{pipelineId}/iteration` | `200 PipelineIterationSummaryRS[]` | ✅ | T6.2-G1 strict raw adapter + reduced iterations | Legacy P2 while mock mode is active | 🔒 hard closed |
-| LP3 | `GET /v1/project/{projectKey}/pipeline/iteration/{iterationId}` | `200 PipelineIterationDetailRS` | ✅ | T6.2-G2 strict raw adapter + reduced detail | Legacy rich P3 while mock mode is active | 🔒 hard closed |
+| LP3 | `GET /v1/project/{projectKey}/pipeline/iteration/{iterationId}` | `200 PipelineIterationDetailRS` | ✅ | EPMRPP-122413 live detail adapter and stage view | Canonical API by default; no P3 runtime mock | ⚠️ local proxy checked; trusted deployment gates open |
 | LP4 | `GET /v1/project/{projectKey}/pipeline/iteration/{iterationId}/compare?with={otherIterationId}` | `200 PipelineCompareRS` | ✅ | T4.3 exact-path adapter; status-only for unmarked raw data | Same-path rich mock | 🔒 disabled with live catalog |
 | LP5 | `PATCH /v1/project/{projectKey}/pipeline/{pipelineId}` | `200 PipelineRS` | ✅ | T3.4 canonical request/body; UI currently requires mock-catalog provenance | Same-path mock in development | 🔒 not enabled from live catalog |
 | LP6 | `POST /v1/project/{projectKey}/pipeline/iteration` | `201 PipelineIterationDetailRS` | ✅ | No request integration; disabled Re-run shell explicitly refuses LP6 | Mock-only option display | ❌ |
@@ -80,6 +86,35 @@ and remain an open backend/product agreement.
 | QS2 | `POST /v1/project/{projectKey}/tms/quality-standard` | `201 TmsQualityStandardRS` | ✅ | None | None | ❌ |
 | QS3 | `PUT /v1/project/{projectKey}/tms/quality-standard` | `200 TmsQualityStandardRS` | ✅ | None | None | ❌ |
 | QS4 | `DELETE /v1/project/{projectKey}/tms/quality-standard` | `200`, no response body schema | ✅ | None | None | ❌ |
+
+### 0.1.1 Current LP3 read contract (EPMRPP-122413)
+
+The unauthenticated OpenAPI read on **2026-10-19** returned `feature-pipelines-2876` (downloaded JSON
+SHA-256 `2ce553356e46ec529286798ead31e6db5658a5d861859824972ca73eede40526`). This is schema
+evidence, not proof of the deployed Git SHA or an authenticated non-empty response from a trusted HTTPS origin.
+
+- `GET /v1/project/{projectKey}/pipeline/iteration/{iterationId}` returns one `PipelineIterationDetailRS`.
+  Required fields are `id`, `pipelineId`, `pipelineName`, `iterationNumber`, `status`, `statusCategory` and
+  `stages`. The frontend validates the route and response identities, keeps status text distinct from its
+  category and displays empty, forbidden and missing-detail states without substituting mock data.
+- Each `PipelineStageRS` requires `id`, `name`, `sequence`, `attempt`, `ownedBy`, `status` and
+  `statusCategory`. Documented optional data include attributes, timing, summary/message, result,
+  sections, related entities, links, attempts and raw output. The UI exposes validated fields in stage
+  cards/panels and offers the full response for inspection; absent values stay absent.
+- A `PipelineSection` requires `key`, `columns` and `rows`; its optional `role` distinguishes `RESULT`
+  and `DETAILS`. Column `key` is required. The OpenAPI does not define a semantic registry for stage,
+  section or column keys, so specialized Create/Grade/Upload mapping needs backend-owned stable keys.
+- **Backend follow-up:** add a stable semantic `stageKey` to stage *responses* (reporting requests already
+  accept it). `name` and `sequence` are presentation/order fields and cannot safely identify a stage.
+  `PipelineSection.EntityReference` requires string `entityType`/`entityId`; for `TEST_CASE`, the observed
+  `entityId` is a display ID such as `TC25602`, while the Library detail route needs a numeric internal ID.
+  Provide that internal ID or a verified internal URL before enabling direct case-detail links. Confirm a
+  trusted URL policy for stage/CI links as well.
+
+The local authenticated proxy showed LP3 data for pipeline 1, iteration 1. Trusted HTTPS, deployed backend
+SHA, sanitized non-empty/error captures, permissions and link targets remain open in the
+[integration evidence log](21-live-pipeline-integration-2026-10-18.md). This addendum supersedes the LP3
+field shapes in §1.4; it does not change the LP4 comparison contract.
 
 ### 0.2 Provisional test-case contract status
 
@@ -984,6 +1019,7 @@ An endpoint group is ready for live enablement only when all applicable items ar
 
 | Date | Change | Agreed with |
 |------|--------|-------------|
+| 2026-10-19 | Recorded the current LP3 read schema and API-default frontend behavior for EPMRPP-122413; specified missing stage identity, Test Case internal ID and trusted-link requirements without claiming deployed HTTPS validation | OpenAPI `feature-pipelines-2876` and local proxy evidence; backend answers pending |
 | 2026-10-05 | v1.1 aligned the contract with T6.7: recorded disabled Re-run/Retry presentation shells without claiming LP6/LP7 integration; added the mock-only Re-run option projection, user-command/CI-capability requirements, Upload rollback and structured retry-attempt rules; synchronized C2 Pipeline link labels (`pipelineName`, `requirementId`) | Current frontend implementation only; Backend/Product/Security decisions remain open |
 | 2026-10-05 | v1.0 fully aligned the contract with all implemented T0–T6.6-A scopes; separated published, implemented, mock-owned and live-rollout states; corrected LP4/LP5 live availability; added C/L/R/F/G/A coverage, role matrix, polling/refetch rules, normalized errors, strict validation, NFR/security rules, deferred scopes and backend delivery gates. Re-audited live OpenAPI with no material drift | Published OpenAPI `feature-pipelines-2767` plus current frontend implementation |
 | 2026-10-04 | v0.4 recorded the implemented and automatically validated EPMRPP-122041 LP3 generic-detail DTO/adapter/transport foundation, separate detail provenance/stale guards, reduced-detail presentation and removal of the Library direct-detail request. The live gate remains hard closed; no live rollout, backend/browser validation, rich detail parity, live polling or Quality Standard integration is claimed | Published OpenAPI `feature-pipelines-2767` plus frontend branch evidence |

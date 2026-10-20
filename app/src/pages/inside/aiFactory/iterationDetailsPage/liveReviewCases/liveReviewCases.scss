@@ -1,0 +1,53 @@
+.live-review-cases {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding-top: 16px;
+  border-top: 1px solid var(--rp-ui-base-e-100);
+
+  &__heading {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+  }
+
+  h3 {
+    margin: 0;
+    font-size: 14px;
+    font-weight: 400;
+  }
+
+  &__scroll {
+    overflow-x: auto;
+    scrollbar-width: thin;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  th,
+  td {
+    padding: 8px 12px;
+    border-bottom: 1px solid var(--rp-ui-base-e-100);
+    text-align: left;
+    vertical-align: top;
+  }
+
+  th {
+    color: var(--rp-ui-base-e-400);
+    font-size: 11px;
+  }
+
+  &__status {
+    &--ready {
+      color: var(--rp-ui-base-test-execution-status-passed);
+    }
+
+    &--draft {
+      color: var(--rp-ui-base-a-yellow-600);
+    }
+  }
+}

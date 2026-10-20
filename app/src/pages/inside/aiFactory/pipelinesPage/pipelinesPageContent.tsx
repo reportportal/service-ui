@@ -314,8 +314,8 @@ export const PipelinesPageContent = () => {
             <div className={cx('toolbar__actions')}>
               <Button
                 variant="text"
+                adjustWidthOn="content"
                 data-automation-id="compareIterationsButton"
-                disabled={transport !== 'mock'}
                 onClick={() =>
                   dispatch({
                     type: PROJECT_PIPELINE_COMPARISON_PAGE,
@@ -328,6 +328,7 @@ export const PipelinesPageContent = () => {
               {isDemoResetAvailable && (
                 <Button
                   variant="text"
+                  adjustWidthOn="content"
                   data-automation-id="resetAiFactoryDemoButton"
                   disabled={isLoading}
                   onClick={openResetDemoConfirmation}
@@ -337,6 +338,7 @@ export const PipelinesPageContent = () => {
               )}
               <Button
                 variant="text"
+                adjustWidthOn="content"
                 data-automation-id="refreshPipelinesButton"
                 icon={<RefreshIcon />}
                 disabled={isLoading}

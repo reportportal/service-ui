@@ -28,15 +28,16 @@ const cx = createClassnames(styles);
 export interface CaseLinkProps {
   testCaseId?: number;
   name: string;
+  searchName?: string;
 }
 
-/** A case's name, linked to its Library details page when it already has an id (02 §"Case title links"). */
-export const CaseLink = ({ testCaseId, name }: CaseLinkProps) => {
+/** Opens the case by numeric id, or searches the Library by name when only a display id is known. */
+export const CaseLink = ({ testCaseId, name, searchName }: CaseLinkProps) => {
   const { organizationSlug, projectSlug } = useSelector(
     urlOrganizationAndProjectSelector,
   ) as ProjectDetails;
 
-  if (testCaseId === undefined) {
+  if (testCaseId === undefined && !searchName?.trim()) {
     return <span>{name}</span>;
   }
 
@@ -45,7 +46,14 @@ export const CaseLink = ({ testCaseId, name }: CaseLinkProps) => {
       className={cx('caseLink')}
       to={{
         type: TEST_CASE_LIBRARY_PAGE,
-        payload: { organizationSlug, projectSlug, testCasePageRoute: `test-cases/${testCaseId}` },
+        payload: {
+          organizationSlug,
+          projectSlug,
+          ...(testCaseId !== undefined ? { testCasePageRoute: `test-cases/${testCaseId}` } : {}),
+        },
+        ...(testCaseId === undefined
+          ? { query: { testCasesSearchParams: searchName?.trim() } }
+          : {}),
       }}
     >
       {name}
