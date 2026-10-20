@@ -16,6 +16,12 @@
 
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 
+// ui-kit (used by TMS pages) ships only TTF files, which are requested once the CSS is injected
+const UI_KIT_TTF_REGEXP =
+  /(^|\/)(Roboto-(Regular|Medium|Bold)|OpenSans-(Regular|Medium|Semibold))\.[0-9a-f]+\.ttf$/;
+
+const getFontType = (name) => (name.endsWith('.woff2') ? 'font/woff2' : 'font/ttf');
+
 class FontPreloadPlugin {
   apply(compiler) {
     compiler.hooks.compilation.tap('FontPreloadPlugin', (compilation) => {
@@ -24,7 +30,7 @@ class FontPreloadPlugin {
         (data, cb) => {
           const publicPath = data.publicPath === 'auto' ? '' : data.publicPath || '';
           const fontTags = Object.keys(compilation.assets)
-            .filter((name) => name.endsWith('.woff2'))
+            .filter((name) => name.endsWith('.woff2') || UI_KIT_TTF_REGEXP.test(name))
             .map((name) => ({
               tagName: 'link',
               voidTag: true,
@@ -33,7 +39,7 @@ class FontPreloadPlugin {
                 rel: 'preload',
                 href: publicPath + name,
                 as: 'font',
-                type: 'font/woff2',
+                type: getFontType(name),
                 crossorigin: 'anonymous',
               },
             }));
