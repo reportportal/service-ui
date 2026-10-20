@@ -15,12 +15,12 @@
  */
 
 /**
- * Smoke test: every endpoint of docs/ai-factory-poc/05-backend-contract.md answers on the mocks.
+ * Smoke test: remaining mock endpoints answer locally while live Pipeline endpoints pass through.
  * Uses a scratch axios instance (never the app's global one) so this never touches real network
  * code paths. Async simulations (fix round, automation) are advanced with fake timers.
  */
 
-import axios from 'axios';
+import axios, { InternalAxiosRequestConfig } from 'axios';
 import MockAdapter from 'axios-mock-adapter';
 import { URLS } from 'common/urls';
 import {
@@ -29,12 +29,8 @@ import {
   AutomationEnvironmentsRS,
   FixRoundRS,
   IterationStatus,
-  IterationPageRS,
-  IterationRS,
   LifecycleBatchRS,
   MergeRequestState,
-  PipelineCompareRS,
-  PipelineRS,
   PipelineSettingsRS,
   ReviewCommentRS,
   TestCaseAiExtension,
@@ -43,11 +39,13 @@ import {
 import {
   findCase,
   findIteration,
+  findPipeline,
   registerCaseAlias,
   reloadMockDb,
   resetMockDb,
 } from './db';
 import { installAiFactoryHandlers, SIMULATED_DELAY_MS } from './handlers';
+import { toIterationRS, toIterationSummaryRS } from './viewModels';
 
 const PROJECT = 'demo_project';
 let http: ReturnType<typeof axios.create>;
@@ -69,41 +67,7 @@ const reloadPersistedHandlers = (): void => {
   installAiFactoryHandlers(mock);
 };
 
-describe('pipelines (P1-P4)', () => {
-  test('P1 lists both pipelines', async () => {
-    const { data } = await http.get<PipelineRS[]>(URLS.tmsPipeline(PROJECT));
-    expect(data).toHaveLength(2);
-    expect(data[0]).toMatchObject({ name: 'Test case generation', settings: { threshold: 90 } });
-  });
-
-  test('P2 lists gen-1 first when sorted, and search filters by requirement', async () => {
-    const { data } = await http.get<IterationPageRS>(
-      URLS.tmsPipelineIterations(PROJECT, 1, { search: 'BLK' }),
-    );
-    expect(data.content).toHaveLength(1);
-    expect(data.content[0].requirement?.specId).toBe('US-TMS-BLK-001');
-  });
-
-  test('P3 returns iteration details with stages', async () => {
-    const { data } = await http.get<IterationRS>(URLS.tmsPipelineIterationById(PROJECT, 1, 101));
-    expect(data.stages.map((s) => s.key)).toEqual(['CREATE', 'GRADE', 'UPLOAD', 'REVIEW']);
-  });
-
-  test('P3 404s for an unknown iteration', async () => {
-    const res = await http.get(URLS.tmsPipelineIterationById(PROJECT, 1, 999), {
-      validateStatus: () => true,
-    });
-    expect(res.status).toBe(404);
-  });
-
-  test('P3 rejects an iteration that belongs to another pipeline', async () => {
-    const res = await http.get(URLS.tmsPipelineIterationById(PROJECT, 1, 201), {
-      validateStatus: () => true,
-    });
-
-    expect(res.status).toBe(404);
-  });
-
+describe('pipeline settings mocks and live comparison routing', () => {
   test('LP5 PATCH updates settings through the live contract, with validation', async () => {
     const before = await http.get<PipelineSettingsRS>(URLS.tmsPipelineSettings(PROJECT, 1));
     expect(before.data).toMatchObject({ autoReady: true, threshold: 90 });
@@ -129,37 +93,28 @@ describe('pipelines (P1-P4)', () => {
     expect(after.data).toEqual({ autoReady: false, threshold: 80, editable: true });
   });
 
-  test('LP4 uses the path iteration as candidate and the required with query as baseline', async () => {
-    const { data } = await http.get<PipelineCompareRS>(
-      URLS.pipelineIterationComparison(PROJECT, 103, 102),
-    );
+  test('LP4 passes through the dev mock adapter to the HTTP adapter', async () => {
+    const networkAdapter = jest.fn((config: InternalAxiosRequestConfig) => Promise.resolve({
+      data: { source: 'backend' },
+      status: 200,
+      statusText: 'OK',
+      headers: {},
+      config,
+    }));
+    const client = axios.create({ adapter: networkAdapter });
+    const passthroughMock = new MockAdapter(client, { onNoMatch: 'passthrough' });
+    installAiFactoryHandlers(passthroughMock);
 
-    expect(mock.history.get[0].url).toContain('/pipeline/iteration/103/compare?with=102');
-    expect(data.mock).toEqual({
-      kind: 'REPORTPORTAL_AI_FACTORY_COMPARE_DEMO',
-      version: 1,
-    });
-    expect(data.current).toMatchObject({ id: 103, pipelineId: 1, iterationNumber: 3 });
-    expect(data.previous).toMatchObject({ id: 102, pipelineId: 1, iterationNumber: 2 });
-    expect(data.current?.mockMetrics).toEqual(
-      expect.objectContaining({
-        testCasesCount: expect.any(Number),
-        autoReadyPromotedCount: expect.any(Number),
-      }),
-    );
-    expect(data.previous?.mockMetrics?.criterionAverages).toEqual(
-      expect.objectContaining({ atomicity: expect.any(Number) }),
-    );
-  });
+    try {
+      const url = URLS.pipelineIterationComparison(PROJECT, 2, 1);
+      const response = await client.get(url);
 
-  test.each([
-    ['/api/v1/project/demo_project/pipeline/iteration/103/compare', 'missing baseline'],
-    [URLS.pipelineIterationComparison(PROJECT, 103, 103), 'same iteration'],
-    [URLS.pipelineIterationComparison(PROJECT, 201, 103), 'cross-pipeline pair'],
-  ])('LP4 rejects a %s (%s)', async (url, _description) => {
-    const response = await http.get(url, { validateStatus: () => true });
-
-    expect(response.status).toBe(400);
+      expect(response.data).toEqual({ source: 'backend' });
+      expect(networkAdapter).toHaveBeenCalledTimes(1);
+      expect(networkAdapter.mock.calls[0][0].url).toBe(url);
+    } finally {
+      passthroughMock.restore();
+    }
   });
 });
 
@@ -435,10 +390,7 @@ describe('automation (A1-A2)', () => {
     });
     const { pipelineId, iterationId, number } = accepted.data.iteration;
 
-    const initialList = await http.get<IterationPageRS>(
-      URLS.tmsPipelineIterations(PROJECT, pipelineId),
-    );
-    const initial = initialList.data.content.find(({ id }) => id === iterationId);
+    const initial = toIterationSummaryRS(findPipeline(pipelineId), findIteration(iterationId));
     expect(initial).toMatchObject({
       pipelineId,
       number,
@@ -459,16 +411,14 @@ describe('automation (A1-A2)', () => {
     });
 
     jest.advanceTimersByTime(SIMULATED_DELAY_MS + 100);
-    const firstTransition = await http.get<IterationRS>(
-      URLS.tmsPipelineIterationById(PROJECT, pipelineId, iterationId),
-    );
-    expect(firstTransition.data.stages.map(({ status }) => status)).toEqual([
+    const firstTransition = toIterationRS(findPipeline(pipelineId), findIteration(iterationId));
+    expect(firstTransition.stages.map(({ status }) => status)).toEqual([
       'PASSED',
       'RUNNING',
       'PENDING',
       'PENDING',
     ]);
-    expect(firstTransition.data.stages[0].perCase).toEqual([
+    expect(firstTransition.stages[0].perCase).toEqual([
       {
         testCaseId: 1005,
         displayId: 'TC105',
@@ -479,18 +429,16 @@ describe('automation (A1-A2)', () => {
     ]);
 
     jest.advanceTimersByTime(SIMULATED_DELAY_MS * 3 + 100);
-    const completed = await http.get<IterationRS>(
-      URLS.tmsPipelineIterationById(PROJECT, pipelineId, iterationId),
-    );
-    expect(completed.data.status).toBe('COMPLETED');
-    expect(completed.data.durationMs).toBeGreaterThan(0);
-    expect(completed.data.stages.map(({ status }) => status)).toEqual([
+    const completed = toIterationRS(findPipeline(pipelineId), findIteration(iterationId));
+    expect(completed.status).toBe('COMPLETED');
+    expect(completed.durationMs).toBeGreaterThan(0);
+    expect(completed.stages.map(({ status }) => status)).toEqual([
       'PASSED',
       'PASSED',
       'PASSED',
       'SKIPPED',
     ]);
-    expect(completed.data.stages[3].perCase?.[0]).toMatchObject({
+    expect(completed.stages[3].perCase?.[0]).toMatchObject({
       displayId: 'TC105',
       name: 'TC105',
       result: 'Skipped · review was clean',
@@ -517,11 +465,9 @@ describe('automation (A1-A2)', () => {
     const { pipelineId, iterationId } = accepted.data.iteration;
     reloadPersistedHandlers();
 
-    const rehydratedIteration = await http.get<IterationRS>(
-      URLS.tmsPipelineIterationById(PROJECT, pipelineId, iterationId),
-    );
+    const rehydratedIteration = toIterationRS(findPipeline(pipelineId), findIteration(iterationId));
     const rehydratedCase = await http.get<TestCaseAiRS>(URLS.testCaseAi(PROJECT, 'TC105'));
-    expect(rehydratedIteration.data).toMatchObject({
+    expect(rehydratedIteration).toMatchObject({
       id: iterationId,
       status: IterationStatus.RUNNING,
     });
@@ -532,12 +478,10 @@ describe('automation (A1-A2)', () => {
 
     jest.advanceTimersByTime(SIMULATED_DELAY_MS * 4 + 100);
 
-    const resumedIteration = await http.get<IterationRS>(
-      URLS.tmsPipelineIterationById(PROJECT, pipelineId, iterationId),
-    );
+    const resumedIteration = toIterationRS(findPipeline(pipelineId), findIteration(iterationId));
     const resumedCase = await http.get<TestCaseAiRS>(URLS.testCaseAi(PROJECT, 'TC105'));
-    expect(resumedIteration.data.status).toBe(IterationStatus.COMPLETED);
-    expect(resumedIteration.data.stages.map(({ status }) => status)).toEqual([
+    expect(resumedIteration.status).toBe(IterationStatus.COMPLETED);
+    expect(resumedIteration.stages.map(({ status }) => status)).toEqual([
       'PASSED',
       'PASSED',
       'PASSED',
@@ -587,11 +531,9 @@ describe('automation (A1-A2)', () => {
     });
     jest.advanceTimersByTime(SIMULATED_DELAY_MS * 4 + 100);
 
-    const completed = await http.get<IterationRS>(
-      URLS.tmsPipelineIterationById(PROJECT, pipelineId, iterationId),
-    );
-    expect(completed.data.testCases).toEqual([{ id: externalCaseId, displayId: 'TC105' }]);
-    expect(completed.data.stages[0].perCase).toEqual([
+    const completed = toIterationRS(findPipeline(pipelineId), findIteration(iterationId));
+    expect(completed.testCases).toEqual([{ id: externalCaseId, displayId: 'TC105' }]);
+    expect(completed.stages[0].perCase).toEqual([
       expect.objectContaining({
         testCaseId: externalCaseId,
         displayId: 'TC105',

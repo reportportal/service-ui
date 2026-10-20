@@ -465,15 +465,10 @@ export const URLS = {
   // not an agreed backend contract (open ask F8) — mocked until the endpoint status board in
   // docs/ai-factory-poc/05-backend-contract.md §0 says integrated. IDs below (P*, C*, L*, R*,
   // F*, A*) refer to that document's sections.
-  tmsPipeline: (projectKey) => `${urlBase}project/${projectKey}/tms/pipeline`, // P1
-  tmsPipelineIterations: (projectKey, pipelineId, query = {}) =>
-    `${urlBase}project/${projectKey}/tms/pipeline/${pipelineId}/iteration${getQueryParams(query)}`, // P2
   pipelineCatalog: (projectKey, query = {}) =>
     `${urlBase}project/${projectKey}/pipeline${getQueryParams(query)}`, // LP1
   pipelineCatalogIterations: (projectKey, pipelineId, query = {}) =>
     `${urlBase}project/${projectKey}/pipeline/${pipelineId}/iteration${getQueryParams(query)}`, // LP2
-  tmsPipelineIterationById: (projectKey, pipelineId, iterationId) =>
-    `${urlBase}project/${projectKey}/tms/pipeline/${pipelineId}/iteration/${iterationId}`, // P3
   pipelineIterationById: (projectKey, iterationId) =>
     `${urlBase}project/${projectKey}/pipeline/iteration/${iterationId}`, // LP3
   pipelineIterationComparison: (projectKey, iterationId, withIterationId) =>

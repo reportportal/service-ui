@@ -27,7 +27,8 @@
   }
 
   &__value {
-    font-weight: var(--rp-ui-base-fw-bold);
+    font-family: $FONT-ROBOTO-BOLD;
+    font-weight: normal;
     font-size: 16px;
     line-height: 22px;
   }

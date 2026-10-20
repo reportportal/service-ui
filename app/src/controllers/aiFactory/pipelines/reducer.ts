@@ -27,7 +27,7 @@ import {
   PROJECT_PIPELINES_PAGE,
   TEST_CASE_LIBRARY_PAGE,
 } from 'controllers/pages';
-import { IterationRS, PipelineComparison } from 'types/aiFactory';
+import { IterationRS } from 'types/aiFactory';
 
 import {
   CLEAR_PIPELINE_COMPARISON,
@@ -42,6 +42,7 @@ import {
   IterationsErrorByPipelineId,
   IterationsLoadingByPipelineId,
   PipelineIterationItem,
+  PipelineComparisonResult,
   PipelinePageState,
   PipelinesState,
 } from './types';
@@ -54,7 +55,6 @@ interface PipelineReducerAction extends Action<string> {
     namespace?: string;
     pipelineId?: number;
     transport?: PipelineCatalogTransport;
-    transportFallback?: boolean;
     isCancellation?: boolean;
     requestId?: number;
     catalogVersion?: number;
@@ -65,6 +65,7 @@ interface PipelineReducerAction extends Action<string> {
     catalogTransport?: PipelineCatalogTransport;
     detailTransport?: PipelineDetailTransport;
     isUnavailable?: boolean;
+    detailFailureKind?: 'forbidden' | 'notFound';
   };
 }
 
@@ -175,16 +176,11 @@ const iterationsErrorByPipelineReducer = (
 };
 
 const transportReducer = (
-  state: PipelineCatalogTransport = 'mock',
+  state: PipelineCatalogTransport = 'live',
   action: PipelineReducerAction,
 ): PipelineCatalogTransport =>
   action.type === FETCH_SUCCESS && action.meta?.namespace === PIPELINES_NAMESPACE
-    ? (action.meta.transport ?? 'mock')
-    : state;
-
-const transportFallbackReducer = (state = false, action: PipelineReducerAction): boolean =>
-  action.type === FETCH_SUCCESS && action.meta?.namespace === PIPELINES_NAMESPACE
-    ? Boolean(action.meta.transportFallback)
+    ? (action.meta.transport ?? 'live')
     : state;
 
 const catalogVersionReducer = (state = 0, action: PipelineReducerAction): number => {
@@ -267,6 +263,14 @@ const iterationDetailsUnavailableReducer = (
     ? action.type === FETCH_ERROR && Boolean(action.meta?.isUnavailable)
     : state;
 
+const iterationDetailsFailureKindReducer = (
+  state: 'forbidden' | 'notFound' | null = null,
+  action: PipelineReducerAction,
+): 'forbidden' | 'notFound' | null => {
+  if (!isPipelineDetailAction(action)) return state;
+  return action.type === FETCH_ERROR ? (action.meta?.detailFailureKind ?? null) : null;
+};
+
 const detailMetaReducer =
   <T extends keyof NonNullable<PipelineReducerAction['meta']>>(
     key: T,
@@ -281,9 +285,9 @@ const detailMetaReducer =
       : state;
 
 const comparisonReducer = (
-  state: PipelineComparison | null = null,
+  state: PipelineComparisonResult | null = null,
   action: PipelineReducerAction,
-): PipelineComparison | null => {
+): PipelineComparisonResult | null => {
   if (action.type === GET_PIPELINE_COMPARISON || action.type === CLEAR_PIPELINE_COMPARISON) {
     return null;
   }
@@ -291,7 +295,7 @@ const comparisonReducer = (
     return state;
   }
   return action.type === FETCH_SUCCESS
-    ? ((action.payload?.data as PipelineComparison | undefined) ?? null)
+    ? ((action.payload?.data as PipelineComparisonResult | undefined) ?? null)
     : null;
 };
 
@@ -317,7 +321,6 @@ const combinedReducer = combineReducers({
   isLoading: loadingReducer(PIPELINES_NAMESPACE),
   catalogError: catalogErrorReducer,
   transport: transportReducer,
-  transportFallback: transportFallbackReducer,
   catalogVersion: catalogVersionReducer,
   catalogRequestId: catalogRequestIdReducer,
   catalogProjectKey: catalogProjectKeyReducer,
@@ -332,6 +335,7 @@ const combinedReducer = combineReducers({
   iterationDetailsLoading: iterationDetailsLoadingReducer,
   iterationDetailsError: iterationDetailsErrorReducer,
   iterationDetailsUnavailable: iterationDetailsUnavailableReducer,
+  iterationDetailsFailureKind: iterationDetailsFailureKindReducer,
   detailRequestId: detailMetaReducer('requestId', null),
   detailProjectKey: detailMetaReducer('projectKey', null),
   detailPipelineId: detailMetaReducer('pipelineId', null),
@@ -406,11 +410,17 @@ const getPipelineDetailMeta = (action: PipelineReducerAction): PipelineDetailMet
   return meta as PipelineDetailMeta;
 };
 
-const matchesDetailCatalog = (state: PipelinesState, meta: PipelineDetailMeta): boolean =>
-  meta.projectKey === state.catalogProjectKey &&
-  meta.catalogTransport === state.transport &&
-  meta.catalogVersion === state.catalogVersion &&
-  meta.catalogRequestId === state.catalogRequestId;
+const matchesDetailCatalog = (state: PipelinesState, meta: PipelineDetailMeta): boolean => {
+  if (meta.catalogTransport === 'live' && meta.catalogVersion === 0 && meta.catalogRequestId === 0) {
+    return state.transport === 'live';
+  }
+  return (
+    meta.projectKey === state.catalogProjectKey &&
+    meta.catalogTransport === state.transport &&
+    meta.catalogVersion === state.catalogVersion &&
+    meta.catalogRequestId === state.catalogRequestId
+  );
+};
 
 const matchesDetailRequest = (state: PipelinesState, meta: PipelineDetailMeta): boolean =>
   meta.requestId === state.detailRequestId &&
@@ -452,12 +462,21 @@ const reducer = (
     state as CombinedPipelinesState | undefined,
     action,
   ) as PipelinesState;
+  if (
+    isPipelineDetailAction(action) &&
+    action.type === FETCH_START &&
+    currentState.detailProjectKey !== action.meta?.projectKey
+  ) {
+    return { ...nextState, iterationDetails: null };
+  }
   const shouldResetCatalogData =
     action.meta?.namespace === PIPELINES_NAMESPACE &&
     (action.type === FETCH_START || action.type === FETCH_SUCCESS);
   if (!shouldResetCatalogData) {
     return nextState;
   }
+  const shouldResetComparison =
+    action.type === FETCH_START && action.meta?.projectKey !== currentState.catalogProjectKey;
   return {
     ...nextState,
     data: action.type === FETCH_START ? null : nextState.data,
@@ -470,6 +489,7 @@ const reducer = (
     iterationDetailsLoading: false,
     iterationDetailsError: false,
     iterationDetailsUnavailable: false,
+    iterationDetailsFailureKind: null,
     detailRequestId: null,
     detailProjectKey: null,
     detailPipelineId: null,
@@ -478,9 +498,9 @@ const reducer = (
     detailCatalogVersion: 0,
     detailCatalogRequestId: null,
     detailTransport: null,
-    comparison: null,
-    comparisonLoading: false,
-    comparisonError: false,
+    comparison: shouldResetComparison ? null : nextState.comparison,
+    comparisonLoading: shouldResetComparison ? false : nextState.comparisonLoading,
+    comparisonError: shouldResetComparison ? false : nextState.comparisonError,
   };
 };
 

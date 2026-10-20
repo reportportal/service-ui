@@ -69,6 +69,18 @@ export const messages = defineMessages({
     id: 'CompareIterationsPage.noComparisonData',
     defaultMessage: 'No comparable stage or metric data is available for these iterations.',
   },
+  differentScope: {
+    id: 'CompareIterationsPage.differentScope',
+    defaultMessage: 'These iterations have different scopes; case rows cannot be compared.',
+  },
+  scopeUnavailable: {
+    id: 'CompareIterationsPage.scopeUnavailable',
+    defaultMessage: 'The backend did not confirm that these iterations have the same scope.',
+  },
+  rowColumn: {
+    id: 'CompareIterationsPage.rowColumn',
+    defaultMessage: 'Row',
+  },
   retry: {
     id: 'CompareIterationsPage.retry',
     defaultMessage: 'Retry',
@@ -98,6 +110,14 @@ export const messages = defineMessages({
   metricColumn: {
     id: 'CompareIterationsPage.metricColumn',
     defaultMessage: 'Metric',
+  },
+  valueTypeColumn: {
+    id: 'CompareIterationsPage.valueTypeColumn',
+    defaultMessage: 'Value type',
+  },
+  verdictColumn: {
+    id: 'CompareIterationsPage.verdictColumn',
+    defaultMessage: 'Verdict',
   },
   deltaColumn: {
     id: 'CompareIterationsPage.deltaColumn',
@@ -142,5 +162,9 @@ export const messages = defineMessages({
   unavailable: {
     id: 'CompareIterationsPage.unavailable',
     defaultMessage: '—',
+  },
+  fullApiResponse: {
+    id: 'CompareIterationsPage.fullApiResponse',
+    defaultMessage: 'Full API response',
   },
 });

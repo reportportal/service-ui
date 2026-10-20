@@ -29,6 +29,22 @@ export const messages = defineMessages({
     id: 'IterationDetailsPage.detailError',
     defaultMessage: 'Iteration details could not be loaded',
   },
+  detailInvalidRoute: {
+    id: 'IterationDetailsPage.detailInvalidRoute',
+    defaultMessage: 'Invalid pipeline or iteration address',
+  },
+  detailForbidden: {
+    id: 'IterationDetailsPage.detailForbidden',
+    defaultMessage: 'You do not have access to this iteration',
+  },
+  detailNotFound: {
+    id: 'IterationDetailsPage.detailNotFound',
+    defaultMessage: 'This iteration was not found',
+  },
+  backToPipelines: {
+    id: 'IterationDetailsPage.backToPipelines',
+    defaultMessage: 'Back to pipelines',
+  },
   retry: {
     id: 'IterationDetailsPage.retry',
     defaultMessage: 'Retry',
@@ -85,9 +101,21 @@ export const messages = defineMessages({
     id: 'IterationDetailsPage.compareWithPrevious',
     defaultMessage: 'Compare with previous',
   },
+  compareUnavailable: {
+    id: 'IterationDetailsPage.compareUnavailable',
+    defaultMessage: 'Comparison is not available yet',
+  },
+  noPreviousIteration: {
+    id: 'IterationDetailsPage.noPreviousIteration',
+    defaultMessage: 'There is no previous iteration to compare',
+  },
   rerun: {
     id: 'IterationDetailsPage.rerun',
     defaultMessage: 'Re-run',
+  },
+  rerunUnavailable: {
+    id: 'IterationDetailsPage.rerunUnavailable',
+    defaultMessage: 'Re-run is not available yet',
   },
   rerunPermissionUnavailable: {
     id: 'IterationDetailsPage.rerunPermissionUnavailable',
@@ -132,6 +160,34 @@ export const messages = defineMessages({
   metaStarted: {
     id: 'IterationDetailsPage.metaStarted',
     defaultMessage: 'Started',
+  },
+  metaFinished: {
+    id: 'IterationDetailsPage.metaFinished',
+    defaultMessage: 'Finished',
+  },
+  metaCreated: {
+    id: 'IterationDetailsPage.metaCreated',
+    defaultMessage: 'Created',
+  },
+  stageAttempt: {
+    id: 'IterationDetailsPage.stageAttempt',
+    defaultMessage: 'Attempt',
+  },
+  stageOwner: {
+    id: 'IterationDetailsPage.stageOwner',
+    defaultMessage: 'Owner',
+  },
+  stageRelatedEntities: {
+    id: 'IterationDetailsPage.stageRelatedEntities',
+    defaultMessage: 'Related entities',
+  },
+  validatedApiFields: {
+    id: 'IterationDetailsPage.validatedApiFields',
+    defaultMessage: 'Mapped API fields',
+  },
+  fullApiResponse: {
+    id: 'IterationDetailsPage.fullApiResponse',
+    defaultMessage: 'Full API response',
   },
   metaCiPipeline: {
     id: 'IterationDetailsPage.metaCiPipeline',

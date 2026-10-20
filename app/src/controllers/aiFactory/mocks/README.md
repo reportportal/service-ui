@@ -3,7 +3,7 @@
 Runtime mock groups and their removal conditions are tracked in
 [`docs/ai-factory-poc/23-temporary-solutions-register.md`](../../../../../docs/ai-factory-poc/23-temporary-solutions-register.md).
 
-Implements every endpoint in [`docs/ai-factory-poc/05-backend-contract.md`](../../../../../docs/ai-factory-poc/05-backend-contract.md)
+Implements the remaining mock endpoint groups in [`docs/ai-factory-poc/05-backend-contract.md`](../../../../../docs/ai-factory-poc/05-backend-contract.md)
 on top of [`axios-mock-adapter`](https://github.com/ctimmerm/axios-mock-adapter), so the UI can be
 built against a real HTTP contract before the backend exists. See
 [`docs/ai-factory-poc/03-frontend-architecture.md`](../../../../../docs/ai-factory-poc/03-frontend-architecture.md)
@@ -18,7 +18,7 @@ built against a real HTTP contract before the backend exists. See
 | `db.ts` | In-memory store: hydrates the seed, persists to `localStorage`, exposes finders and mutators |
 | `engine.ts` | Pure backend rules: `deriveIterationStatus`, `applyAutoReady`, `caseCost`, `automateSkipReason`, … |
 | `viewModels.ts` | Projects `db.ts` records into the contract's `*RS` DTOs |
-| `handlers.ts` | Registers every P/C/L/R/F/A endpoint on a `MockAdapter`; simulates fix rounds and automation with `setTimeout` |
+| `handlers.ts` | Registers remaining P4/LP5/C/L/R/F/A endpoints on a `MockAdapter`; LP1–LP4 pass through to the real API; simulates fix rounds and automation with `setTimeout` |
 | `overlay.ts` | Merges AI/lifecycle fields onto **real** TMS test-case responses, matched by `displayId` (Mode A — see below) |
 | `index.ts` | `installAiFactoryMocks(axiosInstance)` — the only thing outside this folder should import |
 
@@ -49,7 +49,7 @@ Detecting a real scenario edit (`SCENARIO_CHANGED`) is deferred for the same rea
 
 ## Demo controls
 
-Use the supported **Reset demo** action on the Pipelines page to restore `seedData.ts`. It resets only
+The Pipelines page uses live LP1–LP3, so its **Reset demo** action is hidden. To restore the mock data used by other AI Factory features, clear the local DB as shown below. It resets only
 the browser-local mock database for the current localhost origin. It does not delete, modify or restore
 remote Test Cases, plans or launches. There is no floating dev menu and no implemented remote seeding action.
 
@@ -88,7 +88,7 @@ separate owner/runbook defines creation and restoration.
 
 `engine.test.ts` and `viewModels.test.ts` exercise the business rules and DTO shapes directly.
 `handlers.test.ts` is the endpoint smoke test (installs a real `MockAdapter` on a scratch axios
-instance and calls every P/C/L/R/F/A endpoint at least once, advancing fake timers for the async
+instance and calls the remaining mock endpoints, advancing fake timers for the async
 ones). `overlay.test.ts` covers the merge mechanism. Run them all:
 
 ```bash

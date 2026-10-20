@@ -189,25 +189,20 @@ describe('aiFactoryPipelinesReducer catalog provenance', () => {
       namespace: PIPELINES_NAMESPACE,
       catalogRequestId,
       projectKey,
-      transport: 'mock' as const,
-      transportFallback: false,
+      transport: 'live' as const,
     },
   });
 
-  test('stores the resolved transport and whether configuration fell back', () => {
+  test('stores live catalog provenance', () => {
     const loading = aiFactoryPipelinesReducer(undefined, catalogAction(FETCH_START, 1, 'demo'));
-    const state = aiFactoryPipelinesReducer(loading, {
-      ...catalogAction(FETCH_SUCCESS, 1, 'demo', []),
-      meta: {
-        ...catalogAction(FETCH_SUCCESS, 1, 'demo').meta,
-        transportFallback: true,
-      },
-    }) as PipelinesState;
+    const state = aiFactoryPipelinesReducer(
+      loading,
+      catalogAction(FETCH_SUCCESS, 1, 'demo', []),
+    ) as PipelinesState;
 
     expect(state).toMatchObject({
       data: [],
-      transport: 'mock',
-      transportFallback: true,
+      transport: 'live',
       catalogVersion: 1,
       catalogProjectKey: 'demo',
       catalogRequestId: 1,
@@ -248,9 +243,9 @@ describe('aiFactoryPipelinesReducer catalog provenance', () => {
       iterationRequestIdByPipeline: {},
       iterationDetails: null,
       iterationDetailsLoading: false,
-      comparison: null,
-      comparisonLoading: false,
-      comparisonError: false,
+      comparison,
+      comparisonLoading: true,
+      comparisonError: true,
     });
 
     const refreshed = aiFactoryPipelinesReducer(
@@ -265,7 +260,28 @@ describe('aiFactoryPipelinesReducer catalog provenance', () => {
       iterationsLoadingByPipeline: {},
       iterationsErrorByPipeline: {},
       iterationRequestIdByPipeline: {},
+      comparison,
+      comparisonLoading: true,
+      comparisonError: true,
     });
+  });
+
+  test('keeps an LP4 error when LP1 succeeds after the comparison request', () => {
+    const catalogLoading = aiFactoryPipelinesReducer(
+      undefined,
+      catalogAction(FETCH_START, 1, 'demo'),
+    ) as PipelinesState;
+    const comparisonFailed = aiFactoryPipelinesReducer(
+      catalogLoading,
+      fetchErrorAction(PIPELINE_COMPARISON_NAMESPACE, new Error('Not found')),
+    ) as PipelinesState;
+    const catalogLoaded = aiFactoryPipelinesReducer(
+      comparisonFailed,
+      catalogAction(FETCH_SUCCESS, 1, 'demo', []),
+    ) as PipelinesState;
+
+    expect(catalogLoaded.comparisonError).toBe(true);
+    expect(catalogLoaded.comparisonLoading).toBe(false);
   });
 
   test('ignores stale LP1 success and error after a project change', () => {
@@ -324,7 +340,6 @@ describe('aiFactoryPipelinesReducer catalog provenance', () => {
     const current = {
       ...aiFactoryPipelinesReducer(undefined, { type: 'unrelated' }),
       transport: 'live' as const,
-      transportFallback: true,
     };
 
     const state = aiFactoryPipelinesReducer(current, {
@@ -334,7 +349,6 @@ describe('aiFactoryPipelinesReducer catalog provenance', () => {
     }) as PipelinesState;
 
     expect(state.transport).toBe('live');
-    expect(state.transportFallback).toBe(true);
   });
 });
 
@@ -346,7 +360,7 @@ describe('aiFactoryPipelinesReducer per-pipeline iteration state', () => {
     isCancellation = false,
     requestId = pipelineId,
     catalogVersion = 0,
-    transport: 'mock' | 'live' = 'mock',
+    transport: 'mock' | 'live' = 'live',
   ) => ({
     type,
     payload: data === undefined ? undefined : { data },
@@ -418,9 +432,9 @@ describe('aiFactoryPipelinesReducer per-pipeline iteration state', () => {
   });
 
   test.each([
-    ['request id', { requestId: 10, catalogVersion: 0, transport: 'mock' as const }],
-    ['catalog version', { requestId: 11, catalogVersion: 1, transport: 'mock' as const }],
-    ['transport', { requestId: 11, catalogVersion: 0, transport: 'live' as const }],
+    ['request id', { requestId: 10, catalogVersion: 0, transport: 'live' as const }],
+    ['catalog version', { requestId: 11, catalogVersion: 1, transport: 'live' as const }],
+    ['transport', { requestId: 11, catalogVersion: 0, transport: 'mock' as const }],
   ])('ignores a stale LP2 completion with mismatched %s', (_field, staleMeta) => {
     let state = aiFactoryPipelinesReducer(
       undefined,
@@ -473,7 +487,6 @@ describe('aiFactoryPipelinesReducer iteration detail provenance', () => {
       catalogRequestId: 5,
       projectKey: 'demo',
       transport: 'live' as const,
-      transportFallback: false,
     },
   });
   const detailMeta = {
@@ -548,6 +561,7 @@ describe('aiFactoryPipelinesReducer iteration detail provenance', () => {
     const loadedState = {
       ...createCatalogState(),
       iterationDetails: currentDetail,
+      detailProjectKey: 'demo',
     } as PipelinesState;
 
     const state = aiFactoryPipelinesReducer(
@@ -560,6 +574,20 @@ describe('aiFactoryPipelinesReducer iteration detail provenance', () => {
       iterationDetailsLoading: true,
       iterationDetailsError: false,
       iterationDetailsUnavailable: false,
+    });
+  });
+
+  test('clears the previous project detail when the same ids are requested in another project', () => {
+    const directMeta = { ...detailMeta, catalogVersion: 0, catalogRequestId: 0 };
+    const firstLoading = aiFactoryPipelinesReducer(undefined, detailAction(FETCH_START, directMeta));
+    const firstLoaded = aiFactoryPipelinesReducer(firstLoading, detailAction(FETCH_SUCCESS, directMeta));
+    const nextMeta = { ...directMeta, projectKey: 'other-project', requestId: 12 };
+    const secondLoading = aiFactoryPipelinesReducer(firstLoaded, detailAction(FETCH_START, nextMeta));
+
+    expect(secondLoading).toMatchObject({
+      iterationDetails: null,
+      iterationDetailsLoading: true,
+      detailProjectKey: 'other-project',
     });
   });
 
@@ -576,6 +604,37 @@ describe('aiFactoryPipelinesReducer iteration detail provenance', () => {
       iterationDetailsLoading: false,
       iterationDetailsError: false,
       iterationDetailsUnavailable: false,
+    });
+  });
+
+  test('accepts a direct LP3 request without a loaded catalog and rejects an older project response', () => {
+    const directMeta = { ...detailMeta, catalogVersion: 0, catalogRequestId: 0 };
+    const initial = aiFactoryPipelinesReducer(undefined, { type: '@@INIT' });
+    const loading = aiFactoryPipelinesReducer(initial, detailAction(FETCH_START, directMeta));
+    expect(loading).toMatchObject({ detailProjectKey: 'demo', iterationDetailsLoading: true });
+
+    const nextMeta = { ...directMeta, requestId: 12, projectKey: 'other-project' };
+    const nextLoading = aiFactoryPipelinesReducer(loading, detailAction(FETCH_START, nextMeta));
+    expect(aiFactoryPipelinesReducer(nextLoading, detailAction(FETCH_SUCCESS, directMeta)))
+      .toBe(nextLoading);
+    expect(aiFactoryPipelinesReducer(nextLoading, detailAction(FETCH_SUCCESS, nextMeta)))
+      .toMatchObject({ iterationDetails: detail, detailProjectKey: 'other-project' });
+  });
+
+  test.each([
+    ['forbidden', 'forbidden'],
+    ['missing', 'notFound'],
+  ] as const)('tracks %s detail errors for the current request', (_description, detailFailureKind) => {
+    const directMeta = { ...detailMeta, catalogVersion: 0, catalogRequestId: 0 };
+    const loading = aiFactoryPipelinesReducer(undefined, detailAction(FETCH_START, directMeta));
+    const failed = aiFactoryPipelinesReducer(loading, detailAction(FETCH_ERROR, {
+      ...directMeta,
+      detailFailureKind,
+    }));
+    expect(failed).toMatchObject({
+      iterationDetails: null,
+      iterationDetailsFailureKind: detailFailureKind,
+      iterationDetailsLoading: false,
     });
   });
 

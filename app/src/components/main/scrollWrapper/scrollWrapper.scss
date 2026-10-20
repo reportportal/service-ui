@@ -36,18 +36,19 @@
     max-height: none !important;
   }
 }
+
 .track-horizontal {
   right: 2px;
   bottom: 0;
   left: 2px;
-  height: 8px !important;
+  height: 8px;
   border-radius: 3px;
 }
 .track-vertical {
   right: 0;
   bottom: 2px;
   top: 2px;
-  width: 8px !important;
+  width: 8px;
   border-radius: 3px;
 }
 .thumb-horizontal {

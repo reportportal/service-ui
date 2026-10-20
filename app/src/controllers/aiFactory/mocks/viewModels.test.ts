@@ -26,29 +26,11 @@ import {
   toIterationRS,
   toIterationSummaryRS,
   toPipelineCompareRS,
-  toPipelineRS,
   toTestCaseAiExtension,
   toTestCaseAiRS,
 } from './viewModels';
 
 beforeEach(() => resetMockDb());
-
-describe('toPipelineRS', () => {
-  test('generation pipeline carries its settings', () => {
-    const rs = toPipelineRS(findPipeline(1), 3);
-    expect(rs).toMatchObject({
-      id: 1,
-      name: 'Test case generation',
-      iterationsCount: 3,
-      settings: { autoReady: true, threshold: 90 },
-    });
-  });
-
-  test('automation pipeline has no settings', () => {
-    const rs = toPipelineRS(findPipeline(2), 1);
-    expect(rs.settings).toBeUndefined();
-  });
-});
 
 describe('toIterationSummaryRS', () => {
   test('gen-1 status is IN_REVIEW and carries suite score / cost / attributes', () => {

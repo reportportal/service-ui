@@ -21,11 +21,6 @@ export const messages = defineMessages({
     id: 'PipelinesPage.pageTitle',
     defaultMessage: 'Pipelines',
   },
-  temporaryPostmanData: {
-    id: 'PipelinesPage.temporaryPostmanData',
-    defaultMessage:
-      'Demo data from the Postman collection is shown because the API catalog is empty.',
-  },
   refreshPage: {
     id: 'PipelinesPage.refreshPage',
     defaultMessage: 'Refresh',

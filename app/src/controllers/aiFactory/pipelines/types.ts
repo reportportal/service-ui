@@ -30,10 +30,12 @@ import type {
   ReducedPipelineIteration,
   ReducedPipelineIterationDetail,
 } from './liveAdapters';
+import type { LivePipelineComparison } from './liveCompareAdapter';
 import type { PipelineCatalogTransport, PipelineDetailTransport } from './transport';
 
 export type PipelineCatalogItem = PipelineRS | ReducedPipeline;
 export type PipelineIterationItem = IterationSummaryRS | ReducedPipelineIteration;
+export type PipelineComparisonResult = PipelineComparison | LivePipelineComparison;
 export type IterationsByPipelineId = Record<number, PipelineIterationItem[]>;
 export type IterationsLoadingByPipelineId = Record<number, boolean>;
 export type IterationsErrorByPipelineId = Record<number, boolean>;
@@ -53,7 +55,6 @@ export interface PipelinesState {
   isLoading?: boolean;
   catalogError?: boolean;
   transport: PipelineCatalogTransport;
-  transportFallback?: boolean;
   catalogVersion: number;
   catalogRequestId: number | null;
   catalogProjectKey: string | null;
@@ -68,6 +69,7 @@ export interface PipelinesState {
   iterationDetailsLoading?: boolean;
   iterationDetailsError?: boolean;
   iterationDetailsUnavailable?: boolean;
+  iterationDetailsFailureKind?: 'forbidden' | 'notFound' | null;
   detailRequestId?: number | null;
   detailProjectKey?: string | null;
   detailPipelineId?: number | null;
@@ -76,7 +78,7 @@ export interface PipelinesState {
   detailCatalogVersion?: number;
   detailCatalogRequestId?: number | null;
   detailTransport?: PipelineDetailTransport | null;
-  comparison: PipelineComparison | null;
+  comparison: PipelineComparisonResult | null;
   comparisonLoading?: boolean;
   comparisonError?: boolean;
 }

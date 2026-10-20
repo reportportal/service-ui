@@ -84,7 +84,7 @@ export const PipelinesPageContent = () => {
   const catalogPage = useSelector(pipelineCatalogPageSelector);
   const catalogSearch = useSelector(pipelineCatalogSearchSelector);
   const iterationPages = useSelector(pipelineIterationPagesSelector);
-  const transport = catalogTransport ?? 'mock';
+  const transport = catalogTransport ?? 'live';
   const [search, setSearch] = useState('');
   const [serverSearch, setServerSearch] = useState('');
   const transportRef = useRef(catalogTransport);
@@ -302,11 +302,6 @@ export const PipelinesPageContent = () => {
           breadcrumbDescriptors={breadcrumbDescriptors}
         />
         <div className={cx('page-content')}>
-          {transport === 'postman-demo' && (
-            <output className={cx('demo-notice')}>
-              {formatMessage(messages.temporaryPostmanData)}
-            </output>
-          )}
           <div className={cx('toolbar')} data-automation-id="pipelinesToolbar">
             <SearchField
               searchValue={search}
@@ -319,8 +314,8 @@ export const PipelinesPageContent = () => {
             <div className={cx('toolbar__actions')}>
               <Button
                 variant="text"
+                adjustWidthOn="content"
                 data-automation-id="compareIterationsButton"
-                disabled={transport !== 'mock'}
                 onClick={() =>
                   dispatch({
                     type: PROJECT_PIPELINE_COMPARISON_PAGE,
@@ -333,6 +328,7 @@ export const PipelinesPageContent = () => {
               {isDemoResetAvailable && (
                 <Button
                   variant="text"
+                  adjustWidthOn="content"
                   data-automation-id="resetAiFactoryDemoButton"
                   disabled={isLoading}
                   onClick={openResetDemoConfirmation}
@@ -342,6 +338,7 @@ export const PipelinesPageContent = () => {
               )}
               <Button
                 variant="text"
+                adjustWidthOn="content"
                 data-automation-id="refreshPipelinesButton"
                 icon={<RefreshIcon />}
                 disabled={isLoading}

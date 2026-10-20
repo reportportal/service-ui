@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { useEffect, useRef, useState } from 'react';
+import { ComponentProps, useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useIntl } from 'react-intl';
 import { Button, CycleArrowsIcon, RefreshIcon, RerunIcon } from '@reportportal/ui-kit';
@@ -33,6 +33,10 @@ import {
   pipelineIterationDetailsErrorSelector,
   pipelineIterationDetailsSelector,
   pipelineIterationDetailsUnavailableSelector,
+  pipelineIterationDetailsFailureKindSelector,
+  pipelineIterationDetailProjectKeySelector,
+  pipelineIterationDetailPipelineIdSelector,
+  pipelineIterationDetailIterationIdSelector,
   pipelinesLoadingSelector,
   pipelinesSelector,
   PipelineCatalogItem,
@@ -80,8 +84,10 @@ const ITERATION_POLL_INTERVAL_MS = 5000;
 
 const STAGE_KEYS = new Set<string>(Object.values(StageKey));
 
+type PipelineIteration = IterationRS | ReducedPipelineIterationDetail;
+
 const isReducedDetail = (
-  iteration: IterationRS | ReducedPipelineIterationDetail | null,
+  iteration: PipelineIteration | null,
 ): iteration is ReducedPipelineIterationDetail =>
   Boolean(iteration && 'kind' in iteration && iteration.kind === 'reduced');
 
@@ -105,61 +111,173 @@ const resolvePipelineCatalog = (
   return { hasCurrentCatalog, pipelineCandidate, pipeline, isReducedCatalogPipeline };
 };
 
-export const IterationDetailsPageContent = () => {
-  const { formatMessage } = useIntl();
-  const dispatch = useDispatch();
-  const { canManagePipelineSettings } = useUserPermissions();
-  const { openModal: openRerunModal } = useIterationRerunModal();
-  const projectName = useSelector(projectNameSelector);
-  const projectKey = useSelector(projectKeySelector);
-  const { organizationSlug, projectSlug } = useSelector(
-    urlOrganizationAndProjectSelector,
-  ) as ProjectDetails;
-  const pipelineId = useSelector(pipelineIdSelector);
-  const iterationId = useSelector(iterationIdSelector);
-  const query = useSelector(querySelector);
-  const pipelines = useSelector(pipelinesSelector);
-  const catalogProjectKey = useSelector(pipelineCatalogProjectKeySelector);
-  const catalogTransport = useSelector(pipelineCatalogTransportSelector);
-  const catalogVersion = useSelector(pipelineCatalogVersionSelector);
-  const catalogRequestId = useSelector(pipelineCatalogRequestIdSelector);
-  const iteration = useSelector(pipelineIterationDetailsSelector);
-  const isLoading = useSelector(pipelineIterationDetailsLoadingSelector);
-  const hasDetailError = useSelector(pipelineIterationDetailsErrorSelector);
-  const isDetailUnavailable = useSelector(pipelineIterationDetailsUnavailableSelector);
-  const isCatalogLoading = useSelector(pipelinesLoadingSelector);
-  const currentIteration =
-    iteration?.id === iterationId && iteration.pipelineId === pipelineId ? iteration : null;
+const shouldRequestDetail = ({
+  projectKey,
+  hasValidRoute,
+  isLiveTransport,
+  catalogVersion,
+  catalogProjectKey,
+  pipelineCandidate,
+  detailMatchesRoute,
+  isLoading,
+  currentIteration,
+  requestKey,
+  lastRequestKey,
+}: {
+  projectKey: string;
+  hasValidRoute: boolean;
+  isLiveTransport: boolean;
+  catalogVersion: number;
+  catalogProjectKey: string | null;
+  pipelineCandidate: PipelineCatalogItem | undefined;
+  detailMatchesRoute: boolean;
+  isLoading: boolean;
+  currentIteration: PipelineIteration | null;
+  requestKey: string;
+  lastRequestKey: string | null;
+}) =>
+  Boolean(projectKey) &&
+  hasValidRoute &&
+  (isLiveTransport ||
+    (catalogVersion > 0 && catalogProjectKey === projectKey && pipelineCandidate)) &&
+  !(detailMatchesRoute && isLoading) &&
+  !currentIteration &&
+  lastRequestKey !== requestKey;
 
-  const { hasCurrentCatalog, pipelineCandidate, pipeline, isReducedCatalogPipeline } =
-    resolvePipelineCatalog(
-      pipelines,
-      pipelineId,
-      catalogVersion,
-      catalogProjectKey,
-      projectKey,
-    );
-  const [selectedStage, setSelectedStage] = useState<AiStageKey | null>(null);
-  const hasInitializedStage = useRef(false);
+const shouldRequestCatalog = (
+  isLiveTransport: boolean,
+  projectKey: string,
+  hasCurrentCatalog: boolean,
+  lastProjectKey: string | null,
+) => !isLiveTransport && Boolean(projectKey) && !hasCurrentCatalog && lastProjectKey !== projectKey;
+
+const shouldPollIteration = (
+  isLiveTransport: boolean,
+  isLoading: boolean,
+  pipeline: PipelineRS | undefined,
+  iteration: PipelineIteration | null,
+) =>
+  !isLiveTransport &&
+  !isLoading &&
+  Boolean(pipeline) &&
+  (iteration?.status === IterationStatus.RUNNING ||
+    iteration?.status === IterationStatus.IN_REVIEW);
+
+const resolveDetailRouteState = ({
+  pipelineId,
+  iterationId,
+  projectKey,
+  detailProjectKey,
+  detailPipelineId,
+  detailIterationId,
+  iteration,
+  isLiveTransport,
+  isCatalogLoading,
+  isLoading,
+}: {
+  pipelineId: number;
+  iterationId: number;
+  projectKey: string;
+  detailProjectKey: string | null;
+  detailPipelineId: number | null;
+  detailIterationId: number | null;
+  iteration: PipelineIteration | null;
+  isLiveTransport: boolean;
+  isCatalogLoading: boolean;
+  isLoading: boolean;
+}) => {
+  const hasValidRoute =
+    Number.isSafeInteger(pipelineId) &&
+    pipelineId > 0 &&
+    Number.isSafeInteger(iterationId) &&
+    iterationId > 0;
+  const detailMatchesRoute =
+    detailProjectKey === projectKey &&
+    detailPipelineId === pipelineId &&
+    detailIterationId === iterationId;
+  const currentIteration =
+    (!isLiveTransport || detailMatchesRoute) &&
+    iteration?.id === iterationId &&
+    iteration.pipelineId === pipelineId
+      ? iteration
+      : null;
+  const isDetailPending =
+    (!isLiveTransport && isCatalogLoading) ||
+    (detailMatchesRoute && isLoading) ||
+    (isLiveTransport && !detailMatchesRoute);
+  return { hasValidRoute, detailMatchesRoute, currentIteration, isDetailPending };
+};
+
+interface DetailRequestOptions {
+  dispatch: ReturnType<typeof useDispatch>;
+  projectKey: string;
+  pipelineId: number;
+  iterationId: number;
+  isLiveTransport: boolean;
+  hasCurrentCatalog: boolean;
+  catalogTransport: string;
+  catalogVersion: number;
+  catalogRequestId: number | null;
+  catalogProjectKey: string | null;
+  pipelineCandidate: PipelineCatalogItem | undefined;
+  hasValidRoute: boolean;
+  detailMatchesRoute: boolean;
+  isLoading: boolean;
+  currentIteration: PipelineIteration | null;
+}
+
+const useIterationDetailRequests = ({
+  dispatch,
+  projectKey,
+  pipelineId,
+  iterationId,
+  isLiveTransport,
+  hasCurrentCatalog,
+  catalogTransport,
+  catalogVersion,
+  catalogRequestId,
+  catalogProjectKey,
+  pipelineCandidate,
+  hasValidRoute,
+  detailMatchesRoute,
+  isLoading,
+  currentIteration,
+}: DetailRequestOptions) => {
   const catalogRequestProjectRef = useRef<string | null>(null);
   const detailRequestKeyRef = useRef<string | null>(null);
 
   useEffect(() => {
-    if (!hasCurrentCatalog && catalogRequestProjectRef.current !== projectKey) {
+    if (
+      shouldRequestCatalog(
+        isLiveTransport,
+        projectKey,
+        hasCurrentCatalog,
+        catalogRequestProjectRef.current,
+      )
+    ) {
       catalogRequestProjectRef.current = projectKey;
       dispatch(getPipelinesAction());
     }
-  }, [dispatch, hasCurrentCatalog, projectKey]);
+  }, [dispatch, hasCurrentCatalog, isLiveTransport, projectKey]);
 
   useEffect(() => {
-    const requestKey = `${projectKey}:${catalogTransport}:${catalogVersion}:${catalogRequestId}:${pipelineId}:${iterationId}`;
+    const requestKey = isLiveTransport
+      ? `${projectKey}:live:${pipelineId}:${iterationId}`
+      : `${projectKey}:${catalogTransport}:${catalogVersion}:${catalogRequestId}:${pipelineId}:${iterationId}`;
     if (
-      catalogVersion <= 0 ||
-      catalogProjectKey !== projectKey ||
-      !pipelineCandidate ||
-      isLoading ||
-      currentIteration ||
-      detailRequestKeyRef.current === requestKey
+      !shouldRequestDetail({
+        projectKey,
+        hasValidRoute,
+        isLiveTransport,
+        catalogVersion,
+        catalogProjectKey,
+        pipelineCandidate,
+        detailMatchesRoute,
+        isLoading,
+        currentIteration,
+        requestKey,
+        lastRequestKey: detailRequestKeyRef.current,
+      })
     ) {
       return;
     }
@@ -172,59 +290,48 @@ export const IterationDetailsPageContent = () => {
     catalogVersion,
     dispatch,
     isLoading,
+    isLiveTransport,
+    hasValidRoute,
+    detailMatchesRoute,
     currentIteration,
     iterationId,
     pipelineCandidate,
     pipelineId,
     projectKey,
   ]);
+};
 
-  useEffect(() => {
-    if (hasInitializedStage.current || !pipeline) {
-      return;
-    }
-    const requestedStage = typeof query.stage === 'string' ? query.stage.toUpperCase() : undefined;
-    setSelectedStage(
-      requestedStage && STAGE_KEYS.has(requestedStage)
-        ? (requestedStage as AiStageKey)
-        : defaultStageKey(pipeline.type),
-    );
-    hasInitializedStage.current = true;
-  }, [pipeline, query.stage]);
+interface RichIterationDetailsProps {
+  richIteration: IterationRS;
+  pipeline: PipelineRS;
+  breadcrumbDescriptors: ComponentProps<
+    typeof PageHeaderWithBreadcrumbsAndActions
+  >['breadcrumbDescriptors'];
+  selectedStage: AiStageKey | null;
+  onSelectStage: (stage: AiStageKey) => void;
+  isLoading: boolean;
+  pipelineId: number;
+  iterationId: number;
+  organizationSlug: string;
+  projectSlug: string;
+}
 
-  usePolling(
-    () => {
-      dispatch(getPipelineIterationDetailsAction(pipelineId, iterationId));
-      return POLLING_REQUEST_STARTED;
-    },
-    ITERATION_POLL_INTERVAL_MS,
-    !isLoading &&
-      Boolean(pipeline) &&
-      (currentIteration?.status === IterationStatus.RUNNING ||
-        currentIteration?.status === IterationStatus.IN_REVIEW),
-  );
-
-  const breadcrumbDescriptors = [
-    {
-      id: 'project',
-      title: projectName,
-      onClick: () =>
-        dispatch({ type: PROJECT_DASHBOARD_PAGE, payload: { organizationSlug, projectSlug } }),
-    },
-    {
-      id: 'pipelines',
-      title: formatMessage(messages.pipelinesBreadcrumb),
-      onClick: () =>
-        dispatch({ type: PROJECT_PIPELINES_PAGE, payload: { organizationSlug, projectSlug } }),
-    },
-    {
-      id: 'iteration',
-      title: currentIteration
-        ? formatMessage(messages.iterationTitle, { number: currentIteration.number })
-        : '',
-    },
-  ];
-
+const RichIterationDetails = ({
+  richIteration,
+  pipeline,
+  breadcrumbDescriptors,
+  selectedStage,
+  onSelectStage,
+  isLoading,
+  pipelineId,
+  iterationId,
+  organizationSlug,
+  projectSlug,
+}: RichIterationDetailsProps) => {
+  const { formatMessage } = useIntl();
+  const dispatch = useDispatch();
+  const { canManagePipelineSettings } = useUserPermissions();
+  const { openModal: openRerunModal } = useIterationRerunModal();
   const renderBanner = (richIteration: IterationRS) => {
     let content;
     switch (richIteration.status) {
@@ -285,39 +392,6 @@ export const IterationDetailsPageContent = () => {
     );
   };
 
-  const retryDetail = () => {
-    dispatch(getPipelineIterationDetailsAction(pipelineId, iterationId));
-  };
-
-  if ((isCatalogLoading || isLoading) && !currentIteration) {
-    return (
-      <SettingsLayout>
-        <output className={cx('state')} aria-live="polite">
-          <SpinningPreloader />
-          <span>{formatMessage(messages.detailLoading)}</span>
-        </output>
-      </SettingsLayout>
-    );
-  }
-
-  if (isReducedCatalogPipeline) {
-    return (
-      <ReducedIterationDetails
-        iteration={isReducedDetail(currentIteration) ? currentIteration : null}
-        hasError={hasDetailError}
-        isUnavailable={isDetailUnavailable}
-        breadcrumbDescriptors={breadcrumbDescriptors}
-        onRetry={retryDetail}
-      />
-    );
-  }
-
-  if (!currentIteration || isReducedDetail(currentIteration) || !pipeline) {
-    return null;
-  }
-
-  const richIteration = currentIteration;
-
   const metaFields = [
     richIteration.requirement
       ? {
@@ -372,7 +446,9 @@ export const IterationDetailsPageContent = () => {
           })}`}
           titleAddon={
             <div className={cx('title-badges')}>
-              <span className={cx('iteration-badge')}>{formatMessage(messages.iterationBadge)}</span>
+              <span className={cx('iteration-badge')}>
+                {formatMessage(messages.iterationBadge)}
+              </span>
               <IterationStatusBadge status={richIteration.status} showIcon />
             </div>
           }
@@ -436,7 +512,9 @@ export const IterationDetailsPageContent = () => {
                 </span>
               ))}
               <span className={cx('meta__field')}>
-                <span className={cx('meta__label')}>{`${formatMessage(messages.metaCiPipeline)}:`}</span>
+                <span
+                  className={cx('meta__label')}
+                >{`${formatMessage(messages.metaCiPipeline)}:`}</span>
                 <a href={richIteration.ciPipeline.url} target="_blank" rel="noreferrer">
                   {richIteration.ciPipeline.id}
                 </a>
@@ -472,7 +550,7 @@ export const IterationDetailsPageContent = () => {
               fixRoundsCount={richIteration.fixRoundsCount}
               autoReadyPromotedCount={richIteration.autoReadyPromotedCount}
               selectedStage={selectedStage || defaultStageKey(pipeline.type)}
-              onSelect={setSelectedStage}
+              onSelect={onSelectStage}
             />
           </section>
           {currentStage && (
@@ -483,5 +561,191 @@ export const IterationDetailsPageContent = () => {
         </div>
       </ScrollWrapper>
     </SettingsLayout>
+  );
+};
+
+export const IterationDetailsPageContent = () => {
+  const { formatMessage } = useIntl();
+  const dispatch = useDispatch();
+  const projectName = useSelector(projectNameSelector);
+  const projectKey = useSelector(projectKeySelector);
+  const { organizationSlug, projectSlug } = useSelector(
+    urlOrganizationAndProjectSelector,
+  ) as ProjectDetails;
+  const pipelineId = useSelector(pipelineIdSelector);
+  const iterationId = useSelector(iterationIdSelector);
+  const query = useSelector(querySelector);
+  const pipelines = useSelector(pipelinesSelector);
+  const catalogProjectKey = useSelector(pipelineCatalogProjectKeySelector);
+  const catalogTransport = useSelector(pipelineCatalogTransportSelector);
+  const catalogVersion = useSelector(pipelineCatalogVersionSelector);
+  const catalogRequestId = useSelector(pipelineCatalogRequestIdSelector);
+  const iteration = useSelector(pipelineIterationDetailsSelector);
+  const isLoading = useSelector(pipelineIterationDetailsLoadingSelector);
+  const hasDetailError = useSelector(pipelineIterationDetailsErrorSelector);
+  const isDetailUnavailable = useSelector(pipelineIterationDetailsUnavailableSelector);
+  const detailFailureKind = useSelector(pipelineIterationDetailsFailureKindSelector);
+  const detailProjectKey = useSelector(pipelineIterationDetailProjectKeySelector);
+  const detailPipelineId = useSelector(pipelineIterationDetailPipelineIdSelector);
+  const detailIterationId = useSelector(pipelineIterationDetailIterationIdSelector);
+  const isCatalogLoading = useSelector(pipelinesLoadingSelector);
+  const isLiveTransport = catalogTransport === 'live';
+  const { hasValidRoute, detailMatchesRoute, currentIteration, isDetailPending } =
+    resolveDetailRouteState({
+      pipelineId,
+      iterationId,
+      projectKey,
+      detailProjectKey,
+      detailPipelineId,
+      detailIterationId,
+      iteration,
+      isLiveTransport,
+      isCatalogLoading,
+      isLoading,
+    });
+
+  const { hasCurrentCatalog, pipelineCandidate, pipeline, isReducedCatalogPipeline } =
+    resolvePipelineCatalog(pipelines, pipelineId, catalogVersion, catalogProjectKey, projectKey);
+  const [selectedStage, setSelectedStage] = useState<AiStageKey | null>(null);
+  const hasInitializedStage = useRef(false);
+  useIterationDetailRequests({
+    dispatch,
+    projectKey,
+    pipelineId,
+    iterationId,
+    isLiveTransport,
+    hasCurrentCatalog,
+    catalogTransport,
+    catalogVersion,
+    catalogRequestId,
+    catalogProjectKey,
+    pipelineCandidate,
+    hasValidRoute,
+    detailMatchesRoute,
+    isLoading,
+    currentIteration,
+  });
+
+  useEffect(() => {
+    if (hasInitializedStage.current || !pipeline) {
+      return;
+    }
+    const requestedStage = typeof query.stage === 'string' ? query.stage.toUpperCase() : undefined;
+    setSelectedStage(
+      requestedStage && STAGE_KEYS.has(requestedStage)
+        ? (requestedStage as AiStageKey)
+        : defaultStageKey(pipeline.type),
+    );
+    hasInitializedStage.current = true;
+  }, [pipeline, query.stage]);
+
+  usePolling(
+    () => {
+      dispatch(getPipelineIterationDetailsAction(pipelineId, iterationId));
+      return POLLING_REQUEST_STARTED;
+    },
+    ITERATION_POLL_INTERVAL_MS,
+    shouldPollIteration(isLiveTransport, isLoading, pipeline, currentIteration),
+  );
+
+  const breadcrumbDescriptors = [
+    {
+      id: 'project',
+      title: projectName,
+      onClick: () =>
+        dispatch({ type: PROJECT_DASHBOARD_PAGE, payload: { organizationSlug, projectSlug } }),
+    },
+    {
+      id: 'pipelines',
+      title: formatMessage(messages.pipelinesBreadcrumb),
+      onClick: () =>
+        dispatch({ type: PROJECT_PIPELINES_PAGE, payload: { organizationSlug, projectSlug } }),
+    },
+    {
+      id: 'iteration',
+      title: currentIteration
+        ? formatMessage(messages.iterationTitle, { number: currentIteration.number })
+        : '',
+    },
+  ];
+
+  const retryDetail = () => {
+    dispatch(getPipelineIterationDetailsAction(pipelineId, iterationId));
+  };
+
+  const backToPipelines = () => {
+    dispatch({ type: PROJECT_PIPELINES_PAGE, payload: { organizationSlug, projectSlug } });
+  };
+
+  if (isLiveTransport && !hasValidRoute) {
+    return (
+      <ReducedIterationDetails
+        iteration={null}
+        hasError={false}
+        isUnavailable={false}
+        isInvalidRoute
+        breadcrumbDescriptors={breadcrumbDescriptors}
+        requestedStage={typeof query.stage === 'string' ? query.stage : undefined}
+        onRetry={retryDetail}
+        onBack={backToPipelines}
+        projectKey={projectKey}
+      />
+    );
+  }
+
+  if (isDetailPending && !currentIteration) {
+    return (
+      <SettingsLayout>
+        <output className={cx('state')} aria-live="polite">
+          <SpinningPreloader />
+          <span>{formatMessage(messages.detailLoading)}</span>
+        </output>
+      </SettingsLayout>
+    );
+  }
+
+  if (isLiveTransport || isReducedCatalogPipeline) {
+    return (
+      <ReducedIterationDetails
+        iteration={isReducedDetail(currentIteration) ? currentIteration : null}
+        hasError={detailMatchesRoute && hasDetailError}
+        isUnavailable={detailMatchesRoute && isDetailUnavailable}
+        failureKind={detailMatchesRoute ? detailFailureKind : null}
+        breadcrumbDescriptors={breadcrumbDescriptors}
+        requestedStage={typeof query.stage === 'string' ? query.stage : undefined}
+        onRetry={retryDetail}
+        onBack={backToPipelines}
+        projectKey={projectKey}
+        onCompare={(selectedPipelineId, selectedIterationId) =>
+          dispatch({
+            type: PROJECT_PIPELINE_COMPARISON_PAGE,
+            payload: { organizationSlug, projectSlug },
+            query: {
+              pipeline: String(selectedPipelineId),
+              candidate: String(selectedIterationId),
+            },
+          })
+        }
+      />
+    );
+  }
+
+  if (!currentIteration || isReducedDetail(currentIteration) || !pipeline) {
+    return null;
+  }
+
+  return (
+    <RichIterationDetails
+      richIteration={currentIteration}
+      pipeline={pipeline}
+      breadcrumbDescriptors={breadcrumbDescriptors}
+      selectedStage={selectedStage}
+      onSelectStage={setSelectedStage}
+      isLoading={isLoading}
+      pipelineId={pipelineId}
+      iterationId={iterationId}
+      organizationSlug={organizationSlug}
+      projectSlug={projectSlug}
+    />
   );
 };

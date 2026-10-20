@@ -23,7 +23,7 @@
 
   &__item-wrapper {
     display: flex;
-    align-items: center;
+    align-items: stretch;
     gap: 8px;
     min-width: 0;
     flex: 1 0 220px;
@@ -49,7 +49,7 @@
     border: 1px solid var(--rp-ui-base-e-100);
     border-radius: 4px;
     cursor: pointer;
-    font-family: var(--rp-ui-base-font-family);
+    font-family: $FONT-ROBOTO-REGULAR;
     color: var(--rp-ui-base-almost-black);
     text-align: left;
     transition: border-color 0.15s ease;
@@ -83,7 +83,8 @@
 
   &__item-label {
     min-width: 0;
-    font-weight: var(--rp-ui-base-fw-bold);
+    font-family: $FONT-ROBOTO-BOLD;
+    font-weight: normal;
     font-size: 13px;
     overflow-wrap: anywhere;
   }
@@ -137,16 +138,21 @@
   .stage-cards {
     display: grid;
     grid-template-columns: 1fr;
+    grid-auto-rows: 1fr;
+    gap: 32px;
 
     &__item-wrapper {
       display: grid;
       grid-template-columns: 1fr;
+      position: relative;
       width: 100%;
     }
 
     &__arrow {
-      justify-self: center;
-      transform: rotate(90deg);
+      position: absolute;
+      top: -26px;
+      left: 50%;
+      transform: translateX(-50%) rotate(90deg);
     }
   }
 }

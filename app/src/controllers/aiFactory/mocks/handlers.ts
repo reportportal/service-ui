@@ -27,7 +27,6 @@ import {
   EvaluationState,
   FixRoundRS,
   FixRoundStatus,
-  IterationPageRS,
   Lifecycle,
   LifecycleActorType,
   LifecycleReason,
@@ -50,10 +49,6 @@ import {
 } from './db';
 import { applyAutoReady, automateSkipReason } from './engine';
 import {
-  toIterationRS,
-  toIterationSummaryRS,
-  toPipelineCompareRS,
-  toPipelineRS,
   toTestCaseAiExtension,
   toTestCaseAiRS,
 } from './viewModels';
@@ -105,37 +100,6 @@ const caseWithExtension = (c: MockCaseRecord) => {
 };
 
 export const installAiFactoryHandlers = (mock: MockAdapter): void => {
-  // P1 — GET tms/pipeline
-  mock.onGet(/\/tms\/pipeline$/).reply(() => [200, getDb().pipelines.map((p) => toPipelineRS(p, listIterations(p.id).length))]);
-
-  // P2 — GET tms/pipeline/{id}/iteration
-  mock.onGet(/\/tms\/pipeline\/(\d+)\/iteration(?:\?.*)?$/).reply((config) => {
-    const [, pipelineId] = url(config).match(/\/tms\/pipeline\/(\d+)\/iteration/);
-    const pipeline = findPipeline(Number(pipelineId));
-    if (!pipeline) return notFound();
-    const q = query(config);
-    const search = (q.get('search') || '').toLowerCase();
-    const all = listIterations(pipeline.id).filter(
-      (it) =>
-        !search ||
-        `${pipeline.name} #${it.number} ${it.requirement?.specId || ''} ${it.requirement?.title || ''}`.toLowerCase().includes(search),
-    );
-    const limit = Number(q.get('limit')) || all.length;
-    const offset = Number(q.get('offset')) || 0;
-    const content = all.slice(offset, offset + limit).map((it) => toIterationSummaryRS(pipeline, it));
-    const page: IterationPageRS = { content, page: { number: Math.floor(offset / limit) || 0, size: limit, totalElements: all.length, totalPages: Math.ceil(all.length / limit) || 1 } };
-    return [200, page];
-  });
-
-  // P3 — GET tms/pipeline/{id}/iteration/{iterationId}
-  mock.onGet(/\/tms\/pipeline\/(\d+)\/iteration\/(\d+)$/).reply((config) => {
-    const m = url(config).match(/\/tms\/pipeline\/(\d+)\/iteration\/(\d+)/);
-    const pipeline = findPipeline(Number(m[1]));
-    const iteration = findIteration(Number(m[2]));
-    if (!pipeline || iteration?.pipelineId !== pipeline.id) return notFound();
-    return [200, toIterationRS(pipeline, iteration)];
-  });
-
   // P4 — GET/PUT tms/pipeline/{id}/settings
   mock.onGet(/\/tms\/pipeline\/(\d+)\/settings$/).reply((config) => {
     const [, pipelineId] = url(config).match(/\/tms\/pipeline\/(\d+)\/settings/);
@@ -188,25 +152,6 @@ export const installAiFactoryHandlers = (mock: MockAdapter): void => {
         iterationsCount: listIterations(pipeline.id).length,
       },
     ];
-  });
-
-  // LP4 — GET pipeline/iteration/{iterationId}/compare?with={otherIterationId}
-  mock.onGet(/\/pipeline\/iteration\/(\d+)\/compare(?:\?.*)?$/).reply((config) => {
-    const [, candidateIdValue] = url(config).match(/\/pipeline\/iteration\/(\d+)\/compare/);
-    const baselineIdValue = query(config).get('with');
-    const candidateId = Number(candidateIdValue);
-    const baselineId = Number(baselineIdValue);
-    if (!baselineIdValue || !Number.isSafeInteger(baselineId) || candidateId === baselineId) {
-      return [400, { errorCode: 40001, message: 'Two different iteration ids are required' }];
-    }
-    const candidate = findIteration(candidateId);
-    const baseline = findIteration(baselineId);
-    if (!candidate || !baseline) return notFound();
-    if (candidate.pipelineId !== baseline.pipelineId) {
-      return [400, { errorCode: 40001, message: 'Iterations must belong to the same pipeline' }];
-    }
-    const pipeline = findPipeline(candidate.pipelineId);
-    return pipeline ? [200, toPipelineCompareRS(pipeline, candidate, baseline)] : notFound();
   });
 
   // C2 — GET tms/test-case/{id}/ai

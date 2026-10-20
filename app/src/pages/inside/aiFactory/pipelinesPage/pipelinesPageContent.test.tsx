@@ -152,7 +152,7 @@ interface RenderOptions {
   pipelinesLoading?: boolean;
   iterationsLoadingByPipeline?: Record<number, boolean>;
   iterationsErrorByPipeline?: Record<number, boolean>;
-  transport?: 'mock' | 'live' | 'postman-demo';
+  transport?: 'mock' | 'live';
   catalogPage?: PipelinePageState | null;
   catalogSearch?: string;
   catalogError?: boolean;
@@ -227,14 +227,6 @@ describe('PipelinesPageContent polling', () => {
     jest.mocked(isAiFactoryDemoResetAvailable).mockReturnValue(false);
     jest.mocked(isAiFactoryMockRuntimeInstalled).mockReturnValue(true);
     jest.mocked(resetMockDb).mockReturnValue(true);
-  });
-
-  test('labels a Postman fallback catalog as demo data', () => {
-    const wrapper = renderPage({ transport: 'postman-demo' });
-
-    expect(wrapper.find('output').text()).toContain('Demo data from the Postman collection');
-    expect(usePolling).toHaveBeenLastCalledWith(expect.any(Function), 5000, false);
-    wrapper.unmount();
   });
 
   test('shows an inline retry when the catalog request fails', () => {
