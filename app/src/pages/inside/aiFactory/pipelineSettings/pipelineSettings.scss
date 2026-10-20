@@ -18,7 +18,7 @@
   display: flex;
   flex-direction: column;
   gap: 16px;
-  min-width: 440px;
+  min-width: 0;
   color: var(--rp-ui-base-almost-black);
   font-family: var(--rp-ui-base-font-family);
 
@@ -39,6 +39,16 @@
     width: 180px;
   }
 
+  &__live-threshold-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+
+    .settings__live-threshold {
+      width: 100%;
+    }
+  }
+
   &__toggle-row {
     display: flex;
     align-items: center;
@@ -46,11 +56,5 @@
     font-size: 13px;
     font-weight: var(--rp-ui-base-fw-bold);
     line-height: 20px;
-  }
-}
-
-@media (max-width: 560px) {
-  .settings {
-    min-width: 0;
   }
 }

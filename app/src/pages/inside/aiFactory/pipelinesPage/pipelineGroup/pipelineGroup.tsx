@@ -29,7 +29,7 @@ import {
 } from 'controllers/aiFactory/pipelines';
 import { PipelineType } from 'types/aiFactory';
 
-import { PipelineSettingsButton } from '../../pipelineSettings';
+import { LivePipelineSettingsButton, PipelineSettingsButton } from '../../pipelineSettings';
 import { IterationCard } from '../iterationCard';
 import { ReducedIterationCard } from '../iterationCard/reducedIterationCard';
 import { PageControls } from '../pageControls/pageControls';
@@ -65,7 +65,11 @@ export const PipelineGroup = ({
   const renderIteration = (iteration: PipelineIterationItem) => {
     if (isReducedPipelineIteration(iteration)) {
       return (
-        <ReducedIterationCard key={iteration.id} iteration={iteration} pipelineName={pipeline.name} />
+        <ReducedIterationCard
+          key={iteration.id}
+          iteration={iteration}
+          pipelineName={pipeline.name}
+        />
       );
     }
     if (isReducedPipeline(pipeline)) {
@@ -128,7 +132,7 @@ export const PipelineGroup = ({
           <span className={cx('group__name')}>{pipeline.name}</span>
           <span className={cx('group__meta')}>
             {isReducedPipeline(pipeline)
-              ? pipeline.repository ?? formatMessage(messages.repositoryNotProvided)
+              ? (pipeline.repository ?? formatMessage(messages.repositoryNotProvided))
               : pipeline.repository}
           </span>
           {pipeline.iterationsCount !== undefined && (
@@ -154,7 +158,11 @@ export const PipelineGroup = ({
               </span>
             )}
         </button>
-        {!isReducedPipeline(pipeline) && <PipelineSettingsButton pipeline={pipeline} />}
+        {isReducedPipeline(pipeline) ? (
+          <LivePipelineSettingsButton pipelineId={pipeline.id} />
+        ) : (
+          <PipelineSettingsButton pipeline={pipeline} />
+        )}
       </div>
       {isOpen && <div className={cx('group__body')}>{renderBody()}</div>}
     </section>

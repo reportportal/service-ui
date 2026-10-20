@@ -49,7 +49,6 @@ import {
 } from './db';
 import { applyAutoReady, automateSkipReason } from './engine';
 import {
-  toPipelineCompareRS,
   toTestCaseAiExtension,
   toTestCaseAiRS,
 } from './viewModels';
@@ -153,25 +152,6 @@ export const installAiFactoryHandlers = (mock: MockAdapter): void => {
         iterationsCount: listIterations(pipeline.id).length,
       },
     ];
-  });
-
-  // LP4 — GET pipeline/iteration/{iterationId}/compare?with={otherIterationId}
-  mock.onGet(/\/pipeline\/iteration\/(\d+)\/compare(?:\?.*)?$/).reply((config) => {
-    const [, candidateIdValue] = url(config).match(/\/pipeline\/iteration\/(\d+)\/compare/);
-    const baselineIdValue = query(config).get('with');
-    const candidateId = Number(candidateIdValue);
-    const baselineId = Number(baselineIdValue);
-    if (!baselineIdValue || !Number.isSafeInteger(baselineId) || candidateId === baselineId) {
-      return [400, { errorCode: 40001, message: 'Two different iteration ids are required' }];
-    }
-    const candidate = findIteration(candidateId);
-    const baseline = findIteration(baselineId);
-    if (!candidate || !baseline) return notFound();
-    if (candidate.pipelineId !== baseline.pipelineId) {
-      return [400, { errorCode: 40001, message: 'Iterations must belong to the same pipeline' }];
-    }
-    const pipeline = findPipeline(candidate.pipelineId);
-    return pipeline ? [200, toPipelineCompareRS(pipeline, candidate, baseline)] : notFound();
   });
 
   // C2 — GET tms/test-case/{id}/ai

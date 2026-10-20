@@ -27,7 +27,7 @@ import {
   PROJECT_PIPELINES_PAGE,
   TEST_CASE_LIBRARY_PAGE,
 } from 'controllers/pages';
-import { IterationRS, PipelineComparison } from 'types/aiFactory';
+import { IterationRS } from 'types/aiFactory';
 
 import {
   CLEAR_PIPELINE_COMPARISON,
@@ -42,6 +42,7 @@ import {
   IterationsErrorByPipelineId,
   IterationsLoadingByPipelineId,
   PipelineIterationItem,
+  PipelineComparisonResult,
   PipelinePageState,
   PipelinesState,
 } from './types';
@@ -284,9 +285,9 @@ const detailMetaReducer =
       : state;
 
 const comparisonReducer = (
-  state: PipelineComparison | null = null,
+  state: PipelineComparisonResult | null = null,
   action: PipelineReducerAction,
-): PipelineComparison | null => {
+): PipelineComparisonResult | null => {
   if (action.type === GET_PIPELINE_COMPARISON || action.type === CLEAR_PIPELINE_COMPARISON) {
     return null;
   }
@@ -294,7 +295,7 @@ const comparisonReducer = (
     return state;
   }
   return action.type === FETCH_SUCCESS
-    ? ((action.payload?.data as PipelineComparison | undefined) ?? null)
+    ? ((action.payload?.data as PipelineComparisonResult | undefined) ?? null)
     : null;
 };
 
@@ -474,6 +475,8 @@ const reducer = (
   if (!shouldResetCatalogData) {
     return nextState;
   }
+  const shouldResetComparison =
+    action.type === FETCH_START && action.meta?.projectKey !== currentState.catalogProjectKey;
   return {
     ...nextState,
     data: action.type === FETCH_START ? null : nextState.data,
@@ -495,9 +498,9 @@ const reducer = (
     detailCatalogVersion: 0,
     detailCatalogRequestId: null,
     detailTransport: null,
-    comparison: null,
-    comparisonLoading: false,
-    comparisonError: false,
+    comparison: shouldResetComparison ? null : nextState.comparison,
+    comparisonLoading: shouldResetComparison ? false : nextState.comparisonLoading,
+    comparisonError: shouldResetComparison ? false : nextState.comparisonError,
   };
 };
 

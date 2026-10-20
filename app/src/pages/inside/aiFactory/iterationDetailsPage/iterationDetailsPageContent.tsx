@@ -688,6 +688,7 @@ export const IterationDetailsPageContent = () => {
         requestedStage={typeof query.stage === 'string' ? query.stage : undefined}
         onRetry={retryDetail}
         onBack={backToPipelines}
+        projectKey={projectKey}
       />
     );
   }
@@ -714,6 +715,17 @@ export const IterationDetailsPageContent = () => {
         requestedStage={typeof query.stage === 'string' ? query.stage : undefined}
         onRetry={retryDetail}
         onBack={backToPipelines}
+        projectKey={projectKey}
+        onCompare={(selectedPipelineId, selectedIterationId) =>
+          dispatch({
+            type: PROJECT_PIPELINE_COMPARISON_PAGE,
+            payload: { organizationSlug, projectSlug },
+            query: {
+              pipeline: String(selectedPipelineId),
+              candidate: String(selectedIterationId),
+            },
+          })
+        }
       />
     );
   }

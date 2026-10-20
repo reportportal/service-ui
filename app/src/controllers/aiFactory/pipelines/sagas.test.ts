@@ -22,11 +22,13 @@ import { FETCH_ERROR, FETCH_START, FETCH_SUCCESS } from 'controllers/fetch/const
 import { CriterionKey, PipelineCompareRS, StageKey, StageStatus } from 'types/aiFactory';
 
 import {
+  getPipelineComparisonAction,
   getPipelineIterationDetailsAction,
   getPipelineIterationsAction,
   getPipelinesAction,
 } from './actionCreators';
 import {
+  PIPELINE_COMPARISON_NAMESPACE,
   PIPELINE_ITERATION_DETAILS_NAMESPACE,
   PIPELINE_ITERATIONS_NAMESPACE,
   PIPELINES_NAMESPACE,
@@ -588,6 +590,76 @@ describe('normalizePipelineComparison', () => {
       expect(notifications).toHaveLength(isCurrent ? 1 : 0);
       await harness.stop();
     });
+  });
+
+  test('requests and validates the published LP4 response for a live catalog', async () => {
+    fetchMock.mockResolvedValue({
+      baseline: {
+        id: 11,
+        pipelineId: 7,
+        pipelineName: 'Generation',
+        iterationNumber: 1,
+        status: 'Passed',
+        statusCategory: 'PASSED',
+        stages: [],
+      },
+      candidate: {
+        id: 12,
+        pipelineId: 7,
+        pipelineName: 'Generation',
+        iterationNumber: 2,
+        status: 'In review',
+        statusCategory: 'WAITING',
+        stages: [],
+      },
+      sameScope: true,
+      metrics: [{ key: 'score', baseline: '80', candidate: '90', delta: '10' }],
+    });
+    let notifyComplete: () => void = () => undefined;
+    const complete = new Promise<void>((resolve) => { notifyComplete = resolve; });
+    const harness = startPipelineSagas(createSagaState({ transport: 'live' }), (action) => {
+      const result = action as { type?: string; meta?: { namespace?: string } };
+      if (result.type === FETCH_SUCCESS && result.meta?.namespace === PIPELINE_COMPARISON_NAMESPACE) {
+        notifyComplete();
+      }
+    });
+    await Promise.resolve();
+    harness.dispatch(getPipelineComparisonAction(7, 12, 11));
+    await complete;
+    expect(fetchMock).toHaveBeenCalledWith(
+      URLS.pipelineIterationComparison('demo', 12, 11),
+      { signal: expect.any(AbortSignal) },
+    );
+    expect(harness.dispatched).toContainEqual(expect.objectContaining({
+      type: FETCH_SUCCESS,
+      payload: { data: expect.objectContaining({
+        mode: 'live',
+        projectKey: 'demo',
+        pipelineId: 7,
+        metrics: [expect.objectContaining({ key: '0:score', delta: '10' })],
+      }) },
+    }));
+    await harness.stop();
+  });
+
+  test('surfaces a missing LP4 comparison as an inline fetch error', async () => {
+    fetchMock.mockRejectedValue({ message: 'Not found' });
+    let notifyComplete: () => void = () => undefined;
+    const complete = new Promise<void>((resolve) => { notifyComplete = resolve; });
+    const harness = startPipelineSagas(createSagaState({ transport: 'live' }), (action) => {
+      const result = action as { type?: string; meta?: { namespace?: string } };
+      if (result.type === FETCH_ERROR && result.meta?.namespace === PIPELINE_COMPARISON_NAMESPACE) {
+        notifyComplete();
+      }
+    });
+    await Promise.resolve();
+    harness.dispatch(getPipelineComparisonAction(7, 12, 11));
+    await complete;
+    expect(harness.dispatched).toContainEqual(expect.objectContaining({
+      type: FETCH_ERROR,
+      meta: expect.objectContaining({ namespace: PIPELINE_COMPARISON_NAMESPACE }),
+    }));
+    await harness.stop();
   });
 
   test('enables mock-rich metrics, requirements, criterion averages, and Auto-Ready only with marker', () => {

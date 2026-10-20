@@ -51,6 +51,7 @@ import {
   adaptLivePipelinesPage,
   type LivePage,
 } from './liveAdapters';
+import { adaptLivePipelineComparison } from './liveCompareAdapter';
 import {
   CLEAR_PIPELINE_COMPARISON,
   GET_PIPELINE_COMPARISON,
@@ -81,7 +82,6 @@ import {
 import {
   getPipelineCatalogTransport,
   getPipelineDetailTransport,
-  isMockDownstreamCompatible,
   PipelineCatalogTransport,
   PipelineDetailTransport,
 } from './transport';
@@ -827,28 +827,21 @@ function* getPipelineComparison(action: GetPipelineComparisonAction): Generator 
 
   try {
     const projectKey = (yield select(projectKeySelector)) as string;
-    const transport = (yield select(pipelineCatalogTransportSelector)) as PipelineCatalogTransport;
     const { pipelineId, candidateIterationId, baselineIterationId } = action.payload;
     yield put({
       type: FETCH_START,
       payload: { projectKey },
       meta: { namespace: PIPELINE_COMPARISON_NAMESPACE },
     });
-    if (!isMockDownstreamCompatible(transport)) {
-      throw new Error('Pipeline comparison transport is unavailable');
-    }
-
     const raw = (yield call(
       fetch,
       URLS.pipelineIterationComparison(projectKey, candidateIterationId, baselineIterationId),
       { signal: controller.signal },
-    )) as PipelineCompareRS;
-    const data = normalizePipelineComparison(
-      raw,
-      pipelineId,
-      candidateIterationId,
-      baselineIterationId,
-    );
+    )) as unknown;
+    const data = {
+      ...adaptLivePipelineComparison(raw, pipelineId, candidateIterationId, baselineIterationId),
+      projectKey,
+    };
     yield put(fetchSuccessAction(PIPELINE_COMPARISON_NAMESPACE, { data }));
   } catch (error) {
     const isCancellation = error instanceof Error && error.message === 'REQUEST_CANCELED';

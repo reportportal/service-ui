@@ -22,21 +22,25 @@ import {
   clearPipelineComparisonAction,
   getPipelineComparisonAction,
   getPipelineIterationsAction,
-  pipelineCatalogTransportSelector,
+  getPipelinesAction,
+  pipelineCatalogErrorSelector,
+  pipelineCatalogProjectKeySelector,
   pipelineComparisonErrorSelector,
   pipelineComparisonLoadingSelector,
   pipelineComparisonSelector,
   pipelineIterationsByPipelineSelector,
+  pipelineIterationsErrorByPipelineSelector,
   pipelineIterationsLoadingSelector,
   pipelinesLoadingSelector,
   pipelinesSelector,
+  type PipelineComparisonResult,
 } from 'controllers/aiFactory/pipelines';
 import {
   querySelector,
   updatePagePropertiesAction,
   urlOrganizationAndProjectSelector,
 } from 'controllers/pages';
-import { projectNameSelector } from 'controllers/project';
+import { projectKeySelector, projectNameSelector } from 'controllers/project';
 import {
   IterationStatus,
   PipelineComparison,
@@ -95,6 +99,10 @@ jest.mock('controllers/aiFactory/pipelines', () => ({
     type: 'GET_ITERATIONS',
     payload: { pipelineIds },
   })),
+  getPipelinesAction: jest.fn(() => ({ type: 'GET_PIPELINES' })),
+  pipelineCatalogErrorSelector: jest.fn(),
+  pipelineCatalogProjectKeySelector: jest.fn(),
+  pipelineIterationsErrorByPipelineSelector: jest.fn(),
   isRichPipeline: jest.fn(
     (pipeline: unknown) =>
       typeof pipeline !== 'object' || pipeline === null || !('kind' in pipeline),
@@ -103,7 +111,6 @@ jest.mock('controllers/aiFactory/pipelines', () => ({
     (iteration: unknown) =>
       typeof iteration !== 'object' || iteration === null || !('kind' in iteration),
   ),
-  pipelineCatalogTransportSelector: jest.fn(),
   pipelineComparisonErrorSelector: jest.fn(),
   pipelineComparisonLoadingSelector: jest.fn(),
   pipelineComparisonSelector: jest.fn(),
@@ -189,10 +196,9 @@ type SelectorValues = {
   pipelinesLoading?: boolean;
   iterationsByPipeline?: Record<number, IterationSummaryRS[]> | null;
   iterationsLoading?: boolean;
-  comparison?: PipelineComparison | null;
+  comparison?: PipelineComparisonResult | null;
   comparisonLoading?: boolean;
   comparisonError?: boolean;
-  transport?: 'mock' | 'live';
 };
 
 interface DropdownProps {
@@ -218,10 +224,13 @@ interface BreadcrumbButtonCollection {
 const renderPage = (values: SelectorValues = {}): ReactWrapper => {
   const selectorValues = new Map<unknown, unknown>([
     [projectNameSelector, 'Demo'],
+    [projectKeySelector, 'project'],
     [urlOrganizationAndProjectSelector, { organizationSlug: 'org', projectSlug: 'project' }],
     [querySelector, values.query ?? { pipeline: '1', baseline: '102', candidate: '103' }],
     [pipelinesSelector, values.pipelines === undefined ? [generationPipeline] : values.pipelines],
-    [pipelineCatalogTransportSelector, values.transport ?? 'mock'],
+    [pipelineCatalogErrorSelector, false],
+    [pipelineCatalogProjectKeySelector, 'project'],
+    [pipelineIterationsErrorByPipelineSelector, {}],
     [pipelinesLoadingSelector, values.pipelinesLoading ?? false],
     [
       pipelineIterationsByPipelineSelector,
@@ -267,13 +276,18 @@ describe('CompareIterationsPageContent', () => {
     expect(updatePagePropertiesAction).toHaveBeenCalledWith({ baseline: 102, candidate: 103 });
   });
 
+  test('loads the live catalog when the comparison page opens directly', () => {
+    wrapper = renderPage({ pipelines: null, iterationsByPipeline: null });
+    expect(getPipelinesAction).toHaveBeenCalledTimes(1);
+  });
+
   test('loads iterations for a canonical selected pipeline and resets both iteration selections on pipeline change', () => {
     wrapper = renderPage({
       query: { pipeline: '1' },
       iterationsByPipeline: {},
     });
 
-    expect(getPipelineIterationsAction).toHaveBeenCalledWith([1]);
+    expect(getPipelineIterationsAction).toHaveBeenCalledWith([1], { offset: 0, limit: 200 });
     const dropdowns = wrapper.find(Dropdown) as unknown as TestNodeCollection;
     const pipelineDropdown = dropdowns.at(0);
     pipelineDropdown.props().onChange?.(2);
@@ -287,7 +301,6 @@ describe('CompareIterationsPageContent', () => {
   test.each([
     [{ pipeline: '1', baseline: '101', candidate: '101' }, 'same pair'],
     [{ pipeline: '1', baseline: '101' }, 'missing candidate'],
-    [{ pipeline: '1', baseline: '101', candidate: '201' }, 'cross-pipeline candidate'],
   ])('clears and guards the %s selection immediately (%s)', (query, _description) => {
     wrapper = renderPage({ query });
 
@@ -297,6 +310,11 @@ describe('CompareIterationsPageContent', () => {
     expect(wrapper.find('.state').prop('children')).toBe(
       'Select two different iterations from the same pipeline.',
     );
+  });
+
+  test('submits a deep-link pair for backend identity validation when LP2 omits an id', () => {
+    wrapper = renderPage({ query: { pipeline: '1', baseline: '101', candidate: '201' } });
+    expect(getPipelineComparisonAction).toHaveBeenCalledWith(1, 201, 101);
   });
 
   test('keeps a valid mounted comparison and clears it on unmount', () => {
@@ -337,6 +355,22 @@ describe('CompareIterationsPageContent', () => {
     wrapper = renderPage({ comparison: loadedComparison });
 
     expect(wrapper.find(ComparisonResult).prop('comparison')).toBe(loadedComparison);
+  });
+
+  test('does not render a live comparison from another project', () => {
+    wrapper = renderPage({
+      comparison: {
+        mode: 'live',
+        projectKey: 'other-project',
+        pipelineId: 1,
+        baseline: { id: 102, number: 2, status: 'PASSED' },
+        candidate: { id: 103, number: 3, status: 'PASSED' },
+        stages: [],
+        metrics: [],
+        sections: [],
+      },
+    });
+    expect(wrapper.find(ComparisonResult)).toHaveLength(0);
   });
 
   test('renders project, pipelines, selected pipeline, and current-page breadcrumbs', () => {
@@ -392,14 +426,23 @@ describe('CompareIterationsPageContent', () => {
     expect(getPipelineComparisonAction).toHaveBeenLastCalledWith(1, 103, 102);
   });
 
-  test('blocks mock comparison requests when the catalog provenance is live', () => {
-    wrapper = renderPage({ transport: 'live' });
+  test('shows LP4 error even while catalog and iteration options are loading', () => {
+    wrapper = renderPage({
+      pipelines: null,
+      pipelinesLoading: true,
+      iterationsByPipeline: null,
+      iterationsLoading: true,
+      comparisonError: true,
+    });
 
-    expect(wrapper.find('.state').prop('children')).toBe(
-      'Comparison is unavailable for this pipeline source',
+    expect(wrapper.find(SystemMessage).prop('mode')).toBe('error');
+    expect(wrapper.find('[aria-live="assertive"]').prop('children')).toBe(
+      'The comparison could not be loaded.',
     );
-    expect(getPipelineComparisonAction).not.toHaveBeenCalled();
-    expect(getPipelineIterationsAction).not.toHaveBeenCalled();
-    expect(clearPipelineComparisonAction).toHaveBeenCalledTimes(1);
+  });
+
+  test('requests LP4 for the selected pair', () => {
+    wrapper = renderPage();
+    expect(getPipelineComparisonAction).toHaveBeenCalledWith(1, 103, 102);
   });
 });
