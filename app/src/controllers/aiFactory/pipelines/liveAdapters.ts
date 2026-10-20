@@ -75,6 +75,7 @@ export interface LivePipelineIterationRaw {
   id?: unknown;
   pipelineId?: unknown;
   pipelineName?: unknown;
+  pipelineType?: unknown;
   iterationNumber?: unknown;
   status?: unknown;
   statusCategory?: unknown;
@@ -141,6 +142,7 @@ export interface ReducedPipeline {
 
 export interface ReducedPipelineStage {
   key: string;
+  stageKey?: string;
   label: string;
   sequence?: number;
   status: ReducedPipelineStatus;
@@ -167,6 +169,7 @@ export interface ReducedPipelineDetailStage extends ReducedPipelineStage {
 
 export interface ReducedPipelineIterationDetail extends Omit<ReducedPipelineIteration, 'stages'> {
   pipelineName?: string;
+  pipelineType?: string;
   createdAt?: number;
   startedBy?: string;
   warnings?: string[];
@@ -633,6 +636,7 @@ const adaptStage = (value: unknown): ReducedPipelineStage | null => {
 
   return {
     key,
+    ...(reportedKey ? { stageKey: reportedKey } : {}),
     label,
     sequence,
     status: asStatus(raw.statusCategory ?? raw.status),
@@ -968,6 +972,31 @@ export const adaptLivePipelineIterationsPage = (
   return { content, page: envelope.page };
 };
 
+const adaptDetailMetadata = (raw: Record<string, unknown>) => {
+  const pipelineName = asTrimmedString(raw.pipelineName, MAX_NAME_LENGTH);
+  const pipelineType = asTrimmedString(raw.pipelineType, MAX_KEY_LENGTH);
+  const createdAt = asTimestamp(raw.createdAt);
+  const startedByRaw = asRecord(raw.startedBy);
+  const startedBy = startedByRaw
+    ? (asTrimmedString(startedByRaw.fullName, MAX_NAME_LENGTH) ??
+      asTrimmedString(startedByRaw.login, MAX_NAME_LENGTH))
+    : undefined;
+  if (
+    (raw.pipelineName !== undefined && pipelineName === undefined) ||
+    (raw.pipelineType !== undefined && pipelineType === undefined) ||
+    (raw.createdAt !== undefined && createdAt === undefined) ||
+    (raw.startedBy !== undefined && !startedBy)
+  ) {
+    return null;
+  }
+  return {
+    pipelineName,
+    ...(pipelineType ? { pipelineType } : {}),
+    createdAt,
+    ...(startedBy ? { startedBy } : {}),
+  };
+};
+
 export const adaptLivePipelineIterationDetail = (
   value: unknown,
   expectedPipelineId: number,
@@ -981,13 +1010,7 @@ export const adaptLivePipelineIterationDetail = (
   }
   const raw = asRecord(value);
   const iteration = adaptIteration(value, expectedPipelineId);
-  const pipelineName = raw ? asTrimmedString(raw.pipelineName, MAX_NAME_LENGTH) : undefined;
-  const createdAt = raw ? asTimestamp(raw.createdAt) : undefined;
-  const startedByRaw = raw && asRecord(raw.startedBy);
-  const startedBy = startedByRaw
-    ? (asTrimmedString(startedByRaw.fullName, MAX_NAME_LENGTH) ??
-      asTrimmedString(startedByRaw.login, MAX_NAME_LENGTH))
-    : undefined;
+  const metadata = raw ? adaptDetailMetadata(raw) : null;
   const rawWarnings = raw?.warnings === undefined ? [] : raw.warnings;
   const warningDetails =
     Array.isArray(rawWarnings) && rawWarnings.length <= 20
@@ -1020,9 +1043,7 @@ export const adaptLivePipelineIterationDetail = (
   if (
     !raw ||
     iteration?.id !== expectedIterationId ||
-    (raw.pipelineName !== undefined && pipelineName === undefined) ||
-    (raw.createdAt !== undefined && createdAt === undefined) ||
-    (raw.startedBy !== undefined && !startedBy) ||
+    !metadata ||
     !warningDetails ||
     warningDetails.some((warning) => !warning) ||
     !stages
@@ -1031,9 +1052,7 @@ export const adaptLivePipelineIterationDetail = (
   }
   return {
     ...iteration,
-    pipelineName,
-    createdAt,
-    ...(startedBy ? { startedBy } : {}),
+    ...metadata,
     ...(warningDetails.length
       ? {
           warnings: warningDetails.map(({ message }) => message),

@@ -494,14 +494,28 @@
     background-color: var(--rp-ui-base-bg-100);
   }
 
+  &--grade table th {
+    white-space: normal;
+  }
+
+  &--create table,
+  &--upload table {
+    width: 100%;
+    min-width: 680px;
+  }
+
+  &--create th:first-child {
+    min-width: 320px;
+  }
+
+  &--upload th:nth-child(2) {
+    min-width: 300px;
+  }
+
   &--grade table {
     width: 100%;
     min-width: 1050px;
     table-layout: fixed;
-
-    th {
-      white-space: normal;
-    }
 
     th:first-child {
       width: 94px;
@@ -518,6 +532,35 @@
 
   details {
     margin-top: 6px;
+  }
+}
+
+.generation-highlights {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: 12px 0 16px;
+
+  &__item {
+    min-width: 110px;
+    padding: 10px 12px;
+    border: 1px solid var(--rp-ui-base-e-100);
+    border-radius: 4px;
+    background-color: var(--rp-ui-base-bg-000);
+  }
+
+  dt {
+    color: var(--rp-ui-base-e-400);
+    font-size: 11px;
+    line-height: 16px;
+  }
+
+  dd {
+    margin: 3px 0 0;
+    font-family: $FONT-ROBOTO-BOLD;
+    font-weight: normal;
+    font-size: 13px;
+    line-height: 18px;
   }
 }
 

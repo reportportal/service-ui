@@ -74,6 +74,7 @@ export type {
   PipelinePageRequest,
   PipelinePageState,
   PipelineIterationItem,
+  PipelineComparisonResult,
   GetPipelineComparisonAction,
   ClearPipelineComparisonAction,
 } from './types';
@@ -88,6 +89,7 @@ export type {
   ReducedPipelineSection,
   ReducedPipelineStatus,
 } from './liveAdapters';
+export type { LiveComparisonStage, LivePipelineComparison } from './liveCompareAdapter';
 export {
   isReducedPipeline,
   isReducedPipelineIteration,

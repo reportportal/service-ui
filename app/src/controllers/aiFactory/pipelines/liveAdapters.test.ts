@@ -431,8 +431,14 @@ describe('live pipeline catalog adapters', () => {
           { key: 'zeta', value: 'last' },
         ],
         stages: [
-          { key: 'prepare', label: 'Prepare', sequence: 1, status: 'PASSED' },
-          { key: 'review', label: 'Review', sequence: 2, status: 'NEEDS_HUMAN' },
+          { key: 'prepare', stageKey: 'prepare', label: 'Prepare', sequence: 1, status: 'PASSED' },
+          {
+            key: 'review',
+            stageKey: 'review',
+            label: 'Review',
+            sequence: 2,
+            status: 'NEEDS_HUMAN',
+          },
         ],
       },
     ]);
@@ -570,7 +576,13 @@ describe('live pipeline catalog adapters', () => {
 
       expect(iteration.status).toBe('UNKNOWN');
       expect(iteration.stages).toEqual([
-        { key: 'custom', label: 'custom', sequence: undefined, status: 'UNKNOWN' },
+        {
+          key: 'custom',
+          stageKey: 'custom',
+          label: 'custom',
+          sequence: undefined,
+          status: 'UNKNOWN',
+        },
       ]);
     },
   );
@@ -687,6 +699,7 @@ describe('live pipeline catalog adapters', () => {
         {
           ...minimalDetail,
           pipelineName: '  Release validation  ',
+          pipelineType: ' TEST_CASE_GENERATION ',
           status: 'FUTURE_STATUS',
           trigger: ' CI ',
           startedAt: '2026-10-04T10:00:00.000Z',
@@ -730,6 +743,7 @@ describe('live pipeline catalog adapters', () => {
         pipelineId: 7,
         number: 3,
         pipelineName: 'Release validation',
+        pipelineType: 'TEST_CASE_GENERATION',
         status: 'UNKNOWN',
         trigger: 'CI',
         startedAt: Date.parse('2026-10-04T10:00:00.000Z'),
@@ -741,10 +755,18 @@ describe('live pipeline catalog adapters', () => {
           { key: 'zeta', value: 'last' },
         ],
         stages: [
-          { id: 11, key: 'prepare', label: 'Prepare', sequence: 1, status: 'PASSED' },
+          {
+            id: 11,
+            key: 'prepare',
+            stageKey: 'prepare',
+            label: 'Prepare',
+            sequence: 1,
+            status: 'PASSED',
+          },
           {
             id: 12,
             key: 'review',
+            stageKey: 'review',
             label: 'Review',
             sequence: 2,
             status: 'NEEDS_HUMAN',
@@ -776,6 +798,7 @@ describe('live pipeline catalog adapters', () => {
       ['invalid created date', { ...minimalDetail, createdAt: 'not-a-date' }, 7, 103],
       ['invalid started date', { ...minimalDetail, startedAt: 'not-a-date' }, 7, 103],
       ['invalid pipeline name', { ...minimalDetail, pipelineName: 'x'.repeat(256) }, 7, 103],
+      ['invalid pipeline type', { ...minimalDetail, pipelineType: '' }, 7, 103],
       ['invalid attribute array', { ...minimalDetail, attributes: [7] }, 7, 103],
       [
         'unsafe attribute key',

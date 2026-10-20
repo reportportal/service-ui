@@ -28,10 +28,11 @@ import {
   AiStageKey,
   ComparisonIteration,
   ComparisonStageEntry,
-  PipelineComparison,
 } from 'types/aiFactory';
+import type { PipelineComparisonResult } from 'controllers/aiFactory/pipelines';
 
 import { buildComparisonMetrics, ComparisonMetric } from './compareIterationsUtils';
+import { LiveComparisonResult } from './liveComparisonResult';
 import { messages } from './messages';
 import styles from './compareIterationsPage.scss';
 
@@ -110,11 +111,14 @@ const MetricDelta = ({ metric }: { metric: ComparisonMetric }) => {
 };
 
 export interface ComparisonResultProps {
-  comparison: PipelineComparison;
+  comparison: PipelineComparisonResult;
 }
 
 export const ComparisonResult = ({ comparison }: ComparisonResultProps) => {
   const intl = useIntl();
+  if (comparison.mode === 'live') {
+    return <LiveComparisonResult comparison={comparison} />;
+  }
   const isRich = comparison.mode === 'mock-rich';
   const metrics = isRich
     ? buildComparisonMetrics(comparison.baseline, comparison.candidate, intl)

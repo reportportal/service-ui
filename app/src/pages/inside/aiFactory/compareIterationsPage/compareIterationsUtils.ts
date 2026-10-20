@@ -38,7 +38,7 @@ export const parseQueryId = (value: unknown): number | null => {
   return Number.isSafeInteger(parsed) && parsed > 0 ? parsed : null;
 };
 
-export const getLatestPair = (iterations: IterationSummaryRS[]) => {
+export const getLatestPair = (iterations: Array<Pick<IterationSummaryRS, 'id' | 'number'>>) => {
   const [candidate, baseline] = [...iterations].sort((left, right) => right.number - left.number);
   return baseline && candidate ? { baselineId: baseline.id, candidateId: candidate.id } : null;
 };

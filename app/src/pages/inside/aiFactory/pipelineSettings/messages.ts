@@ -55,6 +55,23 @@ export const messages = defineMessages({
     defaultMessage:
       'You can view these settings. Only an Organization Manager or Administrator can change them.',
   },
+  liveReadOnly: {
+    id: 'PipelineSettings.liveReadOnly',
+    defaultMessage:
+      'Live pipeline settings are available for viewing. Saving is not available yet.',
+  },
+  liveUnavailable: {
+    id: 'PipelineSettings.liveUnavailable',
+    defaultMessage: 'Pipeline settings are unavailable until the pipeline catalog is loaded.',
+  },
+  liveNoSettings: {
+    id: 'PipelineSettings.liveNoSettings',
+    defaultMessage: 'The API did not provide Auto-Ready settings for this pipeline.',
+  },
+  liveThresholdUnavailable: {
+    id: 'PipelineSettings.liveThresholdUnavailable',
+    defaultMessage: 'Quality threshold was not provided by the API.',
+  },
   automationNoSettings: {
     id: 'PipelineSettings.automationNoSettings',
     defaultMessage: '{pipelineName} has no settings in the PoC.',

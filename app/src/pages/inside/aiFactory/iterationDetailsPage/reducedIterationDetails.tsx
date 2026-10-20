@@ -18,7 +18,6 @@ import { ComponentProps, Fragment, ReactNode, useState } from 'react';
 import { useIntl } from 'react-intl';
 import {
   Button,
-  ConfigurationIcon,
   CycleArrowsIcon,
   RefreshIcon,
   RerunIcon,
@@ -39,7 +38,8 @@ import { SettingsLayout } from 'layouts/settingsLayout';
 import { ScoreBar } from 'pages/inside/aiFactory/common';
 
 import { getReducedStatusVariant } from '../common/reducedStatusVariant';
-import { messages as pipelineSettingsMessages } from '../pipelineSettings/messages';
+import { LivePipelineSettingsButton } from '../pipelineSettings';
+import { LiveReviewCases } from './liveReviewCases/liveReviewCases';
 import { PageHeaderWithBreadcrumbsAndActions } from '../../common/pageHeaderWithBreadcrumbsAndActions';
 import { KpiTile } from './kpiTile';
 import { CaseLink } from './stagePanels/caseLink';
@@ -93,7 +93,55 @@ export interface ReducedIterationDetailsProps {
   requestedStage?: string;
   onRetry: () => void;
   onBack?: () => void;
+  onCompare?: (pipelineId: number, iterationId: number) => void;
+  projectKey?: string;
 }
+
+type GenerationStageKind = 'create' | 'grade' | 'upload';
+
+const GENERATION_SECTION_SHAPES: Record<GenerationStageKind, { key: string; columns: string[] }> = {
+  create: { key: 'authoredCases', columns: ['name', 'status'] },
+  grade: { key: 'gradedCases', columns: ['name', 'total'] },
+  upload: { key: 'uploadReport', columns: ['testCase', 'result'] },
+};
+
+const getGenerationStageKind = (
+  pipelineType: string | undefined,
+  stage: ReducedPipelineDetailStage,
+): GenerationStageKind | undefined => {
+  if (pipelineType !== 'TEST_CASE_GENERATION' || !stage.stageKey) return undefined;
+  const key = stage.stageKey.toLowerCase();
+  return key === 'create' || key === 'grade' || key === 'upload' ? key : undefined;
+};
+
+const getGenerationSectionKind = (
+  section: ReducedPipelineSection,
+  stageKind: GenerationStageKind | undefined,
+): GenerationStageKind | undefined => {
+  if (!stageKind || section.role !== 'RESULT') return undefined;
+  const expected = GENERATION_SECTION_SHAPES[stageKind];
+  const columns = new Set(section.columns.map(({ key }) => key));
+  return section.key === expected.key && expected.columns.every((key) => columns.has(key))
+    ? stageKind
+    : undefined;
+};
+
+const renderGenerationHighlights = (
+  stage: ReducedPipelineDetailStage,
+  stageKind: GenerationStageKind | undefined,
+) => {
+  const highlights = stageKind ? stage.attributes?.filter(({ type }) => type === 'META') : [];
+  return highlights?.length ? (
+    <dl className={cx('generation-highlights')} data-automation-id="generationStageHighlights">
+      {highlights.map((attribute) => (
+        <div key={attribute.key} className={cx('generation-highlights__item')}>
+          <dt>{attribute.label ?? attribute.key}</dt>
+          <dd title={attribute.value}>{attribute.value}</dd>
+        </div>
+      ))}
+    </dl>
+  ) : null;
+};
 
 const renderReducedStageSection = (
   section: ReducedPipelineSection,
@@ -101,6 +149,7 @@ const renderReducedStageSection = (
   stageId: number,
   expandedRows: Set<string>,
   onToggleDetails: (rowKey: string) => void,
+  generationKind?: GenerationStageKind,
 ) => {
   if (
     section.key === 'tokenUsage' &&
@@ -142,7 +191,12 @@ const renderReducedStageSection = (
   return (
     <section
       key={section.key}
-      className={cx('reduced-section', { 'reduced-section--grade': section.key === 'gradedCases' })}
+      className={cx('reduced-section', {
+        'reduced-section--grade': section.key === 'gradedCases',
+        'reduced-section--create': generationKind === 'create',
+        'reduced-section--upload': generationKind === 'upload',
+      })}
+      data-automation-id={generationKind ? `live-${generationKind}-results` : undefined}
     >
       <h3>{section.title}</h3>
       <div className={cx('reduced-section__scroll')}>
@@ -418,7 +472,7 @@ const renderReducedStageCards = (
                     </span>
                   </span>
                   {stage.message && (
-                    <strong className={cardCx('stage-cards__item-summary')}>{stage.message}</strong>
+                    <span className={cardCx('stage-cards__item-summary')}>{stage.message}</span>
                   )}
                   {stage.summary && (
                     <span className={cardCx('stage-cards__item-description')}>{stage.summary}</span>
@@ -456,10 +510,15 @@ const renderReducedStagePanel = (
   expandedRows: Set<string>,
   onToggleDetails: (rowKey: string) => void,
   formatMessage: ReturnType<typeof useIntl>['formatMessage'],
+  generationKind?: GenerationStageKind,
+  reviewContent?: ReactNode,
 ) => (
   <div className={cx('panel-card')} data-automation-id="reducedStagePanel">
     <div className={panelCx('stage-panels')}>
-      <section className={panelCx('stage-panels__main')}>
+      <section
+        className={panelCx('stage-panels__main')}
+        data-automation-id={generationKind ? `live-${generationKind}-panel` : undefined}
+      >
         <div className={panelCx('panel-heading')}>
           <h2>{currentStage.label}</h2>
           <span
@@ -478,6 +537,7 @@ const renderReducedStagePanel = (
         {currentStage.message && (
           <p className={cx('reduced-stage__message')}>{currentStage.message}</p>
         )}
+        {renderGenerationHighlights(currentStage, generationKind)}
         {currentStage.sections
           ?.filter(({ role }) => role === 'RESULT')
           .map((section) =>
@@ -487,8 +547,10 @@ const renderReducedStagePanel = (
               currentStage.id,
               expandedRows,
               onToggleDetails,
+              getGenerationSectionKind(section, generationKind),
             ),
           )}
+        {reviewContent}
       </section>
       <aside className={panelCx('stage-panels__aside')}>
         <h2 className={panelCx('aside-title')}>{formatMessage(messages.stageDetailsTitle)}</h2>
@@ -548,12 +610,14 @@ const renderReducedStagePanel = (
               </dd>
             </Fragment>
           ))}
-          {currentStage.attributes?.map((attribute) => (
-            <Fragment key={attribute.key}>
-              <dt title={attribute.description}>{attribute.label ?? attribute.key}</dt>
-              <dd>{attribute.value}</dd>
-            </Fragment>
-          ))}
+          {currentStage.attributes
+            ?.filter(({ type }) => !generationKind || type !== 'META')
+            .map((attribute) => (
+              <Fragment key={attribute.key}>
+                <dt title={attribute.description}>{attribute.label ?? attribute.key}</dt>
+                <dd>{attribute.value}</dd>
+              </Fragment>
+            ))}
         </dl>
         {currentStage.sections?.some(({ role }) => role === 'DETAILS') && (
           <div
@@ -634,6 +698,8 @@ export const ReducedIterationDetails = ({
   requestedStage,
   onRetry,
   onBack,
+  onCompare,
+  projectKey,
 }: ReducedIterationDetailsProps) => {
   const { formatMessage } = useIntl();
   const [selectedStageId, setSelectedStageId] = useState<number | null>(null);
@@ -658,6 +724,23 @@ export const ReducedIterationDetails = ({
   const metadata = buildReducedMetadata(iteration, formatMessage);
   const kpis = buildReducedKpis(iteration, formatMessage);
   const currentStage = findSelectedStage(iteration.stages, selectedStageId, requestedStage);
+  const linkedCaseIds = Array.from(
+    new Set(
+      iteration.stages.flatMap((stage) =>
+        (stage.relatedEntities ?? [])
+          .filter(
+            ({ entityType, entityId }) => entityType === 'TEST_CASE' && entityId.length <= 128,
+          )
+          .map(({ entityId }) => entityId),
+      ),
+    ),
+  );
+  const isReviewStage = Boolean(
+    currentStage &&
+    (currentStage.stageKey?.toLowerCase() === 'review' ||
+      (currentStage.ownedBy === 'REPORTPORTAL' &&
+        currentStage.attributes?.some(({ key }) => key === 'ready'))),
+  );
   const bannerStage = iteration.stages.find(
     (stage) =>
       ['RUNNING', 'WAITING', 'NEEDS_HUMAN', 'FAILED'].includes(stage.status) && stage.message,
@@ -665,6 +748,12 @@ export const ReducedIterationDetails = ({
   const statusVariant = getReducedStatusVariant(iteration.status);
   const statusText =
     iteration.statusText ?? formatMessage(messages[STATUS_MESSAGES[iteration.status]]);
+  let compareTitle: string | undefined;
+  if (iteration.number <= 1) {
+    compareTitle = formatMessage(messages.noPreviousIteration);
+  } else if (!onCompare) {
+    compareTitle = formatMessage(messages.compareUnavailable);
+  }
   const pipelinePrefix = iteration.pipelineName ? `${iteration.pipelineName} · ` : '';
   const title = `${pipelinePrefix}${formatMessage(messages.iterationTitle, {
     number: iteration.number,
@@ -688,18 +777,15 @@ export const ReducedIterationDetails = ({
           stackActionsAtNarrowWidth
           actions={
             <div className={cx('header-actions', 'header-actions--reduced')}>
-              <span
-                title={formatMessage(
-                  iteration.number <= 1
-                    ? messages.noPreviousIteration
-                    : messages.compareUnavailable,
-                )}
-              >
+              <span title={compareTitle}>
                 <Button
                   variant="text"
                   data-automation-id="compareWithPreviousButton"
                   icon={<CycleArrowsIcon />}
-                  disabled
+                  disabled={iteration.number <= 1 || !onCompare}
+                  onClick={
+                    onCompare ? () => onCompare(iteration.pipelineId, iteration.id) : undefined
+                  }
                 >
                   {formatMessage(messages.compareWithPrevious)}
                 </Button>
@@ -714,16 +800,7 @@ export const ReducedIterationDetails = ({
                   {formatMessage(messages.rerun)}
                 </Button>
               </span>
-              <span title={formatMessage(messages.pipelineSettingsUnavailable)}>
-                <Button
-                  variant="text"
-                  data-automation-id={`pipelineSettingsButton-${iteration.pipelineId}`}
-                  icon={<ConfigurationIcon />}
-                  disabled
-                >
-                  {formatMessage(pipelineSettingsMessages.action)}
-                </Button>
-              </span>
+              <LivePipelineSettingsButton pipelineId={iteration.pipelineId} />
               <Button
                 variant="text"
                 data-automation-id="refreshReducedIterationButton"
@@ -790,7 +867,16 @@ export const ReducedIterationDetails = ({
           ))}
           {renderReducedStageCards(iteration, currentStage, setSelectedStageId, formatMessage)}
           {currentStage &&
-            renderReducedStagePanel(currentStage, expandedRows, toggleRowDetails, formatMessage)}
+            renderReducedStagePanel(
+              currentStage,
+              expandedRows,
+              toggleRowDetails,
+              formatMessage,
+              getGenerationStageKind(iteration.pipelineType, currentStage),
+              isReviewStage && projectKey ? (
+                <LiveReviewCases displayIds={linkedCaseIds} projectKey={projectKey} />
+              ) : undefined,
+            )}
           <details className={cx('reduced-api-fields')}>
             <summary>{formatMessage(messages.validatedApiFields)}</summary>
             <pre>{JSON.stringify(mappedFields, null, 2)}</pre>
