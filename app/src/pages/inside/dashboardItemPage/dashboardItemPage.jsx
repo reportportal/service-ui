@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 EPAM Systems
+ * Copyright 2026 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,11 +31,9 @@ import {
   changeFullWidthModeAction,
   changeFullScreenModeAction,
   toggleFullScreenModeAction,
-  deleteDashboardAction,
   updateDashboardAction,
   loadingSelector,
 } from 'controllers/dashboard';
-import { userInfoSelector } from 'controllers/user';
 import { projectKeySelector } from 'controllers/project';
 import {
   urlOrganizationAndProjectSelector,
@@ -52,7 +50,6 @@ import { GhostButton } from 'components/buttons/ghostButton';
 import Link from 'redux-first-router-link';
 import { PageLayout, PageHeader, PageSection } from 'layouts/pageLayout';
 import { DashboardPageHeader } from 'pages/inside/common/dashboardPageHeader';
-import { DeleteDashboardConfirmationMessage } from 'pages/inside/common/modals/deleteDashboardConfirmationMessage';
 import AddWidgetIcon from 'common/img/add-widget-inline.svg';
 import ExportIcon from 'common/img/export-inline.svg';
 import { DASHBOARD_EVENTS } from 'analyticsEvents/dashboardsPageEvents';
@@ -60,6 +57,7 @@ import { canWorkWithWidgets } from 'common/utils/permissions/permissions';
 import { useCanLockDashboard } from 'common/hooks/useCanLockDashboard';
 import { updateDashboardLockedAction } from 'controllers/dashboard/actionCreators';
 import { SpinningPreloader } from 'components/preloaders/spinningPreloader';
+import { AddEditModal, DeleteDashboardModal } from '../dashboardPage/modals';
 import { LockedDashboardTooltip } from '../common/lockedDashboardTooltip';
 import { LockedIcon } from '../common/lockedIcon';
 import { getUpdatedWidgetsList } from './modals/common/utils';
@@ -97,15 +95,6 @@ const messages = defineMessages({
     id: 'DashboardItemPage.addWidgetSuccess',
     defaultMessage: 'Widget has been added successfully',
   },
-  deleteModalWarningMessage: {
-    id: 'DashboardPage.modal.deleteModalWarningMessage',
-    defaultMessage:
-      'You are going to delete not your own dashboard. This may affect other users information on the project.',
-  },
-  deleteModalTitle: {
-    id: 'DashboardPage.modal.deleteModalTitle',
-    defaultMessage: 'Delete Dashboard',
-  },
   print: {
     id: 'DashboardPage.print',
     defaultMessage: 'Print',
@@ -131,7 +120,6 @@ export const DashboardItemPage = () => {
   const { organizationSlug, projectSlug } = useSelector(urlOrganizationAndProjectSelector);
   const projectKey = useSelector(projectKeySelector);
   const dashboard = useSelector(activeDashboardItemSelector);
-  const userInfo = useSelector(userInfoSelector);
   const fullWidthMode = useSelector(dashboardFullWidthModeSelector);
   const fullScreenMode = useSelector(dashboardFullScreenModeSelector);
   const activeDashboardId = useSelector(activeDashboardIdSelector);
@@ -160,36 +148,21 @@ export const DashboardItemPage = () => {
   }, [projectKey, query, formatMessage, dashboard?.name]);
 
   const onDeleteDashboard = useCallback(() => {
-    const warning =
-      dashboard.owner === userInfo.userId ? '' : formatMessage(messages.deleteModalWarningMessage);
     trackEvent(DASHBOARD_EVENTS.clickOnIconDashboard('delete', dashboard.id));
-    dispatch(
-      showModalAction({
-        id: 'deleteItemsModal',
-        data: {
-          items: [dashboard],
-          onConfirm: () => dispatch(deleteDashboardAction(dashboard)),
-          header: formatMessage(messages.deleteModalTitle),
-          mainContent: <DeleteDashboardConfirmationMessage name={dashboard.name} />,
-          warning,
-          eventsInfo: {
-            deleteBtn: DASHBOARD_EVENTS.clickOnButtonDeleteInModalDeleteDashboard(dashboard.id),
-          },
-        },
-      }),
-    );
-  }, [dashboard, userInfo.userId, formatMessage, trackEvent, dispatch]);
+    dispatch(showModalAction({ component: <DeleteDashboardModal dashboardItem={dashboard} /> }));
+  }, [dashboard, trackEvent, dispatch]);
 
   const onEditDashboardItem = useCallback(() => {
     trackEvent(DASHBOARD_EVENTS.clickOnIconDashboard('edit', dashboard.id));
     dispatch(
       showModalAction({
-        id: 'dashboardAddEditModal',
-        data: {
-          dashboardItem: dashboard,
-          onSubmit: (data) => dispatch(updateDashboardAction(data)),
-          type: 'edit',
-        },
+        component: (
+          <AddEditModal
+            dashboardItem={dashboard}
+            onSubmit={(data) => dispatch(updateDashboardAction(data))}
+            type="edit"
+          />
+        ),
       }),
     );
   }, [dashboard, trackEvent, dispatch]);

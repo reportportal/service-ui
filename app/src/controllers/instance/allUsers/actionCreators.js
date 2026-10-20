@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 EPAM Systems
+ * Copyright 2026 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,14 +15,11 @@
  */
 
 import {
-  defineGroupOperation,
   toggleItemSelectionAction,
   toggleAllItemsAction,
   unselectAllItemsAction,
 } from 'controllers/groupOperations';
-import { showModalAction } from 'controllers/modal';
 import { FETCH_ALL_USERS, NAMESPACE, TOGGLE_USER_ROLE_FORM } from './constants';
-import { validateDeleteUser } from './actionValidators';
 
 export const fetchAllUsersAction = () => ({
   type: FETCH_ALL_USERS,
@@ -39,14 +36,3 @@ export const toggleUserRoleFormAction = (userId, value) => ({
     value,
   },
 });
-
-export const deleteItemsAction = defineGroupOperation(
-  NAMESPACE,
-  'deleteUsers',
-  (items, { onConfirm, header, mainContent, eventsInfo }) =>
-    showModalAction({
-      id: 'deleteItemsModal',
-      data: { items, onConfirm, header, mainContent, eventsInfo },
-    }),
-  validateDeleteUser,
-);
