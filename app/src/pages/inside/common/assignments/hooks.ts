@@ -69,15 +69,6 @@ export const useAssignmentsUtils = ({
   const isOrganizationOwner = userId != null && userId === ownerId;
   const isCurrentUser = currentUserId === userId;
 
-  if (isCurrentUser) {
-    return {
-      unassignTooltip:
-        isPersonalOrg && isOrganizationOwner
-          ? assignmentMessages.unassignPersonalOwnerSelfMessage
-          : assignmentMessages.unassignSelfMessage,
-    };
-  }
-
   if (isUpsaUser && isExternalOrg) {
     return {
       unassignTooltip: assignmentMessages.unassignUpsaMessage,
@@ -86,7 +77,9 @@ export const useAssignmentsUtils = ({
 
   if (isPersonalOrg && isOrganizationOwner) {
     return {
-      unassignTooltip: assignmentMessages.unassignPersonalOwnerMessage,
+      unassignTooltip: isCurrentUser
+        ? assignmentMessages.unassignPersonalOwnerSelfMessage
+        : assignmentMessages.unassignPersonalOwnerMessage,
     };
   }
 
