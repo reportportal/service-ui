@@ -23,7 +23,6 @@ import track from 'react-tracking';
 import { NOTIFICATION_TYPES } from 'controllers/notification';
 import { fetch } from 'common/utils';
 import { URLS } from 'common/urls';
-import { ScrollWrapper } from 'components/main/scrollWrapper';
 import PropTypes from 'prop-types';
 import { WIDGETS_EVENTS } from 'components/main/analytics/events/ga4Events/dashboardsPageEvents';
 import { EmptyWidgetGrid } from './emptyWidgetGrid';
@@ -257,13 +256,7 @@ export class WidgetsGrid extends Component {
     const { widgets = [] } = dashboard;
 
     if (widgets.length) {
-      return isFullscreen ? (
-        <ScrollWrapper autoHeight autoHeightMax={window.innerHeight} hideTracksWhenNotNeeded>
-          {this.renderWidgetsGridLayout()}
-        </ScrollWrapper>
-      ) : (
-        this.renderWidgetsGridLayout()
-      );
+      return this.renderWidgetsGridLayout();
     }
 
     return (

@@ -1,5 +1,5 @@
 /*!
- * Copyright 2019 EPAM Systems
+ * Copyright 2026 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,52 +14,9 @@
  * limitations under the License.
  */
 
-.empty-widget {
-  width: 100%;
-  padding: 25px 0 60px 0;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  background-color: $COLOR--white-two;
-}
+$EMPTY_STATE_TOP_OFFSET: 200px;
 
-.empty-widget-headline {
-  margin-top: 27px;
-  margin-bottom: 10px;
-  text-align: center;
-  font-weight: $FONT-SEMIBOLD;
-  color: $COLOR--gray-47;
-}
-
-.empty-dashboard {
-  width: 140px;
-  height: 98px;
-  margin: 0 auto;
-  background-image: url(./img/no-widgets.svg);
-  background-position: center;
-  background-repeat: no-repeat;
-  &.add-enabled {
-    background-image: url(./img/add-first-widget.png);
-  }
-}
-
-.empty-widget-text {
-  margin-top: 20px;
-  margin-bottom: 5px;
-  font-size: 13px;
-  text-align: center;
-  color: $COLOR--gray-47;
-
-  @media (max-width: $SCREEN_XS_MAX) {
-    display: none;
-  }
-}
-
-.empty-widget-content {
-  padding: 15px 0;
-  text-align: center;
-
-  @media (max-width: $SCREEN_XS_MAX) {
-    display: none;
-  }
+// the shared empty state image already has a 65px top margin
+.empty-widget-grid {
+  padding-top: $EMPTY_STATE_TOP_OFFSET - 65px;
 }

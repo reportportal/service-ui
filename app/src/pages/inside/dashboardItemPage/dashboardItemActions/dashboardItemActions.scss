@@ -1,0 +1,103 @@
+/*!
+ * Copyright 2026 EPAM Systems
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+.dashboard-item-actions {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+
+  &__view {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+  }
+
+  &__edit {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+}
+
+// the ui-kit toggle is only as wide as the switch, the label would overlap the next button
+.toggle.toggle {
+  width: auto;
+  flex-shrink: 0;
+}
+
+// the ui-kit popover is as narrow as its content
+.actions-popover {
+  // doubled class to win over the ui-kit popover styles
+  &.actions-popover {
+    min-width: 195px;
+    max-width: none;
+  }
+}
+
+.menu-button.menu-button {
+  // block level, otherwise the popover wrapper adds the text line height below the button
+  display: flex;
+  min-width: 0;
+  width: 40px;
+  height: 36px;
+  padding: 0;
+
+  // the ui-kit adds a right margin to the icon of a button, with no text it shifts the icon off the center
+  [class*='icon'] {
+    display: flex;
+    margin: 0;
+    align-items: center;
+  }
+
+  svg {
+    display: block;
+    // the dots of the ui-kit icon end before the right edge of its box, they look shifted to the left
+    transform: translateX(0.8px);
+  }
+}
+
+.toggle-label {
+  color: var(--rp-ui-base-almost-black);
+  font-size: 13px;
+  line-height: 20px;
+  white-space: nowrap;
+}
+
+// longer translations widen the button instead of wrapping
+.add-widget-button.add-widget-button {
+  width: auto;
+  min-width: 152px;
+  height: 36px;
+  padding-right: 15px;
+  padding-left: 15px;
+  white-space: nowrap;
+}
+
+.full-screen-button.full-screen-button {
+  padding-right: 0;
+  padding-left: 0;
+  margin: 0;
+  // the text is 1px lower than the icon, the icon is moved back below
+  padding-top: 2px;
+
+  [class*='icon'] {
+    position: relative;
+    top: -1px;
+    align-self: center;
+    margin-top: 3px;
+    margin-bottom: 3px;
+  }
+}
