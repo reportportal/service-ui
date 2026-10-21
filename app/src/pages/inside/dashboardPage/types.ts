@@ -22,6 +22,10 @@ export interface DashboardItem {
   locked?: boolean;
 }
 
+export interface ActiveDashboardItem extends DashboardItem {
+  widgets?: unknown[];
+}
+
 export interface DashboardActionHandlers {
   onEdit?: (item: DashboardItem) => void;
   onDelete?: (item: DashboardItem) => void;

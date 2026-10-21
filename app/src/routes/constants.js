@@ -159,7 +159,11 @@ export const pageRendering = {
     rawContent: true,
   },
   PROJECT_DASHBOARD_PAGE: { component: DashboardPage, layout: ProjectLayout, rawContent: true },
-  PROJECT_DASHBOARD_ITEM_PAGE: { component: DashboardItemPage, layout: ProjectLayout },
+  PROJECT_DASHBOARD_ITEM_PAGE: {
+    component: DashboardItemPage,
+    layout: ProjectLayout,
+    rawContent: true,
+  },
   PROJECT_DASHBOARD_PRINT_PAGE: { component: DashboardPrintPage, layout: EmptyLayout },
   PROJECT_FILTERS_PAGE: { component: FiltersPage, layout: ProjectLayout },
   [LAUNCHES_PAGE]: { component: LaunchesPage, layout: ProjectLayout },

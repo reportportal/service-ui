@@ -1,5 +1,5 @@
-/*!
- * Copyright 2019 EPAM Systems
+/*
+ * Copyright 2026 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,27 +14,4 @@
  * limitations under the License.
  */
 
-.dashboard-page-header {
-  .dashboards-nav-list-mobile {
-    display: none;
-    @media (max-width: $SCREEN_XS_MAX) {
-      display: block;
-      padding: 13px 10px;
-      background: $COLOR--white-two;
-    }
-  }
-
-  .link {
-    display: block;
-    color: $COLOR--charcoal-grey;
-    text-decoration: none;
-    text-transform: uppercase;
-    font-size: 13px;
-  }
-
-  .active-link {
-    color: $COLOR--topaz;
-    font-family: $FONT-CONDBOLD;
-    font-size: 16px;
-  }
-}
+export { DashboardFullScreen } from './dashboardFullScreen';
