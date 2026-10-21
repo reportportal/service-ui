@@ -29,6 +29,8 @@ const cx = createClassnames(styles);
 
 const EXIT_KEY = 'Escape';
 
+const renderBold = (chunks: ReactNode) => <b>{chunks}</b>;
+
 interface DashboardFullScreenProps {
   title: string;
   children: ReactNode;
@@ -70,9 +72,7 @@ export const DashboardFullScreen = ({
         </button>
       </header>
       <div className={cx('dashboard-full-screen__exit-note')}>
-        {formatMessage(messages.exitFullScreenNote, {
-          b: (chunks) => <b>{chunks}</b>,
-        })}
+        {formatMessage(messages.exitFullScreenNote, { b: renderBold })}
       </div>
       <div className={cx('dashboard-full-screen__content')}>
         <ScrollWrapper>{children}</ScrollWrapper>

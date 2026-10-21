@@ -56,15 +56,14 @@ export const EmptyWidgetGrid = ({ action, isDisable = false }: EmptyWidgetGridPr
       ]
     : [];
 
+  const descriptionMessage = canWorkWithWidgets ? messages.emptyText : messages.emptyTextViewer;
+  const description = isDisable ? '' : formatMessage(descriptionMessage);
+
   return (
     <div className={cx('empty-widget-grid')}>
       <EmptyStatePage
         title={formatMessage(messages.emptyHeadline)}
-        description={
-          isDisable
-            ? ''
-            : formatMessage(canWorkWithWidgets ? messages.emptyText : messages.emptyTextViewer)
-        }
+        description={description}
         imageType="widgets"
         buttons={isDisable ? [] : buttons}
       />
