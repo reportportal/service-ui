@@ -624,7 +624,7 @@
   "DashboardItemPage.addWidgetSuccess": "小部件已添加",
   "DashboardItemPage.closeFullScreen": "关闭全屏",
   "DashboardItemPage.dashboardEmptyText": "Add your first widget to start analyzing the statistics",
-  "DashboardItemPage.dashboardEmptyTextViewer": "Widgets will appear here once created by your team",
+  "DashboardItemPage.dashboardEmptyTextViewer": "团队创建小部件后，将显示在此处",
   "DashboardItemPage.delete": "删除",
   "DashboardItemPage.deleteDashboardAction": "删除报告面板",
   "DashboardItemPage.editDashboard": "编辑",
