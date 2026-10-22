@@ -19,7 +19,7 @@ import { defineMessages, useIntl } from 'react-intl';
 import { useTracking } from 'react-tracking';
 
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
-import { createClassnames, referenceDictionary } from 'common/utils';
+import { createClassnames, docsReferences } from 'common/utils';
 import NoResultsIcon from 'common/img/newIcons/no-results-icon-inline.svg';
 import { useUserPermissions } from 'hooks/useUserPermissions';
 import { EmptyPageState } from 'pages/common';
@@ -105,7 +105,7 @@ export const EmptyDashboards = ({ action = noop, filter = '' }: EmptyDashboardsP
             : messages.currentUserDashboardsTextViewer,
         )}
         imageType="dashboards"
-        documentationLink={referenceDictionary.rpDoc}
+        documentationLink={docsReferences.workWithDashboards}
         buttons={buttons}
       />
     </div>
