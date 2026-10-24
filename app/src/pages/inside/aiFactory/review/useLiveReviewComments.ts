@@ -22,6 +22,7 @@ import { fetch } from 'common/utils';
 import { idSelector } from 'controllers/user';
 import { useUserPermissions } from 'hooks/useUserPermissions';
 import { CommentState } from 'types/aiFactory';
+import { approveNativeTestCase } from 'pages/inside/aiFactory/approval/nativeApproval';
 import type { ReviewCommentPayload, ReviewCommentRS } from 'types/aiFactory';
 import {
   normalizeLiveReview,
@@ -31,6 +32,8 @@ import type { LiveReviewData } from 'pages/inside/aiFactory/review/liveReviewCom
 
 export interface LiveReviewCommentsLoadState {
   resourceKey: object;
+  approveReady?: () => Promise<boolean>;
+  isApproved?: boolean;
   comments: ReviewCommentRS[];
   unsentCount: number;
   fixInProgress: boolean;
@@ -46,12 +49,21 @@ export interface LiveReviewCommentsLoadState {
   discardPending: () => Promise<boolean>;
 }
 
+interface LiveReviewCommentsOptions {
+  canApprove?: boolean;
+  versionId?: number;
+}
+
 interface ReviewScope {
+  versionId?: number;
   projectKey: string;
   testCaseId: number;
   isEnabled: boolean;
   active: boolean;
   canReview: boolean;
+  canApprove: boolean;
+  approvalGeneration: number;
+  isApproved: boolean;
   userId?: number;
   generation: number;
   isLoading: boolean;
@@ -88,6 +100,7 @@ export const useLiveReviewComments = (
   projectKey: string,
   testCaseId: number,
   isEnabled: boolean,
+  { canApprove = false, versionId }: LiveReviewCommentsOptions = {},
 ): LiveReviewCommentsLoadState => {
   const { canReviewAiTestCases } = useUserPermissions();
   const currentUserId = useSelector(idSelector) as number | undefined;
@@ -95,19 +108,28 @@ export const useLiveReviewComments = (
     isEnabled && Boolean(projectKey) && Number.isSafeInteger(testCaseId) && testCaseId > 0;
   const scope = useMemo<ReviewScope>(
     () => ({
+      versionId,
       projectKey,
       testCaseId,
       isEnabled: isResourceEnabled,
       active: false,
       canReview: false,
+      canApprove: false,
+      approvalGeneration: 0,
+      isApproved: false,
       generation: 0,
       isLoading: true,
     }),
-    [projectKey, testCaseId, isResourceEnabled],
+    [projectKey, testCaseId, isResourceEnabled, versionId],
   );
   const currentScope = useRef(scope);
   currentScope.current = scope;
   scope.canReview = canReviewAiTestCases;
+  const isApprovalEnabled = canApprove && canReviewAiTestCases && isResourceEnabled;
+  if (scope.canApprove !== isApprovalEnabled) scope.approvalGeneration += 1;
+  scope.canApprove = isApprovalEnabled;
+  if (!canApprove) scope.isApproved = false;
+  const approvalGeneration = scope.approvalGeneration;
   scope.userId = currentUserId;
   const [state, setState] = useState<ReviewState>(INITIAL_STATE);
   const [requestIndex, setRequestIndex] = useState(0);
@@ -191,6 +213,36 @@ export const useLiveReviewComments = (
     [isCurrent, reload, scope],
   );
 
+  const approveReady = useCallback(async () => {
+    if (!isCurrent() || !canMutate(scope) || !scope.canApprove || scope.isApproved) return false;
+    if (approvalGeneration !== scope.approvalGeneration) return false;
+    if (scope.review?.unsentCount !== 0) return false;
+    const controller = new AbortController();
+    const isCurrentApproval = () =>
+      isCurrent() &&
+      !controller.signal.aborted &&
+      scope.canApprove &&
+      approvalGeneration === scope.approvalGeneration;
+    scope.mutation = controller;
+    setState((previous) => ({ ...previous, isMutating: true, isMutationError: false }));
+    try {
+      await approveNativeTestCase(projectKey, testCaseId, controller.signal);
+      if (!isCurrentApproval()) return false;
+      scope.isApproved = true;
+      reload();
+      return true;
+    } catch (error: unknown) {
+      if (!isCurrentApproval()) return false;
+      reload();
+      throw error;
+    } finally {
+      if (isCurrent() && scope.mutation === controller) {
+        scope.mutation = undefined;
+        setState((previous) => ({ ...previous, isMutating: false }));
+      }
+    }
+  }, [approvalGeneration, isCurrent, projectKey, reload, scope, testCaseId]);
+
   const addComment = useCallback(
     async (payload: ReviewCommentPayload) => {
       if (!isCurrent() || !canMutate(scope)) return false;
@@ -224,6 +276,8 @@ export const useLiveReviewComments = (
   const data = isCurrentState ? state.data : undefined;
   return {
     resourceKey: scope,
+    approveReady,
+    isApproved: isCurrentState && scope.isApproved,
     comments: data?.comments ?? EMPTY_COMMENTS,
     unsentCount: data?.unsentCount ?? 0,
     fixInProgress: data?.fixInProgress ?? false,

@@ -26,6 +26,10 @@ and the progress board is [00](00-status.md).
 
 TMP-06 remains **partially removed**, not closed. Legacy quick filters and folder Review counts still depend on the mock database when the development overlay is enabled, and may classify native cases incorrectly or omit them. Native filter/count integration and Approve/Push remain separate scopes. R1's focused tests and static reviews pass; authenticated runtime evidence remains pending. R2 ([EPMRPP-122687](https://jiraeu.epam.com/browse/EPMRPP-122687)) now has a native `/review` and `/review/comment` path in case details, with validated server counts/locks and no provisional case calls; legacy mock handlers stay available only to legacy consumers. R2 has 8 suites / 138 tests, type-check, changed-file lint and independent reviews passing; publication is authorized, with delivery/CI evidence tracked in its Jira issue and dependent PR. No backend writes or live runtime verification were performed. See [the current integration plan and evidence](25-live-review-fix-round-integration-2026-10-24.md).
 
+## TMP-06 update — native single-case approval (2026-10-24)
+
+[EPMRPP-122688](https://jiraeu.epam.com/browse/EPMRPP-122688) now implements the native AI Draft Approve action in details and the Library side panel through the status-only Test Case PATCH. It uses live Review guards, a shared comment/approval lock, localized HTTP 409/40915 handling and case/Review reconciliation; it does not activate the legacy lifecycle endpoint. Local validation passes (12 suites / 227 tests, type-check, changed-file lint and independent reviews). Publication is authorized, with delivery and exact-head CI evidence tracked in Jira/PR; authenticated runtime remains pending. Native manual/bulk approval, obsolete-confirmation semantics, Push/fix rounds and native filter/count integration remain separate scopes, so TMP-06 stays **partially removed**.
+
 ## Rule for closing a row
 
 For the relevant FE task, record the real endpoint and response evidence, replace the consuming
