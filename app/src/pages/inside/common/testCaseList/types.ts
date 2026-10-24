@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+import type { TestCase } from 'types/testCase';
 import type { AiAutomationStatus, AiLifecycle, TestCaseAiExtension } from 'types/aiFactory';
 
 export interface FilterOption {
@@ -29,7 +30,10 @@ export enum TestCaseMenuAction {
   DELETE = 'delete',
 }
 
-export interface SelectedTestCaseRow {
+export interface SelectedTestCaseRow extends Pick<
+  TestCase,
+  'origin' | 'status' | 'defaultVersionId' | 'metrics'
+> {
   id: number;
   folderId: number;
   displayId?: string;

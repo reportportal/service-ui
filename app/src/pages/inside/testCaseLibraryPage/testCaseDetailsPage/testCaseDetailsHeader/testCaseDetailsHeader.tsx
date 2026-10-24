@@ -47,6 +47,8 @@ import { PriorityIcon } from 'pages/inside/common/priorityIcon';
 import { testCaseLibraryBreadcrumbsSelector } from 'controllers/pages/selectors';
 import { ExecutionEstimationTime } from 'pages/inside/common/executionEstimationTime';
 import { LifecycleBadge, ScoreChip } from 'pages/inside/aiFactory/common';
+import { getNativeTestCaseSummary, getTestCasePresentation } from 'common/utils/nativeTestCase';
+import { NativeTestCaseSummary } from 'pages/inside/aiFactory/common/nativeTestCaseSummary/nativeTestCaseSummary';
 import { ApproveButton } from 'pages/inside/aiFactory/approval';
 import {
   automationDisabledMessages,
@@ -80,11 +82,14 @@ interface TestCaseDetailsHeaderProps {
 
 export const TestCaseDetailsHeader = ({
   className,
-  testCase,
+  testCase: rawTestCase,
   onAddToTestPlan,
   onMenuAction = () => {},
   isScenarioEmpty = false,
 }: TestCaseDetailsHeaderProps) => {
+  const isAiFactoryEnabled = useAiFactoryEnabled();
+  const testCase = getTestCasePresentation(rawTestCase, isAiFactoryEnabled);
+  const nativeSummary = isAiFactoryEnabled ? getNativeTestCaseSummary(testCase) : undefined;
   const { formatMessage } = useIntl();
   const { trackEvent } = useTracking();
   const { canAutomateTestCases, canManageTestCases, canReviewAiTestCases } = useUserPermissions();
@@ -98,9 +103,9 @@ export const TestCaseDetailsHeader = ({
   const { openModal: openEditScenarioModal } = useEditScenarioModal();
   const { openModal: openAutomationModal } = useAutomationModal();
   const { hasTestPlans } = useHasTestPlans();
-  const isAiFactoryEnabled = useAiFactoryEnabled();
   const isFixRunning = Boolean(testCase.review?.fixRound);
-  const isDraft = isDraftGateActive(isAiFactoryEnabled, testCase.lifecycle);
+  const gateStatus = nativeSummary?.status ?? testCase.lifecycle;
+  const isDraft = isDraftGateActive(isAiFactoryEnabled, gateStatus);
   const automationDisabledReason = getAutomationSkipReason(testCase);
 
   const breadcrumbsTitles = {
@@ -172,7 +177,7 @@ export const TestCaseDetailsHeader = ({
   };
 
   const items: PopoverItem[] = [
-    ...(isAiFactoryEnabled && canAutomateTestCases
+    ...(isAiFactoryEnabled && !nativeSummary && canAutomateTestCases
       ? [
           {
             label: formatMessage(automationMessages.automate),
@@ -235,8 +240,14 @@ export const TestCaseDetailsHeader = ({
         <span className={cx('header__title-text')} title={testCase.name}>
           {testCase.name}
         </span>
+        {nativeSummary && (
+          <NativeTestCaseSummary summary={nativeSummary} showIdentity showMetrics={false} />
+        )}
         {isAiFactoryEnabled && testCase.lifecycle && (
           <LifecycleBadge lifecycle={testCase.lifecycle} />
+        )}
+        {nativeSummary?.score !== undefined && (
+          <ScoreChip score={nativeSummary.score} obsolete={nativeSummary.isObsolete} />
         )}
         {isAiFactoryEnabled && testCase.evaluationSummary && (
           <ScoreChip
@@ -303,7 +314,7 @@ export const TestCaseDetailsHeader = ({
               <AddToLaunchButton
                 manualScenario={testCase?.manualScenario}
                 testCaseId={testCase.id}
-                lifecycle={testCase.lifecycle}
+                lifecycle={gateStatus}
                 place={TEST_CASE_PLACE.DETAILS_PAGE}
               />
               {hasTestPlans && !isDraft ? (
@@ -314,7 +325,9 @@ export const TestCaseDetailsHeader = ({
                 <Tooltip
                   placement="top"
                   content={formatMessage(
-                    isDraft ? readyOnlyMessages.testPlanDraftHint : commonMessages.noTestPlanCreated,
+                    isDraft
+                      ? readyOnlyMessages.testPlanDraftHint
+                      : commonMessages.noTestPlanCreated,
                   )}
                 >
                   <Button variant="primary" disabled>

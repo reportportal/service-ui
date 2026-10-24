@@ -1,6 +1,6 @@
 # Temporary solutions and mock removal register
 
-**Updated:** 2026-10-19. This is the cleanup checklist for the AI Factory PoC. An implemented UI
+**Updated:** 2026-10-24. This is the cleanup checklist for the AI Factory PoC. An implemented UI
 screen does not mean its data is live. The user approved switching LP1–LP3 to API by default after
 authenticated nonempty local-proxy evidence; trusted HTTPS, deployed SHA and error/multi-page checks
 remain open. Update the relevant row when replacing mock or provisional behavior.
@@ -19,6 +19,12 @@ and the progress board is [00](00-status.md).
 | TMP-08 | Collapsed `Full API response` JSON on live LP3, alongside `Mapped API fields`. It makes currently unmodeled backend values inspectable as text only. | Remove the raw inspector after the LP3 field mapping, sensitive-field policy and Product/QA presentation are agreed; retain only purpose-built visual elements. | [EPMRPP-122413](https://jiraeu.epam.com/browse/EPMRPP-122413)/[EPMRPP-122414](https://jiraeu.epam.com/browse/EPMRPP-122414); **active**. |
 | TMP-09 | LP3 section Test Case links with a `TC…` display ID still open Library search by case name. The new Review table resolves display IDs to unique numeric Library IDs and uses direct links, but Upload/Grade section cells still lack that resolution. | Backend supplies a numeric Test Case ID or verified internal details target per linked cell, or a bulk display-ID resolver; use direct links throughout and remove name-search fallback after live verification. | [EPMRPP-122413](https://jiraeu.epam.com/browse/EPMRPP-122413), [EPMRPP-122416](https://jiraeu.epam.com/browse/EPMRPP-122416); **partially removed**. |
 | TMP-10 | The live LP3 header now opens LP4 Compare for iterations above #1; its candidate-only route resolves the previous ID from the loaded LP2 page. Re-run remains disabled. Pipeline settings stays read-only and requires the current catalog. The rich mock-only actions are not wired to live data. | Complete Compare's previous-ID/pagination, deployed payload and metric semantics; enable settings write after LP5 validation, permissions and concurrency are verified; enable Re-run only after its command contract and authorization are available. | [EPMRPP-122417](https://jiraeu.epam.com/browse/EPMRPP-122417), [EPMRPP-122415](https://jiraeu.epam.com/browse/EPMRPP-122415), Re-run contract pending; **partially removed**. |
+
+## TMP-06 update — native Test Case reads (2026-10-24)
+
+[EPMRPP-122686](https://jiraeu.epam.com/browse/EPMRPP-122686) adds a native read path for backend `origin/status/metrics/defaultVersionId`. Such responses now bypass demo enrichment and scenario-update side effects; Library/detail/side-panel presentation does not use their legacy AI extension fields or activate provisional case commands. Supported metrics describe the current version only. Legacy responses without native fields retain their explicit mock behavior.
+
+TMP-06 remains **partially removed**, not closed. Legacy quick filters and folder Review counts still depend on the mock database when the development overlay is enabled, and may classify native cases incorrectly or omit them. Native filter/count integration and the remaining Review/Approve/Push commands are separate scopes. R1's focused tests and static reviews pass; authenticated runtime evidence remains pending. See [the current integration plan and evidence](25-live-review-fix-round-integration-2026-10-24.md).
 
 ## Rule for closing a row
 

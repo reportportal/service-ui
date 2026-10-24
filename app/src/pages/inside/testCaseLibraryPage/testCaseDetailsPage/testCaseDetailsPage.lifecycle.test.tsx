@@ -14,9 +14,10 @@
  * limitations under the License.
  */
 
-import { shallow } from 'enzyme';
+import { mount, shallow } from 'enzyme';
 import { useSelector } from 'react-redux';
 
+import { fetch } from 'common/utils';
 import { useAiFactoryEnabled } from 'controllers/aiFactory';
 import { urlOrganizationAndProjectSelector } from 'controllers/pages';
 import { projectKeySelector } from 'controllers/project';
@@ -27,6 +28,7 @@ import { EvaluationPanel } from 'pages/inside/aiFactory/evaluation';
 import { GenerationCost } from 'pages/inside/aiFactory/generationCost';
 import { AutomationSection } from 'pages/inside/aiFactory/automation';
 import { usePolling } from 'pages/inside/aiFactory/common';
+import { NativeTestCaseSummary } from 'pages/inside/aiFactory/common/nativeTestCaseSummary/nativeTestCaseSummary';
 import { PipelineLinks } from 'pages/inside/aiFactory/pipelineLinks';
 import { LaunchBlockedBanner } from 'pages/inside/aiFactory/readyOnlyGate';
 import { ReviewStrip, useFixRound, useReviewComments } from 'pages/inside/aiFactory/review';
@@ -40,11 +42,11 @@ import { useTestCaseTags } from './useTestCaseTags';
 import { checkScenario } from './utils';
 
 jest.mock('@reportportal/ui-kit', () => ({
-  BubblesLoader: 'BubblesLoader',
-  Button: 'Button',
-  EditIcon: 'EditIcon',
-  PlusIcon: 'PlusIcon',
-  SystemMessage: 'SystemMessage',
+  BubblesLoader: 'mock-BubblesLoader',
+  Button: 'mock-Button',
+  EditIcon: 'mock-EditIcon',
+  PlusIcon: 'mock-PlusIcon',
+  SystemMessage: 'mock-SystemMessage',
 }));
 jest.mock(
   'analyticsEvents/testCaseLibraryPageEvents',
@@ -63,19 +65,20 @@ const mockDispatch = jest.fn();
 jest.mock('react-redux', () => ({ useDispatch: () => mockDispatch, useSelector: jest.fn() }));
 jest.mock('react-tracking', () => ({ useTracking: () => ({ trackEvent: jest.fn() }) }));
 jest.mock('common/utils', () => ({
+  fetch: jest.fn(),
   createClassnames:
     () =>
     (...classNames: string[]) =>
       classNames.filter(Boolean).join(' '),
 }));
 jest.mock('components/collapsibleSection', () => ({
-  CollapsibleSectionWithHeaderControl: 'CollapsibleSectionWithHeaderControl',
+  CollapsibleSectionWithHeaderControl: 'mock-CollapsibleSectionWithHeaderControl',
 }));
 jest.mock('components/fields/expandedTextSection', () => ({
-  ExpandedTextSection: 'ExpandedTextSection',
+  ExpandedTextSection: 'mock-ExpandedTextSection',
 }));
-jest.mock('components/main/scrollWrapper', () => ({ ScrollWrapper: 'ScrollWrapper' }));
-jest.mock('layouts/settingsLayout', () => ({ SettingsLayout: 'SettingsLayout' }));
+jest.mock('components/main/scrollWrapper', () => ({ ScrollWrapper: 'mock-ScrollWrapper' }));
+jest.mock('layouts/settingsLayout', () => ({ SettingsLayout: 'mock-SettingsLayout' }));
 jest.mock('controllers/aiFactory', () => ({ useAiFactoryEnabled: jest.fn() }));
 jest.mock('controllers/pages', () => ({
   urlOrganizationAndProjectSelector: jest.fn(),
@@ -86,51 +89,60 @@ jest.mock('controllers/testCase', () => ({
   isLoadingTestCaseDetailsSelector: jest.fn(),
   testCaseDetailsSelector: jest.fn(),
 }));
-jest.mock('pages/inside/aiFactory/evaluation', () => ({ EvaluationPanel: 'EvaluationPanel' }));
-jest.mock('pages/inside/aiFactory/generationCost', () => ({ GenerationCost: 'GenerationCost' }));
-jest.mock('pages/inside/aiFactory/automation', () => ({ AutomationSection: 'AutomationSection' }));
+jest.mock('pages/inside/aiFactory/evaluation', () => ({ EvaluationPanel: 'mock-EvaluationPanel' }));
+jest.mock('pages/inside/aiFactory/generationCost', () => ({
+  GenerationCost: 'mock-GenerationCost',
+}));
+jest.mock('pages/inside/aiFactory/automation', () => ({
+  AutomationSection: 'mock-AutomationSection',
+}));
 jest.mock('pages/inside/aiFactory/common', () => ({ usePolling: jest.fn() }));
+jest.mock('pages/inside/aiFactory/common/nativeTestCaseSummary/nativeTestCaseSummary', () => ({
+  NativeTestCaseSummary: 'mock-NativeTestCaseSummary',
+}));
 jest.mock('hooks/useUserPermissions', () => ({ useUserPermissions: jest.fn() }));
 jest.mock('pages/inside/aiFactory/lifecycle', () => ({
-  LifecycleHistory: 'LifecycleHistory',
+  LifecycleHistory: 'mock-LifecycleHistory',
   useTestCaseAi: jest.fn(),
 }));
-jest.mock('pages/inside/aiFactory/pipelineLinks', () => ({ PipelineLinks: 'PipelineLinks' }));
+jest.mock('pages/inside/aiFactory/pipelineLinks', () => ({ PipelineLinks: 'mock-PipelineLinks' }));
 jest.mock('pages/inside/aiFactory/review', () => ({
-  ReviewStrip: 'ReviewStrip',
-  ReviewTarget: 'ReviewTarget',
+  ReviewStrip: 'mock-ReviewStrip',
+  ReviewTarget: 'mock-ReviewTarget',
   useFixRound: jest.fn(),
   useReviewComments: jest.fn(),
 }));
 jest.mock('pages/inside/common/attachmentsWithSlider', () => ({
-  AttachmentsWithSlider: 'AttachmentsWithSlider',
+  AttachmentsWithSlider: 'mock-AttachmentsWithSlider',
 }));
 jest.mock('pages/inside/common/requirementsList/requirementsList', () => ({
-  RequirementsList: 'RequirementsList',
+  RequirementsList: 'mock-RequirementsList',
 }));
-jest.mock('pages/inside/common/scenario', () => ({ Scenario: 'Scenario' }));
+jest.mock('pages/inside/common/scenario', () => ({ Scenario: 'mock-Scenario' }));
 jest.mock('pages/inside/common/scenarioUtils', () => ({
   hasScenarioContent: jest.fn(() => false),
   hasStepContent: jest.fn(() => false),
   hasStepsPreconditionContent: jest.fn(() => false),
 }));
 jest.mock('pages/inside/productVersionPage/linkedTestCasesTab/tagList', () => ({
-  AdaptiveTagList: 'AdaptiveTagList',
+  AdaptiveTagList: 'mock-AdaptiveTagList',
 }));
 jest.mock(
   'pages/inside/testCaseLibraryPage/addTestCasesToTestPlanModal/useAddTestCasesToTestPlanModal',
   () => ({ useAddTestCasesToTestPlanModal: jest.fn() }),
 );
 jest.mock('./descriptionModal', () => ({ useDescriptionModal: jest.fn() }));
-jest.mock('./precondition', () => ({ Precondition: 'Precondition' }));
-jest.mock('./stepsList', () => ({ StepsList: 'StepsList' }));
-jest.mock('./testCaseDetailsHeader', () => ({ TestCaseDetailsHeader: 'TestCaseDetailsHeader' }));
+jest.mock('./precondition', () => ({ Precondition: 'mock-Precondition' }));
+jest.mock('./stepsList', () => ({ StepsList: 'mock-StepsList' }));
+jest.mock('./testCaseDetailsHeader', () => ({
+  TestCaseDetailsHeader: 'mock-TestCaseDetailsHeader',
+}));
 jest.mock('./useTestCaseTags', () => ({ useTestCaseTags: jest.fn() }));
 jest.mock('./utils', () => ({ checkScenario: jest.fn(() => true) }));
 jest.mock('../emptyState/details/detailsEmptyState', () => ({
-  DetailsEmptyState: 'DetailsEmptyState',
+  DetailsEmptyState: 'mock-DetailsEmptyState',
 }));
-jest.mock('../tagPopover', () => ({ TagPopover: 'TagPopover' }));
+jest.mock('../tagPopover', () => ({ TagPopover: 'mock-TagPopover' }));
 
 const testCase = {
   id: 42,
@@ -214,6 +226,77 @@ describe('TestCaseDetailsPage lifecycle history', () => {
     testCaseDetailsLoading = false;
     aiDetailsLoading = false;
     aiDetailsError = false;
+  });
+
+  test.each(['AI', 'MANUAL'] as const)(
+    'uses native %s data without activating provisional endpoints or unsupported sections',
+    (origin) => {
+      selectedTestCase = {
+        ...testCase,
+        origin,
+        status: 'DRAFT',
+        metrics: { overallScore: 0, obsolete: true, costUsd: 0 },
+        ai: {
+          generatedByIteration: { pipelineId: 1, iterationId: 101, number: 1 },
+          modifiedByAgent: true,
+          factoryKey: 'stale overlay',
+        },
+        automation: { status: AutomationStatus.IN_PROGRESS },
+        review: { unsentCommentsCount: 2 },
+      };
+      // Keep real request-hook effects: enabling a provisional API fails the request assertion.
+      const wrapper = renderPage(true, true);
+      jest
+        .mocked(useTestCaseAi)
+        .mockImplementation(
+          jest.requireActual<typeof import('pages/inside/aiFactory/lifecycle/useTestCaseAi')>(
+            'pages/inside/aiFactory/lifecycle/useTestCaseAi',
+          ).useTestCaseAi,
+        );
+      jest
+        .mocked(useReviewComments)
+        .mockImplementation(
+          jest.requireActual<typeof import('pages/inside/aiFactory/review/useReviewComments')>(
+            'pages/inside/aiFactory/review/useReviewComments',
+          ).useReviewComments,
+        );
+      jest
+        .mocked(useFixRound)
+        .mockImplementation(
+          jest.requireActual<typeof import('pages/inside/aiFactory/review/useFixRound')>(
+            'pages/inside/aiFactory/review/useFixRound',
+          ).useFixRound,
+        );
+
+      const mountedPage = mount(<TestCaseDetailsPage />);
+
+      expect(fetch).not.toHaveBeenCalled();
+      expect(useTestCaseAi).toHaveBeenLastCalledWith('demo', 42, false, 100);
+      expect(useReviewComments).toHaveBeenLastCalledWith('demo', 42, false);
+      expect(useFixRound).toHaveBeenLastCalledWith('demo', 42, false, expect.any(Object));
+      expect(wrapper.find(NativeTestCaseSummary)).toHaveLength(origin === 'AI' ? 1 : 0);
+      expect(wrapper.find(ReviewStrip)).toHaveLength(0);
+      expect(wrapper.find(EvaluationPanel)).toHaveLength(0);
+      expect(wrapper.find(GenerationCost)).toHaveLength(0);
+      expect(wrapper.find(PipelineLinks)).toHaveLength(0);
+      expect(wrapper.find(LifecycleHistory)).toHaveLength(0);
+      expect(wrapper.find(AutomationSection)).toHaveLength(0);
+      expect(wrapper.find(LaunchBlockedBanner)).toHaveLength(0);
+      expect(usePolling).toHaveBeenCalledWith(expect.any(Function), 3000, false);
+      mountedPage.unmount();
+    },
+  );
+
+  test('keeps native summary hidden while the feature flag is disabled', () => {
+    selectedTestCase = { ...testCase, origin: 'AI', status: 'READY' };
+
+    const wrapper = renderPage(false, true);
+
+    expect(wrapper.find(NativeTestCaseSummary)).toHaveLength(0);
+    expect(wrapper.find(ReviewStrip)).toHaveLength(0);
+    expect(wrapper.find(AutomationSection)).toHaveLength(0);
+    expect(useTestCaseAi).toHaveBeenLastCalledWith('demo', 42, false, 100);
+    expect(useReviewComments).toHaveBeenLastCalledWith('demo', 42, false);
   });
 
   test('does not mount History while the feature is disabled', () => {

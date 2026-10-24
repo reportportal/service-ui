@@ -14,13 +14,16 @@
  * limitations under the License.
  */
 
-import { shallow } from 'enzyme';
+import { mount, shallow } from 'enzyme';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { useAiFactoryEnabled } from 'controllers/aiFactory';
 import { useHasTestPlans } from 'hooks/useHasTestPlans';
 import { useUserPermissions } from 'hooks/useUserPermissions';
+import { fetch } from 'common/utils';
 import { AiChip, LifecycleBadge, ScoreChip } from 'pages/inside/aiFactory/common';
+import { NativeTestCaseSummary } from 'pages/inside/aiFactory/common/nativeTestCaseSummary/nativeTestCaseSummary';
+import { useTestCaseAi } from 'pages/inside/aiFactory/lifecycle';
 import { EvaluationMini } from 'pages/inside/aiFactory/evaluation';
 import { ApproveButton } from 'pages/inside/aiFactory/approval';
 import { ReviewFlags } from 'pages/inside/aiFactory/library/reviewFlags';
@@ -41,13 +44,13 @@ import { EvaluationState, Lifecycle } from 'types/aiFactory';
 import { TestCaseManualScenario, type ExtendedTestCase } from 'types/testCase';
 
 jest.mock('@reportportal/ui-kit', () => ({
-  BreadcrumbsTreeIcon: 'BreadcrumbsTreeIcon',
-  Button: 'Button',
-  CopyIcon: 'CopyIcon',
-  MeatballMenuIcon: 'MeatballMenuIcon',
-  RerunIcon: 'RerunIcon',
-  SystemMessage: 'SystemMessage',
-  Tooltip: 'Tooltip',
+  BreadcrumbsTreeIcon: 'mock-BreadcrumbsTreeIcon',
+  Button: 'mock-Button',
+  CopyIcon: 'mock-CopyIcon',
+  MeatballMenuIcon: 'mock-MeatballMenuIcon',
+  RerunIcon: 'mock-RerunIcon',
+  SystemMessage: 'mock-SystemMessage',
+  Tooltip: 'mock-Tooltip',
 }));
 jest.mock(
   'analyticsEvents/testCaseLibraryPageEvents',
@@ -63,10 +66,10 @@ jest.mock(
       clickTestCaseMenu: jest.fn(),
     },
     TEST_CASE_MENU_ELEMENT_NAME: {
-      DELETE: 'DELETE',
-      DUPLICATE: 'DUPLICATE',
-      EDIT: 'EDIT',
-      HISTORY: 'HISTORY',
+      DELETE: 'mock-DELETE',
+      DUPLICATE: 'mock-DUPLICATE',
+      EDIT: 'mock-EDIT',
+      HISTORY: 'mock-HISTORY',
       MOVE_TO: 'MOVE_TO',
     },
     TEST_CASE_PLACE: { DETAILS_PAGE: 'DETAILS_PAGE', SIDE_PANEL: 'SIDE_PANEL' },
@@ -75,7 +78,7 @@ jest.mock(
 );
 jest.mock('html-react-parser', () => ({ __esModule: true, default: () => null }));
 jest.mock('moment', () => ({ __esModule: true, default: () => ({ format: () => '' }) }));
-jest.mock('react-copy-to-clipboard', () => ({ CopyToClipboard: 'CopyToClipboard' }));
+jest.mock('react-copy-to-clipboard', () => ({ CopyToClipboard: 'mock-CopyToClipboard' }));
 jest.mock('react-intl', () => ({
   defineMessages: (messages: unknown) => messages,
   useIntl: () => ({
@@ -84,22 +87,25 @@ jest.mock('react-intl', () => ({
   }),
 }));
 jest.mock('react-redux', () => ({ useDispatch: jest.fn(), useSelector: jest.fn() }));
-jest.mock('redux-first-router-link', () => 'Link');
+jest.mock('redux-first-router-link', () => 'mock-Link');
 jest.mock('react-tracking', () => ({ useTracking: () => ({ trackEvent: jest.fn() }) }));
 jest.mock('common/hooks', () => ({ useOnClickOutside: jest.fn() }));
 jest.mock('common/utils', () => ({
+  fetch: jest.fn(),
   copyToClipboard: jest.fn(() => Promise.resolve()),
   createClassnames:
     () =>
     (...classNames: string[]) =>
       classNames.filter(Boolean).join(' '),
 }));
-jest.mock('components/collapsibleSection', () => ({ CollapsibleSection: 'CollapsibleSection' }));
-jest.mock('components/fields/expandedTextSection', () => ({
-  ExpandedTextSection: 'ExpandedTextSection',
+jest.mock('components/collapsibleSection', () => ({
+  CollapsibleSection: 'mock-CollapsibleSection',
 }));
-jest.mock('components/folderBreadcrumbs', () => ({ FolderBreadcrumbs: 'FolderBreadcrumbs' }));
-jest.mock('componentLibrary/breadcrumbs', () => ({ Breadcrumbs: 'Breadcrumbs' }), {
+jest.mock('components/fields/expandedTextSection', () => ({
+  ExpandedTextSection: 'mock-ExpandedTextSection',
+}));
+jest.mock('components/folderBreadcrumbs', () => ({ FolderBreadcrumbs: 'mock-FolderBreadcrumbs' }));
+jest.mock('componentLibrary/breadcrumbs', () => ({ Breadcrumbs: 'mock-Breadcrumbs' }), {
   virtual: true,
 });
 jest.mock('controllers/aiFactory', () => ({ useAiFactoryEnabled: jest.fn() }));
@@ -123,23 +129,26 @@ jest.mock('controllers/project', () => ({ projectKeySelector: jest.fn() }));
 jest.mock('controllers/testCase', () => ({ GET_TEST_CASE_DETAILS: 'GET_TEST_CASE_DETAILS' }));
 jest.mock('hooks/useHasTestPlans', () => ({ useHasTestPlans: jest.fn() }));
 jest.mock('hooks/useUserPermissions', () => ({ useUserPermissions: jest.fn() }));
-jest.mock('pages/common/popoverControl', () => ({ PopoverControl: 'PopoverControl' }));
+jest.mock('pages/common/popoverControl', () => ({ PopoverControl: 'mock-PopoverControl' }));
 jest.mock('pages/common/popoverControl/popoverControl', () => ({}));
-jest.mock('pages/inside/common/attachmentList', () => ({ AttachmentList: 'AttachmentList' }));
+jest.mock('pages/inside/common/attachmentList', () => ({ AttachmentList: 'mock-AttachmentList' }));
 jest.mock('pages/inside/common/executionEstimationTime', () => ({
-  ExecutionEstimationTime: 'ExecutionEstimationTime',
+  ExecutionEstimationTime: 'mock-ExecutionEstimationTime',
 }));
-jest.mock('pages/inside/common/priorityIcon', () => ({ PriorityIcon: 'PriorityIcon' }));
+jest.mock('pages/inside/common/priorityIcon', () => ({ PriorityIcon: 'mock-PriorityIcon' }));
 jest.mock('pages/inside/common/requirementsList/requirementsList', () => ({
-  RequirementsList: 'RequirementsList',
+  RequirementsList: 'mock-RequirementsList',
 }));
 jest.mock('pages/inside/productVersionPage/linkedTestCasesTab/tagList', () => ({
-  AdaptiveTagList: 'AdaptiveTagList',
+  AdaptiveTagList: 'mock-AdaptiveTagList',
 }));
 jest.mock('pages/inside/testCaseLibraryPage/addToLaunchButton', () => ({
-  AddToLaunchButton: 'AddToLaunchButton',
-  AddToLaunchButtonView: 'AddToLaunchButtonView',
+  AddToLaunchButton: 'mock-AddToLaunchButton',
+  AddToLaunchButtonView: 'mock-AddToLaunchButtonView',
   useAddToLaunchAction: jest.fn(),
+}));
+jest.mock('pages/inside/testCaseLibraryPage/addToLaunchModal', () => ({
+  useAddToLaunchModal: () => ({ openModal: jest.fn() }),
 }));
 jest.mock(
   'pages/inside/testCaseLibraryPage/addTestCasesToTestPlanModal/useAddTestCasesToTestPlanModal',
@@ -172,10 +181,13 @@ jest.mock('pages/inside/common/testCaseList/utils', () => ({
   getExcludedActionsFromPermissionMap: jest.fn(() => []),
 }));
 jest.mock('pages/inside/common/testCaseList/testCaseSidePanel/scenario', () => ({
-  Scenario: 'Scenario',
+  Scenario: 'mock-Scenario',
 }));
-jest.mock('pages/inside/aiFactory/evaluation', () => ({ EvaluationMini: 'EvaluationMini' }));
-jest.mock('pages/inside/aiFactory/approval', () => ({ ApproveButton: 'ApproveButton' }));
+jest.mock('pages/inside/aiFactory/evaluation', () => ({ EvaluationMini: 'mock-EvaluationMini' }));
+jest.mock('pages/inside/aiFactory/common/nativeTestCaseSummary/nativeTestCaseSummary', () => ({
+  NativeTestCaseSummary: 'mock-NativeTestCaseSummary',
+}));
+jest.mock('pages/inside/aiFactory/approval', () => ({ ApproveButton: 'mock-ApproveButton' }));
 jest.mock('pages/inside/aiFactory/lifecycle', () => ({
   useTestCaseAi: jest.fn(() => ({
     data: null,
@@ -219,6 +231,7 @@ const renderHosts = (
   canReviewAiTestCases = false,
   canManageTestCases = false,
   hasTestPlans = false,
+  canAutomateTestCases = false,
 ) => {
   jest.mocked(useAiFactoryEnabled).mockReturnValue(isEnabled);
   jest.mocked(useDispatch).mockReturnValue(jest.fn());
@@ -226,6 +239,7 @@ const renderHosts = (
   jest.mocked(useUserPermissions).mockReturnValue({
     canManageTestCases,
     canReviewAiTestCases,
+    canAutomateTestCases,
   } as ReturnType<typeof useUserPermissions>);
   jest.mocked(useHasTestPlans).mockReturnValue({
     hasTestPlans,
@@ -252,6 +266,138 @@ const renderHosts = (
 describe('lifecycle badges in test case hosts', () => {
   beforeEach(() => {
     jest.clearAllMocks();
+    jest.mocked(useTestCaseAi).mockReturnValue({
+      data: null,
+      isLoading: false,
+      isError: false,
+      reload: jest.fn(),
+    });
+  });
+
+  test('keeps native Draft Test Plan actions disabled in the header and side panel', () => {
+    const nativeDraft: ExtendedTestCase = {
+      ...testCase,
+      origin: 'AI',
+      status: 'DRAFT',
+      lifecycle: Lifecycle.READY,
+    };
+    const { header, sidePanel } = renderHosts(true, nativeDraft, true, true, true);
+
+    expect(
+      header.find({ content: 'Only Ready Test Cases can be added to a Test Plan' }),
+    ).toHaveLength(1);
+    expect(
+      sidePanel.find({ content: 'Only Ready Test Cases can be added to a Test Plan' }),
+    ).toHaveLength(1);
+  });
+
+  test('keeps native Draft Add to Launch disabled in the header and side panel', () => {
+    const nativeDraft = {
+      ...testCase,
+      origin: 'AI',
+      status: 'DRAFT',
+      lifecycle: Lifecycle.READY,
+      manualScenario: {
+        manualScenarioType: TestCaseManualScenario.TEXT,
+        instructions: 'Open Library',
+        expectedResult: 'Library is displayed',
+        attachments: [],
+        requirements: [],
+      },
+    } as ExtendedTestCase;
+    const { header, sidePanel } = renderHosts(true, nativeDraft, true, true, true);
+    jest
+      .mocked(useAddToLaunchAction)
+      .mockImplementation(
+        jest.requireActual<
+          typeof import('pages/inside/testCaseLibraryPage/addToLaunchButton/useAddToLaunchAction')
+        >('pages/inside/testCaseLibraryPage/addToLaunchButton/useAddToLaunchAction')
+          .useAddToLaunchAction,
+      );
+    const ActualAddToLaunchButton = jest.requireActual<
+      typeof import('pages/inside/testCaseLibraryPage/addToLaunchButton/addToLaunchButton')
+    >('pages/inside/testCaseLibraryPage/addToLaunchButton/addToLaunchButton').AddToLaunchButton;
+    const launchProps = header.find('mock-AddToLaunchButton').props() as unknown as React.ComponentProps<
+      typeof ActualAddToLaunchButton
+    >;
+
+    const launchButton = shallow(<ActualAddToLaunchButton {...launchProps} />);
+    sidePanel.setProps({ testCase: { ...nativeDraft } });
+
+    expect(
+      launchButton.find('[data-automation-id="test-case-add-to-launch"]').prop('disabled'),
+    ).toBe(true);
+    expect(sidePanel.find(AddToLaunchButtonView).prop('isDisabled')).toBe(true);
+  });
+
+  test.each([
+    { origin: 'AI', status: 'DRAFT' },
+    { origin: 'MANUAL', status: 'READY' },
+  ] as const)(
+    'shows native $origin/$status identity without legacy actions or provenance',
+    ({ origin, status }) => {
+      const nativeCase = {
+        ...testCase,
+        origin,
+        status,
+        metrics: { overallScore: 0, obsolete: true, costUsd: 0 },
+      };
+      const { header, sidePanel } = renderHosts(true, nativeCase, true, true, false, true);
+
+      expect(header.find(NativeTestCaseSummary).props()).toMatchObject({
+        showIdentity: true,
+        showMetrics: false,
+        summary: { isAi: origin === 'AI', status },
+      });
+      expect(sidePanel.find(NativeTestCaseSummary).props()).toMatchObject({
+        showIdentity: true,
+        summary: { isAi: origin === 'AI', status },
+      });
+      expect(header.find(ApproveButton)).toHaveLength(0);
+      expect(header.find('mock-PopoverControl').prop('items')).not.toEqual(
+        expect.arrayContaining([expect.objectContaining({ label: 'Automate' })]),
+      );
+      expect(sidePanel.find(ApproveButton)).toHaveLength(0);
+      expect(sidePanel.find(ReviewFlags)).toHaveLength(0);
+      expect(sidePanel.find(EvaluationMini)).toHaveLength(0);
+      expect(sidePanel.find(LaunchBlockedBanner)).toHaveLength(0);
+      expect(sidePanel.find(ScoreChip)).toHaveLength(0);
+      expect(header.find(ScoreChip)).toHaveLength(origin === 'AI' ? 1 : 0);
+      if (origin === 'AI')
+        expect(header.find(ScoreChip).props()).toMatchObject({ score: 0, obsolete: true });
+      expect(useTestCaseAi).toHaveBeenLastCalledWith(expect.anything(), 42, false, undefined);
+    },
+  );
+
+  test('mounts a native side panel without issuing an AI details request', () => {
+    const nativeCase = { ...testCase, origin: 'AI', status: 'DRAFT' } as ExtendedTestCase;
+    renderHosts(true, nativeCase, true, true);
+    jest
+      .mocked(useTestCaseAi)
+      .mockImplementation(
+        jest.requireActual<typeof import('pages/inside/aiFactory/lifecycle/useTestCaseAi')>(
+          'pages/inside/aiFactory/lifecycle/useTestCaseAi',
+        ).useTestCaseAi,
+      );
+
+    const sidePanel = mount(
+      <TestCaseSidePanel testCase={nativeCase} isVisible onClose={jest.fn()} />,
+    );
+
+    expect(fetch).not.toHaveBeenCalled();
+    expect(sidePanel.find(ApproveButton)).toHaveLength(0);
+    expect(sidePanel.find(EvaluationMini)).toHaveLength(0);
+    sidePanel.unmount();
+  });
+
+  test('keeps native identity hidden in both hosts while the feature is disabled', () => {
+    const nativeCase = { ...testCase, origin: 'AI', status: 'DRAFT' } as ExtendedTestCase;
+    const { header, sidePanel } = renderHosts(false, nativeCase, true, true);
+
+    expect(header.find(NativeTestCaseSummary)).toHaveLength(0);
+    expect(sidePanel.find(NativeTestCaseSummary)).toHaveLength(0);
+    expect(header.find(ApproveButton)).toHaveLength(0);
+    expect(sidePanel.find(ApproveButton)).toHaveLength(0);
   });
 
   test.each([
@@ -323,7 +469,7 @@ describe('lifecycle badges in test case hosts', () => {
   test('exposes accessible side-panel actions and reuses Add to Launch in the narrow menu', () => {
     const { sidePanel } = renderHosts(true, testCase, false, true);
     const moreActions = sidePanel.find('[data-automation-id="test-case-more-actions"]');
-    const menuItems = sidePanel.find('PopoverControl').prop('items') as Array<{
+    const menuItems = sidePanel.find('mock-PopoverControl').prop('items') as Array<{
       label: string;
       className?: string;
       disabled?: boolean;

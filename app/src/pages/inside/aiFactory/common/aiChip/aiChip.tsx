@@ -41,7 +41,11 @@ export const AiChip = ({ tooltip }: AiChipProps) => {
   const { formatMessage } = useIntl();
 
   return (
-    <ConditionalTooltip content={tooltip ?? formatMessage(messages.tooltip)} placement="top">
+    <ConditionalTooltip
+      content={tooltip ?? formatMessage(messages.tooltip)}
+      placement="top"
+      wrapperClassName={cx('tooltip-wrapper')}
+    >
       <span className={cx('chip')} data-automation-id="aiChip">
         {formatMessage(messages.label)}
       </span>

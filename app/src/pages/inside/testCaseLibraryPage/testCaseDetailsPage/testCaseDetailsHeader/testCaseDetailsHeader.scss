@@ -37,6 +37,14 @@
     font-family: $FONT-REGULAR;
     line-height: 31px;
     color: var(--rp-ui-base-almost-black);
+
+    > div:not(.header__title-icon) {
+      display: inline-flex;
+      flex: 0 0 auto;
+      flex-wrap: nowrap;
+      width: fit-content;
+      padding: 0;
+    }
   }
 
   &__title-icon {

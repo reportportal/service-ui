@@ -25,6 +25,8 @@ import { DragLayer } from '@reportportal/ui-kit/sortable';
 
 import { TEST_CASE_LIBRARY_EVENTS } from 'analyticsEvents/testCaseLibraryPageEvents';
 import { createClassnames } from 'common/utils';
+import { getNativeTestCaseSummary, getTestCasePresentation } from 'common/utils/nativeTestCase';
+import { NativeTestCaseSummary } from 'pages/inside/aiFactory/common/nativeTestCaseSummary/nativeTestCaseSummary';
 import { useAiFactoryEnabled } from 'controllers/aiFactory';
 import type { ExtendedTestCase, TestCasePriority } from 'types/testCase';
 import { useUserPermissions } from 'hooks/useUserPermissions';
@@ -89,6 +91,14 @@ const toggleRowSelection = ({
           id: testCase.id,
           folderId: testCase.testFolder.id,
           displayId: testCase.displayId,
+          ...(getNativeTestCaseSummary(testCase)
+            ? {
+                origin: testCase.origin,
+                status: testCase.status,
+                defaultVersionId: testCase.defaultVersionId,
+                metrics: testCase.metrics,
+              }
+            : {}),
           lifecycle: testCase.lifecycle,
           name: testCase.name,
           review: testCase.review,
@@ -126,6 +136,14 @@ const toggleAllRowsSelection = ({
             id: testCase.id,
             folderId: testCase.testFolder.id,
             displayId: testCase.displayId,
+            ...(getNativeTestCaseSummary(testCase)
+              ? {
+                  origin: testCase.origin,
+                  status: testCase.status,
+                  defaultVersionId: testCase.defaultVersionId,
+                  metrics: testCase.metrics,
+                }
+              : {}),
             lifecycle: testCase.lifecycle,
             name: testCase.name,
             review: testCase.review,
@@ -141,7 +159,9 @@ const hasLifecycleData = (
   isSupportedRoute: boolean,
   testCases: ExtendedTestCase[],
 ) =>
-  isAiFactoryEnabled && isSupportedRoute && testCases.some(({ lifecycle }) => Boolean(lifecycle));
+  isAiFactoryEnabled &&
+  isSupportedRoute &&
+  testCases.some((testCase) => Boolean(getNativeTestCaseSummary(testCase) ?? testCase.lifecycle));
 
 const hasActiveFilters = (
   searchParams: unknown,
@@ -171,67 +191,74 @@ const createTableData = ({
   shouldShowLifecycle,
   testCases,
 }: CreateTableDataParams) =>
-  testCases.map((testCase) => ({
-    id: testCase.id,
-    name: {
-      content: testCase.name,
-      component: (
-        <div className={cx('cell-wrapper', { selected: testCase.id === selectedTestCaseId })}>
-          <button
-            type="button"
-            className={cx('cell-open-area')}
-            title={`${testCase.displayId} ${testCase.name}`}
-            aria-label={formatMessage(messages.openTestCase, {
-              displayId: testCase.displayId,
-              name: testCase.name,
-            })}
-            onClick={() => handleRowOpen(testCase.id)}
-          />
-          <DraggableTestCaseNameCell
-            testCase={testCase}
-            priority={testCase.priority?.toLowerCase() as TestCasePriority}
-            name={testCase.name}
-            tags={testCase?.attributes?.map(({ key }) => key)}
-            searchQuery={searchQuery}
-            ai={shouldShowAiQuality ? testCase.ai : undefined}
-            review={shouldShowAiQuality ? testCase.review : undefined}
-          />
-        </div>
-      ),
-    },
-    lastExecution: {
-      content: testCase.updatedAt,
-      component: (
-        <TestCaseExecutionCell
-          testCase={testCase}
-          instanceKey={instanceKey}
-          onRowClick={() => handleRowOpen(testCase.id)}
-        />
-      ),
-    },
-    ...(shouldShowLifecycle && {
-      status: {
-        content: testCase.lifecycle ?? '',
-        component: testCase.lifecycle ? (
-          <div className={cx('lifecycle-cell')}>
-            <LifecycleBadge lifecycle={testCase.lifecycle} />
-          </div>
-        ) : null,
-      },
-    }),
-    ...(shouldShowAiQuality && {
-      aiQuality: {
-        content: testCase.evaluationSummary?.totalScore ?? '',
+  testCases.map((testCase) => {
+    const nativeSummary = getNativeTestCaseSummary(testCase);
+    const displayStatus = nativeSummary?.status ?? testCase.lifecycle;
+    return {
+      id: testCase.id,
+      name: {
+        content: testCase.name,
         component: (
-          <AiQualityCell
-            ai={testCase.ai}
-            evaluationSummary={testCase.evaluationSummary}
-            costSummary={testCase.costSummary}
+          <div className={cx('cell-wrapper', { selected: testCase.id === selectedTestCaseId })}>
+            <button
+              type="button"
+              className={cx('cell-open-area')}
+              title={`${testCase.displayId} ${testCase.name}`}
+              aria-label={formatMessage(messages.openTestCase, {
+                displayId: testCase.displayId,
+                name: testCase.name,
+              })}
+              onClick={() => handleRowOpen(testCase.id)}
+            />
+            <DraggableTestCaseNameCell
+              testCase={testCase}
+              priority={testCase.priority?.toLowerCase() as TestCasePriority}
+              name={testCase.name}
+              tags={testCase?.attributes?.map(({ key }) => key)}
+              searchQuery={searchQuery}
+              isNativeAi={shouldShowAiQuality && nativeSummary?.isAi}
+              ai={shouldShowAiQuality ? testCase.ai : undefined}
+              review={shouldShowAiQuality ? testCase.review : undefined}
+            />
+          </div>
+        ),
+      },
+      lastExecution: {
+        content: testCase.updatedAt,
+        component: (
+          <TestCaseExecutionCell
+            testCase={testCase}
+            instanceKey={instanceKey}
+            onRowClick={() => handleRowOpen(testCase.id)}
           />
         ),
       },
-    }),
-  }));
+      ...(shouldShowLifecycle && {
+        status: {
+          content: displayStatus ?? '',
+          component: displayStatus ? (
+            <div className={cx('lifecycle-cell')}>
+              <LifecycleBadge lifecycle={displayStatus} />
+            </div>
+          ) : null,
+        },
+      }),
+      ...(shouldShowAiQuality && {
+        aiQuality: {
+          content: nativeSummary?.score ?? testCase.evaluationSummary?.totalScore ?? '',
+          component: nativeSummary ? (
+            <NativeTestCaseSummary summary={nativeSummary} />
+          ) : (
+            <AiQualityCell
+              ai={testCase.ai}
+              evaluationSummary={testCase.evaluationSummary}
+              costSummary={testCase.costSummary}
+            />
+          ),
+        },
+      }),
+    };
+  });
 
 const createFixedColumns = (
   formatMessage: IntlShape['formatMessage'],
@@ -361,7 +388,7 @@ const TestCaseSidePanelPortal = ({
 
 export const TestCaseList = memo(
   ({
-    testCases,
+    testCases: rawTestCases,
     isLoading = false,
     selectedRowIds,
     selectedRows,
@@ -377,6 +404,9 @@ export const TestCaseList = memo(
     const [selectedTestCaseId, setSelectedTestCaseId] = useState<number | null>(null);
     const { canManageTestCases } = useUserPermissions();
     const isAiFactoryEnabled = useAiFactoryEnabled();
+    const testCases = rawTestCases.map((testCase) =>
+      getTestCasePresentation(testCase, isAiFactoryEnabled),
+    );
     const isSelectable = selectable && canManageTestCases;
 
     const searchQuery = location?.query?.testCasesSearchParams || '';
