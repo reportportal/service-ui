@@ -79,6 +79,24 @@ const realTestCase = (
 beforeEach(() => resetMockDb());
 
 describe('mergeAiFields', () => {
+  test.each(['AI', 'MANUAL'] as const)(
+    'leaves native %s data intact even when its displayId matches a seeded case',
+    (origin) => {
+      const real: TestCase = {
+        ...realTestCase('TC106'),
+        origin,
+        status: 'READY',
+        defaultVersionId: 8302,
+        metrics: { overallScore: 0, obsolete: false, costUsd: 0 },
+      };
+
+      expect(mergeAiFields(real)).toBe(real);
+      expect(real).not.toHaveProperty('lifecycle');
+      expect(real).not.toHaveProperty('ai');
+      expect(real).not.toHaveProperty('review');
+    },
+  );
+
   test('leaves a case untouched when no mock record matches its displayId', () => {
     const real = realTestCase('TC999-not-seeded');
     expect(mergeAiFields(real)).toEqual(real);
@@ -141,6 +159,54 @@ describe('mergeTestPlanAiFields', () => {
 });
 
 describe('installOverlayInterceptor', () => {
+  test('does not add legacy lifecycle side effects to a native scenario update', async () => {
+    const { http, mock } = setupOverlay();
+    const before = originalScenario();
+    const after = { ...before, preconditions: { value: 'A changed native precondition' } };
+    const native: TestCase = {
+      ...realTestCase('TC101', before),
+      origin: 'AI',
+      status: 'READY',
+      defaultVersionId: 8302,
+      metrics: { overallScore: 93, obsolete: false, costUsd: 0.22 },
+    };
+    const record = findCase('TC101');
+    const initialHistory = [...(record?.lifecycleHistory ?? [])];
+    mock.onGet(TEST_CASE_URL).reply(200, native);
+    mock.onPut(TEST_CASE_URL).reply(200, { ...native, manualScenario: after });
+
+    await http.get(TEST_CASE_URL);
+    const { data } = await http.put(TEST_CASE_URL, { manualScenario: after });
+
+    expect(data).toEqual({ ...native, manualScenario: after });
+    expect(data).not.toHaveProperty('lifecycleChanged');
+    expect(data).not.toHaveProperty('lifecycle');
+    expect(record?.lifecycleHistory).toEqual(initialHistory);
+    mock.restore();
+  });
+
+  test('preserves native fields in both detail and mixed Library responses', async () => {
+    const { http, mock } = setupOverlay();
+    const native: TestCase = {
+      ...realTestCase('TC106'),
+      origin: 'AI',
+      status: 'READY',
+      metrics: { overallScore: 0, obsolete: true, costUsd: 0 },
+    };
+    const listUrl = '/api/v1/project/demo/tms/test-case';
+    mock.onGet(TEST_CASE_URL).reply(200, native);
+    mock.onGet(listUrl).reply(200, { content: [native, realTestCase('TC101')] });
+
+    const detail = await http.get<TestCase>(TEST_CASE_URL);
+    const list = await http.get<{ content: TestCase[] }>(listUrl);
+
+    expect(detail.data).toEqual(native);
+    expect(list.data.content[0]).toEqual(native);
+    expect(list.data.content[0]).not.toHaveProperty('ai');
+    expect(list.data.content[1]).toMatchObject({ lifecycle: Lifecycle.READY });
+    mock.restore();
+  });
+
   test('enriches a test-case details response', async () => {
     const { http, mock } = setupOverlay();
     mock.onGet(TEST_CASE_URL).reply(200, realTestCase('TC106'));

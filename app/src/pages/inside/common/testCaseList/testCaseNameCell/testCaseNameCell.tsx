@@ -24,6 +24,7 @@ import { AiChip } from 'pages/inside/aiFactory/common';
 import { ReviewFlags } from 'pages/inside/aiFactory/library';
 import type { TestCasePriority } from 'types/testCase';
 
+import { messages as nativeMessages } from 'pages/inside/aiFactory/common/nativeTestCaseSummary/messages';
 import { messages } from './messages';
 
 import styles from './testCaseNameCell.scss';
@@ -36,6 +37,7 @@ interface TestCaseNameCellProps {
   name: string;
   tags: string[];
   searchQuery?: string;
+  isNativeAi?: boolean;
   ai?: TestCaseAiExtension['ai'];
   review?: TestCaseAiExtension['review'];
 }
@@ -48,6 +50,7 @@ export const TestCaseNameCell = ({
   searchQuery,
   ai,
   review,
+  isNativeAi = false,
 }: TestCaseNameCellProps) => {
   const { formatMessage } = useIntl();
   const title = `${displayId} ${name}`;
@@ -68,9 +71,13 @@ export const TestCaseNameCell = ({
           <span className={cx('business-id')}>
             {highlightText(displayId, searchQuery || '', cx('highlight'))}
           </span>
-          {generatedByIterationTooltip && (
+          {(isNativeAi || generatedByIterationTooltip) && (
             <div className={cx('ai-chip')}>
-              <AiChip tooltip={generatedByIterationTooltip} />
+              <AiChip
+                tooltip={
+                  isNativeAi ? formatMessage(nativeMessages.origin) : generatedByIterationTooltip
+                }
+              />
             </div>
           )}
           <span className={cx('test-name')}>

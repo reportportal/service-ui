@@ -34,6 +34,11 @@ import {
   TestCasePageDefaultValues,
 } from 'pages/inside/common/testCaseList/constants';
 import { TestCase } from 'types/testCase';
+import {
+  getNativeTestCaseSummary,
+  getTestCasePresentation,
+  hasNativeTestCaseData,
+} from 'common/utils/nativeTestCase';
 import { Page } from 'types/common';
 import { TMS_INSTANCE_KEY } from 'pages/inside/common/constants';
 import { SelectedTestCaseRow } from 'pages/inside/common/testCaseList/types';
@@ -215,9 +220,16 @@ export const AllTestCasesPage = ({
   const isAnyRowSelected = !isEmpty(selectedRows);
   const selectedRowIds = useMemo(() => selectedRows.map((row) => row.id), [selectedRows]);
   const selectedTestCases = useMemo(
-    () => selectedRows.map((row) => testCases.find(({ id }) => id === row.id) ?? row),
-    [selectedRows, testCases],
+    () =>
+      selectedRows.map((row) =>
+        getTestCasePresentation(
+          testCases.find(({ id }) => id === row.id) ?? row,
+          isAiFactoryEnabled,
+        ),
+      ),
+    [selectedRows, testCases, isAiFactoryEnabled],
   );
+  const hasNativeSelection = isAiFactoryEnabled && selectedTestCases.some(hasNativeTestCaseData);
   const automationSelection = useMemo(
     () => partitionAutomationSelection(selectedTestCases),
     [selectedTestCases],
@@ -229,7 +241,17 @@ export const AllTestCasesPage = ({
     return automationDisabledMessages[[...reasons][0]];
   }, [automationSelection.skipped]);
   const { eligibleIds, skippedDrafts } = useMemo(
-    () => partitionReadyOnlySelection(selectedRowIds, selectedTestCases, isAiFactoryEnabled),
+    () =>
+      partitionReadyOnlySelection(
+        selectedRowIds,
+        selectedTestCases.map((testCase) => ({
+          ...testCase,
+          lifecycle: isAiFactoryEnabled
+            ? (getNativeTestCaseSummary(testCase)?.status ?? testCase.lifecycle)
+            : testCase.lifecycle,
+        })),
+        isAiFactoryEnabled,
+      ),
     [isAiFactoryEnabled, selectedRowIds, selectedTestCases],
   );
   const hasOnlyDraftsSelected = skippedDrafts.length > 0 && eligibleIds.length === 0;
@@ -448,7 +470,7 @@ export const AllTestCasesPage = ({
                 <MeatballMenuIcon />
               </Button>
             </PopoverControl>
-            {isAiFactoryEnabled && canReviewAiTestCases && (
+            {isAiFactoryEnabled && !hasNativeSelection && canReviewAiTestCases && (
               <BulkApproveButton
                 testCaseIds={selectedRowIds}
                 onSuccess={() => {
@@ -461,7 +483,7 @@ export const AllTestCasesPage = ({
               canAutomateTestCases,
               disabledMessage: formatMessage(automationDisabledMessage),
               hasEligibleCases: automationSelection.eligible.length > 0,
-              isAiFactoryEnabled,
+              isAiFactoryEnabled: isAiFactoryEnabled && !hasNativeSelection,
               label: formatMessage(automationMessages.automate),
               onClick: handleOpenAutomationModal,
             })}

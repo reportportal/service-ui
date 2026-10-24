@@ -46,6 +46,12 @@ import { GenerationCost } from 'pages/inside/aiFactory/generationCost';
 import { AutomationSection } from 'pages/inside/aiFactory/automation';
 import { POLLING_REQUEST_STARTED, usePolling } from 'pages/inside/aiFactory/common';
 import { LifecycleHistory, useTestCaseAi } from 'pages/inside/aiFactory/lifecycle';
+import {
+  getNativeTestCaseSummary,
+  getTestCasePresentation,
+  hasNativeTestCaseData,
+} from 'common/utils/nativeTestCase';
+import { NativeTestCaseSummary } from 'pages/inside/aiFactory/common/nativeTestCaseSummary/nativeTestCaseSummary';
 import { PipelineLinks } from 'pages/inside/aiFactory/pipelineLinks';
 import { LaunchBlockedBanner } from 'pages/inside/aiFactory/readyOnlyGate';
 import {
@@ -138,9 +144,7 @@ const shouldShowAutomationSection = ({
   isLoading,
   isError,
 }: AutomationSectionVisibilityCriteria) =>
-  isAiFactoryEnabled &&
-  hasLifecycle &&
-  (canAutomate || hasLoadedData || isLoading || isError);
+  isAiFactoryEnabled && hasLifecycle && (canAutomate || hasLoadedData || isLoading || isError);
 
 const SIDEBAR_COLLAPSIBLE_SECTIONS_CONFIG = ({
   canManageTestCases,
@@ -309,11 +313,15 @@ export const TestCaseDetailsPage = () => {
   const { openModal: openAddTestCasesToTestPlanModal } = useAddTestCasesToTestPlanModal();
   const { openModal: openDescriptionModal } = useDescriptionModal();
 
-  const testCaseDetails = useSelector(testCaseDetailsSelector);
+  const rawTestCaseDetails = useSelector(testCaseDetailsSelector);
   const isLoadingTestCaseDetails = useSelector(isLoadingTestCaseDetailsSelector);
   const projectKey = useSelector(projectKeySelector);
   const projectRoute = useSelector(urlOrganizationAndProjectSelector) as ProjectDetails | undefined;
   const isAiFactoryEnabled = useAiFactoryEnabled();
+  const testCaseDetails = rawTestCaseDetails
+    ? getTestCasePresentation(rawTestCaseDetails, isAiFactoryEnabled)
+    : rawTestCaseDetails;
+  const nativeSummary = isAiFactoryEnabled ? getNativeTestCaseSummary(testCaseDetails) : undefined;
 
   const testCaseId = testCaseDetails?.id || 0;
   const aiDetailsState = useTestCaseAi(
@@ -338,7 +346,7 @@ export const TestCaseDetailsPage = () => {
     dispatch({ type: GET_TEST_CASE_DETAILS, payload: { testCaseId } });
   }, [aiDetailsState, dispatch, testCaseId]);
   const isAutomationPollingEnabled = shouldPollAutomation({
-    isAiFactoryEnabled,
+    isAiFactoryEnabled: isAiFactoryEnabled && !hasNativeTestCaseData(testCaseDetails),
     projectKey,
     testCaseId,
     testCaseAutomationStatus: testCaseDetails?.automation?.status,
@@ -347,7 +355,7 @@ export const TestCaseDetailsPage = () => {
     isTestCaseDetailsLoading: isLoadingTestCaseDetails,
   });
   const isAutomationSectionVisible = shouldShowAutomationSection({
-    isAiFactoryEnabled,
+    isAiFactoryEnabled: isAiFactoryEnabled && !hasNativeTestCaseData(testCaseDetails),
     hasLifecycle: Boolean(testCaseDetails?.lifecycle),
     canAutomate: canAutomateTestCases,
     hasLoadedData: Boolean(aiDetailsState.data),
@@ -504,6 +512,7 @@ export const TestCaseDetailsPage = () => {
                 {childComponent}
               </CollapsibleSectionWithHeaderControl>
             ))}
+            {nativeSummary?.isAi && <NativeTestCaseSummary summary={nativeSummary} />}
             {isAiFactoryEnabled && testCaseDetails.ai && (
               <>
                 <EvaluationPanel aiDetailsState={aiDetailsState} />

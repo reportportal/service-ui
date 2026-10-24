@@ -14,20 +14,28 @@
  * limitations under the License.
  */
 
+.tooltip-wrapper {
+  display: inline-flex;
+  align-items: center;
+  width: fit-content;
+  vertical-align: middle;
+  flex-shrink: 0;
+}
+
 .chip {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  height: 16px;
+  height: 20px;
   min-width: 16px;
-  padding: 0 4px;
+  padding: 4px;
   border-radius: 4px;
   box-sizing: border-box;
   background-color: var(--rp-ui-base-topaz);
   color: var(--rp-ui-base-bg-000);
   font-family: var(--rp-ui-base-font-family);
   font-weight: var(--rp-ui-base-fw-bold);
-  font-size: 9px;
+  font-size: 11px;
   line-height: 1;
   text-transform: uppercase;
   flex-shrink: 0;

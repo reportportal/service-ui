@@ -47,6 +47,19 @@ Keep this in sync with 00-status (the status file is the source of truth for pro
 
 ## Creating a sub-task
 
+### Live Review and fix-round integration (2026-10-24)
+
+The user explicitly requested splitting the new backend integration into subtasks and executing them sequentially. The following live-contract follow-ups are separate from the earlier mock UI scopes. Original Estimates and research/implementation/validation comments were set at creation; see [the delivery plan](25-live-review-fix-round-integration-2026-10-24.md) and [08-estimations.md](08-estimations.md).
+
+| Order | Story parent | FE sub-task | Scope |
+|---|---|---|---|
+| R1 | EPMRPP-121677 | [EPMRPP-122686](https://jiraeu.epam.com/browse/EPMRPP-122686) | Native Library/detail AI data |
+| R2 | EPMRPP-121681 | [EPMRPP-122687](https://jiraeu.epam.com/browse/EPMRPP-122687) | Live review comments |
+| R3 | EPMRPP-121682 | [EPMRPP-122688](https://jiraeu.epam.com/browse/EPMRPP-122688) | Live approval and review conflicts |
+| R4 | EPMRPP-121703 | [EPMRPP-122689](https://jiraeu.epam.com/browse/EPMRPP-122689) | Live Push to agent and fix-round states |
+| R5 | EPMRPP-121703 | [EPMRPP-122690](https://jiraeu.epam.com/browse/EPMRPP-122690) | Fix iteration provenance and comparison scope |
+| R6 | EPMRPP-121703 | [EPMRPP-122691](https://jiraeu.epam.com/browse/EPMRPP-122691) | GitHub Actions journey verification |
+
 ### Live Pipeline integration exceptions (2026-10-18)
 
 The user explicitly requested tasks for every stage in advance. These seven tasks were created with Original Estimate and the research / implementation / validation comment at creation time; each remains within the 36 h limit. See [00-status.md](00-status.md) for progress and [08-estimations.md](08-estimations.md) for planned hours.

@@ -44,6 +44,7 @@ interface DraggableTestCaseNameCellProps {
   name: string;
   tags: string[];
   searchQuery?: string;
+  isNativeAi?: boolean;
   ai?: TestCaseAiExtension['ai'];
   review?: TestCaseAiExtension['review'];
 }
@@ -56,6 +57,7 @@ export const DraggableTestCaseNameCell = ({
   searchQuery,
   ai,
   review,
+  isNativeAi = false,
 }: DraggableTestCaseNameCellProps) => {
   const { canManageTestCases } = useUserPermissions();
 
@@ -85,6 +87,7 @@ export const DraggableTestCaseNameCell = ({
         name={name}
         tags={tags}
         searchQuery={searchQuery}
+        isNativeAi={isNativeAi}
         ai={ai}
         review={review}
       />

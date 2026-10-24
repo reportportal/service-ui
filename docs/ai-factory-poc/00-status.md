@@ -3,11 +3,26 @@
 > **Single source of truth for progress.** Update at the start and end of every task / session.
 > Legend: ⬜ todo · 🟨 in progress · 🟦 in review · ✅ done · ⛔ blocked · ➖ skipped
 
-**Last updated:** 2026-10-19 · **Branch:** `EPMRPP-122415-live-pipeline-settings` · **Phase:** live Pipeline integration and contract verification
+**Last updated:** 2026-10-24 · **Branch:** `EPMRPP-122686-live-test-case-ai-data` · **Phase:** live Review and fix-round integration
 
 Temporary mock data and integration workarounds are tracked for removal in
 [23-temporary-solutions-register.md](23-temporary-solutions-register.md). Close the relevant register
 row as part of each real API integration task.
+
+## Live Review and fix-round integration (2026-10-24)
+
+The new backend handoff describes native case fields and the complete review/fix journey. [Plan, acceptance criteria, dependencies and limits](25-live-review-fix-round-integration-2026-10-24.md). All six subtasks have Original Estimates and matching research/implementation/validation comments. Contract fixtures are not authenticated deployment evidence.
+
+| Order | Scope | FE sub-task | Status |
+|---|---|---|---|
+| R1 | Native Library/detail AI data and read-only presentation | [EPMRPP-122686](https://jiraeu.epam.com/browse/EPMRPP-122686) | 🟦 implementation validated for Code review: native metadata wins over demo enrichment, supported read-only fields render in Library/detail/side panel, provisional actions stay unavailable, native Draft guards are preserved; publication checks pass (11 suites / 160 tests, Node 20 type-check, changed-file lint). Authenticated deployment/browser verification pending. |
+| R2 | Live Review comments and review state | [EPMRPP-122687](https://jiraeu.epam.com/browse/EPMRPP-122687) | ⬜ depends on R1 |
+| R3 | Live Approve and review conflicts | [EPMRPP-122688](https://jiraeu.epam.com/browse/EPMRPP-122688) | ⬜ depends on R1/R2 |
+| R4 | Live Push to agent and fix-round states | [EPMRPP-122689](https://jiraeu.epam.com/browse/EPMRPP-122689) | ⬜ depends on R1–R3 |
+| R5 | Fix iteration provenance, refresh and comparison scope | [EPMRPP-122690](https://jiraeu.epam.com/browse/EPMRPP-122690) | ⬜ depends on R4 |
+| R6 | GitHub Actions fix-round journey verification | [EPMRPP-122691](https://jiraeu.epam.com/browse/EPMRPP-122691) | ⬜ depends on R1–R5 and real integration/workflow configuration |
+
+Generation panels and Auto-Ready remain with existing EPMRPP-122414/EPMRPP-122415; their remaining backend decisions are not resolved by creating these tasks.
 
 ## Live Pipeline integration (2026-10-18)
 
