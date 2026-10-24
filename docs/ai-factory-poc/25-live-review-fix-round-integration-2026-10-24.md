@@ -54,8 +54,14 @@ Started 2026-10-24 on `EPMRPP-122688-live-test-case-approval`, stacked on R2 com
 
 ## R4 — Live Push to agent
 
+Started 2026-10-24 on `EPMRPP-122689-live-fix-round` from PR [#5848](https://github.com/reportportal/service-ui/pull/5848), branch `EPMRPP-122692-remove-obsolete-compare-mocks`, exact head `3ec0526ce12421ab03ae8430cbb88c97c9b3e2e4`, as explicitly requested. Original Estimate remains 28 h (5 / 16 / 7). The user authorized R4 commit, push and PR creation on 2026-10-24. The dependent PR temporarily targets `EPMRPP-122692-remove-obsolete-compare-mocks` while #5848 remains open; merge dependencies first, then retarget to `bootcamp-prototype`. Delivery and exact-head CI evidence are tracked in Jira/PR. Real agent/workflow dispatch is not included.
+
 - Use `POST .../review/fix-round` and the documented round/review reads. Adapt `id`, `roundNumber`, `PENDING`, `FIXED`, `FIXED_GRADE_FAILED`, `FAILED` and available workflow/provenance fields.
+- The native POST has no body. Read a known round with `GET .../review/fix-round/{id}`. The optional `review.fixRound` field is a round number, not this ID; resume tracking only from a validated POST ID or unambiguous explicit comment `fixRoundId` metadata. Without a safe ID, poll Review and report completion neutrally.
+- Native AI Draft and Ready cases can Push with edit permission and authoritative unsent comments. Use the existing synchronous Review mutation lock for Push, comments and Approve; latch accepted starts before releasing it, so stale reads cannot reopen actions during a pending round.
 - Drive fixing locks from server state; poll only while needed, cancel on navigation, refresh comments and case after completion, and distinguish failed start from failed/expired round.
+- Read errors or a bounded frontend observation deadline pause monitoring and offer a read-only retry while preserving known fixing protection. They never set the backend round to FAILED or automatically repeat POST. Server timeout and Auto-Ready remain backend-owned; refreshed case status/metrics are authoritative.
+- A network error or malformed launch response can leave dispatch outcome unknown. Reconcile Review before permitting another explicit start; show uncertainty separately from a confirmed failed round, and do not render raw server error text.
 - Do not claim score-before/after, cumulative cost, change diff or `canPush` support when unavailable.
 - Verify start rollback, duplicate push, timeout, failure and successful fix without a grade using contract fixtures; live CI verification belongs to R6.
 
@@ -84,7 +90,7 @@ Started 2026-10-24 on `EPMRPP-122688-live-test-case-approval`, stacked on R2 com
 
 ## Execution evidence
 
-All six Jira subtasks were created with Original Estimates and breakdown comments on 2026-10-24. R1 and R2 are submitted for review; R3 is implemented and validated locally as recorded below. R4–R5 remain pending, and R6 also awaits actual integration/workflow configuration. The user authorized R1–R3 publication on 2026-10-24; delivery and exact-head CI evidence are tracked in their Jira issues and PRs. No deployment or manual workflow trigger is included.
+All six Jira subtasks were created with Original Estimates and breakdown comments on 2026-10-24. R1–R3 are submitted for review; R4 is implemented and validated locally as recorded below. R5 remains pending, and R6 also awaits actual integration/workflow configuration. The user authorized R1–R4 publication on 2026-10-24; delivery and exact-head CI evidence are tracked in their Jira issues and PRs. No deployment or manual workflow trigger is included.
 
 R1 implements native DTO/read presentation, current-version score/model/cost, native-before-overlay precedence (including scenario-update responses), and guards unsupported provisional actions. The first code review found that removing legacy lifecycle data bypassed Draft eligibility checks; four behavior tests reproduced the regression before a host-local native-status fix. Both code and security rechecks report no remaining introduced findings.
 
@@ -125,3 +131,25 @@ Validation: 12 focused suites / 227 tests PASS, full Node 20 `type-check` PASS, 
 Authenticated browser/backend execution, backend authorization/atomic conflict enforcement, deployment and fresh R3 CI/Sonar are NOT VERIFIED by the local checks above. No live case mutation was performed. Publication is authorized; Jira moves to Code review after PR creation, with current delivery/CI evidence tracked in the issue and PR. Native manual approval, native batch approval, obsolete-confirmation semantics, Push and fix-round polling remain outside this slice. On a side-panel Review read error, retry by closing and reopening the panel; there is no inline Retry control.
 
 For the later runtime check, enable `show_ai_factory_poc`, disable demo overlays, and open a real native AI Draft case with a numeric ID and confirmed project access. Verify one initial Review GET in details; Approve sends the status-only PATCH followed by Review and case refresh, with the authoritative Ready result replacing Draft. Repeat from the Library side panel and verify list refresh. Verify the button is unavailable for Viewer, flag OFF, native manual/Ready cases, unsent comments and active fixing. A real conflict must show localized feedback, refresh both resources and never automatically retry PATCH. This checklist is pending runtime verification, not a recorded pass.
+
+## R4 implementation and local validation
+
+R4 is implemented on `EPMRPP-122689-live-fix-round`, based exactly on PR #5848 head `3ec0526ce12421ab03ae8430cbb88c97c9b3e2e4`. The details Review strip supports native Push for eligible AI Draft and Ready cases. The command sends a bodyless POST to `/review/fix-round`; typed native reads validate actual case/round IDs and statuses. Comment metadata can recover an unambiguous actual round ID; the optional Review round number is never used as a database ID. Without a safe ID, monitoring reads Review only and reports completion neutrally.
+
+Comments, Approve and Push share one synchronous mutation semaphore per Review hook. Accepted starts retain the fixing lock before the command releases its semaphore. Navigation, case/version changes, feature disable and unmount abort requests/timers and invalidate stale handlers. Viewers can observe an existing fix but cannot start one. The details header and approval controls consume the same fixing state; side-panel monitoring refreshes its list on completion and exposes no Push action.
+
+Monitoring uses non-overlapping GETs with a 3-second interval and an independent 30-minute frontend observation deadline, including cancellation of a hung read. A read error, missing round or observation timeout retains known fixing protection and offers read-only retry. These UI states do not set backend FAILED or repeat POST. An uncertain start reconciles Review before another explicit launch is possible. Terminal FIXED, FIXED_GRADE_FAILED and FAILED refresh case/Review with distinct localized feedback; returned version/status/metrics remain authoritative. Feedback survives a same-case version refresh, is cleared for a new observation/resource, and known round completions are deduplicated within the project/case session. UI eligibility does not establish that a source workflow/integration is configured.
+
+Validation on the final local source:
+
+- Full Node 20 `npm run type-check`: PASS.
+- Full `npm run test:coverage -- --runInBand --watch=false --notify=false`: 176 suites / 1799 tests PASS, exit 0.
+- Production `npm run build`: PASS; webpack compiled successfully.
+- Changed-file ESLint: 10 production and 6 test files, zero warnings, PASS. No SCSS changes.
+- Changed production entry-point Madge: 836 files, 6 warnings, no circular dependency.
+- Independent senior code and security reviews: PASS after resumed-round lock, external-round feedback and completion-idempotency fixes. Each reported regression was reproduced before correction.
+- `git diff --check`: PASS.
+
+Publication is authorized; Jira moves to Code review after PR creation, with current delivery and exact-head CI/Sonar evidence tracked in Jira/PR. Authenticated browser/backend execution and real workflow dispatch remain unverified. The 28 h Original Estimate is unchanged planned effort, not measured delivery time. R5 provenance/comparison, native filters/history/diff/cumulative cost, server Auto-Ready cause attribution and R6 workflow verification remain separate scopes. Legacy fix-round handlers and fixtures remain available for legacy consumers.
+
+For later runtime verification, use a project with a configured matching integration/workflow and source iteration, enable the feature flag and disable demo overlays. Add an unsent comment to a real native AI Draft or Ready case; Push must send one bodyless native POST, lock comments/Approve/Edit Scenario immediately, and read the actual returned round ID. Reload during a pending fix and verify safe resume, then verify all three terminal outcomes, case/Review refresh and stale-score removal. Viewer/feature-OFF behavior, conflict, unknown start, read retry and timeout remain runtime QA scenarios; retry monitoring must issue GET only. This checklist is pending runtime evidence.

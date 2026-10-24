@@ -36,6 +36,72 @@ interface LiveReviewStripProps {
 
 const cx = createClassnames(styles);
 
+const FIX_STATUS_MESSAGES = {
+  FIXED: messages.nativeFixFixed,
+  FIXED_GRADE_FAILED: messages.nativeFixGradeFailed,
+  FAILED: messages.nativeFixFailed,
+};
+const MONITOR_ERROR_MESSAGES = {
+  READ: messages.nativeFixReadError,
+  TIMEOUT: messages.nativeFixTimeout,
+  MISSING: messages.nativeFixMissing,
+};
+const START_ERROR_MESSAGES = {
+  CONFLICT: messages.nativeFixConflict,
+  FAILED: messages.nativeFixStartFailed,
+  UNCONFIRMED: messages.nativeFixStartUnconfirmed,
+};
+
+const LiveFixFeedback = ({ reviewState }: Pick<LiveReviewStripProps, 'reviewState'>) => {
+  const { formatMessage } = useIntl();
+  const round = reviewState.fixRoundState;
+  const terminalMessage = round && round.status !== 'PENDING' ? FIX_STATUS_MESSAGES[round.status] : undefined;
+  return (
+    <>
+      {reviewState.fixCompleted && (
+        <output className={cx('review-strip__status')} aria-live="polite">
+          {formatMessage(terminalMessage ?? messages.nativeFixCompleted, { round: round?.roundNumber })}
+        </output>
+      )}
+      {reviewState.fixStartError && (
+        <div role="alert">{formatMessage(START_ERROR_MESSAGES[reviewState.fixStartError])}</div>
+      )}
+      {reviewState.fixMonitoringError && (
+        <div role="alert">
+          {formatMessage(MONITOR_ERROR_MESSAGES[reviewState.fixMonitoringError])}
+          <Button
+            variant="text"
+            adjustWidthOn="content"
+            disabled={reviewState.isLoading || reviewState.isMutating}
+            data-automation-id="retry-fix-monitoring"
+            onClick={reviewState.retryFixMonitoring}
+          >
+            {formatMessage(messages.nativeFixRetry)}
+          </Button>
+        </div>
+      )}
+    </>
+  );
+};
+
+const LivePushButton = ({ reviewState, isReadOnly }: Pick<LiveReviewStripProps, 'reviewState' | 'isReadOnly'>) => {
+  const { formatMessage } = useIntl();
+  if (isReadOnly) return null;
+  const hint = reviewState.fixInProgress ? messages.fixingHint : messages.addAtLeastOne;
+  return (
+    <Button
+      variant="primary"
+      adjustWidthOn="content"
+      disabled={!reviewState.canPush}
+      title={reviewState.canPush ? undefined : formatMessage(hint)}
+      data-automation-id="push-review-comments"
+      onClick={() => void reviewState.pushToAgent?.()}
+    >
+      {formatMessage(messages.push, { count: reviewState.unsentCount })}
+    </Button>
+  );
+};
+
 export const LiveReviewStrip = ({ lifecycle, reviewState, isReadOnly }: LiveReviewStripProps) => {
   const { formatMessage } = useIntl();
   const dispatch = useDispatch();
@@ -71,6 +137,7 @@ export const LiveReviewStrip = ({ lifecycle, reviewState, isReadOnly }: LiveRevi
         )}
       </div>
       <div className={cx('review-strip__actions')}>
+        <LivePushButton reviewState={reviewState} isReadOnly={isReadOnly} />
         {reviewState.unsentCount > 0 && !isReadOnly && (
           <Button
             variant="text-danger"
@@ -100,6 +167,7 @@ export const LiveReviewStrip = ({ lifecycle, reviewState, isReadOnly }: LiveRevi
           )}
         </output>
       )}
+      <LiveFixFeedback reviewState={reviewState} />
       {reviewState.isError && <div role="alert">{formatMessage(messages.loadError)}</div>}
       {reviewState.isMutationError && (
         <div role="alert">{formatMessage(messages.mutationError)}</div>

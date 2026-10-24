@@ -194,12 +194,22 @@ describe('TestCaseSidePanel native approval', () => {
     expect(useLiveReviewComments).toHaveBeenLastCalledWith('demo', 42, true, {
       canApprove: true,
       versionId: 100,
+      onFixCompleted: expect.any(Function),
+      allowPush: false,
     });
     const approval = wrapper.find(NativeApproveButton);
     expect(approval.prop('reviewState')).toBe(reviewState);
     (approval.prop('onRefresh') as () => void)();
     expect(mockRefetch).toHaveBeenCalledTimes(1);
     expect(wrapper.find('ApproveButton')).toHaveLength(0);
+  });
+
+  test('refreshes the currently displayed list after monitoring completes and never enables side-panel Push', () => {
+    shallow(<TestCaseSidePanel testCase={nativeCase} isVisible onClose={jest.fn()} />);
+    const options = jest.mocked(useLiveReviewComments).mock.lastCall?.[3];
+    expect(options).toMatchObject({ allowPush: false, versionId: 100 });
+    options?.onFixCompleted?.();
+    expect(mockRefetch).toHaveBeenCalledTimes(1);
   });
 
   test.each(['hidden', 'manual', 'ready', 'flag-off', 'viewer'] as const)(
@@ -235,6 +245,8 @@ describe('TestCaseSidePanel native approval', () => {
       expect(useLiveReviewComments).toHaveBeenLastCalledWith('demo', 42, expect.any(Boolean), {
         canApprove: variant === 'viewer',
         versionId: 100,
+        onFixCompleted: expect.any(Function),
+        allowPush: false,
       });
     },
   );

@@ -343,7 +343,8 @@ const getTestCaseReadState = (
   return {
     testCaseDetails,
     nativeSummary,
-    isNativeReviewEnabled: nativeSummary?.isAi === true,
+    isNativeReviewEnabled: nativeSummary?.isAi === true &&
+      (nativeSummary.status === 'DRAFT' || nativeSummary.status === 'READY'),
     isLegacyAiEnabled: isAiFactoryEnabled && !hasNativeTestCaseData(testCaseDetails),
   };
 };
@@ -473,9 +474,13 @@ export const TestCaseDetailsPage = () => {
   const automationDetails = aiDetailsState.data?.automation;
   const isAiReviewEnabled = isLegacyAiEnabled && Boolean(testCaseDetails?.ai);
   const reviewState = useReviewComments(projectKey, testCaseId, isAiReviewEnabled);
+  const refreshAfterNativeFix = useCallback(() => {
+    dispatch({ type: GET_TEST_CASE_DETAILS, payload: { testCaseId } });
+  }, [dispatch, testCaseId]);
   const nativeReviewState = useLiveReviewComments(projectKey, testCaseId, isNativeReviewEnabled, {
     canApprove: nativeSummary?.status === 'DRAFT',
     versionId: testCaseDetails?.defaultVersionId,
+    onFixCompleted: refreshAfterNativeFix,
   });
   const refreshAfterFixRoundStart = useCallback(() => {
     reviewState.reload();

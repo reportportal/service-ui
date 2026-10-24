@@ -14,21 +14,33 @@
  * limitations under the License.
  */
 
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useLayoutEffect, useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
 
-import { URLS } from 'common/urls';
-import { fetch } from 'common/utils';
 import { idSelector } from 'controllers/user';
 import { useUserPermissions } from 'hooks/useUserPermissions';
-import { CommentState } from 'types/aiFactory';
-import { approveNativeTestCase } from 'pages/inside/aiFactory/approval/nativeApproval';
 import type { ReviewCommentPayload, ReviewCommentRS } from 'types/aiFactory';
+import type { FixStartError, NativeFixRound } from 'pages/inside/aiFactory/review/liveFixRounds';
 import {
-  normalizeLiveReview,
-  toLiveReviewCommentPayload,
-} from 'pages/inside/aiFactory/review/liveReviewComments';
-import type { LiveReviewData } from 'pages/inside/aiFactory/review/liveReviewComments';
+  createReviewSnapshot,
+  isFixInProgress,
+  refreshLiveReview,
+  retryLiveFixObservation,
+  stopReviewObservation,
+} from 'pages/inside/aiFactory/review/liveFixRoundMonitor';
+import type {
+  FixMonitoringError,
+  ReviewScope,
+  ReviewSnapshot,
+} from 'pages/inside/aiFactory/review/liveFixRoundMonitor';
+import {
+  addLiveReviewComment,
+  approveLiveReview,
+  canPushLiveReview,
+  deleteLiveReviewComment,
+  discardLiveReviewComments,
+  pushLiveReviewToAgent,
+} from 'pages/inside/aiFactory/review/liveReviewCommands';
 
 export interface LiveReviewCommentsLoadState {
   resourceKey: object;
@@ -38,6 +50,13 @@ export interface LiveReviewCommentsLoadState {
   unsentCount: number;
   fixInProgress: boolean;
   fixRound?: number;
+  fixRoundState?: NativeFixRound;
+  fixMonitoringError?: FixMonitoringError;
+  fixStartError?: FixStartError;
+  fixCompleted?: boolean;
+  canPush?: boolean;
+  pushToAgent?: () => Promise<boolean>;
+  retryFixMonitoring?: () => void;
   isLoaded: boolean;
   isLoading: boolean;
   isError: boolean;
@@ -52,244 +71,146 @@ export interface LiveReviewCommentsLoadState {
 interface LiveReviewCommentsOptions {
   canApprove?: boolean;
   versionId?: number;
+  allowPush?: boolean;
+  onFixCompleted?: () => void;
 }
 
-interface ReviewScope {
-  versionId?: number;
+interface CompletionIdentity {
   projectKey: string;
   testCaseId: number;
-  isEnabled: boolean;
-  active: boolean;
-  canReview: boolean;
-  canApprove: boolean;
-  approvalGeneration: number;
-  isApproved: boolean;
-  userId?: number;
-  generation: number;
-  isLoading: boolean;
-  review?: LiveReviewData;
-  mutation?: AbortController;
+  isResourceEnabled: boolean;
+  completedRoundIds: Set<number>;
 }
 
-interface ReviewState {
-  scope?: ReviewScope;
-  data?: LiveReviewData;
-  isLoading: boolean;
-  isError: boolean;
-  isMutating: boolean;
-  isMutationError: boolean;
-}
-
-const INITIAL_STATE: ReviewState = {
-  isLoading: false,
-  isError: false,
-  isMutating: false,
-  isMutationError: false,
+const recordRoundCompletion = (identity: CompletionIdentity, roundId?: number): boolean => {
+  if (roundId === undefined) return true;
+  if (identity.completedRoundIds.has(roundId)) return false;
+  identity.completedRoundIds.add(roundId);
+  return true;
 };
+
+interface ScopedSnapshot extends ReviewSnapshot {
+  scope?: ReviewScope;
+}
 const EMPTY_COMMENTS: ReviewCommentRS[] = [];
 
-const canMutate = (scope: ReviewScope): boolean =>
-  scope.active &&
-  scope.canReview &&
-  Boolean(scope.review) &&
-  !scope.review?.fixInProgress &&
-  !scope.isLoading &&
-  !scope.mutation;
+const updateScopePermissions = (
+  scope: ReviewScope,
+  canReview: boolean,
+  canApprove: boolean,
+  userId: number | undefined,
+  allowPush: boolean,
+  isDraft: boolean,
+): void => {
+  if (scope.canReview !== canReview || scope.userId !== userId || scope.canApprove !== canApprove)
+    scope.commandGeneration += 1;
+  if (scope.canApprove !== canApprove) scope.approvalGeneration += 1;
+  scope.canReview = canReview;
+  scope.canApprove = canApprove;
+  scope.userId = userId;
+  scope.allowPush = allowPush;
+  if (!isDraft) scope.isApproved = false;
+};
+
+const updateCompletionCallback = (scope: ReviewScope, callback?: () => void): void => {
+  scope.completedCallback = callback;
+};
+
+const activateReviewScope = (scope: ReviewScope): (() => void) => {
+  scope.active = true;
+  void refreshLiveReview(scope);
+  return () => {
+    scope.active = false;
+    scope.mutation?.abort();
+    stopReviewObservation(scope, true);
+  };
+};
 
 export const useLiveReviewComments = (
   projectKey: string,
   testCaseId: number,
   isEnabled: boolean,
-  { canApprove = false, versionId }: LiveReviewCommentsOptions = {},
+  { canApprove = false, versionId, allowPush = true, onFixCompleted }: LiveReviewCommentsOptions = {},
 ): LiveReviewCommentsLoadState => {
   const { canReviewAiTestCases } = useUserPermissions();
   const currentUserId = useSelector(idSelector) as number | undefined;
-  const isResourceEnabled =
-    isEnabled && Boolean(projectKey) && Number.isSafeInteger(testCaseId) && testCaseId > 0;
-  const scope = useMemo<ReviewScope>(
-    () => ({
-      versionId,
-      projectKey,
-      testCaseId,
-      isEnabled: isResourceEnabled,
-      active: false,
-      canReview: false,
-      canApprove: false,
-      approvalGeneration: 0,
-      isApproved: false,
-      generation: 0,
-      isLoading: true,
-    }),
-    [projectKey, testCaseId, isResourceEnabled, versionId],
-  );
-  const currentScope = useRef(scope);
-  currentScope.current = scope;
-  scope.canReview = canReviewAiTestCases;
-  const isApprovalEnabled = canApprove && canReviewAiTestCases && isResourceEnabled;
-  if (scope.canApprove !== isApprovalEnabled) scope.approvalGeneration += 1;
-  scope.canApprove = isApprovalEnabled;
-  if (!canApprove) scope.isApproved = false;
-  const approvalGeneration = scope.approvalGeneration;
-  scope.userId = currentUserId;
-  const [state, setState] = useState<ReviewState>(INITIAL_STATE);
-  const [requestIndex, setRequestIndex] = useState(0);
-  const reload = useCallback(() => {
-    if (currentScope.current === scope && scope.active) {
-      scope.isLoading = true;
-      scope.generation += 1;
-      setRequestIndex((index) => index + 1);
-    }
-  }, [scope]);
-  const isCurrent = useCallback(() => currentScope.current === scope && scope.active, [scope]);
-
-  useEffect(() => {
-    if (!isResourceEnabled) return undefined;
-    scope.active = true;
-    return () => {
-      scope.active = false;
-      scope.mutation?.abort();
+  const [state, setState] = useState<ScopedSnapshot>(createReviewSnapshot);
+  const isResourceEnabled = isEnabled && Boolean(projectKey) &&
+    Number.isSafeInteger(testCaseId) && testCaseId > 0;
+  const feedbackKey = useMemo<CompletionIdentity>(() => ({
+    projectKey, testCaseId, isResourceEnabled, completedRoundIds: new Set<number>(),
+  }),
+    [projectKey, testCaseId, isResourceEnabled]);
+  const [completion, setCompletion] = useState<{ key: object; round?: NativeFixRound }>();
+  const scope = useMemo<ReviewScope>(() => {
+    const next: ReviewScope = {
+      projectKey, testCaseId, versionId, isEnabled: isResourceEnabled,
+      active: false, canReview: false, canApprove: false, allowPush: false,
+      approvalGeneration: 0, commandGeneration: 0, generation: 0,
+      isApproved: false, isLoading: true, isFixLocked: false,
+      observedFixing: false, completionPending: false,
+      snapshot: createReviewSnapshot(),
+      isCurrent: () => next.active && next.isEnabled,
+      publish: () => {
+        if (next.isCurrent()) setState({ ...next.snapshot, scope: next });
+      },
+      onObservationStarted: () => setCompletion(undefined),
+      onCompleted: () => {
+        const round = next.snapshot.fixRoundState;
+        const shouldNotify = recordRoundCompletion(feedbackKey, round?.id);
+        setCompletion({ key: feedbackKey, round });
+        if (shouldNotify) next.completedCallback?.();
+      },
     };
+    return next;
+  }, [projectKey, testCaseId, versionId, isResourceEnabled, feedbackKey]);
+  useLayoutEffect(() => {
+    updateCompletionCallback(scope, onFixCompleted);
+  }, [scope, onFixCompleted]);
+  updateScopePermissions(scope, canReviewAiTestCases,
+    canApprove && canReviewAiTestCases && isResourceEnabled, currentUserId, allowPush, canApprove);
+  const epoch = scope.commandGeneration;
+  const approvalEpoch = scope.approvalGeneration;
+
+  useLayoutEffect(() => {
+    if (!isResourceEnabled) return undefined;
+    return activateReviewScope(scope);
   }, [isResourceEnabled, scope]);
 
-  useEffect(() => {
-    if (!isResourceEnabled) return undefined;
-    const controller = new AbortController();
-    scope.generation += 1;
-    const generation = scope.generation;
-    scope.isLoading = true;
-    setState((previous) => ({
-      ...(previous.scope === scope ? previous : INITIAL_STATE),
-      scope,
-      isLoading: true,
-      isError: false,
-    }));
-    void fetch<unknown>(URLS.liveTestCaseReview(projectKey, testCaseId), {
-      signal: controller.signal,
-    })
-      .then((response) => {
-        if (!isCurrent() || controller.signal.aborted || generation !== scope.generation) return;
-        const data = normalizeLiveReview(response, scope.userId);
-        scope.review = data;
-        scope.isLoading = false;
-        setState((previous) => ({ ...previous, scope, data, isLoading: false, isError: false }));
-      })
-      .catch(() => {
-        if (!isCurrent() || controller.signal.aborted || generation !== scope.generation) return;
-        scope.review = undefined;
-        scope.isLoading = false;
-        setState((previous) => ({
-          ...previous,
-          scope,
-          isLoading: false,
-          isError: true,
-        }));
-      });
-    return () => controller.abort();
-  }, [isResourceEnabled, isCurrent, projectKey, requestIndex, scope, testCaseId]);
-
-  const mutate = useCallback(
-    async (url: string, method: 'POST' | 'DELETE', data?: unknown) => {
-      if (!isCurrent() || !canMutate(scope)) return false;
-      const controller = new AbortController();
-      scope.mutation = controller;
-      setState((previous) => ({ ...previous, isMutating: true, isMutationError: false }));
-      try {
-        await fetch(url, { method, data, signal: controller.signal });
-        if (!isCurrent() || controller.signal.aborted) return false;
-        reload();
-        return true;
-      } catch (error: unknown) {
-        if (!isCurrent() || controller.signal.aborted) return false;
-        setState((previous) => ({ ...previous, isMutationError: true }));
-        reload();
-        throw error;
-      } finally {
-        if (isCurrent() && scope.mutation === controller) {
-          scope.mutation = undefined;
-          setState((previous) => ({ ...previous, isMutating: false }));
-        }
-      }
-    },
-    [isCurrent, reload, scope],
-  );
-
-  const approveReady = useCallback(async () => {
-    if (!isCurrent() || !canMutate(scope) || !scope.canApprove || scope.isApproved) return false;
-    if (approvalGeneration !== scope.approvalGeneration) return false;
-    if (scope.review?.unsentCount !== 0) return false;
-    const controller = new AbortController();
-    const isCurrentApproval = () =>
-      isCurrent() &&
-      !controller.signal.aborted &&
-      scope.canApprove &&
-      approvalGeneration === scope.approvalGeneration;
-    scope.mutation = controller;
-    setState((previous) => ({ ...previous, isMutating: true, isMutationError: false }));
-    try {
-      await approveNativeTestCase(projectKey, testCaseId, controller.signal);
-      if (!isCurrentApproval()) return false;
-      scope.isApproved = true;
-      reload();
-      return true;
-    } catch (error: unknown) {
-      if (!isCurrentApproval()) return false;
-      reload();
-      throw error;
-    } finally {
-      if (isCurrent() && scope.mutation === controller) {
-        scope.mutation = undefined;
-        setState((previous) => ({ ...previous, isMutating: false }));
-      }
-    }
-  }, [approvalGeneration, isCurrent, projectKey, reload, scope, testCaseId]);
-
-  const addComment = useCallback(
-    async (payload: ReviewCommentPayload) => {
-      if (!isCurrent() || !canMutate(scope)) return false;
-      return await mutate(
-        URLS.liveTestCaseReviewComments(projectKey, testCaseId),
-        'POST',
-        toLiveReviewCommentPayload(payload),
-      );
-    },
-    [isCurrent, mutate, projectKey, scope, testCaseId],
-  );
-
-  const deleteComment = useCallback(
-    async (commentId: number) => {
-      const comment = scope.review?.comments.find(({ id }) => id === commentId);
-      if (comment?.author.id !== scope.userId || comment?.state !== CommentState.PENDING)
-        return false;
-      return await mutate(
-        URLS.liveTestCaseReviewCommentById(projectKey, testCaseId, commentId),
-        'DELETE',
-      );
-    },
-    [mutate, projectKey, scope, testCaseId],
-  );
-
-  const discardPending = useCallback(async () => {
-    if (!scope.review?.unsentCount) return false;
-    return await mutate(URLS.liveTestCaseReviewComments(projectKey, testCaseId), 'DELETE');
-  }, [mutate, projectKey, scope, testCaseId]);
+  const reload = useCallback(() => { void refreshLiveReview(scope); }, [scope]);
+  const addComment = useCallback((payload: ReviewCommentPayload) =>
+    addLiveReviewComment(scope, epoch, payload), [epoch, scope]);
+  const deleteComment = useCallback((id: number) =>
+    deleteLiveReviewComment(scope, epoch, id), [epoch, scope]);
+  const discardPending = useCallback(() => discardLiveReviewComments(scope, epoch), [epoch, scope]);
+  const approveReady = useCallback(() =>
+    approveLiveReview(scope, epoch, approvalEpoch), [approvalEpoch, epoch, scope]);
+  const pushToAgent = useCallback(() => {
+    if (canPushLiveReview(scope)) setCompletion(undefined);
+    return pushLiveReviewToAgent(scope, epoch);
+  }, [epoch, scope]);
+  const retryFixMonitoring = useCallback(() => retryLiveFixObservation(scope), [scope]);
   const isCurrentState = isResourceEnabled && state.scope === scope;
   const data = isCurrentState ? state.data : undefined;
+  const fixing = isCurrentState && isFixInProgress(scope);
+  const completed = completion?.key === feedbackKey && !fixing;
   return {
-    resourceKey: scope,
-    approveReady,
+    resourceKey: scope, approveReady, reload, addComment, deleteComment, discardPending,
+    pushToAgent, retryFixMonitoring,
     isApproved: isCurrentState && scope.isApproved,
+    canPush: isCurrentState && canPushLiveReview(scope),
     comments: data?.comments ?? EMPTY_COMMENTS,
     unsentCount: data?.unsentCount ?? 0,
-    fixInProgress: data?.fixInProgress ?? false,
-    fixRound: data?.fixRound,
+    fixInProgress: fixing,
+    fixRound: data?.fixRound ?? (isCurrentState ? state.fixRoundState?.roundNumber : undefined),
+    fixRoundState: (isCurrentState ? state.fixRoundState : undefined) ?? (completed ? completion?.round : undefined),
+    fixMonitoringError: isCurrentState ? state.fixMonitoringError : undefined,
+    fixStartError: isCurrentState ? state.fixStartError : undefined,
+    fixCompleted: completed || (isCurrentState && state.fixCompleted),
     isLoaded: Boolean(data) && !state.isError && isCurrentState,
     isLoading: isResourceEnabled && (!isCurrentState || state.isLoading),
     isError: isCurrentState && state.isError,
     isMutating: isCurrentState && state.isMutating,
     isMutationError: isCurrentState && state.isMutationError,
-    reload,
-    addComment,
-    deleteComment,
-    discardPending,
   };
 };

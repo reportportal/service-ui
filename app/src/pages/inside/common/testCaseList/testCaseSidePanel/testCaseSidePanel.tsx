@@ -206,11 +206,13 @@ export const TestCaseSidePanel = memo(
     const isNativeDraft =
       isVisible && nativeSummary?.isAi === true && nativeSummary.status === 'DRAFT';
 
+    const refetchCurrentTestCases = useRefetchCurrentTestCases();
     const nativeReviewState = useLiveReviewComments(projectKey, testCase?.id ?? 0, isNativeDraft, {
       canApprove: isNativeDraft,
       versionId: testCase?.defaultVersionId,
+      allowPush: false,
+      onFixCompleted: refetchCurrentTestCases,
     });
-    const refetchCurrentTestCases = useRefetchCurrentTestCases();
     const addToLaunchAction = useAddToLaunchAction({
       testCaseId: testCase?.id ?? 0,
       manualScenario: testCase?.manualScenario,

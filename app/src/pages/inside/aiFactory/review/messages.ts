@@ -17,6 +17,50 @@
 import { defineMessages } from 'react-intl';
 
 export const messages = defineMessages({
+  nativeFixFixed: {
+    id: 'AiReview.nativeFixFixed',
+    defaultMessage: 'Fix round {round} finished. The latest Test Case has been refreshed.',
+  },
+  nativeFixGradeFailed: {
+    id: 'AiReview.nativeFixGradeFailed',
+    defaultMessage: 'Fix round {round} updated the scenario, but grading failed. Review the latest Draft.',
+  },
+  nativeFixFailed: {
+    id: 'AiReview.nativeFixFailed',
+    defaultMessage: 'Fix round {round} failed. Review the current comments before pushing again.',
+  },
+  nativeFixCompleted: {
+    id: 'AiReview.nativeFixCompleted',
+    defaultMessage: 'The fix is no longer in progress. The latest Test Case has been refreshed.',
+  },
+  nativeFixStartFailed: {
+    id: 'AiReview.nativeFixStartFailed',
+    defaultMessage: 'The fix round could not be started. Refresh the review before trying again.',
+  },
+  nativeFixStartUnconfirmed: {
+    id: 'AiReview.nativeFixStartUnconfirmed',
+    defaultMessage: 'The start could not be confirmed. Checking the current fix before another push is allowed.',
+  },
+  nativeFixConflict: {
+    id: 'AiReview.nativeFixConflict',
+    defaultMessage: 'The Test Case changed or a fix is already in progress. Review the refreshed state.',
+  },
+  nativeFixReadError: {
+    id: 'AiReview.nativeFixReadError',
+    defaultMessage: 'Fix monitoring paused because its status could not be loaded. Retry monitoring to check the current fix.',
+  },
+  nativeFixTimeout: {
+    id: 'AiReview.nativeFixTimeout',
+    defaultMessage: 'Fix monitoring paused after 30 minutes. The agent may still be working. Retry monitoring to check its status.',
+  },
+  nativeFixMissing: {
+    id: 'AiReview.nativeFixMissing',
+    defaultMessage: 'This fix round could not be found. The review has been refreshed. Retry monitoring to check again.',
+  },
+  nativeFixRetry: {
+    id: 'AiReview.nativeFixRetry',
+    defaultMessage: 'Retry monitoring',
+  },
   userById: {
     id: 'AiReview.userById',
     defaultMessage: 'User {id}',

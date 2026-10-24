@@ -22,6 +22,7 @@ export interface LiveReviewData {
   unsentCount: number;
   fixInProgress: boolean;
   fixRound?: number;
+  fixRoundId?: number;
 }
 
 export interface LiveReviewCommentPayload {
@@ -111,6 +112,19 @@ const readComment = (value: unknown, currentUserId?: number): ReviewCommentRS =>
   };
 };
 
+const findCurrentFixRoundId = (review: Record<string, unknown>): number | undefined => {
+  const roundNumber = optionalRound(review.fixRound);
+  const ids = new Set<number>();
+  (review.comments as unknown[]).forEach((value) => {
+    const comment = asRecord(value);
+    const id = optionalRound(comment.fixRoundId);
+    if (id !== undefined && roundNumber !== undefined && comment.roundNumber === roundNumber) {
+      ids.add(id);
+    }
+  });
+  return ids.size === 1 ? [...ids][0] : undefined;
+};
+
 export const normalizeLiveReview = (value: unknown, currentUserId?: number): LiveReviewData => {
   const review = asRecord(value);
   if (!Array.isArray(review.comments) || typeof review.fixInProgress !== 'boolean')
@@ -126,6 +140,7 @@ export const normalizeLiveReview = (value: unknown, currentUserId?: number): Liv
     unsentCount: review.unsentCount,
     fixInProgress: review.fixInProgress,
     fixRound: optionalRound(review.fixRound),
+    fixRoundId: findCurrentFixRoundId(review),
   };
 };
 

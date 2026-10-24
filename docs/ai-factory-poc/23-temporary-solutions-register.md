@@ -38,6 +38,12 @@ Automation tests retain the former iteration DTO projections through a test-only
 
 Validation: 15 focused suites / 280 tests, final Node 20 type-check, changed-file ESLint/Stylelint, diff-check and production build PASS. Madge processed 264 files with 6 warnings and found no circular dependency; independent senior code and security reviews PASS. The dependent cleanup PR targets R3's branch while #5847 remains open, with final target `bootcamp-prototype`. Current delivery/CI evidence is tracked in Jira/PR; no authenticated backend/browser run, merge or deployment was performed.
 
+## TMP-06 update — native Push and fix-round monitoring (2026-10-24)
+
+[EPMRPP-122689](https://jiraeu.epam.com/browse/EPMRPP-122689) replaces the native details Push path with bodyless `/review/fix-round` POST and validated round/Review reads. Native AI Draft and Ready cases use authoritative Review guards and one shared comment/Approve/Push mutation lock. Monitoring safely restores actual IDs, preserves fixing protection on uncertain starts/read errors/timeouts, and refreshes case/Review with distinct terminal outcomes. Legacy `/fix-round` handlers remain for legacy consumers.
+
+Local R4 validation passes: full coverage 176 suites / 1799 tests, type-check, production build, changed-file ESLint and independent reviews. The branch starts exactly at PR #5848 head `3ec0526ce`; publication is authorized with delivery/CI evidence tracked in Jira/PR, while authenticated backend/workflow verification remains pending. R5 provenance/comparison and R6 integration/workflow evidence remain open, so TMP-06 stays **partially removed**. See [R4 contract, evidence and pending runtime checklist](25-live-review-fix-round-integration-2026-10-24.md).
+
 ## Rule for closing a row
 
 For the relevant FE task, record the real endpoint and response evidence, replace the consuming
