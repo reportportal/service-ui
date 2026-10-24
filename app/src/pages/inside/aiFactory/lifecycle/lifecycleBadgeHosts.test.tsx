@@ -25,7 +25,7 @@ import { AiChip, LifecycleBadge, ScoreChip } from 'pages/inside/aiFactory/common
 import { NativeTestCaseSummary } from 'pages/inside/aiFactory/common/nativeTestCaseSummary/nativeTestCaseSummary';
 import { useTestCaseAi } from 'pages/inside/aiFactory/lifecycle';
 import { EvaluationMini } from 'pages/inside/aiFactory/evaluation';
-import { ApproveButton } from 'pages/inside/aiFactory/approval';
+import { ApproveButton, NativeApproveButton } from 'pages/inside/aiFactory/approval';
 import { ReviewFlags } from 'pages/inside/aiFactory/library/reviewFlags';
 import { LaunchBlockedBanner } from 'pages/inside/aiFactory/readyOnlyGate';
 import { useDeleteTestCaseModal } from 'pages/inside/testCaseLibraryPage/deleteTestCaseModal';
@@ -187,7 +187,28 @@ jest.mock('pages/inside/aiFactory/evaluation', () => ({ EvaluationMini: 'mock-Ev
 jest.mock('pages/inside/aiFactory/common/nativeTestCaseSummary/nativeTestCaseSummary', () => ({
   NativeTestCaseSummary: 'mock-NativeTestCaseSummary',
 }));
-jest.mock('pages/inside/aiFactory/approval', () => ({ ApproveButton: 'mock-ApproveButton' }));
+jest.mock('pages/inside/aiFactory/approval', () => ({
+  ApproveButton: 'mock-ApproveButton',
+  NativeApproveButton: 'mock-NativeApproveButton',
+}));
+// Review requests are covered separately; this suite isolates badge hosts and AI details reads.
+jest.mock('pages/inside/aiFactory/review/useLiveReviewComments', () => ({
+  useLiveReviewComments: () => ({
+    resourceKey: {},
+    comments: [],
+    unsentCount: 0,
+    fixInProgress: false,
+    isLoaded: true,
+    isLoading: false,
+    isError: false,
+    isMutating: false,
+    isMutationError: false,
+    reload: jest.fn(),
+    addComment: jest.fn(() => Promise.resolve(false)),
+    deleteComment: jest.fn(() => Promise.resolve(false)),
+    discardPending: jest.fn(() => Promise.resolve(false)),
+  }),
+}));
 jest.mock('pages/inside/aiFactory/lifecycle', () => ({
   useTestCaseAi: jest.fn(() => ({
     data: null,
@@ -262,6 +283,9 @@ const renderHosts = (
     sidePanel: shallow(<TestCaseSidePanel testCase={caseToRender} isVisible onClose={jest.fn()} />),
   };
 };
+
+const getHeaderApproval = (header: ReturnType<typeof shallow>) =>
+  (header.find('TestCaseApproval') as typeof header & { dive: () => typeof header }).dive();
 
 describe('lifecycle badges in test case hosts', () => {
   beforeEach(() => {
@@ -353,7 +377,12 @@ describe('lifecycle badges in test case hosts', () => {
         showIdentity: true,
         summary: { isAi: origin === 'AI', status },
       });
-      expect(header.find(ApproveButton)).toHaveLength(0);
+      expect(getHeaderApproval(header).find(ApproveButton)).toHaveLength(0);
+      expect(getHeaderApproval(header).find(NativeApproveButton).prop('testCase')).toMatchObject({
+        origin,
+        status,
+      });
+      expect(sidePanel.find(NativeApproveButton)).toHaveLength(origin === 'AI' ? 1 : 0);
       expect(header.find('mock-PopoverControl').prop('items')).not.toEqual(
         expect.arrayContaining([expect.objectContaining({ label: 'Automate' })]),
       );
@@ -386,6 +415,7 @@ describe('lifecycle badges in test case hosts', () => {
 
     expect(fetch).not.toHaveBeenCalled();
     expect(sidePanel.find(ApproveButton)).toHaveLength(0);
+    expect(sidePanel.find(NativeApproveButton)).toHaveLength(1);
     expect(sidePanel.find(EvaluationMini)).toHaveLength(0);
     sidePanel.unmount();
   });
@@ -396,8 +426,10 @@ describe('lifecycle badges in test case hosts', () => {
 
     expect(header.find(NativeTestCaseSummary)).toHaveLength(0);
     expect(sidePanel.find(NativeTestCaseSummary)).toHaveLength(0);
-    expect(header.find(ApproveButton)).toHaveLength(0);
+    expect(getHeaderApproval(header).find(ApproveButton)).toHaveLength(0);
+    expect(getHeaderApproval(header).find(NativeApproveButton)).toHaveLength(0);
     expect(sidePanel.find(ApproveButton)).toHaveLength(0);
+    expect(sidePanel.find(NativeApproveButton)).toHaveLength(0);
   });
 
   test.each([
@@ -441,13 +473,29 @@ describe('lifecycle badges in test case hosts', () => {
     const viewer = renderHosts(true, draftCase, false);
     const toggleOff = renderHosts(false, draftCase, true);
 
-    expect(permitted.header.find(ApproveButton)).toHaveLength(1);
+    expect(getHeaderApproval(permitted.header).find(ApproveButton)).toHaveLength(1);
     expect(permitted.sidePanel.find(ApproveButton)).toHaveLength(1);
-    expect(viewer.header.find(ApproveButton)).toHaveLength(0);
+    expect(getHeaderApproval(viewer.header).find(ApproveButton)).toHaveLength(0);
     expect(viewer.sidePanel.find(ApproveButton)).toHaveLength(0);
-    expect(toggleOff.header.find(ApproveButton)).toHaveLength(0);
+    expect(getHeaderApproval(toggleOff.header).find(ApproveButton)).toHaveLength(0);
     expect(toggleOff.sidePanel.find(ApproveButton)).toHaveLength(0);
   });
+
+  test.each([
+    { origin: 'AI', status: 'READY', canReview: true },
+    { origin: 'MANUAL', status: 'DRAFT', canReview: true },
+    { origin: 'AI', status: 'DRAFT', canReview: false },
+  ] as const)(
+    'keeps side-panel native approval hidden for $origin/$status (reviewer=$canReview)',
+    ({ origin, status, canReview }) => {
+      const nativeCase = { ...testCase, origin, status };
+      const { header, sidePanel } = renderHosts(true, nativeCase, canReview);
+
+      expect(sidePanel.find(NativeApproveButton)).toHaveLength(0);
+      expect(sidePanel.find(ApproveButton)).toHaveLength(0);
+      expect(getHeaderApproval(header).find(ApproveButton)).toHaveLength(0);
+    },
+  );
 
   test('gates Test Plan actions and shows the blocked-plan banner for a planned Draft case', () => {
     const draftCase = {
