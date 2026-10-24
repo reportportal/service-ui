@@ -67,9 +67,15 @@ Started 2026-10-24 on `EPMRPP-122689-live-fix-round` from PR [#5848](https://git
 
 ## R5 — Fix iterations and scope
 
+Started 2026-10-24 on `EPMRPP-122690-live-fix-iteration-provenance`, based on PR [#5849](https://github.com/reportportal/service-ui/pull/5849) head `b14bbb58ed045b9e33c18c0a69b7751f7cbcfa5d`. R4's exact-head Build completed successfully. Jira is In Progress; Original Estimate remains 20 h (4 / 11 / 5). R5 implementation and publication are authorized; no backend mutation or real workflow dispatch is included.
+
 - Represent a fix round as its own iteration, using `rerunOf` and supplied fix-round attributes, without adding its cost to the original iteration.
+- Read provenance uses `rerunOf: {id, iterationNumber}`. The `fixRoundId` NONE attribute supplies the actual round link; `fixRound` META is display text only. An ordinary `rerunOf` is not sufficient to classify a fix iteration.
 - Refresh the original Review and navigate using real pipeline/iteration identities when available.
+- Round DTOs have iteration IDs but no pipeline ID. Resolve only explicit references through the canonical project-scoped iteration-by-ID GET and validate returned identity before constructing routes. Never infer a pipeline, subtract an iteration number or parse a `TC...` display label into an ID.
 - Avoid presenting different-scope suite totals as a regression. Preserve existing generic comparison behavior for ordinary iterations.
+- Fix comparisons remain neutral even when backend `sameScope` is true: the source handoff copies comparison-key attributes while comparing one repaired case against the original suite. Show independent iteration values without aggregate delta/verdict or unsupported case-level comparison; leave ordinary Compare semantics unchanged.
+- An accepted LP3 refresh must re-read its referenced Library rows even if the linked IDs are unchanged. Preserve exact display-ID lookup, deduplication and the existing limit; do not fetch all cases or fan out native Review reads.
 - Keep absent provenance unavailable; verify different-scope, missing metadata, errors and stale responses.
 
 ## R6 — GitHub Actions journey verification
@@ -90,7 +96,7 @@ Started 2026-10-24 on `EPMRPP-122689-live-fix-round` from PR [#5848](https://git
 
 ## Execution evidence
 
-All six Jira subtasks were created with Original Estimates and breakdown comments on 2026-10-24. R1–R3 are submitted for review; R4 is implemented and validated locally as recorded below. R5 remains pending, and R6 also awaits actual integration/workflow configuration. The user authorized R1–R4 publication on 2026-10-24; delivery and exact-head CI evidence are tracked in their Jira issues and PRs. No deployment or manual workflow trigger is included.
+All six Jira subtasks were created with Original Estimates and breakdown comments on 2026-10-24. R1–R4 are submitted for review. R5 is implemented locally on its own branch; its validation evidence is recorded below. R6 awaits actual integration/workflow configuration. The user authorized R1–R4 publication on 2026-10-24; delivery and exact-head CI evidence are tracked in their Jira issues and PRs. R5 publication is also authorized; delivery evidence will be recorded in Jira/PR. No deployment or manual workflow trigger is included.
 
 R1 implements native DTO/read presentation, current-version score/model/cost, native-before-overlay precedence (including scenario-update responses), and guards unsupported provisional actions. The first code review found that removing legacy lifecycle data bypassed Draft eligibility checks; four behavior tests reproduced the regression before a host-local native-status fix. Both code and security rechecks report no remaining introduced findings.
 
@@ -153,3 +159,26 @@ Validation on the final local source:
 Publication is authorized; Jira moves to Code review after PR creation, with current delivery and exact-head CI/Sonar evidence tracked in Jira/PR. Authenticated browser/backend execution and real workflow dispatch remain unverified. The 28 h Original Estimate is unchanged planned effort, not measured delivery time. R5 provenance/comparison, native filters/history/diff/cumulative cost, server Auto-Ready cause attribution and R6 workflow verification remain separate scopes. Legacy fix-round handlers and fixtures remain available for legacy consumers.
 
 For later runtime verification, use a project with a configured matching integration/workflow and source iteration, enable the feature flag and disable demo overlays. Add an unsent comment to a real native AI Draft or Ready case; Push must send one bodyless native POST, lock comments/Approve/Edit Scenario immediately, and read the actual returned round ID. Reload during a pending fix and verify safe resume, then verify all three terminal outcomes, case/Review refresh and stale-score removal. Viewer/feature-OFF behavior, conflict, unknown start, read retry and timeout remain runtime QA scenarios; retry monitoring must issue GET only. This checklist is pending runtime evidence.
+
+## R5 implementation and local validation
+
+R5 is implemented locally on `EPMRPP-122690-live-fix-iteration-provenance`, based on R4 `b14bbb58e`. LP2/LP3 preserve a validated `rerunOf.id` and an optional valid display number. Fix markers come from supplied `fixRoundId`/`fixRound` attributes; an ordinary rerun is not relabeled as a fix. Pipeline cards show provenance as text without nested links, while details and the native Review strip offer **Show iteration links**.
+
+That explicit action reads only the supplied source/result iteration IDs through the canonical project-scoped GET, with at most two unique requests per attempt. Navigation uses confirmed response IDs, pipeline IDs and iteration numbers. Missing metadata, mismatched identities, different pipelines or an inconsistent result `rerunOf` leave links unavailable. Network errors offer read-only retry. Duplicate clicks, stale responses and retained handlers are guarded across project, resource, round, feature and unmount changes, including A→B→A navigation. Viewer access remains read-only.
+
+An accepted LP3 refresh now reloads its known Library rows even when their display IDs stay the same. The component deduplicates references, keeps the existing 50-ID limit and exact `filter.eq.displayId` lookup, and does not scan all cases or add native Review fan-out. Backend status/score values remain authoritative. Compare re-fetches after a project change with identical numeric IDs. If either side is a fix iteration, it keeps independent values, cost and stage facts but omits aggregate delta/verdict and unsupported case comparison sections, including when `sameScope=true`. Ordinary comparison behavior and the raw-response inspector are preserved.
+
+Local validation:
+
+- Full Node 20 `npm run type-check`: PASS.
+- Focused integration tests: 20 suites / 436 tests PASS.
+- Full `npm run test:coverage -- --runInBand --watch=false --notify=false`: 182 suites / 1882 tests PASS, exit 0.
+- Production `npm run build`: PASS; webpack compiled successfully.
+- Changed-file ESLint: 18 production and 13 test files, zero warnings, PASS. No SCSS changes.
+- Changed production entry-point Madge: 336 files, 6 warnings, no circular dependency. A type-only back edge was removed with a local structural attribute type; its follow-up 4 suites / 120 tests, type-check and lint PASS.
+- Independent senior code and security reviews: PASS. Mounted tests cover on-demand navigation/retry, missing and inconsistent metadata, duplicate requests, stale callbacks, project changes, ABA, unmount and accepted-detail refresh. Tests found duplicate Library-ID fan-out; the component now deduplicates before both lookup and rendering.
+- `git diff --check`: PASS.
+
+Authenticated browser/backend behavior, deployed authorization, workflow dispatch and fresh R5 CI/Sonar are NOT VERIFIED by local fixtures. Publication is authorized; the dependent PR targets R4’s branch until dependencies merge, then bootcamp-prototype. Jira moves to Code review after PR creation, with delivery and exact-head CI evidence tracked in Jira/PR. The 20 h Original Estimate is unchanged planned effort. Native history/diff, cumulative cost, Review filters/counts and server Auto-Ready cause attribution remain separate scopes.
+
+For later runtime verification, enable the feature flag, disable demo overlays and open a real fix iteration in Pipelines. Confirm its fix label, optional source number and its own cost. Open details, select **Show iteration links**, and inspect `GET /api/v1/project/{project}/pipeline/iteration/{id}` for only the explicit source/result IDs. Open both destinations and **Compare source and fix**; confirm the route uses actual IDs and the subset notice replaces aggregate regression/delta/verdict claims. In the native Test Case Review strip, load links for the returned round and repeat as Viewer. Refresh the original iteration details and verify its existing linked Library rows are fetched again with exact `filter.eq.displayId` queries, showing server-returned status/score. Exercise missing metadata, 403/404, retry, rapid duplicate clicks and project/case/round navigation while a read is pending. This checklist is pending runtime evidence; it does not require starting a new fix round.

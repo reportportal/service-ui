@@ -15,7 +15,7 @@
  */
 
 import { ReactElement } from 'react';
-import { shallow } from 'enzyme';
+import { shallow, type CommonWrapper } from 'enzyme';
 
 import type {
   ReducedPipelineDetailStage,
@@ -23,6 +23,8 @@ import type {
 } from 'controllers/aiFactory/pipelines';
 
 import { LivePipelineSettingsButton } from '../pipelineSettings';
+import { IterationProvenance } from './iterationProvenance';
+import { KpiTile } from './kpiTile';
 import { LiveReviewCases } from './liveReviewCases/liveReviewCases';
 import { CaseLink } from './stagePanels/caseLink';
 import { ReducedIterationDetails } from './reducedIterationDetails';
@@ -62,6 +64,10 @@ jest.mock('../../common/pageHeaderWithBreadcrumbsAndActions', () => ({
 jest.mock('../pipelineSettings', () => ({
   LivePipelineSettingsButton: 'LivePipelineSettingsButton',
 }));
+
+interface TestNodes {
+  map: <T>(callback: (node: CommonWrapper) => T) => T[];
+}
 
 const breadcrumbDescriptors = [{ id: 'iteration', title: 'Iteration #3' }];
 
@@ -229,7 +235,12 @@ describe('ReducedIterationDetails', () => {
       />,
     );
     expect(wrapper.find(LiveReviewCases).prop('displayIds')).toEqual(['TC101']);
-    const actions = wrapper.find('PageHeaderWithBreadcrumbsAndActions').prop('actions') as ReactElement;
+    expect(wrapper.find(LiveReviewCases).prop('refreshIdentity')).toBe(
+      wrapper.find(IterationProvenance).prop('iteration'),
+    );
+    const actions = wrapper
+      .find('PageHeaderWithBreadcrumbsAndActions')
+      .prop('actions') as ReactElement;
     const compare = shallow(actions).find('[data-automation-id="compareWithPreviousButton"]');
     expect(compare.prop('disabled')).toBe(false);
     (compare.prop('onClick') as () => void)();
@@ -360,6 +371,34 @@ describe('ReducedIterationDetails', () => {
     expect(wrapper.find('[data-automation-id="live-create-panel"]')).toHaveLength(1);
     expect(wrapper.find('[data-automation-id="live-create-results"]')).toHaveLength(0);
     expect(wrapper.text()).toContain('Backend value');
+  });
+
+  test('keeps the fix iteration cost independent from the original iteration', () => {
+    const iteration = detail({
+      rerunOf: { id: 31, iterationNumber: 1 },
+      attributes: [
+        { key: 'cost', value: '0.22' },
+        { key: 'fixRoundId', type: 'NONE', value: '5' },
+      ],
+      rawResponse: { originalIterationCost: 1.27 },
+    });
+    const wrapper = shallow(
+      <ReducedIterationDetails
+        iteration={iteration}
+        projectKey="project"
+        hasError={false}
+        isUnavailable={false}
+        breadcrumbDescriptors={breadcrumbDescriptors}
+        onRetry={jest.fn()}
+      />,
+    );
+    expect(wrapper.find(IterationProvenance).props()).toEqual({ iteration, projectKey: 'project' });
+    const kpiValues = (wrapper.find(KpiTile) as unknown as TestNodes).map((node) =>
+      node.prop('value'),
+    );
+    expect(kpiValues).toContain('$0.22');
+    expect(kpiValues).not.toContain('$1.49');
+    expect(kpiValues).not.toContain('$1.27');
   });
 
   test('uses backend categories for the reduced detail status colors', () => {

@@ -23,6 +23,7 @@ import { createClassnames } from 'common/utils';
 import { showModalAction } from 'controllers/modal';
 import { LifecycleBadge } from 'pages/inside/aiFactory/common';
 import { messages } from 'pages/inside/aiFactory/review/messages';
+import { LiveFixIterationLinks } from 'pages/inside/aiFactory/review/liveFixIterationLinks';
 import type { LiveReviewCommentsLoadState } from 'pages/inside/aiFactory/review/useLiveReviewComments';
 import type { AiLifecycle } from 'types/aiFactory';
 
@@ -55,12 +56,15 @@ const START_ERROR_MESSAGES = {
 const LiveFixFeedback = ({ reviewState }: Pick<LiveReviewStripProps, 'reviewState'>) => {
   const { formatMessage } = useIntl();
   const round = reviewState.fixRoundState;
-  const terminalMessage = round && round.status !== 'PENDING' ? FIX_STATUS_MESSAGES[round.status] : undefined;
+  const terminalMessage =
+    round && round.status !== 'PENDING' ? FIX_STATUS_MESSAGES[round.status] : undefined;
   return (
     <>
       {reviewState.fixCompleted && (
         <output className={cx('review-strip__status')} aria-live="polite">
-          {formatMessage(terminalMessage ?? messages.nativeFixCompleted, { round: round?.roundNumber })}
+          {formatMessage(terminalMessage ?? messages.nativeFixCompleted, {
+            round: round?.roundNumber,
+          })}
         </output>
       )}
       {reviewState.fixStartError && (
@@ -84,7 +88,10 @@ const LiveFixFeedback = ({ reviewState }: Pick<LiveReviewStripProps, 'reviewStat
   );
 };
 
-const LivePushButton = ({ reviewState, isReadOnly }: Pick<LiveReviewStripProps, 'reviewState' | 'isReadOnly'>) => {
+const LivePushButton = ({
+  reviewState,
+  isReadOnly,
+}: Pick<LiveReviewStripProps, 'reviewState' | 'isReadOnly'>) => {
   const { formatMessage } = useIntl();
   if (isReadOnly) return null;
   const hint = reviewState.fixInProgress ? messages.fixingHint : messages.addAtLeastOne;
@@ -168,6 +175,7 @@ export const LiveReviewStrip = ({ lifecycle, reviewState, isReadOnly }: LiveRevi
         </output>
       )}
       <LiveFixFeedback reviewState={reviewState} />
+      <LiveFixIterationLinks reviewState={reviewState} isReadOnly={isReadOnly} />
       {reviewState.isError && <div role="alert">{formatMessage(messages.loadError)}</div>}
       {reviewState.isMutationError && (
         <div role="alert">{formatMessage(messages.mutationError)}</div>

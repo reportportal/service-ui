@@ -26,6 +26,10 @@ import {
   PROJECT_PIPELINE_ITERATION_PAGE,
   urlOrganizationAndProjectSelector,
 } from 'controllers/pages';
+import {
+  getIterationFixLabel,
+  isFixIteration,
+} from 'controllers/aiFactory/pipelines/iterationProvenance';
 import { ProjectDetails } from 'pages/organization/constants';
 
 import { getReducedStatusVariant } from '../../common/reducedStatusVariant';
@@ -50,6 +54,22 @@ export interface ReducedIterationCardProps {
   pipelineName: string;
 }
 
+const buildFixMetadata = (
+  iteration: ReducedPipelineIteration,
+  formatMessage: ReturnType<typeof useIntl>['formatMessage'],
+) => [
+  {
+    value: isFixIteration(iteration.attributes) ? formatMessage(messages.fixIteration) : undefined,
+  },
+  { value: getIterationFixLabel(iteration.attributes) },
+  {
+    label: formatMessage(messages.sourceIterationLabel),
+    value: iteration.rerunOf?.iterationNumber
+      ? formatMessage(messages.iterationTitle, { number: iteration.rerunOf.iterationNumber })
+      : undefined,
+  },
+];
+
 export const ReducedIterationCard = ({ iteration, pipelineName }: ReducedIterationCardProps) => {
   const { formatMessage } = useIntl();
   const { organizationSlug, projectSlug } = useSelector(
@@ -60,6 +80,7 @@ export const ReducedIterationCard = ({ iteration, pipelineName }: ReducedIterati
   const attributeValue = (key: string) =>
     iteration.attributes.find((attribute) => attribute.key === key)?.value;
   const metaFields = [
+    ...buildFixMetadata(iteration, formatMessage),
     { label: formatMessage(messages.metaRequirementLabel), value: attributeValue('requirement') },
     { label: formatMessage(messages.metaTriggerLabel), value: iteration.trigger },
     { label: formatMessage(messages.metaModelLabel), value: attributeValue('model') },
@@ -141,7 +162,7 @@ export const ReducedIterationCard = ({ iteration, pipelineName }: ReducedIterati
       {metaFields.length > 0 && (
         <div className={cx('card__meta')}>
           {metaFields.map(({ label, value }) => (
-            <span key={label ?? 'duration'} className={cx('card__meta-field')}>
+            <span key={label ?? value} className={cx('card__meta-field')}>
               {label && <span className={cx('card__meta-label')}>{label}</span>}
               <span className={cx('card__meta-value')}>{value}</span>
             </span>

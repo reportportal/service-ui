@@ -874,3 +874,37 @@ describe('live pipeline catalog adapters', () => {
     );
   });
 });
+
+describe('native iteration provenance', () => {
+  const dto = { id: 72, pipelineId: 7, iterationNumber: 3 };
+
+  test.each([
+    [
+      { id: 31, iterationNumber: 1 },
+      { id: 31, iterationNumber: 1 },
+    ],
+    [{ id: 31 }, { id: 31 }],
+    [{ id: 31, iterationNumber: null }, { id: 31 }],
+    [{ id: 31, iterationNumber: -1 }, { id: 31 }],
+    [{ id: 31, iterationNumber: '1' }, { id: 31 }],
+  ])(
+    'preserves the source database identity independently of its display number %p',
+    (rerunOf, expected) => {
+      const source = { ...dto, rerunOf };
+      expect(adaptLivePipelineIterations([source], 7)[0]).toHaveProperty('rerunOf', expected);
+      expect(adaptLivePipelineIterationDetail(source, 7, 72)).toHaveProperty('rerunOf', expected);
+    },
+  );
+
+  test.each([undefined, null, {}, { id: 0 }, { id: '31' }, { id: -1 }])(
+    'never fabricates source identity or display number from malformed provenance %p',
+    (rerunOf) => {
+      const source = { ...dto, rerunOf };
+      const list = adaptLivePipelineIterations([source], 7)[0];
+      const detail = adaptLivePipelineIterationDetail(source, 7, 72);
+      expect(list.rerunOf).toBeUndefined();
+      expect(detail.rerunOf).toBeUndefined();
+      expect(detail.rawResponse).toBe(source);
+    },
+  );
+});

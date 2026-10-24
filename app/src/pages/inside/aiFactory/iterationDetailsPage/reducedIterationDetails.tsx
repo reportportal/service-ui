@@ -36,6 +36,7 @@ import {
 import { ScrollWrapper } from 'components/main/scrollWrapper';
 import { SettingsLayout } from 'layouts/settingsLayout';
 import { ScoreBar } from 'pages/inside/aiFactory/common';
+import { IterationProvenance } from 'pages/inside/aiFactory/iterationDetailsPage/iterationProvenance';
 
 import { getReducedStatusVariant } from '../common/reducedStatusVariant';
 import { LivePipelineSettingsButton } from '../pipelineSettings';
@@ -814,6 +815,7 @@ export const ReducedIterationDetails = ({
         />
         <div className={cx('content')} data-automation-id="reducedIterationDetails">
           <section className={cx('summary-card')} aria-label={formatMessage(messages.summaryLabel)}>
+            <IterationProvenance iteration={iteration} projectKey={projectKey} />
             {metadata.length > 0 && (
               <div className={cx('meta')}>
                 {metadata.map(({ label, value }) => (
@@ -874,7 +876,11 @@ export const ReducedIterationDetails = ({
               formatMessage,
               getGenerationStageKind(iteration.pipelineType, currentStage),
               isReviewStage && projectKey ? (
-                <LiveReviewCases displayIds={linkedCaseIds} projectKey={projectKey} />
+                <LiveReviewCases
+                  displayIds={linkedCaseIds}
+                  projectKey={projectKey}
+                  refreshIdentity={iteration}
+                />
               ) : undefined,
             )}
           <details className={cx('reduced-api-fields')}>
