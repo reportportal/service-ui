@@ -3,7 +3,7 @@
 > **Single source of truth for progress.** Update at the start and end of every task / session.
 > Legend: ⬜ todo · 🟨 in progress · 🟦 in review · ✅ done · ⛔ blocked · ➖ skipped
 
-**Last updated:** 2026-10-24 · **Branch:** `EPMRPP-122686-live-test-case-ai-data` · **Phase:** live Review and fix-round integration
+**Last updated:** 2026-10-24 · **Branch:** `EPMRPP-122687-live-review-comments` · **Phase:** live Review and fix-round integration
 
 Temporary mock data and integration workarounds are tracked for removal in
 [23-temporary-solutions-register.md](23-temporary-solutions-register.md). Close the relevant register
@@ -16,7 +16,7 @@ The new backend handoff describes native case fields and the complete review/fix
 | Order | Scope | FE sub-task | Status |
 |---|---|---|---|
 | R1 | Native Library/detail AI data and read-only presentation | [EPMRPP-122686](https://jiraeu.epam.com/browse/EPMRPP-122686) | 🟦 implementation validated for Code review: native metadata wins over demo enrichment, supported read-only fields render in Library/detail/side panel, provisional actions stay unavailable, native Draft guards are preserved; publication checks pass (11 suites / 160 tests, Node 20 type-check, changed-file lint). Authenticated deployment/browser verification pending. |
-| R2 | Live Review comments and review state | [EPMRPP-122687](https://jiraeu.epam.com/browse/EPMRPP-122687) | ⬜ depends on R1 |
+| R2 | Live Review comments and review state | [EPMRPP-122687](https://jiraeu.epam.com/browse/EPMRPP-122687) | 🟦 implementation validated for Code review: native GET/POST/DELETE comments, authoritative count/fixing state, ownership/permissions, original step positions and navigation-race guards; 8 suites / 138 tests, type-check, changed-file lint and code/security reviews pass. Publication authorized; dependent PR targets R1's branch until PR #5845 merges, then retargets to bootcamp-prototype. Authenticated runtime pending; Push/Approve remain outside this scope. |
 | R3 | Live Approve and review conflicts | [EPMRPP-122688](https://jiraeu.epam.com/browse/EPMRPP-122688) | ⬜ depends on R1/R2 |
 | R4 | Live Push to agent and fix-round states | [EPMRPP-122689](https://jiraeu.epam.com/browse/EPMRPP-122689) | ⬜ depends on R1–R3 |
 | R5 | Fix iteration provenance, refresh and comparison scope | [EPMRPP-122690](https://jiraeu.epam.com/browse/EPMRPP-122690) | ⬜ depends on R4 |

@@ -14,10 +14,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useAiFactoryEnabled } from 'controllers/aiFactory';
 import { useUserPermissions } from 'hooks/useUserPermissions';
 import { PopoverControl } from 'pages/common/popoverControl';
-import {
-  useAutomationModal,
-  type AutomationCandidate,
-} from 'pages/inside/aiFactory/automation';
+import { useAutomationModal, type AutomationCandidate } from 'pages/inside/aiFactory/automation';
 import type { AutomateAcceptedRS } from 'types/aiFactory';
 import { Lifecycle } from 'types/aiFactory';
 import type { ExtendedTestCase } from 'types/testCase';
@@ -55,9 +52,9 @@ jest.mock('react-intl', () => ({
   }),
 }));
 jest.mock('common/utils', () => ({
-  queueReducers:
-    jest.requireActual<typeof import('common/utils/queueReducers')>('common/utils/queueReducers')
-      .queueReducers,
+  queueReducers: jest.requireActual<typeof import('common/utils/queueReducers')>(
+    'common/utils/queueReducers',
+  ).queueReducers,
   createClassnames:
     () =>
     (...classNames: string[]) =>
@@ -110,8 +107,9 @@ jest.mock('../../deleteTestCaseModal', () => ({
 jest.mock('../../duplicateSelectedTestCaseModal', () => ({
   useDuplicateSelectedTestCaseModal: () => ({ openModal: jest.fn() }),
 }));
+const mockOpenEditScenarioModal = jest.fn();
 jest.mock('../../editScenarioModal', () => ({
-  useEditScenarioModal: () => ({ openModal: jest.fn() }),
+  useEditScenarioModal: () => ({ openModal: mockOpenEditScenarioModal }),
 }));
 jest.mock('../editTestCaseModal/editTestCaseModal', () => ({
   EDIT_TEST_CASE_MODAL_KEY: 'EDIT_TEST_CASE_MODAL_KEY',
@@ -156,12 +154,7 @@ const renderHeader = (
   } as ReturnType<typeof useUserPermissions>);
   jest.mocked(useAutomationModal).mockReturnValue({ openModal: openAutomationModal });
 
-  return shallow(
-    <TestCaseDetailsHeader
-      testCase={selectedTestCase}
-      onAddToTestPlan={jest.fn()}
-    />,
-  );
+  return shallow(<TestCaseDetailsHeader testCase={selectedTestCase} onAddToTestPlan={jest.fn()} />);
 };
 
 describe('TestCaseDetailsHeader automation action', () => {
@@ -179,7 +172,11 @@ describe('TestCaseDetailsHeader automation action', () => {
       .find(PopoverControl)
       .prop('items') as AutomationMenuItem[];
     expect(items).toEqual([
-      expect.objectContaining({ label: 'Automate', disabled: false, onClick: expect.any(Function) }),
+      expect.objectContaining({
+        label: 'Automate',
+        disabled: false,
+        onClick: expect.any(Function),
+      }),
     ]);
   });
 
@@ -220,5 +217,33 @@ describe('TestCaseDetailsHeader automation action', () => {
       disabled: true,
       tooltip: 'Only Ready Test Cases can be automated',
     });
+  });
+
+  test('locks scenario editing from native fixing state and restores it after a refresh', () => {
+    const nativeCase = {
+      ...testCase,
+      origin: 'AI',
+      status: 'READY',
+      lifecycle: undefined,
+    } as ExtendedTestCase;
+    const wrapper = renderHeader(true, false, nativeCase);
+    jest.mocked(useUserPermissions).mockReturnValue({
+      canManageTestCases: true,
+      canAutomateTestCases: false,
+      canReviewAiTestCases: true,
+    } as ReturnType<typeof useUserPermissions>);
+    wrapper.setProps({ isNativeFixInProgress: true });
+    const edit = wrapper.find('Button[variant="ghost"][disabled=true]');
+    expect(edit.prop('disabled')).toBe(true);
+    const onEdit = edit.prop('onClick') as () => void;
+    onEdit();
+    expect(mockOpenEditScenarioModal).not.toHaveBeenCalled();
+    expect(wrapper.find('ApproveButton')).toHaveLength(0);
+
+    wrapper.setProps({ isNativeFixInProgress: false });
+    const enabledEdit = wrapper.find('Button[variant="ghost"][disabled=false]');
+    expect(enabledEdit.prop('disabled')).toBe(false);
+    (enabledEdit.prop('onClick') as () => void)();
+    expect(mockOpenEditScenarioModal).toHaveBeenCalledWith({ testCase: nativeCase });
   });
 });

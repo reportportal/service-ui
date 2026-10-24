@@ -60,14 +60,27 @@ import {
   useFixRound,
   useReviewComments,
   type ReviewCommentsLoadState,
+  type ReviewCommentsViewState,
+  type FixRoundLoadState,
 } from 'pages/inside/aiFactory/review';
+import {
+  useLiveReviewComments,
+  type LiveReviewCommentsLoadState,
+} from 'pages/inside/aiFactory/review/useLiveReviewComments';
+import { LiveReviewStrip } from 'pages/inside/aiFactory/review/liveReviewStrip';
 import {
   AutomationStatus,
   CommentTargetType,
   Lifecycle,
   type AiAutomationStatus,
 } from 'types/aiFactory';
-import { ManualScenario, Tag, TestCaseManualScenario } from 'types/testCase';
+import {
+  ExtendedTestCase,
+  ManualScenario,
+  Step as TestCaseStep,
+  Tag,
+  TestCaseManualScenario,
+} from 'types/testCase';
 import type { ProjectDetails } from 'pages/organization/constants';
 
 import { TestCaseDetailsHeader } from './testCaseDetailsHeader';
@@ -194,14 +207,28 @@ const SIDEBAR_COLLAPSIBLE_SECTIONS_CONFIG = ({
   ] as const;
 };
 
+const getReviewSteps = (steps: TestCaseStep[], isNativeReview: boolean) => {
+  const reviewSteps = isNativeReview
+    ? steps.map((step, index) => ({ ...step, reviewStepNumber: index + 1 }))
+    : steps;
+  return reviewSteps.filter(hasStepContent);
+};
+
+const getStepReviewTarget = (stepId: number, stepNumber: number, isNativeReview: boolean) =>
+  isNativeReview
+    ? { type: CommentTargetType.STEP, stepNumber }
+    : { type: CommentTargetType.STEP, stepId };
+
 const MAIN_CONTENT_COLLAPSIBLE_SECTIONS_CONFIG = ({
   manualScenario,
   reviewState,
   isReviewReadOnly,
+  isNativeReview = false,
 }: {
   manualScenario: ManualScenario;
-  reviewState?: ReviewCommentsLoadState;
+  reviewState?: ReviewCommentsViewState;
   isReviewReadOnly?: boolean;
+  isNativeReview?: boolean;
 }) => {
   const sections = [
     {
@@ -240,12 +267,12 @@ const MAIN_CONTENT_COLLAPSIBLE_SECTIONS_CONFIG = ({
         defaultMessage: messages.noSteps,
         childComponent: manualScenario?.steps?.some(hasStepContent) && (
           <StepsList
-            steps={manualScenario.steps.filter(hasStepContent)}
+            steps={getReviewSteps(manualScenario.steps, isNativeReview)}
             renderReviewControl={
               reviewState
-                ? (stepId) => (
+                ? (stepId, stepNumber) => (
                     <ReviewTarget
-                      target={{ type: CommentTargetType.STEP, stepId }}
+                      target={getStepReviewTarget(stepId, stepNumber, isNativeReview)}
                       reviewState={reviewState}
                       isReadOnly={isReviewReadOnly}
                     />
@@ -312,11 +339,112 @@ const getTestCaseReadState = (
   const testCaseDetails = rawTestCase
     ? getTestCasePresentation(rawTestCase, isAiFactoryEnabled)
     : rawTestCase;
+  const nativeSummary = isAiFactoryEnabled ? getNativeTestCaseSummary(testCaseDetails) : undefined;
   return {
     testCaseDetails,
-    nativeSummary: isAiFactoryEnabled ? getNativeTestCaseSummary(testCaseDetails) : undefined,
+    nativeSummary,
+    isNativeReviewEnabled: nativeSummary?.isAi === true,
     isLegacyAiEnabled: isAiFactoryEnabled && !hasNativeTestCaseData(testCaseDetails),
   };
+};
+
+interface ReviewPresentationOptions {
+  testCaseDetails: ExtendedTestCase;
+  reviewState: ReviewCommentsLoadState;
+  nativeReviewState: LiveReviewCommentsLoadState;
+  fixRoundState: FixRoundLoadState;
+  isNativeReviewEnabled: boolean;
+  isAiReviewEnabled: boolean;
+  canReviewAiTestCases: boolean;
+}
+
+const getReviewPresentation = ({
+  testCaseDetails,
+  reviewState,
+  nativeReviewState,
+  fixRoundState,
+  isNativeReviewEnabled,
+  isAiReviewEnabled,
+  canReviewAiTestCases,
+}: ReviewPresentationOptions) => {
+  if (isNativeReviewEnabled)
+    return {
+      reviewState: nativeReviewState,
+      isReadOnly:
+        !canReviewAiTestCases ||
+        nativeReviewState.fixInProgress ||
+        !nativeReviewState.isLoaded ||
+        nativeReviewState.isLoading,
+      renderedTestCase: testCaseDetails,
+    };
+  const isFixRunning =
+    fixRoundState.current?.status === 'RUNNING' || Boolean(testCaseDetails.review?.fixRound);
+  const renderedTestCase = isFixRunning
+    ? {
+        ...testCaseDetails,
+        review: {
+          ...testCaseDetails.review,
+          unsentCommentsCount: testCaseDetails.review?.unsentCommentsCount ?? 0,
+          fixRound: {
+            number: fixRoundState.current?.round ?? testCaseDetails.review?.fixRound?.number ?? 1,
+            status: 'RUNNING' as const,
+          },
+        },
+      }
+    : testCaseDetails;
+  return {
+    reviewState: isAiReviewEnabled ? reviewState : undefined,
+    isReadOnly: isFixRunning || !canReviewAiTestCases,
+    renderedTestCase,
+  };
+};
+
+interface TestCaseReviewStripProps {
+  testCase: ExtendedTestCase;
+  nativeLifecycle?: Parameters<typeof LiveReviewStrip>[0]['lifecycle'];
+  nativeReviewState: LiveReviewCommentsLoadState;
+  reviewState: ReviewCommentsLoadState;
+  fixRoundState: FixRoundLoadState;
+  isNativeReviewEnabled: boolean;
+  isAiReviewEnabled: boolean;
+  isScenarioEmpty: boolean;
+  isReadOnly: boolean;
+  lastAgentChange?: Parameters<typeof ReviewStrip>[0]['lastAgentChange'];
+}
+
+const TestCaseReviewStrip = ({
+  testCase,
+  nativeLifecycle,
+  nativeReviewState,
+  reviewState,
+  fixRoundState,
+  isNativeReviewEnabled,
+  isAiReviewEnabled,
+  isScenarioEmpty,
+  isReadOnly,
+  lastAgentChange,
+}: TestCaseReviewStripProps) => {
+  if (isNativeReviewEnabled)
+    return (
+      <LiveReviewStrip
+        lifecycle={nativeLifecycle}
+        reviewState={nativeReviewState}
+        isReadOnly={isReadOnly}
+      />
+    );
+  if (!isAiReviewEnabled || !testCase.lifecycle || isScenarioEmpty) return null;
+  const isFixRunning =
+    fixRoundState.current?.status === 'RUNNING' || Boolean(testCase.review?.fixRound);
+  return (
+    <ReviewStrip
+      lifecycle={testCase.lifecycle}
+      reviewState={reviewState}
+      isReadOnly={isReadOnly}
+      readOnlyReason={isFixRunning ? 'FIX_RUNNING' : 'NO_PERMISSION'}
+      fixRoundState={fixRoundState}
+      lastAgentChange={lastAgentChange}
+    />
+  );
 };
 
 export const TestCaseDetailsPage = () => {
@@ -332,10 +460,8 @@ export const TestCaseDetailsPage = () => {
   const projectKey = useSelector(projectKeySelector);
   const projectRoute = useSelector(urlOrganizationAndProjectSelector) as ProjectDetails | undefined;
   const isAiFactoryEnabled = useAiFactoryEnabled();
-  const { testCaseDetails, nativeSummary, isLegacyAiEnabled } = getTestCaseReadState(
-    rawTestCaseDetails,
-    isAiFactoryEnabled,
-  );
+  const { testCaseDetails, nativeSummary, isLegacyAiEnabled, isNativeReviewEnabled } =
+    getTestCaseReadState(rawTestCaseDetails, isAiFactoryEnabled);
 
   const testCaseId = testCaseDetails?.id || 0;
   const aiDetailsState = useTestCaseAi(
@@ -345,8 +471,9 @@ export const TestCaseDetailsPage = () => {
     testCaseDetails?.updatedAt,
   );
   const automationDetails = aiDetailsState.data?.automation;
-  const isAiReviewEnabled = isAiFactoryEnabled && Boolean(testCaseDetails?.ai);
+  const isAiReviewEnabled = isLegacyAiEnabled && Boolean(testCaseDetails?.ai);
   const reviewState = useReviewComments(projectKey, testCaseId, isAiReviewEnabled);
+  const nativeReviewState = useLiveReviewComments(projectKey, testCaseId, isNativeReviewEnabled);
   const refreshAfterFixRoundStart = useCallback(() => {
     reviewState.reload();
   }, [reviewState]);
@@ -439,41 +566,25 @@ export const TestCaseDetailsPage = () => {
   const tags = attributes.map(({ key }) => key);
 
   const isScenarioEmpty = checkScenario(testCaseDetails?.manualScenario);
-  const isFixRunning =
-    fixRoundState.current?.status === 'RUNNING' || Boolean(testCaseDetails.review?.fixRound);
-  const isReviewReadOnly = isFixRunning || !canReviewAiTestCases;
-  const renderedTestCase = isFixRunning
-    ? {
-        ...testCaseDetails,
-        review: {
-          ...testCaseDetails.review,
-          unsentCommentsCount: testCaseDetails.review?.unsentCommentsCount ?? 0,
-          fixRound: {
-            number: fixRoundState.current?.round ?? testCaseDetails.review?.fixRound?.number ?? 1,
-            status: 'RUNNING' as const,
-          },
-        },
-      }
-    : testCaseDetails;
+  const reviewPresentation = getReviewPresentation({
+    testCaseDetails,
+    reviewState,
+    nativeReviewState,
+    fixRoundState,
+    isNativeReviewEnabled,
+    isAiReviewEnabled,
+    canReviewAiTestCases,
+  });
 
   const testCaseContent = isScenarioEmpty ? (
     <DetailsEmptyState testCase={testCaseDetails} />
   ) : (
     <>
-      {isAiReviewEnabled && testCaseDetails.lifecycle && (
-        <ReviewStrip
-          lifecycle={testCaseDetails.lifecycle}
-          reviewState={reviewState}
-          isReadOnly={isReviewReadOnly}
-          readOnlyReason={isFixRunning ? 'FIX_RUNNING' : 'NO_PERMISSION'}
-          fixRoundState={fixRoundState}
-          lastAgentChange={aiDetailsState.data?.lastAgentChange}
-        />
-      )}
       {MAIN_CONTENT_COLLAPSIBLE_SECTIONS_CONFIG({
         manualScenario: testCaseDetails.manualScenario,
-        reviewState: isAiReviewEnabled ? reviewState : undefined,
-        isReviewReadOnly,
+        reviewState: reviewPresentation.reviewState,
+        isReviewReadOnly: reviewPresentation.isReadOnly,
+        isNativeReview: isNativeReviewEnabled,
       }).map(({ titleKey, defaultMessage, childComponent }) => (
         <CollapsibleSectionWithHeaderControl
           key={titleKey}
@@ -491,6 +602,18 @@ export const TestCaseDetailsPage = () => {
       {isAiFactoryEnabled && testCaseDetails.lifecycle === Lifecycle.DRAFT && (
         <LaunchBlockedBanner plans={testCaseDetails.blockedPlans ?? []} />
       )}
+      <TestCaseReviewStrip
+        testCase={testCaseDetails}
+        nativeLifecycle={nativeSummary?.status}
+        nativeReviewState={nativeReviewState}
+        reviewState={reviewState}
+        fixRoundState={fixRoundState}
+        isNativeReviewEnabled={isNativeReviewEnabled}
+        isAiReviewEnabled={isAiReviewEnabled}
+        isScenarioEmpty={isScenarioEmpty}
+        isReadOnly={reviewPresentation.isReadOnly}
+        lastAgentChange={aiDetailsState.data?.lastAgentChange}
+      />
       {testCaseContent}
     </>
   );
@@ -501,7 +624,8 @@ export const TestCaseDetailsPage = () => {
         <div className={cx('page')}>
           <TestCaseDetailsHeader
             className={cx('page__header')}
-            testCase={renderedTestCase}
+            testCase={reviewPresentation.renderedTestCase}
+            isNativeFixInProgress={nativeReviewState.fixInProgress}
             onAddToTestPlan={handleAddToTestPlan}
             onMenuAction={noop}
             isScenarioEmpty={isScenarioEmpty}
@@ -536,7 +660,7 @@ export const TestCaseDetailsPage = () => {
             )}
             {isAutomationSectionVisible && (
               <AutomationSection
-                testCase={renderedTestCase}
+                testCase={reviewPresentation.renderedTestCase}
                 automation={automationDetails}
                 canAutomate={canAutomateTestCases}
                 organizationSlug={projectRoute?.organizationSlug}

@@ -621,14 +621,15 @@ export interface ScenarioUpdateRS {
 
 export interface ReviewCommentTarget {
   type: AiCommentTargetType;
-  stepId?: number; // for STEP
+  stepId?: number; // for legacy STEP
+  stepNumber?: number; // 1-based native STEP position
 }
 
 export interface ReviewCommentRS {
   id: number;
   target: ReviewCommentTarget;
   text: string;
-  author: { id: number; name: string };
+  author: { id: number; name?: string };
   createdAt: number;
   state: AiCommentState;
   fixRound?: number; // when SENT/ADDRESSED/NOT_ADDRESSED
