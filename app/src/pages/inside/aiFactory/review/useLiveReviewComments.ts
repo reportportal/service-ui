@@ -194,7 +194,7 @@ export const useLiveReviewComments = (
   const addComment = useCallback(
     async (payload: ReviewCommentPayload) => {
       if (!isCurrent() || !canMutate(scope)) return false;
-      return mutate(
+      return await mutate(
         URLS.liveTestCaseReviewComments(projectKey, testCaseId),
         'POST',
         toLiveReviewCommentPayload(payload),
@@ -208,7 +208,7 @@ export const useLiveReviewComments = (
       const comment = scope.review?.comments.find(({ id }) => id === commentId);
       if (comment?.author.id !== scope.userId || comment?.state !== CommentState.PENDING)
         return false;
-      return mutate(
+      return await mutate(
         URLS.liveTestCaseReviewCommentById(projectKey, testCaseId, commentId),
         'DELETE',
       );
@@ -218,7 +218,7 @@ export const useLiveReviewComments = (
 
   const discardPending = useCallback(async () => {
     if (!scope.review?.unsentCount) return false;
-    return mutate(URLS.liveTestCaseReviewComments(projectKey, testCaseId), 'DELETE');
+    return await mutate(URLS.liveTestCaseReviewComments(projectKey, testCaseId), 'DELETE');
   }, [mutate, projectKey, scope, testCaseId]);
   const isCurrentState = isResourceEnabled && state.scope === scope;
   const data = isCurrentState ? state.data : undefined;
