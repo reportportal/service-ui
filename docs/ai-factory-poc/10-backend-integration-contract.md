@@ -1,5 +1,9 @@
 # 10 · Backend/frontend integration contract — Pipeline and Quality Standard
 
+> **Current authority — 2026-10-25:** use [27-backend-integration-completion-contract-2026-10-25.md](27-backend-integration-completion-contract-2026-10-25.md) for current completion requirements, owners, acceptance criteria and evidence. R1–R5 native case/Review/Approve/Push/provenance are implemented; R6 runtime is blocked on a real scenario and verified integration/runtime identities; local-frontend/real-backend E2E is eligible, while deployed rollout acceptance remains separate. LP1–LP4 use live transport by default; generic project GitHub integration is published. The status, gap matrices and requirements below are the **2026-10-02/05 historical proposal** and do not override this reconciliation. Their old mock gates and blanket native API-absence claims no longer apply.
+>
+> Remaining minimum R6 exit is AC1–AC5 in 27. Stage panels/settings/Library queues are independent AC6–AC9 scopes; history/cumulative cost/full CI settings/Re-run are Product-scoped AC10 follow-ups. Do not reopen already-published Review, native filters/criteria, atomic result or LP5 replacement/null validation as missing implementations.
+
 > **Status: proposed, not yet agreed.** This document is the hand-off and acceptance contract between
 > ReportPortal backend, `service-ui`, QA and AI Factory PoC stakeholders. It records the decisions that must
 > be made before the frontend can replace its Pipeline mocks or consume the Quality Standard API.

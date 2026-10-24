@@ -1,6 +1,13 @@
 # CI connection API contract request — US-019 / T3.6
 
-> **Status:** Proposed for Backend/Product/QA agreement — no CI connection API is published or agreed yet
+## Current integration clarification (2026-10-25)
+
+[27 — completion contract](27-backend-integration-completion-contract-2026-10-25.md) separates the current Review/fix workflow from this broader US-019 proposal. Published `POST /api/v1/integration/{projectKey}/{pluginName}` (201) and `GET /api/v1/integration/project/{projectKey}/all/{pluginName}` support generic project integration configuration. For `github-actions`, the backend handoff uses `integrationParameters.token/repo/ref/fixWorkflowRef`; configuration and a real workflow still require verification. This is sufficient configuration scope for R6 when validated with an eligible source, not proof of dispatch and not the dedicated Pipeline settings/capabilities/jobs/models/environments contract proposed below.
+
+The proposed endpoints and downstream capability gate below remain **future agreement**, not a new prerequisite to reimplement before native R6 can be tested. Do not infer API absence from the visible Integrations UI cards or copy real credentials into this document.
+
+
+> **Status:** Proposed for Backend/Product/QA agreement — no dedicated **Pipeline CI-settings read/save/test/capability** contract is agreed. Generic project integration creation/discovery is already published; see the current clarification in this document.
 >
 > **Frontend Jira:** [EPMRPP-122050](https://jiraeu.epam.com/browse/EPMRPP-122050) · 12 h
 > (4 h research / 5 h contract / 3 h validation)

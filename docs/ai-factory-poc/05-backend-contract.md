@@ -1,21 +1,27 @@
 # 05 · AI Factory backend integration contract
 
-> **Status: implementation-aligned contract, partly published and partly provisional.** This is the consolidated
-> backend contract required by every AI Factory surface implemented through **T6.7**. Pipeline and Quality
-> Standard operations marked **Published** come from the live OpenAPI document. Test Case AI, lifecycle, review,
-> fix-round, Ready-only gate, automation and backlink operations remain frontend proposals unless explicitly
-> marked otherwise. A published operation, an implemented frontend adapter and a production-ready live rollout
-> are three different states and are tracked separately below.
+## Current native contract reconciliation (2026-10-25)
+
+The audit/source evidence and requested completion criteria are in [27](27-backend-integration-completion-contract-2026-10-25.md). This reconciliation takes precedence over historical inventories below.
+
+| Capability | Current contract / FE boundary |
+|---|---|
+| Case reads / Library | Native `origin`, `status`, `defaultVersionId`, current `metrics` are published and integrated in R1. Native `origin`/`status`/`displayId` filters and `page.totalElements` are published; legacy quick-filter/mock-counter replacement is FE work. Iteration-membership/bulk pagination remains unagreed. |
+| Current criteria | `metrics.criteria[]` already defines `criterionId`, `name`, `maxPoints`, `score`; FE criterion rendering remains to integrate. Requiredness, real examples and optional rubric/history linkage are distinct questions. |
+| Review / approval | Native `.../tms/test-case/{id}/review`, `/review/comment` operations and status-only `PATCH .../tms/test-case/{id}` (`READY`) are published; R2/R3 consume them. The older proposed `/review-comment` and `/lifecycle` paths are not the native contract. |
+| Push / fix result | Bodyless `POST .../review/fix-round` returns `200`; GET uses the actual round ID. Statuses: `PENDING`, `FIXED`, `FIXED_GRADE_FAILED`, `FAILED`. Agent `PUT .../review/fix-round/{roundId}/result` is already published. R4/R5 integrate monitoring, refresh and validated provenance. |
+| Iteration identity / comparison | Read `rerunOf: {id, iterationNumber}`; write `rerunOfIterationId`. `fixRoundId` NONE is an actual ID; `fixRound` META is display text. Costs stay per iteration. R5 makes fix-subset Compare neutral even if server `sameScope=true`. |
+| Integration | Generic `POST /v1/integration/{projectKey}/{pluginName}` and `GET /v1/integration/project/{projectKey}/all/{pluginName}` are published. A configured GitHub Actions integration/workflow is still unverified; this is not the full US-019 Pipeline CI-settings API. |
+| Remaining Pipeline slices | Stage response `stageKey` is absent from inspected OpenAPI; settings remain read-only pending read/role/concurrency agreement. LP5 replacement/null/0–100 semantics already described by the supplied journey need schema/capture confirmation, not reimplementation. |
+
+R1–R5 implementation/CI is not merge, deployment or real workflow proof. Only local TLS trust failure is reproduced in the latest infrastructure audit; the real R6 outcomes remain NOT VERIFIED.
+
+
+> **Current contract update — 2026-10-25:** [27-backend-integration-completion-contract-2026-10-25.md](27-backend-integration-completion-contract-2026-10-25.md) is the current Backend handoff and remaining-work acceptance list. Native Review/fix-round R1–R5 are frontend-integrated; R6 awaits a real scenario and verified frontend-runtime/backend/workflow identities; local-frontend/real-backend E2E is eligible, while deployed rollout acceptance remains separate. Published APIs, implemented FE and observed end-to-end success remain different evidence levels.
 >
-> **Not included as an executable integration:** T3.6 CI connection, T1.2u CI-state badges and T4.4 Re-run/Retry
-> commands are not implemented. T6.7 added disabled, mock-backed Re-run and failed-Upload Retry presentation
-> shells only. They send no mutation and do not prove that LP6 is a browser Re-run command or that LP7 is ready.
+> **Historical baseline below:** the 2026-10-02/05 `feature-pipelines-2767` DTO inventory and provisional C/L/R/F paths are retained for traceability. Their mock-default, absent-API, plain-array LP1/LP2 and closed-gate claims do **not** describe current native integration. Current LP1/LP2 use `{content, page}`; LP1–LP4 use live API without response fallbacks. Read [25](25-live-review-fix-round-integration-2026-10-24.md) for R1–R5 boundaries and [26](26-github-actions-journey-verification-2026-10-24.md) for R6 runtime evidence.
 >
-> **LP3 update (2026-10-19):** §1.4 and the original inventory describe the historical
-> `feature-pipelines-2767` contract. The current LP3 response and frontend integration are recorded in
-> §0.1.1 below. The remaining LP1/LP2 and other historical sections require separate reconciliation;
-> [21-live-pipeline-integration-2026-10-18.md](21-live-pipeline-integration-2026-10-18.md) tracks the
-> current LP1–LP3 evidence and unresolved deployment checks.
+> General UI Re-run/failed-stage Retry and the full Pipeline CI-settings proposal remain separate scopes; generic project `github-actions` integration is already published.
 
 ## 0. Sources, scope and status legend
 
@@ -116,10 +122,9 @@ SHA, sanitized non-empty/error captures, permissions and link targets remain ope
 [integration evidence log](21-live-pipeline-integration-2026-10-18.md). This addendum supersedes the LP3
 field shapes in §1.4; it does not change the LP4 comparison contract.
 
-### 0.2 Provisional test-case contract status
+### 0.2 Historical provisional test-case contract status
 
-These operations are **not verified by the audited live OpenAPI**. “Mock” means only that the PoC implements
-the proposed behavior locally; it must not be read as backend availability or integration.
+This table records the 2026-10-05 proposed paths and mock consumers, **not current native API absence**. Native equivalents for case reads, Review, approval and fix rounds are summarized above and in [27](27-backend-integration-completion-contract-2026-10-25.md). Unimplemented historical path variants must not be requested as duplicate backend work.
 
 | ID | Provisional contract | Implemented consumers | Mock/fixture evidence | Published backend | Live rollout |
 |---|---|---|:---:|:---:|:---:|
@@ -138,7 +143,7 @@ the proposed behavior locally; it must not be read as backend availability or in
 
 ### 0.3 CI connection contract status
 
-The audited OpenAPI has **no** Pipeline CI connection read/save/test endpoint and no normative DTO for repository,
+The historical audit has **no dedicated Pipeline** CI connection read/save/test endpoint and no normative DTO for repository,
 branch, write-only credential, jobs, models, environments or the aggregate Not connected / Connected / Connection
 failed state. Stage-level CI metadata in LP3/LP7 is not a substitute for Pipeline connection configuration.
 

@@ -1,5 +1,7 @@
 # Live Review and fix-round integration
 
+**Completion handoff updated 2026-10-25:** [27](27-backend-integration-completion-contract-2026-10-25.md) is the current Backend request list and scope/evidence reconciliation; the dated implementation and runtime evidence below is preserved.
+
 Date: 2026-10-24. Base: `bootcamp-prototype` at `e5a53e8b9`.
 
 The user authorized creating the sequential subtasks and starting implementation. The backend handoff is the supplied `pipeline-iteration-e2e-journey 1.md`, especially steps 5/10 and sections 19/20. Its examples and stated integration-test coverage are contract evidence, not authenticated deployment captures. The deployed build and end-to-end GitHub Actions behavior are not verified.
@@ -80,6 +82,12 @@ Started 2026-10-24 on `EPMRPP-122690-live-fix-iteration-provenance`, based on PR
 
 ## R6 — GitHub Actions journey verification
 
+Started 2026-10-24 on `EPMRPP-122691-github-actions-journey-verification`, based on PR [#5850](https://github.com/reportportal/service-ui/pull/5850) exact head `11a81f2389db0c9fa5b6e00d8d4354d1eb7c4350`. R5 fresh SonarCloud analysis matches this SHA: Quality Gate OK, zero open issues; [Build 40129900921](https://github.com/reportportal/service-ui/actions/runs/40129900921) SUCCESS. Jira R6 is In Progress; Original Estimate remains 12 h (3 / 4 / 5). On 2026-10-25 the user authorized commit, push and a draft PR for documentation/preflight. Delivery and exact-head CI evidence are tracked in Jira/PR; no R6 deployment or workflow dispatch is included.
+
+[Native runtime checklist, setup gate and evidence matrix](26-github-actions-journey-verification-2026-10-24.md). The current read-only preflight identifies the reachable backend build and available browser context. The user confirmed no real scenario is available. R6 runtime execution is blocked by external prerequisites: an eligible case/source iteration and configured integration/workflow. Real workflow outcomes and exact deployed FE identity remain NOT VERIFIED.
+
+The 2026-10-25 credential follow-up confirms GitHub authentication using the locally supplied PAT; workflow access/Actions write remain unverified. Final local verification identified the ReportPortal variable as a configuration-field placeholder; an actual ReportPortal credential is still required. HTTPS certificate verification also failed before authentication. [Sanitized results and remaining prerequisites](26-github-actions-journey-verification-2026-10-24.md#credential-verification-follow-up-2026-10-25) contain no secret values. Draft publication records this preparation, not completion of the end-to-end task.
+
 - Verify an enabled project `github-actions` integration with real repository/ref/workflow settings, and a source stage with matching `GITHUB_ACTIONS` execution metadata.
 - Verify that the agent workflow accepts `test_case_id`, `fix_round_id`, `previous_iteration_id`, reads comments, reports a new iteration with `fixRoundId`, and reports the atomic result.
 - Capture sanitized evidence for successful fix, failed dispatch, failed round and grade failure; record exact deployment/build and workflow run identities where available.
@@ -90,13 +98,13 @@ Started 2026-10-24 on `EPMRPP-122690-live-fix-iteration-provenance`, based on PR
 
 - Continue generation-panel task [EPMRPP-122414](https://jiraeu.epam.com/browse/EPMRPP-122414) when `stageKey` is returned by LP2/LP3; it is still absent from the new response examples.
 - Continue Auto-Ready settings task [EPMRPP-122415](https://jiraeu.epam.com/browse/EPMRPP-122415): the new handoff clarifies PATCH merge/null/range behavior, while concurrent edits and the accepted UI permission policy remain unresolved.
-- Review queue/filter, version-history reads, previous-versus-current diff, cumulative version cost, `modifiedByAgent` and `canPush` remain contract gaps.
+- Native Library `origin`/`status`/`displayId` filters, totals and criterion score DTOs are already published; legacy filter/count replacement and criterion rendering remain FE work. Iteration-scoped/bulk Review membership is unagreed. Version-history reads, previous/current diff, cumulative version cost and attribution/eligibility-reason fields are separate Product-scoped gaps, not minimum R6 blockers; see [27](27-backend-integration-completion-contract-2026-10-25.md).
 - Legacy Library quick filters and the folder review count still use the development overlay's mock database when that mode is enabled. Native read presentation does not integrate these filters: mock-backed filtering can omit native cases or classify them using a same-display-ID fixture. Verify R1 with those provisional filters cleared and the mock overlay disabled; authoritative native/iteration filter and count semantics remain with the existing Review/Library scope. R1 does not add undocumented backend filter parameters or a global capability registry.
 - No general Re-run command or complete Retry command is specified in this handoff. Keep those controls unavailable pending their contracts.
 
 ## Execution evidence
 
-All six Jira subtasks were created with Original Estimates and breakdown comments on 2026-10-24. R1–R4 are submitted for review. R5 is implemented locally on its own branch; its validation evidence is recorded below. R6 awaits actual integration/workflow configuration. The user authorized R1–R4 publication on 2026-10-24; delivery and exact-head CI evidence are tracked in their Jira issues and PRs. R5 publication is also authorized; delivery evidence will be recorded in Jira/PR. No deployment or manual workflow trigger is included.
+All six Jira subtasks were created with Original Estimates and breakdown comments on 2026-10-24. R1–R5 are submitted for review; R5 is published in PR #5850 with exact-head CI/Sonar success recorded above. R6 preparation and read-only preflight are complete. The user confirmed no real scenario is available; runtime execution waits for an eligible case/source iteration, with actual integration/workflow configuration still unverified. The user authorized R1–R4 publication on 2026-10-24; delivery and exact-head CI evidence are tracked in their Jira issues and PRs. R5 delivery and current exact-head CI/Sonar evidence are recorded in Jira/PR. No deployment or manual workflow trigger is included.
 
 R1 implements native DTO/read presentation, current-version score/model/cost, native-before-overlay precedence (including scenario-update responses), and guards unsupported provisional actions. The first code review found that removing legacy lifecycle data bypassed Draft eligibility checks; four behavior tests reproduced the regression before a host-local native-status fix. Both code and security rechecks report no remaining introduced findings.
 

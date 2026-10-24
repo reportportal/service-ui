@@ -1,11 +1,11 @@
 # Temporary solutions and mock removal register
 
-**Updated:** 2026-10-24. This is the cleanup checklist for the AI Factory PoC. An implemented UI
+**Updated:** 2026-10-25. This is the cleanup checklist for the AI Factory PoC. An implemented UI
 screen does not mean its data is live. The user approved switching LP1–LP3 to API by default after
 authenticated nonempty local-proxy evidence; trusted HTTPS, deployed SHA and error/multi-page checks
 remain open. Update the relevant row when replacing mock or provisional behavior.
 The current integration sequence and Jira owners are in [21](21-live-pipeline-integration-2026-10-18.md),
-and the progress board is [00](00-status.md).
+and the progress board is [00](00-status.md). [27](27-backend-integration-completion-contract-2026-10-25.md) is the current Backend completion handoff: native Review/fix APIs, filters/totals and criterion score DTOs are already published; remaining native quick-filter/count and criterion-renderer integration is FE work, while iteration-scoped pagination and other decisions remain explicit requests.
 
 | ID | Temporary solution / location | Removal condition | FE task / status |
 |---|---|---|---|

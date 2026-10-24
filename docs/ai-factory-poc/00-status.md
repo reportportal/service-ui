@@ -3,11 +3,15 @@
 > **Single source of truth for progress.** Update at the start and end of every task / session.
 > Legend: ⬜ todo · 🟨 in progress · 🟦 in review · ✅ done · ⛔ blocked · ➖ skipped
 
-**Last updated:** 2026-10-24 · **Branch:** `EPMRPP-122690-live-fix-iteration-provenance` · **Phase:** live Review and fix-round integration
+**Last updated:** 2026-10-25 · **Branch:** `EPMRPP-122691-github-actions-journey-verification` · **Phase:** live Review and fix-round integration
 
 Temporary mock data and integration workarounds are tracked for removal in
 [23-temporary-solutions-register.md](23-temporary-solutions-register.md). Close the relevant register
 row as part of each real API integration task.
+
+## Current Backend completion contract (2026-10-25)
+
+[27 — current Backend handoff](27-backend-integration-completion-contract-2026-10-25.md) reconciles published native APIs with remaining FE work, Product decisions and runtime blockers. R6 needs a real disposable scenario and verified integration/deployment; stage panels, settings and Library queues remain separate scopes. Historical 05/10/12 contracts no longer imply native Review/criteria/filters are absent. No runtime outcome is newly claimed verified.
 
 ## Live Review and fix-round integration (2026-10-24)
 
@@ -20,7 +24,7 @@ The new backend handoff describes native case fields and the complete review/fix
 | R3 | Live Approve and review conflicts | [EPMRPP-122688](https://jiraeu.epam.com/browse/EPMRPP-122688) | 🟦 implementation validated for Code review on `EPMRPP-122688-live-test-case-approval`, stacked on R2 `5267d5261`: native AI Draft single-case approval in details/side panel, shared Review mutation lock, conflict reconciliation and version/navigation guards. 12 suites / 227 tests, type-check, changed-file ESLint and code/security reviews pass. Publication authorized; dependent PR targets R2's branch until dependencies merge, then retargets to bootcamp-prototype. Authenticated runtime pending; delivery and exact-head CI evidence are tracked in Jira/PR. |
 | R4 | Live Push to agent and fix-round states | [EPMRPP-122689](https://jiraeu.epam.com/browse/EPMRPP-122689) | 🟦 implementation validated for Code review on `EPMRPP-122689-live-fix-round`, created from PR #5848 head `3ec0526ce` as requested: native Push, safe round identity, bounded polling/read retry, shared mutation locks and terminal case/Review refresh. Full coverage 176 suites / 1799 tests, type-check, production build, changed-file ESLint and independent code/security reviews PASS. Publication authorized; dependent PR targets PR #5848's branch, then bootcamp-prototype after dependencies merge. Authenticated workflow verification pending; delivery/CI evidence is tracked in Jira/PR. |
 | R5 | Fix iteration provenance, refresh and comparison scope | [EPMRPP-122690](https://jiraeu.epam.com/browse/EPMRPP-122690) | 🟦 implementation validated for Code review on `EPMRPP-122690-live-fix-iteration-provenance`, based on R4 `b14bbb58e`: validated source/fix navigation, accepted-refresh Review reads and neutral fix-subset Compare. Full coverage 182 suites / 1882 tests, type-check, production build, changed-file ESLint, acyclic dependency check and independent code/security reviews PASS. Publication authorized; dependent PR targets R4’s branch, then bootcamp-prototype after dependencies merge. Jira moves to Code review after PR creation; delivery and exact-head CI evidence are tracked in Jira/PR. Authenticated runtime pending. |
-| R6 | GitHub Actions fix-round journey verification | [EPMRPP-122691](https://jiraeu.epam.com/browse/EPMRPP-122691) | ⬜ depends on R1–R5 and real integration/workflow configuration |
+| R6 | GitHub Actions fix-round journey verification | [EPMRPP-122691](https://jiraeu.epam.com/browse/EPMRPP-122691) | 🟧 waiting for external prerequisites on `EPMRPP-122691-github-actions-journey-verification`, based on R5 `11a81f238`: read-only preflight and native runtime checklist prepared. User confirmed no real scenario is available. Eligible case/source iteration and verified integration/workflow are required; deployed FE identity and all end-to-end outcomes remain NOT VERIFIED. GitHub PAT authentication confirmed; ReportPortal credential is a field-name placeholder and HTTPS trust validation fails. Documentation/preflight draft publication authorized; Jira remains In Progress and R6 is not complete. |
 
 Generation panels and Auto-Ready remain with existing EPMRPP-122414/EPMRPP-122415; their remaining backend decisions are not resolved by creating these tasks.
 
