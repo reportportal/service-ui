@@ -30,10 +30,15 @@ These are planned FE effort estimates, not actual delivered hours. Every new Jir
 
 ## R2 — Live review comments
 
+Started 2026-10-24 on `EPMRPP-122687-live-review-comments`, stacked on R1 commit `7bb96619a` while PR #5845 is in review. The user authorized R2 commit, push and PR creation on 2026-10-24. The dependent PR temporarily targets `EPMRPP-122686-live-test-case-ai-data` to show only R2 changes; after R1 merges, retarget it to `bootcamp-prototype`. Delivery and CI evidence are tracked in the R2 Jira issue and PR.
+
 - Integrate `GET .../review`, `POST .../review/comment`, own-comment deletion and unsent-comment discard.
 - Adapt the response envelope and `NOT_SENT`, `targetType`, 1-based `stepNumber`, `SCENARIO_TEXT`, `authorId`, ISO dates, `roundNumber` and `agentReason`.
 - Render live comments for native AI cases and use authoritative `unsentCount` / `fixInProgress` for state. Do not invent author names or permissions absent from the response.
 - Verify edit/view permissions, comment targets, empty/error states, mutation conflicts and project/case navigation races.
+- Use the numeric current-user ID for author ownership, and a localized user-ID fallback when no author name is supplied. Native `STEP` numbers come from the original scenario array before any display filtering.
+- Keep native and legacy Review capabilities explicit: native cases may read/write comments but must not call legacy `/ai`, `/review-comment`, `/fix-round` or `/lifecycle`, or enable native Push/Approve. The native fixing state must not synthesize a round number or a legacy `review.fixRound` DTO.
+- Guard GET and mutation completions across project/case changes, disable/unmount and A→B→A; retain composer text on mutation failure, reconcile server state, and block duplicate submissions and edits while fixing.
 
 ## R3 — Live Approve
 
@@ -74,7 +79,7 @@ These are planned FE effort estimates, not actual delivered hours. Every new Jir
 
 ## Execution evidence
 
-All six Jira subtasks were created with Original Estimates and breakdown comments on 2026-10-24. R1 is implemented on `EPMRPP-122686-live-test-case-ai-data`; R2–R5 remain pending and R6 also awaits actual integration/workflow configuration. The user authorized commit, push and a PR into `bootcamp-prototype` on 2026-10-24. Delivery and exact-head CI status are tracked in the R1 Jira issue and PR; no deployment or manual workflow trigger is included.
+All six Jira subtasks were created with Original Estimates and breakdown comments on 2026-10-24. R1 is implemented on `EPMRPP-122686-live-test-case-ai-data`; R2 implementation is recorded below, R3–R5 remain pending, and R6 also awaits actual integration/workflow configuration. The user authorized R1 commit, push and a PR into `bootcamp-prototype` on 2026-10-24. Delivery and exact-head CI status are tracked in the R1 Jira issue and PR; no deployment or manual workflow trigger is included.
 
 R1 implements native DTO/read presentation, current-version score/model/cost, native-before-overlay precedence (including scenario-update responses), and guards unsupported provisional actions. The first code review found that removing legacy lifecycle data bypassed Draft eligibility checks; four behavior tests reproduced the regression before a host-local native-status fix. Both code and security rechecks report no remaining introduced findings.
 
@@ -87,3 +92,19 @@ Automated checks on 2026-10-24:
 - `git diff --check`: PASS.
 
 The publication recheck also reviewed the shared AI chip tooltip wrapper/badge sizing and native header placement, with no actionable code-review findings. No authenticated runtime or visual browser check was performed for R1. Tests use explicit contract fixtures; they do not prove the deployed build, real project roles or real workflow execution. Full criterion-level metrics, native quick filters/counts, Review/Approve/Push, version history and cumulative version cost are not claimed integrated by R1. The delivery workflow is Code review after PR creation, then Testing after merge; R2 is the next implementation slice.
+
+R1 Sonar follow-up: PR [#5845](https://github.com/reportportal/service-ui/pull/5845), commit `7bb96619a487f3e5501dd5e0b64f2331b80fde41`, extracts the existing Ready-only selection and native detail read-state calculations without behavior changes. Node 20 type-check, changed-file ESLint, 3 focused suites / 56 tests and independent code/security checks pass. SonarCloud analysis at `2026-10-24T12:48:03+0000` matches that exact commit: Quality Gate OK, zero bugs/vulnerabilities/code smells and zero open issues. GitHub [Build run 40095414828](https://github.com/reportportal/service-ui/actions/runs/40095414828) subsequently completed successfully for the same head, including JS Build and Codecov. The PR remains open; no merge or deployment is claimed.
+
+## R2 local implementation evidence (2026-10-24)
+
+Native AI case details now use a separate live Review adapter/hook/strip. The URLs are `GET .../review`, `POST .../review/comment`, `DELETE .../review/comment/{id}` and `DELETE .../review/comment`. The hook validates responses, uses the server's unsent count and fixing state, checks current numeric author ownership and editor permission, prevents duplicate mutations and ignores stale completions across project/case changes, disable, unmount and A→B→A. Failed mutations retain composer text and reconcile Review; a failed refresh preserves a previously known fixing presentation while blocking mutations.
+
+Native comments use original 1-based scenario positions before empty-step filtering, localized user-ID fallbacks and generic round labels when optional metadata is absent. Native fixing locks are explicit header props; legacy DTOs, hooks and feature-OFF behavior remain separate. Native Review does not activate provisional `/ai`, `/review-comment`, `/fix-round`, `/review/fix-round` or `/lifecycle`, nor Push/Approve. Refresh is manual; fix-round polling remains R4.
+
+- Node 20 canonical `npm run type-check`: PASS.
+- Focused Jest: 8 suites / 138 tests PASS, including DTO/hook/shared comments, details, header and original step positions. Test log: `/tmp/service-ui-r2-tests.log` (local evidence only).
+- Changed-file ESLint: 17 JS/TS/TSX files, zero warnings, PASS. No SCSS changes in R2.
+- `git diff --check`: PASS.
+- Independent senior code and security reviews: PASS, no actionable introduced findings.
+
+R2 is submitted from `EPMRPP-122687-live-review-comments`, stacked on R1 commit `7bb96619a`, following the user's publication request. The delivery workflow moves Jira to Code review after PR creation; this does not mark the task deployed or runtime-verified. No authenticated browser check, backend comment mutation, merge or deployment was performed. Automated contract fixtures do not establish deployed authorization or runtime behavior. Native Library filter/count semantics, Approve and Push remain separate follow-ups.

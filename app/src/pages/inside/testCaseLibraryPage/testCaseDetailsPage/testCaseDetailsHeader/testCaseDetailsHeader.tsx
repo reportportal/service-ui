@@ -78,6 +78,7 @@ interface TestCaseDetailsHeaderProps {
   onAddToTestPlan: () => void;
   onMenuAction?: () => void;
   isScenarioEmpty?: boolean;
+  isNativeFixInProgress?: boolean;
 }
 
 export const TestCaseDetailsHeader = ({
@@ -86,6 +87,7 @@ export const TestCaseDetailsHeader = ({
   onAddToTestPlan,
   onMenuAction = () => {},
   isScenarioEmpty = false,
+  isNativeFixInProgress = false,
 }: TestCaseDetailsHeaderProps) => {
   const isAiFactoryEnabled = useAiFactoryEnabled();
   const testCase = getTestCasePresentation(rawTestCase, isAiFactoryEnabled);
@@ -103,7 +105,7 @@ export const TestCaseDetailsHeader = ({
   const { openModal: openEditScenarioModal } = useEditScenarioModal();
   const { openModal: openAutomationModal } = useAutomationModal();
   const { hasTestPlans } = useHasTestPlans();
-  const isFixRunning = Boolean(testCase.review?.fixRound);
+  const isFixRunning = isNativeFixInProgress || Boolean(testCase.review?.fixRound);
   const gateStatus = nativeSummary?.status ?? testCase.lifecycle;
   const isDraft = isDraftGateActive(isAiFactoryEnabled, gateStatus);
   const automationDisabledReason = getAutomationSkipReason(testCase);
@@ -209,6 +211,7 @@ export const TestCaseDetailsHeader = ({
   ];
 
   const handleEditScenario = () => {
+    if (isFixRunning) return;
     trackEvent(TEST_CASE_LIBRARY_EVENTS.clickEditTestCaseFromDetails(testCaseIdString));
     openEditScenarioModal({ testCase });
   };
