@@ -94,6 +94,23 @@ interface ScopedSnapshot extends ReviewSnapshot {
 }
 const EMPTY_COMMENTS: ReviewCommentRS[] = [];
 
+const getFixRoundFeedback = (
+  state: ScopedSnapshot,
+  isCurrentState: boolean,
+  completed: boolean,
+  completedRound?: NativeFixRound,
+): Pick<LiveReviewCommentsLoadState,
+  'fixRound' | 'fixRoundState' | 'fixMonitoringError' | 'fixStartError' | 'fixCompleted'> => {
+  const data = isCurrentState ? state.data : undefined;
+  return {
+    fixRound: data?.fixRound ?? (isCurrentState ? state.fixRoundState?.roundNumber : undefined),
+    fixRoundState: (isCurrentState ? state.fixRoundState : undefined) ?? (completed ? completedRound : undefined),
+    fixMonitoringError: isCurrentState ? state.fixMonitoringError : undefined,
+    fixStartError: isCurrentState ? state.fixStartError : undefined,
+    fixCompleted: completed || (isCurrentState && state.fixCompleted),
+  };
+};
+
 const updateScopePermissions = (
   scope: ReviewScope,
   canReview: boolean,
@@ -202,11 +219,7 @@ export const useLiveReviewComments = (
     comments: data?.comments ?? EMPTY_COMMENTS,
     unsentCount: data?.unsentCount ?? 0,
     fixInProgress: fixing,
-    fixRound: data?.fixRound ?? (isCurrentState ? state.fixRoundState?.roundNumber : undefined),
-    fixRoundState: (isCurrentState ? state.fixRoundState : undefined) ?? (completed ? completion?.round : undefined),
-    fixMonitoringError: isCurrentState ? state.fixMonitoringError : undefined,
-    fixStartError: isCurrentState ? state.fixStartError : undefined,
-    fixCompleted: completed || (isCurrentState && state.fixCompleted),
+    ...getFixRoundFeedback(state, isCurrentState, completed, completion?.round),
     isLoaded: Boolean(data) && !state.isError && isCurrentState,
     isLoading: isResourceEnabled && (!isCurrentState || state.isLoading),
     isError: isCurrentState && state.isError,
