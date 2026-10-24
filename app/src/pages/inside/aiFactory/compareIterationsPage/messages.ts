@@ -85,20 +85,6 @@ export const messages = defineMessages({
     id: 'CompareIterationsPage.retry',
     defaultMessage: 'Retry',
   },
-  differentRequirements: {
-    id: 'CompareIterationsPage.differentRequirements',
-    defaultMessage:
-      'Different requirements ({baseline} vs {candidate}) — compare trends, not individual cases.',
-  },
-  statusOnlyExplanation: {
-    id: 'CompareIterationsPage.statusOnlyExplanation',
-    defaultMessage:
-      'This comparison provides iteration identity and stage statuses only. Metrics and directional deltas are unavailable.',
-  },
-  unknownStage: {
-    id: 'CompareIterationsPage.unknownStage',
-    defaultMessage: 'Stage: {stage}',
-  },
   stagesTitle: {
     id: 'CompareIterationsPage.stagesTitle',
     defaultMessage: 'Stages',
@@ -122,42 +108,6 @@ export const messages = defineMessages({
   deltaColumn: {
     id: 'CompareIterationsPage.deltaColumn',
     defaultMessage: 'Δ',
-  },
-  metricTestCases: {
-    id: 'CompareIterationsPage.metricTestCases',
-    defaultMessage: 'Test Cases',
-  },
-  metricSuiteScore: {
-    id: 'CompareIterationsPage.metricSuiteScore',
-    defaultMessage: 'Suite score',
-  },
-  metricReady: {
-    id: 'CompareIterationsPage.metricReady',
-    defaultMessage: 'Ready',
-  },
-  metricFixRounds: {
-    id: 'CompareIterationsPage.metricFixRounds',
-    defaultMessage: 'Fix rounds',
-  },
-  metricAutoReadyPromoted: {
-    id: 'CompareIterationsPage.metricAutoReadyPromoted',
-    defaultMessage: 'Auto-Ready promoted',
-  },
-  metricCost: {
-    id: 'CompareIterationsPage.metricCost',
-    defaultMessage: 'Pipeline estimate',
-  },
-  metricDuration: {
-    id: 'CompareIterationsPage.metricDuration',
-    defaultMessage: 'Duration',
-  },
-  stageCost: {
-    id: 'CompareIterationsPage.stageCost',
-    defaultMessage: 'Pipeline estimate {cost}',
-  },
-  stageDuration: {
-    id: 'CompareIterationsPage.stageDuration',
-    defaultMessage: 'Duration {duration}',
   },
   unavailable: {
     id: 'CompareIterationsPage.unavailable',
