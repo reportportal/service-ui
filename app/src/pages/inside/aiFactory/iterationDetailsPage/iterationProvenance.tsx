@@ -43,7 +43,7 @@ export const IterationProvenance = ({ iteration, projectKey }: IterationProvenan
       {getIterationFixLabel(iteration.attributes) && (
         <span>{getIterationFixLabel(iteration.attributes)}</span>
       )}
-      {iteration.rerunOf?.iterationNumber && (
+      {!!iteration.rerunOf?.iterationNumber && (
         <span>
           {formatMessage(messages.sourceIteration, { number: iteration.rerunOf.iterationNumber })}
         </span>
