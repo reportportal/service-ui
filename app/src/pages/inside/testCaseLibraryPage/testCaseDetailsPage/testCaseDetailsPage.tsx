@@ -305,6 +305,20 @@ const MAIN_CONTENT_COLLAPSIBLE_SECTIONS_CONFIG = ({
   return sections;
 };
 
+const getTestCaseReadState = (
+  rawTestCase: ReturnType<typeof testCaseDetailsSelector>,
+  isAiFactoryEnabled: boolean,
+) => {
+  const testCaseDetails = rawTestCase
+    ? getTestCasePresentation(rawTestCase, isAiFactoryEnabled)
+    : rawTestCase;
+  return {
+    testCaseDetails,
+    nativeSummary: isAiFactoryEnabled ? getNativeTestCaseSummary(testCaseDetails) : undefined,
+    isLegacyAiEnabled: isAiFactoryEnabled && !hasNativeTestCaseData(testCaseDetails),
+  };
+};
+
 export const TestCaseDetailsPage = () => {
   const { formatMessage } = useIntl();
   const { trackEvent } = useTracking();
@@ -318,10 +332,10 @@ export const TestCaseDetailsPage = () => {
   const projectKey = useSelector(projectKeySelector);
   const projectRoute = useSelector(urlOrganizationAndProjectSelector) as ProjectDetails | undefined;
   const isAiFactoryEnabled = useAiFactoryEnabled();
-  const testCaseDetails = rawTestCaseDetails
-    ? getTestCasePresentation(rawTestCaseDetails, isAiFactoryEnabled)
-    : rawTestCaseDetails;
-  const nativeSummary = isAiFactoryEnabled ? getNativeTestCaseSummary(testCaseDetails) : undefined;
+  const { testCaseDetails, nativeSummary, isLegacyAiEnabled } = getTestCaseReadState(
+    rawTestCaseDetails,
+    isAiFactoryEnabled,
+  );
 
   const testCaseId = testCaseDetails?.id || 0;
   const aiDetailsState = useTestCaseAi(
@@ -346,7 +360,7 @@ export const TestCaseDetailsPage = () => {
     dispatch({ type: GET_TEST_CASE_DETAILS, payload: { testCaseId } });
   }, [aiDetailsState, dispatch, testCaseId]);
   const isAutomationPollingEnabled = shouldPollAutomation({
-    isAiFactoryEnabled: isAiFactoryEnabled && !hasNativeTestCaseData(testCaseDetails),
+    isAiFactoryEnabled: isLegacyAiEnabled,
     projectKey,
     testCaseId,
     testCaseAutomationStatus: testCaseDetails?.automation?.status,
@@ -355,7 +369,7 @@ export const TestCaseDetailsPage = () => {
     isTestCaseDetailsLoading: isLoadingTestCaseDetails,
   });
   const isAutomationSectionVisible = shouldShowAutomationSection({
-    isAiFactoryEnabled: isAiFactoryEnabled && !hasNativeTestCaseData(testCaseDetails),
+    isAiFactoryEnabled: isLegacyAiEnabled,
     hasLifecycle: Boolean(testCaseDetails?.lifecycle),
     canAutomate: canAutomateTestCases,
     hasLoadedData: Boolean(aiDetailsState.data),

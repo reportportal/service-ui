@@ -174,6 +174,27 @@ const shouldShowFolderEmptyState = ({
   !hasTagFilter &&
   (!isAiFactoryEnabled || !hasAiFilters);
 
+const getReadyOnlySelection = (
+  selectedRowIds: number[],
+  testCases: (TestCase | SelectedTestCaseRow)[],
+  isAiFactoryEnabled: boolean,
+) => {
+  const selection = partitionReadyOnlySelection(
+    selectedRowIds,
+    testCases.map((testCase) => ({
+      ...testCase,
+      lifecycle: isAiFactoryEnabled
+        ? (getNativeTestCaseSummary(testCase)?.status ?? testCase.lifecycle)
+        : testCase.lifecycle,
+    })),
+    isAiFactoryEnabled,
+  );
+  return {
+    ...selection,
+    hasOnlyDraftsSelected: selection.skippedDrafts.length > 0 && selection.eligibleIds.length === 0,
+  };
+};
+
 export const AllTestCasesPage = ({
   testCases,
   isLoading,
@@ -240,21 +261,10 @@ export const AllTestCasesPage = ({
 
     return automationDisabledMessages[[...reasons][0]];
   }, [automationSelection.skipped]);
-  const { eligibleIds, skippedDrafts } = useMemo(
-    () =>
-      partitionReadyOnlySelection(
-        selectedRowIds,
-        selectedTestCases.map((testCase) => ({
-          ...testCase,
-          lifecycle: isAiFactoryEnabled
-            ? (getNativeTestCaseSummary(testCase)?.status ?? testCase.lifecycle)
-            : testCase.lifecycle,
-        })),
-        isAiFactoryEnabled,
-      ),
+  const { eligibleIds, skippedDrafts, hasOnlyDraftsSelected } = useMemo(
+    () => getReadyOnlySelection(selectedRowIds, selectedTestCases, isAiFactoryEnabled),
     [isAiFactoryEnabled, selectedRowIds, selectedTestCases],
   );
-  const hasOnlyDraftsSelected = skippedDrafts.length > 0 && eligibleIds.length === 0;
 
   const isAddToLaunchDisabled = useMemo(() => {
     const loadedEligibleTestCases = eligibleIds
