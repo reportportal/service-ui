@@ -22,6 +22,8 @@ import {
   urlOrganizationAndProjectSelector,
 } from 'controllers/pages';
 
+import type { ReducedPipelineIteration } from 'controllers/aiFactory/pipelines';
+
 import { ReducedIterationCard } from './reducedIterationCard';
 
 jest.mock(
@@ -93,6 +95,52 @@ describe('ReducedIterationCard', () => {
     expect(wrapper.text()).toContain('Prepare · Passed');
   });
 
+  test('identifies a fix iteration and renders source display number as plain text inside one card link', () => {
+    const iteration: ReducedPipelineIteration = {
+      kind: 'reduced',
+      id: 72,
+      pipelineId: 7,
+      number: 3,
+      status: 'WAITING',
+      stages: [],
+      rerunOf: { id: 31, iterationNumber: 1 },
+      attributes: [
+        { key: 'fixRoundId', type: 'NONE', value: '5' },
+        { key: 'fixRound', type: 'META', value: 'Fix TC101' },
+      ],
+    };
+    const wrapper = shallow(
+      <ReducedIterationCard pipelineName="Generation" iteration={iteration} />,
+    );
+    expect(wrapper.text()).toContain('Fix iteration');
+    expect(wrapper.text()).toContain('Fix TC101');
+    expect(wrapper.text()).toContain('Iteration #1');
+    expect(wrapper.find('Link')).toHaveLength(1);
+    expect(wrapper.find('a')).toHaveLength(0);
+    expect(wrapper.find('Link').prop('to')).toMatchObject({
+      payload: { iterationId: 72, pipelineId: 7 },
+    });
+  });
+
+  test('keeps ordinary reruns distinct from fix iterations and never displays a database ID as the source number', () => {
+    const iteration: ReducedPipelineIteration = {
+      kind: 'reduced',
+      id: 72,
+      pipelineId: 7,
+      number: 3,
+      status: 'PASSED',
+      stages: [],
+      rerunOf: { id: 31 },
+      attributes: [],
+    };
+    const wrapper = shallow(
+      <ReducedIterationCard pipelineName="Generation" iteration={iteration} />,
+    );
+    expect(wrapper.text()).not.toContain('Fix iteration');
+    expect(wrapper.text()).not.toContain('Iteration #31');
+    expect(wrapper.find('Link')).toHaveLength(1);
+  });
+
   test('colors the backend categories while preserving their display text', () => {
     const wrapper = shallow(
       <ReducedIterationCard
@@ -107,8 +155,16 @@ describe('ReducedIterationCard', () => {
           attributes: [],
           stages: [
             { key: 'create', label: 'Create', status: 'PASSED', statusText: 'Passed' },
-            { key: 'review', label: 'Review', status: 'WAITING', statusText: 'In progress',
-              attributes: [{ key: 'ready', value: '3' }, { key: 'total', value: '4' }] },
+            {
+              key: 'review',
+              label: 'Review',
+              status: 'WAITING',
+              statusText: 'In progress',
+              attributes: [
+                { key: 'ready', value: '3' },
+                { key: 'total', value: '4' },
+              ],
+            },
           ],
         }}
       />,
@@ -124,19 +180,36 @@ describe('ReducedIterationCard', () => {
   });
 
   test('renders LP2 metadata, Review result, stage summary, and TAG values', () => {
-    const wrapper = shallow(<ReducedIterationCard pipelineName="Release validation" iteration={{
-      kind: 'reduced', id: 31, pipelineId: 7, number: 1, status: 'PASSED',
-      attributes: [
-        { key: 'requirement', value: 'US-TMS-MIG-001', type: 'META' },
-        { key: 'testCases', value: '4', type: 'META' },
-        { key: 'suiteScore', value: '79', type: 'META' },
-        { key: 'ci', value: '#1284551', type: 'TAG' },
-      ],
-      stages: [{ key: 'review', label: 'Review', status: 'PASSED',
-        summary: '2/4 Ready', attributes: [
-          { key: 'ready', value: '2' }, { key: 'total', value: '4' },
-        ] }],
-    }} />);
+    const wrapper = shallow(
+      <ReducedIterationCard
+        pipelineName="Release validation"
+        iteration={{
+          kind: 'reduced',
+          id: 31,
+          pipelineId: 7,
+          number: 1,
+          status: 'PASSED',
+          attributes: [
+            { key: 'requirement', value: 'US-TMS-MIG-001', type: 'META' },
+            { key: 'testCases', value: '4', type: 'META' },
+            { key: 'suiteScore', value: '79', type: 'META' },
+            { key: 'ci', value: '#1284551', type: 'TAG' },
+          ],
+          stages: [
+            {
+              key: 'review',
+              label: 'Review',
+              status: 'PASSED',
+              summary: '2/4 Ready',
+              attributes: [
+                { key: 'ready', value: '2' },
+                { key: 'total', value: '4' },
+              ],
+            },
+          ],
+        }}
+      />,
+    );
 
     expect(wrapper.text()).toContain('US-TMS-MIG-001');
     expect(wrapper.text()).toContain('Suite score:79');

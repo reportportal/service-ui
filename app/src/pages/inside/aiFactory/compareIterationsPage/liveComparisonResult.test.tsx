@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { shallow } from 'enzyme';
+import { shallow, type CommonWrapper } from 'enzyme';
 
 import type { LivePipelineComparison } from 'controllers/aiFactory/pipelines';
 
@@ -54,6 +54,10 @@ const comparison = (sameScope: boolean | undefined): LivePipelineComparison => (
     },
   ],
 });
+
+interface TestNodes {
+  map: <T>(callback: (node: CommonWrapper) => T) => T[];
+}
 
 describe('LiveComparisonResult', () => {
   test('shows server stages, metrics, and case rows for the confirmed same scope', () => {
@@ -102,5 +106,56 @@ describe('LiveComparisonResult', () => {
     expect(wrapper.find('[data-automation-id="fullComparisonApiResponse"]').text()).toContain(
       'backendOnly',
     );
+  });
+});
+
+describe('fix subset comparison rendering', () => {
+  test('shows independent values without a suite delta, verdict, backend conclusion or case table', () => {
+    const data = comparison(true);
+    data.isFixComparison = true;
+    data.note = 'The suite improved';
+    data.metrics = [
+      {
+        key: 'cost',
+        label: 'Cost',
+        valueType: 'MONEY',
+        baseline: '1.27',
+        candidate: '0.22',
+        delta: '-1.05',
+        verdict: 'BETTER',
+      },
+    ];
+    data.stages[0] = {
+      ...data.stages[0],
+      baselineDurationMs: 1000,
+      candidateDurationMs: 200,
+      baselineCost: 1.27,
+      candidateCost: 0.22,
+    };
+    data.rawResponse = { note: data.note, metrics: data.metrics, sections: data.sections };
+
+    const wrapper = shallow(<LiveComparisonResult comparison={data} />);
+    const raw = wrapper.find('[data-automation-id="fullComparisonApiResponse"]');
+    expect(raw.text()).toContain('The suite improved');
+    expect(raw.text()).toContain('BETTER');
+    const headings = (wrapper.find('th') as unknown as TestNodes).map((node) => node.text());
+    expect(headings).not.toContain('Delta');
+    expect(headings).not.toContain('Verdict');
+    expect(wrapper.find('SystemMessage').text().toLowerCase()).toContain('subset');
+    expect(wrapper.find('SystemMessage').text()).not.toContain('The suite improved');
+    expect(
+      (wrapper.find('.section__title') as unknown as TestNodes).map((node) => node.text()),
+    ).not.toContain('Graded cases');
+    expect((wrapper.find('td') as unknown as TestNodes).map((node) => node.text())).toEqual([
+      'CostMoney',
+      '$1.27',
+      '$0.22',
+    ]);
+    expect(
+      (wrapper.find('StageComparisonEntry') as unknown as TestNodes).map((node) => node.props()),
+    ).toEqual([
+      expect.objectContaining({ durationMs: 1000, cost: 1.27, status: 'Passed' }),
+      expect.objectContaining({ durationMs: 200, cost: 0.22, status: 'Failed' }),
+    ]);
   });
 });

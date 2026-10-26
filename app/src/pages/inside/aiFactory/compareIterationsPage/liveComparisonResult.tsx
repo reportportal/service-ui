@@ -103,14 +103,14 @@ export interface LiveComparisonResultProps {
   comparison: LivePipelineComparison;
 }
 
-export const LiveComparisonResult = ({ comparison }: LiveComparisonResultProps) => {
-  const { formatMessage } = useIntl();
-  const { baseline, candidate } = comparison;
-  const hasMetricTypes = comparison.metrics.some((metric) => metric.valueType);
-  const hasMetricVerdicts = comparison.metrics.some((metric) => metric.verdict);
-
+const renderComparisonScopeNotice = (
+  comparison: LivePipelineComparison,
+  formatMessage: ReturnType<typeof useIntl>['formatMessage'],
+) => {
+  if (comparison.isFixComparison)
+    return <SystemMessage mode="info">{formatMessage(messages.fixSubsetScope)}</SystemMessage>;
   return (
-    <div className={cx('result')} data-automation-id="livePipelineComparison">
+    <>
       {comparison.sameScope === false && (
         <SystemMessage mode="info">
           {comparison.note || formatMessage(messages.differentScope)}
@@ -122,6 +122,20 @@ export const LiveComparisonResult = ({ comparison }: LiveComparisonResultProps) 
       {comparison.sameScope !== false && comparison.note && (
         <SystemMessage mode="info">{comparison.note}</SystemMessage>
       )}
+    </>
+  );
+};
+
+export const LiveComparisonResult = ({ comparison }: LiveComparisonResultProps) => {
+  const { formatMessage } = useIntl();
+  const { baseline, candidate } = comparison;
+  const hasMetricTypes = comparison.metrics.some((metric) => metric.valueType);
+  const hasMetricVerdicts =
+    !comparison.isFixComparison && comparison.metrics.some((metric) => metric.verdict);
+
+  return (
+    <div className={cx('result')} data-automation-id="livePipelineComparison">
+      {renderComparisonScopeNotice(comparison, formatMessage)}
       <div className={cx('identities', 'live-identities')}>
         <div className={cx('identity', 'live-identity')}>
           <span className={cx('live-identity__label')}>
@@ -182,7 +196,9 @@ export const LiveComparisonResult = ({ comparison }: LiveComparisonResultProps) 
                     {formatMessage(messages.candidateLabel)} ·{' '}
                     {formatMessage(messages.iterationOption, { number: candidate.number })}
                   </th>
-                  <th scope="col">{formatMessage(messages.deltaColumn)}</th>
+                  {!comparison.isFixComparison && (
+                    <th scope="col">{formatMessage(messages.deltaColumn)}</th>
+                  )}
                   {hasMetricVerdicts && (
                     <th scope="col">{formatMessage(messages.verdictColumn)}</th>
                   )}
@@ -213,13 +229,15 @@ export const LiveComparisonResult = ({ comparison }: LiveComparisonResultProps) 
                         formatMessage(messages.unavailable),
                       )}
                     </td>
-                    <td>
-                      {formatMetricValue(
-                        metric.delta,
-                        metric.valueType,
-                        formatMessage(messages.unavailable),
-                      )}
-                    </td>
+                    {!comparison.isFixComparison && (
+                      <td>
+                        {formatMetricValue(
+                          metric.delta,
+                          metric.valueType,
+                          formatMessage(messages.unavailable),
+                        )}
+                      </td>
+                    )}
                     {hasMetricVerdicts && (
                       <td>
                         {metric.verdict
@@ -234,7 +252,7 @@ export const LiveComparisonResult = ({ comparison }: LiveComparisonResultProps) 
           </div>
         </section>
       )}
-      {comparison.sections.map((section) => (
+      {(comparison.isFixComparison ? [] : comparison.sections).map((section) => (
         <section className={cx('section')} key={section.key}>
           <h2 className={cx('section__title')}>
             {section.stageName ? `${section.stageName} · ${section.title}` : section.title}

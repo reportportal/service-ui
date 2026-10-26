@@ -147,3 +147,68 @@ describe('adaptLivePipelineComparison', () => {
     expect(unknownScope.sections).toEqual([]);
   });
 });
+
+describe('fix iteration subset comparison', () => {
+  const metric = {
+    key: 'cost',
+    label: 'Cost',
+    valueType: 'MONEY',
+    baseline: '1.27',
+    candidate: '0.22',
+    delta: '-1.05',
+    verdict: 'BETTER',
+  };
+  const section = { sectionKey: 'gradedCases', title: 'Graded cases', rows: [{ key: 'TC101' }] };
+
+  test.each(['baseline', 'candidate'] as const)(
+    'recognizes fix metadata on the %s even when copied scope says true',
+    (side) => {
+      const payload = {
+        baseline: detail(11, 7, 1),
+        candidate: detail(12, 7, 2),
+        sameScope: true,
+        metrics: [metric],
+        sections: [section],
+      };
+      Object.assign(payload[side], {
+        attributes: [{ key: 'fixRoundId', type: 'NONE', value: '5' }],
+      });
+      const result = adaptLivePipelineComparison(payload, 7, 12, 11);
+      expect(result.isFixComparison).toBe(true);
+      expect(result.sameScope).toBe(true);
+      expect(result.metrics).toEqual([
+        expect.objectContaining({
+          baseline: '1.27',
+          candidate: '0.22',
+          delta: undefined,
+          verdict: undefined,
+        }),
+      ]);
+      expect(result.sections).toEqual([]);
+      expect(result.rawResponse).toBe(payload);
+      expect(result.rawResponse?.metrics).toEqual([metric]);
+    },
+  );
+
+  test.each([
+    { rerunOf: { id: 11, iterationNumber: 1 } },
+    { attributes: [{ key: 'fixRoundId', type: 'TAG', value: '5' }] },
+    { attributes: [{ key: 'unrelated', type: 'META', value: 'fix test case' }] },
+  ])('preserves an ordinary rerun comparison %p', (provenance) => {
+    const result = adaptLivePipelineComparison(
+      {
+        baseline: detail(11, 7, 1),
+        candidate: { ...detail(12, 7, 2), ...provenance },
+        sameScope: true,
+        metrics: [metric],
+        sections: [section],
+      },
+      7,
+      12,
+      11,
+    );
+    expect(result.isFixComparison).not.toBe(true);
+    expect(result.metrics[0]).toMatchObject({ delta: '-1.05', verdict: 'BETTER' });
+    expect(result.sections).toHaveLength(1);
+  });
+});

@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+import { isFixIteration } from 'controllers/aiFactory/pipelines/iterationProvenance';
+
 import { adaptLivePipelineIterationDetail } from './liveAdapters';
 
 type RecordValue = Record<string, unknown>;
@@ -76,6 +78,7 @@ export interface LivePipelineComparison {
   baseline: { id: number; number: number; status: string; statusText?: string };
   candidate: { id: number; number: number; status: string; statusText?: string };
   sameScope?: boolean;
+  isFixComparison?: boolean;
   note?: string;
   stages: LiveComparisonStage[];
   metrics: LiveComparisonMetric[];
@@ -208,8 +211,11 @@ export const adaptLivePipelineComparison = (
   }
   const baseline = adaptLivePipelineIterationDetail(raw.baseline, pipelineId, baselineId);
   const candidate = adaptLivePipelineIterationDetail(raw.candidate, pipelineId, candidateId);
+  const isFixComparison =
+    isFixIteration(baseline.attributes) || isFixIteration(candidate.attributes);
   return {
     mode: 'live',
+    isFixComparison,
     pipelineId,
     baseline: {
       id: baseline.id,
@@ -226,8 +232,10 @@ export const adaptLivePipelineComparison = (
     ...(typeof raw.sameScope === 'boolean' ? { sameScope: raw.sameScope } : {}),
     ...(string(raw.note, 2048) ? { note: string(raw.note, 2048) } : {}),
     stages: adaptStages(raw.stages),
-    metrics: adaptMetrics(raw.metrics),
-    sections: raw.sameScope === true ? adaptSections(raw.sections) : [],
+    metrics: adaptMetrics(raw.metrics).map((metric) =>
+      isFixComparison ? { ...metric, delta: undefined, verdict: undefined } : metric,
+    ),
+    sections: !isFixComparison && raw.sameScope === true ? adaptSections(raw.sections) : [],
     rawResponse: raw,
   };
 };

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useIntl } from 'react-intl';
 import { Button, SystemMessage } from '@reportportal/ui-kit';
 
@@ -31,6 +31,7 @@ const MAX_CASES = 50;
 export interface LiveReviewCasesProps {
   displayIds: string[];
   projectKey: string;
+  refreshIdentity?: object;
 }
 
 interface CaseResult {
@@ -38,14 +39,22 @@ interface CaseResult {
   testCase: LiveLibraryCase | null;
 }
 
-export const LiveReviewCases = ({ displayIds, projectKey }: LiveReviewCasesProps) => {
+export const LiveReviewCases = ({
+  displayIds: providedDisplayIds,
+  projectKey,
+  refreshIdentity,
+}: LiveReviewCasesProps) => {
   const { formatMessage } = useIntl();
-  const [response, setResponse] = useState<{ requestKey: string; results: CaseResult[] } | null>(
+  const displayIds = Array.from(new Set(providedDisplayIds));
+  const [response, setResponse] = useState<{ requestKey: object; results: CaseResult[] } | null>(
     null,
   );
   const [retry, setRetry] = useState(0);
   const idsKey = JSON.stringify(displayIds);
-  const requestKey = `${projectKey}:${idsKey}:${retry}`;
+  const requestKey = useMemo(
+    () => ({ projectKey, idsKey, retry, refreshIdentity }),
+    [projectKey, idsKey, retry, refreshIdentity],
+  );
   const results = response?.requestKey === requestKey ? response.results : null;
 
   useEffect(() => {

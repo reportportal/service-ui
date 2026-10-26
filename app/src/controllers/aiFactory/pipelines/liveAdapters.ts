@@ -14,6 +14,11 @@
  * limitations under the License.
  */
 
+import {
+  adaptIterationReference,
+  type IterationReference,
+} from 'controllers/aiFactory/pipelines/iterationProvenance';
+
 import { IterationSummaryRS, LivePipelineStatus, PipelineRS } from 'types/aiFactory';
 
 export type ReducedPipelineStatus =
@@ -82,6 +87,7 @@ export interface LivePipelineIterationRaw {
   metrics?: unknown;
   attributes?: unknown;
   trigger?: unknown;
+  rerunOf?: unknown;
   rerun?: unknown;
   rerunOfIterationId?: unknown;
   stagesCount?: unknown;
@@ -185,6 +191,7 @@ export interface ReducedPipelineIterationDetail extends Omit<ReducedPipelineIter
 }
 
 export interface ReducedPipelineIteration {
+  rerunOf?: IterationReference;
   kind: 'reduced';
   id: number;
   pipelineId: number;
@@ -879,6 +886,7 @@ const adaptIteration = (
     id,
     pipelineId,
     number,
+    rerunOf: adaptIterationReference(raw.rerunOf),
     status: asStatus(raw.statusCategory ?? raw.status),
     ...(raw.statusCategory !== undefined
       ? { statusText: asTrimmedString(raw.status, MAX_NAME_LENGTH) }

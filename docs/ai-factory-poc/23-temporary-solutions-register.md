@@ -44,6 +44,12 @@ Validation: 15 focused suites / 280 tests, final Node 20 type-check, changed-fil
 
 Local R4 validation passes: full coverage 176 suites / 1799 tests, type-check, production build, changed-file ESLint and independent reviews. The branch starts exactly at PR #5848 head `3ec0526ce`; publication is authorized with delivery/CI evidence tracked in Jira/PR, while authenticated backend/workflow verification remains pending. R5 provenance/comparison and R6 integration/workflow evidence remain open, so TMP-06 stays **partially removed**. See [R4 contract, evidence and pending runtime checklist](25-live-review-fix-round-integration-2026-10-24.md).
 
+## TMP-05/TMP-06 update — live fix provenance and comparison (2026-10-24)
+
+[EPMRPP-122690](https://jiraeu.epam.com/browse/EPMRPP-122690) now uses native `rerunOf` and fix attributes in LP2/LP3, validates explicit source/result identities through on-demand canonical GETs, and offers source/fix/Compare navigation in details and the native Review strip. It does not invent pipeline IDs, version history, case diffs or cumulative cost. Accepted LP3 refreshes re-read only their deduplicated known Library rows. Fix comparisons show independent facts without aggregate delta/verdict or unsupported case comparisons, even when the backend reports matching scope.
+
+Local full coverage passes (182 suites / 1882 tests), together with type-check, production build, changed-file lint, acyclic dependency check and independent code/security reviews. R5 publication is authorized, with delivery/CI evidence tracked in Jira/PR; deployed browser/backend and real workflow evidence remain pending R6. Legacy mock consumers, native filters/counts and other unresolved contracts remain, so TMP-05/TMP-06 stay **partially removed**. See [R5 evidence and runtime checklist](25-live-review-fix-round-integration-2026-10-24.md).
+
 ## Rule for closing a row
 
 For the relevant FE task, record the real endpoint and response evidence, replace the consuming

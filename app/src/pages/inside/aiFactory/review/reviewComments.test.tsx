@@ -37,7 +37,11 @@ jest.mock('@reportportal/ui-kit', () => ({
   DeleteIcon: () => <span>DeleteIcon</span>,
   Tooltip: ({ children }: { children: React.ReactNode }) => <>{children}</>,
 }));
-jest.mock('react-redux', () => ({ useDispatch: jest.fn() }));
+jest.mock('react-redux', () => ({
+  useDispatch: jest.fn(),
+  useSelector: jest.fn(() => ({ organizationSlug: 'org', projectSlug: 'project' })),
+}));
+jest.mock('controllers/project', () => ({ projectKeySelector: jest.fn() }));
 jest.mock('controllers/modal', () => ({
   showModalAction: jest.fn((payload: unknown) => ({ type: 'SHOW_MODAL', payload })),
 }));
