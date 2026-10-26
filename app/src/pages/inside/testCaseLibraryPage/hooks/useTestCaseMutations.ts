@@ -23,6 +23,7 @@ import { FolderWithFullPath, GET_TEST_CASE_DETAILS } from 'controllers/testCase'
 import { hideModalAction } from 'controllers/modal';
 import { fetch } from 'common/utils';
 import { useDebouncedSpinner, useNotification } from 'common/hooks';
+import { urlFolderIdSelector } from 'controllers/pages';
 import { NotificationMessageKey } from 'common/hooks/useNotification';
 import { URLS } from 'common/urls';
 import { Attribute } from 'types/testCase';
@@ -67,6 +68,7 @@ export const useTestCaseMutations = (testCaseId?: number) => {
   const projectKey = useSelector(projectKeySelector);
   const { processFolderDestinationAndComplete } = useFolderActions();
   const refetchCurrentTestCases = useRefetchCurrentTestCases();
+  const currentUrlFolderId = useSelector(urlFolderIdSelector);
   const { showSuccessNotification, showErrorNotification } = useNotification();
 
   const completeFolderDestination = useCallback(
@@ -156,10 +158,20 @@ export const useTestCaseMutations = (testCaseId?: number) => {
         });
 
         const refreshedTestCaseId = response?.id ?? testCaseId;
+        const folderIdFromResponse = response?.testFolder?.id;
 
         if (refreshedTestCaseId) {
           dispatch({ type: GET_TEST_CASE_DETAILS, payload: { testCaseId: refreshedTestCaseId } });
-          if (!options.isDetailsPage) {
+
+          // Only refetch the current list when the response folder matches
+          // the current URL folder (to avoid refreshing an unrelated folder/page)
+          // or when both are undefined (top-level/all test cases view).
+          const shouldRefetchList =
+            !options.isDetailsPage &&
+            ((folderIdFromResponse && String(folderIdFromResponse) === String(currentUrlFolderId)) ||
+              (!folderIdFromResponse && !currentUrlFolderId));
+
+          if (shouldRefetchList) {
             refetchCurrentTestCases();
           }
         }
