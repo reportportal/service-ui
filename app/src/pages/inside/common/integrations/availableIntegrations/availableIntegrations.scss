@@ -38,7 +38,7 @@
 }
 
 .integrations-text {
-  @include measure(11px, 16px, var(--rp-ui-base-e-300), var(--rp-ui-base-font-family));
+  @include measure(11px, 16px, var(--rp-ui-base-grey-800), var(--rp-ui-base-font-family));
 }
 
 .empty-state {
@@ -50,7 +50,7 @@
   padding: 16px;
   border-radius: 8px;
   background-color: var(--rp-ui-base-bg-200);
-  color: var(--rp-ui-base-e-400);
+  color: var(--rp-ui-base-grey-800);
   box-sizing: border-box;
 
   .empty-state-text {

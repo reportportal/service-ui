@@ -81,7 +81,7 @@
 }
 
 .integration-version {
-  @include integration-info(var(--rp-ui-base-e-400), 16px, 11px, var(--rp-ui-base-fw-regular));
+  @include integration-info(var(--rp-ui-base-grey-800), 16px, 11px, var(--rp-ui-base-fw-regular));
 }
 
 .integration-description {
