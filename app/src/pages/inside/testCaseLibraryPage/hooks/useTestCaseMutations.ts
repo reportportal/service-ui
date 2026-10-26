@@ -69,7 +69,7 @@ export const useTestCaseMutations = (testCaseId?: number) => {
   const { processFolderDestinationAndComplete } = useFolderActions();
   const refetchCurrentTestCases = useRefetchCurrentTestCases();
   const currentUrlFolderId = useSelector(urlFolderIdSelector);
-  const currentUrlFolderIdRef = useRef<number | undefined>(currentUrlFolderId);
+  const currentUrlFolderIdRef = useRef<string>(currentUrlFolderId);
 
   useEffect(() => {
     currentUrlFolderIdRef.current = currentUrlFolderId;
@@ -174,13 +174,15 @@ export const useTestCaseMutations = (testCaseId?: number) => {
 
           // Only refetch the current list when the operation is not on the
           // details page AND either:
-          // - the user currently views all test cases (no folder in URL),
-          //   in which case the edited test case may appear there regardless
-          //   of its folder; OR
+          // - the user currently views all test cases (no folder in URL, represented
+          //   by an empty string), in which case the edited test case may appear
+          //   there regardless of its folder; OR
           // - the response folder matches the current URL folder.
-          const shouldRefetchList =
-            !options.isDetailsPage &&
-            (latestUrlFolderId == null || String(folderIdFromResponse) === String(latestUrlFolderId));
+          const isAllCasesView = latestUrlFolderId === '';
+          const folderMatches =
+            folderIdFromResponse != null && String(folderIdFromResponse) === latestUrlFolderId;
+
+          const shouldRefetchList = !options.isDetailsPage && (isAllCasesView || folderMatches);
 
           if (shouldRefetchList) {
             refetchCurrentTestCases();
