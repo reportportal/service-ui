@@ -70,6 +70,10 @@ export const ExistingLaunchFields = ({ onLaunchSelect }: ExistingLaunchFieldsPro
         createWithoutConfirmation
         skipOptionCreation
         isDropdownMode
+        inputProps={{
+          clearable: !!input.value,
+          onClear: () => handleLaunchChange(null, input),
+        }}
         minLength={0}
         maxLength={LAUNCH_NAME_MAX_LENGTH}
         limitOptions={PAGE_SIZE}
