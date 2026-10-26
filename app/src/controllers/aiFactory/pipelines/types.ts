@@ -16,7 +16,7 @@
 
 import { Action } from 'redux';
 
-import { IterationRS, IterationSummaryRS, PipelineComparison, PipelineRS } from 'types/aiFactory';
+import { IterationRS, IterationSummaryRS, PipelineRS } from 'types/aiFactory';
 import {
   CLEAR_PIPELINE_COMPARISON,
   GET_PIPELINE_COMPARISON,
@@ -35,7 +35,7 @@ import type { PipelineCatalogTransport, PipelineDetailTransport } from './transp
 
 export type PipelineCatalogItem = PipelineRS | ReducedPipeline;
 export type PipelineIterationItem = IterationSummaryRS | ReducedPipelineIteration;
-export type PipelineComparisonResult = PipelineComparison | LivePipelineComparison;
+export type PipelineComparisonResult = LivePipelineComparison;
 export type IterationsByPipelineId = Record<number, PipelineIterationItem[]>;
 export type IterationsLoadingByPipelineId = Record<number, boolean>;
 export type IterationsErrorByPipelineId = Record<number, boolean>;

@@ -22,13 +22,8 @@ import {
   StageKey,
 } from 'types/aiFactory';
 import { findCase, findIteration, findPipeline, resetMockDb } from './db';
-import {
-  toIterationRS,
-  toIterationSummaryRS,
-  toPipelineCompareRS,
-  toTestCaseAiExtension,
-  toTestCaseAiRS,
-} from './viewModels';
+import { toIterationRS, toIterationSummaryRS } from './testUtils/iterationViewModels';
+import { toTestCaseAiExtension, toTestCaseAiRS } from './viewModels';
 
 beforeEach(() => resetMockDb());
 
@@ -79,44 +74,6 @@ describe('toIterationRS', () => {
       expect.objectContaining({ testCaseId: 1001, displayId: 'TC101', name: 'TC101' }),
       expect.objectContaining({ testCaseId: 1002, displayId: 'TC102', name: 'TC102' }),
     ]);
-  });
-});
-
-describe('toPipelineCompareRS', () => {
-  test('keeps candidate and baseline identity and emits stage deltas keyed by stage', () => {
-    const pipeline = findPipeline(1);
-    const result = toPipelineCompareRS(pipeline, findIteration(103), findIteration(102));
-
-    expect(result.mock).toEqual({
-      kind: 'REPORTPORTAL_AI_FACTORY_COMPARE_DEMO',
-      version: 1,
-    });
-    expect(result.current).toMatchObject({ id: 103, pipelineId: 1, iterationNumber: 3 });
-    expect(result.previous).toMatchObject({ id: 102, pipelineId: 1, iterationNumber: 2 });
-    expect(result.current?.mockMetrics).toEqual(
-      expect.objectContaining({
-        autoReadyPromotedCount: expect.any(Number),
-      }),
-    );
-    expect(result.previous?.mockMetrics?.criterionAverages).toEqual(
-      expect.objectContaining({ atomicity: expect.any(Number) }),
-    );
-    expect(result.stageDeltas?.map(({ stageKey }) => stageKey)).toEqual([
-      StageKey.CREATE,
-      StageKey.GRADE,
-      StageKey.UPLOAD,
-      StageKey.REVIEW,
-    ]);
-    expect(
-      result.stageDeltas?.find(({ stageKey }) => stageKey === String(StageKey.GRADE)),
-    ).toMatchObject({
-      current: {
-        mockMetrics: { metric: result.current?.mockMetrics?.suiteScore },
-      },
-      previous: {
-        mockMetrics: { metric: result.previous?.mockMetrics?.suiteScore },
-      },
-    });
   });
 });
 

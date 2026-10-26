@@ -23,7 +23,7 @@ import {
   PROJECT_PIPELINES_PAGE,
   PROJECT_PIPELINE_ITERATION_PAGE,
 } from 'controllers/pages';
-import { PipelineComparison } from 'types/aiFactory';
+import type { LivePipelineComparison } from './liveCompareAdapter';
 
 import { getPipelineComparisonAction, clearPipelineComparisonAction } from './actionCreators';
 import {
@@ -35,12 +35,14 @@ import {
 import { aiFactoryPipelinesReducer } from './reducer';
 import type { PipelinesState } from './types';
 
-const comparison: PipelineComparison = {
-  mode: 'status-only',
+const comparison: LivePipelineComparison = {
+  mode: 'live',
+  projectKey: 'demo',
   pipelineId: 1,
   candidate: { id: 102, number: 2, status: 'COMPLETED' },
   baseline: { id: 101, number: 1, status: 'IN_REVIEW' },
-  hasDifferentRequirements: false,
+  metrics: [],
+  sections: [],
   stages: [],
 };
 

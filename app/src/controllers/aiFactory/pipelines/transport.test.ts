@@ -14,25 +14,19 @@
  * limitations under the License.
  */
 
-import {
-  getPipelineCatalogTransport,
-  getPipelineDetailTransport,
-  isMockDownstreamCompatible,
-} from './transport';
+import { getPipelineCatalogTransport, getPipelineDetailTransport } from './transport';
 
 describe('pipeline read transport', () => {
-  test.each([null, 'mock', 'postman-demo', 'live'])('always uses LP1-LP3 API with %s stored', (mode) => {
-    localStorage.clear();
-    if (mode) {
-      localStorage.setItem('ai_factory_transport', JSON.stringify({ pipelineCatalog: mode }));
-    }
+  test.each([null, 'mock', 'postman-demo', 'live'])(
+    'always uses LP1-LP3 API with %s stored',
+    (mode) => {
+      localStorage.clear();
+      if (mode) {
+        localStorage.setItem('ai_factory_transport', JSON.stringify({ pipelineCatalog: mode }));
+      }
 
-    expect(getPipelineCatalogTransport()).toEqual({ mode: 'live' });
-    expect(getPipelineDetailTransport('live')).toBe('live');
-  });
-
-  test('keeps mock-only downstream actions closed for a live catalog', () => {
-    expect(isMockDownstreamCompatible('live')).toBe(false);
-    expect(isMockDownstreamCompatible('mock')).toBe(true);
-  });
+      expect(getPipelineCatalogTransport()).toEqual({ mode: 'live' });
+      expect(getPipelineDetailTransport('live')).toBe('live');
+    },
+  );
 });

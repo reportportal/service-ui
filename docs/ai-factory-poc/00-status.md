@@ -24,6 +24,12 @@ The new backend handoff describes native case fields and the complete review/fix
 
 Generation panels and Auto-Ready remain with existing EPMRPP-122414/EPMRPP-122415; their remaining backend decisions are not resolved by creating these tasks.
 
+## Obsolete Compare mock cleanup (2026-10-24)
+
+[EPMRPP-122692](https://jiraeu.epam.com/browse/EPMRPP-122692), branch `EPMRPP-122692-remove-obsolete-compare-mocks`, removes the old Compare normalizer, mock DTO generator, legacy rendering/types/local metrics, exclusive styles/messages and unused transport helper. Test-only iteration projections were moved into `mocks/testUtils/iterationViewModels.ts`; live LP1–LP4 and automation regression assertions remain. Active Test Case mocks, DB/seed, overlay, filters, lifecycle/fix rounds and automation are preserved.
+
+Local validation: 15 focused suites / 280 tests PASS, final Node 20 type-check PASS, changed-file ESLint (9 production and 9 test/helper files), Stylelint and diff-check PASS, Madge no cycles (264 files, 6 warnings), production build PASS, independent senior code/security reviews PASS. The user approved a separate cleanup PR; it depends on R3 PR #5847 and ultimately targets `bootcamp-prototype` after dependencies merge. Delivery and exact-head CI/Sonar evidence are tracked in Jira/PR. Unrelated header edits remain in the original worktree. No authenticated browser/backend execution, merge or deployment is claimed.
+
 ## Live Pipeline integration (2026-10-18)
 
 The backend's `pipeline-iteration-e2e-journey.md` describes `feature/pipelines` and its integration test. The backend source is pinned to `3e9a6454e0b5755cb2b2f44ccb305c01f3356d4f`; the 2026-10-18 unauthenticated HTTP OpenAPI from the supplied environment reports `feature-pipelines-2876` and matching LP1-LP3 schemas, but does not expose the deployed Git SHA. Task 1 records source-confirmed page/search/permission/status behavior and the earlier authenticated empty LP1 `200` response in [21](21-live-pipeline-integration-2026-10-18.md). On 2026-10-19, authenticated nonempty LP1, LP2 and LP3 screens were observed through the local proxy for `superadmin_personal`, including LP3 stage sections. Trusted HTTPS, deployed SHA and multi-page/error evidence remain unverified. LP1–LP3 now use the real API by default; the Postman fallback and P1–P3 HTTP mocks have been removed. Trusted deployment and broader QA evidence are still pending.
