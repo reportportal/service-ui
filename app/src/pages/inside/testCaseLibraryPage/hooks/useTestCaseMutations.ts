@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { useCallback } from 'react';
+import { useCallback, useRef, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { isEmpty } from 'es-toolkit/compat';
 
@@ -23,6 +23,7 @@ import { FolderWithFullPath, GET_TEST_CASE_DETAILS } from 'controllers/testCase'
 import { hideModalAction } from 'controllers/modal';
 import { fetch } from 'common/utils';
 import { useDebouncedSpinner, useNotification } from 'common/hooks';
+import { urlFolderIdSelector } from 'controllers/pages';
 import { NotificationMessageKey } from 'common/hooks/useNotification';
 import { URLS } from 'common/urls';
 import { Attribute } from 'types/testCase';
@@ -67,6 +68,12 @@ export const useTestCaseMutations = (testCaseId?: number) => {
   const projectKey = useSelector(projectKeySelector);
   const { processFolderDestinationAndComplete } = useFolderActions();
   const refetchCurrentTestCases = useRefetchCurrentTestCases();
+  const currentUrlFolderId = useSelector(urlFolderIdSelector);
+  const currentUrlFolderIdRef = useRef<string>(currentUrlFolderId);
+
+  useEffect(() => {
+    currentUrlFolderIdRef.current = currentUrlFolderId;
+  }, [currentUrlFolderId]);
   const { showSuccessNotification, showErrorNotification } = useNotification();
 
   const completeFolderDestination = useCallback(
@@ -155,8 +162,31 @@ export const useTestCaseMutations = (testCaseId?: number) => {
           data: buildTestCaseData(payload, manualScenario, updatedAttributes),
         });
 
-        if (options.isDetailsPage && testCaseId) {
-          dispatch({ type: GET_TEST_CASE_DETAILS, payload: { testCaseId } });
+        const refreshedTestCaseId = response?.id ?? testCaseId;
+        const folderIdFromResponse = response?.testFolder?.id;
+
+        if (refreshedTestCaseId) {
+          dispatch({ type: GET_TEST_CASE_DETAILS, payload: { testCaseId: refreshedTestCaseId } });
+
+          // Read the latest folder id from ref to handle navigation that may
+          // have happened while the request was in-flight.
+          const latestUrlFolderId = currentUrlFolderIdRef.current;
+
+          // Only refetch the current list when the operation is not on the
+          // details page AND either:
+          // - the user currently views all test cases (no folder in URL, represented
+          //   by an empty string), in which case the edited test case may appear
+          //   there regardless of its folder; OR
+          // - the response folder matches the current URL folder.
+          const isAllCasesView = latestUrlFolderId === '';
+          const folderMatches =
+            folderIdFromResponse != null && String(folderIdFromResponse) === latestUrlFolderId;
+
+          const shouldRefetchList = !options.isDetailsPage && (isAllCasesView || folderMatches);
+
+          if (shouldRefetchList) {
+            refetchCurrentTestCases();
+          }
         }
 
         dispatch(hideModalAction());
@@ -187,6 +217,8 @@ export const useTestCaseMutations = (testCaseId?: number) => {
       showSuccessNotification,
       showErrorNotification,
       testCaseId,
+      refetchCurrentTestCases,
+      currentUrlFolderId,
     ],
   );
 
