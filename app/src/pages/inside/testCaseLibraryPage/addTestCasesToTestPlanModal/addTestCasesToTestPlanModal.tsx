@@ -142,6 +142,7 @@ export const AddTestCasesToTestPlanModal = ({
               onChange={setSelectedTestPlan}
               refFunction={inputRefFunction}
               isDropdownMode
+              inputProps={{ clearable: !!selectedTestPlan, onClear: () => setSelectedTestPlan(null) }}
               parseValueToString={(value: TestPlanDto) => value?.name}
               getUniqKey={(value: TestPlanDto) => String(value?.id)}
               createWithoutConfirmation
