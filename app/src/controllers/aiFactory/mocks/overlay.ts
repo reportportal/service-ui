@@ -35,6 +35,7 @@ import {
   InternalAxiosRequestConfig,
 } from 'axios';
 import { Page } from 'types/common';
+import { hasNativeTestCaseData } from 'common/utils/nativeTestCase';
 import { Lifecycle, ScenarioUpdateRS, TestCaseAiExtension } from 'types/aiFactory';
 import { TestCase, TestCaseManualScenario } from 'types/testCase';
 import {
@@ -116,6 +117,7 @@ export class C3OverlayError extends Error {
 }
 
 export const mergeAiFields = (testCase: TestCase): TestCase & Partial<TestCaseAiExtension> => {
+  if (hasNativeTestCaseData(testCase)) return testCase;
   const record = findCase(testCase.displayId);
   if (!record || record.availableInLibrary === false) {
     return testCase; // no matching mock record — the toggle-OFF/no-data guard in components handles this too
@@ -320,6 +322,7 @@ const mergeUpdatedTestCase = (
   testCase: TestCase,
   scenarios: Map<string, ScenarioFields>,
 ): AxiosResponse => {
+  if (hasNativeTestCaseData(testCase)) return response;
   const isUpdate = response.config.method?.toLowerCase() === 'put';
   const key = decodeCaseKey(testCaseKeyFromUrl(response));
   const before = key ? scenarios.get(key) : undefined;

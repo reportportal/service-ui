@@ -68,9 +68,12 @@ import {
 import { ExecutionEstimationTime } from 'pages/inside/common/executionEstimationTime';
 import { AiChip, LifecycleBadge, ScoreChip } from 'pages/inside/aiFactory/common';
 import { EvaluationMini } from 'pages/inside/aiFactory/evaluation';
-import { ApproveButton } from 'pages/inside/aiFactory/approval';
+import { ApproveButton, NativeApproveButton } from 'pages/inside/aiFactory/approval';
+import { useLiveReviewComments } from 'pages/inside/aiFactory/review/useLiveReviewComments';
 import { ReviewFlags } from 'pages/inside/aiFactory/library/reviewFlags';
 import { useTestCaseAi } from 'pages/inside/aiFactory/lifecycle';
+import { getNativeTestCaseSummary, getTestCasePresentation } from 'common/utils/nativeTestCase';
+import { NativeTestCaseSummary } from 'pages/inside/aiFactory/common/nativeTestCaseSummary/nativeTestCaseSummary';
 import {
   isDraftGateActive,
   LaunchBlockedBanner,
@@ -170,7 +173,7 @@ interface TestCaseSidePanelProps {
 }
 
 export const TestCaseSidePanel = memo(
-  ({ testCase, isVisible, onClose }: TestCaseSidePanelProps) => {
+  ({ testCase: rawTestCase, isVisible, onClose }: TestCaseSidePanelProps) => {
     const dispatch = useDispatch();
     const { trackEvent } = useTracking();
     const { canManageTestCases, canReviewAiTestCases } = useUserPermissions();
@@ -187,7 +190,12 @@ export const TestCaseSidePanel = memo(
     const { openModal: openDuplicateSelectedTestCaseModal } = useDuplicateSelectedTestCaseModal();
     const { hasTestPlans } = useHasTestPlans();
     const isAiFactoryEnabled = useAiFactoryEnabled();
-    const isDraft = isDraftGateActive(isAiFactoryEnabled, testCase?.lifecycle);
+    const testCase = rawTestCase
+      ? getTestCasePresentation(rawTestCase, isAiFactoryEnabled)
+      : rawTestCase;
+    const nativeSummary = isAiFactoryEnabled ? getNativeTestCaseSummary(testCase) : undefined;
+    const gateStatus = nativeSummary?.status ?? testCase?.lifecycle;
+    const isDraft = isDraftGateActive(isAiFactoryEnabled, gateStatus);
     const projectKey = useSelector(projectKeySelector);
     const aiDetailsState = useTestCaseAi(
       projectKey,
@@ -195,11 +203,18 @@ export const TestCaseSidePanel = memo(
       isAiFactoryEnabled && Boolean(testCase?.ai),
       testCase?.updatedAt,
     );
+    const isNativeDraft =
+      isVisible && nativeSummary?.isAi === true && nativeSummary.status === 'DRAFT';
+
+    const nativeReviewState = useLiveReviewComments(projectKey, testCase?.id ?? 0, isNativeDraft, {
+      canApprove: isNativeDraft,
+      versionId: testCase?.defaultVersionId,
+    });
     const refetchCurrentTestCases = useRefetchCurrentTestCases();
     const addToLaunchAction = useAddToLaunchAction({
       testCaseId: testCase?.id ?? 0,
       manualScenario: testCase?.manualScenario,
-      lifecycle: testCase?.lifecycle,
+      lifecycle: gateStatus,
       place: TEST_CASE_PLACE.SIDE_PANEL,
     });
 
@@ -370,12 +385,11 @@ export const TestCaseSidePanel = memo(
                 <span className={cx('meta-value')}>{formatTimestamp(testCase.createdAt)}</span>
               </div>
             </div>
+            {nativeSummary && <NativeTestCaseSummary summary={nativeSummary} showIdentity />}
             {isAiFactoryEnabled && testCase.lifecycle && (
               <div className={cx('ai-status')} data-automation-id="ai-status-row">
                 <LifecycleBadge lifecycle={testCase.lifecycle} />
-                {generatedByIterationTooltip && (
-                  <AiChip tooltip={generatedByIterationTooltip} />
-                )}
+                {generatedByIterationTooltip && <AiChip tooltip={generatedByIterationTooltip} />}
                 {testCase.evaluationSummary && (
                   <ScoreChip
                     score={testCase.evaluationSummary.totalScore}
@@ -497,15 +511,21 @@ export const TestCaseSidePanel = memo(
               )}
             </>
           )}
-          {isAiFactoryEnabled &&
-            canReviewAiTestCases &&
-            testCase.lifecycle === Lifecycle.DRAFT && (
-              <ApproveButton
-                testCase={testCase}
-                className={cx('action-button', 'last-button')}
-                onSuccess={refetchCurrentTestCases}
-              />
-            )}
+          {isNativeDraft && canReviewAiTestCases && (
+            <NativeApproveButton
+              testCase={testCase}
+              reviewState={nativeReviewState}
+              className={cx('action-button', 'last-button')}
+              onRefresh={refetchCurrentTestCases}
+            />
+          )}
+          {isAiFactoryEnabled && canReviewAiTestCases && testCase.lifecycle === Lifecycle.DRAFT && (
+            <ApproveButton
+              testCase={testCase}
+              className={cx('action-button', 'last-button')}
+              onSuccess={refetchCurrentTestCases}
+            />
+          )}
         </div>
       </div>
     );

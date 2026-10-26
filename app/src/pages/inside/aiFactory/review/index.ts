@@ -13,3 +13,8 @@ export { useReviewComments } from './useReviewComments';
 export type { ReviewCommentsLoadState } from './useReviewComments';
 export { useFixRound } from './useFixRound';
 export type { FixRoundLoadState } from './useFixRound';
+
+export { useLiveReviewComments } from './useLiveReviewComments';
+export type { LiveReviewCommentsLoadState } from './useLiveReviewComments';
+export { LiveReviewStrip } from './liveReviewStrip';
+export type { ReviewCommentsViewState } from './reviewComments';

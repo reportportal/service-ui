@@ -29,9 +29,10 @@ import { useAutomationModal, type AutomationCandidate } from 'pages/inside/aiFac
 import type { AutomateAcceptedRS } from 'types/aiFactory';
 import { TMS_INSTANCE_KEY } from 'pages/inside/common/constants';
 import { TestCaseList } from 'pages/inside/common/testCaseList';
+import type { SelectedTestCaseRow } from 'pages/inside/common/testCaseList/types';
 import { useURLBoundPagination } from 'pages/inside/common/testCaseList/useURLBoundPagination';
 import { Lifecycle } from 'types/aiFactory';
-import type { TestCase } from 'types/testCase';
+import { TestCaseManualScenario, type TestCase } from 'types/testCase';
 
 import { useAddToLaunchModal } from '../addToLaunchModal';
 import { useAddTestCasesToTestPlanModal } from '../addTestCasesToTestPlanModal/useAddTestCasesToTestPlanModal';
@@ -248,6 +249,91 @@ describe('AllTestCasesPage AI filters', () => {
   beforeEach(() => {
     jest.clearAllMocks();
     query = {};
+  });
+
+  test.each([false, true])(
+    'keeps native Draft bulk actions disabled when off-page is %s',
+    (isOffPage) => {
+      const nativeDraft: TestCase = {
+        ...testCase,
+        origin: 'AI',
+        status: 'DRAFT',
+        lifecycle: Lifecycle.READY,
+        manualScenario: {
+          id: 10,
+          executionEstimationTime: 1,
+          manualScenarioType: TestCaseManualScenario.TEXT,
+          requirements: [],
+          steps: [],
+          instructions: 'Open Library',
+          expectedResult: 'Library is displayed',
+        },
+      };
+      const wrapper = renderPage(
+        true,
+        isOffPage ? [{ ...testCase, id: 99 }] : [nativeDraft],
+        true,
+        true,
+        true,
+      );
+      const selection: SelectedTestCaseRow[] = [
+        {
+          id: nativeDraft.id,
+          folderId: 7,
+          origin: 'AI',
+          status: 'DRAFT',
+          lifecycle: Lifecycle.READY,
+        },
+      ];
+
+      (
+        wrapper.find(TestCaseList).prop('handleSelectedRows') as (
+          rows: SelectedTestCaseRow[],
+        ) => void
+      )(selection);
+
+      expect(wrapper.find('[data-automation-id="bulk-add-to-launch"]').prop('disabled')).toBe(true);
+      expect(wrapper.find('[data-automation-id="bulk-add-to-test-plan"]').prop('disabled')).toBe(
+        true,
+      );
+      expect(openAddToLaunchModal).not.toHaveBeenCalled();
+      expect(openAddToTestPlanModal).not.toHaveBeenCalled();
+    },
+  );
+
+  test.each(['AI', 'MANUAL'] as const)(
+    'hides bulk Approve and Automate for a native %s selection with stale legacy fields',
+    (origin) => {
+      const nativeCase: TestCase = { ...testCase, origin, status: 'DRAFT' };
+      const wrapper = renderPage(true, [nativeCase], true, false, true);
+      const selection: SelectedTestCaseRow[] = [{ id: nativeCase.id, folderId: 7 }];
+
+      (
+        wrapper.find(TestCaseList).prop('handleSelectedRows') as (
+          rows: SelectedTestCaseRow[],
+        ) => void
+      )(selection);
+
+      expect(wrapper.find(BulkApproveButton)).toHaveLength(0);
+      expect(wrapper.find('[data-automation-id="bulk-automate-test-cases"]')).toHaveLength(0);
+      expect(openAutomationModal).not.toHaveBeenCalled();
+    },
+  );
+
+  test('hides provisional bulk actions for mixed selections including an off-page native row', () => {
+    const wrapper = renderPage(true, [testCase], true, false, true);
+    const selection: SelectedTestCaseRow[] = [
+      { id: testCase.id, folderId: 7 },
+      { id: 99, folderId: 9, origin: 'AI', status: 'READY', lifecycle: Lifecycle.READY },
+    ];
+
+    (
+      wrapper.find(TestCaseList).prop('handleSelectedRows') as (rows: SelectedTestCaseRow[]) => void
+    )(selection);
+
+    expect(wrapper.find(BulkApproveButton)).toHaveLength(0);
+    expect(wrapper.find('[data-automation-id="bulk-automate-test-cases"]')).toHaveLength(0);
+    expect(openAutomationModal).not.toHaveBeenCalled();
   });
 
   test('shows bulk Approve only for a permitted selection while the feature is enabled', () => {

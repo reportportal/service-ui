@@ -29,6 +29,7 @@ import { LifecycleBadge } from 'pages/inside/aiFactory/common';
 import { CommentState, CommentTargetType, FixRoundStatus, Lifecycle } from 'types/aiFactory';
 import type {
   AiCommentState,
+  ReviewCommentPayload,
   ReviewCommentRS,
   ReviewCommentTarget,
   ScenarioSnapshot,
@@ -43,9 +44,22 @@ import styles from './reviewComments.scss';
 
 const cx = createClassnames(styles);
 
+export interface ReviewCommentsViewState extends Omit<
+  ReviewCommentsLoadState,
+  'addComment' | 'deleteComment' | 'discardPending'
+> {
+  resourceKey?: object;
+  addComment: (payload: ReviewCommentPayload) => Promise<void | boolean>;
+  deleteComment: (commentId: number) => Promise<void | boolean>;
+  discardPending: () => Promise<void | boolean>;
+}
+
 const matchesTarget = (comment: ReviewCommentRS, target: ReviewCommentTarget) =>
   comment.target.type === target.type &&
-  (target.type !== CommentTargetType.STEP || comment.target.stepId === target.stepId);
+  (target.type !== CommentTargetType.STEP ||
+    (target.stepNumber !== undefined
+      ? comment.target.stepNumber === target.stepNumber
+      : comment.target.stepId === target.stepId));
 
 const stateLabel = (
   state: AiCommentState,
@@ -54,20 +68,43 @@ const stateLabel = (
 ) => {
   if (state === CommentState.SENT) return formatMessage(messages.sent);
   if (state === CommentState.ADDRESSED) {
-    return formatMessage(messages.addressed, { round: fixRound ?? '—' });
+    return formatMessage(
+      fixRound === undefined ? messages.addressedWithoutRound : messages.addressed,
+      { round: fixRound },
+    );
   }
   if (state === CommentState.NOT_ADDRESSED) {
-    return formatMessage(messages.notAddressed, { round: fixRound ?? '—' });
+    return formatMessage(
+      fixRound === undefined ? messages.notAddressedWithoutRound : messages.notAddressed,
+      { round: fixRound },
+    );
   }
   return formatMessage(messages.pending);
 };
 
 interface ReviewTargetProps {
   target: ReviewCommentTarget;
-  reviewState: ReviewCommentsLoadState;
+  reviewState: ReviewCommentsViewState;
   isReadOnly?: boolean;
   isInitiallyOpen?: boolean;
 }
+
+const useReviewComposer = (resourceKey?: object) => {
+  const emptyComposer = { text: '', mutationError: false };
+  const [state, setState] = useState({ resourceKey, ...emptyComposer });
+  const composer = state.resourceKey === resourceKey ? state : emptyComposer;
+  const updateComposer = (patch: Partial<typeof emptyComposer>) =>
+    setState((previous) => ({
+      ...(previous.resourceKey === resourceKey ? previous : emptyComposer),
+      resourceKey,
+      ...patch,
+    }));
+  return {
+    ...composer,
+    setText: (text: string) => updateComposer({ text }),
+    setMutationError: (mutationError: boolean) => updateComposer({ mutationError }),
+  };
+};
 
 export const ReviewTarget = ({
   target,
@@ -77,15 +114,16 @@ export const ReviewTarget = ({
 }: ReviewTargetProps) => {
   const { formatMessage } = useIntl();
   const [isOpen, setIsOpen] = useState(isInitiallyOpen);
-  const [text, setText] = useState('');
-  const [mutationError, setMutationError] = useState(false);
+  const { text, setText, mutationError, setMutationError } = useReviewComposer(
+    reviewState.resourceKey,
+  );
   const uniqueId = useId();
   const comments = useMemo(
     () => reviewState.comments.filter((comment) => matchesTarget(comment, target)),
     [reviewState.comments, target],
   );
   const hasPending = comments.some((comment) => comment.state === CommentState.PENDING);
-  const targetId = `${target.type.toLowerCase()}-${target.stepId ?? 'case'}-${uniqueId}`;
+  const targetId = `${target.type.toLowerCase()}-${target.stepNumber ?? target.stepId ?? 'case'}-${uniqueId}`;
   const triggerId = `review-comment-trigger-${targetId}`;
   const threadId = `review-comment-thread-${targetId}`;
   const composerId = `review-comment-${targetId}`;
@@ -98,8 +136,8 @@ export const ReviewTarget = ({
 
     setMutationError(false);
     try {
-      await reviewState.addComment({ target, text: trimmedText });
-      setText('');
+      const isApplied = await reviewState.addComment({ target, text: trimmedText });
+      if (isApplied !== false) setText('');
     } catch {
       setMutationError(true);
     }
@@ -127,7 +165,7 @@ export const ReviewTarget = ({
         aria-expanded={isOpen}
         aria-controls={threadId}
         aria-label={formatMessage(messages.commentCount, { count: comments.length })}
-        data-automation-id={`review-comment-toggle-${target.type}-${target.stepId ?? 'case'}`}
+        data-automation-id={`review-comment-toggle-${target.type}-${target.stepNumber ?? target.stepId ?? 'case'}`}
         disabled={reviewState.isLoading}
         onClick={() => setIsOpen((open) => !open)}
       >
@@ -137,15 +175,14 @@ export const ReviewTarget = ({
         <span>{comments.length}</span>
       </button>
       {isOpen && (
-        <section
-          id={threadId}
-          className={cx('review-target__thread')}
-          aria-labelledby={triggerId}
-        >
+        <section id={threadId} className={cx('review-target__thread')} aria-labelledby={triggerId}>
           {comments.map((comment) => (
             <article key={comment.id} className={cx('review-target__comment')}>
               <div className={cx('review-target__comment-header')}>
-                <strong>{comment.author.name}</strong>
+                <strong>
+                  {comment.author.name ||
+                    formatMessage(messages.userById, { id: comment.author.id })}
+                </strong>
                 <span>{fromNowFormat(comment.createdAt)}</span>
                 <span>{stateLabel(comment.state, comment.fixRound, formatMessage)}</span>
                 {comment.canDelete && comment.state === CommentState.PENDING && !isReadOnly && (

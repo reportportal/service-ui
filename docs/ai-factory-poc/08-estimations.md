@@ -74,6 +74,27 @@ These are **planned Original Estimates**, not actual delivered hours. Each Jira 
 | [EPMRPP-122416](https://jiraeu.epam.com/browse/EPMRPP-122416) | Review and Library case join | 28 h | 5 h | 17 h | 6 h |
 | [EPMRPP-122417](https://jiraeu.epam.com/browse/EPMRPP-122417) | Pipeline comparison | 16 h | 3 h | 9 h | 4 h |
 
+## Live Review and fix-round integration planned scopes (2026-10-24)
+
+Planned Original Estimates, not actual delivered hours. Each issue has the matching estimate and breakdown comment. External waiting and unavailable integration/workflow configuration are excluded from FE effort. Acceptance criteria and dependencies are in [25-live-review-fix-round-integration-2026-10-24.md](25-live-review-fix-round-integration-2026-10-24.md).
+
+| Jira | Scope | Planned | Research | Implementation | Validation |
+|---|---|---:|---:|---:|---:|
+| [EPMRPP-122686](https://jiraeu.epam.com/browse/EPMRPP-122686) | Native Library/detail AI data | 24 h | 4 h | 14 h | 6 h |
+| [EPMRPP-122687](https://jiraeu.epam.com/browse/EPMRPP-122687) | Live review comments | 24 h | 4 h | 14 h | 6 h |
+| [EPMRPP-122688](https://jiraeu.epam.com/browse/EPMRPP-122688) | Live approval and review conflicts | 16 h | 3 h | 9 h | 4 h |
+| [EPMRPP-122689](https://jiraeu.epam.com/browse/EPMRPP-122689) | Live Push to agent and fix-round states | 28 h | 5 h | 16 h | 7 h |
+| [EPMRPP-122690](https://jiraeu.epam.com/browse/EPMRPP-122690) | Fix iteration provenance and comparison scope | 20 h | 4 h | 11 h | 5 h |
+| [EPMRPP-122691](https://jiraeu.epam.com/browse/EPMRPP-122691) | GitHub Actions fix-round journey verification | 12 h | 3 h | 4 h | 5 h |
+
+## Obsolete Compare mock cleanup planned scope (2026-10-24)
+
+The user approved a focused cleanup PR after the live Compare migration. This is a planned Original Estimate, not actual delivered hours; Jira has the matching estimate and immediate breakdown comment.
+
+| Jira | Scope | Planned | Research | Implementation | Validation |
+|---|---|---:|---:|---:|---:|
+| [EPMRPP-122692](https://jiraeu.epam.com/browse/EPMRPP-122692) | Remove obsolete Compare mock paths and unused transport helper; preserve automation test projections | 12 h | 3 h | 6 h | 3 h |
+
 ## Per-task estimates
 
 Filled in as tasks complete. `—` = not done yet.

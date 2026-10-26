@@ -98,7 +98,21 @@ export interface ManualScenario {
   attachments?: Attachment[];
 }
 
+export type TestCaseOrigin = 'AI' | 'MANUAL';
+export type TestCaseStatus = 'DRAFT' | 'READY';
+
+export interface TestCaseMetrics {
+  overallScore?: number;
+  obsolete?: boolean;
+  model?: string;
+  costUsd?: number;
+}
+
 export interface TestCase extends Partial<TestCaseAiExtension> {
+  origin?: TestCaseOrigin;
+  status?: TestCaseStatus;
+  defaultVersionId?: number;
+  metrics?: TestCaseMetrics;
   id: number;
   displayId: string;
   name: string;

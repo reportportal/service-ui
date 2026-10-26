@@ -18,9 +18,11 @@ import { shallow } from 'enzyme';
 import { useSelector } from 'react-redux';
 import { Table } from '@reportportal/ui-kit';
 
+import type { NativeTestCaseSummary as NativeSummary } from 'common/utils/nativeTestCase';
 import { useAiFactoryEnabled } from 'controllers/aiFactory';
 import { PROJECT_TEST_PLAN_DETAILS_PAGE, TEST_CASE_LIBRARY_PAGE } from 'controllers/pages';
 import { useUserPermissions } from 'hooks/useUserPermissions';
+import { NativeTestCaseSummary } from 'pages/inside/aiFactory/common/nativeTestCaseSummary/nativeTestCaseSummary';
 import { TMS_INSTANCE_KEY } from 'pages/inside/common/constants';
 import { AutomationStatus, Lifecycle } from 'types/aiFactory';
 import { EvaluationState } from 'types/aiFactory';
@@ -171,6 +173,86 @@ const getNameCellProps = (nameComponent: React.ReactElement) =>
 describe('TestCaseList lifecycle column', () => {
   beforeEach(() => {
     jest.clearAllMocks();
+  });
+
+  test('uses native AI identity, status and zero metrics over stale mock metadata', () => {
+    const nativeCase: ExtendedTestCase = {
+      ...aiTestCase,
+      origin: 'AI',
+      status: 'DRAFT',
+      metrics: { overallScore: 0, obsolete: true, costUsd: 0 },
+    };
+
+    const table = getTableProps(true, TEST_CASE_LIBRARY_PAGE, [nativeCase]);
+    const quality = table.data[0].aiQuality?.component;
+
+    expect(table.data[0].status?.content).toBe('DRAFT');
+    expect(table.data[0].aiQuality?.content).toBe(0);
+    expect(getNameCellProps(table.data[0].name.component)).toMatchObject({
+      isNativeAi: true,
+      ai: undefined,
+      review: undefined,
+    });
+    expect(quality?.type).toBe(NativeTestCaseSummary);
+    expect((quality?.props as { summary: NativeSummary }).summary).toMatchObject({
+      isAi: true,
+      score: 0,
+      costUsd: 0,
+      isObsolete: true,
+    });
+  });
+
+  test('renders native Manual status without stale AI identity or evaluation', () => {
+    const nativeCase: ExtendedTestCase = { ...aiTestCase, origin: 'MANUAL', status: 'READY' };
+
+    const table = getTableProps(true, TEST_CASE_LIBRARY_PAGE, [nativeCase]);
+
+    expect(table.data[0].status?.content).toBe('READY');
+    expect(table.data[0].aiQuality?.content).toBe('');
+    expect(getNameCellProps(table.data[0].name.component)).toMatchObject({
+      isNativeAi: false,
+      ai: undefined,
+      review: undefined,
+    });
+    expect(
+      (table.data[0].aiQuality?.component.props as { summary: NativeSummary }).summary,
+    ).toMatchObject({
+      isAi: false,
+      score: undefined,
+      costUsd: undefined,
+    });
+  });
+
+  test('retains native identity and omits legacy action metadata in selected row snapshots', () => {
+    const handleSelectedRows = jest.fn<void, [SelectedTestCaseRow[]]>();
+    const nativeCase: ExtendedTestCase = { ...aiTestCase, origin: 'AI', status: 'DRAFT' };
+    const wrapper = renderList(true, TEST_CASE_LIBRARY_PAGE, [nativeCase], { handleSelectedRows });
+
+    (wrapper.find(Table).prop('onToggleRowSelection') as (id: number) => void)(nativeCase.id);
+
+    const [selected] = handleSelectedRows.mock.calls[0][0];
+    expect(selected).toMatchObject({
+      id: nativeCase.id,
+      displayId: nativeCase.displayId,
+      origin: 'AI',
+      status: 'DRAFT',
+    });
+    expect(selected.lifecycle).toBeUndefined();
+    expect(selected).not.toHaveProperty('ai');
+    expect(selected.review).toBeUndefined();
+    expect(selected.automation).toBeUndefined();
+  });
+
+  test('omits native Status and AI quality columns while the feature is disabled', () => {
+    const nativeCase: ExtendedTestCase = { ...aiTestCase, origin: 'AI', status: 'DRAFT' };
+
+    const table = getTableProps(false, TEST_CASE_LIBRARY_PAGE, [nativeCase]);
+
+    expect(table.fixedColumns.map(({ key }) => key)).not.toContain('status');
+    expect(table.fixedColumns.map(({ key }) => key)).not.toContain('aiQuality');
+    expect(table.data[0].status).toBeUndefined();
+    expect(table.data[0].aiQuality).toBeUndefined();
+    expect(getNameCellProps(table.data[0].name.component)).toMatchObject({ ai: undefined });
   });
 
   test('omits Status and AI quality when the feature is disabled', () => {

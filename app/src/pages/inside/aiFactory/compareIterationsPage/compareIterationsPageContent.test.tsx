@@ -34,6 +34,7 @@ import {
   pipelinesLoadingSelector,
   pipelinesSelector,
   type PipelineComparisonResult,
+  type LivePipelineComparison,
 } from 'controllers/aiFactory/pipelines';
 import {
   querySelector,
@@ -43,7 +44,6 @@ import {
 import { projectKeySelector, projectNameSelector } from 'controllers/project';
 import {
   IterationStatus,
-  PipelineComparison,
   PipelineRS,
   PipelineType,
   type IterationSummaryRS,
@@ -181,12 +181,14 @@ const iteration = (id: number, number: number, pipelineId = 1): IterationSummary
   stages: [],
 });
 const iterations = [iteration(101, 1), iteration(103, 3), iteration(102, 2)];
-const loadedComparison: PipelineComparison = {
-  mode: 'status-only',
+const loadedComparison: LivePipelineComparison = {
+  mode: 'live',
+  projectKey: 'project',
   pipelineId: 1,
   baseline: { id: 102, number: 2, status: IterationStatus.COMPLETED },
   candidate: { id: 103, number: 3, status: IterationStatus.COMPLETED },
-  hasDifferentRequirements: false,
+  metrics: [],
+  sections: [],
   stages: [],
 };
 

@@ -45,7 +45,7 @@ import {
   resetMockDb,
 } from './db';
 import { installAiFactoryHandlers, SIMULATED_DELAY_MS } from './handlers';
-import { toIterationRS, toIterationSummaryRS } from './viewModels';
+import { toIterationRS, toIterationSummaryRS } from './testUtils/iterationViewModels';
 
 const PROJECT = 'demo_project';
 let http: ReturnType<typeof axios.create>;

@@ -37,6 +37,14 @@
     font-family: $FONT-REGULAR;
     line-height: 31px;
     color: var(--rp-ui-base-almost-black);
+
+    > div:not(.header__title-icon) {
+      display: inline-flex;
+      flex: 0 0 auto;
+      flex-wrap: nowrap;
+      width: fit-content;
+      padding: 0;
+    }
   }
 
   &__title-icon {
@@ -120,8 +128,19 @@
 
   &__actions {
     display: flex;
+    flex-shrink: 0;
     gap: 10px;
     align-items: center;
+
+    button {
+      flex-shrink: 0;
+      white-space: nowrap;
+    }
+  }
+
+  &__actions &__action-tooltip {
+    width: fit-content;
+    flex-shrink: 0;
   }
 
   &__copy {

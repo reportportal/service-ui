@@ -25,9 +25,6 @@ export interface PipelineCatalogTransportConfig {
 
 export const getPipelineCatalogTransport = (): PipelineCatalogTransportConfig => ({ mode: 'live' });
 
-export const isMockDownstreamCompatible = (mode: PipelineCatalogTransport): boolean =>
-  mode === 'mock';
-
 export const getPipelineDetailTransport = (
   _catalogTransport: PipelineCatalogTransport,
 ): PipelineDetailTransport => 'live';

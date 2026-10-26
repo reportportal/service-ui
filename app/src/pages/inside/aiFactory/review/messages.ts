@@ -17,6 +17,26 @@
 import { defineMessages } from 'react-intl';
 
 export const messages = defineMessages({
+  userById: {
+    id: 'AiReview.userById',
+    defaultMessage: 'User {id}',
+  },
+  addressedWithoutRound: {
+    id: 'AiReview.addressedWithoutRound',
+    defaultMessage: 'Addressed',
+  },
+  notAddressedWithoutRound: {
+    id: 'AiReview.notAddressedWithoutRound',
+    defaultMessage: 'Not addressed',
+  },
+  fixingWithoutRound: {
+    id: 'AiReview.fixingWithoutRound',
+    defaultMessage: 'Agent is fixing…',
+  },
+  refresh: {
+    id: 'AiReview.refresh',
+    defaultMessage: 'Refresh review',
+  },
   reviewComments: {
     id: 'AiReview.reviewComments',
     defaultMessage: 'Review comments',
