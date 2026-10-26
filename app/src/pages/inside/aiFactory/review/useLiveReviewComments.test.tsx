@@ -60,11 +60,20 @@ interface ProbeProps {
   projectKey?: string;
   testCaseId?: number;
   enabled?: boolean;
+  canApprove?: boolean;
+  versionId?: number;
   onState: (state: LiveReviewCommentsLoadState) => void;
 }
 
-const Probe = ({ projectKey = 'demo', testCaseId = 42, enabled = true, onState }: ProbeProps) => {
-  const state = useLiveReviewComments(projectKey, testCaseId, enabled);
+const Probe = ({
+  projectKey = 'demo',
+  testCaseId = 42,
+  enabled = true,
+  canApprove = false,
+  versionId,
+  onState,
+}: ProbeProps) => {
+  const state = useLiveReviewComments(projectKey, testCaseId, enabled, { canApprove, versionId });
   useEffect(() => onState(state), [state, onState]);
   return <div />;
 };
@@ -564,5 +573,382 @@ describe('useLiveReviewComments', () => {
       await flush();
     });
     expect(latest(onState).unsentCount).toBe(8);
+  });
+
+  describe('native approval', () => {
+    const readyReview = () => serverReview({ comments: [], unsentCount: 0 });
+    const approve = () => {
+      const command = latest(onState).approveReady;
+      if (!command) throw new Error('Native approval command is unavailable');
+      return command();
+    };
+
+    test('patches only the native status, refreshes Review and latches approval until Draft eligibility changes', async () => {
+      fetchMock
+        .mockResolvedValueOnce(readyReview())
+        .mockResolvedValueOnce({ status: 200, data: {} })
+        .mockResolvedValue(readyReview());
+      await render({ canApprove: true });
+      let result = false;
+      await act(async () => {
+        result = await approve();
+        await flush();
+      });
+      expect(result).toBe(true);
+      expect(fetchMock).toHaveBeenNthCalledWith(
+        2,
+        expect.stringMatching(/\/tms\/test-case\/42$/),
+        expect.objectContaining({
+          method: 'PATCH',
+          data: { status: 'READY' },
+          signal: expect.any(AbortSignal),
+          validateStatus: expect.any(Function),
+        }),
+        true,
+      );
+      expect(fetchMock.mock.calls.filter(([url]) => /\/review$/.test(url))).toHaveLength(2);
+      expect(latest(onState)).toMatchObject({ isApproved: true, isMutating: false });
+      await act(async () => {
+        await approve();
+        latest(onState).reload();
+        await flush();
+      });
+      await act(async () => {
+        await approve();
+      });
+      expect(
+        fetchMock.mock.calls.filter(([, options]) => options?.method === 'PATCH'),
+      ).toHaveLength(1);
+      await update({ canApprove: false });
+      await update({ canApprove: true });
+      await act(async () => {
+        await approve();
+        await flush();
+      });
+      expect(
+        fetchMock.mock.calls.filter(([, options]) => options?.method === 'PATCH'),
+      ).toHaveLength(2);
+    });
+
+    test.each([
+      ['approval is unsupported', { canApprove: false }, readyReview()],
+      ['unsent comments exist', { canApprove: true }, serverReview({ unsentCount: 3 })],
+      ['server is fixing', { canApprove: true }, readyReviewWithFix()],
+      ['Review is malformed', { canApprove: true }, {}],
+      ['feature is disabled', { canApprove: true, enabled: false }, readyReview()],
+    ])('rejects direct approval while %s', async (_label, props, review) => {
+      fetchMock.mockResolvedValue(review);
+      await render(props);
+      await act(async () => {
+        expect(await approve()).toBe(false);
+      });
+      expect(
+        fetchMock.mock.calls.filter(([, options]) => options?.method === 'PATCH'),
+      ).toHaveLength(0);
+    });
+
+    function readyReviewWithFix() {
+      return serverReview({ comments: [], unsentCount: 0, fixInProgress: true });
+    }
+
+    test('does not approve while Review is loading or after a retained command loses permission', async () => {
+      const read = deferred<unknown>();
+      fetchMock.mockReturnValueOnce(read.promise);
+      await render({ canApprove: true });
+      const retained = latest(onState).approveReady;
+      await act(async () => {
+        expect(await approve()).toBe(false);
+        read.resolve(readyReview());
+        await flush();
+      });
+      jest
+        .mocked(useUserPermissions)
+        .mockReturnValue({ canReviewAiTestCases: false } as ReturnType<typeof useUserPermissions>);
+      await update({ canApprove: true });
+      await act(async () => {
+        expect(await retained?.()).toBe(false);
+      });
+      expect(fetchMock).toHaveBeenCalledTimes(1);
+    });
+
+    test('invalidates retained approval commands after permission is revoked and granted again', async () => {
+      fetchMock
+        .mockResolvedValueOnce(readyReview())
+        .mockResolvedValueOnce({ status: 200, data: {} })
+        .mockResolvedValue(readyReview());
+      await render({ canApprove: true });
+      const retained = latest(onState).approveReady;
+      jest
+        .mocked(useUserPermissions)
+        .mockReturnValue({ canReviewAiTestCases: false } as ReturnType<typeof useUserPermissions>);
+      await update({ canApprove: true });
+      jest
+        .mocked(useUserPermissions)
+        .mockReturnValue({ canReviewAiTestCases: true } as ReturnType<typeof useUserPermissions>);
+      await update({ canApprove: true });
+      await act(async () => {
+        expect(await retained?.()).toBe(false);
+      });
+      expect(fetchMock).toHaveBeenCalledTimes(1);
+      await act(async () => {
+        expect(await approve()).toBe(true);
+        await flush();
+      });
+    });
+
+    test.each(['permission', 'draft-status'] as const)(
+      'ignores approval completion after %s changes and returns to its original value',
+      async (variant) => {
+        const mutation = deferred<unknown>();
+        fetchMock.mockResolvedValueOnce(readyReview()).mockReturnValueOnce(mutation.promise);
+        await render({ canApprove: true });
+        let result!: Promise<boolean>;
+        act(() => {
+          result = approve();
+        });
+        if (variant === 'permission')
+          jest
+            .mocked(useUserPermissions)
+            .mockReturnValue({ canReviewAiTestCases: false } as ReturnType<
+              typeof useUserPermissions
+            >);
+        await update({ canApprove: variant === 'permission' });
+        jest
+          .mocked(useUserPermissions)
+          .mockReturnValue({ canReviewAiTestCases: true } as ReturnType<typeof useUserPermissions>);
+        await update({ canApprove: true });
+        await act(async () => {
+          mutation.resolve({ status: 200, data: {} });
+          expect(await result).toBe(false);
+          await flush();
+        });
+        expect(fetchMock).toHaveBeenCalledTimes(2);
+        expect(latest(onState)).toMatchObject({ isApproved: false, isMutating: false });
+      },
+    );
+
+    test('preserves successful approval across a permission change while the authoritative case remains Draft', async () => {
+      fetchMock
+        .mockResolvedValueOnce(readyReview())
+        .mockResolvedValueOnce({ status: 200, data: {} })
+        .mockResolvedValue(readyReview());
+      await render({ canApprove: true });
+      await act(async () => {
+        expect(await approve()).toBe(true);
+        await flush();
+      });
+      jest
+        .mocked(useUserPermissions)
+        .mockReturnValue({ canReviewAiTestCases: false } as ReturnType<typeof useUserPermissions>);
+      await update({ canApprove: true });
+      jest
+        .mocked(useUserPermissions)
+        .mockReturnValue({ canReviewAiTestCases: true } as ReturnType<typeof useUserPermissions>);
+      await update({ canApprove: true });
+      await act(async () => {
+        expect(await approve()).toBe(false);
+      });
+      expect(latest(onState).isApproved).toBe(true);
+      expect(
+        fetchMock.mock.calls.filter(([, options]) => options?.method === 'PATCH'),
+      ).toHaveLength(1);
+    });
+
+    test('keeps a current approval valid when a manual Review refresh finishes while PATCH is pending', async () => {
+      const mutation = deferred<unknown>();
+      fetchMock
+        .mockResolvedValueOnce(readyReview())
+        .mockReturnValueOnce(mutation.promise)
+        .mockResolvedValue(readyReview());
+      await render({ canApprove: true });
+      let result!: Promise<boolean>;
+      act(() => {
+        result = approve();
+      });
+      await act(async () => {
+        latest(onState).reload();
+        await flush();
+      });
+      expect(latest(onState).isMutating).toBe(true);
+      await act(async () => {
+        mutation.resolve({ status: 200, data: {} });
+        expect(await result).toBe(true);
+        await flush();
+      });
+      expect(latest(onState)).toMatchObject({ isApproved: true, isMutating: false });
+      expect(fetchMock.mock.calls.filter(([url]) => /\/review$/.test(url))).toHaveLength(3);
+      expect(
+        fetchMock.mock.calls.filter(([, options]) => options?.method === 'PATCH'),
+      ).toHaveLength(1);
+    });
+
+    test('invalidates old commands and approval completions when the same case gets a new default version', async () => {
+      const mutation = deferred<unknown>();
+      fetchMock
+        .mockResolvedValueOnce(readyReview())
+        .mockReturnValueOnce(mutation.promise)
+        .mockResolvedValue(readyReview());
+      await render({ canApprove: true, versionId: 100 });
+      const retained = latest(onState).approveReady;
+      let result!: Promise<boolean>;
+      act(() => {
+        result = approve();
+      });
+      await update({ versionId: 101 });
+      const callsBefore = fetchMock.mock.calls.length;
+      await act(async () => {
+        mutation.resolve({ status: 200, data: {} });
+        expect(await result).toBe(false);
+        expect(await retained?.()).toBe(false);
+        await flush();
+      });
+      expect(fetchMock).toHaveBeenCalledTimes(callsBefore);
+      expect(latest(onState)).toMatchObject({
+        isApproved: false,
+        isMutating: false,
+        isLoaded: true,
+      });
+    });
+
+    test('clears a successful approval latch for a new default version of the same Draft case', async () => {
+      fetchMock.mockImplementation((_url, options) =>
+        Promise.resolve(options?.method === 'PATCH' ? { status: 200, data: {} } : readyReview()),
+      );
+      await render({ canApprove: true, versionId: 100 });
+      await act(async () => {
+        expect(await approve()).toBe(true);
+        await flush();
+      });
+      expect(latest(onState).isApproved).toBe(true);
+      await update({ versionId: 101 });
+      expect(latest(onState).isApproved).toBe(false);
+      await act(async () => {
+        expect(await approve()).toBe(true);
+        await flush();
+      });
+      expect(
+        fetchMock.mock.calls.filter(([, options]) => options?.method === 'PATCH'),
+      ).toHaveLength(2);
+    });
+
+    test.each(['approve-first', 'comment-first'] as const)(
+      'shares a synchronous mutation lock with comments: %s',
+      async (order) => {
+        const mutation = deferred<unknown>();
+        fetchMock
+          .mockResolvedValueOnce(readyReview())
+          .mockReturnValueOnce(mutation.promise)
+          .mockResolvedValue(readyReview());
+        await render({ canApprove: true });
+        const state = latest(onState);
+        let first!: Promise<boolean>;
+        let second!: Promise<boolean>;
+        act(() => {
+          first = order === 'approve-first' ? approve() : state.addComment(payload);
+          second = order === 'approve-first' ? state.addComment(payload) : approve();
+        });
+        expect(await second).toBe(false);
+        expect(fetchMock).toHaveBeenCalledTimes(2);
+        await act(async () => {
+          mutation.resolve({ status: 200, data: {} });
+          await first;
+          await flush();
+        });
+        expect(await first).toBe(true);
+        expect(fetchMock.mock.calls.filter(([, options]) => options?.method)).toHaveLength(1);
+      },
+    );
+
+    test('rejects duplicate approvals before React renders the pending state', async () => {
+      const mutation = deferred<unknown>();
+      fetchMock
+        .mockResolvedValueOnce(readyReview())
+        .mockReturnValueOnce(mutation.promise)
+        .mockResolvedValue(readyReview());
+      await render({ canApprove: true });
+      const command = latest(onState).approveReady;
+      let first: Promise<boolean> | undefined;
+      let second: Promise<boolean> | undefined;
+      act(() => {
+        first = command?.();
+        second = command?.();
+      });
+      expect(await second).toBe(false);
+      expect(fetchMock).toHaveBeenCalledTimes(2);
+      await act(async () => {
+        mutation.resolve({ status: 200, data: {} });
+        await first;
+        await flush();
+      });
+    });
+
+    test.each([
+      ['raw HTTP 409', { rawStatus: 409, body: { unexpected: 'shape' } }, 'CONFLICT'],
+      ['backend conflict code', { errorCode: 40915 }, 'CONFLICT'],
+      ['network error', new Error('Unavailable'), 'FAILED'],
+    ])(
+      'reports %s without optimistic Ready and reconciles Review',
+      async (_label, error, reason) => {
+        fetchMock
+          .mockResolvedValueOnce(readyReview())
+          .mockImplementationOnce((_url, options) => {
+            if ('rawStatus' in error) {
+              const validateStatus = options?.validateStatus as (status: number) => boolean;
+              expect(validateStatus(409)).toBe(true);
+              expect(validateStatus(500)).toBe(false);
+              return Promise.resolve({ status: error.rawStatus, data: error.body });
+            }
+            // The shared fetch helper rejects backend response DTOs directly.
+            // eslint-disable-next-line @typescript-eslint/prefer-promise-reject-errors
+            return Promise.reject(error);
+          })
+          .mockResolvedValueOnce(readyReviewWithFix());
+        await render({ canApprove: true });
+        await act(async () => {
+          await expect(approve()).rejects.toMatchObject({ reason });
+          await flush();
+        });
+        expect(latest(onState)).toMatchObject({
+          isApproved: false,
+          isMutating: false,
+          fixInProgress: true,
+        });
+        expect(fetchMock.mock.calls.filter(([url]) => /\/review$/.test(url))).toHaveLength(2);
+      },
+    );
+
+    test.each(['project', 'case', 'disable', 'unmount', 'return-to-A'] as const)(
+      'ignores an approval completion after %s navigation',
+      async (navigation) => {
+        const mutation = deferred<unknown>();
+        fetchMock
+          .mockResolvedValueOnce(readyReview())
+          .mockReturnValueOnce(mutation.promise)
+          .mockResolvedValue(readyReview());
+        await render({ canApprove: true });
+        let result!: Promise<boolean>;
+        act(() => {
+          result = approve();
+        });
+        if (navigation === 'unmount') {
+          act(() => wrapper?.update().unmount());
+          wrapper = undefined;
+        } else if (navigation === 'project') await update({ projectKey: 'other' });
+        else if (navigation === 'disable') await update({ enabled: false });
+        else {
+          await update({ testCaseId: 43 });
+          if (navigation === 'return-to-A') await update({ testCaseId: 42 });
+        }
+        const callsBefore = fetchMock.mock.calls.length;
+        await act(async () => {
+          mutation.resolve({ status: 200, data: {} });
+          await result;
+          await flush();
+        });
+        expect(await result).toBe(false);
+        expect(fetchMock).toHaveBeenCalledTimes(callsBefore);
+        if (navigation !== 'unmount') expect(latest(onState).isApproved).toBe(false);
+      },
+    );
   });
 });

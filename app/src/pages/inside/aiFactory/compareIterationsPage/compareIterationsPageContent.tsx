@@ -193,7 +193,7 @@ export const CompareIterationsPageContent = () => {
     })) ?? [];
   const comparisonMatchesSelection = Boolean(
     comparison?.pipelineId === pipelineId &&
-    (comparison?.mode !== 'live' || comparison.projectKey === projectKey) &&
+    comparison?.projectKey === projectKey &&
     comparison?.baseline.id === baselineId &&
     comparison?.candidate.id === candidateId,
   );

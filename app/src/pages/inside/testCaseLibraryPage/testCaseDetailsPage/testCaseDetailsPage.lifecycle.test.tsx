@@ -349,7 +349,9 @@ describe('TestCaseDetailsPage lifecycle history', () => {
             ([url]) => !/\/(?:ai|review-comment|fix-round|lifecycle)(?:[/?]|$)/.test(url),
           ),
       ).toBe(true);
-      expect(useLiveReviewComments).toHaveBeenLastCalledWith('demo', 42, origin === 'AI');
+      expect(useLiveReviewComments).toHaveBeenLastCalledWith('demo', 42, origin === 'AI', {
+        canApprove: true,
+      });
       expect(useTestCaseAi).toHaveBeenLastCalledWith('demo', 42, false, 100);
       expect(useReviewComments).toHaveBeenLastCalledWith('demo', 42, false);
       expect(useFixRound).toHaveBeenLastCalledWith('demo', 42, false, expect.any(Object));
@@ -366,6 +368,60 @@ describe('TestCaseDetailsPage lifecycle history', () => {
       act(() => mountedPage.unmount());
     },
   );
+
+  test('shares one native Review read with the header and reconciles it after approval without optimistic Ready', async () => {
+    selectedTestCase = { ...testCase, origin: 'AI', status: 'DRAFT', defaultVersionId: 100 };
+    renderPage(true);
+    jest
+      .mocked(useLiveReviewComments)
+      .mockImplementation(
+        jest.requireActual<typeof import('pages/inside/aiFactory/review/useLiveReviewComments')>(
+          'pages/inside/aiFactory/review/useLiveReviewComments',
+        ).useLiveReviewComments,
+      );
+    fetchMock.mockImplementation((_url, params) =>
+      Promise.resolve(
+        params?.method === 'PATCH'
+          ? { status: 200, data: {} }
+          : { comments: [], unsentCount: 0, fixInProgress: false },
+      ),
+    );
+    let mountedPage!: ReturnType<typeof mount> & { update: () => void };
+    await act(async () => {
+      mountedPage = mount(<TestCaseDetailsPage />) as typeof mountedPage;
+      await Promise.resolve();
+      await Promise.resolve();
+    });
+    mountedPage.update();
+    expect(fetchMock).toHaveBeenCalledTimes(1);
+    expect(useLiveReviewComments).toHaveBeenLastCalledWith('demo', 42, true, {
+      canApprove: true,
+      versionId: 100,
+    });
+    const header = mountedPage.find('mock-TestCaseDetailsHeader');
+    const state = header.prop('nativeReviewState') as LiveReviewCommentsLoadState;
+    expect(state.isLoaded).toBe(true);
+    expect(state.approveReady).toEqual(expect.any(Function));
+    await act(async () => {
+      expect(await state.approveReady?.()).toBe(true);
+      await Promise.resolve();
+      await Promise.resolve();
+    });
+    mountedPage.update();
+    expect(fetchMock.mock.calls.filter(([url]) => /\/review$/.test(url))).toHaveLength(2);
+    expect(fetchMock.mock.calls.filter(([, params]) => params?.method === 'PATCH')).toHaveLength(1);
+    expect(mountedPage.find('mock-TestCaseDetailsHeader').prop('testCase')).toMatchObject({
+      status: 'DRAFT',
+    });
+    expect(
+      (
+        mountedPage
+          .find('mock-TestCaseDetailsHeader')
+          .prop('nativeReviewState') as LiveReviewCommentsLoadState
+      ).isApproved,
+    ).toBe(true);
+    act(() => mountedPage.unmount());
+  });
 
   test('keeps native summary hidden while the feature flag is disabled', () => {
     selectedTestCase = { ...testCase, origin: 'AI', status: 'READY' };
@@ -640,7 +696,9 @@ describe('TestCaseDetailsPage lifecycle history', () => {
       selectedTestCase = { ...testCase, origin: 'AI', status };
       const wrapper = renderPage(true);
 
-      expect(useLiveReviewComments).toHaveBeenLastCalledWith('demo', 42, true);
+      expect(useLiveReviewComments).toHaveBeenLastCalledWith('demo', 42, true, {
+        canApprove: status === 'DRAFT',
+      });
       expect(getReviewStrip(wrapper).find(LiveReviewStrip)).toHaveLength(1);
       expect(getReviewStrip(wrapper).find(LiveReviewStrip).prop('lifecycle')).toBe(status);
       expect(getReviewStrip(wrapper).find(ReviewStrip)).toHaveLength(0);
@@ -651,13 +709,13 @@ describe('TestCaseDetailsPage lifecycle history', () => {
   test('keeps live comments disabled for native MANUAL, legacy AI and feature flag OFF', () => {
     selectedTestCase = { ...testCase, origin: 'MANUAL', status: 'DRAFT' };
     expect(getReviewStrip(renderPage(true)).find(LiveReviewStrip)).toHaveLength(0);
-    expect(useLiveReviewComments).toHaveBeenLastCalledWith('demo', 42, false);
+    expect(useLiveReviewComments).toHaveBeenLastCalledWith('demo', 42, false, expect.any(Object));
     selectedTestCase = { ...testCase, origin: 'AI', status: 'READY' };
     expect(getReviewStrip(renderPage(false)).find(LiveReviewStrip)).toHaveLength(0);
-    expect(useLiveReviewComments).toHaveBeenLastCalledWith('demo', 42, false);
+    expect(useLiveReviewComments).toHaveBeenLastCalledWith('demo', 42, false, expect.any(Object));
     selectedTestCase = testCase;
     expect(getReviewStrip(renderPage(true)).find(LiveReviewStrip)).toHaveLength(0);
-    expect(useLiveReviewComments).toHaveBeenLastCalledWith('demo', 42, false);
+    expect(useLiveReviewComments).toHaveBeenLastCalledWith('demo', 42, false, expect.any(Object));
   });
 
   test('locks native Review and header edits from fixInProgress without synthesizing a legacy round', () => {
@@ -749,7 +807,9 @@ describe('TestCaseDetailsPage lifecycle history', () => {
       canReviewAiTestCases = canReview;
       const wrapper = renderPage(true);
       expect(getReviewStrip(wrapper).find(LiveReviewStrip).prop('isReadOnly')).toBe(!canReview);
-      expect(useLiveReviewComments).toHaveBeenLastCalledWith('demo', 42, true);
+      expect(useLiveReviewComments).toHaveBeenLastCalledWith('demo', 42, true, {
+        canApprove: false,
+      });
     },
   );
 

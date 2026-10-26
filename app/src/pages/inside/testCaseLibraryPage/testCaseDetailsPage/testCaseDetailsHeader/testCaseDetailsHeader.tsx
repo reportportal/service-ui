@@ -49,7 +49,8 @@ import { ExecutionEstimationTime } from 'pages/inside/common/executionEstimation
 import { LifecycleBadge, ScoreChip } from 'pages/inside/aiFactory/common';
 import { getNativeTestCaseSummary, getTestCasePresentation } from 'common/utils/nativeTestCase';
 import { NativeTestCaseSummary } from 'pages/inside/aiFactory/common/nativeTestCaseSummary/nativeTestCaseSummary';
-import { ApproveButton } from 'pages/inside/aiFactory/approval';
+import { ApproveButton, NativeApproveButton } from 'pages/inside/aiFactory/approval';
+import type { LiveReviewCommentsLoadState } from 'pages/inside/aiFactory/review/useLiveReviewComments';
 import {
   automationDisabledMessages,
   automationMessages,
@@ -79,7 +80,35 @@ interface TestCaseDetailsHeaderProps {
   onMenuAction?: () => void;
   isScenarioEmpty?: boolean;
   isNativeFixInProgress?: boolean;
+  nativeReviewState?: LiveReviewCommentsLoadState;
 }
+
+interface TestCaseApprovalProps {
+  testCase: ExtendedTestCase;
+  nativeReviewState?: LiveReviewCommentsLoadState;
+  isNative: boolean;
+  isEnabled: boolean;
+  onRefresh: () => void;
+}
+
+const TestCaseApproval = ({
+  testCase,
+  nativeReviewState,
+  isNative,
+  isEnabled,
+  onRefresh,
+}: TestCaseApprovalProps) => {
+  if (isNative)
+    return (
+      <NativeApproveButton
+        testCase={testCase}
+        reviewState={nativeReviewState}
+        onRefresh={onRefresh}
+      />
+    );
+  if (!isEnabled || testCase.lifecycle !== Lifecycle.DRAFT) return null;
+  return <ApproveButton testCase={testCase} onSuccess={onRefresh} />;
+};
 
 export const TestCaseDetailsHeader = ({
   className,
@@ -88,6 +117,7 @@ export const TestCaseDetailsHeader = ({
   onMenuAction = () => {},
   isScenarioEmpty = false,
   isNativeFixInProgress = false,
+  nativeReviewState,
 }: TestCaseDetailsHeaderProps) => {
   const isAiFactoryEnabled = useAiFactoryEnabled();
   const testCase = getTestCasePresentation(rawTestCase, isAiFactoryEnabled);
@@ -327,6 +357,7 @@ export const TestCaseDetailsHeader = ({
               ) : (
                 <Tooltip
                   placement="top"
+                  wrapperClassName={cx('header__action-tooltip')}
                   content={formatMessage(
                     isDraft
                       ? readyOnlyMessages.testPlanDraftHint
@@ -340,14 +371,15 @@ export const TestCaseDetailsHeader = ({
               )}
             </>
           )}
-          {isAiFactoryEnabled && canReviewAiTestCases && testCase.lifecycle === Lifecycle.DRAFT && (
-            <ApproveButton
-              testCase={testCase}
-              onSuccess={() =>
-                dispatch({ type: GET_TEST_CASE_DETAILS, payload: { testCaseId: testCase.id } })
-              }
-            />
-          )}
+          <TestCaseApproval
+            testCase={testCase}
+            nativeReviewState={nativeReviewState}
+            isNative={Boolean(nativeSummary)}
+            isEnabled={isAiFactoryEnabled && canReviewAiTestCases}
+            onRefresh={() =>
+              dispatch({ type: GET_TEST_CASE_DETAILS, payload: { testCaseId: testCase.id } })
+            }
+          />
         </div>
       </div>
     </div>

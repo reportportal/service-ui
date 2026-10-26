@@ -473,7 +473,10 @@ export const TestCaseDetailsPage = () => {
   const automationDetails = aiDetailsState.data?.automation;
   const isAiReviewEnabled = isLegacyAiEnabled && Boolean(testCaseDetails?.ai);
   const reviewState = useReviewComments(projectKey, testCaseId, isAiReviewEnabled);
-  const nativeReviewState = useLiveReviewComments(projectKey, testCaseId, isNativeReviewEnabled);
+  const nativeReviewState = useLiveReviewComments(projectKey, testCaseId, isNativeReviewEnabled, {
+    canApprove: nativeSummary?.status === 'DRAFT',
+    versionId: testCaseDetails?.defaultVersionId,
+  });
   const refreshAfterFixRoundStart = useCallback(() => {
     reviewState.reload();
   }, [reviewState]);
@@ -626,6 +629,7 @@ export const TestCaseDetailsPage = () => {
             className={cx('page__header')}
             testCase={reviewPresentation.renderedTestCase}
             isNativeFixInProgress={nativeReviewState.fixInProgress}
+            nativeReviewState={nativeReviewState}
             onAddToTestPlan={handleAddToTestPlan}
             onMenuAction={noop}
             isScenarioEmpty={isScenarioEmpty}
