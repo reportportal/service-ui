@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { useCallback } from 'react';
+import { useCallback, useRef, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { isEmpty } from 'es-toolkit/compat';
 
@@ -69,6 +69,11 @@ export const useTestCaseMutations = (testCaseId?: number) => {
   const { processFolderDestinationAndComplete } = useFolderActions();
   const refetchCurrentTestCases = useRefetchCurrentTestCases();
   const currentUrlFolderId = useSelector(urlFolderIdSelector);
+  const currentUrlFolderIdRef = useRef<number | undefined>(currentUrlFolderId);
+
+  useEffect(() => {
+    currentUrlFolderIdRef.current = currentUrlFolderId;
+  }, [currentUrlFolderId]);
   const { showSuccessNotification, showErrorNotification } = useNotification();
 
   const completeFolderDestination = useCallback(
@@ -163,13 +168,19 @@ export const useTestCaseMutations = (testCaseId?: number) => {
         if (refreshedTestCaseId) {
           dispatch({ type: GET_TEST_CASE_DETAILS, payload: { testCaseId: refreshedTestCaseId } });
 
-          // Only refetch the current list when the response folder matches
-          // the current URL folder (to avoid refreshing an unrelated folder/page)
-          // or when both are undefined (top-level/all test cases view).
+          // Read the latest folder id from ref to handle navigation that may
+          // have happened while the request was in-flight.
+          const latestUrlFolderId = currentUrlFolderIdRef.current;
+
+          // Only refetch the current list when the operation is not on the
+          // details page AND either:
+          // - the user currently views all test cases (no folder in URL),
+          //   in which case the edited test case may appear there regardless
+          //   of its folder; OR
+          // - the response folder matches the current URL folder.
           const shouldRefetchList =
             !options.isDetailsPage &&
-            ((folderIdFromResponse && String(folderIdFromResponse) === String(currentUrlFolderId)) ||
-              (!folderIdFromResponse && !currentUrlFolderId));
+            (latestUrlFolderId == null || String(folderIdFromResponse) === String(latestUrlFolderId));
 
           if (shouldRefetchList) {
             refetchCurrentTestCases();
@@ -204,6 +215,8 @@ export const useTestCaseMutations = (testCaseId?: number) => {
       showSuccessNotification,
       showErrorNotification,
       testCaseId,
+      refetchCurrentTestCases,
+      currentUrlFolderId,
     ],
   );
 
