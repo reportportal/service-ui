@@ -1,0 +1,44 @@
+name: ReportPortal dispatch probe (logging only)
+
+on:
+  workflow_dispatch:
+    inputs:
+      test_case_id:
+        description: ReportPortal test case ID
+        required: true
+        type: string
+      fix_round_id:
+        description: ReportPortal fix round ID
+        required: true
+        type: string
+      previous_iteration_id:
+        description: ReportPortal source iteration ID
+        required: true
+        type: string
+
+permissions: {}
+
+jobs:
+  log-dispatch:
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    steps:
+      - name: Validate and log dispatch identifiers
+        env:
+          TEST_CASE_ID: ${{ inputs.test_case_id }}
+          FIX_ROUND_ID: ${{ inputs.fix_round_id }}
+          PREVIOUS_ITERATION_ID: ${{ inputs.previous_iteration_id }}
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import os
+          import re
+
+          names = ('TEST_CASE_ID', 'FIX_ROUND_ID', 'PREVIOUS_ITERATION_ID')
+          values = {name: os.environ[name] for name in names}
+          if any(re.fullmatch(r'[1-9][0-9]*', value) is None for value in values.values()):
+              raise SystemExit('All three identifiers must be canonical positive integers.')
+          for name, value in values.items():
+              print(f'{name.lower()}={value}')
+          print(f"run_url={os.environ['GITHUB_SERVER_URL']}/{os.environ['GITHUB_REPOSITORY']}/actions/runs/{os.environ['GITHUB_RUN_ID']}")
+          PY
