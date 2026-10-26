@@ -155,8 +155,11 @@ export const useTestCaseMutations = (testCaseId?: number) => {
           data: buildTestCaseData(payload, manualScenario, updatedAttributes),
         });
 
-        if (options.isDetailsPage && testCaseId) {
+        if (testCaseId) {
           dispatch({ type: GET_TEST_CASE_DETAILS, payload: { testCaseId } });
+          if (!options.isDetailsPage) {
+            refetchCurrentTestCases();
+          }
         }
 
         dispatch(hideModalAction());
