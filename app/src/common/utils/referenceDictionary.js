@@ -85,6 +85,11 @@ export const docsReferences = {
   emptyStateIntegrationsDocs:
     'https://reportportal.io/docs/reportportal-configuration/IntegrationViaPlugin',
   emptyStateOrgIntegrationsDocs: 'https://reportportal.io/docs/plugins/ManagePlugins/',
+  emptyStateMilestonesDocs: 'https://reportportal.io/docs/test-management-system/milestones/',
+  emptyStateTestCaseLibraryDocs:
+    'https://reportportal.io/docs/test-management-system/test-case-library/',
+  emptyStateManualLaunchesDocs:
+    'https://reportportal.io/docs/test-management-system/manual-launches/',
   authorizationWithUsersApiKeyForAgents:
     'https://reportportal.io/docs/reportportal-configuration/HowToGetAnAccessTokenInReportPortal/#2-authorization-with-users-api-key-for-agents',
   workWithReports: 'https://reportportal.io/docs/work-with-reports/InvestigationOfFailure',
