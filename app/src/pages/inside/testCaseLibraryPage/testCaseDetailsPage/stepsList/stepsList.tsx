@@ -28,8 +28,8 @@ import styles from './stepsList.scss';
 const cx = createClassnames(styles);
 
 interface StepsListProps {
-  steps: StepProp[];
-  renderReviewControl?: (stepId: number) => ReactNode;
+  steps: (StepProp & { reviewStepNumber?: number })[];
+  renderReviewControl?: (stepId: number, stepNumber?: number) => ReactNode;
 }
 
 export const StepsList = ({ steps, renderReviewControl }: StepsListProps) => {
@@ -52,11 +52,11 @@ export const StepsList = ({ steps, renderReviewControl }: StepsListProps) => {
         {steps.map((step, index) => (
           <Step
             key={step.id}
-            index={index + 1}
+            index={step.reviewStepNumber ?? index + 1}
             expectedResult={step.expectedResult}
             instructions={step.instructions}
             attachments={step.attachments}
-            reviewControl={renderReviewControl?.(step.id)}
+            reviewControl={renderReviewControl?.(step.id, step.reviewStepNumber)}
           />
         ))}
       </ul>

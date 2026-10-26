@@ -16,3 +16,4 @@
 
 export { ApproveButton } from './approveButton';
 export { BulkApproveButton } from './bulkApproveButton';
+export { NativeApproveButton } from 'pages/inside/aiFactory/approval/nativeApproveButton';

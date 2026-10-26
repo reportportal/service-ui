@@ -30,17 +30,27 @@ These are planned FE effort estimates, not actual delivered hours. Every new Jir
 
 ## R2 — Live review comments
 
+Started 2026-10-24 on `EPMRPP-122687-live-review-comments`, stacked on R1 commit `7bb96619a` while PR #5845 is in review. The user authorized R2 commit, push and PR creation on 2026-10-24. The dependent PR temporarily targets `EPMRPP-122686-live-test-case-ai-data` to show only R2 changes; after R1 merges, retarget it to `bootcamp-prototype`. Delivery and CI evidence are tracked in the R2 Jira issue and PR.
+
 - Integrate `GET .../review`, `POST .../review/comment`, own-comment deletion and unsent-comment discard.
 - Adapt the response envelope and `NOT_SENT`, `targetType`, 1-based `stepNumber`, `SCENARIO_TEXT`, `authorId`, ISO dates, `roundNumber` and `agentReason`.
 - Render live comments for native AI cases and use authoritative `unsentCount` / `fixInProgress` for state. Do not invent author names or permissions absent from the response.
 - Verify edit/view permissions, comment targets, empty/error states, mutation conflicts and project/case navigation races.
+- Use the numeric current-user ID for author ownership, and a localized user-ID fallback when no author name is supplied. Native `STEP` numbers come from the original scenario array before any display filtering.
+- Keep native and legacy Review capabilities explicit: native cases may read/write comments but must not call legacy `/ai`, `/review-comment`, `/fix-round` or `/lifecycle`, or enable native Push/Approve. The native fixing state must not synthesize a round number or a legacy `review.fixRound` DTO.
+- Guard GET and mutation completions across project/case changes, disable/unmount and A→B→A; retain composer text on mutation failure, reconcile server state, and block duplicate submissions and edits while fixing.
 
 ## R3 — Live Approve
+
+Started 2026-10-24 on `EPMRPP-122688-live-test-case-approval`, stacked on R2 commit `5267d5261` while PRs #5845 and #5846 remain open. Original Estimate remains 16 h (3 / 9 / 4). The user authorized R3 commit, push and PR publication on 2026-10-24. The dependent PR temporarily targets `EPMRPP-122687-live-review-comments` so its diff contains only R3; after the dependencies merge, retarget to `bootcamp-prototype`. Delivery and exact-head CI evidence are tracked in Jira/PR.
 
 - Use `PATCH .../tms/test-case/{id}` with `status: READY` for supported single-case approval.
 - Handle review conflict `409`, including error code `40915`, with refresh and useful localized feedback.
 - Refresh case/review data after success. Do not silently implement batch behavior or obsolete-confirmation semantics absent from the new contract.
 - Verify pending comments, active fixes, permissions, errors and flag-OFF behavior.
+- Scope the native action to AI Draft cases in details and the Library side panel. Native manual Mark as ready remains unavailable pending its confirmed contract; legacy manual behavior is preserved.
+- Share the synchronous mutation lock with comment operations, fail closed while Review is unavailable, and retain a successful-approval latch while a stale case response still says Draft. Ignore completions after navigation, feature disable, permission revocation or unmount.
+- Preserve HTTP 409 in the approval request locally; shared HTTP-client behavior remains unchanged. Refresh both case and Review on current-resource conflict without automatically retrying the mutation.
 
 ## R4 — Live Push to agent
 
@@ -74,7 +84,7 @@ These are planned FE effort estimates, not actual delivered hours. Every new Jir
 
 ## Execution evidence
 
-All six Jira subtasks were created with Original Estimates and breakdown comments on 2026-10-24. R1 is implemented on `EPMRPP-122686-live-test-case-ai-data`; R2–R5 remain pending and R6 also awaits actual integration/workflow configuration. The user authorized commit, push and a PR into `bootcamp-prototype` on 2026-10-24. Delivery and exact-head CI status are tracked in the R1 Jira issue and PR; no deployment or manual workflow trigger is included.
+All six Jira subtasks were created with Original Estimates and breakdown comments on 2026-10-24. R1 and R2 are submitted for review; R3 is implemented and validated locally as recorded below. R4–R5 remain pending, and R6 also awaits actual integration/workflow configuration. The user authorized R1–R3 publication on 2026-10-24; delivery and exact-head CI evidence are tracked in their Jira issues and PRs. No deployment or manual workflow trigger is included.
 
 R1 implements native DTO/read presentation, current-version score/model/cost, native-before-overlay precedence (including scenario-update responses), and guards unsupported provisional actions. The first code review found that removing legacy lifecycle data bypassed Draft eligibility checks; four behavior tests reproduced the regression before a host-local native-status fix. Both code and security rechecks report no remaining introduced findings.
 
@@ -87,3 +97,31 @@ Automated checks on 2026-10-24:
 - `git diff --check`: PASS.
 
 The publication recheck also reviewed the shared AI chip tooltip wrapper/badge sizing and native header placement, with no actionable code-review findings. No authenticated runtime or visual browser check was performed for R1. Tests use explicit contract fixtures; they do not prove the deployed build, real project roles or real workflow execution. Full criterion-level metrics, native quick filters/counts, Review/Approve/Push, version history and cumulative version cost are not claimed integrated by R1. The delivery workflow is Code review after PR creation, then Testing after merge; R2 is the next implementation slice.
+
+R1 Sonar follow-up: PR [#5845](https://github.com/reportportal/service-ui/pull/5845), commit `7bb96619a487f3e5501dd5e0b64f2331b80fde41`, extracts the existing Ready-only selection and native detail read-state calculations without behavior changes. Node 20 type-check, changed-file ESLint, 3 focused suites / 56 tests and independent code/security checks pass. SonarCloud analysis at `2026-10-24T12:48:03+0000` matches that exact commit: Quality Gate OK, zero bugs/vulnerabilities/code smells and zero open issues. GitHub [Build run 40095414828](https://github.com/reportportal/service-ui/actions/runs/40095414828) subsequently completed successfully for the same head, including JS Build and Codecov. The PR remains open; no merge or deployment is claimed.
+
+## R2 local implementation evidence (2026-10-24)
+
+Native AI case details now use a separate live Review adapter/hook/strip. The URLs are `GET .../review`, `POST .../review/comment`, `DELETE .../review/comment/{id}` and `DELETE .../review/comment`. The hook validates responses, uses the server's unsent count and fixing state, checks current numeric author ownership and editor permission, prevents duplicate mutations and ignores stale completions across project/case changes, disable, unmount and A→B→A. Failed mutations retain composer text and reconcile Review; a failed refresh preserves a previously known fixing presentation while blocking mutations.
+
+Native comments use original 1-based scenario positions before empty-step filtering, localized user-ID fallbacks and generic round labels when optional metadata is absent. Native fixing locks are explicit header props; legacy DTOs, hooks and feature-OFF behavior remain separate. Native Review does not activate provisional `/ai`, `/review-comment`, `/fix-round`, `/review/fix-round` or `/lifecycle`, nor Push/Approve. Refresh is manual; fix-round polling remains R4.
+
+- Node 20 canonical `npm run type-check`: PASS.
+- Focused Jest: 8 suites / 138 tests PASS, including DTO/hook/shared comments, details, header and original step positions. Test log: `/tmp/service-ui-r2-tests.log` (local evidence only).
+- Changed-file ESLint: 17 JS/TS/TSX files, zero warnings, PASS. No SCSS changes in R2.
+- `git diff --check`: PASS.
+- Independent senior code and security reviews: PASS, no actionable introduced findings.
+
+R2 is submitted from `EPMRPP-122687-live-review-comments`, stacked on R1 commit `7bb96619a`, following the user's publication request. The delivery workflow moves Jira to Code review after PR creation; this does not mark the task deployed or runtime-verified. No authenticated browser check, backend comment mutation, merge or deployment was performed. Automated contract fixtures do not establish deployed authorization or runtime behavior. Native Library filter/count semantics, Approve and Push remain separate follow-ups.
+
+## R3 implementation and local validation
+
+R3 is implemented locally on `EPMRPP-122688-live-test-case-approval` from R2 `5267d5261`. Native AI Draft cases now offer Approve in details and the Library side panel. The command sends only `PATCH .../tms/test-case/{id}` with `{status: "READY"}` and reconciles case/Review after success or a current-resource failure. Request-local raw response handling preserves HTTP 409; numeric `errorCode: 40915` is also recognized. Feedback is localized and never renders server error text.
+
+The command shares the synchronous Review mutation lock with comments, checks editor permission and authoritative loaded Review state, and blocks unsent comments, active fixes, errors, loading and duplicates. An approval latch prevents another PATCH while stale case data still says Draft. Default-version identity and approval epochs invalidate old handlers/responses after navigation, permission changes, disable/unmount or a new version. An ordinary Review refresh does not discard an in-flight approval result. Details reuse their existing Review hook; the side panel loads Review only for visible native AI Draft cases. Viewer reads remain permitted, while the approval button and command require edit permission.
+
+Validation: 12 focused suites / 227 tests PASS, full Node 20 `type-check` PASS, changed-file ESLint for 8 production and 5 test files with zero warnings PASS, and `git diff --check` PASS. Changed production entry-point Madge processed 832 files with 7 warnings and found no circular dependency. Independent senior code and security reviews PASS after navigation/permission/version race fixes. Fixtures cover both raw HTTP 409 with an unknown body and the documented 40915 body, shared locks in both directions, stale callbacks/completions and same-case version changes, authoritative latch reset, case/Review refresh and native-versus-legacy/feature-OFF behavior.
+
+Authenticated browser/backend execution, backend authorization/atomic conflict enforcement, deployment and fresh R3 CI/Sonar are NOT VERIFIED by the local checks above. No live case mutation was performed. Publication is authorized; Jira moves to Code review after PR creation, with current delivery/CI evidence tracked in the issue and PR. Native manual approval, native batch approval, obsolete-confirmation semantics, Push and fix-round polling remain outside this slice. On a side-panel Review read error, retry by closing and reopening the panel; there is no inline Retry control.
+
+For the later runtime check, enable `show_ai_factory_poc`, disable demo overlays, and open a real native AI Draft case with a numeric ID and confirmed project access. Verify one initial Review GET in details; Approve sends the status-only PATCH followed by Review and case refresh, with the authoritative Ready result replacing Draft. Repeat from the Library side panel and verify list refresh. Verify the button is unavailable for Viewer, flag OFF, native manual/Ready cases, unsent comments and active fixing. A real conflict must show localized feedback, refresh both resources and never automatically retry PATCH. This checklist is pending runtime verification, not a recorded pass.

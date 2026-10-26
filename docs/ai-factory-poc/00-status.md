@@ -3,7 +3,7 @@
 > **Single source of truth for progress.** Update at the start and end of every task / session.
 > Legend: ⬜ todo · 🟨 in progress · 🟦 in review · ✅ done · ⛔ blocked · ➖ skipped
 
-**Last updated:** 2026-10-24 · **Branch:** `EPMRPP-122686-live-test-case-ai-data` · **Phase:** live Review and fix-round integration
+**Last updated:** 2026-10-24 · **Branch:** `EPMRPP-122687-live-review-comments` · **Phase:** live Review and fix-round integration
 
 Temporary mock data and integration workarounds are tracked for removal in
 [23-temporary-solutions-register.md](23-temporary-solutions-register.md). Close the relevant register
@@ -16,13 +16,19 @@ The new backend handoff describes native case fields and the complete review/fix
 | Order | Scope | FE sub-task | Status |
 |---|---|---|---|
 | R1 | Native Library/detail AI data and read-only presentation | [EPMRPP-122686](https://jiraeu.epam.com/browse/EPMRPP-122686) | 🟦 implementation validated for Code review: native metadata wins over demo enrichment, supported read-only fields render in Library/detail/side panel, provisional actions stay unavailable, native Draft guards are preserved; publication checks pass (11 suites / 160 tests, Node 20 type-check, changed-file lint). Authenticated deployment/browser verification pending. |
-| R2 | Live Review comments and review state | [EPMRPP-122687](https://jiraeu.epam.com/browse/EPMRPP-122687) | ⬜ depends on R1 |
-| R3 | Live Approve and review conflicts | [EPMRPP-122688](https://jiraeu.epam.com/browse/EPMRPP-122688) | ⬜ depends on R1/R2 |
+| R2 | Live Review comments and review state | [EPMRPP-122687](https://jiraeu.epam.com/browse/EPMRPP-122687) | 🟦 implementation validated for Code review: native GET/POST/DELETE comments, authoritative count/fixing state, ownership/permissions, original step positions and navigation-race guards; 8 suites / 138 tests, type-check, changed-file lint and code/security reviews pass. Publication authorized; dependent PR targets R1's branch until PR #5845 merges, then retargets to bootcamp-prototype. Authenticated runtime pending; Push/Approve remain outside this scope. |
+| R3 | Live Approve and review conflicts | [EPMRPP-122688](https://jiraeu.epam.com/browse/EPMRPP-122688) | 🟦 implementation validated for Code review on `EPMRPP-122688-live-test-case-approval`, stacked on R2 `5267d5261`: native AI Draft single-case approval in details/side panel, shared Review mutation lock, conflict reconciliation and version/navigation guards. 12 suites / 227 tests, type-check, changed-file ESLint and code/security reviews pass. Publication authorized; dependent PR targets R2's branch until dependencies merge, then retargets to bootcamp-prototype. Authenticated runtime pending; delivery and exact-head CI evidence are tracked in Jira/PR. |
 | R4 | Live Push to agent and fix-round states | [EPMRPP-122689](https://jiraeu.epam.com/browse/EPMRPP-122689) | ⬜ depends on R1–R3 |
 | R5 | Fix iteration provenance, refresh and comparison scope | [EPMRPP-122690](https://jiraeu.epam.com/browse/EPMRPP-122690) | ⬜ depends on R4 |
 | R6 | GitHub Actions fix-round journey verification | [EPMRPP-122691](https://jiraeu.epam.com/browse/EPMRPP-122691) | ⬜ depends on R1–R5 and real integration/workflow configuration |
 
 Generation panels and Auto-Ready remain with existing EPMRPP-122414/EPMRPP-122415; their remaining backend decisions are not resolved by creating these tasks.
+
+## Obsolete Compare mock cleanup (2026-10-24)
+
+[EPMRPP-122692](https://jiraeu.epam.com/browse/EPMRPP-122692), branch `EPMRPP-122692-remove-obsolete-compare-mocks`, removes the old Compare normalizer, mock DTO generator, legacy rendering/types/local metrics, exclusive styles/messages and unused transport helper. Test-only iteration projections were moved into `mocks/testUtils/iterationViewModels.ts`; live LP1–LP4 and automation regression assertions remain. Active Test Case mocks, DB/seed, overlay, filters, lifecycle/fix rounds and automation are preserved.
+
+Local validation: 15 focused suites / 280 tests PASS, final Node 20 type-check PASS, changed-file ESLint (9 production and 9 test/helper files), Stylelint and diff-check PASS, Madge no cycles (264 files, 6 warnings), production build PASS, independent senior code/security reviews PASS. The user approved a separate cleanup PR; it depends on R3 PR #5847 and ultimately targets `bootcamp-prototype` after dependencies merge. Delivery and exact-head CI/Sonar evidence are tracked in Jira/PR. Unrelated header edits remain in the original worktree. No authenticated browser/backend execution, merge or deployment is claimed.
 
 ## Live Pipeline integration (2026-10-18)
 

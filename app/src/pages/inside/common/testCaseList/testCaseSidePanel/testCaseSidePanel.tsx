@@ -68,7 +68,8 @@ import {
 import { ExecutionEstimationTime } from 'pages/inside/common/executionEstimationTime';
 import { AiChip, LifecycleBadge, ScoreChip } from 'pages/inside/aiFactory/common';
 import { EvaluationMini } from 'pages/inside/aiFactory/evaluation';
-import { ApproveButton } from 'pages/inside/aiFactory/approval';
+import { ApproveButton, NativeApproveButton } from 'pages/inside/aiFactory/approval';
+import { useLiveReviewComments } from 'pages/inside/aiFactory/review/useLiveReviewComments';
 import { ReviewFlags } from 'pages/inside/aiFactory/library/reviewFlags';
 import { useTestCaseAi } from 'pages/inside/aiFactory/lifecycle';
 import { getNativeTestCaseSummary, getTestCasePresentation } from 'common/utils/nativeTestCase';
@@ -202,6 +203,13 @@ export const TestCaseSidePanel = memo(
       isAiFactoryEnabled && Boolean(testCase?.ai),
       testCase?.updatedAt,
     );
+    const isNativeDraft =
+      isVisible && nativeSummary?.isAi === true && nativeSummary.status === 'DRAFT';
+
+    const nativeReviewState = useLiveReviewComments(projectKey, testCase?.id ?? 0, isNativeDraft, {
+      canApprove: isNativeDraft,
+      versionId: testCase?.defaultVersionId,
+    });
     const refetchCurrentTestCases = useRefetchCurrentTestCases();
     const addToLaunchAction = useAddToLaunchAction({
       testCaseId: testCase?.id ?? 0,
@@ -502,6 +510,14 @@ export const TestCaseSidePanel = memo(
                 </Tooltip>
               )}
             </>
+          )}
+          {isNativeDraft && canReviewAiTestCases && (
+            <NativeApproveButton
+              testCase={testCase}
+              reviewState={nativeReviewState}
+              className={cx('action-button', 'last-button')}
+              onRefresh={refetchCurrentTestCases}
+            />
           )}
           {isAiFactoryEnabled && canReviewAiTestCases && testCase.lifecycle === Lifecycle.DRAFT && (
             <ApproveButton

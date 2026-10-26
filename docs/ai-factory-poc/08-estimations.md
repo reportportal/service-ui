@@ -87,6 +87,14 @@ Planned Original Estimates, not actual delivered hours. Each issue has the match
 | [EPMRPP-122690](https://jiraeu.epam.com/browse/EPMRPP-122690) | Fix iteration provenance and comparison scope | 20 h | 4 h | 11 h | 5 h |
 | [EPMRPP-122691](https://jiraeu.epam.com/browse/EPMRPP-122691) | GitHub Actions fix-round journey verification | 12 h | 3 h | 4 h | 5 h |
 
+## Obsolete Compare mock cleanup planned scope (2026-10-24)
+
+The user approved a focused cleanup PR after the live Compare migration. This is a planned Original Estimate, not actual delivered hours; Jira has the matching estimate and immediate breakdown comment.
+
+| Jira | Scope | Planned | Research | Implementation | Validation |
+|---|---|---:|---:|---:|---:|
+| [EPMRPP-122692](https://jiraeu.epam.com/browse/EPMRPP-122692) | Remove obsolete Compare mock paths and unused transport helper; preserve automation test projections | 12 h | 3 h | 6 h | 3 h |
+
 ## Per-task estimates
 
 Filled in as tasks complete. `—` = not done yet.

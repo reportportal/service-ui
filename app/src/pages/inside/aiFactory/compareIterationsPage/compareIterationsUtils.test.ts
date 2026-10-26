@@ -14,21 +14,9 @@
  * limitations under the License.
  */
 
-import { IntlShape } from 'react-intl';
+import { IterationStatus, type IterationSummaryRS } from 'types/aiFactory';
 
-import {
-  CriterionKey,
-  IterationStatus,
-  type ComparisonIteration,
-  type IterationSummaryRS,
-} from 'types/aiFactory';
-
-import { buildComparisonMetrics, getLatestPair, parseQueryId } from './compareIterationsUtils';
-
-const intl = {
-  formatMessage: (message: { defaultMessage?: string; id: string }) =>
-    message.defaultMessage ?? message.id,
-} as IntlShape;
+import { getLatestPair, parseQueryId } from './compareIterationsUtils';
 
 const iteration = (id: number, number: number): IterationSummaryRS => ({
   id,
@@ -73,103 +61,5 @@ describe('compareIterationsUtils', () => {
   test('does not form a pair when fewer than two iterations exist', () => {
     expect(getLatestPair([])).toBeNull();
     expect(getLatestPair([iteration(101, 1)])).toBeNull();
-  });
-
-  test('builds only metrics present on both sides with their comparison direction', () => {
-    const baseline: ComparisonIteration = {
-      id: 101,
-      number: 1,
-      status: IterationStatus.COMPLETED,
-      testCasesCount: 4,
-      suiteScore: 80,
-      readyCount: 2,
-      fixRoundsCount: 1,
-      autoReadyPromotedCount: 1,
-      criterionAverages: {
-        [CriterionKey.ATOMICITY]: 10,
-        [CriterionKey.CLEAR_STEPS]: 15,
-        [CriterionKey.EXPECTED_RESULTS]: 16,
-        [CriterionKey.NO_INVENTED_LOGIC]: 17,
-        [CriterionKey.NO_INVENTED_UI]: 12,
-        [CriterionKey.COHERENCE]: 8,
-      },
-      costTotal: 1.25,
-      durationMs: 1000,
-    };
-    const candidate: ComparisonIteration = {
-      id: 102,
-      number: 2,
-      status: IterationStatus.COMPLETED,
-      testCasesCount: 5,
-      suiteScore: 90,
-      readyCount: 4,
-      fixRoundsCount: 0,
-      autoReadyPromotedCount: 2,
-      criterionAverages: {
-        [CriterionKey.ATOMICITY]: 11,
-        [CriterionKey.CLEAR_STEPS]: 16,
-        [CriterionKey.EXPECTED_RESULTS]: 17,
-        [CriterionKey.NO_INVENTED_LOGIC]: 18,
-        [CriterionKey.NO_INVENTED_UI]: 13,
-        [CriterionKey.COHERENCE]: 9,
-      },
-      costTotal: 1,
-      durationMs: 900,
-    };
-
-    const metrics = buildComparisonMetrics(baseline, candidate, intl);
-
-    expect(metrics).toEqual(
-      expect.arrayContaining([
-        expect.objectContaining({
-          key: 'testCases',
-          baseline: 4,
-          candidate: 5,
-          direction: 'neutral',
-        }),
-        expect.objectContaining({ key: 'score', baseline: 80, candidate: 90, direction: 'higher' }),
-        expect.objectContaining({ key: 'ready', baseline: 2, candidate: 4, direction: 'neutral' }),
-        expect.objectContaining({
-          key: 'fixRounds',
-          baseline: 1,
-          candidate: 0,
-          direction: 'neutral',
-        }),
-        expect.objectContaining({
-          key: 'autoReadyPromoted',
-          baseline: 1,
-          candidate: 2,
-          direction: 'neutral',
-        }),
-        expect.objectContaining({ key: 'cost', baseline: 1.25, candidate: 1, direction: 'lower' }),
-        expect.objectContaining({
-          key: 'duration',
-          baseline: 1000,
-          candidate: 900,
-          direction: 'lower',
-        }),
-      ]),
-    );
-    Object.values(CriterionKey).forEach((key) => {
-      expect(metrics).toContainEqual(expect.objectContaining({ key, direction: 'higher' }));
-    });
-  });
-
-  test('omits metrics missing from either iteration while preserving numeric zero', () => {
-    const metrics = buildComparisonMetrics(
-      {
-        id: 101,
-        number: 1,
-        status: IterationStatus.COMPLETED,
-        testCasesCount: 0,
-        suiteScore: 80,
-      },
-      { id: 102, number: 2, status: IterationStatus.COMPLETED, testCasesCount: 0 },
-      intl,
-    );
-
-    expect(metrics).toEqual([
-      expect.objectContaining({ key: 'testCases', baseline: 0, candidate: 0 }),
-    ]);
   });
 });

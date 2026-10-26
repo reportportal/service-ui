@@ -73,6 +73,7 @@ The user explicitly requested tasks for every stage in advance. These seven task
 | Auto-Ready settings | EPMRPP-121673 | [EPMRPP-122415](https://jiraeu.epam.com/browse/EPMRPP-122415) |
 | Review and Library join | EPMRPP-121677 | [EPMRPP-122416](https://jiraeu.epam.com/browse/EPMRPP-122416) |
 | Comparison | EPMRPP-121706 | [EPMRPP-122417](https://jiraeu.epam.com/browse/EPMRPP-122417) |
+| Obsolete Compare mock cleanup | EPMRPP-121706 | [EPMRPP-122692](https://jiraeu.epam.com/browse/EPMRPP-122692) — Original Estimate 12 h (3 h research / 6 h implementation / 3 h validation), created with the matching estimate comment on 2026-10-24 |
 
 Token: `JIRA_API_TOKEN` (Personal Access Token, sent as `Bearer`) and `JIRA_URL`. They are read from
 `service-ui/.env` first, then `../prism-ui/.env.local`.

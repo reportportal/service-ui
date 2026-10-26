@@ -25,6 +25,23 @@ export const messages = defineMessages({
     id: 'AiFactoryApproval.markAsReady',
     defaultMessage: 'Mark as ready',
   },
+  reviewUnavailableHint: {
+    id: 'AiFactoryApproval.reviewUnavailableHint',
+    defaultMessage: 'Wait for review information to load before approving this Test Case.',
+  },
+  reviewMutationHint: {
+    id: 'AiFactoryApproval.reviewMutationHint',
+    defaultMessage: 'Wait for the current review update to finish.',
+  },
+  approvalCompletedHint: {
+    id: 'AiFactoryApproval.approvalCompletedHint',
+    defaultMessage: 'Approval completed. Refresh the Test Case to see its current status.',
+  },
+  approvalConflict: {
+    id: 'AiFactoryApproval.approvalConflict',
+    defaultMessage:
+      'This Test Case cannot be approved because its review changed. Review the refreshed information and try again.',
+  },
   approveAnyway: {
     id: 'AiFactoryApproval.approveAnyway',
     defaultMessage: 'Approve anyway',

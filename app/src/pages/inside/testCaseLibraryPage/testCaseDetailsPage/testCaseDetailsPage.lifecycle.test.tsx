@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+import { act } from 'react';
 import { mount, shallow } from 'enzyme';
 import { useSelector } from 'react-redux';
 
@@ -31,7 +32,16 @@ import { usePolling } from 'pages/inside/aiFactory/common';
 import { NativeTestCaseSummary } from 'pages/inside/aiFactory/common/nativeTestCaseSummary/nativeTestCaseSummary';
 import { PipelineLinks } from 'pages/inside/aiFactory/pipelineLinks';
 import { LaunchBlockedBanner } from 'pages/inside/aiFactory/readyOnlyGate';
-import { ReviewStrip, useFixRound, useReviewComments } from 'pages/inside/aiFactory/review';
+import {
+  ReviewTarget,
+  ReviewStrip,
+  useFixRound,
+  useReviewComments,
+} from 'pages/inside/aiFactory/review';
+import { LiveReviewStrip } from 'pages/inside/aiFactory/review/liveReviewStrip';
+import { useLiveReviewComments } from 'pages/inside/aiFactory/review/useLiveReviewComments';
+import type { LiveReviewCommentsLoadState } from 'pages/inside/aiFactory/review/useLiveReviewComments';
+import { hasScenarioContent, hasStepContent } from 'pages/inside/common/scenarioUtils';
 import { useAddTestCasesToTestPlanModal } from 'pages/inside/testCaseLibraryPage/addTestCasesToTestPlanModal/useAddTestCasesToTestPlanModal';
 import { AutomationStatus, Lifecycle, type TestCaseAiRS } from 'types/aiFactory';
 import type { ExtendedTestCase } from 'types/testCase';
@@ -112,6 +122,12 @@ jest.mock('pages/inside/aiFactory/review', () => ({
   useFixRound: jest.fn(),
   useReviewComments: jest.fn(),
 }));
+jest.mock('pages/inside/aiFactory/review/liveReviewStrip', () => ({
+  LiveReviewStrip: 'mock-LiveReviewStrip',
+}));
+jest.mock('pages/inside/aiFactory/review/useLiveReviewComments', () => ({
+  useLiveReviewComments: jest.fn(),
+}));
 jest.mock('pages/inside/common/attachmentsWithSlider', () => ({
   AttachmentsWithSlider: 'mock-AttachmentsWithSlider',
 }));
@@ -154,11 +170,23 @@ const testCase = {
   manualScenario: {},
 } as unknown as ExtendedTestCase;
 
+const fetchMock = fetch as jest.MockedFunction<
+  (url: string, params?: Record<string, unknown>) => Promise<unknown>
+>;
+const getReviewStrip = (wrapper: ReturnType<typeof shallow>) =>
+  (
+    wrapper.find('TestCaseReviewStrip') as ReturnType<typeof shallow> & {
+      dive: () => ReturnType<typeof shallow>;
+    }
+  ).dive();
+
 let selectedTestCase = testCase;
 let selectedAiDetails: TestCaseAiRS | null = null;
 let testCaseDetailsLoading = false;
 let aiDetailsLoading = false;
 let aiDetailsError = false;
+let canReviewAiTestCases = true;
+let liveReviewOverrides: Partial<LiveReviewCommentsLoadState> = {};
 const aiDetailsReload = jest.fn();
 
 const renderPage = (isEnabled: boolean, canAutomateTestCases = false) => {
@@ -175,6 +203,7 @@ const renderPage = (isEnabled: boolean, canAutomateTestCases = false) => {
   jest.mocked(useUserPermissions).mockReturnValue({
     canAutomateTestCases,
     canManageTestCases: false,
+    canReviewAiTestCases,
   } as ReturnType<typeof useUserPermissions>);
   jest.mocked(useAddTestCasesToTestPlanModal).mockReturnValue({ openModal: jest.fn() });
   jest.mocked(useDescriptionModal).mockReturnValue({ openModal: jest.fn() });
@@ -193,6 +222,22 @@ const renderPage = (isEnabled: boolean, canAutomateTestCases = false) => {
     addComment: jest.fn(() => Promise.resolve()),
     deleteComment: jest.fn(() => Promise.resolve()),
     discardPending: jest.fn(() => Promise.resolve()),
+  });
+  jest.mocked(useLiveReviewComments).mockReturnValue({
+    resourceKey: {},
+    comments: [],
+    unsentCount: 0,
+    fixInProgress: false,
+    isLoaded: true,
+    isLoading: false,
+    isError: false,
+    isMutating: false,
+    isMutationError: false,
+    reload: jest.fn(),
+    addComment: jest.fn(() => Promise.resolve(true)),
+    deleteComment: jest.fn(() => Promise.resolve(true)),
+    discardPending: jest.fn(() => Promise.resolve(true)),
+    ...liveReviewOverrides,
   });
   jest.mocked(useFixRound).mockReturnValue({
     current: null,
@@ -226,11 +271,16 @@ describe('TestCaseDetailsPage lifecycle history', () => {
     testCaseDetailsLoading = false;
     aiDetailsLoading = false;
     aiDetailsError = false;
+    liveReviewOverrides = {};
+    canReviewAiTestCases = true;
+    jest.mocked(hasScenarioContent).mockReturnValue(false);
+    jest.mocked(hasStepContent).mockReturnValue(false);
+    fetchMock.mockReset();
   });
 
   test.each(['AI', 'MANUAL'] as const)(
     'uses native %s data without activating provisional endpoints or unsupported sections',
-    (origin) => {
+    async (origin) => {
       selectedTestCase = {
         ...testCase,
         origin,
@@ -268,14 +318,46 @@ describe('TestCaseDetailsPage lifecycle history', () => {
           ).useFixRound,
         );
 
-      const mountedPage = mount(<TestCaseDetailsPage />);
+      jest
+        .mocked(useLiveReviewComments)
+        .mockImplementation(
+          jest.requireActual<typeof import('pages/inside/aiFactory/review/useLiveReviewComments')>(
+            'pages/inside/aiFactory/review/useLiveReviewComments',
+          ).useLiveReviewComments,
+        );
+      fetchMock.mockResolvedValue({ comments: [], unsentCount: 0, fixInProgress: false });
+      let mountedPage!: ReturnType<typeof mount> & { update: () => void };
+      await act(async () => {
+        mountedPage = mount(<TestCaseDetailsPage />) as typeof mountedPage;
+        await Promise.resolve();
+      });
+      mountedPage.update();
 
-      expect(fetch).not.toHaveBeenCalled();
+      if (origin === 'AI') {
+        expect(fetch).toHaveBeenCalledTimes(1);
+        expect(fetch).toHaveBeenCalledWith(
+          expect.stringMatching(/\/test-case\/42\/review$/),
+          expect.any(Object),
+        );
+      } else {
+        expect(fetch).not.toHaveBeenCalled();
+      }
+      expect(
+        jest
+          .mocked(fetch)
+          .mock.calls.every(
+            ([url]) => !/\/(?:ai|review-comment|fix-round|lifecycle)(?:[/?]|$)/.test(url),
+          ),
+      ).toBe(true);
+      expect(useLiveReviewComments).toHaveBeenLastCalledWith('demo', 42, origin === 'AI', {
+        canApprove: true,
+      });
       expect(useTestCaseAi).toHaveBeenLastCalledWith('demo', 42, false, 100);
       expect(useReviewComments).toHaveBeenLastCalledWith('demo', 42, false);
       expect(useFixRound).toHaveBeenLastCalledWith('demo', 42, false, expect.any(Object));
       expect(wrapper.find(NativeTestCaseSummary)).toHaveLength(origin === 'AI' ? 1 : 0);
-      expect(wrapper.find(ReviewStrip)).toHaveLength(0);
+      expect(getReviewStrip(wrapper).find(ReviewStrip)).toHaveLength(0);
+      expect(getReviewStrip(wrapper).find(LiveReviewStrip)).toHaveLength(origin === 'AI' ? 1 : 0);
       expect(wrapper.find(EvaluationPanel)).toHaveLength(0);
       expect(wrapper.find(GenerationCost)).toHaveLength(0);
       expect(wrapper.find(PipelineLinks)).toHaveLength(0);
@@ -283,9 +365,63 @@ describe('TestCaseDetailsPage lifecycle history', () => {
       expect(wrapper.find(AutomationSection)).toHaveLength(0);
       expect(wrapper.find(LaunchBlockedBanner)).toHaveLength(0);
       expect(usePolling).toHaveBeenCalledWith(expect.any(Function), 3000, false);
-      mountedPage.unmount();
+      act(() => mountedPage.unmount());
     },
   );
+
+  test('shares one native Review read with the header and reconciles it after approval without optimistic Ready', async () => {
+    selectedTestCase = { ...testCase, origin: 'AI', status: 'DRAFT', defaultVersionId: 100 };
+    renderPage(true);
+    jest
+      .mocked(useLiveReviewComments)
+      .mockImplementation(
+        jest.requireActual<typeof import('pages/inside/aiFactory/review/useLiveReviewComments')>(
+          'pages/inside/aiFactory/review/useLiveReviewComments',
+        ).useLiveReviewComments,
+      );
+    fetchMock.mockImplementation((_url, params) =>
+      Promise.resolve(
+        params?.method === 'PATCH'
+          ? { status: 200, data: {} }
+          : { comments: [], unsentCount: 0, fixInProgress: false },
+      ),
+    );
+    let mountedPage!: ReturnType<typeof mount> & { update: () => void };
+    await act(async () => {
+      mountedPage = mount(<TestCaseDetailsPage />) as typeof mountedPage;
+      await Promise.resolve();
+      await Promise.resolve();
+    });
+    mountedPage.update();
+    expect(fetchMock).toHaveBeenCalledTimes(1);
+    expect(useLiveReviewComments).toHaveBeenLastCalledWith('demo', 42, true, {
+      canApprove: true,
+      versionId: 100,
+    });
+    const header = mountedPage.find('mock-TestCaseDetailsHeader');
+    const state = header.prop('nativeReviewState') as LiveReviewCommentsLoadState;
+    expect(state.isLoaded).toBe(true);
+    expect(state.approveReady).toEqual(expect.any(Function));
+    await act(async () => {
+      expect(await state.approveReady?.()).toBe(true);
+      await Promise.resolve();
+      await Promise.resolve();
+    });
+    mountedPage.update();
+    expect(fetchMock.mock.calls.filter(([url]) => /\/review$/.test(url))).toHaveLength(2);
+    expect(fetchMock.mock.calls.filter(([, params]) => params?.method === 'PATCH')).toHaveLength(1);
+    expect(mountedPage.find('mock-TestCaseDetailsHeader').prop('testCase')).toMatchObject({
+      status: 'DRAFT',
+    });
+    expect(
+      (
+        mountedPage
+          .find('mock-TestCaseDetailsHeader')
+          .prop('nativeReviewState') as LiveReviewCommentsLoadState
+      ).isApproved,
+    ).toBe(true);
+    act(() => mountedPage.unmount());
+  });
 
   test('keeps native summary hidden while the feature flag is disabled', () => {
     selectedTestCase = { ...testCase, origin: 'AI', status: 'READY' };
@@ -293,7 +429,7 @@ describe('TestCaseDetailsPage lifecycle history', () => {
     const wrapper = renderPage(false, true);
 
     expect(wrapper.find(NativeTestCaseSummary)).toHaveLength(0);
-    expect(wrapper.find(ReviewStrip)).toHaveLength(0);
+    expect(getReviewStrip(wrapper).find(ReviewStrip)).toHaveLength(0);
     expect(wrapper.find(AutomationSection)).toHaveLength(0);
     expect(useTestCaseAi).toHaveBeenLastCalledWith('demo', 42, false, 100);
     expect(useReviewComments).toHaveBeenLastCalledWith('demo', 42, false);
@@ -550,7 +686,186 @@ describe('TestCaseDetailsPage lifecycle history', () => {
     const disabledPage = renderPage(false);
 
     expect(useReviewComments).toHaveBeenCalledWith('demo', 42, true);
-    expect(enabledPage.find(ReviewStrip)).toHaveLength(1);
-    expect(disabledPage.find(ReviewStrip)).toHaveLength(0);
+    expect(getReviewStrip(enabledPage).find(ReviewStrip)).toHaveLength(1);
+    expect(getReviewStrip(disabledPage).find(ReviewStrip)).toHaveLength(0);
+  });
+
+  test.each(['DRAFT', 'READY'] as const)(
+    'renders live comments for native AI %s even with an empty scenario',
+    (status) => {
+      selectedTestCase = { ...testCase, origin: 'AI', status };
+      const wrapper = renderPage(true);
+
+      expect(useLiveReviewComments).toHaveBeenLastCalledWith('demo', 42, true, {
+        canApprove: status === 'DRAFT',
+      });
+      expect(getReviewStrip(wrapper).find(LiveReviewStrip)).toHaveLength(1);
+      expect(getReviewStrip(wrapper).find(LiveReviewStrip).prop('lifecycle')).toBe(status);
+      expect(getReviewStrip(wrapper).find(ReviewStrip)).toHaveLength(0);
+      expect(useFixRound).toHaveBeenLastCalledWith('demo', 42, false, expect.any(Object));
+    },
+  );
+
+  test('keeps live comments disabled for native MANUAL, legacy AI and feature flag OFF', () => {
+    selectedTestCase = { ...testCase, origin: 'MANUAL', status: 'DRAFT' };
+    expect(getReviewStrip(renderPage(true)).find(LiveReviewStrip)).toHaveLength(0);
+    expect(useLiveReviewComments).toHaveBeenLastCalledWith('demo', 42, false, expect.any(Object));
+    selectedTestCase = { ...testCase, origin: 'AI', status: 'READY' };
+    expect(getReviewStrip(renderPage(false)).find(LiveReviewStrip)).toHaveLength(0);
+    expect(useLiveReviewComments).toHaveBeenLastCalledWith('demo', 42, false, expect.any(Object));
+    selectedTestCase = testCase;
+    expect(getReviewStrip(renderPage(true)).find(LiveReviewStrip)).toHaveLength(0);
+    expect(useLiveReviewComments).toHaveBeenLastCalledWith('demo', 42, false, expect.any(Object));
+  });
+
+  test('locks native Review and header edits from fixInProgress without synthesizing a legacy round', () => {
+    selectedTestCase = { ...testCase, origin: 'AI', status: 'DRAFT' };
+    liveReviewOverrides = { fixInProgress: true };
+    const wrapper = renderPage(true);
+
+    expect(getReviewStrip(wrapper).find(LiveReviewStrip).prop('isReadOnly')).toBe(true);
+    const header = wrapper.find('mock-TestCaseDetailsHeader');
+    expect(header.prop('testCase')).not.toHaveProperty('review.fixRound');
+    expect(header.prop('isNativeFixInProgress')).toBe(true);
+    expect(usePolling).toHaveBeenCalledWith(expect.any(Function), 3000, false);
+  });
+
+  test.each([true, false])(
+    'preserves original native step number or legacy step ID after filtering empty steps (native=%s)',
+    (native) => {
+      jest.mocked(checkScenario).mockReturnValue(false);
+      jest.mocked(hasStepContent).mockImplementation((step) => Boolean(step.instructions));
+      const steps = [
+        { id: 800, instructions: '', expectedResult: '', attachments: [] },
+        {
+          id: 900,
+          instructions: 'Open the Library',
+          expectedResult: 'Library is displayed',
+          attachments: [],
+        },
+      ];
+      selectedTestCase = {
+        ...testCase,
+        ...(native
+          ? { origin: 'AI', status: 'DRAFT' }
+          : {
+              ai: {
+                generatedByIteration: { pipelineId: 1, iterationId: 101, number: 1 },
+                modifiedByAgent: false,
+                factoryKey: 'REQ-1',
+              },
+            }),
+        manualScenario: { manualScenarioType: 'STEPS', requirements: [], steps },
+      } as unknown as ExtendedTestCase;
+      const wrapper = renderPage(true);
+      const stepList = wrapper.find('mock-StepsList');
+      const renderedSteps = stepList.prop('steps') as Array<{
+        id: number;
+        reviewStepNumber?: number;
+      }>;
+      expect(renderedSteps).toEqual([expect.objectContaining(steps[1])]);
+      if (native) expect(renderedSteps[0].reviewStepNumber).toBe(2);
+      const renderReviewControl = stepList.prop('renderReviewControl') as (
+        stepId: number,
+        stepNumber: number,
+      ) => React.ReactElement<{ target: unknown }>;
+      const control = renderReviewControl(900, renderedSteps[0].reviewStepNumber ?? 1);
+      expect(control.type).toBe(ReviewTarget);
+      expect(control.props.target).toEqual(
+        native ? { type: 'STEP', stepNumber: 2 } : { type: 'STEP', stepId: 900 },
+      );
+    },
+  );
+
+  test('provides precondition and text scenario native comment targets', () => {
+    jest.mocked(checkScenario).mockReturnValue(false);
+    jest.mocked(hasScenarioContent).mockReturnValue(true);
+    selectedTestCase = {
+      ...testCase,
+      origin: 'AI',
+      status: 'READY',
+      manualScenario: {
+        manualScenarioType: 'TEXT',
+        requirements: [],
+        instructions: 'Open Library',
+        expectedResult: 'Library opens',
+      },
+    } as unknown as ExtendedTestCase;
+    const scenario = renderPage(true).find('mock-Scenario');
+    const precondition = scenario.prop('preconditionReviewControl') as React.ReactElement<{
+      target: unknown;
+    }>;
+    const text = scenario.prop('scenarioReviewControl') as React.ReactElement<{ target: unknown }>;
+    expect(precondition.props.target).toEqual({ type: 'PRECONDITION' });
+    expect(text.props.target).toEqual({ type: 'TEXT_SCENARIO' });
+  });
+
+  test.each([true, false])(
+    'applies native editor or viewer permissions without hiding readable review (editor=%s)',
+    (canReview) => {
+      selectedTestCase = { ...testCase, origin: 'AI', status: 'READY' };
+      canReviewAiTestCases = canReview;
+      const wrapper = renderPage(true);
+      expect(getReviewStrip(wrapper).find(LiveReviewStrip).prop('isReadOnly')).toBe(!canReview);
+      expect(useLiveReviewComments).toHaveBeenLastCalledWith('demo', 42, true, {
+        canApprove: false,
+      });
+    },
+  );
+
+  test('routes a native detail text comment through GET and POST Review only', async () => {
+    jest.mocked(checkScenario).mockReturnValue(false);
+    jest.mocked(hasScenarioContent).mockReturnValue(true);
+    selectedTestCase = {
+      ...testCase,
+      origin: 'AI',
+      status: 'READY',
+      manualScenario: {
+        manualScenarioType: 'TEXT',
+        requirements: [],
+        instructions: 'Open Library',
+        expectedResult: 'Library opens',
+      },
+    } as unknown as ExtendedTestCase;
+    renderPage(true);
+    jest
+      .mocked(useLiveReviewComments)
+      .mockImplementation(
+        jest.requireActual<typeof import('pages/inside/aiFactory/review/useLiveReviewComments')>(
+          'pages/inside/aiFactory/review/useLiveReviewComments',
+        ).useLiveReviewComments,
+      );
+    fetchMock.mockResolvedValue({ comments: [], unsentCount: 0, fixInProgress: false });
+    let wrapper!: ReturnType<typeof mount> & { update: () => void };
+    await act(async () => {
+      wrapper = mount(<TestCaseDetailsPage />) as typeof wrapper;
+      await Promise.resolve();
+    });
+    wrapper.update();
+    const scenario = wrapper.find('mock-Scenario');
+    const control = scenario.prop('scenarioReviewControl') as React.ReactElement<{
+      target: { type: 'TEXT_SCENARIO' };
+      reviewState: LiveReviewCommentsLoadState;
+    }>;
+    await act(async () => {
+      await control.props.reviewState.addComment({
+        target: control.props.target,
+        text: 'Clarify the expected result',
+      });
+      await Promise.resolve();
+    });
+    expect(fetchMock).toHaveBeenCalledTimes(3);
+    expect(fetchMock).toHaveBeenNthCalledWith(
+      2,
+      expect.stringMatching(/\/test-case\/42\/review\/comment$/),
+      expect.objectContaining({
+        method: 'POST',
+        data: { targetType: 'SCENARIO_TEXT', text: 'Clarify the expected result' },
+      }),
+    );
+    expect(fetchMock.mock.calls.every(([url]) => /\/review(?:\/comment)?$/.test(url))).toBe(true);
+    act(() => {
+      wrapper.unmount();
+    });
   });
 });

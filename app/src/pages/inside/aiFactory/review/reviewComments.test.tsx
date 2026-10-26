@@ -10,20 +10,27 @@
 
 import { act, type ChangeEvent } from 'react';
 import { useDispatch } from 'react-redux';
-import { shallow } from 'enzyme';
+import { mount, shallow } from 'enzyme';
 
 import { showModalAction } from 'controllers/modal';
 import { CommentState, CommentTargetType, FixRoundStatus, Lifecycle } from 'types/aiFactory';
 import type { ReviewCommentRS } from 'types/aiFactory';
 
 import { ReviewStrip, ReviewTarget } from './reviewComments';
+import { LiveReviewStrip } from './liveReviewStrip';
+import type { LiveReviewCommentsLoadState } from './useLiveReviewComments';
 import type { ReviewCommentsLoadState } from './useReviewComments';
 import type { FixRoundLoadState } from './useFixRound';
 
 jest.mock('@reportportal/ui-kit', () => ({
   BubblesLoader: () => <span>BubblesLoader</span>,
-  Button: ({ children, ...props }: { children: React.ReactNode }) => (
-    <button type="button" {...props}>
+  Button: ({
+    children,
+    disabled,
+    onClick,
+    'data-automation-id': automationId,
+  }: React.ButtonHTMLAttributes<HTMLButtonElement> & { 'data-automation-id'?: string }) => (
+    <button type="button" disabled={disabled} onClick={onClick} data-automation-id={automationId}>
       {children}
     </button>
   ),
@@ -140,9 +147,9 @@ describe('AI review comments', () => {
     const threadId = trigger.prop('aria-controls');
     expect(trigger.prop('aria-expanded')).toBe(false);
     openThread();
-    expect(wrapper.find('[data-automation-id="review-comment-toggle-STEP-7"]').prop('aria-expanded')).toBe(
-      true,
-    );
+    expect(
+      wrapper.find('[data-automation-id="review-comment-toggle-STEP-7"]').prop('aria-expanded'),
+    ).toBe(true);
     const thread = wrapper.find('section');
     expect(thread.props()).toMatchObject({
       id: threadId,
@@ -307,5 +314,273 @@ describe('AI review comments', () => {
 
     expect(wrapper.find('Button[variant="text-danger"]')).toHaveLength(0);
     expect(wrapper.find('[data-automation-id="push-review-comments-again"]')).toHaveLength(0);
+  });
+});
+
+const createLiveReviewState = (
+  overrides: Partial<LiveReviewCommentsLoadState> = {},
+): LiveReviewCommentsLoadState => ({
+  resourceKey: {},
+  comments: [],
+  unsentCount: 0,
+  fixInProgress: false,
+  isLoaded: true,
+  isLoading: false,
+  isError: false,
+  isMutating: false,
+  isMutationError: false,
+  reload: jest.fn(),
+  addComment: jest.fn(() => Promise.resolve(true)),
+  deleteComment: jest.fn(() => Promise.resolve(true)),
+  discardPending: jest.fn(() => Promise.resolve(true)),
+  ...overrides,
+});
+
+const changeComposer = (wrapper: ReturnType<typeof shallow>, text: string) => {
+  const onChange = wrapper.find('textarea').prop('onChange') as (
+    event: ChangeEvent<HTMLTextAreaElement>,
+  ) => void;
+  onChange({ target: { value: text } } as ChangeEvent<HTMLTextAreaElement>);
+};
+
+const submitComposer = (wrapper: ReturnType<typeof shallow>) => {
+  const onClick = wrapper
+    .find('[data-automation-id="add-review-comment"]')
+    .prop('onClick') as () => void;
+  onClick();
+};
+
+describe('native AI review presentation', () => {
+  beforeEach(() => jest.clearAllMocks());
+
+  test('shows the authoritative unsent count without offering Push or Approve', () => {
+    const wrapper = shallow(
+      <LiveReviewStrip
+        lifecycle={Lifecycle.READY}
+        reviewState={createLiveReviewState({ unsentCount: 7 })}
+        isReadOnly={false}
+      />,
+    );
+
+    expect(wrapper.text()).toContain('7 not sent');
+    expect(wrapper.find('[data-automation-id="discard-review-comments"]')).toHaveLength(1);
+    expect(wrapper.find('[data-automation-id="push-review-comments"]')).toHaveLength(0);
+    expect(wrapper.text()).not.toContain('Approve');
+  });
+
+  test('shows a fixing message without inventing a round and wires explicit Refresh', () => {
+    const state = createLiveReviewState({ fixInProgress: true, unsentCount: 2 });
+    const wrapper = shallow(
+      <LiveReviewStrip lifecycle={Lifecycle.DRAFT} reviewState={state} isReadOnly />,
+    );
+
+    expect(wrapper.find('output').text()).toContain('Agent is fixing');
+    expect(wrapper.find('output').text()).not.toMatch(/round\s*1/i);
+    expect(wrapper.find('[data-automation-id="discard-review-comments"]')).toHaveLength(0);
+    const refresh = wrapper
+      .find('[data-automation-id="refresh-review-comments"]')
+      .prop('onClick') as () => void;
+    refresh();
+    expect(state.reload).toHaveBeenCalledTimes(1);
+  });
+
+  test.each([Lifecycle.DRAFT, Lifecycle.READY])(
+    'keeps an empty %s review actionable without a fabricated pending count',
+    (lifecycle) => {
+      const wrapper = shallow(
+        <LiveReviewStrip
+          lifecycle={lifecycle}
+          reviewState={createLiveReviewState()}
+          isReadOnly={false}
+        />,
+      );
+      expect(wrapper.text()).toContain('0 not sent');
+      expect(wrapper.find('[data-automation-id="discard-review-comments"]')).toHaveLength(0);
+      expect(wrapper.find('[data-automation-id="refresh-review-comments"]').prop('disabled')).toBe(
+        false,
+      );
+    },
+  );
+
+  test('does not display zero as authoritative while Review is loading', () => {
+    const wrapper = shallow(
+      <LiveReviewStrip
+        lifecycle={Lifecycle.DRAFT}
+        reviewState={createLiveReviewState({ isLoading: true, isLoaded: false })}
+        isReadOnly
+      />,
+    );
+    expect(wrapper.find('BubblesLoader')).toHaveLength(1);
+    expect(wrapper.text()).not.toContain('0 not sent');
+  });
+
+  test('shows load and mutation failures and permits explicit reload after failure', () => {
+    const state = createLiveReviewState({ isLoaded: false, isError: true, isMutationError: true });
+    const wrapper = shallow(<LiveReviewStrip reviewState={state} isReadOnly />);
+    expect(wrapper.find('[role="alert"]')).toHaveLength(2);
+    expect(wrapper.find('[data-automation-id="refresh-review-comments"]').prop('disabled')).toBe(
+      false,
+    );
+  });
+
+  test('confirms native discard before calling its mutation', async () => {
+    const state = createLiveReviewState({ unsentCount: 2 });
+    const wrapper = shallow(<LiveReviewStrip reviewState={state} isReadOnly={false} />);
+    const discard = wrapper
+      .find('[data-automation-id="discard-review-comments"]')
+      .prop('onClick') as () => void;
+    discard();
+    expect(state.discardPending).not.toHaveBeenCalled();
+    const modal = jest.mocked(showModalAction).mock.lastCall?.[0] as {
+      data: { onConfirm: () => void };
+    };
+    await act(async () => {
+      modal.data.onConfirm();
+      await Promise.resolve();
+    });
+    expect(state.discardPending).toHaveBeenCalledTimes(1);
+  });
+
+  test('matches native step numbers independently of legacy step database IDs', () => {
+    const state = createLiveReviewState({
+      comments: [
+        {
+          ...comments[0],
+          target: { type: CommentTargetType.STEP, stepNumber: 2 },
+          author: { id: 12 },
+        },
+        { ...comments[1], target: { type: CommentTargetType.STEP, stepId: 2 } },
+      ],
+    });
+    const wrapper = shallow(
+      <ReviewTarget
+        target={{ type: CommentTargetType.STEP, stepNumber: 2 }}
+        reviewState={state}
+        isInitiallyOpen
+      />,
+    );
+
+    expect(wrapper.text()).toContain('Use the Library label');
+    expect(wrapper.text()).not.toContain('Keep this label');
+    expect(wrapper.text()).toContain('User 12');
+    expect(wrapper.text()).not.toContain('Reviewer');
+  });
+
+  test.each([
+    new Error('Unavailable'),
+    Object.assign(new Error('Review conflict'), { status: 409, errorCode: 40915 }),
+  ])('retains composer text and shows feedback after rejected add: %j', async (error) => {
+    const state = createLiveReviewState({ addComment: jest.fn(() => Promise.reject(error)) });
+    const wrapper = shallow(
+      <ReviewTarget
+        target={{ type: CommentTargetType.TEXT_SCENARIO }}
+        reviewState={state}
+        isInitiallyOpen
+      />,
+    );
+    changeComposer(wrapper, '  Keep this draft  ');
+    await act(async () => {
+      submitComposer(wrapper);
+      await Promise.resolve();
+    });
+
+    expect(wrapper.find('textarea').prop('value')).toBe('  Keep this draft  ');
+    expect(wrapper.find('[role="alert"]')).toHaveLength(1);
+    expect(state.addComment).toHaveBeenCalledWith({
+      target: { type: CommentTargetType.TEXT_SCENARIO },
+      text: 'Keep this draft',
+    });
+  });
+
+  test('retains composer text when a stale or blocked add reports false', async () => {
+    const state = createLiveReviewState({ addComment: jest.fn(() => Promise.resolve(false)) });
+    const wrapper = shallow(
+      <ReviewTarget
+        target={{ type: CommentTargetType.PRECONDITION }}
+        reviewState={state}
+        isInitiallyOpen
+      />,
+    );
+    changeComposer(wrapper, 'Draft stays here');
+    await act(async () => {
+      submitComposer(wrapper);
+      await Promise.resolve();
+    });
+    expect(wrapper.find('textarea').prop('value')).toBe('Draft stays here');
+    expect(wrapper.find('[role="alert"]')).toHaveLength(0);
+  });
+
+  test('resets drafts on resource change and does not clear new text after stale mutation completes', async () => {
+    let resolve!: (result: boolean) => void;
+    const addComment = jest.fn(
+      () =>
+        new Promise<boolean>((resolvePromise) => {
+          resolve = resolvePromise;
+        }),
+    );
+    const state = createLiveReviewState({ addComment });
+    let wrapper!: ReturnType<typeof mount> & { update: () => void };
+    act(() => {
+      wrapper = mount(
+        <ReviewTarget
+          target={{ type: CommentTargetType.PRECONDITION }}
+          reviewState={state}
+          isInitiallyOpen
+        />,
+      ) as typeof wrapper;
+    });
+    wrapper.update();
+    act(() => {
+      (
+        wrapper.find('textarea').prop('onChange') as (
+          event: ChangeEvent<HTMLTextAreaElement>,
+        ) => void
+      )({ target: { value: 'Old resource draft' } } as ChangeEvent<HTMLTextAreaElement>);
+    });
+    wrapper.update();
+    act(() => {
+      (
+        wrapper
+          .find('button[data-automation-id="add-review-comment"]')
+          .prop('onClick') as () => void
+      )();
+    });
+    act(() => {
+      wrapper.setProps({ reviewState: createLiveReviewState() });
+    });
+    wrapper.update();
+    expect(wrapper.find('textarea').prop('value')).toBe('');
+    act(() => {
+      (
+        wrapper.find('textarea').prop('onChange') as (
+          event: ChangeEvent<HTMLTextAreaElement>,
+        ) => void
+      )({ target: { value: 'New resource draft' } } as ChangeEvent<HTMLTextAreaElement>);
+    });
+    await act(async () => {
+      resolve(false);
+      await Promise.resolve();
+    });
+    wrapper.update();
+    expect(wrapper.find('textarea').prop('value')).toBe('New resource draft');
+    act(() => {
+      wrapper.unmount();
+    });
+  });
+
+  test('hides composer and delete controls for a locked native thread while keeping comments readable', () => {
+    const wrapper = shallow(
+      <ReviewTarget
+        target={{ type: CommentTargetType.PRECONDITION }}
+        reviewState={createLiveReviewState({
+          comments: [{ ...comments[0], target: { type: CommentTargetType.PRECONDITION } }],
+        })}
+        isInitiallyOpen
+        isReadOnly
+      />,
+    );
+    expect(wrapper.text()).toContain('Use the Library label');
+    expect(wrapper.find('textarea')).toHaveLength(0);
+    expect(wrapper.find('[aria-label="Delete comment"]')).toHaveLength(0);
   });
 });
