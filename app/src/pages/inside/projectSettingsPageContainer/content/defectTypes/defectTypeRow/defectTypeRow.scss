@@ -38,7 +38,7 @@ $DEFECT_NAME_PADDING: 16px;
   justify-content: center;
   width: 28px;
   margin-right: 16px;
-  color: $COLOR--e-400;
+  color: var(--rp-ui-base-grey-800);
   font-size: 13px;
   font-family: $FONT-ROBOTO-REGULAR;
 
@@ -104,10 +104,10 @@ $DEFECT_NAME_PADDING: 16px;
 
     svg {
       path {
-        fill: $COLOR--e-300;
+        fill: var(--rp-ui-base-grey-700);
       }
       rect {
-        stroke: $COLOR--e-300;
+        stroke: var(--rp-ui-base-grey-700);
       }
     }
   }
@@ -126,10 +126,10 @@ $DEFECT_NAME_PADDING: 16px;
 .delete-button,
 .copy-button {
   path {
-    fill: $COLOR--e-300;
+    fill: var(--rp-ui-base-grey-700);
   }
   &:hover path {
-    fill: $COLOR--e-400;
+    fill: var(--rp-ui-base-topaz-700);
   }
 }
 

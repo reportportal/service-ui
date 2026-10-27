@@ -37,7 +37,7 @@
   }
 
   &:hover:not(.disabled) {
-    @include fill-svg($COLOR--e-400);
+    @include fill-svg(var(--rp-ui-base-topaz-700));
   }
 
   &:active:not(.disabled) {
