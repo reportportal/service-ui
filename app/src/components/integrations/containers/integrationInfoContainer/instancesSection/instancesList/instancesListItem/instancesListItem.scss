@@ -34,7 +34,7 @@
   &.disabled {
     .integration-name,
     .creation-info {
-      color: $COLOR--gray-60;
+      color: var(--rp-ui-base-grey-800);
     }
 
     .arrow-control {
@@ -63,6 +63,6 @@
   height: 15px;
 
   svg {
-    fill: $COLOR--gray-60;
+    fill: var(--rp-ui-base-grey-700);
   }
 }

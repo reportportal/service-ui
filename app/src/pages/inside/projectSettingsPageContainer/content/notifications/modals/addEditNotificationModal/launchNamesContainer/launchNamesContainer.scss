@@ -20,7 +20,7 @@
   font-family: $FONT-ROBOTO-REGULAR;
   font-size: 11px;
   line-height: 16px;
-  color: $COLOR--e-300;
+  color: var(--rp-ui-base-grey-800);
 }
 
 .system-message {
