@@ -130,7 +130,7 @@ export const ServicesContent = ({ closePopover, closeSidebar, isFaqTouched, onOp
           onClick={() => {
             closePopover();
             closeSidebar();
-            const linkName = contentItem.name?.defaultMessage || 'custom_link';
+            const linkName = contentItem.name?.defaultMessage || contentItem.name || 'custom_link';
             trackEvent(HELP_AND_SERVICE_VERSIONS_EVENTS.onClickPopoverItem(linkName));
           }}
           className={cx('menu-item')}
