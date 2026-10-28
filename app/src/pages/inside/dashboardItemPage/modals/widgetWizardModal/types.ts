@@ -37,8 +37,18 @@ export interface Order {
   isAsc: boolean;
 }
 
+export interface ContentParameters {
+  contentFields?: unknown;
+  widgetOptions?: {
+    separateInterrupted?: unknown;
+    viewMode?: string;
+    launchNameFilter?: string;
+    [key: string]: unknown;
+  };
+}
+
 export interface Filter {
-  id?: number;
+  id?: number | string;
   name?: string;
   description?: string;
   conditions?: Condition[];

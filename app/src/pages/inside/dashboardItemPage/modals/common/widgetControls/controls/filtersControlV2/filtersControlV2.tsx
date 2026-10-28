@@ -240,7 +240,7 @@ export const FiltersControlV2: FC<FiltersControlV2Props> = ({
   }
 
   const selectedFilter: Filter | null = value?.value
-    ? ({ id: Number(value.value), name: value.name ?? '' })
+    ? { id: value.value, name: value.name ?? '' }
     : null;
 
   const getURI = (searchValue: string) =>
@@ -262,7 +262,7 @@ export const FiltersControlV2: FC<FiltersControlV2Props> = ({
             else handleClearFilter();
           }}
           parseValueToString={(v: { name?: string }) => v?.name || ''}
-          getUniqKey={(v: { id?: number }) => v?.id}
+          getUniqKey={(v: { id?: number | string }) => v?.id}
           createWithoutConfirmation
           skipOptionCreation
           isDropdownMode

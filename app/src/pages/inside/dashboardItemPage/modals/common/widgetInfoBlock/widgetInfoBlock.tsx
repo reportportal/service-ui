@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useMemo, useRef } from 'react';
 import isEqual from 'fast-deep-equal';
 import { useSelector } from 'react-redux';
 import { useIntl } from 'react-intl';
@@ -29,17 +29,9 @@ import { WIDGETS_STATIC_PREVIEWS } from '../widgets';
 import { WidgetPreview } from '../widgetPreview';
 import styles from './widgetInfoBlock.scss';
 import { FieldLabel } from '@reportportal/ui-kit';
-import { Widget } from '../../widgetWizardModal/types';
+import { Widget, ContentParameters } from '../../widgetWizardModal/types';
 
 const cx = createClassnames(styles);
-
-interface ContentParameters {
-  widgetOptions?: {
-    separateInterrupted?: unknown;
-    viewMode?: string;
-    launchNameFilter?: string;
-  };
-}
 
 interface WidgetSettings {
   filterIds?: string[];
@@ -72,28 +64,27 @@ export const WidgetInfoBlock = ({
   const [loading, setLoading] = useState(false);
   const [widgetData, setWidgetData] = useState<object | null>(null);
 
-  const projectKeyRef = useRef(projectKey);
-  projectKeyRef.current = projectKey;
-
-  // Stable debounced fetch — closure uses ref so projectKey is always current
-  const fetchWidget = useRef(
-    debounce((ws: WidgetSettings) => {
-      setLoading(true);
-      setWidgetData(null);
-      fetch(URLS.widgetPreview(projectKeyRef.current), {
-        method: 'post',
-        data: ws,
-      })
-        .then((widget: object) => {
-          setLoading(false);
-          setWidgetData({ content: widget, ...ws });
+  // Debounced fetch, recreated only when projectKey changes; no refs read inside the callback
+  const fetchWidget = useMemo(
+    () =>
+      debounce((ws: WidgetSettings) => {
+        setLoading(true);
+        setWidgetData(null);
+        fetch(URLS.widgetPreview(projectKey), {
+          method: 'post',
+          data: ws,
         })
-        .catch(() => {
-          setLoading(false);
-          setWidgetData(null);
-        });
-    }, 300),
-  ).current;
+          .then((widget: object) => {
+            setLoading(false);
+            setWidgetData({ content: widget, ...ws });
+          })
+          .catch(() => {
+            setLoading(false);
+            setWidgetData(null);
+          });
+      }, 300),
+    [projectKey],
+  );
 
   const isMountedRef = useRef(false);
   const prevRef = useRef<{ activeWidgetId: string | number | undefined; widgetSettings: WidgetSettings }>({
@@ -145,8 +136,7 @@ export const WidgetInfoBlock = ({
     ) {
       fetchWidget(widgetSettings);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [activeWidget?.id, widgetSettings, customCondition]);
+  }, [activeWidget?.id, widgetSettings, customCondition, fetchWidget]);
 
   const widgetOptions = widgetSettings.contentParameters?.widgetOptions;
   const isSeparateInterrupted =

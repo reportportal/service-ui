@@ -46,15 +46,10 @@ import {
 } from '../../common/utils';
 import { WizardInfoSection } from './wizardInfoSection';
 import { WizardControlsSection } from './wizardControlsSection';
-import { DisabledButtons, Widget } from '../types';
+import { DisabledButtons, Widget, ContentParameters } from '../types';
 import styles from './widgetWizardContent.scss';
 
 const cx = classNames.bind(styles);
-
-interface ContentParameters {
-  contentFields?: unknown;
-  widgetOptions?: Record<string, unknown>;
-}
 
 interface FormValues {
   widgetType?: string;
