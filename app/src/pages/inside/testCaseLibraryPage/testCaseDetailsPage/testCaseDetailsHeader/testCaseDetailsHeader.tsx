@@ -357,6 +357,7 @@ export const TestCaseDetailsHeader = ({
               ) : (
                 <Tooltip
                   placement="top"
+                  wrapperClassName={cx('header__action-tooltip')}
                   content={formatMessage(
                     isDraft
                       ? readyOnlyMessages.testPlanDraftHint
