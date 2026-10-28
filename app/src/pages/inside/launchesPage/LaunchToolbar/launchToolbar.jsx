@@ -39,7 +39,6 @@ export const LaunchToolbar = ({
   onRefresh,
   onDelete,
   onExportReport,
-  onAddNewWidget,
   activeFilterId,
   finishedLaunchesCount,
 }) => (
@@ -71,7 +70,6 @@ export const LaunchToolbar = ({
       onDelete={onDelete}
       onExportReport={onExportReport}
       activeFilterId={activeFilterId}
-      onAddNewWidget={onAddNewWidget}
       finishedLaunchesCount={finishedLaunchesCount}
     />
   </div>
@@ -94,7 +92,6 @@ LaunchToolbar.propTypes = {
   debugMode: PropTypes.bool,
   onRefresh: PropTypes.func,
   activeFilterId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
-  onAddNewWidget: PropTypes.func,
   finishedLaunchesCount: PropTypes.number,
 };
 LaunchToolbar.defaultProps = {
@@ -115,6 +112,5 @@ LaunchToolbar.defaultProps = {
   debugMode: false,
   onRefresh: () => {},
   activeFilterId: null,
-  onAddNewWidget: () => {},
   finishedLaunchesCount: null,
 };

@@ -101,10 +101,6 @@ const messages = defineMessages({
     id: 'LaunchesPage.patternAnalyseStartSuccess',
     defaultMessage: 'Pattern analyzer has been started.',
   },
-  addWidgetSuccess: {
-    id: 'LaunchesPage.addWidgetSuccess',
-    defaultMessage: 'Widget has been added',
-  },
 });
 
 @connect(
@@ -308,52 +304,6 @@ export class LaunchesPage extends Component {
       data: {
         item: launch,
         onConfirm: (data) => this.patternAnalyseItem(launch, data),
-      },
-    });
-  };
-  onAddDashboard = (dashboard) => {
-    const { projectKey } = this.props;
-    if (dashboard.id) {
-      return Promise.resolve(dashboard);
-    }
-    return fetch(URLS.dashboards(projectKey), {
-      method: 'post',
-      data: dashboard,
-    });
-  };
-  onAddWidget = (widget, closeModal, dashboard) => {
-    const {
-      projectKey,
-      intl: { formatMessage },
-    } = this.props;
-    this.onAddDashboard(dashboard).then(({ id }) => {
-      fetch(URLS.addDashboardWidget(projectKey, id), {
-        method: 'put',
-        data: { addWidget: widget },
-      })
-        .then(() => {
-          this.props.hideScreenLockAction();
-          closeModal();
-          this.props.showNotification({
-            message: formatMessage(messages.addWidgetSuccess),
-            type: NOTIFICATION_TYPES.SUCCESS,
-          });
-        })
-        .catch((err) => {
-          this.props.hideScreenLockAction();
-          this.props.showNotification({ message: err.message, type: NOTIFICATION_TYPES.ERROR });
-        });
-    });
-  };
-  showWidgetWizard = () => {
-    const {
-      tracking: { trackEvent },
-    } = this.props;
-    trackEvent(LAUNCHES_PAGE_EVENTS.ADD_NEW_WIDGET_BTN);
-    this.props.showModalAction({
-      id: 'widgetWizardModal',
-      data: {
-        onConfirm: this.onAddWidget,
       },
     });
   };
@@ -716,7 +666,6 @@ export class LaunchesPage extends Component {
                 onDelete={this.deleteItems}
                 onExportReport={this.exportReport}
                 activeFilterId={debugMode ? ALL : activeFilterId}
-                onAddNewWidget={this.showWidgetWizard}
                 finishedLaunchesCount={finishedLaunchesCount}
               />
               {debugMode && (
