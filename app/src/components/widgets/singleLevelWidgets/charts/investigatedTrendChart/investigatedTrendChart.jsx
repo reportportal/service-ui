@@ -100,10 +100,12 @@ export const InvestigatedTrendChart = ({
   );
 
   const sortedLaunchResult = useMemo(
-    () =>
-      [...(widget.content?.result ?? [])].sort(
+    () => {
+      const result = Array.isArray(widget.content?.result) ? [...widget.content.result] : [];
+      return result.sort(
         (a, b) => new Date(a.startTime) - new Date(b.startTime),
-      ),
+      );
+    },
     [widget.content?.result],
   );
 
