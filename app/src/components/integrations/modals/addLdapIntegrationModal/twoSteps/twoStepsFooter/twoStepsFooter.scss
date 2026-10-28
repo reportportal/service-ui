@@ -37,7 +37,7 @@
 .left-icon > svg {
   height: 32px;
   width: 16px;
-  fill: $COLOR--e-400;
+  fill: var(--rp-ui-base-grey-700);
   vertical-align: middle;
   margin-right: 8px;
   transform: rotate(180deg);

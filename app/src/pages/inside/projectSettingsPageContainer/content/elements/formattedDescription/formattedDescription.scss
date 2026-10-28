@@ -38,7 +38,7 @@
 .gray {
   & > a {
     display: inline-flex;
-    color: $COLOR--e-300;
+    color: var(--rp-ui-base-grey-800);
 
     svg {
       width: 16px;

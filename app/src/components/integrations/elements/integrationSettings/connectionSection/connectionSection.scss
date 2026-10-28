@@ -57,11 +57,11 @@
   cursor: pointer;
   outline: none;
   path {
-    fill: $COLOR--e-300;
+    fill: var(--rp-ui-base-grey-700);
   }
   &:hover {
     path {
-      fill: $COLOR--e-400;
+      fill: var(--rp-ui-base-topaz-700);
     }
   }
 }
@@ -85,7 +85,7 @@
 
     &.blocked {
       h1 {
-        color: $COLOR--e-400;
+        color: var(--rp-ui-base-grey-800);
       }
     }
   }
@@ -94,7 +94,7 @@
 .created-date-block {
   font-size: 11px;
   line-height: 16px;
-  color: $COLOR--e-300;
+  color: var(--rp-ui-base-grey-800);
   font-family: $FONT-ROBOTO-REGULAR;
 }
 
