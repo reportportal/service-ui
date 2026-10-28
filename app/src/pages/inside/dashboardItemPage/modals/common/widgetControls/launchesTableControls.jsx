@@ -18,6 +18,7 @@ import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { FieldProvider } from 'components/fields/fieldProvider';
+import { FieldErrorHint } from 'components/fields';
 import { arrayRemoveDoubles } from 'common/utils/arrayRemoveDoubles';
 import { validate, bindMessageToValidator, commonValidators } from 'common/utils/validation';
 import { injectIntl, defineMessages } from 'react-intl';
@@ -30,14 +31,18 @@ import {
   NO_DEFECT,
 } from 'common/constants/defectTypes';
 import { getWidgetCriteriaOptions } from './utils/getWidgetCriteriaOptions';
+import { Dropdown, FieldNumber } from '@reportportal/ui-kit';
 import {
   LAUNCH_GRID_COLUMNS_OPTIONS,
   LAUNCH_STATUSES_OPTIONS,
   DEFECT_TYPES_GROUPS_OPTIONS,
   STATIC_CRITERIA,
-  ITEMS_INPUT_WIDTH,
 } from './constants';
-import { FiltersControl, DropdownControl, InputControl } from './controls';
+import { FiltersControlV2 } from './controls';
+import { createClassnames } from 'common/utils';
+import styles from './widgetControls.scss';
+
+const cx = createClassnames(styles);
 
 const DEFECT_STATISTICS_BASE = 'statistics$defects$';
 const DEFAULT_ITEMS_COUNT = '50';
@@ -146,14 +151,17 @@ export class LaunchesTableControls extends Component {
       eventsInfo,
       isMainControlsDisabled,
     } = this.props;
+    const filterId = this.props.widgetSettings?.filters?.length && this.props.widgetSettings.filters[0].value;
+    const disabled = !filterId;
 
     return (
       <Fragment>
         <FieldProvider name="filters" parse={this.parseFilterValue} format={this.formatFilterValue}>
-          <FiltersControl
+          <FiltersControlV2
             formAppearance={formAppearance}
             onFormAppearanceChange={onFormAppearanceChange}
             eventsInfo={eventsInfo}
+            required
           />
         </FieldProvider>
         {!formAppearance.isMainControlsLocked && (
@@ -166,12 +174,12 @@ export class LaunchesTableControls extends Component {
                 formatMessage(messages.ContentFieldsValidationError),
               )}
             >
-              <DropdownControl
-                fieldLabel={formatMessage(messages.CriteriaFieldLabel)}
-                multiple
-                selectAll
+              <Dropdown
+                label={formatMessage(messages.CriteriaFieldLabel)}
+                multiSelect
+                isOptionAllVisible
                 options={this.criteria}
-                disabled={isMainControlsDisabled}
+                disabled={disabled || isMainControlsDisabled}
               />
             </FieldProvider>
             <FieldProvider
@@ -181,14 +189,16 @@ export class LaunchesTableControls extends Component {
               )}
               format={String}
               normalize={this.normalizeValue}
+              className={cx('field-number')}
             >
-              <InputControl
-                fieldLabel={formatMessage(messages.ItemsFieldLabel)}
-                inputWidth={ITEMS_INPUT_WIDTH}
-                maxLength="3"
-                hintType={'top-right'}
-                disabled={isMainControlsDisabled}
-              />
+              <FieldErrorHint provideHint={false}>
+                <FieldNumber
+                  label={formatMessage(messages.ItemsFieldLabel)}
+                  maxLength={3}
+                  defaultWidth={false}
+                  disabled={disabled || isMainControlsDisabled}
+                />
+              </FieldErrorHint>
             </FieldProvider>
           </Fragment>
         )}

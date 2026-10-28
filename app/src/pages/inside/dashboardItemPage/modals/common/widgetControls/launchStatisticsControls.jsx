@@ -17,26 +17,20 @@
 import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { injectIntl, defineMessages } from 'react-intl';
+import { messages as widgetControlsMessages } from './messages';
 import { connect } from 'react-redux';
 import { defectTypesSelector } from 'controllers/project';
+import { FieldText, FieldNumber, Dropdown, Checkbox } from '@reportportal/ui-kit';
+import { RadioGroupControl } from './controls';
 import { FieldProvider } from 'components/fields/fieldProvider';
+import { FieldErrorHint } from 'components/fields';
 import { commonValidators } from 'common/utils/validation';
 import { CHART_MODES, MODES_VALUES } from 'common/constants/chartModes';
 import classNames from 'classnames/bind';
 import { getWidgetCriteriaOptions } from './utils/getWidgetCriteriaOptions';
 import { getWidgetModeOptions } from './utils/getWidgetModeOptions';
-import {
-  LAUNCH_STATUSES_OPTIONS,
-  GROUPED_DEFECT_TYPES_OPTIONS,
-  ITEMS_INPUT_WIDTH,
-} from './constants';
-import {
-  FiltersControl,
-  DropdownControl,
-  InputControl,
-  TogglerControl,
-  CheckboxControl,
-} from './controls';
+import { LAUNCH_STATUSES_OPTIONS, GROUPED_DEFECT_TYPES_OPTIONS } from './constants';
+import { FiltersControlV2 } from './controls';
 import styles from './widgetControls.scss';
 
 const cx = classNames.bind(styles);
@@ -120,14 +114,17 @@ export class LaunchStatisticsControls extends Component {
       eventsInfo,
       isMainControlsDisabled,
     } = this.props;
+    const filterId = this.props.widgetSettings?.filters?.length && this.props.widgetSettings.filters[0].value;
+    const disabled = !filterId;
 
     return (
       <Fragment>
         <FieldProvider name="filters" parse={this.parseFilterValue} format={this.formatFilterValue}>
-          <FiltersControl
+          <FiltersControlV2
             formAppearance={formAppearance}
             onFormAppearanceChange={onFormAppearanceChange}
             eventsInfo={eventsInfo}
+            required
           />
         </FieldProvider>
         {!formAppearance.isMainControlsLocked && (
@@ -138,12 +135,12 @@ export class LaunchStatisticsControls extends Component {
                 formatMessage(messages.ContentFieldsValidationError),
               )}
             >
-              <DropdownControl
-                fieldLabel={formatMessage(messages.CriteriaFieldLabel)}
-                multiple
-                selectAll
+              <Dropdown
+                label={formatMessage(messages.CriteriaFieldLabel)}
+                multiSelect
+                isOptionAllVisible
                 options={this.criteria}
-                disabled={isMainControlsDisabled}
+                disabled={disabled || isMainControlsDisabled}
               />
             </FieldProvider>
             <FieldProvider
@@ -153,43 +150,42 @@ export class LaunchStatisticsControls extends Component {
               )}
               format={String}
               normalize={this.normalizeValue}
+              className={cx('field-number')}
             >
-              <InputControl
-                fieldLabel={formatMessage(messages.ItemsFieldLabel)}
-                inputWidth={ITEMS_INPUT_WIDTH}
-                maxLength="3"
-                hintType={'top-right'}
-                disabled={isMainControlsDisabled}
-              />
+              <FieldErrorHint provideHint={false}>
+                <FieldNumber
+                  label={formatMessage(messages.ItemsFieldLabel)}
+                  maxLength={3}
+                  defaultWidth={false}
+                  disabled={disabled || isMainControlsDisabled}
+                />
+              </FieldErrorHint>
             </FieldProvider>
             <FieldProvider name="contentParameters.widgetOptions.timeline">
-              <TogglerControl
-                fieldLabel=" "
-                items={getWidgetModeOptions(
+              <RadioGroupControl
+                options={getWidgetModeOptions(
                   [CHART_MODES.LAUNCH_MODE, CHART_MODES.TIMELINE_MODE],
                   formatMessage,
                 )}
-                disabled={isMainControlsDisabled}
+                label={formatMessage(widgetControlsMessages.ModeLabel)}
+                disabled={disabled || isMainControlsDisabled}
               />
             </FieldProvider>
-            <FieldProvider name="contentParameters.widgetOptions.viewMode">
-              <TogglerControl
-                fieldLabel=" "
-                items={getWidgetModeOptions(
-                  [CHART_MODES.AREA_VIEW, CHART_MODES.BAR_VIEW],
-                  formatMessage,
-                )}
-                disabled={isMainControlsDisabled}
-              />
-            </FieldProvider>
+              <FieldProvider name="contentParameters.widgetOptions.viewMode">
+                <RadioGroupControl
+                  options={getWidgetModeOptions(
+                    [CHART_MODES.AREA_VIEW, CHART_MODES.BAR_VIEW],
+                    formatMessage,
+                  )}
+                  label={formatMessage(widgetControlsMessages.ViewLabel)}
+                  disabled={disabled || isMainControlsDisabled}
+                />
+              </FieldProvider>
             <div className={cx('zoom-container')}>
               <FieldProvider name="contentParameters.widgetOptions.zoom">
-                <CheckboxControl
-                  eventInfo={{ onChangeCheckboxEvent: this.props.eventsInfo.clickOnZoomWidgetArea }}
-                  fieldLabel=" "
-                  text={formatMessage(messages.ZoomControlText)}
-                  disabled={isMainControlsDisabled}
-                />
+                <Checkbox disabled={disabled || isMainControlsDisabled}>
+                  {formatMessage(messages.ZoomControlText)}
+                </Checkbox>
               </FieldProvider>
             </div>
           </Fragment>

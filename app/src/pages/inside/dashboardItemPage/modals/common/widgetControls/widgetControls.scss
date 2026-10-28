@@ -30,3 +30,7 @@
 .component-wrap {
   margin-bottom: 20px;
 }
+
+.field-number [class*='input-container'] {
+  max-width: fit-content;
+}

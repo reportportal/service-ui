@@ -28,7 +28,7 @@ import {
   STATS_SI_TOTAL,
   STATS_TI_TOTAL,
 } from 'common/constants/statistics';
-import { FiltersControl } from './controls';
+import { FiltersControlV2 } from './controls';
 
 const DEFAULT_ITEMS_COUNT = '2';
 
@@ -73,10 +73,11 @@ export class DifferentLaunchesComparisonControls extends Component {
     const { formAppearance, onFormAppearanceChange, eventsInfo } = this.props;
     return (
       <FieldProvider name="filters" parse={this.parseFilterValue} format={this.formatFilterValue}>
-        <FiltersControl
+        <FiltersControlV2
           formAppearance={formAppearance}
           onFormAppearanceChange={onFormAppearanceChange}
           eventsInfo={eventsInfo}
+          required
         />
       </FieldProvider>
     );

@@ -17,9 +17,11 @@
 export { CheckboxControl } from './checkboxControl';
 export { DropdownControl } from './dropdownControl';
 export { FiltersControl } from './filtersControl';
+export { FiltersControlV2 } from './filtersControlV2';
 export { InputControl } from './inputControl';
 export { TagsControl } from './tagsControl';
 export { TogglerControl } from './togglerControl';
 export { CustomColumnsControl } from './customColumnsControl';
 export { AttributesFieldArrayControl } from './attributesFieldArrayControl';
 export { SortingControl } from './sortingControl';
+export { RadioGroupControl } from './radioGroupControl';

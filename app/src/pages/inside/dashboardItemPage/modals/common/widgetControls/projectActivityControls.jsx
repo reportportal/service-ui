@@ -18,15 +18,21 @@ import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { FieldProvider } from 'components/fields/fieldProvider';
+import { FieldErrorHint } from 'components/fields';
 import { injectIntl, defineMessages } from 'react-intl';
 import { URLS } from 'common/urls';
 import { arrayRemoveDoubles } from 'common/utils/arrayRemoveDoubles';
 import { validate, bindMessageToValidator, commonValidators } from 'common/utils/validation';
 import { GROUP_TO_ACTION_MAP, ACTION_TO_GROUP_MAP } from 'common/constants/actionTypes';
 import { projectKeySelector } from 'controllers/project';
+import { Dropdown, FieldNumber } from '@reportportal/ui-kit';
 import { getWidgetCriteriaOptions } from './utils/getWidgetCriteriaOptions';
-import { USER_ACTIONS_OPTIONS, ITEMS_INPUT_WIDTH, CONTENT_FIELDS } from './constants';
-import { DropdownControl, InputControl, TagsControl } from './controls';
+import { USER_ACTIONS_OPTIONS, CONTENT_FIELDS } from './constants';
+import { TagsControl } from './controls';
+import { createClassnames } from 'common/utils';
+import styles from './widgetControls.scss';
+
+const cx = createClassnames(styles);
 
 const DEFAULT_ITEMS_COUNT = '50';
 const messages = defineMessages({
@@ -143,10 +149,10 @@ export class ProjectActivityControls extends Component {
           parse={this.parseActionTypes}
           validate={actionTypeValidator(formatMessage(messages.ActionTypesValidationError))}
         >
-          <DropdownControl
-            fieldLabel={formatMessage(messages.CriteriaFieldLabel)}
-            multiple
-            selectAll
+          <Dropdown
+            label={formatMessage(messages.CriteriaFieldLabel)}
+            multiSelect
+            isOptionAllVisible
             options={this.criteria}
             disabled={isMainControlsDisabled}
           />
@@ -158,13 +164,17 @@ export class ProjectActivityControls extends Component {
           )}
           format={String}
           normalize={this.normalizeValue}
+              className={cx('field-number')}
+
         >
-          <InputControl
-            fieldLabel={formatMessage(messages.ItemsFieldLabel)}
-            inputWidth={ITEMS_INPUT_WIDTH}
-            maxLength="3"
-            disabled={isMainControlsDisabled}
-          />
+          <FieldErrorHint provideHint={false}>
+            <FieldNumber
+              label={formatMessage(messages.ItemsFieldLabel)}
+              maxLength={3}
+              defaultWidth={false}
+              disabled={isMainControlsDisabled}
+            />
+          </FieldErrorHint>
         </FieldProvider>
         <FieldProvider
           name="contentParameters.widgetOptions.user"

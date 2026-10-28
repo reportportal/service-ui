@@ -2774,7 +2774,7 @@
   "Widgets.Name.launchesTable": "测试任务表",
   "Widgets.Name.mostFailedTestCases": "失败次数最多的测试用例表（前20）",
   "Widgets.Name.mostPopularPatterns": "使用次数最多的模板表（前20）",
-  "Widgets.Name.mostTimeConsuming": "加载最耗时的测试用例小部件（前20）",
+  "Widgets.Name.mostTimeConsuming": "加载最耗时的测试用例（前20）",
   "Widgets.Name.notPassed": "未通过测试用例趋势图",
   "Widgets.Name.overallStatistics": "总体统计",
   "Widgets.Name.passingRatePerLaunch": "每次执行测试任务的通过率",
