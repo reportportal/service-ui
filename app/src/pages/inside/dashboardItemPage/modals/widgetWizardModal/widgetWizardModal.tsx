@@ -73,10 +73,7 @@ export const WidgetWizardModal = ({
     <div className={cx('wizard-footer')}>
       <Button
         variant="ghost"
-        onClick={() => {
-          closeModal();
-          dispatch(destroy(WIDGET_WIZARD_FORM));
-        }}
+        onClick={closeModal}
       >
         {formatMessage(COMMON_LOCALE_KEYS.CANCEL)}
       </Button>
@@ -115,7 +112,7 @@ export const WidgetWizardModal = ({
   return (
     <Modal
       title={formatMessage(messages.headerText)}
-      onClose={() => dispatch(hideModalAction())}
+      onClose={onClosed}
       className={cx('widget-wizard-modal')}
       createFooter={createFooter}
     >

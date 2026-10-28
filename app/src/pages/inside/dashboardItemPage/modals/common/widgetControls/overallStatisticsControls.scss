@@ -22,3 +22,7 @@
     margin-top: -7px;
   }
 }
+
+.field-number [class*='input-container'] {
+  max-width: fit-content;
+}

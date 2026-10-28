@@ -34,11 +34,11 @@ const messages = defineMessages({
 });
 
 interface LockedActiveFilterProps {
-  filter: Filter;
+  filter?: Filter;
   onEdit: () => void;
 }
 
-export const LockedActiveFilter = memo(({ filter = null, onEdit }: LockedActiveFilterProps) => {
+export const LockedActiveFilter = memo(({ filter = {}, onEdit }: LockedActiveFilterProps) => {
   const { formatMessage } = useIntl();
 
   return (

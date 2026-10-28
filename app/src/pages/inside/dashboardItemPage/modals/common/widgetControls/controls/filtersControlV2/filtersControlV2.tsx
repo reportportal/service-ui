@@ -230,7 +230,7 @@ export const FiltersControlV2: FC<FiltersControlV2Props> = ({
             />
           );
         case FORM_APPEARANCE_MODE_LOCKED:
-          return <LockedActiveFilter filter={activeFilter ?? {}} onEdit={clearFormAppearance} />;
+          return <LockedActiveFilter filter={activeFilter} onEdit={clearFormAppearance} />;
         default:
           return null;
       }
@@ -271,7 +271,7 @@ export const FiltersControlV2: FC<FiltersControlV2Props> = ({
           dropdownMatchInputWidth
           menuClassName={cx('filter-autocomplete-menu')}
           renderOption={(item: Filter, index: number, isNew: boolean, getItemProps) => (
-            <AutocompleteOption key={item} {...getItemProps({ item, index })} isNew={isNew}>
+            <AutocompleteOption key={item.id} {...getItemProps({ item, index })} isNew={isNew}>
               <div className={cx('filter-option-name')}>{item.name}</div>
               <div className={cx('filter-option-description')}>{item.description}</div>
             </AutocompleteOption>

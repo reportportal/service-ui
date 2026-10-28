@@ -101,9 +101,6 @@ export class FlakyTestCasesTableControls extends Component {
       projectKey,
       isMainControlsDisabled,
     } = this.props;
-    const filterId =
-      this.props.widgetSettings?.filters?.length && this.props.widgetSettings.filters[0].value;
-    const disabled = !filterId;
 
     return (
       <Fragment>
@@ -119,7 +116,7 @@ export class FlakyTestCasesTableControls extends Component {
               label={formatMessage(messages.ItemsFieldLabel)}
               maxLength={3}
               defaultWidth={false}
-              disabled={disabled || isMainControlsDisabled}
+              disabled={isMainControlsDisabled}
             />
           </FieldErrorHint>
         </FieldProvider>
@@ -135,11 +132,11 @@ export class FlakyTestCasesTableControls extends Component {
             minLength={3}
             maxLength={256}
             getURI={URLS.launchNameSearch(projectKey)}
-            disabled={disabled || isMainControlsDisabled}
+            disabled={isMainControlsDisabled}
           />
         </FieldProvider>
         <FieldProvider name="contentParameters.widgetOptions.includeMethods">
-          <Checkbox disabled={disabled || isMainControlsDisabled}>
+          <Checkbox disabled={isMainControlsDisabled}>
             {formatMessage(messages.IncludeMethodsControlText)}
           </Checkbox>
         </FieldProvider>
