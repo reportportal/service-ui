@@ -32,6 +32,7 @@ export interface PopoverItem {
   /** @deprecated Consider defining a variant instead */
   className?: string;
   disabled?: boolean;
+  isLoading?: boolean;
   tooltip?: string;
   variant?: 'destructive' | 'danger' | 'text';
   onClick?: VoidFn;
@@ -67,11 +68,26 @@ export const PopoverControl = ({
   isLoading = false,
 }: PopoverControlProps) => {
   const renderItem = (item: PopoverItem, groupIndex: number, itemIndex: number) => {
-    const { label, icon, className = '', variant, disabled, tooltip, onClick } = item;
+    const {
+      label,
+      icon,
+      className = '',
+      variant,
+      disabled,
+      isLoading: isItemLoading = false,
+      tooltip,
+      onClick,
+    } = item;
+    const isItemDisabled = Boolean(disabled) || isItemLoading;
 
     const buttonContent = (
       <>
         {icon} {label}
+        {isItemLoading && (
+          <span className={cx('popover-control__item-loader')}>
+            <BubblesLoader />
+          </span>
+        )}
       </>
     );
 
@@ -81,10 +97,10 @@ export const PopoverControl = ({
           type="button"
           className={cx('popover-control__item-button', className, {
             [`popover-control__item-button--${variant}`]: Boolean(variant),
-            'popover-control__item-button--disabled': Boolean(disabled),
+            'popover-control__item-button--disabled': isItemDisabled,
           })}
-          disabled={disabled}
-          onClick={disabled ? undefined : onClick}
+          disabled={isItemDisabled}
+          onClick={isItemDisabled ? undefined : onClick}
         >
           {tooltip ? (
             <Tooltip

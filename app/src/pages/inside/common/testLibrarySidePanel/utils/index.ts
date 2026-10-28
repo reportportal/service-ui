@@ -15,6 +15,7 @@
  */
 export { fetchAllTestCases, fetchAllTestCasesByFolderIds } from './fetchAllTestCases';
 export type { TestCasesResponse } from './fetchAllTestCases';
+export { hasTestCaseInFolders } from './hasTestCaseInFolders';
 export { chunkIdsForQueryFilter } from './chunkIdsForQueryFilter';
 export { fetchAllTestPlanTestCases } from './fetchAllTestPlanTestCases';
 export { getFolderCacheEntry } from './getFolderCacheEntry';

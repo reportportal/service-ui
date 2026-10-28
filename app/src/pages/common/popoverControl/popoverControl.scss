@@ -96,6 +96,12 @@
     }
   }
 
+  &__item-loader {
+    display: inline-flex;
+    align-items: center;
+    margin-left: auto;
+  }
+
   &__loading {
     display: flex;
     align-items: center;

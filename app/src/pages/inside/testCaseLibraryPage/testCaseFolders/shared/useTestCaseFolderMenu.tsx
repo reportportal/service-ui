@@ -35,7 +35,7 @@ import { useHasTestPlans } from 'hooks/useHasTestPlans';
 import { PopoverItem } from 'pages/common/popoverControl';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { getAllSubfolderIds } from 'common/utils/folderUtils';
-import { fetchAllTestCasesByFolderIds } from 'pages/inside/common/testLibrarySidePanel/utils';
+import { hasTestCaseInFolders } from 'pages/inside/common/testLibrarySidePanel/utils';
 
 import { useAddToLaunchModal } from '../../addToLaunchModal';
 import { useAddTestCasesToTestPlanModal } from '../../addTestCasesToTestPlanModal/useAddTestCasesToTestPlanModal';
@@ -102,15 +102,19 @@ export const useTestCaseFolderMenu = ({
     let isCancelled = false;
     const folderIds = getAllSubfolderIds(folder.id, allFolders);
 
-    fetchAllTestCasesByFolderIds(projectKey, folderIds, {
-      offset: 0,
-      limit: 50,
-    })
-      .then((testCases) => {
+    hasTestCaseInFolders(
+      projectKey,
+      folderIds,
+      (testCase) => !isManualScenarioEmpty(testCase.manualScenario),
+      {
+        offset: 0,
+        limit: 50,
+      },
+      () => isCancelled,
+    )
+      .then((hasExecutable) => {
         if (!isCancelled) {
-          setHasExecutableTestCases(
-            testCases.some((testCase) => !isManualScenarioEmpty(testCase.manualScenario)),
-          );
+          setHasExecutableTestCases(hasExecutable);
         }
       })
       .catch(() => {
@@ -126,8 +130,7 @@ export const useTestCaseFolderMenu = ({
 
   const isCheckingExecutableTestCases =
     isMenuOpen && !isAddActionsDisabled && hasExecutableTestCases === null;
-  const isMenuContentLoading =
-    isCheckingExecutableTestCases || (isMenuOpen && isCheckingTestPlansExistence);
+  const isMenuContentLoading = isMenuOpen && isCheckingTestPlansExistence;
   const isAddToLaunchDisabled = isAddActionsDisabled || hasExecutableTestCases === false;
 
   const getAddToTestPlanTooltip = () => {
@@ -226,6 +229,7 @@ export const useTestCaseFolderMenu = ({
             label: formatMessage(COMMON_LOCALE_KEYS.ADD_TO_LAUNCH),
             onClick: handleAddToLaunch,
             disabled: isAddToLaunchDisabled,
+            isLoading: isCheckingExecutableTestCases,
             tooltip: getAddToLaunchTooltip(),
           },
         ],
