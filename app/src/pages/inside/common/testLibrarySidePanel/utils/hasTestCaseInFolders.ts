@@ -31,9 +31,9 @@ const hasMatchingTestCaseInFolderChunk = async (
   folderIdChunk: number[],
   predicate: TestCasePredicate,
   params: RequestParams,
-  isCancelled: () => boolean,
+  signal?: AbortSignal,
 ): Promise<boolean> => {
-  if (isCancelled()) {
+  if (signal?.aborted) {
     return false;
   }
 
@@ -42,6 +42,7 @@ const hasMatchingTestCaseInFolderChunk = async (
       ...params,
       [TEST_FOLDER_ID_IN_FILTER_KEY]: folderIdChunk.join(','),
     }),
+    { signal },
   );
 
   if (response.content.some(predicate)) {
@@ -54,7 +55,7 @@ const hasMatchingTestCaseInFolderChunk = async (
       folderIdChunk,
       predicate,
       { ...params, offset: response.page.number * response.page.size },
-      isCancelled,
+      signal,
     );
   }
 
@@ -66,10 +67,10 @@ const hasMatchingTestCaseInFolderChunks = async (
   folderIdChunks: number[][],
   predicate: TestCasePredicate,
   params: RequestParams,
-  isCancelled: () => boolean,
+  signal?: AbortSignal,
   chunkIndex = 0,
 ): Promise<boolean> => {
-  if (chunkIndex >= folderIdChunks.length || isCancelled()) {
+  if (chunkIndex >= folderIdChunks.length || signal?.aborted) {
     return false;
   }
 
@@ -78,7 +79,7 @@ const hasMatchingTestCaseInFolderChunks = async (
     folderIdChunks[chunkIndex],
     predicate,
     params,
-    isCancelled,
+    signal,
   );
 
   if (hasMatch) {
@@ -90,7 +91,7 @@ const hasMatchingTestCaseInFolderChunks = async (
     folderIdChunks,
     predicate,
     params,
-    isCancelled,
+    signal,
     chunkIndex + 1,
   );
 };
@@ -100,7 +101,7 @@ export const hasTestCaseInFolders = async (
   folderIds: number[],
   predicate: TestCasePredicate,
   params: RequestParams = {},
-  isCancelled: () => boolean = () => false,
+  signal?: AbortSignal,
 ): Promise<boolean> => {
   if (isEmpty(folderIds)) {
     return false;
@@ -111,6 +112,6 @@ export const hasTestCaseInFolders = async (
     chunkIdsForQueryFilter(folderIds),
     predicate,
     params,
-    isCancelled,
+    signal,
   );
 };

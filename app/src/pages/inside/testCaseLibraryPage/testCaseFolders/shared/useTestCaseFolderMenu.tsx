@@ -99,7 +99,8 @@ export const useTestCaseFolderMenu = ({
       return;
     }
 
-    let isCancelled = false;
+    const abortController = new AbortController();
+    const { signal } = abortController;
     const folderIds = getAllSubfolderIds(folder.id, allFolders);
 
     hasTestCaseInFolders(
@@ -110,21 +111,21 @@ export const useTestCaseFolderMenu = ({
         offset: 0,
         limit: 50,
       },
-      () => isCancelled,
+      signal,
     )
       .then((hasExecutable) => {
-        if (!isCancelled) {
+        if (!signal.aborted) {
           setHasExecutableTestCases(hasExecutable);
         }
       })
       .catch(() => {
-        if (!isCancelled) {
+        if (!signal.aborted) {
           setHasExecutableTestCases(true);
         }
       });
 
     return () => {
-      isCancelled = true;
+      abortController.abort();
     };
   }, [isMenuOpen, hasExecutableTestCases, isAddActionsDisabled, projectKey, folder.id, allFolders]);
 
@@ -230,6 +231,7 @@ export const useTestCaseFolderMenu = ({
             onClick: handleAddToLaunch,
             disabled: isAddToLaunchDisabled,
             isLoading: isCheckingExecutableTestCases,
+            loadingLabel: formatMessage(commonMessages.checkingTestCasesAvailability),
             tooltip: getAddToLaunchTooltip(),
           },
         ],

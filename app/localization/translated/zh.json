@@ -2528,6 +2528,7 @@
   "TableWidgets.skippedColumnShort": "跳过",
   "TableWidgets.totalColumnFull": "全部",
   "TableWidgets.totalColumnShort": "全部",
+  "TestCaseLibraryPage.checkingTestCasesAvailability": "正在检查测试用例的可用性...",
   "TestCaseSearch.loadedItemsWithDisplayedLaunches": "Loaded tests are grouped under the launches due to the active 'Display launches' toggle.",
   "TestCasesGrowthTrendControls.ItemsFieldLabel": "测试项",
   "TestCasesGrowthTrendControls.ItemsValidationError": "测试项的数量应为1到600个",

@@ -33,6 +33,7 @@ export interface PopoverItem {
   className?: string;
   disabled?: boolean;
   isLoading?: boolean;
+  loadingLabel?: string;
   tooltip?: string;
   variant?: 'destructive' | 'danger' | 'text';
   onClick?: VoidFn;
@@ -75,6 +76,7 @@ export const PopoverControl = ({
       variant,
       disabled,
       isLoading: isItemLoading = false,
+      loadingLabel,
       tooltip,
       onClick,
     } = item;
@@ -84,7 +86,7 @@ export const PopoverControl = ({
       <>
         {icon} {label}
         {isItemLoading && (
-          <span className={cx('popover-control__item-loader')}>
+          <span className={cx('popover-control__item-loader')} aria-hidden="true">
             <BubblesLoader />
           </span>
         )}
@@ -100,6 +102,7 @@ export const PopoverControl = ({
             'popover-control__item-button--disabled': isItemDisabled,
           })}
           disabled={isItemDisabled}
+          aria-busy={isItemLoading || undefined}
           onClick={isItemDisabled ? undefined : onClick}
         >
           {tooltip ? (
@@ -114,6 +117,11 @@ export const PopoverControl = ({
             buttonContent
           )}
         </button>
+        {loadingLabel && (
+          <span role="status" aria-live="polite" className={cx('popover-control__status')}>
+            {isItemLoading ? loadingLabel : ''}
+          </span>
+        )}
       </li>
     );
   };

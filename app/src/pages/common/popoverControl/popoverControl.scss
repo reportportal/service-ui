@@ -102,6 +102,18 @@
     margin-left: auto;
   }
 
+  &__status {
+    position: absolute;
+    overflow: hidden;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    border: 0;
+    margin: -1px;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+
   &__loading {
     display: flex;
     align-items: center;

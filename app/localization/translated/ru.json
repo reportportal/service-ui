@@ -2543,6 +2543,7 @@
   "TableWidgets.skippedColumnShort": "проп",
   "TableWidgets.totalColumnFull": "Всего",
   "TableWidgets.totalColumnShort": "Вс",
+  "TestCaseLibraryPage.checkingTestCasesAvailability": "Проверка доступности тест-кейсов...",
   "TestCaseSearch.loadedItemsWithDisplayedLaunches": "Загруженные тесты сгрупированы под запусками из-за активного переключателя «Отображение запусков».",
   "TestCasesGrowthTrendControls.ItemsFieldLabel": "Элементы",
   "TestCasesGrowthTrendControls.ItemsValidationError": "Количество элементов принимает значения от '1' до '600'",
