@@ -99,6 +99,40 @@ describe('live review contract adapter', () => {
     expect(result.fixRound).toBeUndefined();
   });
 
+  test('recovers an explicit round ID only from comments correlated to the current round number', () => {
+    const result = normalizeLiveReview({
+      ...review([
+        { ...nativeComment, state: 'SENT', roundNumber: 1, fixRoundId: 5 },
+        { ...nativeComment, id: 22, state: 'ADDRESSED', roundNumber: 2, fixRoundId: 8 },
+      ]),
+      fixInProgress: true,
+      fixRound: 1,
+    });
+    expect(result.fixRound).toBe(1);
+    expect(result.fixRoundId).toBe(5);
+  });
+
+  test.each([
+    { comments: [{ ...nativeComment, state: 'SENT', roundNumber: 1 }] },
+    { comments: [{ ...nativeComment, state: 'SENT', roundNumber: 2, fixRoundId: 5 }] },
+    {
+      comments: [
+        { ...nativeComment, state: 'SENT', roundNumber: 1, fixRoundId: 5 },
+        { ...nativeComment, id: 22, state: 'SENT', roundNumber: 1, fixRoundId: 8 },
+      ],
+    },
+  ])('does not guess a round ID for missing or ambiguous references: %j', ({ comments }) => {
+    const result = normalizeLiveReview({ ...review(comments), fixInProgress: true, fixRound: 1 });
+    expect(result.fixRound).toBe(1);
+    expect(result.fixRoundId).toBeUndefined();
+  });
+
+  test('does not treat a native round number as its backend ID when no comment reference exists', () => {
+    expect(
+      normalizeLiveReview({ ...review([]), fixInProgress: true, fixRound: 5 }).fixRoundId,
+    ).toBeUndefined();
+  });
+
   test.each([
     null,
     [],

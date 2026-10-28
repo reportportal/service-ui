@@ -164,7 +164,7 @@ export const CompareIterationsPageContent = () => {
       return;
     }
     dispatch(clearPipelineComparisonAction());
-  }, [baselineId, candidateId, dispatch, hasValidPair, pipelineId]);
+  }, [baselineId, candidateId, dispatch, hasValidPair, pipelineId, projectKey]);
 
   useEffect(
     () => () => {

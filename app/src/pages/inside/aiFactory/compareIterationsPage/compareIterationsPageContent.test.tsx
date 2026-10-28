@@ -193,6 +193,7 @@ const loadedComparison: LivePipelineComparison = {
 };
 
 type SelectorValues = {
+  projectKey?: string;
   query?: Record<string, unknown>;
   pipelines?: PipelineRS[] | null;
   pipelinesLoading?: boolean;
@@ -226,12 +227,12 @@ interface BreadcrumbButtonCollection {
 const renderPage = (values: SelectorValues = {}): ReactWrapper => {
   const selectorValues = new Map<unknown, unknown>([
     [projectNameSelector, 'Demo'],
-    [projectKeySelector, 'project'],
+    [projectKeySelector, values.projectKey ?? 'project'],
     [urlOrganizationAndProjectSelector, { organizationSlug: 'org', projectSlug: 'project' }],
     [querySelector, values.query ?? { pipeline: '1', baseline: '102', candidate: '103' }],
     [pipelinesSelector, values.pipelines === undefined ? [generationPipeline] : values.pipelines],
     [pipelineCatalogErrorSelector, false],
-    [pipelineCatalogProjectKeySelector, 'project'],
+    [pipelineCatalogProjectKeySelector, values.projectKey ?? 'project'],
     [pipelineIterationsErrorByPipelineSelector, {}],
     [pipelinesLoadingSelector, values.pipelinesLoading ?? false],
     [
@@ -373,6 +374,32 @@ describe('CompareIterationsPageContent', () => {
       },
     });
     expect(wrapper.find(ComparisonResult)).toHaveLength(0);
+  });
+
+  test('requests a new comparison and hides the previous response when the project changes with the same pair', () => {
+    wrapper = renderPage({ comparison: loadedComparison });
+    expect(wrapper.find(ComparisonResult)).toHaveLength(1);
+    expect(getPipelineComparisonAction).toHaveBeenCalledTimes(1);
+
+    jest.mocked(useSelector).mockImplementation(((selector: unknown) => {
+      if (selector === projectKeySelector || selector === pipelineCatalogProjectKeySelector)
+        return 'other';
+      if (selector === projectNameSelector) return 'Other project';
+      if (selector === urlOrganizationAndProjectSelector)
+        return { organizationSlug: 'org', projectSlug: 'other' };
+      if (selector === querySelector) return { pipeline: '1', baseline: '102', candidate: '103' };
+      if (selector === pipelinesSelector) return [generationPipeline];
+      if (selector === pipelineIterationsByPipelineSelector) return { 1: iterations };
+      if (selector === pipelineIterationsErrorByPipelineSelector) return {};
+      if (selector === pipelineComparisonSelector) return loadedComparison;
+      return false;
+    }) as typeof useSelector);
+    wrapper.setProps({});
+
+    expect(getPipelineComparisonAction).toHaveBeenCalledTimes(2);
+    expect(getPipelineComparisonAction).toHaveBeenLastCalledWith(1, 103, 102);
+    expect(wrapper.find(ComparisonResult)).toHaveLength(0);
+    expect(wrapper.find('[data-testid="spinning-preloader"]')).toHaveLength(1);
   });
 
   test('renders project, pipelines, selected pipeline, and current-page breadcrumbs', () => {

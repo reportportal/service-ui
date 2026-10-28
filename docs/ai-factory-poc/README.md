@@ -1,8 +1,9 @@
 # AI Factory · DF Bootcamp 2026 PoC — frontend workspace
 
 This folder is the working memory of the frontend part of the PoC: it records what we build, why, in which
-order, how far we are and what we still need from the backend. The UI is built on mocks that follow a proposed
-API contract; a live Pipeline and Quality Standard API subset is documented but not yet integrated.
+order, how far we are and what we still need from the backend. LP1–LP4 use live API transport; native case/Review/fix-round R1–R5 are implemented and submitted for review. Other mock/provisional groups remain. Real GitHub Actions acceptance is blocked on an eligible scenario and verified setup; implementation is not deployment evidence.
+
+**Current Backend handoff:** [27 — integration completion contract](27-backend-integration-completion-contract-2026-10-25.md), with explicit blockers, owners and acceptance criteria. [26](26-github-actions-journey-verification-2026-10-24.md) contains the R6 UI/API verification checklist.
 
 - Jira epic: [EPMRPP-118192](https://jiraeu.epam.com/browse/EPMRPP-118192)
 - Requirements (source of truth): [`reportportal-requirements/domains/projects/df_bootcamp_2026`](https://git.epam.com/EPM-RPP/reportportal-requirements/-/tree/main/domains/projects/df_bootcamp_2026)
@@ -23,7 +24,8 @@ API contract; a live Pipeline and Quality Standard API subset is documented but 
 | [08-estimations.md](08-estimations.md) | **All estimations**: method, per-task senior-developer hours, phase roll-up, deviation notes, log | after every finished task |
 | [10-backend-integration-contract.md](10-backend-integration-contract.md) | Actionable FE/BE integration gaps, decisions, security/readiness gates and acceptance criteria | API contract or integration decision changes |
 | [11-backend-integration-contract-test-cases.md](11-backend-integration-contract-test-cases.md) | Risk-based QA cases and traceability for the backend integration contract and rollout groups G1–G11 | contract acceptance criteria, rollout decisions or coverage change |
-| [12-backend-api-integration-request.md](12-backend-api-integration-request.md) | Shareable backend handoff snapshot; not a source of truth — synchronize it from [10](10-backend-integration-contract.md) before sending | before sending to Backend, or when Backend records answers/sign-off |
+| [12-backend-api-integration-request.md](12-backend-api-integration-request.md) | Historical backend handoff snapshot; current handoff is 27 | retained for baseline traceability |
+| [27-backend-integration-completion-contract-2026-10-25.md](27-backend-integration-completion-contract-2026-10-25.md) | **Current Backend handoff:** what remains incomplete, source/evidence, owner, deliverable and scoped acceptance | remaining contract or readiness evidence changes |
 | [13-demo-rehearsal-runbook.md](13-demo-rehearsal-runbook.md) | Local-only preflight, reset, evidence and stop/no-write procedure for the 18-step demo rehearsal | before and during each T6.4 rehearsal |
 | [14-demo-rehearsal-2026-10-04.md](14-demo-rehearsal-2026-10-04.md) | Dated T6.4 rehearsal evidence: 15 PASS, 2 TC106/TC107 parity failures, 0 BLOCKED, 1 N/A, no remote writes | immutable evidence for the 2026-10-04 rehearsal |
 | [23-temporary-solutions-register.md](23-temporary-solutions-register.md) | **Temporary mocks and workarounds**: location, replacement task and removal condition | every real API integration slice and final mock cleanup |

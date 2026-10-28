@@ -10,7 +10,7 @@
 
 import { act, type ChangeEvent } from 'react';
 import { useDispatch } from 'react-redux';
-import { mount, shallow } from 'enzyme';
+import { mount, shallow, type ReactWrapper } from 'enzyme';
 
 import { showModalAction } from 'controllers/modal';
 import { CommentState, CommentTargetType, FixRoundStatus, Lifecycle } from 'types/aiFactory';
@@ -37,7 +37,11 @@ jest.mock('@reportportal/ui-kit', () => ({
   DeleteIcon: () => <span>DeleteIcon</span>,
   Tooltip: ({ children }: { children: React.ReactNode }) => <>{children}</>,
 }));
-jest.mock('react-redux', () => ({ useDispatch: jest.fn() }));
+jest.mock('react-redux', () => ({
+  useDispatch: jest.fn(),
+  useSelector: jest.fn(() => ({ organizationSlug: 'org', projectSlug: 'project' })),
+}));
+jest.mock('controllers/project', () => ({ projectKeySelector: jest.fn() }));
 jest.mock('controllers/modal', () => ({
   showModalAction: jest.fn((payload: unknown) => ({ type: 'SHOW_MODAL', payload })),
 }));
@@ -57,7 +61,9 @@ jest.mock('common/utils', () => ({
         .join(' '),
 }));
 jest.mock('common/utils/timeDateUtils', () => ({ fromNowFormat: () => 'a moment ago' }));
-jest.mock('pages/inside/aiFactory/common', () => ({ LifecycleBadge: 'LifecycleBadge' }));
+jest.mock('pages/inside/aiFactory/common', () => ({
+  LifecycleBadge: ({ lifecycle }: { lifecycle: string }) => <span>{lifecycle}</span>,
+}));
 jest.mock(
   'react-intl',
   () =>
@@ -350,10 +356,17 @@ const submitComposer = (wrapper: ReturnType<typeof shallow>) => {
   onClick();
 };
 
+const stripFeedback = (wrapper: ReactWrapper) =>
+  [wrapper.find('output'), wrapper.find('[role="alert"]')]
+    .map((node) => (node.length === 1 ? node.prop('children') : undefined))
+    .flat()
+    .filter((child): child is string => typeof child === 'string')
+    .join(' ');
+
 describe('native AI review presentation', () => {
   beforeEach(() => jest.clearAllMocks());
 
-  test('shows the authoritative unsent count without offering Push or Approve', () => {
+  test('shows the authoritative unsent count without claiming approval', () => {
     const wrapper = shallow(
       <LiveReviewStrip
         lifecycle={Lifecycle.READY}
@@ -364,9 +377,154 @@ describe('native AI review presentation', () => {
 
     expect(wrapper.text()).toContain('7 not sent');
     expect(wrapper.find('[data-automation-id="discard-review-comments"]')).toHaveLength(1);
-    expect(wrapper.find('[data-automation-id="push-review-comments"]')).toHaveLength(0);
     expect(wrapper.text()).not.toContain('Approve');
   });
+
+  test.each([Lifecycle.DRAFT, Lifecycle.READY])(
+    'an editor can push native %s review and sees the authoritative comment count',
+    async (lifecycle) => {
+      const state = createLiveReviewState({
+        unsentCount: 7,
+        canPush: true,
+        pushToAgent: jest.fn(() => Promise.resolve(true)),
+      });
+      const wrapper = mount(
+        <LiveReviewStrip lifecycle={lifecycle} reviewState={state} isReadOnly={false} />,
+      );
+      const push = wrapper.find('button[data-automation-id="push-review-comments"]');
+      expect(push.prop('children')).toBe('Push to agent · 7');
+      expect(push.prop('disabled')).toBe(false);
+      await act(async () => {
+        (push.prop('onClick') as () => void)();
+        await Promise.resolve();
+      });
+      expect(state.pushToAgent).toHaveBeenCalledTimes(1);
+      expect(state.discardPending).not.toHaveBeenCalled();
+      wrapper.unmount();
+    },
+  );
+
+  test('a viewer can read fix status and retry monitoring without seeing Push', () => {
+    const state = createLiveReviewState({
+      unsentCount: 7,
+      fixInProgress: true,
+      fixMonitoringError: 'READ',
+      retryFixMonitoring: jest.fn(),
+    });
+    const wrapper = mount(<LiveReviewStrip reviewState={state} isReadOnly />);
+    expect(wrapper.find('button[data-automation-id="push-review-comments"]')).toHaveLength(0);
+    expect(wrapper.find('button[data-automation-id="discard-review-comments"]')).toHaveLength(0);
+    (
+      wrapper
+        .find('button[data-automation-id="retry-fix-monitoring"]')
+        .prop('onClick') as () => void
+    )();
+    expect(state.retryFixMonitoring).toHaveBeenCalledTimes(1);
+    expect(stripFeedback(wrapper)).toContain('Agent is fixing');
+    expect(state.pushToAgent).toBeUndefined();
+    wrapper.unmount();
+  });
+
+  test.each([
+    { isLoading: true, isLoaded: false },
+    { isMutating: true },
+    { fixInProgress: true },
+    { isError: true, isLoaded: false },
+  ])('keeps Push disabled while the hook disallows a command: %j', (overrides) => {
+    const state = createLiveReviewState({ unsentCount: 2, canPush: false, ...overrides });
+    const wrapper = mount(<LiveReviewStrip reviewState={state} isReadOnly={false} />);
+    expect(wrapper.find('button[data-automation-id="push-review-comments"]').prop('disabled')).toBe(
+      true,
+    );
+    wrapper.unmount();
+  });
+
+  test.each([
+    ['FIXED', 'Fix round 1 finished.'],
+    ['FIXED_GRADE_FAILED', 'grading failed'],
+    ['FAILED', 'Fix round 1 failed.'],
+  ] as const)(
+    'presents terminal %s without claiming Auto-Ready or reusing grade metrics',
+    (status, text) => {
+      const state = createLiveReviewState({
+        fixCompleted: true,
+        fixRoundState: { id: 5, testCaseId: 42, roundNumber: 1, status },
+      });
+      const wrapper = mount(<LiveReviewStrip reviewState={state} isReadOnly />);
+      expect(stripFeedback(wrapper)).toContain(text);
+      expect(stripFeedback(wrapper)).not.toMatch(/Auto-Ready|score|93/);
+      expect(wrapper.find('button[data-automation-id="retry-fix-monitoring"]')).toHaveLength(0);
+      wrapper.unmount();
+    },
+  );
+
+  test('withdraws an old terminal summary when a new external fix is observed', () => {
+    const wrapper = mount(
+      <LiveReviewStrip
+        reviewState={createLiveReviewState({
+          fixCompleted: true,
+          fixRoundState: { id: 5, testCaseId: 42, roundNumber: 1, status: 'FIXED' },
+        })}
+        isReadOnly
+      />,
+    );
+    expect(stripFeedback(wrapper)).toContain('Fix round 1 finished.');
+    wrapper.setProps({
+      reviewState: createLiveReviewState({
+        fixCompleted: false,
+        fixInProgress: true,
+        fixRound: 2,
+      }),
+    });
+    expect(stripFeedback(wrapper)).toContain('Fix round 2');
+    expect(stripFeedback(wrapper)).not.toContain('finished');
+    wrapper.unmount();
+  });
+
+  test('presents Review-only completion without fabricating a successful round', () => {
+    const wrapper = mount(
+      <LiveReviewStrip reviewState={createLiveReviewState({ fixCompleted: true })} isReadOnly />,
+    );
+    expect(stripFeedback(wrapper)).toContain('The fix is no longer in progress');
+    expect(stripFeedback(wrapper)).not.toMatch(/Fix round 1|Auto-Ready|grading failed/);
+    wrapper.unmount();
+  });
+
+  test.each([
+    ['CONFLICT', 'changed or a fix is already in progress'],
+    ['FAILED', 'could not be started'],
+    ['UNCONFIRMED', 'start could not be confirmed'],
+  ] as const)(
+    'distinguishes the %s start outcome from a FAILED agent result',
+    (fixStartError, text) => {
+      const wrapper = mount(
+        <LiveReviewStrip reviewState={createLiveReviewState({ fixStartError })} isReadOnly />,
+      );
+      expect(stripFeedback(wrapper)).toContain(text);
+      expect(stripFeedback(wrapper)).not.toContain('Fix round 1 failed');
+      wrapper.unmount();
+    },
+  );
+
+  test.each(['READ', 'TIMEOUT', 'MISSING'] as const)(
+    'offers only read monitoring retry for %s without dispatching Push',
+    (fixMonitoringError) => {
+      const state = createLiveReviewState({
+        fixMonitoringError,
+        retryFixMonitoring: jest.fn(),
+        pushToAgent: jest.fn(() => Promise.resolve(false)),
+      });
+      const wrapper = mount(<LiveReviewStrip reviewState={state} isReadOnly />);
+      (
+        wrapper
+          .find('button[data-automation-id="retry-fix-monitoring"]')
+          .prop('onClick') as () => void
+      )();
+      expect(state.retryFixMonitoring).toHaveBeenCalledTimes(1);
+      expect(state.pushToAgent).not.toHaveBeenCalled();
+      wrapper.unmount();
+    },
+  );
 
   test('shows a fixing message without inventing a round and wires explicit Refresh', () => {
     const state = createLiveReviewState({ fixInProgress: true, unsentCount: 2 });

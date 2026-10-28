@@ -351,6 +351,8 @@ describe('TestCaseDetailsPage lifecycle history', () => {
       ).toBe(true);
       expect(useLiveReviewComments).toHaveBeenLastCalledWith('demo', 42, origin === 'AI', {
         canApprove: true,
+        versionId: undefined,
+        onFixCompleted: expect.any(Function),
       });
       expect(useTestCaseAi).toHaveBeenLastCalledWith('demo', 42, false, 100);
       expect(useReviewComments).toHaveBeenLastCalledWith('demo', 42, false);
@@ -397,6 +399,7 @@ describe('TestCaseDetailsPage lifecycle history', () => {
     expect(useLiveReviewComments).toHaveBeenLastCalledWith('demo', 42, true, {
       canApprove: true,
       versionId: 100,
+      onFixCompleted: expect.any(Function),
     });
     const header = mountedPage.find('mock-TestCaseDetailsHeader');
     const state = header.prop('nativeReviewState') as LiveReviewCommentsLoadState;
@@ -422,6 +425,113 @@ describe('TestCaseDetailsPage lifecycle history', () => {
     ).toBe(true);
     act(() => mountedPage.unmount());
   });
+
+  test.each(['FIXED', 'FIXED_GRADE_FAILED', 'FAILED'] as const)(
+    'a mounted native %s completion refreshes the current case and Review through live endpoints',
+    async (status) => {
+      jest.useFakeTimers();
+      selectedTestCase = {
+        ...testCase,
+        origin: 'AI',
+        status: 'DRAFT',
+        defaultVersionId: 100,
+        metrics: { overallScore: 92 },
+      };
+      renderPage(true);
+      jest
+        .mocked(useLiveReviewComments)
+        .mockImplementation(
+          jest.requireActual<typeof import('pages/inside/aiFactory/review/useLiveReviewComments')>(
+            'pages/inside/aiFactory/review/useLiveReviewComments',
+          ).useLiveReviewComments,
+        );
+      let currentRound = { id: 5, testCaseId: 42, roundNumber: 1, status: 'PENDING' };
+      let unsentCount = 1;
+      fetchMock.mockImplementation((url, params) => {
+        if (url.endsWith('/review'))
+          return Promise.resolve({ comments: [], unsentCount, fixInProgress: false });
+        if (url.endsWith('/review/fix-round') && params?.method === 'POST')
+          return Promise.resolve({ status: 200, data: currentRound });
+        if (url.endsWith('/review/fix-round/5'))
+          return Promise.resolve({ status: 200, data: currentRound });
+        throw new Error(`Unexpected request ${url}`);
+      });
+      const flush = () =>
+        Array.from({ length: 12 }).reduce<Promise<void>>(
+          (pending) => pending.then(() => undefined),
+          Promise.resolve(),
+        );
+      let mountedPage!: ReturnType<typeof mount> & { update: () => void };
+      try {
+        await act(async () => {
+          mountedPage = mount(<TestCaseDetailsPage />) as typeof mountedPage;
+          await flush();
+        });
+        mountedPage.update();
+        expect(mountedPage.find(NativeTestCaseSummary).prop('summary')).toMatchObject({
+          score: 92,
+        });
+        const currentState = () =>
+          mountedPage
+            .find('mock-TestCaseDetailsHeader')
+            .prop('nativeReviewState') as LiveReviewCommentsLoadState;
+        await act(async () => {
+          expect(await currentState().pushToAgent?.()).toBe(true);
+          await flush();
+        });
+        mountedPage.update();
+        expect(mountedPage.find('mock-TestCaseDetailsHeader').prop('isNativeFixInProgress')).toBe(
+          true,
+        );
+        mockDispatch.mockClear();
+        currentRound = { ...currentRound, status };
+        unsentCount = 0;
+        await act(async () => {
+          jest.advanceTimersByTime(3000);
+          await flush();
+        });
+        mountedPage.update();
+        expect(mockDispatch).toHaveBeenCalledWith({
+          type: 'GET_TEST_CASE_DETAILS',
+          payload: { testCaseId: 42 },
+        });
+        expect(currentState().fixRoundState?.status).toBe(status);
+        expect(currentState().fixInProgress).toBe(false);
+        expect(currentState().unsentCount).toBe(0);
+        expect(
+          fetchMock.mock.calls.filter(([url]) => /\/review$/.test(url)).length,
+        ).toBeGreaterThanOrEqual(3);
+        expect(
+          fetchMock.mock.calls.some(([url]) =>
+            /\/ai$|\/review-comment|(?<!review)\/fix-round/.test(url),
+          ),
+        ).toBe(false);
+        expect(aiDetailsReload).not.toHaveBeenCalled();
+        if (status !== 'FAILED') {
+          selectedTestCase = { ...selectedTestCase, defaultVersionId: 101, metrics: undefined };
+          await act(async () => {
+            mountedPage.setProps({});
+            await flush();
+          });
+          mountedPage.update();
+          expect(mountedPage.find(NativeTestCaseSummary).prop('summary')).toMatchObject({
+            status: 'DRAFT',
+          });
+          expect(mountedPage.find(NativeTestCaseSummary).prop('summary')).not.toHaveProperty(
+            'score',
+            92,
+          );
+          expect(mountedPage.find('mock-TestCaseDetailsHeader').prop('testCase')).toMatchObject({
+            defaultVersionId: 101,
+          });
+        }
+      } finally {
+        act(() => mountedPage?.unmount());
+        jest.clearAllTimers();
+        jest.useRealTimers();
+      }
+    },
+  );
 
   test('keeps native summary hidden while the feature flag is disabled', () => {
     selectedTestCase = { ...testCase, origin: 'AI', status: 'READY' };
@@ -698,6 +808,8 @@ describe('TestCaseDetailsPage lifecycle history', () => {
 
       expect(useLiveReviewComments).toHaveBeenLastCalledWith('demo', 42, true, {
         canApprove: status === 'DRAFT',
+        versionId: undefined,
+        onFixCompleted: expect.any(Function),
       });
       expect(getReviewStrip(wrapper).find(LiveReviewStrip)).toHaveLength(1);
       expect(getReviewStrip(wrapper).find(LiveReviewStrip).prop('lifecycle')).toBe(status);
@@ -809,6 +921,8 @@ describe('TestCaseDetailsPage lifecycle history', () => {
       expect(getReviewStrip(wrapper).find(LiveReviewStrip).prop('isReadOnly')).toBe(!canReview);
       expect(useLiveReviewComments).toHaveBeenLastCalledWith('demo', 42, true, {
         canApprove: false,
+        versionId: undefined,
+        onFixCompleted: expect.any(Function),
       });
     },
   );

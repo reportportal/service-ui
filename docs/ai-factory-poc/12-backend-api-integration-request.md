@@ -1,5 +1,7 @@
 # AI Factory backend API integration request
 
+> **Superseded current handoff — 2026-10-25:** send [27-backend-integration-completion-contract-2026-10-25.md](27-backend-integration-completion-contract-2026-10-25.md) to Backend. This document is the retained 2026-10-02/05 request baseline. Its statements that LP1/LP2 are arrays, live gates are closed, or all Test Case/Review/fix APIs are absent are historical and no longer normative. Current LP1–LP4 live integration and native R1–R5 are described in 27/25; only the scoped outstanding requests remain open.
+
 > **Status:** Proposed — not yet agreed or approved
 >
 > **Audience:** ReportPortal Backend/API owners, Platform/Security, Frontend, QA, Product and AI Factory PoC stakeholders
@@ -10,7 +12,7 @@
 >
 > **Related initiative:** [EPMRPP-118192](https://jiraeu.epam.com/browse/EPMRPP-118192)
 
-**Send this file to the Backend/API owner as the primary hand-off.** It consolidates the decisions and deliverables
+**Historical hand-off; use [27](27-backend-integration-completion-contract-2026-10-25.md) as the current primary hand-off.** It consolidates the decisions and deliverables
 required to replace AI Factory development mocks with backend contracts. Attach or link
 [05-backend-contract.md](05-backend-contract.md) for complete DTOs, implemented-consumer traceability and raw
 OpenAPI mappings. The decision source is [10-backend-integration-contract.md](10-backend-integration-contract.md)

@@ -1,11 +1,11 @@
 # Temporary solutions and mock removal register
 
-**Updated:** 2026-10-24. This is the cleanup checklist for the AI Factory PoC. An implemented UI
+**Updated:** 2026-10-25. This is the cleanup checklist for the AI Factory PoC. An implemented UI
 screen does not mean its data is live. The user approved switching LP1–LP3 to API by default after
 authenticated nonempty local-proxy evidence; trusted HTTPS, deployed SHA and error/multi-page checks
 remain open. Update the relevant row when replacing mock or provisional behavior.
 The current integration sequence and Jira owners are in [21](21-live-pipeline-integration-2026-10-18.md),
-and the progress board is [00](00-status.md).
+and the progress board is [00](00-status.md). [27](27-backend-integration-completion-contract-2026-10-25.md) is the current Backend completion handoff: native Review/fix APIs, filters/totals and criterion score DTOs are already published; remaining native quick-filter/count and criterion-renderer integration is FE work, while iteration-scoped pagination and other decisions remain explicit requests.
 
 | ID | Temporary solution / location | Removal condition | FE task / status |
 |---|---|---|---|
@@ -37,6 +37,18 @@ The user approved a separate cleanup PR. The isolated branch `EPMRPP-122692-remo
 Automation tests retain the former iteration DTO projections through a test-only helper; no runtime module imports that helper. Live LP1–LP4 saga tests, live Compare adapter/renderer and loading/error/retry/project-isolation coverage are preserved. Active Test Case mocks, DB/seed, overlay, Library filters, lifecycle, fix-round and automation handlers remain. Removing dead Compare code does not establish backend/runtime or deployment readiness and does not close TMP-01/TMP-05/TMP-06.
 
 Validation: 15 focused suites / 280 tests, final Node 20 type-check, changed-file ESLint/Stylelint, diff-check and production build PASS. Madge processed 264 files with 6 warnings and found no circular dependency; independent senior code and security reviews PASS. The dependent cleanup PR targets R3's branch while #5847 remains open, with final target `bootcamp-prototype`. Current delivery/CI evidence is tracked in Jira/PR; no authenticated backend/browser run, merge or deployment was performed.
+
+## TMP-06 update — native Push and fix-round monitoring (2026-10-24)
+
+[EPMRPP-122689](https://jiraeu.epam.com/browse/EPMRPP-122689) replaces the native details Push path with bodyless `/review/fix-round` POST and validated round/Review reads. Native AI Draft and Ready cases use authoritative Review guards and one shared comment/Approve/Push mutation lock. Monitoring safely restores actual IDs, preserves fixing protection on uncertain starts/read errors/timeouts, and refreshes case/Review with distinct terminal outcomes. Legacy `/fix-round` handlers remain for legacy consumers.
+
+Local R4 validation passes: full coverage 176 suites / 1799 tests, type-check, production build, changed-file ESLint and independent reviews. The branch starts exactly at PR #5848 head `3ec0526ce`; publication is authorized with delivery/CI evidence tracked in Jira/PR, while authenticated backend/workflow verification remains pending. R5 provenance/comparison and R6 integration/workflow evidence remain open, so TMP-06 stays **partially removed**. See [R4 contract, evidence and pending runtime checklist](25-live-review-fix-round-integration-2026-10-24.md).
+
+## TMP-05/TMP-06 update — live fix provenance and comparison (2026-10-24)
+
+[EPMRPP-122690](https://jiraeu.epam.com/browse/EPMRPP-122690) now uses native `rerunOf` and fix attributes in LP2/LP3, validates explicit source/result identities through on-demand canonical GETs, and offers source/fix/Compare navigation in details and the native Review strip. It does not invent pipeline IDs, version history, case diffs or cumulative cost. Accepted LP3 refreshes re-read only their deduplicated known Library rows. Fix comparisons show independent facts without aggregate delta/verdict or unsupported case comparisons, even when the backend reports matching scope.
+
+Local full coverage passes (182 suites / 1882 tests), together with type-check, production build, changed-file lint, acyclic dependency check and independent code/security reviews. R5 publication is authorized, with delivery/CI evidence tracked in Jira/PR; deployed browser/backend and real workflow evidence remain pending R6. Legacy mock consumers, native filters/counts and other unresolved contracts remain, so TMP-05/TMP-06 stay **partially removed**. See [R5 evidence and runtime checklist](25-live-review-fix-round-integration-2026-10-24.md).
 
 ## Rule for closing a row
 

@@ -17,6 +17,8 @@
 import { defineMessages } from 'react-intl';
 
 export const messages = defineMessages({
+  fixIteration: { id: 'PipelinesPage.fixIteration', defaultMessage: 'Fix iteration' },
+  sourceIterationLabel: { id: 'PipelinesPage.sourceIterationLabel', defaultMessage: 'Source' },
   pageTitle: {
     id: 'PipelinesPage.pageTitle',
     defaultMessage: 'Pipelines',

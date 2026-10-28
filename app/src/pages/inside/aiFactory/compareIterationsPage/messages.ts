@@ -17,6 +17,11 @@
 import { defineMessages } from 'react-intl';
 
 export const messages = defineMessages({
+  fixSubsetScope: {
+    id: 'CompareIterationsPage.fixSubsetScope',
+    defaultMessage:
+      'A fix iteration contains a subset of Test Cases. Values describe each iteration separately; suite changes and case comparisons are unavailable.',
+  },
   comparisonUnavailable: {
     id: 'CompareIterationsPage.comparisonUnavailable',
     defaultMessage: 'Comparison is unavailable for this pipeline source',

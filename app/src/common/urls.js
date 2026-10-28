@@ -488,6 +488,11 @@ export const URLS = {
   testCaseLifecycleBatch: (projectKey) =>
     `${urlBase}project/${projectKey}/tms/test-case/lifecycle/batch`, // L2
 
+  liveTestCaseFixRounds: (projectKey, testCaseId) =>
+    `${urlBase}project/${projectKey}/tms/test-case/${testCaseId}/review/fix-round`,
+  liveTestCaseFixRoundById: (projectKey, testCaseId, fixRoundId) =>
+    `${urlBase}project/${projectKey}/tms/test-case/${testCaseId}/review/fix-round/${fixRoundId}`,
+
   liveTestCaseReview: (projectKey, testCaseId) =>
     `${urlBase}project/${projectKey}/tms/test-case/${testCaseId}/review`,
   liveTestCaseReviewComments: (projectKey, testCaseId) =>
