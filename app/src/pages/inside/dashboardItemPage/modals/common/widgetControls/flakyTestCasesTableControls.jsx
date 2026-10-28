@@ -18,12 +18,17 @@ import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { FieldProvider } from 'components/fields/fieldProvider';
+import { FieldErrorHint } from 'components/fields';
 import { injectIntl, defineMessages } from 'react-intl';
+import { FieldNumber, Checkbox } from '@reportportal/ui-kit';
 import { URLS } from 'common/urls';
 import { validate, bindMessageToValidator, commonValidators } from 'common/utils/validation';
 import { projectKeySelector } from 'controllers/project';
-import { ITEMS_INPUT_WIDTH } from './constants';
-import { InputControl, TagsControl, CheckboxControl } from './controls';
+import { createClassnames } from 'common/utils';
+import { TagsControl } from './controls';
+import styles from './widgetControls.scss';
+
+const cx = createClassnames(styles);
 
 const DEFAULT_ITEMS_COUNT = '30';
 const messages = defineMessages({
@@ -104,13 +109,16 @@ export class FlakyTestCasesTableControls extends Component {
           validate={itemsValidator(formatMessage(messages.ItemsValidationError))}
           format={String}
           normalize={this.normalizeValue}
+          className={cx('field-number')}
         >
-          <InputControl
-            fieldLabel={formatMessage(messages.ItemsFieldLabel)}
-            inputWidth={ITEMS_INPUT_WIDTH}
-            maxLength="3"
-            disabled={isMainControlsDisabled}
-          />
+          <FieldErrorHint provideHint={false}>
+            <FieldNumber
+              label={formatMessage(messages.ItemsFieldLabel)}
+              maxLength={3}
+              defaultWidth={false}
+              disabled={isMainControlsDisabled}
+            />
+          </FieldErrorHint>
         </FieldProvider>
         <FieldProvider
           name="contentParameters.widgetOptions.launchNameFilter"
@@ -128,11 +136,9 @@ export class FlakyTestCasesTableControls extends Component {
           />
         </FieldProvider>
         <FieldProvider name="contentParameters.widgetOptions.includeMethods">
-          <CheckboxControl
-            fieldLabel=" "
-            text={formatMessage(messages.IncludeMethodsControlText)}
-            disabled={isMainControlsDisabled}
-          />
+          <Checkbox disabled={isMainControlsDisabled}>
+            {formatMessage(messages.IncludeMethodsControlText)}
+          </Checkbox>
         </FieldProvider>
       </Fragment>
     );

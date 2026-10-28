@@ -17,14 +17,16 @@
 import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { injectIntl, defineMessages } from 'react-intl';
+import { messages as widgetControlsMessages } from './messages';
 import { connect } from 'react-redux';
 import { FieldProvider } from 'components/fields/fieldProvider';
 import { CHART_MODES, MODES_VALUES } from 'common/constants/chartModes';
 import { URLS } from 'common/urls';
 import { projectKeySelector } from 'controllers/project';
+import { Dropdown, Checkbox } from '@reportportal/ui-kit';
 import { getWidgetCriteriaOptions } from './utils/getWidgetCriteriaOptions';
 import { PASSED_FAILED_LAUNCHES_OPTIONS } from './constants';
-import { DropdownControl, TogglerControl, TagsControl, CheckboxControl } from './controls';
+import { RadioGroupControl, TagsControl } from './controls';
 import { getWidgetModeOptions } from './utils/getWidgetModeOptions';
 
 const messages = defineMessages({
@@ -114,10 +116,10 @@ export class MostTimeConsumingTestCasesControls extends Component {
           name="contentParameters.contentFields"
           validate={validators.contentFields(formatMessage)}
         >
-          <DropdownControl
-            fieldLabel={formatMessage(messages.CriteriaFieldLabel)}
-            multiple
-            selectAll
+          <Dropdown
+            label={formatMessage(messages.CriteriaFieldLabel)}
+            multiSelect
+            isOptionAllVisible
             options={this.criteria}
             disabled={isMainControlsDisabled}
           />
@@ -136,21 +138,19 @@ export class MostTimeConsumingTestCasesControls extends Component {
           />
         </FieldProvider>
         <FieldProvider name="contentParameters.widgetOptions.viewMode">
-          <TogglerControl
-            fieldLabel=" "
-            items={getWidgetModeOptions(
+          <RadioGroupControl
+            options={getWidgetModeOptions(
               [CHART_MODES.BAR_VIEW, CHART_MODES.TABLE_VIEW],
               formatMessage,
             )}
+            label={formatMessage(widgetControlsMessages.ViewLabel)}
             disabled={isMainControlsDisabled}
           />
         </FieldProvider>
         <FieldProvider name="contentParameters.widgetOptions.includeMethods">
-          <CheckboxControl
-            fieldLabel=" "
-            text={formatMessage(messages.IncludeMethodsControlText)}
-            disabled={isMainControlsDisabled}
-          />
+          <Checkbox disabled={isMainControlsDisabled}>
+            {formatMessage(messages.IncludeMethodsControlText)}
+          </Checkbox>
         </FieldProvider>
       </Fragment>
     );

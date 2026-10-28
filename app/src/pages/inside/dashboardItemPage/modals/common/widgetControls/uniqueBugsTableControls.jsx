@@ -16,13 +16,20 @@
 
 import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
+import { FieldNumber } from '@reportportal/ui-kit';
+import { RadioGroupControl } from './controls';
 import { FieldProvider } from 'components/fields/fieldProvider';
+import { FieldErrorHint } from 'components/fields';
 import { injectIntl, defineMessages } from 'react-intl';
+import { messages as widgetControlsMessages } from './messages';
 import { commonValidators } from 'common/utils/validation';
 import { CHART_MODES, MODES_VALUES } from 'common/constants/chartModes';
-import { ITEMS_INPUT_WIDTH } from './constants';
-import { FiltersControl, InputControl, TogglerControl } from './controls';
+import { FiltersControlV2 } from './controls';
 import { getWidgetModeOptions } from './utils/getWidgetModeOptions';
+import { createClassnames } from 'common/utils';
+import styles from './widgetControls.scss';
+
+const cx = createClassnames(styles);
 
 const DEFAULT_ITEMS_COUNT = '10';
 const messages = defineMessages({
@@ -78,14 +85,17 @@ export class UniqueBugsTableControls extends Component {
       eventsInfo,
       isMainControlsDisabled,
     } = this.props;
+    const filterId = this.props.widgetSettings?.filters?.length && this.props.widgetSettings.filters[0].value;
+    const disabled = !filterId;
 
     return (
       <Fragment>
         <FieldProvider name="filters" parse={this.parseFilterValue} format={this.formatFilterValue}>
-          <FiltersControl
+          <FiltersControlV2
             formAppearance={formAppearance}
             onFormAppearanceChange={onFormAppearanceChange}
             eventsInfo={eventsInfo}
+            required
           />
         </FieldProvider>
         {!formAppearance.isMainControlsLocked && (
@@ -97,23 +107,25 @@ export class UniqueBugsTableControls extends Component {
               )}
               format={String}
               normalize={this.normalizeValue}
+              className={cx('field-number')}
             >
-              <InputControl
-                fieldLabel={formatMessage(messages.ItemsFieldLabel)}
-                inputWidth={ITEMS_INPUT_WIDTH}
-                maxLength="3"
-                hintType={'top-right'}
-                disabled={isMainControlsDisabled}
-              />
+              <FieldErrorHint provideHint={false}>
+                <FieldNumber
+                  label={formatMessage(messages.ItemsFieldLabel)}
+                  maxLength={3}
+                  defaultWidth={false}
+                  disabled={disabled || isMainControlsDisabled}
+                />
+              </FieldErrorHint>
             </FieldProvider>
             <FieldProvider name="contentParameters.widgetOptions.latest">
-              <TogglerControl
-                fieldLabel=" "
-                items={getWidgetModeOptions(
+              <RadioGroupControl
+                options={getWidgetModeOptions(
                   [CHART_MODES.ALL_LAUNCHES, CHART_MODES.LATEST_LAUNCHES],
                   formatMessage,
                 )}
-                disabled={isMainControlsDisabled}
+                label={formatMessage(widgetControlsMessages.ModeLabel)}
+                disabled={disabled || isMainControlsDisabled}
               />
             </FieldProvider>
           </Fragment>

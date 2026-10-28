@@ -20,6 +20,7 @@ import classNames from 'classnames/bind';
 import { injectIntl, defineMessages } from 'react-intl';
 import { connect } from 'react-redux';
 import { FieldArray } from 'redux-form';
+import { FieldNumber } from '@reportportal/ui-kit';
 import {
   validate,
   bindMessageToValidator,
@@ -29,16 +30,15 @@ import {
 import { URLS } from 'common/urls';
 import { STATS_FAILED, STATS_PASSED, STATS_SKIPPED } from 'common/constants/statistics';
 import { FieldProvider } from 'components/fields/fieldProvider';
+import { FieldErrorHint } from 'components/fields';
 import { DEFAULT_LAUNCHES_LIMIT } from 'controllers/testItem';
 import { projectKeySelector } from 'controllers/project';
-import {
-  FiltersControl,
-  InputControl,
-  TogglerControl,
-  AttributesFieldArrayControl,
-} from './controls';
+import { CHART_MODES, MODES_VALUES } from 'common/constants/chartModes';
+import { FiltersControlV2, AttributesFieldArrayControl, RadioGroupControl } from './controls';
 import { getWidgetCriteriaOptions } from './utils/getWidgetCriteriaOptions';
-import { DEFECT_STATISTICS_OPTIONS, TO_INVESTIGATE_OPTION, ITEMS_INPUT_WIDTH } from './constants';
+import { DEFECT_STATISTICS_OPTIONS, TO_INVESTIGATE_OPTION } from './constants';
+import { getWidgetModeOptions } from './utils/getWidgetModeOptions';
+import { messages as widgetControlsMessages } from './messages';
 import styles from './widgetControls.scss';
 
 const cx = classNames.bind(styles);
@@ -134,17 +134,6 @@ export class CumulativeTrendControls extends Component {
     });
   }
 
-  tabItems = [
-    {
-      value: '1',
-      label: 'All launches',
-    },
-    {
-      value: '2',
-      label: 'Latest Launches',
-    },
-  ];
-
   parseContentFields = (criteries) => {
     const data =
       criteries &&
@@ -172,7 +161,10 @@ export class CumulativeTrendControls extends Component {
         this.props.intl.formatMessage(messages.attributeKeyFieldLabelOverview),
         this.props.intl.formatMessage(messages.attributeKeyFieldLabelDetailedView),
       ]}
-      disabled={this.props.isMainControlsDisabled}
+      disabled={
+        !(this.props.widgetSettings?.filters?.length && this.props.widgetSettings.filters[0].value) ||
+        this.props.isMainControlsDisabled
+      }
     />
   );
 
@@ -184,34 +176,48 @@ export class CumulativeTrendControls extends Component {
       eventsInfo,
       isMainControlsDisabled,
     } = this.props;
+    const filterId = this.props.widgetSettings?.filters?.length && this.props.widgetSettings.filters[0].value;
+    const disabled = !filterId;
 
     return (
       <Fragment>
         <FieldProvider name="filters" parse={this.parseFilterValue} format={this.formatFilterValue}>
-          <FiltersControl
+          <FiltersControlV2
             formAppearance={formAppearance}
             onFormAppearanceChange={onFormAppearanceChange}
             eventsInfo={eventsInfo}
+            required
           />
         </FieldProvider>
 
         {!formAppearance.isMainControlsLocked && (
           <Fragment>
-            <TogglerControl disabled fieldLabel=" " items={this.tabItems} value="2" />
+            <RadioGroupControl
+              disabled
+              options={getWidgetModeOptions(
+                [CHART_MODES.ALL_LAUNCHES, CHART_MODES.LATEST_LAUNCHES],
+                formatMessage,
+              )}
+              label={formatMessage(widgetControlsMessages.launchesLabel)}
+              value={MODES_VALUES[CHART_MODES.LATEST_LAUNCHES]}
+            />
 
             <FieldProvider
               name="contentParameters.itemsCount"
               validate={itemsValidator(formatMessage)}
               format={String}
               normalize={this.normalizeValue}
+              className={cx('field-number')}
             >
-              <InputControl
-                fieldLabel={formatMessage(messages.LaunchesLimitFieldLabel)}
-                inputWidth={ITEMS_INPUT_WIDTH}
-                maxLength="6"
-                hintType={'top-right'}
-                disabled={isMainControlsDisabled}
-              />
+              <FieldErrorHint provideHint={false}>
+                <FieldNumber
+                  label={formatMessage(messages.LaunchesLimitFieldLabel)}
+                  maxLength={6}
+                  defaultWidth={false}
+                  disabled={disabled || isMainControlsDisabled}
+                  max={20000}
+                />
+              </FieldErrorHint>
             </FieldProvider>
 
             <div className={cx('attr-header')}>{formatMessage(messages.attributesTitle)}</div>

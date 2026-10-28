@@ -16,15 +16,22 @@
 
 import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
+import { FieldNumber, Checkbox } from '@reportportal/ui-kit';
+import { RadioGroupControl } from './controls';
 import { FieldProvider } from 'components/fields/fieldProvider';
+import { FieldErrorHint } from 'components/fields';
 import { injectIntl, defineMessages } from 'react-intl';
+import { messages as widgetControlsMessages } from './messages';
 import { STATS_TOTAL, STATS_PASSED } from 'common/constants/statistics';
 import { CHART_MODES, MODES_VALUES } from 'common/constants/chartModes';
 import { commonValidators } from 'common/utils/validation';
 import track from 'react-tracking';
 import { getWidgetModeOptions } from './utils/getWidgetModeOptions';
-import { ITEMS_INPUT_WIDTH } from './constants';
-import { TogglerControl, FiltersControl, InputControl, CheckboxControl } from './controls';
+import { FiltersControlV2 } from './controls';
+import { createClassnames } from 'common/utils';
+import styles from './widgetControls.scss';
+
+const cx = createClassnames(styles);
 
 const DEFAULT_ITEMS_COUNT = '50';
 
@@ -95,14 +102,17 @@ export class PassingRateSummaryControls extends Component {
       eventsInfo,
       isMainControlsDisabled,
     } = this.props;
+    const filterId = this.props.widgetSettings?.filters?.length && this.props.widgetSettings.filters[0].value;
+    const disabled = !filterId;
 
     return (
       <Fragment>
         <FieldProvider name="filters" parse={this.parseFilterValue} format={this.formatFilterValue}>
-          <FiltersControl
+          <FiltersControlV2
             formAppearance={formAppearance}
             onFormAppearanceChange={onFormAppearanceChange}
             eventsInfo={eventsInfo}
+            required
           />
         </FieldProvider>
         {!formAppearance.isMainControlsLocked && (
@@ -114,31 +124,31 @@ export class PassingRateSummaryControls extends Component {
               )}
               format={String}
               normalize={this.normalizeValue}
+              className={cx('field-number')}
             >
-              <InputControl
-                fieldLabel={formatMessage(messages.ItemsFieldLabel)}
-                inputWidth={ITEMS_INPUT_WIDTH}
-                maxLength="3"
-                hintType={'top-right'}
-                disabled={isMainControlsDisabled}
-              />
+              <FieldErrorHint provideHint={false}>
+                <FieldNumber
+                  label={formatMessage(messages.ItemsFieldLabel)}
+                  maxLength={3}
+                  defaultWidth={false}
+                  disabled={disabled || isMainControlsDisabled}
+                />
+              </FieldErrorHint>
             </FieldProvider>
             <FieldProvider name="contentParameters.widgetOptions.viewMode">
-              <TogglerControl
-                fieldLabel=" "
-                items={getWidgetModeOptions(
+            <RadioGroupControl
+                options={getWidgetModeOptions(
                   [CHART_MODES.BAR_VIEW, CHART_MODES.PIE_VIEW],
                   formatMessage,
                 )}
-                disabled={isMainControlsDisabled}
+                label={formatMessage(widgetControlsMessages.ViewLabel)}
+                disabled={disabled || isMainControlsDisabled}
               />
             </FieldProvider>
             <FieldProvider name="contentParameters.widgetOptions.excludeSkipped" format={Boolean}>
-              <CheckboxControl
-                fieldLabel=" "
-                text={formatMessage(messages.excludeSkipped)}
-                disabled={isMainControlsDisabled}
-              />
+              <Checkbox disabled={disabled || isMainControlsDisabled}>
+                {formatMessage(messages.excludeSkipped)}
+              </Checkbox>
             </FieldProvider>
           </Fragment>
         )}

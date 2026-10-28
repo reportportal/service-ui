@@ -2806,7 +2806,7 @@
   "Widgets.Name.launchesTable": "Таблиця запусків",
   "Widgets.Name.mostFailedTestCases": "Таблиця найбільш провальних тестових сценаріїв (ТОП-50)",
   "Widgets.Name.mostPopularPatterns": "Таблиця найпопулярніших патернів (ТОП-20)",
-  "Widgets.Name.mostTimeConsuming": "Most time-consuming test cases widget (TOP-20)",
+  "Widgets.Name.mostTimeConsuming": "Most time-consuming test cases (TOP-20)",
   "Widgets.Name.notPassed": "Діаграма тенденцій невдалих тестових сценаріїв",
   "Widgets.Name.overallStatistics": "Загальна статистика",
   "Widgets.Name.passingRatePerLaunch": "Відсоток пройдених тестів для одного запуску",

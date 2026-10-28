@@ -60,6 +60,25 @@ export const widgetModeMessages = defineMessages({
   },
 });
 
+const widgetModeHelpMessages = defineMessages({
+  [CHART_MODES.ALL_LAUNCHES]: {
+    id: 'WidgetModes.allLaunchesHelp',
+    defaultMessage: 'Every launch that matches the filter',
+  },
+  [CHART_MODES.LATEST_LAUNCHES]: {
+    id: 'WidgetModes.latestLaunchesHelp',
+    defaultMessage: 'Only the latest launch of each name',
+  },
+  [CHART_MODES.LAUNCH_MODE]: {
+    id: 'WidgetModes.launchModeHelp',
+    defaultMessage: 'Each launch is a separate point',
+  },
+  [CHART_MODES.TIMELINE_MODE]: {
+    id: 'WidgetModes.timelineModeHelp',
+    defaultMessage: 'Launches are summed up by day',
+  },
+});
+
 export const getWidgetModeByValue = (modeValue) =>
   Object.keys(MODES_VALUES).find((mode) => MODES_VALUES[mode] === modeValue);
 
@@ -67,4 +86,7 @@ export const getWidgetModeOptions = (widgetModes, formatMessage) =>
   widgetModes.map((widgetMode) => ({
     value: MODES_VALUES[widgetMode],
     label: formatMessage(widgetModeMessages[`${widgetMode}`]),
+    help: widgetModeHelpMessages[`${widgetMode}`]
+      ? formatMessage(widgetModeHelpMessages[`${widgetMode}`])
+      : undefined,
   }));

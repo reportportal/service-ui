@@ -61,9 +61,11 @@ import { LockedDashboardTooltip } from 'pages/inside/common/lockedDashboardToolt
 import { ActiveDashboardItem } from '../dashboardPage/types';
 import { AddEditModal, DeleteDashboardModal } from '../dashboardPage/modals';
 import { DashboardLockedIcon } from '../dashboardPage/dashboardList/dashboardLockedIcon';
+import { WidgetWizardModal } from './modals';
 import { getUpdatedWidgetsList } from './modals/common/utils';
 import { DashboardFullScreen } from './dashboardFullScreen';
 import { DashboardItemActions } from './dashboardItemActions';
+import { Widget } from './modals/widgetWizardModal/types';
 import { WidgetsGrid } from './widgetsGrid';
 import { messages } from './messages';
 
@@ -123,7 +125,7 @@ export const DashboardItemPage = () => {
   };
 
   const addWidget = useCallback(
-    (widget: object, closeModal: () => void) =>
+    (widget: Widget, closeModal: () => void) =>
       fetch(URLS.addDashboardWidget(projectKey, dashboard.id), {
         method: 'put',
         data: { addWidget: widget },
@@ -184,14 +186,7 @@ export const DashboardItemPage = () => {
 
   const showWidgetWizard = useCallback(() => {
     trackEvent(DASHBOARD_EVENTS.clickOnAddNewWidgetButton(activeDashboardId));
-    dispatch(
-      showModalAction({
-        id: 'widgetWizardModal',
-        data: {
-          onConfirm: addWidget,
-        },
-      }),
-    );
+    dispatch(showModalAction({ component: <WidgetWizardModal data={{ onConfirm: addWidget }} /> }));
   }, [activeDashboardId, addWidget, trackEvent, dispatch]);
 
   const onChangeLockedState = () => {

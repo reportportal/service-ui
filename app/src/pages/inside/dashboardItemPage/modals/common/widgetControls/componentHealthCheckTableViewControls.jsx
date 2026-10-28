@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 EPAM Systems
+ * Copyright 2026 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,6 +19,7 @@ import PropTypes from 'prop-types';
 import track from 'react-tracking';
 import classNames from 'classnames/bind';
 import { injectIntl, defineMessages } from 'react-intl';
+import { messages as widgetControlsMessages } from './messages';
 import { connect } from 'react-redux';
 import { FieldArray, change, untouch } from 'redux-form';
 import {
@@ -32,20 +33,14 @@ import { FieldErrorHint } from 'components/fields/fieldErrorHint';
 import { AsyncAutocomplete } from 'components/inputs/autocompletes/asyncAutocomplete';
 import { CHART_MODES, MODES_VALUES } from 'common/constants/chartModes';
 import { FieldProvider } from 'components/fields/fieldProvider';
-import { ScrollWrapper } from 'components/main/scrollWrapper';
 import { projectKeySelector } from 'controllers/project';
 import { DEFAULT_LAUNCHES_LIMIT } from 'controllers/testItem';
 import { getWidgetModeOptions } from './utils/getWidgetModeOptions';
-import {
-  CheckboxControl,
-  FiltersControl,
-  InputControl,
-  AttributesFieldArrayControl,
-  TogglerControl,
-  SortingControl,
-} from './controls';
+import { Checkbox, FieldNumber } from '@reportportal/ui-kit';
+import { RadioGroupControl } from './controls';
+import { FiltersControlV2, AttributesFieldArrayControl, SortingControl } from './controls';
 import { WIDGET_WIZARD_FORM } from '../constants';
-import { ITEMS_INPUT_WIDTH, WIDGET_OPTIONS } from './constants';
+import { WIDGET_OPTIONS } from './constants';
 import styles from './widgetControls.scss';
 import { ConditionalTooltip } from 'components/main/conditionalTooltip';
 
@@ -259,55 +254,53 @@ export class ComponentHealthCheckTableViewControls extends Component {
     return (
       <Fragment>
         <FieldProvider name="filters" parse={this.parseFilterValue} format={this.formatFilterValue}>
-          <FiltersControl
+          <FiltersControlV2
             formAppearance={formAppearance}
             onFormAppearanceChange={onFormAppearanceChange}
             eventsInfo={eventsInfo}
+            required
           />
         </FieldProvider>
 
         {!formAppearance.isMainControlsLocked && (
           <Fragment>
-            <ScrollWrapper hideTracksWhenNotNeeded autoHeight autoHeightMax={300}>
-              <div className={cx('component-header')}>{formatMessage(messages.componentTitle)}</div>
-              <FieldProvider name="contentParameters.widgetOptions.latest">
-                <TogglerControl
-                  fieldLabel=" "
-                  items={getWidgetModeOptions(
-                    [CHART_MODES.ALL_LAUNCHES, CHART_MODES.LATEST_LAUNCHES],
-                    formatMessage,
-                  )}
-                  disabled={isMainControlsDisabled}
-                />
-              </FieldProvider>
-              <FieldProvider name="contentParameters.widgetOptions.excludeSkipped" format={Boolean}>
-                <CheckboxControl
-                  fieldLabel=" "
-                  text={formatMessage(messages.excludeSkipped)}
-                  disabled={isMainControlsDisabled}
-                />
-              </FieldProvider>
-              <FieldProvider
-                name="contentParameters.widgetOptions.minPassingRate"
-                validate={passingRateValidator(formatMessage)}
-                format={String}
-                normalize={this.normalizeValue}
-              >
-                <InputControl
-                  fieldLabel={formatMessage(messages.passingRateFieldLabel)}
-                  inputWidth={ITEMS_INPUT_WIDTH}
-                  maxLength="3"
-                  hintType={'top-right'}
-                  inputBadge={'%'}
-                  disabled={isMainControlsDisabled}
-                />
-              </FieldProvider>
-              <FieldArray
-                name="contentParameters.widgetOptions.attributeKeys"
-                component={this.renderAttributesFieldArray}
-                fieldValidator={attributeKeyValidator(formatMessage)}
+            <FieldProvider name="contentParameters.widgetOptions.latest">
+              <RadioGroupControl
+                options={getWidgetModeOptions(
+                  [CHART_MODES.ALL_LAUNCHES, CHART_MODES.LATEST_LAUNCHES],
+                  formatMessage,
+                )}
+                label={formatMessage(widgetControlsMessages.ModeLabel)}
+                disabled={disabled || isMainControlsDisabled}
               />
-            </ScrollWrapper>
+            </FieldProvider>
+            <FieldProvider name="contentParameters.widgetOptions.excludeSkipped" format={Boolean}>
+              <Checkbox disabled={disabled || isMainControlsDisabled}>
+                {formatMessage(messages.excludeSkipped)}
+              </Checkbox>
+            </FieldProvider>
+            <FieldProvider
+              name="contentParameters.widgetOptions.minPassingRate"
+              validate={passingRateValidator(formatMessage)}
+              format={String}
+              normalize={this.normalizeValue}
+              className={cx('field-number')}
+            >
+              <FieldErrorHint provideHint={false}>
+                <FieldNumber
+                  label={formatMessage(messages.passingRateFieldLabel)}
+                  maxLength={3}
+                  defaultWidth={false}
+                  postfix="%"
+                  disabled={disabled || isMainControlsDisabled}
+                />
+              </FieldErrorHint>
+            </FieldProvider>
+            <FieldArray
+              name="contentParameters.widgetOptions.attributeKeys"
+              component={this.renderAttributesFieldArray}
+              fieldValidator={attributeKeyValidator(formatMessage)}
+            />
             <div className={cx('component-header')}>
               {formatMessage(messages.customColumnTitle)}
             </div>
@@ -332,17 +325,17 @@ export class ComponentHealthCheckTableViewControls extends Component {
               </ConditionalTooltip>
             </div>
             <div className={cx('component-header')}>{formatMessage(messages.sortingTitle)}</div>
-            <FieldProvider
-              parse={this.parseSortingValue}
-              format={this.formatSortingValue}
-              name="contentParameters.widgetOptions.sort"
-            >
-              <SortingControl
-                sortingColumn={sortObj?.sortingColumn}
-                sortingDirection={sortObj?.asc}
-                disabled={isMainControlsDisabled}
-              />
-            </FieldProvider>
+              <FieldProvider
+                parse={this.parseSortingValue}
+                format={this.formatSortingValue}
+                name="contentParameters.widgetOptions.sort"
+              >
+                <SortingControl
+                  sortingColumn={sortObj?.sortingColumn}
+                  sortingDirection={sortObj?.asc}
+                  disabled={disabled || isMainControlsDisabled}
+                />
+              </FieldProvider>
           </Fragment>
         )}
       </Fragment>

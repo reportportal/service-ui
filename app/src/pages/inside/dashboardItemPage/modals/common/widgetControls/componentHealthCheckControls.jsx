@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 EPAM Systems
+ * Copyright 2026 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,8 +18,10 @@ import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { injectIntl, defineMessages } from 'react-intl';
+import { messages as widgetControlsMessages } from './messages';
 import { connect } from 'react-redux';
 import { FieldArray, change, untouch } from 'redux-form';
+import { Checkbox, FieldNumber } from '@reportportal/ui-kit';
 import {
   validate,
   commonValidators,
@@ -29,19 +31,13 @@ import {
 import { URLS } from 'common/urls';
 import { CHART_MODES, MODES_VALUES } from 'common/constants/chartModes';
 import { FieldProvider } from 'components/fields/fieldProvider';
-import { ScrollWrapper } from 'components/main/scrollWrapper';
 import { DEFAULT_LAUNCHES_LIMIT } from 'controllers/testItem';
 import { projectKeySelector } from 'controllers/project';
+import { FieldErrorHint } from 'components/fields';
 import { WIDGET_WIZARD_FORM } from '../constants';
+import { RadioGroupControl } from './controls';
 import { getWidgetModeOptions } from './utils/getWidgetModeOptions';
-import {
-  CheckboxControl,
-  FiltersControl,
-  InputControl,
-  AttributesFieldArrayControl,
-  TogglerControl,
-} from './controls';
-import { ITEMS_INPUT_WIDTH } from './constants';
+import { FiltersControlV2, AttributesFieldArrayControl } from './controls';
 import styles from './widgetControls.scss';
 
 const cx = classNames.bind(styles);
@@ -200,58 +196,62 @@ export class ComponentHealthCheckControls extends Component {
       eventsInfo,
       isMainControlsDisabled,
     } = this.props;
+    const filterId =
+      this.props.widgetSettings?.filters?.length && this.props.widgetSettings.filters[0].value;
+    const disabled = !filterId;
 
     return (
       <Fragment>
         <FieldProvider name="filters" parse={this.parseFilterValue} format={this.formatFilterValue}>
-          <FiltersControl
+          <FiltersControlV2
             formAppearance={formAppearance}
             onFormAppearanceChange={onFormAppearanceChange}
             eventsInfo={eventsInfo}
+            required
           />
         </FieldProvider>
 
         {!formAppearance.isMainControlsLocked && (
-          <ScrollWrapper hideTracksWhenNotNeeded autoHeight autoHeightMax={300}>
-            <div className={cx('component-header')}>{formatMessage(messages.componentTitle)}</div>
+          <>
             <FieldProvider name="contentParameters.widgetOptions.latest">
-              <TogglerControl
-                fieldLabel=" "
-                items={getWidgetModeOptions(
+              <RadioGroupControl
+                options={getWidgetModeOptions(
                   [CHART_MODES.ALL_LAUNCHES, CHART_MODES.LATEST_LAUNCHES],
                   formatMessage,
                 )}
-                disabled={isMainControlsDisabled}
+                label={formatMessage(widgetControlsMessages.launchesLabel)}
+                disabled={disabled || isMainControlsDisabled}
               />
             </FieldProvider>
             <FieldProvider name="contentParameters.widgetOptions.excludeSkipped" format={Boolean}>
-              <CheckboxControl
-                fieldLabel=" "
-                text={formatMessage(messages.excludeSkipped)}
-                disabled={isMainControlsDisabled}
-              />
+              <Checkbox disabled={disabled || isMainControlsDisabled}>
+                {formatMessage(messages.excludeSkipped)}
+              </Checkbox>
             </FieldProvider>
             <FieldProvider
               name="contentParameters.widgetOptions.minPassingRate"
               validate={passingRateValidator(formatMessage)}
               format={String}
               normalize={this.normalizeValue}
+              className={cx('field-number')}
             >
-              <InputControl
-                fieldLabel={formatMessage(messages.passingRateFieldLabel)}
-                inputWidth={ITEMS_INPUT_WIDTH}
-                maxLength="3"
-                hintType={'top-right'}
-                inputBadge={'%'}
-                disabled={isMainControlsDisabled}
-              />
+              <FieldErrorHint provideHint={false}>
+                <FieldNumber
+                  label={formatMessage(messages.passingRateFieldLabel)}
+                  maxLength={3}
+                  defaultWidth={false}
+                  postfix="%"
+                  disabled={disabled || isMainControlsDisabled}
+                  max={100}
+                />
+              </FieldErrorHint>
             </FieldProvider>
             <FieldArray
               name="contentParameters.widgetOptions.attributeKeys"
               component={this.renderAttributesFieldArray}
               fieldValidator={attributeKeyValidator(formatMessage)}
             />
-          </ScrollWrapper>
+          </>
         )}
       </Fragment>
     );

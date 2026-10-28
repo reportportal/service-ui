@@ -2776,7 +2776,7 @@
   "Widgets.Name.launchesTable": "Tabla de ejecuciones",
   "Widgets.Name.mostFailedTestCases": "Tabla de los casos de prueba más fallidos (TOP-50)",
   "Widgets.Name.mostPopularPatterns": "Tabla de los patrones más populares (TOP-20)",
-  "Widgets.Name.mostTimeConsuming": "Widget de casos de prueba que más tiempo consumen (TOP-20)",
+  "Widgets.Name.mostTimeConsuming": "Casos de prueba que más tiempo consumen (TOP-20)",
   "Widgets.Name.notPassed": "Diagrama de tendencias de casos de prueba no pasados",
   "Widgets.Name.overallStatistics": "Estadísticas generales",
   "Widgets.Name.passingRatePerLaunch": "Porcentaje de pruebas pasadas para una ejecución",
