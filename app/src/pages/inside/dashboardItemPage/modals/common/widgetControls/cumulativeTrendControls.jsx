@@ -33,12 +33,9 @@ import { FieldProvider } from 'components/fields/fieldProvider';
 import { FieldErrorHint } from 'components/fields';
 import { DEFAULT_LAUNCHES_LIMIT } from 'controllers/testItem';
 import { projectKeySelector } from 'controllers/project';
-import { CHART_MODES, MODES_VALUES } from 'common/constants/chartModes';
-import { FiltersControlV2, AttributesFieldArrayControl, RadioGroupControl } from './controls';
+import { FiltersControlV2, AttributesFieldArrayControl } from './controls';
 import { getWidgetCriteriaOptions } from './utils/getWidgetCriteriaOptions';
 import { DEFECT_STATISTICS_OPTIONS, TO_INVESTIGATE_OPTION } from './constants';
-import { getWidgetModeOptions } from './utils/getWidgetModeOptions';
-import { messages as widgetControlsMessages } from './messages';
 import styles from './widgetControls.scss';
 
 const cx = classNames.bind(styles);
@@ -192,16 +189,6 @@ export class CumulativeTrendControls extends Component {
 
         {!formAppearance.isMainControlsLocked && (
           <Fragment>
-            <RadioGroupControl
-              disabled
-              options={getWidgetModeOptions(
-                [CHART_MODES.ALL_LAUNCHES, CHART_MODES.LATEST_LAUNCHES],
-                formatMessage,
-              )}
-              label={formatMessage(widgetControlsMessages.launchesLabel)}
-              value={MODES_VALUES[CHART_MODES.LATEST_LAUNCHES]}
-            />
-
             <FieldProvider
               name="contentParameters.itemsCount"
               validate={itemsValidator(formatMessage)}
