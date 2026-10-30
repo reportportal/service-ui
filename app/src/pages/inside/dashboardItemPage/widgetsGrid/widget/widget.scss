@@ -14,38 +14,54 @@
  * limitations under the License.
  */
 
-.common-control {
+.drag-handle {
+  position: absolute;
+  top: 4px;
+  left: 50%;
   display: none;
+  width: 16px;
+  height: 16px;
+  transform: translateX(-50%) rotate(90deg);
+  color: var(--rp-ui-base-e-400);
+  pointer-events: none;
+
+  svg {
+    display: block;
+    width: 16px;
+    height: 16px;
+    fill: currentColor;
+  }
 }
 
 .widget-container {
   position: relative;
+  display: flex;
+  flex-direction: column;
   height: 100%;
-  border: 1px solid $COLOR--gray-91;
+  padding: 0 24px 24px;
+  box-sizing: border-box;
+  border-radius: 4px;
+  background-color: var(--rp-ui-base-bg-000);
+  box-shadow: var(--rp-ui-base-shadow);
+  transition: box-shadow 200ms ease;
   -webkit-print-color-adjust: exact;
   print-color-adjust: exact;
 
-  &:hover {
-    .common-control {
-      display: block;
-    }
-  }
+  &.modifiable:hover {
+    box-shadow: var(--rp-ui-base-shadow-hover);
 
-  &.fullscreen {
-    &:hover {
-      .common-control {
-        display: none;
-      }
+    .drag-handle {
+      display: flex;
     }
   }
 }
 
 .widget-header {
   position: relative;
-  height: 60px;
-  border-bottom: 1px solid $COLOR--gray-91;
+  flex-shrink: 0;
+  padding-top: 16px;
+  margin-bottom: 12px;
   box-sizing: border-box;
-  background-color: $COLOR--white;
 
   &.modifiable {
     cursor: all-scroll;
@@ -53,21 +69,9 @@
 }
 
 .widget {
-  height: calc(100% - 60px);
+  flex: 1 1 0;
+  min-height: 0;
   position: relative;
-  transition: opacity 0.5s ease;
-  opacity: 1;
-}
-
-.hidden {
-  opacity: 0;
-}
-
-.error-message-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100%;
 }
 
 .lazy-load-wrapper {

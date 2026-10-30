@@ -169,6 +169,10 @@ export class FilterOptions extends Component {
       return `${optionName} ${condition} ${entity.value}`;
     });
     const options = result.join(` ${intl.formatMessage(messages.and)} `);
+    // a filter can come without any order, e.g. a widget filter in the Edit widget modal
+    if (!this.props.sort.length) {
+      return `(${options})`;
+    }
     const sort = `${intl.formatMessage(messages.sort)}: ${this.sortingToString()}`;
     return `(${options}) ${sort}`;
   };

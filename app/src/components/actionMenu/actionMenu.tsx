@@ -31,6 +31,7 @@ export interface ActionItem {
   hasPermission?: boolean;
   className?: string;
   danger?: boolean;
+  disabled?: boolean;
 }
 
 export interface LinkItem {
@@ -91,10 +92,11 @@ export const ActionMenu = ({
       <>
         {actions
           .filter(({ hasPermission = true }) => hasPermission)
-          .map(({ label, className, danger, onClick }) => (
+          .map(({ label, className, danger, disabled, onClick }) => (
             <button
               key={label}
               type="button"
+              disabled={disabled}
               className={cx('action-item', className, {
                 'danger-button': danger,
               })}

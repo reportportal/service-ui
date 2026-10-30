@@ -47,6 +47,11 @@
     border: none;
   }
 
+  &:disabled {
+    color: var(--rp-ui-base-e-300);
+    cursor: not-allowed;
+  }
+
   &.danger-button {
     color: var(--rp-ui-base-error);
   }
