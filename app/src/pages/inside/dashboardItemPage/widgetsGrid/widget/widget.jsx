@@ -168,6 +168,7 @@ export class SimpleWidget extends Component {
   }
 
   componentWillUnmount() {
+    this.isUnmounted = true;
     this.clearSilentUpdater();
   }
 
@@ -303,7 +304,6 @@ export class SimpleWidget extends Component {
   };
 
   fetchWidget = (params = {}, silent = true, shouldClearQueryParams = true) => {
-    const { isFullscreen } = this.props;
     const url = this.getWidgetUrl(params);
     this.clearSilentUpdater();
 
@@ -333,13 +333,7 @@ export class SimpleWidget extends Component {
             error: null,
           });
         }
-        if (!this.props.isPrintMode) {
-          this.clearSilentUpdater();
-          this.silentUpdaterId = setTimeout(
-            this.fetchWidget,
-            isFullscreen ? SILENT_UPDATE_TIMEOUT_FULLSCREEN : SILENT_UPDATE_TIMEOUT,
-          );
-        }
+        this.scheduleSilentUpdate();
       })
       .catch((error) => {
         if (shouldClearQueryParams && !isEmptyObject(this.state.queryParameters)) {
@@ -351,7 +345,20 @@ export class SimpleWidget extends Component {
           loading: false,
           ...(keepContent ? {} : { hasError: true, error }),
         });
+        // keep polling, so the widget recovers on its own after a failed request
+        this.scheduleSilentUpdate();
       });
+  };
+
+  scheduleSilentUpdate = () => {
+    if (this.props.isPrintMode || this.isUnmounted) {
+      return;
+    }
+    this.clearSilentUpdater();
+    this.silentUpdaterId = setTimeout(
+      this.fetchWidget,
+      this.props.isFullscreen ? SILENT_UPDATE_TIMEOUT_FULLSCREEN : SILENT_UPDATE_TIMEOUT,
+    );
   };
 
   showEditWidgetModal = () => {
@@ -369,11 +376,11 @@ export class SimpleWidget extends Component {
 
   refreshWidget = () => {
     this.props.tracking.trackEvent(WIDGETS_EVENTS.CLICK_ON_REFRESH_WIDGET_ICON);
-    this.fetchWidget({}, false);
+    void this.fetchWidget({}, false);
   };
 
   retryFetchWidget = () => {
-    this.fetchWidget({}, false);
+    void this.fetchWidget({}, false);
   };
 
   refreshWidgetSearch = () => {
