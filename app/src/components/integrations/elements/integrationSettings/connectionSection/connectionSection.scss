@@ -23,6 +23,10 @@
   box-shadow: $BOX_SHADOW--item;
   padding: 24px;
 }
+.connection-error [class*='system-message'] [class*='text-container'] p {
+  color: var(--rp-ui-base-grey-800);
+}
+
 .with-global-message {
   margin-bottom: 16px;
 }
