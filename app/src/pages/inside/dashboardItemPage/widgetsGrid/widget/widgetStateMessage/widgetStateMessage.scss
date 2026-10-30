@@ -27,7 +27,6 @@
   text-align: center;
 }
 
-// 8px flex gap + 8px here = 16px between the loader and the title
 .loader:not(:last-child) {
   margin-bottom: 8px;
 }

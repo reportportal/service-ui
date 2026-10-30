@@ -75,16 +75,14 @@
   .react-resizable {
     position: relative;
   }
-  // The 9x9 icon sits 4px from the right and bottom edges; the ::after extends the start zone
-  // to the whole 24x24 bottom-right corner of the card. The icon is a mask on ::before, so its
-  // colour can be a CSS variable (an inline SVG image can't read one).
+  // the icon is a mask so its colour can be a CSS variable; ::after widens the grab zone to 24x24
   .react-resizable-handle {
     position: absolute;
     right: 4px;
     bottom: 4px;
     z-index: 2;
-    width: 9px;
-    height: 9px;
+    width: 16px;
+    height: 16px;
     opacity: 0;
     box-sizing: border-box;
     background: none;
@@ -95,10 +93,10 @@
       position: absolute;
       inset: 0;
       background-color: var(--rp-ui-base-e-300);
-      -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='9' height='9' viewBox='0 0 9 9'%3E%3Cpath d='M8.25 0.75L0.75 8.25M8.25 4.75L4.75 8.25' stroke='black' stroke-width='1.5' stroke-linecap='round' fill='none'/%3E%3C/svg%3E")
-        center / 9px 9px no-repeat;
-      mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='9' height='9' viewBox='0 0 9 9'%3E%3Cpath d='M8.25 0.75L0.75 8.25M8.25 4.75L4.75 8.25' stroke='black' stroke-width='1.5' stroke-linecap='round' fill='none'/%3E%3C/svg%3E")
-        center / 9px 9px no-repeat;
+      -webkit-mask: url("data:image/svg+xml,%3Csvg width='16' height='16' viewBox='0 0 16 16' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M10.5 1.49023L1.5 10.4902M10.5 5.99023L6 10.4902' stroke-linecap='round' stroke='black'/%3E%3C/svg%3E")
+        center / 16px 16px no-repeat;
+      mask: url("data:image/svg+xml,%3Csvg width='16' height='16' viewBox='0 0 16 16' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M10.5 1.49023L1.5 10.4902M10.5 5.99023L6 10.4902' stroke-linecap='round' stroke='black'/%3E%3C/svg%3E")
+        center / 16px 16px no-repeat;
     }
 
     &::after {
@@ -111,7 +109,6 @@
     }
   }
 
-  // Below 840px widgets are full width and resize in height only
   .mobile .react-resizable-handle {
     cursor: ns-resize;
   }

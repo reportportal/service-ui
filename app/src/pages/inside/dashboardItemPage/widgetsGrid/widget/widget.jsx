@@ -450,7 +450,6 @@ export class SimpleWidget extends Component {
       lastRefresh: widgetOptions.lastRefresh,
       state: widgetOptions.state,
     };
-    // the first load is "Loading"; a reload of an already loaded widget is "Refreshing"
     const isRefreshing = loading && Boolean(widget.id);
     const isTestCaseSearch = widget.widgetType === TEST_CASE_SEARCH;
 

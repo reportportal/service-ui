@@ -88,7 +88,6 @@ export const WidgetHeader = ({
       danger: true,
     },
   ];
-  // without any action (Viewer) ActionMenu renders nothing, so the empty 16x16 wrapper must go too
   const hasMenuActions = menuActions.some(({ hasPermission }) => hasPermission);
 
   return (

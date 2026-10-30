@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-// Shown only while an editor hovers the card; the whole header is the drag zone
 .drag-handle {
   position: absolute;
   top: 4px;
@@ -60,7 +59,6 @@
 .widget-header {
   position: relative;
   flex-shrink: 0;
-  // the 16px top padding of the card lives here so the drag zone reaches the card edge
   padding-top: 16px;
   margin-bottom: 12px;
   box-sizing: border-box;
