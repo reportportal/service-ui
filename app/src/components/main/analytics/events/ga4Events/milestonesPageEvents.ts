@@ -22,7 +22,8 @@ import type {
 import {
   getBasicChooseEventParameters,
   getBasicClickEventParameters,
-  getBasicEventParameters,
+  getBasicPageViewEventParameters,
+  type PageViewContentType,
 } from '../common/ga4Utils';
 
 const MILESTONES = 'milestones';
@@ -36,13 +37,6 @@ const CLICK = getBasicClickEventParameters(MILESTONES);
 
 export type MilestoneStatusType = 'scheduled' | 'testing' | 'completed';
 
-export const MILESTONES_PAGE_VIEW_TYPE = {
-  POPULATED: 'populated',
-  EMPTY: 'empty',
-} as const;
-export type MilestonesPageViewType =
-  (typeof MILESTONES_PAGE_VIEW_TYPE)[keyof typeof MILESTONES_PAGE_VIEW_TYPE];
-
 export {
   type MilestoneChangeStatusModalButtonElementName,
   type MilestoneStatusDropdownChooseType,
@@ -51,8 +45,8 @@ export {
 } from 'pages/inside/testPlansPage/milestones/milestoneStatus';
 
 export const MILESTONES_PAGE_EVENTS = {
-  viewMilestonesPage: (type: MilestonesPageViewType) => ({
-    ...getBasicEventParameters('page_view', MILESTONES),
+  viewMilestonesPage: (type: PageViewContentType) => ({
+    ...getBasicPageViewEventParameters(),
     place: PLACE_PAGE,
     type,
   }),

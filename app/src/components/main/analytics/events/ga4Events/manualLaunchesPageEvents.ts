@@ -17,8 +17,9 @@
 import {
   getBasicChooseEventParameters,
   getBasicClickEventParameters,
-  getBasicEventParameters,
+  getBasicPageViewEventParameters,
   normalizeEventParameter,
+  type PageViewContentType,
 } from '../common/ga4Utils';
 
 const MANUAL_LAUNCHES = 'manual_launches';
@@ -119,15 +120,16 @@ export const BTS_ACTION_TYPE = {
 } as const;
 export type BtsActionType = (typeof BTS_ACTION_TYPE)[keyof typeof BTS_ACTION_TYPE];
 
-const PAGE_VIEW = getBasicEventParameters('page_view', MANUAL_LAUNCHES);
+const PAGE_VIEW = getBasicPageViewEventParameters();
 const CLICK = getBasicClickEventParameters(MANUAL_LAUNCHES);
 const CHOOSE = getBasicChooseEventParameters(MANUAL_LAUNCHES);
 
 export const MANUAL_LAUNCHES_PAGE_EVENTS = {
-  VIEW_MANUAL_LAUNCHES_PAGE: {
+  viewManualLaunchesPage: (type: PageViewContentType) => ({
     ...PAGE_VIEW,
     place: MANUAL_LAUNCHES_PLACE.MANUAL_LAUNCHES_LIST,
-  },
+    type,
+  }),
   CLICK_GO_TO_TEST_PLANS: {
     ...CLICK,
     place: MANUAL_LAUNCHES_PLACE.MANUAL_LAUNCHES_LIST,
@@ -148,10 +150,11 @@ export const MANUAL_LAUNCHES_PAGE_EVENTS = {
     place: MANUAL_LAUNCHES_PLACE.MANUAL_LAUNCHES_LIST,
     element_name: MANUAL_LAUNCHES_ELEMENT.OPEN_LAUNCH_DETAILS,
   },
-  VIEW_ALL_TEST_EXECUTIONS_PAGE: {
+  viewAllTestExecutionsPage: (type: PageViewContentType) => ({
     ...PAGE_VIEW,
     place: MANUAL_LAUNCHES_PLACE.ALL_TEST_EXECUTIONS,
-  },
+    type,
+  }),
   CLICK_APPLY_LAUNCHES_FILTER: {
     ...CLICK,
     place: MANUAL_LAUNCHES_PLACE.MANUAL_LAUNCHES_FILTER_PANEL,
