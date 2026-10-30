@@ -47,6 +47,13 @@
     border: none;
   }
 
+  // only the text is dimmed (not the whole button), so the hover background stays the same as
+  // for the enabled items
+  &:disabled {
+    color: var(--rp-ui-base-e-300);
+    cursor: not-allowed;
+  }
+
   &.danger-button {
     color: var(--rp-ui-base-error);
   }

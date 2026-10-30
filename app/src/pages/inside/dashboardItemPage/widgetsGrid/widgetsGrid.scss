@@ -72,49 +72,55 @@
     user-select: none;
   }
 
-  .react-grid-item > .react-resizable-handle {
-    position: absolute;
-    width: 10px;
-    height: 20px;
-    cursor: se-resize;
-  }
-
-  .react-grid-item > .react-resizable-handle::after {
-    content: '';
-    position: absolute;
-    right: 3px;
-    bottom: 3px;
-    width: 5px;
-    height: 5px;
-  }
-
   .react-resizable {
     position: relative;
   }
+  // The 9x9 icon sits 4px from the right and bottom edges; the ::after extends the start zone
+  // to the whole 24x24 bottom-right corner of the card. The icon is a mask on ::before, so its
+  // colour can be a CSS variable (an inline SVG image can't read one).
   .react-resizable-handle {
-    opacity: 0;
     position: absolute;
-    width: 10px;
-    height: 20px;
-    bottom: 1px;
-    right: 6px;
-    background-repeat: no-repeat;
-    background-origin: content-box;
+    right: 4px;
+    bottom: 4px;
+    z-index: 2;
+    width: 9px;
+    height: 9px;
+    opacity: 0;
     box-sizing: border-box;
-    background-size: contain;
-    cursor: se-resize;
-    transform: rotate(-45deg);
-    background-image: url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI4IiBoZWlnaHQ9IjIwIiB2aWV3Qm94PSIwIDAgOCAyMCI+ICA8cGF0aCBmaWxsPSIjOTk5OTk5IiBmaWxsLXJ1bGU9ImV2ZW5vZGQiIGQ9Ik0xNiw5IEwxMiw5IEwxMiwxMSBMMTYsMTEgTDE2LDE0IEwyMCwxMCBMMTYsNiBMMTYsOSBaIE00LDE0IEw0LDExIEwxMiwxMSBMMTIsOSBMNCw5IEw0LDYgTDAsMTAgTDQsMTQgWiIgdHJhbnNmb3JtPSJyb3RhdGUoOTAgNyA3KSIvPjwvc3ZnPg==);
+    background: none;
+    cursor: nwse-resize;
+
+    &::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-color: var(--rp-ui-base-e-300);
+      -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='9' height='9' viewBox='0 0 9 9'%3E%3Cpath d='M8.25 0.75L0.75 8.25M8.25 4.75L4.75 8.25' stroke='black' stroke-width='1.5' stroke-linecap='round' fill='none'/%3E%3C/svg%3E")
+        center / 9px 9px no-repeat;
+      mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='9' height='9' viewBox='0 0 9 9'%3E%3Cpath d='M8.25 0.75L0.75 8.25M8.25 4.75L4.75 8.25' stroke='black' stroke-width='1.5' stroke-linecap='round' fill='none'/%3E%3C/svg%3E")
+        center / 9px 9px no-repeat;
+    }
+
+    &::after {
+      content: '';
+      position: absolute;
+      right: -4px;
+      bottom: -4px;
+      width: 24px;
+      height: 24px;
+    }
+  }
+
+  // Below 840px widgets are full width and resize in height only
+  .mobile .react-resizable-handle {
+    cursor: ns-resize;
+  }
+
+  .non-resizable .react-resizable-handle {
+    display: none;
   }
 
   .react-grid-item:hover .react-resizable-handle {
     opacity: 1;
-  }
-
-  .mobile,
-  .non-resizable {
-    .react-resizable-handle {
-      display: none;
-    }
   }
 }

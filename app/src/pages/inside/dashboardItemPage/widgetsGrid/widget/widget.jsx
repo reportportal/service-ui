@@ -22,22 +22,23 @@ import PropTypes from 'prop-types';
 import isEqual from 'fast-deep-equal';
 import LazyLoad from 'react-lazyload';
 import { connect } from 'react-redux';
+import { DragNDropIcon } from '@reportportal/ui-kit';
 import { fetch, isEmptyObject } from 'common/utils';
 import { URLS } from 'common/urls';
 import { projectKeySelector } from 'controllers/project';
-import { CUMULATIVE_TREND, TEST_CASE_SEARCH } from 'common/constants/widgetTypes';
+import { TEST_CASE_SEARCH } from 'common/constants/widgetTypes';
 import { showModalAction } from 'controllers/modal';
 import { analyticsEnabledSelector, baseEventParametersSelector } from 'controllers/appInfo';
-import { SpinningPreloader } from 'components/preloaders/spinningPreloader';
-import { ErrorMessage } from 'components/main/errorMessage';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import {
   CHARTS,
+  MATERIALIZED_VIEW_WIDGETS,
   MULTI_LEVEL_WIDGETS_MAP,
-  NoDataAvailable,
   WIDGETS_WITH_INTERNAL_EMPTY_STATE,
 } from 'components/widgets';
-import { activeDashboardIdSelector } from 'controllers/pages';
+import { STATE_RENDERING } from 'components/widgets/common/constants';
+import { canWorkWithWidgets } from 'common/utils/permissions/permissions';
+import { activeDashboardIdSelector, userRolesSelector } from 'controllers/pages';
 import { refreshSearchedItemsAction } from 'controllers/testItem';
 import { WIDGETS_EVENTS } from 'analyticsEvents/dashboardsPageEvents';
 import { baseEventParametersShape, provideEcGA } from 'components/main/analytics/utils';
@@ -45,6 +46,7 @@ import { getEcWidget } from 'components/main/analytics/events/common/widgetPages
 import { widgetTypesMessages } from 'pages/inside/dashboardItemPage/modals/common/messages';
 import { isWidgetDataAvailable } from '../../modals/common/utils';
 import { WidgetHeader } from './widgetHeader';
+import { WidgetStateMessage } from './widgetStateMessage';
 import styles from './widget.scss';
 
 const cx = classNames.bind(styles);
@@ -59,6 +61,34 @@ const messages = defineMessages({
     defaultMessage:
       'Are you sure you want to update data in this widget? It could take <b>up to 15 minutes</b> depend on a database size on the project.',
   },
+  generatingTitle: {
+    id: 'Widget.generatingTitle',
+    defaultMessage: 'Preparing widget data',
+  },
+  generatingDescription: {
+    id: 'Widget.generatingDescription',
+    defaultMessage: 'This can take up to several minutes.',
+  },
+  noDataTitle: {
+    id: 'Widget.noDataTitle',
+    defaultMessage: 'No data to display',
+  },
+  noDataDescription: {
+    id: 'Widget.noDataDescription',
+    defaultMessage: 'No launches match the widget filter yet.',
+  },
+  errorTitle: {
+    id: 'Widget.errorTitle',
+    defaultMessage: "Couldn't load the widget",
+  },
+  errorDescription: {
+    id: 'Widget.errorDescription',
+    defaultMessage: 'Something went wrong while loading the data.',
+  },
+  tryAgain: {
+    id: 'Widget.tryAgain',
+    defaultMessage: 'Try again',
+  },
 });
 
 const SILENT_UPDATE_TIMEOUT = 60000;
@@ -71,6 +101,7 @@ const SILENT_UPDATE_TIMEOUT_FULLSCREEN = 30000;
     activeDashboardId: activeDashboardIdSelector(state),
     isAnalyticsEnabled: analyticsEnabledSelector(state),
     baseEventParameters: baseEventParametersSelector(state),
+    userRoles: userRolesSelector(state),
   }),
   {
     showModalAction,
@@ -98,6 +129,7 @@ export class SimpleWidget extends Component {
     activeDashboardId: PropTypes.number.isRequired,
     isAnalyticsEnabled: PropTypes.bool.isRequired,
     baseEventParameters: baseEventParametersShape,
+    userRoles: PropTypes.object,
   };
 
   static defaultProps = {
@@ -105,6 +137,7 @@ export class SimpleWidget extends Component {
     isModifiable: false,
     isFullscreen: false,
     isPrintMode: false,
+    userRoles: {},
   };
 
   static getDerivedStateFromError(error) {
@@ -118,7 +151,6 @@ export class SimpleWidget extends Component {
     super(props);
     this.state = {
       loading: true,
-      visible: true,
       queryParameters: {},
       widget: {
         content: {},
@@ -132,14 +164,10 @@ export class SimpleWidget extends Component {
   }
 
   componentDidMount() {
-    this.props.observer.subscribe(`${this.props.widgetId}_resizeStarted`, this.hideWidget);
-    this.props.observer.subscribe('widgetResized', this.showWidget);
     this.fetchWidget({}, false);
   }
 
   componentWillUnmount() {
-    this.props.observer.unsubscribe(`${this.props.widgetId}_resizeStarted`, this.hideWidget);
-    this.props.observer.unsubscribe('widgetResized', this.showWidget);
     this.clearSilentUpdater();
   }
 
@@ -163,22 +191,44 @@ export class SimpleWidget extends Component {
 
   getWidgetOptions = () => this.state.widget.contentParameters?.widgetOptions || {};
 
+  canEdit = () => canWorkWithWidgets(this.props.userRoles);
+
   getWidgetNode = (node) => {
     this.node = node;
   };
 
   getWidgetContent = () => {
-    const { widgetType, isPrintMode } = this.props;
+    const {
+      widgetType,
+      isPrintMode,
+      intl: { formatMessage },
+    } = this.props;
     const { widget, queryParameters, userSettings, displayLaunchesValue } = this.state;
+
     if (this.state.loading) {
-      return <SpinningPreloader />;
+      return <WidgetStateMessage isLoading />;
     }
 
     if (this.state.hasError) {
       return (
-        <div className={cx('error-message-container')}>
-          <ErrorMessage error={this.state.error} />
-        </div>
+        <WidgetStateMessage
+          title={formatMessage(messages.errorTitle)}
+          description={formatMessage(messages.errorDescription)}
+          action={{ label: formatMessage(messages.tryAgain), onClick: this.retryFetchWidget }}
+        />
+      );
+    }
+
+    if (
+      MATERIALIZED_VIEW_WIDGETS.includes(widget.widgetType) &&
+      widget.contentParameters?.widgetOptions?.state === STATE_RENDERING
+    ) {
+      return (
+        <WidgetStateMessage
+          isLoading
+          title={formatMessage(messages.generatingTitle)}
+          description={formatMessage(messages.generatingDescription)}
+        />
       );
     }
 
@@ -186,7 +236,12 @@ export class SimpleWidget extends Component {
       !isWidgetDataAvailable(widget) &&
       (!WIDGETS_WITH_INTERNAL_EMPTY_STATE.includes(widgetType) || !widget.id)
     ) {
-      return <NoDataAvailable />;
+      return (
+        <WidgetStateMessage
+          title={formatMessage(messages.noDataTitle)}
+          description={formatMessage(messages.noDataDescription)}
+        />
+      );
     }
 
     const Chart = CHARTS[widget.widgetType];
@@ -229,18 +284,6 @@ export class SimpleWidget extends Component {
   };
 
   uncheckedLegendItems = [];
-
-  showWidget = () => {
-    this.setState({
-      visible: true,
-    });
-  };
-
-  hideWidget = () => {
-    this.setState({
-      visible: false,
-    });
-  };
 
   clearQueryParams = (onClearParams = () => {}) => {
     this.setState(
@@ -298,12 +341,15 @@ export class SimpleWidget extends Component {
           );
         }
       })
-      .catch(() => {
+      .catch((error) => {
         if (shouldClearQueryParams && !isEmptyObject(this.state.queryParameters)) {
           this.clearQueryParams();
         }
+        // a failed silent auto-update must not replace the content that is already shown
+        const keepContent = silent && this.state.widget.id;
         this.setState({
           loading: false,
+          ...(keepContent ? {} : { hasError: true, error }),
         });
       });
   };
@@ -323,8 +369,13 @@ export class SimpleWidget extends Component {
 
   refreshWidget = () => {
     this.props.tracking.trackEvent(WIDGETS_EVENTS.CLICK_ON_REFRESH_WIDGET_ICON);
-    this.fetchWidget();
+    this.fetchWidget({}, false);
   };
+
+  retryFetchWidget = () => {
+    this.fetchWidget({}, false);
+  };
+
   refreshWidgetSearch = () => {
     const { widgetId } = this.props;
     this.props.tracking.trackEvent(WIDGETS_EVENTS.CLICK_ON_REFRESH_WIDGET_ICON);
@@ -380,7 +431,7 @@ export class SimpleWidget extends Component {
       id: 'confirmationModal',
       data: {
         message: formatMessage(messages.forceUpdateWidgetMessage),
-        onConfirm: () => this.fetchWidget({ refresh: true }),
+        onConfirm: () => this.fetchWidget({ refresh: true }, false),
         title: formatMessage(messages.forceUpdateWidgetTitle),
         confirmText: formatMessage(COMMON_LOCALE_KEYS.UPDATE),
         cancelText: formatMessage(COMMON_LOCALE_KEYS.CANCEL),
@@ -389,21 +440,18 @@ export class SimpleWidget extends Component {
   };
 
   render() {
-    const { widget, visible, displayLaunchesValue } = this.state;
-    const { isFullscreen, widgetType, isModifiable, isPrintMode } = this.props;
+    const { widget, displayLaunchesValue, loading } = this.state;
+    const { isModifiable, isPrintMode } = this.props;
     const widgetOptions = this.getWidgetOptions();
     const headerData = {
-      owner: widget.owner,
       name: widget.name,
       description: widget.description,
       type: widget.widgetType,
-      meta: [widgetOptions.viewMode],
-      lastRefresh: widget.contentParameters?.widgetOptions?.lastRefresh,
-      state: widget.contentParameters?.widgetOptions?.state,
+      lastRefresh: widgetOptions.lastRefresh,
+      state: widgetOptions.state,
     };
-    if (widgetOptions.latest || widgetType === CUMULATIVE_TREND) {
-      headerData.meta.push(widgetOptions.latest || true);
-    }
+    // the first load is "Loading"; a reload of an already loaded widget is "Refreshing"
+    const isRefreshing = loading && Boolean(widget.id);
     const isTestCaseSearch = widget.widgetType === TEST_CASE_SEARCH;
 
     const handleDisplayLaunchesToggleChange = () => {
@@ -417,7 +465,12 @@ export class SimpleWidget extends Component {
       trackEvent(WIDGETS_EVENTS.onDisplayLaunchesToggle(!displayLaunchesValue, activeDashboardId));
     };
     return (
-      <div className={cx('widget-container', { disabled: isFullscreen })}>
+      <div className={cx('widget-container', { modifiable: isModifiable })}>
+        {isModifiable && (
+          <div className={cx('drag-handle')}>
+            <DragNDropIcon />
+          </div>
+        )}
         <div
           className={cx('widget-header', 'draggable-field', {
             modifiable: isModifiable,
@@ -429,13 +482,14 @@ export class SimpleWidget extends Component {
             onDelete={this.showDeleteWidgetModal}
             onEdit={this.showEditWidgetModal}
             onForceUpdate={this.showForceUpdateWidgetModal}
-            customClass={cx('common-control')}
+            canEdit={this.canEdit()}
             isPrintMode={isPrintMode}
+            isRefreshing={isRefreshing}
             isDisplayedLaunches={this.state.displayLaunchesValue}
             onDisplayLaunchesToggle={isTestCaseSearch ? handleDisplayLaunchesToggleChange : null}
           />
         </div>
-        <div ref={this.getWidgetNode} className={cx('widget', { hidden: !visible })}>
+        <div ref={this.getWidgetNode} className={cx('widget')}>
           {this.getWidgetContent()}
         </div>
       </div>

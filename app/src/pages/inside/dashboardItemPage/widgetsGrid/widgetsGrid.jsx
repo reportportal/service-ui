@@ -32,6 +32,7 @@ import styles from './widgetsGrid.scss';
 const cx = classNames.bind(styles);
 const ResponsiveGridLayout = WidthProvider(Responsive);
 const rowHeight = 63;
+const WIDGETS_GAP = [8, 8];
 const breakpoints = { lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0 };
 const cols = { lg: 12, md: 12, sm: 4, xs: 4, xxs: 4 };
 const messages = defineMessages({
@@ -134,12 +135,10 @@ export class WidgetsGrid extends Component {
     const widgets = this.props.dashboard.widgets;
     const targetWidget = widgets.find((widget) => +widget.widgetId === +oldItem.i);
     this.props.tracking.trackEvent(WIDGETS_EVENTS.clickOnResizeWidgetIcon(targetWidget.widgetType));
-    this.observer.publish(`${oldItem.i}_resizeStarted`);
   };
 
   onResizeStop = (newLayout, oldWidgetPosition, newWidgetPosition) => {
     this.onGridItemChange(newLayout, oldWidgetPosition, newWidgetPosition);
-    this.observer.publish('widgetResized');
   };
 
   onDeleteWidget = (widgetId) => {
@@ -235,6 +234,7 @@ export class WidgetsGrid extends Component {
       observer={this.observer}
       isFullscreen={this.props.isFullscreen}
       rowHeight={rowHeight}
+      margin={WIDGETS_GAP}
       breakpoints={breakpoints}
       onBreakpointChange={this.onBreakpointChange}
       onDragStop={this.onDragStop}
