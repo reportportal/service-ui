@@ -77,6 +77,7 @@ import { EmptyManualLaunch } from './emptyState';
 import { ManualLaunchFolders } from './manualLaunchFolders';
 import { messages } from './messages';
 import { messages as manualLaunchesMessages } from '../messages';
+import { getLaunchStatistics } from '../useManualLaunches';
 import { commonMessages } from '../../testPlansPage/commonMessages';
 
 import styles from './manualLaunchDetailsPage.scss';
@@ -121,7 +122,6 @@ export const ManualLaunchDetailsPage = () => {
   }, [queryFilterPriorities, queryFilterTags]);
 
   const hasTrackedViewRef = useRef(false);
-  const launchExecutionsTotal = launch?.statistics?.executions?.total;
 
   useEffect(() => {
     if (hasTrackedViewRef.current || isLoading || isEmpty(launch)) {
@@ -130,10 +130,12 @@ export const ManualLaunchDetailsPage = () => {
     hasTrackedViewRef.current = true;
     trackEvent(
       MANUAL_LAUNCHES_PAGE_EVENTS.viewAllTestExecutionsPage(
-        launchExecutionsTotal ? PAGE_VIEW_CONTENT_TYPE.POPULATED : PAGE_VIEW_CONTENT_TYPE.EMPTY,
+        getLaunchStatistics(launch).totalTests
+          ? PAGE_VIEW_CONTENT_TYPE.POPULATED
+          : PAGE_VIEW_CONTENT_TYPE.EMPTY,
       ),
     );
-  }, [isLoading, launch, launchExecutionsTotal, trackEvent]);
+  }, [isLoading, launch, trackEvent]);
 
   const selectedToRunOnly =
     queryStatusFilter === MANUAL_LAUNCH_TO_RUN_STATUS_QUERY_VALUE;
