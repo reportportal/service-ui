@@ -43,7 +43,12 @@
   }
 }
 
-.link .breadcrumb-text {
+.breadcrumb:last-child .link .breadcrumb-text {
+  color: var(--rp-ui-base-grey-800);
+}
+
+.link .breadcrumb-text,
+.breadcrumb:last-child .link .breadcrumb-text {
   &:hover {
     color: $COLOR--topaz-hover-2;
   }
