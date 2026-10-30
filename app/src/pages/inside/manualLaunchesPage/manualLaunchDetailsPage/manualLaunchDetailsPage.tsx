@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useIntl } from 'react-intl';
 import { useDispatch, useSelector, useStore } from 'react-redux';
 import { useTracking } from 'react-tracking';
@@ -69,6 +69,7 @@ import {
 import { messages as testCaseListMessages } from 'pages/inside/common/testCaseList/messages';
 import { ExecutionStatus } from 'types/testCase';
 import { MANUAL_LAUNCHES_PAGE_EVENTS } from 'components/main/analytics/events/ga4Events/manualLaunchesPageEvents';
+import { PAGE_VIEW_CONTENT_TYPE } from 'components/main/analytics/events/common/ga4Utils';
 
 import { PageHeaderWithBreadcrumbsAndActions } from '../../common/pageHeaderWithBreadcrumbsAndActions';
 import { PageLoader } from '../../testPlansPage/pageLoader';
@@ -119,9 +120,20 @@ export const ManualLaunchDetailsPage = () => {
     setSelectedTags(parseTagsFromQuery(queryFilterTags));
   }, [queryFilterPriorities, queryFilterTags]);
 
+  const hasTrackedViewRef = useRef(false);
+  const launchExecutionsTotal = launch?.statistics?.executions?.total;
+
   useEffect(() => {
-    trackEvent(MANUAL_LAUNCHES_PAGE_EVENTS.VIEW_ALL_TEST_EXECUTIONS_PAGE);
-  }, [trackEvent]);
+    if (hasTrackedViewRef.current || isLoading || isEmpty(launch)) {
+      return;
+    }
+    hasTrackedViewRef.current = true;
+    trackEvent(
+      MANUAL_LAUNCHES_PAGE_EVENTS.viewAllTestExecutionsPage(
+        launchExecutionsTotal ? PAGE_VIEW_CONTENT_TYPE.POPULATED : PAGE_VIEW_CONTENT_TYPE.EMPTY,
+      ),
+    );
+  }, [isLoading, launch, launchExecutionsTotal, trackEvent]);
 
   const selectedToRunOnly =
     queryStatusFilter === MANUAL_LAUNCH_TO_RUN_STATUS_QUERY_VALUE;

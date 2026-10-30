@@ -28,6 +28,7 @@ import {
   type FilterFieldType,
 } from 'analyticsEvents/testCaseLibraryPageEvents';
 import { useBreadCrumbsTree } from 'common/hooks';
+import { PAGE_VIEW_CONTENT_TYPE } from 'components/main/analytics/events/common/ga4Utils';
 import { createClassnames, debounce } from 'common/utils';
 import { ProjectDetails } from 'pages/organization/constants';
 import { NavLink } from 'components/main/navLink';
@@ -43,7 +44,12 @@ import {
   locationSelector,
   updatePagePropertiesAction,
 } from 'controllers/pages';
-import { areFoldersLoadingSelector, foldersSelector, isLoadingFilteredFoldersSelector } from 'controllers/testCase';
+import {
+  areFoldersFetchedSelector,
+  areFoldersLoadingSelector,
+  foldersSelector,
+  isLoadingFilteredFoldersSelector,
+} from 'controllers/testCase';
 import { useUserPermissions } from 'hooks/useUserPermissions';
 import { SearchField } from 'components/fields/searchField';
 import { BetaBadge } from 'pages/inside/common/betaBadge';
@@ -75,6 +81,7 @@ export const TestCaseLibraryPage = () => {
   const projectName = useSelector(projectNameSelector);
   const folders = useSelector(foldersSelector);
   const areFoldersLoading = useSelector(areFoldersLoadingSelector);
+  const areFoldersFetched = useSelector(areFoldersFetchedSelector);
   const location = useSelector(locationSelector);
   const { organizationSlug, projectSlug } = useSelector(
     urlOrganizationAndProjectSelector,
@@ -100,6 +107,19 @@ export const TestCaseLibraryPage = () => {
   const { canManageTestCases } = useUserPermissions();
   const projectLink = { type: PROJECT_DASHBOARD_PAGE, payload: { organizationSlug, projectSlug } };
   const hasFolders = !isEmpty(folders);
+  const hasTrackedViewRef = useRef(false);
+
+  useEffect(() => {
+    if (hasTrackedViewRef.current || areFoldersLoading || !areFoldersFetched) {
+      return;
+    }
+    hasTrackedViewRef.current = true;
+    trackEvent(
+      TEST_CASE_LIBRARY_EVENTS.viewTestCaseLibraryPage(
+        hasFolders ? PAGE_VIEW_CONTENT_TYPE.POPULATED : PAGE_VIEW_CONTENT_TYPE.EMPTY,
+      ),
+    );
+  }, [areFoldersLoading, areFoldersFetched, hasFolders, trackEvent]);
   const isSearchLoading =
     searchValue !== (location?.query?.testCasesSearchParams || '') || isLoadingFilteredFolders;
 
@@ -238,7 +258,7 @@ export const TestCaseLibraryPage = () => {
                     <>
                       <Button
                         variant="text"
-                        icon={Parser(ImportIcon as unknown as string)}
+                        icon={Parser(ImportIcon)}
                         data-automation-id="importTestCase"
                         adjustWidthOn="content"
                         onClick={() => {

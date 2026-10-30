@@ -19,6 +19,7 @@ import { useIntl } from 'react-intl';
 import { useSelector, useDispatch } from 'react-redux';
 import { useTracking } from 'react-tracking';
 import { isEmpty } from 'es-toolkit/compat';
+import { isNil } from 'es-toolkit';
 import {
   Button,
   RefreshIcon,
@@ -52,6 +53,7 @@ import {
 } from 'controllers/manualLaunch';
 import { SearchField } from 'components/fields/searchField';
 import { MANUAL_LAUNCHES_PAGE_EVENTS } from 'components/main/analytics/events/ga4Events/manualLaunchesPageEvents';
+import { PAGE_VIEW_CONTENT_TYPE } from 'components/main/analytics/events/common/ga4Utils';
 
 import { messages } from './messages';
 import { ManualLaunchesPageContent } from './manualLaunchesPageContent';
@@ -115,9 +117,19 @@ export const ManualLaunchesPage = () => {
     setSearchValue(appliedSearchQuery);
   }, [appliedSearchQuery]);
 
+  const hasTrackedViewRef = useRef(false);
+
   useEffect(() => {
-    trackEvent(MANUAL_LAUNCHES_PAGE_EVENTS.VIEW_MANUAL_LAUNCHES_PAGE);
-  }, [trackEvent]);
+    if (hasTrackedViewRef.current || isLoading || isNil(content)) {
+      return;
+    }
+    hasTrackedViewRef.current = true;
+    trackEvent(
+      MANUAL_LAUNCHES_PAGE_EVENTS.viewManualLaunchesPage(
+        isEmpty(content) ? PAGE_VIEW_CONTENT_TYPE.EMPTY : PAGE_VIEW_CONTENT_TYPE.POPULATED,
+      ),
+    );
+  }, [content, isLoading, trackEvent]);
 
   const isSearchLoading = searchValue.trim() !== appliedSearchQuery || isLoading;
 

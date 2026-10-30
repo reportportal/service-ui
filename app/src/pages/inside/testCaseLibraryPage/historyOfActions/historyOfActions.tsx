@@ -18,8 +18,10 @@ import type { ChangeEvent } from 'react';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useIntl } from 'react-intl';
 import { useSelector } from 'react-redux';
+import { useTracking } from 'react-tracking';
 import { BubblesLoader, Pagination, Table } from '@reportportal/ui-kit';
 
+import { TEST_CASE_LIBRARY_EVENTS } from 'analyticsEvents/testCaseLibraryPageEvents';
 import { createClassnames, debounce } from 'common/utils';
 import { SEARCH_DELAY } from 'common/constants/delayTime';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
@@ -61,6 +63,7 @@ const emptyPageData: Page = {
 
 export const HistoryOfActions = () => {
   const { formatMessage } = useIntl();
+  const { trackEvent } = useTracking();
   const { organizationSlug, projectSlug } = useProjectDetails();
   const payload = useSelector(payloadSelector);
   const testCaseId = useSelector(urlTestCaseSlugSelector);
@@ -71,6 +74,7 @@ export const HistoryOfActions = () => {
   const [searchValue, setSearchValue] = useState('');
   const [appliedDetailsFilter, setAppliedDetailsFilter] = useState('');
   const debouncedSearchCancelRef = useRef<(() => void) | undefined>(undefined);
+  const searchSessionTrackedRef = useRef(false);
 
   const testCasePageRoute = payload?.testCasePageRoute ?? '';
   const baseUrl = testCaseId
@@ -101,6 +105,7 @@ export const HistoryOfActions = () => {
   }, []);
 
   const clearHistorySearchFields = useCallback(() => {
+    searchSessionTrackedRef.current = false;
     setSearchValue('');
     setAppliedDetailsFilter('');
   }, []);
@@ -109,14 +114,23 @@ export const HistoryOfActions = () => {
     ({ target }: ChangeEvent<HTMLInputElement>) => {
       const { value } = target;
 
+      if (value.trim() && !searchSessionTrackedRef.current) {
+        trackEvent(TEST_CASE_LIBRARY_EVENTS.searchHistoryOfActions(testCaseId || undefined));
+        searchSessionTrackedRef.current = true;
+      }
+      if (!value.trim()) {
+        searchSessionTrackedRef.current = false;
+      }
+
       setSearchValue(value);
       cancelPendingHistorySearch();
       debouncedSearchCancelRef.current = applyDebouncedHistorySearch(value);
     },
-    [applyDebouncedHistorySearch, cancelPendingHistorySearch],
+    [applyDebouncedHistorySearch, cancelPendingHistorySearch, testCaseId, trackEvent],
   );
 
   const handleHistorySearchClear = useCallback(() => {
+    searchSessionTrackedRef.current = false;
     cancelPendingHistorySearch();
     clearHistorySearchFields();
     resetToFirstPage();
@@ -281,7 +295,7 @@ export const HistoryOfActions = () => {
                     <EmptyPageState
                       label={formatMessage(COMMON_LOCALE_KEYS.NO_RESULTS)}
                       description={formatMessage(testCaseListMessages.noResultsDescription)}
-                      emptyIcon={NoResultsIcon as unknown as string}
+                      emptyIcon={NoResultsIcon}
                     />
                   </div>
                 )}
