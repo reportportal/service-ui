@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+import { useState } from 'react';
 import { useIntl } from 'react-intl';
 import { Field, WrappedFieldProps } from 'redux-form';
 import { FieldLabel } from '@reportportal/ui-kit';
@@ -33,59 +34,80 @@ import styles from './launchFormFields.scss';
 
 const cx = createClassnames(styles);
 
+interface LaunchAutocompleteFieldProps extends WrappedFieldProps {
+  projectKey: string;
+  menuPortalRoot: HTMLElement;
+  onLaunchSelect?: ExistingLaunchFieldsProps['onLaunchSelect'];
+}
+
+const LaunchAutocompleteField = ({
+  input,
+  projectKey,
+  menuPortalRoot,
+  onLaunchSelect,
+}: LaunchAutocompleteFieldProps) => {
+  const { formatMessage } = useIntl();
+  const [showLimitationText, setShowLimitationText] = useState(false);
+
+  const retrieveLaunches = (value: string) =>
+    URLS.manualLaunchesListPagination(
+      projectKey,
+      value ? { [LAUNCH_NAME_FILTER_KEY]: value, limit: PAGE_SIZE } : { limit: PAGE_SIZE },
+    );
+
+  const makeLaunchOptions = (response: {
+    content: Array<{ id: number; name: string }>;
+    page: { totalElements: number };
+  }) => {
+    setShowLimitationText((response.page?.totalElements ?? 0) > PAGE_SIZE);
+    return response.content;
+  };
+
+  const handleLaunchChange = (value: unknown, fieldInput: { onChange: (value: unknown) => void }) => {
+    fieldInput.onChange(value);
+    if (onLaunchSelect) {
+      onLaunchSelect(value as LaunchOption | null);
+    }
+  };
+
+  return (
+    <AsyncAutocompleteV2
+      value={input.value}
+      name={input.name}
+      placeholder={formatMessage(messages.searchAndSelectLaunch)}
+      getURI={retrieveLaunches}
+      makeOptions={makeLaunchOptions}
+      onChange={(value) => handleLaunchChange(value, input)}
+      parseValueToString={(value: { name?: string }) => value?.name || ''}
+      createWithoutConfirmation
+      skipOptionCreation
+      isDropdownMode
+      minLength={0}
+      maxLength={LAUNCH_NAME_MAX_LENGTH}
+      menuFooter={showLimitationText ? formatMessage(messages.tooManyLaunchesResult) : undefined}
+      menuClassName={cx('modal-autocomplete-menu')}
+      menuPortalRoot={menuPortalRoot}
+      dropdownMatchInputWidth
+      withMenuFlip
+    />
+  );
+};
+
 export const ExistingLaunchFields = ({ onLaunchSelect }: ExistingLaunchFieldsProps) => {
   const { formatMessage } = useIntl();
   const projectKey = useSelector(projectKeySelector);
   const menuPortalRoot = document.getElementById('tooltip-root') || document.body;
 
-  const retrieveLaunches = (value: string) =>
-    URLS.manualLaunchesListPagination(
-      projectKey,
-      value ? { [LAUNCH_NAME_FILTER_KEY]: value, pageSize: PAGE_SIZE } : { pageSize: PAGE_SIZE },
-    );
-
-  const makeLaunchOptions = (response: { content: Array<{ id: number; name: string }> }) =>
-    response.content;
-
-  const handleLaunchChange = (value: unknown, input: { onChange: (value: unknown) => void }) => {
-    input.onChange(value);
-    if (onLaunchSelect) {
-      const launch = value as LaunchOption | null;
-      onLaunchSelect(launch);
-    }
-  };
-
-  const renderLaunchField = ({ input }: WrappedFieldProps) => {
-    return (
-      <AsyncAutocompleteV2
-        value={input.value}
-        name={input.name}
-        onBlur={input.onBlur}
-        onFocus={input.onFocus}
-        placeholder={formatMessage(messages.searchAndSelectLaunch)}
-        getURI={retrieveLaunches}
-        makeOptions={makeLaunchOptions}
-        onChange={(value) => handleLaunchChange(value, input)}
-        parseValueToString={(value: { name?: string }) => value?.name || ''}
-        createWithoutConfirmation
-        skipOptionCreation
-        isDropdownMode
-        minLength={0}
-        maxLength={LAUNCH_NAME_MAX_LENGTH}
-        limitOptions={PAGE_SIZE}
-        limitationText={formatMessage(messages.tooManyLaunchesResult)}
-        menuClassName={cx('modal-autocomplete-menu')}
-        menuPortalRoot={menuPortalRoot}
-        dropdownMatchInputWidth
-        withMenuFlip
-      />
-    );
-  };
-
   return (
     <div className={cx('launch-name-field')}>
       <FieldLabel isRequired>{formatMessage(messages.launchName)}</FieldLabel>
-      <Field name={LAUNCH_FORM_FIELD_NAMES.NAME} component={renderLaunchField} />
+      <Field
+        name={LAUNCH_FORM_FIELD_NAMES.NAME}
+        component={LaunchAutocompleteField}
+        projectKey={projectKey}
+        menuPortalRoot={menuPortalRoot}
+        onLaunchSelect={onLaunchSelect}
+      />
     </div>
   );
 };
