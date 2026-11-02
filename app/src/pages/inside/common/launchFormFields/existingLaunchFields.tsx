@@ -74,8 +74,6 @@ const LaunchAutocompleteField = ({
     <AsyncAutocompleteV2
       value={input.value}
       name={input.name}
-      onBlur={() => input.onBlur(input.value)}
-      onFocus={input.onFocus}
       placeholder={formatMessage(messages.searchAndSelectLaunch)}
       getURI={retrieveLaunches}
       makeOptions={makeLaunchOptions}
