@@ -25,7 +25,7 @@ import {
   type ManualLaunchesFilterURLQuery,
 } from 'common/manualLaunches/manualLaunchesFilterUrl';
 
-import { COMPLETION_VALUES, EMPTY_FILTER, LAUNCH_STATUSES } from './constants';
+import { COMPLETION_VALUES, EMPTY_FILTER, IMPORTANCE_VALUES, LAUNCH_STATUSES } from './constants';
 import type { LaunchAttribute } from '../types';
 import type {
   ManualLaunchesFilterPayload,
@@ -36,12 +36,14 @@ import type {
 export const buildManualLaunchesFilterPayload = (
   statuses: ManualLaunchesFilterPayload['statuses'],
   completion: ManualLaunchesFilterPayload['completion'],
+  importance: ManualLaunchesFilterPayload['importance'],
   startTime: ManualLaunchesFilterPayload['startTime'],
   testPlan: ManualLaunchesFilterPayload['testPlan'],
   attributes: ManualLaunchesFilterPayload['attributes'],
 ): ManualLaunchesFilterPayload => ({
   statuses,
   completion,
+  importance,
   startTime,
   testPlan,
   attributes,
@@ -64,6 +66,16 @@ const COMPLETION_FROM_BACKEND_VALUES: Record<string, string> = {
   done: COMPLETION_VALUES.DONE,
 };
 
+const IMPORTANCE_BACKEND_VALUES: Record<string, string | undefined> = {
+  [IMPORTANCE_VALUES.IMPORTANT_ONLY]: 'IMPORTANT',
+  [IMPORTANCE_VALUES.NOT_IMPORTANT]: 'REGULAR',
+};
+
+const IMPORTANCE_FROM_BACKEND_VALUES: Record<string, string> = {
+  IMPORTANT: IMPORTANCE_VALUES.IMPORTANT_ONLY,
+  REGULAR: IMPORTANCE_VALUES.NOT_IMPORTANT,
+};
+
 const VALID_STATUS_VALUES = new Set<string>(Object.values(LAUNCH_STATUSES));
 
 const getStartTimeRange = (
@@ -81,6 +93,7 @@ const getStartTimeRange = (
 export interface ManualLaunchesBackendFilterParams {
   itemStatus?: string;
   completion?: string;
+  retentionPolicy?: string;
   startTimeFrom?: number;
   endTimeTo?: number;
   testPlanId?: string;
@@ -100,6 +113,12 @@ export const buildManualLaunchesBackendFilterParams = (
 
   if (backendCompletion) {
     params.completion = backendCompletion;
+  }
+
+  const backendRetentionPolicy = IMPORTANCE_BACKEND_VALUES[payload.importance];
+
+  if (backendRetentionPolicy) {
+    params.retentionPolicy = backendRetentionPolicy;
   }
 
   const { from, to } = getStartTimeRange(payload.startTime);
@@ -136,6 +155,7 @@ export const buildURLQueryFromFilters = (
     [URL_KEYS.STATUSES]:
       !isEmpty(payload.statuses) ? payload.statuses.join(',') : undefined,
     [URL_KEYS.COMPLETION]: COMPLETION_BACKEND_VALUES[payload.completion],
+    [URL_KEYS.IMPORTANCE]: backendAttributes.retentionPolicy,
     [URL_KEYS.START_TIME_FROM]: from !== undefined ? String(from) : undefined,
     [URL_KEYS.START_TIME_TO]: to !== undefined ? String(to) : undefined,
     [URL_KEYS.TEST_PLAN]: payload.testPlan ? String(payload.testPlan.id) : undefined,
@@ -170,6 +190,9 @@ const parseCompletion = (raw?: string): string => {
 
   return COMPLETION_FROM_BACKEND_VALUES[raw] ?? COMPLETION_VALUES.ALL;
 };
+
+const parseImportance = (raw?: string): string =>
+  (raw && IMPORTANCE_FROM_BACKEND_VALUES[raw]) || IMPORTANCE_VALUES.ALL;
 
 const parseTrimmedFiniteNumber = (raw?: string): number | undefined => {
   const normalized = raw?.trim();
@@ -246,11 +269,12 @@ export const parseFiltersFromURLQuery = (
   return {
     statuses: parseStatuses(query[URL_KEYS.STATUSES]),
     completion: parseCompletion(query[URL_KEYS.COMPLETION]),
+    importance: parseImportance(query[URL_KEYS.IMPORTANCE]),
     startTime: parseStartTime(
       query[URL_KEYS.START_TIME_FROM],
       query[URL_KEYS.START_TIME_TO],
     ),
     testPlan: parseTestPlan(query[URL_KEYS.TEST_PLAN], query[URL_KEYS.TEST_PLAN_NAME]),
-    attributes: parseAttributesFromURL(query as Record<string, string | undefined>),
+    attributes: parseAttributesFromURL(query),
   };
 };

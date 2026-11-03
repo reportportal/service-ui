@@ -155,11 +155,12 @@ export const MANUAL_LAUNCHES_PAGE_EVENTS = {
     place: MANUAL_LAUNCHES_PLACE.ALL_TEST_EXECUTIONS,
     type,
   }),
-  CLICK_APPLY_LAUNCHES_FILTER: {
+  clickApplyLaunchesFilter: (condition?: string) => ({
     ...CLICK,
     place: MANUAL_LAUNCHES_PLACE.MANUAL_LAUNCHES_FILTER_PANEL,
     element_name: MANUAL_LAUNCHES_ELEMENT.APPLY_FILTER,
-  },
+    ...(condition && { condition }),
+  }),
   clickShowToRun: (place: ManualLaunchListOrSidebarPlace) => ({
     ...CLICK,
     place,

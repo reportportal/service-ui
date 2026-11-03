@@ -19,6 +19,7 @@ import { formatAttribute } from 'common/utils/attributeUtils';
 const URL_KEYS = {
   STATUSES: 'filterStatuses',
   COMPLETION: 'filterCompletion',
+  IMPORTANCE: 'filterImportance',
   START_TIME_FROM: 'filterStartTimeFrom',
   START_TIME_TO: 'filterStartTimeTo',
   TEST_PLAN: 'filterTestPlan',
