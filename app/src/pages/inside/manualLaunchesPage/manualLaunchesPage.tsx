@@ -30,6 +30,7 @@ import {
 } from '@reportportal/ui-kit';
 
 import { projectNameSelector } from 'controllers/project';
+import { importantLaunchesEnabledSelector } from 'controllers/appInfo';
 import { SettingsLayout } from 'layouts/settingsLayout';
 import { createClassnames, debounce } from 'common/utils';
 import { MANUAL_LAUNCHES_FILTER_URL_KEYS } from 'common/manualLaunches/manualLaunchesFilterUrl';
@@ -89,14 +90,21 @@ export const ManualLaunchesPage = () => {
     urlOrganizationAndProjectSelector,
   ) as ProjectDetails;
   const location = useSelector(locationSelector);
+  const isImportantLaunchesEnabled = useSelector(importantLaunchesEnabledSelector);
 
   const appliedSearchQuery = location?.query?.searchQuery || '';
   const [searchValue, setSearchValue] = useState(appliedSearchQuery);
   const searchSessionTrackedRef = useRef(false);
   const [isFilterSidePanelVisible, setIsFilterSidePanelVisible] = useState(false);
   const appliedFilters = useMemo<ManualLaunchesFilterPayload>(
-    () => parseFiltersFromURLQuery(location?.query),
-    [location?.query],
+    () => {
+      const parsedFilters = parseFiltersFromURLQuery(location?.query);
+
+      return isImportantLaunchesEnabled
+        ? parsedFilters
+        : { ...parsedFilters, importance: EMPTY_FILTER.importance };
+    },
+    [location?.query, isImportantLaunchesEnabled],
   );
 
   const activeFiltersCount = useMemo(() => {
@@ -104,6 +112,7 @@ export const ManualLaunchesPage = () => {
 
     if (!isEmpty(appliedFilters.statuses)) count += 1;
     if (appliedFilters.completion !== EMPTY_FILTER.completion) count += 1;
+    if (appliedFilters.importance !== EMPTY_FILTER.importance) count += 1;
     if (appliedFilters.startTime !== null) count += 1;
     if (appliedFilters.testPlan !== null) count += 1;
     if (!isEmpty(appliedFilters.attributes)) count += 1;
@@ -183,7 +192,11 @@ export const ManualLaunchesPage = () => {
 
   const handleApplyFilters = useCallback(
     (payload: ManualLaunchesFilterPayload) => {
-      trackEvent(MANUAL_LAUNCHES_PAGE_EVENTS.CLICK_APPLY_LAUNCHES_FILTER);
+      trackEvent(
+        MANUAL_LAUNCHES_PAGE_EVENTS.clickApplyLaunchesFilter(
+          isImportantLaunchesEnabled ? payload.importance : undefined,
+        ),
+      );
       dispatch(
         updatePagePropertiesAction({
           ...buildURLQueryFromFilters(payload),
@@ -191,7 +204,7 @@ export const ManualLaunchesPage = () => {
         }),
       );
     },
-    [dispatch, trackEvent],
+    [dispatch, trackEvent, isImportantLaunchesEnabled],
   );
 
   const handleClearAllFiltersFromToolbar = useCallback(() => {
@@ -204,7 +217,8 @@ export const ManualLaunchesPage = () => {
   }, [dispatch]);
 
   const handleRefresh = useCallback(() => {
-    const { filterCompositeAttribute } = buildManualLaunchesBackendFilterParams(appliedFilters);
+    const { filterCompositeAttribute, retentionPolicy } =
+      buildManualLaunchesBackendFilterParams(appliedFilters);
     const { statuses, startTime, testPlan } = appliedFilters;
 
     dispatch(
@@ -214,6 +228,7 @@ export const ManualLaunchesPage = () => {
         searchQuery: appliedSearchQuery || undefined,
         filterStatuses: statuses,
         filterCompletion: location?.query?.[MANUAL_LAUNCHES_FILTER_URL_KEYS.COMPLETION] || undefined,
+        filterRetentionPolicy: retentionPolicy,
         filterStartTimeFrom: startTime?.startDate ? startTime.startDate.getTime() : undefined,
         filterEndTimeTo: startTime?.endDate ? startTime.endDate.getTime() : undefined,
         filterTestPlan: testPlan ? String(testPlan.id) : undefined,

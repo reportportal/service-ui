@@ -63,6 +63,7 @@ import {
   MANUAL_LAUNCH_FOLDER_STATUS_FILTER_KEY,
   MANUAL_LAUNCH_ITEM_STATUS_FILTER_KEY,
   MANUAL_LAUNCH_COMPLETION_FILTER_KEY,
+  MANUAL_LAUNCH_RETENTION_POLICY_FILTER_KEY,
   MANUAL_LAUNCH_START_TIME_GT_FILTER_KEY,
   MANUAL_LAUNCH_END_TIME_LT_FILTER_KEY,
   MANUAL_LAUNCH_TEST_PLAN_ID_FILTER_KEY,
@@ -123,6 +124,7 @@ function* getManualLaunches(action: GetManualLaunchesAction): Generator {
         offset,
         filterStatuses,
         filterCompletion,
+        filterRetentionPolicy,
         filterStartTimeFrom,
         filterEndTimeTo,
         filterTestPlan,
@@ -141,6 +143,10 @@ function* getManualLaunches(action: GetManualLaunchesAction): Generator {
 
       if (filterCompletion) {
         params[MANUAL_LAUNCH_COMPLETION_FILTER_KEY] = filterCompletion;
+      }
+
+      if (filterRetentionPolicy) {
+        params[MANUAL_LAUNCH_RETENTION_POLICY_FILTER_KEY] = filterRetentionPolicy;
       }
 
       if (isNumber(filterStartTimeFrom)) {

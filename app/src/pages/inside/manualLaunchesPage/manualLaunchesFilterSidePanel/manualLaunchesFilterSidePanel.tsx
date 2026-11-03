@@ -34,11 +34,12 @@ import { isEmpty } from 'es-toolkit/compat';
 import { createClassnames } from 'common/utils';
 import { URLS } from 'common/urls';
 import { projectKeySelector } from 'controllers/project';
+import { importantLaunchesEnabledSelector } from 'controllers/appInfo';
 import { EditableAttributeList } from 'componentLibrary/attributeList/editableAttributeList';
 import { AsyncAutocompleteV2 } from 'componentLibrary/autocompletes/asyncAutocompleteV2';
 import { commonMessages } from 'pages/inside/common/common-messages';
 
-import { LAUNCH_STATUSES, COMPLETION_VALUES, EMPTY_FILTER } from './constants';
+import { LAUNCH_STATUSES, COMPLETION_VALUES, IMPORTANCE_VALUES, EMPTY_FILTER } from './constants';
 import {
   buildManualLaunchesFilterPayload,
   normalizeManualLaunchesFilterForCompare,
@@ -79,9 +80,11 @@ export const ManualLaunchesFilterSidePanel = memo(
   const { formatMessage } = useIntl();
   const wasVisibleRef = useRef(false);
   const projectKey = useSelector(projectKeySelector);
+  const isImportantLaunchesEnabled = useSelector(importantLaunchesEnabledSelector);
 
   const [localStatuses, setLocalStatuses] = useState<string[]>(appliedFilters.statuses);
   const [localCompletion, setLocalCompletion] = useState<string>(appliedFilters.completion);
+  const [localImportance, setLocalImportance] = useState<string>(appliedFilters.importance);
   const [localStartTime, setLocalStartTime] = useState<StartTimeValue | null>(
     appliedFilters.startTime,
   );
@@ -95,6 +98,7 @@ export const ManualLaunchesFilterSidePanel = memo(
   const syncLocalStateFromPayload = useCallback((payload: ManualLaunchesFilterPayload) => {
     setLocalStatuses(payload.statuses);
     setLocalCompletion(payload.completion);
+    setLocalImportance(payload.importance);
     setLocalStartTime(payload.startTime);
     setLocalTestPlan(payload.testPlan);
     setLocalAttributes(payload.attributes);
@@ -139,6 +143,27 @@ export const ManualLaunchesFilterSidePanel = memo(
     [formatMessage],
   );
 
+  const importanceOptions = useMemo(
+    () => [
+      {
+        value: IMPORTANCE_VALUES.ALL,
+        label: formatMessage(messages.importanceAll),
+        disabled: false,
+      },
+      {
+        value: IMPORTANCE_VALUES.IMPORTANT_ONLY,
+        label: formatMessage(messages.importanceImportantOnly),
+        disabled: false,
+      },
+      {
+        value: IMPORTANCE_VALUES.NOT_IMPORTANT,
+        label: formatMessage(messages.importanceNotImportant),
+        disabled: false,
+      },
+    ],
+    [formatMessage],
+  );
+
   const handleStatusChange = useCallback(
     (event: ChangeEvent<HTMLInputElement>, status: string) => {
       const { checked } = event.target;
@@ -151,6 +176,10 @@ export const ManualLaunchesFilterSidePanel = memo(
 
   const handleCompletionChange = useCallback((event: ChangeEvent<HTMLInputElement>) => {
     setLocalCompletion(event.target.value);
+  }, []);
+
+  const handleImportanceChange = useCallback((event: ChangeEvent<HTMLInputElement>) => {
+    setLocalImportance(event.target.value);
   }, []);
 
   const handleTestPlanChange = useCallback((value: TestPlanFilterOption | null) => {
@@ -196,6 +225,7 @@ export const ManualLaunchesFilterSidePanel = memo(
   const hasActiveFilters =
     !isEmpty(localStatuses) ||
     localCompletion !== EMPTY_FILTER.completion ||
+    localImportance !== EMPTY_FILTER.importance ||
     localStartTime !== null ||
     localTestPlan !== null ||
     !isEmpty(localAttributes);
@@ -205,11 +235,19 @@ export const ManualLaunchesFilterSidePanel = memo(
       buildManualLaunchesFilterPayload(
         localStatuses,
         localCompletion,
+        localImportance,
         localStartTime,
         localTestPlan,
         localAttributes,
       ),
-    [localStatuses, localCompletion, localStartTime, localTestPlan, localAttributes],
+    [
+      localStatuses,
+      localCompletion,
+      localImportance,
+      localStartTime,
+      localTestPlan,
+      localAttributes,
+    ],
   );
 
   const hasChanges = useMemo(
@@ -262,6 +300,21 @@ export const ManualLaunchesFilterSidePanel = memo(
           ))}
         </div>
       </FilterSectionBlock>
+
+      {isImportantLaunchesEnabled && (
+        <FilterSectionBlock label={formatMessage(messages.importance)}>
+          <div className={cx('radio-group')}>
+            {importanceOptions.map((option) => (
+              <Radio
+                key={option.value}
+                option={option}
+                value={localImportance}
+                onChange={handleImportanceChange}
+              />
+            ))}
+          </div>
+        </FilterSectionBlock>
+      )}
 
       <FilterSectionBlock label={formatMessage(messages.startTime)}>
         <StartTimeFilter value={localStartTime} onChange={setLocalStartTime} />

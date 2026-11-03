@@ -37,6 +37,22 @@ export const messages = defineMessages({
     id: 'ManualLaunchesFilterSidePanel.completionDone',
     defaultMessage: 'Done',
   },
+  importance: {
+    id: 'ManualLaunchesFilterSidePanel.importance',
+    defaultMessage: 'Importance',
+  },
+  importanceAll: {
+    id: 'ManualLaunchesFilterSidePanel.importanceAll',
+    defaultMessage: 'All',
+  },
+  importanceImportantOnly: {
+    id: 'ManualLaunchesFilterSidePanel.importanceImportantOnly',
+    defaultMessage: 'Important only',
+  },
+  importanceNotImportant: {
+    id: 'ManualLaunchesFilterSidePanel.importanceNotImportant',
+    defaultMessage: 'Not important',
+  },
   startTime: {
     id: 'ManualLaunchesFilterSidePanel.startTime',
     defaultMessage: 'Start time',

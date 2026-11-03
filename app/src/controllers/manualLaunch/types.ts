@@ -32,6 +32,7 @@ export interface GetManualLaunchesParams {
   searchQuery?: string;
   filterStatuses?: string[];
   filterCompletion?: string;
+  filterRetentionPolicy?: string;
   filterStartTimeFrom?: number;
   filterEndTimeTo?: number;
   filterTestPlan?: string;
