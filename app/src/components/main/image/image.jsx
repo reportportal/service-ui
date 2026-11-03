@@ -60,6 +60,7 @@ export class Image extends Component {
     this.observer = null;
     this.isVisible = false;
     this.isRequested = false;
+    this.isObservationPending = false;
   }
 
   componentDidMount() {
@@ -74,6 +75,10 @@ export class Image extends Component {
     if (prevProps.src !== this.props.src) {
       this.cancelPendingRequest();
       this.isRequested = false;
+      if (this.shouldLoadLazily()) {
+        this.restartLazyObservation();
+        return;
+      }
     }
     if (this.shouldFetch()) {
       this.fetchImage();
@@ -81,7 +86,20 @@ export class Image extends Component {
   }
 
   shouldFetch = () =>
-    !this.props.isStatic && !this.isRequested && (!this.observer || this.isVisible);
+    !this.props.isStatic &&
+    !this.isRequested &&
+    !this.isObservationPending &&
+    (!this.observer || this.isVisible);
+
+  restartLazyObservation = () => {
+    this.disconnectObserver();
+    this.isVisible = false;
+    this.isObservationPending = true;
+    this.setState({ loading: true }, () => {
+      this.isObservationPending = false;
+      this.observeVisibility();
+    });
+  };
 
   componentWillUnmount() {
     this.disconnectObserver();
