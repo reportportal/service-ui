@@ -21,6 +21,7 @@ import { Tooltip, useEllipsisTitle } from '@reportportal/ui-kit';
 import { ADMIN_TYPE } from 'common/utils/permissions/constants';
 import { messages } from 'pages/common/users/membersListTable/messages';
 import { UserAvatar } from 'pages/inside/common/userAvatar';
+import { IMAGE_REQUEST_GROUP } from 'components/main/image/imageRequestGroups';
 import styles from './userNameCell.scss';
 
 const cx = classNames.bind(styles);
@@ -31,7 +32,13 @@ export const UserNameCell = ({ userId, fullName, badges }) => {
 
   return (
     <div className={cx('user-name-cell')}>
-      <UserAvatar className={cx('user-avatar')} userId={userId} thumbnail />
+      <UserAvatar
+        className={cx('user-avatar')}
+        userId={userId}
+        thumbnail
+        requestGroup={IMAGE_REQUEST_GROUP.MEMBERS_LIST_AVATARS}
+        lazy
+      />
       <div className={cx('name-badge-wrapper')}>
         <div ref={fullNameRef} title={fullNameTitle} className={cx('full-name')}>{fullName}</div>
         {badges.length > 0 && (
