@@ -285,6 +285,12 @@ export const PROJECT_SETTINGS_INTEGRATION = {
     element_name: 'submit_delete_integration',
     type: normalizeEventParameter(type),
   }),
+
+  CLICK_SAVE_EDIT_PROJECT_INTEGRATION: (type) => ({
+    ...BASIC_EVENT_PARAMETERS_INTEGRATIONS,
+    element_name: 'submit_edit_project_integration',
+    type: normalizeEventParameter(type),
+  }),
 };
 
 export const PROJECT_SETTINGS_PATTERN_ANALYSIS_EVENTS = {
