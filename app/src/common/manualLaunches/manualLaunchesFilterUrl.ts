@@ -48,14 +48,14 @@ export const readCompositeFromQuery = (
   return raw || undefined;
 };
 
-const VALID_RETENTION_POLICY_VALUES = ['IMPORTANT', 'REGULAR'];
+const VALID_RETENTION_POLICY_VALUES = new Set(['IMPORTANT', 'REGULAR']);
 
 export const resolveFilterRetentionPolicyForApi = (
   query: { filterImportance?: string } | undefined,
 ): string | undefined => {
   const raw = query?.[URL_KEYS.IMPORTANCE]?.trim();
 
-  return raw && VALID_RETENTION_POLICY_VALUES.includes(raw) ? raw : undefined;
+  return raw && VALID_RETENTION_POLICY_VALUES.has(raw) ? raw : undefined;
 };
 
 export const resolveFilterCompositeAttributeForApi = (
