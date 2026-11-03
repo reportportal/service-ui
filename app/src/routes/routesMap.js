@@ -150,6 +150,7 @@ import {
 import {
   MANUAL_LAUNCHES_FILTER_URL_KEYS,
   resolveFilterCompositeAttributeForApi,
+  resolveFilterRetentionPolicyForApi,
 } from 'common/manualLaunches/manualLaunchesFilterUrl';
 import { getRouterParams } from 'common/utils';
 import { importantLaunchesEnabledSelector } from 'controllers/appInfo';
@@ -417,7 +418,7 @@ const routesMap = {
           filterStatuses,
           filterCompletion: query[MANUAL_LAUNCHES_FILTER_URL_KEYS.COMPLETION] || undefined,
           filterRetentionPolicy: importantLaunchesEnabledSelector(state)
-            ? query[MANUAL_LAUNCHES_FILTER_URL_KEYS.IMPORTANCE] || undefined
+            ? resolveFilterRetentionPolicyForApi(query)
             : undefined,
           filterStartTimeFrom: Number.isFinite(filterStartTimeFrom)
             ? filterStartTimeFrom
