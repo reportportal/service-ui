@@ -33,6 +33,8 @@ interface UserAvatarProps {
   imageClassName?: string;
   thumbnail?: boolean;
   timestamp?: number;
+  requestGroup?: string;
+  lazy?: boolean;
 }
 
 export const UserAvatar = ({
@@ -41,6 +43,8 @@ export const UserAvatar = ({
   imageClassName = '',
   thumbnail = false,
   timestamp,
+  requestGroup,
+  lazy = false,
 }: UserAvatarProps): ReactElement => {
   const currentUserId = useSelector(idSelector);
   const photoTimeStamp = useSelector(photoTimeStampSelector);
@@ -56,6 +60,8 @@ export const UserAvatar = ({
         alt="avatar"
         fallback={DefaultUserImage}
         preloaderColor="charcoal"
+        requestGroup={requestGroup}
+        lazy={lazy}
       />
     </div>
   );
