@@ -30,6 +30,10 @@ describe('isOutdatedVersion', () => {
     expect(isOutdatedVersion('6.0.0', '5.15.6')).toBe(false);
   });
 
+  test('should return false when versions differ only in build metadata', () => {
+    expect(isOutdatedVersion('0.1.0', '0.1.0+foo')).toBe(false);
+  });
+
   test('should return false when latest version is not provided', () => {
     expect(isOutdatedVersion('6.0.0', undefined)).toBe(false);
     expect(isOutdatedVersion('6.0.0', null)).toBe(false);

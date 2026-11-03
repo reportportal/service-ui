@@ -22,7 +22,9 @@ export const isOutdatedVersion = (currentVersion, latestVersion) => {
   }
 
   try {
-    return Boolean(semverDiff(currentVersion, latestVersion));
+    const difference = semverDiff(currentVersion, latestVersion);
+
+    return Boolean(difference) && difference !== 'build';
   } catch {
     return false;
   }
