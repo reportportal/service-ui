@@ -51,9 +51,12 @@ import {
   CONDITION_EQ,
   ENTITY_ATTRIBUTE,
   ENTITY_LAUNCH_TYPE,
+  ENTITY_RETENTION_POLICY,
 } from 'components/filterEntities/constants';
 import { LAUNCH_TYPES } from 'common/constants/launchTypes';
+import { RETENTION_POLICY } from 'common/constants/retentionPolicy';
 import { defectTypesSelector, projectKeySelector } from 'controllers/project';
+import { importantLaunchesEnabledSelector } from 'controllers/appInfo';
 import { getGroupedDefectTypesOptions } from 'pages/inside/common/utils';
 import { NO_DEFECT } from 'common/constants/defectTypes';
 import { launchOwnerLevelMessages } from 'common/constants/launchOwnerLevel';
@@ -163,12 +166,25 @@ const messages = defineMessages({
     id: 'LaunchLevelEntities.ExecutionTypeAutomationOption',
     defaultMessage: 'Automation',
   },
+  ImportanceTitle: {
+    id: 'LaunchLevelEntities.ImportanceTitle',
+    defaultMessage: 'Importance',
+  },
+  ImportanceImportant: {
+    id: 'LaunchLevelEntities.ImportanceImportantOption',
+    defaultMessage: 'Important launches',
+  },
+  ImportanceRegular: {
+    id: 'LaunchLevelEntities.ImportanceRegularOption',
+    defaultMessage: 'Regular launches',
+  },
 });
 
 @injectIntl
 @connect((state) => ({
   defectTypes: defectTypesSelector(state),
   projectKey: projectKeySelector(state),
+  isImportantLaunchesEnabled: importantLaunchesEnabledSelector(state),
 }))
 export class LaunchLevelEntities extends Component {
   static propTypes = {
@@ -178,14 +194,16 @@ export class LaunchLevelEntities extends Component {
     render: PropTypes.func.isRequired,
     visibleFilters: PropTypes.array,
     projectKey: PropTypes.string.isRequired,
+    isImportantLaunchesEnabled: PropTypes.bool,
   };
   static defaultProps = {
     filterValues: {},
     visibleFilters: [],
+    isImportantLaunchesEnabled: false,
   };
 
   getStaticEntities = () => {
-    const { intl, visibleFilters, projectKey } = this.props;
+    const { intl, visibleFilters, projectKey, isImportantLaunchesEnabled } = this.props;
     return [
       {
         id: ENTITY_NAME,
@@ -241,6 +259,33 @@ export class LaunchLevelEntities extends Component {
           selectAll: true,
         },
       },
+      ...(isImportantLaunchesEnabled
+        ? [
+            {
+              id: ENTITY_RETENTION_POLICY,
+              component: EntityDropdown,
+              value: this.bindDefaultValue(ENTITY_RETENTION_POLICY, {
+                condition: CONDITION_IN,
+              }),
+              title: intl.formatMessage(messages.ImportanceTitle),
+              active: visibleFilters.includes(ENTITY_RETENTION_POLICY),
+              removable: true,
+              customProps: {
+                options: [
+                  {
+                    label: intl.formatMessage(messages.ImportanceImportant),
+                    value: RETENTION_POLICY.IMPORTANT,
+                  },
+                  {
+                    label: intl.formatMessage(messages.ImportanceRegular),
+                    value: RETENTION_POLICY.REGULAR,
+                  },
+                ],
+                multiple: true,
+              },
+            },
+          ]
+        : []),
       {
         id: ENTITY_DESCRIPTION,
         component: EntityInputConditional,

@@ -54,6 +54,7 @@ export const ENTITY_PATTERN_NAME = 'patternName';
 export const ENTITY_RETRY = 'hasRetries';
 export const ENTITY_NEW_FAILURE = 'newFailure';
 export const ENTITY_LAUNCH_TYPE = 'launchType';
+export const ENTITY_RETENTION_POLICY = 'retentionPolicy';
 export const ENTITY_LAUNCH_NAME = 'launchName';
 export const ENTITY_LAUNCH_OWNER = 'launchOwner';
 
