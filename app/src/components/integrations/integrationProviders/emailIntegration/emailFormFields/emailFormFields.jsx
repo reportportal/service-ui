@@ -35,6 +35,10 @@ import { separateFromIntoNameAndEmail } from 'common/utils';
 import {
   DEFAULT_FORM_CONFIG,
   AUTH_ENABLED_KEY,
+  AUTH_MODE_KEY,
+  AUTH_MODE_OFF,
+  AUTH_MODE_BASIC,
+  AUTH_MODE_OAUTH2,
   PROTOCOL_KEY,
   SSL_KEY,
   TLS_KEY,
@@ -43,6 +47,9 @@ import {
   PORT_KEY,
   USERNAME_KEY,
   PASSWORD_KEY,
+  TENANT_ID_KEY,
+  CLIENT_ID_KEY,
+  CLIENT_SECRET_KEY,
   FROM_EMAIL_KEY,
   ENCRYPTION_MODE_NONE,
   ENCRYPTION_MODE_TLS,
@@ -98,13 +105,17 @@ const messages = defineMessages({
     id: 'EmailFormFields.authLabel',
     defaultMessage: 'Authorization',
   },
-  authOn: {
-    id: 'EmailFormFields.authOn',
-    defaultMessage: 'On',
+  tenantIdLabel: {
+    id: 'EmailFormFields.tenantIdLabel',
+    defaultMessage: 'Tenant Id',
   },
-  authOff: {
-    id: 'EmailFormFields.authOff',
-    defaultMessage: 'Off',
+  clientIdLabel: {
+    id: 'EmailFormFields.clientIdLabel',
+    defaultMessage: 'Client Id',
+  },
+  clientSecretLabel: {
+    id: 'EmailFormFields.clientSecretLabel',
+    defaultMessage: 'Client Secret',
   },
   usernameLabel: {
     id: 'EmailFormFields.usernameLabel',
@@ -152,42 +163,24 @@ const getEncryptionMode = (tlsEnabled, sslEnabled) => {
   return ENCRYPTION_MODE_NONE;
 };
 
-const AuthRadios = ({ value, onChange, disabled, formatMessage }) => {
-  const opts = [
-    { bool: true, label: formatMessage(messages.authOn) },
-    { bool: false, label: formatMessage(messages.authOff) },
-  ];
-  const current = value === true || value === 'true';
-  return (
-    <div className={cx('radio-row')}>
-      {opts.map(({ bool, label }) => (
-        <Radio
-          key={String(bool)}
-          disabled={disabled}
-          option={{
-            value: bool ? 'true' : 'false',
-            label,
-            disabled: !!disabled,
-          }}
-          value={current ? 'true' : 'false'}
-          onChange={() => onChange(bool ? 'true' : 'false')}
-        />
-      ))}
-    </div>
-  );
-};
-
-AuthRadios.propTypes = {
-  value: PropTypes.oneOfType([PropTypes.bool, PropTypes.string]),
-  onChange: PropTypes.func.isRequired,
-  disabled: PropTypes.bool,
-  formatMessage: PropTypes.func.isRequired,
+/*
+ * Integrations persisted before AUTH_MODE_KEY existed only carry the legacy boolean
+ * authEnabled flag: true meant Basic auth (the only mode that existed back then), anything
+ * else meant Off. Mirrors EmailAuthMode#resolve on the backend.
+ */
+const resolveAuthMode = (data) => {
+  if (data[AUTH_MODE_KEY]) {
+    return data[AUTH_MODE_KEY];
+  }
+  return data[AUTH_ENABLED_KEY] === true || data[AUTH_ENABLED_KEY] === 'true'
+    ? AUTH_MODE_BASIC
+    : AUTH_MODE_OFF;
 };
 
 @connect((state) => ({
-  authEnabled: formValueSelector(INTEGRATION_FORM)(state, AUTH_ENABLED_KEY),
   tlsEnabled: formValueSelector(INTEGRATION_FORM)(state, TLS_KEY),
   sslEnabled: formValueSelector(INTEGRATION_FORM)(state, SSL_KEY),
+  authMode: formValueSelector(INTEGRATION_FORM)(state, AUTH_MODE_KEY),
 }))
 @injectIntl
 export class EmailFormFields extends Component {
@@ -196,9 +189,9 @@ export class EmailFormFields extends Component {
     initialize: PropTypes.func.isRequired,
     change: PropTypes.func.isRequired,
     disabled: PropTypes.bool,
-    authEnabled: PropTypes.bool,
     tlsEnabled: PropTypes.bool,
     sslEnabled: PropTypes.bool,
+    authMode: PropTypes.string,
     initialData: PropTypes.object,
     editAuthMode: PropTypes.bool,
     updateMetaData: PropTypes.func,
@@ -206,9 +199,9 @@ export class EmailFormFields extends Component {
 
   static defaultProps = {
     disabled: false,
-    authEnabled: false,
     tlsEnabled: false,
     sslEnabled: false,
+    authMode: AUTH_MODE_OFF,
     initialData: DEFAULT_FORM_CONFIG,
     editAuthMode: false,
     updateMetaData: () => {},
@@ -217,6 +210,11 @@ export class EmailFormFields extends Component {
   constructor(props) {
     super(props);
     this.protocolOptions = [{ value: PROTOCOL_SMTP, label: 'SMTP' }];
+    this.authOptions = [
+      { value: AUTH_MODE_OFF, label: 'Off' },
+      { value: AUTH_MODE_BASIC, label: 'Basic' },
+      { value: AUTH_MODE_OAUTH2, label: 'OAuth 2.0' },
+    ];
   }
 
   componentDidMount() {
@@ -225,6 +223,7 @@ export class EmailFormFields extends Component {
     if (editAuthMode) {
       preparedData[PASSWORD_KEY] = '';
     }
+    preparedData[AUTH_MODE_KEY] = resolveAuthMode(preparedData);
     this.props.initialize(preparedData);
     if (preparedData[TLS_KEY] && preparedData[SSL_KEY]) {
       this.props.change(SSL_KEY, false);
@@ -234,12 +233,17 @@ export class EmailFormFields extends Component {
     });
   }
 
-  onChangeAuthAvailability = (...args) => {
-    const raw = args.length > 1 ? args[1] : args[0];
-    const enabled = raw === true || raw === 'true';
-    if (!enabled) {
+  onChangeAuthMode = (event, value) => {
+    if (value === AUTH_MODE_OFF) {
       this.props.change(USERNAME_KEY, '');
+    }
+    if (value !== AUTH_MODE_BASIC) {
       this.props.change(PASSWORD_KEY, '');
+    }
+    if (value !== AUTH_MODE_OAUTH2) {
+      this.props.change(TENANT_ID_KEY, '');
+      this.props.change(CLIENT_ID_KEY, '');
+      this.props.change(CLIENT_SECRET_KEY, '');
     }
   };
 
@@ -269,9 +273,9 @@ export class EmailFormFields extends Component {
   render() {
     const {
       intl: { formatMessage },
-      authEnabled,
       tlsEnabled,
       sslEnabled,
+      authMode,
       disabled,
     } = this.props;
 
@@ -359,23 +363,48 @@ export class EmailFormFields extends Component {
           </FieldErrorHint>
         </FieldElement>
         <FieldElement
-          name={AUTH_ENABLED_KEY}
+          name={AUTH_MODE_KEY}
           label={formatMessage(messages.authLabel)}
           disabled={disabled}
           className={cx('fields')}
-          format={(v) => (v ? 'true' : 'false')}
-          parse={(v) => v === 'true'}
-          onChange={this.onChangeAuthAvailability}
+          onChange={this.onChangeAuthMode}
         >
           <FieldErrorHint provideHint={false}>
-            <AuthRadios disabled={disabled} formatMessage={formatMessage} />
+            <Dropdown options={this.authOptions} />
           </FieldErrorHint>
         </FieldElement>
-        {authEnabled && (
+        {(authMode === AUTH_MODE_BASIC || authMode === AUTH_MODE_OAUTH2) && (
+          <FieldElement
+            name={USERNAME_KEY}
+            label={formatMessage(messages.usernameLabel)}
+            disabled={disabled}
+            className={cx('fields')}
+            validate={commonValidators.requiredField}
+            isRequired
+          >
+            <FieldErrorHint provideHint={false}>
+              <FieldText defaultWidth={false} />
+            </FieldErrorHint>
+          </FieldElement>
+        )}
+        {authMode === AUTH_MODE_BASIC && (
+          <FieldElement
+            name={PASSWORD_KEY}
+            label={formatMessage(messages.passwordLabel)}
+            disabled={disabled}
+            className={cx('fields')}
+            isRequired
+          >
+            <FieldErrorHint provideHint={false}>
+              <FieldText defaultWidth={false} type="password" />
+            </FieldErrorHint>
+          </FieldElement>
+        )}
+        {authMode === AUTH_MODE_OAUTH2 && (
           <>
             <FieldElement
-              name={USERNAME_KEY}
-              label={formatMessage(messages.usernameLabel)}
+              name={TENANT_ID_KEY}
+              label={formatMessage(messages.tenantIdLabel)}
               disabled={disabled}
               className={cx('fields')}
               validate={commonValidators.requiredField}
@@ -387,8 +416,20 @@ export class EmailFormFields extends Component {
               </FieldErrorHint>
             </FieldElement>
             <FieldElement
-              name={PASSWORD_KEY}
-              label={formatMessage(messages.passwordLabel)}
+              name={CLIENT_ID_KEY}
+              label={formatMessage(messages.clientIdLabel)}
+              disabled={disabled}
+              className={cx('fields')}
+              validate={commonValidators.requiredField}
+              isRequired
+            >
+              <FieldErrorHint provideHint={false}>
+                <FieldText defaultWidth={false} />
+              </FieldErrorHint>
+            </FieldElement>
+            <FieldElement
+              name={CLIENT_SECRET_KEY}
+              label={formatMessage(messages.clientSecretLabel)}
               disabled={disabled}
               className={cx('fields')}
               validate={commonValidators.requiredField}
