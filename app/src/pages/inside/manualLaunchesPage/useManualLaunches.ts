@@ -53,7 +53,7 @@ const getExecutionStatistics = (launch: Launch): ResolvedLaunchExecutionStats =>
 
 export const transformLaunchToManualTestCase = (launch: Launch): ManualTestCase => {
   const { total, passed, failed, skipped, inProgress, testsToRun } = getExecutionStatistics(launch);
-  const { id, number, name, startTime, displayId } = launch;
+  const { id, number, name, startTime, displayId, retentionPolicy } = launch;
 
   return {
     id,
@@ -67,6 +67,7 @@ export const transformLaunchToManualTestCase = (launch: Launch): ManualTestCase 
     skippedTests: skipped,
     inProgressTests: inProgress,
     testsToRun,
+    retentionPolicy,
   };
 };
 

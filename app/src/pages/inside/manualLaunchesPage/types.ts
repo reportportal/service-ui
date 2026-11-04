@@ -86,6 +86,7 @@ export interface ManualTestCase extends EntityWithDisplayId {
   inProgressTests: number;
   skippedTests: number;
   testsToRun: number;
+  retentionPolicy?: string;
 }
 
 export interface LaunchOwner {

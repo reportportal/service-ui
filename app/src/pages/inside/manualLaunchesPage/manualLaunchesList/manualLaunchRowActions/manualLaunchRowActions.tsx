@@ -21,9 +21,11 @@ import { VoidFn } from '@reportportal/ui-kit/common';
 
 import { ActionMenu } from 'components/actionMenu';
 import { useEditManualLaunchModal } from '../../editManualLaunchModal';
+import { useRetentionPolicyModal } from '../../retentionPolicyModal';
 import { ManualLaunchItem } from '../../types';
 import { fetch } from 'common/utils';
 import { URLS } from 'common/urls';
+import { RETENTION_POLICY } from 'common/constants/retentionPolicy';
 import { projectKeySelector } from 'controllers/project';
 import { showErrorNotification } from 'controllers/notification';
 
@@ -50,6 +52,10 @@ export const ManualLaunchRowActions = ({
   const { openModal: openEditModal } = useEditManualLaunchModal({
     onSuccess: onRefresh,
   });
+  const { openModal: openRetentionPolicyModal } = useRetentionPolicyModal({
+    onSuccess: onRefresh,
+  });
+  const retentionPolicy = metaData.retentionPolicy as string | undefined;
 
   const handleEdit = useCallback(() => {
     const launchId = metaData.id as number;
@@ -87,9 +93,21 @@ export const ManualLaunchRowActions = ({
     onDelete({ id: metaData.id as number, name: metaData.name as string });
   }, [onDelete, metaData.id, metaData.name]);
 
+  const handleChangeRetentionPolicy = useCallback(() => {
+    openRetentionPolicyModal({
+      launchId: metaData.id as number,
+      policy:
+        retentionPolicy === RETENTION_POLICY.IMPORTANT
+          ? RETENTION_POLICY.REGULAR
+          : RETENTION_POLICY.IMPORTANT,
+    });
+  }, [openRetentionPolicyModal, metaData.id, retentionPolicy]);
+
   const rowActions = useManualLaunchesListRowActions({
     onEdit: handleEdit,
     onDelete: handleDelete,
+    onChangeRetentionPolicy: handleChangeRetentionPolicy,
+    retentionPolicy,
   });
 
   return <ActionMenu actions={rowActions} />;

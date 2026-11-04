@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 EPAM Systems
+ * Copyright 2026 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,22 +16,32 @@
 
 import { useMemo } from 'react';
 import { useIntl } from 'react-intl';
+import { useSelector } from 'react-redux';
 
 import { ActionItem } from 'components/actionMenu';
+import { RETENTION_POLICY } from 'common/constants/retentionPolicy';
+import { importantLaunchesEnabledSelector } from 'controllers/appInfo';
 import { useUserPermissions } from 'hooks/useUserPermissions';
 import { messages } from 'pages/inside/manualLaunchesPage/launchSidePanel/messages';
+import { messages as retentionPolicyMessages } from 'pages/inside/manualLaunchesPage/retentionPolicyModal/messages';
 
 interface UseManualLaunchesListRowActionsParams {
   onEdit: () => void;
   onDelete: () => void;
+  onChangeRetentionPolicy: () => void;
+  retentionPolicy?: string;
 }
 
 export const useManualLaunchesListRowActions = ({
   onEdit,
   onDelete,
+  onChangeRetentionPolicy,
+  retentionPolicy,
 }: UseManualLaunchesListRowActionsParams): ActionItem[] => {
   const { formatMessage } = useIntl();
   const { canDeleteLaunch, canEditLaunch } = useUserPermissions();
+  const isImportantLaunchesEnabled = useSelector(importantLaunchesEnabledSelector);
+  const isImportant = retentionPolicy === RETENTION_POLICY.IMPORTANT;
 
   return useMemo(
     () => [
@@ -41,12 +51,30 @@ export const useManualLaunchesListRowActions = ({
         hasPermission: canEditLaunch,
       },
       {
+        label: formatMessage(
+          isImportant
+            ? retentionPolicyMessages.unmarkAsImportantAction
+            : retentionPolicyMessages.markAsImportantAction,
+        ),
+        onClick: onChangeRetentionPolicy,
+        hasPermission: canEditLaunch && isImportantLaunchesEnabled,
+      },
+      {
         label: formatMessage(messages.deleteLaunch),
         onClick: onDelete,
         danger: true,
         hasPermission: canDeleteLaunch,
       },
     ],
-    [formatMessage, onEdit, onDelete, canDeleteLaunch, canEditLaunch],
+    [
+      formatMessage,
+      onEdit,
+      onDelete,
+      onChangeRetentionPolicy,
+      isImportant,
+      isImportantLaunchesEnabled,
+      canDeleteLaunch,
+      canEditLaunch,
+    ],
   );
 };
