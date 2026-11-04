@@ -160,20 +160,26 @@ describe('AvailablePluginDetail', () => {
         { version: '5.12.0', compatible: false, requires: '>=25.0, <26.0', blocked: false },
       ],
     };
-    const installAction = (wrapper) => find(wrapper, 'installAction').first();
+    // the rendered <button>, not the kit component's prop: what the admin can actually press
+    const installButton = (wrapper) => {
+      const button = find(wrapper, 'installAction').hostNodes();
+
+      expect(button).toHaveLength(1);
+      return button.getDOMNode();
+    };
     const reason = (wrapper) => find(wrapper, 'installUnavailableReason').hostNodes();
 
     test('is disabled, and says why under the button', () => {
       const wrapper = render({ detail: outgrown, productVersion: '26.0' });
 
-      expect(installAction(wrapper).prop('disabled')).toBe(true);
+      expect(installButton(wrapper).disabled).toBe(true);
       expect(reason(wrapper).text()).toBe('No published version runs on ReportPortal 26.0.');
     });
 
     test('without a release to name, it still says nothing can be installed', () => {
       const wrapper = render({ detail: outgrown });
 
-      expect(installAction(wrapper).prop('disabled')).toBe(true);
+      expect(installButton(wrapper).disabled).toBe(true);
       expect(reason(wrapper).text()).toBe(
         'No published version can be installed on this instance.',
       );
@@ -188,7 +194,7 @@ describe('AvailablePluginDetail', () => {
         productVersion: '26.0',
       });
 
-      expect(installAction(wrapper).prop('disabled')).toBe(true);
+      expect(installButton(wrapper).disabled).toBe(true);
       expect(reason(wrapper).text()).toBe(
         'No published version can be installed on this instance.',
       );
@@ -203,7 +209,7 @@ describe('AvailablePluginDetail', () => {
         productVersion: '26.0',
       });
 
-      expect(installAction(wrapper).prop('disabled')).toBe(false);
+      expect(installButton(wrapper).disabled).toBe(false);
       expect(reason(wrapper)).toHaveLength(0);
     });
 
@@ -215,14 +221,14 @@ describe('AvailablePluginDetail', () => {
         productVersion: '26.0',
       });
 
-      expect(installAction(wrapper).prop('disabled')).toBe(false);
+      expect(installButton(wrapper).disabled).toBe(false);
     });
 
     test('an answer that has not landed, or cannot be believed, decides nothing', () => {
       [{ loading: true }, { offline: true }, { failed: true }].forEach((state) => {
         const wrapper = render({ detail: outgrown, productVersion: '26.0', ...state });
 
-        expect(installAction(wrapper).prop('disabled')).toBe(false);
+        expect(installButton(wrapper).disabled).toBe(false);
         expect(reason(wrapper)).toHaveLength(0);
       });
     });
