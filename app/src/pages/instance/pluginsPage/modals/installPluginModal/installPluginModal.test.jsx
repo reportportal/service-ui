@@ -111,6 +111,18 @@ describe('InstallPluginModal', () => {
     console.error = consoleError;
   });
 
+  // `<b>` left unbound made react-intl print the source string, placeholder and all
+  test('names the plugin it is about to install, in bold, with no placeholder left', () => {
+    const { wrapper } = render();
+    const description = wrapper.find('[data-automation-id="installPluginDescription"]').hostNodes();
+
+    expect(description.text()).toBe(
+      'Slack will be downloaded from the marketplace and installed on this instance.',
+    );
+    expect(description.text()).not.toContain('{');
+    expect(description.find('b').text()).toBe('Slack');
+  });
+
   test('the newest installable version is what it offers to install', () => {
     const onInstall = jest.fn();
     const { confirm } = render({ onInstall });
