@@ -14,41 +14,61 @@
  * limitations under the License.
  */
 
-import { FC, ReactNode } from 'react';
-import { useIntl, MessageDescriptor } from 'react-intl';
-import { Button } from '@reportportal/ui-kit';
+import { ReactNode } from 'react';
+import { defineMessages, useIntl } from 'react-intl';
+import { ArrowLeftIcon, Button } from '@reportportal/ui-kit';
 import { addFilteringFieldToConditions } from 'controllers/filter';
 import { LEVEL_LAUNCH } from 'common/constants/launchLevels';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
+import { MODAL_POPUP_Z_INDEX } from 'common/constants/zIndex';
 import { FilterEntitiesContainer } from 'components/filterEntities/containers';
-import { EntitiesGroup } from 'components/filterEntities/entitiesGroup';
-import { FiltersSorting } from 'pages/inside/common/filtersSorting';
-import { Filter, Condition, Order } from 'pages/inside/dashboardItemPage/modals/widgetWizardModal/types';
+import { EntitiesGroupV2 } from 'components/filterEntities/v2';
+import { ConditionalTooltip } from 'components/main/conditionalTooltip';
+import { FiltersSortingOrder, FiltersSortingV2 } from 'pages/inside/common/filtersSortingV2';
+import {
+  Filter,
+  Condition,
+  Order,
+} from 'pages/inside/dashboardItemPage/modals/widgetWizardModal/types';
 import { ENTITY_NUMBER } from 'components/filterEntities/constants';
 import { createClassnames } from 'common/utils';
 import styles from './addEditFilter.scss';
 
 const cx = createClassnames(styles);
+const menuPortalRoot = document.getElementById('tooltip-root') || document.body;
+
+const messages = defineMessages({
+  cancelAndGoBack: {
+    id: 'AddEditFilter.cancelAndGoBack',
+    defaultMessage: 'Cancel and Go Back',
+  },
+  fillRequiredTooltip: {
+    id: 'AddEditFilter.fillRequiredTooltip',
+    defaultMessage: 'Fill in all required fields and at least one condition to save the filter.',
+  },
+});
 
 interface AddEditFilterProps {
   filter: Filter;
   isValid?: boolean;
-  blockTitle?: MessageDescriptor | null;
+  blockTitle?: ReactNode;
+  submitTitle?: ReactNode;
   onSubmit: () => void;
   onCancel: () => void;
   onChange: (filter: Filter) => void;
   customBlock?: ReactNode;
 }
 
-export const AddEditFilter: FC<AddEditFilterProps> = ({
+export const AddEditFilter = ({
   filter,
   isValid = true,
   blockTitle = null,
+  submitTitle = null,
   onSubmit,
   onCancel,
   onChange,
   customBlock = null,
-}) => {
+}: AddEditFilterProps) => {
   const { formatMessage } = useIntl();
 
   const getFilterEntities = () => {
@@ -68,33 +88,25 @@ export const AddEditFilter: FC<AddEditFilterProps> = ({
     });
   };
 
-  const handleOrdersChange = (newSortingColumn: string) => {
+  const handleOrdersChange = (order: FiltersSortingOrder) => {
     const { orders = [] } = filter;
-    const currentOrder = orders.length ? orders[0] : {};
-    const { sortingColumn, isAsc } = currentOrder as Order;
+    const newOrders: Order[] = [order];
+    const numberOrder = orders.find((item) => item.sortingColumn === ENTITY_NUMBER);
 
-    const sortObject: Order = {
-      sortingColumn: newSortingColumn,
-      isAsc: sortingColumn === newSortingColumn ? !isAsc : true,
-    };
-
-    const newOrders: Order[] = [sortObject];
-    const numberColumnIndex = orders.findIndex((o) => o.sortingColumn === ENTITY_NUMBER);
-    if (numberColumnIndex >= 0) {
-      newOrders.push(orders[numberColumnIndex]);
+    if (numberOrder) {
+      newOrders.push(numberOrder);
     }
+
     onChange({ ...filter, orders: newOrders });
   };
 
-  const isAbleToSubmit = () => {
-    const { conditions = [] } = filter;
-    const filteredConditions = conditions.filter((item) => item.value.trim());
-    return isValid && filteredConditions.length;
-  };
+  const { conditions = [] } = filter;
+  const hasConditionWithValue = conditions.some((item) => item.value.trim());
+  const canSubmit = Boolean(isValid && hasConditionWithValue);
 
   return (
     <div className={cx('add-edit-filter')}>
-      {blockTitle && <h2 className={cx('block-title')}>{formatMessage(blockTitle)}</h2>}
+      {blockTitle && <h3 className={cx('block-title')}>{blockTitle}</h3>}
       {customBlock}
       <div className={cx('filters-block')}>
         <FilterEntitiesContainer
@@ -109,32 +121,37 @@ export const AddEditFilter: FC<AddEditFilterProps> = ({
             filterErrors,
             filterEntities,
           }) => (
-            <EntitiesGroup
+            <EntitiesGroupV2
               onChange={onFilterChange}
               onValidate={onFilterValidate}
               onRemove={onFilterRemove}
               onAdd={onFilterAdd}
               errors={filterErrors}
               entities={filterEntities}
-              entitySmallSize
             />
           )}
         />
-        <FiltersSorting filter={filter} onChange={handleOrdersChange} />
+        <FiltersSortingV2 filter={filter} onChange={handleOrdersChange} />
         <div className={cx('filter-buttons-block')}>
           <Button
             variant="ghost"
+            icon={<ArrowLeftIcon />}
             onClick={onCancel}
+            adjustWidthOn="content"
           >
-            {formatMessage(COMMON_LOCALE_KEYS.CANCEL)}
+            {formatMessage(messages.cancelAndGoBack)}
           </Button>
-          <Button
-            variant="primary"
-            onClick={onSubmit}
-            disabled={!isAbleToSubmit()}
+          <ConditionalTooltip
+            wrapperClassName={cx('tooltip-wrapper')}
+            content={canSubmit ? null : formatMessage(messages.fillRequiredTooltip)}
+            placement="top"
+            portalRoot={menuPortalRoot}
+            zIndex={MODAL_POPUP_Z_INDEX}
           >
-            {formatMessage(COMMON_LOCALE_KEYS.SUBMIT)}
-          </Button>
+            <Button variant="primary" onClick={onSubmit} disabled={!canSubmit}>
+              {submitTitle ?? formatMessage(COMMON_LOCALE_KEYS.SUBMIT)}
+            </Button>
+          </ConditionalTooltip>
         </div>
       </div>
     </div>

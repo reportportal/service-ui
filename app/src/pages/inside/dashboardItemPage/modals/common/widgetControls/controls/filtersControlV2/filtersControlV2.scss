@@ -14,6 +14,12 @@
  * limitations under the License.
  */
 
+.filters-control-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
 .filters-control {
   display: flex;
   gap: 8px;
@@ -43,10 +49,36 @@
 
 .filter-option-description {
   display: -webkit-box;
-  -webkit-box-orient: vertical;
-  -webkit-line-clamp: 3;
-  line-clamp: 3;
-  overflow: hidden;
+  margin: 0;
   overflow-wrap: break-word;
   color: var(--rp-ui-color-text-secondary);
+
+  &.clamped {
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3;
+    line-clamp: 3;
+    overflow: hidden;
+  }
+}
+
+.filter-card {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 13px;
+  line-height: 20px;
+  padding: 16px;
+  border-radius: 4px;
+  background-color: var(--rp-ui-base-bg-000);
+
+  .filter-card-header {
+    display: flex;
+    gap: 8px;
+    height: 24px;
+  }
+
+  .filter-option-name {
+    flex: 1;
+    font-weight: var(--rp-ui-base-fw-medium);
+  }
 }

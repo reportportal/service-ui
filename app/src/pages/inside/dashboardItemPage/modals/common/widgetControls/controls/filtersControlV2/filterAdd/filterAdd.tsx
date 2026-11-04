@@ -18,28 +18,34 @@ import { useSelector } from 'react-redux';
 import { reduxForm, InjectedFormProps, formValueSelector } from 'redux-form';
 import { defineMessages, useIntl } from 'react-intl';
 import { FieldText } from '@reportportal/ui-kit';
-import { commonValidators, validateAsync } from 'common/utils/validation';
+import { validateAsync } from 'common/utils/validation';
 import { FieldProvider } from 'components/fields/fieldProvider';
 import { FieldErrorHint } from 'components/fields/fieldErrorHint';
-import { createClassnames } from 'common/utils';
 import { Filter } from 'pages/inside/dashboardItemPage/modals/widgetWizardModal/types';
-import { messages } from '../../filtersControl/common/messages';
 import { FILTER_ADD_FORM, FILTER_NAME_KEY } from '../../filtersControl/common/constants';
 import { AddEditFilter } from '../common/addEditFilter';
-import styles from './filterAdd.scss';
 
-const cx = createClassnames(styles);
+const FILTER_NAME_MIN_LENGTH = 3;
+const FILTER_NAME_MAX_LENGTH = 128;
 
 const selector = formValueSelector(FILTER_ADD_FORM);
 
 const localMessages = defineMessages({
+  blockTitle: {
+    id: 'FilterAdd.blockTitle',
+    defaultMessage: 'Create Filter',
+  },
   filterName: {
     id: 'AddFilter.filterName',
-    defaultMessage: 'Filter Name',
+    defaultMessage: 'Filter name',
   },
   placeholderFilterName: {
     id: 'AddFilter.placeholderFilterName',
-    defaultMessage: 'Input filter name',
+    defaultMessage: 'Enter filter name',
+  },
+  filterNameHelpText: {
+    id: 'AddFilter.filterNameHelpText',
+    defaultMessage: 'Filter name length should have size from 3 to 128 characters.',
   },
 });
 
@@ -60,6 +66,7 @@ type FilterAddBaseProps = OwnProps & InjectedFormProps<FilterAddFormValues, OwnP
 const FilterAddBase = ({ filter, valid, onSave, onCancel, onChange }: FilterAddBaseProps) => {
   const { formatMessage } = useIntl();
   const name = useSelector((state) => selector(state, FILTER_NAME_KEY) as string);
+  const isNameValid = (name?.trim().length ?? 0) >= FILTER_NAME_MIN_LENGTH;
 
   const handleFilterChange = (updatedFilter: Filter) => {
     onChange({ ...updatedFilter, name });
@@ -71,21 +78,23 @@ const FilterAddBase = ({ filter, valid, onSave, onCancel, onChange }: FilterAddB
       onCancel={onCancel}
       onSubmit={onSave}
       onChange={handleFilterChange}
-      isValid={valid}
-      blockTitle={messages.addTitle}
+      isValid={valid && isNameValid}
+      blockTitle={formatMessage(localMessages.blockTitle)}
+      submitTitle={formatMessage(localMessages.blockTitle)}
       customBlock={
-        <div className={cx('filter-add-custom-block')}>
-          <span className={cx('custom-block-text')}>{formatMessage(localMessages.filterName)}</span>
-          <FieldProvider name={FILTER_NAME_KEY}>
-            <FieldErrorHint provideHint={false}>
-              <FieldText
-                placeholder={formatMessage(localMessages.placeholderFilterName)}
-                maxLength={128}
-                defaultWidth={false}
-              />
-            </FieldErrorHint>
-          </FieldProvider>
-        </div>
+        <FieldProvider name={FILTER_NAME_KEY}>
+          <FieldErrorHint provideHint={false}>
+            <FieldText
+              label={formatMessage(localMessages.filterName)}
+              placeholder={formatMessage(localMessages.placeholderFilterName)}
+              helpText={formatMessage(localMessages.filterNameHelpText)}
+              maxLength={FILTER_NAME_MAX_LENGTH}
+              maxLengthDisplay={FILTER_NAME_MAX_LENGTH}
+              defaultWidth={false}
+              isRequired
+            />
+          </FieldErrorHint>
+        </FieldProvider>
       }
     />
   );
@@ -93,14 +102,18 @@ const FilterAddBase = ({ filter, valid, onSave, onCancel, onChange }: FilterAddB
 
 export const FilterAdd = reduxForm<FilterAddFormValues, OwnProps>({
   form: FILTER_ADD_FORM,
-  validate: ({ name }: FilterAddFormValues) => ({
-    name: commonValidators.filterName(name),
-  }),
-  asyncValidate: ({ name }: FilterAddFormValues, _dispatch, props: OwnProps) =>
-    validateAsync.filterNameUnique(props.projectKey, undefined, name),
+  // Length is helper text + disabled Create; field error only for duplicate (async)
+  asyncValidate: ({ name }: FilterAddFormValues, _dispatch, props: OwnProps) => {
+    if ((name?.trim().length ?? 0) < FILTER_NAME_MIN_LENGTH) {
+      return Promise.resolve();
+    }
+
+    return validateAsync.filterNameUnique(props.projectKey, undefined, name);
+  },
   asyncChangeFields: ['name'],
   asyncBlurFields: ['name'],
-  onChange: ({ name }: FilterAddFormValues, _dispatcher, props: OwnProps) => props.onChange({ name }),
+  onChange: ({ name }: FilterAddFormValues, _dispatcher, props: OwnProps) =>
+    props.onChange({ name }),
   enableReinitialize: true,
   keepDirtyOnReinitialize: true,
   updateUnregisteredFields: true,

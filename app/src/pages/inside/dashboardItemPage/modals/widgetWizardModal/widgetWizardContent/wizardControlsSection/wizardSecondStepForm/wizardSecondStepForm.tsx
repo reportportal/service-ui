@@ -149,7 +149,9 @@ const WizardSecondStepFormBase: FC<Props> = ({
         <SpinningPreloader />
       ) : (
         <>
-          <CommonWidgetControls dashboards={dashboards} activeDashboard={activeDashboard || {}} />
+          {!formAppearance.isMainControlsLocked && (
+            <CommonWidgetControls dashboards={dashboards} activeDashboard={activeDashboard || {}} />
+          )}
           {ControlsForm && (
             <ControlsForm
               widgetType={widget.id}

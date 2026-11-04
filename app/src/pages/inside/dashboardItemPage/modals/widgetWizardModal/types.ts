@@ -48,7 +48,7 @@ export interface ContentParameters {
 }
 
 export interface Filter {
-  id?: number | string;
+  id?: number;
   name?: string;
   description?: string;
   conditions?: Condition[];

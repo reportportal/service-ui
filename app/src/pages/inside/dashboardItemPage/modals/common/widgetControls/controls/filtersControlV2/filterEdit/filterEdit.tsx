@@ -14,16 +14,20 @@
  * limitations under the License.
  */
 
-import { FC } from 'react';
-import { Radio } from '@reportportal/ui-kit';
-import { createClassnames } from 'common/utils';
+import { defineMessages, useIntl } from 'react-intl';
 import { Filter } from 'pages/inside/dashboardItemPage/modals/widgetWizardModal/types';
-import { messages } from '../../filtersControl/common/messages';
 import { AddEditFilter } from '../common/addEditFilter';
-import styles from './filterEdit.scss';
 
-const cx = createClassnames(styles);
-
+const messages = defineMessages({
+  blockTitle: {
+    id: 'FilterEdit.blockTitle',
+    defaultMessage: 'Edit Filter: {name}',
+  },
+  submitTitle: {
+    id: 'FilterEdit.submitTitle',
+    defaultMessage: 'Save Filter',
+  },
+});
 
 interface FilterEditProps {
   filter: Filter;
@@ -32,25 +36,17 @@ interface FilterEditProps {
   onChange: (data: Partial<Filter>) => void;
 }
 
-export const FilterEdit: FC<FilterEditProps> = ({
-  filter,
-  onSave,
-  onCancel,
-  onChange,
-}) => (
-  <AddEditFilter
-    filter={filter}
-    onCancel={() => onCancel(filter)}
-    onSubmit={() => onSave(filter)}
-    onChange={onChange}
-    customBlock={
-      <div className={cx('filter-edit-header')}>
-        <Radio
-          option={{ value: filter.id, label: filter.name, disabled: false }}
-          value={filter.id}
-        />
-      </div>
-    }
-    blockTitle={messages.editTitle}
-  />
-);
+export const FilterEdit = ({ filter, onSave, onCancel, onChange }: FilterEditProps) => {
+  const { formatMessage } = useIntl();
+
+  return (
+    <AddEditFilter
+      filter={filter}
+      onCancel={() => onCancel(filter)}
+      onSubmit={() => onSave(filter)}
+      onChange={onChange}
+      blockTitle={formatMessage(messages.blockTitle, { name: filter.name })}
+      submitTitle={formatMessage(messages.submitTitle)}
+    />
+  );
+};

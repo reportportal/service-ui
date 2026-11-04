@@ -14,14 +14,18 @@
  * limitations under the License.
  */
 
+$scrollbar-width: 12px;
+
 .wizard-controls-section {
   flex: 1;
   min-height: 0;
   height: 100%;
+  margin-right: -$scrollbar-width;
 }
 .controls-wrapper {
   box-sizing: border-box;
   height: 100%;
+  padding-right: $scrollbar-width;
 }
 .buttons-block {
   position: absolute;
