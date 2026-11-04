@@ -55,6 +55,29 @@ describe('compareVersions', () => {
     expect(compareVersions('5.8.0-rc2', '5.8.0-rc1')).toBeGreaterThan(0);
     expect(compareVersions('5.8.0-rc1', '5.7.9')).toBeGreaterThan(0);
   });
+
+  // the defect PluginVersions fixed on the server: compared as one string, rc.10 sorted below
+  // rc.2, so a plugin on its tenth candidate was told the second was an upgrade
+  test('candidates order by number, not as text', () => {
+    expect(compareVersions('5.8.0-rc.10', '5.8.0-rc.2')).toBeGreaterThan(0);
+    expect(compareVersions('5.8.0-rc.2', '5.8.0-rc.10')).toBeLessThan(0);
+    expect(order(['5.8.0-rc.2', '5.8.0', '5.8.0-rc.10'])).toEqual([
+      '5.8.0',
+      '5.8.0-rc.10',
+      '5.8.0-rc.2',
+    ]);
+  });
+
+  // as on the server: a segment is read for its leading digits, and one with none is a zero
+  test('a segment that is not a number reads as its leading digits, or zero', () => {
+    expect(compareVersions('5.x', '5.0')).toBe(0);
+    expect(compareVersions('5.1a', '5.1')).toBe(0);
+    expect(compareVersions('5.x', '5.1')).toBeLessThan(0);
+  });
+
+  test('is the server’s ordering, not a second one', () => {
+    expect(compareVersions).toBe(compareProductVersions);
+  });
 });
 
 describe('sortVersionsNewestFirst', () => {

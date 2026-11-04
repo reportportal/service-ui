@@ -14,70 +14,6 @@
  * limitations under the License.
  */
 
-const NUMERIC_PREFIX = /^\d+/;
-
-/**
- * Newest first, by version rather than by publish date. A patch for an older branch can be
- * published after a newer release — ordinary, and the registry itself already refuses to call it
- * "latest" for the same reason — so ordering by date would put 5.6.2 above 5.8.0 and make the
- * newest build look like an old one.
- */
-export const sortVersionsNewestFirst = (versions) =>
-  [...versions].sort((a, b) => compareVersions(b.version, a.version));
-
-/**
- * Compares two version strings segment by segment, numerically where a segment is a number.
- *
- * <p>Deliberately not semver-strict: plugins are not disciplined about the third segment, and a
- * version recorded as `5.7` has to sort and compare rather than throw. A segment that does not
- * start with a digit compares as lower than one that does, which puts `5.8.0-rc1` below `5.8.0`.
- */
-export const compareVersions = (left, right) => {
-  const a = String(left ?? '').split('.');
-  const b = String(right ?? '').split('.');
-
-  for (let i = 0; i < Math.max(a.length, b.length); i += 1) {
-    const diff = compareSegments(a[i], b[i]);
-
-    if (diff !== 0) {
-      return diff;
-    }
-  }
-
-  return 0;
-};
-
-const compareSegments = (left = '0', right = '0') => {
-  const a = NUMERIC_PREFIX.exec(left);
-  const b = NUMERIC_PREFIX.exec(right);
-
-  if (!a || !b) {
-    return (a ? 1 : 0) - (b ? 1 : 0);
-  }
-
-  const numeric = Number(a[0]) - Number(b[0]);
-
-  if (numeric !== 0) {
-    return numeric;
-  }
-
-  // 5.8.0 outranks 5.8.0-rc1: a bare number is the release, a suffix is on the way to it
-  const restA = left.slice(a[0].length);
-  const restB = right.slice(b[0].length);
-
-  if (restA === restB) {
-    return 0;
-  }
-  if (restA === '') {
-    return 1;
-  }
-  if (restB === '') {
-    return -1;
-  }
-
-  return restA.localeCompare(restB);
-};
-
 // service-api's CompatibilityRange and PluginVersions, ported rule for rule: the verdict is the
 // server's, and this side only has to find which of its constraints the verdict turned on, so it
 // must read a range and order two versions exactly as the server did
@@ -236,8 +172,21 @@ const comparePreReleases = (left, right) => {
   return Math.sign(a.length - b.length);
 };
 
-/** PluginVersions.compare: how service-api orders the product version against a bound. */
+/**
+ * PluginVersions.compare: how service-api orders two versions — the product against a bound, and
+ * one plugin version against another. Missing segments count as zero, a pre-release sorts below its
+ * release and pre-releases order by semver §11.4 (`rc.10` above `rc.2`), build metadata is ignored,
+ * and an absent version sorts below any present one.
+ */
 export const compareProductVersions = (left, right) => {
+  if (left == null || right == null) {
+    if (left == null && right == null) {
+      return 0;
+    }
+
+    return left == null ? -1 : 1;
+  }
+
   const numbers = compareCores(coreOf(left), coreOf(right));
 
   if (numbers !== 0) {
@@ -249,6 +198,23 @@ export const compareProductVersions = (left, right) => {
     withoutBuildMetadata(right).slice(coreOf(right).length),
   );
 };
+
+/**
+ * The one ordering for versions on these pages. Upgrade-or-downgrade, "a newer version exists" and
+ * the newest-first table all ask the question service-api answers with PluginVersions, so they get
+ * its answer: a private ordering that disagreed (it put `rc.10` below `rc.2`) would offer an update
+ * the server does not see, or hide one it does.
+ */
+export const compareVersions = compareProductVersions;
+
+/**
+ * Newest first, by version rather than by publish date. A patch for an older branch can be
+ * published after a newer release — ordinary, and the registry itself already refuses to call it
+ * "latest" for the same reason — so ordering by date would put 5.6.2 above 5.8.0 and make the
+ * newest build look like an old one.
+ */
+export const sortVersionsNewestFirst = (versions) =>
+  [...versions].sort((a, b) => compareVersions(b.version, a.version));
 
 const SATISFIES = {
   '>=': (comparison) => comparison >= 0,
