@@ -136,6 +136,7 @@ export class InfoSection extends Component {
     } = this.props;
     const { expanded, withShowMore, isEnabled } = this.state;
     const isPartiallyShown = withShowMore && !expanded;
+    const heading = <h2 className={cx('title')}>{title}</h2>;
 
     return (
       <div className={cx('info-section')}>
@@ -145,11 +146,11 @@ export class InfoSection extends Component {
               alone, and screens without a mark keep the bare heading they always had */}
           {afterTitle ? (
             <div className={cx('title-row')} data-automation-id="infoSectionTitleRow">
-              <h2 className={cx('title')}>{title}</h2>
+              {heading}
               {afterTitle}
             </div>
           ) : (
-            <h2 className={cx('title')}>{title}</h2>
+            heading
           )}
           {version && (
             <span className={cx('version')}>{`${formatMessage(messages.version)} ${version}`}</span>

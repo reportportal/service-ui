@@ -382,6 +382,8 @@ describe('InstalledTab', () => {
 
         expect(badge.text()).toBe('Uploaded Manually');
         expect(badge.prop('tone')).toBe('neutral');
+        // beside the heading, not in it: the heading is the plugin's name alone
+        expect(wrapper.find(IntegrationInfoContainer).find('h2').text()).toBe('Jira');
       });
 
       /**
