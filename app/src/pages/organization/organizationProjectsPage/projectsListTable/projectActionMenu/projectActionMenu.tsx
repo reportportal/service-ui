@@ -80,8 +80,8 @@ export const ProjectActionMenu: FC<ProjectActionMenuProps> = ({ details }) => {
     const data = {
       projectName,
       projectId,
-      onConfirm: () => {
-        dispatch(deleteProjectAction({ projectName, projectId }));
+      onConfirm: (onError?: () => void) => {
+        dispatch(deleteProjectAction({ projectName, projectId, onError }));
       },
     };
 
