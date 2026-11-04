@@ -57,3 +57,9 @@
   // text resolves to e-400 (#8d95a1), which is what the design calls Text/Secondary.
   color: var(--rp-ui-color-text-secondary);
 }
+
+.plugins-catalog-empty-actions {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+}

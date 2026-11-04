@@ -651,6 +651,7 @@ export class InstalledTab extends Component {
                 activeCategory={activeFilterItem}
                 query={this.state.searchQuery}
                 onQueryChange={this.handleQueryChange}
+                onCategoryReset={this.resetCategory}
                 onRetry={this.refetchCatalogue}
                 onRowAction={this.handleRowAction}
                 onInstalledItemClick={this.installedPluginsSubPageHandler}
@@ -728,6 +729,9 @@ export class InstalledTab extends Component {
       this.props.fetchMarketplaceCatalogueAction(this.catalogueParams({ category: value }));
     }
   };
+
+  // the zero state's way back to every category: the same path as clicking the All chip
+  resetCategory = () => this.handleFilterChange(ALL_GROUP_TYPE);
 
   // the field stays responsive while the request waits: only the request is debounced
   handleQueryChange = (searchQuery) => {

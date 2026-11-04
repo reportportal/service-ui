@@ -519,10 +519,106 @@ describe('PluginsCatalog', () => {
       expect(onQueryChange).toHaveBeenCalledWith('');
     });
 
+    test('a query alone keeps its copy and offers only to clear the search', () => {
+      const wrapper = render({ query: 'nothing matches this', availablePlugins: [] });
+      const zero = wrapper.find('[data-automation-id="noSearchResults"]').last();
+
+      expect(zero.find('h3').text()).toBe('No plugins match “nothing matches this”');
+      expect(zero.find('p').text()).toBe(
+        'Try a shorter name, or clear the search to see the whole catalogue.',
+      );
+      expect(zero.find('[data-automation-id="showAllCategories"]')).toHaveLength(0);
+    });
+
     test('an empty catalogue with no query is not a no-results state', () => {
       const wrapper = render({ installedPlugins: [], availablePlugins: [], query: '' });
 
       expect(wrapper.find('[data-automation-id="noSearchResults"]')).toHaveLength(0);
+      expect(wrapper.find('[data-automation-id="noCategoryResults"]')).toHaveLength(0);
+    });
+
+    // a chip narrows the page as a query does: a chip that matches nothing must not leave a blank
+    // area that reads as a failed load
+    test('a category with nothing installed or offered gets the same zero state', () => {
+      const onCategoryReset = jest.fn();
+      const wrapper = render({
+        activeCategory: AUTHORIZATION_GROUP_TYPE,
+        availablePlugins: [],
+        onCategoryReset,
+      });
+      const zero = wrapper.find('[data-automation-id="noCategoryResults"]').last();
+
+      expect(groupNames(wrapper)).toEqual([]);
+      expect(zero.find('h3').text()).toBe('No plugins in Authorization');
+      expect(zero.find('[data-automation-id="clearSearch"]')).toHaveLength(0);
+      // chips and search stay where they are, so the user can widen the view from here
+      expect(wrapper.find('[data-automation-id="pluginsSearch"]').exists()).toBe(true);
+
+      click(zero.find('[data-automation-id="showAllCategories"]').last());
+      expect(onCategoryReset).toHaveBeenCalled();
+    });
+
+    test('a category and a query that match nothing offer to widen either', () => {
+      const onQueryChange = jest.fn();
+      const onCategoryReset = jest.fn();
+      const wrapper = render({
+        activeCategory: BTS_GROUP_TYPE,
+        query: 'slack',
+        availablePlugins: [],
+        onQueryChange,
+        onCategoryReset,
+      });
+      const zero = wrapper.find('[data-automation-id="noSearchResults"]').last();
+
+      expect(groupNames(wrapper)).toEqual([]);
+      expect(zero.find('h3').text()).toBe('No plugins match “slack”');
+      expect(zero.find('p').text()).toBe(
+        'Try a shorter name, clear the search, or look across all categories.',
+      );
+
+      click(zero.find('[data-automation-id="clearSearch"]').last());
+      expect(onQueryChange).toHaveBeenCalledWith('');
+      click(zero.find('[data-automation-id="showAllCategories"]').last());
+      expect(onCategoryReset).toHaveBeenCalled();
+    });
+
+    test('no zero state while the registry request is in flight', () => {
+      const wrapper = render({
+        loading: true,
+        activeCategory: AUTHORIZATION_GROUP_TYPE,
+        query: 'x',
+        availablePlugins: [],
+      });
+
+      expect(wrapper.find('[data-automation-id="noCategoryResults"]')).toHaveLength(0);
+      expect(wrapper.find('[data-automation-id="noSearchResults"]')).toHaveLength(0);
+    });
+
+    test('no zero state after a failure: the alert explains the empty page', () => {
+      const wrapper = render({
+        failed: true,
+        installedPlugins: [],
+        marketplaceInstalled: [],
+        availablePlugins: [],
+        activeCategory: AUTHORIZATION_GROUP_TYPE,
+      });
+
+      expect(wrapper.find('[data-automation-id="catalogueUnavailableAlert"]').exists()).toBe(true);
+      expect(wrapper.find('[data-automation-id="noCategoryResults"]')).toHaveLength(0);
+    });
+
+    test('no zero state offline while the category still has installed rows', () => {
+      const wrapper = render({
+        offline: true,
+        registryHost: catalogueOffline.registry.host,
+        installedPlugins: catalogueOffline.installed.map(localPlugin),
+        marketplaceInstalled: catalogueOffline.installed,
+        availablePlugins: catalogueOffline.available,
+        activeCategory: BTS_GROUP_TYPE,
+      });
+
+      expect(groupNames(wrapper)).toEqual([ALL_GROUP_TYPE]);
+      expect(wrapper.find('[data-automation-id="noCategoryResults"]')).toHaveLength(0);
     });
   });
 

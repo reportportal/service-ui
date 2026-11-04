@@ -19,6 +19,7 @@ import { defineMessages, useIntl } from 'react-intl';
 import classNames from 'classnames/bind';
 import { BubblesLoader, Button } from '@reportportal/ui-kit';
 import { ALL_GROUP_TYPE, AVAILABLE_PLUGINS_TYPE } from 'common/constants/pluginsGroupTypes';
+import { PLUGINS_FILTER_MESSAGES } from 'common/constants/pluginsFilter';
 import { SearchField } from 'components/fields/searchField';
 import { PluginsListItems } from '../pluginsListItems';
 import { RegistryOfflineAlert } from '../registryOfflineAlert';
@@ -53,6 +54,23 @@ const messages = defineMessages({
     id: 'PluginsCatalog.clearSearch',
     defaultMessage: 'Clear search',
   },
+  noCategoryResultsTitle: {
+    id: 'PluginsCatalog.noCategoryResultsTitle',
+    defaultMessage: 'No plugins in {category}',
+  },
+  noCategoryResultsDescription: {
+    id: 'PluginsCatalog.noCategoryResultsDescription',
+    defaultMessage:
+      'Nothing in this category is installed on this instance or offered by the marketplace.',
+  },
+  noFilteredResultsDescription: {
+    id: 'PluginsCatalog.noFilteredResultsDescription',
+    defaultMessage: 'Try a shorter name, clear the search, or look across all categories.',
+  },
+  showAllCategories: {
+    id: 'PluginsCatalog.showAllCategories',
+    defaultMessage: 'Show all categories',
+  },
 });
 
 export const PluginsCatalog = ({
@@ -66,6 +84,7 @@ export const PluginsCatalog = ({
   activeCategory,
   query,
   onQueryChange,
+  onCategoryReset = () => {},
   onRowAction,
   onRetry = () => {},
   onInstalledItemClick = () => {},
@@ -113,8 +132,21 @@ export const PluginsCatalog = ({
       );
 
   const hasQuery = query.trim().length > 0;
+  const hasCategory = activeCategory !== ALL_GROUP_TYPE;
   // an empty screen after a failure is explained by the alert, not by a no-results state
   const isEmpty = !failed && installedRows.length === 0 && availableRows.length === 0;
+  // a chip narrows the page just as a query does, so a chip that matches nothing gets the same
+  // page-level zero state instead of a blank list that reads as a failed load
+  const showZeroState = isEmpty && (hasQuery || hasCategory);
+  const categoryLabel = PLUGINS_FILTER_MESSAGES[activeCategory]
+    ? formatMessage(PLUGINS_FILTER_MESSAGES[activeCategory])
+    : activeCategory;
+  let zeroStateDescription = messages.noSearchResultsDescription;
+  if (hasCategory) {
+    zeroStateDescription = hasQuery
+      ? messages.noFilteredResultsDescription
+      : messages.noCategoryResultsDescription;
+  }
 
   return (
     <div className={cx('plugins-catalog')}>
@@ -172,21 +204,41 @@ export const PluginsCatalog = ({
               />
             </div>
           )}
-          {isEmpty && hasQuery && (
-            <div className={cx('plugins-catalog-empty')} data-automation-id="noSearchResults">
+          {showZeroState && (
+            <div
+              className={cx('plugins-catalog-empty')}
+              data-automation-id={hasQuery ? 'noSearchResults' : 'noCategoryResults'}
+            >
               <h3 className={cx('plugins-catalog-empty-title')}>
-                {formatMessage(messages.noSearchResultsTitle, { query: query.trim() })}
+                {hasQuery
+                  ? formatMessage(messages.noSearchResultsTitle, { query: query.trim() })
+                  : formatMessage(messages.noCategoryResultsTitle, { category: categoryLabel })}
               </h3>
               <p className={cx('plugins-catalog-empty-description')}>
-                {formatMessage(messages.noSearchResultsDescription)}
+                {formatMessage(zeroStateDescription)}
               </p>
-              <Button
-                variant="ghost"
-                data-automation-id="clearSearch"
-                onClick={() => onQueryChange('')}
-              >
-                {formatMessage(messages.clearSearch)}
-              </Button>
+              {/* each action widens one filter; with both set either may be the one that empties
+                  the page, and the server answers for the category, so both are offered */}
+              <div className={cx('plugins-catalog-empty-actions')}>
+                {hasQuery && (
+                  <Button
+                    variant="ghost"
+                    data-automation-id="clearSearch"
+                    onClick={() => onQueryChange('')}
+                  >
+                    {formatMessage(messages.clearSearch)}
+                  </Button>
+                )}
+                {hasCategory && (
+                  <Button
+                    variant="ghost"
+                    data-automation-id="showAllCategories"
+                    onClick={onCategoryReset}
+                  >
+                    {formatMessage(messages.showAllCategories)}
+                  </Button>
+                )}
+              </div>
             </div>
           )}
         </>
@@ -206,6 +258,8 @@ PluginsCatalog.propTypes = {
   activeCategory: PropTypes.string.isRequired,
   query: PropTypes.string.isRequired,
   onQueryChange: PropTypes.func.isRequired,
+  /** Puts the category chips back on All, as the All chip itself does. */
+  onCategoryReset: PropTypes.func,
   onRowAction: PropTypes.func.isRequired,
   onRetry: PropTypes.func,
   onInstalledItemClick: PropTypes.func,

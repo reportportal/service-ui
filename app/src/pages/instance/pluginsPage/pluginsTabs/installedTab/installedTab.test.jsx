@@ -188,6 +188,18 @@ describe('InstalledTab', () => {
     expect(lastRequest()).toEqual({ q: null, category: null, debounced: undefined });
   });
 
+  // the zero state's way out goes the same path as the All chip, query and all
+  test('showing all categories from the zero state is the All chip, keeping the query', () => {
+    const { wrapper, call, lastRequest } = render();
+
+    call(PluginsCatalog, 'onQueryChange', 'jir');
+    call(PluginsFilter, 'onFilterChange', BTS_GROUP_TYPE);
+    call(PluginsCatalog, 'onCategoryReset');
+
+    expect(lastRequest()).toEqual({ q: 'jir', category: null, debounced: undefined });
+    expect(wrapper.find(PluginsCatalog).first().prop('activeCategory')).toBe(ALL_GROUP_TYPE);
+  });
+
   test('a failed catalogue reaches the screen, and its retry asks again', () => {
     const { wrapper, call, lastRequest } = render(
       marketplaceState({
