@@ -1778,6 +1778,7 @@
   "MakeDecisionModal.updateDefectsFailed": "Не вдалося оновити дефекти",
   "MakeDecisionModal.updateDefectsSuccess": "Дефекти були оновлені",
   "MakeDecisionModal.withFilterTooltip": "Тести з типом дефекту To Investigate з останніх 10 запусків фільтра {filterName} з журналами помилок, що відповідають обраному елементу на 98% і більше",
+  "ManualLaunchRetentionPolicyModal.importantLaunchLabel": "Важливий запуск",
   "ManualLaunchRetentionPolicyModal.importantLaunchTooltip": "Це важливий запуск. Для нього діє окрема політика зберігання важливих запусків.",
   "ManualLaunchRetentionPolicyModal.launchUpdateFailed": "Не вдалося оновити запуск",
   "ManualLaunchRetentionPolicyModal.launchUpdatedSuccess": "Запуск успішно оновлено",

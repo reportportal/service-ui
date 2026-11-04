@@ -194,7 +194,10 @@ export const useManualLaunchesTableData = (
                       wrapperClassName={cx('manual-launches-list-table-cell-star')}
                     >
                       <i className={cx('manual-launches-list-table-cell-star-icon')}>
-                        {Parser(StarIcon)}
+                        <span aria-hidden="true">{Parser(StarIcon)}</span>
+                        <span className={cx('manual-launches-list-table-cell-star-label')}>
+                          {formatMessage(retentionPolicyMessages.importantLaunchLabel)}
+                        </span>
                       </i>
                     </Tooltip>
                   )}

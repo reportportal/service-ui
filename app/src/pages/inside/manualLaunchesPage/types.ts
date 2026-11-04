@@ -20,6 +20,7 @@ export { ExecutionStatus } from 'types/testCase';
 export interface LaunchAttribute {
   key: string;
   value: string;
+  system?: boolean;
 }
 
 export interface LaunchExecutions {

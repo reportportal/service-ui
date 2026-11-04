@@ -25,6 +25,10 @@ export const messages = defineMessages({
     id: 'ManualLaunchRetentionPolicyModal.unmarkAsImportantAction',
     defaultMessage: 'Unmark as Important',
   },
+  importantLaunchLabel: {
+    id: 'ManualLaunchRetentionPolicyModal.importantLaunchLabel',
+    defaultMessage: 'Important launch',
+  },
   importantLaunchTooltip: {
     id: 'ManualLaunchRetentionPolicyModal.importantLaunchTooltip',
     defaultMessage:

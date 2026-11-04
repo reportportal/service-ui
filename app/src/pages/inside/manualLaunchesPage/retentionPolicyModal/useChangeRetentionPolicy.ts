@@ -51,7 +51,7 @@ export const useChangeRetentionPolicy = ({
         method: 'PUT',
         data: {
           attributes: [
-            ...attributes.filter(({ key }) => key !== RETENTION_POLICY_KEY),
+            ...attributes.filter(({ key, system }) => !(key === RETENTION_POLICY_KEY && system)),
             { key: RETENTION_POLICY_KEY, value: policy, system: true },
           ],
         },
