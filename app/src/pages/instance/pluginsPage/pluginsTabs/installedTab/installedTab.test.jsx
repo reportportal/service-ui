@@ -200,6 +200,20 @@ describe('InstalledTab', () => {
     expect(wrapper.find(PluginsCatalog).first().prop('activeCategory')).toBe(ALL_GROUP_TYPE);
   });
 
+  // only a request over an answer already on screen keeps the rows; the first one has none
+  test('a refetch over a loaded catalogue is a refresh, the first request is not', () => {
+    const loading = { catalogueState: MARKETPLACE_CATALOGUE_STATE.LOADING };
+    const first = render(marketplaceState(loading)).wrapper.find(PluginsCatalog).first();
+    const refetch = render(marketplaceState({ ...loading, available: catalogue.available }))
+      .wrapper.find(PluginsCatalog)
+      .first();
+
+    expect(first.prop('loading')).toBe(true);
+    expect(first.prop('refreshing')).toBe(false);
+    expect(refetch.prop('loading')).toBe(true);
+    expect(refetch.prop('refreshing')).toBe(true);
+  });
+
   test('a failed catalogue reaches the screen, and its retry asks again', () => {
     const { wrapper, call, lastRequest } = render(
       marketplaceState({

@@ -84,6 +84,12 @@ const rowNames = (scope) =>
   scope.find('[data-automation-id="pluginRow"]').map((node) => node.find('.plugins-name').text());
 const actions = (scope) =>
   scope.find('[data-automation-id="pluginRowAction"]').map((node) => node.prop('data-action'));
+const listArea = (wrapper) => wrapper.find('[data-automation-id="catalogList"]').hostNodes();
+const staleGroups = (wrapper) =>
+  wrapper
+    .find('[data-automation-id="catalogGroups"]')
+    .hostNodes()
+    .hasClass('plugins-catalog-groups-stale');
 // enzyme's simulate() goes through findDOMNode, whose React 18 warning jestsetup turns into
 // a throw, so handlers are invoked through the prop they are wired to instead
 const click = (node) => node.prop('onClick')({ stopPropagation: () => {} });
@@ -449,6 +455,74 @@ describe('PluginsCatalog', () => {
 
       expect(wrapper.find(BubblesLoader)).toHaveLength(1);
       expect(wrapper.find('[data-automation-id="catalogSkeleton"]')).toHaveLength(0);
+    });
+
+    test('the first load shows no rows and marks the list busy', () => {
+      const wrapper = render({ loading: true });
+
+      expect(rowNames(wrapper)).toEqual([]);
+      expect(listArea(wrapper).prop('aria-busy')).toBe(true);
+      expect(wrapper.find('[data-automation-id="catalogRefreshLoader"]')).toHaveLength(0);
+    });
+  });
+
+  // a chip or a query refetches the catalogue: what is on screen stays, dimmed, so the click
+  // visibly registered without the list flashing away
+  describe('a refetch over rows already on screen', () => {
+    const refreshing = { loading: true, refreshing: true };
+
+    test('keeps the rows, dimmed and busy, with a compact loader instead of the full one', () => {
+      const wrapper = render(refreshing);
+
+      expect(groupNames(wrapper)).toEqual([ALL_GROUP_TYPE, AVAILABLE_PLUGINS_TYPE]);
+      expect(staleGroups(wrapper)).toBe(true);
+      expect(listArea(wrapper).prop('aria-busy')).toBe(true);
+      expect(wrapper.find('[data-automation-id="catalogRefreshLoader"]').hostNodes()).toHaveLength(
+        1,
+      );
+      expect(wrapper.find('[data-automation-id="catalogLoader"]')).toHaveLength(0);
+      expect(wrapper.find('[data-automation-id="catalogSkeleton"]')).toHaveLength(0);
+    });
+
+    test('the locally held Installed half follows the new chip at once', () => {
+      // the previous answer is still in the store for Available; the installed half is filtered
+      // here, so it does not have to wait for the server
+      const wrapper = render({ ...refreshing, activeCategory: BTS_GROUP_TYPE });
+
+      expect(rowNames(group(wrapper, ALL_GROUP_TYPE))).toEqual(['GitLab', 'Jira', 'Rally']);
+      expect(staleGroups(wrapper)).toBe(true);
+    });
+
+    test('waits for the answer instead of calling the narrowed view empty', () => {
+      const wrapper = render({
+        ...refreshing,
+        activeCategory: AUTHORIZATION_GROUP_TYPE,
+        query: 'nothing matches this',
+        availablePlugins: [],
+      });
+
+      expect(wrapper.find('[data-automation-id="noCategoryResults"]')).toHaveLength(0);
+      expect(wrapper.find('[data-automation-id="noSearchResults"]')).toHaveLength(0);
+    });
+
+    test('swaps to the new rows, undimmed, once the answer lands', () => {
+      const wrapper = render({ ...refreshing, activeCategory: NOTIFICATION_GROUP_TYPE });
+
+      wrapper.setProps({
+        children: (
+          <PluginsCatalog
+            {...defaultProps}
+            activeCategory={NOTIFICATION_GROUP_TYPE}
+            availablePlugins={[slack]}
+          />
+        ),
+      });
+      wrapper.update();
+
+      expect(rowNames(wrapper)).toEqual(['Slack']);
+      expect(staleGroups(wrapper)).toBe(false);
+      expect(listArea(wrapper).prop('aria-busy')).toBe(false);
+      expect(wrapper.find('[data-automation-id="catalogRefreshLoader"]')).toHaveLength(0);
     });
   });
 

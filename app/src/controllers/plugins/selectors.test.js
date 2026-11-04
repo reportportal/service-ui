@@ -24,6 +24,7 @@ import {
   marketplaceRegistrySelector,
   marketplaceRegistryHostSelector,
   marketplaceCatalogueLoadingSelector,
+  marketplaceCatalogueRefreshingSelector,
   isMarketplaceRegistryOfflineSelector,
   hasMarketplaceCatalogueFailedSelector,
   marketplaceCatalogueErrorSelector,
@@ -80,6 +81,21 @@ describe('controllers/plugins/marketplace selectors', () => {
       ),
     ).toBe(true);
     expect(marketplaceCatalogueLoadingSelector({})).toBe(false);
+  });
+
+  test('refreshing is a request in flight over an answer that is already on screen', () => {
+    const loading = { catalogueState: MARKETPLACE_CATALOGUE_STATE.LOADING };
+
+    // the first request: nothing has been answered yet
+    expect(marketplaceCatalogueRefreshingSelector(mockState(loading))).toBe(false);
+    // a refetch keeps the previous lists in the store until the answer lands
+    expect(
+      marketplaceCatalogueRefreshingSelector(mockState({ ...loading, installed, available })),
+    ).toBe(true);
+    expect(marketplaceCatalogueRefreshingSelector(mockState({ ...loading, available }))).toBe(true);
+    // settled is not refreshing, whatever the store holds
+    expect(marketplaceCatalogueRefreshingSelector(loadedOnline)).toBe(false);
+    expect(marketplaceCatalogueRefreshingSelector({})).toBe(false);
   });
 
   test('offline is a loaded state, not the failed one', () => {

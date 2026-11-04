@@ -207,6 +207,13 @@ export const marketplaceRegistryHostSelector = (state) => marketplaceRegistrySel
 export const marketplaceCatalogueLoadingSelector = (state) =>
   marketplaceCatalogueStateSelector(state) === MARKETPLACE_CATALOGUE_STATE.LOADING;
 
+// A request in flight with an earlier answer still in the store: START keeps the previous lists,
+// while the initial state and a failure leave them empty, so rows here are what is on screen.
+export const marketplaceCatalogueRefreshingSelector = (state) =>
+  marketplaceCatalogueLoadingSelector(state) &&
+  (marketplaceInstalledPluginsSelector(state).length > 0 ||
+    marketplaceAvailablePluginsSelector(state).length > 0);
+
 export const isMarketplaceRegistryOfflineSelector = (state) =>
   marketplaceCatalogueStateSelector(state) === MARKETPLACE_CATALOGUE_STATE.LOADED_OFFLINE;
 

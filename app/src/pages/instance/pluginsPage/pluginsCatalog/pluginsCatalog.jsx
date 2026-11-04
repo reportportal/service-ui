@@ -78,6 +78,7 @@ export const PluginsCatalog = ({
   marketplaceInstalled,
   availablePlugins,
   loading = false,
+  refreshing = false,
   offline = false,
   failed = false,
   registryHost = null,
@@ -131,13 +132,17 @@ export const PluginsCatalog = ({
         installState,
       );
 
+  // a refetch keeps what is on screen, dimmed, until the answer lands; only a first load, with
+  // nothing yet to show, gives the whole list area to the loader
+  const busy = loading || refreshing;
+  const firstLoad = busy && !refreshing;
   const hasQuery = query.trim().length > 0;
   const hasCategory = activeCategory !== ALL_GROUP_TYPE;
   // an empty screen after a failure is explained by the alert, not by a no-results state
   const isEmpty = !failed && installedRows.length === 0 && availableRows.length === 0;
   // a chip narrows the page just as a query does, so a chip that matches nothing gets the same
   // page-level zero state instead of a blank list that reads as a failed load
-  const showZeroState = isEmpty && (hasQuery || hasCategory);
+  const showZeroState = !busy && isEmpty && (hasQuery || hasCategory);
   const categoryLabel = PLUGINS_FILTER_MESSAGES[activeCategory]
     ? formatMessage(PLUGINS_FILTER_MESSAGES[activeCategory])
     : activeCategory;
@@ -164,85 +169,108 @@ export const PluginsCatalog = ({
       </div>
       {offline && <RegistryOfflineAlert />}
       {failed && <CatalogueUnavailableAlert onRetry={onRetry} />}
-      {loading ? (
-        <div className={cx('plugins-catalog-loader')} data-automation-id="catalogLoader">
-          <BubblesLoader />
-        </div>
-      ) : (
-        <>
-          {/* a group renders only when it has at least one plugin: no heading, no placeholder */}
-          {installedRows.length > 0 && (
-            <div
-              className={cx('plugins-catalog-group')}
-              data-automation-id="pluginsGroup"
-              data-group={ALL_GROUP_TYPE}
-            >
-              {/* no toggle on a catalogue row: enable/disable is local state and lives on the
-                  plugin page, where the rest of this plugin's local settings already are */}
-              <PluginsListItems
-                title={ALL_GROUP_TYPE}
-                items={installedRows}
-                onItemClick={onInstalledItemClick}
-                onRowAction={onRowAction}
-                highlightedRegistryId={justInstalledId}
-                productVersion={productVersion}
-              />
-            </div>
-          )}
-          {availableRows.length > 0 && (
-            <div
-              className={cx('plugins-catalog-group')}
-              data-automation-id="pluginsGroup"
-              data-group={AVAILABLE_PLUGINS_TYPE}
-            >
-              <PluginsListItems
-                title={AVAILABLE_PLUGINS_TYPE}
-                items={availableRows}
-                onItemClick={onAvailableItemClick}
-                onRowAction={onRowAction}
-                productVersion={productVersion}
-              />
-            </div>
-          )}
-          {showZeroState && (
-            <div
-              className={cx('plugins-catalog-empty')}
-              data-automation-id={hasQuery ? 'noSearchResults' : 'noCategoryResults'}
-            >
-              <h3 className={cx('plugins-catalog-empty-title')}>
-                {hasQuery
-                  ? formatMessage(messages.noSearchResultsTitle, { query: query.trim() })
-                  : formatMessage(messages.noCategoryResultsTitle, { category: categoryLabel })}
-              </h3>
-              <p className={cx('plugins-catalog-empty-description')}>
-                {formatMessage(zeroStateDescription)}
-              </p>
-              {/* each action widens one filter; with both set either may be the one that empties
-                  the page, and the server answers for the category, so both are offered */}
-              <div className={cx('plugins-catalog-empty-actions')}>
-                {hasQuery && (
-                  <Button
-                    variant="ghost"
-                    data-automation-id="clearSearch"
-                    onClick={() => onQueryChange('')}
-                  >
-                    {formatMessage(messages.clearSearch)}
-                  </Button>
-                )}
-                {hasCategory && (
-                  <Button
-                    variant="ghost"
-                    data-automation-id="showAllCategories"
-                    onClick={onCategoryReset}
-                  >
-                    {formatMessage(messages.showAllCategories)}
-                  </Button>
-                )}
+      <div
+        className={cx('plugins-catalog-list')}
+        data-automation-id="catalogList"
+        aria-busy={busy}
+      >
+        {firstLoad ? (
+          <div className={cx('plugins-catalog-loader')} data-automation-id="catalogLoader">
+            <BubblesLoader />
+          </div>
+        ) : (
+          <>
+            {/* over the rows rather than above them, so the list does not jump when it comes and
+                goes; the click registered, and nothing flashes away while the answer is awaited */}
+            {refreshing && (
+              <div
+                className={cx('plugins-catalog-refresh-loader')}
+                data-automation-id="catalogRefreshLoader"
+              >
+                <BubblesLoader />
               </div>
+            )}
+            {/* the Available half is still the answer to the previous chip or query, so the
+                whole list is dimmed and cannot be clicked until the new one arrives */}
+            <div
+              className={cx('plugins-catalog-groups', { 'plugins-catalog-groups-stale': refreshing })}
+              data-automation-id="catalogGroups"
+            >
+              {/* a group renders only when it has at least one plugin: no heading, no placeholder */}
+              {installedRows.length > 0 && (
+                <div
+                  className={cx('plugins-catalog-group')}
+                  data-automation-id="pluginsGroup"
+                  data-group={ALL_GROUP_TYPE}
+                >
+                  {/* no toggle on a catalogue row: enable/disable is local state and lives on the
+                      plugin page, where the rest of this plugin's local settings already are */}
+                  <PluginsListItems
+                    title={ALL_GROUP_TYPE}
+                    items={installedRows}
+                    onItemClick={onInstalledItemClick}
+                    onRowAction={onRowAction}
+                    highlightedRegistryId={justInstalledId}
+                    productVersion={productVersion}
+                  />
+                </div>
+              )}
+              {availableRows.length > 0 && (
+                <div
+                  className={cx('plugins-catalog-group')}
+                  data-automation-id="pluginsGroup"
+                  data-group={AVAILABLE_PLUGINS_TYPE}
+                >
+                  <PluginsListItems
+                    title={AVAILABLE_PLUGINS_TYPE}
+                    items={availableRows}
+                    onItemClick={onAvailableItemClick}
+                    onRowAction={onRowAction}
+                    productVersion={productVersion}
+                  />
+                </div>
+              )}
             </div>
-          )}
-        </>
-      )}
+            {showZeroState && (
+              <div
+                className={cx('plugins-catalog-empty')}
+                data-automation-id={hasQuery ? 'noSearchResults' : 'noCategoryResults'}
+              >
+                <h3 className={cx('plugins-catalog-empty-title')}>
+                  {hasQuery
+                    ? formatMessage(messages.noSearchResultsTitle, { query: query.trim() })
+                    : formatMessage(messages.noCategoryResultsTitle, { category: categoryLabel })}
+                </h3>
+                <p className={cx('plugins-catalog-empty-description')}>
+                  {formatMessage(zeroStateDescription)}
+                </p>
+                {/* each action widens one filter; with both set either may be the one that empties
+                    the page, and the server answers for the category, so both are offered */}
+                <div className={cx('plugins-catalog-empty-actions')}>
+                  {hasQuery && (
+                    <Button
+                      variant="ghost"
+                      data-automation-id="clearSearch"
+                      onClick={() => onQueryChange('')}
+                    >
+                      {formatMessage(messages.clearSearch)}
+                    </Button>
+                  )}
+                  {hasCategory && (
+                    <Button
+                      variant="ghost"
+                      data-automation-id="showAllCategories"
+                      onClick={onCategoryReset}
+                    >
+                      {formatMessage(messages.showAllCategories)}
+                    </Button>
+                  )}
+                </div>
+              </div>
+            )}
+          </>
+        )}
+      </div>
     </div>
   );
 };
@@ -252,6 +280,8 @@ PluginsCatalog.propTypes = {
   marketplaceInstalled: PropTypes.array.isRequired,
   availablePlugins: PropTypes.array.isRequired,
   loading: PropTypes.bool,
+  /** A request is in flight over rows already on screen: they stay, dimmed, until it settles. */
+  refreshing: PropTypes.bool,
   offline: PropTypes.bool,
   failed: PropTypes.bool,
   registryHost: PropTypes.string,

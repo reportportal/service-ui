@@ -33,6 +33,7 @@ import {
   marketplaceAvailablePluginsSelector,
   marketplaceInstalledPluginsSelector,
   marketplaceCatalogueLoadingSelector,
+  marketplaceCatalogueRefreshingSelector,
   marketplaceRegistryHostSelector,
   justInstalledMarketplacePluginSelector,
   marketplaceInstallingPluginsSelector,
@@ -241,6 +242,7 @@ const isLeavingBlockedVersion = (row) =>
     marketplaceInstalled: marketplaceInstalledPluginsSelector(state),
     availablePlugins: marketplaceAvailablePluginsSelector(state),
     catalogueLoading: marketplaceCatalogueLoadingSelector(state),
+    catalogueRefreshing: marketplaceCatalogueRefreshingSelector(state),
     registryOffline: isMarketplaceRegistryOfflineSelector(state),
     catalogueFailed: hasMarketplaceCatalogueFailedSelector(state),
     registryHost: marketplaceRegistryHostSelector(state),
@@ -288,6 +290,7 @@ export class InstalledTab extends Component {
     marketplaceInstalled: PropTypes.array.isRequired,
     availablePlugins: PropTypes.array.isRequired,
     catalogueLoading: PropTypes.bool.isRequired,
+    catalogueRefreshing: PropTypes.bool.isRequired,
     registryOffline: PropTypes.bool.isRequired,
     catalogueFailed: PropTypes.bool.isRequired,
     fetchMarketplaceCatalogueAction: PropTypes.func.isRequired,
@@ -619,6 +622,7 @@ export class InstalledTab extends Component {
           marketplaceInstalled,
           availablePlugins,
           catalogueLoading,
+          catalogueRefreshing,
           registryOffline,
           catalogueFailed,
           registryHost,
@@ -645,6 +649,7 @@ export class InstalledTab extends Component {
                 marketplaceInstalled={marketplaceInstalled}
                 availablePlugins={availablePlugins}
                 loading={catalogueLoading}
+                refreshing={catalogueRefreshing}
                 offline={registryOffline}
                 failed={catalogueFailed}
                 registryHost={registryHost}

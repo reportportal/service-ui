@@ -28,6 +28,35 @@
   padding: 48px 0;
 }
 
+.plugins-catalog-list {
+  position: relative;
+}
+
+// laid over the top of the stale rows, not above them, so the list does not shift under the
+// user when a refetch starts or lands
+.plugins-catalog-refresh-loader {
+  position: absolute;
+  top: 16px;
+  left: 0;
+  right: 0;
+  z-index: 1;
+  display: flex;
+  justify-content: center;
+  pointer-events: none;
+}
+
+.plugins-catalog-groups {
+  transition: opacity 0.2s;
+}
+
+// the previous answer, kept on screen until the next one lands: legible, but not actionable,
+// so a row that no longer matches cannot be opened or installed from
+.plugins-catalog-groups-stale {
+  opacity: 0.4;
+  pointer-events: none;
+  user-select: none;
+}
+
 .plugins-catalog-group + .plugins-catalog-group {
   margin-top: 24px;
 }
