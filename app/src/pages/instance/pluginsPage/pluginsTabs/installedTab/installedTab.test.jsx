@@ -204,7 +204,7 @@ describe('InstalledTab', () => {
   test('a refetch over a loaded catalogue is a refresh, the first request is not', () => {
     const loading = { catalogueState: MARKETPLACE_CATALOGUE_STATE.LOADING };
     const first = render(marketplaceState(loading)).wrapper.find(PluginsCatalog).first();
-    const refetch = render(marketplaceState({ ...loading, available: catalogue.available }))
+    const refetch = render(marketplaceState({ ...loading, answered: true }))
       .wrapper.find(PluginsCatalog)
       .first();
 

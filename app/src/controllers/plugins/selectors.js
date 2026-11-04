@@ -29,7 +29,7 @@ import {
   filterIntegrationsByName,
   filterEnabledExternalPlugins,
 } from './utils';
-import { MARKETPLACE_CATALOGUE_STATE } from './constants';
+import { MARKETPLACE_CATALOGUE_STATE, REGISTRY_STATUS } from './constants';
 
 export const domainSelector = (state) => state.plugins || {};
 
@@ -207,15 +207,18 @@ export const marketplaceRegistryHostSelector = (state) => marketplaceRegistrySel
 export const marketplaceCatalogueLoadingSelector = (state) =>
   marketplaceCatalogueStateSelector(state) === MARKETPLACE_CATALOGUE_STATE.LOADING;
 
-// A request in flight with an earlier answer still in the store: START keeps the previous lists,
-// while the initial state and a failure leave them empty, so rows here are what is on screen.
+// A request in flight over an answer already on screen, an empty one included: the rows (or the
+// zero state) stay until the new answer lands, instead of the first-load loader replacing them.
 export const marketplaceCatalogueRefreshingSelector = (state) =>
-  marketplaceCatalogueLoadingSelector(state) &&
-  (marketplaceInstalledPluginsSelector(state).length > 0 ||
-    marketplaceAvailablePluginsSelector(state).length > 0);
+  marketplaceCatalogueLoadingSelector(state) && !!marketplaceSelector(state).answered;
 
+// A refresh keeps the last verdict: START leaves the registry block alone, so an offline answer
+// stays offline until the next one says otherwise, and nothing on screen is trusted in between.
+// Only an explicit ONLINE is online, as in the reducer.
 export const isMarketplaceRegistryOfflineSelector = (state) =>
-  marketplaceCatalogueStateSelector(state) === MARKETPLACE_CATALOGUE_STATE.LOADED_OFFLINE;
+  marketplaceCatalogueStateSelector(state) === MARKETPLACE_CATALOGUE_STATE.LOADED_OFFLINE ||
+  (marketplaceCatalogueRefreshingSelector(state) &&
+    marketplaceRegistrySelector(state).status !== REGISTRY_STATUS.ONLINE);
 
 // not the same thing as offline: offline the installed list is still authoritative, here the
 // request produced nothing and even the installed list cannot be claimed to be current

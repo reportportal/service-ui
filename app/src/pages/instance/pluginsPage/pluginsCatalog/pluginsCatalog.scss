@@ -49,8 +49,8 @@
   transition: opacity 0.2s;
 }
 
-// the previous answer, kept on screen until the next one lands: legible, but not actionable,
-// so a row that no longer matches cannot be opened or installed from
+// the previous answer, kept on screen until the next one lands: legible, but not actionable.
+// The markup makes it inert for the keyboard; this covers the pointer.
 .plugins-catalog-groups-stale {
   opacity: 0.4;
   pointer-events: none;
@@ -91,4 +91,14 @@
   display: flex;
   justify-content: center;
   gap: 8px;
+}
+
+// the refresh loader's words, for a screen reader only: the dots say the same thing to the eye
+.plugins-catalog-visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
 }

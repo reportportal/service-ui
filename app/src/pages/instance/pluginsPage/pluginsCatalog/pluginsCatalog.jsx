@@ -63,6 +63,16 @@ const messages = defineMessages({
     defaultMessage:
       'Nothing in this category is installed on this instance or offered by the marketplace.',
   },
+  // offline the marketplace was not asked, so the copy may only speak for this instance
+  noSearchResultsDescriptionOffline: {
+    id: 'PluginsCatalog.noSearchResultsDescriptionOffline',
+    defaultMessage: 'Try a shorter name, or clear the search to see every installed plugin.',
+  },
+  noCategoryResultsDescriptionOffline: {
+    id: 'PluginsCatalog.noCategoryResultsDescriptionOffline',
+    defaultMessage:
+      'Nothing in this category is installed on this instance. The marketplace could not be reached, so nothing else can be offered.',
+  },
   noFilteredResultsDescription: {
     id: 'PluginsCatalog.noFilteredResultsDescription',
     defaultMessage: 'Try a shorter name, clear the search, or look across all categories.',
@@ -70,6 +80,10 @@ const messages = defineMessages({
   showAllCategories: {
     id: 'PluginsCatalog.showAllCategories',
     defaultMessage: 'Show all categories',
+  },
+  updating: {
+    id: 'PluginsCatalog.updating',
+    defaultMessage: 'Updating…',
   },
 });
 
@@ -146,10 +160,15 @@ export const PluginsCatalog = ({
   const categoryLabel = PLUGINS_FILTER_MESSAGES[activeCategory]
     ? formatMessage(PLUGINS_FILTER_MESSAGES[activeCategory])
     : activeCategory;
-  let zeroStateDescription = messages.noSearchResultsDescription;
-  if (hasCategory) {
-    zeroStateDescription = hasQuery
-      ? messages.noFilteredResultsDescription
+  let zeroStateDescription = offline
+    ? messages.noSearchResultsDescriptionOffline
+    : messages.noSearchResultsDescription;
+  if (hasCategory && hasQuery) {
+    // names no catalogue, so it holds online and offline alike
+    zeroStateDescription = messages.noFilteredResultsDescription;
+  } else if (hasCategory) {
+    zeroStateDescription = offline
+      ? messages.noCategoryResultsDescriptionOffline
       : messages.noCategoryResultsDescription;
   }
 
@@ -186,15 +205,22 @@ export const PluginsCatalog = ({
               <div
                 className={cx('plugins-catalog-refresh-loader')}
                 data-automation-id="catalogRefreshLoader"
+                role="status"
               >
                 <BubblesLoader />
+                <span className={cx('plugins-catalog-visually-hidden')}>
+                  {formatMessage(messages.updating)}
+                </span>
               </div>
             )}
             {/* the Available half is still the answer to the previous chip or query, so the
-                whole list is dimmed and cannot be clicked until the new one arrives */}
+                whole list is dimmed until the new one arrives; inert, not just pointer-events,
+                so a stale Install cannot be reached by Tab and Enter either. React 18 drops a
+                boolean `inert` with a warning, so the presence attribute is written as '' */}
             <div
               className={cx('plugins-catalog-groups', { 'plugins-catalog-groups-stale': refreshing })}
               data-automation-id="catalogGroups"
+              inert={refreshing ? '' : undefined}
             >
               {/* a group renders only when it has at least one plugin: no heading, no placeholder */}
               {installedRows.length > 0 && (

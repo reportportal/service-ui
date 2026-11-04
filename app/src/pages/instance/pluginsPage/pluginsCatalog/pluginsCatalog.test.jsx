@@ -505,23 +505,66 @@ describe('PluginsCatalog', () => {
       expect(wrapper.find('[data-automation-id="noSearchResults"]')).toHaveLength(0);
     });
 
-    test('swaps to the new rows, undimmed, once the answer lands', () => {
-      const wrapper = render({ ...refreshing, activeCategory: NOTIFICATION_GROUP_TYPE });
+    test('stale rows are out of the keyboard order as well as the pointer', () => {
+      // pointer-events alone leaves Tab and Enter on a stale Install
+      const groups = (wrapper) =>
+        wrapper.find('[data-automation-id="catalogGroups"]').hostNodes().getDOMNode();
 
-      wrapper.setProps({
-        children: (
-          <PluginsCatalog
-            {...defaultProps}
-            activeCategory={NOTIFICATION_GROUP_TYPE}
-            availablePlugins={[slack]}
-          />
-        ),
+      expect(groups(render(refreshing)).hasAttribute('inert')).toBe(true);
+      expect(groups(render()).hasAttribute('inert')).toBe(false);
+    });
+
+    test('announces the update to assistive technology', () => {
+      const status = render(refreshing)
+        .find('[data-automation-id="catalogRefreshLoader"]')
+        .hostNodes();
+
+      expect(status.prop('role')).toBe('status');
+      expect(status.text()).toBe('Updating…');
+    });
+
+    test('an offline answer stays offline while the next one is awaited', () => {
+      // spec rule 5: the refetch has not said the registry is back, so nothing on the stale
+      // rows may claim a marketplace verdict, and the alert saying so stays up
+      const wrapper = render({
+        ...refreshing,
+        offline: true,
+        registryHost: catalogueOffline.registry.host,
+        installedPlugins: catalogueOffline.installed.map(localPlugin),
+        marketplaceInstalled: catalogueOffline.installed,
+        availablePlugins: catalogueOffline.available,
       });
-      wrapper.update();
 
+      expect(wrapper.find('[data-automation-id="registryOfflineAlert"]').exists()).toBe(true);
+      expect(rowNames(group(wrapper, ALL_GROUP_TYPE))).toEqual(['Jira', 'Custom Scanner']);
+      expect(wrapper.text()).not.toMatch(/uploaded manually/i);
+      expect(wrapper.find('span[data-automation-id="pluginBadge"]')).toHaveLength(0);
+    });
+
+    test('the same list drops the stale treatment and the old rows when the answer lands', () => {
+      const rerender = (wrapper, props) => {
+        wrapper.setProps({ children: <PluginsCatalog {...defaultProps} {...props} /> });
+        wrapper.update();
+      };
+      const groupsNode = (wrapper) =>
+        wrapper.find('[data-automation-id="catalogGroups"]').hostNodes().getDOMNode();
+      // the Notifications chip was just clicked: Available is still the answer for All
+      const wrapper = render({ ...refreshing, activeCategory: NOTIFICATION_GROUP_TYPE });
+      const node = groupsNode(wrapper);
+
+      expect(rowNames(wrapper)).toEqual(['Azure DevOps', 'Slack', 'Sauce Labs']);
+      expect(staleGroups(wrapper)).toBe(true);
+      expect(node.hasAttribute('inert')).toBe(true);
+
+      rerender(wrapper, { activeCategory: NOTIFICATION_GROUP_TYPE, availablePlugins: [slack] });
+
+      // the very same element, not a fresh mount that never carried the treatment
+      expect(groupsNode(wrapper)).toBe(node);
       expect(rowNames(wrapper)).toEqual(['Slack']);
       expect(staleGroups(wrapper)).toBe(false);
-      expect(listArea(wrapper).prop('aria-busy')).toBe(false);
+      expect(node.hasAttribute('inert')).toBe(false);
+      expect(node.className).not.toContain('plugins-catalog-groups-stale');
+      expect(listArea(wrapper).getDOMNode().getAttribute('aria-busy')).toBe('false');
       expect(wrapper.find('[data-automation-id="catalogRefreshLoader"]')).toHaveLength(0);
     });
   });
@@ -693,6 +736,29 @@ describe('PluginsCatalog', () => {
 
       expect(groupNames(wrapper)).toEqual([ALL_GROUP_TYPE]);
       expect(wrapper.find('[data-automation-id="noCategoryResults"]')).toHaveLength(0);
+    });
+
+    // offline the marketplace was not asked, so the zero state may not speak for it
+    test('offline, an empty category speaks only for this instance', () => {
+      const offlineEmpty = {
+        offline: true,
+        registryHost: catalogueOffline.registry.host,
+        installedPlugins: catalogueOffline.installed.map(localPlugin),
+        marketplaceInstalled: catalogueOffline.installed,
+        availablePlugins: [],
+      };
+      const category = render({ ...offlineEmpty, activeCategory: AUTHORIZATION_GROUP_TYPE })
+        .find('[data-automation-id="noCategoryResults"]')
+        .last();
+      const search = render({ ...offlineEmpty, query: 'nothing matches this' })
+        .find('[data-automation-id="noSearchResults"]')
+        .last();
+
+      expect(category.find('p').text()).toBe(
+        'Nothing in this category is installed on this instance. The marketplace could not be reached, so nothing else can be offered.',
+      );
+      expect(category.find('p').text()).not.toMatch(/offered by the marketplace/);
+      expect(search.find('p').text()).not.toMatch(/whole catalogue/);
     });
   });
 

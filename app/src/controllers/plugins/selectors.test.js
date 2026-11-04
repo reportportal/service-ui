@@ -86,16 +86,49 @@ describe('controllers/plugins/marketplace selectors', () => {
   test('refreshing is a request in flight over an answer that is already on screen', () => {
     const loading = { catalogueState: MARKETPLACE_CATALOGUE_STATE.LOADING };
 
-    // the first request: nothing has been answered yet
+    // the first request, and a retry after a failure: nothing has been answered yet
     expect(marketplaceCatalogueRefreshingSelector(mockState(loading))).toBe(false);
-    // a refetch keeps the previous lists in the store until the answer lands
     expect(
-      marketplaceCatalogueRefreshingSelector(mockState({ ...loading, installed, available })),
+      marketplaceCatalogueRefreshingSelector(mockState({ ...loading, answered: false, available })),
+    ).toBe(false);
+    // a refetch over an answer, including an empty one (a zero state is an answer too)
+    expect(
+      marketplaceCatalogueRefreshingSelector(mockState({ ...loading, answered: true, available })),
     ).toBe(true);
-    expect(marketplaceCatalogueRefreshingSelector(mockState({ ...loading, available }))).toBe(true);
+    expect(
+      marketplaceCatalogueRefreshingSelector(
+        mockState({ ...loading, answered: true, installed: [], available: [] }),
+      ),
+    ).toBe(true);
     // settled is not refreshing, whatever the store holds
-    expect(marketplaceCatalogueRefreshingSelector(loadedOnline)).toBe(false);
+    expect(
+      marketplaceCatalogueRefreshingSelector(
+        mockState({ catalogueState: MARKETPLACE_CATALOGUE_STATE.LOADED_ONLINE, answered: true }),
+      ),
+    ).toBe(false);
     expect(marketplaceCatalogueRefreshingSelector({})).toBe(false);
+  });
+
+  // spec rule 5: nothing marketplace-sourced is trusted while offline, and a refetch in flight
+  // has not yet said otherwise
+  test('a refetch over an offline answer stays offline until the next answer lands', () => {
+    const refetch = (registryState) =>
+      mockState({
+        catalogueState: MARKETPLACE_CATALOGUE_STATE.LOADING,
+        answered: true,
+        registry: registryState,
+      });
+
+    expect(isMarketplaceRegistryOfflineSelector(refetch(catalogueOffline.registry))).toBe(true);
+    // a missing status was offline when it landed, and stays so
+    expect(isMarketplaceRegistryOfflineSelector(refetch({ status: null, host: null }))).toBe(true);
+    expect(isMarketplaceRegistryOfflineSelector(refetch(registry))).toBe(false);
+    // a first load has no verdict to carry
+    expect(
+      isMarketplaceRegistryOfflineSelector(
+        mockState({ catalogueState: MARKETPLACE_CATALOGUE_STATE.LOADING, registry: {} }),
+      ),
+    ).toBe(false);
   });
 
   test('offline is a loaded state, not the failed one', () => {
