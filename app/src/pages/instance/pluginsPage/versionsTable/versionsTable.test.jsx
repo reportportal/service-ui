@@ -36,6 +36,12 @@ const render = (props = {}) =>
   );
 
 const find = (scope, id) => scope.find(`[data-automation-id="${id}"]`);
+// a release note line comes back as a paragraph of the rendered markdown
+const noteLines = (wrapper) =>
+  find(wrapper, 'releaseNotesBody')
+    .hostNodes()
+    .find('p')
+    .map((node) => node.text());
 const rows = (wrapper) =>
   find(wrapper, 'pluginVersionRow').map((node) => node.prop('data-version'));
 const rowFor = (wrapper, version) =>
@@ -43,7 +49,10 @@ const rowFor = (wrapper, version) =>
 const actionOf = (wrapper, version) => rowFor(wrapper, version).find('button[data-action]').first();
 // the marks carry their explanation as tooltip content now, not as the browser's `title`
 const tooltipOf = (wrapper, version, automationId) =>
-  find(rowFor(wrapper, version), automationId).first().parents(VersionMark).first()
+  find(rowFor(wrapper, version), automationId)
+    .first()
+    .parents(VersionMark)
+    .first()
     .prop('tooltipContent');
 const expand = (wrapper, version) => {
   act(() => {
@@ -114,7 +123,7 @@ describe('VersionsTable', () => {
       const wrapper = render({ installedVersion: '5.7.0', changelog });
 
       expect(find(rowFor(wrapper, '5.8.0'), 'versionReleaseNotes')).toHaveLength(1);
-      expect(find(wrapper, 'releaseNoteLine').map((n) => n.text())).toEqual(changelog.lines);
+      expect(noteLines(wrapper)).toEqual(changelog.lines);
     });
 
     test('and it is the only one open', () => {
@@ -224,14 +233,33 @@ describe('VersionsTable', () => {
   });
 
   describe('Versions. Table. Row Expanded', () => {
-    const changelog = { version: '5.6.1', lines: ['Restored compatibility.', 'Fixed a duplicate.'] };
+    const changelog = {
+      version: '5.6.1',
+      lines: ['Restored compatibility.', 'Fixed a duplicate.'],
+    };
 
     test('an expanded row shows the notes published for that version', () => {
       const wrapper = render({ changelog });
 
       expand(wrapper, '5.6.1');
 
-      expect(find(wrapper, 'releaseNoteLine').map((n) => n.text())).toEqual(changelog.lines);
+      expect(noteLines(wrapper)).toEqual(changelog.lines);
+    });
+
+    test('the notes are markdown, set under the row’s own heading', () => {
+      const wrapper = render({
+        changelog: {
+          version: '5.6.1',
+          lines: ['# 5.6.1', '* Fixed **a duplicate**', '[issue](javascript:alert(1))'],
+        },
+      });
+
+      expand(wrapper, '5.6.1');
+      const body = find(wrapper, 'releaseNotesBody').hostNodes();
+
+      expect(body.find('h5').text()).toBe('5.6.1');
+      expect(body.find('li strong').text()).toBe('a duplicate');
+      expect(body.html()).not.toContain('javascript:');
     });
 
     test('rows are closed until asked, and only one is open at a time', () => {
@@ -267,7 +295,7 @@ describe('VersionsTable', () => {
       expect(find(wrapper, 'noReleaseNotes').first().text()).toBe(
         'No changes were documented for this version.',
       );
-      expect(find(wrapper, 'releaseNoteLine')).toHaveLength(0);
+      expect(find(wrapper, 'releaseNotesBody')).toHaveLength(0);
     });
 
     test('a changelog with no lines is empty too, not half-rendered', () => {

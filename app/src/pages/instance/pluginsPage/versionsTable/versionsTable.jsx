@@ -20,6 +20,7 @@ import { defineMessages, useIntl } from 'react-intl';
 import classNames from 'classnames/bind';
 import { Button, ChevronDownDropdownIcon, DownloadIcon } from '@reportportal/ui-kit';
 import { VersionMark, VERSION_MARK_TONES } from '../versionMark';
+import { RegistryMarkdown } from '../registryMarkdown';
 import { sortVersionsNewestFirst, compareVersions, violatedRangeBound } from './utils';
 import styles from './versionsTable.scss';
 
@@ -378,11 +379,12 @@ export const VersionsTable = ({
               <div className={cx('notes')} data-automation-id="versionReleaseNotes">
                 <h4 className={cx('notes-header')}>{formatMessage(messages.releaseNotes)}</h4>
                 {notes.length > 0 ? (
-                  notes.map((line) => (
-                    <p key={line} className={cx('notes-line')} data-automation-id="releaseNoteLine">
-                      {line}
-                    </p>
-                  ))
+                  // the registry's markdown, under the h4 above
+                  <RegistryMarkdown
+                    lines={notes}
+                    headingLevel={5}
+                    data-automation-id="releaseNotesBody"
+                  />
                 ) : (
                   <p className={cx('notes-empty')} data-automation-id="noReleaseNotes">
                     {formatMessage(messages.noReleaseNotes)}
