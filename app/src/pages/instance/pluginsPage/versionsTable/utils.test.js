@@ -96,6 +96,9 @@ describe('compareProductVersions', () => {
     ['1.0.0-alpha', '1.0.0-alpha.1', -1],
     ['1.0.0-rc.99999999999999999999', '1.0.0-rc.2', 1],
     ['2.0.0+build.5', '2.0.0-rc1', 1],
+    // Java's split drops the trailing empty identifier
+    ['2.0.0-rc.', '2.0.0-rc', 0],
+    ['1.4.', '1.4', 0],
   ])('%s against %s is %i', (left, right, expected) => {
     expect(Math.sign(compareProductVersions(left, right))).toBe(expected);
   });
@@ -114,12 +117,27 @@ describe('parseCompatibilityRange', () => {
     expect(parseCompatibilityRange('25.5.0')).toEqual([{ operator: '=', version: '25.5.0' }]);
   });
 
-  test.each([null, '', '  ', 'whenever', '>=25.x', '>=25.0, <next', '>=25.0,'])(
-    'an unreadable range (%p) is no range at all',
+  // Java's split drops trailing empty parts, so the server reads these as `>=25.0`
+  test.each(['>=25.0,', '>=25.0,,'])(
+    'a trailing separator (%p) is ignored, as on the server',
     (range) => {
-      expect(parseCompatibilityRange(range)).toBeNull();
+      expect(parseCompatibilityRange(range)).toEqual([{ operator: '>=', version: '25.0' }]);
     },
   );
+
+  test.each([
+    null,
+    '',
+    '  ',
+    'whenever',
+    '>=25.x',
+    '>=25.0, <next',
+    ',>=25.0',
+    '>=25.0,,<26.0',
+    ',',
+  ])('an unreadable range (%p) is no range at all', (range) => {
+    expect(parseCompatibilityRange(range)).toBeNull();
+  });
 });
 
 describe('violatedRangeBound', () => {
@@ -129,7 +147,10 @@ describe('violatedRangeBound', () => {
   });
 
   test('names the lower bound a release has not reached', () => {
-    expect(violatedRangeBound('>=25.0, <26.0', '24.3')).toEqual({ operator: '>=', version: '25.0' });
+    expect(violatedRangeBound('>=25.0, <26.0', '24.3')).toEqual({
+      operator: '>=',
+      version: '25.0',
+    });
   });
 
   test.each([

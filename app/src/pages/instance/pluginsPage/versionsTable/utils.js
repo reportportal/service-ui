@@ -88,6 +88,25 @@ const RANGE_OPERATORS = ['>=', '<=', '==', '>', '<', '='];
 const RANGE_VERSION = /^\d+(\.\d+)*(-[0-9A-Za-z.-]+)?(\+[0-9A-Za-z.-]+)?$/;
 const MAX_RANGE_VERSION_LENGTH = 256;
 
+/**
+ * Java's `String.split`, which the server's parsing is built on: trailing empty parts are dropped,
+ * leading and inner ones kept, and a string with no separator at all comes back whole — even an
+ * empty one. A plain `split` keeps the trailing parts, so `>=25.0,` would be unreadable here and
+ * read as `>=25.0` there.
+ */
+const javaSplit = (text, separator) => {
+  if (!text.includes(separator)) {
+    return [text];
+  }
+  const parts = text.split(separator);
+
+  while (parts.length > 0 && parts[parts.length - 1] === '') {
+    parts.pop();
+  }
+
+  return parts;
+};
+
 const parseConstraint = (text) => {
   const trimmed = text.trim();
   const operator = RANGE_OPERATORS.find((candidate) => trimmed.startsWith(candidate));
@@ -112,9 +131,9 @@ export const parseCompatibilityRange = (range) => {
     return null;
   }
 
-  const constraints = range.trim().split(',').map(parseConstraint);
+  const constraints = javaSplit(range.trim(), ',').map(parseConstraint);
 
-  return constraints.includes(null) ? null : constraints;
+  return constraints.length === 0 || constraints.includes(null) ? null : constraints;
 };
 
 const stripLeadingZeroes = (digits) => digits.replace(/^0+(?=\d)/, '');
@@ -158,8 +177,8 @@ const segmentOf = (parts, index) => {
 };
 
 const compareCores = (left, right) => {
-  const a = left.split('.');
-  const b = right.split('.');
+  const a = javaSplit(left, '.');
+  const b = javaSplit(right, '.');
 
   for (let i = 0; i < Math.max(a.length, b.length); i += 1) {
     const result = compareDigits(segmentOf(a, i), segmentOf(b, i));
@@ -203,8 +222,8 @@ const comparePreReleases = (left, right) => {
     return -1;
   }
 
-  const a = left.replace(/^-/, '').split('.');
-  const b = right.replace(/^-/, '').split('.');
+  const a = javaSplit(left.replace(/^-/, ''), '.');
+  const b = javaSplit(right.replace(/^-/, ''), '.');
 
   for (let i = 0; i < Math.min(a.length, b.length); i += 1) {
     const result = compareIdentifiers(a[i], b[i]);
