@@ -173,6 +173,27 @@
     &-cell-launch-name {
       font-weight: var(--rp-ui-base-fw-medium);
     }
+
+    &-cell-star {
+      display: inline-flex;
+      flex-shrink: 0;
+      margin-left: 8px;
+    }
+
+    &-cell-star-icon {
+      display: inline-flex;
+      width: 16px;
+      height: 16px;
+    }
+
+    &-cell-star-label {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+      clip-path: inset(50%);
+      white-space: nowrap;
+    }
   }
 }
 
