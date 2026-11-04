@@ -149,6 +149,94 @@ describe('AvailablePluginDetail', () => {
     expect(find(render({ detail: pluginDetail }), 'pluginVersions')).not.toHaveLength(0);
   });
 
+  // The rows below disable a version that does not run here; the header's Install opens a
+  // dialog over the same list, so with nothing in it that fits, the header is dead as well.
+  describe('Install when no listed version fits', () => {
+    // Jira Cloud as reported: built for 25.x, on an instance running 26.0
+    const outgrown = {
+      ...pluginDetail,
+      versions: [
+        { version: '5.13.1', compatible: false, requires: '>=25.0, <26.0', blocked: false },
+        { version: '5.12.0', compatible: false, requires: '>=25.0, <26.0', blocked: false },
+      ],
+    };
+    const installAction = (wrapper) => find(wrapper, 'installAction').first();
+    const reason = (wrapper) => find(wrapper, 'installUnavailableReason').hostNodes();
+
+    test('is disabled, and says why under the button', () => {
+      const wrapper = render({ detail: outgrown, productVersion: '26.0' });
+
+      expect(installAction(wrapper).prop('disabled')).toBe(true);
+      expect(reason(wrapper).text()).toBe('No published version runs on ReportPortal 26.0.');
+    });
+
+    test('without a release to name, it still says nothing can be installed', () => {
+      const wrapper = render({ detail: outgrown });
+
+      expect(installAction(wrapper).prop('disabled')).toBe(true);
+      expect(reason(wrapper).text()).toBe(
+        'No published version can be installed on this instance.',
+      );
+    });
+
+    test('every version blocked is the same dead end, not a compatibility one', () => {
+      const wrapper = render({
+        detail: {
+          ...pluginDetail,
+          versions: [{ version: '1.6.0', compatible: true, blocked: true }],
+        },
+        productVersion: '26.0',
+      });
+
+      expect(installAction(wrapper).prop('disabled')).toBe(true);
+      expect(reason(wrapper).text()).toBe(
+        'No published version can be installed on this instance.',
+      );
+    });
+
+    test('one version that runs is enough to keep it live', () => {
+      const wrapper = render({
+        detail: {
+          ...outgrown,
+          versions: [...outgrown.versions, { version: '5.11.0', compatible: true }],
+        },
+        productVersion: '26.0',
+      });
+
+      expect(installAction(wrapper).prop('disabled')).toBe(false);
+      expect(reason(wrapper)).toHaveLength(0);
+    });
+
+    // service-api serialises with NON_NULL: an undecided verdict arrives as nothing, and is not
+    // a refusal anywhere else on the page
+    test('a verdict that never arrived does not disable it', () => {
+      const wrapper = render({
+        detail: { ...pluginDetail, versions: [{ version: '5.13.1' }] },
+        productVersion: '26.0',
+      });
+
+      expect(installAction(wrapper).prop('disabled')).toBe(false);
+    });
+
+    test('an answer that has not landed, or cannot be believed, decides nothing', () => {
+      [{ loading: true }, { offline: true }, { failed: true }].forEach((state) => {
+        const wrapper = render({ detail: outgrown, productVersion: '26.0', ...state });
+
+        expect(installAction(wrapper).prop('disabled')).toBe(false);
+        expect(reason(wrapper)).toHaveLength(0);
+      });
+    });
+
+    test('the version rows agree with it', () => {
+      const wrapper = render({ detail: outgrown, productVersion: '26.0' });
+
+      const rows = find(wrapper, 'useVersionAction').hostNodes();
+
+      expect(rows).toHaveLength(2);
+      rows.forEach((row) => expect(row.prop('disabled')).toBe(true));
+    });
+  });
+
   // the page must not become a place where an unverifiable claim can still be read
   test('nothing registry-derived survives an offline registry', () => {
     const wrapper = render({
