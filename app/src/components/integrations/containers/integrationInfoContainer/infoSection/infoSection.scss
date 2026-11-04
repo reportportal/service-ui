@@ -41,6 +41,15 @@
   font-family: $FONT-SEMIBOLD;
 }
 
+// centred on the heading's box rather than on its baseline: a 16px pill set on the baseline of
+// 22px semibold text hangs below the letters' visual middle, which is what read as broken
+.title-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  column-gap: 8px;
+}
+
 .version,
 .description {
   color: $COLOR--black-2;

@@ -129,6 +129,7 @@ export class InfoSection extends Component {
       intl: { formatMessage },
       data: { groupType },
       title,
+      afterTitle,
       description,
       isGlobal,
       pluginDetails: { disabledPluginTooltip, version },
@@ -140,10 +141,16 @@ export class InfoSection extends Component {
       <div className={cx('info-section')}>
         <PluginIcon className={cx('logo')} pluginData={this.props.data} alt={title} />
         <div className={cx('description-block')}>
-          <h2 className={cx('title')}>
-            {title}
-            {this.props.afterTitle}
-          </h2>
+          {/* the mark sits beside the heading, not in it: the heading stays the plugin's name
+              alone, and screens without a mark keep the bare heading they always had */}
+          {afterTitle ? (
+            <div className={cx('title-row')} data-automation-id="infoSectionTitleRow">
+              <h2 className={cx('title')}>{title}</h2>
+              {afterTitle}
+            </div>
+          ) : (
+            <h2 className={cx('title')}>{title}</h2>
+          )}
           {version && (
             <span className={cx('version')}>{`${formatMessage(messages.version)} ${version}`}</span>
           )}
