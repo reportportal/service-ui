@@ -15,11 +15,10 @@
  */
 
 import { mount } from 'enzyme';
-import { RegistryMarkdown, joinChangelogLines } from './registryMarkdown';
+import { RegistryMarkdown, joinChangelogLines, registryMarkdownHtml } from './registryMarkdown';
 
 const render = (lines, headingLevel = 4) =>
   mount(<RegistryMarkdown lines={lines} headingLevel={headingLevel} />);
-const html = (lines) => render(lines).getDOMNode().innerHTML;
 
 describe('RegistryMarkdown', () => {
   test('renders the markdown a release is written in', () => {
@@ -56,39 +55,78 @@ describe('RegistryMarkdown', () => {
     expect(link.prop('rel')).toBe('noopener noreferrer');
   });
 
+  // The whole sanitised output per vector, not the absence of one pattern: an absence check
+  // passes for any spelling of the attack it did not think of, and says nothing of what is left.
   describe('a registry is not trusted with the page', () => {
-    test.each([
-      ['a script', '<script>window.pwned = 1</script>', /<script/i],
-      ['an event handler', '<p onclick="window.pwned = 1">x</p>', /onclick/i],
-      ['an image error handler', '<img src="x" onerror="window.pwned = 1">', /onerror/i],
-      ['a javascript: link', '[x](javascript:window.pwned=1)', /javascript:/i],
-      ['a raw javascript: link', '<a href="javascript:window.pwned=1">x</a>', /javascript:/i],
-      ['a data: link', '[x](data:text/html;base64,PHNjcmlwdD4=)', /data:/i],
+    const VECTORS = [
+      ['a script', '<script>alert(1)</script>', ''],
+      ['an event handler', '<p onclick="alert(1)">x</p>', '<p>x</p>'],
+      ['an image error handler', '<img src="x" onerror="alert(1)">', ''],
+      ['a markdown javascript: link', '[x](javascript:alert(1))', '<p><a>x</a></p>'],
+      ['a raw javascript: link', '<a href="javascript:alert(1)">x</a>', '<p><a>x</a></p>'],
+      [
+        'an entity-encoded javascript: link',
+        '<a href="jav&#x61;script:alert(1)">x</a>',
+        '<p><a>x</a></p>',
+      ],
+      ['an xlink:href', '<a xlink:href="javascript:alert(1)">x</a>', '<p><a>x</a></p>'],
+      ['a data: link', '[x](data:text/html;base64,PHNjcmlwdD4=)', '<p><a>x</a></p>'],
+      // protocol-relative: whatever scheme the page is on, to a host the registry chose
+      ['a protocol-relative link', '<a href="//evil.example/x">x</a>', '<p><a>x</a></p>'],
       // a style block restyles the whole page, not just the card
-      ['a style block', '<style>body { display: none }</style>', /<style|display/i],
-      ['a style attribute', '<p style="position: fixed; inset: 0">x</p>', /style=/i],
-      ['an iframe', '<iframe src="https://example.com"></iframe>', /<iframe/i],
-      ['a form', '<form action="https://example.com"><input name="p"></form>', /<form|<input/i],
-    ])('%s is removed', (_, line, leftover) => {
-      expect(html([line])).not.toMatch(leftover);
-      expect(window.pwned).toBeUndefined();
+      ['a style block', '<style>body { display: none }</style>', ''],
+      ['a style attribute', '<p style="position: fixed; inset: 0">x</p>', '<p>x</p>'],
+      ['an iframe', '<iframe src="https://example.com"></iframe>', ''],
+      ['a form', '<form action="https://example.com"><input name="p"></form>', ''],
+      ['a button formaction', '<button formaction="https://evil.example">x</button>', '<p>x</p>'],
+      // a URI attribute DOMPurify allows by default: the browser fetches it as an image
+      [
+        'a table background',
+        '<table background="https://t.example/b.png"><tr><td>x</td></tr></table>',
+        '<table><tbody><tr><td>x</td></tr></tbody></table>',
+      ],
+      [
+        'a details ontoggle',
+        '<details ontoggle="alert(1)" open><summary>s</summary>x</details>',
+        '<details><summary>s</summary>x</details>',
+      ],
+      // renames the browser tab
+      ['a title element', '<title>x</title>', ''],
+      [
+        'an image map area',
+        '<map name="m"><area href="https://evil.example" shape="rect"></map>',
+        '<p></p>',
+      ],
+      ['a video poster', '<video poster="https://t.example/p.png"></video>', '<p></p>'],
+      ['an open dialog', '<dialog open>x</dialog>', 'x'],
+      ['a marquee', '<marquee>x</marquee>', '<p>x</p>'],
+      ['a template', '<template><p>x</p></template>', '<p></p>'],
+      ['a markdown image', '![pixel](https://tracker.example/p.png)', '<p></p>'],
+      ['a raw image', '<img src="https://t.example/p">', ''],
+      [
+        'identity and data attributes',
+        '<p data-x="1" aria-label="y" class="c" id="i" title="t">x</p>',
+        '<p title="t">x</p>',
+      ],
+      [
+        'a plain https link, which is kept',
+        '[docs](https://reportportal.io/docs "Docs")',
+        '<p><a href="https://reportportal.io/docs" title="Docs">docs</a></p>',
+      ],
+    ];
+
+    test.each(VECTORS)('%s comes out as exactly what is allowed', (_, line, expected) => {
+      expect(registryMarkdownHtml([line])).toBe(expected);
     });
 
     // a remote image is fetched by every admin who opens the page, which tells its host who runs
-    // which plugin and when
-    test('images are not loaded, markdown or raw', () => {
-      const out = html([
-        '![pixel](https://tracker.example/p.png)',
-        '<img src="https://t.example/p">',
-      ]);
+    // which plugin and when; an address may survive only as somewhere a click can go
+    test('no address survives anywhere but a link', () => {
+      VECTORS.forEach(([, line]) => {
+        const outsideLinks = registryMarkdownHtml([line]).replace(/ href="[^"]*"/g, '');
 
-      expect(out).not.toMatch(/<img|tracker\.example|t\.example/);
-    });
-
-    test('a plain-text link is kept', () => {
-      expect(html(['[docs](https://reportportal.io/docs)'])).toContain(
-        'href="https://reportportal.io/docs"',
-      );
+        expect(outsideLinks).not.toMatch(/https?:|\/\//);
+      });
     });
   });
 

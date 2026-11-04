@@ -27,49 +27,83 @@ const cx = classNames.bind(styles);
  * Stricter than the app's own user-content sanitiser, which MarkdownViewer uses: that one is for
  * text a colleague wrote in this instance, and keeps `<style>` blocks and `style` attributes so
  * a description can be laid out. A changelog is written by whoever publishes to the registry, and
- * a style block there restyles this whole page. So no styling, no embedded content, and no images:
- * a remote image in a changelog is fetched by every admin who opens the page, which tells its host
- * who runs which plugin and when — the screenshots block, whose URLs the registry vouches for, is
- * where pictures belong. Links survive, to http(s) and mail only.
+ * a style block there restyles this whole page.
+ *
+ * <p>An allow-list, not a deny-list: a deny-list has to know every way markup can reach the
+ * network or the page, and does not — `<table background>` is a URI attribute DOMPurify allows by
+ * default, so a remote image still loaded through it. What is allowed here is the text markdown
+ * produces and nothing that fetches: no images at all (a remote image is fetched by every admin who
+ * opens the page, which tells its host who runs which plugin and when; the screenshots block, whose
+ * URLs the registry vouches for, is where pictures belong), and the only attributes are a link's
+ * address and a title. Links go to http(s) and mail only. `target` and `rel` are not taken from the
+ * content; they are set when the markup is turned into elements.
  */
 const REGISTRY_CONTENT = {
-  FORBID_TAGS: [
-    'style',
-    'link',
-    'meta',
-    'base',
-    'img',
-    'picture',
-    'source',
-    'video',
-    'audio',
-    'track',
-    'svg',
-    'math',
-    'iframe',
-    'frame',
-    'object',
-    'embed',
-    'form',
-    'input',
-    'button',
-    'select',
-    'textarea',
-    'option',
+  ALLOWED_TAGS: [
+    'p',
+    'br',
+    'a',
+    'strong',
+    'em',
+    'b',
+    'i',
+    'code',
+    'pre',
+    'ul',
+    'ol',
+    'li',
+    'blockquote',
+    'h1',
+    'h2',
+    'h3',
+    'h4',
+    'h5',
+    'h6',
+    'hr',
+    'del',
+    's',
+    'table',
+    'thead',
+    'tbody',
+    'tr',
+    'th',
+    'td',
+    'sup',
+    'sub',
+    'span',
+    'div',
+    'details',
+    'summary',
   ],
-  FORBID_ATTR: ['style', 'class', 'id', 'srcset'],
+  ALLOWED_ATTR: ['href', 'title'],
+  ALLOW_DATA_ATTR: false,
+  ALLOW_ARIA_ATTR: false,
   ALLOWED_URI_REGEXP: /^(?:https?:|mailto:)/i,
 };
 
 const HEADING = /^h([1-6])$/;
 
 /**
- * The server sends the document as its non-blank lines, stripped, so paragraph breaks are gone.
+ * The server sends the document as its non-blank lines, stripped (GetMarketplacePluginDetailHandlerImpl
+ * strips each line and drops the blank ones), so paragraph breaks and indentation are gone.
  * Joined back with one newline, a line after a list item would be read as part of that item and a
  * plain line after another as the same paragraph; a blank line between each puts every line back
  * in a block of its own, which is what the document showed line by line before.
  */
 export const joinChangelogLines = (lines) => (lines || []).join('\n\n');
+
+// What that shape cannot carry, and so renders degraded: fenced code loses its indentation and
+// gains blank lines, GFM tables fall apart into paragraphs (a blank line ends a table), nested lists
+// flatten, and a setext heading's underline becomes a line of its own. The fix is server-side: send
+// the lines unstripped, blank ones included, and join them here with '\n'. GFM task lists render
+// without their checkbox, since an input is not allowed — accepted, the item text still reads.
+
+/** The changelog as sanitised HTML: markdown in, only the allow-listed markup out. */
+export const registryMarkdownHtml = (lines) =>
+  DOMPurify.sanitize(
+    SingletonMarkdownObject.getInstance().markdown(joinChangelogLines(lines)),
+    REGISTRY_CONTENT,
+  ).trim();
 
 /**
  * A plugin changelog from the registry, rendered as the markdown it is written in.
@@ -80,10 +114,7 @@ export const joinChangelogLines = (lines) => (lines || []).join('\n\n');
  * choice of site.
  */
 export const RegistryMarkdown = ({ lines, headingLevel, className = '', ...rest }) => {
-  const html = DOMPurify.sanitize(
-    SingletonMarkdownObject.getInstance().markdown(joinChangelogLines(lines)),
-    REGISTRY_CONTENT,
-  );
+  const html = registryMarkdownHtml(lines);
 
   const replace = (node) => {
     if (node.type !== 'tag') {
@@ -102,7 +133,7 @@ export const RegistryMarkdown = ({ lines, headingLevel, className = '', ...rest 
 
   return (
     <div className={cx('registry-markdown', className)} {...rest}>
-      {Parser(html.trim(), { replace })}
+      {Parser(html, { replace })}
     </div>
   );
 };
