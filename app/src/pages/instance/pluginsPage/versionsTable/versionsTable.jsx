@@ -20,7 +20,7 @@ import { defineMessages, useIntl } from 'react-intl';
 import classNames from 'classnames/bind';
 import { Button, ChevronDownDropdownIcon, DownloadIcon } from '@reportportal/ui-kit';
 import { VersionMark, VERSION_MARK_TONES } from '../versionMark';
-import { sortVersionsNewestFirst, compareVersions, readRangeBound } from './utils';
+import { sortVersionsNewestFirst, compareVersions, violatedRangeBound } from './utils';
 import styles from './versionsTable.scss';
 
 const cx = classNames.bind(styles);
@@ -84,14 +84,30 @@ const messages = defineMessages({
     id: 'VersionsTable.noReleaseNotes',
     defaultMessage: 'No changes were documented for this version.',
   },
+  // one per operator: an inclusive bound and a strict one name different releases, and "26.0 or
+  // earlier" for `<26.0` would tell an instance on 26.0 that it qualifies
   needsNewer: {
     id: 'VersionsTable.needsNewer',
     defaultMessage: 'Needs ReportPortal {version} or later. This instance runs {productVersion}.',
+  },
+  needsLaterThan: {
+    id: 'VersionsTable.needsLaterThan',
+    defaultMessage:
+      'Needs ReportPortal later than {version}. This instance runs {productVersion}.',
   },
   needsOlder: {
     id: 'VersionsTable.needsOlder',
     defaultMessage:
       'Built for ReportPortal {version} or earlier. This instance runs {productVersion}.',
+  },
+  needsBefore: {
+    id: 'VersionsTable.needsBefore',
+    defaultMessage:
+      'Built for ReportPortal before {version}. This instance runs {productVersion}.',
+  },
+  needsExactly: {
+    id: 'VersionsTable.needsExactly',
+    defaultMessage: 'Built for ReportPortal {version} only. This instance runs {productVersion}.',
   },
   incompatibleNoRelease: {
     id: 'VersionsTable.incompatibleNoRelease',
@@ -155,6 +171,15 @@ const rowAction = (version, installedVersion) => {
     : ROW_ACTIONS.DOWNGRADE;
 };
 
+const BOUND_MESSAGE = {
+  '>=': messages.needsNewer,
+  '>': messages.needsLaterThan,
+  '<=': messages.needsOlder,
+  '<': messages.needsBefore,
+  '=': messages.needsExactly,
+  '==': messages.needsExactly,
+};
+
 const ACTION_MESSAGE = {
   [ROW_ACTIONS.INSTALL]: messages.install,
   [ROW_ACTIONS.UPGRADE]: messages.upgrade,
@@ -212,17 +237,16 @@ export const VersionsTable = ({
     value ? formatDate(value, { day: 'numeric', month: 'short', year: 'numeric' }) : '';
 
   const incompatibleReason = (entry) => {
-    const bound = readRangeBound(entry.requires);
-    // without a release to compare against, or a range this cannot make a sentence of, the honest
-    // thing is to say only that it does not run here rather than print a range at the reader
-    if (!bound || !productVersion) {
+    // the bound this release actually fails, not the first one written: in `>=25.0, <26.0` on 26.0
+    // the lower bound holds, and naming it reads as a reason the version should run.
+    // Without a release, a readable range or a failing bound, the honest thing is to say only that
+    // it does not run here: the refusal is service-api's, this only explains it
+    const bound = violatedRangeBound(entry.requires, productVersion);
+    if (!bound) {
       return formatMessage(messages.incompatibleNoRelease);
     }
 
-    return formatMessage(bound.direction === 'newer' ? messages.needsNewer : messages.needsOlder, {
-      version: bound.version,
-      productVersion,
-    });
+    return formatMessage(BOUND_MESSAGE[bound.operator], { version: bound.version, productVersion });
   };
 
   const blockedReason = (entry) => {

@@ -313,6 +313,48 @@ describe('VersionsTable', () => {
       );
     });
 
+    // reported: `>=25.0, <26.0` on 26.0 named the lower bound, which this release meets, so the
+    // reason read as a reason the version should run
+    test('a range with both bounds names the one this release actually fails', () => {
+      const wrapper = render({
+        versions: [{ version: '5.13.1', compatible: false, requires: '>=25.0, <26.0' }],
+        productVersion: '26.0',
+      });
+
+      expect(tooltipOf(wrapper, '5.13.1', 'incompatibleVersionMark')).toBe(
+        'Built for ReportPortal before 26.0. This instance runs 26.0.',
+      );
+    });
+
+    // a strict bound excludes the release it names; "26.0 or earlier" would include this one
+    test.each([
+      ['>=26.0', '25.9', 'Needs ReportPortal 26.0 or later. This instance runs 25.9.'],
+      ['>26.0', '26.0', 'Needs ReportPortal later than 26.0. This instance runs 26.0.'],
+      ['<=25.2', '26.0', 'Built for ReportPortal 25.2 or earlier. This instance runs 26.0.'],
+      ['<26.0', '26.0', 'Built for ReportPortal before 26.0. This instance runs 26.0.'],
+      ['=25.5.0', '26.0', 'Built for ReportPortal 25.5.0 only. This instance runs 26.0.'],
+    ])('%s on %s is worded for its operator', (requires, productVersion, expected) => {
+      const wrapper = render({
+        versions: [{ version: '5.8.0', compatible: false, requires }],
+        productVersion,
+      });
+
+      expect(tooltipOf(wrapper, '5.8.0', 'incompatibleVersionMark')).toBe(expected);
+    });
+
+    // the refusal is the server's; when this side cannot find the bound it turned on, it does not
+    // guess one
+    test('a refusal no bound explains says only that it does not run here', () => {
+      const wrapper = render({
+        versions: [{ version: '5.8.0', compatible: false, requires: '>=25.0, <27.0' }],
+        productVersion: '26.0',
+      });
+
+      expect(tooltipOf(wrapper, '5.8.0', 'incompatibleVersionMark')).toBe(
+        "This version doesn't run on the release this instance uses.",
+      );
+    });
+
     test('a range that makes no sentence says only that it does not run here', () => {
       const wrapper = render({
         versions: [{ version: '5.8.0', compatible: false, requires: 'whenever' }],

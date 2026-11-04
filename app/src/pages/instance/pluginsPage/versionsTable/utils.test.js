@@ -14,7 +14,13 @@
  * limitations under the License.
  */
 
-import { compareVersions, sortVersionsNewestFirst } from './utils';
+import {
+  compareVersions,
+  sortVersionsNewestFirst,
+  compareProductVersions,
+  parseCompatibilityRange,
+  violatedRangeBound,
+} from './utils';
 
 const order = (versions) =>
   sortVersionsNewestFirst(versions.map((version) => ({ version }))).map((e) => e.version);
@@ -67,5 +73,101 @@ describe('sortVersionsNewestFirst', () => {
     sortVersionsNewestFirst(versions);
 
     expect(versions.map((e) => e.version)).toEqual(['5.6.0', '5.8.0']);
+  });
+});
+
+// the explanation has to turn on the same bound the server's verdict did, so these mirror
+// the orderings service-api's PluginVersions documents
+describe('compareProductVersions', () => {
+  test.each([
+    ['26.0', '26.0.0', 0],
+    ['26.0', '25.9', 1],
+    ['1.4.10', '1.4.9', 1],
+    ['2.0.0-rc1', '2.0.0', -1],
+    ['2.0.0-rc.10', '2.0.0-rc.2', 1],
+    ['2.0.0-1', '2.0.0-alpha', -1],
+    ['2.0.0-rc', '2.0.0-rc.1', -1],
+    ['2.0.0+build.5', '2.0.0', 0],
+    ['007.1', '7.1', 0],
+    ['99999999999999999999.0', '99999999999999999998.0', 1],
+    ['25.10', '25.9', 1],
+    ['1.010', '1.9', 1],
+    ['1.0.0-2', '1.0.0-10', -1],
+    ['1.0.0-alpha', '1.0.0-alpha.1', -1],
+    ['1.0.0-rc.99999999999999999999', '1.0.0-rc.2', 1],
+    ['2.0.0+build.5', '2.0.0-rc1', 1],
+  ])('%s against %s is %i', (left, right, expected) => {
+    expect(Math.sign(compareProductVersions(left, right))).toBe(expected);
+  });
+});
+
+describe('parseCompatibilityRange', () => {
+  test('reads every comma-separated constraint, longest operator first', () => {
+    expect(parseCompatibilityRange('>=25.0, <26.0')).toEqual([
+      { operator: '>=', version: '25.0' },
+      { operator: '<', version: '26.0' },
+    ]);
+    expect(parseCompatibilityRange('==25.5.0')).toEqual([{ operator: '==', version: '25.5.0' }]);
+  });
+
+  test('a bare version is an exact pin', () => {
+    expect(parseCompatibilityRange('25.5.0')).toEqual([{ operator: '=', version: '25.5.0' }]);
+  });
+
+  test.each([null, '', '  ', 'whenever', '>=25.x', '>=25.0, <next', '>=25.0,'])(
+    'an unreadable range (%p) is no range at all',
+    (range) => {
+      expect(parseCompatibilityRange(range)).toBeNull();
+    },
+  );
+});
+
+describe('violatedRangeBound', () => {
+  // the reported case: the lower bound holds, so it must not be the one explained
+  test('names the upper bound a release has outgrown, not the lower one it meets', () => {
+    expect(violatedRangeBound('>=25.0, <26.0', '26.0')).toEqual({ operator: '<', version: '26.0' });
+  });
+
+  test('names the lower bound a release has not reached', () => {
+    expect(violatedRangeBound('>=25.0, <26.0', '24.3')).toEqual({ operator: '>=', version: '25.0' });
+  });
+
+  test.each([
+    ['>=26.0', '25.9', '>='],
+    ['>26.0', '26.0', '>'],
+    ['<=25.2', '25.3', '<='],
+    ['<26.0', '26.0', '<'],
+    ['=25.5.0', '25.5.1', '='],
+    ['==25.5.0', '25.5.1', '=='],
+  ])('%s fails on %s through its own operator', (range, productVersion, operator) => {
+    expect(violatedRangeBound(range, productVersion).operator).toBe(operator);
+  });
+
+  test('nothing to name when every bound holds, the range is unreadable or the release unknown', () => {
+    expect(violatedRangeBound('>=25.0, <26.0', '25.4')).toBeNull();
+    expect(violatedRangeBound('whenever', '26.0')).toBeNull();
+    expect(violatedRangeBound('>=25.0', null)).toBeNull();
+  });
+});
+
+// service-api's CompatibilityRangeTest, case for case: a bound is reported failed exactly when
+// the server's matcher says it does not hold
+describe('violatedRangeBound agrees with the server on what matches', () => {
+  test.each([
+    ['>=25.1', '25.1', true],
+    ['>=25.1', '25.0', false],
+    ['>25.1', '25.1', false],
+    ['>25.1', '25.1.1', true],
+    ['<26.0', '25.9', true],
+    ['<26.0', '26.0', false],
+    ['<=25.1', '25.1', true],
+    ['<=25.1', '25.1.1', false],
+    ['>=25.1, <26.0', '25.2', true],
+    ['>=25.1, <26.0', '27.3', false],
+    ['25.5', '25.5.0', true],
+    ['25.5.0', '25.6.0', false],
+    ['>=25.10', '25.10', true],
+  ])('%s on %s matches: %p', (range, productVersion, matches) => {
+    expect(violatedRangeBound(range, productVersion) === null).toBe(matches);
   });
 });
