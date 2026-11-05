@@ -31,6 +31,7 @@ import { handleEnterOrSpaceKey } from 'common/utils/helperUtils/eventUtils';
 import { AsyncAutocompleteV2 } from 'componentLibrary/autocompletes/asyncAutocompleteV2';
 import { Condition, Filter } from 'pages/inside/dashboardItemPage/modals/widgetWizardModal/types';
 import { FilterOptions } from 'pages/inside/filtersPage/filterGrid/filterOptions';
+import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { WIDGET_WIZARD_FORM } from '../../../constants';
 import { LockedActiveFilter } from '../filtersControl/lockedActiveFilter';
 import { FilterEdit } from './filterEdit';
@@ -359,6 +360,7 @@ export const FiltersControlV2 = ({
           <div className={cx('filter-card-header')}>
             <span className={cx('filter-option-name')}>{selectedFilter.name}</span>
             <BaseIconButton
+              aria-label={formatMessage(COMMON_LOCALE_KEYS.EDIT)}
               onClick={(e) =>
                 handleFormAppearanceMode(e, FORM_APPEARANCE_MODE_EDIT, selectedFilter)
               }
