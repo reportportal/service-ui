@@ -17,8 +17,8 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { defineMessages, useIntl } from 'react-intl';
 import { Button, CloseIcon, Dropdown, PlusIcon } from '@reportportal/ui-kit';
+import { DropdownOptionProps, DropdownOptionType } from '@reportportal/ui-kit/dropdown';
 import { formatAttribute, parseQueryAttributes } from 'common/utils/attributeUtils';
-import { DropdownOptionProps, DropdownOptionType } from '@reportportal/ui-kit/components/dropdown/types';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { createClassnames } from 'common/utils';
 import { AttributeEditor } from 'componentLibrary/attributeEditor';
