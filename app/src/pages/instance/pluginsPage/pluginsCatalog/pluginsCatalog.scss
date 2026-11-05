@@ -28,6 +28,35 @@
   padding: 48px 0;
 }
 
+.plugins-catalog-list {
+  position: relative;
+}
+
+// laid over the top of the stale rows, not above them, so the list does not shift under the
+// user when a refetch starts or lands
+.plugins-catalog-refresh-loader {
+  position: absolute;
+  top: 16px;
+  left: 0;
+  right: 0;
+  z-index: 1;
+  display: flex;
+  justify-content: center;
+  pointer-events: none;
+}
+
+.plugins-catalog-groups {
+  transition: opacity 0.2s;
+}
+
+// the previous answer, kept on screen until the next one lands: legible, but not actionable.
+// The markup makes it inert for the keyboard; this covers the pointer.
+.plugins-catalog-groups-stale {
+  opacity: 0.4;
+  pointer-events: none;
+  user-select: none;
+}
+
 .plugins-catalog-group + .plugins-catalog-group {
   margin-top: 24px;
 }
@@ -56,4 +85,20 @@
   // inherited its parent's colour instead of going grey. The kit's own name for secondary
   // text resolves to e-400 (#8d95a1), which is what the design calls Text/Secondary.
   color: var(--rp-ui-color-text-secondary);
+}
+
+.plugins-catalog-empty-actions {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+}
+
+// the refresh loader's words, for a screen reader only: the dots say the same thing to the eye
+.plugins-catalog-visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
 }

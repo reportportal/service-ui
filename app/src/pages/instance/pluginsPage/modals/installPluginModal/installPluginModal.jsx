@@ -19,7 +19,6 @@ import PropTypes from 'prop-types';
 import { useSelector } from 'react-redux';
 import { defineMessages, useIntl } from 'react-intl';
 import classNames from 'classnames/bind';
-import Parser from 'html-react-parser';
 import { ModalLayout } from 'components/main/modal';
 import {
   marketplaceInstallErrorSelector,
@@ -181,7 +180,10 @@ export const InstallPluginModal = ({ data }) => {
       cancelButton={{ text: formatMessage(COMMON_LOCALE_KEYS.CANCEL) }}
     >
       <p className={cx('description')} data-automation-id="installPluginDescription">
-        {Parser(formatMessage(messages.description, { pluginName }))}
+        {/* `<b>` is a rich-text tag to react-intl, not markup: left unbound, formatting fails and
+            the source string is printed verbatim, `{pluginName}` and all. Bound to an element,
+            the name is also never parsed as HTML. */}
+        {formatMessage(messages.description, { pluginName, b: (chunks) => <b>{chunks}</b> })}
       </p>
       {/* the kit's Dropdown is not a native control, so this labels the field rather than
           binding to one */}

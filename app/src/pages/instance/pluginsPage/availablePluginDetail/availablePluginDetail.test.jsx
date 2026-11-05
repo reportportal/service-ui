@@ -105,6 +105,36 @@ describe('AvailablePluginDetail', () => {
     expect(find(wrapper, 'discoverPremiumAction')).toHaveLength(0);
   });
 
+  // the line beside the tier follows `locked` as the action does: a configured licence makes
+  // Install live, and the line may not still tell the admin to upgrade
+  describe('the access line beside the tier', () => {
+    const description = (wrapper) =>
+      find(wrapper, 'pluginDetailTierDescription').hostNodes().text();
+
+    test('a free plugin is available with the current plan', () => {
+      expect(description(render({ plugin: slack }))).toBe('Available with your current plan');
+    });
+
+    test('a premium plugin with no licence here asks for an upgrade', () => {
+      expect(azure.locked).toBe(true);
+      expect(description(render({ plugin: azure }))).toBe(
+        'Upgrade your subscription to access this plugin',
+      );
+    });
+
+    // entitlement is checked only at download, so the line says the licence will be checked,
+    // never that it covers this plugin
+    test('a premium plugin with a licence configured says the licence is checked on install', () => {
+      const text = description(render({ plugin: { ...azure, locked: false } }));
+
+      expect(text).toBe(
+        "Uses this instance's licence, checked against this plugin when you install",
+      );
+      expect(text).not.toMatch(/upgrade/i);
+      expect(text).not.toMatch(/covers|included|entitled/i);
+    });
+  });
+
   test('a premium plugin with no licence can only be enquired about', () => {
     const wrapper = render({ plugin: azure });
 
@@ -147,6 +177,100 @@ describe('AvailablePluginDetail', () => {
 
   test('the registry blocks are part of the page', () => {
     expect(find(render({ detail: pluginDetail }), 'pluginVersions')).not.toHaveLength(0);
+  });
+
+  // The rows below disable a version that does not run here; the header's Install opens a
+  // dialog over the same list, so with nothing in it that fits, the header is dead as well.
+  describe('Install when no listed version fits', () => {
+    // Jira Cloud as reported: built for 25.x, on an instance running 26.0
+    const outgrown = {
+      ...pluginDetail,
+      versions: [
+        { version: '5.13.1', compatible: false, requires: '>=25.0, <26.0', blocked: false },
+        { version: '5.12.0', compatible: false, requires: '>=25.0, <26.0', blocked: false },
+      ],
+    };
+    // the rendered <button>, not the kit component's prop: what the admin can actually press
+    const installButton = (wrapper) => {
+      const button = find(wrapper, 'installAction').hostNodes();
+
+      expect(button).toHaveLength(1);
+      return button.getDOMNode();
+    };
+    const reason = (wrapper) => find(wrapper, 'installUnavailableReason').hostNodes();
+
+    test('is disabled, and says why under the button', () => {
+      const wrapper = render({ detail: outgrown, productVersion: '26.0' });
+
+      expect(installButton(wrapper).disabled).toBe(true);
+      expect(reason(wrapper).text()).toBe('No published version runs on ReportPortal 26.0.');
+    });
+
+    test('without a release to name, it still says nothing can be installed', () => {
+      const wrapper = render({ detail: outgrown });
+
+      expect(installButton(wrapper).disabled).toBe(true);
+      expect(reason(wrapper).text()).toBe(
+        'No published version can be installed on this instance.',
+      );
+    });
+
+    test('every version blocked is the same dead end, not a compatibility one', () => {
+      const wrapper = render({
+        detail: {
+          ...pluginDetail,
+          versions: [{ version: '1.6.0', compatible: true, blocked: true }],
+        },
+        productVersion: '26.0',
+      });
+
+      expect(installButton(wrapper).disabled).toBe(true);
+      expect(reason(wrapper).text()).toBe(
+        'No published version can be installed on this instance.',
+      );
+    });
+
+    test('one version that runs is enough to keep it live', () => {
+      const wrapper = render({
+        detail: {
+          ...outgrown,
+          versions: [...outgrown.versions, { version: '5.11.0', compatible: true }],
+        },
+        productVersion: '26.0',
+      });
+
+      expect(installButton(wrapper).disabled).toBe(false);
+      expect(reason(wrapper)).toHaveLength(0);
+    });
+
+    // service-api serialises with NON_NULL: an undecided verdict arrives as nothing, and is not
+    // a refusal anywhere else on the page
+    test('a verdict that never arrived does not disable it', () => {
+      const wrapper = render({
+        detail: { ...pluginDetail, versions: [{ version: '5.13.1' }] },
+        productVersion: '26.0',
+      });
+
+      expect(installButton(wrapper).disabled).toBe(false);
+    });
+
+    test('an answer that has not landed, or cannot be believed, decides nothing', () => {
+      [{ loading: true }, { offline: true }, { failed: true }].forEach((state) => {
+        const wrapper = render({ detail: outgrown, productVersion: '26.0', ...state });
+
+        expect(installButton(wrapper).disabled).toBe(false);
+        expect(reason(wrapper)).toHaveLength(0);
+      });
+    });
+
+    test('the version rows agree with it', () => {
+      const wrapper = render({ detail: outgrown, productVersion: '26.0' });
+
+      const rows = find(wrapper, 'useVersionAction').hostNodes();
+
+      expect(rows).toHaveLength(2);
+      rows.forEach((row) => expect(row.prop('disabled')).toBe(true));
+    });
   });
 
   // the page must not become a place where an unverifiable claim can still be read

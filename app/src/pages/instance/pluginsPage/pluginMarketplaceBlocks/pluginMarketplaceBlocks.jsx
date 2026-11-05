@@ -25,6 +25,7 @@ import { RegistryOfflineAlert } from '../registryOfflineAlert';
 import { CatalogueUnavailableAlert } from '../catalogueUnavailableAlert';
 import { isMarketplaceTrusted } from '../pluginsCatalog';
 import { VersionsTable } from '../versionsTable';
+import { RegistryMarkdown } from '../registryMarkdown';
 import { formatPublishDate } from './utils';
 import styles from './pluginMarketplaceBlocks.scss';
 
@@ -312,15 +313,13 @@ export const PluginMarketplaceBlocks = ({
                 {formatMessage(messages.changelogHeader, { version: changelog.version })}
               </h3>
               <div className={cx('card')}>
-                {(changelog.lines || []).map((line) => (
-                  <p
-                    key={line}
-                    className={cx('changelog-line')}
-                    data-automation-id="pluginChangelogLine"
-                  >
-                    {line}
-                  </p>
-                ))}
+                {/* the registry's markdown, under this block's h3 */}
+                <RegistryMarkdown
+                  lines={changelog.lines || []}
+                  headingLevel={4}
+                  className={cx('changelog-body')}
+                  data-automation-id="pluginChangelogBody"
+                />
               </div>
             </section>
           )}

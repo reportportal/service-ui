@@ -79,6 +79,7 @@ export {
   marketplaceRegistrySelector,
   marketplaceRegistryHostSelector,
   marketplaceCatalogueLoadingSelector,
+  marketplaceCatalogueRefreshingSelector,
   isMarketplaceRegistryOfflineSelector,
   hasMarketplaceCatalogueFailedSelector,
   marketplaceCatalogueErrorSelector,

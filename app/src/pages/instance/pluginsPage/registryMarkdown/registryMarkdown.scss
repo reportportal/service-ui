@@ -1,0 +1,96 @@
+/*!
+ * Copyright 2026 EPAM Systems
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+// Body text throughout, so nothing a registry writes can look louder than the page's own block
+// headings: a changelog heading is set as a bolder line of the same size, not as a title.
+.registry-markdown {
+  font-family: var(--rp-ui-base-font-family);
+  font-size: 13px;
+  line-height: 20px;
+  color: var(--rp-ui-color-text-primary);
+  // a release's "Full Changelog" URL is one unbroken word, longer than the card
+  overflow-wrap: anywhere;
+
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    margin: 12px 0 4px;
+    font-size: 13px;
+    font-weight: 500;
+    line-height: 20px;
+  }
+
+  > :first-child {
+    margin-top: 0;
+  }
+
+  > :last-child {
+    margin-bottom: 0;
+  }
+
+  p {
+    margin: 0 0 4px;
+  }
+
+  ul,
+  ol {
+    margin: 0 0 4px;
+    padding-left: 20px;
+  }
+
+  ul {
+    list-style: disc;
+  }
+
+  ol {
+    list-style: decimal;
+  }
+
+  li > p {
+    margin: 0;
+  }
+
+  a {
+    color: var(--rp-ui-base-topaz);
+    text-decoration: underline;
+  }
+
+  strong {
+    font-weight: 500;
+  }
+
+  em {
+    font-style: italic;
+  }
+
+  code {
+    font-family: monospace;
+    font-size: 12px;
+  }
+
+  pre {
+    margin: 0 0 4px;
+    white-space: pre-wrap;
+  }
+
+  blockquote {
+    margin: 0 0 4px;
+    padding-left: 8px;
+    border-left: 2px solid var(--rp-ui-base-e-200);
+  }
+}

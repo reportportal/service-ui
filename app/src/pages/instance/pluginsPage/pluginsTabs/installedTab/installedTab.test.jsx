@@ -188,6 +188,32 @@ describe('InstalledTab', () => {
     expect(lastRequest()).toEqual({ q: null, category: null, debounced: undefined });
   });
 
+  // the zero state's way out goes the same path as the All chip, query and all
+  test('showing all categories from the zero state is the All chip, keeping the query', () => {
+    const { wrapper, call, lastRequest } = render();
+
+    call(PluginsCatalog, 'onQueryChange', 'jir');
+    call(PluginsFilter, 'onFilterChange', BTS_GROUP_TYPE);
+    call(PluginsCatalog, 'onCategoryReset');
+
+    expect(lastRequest()).toEqual({ q: 'jir', category: null, debounced: undefined });
+    expect(wrapper.find(PluginsCatalog).first().prop('activeCategory')).toBe(ALL_GROUP_TYPE);
+  });
+
+  // only a request over an answer already on screen keeps the rows; the first one has none
+  test('a refetch over a loaded catalogue is a refresh, the first request is not', () => {
+    const loading = { catalogueState: MARKETPLACE_CATALOGUE_STATE.LOADING };
+    const first = render(marketplaceState(loading)).wrapper.find(PluginsCatalog).first();
+    const refetch = render(marketplaceState({ ...loading, answered: true }))
+      .wrapper.find(PluginsCatalog)
+      .first();
+
+    expect(first.prop('loading')).toBe(true);
+    expect(first.prop('refreshing')).toBe(false);
+    expect(refetch.prop('loading')).toBe(true);
+    expect(refetch.prop('refreshing')).toBe(true);
+  });
+
   test('a failed catalogue reaches the screen, and its retry asks again', () => {
     const { wrapper, call, lastRequest } = render(
       marketplaceState({
@@ -356,6 +382,8 @@ describe('InstalledTab', () => {
 
         expect(badge.text()).toBe('Uploaded Manually');
         expect(badge.prop('tone')).toBe('neutral');
+        // beside the heading, not in it: the heading is the plugin's name alone
+        expect(wrapper.find(IntegrationInfoContainer).find('h2').text()).toBe('Jira');
       });
 
       /**

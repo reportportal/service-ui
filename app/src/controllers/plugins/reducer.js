@@ -155,6 +155,9 @@ export const integrationsReducer = (state = {}, { type = '', payload = {} }) => 
 
 const INITIAL_MARKETPLACE_STATE = {
   catalogueState: MARKETPLACE_CATALOGUE_STATE.NOT_REQUESTED,
+  // Whether an answer is on screen, empty or not. START leaves it alone, so a refetch can be told
+  // from a first load; only a failure, which leaves nothing worth showing, takes it back.
+  answered: false,
   registry: { status: null, host: null },
   // what the instance itself permits, as opposed to what the registry offers
   instance: { uploadAllowed: true },
@@ -194,6 +197,7 @@ export const marketplaceReducer = (state = INITIAL_MARKETPLACE_STATE, { type, pa
       return {
         ...state,
         catalogueState,
+        answered: true,
         registry: { status: registry.status || null, host: registry.host || null },
         instance,
         installed: payload.installed || [],
@@ -205,6 +209,7 @@ export const marketplaceReducer = (state = INITIAL_MARKETPLACE_STATE, { type, pa
       return {
         ...state,
         catalogueState: MARKETPLACE_CATALOGUE_STATE.FAILED,
+        answered: false,
         registry: { status: null, host: null },
         installed: [],
         available: [],
