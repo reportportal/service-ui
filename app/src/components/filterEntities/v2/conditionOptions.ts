@@ -45,21 +45,9 @@ const messages = defineMessages({
     id: 'Conditions.eq',
     defaultMessage: 'Equals',
   },
-  equalsSymbol: {
-    id: 'ConditionFieldV2.equalsSymbol',
-    defaultMessage: '=',
-  },
   notEquals: {
     id: 'Conditions.notEq',
     defaultMessage: 'Not equals',
-  },
-  greaterOrEqual: {
-    id: 'Conditions.gteShort',
-    defaultMessage: '≥',
-  },
-  lessOrEqual: {
-    id: 'Conditions.lteShort',
-    defaultMessage: '≤',
   },
   all: {
     id: 'Conditions.all',
@@ -96,8 +84,6 @@ const CONDITION_MESSAGES: Record<string, MessageDescriptor> = {
   [CONDITION_NOT_CNT]: messages.notContains,
   [CONDITION_EQ]: messages.equals,
   [CONDITION_NOT_EQ]: messages.notEquals,
-  [CONDITION_GREATER_EQ]: messages.greaterOrEqual,
-  [CONDITION_LESS_EQ]: messages.lessOrEqual,
   [CONDITION_HAS]: messages.all,
   [CONDITION_NOT_HAS]: messages.withoutAll,
   [CONDITION_ANY]: messages.any,
@@ -107,21 +93,31 @@ const CONDITION_MESSAGES: Record<string, MessageDescriptor> = {
   [CONDITION_BETWEEN]: messages.between,
 };
 
-const NUMERIC_CONDITIONS = [CONDITION_GREATER_EQ, CONDITION_LESS_EQ];
+const CONDITION_SYMBOLS: Record<string, string> = {
+  [CONDITION_EQ]: '=',
+  [CONDITION_GREATER_EQ]: '≥',
+  [CONDITION_LESS_EQ]: '≤',
+};
+
+const NUMERIC_CONDITIONS = new Set([CONDITION_GREATER_EQ, CONDITION_LESS_EQ]);
 
 export const useConditionOptions = (conditions: string[] = []): ConditionOption[] => {
   const { formatMessage } = useIntl();
-  const isNumericSet = conditions.some((condition) => NUMERIC_CONDITIONS.includes(condition));
+  const isNumericSet = conditions.some((condition) => NUMERIC_CONDITIONS.has(condition));
 
   return conditions.map((condition) => {
-    const message =
-      isNumericSet && condition === CONDITION_EQ
-        ? messages.equalsSymbol
-        : CONDITION_MESSAGES[condition];
+    if (isNumericSet) {
+      return {
+        value: condition,
+        label: CONDITION_SYMBOLS[condition] ?? condition,
+      };
+    }
 
     return {
       value: condition,
-      label: message ? formatMessage(message) : condition,
+      label: CONDITION_MESSAGES[condition]
+        ? formatMessage(CONDITION_MESSAGES[condition])
+        : condition,
     };
   });
 };

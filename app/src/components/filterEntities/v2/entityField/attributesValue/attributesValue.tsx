@@ -201,7 +201,7 @@ export const AttributesValue = ({
   const handleValuesChange = (rowId: string, nextValue: { key: string; value: string }) => {
     const current = rows.find((row) => row.id === rowId);
 
-    if (current && current.key === nextValue.key && current.value === nextValue.value) {
+    if (current?.key === nextValue.key && current?.value === nextValue.value) {
       return;
     }
 

@@ -36,15 +36,15 @@ const localMessages = defineMessages({
     defaultMessage: 'Create Filter',
   },
   filterName: {
-    id: 'AddFilter.filterName',
+    id: 'FilterAdd.filterName',
     defaultMessage: 'Filter name',
   },
   placeholderFilterName: {
-    id: 'AddFilter.placeholderFilterName',
+    id: 'FilterAdd.placeholderFilterName',
     defaultMessage: 'Enter filter name',
   },
   filterNameHelpText: {
-    id: 'AddFilter.filterNameHelpText',
+    id: 'FilterAdd.filterNameHelpText',
     defaultMessage: 'Filter name length should have size from 3 to 128 characters.',
   },
 });

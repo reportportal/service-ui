@@ -51,6 +51,8 @@ const SORT_COLUMNS = [
 
 type SortColumn = (typeof SORT_COLUMNS)[number];
 
+const SORT_COLUMNS_SET = new Set<string>(SORT_COLUMNS);
+
 const messages = defineMessages({
   sortBy: {
     id: 'FiltersSortingV2.sortBy',
@@ -118,8 +120,7 @@ interface FiltersSortingV2Props {
   onChange: (order: FiltersSortingOrder) => void;
 }
 
-const isSortColumn = (column: string): column is SortColumn =>
-  SORT_COLUMNS.some((sortColumn) => sortColumn === column);
+const isSortColumn = (column: string): column is SortColumn => SORT_COLUMNS_SET.has(column);
 
 const getOrder = (orders: FiltersSortingOrder[] = []): FiltersSortingOrder => {
   const currentOrder = orders.find((order) => order.sortingColumn !== ENTITY_NUMBER);

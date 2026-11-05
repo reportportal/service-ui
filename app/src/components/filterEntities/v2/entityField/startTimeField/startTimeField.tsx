@@ -172,7 +172,7 @@ export const StartTimeField = ({
 
   const handleDropdownChange = useCallback(
     (nextValue?: DropdownValue | DropdownValue[]) => {
-      if (typeof nextValue === 'undefined' || Array.isArray(nextValue)) {
+      if (nextValue === undefined || Array.isArray(nextValue)) {
         return;
       }
 
