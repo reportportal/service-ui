@@ -83,7 +83,8 @@ export const usePasswordValidation = ({
 
   const confirmPasswordError = useMemo(() => {
     if (!shouldShowConfirmPasswordValidation) return undefined;
-    if (!confirmPassword.trim()) return formatMessage(messages.requiredField);
+    // Only a truly empty field is "required"; spaces-only input is a mismatch.
+    if (!confirmPassword) return formatMessage(messages.requiredField);
     if (hasMismatch) return formatMessage(messages.passwordsDoNotMatch);
     return undefined;
   }, [shouldShowConfirmPasswordValidation, confirmPassword, hasMismatch, formatMessage, messages]);
