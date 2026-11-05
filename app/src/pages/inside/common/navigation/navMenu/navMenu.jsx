@@ -23,7 +23,7 @@ import styles from './navMenu.scss';
 
 const cx = classNames.bind(styles);
 
-export const NavMenu = ({ items }) => {
+export const NavMenu = ({ items, activeItem = '' }) => {
   const { trackEvent } = useTracking();
   const createTrackingFunction = (eventInfo) => (eventInfo ? () => trackEvent(eventInfo) : null);
 
@@ -37,6 +37,7 @@ export const NavMenu = ({ items }) => {
             onClick={createTrackingFunction(items[key].eventInfo)}
             className={cx('item')}
             activeClassName={cx('active')}
+            {...(activeItem ? { isActive: () => key === activeItem } : {})}
           >
             {items[key].name}
           </NavLink>
@@ -54,4 +55,5 @@ NavMenu.propTypes = {
       mobileDisabled: PropTypes.bool,
     }),
   ).isRequired,
+  activeItem: PropTypes.string,
 };

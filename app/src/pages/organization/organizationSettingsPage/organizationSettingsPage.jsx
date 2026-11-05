@@ -96,8 +96,8 @@ export const OrganizationSettingsPage = () => {
         defaultMessage="Organization Settings"
       />
     );
-    return <Navigation items={config} title={title} />;
-  }, [config]);
+    return <Navigation items={config} title={title} activeItem={activeTab} />;
+  }, [config, activeTab]);
 
   const content = useMemo(() => {
     if (config[activeTab]) {
