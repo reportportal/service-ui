@@ -17,7 +17,7 @@
 import { ChangeEvent } from 'react';
 import { defineMessages, useIntl } from 'react-intl';
 import { Dropdown, FieldText } from '@reportportal/ui-kit';
-import { DropdownValue } from '@reportportal/ui-kit/components/dropdown/types';
+import { DropdownValue } from '@reportportal/ui-kit/dropdown';
 import { GROUP_TO_ACTION_MAP } from 'common/constants/actionTypes';
 import { createClassnames } from 'common/utils';
 import {
@@ -202,12 +202,10 @@ export const EntityFieldV2 = ({
           condition={condition}
           customProps={customProps}
           disabled={isDisabled}
-          removable={removable}
           shouldFocus={shouldFocus}
           browserTooltipTitle={browserTooltipTitle}
           onConditionChange={handleConditionChange}
           onChange={onChange}
-          onRemove={onRemove}
           onAutoFocus={onAutoFocus}
         />
       );
@@ -389,12 +387,10 @@ interface AttributesConditionProps {
   condition: string;
   customProps: FilterEntityCustomProps;
   disabled: boolean;
-  removable: boolean;
   shouldFocus: boolean;
   browserTooltipTitle: string;
   onConditionChange: (condition: string) => void;
   onChange: (value: FilterEntityValue, isConditionChange?: boolean) => void;
-  onRemove: () => void;
   onAutoFocus?: () => void;
 }
 
@@ -404,12 +400,10 @@ const AttributesCondition = ({
   condition,
   customProps,
   disabled,
-  removable,
   shouldFocus,
   browserTooltipTitle,
   onConditionChange,
   onChange,
-  onRemove,
   onAutoFocus,
 }: AttributesConditionProps) => {
   const conditionOptions = useConditionOptions(getAttributeConditions(customProps));
@@ -422,12 +416,10 @@ const AttributesCondition = ({
       condition={condition || CONDITION_HAS}
       conditionOptions={conditionOptions}
       disabled={disabled}
-      removable={removable}
       shouldFocus={shouldFocus}
       browserTooltipTitle={browserTooltipTitle}
       onConditionChange={onConditionChange}
       onChange={onChange}
-      onRemove={onRemove}
       onAutoFocus={onAutoFocus}
     />
   );

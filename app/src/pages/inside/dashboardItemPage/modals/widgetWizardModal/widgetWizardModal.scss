@@ -24,6 +24,10 @@
   > div[class*='modal-content'] {
     flex: 1;
   }
+
+  &.without-footer > div[class*='modal-content'] {
+    padding-bottom: 0;
+  }
 }
 
 .wizard-footer {

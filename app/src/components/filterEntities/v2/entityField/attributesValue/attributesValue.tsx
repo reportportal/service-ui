@@ -16,7 +16,8 @@
 
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { defineMessages, useIntl } from 'react-intl';
-import { BaseIconButton, Button, CloseIcon, Dropdown, PlusIcon } from '@reportportal/ui-kit';
+import { Button, CloseIcon, Dropdown, PlusIcon } from '@reportportal/ui-kit';
+import { DropdownOptionProps, DropdownOptionType } from '@reportportal/ui-kit/dropdown';
 import { formatAttribute, parseQueryAttributes } from 'common/utils/attributeUtils';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { createClassnames } from 'common/utils';
@@ -62,13 +63,17 @@ interface AttributesValueProps {
   condition: string;
   conditionOptions: ConditionOption[];
   disabled?: boolean;
-  removable?: boolean;
   shouldFocus?: boolean;
   browserTooltipTitle?: string;
   onConditionChange: (condition: string) => void;
   onChange: (value: FilterEntityValue) => void;
-  onRemove: () => void;
   onAutoFocus?: () => void;
+}
+
+type ConditionDropdownOptionType = ConditionOption & DropdownOptionType
+
+interface ConditionDropdownOptionProps extends DropdownOptionProps {
+  option: ConditionDropdownOptionType;
 }
 
 const createRowsFromValue = (raw?: string): AttributeRow[] => {
@@ -111,12 +116,10 @@ export const AttributesValue = ({
   condition,
   conditionOptions,
   disabled = false,
-  removable = false,
   shouldFocus = false,
   browserTooltipTitle = '',
   onConditionChange,
   onChange,
-  onRemove,
   onAutoFocus,
 }: AttributesValueProps) => {
   const { formatMessage } = useIntl();
@@ -219,19 +222,20 @@ export const AttributesValue = ({
               disabled={disabled}
               variant="ghost"
               menuPortalRoot={menuPortalRoot}
+              menuMatchTriggerWidth={false}
+              placement="bottom-end"
+              fallbackPlacements={['top-end', 'bottom-start', 'top-start']}
+              renderOption={(renderProps: ConditionDropdownOptionProps) => (
+                <>
+                  <span>{renderProps.option.label}</span>
+                  <div className={cx('condition-option-description')}>
+                    {renderProps.option.description}
+                  </div>
+                </>
+              )}
               onChange={(nextValue) => onConditionChange(String(nextValue))}
             />
           </div>
-        )}
-        {removable && (
-          <BaseIconButton
-            className={cx('section-remove')}
-            onClick={onRemove}
-            disabled={disabled}
-            aria-label={formatMessage(COMMON_LOCALE_KEYS.REMOVE)}
-          >
-            <CloseIcon />
-          </BaseIconButton>
         )}
       </div>
 

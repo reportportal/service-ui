@@ -19,8 +19,6 @@
   flex-direction: column;
   gap: 8px;
   width: 100%;
-  padding-bottom: 16px;
-  border-bottom: 1px solid var(--rp-ui-base-e-100);
 }
 
 .header {
@@ -71,11 +69,15 @@
   padding: 0;
 }
 
-// Portal sets width/maxWidth inline to the trigger; !important is needed for longer options.
 .condition-menu.condition-menu {
-  width: max-content !important;
-  min-width: unset !important;
-  max-width: unset !important;
+  width: max-content;
+  min-width: 240px;
+  max-width: none;
+  white-space: nowrap;
+}
+
+.condition-option-description {
+  color: var(--rp-ui-color-text-secondary);
   white-space: nowrap;
 }
 
