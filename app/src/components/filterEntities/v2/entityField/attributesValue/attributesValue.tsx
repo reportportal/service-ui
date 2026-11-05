@@ -52,6 +52,7 @@ interface AttributeRow {
   attribute: { key: string; value: string };
   key: string;
   value: string;
+  focusOnMount?: boolean;
 }
 
 interface AttributesValueProps {
@@ -119,10 +120,7 @@ export const AttributesValue = ({
   onAutoFocus,
 }: AttributesValueProps) => {
   const { formatMessage } = useIntl();
-  const attributeValue = value.value;
-  const [rows, setRows] = useState<AttributeRow[]>(() => createRowsFromValue(attributeValue));
-  const [sourceValue, setSourceValue] = useState(attributeValue);
-  const isInternalChangeRef = useRef(false);
+  const [rows, setRows] = useState<AttributeRow[]>(() => createRowsFromValue(value.value));
   const blockRef = useRef<HTMLDivElement>(null);
   const {
     projectKey = '',
@@ -135,21 +133,10 @@ export const AttributesValue = ({
 
   const syncFilter = useCallback(
     (nextRows: AttributeRow[], nextCondition = condition || CONDITION_HAS) => {
-      isInternalChangeRef.current = true;
       onChange(toFilterValue(nextRows, nextCondition));
     },
     [condition, onChange],
   );
-
-  if (attributeValue !== sourceValue) {
-    if (isInternalChangeRef.current) {
-      isInternalChangeRef.current = false;
-      setSourceValue(attributeValue);
-    } else {
-      setSourceValue(attributeValue);
-      setRows(createRowsFromValue(attributeValue));
-    }
-  }
 
   useEffect(() => {
     if (!shouldFocus) {
@@ -187,7 +174,10 @@ export const AttributesValue = ({
 
   const handleAdd = () => {
     const attribute = { key: '', value: '' };
-    const nextRows = [...rows, { id: generateUUID(), attribute, key: '', value: '' }];
+    const nextRows = [
+      ...rows.map((row) => ({ ...row, focusOnMount: false })),
+      { id: generateUUID(), attribute, key: '', value: '', focusOnMount: true },
+    ];
     setRows(nextRows);
     syncFilter(nextRows);
   };
@@ -260,6 +250,7 @@ export const AttributesValue = ({
                   isAttributeKeyRequired={isAttributeKeyRequired}
                   isAttributeValueRequired={isAttributeValueRequired}
                   hideActionButtons
+                  focusOnMount={!!row.focusOnMount}
                   onValuesChange={(nextValue: { key: string; value: string }) =>
                     handleValuesChange(row.id, nextValue)
                   }

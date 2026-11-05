@@ -63,6 +63,7 @@ export const SearchField = ({
   const [inputValue, setInputValue] = useState('');
   const [fetchedTerm, setFetchedTerm] = useState('');
   const cancelTokenRef = useRef<(() => void) | null>(null);
+  const searchRequestIdRef = useRef(0);
   const cancelDebounceRef = useRef<(() => void) | null>(null);
   const condition = value.condition || CONDITION_IN;
   const selectedValues = value.value ? value.value.split(',') : [];
@@ -78,11 +79,15 @@ export const SearchField = ({
     (searchTerm: string) => {
       const trimmedSearch = searchTerm.trim();
 
+      searchRequestIdRef.current += 1;
+
       if (!getURI || trimmedSearch.length < SEARCH_MIN_LENGTH) {
         setOptions([]);
         setLoading(false);
         return;
       }
+
+      const requestId = searchRequestIdRef.current;
 
       setLoading(true);
       cancelTokenRef.current?.();
@@ -93,16 +98,28 @@ export const SearchField = ({
         },
       })
         .then((response: string[]) => {
+          if (requestId !== searchRequestIdRef.current) {
+            return;
+          }
+
           cancelTokenRef.current = null;
           setOptions(response || []);
         })
         .catch((error: Error) => {
+          if (requestId !== searchRequestIdRef.current) {
+            return;
+          }
+
           if (error.message !== ERROR_CANCELED) {
             setOptions([]);
           }
           cancelTokenRef.current = null;
         })
         .finally(() => {
+          if (requestId !== searchRequestIdRef.current) {
+            return;
+          }
+
           setFetchedTerm(trimmedSearch);
           setLoading(false);
         });
@@ -112,6 +129,7 @@ export const SearchField = ({
 
   useEffect(
     () => () => {
+      searchRequestIdRef.current += 1;
       cancelTokenRef.current?.();
       cancelDebounceRef.current?.();
     },
@@ -159,6 +177,7 @@ export const SearchField = ({
     cancelDebounceRef.current = null;
     cancelTokenRef.current?.();
     cancelTokenRef.current = null;
+    searchRequestIdRef.current += 1;
     setOptions([]);
     setFetchedTerm('');
     setLoading(false);
@@ -172,7 +191,6 @@ export const SearchField = ({
     <FieldRow
       title={title}
       removable={removable}
-      isRequired={!removable}
       disabled={disabled}
       shouldFocus={shouldFocus}
       onRemove={onRemove}

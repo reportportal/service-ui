@@ -297,7 +297,6 @@ const TextCondition = ({
       conditionOptions={conditionOptions}
       onConditionChange={onConditionChange}
       removable={removable}
-      isRequired={!removable}
       disabled={disabled}
       shouldFocus={shouldFocus}
       onRemove={onRemove}
@@ -357,7 +356,6 @@ const DropdownField = ({
     <FieldRow
       title={title}
       removable={removable}
-      isRequired={!removable}
       disabled={disabled}
       shouldFocus={shouldFocus}
       onRemove={onRemove}
@@ -464,7 +462,6 @@ const ContainsField = ({
   <FieldRow
     title={title}
     removable={removable}
-    isRequired={!removable}
     disabled={disabled}
     shouldFocus={shouldFocus}
     onRemove={onRemove}

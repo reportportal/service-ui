@@ -91,9 +91,12 @@ const messages = defineMessages({
 });
 
 interface FilterValue {
+  id?: number;
   value?: number;
   name?: string;
   type?: string;
+  description?: string;
+  owner?: string;
   conditions?: Filter['conditions'];
   orders?: Filter['orders'];
 }
@@ -137,7 +140,7 @@ export const FiltersControlV2 = ({
 
   const menuPortalRoot = document.getElementById('tooltip-root') || document.body;
 
-  const getFilterForSubmit = (filter: Filter): Filter => ({
+  const getFilterForSubmit = ({ value: _value, ...filter }: Filter): Filter => ({
     ...filter,
     type: filter.type || LAUNCH_FILTER_TYPE,
     conditions: filter.conditions?.filter((item: Condition) => item.value.trim()),
@@ -150,11 +153,10 @@ export const FiltersControlV2 = ({
         'filters',
         [
           {
+            ...filterItem,
+            id,
             value: id,
-            name: filterItem?.name,
             type: (filterItem?.type as string) || LAUNCH_FILTER_TYPE,
-            conditions: filterItem?.conditions,
-            orders: filterItem?.orders,
           },
         ],
         null,
@@ -164,10 +166,7 @@ export const FiltersControlV2 = ({
 
   useEffect(() => {
     if (formAppearance.predefinedFilter?.id != null) {
-      handleActiveFilterChange(
-        formAppearance.predefinedFilter.id,
-        formAppearance.predefinedFilter,
-      );
+      handleActiveFilterChange(formAppearance.predefinedFilter.id, formAppearance.predefinedFilter);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -273,11 +272,10 @@ export const FiltersControlV2 = ({
 
   const selectedFilter: Filter | null = value?.value
     ? {
-        id: value.value,
+        ...value,
+        id: value.id ?? value.value,
         name: value.name ?? '',
         type: value.type || LAUNCH_FILTER_TYPE,
-        conditions: value.conditions,
-        orders: value.orders,
       }
     : null;
 
@@ -360,12 +358,12 @@ export const FiltersControlV2 = ({
         <div className={cx('filter-card')}>
           <div className={cx('filter-card-header')}>
             <span className={cx('filter-option-name')}>{selectedFilter.name}</span>
-            <BaseIconButton>
-              <EditIcon
-                onClick={(e) =>
-                  handleFormAppearanceMode(e, FORM_APPEARANCE_MODE_EDIT, selectedFilter)
-                }
-              />
+            <BaseIconButton
+              onClick={(e) =>
+                handleFormAppearanceMode(e, FORM_APPEARANCE_MODE_EDIT, selectedFilter)
+              }
+            >
+              <EditIcon />
             </BaseIconButton>
           </div>
           <FilterOptions

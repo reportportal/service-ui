@@ -134,10 +134,14 @@ export const StartTimeField = ({
 
   const options = useMemo(
     () =>
-      getTimeDateRangePresets().map((preset, index) => ({
-        label: formatMessage(PRESET_LABELS[index]),
-        value: formatDateValue(preset.getValue()),
-      })),
+      getTimeDateRangePresets().map((preset, index) => {
+        const { start, end } = preset.getValue();
+
+        return {
+          label: formatMessage(PRESET_LABELS[index]),
+          value: formatDateValue({ start, end, dynamic: true }),
+        };
+      }),
     [formatMessage],
   );
 
@@ -260,7 +264,6 @@ export const StartTimeField = ({
     <FieldRow
       title={title}
       removable={removable}
-      isRequired={!removable}
       disabled={disabled}
       shouldFocus={shouldFocus}
       onRemove={onRemove}
