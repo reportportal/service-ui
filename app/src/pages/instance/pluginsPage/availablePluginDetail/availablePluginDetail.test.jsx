@@ -105,6 +105,36 @@ describe('AvailablePluginDetail', () => {
     expect(find(wrapper, 'discoverPremiumAction')).toHaveLength(0);
   });
 
+  // the line beside the tier follows `locked` as the action does: a configured licence makes
+  // Install live, and the line may not still tell the admin to upgrade
+  describe('the access line beside the tier', () => {
+    const description = (wrapper) =>
+      find(wrapper, 'pluginDetailTierDescription').hostNodes().text();
+
+    test('a free plugin is available with the current plan', () => {
+      expect(description(render({ plugin: slack }))).toBe('Available with your current plan');
+    });
+
+    test('a premium plugin with no licence here asks for an upgrade', () => {
+      expect(azure.locked).toBe(true);
+      expect(description(render({ plugin: azure }))).toBe(
+        'Upgrade your subscription to access this plugin',
+      );
+    });
+
+    // entitlement is checked only at download, so the line says the licence will be checked,
+    // never that it covers this plugin
+    test('a premium plugin with a licence configured says the licence is checked on install', () => {
+      const text = description(render({ plugin: { ...azure, locked: false } }));
+
+      expect(text).toBe(
+        "Uses this instance's licence, checked against this plugin when you install",
+      );
+      expect(text).not.toMatch(/upgrade/i);
+      expect(text).not.toMatch(/covers|included|entitled/i);
+    });
+  });
+
   test('a premium plugin with no licence can only be enquired about', () => {
     const wrapper = render({ plugin: azure });
 

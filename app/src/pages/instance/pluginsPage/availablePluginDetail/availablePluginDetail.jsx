@@ -47,6 +47,13 @@ const messages = defineMessages({
     id: 'PluginItem.premiumDescription',
     defaultMessage: 'Upgrade your subscription to access this plugin',
   },
+  // A configured licence unlocks Install, not the plugin: what it covers is checked only when the
+  // artifact is downloaded (ADR-011), so this may not claim the licence covers it. An uncovered
+  // plugin is refused at install and told as marketplaceInstallLicenceRejected.
+  premiumLicensedDescription: {
+    id: 'AvailablePluginDetail.premiumLicensedDescription',
+    defaultMessage: "Uses this instance's licence, checked against this plugin when you install",
+  },
   freeDescription: {
     id: 'PluginItem.freeDescription',
     defaultMessage: 'Available with your current plan',
@@ -130,6 +137,12 @@ export const AvailablePluginDetail = ({
       : formatMessage(messages.noVersionInstallable);
   };
 
+  // `locked` is premium with no licence configured here, per instance rather than per plugin
+  let tierDescription = messages.freeDescription;
+  if (isPremium) {
+    tierDescription = isLocked ? messages.premiumDescription : messages.premiumLicensedDescription;
+  }
+
   const actionLabel = () => {
     if (isLocked) {
       return messages.discoverPremium;
@@ -200,10 +213,11 @@ export const AvailablePluginDetail = ({
                 <PluginBadge tone={isPremium ? BADGE_TONES.PREMIUM : BADGE_TONES.FREE}>
                   {formatMessage(isPremium ? messages.premium : messages.free)}
                 </PluginBadge>
-                <span className={cx('tier-description')}>
-                  {formatMessage(
-                    isPremium ? messages.premiumDescription : messages.freeDescription,
-                  )}
+                <span
+                  className={cx('tier-description')}
+                  data-automation-id="pluginDetailTierDescription"
+                >
+                  {formatMessage(tierDescription)}
                 </span>
               </div>
             </div>
