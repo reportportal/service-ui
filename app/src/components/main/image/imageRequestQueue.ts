@@ -44,8 +44,8 @@ const processQueue = (): void => {
 export const enqueueImageRequest = <T>(
   execute: (registerCancel: (cancel: CancelHandler) => void) => Promise<T>,
 ): ImageRequestTask<T> => {
-  let runningCancel: CancelHandler | null = null;
-  let isStarted = false;
+  let activeCancel: CancelHandler | null = null;
+  let isCancelled = false;
   let rejectTask: ((reason: Error) => void) | null = null;
   let queuedRequest: QueuedImageRequest | null = null;
 
@@ -54,13 +54,20 @@ export const enqueueImageRequest = <T>(
 
     queuedRequest = {
       start: () => {
-        isStarted = true;
+        if (isCancelled) {
+          activeRequestsCount -= 1;
+          processQueue();
+          return;
+        }
         execute((cancel) => {
-          runningCancel = cancel;
+          activeCancel = cancel;
+          if (isCancelled) {
+            cancel();
+          }
         })
           .then(resolve, reject)
           .finally(() => {
-            runningCancel = null;
+            activeCancel = null;
             activeRequestsCount -= 1;
             processQueue();
           });
@@ -72,8 +79,12 @@ export const enqueueImageRequest = <T>(
   });
 
   const cancel = (): void => {
-    if (isStarted) {
-      runningCancel?.();
+    if (isCancelled) {
+      return;
+    }
+    isCancelled = true;
+    if (activeCancel) {
+      activeCancel();
       return;
     }
     const index = queuedRequest ? waitingRequests.indexOf(queuedRequest) : -1;
