@@ -27,7 +27,6 @@ export interface ImageRequestTask<T> {
 
 interface QueuedImageRequest {
   start: () => void;
-  cancel: CancelHandler;
 }
 
 const waitingRequests: QueuedImageRequest[] = [];
