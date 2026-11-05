@@ -21,7 +21,6 @@ import { useTracking } from 'react-tracking';
 
 import { activeProjectSelector } from 'controllers/user';
 import { PROJECT_MILESTONES_PAGE } from 'controllers/pages';
-import { useUserPermissions } from 'hooks/useUserPermissions';
 import { MANUAL_LAUNCHES_PAGE_EVENTS } from 'components/main/analytics/events/ga4Events/manualLaunchesPageEvents';
 import { messages } from 'pages/inside/manualLaunchesPage/messages';
 
@@ -33,14 +32,9 @@ export const useManualLaunchesEmptyStateButtons = () => {
   const dispatch = useDispatch();
   const { trackEvent } = useTracking();
   const { organizationSlug, projectSlug } = useSelector(activeProjectSelector) as ActiveProject;
-  const { canCreateManualLaunch } = useUserPermissions();
 
   return useMemo(() => {
     const payload = { organizationSlug, projectSlug };
-
-    if (!canCreateManualLaunch) {
-      return [];
-    }
 
     return EMPTY_STATE_BUTTONS.map(({ name, type }) => ({
       name: formatMessage(messages[name]),
@@ -54,5 +48,5 @@ export const useManualLaunchesEmptyStateButtons = () => {
         dispatch({ type, payload });
       },
     }));
-  }, [organizationSlug, projectSlug, dispatch, canCreateManualLaunch, formatMessage, trackEvent]);
+  }, [organizationSlug, projectSlug, dispatch, formatMessage, trackEvent]);
 };

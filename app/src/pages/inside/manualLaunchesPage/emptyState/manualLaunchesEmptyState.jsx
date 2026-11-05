@@ -1,5 +1,4 @@
 import { useIntl } from 'react-intl';
-import { useUserPermissions } from 'hooks/useUserPermissions';
 
 import { EmptyStatePage } from 'pages/inside/common/emptyStatePage';
 import { createClassnames } from 'common/utils';
@@ -13,11 +12,6 @@ const cx = createClassnames(styles);
 
 export const ManualLaunchesEmptyState = () => {
   const { formatMessage } = useIntl();
-  const { canCreateManualLaunch } = useUserPermissions();
-
-  const descriptionMessage = canCreateManualLaunch
-    ? formatMessage(messages.noLaunchesDescription)
-    : undefined;
 
   const buttons = useManualLaunchesEmptyStateButtons();
 
@@ -26,7 +20,7 @@ export const ManualLaunchesEmptyState = () => {
       <EmptyStatePage
         imageType="loop"
         title={formatMessage(messages.noLaunches)}
-        description={descriptionMessage}
+        description={formatMessage(messages.noLaunchesDescription)}
         buttons={buttons}
       />
     </div>
