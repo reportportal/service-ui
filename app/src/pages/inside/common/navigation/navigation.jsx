@@ -23,11 +23,11 @@ import styles from './navigation.scss';
 
 const cx = classNames.bind(styles);
 
-export const Navigation = ({ items, title }) => {
+export const Navigation = ({ items, title = '', activeItem = '' }) => {
   return (
     <ScrollWrapper>
       {title && <div className={cx('header')}>{title}</div>}
-      <NavMenu items={items} />
+      <NavMenu items={items} activeItem={activeItem} />
     </ScrollWrapper>
   );
 };
@@ -42,7 +42,5 @@ Navigation.propTypes = {
     }),
   ).isRequired,
   title: PropTypes.oneOfType([PropTypes.node, PropTypes.string]),
-};
-Navigation.defaulProps = {
-  title: '',
+  activeItem: PropTypes.string,
 };

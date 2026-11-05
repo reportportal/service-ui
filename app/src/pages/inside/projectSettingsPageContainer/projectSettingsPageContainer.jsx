@@ -192,8 +192,8 @@ export const ProjectSettingsPageContainer = () => {
 
   const navigation = useMemo(() => {
     const title = <FormattedMessage id="SettingsPage.title" defaultMessage="Project Settings" />;
-    return <Navigation items={config} title={title} />;
-  }, [config]);
+    return <Navigation items={config} title={title} activeItem={activeTab} />;
+  }, [config, activeTab]);
 
   const content = useMemo(() => {
     if (!isShowTmsHiddenData && (activeTab === ENVIRONMENTS || activeTab === TEST_DATA)) {
