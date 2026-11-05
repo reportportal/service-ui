@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { FC, ReactNode } from 'react';
+import { FC, ReactNode, useState } from 'react';
 import { useIntl } from 'react-intl';
 import { useDispatch } from 'react-redux';
 import { InjectedFormProps, reduxForm } from 'redux-form';
@@ -31,6 +31,7 @@ import { createClassnames } from 'common/utils';
 import { useTracking } from 'react-tracking';
 import { PROJECTS_PAGE_EVENTS } from 'components/main/analytics/events/ga4Events/projectsPageEvents';
 import { PreservedText } from 'components/preservedText';
+import { LoadingSubmitButton } from 'components/loadingSubmitButton';
 
 import { messages } from '../../messages';
 
@@ -53,7 +54,7 @@ interface DeleteProjectFormProps {
 
 interface ModalProps {
   data: {
-    onConfirm: () => void;
+    onConfirm: (onError: () => void) => void;
     projectName: string;
     projectId: number;
   };
@@ -71,20 +72,30 @@ const DeleteProjectModal: FC<DeleteProjectModalProps> = ({
   const { trackEvent } = useTracking();
   const { formatMessage } = useIntl();
 
+  const [isLoading, setIsLoading] = useState(false);
+
   const hideModal = () => dispatch(hideModalAction());
 
   const okButton: ModalButtonProps = {
-    children: formatMessage(COMMON_LOCALE_KEYS.DELETE),
+    children: (
+      <LoadingSubmitButton isLoading={isLoading}>
+        {formatMessage(COMMON_LOCALE_KEYS.DELETE)}
+      </LoadingSubmitButton>
+    ),
     onClick: () => {
       trackEvent(PROJECTS_PAGE_EVENTS.clickDeleteProjectModalSubmit(projectId));
-      (handleSubmit(onConfirm))();
+      handleSubmit(() => {
+        setIsLoading(true);
+        onConfirm(() => setIsLoading(false));
+      })();
     },
     variant: 'danger',
-    disabled: anyTouched && invalid,
+    disabled: isLoading || (anyTouched && invalid),
   };
 
   const cancelButton: ModalButtonProps = {
     children: formatMessage(COMMON_LOCALE_KEYS.CANCEL),
+    disabled: isLoading,
   };
 
   return (
@@ -92,6 +103,7 @@ const DeleteProjectModal: FC<DeleteProjectModalProps> = ({
       title={formatMessage(messages.deleteProject)}
       okButton={okButton}
       cancelButton={cancelButton}
+      allowCloseOutside={!isLoading}
       onClose={hideModal}
     >
       <div className={cx('modal-content')}>

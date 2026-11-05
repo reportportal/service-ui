@@ -37,7 +37,7 @@ export const createProjectAction = (project: { newProjectName: string }) => ({
   payload: project,
 } as const);
 
-export const deleteProjectAction = (project: { projectId: number | string; projectName: string }) => ({
+export const deleteProjectAction = (project: { projectId: number | string; projectName: string; onError?: () => void }) => ({
   type: DELETE_PROJECT,
   payload: project,
 } as const);
