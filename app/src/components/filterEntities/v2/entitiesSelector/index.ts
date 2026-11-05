@@ -1,4 +1,4 @@
-/*!
+/*
  * Copyright 2026 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,12 +14,4 @@
  * limitations under the License.
  */
 
-.filter-add-custom-block {
-  padding: 10px;
-}
-
-.custom-block-text {
-  display: block;
-  margin: 0 0 5px;
-  font-size: 13px;
-}
+export { EntitiesSelectorV2 } from './entitiesSelectorV2';

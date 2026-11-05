@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-import { FC, useEffect } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useIntl, defineMessages } from 'react-intl';
 import { change } from 'redux-form';
-import { Button, PlusIcon, FieldLabel } from '@reportportal/ui-kit';
+import { Button, PlusIcon, FieldLabel, BaseIconButton, EditIcon } from '@reportportal/ui-kit';
 import { AutocompleteOption } from '@reportportal/ui-kit/autocompletes';
 import { projectKeySelector } from 'controllers/project';
 import { showSuccessNotification, showErrorNotification } from 'controllers/notification';
@@ -29,7 +29,9 @@ import { canWorkWithFilters } from 'common/utils/permissions';
 import { userRolesSelector } from 'controllers/pages';
 import { handleEnterOrSpaceKey } from 'common/utils/helperUtils/eventUtils';
 import { AsyncAutocompleteV2 } from 'componentLibrary/autocompletes/asyncAutocompleteV2';
-import { Filter } from 'pages/inside/dashboardItemPage/modals/widgetWizardModal/types';
+import { Condition, Filter } from 'pages/inside/dashboardItemPage/modals/widgetWizardModal/types';
+import { FilterOptions } from 'pages/inside/filtersPage/filterGrid/filterOptions';
+import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { WIDGET_WIZARD_FORM } from '../../../constants';
 import { LockedActiveFilter } from '../filtersControl/lockedActiveFilter';
 import { FilterEdit } from './filterEdit';
@@ -44,6 +46,8 @@ import styles from './filtersControlV2.scss';
 
 const cx = createClassnames(styles);
 
+const PRELOAD_PAGE_SIZE = 10;
+
 const messages = defineMessages({
   insertFilterSuccess: {
     id: 'FiltersControlV2.insertFilterSuccess',
@@ -51,7 +55,7 @@ const messages = defineMessages({
   },
   insertFilterError: {
     id: 'FiltersControlV2.insertFilterError',
-    defaultMessage: "Filter don't created",
+    defaultMessage: 'Filter has not been created',
   },
   updateFilterSuccess: {
     id: 'FiltersControlV2.updateFilterSuccess',
@@ -59,7 +63,7 @@ const messages = defineMessages({
   },
   updateFilterError: {
     id: 'FiltersControlV2.updateFilterError',
-    defaultMessage: "Filter don't updated",
+    defaultMessage: 'Filter has not been updated',
   },
   filtersNotFound: {
     id: 'FiltersControlV2.notFound',
@@ -81,12 +85,24 @@ const messages = defineMessages({
     id: 'FiltersControlV2.filterLabel',
     defaultMessage: 'Filter',
   },
+  latestFiltersHint: {
+    id: 'FiltersControlV2.latestFiltersHint',
+    defaultMessage: 'Showing the 10 latest filters. Start typing to find others.',
+  },
 });
 
 interface FilterValue {
-  value?: string;
+  id?: number;
+  value?: number;
   name?: string;
+  type?: string;
+  description?: string;
+  owner?: string;
+  conditions?: Filter['conditions'];
+  orders?: Filter['orders'];
 }
+
+const LAUNCH_FILTER_TYPE = 'launch';
 
 interface FormAppearance {
   mode: string | false;
@@ -109,39 +125,52 @@ interface FiltersControlV2Props {
   required?: boolean;
 }
 
-export const FiltersControlV2: FC<FiltersControlV2Props> = ({
+export const FiltersControlV2 = ({
   value = {},
   formAppearance,
   onFormAppearanceChange,
   required = false,
-}) => {
+}: FiltersControlV2Props) => {
   const { formatMessage } = useIntl();
   const dispatch = useDispatch();
 
-  const projectKey = useSelector(projectKeySelector) as string;
+  const projectKey = useSelector(projectKeySelector);
   const userRoles = useSelector(userRolesSelector);
+  const lastSearchRef = useRef('');
+  const [showLatestFiltersHint, setShowLatestFiltersHint] = useState(false);
 
   const menuPortalRoot = document.getElementById('tooltip-root') || document.body;
 
-  useEffect(() => {
-    if (formAppearance.predefinedFilter) {
-      handleActiveFilterChange(
-        formAppearance.predefinedFilter.id.toString(),
-        formAppearance.predefinedFilter,
-      );
-    }
-  }, []);
-
-  const getFilterForSubmit = (filter: Filter) => ({
+  const getFilterForSubmit = ({ value: _value, ...filter }: Filter): Filter => ({
     ...filter,
-    conditions: (filter.conditions as Array<{ value: string }>)?.filter((item) =>
-      item.value.trim(),
-    ),
+    type: filter.type || LAUNCH_FILTER_TYPE,
+    conditions: filter.conditions?.filter((item: Condition) => item.value.trim()),
   });
 
-  const handleActiveFilterChange = (id: string, filterItem?: Filter) => {
-    dispatch(change(WIDGET_WIZARD_FORM, 'filters', [{ value: id, name: filterItem?.name }], null));
+  const handleActiveFilterChange = (id: number, filterItem?: Filter) => {
+    dispatch(
+      change(
+        WIDGET_WIZARD_FORM,
+        'filters',
+        [
+          {
+            ...filterItem,
+            id,
+            value: id,
+            type: (filterItem?.type as string) || LAUNCH_FILTER_TYPE,
+          },
+        ],
+        null,
+      ),
+    );
   };
+
+  useEffect(() => {
+    if (formAppearance.predefinedFilter?.id != null) {
+      handleActiveFilterChange(formAppearance.predefinedFilter.id, formAppearance.predefinedFilter);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const handleClearFilter = () => {
     dispatch(change(WIDGET_WIZARD_FORM, 'filters', [], null));
@@ -161,7 +190,7 @@ export const FiltersControlV2: FC<FiltersControlV2Props> = ({
       data: getFilterForSubmit(filter),
     })
       .then(({ id }: { id: number }) => {
-        handleActiveFilterChange(String(id), filter);
+        handleActiveFilterChange(id, filter);
         dispatch(showSuccessNotification({ message: formatMessage(messages.insertFilterSuccess) }));
       })
       .catch(() => {
@@ -177,6 +206,9 @@ export const FiltersControlV2: FC<FiltersControlV2Props> = ({
       data,
     })
       .then(() => {
+        if (filter.id != null) {
+          handleActiveFilterChange(filter.id, data);
+        }
         dispatch(updateFilterSuccessAction(data));
         dispatch(showSuccessNotification({ message: formatMessage(messages.updateFilterSuccess) }));
       })
@@ -201,7 +233,7 @@ export const FiltersControlV2: FC<FiltersControlV2Props> = ({
   if (formAppearance.mode !== false) {
     const { mode, filter: formAppearanceFilter = null } = formAppearance;
     const activeFilter: Filter | null = value?.value
-      ? ({ id: Number(value.value), name: value.name ?? '' })
+      ? { id: value.value, name: value.name ?? '' }
       : null;
 
     const getComponent = () => {
@@ -240,58 +272,109 @@ export const FiltersControlV2: FC<FiltersControlV2Props> = ({
   }
 
   const selectedFilter: Filter | null = value?.value
-    ? { id: value.value, name: value.name ?? '' }
+    ? {
+        ...value,
+        id: value.id ?? value.value,
+        name: value.name ?? '',
+        type: value.type || LAUNCH_FILTER_TYPE,
+      }
     : null;
 
-  const getURI = (searchValue: string) =>
-    `${URLS.filtersSearch(projectKey)}${encodeURIComponent(searchValue)}`;
+  const getURI = (searchValue: string) => {
+    const search = (searchValue || '').trim();
+    lastSearchRef.current = search;
 
-  const makeFilterOptions = (response: { content: Filter[] }) => response.content;
+    if (!search) {
+      return `${URLS.filters(projectKey)}?page.page=1&page.size=${PRELOAD_PAGE_SIZE}&page.sort=id,DESC`;
+    }
+
+    return `${URLS.filters(projectKey)}?page.page=1&page.size=50&page.sort=name&filter.cnt.name=${encodeURIComponent(search)}`;
+  };
+
+  const makeFilterOptions = (response: {
+    content?: Filter[];
+    page?: { totalElements?: number };
+  }): Filter[] => {
+    setShowLatestFiltersHint(
+      !lastSearchRef.current && (response.page?.totalElements ?? 0) > PRELOAD_PAGE_SIZE,
+    );
+
+    return response.content ?? [];
+  };
 
   return (
-    <div className={cx('filters-control')}>
-      <div className={cx('filters-control-field')}>
-        <FieldLabel isRequired={required}>{formatMessage(messages.filterLabel)}</FieldLabel>
-        <AsyncAutocompleteV2
-          value={selectedFilter}
-          placeholder={formatMessage(messages.filterPlaceholder)}
-          getURI={getURI}
-          makeOptions={makeFilterOptions}
-          onChange={(selected: Filter | null | undefined) => {
-            if (selected) handleActiveFilterChange(String(selected.id), selected);
-            else handleClearFilter();
-          }}
-          parseValueToString={(v: { name?: string }) => v?.name || ''}
-          getUniqKey={(v: { id?: number | string }) => v?.id}
-          createWithoutConfirmation
-          skipOptionCreation
-          isDropdownMode
-          minLength={0}
-          menuPortalRoot={menuPortalRoot}
-          dropdownMatchInputWidth
-          menuClassName={cx('filter-autocomplete-menu')}
-          renderOption={(item: Filter, index: number, isNew: boolean, getItemProps) => (
-            <AutocompleteOption key={item.id} {...getItemProps({ item, index })} isNew={isNew}>
-              <div className={cx('filter-option-name')}>{item.name}</div>
-              <div className={cx('filter-option-description')}>{item.description}</div>
-            </AutocompleteOption>
-          )}
-          inputProps={{
-            clearable: true,
-            required,
-          }}
-        />
+    <div className={cx('filters-control-wrapper')}>
+      <div className={cx('filters-control')}>
+        <div className={cx('filters-control-field')}>
+          <FieldLabel isRequired={required}>{formatMessage(messages.filterLabel)}</FieldLabel>
+          <AsyncAutocompleteV2
+            value={selectedFilter}
+            placeholder={formatMessage(messages.filterPlaceholder)}
+            getURI={getURI}
+            makeOptions={makeFilterOptions}
+            onChange={(selected: Filter | null | undefined) => {
+              if (selected?.id != null) handleActiveFilterChange(selected.id, selected);
+              else handleClearFilter();
+            }}
+            parseValueToString={(v: { name?: string }) => v?.name || ''}
+            getUniqKey={(v: { id?: number }) => v?.id}
+            createWithoutConfirmation
+            skipOptionCreation
+            isDropdownMode
+            minLength={0}
+            menuPortalRoot={menuPortalRoot}
+            dropdownMatchInputWidth
+            menuClassName={cx('filter-autocomplete-menu')}
+            menuFooter={
+              showLatestFiltersHint ? formatMessage(messages.latestFiltersHint) : undefined
+            }
+            renderOption={(item: Filter, index: number, isNew: boolean, getItemProps) => (
+              <AutocompleteOption key={item.id} {...getItemProps({ item, index })} isNew={isNew}>
+                <div className={cx('filter-option-name')}>{item.name}</div>
+                <FilterOptions
+                  className={cx('filter-option-description', 'clamped')}
+                  entities={item.conditions}
+                  sort={item.orders}
+                />
+              </AutocompleteOption>
+            )}
+            inputProps={{
+              clearable: true,
+              required,
+            }}
+          />
+        </div>
+        <Button
+          variant="ghost"
+          icon={<PlusIcon />}
+          adjustWidthOn="content"
+          className={cx('create-filter-btn')}
+          onClick={(e) => handleFormAppearanceMode(e, FORM_APPEARANCE_MODE_ADD)}
+          disabled={!canWorkWithFilters(userRoles)}
+        >
+          {formatMessage(messages.createFilterButton)}
+        </Button>
       </div>
-      <Button
-        variant="ghost"
-        icon={<PlusIcon />}
-        adjustWidthOn="content"
-        className={cx('create-filter-btn')}
-        onClick={(e) => handleFormAppearanceMode(e, FORM_APPEARANCE_MODE_ADD)}
-        disabled={!canWorkWithFilters(userRoles)}
-      >
-        {formatMessage(messages.createFilterButton)}
-      </Button>
+      {selectedFilter && (
+        <div className={cx('filter-card')}>
+          <div className={cx('filter-card-header')}>
+            <span className={cx('filter-option-name')}>{selectedFilter.name}</span>
+            <BaseIconButton
+              aria-label={formatMessage(COMMON_LOCALE_KEYS.EDIT)}
+              onClick={(e) =>
+                handleFormAppearanceMode(e, FORM_APPEARANCE_MODE_EDIT, selectedFilter)
+              }
+            >
+              <EditIcon />
+            </BaseIconButton>
+          </div>
+          <FilterOptions
+            className={cx('filter-option-description')}
+            entities={selectedFilter.conditions}
+            sort={selectedFilter.orders}
+          />
+        </div>
+      )}
     </div>
   );
 };

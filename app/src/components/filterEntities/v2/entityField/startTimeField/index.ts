@@ -1,4 +1,4 @@
-/*!
+/*
  * Copyright 2026 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,6 +14,4 @@
  * limitations under the License.
  */
 
-.filter-edit-header {
-  padding: 10px;
-}
+export { StartTimeField } from './startTimeField';

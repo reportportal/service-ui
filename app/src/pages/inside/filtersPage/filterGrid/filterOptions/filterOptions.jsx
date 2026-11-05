@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 EPAM Systems
+ * Copyright 2026 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -60,12 +60,14 @@ export class FilterOptions extends Component {
     defectTypes: PropTypes.object.isRequired,
     intl: PropTypes.object.isRequired,
     children: PropTypes.oneOfType([PropTypes.arrayOf(PropTypes.node), PropTypes.node]),
+    className: PropTypes.string,
   };
 
   static defaultProps = {
     children: null,
     entities: [],
     sort: [],
+    className: '',
   };
 
   getTotalStatistics = (defectTypeTotal) => {
@@ -193,10 +195,10 @@ export class FilterOptions extends Component {
   };
 
   render() {
-    const { children } = this.props;
+    const { children, className } = this.props;
 
     return (
-      <p className={cx('filter-options')}>
+      <p className={cx('filter-options', className)}>
         {this.optionsToString()} {children}
       </p>
     );

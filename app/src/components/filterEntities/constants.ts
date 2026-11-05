@@ -65,6 +65,18 @@ export const ENTITY_SUBJECT_NAME = 'subjectName';
 export const ENTITY_SUBJECT_TYPE = 'subjectType';
 export const ENTITY_PROJECT_NAME = 'projectName';
 
+// Renderer id for filter entities V2 (`EntityFieldV2`).
+// V1 still renders the `component` field on the same entity (legacy `EntitiesGroup`
+// mounts that React component). Keep `component` until the V1 filters are removed.
+export const FILTER_ENTITY_KIND = {
+  TEXT: 'text',
+  DROPDOWN: 'dropdown',
+  SEARCH: 'search',
+  START_TIME: 'startTime',
+  ATTRIBUTES: 'attributes',
+  CONTAINS: 'contains',
+};
+
 export const reMappedOperationValuesMap = {
   [CONDITION_NOT_CNT]: CONDITION_NOT_CNT_KEY,
 };

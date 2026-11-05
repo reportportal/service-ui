@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+import { HTMLAttributes } from 'react';
 import classNames from 'classnames/bind';
 import { Scrollbars } from 'rc-scrollbars';
 import { DisabledButtons, Widget } from '../../types';
@@ -22,6 +23,12 @@ import { WizardSecondStepForm } from './wizardSecondStepForm';
 import styles from './wizardControlsSection.scss';
 
 const cx = classNames.bind(styles);
+
+const SCROLLBAR_TRACK_Z_INDEX = 'auto';
+
+const renderScrollTrack = ({ style, ...props }: HTMLAttributes<HTMLDivElement>) => (
+  <div {...props} style={{ ...style, zIndex: SCROLLBAR_TRACK_Z_INDEX }} />
+);
 
 interface WizardControlsSectionProps {
   step: number;
@@ -67,7 +74,11 @@ export const WizardControlsSection = ({
 
   return (
     <div className={cx('wizard-controls-section')}>
-      <Scrollbars hideTracksWhenNotNeeded>
+      <Scrollbars
+        hideTracksWhenNotNeeded
+        renderTrackHorizontal={renderScrollTrack}
+        renderTrackVertical={renderScrollTrack}
+      >
         <div className={cx('controls-wrapper')}>{getControlsByStep(step)}</div>
       </Scrollbars>
     </div>

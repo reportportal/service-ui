@@ -114,6 +114,7 @@ export const WidgetWizardModal = ({
       title={formatMessage(messages.headerText)}
       onClose={onClosed}
       className={cx('widget-wizard-modal')}
+      allowCloseOutside={!formValues}
       createFooter={createFooter}
     >
       <WidgetWizardContent

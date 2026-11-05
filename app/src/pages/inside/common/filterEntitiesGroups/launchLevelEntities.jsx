@@ -52,6 +52,7 @@ import {
   ENTITY_ATTRIBUTE,
   ENTITY_LAUNCH_TYPE,
   ENTITY_RETENTION_POLICY,
+  FILTER_ENTITY_KIND,
 } from 'components/filterEntities/constants';
 import { LAUNCH_TYPES } from 'common/constants/launchTypes';
 import { RETENTION_POLICY } from 'common/constants/retentionPolicy';
@@ -180,6 +181,9 @@ const messages = defineMessages({
   },
 });
 
+// Shared launch-level catalog for V1 and V2.
+// `component` — mounted by legacy `EntitiesGroup` (launches page, old widget filter).
+// `kind` — field type for `EntityFieldV2` (widget wizard V2). Do not drop `component` while V1 is in use.
 @injectIntl
 @connect((state) => ({
   defectTypes: defectTypesSelector(state),
@@ -208,6 +212,7 @@ export class LaunchLevelEntities extends Component {
       {
         id: ENTITY_NAME,
         component: EntityInputConditional,
+        kind: FILTER_ENTITY_KIND.TEXT,
         value: this.bindDefaultValue(ENTITY_NAME, {
           condition: CONDITION_CNT,
         }),
@@ -223,6 +228,7 @@ export class LaunchLevelEntities extends Component {
       {
         id: ENTITY_NUMBER,
         component: EntityInputConditional,
+        kind: FILTER_ENTITY_KIND.TEXT,
         value: this.bindDefaultValue(ENTITY_NUMBER, {
           condition: CONDITION_GREATER_EQ,
         }),
@@ -238,6 +244,7 @@ export class LaunchLevelEntities extends Component {
       {
         id: ENTITY_LAUNCH_TYPE,
         component: EntityDropdown,
+        kind: FILTER_ENTITY_KIND.DROPDOWN,
         value: this.bindDefaultValue(ENTITY_LAUNCH_TYPE, {
           condition: CONDITION_IN,
         }),
@@ -264,6 +271,7 @@ export class LaunchLevelEntities extends Component {
             {
               id: ENTITY_RETENTION_POLICY,
               component: EntityDropdown,
+              kind: FILTER_ENTITY_KIND.DROPDOWN,
               value: this.bindDefaultValue(ENTITY_RETENTION_POLICY, {
                 condition: CONDITION_IN,
               }),
@@ -289,6 +297,7 @@ export class LaunchLevelEntities extends Component {
       {
         id: ENTITY_DESCRIPTION,
         component: EntityInputConditional,
+        kind: FILTER_ENTITY_KIND.TEXT,
         value: this.bindDefaultValue(ENTITY_DESCRIPTION, {
           condition: CONDITION_CNT,
         }),
@@ -304,6 +313,7 @@ export class LaunchLevelEntities extends Component {
       {
         id: ENTITY_USER,
         component: EntitySearch,
+        kind: FILTER_ENTITY_KIND.SEARCH,
         value: this.bindDefaultValue(ENTITY_USER, {
           condition: CONDITION_IN,
         }),
@@ -318,6 +328,7 @@ export class LaunchLevelEntities extends Component {
       {
         id: ENTITY_START_TIME,
         component: EntityItemStartTime,
+        kind: FILTER_ENTITY_KIND.START_TIME,
         value: this.bindDefaultValue(ENTITY_START_TIME, {
           value: '',
           condition: CONDITION_BETWEEN,
@@ -329,6 +340,7 @@ export class LaunchLevelEntities extends Component {
       {
         id: ENTITY_ATTRIBUTE,
         component: EntityInputConditionalAttributes,
+        kind: FILTER_ENTITY_KIND.ATTRIBUTES,
         value: this.bindDefaultValue(ENTITY_ATTRIBUTE, {
           condition: CONDITION_HAS,
         }),
@@ -344,6 +356,7 @@ export class LaunchLevelEntities extends Component {
       {
         id: STATS_TOTAL,
         component: EntityInputConditional,
+        kind: FILTER_ENTITY_KIND.TEXT,
         value: this.bindDefaultValue(STATS_TOTAL, {
           condition: CONDITION_GREATER_EQ,
         }),
@@ -359,6 +372,7 @@ export class LaunchLevelEntities extends Component {
       {
         id: STATS_PASSED,
         component: EntityInputConditional,
+        kind: FILTER_ENTITY_KIND.TEXT,
         value: this.bindDefaultValue(STATS_PASSED, {
           condition: CONDITION_GREATER_EQ,
         }),
@@ -374,6 +388,7 @@ export class LaunchLevelEntities extends Component {
       {
         id: STATS_FAILED,
         component: EntityInputConditional,
+        kind: FILTER_ENTITY_KIND.TEXT,
         value: this.bindDefaultValue(STATS_FAILED, {
           condition: CONDITION_GREATER_EQ,
         }),
@@ -389,6 +404,7 @@ export class LaunchLevelEntities extends Component {
       {
         id: STATS_SKIPPED,
         component: EntityInputConditional,
+        kind: FILTER_ENTITY_KIND.TEXT,
         value: this.bindDefaultValue(STATS_SKIPPED, {
           condition: CONDITION_GREATER_EQ,
         }),
@@ -417,6 +433,7 @@ export class LaunchLevelEntities extends Component {
           ...option,
           id: option.value,
           component: EntityInputConditional,
+          kind: FILTER_ENTITY_KIND.TEXT,
           value: this.bindDefaultValue(option.value, {
             condition: CONDITION_GREATER_EQ,
           }),
@@ -443,6 +460,7 @@ export class LaunchLevelEntities extends Component {
       static: true,
       title: key.split('$').pop(),
       component: EntityContains,
+      kind: FILTER_ENTITY_KIND.CONTAINS,
       removable: true,
       customProps: {
         disabled: true,
