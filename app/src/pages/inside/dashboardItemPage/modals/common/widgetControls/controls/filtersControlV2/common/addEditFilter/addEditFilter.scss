@@ -16,12 +16,14 @@
 
 .add-edit-filter {
   display: flex;
+  flex: 1;
   flex-direction: column;
   gap: 16px;
 }
 
 .filters-block {
   display: flex;
+  flex: 1;
   flex-direction: column;
   gap: 16px;
 }
@@ -33,10 +35,15 @@
 }
 
 .filter-buttons-block {
+  position: sticky;
+  bottom: 0;
+  z-index: 1;
   display: flex;
   gap: 8px;
   justify-content: flex-end;
+  margin-top: auto;
   padding-top: 8px;
+  background-color: var(--rp-ui-base-bg-100);
 }
 
 .tooltip-wrapper {

@@ -89,7 +89,9 @@ export const EntitiesGroupV2 = ({
           onChange={(value, isConditionChange) => handleChange(entity, value, isConditionChange)}
         />
       ))}
-      <EntitiesSelectorV2 entities={entities} onChange={handleAdd} />
+      <div className={cx('entities-selector')}>
+        <EntitiesSelectorV2 entities={entities} onChange={handleAdd} />
+      </div>
     </div>
   );
 };

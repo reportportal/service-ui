@@ -65,6 +65,22 @@ const messages = defineMessages({
     id: 'Conditions.withoutAny',
     defaultMessage: 'Without any',
   },
+  allDescription: {
+    id: 'Conditions.allDescription',
+    defaultMessage: 'Has every listed attribute',
+  },
+  withoutAllDescription: {
+    id: 'Conditions.withoutAllDescription',
+    defaultMessage: 'Lacks at least one listed attribute',
+  },
+  anyDescription: {
+    id: 'Conditions.anyDescription',
+    defaultMessage: 'Has at least one listed attribute',
+  },
+  withoutAnyDescription: {
+    id: 'Conditions.withoutAnyDescription',
+    defaultMessage: 'Has none of the listed attributes',
+  },
   hasAnyOf: {
     id: 'ConditionFieldV2.hasAnyOf',
     defaultMessage: 'Has any of',
@@ -93,6 +109,13 @@ const CONDITION_MESSAGES: Record<string, MessageDescriptor> = {
   [CONDITION_BETWEEN]: messages.between,
 };
 
+const CONDITION_DESCRIPTIONS: Partial<Record<string, MessageDescriptor>> = {
+  [CONDITION_HAS]: messages.allDescription,
+  [CONDITION_NOT_HAS]: messages.withoutAllDescription,
+  [CONDITION_ANY]: messages.anyDescription,
+  [CONDITION_NOT_ANY]: messages.withoutAnyDescription,
+};
+
 const CONDITION_SYMBOLS: Record<string, string> = {
   [CONDITION_EQ]: '=',
   [CONDITION_GREATER_EQ]: '≥',
@@ -106,6 +129,8 @@ export const useConditionOptions = (conditions: string[] = []): ConditionOption[
   const isNumericSet = conditions.some((condition) => NUMERIC_CONDITIONS.has(condition));
 
   return conditions.map((condition) => {
+    const descriptionMessage = CONDITION_DESCRIPTIONS[condition];
+
     if (isNumericSet) {
       return {
         value: condition,
@@ -118,6 +143,7 @@ export const useConditionOptions = (conditions: string[] = []): ConditionOption[
       label: CONDITION_MESSAGES[condition]
         ? formatMessage(CONDITION_MESSAGES[condition])
         : condition,
+      ...(descriptionMessage ? { description: formatMessage(descriptionMessage) } : {}),
     };
   });
 };

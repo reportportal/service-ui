@@ -79,4 +79,5 @@ export interface FilterEntity {
 export interface ConditionOption {
   value: string;
   label: string;
+  description?: string;
 }
