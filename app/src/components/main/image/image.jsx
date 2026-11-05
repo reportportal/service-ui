@@ -20,6 +20,7 @@ import classNames from 'classnames/bind';
 import { fetch, ERROR_CANCELED } from 'common/utils/fetch';
 import { DottedPreloader } from 'components/preloaders/dottedPreloader';
 import { registerImageRequest } from './imageRequestGroups';
+import { enqueueImageRequest, runImageRequestImmediately } from './imageRequestQueue';
 import styles from './image.scss';
 
 const cx = classNames.bind(styles);
@@ -181,32 +182,38 @@ export class Image extends Component {
         loading: true,
       });
 
-      let currentCancel = null;
+      const requestFile = (registerCancel) =>
+        fetch(this.props.src, {
+          responseType: 'blob',
+          ...this.props.requestParams,
+          abort: (cancel) => {
+            registerCancel(cancel);
+          },
+        });
 
-      fetch(this.props.src, {
-        responseType: 'blob',
-        ...this.props.requestParams,
-        abort: (cancel) => {
-          currentCancel = cancel;
-          this.cancelRequest = cancel;
-          if (this.props.requestGroup) {
-            this.unregisterRequest = registerImageRequest(this.props.requestGroup, cancel);
-          }
-        },
-      })
+      const task = this.props.requestGroup
+        ? enqueueImageRequest(requestFile)
+        : runImageRequestImmediately(requestFile);
+
+      this.cancelRequest = task.cancel;
+      if (this.props.requestGroup) {
+        this.unregisterRequest = registerImageRequest(this.props.requestGroup, task.cancel);
+      }
+
+      task.promise
         .then((file) => {
-          this.releaseRequest(currentCancel);
+          this.releaseRequest(task.cancel);
           this.createURL(file);
         })
         .catch((error) => {
           if (error?.message === ERROR_CANCELED) {
-            if (this.cancelRequest === currentCancel) {
-              this.releaseRequest(currentCancel);
+            if (this.cancelRequest === task.cancel) {
+              this.releaseRequest(task.cancel);
               this.isRequested = false;
             }
             return;
           }
-          this.releaseRequest(currentCancel);
+          this.releaseRequest(task.cancel);
           this.disconnectObserver();
           this.setState({ error: true, loading: false });
         });
