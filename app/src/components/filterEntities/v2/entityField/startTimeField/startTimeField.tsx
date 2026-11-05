@@ -18,7 +18,7 @@ import { ChangeEvent, useCallback, useEffect, useMemo, useState } from 'react';
 import { defineMessages, useIntl } from 'react-intl';
 import moment from 'moment';
 import { Checkbox, Dropdown } from '@reportportal/ui-kit';
-import { DropdownValue } from '@reportportal/ui-kit/components/dropdown/types';
+import { DropdownValue } from '@reportportal/ui-kit/dropdown';
 import { DATE_FORMAT_DROPDOWN } from 'common/constants/timeDateFormat';
 import { createClassnames, getMinutesFromTimestamp, parseDateTimeRange } from 'common/utils';
 import { CONDITION_BETWEEN } from 'components/filterEntities/constants';

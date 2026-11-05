@@ -17,7 +17,7 @@
 import { ChangeEvent } from 'react';
 import { defineMessages, useIntl } from 'react-intl';
 import { Dropdown, FieldText } from '@reportportal/ui-kit';
-import { DropdownValue } from '@reportportal/ui-kit/components/dropdown/types';
+import { DropdownValue } from '@reportportal/ui-kit/dropdown';
 import { GROUP_TO_ACTION_MAP } from 'common/constants/actionTypes';
 import { createClassnames } from 'common/utils';
 import {
