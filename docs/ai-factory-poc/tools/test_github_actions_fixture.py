@@ -67,8 +67,9 @@ class FixtureTest(unittest.TestCase):
             with self.assertRaises(fixture.FixtureError):
                 fixture.api_base(base)
         self.assertEqual(fixture.api_base("https://rp.example/api/"), "https://rp.example/api")
+        handler = fixture.NoRedirect()
         with self.assertRaises(fixture.FixtureError):
-            fixture.NoRedirect().redirect_request(None, None, 302, "", {}, "http://other.example")
+            handler.redirect_request(None, None, 302, "", {}, "http://other.example")
         with patch.object(fixture.ssl, "create_default_context") as context:
             fixture.Client("https://rp.example/api", "test-credential", "company-ca.pem")
         context.assert_called_once_with(cafile="company-ca.pem")

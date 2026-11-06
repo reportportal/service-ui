@@ -13,6 +13,10 @@ from urllib import error, parse, request
 from uuid import uuid4
 
 
+# Fixed location: the credentials file path is never taken from command-line input.
+ENV_FILE = Path(__file__).resolve().parents[3] / ".env"
+
+
 class FixtureError(Exception):
     """Safe error text only; never includes credentials or raw server responses."""
 
@@ -68,9 +72,9 @@ class Client:
                 result = json.load(response)
         except error.HTTPError as exc:
             raise FixtureError(f"API {method} failed with HTTP {exc.code}; no automatic retry.") from None
-        except (error.URLError, ssl.SSLError, TimeoutError, OSError):
+        except OSError:  # URLError, SSLError and TimeoutError are all OSError subclasses
             raise FixtureError(f"API {method} transport/TLS failed; no automatic retry.") from None
-        except (ValueError, UnicodeError):
+        except ValueError:  # includes UnicodeError and json.JSONDecodeError
             raise FixtureError(f"API {method} returned unreadable JSON; no automatic retry.") from None
         if not isinstance(result, dict):
             raise FixtureError("API returned an unexpected response shape.")
@@ -129,21 +133,26 @@ def iteration_payload(label, display_id, repo, workflow, now):
                               "result": "Passed"}}]}]}]}}
 
 
+def is_passed_upload_stage_for(stage, target):
+    # A legacy stage without a stageKey is accepted; a different key is not.
+    return (stage.get("stageKey", "upload") == "upload"
+            and stage.get("statusCategory") == "PASSED"
+            and target in stage.get("relatedEntities", []))
+
+
+def has_result_cell_for(stage, target):
+    return any(
+        isinstance(cell, dict) and cell.get("target") == target
+        for section in stage.get("sections", []) if section.get("role") == "RESULT"
+        for row in section.get("rows", [])
+        for cell in row.get("cells", {}).values())
+
+
 def verify_source(source, display_id):
     target = {"entityType": "TEST_CASE", "entityId": display_id}
-    for stage in source.get("stages", []):
-        if (("stageKey" in stage and stage["stageKey"] != "upload")
-                or stage.get("statusCategory") != "PASSED"
-                or target not in stage.get("relatedEntities", [])):
-            continue
-        for section in stage.get("sections", []):
-            if section.get("role") != "RESULT":
-                continue
-            for row in section.get("rows", []):
-                for cell in row.get("cells", {}).values():
-                    if isinstance(cell, dict) and cell.get("target") == target:
-                        return
-    raise FixtureError("Read-back did not confirm the passed source stage and case target.")
+    if not any(is_passed_upload_stage_for(stage, target) and has_result_cell_for(stage, target)
+               for stage in source.get("stages", [])):
+        raise FixtureError("Read-back did not confirm the passed source stage and case target.")
 
 
 def verify_grade(metrics, scores):
@@ -221,7 +230,6 @@ def main(argv=None):
     parser.add_argument("--project", default="superadmin_personal")
     parser.add_argument("--repo", default="reportportal/service-ui")
     parser.add_argument("--workflow", default="fix-test-case.yml")
-    parser.add_argument("--env-file", type=Path, default=Path(__file__).resolve().parents[3] / ".env")
     parser.add_argument("--ca-file", help="Trusted CA bundle; normal TLS verification stays enabled")
     args = parser.parse_args(argv)
     state = {"status": "DRY_RUN", "operation": "offline_plan"}
@@ -234,7 +242,7 @@ def main(argv=None):
         if args.apply:
             if args.project != "superadmin_personal":
                 raise FixtureError("Apply is authorized only for superadmin_personal.")
-            token = bearer_token(args.env_file)
+            token = bearer_token(ENV_FILE)
             client = Client(args.api_base, token, args.ca_file)
             state["status"] = "INCOMPLETE"
             apply_fixture(client, args.project, args.repo, args.workflow, state)
