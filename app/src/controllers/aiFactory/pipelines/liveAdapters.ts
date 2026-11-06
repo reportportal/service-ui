@@ -239,6 +239,9 @@ const MAX_ATTRIBUTES = 100;
 const MAX_NAME_LENGTH = 255;
 const MAX_KEY_LENGTH = 128;
 const MAX_TEXT_LENGTH = 2000;
+const MAX_CELL_VALUE_LENGTH = 10_000;
+const MAX_DETAIL_ITEM_LENGTH = 256_000;
+const MAX_ATTRIBUTE_DESCRIPTION_LENGTH = 16_000;
 
 export interface LivePage {
   number: number;
@@ -354,7 +357,7 @@ const adaptAttributeEntry = (entry: unknown): ReducedPipelineAttribute | null =>
   }
   const type = asTrimmedString(raw.type, MAX_KEY_LENGTH);
   const label = asTrimmedString(raw.label, MAX_NAME_LENGTH);
-  const description = asTrimmedString(raw.description);
+  const description = asTrimmedString(raw.description, MAX_ATTRIBUTE_DESCRIPTION_LENGTH);
   const valueType = asTrimmedString(raw.valueType, MAX_KEY_LENGTH);
   const url = asTrimmedString(raw.url);
   const order = asNonNegativeInteger(raw.order);
@@ -444,7 +447,7 @@ const asCellText = (value: unknown): string | undefined => {
   }
   return typeof content === 'number' && Number.isFinite(content)
     ? String(content)
-    : asTrimmedString(content);
+    : asTrimmedString(content, MAX_CELL_VALUE_LENGTH);
 };
 
 const adaptSectionColumns = (value: unknown): ReducedPipelineSection['columns'] | null => {
@@ -484,7 +487,9 @@ const adaptSectionDetails = (
     if (!heading || !Array.isArray(detail?.items) || detail.items.length > 30) {
       return null;
     }
-    const items = detail.items.map((entryText) => asTrimmedString(entryText));
+    const items = detail.items.map((entryText) =>
+      asTrimmedString(entryText, MAX_DETAIL_ITEM_LENGTH),
+    );
     if (items.some((entryText) => !entryText)) {
       return null;
     }

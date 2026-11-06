@@ -2,6 +2,8 @@
 
 **Backend follow-up (2026-10-25):** [27 — completion contract](27-backend-integration-completion-contract-2026-10-25.md) assigns requested prerequisites and acceptance criteria. This checklist retains its 2026-10-24 observation dates and NOT VERIFIED runtime results.
 
+**Dispatch preparation (2026-10-25):** [28 — logging-only probe and isolated fixture](28-github-actions-dispatch-probe-2026-10-25.md) provides the first executable setup for the user-selected `superadmin_personal` project. Its workflow logs dispatch IDs only; it does not submit a fix result or satisfy the four R6 outcomes. Historical credential observations below must be rechecked before authenticated execution.
+
 Date: 2026-10-24. Task: [EPMRPP-122691](https://jiraeu.epam.com/browse/EPMRPP-122691), R6. Status: **runtime execution blocked by external prerequisites; preparation and limited preflight complete; end-to-end outcomes NOT VERIFIED**.
 
 Branch `EPMRPP-122691-github-actions-journey-verification` starts from R5 commit `11a81f2389db0c9fa5b6e00d8d4354d1eb7c4350`. R5 [PR #5850](https://github.com/reportportal/service-ui/pull/5850) has a successful exact-head [Build run 40129900921](https://github.com/reportportal/service-ui/actions/runs/40129900921) and fresh Sonar Quality Gate OK with zero issues. These checks do not establish the deployed frontend version. Jira is In Progress; Original Estimate is 12 h, not measured execution time.

@@ -28,12 +28,14 @@ const record = (value: unknown): RecordValue | null =>
 const string = (value: unknown, maxLength = 2048): string | undefined =>
   typeof value === 'string' && value.length <= maxLength ? value : undefined;
 
+const MAX_CELL_VALUE_LENGTH = 10_000;
+
 const displayValue = (value: unknown): string | undefined => {
   const cell = record(value);
   const scalar = cell ? cell.value : value;
   if (typeof scalar === 'number' && Number.isFinite(scalar)) return String(scalar);
   if (typeof scalar === 'boolean') return String(scalar);
-  return string(scalar);
+  return string(scalar, MAX_CELL_VALUE_LENGTH);
 };
 
 export interface LiveComparisonStage {

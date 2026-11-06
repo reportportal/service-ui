@@ -19,6 +19,10 @@ build/
 .gradle/
 .tsbuildinfo
 
+## Python
+__pycache__/
+*.pyc
+
 ## Coverage
 coverage
 
