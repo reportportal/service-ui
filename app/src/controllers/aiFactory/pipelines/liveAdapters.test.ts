@@ -228,6 +228,66 @@ describe('live pipeline catalog adapters', () => {
     });
   });
 
+  describe('LP3 report text limits', () => {
+    const detailWith = (
+      cellValue: string,
+      detailItem: string,
+      attributeDescription: string,
+    ): Parameters<typeof adaptLivePipelineIterationDetail>[0] => ({
+      id: 31,
+      pipelineId: 7,
+      iterationNumber: 1,
+      attributes: [{ key: 'summary', value: 'ok', description: attributeDescription }],
+      stages: [
+        {
+          id: 101,
+          name: 'Grade',
+          sequence: 1,
+          status: 'Passed',
+          statusCategory: 'PASSED',
+          sections: [
+            {
+              key: 'gradedCases',
+              title: 'Graded test cases',
+              role: 'RESULT',
+              columns: [{ key: 'name', label: 'Name' }],
+              rows: [
+                {
+                  key: 'case-1',
+                  cells: { name: { value: cellValue } },
+                  details: [{ heading: 'Notes', items: [detailItem] }],
+                },
+              ],
+            },
+          ],
+        },
+      ],
+    });
+
+    test('accepts values up to the backend limits', () => {
+      const detail = adaptLivePipelineIterationDetail(
+        detailWith('c'.repeat(10_000), 'd'.repeat(256_000), 'a'.repeat(16_000)),
+        7,
+        31,
+      );
+      const row = detail.stages[0].sections?.[0].rows[0];
+
+      expect(row?.cells.name).toHaveLength(10_000);
+      expect(row?.details[0].items[0]).toHaveLength(256_000);
+      expect(detail.attributes[0].description).toHaveLength(16_000);
+    });
+
+    test.each([
+      ['cell value', 'c'.repeat(10_001), 'd', 'a'],
+      ['detail item', 'c', 'd'.repeat(256_001), 'a'],
+      ['attribute description', 'c', 'd', 'a'.repeat(16_001)],
+    ])('rejects %s above the backend limit', (_description, cell, item, description) => {
+      expect(() =>
+        adaptLivePipelineIterationDetail(detailWith(cell, item, description), 7, 31),
+      ).toThrow();
+    });
+  });
+
   test('keeps documented LP3 stage facts and safe table targets for the detail view', () => {
     const detail = adaptLivePipelineIterationDetail(
       {
