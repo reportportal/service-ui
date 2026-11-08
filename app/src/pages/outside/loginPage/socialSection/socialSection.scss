@@ -23,7 +23,22 @@
   padding: 58px 53px 32px 54px;
   box-sizing: border-box;
 
+  &__footer {
+    flex-shrink: 0;
+    width: 100%;
+  }
+
   &--news-expanded {
+    /* solid panel instead of the 20% white overlay, so the fade-out edges blend in */
+    background-color: $COLOR--news-panel-background;
+    border-radius: 0 12px 12px 0;
+    /* the list's own 40px inset is the only top spacing when scrolled to top */
+    padding-top: 0;
+
+    @media (max-width: $SCREEN_SM_MAX) {
+      border-radius: 0 0 12px 12px;
+    }
+
     .social-section__footer {
       margin-top: auto;
     }
@@ -32,11 +47,6 @@
       min-height: 0;
       height: auto;
     }
-  }
-
-  &__footer {
-    flex-shrink: 0;
-    width: 100%;
   }
 
   @media (max-width: $SCREEN_SM_MAX) {

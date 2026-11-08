@@ -176,6 +176,8 @@ const NewsDeck = ({ tweets = [], onExpandedChange = null }) => {
   const [isExpanded, setIsExpanded] = useState(false);
   const [isUndoShown, setIsUndoShown] = useState(false);
   const [isDragging, setIsDragging] = useState(false);
+  const [scrollEl, setScrollEl] = useState(null);
+  const [fade, setFade] = useState({ top: false, bottom: false });
 
   const deckRef = useRef(null);
   const cardRefs = useRef({});
@@ -200,6 +202,35 @@ const NewsDeck = ({ tweets = [], onExpandedChange = null }) => {
   useEffect(() => {
     onExpandedChangeRef.current = onExpandedChange;
   }, [onExpandedChange]);
+
+  useEffect(() => {
+    if (!scrollEl) {
+      return undefined;
+    }
+    const update = () => {
+      const { scrollTop, scrollHeight, clientHeight } = scrollEl;
+      const top = scrollTop > 1;
+      const bottom = scrollTop + clientHeight < scrollHeight - 1;
+      setFade((prev) => (prev.top === top && prev.bottom === bottom ? prev : { top, bottom }));
+    };
+    update();
+    scrollEl.addEventListener('scroll', update, { passive: true });
+    window.addEventListener('resize', update);
+    let observer;
+    if (typeof ResizeObserver !== 'undefined') {
+      observer = new ResizeObserver(update);
+      observer.observe(scrollEl);
+      if (scrollEl.firstElementChild) {
+        observer.observe(scrollEl.firstElementChild);
+      }
+    }
+
+    return () => {
+      scrollEl.removeEventListener('scroll', update);
+      window.removeEventListener('resize', update);
+      observer?.disconnect();
+    };
+  }, [scrollEl]);
 
   const commitOrder = useCallback((next) => {
     orderRef.current = next;
@@ -844,7 +875,14 @@ const NewsDeck = ({ tweets = [], onExpandedChange = null }) => {
       {!isEmptied &&
         (order.length > 0 || isExpanded) &&
         (isExpanded ? (
-          <ScrollWrapper className={cx('posts-scroll')} hideTracksWhenNotNeeded>
+          <ScrollWrapper
+            className={cx('posts-scroll', {
+              'posts-scroll--fade-top': fade.top,
+              'posts-scroll--fade-bottom': fade.bottom,
+            })}
+            scrollContainerRef={setScrollEl}
+            hideTracksWhenNotNeeded
+          >
             {postsStack}
           </ScrollWrapper>
         ) : (
@@ -858,8 +896,13 @@ const NewsDeck = ({ tweets = [], onExpandedChange = null }) => {
           </button>
         </div>
       )}
-      <div className={cx('deck-controls')}>
-        <div className={cx('undo-pill', { 'undo-pill--shown': isUndoShown })}>
+      <div className={cx('deck-controls', { 'deck-controls--expanded': isExpanded })}>
+        <div
+          className={cx('undo-pill', {
+            'undo-pill--shown': isUndoShown,
+            'undo-pill--collapsed': isExpanded,
+          })}
+        >
           <span>
             {dismissedStack.length > 1
               ? formatMessage(messages.newsDismissedCount, { count: dismissedStack.length })
