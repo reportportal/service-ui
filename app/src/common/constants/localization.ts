@@ -159,6 +159,18 @@ export const COMMON_LOCALE_KEYS = defineMessages({
     id: 'Common.search',
     defaultMessage: 'Search',
   },
+  SORT_BY: {
+    id: 'Common.sortBy',
+    defaultMessage: 'Sort by',
+  },
+  ASCENDING: {
+    id: 'Common.ascending',
+    defaultMessage: 'Ascending',
+  },
+  DESCENDING: {
+    id: 'Common.descending',
+    defaultMessage: 'Descending',
+  },
   UNINSTALL: {
     id: 'Common.uninstall',
     defaultMessage: 'Uninstall',
@@ -383,6 +395,11 @@ export const COMMON_LOCALE_KEYS = defineMessages({
   NO_AVAILABLE_OPTIONS: {
     id: 'Common.noAvailableOptions',
     defaultMessage: 'No available options',
+  },
+  SEARCH_MIN_SYMBOLS: {
+    id: 'Common.searchMinSymbols',
+    defaultMessage:
+      'At least {count, plural, one {# symbol} few {# symbols} other {# symbols}} required.',
   },
   MO_MATCHES_FOUND: {
     id: 'Common.noMatchesFound',

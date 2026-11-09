@@ -72,10 +72,6 @@ const messages = defineMessages({
     id: 'ComponentHealthCheckControls.addAttributeKeyButton',
     defaultMessage: 'New levels cannot be added until filter is selected',
   },
-  attributeKeyInput: {
-    id: 'ComponentHealthCheckControls.attributeKeyInput',
-    defaultMessage: 'Please select a filter first',
-  },
 });
 
 const passingRateValidator = (formatMessage) =>
@@ -83,12 +79,9 @@ const passingRateValidator = (formatMessage) =>
     validate.healthCheckWidgetPassingRate,
     formatMessage(messages.passingRateValidationError),
   );
-const attributeKeyValidator = (formatMessage) => (attributes) =>
+const attributeKeyValidator = (attributes) =>
   composeBoundValidators([
-    bindMessageToValidator(
-      validate.required,
-      formatMessage(messages.attributesArrayValidationError),
-    ),
+    commonValidators.requiredField,
     commonValidators.attributeKey,
     commonValidators.uniqueAttributeKey(attributes),
   ]);
@@ -175,9 +168,8 @@ export class ComponentHealthCheckControls extends Component {
         maxAttributesAmount={MAX_ATTRIBUTES_AMOUNT}
         showRemainingLevels
         disabled={!filterId || isMainControlsDisabled}
-        inputTooltip={filterId ? null : formatMessage(messages.attributeKeyInput)}
-        addButtonTooltip={filterId ? null : formatMessage(messages.addAttributeKeyButton)}
         withOwnerLevel
+        description={formatMessage(messages.attributesArrayValidationError)}
         getURI={URLS.itemAttributeKeysAllSearch(
           projectKey,
           filterId,
@@ -249,7 +241,7 @@ export class ComponentHealthCheckControls extends Component {
             <FieldArray
               name="contentParameters.widgetOptions.attributeKeys"
               component={this.renderAttributesFieldArray}
-              fieldValidator={attributeKeyValidator(formatMessage)}
+              fieldValidator={attributeKeyValidator}
             />
           </>
         )}

@@ -52,10 +52,6 @@ const messages = defineMessages({
     id: 'CumulativeTrendControls.LaunchesLimitFieldLabel',
     defaultMessage: 'Number of launches',
   },
-  attributesTitle: {
-    id: 'CumulativeTrendControls.attributesTitle',
-    defaultMessage: 'Add attributes',
-  },
   LaunchesLimitValidationError: {
     id: 'CumulativeTrendControls.LaunchesLimitValidationError',
     defaultMessage: 'Items count should have value from 1 to 20000',
@@ -80,12 +76,9 @@ const itemsValidator = (formatMessage) =>
     validate.cumulativeItemsValidation,
     formatMessage(messages.LaunchesLimitValidationError),
   );
-const attributeKeyValidator = (formatMessage) => (attributes) =>
+const attributeKeyValidator = (attributes) =>
   composeBoundValidators([
-    bindMessageToValidator(
-      validate.required,
-      formatMessage(messages.attributesArrayValidationError),
-    ),
+    commonValidators.requiredField,
     commonValidators.attributeKey,
     commonValidators.uniqueAttributeKey(attributes),
   ]);
@@ -158,6 +151,7 @@ export class CumulativeTrendControls extends Component {
         this.props.intl.formatMessage(messages.attributeKeyFieldLabelOverview),
         this.props.intl.formatMessage(messages.attributeKeyFieldLabelDetailedView),
       ]}
+      description={this.props.intl.formatMessage(messages.attributesArrayValidationError)}
       disabled={
         !(this.props.widgetSettings?.filters?.length && this.props.widgetSettings.filters[0].value) ||
         this.props.isMainControlsDisabled
@@ -207,11 +201,10 @@ export class CumulativeTrendControls extends Component {
               </FieldErrorHint>
             </FieldProvider>
 
-            <div className={cx('attr-header')}>{formatMessage(messages.attributesTitle)}</div>
             <FieldArray
               name="contentParameters.widgetOptions.attributes"
               component={this.renderAttributesFieldArray}
-              fieldValidator={attributeKeyValidator(formatMessage)}
+              fieldValidator={attributeKeyValidator}
             />
           </Fragment>
         )}

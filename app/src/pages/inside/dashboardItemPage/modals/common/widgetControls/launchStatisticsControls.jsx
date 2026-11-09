@@ -114,7 +114,8 @@ export class LaunchStatisticsControls extends Component {
       eventsInfo,
       isMainControlsDisabled,
     } = this.props;
-    const filterId = this.props.widgetSettings?.filters?.length && this.props.widgetSettings.filters[0].value;
+    const filterId =
+      this.props.widgetSettings?.filters?.length && this.props.widgetSettings.filters[0].value;
     const disabled = !filterId;
 
     return (
@@ -171,23 +172,21 @@ export class LaunchStatisticsControls extends Component {
                 disabled={disabled || isMainControlsDisabled}
               />
             </FieldProvider>
-              <FieldProvider name="contentParameters.widgetOptions.viewMode">
-                <RadioGroupControl
-                  options={getWidgetModeOptions(
-                    [CHART_MODES.AREA_VIEW, CHART_MODES.BAR_VIEW],
-                    formatMessage,
-                  )}
-                  label={formatMessage(widgetControlsMessages.ViewLabel)}
-                  disabled={disabled || isMainControlsDisabled}
-                />
-              </FieldProvider>
-            <div className={cx('zoom-container')}>
-              <FieldProvider name="contentParameters.widgetOptions.zoom">
-                <Checkbox disabled={disabled || isMainControlsDisabled}>
-                  {formatMessage(messages.ZoomControlText)}
-                </Checkbox>
-              </FieldProvider>
-            </div>
+            <FieldProvider name="contentParameters.widgetOptions.viewMode">
+              <RadioGroupControl
+                options={getWidgetModeOptions(
+                  [CHART_MODES.AREA_VIEW, CHART_MODES.BAR_VIEW],
+                  formatMessage,
+                )}
+                label={formatMessage(widgetControlsMessages.ViewLabel)}
+                disabled={disabled || isMainControlsDisabled}
+              />
+            </FieldProvider>
+            <FieldProvider name="contentParameters.widgetOptions.zoom">
+              <Checkbox disabled={disabled || isMainControlsDisabled}>
+                {formatMessage(messages.ZoomControlText)}
+              </Checkbox>
+            </FieldProvider>
           </Fragment>
         )}
       </Fragment>

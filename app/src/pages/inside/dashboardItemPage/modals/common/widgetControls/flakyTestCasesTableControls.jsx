@@ -25,7 +25,7 @@ import { URLS } from 'common/urls';
 import { validate, bindMessageToValidator, commonValidators } from 'common/utils/validation';
 import { projectKeySelector } from 'controllers/project';
 import { createClassnames } from 'common/utils';
-import { TagsControl } from './controls';
+import { LaunchNameControl } from './controls';
 import styles from './widgetControls.scss';
 
 const cx = createClassnames(styles);
@@ -39,10 +39,6 @@ const messages = defineMessages({
   LaunchNameFieldLabel: {
     id: 'FlakyTestCasesTableControls.LaunchNameFieldLabel',
     defaultMessage: 'Launch name',
-  },
-  LaunchNamePlaceholder: {
-    id: 'FlakyTestCasesTableControls.LaunchNamePlaceholder',
-    defaultMessage: 'Enter launch name',
   },
   IncludeMethodsControlText: {
     id: 'FlakyTestCasesTableControls.IncludeMethodsControlText',
@@ -126,11 +122,8 @@ export class FlakyTestCasesTableControls extends Component {
             formatMessage(messages.LaunchNamesValidationError),
           )}
         >
-          <TagsControl
-            fieldLabel={formatMessage(messages.LaunchNameFieldLabel)}
-            placeholder={formatMessage(messages.LaunchNamePlaceholder)}
-            minLength={3}
-            maxLength={256}
+          <LaunchNameControl
+            label={formatMessage(messages.LaunchNameFieldLabel)}
             getURI={URLS.launchNameSearch(projectKey)}
             disabled={isMainControlsDisabled}
           />

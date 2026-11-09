@@ -1,5 +1,5 @@
 /*!
- * Copyright 2019 EPAM Systems
+ * Copyright 2026 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,14 +14,20 @@
  * limitations under the License.
  */
 
-.caption {
-  font-family: $FONT-REGULAR;
-  color: $COLOR--black-2;
-  font-size: 13px;
-  padding-top: 3px;
-}
-.sorting-block {
+.sorting-control {
   display: flex;
-  justify-content: flex-start;
-  align-items: center;
+  align-items: flex-start;
+  gap: 8px;
+  width: 100%;
+}
+
+.column {
+  flex: 1;
+  min-width: 0;
+}
+
+.direction {
+  width: 160px;
+  flex-shrink: 0;
+  margin-top: 24px;
 }

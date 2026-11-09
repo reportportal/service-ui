@@ -14,23 +14,6 @@
  * limitations under the License.
  */
 
-.zoom-container {
-  position: relative;
-}
-.attr-header,
-.component-header {
-  padding: 10px 10px;
-  background: $COLOR--white;
-  color: $COLOR--gray-47;
-  font-family: $FONT-SEMIBOLD;
-  font-size: 12px;
-  text-transform: uppercase;
-  margin-bottom: 20px;
-}
-.component-wrap {
-  margin-bottom: 20px;
-}
-
 .field-number [class*='input-container'] {
   max-width: fit-content;
 }

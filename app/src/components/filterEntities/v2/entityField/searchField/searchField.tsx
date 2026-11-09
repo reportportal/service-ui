@@ -15,7 +15,7 @@
  */
 
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { defineMessages, useIntl } from 'react-intl';
+import { useIntl } from 'react-intl';
 import { MultipleAutocomplete } from '@reportportal/ui-kit';
 import { ControllerStateAndHelpers, StateChangeOptions } from 'downshift';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
@@ -25,13 +25,6 @@ import { FieldRow } from '../../fieldRow';
 import { FilterEntityCustomProps, FilterEntityValue } from '../../types';
 
 const SEARCH_MIN_LENGTH = 3;
-
-const messages = defineMessages({
-  searchMinLengthHint: {
-    id: 'EntityFieldV2.searchMinLengthHint',
-    defaultMessage: 'At least 3 symbols required.',
-  },
-});
 
 interface SearchFieldProps {
   title: string;
@@ -142,7 +135,9 @@ export const SearchField = ({
     }
 
     if (trimmedInput.length < SEARCH_MIN_LENGTH) {
-      return formatMessage(messages.searchMinLengthHint);
+      return formatMessage(COMMON_LOCALE_KEYS.SEARCH_MIN_SYMBOLS, {
+        count: SEARCH_MIN_LENGTH,
+      });
     }
 
     if (options.length === 0) {
