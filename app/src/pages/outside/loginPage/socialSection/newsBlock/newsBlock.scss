@@ -96,21 +96,6 @@ $fade-height: 40px;
   width: 100%;
   max-width: 479px;
 
-  > div:first-child {
-    margin-right: 0 !important;
-    margin-bottom: 0 !important;
-    /* Chrome snaps the fractional-height view and the fade overlays to different
-       pixel rows, leaving a 1px sliver of the card under the gradient's solid end;
-       insetting the view hides that row behind the (same-colour) panel */
-    top: 1px !important;
-    bottom: 1px !important;
-    scrollbar-width: none;
-
-    &::-webkit-scrollbar {
-      display: none;
-    }
-  }
-
   &::before,
   &::after {
     position: absolute;
@@ -147,6 +132,14 @@ $fade-height: 40px;
       rgba($COLOR--news-panel-background, 0.2) 50%,
       rgba($COLOR--news-panel-background, 0) 100%
     );
+  }
+}
+
+.posts-scroll-view {
+  scrollbar-width: none;
+
+  &::-webkit-scrollbar {
+    display: none;
   }
 }
 

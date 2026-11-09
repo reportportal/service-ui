@@ -137,6 +137,14 @@ const runStaggerIn = (nodes) => {
   });
 };
 
+const renderPostsView = ({ withFooter, style, ...props }) => (
+  <div
+    {...props}
+    className={cx('posts-scroll-view')}
+    style={{ ...style, top: 1, bottom: 1, marginRight: 0, marginBottom: 0 }}
+  />
+);
+
 const NewsDeck = ({ tweets = [], onExpandedChange = null }) => {
   const { formatMessage } = useIntl();
   const { trackEvent } = useTracking();
@@ -881,6 +889,7 @@ const NewsDeck = ({ tweets = [], onExpandedChange = null }) => {
               'posts-scroll--fade-bottom': fade.bottom,
             })}
             scrollContainerRef={setScrollEl}
+            renderView={renderPostsView}
             hideTracksWhenNotNeeded
           >
             {postsStack}
