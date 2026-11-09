@@ -43,6 +43,7 @@ const UNDO_HIDE_MS = 6000;
 const CLICK_SUPPRESS_AFTER_DRAG_MS = 350;
 const PROMOTE_RETRY_MS = 90;
 const PARALLAX_MAX_DEG = 2;
+const POSTS_TOP_INSET_PX = 40;
 
 const NEWS_ELEMENT_NAME_MAX_LENGTH = 80;
 const NEWS_SWITCH_DOT_CLICK = 'dot_click';
@@ -144,6 +145,12 @@ const renderPostsView = ({ withFooter, style, ...props }) => (
     style={{ ...style, top: 1, bottom: 1, marginRight: 0, marginBottom: 0 }}
   />
 );
+ 
+const renderPostsTrack = ({ style, ...props }) =>
+  ScrollWrapper.defaultProps.renderTrackVertical({
+    ...props,
+    style: { ...style, top: POSTS_TOP_INSET_PX },
+  });
 
 const NewsDeck = ({ tweets = [], onExpandedChange = null }) => {
   const { formatMessage } = useIntl();
@@ -890,6 +897,7 @@ const NewsDeck = ({ tweets = [], onExpandedChange = null }) => {
             })}
             scrollContainerRef={setScrollEl}
             renderView={renderPostsView}
+            renderTrackVertical={renderPostsTrack}
             hideTracksWhenNotNeeded
           >
             {postsStack}
