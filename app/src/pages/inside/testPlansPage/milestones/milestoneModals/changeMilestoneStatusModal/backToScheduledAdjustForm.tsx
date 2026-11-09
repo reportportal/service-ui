@@ -33,6 +33,7 @@ import { createMilestoneModalMessages } from '../createMilestoneModal/messages';
 import { ADJUST_FORM_DOM_ID, CHANGE_MILESTONE_STATUS_ADJUST_FORM_NAME } from './constants';
 import { changeMilestoneStatusModalMessages } from './messages';
 import type { MilestoneAdjustFormValues } from './types';
+import { isDeadlineBeforeStart } from '../../milestoneDateUtils';
 import { useMilestoneDateBounds } from '../useMilestoneDateBounds';
 
 import styles from './changeMilestoneStatusModal.scss';
@@ -51,25 +52,32 @@ const BackToScheduledAdjustFormFields = ({
   onValidSubmit,
 }: InjectedFormProps<MilestoneAdjustFormValues> & AdjustFormOwnProps) => {
   const { formatMessage } = useIntl();
-  const { startDate, startDateAsDate, endDateAsDate } = useMilestoneDateBounds(
+  const { startDate, endDate, startDateAsDate, endDateAsDate } = useMilestoneDateBounds(
     CHANGE_MILESTONE_STATUS_ADJUST_FORM_NAME,
   );
 
-  const startDateShortcuts = useMemo(
-    () => [
+  const startDateShortcuts = useMemo(() => {
+    const applyStartDate = (value: string) => {
+      change('startDate', value);
+
+      if (isDeadlineBeforeStart(value, endDate)) {
+        change('endDate', '');
+      }
+    };
+
+    return [
       {
         id: 'today',
         label: formatMessage(changeMilestoneStatusModalMessages.dateShortcutToday),
-        onClick: () => change('startDate', todayDateOnly()),
+        onClick: () => applyStartDate(todayDateOnly()),
       },
       {
         id: 'tomorrow',
         label: formatMessage(createMilestoneModalMessages.dateShortcutTomorrow),
-        onClick: () => change('startDate', tomorrowDateOnly()),
+        onClick: () => applyStartDate(tomorrowDateOnly()),
       },
-    ],
-    [change, formatMessage],
-  );
+    ];
+  }, [change, formatMessage, endDate]);
   const endDateShortcuts = useMemo(
     () => [
       {

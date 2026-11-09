@@ -34,6 +34,7 @@ import {
 import { MilestoneDateShortcutRow } from '../../milestoneDateShortcutRow/milestoneDateShortcutRow';
 import { MilestoneDateField } from '../../milestoneDateField/milestoneDateField';
 import { MilestoneTypeDropdown } from '../../milestoneTypeDropdown/milestoneTypeDropdown';
+import { isDeadlineBeforeStart } from '../../milestoneDateUtils';
 import { useMilestoneDateBounds } from '../useMilestoneDateBounds';
 
 import type { MilestoneFormModalContentProps } from './types';
@@ -48,23 +49,30 @@ export const MilestoneFormModalContent = ({
   onChange,
 }: MilestoneFormModalContentProps) => {
   const { formatMessage } = useIntl();
-  const { startDate, startDateAsDate, endDateAsDate } = useMilestoneDateBounds(formName);
+  const { startDate, endDate, startDateAsDate, endDateAsDate } = useMilestoneDateBounds(formName);
 
-  const startDateShortcuts = useMemo(
-    () => [
+  const startDateShortcuts = useMemo(() => {
+    const applyStartDate = (value: string) => {
+      onChange('startDate', value);
+
+      if (isDeadlineBeforeStart(value, endDate)) {
+        onChange('endDate', '');
+      }
+    };
+
+    return [
       {
         id: 'tomorrow',
         label: formatMessage(createMilestoneModalMessages.dateShortcutTomorrow),
-        onClick: () => onChange('startDate', tomorrowDateOnly()),
+        onClick: () => applyStartDate(tomorrowDateOnly()),
       },
       {
         id: 'nextMonday',
         label: formatMessage(createMilestoneModalMessages.dateShortcutNextMonday),
-        onClick: () => onChange('startDate', nextMondayDateOnly()),
+        onClick: () => applyStartDate(nextMondayDateOnly()),
       },
-    ],
-    [onChange, formatMessage],
-  );
+    ];
+  }, [onChange, formatMessage, endDate]);
 
   const endDateShortcuts = useMemo(
     () => [
