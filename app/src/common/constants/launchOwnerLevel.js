@@ -29,6 +29,6 @@ export const launchOwnerLevelMessages = defineMessages({
   },
   ownerFilterPlaceholder: {
     id: 'LaunchLevelEntities.ownerName.placeholder',
-    defaultMessage: 'Enter owner name',
+    defaultMessage: 'Enter owner name (min 3 characters)',
   },
 });

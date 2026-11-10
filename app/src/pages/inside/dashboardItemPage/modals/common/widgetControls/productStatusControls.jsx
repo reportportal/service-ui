@@ -38,8 +38,10 @@ import { CHART_MODES, MODES_VALUES } from 'common/constants/chartModes';
 import { getWidgetCriteriaOptions } from './utils/getWidgetCriteriaOptions';
 import { getWidgetModeOptions } from './utils/getWidgetModeOptions';
 import { GROUPED_DEFECT_TYPES_OPTIONS } from './constants';
-import { Dropdown, RadioGroup, Checkbox } from '@reportportal/ui-kit';
-import { TagsControl, CustomColumnsControl, RadioGroupControl } from './controls';
+import { Dropdown, Checkbox } from '@reportportal/ui-kit';
+import { FieldErrorHint } from 'components/fields';
+import { AsyncMultipleAutocompleteV2 } from 'componentLibrary/autocompletes/asyncMultipleAutocompleteV2';
+import { CustomColumnsControl, RadioGroupControl } from './controls';
 
 const DEFAULT_ITEMS_COUNT = '50';
 const messages = defineMessages({
@@ -95,6 +97,12 @@ const validators = {
       ? 'customColumnsDuplicationHint'
       : undefined,
 };
+
+const makeFilterOptions = (response) =>
+  (response?.content || []).map((filter) => ({
+    value: String(filter.id),
+    name: filter.name,
+  }));
 
 @injectIntl
 @connect((state) => ({
@@ -168,18 +176,25 @@ export class ProductStatusControls extends Component {
       <Fragment>
         <FieldProvider
           name="filters"
-          format={this.formatFilters}
-          parse={this.parseFilters}
           validate={validators.filters(formatMessage)}
           dumbOnBlur
         >
-          <TagsControl
-            fieldLabel={formatMessage(messages.FiltersFieldLabel)}
-            placeholder={formatMessage(messages.FiltersPlaceholder)}
-            minLength={3}
-            multi
-            getURI={() => filtersSearchUrl}
-          />
+          <FieldErrorHint provideHint={false}>
+            <AsyncMultipleAutocompleteV2
+              placeholder={formatMessage(messages.FiltersPlaceholder)}
+              getURI={(search) => `${filtersSearchUrl}${encodeURIComponent(search || '')}`}
+              makeOptions={makeFilterOptions}
+              parseValueToString={(item) => item?.name || ''}
+              minLength={3}
+              useFixedPositioning
+              dropdownMatchInputWidth
+              inputProps={{
+                label: formatMessage(messages.FiltersFieldLabel),
+                clearable: true,
+                isRequired: true,
+              }}
+            />
+          </FieldErrorHint>
         </FieldProvider>
         <FieldProvider
           name="contentParameters.contentFields"

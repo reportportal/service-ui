@@ -26,9 +26,8 @@ import { URLS } from 'common/urls';
 import { CHART_MODES, MODES_VALUES } from 'common/constants/chartModes';
 import track from 'react-tracking';
 import { Checkbox } from '@reportportal/ui-kit';
-import { RadioGroupControl } from './controls';
+import { RadioGroupControl, LaunchNameControl } from './controls';
 import { getWidgetModeOptions } from './utils/getWidgetModeOptions';
-import { TagsControl } from './controls';
 
 const DEFAULT_ITEMS_COUNT = '30';
 
@@ -36,10 +35,6 @@ const messages = defineMessages({
   LaunchNameFieldLabel: {
     id: 'PassingRatePerLaunchControls.LaunchNameFieldLabel',
     defaultMessage: 'Launch name',
-  },
-  LaunchNamePlaceholder: {
-    id: 'PassingRatePerLaunchControls.LaunchNamePlaceholder',
-    defaultMessage: 'Enter launch name',
   },
   LaunchNamesValidationError: {
     id: 'PassingRatePerLaunchControls.LaunchNamesValidationError',
@@ -111,11 +106,8 @@ export class PassingRatePerLaunchControls extends Component {
           name="contentParameters.widgetOptions.launchNameFilter"
           validate={validators.launchNames(formatMessage)}
         >
-          <TagsControl
-            fieldLabel={formatMessage(messages.LaunchNameFieldLabel)}
-            placeholder={formatMessage(messages.LaunchNamePlaceholder)}
-            minLength={3}
-            maxLength={256}
+          <LaunchNameControl
+            label={formatMessage(messages.LaunchNameFieldLabel)}
             getURI={URLS.launchNameSearch(projectKey)}
             disabled={isMainControlsDisabled}
           />

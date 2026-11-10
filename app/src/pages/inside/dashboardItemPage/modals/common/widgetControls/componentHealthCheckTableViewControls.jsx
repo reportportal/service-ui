@@ -30,7 +30,7 @@ import {
 } from 'common/utils/validation';
 import { URLS } from 'common/urls';
 import { FieldErrorHint } from 'components/fields/fieldErrorHint';
-import { AsyncAutocomplete } from 'components/inputs/autocompletes/asyncAutocomplete';
+import { AsyncAutocompleteV2 } from 'componentLibrary/autocompletes/asyncAutocompleteV2';
 import { CHART_MODES, MODES_VALUES } from 'common/constants/chartModes';
 import { FieldProvider } from 'components/fields/fieldProvider';
 import { projectKeySelector } from 'controllers/project';
@@ -42,7 +42,6 @@ import { FiltersControlV2, AttributesFieldArrayControl, SortingControl } from '.
 import { WIDGET_WIZARD_FORM } from '../constants';
 import { WIDGET_OPTIONS } from './constants';
 import styles from './widgetControls.scss';
-import { ConditionalTooltip } from 'components/main/conditionalTooltip';
 
 const cx = classNames.bind(styles);
 
@@ -68,10 +67,6 @@ const messages = defineMessages({
     id: 'ComponentHealthCheckTableViewControls.customColumnPlaceholder',
     defaultMessage: 'Enter an attribute key',
   },
-  sortingTitle: {
-    id: 'ComponentHealthCheckTableViewControls.sortingTitle',
-    defaultMessage: 'Sorting',
-  },
   passingRateValidationError: {
     id: 'ComponentHealthCheckTableViewControls.passingRateValidationError',
     defaultMessage: 'Should have value from 50 to 100',
@@ -89,10 +84,6 @@ const messages = defineMessages({
     id: 'ComponentHealthCheckTableViewControls.addAttributeKeyButton',
     defaultMessage: 'New levels cannot be added until filter is selected',
   },
-  attributeKeyInput: {
-    id: 'ComponentHealthCheckTableViewControls.attributeKeyInput',
-    defaultMessage: 'Please select a filter first',
-  },
 });
 
 const passingRateValidator = (formatMessage) =>
@@ -100,12 +91,9 @@ const passingRateValidator = (formatMessage) =>
     validate.healthCheckWidgetPassingRate,
     formatMessage(messages.passingRateValidationError),
   );
-const attributeKeyValidator = (formatMessage) => (attributes) =>
+const attributeKeyValidator = (attributes) =>
   composeBoundValidators([
-    bindMessageToValidator(
-      validate.required,
-      formatMessage(messages.attributesArrayValidationError),
-    ),
+    commonValidators.requiredField,
     commonValidators.attributeKey,
     commonValidators.uniqueAttributeKey(attributes),
   ]);
@@ -171,23 +159,6 @@ export class ComponentHealthCheckTableViewControls extends Component {
   formatFilterValue = (value) => value?.[0];
   parseFilterValue = (value) => value && [value];
 
-  formatSortingValue = (value) => value?.sortingColumn;
-
-  parseSortingValue = (value) => {
-    const sortObj = this.getSortObj();
-
-    const asc = sortObj.sortingColumn === value ? !sortObj.asc : sortObj.asc;
-
-    return (
-      value && {
-        sortingColumn: value,
-        asc,
-      }
-    );
-  };
-
-  getSortObj = () => this.props.widgetSettings.contentParameters?.widgetOptions.sort;
-
   getItemAttributeKeysAllSearchURL = () => {
     const {
       projectKey,
@@ -218,8 +189,7 @@ export class ComponentHealthCheckTableViewControls extends Component {
         withOwnerLevel
         getURI={url}
         disabled={isInputDisabled || isMainControlsDisabled}
-        inputTooltip={isInputDisabled ? formatMessage(messages.attributeKeyInput) : null}
-        addButtonTooltip={isInputDisabled ? formatMessage(messages.addAttributeKeyButton) : null}
+        description={formatMessage(messages.attributesArrayValidationError)}
       />
     );
   };
@@ -248,7 +218,6 @@ export class ComponentHealthCheckTableViewControls extends Component {
       isMainControlsDisabled,
     } = this.props;
     const attrUrlKeys = this.getItemAttributeKeysAllSearchURL();
-    const sortObj = this.getSortObj();
     const disabled = !this.props.widgetSettings?.filters?.length;
 
     return (
@@ -299,43 +268,32 @@ export class ComponentHealthCheckTableViewControls extends Component {
             <FieldArray
               name="contentParameters.widgetOptions.attributeKeys"
               component={this.renderAttributesFieldArray}
-              fieldValidator={attributeKeyValidator(formatMessage)}
+              fieldValidator={attributeKeyValidator}
             />
-            <div className={cx('component-header')}>
-              {formatMessage(messages.customColumnTitle)}
-            </div>
-            <div className={cx('component-wrap')}>
-              <ConditionalTooltip
-                content={disabled ? formatMessage(messages.attributeKeyInput) : null}
-              >
-                <FieldProvider
-                  name="contentParameters.widgetOptions.customColumn"
-                  validate={commonValidators.attributeKey}
-                >
-                  <FieldErrorHint hintType="top">
-                    <AsyncAutocomplete
-                      disabled={disabled || isMainControlsDisabled}
-                      getURI={attrUrlKeys}
-                      minLength={1}
-                      creatable
-                      placeholder={formatMessage(messages.customColumnPlaceholder)}
-                    />
-                  </FieldErrorHint>
-                </FieldProvider>
-              </ConditionalTooltip>
-            </div>
-            <div className={cx('component-header')}>{formatMessage(messages.sortingTitle)}</div>
-              <FieldProvider
-                parse={this.parseSortingValue}
-                format={this.formatSortingValue}
-                name="contentParameters.widgetOptions.sort"
-              >
-                <SortingControl
-                  sortingColumn={sortObj?.sortingColumn}
-                  sortingDirection={sortObj?.asc}
+            <FieldProvider
+              name="contentParameters.widgetOptions.customColumn"
+              validate={commonValidators.attributeKey}
+            >
+              <FieldErrorHint provideHint={false}>
+                <AsyncAutocompleteV2
+                  getURI={attrUrlKeys}
+                  minLength={1}
+                  maxLength={512}
+                  placeholder={formatMessage(messages.customColumnPlaceholder)}
                   disabled={disabled || isMainControlsDisabled}
+                  menuPortalRoot={document.getElementById('tooltip-root') || document.body}
+                  dropdownMatchInputWidth
+                  useFixedPositioning={false}
+                  inputProps={{
+                    label: formatMessage(messages.customColumnTitle),
+                    clearable: true,
+                  }}
                 />
-              </FieldProvider>
+              </FieldErrorHint>
+            </FieldProvider>
+            <FieldProvider name="contentParameters.widgetOptions.sort">
+              <SortingControl disabled={disabled || isMainControlsDisabled} />
+            </FieldProvider>
           </Fragment>
         )}
       </Fragment>

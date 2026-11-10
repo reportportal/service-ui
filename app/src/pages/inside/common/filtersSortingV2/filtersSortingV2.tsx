@@ -27,6 +27,7 @@ import {
   STATS_TI_TOTAL,
   STATS_TOTAL,
 } from 'common/constants/statistics';
+import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { SORTING_ASC, SORTING_DESC } from 'controllers/sorting';
 import { ENTITY_NAME, ENTITY_NUMBER, ENTITY_START_TIME } from 'components/filterEntities/constants';
 import { createClassnames } from 'common/utils';
@@ -54,18 +55,6 @@ type SortColumn = (typeof SORT_COLUMNS)[number];
 const SORT_COLUMNS_SET = new Set<string>(SORT_COLUMNS);
 
 const messages = defineMessages({
-  sortBy: {
-    id: 'FiltersSortingV2.sortBy',
-    defaultMessage: 'Sort by',
-  },
-  ascending: {
-    id: 'FiltersSortingV2.ascending',
-    defaultMessage: 'Ascending',
-  },
-  descending: {
-    id: 'FiltersSortingV2.descending',
-    defaultMessage: 'Descending',
-  },
   [ENTITY_NAME]: {
     id: 'FiltersSortingV2.launchName',
     defaultMessage: 'Launch name',
@@ -150,8 +139,8 @@ export const FiltersSortingV2 = ({ filter, onChange }: FiltersSortingV2Props) =>
 
   const directionOptions = useMemo(
     () => [
-      { value: SORTING_ASC, label: formatMessage(messages.ascending) },
-      { value: SORTING_DESC, label: formatMessage(messages.descending) },
+      { value: SORTING_ASC, label: formatMessage(COMMON_LOCALE_KEYS.ASCENDING) },
+      { value: SORTING_DESC, label: formatMessage(COMMON_LOCALE_KEYS.DESCENDING) },
     ],
     [formatMessage],
   );
@@ -190,7 +179,7 @@ export const FiltersSortingV2 = ({ filter, onChange }: FiltersSortingV2Props) =>
     <div className={cx('filters-sorting')}>
       <div className={cx('column')}>
         <Dropdown
-          label={formatMessage(messages.sortBy)}
+          label={formatMessage(COMMON_LOCALE_KEYS.SORT_BY)}
           options={columnOptions}
           value={order.sortingColumn}
           onChange={handleColumnChange}

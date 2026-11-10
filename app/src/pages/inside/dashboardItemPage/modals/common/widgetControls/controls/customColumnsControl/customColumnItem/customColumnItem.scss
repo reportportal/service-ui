@@ -1,5 +1,5 @@
 /*!
- * Copyright 2019 EPAM Systems
+ * Copyright 2026 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,31 +16,30 @@
 
 .custom-column-item {
   display: flex;
-  justify-content: space-between;
+  flex-direction: column;
+  gap: 4px;
+  width: 100%;
 }
-.last-custom-column-field {
-  padding-bottom: 20px;
+
+.row {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  width: 100%;
 }
+
+.fields {
+  display: flex;
+  flex: 1;
+  gap: 8px;
+  min-width: 0;
+}
+
 .name-input {
-  flex-grow: unset;
-  width: 117px;
+  flex: 1;
+  min-width: 0;
 }
-.attribute-key-input {
-  flex-grow: unset;
-  width: 97px;
-}
-.remove-icon {
-  display: inline-block;
-  width: 10px;
-  height: 10px;
-  margin: auto 0;
-  cursor: pointer;
 
-  svg {
-    vertical-align: top;
-  }
-
-  &.no-remove {
-    cursor: default;
-  }
+.remove-button {
+  flex-shrink: 0;
 }

@@ -26,7 +26,7 @@ import { projectKeySelector } from 'controllers/project';
 import { Dropdown, Checkbox } from '@reportportal/ui-kit';
 import { getWidgetCriteriaOptions } from './utils/getWidgetCriteriaOptions';
 import { PASSED_FAILED_LAUNCHES_OPTIONS } from './constants';
-import { RadioGroupControl, TagsControl } from './controls';
+import { RadioGroupControl, LaunchNameControl } from './controls';
 import { getWidgetModeOptions } from './utils/getWidgetModeOptions';
 
 const messages = defineMessages({
@@ -41,10 +41,6 @@ const messages = defineMessages({
   LaunchNameFieldLabel: {
     id: 'MostTimeConsumingTestCasesControls.LaunchNameFieldLabel',
     defaultMessage: 'Launch name',
-  },
-  LaunchNamePlaceholder: {
-    id: 'MostTimeConsumingTestCasesControls.LaunchNamePlaceholder',
-    defaultMessage: 'Enter launch name',
   },
   IncludeMethodsControlText: {
     id: 'MostTimeConsumingTestCasesControls.IncludeMethodsControlText',
@@ -128,11 +124,8 @@ export class MostTimeConsumingTestCasesControls extends Component {
           name="contentParameters.widgetOptions.launchNameFilter"
           validate={validators.launchNames(formatMessage)}
         >
-          <TagsControl
-            fieldLabel={formatMessage(messages.LaunchNameFieldLabel)}
-            placeholder={formatMessage(messages.LaunchNamePlaceholder)}
-            minLength={3}
-            maxLength={256}
+          <LaunchNameControl
+            label={formatMessage(messages.LaunchNameFieldLabel)}
             getURI={URLS.launchNameSearch(projectKey)}
             disabled={isMainControlsDisabled}
           />

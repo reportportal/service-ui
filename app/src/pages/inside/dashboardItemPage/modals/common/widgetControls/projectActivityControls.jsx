@@ -24,17 +24,19 @@ import { URLS } from 'common/urls';
 import { arrayRemoveDoubles } from 'common/utils/arrayRemoveDoubles';
 import { validate, bindMessageToValidator, commonValidators } from 'common/utils/validation';
 import { GROUP_TO_ACTION_MAP, ACTION_TO_GROUP_MAP } from 'common/constants/actionTypes';
+import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { projectKeySelector } from 'controllers/project';
 import { Dropdown, FieldNumber } from '@reportportal/ui-kit';
 import { getWidgetCriteriaOptions } from './utils/getWidgetCriteriaOptions';
 import { USER_ACTIONS_OPTIONS, CONTENT_FIELDS } from './constants';
-import { TagsControl } from './controls';
+import { AsyncMultipleAutocompleteV2 } from 'componentLibrary/autocompletes/asyncMultipleAutocompleteV2';
 import { createClassnames } from 'common/utils';
 import styles from './widgetControls.scss';
 
 const cx = createClassnames(styles);
 
 const DEFAULT_ITEMS_COUNT = '50';
+const SEARCH_MIN_LENGTH = 3;
 const messages = defineMessages({
   CriteriaFieldLabel: {
     id: 'ProjectActivityControls.CriteriaFieldLabel',
@@ -50,7 +52,7 @@ const messages = defineMessages({
   },
   UsersPlaceholder: {
     id: 'ProjectActivityControls.UsersPlaceholder',
-    defaultMessage: 'Enter user name',
+    defaultMessage: 'Enter user name (min 3 characters)',
   },
   ItemsValidationError: {
     id: 'ProjectActivityControls.ItemsValidationError',
@@ -181,15 +183,21 @@ export class ProjectActivityControls extends Component {
           format={this.formatUsernames}
           parse={this.parseUsernames}
         >
-          <TagsControl
-            fieldLabel={formatMessage(messages.UsernameControlText)}
+          <AsyncMultipleAutocompleteV2
             placeholder={formatMessage(messages.UsersPlaceholder)}
-            minLength={3}
-            maxLength={256}
             getURI={URLS.projectUsernamesSearch(projectKey)}
-            makeOptions={this.formatUsernames}
-            multi
+            minLength={SEARCH_MIN_LENGTH}
+            beforeSearchPrompt={formatMessage(COMMON_LOCALE_KEYS.SEARCH_MIN_SYMBOLS, {
+              count: SEARCH_MIN_LENGTH,
+            })}
+            maxLength={256}
             disabled={isMainControlsDisabled}
+            useFixedPositioning
+            dropdownMatchInputWidth
+            inputProps={{
+              label: formatMessage(messages.UsernameControlText),
+              clearable: true,
+            }}
           />
         </FieldProvider>
       </Fragment>

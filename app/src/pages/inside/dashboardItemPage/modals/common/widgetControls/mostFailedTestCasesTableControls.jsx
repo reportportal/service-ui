@@ -26,7 +26,7 @@ import { projectKeySelector } from 'controllers/project';
 import { FieldNumber, Dropdown, Checkbox } from '@reportportal/ui-kit';
 import { getWidgetCriteriaOptions } from './utils/getWidgetCriteriaOptions';
 import { SKIPPED_FAILED_LAUNCHES_OPTIONS, DEFECT_STATISTICS_OPTIONS } from './constants';
-import { TagsControl } from './controls';
+import { LaunchNameControl } from './controls';
 import { createClassnames } from 'common/utils';
 import styles from './widgetControls.scss';
 
@@ -45,10 +45,6 @@ const messages = defineMessages({
   LaunchNameFieldLabel: {
     id: 'MostFailedTestCasesTableControls.LaunchNameFieldLabel',
     defaultMessage: 'Launch name',
-  },
-  LaunchNamePlaceholder: {
-    id: 'MostFailedTestCasesTableControls.LaunchNamePlaceholder',
-    defaultMessage: 'Enter launch name',
   },
   IncludeMethodsControlText: {
     id: 'MostFailedTestCasesTableControls.IncludeMethodsControlText',
@@ -154,11 +150,8 @@ export class MostFailedTestCasesTableControls extends Component {
           name="contentParameters.widgetOptions.launchNameFilter"
           validate={validators.launchNames(formatMessage(messages.LaunchNamesValidationError))}
         >
-          <TagsControl
-            fieldLabel={formatMessage(messages.LaunchNameFieldLabel)}
-            placeholder={formatMessage(messages.LaunchNamePlaceholder)}
-            minLength={3}
-            maxLength={256}
+          <LaunchNameControl
+            label={formatMessage(messages.LaunchNameFieldLabel)}
             getURI={URLS.launchNameSearch(projectKey)}
             disabled={isMainControlsDisabled}
           />
