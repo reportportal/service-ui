@@ -45,6 +45,14 @@ const messages = defineMessages({
     id: 'Conditions.eq',
     defaultMessage: 'Equals',
   },
+  greaterOrEqual: {
+    id: 'Conditions.gte',
+    defaultMessage: 'Greater than or equal',
+  },
+  lessOrEqual: {
+    id: 'Conditions.lte',
+    defaultMessage: 'Less than or equal',
+  },
   notEquals: {
     id: 'Conditions.notEq',
     defaultMessage: 'Not equals',
@@ -99,6 +107,8 @@ const CONDITION_MESSAGES: Record<string, MessageDescriptor> = {
   [CONDITION_CNT]: messages.contains,
   [CONDITION_NOT_CNT]: messages.notContains,
   [CONDITION_EQ]: messages.equals,
+  [CONDITION_GREATER_EQ]: messages.greaterOrEqual,
+  [CONDITION_LESS_EQ]: messages.lessOrEqual,
   [CONDITION_NOT_EQ]: messages.notEquals,
   [CONDITION_HAS]: messages.all,
   [CONDITION_NOT_HAS]: messages.withoutAll,
@@ -116,27 +126,11 @@ const CONDITION_DESCRIPTIONS: Partial<Record<string, MessageDescriptor>> = {
   [CONDITION_NOT_ANY]: messages.withoutAnyDescription,
 };
 
-const CONDITION_SYMBOLS: Record<string, string> = {
-  [CONDITION_EQ]: '=',
-  [CONDITION_GREATER_EQ]: '≥',
-  [CONDITION_LESS_EQ]: '≤',
-};
-
-const NUMERIC_CONDITIONS = new Set([CONDITION_GREATER_EQ, CONDITION_LESS_EQ]);
-
 export const useConditionOptions = (conditions: string[] = []): ConditionOption[] => {
   const { formatMessage } = useIntl();
-  const isNumericSet = conditions.some((condition) => NUMERIC_CONDITIONS.has(condition));
 
   return conditions.map((condition) => {
     const descriptionMessage = CONDITION_DESCRIPTIONS[condition];
-
-    if (isNumericSet) {
-      return {
-        value: condition,
-        label: CONDITION_SYMBOLS[condition] ?? condition,
-      };
-    }
 
     return {
       value: condition,
