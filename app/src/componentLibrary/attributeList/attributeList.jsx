@@ -18,11 +18,9 @@ import React, { useMemo, useRef } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { FormattedMessage } from 'react-intl';
-import Parser from 'html-react-parser';
 import { notSystemAttributePredicate } from 'common/utils/attributeUtils';
 import { AttributeEditor } from 'componentLibrary/attributeEditor';
-import { Button } from '@reportportal/ui-kit';
-import PlusIcon from 'common/img/plus-button-inline.svg';
+import { Button, PlusIcon } from '@reportportal/ui-kit';
 import { ENTER_KEY_CODE, TAB_KEY_CODE } from 'common/constants/keyCodes';
 import { EditableAttribute } from './editableAttribute';
 import styles from './attributeList.scss';
@@ -50,6 +48,8 @@ export const AttributeList = ({
   getURIValue,
   keyPlaceholder,
   valuePlaceholder,
+  keyLabel,
+  valueLabel,
   newAttrMessage,
   maxLength,
   customClass,
@@ -280,6 +280,8 @@ export const AttributeList = ({
           getURIValue={getURIValue}
           keyPlaceholder={keyPlaceholder}
           valuePlaceholder={valuePlaceholder}
+          keyLabel={keyLabel}
+          valueLabel={valueLabel}
           editorDefaultOpen={editorDefaultOpen}
           autocompleteProps={autocompleteProps}
           allowCustomValues={allowCustomValues}
@@ -349,7 +351,7 @@ export const AttributeList = ({
           <Button
             ref={addNewAttButtonRefCb}
             className={cx(addButtonClassName)}
-            icon={Parser(PlusIcon)}
+            icon={<PlusIcon />}
             onClick={onAddNew}
             variant={'text'}
             data-automation-id={'addAttributeButton'}
@@ -375,6 +377,8 @@ AttributeList.propTypes = {
   getURIValue: PropTypes.func,
   keyPlaceholder: PropTypes.string,
   valuePlaceholder: PropTypes.string,
+  keyLabel: PropTypes.string,
+  valueLabel: PropTypes.string,
   showButton: PropTypes.bool,
   editable: PropTypes.bool,
   attributesListClassname: PropTypes.string,

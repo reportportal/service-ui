@@ -71,11 +71,7 @@ export const FieldRow = ({
     );
 
     if (focusTarget) {
-      focusTarget.focus();
-      // ui-kit Dropdown is div[role=button]; styles are :focus-visible/.opened — click to open
-      if (focusTarget.getAttribute('role') === 'button') {
-        focusTarget.click();
-      }
+      focusTarget.focus({ focusVisible: true } as FocusOptions);
     }
 
     onAutoFocus?.();

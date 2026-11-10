@@ -16,12 +16,12 @@
 
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { defineMessages, useIntl } from 'react-intl';
-import { Button, CloseIcon, Dropdown, PlusIcon } from '@reportportal/ui-kit';
+import { Dropdown } from '@reportportal/ui-kit';
 import { DropdownOptionProps, DropdownOptionType } from '@reportportal/ui-kit/dropdown';
-import { formatAttribute, parseQueryAttributes } from 'common/utils/attributeUtils';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
+import { formatAttribute, parseQueryAttributes } from 'common/utils/attributeUtils';
 import { createClassnames } from 'common/utils';
-import { AttributeEditor } from 'componentLibrary/attributeEditor';
+import { AttributeList } from 'componentLibrary/attributeList';
 import {
   CONDITION_ANY,
   CONDITION_HAS,
@@ -29,7 +29,6 @@ import {
   CONDITION_NOT_HAS,
 } from 'components/filterEntities/constants';
 import { messages as launchFormMessages } from 'pages/inside/common/launchFormFields/messages';
-import { generateUUID } from 'pages/inside/common/launchFormFields/utils';
 import { ConditionOption, FilterEntityCustomProps, FilterEntityValue } from '../../types';
 import styles from './attributesValue.scss';
 
@@ -41,19 +40,18 @@ const menuPortalRoot =
 const DEFAULT_CONDITIONS = [CONDITION_HAS, CONDITION_NOT_HAS, CONDITION_ANY, CONDITION_NOT_ANY];
 
 const messages = defineMessages({
-  condition: {
-    id: 'AttributesValue.condition',
-    defaultMessage: 'Condition:',
+  operator: {
+    id: 'AttributesValue.operator',
+    defaultMessage: 'Operator:',
   },
 });
 
-interface AttributeRow {
-  id: string;
-  // Stable mount value for AttributeEditor — do not replace after create.
-  attribute: { key: string; value: string };
-  key: string;
-  value: string;
-  focusOnMount?: boolean;
+interface FilterAttribute {
+  key?: string;
+  value?: string;
+  edited?: boolean;
+  new?: boolean;
+  system?: boolean;
 }
 
 interface AttributesValueProps {
@@ -70,41 +68,30 @@ interface AttributesValueProps {
   onAutoFocus?: () => void;
 }
 
-type ConditionDropdownOptionType = ConditionOption & DropdownOptionType
+type ConditionDropdownOptionType = ConditionOption & DropdownOptionType;
 
 interface ConditionDropdownOptionProps extends DropdownOptionProps {
   option: ConditionDropdownOptionType;
 }
 
-const createRowsFromValue = (raw?: string): AttributeRow[] => {
+const createAttributesFromValue = (raw?: string): FilterAttribute[] => {
   const parsed = parseQueryAttributes({ value: raw });
 
   if (!Array.isArray(parsed)) {
     return [];
   }
 
-  return parsed.map((item: { key?: string; value?: string }) => {
-    const attribute = { key: item.key || '', value: item.value || '' };
-
-    return {
-      id: generateUUID(),
-      attribute,
-      key: attribute.key,
-      value: attribute.value,
-    };
-  });
+  return parsed.map((item: { key?: string; value?: string }) => ({
+    key: item.key || '',
+    value: item.value || '',
+  }));
 };
 
-const toFilterValue = (rows: AttributeRow[], nextCondition: string): FilterEntityValue => {
-  const attributes = rows
-    .filter((row) => row.key.trim() || row.value.trim())
-    .map(({ key, value }) => ({ key, value }));
-
-  return {
-    value: attributes.map((attribute) => String(formatAttribute(attribute))).join(','),
-    condition: nextCondition,
-  };
-};
+const toFilterValue = (attributes: FilterAttribute[]): string =>
+  attributes
+    .filter((attribute) => !attribute.new && (attribute.key?.trim() || attribute.value?.trim()))
+    .map(({ key, value }) => String(formatAttribute({ key, value })))
+    .join(',');
 
 export const getAttributeConditions = (customProps: FilterEntityCustomProps) =>
   customProps.conditions?.length ? customProps.conditions : DEFAULT_CONDITIONS;
@@ -123,8 +110,11 @@ export const AttributesValue = ({
   onAutoFocus,
 }: AttributesValueProps) => {
   const { formatMessage } = useIntl();
-  const [rows, setRows] = useState<AttributeRow[]>(() => createRowsFromValue(value.value));
-  const blockRef = useRef<HTMLDivElement>(null);
+  const [attributes, setAttributes] = useState<FilterAttribute[]>(() =>
+    createAttributesFromValue(value.value),
+  );
+  const listRef = useRef<HTMLDivElement>(null);
+  const pushedValueRef = useRef(value.value || '');
   const {
     projectKey = '',
     keyURLCreator,
@@ -134,19 +124,23 @@ export const AttributesValue = ({
     canAddSinglePair = false,
   } = customProps;
 
-  const syncFilter = useCallback(
-    (nextRows: AttributeRow[], nextCondition = condition || CONDITION_HAS) => {
-      onChange(toFilterValue(nextRows, nextCondition));
-    },
-    [condition, onChange],
-  );
+  useEffect(() => {
+    const incoming = value.value || '';
+
+    if (incoming === pushedValueRef.current) {
+      return;
+    }
+
+    pushedValueRef.current = incoming;
+    setAttributes(createAttributesFromValue(incoming));
+  }, [value.value]);
 
   useEffect(() => {
     if (!shouldFocus) {
       return;
     }
 
-    const focusTarget = blockRef.current?.querySelector<HTMLElement>(
+    const focusTarget = listRef.current?.querySelector<HTMLElement>(
       'input:not([type="hidden"]), textarea, button, [role="button"][tabindex]:not([tabindex="-1"]), [tabindex]:not([tabindex="-1"])',
     );
 
@@ -172,51 +166,37 @@ export const AttributesValue = ({
     [projectKey, valueURLCreator],
   );
 
-  const hasRows = rows.length > 0;
-  const hideAdd = canAddSinglePair && hasRows;
+  const hasAttributes = attributes.some(
+    (attribute) => !attribute.new && Boolean(attribute.key?.trim() || attribute.value?.trim()),
+  );
 
-  const handleAdd = () => {
-    const attribute = { key: '', value: '' };
-    const nextRows = [
-      ...rows.map((row) => ({ ...row, focusOnMount: false })),
-      { id: generateUUID(), attribute, key: '', value: '', focusOnMount: true },
-    ];
-    setRows(nextRows);
-    syncFilter(nextRows);
-  };
+  const handleAttributesChange = (nextAttributes: FilterAttribute[]) => {
+    setAttributes(nextAttributes);
 
-  const handleRemoveRow = (rowId: string) => {
-    const nextRows = rows.filter((row) => row.id !== rowId);
-    setRows(nextRows);
-    syncFilter(nextRows);
-  };
+    const nextValue = toFilterValue(nextAttributes);
 
-  const handleValuesChange = (rowId: string, nextValue: { key: string; value: string }) => {
-    const current = rows.find((row) => row.id === rowId);
-
-    if (current?.key === nextValue.key && current?.value === nextValue.value) {
+    if (nextValue === (value.value || '')) {
       return;
     }
 
-    const nextRows = rows.map((row) =>
-      row.id === rowId ? { ...row, key: nextValue.key, value: nextValue.value } : row,
-    );
-
-    setRows(nextRows);
-    syncFilter(nextRows);
+    pushedValueRef.current = nextValue;
+    onChange({
+      value: nextValue,
+      condition: condition || CONDITION_HAS,
+    });
   };
 
   return (
-    <div ref={blockRef} className={cx('attributes-block')} title={browserTooltipTitle}>
+    <div className={cx('attributes-block')} title={browserTooltipTitle}>
       <div className={cx('header')}>
-        <p className={cx('title')}>{title}</p>
-        {hasRows && (
-          <div className={cx('condition')}>
-            <span className={cx('condition-label')}>{formatMessage(messages.condition)}</span>
+        <span className={cx('title')}>{title}</span>
+        {hasAttributes && (
+          <div className={cx('operator')}>
+            <span className={cx('operator-label')}>{formatMessage(messages.operator)}</span>
             <Dropdown
-              className={cx('condition-dropdown')}
-              toggleButtonClassName={cx('condition-toggle')}
-              selectListClassName={cx('condition-menu')}
+              className={cx('operator-dropdown')}
+              toggleButtonClassName={cx('operator-toggle')}
+              selectListClassName={cx('operator-menu')}
               options={conditionOptions}
               value={condition || CONDITION_HAS}
               disabled={disabled}
@@ -228,7 +208,7 @@ export const AttributesValue = ({
               renderOption={(renderProps: ConditionDropdownOptionProps) => (
                 <>
                   <span>{renderProps.option.label}</span>
-                  <div className={cx('condition-option-description')}>
+                  <div className={cx('operator-option-description')}>
                     {renderProps.option.description}
                   </div>
                 </>
@@ -239,53 +219,28 @@ export const AttributesValue = ({
         )}
       </div>
 
-      {hasRows && (
-        <div className={cx('rows')}>
-          {rows.map((row) => (
-            <div key={row.id} className={cx('row')}>
-              <div className={cx('editor')}>
-                <AttributeEditor
-                  attribute={row.attribute}
-                  attributes={rows
-                    .filter((item) => item.id !== row.id)
-                    .map(({ key, value: attrValue }) => ({ key, value: attrValue }))}
-                  getURIKey={getURIKey}
-                  getURIValue={getURIValue}
-                  isAttributeKeyRequired={isAttributeKeyRequired}
-                  isAttributeValueRequired={isAttributeValueRequired}
-                  hideActionButtons
-                  focusOnMount={!!row.focusOnMount}
-                  onValuesChange={(nextValue: { key: string; value: string }) =>
-                    handleValuesChange(row.id, nextValue)
-                  }
-                />
-              </div>
-              <Button
-                className={cx('remove')}
-                adjustWidthOn="content"
-                variant="ghost"
-                onClick={() => handleRemoveRow(row.id)}
-                disabled={disabled}
-                aria-label={formatMessage(COMMON_LOCALE_KEYS.REMOVE)}
-              >
-                <CloseIcon />
-              </Button>
-            </div>
-          ))}
-        </div>
-      )}
-
-      {!hideAdd && !disabled && (
-        <Button
-          className={cx('add-attribute')}
-          variant="text"
-          adjustWidthOn="content"
-          icon={<PlusIcon />}
-          onClick={handleAdd}
-        >
-          {formatMessage(launchFormMessages.addAttributes)}
-        </Button>
-      )}
+      <div ref={listRef} className={cx('list')}>
+        <AttributeList
+          attributes={attributes}
+          disabled={disabled}
+          editable
+          showButton
+          customClass=""
+          defaultOpen={false}
+          maxLength={canAddSinglePair ? 1 : Infinity}
+          newAttrMessage={formatMessage(launchFormMessages.addAttributes)}
+          getURIKey={getURIKey}
+          getURIValue={getURIValue}
+          isAttributeKeyRequired={isAttributeKeyRequired}
+          isAttributeValueRequired={isAttributeValueRequired}
+          keyLabel={formatMessage(COMMON_LOCALE_KEYS.KEY)}
+          valueLabel={formatMessage(COMMON_LOCALE_KEYS.VALUE)}
+          onChange={handleAttributesChange}
+          editorAfterList
+          addButtonClassName={cx('add-button')}
+          attributesListClassname={cx('attributes-list')}
+        />
+      </div>
     </div>
   );
 };

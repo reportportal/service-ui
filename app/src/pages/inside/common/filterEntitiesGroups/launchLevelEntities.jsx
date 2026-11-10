@@ -159,6 +159,10 @@ const messages = defineMessages({
     id: 'LaunchLevelEntities.ExecutionTypeTitle',
     defaultMessage: 'Execution type',
   },
+  ExecutionTypePlaceholder: {
+    id: 'LaunchLevelEntities.ExecutionTypePlaceholder',
+    defaultMessage: 'Select execution type',
+  },
   ExecutionTypeAgentic: {
     id: 'LaunchLevelEntities.ExecutionTypeAgenticOption',
     defaultMessage: 'Agentic',
@@ -252,6 +256,7 @@ export class LaunchLevelEntities extends Component {
         active: visibleFilters.includes(ENTITY_LAUNCH_TYPE),
         removable: true,
         customProps: {
+          placeholder: intl.formatMessage(messages.ExecutionTypePlaceholder),
           options: [
             {
               label: intl.formatMessage(messages.ExecutionTypeAutomation),
