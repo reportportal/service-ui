@@ -331,7 +331,7 @@ export const EChart = ({
       };
 
       const handleAreaMouseOut = () => {
-        if (!hoveredSeriesRef || hoveredSeriesRef.current === null) return;
+        if (!hoveredSeriesRef?.current) return;
         hoveredSeriesRef.current = null;
         paintAreas(null);
       };

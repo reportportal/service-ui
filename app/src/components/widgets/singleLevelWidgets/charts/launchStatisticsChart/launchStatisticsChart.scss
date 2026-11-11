@@ -84,14 +84,15 @@ div.tooltip {
     }
   }
 
-  // always-visible scrollbar thumb so it is clear there are more legend items
-  [class*='thumb-vertical'] {
-    opacity: 1 !important;
+  // always-visible scrollbar thumb so it is clear there are more legend items;
+  // the :hover selector outranks ScrollWrapper's `.scroll-component:hover .thumb-vertical`
+  [class*='thumb-vertical'],
+  [class*='scroll-component']:hover [class*='thumb-vertical'] {
+    opacity: 1;
     background-color: var(--rp-ui-base-e-200);
   }
 
   [class*='track-vertical'] {
-    width: 6px !important;
     background-color: var(--rp-ui-base-bg-200);
   }
 }
