@@ -14,8 +14,4 @@
  * limitations under the License.
  */
 
-.modal-content {
-  b {
-    font-weight: var(--rp-ui-base-fw-bold);
-  }
-}
+export { BoldText } from './boldText';

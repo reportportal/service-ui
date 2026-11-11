@@ -14,17 +14,9 @@
  * limitations under the License.
  */
 
-import { ReactNode } from 'react';
-import { useDispatch } from 'react-redux';
 import { useIntl, defineMessages } from 'react-intl';
-import { Modal } from '@reportportal/ui-kit';
-import { hideModalAction } from 'controllers/modal';
-import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
-import { createClassnames } from 'common/utils';
-import { ModalButtonProps } from 'types/common';
-import styles from './deleteWidgetModal.scss';
-
-const cx = createClassnames(styles);
+import { BoldText } from 'components/boldText';
+import { DeleteConfirmationModal } from 'components/deleteConfirmationModal';
 
 const messages = defineMessages({
   title: {
@@ -38,8 +30,6 @@ const messages = defineMessages({
   },
 });
 
-const Bold = (chunks: ReactNode) => <b>{chunks}</b>;
-
 interface DeleteWidgetModalProps {
   data: {
     widget: {
@@ -50,39 +40,16 @@ interface DeleteWidgetModalProps {
 }
 
 export const DeleteWidgetModal = ({ data: { widget, onConfirm } }: DeleteWidgetModalProps) => {
-  const dispatch = useDispatch();
   const { formatMessage } = useIntl();
 
-  const handleConfirm = () => {
-    onConfirm();
-    dispatch(hideModalAction());
-  };
-
-  const okButton: ModalButtonProps = {
-    children: formatMessage(COMMON_LOCALE_KEYS.DELETE),
-    variant: 'danger',
-    onClick: handleConfirm,
-    'data-automation-id': 'submitButton',
-  };
-
-  const cancelButton: ModalButtonProps = {
-    children: formatMessage(COMMON_LOCALE_KEYS.CANCEL),
-    'data-automation-id': 'cancelButton',
-  };
-
   return (
-    <Modal
+    <DeleteConfirmationModal
       title={formatMessage(messages.title)}
-      okButton={okButton}
-      cancelButton={cancelButton}
-      onClose={() => dispatch(hideModalAction())}
-    >
-      <div className={cx('modal-content')}>
-        {formatMessage(messages.description, {
-          name: widget.name,
-          b: Bold,
-        })}
-      </div>
-    </Modal>
+      description={formatMessage(messages.description, {
+        name: widget.name,
+        b: BoldText,
+      })}
+      onConfirm={onConfirm}
+    />
   );
 };
