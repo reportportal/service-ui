@@ -54,10 +54,3 @@ export const COLOR_ALMOST_BLACK = '#3f3f3f'; // same as $COLOR--almost-black / -
 export const COLOR_CHART_AXIS_LINE = '#e1e4e9';
 export const COLOR_CHART_SLIDER_ACCENT = '#00829B';
 export const COLOR_CHART_SLIDER_BG = '#e3e7ed';
-
-// DS 6 default defect group colors (custom subtypes keep the colors configured in the project)
-export const COLOR_CHART_PRODUCT_BUG = '#D32F2F';
-export const COLOR_CHART_AUTOMATION_BUG = '#FFC208';
-export const COLOR_CHART_NO_DEFECT = '#76839B';
-export const COLOR_CHART_TO_INVESTIGATE = '#00829B';
-export const COLOR_CHART_SYSTEM_ISSUE = '#3E7BE6';

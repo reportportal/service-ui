@@ -20,11 +20,11 @@ import {
   COLOR_CHART_PASSED,
   COLOR_CHART_FAILED,
   COLOR_CHART_SKIPPED,
-  COLOR_CHART_PRODUCT_BUG,
-  COLOR_CHART_AUTOMATION_BUG,
-  COLOR_CHART_NO_DEFECT,
-  COLOR_CHART_SYSTEM_ISSUE,
-  COLOR_CHART_TO_INVESTIGATE,
+  COLOR_PRODUCT_BUG,
+  COLOR_AUTOMATION_BUG,
+  COLOR_NO_DEFECT,
+  COLOR_SYSTEM_ISSUE,
+  COLOR_TO_INVESTIGATE,
 } from 'common/constants/colors';
 import { TOTAL_KEY } from './constants';
 
@@ -35,11 +35,11 @@ const STATUS_COLORS = {
 };
 
 const DEFECT_GROUP_COLORS = {
-  product_bug: COLOR_CHART_PRODUCT_BUG,
-  automation_bug: COLOR_CHART_AUTOMATION_BUG,
-  no_defect: COLOR_CHART_NO_DEFECT,
-  system_issue: COLOR_CHART_SYSTEM_ISSUE,
-  to_investigate: COLOR_CHART_TO_INVESTIGATE,
+  product_bug: COLOR_PRODUCT_BUG,
+  automation_bug: COLOR_AUTOMATION_BUG,
+  no_defect: COLOR_NO_DEFECT,
+  system_issue: COLOR_SYSTEM_ISSUE,
+  to_investigate: COLOR_TO_INVESTIGATE,
 };
 
 export const getLaunchStatisticsColor = (itemName, defectTypes) => {
