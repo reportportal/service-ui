@@ -185,12 +185,13 @@ export const FiltersControlV2 = ({
 
   const handleFilterInsert = () => {
     const { filter = null } = formAppearance;
+    const data = getFilterForSubmit(filter);
     fetch(URLS.filters(projectKey), {
       method: 'post',
-      data: getFilterForSubmit(filter),
+      data,
     })
       .then(({ id }: { id: number }) => {
-        handleActiveFilterChange(id, filter);
+        handleActiveFilterChange(id, data);
         dispatch(showSuccessNotification({ message: formatMessage(messages.insertFilterSuccess) }));
       })
       .catch(() => {
