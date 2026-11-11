@@ -45,3 +45,19 @@ export const COLOR_DEEP_RED = '#ee0d0d';
 export const COLOR_DULL_RED = '#f56e6e';
 export const COLOR_DULL_GREEN = '#add8a2';
 export const COLOR_INTERRUPTED = '#ffc64a';
+
+// DS 6 chart tokens (Launch statistics chart)
+export const COLOR_CHART_PASSED = '#3AA76D';
+export const COLOR_CHART_FAILED = '#DC5959';
+export const COLOR_CHART_SKIPPED = '#C1C7D0';
+export const COLOR_ALMOST_BLACK = '#3f3f3f'; // same as $COLOR--almost-black / --rp-ui-base-almost-black
+export const COLOR_CHART_AXIS_LINE = '#e1e4e9';
+export const COLOR_CHART_SLIDER_ACCENT = '#00829B';
+export const COLOR_CHART_SLIDER_BG = '#e3e7ed';
+
+// DS 6 default defect group colors (custom subtypes keep the colors configured in the project)
+export const COLOR_CHART_PRODUCT_BUG = '#D32F2F';
+export const COLOR_CHART_AUTOMATION_BUG = '#FFC208';
+export const COLOR_CHART_NO_DEFECT = '#76839B';
+export const COLOR_CHART_TO_INVESTIGATE = '#00829B';
+export const COLOR_CHART_SYSTEM_ISSUE = '#3E7BE6';

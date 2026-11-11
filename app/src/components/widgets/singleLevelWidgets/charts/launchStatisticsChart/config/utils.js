@@ -14,8 +14,14 @@
  * limitations under the License.
  */
 
-import { normalizeChartData, getItemColor } from 'components/widgets/common/utils';
-import { messages } from 'components/widgets/common/messages';
+import moment from 'moment';
+import classNames from 'classnames/bind';
+import { normalizeChartData } from 'components/widgets/common/utils';
+import { TIMELINE_TOOLTIP_DATE_FORMAT } from '../constants';
+import { getLaunchStatisticsColor } from '../chartColors';
+import styles from '../launchStatisticsChart.scss';
+
+const cx = classNames.bind(styles);
 
 export const isSingleColumnChart = (content, isTimeLine) => {
   const data = normalizeChartData(content.result, isTimeLine);
@@ -35,7 +41,7 @@ export const getConfigData = (
 
   contentFields.forEach((key) => {
     chartData[key] = [key];
-    colors[key] = getItemColor(key, defectTypes);
+    colors[key] = getLaunchStatisticsColor(key, defectTypes);
   });
 
   widgetData
@@ -74,15 +80,18 @@ export const getConfigData = (
 };
 
 export const calculateTooltipParams = (data, color, customProps) => {
-  const { itemsData, formatMessage, defectTypes, isTimeline } = customProps;
-  const { index, id, value } = data[0];
+  const { itemsData, formatMessage, defectTypes, isTimeline, realValues } = customProps;
+  const { index, id } = data[0];
+  // bars may be drawn with a minimum height, so show the real count, not the drawn value
+  const value = realValues?.[id]?.[index] ?? data[0].value;
   const { name, number, startTime, date } = itemsData[index];
 
   return {
-    itemName: isTimeline ? date : `${name} #${number}`,
+    itemName: isTimeline ? moment(date).format(TIMELINE_TOOLTIP_DATE_FORMAT) : `${name} #${number}`,
     startTime: isTimeline ? null : new Date(startTime).getTime(),
-    itemCases: `${value} ${formatMessage(messages.cases)}`,
+    itemCases: String(value), // string so a zero count is still rendered by the tooltip
     color: color(id),
+    wrapperClassName: cx('tooltip'),
     issueStatNameProps: { itemName: id, defectTypes, formatMessage },
   };
 };

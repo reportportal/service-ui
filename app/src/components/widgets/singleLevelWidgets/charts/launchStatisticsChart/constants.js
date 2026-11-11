@@ -15,3 +15,13 @@
  */
 
 export const TOTAL_KEY = 'total';
+export const TIMELINE_AXIS_DATE_FORMAT = 'DD.MM';
+export const TIMELINE_TOOLTIP_DATE_FORMAT = 'DD.MM.YYYY';
+
+export const CHART_FONT_FAMILY = 'Roboto, sans-serif';
+
+// 3 legend rows: (18px line-height + 8px margin) * 3
+export const LEGEND_MAX_HEIGHT = 78;
+export const ZOOM_CORNER_RADIUS = 2; // zoom slider selection corners
+export const ZOOM_SHADOW_BOTTOM_GAP = 8; // gap between the slider bottom and the mini chart
+export const ZOOM_SHADOW_SMOOTH = 0.4; // curve smoothing of the mini chart (0 = sharp polyline)

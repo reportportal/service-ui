@@ -29,6 +29,7 @@ import {
 } from 'controllers/testItem';
 import { PASSED, FAILED, SKIPPED, INTERRUPTED } from 'common/constants/testStatuses';
 import { ALL } from 'common/constants/reservedFilterIds';
+import { COLOR_CHART_SLIDER_ACCENT } from 'common/constants/colors';
 import { EChart } from 'components/widgets/common/echarts';
 import {
   getChartDefaultProps,
@@ -39,13 +40,68 @@ import {
 import { getMillisecondsWoTimezone } from 'common/utils/timeDateUtils';
 import { isSingleColumnChart } from './config/utils';
 import { getOption } from './config/getOption';
-import { TOTAL_KEY } from './constants';
+import {
+  TOTAL_KEY,
+  LEGEND_MAX_HEIGHT,
+  ZOOM_CORNER_RADIUS,
+  ZOOM_SHADOW_BOTTOM_GAP,
+  ZOOM_SHADOW_SMOOTH,
+} from './constants';
+import { getLaunchStatisticsColor } from './chartColors';
 import styles from './launchStatisticsChart.scss';
 
 const cx = classNames.bind(styles);
 
 const getLinkParametersStatuses = ({ defectType }) =>
   defectType === TOTAL_KEY ? [PASSED, FAILED, SKIPPED, INTERRUPTED] : [defectType.toUpperCase()];
+
+// ECharts has no options for these zoom slider details, so its elements are adjusted after render:
+// - selection (filler): teal outline + small radius
+// - mini chart (data shadow): smoothed curve, lifted a few px above the slider bottom
+// - frame: only top and bottom lines (no side borders)
+// Values are set only when they differ, otherwise each change would trigger another render.
+const styleZoomSlider = (view) => {
+  const { filler, dataShadowSegs = [], sliderGroup } = view._displayables || {};
+  const [width, height] = view._size || [];
+  if (!filler || !sliderGroup || !height) return;
+
+  if (filler.shape.r !== ZOOM_CORNER_RADIUS) filler.setShape({ r: ZOOM_CORNER_RADIUS });
+  if (filler.style.stroke !== COLOR_CHART_SLIDER_ACCENT) {
+    filler.setStyle({ stroke: COLOR_CHART_SLIDER_ACCENT, lineWidth: 1 });
+  }
+
+  const scaleY = (height - ZOOM_SHADOW_BOTTOM_GAP) / height;
+  dataShadowSegs.forEach((seg) => {
+    // the slider group is flipped vertically, so a positive y moves the shadow up
+    if (seg.y !== ZOOM_SHADOW_BOTTOM_GAP || seg.scaleY !== scaleY) {
+      seg.attr({ y: ZOOM_SHADOW_BOTTOM_GAP, scaleY });
+    }
+    seg.eachChild((shape) => {
+      if (shape.shape.smooth !== ZOOM_SHADOW_SMOOTH) shape.setShape({ smooth: ZOOM_SHADOW_SMOOTH });
+    });
+  });
+
+  sliderGroup.eachChild((el) => {
+    const isFrame =
+      el !== filler &&
+      el.type === 'rect' &&
+      el.silent &&
+      el.shape.width === width &&
+      el.style.stroke;
+    // dash pattern along the rect path: top drawn, right side skipped, bottom drawn, left side skipped
+    if (isFrame && !el.style.lineDash) el.setStyle({ lineDash: [width, height, width, height] });
+  });
+};
+
+const applyZoomSliderStyles = (chart) => {
+  if (!chart || chart.zoomSliderStyled) return;
+  chart.zoomSliderStyled = true;
+  const apply = () =>
+    (chart._componentsViews || []).forEach((view) => view && styleZoomSlider(view));
+  chart.on('rendered', apply);
+  chart.on('finished', apply);
+  apply();
+};
 
 export const LaunchStatisticsChart = ({
   widget,
@@ -76,8 +132,9 @@ export const LaunchStatisticsChart = ({
     [widget.content, isTimeline],
   );
 
-  const onChartCreated = useCallback((_node, _chart, customData) => {
+  const onChartCreated = useCallback((_node, chart, customData) => {
     chartDataRef.current = customData;
+    applyZoomSliderStyles(chart);
   }, []);
 
   const launchModeClickHandler = useCallback(
@@ -132,7 +189,15 @@ export const LaunchStatisticsChart = ({
 
       dispatch({ ...link, ...defaultParams });
     },
-    [defectTypes, dispatch, getDefectLink, getStatisticsLink, slugs, widget.appliedFilters, widget.contentParameters],
+    [
+      defectTypes,
+      dispatch,
+      getDefectLink,
+      getStatisticsLink,
+      slugs,
+      widget.appliedFilters,
+      widget.contentParameters,
+    ],
   );
 
   const onChartClick = useCallback(
@@ -173,6 +238,12 @@ export const LaunchStatisticsChart = ({
       onChangeLegend,
       showLegend: true,
       uncheckedLegendItems,
+      legendProps: {
+        className: cx('legend'),
+        getColor: getLaunchStatisticsColor,
+        maxHeight: LEGEND_MAX_HEIGHT,
+        alwaysShowScroll: true,
+      },
     }),
     [onChangeLegend, uncheckedLegendItems],
   );

@@ -105,9 +105,9 @@ export const EChart = ({
     if (optionProp) {
       return {
         option: mergeOption(optionProp),
-        customData: {} as EChartCustomData,
+        customData: {},
         legendItems: [] as string[],
-        colors: {} as Record<string, string>,
+        colors: {},
       };
     }
 
@@ -306,29 +306,34 @@ export const EChart = ({
     };
 
     if (isAreaMode) {
-      const areaCount = seriesList.length;
+      // Track the hovered area (used by the tooltip) and lighten only that area. Every series is sent
+      // with its id AND color, otherwise ECharts resets the colors to the same value.
+      const colors = ((customDataRef.current as Record<string, unknown>).colors ?? {}) as Record<
+        string,
+        string
+      >;
+      const paintAreas = (hoveredId: string | null) =>
+        chart.setOption({
+          series: seriesList.map((s) => {
+            const id = s.id || s.name;
+            return {
+              id,
+              areaStyle: { color: colors[id], opacity: hoveredId === id ? 0.75 : 1 },
+            };
+          }),
+        });
 
-      const handleAreaMouseOver = (params: { seriesIndex?: number; seriesId?: string; seriesName?: string }) => {
-        const { seriesIndex, seriesId, seriesName } = params;
-        if (hoveredSeriesRef) {
-          hoveredSeriesRef.current = seriesId || seriesName || null;
-        }
-        if (seriesIndex !== undefined) {
-          chart.setOption({
-            series: Array.from({ length: areaCount }, (_, i) => ({
-              areaStyle: { opacity: i === seriesIndex ? 1 : 0.75 },
-            })),
-          });
-        }
+      const handleAreaMouseOver = (params: { seriesId?: string; seriesName?: string }) => {
+        const id = params.seriesId || params.seriesName || null;
+        if (!hoveredSeriesRef || hoveredSeriesRef.current === id) return;
+        hoveredSeriesRef.current = id;
+        paintAreas(id);
       };
 
       const handleAreaMouseOut = () => {
-        if (hoveredSeriesRef) {
-          hoveredSeriesRef.current = null;
-        }
-        chart.setOption({
-          series: Array.from({ length: areaCount }, () => ({ areaStyle: { opacity: 0.75 } })),
-        });
+        if (!hoveredSeriesRef || hoveredSeriesRef.current === null) return;
+        hoveredSeriesRef.current = null;
+        paintAreas(null);
       };
 
       chart.on('mouseover', handleAreaMouseOver);

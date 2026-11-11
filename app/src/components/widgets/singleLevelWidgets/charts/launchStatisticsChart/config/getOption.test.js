@@ -16,6 +16,7 @@
 
 import { MODES_VALUES, CHART_MODES } from 'common/constants/chartModes';
 import { getOption } from './getOption';
+import { calculateTooltipParams } from './utils';
 import {
   CONTENT_FIELDS,
   DEFECT_TYPES,
@@ -65,7 +66,7 @@ describe('launchStatisticsChart getOption', () => {
     expect(option.series[0]).toMatchObject({
       type: 'line',
       stack: 'total',
-      areaStyle: { opacity: 0.75 },
+      areaStyle: { opacity: 1 },
       lineStyle: { width: 0 },
       symbol: 'none',
       smooth: true,
@@ -101,26 +102,52 @@ describe('launchStatisticsChart getOption', () => {
     expect(option.dataZoom).toBeDefined();
     expect(option.dataZoom).toHaveLength(2);
     expect(option.dataZoom[0]).toMatchObject({ type: 'inside' });
-    expect(option.dataZoom[1]).toMatchObject({ type: 'slider', height: 30 });
-    expect(option.grid.bottom).toBe(80);
+    expect(option.dataZoom[1]).toMatchObject({ type: 'slider', height: 40 });
+    expect(option.grid.bottom).toBe(85);
   });
 
   test('zoom disabled — no dataZoom', () => {
-    const option = getOption({ content: sampleLaunchContent, ...BASE_PARAMS, isZoomEnabled: false });
+    const option = getOption({
+      content: sampleLaunchContent,
+      ...BASE_PARAMS,
+      isZoomEnabled: false,
+    });
 
     expect(option.dataZoom).toBeUndefined();
     expect(option.grid.bottom).toBe(40);
   });
 
-  test('timeline mode: categories include day name and date', () => {
+  test('timeline mode: categories use DD.MM', () => {
     const option = getOption({
       content: sampleTimelineContent,
       ...BASE_PARAMS,
       isTimeline: true,
     });
 
-    expect(option.xAxis.data[0]).toMatch(/^[A-Z][a-z]{2}, 2021-01-01$/);
+    expect(option.xAxis.data[0]).toBe('01.01');
     expect(option.customData.itemsData[0]).toMatchObject({ date: '2021-01-01' });
+  });
+
+  test('tooltip params: "<count>" without cases suffix; timeline header is DD.MM.YYYY', () => {
+    const timeline = getOption({
+      content: sampleTimelineContent,
+      ...BASE_PARAMS,
+      isTimeline: true,
+    });
+    const params = calculateTooltipParams(
+      [{ index: 0, id: CONTENT_FIELDS[0], value: 7 }],
+      () => '#000',
+      {
+        itemsData: timeline.customData.itemsData,
+        formatMessage,
+        defectTypes: DEFECT_TYPES,
+        isTimeline: true,
+      },
+    );
+
+    expect(params.itemName).toBe('01.01.2021');
+    expect(params.itemCases).toBe('7');
+    expect(params.startTime).toBeNull();
   });
 
   test('single column area: falls back to bar series (ECharts cannot fill area for one point)', () => {
@@ -139,9 +166,7 @@ describe('launchStatisticsChart getOption', () => {
     const option = getOption({ content: sampleLaunchContent, ...BASE_PARAMS });
 
     expect(option.customData).toMatchObject({
-      itemsData: expect.arrayContaining([
-        expect.objectContaining({ id: 'launch-1', number: '1' }),
-      ]),
+      itemsData: expect.arrayContaining([expect.objectContaining({ id: 'launch-1', number: '1' })]),
       legendItems: expect.any(Array),
       colors: expect.any(Object),
     });
