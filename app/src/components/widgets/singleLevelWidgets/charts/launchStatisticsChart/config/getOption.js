@@ -58,18 +58,20 @@ const BAR_MIN_SEGMENT_SHARE = 0.04;
 const BAR_TINY_BASE = 0.2; // share of the threshold that the smallest non-zero value is drawn at
 
 // Round only the top corners of the topmost non-zero segment of each stack; inner joins stay square.
-const withTopRounding = (itemNames, dataByName, isPreview) => {
+// Series hidden via the legend are ignored, so the top visible segment is the rounded one.
+const withTopRounding = (itemNames, dataByName, isPreview, hiddenItems = []) => {
+  const visibleNames = itemNames.filter((name) => !hiddenItems.includes(name));
   const count = itemNames.length ? dataByName[itemNames[0]].length : 0;
   const maxTotal = Math.max(
     0,
     ...Array.from({ length: count }, (_, index) =>
-      itemNames.reduce((sum, name) => sum + (dataByName[name][index] || 0), 0),
+      visibleNames.reduce((sum, name) => sum + (dataByName[name][index] || 0), 0),
     ),
   );
   const minSegment = maxTotal * BAR_MIN_SEGMENT_SHARE;
   const topSeriesByIndex = Array.from({ length: count }, (_, index) => {
-    for (let i = itemNames.length - 1; i >= 0; i -= 1) {
-      if (dataByName[itemNames[i]][index] > 0) return itemNames[i];
+    for (let i = visibleNames.length - 1; i >= 0; i -= 1) {
+      if (dataByName[visibleNames[i]][index] > 0) return visibleNames[i];
     }
     return null;
   });
@@ -171,16 +173,28 @@ const buildDataZoom = () => [
   },
 ];
 
-const buildSeries = ({ isActiveAreaView, isPreview, itemNames, dataByName, colors }) =>
+const buildSeries = ({
+  isActiveAreaView,
+  isPreview,
+  itemNames,
+  dataByName,
+  colors,
+  hiddenItems,
+}) =>
   isActiveAreaView
     ? buildAreaSeries(itemNames, dataByName, colors, isPreview)
-    : createBarSeries(itemNames, withTopRounding(itemNames, dataByName, isPreview), colors, {
-        silent: isPreview,
-        stack: 'total',
-        barWidth: '60%',
-        barCategoryGap: '40%',
-        itemStyle: isPreview ? BAR_SEGMENT_STYLE_PREVIEW : BAR_SEGMENT_STYLE,
-      }).map((series) => ({
+    : createBarSeries(
+        itemNames,
+        withTopRounding(itemNames, dataByName, isPreview, hiddenItems),
+        colors,
+        {
+          silent: isPreview,
+          stack: 'total',
+          barWidth: '60%',
+          barCategoryGap: '40%',
+          itemStyle: isPreview ? BAR_SEGMENT_STYLE_PREVIEW : BAR_SEGMENT_STYLE,
+        },
+      ).map((series) => ({
         ...series,
         // hover only lightens the hovered segment (no size / border / shape change)
         emphasis: isPreview
@@ -216,6 +230,31 @@ const buildTooltip = ({ isActiveAreaView, isPreview, hoveredSeriesRef, tooltipDa
   };
 };
 
+export const getBarSeriesData = ({
+  content,
+  defectTypes,
+  orderedContentFields,
+  contentFields,
+  isTimeline,
+  isPreview,
+  hiddenItems,
+}) => {
+  const { itemNames, chartDataOrdered } = getConfigData(content, {
+    defectTypes,
+    orderedContentFields,
+    contentFields,
+    isTimeline,
+  });
+  const barData = withTopRounding(
+    itemNames,
+    buildDataByName(chartDataOrdered),
+    isPreview,
+    hiddenItems,
+  );
+
+  return itemNames.map((name) => ({ id: name, data: barData[name] }));
+};
+
 export const getOption = ({
   content,
   isPreview,
@@ -228,6 +267,7 @@ export const getOption = ({
   orderedContentFields,
   contentFields,
   isSingleColumn,
+  hiddenItems = [],
 }) => {
   const { itemNames, itemsData, colors, chartDataOrdered } = getConfigData(content, {
     defectTypes,
@@ -285,7 +325,14 @@ export const getOption = ({
     }),
     ...(withZoom ? { dataZoom: buildDataZoom() } : {}),
     legend: { show: false },
-    series: buildSeries({ isActiveAreaView, isPreview, itemNames, dataByName, colors }),
+    series: buildSeries({
+      isActiveAreaView,
+      isPreview,
+      itemNames,
+      dataByName,
+      colors,
+      hiddenItems,
+    }),
     customData: {
       itemsData,
       colors,

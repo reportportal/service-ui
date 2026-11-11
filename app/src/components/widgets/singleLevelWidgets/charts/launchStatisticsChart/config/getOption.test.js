@@ -15,11 +15,13 @@
  */
 
 import { MODES_VALUES, CHART_MODES } from 'common/constants/chartModes';
-import { getOption } from './getOption';
+import { getOption, getBarSeriesData } from './getOption';
 import { calculateTooltipParams } from './utils';
 import {
   CONTENT_FIELDS,
   DEFECT_TYPES,
+  FAILED_KEY,
+  SKIPPED_KEY,
   sampleLaunchContent,
   sampleTimelineContent,
 } from './fixtures/sampleContent';
@@ -54,6 +56,24 @@ describe('launchStatisticsChart getOption', () => {
     expect(option.tooltip.trigger).toBe('item');
     expect(typeof option.tooltip.formatter).toBe('function');
     expect(option.customData.legendItems).toHaveLength(3);
+  });
+
+  test('bar mode: only the top visible segment is rounded, hidden series are skipped', () => {
+    const isRounded = (point) => Boolean(point?.itemStyle?.borderRadius);
+    const [, failed, skipped] = getOption({ content: sampleLaunchContent, ...BASE_PARAMS }).series;
+
+    expect(skipped.data.every(isRounded)).toBe(true);
+    expect(failed.data.some(isRounded)).toBe(false);
+
+    const withHiddenTop = getBarSeriesData({
+      content: sampleLaunchContent,
+      ...BASE_PARAMS,
+      hiddenItems: [SKIPPED_KEY],
+    });
+    const byId = Object.fromEntries(withHiddenTop.map(({ id, data }) => [id, data]));
+
+    expect(byId[FAILED_KEY].every(isRounded)).toBe(true);
+    expect(byId[SKIPPED_KEY].some(isRounded)).toBe(false);
   });
 
   test('area mode: stacked lines with areaStyle, no symbols, interactive line events', () => {

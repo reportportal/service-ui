@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { useCallback, useMemo, useRef } from 'react';
+import { useCallback, useEffect, useMemo, useRef } from 'react';
 import PropTypes from 'prop-types';
 import { useIntl } from 'react-intl';
 import { useDispatch, useSelector } from 'react-redux';
@@ -39,7 +39,7 @@ import {
 } from 'components/widgets/common/utils';
 import { getMillisecondsWoTimezone } from 'common/utils/timeDateUtils';
 import { isSingleColumnChart } from './config/utils';
-import { getOption } from './config/getOption';
+import { getOption, getBarSeriesData } from './config/getOption';
 import {
   TOTAL_KEY,
   LEGEND_MAX_HEIGHT,
@@ -121,6 +121,7 @@ export const LaunchStatisticsChart = ({
   const getDefectLink = useSelector(defectLinkSelector);
   const getStatisticsLink = useSelector(statisticsLinkSelector);
   const chartDataRef = useRef({ itemsData: [] });
+  const chartRef = useRef(null);
 
   const { widgetOptions = {}, contentFields = [] } = widget.contentParameters || {};
   const isTimeline = widgetOptions.timeline === MODES_VALUES[CHART_MODES.TIMELINE_MODE];
@@ -134,8 +135,43 @@ export const LaunchStatisticsChart = ({
 
   const onChartCreated = useCallback((_node, chart, customData) => {
     chartDataRef.current = customData;
+    chartRef.current = chart;
     applyZoomSliderStyles(chart);
   }, []);
+
+  const isBarView = widgetViewMode !== MODES_VALUES[CHART_MODES.AREA_VIEW] || isSingleColumn;
+
+  // Hiding a series via the legend doesn't rebuild the chart, so the bar top rounding is
+  // recalculated for the visible series here (updated in place, zoom is kept).
+  useEffect(() => {
+    const chart = chartRef.current;
+    if (!chart || isPreview || !isBarView) return undefined;
+
+    const onLegendChange = ({ selected }) => {
+      chart.setOption({
+        series: getBarSeriesData({
+          content: widget.content,
+          defectTypes,
+          orderedContentFields,
+          contentFields,
+          isTimeline,
+          isPreview,
+          hiddenItems: Object.keys(selected).filter((name) => !selected[name]),
+        }),
+      });
+    };
+
+    chart.on('legendselectchanged', onLegendChange);
+    return () => chart.off('legendselectchanged', onLegendChange);
+  }, [
+    isPreview,
+    isBarView,
+    widget.content,
+    defectTypes,
+    orderedContentFields,
+    contentFields,
+    isTimeline,
+  ]);
 
   const launchModeClickHandler = useCallback(
     (data) => {
@@ -218,6 +254,7 @@ export const LaunchStatisticsChart = ({
       contentFields,
       isSingleColumn,
       onChartClick,
+      hiddenItems: uncheckedLegendItems,
     }),
     [
       formatMessage,
@@ -230,6 +267,7 @@ export const LaunchStatisticsChart = ({
       contentFields,
       isSingleColumn,
       onChartClick,
+      uncheckedLegendItems,
     ],
   );
 
