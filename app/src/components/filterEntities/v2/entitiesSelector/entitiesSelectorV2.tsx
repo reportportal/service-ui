@@ -196,6 +196,7 @@ export const EntitiesSelectorV2 = ({ entities, onChange }: EntitiesSelectorV2Pro
       placement="bottom-start"
       fallbackPlacements={['top-start', 'bottom-start']}
       isCentered={false}
+      strategy="fixed"
       isOpened={isOpened}
       setIsOpened={handleOpenChange}
       shouldUsePortal

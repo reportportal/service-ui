@@ -14,21 +14,14 @@
  * limitations under the License.
  */
 
-import { ReactNode } from 'react';
 import { useDispatch } from 'react-redux';
 import { useIntl, defineMessages } from 'react-intl';
 import { useTracking } from 'react-tracking';
-import { Modal } from '@reportportal/ui-kit';
-import { hideModalAction } from 'controllers/modal';
 import { deleteDashboardAction } from 'controllers/dashboard';
-import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
-import { createClassnames } from 'common/utils';
-import { ModalButtonProps } from 'types/common';
+import { BoldText } from 'components/boldText';
+import { DeleteConfirmationModal } from 'components/deleteConfirmationModal';
 import { DASHBOARD_EVENTS } from 'analyticsEvents/dashboardsPageEvents';
 import { DashboardItem } from '../../types';
-import styles from './deleteDashboardModal.scss';
-
-const cx = createClassnames(styles);
 
 const messages = defineMessages({
   title: {
@@ -42,8 +35,6 @@ const messages = defineMessages({
   },
 });
 
-const Bold = (chunks: ReactNode) => <b>{chunks}</b>;
-
 interface DeleteDashboardModalProps {
   dashboardItem: DashboardItem;
 }
@@ -56,34 +47,16 @@ export const DeleteDashboardModal = ({ dashboardItem }: DeleteDashboardModalProp
   const handleConfirm = () => {
     trackEvent(DASHBOARD_EVENTS.clickOnButtonDeleteInModalDeleteDashboard(dashboardItem.id));
     dispatch(deleteDashboardAction(dashboardItem));
-    dispatch(hideModalAction());
-  };
-
-  const okButton: ModalButtonProps = {
-    children: formatMessage(COMMON_LOCALE_KEYS.DELETE),
-    variant: 'danger',
-    onClick: handleConfirm,
-    'data-automation-id': 'submitButton',
-  };
-
-  const cancelButton: ModalButtonProps = {
-    children: formatMessage(COMMON_LOCALE_KEYS.CANCEL),
-    'data-automation-id': 'cancelButton',
   };
 
   return (
-    <Modal
+    <DeleteConfirmationModal
       title={formatMessage(messages.title)}
-      okButton={okButton}
-      cancelButton={cancelButton}
-      onClose={() => dispatch(hideModalAction())}
-    >
-      <div className={cx('modal-content')}>
-        {formatMessage(messages.description, {
-          dashboardName: dashboardItem.name,
-          b: Bold,
-        })}
-      </div>
-    </Modal>
+      description={formatMessage(messages.description, {
+        dashboardName: dashboardItem.name,
+        b: BoldText,
+      })}
+      onConfirm={handleConfirm}
+    />
   );
 };

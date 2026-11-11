@@ -1,5 +1,5 @@
 /*!
- * Copyright 2019 EPAM Systems
+ * Copyright 2026 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,31 +15,24 @@
  */
 
 .edit-widget-modal {
-  width: 800px;
-  margin-left: -400px;
+  width: 94vw;
+  max-width: 1024px;
+  height: 90vh;
+  display: flex;
+  flex-direction: column;
+
+  > div[class*='modal-content'] {
+    flex: 1;
+  }
+
+  &.without-footer > div[class*='modal-content'] {
+    padding-bottom: 0;
+  }
 }
 
-.edit-widget-modal-content {
-  position: relative;
-  top: -10px;
+.footer {
   display: flex;
-  flex-grow: 1;
+  justify-content: space-between;
   width: 100%;
-}
-
-.confirmation-warning-wrapper {
-  max-width: 260px;
-  bottom: 10px;
-  left: 20px;
-}
-
-.locked-widget-hint {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-family: $FONT-REGULAR;
-  font-size: 13px;
-  line-height: 18px;
-  color: $COLOR--charcoal-grey;
-  text-transform: none;
+  margin-top: 16px;
 }

@@ -45,6 +45,8 @@ import { baseEventParametersShape, provideEcGA } from 'components/main/analytics
 import { getEcWidget } from 'components/main/analytics/events/common/widgetPages/utils';
 import { widgetTypesMessages } from 'pages/inside/dashboardItemPage/modals/common/messages';
 import { isWidgetDataAvailable } from '../../modals/common/utils';
+import { EditWidgetModal } from '../../modals/editWidgetModal';
+import { DeleteWidgetModal } from '../../modals/deleteWidgetModal';
 import { WidgetHeader } from './widgetHeader';
 import { WidgetStateMessage } from './widgetStateMessage';
 import styles from './widget.scss';
@@ -362,15 +364,17 @@ export class SimpleWidget extends Component {
   };
 
   showEditWidgetModal = () => {
-    const modalId = 'editWidgetModal';
     this.props.tracking.trackEvent(WIDGETS_EVENTS.CLICK_ON_EDIT_WIDGET_ICON);
     this.props.showModalAction({
-      id: modalId,
-      data: {
-        widget: this.state.widget,
-        onConfirm: (isForceUpdateNeeded) =>
-          this.fetchWidget(isForceUpdateNeeded && { refresh: true }),
-      },
+      component: (
+        <EditWidgetModal
+          data={{
+            widget: this.state.widget,
+            onConfirm: (isForceUpdateNeeded) =>
+              this.fetchWidget(isForceUpdateNeeded && { refresh: true }),
+          }}
+        />
+      ),
     });
   };
 
@@ -422,11 +426,7 @@ export class SimpleWidget extends Component {
       }
     };
     this.props.showModalAction({
-      id: 'deleteWidgetModal',
-      data: {
-        widget: this.state.widget,
-        onConfirm,
-      },
+      component: <DeleteWidgetModal data={{ widget: this.state.widget, onConfirm }} />,
     });
   };
 
