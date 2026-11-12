@@ -566,8 +566,7 @@ const adaptSection = (value: unknown): ReducedPipelineSection | null => {
     !title ||
     (role !== 'RESULT' && role !== 'DETAILS') ||
     !columns ||
-    !Array.isArray(rawRows) ||
-    rawRows.length > 200
+    !Array.isArray(rawRows)
   ) {
     return null;
   }

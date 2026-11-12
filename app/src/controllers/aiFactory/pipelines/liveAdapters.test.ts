@@ -228,6 +228,73 @@ describe('live pipeline catalog adapters', () => {
     });
   });
 
+  describe('LP3 large report sections', () => {
+    const createRows = (count: number) =>
+      Array.from({ length: count }, (_, index) => ({
+        key: `event-${index}`,
+        cells: { action: `Event ${index}` },
+        details: [{ heading: 'Event', items: [`Details ${index}`] }],
+      }));
+
+    const detailWithRows = (rows: unknown, role: 'DETAILS' | 'RESULT' = 'DETAILS') => ({
+      id: 34,
+      pipelineId: 8,
+      iterationNumber: 3,
+      stages: [
+        {
+          id: 110,
+          stageKey: 'test-case-review',
+          sequence: 2,
+          sections: [
+            {
+              key: 'transcript',
+              title: 'Transcript',
+              role,
+              columns: [{ key: 'action', label: 'Action' }],
+              rows,
+            },
+          ],
+        },
+      ],
+    });
+
+    test.each(['DETAILS', 'RESULT'] as const)(
+      'preserves every row of a large %s section',
+      (role) => {
+        const rows = createRows(234);
+        const detail = adaptLivePipelineIterationDetail(detailWithRows(rows, role), 8, 34);
+
+        expect(detail.stages[0].sections?.[0].rows).toEqual(rows);
+      },
+    );
+
+    test('accepts transcripts beyond one thousand rows without truncation', () => {
+      const rows = createRows(1001);
+      const detail = adaptLivePipelineIterationDetail(detailWithRows(rows), 8, 34);
+
+      expect(detail.stages[0].sections?.[0].rows).toEqual(rows);
+    });
+
+    test('rejects duplicate row keys after the former 200-row boundary', () => {
+      const rows = createRows(234);
+      rows[233].key = rows[0].key;
+
+      expect(() => adaptLivePipelineIterationDetail(detailWithRows(rows), 8, 34)).toThrow(
+        'Invalid pipeline iteration detail response',
+      );
+    });
+
+    test('rejects malformed cells after the former 200-row boundary', () => {
+      const rows = createRows(234).map((row, index) =>
+        index === 233 ? { ...row, cells: { action: true } } : row,
+      );
+
+      expect(() => adaptLivePipelineIterationDetail(detailWithRows(rows), 8, 34)).toThrow(
+        'Invalid pipeline iteration detail response',
+      );
+    });
+  });
+
   describe('LP3 report text limits', () => {
     const detailWith = (
       cellValue: string,
