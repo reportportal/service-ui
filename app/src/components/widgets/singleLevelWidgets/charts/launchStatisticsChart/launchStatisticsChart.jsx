@@ -150,7 +150,7 @@ export const LaunchStatisticsChart = ({
     const onLegendChange = ({ selected }) => {
       chart.setOption({
         series: getBarSeriesData({
-          content: widget.content,
+          content: widget.content?.result, // same input EChart passes to getOption
           defectTypes,
           orderedContentFields,
           contentFields,
