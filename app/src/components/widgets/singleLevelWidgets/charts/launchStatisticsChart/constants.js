@@ -18,7 +18,8 @@ export const TOTAL_KEY = 'total';
 export const TIMELINE_AXIS_DATE_FORMAT = 'DD.MM';
 export const TIMELINE_TOOLTIP_DATE_FORMAT = 'DD.MM.YYYY';
 
-export const CHART_FONT_FAMILY = 'Roboto, sans-serif';
+// same stack as --rp-ui-base-font-family (canvas text cannot read CSS variables)
+export const CHART_FONT_FAMILY = 'Roboto, Arial, Helvetica, sans-serif';
 
 // 3 legend rows: (18px line-height + 8px margin) * 3
 export const LEGEND_MAX_HEIGHT = 78;

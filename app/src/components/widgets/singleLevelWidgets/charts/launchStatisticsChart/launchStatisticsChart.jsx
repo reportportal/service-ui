@@ -29,7 +29,6 @@ import {
 } from 'controllers/testItem';
 import { PASSED, FAILED, SKIPPED, INTERRUPTED } from 'common/constants/testStatuses';
 import { ALL } from 'common/constants/reservedFilterIds';
-import { COLOR_CHART_SLIDER_ACCENT } from 'common/constants/colors';
 import { EChart } from 'components/widgets/common/echarts';
 import {
   getChartDefaultProps,
@@ -40,68 +39,15 @@ import {
 import { getMillisecondsWoTimezone } from 'common/utils/timeDateUtils';
 import { isSingleColumnChart } from './config/utils';
 import { getOption, getBarSeriesData } from './config/getOption';
-import {
-  TOTAL_KEY,
-  LEGEND_MAX_HEIGHT,
-  ZOOM_CORNER_RADIUS,
-  ZOOM_SHADOW_BOTTOM_GAP,
-  ZOOM_SHADOW_SMOOTH,
-} from './constants';
+import { TOTAL_KEY, LEGEND_MAX_HEIGHT } from './constants';
 import { getLaunchStatisticsColor } from './chartColors';
+import { applyZoomSliderStyles } from './zoomSliderStyles';
 import styles from './launchStatisticsChart.scss';
 
 const cx = classNames.bind(styles);
 
 const getLinkParametersStatuses = ({ defectType }) =>
   defectType === TOTAL_KEY ? [PASSED, FAILED, SKIPPED, INTERRUPTED] : [defectType.toUpperCase()];
-
-// ECharts has no options for these zoom slider details, so its elements are adjusted after render:
-// - selection (filler): teal outline + small radius
-// - mini chart (data shadow): smoothed curve, lifted a few px above the slider bottom
-// - frame: only top and bottom lines (no side borders)
-// Values are set only when they differ, otherwise each change would trigger another render.
-const styleZoomSlider = (view) => {
-  const { filler, dataShadowSegs = [], sliderGroup } = view._displayables || {};
-  const [width, height] = view._size || [];
-  if (!filler || !sliderGroup || !height) return;
-
-  if (filler.shape.r !== ZOOM_CORNER_RADIUS) filler.setShape({ r: ZOOM_CORNER_RADIUS });
-  if (filler.style.stroke !== COLOR_CHART_SLIDER_ACCENT) {
-    filler.setStyle({ stroke: COLOR_CHART_SLIDER_ACCENT, lineWidth: 1 });
-  }
-
-  const scaleY = (height - ZOOM_SHADOW_BOTTOM_GAP) / height;
-  dataShadowSegs.forEach((seg) => {
-    // the slider group is flipped vertically, so a positive y moves the shadow up
-    if (seg.y !== ZOOM_SHADOW_BOTTOM_GAP || seg.scaleY !== scaleY) {
-      seg.attr({ y: ZOOM_SHADOW_BOTTOM_GAP, scaleY });
-    }
-    seg.eachChild((shape) => {
-      if (shape.shape.smooth !== ZOOM_SHADOW_SMOOTH) shape.setShape({ smooth: ZOOM_SHADOW_SMOOTH });
-    });
-  });
-
-  sliderGroup.eachChild((el) => {
-    const isFrame =
-      el !== filler &&
-      el.type === 'rect' &&
-      el.silent &&
-      el.shape.width === width &&
-      el.style.stroke;
-    // dash pattern along the rect path: top drawn, right side skipped, bottom drawn, left side skipped
-    if (isFrame && !el.style.lineDash) el.setStyle({ lineDash: [width, height, width, height] });
-  });
-};
-
-const applyZoomSliderStyles = (chart) => {
-  if (!chart || chart.zoomSliderStyled) return;
-  chart.zoomSliderStyled = true;
-  const apply = () =>
-    (chart._componentsViews || []).forEach((view) => view && styleZoomSlider(view));
-  chart.on('rendered', apply);
-  chart.on('finished', apply);
-  apply();
-};
 
 export const LaunchStatisticsChart = ({
   widget,
@@ -121,7 +67,10 @@ export const LaunchStatisticsChart = ({
   const getDefectLink = useSelector(defectLinkSelector);
   const getStatisticsLink = useSelector(statisticsLinkSelector);
   const chartDataRef = useRef({ itemsData: [] });
-  const chartRef = useRef(null);
+  const barDataParamsRef = useRef(null);
+  // Series hidden via the legend. Kept in a ref (not in the chart config deps), so toggling the
+  // legend never rebuilds the chart: the legend listener below updates the bars in place.
+  const hiddenItemsRef = useRef(uncheckedLegendItems);
 
   const { widgetOptions = {}, contentFields = [] } = widget.contentParameters || {};
   const isTimeline = widgetOptions.timeline === MODES_VALUES[CHART_MODES.TIMELINE_MODE];
@@ -133,45 +82,55 @@ export const LaunchStatisticsChart = ({
     [widget.content, isTimeline],
   );
 
-  const onChartCreated = useCallback((_node, chart, customData) => {
-    chartDataRef.current = customData;
-    chartRef.current = chart;
-    applyZoomSliderStyles(chart);
-  }, []);
-
   const isBarView = widgetViewMode !== MODES_VALUES[CHART_MODES.AREA_VIEW] || isSingleColumn;
 
-  // Hiding a series via the legend doesn't rebuild the chart, so the bar top rounding is
-  // recalculated for the visible series here (updated in place, zoom is kept).
+  // Latest inputs for the bar data, read by the legend listener (which is bound once per chart).
+  // `content` is what EChart passes to getOption (widget.content.result).
   useEffect(() => {
-    const chart = chartRef.current;
-    if (!chart || isPreview || !isBarView) return undefined;
-
-    const onLegendChange = ({ selected }) => {
-      chart.setOption({
-        series: getBarSeriesData({
-          content: widget.content?.result, // same input EChart passes to getOption
+    barDataParamsRef.current = isBarView
+      ? {
+          content: widget.content?.result,
           defectTypes,
           orderedContentFields,
           contentFields,
           isTimeline,
           isPreview,
-          hiddenItems: Object.keys(selected).filter((name) => !selected[name]),
-        }),
-      });
-    };
-
-    chart.on('legendselectchanged', onLegendChange);
-    return () => chart.off('legendselectchanged', onLegendChange);
+        }
+      : null;
   }, [
-    isPreview,
     isBarView,
     widget.content,
     defectTypes,
     orderedContentFields,
     contentFields,
     isTimeline,
+    isPreview,
   ]);
+
+  // The current legend state is read when the option is built, so a rebuild (e.g. data refresh)
+  // keeps the bar rounding of the hidden series; legend toggles themselves don't rebuild the chart.
+  const getOptionWithHiddenItems = useCallback(
+    (params) => getOption({ ...params, hiddenItems: hiddenItemsRef.current }),
+    [],
+  );
+
+  const onChartCreated = useCallback((_node, chart, customData) => {
+    chartDataRef.current = customData;
+    applyZoomSliderStyles(chart);
+
+    // Hiding a series via the legend doesn't rebuild the chart, so the bar top rounding is
+    // recalculated for the visible series here (updated in place, zoom is kept).
+    chart.on('legendselectchanged', ({ selected }) => {
+      hiddenItemsRef.current = Object.keys(selected).filter((name) => !selected[name]);
+      if (!barDataParamsRef.current) return;
+      chart.setOption({
+        series: getBarSeriesData({
+          ...barDataParamsRef.current,
+          hiddenItems: hiddenItemsRef.current,
+        }),
+      });
+    });
+  }, []);
 
   const launchModeClickHandler = useCallback(
     (data) => {
@@ -243,7 +202,7 @@ export const LaunchStatisticsChart = ({
 
   const configData = useMemo(
     () => ({
-      getOption,
+      getOption: getOptionWithHiddenItems,
       formatMessage,
       isTimeline,
       isZoomEnabled,
@@ -254,9 +213,9 @@ export const LaunchStatisticsChart = ({
       contentFields,
       isSingleColumn,
       onChartClick,
-      hiddenItems: uncheckedLegendItems,
     }),
     [
+      getOptionWithHiddenItems,
       formatMessage,
       isTimeline,
       isZoomEnabled,
@@ -267,7 +226,6 @@ export const LaunchStatisticsChart = ({
       contentFields,
       isSingleColumn,
       onChartClick,
-      uncheckedLegendItems,
     ],
   );
 

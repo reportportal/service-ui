@@ -25,7 +25,7 @@ div.tooltip {
   font-size: 12px;
   line-height: 16px;
   color: var(--rp-ui-base-bg-000);
-  background-color: rgba(38, 38, 38, 0.92);
+  background-color: color-mix(in srgb, var(--rp-ui-base-dark-e-400) 92%, transparent);
   border: none;
   border-radius: 8px;
   box-shadow: none;

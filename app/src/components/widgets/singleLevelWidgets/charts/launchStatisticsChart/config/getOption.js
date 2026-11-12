@@ -44,6 +44,7 @@ const AXIS_LABEL_STYLE = {
 const SLIDER_HANDLE_ICON =
   'path://M2.5,0 a2.5,2.5 0 0 1 2.5,2.5 v15 a2.5,2.5 0 0 1 -5,0 v-15 a2.5,2.5 0 0 1 2.5,-2.5 z';
 const SLIDER_HANDLE_HEIGHT = 20;
+const SLIDER_FILL_ALPHA = '26'; // hex alpha of the accent color (15%) for the selected range
 const SLIDER_MARGIN_TOP = 5; // extra space between the x-axis labels and the zoom slider
 // white border = gap between stacked segments
 const BAR_SEGMENT_STYLE = { borderColor: COLOR_WHITE_TWO, borderWidth: 1 };
@@ -155,7 +156,7 @@ const buildDataZoom = () => [
     showDataShadow: true,
     showDetail: false,
     brushSelect: false,
-    fillerColor: 'rgba(0, 130, 155, 0.15)',
+    fillerColor: `${COLOR_CHART_SLIDER_ACCENT}${SLIDER_FILL_ALPHA}`,
     borderColor: COLOR_CHART_AXIS_LINE,
     borderRadius: 0, // frame side borders are hidden (launchStatisticsChart.jsx), so no corners
     handleIcon: SLIDER_HANDLE_ICON,

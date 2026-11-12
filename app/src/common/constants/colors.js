@@ -52,5 +52,5 @@ export const COLOR_CHART_FAILED = '#DC5959';
 export const COLOR_CHART_SKIPPED = '#C1C7D0';
 export const COLOR_ALMOST_BLACK = '#3f3f3f'; // same as $COLOR--almost-black / --rp-ui-base-almost-black
 export const COLOR_CHART_AXIS_LINE = '#e1e4e9';
-export const COLOR_CHART_SLIDER_ACCENT = '#00829B';
+export const COLOR_CHART_SLIDER_ACCENT = COLOR_TO_INVESTIGATE;
 export const COLOR_CHART_SLIDER_BG = '#e3e7ed';

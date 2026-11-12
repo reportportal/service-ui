@@ -312,7 +312,9 @@ export const EChart = ({
         string,
         string
       >;
+      // without colors the update would reset the areas to one color, so leave them untouched
       const paintAreas = (hoveredId: string | null) =>
+        Object.keys(colors).length > 0 &&
         chart.setOption({
           series: seriesList.map((s) => {
             const id = s.id || s.name;
