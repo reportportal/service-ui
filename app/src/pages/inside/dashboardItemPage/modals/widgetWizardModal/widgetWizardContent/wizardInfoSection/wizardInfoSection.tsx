@@ -15,6 +15,7 @@
  */
 
 import { defineMessages, useIntl } from 'react-intl';
+import { Scrollbars } from 'rc-scrollbars';
 import { createClassnames } from 'common/utils';
 import { WidgetInfoBlock } from '../../../common/widgetInfoBlock';
 import { Widget } from '../../types';
@@ -53,24 +54,28 @@ export const WizardInfoSection = ({
 
   return (
     <div className={cx('wizard-info-section')}>
-      <div className={cx('steps-block')}>
-        {STEPS.map((value, index) => (
-          <StepLabelItem
-            key={value}
-            step={index}
-            label={formatMessage(messages[`${value}StepLabel`])}
-            active={step === index}
-            completed={step > index}
+      <Scrollbars hideTracksWhenNotNeeded>
+        <div className={cx('info-section-content')}>
+          <div className={cx('steps-block')}>
+            {STEPS.map((value, index) => (
+              <StepLabelItem
+                key={value}
+                step={index}
+                label={formatMessage(messages[`${value}StepLabel`])}
+                active={step === index}
+                completed={step > index}
+              />
+            ))}
+          </div>
+          {activeWidget?.id && <div className={cx('divider')} />}
+          <WidgetInfoBlock
+            projectKey={projectKey}
+            widgetSettings={widgetSettings}
+            activeWidget={activeWidget}
+            customCondition={step === 1}
           />
-        ))}
-      </div>
-      {activeWidget?.id && <div className={cx('divider')} />}
-      <WidgetInfoBlock
-        projectKey={projectKey}
-        widgetSettings={widgetSettings}
-        activeWidget={activeWidget}
-        customCondition={step === 1}
-      />
+        </div>
+      </Scrollbars>
     </div>
   );
 };

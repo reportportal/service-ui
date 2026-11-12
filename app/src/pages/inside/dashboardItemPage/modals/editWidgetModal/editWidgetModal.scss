@@ -23,6 +23,7 @@
 
   > div[class*='modal-content'] {
     flex: 1;
+    min-height: 0;
   }
 
   &.without-footer > div[class*='modal-content'] {

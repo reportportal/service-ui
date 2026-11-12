@@ -188,11 +188,15 @@ export const EditWidgetContent = forwardRef<EditWidgetContentHandle, EditWidgetC
     return (
       <div className={cx('content')}>
         <div className={cx('info')}>
-          <WidgetInfoBlock
-            projectKey={projectKey}
-            widgetSettings={widgetSettings}
-            activeWidget={widgetInfo}
-          />
+          <Scrollbars hideTracksWhenNotNeeded>
+            <div className={cx('info-content')}>
+              <WidgetInfoBlock
+                projectKey={projectKey}
+                widgetSettings={widgetSettings}
+                activeWidget={widgetInfo}
+              />
+            </div>
+          </Scrollbars>
         </div>
         <div className={cx('controls')}>
           <Scrollbars
