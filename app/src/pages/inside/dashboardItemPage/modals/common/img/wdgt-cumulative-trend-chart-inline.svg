@@ -1,107 +1,25 @@
-<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="250" height="126" viewBox="0 0 250 126">
-    <defs>
-        <path id="a" d="M9 0h10v75H9z"/>
-        <filter id="b" height="102.7%" y="-1.3%" filterUnits="objectBoundingBox">
-            <feOffset dx="2" in="SourceAlpha" result="shadowOffsetInner1"/>
-            <feComposite in="shadowOffsetInner1" in2="SourceAlpha" k2="-1" k3="1" operator="arithmetic" result="shadowInnerInner1"/>
-            <feColorMatrix in="shadowInnerInner1" values="0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.4 0"/>
-        </filter>
-        <path id="c" d="M19 40h10v35H19z"/>
-        <filter id="d" height="105.7%" y="-2.9%" filterUnits="objectBoundingBox">
-            <feOffset dx="2" in="SourceAlpha" result="shadowOffsetInner1"/>
-            <feComposite in="shadowOffsetInner1" in2="SourceAlpha" k2="-1" k3="1" operator="arithmetic" result="shadowInnerInner1"/>
-            <feColorMatrix in="shadowInnerInner1" values="0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.3 0"/>
-        </filter>
-        <path id="e" d="M29 55h10v20H29z"/>
-        <filter id="f" height="110%" y="-5%" filterUnits="objectBoundingBox">
-            <feOffset dx="2" in="SourceAlpha" result="shadowOffsetInner1"/>
-            <feComposite in="shadowOffsetInner1" in2="SourceAlpha" k2="-1" k3="1" operator="arithmetic" result="shadowInnerInner1"/>
-            <feColorMatrix in="shadowInnerInner1" values="0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.3 0"/>
-        </filter>
-        <path id="g" d="M9 25h10v75H9z"/>
-        <filter id="h" height="102.7%" y="-1.3%" filterUnits="objectBoundingBox">
-            <feOffset dx="2" in="SourceAlpha" result="shadowOffsetInner1"/>
-            <feComposite in="shadowOffsetInner1" in2="SourceAlpha" k2="-1" k3="1" operator="arithmetic" result="shadowInnerInner1"/>
-            <feColorMatrix in="shadowInnerInner1" values="0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.4 0"/>
-        </filter>
-        <path id="i" d="M19 80h10v20H19z"/>
-        <filter id="j" height="110%" y="-5%" filterUnits="objectBoundingBox">
-            <feOffset dx="2" in="SourceAlpha" result="shadowOffsetInner1"/>
-            <feComposite in="shadowOffsetInner1" in2="SourceAlpha" k2="-1" k3="1" operator="arithmetic" result="shadowInnerInner1"/>
-            <feColorMatrix in="shadowInnerInner1" values="0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.3 0"/>
-        </filter>
-        <path id="k" d="M29 50h10v50H29z"/>
-        <filter id="l" height="104%" y="-2%" filterUnits="objectBoundingBox">
-            <feOffset dx="2" in="SourceAlpha" result="shadowOffsetInner1"/>
-            <feComposite in="shadowOffsetInner1" in2="SourceAlpha" k2="-1" k3="1" operator="arithmetic" result="shadowInnerInner1"/>
-            <feColorMatrix in="shadowInnerInner1" values="0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.3 0"/>
-        </filter>
-        <path id="m" d="M9 40h10v35H9z"/>
-        <filter id="n" height="105.7%" y="-2.9%" filterUnits="objectBoundingBox">
-            <feOffset dx="2" in="SourceAlpha" result="shadowOffsetInner1"/>
-            <feComposite in="shadowOffsetInner1" in2="SourceAlpha" k2="-1" k3="1" operator="arithmetic" result="shadowInnerInner1"/>
-            <feColorMatrix in="shadowInnerInner1" values="0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.4 0"/>
-        </filter>
-        <path id="o" d="M19 25h10v50H19z"/>
-        <filter id="p" height="104%" y="-2%" filterUnits="objectBoundingBox">
-            <feOffset dx="2" in="SourceAlpha" result="shadowOffsetInner1"/>
-            <feComposite in="shadowOffsetInner1" in2="SourceAlpha" k2="-1" k3="1" operator="arithmetic" result="shadowInnerInner1"/>
-            <feColorMatrix in="shadowInnerInner1" values="0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.3 0"/>
-        </filter>
-        <path id="q" d="M29 0h10v75H29z"/>
-        <filter id="r" height="102.7%" y="-1.3%" filterUnits="objectBoundingBox">
-            <feOffset dx="2" in="SourceAlpha" result="shadowOffsetInner1"/>
-            <feComposite in="shadowOffsetInner1" in2="SourceAlpha" k2="-1" k3="1" operator="arithmetic" result="shadowInnerInner1"/>
-            <feColorMatrix in="shadowInnerInner1" values="0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.3 0"/>
-        </filter>
-    </defs>
-    <g fill="none" fill-rule="evenodd">
-        <path d="M.053.028h249v125h-249z"/>
-        <g stroke="#F5F5F5">
-            <path d="M.996 103.132h247.118M.996 81.21h247.118M.996 60.285h247.118M.996 38.363h247.118M.996 16.441h247.118"/>
-        </g>
-        <path fill="#D6E4AA" d="M36 70h9v55h-9z"/>
-        <g transform="translate(36 50)">
-            <use fill="#B6E4E3" xlink:href="#a"/>
-            <use fill="#000" filter="url(#b)" xlink:href="#a"/>
-        </g>
-        <g transform="translate(36 50)">
-            <use fill="#EE9583" xlink:href="#c"/>
-            <use fill="#000" filter="url(#d)" xlink:href="#c"/>
-        </g>
-        <g transform="translate(36 50)">
-            <use fill="#F9CC90" xlink:href="#e"/>
-            <use fill="#000" filter="url(#f)" xlink:href="#e"/>
-        </g>
-        <g>
-            <path fill="#D6E4AA" d="M106 25h9v100h-9z"/>
-            <g transform="translate(106 25)">
-                <use fill="#B6E4E3" xlink:href="#g"/>
-                <use fill="#000" filter="url(#h)" xlink:href="#g"/>
-            </g>
-            <g transform="translate(106 25)">
-                <use fill="#EE9583" xlink:href="#i"/>
-                <use fill="#000" filter="url(#j)" xlink:href="#i"/>
-            </g>
-            <g transform="translate(106 25)">
-                <use fill="#F7CC90" xlink:href="#k"/>
-                <use fill="#000" filter="url(#l)" xlink:href="#k"/>
-            </g>
-        </g>
-        <g>
-            <path fill="#D6E4AA" d="M176 105h9v20h-9z"/>
-            <g transform="translate(176 50)">
-                <use fill="#B6E4E3" xlink:href="#m"/>
-                <use fill="#000" filter="url(#n)" xlink:href="#m"/>
-            </g>
-            <g transform="translate(176 50)">
-                <use fill="#EE9583" xlink:href="#o"/>
-                <use fill="#000" filter="url(#p)" xlink:href="#o"/>
-            </g>
-            <g transform="translate(176 50)">
-                <use fill="#F7CC90" xlink:href="#q"/>
-                <use fill="#000" filter="url(#r)" xlink:href="#q"/>
-            </g>
-        </g>
-    </g>
+<svg width="268" height="166" viewBox="0 0 268 166" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g clip-path="url(#clip-widget-preview-17)">
+<rect width="268" height="166" rx="4" fill="#F7F7F8"/>
+<path d="M217.182 7.18198L215.061 5.06066C214.475 4.47487 213.525 4.47487 212.939 5.06066L210.818 7.18198C210.232 7.76777 210.232 8.71751 210.818 9.3033L212.939 11.4246C213.525 12.0104 214.475 12.0104 215.061 11.4246L217.182 9.3033C217.768 8.71751 217.768 7.76777 217.182 7.18198Z" fill="#E3E7EC"/>
+<path d="M10.2909 67.9L8.03923 66.6C7.46528 66.2686 6.73137 66.4653 6.4 67.0392L5.1 69.2909C4.76863 69.8648 4.96528 70.5988 5.53923 70.9301L7.7909 72.2301C8.36485 72.5615 9.09876 72.3648 9.43013 71.7909L10.7301 69.5392C11.0615 68.9653 10.8648 68.2314 10.2909 67.9Z" fill="#ECEFF4"/>
+<path d="M54.2286 153.539L51.4095 152.513C50.6311 152.23 49.7703 152.631 49.487 153.41L48.4609 156.229C48.1776 157.007 48.579 157.868 49.3574 158.151L52.1765 159.177C52.955 159.461 53.8157 159.059 54.0991 158.281L55.1251 155.462C55.4085 154.683 55.0071 153.822 54.2286 153.539Z" fill="#E3E7EC"/>
+<path d="M236.595 34.7582L41.3408 17.6756C35.839 17.1943 30.9886 21.2642 30.5073 26.766L22.3147 120.408C21.8333 125.91 25.9032 130.76 31.405 131.242L226.659 148.324C232.161 148.806 237.011 144.736 237.493 139.234L245.685 45.5917C246.167 40.0898 242.097 35.2395 236.595 34.7582Z" fill="#E3E7EC"/>
+<path d="M232 26H36C30.4772 26 26 30.4772 26 36V130C26 135.523 30.4772 140 36 140H232C237.523 140 242 135.523 242 130V36C242 30.4772 237.523 26 232 26Z" fill="white"/>
+<path d="M204 120H64V121H204V120Z" fill="#E3E7EC"/>
+<path d="M77 76H70C68.8954 76 68 76.8954 68 78V118C68 119.105 68.8954 120 70 120H77C78.1046 120 79 119.105 79 118V78C79 76.8954 78.1046 76 77 76Z" fill="#9CDCB1"/>
+<path d="M90 102H83C81.8954 102 81 102.895 81 104V118C81 119.105 81.8954 120 83 120H90C91.1046 120 92 119.105 92 118V104C92 102.895 91.1046 102 90 102Z" fill="#E29495"/>
+<path d="M103 110H96C94.8954 110 94 110.895 94 112V118C94 119.105 94.8954 120 96 120H103C104.105 120 105 119.105 105 118V112C105 110.895 104.105 110 103 110Z" fill="#CED3DB"/>
+<path d="M123 50H116C114.895 50 114 50.8954 114 52V118C114 119.105 114.895 120 116 120H123C124.105 120 125 119.105 125 118V52C125 50.8954 124.105 50 123 50Z" fill="#9CDCB1"/>
+<path d="M136 92H129C127.895 92 127 92.8954 127 94V118C127 119.105 127.895 120 129 120H136C137.105 120 138 119.105 138 118V94C138 92.8954 137.105 92 136 92Z" fill="#E29495"/>
+<path d="M149 106H142C140.895 106 140 106.895 140 108V118C140 119.105 140.895 120 142 120H149C150.105 120 151 119.105 151 118V108C151 106.895 150.105 106 149 106Z" fill="#CED3DB"/>
+<path d="M169 62H162C160.895 62 160 62.8954 160 64V118C160 119.105 160.895 120 162 120H169C170.105 120 171 119.105 171 118V64C171 62.8954 170.105 62 169 62Z" fill="#9CDCB1"/>
+<path d="M182 84H175C173.895 84 173 84.8954 173 86V118C173 119.105 173.895 120 175 120H182C183.105 120 184 119.105 184 118V86C184 84.8954 183.105 84 182 84Z" fill="#E29495"/>
+<path d="M195 100H188C186.895 100 186 100.895 186 102V118C186 119.105 186.895 120 188 120H195C196.105 120 197 119.105 197 118V102C197 100.895 196.105 100 195 100Z" fill="#CED3DB"/>
+</g>
+<defs>
+<clipPath id="clip-widget-preview-17">
+<rect width="268" height="166" rx="4" fill="white"/>
+</clipPath>
+</defs>
 </svg>
