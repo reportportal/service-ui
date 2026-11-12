@@ -36,6 +36,12 @@ const DEFAULT_LEGEND_CONFIG = {
   legendProps: {} as Record<string, unknown>,
 };
 
+const applyUncheckedLegendItems = (chart: EChartsType, items: string[]) => {
+  items.forEach((name) => {
+    chart.dispatchAction({ type: 'legendUnSelect', name });
+  });
+};
+
 const mergeOption = (option: EChartsOption): EChartsOption => {
   const themeGrid = ECHARTS_THEME.grid as object;
   const themeLegend = ECHARTS_THEME.legend as object;
@@ -88,18 +94,22 @@ export const EChart = ({
   const onChartReadyRef = useRef(onChartReady);
   const resizedCallbackRef = useRef(resizedCallback);
 
-  useEffect(() => {
-    chartCreatedCallbackRef.current = chartCreatedCallback;
-    onChartReadyRef.current = onChartReady;
-    resizedCallbackRef.current = resizedCallback;
-  }, [chartCreatedCallback, onChartReady, resizedCallback]);
-
   const {
     showLegend = false,
     onChangeLegend = DEFAULT_LEGEND_CONFIG.onChangeLegend,
     uncheckedLegendItems = [],
     legendProps = {},
   } = legendConfig;
+  const uncheckedLegendItemsRef = useRef(uncheckedLegendItems);
+  const isLegendInteractive =
+    !isPreview && showLegend && !(legendProps as { disabled?: boolean }).disabled;
+
+  useEffect(() => {
+    chartCreatedCallbackRef.current = chartCreatedCallback;
+    onChartReadyRef.current = onChartReady;
+    resizedCallbackRef.current = resizedCallback;
+    uncheckedLegendItemsRef.current = uncheckedLegendItems;
+  }, [chartCreatedCallback, onChartReady, resizedCallback, uncheckedLegendItems]);
 
   const built = useMemo(() => {
     if (optionProp) {
@@ -157,10 +167,9 @@ export const EChart = ({
 
     chart.setOption(built.option, { notMerge: true });
 
-    if (!isPreview && showLegend && !(legendProps as { disabled?: boolean }).disabled) {
-      uncheckedLegendItems.forEach((name) => {
-        chart.dispatchAction({ type: 'legendUnSelect', name });
-      });
+    // a rebuilt option restores all series, so the hidden ones are re-applied here
+    if (isLegendInteractive) {
+      applyUncheckedLegendItems(chart, uncheckedLegendItemsRef.current);
     }
 
     requestAnimationFrame(() => {
@@ -168,15 +177,15 @@ export const EChart = ({
     });
 
     return undefined;
-  }, [
-    built,
-    container,
-    heightOffset,
-    isPreview,
-    showLegend,
-    legendProps,
-    uncheckedLegendItems,
-  ]);
+  }, [built, container, heightOffset, isPreview, isLegendInteractive]);
+
+  // Legend changes don't rebuild the option (that would reset the zoom range), only the selection.
+  useEffect(() => {
+    const chart = chartRef.current;
+    if (chart && isLegendInteractive) {
+      applyUncheckedLegendItems(chart, uncheckedLegendItems);
+    }
+  }, [uncheckedLegendItems, isLegendInteractive]);
 
   // Opt-in (customData.resizeCursor): charts with drag-to-scroll show the horizontal-resize
   // cursor as the default over the plot area; hovering a series element keeps the pointer.
