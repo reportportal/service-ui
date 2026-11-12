@@ -17,3 +17,82 @@
 .launch-statistics-chart {
   height: 100%;
 }
+
+div.tooltip {
+  min-width: 0;
+  padding: 8px 12px;
+  font-family: var(--rp-ui-base-font-family);
+  font-size: 12px;
+  line-height: 16px;
+  color: var(--rp-ui-base-bg-000);
+  background-color: color-mix(in srgb, var(--rp-ui-base-dark-e-400) 92%, transparent);
+  border: none;
+  border-radius: 8px;
+  box-shadow: none;
+
+  // the shared tooltip sets its own font/color on these children
+  div,
+  span {
+    font-family: inherit;
+    font-weight: var(--rp-ui-base-fw-regular);
+    color: inherit;
+  }
+
+  span:last-child {
+    font-weight: var(--rp-ui-base-fw-bold);
+  }
+}
+
+.legend {
+  position: absolute;
+  z-index: 1;
+  top: 0;
+  left: 0;
+  right: 0;
+  width: 100%;
+  box-sizing: border-box;
+
+  // legend items are rendered by the shared Legend component (hashed classes) — target by structure
+  span[data-id] {
+    margin-top: 0;
+    margin-right: 20px;
+    margin-bottom: 8px;
+
+    > span:first-child {
+      top: 0;
+      width: 12px;
+      height: 12px;
+      margin-right: 6px;
+      border-radius: 50%;
+      vertical-align: middle;
+
+      &::before {
+        top: 3px;
+        left: 3px;
+        width: 6px;
+        height: 6px;
+      }
+    }
+
+    > span:last-child {
+      font-family: var(--rp-ui-base-font-family);
+      font-weight: var(--rp-ui-base-fw-regular);
+      font-size: 13px;
+      line-height: 18px;
+      color: var(--rp-ui-base-almost-black);
+      vertical-align: middle;
+    }
+  }
+
+  // always-visible scrollbar thumb so it is clear there are more legend items;
+  // the :hover selector outranks ScrollWrapper's `.scroll-component:hover .thumb-vertical`
+  [class*='thumb-vertical'],
+  [class*='scroll-component']:hover [class*='thumb-vertical'] {
+    opacity: 1;
+    background-color: var(--rp-ui-base-e-200);
+  }
+
+  [class*='track-vertical'] {
+    background-color: var(--rp-ui-base-bg-200);
+  }
+}

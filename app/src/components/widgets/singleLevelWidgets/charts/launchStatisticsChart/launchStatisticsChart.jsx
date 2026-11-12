@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { useCallback, useMemo, useRef } from 'react';
+import { useCallback, useEffect, useMemo, useRef } from 'react';
 import PropTypes from 'prop-types';
 import { useIntl } from 'react-intl';
 import { useDispatch, useSelector } from 'react-redux';
@@ -38,8 +38,10 @@ import {
 } from 'components/widgets/common/utils';
 import { getMillisecondsWoTimezone } from 'common/utils/timeDateUtils';
 import { isSingleColumnChart } from './config/utils';
-import { getOption } from './config/getOption';
-import { TOTAL_KEY } from './constants';
+import { getOption, getBarSeriesData } from './config/getOption';
+import { TOTAL_KEY, LEGEND_MAX_HEIGHT } from './constants';
+import { getLaunchStatisticsColor } from './chartColors';
+import { applyZoomSliderStyles } from './zoomSliderStyles';
 import styles from './launchStatisticsChart.scss';
 
 const cx = classNames.bind(styles);
@@ -65,6 +67,10 @@ export const LaunchStatisticsChart = ({
   const getDefectLink = useSelector(defectLinkSelector);
   const getStatisticsLink = useSelector(statisticsLinkSelector);
   const chartDataRef = useRef({ itemsData: [] });
+  const barDataParamsRef = useRef(null);
+  // Series hidden via the legend. Kept in a ref (not in the chart config deps), so toggling the
+  // legend never rebuilds the chart: the legend listener below updates the bars in place.
+  const hiddenItemsRef = useRef(uncheckedLegendItems);
 
   const { widgetOptions = {}, contentFields = [] } = widget.contentParameters || {};
   const isTimeline = widgetOptions.timeline === MODES_VALUES[CHART_MODES.TIMELINE_MODE];
@@ -76,8 +82,54 @@ export const LaunchStatisticsChart = ({
     [widget.content, isTimeline],
   );
 
-  const onChartCreated = useCallback((_node, _chart, customData) => {
+  const isBarView = widgetViewMode !== MODES_VALUES[CHART_MODES.AREA_VIEW] || isSingleColumn;
+
+  // Latest inputs for the bar data, read by the legend listener (which is bound once per chart).
+  // `content` is what EChart passes to getOption (widget.content.result).
+  useEffect(() => {
+    barDataParamsRef.current = isBarView
+      ? {
+          content: widget.content?.result,
+          defectTypes,
+          orderedContentFields,
+          contentFields,
+          isTimeline,
+          isPreview,
+        }
+      : null;
+  }, [
+    isBarView,
+    widget.content,
+    defectTypes,
+    orderedContentFields,
+    contentFields,
+    isTimeline,
+    isPreview,
+  ]);
+
+  // The current legend state is read when the option is built, so a rebuild (e.g. data refresh)
+  // keeps the bar rounding of the hidden series; legend toggles themselves don't rebuild the chart.
+  const getOptionWithHiddenItems = useCallback(
+    (params) => getOption({ ...params, hiddenItems: hiddenItemsRef.current }),
+    [],
+  );
+
+  const onChartCreated = useCallback((_node, chart, customData) => {
     chartDataRef.current = customData;
+    applyZoomSliderStyles(chart);
+
+    // Hiding a series via the legend doesn't rebuild the chart, so the bar top rounding is
+    // recalculated for the visible series here (updated in place, zoom is kept).
+    chart.on('legendselectchanged', ({ selected }) => {
+      hiddenItemsRef.current = Object.keys(selected).filter((name) => !selected[name]);
+      if (!barDataParamsRef.current) return;
+      chart.setOption({
+        series: getBarSeriesData({
+          ...barDataParamsRef.current,
+          hiddenItems: hiddenItemsRef.current,
+        }),
+      });
+    });
   }, []);
 
   const launchModeClickHandler = useCallback(
@@ -132,7 +184,15 @@ export const LaunchStatisticsChart = ({
 
       dispatch({ ...link, ...defaultParams });
     },
-    [defectTypes, dispatch, getDefectLink, getStatisticsLink, slugs, widget.appliedFilters, widget.contentParameters],
+    [
+      defectTypes,
+      dispatch,
+      getDefectLink,
+      getStatisticsLink,
+      slugs,
+      widget.appliedFilters,
+      widget.contentParameters,
+    ],
   );
 
   const onChartClick = useCallback(
@@ -142,7 +202,7 @@ export const LaunchStatisticsChart = ({
 
   const configData = useMemo(
     () => ({
-      getOption,
+      getOption: getOptionWithHiddenItems,
       formatMessage,
       isTimeline,
       isZoomEnabled,
@@ -155,6 +215,7 @@ export const LaunchStatisticsChart = ({
       onChartClick,
     }),
     [
+      getOptionWithHiddenItems,
       formatMessage,
       isTimeline,
       isZoomEnabled,
@@ -173,6 +234,12 @@ export const LaunchStatisticsChart = ({
       onChangeLegend,
       showLegend: true,
       uncheckedLegendItems,
+      legendProps: {
+        className: cx('legend'),
+        getColor: getLaunchStatisticsColor,
+        maxHeight: LEGEND_MAX_HEIGHT,
+        alwaysShowScroll: true,
+      },
     }),
     [onChangeLegend, uncheckedLegendItems],
   );

@@ -45,7 +45,7 @@ export const createBarSeries = (
   itemNames,
   dataByName,
   colors,
-  { stack, barMinHeight, barWidth, barCategoryGap, barGap, silent } = {},
+  { stack, barMinHeight, barWidth, barCategoryGap, barGap, silent, itemStyle } = {},
 ) => {
   const resolvedBarWidth = barWidth ?? (stack ? DEFAULT_STACKED_BAR_WIDTH : undefined);
   const resolvedBarCategoryGap =
@@ -73,6 +73,7 @@ export const createBarSeries = (
     data: dataByName[name],
     itemStyle: {
       color: colors[name],
+      ...itemStyle,
     },
     emphasis: silent ? { disabled: true } : STACKED_BAR_EMPHASIS,
   }));
