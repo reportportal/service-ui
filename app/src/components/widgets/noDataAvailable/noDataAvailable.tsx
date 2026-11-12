@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 EPAM Systems
+ * Copyright 2026 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,4 +14,21 @@
  * limitations under the License.
  */
 
-export { NoDataAvailable } from './noDataAvailable';
+import classNames from 'classnames/bind';
+import { defineMessages, useIntl } from 'react-intl';
+import styles from './noDataAvailable.scss';
+
+const cx = classNames.bind(styles);
+
+export const messages = defineMessages({
+  noDataAvailable: {
+    id: 'NoDataAvailable.noDataMessage',
+    defaultMessage: 'No data available.',
+  },
+});
+
+export const NoDataAvailable = () => {
+  const { formatMessage } = useIntl();
+
+  return <div className={cx('no-data-available')}>{formatMessage(messages.noDataAvailable)}</div>;
+};

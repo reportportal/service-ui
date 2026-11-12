@@ -23,7 +23,6 @@ import { fetch, debounce, createClassnames } from 'common/utils';
 import { URLS } from 'common/urls';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { LinkComponent } from 'pages/inside/common/LinkComponent';
-import { OVERALL_STATISTICS } from 'common/constants/widgetTypes';
 import { normalizeSeparateInterrupted } from 'components/main/analytics/events/common/widgetPages/utils';
 import { WIDGETS_STATIC_PREVIEWS } from '../widgets';
 import { WidgetPreview } from '../widgetPreview';
@@ -138,13 +137,6 @@ export const WidgetInfoBlock = ({
     }
   }, [activeWidget?.id, widgetSettings, customCondition, fetchWidget]);
 
-  const widgetOptions = widgetSettings.contentParameters?.widgetOptions;
-  const isSeparateInterrupted =
-    activeWidget?.id === OVERALL_STATISTICS &&
-    widgetOptions?.viewMode === 'panel' &&
-    normalizeSeparateInterrupted(widgetOptions?.separateInterrupted);
-  const isExpanded = !!isSeparateInterrupted && (loading || !!widgetData);
-
   return (
     activeWidget?.id && (
       <div className={cx('edit-widget-info-section')}>
@@ -165,7 +157,6 @@ export const WidgetInfoBlock = ({
           loading={loading}
           widgetType={activeWidget?.id}
           data={widgetData}
-          className={cx({ expanded: isExpanded })}
         />
       </div>
     )
