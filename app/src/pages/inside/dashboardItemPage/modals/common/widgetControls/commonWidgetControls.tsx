@@ -99,6 +99,7 @@ export const CommonWidgetControls = ({
             maxLengthDisplay={128}
             defaultWidth={false}
             disabled={isMainControlsDisabled}
+            isRequired
           />
         </FieldErrorHint>
       </FieldProvider>

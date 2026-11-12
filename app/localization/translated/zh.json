@@ -1127,7 +1127,7 @@
   "FiltersControlV2.updateFilterSuccess": "筛选器已更新",
   "FiltersPage.addFilter": "添加过滤器",
   "FiltersPage.filterDeleted": "已删除过滤器！",
-  "FiltersPage.filterNameDuplicateHint": "系统中已存在同名过滤器。",
+  "FiltersPage.filterNameDuplicateHint": "此项目中已存在同名过滤器。",
   "FiltersPage.filterNameLength": "过滤器名称的长度应为3到128个字符。",
   "FiltersPage.filterUpdated": "已更新过滤器！",
   "FiltersPage.msgFavoriteFilters": "过滤器是已保存以供重复使用的问题搜索。",
