@@ -14,8 +14,6 @@
  * limitations under the License.
  */
 
-import * as COLORS from 'common/constants/colors';
-
 export const TOTAL_FIELD = 'statistics$executions$total';
 
 export const EXECUTION_FIELDS = [
@@ -26,10 +24,6 @@ export const EXECUTION_FIELDS = [
 
 export const getDefectFields = (contentFields) =>
   contentFields.filter((item) => /defects/.test(item));
-
-export const getColorForKey = (key) => COLORS[`COLOR_${key.split('$')[2].toUpperCase()}`];
-
-export const firstCapital = (string) => string.charAt(0).toUpperCase() + string.slice(1);
 
 export const getScaleName = (attributes, activeAttribute) =>
   activeAttribute && attributes[1] ? attributes[1] : attributes[0];

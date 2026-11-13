@@ -14,18 +14,29 @@
  * limitations under the License.
  */
 
-import { COLOR_BLACK, COLOR_FAILED, COLOR_PASSED, COLOR_SKIPPED } from 'common/constants/colors';
 import {
+  COLOR_CHART_FAILED,
+  COLOR_CHART_PASSED,
+  COLOR_CHART_SKIPPED,
+  COLOR_PRODUCT_BUG,
+  COLOR_WHITE_TWO,
+} from 'common/constants/colors';
+import {
+  BAR_TOP_RADIUS,
   BAR_WIDTH,
   BAR_WIDTH_SEPARATE,
-  BAR_WIDTH_WITH_TOTAL,
+  TOTAL_LINE_COLOR,
   getBarsLeftOffset,
   getOption,
+  getStackSeriesIds,
 } from './getOption';
 import { sampleContent, sampleContentFields } from './fixtures/sampleContent';
 
 const formatMessage = (msg) => msg.defaultMessage || msg.id;
 const attributes = ['build'];
+// bar points are plain numbers, or { value, itemStyle } for the rounded top segment of a stack
+const values = (data) => data.map((point) => (point && typeof point === 'object' ? point.value : point));
+const tooltipText = (html) => html.replace(/<[^>]+>/g, ' ').replace(/&nbsp;/g, ' ').replace(/\s+/g, ' ');
 
 describe('cumulativeTrendChart getOption', () => {
   test('plots one bar series per execution status, in absolute counts', () => {
@@ -42,15 +53,15 @@ describe('cumulativeTrendChart getOption', () => {
 
     expect(byId['statistics$executions$passed']).toMatchObject({
       type: 'bar',
-      data: [6, 15],
-      itemStyle: { color: COLOR_PASSED },
+      itemStyle: { color: COLOR_CHART_PASSED },
     });
-    expect(byId['statistics$executions$failed']).toMatchObject({ data: [3, 5] });
-    expect(byId['statistics$executions$skipped']).toMatchObject({ data: [1, 0] });
+    expect(values(byId['statistics$executions$passed'].data)).toEqual([6, 15]);
+    expect(byId['statistics$executions$failed'].data).toEqual([3, 5]);
+    expect(byId['statistics$executions$skipped'].data).toEqual([1, null]);
     // Defects are always plotted, muted (opacity 0.3) when "Defect Types" focus is off.
     expect(byId['statistics$defects$product_bug$total']).toMatchObject({
       data: [2, 3],
-      itemStyle: { opacity: 0.3 },
+      itemStyle: { opacity: 0.3, color: COLOR_PRODUCT_BUG },
     });
     // Executions bar renders on the left, defects bar on the right.
     const executionsIndex = option.series.findIndex((series) =>
@@ -69,12 +80,70 @@ describe('cumulativeTrendChart getOption', () => {
       'statistics$executions$passed',
     ]);
     expect(option.customData.colors).toMatchObject({
-      statistics$executions$passed: COLOR_PASSED,
-      statistics$executions$failed: COLOR_FAILED,
-      statistics$executions$skipped: COLOR_SKIPPED,
+      statistics$executions$passed: COLOR_CHART_PASSED,
+      statistics$executions$failed: COLOR_CHART_FAILED,
+      statistics$executions$skipped: COLOR_CHART_SKIPPED,
     });
     expect(option.xAxis).toMatchObject({ type: 'category', data: ['build-1', 'build-2'] });
-    expect(option.xAxis.name).toBe('Build');
+    expect(option.xAxis.name).toBeUndefined();
+  });
+
+  test('rounds only the top corners of the topmost non-zero segment of each stack', () => {
+    const option = getOption({
+      content: sampleContent,
+      contentFields: sampleContentFields,
+      isPreview: false,
+      formatMessage,
+      attributes,
+      userSettings: {},
+    });
+
+    const byId = Object.fromEntries(option.series.map((series) => [series.id, series]));
+    const rounded = { itemStyle: { borderRadius: BAR_TOP_RADIUS } };
+
+    // executions stack: failed, skipped, passed (top)
+    expect(byId['statistics$executions$passed'].data[0]).toMatchObject({ value: 6, ...rounded });
+    expect(byId['statistics$executions$skipped'].data[0]).toBe(1);
+    // defects stack: product bug, automation bug (top)
+    expect(byId['statistics$defects$automation_bug$total'].data[1]).toMatchObject({
+      value: 2,
+      ...rounded,
+    });
+    expect(byId['statistics$defects$product_bug$total'].data[1]).toBe(3);
+  });
+
+  test('rounds the next segment when the topmost one is unchecked in the legend', () => {
+    const option = getOption({
+      content: sampleContent,
+      contentFields: sampleContentFields,
+      isPreview: false,
+      formatMessage,
+      attributes,
+      userSettings: {},
+      uncheckedLegendItems: ['statistics$executions$passed'],
+    });
+
+    const skipped = option.series.find((series) => series.id === 'statistics$executions$skipped');
+    const failed = option.series.find((series) => series.id === 'statistics$executions$failed');
+
+    expect(skipped.data[0]).toMatchObject({ value: 1, itemStyle: { borderRadius: BAR_TOP_RADIUS } });
+    // build-2 has no skipped tests, so failed is the top of that stack
+    expect(failed.data[1]).toMatchObject({ value: 5, itemStyle: { borderRadius: BAR_TOP_RADIUS } });
+  });
+
+  test('separates touching segments with a 1px border in the card background color', () => {
+    const option = getOption({
+      content: sampleContent,
+      contentFields: sampleContentFields,
+      isPreview: false,
+      formatMessage,
+      attributes,
+      userSettings: {},
+    });
+
+    option.series.forEach((series) => {
+      expect(series.itemStyle).toMatchObject({ borderColor: COLOR_WHITE_TWO, borderWidth: 1 });
+    });
   });
 
   test('converts every series to a percentage of the relevant total when percentage mode is on', () => {
@@ -89,17 +158,18 @@ describe('cumulativeTrendChart getOption', () => {
 
     const byId = Object.fromEntries(option.series.map((series) => [series.id, series]));
 
-    expect(byId['statistics$executions$passed'].data).toEqual([60, 75]);
-    expect(byId['statistics$executions$failed'].data).toEqual([30, 25]);
+    expect(values(byId['statistics$executions$passed'].data)).toEqual([60, 75]);
+    expect(values(byId['statistics$executions$failed'].data)).toEqual([30, 25]);
     // Defect percentage denominator is the sum of defect fields, not the execution total.
-    expect(byId['statistics$defects$product_bug$total'].data).toEqual([66.67, 60]);
+    expect(values(byId['statistics$defects$product_bug$total'].data)).toEqual([66.67, 60]);
     // The "%" belongs on the y-axis ticks, not on the bars themselves.
     expect(option.yAxis).toMatchObject({ type: 'value', min: 0, max: 100, show: true });
     expect(option.yAxis.axisLabel.formatter).toBe('{value}%');
+    expect(option.yAxis.name).toBe('% of test cases');
     expect(byId['statistics$executions$passed'].label).toBeUndefined();
   });
 
-  test('steps the count y-axis by 2, and the percentage one by 10 (0-100 over 10 ticks)', () => {
+  test('lets ECharts pick whole-number steps for counts, and steps the percentage axis by 10', () => {
     const counts = getOption({
       content: sampleContent,
       contentFields: sampleContentFields,
@@ -117,7 +187,8 @@ describe('cumulativeTrendChart getOption', () => {
       userSettings: { percentage: true },
     });
 
-    expect(counts.yAxis.interval).toBe(2);
+    expect(counts.yAxis.interval).toBeUndefined();
+    expect(counts.yAxis.minInterval).toBe(1);
     expect(percentages.yAxis.interval).toBe(10);
   });
 
@@ -187,65 +258,124 @@ describe('cumulativeTrendChart getOption', () => {
     // Required for `api.coord`/`api.barLayout` inside `renderItem` to
     // resolve against the chart's real x/y axes.
     expect(totalSeries.coordinateSystem).toBe('cartesian2d');
-    expect(totalSeries.itemStyle).toMatchObject({ color: COLOR_BLACK });
+    expect(totalSeries.itemStyle).toMatchObject({ color: TOTAL_LINE_COLOR });
     expect(typeof totalSeries.renderItem).toBe('function');
-    // Absolute counts, paired with their category index — even in
-    // percentage mode, since "100%" alone wouldn't say much.
     expect(totalSeries.data).toEqual([
       [0, 100],
       [1, 100],
     ]);
   });
 
-  test('renderItem draws the line just left of the real bars\' left edge, with the total centered above it', () => {
+  const renderTotal = (userSettings, point = [0, 10]) => {
     const option = getOption({
       content: sampleContent,
       contentFields: sampleContentFields,
       isPreview: false,
       formatMessage,
       attributes,
-      userSettings: { showTotal: true },
+      userSettings: { showTotal: true, ...userSettings },
     });
-
     const totalSeries = option.series.find((series) => series.id === 'statistics$executions$total');
-
     const api = {
-      value: (dimIndex) => (dimIndex === 0 ? 0 : 10),
+      value: (dimIndex) => point[dimIndex],
       coord: ([, value]) => [500, 200 - value],
       size: () => [400, 0],
     };
-
     const result = totalSeries.renderItem({}, api);
+    const find = (type) => result?.children.find((child) => child.type === type);
+    return { result, line: find('line'), label: find('text'), hitArea: find('rect') };
+  };
 
-    const line = result.children.find((child) => child.type === 'line');
-    const text = result.children.find((child) => child.type === 'text');
-    // Two stacks, each 14% of 400 = 56px, 10% (5.6px) gap between them:
-    // 117.6px total, so the bars start 58.8px left of center; the line sits
-    // a further 6px left of that.
-    expect(line.shape.x1).toBeCloseTo(500 - 58.8 - 6);
-    expect(line.shape.x2).toBeCloseTo(500 - 58.8 - 6);
-    expect(text.x).toBeCloseTo(line.shape.x1);
-    expect(text.style).toMatchObject({ text: '10', align: 'center', verticalAlign: 'bottom' });
+  test('renderItem draws a vertical 2px Text/Primary line from 0 to the total, 6px left of the stacks', () => {
+    const { line } = renderTotal({});
+
+    expect(line.style).toMatchObject({ stroke: TOTAL_LINE_COLOR, lineWidth: 2 });
+    expect(line.shape.x2).toBe(line.shape.x1);
+    expect(line.shape.y1).toBe(200);
+    expect(line.shape.y2).toBe(190);
+
+    // Two stacks, each 18% of 400 = 72px, 10% (7.2px) gap between them:
+    // 151.2px in total, so the bars' layout edge is 75.6px left of center. Their 1px
+    // white separator border is centred on that edge, so the visible bar starts 0.5px in.
+    const visibleBarLeft = 500 - 75.6 + 0.5;
+    const lineRightEdge = line.shape.x1 + line.style.lineWidth / 2;
+    expect(visibleBarLeft - lineRightEdge).toBeCloseTo(6);
+  });
+
+  test('shows the total count 4px above the line, centered on it, as Chart/Value label', () => {
+    const { line, label, hitArea } = renderTotal({});
+
+    expect(label.x).toBe(line.shape.x1);
+    expect(line.style.lineCap).toBeUndefined();
+    expect(line.shape.y2 - label.y).toBe(4);
+    expect(label.style).toEqual({
+      text: '10',
+      fontFamily: 'Roboto, Arial, Helvetica, sans-serif',
+      fontWeight: 400,
+      fontSize: 12,
+      lineHeight: 16,
+      fill: '#3f3f3f',
+      align: 'center',
+      verticalAlign: 'bottom',
+    });
+    expect(hitArea.shape).toMatchObject({ y: 190, height: 10, width: 10 });
+    expect(hitArea.shape.x + hitArea.shape.width / 2).toBe(line.shape.x1);
+  });
+
+  test('sits left of the whole group of columns when "Separate" is on', () => {
+    const { line } = renderTotal({ separate: true });
+
+    // 5 bars (3 statuses + 2 defects) of 5% of 400 = 20px with 2px gaps: 108px, centered;
+    // 6px from the visible left edge of the first column to the right edge of the line
+    const visibleBarLeft = 500 - 54 + 0.5;
+    expect(visibleBarLeft - (line.shape.x1 + 1)).toBeCloseTo(6);
+  });
+
+  test('reaches 100% in percentage mode, with no count (it would read as a percentage)', () => {
+    const { line, label, hitArea } = renderTotal({ percentage: true }, [1, 100]);
+
+    expect(line.shape.y2).toBe(200 - 100);
+    expect(label).toBeUndefined();
+    expect(hitArea).toBeDefined();
+  });
+
+  test('draws no line for an empty category', () => {
+    expect(renderTotal({}, [0, 0]).result).toBeNull();
+  });
+
+  test('draws only the line in preview mode, no count', () => {
+    const option = getOption({
+      content: sampleContent,
+      contentFields: sampleContentFields,
+      isPreview: true,
+      formatMessage,
+      attributes,
+      userSettings: { showTotal: true },
+    });
+    const totalSeries = option.series.find((series) => series.id === 'statistics$executions$total');
+    const api = { value: (dim) => (dim === 0 ? 0 : 10), coord: ([, v]) => [500, 200 - v], size: () => [400, 0] };
+
+    expect(totalSeries.renderItem({}, api).children.map((child) => child.type)).toEqual(['line']);
   });
 
   test('getBarsLeftOffset mirrors ECharts\' bar layout, including the pixel max-width cap', () => {
     expect(
-      getBarsLeftOffset({ bandWidth: 400, groupCount: 2, barWidthPercent: BAR_WIDTH_WITH_TOTAL, barMaxWidth: 90 }),
-    ).toBeCloseTo(-58.8);
-    // 14% of 1000 = 140px, capped to 90px per bar.
+      getBarsLeftOffset({ bandWidth: 400, groupCount: 2, barWidthPercent: BAR_WIDTH, barMaxWidth: 90 }),
+    ).toBeCloseTo(-75.6);
+    // 18% of 1000 = 180px, capped to 90px per bar.
     expect(
-      getBarsLeftOffset({ bandWidth: 1000, groupCount: 2, barWidthPercent: BAR_WIDTH_WITH_TOTAL, barMaxWidth: 90 }),
+      getBarsLeftOffset({ bandWidth: 1000, groupCount: 2, barWidthPercent: BAR_WIDTH, barMaxWidth: 90 }),
     ).toBeCloseTo(-94.5);
     // Every visible field is its own group when "Separate" is on.
     expect(
       getBarsLeftOffset({ bandWidth: 400, groupCount: 5, barWidthPercent: BAR_WIDTH_SEPARATE, barMaxWidth: 36 }),
     ).toBeCloseTo(-(5 * 20 + 4 * 2) / 2);
     expect(
-      getBarsLeftOffset({ bandWidth: 400, groupCount: 0, barWidthPercent: BAR_WIDTH_WITH_TOTAL, barMaxWidth: 90 }),
+      getBarsLeftOffset({ bandWidth: 400, groupCount: 0, barWidthPercent: BAR_WIDTH, barMaxWidth: 90 }),
     ).toBe(0);
   });
 
-  test('centers the line on the category when every field is unchecked, so there\'s nothing to line up against', () => {
+  test('draws no line when every field is unchecked, so there is no stack to mark', () => {
     const option = getOption({
       content: sampleContent,
       contentFields: sampleContentFields,
@@ -260,14 +390,12 @@ describe('cumulativeTrendChart getOption', () => {
     });
 
     const totalSeries = option.series.find((series) => series.id === 'statistics$executions$total');
-    const api = { value: () => 0, coord: () => [100, 0], size: () => [400, 0] };
+    const api = { value: (dim) => (dim === 0 ? 0 : 10), coord: () => [100, 0], size: () => [400, 0] };
 
-    const result = totalSeries.renderItem({}, api);
-
-    expect(result.children.find((child) => child.type === 'line').shape.x1).toBe(100 - 6);
+    expect(totalSeries.renderItem({}, api)).toBeNull();
   });
 
-  test('makes the regular bars thinner when totals are shown, without giving them a barGap that would shift their group', () => {
+  test('keeps the regular bar width when totals are shown', () => {
     const withoutTotal = getOption({
       content: sampleContent,
       contentFields: sampleContentFields,
@@ -297,7 +425,7 @@ describe('cumulativeTrendChart getOption', () => {
     withTotal.series
       .filter((series) => series.id !== 'statistics$executions$total')
       .forEach((series) => {
-        expect(String(series.barWidth)).toBe(BAR_WIDTH_WITH_TOTAL);
+        expect(String(series.barWidth)).toBe(BAR_WIDTH);
         expect(series.barGap).toBeUndefined();
       });
     withTotalSeparate.series
@@ -400,11 +528,13 @@ describe('cumulativeTrendChart getOption', () => {
     // its own stack (see the next test), so `item` is enough.
     expect(option.tooltip.trigger).toBe('item');
     expect(option.tooltip.axisPointer).toEqual({ show: false });
-    // Overrides the shared theme's `padding: 0` so the popover has breathing room.
-    expect(option.tooltip.extraCssText).toContain('padding: 6px 6px');
+    expect(option.tooltip).toMatchObject({ padding: [8, 12], borderWidth: 0 });
+    expect(option.tooltip.textStyle).toMatchObject({ fontSize: 12, color: COLOR_WHITE_TWO });
+    expect(option.tooltip.extraCssText).toContain('border-radius: 8px');
+    expect(option.tooltip.extraCssText).toContain('--rp-ui-base-dark-e-400');
   });
 
-  test('tooltip formatter reports the title, afterTitle content, and the hovered bar value with a square color marker', () => {
+  test('tooltip formatter reports the title, afterTitle content, and the stack values with round markers', () => {
     const option = getOption({
       content: sampleContent,
       contentFields: sampleContentFields,
@@ -417,16 +547,52 @@ describe('cumulativeTrendChart getOption', () => {
     const html = option.tooltip.formatter({
       seriesId: 'statistics$executions$passed',
       dataIndex: 0,
-      color: COLOR_PASSED,
+      color: COLOR_CHART_PASSED,
+    });
+    const text = tooltipText(html);
+
+    expect(text).toContain('build: build-1');
+    expect(text).toContain('Build 1');
+    expect(html).toContain(`background-color:${COLOR_CHART_PASSED}`);
+    expect(html).toContain('border-radius:50%');
+    expect(text).toContain('Passed: 6 (60%)');
+    expect(html).toContain('<span style="font-weight:700;">6 (60%)</span>');
+  });
+
+  test('lists the stack top-down, in the order the segments are drawn', () => {
+    const option = getOption({
+      content: sampleContent,
+      contentFields: sampleContentFields,
+      isPreview: false,
+      formatMessage,
+      attributes,
+      userSettings: {},
     });
 
-    // Title is bold, and the row leads with a square (not ECharts' default round) marker.
-    expect(html).toContain('font-weight: 600');
-    expect(html).toContain('Build: build-1');
-    expect(html).toContain('Build 1');
-    expect(html).toContain(`background-color:${COLOR_PASSED}`);
-    expect(html).not.toContain('border-radius');
-    expect(html).toContain('Passed: 6 (60%)');
+    const text = tooltipText(
+      option.tooltip.formatter({ seriesId: 'statistics$executions$failed', dataIndex: 0 }),
+    );
+
+    expect(text.indexOf('Passed')).toBeLessThan(text.indexOf('Skipped'));
+    expect(text.indexOf('Skipped')).toBeLessThan(text.indexOf('Failed'));
+  });
+
+  test('shows only the percentage in percentage mode', () => {
+    const option = getOption({
+      content: sampleContent,
+      contentFields: sampleContentFields,
+      isPreview: false,
+      formatMessage,
+      attributes,
+      userSettings: { percentage: true },
+    });
+
+    const text = tooltipText(
+      option.tooltip.formatter({ seriesId: 'statistics$executions$passed', dataIndex: 0 }),
+    );
+
+    expect(text).toContain('Passed: 60%');
+    expect(text).not.toContain('Passed: 6 ');
   });
 
   test('expands the hovered field out to the rest of its own stack, not the unrelated stack next to it', () => {
@@ -441,11 +607,13 @@ describe('cumulativeTrendChart getOption', () => {
 
     // Only ECharts gives us info about the hovered item — everything else
     // in its stack has to be looked up from the raw data ourselves.
-    const html = option.tooltip.formatter({
-      seriesId: 'statistics$executions$failed',
-      dataIndex: 0,
-      color: COLOR_FAILED,
-    });
+    const html = tooltipText(
+      option.tooltip.formatter({
+        seriesId: 'statistics$executions$failed',
+        dataIndex: 0,
+        color: COLOR_CHART_FAILED,
+      }),
+    );
 
     // Every execution status shows, since they're all in the hovered field's
     // own stack...
@@ -467,40 +635,88 @@ describe('cumulativeTrendChart getOption', () => {
       userSettings: { separate: true },
     });
 
-    const html = option.tooltip.formatter({
-      seriesId: 'statistics$executions$failed',
-      dataIndex: 0,
-      color: COLOR_FAILED,
-    });
+    const html = tooltipText(
+      option.tooltip.formatter({
+        seriesId: 'statistics$executions$failed',
+        dataIndex: 0,
+        color: COLOR_CHART_FAILED,
+      }),
+    );
 
     expect(html).toContain('Failed: 3 (30%)');
     expect(html).not.toContain('Passed');
     expect(html).not.toContain('Skipped');
   });
 
-  test('tooltip formatter shows the total as its own bold row when the total line itself is hovered', () => {
+  test('leaves out the segments switched off in the legend', () => {
     const option = getOption({
       content: sampleContent,
       contentFields: sampleContentFields,
       isPreview: false,
       formatMessage,
       attributes,
-      userSettings: { showTotal: true },
+      userSettings: {},
+      uncheckedLegendItems: ['statistics$executions$failed'],
+    });
+
+    const text = tooltipText(
+      option.tooltip.formatter({ seriesId: 'statistics$executions$passed', dataIndex: 0 }),
+    );
+
+    expect(text).toContain('Passed: 6 (60%)');
+    expect(text).toContain('Skipped: 1 (10%)');
+    expect(text).not.toContain('Failed');
+  });
+
+  test('escapes attribute keys and values, and strips unsafe markup from the tooltip content', () => {
+    const [first] = sampleContent;
+    const option = getOption({
+      content: [
+        {
+          ...first,
+          attributeValue: '<img src=x onerror=alert(1)>',
+          content: { ...first.content, tooltipContent: 'Build <script>alert(2)</script><b>1</b>' },
+        },
+      ],
+      contentFields: sampleContentFields,
+      isPreview: false,
+      formatMessage,
+      attributes: ['<b>build</b>'],
+      userSettings: {},
+    });
+
+    const html = option.tooltip.formatter({
+      seriesId: 'statistics$executions$passed',
+      dataIndex: 0,
+    });
+
+    expect(html).toContain('&lt;b&gt;build&lt;/b&gt;: &lt;img src=x onerror=alert(1)&gt;');
+    expect(html).not.toContain('<img');
+    expect(html).not.toContain('<script');
+    expect(html).toContain('<b>1</b>');
+  });
+
+  test('tooltip formatter shows the total count on its own when the total line itself is hovered', () => {
+    const option = getOption({
+      content: sampleContent,
+      contentFields: sampleContentFields,
+      isPreview: false,
+      formatMessage,
+      attributes,
+      userSettings: { showTotal: true, percentage: true },
     });
 
     const html = option.tooltip.formatter({
       seriesId: 'statistics$executions$total',
       dataIndex: 0,
-      color: COLOR_BLACK,
+      color: TOTAL_LINE_COLOR,
     });
 
-    // The total is always 100% of itself, and nothing else from the
-    // category shows alongside it.
-    expect(html).toContain('Total: 10 (100%)');
+    // The total is always 100% of itself and keeps its absolute count even in
+    // percentage mode; nothing else from the category shows alongside it.
+    expect(tooltipText(html)).toContain('Total: 10 (100%)');
     expect(html).not.toContain('Passed');
-    const totalRowIndex = html.indexOf('Total: 10');
-    const totalRowStart = html.lastIndexOf('<div', totalRowIndex);
-    expect(html.slice(totalRowStart, totalRowIndex)).toContain('font-weight: 600');
+    expect(html).toContain(`background-color:${COLOR_WHITE_TWO}`);
   });
 
   test('never fades other bars when one is hovered', () => {
@@ -516,5 +732,72 @@ describe('cumulativeTrendChart getOption', () => {
     option.series.forEach((series) => {
       expect(series.emphasis.focus).toBe('none');
     });
+  });
+
+  test('lightens a hovered segment to 75% of its own opacity, without scaling it', () => {
+    const option = getOption({
+      content: sampleContent,
+      contentFields: sampleContentFields,
+      isPreview: false,
+      formatMessage,
+      attributes,
+      userSettings: {},
+    });
+
+    const byId = Object.fromEntries(option.series.map((series) => [series.id, series]));
+
+    expect(byId['statistics$executions$passed'].emphasis).toMatchObject({
+      scale: false,
+      itemStyle: { opacity: 0.75 },
+    });
+    expect(byId['statistics$defects$product_bug$total'].emphasis.itemStyle.opacity).toBeCloseTo(
+      0.225,
+    );
+  });
+});
+
+describe('cumulativeTrendChart getStackSeriesIds', () => {
+  const defectFields = [
+    'statistics$defects$product_bug$total',
+    'statistics$defects$automation_bug$total',
+  ];
+
+  test('returns every execution series for a hovered execution segment', () => {
+    expect(getStackSeriesIds('statistics$executions$passed', defectFields, false)).toEqual([
+      'statistics$executions$failed',
+      'statistics$executions$skipped',
+      'statistics$executions$passed',
+    ]);
+  });
+
+  test('returns every defect series for a hovered defect segment', () => {
+    expect(getStackSeriesIds('statistics$defects$automation_bug$total', defectFields, false)).toEqual(
+      defectFields,
+    );
+  });
+
+  test('returns only the hovered series with "Separate"', () => {
+    expect(getStackSeriesIds('statistics$executions$failed', defectFields, true)).toEqual([
+      'statistics$executions$failed',
+    ]);
+  });
+
+  test('matches the stacks of the bar series', () => {
+    const option = getOption({
+      content: sampleContent,
+      contentFields: sampleContentFields,
+      isPreview: false,
+      formatMessage,
+      attributes,
+      userSettings: {},
+    });
+    const stackOf = (id) => option.series.find((item) => item.id === id).stack;
+
+    getStackSeriesIds('statistics$executions$passed', defectFields, false).forEach((id) =>
+      expect(stackOf(id)).toBe(stackOf('statistics$executions$passed')),
+    );
+    expect(stackOf('statistics$defects$product_bug$total')).not.toBe(
+      stackOf('statistics$executions$passed'),
+    );
   });
 });

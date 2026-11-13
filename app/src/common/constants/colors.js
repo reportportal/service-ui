@@ -46,11 +46,12 @@ export const COLOR_DULL_RED = '#f56e6e';
 export const COLOR_DULL_GREEN = '#add8a2';
 export const COLOR_INTERRUPTED = '#ffc64a';
 
-// DS 6 chart tokens (Launch statistics chart)
+// DS 6 chart tokens
 export const COLOR_CHART_PASSED = '#3AA76D';
 export const COLOR_CHART_FAILED = '#DC5959';
 export const COLOR_CHART_SKIPPED = '#C1C7D0';
 export const COLOR_ALMOST_BLACK = '#3f3f3f'; // same as $COLOR--almost-black / --rp-ui-base-almost-black
 export const COLOR_CHART_AXIS_LINE = '#e1e4e9';
+export const COLOR_CHART_AXIS_TITLE = '#a2aab5'; // --rp-ui-base-e-300
 export const COLOR_CHART_SLIDER_ACCENT = COLOR_TO_INVESTIGATE;
 export const COLOR_CHART_SLIDER_BG = '#e3e7ed';

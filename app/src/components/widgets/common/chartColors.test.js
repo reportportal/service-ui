@@ -21,7 +21,7 @@ import {
   COLOR_CHART_SKIPPED,
   COLOR_PRODUCT_BUG,
 } from 'common/constants/colors';
-import { getLaunchStatisticsColor } from './chartColors';
+import { getChartColor } from './chartColors';
 
 const DEFECT_TYPES = {
   PRODUCT_BUG: [
@@ -32,35 +32,35 @@ const DEFECT_TYPES = {
   AUTOMATION_BUG: [{ locator: 'automation_bug', color: '#444444' }],
 };
 
-describe('getLaunchStatisticsColor', () => {
+describe('getChartColor', () => {
   test.each([
     ['statistics$executions$passed', COLOR_CHART_PASSED],
     ['statistics$executions$failed', COLOR_CHART_FAILED],
     ['statistics$executions$skipped', COLOR_CHART_SKIPPED],
   ])('execution status %s uses the DS 6 status color', (name, expected) => {
-    expect(getLaunchStatisticsColor(name, DEFECT_TYPES)).toBe(expected);
+    expect(getChartColor(name, DEFECT_TYPES)).toBe(expected);
   });
 
   test('group-level defect (total) uses the default group color, not the project color', () => {
-    expect(getLaunchStatisticsColor('statistics$defects$product_bug$total', DEFECT_TYPES)).toBe(
+    expect(getChartColor('statistics$defects$product_bug$total', DEFECT_TYPES)).toBe(
       COLOR_PRODUCT_BUG,
     );
     expect(
-      getLaunchStatisticsColor('statistics$defects$automation_bug$automation_bug', DEFECT_TYPES),
+      getChartColor('statistics$defects$automation_bug$automation_bug', DEFECT_TYPES),
     ).toBe(COLOR_AUTOMATION_BUG);
   });
 
   test('the default subtype of a group (first locator) is treated as the group', () => {
     expect(
-      getLaunchStatisticsColor('statistics$defects$product_bug$product_bug', DEFECT_TYPES),
+      getChartColor('statistics$defects$product_bug$product_bug', DEFECT_TYPES),
     ).toBe(COLOR_PRODUCT_BUG);
   });
 
   test('custom defect subtypes keep the color configured in the project', () => {
-    expect(getLaunchStatisticsColor('statistics$defects$product_bug$pb001', DEFECT_TYPES)).toBe(
+    expect(getChartColor('statistics$defects$product_bug$pb001', DEFECT_TYPES)).toBe(
       '#222222',
     );
-    expect(getLaunchStatisticsColor('statistics$defects$product_bug$pb_custom', DEFECT_TYPES)).toBe(
+    expect(getChartColor('statistics$defects$product_bug$pb_custom', DEFECT_TYPES)).toBe(
       '#333333',
     );
   });

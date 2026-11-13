@@ -66,6 +66,7 @@ export { createNamespacedActionPredicate } from './createNamespacedActionPredica
 export { omit } from './omit';
 export { calculateFontColor } from './calculateFontColor';
 export { createExternalLink } from './createExternalLink';
+export { escapeHtml } from './escapeHtml';
 export { findAssignedProjectByOrganization } from './findAssignedProjectByOrganization';
 export { combineNameAndEmailToFrom, separateFromIntoNameAndEmail } from './fieldTransformer';
 export { delay, delayedPut } from './delay';

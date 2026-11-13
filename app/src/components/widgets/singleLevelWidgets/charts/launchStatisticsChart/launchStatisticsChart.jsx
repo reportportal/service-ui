@@ -40,7 +40,7 @@ import { getMillisecondsWoTimezone } from 'common/utils/timeDateUtils';
 import { isSingleColumnChart } from './config/utils';
 import { getOption, getBarSeriesData } from './config/getOption';
 import { TOTAL_KEY, LEGEND_MAX_HEIGHT } from './constants';
-import { getLaunchStatisticsColor } from './chartColors';
+import { getChartColor } from 'components/widgets/common/chartColors';
 import { applyZoomSliderStyles } from './zoomSliderStyles';
 import styles from './launchStatisticsChart.scss';
 
@@ -236,7 +236,7 @@ export const LaunchStatisticsChart = ({
       uncheckedLegendItems,
       legendProps: {
         className: cx('legend'),
-        getColor: getLaunchStatisticsColor,
+        getColor: getChartColor,
         maxHeight: LEGEND_MAX_HEIGHT,
         alwaysShowScroll: true,
       },
