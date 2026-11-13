@@ -15,31 +15,37 @@
  */
 
 .container {
+  flex: 0 1 auto;
+  min-width: 0;
   margin-right: auto;
-  margin-left: 40px;
-  color: $COLOR--charcoal-grey;
-  text-transform: uppercase;
-  font-size: 14px;
-  font-family: $FONT-SEMIBOLD;
+  color: var(--rp-ui-base-e-300);
+  font-family: var(--rp-ui-base-font-family);
+  font-weight: var(--rp-ui-base-fw-regular);
+  font-size: 13px;
+  line-height: 18px;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-
-  &.static {
-    margin-left: 0;
-  }
 }
 
 .link {
-  color: $COLOR--topaz;
   cursor: pointer;
-  padding-right: 5px;
+
+  &:hover {
+    color: var(--rp-ui-base-topaz-hover);
+  }
 }
 
 .icon {
   display: inline-block;
-  width: 20px;
-  height: 20px;
-  fill: $COLOR--charcoal-grey;
-  vertical-align: text-top;
+  width: 16px;
+  height: 16px;
+  margin: 0 4px;
+  fill: var(--rp-ui-base-e-300);
+  vertical-align: text-bottom;
+
+  svg {
+    width: 100%;
+    height: 100%;
+  }
 }

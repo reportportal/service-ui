@@ -35,6 +35,9 @@ export const DEFECTS = 'defects';
 export const TOTAL_KEY = 'total';
 export const DURATION = 'duration';
 
+// same as --rp-ui-base-font-family: chart text cannot read CSS variables
+export const CHART_FONT_FAMILY = 'Roboto, Arial, Helvetica, sans-serif';
+
 export const COLORS = {
   [TO_INVESTIGATE]: AVAILABLE_COLORS[`COLOR_${TO_INVESTIGATE.toUpperCase()}`],
   [INVESTIGATED]: AVAILABLE_COLORS[`COLOR_${INVESTIGATED.toUpperCase()}`],

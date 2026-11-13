@@ -17,13 +17,21 @@
 import { Fragment, memo, useCallback } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
-import { InputCheckbox } from 'components/inputs/inputCheckbox';
+import { Checkbox } from '@reportportal/ui-kit';
 import { Legend } from 'components/widgets/common/legend';
+import { getChartColor } from 'components/widgets/common/chartColors';
 import { CumulativeChartBreadcrumbs } from './cumulativeChartBreadcrumbs';
 import styles from './cumulativeChartLegend.scss';
 
 const cx = classNames.bind(styles);
 const noop = () => {};
+const LEGEND_STYLE_PROPS = {
+  className: cx('legend'),
+  itemClassName: cx('legend-item'),
+  markClassName: cx('legend-mark'),
+  labelClassName: cx('legend-label'),
+  getColor: getChartColor,
+};
 
 function CumulativeChartLegendComponent(props) {
   const {
@@ -66,7 +74,12 @@ function CumulativeChartLegendComponent(props) {
     [onChangeUserSettings],
   );
 
-  const { defectTypes, showTotal, separate, percentage } = userSettings;
+  const {
+    defectTypes = false,
+    showTotal = false,
+    separate = false,
+    percentage = false,
+  } = userSettings;
 
   return (
     <div className={cx('cumulative-trend-chart-legend')}>
@@ -80,48 +93,25 @@ function CumulativeChartLegendComponent(props) {
 
         {isChartDataAvailable && (
           <Fragment>
-            {!isPrintMode && <Legend className={cx('legend')} {...props} />}
+            {!isPrintMode && <Legend {...props} {...LEGEND_STYLE_PROPS} />}
             {isLegendControlsShown && (
               <div className={cx('controls')}>
-                <div className={cx('control')}>
-                  <InputCheckbox value={defectTypes} onChange={onChangeFocusType}>
-                    Defect Types
-                  </InputCheckbox>
-                </div>
-
-                <div className={cx('control')}>
-                  <InputCheckbox
-                    className={cx('control')}
-                    value={showTotal}
-                    onChange={onChangeTotals}
-                  >
-                    Totals
-                  </InputCheckbox>
-                </div>
-
-                <div
-                  className={cx('control', 'separate', { 'separate-active': separate })}
+                <Checkbox className={cx('control')} value={defectTypes} onChange={onChangeFocusType}>
+                  Defect Types
+                </Checkbox>
+                <Checkbox className={cx('control')} value={showTotal} onChange={onChangeTotals}>
+                  Totals
+                </Checkbox>
+                <Checkbox className={cx('control')} value={separate} onChange={onChangeSeparate}>
+                  Separate
+                </Checkbox>
+                <Checkbox
+                  className={cx('control')}
+                  value={percentage}
+                  onChange={onChangePercentage}
                 >
-                  <InputCheckbox
-                    className={cx('separate-checkbox')}
-                    value={separate}
-                    onChange={onChangeSeparate}
-                  >
-                    Separate
-                  </InputCheckbox>
-                </div>
-
-                <div
-                  className={cx('control', 'percentage', { 'percentage-active': percentage })}
-                >
-                  <InputCheckbox
-                    className={cx('percentage-checkbox')}
-                    value={percentage}
-                    onChange={onChangePercentage}
-                  >
-                    Percentage
-                  </InputCheckbox>
-                </div>
+                  Percentage
+                </Checkbox>
               </div>
             )}
           </Fragment>
@@ -129,7 +119,7 @@ function CumulativeChartLegendComponent(props) {
       </div>
       {isChartDataAvailable && isPrintMode && (
         <div className={cx('legend-second-row')}>
-          <Legend className={cx('legend')} {...props} />
+          <Legend {...props} {...LEGEND_STYLE_PROPS} />
         </div>
       )}
     </div>

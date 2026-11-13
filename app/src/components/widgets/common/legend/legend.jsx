@@ -46,6 +46,9 @@ export class Legend extends Component {
     customBlock: PropTypes.node,
     uncheckedLegendItems: PropTypes.array,
     className: PropTypes.string,
+    itemClassName: PropTypes.string,
+    markClassName: PropTypes.string,
+    labelClassName: PropTypes.string,
     getColor: PropTypes.func,
     maxHeight: PropTypes.number,
     alwaysShowScroll: PropTypes.bool,
@@ -63,6 +66,9 @@ export class Legend extends Component {
     customBlock: null,
     uncheckedLegendItems: [],
     className: null,
+    itemClassName: null,
+    markClassName: null,
+    labelClassName: null,
     getColor: getItemColor,
     maxHeight: 65,
     alwaysShowScroll: false,
@@ -116,6 +122,9 @@ export class Legend extends Component {
       onMouseOut,
       colors,
       getColor,
+      itemClassName,
+      markClassName,
+      labelClassName,
     } = this.props;
 
     return items.map((name) => {
@@ -126,21 +135,25 @@ export class Legend extends Component {
         <span
           key={name}
           data-id={name}
-          className={cx('legend-item', {
-            disabled,
-            unchecked: uncheckedLegendItems.indexOf(name) !== -1,
-          })}
+          className={cx(
+            'legend-item',
+            {
+              disabled,
+              unchecked: uncheckedLegendItems.indexOf(name) !== -1,
+            },
+            itemClassName,
+          )}
           onClick={disabled || !clickable ? null : this.onClick}
           onMouseOver={disabled ? null : this.onMouseOver}
           onMouseOut={disabled ? null : onMouseOut}
         >
           <span
-            className={cx('color-mark')}
+            className={cx('color-mark', markClassName)}
             style={{
               backgroundColor: isItemConfig ? getColor(name, this.props.defectTypes) : colors[name],
             }}
           />
-          <span className={cx('item-name')}>
+          <span className={cx('item-name', labelClassName)}>
             {isItemConfig
               ? getItemName({ itemName: name, defectTypes, noTotal, formatMessage })
               : formatMessage(messages[name])}
