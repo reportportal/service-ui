@@ -31,7 +31,8 @@ import { createBarSeries } from '../../common/stackedBarSeries';
 import { buildAxisTooltip, buildItemTooltip } from '../../common/echartsAxisBuilders';
 import { IssueTypeStatTooltip } from '../../common/issueTypeStatTooltip';
 import { getConfigData, calculateTooltipParams } from './utils';
-import { TIMELINE_AXIS_DATE_FORMAT, CHART_FONT_FAMILY } from '../constants';
+import { CHART_FONT_FAMILY } from 'components/widgets/common/constants';
+import { TIMELINE_AXIS_DATE_FORMAT } from '../constants';
 
 const AXIS_LABEL_STYLE = {
   fontFamily: CHART_FONT_FAMILY,

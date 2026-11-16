@@ -38,8 +38,9 @@ import { BEFORE_AFTER_METHOD_TYPES_SEQUENCE } from 'common/constants/methodTypes
 import { STATE_READY, DEFECTS, TOTAL_KEY } from 'components/widgets/common/constants';
 import SearchIcon from 'common/img/search-icon-inline.svg';
 import FiltersIcon from 'common/img/filters-icon-inline.svg';
-import { getOption } from './config/getOption';
-import { EXECUTION_FIELDS, getColorForKey, getDefectFields } from './config/utils';
+import { getChartColor } from 'components/widgets/common/chartColors';
+import { getOption, getStackSeriesIds } from './config/getOption';
+import { EXECUTION_FIELDS, getDefectFields } from './config/utils';
 import { CumulativeChartLegend } from './legend/cumulativeChartLegend';
 import { ActionsPopup } from './actionsPopup';
 import {
@@ -51,7 +52,7 @@ import styles from './cumulativeTrendChart.scss';
 
 const cx = classNames.bind(styles);
 
-const LEGEND_HEIGHT = 45;
+const LEGEND_HEIGHT = 44;
 const PRINTED_LEGEND_HEIGHT = 80;
 const ACTIONS_POPUP_Z_INDEX = 9999999;
 
@@ -98,6 +99,8 @@ export const CumulativeTrendChart = ({
   const getStatisticsLink = useSelector(statisticsLinkSelector);
 
   const chartRef = useRef(null);
+  // the hover handlers are registered once, on chart creation
+  const stackSettingsRef = useRef({ defectFields: [], separate: false });
   const clickPositionRef = useRef({ left: 0, top: 0 });
   const prevWidgetOptionsRef = useRef(widget.contentParameters.widgetOptions);
 
@@ -125,6 +128,10 @@ export const CumulativeTrendChart = ({
   const content = widget.content.result;
   const widgetState = widget.contentParameters?.widgetOptions.state;
   const isChartDataAvailable = !!content?.length;
+  stackSettingsRef.current = {
+    defectFields: getDefectFields(contentFields),
+    separate: !!userSettings.separate,
+  };
 
   const hideActionsPopup = useCallback(() => {
     setPopupState({
@@ -175,7 +182,7 @@ export const CumulativeTrendChart = ({
   const legendColors = useMemo(() => {
     const colors = {};
     legendItems.forEach((field) => {
-      colors[field] = getColorForKey(field);
+      colors[field] = getChartColor(field);
     });
     return colors;
   }, [legendItems]);
@@ -337,6 +344,20 @@ export const CumulativeTrendChart = ({
 
   const onChartCreated = useCallback((node, chart) => {
     chartRef.current = chart;
+
+    const toggleStackHighlight = (type) => (params) => {
+      if (params.componentType !== 'series' || params.seriesType !== 'bar') {
+        return;
+      }
+      const { defectFields, separate } = stackSettingsRef.current;
+      chart.dispatchAction({
+        type,
+        seriesId: getStackSeriesIds(params.seriesId, defectFields, separate),
+        dataIndex: params.dataIndex,
+      });
+    };
+    chart.on('mouseover', toggleStackHighlight('highlight'));
+    chart.on('mouseout', toggleStackHighlight('downplay'));
   }, []);
 
   useEffect(() => {

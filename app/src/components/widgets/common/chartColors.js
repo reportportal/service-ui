@@ -15,7 +15,7 @@
  */
 
 import { getItemColor, getItemNameConfig } from 'components/widgets/common/utils';
-import { DEFECTS, EXECUTIONS } from 'components/widgets/common/constants';
+import { DEFECTS, EXECUTIONS, TOTAL_KEY } from 'components/widgets/common/constants';
 import {
   COLOR_CHART_PASSED,
   COLOR_CHART_FAILED,
@@ -26,7 +26,6 @@ import {
   COLOR_SYSTEM_ISSUE,
   COLOR_TO_INVESTIGATE,
 } from 'common/constants/colors';
-import { TOTAL_KEY } from './constants';
 
 const STATUS_COLORS = {
   passed: COLOR_CHART_PASSED,
@@ -42,7 +41,9 @@ const DEFECT_GROUP_COLORS = {
   to_investigate: COLOR_TO_INVESTIGATE,
 };
 
-export const getLaunchStatisticsColor = (itemName, defectTypes) => {
+// DS 6 chart colors: statuses and group-level defects use the Chart tokens,
+// custom defect subtypes keep the color configured in the project.
+export const getChartColor = (itemName, defectTypes) => {
   const { itemType, defectType, locator } = getItemNameConfig(itemName);
 
   if (itemType === EXECUTIONS && STATUS_COLORS[defectType]) {

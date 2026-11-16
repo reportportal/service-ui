@@ -18,7 +18,7 @@ import moment from 'moment';
 import classNames from 'classnames/bind';
 import { normalizeChartData } from 'components/widgets/common/utils';
 import { TIMELINE_TOOLTIP_DATE_FORMAT } from '../constants';
-import { getLaunchStatisticsColor } from '../chartColors';
+import { getChartColor } from 'components/widgets/common/chartColors';
 import styles from '../launchStatisticsChart.scss';
 
 const cx = classNames.bind(styles);
@@ -41,7 +41,7 @@ export const getConfigData = (
 
   contentFields.forEach((key) => {
     chartData[key] = [key];
-    colors[key] = getLaunchStatisticsColor(key, defectTypes);
+    colors[key] = getChartColor(key, defectTypes);
   });
 
   widgetData

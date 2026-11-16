@@ -45,9 +45,11 @@ export class CumulativeChartBreadcrumbs extends PureComponent {
 
   render() {
     const { attributes, activeAttribute, activeAttributes, isStatic } = this.props;
+    const currentLevelKey = activeAttribute ? attributes[activeAttributes.length] : null;
+    const arrow = <i className={cx('icon')}>{Parser(RightArrowIcon)}</i>;
 
     return (
-      <div className={cx('container', { static: isStatic })}>
+      <div className={cx('container')}>
         {activeAttribute
           ? activeAttributes.map((attr, i) => (
               <span key={attr.key}>
@@ -59,13 +61,12 @@ export class CumulativeChartBreadcrumbs extends PureComponent {
                   </span>
                 )}
                 {': '}
-                {attr.value}{' '}
-                {i + 1 < activeAttributes.length && (
-                  <i className={cx('icon')}>{Parser(RightArrowIcon)}</i>
-                )}
+                {attr.value}
+                {(i + 1 < activeAttributes.length || currentLevelKey) && arrow}
               </span>
             ))
           : attributes[0]}
+        {currentLevelKey}
       </div>
     );
   }
