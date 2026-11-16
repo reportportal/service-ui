@@ -175,6 +175,15 @@ const messages = defineMessages({
     id: 'LaunchLevelEntities.ImportanceTitle',
     defaultMessage: 'Importance',
   },
+  ImportanceDisabledTooltip: {
+    id: 'LaunchLevelEntities.ImportanceDisabledTooltip',
+    defaultMessage:
+      'This criterion is not applied because the Administrator disabled Important Launches feature',
+  },
+  ImportancePlaceholder: {
+    id: 'LaunchLevelEntities.ImportancePlaceholder',
+    defaultMessage: 'Select status',
+  },
   ImportanceImportant: {
     id: 'LaunchLevelEntities.ImportanceImportantOption',
     defaultMessage: 'Important launches',
@@ -271,34 +280,6 @@ export class LaunchLevelEntities extends Component {
           selectAll: true,
         },
       },
-      ...(isImportantLaunchesEnabled
-        ? [
-            {
-              id: ENTITY_RETENTION_POLICY,
-              component: EntityDropdown,
-              kind: FILTER_ENTITY_KIND.DROPDOWN,
-              value: this.bindDefaultValue(ENTITY_RETENTION_POLICY, {
-                condition: CONDITION_IN,
-              }),
-              title: intl.formatMessage(messages.ImportanceTitle),
-              active: visibleFilters.includes(ENTITY_RETENTION_POLICY),
-              removable: true,
-              customProps: {
-                options: [
-                  {
-                    label: intl.formatMessage(messages.ImportanceImportant),
-                    value: RETENTION_POLICY.IMPORTANT,
-                  },
-                  {
-                    label: intl.formatMessage(messages.ImportanceRegular),
-                    value: RETENTION_POLICY.REGULAR,
-                  },
-                ],
-                multiple: true,
-              },
-            },
-          ]
-        : []),
       {
         id: ENTITY_DESCRIPTION,
         component: EntityInputConditional,
@@ -358,6 +339,36 @@ export class LaunchLevelEntities extends Component {
           valueURLCreator: URLS.launchAttributeValuesSearch,
         },
       },
+      ...(isImportantLaunchesEnabled
+        ? [
+            {
+              id: ENTITY_RETENTION_POLICY,
+              component: EntityDropdown,
+              kind: FILTER_ENTITY_KIND.DROPDOWN,
+              value: this.bindDefaultValue(ENTITY_RETENTION_POLICY, {
+                condition: CONDITION_IN,
+              }),
+              title: intl.formatMessage(messages.ImportanceTitle),
+              active: visibleFilters.includes(ENTITY_RETENTION_POLICY),
+              removable: true,
+              customProps: {
+                placeholder: intl.formatMessage(messages.ImportancePlaceholder),
+                options: [
+                  {
+                    label: intl.formatMessage(messages.ImportanceImportant),
+                    value: RETENTION_POLICY.IMPORTANT,
+                  },
+                  {
+                    label: intl.formatMessage(messages.ImportanceRegular),
+                    value: RETENTION_POLICY.REGULAR,
+                  },
+                ],
+                multiple: true,
+                selectAll: true,
+              },
+            },
+          ]
+        : []),
       {
         id: STATS_TOTAL,
         component: EntityInputConditional,
@@ -455,23 +466,32 @@ export class LaunchLevelEntities extends Component {
   };
 
   collectLostEntities = (entities) => {
+    const { intl } = this.props;
     const lostKeys = Object.keys(this.props.filterValues).filter(
       (key) => !entities.find((entity) => entity.id === key),
     );
-    return lostKeys.map((key) => ({
-      id: key,
-      value: this.props.filterValues[key],
-      active: true,
-      static: true,
-      title: key.split('$').pop(),
-      component: EntityContains,
-      kind: FILTER_ENTITY_KIND.CONTAINS,
-      removable: true,
-      customProps: {
-        disabled: true,
-        error: 'error',
-      },
-    }));
+    return lostKeys.map((key) => {
+      const isRetentionPolicy = key === ENTITY_RETENTION_POLICY;
+      return {
+        id: key,
+        value: this.props.filterValues[key],
+        active: true,
+        static: true,
+        title: isRetentionPolicy
+          ? intl.formatMessage(messages.ImportanceTitle)
+          : key.split('$').pop(),
+        component: EntityContains,
+        kind: FILTER_ENTITY_KIND.CONTAINS,
+        removable: true,
+        customProps: {
+          disabled: true,
+          error: 'error',
+          ...(isRetentionPolicy && {
+            title: intl.formatMessage(messages.ImportanceDisabledTooltip),
+          }),
+        },
+      };
+    });
   };
 
   bindDefaultValue = bindDefaultValue;

@@ -31,7 +31,8 @@ import { filterIdSelector } from 'controllers/pages';
 import { isEmptyValue } from 'common/utils/isEmptyValue';
 import { createFilterQuery } from 'components/filterEntities/containers/utils';
 import { formatSortingString, SORTING_ASC, SORTING_DESC, SORTING_KEY } from 'controllers/sorting';
-import { ENTITY_NUMBER } from 'components/filterEntities/constants';
+import { ENTITY_NUMBER, ENTITY_RETENTION_POLICY } from 'components/filterEntities/constants';
+import { importantLaunchesEnabledSelector } from 'controllers/appInfo';
 import {
   FETCH_LAUNCHES,
   NAMESPACE,
@@ -52,7 +53,16 @@ function* fetchLaunchesWithParams({ payload }) {
   const projectKey = yield select(projectKeySelector);
   const params = yield select(queryParametersSelector);
   const isDebugMode = yield select(debugModeSelector);
+  const isImportantLaunchesEnabled = yield select(importantLaunchesEnabledSelector);
   const queryParams = { ...params, ...payload };
+  if (!isImportantLaunchesEnabled) {
+    // keys look like `filter.<condition>.retentionPolicy` or `predefinedFilter.retentionPolicy`
+    Object.keys(queryParams).forEach((key) => {
+      if (key.split('.').pop() === ENTITY_RETENTION_POLICY) {
+        delete queryParams[key];
+      }
+    });
+  }
   if (!isDebugMode && !queryParams['filter.in.launchType']) {
     queryParams['filter.in.launchType'] = `${LAUNCH_TYPES.AGENTIC},${LAUNCH_TYPES.AUTOMATION}`;
   }
@@ -100,9 +110,15 @@ function* fetchLaunches() {
   }
   let filtersQuery = {};
   if (activeFilter) {
+    const isImportantLaunchesEnabled = yield select(importantLaunchesEnabledSelector);
     filtersQuery = createFilterQuery(
       activeFilter.conditions
         .filter(notEmptyConditionsPredicate)
+        // Importance criterion is ignored while the Important Launches feature is OFF
+        .filter(
+          ({ filteringField }) =>
+            isImportantLaunchesEnabled || filteringField !== ENTITY_RETENTION_POLICY,
+        )
         .reduce((res, condition) => ({ ...res, [condition.filteringField]: condition }), {}),
     );
     if (activeFilter.orders && activeFilter.orders.length > 0) {
