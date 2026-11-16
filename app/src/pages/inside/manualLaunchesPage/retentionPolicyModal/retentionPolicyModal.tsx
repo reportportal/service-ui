@@ -22,6 +22,7 @@ import { Modal } from '@reportportal/ui-kit';
 import { VoidFn } from '@reportportal/ui-kit/common';
 
 import { RETENTION_POLICY } from 'common/constants/retentionPolicy';
+import { createClassnames } from 'common/utils';
 import { LoadingSubmitButton } from 'components/loadingSubmitButton';
 import { useModalButtons } from 'hooks/useModalButtons';
 import { MANUAL_LAUNCHES_PAGE_EVENTS } from 'components/main/analytics/events/ga4Events/manualLaunchesPageEvents';
@@ -29,6 +30,10 @@ import { MANUAL_LAUNCHES_PAGE_EVENTS } from 'components/main/analytics/events/ga
 import { useChangeRetentionPolicy } from './useChangeRetentionPolicy';
 import { messages } from './messages';
 import { RetentionPolicyModalData } from './types';
+
+import styles from './retentionPolicyModal.scss';
+
+const cx = createClassnames(styles);
 
 interface RetentionPolicyModalProps {
   data: RetentionPolicyModalData;
@@ -70,6 +75,7 @@ export const RetentionPolicyModal = ({ data, onSuccess = noop }: RetentionPolicy
   return (
     <Modal
       title={formatMessage(isMark ? messages.markAsImportantTitle : messages.unmarkAsImportantTitle)}
+      className={cx('retention-policy-modal')}
       okButton={okButton}
       cancelButton={cancelButton}
       onClose={hideModal}

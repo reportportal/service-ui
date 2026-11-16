@@ -307,6 +307,7 @@ export const ManualLaunchesPage = () => {
             fullLaunches={content}
             isLoading={isLoading}
             onRefresh={handleRefresh}
+            hasActiveSearchOrFilters={hasActiveFilters || Boolean(appliedSearchQuery)}
           />
         </div>
         {Boolean(pageInfo?.totalElements) && (
