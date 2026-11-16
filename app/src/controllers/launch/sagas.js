@@ -31,7 +31,8 @@ import { filterIdSelector } from 'controllers/pages';
 import { isEmptyValue } from 'common/utils/isEmptyValue';
 import { createFilterQuery } from 'components/filterEntities/containers/utils';
 import { formatSortingString, SORTING_ASC, SORTING_DESC, SORTING_KEY } from 'controllers/sorting';
-import { ENTITY_NUMBER } from 'components/filterEntities/constants';
+import { ENTITY_NUMBER, ENTITY_RETENTION_POLICY } from 'components/filterEntities/constants';
+import { importantLaunchesEnabledSelector } from 'controllers/appInfo';
 import {
   FETCH_LAUNCHES,
   NAMESPACE,
@@ -100,9 +101,15 @@ function* fetchLaunches() {
   }
   let filtersQuery = {};
   if (activeFilter) {
+    const isImportantLaunchesEnabled = yield select(importantLaunchesEnabledSelector);
     filtersQuery = createFilterQuery(
       activeFilter.conditions
         .filter(notEmptyConditionsPredicate)
+        // Importance criterion is ignored while the Important Launches feature is OFF
+        .filter(
+          ({ filteringField }) =>
+            isImportantLaunchesEnabled || filteringField !== ENTITY_RETENTION_POLICY,
+        )
         .reduce((res, condition) => ({ ...res, [condition.filteringField]: condition }), {}),
     );
     if (activeFilter.orders && activeFilter.orders.length > 0) {
