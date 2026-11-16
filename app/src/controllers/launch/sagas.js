@@ -53,7 +53,16 @@ function* fetchLaunchesWithParams({ payload }) {
   const projectKey = yield select(projectKeySelector);
   const params = yield select(queryParametersSelector);
   const isDebugMode = yield select(debugModeSelector);
+  const isImportantLaunchesEnabled = yield select(importantLaunchesEnabledSelector);
   const queryParams = { ...params, ...payload };
+  if (!isImportantLaunchesEnabled) {
+    // keys look like `filter.<condition>.retentionPolicy` or `predefinedFilter.retentionPolicy`
+    Object.keys(queryParams).forEach((key) => {
+      if (key.split('.').pop() === ENTITY_RETENTION_POLICY) {
+        delete queryParams[key];
+      }
+    });
+  }
   if (!isDebugMode && !queryParams['filter.in.launchType']) {
     queryParams['filter.in.launchType'] = `${LAUNCH_TYPES.AGENTIC},${LAUNCH_TYPES.AUTOMATION}`;
   }
