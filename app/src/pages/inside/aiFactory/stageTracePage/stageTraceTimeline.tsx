@@ -20,65 +20,14 @@ import { useVirtualizer } from '@tanstack/react-virtual';
 
 import { createClassnames } from 'common/utils';
 import { StageTraceEvent } from 'controllers/aiFactory/stageTrace';
-import { StageTraceEventData } from 'pages/inside/aiFactory/stageTracePage/stageTraceGraders';
+import { TraceEvent } from 'pages/inside/aiFactory/stageTracePage/stageTraceEvent';
 import { messages } from 'pages/inside/aiFactory/stageTracePage/messages';
 import styles from 'pages/inside/aiFactory/stageTracePage/stageTracePage.scss';
 
 interface StageTraceTimelineProps {
   events: StageTraceEvent[];
 }
-interface TraceEventProps {
-  event: StageTraceEvent;
-  expanded: boolean;
-  onToggle: () => void;
-}
 const cx = createClassnames(styles);
-
-const TraceEvent = ({ event, expanded, onToggle }: TraceEventProps) => {
-  const { formatMessage } = useIntl();
-  return (
-    <article className={cx('event')}>
-      <button
-        type="button"
-        className={cx('event__toggle')}
-        aria-expanded={expanded}
-        aria-controls={`trace-event-${event.seq}`}
-        onClick={onToggle}
-        data-automation-id={`traceEvent-${event.seq}`}
-      >
-        <span aria-hidden="true">{expanded ? '▾' : '▸'}</span>
-        <strong>{event.type}</strong>
-        <span>{event.title}</span>
-        {event.offsetMs !== undefined && (
-          <span className={cx('event__time')}>+{event.offsetMs} ms</span>
-        )}
-        {event.durationMs !== undefined && <span>{event.durationMs} ms</span>}
-      </button>
-      {expanded && (
-        <div id={`trace-event-${event.seq}`} className={cx('event__body')}>
-          {event.target !== undefined && (
-            <p>
-              <strong>{formatMessage(messages.eventTarget)}: </strong>
-              {event.target}
-            </p>
-          )}
-          {event.text !== undefined && (
-            <div
-              role="textbox"
-              aria-readonly="true"
-              tabIndex={0}
-              className={cx('event__text')}
-              aria-label={formatMessage(messages.eventText)}
-            >
-              {event.text}
-            </div>
-          )}
-          <StageTraceEventData event={event} />
-        </div>
-      )}
-    </article>
-  );
-};
 
 export const StageTraceTimeline = ({ events }: StageTraceTimelineProps) => {
   const { formatMessage } = useIntl();

@@ -26,6 +26,10 @@ import { LivePipelineSettingsButton } from '../pipelineSettings';
 import { IterationProvenance } from './iterationProvenance';
 import { KpiTile } from './kpiTile';
 import { StageTraceAction } from './stageTraceAction/stageTraceAction';
+import {
+  IterationStageTraceEntry,
+  type IterationStageTraceEntryProps,
+} from './stageTraceAction/iterationStageTraceEntry';
 import { GenerationReviewTraceChooser } from './generationReviewTraceChooser/generationReviewTraceChooser';
 import { LiveReviewCases } from './liveReviewCases/liveReviewCases';
 import { CaseLink } from './stagePanels/caseLink';
@@ -70,6 +74,15 @@ jest.mock('../pipelineSettings', () => ({
 interface TestNodes {
   map: <T>(callback: (node: CommonWrapper) => T) => T[];
 }
+
+const traceEntry = (wrapper: CommonWrapper) =>
+  shallow(
+    <IterationStageTraceEntry
+      {...(wrapper
+        .find(IterationStageTraceEntry)
+        .props() as unknown as IterationStageTraceEntryProps)}
+    />,
+  );
 
 const breadcrumbDescriptors = [{ id: 'iteration', title: 'Iteration #3' }];
 
@@ -116,9 +129,35 @@ describe('ReducedIterationDetails', () => {
         requestedStage="agent-create"
       />,
     );
-    expect(wrapper.find(StageTraceAction).prop('stageKey')).toBe('agent-create');
+    expect(traceEntry(wrapper).find(StageTraceAction).prop('stageKey')).toBe('agent-create');
     (wrapper.find('[data-automation-id="reducedStageCard-12"]').prop('onClick') as () => void)();
-    expect(wrapper.find(StageTraceAction)).toHaveLength(0);
+    expect(traceEntry(wrapper).find(StageTraceAction)).toHaveLength(0);
+  });
+
+  test('defaults to the first stage when a later legacy stage has no canonical stage key', () => {
+    const wrapper = shallow(
+      <ReducedIterationDetails
+        iteration={detail({
+          stages: [
+            {
+              id: 11,
+              key: 'create',
+              stageKey: 'create',
+              label: 'Create',
+              sequence: 1,
+              status: 'PASSED',
+            },
+            { id: 12, key: 'legacy-upload', label: 'Upload', sequence: 2, status: 'PASSED' },
+          ],
+        })}
+        hasError={false}
+        isUnavailable={false}
+        breadcrumbDescriptors={breadcrumbDescriptors}
+        onRetry={jest.fn()}
+        projectKey="demo"
+      />,
+    );
+    expect(traceEntry(wrapper).find(StageTraceAction).prop('stageKey')).toBe('create');
   });
 
   test.each(['TEST_CASE_GENERATION', undefined])(
@@ -147,8 +186,8 @@ describe('ReducedIterationDetails', () => {
           projectKey="demo"
         />,
       );
-      expect(wrapper.find(GenerationReviewTraceChooser)).toHaveLength(1);
-      expect(wrapper.find(StageTraceAction)).toHaveLength(0);
+      expect(traceEntry(wrapper).find(GenerationReviewTraceChooser)).toHaveLength(1);
+      expect(traceEntry(wrapper).find(StageTraceAction)).toHaveLength(0);
     },
   );
 
@@ -176,8 +215,8 @@ describe('ReducedIterationDetails', () => {
         projectKey="demo"
       />,
     );
-    expect(wrapper.find(GenerationReviewTraceChooser)).toHaveLength(0);
-    expect(wrapper.find(StageTraceAction).prop('stageKey')).toBe('review');
+    expect(traceEntry(wrapper).find(GenerationReviewTraceChooser)).toHaveLength(0);
+    expect(traceEntry(wrapper).find(StageTraceAction).prop('stageKey')).toBe('review');
   });
 
   test.each([

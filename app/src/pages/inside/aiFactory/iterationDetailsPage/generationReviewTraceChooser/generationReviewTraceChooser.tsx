@@ -14,22 +14,18 @@
  * limitations under the License.
  */
 
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useMemo } from 'react';
 import { useIntl } from 'react-intl';
 import { useDispatch, useSelector } from 'react-redux';
 import { Button } from '@reportportal/ui-kit';
 
 import { useAiFactoryEnabled } from 'controllers/aiFactory';
-import {
-  PROJECT_PIPELINE_STAGE_TRACE_PAGE,
-  urlOrganizationAndProjectSelector,
-} from 'controllers/pages';
+import { urlOrganizationAndProjectSelector } from 'controllers/pages';
+import { createStageTraceAction } from 'pages/inside/aiFactory/common/stageTrace/navigation';
+import { useScopedTraceRequest } from 'pages/inside/aiFactory/common/stageTrace/useScopedTraceRequest';
 import { ProjectDetails } from 'pages/organization/constants';
 
-import {
-  loadGenerationReviewRounds,
-  type GenerationReviewTraceRound,
-} from './loadGenerationReviewRounds';
+import { loadGenerationReviewRounds } from './loadGenerationReviewRounds';
 import { messages } from './messages';
 
 export interface GenerationReviewTraceChooserProps {
@@ -56,7 +52,7 @@ export const GenerationReviewTraceChooser = ({
     urlOrganizationAndProjectSelector,
   ) as ProjectDetails;
   const idsKey = JSON.stringify([...new Set(displayIds)]);
-  const scope = useMemo(
+  const resource = useMemo(
     () => ({
       projectKey,
       idsKey,
@@ -64,87 +60,67 @@ export const GenerationReviewTraceChooser = ({
       iterationId,
       stageKey,
       refreshIdentity,
-      enabled,
-      active: true,
-      controller: undefined as AbortController | undefined,
+      organizationSlug,
+      projectSlug,
     }),
-    [projectKey, idsKey, pipelineId, iterationId, stageKey, refreshIdentity, enabled],
+    [
+      projectKey,
+      idsKey,
+      pipelineId,
+      iterationId,
+      stageKey,
+      refreshIdentity,
+      organizationSlug,
+      projectSlug,
+    ],
   );
-  const currentScope = useRef(scope);
-  currentScope.current = scope;
-  const [state, setState] = useState<{
-    scope: object;
-    loading?: boolean;
-    rounds?: GenerationReviewTraceRound[];
-    incomplete?: boolean;
-  }>();
-  const isCurrent = () => enabled && scope.active && currentScope.current === scope;
-  useEffect(() => {
-    scope.active = true;
-    return () => {
-      scope.active = false;
-      scope.controller?.abort();
-    };
-  }, [scope]);
+  const { loading, data, error, run, isCurrent } = useScopedTraceRequest<
+    Awaited<ReturnType<typeof loadGenerationReviewRounds>>
+  >(resource, enabled);
   const ids = JSON.parse(idsKey) as string[];
   const canLoad = Boolean(projectKey && ids.length && ids.length <= 50);
-  const load = async () => {
-    if (!isCurrent() || !canLoad || scope.controller) return;
-    const controller = new AbortController();
-    scope.controller = controller;
-    setState({ scope, loading: true });
-    try {
-      const result = await loadGenerationReviewRounds(
+  const load = () => {
+    if (!canLoad) return;
+    void run((signal) =>
+      loadGenerationReviewRounds(
         projectKey,
         ids,
         { sourcePipelineId: pipelineId, sourceIterationId: iterationId },
-        controller.signal,
-      );
-      if (isCurrent() && !controller.signal.aborted) setState({ scope, ...result });
-    } catch {
-      if (isCurrent() && !controller.signal.aborted)
-        setState({ scope, rounds: [], incomplete: true });
-    } finally {
-      if (scope.controller === controller) scope.controller = undefined;
-    }
+        signal,
+      ),
+    );
   };
+  const rounds = error ? [] : data?.rounds;
   if (!enabled) return null;
-  const current = state?.scope === scope ? state : undefined;
   return (
     <section data-automation-id="generation-review-trace-chooser">
       <h3>{formatMessage(messages.title)}</h3>
       <p>{formatMessage(messages.limitation)}</p>
       {!canLoad && <p>{formatMessage(messages.unsupported)}</p>}
       {canLoad && (
-        <Button variant="text" disabled={current?.loading} onClick={() => void load()}>
-          {formatMessage(current?.rounds ? messages.refresh : messages.load)}
+        <Button variant="text" disabled={loading} onClick={load}>
+          {formatMessage(rounds ? messages.refresh : messages.load)}
         </Button>
       )}
-      {current?.loading && <output aria-live="polite">{formatMessage(messages.loading)}</output>}
-      {current?.incomplete && <p role="alert">{formatMessage(messages.incomplete)}</p>}
-      {current?.rounds?.length === 0 && <p>{formatMessage(messages.empty)}</p>}
-      {current?.rounds?.map((round) => (
+      {loading && <output aria-live="polite">{formatMessage(messages.loading)}</output>}
+      {(error || data?.incomplete) && <p role="alert">{formatMessage(messages.incomplete)}</p>}
+      {rounds?.length === 0 && <p>{formatMessage(messages.empty)}</p>}
+      {rounds?.map((round) => (
         <Button
           key={`${round.testCaseId}:${round.roundId}`}
           variant="text"
           onClick={() => {
             if (!isCurrent()) return;
-            dispatch({
-              type: PROJECT_PIPELINE_STAGE_TRACE_PAGE,
-              payload: {
-                organizationSlug,
-                projectSlug,
-                pipelineId: round.pipelineId,
-                iterationId: round.iterationId,
-                stageKey: 'fix',
-              },
-              query: {
-                fixRoundNumber: String(round.roundNumber),
-                returnPipelineId: String(pipelineId),
-                returnIterationId: String(iterationId),
-                ...(stageKey ? { returnStageKey: stageKey } : {}),
-              },
-            });
+            dispatch(
+              createStageTraceAction(
+                { organizationSlug, projectSlug },
+                { pipelineId: round.pipelineId, iterationId: round.iterationId, stageKey: 'fix' },
+                {
+                  fixRoundNumber: round.roundNumber,
+                  returnTo: { pipelineId, iterationId, stageKey },
+                },
+              ),
+            );
           }}
         >
           {formatMessage(messages.open, { caseName: round.displayId, number: round.roundNumber })}

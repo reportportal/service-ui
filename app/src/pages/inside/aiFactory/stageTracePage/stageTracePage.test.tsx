@@ -19,11 +19,15 @@ import { createRoot, type Root } from 'react-dom/client';
 import { useStageTrace } from './useStageTrace';
 import { StageTracePage } from './stageTracePage';
 import { StageTraceTimeline } from './stageTraceTimeline';
-import { readTraceGraderData, StageTraceEventData } from './stageTraceGraders';
+import { readTraceGraderData } from './stageTraceGraderUtils';
+import { StageTraceEventData } from './stageTraceEventData';
 
 const mockDispatch = jest.fn();
 let mockEnabled = true;
 let mockQuery: Record<string, string> = {};
+let mockProjectLoading = false;
+let mockActiveProjectKey = 'project-key';
+let mockActiveProject = { organizationSlug: 'org', projectSlug: 'project' };
 const mockRoute = {
   organizationSlug: 'org',
   projectSlug: 'project',
@@ -92,11 +96,11 @@ jest.mock('controllers/pages', () => ({
 jest.mock('controllers/project', () => ({
   projectKeySelector: () => 'project-key',
   projectNameSelector: () => 'My project',
-  projectInfoLoadingSelector: () => false,
+  projectInfoLoadingSelector: () => mockProjectLoading,
 }));
 jest.mock('controllers/user', () => ({
-  activeProjectKeySelector: () => 'project-key',
-  activeProjectSelector: () => mockRoute,
+  activeProjectKeySelector: () => mockActiveProjectKey,
+  activeProjectSelector: () => mockActiveProject,
 }));
 jest.mock('layouts/settingsLayout', () => ({
   SettingsLayout: ({ children }: { children: ReactNode }) => children,
@@ -164,6 +168,9 @@ describe('stage trace page states and navigation', () => {
     jest.clearAllMocks();
     mockEnabled = true;
     mockQuery = {};
+    mockProjectLoading = false;
+    mockActiveProjectKey = 'project-key';
+    mockActiveProject = { organizationSlug: 'org', projectSlug: 'project' };
     useTraceMock.mockReturnValue(readyState);
   });
 
@@ -186,6 +193,49 @@ describe('stage trace page states and navigation', () => {
       payload: { organizationSlug: 'org', projectSlug: 'project', pipelineId: 7, iterationId: 31 },
       query: { stage: 'fix' },
     });
+  });
+
+  test.each([
+    [
+      'unresolved project metadata',
+      () => {
+        mockProjectLoading = true;
+      },
+    ],
+    [
+      'another active project key',
+      () => {
+        mockActiveProjectKey = 'other-project';
+      },
+    ],
+    [
+      'another active project route',
+      () => {
+        mockActiveProject = { organizationSlug: 'org', projectSlug: 'other' };
+      },
+    ],
+  ])('waits without requesting a trace for %s', (_name, setUnresolved) => {
+    setUnresolved();
+    const wrapper = render(<StageTracePage />);
+    expect(useTraceMock).toHaveBeenCalledWith(expect.objectContaining({ enabled: false }));
+    expect(wrapper.textContent).toContain('Loading trace');
+  });
+
+  test('enables a direct target route after the active project finishes changing', () => {
+    mockProjectLoading = true;
+    mockActiveProjectKey = 'previous-project';
+    mockActiveProject = { organizationSlug: 'org', projectSlug: 'previous' };
+    const container = document.createElement('div');
+    const root = createRoot(container);
+    roots.push(root);
+    act(() => root.render(<StageTracePage />));
+    expect(useTraceMock).toHaveBeenLastCalledWith(expect.objectContaining({ enabled: false }));
+    mockProjectLoading = false;
+    mockActiveProjectKey = 'project-key';
+    mockActiveProject = { organizationSlug: 'org', projectSlug: 'project' };
+    act(() => root.render(<StageTracePage />));
+    expect(useTraceMock).toHaveBeenLastCalledWith(expect.objectContaining({ enabled: true }));
+    expect(container.textContent).not.toContain('Loading trace');
   });
 
   test('preserves source iteration and stage when returning from a fix-round trace', () => {
@@ -218,7 +268,7 @@ describe('stage trace page states and navigation', () => {
       type: 'DASHBOARD',
       payload: { organizationSlug: 'org', projectSlug: 'project' },
     });
-    expect(wrapper.childElementCount === 0).toBe(true);
+    expect(wrapper.childElementCount).toBe(0);
   });
 
   test.each([
@@ -325,20 +375,21 @@ describe('trace event disclosure', () => {
         ]}
       />,
     );
-    expect(wrapper.querySelectorAll<HTMLElement>('[role="textbox"]')).toHaveLength(0);
+    expect(wrapper.querySelectorAll<HTMLTextAreaElement>('textarea')).toHaveLength(0);
     expect(wrapper.textContent).not.toContain('README.md');
     expect(wrapper.querySelector('button')?.getAttribute('aria-expanded')).toBe('false');
     expect(wrapper.textContent).toContain('+0 ms');
     act(() => wrapper.querySelector('button')?.click());
     expect(wrapper.querySelector('button')?.getAttribute('aria-expanded')).toBe('true');
-    expect(wrapper.querySelectorAll<HTMLElement>('[role="textbox"]')[0].textContent).toBe(text);
+    expect(wrapper.querySelectorAll<HTMLTextAreaElement>('textarea')[0].value).toBe(text);
     expect(wrapper.querySelectorAll('img')).toHaveLength(0);
-    expect(wrapper.querySelectorAll<HTMLElement>('[role="textbox"]')[1].textContent).toContain(
+    expect(wrapper.querySelectorAll<HTMLTextAreaElement>('textarea')[1].value).toContain(
       '"score": 0',
     );
-    expect(wrapper.querySelectorAll<HTMLElement>('[role="textbox"]')[0].tabIndex).toBe(0);
+    expect(wrapper.querySelectorAll<HTMLTextAreaElement>('textarea')[0].tabIndex).toBe(0);
+    expect(wrapper.querySelectorAll<HTMLTextAreaElement>('textarea')[0].readOnly).toBe(true);
     act(() => wrapper.querySelector('button')?.click());
-    expect(wrapper.querySelectorAll<HTMLElement>('[role="textbox"]')).toHaveLength(0);
+    expect(wrapper.querySelectorAll<HTMLTextAreaElement>('textarea')).toHaveLength(0);
   });
 });
 
@@ -371,9 +422,9 @@ describe('grader trace presentation', () => {
     expect(wrapper.textContent).not.toContain('17 / 100');
     expect(wrapper.querySelectorAll('tbody tr')).toHaveLength(2);
     expect(wrapper.textContent).toContain('0 / 0');
-    expect(wrapper.querySelector('[role="textbox"]')).toBeNull();
+    expect(wrapper.querySelector<HTMLTextAreaElement>('textarea')).toBeNull();
     discloseJson(wrapper);
-    expect(wrapper.querySelector('[role="textbox"]')?.textContent).toBe(
+    expect(wrapper.querySelector<HTMLTextAreaElement>('textarea')?.value).toBe(
       JSON.stringify(data, null, 2),
     );
   });
@@ -406,7 +457,7 @@ describe('grader trace presentation', () => {
   ])('falls back to complete raw JSON for unknown or invalid structured data %#', (data) => {
     const wrapper = render(<StageTraceEventData event={{ seq: 0, type: 'GRADERS', data }} />);
     expect(wrapper.querySelector('table')).toBeNull();
-    expect(wrapper.querySelector('[role="textbox"]')?.textContent).toBe(
+    expect(wrapper.querySelector<HTMLTextAreaElement>('textarea')?.value).toBe(
       JSON.stringify(data, null, 2),
     );
   });
@@ -425,9 +476,9 @@ describe('grader trace presentation', () => {
     const wrapper = render(<StageTraceEventData event={{ seq: 0, type: 'GRADERS', data }} />);
     expect(wrapper.textContent).toContain('0 / 100');
     expect(wrapper.querySelector('table')).toBeNull();
-    expect(wrapper.querySelector('[role="textbox"]')).toBeNull();
+    expect(wrapper.querySelector<HTMLTextAreaElement>('textarea')).toBeNull();
     discloseJson(wrapper);
-    expect(wrapper.querySelector('[role="textbox"]')?.textContent).toBe(
+    expect(wrapper.querySelector<HTMLTextAreaElement>('textarea')?.value).toBe(
       JSON.stringify(data, null, 2),
     );
   });
@@ -462,7 +513,7 @@ describe('grader trace presentation', () => {
     expect(wrapper.textContent).not.toContain('Clarity');
     act(() => wrapper.querySelector('button')?.click());
     expect(wrapper.querySelector('table')).not.toBeNull();
-    expect(wrapper.textContent).toContain('72 -> 88 / 100');
+    expect(wrapper.querySelector<HTMLTextAreaElement>('textarea')?.value).toBe('72 -> 88 / 100');
     expect(wrapper.textContent).toContain('72 → 88 / 100');
   });
 });

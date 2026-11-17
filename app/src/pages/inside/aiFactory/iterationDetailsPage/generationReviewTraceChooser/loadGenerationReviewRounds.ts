@@ -16,8 +16,14 @@
 
 import { URLS } from 'common/urls';
 import { fetch } from 'common/utils';
-import { getLiveIterationIdentity } from 'pages/inside/aiFactory/common/iterationReferences/liveIterationIdentity';
-import { getLiveLibraryCases } from 'pages/inside/aiFactory/iterationDetailsPage/liveReviewCases/liveLibraryCases';
+import {
+  getLiveIterationIdentity,
+  type LiveIterationIdentity,
+} from 'pages/inside/aiFactory/common/iterationReferences/liveIterationIdentity';
+import {
+  getLiveLibraryCases,
+  type LiveLibraryCase,
+} from 'pages/inside/aiFactory/iterationDetailsPage/liveReviewCases/liveLibraryCases';
 import { loadLiveFixRound } from 'pages/inside/aiFactory/review/liveFixRounds';
 import { normalizeLiveReview } from 'pages/inside/aiFactory/review/liveReviewComments';
 
@@ -35,6 +41,50 @@ export interface GenerationReviewSource {
   sourceIterationId: number;
 }
 
+interface RoundResolution {
+  round?: GenerationReviewTraceRound;
+  incomplete: boolean;
+}
+
+const isDirectResult = (iteration: LiveIterationIdentity, source: GenerationReviewSource) =>
+  iteration.pipelineId === source.sourcePipelineId &&
+  iteration.id !== source.sourceIterationId &&
+  (iteration.rerunOf === undefined || iteration.rerunOf.id === source.sourceIterationId);
+
+const resolveCaseRound = async (
+  projectKey: string,
+  displayId: string,
+  testCase: LiveLibraryCase | null,
+  source: GenerationReviewSource,
+  signal: AbortSignal,
+): Promise<RoundResolution> => {
+  if (!testCase || signal.aborted) return { incomplete: true };
+  try {
+    const response = await fetch(URLS.liveTestCaseReview(projectKey, testCase.id), { signal });
+    const review = normalizeLiveReview(response);
+    if (!review.fixRoundId) return { incomplete: false };
+    const round = await loadLiveFixRound(projectKey, testCase.id, review.fixRoundId, signal);
+    if (!round.resultIterationId || round.previousIterationId !== source.sourceIterationId)
+      return { incomplete: false };
+    const iteration = await getLiveIterationIdentity(projectKey, round.resultIterationId, signal);
+    if (!iteration) return { incomplete: true };
+    if (!isDirectResult(iteration, source)) return { incomplete: false };
+    return {
+      incomplete: false,
+      round: {
+        testCaseId: testCase.id,
+        displayId,
+        roundId: round.id,
+        roundNumber: round.roundNumber,
+        iterationId: iteration.id,
+        pipelineId: iteration.pipelineId,
+      },
+    };
+  } catch {
+    return { incomplete: true };
+  }
+};
+
 export const loadGenerationReviewRounds = async (
   projectKey: string,
   displayIds: string[],
@@ -43,44 +93,9 @@ export const loadGenerationReviewRounds = async (
 ): Promise<{ rounds: GenerationReviewTraceRound[]; incomplete: boolean }> => {
   const cases = await getLiveLibraryCases(projectKey, displayIds, signal);
   const results = await Promise.all(
-    cases.map(async ({ displayId, testCase }) => {
-      if (!testCase || signal.aborted) return { incomplete: true };
-      try {
-        const response = await fetch(URLS.liveTestCaseReview(projectKey, testCase.id), { signal });
-        const review = normalizeLiveReview(response);
-        if (!review.fixRoundId) return { incomplete: false };
-        const round = await loadLiveFixRound(projectKey, testCase.id, review.fixRoundId, signal);
-        if (!round.resultIterationId || round.previousIterationId !== source.sourceIterationId) {
-          return { incomplete: false };
-        }
-        const iteration = await getLiveIterationIdentity(
-          projectKey,
-          round.resultIterationId,
-          signal,
-        );
-        if (!iteration) return { incomplete: true };
-        if (
-          iteration.pipelineId !== source.sourcePipelineId ||
-          iteration.id === source.sourceIterationId ||
-          (iteration.rerunOf !== undefined && iteration.rerunOf.id !== round.previousIterationId)
-        ) {
-          return { incomplete: false };
-        }
-        return {
-          incomplete: false,
-          round: {
-            testCaseId: testCase.id,
-            displayId,
-            roundId: round.id,
-            roundNumber: round.roundNumber,
-            iterationId: iteration.id,
-            pipelineId: iteration.pipelineId,
-          },
-        };
-      } catch {
-        return { incomplete: true };
-      }
-    }),
+    cases.map(({ displayId, testCase }) =>
+      resolveCaseRound(projectKey, displayId, testCase, source, signal),
+    ),
   );
   return {
     rounds: results.flatMap(({ round }) => (round ? [round] : [])),

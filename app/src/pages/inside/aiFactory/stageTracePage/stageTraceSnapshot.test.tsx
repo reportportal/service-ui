@@ -32,8 +32,6 @@ jest.mock('common/utils', () => ({
     () =>
     (...names: string[]) =>
       names.join(' '),
-  formatCost: (value: number) => `$${value.toFixed(2)}`,
-  formatTokens: (value: number) => String(value),
 }));
 jest.mock('common/utils/timeDateUtils', () => ({
   formatDuration: (value: number) => `${value} ms`,
@@ -111,6 +109,44 @@ describe('trace attempt snapshot', () => {
     expect(wrapper.querySelector('a')?.getAttribute('href')).toBe('https://ci.example/1');
     expect(wrapper.querySelector('a')?.getAttribute('rel')).toBe('noopener noreferrer');
     expect(wrapper.textContent).toContain('CI trigger');
+  });
+
+  test('preserves generic numeric precision while compacting only token-usage values', () => {
+    const data = {
+      ...iteration,
+      stages: [
+        {
+          ...iteration.stages[0],
+          attributes: [
+            { key: 'temperature', label: 'Temperature', value: '0.7', valueType: 'NUMBER' },
+            { key: 'quality', label: 'Quality', value: '87.5', valueType: 'NUMBER' },
+            { key: 'count', label: 'Count', value: '1000', valueType: 'NUMBER' },
+          ],
+          sections: [
+            {
+              key: 'tokenUsage',
+              title: 'Tokens',
+              role: 'DETAILS' as const,
+              columns: [{ key: 'input', label: 'Input tokens', valueType: 'NUMBER' }],
+              rows: [{ key: 'tokens', cells: { input: '1000' }, details: [] }],
+            },
+          ],
+        },
+      ],
+    };
+    const wrapper = render(
+      <StageTraceSnapshot iteration={data} stageKey="fix" attempt={selected(2)} />,
+    );
+    const fields = Array.from(wrapper.querySelectorAll('dt')).map((label) => [
+      label.textContent,
+      label.nextElementSibling?.textContent,
+    ]);
+    expect(Object.fromEntries(fields)).toMatchObject({
+      Temperature: '0.7',
+      Quality: '87.5',
+      Count: '1000',
+      'Input tokens': '1.0k',
+    });
   });
 
   test('shows the current snapshot only for the matching attempt', () => {

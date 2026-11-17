@@ -99,6 +99,20 @@ describe('native Review fix iteration references', () => {
     expect(links()?.prop('resourceKey')).not.toBe(caseScope);
   });
 
+  test('does not render a numeric zero when the result iteration ID is absent', async () => {
+    await act(async () => {
+      wrapper = mount(
+        <LiveFixIterationLinks
+          reviewState={reviewState({ fixRoundState: { ...round, resultIterationId: 0 } })}
+          isReadOnly
+        />,
+      ) as MountedWrapper;
+      await Promise.resolve();
+    });
+    wrapper?.update();
+    expect(wrapper?.text()).toBe('');
+  });
+
   test('offers no fabricated lookup when a round or its iteration IDs are absent', async () => {
     await act(async () => {
       wrapper = mount(

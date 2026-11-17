@@ -23,10 +23,11 @@ import {
   StageTrace,
   StageTraceAttempt,
   TraceResource,
+  StageTraceErrorReason,
 } from 'controllers/aiFactory/stageTrace';
 import type { ReducedPipelineIterationDetail } from 'controllers/aiFactory/pipelines';
 
-export type TraceFailure = 'FORBIDDEN' | 'NOT_FOUND' | 'INVALID_RESPONSE' | 'REQUEST_FAILED';
+export type TraceFailure = StageTraceErrorReason;
 export interface StageTraceState {
   scope: string;
   attempts?: StageTraceAttempt[];

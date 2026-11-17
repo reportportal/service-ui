@@ -25,10 +25,8 @@ import {
   StageTraceError,
   type StageTraceAttempt,
 } from 'controllers/aiFactory/stageTrace';
-import {
-  PROJECT_PIPELINE_STAGE_TRACE_PAGE,
-  urlOrganizationAndProjectSelector,
-} from 'controllers/pages';
+import { urlOrganizationAndProjectSelector } from 'controllers/pages';
+import { createStageTraceAction } from 'pages/inside/aiFactory/common/stageTrace/navigation';
 import { ProjectDetails } from 'pages/organization/constants';
 
 import { messages } from './messages';
@@ -40,6 +38,17 @@ export interface StageTraceActionProps {
   stageKey: string;
   refreshIdentity?: object;
 }
+
+const getAvailabilityMessage = (attempts?: StageTraceAttempt[], error?: string) => {
+  if (error === 'FORBIDDEN') return messages.forbidden;
+  if (error === 'NOT_FOUND') return messages.missing;
+  if (error) return messages.error;
+  if (!attempts) return messages.loading;
+  if (attempts.some(({ current, traceStatus }) => current && traceStatus === 'REPORTED'))
+    return messages.reported;
+  if (attempts.some(({ traceStatus }) => traceStatus === 'REPORTED')) return messages.earlier;
+  return messages.notReported;
+};
 
 export const StageTraceAction = ({
   projectKey,
@@ -84,31 +93,16 @@ export const StageTraceAction = ({
   if (!enabled) return null;
   const current = state?.scope === scope ? state : undefined;
   const currentAttempt = current?.attempts?.find(({ current: isCurrent }) => isCurrent);
-  let message = messages.loading;
-  if (current?.error) {
-    message = messages.error;
-    if (current.error === 'FORBIDDEN') message = messages.forbidden;
-    if (current.error === 'NOT_FOUND') message = messages.missing;
-  } else if (current?.attempts) {
-    message = messages.notReported;
-    if (current.attempts.some(({ traceStatus }) => traceStatus === 'REPORTED'))
-      message = messages.earlier;
-    if (currentAttempt?.traceStatus === 'REPORTED') message = messages.reported;
-  }
+  const message = getAvailabilityMessage(current?.attempts, current?.error);
+  const target = { pipelineId, iterationId, stageKey };
   return (
     <div data-automation-id="stage-trace-action">
       <Button
         variant="text"
         onClick={() =>
-          dispatch({
-            type: PROJECT_PIPELINE_STAGE_TRACE_PAGE,
-            payload: { organizationSlug, projectSlug, pipelineId, iterationId, stageKey },
-            query: {
-              returnPipelineId: String(pipelineId),
-              returnIterationId: String(iterationId),
-              returnStageKey: stageKey,
-            },
-          })
+          dispatch(
+            createStageTraceAction({ organizationSlug, projectSlug }, target, { returnTo: target }),
+          )
         }
       >
         {formatMessage(messages.open)}

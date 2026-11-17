@@ -105,7 +105,13 @@
   &__text {
     white-space: pre-wrap;
     overflow-wrap: anywhere;
-    word-break: break-word;
+    word-break: normal;
+    display: block;
+    width: 100%;
+    box-sizing: border-box;
+    border: 0;
+    color: inherit;
+    resize: vertical;
     max-height: 420px;
     overflow: auto;
     margin-top: 8px;

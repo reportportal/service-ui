@@ -17,15 +17,20 @@
 import { Fragment } from 'react';
 import { useIntl } from 'react-intl';
 
-import { createClassnames, formatCost, formatTokens } from 'common/utils';
+import { createClassnames } from 'common/utils';
+import { isHttpUrl } from 'common/utils/isHttpUrl';
 import { formatDuration } from 'common/utils/timeDateUtils';
 import type {
   ReducedPipelineIterationDetail,
   ReducedPipelineDetailStage,
   ReducedPipelineStageAttempt,
-  ReducedPipelineAttribute,
 } from 'controllers/aiFactory/pipelines/liveAdapters';
 import type { StageTraceAttempt } from 'controllers/aiFactory/stageTrace';
+import {
+  findAttemptSnapshot,
+  formatSnapshotAttribute,
+  getTokenUsageFields,
+} from 'pages/inside/aiFactory/stageTracePage/stageTraceSnapshotUtils';
 import { messages } from 'pages/inside/aiFactory/stageTracePage/messages';
 import styles from 'pages/inside/aiFactory/stageTracePage/stageTracePage.scss';
 
@@ -36,34 +41,10 @@ interface StageTraceSnapshotProps {
   hasError?: boolean;
 }
 const cx = createClassnames(styles);
-export const findAttemptSnapshot = (
-  stage: ReducedPipelineDetailStage | undefined,
-  attempt: StageTraceAttempt | undefined,
-) => {
-  if (!stage || !attempt) return undefined;
-  if (stage.attempt === attempt.attempt) return stage;
-  return stage.attempts?.find((item) => item.attempt === attempt.attempt);
-};
-const isHttpUrl = (value: string) => {
-  try {
-    return ['http:', 'https:'].includes(new URL(value).protocol);
-  } catch {
-    return false;
-  }
-};
-const formatAttribute = (attribute: ReducedPipelineAttribute) => {
-  if (attribute.value.trim() === '') return attribute.value;
-  const value = Number(attribute.value);
-  if (!Number.isFinite(value)) return attribute.value;
-  if (attribute.valueType === 'MONEY') return formatCost(value);
-  if (attribute.valueType === 'NUMBER') return formatTokens(value);
-  return attribute.value;
-};
-const SnapshotFields = ({
-  snapshot,
-}: {
+interface SnapshotFieldsProps {
   snapshot: ReducedPipelineStageAttempt | ReducedPipelineDetailStage;
-}) => {
+}
+const SnapshotFields = ({ snapshot }: SnapshotFieldsProps) => {
   const { formatMessage } = useIntl();
   return (
     <dl className={cx('snapshot__fields')}>
@@ -92,27 +73,15 @@ const SnapshotFields = ({
       {snapshot.attributes?.map((attribute) => (
         <Fragment key={attribute.key}>
           <dt title={attribute.description}>{attribute.label ?? attribute.key}</dt>
-          <dd>{formatAttribute(attribute)}</dd>
+          <dd>{formatSnapshotAttribute(attribute)}</dd>
         </Fragment>
       ))}
-      {snapshot.sections
-        ?.filter((section) => section.key === 'tokenUsage')
-        .flatMap((section) =>
-          section.rows.flatMap((row) =>
-            section.columns.map((column) => (
-              <Fragment key={`${section.key}-${row.key}-${column.key}`}>
-                <dt>{column.label}</dt>
-                <dd>
-                  {formatAttribute({
-                    key: column.key,
-                    value: row.cells[column.key] ?? '—',
-                    valueType: column.valueType,
-                  })}
-                </dd>
-              </Fragment>
-            )),
-          ),
-        )}
+      {getTokenUsageFields(snapshot.sections).map((field) => (
+        <Fragment key={field.key}>
+          <dt>{field.label}</dt>
+          <dd>{field.value}</dd>
+        </Fragment>
+      ))}
     </dl>
   );
 };
