@@ -41,6 +41,8 @@ import { IterationProvenance } from 'pages/inside/aiFactory/iterationDetailsPage
 import { getReducedStatusVariant } from '../common/reducedStatusVariant';
 import { LivePipelineSettingsButton } from '../pipelineSettings';
 import { LiveReviewCases } from './liveReviewCases/liveReviewCases';
+import { StageTraceAction } from './stageTraceAction/stageTraceAction';
+import { GenerationReviewTraceChooser } from './generationReviewTraceChooser/generationReviewTraceChooser';
 import { PageHeaderWithBreadcrumbsAndActions } from '../../common/pageHeaderWithBreadcrumbsAndActions';
 import { KpiTile } from './kpiTile';
 import { CaseLink } from './stagePanels/caseLink';
@@ -319,8 +321,8 @@ const findSelectedStage = (
   requestedStage?: string,
 ) =>
   stages.find(({ id }) => id === selectedStageId) ??
-  stages.find(({ key, label }) =>
-    [key, label].some((value) => value.toLowerCase() === requestedStage?.toLowerCase()),
+  stages.find(({ key, label, stageKey }) =>
+    [stageKey, key, label].some((value) => value?.toLowerCase() === requestedStage?.toLowerCase()),
   ) ??
   stages[0];
 
@@ -742,6 +744,35 @@ export const ReducedIterationDetails = ({
       (currentStage.ownedBy === 'REPORTPORTAL' &&
         currentStage.attributes?.some(({ key }) => key === 'ready'))),
   );
+  const isHumanGenerationReview =
+    isReviewStage &&
+    currentStage?.ownedBy === 'REPORTPORTAL' &&
+    (!iteration.pipelineType || iteration.pipelineType === 'TEST_CASE_GENERATION');
+  let traceContent: ReactNode;
+  if (currentStage && projectKey) {
+    if (isHumanGenerationReview) {
+      traceContent = (
+        <GenerationReviewTraceChooser
+          projectKey={projectKey}
+          displayIds={linkedCaseIds}
+          pipelineId={iteration.pipelineId}
+          iterationId={iteration.id}
+          stageKey={currentStage.stageKey}
+          refreshIdentity={iteration}
+        />
+      );
+    } else if (currentStage.stageKey) {
+      traceContent = (
+        <StageTraceAction
+          projectKey={projectKey}
+          pipelineId={iteration.pipelineId}
+          iterationId={iteration.id}
+          stageKey={currentStage.stageKey}
+          refreshIdentity={iteration}
+        />
+      );
+    }
+  }
   const bannerStage = iteration.stages.find(
     (stage) =>
       ['RUNNING', 'WAITING', 'NEEDS_HUMAN', 'FAILED'].includes(stage.status) && stage.message,
@@ -868,6 +899,7 @@ export const ReducedIterationDetails = ({
             </p>
           ))}
           {renderReducedStageCards(iteration, currentStage, setSelectedStageId, formatMessage)}
+          {traceContent}
           {currentStage &&
             renderReducedStagePanel(
               currentStage,

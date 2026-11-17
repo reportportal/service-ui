@@ -12,6 +12,11 @@ import { IterationReferenceLinks } from '../common/iterationReferences/iteration
 import { LiveFixIterationLinks } from './liveFixIterationLinks';
 import type { LiveReviewCommentsLoadState } from './useLiveReviewComments';
 
+jest.mock(
+  'pages/inside/aiFactory/iterationDetailsPage/stageTraceAction/liveFixTraceAction',
+  () => ({ LiveFixTraceAction: () => null }),
+);
+
 jest.mock('react-redux', () => ({ useSelector: jest.fn() }));
 jest.mock('controllers/project', () => ({ projectKeySelector: jest.fn() }));
 jest.mock('../common/iterationReferences/iterationReferenceLinks', () => ({

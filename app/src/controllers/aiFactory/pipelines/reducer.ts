@@ -24,6 +24,7 @@ import { loadingReducer } from 'controllers/loading';
 import {
   PROJECT_PIPELINE_COMPARISON_PAGE,
   PROJECT_PIPELINE_ITERATION_PAGE,
+  PROJECT_PIPELINE_STAGE_TRACE_PAGE,
   PROJECT_PIPELINES_PAGE,
   TEST_CASE_LIBRARY_PAGE,
 } from 'controllers/pages';
@@ -235,7 +236,9 @@ const iterationDetailsReducer = (
     return state;
   }
   if (action.type === FETCH_SUCCESS) {
-    return (action.payload?.data as IterationRS | ReducedPipelineIterationDetail | undefined) ?? null;
+    return (
+      (action.payload?.data as IterationRS | ReducedPipelineIterationDetail | undefined) ?? null
+    );
   }
   if (
     action.type === FETCH_START &&
@@ -411,7 +414,11 @@ const getPipelineDetailMeta = (action: PipelineReducerAction): PipelineDetailMet
 };
 
 const matchesDetailCatalog = (state: PipelinesState, meta: PipelineDetailMeta): boolean => {
-  if (meta.catalogTransport === 'live' && meta.catalogVersion === 0 && meta.catalogRequestId === 0) {
+  if (
+    meta.catalogTransport === 'live' &&
+    meta.catalogVersion === 0 &&
+    meta.catalogRequestId === 0
+  ) {
     return state.transport === 'live';
   }
   return (
@@ -509,6 +516,7 @@ const reducer = (
 export const aiFactoryPipelinesReducer = createPageScopedReducer(reducer, [
   PROJECT_PIPELINES_PAGE,
   PROJECT_PIPELINE_ITERATION_PAGE,
+  PROJECT_PIPELINE_STAGE_TRACE_PAGE,
   PROJECT_PIPELINE_COMPARISON_PAGE,
   TEST_CASE_LIBRARY_PAGE,
 ]);

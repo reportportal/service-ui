@@ -1035,3 +1035,69 @@ describe('native iteration provenance', () => {
     },
   );
 });
+
+describe('historical stage attempt metadata for trace snapshots', () => {
+  const stage = {
+    id: 1,
+    stageKey: 'create',
+    sequence: 1,
+    attempt: 3,
+    status: 'Passed',
+    statusCategory: 'PASSED',
+    durationMillis: 9000,
+    attributes: [{ key: 'model', value: 'current-model' }],
+  };
+  const detail = (overrides: Record<string, unknown> = {}) =>
+    adaptLivePipelineIterationDetail(
+      {
+        id: 103,
+        pipelineId: 7,
+        iterationNumber: 3,
+        stages: [{ ...stage, ...overrides }],
+      },
+      7,
+      103,
+    );
+
+  test('sorts historical attempts and retains their own zero duration, model, and CI link', () => {
+    const result = detail({
+      attempts: [
+        {
+          attempt: 2,
+          status: 'Failed',
+          statusCategory: 'FAILED',
+          durationMillis: 0,
+          attributes: [{ key: 'model', value: 'old-model' }],
+          links: [{ type: 'RUN', label: '#2', url: 'https://ci.example/run/2' }],
+        },
+        { attempt: 1, status: 'Failed', statusCategory: 'FAILED' },
+      ],
+    }).stages[0];
+    expect(result.attempts?.map((item) => item.attempt)).toEqual([1, 2]);
+    expect(result.attempts?.[1]).toMatchObject({
+      attempt: 2,
+      status: 'FAILED',
+      durationMs: 0,
+      attributes: [{ key: 'model', value: 'old-model' }],
+      links: [{ type: 'RUN', label: '#2', url: 'https://ci.example/run/2' }],
+    });
+    expect(result.attempts?.[0].attributes).toBeUndefined();
+    expect(result.attempts?.[0].durationMs).toBeUndefined();
+    expect(result.attributes?.[0].value).toBe('current-model');
+  });
+
+  test('keeps missing history unavailable without fabricating an earlier snapshot', () => {
+    expect(detail().stages[0].attempts).toBeUndefined();
+    expect(detail({ attempts: [] }).stages[0].attempts).toBeUndefined();
+  });
+
+  test.each([
+    [{ attempt: 1 }, { attempt: 1 }],
+    [{ attempt: 3 }],
+    [{ attempt: 4 }],
+    [{ attempt: 0 }],
+    [{ attempt: 1, durationMillis: -1 }],
+  ])('rejects duplicate, nonhistorical, or malformed attempt metadata %p', (...attempts) => {
+    expect(() => detail({ attempts })).toThrow('Invalid pipeline iteration detail response');
+  });
+});

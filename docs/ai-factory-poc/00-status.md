@@ -3,7 +3,13 @@
 > **Single source of truth for progress.** Update at the start and end of every task / session.
 > Legend: ⬜ todo · 🟨 in progress · 🟦 in review · ✅ done · ⛔ blocked · ➖ skipped
 
-**Last updated:** 2026-10-25 · **Branch:** `EPMRPP-122691-github-actions-journey-verification` · **Phase:** live Review and fix-round integration
+**Last updated:** 2026-11-17 · **Branch:** `feature/pipeline-stage-trace-ui` · **Phase:** Stage Trace frontend implementation and backend handoff
+
+## Stage Trace — 2026-11-17
+
+[29 — Stage Trace implementation and backend handoff](29-stage-trace-ui-backend-handoff-2026-11-17.md) records the implemented read-only trace page, attempts, virtual timeline, GRADERS, historical snapshots and native fix-result links. Local validation: 25 suites / 332 tests, full TypeScript, production build and independent code/security reviews PASS; scoped ESLint has zero errors and one TanStack compiler warning. Component fixtures were exercised in Chrome; this is not authenticated application E2E.
+
+Authenticated read-only checks returned 200 for trace attempts and trace on eleven sampled stages in `superadmin_personal` and `my-organization.epm-rpp`, all `NOT_REPORTED`, including pipeline 8 / iteration 34. Full fix-round history needs a confirmed native list contract; real producer events, historical attempts and the CI → UI journey remain NOT VERIFIED. Implementation was prepared in an isolated worktree from `bootcamp-prototype`; the user subsequently requested commit, push and a PR targeting that branch. Delivery and exact-head CI status are tracked in GitHub; no deployment is claimed. Earlier sections below retain their historical task-specific status.
 
 Temporary mock data and integration workarounds are tracked for removal in
 [23-temporary-solutions-register.md](23-temporary-solutions-register.md). Close the relevant register
