@@ -20,21 +20,22 @@ import { useDispatch, useSelector } from 'react-redux';
 import classNames from 'classnames/bind';
 import { useTracking } from 'react-tracking';
 import { useIntl } from 'react-intl';
-import { canUpdateSettings } from 'common/utils/permissions';
+import { Toggle } from '@reportportal/ui-kit';
 import {
   projectNotificationsSelector,
   projectNotificationsStateSelector,
 } from 'controllers/project';
-import { activeProjectRoleSelector, userAccountRoleSelector } from 'controllers/user';
 import {
   fetchProjectNotificationsAction,
+  fetchExistingLaunchNamesAction,
   updateNotificationStateAction,
 } from 'controllers/project/actionCreators';
+import { EMAIL } from 'common/constants/pluginNames';
 import { notificationPluginsSelector } from 'controllers/plugins/selectors';
 import { projectNotificationsLoadingSelector } from 'controllers/project/selectors';
 import { SpinningPreloader } from 'components/preloaders/spinningPreloader';
 import { PROJECT_SETTINGS_NOTIFICATIONS_EVENTS } from 'analyticsEvents/projectSettingsPageEvents';
-import { Toggle } from '@reportportal/ui-kit';
+import { useUserPermissions } from 'hooks/useUserPermissions';
 import { FieldElement, FormattedDescription } from '../elements';
 import { Layout } from '../layout';
 import { SettingsPageContent } from '../settingsPageContent';
@@ -55,16 +56,16 @@ export const Notifications = () => {
   const { formatMessage } = useIntl();
   const dispatch = useDispatch();
   const { trackEvent } = useTracking();
-  const projectRole = useSelector(activeProjectRoleSelector);
-  const userRole = useSelector(userAccountRoleSelector);
+
+  const { canUpdateSettings } = useUserPermissions();
   const isAllNotificationsEnabled = useSelector(projectNotificationsStateSelector);
   const notifications = useSelector(projectNotificationsSelector);
   const loading = useSelector(projectNotificationsLoadingSelector);
-  const isReadOnly = !canUpdateSettings(userRole, projectRole);
 
   useEffect(() => {
     dispatch(fetchProjectNotificationsAction());
-  }, []);
+    dispatch(fetchExistingLaunchNamesAction());
+  }, [dispatch]);
 
   const toggleNotificationsEnabled = (isEnabled) => {
     trackEvent(PROJECT_SETTINGS_NOTIFICATIONS_EVENTS.SWITCH_ALL_NOTIFICATIONS(isEnabled));
@@ -88,7 +89,7 @@ export const Notifications = () => {
         >
           <div className={cx('toggle')}>
             <Toggle
-              disabled={isReadOnly}
+              disabled={!canUpdateSettings}
               value={isAllNotificationsEnabled}
               onChange={(e) => toggleNotificationsEnabled(e.target.checked)}
             >
@@ -97,17 +98,19 @@ export const Notifications = () => {
           </div>
         </FieldElement>
       </Layout>
-      {allNotificationPlugins.map((item) => (
-        <RuleGroup
-          ruleDescription={item.details.ruleDescription}
-          ruleFields={item.details.ruleFields}
-          key={`rule-section-${item.name}`}
-          pluginName={item.name}
-          isPluginEnabled={item.enabled}
-          rules={notificationRulesByTypes[item.name] || []}
-        />
-      ))}
-      <NotificationsFooter isReadOnly={isReadOnly} />
+      {allNotificationPlugins
+        .filter((item) => item.enabled || item.name === EMAIL)
+        .map((item) => (
+          <RuleGroup
+            ruleDescription={item.details.ruleDescription}
+            ruleFields={item.details.ruleFields}
+            key={`rule-section-${item.name}`}
+            pluginName={item.name}
+            isPluginEnabled={item.enabled}
+            rules={notificationRulesByTypes[item.name] || []}
+          />
+        ))}
+      <NotificationsFooter isReadOnly={!canUpdateSettings} />
     </SettingsPageContent>
   );
 };

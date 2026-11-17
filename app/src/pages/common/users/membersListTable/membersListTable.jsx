@@ -1,0 +1,144 @@
+/*!
+ * Copyright 2024 EPAM Systems
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+import { useCallback } from 'react';
+import classNames from 'classnames/bind';
+import PropTypes from 'prop-types';
+import { Table } from '@reportportal/ui-kit';
+import { DEFAULT_PAGE_SIZE_OPTIONS } from 'controllers/members/constants';
+import { PaginationWrapper } from 'components/main/paginationWrapper';
+import {
+  cancelImageRequestGroup,
+  IMAGE_REQUEST_GROUP,
+} from 'components/main/image/imageRequestGroups';
+import styles from './membersListTable.scss';
+
+const cx = classNames.bind(styles);
+
+export const MembersListTable = ({
+  data,
+  primaryColumn,
+  fixedColumns,
+  onTableSorting,
+  showPagination,
+  renderRowActions,
+  sortingDirection,
+  pageSize,
+  activePage,
+  itemCount,
+  pageCount,
+  onChangePage,
+  onChangePageSize,
+  changePageSizeEvent,
+  selectable,
+  selectedRowIds,
+  disabledRowIds,
+  getRowCheckboxTooltip,
+  onToggleRowSelection,
+  onToggleAllRowsSelection,
+  bulkPanelProps,
+}) => {
+  const handleChangePage = useCallback(
+    (...args) => {
+      cancelImageRequestGroup(IMAGE_REQUEST_GROUP.MEMBERS_LIST_AVATARS);
+      onChangePage(...args);
+    },
+    [onChangePage],
+  );
+
+  const handleChangePageSize = useCallback(
+    (...args) => {
+      cancelImageRequestGroup(IMAGE_REQUEST_GROUP.MEMBERS_LIST_AVATARS);
+      onChangePageSize(...args);
+    },
+    [onChangePageSize],
+  );
+
+  const handleTableSorting = useCallback(
+    (...args) => {
+      cancelImageRequestGroup(IMAGE_REQUEST_GROUP.MEMBERS_LIST_AVATARS);
+      onTableSorting(...args);
+    },
+    [onTableSorting],
+  );
+
+  return (
+    <PaginationWrapper
+      showPagination={showPagination}
+      pageSize={pageSize}
+      activePage={activePage}
+      totalItems={itemCount}
+      totalPages={pageCount}
+      pageSizeOptions={DEFAULT_PAGE_SIZE_OPTIONS}
+      changePage={handleChangePage}
+      changePageSize={handleChangePageSize}
+      className={cx('members-pagination-wrapper')}
+      paginationContainerClassName={cx('members-pagination-container')}
+      paginationClassName={cx('members-pagination')}
+      changePageSizeEvent={changePageSizeEvent}
+      bulkPanelProps={bulkPanelProps}
+    >
+      <div className={cx('members-list-table-wrapper')}>
+        <Table
+          className={cx('members-list-table')}
+          wrapperClassName={cx('table-wrapper-fix')}
+          checkboxColumnClassName={cx('checkbox-column-fix')}
+          headerClassName={cx('table-header')}
+          rowClassName={cx('table-row')}
+          data={data}
+          primaryColumn={primaryColumn}
+          fixedColumns={fixedColumns}
+          renderRowActions={renderRowActions}
+          sortingColumn={primaryColumn}
+          sortingDirection={sortingDirection}
+          onChangeSorting={handleTableSorting}
+          sortableColumns={primaryColumn.key}
+          selectable={selectable}
+          isCheckboxOutside={selectable}
+          selectedRowIds={selectedRowIds}
+          disabledRowIds={disabledRowIds}
+          getRowCheckboxTooltip={getRowCheckboxTooltip}
+          onToggleRowSelection={onToggleRowSelection}
+          onToggleAllRowsSelection={onToggleAllRowsSelection}
+        />
+      </div>
+    </PaginationWrapper>
+  );
+};
+
+MembersListTable.propTypes = {
+  data: PropTypes.array.isRequired,
+  primaryColumn: PropTypes.object.isRequired,
+  fixedColumns: PropTypes.array.isRequired,
+  onTableSorting: PropTypes.func.isRequired,
+  showPagination: PropTypes.bool.isRequired,
+  renderRowActions: PropTypes.func,
+  sortingDirection: PropTypes.string.isRequired,
+  pageSize: PropTypes.number.isRequired,
+  activePage: PropTypes.number.isRequired,
+  itemCount: PropTypes.number.isRequired,
+  pageCount: PropTypes.number.isRequired,
+  onChangePage: PropTypes.func.isRequired,
+  onChangePageSize: PropTypes.func.isRequired,
+  changePageSizeEvent: PropTypes.func.isRequired,
+  selectable: PropTypes.bool,
+  selectedRowIds: PropTypes.array,
+  disabledRowIds: PropTypes.array,
+  getRowCheckboxTooltip: PropTypes.func,
+  onToggleRowSelection: PropTypes.func,
+  onToggleAllRowsSelection: PropTypes.func,
+  bulkPanelProps: PropTypes.object,
+};

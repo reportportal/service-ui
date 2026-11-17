@@ -1,0 +1,267 @@
+/*
+ * Copyright 2025 EPAM Systems
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+import { useIntl } from 'react-intl';
+import { isEmpty } from 'es-toolkit/compat';
+import Parser from 'html-react-parser';
+import { useDispatch, useSelector } from 'react-redux';
+import { useTracking } from 'react-tracking';
+import moment from 'moment';
+import { BreadcrumbsTreeIcon, Button, MeatballMenuIcon, Tooltip } from '@reportportal/ui-kit';
+import { CopyToClipboard } from 'react-copy-to-clipboard';
+
+import {
+  TEST_CASE_LIBRARY_EVENTS,
+  TEST_CASE_MENU_ELEMENT_NAME,
+  TEST_CASE_PLACE,
+} from 'analyticsEvents/testCaseLibraryPageEvents';
+import { createClassnames } from 'common/utils';
+import PencilIcon from 'common/img/newIcons/pencil-inline.svg';
+import IconDuplicate from 'common/img/duplicate-inline.svg';
+import { Breadcrumbs } from 'componentLibrary/breadcrumbs';
+import { ProjectDetails } from 'pages/organization/constants';
+import { PopoverControl } from 'pages/common/popoverControl';
+import { PopoverItem } from 'pages/common/popoverControl/popoverControl';
+import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
+import { REVERSED_DATE_FORMAT } from 'common/constants/timeDateFormat';
+import { showModalAction } from 'controllers/modal';
+import { TEST_CASE_LIBRARY_PAGE, urlOrganizationAndProjectSelector } from 'controllers/pages';
+import { useUserPermissions } from 'hooks/useUserPermissions';
+import { useHasTestPlans } from 'hooks/useHasTestPlans';
+import { PriorityIcon } from 'pages/inside/common/priorityIcon';
+import { testCaseLibraryBreadcrumbsSelector } from 'controllers/pages/selectors';
+import { ExecutionEstimationTime } from 'pages/inside/common/executionEstimationTime';
+import type { ExtendedTestCase, TestCasePriority } from 'types/testCase';
+
+import { messages } from './messages';
+import { commonMessages } from '../../commonMessages';
+import { EDIT_TEST_CASE_MODAL_KEY } from '../editTestCaseModal/editTestCaseModal';
+import { useDeleteTestCaseModal } from '../../deleteTestCaseModal';
+import { useEditScenarioModal } from '../../editScenarioModal';
+import { useDuplicateSelectedTestCaseModal } from '../../duplicateSelectedTestCaseModal';
+import { AddToLaunchButton } from '../../addToLaunchButton';
+
+import styles from './testCaseDetailsHeader.scss';
+
+const cx = createClassnames(styles);
+
+interface TestCaseDetailsHeaderProps {
+  className?: string;
+  testCase: ExtendedTestCase;
+  onAddToTestPlan: () => void;
+  onMenuAction?: () => void;
+  isScenarioEmpty?: boolean;
+}
+
+export const TestCaseDetailsHeader = ({
+  className,
+  testCase,
+  onAddToTestPlan,
+  onMenuAction = () => {},
+  isScenarioEmpty = false,
+}: TestCaseDetailsHeaderProps) => {
+  const { formatMessage } = useIntl();
+  const { trackEvent } = useTracking();
+  const { canManageTestCases } = useUserPermissions();
+  const { organizationSlug, projectSlug } = useSelector(
+    urlOrganizationAndProjectSelector,
+  ) as ProjectDetails;
+  const dispatch = useDispatch();
+  const testCaseIdString = String(testCase.id);
+  const { openModal: openDeleteTestCaseModal } = useDeleteTestCaseModal();
+  const { openModal: openDuplicateSelectedTestCaseModal } = useDuplicateSelectedTestCaseModal();
+  const { openModal: openEditScenarioModal } = useEditScenarioModal();
+  const { hasTestPlans } = useHasTestPlans();
+
+  const breadcrumbsTitles = {
+    mainTitle: formatMessage(commonMessages.testCaseLibraryBreadcrumb),
+    testTitle: testCase.name,
+  };
+
+  const breadcrumbs = useSelector(testCaseLibraryBreadcrumbsSelector(breadcrumbsTitles));
+  const testCaseBusinessId = testCase.displayId;
+
+  const testCasePriority = (testCase.priority?.toLowerCase() ??
+    'unspecified') as TestCasePriority;
+
+  const handleHistoryOfActions = () => {
+    trackEvent(
+      TEST_CASE_LIBRARY_EVENTS.clickTestCaseMenu(
+        TEST_CASE_MENU_ELEMENT_NAME.HISTORY,
+        TEST_CASE_PLACE.DETAILS_PAGE,
+        testCaseIdString,
+      ),
+    );
+    dispatch({
+      type: TEST_CASE_LIBRARY_PAGE,
+      payload: {
+        organizationSlug,
+        projectSlug,
+        testCasePageRoute: `test-cases/${testCase.id}/historyOfActions`,
+      },
+    });
+  };
+
+  const handleDeleteTestCase = () => {
+    trackEvent(
+      TEST_CASE_LIBRARY_EVENTS.clickTestCaseMenu(
+        TEST_CASE_MENU_ELEMENT_NAME.DELETE,
+        TEST_CASE_PLACE.DETAILS_PAGE,
+        testCaseIdString,
+      ),
+    );
+    openDeleteTestCaseModal({ testCase, isDetailsPage: true });
+  };
+
+  const handleDuplicateTestCase = () => {
+    trackEvent(
+      TEST_CASE_LIBRARY_EVENTS.clickTestCaseMenu(
+        TEST_CASE_MENU_ELEMENT_NAME.DUPLICATE,
+        TEST_CASE_PLACE.DETAILS_PAGE,
+        testCaseIdString,
+      ),
+    );
+    openDuplicateSelectedTestCaseModal({ testCase });
+  };
+
+  const getCreationDate = (timestamp: number) => {
+    const date = new Date(timestamp);
+
+    return moment(date).format(REVERSED_DATE_FORMAT as string);
+  };
+
+  const items: PopoverItem[] = canManageTestCases
+    ? [
+        {
+          label: formatMessage(commonMessages.historyOfActions),
+          onClick: handleHistoryOfActions,
+        },
+        {
+          label: formatMessage(COMMON_LOCALE_KEYS.DUPLICATE),
+          onClick: handleDuplicateTestCase,
+        },
+        {
+          label: formatMessage(COMMON_LOCALE_KEYS.DELETE),
+          variant: 'destructive',
+          onClick: handleDeleteTestCase,
+        },
+      ]
+    : [];
+
+  const handleEditScenario = () => {
+    trackEvent(TEST_CASE_LIBRARY_EVENTS.clickEditTestCaseFromDetails(testCaseIdString));
+    openEditScenarioModal({ testCase });
+  };
+
+  const openEditNameAndPriorityModal = () => {
+    dispatch(
+      showModalAction({
+        id: EDIT_TEST_CASE_MODAL_KEY,
+        data: {
+          initialValues: {
+            name: testCase.name,
+            priority: testCasePriority,
+            testFolderId: testCase.testFolder.id,
+          },
+          testCaseId: testCase.id,
+        },
+      }),
+    );
+  };
+
+  return (
+    <div className={cx('header', className)}>
+      <div className={cx('header__breadcrumb')}>
+        <BreadcrumbsTreeIcon />
+        <Breadcrumbs descriptors={breadcrumbs} />
+      </div>
+      <div className={cx('header__title')}>
+        <PriorityIcon priority={testCasePriority} className={cx('header__title-icon')} />
+        <span className={cx('header__title-text')} title={testCase.name}>
+          {testCase.name}
+        </span>
+        {canManageTestCases && (
+          <button
+            type="button"
+            className={cx('header__edit-button')}
+            onClick={openEditNameAndPriorityModal}
+          >
+            {Parser(PencilIcon as unknown as string)}
+          </button>
+        )}
+      </div>
+      <div className={cx('header__info-wrapper')}>
+        <div className={cx('header__meta')}>
+          <div className={cx('header__meta-item')}>
+            <span className={cx('header__meta-label')}>{formatMessage(messages.created)}</span>
+            <span className={cx('header__meta-value')}>{getCreationDate(testCase.createdAt)}</span>
+          </div>
+          <div className={cx('header__meta-item')}>
+            <span className={cx('header__meta-label')}>{formatMessage(messages.id)}</span>
+            <span className={cx('header__meta-value')}>{testCaseBusinessId}</span>
+            <CopyToClipboard text={testCaseBusinessId} className={cx('header__copy')}>
+              {Parser(IconDuplicate as unknown as string)}
+            </CopyToClipboard>
+          </div>
+          <ExecutionEstimationTime
+            executionEstimationTime={testCase?.manualScenario?.executionEstimationTime}
+            className={cx('header__meta-item')}
+            valueClassName={cx('header__meta-value')}
+          />
+        </div>
+        <div className={cx('header__actions')}>
+          {!isEmpty(items) && (
+            <PopoverControl items={items} placement="bottom-end">
+              <Button
+                variant="ghost"
+                adjustWidthOn="content"
+                onClick={onMenuAction}
+                className={cx('header__more-button')}
+              >
+                <MeatballMenuIcon />
+              </Button>
+            </PopoverControl>
+          )}
+          {canManageTestCases && (
+            <>
+              {!isScenarioEmpty && (
+                <Button onClick={handleEditScenario} variant="ghost">
+                  {formatMessage(commonMessages.editScenario)}
+                </Button>
+              )}
+              <AddToLaunchButton
+                manualScenario={testCase?.manualScenario}
+                testCaseId={testCase.id}
+                place={TEST_CASE_PLACE.DETAILS_PAGE}
+              />
+              {hasTestPlans ? (
+                <Button onClick={onAddToTestPlan} variant="primary">
+                  {formatMessage(COMMON_LOCALE_KEYS.ADD_TO_TEST_PLAN)}
+                </Button>
+              ) : (
+                <Tooltip placement="top" content={formatMessage(commonMessages.noTestPlanCreated)}>
+                  <Button variant="primary" disabled>
+                    {formatMessage(COMMON_LOCALE_KEYS.ADD_TO_TEST_PLAN)}
+                  </Button>
+                </Tooltip>
+              )}
+            </>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+};

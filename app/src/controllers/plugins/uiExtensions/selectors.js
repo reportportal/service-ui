@@ -18,11 +18,14 @@ import { createSelector } from 'reselect';
 import {
   normalizeExtensionPluginModules,
   normalizeRemotePluginModules,
+  isPluginManifestAvailable,
 } from 'controllers/plugins/uiExtensions/utils';
 import {
   EXTENSION_TYPE_SETTINGS_TAB,
+  EXTENSION_TYPE_ORGANIZATION_SETTINGS_TAB,
   EXTENSION_TYPE_ADMIN_PAGE,
   EXTENSION_TYPE_SIDEBAR_COMPONENT,
+  EXTENSION_TYPE_ORGANIZATION_SIDEBAR_COMPONENT,
   EXTENSION_TYPE_ADMIN_SIDEBAR_COMPONENT,
   EXTENSION_TYPE_LAUNCH_ITEM_COMPONENT,
   EXTENSION_TYPE_INTEGRATION_FORM_FIELDS,
@@ -36,6 +39,7 @@ import {
   EXTENSION_TYPE_MAKE_DECISION_DEFECT_COMMENT_ADDON,
   EXTENSION_TYPE_MAKE_DECISION_DEFECT_TYPE_ADDON,
   EXTENSION_TYPE_LOG_STACKTRACE_ADDON,
+  EXTENSION_TYPE_LOG_TAB,
   EXTENSION_TYPE_TEST_ITEM_DETAILS_ADDON,
   EXTENSION_TYPE_PROJECT_PAGE,
   PLUGIN_TYPE_REMOTE,
@@ -49,10 +53,24 @@ import {
   domainSelector,
   enabledExternalPluginsSelector,
   enabledExternalPublicPluginsSelector,
+  pluginsSelector,
 } from '../selectors';
 
 const extensionManifestsSelector = (state) =>
   domainSelector(state).uiExtensions.extensionManifests || [];
+
+export const extensionManifestsLoadPendingSelector = createSelector(
+  pluginsSelector,
+  extensionManifestsSelector,
+  (plugins, manifests) =>
+    plugins.some(
+      (p) =>
+        p.enabled &&
+        p.pluginType === PLUGIN_TYPE_EXTENSION &&
+        isPluginManifestAvailable(p) &&
+        !manifests.some((m) => m.pluginName === p.name),
+    ),
+);
 
 // Normalize different plugin types extensions to unify their processing in components
 const createExtensionSelectorByExtensionPoints = (
@@ -94,6 +112,9 @@ const createExtensionSelectorByExtensionPoints = (
 export const uiExtensionSettingsTabsSelector = createExtensionSelectorByExtensionPoints([
   EXTENSION_TYPE_SETTINGS_TAB,
 ]);
+export const uiExtensionOrganizationSettingsTabsSelector = createExtensionSelectorByExtensionPoints(
+  [EXTENSION_TYPE_ORGANIZATION_SETTINGS_TAB],
+);
 export const uiExtensionAdminPagesSelector = createExtensionSelectorByExtensionPoints([
   EXTENSION_TYPE_ADMIN_PAGE,
   REMOTE_EXTENSION_POINT_ADMIN_PAGE,
@@ -101,6 +122,8 @@ export const uiExtensionAdminPagesSelector = createExtensionSelectorByExtensionP
 export const uiExtensionSidebarComponentsSelector = createExtensionSelectorByExtensionPoints([
   EXTENSION_TYPE_SIDEBAR_COMPONENT,
 ]);
+export const uiExtensionOrganizationSidebarComponentsSelector =
+  createExtensionSelectorByExtensionPoints([EXTENSION_TYPE_ORGANIZATION_SIDEBAR_COMPONENT]);
 export const uiExtensionAdminSidebarComponentsSelector = createExtensionSelectorByExtensionPoints([
   EXTENSION_TYPE_ADMIN_SIDEBAR_COMPONENT,
 ]);
@@ -150,6 +173,9 @@ export const logStackTraceAddonSelector = createExtensionSelectorByExtensionPoin
 ]);
 export const testItemDetailsAddonSelector = createExtensionSelectorByExtensionPoints([
   EXTENSION_TYPE_TEST_ITEM_DETAILS_ADDON,
+]);
+export const uiExtensionLogTabSelector = createExtensionSelectorByExtensionPoints([
+  EXTENSION_TYPE_LOG_TAB,
 ]);
 
 export const extensionManifestSelector = (state, pluginName) => {

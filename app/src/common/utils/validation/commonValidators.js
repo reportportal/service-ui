@@ -38,6 +38,7 @@ export const descriptionEntity = bindMessageToValidator(
 
 export const btsUrl = bindMessageToValidator(validate.url, 'btsUrlHint');
 export const btsRallyUrl = bindMessageToValidator(validate.rallyUrl, 'btsUrlHint');
+export const optionalUrl = bindMessageToValidator(validate.optionalUrl, 'requirementsLinkHint');
 export const btsIntegrationName = bindMessageToValidator(
   validate.btsIntegrationName,
   'btsIntegrationNameHint',
@@ -63,6 +64,21 @@ export const createPatternNameValidator = (patterns, patternId) =>
     ),
   ]);
 
+export const emailCreateUserValidator = () =>
+  composeBoundValidators([
+    requiredField,
+    bindMessageToValidator(validate.requiredEmail, 'emailCreateUserHint'),
+  ]);
+
+export const createPatternCreateUserNameValidator = () =>
+  composeBoundValidators([requiredField, bindMessageToValidator(validate.userName, 'nameHint')]);
+
+export const createPatternCreateUserPasswordValidator = () =>
+  composeBoundValidators([
+    requiredField,
+    bindMessageToValidator(validate.passwordCreateUser, 'passwordCreateUserHint'),
+  ]);
+
 export const createNumberOfLaunchesValidator = (message) =>
   bindMessageToValidator(validate.widgetNumberOfLaunches, message);
 export const createWidgetContentFieldsValidator = (message) =>
@@ -75,6 +91,19 @@ export const createRuleNameValidator = (notifications, notificationId) =>
       validate.createNameUniqueValidator(notificationId, notifications),
       'ruleNameDuplicateHint',
     ),
+  ]);
+export const createProjectNameValidator = () =>
+  composeBoundValidators([
+    requiredField,
+    bindMessageToValidator(validate.projectNameLength, 'projectNameLengthHint'),
+    bindMessageToValidator(validate.projectNamePattern, 'projectNamePatternHint'),
+  ]);
+
+export const createOrganizationNameValidator = () =>
+  composeBoundValidators([
+    requiredField,
+    bindMessageToValidator(validate.organizationNameLength, 'organizationNameLengthHint'),
+    bindMessageToValidator(validate.organizationNamePattern, 'organizationNamePatternHint'),
   ]);
 
 export const createFooterLinkNameValidator = (links) =>
@@ -95,4 +124,24 @@ export const createFooterLinkURLValidator = (links) =>
 export const createDescriptionValidator = bindMessageToValidator(
   validate.descriptionField,
   'descriptionHint',
+);
+
+export const createKeywordMatcherValidator = (keyword) =>
+  bindMessageToValidator(validate.keywordMatcher(keyword), 'keywordMatcherHint');
+
+export const emailInviteUserValidator = () =>
+  composeBoundValidators([
+    requiredField,
+    bindMessageToValidator(validate.requiredEmail, 'emailInviteUserHint'),
+  ]);
+
+export const createProjectVersionValidator = () =>
+  composeBoundValidators([
+    requiredField,
+    bindMessageToValidator(validate.projectVersionLength, 'projectVersionLengthHint'),
+  ]);
+
+export const githubOrganizationName = bindMessageToValidator(
+  validate.githubOrganizationNameOptional,
+  'githubOrganizationNameHint',
 );

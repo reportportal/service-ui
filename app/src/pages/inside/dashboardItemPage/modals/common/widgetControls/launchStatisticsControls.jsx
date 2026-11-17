@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 EPAM Systems
+ * Copyright 2026 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,7 +23,6 @@ import { FieldProvider } from 'components/fields/fieldProvider';
 import { commonValidators } from 'common/utils/validation';
 import { CHART_MODES, MODES_VALUES } from 'common/constants/chartModes';
 import classNames from 'classnames/bind';
-import { BetaBadge } from 'pages/inside/common/betaBadge';
 import { getWidgetCriteriaOptions } from './utils/getWidgetCriteriaOptions';
 import { getWidgetModeOptions } from './utils/getWidgetModeOptions';
 import {
@@ -192,7 +191,6 @@ export class LaunchStatisticsControls extends Component {
                   disabled={isMainControlsDisabled}
                 />
               </FieldProvider>
-              <BetaBadge className={cx('launch-controls')} />
             </div>
           </Fragment>
         )}

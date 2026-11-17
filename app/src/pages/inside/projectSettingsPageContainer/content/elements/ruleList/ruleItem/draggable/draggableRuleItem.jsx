@@ -31,6 +31,7 @@ export const DraggableRuleItem = ({
   onDrop,
   dragControlTooltipContent,
   disabled,
+  readMode,
   className,
   itemClassNames = {},
   ...restRuleItemProps
@@ -107,17 +108,20 @@ export const DraggableRuleItem = ({
         item={item}
         isPreview={isDragging}
         disabled={disabled}
+        className={cx({ 'read-mode': readMode })}
         itemClassNames={itemClassNames}
         {...restRuleItemProps}
       />
-      <DragControlComponent
-        className={itemClassNames.dragControl}
-        dragRef={dragRef}
-        handleDragStart={handleDragStart}
-        handleDragEnd={handleDragEnd}
-        isDragging={isDragging}
-        disabled={disabled}
-      />
+      {!readMode && (
+        <DragControlComponent
+          className={itemClassNames.dragControl}
+          dragRef={dragRef}
+          handleDragStart={handleDragStart}
+          handleDragEnd={handleDragEnd}
+          isDragging={isDragging}
+          disabled={disabled}
+        />
+      )}
     </div>
   );
 };

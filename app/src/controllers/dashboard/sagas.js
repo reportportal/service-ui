@@ -24,25 +24,29 @@ import { NOTIFICATION_TYPES } from 'controllers/notification/constants';
 import { redirect } from 'redux-first-router';
 import { URLS } from 'common/urls';
 import { fetchDataAction } from 'controllers/fetch';
-import { activeProjectSelector, userIdSelector } from 'controllers/user';
+import { userIdSelector, activeProjectKeySelector } from 'controllers/user';
+import { projectKeySelector } from 'controllers/project';
 import { hideModalAction } from 'controllers/modal';
 import { fetch } from 'common/utils/fetch';
 import { setStorageItem } from 'common/utils/storageUtils';
 import {
+  urlOrganizationAndProjectSelector,
   PROJECT_DASHBOARD_ITEM_PAGE,
   PROJECT_DASHBOARD_PAGE,
   activeDashboardIdSelector,
   pageSelector,
-  projectIdSelector,
   pagePropertiesSelector,
 } from 'controllers/pages';
+
 import { provideEcGA } from 'components/main/analytics/utils';
 import { formatEcDashboardData } from 'components/main/analytics/events/common/widgetPages/utils';
 import { analyticsEnabledSelector, baseEventParametersSelector } from 'controllers/appInfo';
 import { SORTING_KEY } from 'controllers/sorting';
 import {
   ADD_DASHBOARD,
+  CHANGE_FULL_WIDTH_MODE,
   CHANGE_VISIBILITY_TYPE,
+  DASHBOARDS_FULL_WIDTH_MODE_STORAGE_KEY,
   DASHBOARDS_VISIBILITY_TYPE_STORAGE_KEY,
   FETCH_DASHBOARD,
   FETCH_DASHBOARDS,
@@ -65,7 +69,7 @@ import {
 import { getDashboardNotificationAction, tryParseConfig } from './utils';
 
 function* fetchDashboards({ payload: params }) {
-  const activeProject = yield select(activeProjectSelector);
+  const projectKey = yield select(activeProjectKeySelector);
   const query = yield select(querySelector);
   const mergedParams = { ...query, ...params };
   const lockedSorting = 'locked,DESC';
@@ -77,23 +81,23 @@ function* fetchDashboards({ payload: params }) {
     mergedParams[SORTING_KEY] = [lockedSorting, mergedParams[SORTING_KEY]].filter(Boolean);
   }
 
-  yield put(fetchDataAction(NAMESPACE)(URLS.dashboards(activeProject, mergedParams, queryOptions)));
+  yield put(fetchDataAction(NAMESPACE)(URLS.dashboards(projectKey, mergedParams, queryOptions)));
 }
 
 function* fetchDashboard() {
-  const activeProject = yield select(activeProjectSelector);
+  const projectKey = yield select(projectKeySelector);
+  const { organizationSlug, projectSlug } = yield select(urlOrganizationAndProjectSelector);
   const activeDashboardId = yield select(activeDashboardIdSelector);
   const isAnalyticsEnabled = yield select(analyticsEnabledSelector);
   let dashboard;
   try {
-    dashboard = yield call(fetch, URLS.dashboard(activeProject, activeDashboardId));
+    dashboard = yield call(fetch, URLS.dashboard(projectKey, activeDashboardId));
     yield put(updateDashboardItemSuccessAction(dashboard));
   } catch (error) {
-    const projectId = yield select(projectIdSelector);
     yield put(
       redirect({
         type: PROJECT_DASHBOARD_PAGE,
-        payload: { projectId },
+        payload: { organizationSlug, projectSlug },
       }),
     );
   }
@@ -112,18 +116,20 @@ function* fetchDashboard() {
   }
 }
 
-function* addDashboard({ payload }) {
-  const activeProject = yield select(activeProjectSelector);
+function* addDashboard({ payload: dashboard }) {
+  const projectKey = yield select(projectKeySelector);
+  const { organizationSlug, projectSlug } = yield select(urlOrganizationAndProjectSelector);
   const owner = yield select(userIdSelector);
-  const { name, onSuccess, onError } = payload;
-  const isPreconfigured = typeof payload.config !== 'undefined';
+  const { name, onSuccess, onError } = dashboard;
+  const isPreconfigured = typeof dashboard.config !== 'undefined';
+
   try {
     let parsedConfig = null;
-    let url = URLS.dashboards(activeProject);
-    let data = payload;
+    let url = URLS.dashboards(projectKey);
+    let data = dashboard;
 
     if (isPreconfigured) {
-      parsedConfig = tryParseConfig(payload.config);
+      parsedConfig = tryParseConfig(dashboard.config);
 
       if (!parsedConfig) {
         if (onError) {
@@ -139,10 +145,10 @@ function* addDashboard({ payload }) {
         return;
       }
 
-      url = URLS.dashboardPreconfigured(activeProject);
+      url = URLS.dashboardPreconfigured(projectKey);
       data = {
-        name: payload.name,
-        description: payload.description,
+        name: dashboard.name,
+        description: dashboard.description,
         config: parsedConfig,
       };
     }
@@ -158,7 +164,7 @@ function* addDashboard({ payload }) {
 
     const { id } = response;
 
-    yield put(addDashboardSuccessAction({ id, owner, ...payload }));
+    yield put(addDashboardSuccessAction({ id, owner, ...dashboard }));
     yield put({ type: INCREASE_TOTAL_DASHBOARDS_LOCALLY });
     yield put(
       showNotification({
@@ -171,7 +177,7 @@ function* addDashboard({ payload }) {
     const query = yield select(pagePropertiesSelector);
     yield put({
       type: PROJECT_DASHBOARD_ITEM_PAGE,
-      payload: { projectId: activeProject, dashboardId: id },
+      payload: { projectSlug, dashboardId: id, organizationSlug },
       meta: {
         query,
       },
@@ -186,10 +192,10 @@ function* addDashboard({ payload }) {
 }
 
 function* duplicateDashboard({ payload: dashboard }) {
-  const activeProject = yield select(activeProjectSelector);
+  const projectKey = yield select(activeProjectKeySelector);
   try {
-    const config = yield call(fetch, URLS.dashboardConfig(activeProject, dashboard.id));
-    const result = yield call(fetch, URLS.dashboardPreconfigured(activeProject), {
+    const config = yield call(fetch, URLS.dashboardConfig(projectKey, dashboard.id));
+    const result = yield call(fetch, URLS.dashboardPreconfigured(projectKey), {
       method: 'post',
       data: {
         name: dashboard.name,
@@ -198,7 +204,7 @@ function* duplicateDashboard({ payload: dashboard }) {
       },
     });
 
-    const newDashboard = yield call(fetch, URLS.dashboard(activeProject, result.id));
+    const newDashboard = yield call(fetch, URLS.dashboard(projectKey, result.id));
     yield put(addDashboardSuccessAction(newDashboard));
 
     yield put(
@@ -214,11 +220,11 @@ function* duplicateDashboard({ payload: dashboard }) {
 }
 
 function* updateDashboard({ payload: dashboard }) {
-  const activeProject = yield select(activeProjectSelector);
+  const projectKey = yield select(projectKeySelector);
   const { name, description, id } = dashboard;
 
   try {
-    yield call(fetch, URLS.dashboard(activeProject, id), {
+    yield call(fetch, URLS.dashboard(projectKey, id), {
       method: 'put',
       data: { name, description },
     });
@@ -236,9 +242,9 @@ function* updateDashboard({ payload: dashboard }) {
 }
 
 function* updateDashboardWidgets({ payload: dashboard }) {
-  const activeProject = yield select(activeProjectSelector);
+  const projectKey = yield select(projectKeySelector);
 
-  yield call(fetch, URLS.dashboard(activeProject, dashboard.id), {
+  yield call(fetch, URLS.dashboard(projectKey, dashboard.id), {
     method: 'put',
     data: {
       name: dashboard.name,
@@ -250,8 +256,8 @@ function* updateDashboardWidgets({ payload: dashboard }) {
 
 function* removeDashboard({ payload: id }) {
   try {
-    const activeProject = yield select(activeProjectSelector);
-    yield call(fetch, URLS.dashboard(activeProject, id), {
+    const projectKey = yield select(projectKeySelector);
+    yield call(fetch, URLS.dashboard(projectKey, id), {
       method: 'delete',
     });
     yield put(deleteDashboardSuccessAction(id));
@@ -269,15 +275,15 @@ function* removeDashboard({ payload: id }) {
 
 function* redirectAfterDelete({ payload: dashboardId }) {
   const activePage = yield select(pageSelector);
+  const { organizationSlug, projectSlug } = yield select(urlOrganizationAndProjectSelector);
   if (activePage === PROJECT_DASHBOARD_ITEM_PAGE) {
     const activeDashboardId = yield select(activeDashboardIdSelector);
     if (activeDashboardId === dashboardId) {
-      const activeProject = yield select(projectIdSelector);
       yield put(hideModalAction());
       yield put(
         redirect({
           type: PROJECT_DASHBOARD_PAGE,
-          payload: { projectId: activeProject },
+          payload: { organizationSlug, projectSlug },
         }),
       );
     }
@@ -288,11 +294,15 @@ function changeVisibilityType({ payload: visibilityType }) {
   setStorageItem(DASHBOARDS_VISIBILITY_TYPE_STORAGE_KEY, visibilityType);
 }
 
+function changeFullWidthMode({ payload: fullWidthMode }) {
+  setStorageItem(DASHBOARDS_FULL_WIDTH_MODE_STORAGE_KEY, fullWidthMode);
+}
+
 function* updateDashboardLocked({ payload: { locked, dashboard } }) {
-  const activeProject = yield select(activeProjectSelector);
+  const projectKey = yield select(projectKeySelector);
 
   try {
-    yield call(fetch, URLS.dashboard(activeProject, dashboard.id), {
+    yield call(fetch, URLS.dashboard(projectKey, dashboard.id), {
       method: 'patch',
       data: { locked },
     });
@@ -312,6 +322,7 @@ export function* dashboardSagas() {
     yield takeEvery(UPDATE_DASHBOARD_WIDGETS, updateDashboardWidgets),
     yield takeEvery(REMOVE_DASHBOARD, removeDashboard),
     yield takeEvery(CHANGE_VISIBILITY_TYPE, changeVisibilityType),
+    yield takeEvery(CHANGE_FULL_WIDTH_MODE, changeFullWidthMode),
     yield takeEvery(REMOVE_DASHBOARD_SUCCESS, redirectAfterDelete),
     yield takeEvery(DUPLICATE_DASHBOARD, duplicateDashboard),
     yield takeEvery(UPDATE_DASHBOARD_LOCKED, updateDashboardLocked),

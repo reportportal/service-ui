@@ -1,0 +1,130 @@
+/*
+ * Copyright 2025 EPAM Systems
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+import { ReactNode } from 'react';
+import { useIntl } from 'react-intl';
+import {
+  Button,
+  CopyIcon,
+  FieldText,
+  Modal,
+  StatusSuccessIcon,
+  SystemMessage,
+  WarningIcon,
+} from '@reportportal/ui-kit';
+import { useDispatch, useSelector } from 'react-redux';
+
+import { copyToClipboard, createClassnames } from 'common/utils';
+import { isEmailIntegrationAvailableSelector } from 'controllers/plugins';
+import { showErrorNotification, showSuccessNotification } from 'controllers/notification';
+
+import { messages } from './messages';
+
+import styles from './externalUserInvitationModal.scss';
+
+const cx = createClassnames(styles);
+
+const getFullInvitationLink = (link: string): string => {
+  try {
+    return new URL(link, globalThis.location.origin).toString();
+  } catch {
+    return link;
+  }
+};
+
+interface ExternalUserInvitationModalProps {
+  email: string;
+  link: string;
+  header?: string | ReactNode;
+  isOrgEmailIntegrationAvailable?: boolean;
+}
+
+export const ExternalUserInvitationModal = ({
+  email,
+  link,
+  header,
+  isOrgEmailIntegrationAvailable = false,
+}: ExternalUserInvitationModalProps) => {
+  const { formatMessage } = useIntl();
+  const dispatch = useDispatch();
+  const isEmailIntegrationAvailableFromStore = useSelector(isEmailIntegrationAvailableSelector);
+  const isEmailIntegrationAvailable = isEmailIntegrationAvailableFromStore || isOrgEmailIntegrationAvailable;
+  const modalTitle = header || formatMessage(messages.header);
+  const fullLink = getFullInvitationLink(link);
+  const invitationMessageText = formatMessage(messages.invitationMessage, {
+    email,
+    b: (innerData) => <b>{innerData}</b>,
+  });
+
+  const handleCopyLink = async () => {
+    try {
+      await copyToClipboard(fullLink);
+      dispatch(showSuccessNotification({ message: formatMessage(messages.copyLinkSuccess) }));
+    } catch {
+      dispatch(showErrorNotification({ messageId: 'copyLinkFailed' }));
+    }
+  };
+
+  return (
+    <Modal
+      size="large"
+      title={modalTitle}
+      createFooter={(closeModal) => (
+        <div className={cx('footer')}>
+          <div className={cx('info')}>
+            <WarningIcon />
+            {formatMessage(messages.warningMessage)}
+          </div>
+          <div className={cx('buttons')}>
+            <Button
+              icon={<CopyIcon />}
+              iconPlace="start"
+              className={cx('copy-button')}
+              onClick={() => {
+                handleCopyLink().catch(() => {});
+              }}>
+              {formatMessage(messages.copyLink)}
+            </Button>
+            <Button variant="ghost" onClick={closeModal}>
+              {formatMessage(messages.gotIt)}
+            </Button>
+          </div>
+        </div>
+      )}
+    >
+      <div className={cx('content')}>
+        {isEmailIntegrationAvailable ? (
+          <div className={cx('invitation-message')}>
+            <StatusSuccessIcon />
+            <div className={cx('text')}>{invitationMessageText}</div>
+          </div>
+        ) : (
+          <SystemMessage mode="warning" header={formatMessage(messages.emailServerIssueHeader)}>
+            {formatMessage(messages.emailServerIssueText)}
+          </SystemMessage>
+        )}
+        <div className={cx('invitation-link')}>
+          <FieldText
+            value={fullLink}
+            label={formatMessage(messages.link)}
+            defaultWidth={false}
+            disabled
+          />
+        </div>
+      </div>
+    </Modal>
+  );
+};

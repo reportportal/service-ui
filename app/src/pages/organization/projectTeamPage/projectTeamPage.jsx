@@ -1,0 +1,143 @@
+/*!
+ * Copyright 2024 EPAM Systems
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+import { useState, useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import { useIntl } from 'react-intl';
+import { useTracking } from 'react-tracking';
+import classNames from 'classnames/bind';
+import { BubblesLoader } from '@reportportal/ui-kit';
+import { loadingSelector, membersSelector, fetchMembersAction } from 'controllers/members';
+import { querySelector } from 'controllers/members/selectors';
+import { SEARCH_KEY } from 'controllers/members/constants';
+import { createClearedMembersSearchQuery } from 'controllers/members/utils';
+import { updatePagePropertiesAction } from 'controllers/pages';
+import { showModalAction } from 'controllers/modal';
+import {
+  fetchProjectAction,
+  projectInfoIdSelector,
+  projectKeySelector,
+  projectMembersSelector,
+} from 'controllers/project';
+import { EmptyPageState } from 'pages/common';
+import NoResultsIcon from 'common/img/newIcons/no-results-icon-inline.svg';
+import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
+import { PROJECT_PAGE_EVENTS } from 'components/main/analytics/events/ga4Events/projectPageEvents';
+import { PROJECT_TEAM_PAGE_VIEWS } from 'components/main/analytics/events/ga4Events/projectTeamPageEvents';
+import { useUserPermissions } from 'hooks/useUserPermissions';
+import { InviteUserModal, Level } from 'pages/inside/common/invitations/inviteUserModal';
+import { messages } from '../messages';
+import { EmptyMembersPageState } from '../common/membersPage/emptyMembersPageState';
+import { ProjectTeamListTable } from './projectTeamListTable';
+import { ProjectTeamPageHeader } from './projectTeamPageHeader/projectTeamPageHeader';
+import styles from './projectTeamPage.scss';
+
+const cx = classNames.bind(styles);
+
+export const ProjectTeamPage = () => {
+  const { trackEvent } = useTracking();
+  const { formatMessage } = useIntl();
+  const dispatch = useDispatch();
+  const { canInviteInternalUser } = useUserPermissions();
+  const members = useSelector(membersSelector);
+  const isMembersLoading = useSelector(loadingSelector);
+  const membersQuery = useSelector(querySelector);
+  const projectMembers = useSelector(projectMembersSelector);
+  const projectKey = useSelector(projectKeySelector);
+  const projectId = useSelector(projectInfoIdSelector);
+  const isProjectLoaded = Boolean(projectId);
+  const [searchValue, setSearchValue] = useState(null);
+  const isEmptyMembers = members.length === 0;
+  const hasProjectMembers = projectMembers.length > 0;
+  const appliedSearch = membersQuery?.[SEARCH_KEY];
+  const effectiveSearchValue = hasProjectMembers ? searchValue : null;
+  const hasPendingSearchClear =
+    hasProjectMembers && !effectiveSearchValue && Boolean(appliedSearch?.trim());
+
+  useEffect(() => {
+    trackEvent(PROJECT_TEAM_PAGE_VIEWS.PROJECT_TEAM);
+  }, [trackEvent]);
+
+  useEffect(() => {
+    if (isProjectLoaded && !hasProjectMembers && appliedSearch) {
+      dispatch(updatePagePropertiesAction(createClearedMembersSearchQuery(membersQuery)));
+    }
+  }, [isProjectLoaded, hasProjectMembers, appliedSearch, dispatch, membersQuery]);
+
+  const onInvite = () => {
+    dispatch(fetchMembersAction());
+    dispatch(fetchProjectAction(projectKey, true));
+    trackEvent(PROJECT_PAGE_EVENTS.projectTeamInviteUserModalSubmit(projectId));
+  };
+
+  const showInviteUserModal = () => {
+    dispatch(
+      showModalAction({
+        component: <InviteUserModal level={Level.PROJECT} onInvite={onInvite} />,
+      }),
+    );
+    trackEvent(PROJECT_PAGE_EVENTS.projectTeamClickInvite(projectId));
+  };
+
+  const getEmptyPageState = () => {
+    if (isMembersLoading || hasPendingSearchClear) {
+      return (
+        <div className={cx('loader')}>
+          <BubblesLoader />
+        </div>
+      );
+    }
+
+    if (!hasProjectMembers) {
+      return (
+        <EmptyMembersPageState
+          isLoading={!isProjectLoaded || isMembersLoading}
+          hasPermission={canInviteInternalUser}
+          showInviteUserModal={showInviteUserModal}
+        />
+      );
+    }
+
+    const hasActiveSearch = Boolean(effectiveSearchValue?.trim() || appliedSearch?.trim());
+
+    return hasActiveSearch ? (
+      <EmptyPageState
+        label={formatMessage(COMMON_LOCALE_KEYS.NO_RESULTS)}
+        description={formatMessage(messages.noResultsDescription)}
+        emptyIcon={NoResultsIcon}
+        hasPermission={false}
+      />
+    ) : (
+      <EmptyMembersPageState
+        hasPermission={canInviteInternalUser}
+        showInviteUserModal={showInviteUserModal}
+      />
+    );
+  };
+
+  return (
+    <div className={cx('project-team-page')}>
+      <ProjectTeamPageHeader
+        hasPermission={canInviteInternalUser}
+        onInvite={showInviteUserModal}
+        isMembersLoading={isMembersLoading}
+        searchValue={searchValue}
+        setSearchValue={setSearchValue}
+      />
+      {isEmptyMembers ? getEmptyPageState() : <ProjectTeamListTable members={members} />}
+    </div>
+  );
+};

@@ -14,38 +14,28 @@
  * limitations under the License.
  */
 
-import React, { useState } from 'react';
+import { useState, useCallback } from 'react';
 import PropTypes from 'prop-types';
-import classNames from 'classnames/bind';
 import { useDispatch, useSelector } from 'react-redux';
 import { reduxForm } from 'redux-form';
 import { useTracking } from 'react-tracking';
 import { defineMessages, useIntl } from 'react-intl';
-import { Modal } from '@reportportal/ui-kit';
+import { Modal, SystemMessage } from '@reportportal/ui-kit';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { withModal } from 'components/main/modal';
 import { hideModalAction } from 'controllers/modal';
-import { SystemMessage } from 'componentLibrary/systemMessage';
 import { INTEGRATIONS_FORM_FIELDS_COMPONENTS_MAP } from 'components/integrations/formFieldComponentsMap';
 import { uiExtensionIntegrationFormFieldsSelector } from 'controllers/plugins';
 import { ExtensionLoader } from 'components/extensionLoader';
 import { INTEGRATION_FORM } from 'components/integrations/elements';
-import { trimStringValues } from 'common/utils';
+import { createClassnames, trimStringValues } from 'common/utils';
 import { PLUGINS_PAGE_EVENTS } from 'components/main/analytics/events';
+import { messages as integrationMessages } from 'pages/inside/common/integrations/messages';
 import styles from './addIntegrationModal.scss';
 
-const cx = classNames.bind(styles);
+const cx = createClassnames(styles);
 
 const messages = defineMessages({
-  globalIntegrationsSystemMessageModalCaption: {
-    id: 'IntegrationsDescription.GlobalIntegrationsSystemMessageModalCaption',
-    defaultMessage: 'Global and Project Integrations can’t work at the same time.',
-  },
-  globalIntegrationsSystemMessageModalText: {
-    id: 'IntegrationsDescription.GlobalIntegrationsSystemMessageModalText',
-    defaultMessage:
-      'Note that Global integrations will be unlinked if you create a Project Integration!',
-  },
   createProjectTitle: {
     id: 'AddIntegrationModal.createProjectTitle',
     defaultMessage: 'Create Project Integration',
@@ -62,9 +52,20 @@ const messages = defineMessages({
     id: 'AddIntegrationModal.editGlobalIntegrationTitle',
     defaultMessage: 'Edit Global Integration',
   },
+  formNotAvailable: {
+    id: 'AddIntegrationModal.formNotAvailable',
+    defaultMessage:
+      'Configuration form is not available for this plugin. Install or update a plugin UI extension that provides integration fields.',
+  },
 });
 
-const AddIntegrationModal = ({ data, initialize, change, handleSubmit, dirty }) => {
+const AddIntegrationModal = ({
+  data,
+  initialize,
+  change,
+  handleSubmit,
+  dirty,
+}) => {
   const [metaData, setMetaData] = useState({});
   const fieldsExtensions = useSelector(uiExtensionIntegrationFormFieldsSelector);
   const dispatch = useDispatch();
@@ -75,13 +76,13 @@ const AddIntegrationModal = ({ data, initialize, change, handleSubmit, dirty }) 
     (ext) => ext.pluginName === data.instanceType,
   );
 
-  const updateMetaData = (newMetaData) => {
-    setMetaData({ ...metaData, ...newMetaData });
-  };
+  const updateMetaData = useCallback((newMetaData) => {
+    setMetaData((prev) => ({ ...prev, ...newMetaData }));
+  }, []);
 
   const onSubmit = (newData) => {
     if (isGlobal) {
-      if (!customProps.editAuthMode) {
+      if (!customProps?.editAuthMode) {
         trackEvent(PLUGINS_PAGE_EVENTS.clickCreateGlobalIntegration(data.instanceType));
       } else {
         trackEvent(PLUGINS_PAGE_EVENTS.clickEditGlobalIntegration(data.instanceType));
@@ -91,12 +92,19 @@ const AddIntegrationModal = ({ data, initialize, change, handleSubmit, dirty }) 
     onConfirm(trimStringValues(newData), metaData);
   };
 
+  const hasFormFields =
+    Boolean(INTEGRATIONS_FORM_FIELDS_COMPONENTS_MAP[data.instanceType]) ||
+    Boolean(integrationFieldsExtension);
+
   const okButton = {
-    children: customProps.editAuthMode
-      ? formatMessage(COMMON_LOCALE_KEYS.SAVE)
-      : formatMessage(COMMON_LOCALE_KEYS.CREATE),
+    children:
+      customProps?.okButtonLabel ||
+      (customProps?.editAuthMode
+        ? formatMessage(COMMON_LOCALE_KEYS.SAVE)
+        : formatMessage(COMMON_LOCALE_KEYS.CREATE)),
     onClick: () => handleSubmit(onSubmit)(),
     'data-automation-id': 'submitButton',
+    disabled: !hasFormFields,
   };
   const cancelButton = {
     children: formatMessage(COMMON_LOCALE_KEYS.CANCEL),
@@ -107,38 +115,50 @@ const AddIntegrationModal = ({ data, initialize, change, handleSubmit, dirty }) 
   const editTitle = isGlobal
     ? messages.editGlobalIntegrationTitle
     : messages.editProjectIntegrationTitle;
+  const defaultTitleMessage = customProps?.editAuthMode ? editTitle : createTitle;
+  const modalTitle = customProps?.modalTitleMessage ?? formatMessage(defaultTitleMessage);
 
   const FieldsComponent =
     INTEGRATIONS_FORM_FIELDS_COMPONENTS_MAP[data.instanceType] ||
-    (integrationFieldsExtension && ExtensionLoader);
+    (integrationFieldsExtension ? ExtensionLoader : null);
+
+  const hasCustomNotice =
+    customProps?.globalIntegrationsNoticeCaption || customProps?.globalIntegrationsNoticeBody;
+  const noticeCaption = hasCustomNotice
+    ? customProps?.globalIntegrationsNoticeCaption
+    : formatMessage(integrationMessages.globalIntegrationsSystemMessageModalCaption);
+  const noticeBody = hasCustomNotice
+    ? customProps?.globalIntegrationsNoticeBody
+    : formatMessage(integrationMessages.globalIntegrationsSystemMessageModalText);
 
   return (
     <Modal
-      title={formatMessage(customProps.editAuthMode ? editTitle : createTitle)}
+      title={modalTitle}
       okButton={okButton}
       cancelButton={cancelButton}
       onClose={() => dispatch(hideModalAction())}
       allowCloseOutside={!dirty}
       scrollable
     >
-      {data.hasWarningMessage && (
-        <SystemMessage
-          header={formatMessage(COMMON_LOCALE_KEYS.warning)}
-          mode="warning"
-          caption={formatMessage(messages.globalIntegrationsSystemMessageModalCaption)}
-        >
-          {formatMessage(messages.globalIntegrationsSystemMessageModalText)}
-        </SystemMessage>
-      )}
-
       <div className={cx('content')}>
-        <FieldsComponent
-          initialize={initialize}
-          change={change}
-          updateMetaData={updateMetaData}
-          extension={integrationFieldsExtension}
-          {...customProps}
-        />
+        {data.hasWarningMessage && (noticeCaption || noticeBody) && (
+          <SystemMessage mode="info" caption={noticeCaption}>
+            {noticeBody}
+          </SystemMessage>
+        )}
+        <div>
+          {FieldsComponent ? (
+            <FieldsComponent
+              initialize={initialize}
+              change={change}
+              updateMetaData={updateMetaData}
+              extension={integrationFieldsExtension}
+              {...customProps}
+            />
+          ) : (
+            <SystemMessage mode="info">{formatMessage(messages.formNotAvailable)}</SystemMessage>
+          )}
+        </div>
       </div>
     </Modal>
   );

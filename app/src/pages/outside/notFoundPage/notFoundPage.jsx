@@ -18,7 +18,7 @@ import React, { Fragment, Component } from 'react';
 import { connect } from 'react-redux';
 import { PropTypes } from 'prop-types';
 import classNames from 'classnames/bind';
-import { HOME_PAGE } from 'controllers/pages';
+import { ORGANIZATIONS_PAGE } from 'controllers/pages';
 import { FormattedMessage } from 'react-intl';
 import { GhostButton } from 'components/buttons/ghostButton';
 import styles from './notFoundPage.scss';
@@ -33,7 +33,7 @@ export class NotFoundPage extends Component {
   };
 
   handleToHomeClick = () => {
-    this.props.navigate({ type: HOME_PAGE });
+    this.props.navigate({ type: ORGANIZATIONS_PAGE });
   };
 
   renderRings = () => {

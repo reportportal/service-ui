@@ -24,7 +24,7 @@ import { injectIntl, defineMessages } from 'react-intl';
 import { fetch, updateSessionItem } from 'common/utils';
 import { URLS } from 'common/urls';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
-import { activeProjectSelector, userIdSelector } from 'controllers/user';
+import { userIdSelector } from 'controllers/user';
 import {
   namedAvailableBtsIntegrationsSelector,
   uiExtensionPostIssueFormSelector,
@@ -40,7 +40,9 @@ import {
   removeNoneValues,
   isJiraCloudAssigneeField,
 } from 'components/fields/dynamicFieldsSection/utils';
-import { projectInfoSelector } from 'controllers/project';
+import { projectInfoSelector, projectKeySelector } from 'controllers/project';
+import { activeOrganizationIdSelector } from 'controllers/organization';
+import { buildPluginCommandRQ } from 'controllers/plugins/utils';
 import { FieldProvider } from 'components/fields/fieldProvider';
 import { Checkbox } from '@reportportal/ui-kit';
 import { ISSUE_TYPE_FIELD_KEY } from 'components/integrations/elements/bts/constants';
@@ -48,6 +50,7 @@ import { BtsIntegrationSelector } from 'pages/inside/common/btsIntegrationSelect
 import { DarkModalLayout, ModalFooter } from 'components/main/modal/darkModalLayout';
 import { GhostButton } from 'components/buttons/ghostButton';
 import { hideModalAction } from 'controllers/modal';
+import { commonMessages } from 'pages/inside/common/common-messages';
 import ErrorInlineIcon from 'common/img/error-inline.svg';
 import Parser from 'html-react-parser';
 import { COMMAND_POST_ISSUE } from 'controllers/plugins/uiExtensions/constants';
@@ -89,18 +92,6 @@ const messages = defineMessages({
     id: 'PostIssueModal.includeDataHeader',
     defaultMessage: 'Include data',
   },
-  attachmentsHeader: {
-    id: 'PostIssueModal.attachmentsHeader',
-    defaultMessage: 'Attachments',
-  },
-  logsHeader: {
-    id: 'PostIssueModal.logsHeader',
-    defaultMessage: 'Logs',
-  },
-  commentsHeader: {
-    id: 'PostIssueModal.commentsHeader',
-    defaultMessage: 'Comments',
-  },
   noDefaultPropertiesMessage: {
     id: 'PostIssueModal.noDefaultPropertiesMessage',
     defaultMessage: 'Configure Bug Tracking System integration default properties to post bugs',
@@ -127,12 +118,13 @@ const messages = defineMessages({
 @track()
 @connect(
   (state) => ({
-    activeProject: activeProjectSelector(state),
+    projectKey: projectKeySelector(state),
     projectInfo: projectInfoSelector(state),
     namedBtsIntegrations: namedAvailableBtsIntegrationsSelector(state),
     userId: userIdSelector(state),
     getBtsIntegrationBackLink: (itemId) => btsIntegrationBackLinkSelector(state, itemId),
     postIssueExtensions: uiExtensionPostIssueFormSelector(state),
+    organizationId: activeOrganizationIdSelector(state),
   }),
   {
     showScreenLockAction,
@@ -145,7 +137,6 @@ const messages = defineMessages({
 export class PostIssueModal extends Component {
   static propTypes = {
     intl: PropTypes.object.isRequired,
-    activeProject: PropTypes.string.isRequired,
     projectInfo: PropTypes.object.isRequired,
     namedBtsIntegrations: PropTypes.object.isRequired,
     userId: PropTypes.string.isRequired,
@@ -168,6 +159,8 @@ export class PostIssueModal extends Component {
     }).isRequired,
     hideModalAction: PropTypes.func,
     invalid: PropTypes.bool,
+    projectKey: PropTypes.string.isRequired,
+    organizationId: PropTypes.number,
   };
 
   static defaultProps = {
@@ -196,10 +189,16 @@ export class PostIssueModal extends Component {
       fields,
       pluginName,
       integrationId: id,
+      isSubmitting: false,
     };
   }
 
   onPost = () => {
+    // Prevent double-submit while the request / screen lock is in progress.
+    if (this.state.isSubmitting) {
+      return;
+    }
+
     const { handleSubmit } = this.props;
     handleSubmit(this.prepareDataToSend)();
   };
@@ -248,22 +247,22 @@ export class PostIssueModal extends Component {
   dataFieldsConfig = [
     {
       name: INCLUDE_ATTACHMENTS_KEY,
-      title: this.props.intl.formatMessage(messages.attachmentsHeader),
+      title: this.props.intl.formatMessage(commonMessages.attachments),
     },
     {
       name: INCLUDE_LOGS_KEY,
-      title: this.props.intl.formatMessage(messages.logsHeader),
+      title: this.props.intl.formatMessage(commonMessages.logs),
     },
     {
       name: INCLUDE_COMMENTS_KEY,
-      title: this.props.intl.formatMessage(messages.commentsHeader),
+      title: this.props.intl.formatMessage(commonMessages.comments),
     },
   ];
 
   initIntegrationFields = (defectFormFields = [], pluginName = '') => {
     const defaultOptionValueKey = getDefaultOptionValueKey(pluginName);
-    const fields = normalizeFieldsWithOptions(defectFormFields, defaultOptionValueKey).map((item) =>
-      item.fieldType === ISSUE_TYPE_FIELD_KEY ? { ...item, disabled: true } : item,
+    const fields = normalizeFieldsWithOptions(defectFormFields, defaultOptionValueKey).map(
+      (item) => (item.fieldType === ISSUE_TYPE_FIELD_KEY ? { ...item, disabled: true } : item),
     );
     validationConfig = createFieldsValidationConfig(fields);
     this.props.initialize({
@@ -322,9 +321,10 @@ export class PostIssueModal extends Component {
       data: { items, fetchFunc, eventsInfo },
       tracking: { trackEvent },
       namedBtsIntegrations,
-      activeProject,
+      projectKey,
       projectInfo,
       userId,
+      organizationId,
     } = this.props;
     const { pluginName, integrationId } = this.state;
     const {
@@ -337,16 +337,23 @@ export class PostIssueModal extends Component {
       ? allowedCommands.indexOf(COMMAND_POST_ISSUE) !== -1
       : false;
     const requestParams = { data, method: 'POST' };
-    let url = URLS.btsIntegrationPostTicket(activeProject, integrationId);
+    let url = URLS.btsIntegrationPostTicket(projectKey, integrationId);
 
     if (isCommandAvailable) {
-      url = URLS.projectIntegrationByIdCommand(activeProject, integrationId, COMMAND_POST_ISSUE);
-      requestParams.method = 'PUT';
-      requestParams.data = {
+      url = URLS.pluginsCommandsCommon(pluginName, COMMAND_POST_ISSUE);
+      requestParams.method = 'POST';
+      requestParams.data = buildPluginCommandRQ({
+        integrationId,
+        organizationId,
         projectId: projectInfo.projectId,
-        entity: data,
-      };
+        projectKey,
+        arguments: {
+          projectId: projectInfo.projectId,
+          entity: data,
+        },
+      });
     }
+    this.setState({ isSubmitting: true });
     this.props.showScreenLockAction();
 
     trackEvent(eventsInfo.postBtn(data));
@@ -370,7 +377,7 @@ export class PostIssueModal extends Component {
           },
         }));
 
-        return fetch(URLS.testItem(activeProject), {
+        return fetch(URLS.testItem(projectKey), {
           method: 'put',
           data: { issues },
         });
@@ -391,6 +398,7 @@ export class PostIssueModal extends Component {
         });
       })
       .catch((err) => {
+        this.setState({ isSubmitting: false });
         this.props.hideScreenLockAction();
         this.props.showNotification({
           message: `${formatMessage(messages.postIssueFailed)}. ${err.message}`,
@@ -415,6 +423,7 @@ export class PostIssueModal extends Component {
         color="''"
         appearance="topaz"
         transparentBackground
+        disabled={this.state.isSubmitting}
       >
         {this.props.intl.formatMessage(COMMON_LOCALE_KEYS.CANCEL)}
       </GhostButton>
@@ -422,7 +431,7 @@ export class PostIssueModal extends Component {
     okButton: (
       <GhostButton
         onClick={this.onPost}
-        disabled={this.props.invalid}
+        disabled={this.props.invalid || this.state.isSubmitting}
         color="''"
         appearance="topaz"
       >
@@ -436,14 +445,18 @@ export class PostIssueModal extends Component {
       namedBtsIntegrations,
       intl: { formatMessage },
       data: { items },
+      projectKey,
       projectInfo,
+      organizationId,
     } = this.props;
     const { pluginName, integrationId, fields } = this.state;
     const currentExtension = this.getCurrentExtension();
     const integrationInfo = {
+      projectKey,
       integrationId,
-      projectName: projectInfo.projectName,
       pluginName,
+      organizationId,
+      projectId: projectInfo.projectId,
     };
 
     return (

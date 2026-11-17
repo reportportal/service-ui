@@ -27,13 +27,31 @@
     border-color: $COLOR--failed;
   }
   :global {
+    .EasyMDEContainer .CodeMirror {
+      box-sizing: content-box;
+      height: 70px;
+      min-height: 50px;
+      border: none;
+      border-radius: 0;
+      padding: 10px;
+    }
+    .EasyMDEContainer .CodeMirror-scroll {
+      min-height: 50px;
+    }
     .editor-toolbar {
       opacity: 1;
       border-radius: 0;
       border: none;
       border-bottom: 1px solid $COLOR--gray-80;
+      padding: 0 10px;
       background: $COLOR--white;
 
+      &:before,
+      &:after {
+        display: block;
+        content: ' ';
+        height: 1px;
+      }
       &:before {
         margin-bottom: 5px;
       }
@@ -41,15 +59,35 @@
         margin-top: 5px;
       }
 
-      a {
+      button {
         vertical-align: middle;
+        width: 30px;
+        height: 30px;
+        min-width: 30px;
+        padding: 0;
+        border: 1px solid transparent;
+        border-radius: 0;
+        background-color: transparent;
         background-repeat: no-repeat;
         background-position: center center;
         background-size: 80% 80%;
         outline: none;
         box-sizing: border-box;
+        font-family: $FONT-REGULAR;
+        font-size: 14px;
+        font-weight: normal;
         line-height: 27px;
-        color: $COLOR--gray-47 !important;
+        color: $COLOR--gray-47;
+
+        &:after {
+          content: none !important;
+        }
+
+        &:hover,
+        &.active {
+          background-color: $COLOR--white-five;
+          border-color: $COLOR--e-300;
+        }
 
         &.icon-header-1 {
           background-image: url(./img/heading-1-icon.svg);
@@ -97,7 +135,7 @@
       &:hover {
         opacity: 1;
       }
-      &.disabled-for-preview a:not(.no-disable) {
+      &.disabled-for-preview button:not(.no-disable) {
         background-color: $COLOR--white;
         vertical-align: middle;
         background-repeat: no-repeat;
@@ -109,13 +147,20 @@
       }
       .separator {
         vertical-align: middle;
+        width: 0;
         border-left: none;
-        border-color: $COLOR--dark-gray;
+        border-right: 1px solid $COLOR--dark-gray;
+        color: transparent;
+        text-indent: -10px;
       }
     }
     .CodeMirror {
+      box-sizing: content-box;
       height: 70px;
       min-height: 50px;
+      border: none;
+      border-radius: 0;
+      padding: 10px;
     }
     .CodeMirror-scroll {
       max-height: 350px;
@@ -168,6 +213,21 @@
     border: none;
 
     :global {
+      .EasyMDEContainer {
+        display: flex;
+        flex-direction: column-reverse;
+      }
+
+      .EasyMDEContainer .CodeMirror {
+        height: auto;
+        min-height: 30px;
+        padding: 0;
+      }
+
+      .EasyMDEContainer .CodeMirror-scroll {
+        min-height: 30px;
+      }
+
       .editor-toolbar {
         border: none;
         padding: 0 10px 0 4px;
@@ -177,9 +237,10 @@
           background: $COLOR--gray-light;
         }
 
-        a {
+        button {
           width: 22px;
           height: 22px;
+          min-width: 22px;
         }
 
         .separator {

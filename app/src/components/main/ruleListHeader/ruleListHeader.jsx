@@ -50,14 +50,8 @@ export class RuleListHeader extends Component {
   };
 
   render() {
-    const {
-      onAddItem,
-      switcherValue,
-      onChangeSwitcher,
-      readOnly,
-      messages,
-      titleMessage,
-    } = this.props;
+    const { onAddItem, switcherValue, onChangeSwitcher, readOnly, messages, titleMessage } =
+      this.props;
     return (
       <div className={cx('list-header')}>
         <span className={cx('caption')}>{messages.toggleLabel}</span>

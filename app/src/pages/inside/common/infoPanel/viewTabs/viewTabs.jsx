@@ -36,7 +36,7 @@ import {
   uniqueErrorsLinkSelector,
 } from 'controllers/testItem';
 import { debugModeSelector } from 'controllers/launch';
-import { analyzerExtensionsSelector } from 'controllers/appInfo';
+import { isAnalyzerAvailableSelector } from 'controllers/appInfo';
 import styles from './viewTabs.scss';
 
 const cx = classNames.bind(styles);
@@ -71,7 +71,7 @@ const messages = defineMessages({
   logViewLink: logViewLinkSelector(state),
   historyViewLink: historyViewLinkSelector(state),
   uniqueErrorsLink: uniqueErrorsLinkSelector(state),
-  isAnalyzerAvailable: !!analyzerExtensionsSelector(state).length,
+  isAnalyzerAvailable: isAnalyzerAvailableSelector(state),
 }))
 @injectIntl
 export class ViewTabs extends Component {

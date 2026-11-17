@@ -68,7 +68,7 @@ function createZipOn(obj) {
   Crc32.prototype.get = function get() {
     return ~this.crc;
   };
-  Crc32.prototype.table = (function() {
+  Crc32.prototype.table = (function () {
     let i,
       j,
       t,
@@ -180,7 +180,7 @@ function createZipOn(obj) {
 
     function readUint8Array(index, length, callback, onerror) {
       const reader = new FileReader();
-      reader.onload = function(e) {
+      reader.onload = function (e) {
         callback(new Uint8Array(e.target.result));
       };
       reader.onerror = onerror;
@@ -201,7 +201,7 @@ function createZipOn(obj) {
   // Writers
 
   function Writer() {}
-  Writer.prototype.getData = function(callback) {
+  Writer.prototype.getData = function (callback) {
     callback(this.data);
   };
 
@@ -225,7 +225,7 @@ function createZipOn(obj) {
 
     function getData(callback, onerror) {
       const reader = new FileReader();
-      reader.onload = function(e) {
+      reader.onload = function (e) {
         callback(e.target.result);
       };
       reader.onerror = onerror;
@@ -337,7 +337,7 @@ function createZipOn(obj) {
         data = message.data,
         err = message.error;
       if (err) {
-        err.toString = function() {
+        err.toString = function () {
           return `Error: ${this.message}`;
         };
         onreaderror(err);
@@ -839,7 +839,7 @@ function createZipOn(obj) {
 
     function Entry() {}
 
-    Entry.prototype.getData = function(writer, onend, onprogress, checkCrc32) {
+    Entry.prototype.getData = function (writer, onend, onprogress, checkCrc32) {
       const that = this;
 
       function testCrc32(crc32) {

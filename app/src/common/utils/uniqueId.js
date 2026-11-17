@@ -14,7 +14,4 @@
  * limitations under the License.
  */
 
-export const uniqueId = () =>
-  `_${Math.random()
-    .toString(36)
-    .slice(2, 11)}`;
+export const uniqueId = () => `_${Math.random().toString(36).slice(2, 11)}`;

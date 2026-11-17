@@ -20,11 +20,10 @@ import { useIntl } from 'react-intl';
 import classNames from 'classnames/bind';
 import { useSelector, useDispatch } from 'react-redux';
 import { useTracking } from 'react-tracking';
-import { activeProjectRoleSelector, userAccountRoleSelector } from 'controllers/user';
 import { Button } from '@reportportal/ui-kit';
 import { PROJECT_SETTINGS_LOG_TYPES_EVENTS } from 'components/main/analytics/events/ga4Events/projectSettingsPageEvents';
 import { logTypesSelector, logTypesLoadingSelector } from 'controllers/project';
-import { canUpdateSettings } from 'common/utils/permissions';
+import { useUserPermissions } from 'hooks/useUserPermissions';
 import { docsReferences, createExternalLink } from 'common/utils';
 import { SpinningPreloader } from 'components/preloaders/spinningPreloader';
 import { showModalAction } from 'controllers/modal';
@@ -43,9 +42,7 @@ export const LogTypes = ({ setHeaderTitleNode }) => {
   const { trackEvent } = useTracking();
   const logTypes = useSelector(logTypesSelector);
   const loading = useSelector(logTypesLoadingSelector);
-  const userAccountRole = useSelector(userAccountRoleSelector);
-  const userProjectRole = useSelector(activeProjectRoleSelector);
-  const isEditable = canUpdateSettings(userAccountRole, userProjectRole);
+  const { canUpdateSettings: isEditable } = useUserPermissions();
 
   const handleCreateLogType = useCallback(() => {
     trackEvent(PROJECT_SETTINGS_LOG_TYPES_EVENTS.CLICK_CREATE_TYPES);
@@ -65,7 +62,7 @@ export const LogTypes = ({ setHeaderTitleNode }) => {
   }, [formatMessage, setHeaderTitleNode, isEditable, handleCreateLogType, loading]);
 
   const filteredLogTypes = useMemo(
-    () => logTypes.filter((logType) => logType.level !== UNKNOWN_LOG_TYPE_LEVEL),
+    () => logTypes.filter((logType) => logType.level < UNKNOWN_LOG_TYPE_LEVEL),
     [logTypes],
   );
 

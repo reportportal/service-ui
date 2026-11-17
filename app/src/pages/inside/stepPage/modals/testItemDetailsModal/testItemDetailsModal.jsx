@@ -29,14 +29,9 @@ import { withModal, ModalLayout, ModalField } from 'components/main/modal';
 import { FieldProvider } from 'components/fields/fieldProvider';
 import { fetch } from 'common/utils/fetch';
 import { URLS } from 'common/urls';
-import {
-  activeProjectSelector,
-  activeProjectRoleSelector,
-  userAccountRoleSelector,
-  userIdSelector,
-} from 'controllers/user';
+import { userRolesType } from 'common/constants/projectRoles';
+import { userRolesSelector } from 'controllers/pages';
 import { clearLogPageStackTrace } from 'controllers/log';
-import { launchSelector } from 'controllers/testItem';
 import { ExtensionLoader, extensionType } from 'components/extensionLoader';
 import { MarkdownEditor, MarkdownViewer } from 'components/main/markdown';
 import { getDuration } from 'common/utils/timeDateUtils';
@@ -56,7 +51,7 @@ import { commonValidators, validate } from 'common/utils/validation';
 import { ContainerWithTabs } from 'components/main/containerWithTabs';
 import { StackTrace } from 'pages/inside/common/stackTrace';
 import { FieldErrorHint } from 'components/fields/fieldErrorHint';
-import { STEP_PAGE_EVENTS } from 'components/main/analytics/events/stepPageEvents';
+import { projectKeySelector } from 'controllers/project';
 import { messages } from './messages';
 import styles from './testItemDetailsModal.scss';
 
@@ -72,11 +67,8 @@ const cx = classNames.bind(styles);
 })
 @connect(
   (state) => ({
-    userAccountRole: userAccountRoleSelector(state),
-    userProjectRole: activeProjectRoleSelector(state),
-    userId: userIdSelector(state),
-    currentProject: activeProjectSelector(state),
-    launch: launchSelector(state),
+    userRoles: userRolesSelector(state),
+    projectKey: projectKeySelector(state),
     extensions: testItemDetailsAddonSelector(state),
   }),
   {
@@ -96,14 +88,10 @@ export class TestItemDetailsModal extends Component {
       fetchFunc: PropTypes.func,
       eventsInfo: PropTypes.object,
     }).isRequired,
-    launch: PropTypes.object,
-    userProjectRole: PropTypes.string,
-    userAccountRole: PropTypes.string.isRequired,
-    userId: PropTypes.string,
+    userRoles: userRolesType,
     initialize: PropTypes.func.isRequired,
     dirty: PropTypes.bool,
     handleSubmit: PropTypes.func.isRequired,
-    currentProject: PropTypes.string.isRequired,
     showNotification: PropTypes.func.isRequired,
     showDefaultErrorNotification: PropTypes.func.isRequired,
     tracking: PropTypes.shape({
@@ -112,13 +100,12 @@ export class TestItemDetailsModal extends Component {
     }).isRequired,
     clearLogPageStackTrace: PropTypes.func,
     invalid: PropTypes.bool.isRequired,
+    projectKey: PropTypes.string.isRequired,
     extensions: PropTypes.arrayOf(extensionType),
   };
 
   static defaultProps = {
-    launch: {},
-    userId: '',
-    userProjectRole: '',
+    userRoles: {},
     dirty: false,
     clearLogPageStackTrace: () => {},
     extensions: [],
@@ -162,18 +149,18 @@ export class TestItemDetailsModal extends Component {
     ];
   };
 
-  testItemAttributeKeyURLCreator = (projectId) => {
+  testItemAttributeKeyURLCreator = (projectKey) => {
     const {
       data: { item },
     } = this.props;
-    return URLS.testItemAttributeKeysSearch(projectId, item.launchId || item.id);
+    return URLS.testItemAttributeKeysSearch(projectKey, item.launchId || item.id);
   };
 
-  testItemAttributeValueURLCreator = (projectId, key) => {
+  testItemAttributeValueURLCreator = (projectKey, key) => {
     const {
       data: { item },
     } = this.props;
-    return URLS.testItemAttributeValuesSearch(projectId, item.launchId || item.id, key);
+    return URLS.testItemAttributeValuesSearch(projectKey, item.launchId || item.id, key);
   };
 
   updateItemAndCloseModal = (closeModal) => (formData) => {
@@ -194,11 +181,11 @@ export class TestItemDetailsModal extends Component {
   updateItem = (data) => {
     const {
       intl: { formatMessage },
-      currentProject,
+      projectKey,
       data: { item, type, fetchFunc },
     } = this.props;
 
-    fetch(URLS.launchesItemsUpdate(currentProject, item.id, type), {
+    fetch(URLS.launchesItemsUpdate(projectKey, item.id, type), {
       method: 'put',
       data,
     })
@@ -225,7 +212,6 @@ export class TestItemDetailsModal extends Component {
     const {
       intl,
       data: { item },
-      tracking: { trackEvent },
     } = this.props;
 
     return (
@@ -250,11 +236,7 @@ export class TestItemDetailsModal extends Component {
           <ModalField label={intl.formatMessage(messages.codeRef)}>
             <div className={cx('code-ref')} title={item.codeRef}>
               {item.codeRef}
-              <CopyToClipboard
-                text={item.codeRef}
-                className={cx('copy')}
-                onCopy={() => trackEvent(STEP_PAGE_EVENTS.COPY_CODE_REFERENCE_EDIT_ITEM_MODAL)}
-              >
+              <CopyToClipboard text={item.codeRef} className={cx('copy')}>
                 {Parser(IconDuplicate)}
               </CopyToClipboard>
             </div>
@@ -353,15 +335,7 @@ export class TestItemDetailsModal extends Component {
   };
 
   render() {
-    const {
-      intl,
-      data: { item, eventsInfo },
-      launch,
-      userAccountRole,
-      userProjectRole,
-      userId,
-      handleSubmit,
-    } = this.props;
+    const { intl, userRoles, handleSubmit } = this.props;
     const okButton = {
       text: intl.formatMessage(COMMON_LOCALE_KEYS.SAVE),
       onClick: (closeModal) => {
@@ -370,14 +344,9 @@ export class TestItemDetailsModal extends Component {
     };
     const cancelButton = {
       text: intl.formatMessage(COMMON_LOCALE_KEYS.CANCEL),
-      eventInfo: eventsInfo.cancelBtn,
     };
 
-    const editable = canEditLaunch(
-      userAccountRole,
-      userProjectRole,
-      item.owner ? userId === item.owner : userId === launch.owner,
-    );
+    const editable = canEditLaunch(userRoles);
     return (
       <ModalLayout
         title={intl.formatMessage(messages.modalTitle)}
@@ -390,7 +359,6 @@ export class TestItemDetailsModal extends Component {
         }
         warningType={!this.props.invalid && 'info'}
         contentClassName={cx('tab-container')}
-        closeIconEventInfo={eventsInfo.closeIcon}
       >
         <ContainerWithTabs data={this.getTabsConfig(editable)} customClass={cx('tab-header')} />
       </ModalLayout>

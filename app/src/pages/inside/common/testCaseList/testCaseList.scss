@@ -1,0 +1,169 @@
+/*
+ * Copyright 2025 EPAM Systems
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+@use '../../../../common/css/mixins';
+
+.test-case-list {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 100%;
+  background: transparent;
+  align-items: center;
+}
+
+.test-case-table {
+  margin-bottom: 32px;
+
+  &_selectable {
+    margin-left: -32px;
+    width: calc(100% + 32px);
+  }
+
+  > div:first-child > div:first-child {
+    padding: 4px 0 4px;
+  }
+
+  // TODO: delete after it is fixed in ui-kit
+  :global([class*='_table-header_']) {
+    background: none !important;
+  }
+}
+
+.test-case-table-row {
+  position: relative;
+  height: max-content;
+  min-height: 76px;
+  border-radius: 4px;
+  box-sizing: content-box;
+
+  &:global([class*='_selectable_']) > div:first-child {
+    align-self: baseline;
+    margin-top: 14px;
+  }
+
+  &:global(.is-dragging-row) :global([class*='table-row-content']) {
+    opacity: 0.3;
+  }
+
+  :global([class*='table-row-content']) {
+    align-items: flex-start;
+    min-height: 76px;
+    padding: 0;
+  }
+
+  &:hover :global([class*='table-row-content']) {
+    outline: 1px solid var(--rp-ui-base-topaz-focused);
+  }
+
+  &:has(.selected) :global([class*='table-row-content']) {
+    outline: 2px solid var(--rp-ui-base-topaz-focused);
+  }
+}
+
+.cell-wrapper {
+  @include mixins.button-reset;
+
+  /* Component-specific styles */
+  width: 100%;
+}
+
+.loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 400px;
+}
+
+.loading-message {
+  font-size: 16px;
+  color: var(--rp-ui-base-e-400);
+  text-align: center;
+}
+
+.no-results {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 200px;
+  padding: 40px 20px;
+
+  &--search {
+    padding-top: 132px;
+  }
+}
+
+.no-results-message {
+  font-size: 16px;
+  color: var(--rp-ui-base-e-400);
+  text-align: center;
+  max-width: 400px;
+}
+
+.controls {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--rp-ui-base-e-100);
+  background: transparent;
+  gap: 16px;
+  width: 100%;
+  height: 45px;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+.controls-title {
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 24px;
+  color: var(--rp-ui-base-almost-black);
+  flex-shrink: 0;
+}
+
+.test-case-drag-preview {
+  position: fixed;
+  pointer-events: none;
+  z-index: $Z-INDEX-OVERLAY-PANEL;
+  left: -350px;
+  top: 0;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  width: 320px;
+  min-height: 44px;
+  padding: 0 16px;
+  border-radius: 4px;
+  opacity: 0.93;
+  outline: none;
+  border: none;
+
+  &__text {
+    flex: 1;
+    min-width: 0;
+    font-family: $FONT-ROBOTO-MEDIUM;
+    font-weight: 500;
+    font-size: 13px;
+    line-height: 20px;
+    letter-spacing: 0;
+    color: var(--rp-ui-base-almost-black);
+    text-align: left;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+}

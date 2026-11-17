@@ -56,16 +56,9 @@ export const SUITES_PAGE_EVENTS = {
   // GA3 events
   ...getCommonActionEvents(SUITE_PAGE),
 
-  // REFINE_FILTERS_PANEL
-  LOG_VIEW_SWITCHER: {
-    category: SUITE_PAGE,
-    action: 'Click on launch log view switcher',
-    label: 'Open "Launch log view"',
-  },
   // DELETE_ITEM_MODAL
-  getClickOnDeleteBtnDeleteItemModalEvent: getClickOnDeleteBtnDeleteItemModalEventCreator(
-    SUITE_PAGE,
-  ),
+  getClickOnDeleteBtnDeleteItemModalEvent:
+    getClickOnDeleteBtnDeleteItemModalEventCreator(SUITE_PAGE),
   // EDIT_ITEMS_MODAL
   EDIT_ITEMS_MODAL_EVENTS: getEditItemsModalEvents(SUITE_PAGE),
 };

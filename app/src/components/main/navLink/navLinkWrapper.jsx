@@ -32,7 +32,10 @@ export class NavLinkWrapper extends Component {
     activeClassName: PropTypes.string,
     children: PropTypes.node,
     onClick: PropTypes.func,
+    onFocus: PropTypes.func,
+    onBlur: PropTypes.func,
     location: PropTypes.object,
+    title: PropTypes.string,
   };
 
   static defaultProps = {
@@ -41,7 +44,10 @@ export class NavLinkWrapper extends Component {
     activeClassName: '',
     children: null,
     onClick: () => {},
+    onFocus: () => {},
+    onBlur: () => {},
     location: null,
+    title: null,
   };
 
   /*
@@ -62,7 +68,6 @@ export class NavLinkWrapper extends Component {
           pathname: path,
         });
       } catch (e) {
-        // eslint-disable-next-line no-undef
         if (process.env.NODE_ENV === 'development') {
           console.warn(
             '[redux-first-router-link]could not create path from action:',
@@ -93,7 +98,19 @@ export class NavLinkWrapper extends Component {
   };
 
   render() {
-    const { onClick, children, to, className, activeClassName } = this.props;
+    const {
+      onClick,
+      onFocus,
+      onBlur,
+      children,
+      to,
+      className,
+      activeClassName,
+      title,
+      location,
+      ...rest
+    } = this.props;
+
     return (
       <NavLink
         to={to}
@@ -101,6 +118,10 @@ export class NavLinkWrapper extends Component {
         activeClassName={activeClassName}
         onClick={onClick}
         isActive={this.isActive}
+        onFocus={onFocus}
+        onBlur={onBlur}
+        title={title}
+        {...rest}
       >
         {children}
       </NavLink>

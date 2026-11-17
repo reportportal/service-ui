@@ -20,14 +20,13 @@ import classNames from 'classnames/bind';
 import { connect } from 'react-redux';
 import { defineMessages, injectIntl } from 'react-intl';
 import { URLS } from 'common/urls';
-import { activeProjectSelector } from 'controllers/user';
-import { pluginByNameSelector, isPluginSupportsCommonCommand } from 'controllers/plugins';
+import { buildPluginCommandRQ } from 'controllers/plugins/utils';
 import { COMMAND_GET_ISSUE } from 'controllers/plugins/uiExtensions/constants';
-import { projectInfoIdSelector } from 'controllers/project/selectors';
+import { activeOrganizationIdSelector } from 'controllers/organization';
+import { projectInfoIdSelector, projectKeySelector } from 'controllers/project';
 import { getStorageItem, updateStorageItem } from 'common/utils';
 import { ERROR_CANCELED, fetch } from 'common/utils/fetch';
 import { DottedPreloader } from 'components/preloaders/dottedPreloader';
-
 import styles from './issueInfoTooltip.scss';
 
 const cx = classNames.bind(styles);
@@ -53,30 +52,31 @@ const messages = defineMessages({
   },
 });
 
-const isResolved = (status = '') => status.toUpperCase() === STATUS_RESOLVED;
-const getStorageKey = (activeProject) => `${activeProject}_tickets`;
+const isResolved = (status) => status.toUpperCase() === STATUS_RESOLVED;
+const getStorageKey = (projectKey) => `${projectKey}_tickets`;
 
 const FETCH_ISSUE_INTERVAL = 900000; // min request interval = 15 min
 
-@connect((state, ownProps) => ({
-  activeProject: activeProjectSelector(state),
-  plugin: pluginByNameSelector(state, ownProps.pluginName),
+@connect((state) => ({
+  projectKey: projectKeySelector(state),
   projectId: projectInfoIdSelector(state),
+  organizationId: activeOrganizationIdSelector(state),
 }))
 @injectIntl
 export class IssueInfoTooltip extends Component {
   static propTypes = {
     intl: PropTypes.object.isRequired,
-    activeProject: PropTypes.string.isRequired,
     projectId: PropTypes.number.isRequired,
+    organizationId: PropTypes.number,
     ticketId: PropTypes.string.isRequired,
     btsProject: PropTypes.string.isRequired,
     btsUrl: PropTypes.string.isRequired,
-    plugin: PropTypes.object,
+    pluginName: PropTypes.string.isRequired,
+    projectKey: PropTypes.string.isRequired,
   };
 
   static defaultProps = {
-    plugin: null,
+    organizationId: null,
   };
 
   constructor(props) {
@@ -113,48 +113,44 @@ export class IssueInfoTooltip extends Component {
   };
 
   getIssueFromStorage = () => {
-    const { activeProject, ticketId, btsProject } = this.props;
-    const storageKey = getStorageKey(activeProject);
+    const { projectKey, ticketId, btsProject } = this.props;
+    const storageKey = getStorageKey(projectKey);
 
     const data = getStorageItem(storageKey) || {};
     return data[`${btsProject}_${ticketId}`] || {};
   };
 
   updateIssueInStorage = (data = {}) => {
-    const { activeProject, btsProject, ticketId } = this.props;
-    const storageKey = getStorageKey(activeProject);
+    const { projectKey, btsProject, ticketId } = this.props;
+    const storageKey = getStorageKey(projectKey);
 
     updateStorageItem(storageKey, { [`${btsProject}_${ticketId}`]: data });
   };
 
   fetchData = () => {
-    const { activeProject, projectId, ticketId, btsProject, btsUrl, plugin } = this.props;
+    const { projectId, ticketId, btsProject, btsUrl, pluginName, projectKey, organizationId } =
+      this.props;
     const cancelRequestFunc = (cancel) => {
       this.cancelRequest = cancel;
     };
     this.setState({ loading: true });
-    const isCommonCommandSupported =
-      plugin && isPluginSupportsCommonCommand(plugin, COMMAND_GET_ISSUE);
-    let url;
-    let data;
-
-    if (isCommonCommandSupported) {
-      url = URLS.pluginCommandCommon(activeProject, plugin.name, COMMAND_GET_ISSUE);
-      data = {
-        ticketId,
-        url: btsUrl,
-        project: btsProject,
-        projectId,
-      };
-    } else {
-      url = URLS.btsTicket(activeProject, ticketId, btsProject, btsUrl);
-    }
-
-    fetch(url, {
-      method: isCommonCommandSupported ? 'PUT' : 'GET',
-      data,
+    const url = URLS.pluginsCommandsCommon(pluginName, COMMAND_GET_ISSUE);
+    const requestParams = {
       abort: cancelRequestFunc,
-    })
+      method: 'POST',
+      data: buildPluginCommandRQ({
+        organizationId,
+        projectId,
+        projectKey,
+        arguments: {
+          ticketId,
+          url: btsUrl,
+          project: btsProject,
+        },
+      }),
+    };
+
+    fetch(url, requestParams)
       .then((issue) => {
         this.updateIssueInStorage({ issue, lastTime: Date.now() });
         this.setState({ loading: false, issue });

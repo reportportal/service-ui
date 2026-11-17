@@ -25,7 +25,7 @@ import { URLS } from 'common/urls';
 import { fetch } from 'common/utils';
 import { showScreenLockAction, hideScreenLockAction } from 'controllers/screenLock';
 import { showDefaultErrorNotification } from 'controllers/notification';
-import { activeProjectSelector } from 'controllers/user';
+import { projectKeySelector } from 'controllers/project';
 import { fetchDashboardsAction } from 'controllers/dashboard';
 import { analyticsEnabledSelector, baseEventParametersSelector } from 'controllers/appInfo';
 import { getWidgets } from 'pages/inside/dashboardItemPage/modals/common/widgets';
@@ -54,7 +54,7 @@ const cx = classNames.bind(styles);
 @injectIntl
 @connect(
   (state) => ({
-    projectId: activeProjectSelector(state),
+    projectKey: projectKeySelector(state),
     activeDashboardId: activeDashboardIdSelector(state),
     currentPage: pageSelector(state),
     isAnalyticsEnabled: analyticsEnabledSelector(state),
@@ -75,7 +75,7 @@ export class WidgetWizardContent extends Component {
     intl: PropTypes.object.isRequired,
     formValues: PropTypes.object,
     submitWidgetWizardForm: PropTypes.func.isRequired,
-    projectId: PropTypes.string.isRequired,
+    projectKey: PropTypes.string.isRequired,
     showScreenLockAction: PropTypes.func.isRequired,
     hideScreenLockAction: PropTypes.func.isRequired,
     showDefaultErrorNotification: PropTypes.func.isRequired,
@@ -158,15 +158,20 @@ export class WidgetWizardContent extends Component {
       });
     }
 
-    tracking.trackEvent(eventsInfo.nextStep);
+    if (eventsInfo?.nextStep) {
+      tracking.trackEvent(eventsInfo.nextStep);
+    }
     if (this.state.step === 1 && formValues.contentParameters.contentFields) {
-      tracking.trackEvent(eventsInfo.selectCriteria(formValues.contentParameters.contentFields));
+      const ev = eventsInfo?.selectCriteria?.(formValues.contentParameters.contentFields);
+      if (ev) {
+        tracking.trackEvent(ev);
+      }
     }
 
     const widgetMode =
       formValues.contentParameters &&
       getWidgetModeValuesString(formValues.contentParameters.widgetOptions);
-    if (this.state.step === 1 && widgetMode) {
+    if (this.state.step === 1 && widgetMode && eventsInfo?.selectToggleButtons) {
       tracking.trackEvent(eventsInfo.selectToggleButtons(widgetMode));
     }
 
@@ -176,13 +181,16 @@ export class WidgetWizardContent extends Component {
   onClickPrevStep = () => {
     const offsetStep = this.getOffsetStep();
     this.setState({ step: this.state.step - offsetStep });
-    this.props.tracking.trackEvent(this.props.eventsInfo.prevStep);
+    const prevStep = this.props.eventsInfo?.prevStep;
+    if (prevStep) {
+      this.props.tracking.trackEvent(prevStep);
+    }
   };
 
   onAddWidget = (formData) => {
     const {
       tracking: { trackEvent },
-      projectId,
+      projectKey,
       onConfirm,
       initialFormValues,
       activeDashboardId,
@@ -195,7 +203,7 @@ export class WidgetWizardContent extends Component {
     const { widgetType, name } = data;
 
     this.props.showScreenLockAction();
-    fetch(URLS.widget(projectId), {
+    fetch(URLS.widget(projectKey), {
       method: 'post',
       data,
     })
@@ -268,7 +276,7 @@ export class WidgetWizardContent extends Component {
       formValues: { widgetType },
       formValues,
       showConfirmation,
-      projectId,
+      projectKey,
       eventsInfo,
       submitWidgetWizardForm,
     } = this.props;
@@ -277,7 +285,7 @@ export class WidgetWizardContent extends Component {
       <div className={cx('widget-wizard-content')}>
         <WizardInfoSection
           activeWidget={this.widgets.find((widget) => widgetType === widget.id)}
-          projectId={projectId}
+          projectKey={projectKey}
           widgetSettings={prepareWidgetDataForSubmit(this.preprocessOutputData(formValues))}
           step={this.state.step}
           showConfirmation={showConfirmation}

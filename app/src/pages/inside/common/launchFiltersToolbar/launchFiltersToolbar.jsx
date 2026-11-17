@@ -29,6 +29,7 @@ import {
   saveNewFilterAction,
   changeActiveFilterAction,
   dirtyFilterIdsSelector,
+  removeLaunchesFilterAction,
 } from 'controllers/filter';
 import { changeLaunchDistinctAction, launchDistinctSelector } from 'controllers/launch';
 import { isEmptyObject, isEmptyValue } from 'common/utils';
@@ -36,7 +37,12 @@ import { GhostButton } from 'components/buttons/ghostButton';
 import { levelSelector } from 'controllers/testItem';
 import { EntitiesGroup } from 'components/filterEntities/entitiesGroup';
 import AddFilterIcon from 'common/img/add-filter-inline.svg';
+import FilterIcon from 'common/img/newIcons/filter-inline.svg';
+import { ClearIcon } from '@reportportal/ui-kit';
 import { LAUNCHES_PAGE_EVENTS } from 'components/main/analytics/events';
+import { canWorkWithFilters } from 'common/utils/permissions';
+import { userRolesSelector } from 'controllers/pages';
+import { CUSTOM_FILTER_ID } from 'common/constants/reservedFilterIds';
 import { FilterList } from './filterList';
 import { FiltersActionBar } from './filtersActionBar';
 import { ExpandToggler } from './expandToggler';
@@ -62,6 +68,7 @@ export const LaunchFiltersToolbar = ({
   onResetFilter,
 }) => {
   const [expanded, setExpanded] = useState(true);
+  const [isFilterCreate, setIsFilterCreate] = useState(false);
   const dispatch = useDispatch();
   const { trackEvent } = useTracking();
 
@@ -69,6 +76,8 @@ export const LaunchFiltersToolbar = ({
   const dirtyFilterIds = useSelector(dirtyFilterIdsSelector);
   const launchDistinct = useSelector(launchDistinctSelector);
   const level = useSelector(levelSelector);
+  const userRoles = useSelector(userRolesSelector);
+  const hasFilterPermissions = canWorkWithFilters(userRoles);
 
   const showModal = useCallback((payload) => dispatch(showModalAction(payload)), [dispatch]);
   const updateFilter = useCallback((payload) => dispatch(updateFilterAction(payload)), [dispatch]);
@@ -86,6 +95,10 @@ export const LaunchFiltersToolbar = ({
     () => dispatch(changeActiveFilterAction(launchDistinct)),
     [dispatch, launchDistinct],
   );
+  const removeLaunchesFilter = useCallback(
+    (payload) => dispatch(removeLaunchesFilterAction(payload)),
+    [dispatch],
+  );
 
   const handleFilterClone = useCallback(() => {
     const { locked, ...newFilter } = activeFilter || {};
@@ -93,10 +106,23 @@ export const LaunchFiltersToolbar = ({
     trackEvent(LAUNCHES_PAGE_EVENTS.getClickOnFilterActionBarButtonEvent('clone'));
   }, [activeFilter, createFilter, trackEvent]);
 
-  const handleFilterCreate = useCallback(() => {
-    createFilter();
-    trackEvent(LAUNCHES_PAGE_EVENTS.ADD_FILTER);
-  }, [createFilter, trackEvent]);
+  const handleFilterCreate = useCallback(
+    (hasFilterPermissions) => {
+      if (hasFilterPermissions) {
+        createFilter();
+      } else {
+        if (isFilterCreate) {
+          removeLaunchesFilter(CUSTOM_FILTER_ID);
+        } else {
+          createFilter();
+        }
+
+        setIsFilterCreate(!isFilterCreate);
+      }
+      trackEvent(LAUNCHES_PAGE_EVENTS.ADD_FILTER);
+    },
+    [createFilter, trackEvent],
+  );
 
   const handleFilterEdit = useCallback(() => {
     showModal({
@@ -154,6 +180,26 @@ export const LaunchFiltersToolbar = ({
     [isFilterUnsaved, isNewFilter],
   );
 
+  const getFilterMessage = (hasFilterPermissions) => {
+    if (hasFilterPermissions) {
+      return <FormattedMessage id="LaunchFiltersToolbar.addFilter" defaultMessage="Add filter" />;
+    }
+
+    return isFilterCreate ? (
+      <FormattedMessage id="LaunchFiltersToolbar.clearFilter" defaultMessage="Clear filter" />
+    ) : (
+      <FormattedMessage id="LaunchFiltersToolbar.filter" defaultMessage="Filter" />
+    );
+  };
+
+  const getFilterIcon = (hasFilterPermissions) => {
+    if (hasFilterPermissions) {
+      return AddFilterIcon;
+    }
+
+    return isFilterCreate ? <ClearIcon /> : FilterIcon;
+  };
+
   return (
     <div className={cx('launch-filters-toolbar')}>
       <div className={cx('filter-tickets-row')}>
@@ -167,25 +213,30 @@ export const LaunchFiltersToolbar = ({
         </div>
         <div className={cx('separator')} />
         <div className={cx('add-filter-button')}>
-          <GhostButton icon={AddFilterIcon} onClick={handleFilterCreate}>
-            <FormattedMessage id="LaunchFiltersToolbar.addFilter" defaultMessage="Add filter" />
+          <GhostButton
+            icon={getFilterIcon(hasFilterPermissions)}
+            onClick={() => handleFilterCreate(hasFilterPermissions)}
+          >
+            {getFilterMessage(hasFilterPermissions)}
           </GhostButton>
         </div>
-        <div className={cx('filter-tickets-container')}>
-          <FilterList
-            filters={filters}
-            activeFilterId={activeFilterId}
-            unsavedFilterIds={unsavedFilterIds}
-            onRemoveFilter={onRemoveFilter}
-          />
-        </div>
+        {hasFilterPermissions && (
+          <div className={cx('filter-tickets-container')}>
+            <FilterList
+              filters={filters}
+              activeFilterId={activeFilterId}
+              unsavedFilterIds={unsavedFilterIds}
+              onRemoveFilter={onRemoveFilter}
+            />
+          </div>
+        )}
         {!!activeFilter && !level && (
           <div className={cx('expand-toggle-container')}>
             <ExpandToggler expanded={expanded} onToggleExpand={toggleExpand} />
           </div>
         )}
       </div>
-      {expanded && !level && !!activeFilter && (
+      {expanded && !level && !!activeFilter && (hasFilterPermissions || isFilterCreate) && (
         <div className={cx('filter-controls-container')}>
           <div className={cx('filter-entities-container')}>
             <EntitiesGroup

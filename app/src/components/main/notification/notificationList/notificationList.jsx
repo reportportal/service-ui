@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 EPAM Systems
+ * Copyright 2026 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,11 +28,18 @@ import styles from './notificationList.scss';
 
 const cx = classNames.bind(styles);
 
-const messages = defineMessages({
+const NOTIFICATION_PORTAL_ATTR = 'data-notification-portal';
+
+export const notificationMessages = defineMessages({
   successLogin: { id: 'NotificationItem.successLogin', defaultMessage: 'Signed in successfully' },
   failureDefault: {
     id: 'NotificationItem.failureDefault',
     defaultMessage: 'An error occurred while connecting to server: {error}',
+  },
+  loginAddressLocked: {
+    id: 'NotificationItem.loginAddressLocked',
+    defaultMessage:
+      'An error occurred while connecting to server: Address is locked due to several incorrect login attempts',
   },
   infoLogout: { id: 'NotificationItem.infoLogout', defaultMessage: 'You have been logged out' },
   assignSuccess: {
@@ -44,16 +51,68 @@ const messages = defineMessages({
     defaultMessage: 'An error occurred during assigning to the project',
   },
   unassignSuccess: {
-    id: 'ProjectsPage.unassignSuccess',
-    defaultMessage: 'You have been unassigned from the project',
+    id: 'Assignment.unassignSuccess',
+    defaultMessage: 'User {name} has been unassigned successfully',
   },
-  unassignError: {
-    id: 'ProjectsPage.unassignError',
+  unassignProjectError: {
+    id: 'Assignment.unassignProjectError',
     defaultMessage: 'An error occurred during unassigning from the project',
+  },
+  changeProjectRoleSuccess: {
+    id: 'Assignment.changeProjectRoleSuccess',
+    defaultMessage: 'User {name} role has been changed successfully',
+  },
+  changeProjectRoleError: {
+    id: 'Assignment.changeProjectRoleError',
+    defaultMessage: 'An error occurred during changing the user role',
+  },
+  assignToOrganizationSuccess: {
+    id: 'OrganizationsPage.assignToOrganizationSuccess',
+    defaultMessage: 'User {name} has been assigned successfully',
+  },
+  assignToOrganizationError: {
+    id: 'OrganizationsPage.assignToOrganizationError',
+    defaultMessage: 'An error occurred during assigning to the organization',
+  },
+  unassignOrganizationError: {
+    id: 'Assignment.unassignOrganizationError',
+    defaultMessage: 'An error occurred during unassigning from the organization',
+  },
+  assignmentUpdatedSuccess: {
+    id: 'Assignment.assignmentUpdatedSuccess',
+    defaultMessage: 'Assignment of {name} has been updated successfully',
+  },
+  assignToProjectSuccess: {
+    id: 'Assignment.assignToProjectSuccess',
+    defaultMessage: 'User has been assigned successfully',
+  },
+  assignToProjectError: {
+    id: 'Assignment.assignToProjectError',
+    defaultMessage: 'An error occurred while assigning to the project',
+  },
+  updateAssignmentsError: {
+    id: 'Assignment.updateAssignmentsError',
+    defaultMessage: 'An error occurred while updating assignments',
   },
   deleteError: {
     id: 'ProjectsPage.deleteError',
     defaultMessage: 'An error occurred during deleting the project',
+  },
+  deleteProjectSuccess: {
+    id: 'ProjectsPage.deleteProjectSuccess',
+    defaultMessage: "The project ''{name}'' has been successfully deleted",
+  },
+  deleteOrganizationError: {
+    id: 'OrganizationsPage.deleteOrganizationError',
+    defaultMessage: 'An error occurred during deleting the organization',
+  },
+  deleteOrganizationSuccess: {
+    id: 'OrganizationsPage.deleteOrganizationSuccess',
+    defaultMessage: 'The organization has been deleted successfully',
+  },
+  updateProjectSuccess: {
+    id: 'ProjectsPage.updateProjectSuccess',
+    defaultMessage: 'The project has been updated successfully',
   },
   addDefectTypeSuccess: {
     id: 'Project.addDefectTypeSuccess',
@@ -77,7 +136,15 @@ const messages = defineMessages({
   },
   projectExists: {
     id: 'ProjectsPage.projectExists',
-    defaultMessage: "The project ''{name}'' is already exists",
+    defaultMessage: "Project with the same name ''{name}'' already exists in this organization",
+  },
+  createOrganizationSuccess: {
+    id: 'OrganizationsPage.createOrganizationSuccess',
+    defaultMessage: 'The organization has been created successfully',
+  },
+  organizationExists: {
+    id: 'OrganizationsPage.organizationExists',
+    defaultMessage: 'An organization with the same name or slug already exists in the instance',
   },
   resetToGlobalSuccess: {
     id: 'InstancesSection.resetToGlobalSuccess',
@@ -85,7 +152,7 @@ const messages = defineMessages({
   },
   addIntegrationSuccess: {
     id: 'InstancesSection.addIntegrationSuccess',
-    defaultMessage: 'Integration successfully added',
+    defaultMessage: 'Integration has been created successfully',
   },
   removePluginSuccess: {
     id: 'InstancesSection.removePluginSuccess',
@@ -93,11 +160,11 @@ const messages = defineMessages({
   },
   updateIntegrationSuccess: {
     id: 'IntegrationSettingsContainer.updateIntegrationSuccess',
-    defaultMessage: 'Integration successfully updated',
+    defaultMessage: 'Integration has been updated successfully',
   },
   removeIntegrationSuccess: {
     id: 'ConnectionSection.removeIntegrationSuccess',
-    defaultMessage: 'Integration successfully deleted',
+    defaultMessage: 'Integration has been deleted successfully',
   },
   addDashboardSuccess: {
     id: 'DashboardPage.addDashboardSuccess',
@@ -126,6 +193,10 @@ const messages = defineMessages({
   dashboardConfigurationCopied: {
     id: 'Notifications.dashboardConfigurationCopied',
     defaultMessage: 'Dashboard configuration has been copied to clipboard successfully',
+  },
+  copyLinkFailed: {
+    id: 'ExternalUserInvitationModal.copyLinkFailed',
+    defaultMessage: 'Failed to copy link',
   },
   dashboardExists: {
     id: 'DashboardPage.dashboardExists',
@@ -176,6 +247,247 @@ const messages = defineMessages({
     id: 'ProfilePage.updateSessionExpirationSuccess',
     defaultMessage: 'Session inactivity timeout has been changed successfully',
   },
+  updateOrganizationSettingsSuccess: {
+    id: 'OrganizationSettingsPage.updateSettingsSuccess',
+    defaultMessage: 'Organization settings have been updated successfully',
+  },
+  updateOrganizationNameSuccess: {
+    id: 'OrganizationsPage.updateOrganizationNameSuccess',
+    defaultMessage: 'Organization name has been updated successfully',
+  },
+  testCaseFolderCreatedSuccess: {
+    id: 'TestCaseLibraryPage.testCaseFolderCreatedSuccess',
+    defaultMessage: 'Folder has been created successfully.',
+  },
+  testCaseFolderDeletedSuccess: {
+    id: 'TestCaseLibraryPage.testCaseFolderDeletedSuccess',
+    defaultMessage: 'Folder has been deleted successfully.',
+  },
+  testCaseFolderDuplicatedSuccess: {
+    id: 'TestCaseLibraryPage.testCaseFolderDuplicatedSuccess',
+    defaultMessage:
+      "Folder ''{folderName}'' has been successfully duplicated to {targetFolderName, select, null {root folder} other {''{targetFolderName}''}}.",
+  },
+  testCasesDuplicatedSuccess: {
+    id: 'TestCaseLibraryPage.testCasesDuplicatedSuccess',
+    defaultMessage: 'Test cases have been duplicated successfully.',
+  },
+  testCaseDeletedSuccess: {
+    id: 'TestCaseLibraryPage.testCaseDeletedSuccess',
+    defaultMessage: 'Test case has been deleted successfully.',
+  },
+  testCasesDeletedSuccess: {
+    id: 'TestCaseLibraryPage.testCasesDeletedSuccess',
+    defaultMessage: 'Test cases have been deleted successfully.',
+  },
+  executionDeletedSuccess: {
+    id: 'ManualLaunchPage.executionDeletedSuccess',
+    defaultMessage: 'Test execution has been deleted successfully.',
+  },
+  executionsDeletedSuccess: {
+    id: 'ManualLaunchPage.executionsDeletedSuccess',
+    defaultMessage: 'Test executions have been deleted successfully.',
+  },
+  testCaseDescriptionUpdateSuccess: {
+    id: 'TestCaseLibraryPage.testCaseDescriptionUpdateSuccess',
+    defaultMessage: 'Test case description has been updated successfully.',
+  },
+  testCaseFolderRenamedSuccess: {
+    id: 'TestCaseLibraryPage.testCaseFolderRenamedSuccess',
+    defaultMessage: 'Folder has been renamed successfully.',
+  },
+  testCaseCreatedSuccess: {
+    id: 'TestCaseLibraryPage.testCaseCreatedSuccess',
+    defaultMessage: 'Test Case has been created successfully.',
+  },
+  testCaseDuplicatedSuccess: {
+    id: 'TestCaseLibraryPage.testCaseDuplicatedSuccess',
+    defaultMessage: 'Test Case has been duplicated successfully.',
+  },
+  testCasesAddingToTestPlanSuccess: {
+    id: 'TestCaseLibraryPage.testCasesAddedToTestPlanSuccess',
+    defaultMessage: 'Selected Test Cases have been added to the Test Plan successfully.',
+  },
+  testCaseAddingToTestPlanSuccess: {
+    id: 'TestCaseLibraryPage.testCaseAddedToTestPlanSuccess',
+    defaultMessage: 'Selected Test Case has been added to the Test Plan successfully.',
+  },
+  testCasesAddedToTestPlanFromLibrarySuccess: {
+    id: 'TestPlanDetailsPage.testCasesAddedToTestPlanFromLibrarySuccess',
+    defaultMessage: '{count, plural, one {# Test Case was} other {# Test Cases were}} successfully added to Test Plan.',
+  },
+  testCaseUpdatedSuccess: {
+    id: 'TestCaseLibraryPage.testCaseUpdatedSuccess',
+    defaultMessage: 'Test Case has been updated successfully.',
+  },
+  testCaseMovedSuccess: {
+    id: 'TestCaseLibraryPage.testCaseMovedSuccess',
+    defaultMessage: 'Test Case has been moved successfully.',
+  },
+  testCaseMovedSuccessWithDetails: {
+    id: 'TestCaseLibraryPage.testCaseMovedSuccessWithDetails',
+    defaultMessage: "Test Case ''{testCaseName}'' has been successfully moved to ''{folderName}''.",
+  },
+  testCaseDuplicatedSuccessWithDetails: {
+    id: 'TestCaseLibraryPage.testCaseDuplicatedSuccessWithDetails',
+    defaultMessage:
+      "Test Case ''{testCaseName}'' has been successfully duplicated to ''{folderName}''.",
+  },
+  testCasesMovedSuccess: {
+    id: 'TestCaseLibraryPage.testCasesMovedSuccess',
+    defaultMessage: 'Test Cases have been moved successfully.',
+  },
+  testCaseFolderMovedSuccess: {
+    id: 'TestCaseLibraryPage.testCaseFolderMovedSuccess',
+    defaultMessage:
+      "Folder ''{folderName}'' has been successfully moved to {targetFolderName, select, null {root folder} other {''{targetFolderName}''}}.",
+  },
+  testCaseFolderMoveFailed: {
+    id: 'TestCaseLibraryPage.testCaseFolderMoveFailed',
+    defaultMessage: 'Failed to move Folder.',
+  },
+  testCaseBulkUpdateSuccess: {
+    id: 'TestCaseLibraryPage.testCaseBulkUpdateSuccess',
+    defaultMessage: 'Test Cases have been updated successfully.',
+  },
+  testCaseCreationFailed: {
+    id: 'TestCaseLibraryPage.testCaseCreationFailed',
+    defaultMessage: 'Failed to create Test Case.',
+  },
+  testCaseUpdateFailed: {
+    id: 'TestCaseLibraryPage.testCaseUpdateFailed',
+    defaultMessage: 'Failed to update Test Case.',
+  },
+  testCaseMoveFailed: {
+    id: 'TestCaseLibraryPage.testCaseMoveFailed',
+    defaultMessage: 'Failed to move Test Case.',
+  },
+  testCasesAddingToTestPlanFailed: {
+    id: 'TestCaseLibraryPage.testCasesAddingToTestPlanFailed',
+    defaultMessage: 'Failed to add selected Test Cases to the Test Plan.',
+  },
+  testCaseAddingToTestPlanFailed: {
+    id: 'TestCaseLibraryPage.testCaseAddingToTestPlanFailed',
+    defaultMessage: 'Failed to add selected Test Case to the Test Plan.',
+  },
+  errorOccurredTryAgain: {
+    id: 'Common.errorOccurredTryAgain',
+    defaultMessage: 'An error occurred. Please try again later.',
+  },
+  redirectWarningMessage: {
+    id: 'TestCaseLibraryPage.redirectWarningMessage',
+    defaultMessage:
+      'The item you are trying to access may have been deleted or doesn’t exist. You have been redirected to the Test Case Library.',
+  },
+  testPlanCreatedSuccess: {
+    id: 'MilestonesPage.testPlanCreatedSuccess',
+    defaultMessage: 'Test Plan has been created successfully.',
+  },
+  testPlanCreatedButNotLinkedToMilestone: {
+    id: 'MilestonesPage.testPlanCreatedButNotLinkedToMilestone',
+    defaultMessage:
+      'Test Plan was created, but it could not be linked to the Milestone. You can link it manually later.',
+  },
+  testPlanLoadingFailed: {
+    id: 'MilestonesPage.testPlanLoadingFailed',
+    defaultMessage: 'Failed to load Test Plans.',
+  },
+  milestoneLoadingFailed: {
+    id: 'MilestonesPage.milestoneLoadingFailed',
+    defaultMessage: 'Failed to load Milestones.',
+  },
+  milestoneCreatedSuccess: {
+    id: 'MilestonesPage.milestoneCreatedSuccess',
+    defaultMessage: 'Milestone has been created successfully.',
+  },
+  milestoneUpdatedSuccess: {
+    id: 'MilestonesPage.milestoneUpdatedSuccess',
+    defaultMessage: 'Changes for the Milestone has been saved successfully.',
+  },
+  milestoneDuplicatedSuccess: {
+    id: 'MilestonesPage.milestoneDuplicatedSuccess',
+    defaultMessage: 'Milestone has been duplicated successfully.',
+  },
+  milestoneDeletedSuccess: {
+    id: 'MilestonesPage.milestoneDeletedSuccess',
+    defaultMessage: 'Milestone has been deleted successfully.',
+  },
+  milestoneTestingStartedSuccess: {
+    id: 'MilestonesPage.milestoneTestingStartedSuccess',
+    defaultMessage: 'Testing started for the milestone.',
+  },
+  milestoneCompletedSuccess: {
+    id: 'MilestonesPage.milestoneCompletedSuccess',
+    defaultMessage: 'Milestone completed.',
+  },
+  milestoneStatusChangedToTestingSuccess: {
+    id: 'MilestonesPage.milestoneStatusChangedToTestingSuccess',
+    defaultMessage: 'The status has been changed to Testing.',
+  },
+  milestoneStatusChangedToScheduledSuccess: {
+    id: 'MilestonesPage.milestoneStatusChangedToScheduledSuccess',
+    defaultMessage: 'The status has been changed to Scheduled.',
+  },
+  testPlanRedirectWarningMessage: {
+    id: 'MilestonesPage.testPlanRedirectWarningMessage',
+    defaultMessage:
+      "The item you are trying to access may have been deleted or doesn't exist. You have been redirected to Test Plans.",
+  },
+  manualLaunchesLoadingFailed: {
+    id: 'ManualLaunchesPage.manualLaunchesLoadingFailed',
+    defaultMessage: 'Failed to load Manual Launches.',
+  },
+  manualLaunchRedirectWarningMessage: {
+    id: 'ManualLaunchesPage.manualLaunchRedirectWarningMessage',
+    defaultMessage:
+      "The item you are trying to access may have been deleted or doesn't exist. You have been redirected to Manual Launches.",
+  },
+  executionStatusUpdated: {
+    id: 'ManualLaunchesPage.executionStatusUpdated',
+    defaultMessage: 'Status updated: Test marked as {status}.',
+  },
+  executionCommentSaved: {
+    id: 'ManualLaunchesPage.executionCommentSaved',
+    defaultMessage: 'Execution comment saved.',
+  },
+  testPlanUpdatedSuccess: {
+    id: 'MilestonesPage.testPlanUpdatedSuccess',
+    defaultMessage: 'Test Plan has been updated successfully.',
+  },
+  testPlanDuplicatedSuccess: {
+    id: 'MilestonesPage.testPlanDuplicatedSuccess',
+    defaultMessage: 'Test Plan has been duplicated successfully.',
+  },
+  testPlanDeletedSuccess: {
+    id: 'MilestonesPage.testPlanDeletedSuccess',
+    defaultMessage: 'Test Plan has been deleted successfully.',
+  },
+  removeFromTestPlanSuccess: {
+    id: 'RemoveTestCasesFromTestPlanModal.successMessage',
+    defaultMessage:
+      '{count, plural, one {Test case has} other {Test cases have}} been successfully removed from the Test Plan',
+  },
+  manualLaunchDeletedSuccess: {
+    id: 'ManualLaunchesPage.manualLaunchDeletedSuccess',
+    defaultMessage: "Launch ''{name}'' has been deleted successfully.",
+  },
+  manualLaunchesBatchDeletedSuccess: {
+    id: 'ManualLaunchesPage.manualLaunchesBatchDeletedSuccess',
+    defaultMessage:
+      '{count} {count, plural, one {launch has} other {launches have}} been deleted successfully.',
+  },
+  importSuccessToFolder: {
+    id: 'ImportTestCaseModal.importSuccessToFolder',
+    defaultMessage: 'Test cases have been imported successfully to folder {folderName}.',
+  },
+  importSuccess: {
+    id: 'ImportTestCaseModal.importSuccess',
+    defaultMessage: 'Test cases have been imported successfully.',
+  },
+  importTestCaseFailed: {
+    id: 'ImportTestCaseModal.testCaseImportFailed',
+    defaultMessage: 'Failed to import Test Case.',
+  },
   createLogTypeSuccess: {
     id: 'LogTypeModal.create.createLogTypeSuccess',
     defaultMessage: 'Log type has been created successfully',
@@ -200,6 +512,10 @@ const messages = defineMessages({
     id: 'LogTypeModal.delete.deleteLogTypeError',
     defaultMessage: 'Failed to delete the log type. Please try again',
   },
+  updateTestCasesTagsSuccess: {
+    id: 'TestCasesTags.update.deleteTagsSuccess',
+    defaultMessage: 'Tags for selected test cases have been updated successfully!',
+  },
 });
 
 @injectIntl
@@ -221,25 +537,36 @@ export class NotificationList extends PureComponent {
   render() {
     const { formatMessage } = this.props.intl;
     return (
-      <div className={cx('notification-list')} data-automation-id="notificationsContainer">
+      <div
+        className={cx('notification-list')}
+        data-automation-id="notificationsContainer"
+        {...{ [NOTIFICATION_PORTAL_ATTR]: '' }}
+      >
         <TransitionGroup>
-          {this.props.notifications.map(({ uid, type, messageId, values, message }) => (
-            <CSSTransition key={uid} timeout={1000} classNames="notification-transition">
-              <div className={cx('notification-item-wrapper')}>
-                <SystemAlert
-                  type={type}
-                  title={Parser(
-                    DOMPurify.sanitize(
-                      messageId ? formatMessage(messages[messageId], values) : message,
-                    ),
-                  )}
-                  onClose={() => this.props.hideNotification(uid)}
-                  className={cx('notification-item')}
-                  dataAutomationId="notificationItem"
-                />
-              </div>
-            </CSSTransition>
-          ))}
+          {this.props.notifications.map(
+            ({ uid, type, duration, typographyColor, messageId, values, message }) => (
+              <CSSTransition key={uid} timeout={1000} classNames="notification-transition">
+                <div className={cx('notification-item-wrapper')}>
+                  <SystemAlert
+                    type={type}
+                    typographyColor={typographyColor}
+                    duration={duration}
+                    title={Parser(
+                      DOMPurify.sanitize(
+                        messageId && notificationMessages[messageId]
+                          ? formatMessage(notificationMessages[messageId], values)
+                          : message,
+                        { ADD_ATTR: ['target'] },
+                      ),
+                    )}
+                    onClose={() => this.props.hideNotification(uid)}
+                    className={cx('notification-item')}
+                    dataAutomationId="notificationItem"
+                  />
+                </div>
+              </CSSTransition>
+            ),
+          )}
         </TransitionGroup>
       </div>
     );

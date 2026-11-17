@@ -81,9 +81,8 @@ export class CommandsContent extends Component {
       filteredCommands = filteredCommands.filter((item) => {
         const commandParts = getCommandBlockConfig(item);
         return commandParts.some(({ id, content = '' }) => {
-          const data = (id === RESPONSE_FIELD
-            ? JSON.stringify(item.result)
-            : content
+          const data = (
+            id === RESPONSE_FIELD ? JSON.stringify(item.result) : content
           ).toLowerCase();
           return data.indexOf(commandsSearchValue.toLowerCase()) !== -1;
         });

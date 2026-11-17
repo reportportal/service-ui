@@ -26,9 +26,10 @@ import { URLS } from 'common/urls';
 import EmptyWidgetPreview from 'pages/inside/dashboardItemPage/modals/common/img/wdgt-undefined-inline.svg';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import ExternalLinkIcon from 'common/img/open-in-rounded-inline.svg';
-import { LinkComponent } from 'pages/inside/projectSettingsPageContainer/content/notifications/LinkComponent';
+import { LinkComponent } from 'pages/inside/common/LinkComponent';
 import { injectIntl } from 'react-intl';
 import { OVERALL_STATISTICS } from 'common/constants/widgetTypes';
+import { normalizeSeparateInterrupted } from 'components/main/analytics/events/common/widgetPages/utils';
 import { WIDGETS_STATIC_PREVIEWS } from '../widgets';
 import { WidgetPreview } from '../widgetPreview';
 import styles from './widgetInfoBlock.scss';
@@ -41,8 +42,8 @@ const cx = classNames.bind(styles);
 @injectIntl
 export class WidgetInfoBlock extends PureComponent {
   static propTypes = {
+    projectKey: PropTypes.string.isRequired,
     intl: PropTypes.object.isRequired,
-    projectId: PropTypes.string.isRequired,
     widgetSettings: PropTypes.object,
     activeWidget: PropTypes.object,
     customCondition: PropTypes.bool,
@@ -68,9 +69,12 @@ export class WidgetInfoBlock extends PureComponent {
       return;
     }
 
-    const prevSeparateInterrupted =
-      prevProps.widgetSettings.contentParameters?.widgetOptions?.separateInterrupted;
-    const nextSeparateInterrupted = contentParameters.widgetOptions?.separateInterrupted;
+    const prevSeparateInterrupted = normalizeSeparateInterrupted(
+      prevProps.widgetSettings.contentParameters?.widgetOptions?.separateInterrupted,
+    );
+    const nextSeparateInterrupted = normalizeSeparateInterrupted(
+      contentParameters.widgetOptions?.separateInterrupted,
+    );
     const isPanelView = contentParameters.widgetOptions?.viewMode === 'panel';
     if (isPanelView && prevSeparateInterrupted !== nextSeparateInterrupted) {
       this.setState({ widgetData: null, loading: true });
@@ -109,7 +113,7 @@ export class WidgetInfoBlock extends PureComponent {
       loading: true,
       widgetData: null,
     });
-    fetch(URLS.widgetPreview(this.props.projectId), {
+    fetch(URLS.widgetPreview(this.props.projectKey), {
       method: 'post',
       data: widgetSettings,
     })
@@ -141,7 +145,7 @@ export class WidgetInfoBlock extends PureComponent {
     const isSeparateInterrupted =
       activeWidget.id === OVERALL_STATISTICS &&
       widgetOptions?.viewMode === 'panel' &&
-      widgetOptions?.separateInterrupted;
+      normalizeSeparateInterrupted(widgetOptions?.separateInterrupted);
     const isExpanded = isSeparateInterrupted && (loading || !!widgetData);
 
     return (
@@ -154,11 +158,9 @@ export class WidgetInfoBlock extends PureComponent {
               <LinkComponent
                 to={activeWidget.documentationLink}
                 icon={ExternalLinkIcon}
-                event={activeWidget?.documentationClickEventInfo(dashboardId)}
+                event={activeWidget.documentationClickEventInfo?.(activeWidget.id, dashboardId)}
               >
-                <span className={cx('link')}>
-                  {formatMessage(COMMON_LOCALE_KEYS.documentation)}
-                </span>
+                <span className={cx('link')}>{formatMessage(COMMON_LOCALE_KEYS.learnMore)}</span>
               </LinkComponent>
             )}
           </div>

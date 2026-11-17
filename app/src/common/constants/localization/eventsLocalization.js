@@ -25,12 +25,13 @@ import {
   DEFECT_TYPE,
   LOG_TYPE,
   USER,
-  EMAIL_CONFIG,
   ITEM_ISSUE,
   INTEGRATION,
   PATTERN_RULE,
   INDEX,
   INVITATION_LINK,
+  APPLICATION,
+  RULE,
 } from 'common/constants/eventsObjectTypes';
 import {
   CREATE_DASHBOARD,
@@ -80,6 +81,12 @@ import {
   START_IMPORT,
   MARK_LAUNCH_AS_IMPORTANT,
   UNMARK_LAUNCH_AS_IMPORTANT,
+  NOTIFICATION_RULE,
+  CREATE_NOTIFICATION_RULE,
+  UPDATE_NOTIFICATION_SETTINGS,
+  UPDATE_NOTIFICATION_RULE,
+  DELETE_NOTIFICATION_RULE,
+  UPDATE_PROJECT_NAME,
 } from 'common/constants/actionTypes';
 
 export const actionMessages = defineMessages({
@@ -141,7 +148,7 @@ export const actionMessages = defineMessages({
   },
   [UNMARK_LAUNCH_AS_IMPORTANT]: {
     id: 'EventActions.unmarkLaunchAsImportant',
-    defaultMessage: 'Unmark as launch as Important',
+    defaultMessage: 'Unmark launch as Important',
   },
   [EVENT_ACTIONS_IMPORT]: {
     id: 'EventActions.import',
@@ -167,6 +174,10 @@ export const actionMessages = defineMessages({
   [UPDATE_PROJECT]: {
     id: 'EventActions.updateProject',
     defaultMessage: 'Update project',
+  },
+  [UPDATE_PROJECT_NAME]: {
+    id: 'EventActions.updateProjectName',
+    defaultMessage: 'Rename project',
   },
   [UPDATE_DEFECT]: {
     id: 'EventActions.updateDefect',
@@ -268,6 +279,22 @@ export const actionMessages = defineMessages({
     id: 'EventActions.createInvitationLink',
     defaultMessage: 'Create invitation link',
   },
+  [UPDATE_NOTIFICATION_SETTINGS]: {
+    id: 'EventActions.updateNotificationSettings',
+    defaultMessage: 'Update notification rule settings',
+  },
+  [CREATE_NOTIFICATION_RULE]: {
+    id: 'EventActions.createNotificationRule',
+    defaultMessage: 'Create notification rule',
+  },
+  [UPDATE_NOTIFICATION_RULE]: {
+    id: 'EventActions.updateNotificationRule',
+    defaultMessage: 'Update notification rule',
+  },
+  [DELETE_NOTIFICATION_RULE]: {
+    id: 'EventActions.deleteNotificationRule',
+    defaultMessage: 'Delete notification rule',
+  },
 });
 
 export const objectTypesMessages = defineMessages({
@@ -311,8 +338,8 @@ export const objectTypesMessages = defineMessages({
     id: 'EventObjectTypes.user',
     defaultMessage: 'User',
   },
-  [EMAIL_CONFIG]: {
-    id: 'EventObjectTypes.emailConfig',
+  [NOTIFICATION_RULE]: {
+    id: 'EventObjectTypes.notificationRule',
     defaultMessage: 'Notification rule',
   },
   [ITEM_ISSUE]: {
@@ -330,5 +357,20 @@ export const objectTypesMessages = defineMessages({
   [INVITATION_LINK]: {
     id: 'EventObjectTypes.invitationLink',
     defaultMessage: 'Invitation link',
+  },
+});
+
+export const subjectTypesMessages = defineMessages({
+  [APPLICATION]: {
+    id: 'EventSubjectTypes.application',
+    defaultMessage: 'Application',
+  },
+  [USER]: {
+    id: 'EventSubjectTypes.user',
+    defaultMessage: 'User',
+  },
+  [RULE]: {
+    id: 'EventSubjectTypes.rule',
+    defaultMessage: 'Rule',
   },
 });

@@ -16,6 +16,8 @@
 
 import GA4 from 'react-ga4';
 import PropTypes from 'prop-types';
+import { APP_LEVEL } from 'controllers/pages/constants';
+import { parseFormattedDate } from '../dateRange';
 
 export const normalizeDimensionValue = (value) => {
   return value !== undefined ? value.toString() : undefined;
@@ -26,12 +28,17 @@ export const getAutoAnalysisEventValue = (isAnalyzerAvailable, value) => {
 };
 
 export const normalizeEventString = (string = '') =>
-  string
-    .trim()
-    .replace(/\s+|-/g, '_')
-    .toLowerCase();
+  string.trim().replace(/\s+|-/g, '_').toLowerCase();
 
-export const provideEcGA = ({ eventName, baseEventParameters, additionalParameters }) => {
+const appendInstanceSuffix = (value, instanceId) => {
+  if (value == null || value === '') return value;
+
+  const str = String(value);
+
+  return str.includes('|') ? str : `${str}|${instanceId}`;
+};
+
+export const buildEventParameters = (baseEventParameters, additionalParameters) => {
   const {
     instanceId,
     buildVersion,
@@ -40,19 +47,41 @@ export const provideEcGA = ({ eventName, baseEventParameters, additionalParamete
     isAnalyzerAvailable,
     isPatternAnalyzerEnabled,
     projectInfoId,
+    organizationId,
+    entryType,
+    pageLevel,
   } = baseEventParameters;
 
-  const eventParameters = {
+  const isProjectLevel = pageLevel === APP_LEVEL.PROJECT;
+  const isOrganizationLevel = pageLevel === APP_LEVEL.ORGANIZATION;
+
+  const merged = {
     instanceID: instanceId,
     version: buildVersion,
-    uid: `${userId}|${instanceId}`,
-    auto_analysis: getAutoAnalysisEventValue(isAnalyzerAvailable, isAutoAnalyzerEnabled),
-    pattern_analysis: normalizeDimensionValue(isPatternAnalyzerEnabled),
     timestamp: Date.now(),
-    project_id: projectInfoId ? `${projectInfoId}|${instanceId}` : 'not_set',
+    uid: `${userId}|${instanceId}`,
+    ...((isOrganizationLevel || isProjectLevel) && {
+      kind: entryType || 'not_set',
+      organization_id: organizationId ? `${organizationId}|${instanceId}` : 'not_set',
+    }),
+    ...(isProjectLevel && {
+      auto_analysis:
+        getAutoAnalysisEventValue(isAnalyzerAvailable, isAutoAnalyzerEnabled) || 'not_set',
+      pattern_analysis: normalizeDimensionValue(isPatternAnalyzerEnabled) || 'not_set',
+      project_id: projectInfoId ? `${projectInfoId}|${instanceId}` : 'not_set',
+    }),
     ...additionalParameters,
   };
 
+  if (additionalParameters?.test_case_id !== undefined) {
+    merged.test_case_id = appendInstanceSuffix(additionalParameters.test_case_id, instanceId);
+  }
+
+  return merged;
+};
+
+export const provideEcGA = ({ eventName, baseEventParameters, additionalParameters }) => {
+  const eventParameters = buildEventParameters(baseEventParameters, additionalParameters);
   GA4.event(eventName, eventParameters);
 };
 
@@ -64,4 +93,45 @@ export const baseEventParametersShape = PropTypes.shape({
   isPatternAnalyzerEnabled: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]).isRequired,
   projectInfoId: PropTypes.number.isRequired,
   isAdmin: PropTypes.bool.isRequired,
+  organizationId: PropTypes.number,
+  entryType: PropTypes.string,
+  pageLevel: PropTypes.string,
 }).isRequired;
+
+export const getApplyFilterEventParams = (
+  fields,
+  initialState,
+  initialDateState = '',
+  conditionProp,
+  predefinedLabels = {},
+) => {
+  const { [conditionProp]: dateField, ...fieldsWithoutDate } = fields;
+
+  let type = Object.keys(fieldsWithoutDate)
+    .filter((field) => fields[field].value.toString() !== initialState[field].toString())
+    .join('#');
+
+  let conditionValue;
+
+  if (dateField && dateField.value !== initialDateState) {
+    conditionValue = dateField?.value;
+    type = type ? `${type}#${conditionProp}` : conditionProp;
+  }
+
+  let condition = 'not_set';
+
+  if (conditionValue !== undefined) {
+    if (conditionValue in predefinedLabels) {
+      condition = predefinedLabels[conditionValue];
+    } else {
+      const { startDate, endDate } = parseFormattedDate(conditionValue);
+      const timestampStartDate = new Date(startDate);
+      const timestampEndDate = new Date(endDate);
+      const msInDay = 1000 * 60 * 60 * 24;
+      const countDays = Math.round((timestampEndDate - timestampStartDate) / msInDay);
+      condition = countDays !== null && !Number.isNaN(countDays) ? countDays : 'not_set';
+    }
+  }
+
+  return { type, condition };
+};

@@ -32,8 +32,8 @@ export const Icon = ({ type, onClick, className, disabled }) => (
 Icon.propTypes = {
   type: PropTypes.string.isRequired,
   onClick: PropTypes.func,
-  className: PropTypes.string,
   disabled: PropTypes.bool,
+  className: PropTypes.string,
 };
 
 Icon.defaultProps = {

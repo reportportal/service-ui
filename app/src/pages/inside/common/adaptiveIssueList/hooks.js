@@ -16,33 +16,33 @@
 
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { useSelector } from 'react-redux';
-import { activeProjectSelector } from 'controllers/user';
-import { pluginByNameSelector, isPluginSupportsCommonCommand } from 'controllers/plugins';
+import { buildPluginCommandRQ } from 'controllers/plugins/utils';
 import { COMMAND_GET_ISSUE } from 'controllers/plugins/uiExtensions/constants';
-import { projectInfoIdSelector } from 'controllers/project/selectors';
+import { activeOrganizationIdSelector } from 'controllers/organization';
+import { projectInfoIdSelector, projectKeySelector } from 'controllers/project';
 import { getStorageItem, updateStorageItem } from 'common/utils';
 import { ERROR_CANCELED, fetch } from 'common/utils/fetch';
 import { URLS } from 'common/urls';
 
 const FETCH_ISSUE_INTERVAL = 900000; // 15 min
 
-const getStorageKey = (activeProject) => `${activeProject}_tickets`;
+const getStorageKey = (projectKey) => `${projectKey}_tickets`;
 
-const getStoredIssueData = (activeProject, btsProject, ticketId) => {
-  const storageKey = getStorageKey(activeProject);
+const getStoredIssueData = (projectKey, btsProject, ticketId) => {
+  const storageKey = getStorageKey(projectKey);
   const data = getStorageItem(storageKey) || {};
   return data[`${btsProject}_${ticketId}`] || {};
 };
 
 export const useIssueInfo = (issue, pluginName) => {
-  const activeProject = useSelector(activeProjectSelector);
+  const projectKey = useSelector(projectKeySelector);
   const projectId = useSelector(projectInfoIdSelector);
-  const plugin = useSelector((state) => pluginByNameSelector(state, pluginName));
+  const organizationId = useSelector(activeOrganizationIdSelector);
 
   const { ticketId, btsProject, btsUrl } = issue;
 
   const [state, setState] = useState(() => {
-    const stored = getStoredIssueData(activeProject, btsProject, ticketId);
+    const stored = getStoredIssueData(projectKey, btsProject, ticketId);
     const timeSinceLastExecution = Date.now() - (stored.lastTime || 0);
     const needsFetch = !stored.lastTime || timeSinceLastExecution >= FETCH_ISSUE_INTERVAL;
 
@@ -58,10 +58,10 @@ export const useIssueInfo = (issue, pluginName) => {
 
   const updateIssueInStorage = useCallback(
     (data = {}) => {
-      const storageKey = getStorageKey(activeProject);
+      const storageKey = getStorageKey(projectKey);
       updateStorageItem(storageKey, { [`${btsProject}_${ticketId}`]: data });
     },
-    [activeProject, btsProject, ticketId],
+    [projectKey, btsProject, ticketId],
   );
 
   const fetchData = useCallback(() => {
@@ -71,28 +71,23 @@ export const useIssueInfo = (issue, pluginName) => {
 
     setState((prev) => ({ ...prev, loading: true }));
 
-    const isCommonCommandSupported =
-      plugin && isPluginSupportsCommonCommand(plugin, COMMAND_GET_ISSUE);
-    let url;
-    let data;
-
-    if (isCommonCommandSupported) {
-      url = URLS.pluginCommandCommon(activeProject, plugin.name, COMMAND_GET_ISSUE);
-      data = {
-        ticketId,
-        url: btsUrl,
-        project: btsProject,
-        projectId,
-      };
-    } else {
-      url = URLS.btsTicket(activeProject, ticketId, btsProject, btsUrl);
-    }
-
-    fetch(url, {
-      method: isCommonCommandSupported ? 'PUT' : 'GET',
-      data,
+    const url = URLS.pluginsCommandsCommon(pluginName, COMMAND_GET_ISSUE);
+    const requestParams = {
       abort: cancelRequestFunc,
-    })
+      method: 'POST',
+      data: buildPluginCommandRQ({
+        organizationId,
+        projectId,
+        projectKey,
+        arguments: {
+          ticketId,
+          url: btsUrl,
+          project: btsProject,
+        },
+      }),
+    };
+
+    fetch(url, requestParams)
       .then((fetchedIssue) => {
         updateIssueInStorage({ issue: fetchedIssue, lastTime: Date.now() });
         setState({ issueInfo: fetchedIssue, loading: false, error: false });
@@ -104,7 +99,16 @@ export const useIssueInfo = (issue, pluginName) => {
         updateIssueInStorage({ lastTime: Date.now() });
         setState((prev) => ({ ...prev, loading: false, error: true }));
       });
-  }, [activeProject, btsProject, btsUrl, plugin, projectId, ticketId, updateIssueInStorage]);
+  }, [
+    projectKey,
+    btsProject,
+    btsUrl,
+    pluginName,
+    projectId,
+    organizationId,
+    ticketId,
+    updateIssueInStorage,
+  ]);
 
   useEffect(() => {
     if (shouldFetchRef.current) {

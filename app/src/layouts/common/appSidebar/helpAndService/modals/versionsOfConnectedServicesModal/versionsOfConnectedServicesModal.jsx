@@ -1,0 +1,140 @@
+/*
+ * Copyright 2024 EPAM Systems
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+import React from 'react';
+import PropTypes from 'prop-types';
+import { useDispatch, useSelector } from 'react-redux';
+import { useIntl } from 'react-intl';
+import classNames from 'classnames/bind';
+import { Modal } from '@reportportal/ui-kit';
+import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
+import Logo from 'common/img/logo.svg';
+import OpenIcon from 'common/img/open-in-new-tab-inline.svg';
+import { analyzerExtensionsSelector, appInfoSelector } from 'controllers/appInfo';
+import { hideModalAction, withModal } from 'controllers/modal';
+import { servicesUpdate } from 'common/utils/referenceDictionary';
+import { LinkItem } from 'layouts/common/appSidebar/helpAndService/linkItem';
+import { messages } from 'layouts/common/appSidebar/messages';
+import { useTracking } from 'react-tracking';
+import {
+  LOGIN_PAGE_EVENTS,
+  SIDEBAR_CATEGORY,
+} from 'components/main/analytics/events/ga4Events/loginPageEvents';
+import { isOutdatedVersion } from 'common/utils/isOutdatedVersion';
+import { ANALYZER_REPOSITORY, PRODUCT_VERSION, PRODUCT_VERSION_LINK } from './constants';
+import { ServiceVersion } from './serviceVersion';
+import styles from './versionsOfConnectedServicesModal.scss';
+
+const cx = classNames.bind(styles);
+
+const VersionsOfConnectedServices = ({ data: { latestServiceVersions, analyticsCategory } }) => {
+  const dispatch = useDispatch();
+  const { formatMessage } = useIntl();
+  const { trackEvent } = useTracking();
+  const appInfo = useSelector(appInfoSelector);
+  const analyzers = useSelector(analyzerExtensionsSelector);
+  const hideModal = () => dispatch(hideModalAction());
+  const releaseNotesCategory = analyticsCategory || SIDEBAR_CATEGORY;
+  const productVersionLabel = formatMessage(messages.productVersion, { version: PRODUCT_VERSION });
+
+  const handleReleaseNotesClick = () => {
+    trackEvent(LOGIN_PAGE_EVENTS.clickOnReleaseNotesLink(releaseNotesCategory, productVersionLabel));
+  };
+
+  const calculateServices = () => {
+    const versionsServices = [];
+
+    const versionsServicesNames = {
+      api: 'API Service',
+      jobs: 'Jobs Service',
+      ui: 'Service UI',
+    };
+
+    Object.keys(versionsServicesNames).forEach((serviceKey) => {
+      const serviceValue = appInfo[serviceKey];
+      const currentVersion = serviceValue?.build?.version;
+      const latestVersion = latestServiceVersions[serviceValue?.build?.repo];
+
+      versionsServices.push({
+        name: versionsServicesNames[serviceKey],
+        version: currentVersion,
+        linkTo: servicesUpdate[serviceKey],
+        isNewVersion: isOutdatedVersion(currentVersion, latestVersion),
+      });
+    });
+
+    const analyzer = analyzers.find((item) => !!item.available) || analyzers[0];
+
+    if (analyzer) {
+      versionsServices.push({
+        name: 'Service Analyzer',
+        version: analyzer.version,
+        linkTo: servicesUpdate.analyzer,
+        isNewVersion: isOutdatedVersion(
+          analyzer.version,
+          latestServiceVersions[ANALYZER_REPOSITORY],
+        ),
+        isUnavailable: !analyzer.available,
+      });
+    }
+
+    return versionsServices;
+  };
+
+  return (
+    <Modal
+      title={formatMessage(messages.servicesVersions)}
+      cancelButton={{ children: formatMessage(COMMON_LOCALE_KEYS.CLOSE) }}
+      onClose={hideModal}
+      size="large"
+    >
+      <div className={cx('product-version-header')}>
+        <img className={cx('logo')} src={Logo} alt="ReportPortal" />
+        <LinkItem
+          link={PRODUCT_VERSION_LINK}
+          content={productVersionLabel}
+          className={cx('version-link')}
+          icon={OpenIcon}
+          onClick={handleReleaseNotesClick}
+        />
+      </div>
+      <div className={cx('title')}>{formatMessage(messages.titleServicesVersionsModal)}</div>
+      <div className={cx('header')}>
+        <div className={cx('service-name')}>{formatMessage(messages.serviceName)}</div>
+        <div>{formatMessage(messages.currentVersion)}</div>
+      </div>
+      {calculateServices().map((service) => (
+        <ServiceVersion
+          service={service}
+          content={formatMessage(COMMON_LOCALE_KEYS.UPDATE)}
+          analyticsCategory={releaseNotesCategory}
+          key={service.linkTo}
+        />
+      ))}
+    </Modal>
+  );
+};
+
+VersionsOfConnectedServices.propTypes = {
+  data: PropTypes.shape({
+    latestServiceVersions: PropTypes.object,
+    analyticsCategory: PropTypes.string,
+  }).isRequired,
+};
+
+export const VersionsOfConnectedServicesModal = withModal('versionsOfConnectedServicesModal')(
+  VersionsOfConnectedServices,
+);

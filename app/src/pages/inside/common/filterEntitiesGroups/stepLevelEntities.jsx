@@ -21,7 +21,6 @@ import PropTypes from 'prop-types';
 import { FILTER_DESCRIPTION_MAX_LENGTH } from 'common/constants/validation';
 import { commonValidators, bindMessageToValidator, validate } from 'common/utils/validation';
 import { URLS } from 'common/urls';
-import { activeProjectSelector } from 'controllers/user';
 import { FAILED, PASSED, SKIPPED, INTERRUPTED, IN_PROGRESS } from 'common/constants/launchStatuses';
 import {
   BEFORE_SUITE,
@@ -69,7 +68,7 @@ import {
   ENTITY_NEW_FAILURE,
   ENTITY_LAUNCH_OWNER,
 } from 'components/filterEntities/constants';
-import { defectTypesSelector, patternsSelector } from 'controllers/project';
+import { defectTypesSelector, patternsSelector, projectKeySelector } from 'controllers/project';
 import { launchIdSelector } from 'controllers/pages';
 import {
   getQueryNamespace,
@@ -315,11 +314,11 @@ const descriptionStepLevelEntity = bindMessageToValidator(
 })
 @connect((state) => ({
   defectTypes: defectTypesSelector(state),
-  projectId: activeProjectSelector(state),
   launchId: launchIdSelector(state),
   patterns: patternsSelector(state),
   level: levelSelector(state),
   query: queryParametersSelector(state, namespaceSelector(state)),
+  projectKey: projectKeySelector(state),
 }))
 export class StepLevelEntities extends Component {
   static propTypes = {
@@ -327,13 +326,13 @@ export class StepLevelEntities extends Component {
     defectTypes: PropTypes.object.isRequired,
     filterValues: PropTypes.object,
     render: PropTypes.func.isRequired,
-    projectId: PropTypes.string.isRequired,
     launchId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
     visibleFilters: PropTypes.array,
     patterns: PropTypes.array,
     level: PropTypes.string,
     updateUriQuery: PropTypes.func.isRequired,
     query: PropTypes.object,
+    projectKey: PropTypes.string.isRequired,
   };
   static defaultProps = {
     filterValues: {},
@@ -393,14 +392,14 @@ export class StepLevelEntities extends Component {
   };
 
   getEntities = () => {
-    const { intl, projectId, launchId, visibleFilters, query } = this.props;
+    const { intl, launchId, visibleFilters, query, projectKey } = this.props;
 
-    const getTestItemAttributeValuesSearch = (project, key) => {
-      return URLS.testItemAttributeValuesSearch(project, launchId, key);
+    const getTestItemAttributeValuesSearch = (projectKeyValue, key) => {
+      return URLS.testItemAttributeValuesSearch(projectKeyValue, launchId, key);
     };
 
-    const getTestItemAttributeKeysSearch = (project) => {
-      return URLS.testItemAttributeKeysSearch(project, launchId);
+    const getTestItemAttributeKeysSearch = (projectKeyValue) => {
+      return URLS.testItemAttributeKeysSearch(projectKeyValue, launchId);
     };
 
     const entities = [
@@ -571,7 +570,7 @@ export class StepLevelEntities extends Component {
         active: visibleFilters.includes(ENTITY_ATTRIBUTE),
         removable: true,
         customProps: {
-          projectId,
+          projectKey,
           keyURLCreator: getTestItemAttributeKeysSearch,
           valueURLCreator: getTestItemAttributeValuesSearch,
         },
@@ -630,7 +629,7 @@ export class StepLevelEntities extends Component {
         active: visibleFilters.includes(ENTITY_BTS_ISSUES),
         removable: true,
         customProps: {
-          getURI: URLS.testItemBTSIssuesSearch(projectId),
+          getURI: URLS.testItemBTSIssuesSearch(projectKey),
           placeholder: intl.formatMessage(messages.BTS_ISSUE_PLACEHOLDER),
         },
       },
@@ -669,7 +668,7 @@ export class StepLevelEntities extends Component {
               active: visibleFilters.includes(ENTITY_LAUNCH_OWNER),
               removable: true,
               customProps: {
-                getURI: URLS.launchOwnersSearch(projectId),
+                getURI: URLS.launchOwnersSearch(projectKey),
                 placeholder: intl.formatMessage(launchOwnerLevelMessages.ownerFilterPlaceholder),
               },
             },

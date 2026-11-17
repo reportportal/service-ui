@@ -1,0 +1,72 @@
+@use '../../milestonesTable/milestonesShared' as ms;
+
+.change-milestone-status-modal {
+  &_wide {
+    min-width: 600px;
+  }
+
+  & > div:first-child {
+    padding-bottom: 12px;
+  }
+
+  &__content {
+    position: relative;
+    min-width: 400px;
+  }
+
+  &__field {
+    margin-bottom: 16px;
+  }
+
+  &__dates {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+
+  &__body {
+    @include ms.milestone-body-13;
+
+    width: 100%;
+    margin: 0;
+    color: var(--rp-ui-color-text);
+  }
+
+  &__body-text {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    width: 100%;
+  }
+
+  &__toggle-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-top: 16px;
+    margin-bottom: 4px;
+
+    label {
+      width: 100%;
+    }
+  }
+
+  &__adjust-fields {
+    position: relative;
+    margin-top: 16px;
+  }
+
+  &__footer {
+    display: flex;
+    justify-content: flex-end;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    margin-top: 16px;
+  }
+
+  &__bold {
+    font-weight: var(--rp-ui-base-fw-bold);
+  }
+}

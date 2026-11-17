@@ -31,6 +31,7 @@ import {
   attachmentsPaginationSelector,
   setActiveAttachmentAction,
   activeAttachmentIdSelector,
+  attachmentModalLoadingIdSelector,
   isFileActionAllowed,
   OPEN_ATTACHMENT_IN_MODAL_ACTION,
 } from 'controllers/log/attachments';
@@ -62,6 +63,7 @@ const getCurrentThumb = (activeItemId, visibleThumbs) =>
     loading: attachmentsLoadingSelector(state),
     pagination: attachmentsPaginationSelector(state),
     activeItemId: activeAttachmentIdSelector(state),
+    modalLoadingId: attachmentModalLoadingIdSelector(state),
   }),
   {
     fetchAttachmentsConcatAction,
@@ -83,6 +85,7 @@ export class Attachments extends Component {
     activeItemId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
     pagination: PropTypes.object,
     loading: PropTypes.bool,
+    modalLoadingId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
     setActiveAttachmentAction: PropTypes.func,
     fetchAttachmentsConcatAction: PropTypes.func,
     openAttachmentInModalAction: PropTypes.func,
@@ -94,6 +97,7 @@ export class Attachments extends Component {
     pagination: {},
     loading: false,
     activeItemId: 0,
+    modalLoadingId: null,
     setActiveAttachmentAction: () => {},
     fetchAttachmentsConcatAction: () => {},
     openAttachmentInModalAction: () => {},
@@ -164,7 +168,7 @@ export class Attachments extends Component {
   };
 
   renderAttachmentsContent = () => {
-    const { intl, loading, attachments, isMobileView, activeItemId } = this.props;
+    const { intl, loading, attachments, isMobileView, activeItemId, modalLoadingId } = this.props;
 
     if (loading) {
       return <SpinningPreloader />;
@@ -195,6 +199,7 @@ export class Attachments extends Component {
             onClickItem={this.onClickItem}
             changeActiveItem={this.changeActiveItem}
             visibleThumbs={visibleThumbs}
+            loadingItemId={modalLoadingId}
             withActions
           />
         </CarouselProvider>

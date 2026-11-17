@@ -40,6 +40,7 @@ import {
   fetchLog,
   RETRY_ID,
   ERROR_LOG_INDEX_KEY,
+  MOBITRU_JUMP_LOG_INFO_KEY,
   loadMoreLogsAction,
   fetchLogItemsForPageAction,
   loadedPagesRangeSelector,
@@ -53,7 +54,6 @@ import { withPagination, PAGE_KEY, DEFAULT_PAGINATION, SIZE_KEY } from 'controll
 import { withSortingURL, SORTING_ASC } from 'controllers/sorting';
 import { logsPaginationEnabledSelector, userIdSelector } from 'controllers/user';
 import { filterableLogTypesSelector } from 'controllers/project';
-import { projectIdSelector } from 'controllers/pages';
 import { PaginationToolbar } from 'components/main/paginationToolbar';
 import { LOG_PAGE_EVENTS } from 'components/main/analytics/events';
 import { FIRST_PAGE } from './constants';
@@ -74,7 +74,6 @@ import { calculateNextIndex } from './utils';
     loadedPagesRange: loadedPagesRangeSelector(state),
     loadingDirection: loadingDirectionSelector(state),
     filterableLogLevels: filterableLogTypesSelector(state),
-    projectId: projectIdSelector(state),
   }),
   { fetchLog, loadMoreLogsAction, fetchLogItemsForPageAction },
 )
@@ -167,7 +166,6 @@ export class LogsGridWrapper extends Component {
     loadingDirection: PropTypes.string,
     className: PropTypes.string,
     filterableLogLevels: PropTypes.array,
-    projectId: PropTypes.string,
   };
 
   static defaultProps = {
@@ -229,6 +227,24 @@ export class LogsGridWrapper extends Component {
             isGridRowHighlighted: true,
           });
         this.props.fetchLog(errorLogs[errorLogIndex], fetchLogCb);
+      } else {
+        try {
+          const mobitruJumpLogInfo = getStorageItem(MOBITRU_JUMP_LOG_INFO_KEY);
+          if (mobitruJumpLogInfo) {
+            const { logInfo, logId, shouldClearSearchFilter } = mobitruJumpLogInfo;
+            removeStorageItem(MOBITRU_JUMP_LOG_INFO_KEY);
+            const fetchMobitruLogCb = () => {
+              this.setState({
+                highlightedRowId: +logId,
+                isGridRowHighlighted: true,
+              });
+            };
+
+            this.props.fetchLog(logInfo, fetchMobitruLogCb, shouldClearSearchFilter);
+          }
+        } catch {
+          removeStorageItem(MOBITRU_JUMP_LOG_INFO_KEY);
+        }
       }
     }
 

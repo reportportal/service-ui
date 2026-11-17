@@ -52,6 +52,7 @@ export class PassingRateSummaryControls extends Component {
     initializeControlsForm: PropTypes.func.isRequired,
     formAppearance: PropTypes.object.isRequired,
     onFormAppearanceChange: PropTypes.func.isRequired,
+    // eslint-disable-next-line react/no-unused-prop-types
     widgetType: PropTypes.string.isRequired,
     eventsInfo: PropTypes.object,
     tracking: PropTypes.shape({

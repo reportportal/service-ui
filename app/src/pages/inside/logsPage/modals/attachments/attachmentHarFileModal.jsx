@@ -30,6 +30,7 @@ export class AttachmentHarFileModal extends Component {
   static propTypes = {
     data: PropTypes.shape({
       harData: PropTypes.object.isRequired,
+      fileName: PropTypes.string,
     }).isRequired,
     intl: PropTypes.object.isRequired,
   };
@@ -42,10 +43,11 @@ export class AttachmentHarFileModal extends Component {
   render = () => {
     const {
       intl: { formatMessage },
-      data: { harData },
+      data: { harData, fileName },
     } = this.props;
+    const title = fileName || formatMessage(messages.title);
     return (
-      <ModalLayout title={formatMessage(messages.title)} okButton={this.renderOkButton()}>
+      <ModalLayout title={title} okButton={this.renderOkButton()}>
         <WithZipJs>
           <PerfCascade
             harData={harData}

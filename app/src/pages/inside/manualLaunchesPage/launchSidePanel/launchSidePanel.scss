@@ -1,0 +1,162 @@
+/*
+ * Copyright 2025 EPAM Systems
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+.launch-side-panel-wrapper {
+  z-index: $Z-INDEX-OVERLAY-PANEL;
+}
+
+.launch-side-panel {
+  min-width: 560px;
+  max-width: 560px;
+
+  .content {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .header-meta {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 0 24px;
+  }
+
+  .launch-type-icon {
+    fill: none !important;
+  }
+
+  .meta-row {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    font-size: 13px;
+    line-height: 20px;
+    font-family: $FONT-ROBOTO-REGULAR;
+
+    &-with-action {
+      justify-content: space-between;
+    }
+  }
+
+  .meta-label {
+    color: var(--rp-ui-base-almost-black);
+    font-weight: 500;
+  }
+
+  .meta-item-row {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    min-width: 0;
+
+    > svg:not(.hash-icon) {
+      width: 16px;
+      height: 16px;
+      fill: var(--rp-ui-base-e-300);
+      flex-shrink: 0;
+    }
+
+    &.id-row {
+      position: relative;
+
+      .copy-button {
+        opacity: 0;
+        transition: opacity 0.2s ease;
+        background: none;
+        border: none;
+        cursor: pointer;
+        padding: 4px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 4px;
+
+        svg {
+          width: 14px;
+          height: 14px;
+          fill: var(--rp-ui-base-e-300);
+        }
+
+        &:hover {
+          background-color: var(--rp-ui-base-bg-200);
+
+          svg {
+            fill: var(--rp-ui-base-topaz-hover);
+          }
+        }
+
+        &:focus {
+          outline: 2px solid var(--rp-ui-base-topaz-focused);
+          outline-offset: 2px;
+        }
+
+        &:focus-visible {
+          opacity: 1;
+        }
+      }
+
+      &:hover .copy-button,
+      &:focus-within .copy-button {
+        opacity: 1;
+      }
+
+      @media (hover: none) {
+        .copy-button {
+          opacity: 1;
+        }
+      }
+    }
+  }
+
+  .hash-icon {
+    flex-shrink: 0;
+    display: block;
+    width: 17px;
+    height: 16px;
+    color: var(--Text-Secondary, var(--rp-ui-base-e-400));
+    fill: currentcolor;
+  }
+
+  .meta-value {
+    min-width: 0;
+    color: var(--rp-ui-base-almost-black);
+    font-size: 13px;
+    overflow-wrap: anywhere;
+
+    &-launch-id {
+      padding-left: 1px;
+      font-weight: 400;
+      line-height: 20px;
+    }
+  }
+
+  .attributes-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+  }
+
+  .action-button {
+    min-width: 0;
+  }
+}

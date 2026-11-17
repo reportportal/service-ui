@@ -24,7 +24,8 @@ import {
   parentItemSelector,
 } from 'controllers/testItem';
 import { URLS } from 'common/urls';
-import { activeProjectSelector, logsPaginationEnabledSelector } from 'controllers/user';
+import { logsPaginationEnabledSelector } from 'controllers/user';
+import { projectKeySelector } from 'controllers/project';
 import {
   logItemIdSelector,
   pathnameChangedSelector,
@@ -111,7 +112,7 @@ import { nestedStepSagas } from './nestedSteps/sagas';
 import { getFormattedPageLocation } from './utils';
 
 function* getLogItemsUrl(payload = {}) {
-  const { activeProject, activeLogItemId, query, filterLevel } = yield call(collectLogPayload);
+  const { projectKey, activeLogItemId, query, filterLevel } = yield call(collectLogPayload);
   const logLevel = payload.level || filterLevel;
   const isLaunchLog = yield select(isLaunchLogSelector);
   const parentItem = yield select(parentItemSelector);
@@ -119,20 +120,18 @@ function* getLogItemsUrl(payload = {}) {
   const searchFilter = query[LOG_MESSAGE_FILTER_KEY];
 
   if (searchFilter && !hasChildren && !isLaunchLog) {
-    return URLS.searchLogs(activeProject, activeLogItemId, logLevel);
+    return URLS.searchLogs(projectKey, activeLogItemId, logLevel);
   }
 
   return isLaunchLog
-    ? URLS.launchLogs(activeProject, activeLogItemId, logLevel)
-    : URLS.logItems(activeProject, activeLogItemId, logLevel);
+    ? URLS.launchLogs(projectKey, activeLogItemId, logLevel)
+    : URLS.logItems(projectKey, activeLogItemId, logLevel);
 }
 
 function* fetchActivity() {
-  const activeProject = yield select(activeProjectSelector);
+  const projectKey = yield select(projectKeySelector);
   const activeLogItemId = yield select(activeLogIdSelector);
-  yield put(
-    fetchDataAction(ACTIVITY_NAMESPACE)(URLS.logItemActivity(activeProject, activeLogItemId)),
-  );
+  yield put(fetchDataAction(ACTIVITY_NAMESPACE)(URLS.logItemActivity(projectKey, activeLogItemId)));
   yield take(createFetchPredicate(ACTIVITY_NAMESPACE));
 }
 
@@ -171,8 +170,8 @@ function* fetchAllErrorLogs({
   excludeLogContent = true,
   level,
 }) {
-  const { id } = logItem;
-  const { activeProject, query, filterLevel } = yield call(collectLogPayload);
+  const id = logItem?.id;
+  const { projectKey, query, filterLevel } = yield call(collectLogPayload);
   let retryId = null;
   const logViewMode = yield select(logViewModeSelector);
   if (logViewMode === DETAILED_LOG_VIEW) {
@@ -183,7 +182,7 @@ function* fetchAllErrorLogs({
     if (logViewMode === DETAILED_LOG_VIEW) {
       yield put(
         fetchDataAction(namespace)(
-          URLS.errorLogs(activeProject, retryId || id, level || filterLevel),
+          URLS.errorLogs(projectKey, retryId || id, level || filterLevel),
           {
             params: { ...query, excludeLogContent },
             abort: (cancelFunc) => {
@@ -375,7 +374,7 @@ function* fetchLog({ payload: { logInfo, callback, shouldClearSearchFilter = fal
 
 function* fetchHistoryItems({ payload } = { payload: {} }) {
   const { loadMore, callback } = payload;
-  const activeProject = yield select(activeProjectSelector);
+  const projectKey = yield select(projectKeySelector);
   const logItemId = yield select(logItemIdSelector);
   const historyItems = yield select(historyItemsSelector);
   const isAllLaunches = yield select(includeAllLaunchesSelector);
@@ -385,7 +384,7 @@ function* fetchHistoryItems({ payload } = { payload: {} }) {
     : DEFAULT_HISTORY_DEPTH;
   const response = yield call(
     fetch,
-    URLS.testItemsHistory(activeProject, historyDepth, historyLineMode, logItemId),
+    URLS.testItemsHistory(projectKey, historyDepth, historyLineMode, logItemId),
   );
 
   yield put(fetchHistoryItemsSuccessAction(response.content));

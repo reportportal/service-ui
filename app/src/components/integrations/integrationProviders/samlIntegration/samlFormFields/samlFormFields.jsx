@@ -14,12 +14,11 @@
  * limitations under the License.
  */
 
-import React, { Component, Fragment } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import PropTypes from 'prop-types';
-import { injectIntl, defineMessages } from 'react-intl';
+import { useIntl, defineMessages } from 'react-intl';
+import { FieldText, Dropdown } from '@reportportal/ui-kit';
 import { FieldErrorHint } from 'components/fields/fieldErrorHint';
-import { Input } from 'components/inputs/input';
-import { InputDropdown } from 'components/inputs/inputDropdown';
 import { IntegrationFormField } from 'components/integrations/elements';
 import { commonValidators } from 'common/utils/validation';
 import {
@@ -66,217 +65,216 @@ const messages = defineMessages({
   },
 });
 
-@injectIntl
-export class SamlFormFields extends Component {
-  static propTypes = {
-    intl: PropTypes.object.isRequired,
-    initialize: PropTypes.func.isRequired,
-    change: PropTypes.func.isRequired,
-    disabled: PropTypes.bool,
-    lineAlign: PropTypes.bool,
-    initialData: PropTypes.object,
-    pluginDetails: PropTypes.object,
-  };
+const nameAttributesOptions = [
+  { value: true, label: 'Full name' },
+  { value: false, label: 'First & last name' },
+];
 
-  static defaultProps = {
-    disabled: false,
-    lineAlign: false,
-    initialData: {},
-    pluginDetails: {},
-  };
+const MAX_INPUT_LENGTH = 256;
 
-  constructor(props) {
-    super(props);
-    this.nameAttributesOptions = [
-      { value: true, label: 'Full name' },
-      { value: false, label: 'First & last name' },
-    ];
-    this.state = {
-      isFullNameAttributeMode: !!props.initialData[FULL_NAME_ATTRIBUTE_KEY],
-    };
-  }
+const configureCallbackUrl = (providerName = '') => {
+  const { origin, pathname } = location;
 
-  componentDidMount() {
-    const identityProviderName = this.props.initialData.identityProviderName;
+  const uiPath = 'ui';
+  const pathParts = pathname.split('/');
+  const index = pathParts.indexOf(uiPath);
+  const basePath = pathParts
+    .slice(0, index !== -1 ? index : pathParts.length)
+    .filter(Boolean)
+    .join('/');
 
-    this.props.initialize({
-      ...this.props.initialData,
-      ...this.props.pluginDetails,
-      [CALLBACK_URL_ATTRIBUTE_KEY]: this.configureCallbackUrl(identityProviderName),
+  const encodedProviderName = encodeURIComponent(providerName || PROVIDER_NAME_PLACEHOLDER);
+  const path = `/${basePath}/${CALLBACK_URL_PATH}/${encodedProviderName}`.replace(/\/{2,}/g, '/');
+
+  return `${origin}${path}`;
+};
+
+export const SamlFormFields = ({
+  initialize,
+  change,
+  disabled = false,
+  lineAlign = false,
+  initialData = {},
+  pluginDetails = {},
+}) => {
+  const { formatMessage } = useIntl();
+  const isFirstRender = useRef(true);
+  const [isFullNameAttributeMode, setIsFullNameAttributeMode] = useState(
+    !!initialData[FULL_NAME_ATTRIBUTE_KEY],
+  );
+
+  const onChangeNameAttributesMode = useCallback(
+    (isFullNameAttributeModeValue) => {
+      if (isFullNameAttributeModeValue === isFullNameAttributeMode) {
+        return;
+      }
+
+      setIsFullNameAttributeMode(isFullNameAttributeModeValue);
+
+      if (isFullNameAttributeModeValue) {
+        change(FIRST_NAME_ATTRIBUTE_KEY, '');
+        change(LAST_NAME_ATTRIBUTE_KEY, '');
+      } else {
+        change(FULL_NAME_ATTRIBUTE_KEY, '');
+      }
+    },
+    [isFullNameAttributeMode, change],
+  );
+
+  const onChangeProviderName = useCallback(
+    (event) => {
+      change(CALLBACK_URL_ATTRIBUTE_KEY, configureCallbackUrl(event.target.value));
+    },
+    [change],
+  );
+
+  useEffect(() => {
+    if (isFirstRender.current) return;
+
+    initialize(initialData);
+    // should handle only fullNameAttribute changes
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [initialData.fullNameAttribute]);
+
+  useEffect(() => {
+    if (isFirstRender.current) return;
+
+    change(CALLBACK_URL_ATTRIBUTE_KEY, configureCallbackUrl(initialData.identityProviderName));
+    // should handle only identityProviderName changes
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [initialData.identityProviderName]);
+
+  useEffect(() => {
+    initialize({
+      ...initialData,
+      ...pluginDetails,
+      [CALLBACK_URL_ATTRIBUTE_KEY]: configureCallbackUrl(initialData.identityProviderName),
     });
-  }
+    isFirstRender.current = false;
+    // first render initialization only
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
-  componentDidUpdate(prevProps) {
-    const { initialData } = this.props;
-
-    if (prevProps.initialData.fullNameAttribute !== initialData.fullNameAttribute) {
-      this.props.initialize(initialData);
-    }
-
-    if (prevProps.initialData.identityProviderName !== initialData.identityProviderName) {
-      this.props.change(
-        CALLBACK_URL_ATTRIBUTE_KEY,
-        this.configureCallbackUrl(initialData.identityProviderName),
-      );
-    }
-  }
-
-  onChangeNameAttributesMode = (isFullNameAttributeMode) => {
-    if (isFullNameAttributeMode === this.state.isFullNameAttributeMode) {
-      return;
-    }
-
-    this.setState({
-      isFullNameAttributeMode,
-    });
-
-    if (isFullNameAttributeMode) {
-      this.props.change(FIRST_NAME_ATTRIBUTE_KEY, '');
-      this.props.change(LAST_NAME_ATTRIBUTE_KEY, '');
-    } else {
-      this.props.change(FULL_NAME_ATTRIBUTE_KEY, '');
-    }
-  };
-
-  onChangeProviderName = (event) => {
-    this.props.change(CALLBACK_URL_ATTRIBUTE_KEY, this.configureCallbackUrl(event.target.value));
-  };
-
-  configureCallbackUrl = (providerName = '') => {
-    const { origin, pathname } = location;
-
-    const uiPath = 'ui';
-    const pathParts = pathname.split('/');
-    const index = pathParts.indexOf(uiPath);
-    const basePath = pathParts
-      .slice(0, index !== -1 ? index : pathParts.length)
-      .filter(Boolean)
-      .join('/');
-
-    const encodedProviderName = encodeURIComponent(providerName || PROVIDER_NAME_PLACEHOLDER);
-    const path = `/${basePath}/${CALLBACK_URL_PATH}/${encodedProviderName}`.replace(/\/{2,}/g, '/');
-
-    return `${origin}${path}`;
-  };
-
-  render() {
-    const {
-      intl: { formatMessage },
-      disabled,
-      lineAlign,
-    } = this.props;
-
-    return (
-      <Fragment>
-        <IntegrationFormField
-          name="identityProviderNameId"
+  return (
+    <>
+      <IntegrationFormField
+        name="identityProviderNameId"
+        disabled={disabled}
+        label={formatMessage(messages.identityProviderNameId)}
+        lineAlign={lineAlign}
+      >
+        <FieldText maxLength={MAX_INPUT_LENGTH} defaultWidth={false} />
+      </IntegrationFormField>
+      <IntegrationFormField
+        name="identityProviderName"
+        disabled={disabled}
+        label={formatMessage(messages.providerName)}
+        validate={commonValidators.requiredField}
+        lineAlign={lineAlign}
+        onChange={onChangeProviderName}
+        required
+      >
+        <FieldErrorHint>
+          <FieldText maxLength={MAX_INPUT_LENGTH} defaultWidth={false} />
+        </FieldErrorHint>
+      </IntegrationFormField>
+      <IntegrationFormField
+        name="identityProviderMetadataUrl"
+        disabled={disabled}
+        label={formatMessage(messages.metadataUrl)}
+        validate={commonValidators.requiredField}
+        lineAlign={lineAlign}
+        required
+      >
+        <FieldErrorHint>
+          <FieldText maxLength={MAX_INPUT_LENGTH} defaultWidth={false} />
+        </FieldErrorHint>
+      </IntegrationFormField>
+      <IntegrationFormField
+        name="emailAttribute"
+        disabled={disabled}
+        label={formatMessage(messages.emailAttribute)}
+        validate={commonValidators.requiredField}
+        lineAlign={lineAlign}
+        required
+      >
+        <FieldErrorHint>
+          <FieldText maxLength={MAX_INPUT_LENGTH} defaultWidth={false} />
+        </FieldErrorHint>
+      </IntegrationFormField>
+      <IntegrationFormField
+        name={CALLBACK_URL_ATTRIBUTE_KEY}
+        label="Assertion Consumer Service (ACS) URL"
+        lineAlign={lineAlign}
+        placeholder={configureCallbackUrl()}
+        disabled
+      >
+        <FieldText maxLength={MAX_INPUT_LENGTH} defaultWidth={false} />
+      </IntegrationFormField>
+      <IntegrationFormField
+        label={formatMessage(messages.nameAttributesMode)}
+        lineAlign={lineAlign}
+        withoutProvider
+      >
+        <Dropdown
+          value={isFullNameAttributeMode}
+          onChange={onChangeNameAttributesMode}
+          options={nameAttributesOptions}
           disabled={disabled}
-          label={formatMessage(messages.identityProviderNameId)}
-          lineAlign={lineAlign}
-        >
-          <Input mobileDisabled />
-        </IntegrationFormField>
+          defaultWidth={false}
+          mobileDisabled
+        />
+      </IntegrationFormField>
+      {isFullNameAttributeMode ? (
         <IntegrationFormField
-          name="identityProviderName"
+          name={FULL_NAME_ATTRIBUTE_KEY}
           disabled={disabled}
-          label={formatMessage(messages.providerName)}
-          validate={commonValidators.requiredField}
-          lineAlign={lineAlign}
-          onChange={this.onChangeProviderName}
-          required
-        >
-          <FieldErrorHint>
-            <Input mobileDisabled />
-          </FieldErrorHint>
-        </IntegrationFormField>
-        <IntegrationFormField
-          name="identityProviderMetadataUrl"
-          disabled={disabled}
-          label={formatMessage(messages.metadataUrl)}
+          label={formatMessage(messages.fullNameAttribute)}
           validate={commonValidators.requiredField}
           lineAlign={lineAlign}
           required
         >
           <FieldErrorHint>
-            <Input mobileDisabled />
+            <FieldText maxLength={MAX_INPUT_LENGTH} defaultWidth={false} />
           </FieldErrorHint>
         </IntegrationFormField>
-        <IntegrationFormField
-          name="emailAttribute"
-          disabled={disabled}
-          label={formatMessage(messages.emailAttribute)}
-          validate={commonValidators.requiredField}
-          lineAlign={lineAlign}
-          required
-        >
-          <FieldErrorHint>
-            <Input mobileDisabled />
-          </FieldErrorHint>
-        </IntegrationFormField>
-        <IntegrationFormField
-          name={CALLBACK_URL_ATTRIBUTE_KEY}
-          label="Assertion Consumer Service (ACS) URL"
-          lineAlign={lineAlign}
-          placeholder={this.configureCallbackUrl()}
-          disabled
-        >
-          <Input mobileDisabled />
-        </IntegrationFormField>
-        <IntegrationFormField
-          label={formatMessage(messages.nameAttributesMode)}
-          lineAlign={lineAlign}
-          withoutProvider
-        >
-          <InputDropdown
-            value={this.state.isFullNameAttributeMode}
-            onChange={this.onChangeNameAttributesMode}
-            options={this.nameAttributesOptions}
-            disabled={disabled}
-            mobileDisabled
-          />
-        </IntegrationFormField>
-        {this.state.isFullNameAttributeMode ? (
+      ) : (
+        <>
           <IntegrationFormField
-            name={FULL_NAME_ATTRIBUTE_KEY}
+            name={FIRST_NAME_ATTRIBUTE_KEY}
             disabled={disabled}
-            label={formatMessage(messages.fullNameAttribute)}
+            label={formatMessage(messages.firstNameAttribute)}
             validate={commonValidators.requiredField}
             lineAlign={lineAlign}
             required
           >
             <FieldErrorHint>
-              <Input mobileDisabled />
+              <FieldText maxLength={MAX_INPUT_LENGTH} defaultWidth={false} />
             </FieldErrorHint>
           </IntegrationFormField>
-        ) : (
-          <Fragment>
-            <IntegrationFormField
-              name={FIRST_NAME_ATTRIBUTE_KEY}
-              disabled={disabled}
-              label={formatMessage(messages.firstNameAttribute)}
-              validate={commonValidators.requiredField}
-              lineAlign={lineAlign}
-              required
-            >
-              <FieldErrorHint>
-                <Input mobileDisabled />
-              </FieldErrorHint>
-            </IntegrationFormField>
-            <IntegrationFormField
-              name={LAST_NAME_ATTRIBUTE_KEY}
-              disabled={disabled}
-              label={formatMessage(messages.lastNameAttribute)}
-              validate={commonValidators.requiredField}
-              lineAlign={lineAlign}
-              required
-            >
-              <FieldErrorHint>
-                <Input mobileDisabled />
-              </FieldErrorHint>
-            </IntegrationFormField>
-          </Fragment>
-        )}
-      </Fragment>
-    );
-  }
-}
+          <IntegrationFormField
+            name={LAST_NAME_ATTRIBUTE_KEY}
+            disabled={disabled}
+            label={formatMessage(messages.lastNameAttribute)}
+            validate={commonValidators.requiredField}
+            lineAlign={lineAlign}
+            required
+          >
+            <FieldErrorHint>
+              <FieldText maxLength={MAX_INPUT_LENGTH} defaultWidth={false} />
+            </FieldErrorHint>
+          </IntegrationFormField>
+        </>
+      )}
+    </>
+  );
+};
+
+SamlFormFields.propTypes = {
+  initialize: PropTypes.func.isRequired,
+  change: PropTypes.func.isRequired,
+  disabled: PropTypes.bool,
+  lineAlign: PropTypes.bool,
+  initialData: PropTypes.object,
+  pluginDetails: PropTypes.object,
+};

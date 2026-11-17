@@ -20,7 +20,8 @@ import {
   IMPORT_GROUP_TYPE,
   NOTIFICATION_GROUP_TYPE,
 } from 'common/constants/pluginsGroupTypes';
-import { EMAIL } from 'common/constants/pluginNames';
+import { EMAIL, EPAM, ORGANIZATION } from 'common/constants/pluginNames';
+import { APP_LEVEL, pageLevelSelector } from 'controllers/pages';
 import {
   filterAvailablePlugins,
   sortItemsByGroupType,
@@ -43,6 +44,10 @@ export const pluginByNameSelector = (state, name) =>
 export const enabledPluginSelector = (state, name) =>
   pluginByNameSelector(state, name)?.enabled || false;
 
+export const isEpamPluginEnabledSelector = (state) => enabledPluginSelector(state, EPAM);
+
+export const organizationPluginSelector = (state) => pluginByNameSelector(state, ORGANIZATION);
+
 export const notificationPluginsSelector = createSelector(pluginsSelector, (plugins) => {
   return plugins.filter((item) => item.groupType === NOTIFICATION_GROUP_TYPE);
 });
@@ -51,6 +56,8 @@ export const globalIntegrationsSelector = (state) =>
   domainSelector(state).integrations?.globalIntegrations || [];
 const projectIntegrationsSelector = (state) =>
   domainSelector(state).integrations.projectIntegrations || [];
+const organizationIntegrationsSelector = (state) =>
+  domainSelector(state).integrations.organizationIntegrations || [];
 
 export const availablePluginsSelector = createSelector(pluginsSelector, filterAvailablePlugins);
 
@@ -123,6 +130,9 @@ export const namedGlobalIntegrationsSelector = createIntegrationsMapSelector(
 export const namedProjectIntegrationsSelector = createIntegrationsMapSelector(
   projectIntegrationsSelector,
 );
+export const namedOrganizationIntegrationsSelector = createIntegrationsMapSelector(
+  organizationIntegrationsSelector,
+);
 
 export const availableIntegrationsByPluginNameSelector = (state, pluginName) => {
   const availablePlugins = availablePluginsSelector(state);
@@ -130,10 +140,30 @@ export const availableIntegrationsByPluginNameSelector = (state, pluginName) => 
   if (!selectedPlugin) {
     return [];
   }
-  let availableIntegrations = namedProjectIntegrationsSelector(state)[pluginName] || [];
-  if (!availableIntegrations.length) {
-    availableIntegrations = namedGlobalIntegrationsSelector(state)[pluginName] || [];
+
+  const pageLevel = pageLevelSelector(state);
+  const projectIntegrations = namedProjectIntegrationsSelector(state)[pluginName] || [];
+  const organizationIntegrations = namedOrganizationIntegrationsSelector(state)[pluginName] || [];
+  const globalIntegrations = namedGlobalIntegrationsSelector(state)[pluginName] || [];
+
+  let availableIntegrations = globalIntegrations;
+
+  if (pageLevel === APP_LEVEL.ORGANIZATION) {
+    availableIntegrations = organizationIntegrations.length
+      ? organizationIntegrations
+      : globalIntegrations;
   }
+
+  if (pageLevel === APP_LEVEL.PROJECT) {
+    if (projectIntegrations.length) {
+      availableIntegrations = projectIntegrations;
+    } else if (organizationIntegrations.length) {
+      availableIntegrations = organizationIntegrations;
+    } else {
+      availableIntegrations = globalIntegrations;
+    }
+  }
+
   return availableIntegrations.filter((item) => item.enabled);
 };
 
@@ -154,9 +184,8 @@ export const isEmailIntegrationAvailableSelector = (state) => {
   return !!availableIntegrations.length;
 };
 
-export const namedAvailableBtsIntegrationsSelector = namedAvailableIntegrationsByGroupTypeSelector(
-  BTS_GROUP_TYPE,
-);
+export const namedAvailableBtsIntegrationsSelector =
+  namedAvailableIntegrationsByGroupTypeSelector(BTS_GROUP_TYPE);
 
 export const availableBtsIntegrationsSelector = (state) => {
   const namedAvailableBtsIntegrations = namedAvailableBtsIntegrationsSelector(state);

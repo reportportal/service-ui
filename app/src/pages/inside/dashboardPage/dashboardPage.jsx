@@ -34,9 +34,8 @@ import {
   dashboardPaginationSelector,
 } from 'controllers/dashboard';
 import { DEFAULT_PAGINATION, PAGE_KEY, SIZE_KEY, withPagination } from 'controllers/pagination';
-import { DASHBOARD_PAGE, DASHBOARD_PAGE_EVENTS } from 'components/main/analytics/events';
 import { PaginationToolbar } from 'components/main/paginationToolbar';
-import { DASHBOARD_EVENTS } from 'analyticsEvents/dashboardsPageEvents';
+import { DASHBOARD_EVENTS, DASHBOARDS } from 'analyticsEvents/dashboardsPageEvents';
 import { userInfoSelector } from 'controllers/user';
 import { showModalAction } from 'controllers/modal';
 import { withFilter } from 'controllers/filter';
@@ -94,7 +93,7 @@ const messages = defineMessages({
   paginationSelector: dashboardPaginationSelector,
 })
 @injectIntl
-@track({ page: DASHBOARD_PAGE })
+@track({ page: DASHBOARDS })
 export class DashboardPage extends Component {
   static propTypes = {
     intl: PropTypes.object.isRequired,
@@ -108,10 +107,6 @@ export class DashboardPage extends Component {
     gridType: PropTypes.string,
     onFilterChange: PropTypes.func,
     changeVisibilityType: PropTypes.func,
-    tracking: PropTypes.shape({
-      trackEvent: PropTypes.func,
-      getTrackingData: PropTypes.func,
-    }).isRequired,
     loading: PropTypes.bool,
     pageCount: PropTypes.number,
     activePage: PropTypes.number,
@@ -149,12 +144,10 @@ export class DashboardPage extends Component {
       userInfo: { userId },
       showModal,
       deleteDashboard,
-      tracking,
     } = this.props;
     const { id } = item;
 
     const warning = item.owner === userId ? '' : formatMessage(messages.deleteModalWarningMessage);
-    tracking.trackEvent(DASHBOARD_PAGE_EVENTS.DELETE_ICON_DASHBOARD_TILE);
     showModal({
       id: 'deleteItemsModal',
       data: {
@@ -164,8 +157,6 @@ export class DashboardPage extends Component {
         mainContent: <DeleteDashboardConfirmationMessage name={item.name} />,
         warning,
         eventsInfo: {
-          closeIcon: DASHBOARD_PAGE_EVENTS.CLOSE_ICON_DELETE_DASHBOARD_MODAL,
-          cancelBtn: DASHBOARD_PAGE_EVENTS.CANCEL_BTN_DELETE_DASHBOARD_MODAL,
           deleteBtn: DASHBOARD_EVENTS.clickOnButtonDeleteInModalDeleteDashboard(id),
         },
       },
@@ -204,9 +195,8 @@ export class DashboardPage extends Component {
   };
 
   onAddDashboardItem = () => {
-    const { showModal, addDashboard, tracking } = this.props;
+    const { showModal, addDashboard } = this.props;
 
-    tracking.trackEvent(DASHBOARD_PAGE_EVENTS.ADD_NEW_WIDGET_EMPTY_PAGE);
     showModal({
       id: 'dashboardAddEditModal',
       data: {
@@ -219,7 +209,6 @@ export class DashboardPage extends Component {
   getBreadcrumbs = () => [
     {
       title: this.props.intl.formatMessage(messages.pageTitle),
-      eventInfo: DASHBOARD_PAGE_EVENTS.BREADCRUMB_ALL_DASHBOARD,
     },
   ];
 

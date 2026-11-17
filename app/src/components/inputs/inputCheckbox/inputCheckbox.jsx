@@ -32,8 +32,13 @@ export const InputCheckbox = ({
   darkView,
   responsive,
 }) => (
-  // eslint-disable-next-line
-  <label className={cx('input-checkbox', className)} onFocus={onFocus} onBlur={onBlur} tabIndex="1">
+  <label
+    className={cx('input-checkbox', className)}
+    onFocus={onFocus}
+    onBlur={onBlur}
+    // eslint-disable-next-line jsx-a11y/no-noninteractive-tabindex, jsx-a11y/tabindex-no-positive
+    tabIndex="1"
+  >
     <input
       type="checkbox"
       className={cx('input')}

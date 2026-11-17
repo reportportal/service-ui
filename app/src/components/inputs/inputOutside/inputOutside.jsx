@@ -45,6 +45,7 @@ export class InputOutside extends Component {
     hasDynamicValidation: PropTypes.bool,
     hint: PropTypes.string,
     provideErrorHint: PropTypes.bool,
+    showHintWithError: PropTypes.bool,
   };
   static defaultProps = {
     type: 'text',
@@ -67,6 +68,7 @@ export class InputOutside extends Component {
     hasDynamicValidation: false,
     hint: '',
     provideErrorHint: false,
+    showHintWithError: false,
   };
 
   state = {
@@ -108,6 +110,7 @@ export class InputOutside extends Component {
       hasDynamicValidation,
       hint,
       provideErrorHint,
+      showHintWithError,
     } = this.props;
     return (
       <div className={cx('content')}>
@@ -148,7 +151,10 @@ export class InputOutside extends Component {
           )}
         </div>
         {provideErrorHint && error && (touched || (active && !hasDynamicValidation)) ? (
-          <span className={cx(VARIANT, 'error')}>{error}</span>
+          <>
+            <span className={cx(VARIANT, 'error')}>{error}</span>
+            {showHintWithError && hint && <div className={cx(VARIANT, 'hint')}>{hint}</div>}
+          </>
         ) : (
           hint && <div className={cx(VARIANT, 'hint')}>{hint}</div>
         )}

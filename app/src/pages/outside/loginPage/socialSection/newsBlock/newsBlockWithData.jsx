@@ -15,16 +15,25 @@
  */
 
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import fetchJsonp from 'fetch-jsonp';
 import { NewsBlock } from './newsBlock';
 
 export class NewsBlockWithData extends Component {
+  static propTypes = {
+    onExpandedChange: PropTypes.func,
+  };
+
+  static defaultProps = {
+    onExpandedChange: null,
+  };
+
   state = {
     tweets: [],
   };
 
   componentDidMount() {
-    fetchJsonp('https://status.reportportal.io/twitter?count=3', {
+    fetchJsonp('https://status.reportportal.io/twitter', {
       jsonpCallback: 'jsonp',
     })
       .then((res) => res.json())
@@ -33,6 +42,8 @@ export class NewsBlockWithData extends Component {
   }
 
   render() {
-    return <NewsBlock tweets={this.state.tweets} />;
+    const { onExpandedChange } = this.props;
+
+    return <NewsBlock tweets={this.state.tweets} onExpandedChange={onExpandedChange} />;
   }
 }

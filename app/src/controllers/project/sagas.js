@@ -14,7 +14,8 @@
  * limitations under the License.
  */
 
-import { takeEvery, all, put, select, call } from 'redux-saga/effects';
+import { takeEvery, take, all, put, select, call } from 'redux-saga/effects';
+import { redirect } from 'redux-first-router';
 import { URLS } from 'common/urls';
 import {
   showNotification,
@@ -23,20 +24,19 @@ import {
   showSuccessNotification,
   showErrorNotification,
 } from 'controllers/notification';
-import { projectIdSelector } from 'controllers/pages';
 import { hideModalAction } from 'controllers/modal';
 import { showScreenLockAction, hideScreenLockAction } from 'controllers/screenLock';
 import { fetch } from 'common/utils';
-import { activeProjectSelector } from 'controllers/user';
-import { setProjectIntegrationsAction } from 'controllers/plugins';
+import { setProjectIntegrationsAction } from 'controllers/plugins/actionCreators';
 import {
   addFilterAction,
   fetchUserFiltersSuccessAction,
   removeFilterAction,
   activeFilterSelector,
 } from 'controllers/filter';
+import { userRolesSelector, ORGANIZATION_PROJECTS_PAGE } from 'controllers/pages';
+import { canWorkWithFilters } from 'common/utils/permissions';
 import { fetchDataAction } from 'controllers/fetch';
-
 import {
   UPDATE_DEFECT_TYPE,
   ADD_DEFECT_TYPE,
@@ -61,8 +61,12 @@ import {
   UPDATE_PROJECT_NOTIFICATION,
   DELETE_PROJECT_NOTIFICATION,
   FETCH_PROJECT_NOTIFICATIONS,
+  FETCH_EXISTING_LAUNCH_NAMES,
   UPDATE_LOG_TYPE,
   DELETE_LOG_TYPE,
+  PREPARE_ACTIVE_PROJECT,
+  FETCH_PROJECT_SUCCESS,
+  FETCH_PROJECT_ERROR,
 } from './constants';
 import {
   updateDefectTypeSuccessAction,
@@ -72,6 +76,7 @@ import {
   updatePatternSuccessAction,
   deletePatternSuccessAction,
   updateConfigurationAttributesAction,
+  fetchProjectAction,
   fetchProjectPreferencesAction,
   fetchProjectSuccessAction,
   fetchProjectErrorAction,
@@ -88,16 +93,63 @@ import {
   updateLogTypeSuccessAction,
   deleteLogTypeSuccessAction,
 } from './actionCreators';
-import { patternsSelector } from './selectors';
+import { patternsSelector, projectKeySelector } from './selectors';
+import { withActiveOrganization } from 'controllers/organization/withActiveOrganizationSaga';
+import { setActiveProjectKeyAction } from 'controllers/user';
+
+export function* withActiveProject(
+  organizationSlug,
+  projectSlug,
+  projectKey,
+  onActiveProjectReady,
+) {
+  const fallbackRedirect = redirect({
+    type: ORGANIZATION_PROJECTS_PAGE,
+    payload: { organizationSlug },
+  });
+
+  yield* withActiveOrganization(organizationSlug, function* onActiveOrgReady(organizationId) {
+    try {
+      let resolvedKey = projectKey;
+
+      if (!resolvedKey) {
+        const { items } = yield call(
+          fetch,
+          URLS.organizationProjects(organizationId, { slug: projectSlug }),
+        );
+        resolvedKey = items?.[0]?.key;
+      }
+
+      if (!resolvedKey) {
+        yield put(fallbackRedirect);
+        return;
+      }
+
+      yield put(setActiveProjectKeyAction(resolvedKey));
+      yield put(fetchProjectAction(resolvedKey));
+
+      const { type } = yield take([FETCH_PROJECT_SUCCESS, FETCH_PROJECT_ERROR]);
+      if (type === FETCH_PROJECT_ERROR) {
+        yield put(fallbackRedirect);
+        return;
+      }
+
+      yield* onActiveProjectReady(resolvedKey);
+    } catch (error) {
+      yield put(showDefaultErrorNotification(error));
+      yield put(fallbackRedirect);
+    }
+  });
+}
 
 function* updateDefectType({ payload: defectTypes }) {
   yield put(showScreenLockAction());
   try {
-    const projectId = yield select(projectIdSelector);
+    const projectKey = yield select(projectKeySelector);
     const data = {
       ids: defectTypes,
     };
-    yield call(fetch, URLS.projectDefectType(projectId), {
+    yield call(fetch, URLS.projectDefectType(projectKey), {
       method: 'put',
       data,
     });
@@ -123,8 +175,8 @@ function* watchUpdateDefectType() {
 function* addDefectType({ payload: defectType }) {
   yield put(showScreenLockAction());
   try {
-    const projectId = yield select(projectIdSelector);
-    const response = yield call(fetch, URLS.projectDefectType(projectId), {
+    const projectKey = yield select(projectKeySelector);
+    const response = yield call(fetch, URLS.projectDefectType(projectKey), {
       method: 'post',
       data: defectType,
     });
@@ -150,8 +202,8 @@ function* watchAddDefectType() {
 function* deleteDefectType({ payload: defectType }) {
   yield put(showScreenLockAction());
   try {
-    const projectId = yield select(projectIdSelector);
-    yield call(fetch, URLS.projectDeleteDefectType(projectId, defectType.id), {
+    const projectKey = yield select(projectKeySelector);
+    yield call(fetch, URLS.projectDeleteDefectType(projectKey, defectType.id), {
       method: 'delete',
     });
     yield put(deleteDefectTypeSuccessAction(defectType));
@@ -173,16 +225,12 @@ function* watchDeleteDefectType() {
   yield takeEvery(DELETE_DEFECT_TYPE, deleteDefectType);
 }
 
-function* fetchProjectNotifications() {
+export function* fetchProjectNotifications() {
   yield put(setProjectNotificationsLoadingAction(true));
   try {
-    const projectId = yield select(projectIdSelector);
-    const [notifications, existingLaunchNames] = yield all([
-      call(fetch, URLS.notification(projectId)),
-      call(fetch, URLS.launchesExistingNames(projectId)),
-    ]);
+    const projectKey = yield select(projectKeySelector);
+    const notifications = yield call(fetch, URLS.notification(projectKey));
     yield put(fetchProjectNotificationsSuccessAction(notifications));
-    yield put(fetchExistingLaunchNamesSuccessAction(existingLaunchNames));
   } catch (error) {
     yield put(showDefaultErrorNotification(error));
   } finally {
@@ -194,11 +242,28 @@ function* watchFetchProjectNotifications() {
   yield takeEvery(FETCH_PROJECT_NOTIFICATIONS, fetchProjectNotifications);
 }
 
+export function* fetchExistingLaunchNames({ payload: payloadProjectKey }) {
+  try {
+    const projectKey = payloadProjectKey || (yield select(projectKeySelector));
+    if (!projectKey) {
+      return;
+    }
+    const existingLaunchNames = yield call(fetch, URLS.launchesExistingNames(projectKey));
+    yield put(fetchExistingLaunchNamesSuccessAction(existingLaunchNames));
+  } catch (error) {
+    yield put(showDefaultErrorNotification(error));
+  }
+}
+
+function* watchFetchExistingLaunchNames() {
+  yield takeEvery(FETCH_EXISTING_LAUNCH_NAMES, fetchExistingLaunchNames);
+}
+
 function* updateNotificationState({
   notificationState: enabled,
   pluginName: attributeKey = NOTIFICATIONS_ATTRIBUTE_ENABLED_KEY,
 }) {
-  const projectId = yield select(projectIdSelector);
+  const projectKey = yield select(projectKeySelector);
   const updatedConfig = {
     configuration: {
       attributes: {
@@ -207,7 +272,7 @@ function* updateNotificationState({
     },
   };
 
-  yield call(fetch, URLS.projectByName(projectId), {
+  yield call(fetch, URLS.projectByName(projectKey), {
     method: 'put',
     data: updatedConfig,
   });
@@ -216,9 +281,9 @@ function* updateNotificationState({
 
 function* addProjectNotification({ payload: { notification, triggerAddingEvent = () => {} } }) {
   try {
-    const projectId = yield select(projectIdSelector);
+    const projectKey = yield select(projectKeySelector);
 
-    const response = yield call(fetch, URLS.notification(projectId), {
+    const response = yield call(fetch, URLS.notification(projectKey), {
       method: 'post',
       data: notification,
     });
@@ -244,9 +309,9 @@ function* watchAddProjectNotification() {
 function* updateProjectNotification({ payload: notification }) {
   yield put(showScreenLockAction());
   try {
-    const projectId = yield select(projectIdSelector);
+    const projectKey = yield select(projectKeySelector);
 
-    yield call(fetch, URLS.notification(projectId), {
+    yield call(fetch, URLS.notification(projectKey), {
       method: 'put',
       data: notification,
     });
@@ -272,9 +337,9 @@ function* watchUpdateProjectNotification() {
 function* deleteProjectNotification({ payload: id }) {
   yield put(showScreenLockAction());
   try {
-    const projectId = yield select(projectIdSelector);
+    const projectKey = yield select(projectKeySelector);
 
-    yield call(fetch, URLS.notificationById(projectId, id), {
+    yield call(fetch, URLS.notificationById(projectKey, id), {
       method: 'delete',
     });
     yield put(deleteProjectNotificationSuccessAction(id));
@@ -318,7 +383,7 @@ function* watchUpdateNotificationState() {
 }
 
 function* updatePAState(PAEnabled) {
-  const projectId = yield select(projectIdSelector);
+  const projectKey = yield select(projectKeySelector);
   const updatedConfig = {
     configuration: {
       attributes: {
@@ -327,7 +392,7 @@ function* updatePAState(PAEnabled) {
     },
   };
 
-  yield call(fetch, URLS.projectByName(projectId), {
+  yield call(fetch, URLS.projectByName(projectKey), {
     method: 'put',
     data: updatedConfig,
   });
@@ -336,8 +401,8 @@ function* updatePAState(PAEnabled) {
 
 function* addPattern({ payload: pattern }) {
   try {
-    const projectId = yield select(projectIdSelector);
-    const response = yield call(fetch, URLS.projectAddPattern(projectId), {
+    const projectKey = yield select(projectKeySelector);
+    const response = yield call(fetch, URLS.projectAddPattern(projectKey), {
       method: 'post',
       data: pattern,
     });
@@ -363,8 +428,8 @@ function* watchAddPattern() {
 
 function* updatePattern({ payload: pattern }) {
   try {
-    const projectId = yield select(projectIdSelector);
-    yield call(fetch, URLS.projectUpdatePattern(projectId, pattern.id), {
+    const projectKey = yield select(projectKeySelector);
+    yield call(fetch, URLS.projectUpdatePattern(projectKey, pattern.id), {
       method: 'put',
       data: {
         name: pattern.name,
@@ -389,8 +454,8 @@ function* watchUpdatePattern() {
 
 function* deletePattern({ payload: pattern }) {
   try {
-    const projectId = yield select(projectIdSelector);
-    yield call(fetch, URLS.projectUpdatePattern(projectId, pattern.id), { method: 'delete' });
+    const projectKey = yield select(projectKeySelector);
+    yield call(fetch, URLS.projectUpdatePattern(projectKey, pattern.id), { method: 'delete' });
     yield put(deletePatternSuccessAction(pattern));
     yield put(
       showNotification({
@@ -428,17 +493,26 @@ function* watchUpdatePAState() {
   yield takeEvery(UPDATE_PA_STATE, updatePAStateWithNotification);
 }
 
-function* fetchProject({ payload: { projectId, fetchInfoOnly } }) {
+function* fetchProject({ payload: { projectKey, fetchInfoOnly } }) {
   try {
-    const project = yield call(fetch, URLS.projectByName(projectId));
+    let project = null;
+    if (projectKey) {
+      project = yield call(fetch, URLS.projectByName(projectKey));
+      yield put(setProjectIntegrationsAction(project.integrations));
+    }
     yield put(fetchProjectSuccessAction(project));
-    yield put(setProjectIntegrationsAction(project.integrations));
-    if (!fetchInfoOnly) {
-      yield put(fetchProjectPreferencesAction(projectId));
-      yield put(fetchLogTypesAction(projectId));
+
+    const userRoles = yield select(userRolesSelector);
+    const hasFilterPermissions = canWorkWithFilters(userRoles);
+
+    if (!fetchInfoOnly && projectKey) {
+      if (hasFilterPermissions) {
+        yield put(fetchProjectPreferencesAction(project.projectKey));
+      }
+      yield put(fetchLogTypesAction(project.projectKey));
     }
   } catch (error) {
-    yield put(fetchProjectErrorAction(error, projectId));
+    yield put(fetchProjectErrorAction(error, projectKey));
     yield put(showDefaultErrorNotification(error));
   }
 }
@@ -447,8 +521,23 @@ function* watchFetchProject() {
   yield takeEvery(FETCH_PROJECT, fetchProject);
 }
 
-function* fetchProjectPreferences({ payload: projectId }) {
-  const preferences = yield call(fetch, URLS.projectPreferences(projectId));
+function* prepareActiveProject({ payload: { organizationSlug, projectSlug, projectKey, action } }) {
+  yield* withActiveProject(
+    organizationSlug,
+    projectSlug,
+    projectKey,
+    function* onActiveProjectReady() {
+      yield put(action);
+    },
+  );
+}
+
+function* watchPrepareActiveProject() {
+  yield takeEvery(PREPARE_ACTIVE_PROJECT, prepareActiveProject);
+}
+
+function* fetchProjectPreferences({ payload: projectKey }) {
+  const preferences = yield call(fetch, URLS.projectPreferences(projectKey));
   yield put(fetchProjectPreferencesSuccessAction(preferences));
   yield put(fetchUserFiltersSuccessAction(preferences.filters));
 }
@@ -457,8 +546,8 @@ function* watchFetchProjectPreferences() {
   yield takeEvery(FETCH_PROJECT_PREFERENCES, fetchProjectPreferences);
 }
 
-function* fetchConfigurationAttributes({ payload: projectId }) {
-  const project = yield call(fetch, URLS.projectByName(projectId));
+function* fetchConfigurationAttributes({ payload: projectKey }) {
+  const project = yield call(fetch, URLS.projectByName(projectKey));
   yield put(updateConfigurationAttributesAction(project));
 }
 
@@ -489,26 +578,26 @@ function* watchShowFilterOnLaunches() {
 
 function* updateProjectFilterPreferences({ payload = {} }) {
   const { filterId, method } = payload;
-  const activeProject = yield select(activeProjectSelector);
-  yield call(fetch, URLS.projectPreferences(activeProject, filterId), { method });
+  const projectKey = yield select(projectKeySelector);
+  yield call(fetch, URLS.projectPreferences(projectKey, filterId), { method });
 }
 
 function* watchUpdateProjectFilterPreferences() {
   yield takeEvery(UPDATE_PROJECT_FILTER_PREFERENCES, updateProjectFilterPreferences);
 }
 
-function* fetchLogTypes({ payload: projectId }) {
-  yield put(fetchDataAction(LOG_TYPES_NAMESPACE)(URLS.projectLogTypes(projectId)));
+function* fetchLogTypes({ payload: projectKey }) {
+  yield put(fetchDataAction(LOG_TYPES_NAMESPACE)(URLS.projectLogTypes(projectKey)));
 }
 
 function* watchFetchLogTypes() {
   yield takeEvery(FETCH_LOG_TYPES, fetchLogTypes);
 }
 
-function* createLogType({ payload: { data, projectId, onSuccess } }) {
+function* createLogType({ payload: { data, projectKey, onSuccess } }) {
   yield put(showScreenLockAction());
   try {
-    const response = yield call(fetch, URLS.projectLogTypes(projectId), { method: 'POST', data });
+    const response = yield call(fetch, URLS.projectLogTypes(projectKey), { method: 'POST', data });
     yield put(createLogTypeSuccessAction(response));
     yield put(showSuccessNotification({ messageId: 'createLogTypeSuccess' }));
     onSuccess?.();
@@ -523,10 +612,10 @@ function* watchCreateLogType() {
   yield takeEvery(CREATE_LOG_TYPE, createLogType);
 }
 
-function* updateLogType({ payload: { data, logTypeId, projectId, onSuccess } }) {
+function* updateLogType({ payload: { data, logTypeId, projectKey, onSuccess } }) {
   yield put(showScreenLockAction());
   try {
-    yield call(fetch, URLS.projectLogTypeById(projectId, logTypeId), { method: 'PUT', data });
+    yield call(fetch, URLS.projectLogTypeById(projectKey, logTypeId), { method: 'PUT', data });
     yield put(updateLogTypeSuccessAction({ ...data, id: logTypeId }));
     yield put(showSuccessNotification({ messageId: 'updateLogTypeSuccess' }));
     onSuccess?.();
@@ -541,10 +630,10 @@ function* watchUpdateLogType() {
   yield takeEvery(UPDATE_LOG_TYPE, updateLogType);
 }
 
-function* deleteLogType({ payload: { logTypeId, projectId, onSuccess } }) {
+function* deleteLogType({ payload: { logTypeId, projectKey, onSuccess } }) {
   yield put(showScreenLockAction());
   try {
-    yield call(fetch, URLS.projectLogTypeById(projectId, logTypeId), { method: 'DELETE' });
+    yield call(fetch, URLS.projectLogTypeById(projectKey, logTypeId), { method: 'DELETE' });
     yield put(deleteLogTypeSuccessAction(logTypeId));
     yield put(showSuccessNotification({ messageId: 'deleteLogTypeSuccess' }));
     onSuccess?.();
@@ -569,6 +658,7 @@ export function* projectSagas() {
     watchUpdatePAState(),
     watchDeletePattern(),
     watchFetchProject(),
+    watchPrepareActiveProject(),
     watchFetchProjectPreferences(),
     watchFetchConfigurationAttributes(),
     watchHideFilterOnLaunches(),
@@ -579,6 +669,7 @@ export function* projectSagas() {
     watchUpdateProjectNotification(),
     watchDeleteProjectNotification(),
     watchFetchProjectNotifications(),
+    watchFetchExistingLaunchNames(),
     watchFetchLogTypes(),
     watchCreateLogType(),
     watchUpdateLogType(),

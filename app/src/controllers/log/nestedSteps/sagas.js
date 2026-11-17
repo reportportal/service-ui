@@ -38,7 +38,7 @@ import { getDirectedPagination } from './utils';
 
 function* fetchNestedStep({ payload = {} }) {
   const { id, errorLogPage, loadDirection = NEXT } = payload;
-  const { activeProject, query, filterLevel } = yield call(collectLogPayload);
+  const { projectKey, query, filterLevel } = yield call(collectLogPayload);
   const logLevel = filterLevel;
   const paramsExcludingPagination = omit(query, [PAGE_KEY, SIZE_KEY]);
   const { page } = yield select(nestedStepSelector, id);
@@ -52,7 +52,7 @@ function* fetchNestedStep({ payload = {} }) {
   let cancelRequest = () => {};
   try {
     yield put(fetchNestedStepStartAction(payload));
-    const response = yield call(fetch, URLS.logItems(activeProject, id, logLevel), {
+    const response = yield call(fetch, URLS.logItems(projectKey, id, logLevel), {
       params: fetchParams,
       abort: (cancelFunc) => {
         cancelRequest = cancelFunc;

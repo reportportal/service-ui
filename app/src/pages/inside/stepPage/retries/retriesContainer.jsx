@@ -22,11 +22,11 @@ import { URLS } from 'common/urls';
 import { fetch } from 'common/utils/fetch';
 import { ERROR } from 'common/constants/logLevels';
 import { STEP_PAGE_EVENTS } from 'components/main/analytics/events';
-import { activeProjectSelector } from 'controllers/user';
+import { projectKeySelector } from 'controllers/project';
 import { Retries } from './retries';
 
 @connect((state) => ({
-  activeProject: activeProjectSelector(state),
+  projectKey: projectKeySelector(state),
 }))
 @track()
 export class RetriesContainer extends Component {
@@ -37,12 +37,11 @@ export class RetriesContainer extends Component {
       trackEvent: PropTypes.func,
       getTrackingData: PropTypes.func,
     }).isRequired,
-    activeProject: PropTypes.string,
+    projectKey: PropTypes.string.isRequired,
     retries: PropTypes.arrayOf(PropTypes.object),
   };
 
   static defaultProps = {
-    activeProject: '',
     retries: [],
   };
 
@@ -59,7 +58,7 @@ export class RetriesContainer extends Component {
 
   fetchLog = (itemId) => {
     this.setState({ loading: true });
-    fetch(URLS.logItem(this.props.activeProject, itemId, ERROR))
+    fetch(URLS.logItem(this.props.projectKey, itemId, ERROR))
       .then((result) =>
         this.setState({
           logItem: result.content[0],

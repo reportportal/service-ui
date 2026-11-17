@@ -1,0 +1,233 @@
+/*
+ * Copyright 2025 EPAM Systems
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+.folders-tree {
+  &--inner {
+    margin-left: 24px;
+  }
+
+  &__connector {
+    position: absolute;
+    top: 0;
+    background-color: var(--rp-ui-base-e-100);
+    pointer-events: none;
+  }
+
+  &__connector-vertical {
+    width: 1px;
+    height: 100%;
+
+    &--last {
+      height: 19px;
+    }
+  }
+
+  &__connector-corner {
+    width: 1px;
+    height: 100%;
+
+    &--last {
+      height: 19px;
+    }
+  }
+
+  &__connector-horizontal {
+    top: 18px;
+    width: 12px;
+    height: 1px;
+  }
+
+  &__item {
+    position: relative;
+    box-sizing: border-box;
+
+    :global([class*='tree-sortable-item--drop-inside']) & &-title {
+      outline: 2px dashed var(--rp-ui-base-topaz-focused);
+      outline-offset: -2px;
+      border-radius: 4px;
+      background-color: var(--rp-ui-base-topaz-100);
+    }
+
+    &-content {
+      position: relative;
+    }
+
+    &-title {
+      display: flex;
+      align-items: center;
+      padding: 8px;
+      cursor: pointer;
+      height: 20px;
+
+      & > .folders-tree__tools {
+        margin-left: auto;
+      }
+
+      &:not(:has(.folders-tree__tools)) {
+        & > .folders-tree__item-title--counter,
+        & > .folders-tree__drag-handle {
+          margin-left: auto;
+        }
+      }
+
+      &--text {
+        flex: 0 1 auto;
+        min-width: 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        font-size: 13px;
+        font-family: $FONT-ROBOTO-MEDIUM;
+        font-weight: 500;
+        color: var(--rp-ui-base-almost-black);
+      }
+
+      &--counter {
+        font-size: 13px;
+        font-family: $FONT-ROBOTO-REGULAR;
+        color: var(--rp-ui-base-e-400);
+        margin-left: 16px;
+        min-width: 16px;
+        text-align: right;
+      }
+
+      &--icon {
+        flex-shrink: 0;
+        margin-right: 8px;
+      }
+
+      &:hover {
+        background-color: var(--rp-ui-base-bg-100);
+        border-radius: 4px;
+      }
+
+      &--active {
+        padding: 6.4px;
+        border: 2px solid var(--rp-ui-base-topaz-focused);
+        border-radius: 4px;
+        box-sizing: border-box;
+        height: 36px;
+      }
+
+      &--dimmed {
+        .folders-tree__item-title--text {
+          color: var(--rp-ui-base-e-300);
+        }
+      }
+
+      &--active-descendant-indicator {
+        display: inline-block;
+        width: 8px;
+        height: 8px;
+        margin: 0 8px;
+        border-radius: 50%;
+        background-color: var(--rp-ui-base-topaz);
+        flex-shrink: 0;
+      }
+    }
+
+    &-content > svg {
+      position: absolute;
+      top: 8px;
+      left: -16px;
+      transform: rotate(-90deg);
+      cursor: pointer;
+    }
+
+    &--open > div {
+      > svg {
+        transform: none;
+      }
+    }
+  }
+
+  &__tools {
+    display: flex;
+    align-items: center;
+    height: 20px;
+    visibility: hidden;
+    border: 0;
+    background-color: transparent;
+    cursor: pointer;
+    padding: 0;
+
+    button svg {
+      width: 16px;
+      height: 100%;
+    }
+
+    &--shown {
+      visibility: visible;
+    }
+
+    &:hover div:first-child {
+      svg path {
+        fill: var(--rp-ui-base-topaz-hover);
+      }
+    }
+  }
+
+  &__meatball {
+    display: flex;
+    align-items: center;
+
+    svg path {
+      fill: var(--rp-ui-base-e-300);
+    }
+
+    &--active {
+      svg path {
+        fill: var(--rp-ui-base-topaz-pressed);
+      }
+    }
+  }
+
+  &__drag-handle {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    height: 20px;
+    min-width: 16px;
+    margin-left: 16px;
+    border: 0;
+    background-color: transparent;
+    cursor: grab;
+    padding: 0;
+    user-select: none;
+
+    &:active {
+      cursor: grabbing;
+    }
+
+    svg {
+      width: 16px;
+      height: 16px;
+      pointer-events: none;
+    }
+
+    svg path {
+      fill: var(--rp-ui-base-e-300);
+    }
+
+    &:hover svg path {
+      fill: var(--rp-ui-base-topaz-hover);
+    }
+  }
+}
+
+.highlight {
+  color: var(--rp-ui-color-primary-text);
+}

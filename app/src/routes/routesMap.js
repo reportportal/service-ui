@@ -14,15 +14,14 @@
  * limitations under the License.
  */
 
-import { redirect, actionToPath } from 'redux-first-router';
+import { redirect, actionToPath, pathToAction } from 'redux-first-router';
 import qs from 'qs';
 import {
-  activeProjectSelector,
-  userAccountRoleSelector,
   userInfoSelector,
-  setActiveProjectAction,
+  getUserSettingsFromStorage,
+  isAdminSelector,
+  activeProjectKeySelector,
 } from 'controllers/user';
-import { fetchProjectAction } from 'controllers/project';
 import {
   LOGIN_PAGE,
   REGISTRATION_PAGE,
@@ -36,41 +35,52 @@ import {
   PROJECT_USERDEBUG_PAGE,
   HISTORY_PAGE,
   UNIQUE_ERRORS_PAGE,
-  PROJECTS_PAGE,
-  PROJECT_DETAILS_PAGE,
   ALL_USERS_PAGE,
   SERVER_SETTINGS_PAGE,
   SERVER_SETTINGS_TAB_PAGE,
   LAUNCHES_PAGE,
+  MANUAL_LAUNCHES_PAGE,
+  MANUAL_LAUNCH_DETAILS_PAGE,
+  MANUAL_LAUNCH_EXECUTION_PAGE,
   PROJECT_LAUNCHES_PAGE,
   PLUGINS_PAGE,
-  PLUGINS_TAB_PAGE,
   NOT_FOUND,
   OAUTH_SUCCESS,
   HOME_PAGE,
   TEST_ITEM_PAGE,
   pageSelector,
   clearPageStateAction,
-  adminPageNames,
   PLUGIN_UI_EXTENSION_ADMIN_PAGE,
-  USER_PROFILE_SUB_PAGE,
   ACCOUNT_REMOVED_PAGE,
   PROJECT_PLUGIN_PAGE,
+  ORGANIZATION_PROJECTS_PAGE,
+  ORGANIZATION_USERS_PAGE,
+  ORGANIZATION_SETTINGS_PAGE,
+  ORGANIZATION_SETTINGS_TAB_PAGE,
+  USER_PROFILE_PAGE,
+  USER_PROFILE_PAGE_ORGANIZATION_LEVEL,
+  USER_PROFILE_PAGE_PROJECT_LEVEL,
+  USER_PROFILE_SUB_PAGE,
+  USER_PROFILE_SUB_PAGE_ORGANIZATION_LEVEL,
+  USER_PROFILE_SUB_PAGE_PROJECT_LEVEL,
+  ORGANIZATIONS_PAGE,
+  ORGANIZATIONS_ACTIVITY_PAGE,
+  PRODUCT_VERSIONS_TAB_PAGE,
+  PRODUCT_VERSIONS_PAGE,
+  TEST_CASE_LIBRARY_PAGE,
 } from 'controllers/pages';
 import {
   GENERAL,
-  AUTHORIZATION_CONFIGURATION,
+  ACCESS_CONFIGURATION,
   ANALYTICS,
   LINKS_AND_BRANDING,
   FEATURES,
 } from 'common/constants/settingsTabs';
-import { ADMINISTRATOR } from 'common/constants/accountRoles';
-import { INSTALLED, STORE } from 'common/constants/pluginsTabs';
-import { MEMBERS, MONITORING } from 'common/constants/projectSections';
 import { ANONYMOUS_REDIRECT_PATH_STORAGE_KEY, isAuthorizedSelector } from 'controllers/auth';
 import {
   fetchDashboardsAction,
   fetchDashboardAction,
+  changeFullWidthModeAction,
   changeVisibilityTypeAction,
 } from 'controllers/dashboard';
 import {
@@ -83,21 +93,64 @@ import { fetchPluginsAction, fetchGlobalIntegrationsAction } from 'controllers/p
 import { fetchTestItemsAction, setLevelAction } from 'controllers/testItem';
 import { fetchFiltersPageAction } from 'controllers/filter';
 import { fetchMembersAction } from 'controllers/members';
-import { fetchProjectDataAction } from 'controllers/administrate';
-import { fetchAllUsersAction } from 'controllers/administrate/allUsers/actionCreators';
+import { fetchAllUsersAction } from 'controllers/instance/allUsers/actionCreators';
 import { fetchLogPageData } from 'controllers/log';
 import { fetchHistoryPageInfoAction } from 'controllers/itemsHistory';
-import { fetchProjectsAction } from 'controllers/administrate/projects';
-import { startSetViewMode } from 'controllers/administrate/projects/actionCreators';
 import { setSessionItem, updateStorageItem } from 'common/utils/storageUtils';
 import { fetchClustersAction } from 'controllers/uniqueErrors';
+import { GET_TEST_CASE_DETAILS, getFoldersAction } from 'controllers/testCase';
+import { LAST_VISITED_PATH_STORAGE_KEY } from 'controllers/initialData/constants';
 import {
   API_KEYS_ROUTE,
   CONFIG_EXAMPLES_ROUTE,
-  PROJECT_ASSIGNMENT_ROUTE,
+  ASSIGNMENTS_ROUTE,
+  MCP_ROUTE,
 } from 'common/constants/userProfileRoutes';
 import { parseQueryToFilterEntityAction } from 'controllers/filter/actionCreators';
+import { fetchFilteredOrganizationsAction } from 'controllers/instance/organizations';
+import { fetchProjectAction } from 'controllers/project';
+import {
+  prepareActiveOrganizationProjectsAction,
+  prepareActiveOrganizationSettingsAction,
+} from 'controllers/organization/actionCreators';
+import { prepareActiveOrganizationUsersAction } from 'controllers/organization/users';
+import { LIST_OF_VERSIONS } from 'pages/inside/productVersionsPage/constants';
+import {
+  PRODUCT_VERSION_PAGE,
+  PRODUCT_VERSION_TAB_PAGE,
+  PROJECT_MILESTONES_PAGE,
+  PROJECT_TEST_PLAN_DETAILS_PAGE,
+} from 'controllers/pages/constants';
+import { DOCUMENTATION } from 'pages/inside/productVersionPage/constants';
 import { pageRendering, ANONYMOUS_ACCESS, ADMIN_ACCESS } from './constants';
+import { fetchOrganizationEventsDataAction } from 'controllers/instance/actionCreators';
+import { canSeeActivityOption } from 'common/utils/permissions';
+import {
+  getTestPlanAction,
+  TEST_PLAN_TEST_CASES_NAMESPACE,
+  defaultTestPlanTestCasesQueryParams,
+} from 'controllers/testPlan';
+import {
+  getMilestonesAction,
+  MILESTONES_NAMESPACE,
+  defaultMilestoneQueryParams,
+} from 'controllers/milestone';
+import {
+  MANUAL_LAUNCHES_NAMESPACE,
+  defaultManualLaunchesQueryParams,
+  getManualLaunchesAction,
+  getManualLaunchAction,
+  getManualLaunchFoldersAction,
+  getManualLaunchTestCaseExecutionsAction,
+  getManualLaunchExecutionAction,
+  buildGetManualLaunchTestCaseExecutionsParams,
+  getManualLaunchDetailsFetchParams,
+} from 'controllers/manualLaunch';
+import {
+  MANUAL_LAUNCHES_FILTER_URL_KEYS,
+  resolveFilterCompositeAttributeForApi,
+} from 'common/manualLaunches/manualLaunchesFilterUrl';
+import { getRouterParams } from 'common/utils';
 
 const redirectRoute = (path, createNewAction, onRedirect = () => {}) => ({
   path,
@@ -109,6 +162,59 @@ const redirectRoute = (path, createNewAction, onRedirect = () => {}) => ({
   },
 });
 
+const getLastPathRoute = (userId) => {
+  const userSettings = getUserSettingsFromStorage(userId);
+  if (userSettings?.lastPath) {
+    return pathToAction(userSettings.lastPath, routesMap, qs);
+  }
+  return null;
+};
+
+/*
+ * Define the correct redirect route based on user assignments.
+ * See EPMRPP-105682:
+ * a) instance only — 'All organizations' page
+ * b) single project — project 'Dashboards' page
+ * c) one organization, several projects — organization 'Projects' page
+ * d) several organizations — 'All organizations' page
+ * e) one organization only — organization 'Projects' page
+ */
+export const getRedirectRoute = (user) => {
+  const assignedOrganizations = user?.assignedOrganizations || {};
+  const assignedProjects = user?.assignedProjects || {};
+  const orgCount = Object.keys(assignedOrganizations).length;
+  const projCount = Object.keys(assignedProjects).length;
+
+  // Single project — find its organization and go to project dashboard
+  if (projCount === 1) {
+    const project = Object.values(assignedProjects)[0];
+    const organization = Object.values(assignedOrganizations).find(
+      (org) => org.organizationId === project.organizationId,
+    );
+    if (organization) {
+      return {
+        type: PROJECT_DASHBOARD_PAGE,
+        payload: {
+          organizationSlug: organization.organizationSlug,
+          projectSlug: project.projectSlug,
+        },
+      };
+    }
+  }
+
+  // Single organization — go to organization projects page
+  if (orgCount === 1) {
+    const organization = Object.values(assignedOrganizations)[0];
+    return {
+      type: ORGANIZATION_PROJECTS_PAGE,
+      payload: { organizationSlug: organization.organizationSlug },
+    };
+  }
+
+  // No assignments, multiple organizations, or fallback
+  return { type: ORGANIZATIONS_PAGE };
+};
+
 const routesMap = {
   [HOME_PAGE]: redirectRoute('/', (payload) => ({ type: LOGIN_PAGE, payload })),
 
@@ -118,85 +224,160 @@ const routesMap = {
   [OAUTH_SUCCESS]: '/authSuccess',
   [NOT_FOUND]: '/notfound',
 
-  ADMINISTRATE_PAGE: redirectRoute('/administrate', () => ({ type: PROJECTS_PAGE })),
-  USER_PROFILE_PAGE: redirectRoute('/userProfile', () => ({
+  [USER_PROFILE_PAGE]: redirectRoute('/userProfile', () => ({
     type: USER_PROFILE_SUB_PAGE,
-    payload: { profileRoute: PROJECT_ASSIGNMENT_ROUTE },
+    payload: { profileRoute: ASSIGNMENTS_ROUTE },
   })),
 
-  [USER_PROFILE_SUB_PAGE]: `/userProfile/:profileRoute(${PROJECT_ASSIGNMENT_ROUTE}|${API_KEYS_ROUTE}|${CONFIG_EXAMPLES_ROUTE})`,
+  [USER_PROFILE_SUB_PAGE]: `/userProfile/:profileRoute(${ASSIGNMENTS_ROUTE}|${API_KEYS_ROUTE}|${CONFIG_EXAMPLES_ROUTE}|${MCP_ROUTE})`,
 
-  API_PAGE: '/api',
+  [USER_PROFILE_PAGE_ORGANIZATION_LEVEL]: redirectRoute(
+    '/organizations/:organizationSlug/userProfile',
+    ({ organizationSlug }) => ({
+      type: USER_PROFILE_SUB_PAGE_ORGANIZATION_LEVEL,
+      payload: { organizationSlug, profileRoute: ASSIGNMENTS_ROUTE },
+    }),
+  ),
 
-  [PROJECTS_PAGE]: {
-    path: '/administrate/projects',
-    thunk: (dispatch) => {
-      dispatch(fetchProjectsAction());
-      dispatch(startSetViewMode());
-    },
-  },
-  [PROJECT_DETAILS_PAGE]: {
-    path: `/administrate/projects/:projectId/:projectSection(${MEMBERS}|${MONITORING})?`,
-    thunk: (dispatch) => {
-      dispatch(fetchProjectDataAction());
-    },
-  },
+  [USER_PROFILE_SUB_PAGE_ORGANIZATION_LEVEL]: `/organizations/:organizationSlug/userProfile/:profileRoute(${ASSIGNMENTS_ROUTE}|${API_KEYS_ROUTE}|${CONFIG_EXAMPLES_ROUTE}|${MCP_ROUTE})`,
+
+  [USER_PROFILE_PAGE_PROJECT_LEVEL]: redirectRoute(
+    '/organizations/:organizationSlug/projects/:projectSlug/userProfile',
+    (payload) => ({
+      type: USER_PROFILE_SUB_PAGE_PROJECT_LEVEL,
+      payload: { ...payload, profileRoute: ASSIGNMENTS_ROUTE },
+    }),
+  ),
+
+  [USER_PROFILE_SUB_PAGE_PROJECT_LEVEL]: `/organizations/:organizationSlug/projects/:projectSlug/userProfile/:profileRoute(${ASSIGNMENTS_ROUTE}|${API_KEYS_ROUTE}|${CONFIG_EXAMPLES_ROUTE}|${MCP_ROUTE})`,
+
+  API_PAGE_INSTANCE_LEVEL: '/api',
+  API_PAGE_ORGANIZATION_LEVEL: '/organizations/:organizationSlug/api',
+  API_PAGE_PROJECT_LEVEL: '/organizations/:organizationSlug/projects/:projectSlug/api',
+
+  EXPLORE_CLOUD_PAGE_INSTANCE_LEVEL: '/explore-cloud',
+  EXPLORE_CLOUD_PAGE_ORGANIZATION_LEVEL: '/organizations/:organizationSlug/explore-cloud',
+  EXPLORE_CLOUD_PAGE_PROJECT_LEVEL:
+    '/organizations/:organizationSlug/projects/:projectSlug/explore-cloud',
+
   [ALL_USERS_PAGE]: {
-    path: '/administrate/users',
+    path: '/users',
     thunk: (dispatch) => dispatch(fetchAllUsersAction()),
   },
-  [SERVER_SETTINGS_PAGE]: redirectRoute('/administrate/settings', () => ({
+  [SERVER_SETTINGS_PAGE]: redirectRoute('/settings', () => ({
     type: SERVER_SETTINGS_TAB_PAGE,
-    payload: { settingsTab: AUTHORIZATION_CONFIGURATION },
+    payload: { settingsTab: ACCESS_CONFIGURATION },
   })),
-  [SERVER_SETTINGS_TAB_PAGE]: `/administrate/settings/:settingsTab(${AUTHORIZATION_CONFIGURATION}|${FEATURES}|${ANALYTICS}|${LINKS_AND_BRANDING})`,
-  [PLUGINS_PAGE]: redirectRoute(
-    '/administrate/plugins',
-    () => ({
-      type: PLUGINS_TAB_PAGE,
-      payload: { pluginsTab: INSTALLED },
-    }),
-    (dispatch) => {
+  [SERVER_SETTINGS_TAB_PAGE]: `/settings/:settingsTab(${ACCESS_CONFIGURATION}|${FEATURES}|${ANALYTICS}|${LINKS_AND_BRANDING})`,
+  [PLUGINS_PAGE]: {
+    path: '/plugins',
+    thunk: (dispatch) => {
       dispatch(fetchPluginsAction());
       dispatch(fetchGlobalIntegrationsAction());
     },
+  },
+
+  [ORGANIZATIONS_PAGE]: {
+    path: '/organizations',
+    thunk: (dispatch) => {
+      dispatch(fetchFilteredOrganizationsAction());
+    },
+  },
+
+  [ORGANIZATIONS_ACTIVITY_PAGE]: {
+    path: '/organizations/:organizationSlug/activity',
+    thunk: (dispatch, getState) => {
+      const state = getState();
+      const hasAccess = canSeeActivityOption({ userRole: state.user.info.userRole });
+
+      if (!hasAccess) {
+        return dispatch({
+          type: ORGANIZATIONS_PAGE,
+        });
+      }
+
+      const {
+        location: { payload },
+      } = state;
+      dispatch(fetchOrganizationEventsDataAction(payload));
+    },
+  },
+
+  [ORGANIZATION_PROJECTS_PAGE]: {
+    path: '/organizations/:organizationSlug/projects',
+    thunk: (dispatch, getState) => {
+      const {
+        location: { payload },
+      } = getState();
+      dispatch(prepareActiveOrganizationProjectsAction(payload));
+    },
+  },
+
+  [ORGANIZATION_USERS_PAGE]: {
+    path: '/organizations/:organizationSlug/users',
+    thunk: (dispatch, getState) => {
+      const {
+        location: { payload },
+      } = getState();
+      dispatch(prepareActiveOrganizationUsersAction(payload));
+    },
+  },
+
+  [ORGANIZATION_SETTINGS_PAGE]: redirectRoute(
+    '/organizations/:organizationSlug/settings',
+    (payload) => ({
+      type: ORGANIZATION_SETTINGS_TAB_PAGE,
+      payload: { ...payload, settingsTab: GENERAL },
+    }),
   ),
-  [PLUGINS_TAB_PAGE]: `/administrate/plugins/:pluginsTab(${INSTALLED}|${STORE})`,
+
+  [ORGANIZATION_SETTINGS_TAB_PAGE]: {
+    path: `/organizations/:organizationSlug/settings/:settingsTab/:subTab*`,
+    thunk: (dispatch, getState) => {
+      const {
+        location: { payload },
+      } = getState();
+      dispatch(prepareActiveOrganizationSettingsAction(payload));
+    },
+  },
 
   [PROJECT_PAGE]: {
-    path: '/:projectId',
+    path: '/organizations/:organizationSlug/projects/:projectSlug',
     thunk: (dispatch, getState) => {
+      const state = getState();
       dispatch(
         redirect({
           type: PROJECT_DASHBOARD_PAGE,
           payload: {
-            projectId: activeProjectSelector(getState()),
+            organizationSlug: state.location.payload.organizationSlug,
+            projectSlug: state.location.payload.projectSlug,
           },
         }),
       );
     },
   },
   [PROJECT_DASHBOARD_PAGE]: {
-    path: '/:projectId/dashboard',
+    path: '/organizations/:organizationSlug/projects/:projectSlug/dashboard',
     thunk: (dispatch) => {
       dispatch(fetchDashboardsAction());
       dispatch(changeVisibilityTypeAction());
     },
   },
   [PROJECT_DASHBOARD_ITEM_PAGE]: {
-    path: '/:projectId/dashboard/:dashboardId',
+    path: '/organizations/:organizationSlug/projects/:projectSlug/dashboard/:dashboardId',
     thunk: (dispatch) => {
+      dispatch(changeFullWidthModeAction());
       dispatch(fetchDashboardAction());
     },
   },
   [PROJECT_DASHBOARD_PRINT_PAGE]: {
-    path: '/:projectId/dashboard/:dashboardId/print',
+    path: '/organizations/:organizationSlug/projects/:projectSlug/dashboard/:dashboardId/print',
     thunk: (dispatch) => {
       dispatch(fetchDashboardAction());
     },
   },
   [LAUNCHES_PAGE]: redirectRoute(
-    '/:projectId/launches',
+    '/organizations/:organizationSlug/projects/:projectSlug/launches',
     (payload, getState) => ({
       type: PROJECT_LAUNCHES_PAGE,
       payload: { ...payload, filterId: launchDistinctSelector(getState()) },
@@ -205,8 +386,89 @@ const routesMap = {
       dispatch(unselectAllLaunchesAction());
     },
   ),
+  [MANUAL_LAUNCHES_PAGE]: {
+    path: '/organizations/:organizationSlug/projects/:projectSlug/manualLaunches',
+    thunk: (dispatch, getState) => {
+      const state = getState();
+      const { offset, limit } = getRouterParams({
+        namespace: MANUAL_LAUNCHES_NAMESPACE,
+        defaultParams: defaultManualLaunchesQueryParams,
+        state,
+      });
+
+      const { searchQuery, ...query } = state.location?.query ?? {};
+
+      const rawStatuses = query[MANUAL_LAUNCHES_FILTER_URL_KEYS.STATUSES];
+      const filterStatuses = rawStatuses ? rawStatuses.split(',').filter(Boolean) : undefined;
+
+      const rawStartTimeFrom = query[MANUAL_LAUNCHES_FILTER_URL_KEYS.START_TIME_FROM];
+      const filterStartTimeFrom = rawStartTimeFrom ? Number(rawStartTimeFrom) : undefined;
+
+      const rawStartTimeTo = query[MANUAL_LAUNCHES_FILTER_URL_KEYS.START_TIME_TO];
+      const filterEndTimeTo = rawStartTimeTo ? Number(rawStartTimeTo) : undefined;
+
+      dispatch(
+        getManualLaunchesAction({
+          offset,
+          limit,
+          searchQuery,
+          filterStatuses,
+          filterCompletion: query[MANUAL_LAUNCHES_FILTER_URL_KEYS.COMPLETION] || undefined,
+          filterStartTimeFrom: Number.isFinite(filterStartTimeFrom)
+            ? filterStartTimeFrom
+            : undefined,
+          filterEndTimeTo: Number.isFinite(filterEndTimeTo) ? filterEndTimeTo : undefined,
+          filterTestPlan: query[MANUAL_LAUNCHES_FILTER_URL_KEYS.TEST_PLAN] || undefined,
+          filterCompositeAttribute: resolveFilterCompositeAttributeForApi(query),
+        }),
+      );
+    },
+  },
+  [MANUAL_LAUNCH_EXECUTION_PAGE]: {
+    path: '/organizations/:organizationSlug/projects/:projectSlug/manualLaunches/:launchId/testCase/:testCaseId/execution/:executionId',
+    thunk: (dispatch, getState) => {
+      const state = getState();
+      const { launchId, executionId } = state.location?.payload || {};
+
+      if (launchId && executionId) {
+        dispatch(getManualLaunchAction({ launchId }));
+        dispatch(getManualLaunchFoldersAction({ launchId }));
+        dispatch(getManualLaunchExecutionAction({ launchId, executionId }));
+      }
+    },
+  },
+  [MANUAL_LAUNCH_DETAILS_PAGE]: {
+    path: '/organizations/:organizationSlug/projects/:projectSlug/manualLaunches/:launchId/:manualLaunchPageRoute*',
+    thunk: (dispatch, getState) => {
+      const state = getState();
+      const params = getManualLaunchDetailsFetchParams(state);
+      const { launchId, filterPriorities, filterTags, statusFilter } = params;
+
+      if (launchId) {
+        dispatch(getManualLaunchAction({ launchId }));
+
+        // Load folders
+        dispatch(
+          getManualLaunchFoldersAction({
+            launchId,
+            offset: 0,
+            limit: 100,
+            ...(filterPriorities && { filterPriorities }),
+            ...(filterTags && { filterTags }),
+            ...(statusFilter && { statusFilter }),
+          }),
+        );
+
+        const executionsParams = buildGetManualLaunchTestCaseExecutionsParams(params);
+
+        if (executionsParams) {
+          dispatch(getManualLaunchTestCaseExecutionsAction(executionsParams));
+        }
+      }
+    },
+  },
   [PROJECT_LAUNCHES_PAGE]: {
-    path: '/:projectId/launches/:filterId',
+    path: '/organizations/:organizationSlug/projects/:projectSlug/launches/:filterId',
     thunk: (dispatch) => {
       dispatch(setDebugMode(false));
       dispatch(setLevelAction(''));
@@ -214,40 +476,40 @@ const routesMap = {
     },
   },
   [HISTORY_PAGE]: {
-    path: '/:projectId/launches/:filterId/:testItemIds+/history',
+    path: '/organizations/:organizationSlug/projects/:projectSlug/launches/:filterId/:testItemIds+/history',
     thunk: (dispatch) => {
       dispatch(fetchHistoryPageInfoAction());
     },
   },
   [UNIQUE_ERRORS_PAGE]: {
-    path: '/:projectId/launches/:filterId/:testItemIds+/uniqueErrors',
+    path: '/organizations/:organizationSlug/projects/:projectSlug/launches/:filterId/:testItemIds+/uniqueErrors',
     thunk: (dispatch) => {
       dispatch(fetchClustersAction());
     },
   },
   PROJECT_FILTERS_PAGE: {
-    path: '/:projectId/filters',
+    path: '/organizations/:organizationSlug/projects/:projectSlug/filters',
     thunk: (dispatch, getState, { action }) => {
       const location = action.meta?.location || {};
       dispatch(fetchFiltersPageAction(location.kind !== 'load'));
     },
   },
   [PROJECT_LOG_PAGE]: {
-    path: '/:projectId/launches/:filterId/:testItemIds+/log',
+    path: '/organizations/:organizationSlug/projects/:projectSlug/launches/:filterId/:testItemIds+/log',
     thunk: (dispatch) => {
       dispatch(setDebugMode(false));
       dispatch(fetchLogPageData());
     },
   },
   [PROJECT_USERDEBUG_LOG_PAGE]: {
-    path: '/:projectId/userdebug/:filterId/:testItemIds+/log',
+    path: '/organizations/:organizationSlug/projects/:projectSlug/userdebug/:filterId/:testItemIds+/log',
     thunk: (dispatch) => {
       dispatch(setDebugMode(true));
       dispatch(fetchLogPageData());
     },
   },
   [PROJECT_USERDEBUG_PAGE]: {
-    path: '/:projectId/userdebug/:filterId',
+    path: '/organizations/:organizationSlug/projects/:projectSlug/userdebug/:filterId',
     thunk: (dispatch) => {
       dispatch(setDebugMode(true));
       dispatch(setLevelAction(''));
@@ -255,62 +517,137 @@ const routesMap = {
     },
   },
   PROJECT_USERDEBUG_TEST_ITEM_PAGE: {
-    path: '/:projectId/userdebug/:filterId/:testItemIds+',
+    path: '/organizations/:organizationSlug/projects/:projectSlug/userdebug/:filterId/:testItemIds+',
     thunk: (dispatch) => {
       dispatch(setDebugMode(true));
       dispatch(fetchTestItemsAction());
     },
   },
   PROJECT_MEMBERS_PAGE: {
-    path: '/:projectId/members',
+    path: '/organizations/:organizationSlug/projects/:projectSlug/members',
     thunk: (dispatch) => dispatch(fetchMembersAction()),
   },
-  PROJECT_SETTINGS_PAGE: redirectRoute('/:projectId/settings', (payload) => ({
-    type: PROJECT_SETTINGS_TAB_PAGE,
-    payload: { ...payload, settingsTab: GENERAL },
-  })),
-  [PROJECT_SETTINGS_TAB_PAGE]: `/:projectId/settings/:settingsTab/:subTab*`,
-  PROJECT_SANDBOX_PAGE: '/:projectId/sandbox',
+  PROJECT_SETTINGS_PAGE: redirectRoute(
+    '/organizations/:organizationSlug/projects/:projectSlug/settings',
+    (payload) => ({
+      type: PROJECT_SETTINGS_TAB_PAGE,
+      payload: { ...payload, settingsTab: GENERAL },
+    }),
+  ),
+  [PROJECT_SETTINGS_TAB_PAGE]: {
+    path: `/organizations/:organizationSlug/projects/:projectSlug/settings/:settingsTab/:subTab*`,
+    thunk: (dispatch, getState) => {
+      const state = getState();
+      const {
+        location: { payload },
+      } = state;
+      dispatch(prepareActiveOrganizationSettingsAction(payload));
+      const projectKey = activeProjectKeySelector(state);
+      if (projectKey) {
+        dispatch(fetchProjectAction(projectKey, true));
+      }
+    },
+  },
+  PROJECT_SANDBOX_PAGE: '/organizations/:organizationSlug/projects/:projectSlug/sandbox',
   [TEST_ITEM_PAGE]: {
-    path: '/:projectId/launches/:filterId/:testItemIds+',
+    path: '/organizations/:organizationSlug/projects/:projectSlug/launches/:filterId/:testItemIds+',
     thunk: (dispatch) => {
       dispatch(setDebugMode(false));
       dispatch(fetchTestItemsAction());
     },
   },
-  [PLUGIN_UI_EXTENSION_ADMIN_PAGE]: '/administrate/plugin/:pluginPage/:pluginRoute*',
-  [PROJECT_PLUGIN_PAGE]: '/:projectId/plugin/:pluginPage/:pluginRoute*',
+  [PLUGIN_UI_EXTENSION_ADMIN_PAGE]: '/plugin/:pluginPage/:pluginRoute*',
+  [PROJECT_PLUGIN_PAGE]:
+    '/organizations/:organizationSlug/projects/:projectSlug/plugin/:pluginPage/:pluginRoute*',
+  [TEST_CASE_LIBRARY_PAGE]: {
+    path: '/organizations/:organizationSlug/projects/:projectSlug/testLibrary/:testCasePageRoute*',
+    thunk: (dispatch, getState) => {
+      const state = getState();
+      const match = state.location.payload?.testCasePageRoute?.match(/test-cases\/(\d+)/);
+      const testCaseId = match ? match[1] : null;
+
+      if (testCaseId) {
+        dispatch({ type: GET_TEST_CASE_DETAILS, payload: { testCaseId } });
+      }
+
+      dispatch(getFoldersAction());
+    },
+  },
+  [PRODUCT_VERSIONS_PAGE]: {
+    path: '/organizations/:organizationSlug/projects/:projectSlug/productVersions',
+    thunk: (dispatch, getState) => {
+      const { location } = getState();
+      dispatch(
+        redirect({
+          type: PRODUCT_VERSIONS_TAB_PAGE,
+          payload: { ...location.payload, subPage: LIST_OF_VERSIONS },
+        }),
+      );
+    },
+  },
+  [PRODUCT_VERSIONS_TAB_PAGE]: {
+    path: '/organizations/:organizationSlug/projects/:projectSlug/productVersions/:subPage',
+  },
+  [PRODUCT_VERSION_PAGE]: {
+    path: '/organizations/:organizationSlug/projects/:projectSlug/productVersions/listOfVersions/:productVersionId',
+    thunk: (dispatch, getState) => {
+      const { location } = getState();
+      dispatch(
+        redirect({
+          type: PRODUCT_VERSION_TAB_PAGE,
+          payload: { ...location.payload, productVersionTab: DOCUMENTATION },
+        }),
+      );
+    },
+  },
+  [PRODUCT_VERSION_TAB_PAGE]: {
+    path: '/organizations/:organizationSlug/projects/:projectSlug/productVersions/listOfVersions/:productVersionId/:productVersionTab',
+  },
+
+  [PROJECT_MILESTONES_PAGE]: {
+    path: '/organizations/:organizationSlug/projects/:projectSlug/milestones',
+    thunk: (dispatch, getState) => {
+      const state = getState();
+      const { offset, limit } = getRouterParams({
+        namespace: MILESTONES_NAMESPACE,
+        defaultParams: defaultMilestoneQueryParams,
+        state,
+      });
+
+      dispatch(getMilestonesAction({ offset, limit }));
+    },
+  },
+  [PROJECT_TEST_PLAN_DETAILS_PAGE]: {
+    path: '/organizations/:organizationSlug/projects/:projectSlug/milestones/:testPlanId/:testPlanRoute*',
+    thunk: (dispatch, getState) => {
+      const state = getState();
+      const testPlanId = state.location?.payload?.testPlanId;
+      const testPlanRoute = state.location?.payload?.testPlanRoute;
+      const match = testPlanRoute?.match(/folder\/(\d+)/);
+      const folderId = match ? match[1] : null;
+      const { offset, limit } = getRouterParams({
+        namespace: TEST_PLAN_TEST_CASES_NAMESPACE,
+        defaultParams: defaultTestPlanTestCasesQueryParams,
+        state,
+      });
+
+      const testCasesSearchParams = state.location?.query?.testCasesSearchParams;
+
+      dispatch(getTestPlanAction({ testPlanId, folderId, offset, limit, testCasesSearchParams }));
+    },
+  },
 };
 
+export const ROUTE_ACTION_TYPES = new Set(Object.keys(routesMap));
+
 export const onBeforeRouteChange = (dispatch, getState, { action }) => {
-  const {
-    type: nextPageType,
-    payload: { projectId: hashProject },
-  } = action;
+  const { type: nextPageType } = action;
+
   const currentPageType = pageSelector(getState());
   const authorized = isAuthorizedSelector(getState());
-  let projectId = activeProjectSelector(getState());
-  const accountRole = userAccountRoleSelector(getState());
-  const userInfo = userInfoSelector(getState());
-  const userProjects = userInfo ? userInfo.assignedProjects : {};
-  const isAdmin = accountRole === ADMINISTRATOR;
-  const isAdminNewPageType = !!adminPageNames[nextPageType];
-  const isAdminCurrentPageType = !!adminPageNames[currentPageType];
-
-  if (
-    hashProject &&
-    userProjects &&
-    (hashProject !== projectId || isAdminCurrentPageType) &&
-    !isAdminNewPageType
-  ) {
-    if (hashProject in userProjects || isAdmin) {
-      dispatch(setActiveProjectAction(hashProject));
-      dispatch(fetchProjectAction(hashProject));
-      projectId = hashProject;
-    } else if (hashProject !== projectId) {
-      dispatch(redirect({ ...action, payload: { ...action.payload, projectId }, meta: {} }));
-    }
-  }
+  const user = userInfoSelector(getState());
+  const userId = user?.userId;
+  const isAdmin = isAdminSelector(getState());
 
   if (nextPageType !== currentPageType) {
     dispatch(clearPageStateAction(currentPageType, nextPageType));
@@ -318,24 +655,28 @@ export const onBeforeRouteChange = (dispatch, getState, { action }) => {
 
   const page = pageRendering[nextPageType];
   const redirectPath = actionToPath(action, routesMap, qs);
+
+  if (redirectPath) {
+    setSessionItem(LAST_VISITED_PATH_STORAGE_KEY, redirectPath);
+  }
+
   if (page) {
     const { access } = page;
+
     switch (access) {
       case ANONYMOUS_ACCESS:
         if (authorized) {
-          dispatch(
-            redirect({
-              type: PROJECT_DASHBOARD_PAGE,
-              payload: {
-                projectId,
-              },
-            }),
-          );
+          const redirectRoute = getLastPathRoute(userId) || getRedirectRoute(user);
+          dispatch(redirect(redirectRoute));
         }
         break;
       case ADMIN_ACCESS:
         if (authorized && !isAdmin) {
-          dispatch(redirect({ type: PROJECT_DASHBOARD_PAGE, payload: { projectId } }));
+          dispatch(
+            redirect({
+              type: ORGANIZATIONS_PAGE,
+            }),
+          );
         } else if (!authorized) {
           setSessionItem(ANONYMOUS_REDIRECT_PATH_STORAGE_KEY, redirectPath);
           dispatch(
@@ -344,7 +685,7 @@ export const onBeforeRouteChange = (dispatch, getState, { action }) => {
             }),
           );
         } else {
-          updateStorageItem(`${userInfo.userId}_settings`, {
+          updateStorageItem(`${userId}_settings`, {
             lastPath: redirectPath,
           });
         }
@@ -361,7 +702,7 @@ export const onBeforeRouteChange = (dispatch, getState, { action }) => {
             }),
           );
         } else {
-          updateStorageItem(`${userInfo.userId}_settings`, {
+          updateStorageItem(`${userId}_settings`, {
             lastPath: redirectPath,
           });
         }

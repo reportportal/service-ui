@@ -14,7 +14,8 @@
  * limitations under the License.
  */
 
-export { fetchInitialDataAction } from './actionCreators';
+export { fetchInitialDataAction, setServiceAvailabilityAction } from './actionCreators';
 export { initialDataSagas } from './sagas';
-export { initialDataReadyReducer } from './reducer';
-export { initialDataReadySelector } from './selectors';
+export { initialDataReadyReducer, serviceAvailabilityReducer } from './reducer';
+export { initialDataReadySelector, serviceAvailabilitySelector } from './selectors';
+export { LAST_VISITED_PATH_STORAGE_KEY } from './constants';

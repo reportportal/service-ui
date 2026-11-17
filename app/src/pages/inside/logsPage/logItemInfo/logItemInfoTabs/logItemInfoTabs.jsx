@@ -20,6 +20,7 @@ import { connect } from 'react-redux';
 import { defineMessages, injectIntl } from 'react-intl';
 import classNames from 'classnames/bind';
 import track from 'react-tracking';
+import { ExtensionLoader } from 'components/extensionLoader';
 import {
   lastLogActivitySelector,
   activeRetrySelector,
@@ -28,9 +29,17 @@ import {
   activeLogSelector,
   activeTabIdSelector,
   setActiveTabIdAction,
+  LOG_MESSAGE_FILTER_KEY,
+  MOBITRU_JUMP_LOG_INFO_KEY,
+  NAMESPACE,
 } from 'controllers/log';
+import { querySelector } from 'controllers/log/selectors';
+import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
 import { noLogsCollapsingSelector } from 'controllers/user';
+import { projectKeySelector } from 'controllers/project';
 import { fetchFirstAttachmentsAction, attachmentItemsSelector } from 'controllers/log/attachments';
+import { fetch } from 'common/utils/fetch';
+import { setStorageItem } from 'common/utils';
 import { SAUCE_LABS } from 'common/constants/pluginNames';
 import { LOG_PAGE_EVENTS } from 'components/main/analytics/events';
 import StackTraceIcon from 'common/img/stack-trace-inline.svg';
@@ -40,7 +49,9 @@ import ClockIcon from 'common/img/clock-inline.svg';
 import LogIcon from 'common/img/log-view-inline.svg';
 import { getSauceLabsConfig } from 'components/integrations/integrationProviders/sauceLabsIntegration/utils';
 import { availableIntegrationsByPluginNameSelector } from 'controllers/plugins';
+import { uiExtensionLogTabSelector } from 'controllers/plugins/uiExtensions';
 import { StackTrace } from 'pages/inside/common/stackTrace';
+import { LOGS_TAB } from '../../constants';
 import { SauceLabsIntegrationButton } from './sauceLabsIntegrationButton';
 import { InfoTabs } from '../infoTabs';
 import { LogItemDetails } from './logItemDetails';
@@ -49,6 +60,11 @@ import { Attachments } from './attachments';
 import { getActionMessage } from '../utils/getActionMessage';
 import styles from './logItemInfoTabs.scss';
 import { LogsGridWrapper } from '../../logsGridWrapper';
+import {
+  checkMobitruLogTabVisibility,
+  isMobitruVideoSubtreeTab,
+} from './utils/checkMobitruLogTabVisibility';
+import { resolveMobitruLogForJump } from './utils/resolveMobitruLogForJump';
 
 const cx = classNames.bind(styles);
 
@@ -73,9 +89,17 @@ const messages = defineMessages({
     id: 'LogItemInfoTabs.historyTab',
     defaultMessage: 'History of actions',
   },
+  jumpToLogFailed: {
+    id: 'LogItemInfoTabs.jumpToLogFailed',
+    defaultMessage: 'Target log could not be found',
+  },
 });
 
 const ATTACHMENTS_TAB_ID = 'attachments';
+
+const LOG_TAB_ELEMENT_EVENTS = {
+  remote_device: LOG_PAGE_EVENTS.REMOTE_DEVICE_TAB,
+};
 
 @injectIntl
 @connect(
@@ -89,10 +113,14 @@ const ATTACHMENTS_TAB_ID = 'attachments';
     attachments: attachmentItemsSelector(state),
     activeTabId: activeTabIdSelector(state),
     noLogsCollapsing: noLogsCollapsingSelector(state),
+    logTabExtensions: uiExtensionLogTabSelector(state),
+    projectKey: projectKeySelector(state),
+    logQuery: querySelector(state, NAMESPACE),
   }),
   {
     fetchFirstAttachments: fetchFirstAttachmentsAction,
     setActiveTabId: setActiveTabIdAction,
+    showNotification,
   },
 )
 @track()
@@ -117,20 +145,31 @@ export class LogItemInfoTabs extends Component {
     }).isRequired,
     activeTabId: PropTypes.string,
     noLogsCollapsing: PropTypes.bool,
+    logTabExtensions: PropTypes.array,
+    projectKey: PropTypes.string,
+    logQuery: PropTypes.object,
+    showNotification: PropTypes.func,
   };
 
   static defaultProps = {
     lastActivity: null,
     fetchFirstAttachments: () => {},
     attachments: [],
-    activeTabId: 'logs',
+    activeTabId: LOGS_TAB,
     setActiveTabId: () => {},
     noLogsCollapsing: false,
+    logTabExtensions: [],
+    projectKey: '',
+    logQuery: {},
+    showNotification: () => {},
   };
 
   state = {
     activeTabId: null,
+    logTabVisibility: {},
   };
+
+  logTabVisibilityRequestId = 0;
 
   static getDerivedStateFromProps(props) {
     return props.loading
@@ -145,6 +184,7 @@ export class LogItemInfoTabs extends Component {
     if (activeTabId === ATTACHMENTS_TAB_ID) {
       fetchFirstAttachments();
     }
+    this.fetchLogTabVisibility();
   }
 
   componentDidUpdate(prevProps) {
@@ -154,6 +194,10 @@ export class LogItemInfoTabs extends Component {
       isSauceLabsIntegrationView,
       loading,
       logId,
+      retryId,
+      activeRetry,
+      projectKey,
+      logTabExtensions,
     } = this.props;
     if (loading && isSauceLabsIntegrationView) {
       this.props.onToggleSauceLabsIntegrationView();
@@ -161,9 +205,109 @@ export class LogItemInfoTabs extends Component {
     if (prevProps.logId !== logId && activeTabId === ATTACHMENTS_TAB_ID) {
       fetchFirstAttachments();
     }
+    if (
+      prevProps.retryId !== retryId ||
+      prevProps.logId !== logId ||
+      prevProps.activeRetry?.path !== activeRetry?.path ||
+      prevProps.projectKey !== projectKey ||
+      prevProps.logTabExtensions !== logTabExtensions
+    ) {
+      this.fetchLogTabVisibility();
+    }
   }
 
+  getLogTabId = (extension) => `log-tab:${extension.pluginName}:${extension.name}`;
+
+  fetchLogTabVisibility = () => {
+    const { activeRetry, projectKey, logId, retryId, logTabExtensions } = this.props;
+    const mobitruExtensions = logTabExtensions.filter(isMobitruVideoSubtreeTab);
+
+    this.logTabVisibilityRequestId += 1;
+
+    if (!mobitruExtensions.length || !activeRetry?.path || !projectKey) {
+      return;
+    }
+
+    const requestId = this.logTabVisibilityRequestId;
+    const excludedRetryParentId = logId === retryId ? retryId : undefined;
+    const loadingState = mobitruExtensions.reduce(
+      (acc, extension) => ({
+        ...acc,
+        [this.getLogTabId(extension)]: 'loading',
+      }),
+      {},
+    );
+
+    this.setState((prevState) => ({
+      logTabVisibility: {
+        ...prevState.logTabVisibility,
+        ...loadingState,
+      },
+    }));
+
+    mobitruExtensions.forEach((extension) => {
+      const tabId = this.getLogTabId(extension);
+
+      checkMobitruLogTabVisibility({
+        fetchFn: fetch,
+        projectKey,
+        activeRetryPath: activeRetry.path,
+        excludedRetryParentId,
+      })
+        .then((isVisible) => {
+          if (requestId !== this.logTabVisibilityRequestId) {
+            return;
+          }
+
+          this.setState((prevState) => ({
+            logTabVisibility: {
+              ...prevState.logTabVisibility,
+              [tabId]: isVisible,
+            },
+          }));
+
+          if (!isVisible && this.props.activeTabId === tabId) {
+            this.props.setActiveTabId(LOGS_TAB);
+          }
+        })
+        .catch(() => {
+          if (requestId !== this.logTabVisibilityRequestId) {
+            return;
+          }
+
+          this.setState((prevState) => ({
+            logTabVisibility: {
+              ...prevState.logTabVisibility,
+              [tabId]: false,
+            },
+          }));
+
+          if (this.props.activeTabId === tabId) {
+            this.props.setActiveTabId(LOGS_TAB);
+          }
+        });
+    });
+  };
+
+  isLogTabVisible = (extension) => {
+    if (isMobitruVideoSubtreeTab(extension)) {
+      const tabId = this.getLogTabId(extension);
+      return this.state.logTabVisibility[tabId] === true;
+    }
+
+    if (extension.payload?.visibilityAttributeKey) {
+      const { logItem } = this.props;
+      return logItem.attributes?.some(
+        (attr) => attr.key === extension.payload.visibilityAttributeKey,
+      );
+    }
+
+    return true;
+  };
+
   componentWillUnmount() {
+    this.logTabVisibilityRequestId += 1;
+
     if (this.props.isSauceLabsIntegrationView) {
       this.props.onToggleSauceLabsIntegrationView();
     }
@@ -190,12 +334,61 @@ export class LogItemInfoTabs extends Component {
     const { retryId, logId } = this.props;
     return retryId === logId;
   };
+
+  handleJumpToMobitruLog = async (logId, itemId) => {
+    const {
+      projectKey,
+      retryId,
+      logQuery,
+      setActiveTabId,
+      showNotification: showNotificationAction,
+      intl: { formatMessage },
+      tracking,
+    } = this.props;
+
+    tracking.trackEvent(LOG_PAGE_EVENTS.clickJumpToLog('remote_device'));
+
+    try {
+      const logInfo = await resolveMobitruLogForJump({
+        fetchFn: fetch,
+        projectKey,
+        retryId,
+        itemId,
+        logId,
+        logQuery,
+      });
+
+      if (!logInfo?.pagesLocation?.length) {
+        showNotificationAction({
+          message: formatMessage(messages.jumpToLogFailed),
+          type: NOTIFICATION_TYPES.ERROR,
+        });
+        return;
+      }
+
+      setStorageItem(MOBITRU_JUMP_LOG_INFO_KEY, {
+        logInfo,
+        logId,
+        shouldClearSearchFilter: Boolean(logQuery[LOG_MESSAGE_FILTER_KEY]),
+      });
+      setActiveTabId(LOGS_TAB);
+    } catch {
+      showNotificationAction({
+        message: formatMessage(messages.jumpToLogFailed),
+        type: NOTIFICATION_TYPES.ERROR,
+      });
+    }
+  };
+
   makeTabs = () => {
     const {
       intl: { formatMessage },
       activeRetry,
       logItem,
       noLogsCollapsing,
+      logTabExtensions,
+      logId,
+      retryId,
     } = this.props;
     const history = {
       id: 'history',
@@ -221,7 +414,7 @@ export class LogItemInfoTabs extends Component {
         },
       },
       {
-        id: 'logs',
+        id: LOGS_TAB,
         label: formatMessage(messages.logsTab),
         icon: LogIcon,
         stroked: true,
@@ -253,12 +446,38 @@ export class LogItemInfoTabs extends Component {
     if (this.isHistoryTabVisible()) {
       tabs.push(history);
     }
+
+    logTabExtensions.forEach((extension) => {
+      if (!this.isLogTabVisible(extension)) {
+        return;
+      }
+
+      const tabId = this.getLogTabId(extension);
+      const tabElementName = extension.payload?.tabElementName;
+      const excludedRetryParentId = logId === retryId ? retryId : undefined;
+      const isMobitruTab = isMobitruVideoSubtreeTab(extension);
+      tabs.push({
+        id: tabId,
+        label: extension.name,
+        icon: extension.payload.icon,
+        eventInfo: LOG_TAB_ELEMENT_EVENTS[tabElementName],
+        component: ExtensionLoader,
+        componentProps: {
+          extension,
+          logItem,
+          activeRetry,
+          excludedRetryParentId,
+          ...(isMobitruTab && { onJumpToLog: this.handleJumpToMobitruLog }),
+        },
+      });
+    });
+
     return tabs;
   };
 
   toggleSauceLabsIntegrationContent = () => {
     // TODO: Handle SauceLabs integration as independent tab
-    this.props.setActiveTabId('logs');
+    this.props.setActiveTabId(LOGS_TAB);
     this.props.onToggleSauceLabsIntegrationView();
   };
 
@@ -287,10 +506,13 @@ export class LogItemInfoTabs extends Component {
 
   getActiveTabId = (tabs) => {
     const { activeTabId } = this.props;
-    if (tabs.find((tab) => tab.id === activeTabId)) {
+    if (tabs.some((tab) => tab.id === activeTabId)) {
       return activeTabId;
     }
-    return null;
+    if (tabs.some((tab) => tab.id === LOGS_TAB)) {
+      return LOGS_TAB;
+    }
+    return tabs[0]?.id ?? null;
   };
 
   render() {

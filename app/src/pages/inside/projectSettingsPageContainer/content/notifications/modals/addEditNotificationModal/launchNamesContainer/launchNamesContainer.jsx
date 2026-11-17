@@ -19,12 +19,14 @@ import PropTypes from 'prop-types';
 import { useSelector } from 'react-redux';
 import { defineMessages, useIntl } from 'react-intl';
 import classNames from 'classnames/bind';
+
 import { URLS } from 'common/urls';
-import { projectIdSelector } from 'controllers/pages';
-import { AsyncMultipleAutocomplete } from 'componentLibrary/autocompletes/asyncMultipleAutocomplete';
-import { SystemMessage } from 'componentLibrary/systemMessage';
+import { AsyncMultipleAutocompleteV2 } from 'componentLibrary/autocompletes/asyncMultipleAutocompleteV2';
+import { SystemMessage } from '@reportportal/ui-kit';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
-import { isExistingLaunchNamesSelector } from 'controllers/project/selectors';
+import { existingLaunchNamesSelector } from 'controllers/project/selectors';
+import { projectKeySelector } from 'controllers/project';
+
 import styles from './launchNamesContainer.scss';
 
 const cx = classNames.bind(styles);
@@ -52,9 +54,9 @@ const messages = defineMessages({
 
 export const LaunchNamesContainer = ({ highlightUnStoredItem, value, ...rest }) => {
   const { formatMessage } = useIntl();
-  const activeProject = useSelector(projectIdSelector);
+  const projectKey = useSelector(projectKeySelector);
   const [showMessage, setShowMessage] = useState(false);
-  const existingItemsMap = useSelector(isExistingLaunchNamesSelector);
+  const existingItemsMap = useSelector(existingLaunchNamesSelector);
 
   const containsNonExistingName = (names, itemsMap) => names.some((name) => !itemsMap[name]);
 
@@ -64,17 +66,20 @@ export const LaunchNamesContainer = ({ highlightUnStoredItem, value, ...rest }) 
 
   const handleSystemMessage = (items, storedItems) =>
     highlightUnStoredItem && setShowMessage(containsNonExistingName(items, storedItems));
+
   return (
     <>
-      <AsyncMultipleAutocomplete
-        getURI={URLS.launchNameSearch(activeProject)}
+      <AsyncMultipleAutocompleteV2
+        getURI={URLS.launchNameSearch(projectKey)}
         createWithoutConfirmation
         creatable
+        isDropdownMode
         editable
         handleUnStoredItemCb={handleSystemMessage}
         existingItemsMap={existingItemsMap}
         highlightUnStoredItem={highlightUnStoredItem}
         value={value}
+        shouldShowEmptyListMessage={false}
         {...rest}
       />
       <span className={cx('helper-text')}>{formatMessage(messages.launchNamesNote)}</span>

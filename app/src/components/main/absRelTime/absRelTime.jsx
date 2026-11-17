@@ -31,6 +31,7 @@ class AbsRelTime extends Component {
     setStartTimeFormatAction: PropTypes.func.isRequired,
     customClass: PropTypes.string,
     styles: PropTypes.object,
+    onClick: PropTypes.func,
   };
 
   static defaultProps = {
@@ -38,9 +39,11 @@ class AbsRelTime extends Component {
     startTimeFormat: START_TIME_FORMAT_RELATIVE,
     customClass: '',
     styles: {},
+    onClick: () => {},
   };
 
-  toggleFormat = () => {
+  toggleFormat = (event) => {
+    this.props.onClick(event);
     this.props.setStartTimeFormatAction(
       this.isRelative() ? START_TIME_FORMAT_ABSOLUTE : START_TIME_FORMAT_RELATIVE,
     );

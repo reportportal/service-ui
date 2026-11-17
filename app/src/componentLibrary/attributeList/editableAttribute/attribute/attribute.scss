@@ -57,7 +57,6 @@
   font-family: $FONT-ROBOTO-MEDIUM;
   font-size: 13px;
   line-height: 18px;
-  text-overflow: ellipsis;
   white-space: nowrap;
   overflow: hidden;
   padding: 4px 8px;
@@ -129,7 +128,6 @@
     position: relative;
     @include label($COLOR--almost-black);
 
-    &:focus:not(.disabled),
     &:focus-visible:not(.disabled) {
       outline: none;
       @include draw-attribute-border(calc(100% - 10px), 66%, 3px, 3px);

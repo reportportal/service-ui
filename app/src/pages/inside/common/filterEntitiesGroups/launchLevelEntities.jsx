@@ -21,7 +21,6 @@ import PropTypes from 'prop-types';
 import { FILTER_DESCRIPTION_MAX_LENGTH } from 'common/constants/validation';
 import { commonValidators } from 'common/utils/validation';
 import { URLS } from 'common/urls';
-import { activeProjectSelector } from 'controllers/user';
 import {
   STATS_TOTAL,
   STATS_FAILED,
@@ -54,8 +53,7 @@ import {
   ENTITY_LAUNCH_TYPE,
 } from 'components/filterEntities/constants';
 import { LAUNCH_TYPES } from 'common/constants/launchTypes';
-import { defectTypesSelector } from 'controllers/project';
-import { LAUNCHES_PAGE_EVENTS } from 'components/main/analytics/events';
+import { defectTypesSelector, projectKeySelector } from 'controllers/project';
 import { getGroupedDefectTypesOptions } from 'pages/inside/common/utils';
 import { NO_DEFECT } from 'common/constants/defectTypes';
 import { launchOwnerLevelMessages } from 'common/constants/launchOwnerLevel';
@@ -170,7 +168,7 @@ const messages = defineMessages({
 @injectIntl
 @connect((state) => ({
   defectTypes: defectTypesSelector(state),
-  activeProject: activeProjectSelector(state),
+  projectKey: projectKeySelector(state),
 }))
 export class LaunchLevelEntities extends Component {
   static propTypes = {
@@ -178,8 +176,8 @@ export class LaunchLevelEntities extends Component {
     defectTypes: PropTypes.object.isRequired,
     filterValues: PropTypes.object,
     render: PropTypes.func.isRequired,
-    activeProject: PropTypes.string.isRequired,
     visibleFilters: PropTypes.array,
+    projectKey: PropTypes.string.isRequired,
   };
   static defaultProps = {
     filterValues: {},
@@ -187,7 +185,7 @@ export class LaunchLevelEntities extends Component {
   };
 
   getStaticEntities = () => {
-    const { intl, activeProject, visibleFilters } = this.props;
+    const { intl, visibleFilters, projectKey } = this.props;
     return [
       {
         id: ENTITY_NAME,
@@ -268,7 +266,7 @@ export class LaunchLevelEntities extends Component {
         active: visibleFilters.includes(ENTITY_USER),
         removable: true,
         customProps: {
-          getURI: URLS.launchOwnersSearch(activeProject),
+          getURI: URLS.launchOwnersSearch(projectKey),
           placeholder: intl.formatMessage(launchOwnerLevelMessages.ownerFilterPlaceholder),
         },
       },
@@ -282,9 +280,6 @@ export class LaunchLevelEntities extends Component {
         title: intl.formatMessage(messages.StartTimeTitle),
         active: visibleFilters.includes(ENTITY_START_TIME),
         removable: true,
-        customProps: {
-          events: LAUNCHES_PAGE_EVENTS.REFINE_FILTERS_PANEL_EVENTS.commonEvents,
-        },
       },
       {
         id: ENTITY_ATTRIBUTE,
@@ -296,7 +291,7 @@ export class LaunchLevelEntities extends Component {
         active: visibleFilters.includes(ENTITY_ATTRIBUTE),
         removable: true,
         customProps: {
-          projectId: activeProject,
+          projectKey,
           keyURLCreator: URLS.launchAttributeKeysSearch,
           valueURLCreator: URLS.launchAttributeValuesSearch,
         },

@@ -1,0 +1,325 @@
+/*
+ * Copyright 2026 EPAM Systems
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+import { useDispatch, useSelector } from 'react-redux';
+import { useIntl } from 'react-intl';
+import { reduxForm, getFormValues, SubmissionError } from 'redux-form';
+import { isString } from 'es-toolkit';
+import DOMPurify from 'dompurify';
+import { Modal } from '@reportportal/ui-kit';
+import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
+import { EMAIL } from 'common/constants/pluginNames';
+import { URLS } from 'common/urls';
+import { fetch } from 'common/utils/fetch';
+import { commonValidators, validateAsync } from 'common/utils/validation';
+import { showSuccessNotification } from 'controllers/notification';
+import { hideModalAction, showModalAction } from 'controllers/modal';
+import { Integration } from 'controllers/plugins';
+import { normalizeIntegrationItem } from 'controllers/plugins/utils';
+import { ModalButtonProps } from 'types/common';
+import { ApiError } from 'types/api';
+import { BoundValidator } from 'common/utils/validation/types';
+import { InviteUserProjectForm } from './inviteUserProjectForm';
+import { InviteUserOrganizationForm } from './inviteUserOrganizationForm/inviteUserOrganizationForm';
+import { InviteUserInstanceForm } from './inviteUserInstanceForm';
+import { MEMBER } from 'common/constants/projectRoles';
+import { activeOrganizationSelector } from 'controllers/organization';
+import { messages } from 'common/constants/localization/invitationsLocalization';
+import { fetchUserInfoAction, UserInfo, userInfoSelector } from 'controllers/user';
+import { InvitationStatus, Level } from './constants';
+import { ExternalUserInvitationModal } from '../../modals/externalUserInvitationModal';
+import { useInviteUser } from './hooks';
+import {
+  FormDataMap,
+  InvitationResponseData,
+  InviteProjectCondition,
+  InviteUserProps,
+  ModalProps,
+  InvitationRequestData,
+} from './types';
+import type { ComponentType, ReactNode } from 'react';
+import type { InjectedFormProps } from 'redux-form';
+import { Organization } from '../../assignments/organizationAssignment';
+import { getFormName } from './utils';
+import {
+  createInviteUserFormInstance,
+  type InstanceFormInnerProps,
+} from './inviteUserModalForms';
+import styles from './inviteUserModal.scss';
+import { createClassnames } from 'common/utils';
+
+const cx = createClassnames(styles);
+
+function extractEmailString(rawEmail: unknown): string {
+  return isString(rawEmail)
+    ? rawEmail
+    : (rawEmail as { email?: string } | undefined)?.email ?? '';
+}
+
+function validateEmail(formData: { email?: unknown }): { email?: string } {
+  const emailStr = extractEmailString(formData.email);
+  const emailValidator: BoundValidator = commonValidators.emailInviteUserValidator();
+  return { email: emailValidator(emailStr.trim()) };
+}
+
+function validateProject(
+  formData: FormDataMap[Level.PROJECT],
+): { email?: string } {
+  return validateEmail(formData);
+}
+
+function validateOrganization(
+  formData: FormDataMap[Level.ORGANIZATION],
+): Record<string, unknown> {
+  const errors: Record<string, unknown> = validateEmail(formData);
+  if (formData.isAddingProject) {
+    errors.organization = 'Form is being edited';
+  }
+  return errors;
+}
+
+const asyncValidateOrganizationEmail = ({
+  email,
+  organization,
+}: FormDataMap[Level.ORGANIZATION]) => {
+  if (!organization?.id) {
+    return Promise.resolve();
+  }
+
+  return validateAsync.organizationUserEmailUnique(
+    organization.id,
+    extractEmailString(email).trim(),
+  );
+};
+
+const shouldAsyncValidateOrganizationEmail = ({
+  trigger,
+  syncValidationPasses,
+}: {
+  trigger: string;
+  syncValidationPasses: boolean;
+}) => {
+  if (!syncValidationPasses) {
+    return false;
+  }
+
+  return trigger !== 'submit';
+};
+
+type InviteUserFormInnerProps = InviteUserProps<Level> & { content: ReactNode };
+
+const InviteUserFormInner = (props: InviteUserFormInnerProps) => (
+  <InviteUser {...props} content={props.content} />
+);
+
+type FormInnerProps<FD> = InjectedFormProps<FD> & ModalProps<Level> & { content: ReactNode };
+
+const InviteUserFormInnerInstance = (props: InstanceFormInnerProps) => (
+  <InviteUser {...props} content={props.content} />
+);
+
+const InviteUserFormProject = reduxForm<FormDataMap[Level.PROJECT]>({
+  form: getFormName(Level.PROJECT),
+  validate: validateProject,
+  enableReinitialize: true,
+  shouldValidate: () => true,
+})(InviteUserFormInner as ComponentType<FormInnerProps<FormDataMap[Level.PROJECT]>>);
+
+const InviteUserFormOrganization = reduxForm<FormDataMap[Level.ORGANIZATION]>({
+  form: getFormName(Level.ORGANIZATION),
+  validate: validateOrganization as Parameters<
+    typeof reduxForm<FormDataMap[Level.ORGANIZATION]>
+  >[0]['validate'],
+  asyncValidate: asyncValidateOrganizationEmail,
+  asyncBlurFields: ['email'],
+  shouldAsyncValidate: shouldAsyncValidateOrganizationEmail,
+  enableReinitialize: true,
+})(InviteUserFormInner as ComponentType<FormInnerProps<FormDataMap[Level.ORGANIZATION]>>);
+
+const InviteUserFormInstance = createInviteUserFormInstance(InviteUserFormInnerInstance);
+
+const FORM_COMPONENTS = {
+  [Level.PROJECT]: InviteUserFormProject,
+  [Level.ORGANIZATION]: InviteUserFormOrganization,
+  [Level.INSTANCE]: InviteUserFormInstance,
+} as const;
+
+export const InviteUser = <L extends keyof FormDataMap>({
+  level,
+  onInvite,
+  content,
+  handleSubmit,
+  dirty,
+  invalid,
+  submitting,
+  projectId,
+  projectName,
+}: InviteUserProps<L>) => {
+  const { formatMessage } = useIntl();
+  const dispatch = useDispatch();
+  const { header, okButtonTitle, buildUserData, handleError } = useInviteUser(level, {
+    projectId,
+    projectName,
+  });
+  const currentUser = useSelector(userInfoSelector) as UserInfo;
+  const formValues = useSelector(getFormValues(getFormName(level))) as Record<string, unknown> | undefined;
+
+  const inviteUser = async (userData: InvitationRequestData, condition: InviteProjectCondition) => {
+    try {
+      const invitedUser = await fetch<InvitationResponseData>(URLS.userInvitations(), {
+        method: 'post',
+        data: userData,
+      });
+
+      onInvite?.(condition);
+
+      if (userData.email === currentUser.email) {
+        dispatch(fetchUserInfoAction());
+      }
+
+      return invitedUser;
+    } catch (err) {
+      handleError(err as ApiError, userData);
+
+      return null;
+    }
+  };
+
+  const completeInvite = async (formData: FormDataMap[L]) => {
+    const userData = buildUserData(formData) as InvitationRequestData;
+    const getCondition = (): InviteProjectCondition => {
+      if (level === Level.PROJECT) return 'without_project';
+      const hasWithProject = userData.organizations.some((org) => org.projects?.length > 0);
+      const hasWithoutProject = userData.organizations.some((org) => !org.projects?.length);
+      if (hasWithProject && hasWithoutProject) return 'with_project#without_project';
+      if (hasWithProject) return 'with_project';
+      return 'without_project';
+    };
+    const condition = getCondition();
+    const invitedUser = await inviteUser(userData, condition);
+
+    if (!invitedUser) {
+      return;
+    }
+
+    if (invitedUser?.status === InvitationStatus.PENDING) {
+      let isOrgEmailIntegrationAvailable = false;
+      if (level === Level.INSTANCE && userData.organizations?.length === 1) {
+        const { items = [] } = await fetch<{ items: Integration[] }>(
+          URLS.organizationIntegrations(userData.organizations[0].id),
+        ).catch(() => ({ items: [] }));
+        isOrgEmailIntegrationAvailable = items
+          .map(normalizeIntegrationItem)
+          .some((item: Integration) => item.integrationType?.name === EMAIL && item.enabled);
+      }
+      dispatch(
+        showModalAction({
+          component: (
+            <ExternalUserInvitationModal
+              email={invitedUser.email}
+              link={invitedUser.link}
+              header={header}
+              isOrgEmailIntegrationAvailable={isOrgEmailIntegrationAvailable}
+            />
+          ),
+        }),
+      );
+    } else {
+      const message = formatMessage(messages.memberWasInvited, {
+        b: (innerData) => DOMPurify.sanitize(`<b>${innerData.join('')}</b>`),
+        name: invitedUser.full_name,
+      });
+      dispatch(showSuccessNotification({ message }));
+      dispatch(hideModalAction());
+    }
+  };
+
+  const inviteUserAndCloseModal = async (formData: FormDataMap[L]) => {
+    if (level === Level.ORGANIZATION) {
+      const orgFormData = formData as FormDataMap[Level.ORGANIZATION];
+      const { id: organizationId } = orgFormData.organization ?? {};
+
+      if (organizationId != null) {
+        try {
+          await validateAsync.organizationUserEmailUnique(
+            organizationId,
+            extractEmailString(orgFormData.email).trim(),
+          );
+        } catch (error: unknown) {
+          throw new SubmissionError(error);
+        }
+      }
+    }
+
+    return completeInvite(formData);
+  };
+
+  const okButton: ModalButtonProps = {
+    children: okButtonTitle,
+    onClick: handleSubmit(inviteUserAndCloseModal) as () => void,
+    disabled: !dirty || invalid || submitting,
+    'data-automation-id': 'submitButton',
+  };
+
+  const cancelButton: ModalButtonProps = {
+    children: formatMessage(COMMON_LOCALE_KEYS.CANCEL),
+    'data-automation-id': 'cancelButton',
+  };
+
+  const isSomeFieldFilled = [
+    formValues?.email,
+    (formValues?.organizations as unknown[] | undefined)?.length > 0,
+  ].some((value) => !!value);
+
+  return (
+    <Modal
+      title={header}
+      okButton={okButton}
+      cancelButton={cancelButton}
+      onClose={() => dispatch(hideModalAction())}
+      size="large"
+      className={cx('modal')}
+      allowCloseOutside={!isSomeFieldFilled}
+      scrollable
+    >
+      <div className={cx('modal-content')}>{content}</div>
+    </Modal>
+  );
+};
+
+const FORM_CONTENT = {
+  [Level.PROJECT]: <InviteUserProjectForm />,
+  [Level.ORGANIZATION]: <InviteUserOrganizationForm />,
+  [Level.INSTANCE]: <InviteUserInstanceForm />,
+} as const;
+
+export const InviteUserModal = <L extends keyof FormDataMap>(props: ModalProps<L>) => {
+  const { id, name, type } = useSelector(activeOrganizationSelector) as Organization;
+  const level = props.level;
+
+  let initialValues: Record<string, unknown> = {};
+  if (level === Level.ORGANIZATION) {
+    const organization: Organization = { id, name, type, role: MEMBER, projects: [] };
+    initialValues = { organization };
+  }
+
+  const FormComponent = FORM_COMPONENTS[level] as unknown as ComponentType<
+    ModalProps<L> & { content: ReactNode; initialValues?: Record<string, unknown> }
+  >;
+  return (
+    <FormComponent {...props} content={FORM_CONTENT[level]} initialValues={initialValues} />
+  );
+};

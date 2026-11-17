@@ -22,18 +22,23 @@ const InnerComponent = ({
   children,
   dumbOnBlur = false,
   input: { onChange, onBlur, onFocus, value, name },
-  meta: { error, active, touched, asyncValidating },
+  meta: { error, submitError, submitFailed, active, touched, asyncValidating },
   ...rest
 }) =>
   cloneElement(children, {
-    onChange,
+    onChange: (...args) => {
+      onChange(...args);
+      if (typeof children.props.onChange === 'function') {
+        children.props.onChange(...args);
+      }
+    },
     onBlur: dumbOnBlur ? () => {} : onBlur,
     onFocus,
     value,
     name,
-    error,
+    error: error || submitError,
     active,
-    touched,
+    touched: touched || submitFailed,
     asyncValidating,
     ...rest,
   });

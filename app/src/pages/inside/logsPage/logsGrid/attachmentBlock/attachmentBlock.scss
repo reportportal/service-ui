@@ -45,6 +45,12 @@
   }
 }
 
+.loader {
+  height: 25px;
+  width: 25px;
+  cursor: default;
+}
+
 .attachment-icon {
   cursor: pointer;
   display: flex;

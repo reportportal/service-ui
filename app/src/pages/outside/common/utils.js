@@ -14,15 +14,75 @@
  * limitations under the License.
  */
 
-import { UAT_API_PATH } from 'common/urls';
+import { LDAP } from 'common/constants/pluginNames';
+import { API_PATH } from 'common/urls';
+import { redirect } from 'redux-first-router';
+import { LOGIN_PAGE } from 'controllers/pages';
+
+export const isLdapAuthType = (authType) => authType?.toLowerCase() === LDAP;
+
+export const isSoleLdapAuth = (externalAuth = {}) => {
+  const authTypes = Object.keys(externalAuth);
+  return authTypes.length === 1 && isLdapAuthType(authTypes[0]);
+};
+
+export const hasMultipleAuthProviders = (val) =>
+  Boolean(val?.providers && Object.keys(val.providers).length > 1);
+
+export const shouldTrackLoginButtonClick = (authType, val) =>
+  !isLdapAuthType(authType) && !hasMultipleAuthProviders(val);
 
 export const normalizePathWithPrefix = (path) => {
-  if (path.indexOf(UAT_API_PATH) === -1) {
-    return `${UAT_API_PATH}${path}`;
+  if (path.indexOf(API_PATH) === -1) {
+    return `${API_PATH}${path}`;
   }
   return path;
 };
 
 export const setWindowLocationToNewPath = (path) => {
   window.location = path;
+};
+
+const SSO_AUTH_REDIRECT_RESET_MS = 5000;
+
+export const startSsoAuthFlow = ({ dispatch, authType, val, onExternalRedirect, onError }) => {
+  const noop = () => {};
+
+  if (!val) {
+    onError?.();
+    return noop;
+  }
+
+  if (isLdapAuthType(authType)) {
+    dispatch(redirect({ type: LOGIN_PAGE, payload: { query: { ldapLogin: 'true' } } }));
+    return noop;
+  }
+
+  if (hasMultipleAuthProviders(val)) {
+    dispatch(redirect({ type: LOGIN_PAGE, payload: { query: { multipleAuth: authType } } }));
+    return noop;
+  }
+
+  const path = val.path || (val.providers && Object.values(val.providers)[0]);
+
+  if (!path) {
+    onError?.();
+    return noop;
+  }
+
+  try {
+    onExternalRedirect?.();
+    setWindowLocationToNewPath(normalizePathWithPrefix(path));
+
+    if (!onError) {
+      return noop;
+    }
+
+    const timeoutId = window.setTimeout(onError, SSO_AUTH_REDIRECT_RESET_MS);
+
+    return () => window.clearTimeout(timeoutId);
+  } catch {
+    onError?.();
+    return noop;
+  }
 };

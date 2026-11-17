@@ -16,13 +16,13 @@
 
 import PropTypes from 'prop-types';
 import { useSelector } from 'react-redux';
-import { activeProjectSelector } from 'controllers/user';
+import { projectKeySelector } from 'controllers/project';
 import { EditableAttributeList } from 'componentLibrary/attributeList/editableAttributeList';
 
 export const AttributeListContainer = ({ value, keyURLCreator, valueURLCreator, ...rest }) => {
-  const projectId = useSelector(activeProjectSelector);
-  const getURIKey = keyURLCreator(projectId);
-  const getURIValue = (key) => valueURLCreator(projectId, key);
+  const projectKey = useSelector(projectKeySelector);
+  const getURIKey = keyURLCreator(projectKey);
+  const getURIValue = (key) => valueURLCreator(projectKey, key);
   return (
     <EditableAttributeList
       attributes={value}

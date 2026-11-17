@@ -31,7 +31,7 @@ import { showErrorNotification, showSuccessNotification } from 'controllers/noti
 import { ERROR_CANCELED } from 'common/utils';
 import { useDispatch, useSelector } from 'react-redux';
 import {
-  activeProjectSelector,
+  activeProjectKeySelector,
   launchExportIncludeAttachmentsSelector,
   launchExportFlatAttachmentsSelector,
   setLaunchExportIncludeAttachmentsAction,
@@ -113,7 +113,7 @@ export const LaunchExportModal = ({ id, name, launches: launchesProp }) => {
   const { trackEvent } = useTracking();
   const [exportType, setExportType] = useState(PDF_EXPORT);
   const dispatch = useDispatch();
-  const projectId = useSelector(activeProjectSelector);
+  const projectKey = useSelector(activeProjectKeySelector);
   const includeAttachments = useSelector(launchExportIncludeAttachmentsSelector);
   const exportFlatAttachments = useSelector(launchExportFlatAttachmentsSelector);
   const exportAttachmentsWithoutPreservingFolders =
@@ -162,7 +162,7 @@ export const LaunchExportModal = ({ id, name, launches: launchesProp }) => {
     }
 
     try {
-      await downloadFile(URLS.exportLaunch(projectId, launchId, exportType), {
+      await downloadFile(URLS.exportLaunch(projectKey, launchId, exportType), {
         params: queryParams,
         abort: (cancelRequest) =>
           dispatch(
@@ -269,9 +269,4 @@ LaunchExportModal.propTypes = {
       name: PropTypes.string,
     }),
   ),
-};
-LaunchExportModal.defaultProps = {
-  id: undefined,
-  name: undefined,
-  launches: undefined,
 };

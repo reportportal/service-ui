@@ -1,0 +1,285 @@
+/*
+ * Copyright 2026 EPAM Systems
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+import { useEffect, useRef, useState } from 'react';
+import { useIntl } from 'react-intl';
+import { useSelector } from 'react-redux';
+import { useTracking } from 'react-tracking';
+import { isEmpty } from 'es-toolkit/compat';
+import { Button, RunManualIcon } from '@reportportal/ui-kit';
+
+import { createClassnames } from 'common/utils';
+import { SettingsLayout } from 'layouts/settingsLayout';
+import { ScrollWrapper } from 'components/main/scrollWrapper';
+import { PageHeaderWithBreadcrumbsAndActions } from 'pages/inside/common/pageHeaderWithBreadcrumbsAndActions';
+import { PageLoader } from 'pages/inside/testPlansPage/pageLoader';
+import { ExecutionStatus } from 'pages/inside/manualLaunchesPage/types';
+import { MANUAL_LAUNCHES_PAGE, MANUAL_LAUNCH_DETAILS_PAGE } from 'controllers/pages';
+import { availableBtsIntegrationsSelector } from 'controllers/plugins';
+import {
+  activeManualLaunchExecutionSelector,
+  isLoadingActiveManualLaunchExecutionSelector,
+  manualLaunchFoldersSelector,
+  MANUAL_SCENARIO_TYPE_TEXT,
+} from 'controllers/manualLaunch';
+import {
+  useProjectDetails,
+  useManualLaunchId,
+  useManualLaunchById,
+  useActiveManualLaunchLoading,
+} from 'hooks/useTypedSelector';
+import { useUserPermissions } from 'hooks/useUserPermissions';
+import {
+  MANUAL_LAUNCHES_PAGE_EVENTS,
+  TEST_EXECUTION_TEMPLATE_TYPE,
+} from 'components/main/analytics/events/ga4Events/manualLaunchesPageEvents';
+
+import { ExecutionStatusButtons } from './executionStatusButtons';
+import { ExecutionStatusDropdown } from './executionStatusDropdown';
+import { TextBasedContent } from './textBasedContent';
+import { StepsBasedContent } from './stepsBasedContent';
+import { ExecutionCommentSection } from './executionCommentSection/executionCommentSection';
+import { messages } from './messages';
+import { commonMessages } from 'pages/inside/common/common-messages';
+import { messages as manualLaunchesMessages } from '../messages';
+import { hasPersistedExecutionComment } from './utils';
+import { LinkedToBTSSection } from './LinkedToBTSSection/LinkedToBTSSection';
+
+import styles from './manualLaunchExecutionPage.scss';
+
+const cx = createClassnames(styles);
+
+export const ManualLaunchExecutionPage = () => {
+  const { formatMessage } = useIntl();
+  const { trackEvent } = useTracking();
+  const { organizationSlug, projectSlug } = useProjectDetails();
+  const { canManageExecutions } = useUserPermissions();
+  const launchId = useManualLaunchId();
+  const launch = useManualLaunchById(launchId);
+  const isLaunchLoading = useActiveManualLaunchLoading();
+  const execution = useSelector(activeManualLaunchExecutionSelector);
+  const folders = useSelector(manualLaunchFoldersSelector);
+  const isExecutionLoading = useSelector(isLoadingActiveManualLaunchExecutionSelector);
+  const availableBtsIntegrations = useSelector(availableBtsIntegrationsSelector);
+  const [showStatusButtons, setShowStatusButtons] = useState(false);
+  const [resetScroll, setResetScroll] = useState(false);
+  const prevExecutionIdRef = useRef<number | undefined>(undefined);
+
+  const launchName = launch?.name ?? '';
+
+  const folderName =
+    execution?.testFolder?.name ||
+    folders.find((f) => f.id === execution?.testFolder?.testItemId)?.name ||
+    '';
+
+  const folderId = execution?.testFolder?.testItemId;
+
+  const breadcrumbDescriptors = [
+    {
+      id: 'manualLaunches',
+      title: formatMessage(manualLaunchesMessages.manualLaunchesTitle),
+      link: {
+        type: MANUAL_LAUNCHES_PAGE,
+        payload: { organizationSlug, projectSlug },
+      },
+    },
+    {
+      id: 'launch',
+      title: launchName || formatMessage(commonMessages.scenario),
+      link: launchId
+        ? {
+            type: MANUAL_LAUNCH_DETAILS_PAGE,
+            payload: { organizationSlug, projectSlug, launchId },
+          }
+        : undefined,
+    },
+    ...(folderName && folderId
+      ? [
+          {
+            id: 'folder',
+            title: folderName,
+            link: {
+              type: MANUAL_LAUNCH_DETAILS_PAGE,
+              payload: {
+                organizationSlug,
+                projectSlug,
+                launchId,
+                manualLaunchPageRoute: `folder/${folderId}`,
+              },
+            },
+          },
+        ]
+      : []),
+    {
+      id: 'execution',
+      title: execution?.testCaseName ?? '',
+    },
+  ];
+
+  const isTextBased = execution?.manualScenario?.manualScenarioType === MANUAL_SCENARIO_TYPE_TEXT;
+  const executionStatus = execution?.executionStatus;
+  const isInProgress = executionStatus === ExecutionStatus.IN_PROGRESS;
+  const hasStatus = executionStatus && executionStatus !== ExecutionStatus.TO_RUN && !isInProgress;
+
+  const showExecutionCommentSection = hasStatus || hasPersistedExecutionComment(execution);
+
+  useEffect(() => {
+    setShowStatusButtons(false);
+  }, [execution?.id, hasStatus]);
+
+  useEffect(() => {
+    if (isLaunchLoading || isExecutionLoading) {
+      return;
+    }
+    if (execution?.id !== undefined && execution.id !== prevExecutionIdRef.current) {
+      prevExecutionIdRef.current = execution.id;
+      setResetScroll(true);
+    }
+  }, [execution?.id, isLaunchLoading, isExecutionLoading]);
+
+  const lastViewedExecutionRef = useRef<{ id: number; type: string } | null>(null);
+
+  useEffect(() => {
+    if (!execution?.id) {
+      return;
+    }
+
+    const type = isTextBased
+      ? TEST_EXECUTION_TEMPLATE_TYPE.TEXT
+      : TEST_EXECUTION_TEMPLATE_TYPE.STEPS;
+    const last = lastViewedExecutionRef.current;
+
+    if (last && last.id === execution.id && last.type === type) {
+      return;
+    }
+    lastViewedExecutionRef.current = { id: execution.id, type };
+    trackEvent(MANUAL_LAUNCHES_PAGE_EVENTS.viewTestExecutionPage(type));
+  }, [execution?.id, isTextBased, trackEvent]);
+
+  useEffect(() => {
+    if (hasStatus) {
+      setShowStatusButtons(false);
+    }
+  }, [hasStatus]);
+
+  const handleRunTestClick = () => {
+    setShowStatusButtons(true);
+  };
+
+  const renderHeaderActions = () => {
+    if (isInProgress || showStatusButtons) {
+      if (!canManageExecutions) {
+        return null;
+      }
+
+      return <ExecutionStatusButtons executionId={execution?.id} />;
+    }
+
+    if (hasStatus) {
+      return (
+        <ExecutionStatusDropdown
+          executionId={execution.id}
+          currentStatus={executionStatus}
+          readOnly={!canManageExecutions}
+        />
+      );
+    }
+
+    return (
+      <div className={cx('header-actions')}>
+        <Button
+          className={cx('run-test-button')}
+          onClick={handleRunTestClick}
+          disabled={!canManageExecutions}
+        >
+          {formatMessage(commonMessages.runTest)}
+          <span className={cx('run-test-icon')}>
+            <RunManualIcon />
+          </span>
+        </Button>
+      </div>
+    );
+  };
+
+  if (isLaunchLoading || isExecutionLoading) {
+    return (
+      <SettingsLayout>
+        <PageLoader />
+      </SettingsLayout>
+    );
+  }
+
+  if (!execution || isEmpty(execution)) {
+    return (
+      <SettingsLayout>
+        <ScrollWrapper resetRequired={resetScroll} onReset={() => setResetScroll(false)}>
+          <div
+            className={cx('manual-launch-execution-page', 'manual-launch-execution-page--empty')}
+          >
+            <div className={cx('manual-launch-execution-page__header')}>
+              <PageHeaderWithBreadcrumbsAndActions
+                title=""
+                breadcrumbDescriptors={breadcrumbDescriptors}
+                titleTailNumChars={0}
+              />
+            </div>
+            <div className={cx('empty-message')}>{formatMessage(messages.executionNotFound)}</div>
+          </div>
+        </ScrollWrapper>
+      </SettingsLayout>
+    );
+  }
+
+  const executionTitle = (
+    <span className={cx('manual-launch-execution-page__title-group')}>
+      <span className={cx('manual-launch-execution-page__title-business-id')}>
+        {execution.testCaseDisplayId}
+      </span>
+      <span
+        className={cx('manual-launch-execution-page__title-name')}
+        title={execution.testCaseName}
+      >
+        {execution.testCaseName}
+      </span>
+    </span>
+  );
+
+  return (
+    <SettingsLayout>
+      <ScrollWrapper resetRequired={resetScroll} onReset={() => setResetScroll(false)}>
+        <div className={cx('manual-launch-execution-page')}>
+          <div className={cx('manual-launch-execution-page__header')}>
+            <PageHeaderWithBreadcrumbsAndActions
+              title={executionTitle}
+              breadcrumbDescriptors={breadcrumbDescriptors}
+              actions={renderHeaderActions()}
+              titleTailNumChars={0}
+            />
+          </div>
+          <div className={cx('manual-launch-execution-page__content')}>
+            {isTextBased ? (
+              <TextBasedContent execution={execution} />
+            ) : (
+              <StepsBasedContent execution={execution} />
+            )}
+            {!isEmpty(availableBtsIntegrations) && <LinkedToBTSSection execution={execution} />}
+            {showExecutionCommentSection && <ExecutionCommentSection execution={execution} />}
+          </div>
+        </div>
+      </ScrollWrapper>
+    </SettingsLayout>
+  );
+};

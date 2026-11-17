@@ -166,6 +166,7 @@ GenerateApiKey.propTypes = {
   handleSubmit: PropTypes.func.isRequired,
   invalid: PropTypes.bool.isRequired,
   apiKeyName: PropTypes.string,
+  // eslint-disable-next-line react/no-unused-prop-types
   apiKeys: PropTypes.arrayOf(
     PropTypes.shape({
       name: PropTypes.string,

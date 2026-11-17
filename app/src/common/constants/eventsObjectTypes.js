@@ -25,12 +25,14 @@ export const INTEGRATION = 'integration';
 export const DEFECT_TYPE = 'defectType';
 export const LOG_TYPE = 'logType';
 export const USER = 'user';
-export const EMAIL_CONFIG = 'emailConfig';
 export const PATTERN_RULE = 'pattern';
 export const INDEX = 'index';
 export const INVITATION_LINK = 'invitationLink';
+export const APPLICATION = 'application';
+export const RULE = 'rule';
 
 export const EMAIL_CONFIG_FILTERING_OPTION = 'EMAIL_CONFIG';
+export const NOTIFICATION_RULE_FILTERING_OPTION = 'NOTIFICATION_RULE';
 export const DEFECT_TYPE_FILTERING_OPTION = 'DEFECT_TYPE';
 export const LOG_TYPE_FILTERING_OPTION = 'LOG_TYPE';
 export const ITEM_ISSUE_FILTERING_OPTION = 'ITEM_ISSUE';

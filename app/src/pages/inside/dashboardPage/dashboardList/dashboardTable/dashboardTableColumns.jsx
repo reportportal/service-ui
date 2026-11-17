@@ -14,10 +14,11 @@
  * limitations under the License.
  */
 
-import React, { useEffect, useRef, useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import classNames from 'classnames/bind';
 import PropTypes from 'prop-types';
 import { useTracking } from 'react-tracking';
+import { useEllipsisTitle } from '@reportportal/ui-kit';
 import { Icon } from 'components/main/icon';
 import { NavLink } from 'components/main/navLink';
 import { DASHBOARD_EVENTS } from 'analyticsEvents/dashboardsPageEvents';
@@ -26,9 +27,10 @@ import IconDuplicate from 'common/img/duplicate-inline.svg';
 import { useIntl } from 'react-intl';
 import { useDispatch, useSelector } from 'react-redux';
 import { URLS } from 'common/urls';
-import { activeProjectSelector } from 'controllers/user';
+import { activeProjectKeySelector } from 'controllers/user';
 import { showDefaultErrorNotification, showSuccessNotification } from 'controllers/notification';
-import { fetch } from 'common/utils';
+import { fetch, copyToClipboard } from 'common/utils';
+import { useUserPermissions } from 'hooks/useUserPermissions';
 import { LockedDashboardTooltip } from 'pages/inside/common/lockedDashboardTooltip';
 import { LockedIcon } from 'pages/inside/common/lockedIcon';
 import { useCanLockDashboard } from 'common/hooks/useCanLockDashboard';
@@ -37,7 +39,7 @@ import { messages } from './messages';
 
 const cx = classNames.bind(styles);
 
-export const NameColumn = ({ value, customProps: { getLink }, className }) => {
+export const NameColumn = ({ value = {}, customProps: { getLink } = {}, className = '' }) => {
   const { trackEvent } = useTracking();
   const { id: dashboardId, name, locked } = value;
 
@@ -62,56 +64,55 @@ export const NameColumn = ({ value, customProps: { getLink }, className }) => {
     </div>
   );
 };
+
 NameColumn.propTypes = {
   value: PropTypes.object,
   customProps: PropTypes.object,
   className: PropTypes.string,
 };
-NameColumn.defaultProps = {
-  value: {},
-  customProps: {},
-  className: '',
-};
 
-export const DescriptionColumn = ({ value, className }) => (
+export const DescriptionColumn = ({ value = '', className = '' }) => (
   <div className={cx(className, 'description', { empty: !value })}>{value}</div>
 );
 DescriptionColumn.propTypes = {
   value: PropTypes.string,
   className: PropTypes.string,
 };
-DescriptionColumn.defaultProps = {
-  value: '',
-  className: '',
+
+export const OwnerColumn = ({ value = '', className = '' }) => {
+  const { ref, title } = useEllipsisTitle(value);
+
+  return (
+    <div className={cx(className, 'owner')}>
+      <div ref={ref} title={title} className={cx('owner-name')}>
+        {value}
+      </div>
+    </div>
+  );
 };
 
-export const OwnerColumn = ({ value, className }) => (
-  <div className={cx(className, 'owner')}>{value}</div>
-);
 OwnerColumn.propTypes = {
   value: PropTypes.string,
   className: PropTypes.string,
 };
-OwnerColumn.defaultProps = {
-  value: '',
-  className: '',
-};
 
-export const DuplicateColumn = ({ value, customProps, className }) => {
+export const DuplicateColumn = ({ value = {}, customProps = {}, className = '' }) => {
   const { trackEvent } = useTracking();
   const { formatMessage } = useIntl();
   const [opened, setOpened] = useState(false);
   const dropdownRef = useRef(null);
   const dispatch = useDispatch();
-  const activeProject = useSelector(activeProjectSelector);
+  const activeProjectKey = useSelector(activeProjectKeySelector);
 
   // The promise should be stored in state to prevent losing document focus (causes errors) in Safari when clicking to copy
   const [dashboardConfigPromise, setDashboardConfigPromise] = useState(null);
 
   const fetchDashboardConfig = async () => {
-    const url = URLS.dashboardConfig(activeProject, value.id);
+    const url = URLS.dashboardConfig(activeProjectKey, value.id);
     return fetch(url);
   };
+
+  const { canWorkWithDashboard } = useUserPermissions();
 
   useEffect(() => {
     if (opened) {
@@ -146,7 +147,7 @@ export const DuplicateColumn = ({ value, customProps, className }) => {
 
     try {
       const config = await dashboardConfigPromise;
-      await navigator.clipboard.writeText(JSON.stringify(config));
+      await copyToClipboard(JSON.stringify(config));
       dispatch(
         showSuccessNotification({
           messageId: 'dashboardConfigurationCopied',
@@ -158,7 +159,6 @@ export const DuplicateColumn = ({ value, customProps, className }) => {
 
     setOpened(false);
   };
-
   return (
     <div className={cx(className, 'icon-cell', 'with-button')}>
       <div className={cx('icon-holder', 'no-border')}>
@@ -172,9 +172,11 @@ export const DuplicateColumn = ({ value, customProps, className }) => {
           <i className={cx('arrow', { opened })} />
           {opened && (
             <div className={cx('duplicate-menu', 'shown')}>
-              <button type="button" className={cx('dropdown-item')} onClick={handleDuplicate}>
-                {formatMessage(messages.duplicate)}
-              </button>
+              {canWorkWithDashboard && (
+                <button type="button" className={cx('dropdown-item')} onClick={handleDuplicate}>
+                  {formatMessage(messages.duplicate)}
+                </button>
+              )}
               <button type="button" className={cx('dropdown-item')} onClick={handleCopyConfig}>
                 {formatMessage(messages.copyConfig)}
               </button>
@@ -192,13 +194,7 @@ DuplicateColumn.propTypes = {
   className: PropTypes.string,
 };
 
-DuplicateColumn.defaultProps = {
-  value: {},
-  customProps: {},
-  className: '',
-};
-
-export const EditColumn = ({ value, customProps, className }) => {
+export const EditColumn = ({ value = {}, customProps = {}, className = '' }) => {
   const { trackEvent } = useTracking();
   const { onEdit } = customProps;
   const { id, locked } = value;
@@ -226,13 +222,8 @@ EditColumn.propTypes = {
   customProps: PropTypes.object,
   className: PropTypes.string,
 };
-EditColumn.defaultProps = {
-  value: {},
-  customProps: {},
-  className: '',
-};
 
-export const DeleteColumn = ({ value, customProps, className }) => {
+export const DeleteColumn = ({ value = {}, customProps = {}, className = '' }) => {
   const { trackEvent } = useTracking();
   const { id, locked } = value;
   const canLock = useCanLockDashboard();
@@ -258,9 +249,4 @@ DeleteColumn.propTypes = {
   value: PropTypes.object,
   customProps: PropTypes.object,
   className: PropTypes.string,
-};
-DeleteColumn.defaultProps = {
-  value: {},
-  customProps: {},
-  className: '',
 };

@@ -1,0 +1,296 @@
+@use '../milestonesShared' as ms;
+@use '../../../../../../common/css/mixins' as mixins;
+
+.milestone-card {
+  box-sizing: border-box;
+  overflow: visible;
+  width: 100%;
+  border-radius: 8px;
+  background: var(--rp-ui-color-bg);
+  box-shadow: var(--rp-ui-base-shadow-hover);
+
+  &__header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    box-sizing: border-box;
+    min-height: 86px;
+    padding: 16px 24px;
+    border-radius: 8px 8px 0 0;
+  }
+
+  &__header-toggle {
+    @include mixins.button-reset;
+
+    display: flex;
+    flex: 1;
+    gap: 16px;
+    align-items: center;
+    min-width: 0;
+    cursor: pointer;
+    text-align: left;
+
+    &:focus-visible {
+      outline: 2px solid var(--rp-ui-base-topaz-focused);
+      outline-offset: -2px;
+    }
+  }
+
+  &__header-actions {
+    display: flex;
+    flex-shrink: 0;
+    gap: 8px;
+    align-items: center;
+  }
+
+  &__chevron {
+    display: flex;
+    transform: rotate(-90deg);
+    transition: transform 0.15s ease;
+
+    &_open {
+      transform: rotate(0);
+    }
+  }
+
+  &__title-block {
+    flex: 1;
+    min-width: 0;
+  }
+
+  &__name {
+    overflow: hidden;
+    font-weight: var(--rp-ui-base-fw-medium);
+    font-size: 15px;
+    line-height: 20px;
+    color: var(--rp-ui-color-text);
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  &__dates {
+    @include ms.milestone-body-13;
+
+    margin-top: 4px;
+    color: var(--rp-ui-color-text-secondary);
+  }
+
+  &__metrics {
+    display: flex;
+    flex-shrink: 0;
+    gap: 24px;
+    align-items: center;
+  }
+
+  &__metric {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-width: 72px;
+  }
+
+  &__metric-value {
+    @include ms.milestone-metric-value;
+
+    &_alert {
+      color: var(--rp-ui-color-error);
+    }
+  }
+
+  &__metric-label {
+    margin-top: 2px;
+
+    @include ms.milestone-metric-label;
+  }
+
+  &__status-popover {
+    margin-inline-start: -10px;
+    padding: 8px 0;
+    z-index: 11;
+  }
+
+  &__status-options {
+    display: flex;
+    flex-direction: column;
+    min-width: 160px;
+  }
+
+  &__status-option {
+    @include mixins.button-reset;
+    @include ms.milestone-body-13;
+
+    display: flex;
+    align-items: center;
+    width: 100%;
+    padding: 7px 16px;
+    border-radius: 0;
+    color: var(--rp-ui-color-text);
+    cursor: pointer;
+    text-align: left;
+
+    &:hover {
+      background-color: var(--rp-ui-base-bg-200);
+    }
+
+    &:focus-visible {
+      outline: 1px solid var(--rp-ui-base-topaz-focused);
+      outline-offset: -1px;
+      background-color: var(--rp-ui-base-bg-200);
+    }
+  }
+
+  &__actions-trigger {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    padding: 4px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    color: var(--rp-ui-base-e-300);
+    line-height: 0;
+
+    :global(svg) {
+      color: var(--rp-ui-base-e-300);
+    }
+
+    :global(path) {
+      fill: var(--rp-ui-base-e-300);
+    }
+
+    &:hover,
+    &:focus-visible {
+      border-color: transparent !important;
+    }
+
+    &:active,
+    &:focus-visible {
+      :global(svg path) {
+        fill: var(--rp-ui-base-topaz-pressed);
+      }
+    }
+  }
+
+  &__actions-popover {
+    box-sizing: border-box;
+    min-width: 160px;
+    max-width: 160px;
+    width: 160px;
+    padding: 8px 0;
+    font-size: 13px;
+  }
+
+  &__actions-menu {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  &__actions-menu-item {
+    @include mixins.button-reset;
+    @include ms.milestone-body-13;
+
+    display: block;
+    width: 100%;
+    min-width: 0;
+    padding: 7px 16px;
+    text-align: left;
+    color: var(--rp-ui-base-almost-black);
+    cursor: pointer;
+
+    &:hover {
+      background-color: var(--rp-ui-base-bg-200);
+    }
+
+    &:focus-visible {
+      outline: 1px solid var(--rp-ui-base-topaz-focused);
+      outline-offset: -1px;
+      background-color: var(--rp-ui-base-bg-200);
+    }
+
+    &_destructive {
+      color: var(--rp-ui-base-error);
+
+      &:hover,
+      &:active,
+      &:focus {
+        color: var(--rp-ui-base-error);
+      }
+    }
+  }
+
+  &__drawer {
+    padding: 16px 0 37px 104px;
+    background: var(--rp-ui-kit-colors-bg-secondary);
+    border-top: 1px solid var(--rp-ui-kit-colors-border-primary);
+    border-radius: 0 0 8px 8px;
+
+    &_empty {
+      padding: 0;
+      background: transparent;
+      border-top: none;
+    }
+  }
+
+  &__test-plans-empty-bar-wrap {
+    box-sizing: border-box;
+    padding: 12px 48px 24px 104px;
+    background: var(--rp-ui-kit-colors-bg-secondary);
+    border-top: 1px solid var(--rp-ui-kit-colors-border-primary);
+    border-radius: 0 0 8px 8px;
+  }
+
+  &__test-plans-empty-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    box-sizing: border-box;
+    min-height: 52px;
+    margin-inline-end: -8px;
+    padding: 0 16px;
+    background: var(--Background-Tertiary, var(--rp-ui-base-bg-200));
+    border-radius: 4px;
+  }
+
+  &__test-plans-empty-text {
+    @include ms.milestone-body-13;
+
+    margin: 0;
+    color: var(--rp-ui-color-text-secondary);
+  }
+
+  &__test-plans {
+    box-sizing: border-box;
+    max-width: 100%;
+    min-width: 0;
+    overflow: visible;
+
+    :global([class*='table-header-cell']:first-child) {
+      padding-inline-start: 0;
+    }
+
+    :global([class*='primary-cell']) {
+      padding-inline-start: 0;
+    }
+  }
+
+  &__test-plans-footer {
+    margin-top: 16px;
+  }
+
+  &__placeholder {
+    @include ms.milestone-body-13;
+
+    margin: 0;
+    color: var(--rp-ui-color-text-secondary);
+  }
+}
+.milestone-card__group {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}

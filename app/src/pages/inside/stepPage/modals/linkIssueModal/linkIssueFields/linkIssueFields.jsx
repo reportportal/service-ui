@@ -22,7 +22,7 @@ import CloseIcon from 'common/img/cross-icon-inline.svg';
 import classNames from 'classnames/bind';
 import { injectIntl, defineMessages } from 'react-intl';
 import { GhostButton } from 'components/buttons/ghostButton';
-import { FieldText } from 'componentLibrary/fieldText';
+import { FieldText, ThemeProvider } from '@reportportal/ui-kit';
 import { FieldElement } from 'pages/inside/projectSettingsPageContainer/content/elements';
 import { FieldErrorHint } from 'components/fields/fieldErrorHint';
 import PlusIcon from 'common/img/plus-button-inline.svg';
@@ -91,35 +91,37 @@ export class LinkIssueFields extends Component {
                 {Parser(CloseIcon)}
               </div>
             )}
-            <FieldElement
-              name={`${issue}.issueLink`}
-              label={intl.formatMessage(messages.issueLinkLabel)}
-              onChange={this.updateIssueId}
-              className={cx('field')}
-              labelClassName={cx('label')}
-            >
-              <FieldErrorHint provideHint={false}>
-                <FieldText
-                  variant="dark"
-                  placeholder={intl.formatMessage(messages.issueLinkPlaceholder)}
-                  defaultWidth={false}
-                />
-              </FieldErrorHint>
-            </FieldElement>
-            <FieldElement
-              name={`${issue}.issueId`}
-              label={intl.formatMessage(messages.issueIdLabel)}
-              className={cx('field')}
-              labelClassName={cx('label')}
-            >
-              <FieldErrorHint provideHint={false}>
-                <FieldText
-                  placeholder={intl.formatMessage(messages.issueIdLabel)}
-                  variant="dark"
-                  defaultWidth={false}
-                />
-              </FieldErrorHint>
-            </FieldElement>
+            <ThemeProvider theme="dark">
+              <FieldElement
+                name={`${issue}.issueLink`}
+                label={intl.formatMessage(messages.issueLinkLabel)}
+                onChange={this.updateIssueId}
+                className={cx('field')}
+                labelClassName={cx('label')}
+              >
+                <FieldErrorHint provideHint={false}>
+                  <FieldText
+                    variant="dark"
+                    placeholder={intl.formatMessage(messages.issueLinkPlaceholder)}
+                    defaultWidth={false}
+                  />
+                </FieldErrorHint>
+              </FieldElement>
+              <FieldElement
+                name={`${issue}.issueId`}
+                label={intl.formatMessage(messages.issueIdLabel)}
+                className={cx('field')}
+                labelClassName={cx('label')}
+              >
+                <FieldErrorHint provideHint={false}>
+                  <FieldText
+                    placeholder={intl.formatMessage(messages.issueIdLabel)}
+                    variant="dark"
+                    defaultWidth={false}
+                  />
+                </FieldErrorHint>
+              </FieldElement>
+            </ThemeProvider>
           </li>
         ))}
         <GhostButton

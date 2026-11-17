@@ -1,0 +1,160 @@
+/*
+ * Copyright 2025 EPAM Systems
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+import { defineMessages, MessageDescriptor } from 'react-intl';
+
+export const commonMessages: Record<string, MessageDescriptor> = defineMessages({
+  closePanel: {
+    id: 'Common.closePanel',
+    defaultMessage: 'Close panel',
+  },
+  description: {
+    id: 'Common.description',
+    defaultMessage: 'Description',
+  },
+  instructions: {
+    id: 'Common.instructions',
+    defaultMessage: 'Instructions',
+  },
+  expectedResult: {
+    id: 'Common.expectedResult',
+    defaultMessage: 'Expected Result',
+  },
+  scenario: {
+    id: 'Common.scenario',
+    defaultMessage: 'Scenario',
+  },
+  precondition: {
+    id: 'Common.precondition',
+    defaultMessage: 'Precondition',
+  },
+  steps: {
+    id: 'Common.steps',
+    defaultMessage: 'Steps',
+  },
+  descriptionNotSpecified: {
+    id: 'Common.descriptionNotSpecified',
+    defaultMessage: 'Description not specified',
+  },
+  noExecutions: {
+    id: 'Common.noExecutions',
+    defaultMessage: 'No executions',
+  },
+  noAttachmentsAdded: {
+    id: 'Common.noAttachmentsAdded',
+    defaultMessage: 'No attachments added',
+  },
+  copyId: {
+    id: 'Common.copyId',
+    defaultMessage: 'Copy ID',
+  },
+  tags: {
+    id: 'Common.tags',
+    defaultMessage: 'Tags',
+  },
+  attachments: {
+    id: 'Common.attachments',
+    defaultMessage: 'Attachments',
+  },
+  toRun: {
+    id: 'Common.toRun',
+    defaultMessage: 'To Run',
+  },
+  passed: {
+    id: 'Common.passed',
+    defaultMessage: 'Passed',
+  },
+  failed: {
+    id: 'Common.failed',
+    defaultMessage: 'Failed',
+  },
+  skipped: {
+    id: 'Common.skipped',
+    defaultMessage: 'Skipped',
+  },
+  inProgress: {
+    id: 'Common.inProgress',
+    defaultMessage: 'In progress',
+  },
+  moreActions: {
+    id: 'Common.moreActions',
+    defaultMessage: 'More actions',
+  },
+  coveredManually: {
+    id: 'Common.coveredManually',
+    defaultMessage: 'Covered manually',
+  },
+  noTagsAdded: {
+    id: 'Common.noTagsAdded',
+    defaultMessage: 'No tags added',
+  },
+  requirementsAreNotSpecified: {
+    id: 'Common.requirementsAreNotSpecified',
+    defaultMessage: 'Requirements are not specified',
+  },
+  requirements: {
+    id: 'Common.requirements',
+    defaultMessage: 'Requirements',
+  },
+  cancel: {
+    id: 'Common.cancel',
+    defaultMessage: 'Cancel',
+  },
+  apply: {
+    id: 'Common.apply',
+    defaultMessage: 'Apply',
+  },
+  priority: {
+    id: 'Common.priority',
+    defaultMessage: 'Priority',
+  },
+  runTest: {
+    id: 'Common.runTest',
+    defaultMessage: 'Run Test',
+  },
+  filterTitle: {
+    id: 'FilterSidePanel.filterTitle',
+    defaultMessage: 'Filter',
+  },
+  clearAllFilters: {
+    id: 'FilterSidePanel.clearAllFilters',
+    defaultMessage: 'Clear all filters',
+  },
+  testPlanLabel: {
+    id: 'LaunchFormFields.testPlanLabel',
+    defaultMessage: 'Test plan',
+  },
+  selectTestPlanPlaceholder: {
+    id: 'LaunchFormFields.selectTestPlanPlaceholder',
+    defaultMessage: 'Select test plan',
+  },
+  launchAttributes: {
+    id: 'LaunchFormFields.launchAttributes',
+    defaultMessage: 'Launch attributes',
+  },
+  addAttributes: {
+    id: 'CreateMilestoneModal.addAttributes',
+    defaultMessage: 'Add Attributes',
+  },
+  logs: {
+    id: 'Common.logsHeader',
+    defaultMessage: 'Logs',
+  },
+  comments: {
+    id: 'Common.commentsHeader',
+    defaultMessage: 'Comments',
+  },
+});

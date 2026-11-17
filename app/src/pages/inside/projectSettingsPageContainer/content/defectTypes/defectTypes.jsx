@@ -22,18 +22,16 @@ import { useIntl } from 'react-intl';
 import classNames from 'classnames/bind';
 import Parser from 'html-react-parser';
 import { addDefectTypeAction, defectTypesSelector } from 'controllers/project';
-import { userAccountRoleSelector, activeProjectRoleSelector } from 'controllers/user';
-import { canUpdateSettings } from 'common/utils/permissions';
 import { DEFECT_TYPES_SEQUENCE } from 'common/constants/defectTypes';
-import { Button } from '@reportportal/ui-kit';
+import { Button, SystemMessage } from '@reportportal/ui-kit';
 import CreateDefectIcon from 'common/img/newIcons/create-subtype-inline.svg';
 import DefectGroupIcon from 'common/img/newIcons/defect-group-inline.svg';
 import { withTooltip } from 'componentLibrary/tooltip';
 import { showModalAction } from 'controllers/modal';
-import { SystemMessage } from 'componentLibrary/systemMessage';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { PROJECT_SETTINGS_DEFECT_TYPES_EVENTS } from 'analyticsEvents/projectSettingsPageEvents';
 import { docsReferences, createExternalLink } from 'common/utils';
+import { useUserPermissions } from 'hooks/useUserPermissions';
 import { Divider, TabDescription, MODAL_ACTION_TYPE_ADD, FormattedDescription } from '../elements';
 import { MAX_DEFECT_TYPES_COUNT, WARNING_DEFECT_TYPES_COUNT } from './constants';
 import { SettingsPageContent } from '../settingsPageContent';
@@ -76,8 +74,7 @@ export const DefectTypes = ({ setHeaderTitleNode }) => {
   const { trackEvent } = useTracking();
 
   const defectTypes = useSelector(defectTypesSelector);
-  const userAccountRole = useSelector(userAccountRoleSelector);
-  const userProjectRole = useSelector(activeProjectRoleSelector);
+  const { canUpdateSettings } = useUserPermissions();
 
   const addDefect = (data) => {
     dispatch(addDefectTypeAction({ ...data }));
@@ -98,10 +95,9 @@ export const DefectTypes = ({ setHeaderTitleNode }) => {
   };
 
   const defectTypesLength = useMemo(
-    () => DEFECT_TYPES_SEQUENCE.reduce((acc, groupName) => defectTypes[groupName].length + acc, 0),
+    () => DEFECT_TYPES_SEQUENCE.reduce((acc, groupName) => defectTypes[groupName]?.length + acc, 0),
     [defectTypes],
   );
-  const isEditable = canUpdateSettings(userAccountRole, userProjectRole);
   const canAddNewDefectType = defectTypesLength < MAX_DEFECT_TYPES_COUNT;
   const isInformationMessage =
     defectTypesLength >= WARNING_DEFECT_TYPES_COUNT && canAddNewDefectType;
@@ -123,23 +119,27 @@ export const DefectTypes = ({ setHeaderTitleNode }) => {
 
   useEffect(() => {
     setHeaderTitleNode(
-      <span className={cx('button')}>
-        <Button
-          disabled={!isEditable || !canAddNewDefectType}
-          onClick={() =>
-            onAdd(defectTypes[DEFECT_TYPES_SEQUENCE[0]][0], () =>
-              trackEvent(PROJECT_SETTINGS_DEFECT_TYPES_EVENTS.CLICK_CREATE_BUTTON),
-            )
-          }
-          data-automation-id={'createDefectTypeButton'}
-        >
-          {formatMessage(messages.createDefectHeader)}
-        </Button>
-      </span>,
+      <>
+        {canUpdateSettings && (
+          <span className={cx('button')}>
+            <Button
+              disabled={!canUpdateSettings || !canAddNewDefectType}
+              onClick={() =>
+                onAdd(defectTypes[DEFECT_TYPES_SEQUENCE[0]][0], () =>
+                  trackEvent(PROJECT_SETTINGS_DEFECT_TYPES_EVENTS.CLICK_CREATE_BUTTON),
+                )
+              }
+              data-automation-id={'createDefectTypeButton'}
+            >
+              {formatMessage(messages.createDefectHeader)}
+            </Button>
+          </span>
+        )}
+      </>,
     );
 
     return () => setHeaderTitleNode(null);
-  }, [defectTypes, canAddNewDefectType, isEditable]);
+  }, [defectTypes, canAddNewDefectType, canUpdateSettings]);
 
   return (
     <SettingsPageContent>
@@ -187,7 +187,7 @@ export const DefectTypes = ({ setHeaderTitleNode }) => {
                     {formatMessage(messages[groupName.toLowerCase()])}
                   </div>
                 </div>
-                {isEditable && (
+                {canUpdateSettings && (
                   <CreateDefect
                     formatMessage={formatMessage}
                     onClick={() =>
@@ -206,13 +206,13 @@ export const DefectTypes = ({ setHeaderTitleNode }) => {
               </div>
               <Divider />
               <div className={cx('group-content')} data-automation-id="defectTypesList">
-                {defectTypes[groupName].map((defectType, i) => (
+                {defectTypes[groupName]?.map((defectType, i) => (
                   <div key={defectType.id} data-automation-id="listItem">
                     <DefectTypeRow
                       data={defectType}
                       parentType={defectTypes[groupName][0]}
                       group={i === 0 ? defectTypes[groupName] : null}
-                      isPossibleUpdateSettings={isEditable}
+                      isPossibleUpdateSettings={canUpdateSettings}
                     />
                     <Divider />
                   </div>

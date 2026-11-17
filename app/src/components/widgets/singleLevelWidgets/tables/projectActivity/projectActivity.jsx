@@ -30,6 +30,8 @@ import {
   ACTIONS_WITH_FILTERS,
   ACTIONS_WITH_INTEGRATIONS,
   ACTIONS_WITH_AA_SETTINGS,
+  ACTIONS_WITH_NOTIFICATION_RULE_SETTINGS,
+  ACTIONS_WITH_NOTIFICATION_RULES,
   ACTIONS_WITH_DEFECTS,
   ACTIONS_WITH_LOG_TYPES,
   ACTIONS_WITH_IMPORT,
@@ -47,6 +49,7 @@ import {
   ASSIGN_USER,
   UNASSIGN_USER,
   CHANGE_ROLE,
+  CREATE_INVITATION_LINK,
   CREATE_PROJECT,
   UPDATE_AUTO_PATTERN_ANALYSIS_SETTINGS,
   MARK_LAUNCH_AS_IMPORTANT,
@@ -54,7 +57,7 @@ import {
 } from 'common/constants/actionTypes';
 import { AbsRelTime } from 'components/main/absRelTime';
 import { externalSystemSelector } from 'controllers/project';
-import { projectIdSelector } from 'controllers/pages';
+import { urlProjectSlugSelector, urlOrganizationSlugSelector } from 'controllers/pages';
 import { UserAvatar } from 'pages/inside/common/userAvatar';
 import { COMMON_LOCALE_KEYS, months, days } from 'common/constants/localization';
 import { DefaultProjectSettings } from './activities/defaultProjectSettings';
@@ -68,30 +71,35 @@ import { CommonEntity } from './activities/commonEntity';
 import { Dashboard } from './activities/dashboard';
 import { DefectType } from './activities/defectType';
 import { LogType } from './activities/logType';
-import { Notifications } from './activities/notifications';
 import styles from './projectActivity.scss';
 import { AssignUser } from './activities/assignUser';
 import { UnassignUser } from './activities/unassignUser';
 import { ChangeRole } from './activities/changeRole';
+import { CreateInvitationLink } from './activities/createInvitationLink';
 import { CreateProject } from './activities/createProject';
 import { UpdateAutoPatternAnalysis } from './activities/updatePatternAnalysis';
+import { LegacyNotificationActivity } from './activities/legacyNotificationActivity';
+import { RuleNotificationActivity } from './activities/notificationRuleActivity';
+import { NotificationSettingsActivity } from './activities/notificationSettingsActivity';
 
 const cx = classNames.bind(styles);
 
 // TODO: rewrite it when integrations will be added
 @connect((state) => ({
   hasBts: externalSystemSelector(state).length > 0,
-  projectId: projectIdSelector(state),
   lang: langSelector(state),
+  organizationSlug: urlOrganizationSlugSelector(state),
+  projectSlug: urlProjectSlugSelector(state),
 }))
 @injectIntl
 export class ProjectActivity extends Component {
   static propTypes = {
     intl: PropTypes.object.isRequired,
-    projectId: PropTypes.string.isRequired,
     widget: PropTypes.object,
     hasBts: PropTypes.bool,
     lang: PropTypes.string,
+    organizationSlug: PropTypes.string,
+    projectSlug: PropTypes.string,
   };
   static defaultProps = {
     widget: {
@@ -101,18 +109,25 @@ export class ProjectActivity extends Component {
     },
     hasBts: false,
     lang: 'en',
+    organizationSlug: null,
+    projectSlug: null,
   };
 
   getActivities = () => {
     const dates = [];
     const { result = [] } = this.props.widget.content;
+    const { organizationSlug, projectSlug } = this.props;
 
     result.forEach((activity) => {
       let dateKey;
       let contains;
       let values;
       if (this.isValidActivity(activity)) {
-        values = activity;
+        values = {
+          ...activity,
+          organizationSlug: activity.organizationSlug ?? organizationSlug,
+          projectSlug: activity.projectSlug ?? projectSlug,
+        };
         dateKey = this.getDayKey(values.lastModified);
         contains = dates.find((item) => item.day === dateKey);
         if (contains) {
@@ -183,6 +198,10 @@ export class ProjectActivity extends Component {
         ) : (
           <AnalysisConfigurations activity={activity} />
         );
+      case ACTIONS_WITH_NOTIFICATION_RULE_SETTINGS:
+        return <NotificationSettingsActivity activity={activity} />;
+      case ACTIONS_WITH_NOTIFICATION_RULES:
+        return <RuleNotificationActivity activity={activity} />;
       case ACTIONS_WITH_DEFECTS:
         return <DefectType activity={activity} />;
       case ACTIONS_WITH_LOG_TYPES:
@@ -196,7 +215,7 @@ export class ProjectActivity extends Component {
         return <Launch activity={activity} />;
       case UPDATE_PROJECT:
         return activity.objectType === UPDATE_NOTIFICATIONS ? (
-          <Notifications activity={activity} />
+          <LegacyNotificationActivity activity={activity} />
         ) : (
           <DefaultProjectSettings activity={activity} lang={this.props.lang} />
         );
@@ -209,6 +228,9 @@ export class ProjectActivity extends Component {
 
       case CHANGE_ROLE:
         return <ChangeRole activity={activity} />;
+
+      case CREATE_INVITATION_LINK:
+        return <CreateInvitationLink activity={activity} />;
 
       case CREATE_PROJECT:
         return <CreateProject activity={activity} />;
@@ -227,12 +249,7 @@ export class ProjectActivity extends Component {
       return (
         ActivityComponent && (
           <div className={cx('row-content')} key={activity.id}>
-            <UserAvatar
-              className={cx('avatar-wrapper')}
-              userId={activity.user}
-              projectId={this.props.projectId}
-              alt="avatar"
-            />
+            <UserAvatar className={cx('avatar-wrapper')} userId={activity.userId} />
             <div className={cx('activity-wrapper')}>
               {ActivityComponent}
               <AbsRelTime

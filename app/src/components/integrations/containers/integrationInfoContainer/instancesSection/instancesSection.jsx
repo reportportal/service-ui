@@ -19,11 +19,12 @@ import classNames from 'classnames/bind';
 import { defineMessages, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import track from 'react-tracking';
+import DOMPurify from 'dompurify';
 import PlusIcon from 'common/img/plus-button-inline.svg';
 import { canUpdateSettings } from 'common/utils/permissions';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
-import { activeProjectRoleSelector, userAccountRoleSelector } from 'controllers/user';
-import { projectIdSelector } from 'controllers/pages';
+import { userRolesType } from 'common/constants/projectRoles';
+import { userRolesSelector } from 'controllers/pages';
 import {
   removePluginAction,
   addIntegrationAction,
@@ -31,11 +32,7 @@ import {
   enabledPluginSelector,
 } from 'controllers/plugins';
 import { showModalAction } from 'controllers/modal';
-import {
-  PLUGINS_PAGE_EVENTS,
-  getUninstallPluginBtnClickEvent,
-  getIntegrationUnlinkGlobalEvent,
-} from 'components/main/analytics/events';
+import { PLUGINS_PAGE_EVENTS } from 'components/main/analytics/events';
 import { GhostButton } from 'components/buttons/ghostButton';
 import { BigButton } from 'components/buttons/bigButton';
 import {
@@ -43,8 +40,8 @@ import {
   isIntegrationSupportsMultipleInstances,
   isPluginBuiltin,
 } from 'components/integrations/utils';
-import { EMAIL, LDAP } from 'common/constants/pluginNames';
-import { combineNameAndEmailToFrom } from 'common/utils';
+import { LDAP } from 'common/constants/pluginNames';
+import { applyIntegrationFormPrepare } from 'components/integrations/integrationFormPrepareMap';
 import { InstancesList } from './instancesList';
 import styles from './instancesSection.scss';
 
@@ -102,7 +99,7 @@ const messages = defineMessages({
   },
   uninstallPluginConfirmation: {
     id: 'InstancesSection.uninstallPluginConfirmation',
-    defaultMessage: 'Are you sure you want to uninstall {pluginName} Plugin?',
+    defaultMessage: 'Are you sure you want to uninstall <b>{pluginName}</b> plugin?',
   },
   uninstallPluginTitle: {
     id: 'InstancesSection.uninstallPluginTitle',
@@ -117,9 +114,7 @@ const messages = defineMessages({
 
 @connect(
   (state, ownProps) => ({
-    projectId: projectIdSelector(state),
-    accountRole: userAccountRoleSelector(state),
-    userRole: activeProjectRoleSelector(state),
+    userRoles: userRolesSelector(state),
     isEnabled: enabledPluginSelector(state, ownProps.instanceType),
   }),
   {
@@ -136,14 +131,13 @@ export class InstancesSection extends Component {
     intl: PropTypes.object.isRequired,
     instanceType: PropTypes.string.isRequired,
     pluginType: PropTypes.string.isRequired,
-    projectId: PropTypes.string,
     onItemClick: PropTypes.func.isRequired,
     removePluginSuccessCallback: PropTypes.func.isRequired,
     showModalAction: PropTypes.func.isRequired,
     removeProjectIntegrationsByTypeAction: PropTypes.func.isRequired,
     addIntegrationAction: PropTypes.func.isRequired,
     removePluginAction: PropTypes.func.isRequired,
-    accountRole: PropTypes.string.isRequired,
+    userRoles: userRolesType,
     userRole: PropTypes.string.isRequired,
     isEnabled: PropTypes.bool.isRequired,
     tracking: PropTypes.shape({
@@ -163,11 +157,11 @@ export class InstancesSection extends Component {
     pluginDetails: {},
     projectIntegrations: [],
     globalIntegrations: [],
-    projectId: '',
     isGlobal: false,
     title: '',
     pluginId: null,
     events: {},
+    userRoles: {},
   };
 
   constructor(props) {
@@ -197,7 +191,7 @@ export class InstancesSection extends Component {
 
   createIntegration = (formData, metaData) => {
     const { isGlobal, instanceType, pluginDetails } = this.props;
-    const updatedFormData = instanceType === EMAIL ? combineNameAndEmailToFrom(formData) : formData;
+    const updatedFormData = applyIntegrationFormPrepare(instanceType, formData);
     const data = {
       enabled: true,
       integrationParameters: updatedFormData,
@@ -217,16 +211,14 @@ export class InstancesSection extends Component {
     const {
       intl: { formatMessage },
       instanceType,
-      tracking,
       pluginDetails,
     } = this.props;
-    tracking.trackEvent(getUninstallPluginBtnClickEvent(instanceType));
-
     this.props.showModalAction({
       id: 'confirmationModal',
       data: {
         message: formatMessage(messages.uninstallPluginConfirmation, {
           pluginName: pluginDetails.name || instanceType,
+          b: (chunks) => DOMPurify.sanitize(`<b>${chunks}</b>`),
         }),
         onConfirm: this.removePlugin,
         title: formatMessage(messages.uninstallPluginTitle),
@@ -235,8 +227,6 @@ export class InstancesSection extends Component {
         dangerConfirm: true,
         eventsInfo: {
           confirmBtn: PLUGINS_PAGE_EVENTS.clickConfirmUninstallPlugin(instanceType),
-          closeIcon: PLUGINS_PAGE_EVENTS.CLOSE_ICON_UNINSTALL_PLUGIN_MODAL,
-          cancelBtn: PLUGINS_PAGE_EVENTS.CANCEL_BTN_UNINSTALL_PLUGIN_MODAL,
         },
       },
     });
@@ -286,9 +276,6 @@ export class InstancesSection extends Component {
   };
 
   unlinkAndSetupManuallyClickHandler = () => {
-    const { instanceType, tracking } = this.props;
-
-    tracking.trackEvent(getIntegrationUnlinkGlobalEvent(instanceType));
     this.showAddIntegrationModal();
   };
 
@@ -298,15 +285,14 @@ export class InstancesSection extends Component {
       onItemClick,
       projectIntegrations,
       globalIntegrations,
-      accountRole,
-      userRole,
+      userRoles,
       isGlobal,
       pluginDetails: { metadata },
       pluginType,
       isEnabled,
     } = this.props;
     const isProjectIntegrationsExists = !!projectIntegrations.length;
-    const disabled = !canUpdateSettings(accountRole, userRole);
+    const disabled = !canUpdateSettings(userRoles);
     const globalIntegrationMessage = this.multiple
       ? messages.globalIntegrations
       : messages.globalIntegration;
@@ -348,7 +334,6 @@ export class InstancesSection extends Component {
               )}
               items={globalIntegrations}
               onItemClick={onItemClick}
-              isGlobal={isGlobal}
               {...(isGlobal
                 ? {}
                 : {

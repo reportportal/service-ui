@@ -23,6 +23,7 @@ import queryString from 'qs';
 import { initAuthInterceptor } from 'common/utils/fetch';
 import { LOGOUT } from 'controllers/auth';
 import routesMap, { onBeforeRouteChange } from 'routes/routesMap';
+import { organizationProjectRouteMiddleware } from './organizationProjectRouteMiddleware';
 import reducers from './reducers';
 import { rootSagas } from './rootSaga';
 
@@ -30,8 +31,8 @@ const createRootReducer = (appReducer) => (state, action) => {
   let newState = state;
 
   if (action.type === LOGOUT) {
-    const { appInfo, lang, initialDataReady, location } = state;
-    newState = { appInfo, lang, initialDataReady, location };
+    const { appInfo, lang, initialDataReady, serviceAvailability, location } = state;
+    newState = { appInfo, lang, initialDataReady, serviceAvailability, location };
   }
 
   return appReducer(newState, action);
@@ -50,18 +51,15 @@ export const configureStore = (history, preloadedState) => {
   const appReducer = combineReducers({ ...reducers, location: reducer });
   const rootReducer = createRootReducer(appReducer);
   const saga = createSagaMiddleware();
-  const middlewares = applyMiddleware(saga, middleware);
+  const middlewares = applyMiddleware(saga, organizationProjectRouteMiddleware, middleware);
   const enhancers = composeEnhancers(enhancer, middlewares);
   const store = createStore(rootReducer, preloadedState, enhancers);
 
   initAuthInterceptor(store);
 
-  // eslint-disable-next-line no-undef
   if (module.hot && process.env.NODE_ENV === 'development') {
-    // eslint-disable-next-line no-undef
     module.hot.accept('./reducers', () => {
-      // eslint-disable-next-line no-undef
-      const newReducers = require('./reducers');
+      const newReducers = require('./reducers'); // eslint-disable-line global-require
       const newAppReducer = combineReducers({ ...newReducers, location: reducer });
       const newRootReducer = createRootReducer(newAppReducer);
       store.replaceReducer(newRootReducer);

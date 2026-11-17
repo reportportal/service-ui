@@ -84,17 +84,11 @@ export class WizardThirdStepForm extends Component {
     loading: false,
   };
 
-  getUniqPostfix = () =>
-    new Date()
-      .valueOf()
-      .toString()
-      .slice(-3);
+  getUniqPostfix = () => new Date().valueOf().toString().slice(-3);
 
   generateWidgetName = () => {
-    const {
-      filters,
-      contentParameters: { widgetOptions: { launchNameFilter } = {} } = {},
-    } = this.props.formValues;
+    const { filters, contentParameters: { widgetOptions: { launchNameFilter } = {} } = {} } =
+      this.props.formValues;
     const filterBasedName =
       (filters?.length &&
         filters.reduce((acc, item) => `${acc}${acc.length ? '.' : ''}${item.name}`, '')) ||
@@ -123,15 +117,8 @@ export class WizardThirdStepForm extends Component {
   };
 
   render() {
-    const {
-      handleSubmit,
-      onSubmit,
-      tracking,
-      eventsInfo,
-      dashboards,
-      activeDashboard,
-      loading,
-    } = this.props;
+    const { handleSubmit, onSubmit, tracking, eventsInfo, dashboards, activeDashboard, loading } =
+      this.props;
     return (
       <form onSubmit={handleSubmit(onSubmit)}>
         {loading ? (

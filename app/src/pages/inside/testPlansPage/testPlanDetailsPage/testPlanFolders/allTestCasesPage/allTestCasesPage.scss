@@ -1,0 +1,100 @@
+/*
+ * Copyright 2025 EPAM Systems
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+$sidebar-width: calc(100vw - 408px);
+
+.all-test-cases-page {
+  display: flex;
+  flex-direction: column;
+  height: fit-content;
+  padding: 20px 32px 64px;
+
+  &__with-panel {
+    padding-bottom: 104px;
+  }
+}
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: var(--rp-ui-base-bg-100);
+  padding: 5px 32px;
+  border-top: 1px solid var(--rp-ui-base-e-100);
+  margin-top: auto;
+  height: 64px;
+  box-sizing: border-box;
+  position: fixed;
+  width: $sidebar-width;
+  bottom: 0;
+  z-index: $Z-INDEX-POPUP;
+}
+
+.pagination-content {
+  padding: 0;
+}
+
+.pagination-with-panel {
+  padding: 0 32px;
+  height: 40px;
+  bottom: 64px;
+}
+
+.selection {
+  position: fixed;
+  width: $sidebar-width;
+  bottom: 0;
+  z-index: $Z-INDEX-POPUP;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-sizing: border-box;
+  background: var(--rp-ui-base-bg-000);
+  padding: 12px 32px;
+  border-top: 1px solid var(--rp-ui-base-e-100);
+  margin-top: auto;
+  height: 64px;
+
+  &-controls {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    &__remove-button {
+      border: 1px solid var(--rp-ui-base-error);
+      color: var(--rp-ui-base-error);
+      font-family: var(--rp-ui-base-font-family);
+      font-weight: 400;
+      font-size: 13px;
+      line-height: 20px;
+      letter-spacing: 0;
+      text-align: center;
+      vertical-align: bottom;
+
+      &:hover {
+        color: var(--rp-ui-base-error-hover);
+        border-color: var(--rp-ui-base-error-hover);
+        background-color: transparent;
+      }
+
+      &:active {
+        color: var(--rp-ui-base-error-pressed);
+        border-color: var(--rp-ui-base-error-pressed);
+        background-color: transparent;
+      }
+    }
+  }
+}

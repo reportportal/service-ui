@@ -25,3 +25,5 @@ PROXY_PATH='' // http://you_server:port/
 6. Run command `npm run dev`
 
 7. Open `http://localhost:3000/` in browser
+
+   

@@ -18,9 +18,9 @@
   display: block;
   width: 100%;
   margin-bottom: 32px;
-  font-family: $FONT-REGULAR;
+  font-family: var(--rp-ui-base-font-family-heading);
   font-size: 24px;
-  color: $COLOR--steel-grey;
+  color: var(--rp-ui-base-e-400);
   text-align: center;
   line-height: 1.4;
 
@@ -31,6 +31,7 @@
 }
 .huge-message {
   font-size: 32px;
+  color: var(--rp-ui-base-charcoal);
 
   @media (max-width: $SCREEN_XS_MAX) {
     font-size: 24px;

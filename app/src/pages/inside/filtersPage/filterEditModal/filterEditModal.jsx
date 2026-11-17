@@ -31,7 +31,7 @@ import { FieldErrorHint } from 'components/fields/fieldErrorHint';
 import { FieldProvider } from 'components/fields/fieldProvider';
 import { MarkdownEditor } from 'components/main/markdown';
 import { commonValidators, validateAsync } from 'common/utils/validation';
-import { activeProjectSelector } from 'controllers/user';
+import { projectKeySelector } from 'controllers/project';
 
 const messages = defineMessages({
   name: {
@@ -56,19 +56,19 @@ const messages = defineMessages({
   },
 });
 
-const validateFilterNameUniqueness = (activeProject, id, name) =>
-  validateAsync.filterNameUnique(activeProject, id >= 0 ? id : undefined, name);
+const validateFilterNameUniqueness = (projectKey, id, name) =>
+  validateAsync.filterNameUnique(projectKey, id >= 0 ? id : undefined, name);
 
 @withModal('filterEditModal')
 @injectIntl
 @connect((state) => ({
-  activeProject: activeProjectSelector(state),
+  projectKey: projectKeySelector(state),
 }))
 @reduxForm({
   form: 'filterEditForm',
   validate: ({ name }) => ({ name: commonValidators.filterName(name) }),
-  asyncValidate: ({ id, name }, dispatch, { activeProject }) =>
-    validateFilterNameUniqueness(activeProject, id, name),
+  asyncValidate: ({ id, name }, dispatch, { projectKey }) =>
+    validateFilterNameUniqueness(projectKey, id, name),
   asyncChangeFields: ['name'],
   asyncBlurFields: ['name'],
 })
@@ -84,15 +84,11 @@ export class FilterEditModal extends Component {
     initialize: PropTypes.func.isRequired,
     handleSubmit: PropTypes.func.isRequired,
     dirty: PropTypes.bool.isRequired,
-    activeProject: PropTypes.string,
     tracking: PropTypes.shape({
       trackEvent: PropTypes.func,
       getTrackingData: PropTypes.func,
     }).isRequired,
-  };
-
-  static defaultProps = {
-    activeProject: '',
+    projectKey: PropTypes.string.isRequired,
   };
 
   constructor(props) {
@@ -133,7 +129,7 @@ export class FilterEditModal extends Component {
   };
 
   saveFilterAndCloseModal = (closeModal) => (values) =>
-    validateFilterNameUniqueness(this.props.activeProject, values.id, values.name)
+    validateFilterNameUniqueness(this.props.projectKey, values.id, values.name)
       .then(() => {
         this.props.data.onEdit(values);
         closeModal();
@@ -155,20 +151,18 @@ export class FilterEditModal extends Component {
         const event = this.isCreationMode
           ? this.events.clickOkBtn(getAddFilterTypeParam(filter?.conditions))
           : this.events.clickOkBtn;
-        tracking.trackEvent(event);
+        event && tracking.trackEvent(event);
         handleSubmit(this.saveFilterAndCloseModal(closeModal))();
       },
     };
     const cancelButton = {
       text: intl.formatMessage(COMMON_LOCALE_KEYS.CANCEL),
-      eventInfo: this.events.clickCancelBtn,
     };
     return (
       <ModalLayout
         title={this.getTitle()}
         okButton={okButton}
         cancelButton={cancelButton}
-        closeIconEventInfo={this.events.clickCloseIcon}
         closeConfirmation={this.getCloseConfirmationConfig()}
       >
         <form>
@@ -182,7 +176,6 @@ export class FilterEditModal extends Component {
           <ModalField>
             <FieldProvider name="description">
               <MarkdownEditor
-                eventsInfo={{ onChange: this.events.editDescription }}
                 placeholder={intl.formatMessage(messages.descriptionPlaceholder)}
               />
             </FieldProvider>

@@ -92,29 +92,28 @@ export const unselectAllItemsAction = (namespace) => () => ({
   },
 });
 
-export const setLastOperationAction = (namespace) => (operationName, operationArgs = {}) => ({
-  type: SET_LAST_OPERATION,
-  payload: {
-    operationName,
-    operationArgs,
-  },
-  meta: {
-    namespace,
-  },
-});
+export const setLastOperationAction =
+  (namespace) =>
+  (operationName, operationArgs = {}) => ({
+    type: SET_LAST_OPERATION,
+    payload: {
+      operationName,
+      operationArgs,
+    },
+    meta: {
+      namespace,
+    },
+  });
 
-export const createProceedWithValidItemsAction = (namespace) => (
-  operationName,
-  selectedItems,
-  additionalArgs,
-) => ({
-  type: PROCEED_WITH_VALID_ITEMS,
-  payload: {
-    name: operationName,
-    selectedItems,
-    additionalArgs,
-  },
-  meta: {
-    namespace,
-  },
-});
+export const createProceedWithValidItemsAction =
+  (namespace) => (operationName, selectedItems, additionalArgs) => ({
+    type: PROCEED_WITH_VALID_ITEMS,
+    payload: {
+      name: operationName,
+      selectedItems,
+      additionalArgs,
+    },
+    meta: {
+      namespace,
+    },
+  });

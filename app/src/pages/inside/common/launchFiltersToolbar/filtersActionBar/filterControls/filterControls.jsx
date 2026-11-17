@@ -70,7 +70,6 @@ FilterControls.propTypes = {
   cloneDisabled: PropTypes.bool,
   editDisabled: PropTypes.bool,
   saveDisabled: PropTypes.bool,
-  onChangeSorting: PropTypes.func.isRequired,
   onDiscard: PropTypes.func.isRequired,
   onClone: PropTypes.func.isRequired,
   onEdit: PropTypes.func.isRequired,

@@ -162,7 +162,6 @@ export class StackTrace extends Component {
   fetchItems = () => this.props.fetchLogPageStackTrace(this.props.logItem);
 
   loadMore = () => {
-    this.props.tracking.trackEvent(LOG_PAGE_EVENTS.LOAD_MORE_CLICK_STACK_TRACE);
     this.fetchItems();
   };
 
@@ -238,15 +237,8 @@ export class StackTrace extends Component {
   };
 
   renderStackTraceMessage = () => {
-    const {
-      items,
-      loadMore,
-      loading,
-      intl,
-      hideAdditionalCells,
-      designMode,
-      extensions,
-    } = this.props;
+    const { items, loadMore, loading, intl, hideAdditionalCells, designMode, extensions } =
+      this.props;
 
     return (
       <React.Fragment>

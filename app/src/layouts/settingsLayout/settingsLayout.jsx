@@ -14,28 +14,29 @@
  * limitations under the License.
  */
 
-import React from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
-import { Footer } from 'layouts/common/footer';
 import styles from './settingsLayout.scss';
 
 const cx = classNames.bind(styles);
 
-export const SettingsLayout = ({ navigation, children }) => (
+export const SettingsLayout = ({ navigation, children, fitContent }) => (
   <div className={cx('container')}>
     {navigation && <div className={cx('navigation')}>{navigation}</div>}
     <div className={cx('section')}>
-      <div className={cx('section-content')}>{children}</div>
-      <Footer />
+      <div className={cx('section-content', { 'section-content--fit': fitContent })}>
+        {children}
+      </div>
     </div>
   </div>
 );
 SettingsLayout.propTypes = {
   navigation: PropTypes.node,
   children: PropTypes.node,
+  fitContent: PropTypes.bool,
 };
 SettingsLayout.defaultProps = {
   navigation: null,
   children: null,
+  fitContent: false,
 };

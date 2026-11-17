@@ -26,7 +26,7 @@ import { commonValidators, validate } from 'common/utils/validation';
 import { getUniqueAndCommonAttributes } from 'common/utils/attributeUtils';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { LAUNCH_ITEM_TYPES } from 'common/constants/launchItemTypes';
-import { activeProjectSelector } from 'controllers/user';
+import { projectKeySelector } from 'controllers/project';
 import {
   NOTIFICATION_TYPES,
   showNotification,
@@ -141,7 +141,7 @@ const makeDescriptionOptions = (formatMessage) => [
 @formValues('descriptionAction', 'uniqueAttributes')
 @connect(
   (state) => ({
-    currentProject: activeProjectSelector(state),
+    projectKey: projectKeySelector(state),
   }),
   {
     showNotification,
@@ -159,7 +159,7 @@ export class EditItemsModal extends Component {
       eventsInfo: PropTypes.object,
     }).isRequired,
     initialize: PropTypes.func.isRequired,
-    currentProject: PropTypes.string.isRequired,
+    projectKey: PropTypes.string.isRequired,
     descriptionAction: PropTypes.string,
     uniqueAttributes: PropTypes.array,
     intl: PropTypes.object.isRequired,
@@ -251,24 +251,24 @@ export class EditItemsModal extends Component {
     }
   };
 
-  getAttributeKeyURLCreator = () => (activeProject) => {
+  getAttributeKeyURLCreator = () => (projectKey) => {
     const {
       data: { type, parentLaunch },
     } = this.props;
 
     return type === LAUNCH_ITEM_TYPES.launch
-      ? URLS.launchAttributeKeysSearch(activeProject)
-      : URLS.testItemAttributeKeysSearch(activeProject, parentLaunch.id);
+      ? URLS.launchAttributeKeysSearch(projectKey)
+      : URLS.testItemAttributeKeysSearch(projectKey, parentLaunch.id);
   };
 
-  getAttributeValueURLCreator = () => (activeProject, key) => {
+  getAttributeValueURLCreator = () => (projectKey, key) => {
     const {
       data: { type, parentLaunch },
     } = this.props;
 
     return type === LAUNCH_ITEM_TYPES.launch
-      ? URLS.launchAttributeValuesSearch(activeProject, key)
-      : URLS.testItemAttributeValuesSearch(activeProject, parentLaunch.id, key);
+      ? URLS.launchAttributeValuesSearch(projectKey, key)
+      : URLS.testItemAttributeValuesSearch(projectKey, parentLaunch.id, key);
   };
 
   removeUniqueAttribute = (attribute) => {
@@ -304,7 +304,7 @@ export class EditItemsModal extends Component {
   updateItems = ({ ids, attributes, description, descriptionAction }) => {
     const {
       intl: { formatMessage },
-      currentProject,
+      projectKey,
       data: { type, fetchFunc, eventsInfo },
       tracking,
     } = this.props;
@@ -314,8 +314,8 @@ export class EditItemsModal extends Component {
 
     const fetchUrl =
       type === LAUNCH_ITEM_TYPES.launch
-        ? URLS.launchesInfo(currentProject)
-        : URLS.testItemsInfo(currentProject);
+        ? URLS.launchesInfo(projectKey)
+        : URLS.testItemsInfo(projectKey);
     const data = {
       ids,
       attributes: attributes.filter((attribute) =>

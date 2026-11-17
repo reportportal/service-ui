@@ -1,0 +1,42 @@
+.milestones-table {
+  --milestones-table-inline-gutter: 34px;
+
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 1200px;
+  margin: 24px auto 0;
+
+  &_with-pagination {
+    padding-bottom: 90px;
+  }
+
+  &__pagination {
+    position: fixed;
+    bottom: 0;
+    left: 48px;
+    z-index: $Z-INDEX-POPUP;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-sizing: border-box;
+    width: calc(100vw - 48px);
+    height: 64px;
+    padding: 5px 32px;
+    background: var(--rp-ui-base-bg-100);
+    border-top: 1px solid var(--rp-ui-base-e-100);
+  }
+
+  &__pagination-inner {
+    box-sizing: border-box;
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 var(--milestones-table-inline-gutter);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+}

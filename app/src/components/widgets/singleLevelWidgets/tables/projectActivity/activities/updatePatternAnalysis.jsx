@@ -28,9 +28,9 @@ const getValue = ({ history: [{ oldValue, newValue }] = [{ oldValue: '', newValu
   return { oldValue: JSON.parse(oldValue), newValue: JSON.parse(newValue) };
 };
 
-export const UpdateAutoPatternAnalysis = ({ activity: { user, projectName, details } }) => {
+export const UpdateAutoPatternAnalysis = ({ activity }) => {
   const { formatMessage } = useIntl();
-
+  const { user, details, organizationSlug, projectSlug } = activity;
   const { oldValue, newValue } = getValue(details);
 
   return (
@@ -40,7 +40,7 @@ export const UpdateAutoPatternAnalysis = ({ activity: { user, projectName, detai
       <Link
         className={cx('link')}
         target="_blank"
-        to={getProjectSettingTabPageLink(projectName, PATTERN_ANALYSIS)}
+        to={getProjectSettingTabPageLink(organizationSlug, projectSlug, PATTERN_ANALYSIS)}
       >
         {formatMessage(messages.updatePatternAnalysisSettings_LINK)}
       </Link>

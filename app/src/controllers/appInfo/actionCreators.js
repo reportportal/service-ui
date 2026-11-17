@@ -14,18 +14,15 @@
  * limitations under the License.
  */
 
-import { fetchDataAction } from 'controllers/fetch';
-import { URLS } from 'common/urls';
 import {
-  APP_INFO_NAMESPACE,
+  FETCH_APP_INFO,
   UPDATE_SERVER_SETTINGS,
   UPDATE_API_EXTENSIONS_RESULT,
 } from './constants';
 
-export const fetchAppInfoAction = () =>
-  fetchDataAction(APP_INFO_NAMESPACE, true)(URLS.appInfo(), {
-    headers: { Authorization: undefined },
-  });
+export const fetchAppInfoAction = () => ({
+  type: FETCH_APP_INFO,
+});
 
 export const updateServerSettingsAction = (settings) => ({
   type: UPDATE_SERVER_SETTINGS,

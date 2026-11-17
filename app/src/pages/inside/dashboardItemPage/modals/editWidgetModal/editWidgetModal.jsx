@@ -24,13 +24,12 @@ import { useIntl, defineMessages } from 'react-intl';
 import { destroy, getFormInitialValues, getFormValues, isDirty, isValid } from 'redux-form';
 import { URLS } from 'common/urls';
 import { fetch } from 'common/utils';
-import { activeProjectSelector } from 'controllers/user';
 import { withModal, ModalLayout } from 'components/main/modal';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { showScreenLockAction, hideScreenLockAction } from 'controllers/screenLock';
 import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
 import { getWidgets } from 'pages/inside/dashboardItemPage/modals/common/widgets';
-import { getWidgetModeValuesString } from 'components/main/analytics/events/common/widgetPages/utils';
+import { projectKeySelector } from 'controllers/project';
 import { WIDGETS_EVENTS } from 'components/main/analytics/events/ga4Events/dashboardsPageEvents';
 import { activeDashboardIdSelector } from 'controllers/pages';
 import { useCanLockDashboard } from 'common/hooks';
@@ -65,16 +64,16 @@ const messages = defineMessages({
   },
 });
 
-const EditWidgetModalComponent = ({ data: { widget, onConfirm, eventsInfo } }) => {
+const EditWidgetModalComponent = ({ data: { widget, onConfirm } }) => {
   const { formatMessage } = useIntl();
   const { trackEvent } = useTracking();
   const dispatch = useDispatch();
-  const projectId = useSelector(activeProjectSelector);
   const widgetSettings = useSelector((state) => getFormValues(WIDGET_WIZARD_FORM)(state) || {});
   const initiallyFilledWidgetSettings = useSelector(getFormInitialValues(WIDGET_WIZARD_FORM));
   const activeDashboardId = useSelector(activeDashboardIdSelector);
   const dirty = useSelector(isDirty(WIDGET_WIZARD_FORM));
   const valid = useSelector(isValid(WIDGET_WIZARD_FORM));
+  const projectKey = useSelector(projectKeySelector);
   const canLock = useCanLockDashboard();
   const isLocked = widget?.locked && !canLock;
 
@@ -132,7 +131,7 @@ const EditWidgetModalComponent = ({ data: { widget, onConfirm, eventsInfo } }) =
         );
 
       dispatch(showScreenLockAction());
-      fetch(URLS.widget(projectId, widget.id), {
+      fetch(URLS.widget(projectKey, widget.id), {
         method: 'put',
         data: submitData,
       })
@@ -173,27 +172,16 @@ const EditWidgetModalComponent = ({ data: { widget, onConfirm, eventsInfo } }) =
           dispatch(hideScreenLockAction());
           dispatch(showNotification({ message: err.message, type: NOTIFICATION_TYPES.ERROR }));
         });
-
-      if (widgetSettings?.contentParameters) {
-        trackEvent(eventsInfo.selectCriteria(widgetSettings.contentParameters.contentFields));
-      }
-      const widgetMode =
-        widgetSettings.contentParameters?.widgetOptions &&
-        getWidgetModeValuesString(widgetSettings.contentParameters.widgetOptions);
-      if (widgetMode) {
-        trackEvent(eventsInfo.selectToggleButtons(widgetMode));
-      }
     },
     [
       widget,
       widgetSettings,
-      projectId,
+      projectKey,
       initiallyFilledWidgetSettings,
       activeDashboardId,
       onConfirm,
       formatMessage,
       trackEvent,
-      eventsInfo,
       preprocessOutputData,
       dispatch,
       isLocked,
@@ -244,12 +232,10 @@ const EditWidgetModalComponent = ({ data: { widget, onConfirm, eventsInfo } }) =
     text: formatMessage(COMMON_LOCALE_KEYS.SAVE),
     onClick: onSave,
     disabled: formAppearance.isMainControlsLocked || !valid,
-    eventInfo: eventsInfo.okBtn,
   };
   const cancelButton = {
     text: buttonsMessages.cancel,
     disabled: formAppearance.isMainControlsLocked,
-    eventInfo: eventsInfo.cancelBtn,
   };
 
   return (
@@ -260,11 +246,10 @@ const EditWidgetModalComponent = ({ data: { widget, onConfirm, eventsInfo } }) =
       cancelButton={cancelButton}
       className={cx('edit-widget-modal')}
       closeConfirmation={getCloseConfirmationConfig()}
-      closeIconEventInfo={eventsInfo.closeIcon}
     >
       <div className={cx('edit-widget-modal-content')}>
         <EditWidgetInfoSection
-          projectId={projectId}
+          projectKey={projectKey}
           widgetSettings={prepareWidgetDataForSubmit(preprocessOutputData(widgetSettings))}
           activeWidget={widgetInfo}
         />
@@ -277,7 +262,6 @@ const EditWidgetModalComponent = ({ data: { widget, onConfirm, eventsInfo } }) =
           formAppearance={formAppearance}
           handleFormAppearanceChange={handleFormAppearanceChange}
           buttonsMessages={buttonsMessages}
-          eventsInfo={eventsInfo}
           isMainControlsDisabled={isLocked}
         />
       </div>
@@ -289,14 +273,12 @@ EditWidgetModalComponent.propTypes = {
   data: PropTypes.shape({
     onConfirm: PropTypes.func,
     widget: PropTypes.object,
-    eventsInfo: PropTypes.object,
   }),
 };
 EditWidgetModalComponent.defaultProps = {
   data: {
     onConfirm: () => {},
     widget: {},
-    eventsInfo: {},
   },
 };
 export const EditWidgetModal = withModal('editWidgetModal')(EditWidgetModalComponent);

@@ -21,19 +21,19 @@ import classNames from 'classnames/bind';
 import { FormattedMessage } from 'react-intl';
 import { ADMINISTRATOR } from 'common/constants/accountRoles';
 import { userIdSelector } from 'controllers/user';
-import { projectIdSelector } from 'controllers/pages';
 import { UserAvatar } from 'pages/inside/common/userAvatar';
+import { projectKeySelector } from 'controllers/project';
 import styles from './personalInfo.scss';
 
 const cx = classNames.bind(styles);
 
 @connect((state) => ({
   currentUser: userIdSelector(state),
-  projectId: projectIdSelector(state),
+  projectKey: projectKeySelector(state),
 }))
 export class PersonalInfo extends Component {
   static propTypes = {
-    projectId: PropTypes.string.isRequired,
+    projectKey: PropTypes.string.isRequired,
     name: PropTypes.string,
     login: PropTypes.string,
     userRole: PropTypes.string,
@@ -47,10 +47,10 @@ export class PersonalInfo extends Component {
   };
 
   render() {
-    const { projectId, name, login, userRole, currentUser } = this.props;
+    const { projectKey, name, login, userRole, currentUser } = this.props;
     return (
       <div className={cx('personal-info')}>
-        <UserAvatar className={cx('avatar-wrapper')} projectId={projectId} userId={login} />
+        <UserAvatar className={cx('avatar-wrapper')} projectKey={projectKey} userId={login} />
         <div className={cx('member-info')}>
           <p className={cx('member-name-wrap')}>
             <span className={cx('member-name')} title={name}>

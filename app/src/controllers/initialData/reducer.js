@@ -14,13 +14,35 @@
  * limitations under the License.
  */
 
-import { SET_INITIAL_DATA_READY } from './constants';
+import { SET_INITIAL_DATA_READY, SET_SERVICE_AVAILABILITY } from './constants';
 
-export const initialDataReadyReducer = (state = false, { type = '' }) => {
-  switch (type) {
-    case SET_INITIAL_DATA_READY:
-      return true;
-    default:
-      return state;
+export const initialDataReadyReducer = (state, { type = '' } = {}) => {
+  const currentState = state ?? false;
+
+  if (type === SET_INITIAL_DATA_READY) {
+    return true;
   }
+
+  return currentState;
+};
+
+const initialServiceAvailabilityState = {
+  checked: false,
+  apiUnavailable: false,
+};
+
+export const serviceAvailabilityReducer = (
+  state,
+  { type = '', payload = {} } = {},
+) => {
+  const currentState = state ?? initialServiceAvailabilityState;
+
+  if (type === SET_SERVICE_AVAILABILITY) {
+    return {
+      ...currentState,
+      ...payload,
+    };
+  }
+
+  return currentState;
 };

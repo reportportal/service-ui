@@ -18,37 +18,29 @@ import { all, call, put, select, takeEvery, take } from 'redux-saga/effects';
 import { fetch, updateToken } from 'common/utils/fetch';
 import {
   getSessionItem,
-  getStorageItem,
   removeSessionItem,
   removeStorageItem,
   setStorageItem,
   updateStorageItem,
 } from 'common/utils/storageUtils';
 import { URLS } from 'common/urls';
-import {
-  ERROR_CODE_LOGIN_BAD_CREDENTIALS,
-  ERROR_CODE_LOGIN_MAX_LIMIT,
-} from 'common/constants/apiErrorCodes';
-import { ALL } from 'common/constants/reservedFilterIds';
 import { APPLICATION_SETTINGS } from 'common/constants/localStorageKeys';
 import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
-import { fetchAppInfoAction, isDemoInstanceSelector } from 'controllers/appInfo';
+import { fetchAppInfoAction } from 'controllers/appInfo';
 import {
   OAUTH_SUCCESS,
   pagePropertiesSelector,
-  PROJECT_DASHBOARD_PAGE,
   LOGIN_PAGE,
-  PROJECT_LAUNCHES_PAGE,
+  ACCOUNT_REMOVED_PAGE,
 } from 'controllers/pages';
 import {
-  activeProjectSelector,
   FETCH_USER_ERROR,
   FETCH_USER_SUCCESS,
   fetchUserAction,
-  SET_ACTIVE_PROJECT,
+  getUserSettingsFromStorage,
   userIdSelector,
+  userInfoSelector,
 } from 'controllers/user';
-import { FETCH_PROJECT_SUCCESS, fetchProjectAction } from 'controllers/project';
 import {
   fetchPluginsAction,
   fetchGlobalIntegrationsAction,
@@ -56,16 +48,29 @@ import {
 } from 'controllers/plugins';
 import { redirect, pathToAction } from 'redux-first-router';
 import qs, { stringify } from 'qs';
-import routesMap from 'routes/routesMap';
+import routesMap, { getRedirectRoute } from 'routes/routesMap';
 import { ACTIVITY_TIMESTAMP } from 'controllers/user/constants';
 import {
   authSuccessAction,
   resetTokenAction,
   setTokenAction,
   setLastFailedLoginTimeAction,
+  setFailedLoginAttemptsAction,
+  clearLoginLockoutAction,
   loginSuccessAction,
   setBadCredentialsAction,
+  setLoginLoadingAction,
 } from './actionCreators';
+import {
+  hasExpiredLoginLockout,
+  isLoginAttemptsExceeded,
+  isLoginCredentialFailure,
+  isLoginLockoutActive,
+  isLoginRedirectLockout,
+  isServerLoginLockFailure,
+  isValidLoginTokenResponse,
+  shouldStartLoginLockout,
+} from './loginLockout';
 import {
   LOGIN,
   LOGOUT,
@@ -76,16 +81,34 @@ import {
   ANONYMOUS_REDIRECT_PATH_STORAGE_KEY,
   GRAFANA_SESSION_REVOKE_TIMEOUT,
 } from './constants';
-import { tokenSelector } from './selectors';
+import { tokenSelector, lastFailedLoginTimeSelector, failedLoginAttemptsSelector } from './selectors';
+
+function* logoutOnServer(redirectedPage) {
+  if (redirectedPage === ACCOUNT_REMOVED_PAGE) {
+    return;
+  }
+
+  try {
+    yield call(fetch, URLS.logout(), { method: 'POST' });
+  } catch {
+    // proceed with local logout regardless of API errors
+  }
+}
 
 // TODO: clear cookie on logout
 function* handleLogout({ payload }) {
+  const token = yield select(tokenSelector);
+  if (!token) {
+    return;
+  }
+
   // JWT is still in axios.defaults.headers here (resetTokenAction hasn't fired yet).
   fetch(URLS.grafanaSession(), {
     method: 'DELETE',
     timeout: GRAFANA_SESSION_REVOKE_TIMEOUT,
   }).catch((error) => console.error('Failed to revoke Grafana session on logout', error));
 
+  yield call(logoutOnServer, payload);
   yield put(resetTokenAction());
   yield put(fetchPublicPluginsAction());
   yield put(fetchAppInfoAction());
@@ -104,11 +127,15 @@ function* handleLogout({ payload }) {
 }
 
 function* watchLogout() {
-  yield takeEvery(LOGOUT, handleLogout);
+  while (true) {
+    const action = yield take(LOGOUT);
+    yield call(handleLogout, action);
+  }
 }
 
 function* loginSuccessHandler({ payload }) {
   setStorageItem(ACTIVITY_TIMESTAMP, Date.now());
+  yield put(clearLoginLockoutAction());
 
   yield put(
     setTokenAction({
@@ -117,52 +144,109 @@ function* loginSuccessHandler({ payload }) {
     }),
   );
   yield put(fetchUserAction());
-  yield all([take([FETCH_USER_SUCCESS, FETCH_USER_ERROR]), take(SET_ACTIVE_PROJECT)]);
-  const projectId = yield select(activeProjectSelector);
-  yield put(fetchProjectAction(projectId));
-  yield take(FETCH_PROJECT_SUCCESS);
+  const userResult = yield take([FETCH_USER_SUCCESS, FETCH_USER_ERROR]);
+  if (userResult.error) {
+    yield put(setLoginLoadingAction(false));
+    return;
+  }
+
   yield put(fetchPluginsAction());
   yield put(fetchGlobalIntegrationsAction());
   yield put(authSuccessAction());
+
   const userId = yield select(userIdSelector);
+  const user = yield select(userInfoSelector);
   const anonymousRedirectPath = getSessionItem(ANONYMOUS_REDIRECT_PATH_STORAGE_KEY);
-  const userSettings = getStorageItem(`${userId}_settings`) || {};
+  const userSettings = getUserSettingsFromStorage(userId);
   const redirectPath = anonymousRedirectPath || userSettings.lastPath;
+
   if (redirectPath) {
     yield put(redirect(pathToAction(redirectPath, routesMap, qs)));
     if (anonymousRedirectPath) {
-      removeSessionItem('anonymousRedirectPath');
+      removeSessionItem(ANONYMOUS_REDIRECT_PATH_STORAGE_KEY);
     }
   } else {
-    const isDemoInstance = yield select(isDemoInstanceSelector);
-    const page = isDemoInstance
-      ? {
-          type: PROJECT_LAUNCHES_PAGE,
-          payload: { projectId, filterId: ALL },
-        }
-      : {
-          type: PROJECT_DASHBOARD_PAGE,
-          payload: { projectId },
-        };
+    // Demo instance specific redirect to be implemented
+    const page = getRedirectRoute(user);
     yield put(redirect(page));
   }
 
-  yield put(
-    showNotification({
-      messageId: 'successLogin',
-      type: NOTIFICATION_TYPES.SUCCESS,
-    }),
-  );
 }
 
 function* watchLoginSuccess() {
   yield takeEvery(LOGIN_SUCCESS, loginSuccessHandler);
 }
 
-function* handleLogin({ payload }) {
-  try {
-    const result = yield call(fetch, URLS.login(), {
+function* startServerLoginLockout() {
+  const lastFailedLoginTime = Date.now();
+  updateStorageItem(APPLICATION_SETTINGS, { lastFailedLoginTime });
+  yield put(setLastFailedLoginTimeAction(lastFailedLoginTime));
+}
+
+function* registerFailedLoginAttempt(shouldSetBadCredentials = true) {
+  const failedAttempts = (yield select(failedLoginAttemptsSelector)) + 1;
+  yield put(setFailedLoginAttemptsAction(failedAttempts));
+
+  if (shouldStartLoginLockout(failedAttempts)) {
+    const lastFailedLoginTime = Date.now();
+    updateStorageItem(APPLICATION_SETTINGS, { lastFailedLoginTime });
+    yield put(setLastFailedLoginTimeAction(lastFailedLoginTime));
+    return true;
+  }
+
+  // Field errors only; lockout counter above is unchanged regardless of this flag.
+  if (shouldSetBadCredentials) {
+    yield put(setBadCredentialsAction());
+  }
+
+  return false;
+}
+
+function getLoginErrorMessage(rawError) {
+  return String(
+    rawError?.message || rawError?.error_description || rawError?.error || 'Unknown error',
+  );
+}
+
+function* showLoginFailureNotification(errorMessage) {
+  yield put(
+    showNotification({
+      messageId: 'failureDefault',
+      type: NOTIFICATION_TYPES.ERROR,
+      values: { error: errorMessage },
+    }),
+  );
+}
+
+function* showLoginLockoutNotification() {
+  yield put(
+    showNotification({
+      messageId: 'loginAddressLocked',
+      type: NOTIFICATION_TYPES.ERROR,
+    }),
+  );
+}
+
+function* clearExpiredLoginLockoutState() {
+  const lastFailedLoginTime = yield select(lastFailedLoginTimeSelector);
+
+  if (hasExpiredLoginLockout(lastFailedLoginTime)) {
+    yield put(clearLoginLockoutAction());
+  }
+}
+
+function* stopLoadingAndActivateLockout() {
+  yield put(setLoginLoadingAction(false));
+  yield call(startServerLoginLockout);
+}
+
+function* submitLoginRequest(payload) {
+  return yield call(
+    fetch,
+    URLS.login(),
+    {
       method: 'POST',
+      validateStatus: () => true,
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded',
       },
@@ -171,29 +255,77 @@ function* handleLogin({ payload }) {
         username: payload.login,
         password: payload.password,
       }),
-    });
-    const token = {
+    },
+    true,
+  );
+}
+
+function* handleLoginResponse(response, isLastAttempt) {
+  if (isLoginRedirectLockout(response) || (isLastAttempt && response.status >= 400 && response.status < 500)) {
+    yield call(stopLoadingAndActivateLockout);
+    return;
+  }
+
+  if (response.status >= 400) {
+    throw response.data;
+  }
+
+  const result = response.data;
+
+  if (!isValidLoginTokenResponse(result)) {
+    yield call(stopLoadingAndActivateLockout);
+    return;
+  }
+
+  yield put(
+    loginSuccessAction({
       type: result.token_type,
       value: result.access_token,
-    };
+    }),
+  );
+}
 
-    yield put(loginSuccessAction(token));
-  } catch ({ message: error, errorCode }) {
-    yield put(
-      showNotification({
-        messageId: 'failureDefault',
-        type: NOTIFICATION_TYPES.ERROR,
-        values: { error },
-      }),
-    );
-    if (errorCode === ERROR_CODE_LOGIN_BAD_CREDENTIALS) {
-      yield put(setBadCredentialsAction());
+function* handleLoginFailure(rawError, isLastAttempt) {
+  yield put(setLoginLoadingAction(false));
+
+  if (isServerLoginLockFailure(rawError) || isLastAttempt) {
+    yield call(startServerLoginLockout);
+    yield call(showLoginLockoutNotification);
+    return;
+  }
+
+  if (isLoginCredentialFailure(rawError)) {
+    // Any 4003: field errors only (no toaster), same as classic "Bad credentials".
+    const isLockedOut = yield call(registerFailedLoginAttempt, true);
+
+    if (isLockedOut) {
+      yield call(showLoginLockoutNotification);
     }
-    if (errorCode === ERROR_CODE_LOGIN_MAX_LIMIT) {
-      const lastFailedLoginTime = Date.now();
-      updateStorageItem(APPLICATION_SETTINGS, { lastFailedLoginTime });
-      yield put(setLastFailedLoginTimeAction(lastFailedLoginTime));
-    }
+
+    return;
+  }
+
+  yield call(showLoginFailureNotification, getLoginErrorMessage(rawError));
+}
+
+function* handleLogin({ payload }) {
+  yield call(clearExpiredLoginLockoutState);
+
+  const lastFailedLoginTime = yield select(lastFailedLoginTimeSelector);
+
+  if (isLoginLockoutActive(lastFailedLoginTime)) {
+    yield put(setLoginLoadingAction(false));
+    return;
+  }
+
+  const failedAttempts = yield select(failedLoginAttemptsSelector);
+  const isLastAttempt = isLoginAttemptsExceeded(failedAttempts);
+
+  try {
+    const response = yield call(submitLoginRequest, payload);
+    yield call(handleLoginResponse, response, isLastAttempt);
+  } catch (rawError) {
+    yield call(handleLoginFailure, rawError, isLastAttempt);
   }
 }
 

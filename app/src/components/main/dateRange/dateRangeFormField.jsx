@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 EPAM Systems
+ * Copyright 2026 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,34 +15,99 @@
  */
 
 import PropTypes from 'prop-types';
-import { DateRange } from './dateRange';
+import classNames from 'classnames/bind';
+import { useIntl, defineMessages } from 'react-intl';
+import { DatePicker } from '@reportportal/ui-kit';
+import styles from './dateRangeFormField.scss';
+import {
+  parseFormattedDate,
+  formatDateRangeToMinutesString,
+  setEndOfDay,
+  getMaxAllowedEndDate,
+} from './utils';
+import { useCallback, useMemo } from 'react';
+
+const cx = classNames.bind(styles);
+
+export const messages = defineMessages({
+  customRange: {
+    id: 'DateRange.customRange',
+    defaultMessage: 'Custom range',
+  },
+  maxRangeHint: {
+    id: 'DateRange.maxRangeHint',
+    defaultMessage: 'The maximum date range is {maxDays, plural, one {# day} other {# days}}',
+  },
+});
 
 export const DateRangeFormField = ({
   input,
   popperClassName = '',
   calendarClassName = '',
+  onClose = () => {},
   maxRangeDays,
+  placeholder
 }) => {
-  const { value = {}, onChange } = input;
+  const { formatMessage } = useIntl();
+  const { value = '', onChange } = input;
+  const isObjectValue = value && typeof value === 'object';
+  const { startDate, endDate } = parseFormattedDate(value);
+  const showMaxRangeHint = maxRangeDays > 0;
+
+  const maxDate = useMemo(
+    () => getMaxAllowedEndDate(maxRangeDays, startDate, endDate),
+    [maxRangeDays, startDate, endDate],
+  );
+
+  const handleDateChange = useCallback(
+    ([startDate, endDate] = []) => {
+      const normalizedDateRange = {
+        startDate,
+        endDate: setEndOfDay(endDate),
+      };
+      const nextValue = isObjectValue
+        ? normalizedDateRange
+        : formatDateRangeToMinutesString(normalizedDateRange);
+
+      onChange(nextValue);
+
+      if (startDate && endDate && startDate <= endDate) {
+        onClose();
+      }
+    },
+    [isObjectValue, onChange, onClose],
+  );
 
   return (
-    <DateRange
-      startDate={value?.startDate}
-      endDate={value?.endDate}
-      onChange={onChange}
-      popperClassName={popperClassName}
-      calendarClassName={calendarClassName}
-      maxRangeDays={maxRangeDays}
-    />
+    <div className={cx('date-range-wrapper')}>
+      <div className={cx('title')}>{formatMessage(messages.customRange)}</div>
+      <div className={cx('date-picker-container')}>
+        <DatePicker
+          placeholder={placeholder}
+          selectsRange
+          value={[startDate, endDate]}
+          onChange={handleDateChange}
+          popperClassName={popperClassName}
+          calendarClassName={calendarClassName}
+          maxDate={maxDate}
+        />
+      </div>
+      {showMaxRangeHint && (
+        <span className={cx('max-range-hint')}>
+          {formatMessage(messages.maxRangeHint, { maxDays: Number(maxRangeDays) })}
+        </span>
+      )}
+    </div>
   );
 };
-
 DateRangeFormField.propTypes = {
   input: PropTypes.shape({
-    value: PropTypes.object,
+    value: PropTypes.string,
     onChange: PropTypes.func,
   }).isRequired,
+  onClose: PropTypes.func,
   popperClassName: PropTypes.string,
   calendarClassName: PropTypes.string,
   maxRangeDays: PropTypes.number,
+  placeholder: PropTypes.string
 };

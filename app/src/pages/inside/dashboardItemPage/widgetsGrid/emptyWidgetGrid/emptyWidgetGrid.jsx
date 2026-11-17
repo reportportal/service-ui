@@ -20,6 +20,8 @@ import classNames from 'classnames/bind';
 import { defineMessages, useIntl } from 'react-intl';
 import { GhostButton } from 'components/buttons/ghostButton';
 import AddDashboardIcon from 'common/img/add-widget-inline.svg';
+import { canWorkWithWidgets } from 'common/utils/permissions/permissions';
+import { userRolesSelector } from 'controllers/pages';
 import styles from './emptyWidgetGrid.scss';
 import { useCanLockDashboard } from 'common/hooks';
 import { useSelector } from 'react-redux';
@@ -34,19 +36,25 @@ const messages = defineMessages({
   },
   dashboardEmptyText: {
     id: 'DashboardItemPage.dashboardEmptyText',
-    defaultMessage: 'Add your first widget to analyse statistics',
+    defaultMessage: 'Add your first widget to start analyzing the statistics',
+  },
+  dashboardEmptyTextViewer: {
+    id: 'DashboardItemPage.dashboardEmptyTextViewer',
+    defaultMessage: 'Widgets will appear here once created by your team',
   },
   notMyDashboardEmptyHeader: {
     id: 'DashboardItemPage.notMyDashboardEmptyHeader',
-    defaultMessage: 'There are no widgets on this dashboard',
+    defaultMessage: 'No widgets yet',
   },
 });
 
 export const EmptyWidgetGrid = ({ action, isDisable }) => {
   const { formatMessage } = useIntl();
+  const userRoles = useSelector(userRolesSelector);
   const canLock = useCanLockDashboard();
   const dashboard = useSelector(activeDashboardItemSelector);
   const isButtonDisabled = dashboard?.locked && !canLock;
+  const isWorkWithDashboard = canWorkWithWidgets(userRoles);
 
   return (
     <div className={cx('empty-widget')}>
@@ -56,19 +64,25 @@ export const EmptyWidgetGrid = ({ action, isDisable }) => {
       </p>
       {!isDisable && (
         <Fragment>
-          <p className={cx('empty-widget-text')}>{formatMessage(messages.dashboardEmptyText)}</p>
-          <div className={cx('empty-widget-content')}>
-            <LockedDashboardTooltip locked={dashboard?.locked}>
-              <GhostButton
-                icon={AddDashboardIcon}
-                onClick={action}
-                disabled={isButtonDisabled}
-                appearance="faded"
-              >
-                {formatMessage(messages.addNewWidget)}
-              </GhostButton>
-            </LockedDashboardTooltip>
-          </div>
+          <p className={cx('empty-widget-text')}>
+            {formatMessage(
+              isWorkWithDashboard ? messages.dashboardEmptyText : messages.dashboardEmptyTextViewer,
+            )}
+          </p>
+          {isWorkWithDashboard && (
+            <div className={cx('empty-widget-content')}>
+              <LockedDashboardTooltip locked={dashboard?.locked}>
+                <GhostButton
+                  icon={AddDashboardIcon}
+                  onClick={action}
+                  disabled={isButtonDisabled}
+                  appearance="faded"
+                >
+                  {formatMessage(messages.addNewWidget)}
+                </GhostButton>
+              </LockedDashboardTooltip>
+            </div>
+          )}
         </Fragment>
       )}
     </div>

@@ -71,6 +71,7 @@ export class ArrayField extends Component {
           parseValueToString={this.parseValueToString}
           creatable={this.creatable}
           variant={darkView ? 'dark' : 'light'}
+          shouldShowEmptyListMessage={!this.creatable}
           mobileDisabled
           createWithoutConfirmation
         />

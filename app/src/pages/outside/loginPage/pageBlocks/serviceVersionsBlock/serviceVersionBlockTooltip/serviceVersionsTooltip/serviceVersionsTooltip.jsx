@@ -28,7 +28,7 @@ export const ServiceVersionsTooltip = ({ services, className }) => {
       <span className={cx('current-version')}>
         <FormattedMessage
           id={'ServiceVersionsBlock.currentVersion'}
-          defaultMessage={'Current version:'}
+          defaultMessage={'Service Version:'}
         />
       </span>
       <span className={cx('versions-list')}>
@@ -37,7 +37,6 @@ export const ServiceVersionsTooltip = ({ services, className }) => {
 
           return (
             <ServiceVersionItem
-              // eslint-disable-next-line react/no-array-index-key
               key={objKey}
               serviceName={value.name}
               serviceVersion={value.version}

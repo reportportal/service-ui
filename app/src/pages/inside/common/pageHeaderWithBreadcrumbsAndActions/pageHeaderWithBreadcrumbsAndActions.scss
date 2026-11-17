@@ -1,0 +1,88 @@
+/*
+ * Copyright 2025 EPAM Systems
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+.page-header-with-breadcrumbs-and-actions {
+  position: sticky;
+  top: 0;
+  z-index: 5;
+  padding: 16px 32px;
+  background-color: var(--rp-ui-base-bg-000);
+  border-bottom: 1px solid var(--rp-ui-base-e-100);
+
+  h1 {
+    color: var(--rp-ui-base-almost-black);
+    font-family: var(--rp-ui-base-font-family-heading);
+    font-size: 20px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 31px;
+  }
+
+  &__breadcrumb {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 12px;
+    min-width: 0;
+
+    [data-testid='breadcrumb'] {
+      min-width: 0;
+      max-width: 100%;
+    }
+
+    a,
+    button {
+      display: block;
+      min-width: 0;
+      max-width: 100%;
+    }
+
+    div:has(> [data-testid='breadcrumb']):first-child {
+      flex: 0 0 auto;
+    }
+  }
+
+  &__title-row {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    min-width: 0;
+  }
+
+  &__title-group {
+    display: flex;
+    flex: 1;
+    gap: 8px;
+    align-items: center;
+    min-width: 0;
+  }
+
+  &__title {
+    min-width: 0;
+    margin: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  &__actions {
+    display: flex;
+    flex-shrink: 0;
+    gap: 12px;
+    align-items: center;
+    height: 36px;
+  }
+}

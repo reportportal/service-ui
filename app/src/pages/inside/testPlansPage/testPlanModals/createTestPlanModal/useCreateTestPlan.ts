@@ -1,0 +1,109 @@
+/*
+ * Copyright 2025 EPAM Systems
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+import { useDispatch, useSelector } from 'react-redux';
+import { useTracking } from 'react-tracking';
+import { isNotNil } from 'es-toolkit';
+
+import { MILESTONES_PAGE_EVENTS } from 'analyticsEvents/milestonesPageEvents';
+import { URLS } from 'common/urls';
+import { fetch } from 'common/utils';
+import { useDebouncedSpinner, useQueryParams } from 'common/hooks';
+import { projectKeySelector } from 'controllers/project';
+import { hideModalAction } from 'controllers/modal';
+import { showSuccessNotification, showErrorNotification } from 'controllers/notification';
+import { defaultQueryParams, getTestPlansAction } from 'controllers/testPlan';
+import type { TestPlanDto } from 'controllers/testPlan/types';
+import { getMilestonesAction } from 'controllers/milestone';
+import { resetHasTestPlansCache } from 'hooks/useHasTestPlans';
+
+import { TestPlanFormValues } from '../testPlanModal';
+
+import type { CreateTestPlanModalData } from './types';
+
+export const useCreateTestPlan = ({ milestoneId }: CreateTestPlanModalData = {}) => {
+  const { isLoading, showSpinner, hideSpinner } = useDebouncedSpinner();
+  const dispatch = useDispatch();
+  const { trackEvent } = useTracking();
+  const projectKey = useSelector(projectKeySelector);
+  const queryParams = useQueryParams(defaultQueryParams);
+  const isFromMilestonesPage = isNotNil(milestoneId);
+
+  const trackSubmitSuccess = (attributesCount: number) => {
+    if (isFromMilestonesPage) {
+      trackEvent(MILESTONES_PAGE_EVENTS.submitCreateTestPlan(attributesCount));
+    }
+  };
+
+  const submitTestPlan = async (payload: TestPlanFormValues) => {
+    try {
+      showSpinner();
+
+      const created = await fetch<TestPlanDto>(URLS.testPlan(projectKey), {
+        method: 'post',
+        data: {
+          name: payload.name,
+          description: payload.description,
+          attributes: payload.attributes,
+        },
+      });
+
+      if (isNotNil(milestoneId)) {
+        try {
+          await fetch(URLS.tmsMilestoneAddTestPlan(projectKey, milestoneId, created.id), {
+            method: 'post',
+          });
+        } catch {
+          dispatch(hideModalAction());
+          dispatch(
+            showErrorNotification({
+              messageId: 'testPlanCreatedButNotLinkedToMilestone',
+            }),
+          );
+          dispatch(getTestPlansAction(queryParams));
+          dispatch(getMilestonesAction());
+          return;
+        }
+      }
+
+      trackSubmitSuccess(payload.attributes?.length ?? 0);
+      dispatch(hideModalAction());
+      dispatch(
+        showSuccessNotification({
+          messageId: 'testPlanCreatedSuccess',
+        }),
+      );
+      dispatch(getTestPlansAction(queryParams));
+      if (isNotNil(milestoneId)) {
+        dispatch(getMilestonesAction());
+        resetHasTestPlansCache();
+      }
+    } catch {
+      dispatch(
+        showErrorNotification({
+          messageId: 'errorOccurredTryAgain',
+        }),
+      );
+    } finally {
+      hideSpinner();
+    }
+  };
+
+  return {
+    isLoading,
+    submitTestPlan,
+  };
+};

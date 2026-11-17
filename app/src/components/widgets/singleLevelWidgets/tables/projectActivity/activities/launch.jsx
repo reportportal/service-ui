@@ -79,11 +79,12 @@ export class Launch extends Component {
   };
   static defaultProps = activityItemDefaultProps;
 
-  getLaunchesPageLink = (projectId) => ({
+  getLaunchesPageLink = (projectSlug, organizationSlug) => ({
     type: PROJECT_LAUNCHES_PAGE,
     payload: {
-      projectId,
+      projectSlug,
       filterId: ALL,
+      organizationSlug,
     },
   });
 
@@ -122,7 +123,11 @@ export class Launch extends Component {
           <Fragment>
             {` ${formatMessage(messages.launch)}`}
             <Link
-              to={getTestItemPageLink(activity.projectName, activity.loggedObjectId)}
+              to={getTestItemPageLink(
+                activity.organizationSlug,
+                activity.projectSlug,
+                activity.loggedObjectId,
+              )}
               className={cx('link')}
               target="_blank"
             >
@@ -132,7 +137,7 @@ export class Launch extends Component {
         )}
         {(activity.actionType === START_IMPORT || activity.actionType === FINISH_IMPORT) && (
           <Link
-            to={this.getLaunchesPageLink(activity.projectName)}
+            to={this.getLaunchesPageLink(activity.projectSlug, activity.organizationSlug)}
             className={cx('link')}
             target="_blank"
           >

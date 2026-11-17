@@ -15,7 +15,8 @@
  */
 export { isEmptyObject } from './isEmptyObject';
 export { referenceDictionary, docsReferences } from './referenceDictionary';
-export { isString, capitalize } from './stringUtils';
+export { isString, capitalize, compareStringsLocale } from './stringUtils';
+export { getNextDuplicateName, joinNameWithSuffix } from './getNextDuplicateName';
 export { trimStringValues } from './objectUtils';
 export { fetch, ERROR_CANCELED, ERROR_UNAUTHORIZED } from './fetch';
 export {
@@ -25,6 +26,7 @@ export {
   updateStorageItem,
   getSessionItem,
   setSessionItem,
+  removeSessionItem,
   updateSessionItem,
 } from './storageUtils';
 export {
@@ -40,7 +42,12 @@ export {
   getMinutesFromTimestamp,
   formatDuration,
   secondsToDays,
+  hoursToSeconds,
+  daysToSeconds,
+  secondsToHours,
+  hoursToDays,
   getApproximateTime,
+  humanizeDays,
 } from './timeDateUtils';
 export { connectRouter } from './connectRouter';
 export { uniqueId } from './uniqueId';
@@ -59,4 +66,12 @@ export { createNamespacedActionPredicate } from './createNamespacedActionPredica
 export { omit } from './omit';
 export { calculateFontColor } from './calculateFontColor';
 export { createExternalLink } from './createExternalLink';
+export { findAssignedProjectByOrganization } from './findAssignedProjectByOrganization';
 export { combineNameAndEmailToFrom, separateFromIntoNameAndEmail } from './fieldTransformer';
+export { delay, delayedPut } from './delay';
+export { createClassnames } from './createClassnames';
+export { commonValidators } from './validation';
+export { copyToClipboard } from './clipboard';
+export { getRouterParams } from './getRouterParams';
+export { convertBytesToMB } from './convertBytesToMB';
+export { highlightText } from './textHighlight';

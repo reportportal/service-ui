@@ -22,4 +22,5 @@ export { RuleList, DraggableRuleList } from './ruleList';
 export { PatternRuleContent } from './patternRuleContent';
 export { NotificationRuleContent } from './notificationRuleContent';
 export { FormattedDescription } from './formattedDescription';
+export { InfoBlockWithControl } from './infoBlockWithControl';
 export * from './constants';

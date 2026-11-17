@@ -1,0 +1,269 @@
+/*
+ * Copyright 2024 EPAM Systems
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+import {
+  getBasicChooseEventParameters,
+  getBasicClickEventParameters,
+  normalizeEventParameter,
+} from '../common/ga4Utils';
+import { InviteProjectCondition } from 'pages/inside/common/invitations/inviteUserModal/types';
+
+const ORGANIZATION_PAGE = 'organization';
+const SETTINGS_PAGE = 'organization_settings';
+const INTEGRATIONS = 'integrations';
+const PROMO = 'all_organizations_without_plugin';
+const PREMIUM_FEATURES_POPUP = 'premium_features_popup';
+
+const BASIC_EVENT_PARAMETERS = getBasicClickEventParameters(ORGANIZATION_PAGE);
+const SETTINGS_EVENT_PARAMETERS = getBasicClickEventParameters(SETTINGS_PAGE);
+const BASIC_EVENT_PARAMETERS_INTEGRATIONS = {
+  ...SETTINGS_EVENT_PARAMETERS,
+  place: INTEGRATIONS,
+};
+
+export const ORGANIZATION_SETTINGS_VIEWS = {
+  getOrganizationSettingsPageView: (settingsTab: string, subTab?: string) => ({
+    action: 'page_view',
+    place: subTab
+      ? `${SETTINGS_PAGE}_${settingsTab.toLowerCase()}_${normalizeEventParameter(subTab)}`
+      : `${SETTINGS_PAGE}_${settingsTab.toLowerCase()}`,
+  }),
+};
+
+export const ORGANIZATION_SETTINGS_INTEGRATION = {
+  CLICK_DOCUMENTATION_LINK_INTEGRATIONS: {
+    ...BASIC_EVENT_PARAMETERS_INTEGRATIONS,
+    link_name: 'documentation',
+  },
+
+  clickCreateIntegrationModal: (type: string) => ({
+    ...BASIC_EVENT_PARAMETERS_INTEGRATIONS,
+    element_name: 'submit_create_organization_integration',
+    type: normalizeEventParameter(type),
+  }),
+
+  clickDeleteIntegrationModal: (type: string) => ({
+    ...BASIC_EVENT_PARAMETERS_INTEGRATIONS,
+    element_name: 'submit_delete_organization_integration',
+    type: normalizeEventParameter(type),
+  }),
+
+  clickResetToGlobalIntegration: (type: string) => ({
+    ...BASIC_EVENT_PARAMETERS_INTEGRATIONS,
+    element_name: 'start_reset_global_organization_integration',
+    type: normalizeEventParameter(type),
+  }),
+
+  clickResetToGlobalIntegrationModal: (type: string) => ({
+    ...BASIC_EVENT_PARAMETERS_INTEGRATIONS,
+    element_name: 'submit_reset_global_organization_integration',
+    type: normalizeEventParameter(type),
+  }),
+
+  clickEditIntegrationModal: (type: string) => ({
+    ...BASIC_EVENT_PARAMETERS_INTEGRATIONS,
+    element_name: 'submit_edit_organization_integration',
+    type: normalizeEventParameter(type),
+  }),
+};
+
+export const ORGANIZATION_PAGE_EVENTS = {
+  VIEW_ALL_ORGANIZATIONS: {
+    action: 'page_view',
+    place: 'all_organizations',
+  },
+  SEARCH_ORGANIZATION_FIELD: {
+    ...BASIC_EVENT_PARAMETERS,
+    place: 'all_organizations',
+    element_name: 'search',
+  },
+  SEARCH_ORGANIZATION_USERS_FIELD: {
+    ...BASIC_EVENT_PARAMETERS,
+    place: 'all_users',
+    element_name: 'search',
+  },
+  clickApplyFilterButton: (type: string, condition: string) => ({
+    ...BASIC_EVENT_PARAMETERS,
+    modal: 'filter_organization',
+    element_name: 'apply',
+    condition,
+    type,
+  }),
+  organizationsSorting: (type: string, arrow = false) => ({
+    ...BASIC_EVENT_PARAMETERS,
+    place: 'all_organizations',
+    element_name: `organizations_sorting${arrow ? '_arrow' : ''}`,
+    type,
+  }),
+  export: (appliedFiltersCount = 0) => ({
+    ...BASIC_EVENT_PARAMETERS,
+    place: 'all_organizations',
+    element_name: 'export',
+    number: appliedFiltersCount,
+  }),
+  meatballMenu: (elementName: string) => ({
+    ...BASIC_EVENT_PARAMETERS,
+    place: 'all_organizations',
+    element_name: elementName,
+  }),
+  activityPage: (page: string) => ({
+    ...BASIC_EVENT_PARAMETERS,
+    action: 'page_view',
+    place: page,
+  }),
+  VIEW_ORGANIZATION_USERS: {
+    action: 'page_view',
+    place: 'organization_users',
+  },
+  updateOrganizationSettings: ({ keepLaunches, keepLogs, keepScreenshots }) => ({
+    ...SETTINGS_EVENT_PARAMETERS,
+    place: 'general',
+    element_name: 'button_submit',
+    type: `${keepLaunches}#${keepLogs}#${keepScreenshots}`,
+  }),
+  inviteUser: (condition: InviteProjectCondition = 'without_project') => ({
+    ...BASIC_EVENT_PARAMETERS,
+    element_name: 'invite',
+    modal: 'invite_user',
+    type: 'organization_level',
+    condition,
+  }),
+  CLICK_APPLY_BUTTON: {
+    ...BASIC_EVENT_PARAMETERS,
+    place: 'all_organizations',
+    modal: 'filter_activity',
+    element_name: 'apply',
+  },
+  SEARCH_ACTIVITY_FIELD: {
+    ...BASIC_EVENT_PARAMETERS,
+    place: 'activity',
+    element_name: 'search',
+  },
+  meatballMenuUsers: (elementName: string) => ({
+    ...BASIC_EVENT_PARAMETERS,
+    place: 'all_users',
+    element_name: elementName,
+  }),
+  manageAssignments: (elementName: string, condition?: string) => ({
+    ...BASIC_EVENT_PARAMETERS,
+    place: 'all_users',
+    element_name: elementName,
+    modal: 'manage_assignments_of_user',
+    ...(condition && { condition }),
+  }),
+  MANAGE_ASSIGNMENTS_DOCUMENTATION: {
+    ...BASIC_EVENT_PARAMETERS,
+    link_name: 'documentation',
+    place: 'manage_assignment',
+  },
+  unassignUser: (isCurrentUser: boolean) => ({
+    ...BASIC_EVENT_PARAMETERS,
+    place: 'all_users',
+    element_name: 'unassign',
+    modal: `unassign${isCurrentUser ? '' : '_user'}_from_organization`,
+  }),
+  ASSIGN_SELF: {
+    ...BASIC_EVENT_PARAMETERS,
+    place: 'all_organizations',
+    element_name: 'assign_via_menu',
+  },
+  CLICK_ASSIGN_BUTTON: {
+    ...BASIC_EVENT_PARAMETERS,
+    place: 'all_organizations',
+    element_name: 'assign',
+    modal: 'assign_organization',
+  },
+  UNASSIGN_SELF: {
+    ...BASIC_EVENT_PARAMETERS,
+    place: 'all_organizations',
+    element_name: 'unassign',
+  },
+  clickCreateOrganization: (element = '') => ({
+    ...BASIC_EVENT_PARAMETERS,
+    place: 'all_organizations_with_plugin',
+    element_name: element ? `create_organization_${element}` : 'create_organization',
+  }),
+  CLICK_CREATE_BUTTON: {
+    ...BASIC_EVENT_PARAMETERS,
+    element_name: 'create',
+    modal: 'create_organization',
+    place: 'all_organizations',
+  },
+  HOVER_CREATE_BUTTON: {
+    ...BASIC_EVENT_PARAMETERS,
+    action: 'tooltip_view',
+    element_name: 'tooltip_create_organization',
+    place: 'all_organizations',
+  },
+  DELETE_ORGANIZATION: {
+    ...BASIC_EVENT_PARAMETERS,
+    place: 'all_organizations',
+    element_name: 'delete',
+    modal: 'delete_organization',
+  },
+  getChangePageSizeEvent: (place: string) => (pageSize: number) => ({
+    ...getBasicChooseEventParameters(ORGANIZATION_PAGE),
+    element_name: 'page_size_control',
+    number: pageSize,
+    place,
+  }),
+  renameOrganization: (place: string) => ({
+    ...BASIC_EVENT_PARAMETERS,
+    element_name: 'rename',
+    modal: 'rename_organization',
+    place,
+  }),
+  assignToProject: () => ({
+    ...BASIC_EVENT_PARAMETERS,
+    place: 'all_organizations_projects',
+    element_name: 'assign_via_menu',
+  }),
+  assignToProjectModal: (elementName: string) => ({
+    ...BASIC_EVENT_PARAMETERS,
+    place: 'all_organizations',
+    element_name: elementName,
+    modal: 'assign_project',
+  }),
+};
+
+export const ORGANIZATION_PROMO_EVENTS = {
+  CLICK_CREATE_ORGANIZATION_WITHOUT_PLUGIN: {
+    ...getBasicClickEventParameters(ORGANIZATION_PAGE),
+    place: PROMO,
+    element_name: 'create_organization',
+  },
+
+  CLICK_EXPLORE_PLANS_POPUP: {
+    ...getBasicClickEventParameters(ORGANIZATION_PAGE),
+    place: PREMIUM_FEATURES_POPUP,
+    type: 'organizations',
+    element_name: 'explore_plans',
+  },
+
+  CLICK_NOT_NOW_POPUP: {
+    ...getBasicClickEventParameters(ORGANIZATION_PAGE),
+    place: PREMIUM_FEATURES_POPUP,
+    type: 'organizations',
+    element_name: 'not_now',
+  },
+
+  CLICK_CONTACT_US_POPUP: {
+    ...getBasicClickEventParameters(ORGANIZATION_PAGE),
+    place: PREMIUM_FEATURES_POPUP,
+    type: 'organizations',
+    element_name: 'start_contact_us_org',
+  },
+};

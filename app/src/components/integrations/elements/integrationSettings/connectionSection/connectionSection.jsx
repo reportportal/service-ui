@@ -19,19 +19,17 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { connect } from 'react-redux';
 import { injectIntl, defineMessages } from 'react-intl';
-import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
-import track from 'react-tracking';
 import moment from 'moment';
 import Parser from 'html-react-parser';
 import { showModalAction } from 'controllers/modal';
 import { namedProjectIntegrationsSelector } from 'controllers/plugins';
-import { PLUGINS_PAGE_EVENTS, SETTINGS_PAGE_EVENTS } from 'components/main/analytics/events';
-import { SystemMessage } from 'componentLibrary/systemMessage';
+import { SystemMessage } from '@reportportal/ui-kit';
 import PencilIcon from 'common/img/newIcons/pencil-inline.svg';
 import TrashBin from 'common/img/newIcons/bin-inline.svg';
 import Tick from 'common/img/newIcons/tick-inline.svg';
 import ErrorIcon from 'common/img/newIcons/error-inline.svg';
 import styles from './connectionSection.scss';
+import { IntegrationAnalyticsContext } from 'components/integrations/integrationAnalyticsContext';
 
 const cx = classNames.bind(styles);
 
@@ -60,9 +58,13 @@ const messages = defineMessages({
     id: 'ConnectionSection.warningMessageDescription',
     defaultMessage: 'Global Integrations are inactive as you have configured Project Integration',
   },
+  deleteIntegrationTitle: {
+    id: 'ConnectionSection.deleteIntegrationTitle',
+    defaultMessage: 'Delete {name}',
+  },
   deleteIntegrationDescription: {
     id: 'ConnectionSection.deleteIntegrationDescription',
-    defaultMessage: 'Are you sure you want to delete Integration',
+    defaultMessage: 'Are you sure you want to delete Integration {name}?',
   },
 });
 
@@ -74,7 +76,6 @@ const messages = defineMessages({
     showModalAction,
   },
 )
-@track()
 @injectIntl
 export class ConnectionSection extends Component {
   static propTypes = {
@@ -87,12 +88,7 @@ export class ConnectionSection extends Component {
     connected: PropTypes.bool,
     editAuthConfig: PropTypes.object,
     pluginName: PropTypes.string,
-    tracking: PropTypes.shape({
-      trackEvent: PropTypes.func,
-      getTrackingData: PropTypes.func,
-    }).isRequired,
     isEditable: PropTypes.bool.isRequired,
-    isGlobal: PropTypes.bool,
     data: PropTypes.shape({
       creationDate: PropTypes.number,
       creator: PropTypes.string,
@@ -111,41 +107,31 @@ export class ConnectionSection extends Component {
     connected: true,
     editAuthConfig: null,
     pluginName: null,
-    isGlobal: false,
   };
+
+  static contextType = IntegrationAnalyticsContext;
 
   removeIntegrationHandler = () => {
     const {
       intl: { formatMessage },
-      tracking,
-      pluginName,
-      isGlobal,
       data,
     } = this.props;
-
-    tracking.trackEvent(
-      (isGlobal ? PLUGINS_PAGE_EVENTS : SETTINGS_PAGE_EVENTS).pluginRemoveIntegrationClick(
-        pluginName,
-      ),
-    );
 
     this.props.showModalAction({
       id: 'deleteIntegrationModal',
       data: {
         onConfirm: this.props.onRemoveIntegration,
-        modalTitle: `${formatMessage(COMMON_LOCALE_KEYS.DELETE)} ${data.name}`,
-        description: `${formatMessage(messages.deleteIntegrationDescription)} ${data.name}?`,
+        onConfirmTrackEvent: this.context?.deleteConfirmEvent
+          ? () => this.context.deleteConfirmEvent(this.props.pluginName)
+          : undefined,
+        modalTitle: formatMessage(messages.deleteIntegrationTitle, { name: data.name }),
+        description: formatMessage(messages.deleteIntegrationDescription, { name: data.name }),
       },
     });
   };
 
   onEditAuth = () => {
-    const { editAuthConfig, testConnection, tracking, pluginName, isGlobal } = this.props;
-    tracking.trackEvent(
-      (isGlobal ? PLUGINS_PAGE_EVENTS : SETTINGS_PAGE_EVENTS).pluginEditAuthorizationClick(
-        pluginName,
-      ),
-    );
+    const { editAuthConfig, testConnection } = this.props;
     editAuthConfig.onClick(testConnection);
   };
 

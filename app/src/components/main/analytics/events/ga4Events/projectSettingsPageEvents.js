@@ -17,6 +17,7 @@
 import { normalizeEventString } from '../../utils';
 import { LAUNCH_ANALYZE_TYPES_TO_ANALYTICS_TITLES_MAP } from '../common/constants';
 import { getBasicClickEventParameters, normalizeEventParameter } from '../common/ga4Utils';
+import { EMAIL } from 'common/constants/pluginNames';
 
 const PROJECT_SETTINGS = 'project_settings';
 const ANALYZER = 'analyzer';
@@ -58,7 +59,7 @@ export const PROJECT_SETTINGS_VIEWS = {
     action: 'page_view',
     page: PROJECT_SETTINGS,
     place: subTab
-      ? `${PROJECT_SETTINGS}_${settingsTab.toLowerCase()}_${subTab.toLowerCase()}`
+      ? `${PROJECT_SETTINGS}_${settingsTab.toLowerCase()}_${normalizeEventParameter(subTab)}`
       : `${PROJECT_SETTINGS}_${settingsTab.toLowerCase()}`,
   }),
 };
@@ -139,7 +140,7 @@ export const PROJECT_SETTINGS_NOTIFICATIONS_EVENTS = {
     ...BASIC_EVENT_PARAMETERS_NOTIFICATIONS,
     element_name: 'button_save',
     modal: normalizeEventString(modalName),
-    status: getStatus(status),
+    ...(communicationChanelName === EMAIL && { status: getStatus(status) }),
     type: normalizeEventString(type),
     switcher: getSwitcher(switcher),
     icon_name: ruleId,
@@ -260,10 +261,36 @@ export const PROJECT_SETTINGS_INTEGRATION = {
     type: normalizeEventString(type),
   }),
 
-  CLICK_RESET_TO_GLOBAL_INTEGRATION: {
+  CLICK_SUBMIT_CONFIGURATION: (type) => ({
+    ...BASIC_EVENT_PARAMETERS_INTEGRATIONS,
+    element_name: 'submit',
+    place: 'configuration_view',
+    type: normalizeEventParameter(type),
+  }),
+
+  CLICK_RESET_TO_GLOBAL_INTEGRATION: (type) => ({
     ...BASIC_EVENT_PARAMETERS_INTEGRATIONS,
     element_name: 'button_reset',
-  },
+    type: normalizeEventParameter(type),
+  }),
+
+  CLICK_RESET_CONFIRM: (type) => ({
+    ...BASIC_EVENT_PARAMETERS_INTEGRATIONS,
+    element_name: 'submit_reset_global_integrations',
+    type: normalizeEventParameter(type),
+  }),
+
+  CLICK_DELETE_CONFIRM: (type) => ({
+    ...BASIC_EVENT_PARAMETERS_INTEGRATIONS,
+    element_name: 'submit_delete_integration',
+    type: normalizeEventParameter(type),
+  }),
+
+  CLICK_SAVE_EDIT_PROJECT_INTEGRATION: (type) => ({
+    ...BASIC_EVENT_PARAMETERS_INTEGRATIONS,
+    element_name: 'submit_edit_project_integration',
+    type: normalizeEventParameter(type),
+  }),
 };
 
 export const PROJECT_SETTINGS_PATTERN_ANALYSIS_EVENTS = {
@@ -352,5 +379,48 @@ export const PROJECT_SETTINGS_LOG_TYPES_EVENTS = {
   CLICK_DOCUMENTATION_LINK: {
     ...BASIC_EVENT_PARAMETERS_LOG_TYPES,
     link_name: 'documentation',
+  },
+};
+
+const BASIC_EVENT_PARAMETERS_QUALITY_GATES_PAGE = {
+  ...getBasicClickEventParameters(PROJECT_SETTINGS),
+  place: 'page_quality_gates_without_plugin',
+};
+
+const BASIC_EVENT_PARAMETERS_QUALITY_GATES_POPUP = {
+  ...getBasicClickEventParameters(PROJECT_SETTINGS),
+  place: 'premium_features_popup',
+  type: 'quality_gates',
+};
+
+export const PROJECT_SETTINGS_QUALITY_GATES_EVENTS = {
+  CLICK_CREATE_QUALITY_GATE_WITHOUT_PLUGIN: {
+    ...BASIC_EVENT_PARAMETERS_QUALITY_GATES_PAGE,
+    element_name: 'start_create_quality_gate_without_plugin',
+  },
+
+  CLICK_CREATE_QUALITY_GATE_WITH_PLUGIN: {
+    ...BASIC_EVENT_PARAMETERS_QUALITY_GATES_PAGE,
+    element_name: 'start_create_quality_gate_with_plugin',
+  },
+
+  clickPromoLink: (linkName) => ({
+    ...BASIC_EVENT_PARAMETERS_QUALITY_GATES_PAGE,
+    link_name: linkName,
+  }),
+
+  CLICK_EXPLORE_PLANS_POPUP: {
+    ...BASIC_EVENT_PARAMETERS_QUALITY_GATES_POPUP,
+    element_name: 'explore_plans',
+  },
+
+  CLICK_NOT_NOW_POPUP: {
+    ...BASIC_EVENT_PARAMETERS_QUALITY_GATES_POPUP,
+    element_name: 'not_now',
+  },
+
+  CLICK_CONTACT_US_POPUP: {
+    ...BASIC_EVENT_PARAMETERS_QUALITY_GATES_POPUP,
+    element_name: 'start_contact_us_qe',
   },
 };

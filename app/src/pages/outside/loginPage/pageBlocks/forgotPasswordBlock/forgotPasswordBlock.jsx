@@ -15,22 +15,104 @@
  */
 
 import { defineMessages } from 'react-intl';
-import { PageBlockContainer } from 'pages/outside/common/pageBlockContainer';
+import { PageSectionContainer } from 'pages/outside/common/pageSectionContainer';
+import { OutsideLoginFooter } from 'pages/outside/common/outsideLoginFooter';
 import { ForgotPasswordForm } from './forgotPasswordForm';
+
+// import { useCallback, useState } from 'react';
+// import classNames from 'classnames/bind';
+// import { useDispatch } from 'react-redux';
+// import { showDefaultErrorNotification } from 'controllers/notification';
+// import { fetch } from 'common/utils/fetch';
+// import { URLS } from 'common/urls';
+// import { ForgotPasswordConfirmation } from './forgotPasswordForm/forgotPasswordConfirmation';
+// import styles from './forgotPasswordBlock.scss';
 
 const messages = defineMessages({
   forgotPass: {
     id: 'ForgotPasswordBlock.forgotPass',
-    defaultMessage: 'Forgot password?',
+    defaultMessage: 'Restore password',
   },
   enterEmail: {
     id: 'ForgotPasswordBlock.enterEmail',
-    defaultMessage: 'enter your email to restore',
+    defaultMessage: 'Enter your email address and we will send you the recovery link',
   },
+  // confirmationHint: {
+  //   id: 'ForgotPasswordBlock.confirmationHint',
+  //   defaultMessage:
+  //     'We\u2019ve sent you an email to confirm your password change. Please check your inbox:',
+  // },
 });
 
+// const cx = classNames.bind(styles);
+
 export const ForgotPasswordBlock = () => (
-  <PageBlockContainer header={messages.forgotPass} hint={messages.enterEmail}>
-    <ForgotPasswordForm />
-  </PageBlockContainer>
+  <>
+    <PageSectionContainer header={messages.forgotPass} hint={messages.enterEmail} leftAligned>
+      <ForgotPasswordForm />
+    </PageSectionContainer>
+    <OutsideLoginFooter />
+  </>
 );
+
+/*
+ * Inline confirmation + resend flow (Figma) — reserved for future use.
+ * US-RST-001 v0.2: on success redirect to Login + success notification instead.
+ *
+export const ForgotPasswordBlock = () => {
+  const dispatch = useDispatch();
+  const [confirmation, setConfirmation] = useState(null);
+  const [isResending, setIsResending] = useState(false);
+
+  const handleSendSuccess = useCallback((email) => {
+    setConfirmation({ email, lastSentTime: Date.now() });
+  }, []);
+
+  const handleResend = useCallback(() => {
+    if (!confirmation || isResending) {
+      return;
+    }
+
+    setIsResending(true);
+    fetch(URLS.userPasswordRestore(), {
+      method: 'post',
+      data: {
+        email: confirmation.email,
+      },
+    })
+      .then(() => {
+        setConfirmation((prev) => ({ ...prev, lastSentTime: Date.now() }));
+      })
+      .catch((error) => dispatch(showDefaultErrorNotification(error)))
+      .then(() => {
+        setIsResending(false);
+      });
+  }, [confirmation, dispatch, isResending]);
+
+  return (
+    <>
+      {confirmation ? (
+        <PageSectionContainer
+          header={messages.forgotPass}
+          hint={messages.confirmationHint}
+          customClassName={cx('confirmation-block')}
+          compactHeaderSpacing
+          leftAligned
+        >
+          <ForgotPasswordConfirmation
+            email={confirmation.email}
+            lastSentTime={confirmation.lastSentTime}
+            isResending={isResending}
+            onResend={handleResend}
+          />
+        </PageSectionContainer>
+      ) : (
+        <PageSectionContainer header={messages.forgotPass} hint={messages.enterEmail} leftAligned>
+          <ForgotPasswordForm onSuccess={handleSendSuccess} />
+        </PageSectionContainer>
+      )}
+      <OutsideLoginFooter />
+    </>
+  );
+};
+*/

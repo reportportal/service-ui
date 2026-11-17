@@ -62,26 +62,28 @@ export class ContainerWithTabs extends Component {
   };
 
   render() {
+    const { data, customClass } = this.props;
+    const { active } = this.state;
+
     return (
       <div className={cx('container-with-tabs')}>
-        <div className={cx('tabs-wrapper', this.props.customClass)}>
-          {this.props.data.length
-            ? this.props.data.map((item, id) => (
-                <div
+        <div className={cx('tabs-wrapper', customClass)}>
+          {data.length
+            ? data.map((item, id) => (
+                <button
                   // eslint-disable-next-line react/no-array-index-key
                   key={id}
+                  type="button"
                   data-id={id}
-                  className={cx({ tab: true, active: this.state.active === id })}
+                  className={cx({ tab: true, active: active === id })}
                   onClick={this.tabClickHandler}
                 >
                   {item.name}
-                </div>
+                </button>
               ))
             : null}
         </div>
-        <div className={cx('content-wrapper')}>
-          {this.props.data.length ? this.props.data[this.state.active].content : null}
-        </div>
+        <div className={cx('content-wrapper')}>{data.length ? data[active].content : null}</div>
       </div>
     );
   }

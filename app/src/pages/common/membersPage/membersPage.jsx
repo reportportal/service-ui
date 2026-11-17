@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import React, { Component, Fragment } from 'react';
+import { Component, Fragment } from 'react';
 import track from 'react-tracking';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
@@ -28,7 +28,7 @@ import {
 import { withFilter } from 'controllers/filter';
 import { PaginationToolbar } from 'components/main/paginationToolbar';
 import { withPagination, DEFAULT_PAGINATION, SIZE_KEY, PAGE_KEY } from 'controllers/pagination';
-import { MEMBERS_PAGE_EVENTS, MEMBERS_PAGE_VIEWS } from 'components/main/analytics/events';
+import { MEMBERS_PAGE_VIEWS } from 'components/main/analytics/events';
 import { NoResultsForFilter } from 'pages/inside/common/noResultsForFilter';
 import { MembersPageToolbar } from './membersPageToolbar';
 import { MembersGrid } from './membersGrid';
@@ -88,7 +88,6 @@ export class MembersPage extends Component {
   };
 
   searchUser = (filterQuery) => {
-    this.props.tracking.trackEvent(MEMBERS_PAGE_EVENTS.ENTER_SEARCH_PARAM);
     this.props.onFilterChange(filterQuery);
   };
 

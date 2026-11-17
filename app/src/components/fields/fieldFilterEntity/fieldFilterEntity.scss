@@ -18,6 +18,7 @@
   position: relative;
   display: flex;
   flex-direction: column;
+  justify-content: space-between;
   width: 235px;
   height: 55px;
   vertical-align: top;
@@ -50,7 +51,6 @@
   width: 100%;
   box-sizing: border-box;
   padding-right: 20px;
-  margin-bottom: 7px;
   font-family: $FONT-REGULAR;
   font-size: 13px;
   line-height: 18px;
@@ -59,7 +59,7 @@
   text-overflow: ellipsis;
 
   &.vertical {
-    padding-right: 0;
+    padding-right: 4px;
     width: 78px;
     vertical-align: middle;
     color: $COLOR--black-2;

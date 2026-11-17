@@ -108,7 +108,9 @@ export class InfoTabs extends Component {
               <button
                 className={cx('tab', { active: this.isActiveTab(tab), stroked: tab.stroked })}
                 onClick={() => {
-                  tracking.trackEvent(tab.eventInfo);
+                  if (tab.eventInfo) {
+                    tracking.trackEvent(tab.eventInfo);
+                  }
                   setActiveTab(tab.id);
                 }}
               >

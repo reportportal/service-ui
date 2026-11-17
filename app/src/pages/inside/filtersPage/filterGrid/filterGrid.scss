@@ -47,7 +47,6 @@
   padding: 15px;
   line-height: 22px;
   box-sizing: border-box;
-  word-break: break-all;
   font-size: 13px;
 
   @media (max-width: $SCREEN_XS_MAX) {
@@ -57,6 +56,24 @@
     text-align: left;
   }
 }
+
+.owner-name {
+  width: 0;
+  min-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+
+  @media (max-width: $SCREEN_XS_MAX) {
+    width: auto;
+    display: inline;
+    overflow: visible;
+    text-overflow: unset;
+    white-space: normal;
+    word-break: break-all;
+  }
+}
+
 .owner-label {
   vertical-align: unset;
 }

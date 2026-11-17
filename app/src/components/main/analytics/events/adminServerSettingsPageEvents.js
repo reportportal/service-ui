@@ -49,6 +49,11 @@ export const ADMIN_SERVER_SETTINGS_PAGE_EVENTS = {
     element_name: 'sso',
     switcher: switcherValue ? 'on' : 'off',
   }),
+  togglePersonalOrganizations: (switcherValue) => ({
+    ...basicClickEventParametersAdminServerSettingsPage,
+    element_name: 'create_personal_organizations',
+    switcher: switcherValue ? 'on' : 'off',
+  }),
   toggleImportantLaunches: (switcherValue) => ({
     ...basicClickEventParametersAdminServerSettingsPage,
     element_name: 'important_launches',
@@ -96,60 +101,8 @@ export const ADMIN_SERVER_SETTINGS_PAGE_EVENTS = {
     place: 'section_footer_links',
     link_name: DEFAULT_FOOTER_LINK_NAMES.includes(linkName) ? 'default_link' : 'custom_link',
   }),
-  onClickFooterLink: (linkName, isPreview) => ({
-    ...basicClickEventParametersAdminServerSettingsPage,
-    place: isPreview ? 'preview_footer' : 'footer',
-    link_name: DEFAULT_FOOTER_LINK_NAMES.includes(linkName) ? linkName : 'custom_link',
-  }),
   SUBMIT_PASSWORD_LENGTH: {
     ...basicClickEventParametersAdminServerSettingsPage,
     element_name: 'submit_password_length',
-  },
-  // GA3 events
-  ACTIVATE_GITHUB_SWITCHER: {
-    category: ADMIN_SERVER_SETTINGS_PAGE,
-    action: 'Click on switcher Activate Github authorization on tab Authorization Configuration',
-    label: 'On/off Activate Github authorization on tab Authorization Configuration',
-  },
-  ADD_GITHUB_ORGANIZATION_BTN: {
-    category: ADMIN_SERVER_SETTINGS_PAGE,
-    action: 'Click on Btn Add Github Organization on tab Authorization Configuration',
-    label: 'Arise field to Add Github Organization on tab Authorization Configuration',
-  },
-  SUBMIT_GITHUB_BTN: {
-    category: ADMIN_SERVER_SETTINGS_PAGE,
-    action: 'Click on Btn Submit on GitHub block on tab Authorization Configuration',
-    label: 'Submit changes for GitHub on tab Authorization Configuration',
-  },
-  ACTIVATE_AD_SWITCHER: {
-    category: ADMIN_SERVER_SETTINGS_PAGE,
-    action:
-      'Click on switcher Activate Active Directory authorization on tab Authorization Configuration',
-    label: 'On/off Activate Active Directory authorization on tab Authorization Configuration',
-  },
-  SUBMIT_AD_BTN: {
-    category: ADMIN_SERVER_SETTINGS_PAGE,
-    action: 'Click on Btn Submit on Active Directory block on tab Authorization Configuration',
-    label: 'Submit changes for Active Directory on tab Authorization Configuration',
-  },
-  ACTIVATE_LDAP_SWITCHER: {
-    category: ADMIN_SERVER_SETTINGS_PAGE,
-    action: 'Click on switcher Activate LDAP authorization on tab Authorization Configuration',
-    label: 'On/off Activate LDAP authorization on tab Authorization Configuration',
-  },
-  SUBMIT_LDAP_BTN: {
-    category: ADMIN_SERVER_SETTINGS_PAGE,
-    action: 'Click on Btn Submit on LDAP block on tab Authorization Configuration',
-    label: 'Submit changes for LDAP on tab Authorization Configuration',
-  },
-  MAKE_RP_GREAT_AGAIN_CHECK: {
-    category: ADMIN_SERVER_SETTINGS_PAGE,
-    action: 'Edit checkbox Help make ReportPortal better on tab Analytics',
-    label: 'Check Help make ReportPortal better on tab Analytics',
-  },
-  MAKE_RP_GREAT_AGAIN_UNCHECK: {
-    category: ADMIN_SERVER_SETTINGS_PAGE,
-    action: 'Edit checkbox Help make ReportPortal better on tab Analytics',
-    label: 'Uncheck Help make ReportPortal better on tab Analytics',
   },
 };

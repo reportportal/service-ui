@@ -1,0 +1,64 @@
+/*
+ * Copyright 2025 EPAM Systems
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+@use '../../../../common/css/mixins';
+
+.manual-launch-details-page {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+
+  &__header-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+
+    @include mixins.header-toolbar-search-button;
+
+    // Collapse gap between SearchField (1st) and filter button (2nd); keep gap for the rest
+    > *:nth-child(2) {
+      margin-left: -12px;
+    }
+  }
+
+  &__filter-icon {
+    @include mixins.header-toolbar-filter-button;
+
+    flex-shrink: 0;
+  }
+
+  &__filter-count {
+    font-size: 13px;
+    font-weight: 500;
+    line-height: 20px;
+    color: var(--rp-ui-base-topaz);
+  }
+
+  &__content {
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    gap: 80px;
+    justify-content: center;
+    padding: 0;
+
+    // this part is used to keep side panel above the page header
+    & > * > [class*="scrollWrapper__scroll-component"] [class*="scrollWrapper__scrolling-content"] {
+      z-index: 15;
+    }
+  }
+}

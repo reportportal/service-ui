@@ -1,0 +1,112 @@
+/*!
+ * Copyright 2026 EPAM Systems
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+.promo-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.title {
+  font-family: var(--rp-ui-base-font-family-heading);
+  font-size: 32px;
+  line-height: 42px;
+  margin-top: 96px;
+  color: var(--rp-ui-color-text-secondary);
+  text-align: center;
+  max-width: 772px;
+}
+
+.description {
+  margin-top: 15px;
+  font-family: var(--rp-ui-base-font-family);
+  font-size: 13px;
+  line-height: 20px;
+  text-align: center;
+  max-width: 649px;
+  color: var(--rp-ui-color-text);
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 24px;
+}
+
+.highlights {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 39px;
+  width: 100%;
+  max-width: 968px;
+  margin-top: 55px;
+}
+
+.highlight {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 292px;
+}
+
+.highlight-title {
+  font-family: var(--rp-ui-base-font-family);
+  font-size: 20px;
+  line-height: 24px;
+  color: var(--rp-ui-base-e-400);
+  text-align: center;
+}
+
+.highlight-visual {
+  width: 100%;
+  margin-top: 16px;
+}
+
+.highlight-image {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.footer {
+  width: 100%;
+  max-width: 968px;
+  margin-top: 28px;
+}
+
+.te {
+  margin-top: -2px;
+}
+
+.scim {
+  margin-top: 0;
+}
+
+.explore-billing-button {
+  min-width: 205px;
+}
+
+.help-panel {
+  justify-content: center;
+  padding-top: 0;
+}
+
+.help-panel-content {
+  padding-top: 6px;
+}

@@ -23,12 +23,16 @@ dotenv.config();
 
 module.exports = () => {
   if (!process.env.PROXY_PATH) {
+    // eslint-disable-next-line no-console
     console.log('========== Specify the PROXY_PATH variable in the .env file =========');
     process.exit(1);
   }
   return {
     devtool: 'eval-source-map',
     mode: 'development',
+    output: {
+      publicPath: '/',
+    },
     module: {
       rules: [
         {
@@ -89,10 +93,11 @@ module.exports = () => {
       port: 3000,
       proxy: [
         {
-          context: ['/composite', '/api/', '/uat/'],
+          context: ['/api/', '/ui/info', '/info'],
           target: process.env.PROXY_PATH,
           changeOrigin: true,
           bypass(req) {
+            // eslint-disable-next-line no-console
             console.log(`proxy url: ${req.url}`);
           },
         },

@@ -1,0 +1,137 @@
+/*
+ * Copyright 2024 EPAM Systems
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+.rocket-icon {
+  width: 113px;
+  height: 190px;
+  margin-bottom: -45px;
+}
+
+.footer-icon {
+  position: absolute;
+  bottom: 0;
+  width: 100vw;
+  left: -48px;
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: calc(100vh - 200px);
+}
+
+.title {
+  font-size: 32px;
+  line-height: 42px;
+  color: $COLOR--e-400;
+}
+
+.description {
+  font-family: $FONT-ROBOTO-REGULAR;
+  font-size: 13px;
+  line-height: 20px;
+  color: $COLOR--almost-black;
+  width: 530px;
+  text-align: center;
+  margin-top: 16px;
+}
+
+.saas-container {
+  margin-top: 24px;
+  max-width: 820px;
+  background-color: $COLOR--bg-000;
+  display: flex;
+  border-radius: 6px;
+  box-shadow: 0px 1px 3px 0px $COLOR--item-shadow;
+}
+
+.block {
+  width: 300px;
+  text-align: center;
+  padding: 30px;
+}
+
+.block-title {
+  font-family: $FONT-ROBOTO-MEDIUM;
+  font-size: 15px;
+  line-height: 24px;
+}
+
+.block-description {
+  font-family: $FONT-ROBOTO-REGULAR;
+  font-size: 13px;
+  line-height: 20px;
+  margin-top: 8px;
+}
+
+.separator-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.separator {
+  width: 2px;
+  height: 140px;
+  background-color: $COLOR--bg-200;
+  position: absolute;
+  top: 0;
+  left: 14px;
+}
+
+.text {
+  font-family: $FONT-ROBOTO-BOLD;
+  font-size: 11px;
+  line-height: 20px;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  color: $COLOR--e-400;
+  background-color: $COLOR--darkmode-gray-50;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1;
+}
+
+.link-container {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  justify-content: center;
+  margin-top: 8px;
+  text-decoration: none;
+}
+
+.link {
+  font-family: $FONT-ROBOTO-MEDIUM;
+  font-size: 13px;
+  line-height: 20px;
+  color: $COLOR--topaz-2;
+}
+
+.open-icon {
+  svg {
+    width: 13px;
+    height: 13px;
+
+    path {
+      fill: $COLOR--e-300;
+    }
+  }
+}

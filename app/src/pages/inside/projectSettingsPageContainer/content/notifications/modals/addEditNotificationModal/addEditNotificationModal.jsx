@@ -21,23 +21,19 @@ import { useDispatch, useSelector } from 'react-redux';
 import className from 'classnames/bind';
 import { defineMessages, useIntl } from 'react-intl';
 import { withModal } from 'components/main/modal';
-import { Modal, Checkbox, Toggle } from '@reportportal/ui-kit';
+import { Modal, Checkbox, Toggle, Dropdown, FieldText, FieldTextFlex, RadioGroup } from '@reportportal/ui-kit';
 import { FieldProvider } from 'components/fields/fieldProvider';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { FIELD } from 'common/constants/dataAutomation';
 import { bindMessageToValidator, commonValidators, validate } from 'common/utils/validation';
 import { FieldErrorHint } from 'components/fields/fieldErrorHint';
 import { URLS } from 'common/urls';
-import { Dropdown } from 'componentLibrary/dropdown';
 import { hideModalAction } from 'controllers/modal';
-import { FieldText } from 'componentLibrary/fieldText';
 import { AttributeListFormField } from 'components/containers/AttributeListFormField';
-import { RadioGroup } from 'componentLibrary/radioGroup';
 import { EMAIL } from 'common/constants/pluginNames';
-import { FieldTextFlex } from 'componentLibrary/fieldTextFlex';
 import { ruleField } from 'pages/inside/projectSettingsPageContainer/content/notifications/propTypes';
 import { fetchProjectAction } from 'controllers/project/actionCreators';
-import { projectIdSelector } from 'controllers/pages';
+import { projectKeySelector } from 'controllers/project';
 import { capitalizeWord } from '../util';
 import { RecipientsContainer } from './recipientsContainer';
 import { LaunchNamesContainer } from './launchNamesContainer';
@@ -93,7 +89,7 @@ const messages = defineMessages({
   },
   recipientsLabel: {
     id: 'AddEditNotificationCaseModal.recipientsLabel',
-    defaultMessage: 'Recipients',
+    defaultMessage: 'Email',
   },
   nameLabel: {
     id: 'AddEditNotificationModal.nameLabel',
@@ -215,15 +211,25 @@ const AddEditNotificationModal = ({
 }) => {
   const { formatMessage } = useIntl();
   const dispatch = useDispatch();
-  const projectId = useSelector(projectIdSelector);
+  const projectKey = useSelector(projectKeySelector);
   const [isEditorShown, setShowEditor] = React.useState(data.notification.attributes.length > 0);
+  const [forceAttributeErrors, setForceAttributeErrors] = React.useState(0);
   const attributesValue =
     useSelector((state) => attributesValueSelector(state, ATTRIBUTES_FIELD_KEY)) ?? [];
 
   useEffect(() => {
     initialize(data.notification);
-    dispatch(fetchProjectAction(projectId, false));
+    dispatch(fetchProjectAction(projectKey, false));
+
+  // Initialization should be called only once when the modal is opened 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  useEffect(() => {
+    if (!attributesValue.some((attr) => attr.edited)) {
+      setForceAttributeErrors(0);
+    }
+  }, [attributesValue]);
 
   const caseOptions = [
     {
@@ -286,11 +292,16 @@ const AddEditNotificationModal = ({
 
   const okButton = {
     children:
-      actionType === MODAL_ACTION_TYPE_ADD
-        ? formatMessage(COMMON_LOCALE_KEYS.CREATE)
-        : formatMessage(COMMON_LOCALE_KEYS.SAVE),
+      actionType === MODAL_ACTION_TYPE_EDIT
+        ? formatMessage(COMMON_LOCALE_KEYS.SAVE)
+        : formatMessage(COMMON_LOCALE_KEYS.CREATE),
     onClick: () => {
-      handleSubmit(submitActions)();
+      const hasOpenAttributeEditor = isEditorShown && attributesValue.some((attr) => attr.edited);
+      if (hasOpenAttributeEditor) {
+        setForceAttributeErrors((prev) => prev + 1);
+      } else {
+        handleSubmit(submitActions)();
+      }
     },
     'data-automation-id': 'submitButton',
   };
@@ -394,7 +405,7 @@ const AddEditNotificationModal = ({
           className={cx('input')}
           dataAutomationId={SEND_CASE_FIELD_KEY + FIELD}
         >
-          <Dropdown options={caseOptions} defaultWidth={false} />
+          <Dropdown options={caseOptions} />
         </FieldElement>
         <FieldElement
           label={formatMessage(messages.launchNamesLabel)}
@@ -423,6 +434,7 @@ const AddEditNotificationModal = ({
             changeValue={change}
             attributesNote={formatMessage(messages.attributesNote)}
             autocompleteProps={{ useFixedPositioning: true }}
+            forceValidateVersion={forceAttributeErrors}
           />
         </FieldElement>
         {attributesValue.length > 0 && isEditorShown && (
@@ -431,7 +443,7 @@ const AddEditNotificationModal = ({
             name={ATTRIBUTES_OPERATOR_FIELD_KEY}
             dataAutomationId={ATTRIBUTES_OPERATOR_FIELD_KEY + FIELD}
           >
-            <RadioGroup options={getAttributesConditionOptions()} />
+            <RadioGroup options={getAttributesConditionOptions()} className={cx('radio')} />
           </FieldElement>
         )}
       </div>

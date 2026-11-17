@@ -14,19 +14,25 @@
  * limitations under the License.
  */
 
-import { Component } from 'react';
-import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
+import { isEmpty } from 'es-toolkit/compat';
+import PropTypes from 'prop-types';
+import { Component } from 'react';
+import { injectIntl } from 'react-intl';
+
 import { BubblesLoader } from '@reportportal/ui-kit';
+import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
+
 import { autocompleteVariantType, singleAutocompleteOptionVariantType } from './propTypes';
 import { AutocompletePrompt } from './autocompletePrompt';
 import { AutocompleteOption } from './autocompleteOption';
+
 import styles from './autocompleteOptions.scss';
 
 const cx = classNames.bind(styles);
 
-export class AutocompleteOptions extends Component {
+export class AutocompleteOptionsComponent extends Component {
   static propTypes = {
     children: PropTypes.func,
     options: PropTypes.array,
@@ -39,6 +45,11 @@ export class AutocompleteOptions extends Component {
     optionVariant: singleAutocompleteOptionVariantType,
     createWithoutConfirmation: PropTypes.bool,
     variant: autocompleteVariantType,
+    customEmptyListMessage: PropTypes.string,
+    shouldShowEmptyListMessage: PropTypes.bool,
+    intl: PropTypes.object.isRequired,
+    getUniqKey: PropTypes.func,
+    newItemButtonText: PropTypes.string,
     creatable: PropTypes.bool,
     optionsMaxHeight: PropTypes.number,
   };
@@ -55,7 +66,9 @@ export class AutocompleteOptions extends Component {
     optionVariant: '',
     createWithoutConfirmation: false,
     variant: 'light',
+    newItemButtonText: '',
     creatable: true,
+    shouldShowEmptyListMessage: true,
     optionsMaxHeight: 140,
   };
 
@@ -90,7 +103,7 @@ export class AutocompleteOptions extends Component {
       renderOption(item, index, isNew, getItemProps)
     ) : (
       <AutocompleteOption
-        key={this.props.parseValueToString(item)}
+        key={this.props.getUniqKey?.(item) || this.props.parseValueToString(item)}
         optionVariant={optionVariant}
         {...getItemProps({ item, index })}
         isNew={isNew}
@@ -106,7 +119,7 @@ export class AutocompleteOptions extends Component {
   };
 
   renderNewItem = (options, showDivider = false) => {
-    const { inputValue, getItemProps, optionVariant, variant } = this.props;
+    const { inputValue, getItemProps, optionVariant, variant, newItemButtonText } = this.props;
     const index = options.length;
     const isNew = true;
     return (
@@ -118,6 +131,7 @@ export class AutocompleteOptions extends Component {
           isNew={isNew}
           showDivider={showDivider}
           variant={variant}
+          newItemButtonText={newItemButtonText}
         >
           {this.props.parseValueToString(inputValue)}
         </AutocompleteOption>
@@ -125,15 +139,36 @@ export class AutocompleteOptions extends Component {
     );
   };
 
+  renderEmptyList = () => {
+    const {
+      intl: { formatMessage },
+    } = this.props;
+
+    const message = isEmpty(this.props.options)
+      ? this.props.customEmptyListMessage || formatMessage(COMMON_LOCALE_KEYS.NO_AVAILABLE_OPTIONS)
+      : formatMessage(COMMON_LOCALE_KEYS.MO_MATCHES_FOUND);
+
+    return <div className={cx('empty-list-message')}>{message}</div>;
+  };
+
   render() {
-    const { async, options, createWithoutConfirmation, creatable, optionsMaxHeight } = this.props;
+    const { async, options, createWithoutConfirmation, shouldShowEmptyListMessage, creatable, optionsMaxHeight } =
+      this.props;
     const availableOptions = async ? options : this.filterStaticOptions();
     const prompt = this.getPrompt(options);
     if (prompt) return prompt;
+
+    const areAvailableOptionsEmpty = isEmpty(availableOptions);
+
+    if (areAvailableOptionsEmpty && !shouldShowEmptyListMessage && createWithoutConfirmation)
+      return null;
+
     return (
-      <div className={cx({ container: options.length })}>
+      <div className={cx('container')}>
         <ScrollWrapper autoHeight autoHeightMax={optionsMaxHeight}>
-          {this.renderItems(availableOptions)}
+          {areAvailableOptionsEmpty
+            ? shouldShowEmptyListMessage && this.renderEmptyList()
+            : this.renderItems(availableOptions)}
         </ScrollWrapper>
         {!createWithoutConfirmation &&
           creatable &&
@@ -142,3 +177,5 @@ export class AutocompleteOptions extends Component {
     );
   }
 }
+
+export const AutocompleteOptions = injectIntl(AutocompleteOptionsComponent);

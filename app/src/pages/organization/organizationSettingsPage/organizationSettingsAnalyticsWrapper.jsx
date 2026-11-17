@@ -1,0 +1,47 @@
+/*
+ * Copyright 2025 EPAM Systems
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+import { useEffect } from 'react';
+import { useSelector } from 'react-redux';
+import { useTracking } from 'react-tracking';
+import { INTEGRATIONS } from 'common/constants/settingsTabs';
+import { pluginByNameSelector } from 'controllers/plugins';
+import { payloadSelector, querySelector } from 'controllers/pages';
+import { ORGANIZATION_SETTINGS_VIEWS } from 'components/main/analytics/events/ga4Events/organizationsPageEvents';
+
+export const OrganizationSettingsAnalyticsWrapper = ({ children }) => {
+  const { trackEvent } = useTracking();
+  const payload = useSelector(payloadSelector);
+  const query = useSelector(querySelector);
+  const pluginName = payload.settingsTab === INTEGRATIONS && query.subPage ? query.subPage : null;
+  const plugin = useSelector((state) =>
+    pluginName ? pluginByNameSelector(state, pluginName) : undefined,
+  );
+  const subPage = plugin ? plugin.details?.name || plugin.name : query.subPage;
+
+  useEffect(() => {
+    if (payload.settingsTab) {
+      trackEvent(
+        ORGANIZATION_SETTINGS_VIEWS.getOrganizationSettingsPageView(
+          payload.settingsTab,
+          payload.subTab || subPage,
+        ),
+      );
+    }
+  }, [payload, trackEvent, subPage]);
+
+  return children;
+};

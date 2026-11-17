@@ -1,0 +1,96 @@
+/*
+ * Copyright 2026 EPAM Systems
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+import { defineMessages } from 'react-intl';
+
+export const messages = defineMessages({
+  requirements: {
+    id: 'ManualLaunchExecutionPage.requirements',
+    defaultMessage: 'Requirements',
+  },
+  requirementsAreNotSpecified: {
+    id: 'ManualLaunchExecutionPage.requirementsAreNotSpecified',
+    defaultMessage: 'Requirements are not specified',
+  },
+  preconditionIsNotSpecified: {
+    id: 'ManualLaunchExecutionPage.preconditionIsNotSpecified',
+    defaultMessage: 'Precondition is not specified',
+  },
+  noStepsSpecified: {
+    id: 'ManualLaunchExecutionPage.noStepsSpecified',
+    defaultMessage: 'No steps specified',
+  },
+  noDetailsForScenario: {
+    id: 'ManualLaunchExecutionPage.noDetailsForScenario',
+    defaultMessage: 'No details for this scenario',
+  },
+  executionNotFound: {
+    id: 'ManualLaunchExecutionPage.executionNotFound',
+    defaultMessage: 'Execution not found',
+  },
+  noAttachments: {
+    id: 'ManualLaunchExecutionPage.noAttachments',
+    defaultMessage: 'No attachments added',
+  },
+  executionStatusUpdated: {
+    id: 'ManualLaunchExecutionPage.executionStatusUpdated',
+    defaultMessage: 'Execution status updated to {status}',
+  },
+  executionCommentTitle: {
+    id: 'ManualLaunchExecutionPage.executionCommentTitle',
+    defaultMessage: 'Execution comment',
+  },
+  postOrLinkIssue: {
+    id: 'ManualLaunchExecutionPage.postOrLinkIssue',
+    defaultMessage: 'Post or Link Issue',
+  },
+  noLinkedIssuesYet: {
+    id: 'ManualLaunchExecutionPage.noLinkedIssuesYet',
+    defaultMessage: 'No linked issues yet',
+  },
+  clearExecutionComment: {
+    id: 'ManualLaunchExecutionPage.clearExecutionComment',
+    defaultMessage: 'Clear Comment',
+  },
+  saveExecutionComment: {
+    id: 'ManualLaunchExecutionPage.saveExecutionComment',
+    defaultMessage: 'Save',
+  },
+  removeAttachment: {
+    id: 'ManualLaunchExecutionPage.removeAttachment',
+    defaultMessage: 'Remove attachment',
+  },
+  duplicateFileNames: {
+    id: 'ManualLaunchExecutionPage.duplicateFileNames',
+    defaultMessage: 'File(s) with the same name already attached: {files}',
+  },
+  emptyFiles: {
+    id: 'ManualLaunchExecutionPage.emptyFiles',
+    defaultMessage: 'Cannot attach empty file(s): {files}',
+  },
+  clearStatus: {
+    id: 'ExecutionStatusPopover.clearStatus',
+    defaultMessage: 'Clear status',
+  },
+  postIssueToBts: {
+    id: 'ExecutionStatusConfirmModal.postIssueToBts',
+    defaultMessage: 'Post or link issue to BTS',
+  },
+  postIssueToBtsDisabledTooltip: {
+    id: 'ExecutionStatusConfirmModal.postIssueToBtsDisabledTooltip',
+    defaultMessage: 'No integration with BTS configured yet.\nContact Admin for assistance',
+  },
+});

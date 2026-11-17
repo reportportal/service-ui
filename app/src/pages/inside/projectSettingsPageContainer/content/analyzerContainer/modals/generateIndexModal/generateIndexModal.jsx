@@ -22,8 +22,7 @@ import { defineMessages, useIntl } from 'react-intl';
 import { URLS } from 'common/urls';
 import { fetch } from 'common/utils';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
-import { fetchProjectAction } from 'controllers/project';
-import { projectIdSelector } from 'controllers/pages';
+import { fetchProjectAction, projectKeySelector } from 'controllers/project';
 import {
   showNotification,
   showDefaultErrorNotification,
@@ -65,10 +64,10 @@ const messages = defineMessages({
 const GenerateIndexModal = ({ data }) => {
   const dispatch = useDispatch();
   const { formatMessage } = useIntl();
-  const projectId = useSelector(projectIdSelector);
+  const projectKey = useSelector(projectKeySelector);
 
   const onClickGenerate = () => {
-    fetch(URLS.projectIndex(projectId), { method: 'put' })
+    fetch(URLS.projectIndex(projectKey), { method: 'put' })
       .then(() => {
         dispatch(
           showNotification({
@@ -76,7 +75,7 @@ const GenerateIndexModal = ({ data }) => {
             type: NOTIFICATION_TYPES.SUCCESS,
           }),
         );
-        dispatch(fetchProjectAction(projectId));
+        dispatch(fetchProjectAction(projectKey));
       })
       .catch((error) => dispatch(showDefaultErrorNotification(error)));
     dispatch(hideModalAction());

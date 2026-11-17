@@ -24,9 +24,8 @@ import { useIntl } from 'react-intl';
 import { Modal, SystemMessage } from '@reportportal/ui-kit';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { PROJECT_SETTINGS_LOG_TYPES_EVENTS } from 'components/main/analytics/events/ga4Events/projectSettingsPageEvents';
-import { updateLogTypeAction, logTypesSelector } from 'controllers/project';
+import { updateLogTypeAction, logTypesSelector, projectKeySelector } from 'controllers/project';
 import { hideModalAction } from 'controllers/modal';
-import { projectIdSelector } from 'controllers/pages';
 import { messages } from '../messages';
 import {
   NAME_FIELD_KEY,
@@ -48,7 +47,7 @@ const EditLogTypeModal = ({ logType, handleSubmit, initialize, invalid, dirty })
   const { formatMessage } = useIntl();
   const dispatch = useDispatch();
   const { trackEvent } = useTracking();
-  const projectId = useSelector(projectIdSelector);
+  const projectKey = useSelector(projectKeySelector);
   const { name, level, style, is_filterable: isFilterable, is_system: isSystem } = logType;
   const initialColors = useMemo(
     () => ({
@@ -81,7 +80,7 @@ const EditLogTypeModal = ({ logType, handleSubmit, initialize, invalid, dirty })
       dispatch(hideModalAction());
     };
 
-    dispatch(updateLogTypeAction(data, logType.id, projectId, onSuccess));
+    dispatch(updateLogTypeAction(data, logType.id, projectKey, onSuccess));
   };
 
   const okButton = {

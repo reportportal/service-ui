@@ -15,11 +15,11 @@
  */
 
 import { takeLatest, takeEvery, call, put, all, select, take } from 'redux-saga/effects';
-import { URLS } from 'common/urls';
+import { URLS, resolveApiPath } from 'common/urls';
 import { fetch } from 'common/utils/fetch';
 import { showModalAction, HIDE_MODAL } from 'controllers/modal';
+import { showDefaultErrorNotification } from 'controllers/notification';
 import { concatFetchDataAction, createFetchPredicate } from 'controllers/fetch';
-import { activeProjectSelector } from 'controllers/user';
 import {
   activeRetryIdSelector,
   isLaunchLogSelector,
@@ -31,10 +31,12 @@ import { DETAILED_LOG_VIEW } from 'controllers/log/constants';
 import { downloadFile } from 'common/utils/downloadFile';
 import { JSON as JSON_TYPE } from 'common/constants/fileTypes';
 import { PAGE_KEY, SIZE_KEY } from 'controllers/pagination';
+import { projectKeySelector } from 'controllers/project';
 import {
   ATTACHMENT_CODE_MODAL_ID,
   ATTACHMENT_HAR_FILE_MODAL_ID,
   ATTACHMENT_IMAGE_MODAL_ID,
+  ATTACHMENT_VIDEO_MODAL_ID,
   FETCH_ATTACHMENTS_CONCAT_ACTION,
   ATTACHMENTS_NAMESPACE,
   DEFAULT_PAGE_SIZE,
@@ -50,25 +52,26 @@ import {
   isTextWithJson,
   createAttachmentName,
 } from './utils';
+import { setAttachmentModalLoadingIdAction } from './actionCreators';
 
 function* getAttachmentURL() {
-  const activeProject = yield select(activeProjectSelector);
+  const projectKey = yield select(projectKeySelector);
   const isLaunchLog = yield select(isLaunchLogSelector);
   const activeRetryId = yield select(activeRetryIdSelector);
   if (isLaunchLog) {
-    return URLS.launchLogs(activeProject, activeRetryId);
+    return URLS.launchLogs(projectKey, activeRetryId);
   }
   const logViewMode = yield select(logViewModeSelector);
   if (logViewMode === DETAILED_LOG_VIEW) {
     const activeRetry = yield select(activeRetrySelector);
     const retryParentId = yield select(activeLogIdSelector);
     return URLS.logsUnderPath(
-      activeProject,
+      projectKey,
       activeRetry.path,
       retryParentId === activeRetryId ? retryParentId : undefined,
     );
   }
-  return URLS.logItems(activeProject, activeRetryId);
+  return URLS.logItems(projectKey, activeRetryId);
 }
 
 function* fetchAttachmentsConcat({ payload: { params, concat } }) {
@@ -87,21 +90,32 @@ function* fetchFirstAttachments({ payload }) {
   yield call(fetchAttachmentsConcat, { payload: { params } });
 }
 
-export function fetchFileData({ projectId, id }, params) {
-  return fetch(URLS.getFileById(projectId, id), params);
+export function fetchFileData({ projectKey, id }, params) {
+  return fetch(URLS.getFileById(projectKey, id), params);
 }
 
 /* HAR */
 function* openHarModalWorker(data) {
   const harData = yield call(fetchFileData, data);
-  yield put(showModalAction({ id: ATTACHMENT_HAR_FILE_MODAL_ID, data: { harData } }));
+  yield put(
+    showModalAction({
+      id: ATTACHMENT_HAR_FILE_MODAL_ID,
+      data: { harData, fileName: data.fileName },
+    }),
+  );
 }
 
 /* IMAGE */
 function* openImageModalsWorker(data) {
   const imageData = yield call(fetchFileData, data, { responseType: 'blob' });
   const imageURL = URL.createObjectURL(imageData);
-  yield put(showModalAction({ id: ATTACHMENT_IMAGE_MODAL_ID, data: { image: imageURL } }));
+  yield put(
+    showModalAction({
+      id: ATTACHMENT_IMAGE_MODAL_ID,
+      data: { image: imageURL, fileName: data.fileName },
+    }),
+  );
+  yield put(setAttachmentModalLoadingIdAction(null));
   yield take(HIDE_MODAL);
   URL.revokeObjectURL(imageURL);
 }
@@ -109,52 +123,95 @@ function* openImageModalsWorker(data) {
 /* BINARY */
 function* openBinaryModalWorker(data) {
   const binaryData = yield call(fetchFileData, data);
-  const content =
-    data.extension === JSON_TYPE && !isTextWithJson(data.contentType)
-      ? JSON.stringify(binaryData, null, 4)
-      : binaryData;
+  const shouldStringify =
+    typeof binaryData !== 'string' ||
+    (data.extension === JSON_TYPE && !isTextWithJson(data.contentType));
+  const content = shouldStringify ? JSON.stringify(binaryData, null, 4) : binaryData;
   yield put(
     showModalAction({
       id: ATTACHMENT_CODE_MODAL_ID,
-      data: { extension: data.extension, content, id: data.id },
+      data: { extension: data.extension, content, id: data.id, fileName: data.fileName },
     }),
   );
+}
+
+/* VIDEO */
+function* openVideoModalWorker(data) {
+  const projectKey = yield select(projectKeySelector);
+  const response = yield call(fetch, URLS.createStreamLink(projectKey, data.id), {
+    method: 'post',
+  });
+
+  yield put(
+    showModalAction({
+      id: ATTACHMENT_VIDEO_MODAL_ID,
+      data: {
+        video: response?.url ? resolveApiPath(response.url) : null,
+        fileName: data.fileName,
+      },
+    }),
+  );
+  yield put(setAttachmentModalLoadingIdAction(null));
+  yield take(HIDE_MODAL);
 }
 
 const ATTACHMENT_MODAL_WORKERS = {
   [ATTACHMENT_IMAGE_MODAL_ID]: openImageModalsWorker,
   [ATTACHMENT_HAR_FILE_MODAL_ID]: openHarModalWorker,
   [ATTACHMENT_CODE_MODAL_ID]: openBinaryModalWorker,
+  [ATTACHMENT_VIDEO_MODAL_ID]: openVideoModalWorker,
 };
 
-function* openAttachmentInModal({ payload: { id, contentType } }) {
+function* openAttachmentInModal({ payload: { id, contentType, fileName } }) {
   const modalId = getAttachmentModalId(contentType);
-  const projectId = yield select(activeProjectSelector);
+  const projectKey = yield select(projectKeySelector);
 
   if (modalId) {
-    const data = { projectId, id, extension: extractExtension(contentType), contentType };
+    const data = {
+      projectKey,
+      extension: extractExtension(contentType),
+      contentType,
+      id,
+      fileName: fileName || createAttachmentName(id, contentType),
+    };
+    yield put(setAttachmentModalLoadingIdAction(id));
     try {
       yield call(ATTACHMENT_MODAL_WORKERS[modalId], data);
-    } catch (e) {} // eslint-disable-line no-empty
+    } catch (error) {
+      yield put(showDefaultErrorNotification(error));
+    } finally {
+      yield put(setAttachmentModalLoadingIdAction(null));
+    }
   }
 }
 
 function* downloadAttachment({ payload: { id, contentType } }) {
-  const projectId = yield select(activeProjectSelector);
+  const projectKey = yield select(projectKeySelector);
 
-  downloadFile(URLS.getFileById(projectId, id), {}, createAttachmentName(id, contentType));
+  downloadFile(URLS.getFileById(projectKey, id), {}, createAttachmentName(id, contentType));
 }
 
 function* openAttachmentInBrowser({ payload: id }) {
-  const projectId = yield select(activeProjectSelector);
-  const data = yield call(fetch, URLS.getFileById(projectId, id), { responseType: 'blob' });
+  const projectKey = yield select(projectKeySelector);
+  const data = yield call(fetch, URLS.getFileById(projectKey, id), { responseType: 'blob' });
 
   if (window.navigator?.msSaveOrOpenBlob) {
     window.navigator.msSaveOrOpenBlob(data);
   } else {
     const url = URL.createObjectURL(data);
     const newWindow = window.open(url);
-    newWindow.onbeforeunload = () => URL.revokeObjectURL(url);
+    if (newWindow) {
+      newWindow.onbeforeunload = () => URL.revokeObjectURL(url);
+    } else {
+      const link = document.createElement('a');
+      link.href = url;
+      link.target = '_blank';
+      link.rel = 'noopener noreferrer';
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      setTimeout(() => URL.revokeObjectURL(url), 60000);
+    }
   }
 }
 

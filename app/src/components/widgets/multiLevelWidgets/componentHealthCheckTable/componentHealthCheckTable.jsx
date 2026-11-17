@@ -36,7 +36,7 @@ import {
 import { formatAttribute, isEmptyObject } from 'common/utils';
 import { Grid, ALIGN_CENTER, ALIGN_RIGHT } from 'components/main/grid';
 import { TEST_ITEMS_TYPE_LIST } from 'controllers/testItem';
-import { activeProjectSelector } from 'controllers/user';
+import { urlOrganizationAndProjectSelector } from 'controllers/pages';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
 import { Breadcrumbs } from 'components/widgets/multiLevelWidgets/common/breadcrumbs';
 import { NoDataAvailableMaterializedView } from 'components/widgets/multiLevelWidgets/common/noDataAvailableMaterializedView';
@@ -150,7 +150,7 @@ const getColumn = (name, customProps, customColumn) => {
 
 @injectIntl
 @connect((state) => ({
-  project: activeProjectSelector(state),
+  slugs: urlOrganizationAndProjectSelector(state),
 }))
 export class ComponentHealthCheckTable extends Component {
   static propTypes = {
@@ -158,7 +158,10 @@ export class ComponentHealthCheckTable extends Component {
     widget: PropTypes.object.isRequired,
     fetchWidget: PropTypes.func,
     clearQueryParams: PropTypes.func,
-    project: PropTypes.string.isRequired,
+    slugs: PropTypes.shape({
+      organizationSlug: PropTypes.string.isRequired,
+      projectSlug: PropTypes.string.isRequired,
+    }),
   };
 
   static defaultProps = {
@@ -313,8 +316,8 @@ export class ComponentHealthCheckTable extends Component {
   getColumns = () => {
     const {
       intl: { formatMessage },
-      project,
       widget,
+      slugs: { organizationSlug, projectSlug },
     } = this.props;
     const attributes = widget.contentParameters?.widgetOptions.attributeKeys;
     const hasLaunchOwner = attributes?.includes(LAUNCH_OWNER_LEVEL_KEY) ?? false;
@@ -323,9 +326,10 @@ export class ComponentHealthCheckTable extends Component {
       formatMessage,
       isLatest: widget.contentParameters?.widgetOptions.latest,
       linkPayload: {
-        projectId: project,
         filterId: widget.appliedFilters[0]?.id,
         testItemIds: TEST_ITEMS_TYPE_LIST,
+        organizationSlug,
+        projectSlug,
       },
       getCompositeAttributes: this.getCompositeAttributes,
       getLaunchOwner: this.getLaunchOwner,

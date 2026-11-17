@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 EPAM Systems
+ * Copyright 2025 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,9 +16,12 @@
 
 // extension points
 export const EXTENSION_TYPE_SETTINGS_TAB = 'uiExtension:settingsTab';
+export const EXTENSION_TYPE_ORGANIZATION_SETTINGS_TAB = 'uiExtension:organizationSettingsTab';
 export const EXTENSION_TYPE_ADMIN_SIDEBAR_COMPONENT = 'uiExtension:adminSidebarComponent';
 export const EXTENSION_TYPE_ADMIN_PAGE = 'uiExtension:adminPage';
 export const EXTENSION_TYPE_SIDEBAR_COMPONENT = 'uiExtension:sidebarComponent';
+export const EXTENSION_TYPE_ORGANIZATION_SIDEBAR_COMPONENT =
+  'uiExtension:organizationSidebarComponent';
 export const EXTENSION_TYPE_LAUNCH_ITEM_COMPONENT = 'uiExtension:launchItemComponent';
 export const EXTENSION_TYPE_INTEGRATION_FORM_FIELDS = 'uiExtension:integrationFormFields';
 export const EXTENSION_TYPE_INTEGRATION_SETTINGS = 'uiExtension:integrationSettings';
@@ -36,6 +39,7 @@ export const EXTENSION_TYPE_MAKE_DECISION_DEFECT_TYPE_ADDON =
   'uiExtension:makeDecisionDefectTypeAddon';
 export const EXTENSION_TYPE_LOG_STACKTRACE_ADDON = 'uiExtension:logStacktraceAddon';
 export const EXTENSION_TYPE_TEST_ITEM_DETAILS_ADDON = 'uiExtension:testItemDetailsAddon';
+export const EXTENSION_TYPE_LOG_TAB = 'uiExtension:logTab';
 export const EXTENSION_TYPE_PROJECT_PAGE = 'uiExtension:projectPage';
 
 export const REMOTE_EXTENSION_POINT_PROJECT_PAGE = 'projectPages';
@@ -46,6 +50,8 @@ export const COMMAND_GET_ISSUE_FIELDS = 'getIssueFields';
 export const COMMAND_POST_ISSUE = 'postTicket';
 export const COMMAND_GET_ISSUE = 'getIssue';
 export const COMMAND_GET_CLUSTERS = 'getClusters';
+export const COMMAND_TEST_CONNECTION = 'testConnection';
+export const COMMAND_SYNCHRONIZE = 'synchronize';
 
 // core files keys
 export const MANIFEST_FILE_KEY = 'metadata';
@@ -55,6 +61,7 @@ export const ICON_FILE_KEY = 'icon';
 // redux actions
 export const FETCH_EXTENSION_MANIFESTS_SUCCESS = 'fetchExtensionManifestsSuccess';
 export const UPDATE_EXTENSION_MANIFEST = 'updateExtensionManifest';
+export const ADD_EXTENSION_MANIFEST = 'addExtensionManifest';
 
 // plugin types
 export const PLUGIN_TYPE_REMOTE = 'REMOTE';

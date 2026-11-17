@@ -1,8 +1,10 @@
 export { fetchExtensionManifests, fetchExtensionManifest } from './sagas';
 export {
   uiExtensionSettingsTabsSelector,
+  uiExtensionOrganizationSettingsTabsSelector,
   uiExtensionAdminPagesSelector,
   uiExtensionSidebarComponentsSelector,
+  uiExtensionOrganizationSidebarComponentsSelector,
   uiExtensionAdminSidebarComponentsSelector,
   uiExtensionLaunchItemComponentsSelector,
   uiExtensionIntegrationSettingsSelector,
@@ -17,8 +19,10 @@ export {
   makeDecisionDefectTypeAddonSelector,
   logStackTraceAddonSelector,
   testItemDetailsAddonSelector,
+  uiExtensionLogTabSelector,
   uiExtensionProjectPagesSelector,
   extensionManifestSelector,
+  extensionManifestsLoadPendingSelector,
   disablePluginPopupContentSelector,
 } from './selectors';
 export { uiExtensionsReducer } from './reducer';

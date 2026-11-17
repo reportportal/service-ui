@@ -79,9 +79,7 @@ export const getTimelineConfig = ({
         show: !isPreview,
         type: 'category',
         categories: itemsData.map((item) => {
-          const day = moment(item.date)
-            .format('dddd')
-            .substring(0, 3);
+          const day = moment(item.date).format('dddd').substring(0, 3);
           return `${day}, ${item.date}`;
         }),
         tick: {

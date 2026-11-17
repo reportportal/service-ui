@@ -15,7 +15,6 @@
  */
 
 import React from 'react';
-import { useTracking } from 'react-tracking';
 import classNames from 'classnames/bind';
 import PropTypes from 'prop-types';
 import { useSelector } from 'react-redux';
@@ -25,16 +24,17 @@ import { NavLink } from 'components/main/navLink';
 import { LockedDashboardTooltip } from 'pages/inside/common/lockedDashboardTooltip';
 import { LockedIcon } from 'pages/inside/common/lockedIcon';
 import { useCanLockDashboard } from 'common/hooks/useCanLockDashboard';
+import { useUserPermissions } from 'hooks/useUserPermissions';
 import styles from './dashboardGridItem.scss';
 
 const cx = classNames.bind(styles);
 
 const calculateGridPreviewBaseOnWidgetId = (id) => id % 14;
 
-export const DashboardGridItem = ({ item, onEdit, onDelete, nameEventInfo }) => {
-  const { trackEvent } = useTracking();
+export const DashboardGridItem = ({ item, onEdit, onDelete }) => {
   const getDashboardItemPageLink = useSelector(getDashboardItemPageLinkSelector);
   const canLock = useCanLockDashboard();
+  const { canWorkWithDashboard } = useUserPermissions();
   const { name, description, owner, id, locked } = item;
   const isDisabled = locked && !canLock;
 
@@ -50,11 +50,7 @@ export const DashboardGridItem = ({ item, onEdit, onDelete, nameEventInfo }) => 
 
   return (
     <div className={cx('grid-view')}>
-      <NavLink
-        to={getDashboardItemPageLink(id)}
-        className={cx('grid-view-inner')}
-        onClick={() => trackEvent(nameEventInfo)}
-      >
+      <NavLink to={getDashboardItemPageLink(id)} className={cx('grid-view-inner')}>
         <div className={cx('grid-cell', 'name')}>
           {locked && (
             <LockedDashboardTooltip locked={locked}>
@@ -74,6 +70,7 @@ export const DashboardGridItem = ({ item, onEdit, onDelete, nameEventInfo }) => 
           <p>{description}</p>
         </div>
         <div className={cx('grid-cell', 'owner')}>{owner}</div>
+        {canWorkWithDashboard && (
         <>
           <div className={cx('grid-cell', 'edit')}>
             <LockedDashboardTooltip locked={locked}>
@@ -86,6 +83,7 @@ export const DashboardGridItem = ({ item, onEdit, onDelete, nameEventInfo }) => 
             </LockedDashboardTooltip>
           </div>
         </>
+        )}
       </NavLink>
     </div>
   );
@@ -95,12 +93,10 @@ DashboardGridItem.propTypes = {
   item: PropTypes.object,
   onEdit: PropTypes.func,
   onDelete: PropTypes.func,
-  nameEventInfo: PropTypes.object,
 };
 
 DashboardGridItem.defaultProps = {
   item: {},
   onEdit: () => {},
   onDelete: () => {},
-  nameEventInfo: {},
 };

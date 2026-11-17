@@ -1,0 +1,44 @@
+/*
+ * Copyright 2026 EPAM Systems
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+import { memo } from 'react';
+import { createClassnames } from 'common/utils';
+import Parser from 'html-react-parser';
+
+import { ExecutionStatus } from 'pages/inside/manualLaunchesPage/types';
+
+import { ExecutionStatusChipProps } from './types';
+import { STATUS_CLASS_MAP, STATUS_ICON_MAP } from './constants';
+
+import styles from './executionStatusChip.scss';
+
+const cx = createClassnames(styles);
+
+export const ExecutionStatusChip = memo(({ status, disabled = false }: ExecutionStatusChipProps) => {
+  const statusKey = status.toUpperCase() as ExecutionStatus;
+  const statusClass = STATUS_CLASS_MAP[statusKey];
+  const statusIcon = STATUS_ICON_MAP[statusKey] as string;
+
+  if (!statusIcon) {
+    return null;
+  }
+
+  return (
+    <div className={cx('execution-status-chip', statusClass, { disabled })}>
+      <div className={cx('status-icon')}>{Parser(statusIcon)}</div>
+    </div>
+  );
+});

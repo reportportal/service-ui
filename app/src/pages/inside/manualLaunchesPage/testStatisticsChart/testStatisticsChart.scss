@@ -1,0 +1,152 @@
+/*
+ * Copyright 2025 EPAM Systems
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+.test-statistics-chart {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  align-self: stretch;
+  padding: 8px 32px;
+  height: 176px;
+  background-color: var(--rp-ui-base-bg-000);
+  box-shadow: 0px 1px 3px 0px rgba(55, 67, 98, 0.2);
+  border-radius: 4px;
+}
+
+.chart-header {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.total-value {
+  font-family: 'Open Sans', sans-serif;
+  font-size: 20px;
+  font-weight: 400;
+  line-height: 31px;
+  text-align: center;
+  color: var(--rp-ui-base-almost-black);
+}
+
+.total-label {
+  font-family: $FONT-ROBOTO-REGULAR;
+  font-size: 11px;
+  font-weight: 400;
+  line-height: 16px;
+  text-align: center;
+  color: var(--rp-ui-base-almost-black);
+}
+
+.chart-divider {
+  width: 288px;
+  height: 1px;
+  background-color: var(--rp-ui-base-e-100);
+  margin: 11px 0;
+  position: relative;
+  bottom: 18px;
+}
+
+.chart-body {
+  display: flex;
+  justify-content: center;
+  gap: 24px;
+  height: 70px;
+}
+
+.chart-column {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 8px;
+}
+
+.column-bar-wrapper {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  height: 70px;
+  flex-shrink: 0;
+}
+
+.column-bar {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: center;
+  width: 40px;
+  background-color: var(--rp-ui-base-e-100);
+  border-radius: 4px 4px 0 0;
+  transition: height 0.3s ease;
+}
+
+.column-badge {
+  position: absolute;
+  bottom: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 48px;
+  height: 20px;
+  border-radius: 4px;
+
+  &.passed {
+    background-color: var(--rp-ui-base-test-execution-status-passed);
+  }
+
+  &.failed {
+    background-color: var(--rp-ui-base-error);
+  }
+
+  &.in-progress {
+    background-color: var(--rp-ui-base-icon-priority-medium);
+  }
+
+  &.skipped {
+    background-color: var(--rp-ui-base-test-execution-status-skipped);
+  }
+
+  &.to-run {
+    background-color: var(--rp-ui-base-topaz);
+  }
+}
+
+.badge-value {
+  font-family: $FONT-ROBOTO-REGULAR;
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 16px;
+  text-align: center;
+  color: var(--rp-ui-base-bg-000);
+}
+
+.column-label {
+  margin-top: 8px;
+  height: 20px;
+  font-family: $FONT-ROBOTO-REGULAR;
+  font-size: 11px;
+  font-weight: 400;
+  line-height: 16px;
+  text-align: center;
+  color: var(--rp-ui-base-almost-black);
+}

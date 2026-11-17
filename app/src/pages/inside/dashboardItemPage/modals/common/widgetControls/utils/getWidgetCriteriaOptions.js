@@ -38,13 +38,14 @@ import {
   START_LAUNCH,
   FINISH_LAUNCH,
   DELETE_LAUNCH,
-  UPDATE_PROJECT,
   ACTIONS_WITH_BTS_ISSUES,
   ACTIONS_WITH_DASHBOARDS,
   ACTIONS_WITH_WIDGETS,
   ACTIONS_WITH_FILTERS,
   ACTIONS_WITH_INTEGRATIONS,
   ACTIONS_WITH_AA_SETTINGS,
+  ACTIONS_WITH_NOTIFICATION_RULE_SETTINGS,
+  ACTIONS_WITH_NOTIFICATION_RULES,
   ACTIONS_WITH_DEFECTS,
   ACTIONS_WITH_LOG_TYPES,
   ACTIONS_WITH_IMPORT,
@@ -55,11 +56,13 @@ import {
   ASSIGN_USER,
   UNASSIGN_USER,
   CHANGE_ROLE,
+  CREATE_INVITATION_LINK,
   CREATE_PROJECT,
   UPDATE_AUTO_PATTERN_ANALYSIS_SETTINGS,
   MARK_LAUNCH_AS_IMPORTANT,
   UNMARK_LAUNCH_AS_IMPORTANT,
   ACTIONS_UPDATE_TEST_ITEM,
+  ACTIONS_WITH_PROJECT,
 } from 'common/constants/actionTypes';
 import { getGroupedDefectTypesOptions } from 'pages/inside/common/utils';
 import { defectTypesLocalization } from 'common/constants/localization/defectTypesLocalization';
@@ -130,16 +133,10 @@ const messages = defineMessages({
     defaultMessage: 'Unassign user',
   },
   [CHANGE_ROLE]: { id: 'WidgetCriteriaOption.change_role', defaultMessage: 'Change role' },
-
-  [ASSIGN_USER]: {
-    id: 'WidgetCriteriaOption.assign_user',
-    defaultMessage: 'Assign, invite user',
+  [CREATE_INVITATION_LINK]: {
+    id: 'WidgetCriteriaOption.create_invitation_link',
+    defaultMessage: 'Create invitation link',
   },
-  [UNASSIGN_USER]: {
-    id: 'WidgetCriteriaOption.unassign_user',
-    defaultMessage: 'Unassign user',
-  },
-
   [ACTIONS_WITH_DASHBOARDS]: {
     id: 'WidgetCriteriaOption.dashboards_actions',
     defaultMessage: 'Update dashboard',
@@ -156,13 +153,21 @@ const messages = defineMessages({
     id: 'WidgetCriteriaOption.integration_actions',
     defaultMessage: 'Update integration',
   },
-  [UPDATE_PROJECT]: {
-    id: 'WidgetCriteriaOption.update_project',
+  [ACTIONS_WITH_PROJECT]: {
+    id: 'WidgetCriteriaOption.project_actions',
     defaultMessage: 'Update project settings',
   },
   [ACTIONS_WITH_AA_SETTINGS]: {
     id: 'WidgetCriteriaOption.aa_settings_actions',
     defaultMessage: 'Update Auto-Analysis settings',
+  },
+  [ACTIONS_WITH_NOTIFICATION_RULE_SETTINGS]: {
+    id: 'WidgetCriteriaOption.notificationRuleSettingsActions',
+    defaultMessage: 'Update Notification rule settings',
+  },
+  [ACTIONS_WITH_NOTIFICATION_RULES]: {
+    id: 'WidgetCriteriaOption.notificationRuleActions',
+    defaultMessage: 'Update Notification rule',
   },
   [ACTIONS_WITH_DEFECTS]: {
     id: 'WidgetCriteriaOption.defects_actions',
@@ -281,12 +286,21 @@ const getUserActionOptions = (formatMessage) => [
   { value: ASSIGN_USER, label: formatMessage(messages[ASSIGN_USER]) },
   { value: UNASSIGN_USER, label: formatMessage(messages[UNASSIGN_USER]) },
   { value: CHANGE_ROLE, label: formatMessage(messages[CHANGE_ROLE]) },
+  { value: CREATE_INVITATION_LINK, label: formatMessage(messages[CREATE_INVITATION_LINK]) },
   { value: ACTIONS_WITH_DASHBOARDS, label: formatMessage(messages[ACTIONS_WITH_DASHBOARDS]) },
   { value: ACTIONS_WITH_WIDGETS, label: formatMessage(messages[ACTIONS_WITH_WIDGETS]) },
   { value: ACTIONS_WITH_FILTERS, label: formatMessage(messages[ACTIONS_WITH_FILTERS]) },
   { value: ACTIONS_WITH_INTEGRATIONS, label: formatMessage(messages[ACTIONS_WITH_INTEGRATIONS]) },
-  { value: UPDATE_PROJECT, label: formatMessage(messages[UPDATE_PROJECT]) },
+  { value: ACTIONS_WITH_PROJECT, label: formatMessage(messages[ACTIONS_WITH_PROJECT]) },
   { value: ACTIONS_WITH_AA_SETTINGS, label: formatMessage(messages[ACTIONS_WITH_AA_SETTINGS]) },
+  {
+    value: ACTIONS_WITH_NOTIFICATION_RULE_SETTINGS,
+    label: formatMessage(messages[ACTIONS_WITH_NOTIFICATION_RULE_SETTINGS]),
+  },
+  {
+    value: ACTIONS_WITH_NOTIFICATION_RULES,
+    label: formatMessage(messages[ACTIONS_WITH_NOTIFICATION_RULES]),
+  },
   { value: ACTIONS_WITH_DEFECTS, label: formatMessage(messages[ACTIONS_WITH_DEFECTS]) },
   { value: ACTIONS_WITH_LOG_TYPES, label: formatMessage(messages[ACTIONS_WITH_LOG_TYPES]) },
   { value: ACTIONS_WITH_IMPORT, label: formatMessage(messages[ACTIONS_WITH_IMPORT]) },

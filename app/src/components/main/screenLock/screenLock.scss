@@ -20,7 +20,7 @@
   bottom: 0;
   right: 0;
   left: 0;
-  z-index: 2;
+  z-index: $Z-INDEX-SCREEN-LOCK;
 }
 .backdrop {
   position: absolute;

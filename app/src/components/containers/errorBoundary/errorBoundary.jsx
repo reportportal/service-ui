@@ -44,7 +44,6 @@ export class ErrorBoundary extends Component {
     if (!hasError) {
       return children;
     }
-    // eslint-disable-next-line no-console
     console.error(error);
     return getFallback ? getFallback(error) : null;
   }

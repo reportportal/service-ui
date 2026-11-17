@@ -26,9 +26,15 @@ export const USERNAME_KEY = 'username';
 export const PASSWORD_KEY = 'password';
 const RP_HOST = 'rpHost';
 
+export const ENCRYPTION_MODE_NONE = 'none';
+export const ENCRYPTION_MODE_TLS = 'tls';
+export const ENCRYPTION_MODE_SSL = 'ssl';
+
+export const PROTOCOL_SMTP = 'smtp';
+
 export const DEFAULT_FORM_CONFIG = {
   [AUTH_ENABLED_KEY]: false,
-  [PROTOCOL_KEY]: 'smtp',
+  [PROTOCOL_KEY]: PROTOCOL_SMTP,
   [SSL_KEY]: false,
   [TLS_KEY]: false,
   [USERNAME_KEY]: '',

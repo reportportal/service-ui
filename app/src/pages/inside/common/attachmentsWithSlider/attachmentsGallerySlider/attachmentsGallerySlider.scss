@@ -1,0 +1,251 @@
+/*
+ * Copyright 2026 EPAM Systems
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+$MAX_IMAGE_HEIGHT: calc(100vh - 280px);
+
+.overlay {
+  position: fixed;
+  inset: 0;
+  z-index: $Z-INDEX-OVERLAY-PANEL;
+  display: flex;
+  flex-direction: column;
+}
+
+.backdrop {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background-color: var(--rp-ui-base-dark-e-500);
+  opacity: 0.91;
+}
+
+.toolbar {
+  position: relative;
+  z-index: $Z_INDEX-GRID_HEADER;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  flex-shrink: 0;
+  margin-top: 40px;
+  padding-right: 40px;
+}
+
+.toolbarButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: content-box;
+  width: 16px;
+  margin-left: 19px;
+  padding: 0;
+  border: none;
+  background: none;
+  cursor: pointer;
+
+  path {
+    fill: var(--rp-ui-base-bg-000);
+  }
+}
+
+.toolbarButtonClose {
+  margin-left: 56px;
+}
+
+.toolbarButtonZoomMinus,
+.toolbarButtonZoomPlus {
+  width: 20px;
+  height: 20px;
+
+  svg {
+    width: 20px;
+    height: 20px;
+  }
+}
+
+.toolbarButtonHidden {
+  display: none;
+}
+
+.stageRow {
+  position: relative;
+  z-index: $Z-INDEX-DEFAULT;
+  display: flex;
+  flex: 1;
+  align-items: center;
+  min-height: 0;
+  padding-top: 80px;
+}
+
+.navButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border: none;
+  background-color: var(--rp-ui-base-topaz-100);
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.navPrev {
+  margin-left: 67px;
+}
+
+.navNext {
+  margin-right: 67px;
+}
+
+.stage {
+  position: relative;
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 16px;
+}
+
+.mainImage {
+  display: block;
+  max-width: 100%;
+  max-height: $MAX_IMAGE_HEIGHT;
+  border-radius: 4px;
+  object-fit: contain;
+
+  &[src^='data:image/svg'] {
+    width: 64px;
+    height: 64px;
+  }
+}
+
+.slideHost {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  max-width: 100%;
+  max-height: $MAX_IMAGE_HEIGHT;
+
+  &.slideHostPending .mainImage {
+    opacity: 0;
+  }
+
+  &:has(.fullImageLoading) {
+    .mainImage {
+      opacity: 0;
+    }
+  }
+}
+
+.zoomedImageViewport {
+  position: relative;
+  display: flex;
+  overflow: hidden;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  max-width: 100%;
+  max-height: $MAX_IMAGE_HEIGHT;
+  touch-action: none;
+  user-select: none;
+}
+
+.zoomedImageViewportDraggable {
+  cursor: grab;
+}
+
+.zoomedImageViewportDragging {
+  cursor: grabbing;
+}
+
+.zoomedImageLayer {
+  transform-origin: center center;
+  will-change: transform;
+}
+
+.thumbs {
+  position: relative;
+  z-index: $Z_INDEX-GRID_HEADER;
+  box-sizing: border-box;
+  width: 100%;
+  min-width: 0;
+  flex-shrink: 0;
+  margin: 29px 0;
+  padding: 0 40px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior-x: contain;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+.thumbsTrack {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  align-items: center;
+  gap: 17px;
+  width: max-content;
+  min-height: 96px;
+  margin: 0 auto;
+}
+
+.thumbButton {
+  display: block;
+  flex: 0 0 auto;
+  box-sizing: border-box;
+  width: 148px;
+  min-width: 148px;
+  max-width: 148px;
+  height: 96px;
+  min-height: 96px;
+  max-height: 96px;
+  padding: 0;
+  border: 2px solid var(--rp-ui-base-bg-000);
+  border-radius: 4px;
+  box-shadow: var(--rp-ui-image-shadow);
+  cursor: pointer;
+  overflow: hidden;
+  opacity: 0.7;
+
+  &.thumbActive {
+    opacity: 1;
+  }
+
+  &:hover {
+    opacity: 1;
+  }
+}
+
+.singleItem {
+  .navPrev,
+  .navNext {
+    display: none;
+  }
+}
+
+.fullImageLoading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  pointer-events: none;
+}

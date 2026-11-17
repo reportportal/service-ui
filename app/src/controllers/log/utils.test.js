@@ -104,7 +104,7 @@ describe('log/utils', () => {
   });
 
   describe('getFormattedPageLocation', () => {
-    const data = [{ '3995': 1 }, { '3996': 1 }, { '40981': 2 }];
+    const data = [{ 3995: 1 }, { 3996: 1 }, { 40981: 2 }];
     const expectedRes = [
       ['3995', 1],
       ['3996', 2],

@@ -29,4 +29,12 @@ export const messages = defineMessages({
     id: 'AttachmentModal.errorFileStructure',
     defaultMessage: 'Bad file structure',
   },
+  videoUnsupported: {
+    id: 'AttachmentModal.videoUnsupported',
+    defaultMessage: 'Your browser does not support the video tag.',
+  },
+  videoUnableToLoad: {
+    id: 'AttachmentModal.videoUnableToLoad',
+    defaultMessage: 'Unable to load video',
+  },
 });

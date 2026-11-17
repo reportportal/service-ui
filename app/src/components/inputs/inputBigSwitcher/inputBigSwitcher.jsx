@@ -81,8 +81,11 @@ export class InputBigSwitcher extends Component {
       onChangeEventInfo && tracking.trackEvent(event);
     };
     return (
-      // eslint-disable-next-line
-      <label className={cx('input-big-switcher')} tabIndex="1">
+      <label
+        className={cx('input-big-switcher')}
+        // eslint-disable-next-line jsx-a11y/no-noninteractive-tabindex, jsx-a11y/tabindex-no-positive
+        tabIndex="1"
+      >
         <div className={classes} title={title}>
           <div className={cx('on')}>
             <FormattedMessage id={'Common.on'} defaultMessage={'ON'} />

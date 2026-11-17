@@ -15,23 +15,19 @@
  */
 
 import React, { Component } from 'react';
-import track from 'react-tracking';
 import classNames from 'classnames/bind';
 import PropTypes from 'prop-types';
 import Parser from 'html-react-parser';
-import { FormattedMessage } from 'react-intl';
 import { SpringSystem } from 'rebound';
 import { Scrollbars } from 'react-custom-scrollbars-2';
-import { FOOTER_EVENTS } from 'components/main/analytics/events';
 import { forceCheck } from 'react-lazyload';
-import { Footer } from 'layouts/common/footer';
 import { scrollEventObserver, BACK_TO_TOP_EVENT } from 'common/observers/scrollObserver';
 import BackToTopIcon from './img/back-to-top-inline.svg';
 import styles from './scrollWrapper.scss';
 
 const cx = classNames.bind(styles);
+const SCROLL_HEIGHT = 800;
 
-@track()
 export class ScrollWrapper extends Component {
   static propTypes = {
     initialScrollRight: PropTypes.bool,
@@ -54,15 +50,14 @@ export class ScrollWrapper extends Component {
     resetRequired: PropTypes.bool,
     onReset: PropTypes.func,
     className: PropTypes.string,
-    tracking: PropTypes.shape({
-      trackEvent: PropTypes.func,
-      getTrackingData: PropTypes.func,
-    }).isRequired,
+    classNameBackToTop: PropTypes.string,
     backToTopEventEnabled: PropTypes.bool,
+    scrollContainerRef: PropTypes.oneOfType([PropTypes.func, PropTypes.shape({ current: PropTypes.any })]),
   };
   static defaultProps = {
     initialScrollRight: false,
     className: '',
+    classNameBackToTop: '',
     children: null,
     autoHide: false,
     autoHeight: false,
@@ -84,6 +79,7 @@ export class ScrollWrapper extends Component {
     resetRequired: false,
     onReset: () => {},
     backToTopEventEnabled: false,
+    scrollContainerRef: null,
   };
   state = {
     showButton: false,
@@ -97,14 +93,21 @@ export class ScrollWrapper extends Component {
       this.spring.addListener({ onSpringUpdate: this.handleSpringUpdate });
       this.stopScroll = false;
     }
+    this.applyScrollReset();
+    this.updateScrollContainerRef();
   }
 
   componentDidUpdate() {
+    this.applyScrollReset();
+    this.updateScrollContainerRef();
+  }
+
+  applyScrollReset = () => {
     if (this.props.resetRequired) {
       this.scrollbars.scrollTop(0);
       this.props.onReset();
     }
-  }
+  };
 
   componentWillUnmount() {
     if (this.props.withBackToTop) {
@@ -122,6 +125,20 @@ export class ScrollWrapper extends Component {
     this.scrollbars = scrollbars;
   };
 
+  updateScrollContainerRef = () => {
+    if (this.props.scrollContainerRef && this.scrollbars) {
+      const viewElement = this.scrollbars.view;
+
+      if (viewElement) {
+        if (typeof this.props.scrollContainerRef === 'function') {
+          this.props.scrollContainerRef(viewElement);
+        } else if (this.props.scrollContainerRef.current !== undefined) {
+          this.props.scrollContainerRef.current = viewElement;
+        }
+      }
+    }
+  };
+
   handleSpringUpdate = (spring) => {
     const val = spring.getCurrentValue();
     if (this.stopScroll) {
@@ -135,7 +152,6 @@ export class ScrollWrapper extends Component {
   };
 
   scrollTop = () => {
-    this.props.tracking.trackEvent(FOOTER_EVENTS.BACK_TO_TOP_CLICK);
     this.stopScroll = false;
     const scrollTop = this.scrollbars.getScrollTop();
     this.spring.setCurrentValue(scrollTop).setAtRest();
@@ -150,7 +166,7 @@ export class ScrollWrapper extends Component {
     const { lastViewScrollTop, lastViewScrollLeft } = this.scrollbars;
     const { withBackToTop, onLazyLoad } = this.props;
 
-    const isBackToTopVisible = withBackToTop && scrollTop > 100;
+    const isBackToTopVisible = withBackToTop && scrollTop >= SCROLL_HEIGHT;
     if (isBackToTopVisible !== this.state.showButton) {
       this.setState({ showButton: isBackToTopVisible });
     }
@@ -197,16 +213,12 @@ export class ScrollWrapper extends Component {
       >
         {this.props.children}
         {this.state.showButton && (
-          <div className={cx('back-to-top')}>
-            <button className={cx('back-to-top-button')} onClick={this.scrollTop}>
+          <div className={cx('back-to-top', this.props.classNameBackToTop)}>
+            <button className={cx('back-to-top-button')} onClick={this.scrollTop} tabIndex={0}>
               <i className={cx('top-icon')}>{Parser(BackToTopIcon)}</i>
-              <div className={cx('message')}>
-                <FormattedMessage id="ScrollWrapper.backToTop" defaultMessage="Back to top" />
-              </div>
             </button>
           </div>
         )}
-        {this.props.withFooter && <Footer />}
       </Scrollbars>
     );
   }

@@ -15,20 +15,17 @@
  */
 
 import { select } from 'redux-saga/effects';
-import {
-  activeProjectSelector,
-  userIdSelector,
-  logsPaginationEnabledSelector,
-} from 'controllers/user';
+import { userIdSelector, logsPaginationEnabledSelector } from 'controllers/user';
 import { activeRetryIdSelector, querySelector } from 'controllers/log/selectors';
 import { LOG_LEVEL_FILTER_KEY, NAMESPACE, LOAD_MORE_PAGE_SIZE } from 'controllers/log/constants';
 import { PAGE_KEY, SIZE_KEY } from 'controllers/pagination';
 import { getLogLevel } from 'controllers/log/storageUtils';
+import { projectKeySelector } from 'controllers/project';
 import { filterableLogTypesSelector } from 'controllers/project/selectors';
 import { isDefaultLogLevel } from 'controllers/log/utils';
 
 export function* collectLogPayload() {
-  const activeProject = yield select(activeProjectSelector);
+  const projectKey = yield select(projectKeySelector);
   const userId = yield select(userIdSelector);
   const query = yield select(querySelector, NAMESPACE);
   const filterableLogLevels = yield select(filterableLogTypesSelector);
@@ -49,7 +46,7 @@ export function* collectLogPayload() {
   }
 
   return {
-    activeProject,
+    projectKey,
     userId,
     filterLevel,
     activeLogItemId,

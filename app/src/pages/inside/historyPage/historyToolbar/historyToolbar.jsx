@@ -20,8 +20,9 @@ import { HISTORY_PAGE_EVENTS } from 'components/main/analytics/events';
 import { RefineFiltersPanel } from 'pages/inside/common/refineFiltersPanel';
 import { InfoPanel } from 'pages/inside/common/infoPanel';
 import { HISTORY_VIEW } from 'controllers/testItem';
-import { HistoryActionPanel } from './actionPanel';
+import { useUserPermissions } from 'hooks/useUserPermissions';
 import { ActionPanelWithGroupOperations } from './actionPanelWithGroupOperations';
+import { HistoryActionPanel } from './actionPanel';
 
 export const HistoryToolbar = ({
   selectedItems,
@@ -38,38 +39,42 @@ export const HistoryToolbar = ({
   withGroupOperations,
   userId,
   parentItem,
-}) => (
-  <Fragment>
-    {withGroupOperations ? (
-      <ActionPanelWithGroupOperations
-        onRefresh={onRefresh}
-        selectedItems={selectedItems}
-        onUnselect={onUnselect}
-        onUnselectAll={onUnselectAll}
-        userId={userId}
-        parentItem={parentItem}
+}) => {
+  const { canWorkWithTests } = useUserPermissions();
+
+  return (
+    <Fragment>
+      {canWorkWithTests && withGroupOperations ? (
+        <ActionPanelWithGroupOperations
+          onRefresh={onRefresh}
+          selectedItems={selectedItems}
+          onUnselect={onUnselect}
+          onUnselectAll={onUnselectAll}
+          userId={userId}
+          parentItem={parentItem}
+        />
+      ) : (
+        <HistoryActionPanel
+          onRefresh={onRefresh}
+          selectedItems={selectedItems}
+          parentItem={parentItem}
+        />
+      )}
+      {(parentItem || isTestItemsList) && (
+        <InfoPanel viewMode={HISTORY_VIEW} data={parentItem} events={HISTORY_PAGE_EVENTS} />
+      )}
+      <RefineFiltersPanel
+        onFilterAdd={onFilterAdd}
+        onFilterRemove={onFilterRemove}
+        onFilterValidate={onFilterValidate}
+        onFilterChange={onFilterChange}
+        filterErrors={filterErrors}
+        filterEntities={filterEntities}
+        events={HISTORY_PAGE_EVENTS.REFINE_FILTERS_PANEL_EVENTS}
       />
-    ) : (
-      <HistoryActionPanel
-        onRefresh={onRefresh}
-        selectedItems={selectedItems}
-        parentItem={parentItem}
-      />
-    )}
-    {(parentItem || isTestItemsList) && (
-      <InfoPanel viewMode={HISTORY_VIEW} data={parentItem} events={HISTORY_PAGE_EVENTS} />
-    )}
-    <RefineFiltersPanel
-      onFilterAdd={onFilterAdd}
-      onFilterRemove={onFilterRemove}
-      onFilterValidate={onFilterValidate}
-      onFilterChange={onFilterChange}
-      filterErrors={filterErrors}
-      filterEntities={filterEntities}
-      events={HISTORY_PAGE_EVENTS.REFINE_FILTERS_PANEL_EVENTS}
-    />
-  </Fragment>
-);
+    </Fragment>
+  );
+};
 HistoryToolbar.propTypes = {
   selectedItems: PropTypes.arrayOf(PropTypes.object),
   userId: PropTypes.string,

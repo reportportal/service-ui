@@ -115,6 +115,8 @@ export const getWidgets = (formatMessage) => [
     ),
     preview: Parser(LAUNCH_STATISTICS_PREVIEW),
     controls: LaunchStatisticsControls,
+    documentationLink: widgetDocsReferences.launchStatisticsChart,
+    documentationClickEventInfo: WIDGETS_EVENTS.onWidgetDocumentLinkClick,
   },
   {
     id: OVERALL_STATISTICS,
@@ -127,6 +129,8 @@ export const getWidgets = (formatMessage) => [
     ),
     preview: Parser(OVERALL_STATISTICS_PREVIEW),
     controls: OverallStatisticsControls,
+    documentationLink: widgetDocsReferences.overallStatistics,
+    documentationClickEventInfo: WIDGETS_EVENTS.onWidgetDocumentLinkClick,
   },
   {
     id: LAUNCH_DURATION,
@@ -139,6 +143,8 @@ export const getWidgets = (formatMessage) => [
     ),
     preview: Parser(LAUNCH_DURATION_PREVIEW),
     controls: LaunchDurationControls,
+    documentationLink: widgetDocsReferences.launchesDurationChart,
+    documentationClickEventInfo: WIDGETS_EVENTS.onWidgetDocumentLinkClick,
   },
   {
     id: LAUNCH_EXECUTION_AND_ISSUE_STATISTICS,
@@ -156,6 +162,8 @@ export const getWidgets = (formatMessage) => [
     ),
     preview: Parser(LAUNCH_EXECUTION_AND_ISSUE_STATISTICS_PREVIEW),
     controls: LaunchExecutionAndIssueStatisticsControls,
+    documentationLink: widgetDocsReferences.launchExecutionAndIssueStatistic,
+    documentationClickEventInfo: WIDGETS_EVENTS.onWidgetDocumentLinkClick,
   },
   {
     id: PROJECT_ACTIVITY,
@@ -168,6 +176,8 @@ export const getWidgets = (formatMessage) => [
     ),
     preview: Parser(PROJECT_ACTIVITY_PREVIEW),
     controls: ProjectActivityControls,
+    documentationLink: widgetDocsReferences.projectActivityPanel,
+    documentationClickEventInfo: WIDGETS_EVENTS.onWidgetDocumentLinkClick,
   },
   {
     id: TEST_CASES_GROWTH_TREND,
@@ -185,6 +195,8 @@ export const getWidgets = (formatMessage) => [
     ),
     preview: Parser(TEST_CASES_GROWTH_TREND_PREVIEW),
     controls: TestCasesGrowthTrendControls,
+    documentationLink: widgetDocsReferences.testCasesGrowthTrendChart,
+    documentationClickEventInfo: WIDGETS_EVENTS.onWidgetDocumentLinkClick,
   },
   {
     id: INVESTIGATED_PERCENTAGE_OF_LAUNCHES,
@@ -202,6 +214,8 @@ export const getWidgets = (formatMessage) => [
     ),
     preview: Parser(INVESTIGATED_PERCENTAGE_OF_LAUNCHES_PREVIEW),
     controls: InvestigatedPercentageOfLaunchesControls,
+    documentationLink: widgetDocsReferences.investigatedPercentageOfLaunches,
+    documentationClickEventInfo: WIDGETS_EVENTS.onWidgetDocumentLinkClick,
   },
   {
     id: LAUNCHES_TABLE,
@@ -214,6 +228,8 @@ export const getWidgets = (formatMessage) => [
     ),
     preview: Parser(LAUNCHES_TABLE_PREVIEW),
     controls: LaunchesTableControls,
+    documentationLink: widgetDocsReferences.launchesTable,
+    documentationClickEventInfo: WIDGETS_EVENTS.onWidgetDocumentLinkClick,
   },
   {
     id: UNIQUE_BUGS_TABLE,
@@ -228,6 +244,8 @@ export const getWidgets = (formatMessage) => [
     ),
     preview: Parser(UNIQUE_BUGS_TABLE_PREVIEW),
     controls: UniqueBugsTableControls,
+    documentationLink: widgetDocsReferences.uniqueBugsTable,
+    documentationClickEventInfo: WIDGETS_EVENTS.onWidgetDocumentLinkClick,
   },
   {
     id: MOST_FAILED_TEST_CASES_TABLE,
@@ -242,6 +260,8 @@ export const getWidgets = (formatMessage) => [
     ),
     preview: Parser(MOST_FAILED_TEST_CASES_TABLE_PREVIEW),
     controls: MostFailedTestCasesTableControls,
+    documentationLink: widgetDocsReferences.mostFailedTestCasesTableTop50,
+    documentationClickEventInfo: WIDGETS_EVENTS.onWidgetDocumentLinkClick,
   },
   {
     id: FAILED_CASES_TREND,
@@ -256,6 +276,8 @@ export const getWidgets = (formatMessage) => [
     ),
     preview: Parser(FAILED_CASES_TREND_PREVIEW),
     controls: FailedCasesTrendControls,
+    documentationLink: widgetDocsReferences.failedCasesTrendChart,
+    documentationClickEventInfo: WIDGETS_EVENTS.onWidgetDocumentLinkClick,
   },
   {
     id: NON_PASSED_TEST_CASES_TREND,
@@ -270,6 +292,8 @@ export const getWidgets = (formatMessage) => [
     ),
     preview: Parser(NON_PASSED_TEST_CASES_TREND_PREVIEW),
     controls: NotPassedTestCasesTrendControls,
+    documentationLink: widgetDocsReferences.nonPassedTestCasesTrendChart,
+    documentationClickEventInfo: WIDGETS_EVENTS.onWidgetDocumentLinkClick,
   },
   {
     id: DIFFERENT_LAUNCHES_COMPARISON,
@@ -282,6 +306,8 @@ export const getWidgets = (formatMessage) => [
     ),
     preview: Parser(DIFFERENT_LAUNCHES_COMPARISON_PREVIEW),
     controls: DifferentLaunchesComparisonControls,
+    documentationLink: widgetDocsReferences.differentLaunchesComparisonChart,
+    documentationClickEventInfo: WIDGETS_EVENTS.onWidgetDocumentLinkClick,
   },
   {
     id: PASSING_RATE_PER_LAUNCH,
@@ -296,6 +322,8 @@ export const getWidgets = (formatMessage) => [
     ),
     preview: Parser(PASSING_RATE_PER_LAUNCH_PREVIEW),
     controls: PassingRatePerLaunchControls,
+    documentationLink: widgetDocsReferences.passingRatePerLaunch,
+    documentationClickEventInfo: WIDGETS_EVENTS.onWidgetDocumentLinkClick,
   },
   {
     id: PASSING_RATE_SUMMARY,
@@ -310,6 +338,8 @@ export const getWidgets = (formatMessage) => [
     ),
     preview: Parser(PASSING_RATE_SUMMARY_PREVIEW),
     controls: PassingRateSummaryControls,
+    documentationLink: widgetDocsReferences.passingRateSummary,
+    documentationClickEventInfo: WIDGETS_EVENTS.onWidgetDocumentLinkClick,
   },
   {
     id: FLAKY_TEST_CASES_TABLE,
@@ -322,6 +352,8 @@ export const getWidgets = (formatMessage) => [
     ),
     preview: Parser(FLAKY_TEST_CASES_TABLE_PREVIEW),
     controls: FlakyTestCasesTableControls,
+    documentationLink: widgetDocsReferences.flakyTestCasesTableTop50,
+    documentationClickEventInfo: WIDGETS_EVENTS.onWidgetDocumentLinkClick,
   },
   {
     id: CUMULATIVE_TREND,
@@ -336,6 +368,8 @@ export const getWidgets = (formatMessage) => [
     ),
     preview: Parser(CUMULATIVE_TREND_PREVIEW),
     controls: CumulativeTrendControls,
+    documentationLink: widgetDocsReferences.cumulativeTrendChart,
+    documentationClickEventInfo: WIDGETS_EVENTS.onWidgetDocumentLinkClick,
   },
   {
     id: MOST_POPULAR_PATTERNS,
@@ -350,6 +384,8 @@ export const getWidgets = (formatMessage) => [
     ),
     preview: Parser(MOST_POPULAR_PATTERNS_PREVIEW),
     controls: MostPopularPatternsControls,
+    documentationLink: widgetDocsReferences.mostPopularPatternTableTop20,
+    documentationClickEventInfo: WIDGETS_EVENTS.onWidgetDocumentLinkClick,
   },
   {
     id: COMPONENT_HEALTH_CHECK,
@@ -364,6 +400,8 @@ export const getWidgets = (formatMessage) => [
     ),
     preview: Parser(COMPONENT_HEALTH_CHECK_PREVIEW),
     controls: ComponentHealthCheckControls,
+    documentationLink: widgetDocsReferences.componentHealthCheck,
+    documentationClickEventInfo: WIDGETS_EVENTS.onWidgetDocumentLinkClick,
   },
   {
     id: COMPONENT_HEALTH_CHECK_TABLE,
@@ -378,6 +416,8 @@ export const getWidgets = (formatMessage) => [
     ),
     preview: Parser(COMPONENT_HEALTH_CHECK_TABLE_PREVIEW),
     controls: ComponentHealthCheckTableViewControls,
+    documentationLink: widgetDocsReferences.tableComponentHealthCheck,
+    documentationClickEventInfo: WIDGETS_EVENTS.onWidgetDocumentLinkClick,
   },
   {
     id: MOST_TIME_CONSUMING,
@@ -392,6 +432,8 @@ export const getWidgets = (formatMessage) => [
     ),
     preview: Parser(MOST_TIME_CONSUMING_PREVIEW),
     controls: MostTimeConsumingTestCasesControls,
+    documentationLink: widgetDocsReferences.mostTimeConsumingTestCasesWidgetTop20,
+    documentationClickEventInfo: WIDGETS_EVENTS.onWidgetDocumentLinkClick,
   },
   {
     id: TEST_CASE_SEARCH,
@@ -406,7 +448,7 @@ export const getWidgets = (formatMessage) => [
     ),
     preview: Parser(TEST_CASE_SEARCH_PREVIEW),
     documentationLink: widgetDocsReferences.testCaseSearch,
-    documentationClickEventInfo: WIDGETS_EVENTS.onSearchWidgetDocumentLinkClick,
+    documentationClickEventInfo: WIDGETS_EVENTS.onWidgetDocumentLinkClick,
   },
   /*
   {

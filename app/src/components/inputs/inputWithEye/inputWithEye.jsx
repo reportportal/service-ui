@@ -53,8 +53,13 @@ export const InputWithEye = ({ value, disabled, onChange, onFocus, onBlur, class
   const { formatMessage } = useIntl();
 
   return (
-    // eslint-disable-next-line
-    <label className={cx('input-with-eye', className)} onFocus={onFocus} onBlur={onBlur} tabIndex="1">
+    <label
+      className={cx('input-with-eye', className)}
+      onFocus={onFocus}
+      onBlur={onBlur}
+      // eslint-disable-next-line jsx-a11y/no-noninteractive-tabindex, jsx-a11y/tabindex-no-positive
+      tabIndex="1"
+    >
       <input
         type="checkbox"
         className={cx('input')}

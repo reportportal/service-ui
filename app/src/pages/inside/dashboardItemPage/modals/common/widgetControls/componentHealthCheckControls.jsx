@@ -16,11 +16,10 @@
 
 import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
-import track from 'react-tracking';
 import classNames from 'classnames/bind';
 import { injectIntl, defineMessages } from 'react-intl';
 import { connect } from 'react-redux';
-import { FieldArray } from 'redux-form';
+import { FieldArray, change, untouch } from 'redux-form';
 import {
   validate,
   commonValidators,
@@ -31,8 +30,9 @@ import { URLS } from 'common/urls';
 import { CHART_MODES, MODES_VALUES } from 'common/constants/chartModes';
 import { FieldProvider } from 'components/fields/fieldProvider';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
-import { activeProjectSelector } from 'controllers/user';
 import { DEFAULT_LAUNCHES_LIMIT } from 'controllers/testItem';
+import { projectKeySelector } from 'controllers/project';
+import { WIDGET_WIZARD_FORM } from '../constants';
 import { getWidgetModeOptions } from './utils/getWidgetModeOptions';
 import {
   CheckboxControl,
@@ -48,6 +48,7 @@ const cx = classNames.bind(styles);
 
 const MAX_ATTRIBUTES_AMOUNT = 10;
 const DEFAULT_PASSING_RATE = '100';
+const DEFAULT_ATTRIBUTE_KEY = '';
 
 const messages = defineMessages({
   passingRateFieldLabel: {
@@ -71,6 +72,14 @@ const messages = defineMessages({
     id: 'ComponentHealthCheckControls.excludeSkipped',
     defaultMessage: 'Exclude Skipped tests from statistics',
   },
+  addAttributeKeyButton: {
+    id: 'ComponentHealthCheckControls.addAttributeKeyButton',
+    defaultMessage: 'New levels cannot be added until filter is selected',
+  },
+  attributeKeyInput: {
+    id: 'ComponentHealthCheckControls.attributeKeyInput',
+    defaultMessage: 'Please select a filter first',
+  },
 });
 
 const passingRateValidator = (formatMessage) =>
@@ -88,10 +97,15 @@ const attributeKeyValidator = (formatMessage) => (attributes) =>
     commonValidators.uniqueAttributeKey(attributes),
   ]);
 
-@connect((state) => ({
-  activeProject: activeProjectSelector(state),
-}))
-@track()
+@connect(
+  (state) => ({
+    projectKey: projectKeySelector(state),
+  }),
+  {
+    changeField: (field, value) => change(WIDGET_WIZARD_FORM, field, value, null),
+    untouchField: (field) => untouch(WIDGET_WIZARD_FORM, field),
+  },
+)
 @injectIntl
 export class ComponentHealthCheckControls extends Component {
   static propTypes = {
@@ -100,11 +114,10 @@ export class ComponentHealthCheckControls extends Component {
     initializeControlsForm: PropTypes.func.isRequired,
     formAppearance: PropTypes.object.isRequired,
     onFormAppearanceChange: PropTypes.func.isRequired,
-    activeProject: PropTypes.string.isRequired,
     eventsInfo: PropTypes.object,
-    tracking: PropTypes.shape({
-      trackEvent: PropTypes.func,
-    }).isRequired,
+    projectKey: PropTypes.string.isRequired,
+    changeField: PropTypes.func.isRequired,
+    untouchField: PropTypes.func.isRequired,
     isMainControlsDisabled: PropTypes.bool,
   };
 
@@ -124,12 +137,24 @@ export class ComponentHealthCheckControls extends Component {
         widgetOptions: {
           minPassingRate: DEFAULT_PASSING_RATE,
           latest: MODES_VALUES[CHART_MODES.ALL_LAUNCHES],
-          attributeKeys: [],
+          attributeKeys: [DEFAULT_ATTRIBUTE_KEY],
           excludeSkipped: false,
         },
       },
     });
   }
+
+  componentDidUpdate = (prevProps) => {
+    const prevFilterId = prevProps?.widgetSettings?.filters?.[0]?.value;
+    const currentFilterId = this.props.widgetSettings?.filters?.[0]?.value;
+
+    if (prevFilterId && currentFilterId && prevFilterId !== currentFilterId) {
+      this.props.changeField('contentParameters.widgetOptions.attributeKeys', [
+        DEFAULT_ATTRIBUTE_KEY,
+      ]);
+      this.props.untouchField('contentParameters.widgetOptions.attributeKeys[0]');
+    }
+  };
 
   normalizeValue = (value) => value && `${value}`.replace(/\D+/g, '');
 
@@ -138,7 +163,8 @@ export class ComponentHealthCheckControls extends Component {
 
   renderAttributesFieldArray = ({ fields, fieldValidator }) => {
     const {
-      activeProject,
+      projectKey,
+      intl: { formatMessage },
       widgetSettings: { contentParameters, filters },
       isMainControlsDisabled,
     } = this.props;
@@ -152,14 +178,16 @@ export class ComponentHealthCheckControls extends Component {
         fieldValidator={fieldValidator}
         maxAttributesAmount={MAX_ATTRIBUTES_AMOUNT}
         showRemainingLevels
+        disabled={!filterId || isMainControlsDisabled}
+        inputTooltip={filterId ? null : formatMessage(messages.attributeKeyInput)}
+        addButtonTooltip={filterId ? null : formatMessage(messages.addAttributeKeyButton)}
         withOwnerLevel
         getURI={URLS.itemAttributeKeysAllSearch(
-          activeProject,
+          projectKey,
           filterId,
           isLatest,
           DEFAULT_LAUNCHES_LIMIT,
         )}
-        disabled={isMainControlsDisabled}
       />
     );
   };

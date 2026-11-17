@@ -1,0 +1,265 @@
+/*
+ * Copyright 2026 EPAM Systems
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+import { useState, useEffect, useMemo, useCallback, useRef } from 'react';
+import { isEmpty } from 'es-toolkit/compat';
+import { useDispatch, useSelector } from 'react-redux';
+import { VoidFn } from '@reportportal/ui-kit/common';
+
+import {
+  getFoldersAction,
+  transformedFoldersSelector,
+  TransformedFolder,
+} from 'controllers/testCase';
+import { activeTestPlanSelector, testPlanFoldersSelector } from 'controllers/testPlan';
+import { TestCase } from 'types/testCase';
+
+import {
+  PanelActionsContextValue,
+  PanelStateContextValue,
+  CheckboxSelectionState,
+  FolderTestCases,
+  NumberSet,
+} from '../testLibraryPanelContext';
+import { getAllCheckboxStates } from '../utils';
+
+import { useBatchFolderSelection } from './useBatchFolderSelection';
+
+interface UseTestLibraryPanelProps {
+  isOpen: boolean;
+  shouldHideAddedTestCases: boolean;
+  onAddTestCases: (testCaseIds: number[]) => Promise<boolean>;
+  onClose: VoidFn;
+}
+
+interface UseTestLibraryPanelUtils {
+  actionsValue: PanelActionsContextValue;
+  stateValue: PanelStateContextValue;
+  selectionCount: number;
+  folders: ReturnType<typeof transformedFoldersSelector>;
+  hasSelection: boolean;
+  clearSelection: VoidFn;
+  addToTestPlan: () => Promise<boolean>;
+  selectedTestCases: TestCase[];
+  testPlanId: number | null;
+}
+
+const toggleSet = (set: NumberSet, value: number): NumberSet => {
+  const updatedSet = new Set(set);
+
+  if (updatedSet.has(value)) {
+    updatedSet.delete(value);
+  } else {
+    updatedSet.add(value);
+  }
+
+  return updatedSet;
+};
+
+export const useTestLibraryPanel = ({
+  isOpen,
+  shouldHideAddedTestCases,
+  onAddTestCases,
+  onClose,
+}: UseTestLibraryPanelProps): UseTestLibraryPanelUtils => {
+  const dispatch = useDispatch();
+  const [selectedTestCasesIds, setSelectedTestCasesIds] = useState<NumberSet>(new Set());
+  const [selectedFolderIds, setSelectedFolderIds] = useState<NumberSet>(new Set());
+  const [expandedIds, setExpandedIds] = useState<NumberSet>(new Set());
+  const [testCasesMap, setTestCasesMap] = useState<Map<number, FolderTestCases>>(new Map());
+  const [scrollElement, setScrollElement] = useState<HTMLElement | null>(null);
+  const [batchLoadingFolderIds, setBatchLoadingFolderIds] = useState<NumberSet>(new Set());
+
+  const isOpenRef = useRef(isOpen);
+
+  const folders = useSelector(transformedFoldersSelector);
+  const activeTestPlan = useSelector(activeTestPlanSelector);
+  const testPlanFolders = useSelector(testPlanFoldersSelector);
+  const testPlanId = activeTestPlan?.id ?? null;
+
+  const testPlanCountByFolderId = useMemo(
+    () => new Map(testPlanFolders.map((folder) => [folder.id, folder.countOfTestCases])),
+    [testPlanFolders],
+  );
+
+  useEffect(() => {
+    dispatch(getFoldersAction());
+  }, [dispatch]);
+
+  useEffect(() => {
+    isOpenRef.current = isOpen;
+
+    if (!isOpen) {
+      setSelectedTestCasesIds(new Set());
+      setSelectedFolderIds(new Set());
+      setExpandedIds(new Set());
+      setTestCasesMap(new Map());
+      setBatchLoadingFolderIds(new Set());
+    }
+  }, [isOpen]);
+
+  const updateFolderTestCases = useCallback(
+    (folderId: number, newTestCases: Partial<FolderTestCases>) => {
+      if (!isOpenRef.current) {
+        return;
+      }
+
+      setTestCasesMap((prevMap) => {
+        const updatedMap = new Map(prevMap);
+
+        const currentState = updatedMap.get(folderId) || {
+          testCases: [],
+          page: null,
+          isLoading: false,
+          addedToTestPlanIds: undefined,
+        };
+
+        updatedMap.set(folderId, {
+          ...currentState,
+          ...newTestCases,
+        });
+
+        return updatedMap;
+      });
+    },
+    [],
+  );
+
+  const toggleFolder = useCallback((folder: TransformedFolder) => {
+    setExpandedIds((prevState) => toggleSet(prevState, folder.id));
+  }, []);
+
+  const toggleTestCasesSelection = useCallback((testCaseIds: number[]) => {
+    setSelectedTestCasesIds((prev) =>
+      testCaseIds.reduce((acc, testCaseId) => toggleSet(acc, testCaseId), prev),
+    );
+  }, []);
+
+  const clearSelection = useCallback(() => {
+    setSelectedTestCasesIds(new Set());
+    setSelectedFolderIds(new Set());
+  }, []);
+
+  const addToTestPlan = useCallback(async () => {
+    const selectedIds = Array.from(selectedTestCasesIds);
+
+    if (isEmpty(selectedIds)) {
+      return false;
+    }
+
+    const isSuccess = await onAddTestCases(selectedIds);
+
+    if (isSuccess) {
+      clearSelection();
+      onClose();
+    }
+
+    return isSuccess;
+  }, [selectedTestCasesIds, onAddTestCases, clearSelection, onClose]);
+
+  const { batchSelectFolder, batchDeselectFolder, getFolderTestCaseIds } = useBatchFolderSelection({
+    isOpenRef,
+    testPlanId,
+    testCasesMap,
+    setTestCasesMap,
+    setSelectedTestCasesIds,
+    setSelectedFolderIds,
+    setBatchLoadingFolderIds,
+  });
+
+  const checkboxStatesMap = useMemo(() => {
+    if (selectedTestCasesIds.size === 0 && selectedFolderIds.size === 0) {
+      return new Map<number, CheckboxSelectionState>();
+    }
+    return getAllCheckboxStates(folders, selectedTestCasesIds, selectedFolderIds, testCasesMap);
+  }, [folders, selectedTestCasesIds, selectedFolderIds, testCasesMap]);
+
+  const selectionCount = selectedTestCasesIds.size;
+
+  const hasSelection = selectionCount > 0 || selectedFolderIds.size > 0;
+
+  const selectedTestCases = useMemo(
+    () =>
+      Array.from(testCasesMap.values())
+        .flatMap((folder) => folder.testCases)
+        .filter(({ id }) => selectedTestCasesIds.has(id)),
+    [testCasesMap, selectedTestCasesIds],
+  );
+
+  const actionsValue: PanelActionsContextValue = useMemo(
+    () => ({
+      isOpenRef,
+      setScrollElement,
+      toggleTestCasesSelection,
+      updateFolderTestCases,
+      toggleFolder,
+      batchSelectFolder,
+      batchDeselectFolder,
+      getFolderTestCaseIds,
+    }),
+    [
+      isOpenRef,
+      setScrollElement,
+      toggleTestCasesSelection,
+      updateFolderTestCases,
+      toggleFolder,
+      batchSelectFolder,
+      batchDeselectFolder,
+      getFolderTestCaseIds,
+    ],
+  );
+
+  const stateValue: PanelStateContextValue = useMemo(
+    () => ({
+      selectedIds: selectedTestCasesIds,
+      selectedFolderIds,
+      testCasesMap,
+      checkboxStatesMap,
+      testPlanId,
+      expandedFolderIds: expandedIds,
+      scrollElement,
+      batchLoadingFolderIds,
+      shouldHideAddedTestCases,
+      testPlanCountByFolderId,
+      selectedTestCases,
+    }),
+    [
+      selectedTestCasesIds,
+      selectedFolderIds,
+      testCasesMap,
+      checkboxStatesMap,
+      testPlanId,
+      expandedIds,
+      scrollElement,
+      batchLoadingFolderIds,
+      shouldHideAddedTestCases,
+      testPlanCountByFolderId,
+      selectedTestCases,
+    ],
+  );
+
+  return {
+    actionsValue,
+    stateValue,
+    folders,
+    selectionCount,
+    hasSelection,
+    clearSelection,
+    addToTestPlan,
+    selectedTestCases,
+    testPlanId,
+  };
+};

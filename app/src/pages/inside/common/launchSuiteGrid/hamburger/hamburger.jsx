@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, Fragment } from 'react';
 import { useIntl } from 'react-intl';
 import { useSelector, useDispatch } from 'react-redux';
 import classNames from 'classnames/bind';
@@ -22,17 +22,10 @@ import { useTracking } from 'react-tracking';
 import PropTypes from 'prop-types';
 import { LAUNCHES_PAGE_EVENTS } from 'components/main/analytics/events';
 import { IN_PROGRESS } from 'common/constants/launchStatuses';
-import { canDeleteLaunch, canForceFinishLaunch, canMoveToDebug } from 'common/utils/permissions';
 import { updateLaunchLocallyAction } from 'controllers/launch';
 import { showModalAction } from 'controllers/modal';
-import {
-  activeProjectRoleSelector,
-  userIdSelector,
-  userAccountRoleSelector,
-  activeProjectSelector,
-} from 'controllers/user';
-import { enabledPattersSelector } from 'controllers/project';
-import { analyzerExtensionsSelector, importantLaunchesEnabledSelector } from 'controllers/appInfo';
+import { enabledPattersSelector, projectKeySelector } from 'controllers/project';
+import { isAnalyzerAvailableSelector, importantLaunchesEnabledSelector } from 'controllers/appInfo';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { ANALYZER_TYPES } from 'common/constants/analyzerTypes';
 import { RETENTION_POLICY } from 'common/constants/retentionPolicy';
@@ -40,6 +33,7 @@ import { LaunchExportModal } from 'pages/inside/launchesPage/modals/launchExport
 import { HamburgerMenuItem } from './hamburgerMenuItem';
 import { messages } from './messages';
 import styles from './hamburger.scss';
+import { useUserPermissions } from 'hooks/useUserPermissions';
 
 const cx = classNames.bind(styles);
 
@@ -50,13 +44,16 @@ export const Hamburger = ({ launch, customProps }) => {
   const [menuShown, setMenuShown] = useState(false);
   const [disableEventTrack, setDisableEventTrack] = useState(false);
   const iconRef = useRef(null);
-
-  const projectRole = useSelector(activeProjectRoleSelector);
-  const userId = useSelector(userIdSelector);
-  const accountRole = useSelector(userAccountRoleSelector);
-  const projectId = useSelector(activeProjectSelector);
+  const {
+    canForceFinishLaunch,
+    canMoveToDebug,
+    canDeleteLaunch,
+    canSeeRowActionMenu,
+    canStartAnalysis,
+  } = useUserPermissions();
+  const projectKey = useSelector(projectKeySelector);
   const enabledPatterns = useSelector(enabledPattersSelector);
-  const analyzerExtensions = useSelector(analyzerExtensionsSelector);
+  const isAnalyzerAvailable = useSelector(isAnalyzerAvailableSelector);
   const areImportantLaunchesEnabled = useSelector(importantLaunchesEnabledSelector);
 
   const isLaunchInProgress = launch.status === IN_PROGRESS.toUpperCase();
@@ -93,7 +90,8 @@ export const Hamburger = ({ launch, customProps }) => {
 
   const getForceFinishTooltip = () => {
     let forceFinishTitle = '';
-    if (!canForceFinishLaunch(accountRole, projectRole, userId === launch.owner || launch.rerun)) {
+
+    if (!canForceFinishLaunch) {
       forceFinishTitle = formatMessage(messages.noPermissions);
     }
     if (!isLaunchInProgress) {
@@ -103,13 +101,11 @@ export const Hamburger = ({ launch, customProps }) => {
   };
 
   const getMoveToDebugTooltip = () => {
-    return !canMoveToDebug(accountRole, projectRole, userId === launch.owner)
-      ? formatMessage(messages.noPermissions)
-      : '';
+    return !canMoveToDebug ? formatMessage(messages.noPermissions) : '';
   };
 
   const getDeleteItemTooltip = () => {
-    if (!canDeleteLaunch(accountRole, projectRole, userId === launch.owner)) {
+    if (!canDeleteLaunch) {
       return formatMessage(messages.notYourLaunch);
     }
     if (isLaunchInProgress) {
@@ -145,7 +141,7 @@ export const Hamburger = ({ launch, customProps }) => {
             ? 'unmarkAsImportantModal'
             : 'markAsImportantModal',
         data: {
-          activeProject: projectId,
+          activeProject: projectKey,
           launch,
           onSuccess: updateLaunchLocally,
         },
@@ -160,7 +156,7 @@ export const Hamburger = ({ launch, customProps }) => {
       return formatMessage(messages.uniqueErrorAnalysisIsInProgress);
     } else if (isLaunchInProgress) {
       return formatMessage(messages.uniqueErrorAnalysisLaunchesInProgressError);
-    } else if (!analyzerExtensions.length) {
+    } else if (!isAnalyzerAvailable) {
       return formatMessage(messages.serviceAnalyzerDisabledTooltip);
     } else {
       return '';
@@ -168,17 +164,13 @@ export const Hamburger = ({ launch, customProps }) => {
   };
 
   const getImportantLaunchesTitle = () => {
-    const canUpdateImportance = canDeleteLaunch(accountRole, projectRole, userId === launch.owner);
-
     if (!areImportantLaunchesEnabled) {
       return formatMessage(messages.importantControlsDisabledTooltip);
-    } else if (!canUpdateImportance) {
+    } else if (!canDeleteLaunch) {
       return formatMessage(messages.noPermissions);
     }
-
     return '';
   };
-
   const clusterTitle = getClusterTitle();
   const importantLaunchesTitle = getImportantLaunchesTitle();
 
@@ -191,100 +183,103 @@ export const Hamburger = ({ launch, customProps }) => {
       </button>
       <div className={cx('hamburger-menu', { shown: menuShown })}>
         <div className={cx('hamburger-menu-actions')}>
-          {launch.mode === 'DEFAULT' ? (
-            <HamburgerMenuItem
-              title={getMoveToDebugTooltip()}
-              text={formatMessage(COMMON_LOCALE_KEYS.MOVE_TO_DEBUG)}
-              disabled={!canMoveToDebug(accountRole, projectRole, userId === launch.owner)}
-              onClick={() => {
-                trackEvent(LAUNCHES_PAGE_EVENTS.CLICK_MOVE_TO_DEBUG_LAUNCH_MENU);
-                customProps.onMove(launch);
-              }}
-            />
-          ) : (
-            <HamburgerMenuItem
-              text={formatMessage(COMMON_LOCALE_KEYS.MOVE_TO_ALL_LAUNCHES)}
-              title={getMoveToDebugTooltip()}
-              disabled={!canMoveToDebug(accountRole, projectRole, userId === launch.owner)}
-              onClick={() => {
-                customProps.onMove(launch);
-              }}
-            />
+          {canSeeRowActionMenu && (
+            <Fragment>
+              {launch.mode === 'DEFAULT' ? (
+                <HamburgerMenuItem
+                  title={getMoveToDebugTooltip()}
+                  text={formatMessage(COMMON_LOCALE_KEYS.MOVE_TO_DEBUG)}
+                  disabled={!canMoveToDebug}
+                  onClick={() => {
+                    trackEvent(LAUNCHES_PAGE_EVENTS.CLICK_MOVE_TO_DEBUG_LAUNCH_MENU);
+                    customProps.onMove(launch);
+                  }}
+                />
+              ) : (
+                <HamburgerMenuItem
+                  text={formatMessage(COMMON_LOCALE_KEYS.MOVE_TO_ALL_LAUNCHES)}
+                  title={getMoveToDebugTooltip()}
+                  disabled={!canMoveToDebug}
+                  onClick={() => {
+                    customProps.onMove(launch);
+                  }}
+                />
+              )}
+              <HamburgerMenuItem
+                text={formatMessage(COMMON_LOCALE_KEYS.FORCE_FINISH)}
+                title={getForceFinishTooltip()}
+                disabled={!canForceFinishLaunch || !isLaunchInProgress}
+                onClick={() => {
+                  trackEvent(LAUNCHES_PAGE_EVENTS.CLICK_FORCE_FINISH_LAUNCH_MENU);
+                  customProps.onForceFinish(launch);
+                }}
+              />
+              <HamburgerMenuItem
+                disabled={!!importantLaunchesTitle}
+                title={importantLaunchesTitle}
+                text={formatMessage(
+                  launch.retentionPolicy === RETENTION_POLICY.IMPORTANT
+                    ? messages.unmarkAsImportant
+                    : messages.markAsImportant,
+                )}
+                onClick={() => {
+                  trackEvent(
+                    launch.retentionPolicy === RETENTION_POLICY.IMPORTANT
+                      ? LAUNCHES_PAGE_EVENTS.CLICK_UNMARK_AS_IMPORTANT_LAUNCH_MENU
+                      : LAUNCHES_PAGE_EVENTS.CLICK_MARK_AS_IMPORTANT_LAUNCH_MENU,
+                  );
+                  changeImportantState(launch.retentionPolicy);
+                }}
+              />
+              {launch.mode === 'DEFAULT' && (
+                <HamburgerMenuItem
+                  disabled={!canStartAnalysis}
+                  text={formatMessage(messages.analysis)}
+                  onClick={() => {
+                    trackEvent(LAUNCHES_PAGE_EVENTS.CLICK_ANALYSIS_LAUNCH_MENU);
+                    customProps.onAnalysis(launch);
+                  }}
+                />
+              )}
+              <HamburgerMenuItem
+                disabled={!!clusterTitle || !canStartAnalysis}
+                title={clusterTitle}
+                text={formatMessage(messages.uniqueErrorAnalysis)}
+                onClick={() => {
+                  trackEvent(LAUNCHES_PAGE_EVENTS.CLICK_UNIQUE_ERROR_ANALYSIS_LAUNCH_MENU);
+                  openUniqueErrorAnalysisModal();
+                }}
+              />
+              <HamburgerMenuItem
+                text={formatMessage(messages.patternAnalysis)}
+                title={
+                  !canStartAnalysis
+                    ? formatMessage(messages.noPermissions)
+                    : !enabledPatterns.length && formatMessage(messages.noPatternsEnabled)
+                }
+                onClick={() => {
+                  trackEvent(LAUNCHES_PAGE_EVENTS.CLICK_PATTERN_ANALYSIS_LAUNCH_MENU);
+                  customProps.onPatternAnalysis(launch);
+                }}
+                disabled={!canStartAnalysis || !enabledPatterns.length}
+              />
+              <HamburgerMenuItem
+                text={formatMessage(messages.exportReport)}
+                disabled={isLaunchInProgress}
+                onClick={onExportReport}
+                title={isLaunchInProgress ? formatMessage(messages.launchInProgress) : ''}
+              />
+              <HamburgerMenuItem
+                text={formatMessage(COMMON_LOCALE_KEYS.DELETE)}
+                disabled={!canDeleteLaunch || isLaunchInProgress}
+                onClick={() => {
+                  trackEvent(LAUNCHES_PAGE_EVENTS.CLICK_DELETE_LAUNCH_MENU);
+                  customProps.onDeleteItem(launch);
+                }}
+                title={getDeleteItemTooltip()}
+              />
+            </Fragment>
           )}
-          <HamburgerMenuItem
-            text={formatMessage(COMMON_LOCALE_KEYS.FORCE_FINISH)}
-            title={getForceFinishTooltip()}
-            disabled={
-              !canForceFinishLaunch(accountRole, projectRole, userId === launch.owner) ||
-              !isLaunchInProgress
-            }
-            onClick={() => {
-              trackEvent(LAUNCHES_PAGE_EVENTS.CLICK_FORCE_FINISH_LAUNCH_MENU);
-              customProps.onForceFinish(launch);
-            }}
-          />
-          <HamburgerMenuItem
-            disabled={!!importantLaunchesTitle}
-            title={importantLaunchesTitle}
-            text={formatMessage(
-              launch.retentionPolicy === RETENTION_POLICY.IMPORTANT
-                ? messages.unmarkAsImportant
-                : messages.markAsImportant,
-            )}
-            onClick={() => {
-              trackEvent(
-                launch.retentionPolicy === RETENTION_POLICY.IMPORTANT
-                  ? LAUNCHES_PAGE_EVENTS.CLICK_UNMARK_AS_IMPORTANT_LAUNCH_MENU
-                  : LAUNCHES_PAGE_EVENTS.CLICK_MARK_AS_IMPORTANT_LAUNCH_MENU,
-              );
-              changeImportantState(launch.retentionPolicy);
-            }}
-          />
-          {launch.mode === 'DEFAULT' && (
-            <HamburgerMenuItem
-              text={formatMessage(messages.analysis)}
-              onClick={() => {
-                trackEvent(LAUNCHES_PAGE_EVENTS.CLICK_ANALYSIS_LAUNCH_MENU);
-                customProps.onAnalysis(launch);
-              }}
-            />
-          )}
-          <HamburgerMenuItem
-            disabled={!!clusterTitle}
-            title={clusterTitle}
-            text={formatMessage(messages.uniqueErrorAnalysis)}
-            onClick={() => {
-              trackEvent(LAUNCHES_PAGE_EVENTS.CLICK_UNIQUE_ERROR_ANALYSIS_LAUNCH_MENU);
-              openUniqueErrorAnalysisModal();
-            }}
-          />
-          <HamburgerMenuItem
-            text={formatMessage(messages.patternAnalysis)}
-            title={!enabledPatterns.length && formatMessage(messages.noPatternsEnabled)}
-            onClick={() => {
-              trackEvent(LAUNCHES_PAGE_EVENTS.CLICK_PATTERN_ANALYSIS_LAUNCH_MENU);
-              customProps.onPatternAnalysis(launch);
-            }}
-            disabled={!enabledPatterns.length}
-          />
-          <HamburgerMenuItem
-            text={formatMessage(messages.exportReport)}
-            disabled={isLaunchInProgress}
-            onClick={onExportReport}
-            title={isLaunchInProgress ? formatMessage(messages.launchInProgress) : ''}
-          />
-          <HamburgerMenuItem
-            text={formatMessage(COMMON_LOCALE_KEYS.DELETE)}
-            disabled={
-              !canDeleteLaunch(accountRole, projectRole, userId === launch.owner) ||
-              isLaunchInProgress
-            }
-            onClick={() => {
-              trackEvent(LAUNCHES_PAGE_EVENTS.CLICK_DELETE_LAUNCH_MENU);
-              customProps.onDeleteItem(launch);
-            }}
-            title={getDeleteItemTooltip()}
-          />
         </div>
       </div>
     </div>

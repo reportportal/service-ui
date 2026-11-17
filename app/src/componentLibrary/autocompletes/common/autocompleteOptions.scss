@@ -17,3 +17,11 @@
 .container {
   margin: 8px 0;
 }
+
+.empty-list-message {
+  font-family: var(--rp-ui-base-font-family);
+  color: var(--rp-ui-color-text-secondary);
+  margin: 8px 0;
+  padding: 8px 12px;
+  text-align: center;
+}

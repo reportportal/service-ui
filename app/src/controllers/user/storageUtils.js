@@ -32,44 +32,44 @@ export const getUserSettingsFromStorage = (userId) => getStorageItem(`${userId}_
 export const updateUserSettingsInStorage = (userId, data) =>
   updateStorageItem(`${userId}_settings`, data);
 
-export const getUserProjectSettingsFromStorage = (userId, projectId) => {
+export const getUserProjectSettingsFromStorage = (userId, projectKey) => {
   const userSettings = getUserSettingsFromStorage(userId);
-  return userSettings[`pr_${projectId}`] || {};
+  return userSettings[`pr_${projectKey}`] || {};
 };
 
-export const updateUserProjectSettingsInStorage = (userId, projectId, data) => {
-  const projectKey = `pr_${projectId}`;
-  const existingProjectSettings = getUserProjectSettingsFromStorage(userId, projectId);
+export const updateUserProjectSettingsInStorage = (userId, projectKey, data) => {
+  const storageKey = `pr_${projectKey}`;
+  const existingProjectSettings = getUserProjectSettingsFromStorage(userId, projectKey);
   updateUserSettingsInStorage(userId, {
-    [projectKey]: {
+    [storageKey]: {
       ...existingProjectSettings,
       ...data,
     },
   });
 };
 
-export const setNoLogsCollapsingInStorage = (userId, projectId, value) =>
-  updateUserProjectSettingsInStorage(userId, projectId, {
+export const setNoLogsCollapsingInStorage = (userId, projectKey, value) =>
+  updateUserProjectSettingsInStorage(userId, projectKey, {
     [NO_LOGS_COLLAPSING_KEY]: value,
   });
 
-export const setLogsPaginationEnabledInStorage = (userId, projectId, value) =>
-  updateUserProjectSettingsInStorage(userId, projectId, {
+export const setLogsPaginationEnabledInStorage = (userId, projectKey, value) =>
+  updateUserProjectSettingsInStorage(userId, projectKey, {
     [LOGS_PAGINATION_ENABLED_KEY]: value,
   });
 
-export const setLogsSizeInStorage = (userId, projectId, value) =>
-  updateUserProjectSettingsInStorage(userId, projectId, {
+export const setLogsSizeInStorage = (userId, projectKey, value) =>
+  updateUserProjectSettingsInStorage(userId, projectKey, {
     [LOGS_SIZE_KEY]: value,
   });
 
-export const setLogsFullWidthModeInStorage = (userId, projectId, value) =>
-  updateUserProjectSettingsInStorage(userId, projectId, {
+export const setLogsFullWidthModeInStorage = (userId, projectKey, value) =>
+  updateUserProjectSettingsInStorage(userId, projectKey, {
     [LOGS_FULL_WIDTH_MODE_KEY]: value,
   });
 
-export const setLogsColorizedBackgroundInStorage = (userId, projectId, value) =>
-  updateUserProjectSettingsInStorage(userId, projectId, {
+export const setLogsColorizedBackgroundInStorage = (userId, projectKey, value) =>
+  updateUserProjectSettingsInStorage(userId, projectKey, {
     [LOGS_COLORIZED_BACKGROUND_KEY]: value,
   });
 

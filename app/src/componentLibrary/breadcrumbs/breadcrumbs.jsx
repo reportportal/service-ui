@@ -118,7 +118,7 @@ Breadcrumbs.propTypes = {
     PropTypes.shape({
       id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
       title: PropTypes.string.isRequired,
-      link: PropTypes.object.isRequired,
+      link: PropTypes.object,
       onClick: PropTypes.func,
     }),
   ),

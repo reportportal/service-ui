@@ -15,7 +15,7 @@
  */
 
 export const COMMANDS_TAB = 'commands';
-export const LOGS_TAB = 'logs';
+export { LOGS_TAB } from '../../constants';
 export const METADATA_TAB = 'metadata';
 
 export const COMMAND_FIELD = 'command';

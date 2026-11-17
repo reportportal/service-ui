@@ -19,6 +19,7 @@ import Parser from 'html-react-parser';
 import classNames from 'classnames/bind';
 import { useIntl, defineMessages, FormattedRelativeTime } from 'react-intl';
 import PropTypes from 'prop-types';
+import { Toggle } from '@reportportal/ui-kit';
 import { useSelector } from 'react-redux';
 import { activeDashboardItemSelector } from 'controllers/dashboard';
 import CrossIcon from 'common/img/cross-icon-inline.svg';
@@ -32,7 +33,8 @@ import {
 } from 'pages/inside/dashboardItemPage/modals/common/widgetControls/utils/getWidgetModeOptions';
 import { STATE_RENDERING } from 'components/widgets/common/constants';
 import { MATERIALIZED_VIEW_WIDGETS } from 'components/widgets';
-import { Toggle } from '@reportportal/ui-kit';
+import { canWorkWithWidgets } from 'common/utils/permissions/permissions';
+import { userRolesSelector } from 'controllers/pages';
 import { LockedDashboardTooltip } from 'pages/inside/common/lockedDashboardTooltip';
 import { useCanLockDashboard } from 'common/hooks';
 import { DescriptionTooltipIcon } from './descriptionTooltipIcon';
@@ -63,16 +65,19 @@ export const WidgetHeader = ({
 }) => {
   const { formatMessage } = useIntl();
   const dashboard = useSelector(activeDashboardItemSelector);
+  const userRoles = useSelector(userRolesSelector);
   const canLock = useCanLockDashboard();
   const deleteDisabled = dashboard?.locked && !canLock;
   const isForceUpdateAvailable = MATERIALIZED_VIEW_WIDGETS.includes(data.type);
   const isEditControlHidden = isForceUpdateAvailable && data.state === STATE_RENDERING;
   const { value: startTime, unit } = getRelativeUnits(data.lastRefresh);
+  const isDisabled = !canWorkWithWidgets(userRoles);
 
   const renderMetaInfo = () =>
     data.meta?.map((item, index) => {
       const widgetMode = getWidgetModeByValue(item);
       return (
+        // eslint-disable-next-line react/no-array-index-key
         <div key={`${widgetMode}_${index}`} className={cx('meta-info')}>
           {widgetModeMessages[widgetMode]
             ? formatMessage(widgetModeMessages[widgetMode])
@@ -136,7 +141,7 @@ export const WidgetHeader = ({
                 </button>
               </div>
             )}
-            {!isEditControlHidden && data.type && (
+            {!isEditControlHidden && data.type && !isDisabled && (
               <button className={cx('control', 'mobile-hide')} onClick={onEdit}>
                 {Parser(PencilIcon)}
               </button>
@@ -146,15 +151,17 @@ export const WidgetHeader = ({
                 {Parser(RefreshIcon)}
               </button>
             )}
-            <LockedDashboardTooltip locked={dashboard?.locked}>
-              <button
-                className={cx('control', 'mobile-hide')}
-                onClick={onDelete}
-                disabled={deleteDisabled}
-              >
-                {Parser(CrossIcon)}
-              </button>
-            </LockedDashboardTooltip>
+            {!isDisabled && (
+              <LockedDashboardTooltip locked={dashboard?.locked}>
+                <button
+                  className={cx('control', 'mobile-hide')}
+                  onClick={onDelete}
+                  disabled={deleteDisabled}
+                >
+                  {Parser(CrossIcon)}
+                </button>
+              </LockedDashboardTooltip>
+            )}
           </div>
         </div>
       )}

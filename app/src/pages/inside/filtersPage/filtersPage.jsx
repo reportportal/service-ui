@@ -31,7 +31,7 @@ import {
   updateFilterSuccessAction,
   pageLoadingSelector,
 } from 'controllers/filter';
-import { userIdSelector, activeProjectSelector } from 'controllers/user';
+import { userIdSelector } from 'controllers/user';
 import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
 import { withPagination, DEFAULT_PAGINATION, SIZE_KEY, PAGE_KEY } from 'controllers/pagination';
 import { PaginationToolbar } from 'components/main/paginationToolbar';
@@ -41,8 +41,9 @@ import {
   userFiltersSelector,
   showFilterOnLaunchesAction,
   hideFilterOnLaunchesAction,
+  projectKeySelector,
 } from 'controllers/project';
-import { FILTERS_PAGE, FILTERS_PAGE_EVENTS } from 'components/main/analytics/events';
+import { FILTERS_PAGE } from 'components/main/analytics/events';
 import { NoResultsForFilter } from 'pages/inside/common/noResultsForFilter';
 import { NoFiltersBlock } from './noFiltersBlock';
 import { FilterPageToolbar } from './filterPageToolbar';
@@ -70,11 +71,11 @@ const messages = defineMessages({
 @connect(
   (state) => ({
     userId: userIdSelector(state),
-    url: URLS.filters(activeProjectSelector(state)),
-    activeProject: activeProjectSelector(state),
+    url: URLS.filters(projectKeySelector(state)),
     userFilters: userFiltersSelector(state),
     filters: filtersSelector(state),
     loading: pageLoadingSelector(state),
+    projectKey: projectKeySelector(state),
   }),
   {
     showModalAction,
@@ -105,22 +106,18 @@ export class FiltersPage extends Component {
     onChangePageSize: PropTypes.func,
     userId: PropTypes.string,
     filter: PropTypes.string,
-    activeProject: PropTypes.string,
     onFilterChange: PropTypes.func,
     fetchFiltersAction: PropTypes.func,
     showModalAction: PropTypes.func,
     userFilters: PropTypes.arrayOf(PropTypes.object),
     loading: PropTypes.bool,
-    tracking: PropTypes.shape({
-      trackEvent: PropTypes.func,
-      getTrackingData: PropTypes.func,
-    }).isRequired,
     removeUserFilter: PropTypes.func,
     showFilterOnLaunchesAction: PropTypes.func,
     hideFilterOnLaunchesAction: PropTypes.func,
     createFilter: PropTypes.func,
     updateFilterSuccessAction: PropTypes.func,
     showNotification: PropTypes.func,
+    projectKey: PropTypes.string.isRequired,
   };
 
   static defaultProps = {
@@ -131,7 +128,6 @@ export class FiltersPage extends Component {
     pageSize: DEFAULT_PAGINATION[SIZE_KEY],
     userId: '',
     filter: '',
-    activeProject: '',
     onFilterChange: () => {},
     onChangePage: () => {},
     onChangePageSize: () => {},
@@ -166,7 +162,7 @@ export class FiltersPage extends Component {
     });
 
   updateFilter = (filter) =>
-    fetch(URLS.filter(this.props.activeProject, filter.id), {
+    fetch(URLS.filter(this.props.projectKey, filter.id), {
       method: 'put',
       data: filter,
     })
@@ -182,7 +178,7 @@ export class FiltersPage extends Component {
       });
 
   deleteFilter = (filter) => {
-    fetch(URLS.filter(this.props.activeProject, filter.id), {
+    fetch(URLS.filter(this.props.projectKey, filter.id), {
       method: 'delete',
     })
       .then(() => {
@@ -200,7 +196,6 @@ export class FiltersPage extends Component {
   };
 
   addFilter = () => {
-    this.props.tracking.trackEvent(FILTERS_PAGE_EVENTS.CLICK_ADD_FILTER_BTN);
     this.props.createFilter();
   };
 
@@ -224,7 +219,6 @@ export class FiltersPage extends Component {
       onChangePageSize,
       filters,
       loading,
-      activeProject,
       ...rest
     } = this.props;
 
@@ -243,7 +237,6 @@ export class FiltersPage extends Component {
             onDelete={this.confirmDelete}
             filters={filters}
             loading={loading}
-            activeProject={activeProject}
             {...rest}
           />
           {!filters.length && !loading && this.renderNoFiltersBlock()}

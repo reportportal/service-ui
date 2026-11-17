@@ -25,6 +25,7 @@ export { fetchReducer } from './reducer';
 export { fetchSagas, handleError } from './sagas';
 export {
   fetchDataAction,
+  fetchStartAction,
   fetchErrorAction,
   fetchSuccessAction,
   bulkFetchDataAction,

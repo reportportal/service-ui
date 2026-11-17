@@ -14,21 +14,21 @@
  * limitations under the License.
  */
 
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { useIntl } from 'react-intl';
 import { reduxForm } from 'redux-form';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { LAUNCH_ANALYZE_TYPES } from 'common/constants/launchAnalyzeTypes';
 import { FIELD } from 'common/constants/dataAutomation';
-import { Button, Checkbox, FieldNumber } from '@reportportal/ui-kit';
+import { Button, Checkbox, Dropdown, FieldNumber } from '@reportportal/ui-kit';
 import { FieldErrorHint } from 'components/fields/fieldErrorHint';
 import { bindMessageToValidator, validate } from 'common/utils/validation';
-import { Dropdown } from 'componentLibrary/dropdown';
 import { useTracking } from 'react-tracking';
 import { PROJECT_SETTINGS_ANALYZER_EVENTS } from 'analyticsEvents/projectSettingsPageEvents';
 import { docsReferences, createExternalLink } from 'common/utils';
 import OpenInNewTabIcon from 'common/img/open-in-new-tab-inline.svg';
+import classNames from 'classnames/bind';
 import { Layout } from '../../layout';
 import { FieldElement, LabeledPreloader, FormattedDescription } from '../../elements';
 import { messages } from './messages';
@@ -40,6 +40,9 @@ import {
   MIN_SHOULD_MATCH,
   NUMBER_OF_LOG_LINES,
 } from '../constants';
+import styles from './autoAnalysis.scss';
+
+const cx = classNames.bind(styles);
 
 const AutoAnalysis = ({
   analyzerConfig,
@@ -87,7 +90,7 @@ const AutoAnalysis = ({
   useEffect(() => {
     initialize({
       [ANALYZER_ENABLED]: JSON.parse(analyzerConfig[ANALYZER_ENABLED] || 'false'),
-      [MIN_SHOULD_MATCH]: analyzerConfig[MIN_SHOULD_MATCH],
+      [MIN_SHOULD_MATCH]: analyzerConfig[MIN_SHOULD_MATCH] || '',
       [ANALYZER_MODE]: analyzerConfig[ANALYZER_MODE],
       [NUMBER_OF_LOG_LINES]: analyzerConfig[NUMBER_OF_LOG_LINES],
       [ALL_MESSAGES_SHOULD_MATCH]: JSON.parse(analyzerConfig[ALL_MESSAGES_SHOULD_MATCH] || 'false'),
@@ -164,7 +167,12 @@ const AutoAnalysis = ({
           disabled={isFieldDisabled}
           dataAutomationId={ANALYZER_MODE + FIELD}
         >
-          <Dropdown options={analyzerModeDropdownOptions} mobileDisabled />
+          <Dropdown
+            className={cx('dropdown')}
+            options={analyzerModeDropdownOptions}
+            isListWidthLimited
+            mobileDisabled
+          />
         </FieldElement>
         <FieldElement
           name={MIN_SHOULD_MATCH}
@@ -186,7 +194,11 @@ const AutoAnalysis = ({
           disabled={isFieldDisabled}
           dataAutomationId={NUMBER_OF_LOG_LINES + FIELD}
         >
-          <Dropdown options={numberOfLogDropdownOptions} mobileDisabled />
+          <Dropdown
+            className={cx('dropdown')}
+            options={numberOfLogDropdownOptions}
+            mobileDisabled
+          />
         </FieldElement>
         <FieldElement
           name={ALL_MESSAGES_SHOULD_MATCH}
@@ -206,9 +218,11 @@ const AutoAnalysis = ({
         >
           <Checkbox>{formatMessage(messages.largestRetryPriority)}</Checkbox>
         </FieldElement>
-        <Button type="submit" disabled={isFieldDisabled} data-automation-id="submitButton">
-          {formatMessage(COMMON_LOCALE_KEYS.SUBMIT)}
-        </Button>
+        {hasPermission && (
+          <Button type="submit" disabled={isFieldDisabled} data-automation-id="submitButton">
+            {formatMessage(COMMON_LOCALE_KEYS.SUBMIT)}
+          </Button>
+        )}
         {isPending && <LabeledPreloader text={formatMessage(COMMON_LOCALE_KEYS.processData)} />}
       </form>
     </Layout>

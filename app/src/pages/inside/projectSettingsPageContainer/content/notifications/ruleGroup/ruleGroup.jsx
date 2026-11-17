@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
+import React from 'react';
 import { Layout } from 'pages/inside/projectSettingsPageContainer/content/layout';
 import { Button, Toggle } from '@reportportal/ui-kit';
 import addIcon from 'common/img/add-inline.svg';
-import React from 'react';
 import classNames from 'classnames/bind';
 import { useIntl } from 'react-intl';
 import CopyIcon from 'common/img/newIcons/copy-inline.svg';
@@ -32,26 +32,22 @@ import {
   deleteProjectNotificationAction,
   updateProjectNotificationAction,
 } from 'controllers/project';
-import { canUpdateSettings } from 'common/utils/permissions';
 import { useDispatch, useSelector } from 'react-redux';
 import { isEmailIntegrationAvailableSelector } from 'controllers/plugins';
-import {
-  activeProjectRoleSelector,
-  activeProjectSelector,
-  userAccountRoleSelector,
-} from 'controllers/user';
+import { activeProjectSelector } from 'controllers/user';
 import Parser from 'html-react-parser';
 import PropTypes from 'prop-types';
 import { withTooltip } from 'components/main/tooltips/tooltip';
 import { TextTooltip } from 'components/main/tooltips/textTooltip';
 import { PROJECT_SETTINGS_TAB_PAGE } from 'controllers/pages';
 import { INTEGRATIONS } from 'common/constants/settingsTabs';
-import { LinkComponent } from 'pages/inside/projectSettingsPageContainer/content/notifications/LinkComponent';
+import { LinkComponent } from 'pages/inside/common/LinkComponent';
 import arrowRightIcon from 'common/img/arrow-right-inline.svg';
 import { updateNotificationStateAction } from 'controllers/project/actionCreators';
 import { NOTIFICATIONS_PLUGIN_ATTRIBUTE_ENABLED_KEY } from 'controllers/project/constants';
 import { projectPluginNotificationsStateSelector } from 'controllers/project/selectors';
 import { EMAIL } from 'common/constants/pluginNames';
+import { useUserPermissions } from 'hooks/useUserPermissions';
 import { ruleField } from 'pages/inside/projectSettingsPageContainer/content/notifications/propTypes';
 import { DEFAULT_CASE_CONFIG } from '../constants';
 import { convertNotificationCaseForSubmission, flatRule, toCamelCase } from '../utils';
@@ -64,8 +60,8 @@ import {
   RuleList,
 } from '../../elements';
 import { messages } from '../messages';
-import styles from './ruleGroup.scss';
 import { EmptyRuleState } from '../emptyRuleState';
+import styles from './ruleGroup.scss';
 
 const cx = classNames.bind(styles);
 const COPY_POSTFIX = '_copy';
@@ -85,18 +81,16 @@ export const RuleGroup = ({ pluginName, ruleDescription, rules, isPluginEnabled,
   const { formatMessage } = useIntl();
 
   const dispatch = useDispatch();
-  const projectRole = useSelector(activeProjectRoleSelector);
-  const activeProject = useSelector(activeProjectSelector);
-  const userRole = useSelector(userAccountRoleSelector);
+  const { organizationSlug, projectSlug } = useSelector(activeProjectSelector);
+  const { canUpdateSettings } = useUserPermissions();
   const isEmailIntegrationAvailable = useSelector(isEmailIntegrationAvailableSelector);
   const pluginNameInCamelCase = toCamelCase(pluginName);
   const isPluginNotificationsEnabled = useSelector(
     projectPluginNotificationsStateSelector(pluginNameInCamelCase),
   );
 
-  const isUpdateSettingAvailable = canUpdateSettings(userRole, projectRole);
-  const isReadOnly = !isUpdateSettingAvailable || !isPluginEnabled;
-  const isActivationRequired = isUpdateSettingAvailable || rules?.length > 0;
+  const isReadOnly = !canUpdateSettings || !isPluginEnabled;
+  const isActivationRequired = canUpdateSettings || rules?.length > 0;
   const isDisabledTooltipActivationRequired = !isPluginEnabled && isActivationRequired;
   const isEmailIntegrationRequired =
     pluginName === EMAIL && !isEmailIntegrationAvailable && isActivationRequired;
@@ -317,12 +311,13 @@ export const RuleGroup = ({ pluginName, ruleDescription, rules, isPluginEnabled,
             isEmailIntegrationRequired && (
               <div className={cx('integrate-configurations')}>
                 <p>{formatMessage(messages.notConfiguredIntegration)}</p>
-                {isUpdateSettingAvailable && (
+                {canUpdateSettings && (
                   <LinkComponent
                     to={{
                       type: PROJECT_SETTINGS_TAB_PAGE,
                       payload: {
-                        projectId: activeProject,
+                        organizationSlug,
+                        projectSlug,
                         settingsTab: INTEGRATIONS,
                       },
                       meta: {
@@ -360,7 +355,7 @@ export const RuleGroup = ({ pluginName, ruleDescription, rules, isPluginEnabled,
                 dataAutomationId="notificationsRulesList"
                 className={cx('rule-group-list')}
               />
-              {isUpdateSettingAvailable && (
+              {canUpdateSettings && (
                 <Button
                   className={cx('add-rule')}
                   onClick={onAdd}
@@ -373,9 +368,7 @@ export const RuleGroup = ({ pluginName, ruleDescription, rules, isPluginEnabled,
               )}
             </div>
           ) : (
-            isUpdateSettingAvailable && (
-              <EmptyRuleState ruleName={pluginName} onCreateClick={onAdd} />
-            )
+            <EmptyRuleState ruleName={pluginName} onCreateClick={onAdd} />
           )}
         </div>
       </Layout>

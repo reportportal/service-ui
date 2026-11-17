@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 EPAM Systems
+ * Copyright 2025 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -45,8 +45,20 @@ export const messages = defineMessages({
     id: 'SettingsPage.patternAnalysis',
     defaultMessage: 'Pattern-analysis',
   },
+  environments: {
+    id: 'SettingsPage.environments',
+    defaultMessage: 'Environments',
+  },
+  testData: {
+    id: 'SettingsPage.testData',
+    defaultMessage: 'Test data',
+  },
   logTypes: {
     id: 'SettingsPage.logTypes',
     defaultMessage: 'Log types',
+  },
+  qualityGates: {
+    id: 'SettingsPage.qualityGates',
+    defaultMessage: 'Quality Gates',
   },
 });

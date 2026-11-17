@@ -14,26 +14,25 @@
  * limitations under the License.
  */
 
-import React, { Component, Fragment } from 'react';
+import { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { defineMessages, injectIntl } from 'react-intl';
 import track from 'react-tracking';
 import classNames from 'classnames/bind';
-import { BubblesLoader } from '@reportportal/ui-kit';
+import { BubblesLoader, Dropdown, Popover } from '@reportportal/ui-kit';
 import { fetch } from 'common/utils';
-import { projectIdSelector } from 'controllers/pages';
-import { projectInfoSelector } from 'controllers/project';
+import { projectInfoIdSelector, projectKeySelector } from 'controllers/project';
+import { activeOrganizationIdSelector } from 'controllers/organization';
 import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
+import { buildPluginCommandRQ } from 'controllers/plugins/utils';
 import {
   COMMAND_GET_ISSUE_TYPES,
   COMMAND_GET_ISSUE_FIELDS,
 } from 'controllers/plugins/uiExtensions/constants';
 import { URLS } from 'common/urls';
-import { withPopover } from 'componentLibrary/popover';
 import Parser from 'html-react-parser';
 import InfoIcon from 'common/img/newIcons/icon-about-inline.svg';
-import { Dropdown } from 'componentLibrary/dropdown';
 import { FieldErrorHint } from 'components/fields/fieldErrorHint';
 import { FieldElement } from 'pages/inside/projectSettingsPageContainer/content/elements';
 import { InputWithEye } from 'components/inputs/inputWithEye';
@@ -43,7 +42,6 @@ import {
   mapFieldsToValues,
   mergeFields,
 } from 'components/fields/dynamicFieldsSection/utils';
-import { PLUGINS_PAGE_EVENTS, SETTINGS_PAGE_EVENTS } from 'components/main/analytics/events';
 import { getDefaultOptionValueKey } from 'pages/inside/stepPage/modals/postIssueModal/utils';
 import { ISSUE_TYPE_FIELD_KEY } from '../constants';
 import styles from './btsPropertiesForIssueForm.scss';
@@ -73,30 +71,34 @@ const messages = defineMessages({
   },
 });
 
-const Popover = ({ formatMessage }) => (
-  <div className={cx('popover')}>{formatMessage(messages.tooltip)}</div>
-);
-Popover.propTypes = {
-  formatMessage: PropTypes.func.isRequired,
-};
-
 const IconShow = () => {
   return <i>{Parser(InfoIcon)}</i>;
 };
 
-const ShowWithPopover = withPopover({
-  ContentComponent: Popover,
-  side: 'bottom',
-  arrowPosition: 'middle',
-})(IconShow);
+const ShowWithPopover = ({ formatMessage }) => (
+  <Popover
+    placement="bottom"
+    arrowColor="white"
+    content={<div className={cx('popover')}>{formatMessage(messages.tooltip)}</div>}
+  >
+    <button
+      type="button"
+      className={cx('show-popover-trigger')}
+      aria-label={formatMessage(messages.tooltip)}
+    >
+      <IconShow />
+    </button>
+  </Popover>
+);
 ShowWithPopover.propTypes = {
   formatMessage: PropTypes.func.isRequired,
 };
 
 @connect(
   (state) => ({
-    projectName: projectIdSelector(state),
-    projectInfo: projectInfoSelector(state),
+    projectKey: projectKeySelector(state),
+    projectId: projectInfoIdSelector(state),
+    organizationId: activeOrganizationIdSelector(state),
   }),
   {
     showNotification,
@@ -108,8 +110,6 @@ export class BtsPropertiesForIssueForm extends Component {
   static propTypes = {
     intl: PropTypes.object.isRequired,
     integrationId: PropTypes.number.isRequired,
-    projectName: PropTypes.string,
-    projectInfo: PropTypes.object,
     pluginName: PropTypes.string,
     initialData: PropTypes.object,
     showNotification: PropTypes.func,
@@ -122,11 +122,12 @@ export class BtsPropertiesForIssueForm extends Component {
       trackEvent: PropTypes.func,
       getTrackingData: PropTypes.func,
     }).isRequired,
+    projectKey: PropTypes.string.isRequired,
+    projectId: PropTypes.number,
+    organizationId: PropTypes.number,
   };
 
   static defaultProps = {
-    projectName: '',
-    projectInfo: {},
     pluginName: '',
     initialData: {
       defectFormFields: [],
@@ -171,12 +172,6 @@ export class BtsPropertiesForIssueForm extends Component {
   }
 
   onChangeFieldCheckbox = (fieldId, fieldName) => {
-    this.props.tracking.trackEvent(
-      (this.props.isGlobal
-        ? PLUGINS_PAGE_EVENTS
-        : SETTINGS_PAGE_EVENTS
-      ).pluginChoosePropertiesCheckboxClick(this.props.pluginName, fieldName),
-    );
     const fieldsIds = {
       ...this.state.checkedFieldsIds,
       [fieldId]: !this.state.checkedFieldsIds[fieldId],
@@ -324,32 +319,46 @@ export class BtsPropertiesForIssueForm extends Component {
       });
     });
 
+  getPluginCommandContext = () => {
+    const { integrationId, isGlobal, organizationId, projectId, projectKey } = this.props;
+
+    return {
+      integrationId,
+      isGlobal,
+      organizationId,
+      projectId,
+      projectKey,
+    };
+  };
+
   fetchFieldsSet = (issueTypeValue) => {
     const {
       pluginDetails: { allowedCommands },
       isGlobal,
       integrationId,
-      projectName,
-      projectInfo,
+      pluginName,
+      projectKey,
     } = this.props;
-    const project = projectName || projectInfo.projectName;
     const isCommandAvailable = allowedCommands
-      ? allowedCommands.indexOf(COMMAND_GET_ISSUE_FIELDS) !== -1
+      ? allowedCommands.includes(COMMAND_GET_ISSUE_FIELDS)
       : false;
     const requestParams = {};
     let url;
 
     if (isCommandAvailable) {
-      url = URLS.projectIntegrationByIdCommand(project, integrationId, COMMAND_GET_ISSUE_FIELDS);
-      requestParams.method = 'PUT';
-      requestParams.data = {
-        projectId: projectInfo.projectId,
-        issueType: issueTypeValue,
-      };
+      url = URLS.pluginsCommandsCommon(pluginName, COMMAND_GET_ISSUE_FIELDS);
+      requestParams.method = 'POST';
+      requestParams.data = buildPluginCommandRQ({
+        ...this.getPluginCommandContext(),
+        arguments: {
+          projectKey,
+          issueType: issueTypeValue,
+        },
+      });
     } else {
       url = isGlobal
         ? URLS.btsGlobalIntegrationFieldsSet(integrationId, issueTypeValue)
-        : URLS.btsIntegrationFieldsSet(project, integrationId, issueTypeValue);
+        : URLS.btsIntegrationFieldsSet(projectKey, integrationId, issueTypeValue);
     }
 
     return fetch(url, requestParams);
@@ -370,26 +379,29 @@ export class BtsPropertiesForIssueForm extends Component {
       pluginDetails: { allowedCommands },
       isGlobal,
       integrationId,
-      projectName,
-      projectInfo,
+      pluginName,
+      projectKey,
     } = this.props;
-    const project = projectName || projectInfo.projectName;
     const isCommandAvailable = allowedCommands
-      ? allowedCommands.indexOf(COMMAND_GET_ISSUE_FIELDS) !== -1
+      ? allowedCommands.includes(COMMAND_GET_ISSUE_TYPES)
       : false;
+
     const requestParams = {};
     let url;
 
     if (isCommandAvailable) {
-      url = URLS.projectIntegrationByIdCommand(project, integrationId, COMMAND_GET_ISSUE_TYPES);
-      requestParams.method = 'PUT';
-      requestParams.data = {
-        projectId: projectInfo.projectId,
-      };
+      url = URLS.pluginsCommandsCommon(pluginName, COMMAND_GET_ISSUE_TYPES);
+      requestParams.method = 'POST';
+      requestParams.data = buildPluginCommandRQ({
+        ...this.getPluginCommandContext(),
+        arguments: {
+          projectKey,
+        },
+      });
     } else {
       url = isGlobal
         ? URLS.btsGlobalIntegrationIssueTypes(integrationId)
-        : URLS.btsIntegrationIssueTypes(project, integrationId);
+        : URLS.btsIntegrationIssueTypes(projectKey, integrationId);
     }
 
     return fetch(url, requestParams);
@@ -403,13 +415,17 @@ export class BtsPropertiesForIssueForm extends Component {
   };
 
   render() {
-    const { intl, disabled, integrationId, pluginName, projectName, projectInfo } = this.props;
+    const { intl, disabled, integrationId, pluginName, projectKey, organizationId, projectId, isGlobal } =
+      this.props;
     const { loading } = this.state;
     const preparedFields = this.prepareFieldsToRender();
     const integrationInfo = {
+      projectKey,
       integrationId,
-      projectName: projectName || projectInfo.projectName,
       pluginName,
+      organizationId,
+      projectId,
+      isGlobal,
     };
 
     return (
@@ -433,7 +449,6 @@ export class BtsPropertiesForIssueForm extends Component {
                         value={this.state.issueType}
                         onChange={this.handleIssueTypeChange}
                         options={this.issueTypeDropdownOptions}
-                        defaultWidth={false}
                       />
                     </FieldErrorHint>
                   </FieldElement>

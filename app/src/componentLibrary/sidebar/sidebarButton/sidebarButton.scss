@@ -1,0 +1,146 @@
+/*
+ * Copyright 2024 EPAM Systems
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+@use '../sidebarItemFocus' as *;
+
+.btn-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  align-self: flex-start;
+  flex-shrink: 0;
+  width: 48px;
+  height: 40px;
+
+  svg,
+  img {
+    width: 20px;
+    height: 20px;
+    object-fit: contain;
+  }
+}
+
+.title-container {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 10px 16px;
+  row-gap: 4px;
+  font-family: var(--rp-ui-base-font-family);
+}
+
+.title {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  line-height: 20px;
+  font-size: 13px;
+  font-weight: var(--rp-ui-base-fw-medium);
+}
+
+.sub-title {
+  font-size: 11px;
+  line-height: 16px;
+}
+
+.sidebar-button {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+  min-height: 40px;
+  flex-shrink: 0;
+  box-sizing: border-box;
+  color: var(--rp-ui-base-dark-e-100);
+  text-decoration: none;
+  text-align: center;
+  border-radius: 4px;
+  outline: none;
+  @include sidebar-item-focus-visible;
+
+  &:focus-visible {
+    background-color: transparent;
+  }
+
+  &:hover {
+    background-color: var(--rp-ui-base-dark-e-500);
+
+    .title {
+      color: var(--rp-ui-base-bg-000);
+    }
+
+    svg path {
+      fill: var(--rp-ui-base-bg-000);
+    }
+  }
+
+  &:active {
+    background-color: var(--rp-ui-base-dark-e-500);
+
+    .title {
+      color: var(--rp-ui-base-dark-topaz-pressed);
+    }
+
+    svg path {
+      fill: var(--rp-ui-base-dark-topaz-pressed);
+    }
+  }
+
+  &.active {
+    svg {
+      path,
+      rect,
+      polygon {
+        fill: var(--rp-ui-base-dark-topaz-text);
+      }
+    }
+
+    .title {
+      color: var(--rp-ui-base-dark-topaz-text);
+    }
+  }
+
+  &.variant-error {
+    svg path {
+      fill: var(--rp-ui-base-a-red-400);
+    }
+
+    &:hover svg path {
+      fill: var(--rp-ui-base-a-red-200);
+    }
+
+    &:active svg path {
+      fill: var(--rp-ui-base-a-raspberry-300);
+    }
+  }
+
+  &.variant-warning {
+    svg path {
+      fill: var(--rp-ui-base-a-yellow-600);
+    }
+
+    &:hover svg path {
+      fill: var(--rp-ui-base-a-yellow-300);
+    }
+
+    &:active svg path {
+      fill: var(--rp-ui-base-a-yellow-700);
+    }
+  }
+}

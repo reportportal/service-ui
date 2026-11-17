@@ -1,0 +1,122 @@
+/*
+ * Copyright 2025 EPAM Systems
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+import { useCallback, useRef, useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { change } from 'redux-form';
+
+import { Organization, OrganizationItem } from './organizationItem/organizationItem';
+
+interface OrganizationAssignmentProps {
+  onChange?: (value: Organization | Organization[]) => void;
+  value?: Organization | Organization[];
+  isMultiple?: boolean;
+  formName?: string;
+  invitedUserId?: number | null;
+  userType?: string;
+  excludeUserAssignments?: boolean;
+  isOrganizationFormOpen?: boolean;
+  onExpandOrganization?: (orgId: number) => void;
+  showUnassignProjectTooltip?: boolean;
+}
+
+export const OrganizationAssignment = ({
+  value,
+  onChange,
+  isMultiple = false,
+  formName,
+  invitedUserId,
+  userType,
+  excludeUserAssignments = false,
+  isOrganizationFormOpen = false,
+  onExpandOrganization,
+  showUnassignProjectTooltip,
+}: OrganizationAssignmentProps) => {
+  const dispatch = useDispatch();
+  const [openFormOrgId, setOpenFormOrgId] = useState<number | null>(null);
+  const openFormOrgIdRef = useRef<number | null>(null);
+
+  const handleAddProjectFormToggle = useCallback(
+    (orgId: number, isOpen: boolean) => {
+      const nextId = isOpen ? orgId : null;
+      openFormOrgIdRef.current = nextId;
+      setOpenFormOrgId(nextId);
+      if (formName) {
+        dispatch(change(formName, 'isAddingProject', isOpen));
+      }
+    },
+    [formName, dispatch],
+  );
+
+  const updateItem = (updates: Partial<Organization>, index?: number) => {
+    if (isMultiple) {
+      const updated = [...(value as Organization[])];
+      updated[index] = { ...updated[index], ...updates };
+      onChange?.(updated);
+    } else {
+      onChange?.({ ...value, ...updates });
+    }
+  };
+
+  const removeItem = (index: number) => {
+    if (isMultiple) {
+      const updated = [...(value as Organization[])];
+      updated.splice(index, 1);
+      onChange?.(updated);
+    }
+  };
+
+  if (isMultiple) {
+    if (!Array.isArray(value)) {
+      return;
+    }
+
+    return (
+      <>
+        {value?.map((org: Organization, index: number) => (
+          <div key={org.id}>
+            <OrganizationItem
+              value={org}
+              onChange={(updates) => updateItem(updates, index)}
+              onRemove={() => removeItem(index)}
+              collapsable
+              invitedUserId={invitedUserId}
+              userType={userType}
+              excludeUserAssignments={excludeUserAssignments}
+              disabled={(openFormOrgId !== null && openFormOrgId !== org.id) || isOrganizationFormOpen}
+              onAddProjectFormToggle={handleAddProjectFormToggle}
+              onExpandOrganization={onExpandOrganization}
+              showUnassignProjectTooltip={showUnassignProjectTooltip}
+            />
+          </div>
+        ))}
+      </>
+    );
+  }
+
+  return (
+    <OrganizationItem
+      value={value as Organization}
+      onChange={(updates) => updateItem(updates)}
+      invitedUserId={invitedUserId}
+      userType={userType}
+      excludeUserAssignments={excludeUserAssignments}
+      onAddProjectFormToggle={handleAddProjectFormToggle}
+      onExpandOrganization={onExpandOrganization}
+      showUnassignProjectTooltip={showUnassignProjectTooltip}
+    />
+  );
+};

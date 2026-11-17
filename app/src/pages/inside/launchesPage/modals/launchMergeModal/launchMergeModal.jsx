@@ -36,10 +36,11 @@ import { Input } from 'components/inputs/input';
 import { InputTextArea } from 'components/inputs/inputTextArea';
 import { InputRadio } from 'components/inputs/inputRadio';
 import { InputCheckbox } from 'components/inputs/inputCheckbox';
-import { activeProjectSelector, userInfoSelector } from 'controllers/user';
+import { userInfoSelector } from 'controllers/user';
 import { LAUNCHES_MODAL_EVENTS } from 'components/main/analytics/events';
 import { compareAttributes } from 'common/utils/attributeUtils';
 import { AttributeListField } from 'components/main/attributeList';
+import { projectKeySelector } from 'controllers/project';
 import { MergeTypeScheme } from './mergeTypeScheme';
 import { StartEndTime } from './startEndTime';
 import styles from './launchMergeModal.scss';
@@ -125,7 +126,7 @@ const formSyncErrorsSelector = getFormSyncErrors(MERGE_FORM);
     user: userInfoSelector(state),
     syncErrors: formSyncErrorsSelector(state),
     fields: formMetaSelector(state),
-    activeProject: activeProjectSelector(state),
+    projectKey: projectKeySelector(state),
     mergeType: valueSelector(state, 'mergeType'),
     startTime: valueSelector(state, 'startTime'),
     endTime: valueSelector(state, 'endTime'),
@@ -144,7 +145,6 @@ export class LaunchMergeModal extends Component {
     hideScreenLockAction: PropTypes.func.isRequired,
     showDefaultErrorNotification: PropTypes.func.isRequired,
     handleSubmit: PropTypes.func.isRequired,
-    activeProject: PropTypes.string.isRequired,
     user: PropTypes.object.isRequired,
     initialize: PropTypes.func.isRequired,
     syncErrors: PropTypes.object.isRequired,
@@ -161,6 +161,7 @@ export class LaunchMergeModal extends Component {
       trackEvent: PropTypes.func,
       getTrackingData: PropTypes.func,
     }).isRequired,
+    projectKey: PropTypes.string.isRequired,
   };
   static defaultProps = {
     mergeType: '',
@@ -223,7 +224,7 @@ export class LaunchMergeModal extends Component {
     );
 
     this.props.showScreenLockAction();
-    fetch(URLS.launchesMerge(this.props.activeProject), {
+    fetch(URLS.launchesMerge(this.props.projectKey), {
       method: 'post',
       data: values,
     })
@@ -247,7 +248,6 @@ export class LaunchMergeModal extends Component {
       endTime,
       syncErrors,
       fields,
-      tracking,
     } = this.props;
     const okButton = {
       text: intl.formatMessage(COMMON_LOCALE_KEYS.MERGE),
@@ -257,7 +257,6 @@ export class LaunchMergeModal extends Component {
     };
     const cancelButton = {
       text: intl.formatMessage(COMMON_LOCALE_KEYS.CANCEL),
-      eventInfo: LAUNCHES_MODAL_EVENTS.CANCEL_BTN_MERGE_MODAL,
     };
     return (
       <ModalLayout
@@ -265,7 +264,6 @@ export class LaunchMergeModal extends Component {
         className={cx('launch-merge-modal')}
         okButton={okButton}
         cancelButton={cancelButton}
-        closeIconEventInfo={LAUNCHES_MODAL_EVENTS.CLOSE_ICON_MERGE_MODAL}
         closeConfirmation={this.getCloseConfirmationConfig()}
       >
         <form>
@@ -279,22 +277,12 @@ export class LaunchMergeModal extends Component {
           <ModalField>
             <div className={cx('merge-type-section')}>
               <div className={cx('merge-type-options')}>
-                <FieldProvider
-                  name="mergeType"
-                  onChange={() =>
-                    tracking.trackEvent(LAUNCHES_MODAL_EVENTS.LINEAR_MERGE_BTN_MERGE_MODAL)
-                  }
-                >
+                <FieldProvider name="mergeType">
                   <InputRadio ownValue={MERGE_TYPE_BASIC}>
                     {intl.formatMessage(messages.mergeTypeLinear)}
                   </InputRadio>
                 </FieldProvider>
-                <FieldProvider
-                  name="mergeType"
-                  onChange={() =>
-                    tracking.trackEvent(LAUNCHES_MODAL_EVENTS.DEEP_MERGE_BTN_MERGE_MODAL)
-                  }
-                >
+                <FieldProvider name="mergeType">
                   <InputRadio ownValue={MERGE_TYPE_DEEP}>
                     {intl.formatMessage(messages.mergeTypeDeep)}
                   </InputRadio>

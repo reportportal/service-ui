@@ -67,7 +67,6 @@ export const HistoryCell = ({
       {children}
     </th>
   ) : (
-    // eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions
     <td className={className} onClick={onClick} style={attributeStyle}>
       {children}
     </td>

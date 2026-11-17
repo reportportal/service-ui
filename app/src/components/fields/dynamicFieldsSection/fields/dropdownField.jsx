@@ -16,7 +16,7 @@
 
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Dropdown } from 'componentLibrary/dropdown';
+import { Dropdown, ThemeProvider } from '@reportportal/ui-kit';
 import { DynamicField } from '../dynamicField';
 
 export class DropdownField extends Component {
@@ -39,20 +39,17 @@ export class DropdownField extends Component {
   render() {
     const { field, darkView, ...rest } = this.props;
     return (
-      <DynamicField
-        field={field}
-        parse={this.parseDropdownValue}
-        format={this.formatDropdownValue}
-        darkView={darkView}
-        {...rest}
-      >
-        <Dropdown
-          mobileDisabled
-          options={this.getInputOptions(field.definedValues)}
-          variant={darkView ? 'dark' : 'light'}
-          defaultWidth={false}
-        />
-      </DynamicField>
+      <ThemeProvider theme={darkView ? 'dark' : 'light'}>
+        <DynamicField
+          field={field}
+          parse={this.parseDropdownValue}
+          format={this.formatDropdownValue}
+          darkView={darkView}
+          {...rest}
+        >
+          <Dropdown mobileDisabled options={this.getInputOptions(field.definedValues)} />
+        </DynamicField>
+      </ThemeProvider>
     );
   }
 }

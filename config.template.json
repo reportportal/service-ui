@@ -1,0 +1,10 @@
+{
+  "service": {
+    "api": {
+      "url": "${API_URL}"
+    },
+    "auth": {
+      "url": "${AUTH_URL}"
+    }
+  }
+}

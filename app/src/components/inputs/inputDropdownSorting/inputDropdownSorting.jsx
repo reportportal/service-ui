@@ -38,6 +38,8 @@ export class InputDropdownSorting extends Component {
     mobileDisabled: PropTypes.bool,
     transparent: PropTypes.bool,
     positionTop: PropTypes.bool,
+    hideArrow: PropTypes.bool,
+    boldValue: PropTypes.bool,
   };
 
   static defaultProps = {
@@ -53,6 +55,8 @@ export class InputDropdownSorting extends Component {
     mobileDisabled: false,
     transparent: false,
     positionTop: false,
+    hideArrow: false,
+    boldValue: false,
   };
   state = {
     opened: false,
@@ -131,6 +135,8 @@ export class InputDropdownSorting extends Component {
       transparent,
       sortingMode,
       positionTop,
+      hideArrow,
+      boldValue,
     } = this.props;
     const { opened } = this.state;
 
@@ -143,11 +149,14 @@ export class InputDropdownSorting extends Component {
             touched,
             'mobile-disabled': mobileDisabled,
             transparent,
+            'hide-arrow': hideArrow,
           })}
           onClick={this.onClickSelectBlock}
         >
-          <span className={cx('value')}>{this.displayedValue()}</span>
-          <span className={cx('arrow', { asc: sortingMode })}>{Parser(ArrowIcon)}</span>
+          <span className={cx('value', { 'bold-value': boldValue })}>{this.displayedValue()}</span>
+          {!hideArrow && (
+            <span className={cx('arrow', { asc: sortingMode })}>{Parser(ArrowIcon)}</span>
+          )}
         </div>
         <div className={cx('select-list', { 'select-list--top': positionTop })}>
           {this.renderOptions()}

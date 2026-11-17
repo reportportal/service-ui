@@ -16,12 +16,11 @@
 
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import track from 'react-tracking';
 import { injectIntl, defineMessages } from 'react-intl';
 import { change } from 'redux-form';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
-import { activeProjectSelector } from 'controllers/user/selectors';
+import { projectKeySelector } from 'controllers/project';
 import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
 import AddFilterIcon from 'common/img/add-filter-inline.svg';
 import { fetch, debounce } from 'common/utils';
@@ -36,6 +35,10 @@ import {
 import { PAGE_KEY, SIZE_KEY } from 'controllers/pagination';
 import { GhostButton } from 'components/buttons/ghostButton';
 import { SearchableFilterList } from 'pages/inside/common/searchableFilterList';
+import { canWorkWithFilters } from 'common/utils/permissions';
+import { userRolesType } from 'common/constants/projectRoles';
+import { userRolesSelector } from 'controllers/pages';
+import { handleEnterOrSpaceKey } from 'common/utils/helperUtils/eventUtils';
 import { WIDGET_WIZARD_FORM } from '../../../constants';
 import { LockedActiveFilter } from './lockedActiveFilter';
 import { FilterEdit } from './filterEdit';
@@ -85,13 +88,13 @@ const messages = defineMessages({
   },
 });
 
-@track()
 @connect(
   (state) => ({
-    activeProject: activeProjectSelector(state),
+    projectKey: projectKeySelector(state),
     filters: filtersSelector(state),
     pagination: filtersPaginationSelector(state),
     loading: loadingSelector(state),
+    userRoles: userRolesSelector(state),
   }),
   {
     changeWizardForm: (field, value) => change(WIDGET_WIZARD_FORM, field, value, null),
@@ -107,7 +110,7 @@ export class FiltersControl extends Component {
     touched: PropTypes.bool.isRequired,
     loading: PropTypes.bool.isRequired,
     error: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]),
-    activeProject: PropTypes.string,
+    projectKey: PropTypes.string.isRequired,
     value: PropTypes.shape({
       value: PropTypes.string,
       label: PropTypes.string,
@@ -120,11 +123,7 @@ export class FiltersControl extends Component {
     updateFilterSuccessAction: PropTypes.func,
     onFormAppearanceChange: PropTypes.func.isRequired,
     notify: PropTypes.func.isRequired,
-    tracking: PropTypes.shape({
-      trackEvent: PropTypes.func,
-      getTrackingData: PropTypes.func,
-    }).isRequired,
-    eventsInfo: PropTypes.object,
+    userRoles: userRolesType,
   };
 
   static defaultProps = {
@@ -133,7 +132,6 @@ export class FiltersControl extends Component {
     touched: false,
     error: '',
     value: {},
-    activeProject: '',
     loading: false,
     filters: [],
     pagination: {},
@@ -142,7 +140,7 @@ export class FiltersControl extends Component {
     updateFilterSuccessAction: () => {},
     onFormAppearanceChange: () => {},
     notify: () => {},
-    eventsInfo: {},
+    userRoles: {},
   };
 
   constructor(props) {
@@ -168,18 +166,16 @@ export class FiltersControl extends Component {
   }
 
   onFilterAdd = (event) => {
-    this.props.tracking.trackEvent(this.props.eventsInfo.addFilter);
     this.handleFormAppearanceMode(event, FORM_APPEARANCE_MODE_ADD);
   };
 
   getFormAppearanceComponent = (activeFilter) => {
     const {
       formAppearance: { mode: formAppearanceMode, filter: formAppearanceFilter },
-      activeProject,
-      eventsInfo,
+      projectKey,
     } = this.props;
 
-    const component = (() => {
+    const getComponent = () => {
       switch (formAppearanceMode) {
         case FORM_APPEARANCE_MODE_EDIT: {
           return (
@@ -188,7 +184,6 @@ export class FiltersControl extends Component {
               onChange={this.handleFilterChange}
               onCancel={this.clearFormAppearance}
               onSave={this.handleFilterUpdate}
-              eventsInfo={eventsInfo}
             />
           );
         }
@@ -198,11 +193,10 @@ export class FiltersControl extends Component {
               filter={
                 formAppearanceFilter.conditions ? formAppearanceFilter : NEW_FILTER_DEFAULT_CONFIG
               }
-              activeProject={activeProject}
+              projectKey={projectKey}
               onChange={this.handleFilterChange}
               onCancel={this.clearFormAppearance}
               onSave={this.handleFilterInsert}
-              eventsInfo={eventsInfo}
             />
           );
         }
@@ -212,9 +206,9 @@ export class FiltersControl extends Component {
         default:
           return null;
       }
-    })();
+    };
 
-    return <div className={cx('filters-control-form')}>{component}</div>;
+    return <div className={cx('filters-control-form')}>{getComponent()}</div>;
   };
 
   getFilterById = (filterId) => this.getFiltersList().find((elem) => elem.id === Number(filterId));
@@ -244,6 +238,7 @@ export class FiltersControl extends Component {
   getCustomActionBlock = () => {
     const {
       intl: { formatMessage },
+      userRoles,
     } = this.props;
 
     return (
@@ -251,6 +246,7 @@ export class FiltersControl extends Component {
         icon={AddFilterIcon}
         title={formatMessage(messages.addFilterButton)}
         onClick={this.onFilterAdd}
+        disabled={!canWorkWithFilters(userRoles)}
       >
         {formatMessage(messages.addFilterButton)}
       </GhostButton>
@@ -283,18 +279,15 @@ export class FiltersControl extends Component {
   };
 
   handleSearchValueChange = debounce((value) => {
-    this.props.tracking.trackEvent(this.props.eventsInfo.enterSearchParams);
     return this.fetchFilter({ page: 1, searchValue: value });
   }, 300);
 
   editLockedActiveFilter = () => {
-    this.props.tracking.trackEvent(this.props.eventsInfo.editFilterIcon);
     this.clearFormAppearance();
   };
 
   handleFormAppearanceMode = (event, mode, filter) => {
-    event.preventDefault();
-    event.stopPropagation();
+    handleEnterOrSpaceKey(event);
     const { onFormAppearanceChange, formAppearance } = this.props;
 
     onFormAppearanceChange(mode || formAppearance.mode, filter || {});
@@ -317,12 +310,12 @@ export class FiltersControl extends Component {
   handleFilterInsert = () => {
     const {
       intl,
-      activeProject,
+      projectKey,
       notify,
       formAppearance: { filter },
     } = this.props;
 
-    fetch(URLS.filters(activeProject), {
+    fetch(URLS.filters(projectKey), {
       method: 'post',
       data: this.getFilterForSubmit(filter),
     })
@@ -346,10 +339,10 @@ export class FiltersControl extends Component {
   };
 
   handleFilterUpdate = (filter) => {
-    const { intl, notify, activeProject } = this.props;
+    const { intl, notify, projectKey } = this.props;
     const data = this.getFilterForSubmit(filter);
 
-    fetch(URLS.filter(activeProject, filter.id), {
+    fetch(URLS.filter(projectKey, filter.id), {
       method: 'put',
       data,
     })
@@ -372,7 +365,6 @@ export class FiltersControl extends Component {
   };
 
   handleFilterListChange = (event) => {
-    this.props.tracking.trackEvent(this.props.eventsInfo.chooseFilter);
     return this.handleActiveFilterChange(event.target.value);
   };
 

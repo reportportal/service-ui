@@ -21,5 +21,13 @@ export const SHOW_DEFAULT_ERROR_NOTIFICATION = 'showDefaultErrorNotification';
 export const NOTIFICATION_TYPES = {
   ERROR: 'error',
   INFO: 'info',
+  WARNING: 'warning',
   SUCCESS: 'success',
 };
+
+export const NOTIFICATION_TYPOGRAPHY_COLOR_TYPES = {
+  WHITE: 'white',
+  BLACK: 'black',
+};
+
+export const WARNING_NOTIFICATION_DURATION = 8000;

@@ -20,8 +20,6 @@ import { useIntl } from 'react-intl';
 import classNames from 'classnames/bind';
 import { reduxForm } from 'redux-form';
 import { Button } from '@reportportal/ui-kit';
-import { SETTINGS_PAGE_EVENTS } from 'components/main/analytics/events';
-import { useTracking } from 'react-tracking';
 import { showModalAction } from 'controllers/modal';
 import { useDispatch } from 'react-redux';
 import { docsReferences, createExternalLink } from 'common/utils';
@@ -35,16 +33,13 @@ const cx = classNames.bind(styles);
 
 const IndexSettings = ({ indexingRunning, analyzerUnavailableTitle, hasPermission }) => {
   const { formatMessage } = useIntl();
-  const { trackEvent } = useTracking();
   const dispatch = useDispatch();
 
   const removeIndex = () => {
-    trackEvent(SETTINGS_PAGE_EVENTS.REMOVE_INDEX_BTN);
     dispatch(showModalAction({ id: 'removeIndexModalWindow' }));
   };
 
   const generateIndex = () => {
-    trackEvent(SETTINGS_PAGE_EVENTS.GENERATE_INDEX_BTN);
     dispatch(showModalAction({ id: 'generateIndexModalWindow' }));
   };
 

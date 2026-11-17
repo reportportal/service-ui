@@ -15,91 +15,119 @@
  */
 
 .login-form {
-  width: 380px;
-  margin: auto;
-  font-family: $FONT-REGULAR;
+  width: 100%;
+  max-width: 400px;
+  margin: 0;
+  font-family: var(--rp-ui-base-font-family-heading);
 
   @media (max-width: $SCREEN_XS_MAX) {
-    width: 100%;
+    max-width: 280px;
+  }
+
+  &--lockout {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    justify-content: start;
+    align-items: start;
+    max-width: none;
+    min-height: 86px;
+    text-align: start;
   }
 }
+
 .login-field {
-  width: 380px;
-  margin-bottom: 30px;
-
-  @media (max-width: $SCREEN_XS_MAX) {
-    width: 280px;
-  }
+  width: 100%;
+  margin-bottom: 16px;
 }
+
 .password-field {
-  width: 380px;
-  margin-bottom: 10px;
-
-  @media (max-width: $SCREEN_XS_MAX) {
-    width: 280px;
-  }
+  width: 100%;
+  margin-bottom: 16px;
 }
+
 .forgot-pass {
+  font-family: var(--rp-ui-base-font-family);
+  text-decoration-line: none;
   display: block;
-  margin-bottom: 30px;
+  margin-bottom: 16px;
   font-size: 13px;
-  color: $COLOR--tealish;
+  color: var(--rp-ui-base-topaz);
+  line-height: 20px;
   text-align: left;
   cursor: pointer;
 
   &:hover {
     text-decoration: underline;
   }
+}
 
-  &.attempts-exceed {
-    @media (max-width: $SCREEN_XS_MAX) {
-      position: initial;
-      margin-bottom: 0;
-    }
+.login-actions-row {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.login-button {
+  margin-bottom: 32px;
+}
+
+.log-in-with-email-link {
+  color: var(--rp-ui-base-topaz);
+  font-weight: var(--rp-ui-base-fw-medium);
+  font-family: var(--rp-ui-base-font-family);
+  font-size: 13px;
+  line-height: 20px;
+  letter-spacing: 0;
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: underline;
   }
 }
-.login-button-container {
-  width: 160px;
-  height: 40px;
-  margin: 0 auto;
 
-  @media (max-width: $SCREEN_SM_MAX) {
-    margin-bottom: 0;
-  }
-
-  @media (max-width: $SCREEN_XS_MAX) {
-    margin-bottom: 34px;
-  }
+.or-separator {
+  font-size: 11px;
+  font-weight: var(--rp-ui-base-fw-bold);
+  font-family: var(--rp-ui-base-font-family);
+  line-height: 16px;
+  color: var(--rp-ui-base-e-400);
+  text-transform: uppercase;
 }
+
 .attempts-exceeded-block {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  margin-bottom: 16px;
+  align-items: start;
+  width: 100%;
+  max-width: 360px;
+  box-sizing: border-box;
+  margin-top: 39px;
 }
 
-.attempts-exceeded-block-content {
-  display: flex;
-  flex-direction: column;
-  width: 320px;
-  text-align: center;
-  margin-top: 10px;
-  margin-bottom: 16px;
-  color: $COLOR--steel-grey;
-  font-size: 12px;
-  font-family: $FONT-REGULAR;
-  line-height: 16px;
-
-  .time {
-    padding-top: 16px;
-    line-height: 30px;
-  }
-
-  b {
-    font-size: 36px;
-  }
+.attempts-exceeded-heading {
+  margin-bottom: 4px;
+  font-family: var(--rp-ui-base-font-family-heading);
+  font-weight: var(--rp-ui-base-fw-regular);
+  font-size: 32px;
+  line-height: 42px;
+  color: var(--rp-ui-base-almost-black);
 
   @media (max-width: $SCREEN_XS_MAX) {
-    width: 280px;
+    font-size: 24px;
+    line-height: 32px;
   }
+}
+
+.attempts-exceeded-message {
+  margin: 0;
+  color: var(--rp-ui-base-almost-black);
+  font-size: 13px;
+  font-family: var(--rp-ui-base-font-family);
+  line-height: 20px;
+}
+
+.attempts-exceeded-count {
+  font-weight: var(--rp-ui-base-fw-semibold);
 }

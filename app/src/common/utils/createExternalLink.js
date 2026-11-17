@@ -18,8 +18,9 @@ import DOMPurify from 'dompurify';
 
 export const createExternalLink = (data, href, dataAutomationId, icon) =>
   DOMPurify.sanitize(
-    `<a href=${href} target="_blank" rel="noreferrer noopener" data-automation-id=${dataAutomationId}>${data}${icon ||
-      ''}</a>`,
+    `<a href=${href} target="_blank" rel="noreferrer noopener" data-automation-id=${dataAutomationId}>${data}${
+      icon || ''
+    }</a>`,
     {
       ALLOWED_ATTR: ['target', 'href', 'rel', 'data-automation-id', 'd', 'fill'],
     },

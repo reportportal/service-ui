@@ -23,9 +23,15 @@
   padding: 20px 0 0;
   position: relative;
   height: 100%;
+  width: 100%;
   max-width: 1370px;
+  box-sizing: border-box;
   @media (max-width: $SCREEN_XS_MAX) {
     padding: 0;
+  }
+
+  &.full-width {
+    max-width: none;
   }
 }
 
@@ -48,6 +54,7 @@
   &:not(:last-child) {
     margin-bottom: 15px;
   }
+
   @media print {
     box-shadow: 0;
   }

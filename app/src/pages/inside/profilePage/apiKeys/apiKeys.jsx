@@ -30,7 +30,7 @@ const ApiKeysBase = ({ apiKeys }) => {
 
   useEffect(() => {
     dispatch(fetchApiKeysAction());
-  }, []);
+  }, [dispatch]);
 
   return (
     <div className={cx('api-keys')}>

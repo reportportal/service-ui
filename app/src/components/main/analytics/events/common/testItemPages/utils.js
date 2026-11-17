@@ -54,10 +54,10 @@ export const getDefectTypesAnalyticsData = (issueType) => {
   const unselectedIssueType = 'unselected';
 
   return issueType
-    ? DEFECT_TYPES_LOCATORS_TO_DEFECT_TYPES[issueType] ??
+    ? (DEFECT_TYPES_LOCATORS_TO_DEFECT_TYPES[issueType] ??
         `custom_${
           DEFECT_TYPES_LOCATORS_TO_DEFECT_TYPES[issueType?.slice(0, 2) + defaultDefectTypeNumber]
-        }`
+        }`)
     : unselectedIssueType;
 };
 

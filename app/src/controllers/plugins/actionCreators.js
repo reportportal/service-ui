@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 EPAM Systems
+ * Copyright 2026 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,15 +26,21 @@ import {
   SET_PROJECT_INTEGRATIONS,
   REMOVE_PROJECT_INTEGRATIONS_BY_TYPE,
   REMOVE_PROJECT_INTEGRATIONS_BY_TYPE_SUCCESS,
+  REMOVE_ORGANIZATION_INTEGRATIONS_BY_TYPE,
+  REMOVE_ORGANIZATION_INTEGRATIONS_BY_TYPE_SUCCESS,
   ADD_PROJECT_INTEGRATION_SUCCESS,
   UPDATE_PROJECT_INTEGRATION_SUCCESS,
   REMOVE_PROJECT_INTEGRATION_SUCCESS,
+  ADD_ORGANIZATION_INTEGRATION_SUCCESS,
+  UPDATE_ORGANIZATION_INTEGRATION_SUCCESS,
+  REMOVE_ORGANIZATION_INTEGRATION_SUCCESS,
   ADD_GLOBAL_INTEGRATION_SUCCESS,
   UPDATE_GLOBAL_INTEGRATION_SUCCESS,
   REMOVE_GLOBAL_INTEGRATION_SUCCESS,
   FETCH_GLOBAL_INTEGRATIONS,
   FETCH_GLOBAL_INTEGRATIONS_SUCCESS,
   REMOVE_GLOBAL_INTEGRATIONS_BY_TYPE_SUCCESS,
+  SET_ORGANIZATION_INTEGRATIONS,
 } from './constants';
 
 export const fetchPluginsAction = () => ({
@@ -74,15 +80,30 @@ export const setProjectIntegrationsAction = (projectIntegrations) => ({
   payload: projectIntegrations,
 });
 
-export const updateIntegrationAction = (data, isGlobal, id, pluginName, callback, metaData) => ({
+export const updateIntegrationAction = (
+  data,
+  isGlobal,
+  id,
+  pluginName,
+  callback,
+  metaData,
+  isOrganizational = false,
+) => ({
   type: UPDATE_INTEGRATION,
-  payload: { data, isGlobal, id, pluginName, callback },
+  payload: { data, isGlobal, isOrganizational, id, pluginName, callback },
   meta: metaData,
 });
 
-export const addIntegrationAction = (data, isGlobal, pluginName, callback, metaData) => ({
+export const addIntegrationAction = (
+  data,
+  isGlobal,
+  pluginName,
+  callback,
+  metaData,
+  isOrganizational = false,
+) => ({
   type: ADD_INTEGRATION,
-  payload: { data, isGlobal, pluginName, callback },
+  payload: { data, isGlobal, isOrganizational, pluginName, callback },
   meta: metaData,
 });
 
@@ -111,9 +132,24 @@ export const addProjectIntegrationSuccessAction = (integration) => ({
   payload: integration,
 });
 
-export const removeIntegrationAction = (id, isGlobal, callback) => ({
+export const addOrganizationIntegrationSuccessAction = (integration) => ({
+  type: ADD_ORGANIZATION_INTEGRATION_SUCCESS,
+  payload: integration,
+});
+
+export const updateOrganizationIntegrationSuccessAction = (data, id) => ({
+  type: UPDATE_ORGANIZATION_INTEGRATION_SUCCESS,
+  payload: { data, id },
+});
+
+export const removeOrganizationIntegrationSuccessAction = (id) => ({
+  type: REMOVE_ORGANIZATION_INTEGRATION_SUCCESS,
+  payload: id,
+});
+
+export const removeIntegrationAction = (id, isGlobal, callback, isOrganizational = false) => ({
   type: REMOVE_INTEGRATION,
-  payload: { id, isGlobal, callback },
+  payload: { id, isGlobal, callback, isOrganizational },
 });
 
 export const removeProjectIntegrationSuccessAction = (id) => ({
@@ -131,7 +167,22 @@ export const removeProjectIntegrationsByTypeSuccessAction = (instanceType) => ({
   payload: instanceType,
 });
 
+export const removeOrganizationIntegrationsByTypeAction = (instanceType) => ({
+  type: REMOVE_ORGANIZATION_INTEGRATIONS_BY_TYPE,
+  payload: instanceType,
+});
+
+export const removeOrganizationIntegrationsByTypeSuccessAction = (instanceType) => ({
+  type: REMOVE_ORGANIZATION_INTEGRATIONS_BY_TYPE_SUCCESS,
+  payload: instanceType,
+});
+
 export const removeGlobalIntegrationsByTypeSuccessAction = (instanceType) => ({
   type: REMOVE_GLOBAL_INTEGRATIONS_BY_TYPE_SUCCESS,
   payload: instanceType,
+});
+
+export const setOrganizationIntegrationsAction = (organizationIntegrations) => ({
+  type: SET_ORGANIZATION_INTEGRATIONS,
+  payload: organizationIntegrations,
 });

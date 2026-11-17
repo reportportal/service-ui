@@ -17,10 +17,12 @@
 import { takeLatest, takeEvery, call, all, put, select } from 'redux-saga/effects';
 import { fetch } from 'common/utils/fetch';
 import { URLS } from 'common/urls';
-import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
+import {
+  showNotification,
+  NOTIFICATION_TYPES,
+  showErrorNotification,
+} from 'controllers/notification';
 import { PROJECT_MANAGER } from 'common/constants/projectRoles';
-import { getStorageItem, setStorageItem } from 'common/utils/storageUtils';
-import { userIdSelector, userInfoSelector, activeProjectSelector } from './selectors';
 import {
   getUserProjectSettingsFromStorage,
   setNoLogsCollapsingInStorage,
@@ -33,14 +35,27 @@ import {
   getLogTimeFormatFromStorage,
 } from './storageUtils';
 import {
+  assignToProjectSuccessAction,
+  assignToProjectErrorAction,
+  fetchUserSuccessAction,
+  fetchUserErrorAction,
+  setApiKeysAction,
+  addApiKeySuccessAction,
+  deleteApiKeySuccessAction,
+  setLogTimeFormatAction,
+  setActiveProjectSettingsAction,
+  updateActiveProjectSettingsAction,
+} from './actionCreators';
+import {
   ASSIGN_TO_PROJECT,
-  UNASSIGN_FROM_PROJECT,
-  SET_ACTIVE_PROJECT,
+  SET_ACTIVE_PROJECT_KEY,
   ADD_API_KEY,
   FETCH_API_KEYS,
   DELETE_API_KEY,
   FETCH_USER,
+  FETCH_USER_INFO,
   DELETE_USER_ACCOUNT,
+  UPDATE_USER_INFO,
   SET_NO_LOGS_COLLAPSING,
   SET_LOGS_PAGINATION_ENABLED,
   SET_LOGS_SIZE,
@@ -56,20 +71,7 @@ import {
   LAUNCH_EXPORT_INCLUDE_ATTACHMENTS_KEY,
   LAUNCH_EXPORT_FLAT_ATTACHMENTS_KEY,
 } from './constants';
-import {
-  assignToProjectSuccessAction,
-  assignToProjectErrorAction,
-  unassignFromProjectSuccessAction,
-  setActiveProjectAction,
-  fetchUserSuccessAction,
-  fetchUserErrorAction,
-  setApiKeysAction,
-  addApiKeySuccessAction,
-  deleteApiKeySuccessAction,
-  setLogTimeFormatAction,
-  setActiveProjectSettingsAction,
-  updateActiveProjectSettingsAction,
-} from './actionCreators';
+import { activeProjectKeySelector, userIdSelector, userInfoSelector } from './selectors';
 
 function* assignToProject({ payload: project }) {
   const userId = yield select(userIdSelector);
@@ -80,13 +82,13 @@ function* assignToProject({ payload: project }) {
     },
   };
   try {
-    yield call(fetch, URLS.userInviteInternal(project.projectName), {
+    yield call(fetch, URLS.userInviteInternal(project.projectKey), {
       method: 'put',
       data,
     });
     yield put(
       assignToProjectSuccessAction({
-        projectName: project.projectName,
+        projectKey: project.projectKey,
         projectRole: userRole,
         entryType: project.entryType,
       }),
@@ -101,7 +103,7 @@ function* assignToProject({ payload: project }) {
     const error = err.message;
     yield put(
       assignToProjectErrorAction({
-        projectName: project.projectName,
+        projectKey: project.projectKey,
         projectRole: userRole,
         entryType: project.entryType,
       }),
@@ -116,70 +118,37 @@ function* assignToProject({ payload: project }) {
   }
 }
 
-function* unassignFromProject({ payload: project }) {
-  const userId = yield select(userIdSelector);
-  const data = {
-    userNames: [userId],
-  };
+function* fetchUserInfo() {
   try {
-    yield call(fetch, URLS.userUnasign(project.projectName), {
-      method: 'put',
-      data,
-    });
-    yield put(unassignFromProjectSuccessAction(project));
-    yield put(
-      showNotification({
-        messageId: 'unassignSuccess',
-        type: NOTIFICATION_TYPES.SUCCESS,
-      }),
-    );
+    const user = yield call(fetch, URLS.users());
+    yield put(fetchUserSuccessAction(user));
+    return user;
   } catch (err) {
-    const error = err.message;
-    yield put(
-      showNotification({
-        messageId: 'unassignError',
-        type: NOTIFICATION_TYPES.ERROR,
-        values: { error },
-      }),
-    );
+    yield put(fetchUserErrorAction());
   }
 }
 
 function* fetchUserWorker() {
-  let user;
-  try {
-    user = yield call(fetch, URLS.users());
-    yield put(fetchUserSuccessAction(user));
-  } catch (err) {
-    yield put(fetchUserErrorAction());
-    return;
-  }
-  const userSettings = getStorageItem(`${user.userId}_settings`) || {};
-  const savedActiveProject = userSettings.activeProject;
-  const activeProject =
-    savedActiveProject && savedActiveProject in user.assignedProjects
-      ? savedActiveProject
-      : Object.keys(user.assignedProjects)[0];
-  yield put(setActiveProjectAction(activeProject));
-  const format = getLogTimeFormatFromStorage(user.userId);
+  const user = yield call(fetchUserInfo);
+  if (!user) return;
+
+  const { userId } = user;
+  const format = getLogTimeFormatFromStorage(userId);
   yield put(setLogTimeFormatAction(format));
 }
 
-function* saveActiveProject({ payload: project }) {
+function* loadProjectSettingsWorker({ payload: projectKey }) {
   const user = yield select(userInfoSelector);
-  const currentUserSettings = getStorageItem(`${user.userId}_settings`) || {};
-  setStorageItem(`${user.userId}_settings`, { ...currentUserSettings, activeProject: project });
-
-  const projectSettings = getUserProjectSettingsFromStorage(user.userId, project);
+  const projectSettings = getUserProjectSettingsFromStorage(user.userId, projectKey);
   yield put(setActiveProjectSettingsAction(projectSettings));
 }
 
 function* updateUserProjectSettings({ payload, setInStorage, settingKey }) {
   const { value } = payload;
   const userId = yield select(userIdSelector);
-  const projectId = yield select(activeProjectSelector);
+  const projectKey = yield select(activeProjectKeySelector);
 
-  yield call(setInStorage, userId, projectId, value);
+  yield call(setInStorage, userId, projectKey, value);
   yield put(updateActiveProjectSettingsAction({ [settingKey]: value }));
 }
 
@@ -226,13 +195,13 @@ function* setLogsColorizedBackground({ payload }) {
 function* setLaunchExportIncludeAttachments({ payload }) {
   const { value } = payload;
   const userId = yield select(userIdSelector);
-  const projectId = yield select(activeProjectSelector);
+  const projectKey = yield select(activeProjectKeySelector);
 
-  yield call(setLaunchExportIncludeAttachmentsInStorage, userId, projectId, value);
+  yield call(setLaunchExportIncludeAttachmentsInStorage, userId, projectKey, value);
   if (value) {
     yield put(updateActiveProjectSettingsAction({ [LAUNCH_EXPORT_INCLUDE_ATTACHMENTS_KEY]: value }));
   } else {
-    yield call(setLaunchExportFlatAttachmentsInStorage, userId, projectId, false);
+    yield call(setLaunchExportFlatAttachmentsInStorage, userId, projectKey, false);
     yield put(
       updateActiveProjectSettingsAction({
         [LAUNCH_EXPORT_INCLUDE_ATTACHMENTS_KEY]: false,
@@ -333,11 +302,10 @@ function* deleteApiKey({ payload = {} }) {
 }
 
 function* deleteUserAccount({ payload = {} }) {
-  const { onSuccess } = payload;
-  const user = yield select(userInfoSelector);
+  const { onSuccess, userId } = payload;
 
   try {
-    yield call(fetch, URLS.userInfo(user.id), {
+    yield call(fetch, URLS.userInfo(userId), {
       method: 'delete',
     });
     onSuccess();
@@ -348,6 +316,20 @@ function* deleteUserAccount({ payload = {} }) {
         type: NOTIFICATION_TYPES.ERROR,
       }),
     );
+  }
+}
+
+function* updateUserInfo({ payload = {} }) {
+  const { email, data, onSuccess } = payload;
+
+  try {
+    yield call(fetch, URLS.userInfo(email), {
+      method: 'put',
+      data,
+    });
+    onSuccess?.();
+  } catch ({ message }) {
+    yield put(showErrorNotification({ message }));
   }
 }
 
@@ -367,8 +349,12 @@ function* watchDeleteUserAccount() {
   yield takeEvery(DELETE_USER_ACCOUNT, deleteUserAccount);
 }
 
-function* watchSetActiveProject() {
-  yield takeEvery(SET_ACTIVE_PROJECT, saveActiveProject);
+function* watchFetchUserInfo() {
+  yield takeEvery(FETCH_USER_INFO, fetchUserInfo);
+}
+
+function* watchLoadProjectSettings() {
+  yield takeEvery(SET_ACTIVE_PROJECT_KEY, loadProjectSettingsWorker);
 }
 
 function* watchSetNoLogsCollapsing() {
@@ -407,16 +393,16 @@ function* watchAssignToProject() {
   yield takeLatest(ASSIGN_TO_PROJECT, assignToProject);
 }
 
-function* watchUnassignFromProject() {
-  yield takeLatest(UNASSIGN_FROM_PROJECT, unassignFromProject);
+function* watchUpdateUserInfo() {
+  yield takeEvery(UPDATE_USER_INFO, updateUserInfo);
 }
 
 export function* userSagas() {
   yield all([
     watchAssignToProject(),
-    watchUnassignFromProject(),
     watchFetchUser(),
-    watchSetActiveProject(),
+    watchFetchUserInfo(),
+    watchLoadProjectSettings(),
     watchSetNoLogsCollapsing(),
     watchSetLogsPagination(),
     watchSetLogsSize(),
@@ -428,5 +414,6 @@ export function* userSagas() {
     watchFetchApiKeys(),
     watchDeleteApiKey(),
     watchDeleteUserAccount(),
+    watchUpdateUserInfo(),
   ]);
 }

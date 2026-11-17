@@ -30,15 +30,15 @@ import { activeProjectSelector } from 'controllers/user';
 import { docsReferences } from 'common/utils';
 import { PROJECT_SETTINGS_NOTIFICATIONS_EVENTS } from 'components/main/analytics/events/ga4Events/projectSettingsPageEvents';
 import PropTypes from 'prop-types';
+import { HelpPanel } from 'pages/inside/common/helpPanel';
 import { messages } from '../messages';
 import styles from './footer.scss';
-import { HelpPanel } from '../helpPanel';
 
 const cx = classNames.bind(styles);
 
 export const NotificationsFooter = ({ isReadOnly }) => {
   const { formatMessage } = useIntl();
-  const activeProject = useSelector(activeProjectSelector);
+  const { organizationSlug, projectSlug } = useSelector(activeProjectSelector);
 
   const footerItems = [
     {
@@ -56,7 +56,8 @@ export const NotificationsFooter = ({ isReadOnly }) => {
       link: {
         type: PROJECT_SETTINGS_TAB_PAGE,
         payload: {
-          projectId: activeProject,
+          organizationSlug,
+          projectSlug,
           settingsTab: INTEGRATIONS,
         },
       },

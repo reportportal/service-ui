@@ -52,70 +52,67 @@ const selectAll = (state, items) => {
   return selectItems(state, items);
 };
 
-export const selectedItemsReducer = (namespace) => (
-  state = SELECTED_ITEMS_INITIAL_STATE,
-  { type = '', payload = {}, meta = {} },
-) => {
-  if (meta?.namespace !== namespace) {
-    return state;
-  }
-  switch (type) {
-    case TOGGLE_ITEM_SELECTION:
-      return toggleItem(state, payload);
-    case SELECT_ITEMS:
-      return selectItems(state, payload);
-    case UNSELECT_ITEMS:
-      return unselectItems(state, payload);
-    case TOGGLE_ALL_ITEMS:
-      return selectAll(state, payload);
-    case UNSELECT_ALL_ITEMS:
-      return [];
-    default:
+export const selectedItemsReducer =
+  (namespace) =>
+  (state = SELECTED_ITEMS_INITIAL_STATE, { type = '', payload = {}, meta = {} }) => {
+    if (meta?.namespace !== namespace) {
       return state;
-  }
-};
-
-export const validationErrorsReducer = (namespace) => (
-  state = VALIDATION_ERRORS_INITIAL_STATE,
-  { type = '', payload = {}, meta = {} },
-) => {
-  if (meta?.namespace !== namespace) {
-    return state;
-  }
-  switch (type) {
-    case SET_VALIDATION_ERRORS:
-      return { ...payload };
-    case REMOVE_VALIDATION_ERRORS: {
-      const errorIds = Object.keys(state);
-      const payloadIds = payload.map(String);
-      return errorIds
-        .filter((id) => payloadIds.indexOf(id) === -1)
-        .reduce(
-          (result, key) => ({ ...result, [key]: state[key] }),
-          VALIDATION_ERRORS_INITIAL_STATE,
-        );
     }
-    case RESET_VALIDATION_ERRORS:
-      return VALIDATION_ERRORS_INITIAL_STATE;
-    default:
-      return state;
-  }
-};
+    switch (type) {
+      case TOGGLE_ITEM_SELECTION:
+        return toggleItem(state, payload);
+      case SELECT_ITEMS:
+        return selectItems(state, payload);
+      case UNSELECT_ITEMS:
+        return unselectItems(state, payload);
+      case TOGGLE_ALL_ITEMS:
+        return selectAll(state, payload);
+      case UNSELECT_ALL_ITEMS:
+        return [];
+      default:
+        return state;
+    }
+  };
 
-export const lastOperationReducer = (namespace) => (
-  state = LAST_OPERATION_INITIAL_STATE,
-  { type = '', payload = {}, meta = {} },
-) => {
-  if (meta?.namespace !== namespace) {
-    return state;
-  }
-  switch (type) {
-    case SET_LAST_OPERATION:
-      return payload;
-    default:
+export const validationErrorsReducer =
+  (namespace) =>
+  (state = VALIDATION_ERRORS_INITIAL_STATE, { type = '', payload = {}, meta = {} }) => {
+    if (meta?.namespace !== namespace) {
       return state;
-  }
-};
+    }
+    switch (type) {
+      case SET_VALIDATION_ERRORS:
+        return { ...payload };
+      case REMOVE_VALIDATION_ERRORS: {
+        const errorIds = Object.keys(state);
+        const payloadIds = payload.map(String);
+        return errorIds
+          .filter((id) => payloadIds.indexOf(id) === -1)
+          .reduce(
+            (result, key) => ({ ...result, [key]: state[key] }),
+            VALIDATION_ERRORS_INITIAL_STATE,
+          );
+      }
+      case RESET_VALIDATION_ERRORS:
+        return VALIDATION_ERRORS_INITIAL_STATE;
+      default:
+        return state;
+    }
+  };
+
+export const lastOperationReducer =
+  (namespace) =>
+  (state = LAST_OPERATION_INITIAL_STATE, { type = '', payload = {}, meta = {} }) => {
+    if (meta?.namespace !== namespace) {
+      return state;
+    }
+    switch (type) {
+      case SET_LAST_OPERATION:
+        return payload;
+      default:
+        return state;
+    }
+  };
 
 export const groupOperationsReducer = (namespace) =>
   combineReducers({

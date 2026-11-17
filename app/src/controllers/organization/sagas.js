@@ -1,0 +1,225 @@
+/*
+ * Copyright 2026 EPAM Systems
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+import { takeEvery, all, put, call, select, take } from 'redux-saga/effects';
+import { fetchDataAction, createFetchPredicate } from 'controllers/fetch';
+import { FETCH_SUCCESS } from 'controllers/fetch/constants';
+import { redirect } from 'redux-first-router';
+import { ORGANIZATION_PROJECTS_PAGE } from 'controllers/pages';
+import { URLS } from 'common/urls';
+import {
+  showDefaultErrorNotification,
+  showErrorNotification,
+  showSuccessNotification,
+} from 'controllers/notification';
+import { fetchFilteredProjectAction } from './projects/actionCreators';
+import { projectsSagas } from './projects/sagas';
+import {
+  CREATE_ORGANIZATION,
+  ERROR_CODES,
+  FETCH_ORGANIZATION_BY_SLUG,
+  FETCH_ORGANIZATION_SETTINGS,
+  PREPARE_ACTIVE_ORGANIZATION_PROJECTS,
+  PREPARE_ACTIVE_ORGANIZATION_SETTINGS,
+  RENAME_ORGANIZATION,
+  UPDATE_ORGANIZATION_SETTINGS,
+  FETCH_ORGANIZATION_INTEGRATIONS,
+} from './constants';
+import { usersSagas } from './users/sagas';
+import { fetch } from 'common/utils';
+import { hideModalAction } from 'controllers/modal';
+import { normalizeIntegrationItem } from 'controllers/plugins/utils';
+import { setOrganizationIntegrationsAction } from 'controllers/plugins/actionCreators';
+import { withActiveOrganization } from './withActiveOrganizationSaga';
+import {
+  fetchOrganizationIntegrationsAction,
+  updateOrganizationSettingsSuccessAction,
+  setOrganizationIntegrationsLoadingAction,
+} from './actionCreators';
+import { activeOrganizationIdSelector } from './selectors';
+
+function* fetchOrganizationBySlug({ payload: { slug, withIntegrations } }) {
+  try {
+    yield put(fetchDataAction(FETCH_ORGANIZATION_BY_SLUG)(URLS.organizationList({ slug })));
+    if (withIntegrations) {
+      const fetchResult = yield take(createFetchPredicate(FETCH_ORGANIZATION_BY_SLUG));
+      if (fetchResult.type === FETCH_SUCCESS) {
+        const organizationId = yield select(activeOrganizationIdSelector);
+        if (organizationId) {
+          yield put(fetchOrganizationIntegrationsAction(organizationId));
+        }
+      }
+    }
+  } catch (error) {
+    yield put(showDefaultErrorNotification(error));
+  }
+}
+
+function* prepareActiveOrganizationProjects({ payload: { organizationSlug } }) {
+  yield* withActiveOrganization(organizationSlug, function* onActiveOrgReady(organizationId) {
+    yield put(fetchFilteredProjectAction(organizationId));
+  });
+}
+
+function* watchFetchOrganizationProjects() {
+  yield takeEvery(PREPARE_ACTIVE_ORGANIZATION_PROJECTS, prepareActiveOrganizationProjects);
+}
+
+function* watchFetchOrganizationBySlug() {
+  yield takeEvery(FETCH_ORGANIZATION_BY_SLUG, fetchOrganizationBySlug);
+}
+
+function* fetchOrganizationSettings({ payload: organizationId }) {
+  yield put(
+    fetchDataAction(FETCH_ORGANIZATION_SETTINGS)(URLS.organizationSettings(organizationId)),
+  );
+}
+
+function* watchFetchOrganizationSettings() {
+  yield takeEvery(FETCH_ORGANIZATION_SETTINGS, fetchOrganizationSettings);
+}
+
+function* prepareActiveOrganizationSettings({ payload: { organizationSlug } }) {
+  yield* withActiveOrganization(organizationSlug, function* onActiveOrgReady(organizationId) {
+    yield call(fetchOrganizationSettings, { payload: organizationId });
+  });
+}
+
+function* updateOrganizationSettings({ payload: { organizationId, retentionPolicy, onComplete } }) {
+  try {
+    yield call(fetch, URLS.organizationSettings(organizationId), {
+      method: 'put',
+      data: {
+        retention_policy: retentionPolicy,
+      },
+    });
+    yield put(updateOrganizationSettingsSuccessAction(retentionPolicy));
+    yield put(showSuccessNotification({ messageId: 'updateOrganizationSettingsSuccess' }));
+  } catch ({ message }) {
+    yield put(showDefaultErrorNotification({ message }));
+  } finally {
+    onComplete?.();
+  }
+}
+
+function* watchPrepareActiveOrganizationSettings() {
+  yield takeEvery(PREPARE_ACTIVE_ORGANIZATION_SETTINGS, prepareActiveOrganizationSettings);
+}
+
+function* watchUpdateOrganizationSettings() {
+  yield takeEvery(UPDATE_ORGANIZATION_SETTINGS, updateOrganizationSettings);
+}
+
+function* createOrganization({ payload: { name, type } }) {
+  try {
+    const created = yield call(fetch, URLS.organizationList(), {
+      method: 'post',
+      data: {
+        name,
+        type,
+      },
+    });
+    yield put(hideModalAction());
+    yield put(showSuccessNotification({ messageId: 'createOrganizationSuccess' }));
+    yield put(
+      redirect({
+        type: ORGANIZATION_PROJECTS_PAGE,
+        payload: { organizationSlug: created.slug },
+      }),
+    );
+  } catch (err) {
+    if (ERROR_CODES.ORGANIZATION_EXISTS.includes(err.errorCode)) {
+      yield put(
+        showErrorNotification({
+          messageId: 'organizationExists',
+          values: { name },
+        }),
+      );
+    } else {
+      yield put(
+        showErrorNotification({
+          messageId: 'failureDefault',
+          values: { error: err.message },
+        }),
+      );
+    }
+  }
+}
+
+function* watchCreateOrganization() {
+  yield takeEvery(CREATE_ORGANIZATION, createOrganization);
+}
+
+function* renameOrganization({ payload: { organizationId, newOrganizationName, onSuccess } }) {
+  try {
+    yield call(fetch, URLS.organizationById(organizationId), {
+      method: 'put',
+      data: {
+        name: newOrganizationName,
+      },
+    });
+    yield put(showSuccessNotification({ messageId: 'updateOrganizationNameSuccess' }));
+    onSuccess?.();
+  } catch ({ errorCode, message }) {
+    if (ERROR_CODES.ORGANIZATION_EXISTS.includes(errorCode)) {
+      yield put(
+        showErrorNotification({
+          messageId: 'organizationExists',
+          values: { name: newOrganizationName },
+        }),
+      );
+    } else {
+      yield put(showDefaultErrorNotification({ message }));
+    }
+  }
+}
+
+function* watchRenameOrganization() {
+  yield takeEvery(RENAME_ORGANIZATION, renameOrganization);
+}
+
+function* fetchOrganizationIntegrations({ payload: { organizationId } }) {
+  try {
+    yield put(setOrganizationIntegrationsLoadingAction(true));
+    const response = yield call(fetch, URLS.organizationIntegrations(organizationId));
+    const rawItems = Array.isArray(response?.items) ? response.items : [];
+    const items = rawItems.map((item) => normalizeIntegrationItem(item));
+    yield put(setOrganizationIntegrationsAction(items));
+  } catch (error) {
+    yield put(showDefaultErrorNotification(error));
+  } finally {
+    yield put(setOrganizationIntegrationsLoadingAction(false));
+  }
+}
+
+function* watchFetchOrganizationIntegrations() {
+  yield takeEvery(FETCH_ORGANIZATION_INTEGRATIONS, fetchOrganizationIntegrations);
+}
+
+export function* organizationSagas() {
+  yield all([
+    watchFetchOrganizationProjects(),
+    watchFetchOrganizationBySlug(),
+    watchFetchOrganizationSettings(),
+    watchPrepareActiveOrganizationSettings(),
+    watchUpdateOrganizationSettings(),
+    watchCreateOrganization(),
+    watchRenameOrganization(),
+    watchFetchOrganizationIntegrations(),
+    projectsSagas(),
+    usersSagas(),
+  ]);
+}

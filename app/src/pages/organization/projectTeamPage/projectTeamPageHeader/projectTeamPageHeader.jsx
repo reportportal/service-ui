@@ -1,0 +1,132 @@
+/*
+ * Copyright 2026 EPAM Systems
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+import { useSelector } from 'react-redux';
+import PropTypes from 'prop-types';
+import classNames from 'classnames/bind';
+import { Button } from '@reportportal/ui-kit';
+import {
+  ORGANIZATION_PROJECTS_PAGE,
+  ORGANIZATIONS_PAGE,
+} from 'controllers/pages/constants';
+import { useIntl } from 'react-intl';
+import { projectMembersSelector, projectNameSelector } from 'controllers/project';
+import { SearchField } from 'components/fields/searchField';
+import { NAMESPACE, SEARCH_KEY } from 'controllers/members/constants';
+import { withFilter } from 'controllers/filter';
+import { PROJECT_PAGE_EVENTS } from 'components/main/analytics/events/ga4Events/projectPageEvents';
+import { ssoUsersOnlySelector } from 'controllers/appInfo';
+import { activeOrganizationNameSelector } from 'controllers/organization';
+import { urlOrganizationSlugSelector, urlProjectSlugSelector } from 'controllers/pages';
+import { LocationHeaderLayout } from 'layouts/locationHeaderLayout';
+import { PreservedText } from 'components/preservedText';
+import { messages } from '../../messages';
+import styles from './projectTeamPageHeader.scss';
+
+const cx = classNames.bind(styles);
+
+const SearchFieldWithFilter = withFilter({ filterKey: SEARCH_KEY, namespace: NAMESPACE })(
+  SearchField,
+);
+
+export const ProjectTeamPageHeader = ({
+  hasPermission,
+  onInvite,
+  isMembersLoading,
+  searchValue,
+  setSearchValue,
+}) => {
+  const { formatMessage } = useIntl();
+  const projectName = useSelector(projectNameSelector);
+  const ssoOnlyEnabled = useSelector(ssoUsersOnlySelector);
+
+  const organizationName = useSelector(activeOrganizationNameSelector);
+  const organizationSlug = useSelector(urlOrganizationSlugSelector);
+  const projectSlug = useSelector(urlProjectSlugSelector);
+  const isNotEmptyMembers = useSelector(projectMembersSelector).length > 0;
+
+  const rootCrumb = {
+    title: formatMessage(messages.allOrganizations),
+    link: { type: ORGANIZATIONS_PAGE },
+    children: []
+  };
+
+  const organizationCrumb = {
+    title: <PreservedText>{organizationName}</PreservedText>,
+    link: { type: ORGANIZATION_PROJECTS_PAGE, payload: { organizationSlug } },
+    children: []
+  };
+
+  const projectCrumb = {
+    title: <PreservedText>{projectName}</PreservedText>,
+  };
+
+  let lastCrumb = rootCrumb;
+
+  if (organizationSlug) {
+    rootCrumb.children.push(organizationCrumb)
+    lastCrumb = organizationCrumb;
+  };
+
+  if (projectSlug) {
+    organizationCrumb.children.push(projectCrumb)
+    lastCrumb = projectCrumb;
+  }
+
+  return (
+    <LocationHeaderLayout
+      title={formatMessage(messages.projectTeamTitle)}
+      breadcrumbs={[lastCrumb]}
+      tree={[rootCrumb]}
+    >
+      <div className={cx('actions')}>
+        {isNotEmptyMembers && (
+          <>
+            <div className={cx('icons')}>
+              <div className={cx('filters')}>
+                <SearchFieldWithFilter
+                  isLoading={isMembersLoading}
+                  searchValue={searchValue}
+                  setSearchValue={setSearchValue}
+                  placeholder={formatMessage(messages.searchPlaceholder)}
+                  event={PROJECT_PAGE_EVENTS.SEARCH_PROJECT_TEAM_FIELD}
+                />
+              </div>
+            </div>
+            {hasPermission && (
+              <Button variant={'ghost'} onClick={onInvite}>
+                {ssoOnlyEnabled ? formatMessage(messages.assignUser) : formatMessage(messages.inviteUser)}
+              </Button>
+            )}
+          </>
+        )}
+      </div>
+    </LocationHeaderLayout>
+  );
+};
+
+ProjectTeamPageHeader.propTypes = {
+  isMembersLoading: PropTypes.bool.isRequired,
+  searchValue: PropTypes.string.isRequired,
+  setSearchValue: PropTypes.func.isRequired,
+  hasPermission: PropTypes.bool,
+  onInvite: PropTypes.func,
+};
+
+ProjectTeamPageHeader.defaultProps = {
+  hasPermission: false,
+  onInvite: () => {},
+};

@@ -1,0 +1,15 @@
+.empty-milestones {
+  padding: 40px 0 60px;
+  width: 100%;
+
+  &__numerable-block {
+    align-items: center;
+    margin-top: 95px;
+  }
+
+  &__documentation-link {
+    span:last-child {
+      margin-bottom: 2px;
+    }
+  }
+}

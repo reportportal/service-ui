@@ -37,6 +37,7 @@ export class MultipleAutocomplete extends Component {
     placeholder: PropTypes.string,
     error: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]),
     touched: PropTypes.bool,
+    getUniqKey: PropTypes.func,
     creatable: PropTypes.bool,
     onChange: PropTypes.func,
     onFocus: PropTypes.func,
@@ -90,14 +91,16 @@ export class MultipleAutocomplete extends Component {
     focused: false,
   };
 
-  getOptionProps = (getItemProps, highlightedIndex, selectedItems) => ({ item, index, ...rest }) =>
-    getItemProps({
-      item,
-      index,
-      isActive: highlightedIndex === index,
-      isSelected: selectedItems.some((selectedItem) => isEqual(selectedItem, item)),
-      ...rest,
-    });
+  getOptionProps =
+    (getItemProps, highlightedIndex, selectedItems) =>
+    ({ item, index, ...rest }) =>
+      getItemProps({
+        item,
+        index,
+        isActive: highlightedIndex === index,
+        isSelected: selectedItems.some((selectedItem) => isEqual(selectedItem, item)),
+        ...rest,
+      });
 
   handleChange = (...args) => {
     this.updatePosition?.();

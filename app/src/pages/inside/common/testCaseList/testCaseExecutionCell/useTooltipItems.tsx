@@ -1,0 +1,63 @@
+/*
+ * Copyright 2025 EPAM Systems
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+import { useIntl } from 'react-intl';
+
+import { ACTION_SOURCE } from 'analyticsEvents/testPlansPageEvents';
+import { useUserPermissions } from 'hooks/useUserPermissions';
+import { PopoverItem } from 'pages/common/popoverControl/popoverControl';
+import { TMS_INSTANCE_KEY } from 'pages/inside/common/constants';
+import {
+  useRemoveTestCasesFromTestPlanModal,
+  removeTestCasesFromTestPlanMessages,
+} from 'pages/inside/testPlansPage/testPlanModals';
+import { ExtendedTestCase } from 'types/testCase';
+
+import { useTestCaseTooltipItems } from '../useTestCaseTooltipItems';
+
+interface UseTooltipItemsProps {
+  instanceKey: TMS_INSTANCE_KEY;
+  testCase: ExtendedTestCase;
+}
+
+export const useTooltipItems = ({ instanceKey, testCase }: UseTooltipItemsProps) => {
+  const { formatMessage } = useIntl();
+  const { canManageTestCases } = useUserPermissions();
+  const testCaseTooltipItems = useTestCaseTooltipItems({ testCase });
+  const { openModal: openRemoveFromTestPlanModal } = useRemoveTestCasesFromTestPlanModal();
+
+  const tooltipItemsByInstance: Partial<Record<TMS_INSTANCE_KEY, PopoverItem[]>> = {
+    [TMS_INSTANCE_KEY.TEST_PLAN]: canManageTestCases
+      ? [
+          {
+            label: formatMessage(removeTestCasesFromTestPlanMessages.removeFromTestPlanTitle),
+            variant: 'danger',
+            onClick: () => {
+              openRemoveFromTestPlanModal({
+                selectedTestCaseIds: [testCase.id],
+                testCaseName: testCase.name,
+                source: ACTION_SOURCE.SINGLE,
+              });
+            },
+          },
+        ]
+      : [],
+    [TMS_INSTANCE_KEY.TEST_CASE]: testCaseTooltipItems,
+    [TMS_INSTANCE_KEY.MANUAL_LAUNCH]: testCaseTooltipItems,
+  };
+
+  return tooltipItemsByInstance[instanceKey];
+};

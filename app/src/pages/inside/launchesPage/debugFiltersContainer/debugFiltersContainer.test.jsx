@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { mount } from 'enzyme/build';
+import { mount } from 'enzyme';
 import { ENTITY_NUMBER } from 'components/filterEntities/constants';
 import { formatSortingString, SORTING_ASC, SORTING_DESC, SORTING_KEY } from 'controllers/sorting';
 import { createFilterQuery } from 'components/filterEntities/containers/utils';

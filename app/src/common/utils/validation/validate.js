@@ -16,6 +16,8 @@
 
 import {
   PASSWORD_MAX_ALLOWED_LENGTH,
+  REGISTRATION_NAME_MIN_LENGTH,
+  REGISTRATION_NAME_MAX_LENGTH,
   FILTER_DESCRIPTION_MAX_LENGTH,
 } from 'common/constants/validation';
 import {
@@ -28,19 +30,33 @@ import {
   lengthRange,
   range,
   isNotOnlySpaces,
+  trimValue,
 } from './validatorHelpers';
+import { MAX_FIELD_LENGTH } from './constants';
 
-export const required = isNotEmpty;
+const URL_REGEX = /^(ftp|http|https):\/\/[^\s"]+[^\s".]$/;
+
+export { isNotEmpty as required };
 export const isNotEmptyArray = composeValidators([isNotEmpty, minLength(1)]);
-export const url = composeValidators([isNotEmpty, regex(/^(ftp|http|https):\/\/[^ "]+$/)]);
+export const url = composeValidators([isNotEmpty, regex(URL_REGEX)]);
 export const rallyUrl = composeValidators([
   isNotEmpty,
   regex(/^(https:\/\/rally1.rallydev.com).*/),
 ]);
-export const email = composeValidators([regex(/^[a-z0-9.+_-]+@[a-z0-9_.-]+?\.[a-z0-9]{2,}$/i)]);
+export const email = composeValidators([
+  regex(/^(?![.])[a-z0-9._-]+@[a-z0-9_.-]+?\.[a-z0-9]{2,}$/i),
+]);
 export const requiredEmail = composeValidators([isNotEmpty, email]);
-export const login = composeValidators([isNotEmpty, regex(/^[0-9a-zA-Z-_.]{1,128}$/)]);
+export const login = composeValidators([isNotEmpty, email]);
 export const oldPassword = composeValidators([isNotEmpty, regex(/^(.){4,256}$/)]);
+
+// TODO: Remove this validator in favor of createPasswordValidator
+export const passwordCreateUser = composeValidators([
+  isNotEmpty,
+  minLength(8),
+  maxLength(256),
+  regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).+$/),
+]);
 
 export const createPasswordValidator = (passwordMinLength) =>
   composeValidators([
@@ -54,11 +70,16 @@ export const createPasswordValidator = (passwordMinLength) =>
 
 export const userName = composeValidators([
   isNotEmpty,
-  regex(/^[a-z0-9._\-\s\u0400-\u04FF]{3,256}$/i),
+  regex(
+    new RegExp(
+      `^[A-Za-z0-9.'_\\- ]{${REGISTRATION_NAME_MIN_LENGTH},${REGISTRATION_NAME_MAX_LENGTH}}$`,
+    ),
+  ),
 ]);
 export const filterName = composeValidators([isNotEmpty, lengthRange(3, 128)]);
 export const launchName = composeValidators([isNotEmpty, maxLength(256)]);
 export const launchDescription = maxLength(2048);
+export const testCaseDescription = maxLength(MAX_FIELD_LENGTH);
 export const dashboardName = composeValidators([isNotEmpty, lengthRange(3, 128)]);
 export const createDashboardNameUniqueValidator = (dashboardItems, dashboardItem) => (name) =>
   !dashboardItems.some((dashboard) => dashboard.name === name && dashboard.id !== dashboardItem.id);
@@ -69,7 +90,9 @@ export const issueId = composeValidators([isNotEmpty, maxLength(128)]);
 export const ldapUrl = composeValidators([isNotEmpty, regex(/:\/\/.+/)]);
 export const defectTypeLongName = composeValidators([isNotEmpty, lengthRange(3, 55)]);
 export const defectTypeShortName = composeValidators([isNotEmpty, maxLength(4)]);
-export const projectName = composeValidators([isNotEmpty, regex(/^[0-9a-zA-Z-_]{3,256}$/)]);
+export const projectNamePattern = composeValidators([isNotEmpty, regex(/^[0-9a-zA-Z-_. ]+$/)]);
+export const projectNameLength = composeValidators([isNotEmpty, lengthRange(3, 60)]);
+export const projectVersionLength = composeValidators([isNotEmpty, maxLength(60)]);
 export const btsIntegrationName = composeValidators([isNotEmpty, maxLength(55)]);
 export const btsProject = composeValidators([isNotEmpty, maxLength(55)]);
 export const btsUserName = composeValidators([isNotEmpty, maxLength(55)]);
@@ -107,6 +130,7 @@ export const descriptionStepLevelEntity = composeValidators([
 
 export const port = range(1, 65535);
 
+export const optionalUrl = (value) => !value || regex(URL_REGEX)(value);
 export const searchFilter = (value) =>
   !value || composeValidators([isNotOnlySpaces, minLength(3)])(value);
 export const searchMembers = (value) => !value || isNotOnlySpaces(value);
@@ -135,20 +159,22 @@ export const footerLinkNameLength = composeValidators([isNotEmpty, lengthRange(3
 export const footerLinkUrlLength = maxLength(1024);
 export const isUniqueByKey = (array, key) => (value) => !array.some((item) => item[key] === value);
 export const urlOrEmailValidator = (value) => email(value) || url(value);
-export const createNotificationRecipientsValidator = (informOwner) => (value = []) => {
-  if (!informOwner && !value.length) {
-    return false;
-  }
-  if (informOwner && !value.length) {
-    return true;
-  }
-  const checkIsStringWithEmailParts = regex(/@/);
-  if (value.some(checkIsStringWithEmailParts)) {
-    return value.filter(checkIsStringWithEmailParts).every(email);
-  }
+export const createNotificationRecipientsValidator =
+  (informOwner) =>
+  (value = []) => {
+    if (!informOwner && !value.length) {
+      return false;
+    }
+    if (informOwner && !value.length) {
+      return true;
+    }
+    const checkIsStringWithEmailParts = regex(/@/);
+    if (value.some(checkIsStringWithEmailParts)) {
+      return value.filter(checkIsStringWithEmailParts).every(email);
+    }
 
-  return true;
-};
+    return true;
+  };
 export const notificationLaunchNames = (value) =>
   isEmpty(value) || !value.length || value.every(launchName);
 export const apiKeyName = composeValidators([isNotEmpty, lengthRange(1, 40)]);
@@ -157,3 +183,20 @@ export const uniqueApiKeyName = (names) => (value) =>
 export const apiKeyNameShouldMatch = composeValidators([regex(/^[A-Za-z0-9-._~+/]+$/)]);
 export const deleteAccountFeedbackOtherValue = maxLength(128);
 export const anyOptionSelected = (options) => Object.values(options).some((option) => !!option);
+export const keywordMatcher = (keyword) => (value) =>
+  keyword.toLowerCase().trim() === value?.toLowerCase()?.trim();
+export const organizationNamePattern = composeValidators([
+  isNotEmpty,
+  regex(/^[0-9a-zA-Z-'_. ]+$/),
+]);
+export const organizationNameLength = composeValidators([isNotEmpty, lengthRange(3, 60)]);
+
+const githubOrganizationNameWhenPresent = composeValidators([
+  maxLength(256),
+  regex(/^[A-Za-z0-9-]+$/),
+]);
+
+export const githubOrganizationNameOptional = (value) => {
+  const v = trimValue(value);
+  return !v?.length || githubOrganizationNameWhenPresent(v);
+};

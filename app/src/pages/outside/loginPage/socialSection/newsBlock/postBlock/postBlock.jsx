@@ -14,32 +14,49 @@
  * limitations under the License.
  */
 
+import { forwardRef } from 'react';
 import classNames from 'classnames/bind';
 import PropTypes from 'prop-types';
 import Parser from 'html-react-parser';
-import { LOGIN_PAGE_EVENTS } from 'components/main/analytics/events';
 import DOMPurify from 'dompurify';
+import { useIntl } from 'react-intl';
 import { marked } from 'marked-lts';
 
 import styles from './postBlock.scss';
 
 const cx = classNames.bind(styles);
-const HREF_TAG_NAME = 'A';
+
+const POST_CONTENT_SANITIZE_CONFIG = { ADD_ATTR: ['target', 'rel'] };
+const MAX_VISIBLE_STACK_LAYER = 2;
+
+const ensureLinkOpensInNewTab = (node) => {
+  if (node.tagName === 'A') {
+    node.setAttribute('target', '_blank');
+    node.setAttribute('rel', 'noopener noreferrer');
+  }
+};
+
+const sanitizePostContent = (html) => {
+  DOMPurify.addHook('afterSanitizeAttributes', ensureLinkOpensInNewTab);
+  const sanitized = DOMPurify.sanitize(html, POST_CONTENT_SANITIZE_CONFIG);
+  DOMPurify.removeHook('afterSanitizeAttributes', ensureLinkOpensInNewTab);
+
+  return sanitized;
+};
 
 export const renderer = {
   link(href, text, title) {
+    const className = cx('twit-link');
+
     if (text && title) {
-      return `<a class=${cx(
-        'twit-link',
-      )} href="${href}" target="_blank" rel="noopener noreferrer" title="${text}">${title}</a>`;
-    } else if (title) {
-      return `<a class=${cx(
-        'twit-link',
-      )} href="${href}" target="_blank" rel="noopener noreferrer"">${title}</a>`;
+      return `<a class="${className}" href="${href}" target="_blank" rel="noopener noreferrer" title="${text}">${title}</a>`;
     }
-    return `<a class=${cx(
-      'twit-link',
-    )} href="${href}" target="_blank" rel="noopener noreferrer"">${href}</a>`;
+
+    if (title) {
+      return `<a class="${className}" href="${href}" target="_blank" rel="noopener noreferrer">${title}</a>`;
+    }
+
+    return `<a class="${className}" href="${href}" target="_blank" rel="noopener noreferrer">${href}</a>`;
   },
 };
 
@@ -54,32 +71,90 @@ marked.use(
   },
 );
 
-const getPostContent = (text) => {
-  const result = marked.parse(text);
-  return result;
-};
+const getPostContent = (text) => marked.parse(text);
 
-const handleClick = (e, tracking) => {
-  const { href, tagName } = e.target;
-  if (tagName === HREF_TAG_NAME) {
-    tracking.trackEvent(LOGIN_PAGE_EVENTS.click_twitter_link(href));
+const formatTweetDate = (tweetData, locale) => {
+  const dateValue = tweetData.created_at || tweetData.date || tweetData.createdAt;
+  if (!dateValue) {
+    return null;
   }
+
+  const date = new Date(dateValue);
+  if (Number.isNaN(date.getTime())) {
+    return null;
+  }
+
+  return date.toLocaleDateString(locale, { month: 'short', day: 'numeric' });
 };
 
-export const PostBlock = ({ tweetData, tracking }) => (
-  <div className={cx('post-block')} onClick={(e) => handleClick(e, tracking)}>
-    {Parser(DOMPurify.sanitize(getPostContent(tweetData.text)))}
-  </div>
+export const PostBlock = forwardRef(
+  (
+    {
+      tweetData = {},
+      stackLayer = null,
+      isStacked = false,
+      isStackFront = false,
+      isHidden = false,
+      isDismissing = false,
+      isPeeking = false,
+      isExpanded = false,
+      style = null,
+    },
+    ref,
+  ) => {
+    const { locale } = useIntl();
+    const formattedDate = formatTweetDate(tweetData, locale);
+    const visibleLayer = stackLayer === null ? null : Math.min(stackLayer, MAX_VISIBLE_STACK_LAYER);
+
+    return (
+      <div
+        ref={ref}
+        className={cx('post-block', {
+          'post-block--stacked': isStacked && stackLayer !== null,
+          'post-block--stack-front': isStacked && isStackFront,
+          'post-block--stack-back': isStacked && !isStackFront,
+          [`post-block--stack-layer-${visibleLayer}`]:
+            isStacked && visibleLayer !== null && !isHidden,
+          'post-block--stack-hidden': isStacked && isHidden,
+          'post-block--dismissing': isDismissing,
+          'post-block--peeking': isPeeking,
+          'post-block--expanded': isExpanded,
+        })}
+        style={style}
+      >
+        <div className={cx('post-header')}>
+          <div className={cx('post-avatar')} />
+          <div className={cx('post-meta')}>
+            <div className={cx('post-author')}>
+              <span className={cx('post-name')}>ReportPortal.io</span>
+              <span className={cx('post-handle')}>@ReportPortal.io</span>
+              {formattedDate && (
+                <>
+                  <span className={cx('post-separator')}>•</span>
+                  <span className={cx('post-date')}>{formattedDate}</span>
+                </>
+              )}
+            </div>
+          </div>
+        </div>
+        <div className={cx('post-content')}>
+          {Parser(sanitizePostContent(getPostContent(tweetData.text)))}
+        </div>
+      </div>
+    );
+  },
 );
+
+PostBlock.displayName = 'PostBlock';
 
 PostBlock.propTypes = {
   tweetData: PropTypes.object,
-  tracking: PropTypes.shape({
-    trackEvent: PropTypes.func,
-    getTrackingData: PropTypes.func,
-  }).isRequired,
-};
-
-PostBlock.defaultProps = {
-  tweetData: {},
+  stackLayer: PropTypes.number,
+  isStacked: PropTypes.bool,
+  isStackFront: PropTypes.bool,
+  isHidden: PropTypes.bool,
+  isDismissing: PropTypes.bool,
+  isPeeking: PropTypes.bool,
+  isExpanded: PropTypes.bool,
+  style: PropTypes.object,
 };

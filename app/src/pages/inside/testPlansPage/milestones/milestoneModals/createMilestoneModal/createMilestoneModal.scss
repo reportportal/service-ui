@@ -1,0 +1,209 @@
+@use '../../milestonesTable/milestonesShared' as ms;
+
+.milestone-type-dropdown {
+  :global(div[role='button'][class*='_dropdown_']) {
+    align-items: center;
+    box-sizing: border-box;
+    min-height: 36px;
+    height: 36px;
+    padding-top: 0;
+    padding-bottom: 0;
+    padding-left: 12px;
+  }
+
+  :global([class*='value-wrapper']) {
+    align-items: center;
+    min-height: 0;
+  }
+
+  :global(span[class*='_icon_']) {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    width: auto;
+    min-width: 0;
+    height: auto;
+    margin-top: 0;
+    margin-right: 8px;
+    align-self: center;
+  }
+}
+
+.create-milestone-modal {
+  &__label-asterisk {
+    @include ms.milestone-body-13;
+
+    position: absolute;
+    top: -3px;
+    padding-left: 4px;
+    color: var(--rp-ui-base-e-300);
+    font-weight: var(--rp-ui-base-fw-medium);
+  }
+
+  &__type-dropdown-toggle-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    width: auto;
+    height: auto;
+    margin: 0;
+    line-height: 0;
+    background: none;
+
+    [class*='milestone-type-icon'] {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: auto;
+      height: auto;
+      min-width: 0;
+      min-height: 0;
+      padding: 0;
+      border-radius: 0;
+      background-color: transparent;
+    }
+  }
+
+  &__content {
+    position: relative;
+    min-width: 400px;
+  }
+
+  &__field {
+    margin-bottom: 16px;
+  }
+
+  &__dates {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+
+  &__date-shortcuts {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 12px;
+    margin-top: 8px;
+  }
+
+  &__date-shortcut {
+    @include ms.milestone-body-13;
+
+    text-indent: 1px;
+    color: var(--rp-ui-color-text-secondary);
+    text-decoration: underline;
+    text-decoration-style: solid;
+    text-underline-offset: 0;
+    -webkit-text-decoration-skip: none;
+    text-decoration-skip-ink: none;
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+
+    &:disabled {
+      cursor: not-allowed;
+      opacity: 0.5;
+    }
+  }
+
+  &__type-option {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    box-sizing: border-box;
+    width: 100%;
+    max-width: 100%;
+    min-height: 48px;
+    padding: 8px 12px;
+    text-align: left;
+    border-radius: 3px;
+
+    &_highlight {
+      background: var(--rp-ui-base-bg-200);
+    }
+
+    &_selected {
+      background: var(--rp-ui-base-topaz-focused-10);
+    }
+  }
+
+  &__type-option:hover &__type-option-icon,
+  &__type-option_selected &__type-option-icon,
+  &__type-option_highlight &__type-option-icon {
+    [class*='milestone-type-icon'] {
+      background-color: var(--rp-ui-color-bg);
+    }
+  }
+
+  &__type-option-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    width: 32px;
+    height: 32px;
+    line-height: 0;
+  }
+
+  &__type-option-text {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    flex: 1;
+    min-width: 0;
+    justify-content: center;
+  }
+
+  &__type-option-title {
+    @include ms.milestone-body-13-medium;
+
+    line-height: 20px;
+    color: var(--rp-ui-color-text);
+  }
+
+  &__type-option_selected &__type-option-title {
+    color: var(--rp-ui-base-topaz);
+  }
+
+  &__type-option-desc {
+    @include ms.milestone-body-13;
+
+    font-size: 12px;
+    line-height: 20px;
+    color: var(--rp-ui-color-text-secondary);
+  }
+}
+
+:global(.milestone-type-dropdown-menu--compact) {
+  box-sizing: border-box;
+  min-width: 400px;
+  max-height: 296px;
+  padding: 8px 0;
+  overflow-y: auto;
+  border-radius: 3px;
+  background: var(--rp-ui-color-field-bg);
+  box-shadow: 0 8px 40px rgb(0 0 0 / 15%);
+
+  [class*='dropdown-option'] {
+    box-sizing: border-box;
+    padding: 0 !important;
+    min-height: 0;
+    max-height: none;
+    align-items: center;
+  }
+
+  [class*='dropdown-option'] [class*='single-option'] {
+    flex: 1;
+    min-width: 0;
+    height: auto;
+    max-height: 100%;
+    white-space: normal;
+    overflow: visible;
+    display: flex;
+    align-items: center;
+  }
+}

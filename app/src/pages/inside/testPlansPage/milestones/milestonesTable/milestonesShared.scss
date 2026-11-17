@@ -1,0 +1,119 @@
+@mixin milestone-font-body {
+  font-family: var(--rp-ui-base-font-family);
+}
+
+@mixin milestone-body-13 {
+  font-family: var(--rp-ui-base-font-family);
+  font-weight: var(--rp-ui-base-fw-regular);
+  font-size: 13px;
+  line-height: 20px;
+  letter-spacing: 0;
+}
+
+@mixin milestone-body-13-medium {
+  @include milestone-body-13;
+
+  font-weight: var(--rp-ui-base-fw-medium);
+}
+
+@mixin milestone-metric-value {
+  @include milestone-font-body;
+
+  font-weight: var(--rp-ui-base-fw-medium);
+  font-size: 17px;
+  line-height: 24px;
+  letter-spacing: 0;
+  text-align: center;
+  color: var(--rp-ui-color-text);
+}
+
+@mixin milestone-metric-label {
+  @include milestone-font-body;
+
+  font-weight: var(--rp-ui-base-fw-regular);
+  font-size: 11px;
+  line-height: 16px;
+  letter-spacing: 0;
+  text-align: center;
+  color: var(--rp-ui-color-text-secondary);
+}
+
+@mixin milestone-status-pill {
+  @include milestone-body-13-medium;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  box-sizing: border-box;
+  min-width: 118px;
+  height: 36px;
+  padding: 7px 16px;
+  border: none;
+  border-radius: 3px;
+  text-align: center;
+}
+
+@mixin milestone-notice-typography($font-weight, $text-color) {
+  font-family: var(--rp-ui-base-font-family);
+  font-weight: $font-weight;
+  font-size: 13px;
+  line-height: 20px;
+  letter-spacing: 0;
+  text-indent: 1px;
+  color: $text-color;
+}
+
+@mixin duplicate-milestone-notice-title {
+  @include milestone-notice-typography(var(--rp-ui-base-fw-bold), var(--rp-ui-color-text));
+
+  text-transform: none;
+}
+
+@mixin duplicate-milestone-notice-body {
+  @include milestone-notice-typography(
+    var(--rp-ui-base-fw-regular),
+    var(--rp-ui-color-text-secondary)
+  );
+}
+
+@mixin milestone-test-plans-divider {
+  border-bottom: 1px solid var(--rp-ui-base-e-100);
+}
+
+@mixin milestone-test-plans-header-label {
+  font-family: var(--rp-ui-base-font-family);
+  font-weight: var(--rp-ui-base-fw-regular);
+  font-size: 11px;
+  line-height: 16px;
+  letter-spacing: 0;
+  color: var(--Text-Secondary, var(--rp-ui-base-e-400));
+}
+
+@mixin milestone-test-plans-cell-name {
+  font-family: var(--rp-ui-base-font-family);
+  font-weight: var(--rp-ui-base-fw-medium);
+  font-size: 13px;
+  line-height: 20px;
+  letter-spacing: 0;
+  color: var(--rp-ui-color-text);
+}
+
+@mixin milestone-test-plans-cell-ratio {
+  font-family: var(--rp-ui-base-font-family);
+  font-weight: var(--rp-ui-base-fw-regular);
+  font-size: 13px;
+  line-height: 20px;
+  letter-spacing: 0;
+  text-indent: 1px;
+  color: var(--rp-ui-color-text);
+}
+
+@mixin milestone-test-plans-cell-coverage-pct {
+  font-family: var(--rp-ui-base-font-family);
+  font-weight: var(--rp-ui-base-fw-medium);
+  font-size: 15px;
+  line-height: 24px;
+  letter-spacing: 0;
+  color: var(--rp-ui-color-text);
+}

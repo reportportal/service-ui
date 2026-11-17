@@ -22,7 +22,8 @@ import Parser from 'html-react-parser';
 import { connect } from 'react-redux';
 import AttachIcon from 'common/img/attachment-inline.svg';
 import { Image } from 'components/main/image';
-import { activeProjectSelector } from 'controllers/user';
+import { SpinLoader } from '@reportportal/ui-kit';
+import { projectKeySelector } from 'controllers/project';
 import { LOG_PAGE_EVENTS } from 'components/main/analytics/events';
 import {
   openAttachmentInModalAction,
@@ -30,16 +31,19 @@ import {
   getFileIconSource,
   OPEN_ATTACHMENT_IN_MODAL_ACTION,
   isFileActionAllowed,
+  attachmentModalLoadingIdSelector,
 } from 'controllers/log/attachments';
 import { AttachmentActions } from 'pages/inside/logsPage/attachmentActions';
 import { LOGS_SIZE, DEFAULT_LOGS_SIZE } from 'common/constants/logsSettings';
+import { IMAGE } from 'common/constants/fileTypes';
 import styles from './attachmentBlock.scss';
 
 const cx = classNames.bind(styles);
 
 @connect(
   (state) => ({
-    activeProject: activeProjectSelector(state),
+    projectKey: projectKeySelector(state),
+    modalLoadingId: attachmentModalLoadingIdSelector(state),
   }),
   {
     openAttachmentInModalAction,
@@ -53,18 +57,19 @@ export class AttachmentBlock extends Component {
     customProps: PropTypes.object,
     openAttachmentInModalAction: PropTypes.func,
     downloadAttachmentAction: PropTypes.func,
-    activeProject: PropTypes.string,
     tracking: PropTypes.shape({
       trackEvent: PropTypes.func,
       getTrackingData: PropTypes.func,
     }).isRequired,
+    projectKey: PropTypes.string.isRequired,
+    modalLoadingId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
   };
 
   static defaultProps = {
     value: {},
     customProps: {},
     openAttachmentInModalAction: () => {},
-    activeProject: '',
+    modalLoadingId: null,
   };
 
   openAttachmentInModal = () => {
@@ -78,12 +83,14 @@ export class AttachmentBlock extends Component {
   };
 
   render() {
-    const { value, customProps, activeProject } = this.props;
+    const { value, customProps, projectKey, modalLoadingId } = this.props;
     const { consoleView, logsSize = DEFAULT_LOGS_SIZE } = customProps;
+    const isImage = value.contentType?.toLowerCase().split('/')[0] === IMAGE;
     const isValidToOpenInModal = isFileActionAllowed(
       value.contentType,
       OPEN_ATTACHMENT_IN_MODAL_ACTION,
     );
+    const isLoading = modalLoadingId === value.id;
 
     return (
       <div className={cx('attachment-block')}>
@@ -93,12 +100,19 @@ export class AttachmentBlock extends Component {
           </button>
         ) : (
           <Fragment>
-            <Image
-              className={cx('attachment', `attachment-size-${logsSize}`)}
-              src={getFileIconSource(value, activeProject, true)}
-              alt={value.contentType}
-              onClick={isValidToOpenInModal ? this.openAttachmentInModal : null}
-            />
+            {isLoading ? (
+              <SpinLoader
+                className={cx('loader', `loader-size-${logsSize}` )}
+              />
+            ) : (
+              <Image
+                className={cx('attachment', `attachment-size-${logsSize}`)}
+                src={getFileIconSource(value, projectKey, true)}
+                alt={value.contentType}
+                isStatic={!isImage}
+                onClick={isValidToOpenInModal ? this.openAttachmentInModal : null}
+              />
+            )}
             <AttachmentActions
               value={value}
               className={cx('actions')}

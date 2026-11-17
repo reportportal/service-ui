@@ -15,7 +15,7 @@
  */
 
 import { createQueryParametersSelector } from '../pages';
-import { DEFAULT_SORTING } from './constants';
+import { DEFAULT_SORTING, NAMESPACE } from './constants';
 
 const domainSelector = (state) => state.members || {};
 
@@ -25,4 +25,5 @@ export const loadingSelector = (state) => domainSelector(state).loading || false
 
 export const querySelector = createQueryParametersSelector({
   defaultSorting: DEFAULT_SORTING,
+  namespace: NAMESPACE,
 });

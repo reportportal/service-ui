@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { useIntl } from 'react-intl';
 import { reduxForm } from 'redux-form';
@@ -44,7 +44,7 @@ const SimilarItems = ({
 
   useEffect(() => {
     initialize({
-      [SEARCH_LOGS_MIN_SHOULD_MATCH]: analyzerConfig[SEARCH_LOGS_MIN_SHOULD_MATCH],
+      [SEARCH_LOGS_MIN_SHOULD_MATCH]: analyzerConfig[SEARCH_LOGS_MIN_SHOULD_MATCH] || '',
     });
   }, []);
 
@@ -87,9 +87,11 @@ const SimilarItems = ({
             <FieldNumber postfix="%" max={100} />
           </FieldErrorHint>
         </FieldElement>
-        <Button type="submit" disabled={isFieldDisabled} data-automation-id="submitButton">
-          {formatMessage(COMMON_LOCALE_KEYS.SUBMIT)}
-        </Button>
+        {hasPermission && (
+          <Button type="submit" disabled={isFieldDisabled} data-automation-id="submitButton">
+            {formatMessage(COMMON_LOCALE_KEYS.SUBMIT)}
+          </Button>
+        )}
         {isPending && <LabeledPreloader text={formatMessage(COMMON_LOCALE_KEYS.processData)} />}
       </form>
     </Layout>

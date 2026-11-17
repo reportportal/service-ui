@@ -19,6 +19,7 @@ import * as boundValidators from './commonValidators';
 import * as asyncValidation from './asyncValidation';
 
 export { bindMessageToValidator, composeBoundValidators } from './validatorHelpers';
+export { MAX_FIELD_LENGTH } from './constants';
 
 export const validateAsync = asyncValidation;
 export const validate = validators;

@@ -15,10 +15,3 @@
  */
 
 export const LOGIN_PAGE = 'login';
-export const LOGIN_PAGE_EVENTS = {
-  click_twitter_link: (link) => ({
-    category: LOGIN_PAGE,
-    action: 'Click on News Link on Page Login',
-    label: link,
-  }),
-};

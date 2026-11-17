@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 EPAM Systems
+ * Copyright 2025 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,9 +20,12 @@ export const INTEGRATIONS = 'integrations';
 export const DEFECT = 'defect';
 export const ANALYSIS = 'analyzer';
 export const DEMO_DATA = 'demoData';
-export const AUTHORIZATION_CONFIGURATION = 'authConfiguration';
+export const ACCESS_CONFIGURATION = 'accessConfiguration';
 export const FEATURES = 'features';
 export const ANALYTICS = 'analytics';
 export const LINKS_AND_BRANDING = 'linksAndBranding';
 export const PATTERN_ANALYSIS = 'patternAnalysis';
+export const QUALITY_GATES = 'qualityGates';
+export const ENVIRONMENTS = 'environments';
+export const TEST_DATA = 'testData';
 export const LOG_TYPES = 'logTypes';

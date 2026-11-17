@@ -62,7 +62,7 @@ Breadcrumb.propTypes = {
   titleTailNumChars: PropTypes.number,
   descriptor: PropTypes.shape({
     title: PropTypes.string.isRequired,
-    link: PropTypes.object.isRequired,
+    link: PropTypes.object,
     onClick: PropTypes.func,
   }).isRequired,
   isClickable: PropTypes.bool,

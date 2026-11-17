@@ -64,21 +64,20 @@ export default class PageSwitcher extends React.Component {
     if (!PageComponent) throw new Error(`Page ${page} does not exfist`);
     if (!Layout) throw new Error(`Page ${page} is missing layout`);
 
-    // eslint-disable-next-line no-undef
     const mode = process.env.NODE_ENV;
 
     return (
       <div className={cx('page-switcher')}>
         <ThemeProvider>
-          <Layout rawContent={rawContent}>
-            {mode === 'development' && <LocalizationSwitcher />}
-            <PageErrorBoundary key={page}>
-              <DndProvider backend={HTML5Backend}>
+          <DndProvider backend={HTML5Backend}>
+            <Layout rawContent={rawContent}>
+              {mode === 'development' && <LocalizationSwitcher />}
+              <PageErrorBoundary key={page}>
                 <PageComponent />
-              </DndProvider>
-            </PageErrorBoundary>
-          </Layout>
-          <ModalContainer />
+              </PageErrorBoundary>
+            </Layout>
+            <ModalContainer />
+          </DndProvider>
           <NotificationContainer />
           <ScreenLock />
         </ThemeProvider>

@@ -16,9 +16,7 @@
 
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import track from 'react-tracking';
 import classNames from 'classnames/bind';
-import { DASHBOARD_PAGE_EVENTS } from 'components/main/analytics/events';
 import { InputRadio } from 'components/inputs/inputRadio';
 import { messages } from '../common/messages';
 import { AddEditFilter } from '../common/addEditFilter';
@@ -26,38 +24,25 @@ import styles from './filterEdit.scss';
 
 const cx = classNames.bind(styles);
 
-@track()
 export class FilterEdit extends Component {
   static propTypes = {
     filter: PropTypes.object.isRequired,
     onSave: PropTypes.func.isRequired,
     onCancel: PropTypes.func.isRequired,
     onChange: PropTypes.func.isRequired,
-    tracking: PropTypes.shape({
-      trackEvent: PropTypes.func,
-      getTrackingData: PropTypes.func,
-    }).isRequired,
-    eventsInfo: PropTypes.object,
   };
 
   static defaultProps = {
     onSave: () => {},
     onCancel: () => {},
     onChange: () => {},
-    eventsInfo: {},
   };
 
   onFilterSave = () => {
-    const { eventsInfo, filter, tracking, onSave } = this.props;
-    tracking.trackEvent(eventsInfo.addNewFilter);
-    tracking.trackEvent(
-      eventsInfo.sortingSelectParameters(filter.orders[0].sortingColumn, 'Tab edit filter'),
-    );
-    onSave(this.props.filter);
+    this.props.onSave(this.props.filter);
   };
 
   onFilterCancel = () => {
-    this.props.tracking.trackEvent(DASHBOARD_PAGE_EVENTS.CANCEL_BTN_EDIT_FILTER_ADD_WIDGET_MODAL);
     this.props.onCancel(this.props.filter);
   };
 
@@ -74,7 +59,7 @@ export class FilterEdit extends Component {
   );
 
   render() {
-    const { filter, eventsInfo } = this.props;
+    const { filter } = this.props;
 
     return (
       <AddEditFilter
@@ -84,7 +69,6 @@ export class FilterEdit extends Component {
         onChange={this.onFilterChange}
         customBlock={this.getCustomBlock(filter)}
         blockTitle={messages.editTitle}
-        eventsInfo={eventsInfo}
       />
     );
   }

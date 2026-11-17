@@ -22,7 +22,7 @@ import { useIntl } from 'react-intl';
 import NavigationIcon from 'common/img/navigation-icon-inline.svg';
 import OpenInNewTabIcon from 'common/img/open-in-new-tab-inline.svg';
 import { widgetDocsReferences } from 'common/utils/referenceDictionary';
-import { LinkComponent } from 'pages/inside/projectSettingsPageContainer/content/notifications/LinkComponent';
+import { LinkComponent } from 'pages/inside/common/LinkComponent';
 import { messages } from '../messages';
 import styles from './testExecutionsPromoBanner.scss';
 

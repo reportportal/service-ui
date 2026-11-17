@@ -61,7 +61,6 @@ export class DeleteWidgetModal extends Component {
     data: PropTypes.shape({
       widget: PropTypes.object,
       onConfirm: PropTypes.func,
-      eventsInfo: PropTypes.object,
     }),
     userId: PropTypes.string.isRequired,
   };
@@ -70,7 +69,6 @@ export class DeleteWidgetModal extends Component {
     data: {
       widget: {},
       onConfirm: () => {},
-      eventsInfo: {},
     },
   };
 
@@ -88,7 +86,7 @@ export class DeleteWidgetModal extends Component {
 
   render() {
     const { intl } = this.props;
-    const { widget, onConfirm, eventsInfo } = this.props.data;
+    const { widget, onConfirm } = this.props.data;
     const confirmAndClose = (closeModal) => {
       onConfirm();
       closeModal();
@@ -97,11 +95,9 @@ export class DeleteWidgetModal extends Component {
       text: intl.formatMessage(COMMON_LOCALE_KEYS.DELETE),
       danger: true,
       onClick: confirmAndClose,
-      eventInfo: eventsInfo.deleteBtn,
     };
     const cancelButton = {
       text: intl.formatMessage(COMMON_LOCALE_KEYS.CANCEL),
-      eventInfo: eventsInfo.cancelBtn,
     };
     return (
       <ModalLayout
@@ -109,7 +105,6 @@ export class DeleteWidgetModal extends Component {
         okButton={okButton}
         cancelButton={cancelButton}
         warningMessage={this.getWarningMessage()}
-        closeIconEventInfo={eventsInfo.closeIcon}
       >
         <p className={cx('message')}>
           {Parser(

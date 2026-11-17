@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 EPAM Systems
+ * Copyright 2026 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,6 +15,9 @@
  */
 
 export const PASSWORD_MIN_ALLOWED_LENGTH = 8;
-export const PASSWORD_MAX_ALLOWED_LENGTH = 256;
+export const PASSWORD_MAX_ALLOWED_LENGTH = 36;
+
+export const REGISTRATION_NAME_MIN_LENGTH = 3;
+export const REGISTRATION_NAME_MAX_LENGTH = 60;
 
 export const FILTER_DESCRIPTION_MAX_LENGTH = 256;

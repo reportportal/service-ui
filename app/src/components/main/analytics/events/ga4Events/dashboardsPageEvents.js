@@ -26,7 +26,7 @@ import {
   normalizeEventParameter,
 } from '../common/ga4Utils';
 
-const DASHBOARDS = 'dashboards';
+export const DASHBOARDS = 'dashboards';
 
 export const WIDGETS_EVENTS = {
   clickOnDeleteWidgetButton: (type, dashboardId) => ({
@@ -106,6 +106,12 @@ export const WIDGETS_EVENTS = {
     type: 'most_failed_test_cases',
     number: dashboardId,
   }),
+  clickOnFlakyTestCaseName: (dashboardId) => ({
+    ...getBasicClickEventParameters(DASHBOARDS),
+    element_name: 'test_name',
+    type: 'flaky_test_cases',
+    number: dashboardId,
+  }),
   clickOnIssueTicket: (dashboardId) => (pluginName) => ({
     ...getBasicClickEventParameters(DASHBOARDS),
     element_name: 'issue_ticket',
@@ -119,11 +125,11 @@ export const WIDGETS_EVENTS = {
     type: 'search_widget',
     number: dashboardId,
   }),
-  onSearchWidgetDocumentLinkClick: (dashboardId, place = 'search_widget') => ({
+  onWidgetDocumentLinkClick: (widgetType, dashboardId, place = 'widgets') => ({
     ...getBasicClickEventParameters(DASHBOARDS),
     link_name: 'documentation',
     place,
-    type: 'search_widget',
+    type: widgetType,
     number: dashboardId,
   }),
   onDisplayLaunchesToggle: (isDisplayedLaunches, dashboardId) => ({
@@ -257,6 +263,11 @@ export const DASHBOARD_EVENTS = {
     ...getBasicClickEventParameters(DASHBOARDS),
     icon_name: iconName,
     number: dashboardId,
+  }),
+
+  clickOnFullWidthModeCheckbox: (isEnabled) => ({
+    ...getBasicClickEventParameters(DASHBOARDS),
+    element_name: isEnabled ? 'full_width_mode_selected' : 'full_width_mode_unselected',
   }),
 
   clickOnDuplicateMenuOption: (option) => ({

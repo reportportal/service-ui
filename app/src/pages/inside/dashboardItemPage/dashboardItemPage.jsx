@@ -25,19 +25,24 @@ import { URLS } from 'common/urls';
 import { fetch } from 'common/utils';
 import {
   activeDashboardItemSelector,
+  dashboardFullWidthModeSelector,
   updateDashboardWidgetsAction,
   dashboardFullScreenModeSelector,
+  changeFullWidthModeAction,
   changeFullScreenModeAction,
   toggleFullScreenModeAction,
   deleteDashboardAction,
   updateDashboardAction,
   loadingSelector,
 } from 'controllers/dashboard';
-import { userInfoSelector, activeProjectSelector } from 'controllers/user';
+import { userInfoSelector } from 'controllers/user';
+import { projectKeySelector } from 'controllers/project';
 import {
+  urlOrganizationAndProjectSelector,
   PROJECT_DASHBOARD_PAGE,
   PROJECT_DASHBOARD_PRINT_PAGE,
   activeDashboardIdSelector,
+  userRolesSelector,
   pagePropertiesSelector,
 } from 'controllers/pages';
 import { showModalAction } from 'controllers/modal';
@@ -46,12 +51,12 @@ import { hideScreenLockAction } from 'controllers/screenLock';
 import { GhostButton } from 'components/buttons/ghostButton';
 import Link from 'redux-first-router-link';
 import { PageLayout, PageHeader, PageSection } from 'layouts/pageLayout';
-import { DASHBOARD_PAGE_EVENTS } from 'components/main/analytics/events';
 import { DashboardPageHeader } from 'pages/inside/common/dashboardPageHeader';
 import { DeleteDashboardConfirmationMessage } from 'pages/inside/common/modals/deleteDashboardConfirmationMessage';
 import AddWidgetIcon from 'common/img/add-widget-inline.svg';
 import ExportIcon from 'common/img/export-inline.svg';
 import { DASHBOARD_EVENTS } from 'analyticsEvents/dashboardsPageEvents';
+import { canWorkWithWidgets } from 'common/utils/permissions/permissions';
 import { useCanLockDashboard } from 'common/hooks/useCanLockDashboard';
 import { updateDashboardLockedAction } from 'controllers/dashboard/actionCreators';
 import { SpinningPreloader } from 'components/preloaders/spinningPreloader';
@@ -61,6 +66,7 @@ import { getUpdatedWidgetsList } from './modals/common/utils';
 import EditIcon from './img/edit-inline.svg';
 import CancelIcon from './img/cancel-inline.svg';
 import FullscreenIcon from './img/full-screen-inline.svg';
+import { DashboardLayoutSettings } from './dashboardLayoutSettings';
 import { WidgetsGrid } from './widgetsGrid';
 import styles from './dashboardItemPage.scss';
 
@@ -122,11 +128,15 @@ export const DashboardItemPage = () => {
   const { formatMessage } = useIntl();
   const { trackEvent } = useTracking();
   const dispatch = useDispatch();
-  const activeProject = useSelector(activeProjectSelector);
+  const { organizationSlug, projectSlug } = useSelector(urlOrganizationAndProjectSelector);
+  const projectKey = useSelector(projectKeySelector);
   const dashboard = useSelector(activeDashboardItemSelector);
   const userInfo = useSelector(userInfoSelector);
+  const fullWidthMode = useSelector(dashboardFullWidthModeSelector);
   const fullScreenMode = useSelector(dashboardFullScreenModeSelector);
   const activeDashboardId = useSelector(activeDashboardIdSelector);
+  const userRoles = useSelector(userRolesSelector);
+  const isWorkWithWidgets = canWorkWithWidgets(userRoles);
   const query = useSelector(pagePropertiesSelector);
   const loading = useSelector(loadingSelector);
   const canLock = useCanLockDashboard();
@@ -139,14 +149,15 @@ export const DashboardItemPage = () => {
         title: formatMessage(messages.pageTitle),
         link: {
           type: PROJECT_DASHBOARD_PAGE,
-          payload: { projectId: activeProject },
-          meta: { query },
+          payload: { organizationSlug, projectSlug },
+          meta: {
+            query,
+          },
         },
-        eventInfo: DASHBOARD_PAGE_EVENTS.BREADCRUMB_ALL_DASHBOARD,
       },
       { title: dashboard?.name || '' },
     ];
-  }, [activeProject, query, formatMessage, dashboard?.name]);
+  }, [projectKey, query, formatMessage, dashboard?.name]);
 
   const onDeleteDashboard = useCallback(() => {
     const warning =
@@ -162,8 +173,6 @@ export const DashboardItemPage = () => {
           mainContent: <DeleteDashboardConfirmationMessage name={dashboard.name} />,
           warning,
           eventsInfo: {
-            closeIcon: DASHBOARD_PAGE_EVENTS.CLOSE_ICON_DELETE_DASHBOARD_MODAL,
-            cancelBtn: DASHBOARD_PAGE_EVENTS.CANCEL_BTN_DELETE_DASHBOARD_MODAL,
             deleteBtn: DASHBOARD_EVENTS.clickOnButtonDeleteInModalDeleteDashboard(dashboard.id),
           },
         },
@@ -187,7 +196,7 @@ export const DashboardItemPage = () => {
 
   const addWidget = useCallback(
     (widget, closeModal) => {
-      return fetch(URLS.addDashboardWidget(activeProject, dashboard.id), {
+      return fetch(URLS.addDashboardWidget(projectKey, dashboard.id), {
         method: 'put',
         data: { addWidget: widget },
       })
@@ -214,13 +223,27 @@ export const DashboardItemPage = () => {
           dispatch(showNotification({ message: err.message, type: NOTIFICATION_TYPES.ERROR }));
         });
     },
-    [activeProject, dashboard, formatMessage, dispatch],
+    [projectKey, dashboard, formatMessage, dispatch],
   );
 
   const toggleFullscreen = useCallback(() => {
     trackEvent(DASHBOARD_EVENTS.clickOnIconDashboard('full_screen', dashboard.id));
     dispatch(toggleFullScreenModeAction());
   }, [dashboard?.id, trackEvent, dispatch]);
+
+  const onOpenDashboardLayoutSettings = () => {
+    trackEvent(DASHBOARD_EVENTS.clickOnIconDashboard('dashboard_layout', dashboard.id));
+  };
+
+  const toggleFullWidthMode = () => {
+    const newValue = !fullWidthMode;
+
+    requestAnimationFrame(() => {
+      globalThis.dispatchEvent(new Event('resize'));
+    });
+    trackEvent(DASHBOARD_EVENTS.clickOnFullWidthModeCheckbox(newValue));
+    dispatch(changeFullWidthModeAction(newValue));
+  };
 
   const onPrintDashboard = useCallback(() => {
     trackEvent(DASHBOARD_EVENTS.clickOnIconDashboard('print', dashboard.id));
@@ -233,27 +256,6 @@ export const DashboardItemPage = () => {
         id: 'widgetWizardModal',
         data: {
           onConfirm: addWidget,
-          eventsInfo: {
-            closeIcon: DASHBOARD_PAGE_EVENTS.CLOSE_ICON_ADD_WIDGET_MODAL,
-            cancelBtn: DASHBOARD_PAGE_EVENTS.CANCEL_BTN_ADD_WIDGET_MODAL,
-            changeName: DASHBOARD_PAGE_EVENTS.WIDGET_NAME_ADD_WIDGET_MODAL,
-            chooseWidgetType: DASHBOARD_PAGE_EVENTS.CHOOSE_WIDGET_TYPE_ADD_WIDGET_MODAL,
-            nextStep: DASHBOARD_PAGE_EVENTS.NEXT_STEP_ADD_WIDGET_MODAL,
-            prevStep: DASHBOARD_PAGE_EVENTS.PREVIOUS_STEP_ADD_WIDGET_MODAL,
-            changeDescription: DASHBOARD_PAGE_EVENTS.ENTER_WIDGET_DESCRIPTION_ADD_WIDGET_MODAL,
-            editFilterIcon: DASHBOARD_PAGE_EVENTS.EDIT_FILTER_ADD_WIDGET_MODAL,
-            enterSearchParams: DASHBOARD_PAGE_EVENTS.ENTER_SEARCH_PARAMS_ADD_WIDGET_MODAL,
-            chooseFilter: DASHBOARD_PAGE_EVENTS.CHOOSE_FILTER_ADD_WIDGET_MODAL,
-            addFilter: DASHBOARD_PAGE_EVENTS.ADD_FILTER_BTN_ADD_WIDGET_MODAL,
-            cancelAddNewFilter: DASHBOARD_PAGE_EVENTS.CANCEL_BTN_ADD_NEW_FILTER_ADD_WIDGET_MODAL,
-            addNewFilter: DASHBOARD_PAGE_EVENTS.ADD_BTN_ADD_NEW_FILTER_ADD_WIDGET_MODAL,
-            sortingSelectParameters: DASHBOARD_PAGE_EVENTS.SELECT_SORTING_FILTER_ADD_WIDGET_MODAL,
-            editFilterName: DASHBOARD_PAGE_EVENTS.EDIT_FILTER_NAME_ADD_WIDGET_MODAL,
-            selectParamsForFilter: DASHBOARD_PAGE_EVENTS.SELECT_PARAMS_FILTER_ADD_WIDGET_MODAL,
-            clickOnZoomWidgetArea: DASHBOARD_PAGE_EVENTS.CLICK_ZOOM_ADD_WIDGET_AREA,
-            selectCriteria: DASHBOARD_PAGE_EVENTS.SELECT_CRITERIA_ADD_NEW_WIDGET_MODAL,
-            selectToggleButtons: DASHBOARD_PAGE_EVENTS.SELECT_TOGGLE_BUTTONS_ADD_NEW_WIDGET_MODAL,
-          },
         },
       }),
     );
@@ -268,7 +270,7 @@ export const DashboardItemPage = () => {
   };
 
   return (
-    <PageLayout>
+    <PageLayout fullWidth={fullWidthMode}>
       {!isCurrentDashboard || loading ? (
         <PageSection>
           <SpinningPreloader />
@@ -282,16 +284,18 @@ export const DashboardItemPage = () => {
             <div className={cx('dashboard-item')}>
               <div className={cx('buttons-container')}>
                 <div className={cx('buttons-block')}>
-                  <LockedDashboardTooltip locked={dashboard.locked}>
-                    <GhostButton
-                      icon={AddWidgetIcon}
-                      onClick={showWidgetWizard}
-                      disabled={isDisabled}
-                      appearance="faded"
-                    >
-                      {formatMessage(messages.addNewWidget)}
-                    </GhostButton>
-                  </LockedDashboardTooltip>
+                  {isWorkWithWidgets && (
+                    <LockedDashboardTooltip locked={dashboard.locked}>
+                      <GhostButton
+                        icon={AddWidgetIcon}
+                        onClick={showWidgetWizard}
+                        disabled={isDisabled}
+                        appearance="faded"
+                      >
+                        {formatMessage(messages.addNewWidget)}
+                      </GhostButton>
+                    </LockedDashboardTooltip>
+                  )}
                 </div>
                 {isDisabled && (
                   <div className={cx('locked-dashboard')}>
@@ -302,6 +306,12 @@ export const DashboardItemPage = () => {
                   </div>
                 )}
                 <div className={cx('buttons-block')}>
+                  <DashboardLayoutSettings
+                    className={cx('dashboard-layout-settings-control')}
+                    fullWidthMode={fullWidthMode}
+                    onOpen={onOpenDashboardLayoutSettings}
+                    onToggleFullWidthMode={toggleFullWidthMode}
+                  />
                   {canLock && (
                     <GhostButton
                       icon={<LockedIcon locked={!dashboard.locked} />}
@@ -310,33 +320,37 @@ export const DashboardItemPage = () => {
                       {formatMessage(dashboard.locked ? messages.unlock : messages.lock)}
                     </GhostButton>
                   )}
-                  <LockedDashboardTooltip locked={dashboard.locked}>
-                    <GhostButton
-                      icon={EditIcon}
-                      onClick={onEditDashboardItem}
-                      disabled={isDisabled}
-                      appearance="faded"
-                    >
-                      {formatMessage(messages.editDashboard)}
-                    </GhostButton>
-                  </LockedDashboardTooltip>
+                  {isWorkWithWidgets && (
+                    <LockedDashboardTooltip locked={dashboard.locked}>
+                      <GhostButton
+                        icon={EditIcon}
+                        onClick={onEditDashboardItem}
+                        disabled={isDisabled}
+                        appearance="faded"
+                      >
+                        {formatMessage(messages.editDashboard)}
+                      </GhostButton>
+                    </LockedDashboardTooltip>
+                  )}
                   <GhostButton icon={FullscreenIcon} onClick={toggleFullscreen}>
                     {formatMessage(messages.fullscreen)}
                   </GhostButton>
-                  <LockedDashboardTooltip locked={dashboard.locked}>
-                    <GhostButton
-                      icon={CancelIcon}
-                      onClick={onDeleteDashboard}
-                      disabled={isDisabled}
-                      appearance="faded"
-                    >
-                      {formatMessage(messages.delete)}
-                    </GhostButton>
-                  </LockedDashboardTooltip>
+                  {isWorkWithWidgets && (
+                    <LockedDashboardTooltip locked={dashboard.locked}>
+                      <GhostButton
+                        icon={CancelIcon}
+                        onClick={onDeleteDashboard}
+                        disabled={isDisabled}
+                        appearance="faded"
+                      >
+                        {formatMessage(messages.delete)}
+                      </GhostButton>
+                    </LockedDashboardTooltip>
+                  )}
                   <Link
                     to={{
                       type: PROJECT_DASHBOARD_PRINT_PAGE,
-                      payload: { projectId: activeProject, dashboardId: activeDashboardId },
+                      payload: { projectSlug, organizationSlug, dashboardId: activeDashboardId },
                     }}
                     target="_blank"
                     className={cx('print-button')}
@@ -355,7 +369,7 @@ export const DashboardItemPage = () => {
                   dashboard={dashboard}
                   isFullscreen={fullScreenMode}
                   showWidgetWizard={showWidgetWizard}
-                  activeProject={activeProject}
+                  projectKey={projectKey}
                   showNotification={(payload) => dispatch(showNotification(payload))}
                   updateDashboardWidgetsAction={(payload) =>
                     dispatch(updateDashboardWidgetsAction(payload))

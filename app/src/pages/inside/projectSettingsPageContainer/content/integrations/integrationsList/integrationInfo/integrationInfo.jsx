@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 EPAM Systems
+ * Copyright 2026 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,31 +22,38 @@ import PropTypes from 'prop-types';
 import { useIntl } from 'react-intl';
 import { useTracking } from 'react-tracking';
 import {
-  activeProjectRoleSelector,
-  activeProjectSelector,
-  userAccountRoleSelector,
-} from 'controllers/user';
+  urlOrganizationAndProjectSelector,
+  PROJECT_SETTINGS_TAB_PAGE,
+  updatePagePropertiesAction,
+} from 'controllers/pages';
 import { uiExtensionIntegrationSettingsSelector } from 'controllers/plugins/uiExtensions/selectors';
-import { canUpdateSettings } from 'common/utils/permissions';
 import { showModalAction } from 'controllers/modal';
 import {
   namedGlobalIntegrationsSelector,
+  namedOrganizationIntegrationsSelector,
   namedProjectIntegrationsSelector,
   addIntegrationAction,
   updateIntegrationAction,
   removeProjectIntegrationsByTypeAction,
 } from 'controllers/plugins';
-import { PROJECT_SETTINGS_TAB_PAGE, updatePagePropertiesAction } from 'controllers/pages';
+import { activeOrganizationIdSelector } from 'controllers/organization';
+import {
+  getTestIntegrationConnection,
+  isLimitedIntegrationPlugin,
+} from 'controllers/plugins/utils';
 import { ExtensionLoader } from 'components/extensionLoader';
 import { INTEGRATIONS_SETTINGS_COMPONENTS_MAP } from 'components/integrations/settingsComponentsMap';
-import { EmptyStatePage } from 'pages/inside/projectSettingsPageContainer/content/emptyStatePage';
+import { EmptyStatePage } from 'pages/inside/common/emptyStatePage';
 import { PROJECT_SETTINGS_INTEGRATION } from 'analyticsEvents/projectSettingsPageEvents';
+import { IntegrationAnalyticsContext } from 'components/integrations/integrationAnalyticsContext';
 import { INTEGRATIONS } from 'common/constants/settingsTabs';
 import { EMAIL } from 'common/constants/pluginNames';
 import { combineNameAndEmailToFrom } from 'common/utils';
-import { IntegrationHeader } from './integrationHeader';
-import { AvailableIntegrations } from './availableIntegrations';
-import { messages } from './messages';
+import { projectInfoIdSelector, projectKeySelector } from 'controllers/project';
+import { useUserPermissions } from 'hooks/useUserPermissions';
+import { IntegrationHeader } from 'pages/inside/common/integrations/integrationHeader';
+import { AvailableIntegrations } from 'pages/inside/common/integrations/availableIntegrations';
+import { messages } from 'pages/inside/common/integrations/messages';
 import styles from './integrationInfo.scss';
 
 const cx = classNames.bind(styles);
@@ -56,13 +63,25 @@ export const IntegrationInfo = (props) => {
   const [updatedParameters, setUpdatedParameters] = useState({});
   const { formatMessage } = useIntl();
   const { trackEvent } = useTracking();
+
+  const integrationAnalyticsContextValue = useMemo(
+    () => ({
+      submitEvent: (pluginName) =>
+        trackEvent(PROJECT_SETTINGS_INTEGRATION.CLICK_SUBMIT_CONFIGURATION(pluginName)),
+      deleteConfirmEvent: (pluginName) =>
+        trackEvent(PROJECT_SETTINGS_INTEGRATION.CLICK_DELETE_CONFIRM(pluginName)),
+    }),
+    [trackEvent],
+  );
   const settingsExtensions = useSelector(uiExtensionIntegrationSettingsSelector);
-  const accountRole = useSelector(userAccountRoleSelector);
-  const userProjectRole = useSelector(activeProjectRoleSelector);
+  const { canUpdateSettings } = useUserPermissions();
   const globalIntegrations = useSelector(namedGlobalIntegrationsSelector);
+  const organizationIntegrations = useSelector(namedOrganizationIntegrationsSelector);
   const projectIntegrations = useSelector(namedProjectIntegrationsSelector);
-  const activeProject = useSelector(activeProjectSelector);
-  const isAbleToClick = canUpdateSettings(accountRole, userProjectRole);
+  const projectId = useSelector(projectInfoIdSelector);
+  const projectKey = useSelector(projectKeySelector);
+  const { organizationSlug, projectSlug } = useSelector(urlOrganizationAndProjectSelector);
+  const organizationId = useSelector(activeOrganizationIdSelector);
   const dispatch = useDispatch();
   const {
     plugin: { name: pluginName, details = {} },
@@ -70,20 +89,72 @@ export const IntegrationInfo = (props) => {
     integrationId,
   } = props;
 
-  const availableGlobalIntegrations = useMemo(() => globalIntegrations[pluginName] || [], [
-    globalIntegrations,
-    pluginName,
-  ]);
-  const availableProjectIntegrations = useMemo(() => projectIntegrations[pluginName] || [], [
-    projectIntegrations,
-    pluginName,
-  ]);
+  const availableGlobalIntegrations = useMemo(
+    () => globalIntegrations[pluginName] || [],
+    [globalIntegrations, pluginName],
+  );
+  const availableProjectIntegrations = useMemo(
+    () => projectIntegrations[pluginName] || [],
+    [projectIntegrations, pluginName],
+  );
+  const availableOrganizationIntegrations = useMemo(
+    () => organizationIntegrations[pluginName] || [],
+    [organizationIntegrations, pluginName],
+  );
   const isAtLeastOneIntegrationAvailable =
-    availableGlobalIntegrations.length > 0 || availableProjectIntegrations.length > 0;
+    availableGlobalIntegrations.length > 0 ||
+    availableOrganizationIntegrations.length > 0 ||
+    availableProjectIntegrations.length > 0;
+
+  const showOrganizationalIntegrations = Boolean(availableOrganizationIntegrations.length);
+  const showGlobalIntegrations =
+    Boolean(availableGlobalIntegrations.length) && !showOrganizationalIntegrations;
+
+  const resetButtonText = showOrganizationalIntegrations
+    ? formatMessage(messages.resetIntegrationsToOrganizational)
+    : formatMessage(messages.resetIntegrations);
+
+  const isProjectIntegrationAddLimited = useMemo(
+    () => isLimitedIntegrationPlugin(pluginName) && availableProjectIntegrations.length > 0,
+    [pluginName, availableProjectIntegrations],
+  );
+
+  const projectIntegrationCreateButtonTooltip = isProjectIntegrationAddLimited
+    ? formatMessage(messages.projectIntegrationAddLimited)
+    : undefined;
+
+  const testProjectIntegrationConnection = useMemo(
+    () =>
+      getTestIntegrationConnection({
+        pluginName,
+        context: { projectId, projectKey, organizationId },
+      }),
+    [pluginName, projectId, projectKey, organizationId],
+  );
+
+  const testOrganizationIntegrationConnection = useMemo(
+    () =>
+      getTestIntegrationConnection({
+        pluginName,
+        isOrganizational: true,
+        context: { organizationId },
+      }),
+    [pluginName, organizationId],
+  );
+
+  const testGlobalIntegrationConnection = useMemo(
+    () => getTestIntegrationConnection({ pluginName, isGlobal: true }),
+    [pluginName],
+  );
 
   useEffect(() => {
     let isGlobal = false;
+    let isOrganizational = false;
     let integration = availableProjectIntegrations.find((value) => value.id === +integrationId);
+    if (!integration) {
+      integration = availableOrganizationIntegrations.find((value) => value.id === +integrationId);
+      isOrganizational = !!integration;
+    }
     if (!integration) {
       integration = availableGlobalIntegrations.find((value) => value.id === +integrationId);
       isGlobal = !!integration;
@@ -91,9 +162,19 @@ export const IntegrationInfo = (props) => {
 
     if (integration) {
       setUpdatedParameters({});
-      setIntegrationInfo({ ...integration, blocked: isGlobal });
+      setIntegrationInfo({
+        ...integration,
+        blocked: isGlobal || isOrganizational,
+        isGlobal,
+        isOrganizational,
+      });
     }
-  }, [availableGlobalIntegrations, availableProjectIntegrations, integrationId]);
+  }, [
+    availableGlobalIntegrations,
+    availableOrganizationIntegrations,
+    availableProjectIntegrations,
+    integrationId,
+  ]);
 
   const integrationSettingsExtension = settingsExtensions.find(
     (ext) => ext.pluginName === pluginName,
@@ -125,17 +206,27 @@ export const IntegrationInfo = (props) => {
 
   const onAddProjectIntegration = () => {
     const pluginDetails = { ...details };
+    const warningNoticeCaption = showOrganizationalIntegrations
+      ? formatMessage(messages.projectIntegrationOrganizationalNoticeCaption)
+      : formatMessage(messages.globalIntegrationsSystemMessageModalCaption);
+    const warningNoticeBody = showOrganizationalIntegrations
+      ? formatMessage(messages.projectIntegrationOrganizationalNoticeBody)
+      : formatMessage(messages.globalIntegrationsSystemMessageModalText);
+
     dispatch(
       showModalAction({
         id: 'addIntegrationModal',
         data: {
           hasWarningMessage: Boolean(
-            availableGlobalIntegrations.length && availableProjectIntegrations.length === 0,
+            (availableGlobalIntegrations.length || availableOrganizationIntegrations.length) &&
+            availableProjectIntegrations.length === 0,
           ),
           instanceType: pluginName,
           onConfirm: addProjectIntegration,
           customProps: {
             pluginDetails,
+            globalIntegrationsNoticeCaption: warningNoticeCaption,
+            globalIntegrationsNoticeBody: warningNoticeBody,
           },
         },
       }),
@@ -151,6 +242,10 @@ export const IntegrationInfo = (props) => {
 
     if (updatedFormData.integrationName) {
       newData.name = updatedFormData.integrationName;
+    }
+
+    if (!integrationInfo.isGlobal && !integrationInfo.isOrganizational) {
+      trackEvent(PROJECT_SETTINGS_INTEGRATION.CLICK_SAVE_EDIT_PROJECT_INTEGRATION(pluginName));
     }
 
     dispatch(
@@ -178,7 +273,7 @@ export const IntegrationInfo = (props) => {
   };
   const allIntegrationListLink = {
     type: PROJECT_SETTINGS_TAB_PAGE,
-    payload: { projectId: activeProject, settingsTab: INTEGRATIONS },
+    payload: { organizationSlug, projectSlug, settingsTab: INTEGRATIONS },
   };
   const pluginIntegrationListLink = {
     ...allIntegrationListLink,
@@ -191,9 +286,13 @@ export const IntegrationInfo = (props) => {
 
   const integrationListBreadcrumbs = [
     {
-      id: 'backToIntegrations',
-      title: formatMessage(messages.backToIntegrations),
+      id: 'integrationList',
+      title: formatMessage(messages.integrationList),
       link: allIntegrationListLink,
+    },
+    {
+      id: pluginName,
+      title: details.name || pluginName,
     },
   ];
   const integrationBreadcrumbs = [
@@ -204,21 +303,12 @@ export const IntegrationInfo = (props) => {
     },
     {
       id: pluginName,
-      title: `${details.name || pluginName} ${formatMessage(messages.settings)}`,
+      title: details.name || pluginName,
       link: pluginIntegrationListLink,
     },
     {
       id: updatedData.id,
       title: updatedData.name,
-      link: {
-        ...pluginIntegrationListLink,
-        meta: {
-          query: {
-            subPage: pluginName,
-            id: integrationId,
-          },
-        },
-      },
     },
   ];
 
@@ -235,85 +325,148 @@ export const IntegrationInfo = (props) => {
         id: 'deleteIntegrationModal',
         data: {
           onConfirm: resetProjectIntegrations,
-          modalTitle: formatMessage(messages.projectIntegrationReset),
-          description: formatMessage(messages.projectIntegrationResetDescription),
+          onConfirmTrackEvent: () =>
+            trackEvent(PROJECT_SETTINGS_INTEGRATION.CLICK_RESET_CONFIRM(pluginName)),
+          modalTitle: showOrganizationalIntegrations
+            ? formatMessage(messages.resetIntegrationsToOrganizational)
+            : formatMessage(messages.resetIntegrations),
+          description: showOrganizationalIntegrations
+            ? formatMessage(messages.projectIntegrationResetToOrganizationalDescription)
+            : formatMessage(messages.projectIntegrationResetDescription),
           isReset: true,
         },
       }),
     );
-    trackEvent(PROJECT_SETTINGS_INTEGRATION.CLICK_RESET_TO_GLOBAL_INTEGRATION);
+    trackEvent(PROJECT_SETTINGS_INTEGRATION.CLICK_RESET_TO_GLOBAL_INTEGRATION(pluginName));
   };
 
   const handleDocumentationClick = () => {
     trackEvent(PROJECT_SETTINGS_INTEGRATION.clickDocumentationLink('integrations'));
   };
 
+  const integrationListDocumentationLinkEvent = useMemo(
+    () =>
+      PROJECT_SETTINGS_INTEGRATION.clickDocumentationLink(
+        isAtLeastOneIntegrationAvailable && canUpdateSettings ? 'integrations' : 'no_integrations',
+        plugin.name,
+      ),
+    [isAtLeastOneIntegrationAvailable, canUpdateSettings, plugin.name],
+  );
+
+  const integrationDetailDocumentationLinkEvent = useMemo(
+    () => PROJECT_SETTINGS_INTEGRATION.clickDocumentationLink('no_integrations', plugin.name),
+    [plugin.name],
+  );
+
+  const getButtons = () =>
+    canUpdateSettings
+      ? [
+          {
+            name: formatMessage(messages.noGlobalIntegrationsButtonAdd),
+            dataAutomationId: 'addProjectIntegrationButton',
+            handleButton: onAddProjectIntegration,
+          },
+        ]
+      : [];
+
   const renderIntegrationList = () => (
     <>
       {isAtLeastOneIntegrationAvailable ? (
-        <>
-          {availableProjectIntegrations.length > 0 && (
+        <div className={cx('integration-list')}>
+          <AvailableIntegrations
+            header={formatMessage(messages.projectIntegrationTitle)}
+            text={formatMessage(messages.projectIntegrationText)}
+            integrations={availableProjectIntegrations}
+            openIntegration={openIntegration}
+            testConnection={testProjectIntegrationConnection}
+            withEmptyState
+            hasUpdatePermission={canUpdateSettings}
+            onCreateClick={onAddProjectIntegration}
+            onResetClick={onResetProjectIntegration}
+            createButtonDisabled={isProjectIntegrationAddLimited}
+            createButtonTooltip={projectIntegrationCreateButtonTooltip}
+            resetButtonText={resetButtonText}
+          />
+          {showOrganizationalIntegrations && (
             <AvailableIntegrations
-              header={formatMessage(messages.projectIntegrationTitle)}
-              text={formatMessage(messages.projectIntegrationText)}
-              integrations={availableProjectIntegrations}
+              header={formatMessage(messages.organizationalIntegrationTitle)}
+              text={formatMessage(messages.organizationalIntegrationText)}
+              integrations={availableOrganizationIntegrations}
               openIntegration={openIntegration}
+              inactive={Boolean(availableProjectIntegrations.length)}
+              inactiveTooltip={formatMessage(messages.inactiveOrganizationIntegrations)}
+              testConnection={testOrganizationIntegrationConnection}
             />
           )}
-          <AvailableIntegrations
-            header={formatMessage(messages.globalIntegrationTitle)}
-            text={formatMessage(messages.globalIntegrationText)}
-            integrations={availableGlobalIntegrations}
-            openIntegration={openIntegration}
-            hasProjectIntegration={Boolean(availableProjectIntegrations.length)}
-          />
-        </>
+          {showGlobalIntegrations && (
+            <AvailableIntegrations
+              header={formatMessage(messages.globalIntegrationTitle)}
+              text={formatMessage(messages.globalIntegrationText)}
+              integrations={availableGlobalIntegrations}
+              openIntegration={openIntegration}
+              inactive={Boolean(availableProjectIntegrations.length)}
+              inactiveTooltip={formatMessage(messages.inactiveGlobalIntegrations)}
+              testConnection={testGlobalIntegrationConnection}
+            />
+          )}
+        </div>
       ) : (
         <EmptyStatePage
-          title={formatMessage(messages.noGlobalIntegrationsMessage)}
-          handleButton={onAddProjectIntegration}
-          description={formatMessage(messages.noGlobalIntegrationsDescription)}
+          title={formatMessage(
+            canUpdateSettings
+              ? messages.noGlobalIntegrationsMessage
+              : messages.noGlobalIntegrationsYet,
+          )}
+          description={formatMessage(
+            canUpdateSettings
+              ? messages.noGlobalIntegrationsDescription
+              : messages.noGlobalIntegrationsYetDescription,
+          )}
           handleDocumentationClick={handleDocumentationClick}
-          buttonName={formatMessage(messages.noGlobalIntegrationsButtonAdd)}
-          disableButton={!isAbleToClick}
-          buttonDataAutomationId="addProjectIntegrationButton"
+          buttons={getButtons()}
         />
       )}
     </>
   );
+
   return (
     <>
       {!integrationId ? (
         <>
           <IntegrationHeader
             data={plugin}
-            onAddProjectIntegration={onAddProjectIntegration}
-            onResetProjectIntegration={onResetProjectIntegration}
-            isAbleToClick={isAbleToClick}
-            availableProjectIntegrations={availableProjectIntegrations}
-            withButton={isAtLeastOneIntegrationAvailable}
             breadcrumbs={integrationListBreadcrumbs}
+            documentationLinkEvent={integrationListDocumentationLinkEvent}
           />
           {renderIntegrationList()}
         </>
       ) : (
         <>
-          <IntegrationHeader data={plugin} breadcrumbs={integrationBreadcrumbs} />
+          <IntegrationHeader
+            data={plugin}
+            breadcrumbs={integrationBreadcrumbs}
+            documentationLinkEvent={integrationDetailDocumentationLinkEvent}
+          />
           <div className={cx('integration-settings-block')}>
-            <IntegrationSettingsComponent
-              data={updatedData}
-              onUpdate={onUpdate}
-              goToPreviousPage={goToPluginIntegrationList}
-              extension={integrationSettingsExtension}
-              withPreloader
-              silentOnError={false}
-            />
+            <IntegrationAnalyticsContext.Provider value={integrationAnalyticsContextValue}>
+              <IntegrationSettingsComponent
+                data={updatedData}
+                onUpdate={onUpdate}
+                goToPreviousPage={goToPluginIntegrationList}
+                extension={integrationSettingsExtension}
+                withPreloader
+                silentOnError={false}
+                isGlobal={integrationInfo.isGlobal}
+                isOrganizational={integrationInfo.isOrganizational}
+              />
+            </IntegrationAnalyticsContext.Provider>
           </div>
         </>
       )}
     </>
   );
 };
+
 IntegrationInfo.propTypes = {
   plugin: PropTypes.shape({
     creationDate: PropTypes.number,
@@ -330,6 +483,7 @@ IntegrationInfo.propTypes = {
   }).isRequired,
   integrationId: PropTypes.string,
 };
+
 IntegrationInfo.defaultProps = {
   integrationId: '',
 };

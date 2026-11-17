@@ -21,6 +21,7 @@ export {
   authSuccessAction,
   setTokenAction,
   resetTokenAction,
+  clearLoginLockoutAction,
 } from './actionCreators';
 export { authReducer } from './reducer';
 export {
@@ -30,5 +31,6 @@ export {
   tokenValueSelector,
   lastFailedLoginTimeSelector,
   badCredentialsSelector,
+  loginLoadingSelector,
 } from './selectors';
 export { ANONYMOUS_REDIRECT_PATH_STORAGE_KEY } from './constants';

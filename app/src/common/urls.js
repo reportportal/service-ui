@@ -18,155 +18,189 @@ import { stringify } from 'qs';
 import { CSV } from 'common/constants/fileTypes';
 import { createFilterQuery } from 'components/filterEntities/containers/utils';
 
-export const UAT_API_PATH = '/uat';
+export const API_PATH = '/api';
 
 export const DEFAULT_API_URL_PREFIX = '../api/v1';
 export const DEFAULT_COMMON_API_URL_PREFIX = '../api';
-export const UAT_API_URL_PREFIX = '../uat';
-export const COMPOSITE_API_URL_PREFIX = '../composite/';
+export const UI_INFO_URL_PREFIX = '../ui/';
 
 const urlBase = `${DEFAULT_API_URL_PREFIX}/`;
 const urlCommonBase = `${DEFAULT_COMMON_API_URL_PREFIX}/`;
-const uatBase = `${UAT_API_URL_PREFIX}/`;
-const compositeBase = COMPOSITE_API_URL_PREFIX;
+const uiInfoBase = UI_INFO_URL_PREFIX;
 const getQueryParams = (paramsObj, options = {}) =>
   stringify(paramsObj, { addQueryPrefix: true, ...options });
 const removeTrailingSlash = (url) => (url.endsWith('/') ? url.slice(0, -1) : url);
 
+export const resolveApiPath = (path) => `${DEFAULT_COMMON_API_URL_PREFIX}${path}`;
+
 export const URLS = {
   apiDocs: (apiType) => `${apiType}/api-docs`,
+  dataPhoto: (userId, at, loadThumbnail) =>
+    `${urlCommonBase}users/${userId}/avatar${getQueryParams({ at, loadThumbnail })}`,
+  userAvatar: (userId, thumbnail, timestamp) =>
+    `${urlCommonBase}users/${userId}/avatar${getQueryParams({ thumbnail, ts: timestamp })}`,
+  createUser: () => `${urlCommonBase}users`,
 
-  dataPhoto: (at, loadThumbnail) => `${urlBase}data/photo${getQueryParams({ at, loadThumbnail })}`,
-  dataUserPhoto: (activeProject, login, loadThumbnail) =>
-    `${urlBase}data/${activeProject}/userphoto${getQueryParams({ login, loadThumbnail })}`,
+  dashboard: (projectKey, id) => `${urlBase}${projectKey}/dashboard/${id}`,
+  dashboards: (projectKey, params = {}, queryOptions = {}) =>
+    `${urlBase}${projectKey}/dashboard${getQueryParams(params, queryOptions)}`,
+  dashboardConfig: (projectKey, id) => `${urlBase}${projectKey}/dashboard/${id}/config`,
+  dashboardPreconfigured: (projectKey) => `${urlBase}${projectKey}/dashboard/preconfigured`,
 
-  dashboard: (activeProject, id) => `${urlBase}${activeProject}/dashboard/${id}`,
-  dashboards: (activeProject, params = {}, queryOptions = {}) =>
-    `${urlBase}${activeProject}/dashboard${getQueryParams(params, queryOptions)}`,
-  dashboardConfig: (activeProject, id) => `${urlBase}${activeProject}/dashboard/${id}/config`,
-  dashboardPreconfigured: (activeProject) => `${urlBase}${activeProject}/dashboard/preconfigured`,
-
-  widget: (activeProject, widgetId = '') =>
-    removeTrailingSlash(`${urlBase}${activeProject}/widget/${widgetId}`),
-  widgetMultilevel: (activeProject, widgetId, params) =>
-    `${urlBase}${activeProject}/widget/multilevel/${widgetId}${getQueryParams({
+  widget: (projectKey, widgetId = '') =>
+    removeTrailingSlash(`${urlBase}${projectKey}/widget/${widgetId}`),
+  widgetMultilevel: (projectKey, widgetId, params) =>
+    `${urlBase}${projectKey}/widget/multilevel/${widgetId}${getQueryParams({
       ...params,
     })}`,
-  widgetPreview: (activeProject) => `${urlBase}${activeProject}/widget/preview`,
+  widgetPreview: (projectKey) => `${urlBase}${projectKey}/widget/preview`,
 
-  dashboardWidget: (activeProject, dashboardId, widgetId) =>
-    removeTrailingSlash(`${urlBase}${activeProject}/dashboard/${dashboardId}/${widgetId}`),
+  dashboardWidget: (projectKey, dashboardId, widgetId) =>
+    removeTrailingSlash(`${urlBase}${projectKey}/dashboard/${dashboardId}/${widgetId}`),
 
-  addDashboardWidget: (activeProject, dashboardId) =>
-    `${urlBase}${activeProject}/dashboard/${dashboardId}/add`,
+  addDashboardWidget: (projectKey, dashboardId) =>
+    `${urlBase}${projectKey}/dashboard/${dashboardId}/add`,
 
-  projectWidget: (activeProject, widgetId = '', interval = '') =>
-    `${urlBase}project/${activeProject}/widget/${widgetId}${getQueryParams({ interval })}`,
+  projectWidget: (projectKey, widgetId = '', interval = '') =>
+    `${urlBase}project/${projectKey}/widget/${widgetId}${getQueryParams({ interval })}`,
 
-  filter: (activeProject, id = '') =>
-    removeTrailingSlash(`${urlBase}${activeProject}/filter/${id}`),
-  filters: (activeProject) => `${urlBase}${activeProject}/filter`,
-  filtersSearch: (activeProject) =>
-    `${urlBase}${activeProject}/filter?page.sort=name&page.page=1&page.size=50&filter.cnt.name=`,
-  searchFilterNames: (activeProject) => `${urlBase}${activeProject}/filter/names`,
-  launchesFilters: (activeProject, ids = []) =>
-    `${urlBase}${activeProject}/filter/filters?ids=${ids.join(',')}`,
+  filter: (projectKey, id = '') => removeTrailingSlash(`${urlBase}${projectKey}/filter/${id}`),
+  filters: (projectKey) => `${urlBase}${projectKey}/filter`,
+  filtersSearch: (projectKey) =>
+    `${urlBase}${projectKey}/filter?page.sort=name&page.page=1&page.size=50&filter.cnt.name=`,
+  searchFilterNames: (projectKey) => `${urlBase}${projectKey}/filter/names`,
+  launchesFilters: (projectKey, ids = []) =>
+    `${urlBase}${projectKey}/filter/filters?ids=${ids.join(',')}`,
 
-  debug: (activeProject) => `${urlBase}${activeProject}/launch/mode`,
+  debug: (projectKey) => `${urlBase}${projectKey}/launch/mode`,
 
-  launch: (activeProject, id) => removeTrailingSlash(`${urlBase}${activeProject}/launch/${id}`),
-  launchStatus: (activeProject, ids) => `${urlBase}${activeProject}/launch/status?ids=${ids}`,
-  launchByIds: (activeProject, ids) => `${urlBase}${activeProject}/launch?filter.in.id=${ids}`,
-  launchAttributeKeysSearch: (activeProject) => (searchTerm = '') =>
-    `${urlBase}${activeProject}/launch/attribute/keys?filter.cnt.attributeKey=${searchTerm}`,
-  itemAttributeKeysAllSearch: (activeProject, filterId, isLatest, launchesLimit) => (
-    searchTerm = '',
-  ) =>
-    `${urlBase}${activeProject}/item/attribute/keys/all?filterId=${filterId}&isLatest=${isLatest}&launchesLimit=${launchesLimit}&filter.cnt.attributeKey=${searchTerm}`,
-  launchAttributeValuesSearch: (activeProject, key = '') => (searchTerm = '') =>
-    `${urlBase}${activeProject}/launch/attribute/values?${
-      key ? `filter.eq.attributeKey=${key}&` : ''
-    }filter.cnt.attributeValue=${searchTerm}`,
-  itemAttributeKeysByLaunchName: (activeProject, launchName) => (searchTerm = '') =>
-    `${urlBase}${activeProject}/item/step/attribute/keys${getQueryParams({
-      'filter.eq.name': launchName || undefined,
-      'filter.cnt.attributeKey': searchTerm,
-    })}`,
-  itemAttributeValuesByLaunchName: (activeProject, launchName, key) => (searchTerm = '') =>
-    `${urlBase}${activeProject}/item/step/attribute/values${getQueryParams({
-      'filter.eq.name': launchName || undefined,
-      'filter.eq.attributeKey': key || undefined,
-      'filter.cnt.attributeValue': searchTerm,
-    })}`,
-  MLSuggestions: (activeProject, itemId) => `${urlBase}${activeProject}/item/suggest/${itemId}`,
-  MLSuggestionsByCluster: (activeProject, clusterId) =>
-    `${urlBase}${activeProject}/item/suggest/cluster/${clusterId}`,
-  choiceSuggestedItems: (activeProject) => `${urlBase}${activeProject}/item/suggest/choice`,
-  launchNameSearch: (activeProject) => (searchTerm = '') =>
-    `${urlBase}${activeProject}/launch/names?filter.cnt.name=${encodeURIComponent(searchTerm)}`,
-  launchesExistingNames: (activeProject) => `${urlBase}${activeProject}/launch/names`,
-  launchOwnersSearch: (activeProject) => (searchTerm = '') =>
-    `${urlBase}${activeProject}/launch/owners?filter.cnt.user=${searchTerm}`,
-  launches: (activeProject, ids = []) => `${urlBase}${activeProject}/launch?ids=${ids.join(',')}`,
-  launchesLatest: (activeProject, ids) =>
-    `${urlBase}${activeProject}/launch/latest${getQueryParams({ ids })}`,
-  launchUpdate: (activeProject) => `${urlBase}${activeProject}/launch/update`,
-  singleLaunchUpdate: (activeProject, launchId) =>
-    `${urlBase}${activeProject}/launch/${launchId}/update`,
-  launchesInfo: (activeProject) => `${urlBase}${activeProject}/launch/info`,
-  launchStop: (activeProject) => `${urlBase}${activeProject}/launch/stop`,
-  launchesItemsUpdate: (activeProject, id, type) =>
-    `${urlBase}${activeProject}/${type}/${id}/update`,
-  launchesMerge: (activeProject) => `${urlBase}${activeProject}/launch/merge`,
-  launchesCompare: (activeProject, ids) =>
-    `${urlBase}${activeProject}/launch/compare${getQueryParams({ ids })}`,
+  launch: (projectKey, id) => removeTrailingSlash(`${urlBase}${projectKey}/launch/${id}`),
+  launchStatus: (projectKey, ids) => `${urlBase}${projectKey}/launch/status?ids=${ids}`,
+  launchByIds: (projectKey, ids) => `${urlBase}${projectKey}/launch?filter.in.id=${ids}`,
+  launchAttributeKeysSearch:
+    (projectKey) =>
+    (searchTerm = '') =>
+      `${urlBase}${projectKey}/launch/attribute/keys?filter.cnt.attributeKey=${searchTerm}`,
+  itemAttributeKeysAllSearch:
+    (projectKey, filterId, isLatest, launchesLimit) =>
+    (searchTerm = '') =>
+      `${urlBase}${projectKey}/item/attribute/keys/all?filterId=${filterId}&isLatest=${isLatest}&launchesLimit=${launchesLimit}&filter.cnt.attributeKey=${searchTerm}`,
+  launchAttributeValuesSearch:
+    (projectKey, key = '') =>
+    (searchTerm = '') =>
+      `${urlBase}${projectKey}/launch/attribute/values?${
+        key ? `filter.eq.attributeKey=${key}&` : ''
+      }filter.cnt.attributeValue=${searchTerm}`,
+  itemAttributeKeysByLaunchName:
+    (projectKey, launchName) =>
+    (searchTerm = '') =>
+      `${urlBase}${projectKey}/item/step/attribute/keys${getQueryParams({
+        'filter.eq.name': launchName || undefined,
+        'filter.cnt.attributeKey': searchTerm,
+      })}`,
+  itemAttributeValuesByLaunchName:
+    (projectKey, launchName, key) =>
+    (searchTerm = '') =>
+      `${urlBase}${projectKey}/item/step/attribute/values${getQueryParams({
+        'filter.eq.name': launchName || undefined,
+        'filter.eq.attributeKey': key || undefined,
+        'filter.cnt.attributeValue': searchTerm,
+      })}`,
+  MLSuggestions: (projectKey, itemId) => `${urlBase}${projectKey}/item/suggest/${itemId}`,
+  MLSuggestionsByCluster: (projectKey, clusterId) =>
+    `${urlBase}${projectKey}/item/suggest/cluster/${clusterId}`,
+  choiceSuggestedItems: (projectKey) => `${urlBase}${projectKey}/item/suggest/choice`,
+  launchNameSearch:
+    (projectKey) =>
+    (searchTerm = '') =>
+      `${urlBase}${projectKey}/launch/names?filter.cnt.name=${encodeURIComponent(searchTerm)}`,
+  launchesExistingNames: (projectKey) => `${urlBase}${projectKey}/launch/names`,
+  launchOwnersSearch:
+    (projectKey) =>
+    (searchTerm = '') =>
+      `${urlBase}${projectKey}/launch/owners?filter.cnt.user=${searchTerm}`,
+  launches: (projectKey, ids = []) => `${urlBase}${projectKey}/launch?ids=${ids.join(',')}`,
+  launchesLatest: (projectKey, ids) =>
+    `${urlBase}${projectKey}/launch/latest${getQueryParams({ ids })}`,
+  launchUpdate: (projectKey) => `${urlBase}${projectKey}/launch/update`,
+  singleLaunchUpdate: (projectKey, launchId) => `${urlBase}${projectKey}/launch/${launchId}/update`,
+  launchesInfo: (projectKey) => `${urlBase}${projectKey}/launch/info`,
+  launchStop: (projectKey) => `${urlBase}${projectKey}/launch/stop`,
+  launchesItemsUpdate: (projectKey, id, type) => `${urlBase}${projectKey}/${type}/${id}/update`,
+  launchesMerge: (projectKey) => `${urlBase}${projectKey}/launch/merge`,
+  launchesCompare: (projectKey, ids) =>
+    `${urlBase}${projectKey}/launch/compare${getQueryParams({ ids })}`,
 
-  launchImport: (activeProject) => `${urlBase}${activeProject}/launch/import`,
-  exportLaunch: (projectId, launchId, exportType) =>
-    `${urlBase}${projectId}/launch/${launchId}/report${getQueryParams({
+  launchImport: (projectKey) => `${urlBase}${projectKey}/launch/import`,
+  exportLaunch: (projectKey, launchId, exportType) =>
+    `${urlBase}${projectKey}/launch/${launchId}/report${getQueryParams({
       view: String(exportType).toLowerCase(),
     })}`,
-  launchAnalyze: (activeProject) => `${urlBase}${activeProject}/launch/analyze`,
-  login: () => `${uatBase}sso/oauth/token`,
-  sessionToken: () => `${uatBase}sso/me`,
+  launchAnalyze: (projectKey) => `${urlBase}${projectKey}/launch/analyze`,
+  login: () => `${urlCommonBase}sso/oauth/token`,
+  logout: () => `${urlBase}auth/logout`,
+  sessionToken: () => `${urlCommonBase}sso/me`,
 
-  apiKeys: (userId) => `${urlCommonBase}users/${userId}/api-keys`,
-  apiKeyById: (userId, apiKeyId) => `${urlCommonBase}users/${userId}/api-keys/${apiKeyId}`,
+  apiKeys: (userId) => `${urlBase}users/${userId}/api-keys`,
+  apiKeyById: (userId, apiKeyId) => `${urlBase}users/${userId}/api-keys/${apiKeyId}`,
 
-  projectByName: (activeProject) => `${urlBase}project/${activeProject}`,
+  organizationList: (preferencesObj = {}) =>
+    `${urlCommonBase}organizations${getQueryParams(preferencesObj)}`,
+  organizationSearches: () => `${urlCommonBase}organizations/searches`,
+  organizationProjects: (organizationId, preferencesObj = {}) =>
+    `${urlCommonBase}organizations/${organizationId}/projects${getQueryParams(preferencesObj)}`,
+  organizationProjectsSearches: (organizationId) =>
+    `${urlCommonBase}organizations/${organizationId}/projects/searches`,
+  organizationUsers: (organizationId, preferencesObj = {}) =>
+    `${urlCommonBase}organizations/${organizationId}/users${getQueryParams(preferencesObj)}`,
+  organizationUserById: ({ organizationId, userId }) =>
+    `${urlCommonBase}organizations/${organizationId}/users/${userId}`,
+  organizationUserProjects: (organizationId, userId) =>
+    `${urlCommonBase}organizations/${organizationId}/users/${userId}/projects`,
+  organizationUserAssignments: (organizationId, userId) =>
+    `${urlCommonBase}organizations/${organizationId}/users/${userId}`,
+  organizationProjectById: ({ organizationId, projectId }) =>
+    `${urlCommonBase}organizations/${organizationId}/projects/${projectId}`,
+  organizationSettings: (organizationId) =>
+    `${urlCommonBase}organizations/${organizationId}/settings`,
+  organizationById: (organizationId) => `${urlCommonBase}organizations/${organizationId}`,
+  organizationIntegrations: (organizationId) =>
+    `${urlCommonBase}organizations/${organizationId}/integrations`,
+  removeOrganizationIntegrationsByType: (organizationId, type) =>
+    `${urlCommonBase}organizations/${organizationId}/integrations${getQueryParams({ type })}`,
+  organizationIntegrationById: (organizationId, integrationId) =>
+    `${urlCommonBase}organizations/${organizationId}/integrations/${integrationId}`,
+
+  projectByName: (projectKey) => `${urlBase}project/${projectKey}`,
   project: (ids = []) => `${urlBase}project?ids=${ids.join(',')}`,
   projectNames: () => `${urlBase}project/names`,
   searchProjectNames: () => `${urlBase}project/names/search`,
-  projectDefectType: (activeProject) => `${urlBase}${activeProject}/settings/sub-type`,
-  projectDeleteDefectType: (activeProject, id) =>
-    removeTrailingSlash(`${urlBase}${activeProject}/settings/sub-type/${id}`),
+  projectDefectType: (projectKey) => `${urlBase}${projectKey}/settings/sub-type`,
+  projectDeleteDefectType: (projectKey, id) =>
+    removeTrailingSlash(`${urlBase}${projectKey}/settings/sub-type/${id}`),
   projects: () => `${urlBase}project/list`,
-  projectPreferences: (activeProject, filterId = '') =>
-    removeTrailingSlash(`${urlBase}project/${activeProject}/preference/${filterId}`),
-  projectUsers: (activeProject) => `${urlBase}project/${activeProject}/users`,
-  projectUserSearchUser: (activeProject) => (searchTerm) =>
-    `${urlBase}project/${activeProject}/usernames/search${getQueryParams({
-      'page.page': 1,
-      'page.size': 10,
-      'page.sort': 'user,ASC',
-      term: searchTerm,
-    })}`,
+  projectPreferences: (projectKey, filterId = '') =>
+    removeTrailingSlash(`${urlBase}project/${projectKey}/preference/${filterId}`),
+  projectUsers: (projectKey) => `${urlBase}project/${projectKey}/users`,
   searchUsers: (term) =>
-    `${urlCommonBase}users/search${getQueryParams({
+    `${urlBase}users/search${getQueryParams({
       term,
     })}`,
-  projectAddPattern: (activeProject) => `${urlBase}${activeProject}/settings/pattern`,
-  projectUpdatePattern: (activeProject, patternId) =>
-    `${urlBase}${activeProject}/settings/pattern/${patternId}`,
-  projectUsernamesSearch: (activeProject) => (searchTerm = '') =>
-    `${urlBase}project/${activeProject}/usernames?filter.cnt.users=${searchTerm}`,
-  projectIndex: (activeProject) => `${urlBase}project/${activeProject}/index`,
-  projectLogTypes: (activeProject) => `${urlCommonBase}projects/${activeProject}/log-types`,
-  projectLogTypeById: (activeProject, logTypeId) =>
-    `${urlCommonBase}projects/${activeProject}/log-types/${logTypeId}`,
+  searchAllUsers: () => `${urlCommonBase}users/searches`,
+  projectAddPattern: (projectKey) => `${urlBase}${projectKey}/settings/pattern`,
+  projectUpdatePattern: (projectKey, patternId) =>
+    `${urlBase}${projectKey}/settings/pattern/${patternId}`,
+  projectUsernamesSearch:
+    (projectKey) =>
+    (searchTerm = '') =>
+      `${urlBase}project/${projectKey}/usernames?filter.cnt.users=${searchTerm}`,
+  projectIndex: (projectKey) => `${urlBase}project/${projectKey}/index`,
+  projectLogTypes: (projectKey) => `${urlCommonBase}projects/${projectKey}/log-types`,
+  projectLogTypeById: (projectKey, logTypeId) =>
+    `${urlCommonBase}projects/${projectKey}/log-types/${logTypeId}`,
 
-  projectStatus: (activeProject, interval) =>
-    `${urlBase}project/list/${activeProject}${getQueryParams({
+  projectStatus: (projectKey, interval) =>
+    `${urlBase}project/list/${projectKey}${getQueryParams({
       interval,
     })}`,
   projectSearch: () => `${urlBase}project/list?filter.cnt.name=`,
@@ -178,127 +212,140 @@ export const URLS = {
       ...createFilterQuery(filterEntities),
       ...sortingEntities,
     })}`,
-  suite: (activeProject, suiteId) =>
-    removeTrailingSlash(`${urlBase}${activeProject}/item/${suiteId}`),
+  suite: (projectKey, suiteId) => removeTrailingSlash(`${urlBase}${projectKey}/item/${suiteId}`),
 
-  notification: (activeProject) => `${urlBase}${activeProject}/settings/notification`,
-  notificationById: (activeProject, notificationId) =>
-    `${urlBase}${activeProject}/settings/notification/${notificationId}`,
+  notification: (projectKey) => `${urlBase}${projectKey}/settings/notification`,
+  notificationById: (projectKey, notificationId) =>
+    `${urlBase}${projectKey}/settings/notification/${notificationId}`,
 
-  testItems: (activeProject, ids) =>
-    removeTrailingSlash(`${urlBase}${activeProject}/item${getQueryParams({ ids })}`),
-  testItemsWithProviderType: (activeProject, ids) =>
-    `${urlBase}${activeProject}/item/v2${getQueryParams({ ids })}`,
-  testItemsBulk: (activeProject) => `${urlBase}${activeProject}/item/bulk`,
-  testItem: (activeProject, id = '') =>
-    removeTrailingSlash(`${urlBase}${activeProject}/item/${id}`),
-  testItemStatistics: (activeProject) => `${urlBase}${activeProject}/item/statistics`,
-  testItemUpdate: (activeProject, id = '') => `${urlBase}${activeProject}/item/${id}/update`,
-  testItemsHistory: (activeProject, historyDepth, type, id) =>
-    `${urlBase}${activeProject}/item/history${getQueryParams({
+  testCasesTags: (projectKey) => `${urlBase}project/${projectKey}/tms/test-case/attribute`,
+  testCasesTagsBatch: (projectKey) =>
+    `${urlBase}project/${projectKey}/tms/test-case/attributes/batch`,
+  testItems: (projectKey, ids) =>
+    removeTrailingSlash(`${urlBase}${projectKey}/item${getQueryParams({ ids })}`),
+  testItemsWithProviderType: (projectKey, ids) =>
+    `${urlBase}${projectKey}/item/v2${getQueryParams({ ids })}`,
+  testItemsBulk: (projectKey) => `${urlBase}${projectKey}/item/bulk`,
+  testItem: (projectKey, id = '') => removeTrailingSlash(`${urlBase}${projectKey}/item/${id}`),
+  testItemStatistics: (projectKey) => `${urlBase}${projectKey}/item/statistics`,
+  testItemUpdate: (projectKey, id = '') => `${urlBase}${projectKey}/item/${id}/update`,
+  testItemsHistory: (projectKey, historyDepth, type, id) =>
+    `${urlBase}${projectKey}/item/history${getQueryParams({
       historyDepth,
       type,
       'filter.eq.id': id,
     })}`,
-  testItemsInfo: (activeProject) => `${urlBase}${activeProject}/item/info`,
-  testItemSearch: (activeProject, searchParam = {}) => {
-    return `${urlBase}${activeProject}/item/search${getQueryParams(searchParam)}`;
+  testItemsInfo: (projectKey) => `${urlBase}${projectKey}/item/info`,
+  testItemSearch: (projectKey, searchParam = {}) => {
+    return `${urlBase}${projectKey}/item/search${getQueryParams(searchParam)}`;
   },
-  testItemsLinkIssues: (activeProject) => `${urlBase}${activeProject}/item/issue/link`,
-  testItemsUnlinkIssues: (activeProject) => `${urlBase}${activeProject}/item/issue/unlink`,
-  testItemAttributeKeysSearch: (activeProject, launch = '') => (searchTerm = '') => {
-    const params = {
-      ...(launch ? { launch } : {}),
-      'filter.cnt.attributeKey': searchTerm,
-    };
-    return `${urlBase}${activeProject}/item/attribute/keys${getQueryParams(params)}`;
-  },
-  testItemAttributeValuesSearch: (activeProject, launch = '', key = '') => (searchTerm = '') => {
-    const params = {
-      ...(launch ? { launch } : {}),
-      ...(key ? { 'filter.eq.attributeKey': key } : {}),
-      'filter.cnt.attributeValue': searchTerm,
-    };
-    return `${urlBase}${activeProject}/item/attribute/values${getQueryParams(params)}`;
-  },
-  testItemBTSIssuesSearch: (activeProject) => (searchTerm = '') =>
-    `${urlBase}${activeProject}/item/ticket/ids/all?term=${searchTerm}`,
+  testItemsLinkIssues: (projectKey) => `${urlBase}${projectKey}/item/issue/link`,
+  testItemsUnlinkIssues: (projectKey) => `${urlBase}${projectKey}/item/issue/unlink`,
+  testItemAttributeKeysSearch:
+    (projectKey, launch = '') =>
+    (searchTerm = '') => {
+      const params = {
+        ...(launch ? { launch } : {}),
+        'filter.cnt.attributeKey': searchTerm,
+      };
+      return `${urlBase}${projectKey}/item/attribute/keys${getQueryParams(params)}`;
+    },
+  testItemAttributeValuesSearch:
+    (projectKey, launch = '', key = '') =>
+    (searchTerm = '') => {
+      const params = {
+        ...(launch ? { launch } : {}),
+        ...(key ? { 'filter.eq.attributeKey': key } : {}),
+        'filter.cnt.attributeValue': searchTerm,
+      };
+      return `${urlBase}${projectKey}/item/attribute/values${getQueryParams(params)}`;
+    },
+  testItemBTSIssuesSearch:
+    (projectKey) =>
+    (searchTerm = '') =>
+      `${urlBase}${projectKey}/item/ticket/ids/all?term=${searchTerm}`,
 
-  logItem: (activeProject, itemId, level) =>
-    `${urlBase}${activeProject}/log${getQueryParams({
+  logItem: (projectKey, itemId, level) =>
+    `${urlBase}${projectKey}/log${getQueryParams({
       'filter.eq.item': itemId,
       ...(level && { 'filter.gte.level': level }),
       'page.page': 1,
       'page.size': 1,
       'page.sort': 'logTime,DESC',
     })}`,
-  logItems: (activeProject, itemId, level) =>
-    `${urlBase}${activeProject}/log/nested/${itemId}${getQueryParams({
+  logItems: (projectKey, itemId, level) =>
+    `${urlBase}${projectKey}/log/nested/${itemId}${getQueryParams({
       ...(level && { 'filter.gte.level': level }),
     })}`,
-  errorLogs: (activeProject, itemId, level) =>
-    `${urlBase}${activeProject}/log/locations/${itemId}${getQueryParams({
+  errorLogs: (projectKey, itemId, level) =>
+    `${urlBase}${projectKey}/log/locations/${itemId}${getQueryParams({
       ...(level && { 'filter.gte.level': level }),
     })}`,
-  searchLogs: (activeProject, itemId, level) =>
-    `${urlBase}${activeProject}/log/locations/search/${itemId}${getQueryParams({
+  searchLogs: (projectKey, itemId, level) =>
+    `${urlBase}${projectKey}/log/locations/search/${itemId}${getQueryParams({
       excludeLogContent: false,
       ...(level && { 'filter.gte.level': level }),
     })}`,
-  logsUnderPath: (activeProject, path, excludedRetryParentId) =>
-    `${urlBase}${activeProject}/log${getQueryParams({
+  logsUnderPath: (projectKey, path, excludedRetryParentId) =>
+    `${urlBase}${projectKey}/log${getQueryParams({
       'filter.under.path': path,
       'filter.!ex.retryParentId': excludedRetryParentId,
     })}`,
-  launchLogs: (activeProject, itemId, level) =>
-    `${urlBase}${activeProject}/log${getQueryParams({
+  launchLogs: (projectKey, itemId, level) =>
+    `${urlBase}${projectKey}/log${getQueryParams({
       'filter.eq.launch': itemId,
       ...(level && { 'filter.gte.level': level }),
     })}`,
-  logItemActivity: (activeProject, itemId) =>
-    removeTrailingSlash(`${urlBase}${activeProject}/activity/item/${itemId}`),
-  logItemStackTrace: (activeProject, path, pageSize) =>
-    `${urlBase}${activeProject}/log${getQueryParams({
+  logItemActivity: (projectKey, itemId) =>
+    removeTrailingSlash(`${urlBase}${projectKey}/activity/item/${itemId}`),
+  testCaseActivity: (projectKey, testCaseId, query = {}) =>
+    removeTrailingSlash(`${urlBase}${projectKey}/activity/test-case/${testCaseId}${getQueryParams(query)}`),
+  logItemStackTrace: (projectKey, path, pageSize) =>
+    `${urlBase}${projectKey}/log${getQueryParams({
       'filter.under.path': path,
       'page.page': 1,
       'page.size': pageSize,
       'filter.gte.level': 'ERROR',
       'page.sort': 'logTime,DESC',
     })}`,
-  logSearch: (activeProject, itemId) => `${urlBase}${activeProject}/log/search/${itemId}`,
-  bulkLastLogs: (activeProject) => `${urlBase}${activeProject}/log/under`,
-  users: (ids = []) => `${urlCommonBase}users?ids=${ids.join(',')}`,
-  userRegistration: () => `${urlCommonBase}users/registration`,
-  userPasswordReset: () => `${urlCommonBase}users/password/reset`,
-  userPasswordResetToken: (token) => `${urlCommonBase}users/password/reset/${token}`,
-  userPasswordRestore: () => `${urlCommonBase}users/password/restore`,
-  userChangePassword: () => `${urlCommonBase}users/password/change`,
-  userSynchronize: (type) => `${uatBase}sso/me/${type}/synchronize`,
-  userInfo: (userId) => `${urlCommonBase}users/${userId}`,
-  userInviteInternal: (activeProject) => `${urlBase}project/${activeProject}/assign`,
-  userInviteExternal: () => `${urlCommonBase}users/bid`,
-  userUnasign: (activeProject) => `${urlBase}project/${activeProject}/unassign`,
+  logSearch: (projectKey, itemId) => `${urlBase}${projectKey}/log/search/${itemId}`,
+  bulkLastLogs: (projectKey) => `${urlBase}${projectKey}/log/under`,
+  users: (ids = []) => `${urlBase}users?ids=${ids.join(',')}`,
+  invitation: (uuid) => `${urlCommonBase}invitations/${uuid}`,
+  userRegistration: () => `${urlBase}users/registration`,
+  userPasswordReset: () => `${urlBase}users/password/reset`,
+  userPasswordResetToken: (token) => `${urlBase}users/password/reset/${token}`,
+  userPasswordRestore: () => `${urlBase}users/password/restore`,
+  userChangePassword: () => `${urlBase}users/password/change`,
+  userInfo: (userId) => `${urlBase}users/${userId}`,
+  deleteUsers: (ids) => `${urlBase}users${getQueryParams({ ids })}`,
+  userInviteInternal: (projectKey) => `${urlBase}project/${projectKey}/assign`,
+  userInviteExternal: () => `${urlBase}users/bid`,
+  userUnassign: (projectKey) => `${urlBase}project/${projectKey}/unassign`,
+  userInvitations: () => `${urlCommonBase}invitations`,
 
-  generateDemoData: (projectId) => `${urlBase}demo/${projectId}/generate`,
-  getFileById: (projectId, dataId, loadThumbnail) =>
-    `${urlBase}data/${projectId}/${dataId}${getQueryParams({ loadThumbnail })}`,
+  generateDemoData: (projectKey) => `${urlBase}demo/${projectKey}/generate`,
+  getFileById: (projectKey, dataId, loadThumbnail) =>
+    `${urlBase}data/${projectKey}/${dataId}${getQueryParams({ loadThumbnail })}`,
 
-  authSettings: (authTypeOrId, id = '') =>
-    removeTrailingSlash(`${uatBase}settings/auth/${authTypeOrId}/${id}`),
-  githubAuthSettings: () => `${uatBase}settings/oauth/github`,
+  createStreamLink: (projectKey, dataId) => `${urlBase}data/${projectKey}/streams/${dataId}/link`,
+
+  githubAuthSettings: () => `${urlCommonBase}settings/oauth/github`, // TODO: to be changed in the future
   analyticsServerSettings: () => `${urlBase}settings/analytics`,
-  events: () => `${urlBase}activities/searches`,
-  searchEventsBySubjectName: (projectName) => (searchTerm = '') =>
-    `${urlBase}activities/${projectName}/subjectName?filter.cnt.subjectName=${searchTerm}`,
-  allUsers: () => `${urlCommonBase}users/all`,
+  events: () => `${urlCommonBase}activities/searches`,
+  searchEventsBySubjectName:
+    (projectName) =>
+    (searchTerm = '') =>
+      `${urlBase}activities/${projectName}/subjectName?filter.cnt.subjectName=${searchTerm}`,
 
   exportUsers: (filterEntities) =>
-    `${urlCommonBase}users/export${getQueryParams({
+    `${urlBase}users/export${getQueryParams({
       view: 'csv',
       ...createFilterQuery(filterEntities),
     })}`,
 
-  appInfo: () => `${compositeBase}info`,
+  appInfoApi: () => `${urlCommonBase}info`,
+  appInfoUi: () => `${uiInfoBase}info`,
 
   grafanaSession: () => `${urlBase}integration/grafana/session`,
 
@@ -307,45 +354,110 @@ export const URLS = {
   pluginPublic: () => `${urlBase}plugin/public`,
   pluginPublicFile: (pluginName, fileKey) =>
     `${urlBase}plugin/public/${pluginName}/file/${fileKey}`,
-  pluginCommandCommon: (projectId, pluginName, command) =>
-    `${urlBase}plugin/${projectId}/${pluginName}/common/${command}`,
+  pluginCommandCommon: (projectKey, pluginName, command) =>
+    `${urlBase}plugin/${projectKey}/${pluginName}/common/${command}`,
   pluginCommandPublic: (pluginName, command) => `${urlBase}plugin/public/${pluginName}/${command}`,
+  pluginsCommandsCommon: (pluginName, command) =>
+    `${urlCommonBase}plugins/${pluginName}/commands/${command}`,
   globalIntegrationsByPluginName: (pluginName = '') =>
     `${urlBase}integration/global/all/${pluginName}`,
-  projectIntegrationByIdCommand: (projectId, integrationId, command) =>
-    `${urlBase}integration/${projectId}/${integrationId}/${command}`,
-  newProjectIntegration: (projectId, pluginName) =>
-    `${urlBase}integration/${projectId}/${pluginName}`,
+  projectIntegrationByIdCommand: (projectKey, integrationId, command) =>
+    `${urlBase}integration/${projectKey}/${integrationId}/${command}`,
+  newProjectIntegration: (projectKey, pluginName) =>
+    `${urlBase}integration/${projectKey}/${pluginName}`,
   newGlobalIntegration: (pluginName) => `${urlBase}integration/${pluginName}`,
-  projectIntegration: (projectId, integrationId) =>
-    `${urlBase}integration/${projectId}/${integrationId}`,
+  projectIntegration: (projectKey, integrationId) =>
+    `${urlBase}integration/${projectKey}/${integrationId}`,
   globalIntegration: (integrationId) => `${urlBase}integration/${integrationId}`,
-  removeProjectIntegrationByType: (projectId, type) =>
-    `${urlBase}integration/${projectId}/all/${type}`,
-  testIntegrationConnection: (projectId, integrationId) =>
-    `${urlBase}integration/${projectId}/${integrationId}/connection/test`,
-  testGlobalIntegrationConnection: (integrationId) =>
-    `${urlBase}integration/${integrationId}/connection/test`,
-  pluginFileImport: (projectName, pluginName) =>
-    `${urlBase}plugin/${projectName}/${pluginName}/import`,
+  removeProjectIntegrationByType: (projectKey, type) =>
+    `${urlBase}integration/${projectKey}/all/${type}`,
+  pluginFileImport: (projectKey, pluginName) =>
+    `${urlBase}plugin/${projectKey}/${pluginName}/import`,
 
-  btsIntegrationIssueTypes: (projectId, integrationId) =>
-    `${urlBase}bts/${projectId}/${integrationId}/issue_types`,
+  btsIntegrationIssueTypes: (projectKey, integrationId) =>
+    `${urlBase}bts/${projectKey}/${integrationId}/issue_types`,
   btsGlobalIntegrationIssueTypes: (integrationId) => `${urlBase}bts/${integrationId}/issue_types`,
-  btsIntegrationFieldsSet: (projectId, integrationId, issueType) =>
-    `${urlBase}bts/${projectId}/${integrationId}/fields-set?issueType=${issueType}`,
+  btsIntegrationFieldsSet: (projectKey, integrationId, issueType) =>
+    `${urlBase}bts/${projectKey}/${integrationId}/fields-set?issueType=${issueType}`,
   btsGlobalIntegrationFieldsSet: (integrationId, issueType) =>
     `${urlBase}bts/${integrationId}/fields-set?issueType=${issueType}`,
-  btsIntegrationPostTicket: (projectId, integrationId) =>
-    `${urlBase}bts/${projectId}/${integrationId}/ticket`,
-  btsTicket: (activeProject, issueId, btsProject, btsUrl) =>
-    `${urlBase}bts/${activeProject}/ticket/${issueId}${getQueryParams({
-      btsProject,
-      btsUrl,
-    })}`,
-  runUniqueErrorAnalysis: (activeProject) => `${urlBase}${activeProject}/launch/cluster`,
-  clusterByLaunchId: (activeProject, launchId, query) =>
-    `${urlBase}${activeProject}/launch/cluster/${launchId}${getQueryParams(query)}`,
+  btsIntegrationPostTicket: (projectKey, integrationId) =>
+    `${urlBase}bts/${projectKey}/${integrationId}/ticket`,
+  runUniqueErrorAnalysis: (projectKey) => `${urlBase}${projectKey}/launch/cluster`,
+  clusterByLaunchId: (projectKey, launchId, query) =>
+    `${urlBase}${projectKey}/launch/cluster/${launchId}${getQueryParams(query)}`,
   onboarding: (page = 'GENERAL') => `${urlBase}onboarding?page=${page}`,
   instanceSettings: () => `${urlBase}settings`,
+
+  testCaseDetails: (projectKey, testCaseId) =>
+    `${urlBase}project/${projectKey}/tms/test-case/${testCaseId}`,
+  testPlanTestCaseDetails: (projectKey, testPlanId, testCaseId) =>
+    `${urlBase}project/${projectKey}/tms/test-plan/${testPlanId}/test-case/${testCaseId}`,
+  testCasesBatch: (projectKey) => `${urlBase}project/${projectKey}/tms/test-case/batch`,
+  testCaseBatchDuplicate: (projectKey) =>
+    `${urlBase}project/${projectKey}/tms/test-case/batch/duplicate`,
+  testCases: (projectKey, query = {}) =>
+    `${urlBase}project/${projectKey}/tms/test-case${getQueryParams(query)}`,
+  testPlanTestCases: (projectKey, id, query = {}) =>
+    `${urlBase}project/${projectKey}/tms/test-plan/${id}/test-case${getQueryParams(query)}`,
+  testPlan: (projectKey, query = {}) =>
+    `${urlBase}project/${projectKey}/tms/test-plan${getQueryParams(query)}`,
+  testPlanNameSearch: (projectKey) => (search = '') =>
+    `${urlBase}project/${projectKey}/tms/test-plan/name${getQueryParams({
+      limit: 20,
+      ...(search ? { search } : {}),
+    })}`,
+  tmsMilestone: (projectKey, query = {}) =>
+    `${urlBase}project/${projectKey}/tms/milestone${getQueryParams(query)}`,
+  tmsMilestoneById: (projectKey, milestoneId) =>
+    `${urlBase}project/${projectKey}/tms/milestone/${milestoneId}`,
+  tmsMilestoneDuplicate: (projectKey, milestoneId) =>
+    `${urlBase}project/${projectKey}/tms/milestone/${milestoneId}/duplicate`,
+  tmsMilestoneAddTestPlan: (projectKey, milestoneId, testPlanId) =>
+    `${urlBase}project/${projectKey}/tms/milestone/${milestoneId}/test-plan/${testPlanId}`,
+  testPlanTestCasesBatch: (projectKey, testPlanId) =>
+    `${urlBase}project/${projectKey}/tms/test-plan/${testPlanId}/test-case/batch`,
+  testPlanById: (projectKey, testPlanId) =>
+    `${urlBase}project/${projectKey}/tms/test-plan/${testPlanId}`,
+  testPlanDuplicate: (projectKey, testPlanId) =>
+    `${urlBase}project/${projectKey}/tms/test-plan/${testPlanId}/duplicate`,
+  testFolders: (projectKey, query = {}) =>
+    `${urlBase}project/${projectKey}/tms/folder${getQueryParams(query)}`,
+  testFolderDuplicate: (projectKey, folderId) =>
+    `${urlBase}project/${projectKey}/tms/folder/${folderId}/duplicate`,
+  folder: (projectKey, folderId) => `${urlBase}project/${projectKey}/tms/folder/${folderId}`,
+  attachmentThumbnail: (projectKey, attachmentId) =>
+    `${urlBase}project/${projectKey}/tms/attachment/${attachmentId}/thumbnail`,
+  tmsAttachmentUpload: (projectKey) => `${urlBase}project/${projectKey}/tms/attachment/upload`,
+  tmsAttachmentDownload: (projectKey, attachmentId) =>
+    `${urlBase}project/${projectKey}/tms/attachment/${attachmentId}`,
+  manualLaunchesList: (projectKey) => `${urlBase}/${projectKey}/launch`,
+  manualLaunchById: (projectKey, launchId) =>
+    `${urlBase}project/${projectKey}/launch/manual/${launchId}`,
+  manualLaunchesListPagination: (projectKey, query = {}) =>
+    `${urlBase}project/${projectKey}/launch/manual${getQueryParams(query)}`,
+  manualLaunchFolders: (projectKey, launchId, query = {}) =>
+    `${urlBase}project/${projectKey}/launch/manual/${launchId}/folder${getQueryParams(query)}`,
+  manualLaunchTestCaseExecutions: (projectKey, launchId, query = {}) =>
+    `${urlBase}project/${projectKey}/launch/manual/${launchId}/test-case/execution${getQueryParams(query)}`,
+  manualLaunchExecutionById: (projectKey, launchId, executionId) =>
+    `${urlBase}project/${projectKey}/launch/manual/${launchId}/test-case/execution/${executionId}`,
+  manualLaunch: (projectKey) => `${urlBase}project/${projectKey}/launch/manual`,
+  addTestCaseToLaunch: (projectKey, launchId) =>
+    `${urlBase}project/${projectKey}/launch/manual/${launchId}/test-case`,
+  batchAddTestCasesToLaunch: (projectKey, launchId) =>
+    `${urlBase}project/${projectKey}/launch/manual/${launchId}/test-case/batch`,
+  deleteExecutionFromLaunch: (projectKey, launchId, executionId) =>
+    `${urlBase}project/${projectKey}/launch/manual/${launchId}/test-case/execution/${executionId}`,
+  batchDeleteExecutionsFromLaunch: (projectKey, launchId) =>
+    `${urlBase}project/${projectKey}/launch/manual/${launchId}/test-case/execution`,
+  importTestCase: (projectKey, query = {}) =>
+    `${urlBase}project/${projectKey}/tms/test-case/import${getQueryParams(query)}`,
+  tmsAttributes: (projectKey, query = {}) =>
+    `${urlBase}project/${projectKey}/tms/attribute${getQueryParams(query)}`,
+  createTmsAttribute: (projectKey) => `${urlBase}project/${projectKey}/tms/attribute`,
+  tmsAttributeKeysSearch: (projectKey, query = {}) =>
+    `${urlBase}project/${projectKey}/tms/attribute/key${getQueryParams(query)}`,
+  tmsAttributeValuesSearch: (projectKey, query = {}) =>
+    `${urlBase}project/${projectKey}/tms/attribute/value${getQueryParams(query)}`,
 };

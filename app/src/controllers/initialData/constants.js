@@ -16,3 +16,5 @@
 
 export const FETCH_INITIAL_DATA = 'fetchInitialData';
 export const SET_INITIAL_DATA_READY = 'setInitialDataReady';
+export const SET_SERVICE_AVAILABILITY = 'setServiceAvailability';
+export const LAST_VISITED_PATH_STORAGE_KEY = 'lastVisitedPath';

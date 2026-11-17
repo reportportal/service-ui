@@ -20,11 +20,12 @@ import { useIntl } from 'react-intl';
 import { useTracking } from 'react-tracking';
 import classNames from 'classnames/bind';
 import { PROJECT_SETTINGS_INTEGRATION } from 'analyticsEvents/projectSettingsPageEvents';
-import { EmptyStatePage } from 'pages/inside/projectSettingsPageContainer/content/emptyStatePage';
+import { EmptyStatePage } from 'pages/inside/common/emptyStatePage';
 import { docsReferences } from 'common/utils';
-import { IntegrationsListItem } from './integrationsListItem';
+import { useUserPermissions } from 'hooks/useUserPermissions';
+import { IntegrationsListItem } from 'pages/inside/common/integrations/integrationsListItem';
+import { messages } from 'pages/inside/common/integrations/messages';
 import styles from './integrationsList.scss';
-import { messages } from './messages';
 
 const cx = classNames.bind(styles);
 
@@ -32,6 +33,7 @@ export const IntegrationsList = (props) => {
   const { formatMessage } = useIntl();
   const { availableIntegrations, onItemClick } = props;
   const { trackEvent } = useTracking();
+  const { canUpdateSettings } = useUserPermissions();
 
   const handleDocumentationClick = () => {
     trackEvent(PROJECT_SETTINGS_INTEGRATION.clickDocumentationLink('no_integrations'));
@@ -60,8 +62,14 @@ export const IntegrationsList = (props) => {
         </div>
       ) : (
         <EmptyStatePage
-          title={formatMessage(messages.noIntegrationsMessage)}
-          description={formatMessage(messages.noIntegrationsDescription)}
+          title={formatMessage(
+            canUpdateSettings ? messages.noIntegrationsMessage : messages.noIntegrationsYet,
+          )}
+          description={formatMessage(
+            canUpdateSettings
+              ? messages.noIntegrationsDescription
+              : messages.noIntegrationsYetDescription,
+          )}
           documentationLink={docsReferences.emptyStateIntegrationsDocs}
           handleDocumentationClick={handleDocumentationClick}
           descriptionClassName={cx('integration-empty')}

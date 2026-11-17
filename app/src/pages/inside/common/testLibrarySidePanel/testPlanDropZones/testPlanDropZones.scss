@@ -1,0 +1,110 @@
+/*
+ * Copyright 2026 EPAM Systems
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+.test-plan-drop-zones {
+  --side-panel-width: 560px;
+  --app-sidebar-width: 48px;
+  --overlay-z-index: var(--rp-ui-base-z-index-overlay-panel);
+
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: var(--app-sidebar-width);
+  right: var(--side-panel-width);
+  display: flex;
+  flex-direction: column;
+  padding: 8px;
+  gap: 8px;
+  z-index: calc(var(--overlay-z-index) - 1);
+
+  &__zone {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px dashed var(--rp-ui-base-e-200);
+    border-radius: 8px;
+    background-color: var(--rp-ui-base-bg-200);
+    transition: background-color 0.15s ease, border-color 0.15s ease;
+
+    &--add {
+      flex: 2;
+    }
+
+    &--over {
+      background-color: var(--rp-ui-base-topaz-100);
+      border-color: var(--rp-ui-base-topaz-hover);
+    }
+
+    &--disabled {
+      pointer-events: none;
+    }
+  }
+
+  &__content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    max-width: 380px;
+    text-align: center;
+  }
+
+  &__icon {
+    position: relative;
+    display: block;
+    width: 64px;
+    height: 64px;
+    margin-bottom: 16px;
+
+    div {
+      position: absolute;
+      background-color: var(--rp-ui-base-icon-priority-unspecified);
+      border-radius: 2px;
+    }
+
+    &-vertical {
+      width: 6px;
+      height: 64px;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+
+    &-horizontal {
+      height: 6px;
+      width: 64px;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+    }
+  }
+
+  &__title {
+    font-family: var(--rp-ui-base-font-family-heading), serif;
+    font-size: 20px;
+    font-weight: 400;
+    line-height: 31px;
+    color: var(--rp-ui-base-e-400);
+  }
+
+  &__hint {
+    font-family: var(--rp-ui-base-font-family), serif;
+    font-size: 13px;
+    font-weight: 400;
+    line-height: 20px;
+    color: var(--rp-ui-base-e-300);
+  }
+}

@@ -34,9 +34,13 @@ import {
   BubblesLoader,
   Button,
   Checkbox,
-  FieldNumber,
   Toggle,
   Modal as ModalLayoutComponent,
+  Dropdown,
+  FieldText,
+  FieldTextFlex,
+  FieldNumber,
+  SystemMessage,
 } from '@reportportal/ui-kit';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { ALL } from 'common/constants/reservedFilterIds';
@@ -50,11 +54,8 @@ import { showModalAction, hideModalAction } from 'controllers/modal';
 import { fetch, ERROR_CANCELED } from 'common/utils/fetch';
 import { downloadFile } from 'common/utils/downloadFile';
 import { isEmptyObject } from 'common/utils/isEmptyObject';
-import {
-  getSessionItem,
-  setSessionItem,
-  removeSessionItem,
-} from 'common/utils/storageUtils';
+import { referenceDictionary } from 'common/utils/referenceDictionary';
+import { getSessionItem, setSessionItem, removeSessionItem } from 'common/utils/storageUtils';
 import {
   STATS_PB_TOTAL,
   STATS_AB_TOTAL,
@@ -70,13 +71,23 @@ import {
   CANCELLED,
   STOPPED,
 } from 'common/constants/testStatuses';
+import { isAdminSelector, activeProjectKeySelector } from 'controllers/user';
 import {
-  activeProjectSelector,
-  activeProjectRoleSelector,
-  userAccountRoleSelector,
-  isAdminSelector,
+  projectMembersSelector,
+  projectInfoSelector,
+  projectNameSelector,
+  projectAttributesSelector,
+  fetchProjectAction,
+  fetchExistingLaunchNamesAction,
+  projectInfoLoadingSelector,
+  defectTypesSelector,
+  existingLaunchNamesSelector,
+  updateConfigurationAttributesAction,
+} from 'controllers/project';
+import {
   userIdSelector,
   idSelector,
+  userAccountRoleSelector,
   getUserProjectSettingsFromStorage,
   updateUserProjectSettingsInStorage,
   logsSizeSelector,
@@ -88,13 +99,21 @@ import {
   pluginPageSelector,
   updatePagePropertiesAction,
   pagePropertiesSelector,
-  projectIdSelector,
+  urlOrganizationAndProjectSelector,
   querySelector,
   payloadSelector,
+  activeProjectRoleSelector,
+  userRolesSelector,
+  ORGANIZATION_SETTINGS_TAB_PAGE,
+  ORGANIZATION_PROJECTS_PAGE,
+  ORGANIZATIONS_PAGE,
+  PROJECT_DASHBOARD_PAGE,
+  urlOrganizationSlugSelector,
+  urlProjectSlugSelector,
   locationSelector,
 } from 'controllers/pages';
 import { attributesArray, isNotEmptyArray } from 'common/utils/validation/validate';
-import { canDeleteTestItem } from 'common/utils/permissions';
+import { canDeleteTestItem, canUpdateSettings } from 'common/utils/permissions';
 import {
   requiredField,
   btsUrl,
@@ -118,10 +137,12 @@ import ArrowIcon from 'common/img/arrow-down-inline.svg';
 import CircleCrossIcon from 'common/img/circle-cross-icon-inline.svg';
 import CircleCheckIcon from 'common/img/circle-check-inline.svg';
 import PencilIcon from 'common/img/pencil-empty-inline.svg';
+import DiscoverPluginsIcon from 'common/img/discover-icon-inline.svg';
+import OpenInNewTabIcon from 'common/img/open-in-new-tab-inline.svg';
 import { Input } from 'components/inputs/input';
 import { InputDropdown } from 'components/inputs/inputDropdown';
 import { InputRadio } from 'components/inputs/inputRadio';
-import { URLS } from 'common/urls';
+import { URLS, resolveApiPath } from 'common/urls';
 import { isEmailIntegrationAvailableSelector, SECRET_FIELDS_KEY } from 'controllers/plugins';
 import { showScreenLockAction, hideScreenLockAction } from 'controllers/screenLock';
 import {
@@ -142,15 +163,7 @@ import { DottedPreloader } from 'components/preloaders/dottedPreloader';
 import { FieldProvider } from 'components/fields/fieldProvider';
 import { FieldErrorHint } from 'components/fields/fieldErrorHint';
 import { SimpleBreadcrumbs } from 'components/main/simpleBreadcrumbs';
-import {
-  projectMembersSelector,
-  projectInfoSelector,
-  projectAttributesSelector,
-  fetchProjectAction,
-  projectInfoLoadingSelector,
-  defectTypesSelector,
-  updateConfigurationAttributesAction,
-} from 'controllers/project';
+import { LocationHeaderLayout } from 'layouts/locationHeaderLayout';
 import { statisticsLinkSelector, defectLinkSelector, launchSelector } from 'controllers/testItem';
 import { NameLink } from 'pages/inside/common/nameLink';
 import { Grid } from 'components/main/grid';
@@ -159,7 +172,6 @@ import { AttributeListContainer as AttributeListField } from 'components/contain
 import { AsyncAutocomplete } from 'components/inputs/autocompletes/asyncAutocomplete';
 import { InputSearch } from 'components/inputs/inputSearch';
 import { PaginationToolbar } from 'components/main/paginationToolbar';
-import { ProjectName } from 'pages/admin/projectsPage/projectName';
 import { debounce } from 'common/utils/debounce';
 import { DotsMenuButton } from 'components/buttons/dotsMenuButton';
 import { GhostMenuButton } from 'components/buttons/ghostMenuButton';
@@ -180,8 +192,7 @@ import { AbsRelTime } from 'components/main/absRelTime';
 import { StripedMessage } from 'components/main/stripedMessage';
 import { MarkdownEditor, MarkdownViewer } from 'components/main/markdown';
 import { DependentFieldsControl } from 'components/main/dependentFieldsControl';
-import { SidebarButton } from 'components/buttons/sidebarButton';
-import { GeneralTab } from 'pages/inside/projectSettingsPageContainer/generalTab';
+import { GeneralTab } from 'pages/organization/organizationSettingsPage/content/generalTab';
 import { TestItemStatus } from 'pages/inside/common/testItemStatus';
 import { RuleList, ItemContent } from 'components/main/ruleList';
 import { RuleListHeader } from 'components/main/ruleListHeader';
@@ -211,9 +222,11 @@ import { formatMethodType } from 'common/utils/localizationUtils';
 import {
   publicPluginsSelector,
   createGlobalNamedIntegrationsSelector,
+  availableIntegrationsByPluginNameSelector,
+  namedProjectIntegrationsSelector,
+  namedOrganizationIntegrationsSelector,
 } from 'controllers/plugins/selectors';
 import { loginAction } from 'controllers/auth';
-import { FieldText } from 'componentLibrary/fieldText';
 import { AttributeEditor } from 'componentLibrary/attributeEditor';
 import { EditableAttribute } from 'componentLibrary/attributeList/editableAttribute';
 
@@ -222,16 +235,19 @@ import {
   RuleList as RuleListComponent,
   DraggableRuleList,
 } from 'pages/inside/projectSettingsPageContainer/content/elements';
-import { FieldTextFlex } from 'componentLibrary/fieldTextFlex';
-import { EmptyStatePage } from 'pages/inside/projectSettingsPageContainer/content/emptyStatePage';
-import { Dropdown } from 'componentLibrary/dropdown';
-import { SystemMessage } from 'componentLibrary/systemMessage';
+import { EmptyStatePage } from 'pages/inside/common/emptyStatePage';
+import { QualityGatesPromoLayout } from 'pages/inside/projectSettingsPageContainer/content/qualityGates/qualityGatesPromoLayout';
+import { messages as qualityGatesMessages } from 'pages/inside/projectSettingsPageContainer/content/qualityGates/messages';
 import { AsyncAutocomplete as AsyncAutocompleteField } from 'componentLibrary/autocompletes/asyncAutocomplete';
+import { AsyncAutocompleteV2 } from 'componentLibrary/autocompletes/asyncAutocompleteV2';
 import { AttributeListFormField } from 'components/containers/AttributeListFormField';
 import { Tabs } from 'components/main/tabs';
 import { withTooltip } from 'components/main/tooltips/tooltip';
 import { Breadcrumbs } from 'componentLibrary/breadcrumbs';
 import { PlainTable } from 'componentLibrary/plainTable';
+import { ProjectName } from 'pages/organization/organizationProjectsPage/projectsListTable/projectName';
+import { SidebarButton } from 'componentLibrary/sidebar/sidebarButton';
+import { activeOrganizationSelector, activeOrganizationNameSelector } from 'controllers/organization';
 import { AdaptiveIssueList } from 'pages/inside/common/adaptiveIssueList';
 import { withFilter } from 'controllers/filter';
 import { SORTING_KEY, withSortingURL } from 'controllers/sorting';
@@ -339,10 +355,12 @@ export const createImportProps = (pluginName) => ({
     Checkbox,
     Toggle,
     EmptyStatePage,
+    QualityGatesPromoLayout,
     Dropdown,
     FieldNumber,
     SystemMessage,
     AsyncAutocompleteField,
+    AsyncAutocompleteV2,
     RuleListComponent,
     AttributeListFormField,
     Breadcrumbs,
@@ -350,6 +368,7 @@ export const createImportProps = (pluginName) => ({
     BubblesPreloader: BubblesLoader,
     DateRangeFormField,
     AdaptiveIssueList,
+    LocationHeaderLayout,
   },
   componentLibrary: { DraggableRuleList },
   HOCs: {
@@ -378,6 +397,10 @@ export const createImportProps = (pluginName) => ({
     STOPPED,
     SECRET_FIELDS_KEY,
     BTS_FIELDS_FORM,
+    ORGANIZATION_SETTINGS_TAB_PAGE,
+    ORGANIZATION_PROJECTS_PAGE,
+    ORGANIZATIONS_PAGE,
+    PROJECT_DASHBOARD_PAGE,
     SORTING_KEY,
     PAGE_KEY,
     ERROR_CANCELED,
@@ -390,6 +413,7 @@ export const createImportProps = (pluginName) => ({
     showSuccessNotification,
     showErrorNotification,
     fetchProjectAction,
+    fetchExistingLaunchNamesAction,
     showScreenLockAction,
     hideScreenLockAction,
     updateConfigurationAttributesAction,
@@ -406,16 +430,25 @@ export const createImportProps = (pluginName) => ({
     pluginRouteSelector,
     pluginPageSelector,
     payloadSelector,
-    activeProjectSelector,
+    activeProjectKeySelector,
     userIdSelector,
     idSelector,
-    projectIdSelector,
+    urlOrganizationAndProjectSelector,
     // TODO: must be removed when the common plugin commands will be used
     globalIntegrationsSelector: createGlobalNamedIntegrationsSelector(pluginName),
+    projectIntegrationsSelector: (state) =>
+      namedProjectIntegrationsSelector(state)[pluginName] || [],
+    organizationIntegrationsSelector: (state) =>
+      namedOrganizationIntegrationsSelector(state)[pluginName] || [],
+    availableIntegrationsSelector: (state) =>
+      availableIntegrationsByPluginNameSelector(state, pluginName),
     projectMembersSelector,
     projectInfoSelector,
+    projectNameSelector,
     projectAttributesSelector,
+    existingLaunchNamesSelector,
     activeProjectRoleSelector,
+    userRolesSelector,
     userAccountRoleSelector,
     projectInfoLoadingSelector,
     isEmailIntegrationAvailableSelector,
@@ -427,6 +460,10 @@ export const createImportProps = (pluginName) => ({
     launchSelector,
     publicPluginsSelector,
     querySelector,
+    activeOrganizationSelector,
+    activeOrganizationNameSelector,
+    urlOrganizationSlugSelector,
+    urlProjectSlugSelector,
     logsSizeSelector,
     analyticsEnabledSelector,
     baseEventParametersSelector,
@@ -443,11 +480,14 @@ export const createImportProps = (pluginName) => ({
     CircleCheckIcon,
     CircleCrossIcon,
     RefreshIcon,
+    DiscoverPluginsIcon,
+    OpenInNewTabIcon,
   },
   utils: {
     fetch,
     downloadFile,
     URLS,
+    resolveApiPath,
     debounce,
     getGroupedDefectTypesOptions,
     isEmptyObject,
@@ -470,6 +510,9 @@ export const createImportProps = (pluginName) => ({
     setSessionItem,
     removeSessionItem,
     canDeleteTestItem,
+    canUpdateSettings,
+    referenceDictionary,
+    qualityGatesMessages,
   },
   validators: {
     attributesArray,

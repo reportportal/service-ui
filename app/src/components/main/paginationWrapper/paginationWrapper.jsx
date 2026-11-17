@@ -1,0 +1,120 @@
+/*
+ * Copyright 2024 EPAM Systems
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+import { useState, useEffect, useRef } from 'react';
+import { useTracking } from 'react-tracking';
+import { Pagination, BulkPanel } from '@reportportal/ui-kit';
+import classNames from 'classnames/bind';
+import PropTypes from 'prop-types';
+
+import { ScrollWrapper } from 'components/main/scrollWrapper';
+import { usePagination } from 'hooks/usePagination';
+
+import styles from './paginationWrapper.scss';
+
+const cx = classNames.bind(styles);
+
+export const PaginationWrapper = ({
+  children,
+  showPagination,
+  className,
+  paginationClassName,
+  paginationContainerClassName,
+  changePageSize,
+  changePageSizeEvent,
+  bulkPanelProps,
+  ...paginationProps
+}) => {
+  const { captions } = usePagination({});
+  const { trackEvent } = useTracking();
+  const isBulkPanelVisible = bulkPanelProps?.items?.length > 0;
+  const bulkPanelPortalRoot = document.getElementById('modal-root') || document.body;
+
+  const [resetScroll, setResetScroll] = useState(false);
+  const prevActivePageRef = useRef(paginationProps.activePage);
+
+  useEffect(() => {
+    if (prevActivePageRef.current !== paginationProps.activePage) {
+      prevActivePageRef.current = paginationProps.activePage;
+      setResetScroll(true);
+    }
+  }, [paginationProps.activePage]);
+
+  const changePageSizeHandle = (newSize) => {
+    changePageSize(newSize);
+    trackEvent(changePageSizeEvent(newSize));
+  };
+
+  return (
+    <div className={cx('pagination-wrapper', className)}>
+      <ScrollWrapper
+        key={paginationProps.pageSize}
+        withBackToTop
+        className={cx('scroll')}
+        classNameBackToTop={cx('back-to-top')}
+        resetRequired={resetScroll}
+        onReset={() => setResetScroll(false)}
+      >
+        {children}
+      </ScrollWrapper>
+      {showPagination && (
+        <div className={cx('sticky-footer')}>
+          <div
+            className={cx(
+              'pagination-container',
+              { 'pagination-with-panel': isBulkPanelVisible },
+              paginationContainerClassName,
+            )}
+          >
+            <Pagination
+              className={cx('pagination', paginationClassName)}
+              changePageSize={changePageSizeHandle}
+              captions={captions}
+              {...paginationProps}
+            />
+          </div>
+          {isBulkPanelVisible && <BulkPanel {...bulkPanelProps} portalRoot={bulkPanelPortalRoot} />}
+        </div>
+      )}
+    </div>
+  );
+};
+
+PaginationWrapper.propTypes = {
+  showPagination: PropTypes.bool.isRequired,
+  changePageSize: PropTypes.func.isRequired,
+  children: PropTypes.node,
+  className: PropTypes.string,
+  paginationClassName: PropTypes.string,
+  paginationContainerClassName: PropTypes.string,
+  changePageSizeEvent: PropTypes.func,
+  bulkPanelProps: PropTypes.shape({
+    items: PropTypes.array,
+    actions: PropTypes.array,
+    captions: PropTypes.object,
+    onRemoveItem: PropTypes.func,
+    onClearSelection: PropTypes.func,
+  }),
+};
+
+PaginationWrapper.defaultProps = {
+  children: null,
+  className: '',
+  paginationClassName: '',
+  paginationContainerClassName: '',
+  changePageSizeEvent: () => {},
+  bulkPanelProps: null,
+};

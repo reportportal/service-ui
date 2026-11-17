@@ -1,0 +1,57 @@
+/*
+ * Copyright 2025 EPAM Systems
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+import { useIntl } from 'react-intl';
+
+import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
+import { getNextDuplicateName } from 'common/utils';
+import type { TestPlanDto } from 'controllers/testPlan/types';
+
+import { TestPlanModal } from '../testPlanModal';
+import { NAME_FIELD_MAX_LENGTH } from '../constants';
+import { commonMessages } from '../../commonMessages';
+import { useDuplicateTestPlan } from './useDuplicateTestPlan';
+
+export const DUPLICATE_TEST_PLAN_MODAL_KEY = 'duplicateTestPlanModalKey';
+
+interface DuplicateTestPlanModalProps {
+  data: TestPlanDto;
+  onSuccess?: (testPlanId: number, attributesCount: number) => void;
+}
+
+export const DuplicateTestPlanModal = ({ data, onSuccess }: DuplicateTestPlanModalProps) => {
+  const { formatMessage } = useIntl();
+  const { isLoading, duplicateTestPlan } = useDuplicateTestPlan({
+    testPlanId: data.id,
+    milestoneId: data.milestoneId,
+    onSuccess,
+  });
+
+  return (
+    <TestPlanModal
+      title={formatMessage(commonMessages.duplicateTestPlan)}
+      submitButtonText={formatMessage(COMMON_LOCALE_KEYS.DUPLICATE)}
+      isLoading={isLoading}
+      formName="duplicate-test-plan-modal-form"
+      initialValues={{
+        name: getNextDuplicateName(data.name, NAME_FIELD_MAX_LENGTH),
+        description: data.description,
+        attributes: data.attributes || [],
+      }}
+      onSubmit={duplicateTestPlan}
+    />
+  );
+};

@@ -65,9 +65,7 @@ export class ConfirmationModal extends Component {
         }}
         cancelButton={{
           text: cancelText,
-          eventInfo: eventsInfo.cancelBtn,
         }}
-        closeIconEventInfo={eventsInfo.closeIcon}
       >
         <p className={cx('message')}>{Parser(message)}</p>
       </ModalLayout>

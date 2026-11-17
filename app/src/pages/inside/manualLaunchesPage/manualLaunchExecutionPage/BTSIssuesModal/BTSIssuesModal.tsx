@@ -1,0 +1,589 @@
+/*
+ * Copyright 2026 EPAM Systems
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+import { FC, useState, useMemo, useCallback, useEffect, useRef } from 'react';
+import { useIntl } from 'react-intl';
+import { Modal, SegmentedControl } from '@reportportal/ui-kit';
+import { InjectedFormProps, reduxForm } from 'redux-form';
+import { useDispatch, useSelector } from 'react-redux';
+import { useTracking } from 'react-tracking';
+
+import { fetch, commonValidators, uniqueId, createClassnames } from 'common/utils';
+import { URLS } from 'common/urls';
+import { withModal } from 'controllers/modal';
+import { showSuccessNotification, showErrorNotification } from 'controllers/notification';
+import { projectKeySelector, projectInfoSelector } from 'controllers/project';
+import { activeOrganizationIdSelector } from 'controllers/organization';
+import { useModalButtons } from 'hooks/useModalButtons';
+import { buildPluginCommandRQ } from 'controllers/plugins/utils';
+import { COMMAND_POST_ISSUE } from 'controllers/plugins/uiExtensions/constants';
+import {
+  getDefaultIssueModalConfig,
+  getDefaultOptionValueKey,
+  createFieldsValidationConfig,
+  getDataSectionConfig,
+  validate,
+} from 'pages/inside/stepPage/modals/postIssueModal/utils';
+import { userIdSelector } from 'controllers/user';
+import {
+  normalizeFieldsWithOptions,
+  mapFieldsToValues,
+  removeNoneValues,
+} from 'components/fields/dynamicFieldsSection/utils';
+import {
+  INCLUDE_ATTACHMENTS_KEY,
+  INCLUDE_COMMENTS_KEY,
+  INCLUDE_LOGS_KEY,
+  LOG_QUANTITY,
+} from 'pages/inside/stepPage/modals/postIssueModal/constants';
+import { ISSUE_TYPE_FIELD_KEY } from 'components/integrations/elements/bts/constants';
+import { namedAvailableBtsIntegrationsSelector } from 'controllers/plugins';
+
+import { messages as commonMessages } from '../messages';
+import { messages } from './messages';
+import { BTS_ISSUES_MODAL } from '../constants';
+import { LinkBTSIssueForm } from './LinkBTSIssueForm';
+import { PostBTSIssueForm } from './PostBTSIssueForm/PostBTSIssueForm';
+import { DynamicField, BTSIntegration, BTSIssuesModalData } from './types';
+import {
+  BTS_ACTION_TYPE,
+  MANUAL_LAUNCHES_PAGE_EVENTS,
+  type BtsActionType,
+} from 'components/main/analytics/events/ga4Events/manualLaunchesPageEvents';
+
+import styles from './BTSIssuesModal.scss';
+import { activeManualLaunchExecutionSelector, getManualLaunchExecutionAction } from 'controllers/manualLaunch';
+import { useManualLaunchId } from 'hooks/useTypedSelector';
+
+const cx = createClassnames(styles);
+
+enum BTSIssueActionTypes {
+  POST = 'post',
+  LINK = 'link',
+}
+
+const CONTROL_TYPE_FIELD = '_controlType';
+
+let validationConfig: Record<string, unknown> | null = null;
+
+interface BTSIssuesModalOwnProps {
+  data: BTSIssuesModalData;
+}
+
+type BTSIssuesModalProps = BTSIssuesModalOwnProps &
+  InjectedFormProps<Record<string, unknown>, BTSIssuesModalOwnProps>;
+
+const BTSIssuesModalComponent: FC<BTSIssuesModalProps> = ({
+  data,
+  handleSubmit,
+  initialize,
+  invalid,
+  dirty,
+  reset,
+  change,
+}) => {
+  const { formatMessage } = useIntl();
+  const { trackEvent } = useTracking();
+  const dispatch = useDispatch();
+  const namedBtsIntegrations = useSelector(namedAvailableBtsIntegrationsSelector) as Record<
+    string,
+    BTSIntegration[]
+  >;
+  const userId = useSelector(userIdSelector);
+  const projectKey = useSelector(projectKeySelector);
+  const projectInfo = useSelector(projectInfoSelector);
+  const organizationId = useSelector(activeOrganizationIdSelector);
+  const launchId = useManualLaunchId();
+  const execution = useSelector(activeManualLaunchExecutionSelector);
+
+  const executionId = execution.id;
+
+  const [selectedControl, setSelectedControl] = useState(BTSIssueActionTypes.LINK);
+  const [isLoading, setIsLoading] = useState(false);
+
+  const isMountedRef = useRef(true);
+
+  useEffect(() => {
+    isMountedRef.current = true;
+    return () => {
+      isMountedRef.current = false;
+    };
+  }, []);
+
+  const initIntegrationFields = useCallback(
+    (defectFormFields: DynamicField[] = [], integrationPluginName = '') => {
+      const defaultOptionValueKey = getDefaultOptionValueKey(integrationPluginName) as string;
+      const normalizedFields = normalizeFieldsWithOptions(
+        defectFormFields,
+        defaultOptionValueKey,
+      ) as DynamicField[];
+      const processedFields = normalizedFields.map((item) =>
+        item.fieldType === ISSUE_TYPE_FIELD_KEY ? { ...item, disabled: true } : item,
+      );
+      validationConfig = createFieldsValidationConfig(processedFields);
+      return processedFields;
+    },
+    [],
+  );
+
+  const initialConfig = useMemo(() => {
+    const { pluginName, integration } = getDefaultIssueModalConfig(
+      namedBtsIntegrations,
+      userId,
+    ) as {
+      pluginName: string;
+      integration: {
+        id?: number;
+        integrationParameters?: { defectFormFields: DynamicField[] };
+      };
+    };
+
+    const id = integration?.id;
+    const defectFormFields = integration?.integrationParameters?.defectFormFields ?? [];
+
+    const fields = initIntegrationFields(defectFormFields, pluginName);
+
+    return {
+      fields,
+      pluginName,
+      integrationId: id,
+    };
+  }, [userId, initIntegrationFields, namedBtsIntegrations]);
+
+  const [fields, setFields] = useState<DynamicField[]>(initialConfig.fields);
+  const [pluginName, setPluginName] = useState<string>(initialConfig.pluginName);
+  const [integrationId, setIntegrationId] = useState(initialConfig.integrationId);
+
+  useEffect(() => {
+    initialize({
+      ...getDataSectionConfig(true),
+      ...mapFieldsToValues(fields),
+      [CONTROL_TYPE_FIELD]: selectedControl,
+      linkedIssues: [{ id: uniqueId(), linkToIssue: '', issueId: '' }],
+    });
+  }, [fields, initialize, selectedControl]);
+
+  const handlePluginChange = useCallback(
+    (newPluginName: string) => {
+      if (newPluginName === pluginName) {
+        return;
+      }
+
+      const integration = namedBtsIntegrations[newPluginName]?.[0];
+      if (!integration) {
+        return;
+      }
+
+      const { id, integrationParameters } = integration;
+      const defectFormFields = integrationParameters?.defectFormFields ?? [];
+      const newFields = initIntegrationFields(defectFormFields, newPluginName);
+
+      setPluginName(newPluginName);
+      setFields(newFields);
+      setIntegrationId(id);
+    },
+    [pluginName, initIntegrationFields, namedBtsIntegrations],
+  );
+
+  const handleIntegrationChange = useCallback(
+    (newIntegrationId: number) => {
+      if (newIntegrationId === integrationId) {
+        return;
+      }
+
+      const integration = namedBtsIntegrations[pluginName]?.find(
+        (item: BTSIntegration) => item.id === newIntegrationId,
+      );
+
+      if (!integration) {
+        return;
+      }
+
+      const defectFormFields = integration.integrationParameters?.defectFormFields ?? [];
+      const newFields = initIntegrationFields(defectFormFields, pluginName);
+
+      setFields(newFields);
+      setIntegrationId(newIntegrationId);
+    },
+    [integrationId, pluginName, initIntegrationFields, namedBtsIntegrations],
+  );
+
+  const prepareDataToSend = useCallback(
+    (formData: Record<string, unknown>) => {
+      const refinedData = removeNoneValues(formData) as Record<string, unknown>;
+      const preparedFields = fields.map((field) => {
+        const formFieldData = refinedData[field.id];
+
+        let value: string[];
+
+        if (Array.isArray(formFieldData)) {
+          value = formFieldData.map(String);
+        } else if (typeof formFieldData === 'string' || typeof formFieldData === 'number') {
+          value = [String(formFieldData)];
+        } else {
+          value = [];
+        }
+
+        return {
+          ...field,
+          value,
+        };
+      });
+
+      return {
+        [INCLUDE_COMMENTS_KEY]: refinedData[INCLUDE_COMMENTS_KEY],
+        [INCLUDE_ATTACHMENTS_KEY]: refinedData[INCLUDE_ATTACHMENTS_KEY],
+        [INCLUDE_LOGS_KEY]: refinedData[INCLUDE_LOGS_KEY],
+        logQuantity: LOG_QUANTITY,
+        item: execution.testItemId || executionId,
+        fields: preparedFields,
+        backLinks: {},
+      };
+    },
+    [fields, executionId, execution],
+  );
+
+  const refreshExecutionData = useCallback(() => {
+    if (!launchId || !executionId) {
+      return;
+    }
+
+    dispatch(
+      getManualLaunchExecutionAction({
+        launchId,
+        executionId,
+      }),
+    );
+  }, [launchId, executionId, dispatch]);
+
+  const postIssue = useCallback(
+    (issueData: Record<string, unknown>, onSuccess: () => void) => {
+      const integration = namedBtsIntegrations[pluginName]?.find(
+        (item: BTSIntegration) => item.id === integrationId,
+      );
+
+      if (!integration) {
+        return;
+      }
+
+      const {
+        integrationParameters: { project: btsProject, url: btsUrl },
+      } = integration;
+      const allowedCommands: string[] = integration.integrationType?.details?.allowedCommands ?? [];
+      const isCommandAvailable = allowedCommands.includes(COMMAND_POST_ISSUE);
+      const requestParams: { data: Record<string, unknown>; method: string } = {
+        data: issueData,
+        method: 'POST',
+      };
+      let url = URLS.btsIntegrationPostTicket(projectKey, integrationId);
+
+      if (isCommandAvailable) {
+        url = URLS.pluginsCommandsCommon(pluginName, COMMAND_POST_ISSUE);
+        requestParams.data = buildPluginCommandRQ({
+          integrationId,
+          organizationId,
+          projectId: projectInfo.projectId,
+          projectKey,
+          arguments: {
+            projectId: projectInfo.projectId,
+            entity: issueData,
+          },
+        });
+      }
+
+      setIsLoading(true);
+
+      const testItemId = execution.testItemId || executionId;
+
+      fetch(url, requestParams)
+        .then((response: { id: string; url: string }) => {
+          return fetch(URLS.testItemsLinkIssues(projectKey), {
+            method: 'PUT',
+            data: {
+              issues: [
+                {
+                  ticketId: response.id,
+                  url: response.url,
+                  btsProject,
+                  btsUrl,
+                  pluginName,
+                },
+              ],
+              testItemIds: [testItemId],
+            },
+          });
+        })
+        .then(() => {
+          if (!isMountedRef.current) return;
+          setIsLoading(false);
+          refreshExecutionData();
+          dispatch(
+            showSuccessNotification({
+              message: formatMessage(messages.postIssueSuccess),
+            }),
+          );
+          onSuccess();
+        })
+        .catch((err: Error) => {
+          if (!isMountedRef.current) return;
+          setIsLoading(false);
+          dispatch(
+            showErrorNotification({
+              message: `${formatMessage(messages.postIssueFailed)}. ${err.message}`,
+            }),
+          );
+        });
+    },
+    [
+      projectKey,
+      integrationId,
+      pluginName,
+      namedBtsIntegrations,
+      organizationId,
+      projectInfo,
+      execution,
+      dispatch,
+      formatMessage,
+      refreshExecutionData,
+    ],
+  );
+
+  const linkIssue = useCallback(
+    (formData: Record<string, unknown>, onSuccess: () => void) => {
+      const integration = namedBtsIntegrations[pluginName]?.find(
+        (item: BTSIntegration) => item.id === integrationId,
+      );
+
+      if (!integration) {
+        return;
+      }
+
+      const {
+        integrationParameters: { project: btsProject, url: btsUrl },
+      } = integration;
+
+      const url = URLS.testItemsLinkIssues(projectKey);
+      const linkedIssuesData = formData.linkedIssues;
+      const issues = (Array.isArray(linkedIssuesData) ? linkedIssuesData : []).reduce<
+        Array<{
+          ticketId: string;
+          btsProject: string;
+          btsUrl: string;
+          pluginName: string;
+          url: string;
+        }>
+      >((acc, value) => {
+        if (!value || typeof value !== 'object') {
+          return acc;
+        }
+
+        const issue = value as Record<string, unknown>;
+        const linkToIssue = issue.linkToIssue;
+        const issueId = issue.issueId;
+
+        if (
+          typeof linkToIssue === 'string' &&
+          linkToIssue &&
+          typeof issueId === 'string' &&
+          issueId
+        ) {
+          acc.push({
+            ticketId: issueId,
+            btsProject,
+            btsUrl,
+            pluginName,
+            url: linkToIssue,
+          });
+        }
+
+        return acc;
+      }, []);
+
+      if (issues.length === 0) {
+        return;
+      }
+
+      const testItemId = execution.testItemId || executionId;
+
+      setIsLoading(true);
+
+      fetch(url, {
+        method: 'PUT',
+        data: {
+          issues,
+          testItemIds: [testItemId],
+        },
+      })
+        .then(() => {
+          if (!isMountedRef.current) return;
+          setIsLoading(false);
+          refreshExecutionData();
+          dispatch(
+            showSuccessNotification({
+              message: formatMessage(messages.linkIssueSuccess),
+            }),
+          );
+          onSuccess();
+        })
+        .catch((err: Error) => {
+          if (!isMountedRef.current) return;
+          setIsLoading(false);
+          dispatch(
+            showErrorNotification({
+              message: `${formatMessage(messages.linkIssueFailed)}. ${err.message}`,
+            }),
+          );
+        });
+    },
+    [
+      projectKey,
+      execution,
+      integrationId,
+      pluginName,
+      namedBtsIntegrations,
+      dispatch,
+      formatMessage,
+      refreshExecutionData,
+    ],
+  );
+
+  const isPostIssueWithoutFields =
+    selectedControl === BTSIssueActionTypes.POST && fields.length === 0;
+
+  const { okButton, cancelButton, hideModal } = useModalButtons({
+    okButtonText: 'OK',
+    isLoading,
+    isSubmitButtonDisabled: invalid || isPostIssueWithoutFields,
+    onSubmit: () => {
+      handleSubmit((values: Record<string, unknown>) => {
+        const btsActionType: BtsActionType =
+          selectedControl === BTSIssueActionTypes.POST
+            ? BTS_ACTION_TYPE.POST
+            : BTS_ACTION_TYPE.LINK;
+
+        const onSuccess = () => {
+          trackEvent(MANUAL_LAUNCHES_PAGE_EVENTS.submitBtsAction(data.entryPlace, btsActionType));
+          hideModal();
+        };
+
+        if (selectedControl === BTSIssueActionTypes.POST) {
+          if (fields.length === 0) {
+            return;
+          }
+
+          const issueData = prepareDataToSend(values);
+          postIssue(issueData, onSuccess);
+        } else {
+          linkIssue(values, onSuccess);
+        }
+      })();
+    },
+  });
+
+  const handleControlChange = useCallback(
+    (value: BTSIssueActionTypes) => {
+      setSelectedControl(value);
+      reset();
+      change(CONTROL_TYPE_FIELD, value);
+    },
+    [reset, change],
+  );
+
+  const segmentedControlOptions = useMemo(
+    () => [
+      {
+        label: formatMessage(messages.postIssue),
+        value: BTSIssueActionTypes.POST,
+        selected: selectedControl === BTSIssueActionTypes.POST,
+      },
+      {
+        label: formatMessage(messages.linkIssue),
+        value: BTSIssueActionTypes.LINK,
+        selected: selectedControl === BTSIssueActionTypes.LINK,
+      },
+    ],
+    [formatMessage, selectedControl],
+  );
+
+  if (!data) {
+    return null;
+  }
+
+  return (
+    <Modal
+      title={formatMessage(commonMessages.postIssueToBts)}
+      onClose={hideModal}
+      okButton={okButton}
+      cancelButton={cancelButton}
+      allowCloseOutside={!dirty}
+      scrollable
+      className={cx('bts-issues-modal')}
+    >
+      <div className={cx('bts-controls')}>
+        <span className={cx('label')}>{formatMessage(messages.selectAnActionForBTS)}</span>
+        <SegmentedControl
+          fullWidth
+          onChange={handleControlChange}
+          options={segmentedControlOptions}
+        />
+      </div>
+
+      {selectedControl === BTSIssueActionTypes.POST && (
+        <PostBTSIssueForm
+          namedBtsIntegrations={namedBtsIntegrations}
+          pluginName={pluginName}
+          integrationId={integrationId}
+          fields={fields}
+          onChangePlugin={handlePluginChange}
+          onChangeIntegration={handleIntegrationChange}
+        />
+      )}
+
+      {selectedControl === BTSIssueActionTypes.LINK && (
+        <LinkBTSIssueForm
+          namedBtsIntegrations={namedBtsIntegrations}
+          pluginName={pluginName}
+          integrationId={integrationId}
+          onChangePlugin={handlePluginChange}
+          onChangeIntegration={handleIntegrationChange}
+        />
+      )}
+    </Modal>
+  );
+};
+
+const validateForm = (formValues: Record<string, unknown>) => {
+  const controlType = formValues[CONTROL_TYPE_FIELD];
+
+  if (controlType === BTSIssueActionTypes.POST) {
+    return validate(formValues, validationConfig);
+  }
+
+  if (controlType === BTSIssueActionTypes.LINK) {
+    const ticketNameError = commonValidators.requiredField(formValues.ticketName);
+    return ticketNameError ? { ticketName: ticketNameError } : {};
+  }
+
+  return {};
+};
+
+export const BTSIssuesModal = withModal(BTS_ISSUES_MODAL)(
+  reduxForm<Record<string, unknown>, BTSIssuesModalOwnProps>({
+    form: 'btsIssuesModalForm',
+    destroyOnUnmount: true,
+    validate: validateForm,
+  })(BTSIssuesModalComponent),
+);

@@ -33,6 +33,8 @@ export const activeDashboardItemSelector = (state) => domainSelector(state).acti
 export const totalDashboardsSelector = (state) =>
   domainSelector(state).pagination.totalElements || 0;
 
+export const dashboardFullWidthModeSelector = (state) => domainSelector(state).fullWidthMode;
+
 export const dashboardFullScreenModeSelector = (state) => domainSelector(state).fullScreenMode;
 
 export const querySelector = createQueryParametersSelector({ defaultSorting: DEFAULT_SORTING });
@@ -40,12 +42,12 @@ export const querySelector = createQueryParametersSelector({ defaultSorting: DEF
 export const dashboardPaginationSelector = (state) => domainSelector(state).pagination;
 
 export const getDashboardItemPageLinkSelector = (state) => (dashboardId) => {
-  const activeProject = activeProjectSelector(state);
+  const { organizationSlug, projectSlug } = activeProjectSelector(state);
   const queryParams = pagePropertiesSelector(state);
 
   return {
     type: PROJECT_DASHBOARD_ITEM_PAGE,
-    payload: { projectId: activeProject, dashboardId },
+    payload: { organizationSlug, projectSlug, dashboardId },
     meta: {
       query: queryParams,
     },

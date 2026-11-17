@@ -14,154 +14,138 @@
  * limitations under the License.
  */
 
-import React, { PureComponent } from 'react';
-import track from 'react-tracking';
+import { useEffect, useRef } from 'react';
+import { useTracking } from 'react-tracking';
 import classNames from 'classnames/bind';
-import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
-import { referenceDictionary, connectRouter } from 'common/utils';
+import { useDispatch, useSelector } from 'react-redux';
+import { referenceDictionary } from 'common/utils';
+import { updateStorageItem } from 'common/utils/storageUtils';
+import { APPLICATION_SETTINGS } from 'common/constants/localStorageKeys';
+import { pagePropertiesSelector } from 'controllers/pages';
 import { showDefaultErrorNotification } from 'controllers/notification';
+import { lastFailedLoginTimeSelector } from 'controllers/auth';
+import { setLastFailedLoginTimeAction } from 'controllers/auth/actionCreators';
+import {
+  hasExpiredLoginLockout,
+  isLoginLockoutActive,
+  isLoginLockoutErrorAuthMessage,
+} from 'controllers/auth/loginLockout';
 import { uiExtensionLoginPageSelector } from 'controllers/plugins/uiExtensions';
 import { ExtensionLoader } from 'components/extensionLoader';
-import { instanceTypeSelector } from 'controllers/appInfo/selectors';
-import { EPAM, SAAS } from 'controllers/appInfo/constants';
 import { LOGIN_PAGE_EVENTS } from 'components/main/analytics/events/ga4Events/loginPageEvents';
-import { LOGIN_PAGE } from 'components/main/analytics/events';
 import styles from './loginPage.scss';
 import { LoginPageSection } from './loginPageSection';
 import { SocialSection } from './socialSection';
 import { LoginBlock } from './pageBlocks/loginBlock';
 import { ForgotPasswordBlock } from './pageBlocks/forgotPasswordBlock';
 import { ChangePasswordBlock } from './pageBlocks/changePasswordBlock';
-import { ServiceVersionsBlock } from './pageBlocks/serviceVersionsBlock';
 import { MultipleAuthBlock } from './pageBlocks/multipleAuthBlock';
-import { PolicyBlock } from './pageBlocks/policyBlock';
-
+import { SelectSsoProviderBlock } from './pageBlocks/selectSsoProviderBlock';
+import { LdapLoginBlock } from './pageBlocks/ldapLoginBlock';
+import { OutsideLoginFooter } from '../common/outsideLoginFooter';
+import { ReportPortalIcon } from './reportPortalIcon/ReportPortalIcon';
 const cx = classNames.bind(styles);
 
-@connectRouter(({ forgotPass, reset, errorAuth, multipleAuth, registration }) => ({
+
+const shownErrors = new Set();
+
+const getCurrentBlock = ({
   forgotPass,
   reset,
-  errorAuth,
   multipleAuth,
+  selectSso,
+  ldapLogin,
   registration,
-}))
-@connect(
-  (state) => ({
-    extensions: uiExtensionLoginPageSelector(state),
-    instanceType: instanceTypeSelector(state),
-  }),
-  {
-    showDefaultErrorNotification,
-  },
-)
-@track({ page: LOGIN_PAGE })
-export class LoginPage extends PureComponent {
-  static propTypes = {
-    forgotPass: PropTypes.string,
-    reset: PropTypes.string,
-    errorAuth: PropTypes.string,
-    multipleAuth: PropTypes.string,
-    registration: PropTypes.string,
-    extensions: PropTypes.array,
-    showDefaultErrorNotification: PropTypes.func,
-    instanceType: PropTypes.string.isRequired,
-    tracking: PropTypes.shape({
-      trackEvent: PropTypes.func,
-      getTrackingData: PropTypes.func,
-    }).isRequired,
-  };
-  static defaultProps = {
-    forgotPass: '',
-    reset: '',
-    errorAuth: '',
-    multipleAuth: '',
-    registration: '',
-    extensions: [],
-    showDefaultErrorNotification: () => {},
-  };
-  /*
-   * EPMRPP-96385: Quick fix for duplicate login error notifications
-   * Includes: static shownErrors, showErrorIfNeeded, componentDidMount, componentDidUpdate
-   *
-   * Quick fix to prevent duplicate error messages that sometimes occur when inactive GitHub users
-   * try to log in. Root cause: Login page component occasionally mounts twice causing duplicate
-   * error notifications. Using a static Set to deduplicate error messages as a temporary solution.
-   *
-   * TODO: Investigate inconsistent double mounting of login page
-   */
-  static shownErrors = new Set();
-
-  showErrorIfNeeded = (error) => {
-    if (error && !LoginPage.shownErrors.has(error)) {
-      LoginPage.shownErrors.add(error);
-      this.props.showDefaultErrorNotification({
-        message: error,
-      });
-
-      setTimeout(() => {
-        LoginPage.shownErrors.delete(error);
-      }, 5000);
-    }
-  };
-
-  componentDidMount() {
-    this.showErrorIfNeeded(this.props.errorAuth);
+  extensions,
+}) => {
+  if (registration && extensions?.length) {
+    return extensions.map((extension) => (
+      <ExtensionLoader key={extension.name} extension={extension} withPreloader />
+    ));
   }
+  if (selectSso) return <SelectSsoProviderBlock />;
+  if (ldapLogin) return <LdapLoginBlock />;
+  if (multipleAuth) return <MultipleAuthBlock multipleAuthKey={multipleAuth} />;
+  if (reset) return <ChangePasswordBlock />;
+  if (forgotPass) return <ForgotPasswordBlock />;
+  return <LoginBlock />;
+};
 
-  componentDidUpdate(prevProps) {
-    if (this.props.errorAuth !== prevProps.errorAuth) {
-      this.showErrorIfNeeded(this.props.errorAuth);
-    }
-  }
+export const LoginPage = () => {
+  const dispatch = useDispatch();
+  const { trackEvent } = useTracking();
 
-  getCurrentBlock = () => {
-    const { forgotPass, reset, multipleAuth, registration, extensions } = this.props;
+  const { forgotPass, reset, errorAuth, multipleAuth, selectSso, ldapLogin, registration } =
+    useSelector(pagePropertiesSelector) ?? {};
+  const extensions = useSelector(uiExtensionLoginPageSelector);
+  const lastFailedLoginTime = useSelector(lastFailedLoginTimeSelector);
 
-    let currentBlock = <LoginBlock />;
-    if (forgotPass) {
-      currentBlock = <ForgotPasswordBlock />;
-    }
-    if (reset) {
-      currentBlock = <ChangePasswordBlock />;
-    }
-    if (multipleAuth) {
-      currentBlock = <MultipleAuthBlock multipleAuthKey={multipleAuth} />;
-    }
-    if (registration && extensions) {
-      currentBlock = extensions.map((extension) => (
-        <ExtensionLoader key={extension.name} extension={extension} withPreloader />
-      ));
+  const prevErrorRef = useRef(null);
+
+  useEffect(() => {
+    if (!isLoginLockoutErrorAuthMessage(errorAuth)) {
+      return;
     }
 
-    return currentBlock;
-  };
+    if (isLoginLockoutActive(lastFailedLoginTime) || hasExpiredLoginLockout(lastFailedLoginTime)) {
+      return;
+    }
 
-  render() {
-    const { registration, instanceType, tracking } = this.props;
-    const currentBlock = this.getCurrentBlock();
+    const lockoutStartedAt = Date.now();
+    updateStorageItem(APPLICATION_SETTINGS, { lastFailedLoginTime: lockoutStartedAt });
+    dispatch(setLastFailedLoginTimeAction(lockoutStartedAt));
+  }, [dispatch, errorAuth, lastFailedLoginTime]);
 
-    return (
-      <div className={cx('login-page')}>
-        <div className={cx('login-page-content')}>
-          <div className={cx('background')} />
-          <a
-            href={referenceDictionary.rpLanding}
-            target="_blank"
-            onClick={() => tracking.trackEvent(LOGIN_PAGE_EVENTS.CLICK_ON_RPP_LOGO)}
-          >
-            <div className={cx('logo')} />
-          </a>
-          <LoginPageSection left>
-            <SocialSection />
-          </LoginPageSection>
-          <LoginPageSection>
-            {currentBlock}
-            {!registration && <ServiceVersionsBlock />}
-            {(instanceType === EPAM || instanceType === SAAS) && <PolicyBlock />}
-          </LoginPageSection>
+  useEffect(() => {
+    const showErrorIfNeeded = (error) => {
+      if (error && !shownErrors.has(error)) {
+        shownErrors.add(error);
+        dispatch(showDefaultErrorNotification({ message: error }));
+        setTimeout(() => shownErrors.delete(error), 5000);
+      }
+    };
+
+    if (errorAuth !== prevErrorRef.current) {
+      prevErrorRef.current = errorAuth;
+      showErrorIfNeeded(errorAuth);
+    }
+  }, [dispatch, errorAuth]);
+
+  const currentBlock = getCurrentBlock({
+    forgotPass,
+    reset,
+    multipleAuth,
+    selectSso,
+    ldapLogin,
+    registration,
+    extensions,
+  });
+
+  return (
+    <div className={cx('login-page')}>
+      <div className={cx('login-page-content')}>
+        <div className={cx('login-form-side')}>
+        <div className={cx('logo')}>
+        <a
+          href={referenceDictionary.rpLanding}
+          target="_blank"
+          rel="noopener noreferrer"
+          onClick={() => trackEvent(LOGIN_PAGE_EVENTS.CLICK_ON_RPP_LOGO)}
+        >
+          <ReportPortalIcon />
+        </a>
         </div>
+        <LoginPageSection>
+          {currentBlock}
+          {!registration && !forgotPass && !reset && !selectSso && !ldapLogin && (
+            <OutsideLoginFooter />
+          )}
+        </LoginPageSection>
+        </div>
+        <LoginPageSection social>
+          <SocialSection />
+        </LoginPageSection>
       </div>
-    );
-  }
-}
+    </div>
+  );
+};

@@ -1,0 +1,90 @@
+import { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+
+import { URLS } from 'common/urls';
+import { fetch } from 'common/utils';
+import { showErrorNotification } from 'controllers/notification';
+import { projectKeySelector } from 'controllers/project';
+import { Attribute, BtsTicket, ExecutionComment, TestFolder } from 'controllers/manualLaunch/types';
+import { useManualLaunchId } from 'hooks/useTypedSelector';
+import { UrlsHelper, ExecutionStatus } from 'pages/inside/manualLaunchesPage/types';
+import type { TestCasePriority } from 'types/testCase';
+import { ManualScenario, Requirement } from 'types/testCase';
+
+interface ExecutionItem {
+  id: number;
+  executionStatus: ExecutionStatus;
+  executionComment: ExecutionComment | null;
+  startedAt: number;
+  finishedAt: number;
+  duration: number;
+  testCaseVersionId: number;
+  testItemId: number;
+  testCaseId: number;
+  testCaseDisplayId?: string;
+  testCaseName: string;
+  testCaseDescription: string;
+  testCasePriority: TestCasePriority;
+  testFolder: TestFolder;
+  manualScenario: ManualScenario | null;
+  attributes: Attribute[];
+  requirements?: Requirement[];
+  btsTickets?: BtsTicket[];
+}
+
+export const useExecutionDetails = (executionId: number | null) => {
+  const [executionDetails, setExecutionDetails] = useState<ExecutionItem | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const projectKey = useSelector(projectKeySelector);
+  const launchId = useManualLaunchId();
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    if (!executionId || !launchId) {
+      setExecutionDetails(null);
+      return;
+    }
+
+    const abortController = new AbortController();
+    setExecutionDetails(null);
+    setIsLoading(true);
+
+    const fetchExecutionDetails = async () => {
+      try {
+        const response = await fetch<ExecutionItem>(
+          (URLS as UrlsHelper).manualLaunchExecutionById(projectKey, launchId, executionId),
+          {
+            signal: abortController.signal,
+          },
+        );
+
+        setExecutionDetails(response);
+      } catch {
+        if (abortController.signal.aborted) {
+          return;
+        }
+
+        dispatch(
+          showErrorNotification({
+            messageId: 'errorOccurredTryAgain',
+          }),
+        );
+      } finally {
+        if (!abortController.signal.aborted) {
+          setIsLoading(false);
+        }
+      }
+    };
+
+    fetchExecutionDetails();
+
+    return () => {
+      abortController.abort();
+    };
+  }, [executionId, projectKey]);
+
+  return {
+    executionDetails,
+    isLoading,
+  };
+};

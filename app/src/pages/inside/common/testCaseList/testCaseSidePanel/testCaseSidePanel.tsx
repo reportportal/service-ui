@@ -1,0 +1,411 @@
+/*
+ * Copyright 2026 EPAM Systems
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+import { memo, useRef, useState } from 'react';
+import { useIntl, MessageDescriptor } from 'react-intl';
+import { useSelector, useDispatch } from 'react-redux';
+import { useTracking } from 'react-tracking';
+import Parser from 'html-react-parser';
+
+import {
+  SIDE_PANEL_QUICK_ACTION_ELEMENT_NAME,
+  TEST_CASE_LIBRARY_EVENTS,
+  TEST_CASE_MENU_ELEMENT_NAME,
+  TEST_CASE_PLACE,
+  type TestCaseMenuElementName,
+} from 'analyticsEvents/testCaseLibraryPageEvents';
+import { Button, MeatballMenuIcon, Tooltip, CopyIcon, RerunIcon } from '@reportportal/ui-kit';
+import { isEmpty } from 'es-toolkit/compat';
+
+import { createClassnames, copyToClipboard } from 'common/utils';
+import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
+import { OVERLAY_PANEL_Z_INDEX } from 'common/constants/zIndex';
+import { useOnClickOutside } from 'common/hooks';
+import { useHasTestPlans } from 'hooks/useHasTestPlans';
+import { PriorityIcon } from 'pages/inside/common/priorityIcon';
+import { TMS_INSTANCE_KEY } from 'pages/inside/common/constants';
+import CrossIcon from 'common/img/cross-icon-inline.svg';
+import { PopoverControl } from 'pages/common/popoverControl';
+import { ProjectDetails } from 'pages/organization/constants';
+import { CollapsibleSection } from 'components/collapsibleSection';
+import { ExpandedTextSection } from 'components/fields/expandedTextSection';
+import { FolderBreadcrumbs } from 'components/folderBreadcrumbs';
+import { useUserPermissions } from 'hooks/useUserPermissions';
+import { TEST_CASE_LIBRARY_PAGE, urlOrganizationAndProjectSelector } from 'controllers/pages';
+import { AdaptiveTagList } from 'pages/inside/productVersionPage/linkedTestCasesTab/tagList';
+import { AttachmentList } from 'pages/inside/common/attachmentList';
+import { ManualScenario, ExtendedTestCase, Requirement, TestCaseManualScenario } from 'types/testCase';
+import { useAddTestCasesToTestPlanModal } from 'pages/inside/testCaseLibraryPage/addTestCasesToTestPlanModal/useAddTestCasesToTestPlanModal';
+import { commonMessages as testCaseLibraryCommonMessages } from 'pages/inside/testCaseLibraryPage/commonMessages';
+import { useEditTestCaseModal } from 'pages/inside/testCaseLibraryPage/createTestCaseModal';
+import { useDeleteTestCaseModal } from 'pages/inside/testCaseLibraryPage/deleteTestCaseModal';
+import { useMoveTestCaseModal } from 'pages/inside/testCaseLibraryPage/moveTestCaseModal/useMoveTestCaseModal';
+import { useDuplicateSelectedTestCaseModal } from 'pages/inside/testCaseLibraryPage/duplicateSelectedTestCaseModal';
+import { AddToLaunchButton } from 'pages/inside/testCaseLibraryPage/addToLaunchButton';
+import { ExecutionEstimationTime } from 'pages/inside/common/executionEstimationTime';
+
+import { RequirementsList } from '../../requirementsList/requirementsList';
+import { TestCaseMenuAction } from '../types';
+import { formatTimestamp, getExcludedActionsFromPermissionMap } from '../utils';
+import { createTestCaseMenuItems } from '../configUtils';
+import { Scenario } from './scenario';
+import { messages } from './messages';
+import { commonMessages } from '../../common-messages';
+
+import styles from './testCaseSidePanel.scss';
+
+const cx = createClassnames(styles);
+
+const safeGetMessage = (
+  key: string,
+  formatMessage: (descriptor: MessageDescriptor) => string,
+): string => {
+  const allMessages: Record<string, MessageDescriptor> = { ...messages, ...commonMessages };
+  const messageDescriptor = allMessages[key];
+
+  return messageDescriptor ? formatMessage(messageDescriptor) : key;
+};
+
+const COLLAPSIBLE_SECTIONS_CONFIG = ({
+  attributes,
+  scenario,
+  testCaseDescription,
+  requirements,
+}: {
+  attributes: string[];
+  scenario: ManualScenario;
+  testCaseDescription: string;
+  requirements: Requirement[];
+}) => {
+  const firstStep = scenario?.steps?.[0];
+  const isStepsManualScenario = scenario?.manualScenarioType === TestCaseManualScenario.STEPS;
+  const isEmptyPreconditions =
+    !scenario?.preconditions?.value &&
+    isEmpty(scenario?.preconditions?.attachments) &&
+    !firstStep?.instructions &&
+    !firstStep?.expectedResult &&
+    isEmpty(firstStep?.attachments);
+  const isScenarioDataHidden = isStepsManualScenario
+    ? isEmptyPreconditions
+    : !scenario?.preconditions?.value && !scenario?.instructions && !scenario?.expectedResult;
+
+  return [
+    {
+      titleKey: 'tags',
+      defaultMessageKey: 'noTagsAdded',
+      childComponent: isEmpty(attributes) ? null : (
+        <AdaptiveTagList tags={attributes} isShowAllView />
+      ),
+    },
+    {
+      titleKey: 'requirements',
+      defaultMessageKey: 'requirementsAreNotSpecified',
+      childComponent: isEmpty(requirements) ? null : <RequirementsList items={requirements} />,
+    },
+    {
+      titleKey: 'scenarioTitle',
+      defaultMessageKey: 'noDetailsForScenario',
+      childComponent: isScenarioDataHidden ? null : <Scenario scenario={scenario} />,
+    },
+    ...(scenario?.manualScenarioType === TestCaseManualScenario.TEXT
+      ? [
+          {
+            titleKey: 'attachments',
+            defaultMessageKey: 'noAttachmentsAdded',
+            childComponent: isEmpty(scenario?.attachments) ? null : (
+              <AttachmentList attachments={scenario.attachments} />
+            ),
+          },
+        ]
+      : []),
+    {
+      titleKey: 'description',
+      defaultMessageKey: 'descriptionNotSpecified',
+      childComponent: testCaseDescription ? (
+        <ExpandedTextSection text={testCaseDescription} defaultVisibleLines={5} />
+      ) : null,
+    },
+  ] as const;
+};
+
+interface TestCaseSidePanelProps {
+  testCase: ExtendedTestCase | null;
+  isVisible: boolean;
+  onClose: () => void;
+}
+
+export const TestCaseSidePanel = memo(
+  ({ testCase, isVisible, onClose }: TestCaseSidePanelProps) => {
+    const dispatch = useDispatch();
+    const { trackEvent } = useTracking();
+    const { canManageTestCases } = useUserPermissions();
+    const { organizationSlug, projectSlug } = useSelector(
+      urlOrganizationAndProjectSelector,
+    ) as ProjectDetails;
+    const { formatMessage } = useIntl();
+    const sidePanelRef = useRef<HTMLDivElement>(null);
+    const [isMenuOpen, setIsMenuOpen] = useState(false);
+    const { openModal: openEditTestCaseModal } = useEditTestCaseModal();
+    const { openModal: openAddTestCasesToTestPlanModal } = useAddTestCasesToTestPlanModal();
+    const { openModal: openDeleteTestCaseModal } = useDeleteTestCaseModal();
+    const { openModal: openMoveTestCaseModal } = useMoveTestCaseModal();
+    const { openModal: openDuplicateSelectedTestCaseModal } = useDuplicateSelectedTestCaseModal();
+    const { hasTestPlans } = useHasTestPlans();
+
+    const folderId = testCase?.testFolder?.id;
+
+    useOnClickOutside(sidePanelRef, onClose);
+
+    if (!isVisible || !testCase) {
+      return null;
+    }
+
+    const testCaseBusinessId = testCase.displayId;
+
+    const trackSidePanelMenu = (elementName: TestCaseMenuElementName) => {
+      trackEvent(TEST_CASE_LIBRARY_EVENTS.clickSidePanelMenu(elementName));
+    };
+
+    const handleEditTestCase = () => {
+      trackSidePanelMenu(TEST_CASE_MENU_ELEMENT_NAME.EDIT);
+      openEditTestCaseModal({ testCase });
+    };
+
+    const permissionMap = [
+      TestCaseMenuAction.EDIT,
+      TestCaseMenuAction.DELETE,
+      TestCaseMenuAction.DUPLICATE,
+      TestCaseMenuAction.MOVE,
+    ].map((action) => ({
+      isAllowed: canManageTestCases,
+      action,
+    }));
+
+    const menuItems = createTestCaseMenuItems(
+      formatMessage,
+      {
+        [TestCaseMenuAction.EDIT]: handleEditTestCase,
+        [TestCaseMenuAction.DELETE]: () => {
+          trackSidePanelMenu(TEST_CASE_MENU_ELEMENT_NAME.DELETE);
+          openDeleteTestCaseModal({ testCase });
+        },
+        [TestCaseMenuAction.MOVE]: () => {
+          trackSidePanelMenu(TEST_CASE_MENU_ELEMENT_NAME.MOVE_TO);
+          openMoveTestCaseModal({ testCase });
+        },
+        [TestCaseMenuAction.DUPLICATE]: () => {
+          trackSidePanelMenu(TEST_CASE_MENU_ELEMENT_NAME.DUPLICATE);
+          openDuplicateSelectedTestCaseModal({ testCase });
+        },
+        [TestCaseMenuAction.HISTORY]: () => {
+          trackSidePanelMenu(TEST_CASE_MENU_ELEMENT_NAME.HISTORY);
+          dispatch({
+            type: TEST_CASE_LIBRARY_PAGE,
+            payload: {
+              organizationSlug,
+              projectSlug,
+              testCasePageRoute: `test-cases/${testCase.id}/historyOfActions`,
+            },
+          });
+        },
+      },
+      getExcludedActionsFromPermissionMap(permissionMap),
+    );
+
+    const handleThreeDotsClick = () => {
+      setIsMenuOpen(!isMenuOpen);
+    };
+
+    const handleOpenDetailsClick = () => {
+      trackEvent(
+        TEST_CASE_LIBRARY_EVENTS.clickSidePanelQuickAction(
+          SIDE_PANEL_QUICK_ACTION_ELEMENT_NAME.OPEN_DETAILS,
+          testCase.id?.toString(),
+        ),
+      );
+      dispatch({
+        type: TEST_CASE_LIBRARY_PAGE,
+        payload: {
+          organizationSlug,
+          projectSlug,
+          testCasePageRoute: `test-cases/${testCase.id}`,
+        },
+      });
+    };
+
+    const handleAddToTestPlanClick = () => {
+      trackEvent(
+        TEST_CASE_LIBRARY_EVENTS.clickSidePanelQuickAction(
+          SIDE_PANEL_QUICK_ACTION_ELEMENT_NAME.ADD_TO_TEST_PLAN,
+          testCase.id?.toString(),
+        ),
+      );
+      openAddTestCasesToTestPlanModal({
+        selectedTestCaseIds: [testCase.id],
+      });
+    };
+
+    const handleCopyId = () => {
+      copyToClipboard(testCaseBusinessId).catch((error) => {
+        console.error('Failed to copy ID:', error);
+      });
+    };
+
+    return (
+      <div ref={sidePanelRef} className={cx('test-case-side-panel')}>
+        <div className={cx('header')}>
+          <div className={cx('header-top')}>
+            <div className={cx('test-case-name')}>
+              <PriorityIcon priority={testCase.priority} className={cx('priority-icon')} />
+              <span className={cx('test-name')} title={testCase.name}>
+                {testCase.name}
+              </span>
+            </div>
+            <button
+              type="button"
+              className={cx('close-button')}
+              onClick={onClose}
+              aria-label={formatMessage(commonMessages.closePanel)}
+              data-automation-id="close-test-case-panel"
+            >
+              {Parser(CrossIcon as unknown as string)}
+            </button>
+          </div>
+          <FolderBreadcrumbs
+            folderId={folderId}
+            instanceKey={TMS_INSTANCE_KEY.TEST_CASE}
+            onNavigate={onClose}
+          />
+          <div className={cx('header-meta')}>
+            <div className={cx('meta-row')}>
+              <div className={cx('meta-item-row', 'id-row')}>
+                <span className={cx('meta-label')}>ID:</span>
+                <span className={cx('meta-value')}>{testCaseBusinessId}</span>
+                <button
+                  type="button"
+                  className={cx('copy-button')}
+                  onClick={handleCopyId}
+                  aria-label={formatMessage(commonMessages.copyId)}
+                  data-automation-id="copy-test-case-id"
+                >
+                  <CopyIcon />
+                </button>
+              </div>
+              <div className={cx('meta-item-row')}>
+                <span className={cx('meta-label')}>Created:</span>
+                <span className={cx('meta-value')}>{formatTimestamp(testCase.createdAt)}</span>
+              </div>
+            </div>
+            <div className={cx('meta-row')}>
+              {!!testCase?.lastExecution?.startedAt && (
+                <div className={cx('meta-item-row')}>
+                  <RerunIcon />
+                  <span className={cx('meta-value')}>
+                    {formatTimestamp(testCase.lastExecution.startedAt)}
+                  </span>
+                </div>
+              )}
+              <ExecutionEstimationTime
+                executionEstimationTime={testCase?.manualScenario?.executionEstimationTime}
+                className={cx('meta-item-row')}
+                valueClassName={cx('meta-value')}
+              />
+            </div>
+          </div>
+        </div>
+        <div className={cx('content')}>
+          {COLLAPSIBLE_SECTIONS_CONFIG({
+            attributes: testCase?.attributes?.map(({ key }) => key),
+            scenario: testCase?.manualScenario,
+            testCaseDescription: testCase.description,
+            requirements: testCase?.manualScenario?.requirements || [],
+          }).map(({ titleKey, defaultMessageKey, childComponent }) => (
+            <CollapsibleSection
+              key={titleKey}
+              title={safeGetMessage(titleKey, formatMessage)}
+              defaultMessage={safeGetMessage(defaultMessageKey, formatMessage)}
+              isInitiallyExpanded={!!childComponent}
+            >
+              {childComponent}
+            </CollapsibleSection>
+          ))}
+        </div>
+        <div className={cx('footer')}>
+          <PopoverControl
+            items={menuItems}
+            placement="bottom-end"
+            isOpened={isMenuOpen}
+            setIsOpened={setIsMenuOpen}
+          >
+            <Tooltip placement="top" content={formatMessage(messages.moreActionsTooltip)}>
+              <Button
+                variant="ghost"
+                icon={<MeatballMenuIcon />}
+                className={cx('action-button', 'more-actions-button')}
+                onClick={handleThreeDotsClick}
+                data-automation-id="test-case-more-actions"
+              />
+            </Tooltip>
+          </PopoverControl>
+          <Button
+            variant="ghost"
+            className={cx('action-button')}
+            onClick={handleOpenDetailsClick}
+            data-automation-id="test-case-open-details"
+          >
+            {formatMessage(messages.openDetails)}
+          </Button>
+          {canManageTestCases && (
+            <>
+              <AddToLaunchButton
+                manualScenario={testCase?.manualScenario}
+                testCaseId={testCase.id}
+                place={TEST_CASE_PLACE.SIDE_PANEL}
+              />
+              {hasTestPlans ? (
+                <Button
+                  variant="primary"
+                  className={cx('action-button', 'last-button')}
+                  onClick={handleAddToTestPlanClick}
+                  data-automation-id="test-case-add-to-test-plan"
+                >
+                  {formatMessage(COMMON_LOCALE_KEYS.ADD_TO_TEST_PLAN)}
+                </Button>
+              ) : (
+                <Tooltip
+                  wrapperClassName={cx('tooltip-wrapper')}
+                  portalRoot={document.body}
+                  zIndex={OVERLAY_PANEL_Z_INDEX + 1}
+                  placement="top"
+                  content={formatMessage(testCaseLibraryCommonMessages.noTestPlanCreated)}
+                >
+                  <Button
+                    variant="primary"
+                    className={cx('action-button', 'last-button')}
+                    disabled
+                    data-automation-id="test-case-add-to-test-plan"
+                  >
+                    {formatMessage(COMMON_LOCALE_KEYS.ADD_TO_TEST_PLAN)}
+                  </Button>
+                </Tooltip>
+              )}
+            </>
+          )}
+        </div>
+      </div>
+    );
+  },
+);

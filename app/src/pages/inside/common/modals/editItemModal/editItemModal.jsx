@@ -29,14 +29,14 @@ import { commonValidators, validate } from 'common/utils/validation';
 import { URLS } from 'common/urls';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { LAUNCH_ITEM_TYPES } from 'common/constants/launchItemTypes';
-import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
 import {
-  activeProjectSelector,
-  activeProjectRoleSelector,
-  userAccountRoleSelector,
-  userIdSelector,
-} from 'controllers/user';
-import { formatItemName, isItemOwner } from 'controllers/testItem';
+  showNotification,
+  NOTIFICATION_TYPES,
+  showDefaultErrorNotification,
+} from 'controllers/notification';
+import { userRolesType } from 'common/constants/projectRoles';
+import { userRolesSelector } from 'controllers/pages';
+import { formatItemName } from 'controllers/testItem';
 import { SectionHeader } from 'components/main/sectionHeader';
 import { ModalLayout, withModal, ModalField } from 'components/main/modal';
 import { FieldProvider } from 'components/fields/fieldProvider';
@@ -47,6 +47,7 @@ import { canEditLaunch } from 'common/utils/permissions';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
 import { TestParameters } from 'pages/inside/common/testParameters';
 import { FieldErrorHint } from 'components/fields/fieldErrorHint';
+import { projectKeySelector } from 'controllers/project';
 import styles from './editItemModal.scss';
 
 const cx = classNames.bind(styles);
@@ -123,13 +124,12 @@ const messages = defineMessages({
 })
 @connect(
   (state) => ({
-    currentProject: activeProjectSelector(state),
-    userAccountRole: userAccountRoleSelector(state),
-    userProjectRole: activeProjectRoleSelector(state),
-    userId: userIdSelector(state),
+    userRoles: userRolesSelector(state),
+    projectKey: projectKeySelector(state),
   }),
   {
     showNotification,
+    showDefaultErrorNotification,
   },
 )
 export class EditItemModal extends Component {
@@ -142,25 +142,22 @@ export class EditItemModal extends Component {
       fetchFunc: PropTypes.func,
       eventsInfo: PropTypes.object,
     }).isRequired,
-    userProjectRole: PropTypes.string,
-    userAccountRole: PropTypes.string,
-    userId: PropTypes.string,
+    userRoles: userRolesType,
     initialize: PropTypes.func.isRequired,
     dirty: PropTypes.bool.isRequired,
     handleSubmit: PropTypes.func.isRequired,
-    currentProject: PropTypes.string.isRequired,
     showNotification: PropTypes.func.isRequired,
+    showDefaultErrorNotification: PropTypes.func.isRequired,
     tracking: PropTypes.shape({
       trackEvent: PropTypes.func,
       getTrackingData: PropTypes.func,
     }).isRequired,
     invalid: PropTypes.bool.isRequired,
+    projectKey: PropTypes.string.isRequired,
   };
 
   static defaultProps = {
-    userProjectRole: '',
-    userAccountRole: '',
-    userId: '',
+    userRoles: {},
   };
 
   componentDidMount() {
@@ -197,14 +194,7 @@ export class EditItemModal extends Component {
       : this.testItemAttributeValueURLCreator;
   };
 
-  updateItemAndCloseModal = (closeModal) => (formData, dispatch, props) => {
-    const {
-      data: { eventsInfo },
-      tracking,
-    } = this.props;
-    if (props.data.item.description !== formData.description) {
-      tracking.trackEvent(eventsInfo.EDIT_ITEM_DESCRIPTION);
-    }
+  updateItemAndCloseModal = (closeModal) => (formData) => {
     this.props.dirty && this.updateItem(formData);
     closeModal();
   };
@@ -212,34 +202,38 @@ export class EditItemModal extends Component {
   updateItem = (data) => {
     const {
       intl: { formatMessage },
-      currentProject,
+      projectKey,
       data: { item, type, fetchFunc },
     } = this.props;
 
-    fetch(URLS.launchesItemsUpdate(currentProject, item.id, type), {
+    fetch(URLS.launchesItemsUpdate(projectKey, item.id, type), {
       method: 'put',
       data,
-    }).then(() => {
-      this.props.showNotification({
-        message: formatMessage(messages[`${type}UpdateSuccess`]),
-        type: NOTIFICATION_TYPES.SUCCESS,
+    })
+      .then(() => {
+        this.props.showNotification({
+          message: formatMessage(messages[`${type}UpdateSuccess`]),
+          type: NOTIFICATION_TYPES.SUCCESS,
+        });
+        fetchFunc();
+      })
+      .catch((error) => {
+        this.props.showDefaultErrorNotification(error);
       });
-      fetchFunc();
-    });
   };
 
-  testItemAttributeKeyURLCreator = (projectId) => {
+  testItemAttributeKeyURLCreator = (projectKey) => {
     const {
       data: { item },
     } = this.props;
-    return URLS.testItemAttributeKeysSearch(projectId, item.launchId || item.id);
+    return URLS.testItemAttributeKeysSearch(projectKey, item.launchId || item.id);
   };
 
-  testItemAttributeValueURLCreator = (projectId, key) => {
+  testItemAttributeValueURLCreator = (projectKey, key) => {
     const {
       data: { item },
     } = this.props;
-    return URLS.testItemAttributeValuesSearch(projectId, item.launchId || item.id, key);
+    return URLS.testItemAttributeValuesSearch(projectKey, item.launchId || item.id, key);
   };
 
   onClickCopyUUID = () => {
@@ -262,11 +256,9 @@ export class EditItemModal extends Component {
   render() {
     const {
       intl: { formatMessage },
-      data: { item, type, parentLaunch, eventsInfo },
-      userId,
+      data: { item, type, eventsInfo },
       handleSubmit,
-      userAccountRole,
-      userProjectRole,
+      userRoles,
       tracking,
     } = this.props;
     const okButton = {
@@ -278,14 +270,9 @@ export class EditItemModal extends Component {
     };
     const cancelButton = {
       text: formatMessage(COMMON_LOCALE_KEYS.CANCEL),
-      eventInfo: eventsInfo.CANCEL_BTN_EDIT_ITEM_MODAL,
     };
 
-    const editable = canEditLaunch(
-      userAccountRole,
-      userProjectRole,
-      isItemOwner(userId, item, parentLaunch),
-    );
+    const editable = canEditLaunch(userRoles);
 
     return (
       <ModalLayout
@@ -293,7 +280,6 @@ export class EditItemModal extends Component {
         okButton={editable ? okButton : undefined}
         cancelButton={cancelButton}
         closeConfirmation={this.getCloseConfirmationConfig()}
-        closeIconEventInfo={eventsInfo.CLOSE_ICON_EDIT_ITEM_MODAL}
         warningMessage={
           (this.props.invalid && formatMessage(COMMON_LOCALE_KEYS.changesWarning)) ||
           (type === LAUNCH_ITEM_TYPES.launch && editable && formatMessage(messages.launchWarning))

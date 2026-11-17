@@ -29,6 +29,7 @@ const DraggableRuleListComponent = ({
   onRuleNameClick,
   onRuleDrop,
   dragControlTooltipContent,
+  readMode,
   className,
   itemClassNames,
 }) => {
@@ -57,6 +58,7 @@ const DraggableRuleListComponent = ({
           onRuleNameClick={onRuleNameClick}
           onDrop={onDrop}
           dragControlTooltipContent={dragControlTooltipContent}
+          readMode={readMode}
         />
       ))}
     </Fragment>

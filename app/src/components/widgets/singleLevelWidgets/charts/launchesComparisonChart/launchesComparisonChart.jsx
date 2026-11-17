@@ -21,9 +21,9 @@ import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import * as d3 from 'd3-selection';
 import { ALL } from 'common/constants/reservedFilterIds';
-import { defectTypesSelector } from 'controllers/project';
 import { defectLinkSelector, statisticsLinkSelector } from 'controllers/testItem';
-import { activeProjectSelector } from 'controllers/user';
+import { defectTypesSelector } from 'controllers/project';
+import { urlOrganizationAndProjectSelector } from 'controllers/pages';
 import {
   getDefaultTestItemLinkParams,
   getDefectTypeLocators,
@@ -39,7 +39,7 @@ const cx = classNames.bind(styles);
 @injectIntl
 @connect(
   (state) => ({
-    projectId: activeProjectSelector(state),
+    slugs: urlOrganizationAndProjectSelector(state),
     defectTypes: defectTypesSelector(state),
     getDefectLink: defectLinkSelector(state),
     getStatisticsLink: statisticsLinkSelector(state),
@@ -53,7 +53,6 @@ export class LaunchesComparisonChart extends Component {
     intl: PropTypes.object.isRequired,
     navigate: PropTypes.func.isRequired,
     widget: PropTypes.object.isRequired,
-    projectId: PropTypes.string.isRequired,
     defectTypes: PropTypes.object.isRequired,
     getDefectLink: PropTypes.func.isRequired,
     getStatisticsLink: PropTypes.func.isRequired,
@@ -63,6 +62,10 @@ export class LaunchesComparisonChart extends Component {
     uncheckedLegendItems: PropTypes.array,
     onChangeLegend: PropTypes.func,
     clickable: PropTypes.bool,
+    slugs: PropTypes.shape({
+      organizationSlug: PropTypes.string.isRequired,
+      projectSlug: PropTypes.string.isRequired,
+    }),
   };
 
   static defaultProps = {
@@ -75,7 +78,7 @@ export class LaunchesComparisonChart extends Component {
 
   onChartCreated = () => {
     // eslint-disable-next-line func-names
-    d3.selectAll(this.props.container.querySelectorAll('.c3-chart-bar path')).each(function() {
+    d3.selectAll(this.props.container.querySelectorAll('.c3-chart-bar path')).each(function () {
       const elem = d3.select(this);
       if (elem.datum().value === 0) {
         elem.style('stroke-width', '3px');
@@ -84,11 +87,17 @@ export class LaunchesComparisonChart extends Component {
   };
 
   onChartClick = (data) => {
-    const { widget, getDefectLink, getStatisticsLink, defectTypes, projectId } = this.props;
+    const {
+      widget,
+      getDefectLink,
+      getStatisticsLink,
+      defectTypes,
+      slugs: { organizationSlug, projectSlug },
+    } = this.props;
 
     const nameConfig = getItemNameConfig(data.id);
     const id = widget.content.result[data.index].id;
-    const defaultParams = getDefaultTestItemLinkParams(projectId, ALL, id);
+    const defaultParams = getDefaultTestItemLinkParams(projectSlug, ALL, id, organizationSlug);
     const defectLocators = getDefectTypeLocators(nameConfig, defectTypes);
 
     const link = defectLocators

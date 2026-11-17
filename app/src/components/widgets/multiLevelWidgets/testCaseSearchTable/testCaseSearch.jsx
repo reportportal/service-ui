@@ -22,7 +22,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { WIDGETS_EVENTS } from 'analyticsEvents/dashboardsPageEvents';
 import { SORTING_ASC, SORTING_DESC } from 'controllers/sorting';
 import { debounce } from 'common/utils';
-import { activeDashboardIdSelector, projectIdSelector } from 'controllers/pages';
+import { activeDashboardIdSelector } from 'controllers/pages';
+import { activeProjectSelector } from 'controllers/user';
 import { PROJECT_PLUGIN_PAGE } from 'controllers/pages/constants';
 import { enabledPluginSelector } from 'controllers/plugins';
 import { showModalAction } from 'controllers/modal';
@@ -31,6 +32,7 @@ import {
   searchedTestItemsSelector,
   testItemsSearchAction,
 } from 'controllers/testItem';
+import { SEARCH_DEBOUNCE_MS } from 'common/constants/delayTime';
 import { TestCaseSearchControl } from './testCaseSearchControl';
 import { TestCaseSearchContent } from './testCaseSearchContent';
 import { TestExecutionsPromoBanner } from './testExecutionsPromoBanner';
@@ -43,7 +45,6 @@ const TRACKING_EVENTS_TRIGGER_SOURCES = {
   loadMore: 'load_more',
   status: 'test_execution_status',
 };
-const THROTTLING_SEARCH_TIME = 300;
 const THROTTLING_STATUS_CHANGE_TIME = 1000;
 
 const PROMOTION_BANNER_SOURCE = 'promotion_banner';
@@ -54,7 +55,7 @@ const TEST_EXECUTION_PLUGIN_PAGE = 'testExecution';
 const cx = classNames.bind(styles);
 export const TestCaseSearch = ({ widget: { id: widgetId }, isDisplayedLaunches }) => {
   const dashboardId = useSelector(activeDashboardIdSelector);
-  const projectId = useSelector(projectIdSelector);
+  const { organizationSlug, projectSlug } = useSelector(activeProjectSelector);
   const isTestExecutionPluginEnabled = useSelector((state) =>
     enabledPluginSelector(state, TEST_EXECUTION_PLUGIN_NAME),
   );
@@ -72,7 +73,7 @@ export const TestCaseSearch = ({ widget: { id: widgetId }, isDisplayedLaunches }
   const [searchValue, setSearchValue] = useState(searchCriteria);
   const [sortingDirection, setSortingDirection] = useState(initialDirection);
   const [isTableLoading, setIsTableLoading] = useState(fetchLoading);
-  const [throttling, setThrottling] = useState(THROTTLING_SEARCH_TIME);
+  const [throttling, setThrottling] = useState(SEARCH_DEBOUNCE_MS);
   const triggerSourceRef = useRef(null);
 
   const dispatch = useDispatch();
@@ -98,7 +99,7 @@ export const TestCaseSearch = ({ widget: { id: widgetId }, isDisplayedLaunches }
   );
 
   const handleSearch = (entity) => {
-    setThrottling(THROTTLING_SEARCH_TIME);
+    setThrottling(SEARCH_DEBOUNCE_MS);
     setIsTableLoading(true);
     triggerSourceRef.current = TRACKING_EVENTS_TRIGGER_SOURCES.creatingWidget;
     setSearchValue(entity);
@@ -113,12 +114,12 @@ export const TestCaseSearch = ({ widget: { id: widgetId }, isDisplayedLaunches }
     setSearchValue(entity);
     setThrottling(
       !value || selectedStatuses.length === 5
-        ? THROTTLING_SEARCH_TIME
+        ? SEARCH_DEBOUNCE_MS
         : THROTTLING_STATUS_CHANGE_TIME,
     );
   };
   const handleChangeSorting = () => {
-    setThrottling(THROTTLING_SEARCH_TIME);
+    setThrottling(SEARCH_DEBOUNCE_MS);
     triggerSourceRef.current = TRACKING_EVENTS_TRIGGER_SOURCES.sorting;
     setSortingDirection(sortingDirection === SORTING_DESC ? SORTING_ASC : SORTING_DESC);
   };
@@ -130,7 +131,7 @@ export const TestCaseSearch = ({ widget: { id: widgetId }, isDisplayedLaunches }
 
   const handleLoadMoreMessageDocumentationClick = () => {
     trackEvent(
-      WIDGETS_EVENTS.onSearchWidgetDocumentLinkClick(dashboardId, 'promotion_load_more_message'),
+      WIDGETS_EVENTS.onWidgetDocumentLinkClick(widgetId, dashboardId, 'promotion_load_more_message'),
     );
   };
 
@@ -139,7 +140,7 @@ export const TestCaseSearch = ({ widget: { id: widgetId }, isDisplayedLaunches }
       trackEvent(WIDGETS_EVENTS.onTcsPromoOpenNewSearchNavigate(dashboardId, PROMOTION_BANNER_SOURCE));
       dispatch({
         type: PROJECT_PLUGIN_PAGE,
-        payload: { projectId, pluginPage: TEST_EXECUTION_PLUGIN_PAGE },
+        payload: { organizationSlug, projectSlug, pluginPage: TEST_EXECUTION_PLUGIN_PAGE },
       });
     } else {
       trackEvent(WIDGETS_EVENTS.onTcsPromoOpenNewSearchNavigate(dashboardId, PROMOTION_BANNER_SOURCE));

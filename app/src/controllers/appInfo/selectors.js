@@ -22,7 +22,16 @@ import {
   patternAnalysisEnabledSelector,
   projectInfoIdSelector,
 } from 'controllers/project/selectors';
-import { PASSWORD_MIN_ALLOWED_LENGTH } from 'common/constants/validation';
+import {
+  activeOrganizationIdSelector,
+  activeOrganizationTypeSelector,
+} from 'controllers/organization/selectors';
+import { pageLevelSelector } from 'controllers/pages/selectors';
+import {
+  PASSWORD_MAX_ALLOWED_LENGTH,
+  PASSWORD_MIN_ALLOWED_LENGTH,
+} from 'common/constants/validation';
+import { isHostedInstanceType } from './isHostedInstanceType';
 import {
   ANALYTICS_INSTANCE_KEY,
   ANALYTICS_ALL_KEY,
@@ -31,17 +40,17 @@ import {
   INSTANCE_TYPE,
   NOT_PROVIDED,
   ALLOW_DELETE_ACCOUNT,
-  USER_SUGGESTIONS,
   SSO_USERS_ONLY_KEY,
   SERVER_SESSION_EXPIRATION_KEY,
-  SERVER_FOOTER_LINKS_KEY,
+  SERVER_SIDEBAR_LINKS_KEY,
   IMPORTANT_LAUNCHES_FEATURE_KEY,
+  PERSONAL_ORGANIZATIONS_KEY,
+  TMS_ENABLED_KEY,
   PASSWORD_MIN_LENGTH_KEY,
 } from './constants';
 
 export const appInfoSelector = (state) => state.appInfo || {};
 const apiInfoSelector = (state) => appInfoSelector(state).api || {};
-const uatInfoSelector = (state) => appInfoSelector(state).uat || {};
 const uiInfoSelector = (state) => appInfoSelector(state).ui || {};
 
 export const uiBuildVersionSelector = (state) => {
@@ -62,18 +71,27 @@ export const instanceIdSelector = (state) =>
 export const analyticsEnabledSelector = (state) =>
   extensionsConfigSelector(state)[ANALYTICS_ALL_KEY] === 'true';
 export const analyzerExtensionsSelector = (state) => extensionsSelector(state).analyzers || [];
-export const authExtensionsSelector = (state) => uatInfoSelector(state).authExtensions || {};
+export const isAnalyzerAvailableSelector = (state) =>
+  analyzerExtensionsSelector(state).some((analyzer) => !!analyzer.available);
+export const authExtensionsSelector = (state) => apiInfoSelector(state).authExtensions || {};
 export const ssoUsersOnlySelector = (state) =>
   extensionsConfigSelector(state)[SSO_USERS_ONLY_KEY] === 'true';
+export const personalOrganizationsSelector = (state) =>
+  extensionsConfigSelector(state)[PERSONAL_ORGANIZATIONS_KEY]?.toLowerCase() === 'true';
 export const importantLaunchesEnabledSelector = (state) =>
   extensionsConfigSelector(state)[IMPORTANT_LAUNCHES_FEATURE_KEY] === 'true';
 export const sessionExpirationTimeSelector = (state) =>
   Number(extensionsConfigSelector(state)[SERVER_SESSION_EXPIRATION_KEY]) || Infinity;
-export const passwordMinLengthSelector = (state) =>
-  Number(extensionsConfigSelector(state)[PASSWORD_MIN_LENGTH_KEY]) || PASSWORD_MIN_ALLOWED_LENGTH;
-export const serverFooterLinksSelector = createSelector(
+
+export const passwordMinLengthSelector = (state) => {
+  const raw = Number(extensionsConfigSelector(state)[PASSWORD_MIN_LENGTH_KEY]);
+  if (!Number.isFinite(raw) || raw <= 0) return PASSWORD_MIN_ALLOWED_LENGTH;
+  const normalized = Math.trunc(raw);
+  return Math.max(PASSWORD_MIN_ALLOWED_LENGTH, Math.min(normalized, PASSWORD_MAX_ALLOWED_LENGTH));
+};
+export const serverSidebarLinksSelector = createSelector(
   extensionsConfigSelector,
-  (extensionsConfig) => JSON.parse(extensionsConfig?.[SERVER_FOOTER_LINKS_KEY] || `[]`),
+  (extensionsConfig) => JSON.parse(extensionsConfig?.[SERVER_SIDEBAR_LINKS_KEY] || `[]`),
 );
 export const isOldHistorySelector = (state) =>
   environmentSelector(state)[OLD_HISTORY_KEY] === 'true';
@@ -83,10 +101,11 @@ export const flushDataInSelector = (state) =>
 export const gaMeasurementIdSelector = (state) => environmentSelector(state)[GA_MEASUREMENT_ID];
 export const instanceTypeSelector = (state) =>
   environmentSelector(state)[INSTANCE_TYPE] || NOT_PROVIDED;
+export const shouldShowExploreCloudPromoSelector = (state) =>
+  !isHostedInstanceType(instanceTypeSelector(state));
 export const allowDeleteAccountSelector = (state) =>
   environmentSelector(state)[ALLOW_DELETE_ACCOUNT] === 'true';
-export const areUserSuggestionsAllowedSelector = (state) =>
-  (environmentSelector(state)[USER_SUGGESTIONS] || 'true') === 'true';
+export const tmsEnabledSelector = (state) => environmentSelector(state)[TMS_ENABLED_KEY] === 'true';
 export const baseEventParametersSelector = createSelector(
   instanceIdSelector,
   apiBuildVersionSelector,
@@ -95,8 +114,11 @@ export const baseEventParametersSelector = createSelector(
   patternAnalysisEnabledSelector,
   projectInfoIdSelector,
   isAdminSelector,
-  analyzerExtensionsSelector,
+  isAnalyzerAvailableSelector,
   enabledPattersSelector,
+  activeOrganizationIdSelector,
+  activeOrganizationTypeSelector,
+  pageLevelSelector,
   (
     instanceId,
     buildVersion,
@@ -105,8 +127,11 @@ export const baseEventParametersSelector = createSelector(
     isPatternAnalyzerEnabled,
     projectInfoId,
     isAdmin,
-    analyzerExtensions,
+    isAnalyzerAvailable,
     enabledPatterns,
+    organizationId,
+    entryType,
+    pageLevel,
   ) => ({
     instanceId,
     buildVersion,
@@ -116,6 +141,9 @@ export const baseEventParametersSelector = createSelector(
       !!enabledPatterns.length && String(isPatternAnalyzerEnabled) === 'true',
     projectInfoId,
     isAdmin,
-    isAnalyzerAvailable: !!analyzerExtensions.length,
+    isAnalyzerAvailable,
+    organizationId,
+    entryType,
+    pageLevel,
   }),
 );

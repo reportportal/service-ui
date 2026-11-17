@@ -14,24 +14,23 @@
  * limitations under the License.
  */
 
-import PropTypes from 'prop-types';
-import track from 'react-tracking';
 import classNames from 'classnames/bind';
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
-import { defineMessages, injectIntl } from 'react-intl';
+import React, { useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { defineMessages, useIntl } from 'react-intl';
 import { fetch } from 'common/utils';
 import { URLS } from 'common/urls';
-import { INTERNAL, LDAP, UPSA } from 'common/constants/accountType';
+import { INTERNAL, UPSA } from 'common/constants/accountType';
+import { EPAM } from 'common/constants/pluginNames';
 import { DEFAULT_USER_ID } from 'common/constants/accountRoles';
 import DefaultUserImage from 'common/img/default-user-avatar.png';
-import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
+import { showErrorNotification, showSuccessNotification } from 'controllers/notification';
 import { showModalAction } from 'controllers/modal';
-import { userInfoSelector } from 'controllers/user';
-import { logoutAction } from 'controllers/auth';
+import { fetchUserInfoAction, photoTimeStampSelector, userInfoSelector } from 'controllers/user';
 import { isDemoInstanceSelector } from 'controllers/appInfo';
+import { isEpamPluginEnabledSelector } from 'controllers/plugins';
+import { COMMAND_SYNCHRONIZE } from 'controllers/plugins/uiExtensions/constants';
 import { GhostButton } from 'components/buttons/ghostButton';
-import { PROFILE_PAGE_EVENTS } from 'components/main/analytics/events';
 import { Image } from 'components/main/image';
 import styles from './personalInfoBlock.scss';
 import { BlockContainerBody } from '../blockContainer';
@@ -79,168 +78,119 @@ const messages = defineMessages({
   },
 });
 
-@connect(
-  (state) => ({
-    userId: userInfoSelector(state).userId,
-    accountType: userInfoSelector(state).accountType,
-    isDemoInstance: isDemoInstanceSelector(state),
-  }),
-  {
-    showNotification,
-    showModalAction,
-    logoutAction,
-  },
-)
-@injectIntl
-@track()
-export class PersonalInfoBlock extends Component {
-  static propTypes = {
-    userId: PropTypes.string,
-    accountType: PropTypes.string,
-    intl: PropTypes.object.isRequired,
-    showModalAction: PropTypes.func.isRequired,
-    showNotification: PropTypes.func.isRequired,
-    logoutAction: PropTypes.func.isRequired,
-    tracking: PropTypes.shape({
-      trackEvent: PropTypes.func,
-      getTrackingData: PropTypes.func,
-    }).isRequired,
-    isDemoInstance: PropTypes.bool,
-  };
-  static defaultProps = {
-    userId: '',
-    accountType: '',
-    isDemoInstance: false,
-  };
+export const PersonalInfoBlock = () => {
+  const { formatMessage } = useIntl();
+  const dispatch = useDispatch();
+  const { userId: userLogin, id: userId, accountType } = useSelector(userInfoSelector);
+  const isDemoInstance = useSelector(isDemoInstanceSelector);
+  const photoTimeStamp = useSelector(photoTimeStampSelector);
+  const isEpamAuthEnabled = useSelector(isEpamPluginEnabledSelector);
+  const [forceUpdateInProgress, setForceUpdateInProgress] = useState(false);
+  const [avatarPreviewSource, setAvatarPreviewSource] = useState(null);
 
-  state = {
-    avatarSource: URLS.dataPhoto(),
-    forceUpdateInProgress: false,
-  };
-  onChangePassword = () => {
-    this.props.tracking.trackEvent(PROFILE_PAGE_EVENTS.CHANGE_PASSWORD_CLICK);
-    this.props.showModalAction({
-      id: 'changePasswordModal',
-      data: { onChangePassword: this.changePasswordHandler },
-    });
-  };
-
-  onForceUpdate = () => {
-    const { accountType = '', intl } = this.props;
-    this.props.showNotification({
-      message: intl.formatMessage(messages.synchronizeInProgress),
-      type: NOTIFICATION_TYPES.SUCCESS,
-    });
-    this.setState({ forceUpdateInProgress: true });
-    fetch(URLS.userSynchronize(this.getUserSyncType(accountType)), { method: 'post' })
-      .then(() => {
-        this.props.showNotification({
-          message: intl.formatMessage(messages.synchronize),
-          type: NOTIFICATION_TYPES.SUCCESS,
-        });
-        this.props.showModalAction({
-          id: 'forceUpdateModal',
-          data: { onForceUpdate: this.props.logoutAction },
-        });
-      })
-      .catch(() => {
-        this.props.showNotification({
-          message: intl.formatMessage(messages.synchronizeError),
-          type: NOTIFICATION_TYPES.ERROR,
-        });
-      })
-      .finally(() => {
-        this.setState({ forceUpdateInProgress: false });
-      });
-  };
-
-  getUserSyncType = (accountType) => {
-    if (accountType === UPSA) {
-      return 'epam';
-    }
-
-    return accountType.toLowerCase();
-  };
-
-  changePasswordHandler = (data) => {
-    fetch(URLS.userChangePassword(), {
+  const changePasswordHandler = (data) => {
+    return fetch(URLS.userChangePassword(), {
       method: 'post',
       data: { oldPassword: data.oldPassword, newPassword: data.newPassword },
     })
       .then(() => {
-        this.props.showNotification({
-          message: this.props.intl.formatMessage(messages.passwordChanged),
-          type: NOTIFICATION_TYPES.SUCCESS,
-        });
+        dispatch(showSuccessNotification({ message: formatMessage(messages.passwordChanged) }));
       })
       .catch((error) => {
-        this.props.showNotification({
-          message: error.message,
-          type: NOTIFICATION_TYPES.ERROR,
-        });
+        dispatch(showErrorNotification({ message: error.message }));
+        throw error;
       });
   };
-  uploadNewImage = (image) => {
-    this.setState({ avatarSource: image });
-  };
-  removeImage = () => {
-    this.setState({ avatarSource: URLS.dataPhoto(Date.now()) });
+
+  const onChangePassword = () => {
+    dispatch(
+      showModalAction({
+        id: 'changePasswordModal',
+        data: { onChangePassword: changePasswordHandler },
+      }),
+    );
   };
 
-  render() {
-    const { intl, accountType, userId, isDemoInstance } = this.props;
-    const { forceUpdateInProgress } = this.state;
-    const isDefaultUser = userId === DEFAULT_USER_ID;
-    const isChangePasswordDisabled = isDemoInstance && isDefaultUser;
-    return (
-      <div className={cx('personal-info-block')}>
-        <BlockContainerBody>
-          <div className={cx('block-content')}>
-            <div className={cx('avatar-wrapper')}>
-              <Image
-                className={cx('avatar')}
-                src={this.state.avatarSource}
-                alt="Profile avatar"
-                fallback={DefaultUserImage}
-                preloaderColor="charcoal"
-              />
-            </div>
-            <div className={cx('info')}>
-              <UserInfo accountType={accountType} userId={userId} />
-              {accountType === INTERNAL && (
-                <PhotoControls
-                  accountType={accountType}
-                  uploadNewImage={this.uploadNewImage}
-                  removeImage={this.removeImage}
-                />
-              )}
-              {accountType === INTERNAL && (
-                <div className={cx('top-btn')}>
-                  <GhostButton
-                    onClick={this.onChangePassword}
-                    disabled={isChangePasswordDisabled}
-                    title={
-                      isChangePasswordDisabled &&
-                      intl.formatMessage(messages.disabledChangePassword)
-                    }
-                  >
-                    {intl.formatMessage(messages.changePassword)}
-                  </GhostButton>
-                </div>
-              )}
-              {accountType !== INTERNAL && accountType !== LDAP && (
-                <div className={cx('top-btn')}>
-                  <GhostButton disabled={forceUpdateInProgress} onClick={this.onForceUpdate}>
-                    {forceUpdateInProgress
-                      ? intl.formatMessage(messages.inProgress)
-                      : intl.formatMessage(messages.forceUpdate)}
-                  </GhostButton>
-                </div>
-              )}
-            </div>
+  const onForceUpdate = () => {
+    dispatch(showSuccessNotification({ message: formatMessage(messages.synchronizeInProgress) }));
+    setForceUpdateInProgress(true);
+    fetch(URLS.pluginsCommandsCommon(EPAM, COMMAND_SYNCHRONIZE), {
+      method: 'post',
+      data: {
+        arguments: { userId },
+      },
+    })
+      .then(() => {
+        dispatch(showSuccessNotification({ message: formatMessage(messages.synchronize) }));
+        dispatch(fetchUserInfoAction());
+      })
+      .catch(() => {
+        dispatch(showErrorNotification({ message: formatMessage(messages.synchronizeError) }));
+      })
+      .finally(() => {
+        setForceUpdateInProgress(false);
+      });
+  };
+
+  const uploadNewImage = (image) => {
+    setAvatarPreviewSource(image);
+  };
+
+  const removeImage = () => {
+    setAvatarPreviewSource(null);
+  };
+
+  const isDefaultUser = userLogin === DEFAULT_USER_ID;
+  const isChangePasswordDisabled = isDemoInstance && isDefaultUser;
+  const isForceUpdateVisible = accountType === UPSA && isEpamAuthEnabled;
+
+  return (
+    <div className={cx('personal-info-block')}>
+      <BlockContainerBody>
+        <div className={cx('block-content')}>
+          <div className={cx('avatar-wrapper')}>
+            <Image
+              className={cx('avatar')}
+              src={avatarPreviewSource || URLS.userAvatar(userId, false, photoTimeStamp)}
+              isStatic={Boolean(avatarPreviewSource)}
+              alt="Profile avatar"
+              fallback={DefaultUserImage}
+              preloaderColor="charcoal"
+            />
           </div>
-        </BlockContainerBody>
-      </div>
-    );
-  }
-}
+          <div className={cx('info')}>
+            <UserInfo accountType={accountType} userId={userLogin} />
+            {accountType === INTERNAL && (
+              <PhotoControls
+                accountType={accountType}
+                uploadNewImage={uploadNewImage}
+                removeImage={removeImage}
+                userId={userId}
+              />
+            )}
+            {accountType === INTERNAL && (
+              <div className={cx('top-btn')}>
+                <GhostButton
+                  onClick={onChangePassword}
+                  disabled={isChangePasswordDisabled}
+                  title={isChangePasswordDisabled && formatMessage(messages.disabledChangePassword)}
+                >
+                  {formatMessage(messages.changePassword)}
+                </GhostButton>
+              </div>
+            )}
+            {isForceUpdateVisible && (
+              <div className={cx('top-btn')}>
+                <GhostButton disabled={forceUpdateInProgress} onClick={onForceUpdate}>
+                  {forceUpdateInProgress
+                    ? formatMessage(messages.inProgress)
+                    : formatMessage(messages.forceUpdate)}
+                </GhostButton>
+              </div>
+            )}
+          </div>
+        </div>
+      </BlockContainerBody>
+    </div>
+  );
+};

@@ -15,17 +15,37 @@
  */
 
 import React from 'react';
+import { useSelector } from 'react-redux';
 import { BubblesLoader } from '@reportportal/ui-kit';
 import { uiExtensionProjectPagesSelector } from 'controllers/plugins/uiExtensions';
 import { useActivePluginPageExtension } from 'controllers/plugins/uiExtensions/hooks';
+import {
+  pluginsLoadingSelector,
+  extensionManifestsLoadPendingSelector,
+} from 'controllers/plugins';
+import { pluginPageSelector } from 'controllers/pages';
 import { ExtensionLoader } from 'components/extensionLoader';
+import { TestExecutionsPromoPage } from './testExecutionsPromoPage';
+
+const TEST_EXECUTIONS_SLUG = 'testExecution';
 
 export const ProjectUiExtensionPage = () => {
   const extension = useActivePluginPageExtension(uiExtensionProjectPagesSelector);
+  const activePluginPage = useSelector(pluginPageSelector);
+  const pluginsLoading = useSelector(pluginsLoadingSelector);
+  const extensionsLoadPending = useSelector(extensionManifestsLoadPendingSelector);
 
-  return extension ? (
-    <ExtensionLoader extension={extension} silentOnError={false} withPreloader />
-  ) : (
-    <BubblesLoader />
-  );
+  if (extension) {
+    return <ExtensionLoader extension={extension} silentOnError={false} withPreloader />;
+  }
+
+  if (pluginsLoading || extensionsLoadPending) {
+    return <BubblesLoader />;
+  }
+
+  if (activePluginPage === TEST_EXECUTIONS_SLUG) {
+    return <TestExecutionsPromoPage />;
+  }
+
+  return <BubblesLoader />;
 };

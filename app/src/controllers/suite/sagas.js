@@ -16,16 +16,16 @@
 
 import { takeEvery, all, put, select } from 'redux-saga/effects';
 import { fetchDataAction } from 'controllers/fetch';
-import { activeProjectSelector } from 'controllers/user';
 import { launchIdSelector } from 'controllers/pages';
 import { URLS } from 'common/urls';
+import { projectKeySelector } from 'controllers/project';
 import { FETCH_SUITES, NAMESPACE } from './constants';
 
 function* getSuites({ payload }) {
-  const activeProject = yield select(activeProjectSelector);
+  const projectKey = yield select(projectKeySelector);
   const launchId = yield select(launchIdSelector);
   yield put(
-    fetchDataAction(NAMESPACE)(URLS.testItemsWithProviderType(activeProject, launchId), payload),
+    fetchDataAction(NAMESPACE)(URLS.testItemsWithProviderType(projectKey, launchId), payload),
   );
 }
 

@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-import React, { Component } from 'react';
+import { Component } from 'react';
 import Downshift from 'downshift';
 import PropTypes from 'prop-types';
 import { Manager, Reference, Popper } from 'react-popper';
-import { FieldText } from 'componentLibrary/fieldText';
+import { FieldText, ThemeProvider } from '@reportportal/ui-kit';
 import { ENTER_KEY_CODE, TAB_KEY_CODE } from 'common/constants/keyCodes';
 import { AutocompleteMenu } from '../common/autocompleteMenu';
 import { autocompleteVariantType, singleAutocompleteOptionVariantType } from '../common/propTypes';
@@ -61,16 +61,21 @@ export class SingleAutocomplete extends Component {
     setTouch: PropTypes.func,
     createWithoutConfirmation: PropTypes.bool,
     menuClassName: PropTypes.string,
-    icon: PropTypes.string,
+    icon: PropTypes.node,
     isOptionUnique: PropTypes.func,
     refFunction: PropTypes.func,
     stateReducer: PropTypes.func,
     variant: autocompleteVariantType,
     useFixedPositioning: PropTypes.bool,
+    customEmptyListMessage: PropTypes.string,
+    getUniqKey: PropTypes.func,
+    skipOptionCreation: PropTypes.bool,
+    newItemButtonText: PropTypes.string,
     // Opt-in: clamp options list height to fit space below the field, so the menu
     // never overflows the viewport.
     adaptiveOptionsHeight: PropTypes.bool,
     creatable: PropTypes.bool,
+    shouldShowEmptyListMessage: PropTypes.bool,
   };
 
   static defaultProps = {
@@ -101,8 +106,11 @@ export class SingleAutocomplete extends Component {
     stateReducer: (state, changes) => changes,
     variant: 'light',
     useFixedPositioning: false,
+    skipOptionCreation: false,
+    newItemButtonText: '',
     adaptiveOptionsHeight: false,
     creatable: true,
+    shouldShowEmptyListMessage: true,
   };
 
   setReferenceEl = (popperRef) => (el) => {
@@ -126,14 +134,16 @@ export class SingleAutocomplete extends Component {
     }
   };
 
-  getOptionProps = (getItemProps, highlightedIndex, selectedItem) => ({ item, index, ...rest }) =>
-    getItemProps({
-      item,
-      index,
-      isActive: highlightedIndex === index,
-      isSelected: selectedItem === item,
-      ...rest,
-    });
+  getOptionProps =
+    (getItemProps, highlightedIndex, selectedItem) =>
+    ({ item, index, ...rest }) =>
+      getItemProps({
+        item,
+        index,
+        isActive: highlightedIndex === index,
+        isSelected: selectedItem === item,
+        ...rest,
+      });
 
   handleKeyDown = (event, setHighlightedIndex) => {
     if (event.keyCode === TAB_KEY_CODE) {
@@ -168,10 +178,15 @@ export class SingleAutocomplete extends Component {
       stateReducer,
       variant,
       useFixedPositioning,
+      skipOptionCreation,
+      newItemButtonText,
       adaptiveOptionsHeight,
       creatable,
       ...props
     } = this.props;
+
+    const { onKeyDown: inputOnKeyDown, ...restInputProps } = inputProps || {};
+
     return (
       <Manager>
         <Downshift
@@ -202,48 +217,52 @@ export class SingleAutocomplete extends Component {
               <Reference>
                 {({ ref }) => (
                   <div ref={this.setReferenceEl(ref)}>
-                    <FieldText
-                      {...getInputProps({
-                        placeholder: !disabled ? placeholder : '',
-                        maxLength,
-                        onFocus: () => {
-                          onFocus();
-                        },
-                        refFunction,
-                        onKeyDown: (event) => {
-                          if (event.keyCode === ENTER_KEY_CODE) {
-                            event.preventDefault();
-                          }
+                    <ThemeProvider theme={variant}>
+                      <FieldText
+                        {...getInputProps({
+                          placeholder: !disabled ? placeholder : '',
+                          maxLength,
+                          onFocus: () => {
+                            onFocus();
+                          },
+                          ref: refFunction,
+                          onKeyDown: (event) => {
+                            if (event.keyCode === ENTER_KEY_CODE) {
+                              event.preventDefault();
+                            }
 
-                          if (inputValue && isOpen) {
-                            this.handleKeyDown(event, setHighlightedIndex);
-                          }
-                        },
-                        onBlur: (e) => {
-                          const newValue = (inputValue || '').trim();
+                            if (inputValue && isOpen) {
+                              this.handleKeyDown(event, setHighlightedIndex);
+                            }
+                            inputOnKeyDown?.(event);
+                          },
+                          onBlur: (e) => {
+                            const newValue = (inputValue || '').trim();
 
-                          if (!createWithoutConfirmation && !newValue) {
-                            selectItem(newValue);
-                          }
+                            if (!skipOptionCreation) {
+                              if (!createWithoutConfirmation && !newValue) {
+                                selectItem(newValue);
+                              }
 
-                          if (createWithoutConfirmation && creatable) {
-                            selectItem(newValue);
-                          }
+                              if (createWithoutConfirmation && creatable) {
+                                selectItem(newValue);
+                              }
+                            }
 
-                          onBlur(e);
-                          isOptionUnique?.(newValue ? !options.find((v) => v === newValue) : null);
-                          setTouch(true);
-                        },
-                        disabled,
-                        defaultWidth: false,
-                        isRequired,
-                        touched,
-                        error,
-                        endIcon: icon,
-                        variant,
-                        ...inputProps,
-                      })}
-                    />
+                            onBlur(e);
+                            isOptionUnique?.(newValue ? !options.find((v) => v === newValue) : null);
+                            setTouch(true);
+                          },
+                          disabled,
+                          defaultWidth: false,
+                          isRequired,
+                          touched,
+                          error,
+                          endIcon: icon,
+                          ...restInputProps,
+                        })}
+                      />
+                    </ThemeProvider>
                   </div>
                 )}
               </Reference>
@@ -272,6 +291,7 @@ export class SingleAutocomplete extends Component {
                     options={options}
                     optionsMaxHeight={this.state.optionsMaxHeight}
                     variant={variant}
+                    newItemButtonText={newItemButtonText}
                     creatable={creatable}
                     {...props}
                   />

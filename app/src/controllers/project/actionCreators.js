@@ -48,6 +48,7 @@ import {
   DELETE_PROJECT_NOTIFICATION_SUCCESS,
   UPDATE_PROJECT_NOTIFICATION_SUCCESS,
   SET_PROJECT_NOTIFICATION_LOADING,
+  FETCH_EXISTING_LAUNCH_NAMES,
   FETCH_EXISTING_LAUNCH_NAMES_SUCCESS,
   FETCH_LOG_TYPES,
   CREATE_LOG_TYPE,
@@ -56,6 +57,7 @@ import {
   CREATE_LOG_TYPE_SUCCESS,
   UPDATE_LOG_TYPE_SUCCESS,
   DELETE_LOG_TYPE_SUCCESS,
+  PREPARE_ACTIVE_PROJECT,
 } from './constants';
 
 export const fetchProjectSuccessAction = (project) => ({
@@ -63,9 +65,9 @@ export const fetchProjectSuccessAction = (project) => ({
   payload: project,
 });
 
-export const fetchProjectErrorAction = (error, projectId) => ({
+export const fetchProjectErrorAction = (error, projectKey) => ({
   type: FETCH_PROJECT_ERROR,
-  payload: { error, projectId },
+  payload: { error, projectKey },
 });
 
 export const fetchProjectPreferencesSuccessAction = (preferences) => ({
@@ -93,19 +95,24 @@ export const hideFilterOnLaunchesAction = (filter) => ({
   payload: filter,
 });
 
-export const fetchProjectPreferencesAction = (projectId) => ({
+export const fetchProjectPreferencesAction = (projectKey) => ({
   type: FETCH_PROJECT_PREFERENCES,
-  payload: projectId,
+  payload: projectKey,
 });
 
-export const fetchProjectAction = (projectId, fetchInfoOnly) => ({
+export const fetchProjectAction = (projectKey, fetchInfoOnly) => ({
   type: FETCH_PROJECT,
-  payload: { projectId, fetchInfoOnly },
+  payload: { projectKey, fetchInfoOnly },
 });
 
-export const fetchConfigurationAttributesAction = (projectId) => ({
+export const prepareActiveProjectAction = (payload) => ({
+  type: PREPARE_ACTIVE_PROJECT,
+  payload,
+});
+
+export const fetchConfigurationAttributesAction = (projectKey) => ({
   type: FETCH_CONFIGURATION_ATTRIBUTES,
-  payload: projectId,
+  payload: projectKey,
 });
 
 export const updateDefectTypeAction = (defectType) => ({
@@ -222,29 +229,34 @@ export const setProjectNotificationsLoadingAction = (loading) => ({
   payload: loading,
 });
 
+export const fetchExistingLaunchNamesAction = (projectKey) => ({
+  type: FETCH_EXISTING_LAUNCH_NAMES,
+  payload: projectKey,
+});
+
 export const fetchExistingLaunchNamesSuccessAction = (payload) => ({
   type: FETCH_EXISTING_LAUNCH_NAMES_SUCCESS,
   payload,
 });
 
-export const fetchLogTypesAction = (projectId) => ({
+export const fetchLogTypesAction = (projectKey) => ({
   type: FETCH_LOG_TYPES,
-  payload: projectId,
+  payload: projectKey,
 });
 
-export const createLogTypeAction = (data, projectId, onSuccess) => ({
+export const createLogTypeAction = (data, projectKey, onSuccess) => ({
   type: CREATE_LOG_TYPE,
-  payload: { data, projectId, onSuccess },
+  payload: { data, projectKey, onSuccess },
 });
 
-export const updateLogTypeAction = (data, logTypeId, projectId, onSuccess) => ({
+export const updateLogTypeAction = (data, logTypeId, projectKey, onSuccess) => ({
   type: UPDATE_LOG_TYPE,
-  payload: { data, logTypeId, projectId, onSuccess },
+  payload: { data, logTypeId, projectKey, onSuccess },
 });
 
-export const deleteLogTypeAction = (logTypeId, projectId, onSuccess) => ({
+export const deleteLogTypeAction = (logTypeId, projectKey, onSuccess) => ({
   type: DELETE_LOG_TYPE,
-  payload: { logTypeId, projectId, onSuccess },
+  payload: { logTypeId, projectKey, onSuccess },
 });
 
 export const createLogTypeSuccessAction = (logType) => ({

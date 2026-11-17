@@ -1,0 +1,167 @@
+/*
+ * Copyright 2025 EPAM Systems
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+/**
+ * Reset all default button styles
+ * Use this mixin to create unstyled/reset button elements
+ */
+@mixin button-reset {
+  background: none;
+  border: none;
+  padding: 0;
+  margin: 0;
+  outline: none;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: inherit;
+  line-height: inherit;
+  color: inherit;
+  text-align: inherit;
+  text-decoration: none;
+  box-sizing: border-box;
+  appearance: none;
+}
+
+@mixin pagination-bar {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: var(--rp-ui-base-bg-100);
+  padding: 5px 32px;
+  border-top: 1px solid var(--rp-ui-base-e-100);
+  margin-top: auto;
+  height: 64px;
+  box-sizing: border-box;
+  width: 100%;
+}
+
+@mixin sticky-wrapper($z-index) {
+  position: sticky;
+  width: 100%;
+  bottom: 0;
+  z-index: $z-index;
+}
+
+@mixin centered-content($max-width: 967px, $padding-x: 32px) {
+  width: 100%;
+  max-width: $max-width;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: $padding-x;
+  padding-right: $padding-x;
+  box-sizing: border-box;
+}
+
+@mixin horizontal-padding($padding-left: 32px, $padding-right: $padding-left) {
+  padding-left: $padding-left;
+  padding-right: $padding-right;
+  box-sizing: border-box;
+}
+
+@mixin header-toolbar-filter-icon-svg-box {
+  width: calc(15 / 14 * 16px);
+  height: 16px;
+}
+
+@mixin header-toolbar-filter-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 0 12px;
+  min-width: 40px;
+  height: 36px;
+  border: none;
+  border-radius: 16px;
+  background: transparent;
+  color: var(--rp-ui-base-e-400);
+  cursor: pointer;
+  transition: background-color 0.2s ease-in-out;
+  position: relative;
+
+  &:hover {
+    background-color: var(--rp-ui-base-bg-200);
+  }
+
+  svg {
+    @include header-toolbar-filter-icon-svg-box;
+    flex-shrink: 0;
+    color: var(--rp-ui-base-e-400);
+    transition: color 0.2s ease-in-out;
+
+    path {
+      fill: currentColor;
+    }
+  }
+
+  &.active {
+    svg {
+      color: var(--rp-ui-base-topaz);
+    }
+
+    &:hover {
+      background-color: var(--rp-ui-base-bg-200);
+    }
+  }
+}
+
+@mixin header-toolbar-search-button {
+  [class*='field'][class*='collapsed'] {
+    width: 40px;
+    height: 36px;
+    border-radius: 18px;
+    overflow: visible;
+    justify-content: center;
+    padding: 0;
+    transition: background-color 0.2s ease-in-out;
+
+    &:hover {
+      background-color: var(--rp-ui-base-bg-200);
+    }
+
+    [class*='icon-container-start'] {
+      position: relative;
+      left: 12px;
+      width: 16px;
+      height: 16px;
+      margin: 0;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    [class*='start-icon'] {
+      width: 16px;
+      height: 16px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+  }
+}
+
+/**
+ * Sticky pagination bar inner width: matches page tables that use --rp-ui-base-max-page-width with 32px horizontal padding.
+ */
+@mixin page-layout-pagination-container {
+  max-width: calc(var(--rp-ui-base-max-page-width) + 64px);
+  padding-left: 32px;
+  padding-right: 32px;
+  width: 100%;
+  box-sizing: border-box;
+  margin-left: auto;
+  margin-right: auto;
+}

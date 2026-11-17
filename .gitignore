@@ -1,8 +1,4 @@
-build/
-*/**/build/
-*/**/sl_instrumented/
-.gradle/
-
+## IDE
 */**/.idea/
 .idea/
 *.ipr
@@ -12,23 +8,37 @@ build/
 .vscode
 .devcontainer
 .scannerwork
+.cursor
+app/.env
+*.claude
 
+## Compiled
+build/
+*/**/build/
+*/**/sl_instrumented/
+.gradle/
+.tsbuildinfo
+
+## Coverage
 coverage
 
 ## Binaries
 bin/
 
-##Vendor
+## Vendor
 vendor/*/
 !vendor/vendor.json
 
 ## Data
 data/
 
-##Release dir
+## Release dir
 release/
 
 # local working files
 .local/
 .serena/
 .cursor/
+graphify-out
+
+.env

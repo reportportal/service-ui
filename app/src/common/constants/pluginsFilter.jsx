@@ -20,10 +20,12 @@ import {
   BTS_GROUP_TYPE,
   NOTIFICATION_GROUP_TYPE,
   AUTHORIZATION_GROUP_TYPE,
-  ANALYZER_GROUP_TYPE,
   OTHER_GROUP_TYPE,
   IMPORT_GROUP_TYPE,
 } from './pluginsGroupTypes';
+
+// Special filter that shows only installed plugins (no available-to-install section).
+export const INSTALLED_GROUP_TYPE = 'INSTALLED';
 
 const PLUGINS_FILTER_LIST = [
   {
@@ -31,32 +33,40 @@ const PLUGINS_FILTER_LIST = [
     label: <FormattedMessage id={'PluginsFilter.all'} defaultMessage={'All'} />,
   },
   {
-    value: OTHER_GROUP_TYPE,
-    label: <FormattedMessage id={'PluginsFilter.other'} defaultMessage={'Other'} />,
-  },
-  {
-    value: ANALYZER_GROUP_TYPE,
-    label: <FormattedMessage id={'PluginsFilter.analyzer'} defaultMessage={'Analyzer'} />,
+    value: INSTALLED_GROUP_TYPE,
+    label: <FormattedMessage id={'PluginsFilter.installed'} defaultMessage={'Installed'} />,
   },
   {
     value: AUTHORIZATION_GROUP_TYPE,
     label: <FormattedMessage id={'PluginsFilter.auth'} defaultMessage={'Authorization'} />,
   },
   {
-    value: IMPORT_GROUP_TYPE,
-    label: <FormattedMessage id={'PluginsFilter.import'} defaultMessage={'Launches Import'} />,
-  },
-  {
     value: NOTIFICATION_GROUP_TYPE,
     label: <FormattedMessage id={'PluginsFilter.notifications'} defaultMessage={'Notifications'} />,
+  },
+  {
+    value: IMPORT_GROUP_TYPE,
+    label: <FormattedMessage id={'PluginsFilter.import'} defaultMessage={'Launches Import'} />,
   },
   {
     value: BTS_GROUP_TYPE,
     label: <FormattedMessage id={'PluginsFilter.bts'} defaultMessage={'Bug Tracking Systems'} />,
   },
+  {
+    value: OTHER_GROUP_TYPE,
+    label: <FormattedMessage id={'PluginsFilter.other'} defaultMessage={'Other'} />,
+  },
 ];
 
+// Real plugin group types (excludes the synthetic All / Installed filters).
+export const PLUGIN_FILTER_GROUP_VALUES = PLUGINS_FILTER_LIST.filter(
+  (item) => item.value !== ALL_GROUP_TYPE && item.value !== INSTALLED_GROUP_TYPE,
+).map((item) => item.value);
+
 export const getPluginsFilter = (values = []) =>
-  PLUGINS_FILTER_LIST.filter((item) => values.includes(item.value))
-    .concat(PLUGINS_FILTER_LIST[0])
-    .reverse();
+  PLUGINS_FILTER_LIST.filter(
+    (item) =>
+      item.value === ALL_GROUP_TYPE ||
+      item.value === INSTALLED_GROUP_TYPE ||
+      values.includes(item.value),
+  );

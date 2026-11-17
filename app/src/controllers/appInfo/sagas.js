@@ -17,9 +17,30 @@
 import { fetch } from 'common/utils';
 import { URLS } from 'common/urls';
 import { call, takeEvery, all, put } from 'redux-saga/effects';
+import { fetchStartAction, fetchSuccessAction, fetchErrorAction } from 'controllers/fetch';
 import { updateServerSettingsSuccessAction } from 'controllers/appInfo/actionCreators';
 import { NOTIFICATION_TYPES, showNotification } from 'controllers/notification';
-import { UPDATE_SERVER_SETTINGS } from './constants';
+import { APP_INFO_NAMESPACE, FETCH_APP_INFO, UPDATE_SERVER_SETTINGS } from './constants';
+import { composeAppInfo } from './utils';
+
+const APP_INFO_FETCH_OPTIONS = {
+  headers: { Authorization: undefined },
+};
+
+const silentFetch = (...args) => fetch(...args).catch(() => null);
+
+function* fetchAppInfo() {
+  try {
+    yield put(fetchStartAction(APP_INFO_NAMESPACE, {}));
+    const [apiInfo, uiInfo] = yield all([
+      call(fetch, URLS.appInfoApi(), APP_INFO_FETCH_OPTIONS),
+      call(silentFetch, URLS.appInfoUi(), APP_INFO_FETCH_OPTIONS),
+    ]);
+    yield put(fetchSuccessAction(APP_INFO_NAMESPACE, composeAppInfo(apiInfo, uiInfo || {})));
+  } catch (error) {
+    yield put(fetchErrorAction(APP_INFO_NAMESPACE, error, true));
+  }
+}
 
 function* updateServerSettings({ payload }) {
   const { data, onSuccess = () => {}, onError = () => {} } = payload;
@@ -41,10 +62,18 @@ function* updateServerSettings({ payload }) {
   }
 }
 
+function* watchFetchAppInfo() {
+  yield takeEvery(FETCH_APP_INFO, fetchAppInfo);
+}
+
 function* watchUpdateServerSettings() {
   yield takeEvery(UPDATE_SERVER_SETTINGS, updateServerSettings);
 }
 
+export function* appInfoSagas() {
+  yield all([watchFetchAppInfo(), watchUpdateServerSettings()]);
+}
+
 export function* serverSettingsSagas() {
-  yield all([watchUpdateServerSettings()]);
+  yield* appInfoSagas();
 }

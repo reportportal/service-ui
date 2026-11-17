@@ -18,15 +18,17 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Icon } from 'components/main/icon';
 
-export const DeleteFilterButton = ({ onDelete, filter }) => (
-  <Icon type="icon-delete" onClick={() => onDelete(filter)} />
+export const DeleteFilterButton = ({ onDelete, filter, disabled }) => (
+  <Icon type="icon-delete" onClick={() => onDelete(filter)} disabled={disabled} />
 );
 
 DeleteFilterButton.propTypes = {
   onDelete: PropTypes.func,
   filter: PropTypes.object,
+  disabled: PropTypes.bool,
 };
 DeleteFilterButton.defaultProps = {
   onDelete: () => {},
   filter: {},
+  disabled: false,
 };

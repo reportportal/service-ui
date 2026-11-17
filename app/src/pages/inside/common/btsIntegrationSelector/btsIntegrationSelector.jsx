@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-import { Component, Fragment } from 'react';
+import { Component } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { injectIntl, defineMessages } from 'react-intl';
-import { Dropdown } from 'componentLibrary/dropdown';
+import { Dropdown, ThemeProvider } from '@reportportal/ui-kit';
 import { FieldElement } from 'pages/inside/projectSettingsPageContainer/content/elements';
 import styles from './btsIntegrationSelector.scss';
 
@@ -44,6 +44,7 @@ export class BtsIntegrationSelector extends Component {
     integrationId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
     onChangePluginName: PropTypes.func.isRequired,
     onChangeIntegration: PropTypes.func.isRequired,
+    theme: PropTypes.oneOf(['dark', 'light']),
   };
 
   constructor(props) {
@@ -69,24 +70,23 @@ export class BtsIntegrationSelector extends Component {
     const { intl, pluginName, onChangePluginName, integrationId, onChangeIntegration } = this.props;
 
     return (
-      <Fragment>
+      <ThemeProvider theme={this.props.theme || 'dark'}>
         <FieldElement
-          className={cx('field-wrapper')}
+          className={cx('field-wrapper', this.props.theme)}
           label={intl.formatMessage(messages.btsTitle)}
           labelClassName={cx('label')}
           withoutProvider
+          isRequired
         >
           <Dropdown
             value={pluginName}
             options={this.pluginNamesOptions}
             onChange={onChangePluginName}
             disabled={!this.isMultipleBtsPlugins()}
-            variant="dark"
-            defaultWidth={false}
           />
         </FieldElement>
         <FieldElement
-          className={cx('field-wrapper')}
+          className={cx('field-wrapper', this.props.theme)}
           label={intl.formatMessage(messages.integrationNameTitle)}
           labelClassName={cx('label')}
           withoutProvider
@@ -96,11 +96,9 @@ export class BtsIntegrationSelector extends Component {
             options={this.getIntegrationNamesOptions()}
             onChange={onChangeIntegration}
             disabled={!this.isMultipleBtsIntegrations()}
-            variant="dark"
-            defaultWidth={false}
           />
         </FieldElement>
-      </Fragment>
+      </ThemeProvider>
     );
   }
 }

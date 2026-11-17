@@ -35,7 +35,6 @@ export const InputRadio = ({
   mode,
   size,
 }) => (
-  // eslint-disable-next-line
   <label
     className={cx(
       'input-radio',
@@ -44,6 +43,7 @@ export const InputRadio = ({
     )}
     onFocus={onFocus}
     onBlur={onBlur}
+    // eslint-disable-next-line jsx-a11y/no-noninteractive-tabindex, jsx-a11y/tabindex-no-positive
     tabIndex="1"
   >
     <input

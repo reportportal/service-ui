@@ -14,8 +14,5 @@
  * limitations under the License.
  */
 
-import { FieldProvider } from './fieldProvider';
-
-export { FieldProvider };
-
-export default FieldProvider;
+export { FieldProvider } from './fieldProvider';
+export { FieldErrorHint } from './fieldErrorHint';

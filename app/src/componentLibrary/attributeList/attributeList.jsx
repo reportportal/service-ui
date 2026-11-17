@@ -48,6 +48,8 @@ export const AttributeList = ({
   disabled,
   getURIKey,
   getURIValue,
+  keyPlaceholder,
+  valuePlaceholder,
   newAttrMessage,
   maxLength,
   customClass,
@@ -58,13 +60,22 @@ export const AttributeList = ({
   autocompleteProps,
   allowCustomValues,
   addButtonClassName,
+  showValidationErrors,
+  forceValidateVersion,
+  isAttributeKeyRequired,
   isAttributeValueRequired,
+  maxCellWidth,
 }) => {
   const addNewAttrRef = useRef(null);
   const attributesRefs = useRef(null);
+  const keyEditorRef = useRef(null);
 
   const addNewAttButtonRefCb = (node) => {
     addNewAttrRef.current = node;
+  };
+
+  const keyEditorRefCb = (node) => {
+    keyEditorRef.current = node;
   };
 
   const getAttributesRefsMap = () => {
@@ -170,8 +181,12 @@ export const AttributeList = ({
       ...newAttributes[index],
       edited: true,
     };
-    handleAddNewAttrFocus();
+
     onChange(newAttributes);
+
+    scheduleUpdate(() => {
+      handleChangeFocus(keyEditorRef.current);
+    });
   };
 
   const editableAttr = getExistEditableAttr();
@@ -253,6 +268,7 @@ export const AttributeList = ({
     <div className={cx(attributesListClassname)} data-automation-id={'attributesField'}>
       {editableAttr && (
         <AttributeEditor
+          refFunction={keyEditorRefCb}
           attribute={editableAttr}
           attributes={attributes}
           onChange={createChangeHandler()}
@@ -262,9 +278,14 @@ export const AttributeList = ({
           onCancel={createCancelEditHandler(indexEditableAttr)}
           getURIKey={getURIKey}
           getURIValue={getURIValue}
+          keyPlaceholder={keyPlaceholder}
+          valuePlaceholder={valuePlaceholder}
           editorDefaultOpen={editorDefaultOpen}
           autocompleteProps={autocompleteProps}
           allowCustomValues={allowCustomValues}
+          showValidationErrors={showValidationErrors}
+          forceValidateVersion={forceValidateVersion}
+          isAttributeKeyRequired={isAttributeKeyRequired}
           isAttributeValueRequired={isAttributeValueRequired}
         />
       )}
@@ -297,9 +318,8 @@ export const AttributeList = ({
                 removeHandler,
                 attributeKeyValueRef,
               );
-              const handleAttributeWrapperKeyDown = createAttributeWrapperKeyDownHandler(
-                keyAttrValue,
-              );
+              const handleAttributeWrapperKeyDown =
+                createAttributeWrapperKeyDownHandler(keyAttrValue);
 
               return (
                 <EditableAttribute
@@ -313,6 +333,7 @@ export const AttributeList = ({
                   onCancelEdit={createCancelEditHandler(i)}
                   disabled={disabled}
                   customClass={customClass}
+                  maxCellWidth={maxCellWidth}
                   keyValueRefCallback={attributeKeyValueRefCb}
                   crossIconRefCallback={attributeCrossIconRefCb}
                   wrapperRefCallback={attributeWrapperRefCb}
@@ -326,8 +347,8 @@ export const AttributeList = ({
         )}
         {!hasEditedAttribute && !disabled && showButton && attributes.length < maxLength && (
           <Button
-            refCallback={addNewAttButtonRefCb}
-            className={cx('button-focused', addButtonClassName)}
+            ref={addNewAttButtonRefCb}
+            className={cx(addButtonClassName)}
             icon={Parser(PlusIcon)}
             onClick={onAddNew}
             variant={'text'}
@@ -352,6 +373,8 @@ AttributeList.propTypes = {
   onAddNew: PropTypes.func,
   getURIKey: PropTypes.func,
   getURIValue: PropTypes.func,
+  keyPlaceholder: PropTypes.string,
+  valuePlaceholder: PropTypes.string,
   showButton: PropTypes.bool,
   editable: PropTypes.bool,
   attributesListClassname: PropTypes.string,
@@ -359,7 +382,11 @@ AttributeList.propTypes = {
   autocompleteProps: PropTypes.object,
   allowCustomValues: PropTypes.bool,
   addButtonClassName: PropTypes.string,
+  showValidationErrors: PropTypes.bool,
+  forceValidateVersion: PropTypes.number,
+  isAttributeKeyRequired: PropTypes.bool,
   isAttributeValueRequired: PropTypes.bool,
+  maxCellWidth: PropTypes.number,
 };
 AttributeList.defaultProps = {
   attributes: [],
@@ -378,5 +405,9 @@ AttributeList.defaultProps = {
   autocompleteProps: {},
   allowCustomValues: true,
   addButtonClassName: '',
+  showValidationErrors: false,
+  forceValidateVersion: 0,
+  isAttributeKeyRequired: false,
   isAttributeValueRequired: true,
+  maxCellWidth: undefined,
 };

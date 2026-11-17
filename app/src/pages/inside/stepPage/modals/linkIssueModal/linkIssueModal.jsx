@@ -21,7 +21,8 @@ import { connect } from 'react-redux';
 import { reduxForm, FieldArray } from 'redux-form';
 import classNames from 'classnames/bind';
 import { injectIntl, defineMessages } from 'react-intl';
-import { activeProjectSelector, userIdSelector } from 'controllers/user';
+import { userIdSelector } from 'controllers/user';
+import { projectKeySelector } from 'controllers/project';
 import { namedAvailableBtsIntegrationsSelector } from 'controllers/plugins';
 import { withModal } from 'components/main/modal';
 import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
@@ -70,7 +71,7 @@ const messages = defineMessages({
   (state) => ({
     userId: userIdSelector(state),
     namedBtsIntegrations: namedAvailableBtsIntegrationsSelector(state),
-    activeProject: activeProjectSelector(state),
+    projectKey: projectKeySelector(state),
   }),
   {
     showNotification,
@@ -83,7 +84,7 @@ export class LinkIssueModal extends Component {
   static propTypes = {
     intl: PropTypes.object.isRequired,
     userId: PropTypes.string.isRequired,
-    activeProject: PropTypes.string.isRequired,
+    projectKey: PropTypes.string.isRequired,
     showNotification: PropTypes.func.isRequired,
     namedBtsIntegrations: PropTypes.object.isRequired,
     initialize: PropTypes.func.isRequired,
@@ -130,12 +131,12 @@ export class LinkIssueModal extends Component {
       intl,
       userId,
       data: { items, fetchFunc, eventsInfo },
-      activeProject,
+      projectKey,
       tracking,
       namedBtsIntegrations,
     } = this.props;
     const { pluginName, integrationId } = this.state;
-    const requestUrl = URLS.testItemsLinkIssues(activeProject);
+    const requestUrl = URLS.testItemsLinkIssues(projectKey);
     const {
       integrationParameters: { project, url },
     } = namedBtsIntegrations[pluginName].find((item) => item.id === integrationId);

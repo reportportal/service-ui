@@ -21,12 +21,11 @@
   opacity: 1;
   max-width: 600px;
   transform: translateX(-50%);
-  z-index: $Z-INDEX-POPUP;
+  z-index: $Z-INDEX-NOTIFICATION;
 }
 
 .notification-item-wrapper {
   margin-top: 16px;
-  overflow: hidden;
   opacity: 0;
   max-height: 0;
   min-height: 0;

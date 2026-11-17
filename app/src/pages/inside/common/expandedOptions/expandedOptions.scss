@@ -1,0 +1,372 @@
+/*
+ * Copyright 2025 EPAM Systems
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+@mixin text-style(
+  $size,
+  $weight: var(--rp-ui-base-fw-medium),
+  $color: var(--rp-ui-base-almost-black),
+  $family: var(--rp-ui-base-font-family)
+) {
+  font-size: $size;
+  font-family: $family;
+  font-weight: $weight;
+  color: $color;
+}
+
+@mixin flex-center($direction: row, $justify: center, $align: center) {
+  display: flex;
+  flex-direction: $direction;
+  justify-content: $justify;
+  align-items: $align;
+}
+
+@mixin active-border($color: var(--rp-ui-base-topaz-focused), $width: 2px) {
+  border: $width solid $color;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+
+@mixin text-ellipsis {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+@mixin svg-icon($size, $shrink: 0) {
+  width: $size;
+  height: $size;
+  flex-shrink: $shrink;
+}
+
+@mixin drop-zone-border($border-color: var(--rp-ui-color-primary-focused)) {
+  &::before {
+    content: '';
+    position: absolute;
+    top: 4px;
+    left: 4px;
+    right: 4px;
+    bottom: 4px;
+    border: 2px dashed $border-color;
+    border-radius: 4px;
+    pointer-events: none;
+    z-index: 100;
+  }
+}
+
+.expanded-options {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  grid-template-rows: 1fr;
+  position: relative;
+  width: 100%;
+  height: 100%;
+
+  &__sidebar {
+    display: flex;
+    flex-direction: column;
+    min-width: 360px;
+    max-width: 360px;
+    min-height: 0;
+    height: 100%;
+    border-right: 1px solid var(--rp-ui-base-e-100);
+    background-color: var(--rp-ui-base-bg-000);
+  }
+
+  &__sidebar-separator {
+    flex-shrink: 0;
+    width: 312px;
+    height: 1px;
+    margin: 8px auto;
+    background-color: var(--rp-ui-base-e-100);
+  }
+
+  &__sidebar-actions {
+    @include flex-center(row, space-between, center);
+
+    flex-shrink: 0;
+    padding: 8px 32px;
+
+    &--title {
+      @include text-style(15px);
+
+      margin-right: auto;
+    }
+
+    &--search {
+      height: 16px;
+
+      svg {
+        @include svg-icon(16px);
+      }
+
+      svg path {
+        fill: var(--rp-ui-base-e-300);
+      }
+
+      &:hover:not(:focus-visible, &-has-query, &-panel-open) svg path {
+        fill: var(--rp-ui-base-e-400);
+      }
+
+      &:focus-visible:not(&-has-query, &-panel-open) svg path {
+        fill: var(--rp-ui-base-topaz-hover);
+      }
+
+      &-panel-open:not(&-has-query) {
+        color: var(--rp-ui-base-topaz-pressed);
+        background-color: var(--rp-ui-base-topaz-focused-10);
+
+        svg path {
+          fill: var(--rp-ui-base-topaz-pressed);
+        }
+
+        &:hover:not(:focus-visible) svg path {
+          fill: var(--rp-ui-base-topaz-hover);
+        }
+      }
+
+      &-has-query {
+        svg path {
+          fill: var(--rp-ui-base-topaz-hover);
+        }
+
+        &:hover:not(.expanded-options__sidebar-actions--search-panel-open) svg path {
+          fill: var(--rp-ui-base-topaz-focused);
+        }
+
+        &:focus-visible:not(:hover, .expanded-options__sidebar-actions--search-panel-open)
+          svg
+          path {
+          fill: var(--rp-ui-base-topaz-hover);
+        }
+
+        &.expanded-options__sidebar-actions--search-panel-open {
+          color: var(--rp-ui-base-topaz-pressed);
+          background-color: var(--rp-ui-base-topaz-focused-10);
+
+          svg path {
+            fill: var(--rp-ui-base-topaz-pressed);
+          }
+
+          &:hover:not(:focus-visible) svg path,
+          &:focus-visible svg path {
+            fill: var(--rp-ui-base-topaz-hover);
+          }
+        }
+      }
+    }
+
+    &--create {
+      margin-left: 16px;
+    }
+  }
+
+  &__search-wrapper {
+    @include flex-center(row, center, center);
+
+    flex-shrink: 0;
+    padding: 7px 8px;
+    background-color: var(--rp-ui-base-bg-200);
+
+    > div {
+      max-width: 312px;
+    }
+  }
+
+  &__sidebar-folders {
+    position: relative;
+    padding: 0 16px 20px 24px;
+    margin: 0;
+
+    &--dragging {
+      @include drop-zone-border;
+    }
+
+    // Keep border visible when confirmation popup is showing (pending state)
+    &:has([class*='tree-sortable-item--pending']) {
+      @include drop-zone-border;
+    }
+  }
+
+  &__drop-placeholder {
+    position: absolute;
+    top: 4px;
+    left: 4px;
+    right: 4px;
+    bottom: 4px;
+    @include flex-center(column, center, center);
+
+    background-color: var(--rp-ui-base-bg-200);
+    border: 2px dashed var(--rp-ui-base-e-300);
+    border-radius: 4px;
+    opacity: 0.9;
+    z-index: 10;
+    pointer-events: none;
+  }
+
+  &__drop-placeholder-content {
+    @include flex-center(column, center, center);
+    gap: 16px;
+
+    position: relative;
+    z-index: 11;
+  }
+
+  &__drop-placeholder-icon {
+    width: 30px;
+    height: 24px;
+  }
+
+  &__drop-placeholder-text {
+    @include text-style(13px);
+
+    text-align: center;
+  }
+
+  &__sidebar-folders-wrapper {
+    flex: 1 1 0;
+    min-height: 0;
+    position: relative;
+    overflow: hidden;
+
+    &--fade-top::before {
+      content: '';
+      position: absolute;
+      z-index: 1;
+      top: 0;
+      left: 0;
+      right: var(--folder-tree-scrollbar-gutter, 0px);
+      height: 48px;
+      pointer-events: none;
+      background: linear-gradient(
+        180deg,
+        var(--rp-ui-base-bg-000) 0%,
+        color-mix(in srgb, var(--rp-ui-base-bg-000) 0%, transparent) 100%
+      );
+    }
+
+    &:has(.expanded-options__drop-placeholder) {
+      .folders-tree {
+        opacity: 0.5;
+        pointer-events: none;
+      }
+
+      .expanded-options__sidebar-folders--dragging::before {
+        display: none;
+      }
+    }
+  }
+
+  &--no-sidebar {
+    grid-template-columns: 1fr;
+  }
+
+  &__content-scroll {
+    min-width: 580px;
+    overflow: hidden;
+  }
+
+  &__content {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+  }
+
+  &__no-search-results,
+  &__search-loading {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: calc(100vh - 200px);
+  }
+
+  &__content-title {
+    margin: 24px 0 24px 32px;
+    font-size: 17px;
+    font-family: $FONT-ROBOTO-REGULAR;
+    font-weight: 500;
+  }
+
+  &__scroll-wrapper-background {
+    background-color: var(--rp-ui-base-bg-000);
+  }
+}
+
+.sidebar-header {
+  flex-shrink: 0;
+  padding: 20px 24px 0 24px;
+
+  &__title {
+    @include flex-center(row, space-between, center);
+    height: 36px;
+    padding: 8px;
+    cursor: pointer;
+    width: 100%;
+    border: none;
+    background-color: transparent;
+
+    &:hover {
+      background-color: var(--rp-ui-base-bg-100);
+    }
+
+    &--active {
+      padding: 6.4px;
+      @include active-border;
+
+      height: 36px;
+    }
+
+    &--text {
+      @include text-style(13px);
+    }
+
+    &--counter {
+      font-size: 13px;
+      font-family: $FONT-ROBOTO-REGULAR;
+      color: var(--rp-ui-base-e-400);
+    }
+  }
+}
+
+.folders-loading {
+  @include flex-center(row, center, center);
+
+  padding: 32px 16px;
+  color: var(--rp-ui-base-e-400);
+
+  &__text {
+    font-size: 14px;
+    font-style: italic;
+  }
+}
+
+.folder-drag-preview {
+  @include flex-center(row, flex-start, center);
+
+  width: 320px;
+  height: 44px;
+  padding: 0 16px;
+  gap: 16px;
+  background-color: rgba(255, 255, 255, 0.93);
+  border: none;
+  border-radius: 4px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  cursor: grabbing;
+
+  span {
+    @include text-style(13px);
+    @include text-ellipsis;
+  }
+}

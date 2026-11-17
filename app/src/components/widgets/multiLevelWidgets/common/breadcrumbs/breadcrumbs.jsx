@@ -53,6 +53,7 @@ export class Breadcrumbs extends PureComponent {
           return (
             <li className={cx('item', { active: item.isActive })} key={item.key}>
               {!item.isStatic && !item.isActive ? (
+                // eslint-disable-next-line jsx-a11y/anchor-is-valid
                 <a className={cx('link')} onClick={() => onClickBreadcrumbs(item.id)}>
                   <span className={cx('link-key')} title={keyLabel}>
                     {keyIcon && (

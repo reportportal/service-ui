@@ -16,26 +16,29 @@
 
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { addPatternAction, patternsSelector } from 'controllers/project';
 import { useTracking } from 'react-tracking';
-import { getSaveNewPatternEvent, SETTINGS_PAGE_EVENTS } from 'components/main/analytics/events';
-import { PROJECT_SETTINGS_PATTERN_ANALYSIS_EVENTS } from 'analyticsEvents/projectSettingsPageEvents';
-import { hideModalAction, showModalAction } from 'controllers/modal';
-import { STRING_PATTERN } from 'common/constants/patternTypes';
 import { useIntl } from 'react-intl';
-import { canUpdateSettings } from 'common/utils/permissions';
-import { activeProjectRoleSelector, userAccountRoleSelector } from 'controllers/user';
 import PropTypes from 'prop-types';
+import classNames from 'classnames/bind';
+
+import { EmptyStatePage } from 'pages/inside/common/emptyStatePage';
+import { addPatternAction, patternsSelector } from 'controllers/project';
+import { hideModalAction, showModalAction } from 'controllers/modal';
+import { PROJECT_SETTINGS_PATTERN_ANALYSIS_EVENTS } from 'analyticsEvents/projectSettingsPageEvents';
+import { STRING_PATTERN } from 'common/constants/patternTypes';
 import { docsReferences } from 'common/utils';
+import { useUserPermissions } from 'hooks/useUserPermissions';
+
 import { SettingsPageContent } from '../settingsPageContent';
 import { PatternAnalysisContent } from './patternAnalysisContent';
-import { EmptyStatePage } from '../emptyStatePage/';
 import { messages } from './messages';
+import styles from './patternAnalysis.scss';
+
+const cx = classNames.bind(styles);
 
 export const PatternAnalysis = ({ setHeaderTitleNode }) => {
   const patterns = useSelector(patternsSelector);
-  const userRole = useSelector(userAccountRoleSelector);
-  const projectRole = useSelector(activeProjectRoleSelector);
+  const { canUpdateSettings } = useUserPermissions();
 
   const { formatMessage } = useIntl();
   const { trackEvent } = useTracking();
@@ -48,13 +51,11 @@ export const PatternAnalysis = ({ setHeaderTitleNode }) => {
         pattern.enabled,
       ),
     );
-    trackEvent(getSaveNewPatternEvent(pattern.type));
     dispatch(addPatternAction(pattern));
     dispatch(hideModalAction());
   };
   const onAddPattern = () => {
     trackEvent(PROJECT_SETTINGS_PATTERN_ANALYSIS_EVENTS.CLICK_CREATE_PATTERN_ANALYSIS);
-    trackEvent(SETTINGS_PAGE_EVENTS.CREATE_PATTERN_BTN);
     dispatch(
       showModalAction({
         id: 'createPatternAnalysisModal',
@@ -71,13 +72,22 @@ export const PatternAnalysis = ({ setHeaderTitleNode }) => {
     );
   };
 
-  const isAbleToCreate = canUpdateSettings(userRole, projectRole);
-
   const handleDocumentationClick = () => {
     trackEvent(
       PROJECT_SETTINGS_PATTERN_ANALYSIS_EVENTS.clickDocumentationLink('no_pattern_analysis'),
     );
   };
+
+  const getButtons = () =>
+    canUpdateSettings
+      ? [
+          {
+            name: formatMessage(messages.create),
+            dataAutomationId: 'createPatternButton',
+            handleButton: onAddPattern,
+          },
+        ]
+      : [];
 
   return (
     <>
@@ -87,19 +97,23 @@ export const PatternAnalysis = ({ setHeaderTitleNode }) => {
             setHeaderTitleNode={setHeaderTitleNode}
             onAddPattern={onAddPattern}
             patterns={patterns}
-            disabled={!isAbleToCreate}
+            disabled={!canUpdateSettings}
           />
         </SettingsPageContent>
       ) : (
         <EmptyStatePage
-          title={formatMessage(messages.noPatternAnalysisTitle)}
-          description={formatMessage(messages.noPatternAnalysisDescription)}
-          buttonName={formatMessage(messages.create)}
-          buttonDataAutomationId="createPatternButton"
+          title={formatMessage(
+            canUpdateSettings ? messages.noPatternAnalysisTitle : messages.noPatternsYetTitle,
+          )}
+          description={formatMessage(
+            canUpdateSettings
+              ? messages.noPatternAnalysisDescription
+              : messages.noPatternsAppearDescription,
+          )}
+          containerClassName={cx('pattern-analysis-empty-state')}
           documentationLink={docsReferences.emptyStatePatternAnalysisDocs}
-          disableButton={!isAbleToCreate}
-          handleButton={onAddPattern}
           handleDocumentationClick={handleDocumentationClick}
+          buttons={getButtons()}
         />
       )}
     </>

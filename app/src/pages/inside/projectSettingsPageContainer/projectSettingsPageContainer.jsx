@@ -14,15 +14,15 @@
  * limitations under the License.
  */
 
-import React, { useCallback, useMemo, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { FormattedMessage, useIntl } from 'react-intl';
 import classNames from 'classnames/bind';
 import {
   PROJECT_SETTINGS_TAB_PAGE,
-  projectIdSelector,
   querySelector,
   settingsTabSelector,
+  urlOrganizationAndProjectSelector,
 } from 'controllers/pages';
 import { SettingsLayout } from 'layouts/settingsLayout';
 import {
@@ -34,23 +34,28 @@ import {
   LOG_TYPES,
   NOTIFICATIONS,
   PATTERN_ANALYSIS,
+  QUALITY_GATES,
+  ENVIRONMENTS,
+  TEST_DATA,
 } from 'common/constants/settingsTabs';
-import { SETTINGS_PAGE_EVENTS } from 'components/main/analytics/events';
 import { Integrations } from 'pages/inside/projectSettingsPageContainer/content/integrations';
 import { DefectTypes } from 'pages/inside/projectSettingsPageContainer/content/defectTypes';
 import { DemoDataTab } from 'pages/inside/projectSettingsPageContainer/content/demoDataContent';
 import { LogTypes } from 'pages/inside/projectSettingsPageContainer/content/logTypes';
-import { canSeeDemoData } from 'common/utils/permissions';
 import { ExtensionLoader } from 'components/extensionLoader';
 import { uiExtensionSettingsTabsSelector } from 'controllers/plugins';
-import { activeProjectRoleSelector, userAccountRoleSelector } from 'controllers/user';
-import { Navigation } from 'pages/inside/projectSettingsPageContainer/navigation';
+import { useNavigationTabsExtensionsConfig } from 'common/hooks';
+import { Navigation } from 'pages/inside/common/navigation';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
-import { Header } from 'pages/inside/projectSettingsPageContainer/header';
+import { useUserPermissions } from 'hooks/useUserPermissions';
+import { Header } from 'pages/inside/common/header';
 import { PatternAnalysis } from 'pages/inside/projectSettingsPageContainer/content/patternAnalysis';
+import { QualityGates } from 'pages/inside/projectSettingsPageContainer/content/qualityGates';
 import { Notifications } from 'pages/inside/projectSettingsPageContainer/content/notifications';
+import { getTmsOverride } from 'controllers/appInfo/utils';
 import { GeneralTab } from './generalTab';
 import { AnalyzerContainer } from './content/analyzerContainer';
+import { TestData, Environments } from './content/testLibrary';
 import { messages } from './messages';
 import styles from './projectSettingsPageContainer.scss';
 import { ProjectSettingsAnalyticsWrapper } from './projectSettingsAnalyticsWrapper';
@@ -61,59 +66,45 @@ export const ProjectSettingsPageContainer = () => {
   const { formatMessage } = useIntl();
   const dispatch = useDispatch();
   const extensions = useSelector(uiExtensionSettingsTabsSelector);
-  const projectId = useSelector(projectIdSelector);
+  const { organizationSlug, projectSlug } = useSelector(urlOrganizationAndProjectSelector);
   const activeTab = useSelector(settingsTabSelector);
-  const userRole = useSelector(activeProjectRoleSelector);
-  const accountRole = useSelector(userAccountRoleSelector);
+  const { canSeeDemoData, canUpdateSettings } = useUserPermissions();
   const { subPage } = useSelector(querySelector);
   const [headerNodes, setHeaderNodes] = useState({});
+  const tmsOverride = getTmsOverride();
+  const isShowTmsHiddenData = Boolean(tmsOverride);
 
   const createTabLink = useCallback(
     (tabName, extendedParams = {}, page = PROJECT_SETTINGS_TAB_PAGE) => ({
       type: page,
-      payload: { projectId, settingsTab: tabName, ...extendedParams },
+      payload: { projectSlug, settingsTab: tabName, organizationSlug, ...extendedParams },
     }),
-    [projectId],
+    [projectSlug, organizationSlug],
   );
 
-  const extensionsConfig = useMemo(() => {
-    return extensions.reduce((acc, extension) => {
-      const { name, payload } = extension;
-      const title = payload.title || payload.name;
-      return {
-        ...acc,
-        [name]: {
-          name: title,
-          link: createTabLink(name, payload.initialPage?.payload, payload.initialPage?.type),
-          component: (
-            <ExtensionLoader
-              extension={extension}
-              withPreloader
-              silentOnError={false}
-              setHeaderNodes={setHeaderNodes}
-            />
-          ),
-          mobileDisabled: true,
-          eventInfo: SETTINGS_PAGE_EVENTS.extensionTabClick(title),
-        },
-      };
-    }, {});
-  }, [createTabLink, extensions]);
+  const { mergeConfig } = useNavigationTabsExtensionsConfig({
+    extensions,
+    createTabLink,
+    setHeaderNodes,
+    ExtensionLoaderComponent: ExtensionLoader,
+  });
 
   const config = useMemo(() => {
+    const isQualityGatePluginEnabled = extensions.some(
+      (extension) => extension.name === QUALITY_GATES,
+    );
+
     const navConfig = {
       [GENERAL]: {
         name: formatMessage(messages.general),
         link: createTabLink(GENERAL),
         component: <GeneralTab />,
-        eventInfo: SETTINGS_PAGE_EVENTS.GENERAL_TAB,
         mobileDisabled: true,
       },
       [INTEGRATIONS]: {
         name: formatMessage(messages.integrations),
         link: createTabLink(INTEGRATIONS),
         component: <Integrations />,
-        eventInfo: SETTINGS_PAGE_EVENTS.INTEGRATIONS_TAB,
       },
       [NOTIFICATIONS]: {
         name: formatMessage(messages.notifications),
@@ -121,7 +112,6 @@ export const ProjectSettingsPageContainer = () => {
         component: (
           <Notifications setHeaderTitleNode={(node) => setHeaderNodes({ titleNode: node })} />
         ),
-        eventInfo: SETTINGS_PAGE_EVENTS.NOTIFICATIONS_TAB,
         mobileDisabled: true,
       },
       [DEFECT]: {
@@ -130,7 +120,6 @@ export const ProjectSettingsPageContainer = () => {
         component: (
           <DefectTypes setHeaderTitleNode={(node) => setHeaderNodes({ titleNode: node })} />
         ),
-        eventInfo: SETTINGS_PAGE_EVENTS.DEFECT_TYPE_TAB,
         mobileDisabled: true,
       },
       [LOG_TYPES]: {
@@ -141,11 +130,12 @@ export const ProjectSettingsPageContainer = () => {
       },
       [ANALYSIS]: {
         name: formatMessage(messages.analysis),
-        link: createTabLink(ANALYSIS, { subTab: 'indexSettings' }),
+        link: createTabLink(ANALYSIS, {
+          subTab: canUpdateSettings ? 'indexSettings' : 'autoAnalysis',
+        }),
         component: (
           <AnalyzerContainer setHeaderNodes={(node) => setHeaderNodes({ children: node })} />
         ),
-        eventInfo: SETTINGS_PAGE_EVENTS.AUTO_ANALYSIS_TAB,
         mobileDisabled: true,
       },
       [PATTERN_ANALYSIS]: {
@@ -154,54 +144,77 @@ export const ProjectSettingsPageContainer = () => {
         component: (
           <PatternAnalysis setHeaderTitleNode={(node) => setHeaderNodes({ titleNode: node })} />
         ),
-        eventInfo: SETTINGS_PAGE_EVENTS.PATTERN_ANALYSIS_TAB,
         mobileDisabled: true,
       },
       [DEMO_DATA]: {
         name: formatMessage(messages.demoData),
         link: createTabLink(DEMO_DATA),
         component: <DemoDataTab />,
-        eventInfo: SETTINGS_PAGE_EVENTS.DEMO_DATA_TAB,
         mobileDisabled: true,
       },
+      [QUALITY_GATES]: {
+        name: formatMessage(messages.qualityGates),
+        link: createTabLink(QUALITY_GATES),
+        component: <QualityGates />,
+        mobileDisabled: true,
+        hideHeader: !isQualityGatePluginEnabled,
+      },
+      ...(isShowTmsHiddenData && {
+        [ENVIRONMENTS]: {
+          name: formatMessage(messages.environments),
+          link: createTabLink(ENVIRONMENTS),
+          component: <Environments />,
+          mobileDisabled: true,
+        },
+        [TEST_DATA]: {
+          name: formatMessage(messages.testData),
+          link: createTabLink(TEST_DATA),
+          component: (
+            <TestData setHeaderTitleNode={(node) => setHeaderNodes({ titleNode: node })} />
+          ),
+          mobileDisabled: true,
+        },
+      }),
     };
-    if (!canSeeDemoData(accountRole, userRole)) {
+    if (!canSeeDemoData) {
       delete navConfig[DEMO_DATA];
     }
-    Object.keys(extensionsConfig).forEach((key) => {
-      if (navConfig[key]) {
-        navConfig[key].component = extensionsConfig[key].component;
-
-        delete extensionsConfig[key];
-      }
-    });
-    return { ...navConfig, ...extensionsConfig };
-  }, [accountRole, extensionsConfig, createTabLink, userRole]);
+    return mergeConfig(navConfig);
+  }, [
+    formatMessage,
+    createTabLink,
+    mergeConfig,
+    canSeeDemoData,
+    canUpdateSettings,
+    isShowTmsHiddenData,
+    extensions,
+  ]);
 
   const navigation = useMemo(() => {
-    if (subPage) {
-      return null;
-    } else {
-      const title = <FormattedMessage id="SettingsPage.title" defaultMessage="Project Settings" />;
-      return <Navigation items={config} title={title} />;
-    }
-  }, [config, subPage]);
+    const title = <FormattedMessage id="SettingsPage.title" defaultMessage="Project Settings" />;
+    return <Navigation items={config} title={title} />;
+  }, [config]);
 
   const content = useMemo(() => {
+    if (!isShowTmsHiddenData && (activeTab === ENVIRONMENTS || activeTab === TEST_DATA)) {
+      dispatch(createTabLink(GENERAL));
+      return null;
+    }
+
     if (!activeTab || !config[activeTab]) {
       const firstItemName = Object.keys(config)[0];
       dispatch(config[firstItemName].link);
       return null;
     }
     return config[activeTab].component;
-  }, [activeTab, config]);
+  }, [activeTab, config, dispatch, createTabLink, isShowTmsHiddenData]);
 
   return (
     <ProjectSettingsAnalyticsWrapper>
       <SettingsLayout navigation={navigation}>
         <ScrollWrapper resetRequired>
           <div className={cx('settings-page-content-wrapper')}>
-            {!subPage && (
+            {!subPage && !config[activeTab]?.hideHeader && !headerNodes?.hideHeader && (
               <div className={cx('header')}>
                 <Header title={config[activeTab]?.name} titleNode={headerNodes.titleNode}>
                   {headerNodes.children}

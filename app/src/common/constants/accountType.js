@@ -20,3 +20,9 @@ export const UPSA = 'UPSA';
 export const GITHUB = 'GITHUB';
 export const SAML = 'SAML';
 export const SCIM = 'SCIM';
+
+export const ACCOUNT_TYPE_DISPLAY_MAP = {
+  [UPSA]: 'Synched',
+  [INTERNAL]: 'Internal',
+  [GITHUB]: 'GitHub',
+};

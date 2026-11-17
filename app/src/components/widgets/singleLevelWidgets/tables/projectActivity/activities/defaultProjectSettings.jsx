@@ -82,9 +82,9 @@ export class DefaultProjectSettings extends Component {
     return `${activities.join(', ')}.`;
   };
 
-  getProjectSettingsLink = (projectId) => ({
+  getProjectSettingsLink = (projectSlug, organizationSlug) => ({
     type: PROJECT_SETTINGS_PAGE,
-    payload: { projectId },
+    payload: { organizationSlug, projectSlug },
   });
 
   render() {
@@ -94,7 +94,7 @@ export class DefaultProjectSettings extends Component {
         <span className={cx('user-name')}>{activity.user}</span>
         <FormattedMessage id="ProjectActivity.updateProject" defaultMessage="updated" />
         <Link
-          to={this.getProjectSettingsLink(activity.projectName)}
+          to={this.getProjectSettingsLink(activity.projectSlug, activity.organizationSlug)}
           className={cx('link')}
           target="_blank"
         >

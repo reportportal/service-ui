@@ -1,0 +1,116 @@
+/*
+ * Copyright 2026 EPAM Systems
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+.selectable-tree {
+  &__item {
+    &--dimmed {
+      opacity: 0.3;
+    }
+
+    &-content {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-right: 8px;
+
+      & > svg {
+        top: 10px;
+        cursor: pointer;
+      }
+    }
+
+    span {
+      height: 16px;
+    }
+
+    &-title {
+      border: none;
+      background: none;
+      box-sizing: content-box;
+      overflow: hidden;
+
+      &--text {
+        font-weight: 400;
+      }
+    }
+
+    &-empty {
+      div {
+        cursor: default;
+      }
+    }
+
+    &-drag-handle {
+      display: flex;
+      align-items: center;
+      border: none;
+      padding: 0;
+      background: none;
+
+      &--draggable {
+        cursor: grab;
+
+        &:active {
+          cursor: grabbing;
+        }
+      }
+    }
+  }
+}
+
+.selectable-folder {
+  &__loader {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 36px;
+    position: relative;
+    box-sizing: border-box;
+  }
+
+  &__load-more {
+    display: flex;
+    justify-content: center;
+    padding: 16px;
+    position: relative;
+  }
+
+  &__error {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 4px;
+    padding: 8px 16px;
+    position: relative;
+    color: var(--rp-ui-base-almost-black);
+    font-size: 13px;
+    box-sizing: border-box;
+
+    span {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    path {
+      fill: var(--rp-ui-base-error);
+    }
+
+    button {
+      min-width: auto;
+    }
+  }
+}

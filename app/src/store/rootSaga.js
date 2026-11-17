@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 EPAM Systems
+ * Copyright 2024 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,6 +19,7 @@ import { notificationSagas } from 'controllers/notification';
 import { authSagas } from 'controllers/auth/sagas';
 import { fetchSagas } from 'controllers/fetch';
 import { launchSagas } from 'controllers/launch';
+import { manualLaunchesSagas } from 'controllers/manualLaunch';
 import { groupOperationsSagas } from 'controllers/groupOperations';
 import { suiteSagas } from 'controllers/suite';
 import { dashboardSagas } from 'controllers/dashboard';
@@ -28,18 +29,24 @@ import { membersSagas } from 'controllers/members';
 import { testItemsSagas } from 'controllers/testItem';
 import { historySagas } from 'controllers/itemsHistory';
 import { logSagas } from 'controllers/log';
-import { administrateSagas } from 'controllers/administrate';
+import { instanceSagas } from 'controllers/instance';
 import { userSagas } from 'controllers/user';
 import { projectSagas } from 'controllers/project';
 import { initialDataSagas } from 'controllers/initialData';
 import { pageSagas } from 'controllers/pages';
 import { pluginSagas } from 'controllers/plugins';
 import { uniqueErrorsSagas } from 'controllers/uniqueErrors';
+import { organizationsSagas } from 'controllers/instance/organizations';
+import { organizationSagas } from 'controllers/organization';
 import { serverSettingsSagas } from 'controllers/appInfo';
 import { exportsSagas } from 'controllers/exports/sagas';
+import { testCaseSagas } from 'controllers/testCase';
+import { testPlanSagas } from 'controllers/testPlan';
+import { milestoneSagas } from 'controllers/milestone';
 import { analyticsSagas } from 'controllers/analytics';
 
 const sagas = [
+  manualLaunchesSagas,
   notificationSagas,
   authSagas,
   fetchSagas,
@@ -54,14 +61,19 @@ const sagas = [
   testItemsSagas,
   logSagas,
   historySagas,
-  administrateSagas,
+  instanceSagas,
   userSagas,
+  organizationsSagas,
+  organizationSagas,
   projectSagas,
   initialDataSagas,
   pageSagas,
   pluginSagas,
   uniqueErrorsSagas,
   exportsSagas,
+  testCaseSagas,
+  testPlanSagas,
+  milestoneSagas,
   analyticsSagas,
 ];
 
@@ -69,14 +81,13 @@ export function* rootSagas() {
   yield all(
     sagas.map((saga) =>
       // eslint-disable-next-line func-names
-      spawn(function*() {
-        // eslint-disable-next-line no-constant-condition
+      spawn(function* () {
         while (true) {
           try {
             yield call(saga);
             break;
-          } catch (e) {
-            console.error(e); // eslint-disable-line no-console
+          } catch (error) {
+            console.error(error);
           }
         }
       }),

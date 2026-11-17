@@ -27,6 +27,7 @@ export const Triangles = ({ growthDuration }) => {
   return (
     <div className={cx('triangles')}>
       {new Array(count).fill(0).map((_, index) => (
+        // eslint-disable-next-line react/no-array-index-key
         <span key={index} className={cx('triangle')} />
       ))}
     </div>

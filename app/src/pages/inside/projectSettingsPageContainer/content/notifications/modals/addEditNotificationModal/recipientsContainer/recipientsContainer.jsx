@@ -14,97 +14,87 @@
  * limitations under the License.
  */
 
-import React, { useState } from 'react';
-import { connect, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { defineMessages, useIntl } from 'react-intl';
 import { URLS } from 'common/urls';
-import { regex } from 'common/utils/validation/validatorHelpers';
 import { validate } from 'common/utils/validation';
-import { projectIdSelector } from 'controllers/pages';
-import { AsyncMultipleAutocomplete } from 'componentLibrary/autocompletes/asyncMultipleAutocomplete';
-import { projectInfoSelector } from 'controllers/project/selectors';
+import { projectKeySelector } from 'controllers/project';
+import { AsyncMultipleAutocompleteV2 } from 'componentLibrary/autocompletes/asyncMultipleAutocompleteV2';
+
 import PropTypes from 'prop-types';
 
 const messages = defineMessages({
   recipientsPlaceholder: {
     id: 'AddEditNotificationModal.recipientsPlaceholder',
-    defaultMessage: 'User name/Email',
+    defaultMessage: 'Email',
   },
   recipientsError: {
     id: 'AddEditNotificationModal.recipientsError',
-    defaultMessage: 'Please enter existent user name on your project or valid email',
+    defaultMessage: 'Email is incorrect. Please enter correct email',
   },
 });
 
-const RecipientsContainerComponent = ({ projectInfo, error, ...rest }) => {
+export const RecipientsContainer = ({ error, value = [], ...rest }) => {
   const { formatMessage } = useIntl();
-  const activeProject = useSelector(projectIdSelector);
-  const [recipientsWithError, setRecipientsWithError] = useState([]);
+  const projectKey = useSelector(projectKeySelector);
 
-  const emailValidation = (email) => {
-    return regex(/@/)(email);
+  const getEmailValidationError = (email) => {
+    return validate.email(email) ? false : 'error';
   };
 
-  const getEmailValidationError = (v) => {
-    if (emailValidation(v)) {
-      return !validate.email(v) && 'error';
-    }
-    return false;
-  };
-
-  const getValidationError = (v) => {
-    const emailValidationErrorType = getEmailValidationError(v);
-    if (emailValidationErrorType) {
-      return emailValidationErrorType;
-    }
-
-    const hasError = !emailValidation(v) && !projectInfo.users.some((user) => user.login === v);
-    if (hasError) {
-      !recipientsWithError.includes(v) && setRecipientsWithError([...recipientsWithError, v]);
-      return 'error';
-    } else {
-      const currentRecipientsWithError = recipientsWithError.filter((login) => login !== v);
-      currentRecipientsWithError.length !== recipientsWithError.length &&
-        setRecipientsWithError(currentRecipientsWithError);
-      return false;
-    }
-  };
-
-  const clearItemsError = () => {
-    setRecipientsWithError([]);
-  };
+  const clearItemsError = () => {};
 
   const parseEmailsString = (string) => {
-    const re = /<([^\s<>@]+@[^\s<>@]+)>/g;
-    const emails = Array.from(string.matchAll(re), (m) => m[1]);
-    return [...new Set(emails)];
+    const delimiters = /[,;\n]+/;
+    const angleBracketRegex = /<([^\s<>@]+@[^\s<>@]+)>/g;
+
+    const tokens = string
+      .split(delimiters)
+      .map((token) => token.trim())
+      .filter(Boolean);
+
+    const result = tokens.flatMap((token) => {
+      const angleBracketMatches = Array.from(token.matchAll(angleBracketRegex), (match) => match[1]);
+      return angleBracketMatches.length > 0 ? angleBracketMatches : [token];
+    });
+
+    const uniqueResult = [...new Set(result)];
+
+    // For multi-token paste, keep only valid emails and ignore garbage.
+    // For single-token input, preserve existing validation flow.
+    if (uniqueResult.length > 1) {
+      return uniqueResult.filter((token) => validate.email(token));
+    }
+
+    return uniqueResult;
   };
 
-  const recipientsError = recipientsWithError.length ? formatMessage(messages.recipientsError) : '';
+  const recipientsError =
+    Array.isArray(value) && value.some((email) => !validate.email(email))
+      ? formatMessage(messages.recipientsError)
+      : '';
 
   return (
-    <AsyncMultipleAutocomplete
+    <AsyncMultipleAutocompleteV2
       placeholder={formatMessage(messages.recipientsPlaceholder)}
       minLength={1}
-      getURI={URLS.projectUsernamesSearch(activeProject)}
+      isDropdownMode
+      getURI={URLS.projectUsernamesSearch(projectKey)}
       creatable
       editable
       createWithoutConfirmation
-      getItemValidationErrorType={getValidationError}
+      getItemValidationErrorType={getEmailValidationError}
       clearItemsError={clearItemsError}
       parseInputValueFn={parseEmailsString}
       error={error || recipientsError}
+      value={value}
       {...rest}
     />
   );
 };
-RecipientsContainerComponent.propTypes = {
-  projectInfo: PropTypes.object.isRequired,
+
+RecipientsContainer.propTypes = {
   error: PropTypes.string,
+  value: PropTypes.arrayOf(PropTypes.string),
 };
-RecipientsContainerComponent.defaultProps = {
-  error: '',
-};
-export const RecipientsContainer = connect((state) => ({
-  projectInfo: projectInfoSelector(state),
-}))(RecipientsContainerComponent);
+

@@ -14,16 +14,17 @@
  * limitations under the License.
  */
 
-import { defineMessages, FormattedMessage } from 'react-intl';
-import { PageBlockContainer } from 'pages/outside/common/pageBlockContainer';
-import React from 'react';
+import { defineMessages } from 'react-intl';
 import { isEmptyObject } from 'common/utils';
 import { ExtensionLoader } from 'components/extensionLoader';
 import { useSelector } from 'react-redux';
 import { authExtensionsSelector } from 'controllers/appInfo';
+import { lastFailedLoginTimeSelector } from 'controllers/auth';
+import { getLoginLockoutState } from 'controllers/auth/loginLockout';
 import classNames from 'classnames/bind';
 import { uiExtensionLoginBlockSelector } from 'controllers/plugins/uiExtensions';
-import { ExternalLoginBlock } from './loginForm/externalLoginBlock';
+import { isSoleLdapAuth } from 'pages/outside/common/utils';
+import { PageSectionContainer } from 'pages/outside/common/pageSectionContainer';
 import styles from './loginBlock.scss';
 import { LoginForm } from './loginForm';
 
@@ -32,34 +33,32 @@ const cx = classNames.bind(styles);
 const messages = defineMessages({
   welcome: {
     id: 'LoginBlock.welcome',
-    defaultMessage: 'Welcome,',
+    defaultMessage: 'Welcome',
   },
   login: {
     id: 'LoginBlock.login',
-    defaultMessage: 'login to your account',
+    defaultMessage: 'Enter your email and password to log in:',
   },
 });
 
 export const LoginBlock = () => {
   const externalAuth = useSelector(authExtensionsSelector);
   const extensions = useSelector(uiExtensionLoginBlockSelector);
+  const lastFailedLoginTime = useSelector(lastFailedLoginTimeSelector);
+  const { isLoginLimitExceeded } = getLoginLockoutState(lastFailedLoginTime);
+  const showExternalAuth =
+    !isLoginLimitExceeded && !isEmptyObject(externalAuth) && !isSoleLdapAuth(externalAuth);
 
   return (
     <>
-      <PageBlockContainer header={messages.welcome} hint={messages.login}>
-        {!isEmptyObject(externalAuth) ? (
-          <>
-            <ExternalLoginBlock externalAuth={externalAuth} />
-            <div className={cx('separator')}>
-              <div className={cx('line')} />
-              <div className={cx('or')}>
-                <FormattedMessage id={'LoginForm.or'} defaultMessage={'or'} />
-              </div>
-            </div>
-          </>
-        ) : null}
-        <LoginForm />
-      </PageBlockContainer>
+      <PageSectionContainer
+        hideHeader={isLoginLimitExceeded}
+        header={messages.welcome}
+        hint={messages.login}
+        leftAligned
+      >
+        <LoginForm externalAuth={showExternalAuth ? externalAuth : null} />
+      </PageSectionContainer>
       <div className={cx('bottom-content')}>
         {extensions &&
           extensions.length !== 0 &&

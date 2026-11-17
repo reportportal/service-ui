@@ -123,6 +123,11 @@ export const groupItemsByParent = (items) =>
     };
   }, {});
 
+export const cleanUpTestItemQuery = (query) => {
+  const keys = Object.keys(query).filter((item) => !/^item+[0-9]/.test(item));
+  return omit(query, keys);
+};
+
 export const isItemOwner = (userId, item, launch) => {
   if (item.owner) {
     return userId === item.owner;
@@ -131,9 +136,4 @@ export const isItemOwner = (userId, item, launch) => {
   }
 
   return true;
-};
-
-export const cleanUpTestItemQuery = (query) => {
-  const keys = Object.keys(query).filter((item) => !/^item+[0-9]/.test(item));
-  return omit(query, keys);
 };

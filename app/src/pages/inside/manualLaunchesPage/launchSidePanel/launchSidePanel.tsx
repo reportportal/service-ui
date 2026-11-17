@@ -1,0 +1,306 @@
+/*
+ * Copyright 2025 EPAM Systems
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+import { memo, useRef, useCallback } from 'react';
+import { useIntl } from 'react-intl';
+import { useDispatch } from 'react-redux';
+import { useTracking } from 'react-tracking';
+import {
+  Button,
+  RerunIcon,
+  UserIcon,
+  LaunchTypeIcon,
+  TestPlanIcon,
+  SidePanel,
+  BubblesLoader,
+  CopyIcon,
+  HashIcon,
+} from '@reportportal/ui-kit';
+import { VoidFn } from '@reportportal/ui-kit/common';
+import { isEmpty } from 'es-toolkit/compat';
+
+import { createClassnames, copyToClipboard } from 'common/utils';
+import { useOnClickOutside } from 'common/hooks';
+import { CollapsibleSection } from 'components/collapsibleSection';
+import { ExpandedTextSection } from 'components/fields/expandedTextSection';
+import { formatTimestampForSidePanel } from 'pages/inside/common/testCaseList/utils';
+import { MANUAL_LAUNCH_DETAILS_PAGE } from 'controllers/pages';
+import { useUserPermissions } from 'hooks/useUserPermissions';
+import { useProjectDetails } from 'hooks/useTypedSelector';
+import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
+import { ExecutionStatus } from 'types/testCase';
+
+import { commonMessages } from 'pages/inside/common/common-messages';
+import {
+  MANUAL_LAUNCHES_PAGE_EVENTS,
+  MANUAL_LAUNCHES_PLACE,
+} from 'components/main/analytics/events/ga4Events/manualLaunchesPageEvents';
+import { LaunchAttribute } from '../launchAttribute';
+import { TestStatisticsChart } from '../testStatisticsChart';
+import { useEditManualLaunchModal } from '../editManualLaunchModal';
+import { useLaunchDetails } from './useLaunchDetails';
+import { messages } from './messages';
+
+import styles from './launchSidePanel.scss';
+
+const cx = createClassnames(styles);
+
+interface LaunchSidePanelProps {
+  launchId: number | null;
+  isVisible: boolean;
+  onClose: VoidFn;
+  onRefresh?: VoidFn;
+}
+
+export const LaunchSidePanel = memo(
+  ({ launchId, isVisible, onClose, onRefresh }: LaunchSidePanelProps) => {
+    const { formatMessage } = useIntl();
+    const dispatch = useDispatch();
+    const { trackEvent } = useTracking();
+    const { organizationSlug, projectSlug } = useProjectDetails();
+    const { canEditLaunch } = useUserPermissions();
+    const sidePanelRef = useRef<HTMLDivElement>(null);
+    const { launchDetails, isLoading, refetchLaunchDetails } = useLaunchDetails(launchId);
+    const { openModal: openEditModal } = useEditManualLaunchModal({
+      onSuccess: () => {
+        refetchLaunchDetails();
+        onRefresh?.();
+      },
+    });
+
+    const handleEditLaunchClick = useCallback(() => {
+      if (!launchDetails) return;
+
+      const { id, name, description, testPlan, attributes } = launchDetails;
+
+      const modalData = {
+        id,
+        name,
+        description,
+        testPlan: testPlan ? { id: testPlan.id, name: testPlan.name } : null,
+        attributes: attributes || [],
+      };
+
+      trackEvent(MANUAL_LAUNCHES_PAGE_EVENTS.CLICK_START_EDIT_LAUNCH);
+      openEditModal(modalData);
+    }, [launchDetails, openEditModal, trackEvent]);
+
+    useOnClickOutside(sidePanelRef, onClose);
+
+    if (!launchDetails && !isLoading) {
+      return null;
+    }
+
+    if (!launchDetails) {
+      return (
+        <div ref={sidePanelRef} className={cx('launch-side-panel-wrapper')}>
+          <SidePanel
+            className={cx('launch-side-panel')}
+            title=""
+            descriptionComponent={<BubblesLoader />}
+            contentComponent={<BubblesLoader />}
+            footerComponent={null}
+            isOpen={isVisible}
+            onClose={onClose}
+            closeButtonAriaLabel={formatMessage(commonMessages.closePanel)}
+            side="right"
+          />
+        </div>
+      );
+    }
+
+    const { total, passed, failed, skipped, toRun, inProgress } = launchDetails.executionStatistic;
+
+    const handleToRunClick = () => {
+      if (toRun === 0) {
+        onClose();
+        return;
+      }
+
+      if (launchId) {
+        trackEvent(
+          MANUAL_LAUNCHES_PAGE_EVENTS.clickShowToRun(MANUAL_LAUNCHES_PLACE.LAUNCH_DETAILS_SIDEBAR),
+        );
+        dispatch({
+          type: MANUAL_LAUNCH_DETAILS_PAGE,
+          payload: { organizationSlug, projectSlug, launchId: launchId.toString() },
+          meta: { query: { statusFilter: ExecutionStatus.TO_RUN } },
+        });
+        onClose();
+      }
+    };
+
+    const handleOpenDetailsClick = () => {
+      if (launchId) {
+        dispatch({
+          type: MANUAL_LAUNCH_DETAILS_PAGE,
+          payload: { organizationSlug, projectSlug, launchId: launchId.toString() },
+        });
+        onClose();
+      }
+    };
+
+    const launchBusinessId = launchDetails.displayId;
+
+    const handleCopyLaunchId = () => {
+      copyToClipboard(launchBusinessId).catch((error) => {
+        console.error('Failed to copy ID:', error);
+      });
+    };
+
+    const { testPlan, owner, type, startTime } = launchDetails;
+
+    const ownerInfo = owner?.name ?? owner?.email;
+
+    const descriptionComponent = (
+      <div className={cx('header-meta')}>
+        <div className={cx('meta-row')}>
+          <div className={cx('meta-item-row', 'id-row')}>
+            <HashIcon className={cx('hash-icon')} aria-hidden />
+            <span className={cx('meta-label')}>{formatMessage(messages.launchId)}</span>
+            <span className={cx('meta-value', 'meta-value-launch-id')}>{launchBusinessId}</span>
+            <button
+              type="button"
+              className={cx('copy-button')}
+              onClick={handleCopyLaunchId}
+              aria-label={formatMessage(commonMessages.copyId)}
+            >
+              <CopyIcon />
+            </button>
+          </div>
+        </div>
+        <div className={cx('meta-row', 'meta-row-with-action')}>
+          <div className={cx('meta-item-row')}>
+            <LaunchTypeIcon className={cx('launch-type-icon')} />
+            <span className={cx('meta-label')}>{formatMessage(messages.type)}:</span>
+            <span className={cx('meta-value')}>{type}</span>
+          </div>
+        </div>
+        <div className={cx('meta-row')}>
+          <div className={cx('meta-item-row')}>
+            <UserIcon />
+            <span className={cx('meta-label')}>{formatMessage(messages.owner)}:</span>
+            <span className={cx('meta-value')}>{ownerInfo}</span>
+          </div>
+        </div>
+        <div className={cx('meta-row')}>
+          <div className={cx('meta-item-row')}>
+            <RerunIcon />
+            <span className={cx('meta-label')}>{formatMessage(messages.created)}:</span>
+            <span className={cx('meta-value')}>{formatTimestampForSidePanel(startTime)}</span>
+          </div>
+        </div>
+        {testPlan && (
+          <div className={cx('meta-row')}>
+            <div className={cx('meta-item-row')}>
+              <TestPlanIcon />
+              <span className={cx('meta-label')}>{formatMessage(messages.testPlan)}:</span>
+              <span className={cx('meta-value')} title={testPlan.name}>
+                {testPlan.name}
+              </span>
+            </div>
+          </div>
+        )}
+      </div>
+    );
+
+    const contentComponent = (
+      <div className={cx('content')}>
+        <TestStatisticsChart
+          total={total}
+          passed={passed}
+          failed={failed}
+          skipped={skipped}
+          inProgress={inProgress}
+          toRun={toRun}
+        />
+        <CollapsibleSection
+          title={formatMessage(commonMessages.description)}
+          defaultMessage={formatMessage(commonMessages.descriptionNotSpecified)}
+        >
+          {launchDetails.description && (
+            <ExpandedTextSection text={launchDetails.description} defaultVisibleLines={5} />
+          )}
+        </CollapsibleSection>
+        <CollapsibleSection
+          title={formatMessage(messages.attributesTitle)}
+          defaultMessage={formatMessage(messages.noAttributesAdded)}
+        >
+          {!isEmpty(launchDetails.attributes) && (
+            <div className={cx('attributes-list')}>
+              {launchDetails.attributes.map((attr) => (
+                <LaunchAttribute
+                  key={`${attr.key}-${attr.value}`}
+                  attributeKey={attr.key}
+                  value={attr.value}
+                />
+              ))}
+            </div>
+          )}
+        </CollapsibleSection>
+      </div>
+    );
+
+    const footerComponent = (
+      <div className={cx('footer')}>
+        <Button
+          variant="text"
+          className={cx('action-button')}
+          onClick={handleOpenDetailsClick}
+          data-automation-id="launch-open-details"
+        >
+          {formatMessage(messages.openDetails)}
+        </Button>
+        {canEditLaunch && (
+          <Button
+            variant="ghost"
+            className={cx('action-button')}
+            onClick={handleEditLaunchClick}
+            data-automation-id="launch-edit-launch"
+          >
+            {formatMessage(messages.editLaunch)}
+          </Button>
+        )}
+        <Button
+          variant="primary"
+          className={cx('action-button', 'last-button')}
+          onClick={handleToRunClick}
+          data-automation-id="launch-to-run"
+        >
+          {formatMessage(toRun ? messages.toRunWithCount : COMMON_LOCALE_KEYS.DONE, {
+            testCount: toRun,
+          })}
+        </Button>
+      </div>
+    );
+
+    return (
+      <div ref={sidePanelRef} className={cx('launch-side-panel-wrapper')}>
+        <SidePanel
+          className={cx('launch-side-panel')}
+          title={launchDetails.name}
+          descriptionComponent={isLoading ? <BubblesLoader /> : descriptionComponent}
+          contentComponent={isLoading ? <BubblesLoader /> : contentComponent}
+          footerComponent={footerComponent}
+          isOpen={isVisible}
+          onClose={onClose}
+          closeButtonAriaLabel={formatMessage(commonMessages.closePanel)}
+          side="right"
+        />
+      </div>
+    );
+  },
+);

@@ -1,0 +1,48 @@
+/*
+  * Copyright 2026 EPAM Systems
+  *
+  * Licensed under the Apache License, Version 2.0 (the "License");
+  * you may not use this file except in compliance with the License.
+  * You may obtain a copy of the License at
+  *
+  * http://www.apache.org/licenses/LICENSE-2.0
+  *
+  * Unless required by applicable law or agreed to in writing, software
+  * distributed under the License is distributed on an "AS IS" BASIS,
+  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  * See the License for the specific language governing permissions and
+  * limitations under the License.
+  */
+
+.dynamic-fields {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.no-default-properties-message {
+  display: flex;
+  margin-top: 16px;
+  color: var(--rp-ui-base-error);
+  font-family: $FONT-ROBOTO-MEDIUM;
+  font-size: 12px;
+  line-height: 18px;
+}
+
+.icon {
+  display: inline-block;
+  margin-right: 5px;
+
+  svg {
+    width: 16px;
+    height: 16px;
+    fill: var(--rp-ui-base-error);
+  }
+}
+
+.included-data-config {
+  display: flex;
+  flex-direction: column;
+  margin-top: 16px;
+  gap: 10px;
+}

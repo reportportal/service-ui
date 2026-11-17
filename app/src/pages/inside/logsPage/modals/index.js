@@ -15,4 +15,4 @@
  */
 
 export { CopySendDefectModal } from './copySendDefectModal';
-export { AttachmentCodeModal, AttachmentHarFileModal } from './attachments';
+export { AttachmentCodeModal, AttachmentHarFileModal, AttachmentVideoModal } from './attachments';

@@ -1,0 +1,163 @@
+/*
+ * Copyright 2025 EPAM Systems
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+import { useState, useMemo } from 'react';
+import { useIntl } from 'react-intl';
+import { useSelector } from 'react-redux';
+import { useTracking } from 'react-tracking';
+import { isEmpty } from 'es-toolkit/compat';
+import { Pagination, Button, Selection } from '@reportportal/ui-kit';
+
+import {
+  TEST_PLANS_PAGE_EVENTS,
+  PLACE_DETAILS,
+  ACTION_SOURCE,
+} from 'analyticsEvents/testPlansPageEvents';
+import { createClassnames } from 'common/utils';
+import { TestCaseList } from 'pages/inside/common/testCaseList';
+import { ITEMS_PER_PAGE_OPTIONS } from 'pages/inside/common/testCaseList/constants';
+import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
+import { SelectedTestCaseRow } from 'pages/inside/common/testCaseList/types';
+import { BULK_ADD_TO_LAUNCH_MIN_SELECTION } from 'pages/inside/common/constants';
+import {
+  defaultTestPlanTestCasesQueryParams,
+  TEST_PLAN_TEST_CASES_NAMESPACE,
+  testPlanTestCasesPageSelector,
+} from 'controllers/testPlan';
+import { payloadSelector } from 'controllers/pages';
+import { useProjectDetails, useTestPlanId } from 'hooks/useTypedSelector';
+import { useURLBoundPagination } from 'pages/inside/common/testCaseList/useURLBoundPagination';
+
+import { useRemoveTestCasesFromTestPlanModal } from '../../../testPlanModals';
+import { removeTestCasesFromTestPlanMessages } from '../../../testPlanModals/removeTestCasesFromTestPlanModal/messages';
+import { useAddTestCasesToLaunchModal } from './addTestCasesToLaunchModal';
+import { AllTestCasesPageProps } from './types';
+import styles from './allTestCasesPage.scss';
+
+const cx = createClassnames(styles);
+
+export const AllTestCasesPage = ({
+  testCases,
+  loading,
+  instanceKey,
+  folderName,
+}: AllTestCasesPageProps) => {
+  const { formatMessage } = useIntl();
+  const { trackEvent } = useTracking();
+  const testPlansTestCasesPageData = useSelector(testPlanTestCasesPageSelector);
+  const payload = useSelector(payloadSelector);
+  const { organizationSlug, projectSlug } = useProjectDetails();
+  const testPlanId = useTestPlanId();
+  const testPlanRoute = payload.testPlanRoute ? `/${payload.testPlanRoute}` : '';
+  const { setPageNumber, setPageSize, captions, activePage, pageSize, totalPages } =
+    useURLBoundPagination({
+      pageData: testPlansTestCasesPageData,
+      defaultQueryParams: defaultTestPlanTestCasesQueryParams,
+      namespace: TEST_PLAN_TEST_CASES_NAMESPACE,
+      shouldSaveUserPreferences: true,
+      baseUrl: `/organizations/${organizationSlug}/projects/${projectSlug}/milestones/${payload.testPlanId}${testPlanRoute}`,
+    });
+
+  const [selectedRows, setSelectedRows] = useState<SelectedTestCaseRow[]>([]);
+  const selectedRowIds = useMemo(() => selectedRows.map((row) => row.id), [selectedRows]);
+  const onClearSelection = () => setSelectedRows([]);
+
+  const { openModal: openRemoveTestCasesModal } = useRemoveTestCasesFromTestPlanModal();
+  const addToLaunchSource =
+    selectedRowIds.length >= BULK_ADD_TO_LAUNCH_MIN_SELECTION
+      ? ACTION_SOURCE.BULK
+      : ACTION_SOURCE.SINGLE;
+  const { openModal: openAddToLaunchModal } = useAddTestCasesToLaunchModal({
+    selectedRowsIds: selectedRowIds,
+    testCases,
+    testPlanId,
+    onClearSelection,
+    source: addToLaunchSource,
+    place: PLACE_DETAILS,
+  });
+
+  const isAnyRowSelected = !isEmpty(selectedRows);
+
+  const handleOpenRemoveModal = () => {
+    openRemoveTestCasesModal({
+      selectedTestCaseIds: selectedRowIds,
+      testCaseName: selectedRows.length === 1 ? selectedRows[0]?.name : undefined,
+      onClearSelection,
+      source: ACTION_SOURCE.BULK,
+    });
+  };
+
+  const handleOpenAddToLaunchModal = () => {
+    if (selectedRowIds.length >= BULK_ADD_TO_LAUNCH_MIN_SELECTION) {
+      trackEvent(TEST_PLANS_PAGE_EVENTS.clickStartBulkAddToLaunch(selectedRowIds.length));
+    }
+    openAddToLaunchModal();
+  };
+
+  return (
+    <>
+      <div
+        className={cx(
+          'all-test-cases-page',
+          isAnyRowSelected ? 'all-test-cases-page__with-panel' : '',
+        )}
+      >
+        <TestCaseList
+          testCases={testCases}
+          isLoading={loading}
+          selectedRowIds={selectedRowIds}
+          selectedRows={selectedRows}
+          handleSelectedRows={setSelectedRows}
+          folderTitle={folderName || formatMessage(COMMON_LOCALE_KEYS.ALL_TEST_CASES_TITLE)}
+          selectable
+          instanceKey={instanceKey}
+        />
+      </div>
+      {Boolean(testPlansTestCasesPageData?.totalElements) && (
+        <div className={cx('pagination', isAnyRowSelected ? 'pagination-with-panel' : '')}>
+          <Pagination
+            pageSize={pageSize}
+            activePage={activePage}
+            totalItems={testPlansTestCasesPageData.totalElements}
+            totalPages={totalPages}
+            pageSizeOptions={ITEMS_PER_PAGE_OPTIONS}
+            changePage={setPageNumber}
+            changePageSize={setPageSize}
+            captions={captions}
+            className={cx('pagination-content')}
+          />
+        </div>
+      )}
+      {isAnyRowSelected && (
+        <div className={cx('selection')}>
+          <Selection selectedCount={selectedRowIds.length} onClearSelection={onClearSelection} />
+          <div className={cx('selection-controls')}>
+            <Button
+              variant="ghost"
+              onClick={handleOpenRemoveModal}
+              className={cx('selection-controls__remove-button')}
+            >
+              {formatMessage(removeTestCasesFromTestPlanMessages.removeFromTestPlanTitle)}
+            </Button>
+            <Button variant="primary" onClick={handleOpenAddToLaunchModal}>
+              {formatMessage(COMMON_LOCALE_KEYS.ADD_TO_LAUNCH)}
+            </Button>
+          </div>
+        </div>
+      )}
+    </>
+  );
+};

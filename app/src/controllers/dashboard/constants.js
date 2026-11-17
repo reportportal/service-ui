@@ -26,6 +26,7 @@ export const INITIAL_STATE = {
   dashboards: [],
   activeDashboardItem: {},
   gridType: '',
+  fullWidthMode: false,
   fullScreenMode: false,
   loading: false,
   pagination: {},
@@ -46,6 +47,8 @@ export const CHANGE_VISIBILITY_TYPE = 'changeVisibilityType';
 export const DASHBOARDS_VISIBILITY_TYPE_STORAGE_KEY = 'dashboard_type';
 export const DASHBOARDS_TABLE_VIEW = 'table';
 export const DASHBOARDS_GRID_VIEW = 'grid';
+export const CHANGE_FULL_WIDTH_MODE = 'changeFullWidthMode';
+export const DASHBOARDS_FULL_WIDTH_MODE_STORAGE_KEY = 'dashboard_full_width_mode';
 export const CHANGE_FULL_SCREEN_MODE = 'changeFullScreenMode';
 export const TOGGLE_FULL_SCREEN_MODE = 'toggleFullScreenMode';
 export const INCREASE_TOTAL_DASHBOARDS_LOCALLY = 'increaseTotalDashboardsLocally';

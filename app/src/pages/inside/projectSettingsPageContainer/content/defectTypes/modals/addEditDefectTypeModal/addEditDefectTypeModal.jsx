@@ -14,21 +14,19 @@
  * limitations under the License.
  */
 
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { reduxForm } from 'redux-form';
 import { useDispatch } from 'react-redux';
 import className from 'classnames/bind';
 import { defineMessages, useIntl } from 'react-intl';
 import { withModal } from 'components/main/modal';
-import { Modal } from '@reportportal/ui-kit';
+import { Dropdown, FieldText, Modal } from '@reportportal/ui-kit';
 import { FieldProvider } from 'components/fields/fieldProvider';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { validate, bindMessageToValidator, composeBoundValidators } from 'common/utils/validation';
 import { FieldErrorHint } from 'components/fields/fieldErrorHint';
-import { Dropdown } from 'componentLibrary/dropdown';
 import { hideModalAction } from 'controllers/modal';
-import { FieldText } from 'componentLibrary/fieldText';
 import { HexColorPickerComponent } from 'components/main/hexColorPicker';
 import { DEFECT_TYPES_MAP } from 'common/constants/defectTypes';
 import { FIELD } from 'common/constants/dataAutomation';
@@ -197,7 +195,7 @@ const AddEditDefectTypeModal = ({
             }}
             dataAutomationId={GROUP_FIELD_KEY + FIELD}
           >
-            <Dropdown options={defectGroupOptions} defaultWidth={false} />
+            <Dropdown options={defectGroupOptions} />
           </FieldElement>
         )}
         <div className={cx('input')}>
@@ -207,11 +205,7 @@ const AddEditDefectTypeModal = ({
             </FieldErrorHint>
           </FieldProvider>
         </div>
-        <FieldProvider
-          name={ABBREVIATION_FIELD_KEY}
-          type="text"
-          className={cx('abbreviation-field')}
-        >
+        <FieldProvider name={ABBREVIATION_FIELD_KEY} type="text">
           <FieldErrorHint provideHint={false} dataAutomationId={ABBREVIATION_FIELD_KEY + FIELD}>
             <FieldText
               label={formatMessage(messages.abbreviation)}

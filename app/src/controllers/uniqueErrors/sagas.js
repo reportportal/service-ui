@@ -16,21 +16,23 @@
 
 import { all, call, put, select, take, takeEvery } from 'redux-saga/effects';
 import { URLS } from 'common/urls';
-import { activeProjectSelector } from 'controllers/user';
+import { projectKeySelector, projectInfoIdSelector } from 'controllers/project';
+import { activeOrganizationIdSelector } from 'controllers/organization';
 import { fetchParentItems, fetchParentLaunch, launchSelector } from 'controllers/testItem';
 import { createFetchPredicate, fetchDataAction } from 'controllers/fetch';
 import {
   launchIdSelector,
   pagePropertiesSelector,
   pathnameChangedSelector,
+  locationSelector,
 } from 'controllers/pages';
 import { PAGE_KEY, SIZE_KEY } from 'controllers/pagination';
 import { SORTING_KEY } from 'controllers/sorting';
 import { unselectAllItemsAction } from 'controllers/groupOperations';
 import { NAMESPACE as PLUGINS_NAMESPACE } from 'controllers/plugins/constants';
 import { pluginsSelector } from 'controllers/plugins';
+import { buildPluginCommandRQ } from 'controllers/plugins/utils';
 import { COMMAND_GET_CLUSTERS } from 'controllers/plugins/uiExtensions/constants';
-import { locationSelector } from 'controllers/pages/selectors';
 import { queryParametersSelector } from './selectors';
 import {
   CLEAR_CLUSTER_ITEMS,
@@ -62,7 +64,9 @@ function* fetchClusters(payload = {}) {
   const { refresh = false } = payload;
   const launchId = yield select(launchIdSelector);
   const parentLaunch = yield select(launchSelector);
-  const project = yield select(activeProjectSelector);
+  const projectKey = yield select(projectKeySelector);
+  const projectId = yield select(projectInfoIdSelector);
+  const organizationId = yield select(activeOrganizationIdSelector);
   const isPathNameChanged = yield select(pathnameChangedSelector);
   const selectedItems = yield select(selectedClusterItemsSelector);
 
@@ -75,7 +79,7 @@ function* fetchClusters(payload = {}) {
   if (!parentLaunch) {
     yield call(fetchParentItems);
   } else {
-    yield call(fetchParentLaunch, { payload: { project, launchId } });
+    yield call(fetchParentLaunch, { payload: { projectKey, launchId } });
   }
 
   const query = yield select(queryParametersSelector, NAMESPACE);
@@ -83,18 +87,23 @@ function* fetchClusters(payload = {}) {
   const requestParams = {};
   const plugin = yield call(getPlugin);
   if (plugin) {
-    url = URLS.pluginCommandCommon(project, plugin.name, COMMAND_GET_CLUSTERS);
-    requestParams.method = 'PUT';
+    url = URLS.pluginsCommandsCommon(plugin.name, COMMAND_GET_CLUSTERS);
+    requestParams.method = 'POST';
     const uniqueErrorsParams = yield select(pagePropertiesSelector, NAMESPACE);
-    requestParams.data = {
-      launchId,
-      ...uniqueErrorsParams,
-      pageNumber: query[PAGE_KEY],
-      pageSize: query[SIZE_KEY],
-      pageSort: query[SORTING_KEY],
-    };
+    requestParams.data = buildPluginCommandRQ({
+      projectKey,
+      projectId,
+      organizationId,
+      arguments: {
+        launchId,
+        ...uniqueErrorsParams,
+        pageNumber: query[PAGE_KEY],
+        pageSize: query[SIZE_KEY],
+        pageSort: query[SORTING_KEY],
+      },
+    });
   } else {
-    url = URLS.clusterByLaunchId(project, launchId, {
+    url = URLS.clusterByLaunchId(projectKey, launchId, {
       [PAGE_KEY]: query[PAGE_KEY],
       [SIZE_KEY]: query[SIZE_KEY],
       [SORTING_KEY]: query[SORTING_KEY],

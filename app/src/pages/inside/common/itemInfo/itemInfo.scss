@@ -80,7 +80,9 @@
 }
 
 .edit-number-box {
+  display: inline-block;
   white-space: nowrap;
+  vertical-align: baseline;
 }
 
 .number {
@@ -150,10 +152,14 @@
 }
 
 .additional-info {
-  display: inline-block;
-  width: 100%;
+  display: block;
+  max-width: 30vw;
   box-sizing: border-box;
   margin-bottom: 10px;
+
+  @media (max-width: $SCREEN_SM_MAX) {
+    max-width: 100%;
+  }
 }
 
 .duration-block {

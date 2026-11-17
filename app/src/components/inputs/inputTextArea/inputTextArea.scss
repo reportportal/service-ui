@@ -33,7 +33,9 @@
   box-shadow: none;
   flex-grow: 1;
   resize: vertical;
-  transition: border-color ease-in-out 0.15s, box-shadow ease-in-out 0.15s;
+  transition:
+    border-color ease-in-out 0.15s,
+    box-shadow ease-in-out 0.15s;
   &.dark-view {
     border: 1px solid $COLOR--dark-gray;
     border-radius: 4px;

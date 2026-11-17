@@ -17,6 +17,7 @@
 import PropTypes from 'prop-types';
 import { FormattedMessage } from 'react-intl';
 import classNames from 'classnames/bind';
+import { useUserPermissions } from 'hooks/useUserPermissions';
 import { FilterControls } from './filterControls';
 import { FiltersSorting } from '../../filtersSorting';
 import styles from './filtersActionBar.scss';
@@ -36,35 +37,40 @@ export const FiltersActionBar = ({
   onSave,
   onChangeSorting,
   sortingString,
-}) => (
-  <div className={cx('filters-action-bar')}>
-    <div className={cx('info-section')}>
-      {unsaved && (
-        <div className={cx('unsaved-message')}>
-          <span className={cx('asterisk')}>*</span>
-          <FormattedMessage
-            id="FiltersActionBar.unsavedFilter"
-            defaultMessage="Filter is not saved"
+}) => {
+  const { canWorkWithFilters } = useUserPermissions();
+
+  return (
+    <div className={cx('filters-action-bar')}>
+      <div className={cx('info-section')}>
+        {canWorkWithFilters && unsaved && (
+          <div className={cx('unsaved-message')}>
+            <span className={cx('asterisk')}>*</span>
+            <FormattedMessage
+              id="FiltersActionBar.unsavedFilter"
+              defaultMessage="Filter is not saved"
+            />
+          </div>
+        )}
+      </div>
+      <div className={cx('controls-section')}>
+        <FiltersSorting filter={filter} sortingString={sortingString} onChange={onChangeSorting} />
+        {canWorkWithFilters && (
+          <FilterControls
+            cloneDisabled={cloneDisabled}
+            editDisabled={editDisabled}
+            saveDisabled={saveDisabled}
+            discardDisabled={discardDisabled}
+            onDiscard={onDiscard}
+            onClone={onClone}
+            onEdit={onEdit}
+            onSave={onSave}
           />
-        </div>
-      )}
+        )}
+      </div>
     </div>
-    <div className={cx('controls-section')}>
-      <FiltersSorting filter={filter} sortingString={sortingString} onChange={onChangeSorting} />
-      <FilterControls
-        cloneDisabled={cloneDisabled}
-        editDisabled={editDisabled}
-        saveDisabled={saveDisabled}
-        discardDisabled={discardDisabled}
-        onChangeSorting={() => {}}
-        onDiscard={onDiscard}
-        onClone={onClone}
-        onEdit={onEdit}
-        onSave={onSave}
-      />
-    </div>
-  </div>
-);
+  );
+};
 FiltersActionBar.propTypes = {
   filter: PropTypes.object,
   unsaved: PropTypes.bool,

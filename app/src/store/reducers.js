@@ -24,6 +24,12 @@ import { projectReducer } from 'controllers/project';
 import { screenLockReducer } from 'controllers/screenLock';
 import { dashboardReducer } from 'controllers/dashboard';
 import { launchReducer } from 'controllers/launch';
+import {
+  manualLaunchesReducer,
+  manualLaunchFoldersReducer,
+  manualLaunchTestCaseExecutionsReducer,
+  activeManualLaunchExecutionReducer,
+} from 'controllers/manualLaunch';
 import { notificationReducer } from 'controllers/notification';
 import { suiteReducer } from 'controllers/suite/reducer';
 import { filterReducer } from 'controllers/filter';
@@ -33,11 +39,15 @@ import { testItemReducer } from 'controllers/testItem';
 import { stepReducer } from 'controllers/step';
 import { itemsHistoryReducer } from 'controllers/itemsHistory';
 import { logReducer } from 'controllers/log';
-import { administrateReducer } from 'controllers/administrate';
+import { instanceReducer } from 'controllers/instance';
 import { pluginsReducer } from 'controllers/plugins';
-import { initialDataReadyReducer } from 'controllers/initialData';
+import { initialDataReadyReducer, serviceAvailabilityReducer } from 'controllers/initialData';
 import { uniqueErrorsReducer } from 'controllers/uniqueErrors';
+import { organizationsReducer } from 'controllers/instance/organizations';
 import { exportsReducer } from 'controllers/exports/reducer';
+import { testCaseReducer } from 'controllers/testCase';
+import { testPlanReducer } from 'controllers/testPlan';
+import { milestoneReducer } from 'controllers/milestone';
 
 export default {
   appInfo: appInfoReducer,
@@ -46,11 +56,16 @@ export default {
   form: formReducer,
   modal: modalReducer,
   user: userReducer,
+  organizations: organizationsReducer,
   project: projectReducer,
   notifications: notificationReducer,
   screenLock: screenLockReducer,
   dashboards: dashboardReducer,
   launches: launchReducer,
+  manualLaunch: manualLaunchesReducer,
+  manualLaunchFolders: manualLaunchFoldersReducer,
+  manualLaunchTestCaseExecutions: manualLaunchTestCaseExecutionsReducer,
+  activeManualLaunchExecution: activeManualLaunchExecutionReducer,
   suites: suiteReducer,
   filters: filterReducer,
   tests: testReducer,
@@ -60,8 +75,12 @@ export default {
   log: logReducer,
   uniqueErrors: uniqueErrorsReducer,
   itemsHistory: itemsHistoryReducer,
-  administrate: administrateReducer,
+  administrate: instanceReducer,
   plugins: pluginsReducer,
   initialDataReady: initialDataReadyReducer,
+  serviceAvailability: serviceAvailabilityReducer,
   exports: exportsReducer,
+  testCase: testCaseReducer,
+  testPlan: testPlanReducer,
+  milestone: milestoneReducer,
 };

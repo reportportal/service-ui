@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 EPAM Systems
+ * Copyright 2025 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,25 +15,26 @@
  */
 
 import { NOT_FOUND } from 'redux-first-router';
-import { AdminLayout } from 'layouts/adminLayout';
-import { AppLayout } from 'layouts/appLayout';
 import { EmptyLayout } from 'layouts/emptyLayout';
+import { AuthLayout } from 'layouts/authLayout';
 
-import { ProjectsPage } from 'pages/admin/projectsPage';
-import { AllUsersPage } from 'pages/admin/allUsersPage';
-import { ServerSettingsPage } from 'pages/admin/serverSettingsPage';
-import { PluginsPage } from 'pages/admin/pluginsPage';
+import { AllUsersPage } from 'pages/instance/allUsersPage';
+import { ServerSettingsPage } from 'pages/instance/serverSettingsPage';
+import { PluginsPage } from 'pages/instance/pluginsPage';
 
 import { ApiPage } from 'pages/inside/apiPage';
+import { ExploreCloudVersionPage } from 'pages/common/exploreCloudVersionPage';
 import { DashboardPage } from 'pages/inside/dashboardPage';
 import { DashboardItemPage } from 'pages/inside/dashboardItemPage';
 import { DashboardPrintPage } from 'pages/inside/dashboardItemPage/dashboardPrintPage';
 import { FiltersPage } from 'pages/inside/filtersPage';
 import { LaunchesPage } from 'pages/inside/launchesPage';
+import { ManualLaunchesPage } from 'pages/inside/manualLaunchesPage';
+import { ManualLaunchDetailsPage } from 'pages/inside/manualLaunchesPage/manualLaunchDetailsPage';
+import { ManualLaunchExecutionPage } from 'pages/inside/manualLaunchesPage/manualLaunchExecutionPage';
 import { ProfilePage } from 'pages/inside/profilePage';
 import { SandboxPage } from 'pages/inside/sandboxPage';
 import { ProjectSettingsPageContainer } from 'pages/inside/projectSettingsPageContainer';
-import { ProjectMembersPageContainer } from 'pages/inside/projectMembersPageContainer';
 import { HistoryPage } from 'pages/inside/historyPage';
 import { UniqueErrorsPage } from 'pages/inside/uniqueErrorsPage';
 import { LoginPage } from 'pages/outside/loginPage';
@@ -41,24 +42,52 @@ import { NotFoundPage } from 'pages/outside/notFoundPage';
 import { RegistrationPage } from 'pages/outside/registrationPage';
 import { TestItemPage } from 'pages/inside/testItemPage';
 import { LogsPageContainer } from 'pages/inside/logsPage';
+import { MilestonesPage } from 'pages/inside/testPlansPage';
+import { TestPlanDetailsPage } from 'pages/inside/testPlansPage/testPlanDetailsPage';
 import {
   TEST_ITEM_PAGE,
   PROJECT_LOG_PAGE,
   PROJECT_USERDEBUG_LOG_PAGE,
   LAUNCHES_PAGE,
   HISTORY_PAGE,
-  PROJECT_DETAILS_PAGE,
   OAUTH_SUCCESS,
   PLUGIN_UI_EXTENSION_ADMIN_PAGE,
   PROJECT_PLUGIN_PAGE,
   UNIQUE_ERRORS_PAGE,
-  USER_PROFILE_SUB_PAGE,
   ACCOUNT_REMOVED_PAGE,
-} from 'controllers/pages';
-import { AdminUiExtensionPage } from 'pages/admin/adminUiExtensionPage';
-import { AdminUiExtensionPageLayout } from 'layouts/adminLayout/adminUiExtensionPageLayout';
+  USER_PROFILE_PAGE,
+  USER_PROFILE_PAGE_ORGANIZATION_LEVEL,
+  USER_PROFILE_PAGE_PROJECT_LEVEL,
+  USER_PROFILE_SUB_PAGE,
+  USER_PROFILE_SUB_PAGE_ORGANIZATION_LEVEL,
+  USER_PROFILE_SUB_PAGE_PROJECT_LEVEL,
+  ORGANIZATION_USERS_PAGE,
+  PRODUCT_VERSIONS_PAGE,
+  PRODUCT_VERSIONS_TAB_PAGE,
+  PRODUCT_VERSION_PAGE,
+  PRODUCT_VERSION_TAB_PAGE,
+  TEST_CASE_LIBRARY_PAGE,
+  TEST_CASE_DETAILS_PAGE,
+  PROJECT_MILESTONES_PAGE,
+  PROJECT_TEST_PLAN_DETAILS_PAGE,
+  MANUAL_LAUNCHES_PAGE,
+  MANUAL_LAUNCH_DETAILS_PAGE,
+  MANUAL_LAUNCH_EXECUTION_PAGE,
+} from 'controllers/pages/constants';
+import { AdminUiExtensionPage } from 'pages/instance/adminUiExtensionPage';
 import { AccountRemovedPage } from 'pages/outside/accountRemovedPage';
 import { ProjectUiExtensionPage } from 'pages/inside/projectUiExtensionPage';
+import { OrganizationProjectsPage } from 'pages/organization/organizationProjectsPage';
+import { ProjectTeamPage } from 'pages/organization/projectTeamPage';
+import { ProjectLayout } from 'layouts/projectLayout';
+import { OrganizationLayout } from 'layouts/organizationLayout';
+import { InstanceLayout } from 'layouts/instanceLayout';
+import { OrganizationUsersPage } from 'pages/organization/organizationUsersPage';
+import { OrganizationsPage } from 'pages/instance/organizationsPage';
+import { OrganizationSettingsPage } from 'pages/organization/organizationSettingsPage';
+import { OrganizationEventsPage } from 'pages/organization/organizationEventsPage';
+import { ProductVersionsPage } from 'pages/inside/productVersionsPage/productVersionsPage';
+import { TestCaseDetailsPage, TestCaseLibraryPageWrapper } from 'pages/inside/testCaseLibraryPage';
 
 export const ANONYMOUS_ACCESS = 'anonymous';
 export const ADMIN_ACCESS = 'admin';
@@ -66,70 +95,190 @@ export const ADMIN_ACCESS = 'admin';
 export const pageRendering = {
   [NOT_FOUND]: { component: NotFoundPage, layout: EmptyLayout },
 
-  LOGIN_PAGE: { component: LoginPage, layout: EmptyLayout, access: ANONYMOUS_ACCESS },
+  LOGIN_PAGE: { component: LoginPage, layout: AuthLayout, access: ANONYMOUS_ACCESS },
   [ACCOUNT_REMOVED_PAGE]: {
     component: AccountRemovedPage,
     layout: EmptyLayout,
     access: ANONYMOUS_ACCESS,
   },
-  REGISTRATION_PAGE: { component: RegistrationPage, layout: EmptyLayout, access: ANONYMOUS_ACCESS },
+  REGISTRATION_PAGE: { component: RegistrationPage, layout: AuthLayout, access: ANONYMOUS_ACCESS },
   [OAUTH_SUCCESS]: { component: EmptyLayout, layout: EmptyLayout, access: ANONYMOUS_ACCESS },
-  USER_PROFILE_PAGE: { component: ProfilePage, layout: AppLayout },
-  [USER_PROFILE_SUB_PAGE]: { component: ProfilePage, layout: AppLayout },
-  API_PAGE: { component: ApiPage, layout: AppLayout },
-  PROJECT_DASHBOARD_PAGE: { component: DashboardPage, layout: AppLayout },
-  PROJECT_DASHBOARD_ITEM_PAGE: { component: DashboardItemPage, layout: AppLayout },
+  [USER_PROFILE_PAGE]: { component: ProfilePage, layout: InstanceLayout },
+  [USER_PROFILE_SUB_PAGE]: { component: ProfilePage, layout: InstanceLayout },
+  [USER_PROFILE_PAGE_ORGANIZATION_LEVEL]: { component: ProfilePage, layout: OrganizationLayout },
+  [USER_PROFILE_SUB_PAGE_ORGANIZATION_LEVEL]: {
+    component: ProfilePage,
+    layout: OrganizationLayout,
+  },
+  [USER_PROFILE_PAGE_PROJECT_LEVEL]: { component: ProfilePage, layout: ProjectLayout },
+  [USER_PROFILE_SUB_PAGE_PROJECT_LEVEL]: { component: ProfilePage, layout: ProjectLayout },
+  API_PAGE_INSTANCE_LEVEL: { component: ApiPage, layout: InstanceLayout },
+  API_PAGE_ORGANIZATION_LEVEL: { component: ApiPage, layout: OrganizationLayout },
+  API_PAGE_PROJECT_LEVEL: { component: ApiPage, layout: ProjectLayout },
+  EXPLORE_CLOUD_PAGE_INSTANCE_LEVEL: {
+    component: ExploreCloudVersionPage,
+    layout: InstanceLayout,
+  },
+  EXPLORE_CLOUD_PAGE_ORGANIZATION_LEVEL: {
+    component: ExploreCloudVersionPage,
+    layout: OrganizationLayout,
+  },
+  EXPLORE_CLOUD_PAGE_PROJECT_LEVEL: {
+    component: ExploreCloudVersionPage,
+    layout: ProjectLayout,
+  },
+  [ORGANIZATION_USERS_PAGE]: {
+    component: OrganizationUsersPage,
+    layout: OrganizationLayout,
+    rawContent: true,
+  },
+  ORGANIZATIONS_PAGE: {
+    component: OrganizationsPage,
+    layout: InstanceLayout,
+    rawContent: true,
+  },
+  ORGANIZATIONS_ACTIVITY_PAGE: {
+    component: OrganizationEventsPage,
+    layout: OrganizationLayout,
+  },
+  ORGANIZATION_PROJECTS_PAGE: {
+    component: OrganizationProjectsPage,
+    layout: OrganizationLayout,
+    rawContent: true,
+  },
+  ORGANIZATION_SETTINGS_PAGE: {
+    component: OrganizationSettingsPage,
+    layout: OrganizationLayout,
+    rawContent: true,
+  },
+  ORGANIZATION_SETTINGS_TAB_PAGE: {
+    component: OrganizationSettingsPage,
+    layout: OrganizationLayout,
+    rawContent: true,
+  },
+  PROJECT_DASHBOARD_PAGE: { component: DashboardPage, layout: ProjectLayout },
+  PROJECT_DASHBOARD_ITEM_PAGE: { component: DashboardItemPage, layout: ProjectLayout },
   PROJECT_DASHBOARD_PRINT_PAGE: { component: DashboardPrintPage, layout: EmptyLayout },
-  PROJECT_FILTERS_PAGE: { component: FiltersPage, layout: AppLayout },
-  [LAUNCHES_PAGE]: { component: LaunchesPage, layout: AppLayout },
-  PROJECT_LAUNCHES_PAGE: { component: LaunchesPage, layout: AppLayout },
-  PROJECT_MEMBERS_PAGE: { component: ProjectMembersPageContainer, layout: AppLayout },
-  PROJECT_SANDBOX_PAGE: { component: SandboxPage, layout: AppLayout },
+  PROJECT_FILTERS_PAGE: { component: FiltersPage, layout: ProjectLayout },
+  [LAUNCHES_PAGE]: { component: LaunchesPage, layout: ProjectLayout },
+  [MANUAL_LAUNCHES_PAGE]: {
+    component: ManualLaunchesPage,
+    layout: ProjectLayout,
+    rawContent: true,
+    isTMS: true,
+  },
+  [MANUAL_LAUNCH_DETAILS_PAGE]: {
+    component: ManualLaunchDetailsPage,
+    layout: ProjectLayout,
+    rawContent: true,
+    isTMS: true,
+  },
+  [MANUAL_LAUNCH_EXECUTION_PAGE]: {
+    component: ManualLaunchExecutionPage,
+    layout: ProjectLayout,
+    rawContent: true,
+    isTMS: true,
+  },
+  PROJECT_LAUNCHES_PAGE: { component: LaunchesPage, layout: ProjectLayout },
+  PROJECT_MEMBERS_PAGE: { component: ProjectTeamPage, rawContent: true, layout: ProjectLayout },
+  PROJECT_SANDBOX_PAGE: { component: SandboxPage, layout: ProjectLayout },
   PROJECT_SETTINGS_PAGE: {
     component: ProjectSettingsPageContainer,
-    layout: AppLayout,
+    layout: ProjectLayout,
     rawContent: true,
   },
   PROJECT_SETTINGS_TAB_PAGE: {
     component: ProjectSettingsPageContainer,
-    layout: AppLayout,
+    layout: ProjectLayout,
     rawContent: true,
   },
-  PROJECT_USERDEBUG_PAGE: { component: LaunchesPage, layout: AppLayout },
-  PROJECT_USERDEBUG_TEST_ITEM_PAGE: { component: TestItemPage, layout: AppLayout },
-  ADMINISTRATE_PAGE: { component: ProjectsPage, layout: AdminLayout, access: ADMIN_ACCESS },
-  PROJECTS_PAGE: { component: ProjectsPage, layout: AdminLayout, access: ADMIN_ACCESS },
-  [PROJECT_DETAILS_PAGE]: { component: ProjectsPage, layout: AdminLayout, access: ADMIN_ACCESS },
-  ALL_USERS_PAGE: { component: AllUsersPage, layout: AdminLayout, access: ADMIN_ACCESS },
+  [PROJECT_MILESTONES_PAGE]: {
+    component: MilestonesPage,
+    layout: ProjectLayout,
+    rawContent: true,
+    isTMS: true,
+  },
+  PROJECT_USERDEBUG_PAGE: { component: LaunchesPage, layout: ProjectLayout },
+  PROJECT_USERDEBUG_TEST_ITEM_PAGE: { component: TestItemPage, layout: ProjectLayout },
+  ALL_USERS_PAGE: {
+    component: AllUsersPage,
+    layout: InstanceLayout,
+    rawContent: true,
+  },
   SERVER_SETTINGS_PAGE: {
     component: ServerSettingsPage,
-    layout: AdminLayout,
-    access: ADMIN_ACCESS,
+    layout: InstanceLayout,
+    rawContent: true,
   },
   SERVER_SETTINGS_TAB_PAGE: {
     component: ServerSettingsPage,
-    layout: AdminLayout,
-    access: ADMIN_ACCESS,
-  },
-  PLUGINS_PAGE: { component: PluginsPage, layout: AdminLayout, access: ADMIN_ACCESS },
-  PLUGINS_TAB_PAGE: { component: PluginsPage, layout: AdminLayout, access: ADMIN_ACCESS },
-  [TEST_ITEM_PAGE]: { component: TestItemPage, layout: AppLayout },
-  [PROJECT_LOG_PAGE]: { component: LogsPageContainer, layout: AppLayout, rawContent: true },
-  [PROJECT_USERDEBUG_LOG_PAGE]: {
-    component: LogsPageContainer,
-    layout: AppLayout,
+    layout: InstanceLayout,
     rawContent: true,
   },
-  [HISTORY_PAGE]: { component: HistoryPage, layout: AppLayout },
-  [UNIQUE_ERRORS_PAGE]: { component: UniqueErrorsPage, layout: AppLayout },
+  PLUGINS_PAGE: {
+    component: PluginsPage,
+    layout: InstanceLayout,
+    rawContent: true,
+  },
+  [TEST_ITEM_PAGE]: { component: TestItemPage, layout: ProjectLayout },
+  [PROJECT_LOG_PAGE]: { component: LogsPageContainer, layout: ProjectLayout, rawContent: true },
+  [PROJECT_USERDEBUG_LOG_PAGE]: {
+    component: LogsPageContainer,
+    layout: ProjectLayout,
+    rawContent: true,
+  },
+  [HISTORY_PAGE]: { component: HistoryPage, layout: ProjectLayout },
+  [UNIQUE_ERRORS_PAGE]: { component: UniqueErrorsPage, layout: ProjectLayout },
   [PLUGIN_UI_EXTENSION_ADMIN_PAGE]: {
     component: AdminUiExtensionPage,
-    layout: AdminUiExtensionPageLayout,
+    layout: InstanceLayout,
+    rawContent: true,
     access: ADMIN_ACCESS,
   },
   [PROJECT_PLUGIN_PAGE]: {
     component: ProjectUiExtensionPage,
-    layout: AppLayout,
+    layout: ProjectLayout,
     rawContent: true,
+  },
+  [TEST_CASE_LIBRARY_PAGE]: {
+    component: TestCaseLibraryPageWrapper,
+    layout: ProjectLayout,
+    rawContent: true,
+    isTMS: true,
+  },
+  [TEST_CASE_DETAILS_PAGE]: {
+    component: TestCaseDetailsPage,
+    layout: ProjectLayout,
+    rawContent: true,
+  },
+  [PRODUCT_VERSIONS_PAGE]: {
+    component: ProductVersionsPage,
+    layout: ProjectLayout,
+    rawContent: true,
+    isTMS: true,
+  },
+  [PRODUCT_VERSIONS_TAB_PAGE]: {
+    component: ProductVersionsPage,
+    layout: ProjectLayout,
+    rawContent: true,
+    isTMS: true,
+  },
+  [PRODUCT_VERSION_PAGE]: {
+    component: ProductVersionsPage,
+    layout: ProjectLayout,
+    rawContent: true,
+    isTMS: true,
+  },
+  [PRODUCT_VERSION_TAB_PAGE]: {
+    component: ProductVersionsPage,
+    layout: ProjectLayout,
+    rawContent: true,
+    isTMS: true,
+  },
+  [PROJECT_TEST_PLAN_DETAILS_PAGE]: {
+    component: TestPlanDetailsPage,
+    layout: ProjectLayout,
+    rawContent: true,
+    isTMS: true,
   },
 };

@@ -22,43 +22,44 @@ import {
   PREPEND_FETCH_SUCCESS,
 } from 'controllers/fetch';
 
-export const loadingReducer = (namespace) => (state = false, { type = '', meta = {} }) => {
-  if (meta?.namespace !== namespace) {
-    return state;
-  }
-  switch (type) {
-    case FETCH_START:
-      return true;
-    case FETCH_SUCCESS:
-      return false;
-    case CONCAT_FETCH_SUCCESS:
-      return false;
-    case PREPEND_FETCH_SUCCESS:
-      return false;
-    case FETCH_ERROR:
-      return false;
-    default:
+export const loadingReducer =
+  (namespace) =>
+  (state = false, { type = '', meta = {} }) => {
+    if (meta?.namespace !== namespace) {
       return state;
-  }
-};
+    }
+    switch (type) {
+      case FETCH_START:
+        return true;
+      case FETCH_SUCCESS:
+        return false;
+      case CONCAT_FETCH_SUCCESS:
+        return false;
+      case PREPEND_FETCH_SUCCESS:
+        return false;
+      case FETCH_ERROR:
+        return false;
+      default:
+        return state;
+    }
+  };
 
-export const loadingDirectionReducer = (namespace) => (
-  state = null,
-  { type = '', payload = {}, meta = {} },
-) => {
-  if (meta?.namespace !== namespace) {
-    return state;
-  }
-
-  switch (type) {
-    case FETCH_START:
-      return payload?.direction ?? null;
-    case FETCH_SUCCESS:
-    case FETCH_ERROR:
-    case CONCAT_FETCH_SUCCESS:
-    case PREPEND_FETCH_SUCCESS:
-      return null;
-    default:
+export const loadingDirectionReducer =
+  (namespace) =>
+  (state = null, { type = '', payload = {}, meta = {} }) => {
+    if (meta?.namespace !== namespace) {
       return state;
-  }
-};
+    }
+
+    switch (type) {
+      case FETCH_START:
+        return payload?.direction ?? null;
+      case FETCH_SUCCESS:
+      case FETCH_ERROR:
+      case CONCAT_FETCH_SUCCESS:
+      case PREPEND_FETCH_SUCCESS:
+        return null;
+      default:
+        return state;
+    }
+  };

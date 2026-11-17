@@ -21,8 +21,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useIntl } from 'react-intl';
 import { useTracking } from 'react-tracking';
 import classNames from 'classnames/bind';
-import { logTypesSelector, updateLogTypeAction } from 'controllers/project';
-import { projectIdSelector } from 'controllers/pages';
+import { logTypesSelector, updateLogTypeAction, projectKeySelector } from 'controllers/project';
 import { PROJECT_SETTINGS_LOG_TYPES_EVENTS } from 'components/main/analytics/events/ga4Events/projectSettingsPageEvents';
 import { MAX_FILTERABLE_LOG_TYPES } from '../../../modals/constants';
 import { messages } from '../../../messages';
@@ -34,7 +33,7 @@ export const ShowInFilterCell = ({ logType, isEditable }) => {
   const { formatMessage } = useIntl();
   const dispatch = useDispatch();
   const { trackEvent } = useTracking();
-  const projectId = useSelector(projectIdSelector);
+  const projectKey = useSelector(projectKeySelector);
   const logTypes = useSelector(logTypesSelector);
   const { is_filterable: isFilterable, is_system: isSystem } = logType;
   const filterableLogTypesCount = useMemo(
@@ -59,7 +58,7 @@ export const ShowInFilterCell = ({ logType, isEditable }) => {
 
     const data = { ...logType, is_filterable: newFilterableValue };
 
-    dispatch(updateLogTypeAction(data, logType.id, projectId, onSuccess));
+    dispatch(updateLogTypeAction(data, logType.id, projectKey, onSuccess));
   };
 
   if (showTooltip) {

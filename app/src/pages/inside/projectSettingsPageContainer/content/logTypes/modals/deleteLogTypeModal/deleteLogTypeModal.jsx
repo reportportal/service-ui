@@ -24,8 +24,7 @@ import { Modal } from '@reportportal/ui-kit';
 import classNames from 'classnames/bind';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { hideModalAction } from 'controllers/modal';
-import { projectIdSelector } from 'controllers/pages';
-import { deleteLogTypeAction } from 'controllers/project';
+import { deleteLogTypeAction, projectKeySelector } from 'controllers/project';
 import { PROJECT_SETTINGS_LOG_TYPES_EVENTS } from 'components/main/analytics/events/ga4Events/projectSettingsPageEvents';
 import { messages } from '../messages';
 import styles from './deleteLogTypeModal.scss';
@@ -36,7 +35,7 @@ export const DeleteLogTypeModal = ({ logType }) => {
   const { formatMessage } = useIntl();
   const dispatch = useDispatch();
   const { trackEvent } = useTracking();
-  const projectId = useSelector(projectIdSelector);
+  const projectKey = useSelector(projectKeySelector);
 
   const handleDelete = () => {
     const onSuccess = () => {
@@ -44,7 +43,7 @@ export const DeleteLogTypeModal = ({ logType }) => {
       dispatch(hideModalAction());
     };
 
-    dispatch(deleteLogTypeAction(logType.id, projectId, onSuccess));
+    dispatch(deleteLogTypeAction(logType.id, projectKey, onSuccess));
   };
 
   const okButton = {

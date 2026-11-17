@@ -1,0 +1,30 @@
+@use '../milestonesTable/milestonesShared' as ms;
+
+.milestone-date-field {
+  flex: 0 0 192px;
+  width: 192px;
+  min-width: 192px;
+
+  :global([class*='_placeholder_']) {
+    color: var(--rp-ui-color-field-placeholder-3);
+  }
+}
+
+.milestone-date-field__picker-root {
+  width: 100%;
+
+  :global(div[class*='_field_']) {
+    background-color: var(--rp-ui-color-field-bg);
+  }
+}
+
+.milestone-date-field__picker {
+  width: 100%;
+}
+
+.milestone-date-field__error {
+  @include ms.milestone-body-13;
+
+  margin-top: 4px;
+  color: var(--rp-ui-kit-colors-text-error);
+}

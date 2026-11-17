@@ -106,9 +106,7 @@ export const getConfig = ({
         categories: itemsData.map((item) => {
           let day;
           if (isTimeline) {
-            day = moment(item.date)
-              .format('dddd')
-              .substring(0, 3);
+            day = moment(item.date).format('dddd').substring(0, 3);
             return `${day}, ${item.date}`;
           }
           return `#${item.number}`;

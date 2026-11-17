@@ -17,7 +17,7 @@
 .modal-field {
   display: flex;
   align-items: center;
-  padding-bottom: 20px;
+  padding-bottom: 22px;
   box-sizing: border-box;
   line-height: 16px;
 }
@@ -87,4 +87,10 @@
     display: flex;
     align-items: center;
   }
+}
+
+.asterisk {
+  color: $COLOR--e-300;
+  margin-left: 4px;
+  margin-top: -4px;
 }

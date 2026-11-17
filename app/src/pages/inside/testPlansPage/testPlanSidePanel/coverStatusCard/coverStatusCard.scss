@@ -1,0 +1,67 @@
+/*
+ * Copyright 2025 EPAM Systems
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+.cover-status-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  padding: 11px 24px;
+  height: 139px;
+  box-sizing: border-box;
+  background-color: var(--rp-ui-base-bg-000);
+  border-radius: 8px;
+  box-shadow: var(--rp-ui-base-shadow);
+
+  .icon-wrapper {
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    svg {
+      width: 28px;
+      height: 28px;
+      fill: var(--rp-ui-base-e-300);
+    }
+
+    &.is-manual-covered svg > :is(path, rect) {
+      fill: var(--rp-ui-base-purple-600);
+    }
+  }
+
+  .title {
+    font-family: $FONT-ROBOTO-MEDIUM;
+    font-size: 14px;
+    line-height: 24px;
+    text-align: center;
+    color: var(--rp-ui-base-almost-black);
+
+    &.is-manual-covered {
+      color: var(--rp-ui-base-purple-600);
+    }
+  }
+
+  .subtitle {
+    font-family: $FONT-ROBOTO-REGULAR;
+    font-size: 11px;
+    line-height: 16px;
+    text-align: center;
+    color: var(--rp-ui-base-e-400);
+  }
+}

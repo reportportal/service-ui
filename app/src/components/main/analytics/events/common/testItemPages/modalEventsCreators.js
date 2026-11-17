@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-import { SEARCH_MODES } from 'pages/inside/stepPage/modals/makeDecisionModal/constants';
 import { DEFECT_FROM_TI_GROUP_MAP, ISSUE_TYPE_MAP } from './constants';
 import { getBasicClickEventParameters } from '../ga4Utils';
 import { getIncludedData } from '../utils';
@@ -46,70 +45,69 @@ const getBasicClickEventParametersMakeDecisionCreator = (place, defectFromTIGrou
   condition: DEFECT_FROM_TI_GROUP_MAP[defectFromTIGroup] || 'bulk',
 });
 
-const getOpenModalEventCreator = (place) => (defectFromTIGroup, actionPlace = '') => ({
-  ...basicClickEventParametersMakeDecision,
-  place: `${place}${actionPlace && `#${actionPlace}`}`,
-  condition: DEFECT_FROM_TI_GROUP_MAP[defectFromTIGroup] || 'bulk',
-  element_name: 'open_md',
+const getOpenModalEventCreator =
+  (place) =>
+  (defectFromTIGroup, actionPlace = '') => ({
+    ...basicClickEventParametersMakeDecision,
+    place: `${place}${actionPlace && `#${actionPlace}`}`,
+    condition: DEFECT_FROM_TI_GROUP_MAP[defectFromTIGroup] || 'bulk',
+    element_name: 'open_md',
 });
 
-const getClickOnApplyEventCreator = (place) => (
-  defectFromTIGroup,
-  hasSuggestions,
-  status,
-  issueType,
-  itemDataIssueType,
-  issueActionType,
-  suggestedItems,
-  extraParams,
-) => {
-  const basicEventParameters = getBasicClickEventParametersMakeDecisionCreator(
-    place,
+const getClickOnApplyEventCreator =
+  (place) =>
+  (
     defectFromTIGroup,
-  );
-
-  basicEventParameters.type = `${hasSuggestions ? 'with_ml' : 'without_ml'}${
-    issueActionType ? `#${ISSUE_TYPE_MAP[issueActionType]}` : ''
-  }`;
-
-  const switcher = `${getDefectTypesAnalyticsData(itemDataIssueType)}#${getDefectTypesAnalyticsData(
-    issueType,
-  )}`;
-
-  const iconName = suggestedItems
-    .map(({ testItemResource }) => getDefectTypesAnalyticsData(testItemResource.issue.issueType))
-    .join('#');
-
-  return {
-    ...basicEventParameters,
+    hasSuggestions,
     status,
-    switcher,
-    icon_name: iconName || 'not_set',
-    element_name: getMakeDecisionElementName(issueActionType),
-    ...extraParams,
-  };
-};
+    issueType,
+    itemDataIssueType,
+    issueActionType,
+    suggestedItems,
+    extraParams,
+  ) => {
+    const basicEventParameters = getBasicClickEventParametersMakeDecisionCreator(
+      place,
+      defectFromTIGroup,
+    );
 
-const getClickOnApplyBulkEventCreator = (place) => (
-  defectFromTIGroup,
-  issueActionType,
-  items,
-  issueType,
-  linkName,
-) => {
-  const basicEventParameters = getBasicClickEventParametersMakeDecisionCreator(
-    place,
-    defectFromTIGroup,
-  );
+    basicEventParameters.type = `${hasSuggestions ? 'with_ml' : 'without_ml'}${
+      issueActionType ? `#${ISSUE_TYPE_MAP[issueActionType]}` : ''
+    }`;
 
-  return {
-    ...basicEventParameters,
-    element_name: getMakeDecisionElementName(issueActionType),
-    switcher: getSwitchedDefectTypes(items, issueType),
-    type: ISSUE_TYPE_MAP[issueActionType] || undefined,
-    link_name: linkName,
+    const switcher = `${getDefectTypesAnalyticsData(itemDataIssueType)}#${getDefectTypesAnalyticsData(
+      issueType,
+    )}`;
+
+    const iconName = suggestedItems
+      .map(({ testItemResource }) => getDefectTypesAnalyticsData(testItemResource.issue.issueType))
+      .join('#');
+
+    return {
+      ...basicEventParameters,
+      status,
+      switcher,
+      icon_name: iconName || 'not_set',
+      element_name: getMakeDecisionElementName(issueActionType),
+      ...extraParams,
+    };
   };
-};
+
+const getClickOnApplyBulkEventCreator =
+  (place) => (defectFromTIGroup, issueActionType, items, issueType, linkName) => {
+    const basicEventParameters = getBasicClickEventParametersMakeDecisionCreator(
+      place,
+      defectFromTIGroup,
+    );
+
+    return {
+      ...basicEventParameters,
+      element_name: getMakeDecisionElementName(issueActionType),
+      switcher: getSwitchedDefectTypes(items, issueType),
+      type: ISSUE_TYPE_MAP[issueActionType] || undefined,
+      link_name: linkName,
+    };
+  };
 
 const getShowErrLogsSwitcherEventCreator = (place) => (defectFromTIGroup, switcherState) => ({
   ...getBasicClickEventParametersMakeDecisionCreator(place, defectFromTIGroup),
@@ -175,49 +173,8 @@ export const getIgnoreBtnIgnoreItemsInAAModalEvent = (category) => ({
   element_name: 'ignore',
 });
 
-// GA3 events
-export const getEditToInvestigateChangeSearchModeEvent = (category) => ({
-  [SEARCH_MODES.CURRENT_LAUNCH]: {
-    category,
-    action: 'Choose "For the current launch" in Modal "Edit Defect"',
-    label: 'Choose "For the current launch" in Modal "Edit Defect"',
-  },
-  [SEARCH_MODES.LAST_TEN_LAUNCHES]: {
-    category,
-    action: 'Choose "For the launches with the same name" in Modal "Edit Defect"',
-    label: 'Choose "For the launches with the same name" in Modal "Edit Defect"',
-  },
-  [SEARCH_MODES.WITH_FILTER]: {
-    category,
-    action: 'Choose "For the current filter" in Modal "Edit Defect"',
-    label: 'Choose "For the current filter" in Modal "Edit Defect"',
-  },
-});
-
-export const getEditToInvestigateSelectAllSimilarItemsEvent = (category) => ({
-  category,
-  action: 'Click on checkbox Change Similar Items in Modal "Edit Defect"',
-  label: 'Choose All similar items in Modal "Edit Defect"',
-});
-
-export const getEditToInvestigateSelectSpecificSimilarItemEvent = (category) => ({
-  category,
-  action: 'Select the specific item in Change Similar Items in Modal "Edit Defect"',
-  label: `Choose specific item in Modal "Edit Defect"`,
-});
-
 // UNLINK ISSUE MODAL
 export const getUnlinkIssueModalEvents = (category) => ({
-  CANCEL_BTN_UNLINK_ISSUE_MODAL: {
-    category,
-    action: 'Click on Cancel in Unlink issue',
-    label: 'Close Modal "Unlink issue"',
-  },
-  CLOSE_ICON_UNLINK_ISSUE_MODAL: {
-    category,
-    action: 'Click on Close icon in Unlink issue',
-    label: 'Close Modal "Unlink issue"',
-  },
   getClickUnlinkButtonEventParameters: (place) => (isAutoAnalyzeEnabled) => ({
     ...getBasicClickEventParameters(category),
     modal: 'unlink_issue',
@@ -229,16 +186,6 @@ export const getUnlinkIssueModalEvents = (category) => ({
 
 // POST ISSUE MODAL
 export const getPostIssueModalEvents = (category) => ({
-  CLOSE_ICON_POST_ISSUE_MODAL: {
-    category,
-    action: 'Click on Icon Close on Modal Post Issue',
-    label: 'Close Modal Post Issue',
-  },
-  CANCEL_BTN_POST_ISSUE_MODAL: {
-    category,
-    action: 'Click on Btn Cancel on Modal Post Issue',
-    label: 'Close Modal Post Issue',
-  },
   getClickPostIssueButtonEventParameters: (place) => (type) => {
     const analyticsData = getIncludedData(type);
 
@@ -258,34 +205,26 @@ const getBasicLinkIssueModalEventParameters = (category) => ({
 });
 // LINK ISSUE MODAL
 export const getLinkIssueModalEvents = (category) => ({
-  CLOSE_ICON_LINK_ISSUE_MODAL: {
-    category,
-    action: 'Click on Icon Close on Modal Link Issue',
-    label: 'Close Modal Link Issue',
-  },
   getClickAddNewIssueButtonEventParameters: (place) => ({
     ...getBasicLinkIssueModalEventParameters(category),
     element_name: 'add_new_issue',
     ...(place && { place }),
   }),
-  CANCEL_BTN_LINK_ISSUE_MODAL: {
-    category,
-    action: 'Click on Btn Cancel on Modal Link Issue',
-    label: 'Close Modal Modal Link Issue',
-  },
-  getClickLoadButtonEventParameters: (place = '') => (number) => ({
-    ...getBasicLinkIssueModalEventParameters(category),
-    element_name: 'link_issue',
-    number,
-    ...(place && { place }),
-  }),
+  getClickLoadButtonEventParameters:
+    (place = '') =>
+    (number) => ({
+      ...getBasicLinkIssueModalEventParameters(category),
+      element_name: 'link_issue',
+      number,
+      ...(place && { place }),
+    }),
 });
 
 const EDIT_ITEM_MODAL = 'edit_item';
 const EDIT_ITEMS_MODAL = 'edit_items'; // There are two different modals for multiple and single item editing
 
 // EDIT ITEMS MODAL
-export const getEditItemsModalEvents = (category, itemType = 'Item') => ({
+export const getEditItemsModalEvents = (category) => ({
   // GA4 events
   SAVE_BTN_EDIT_ITEM_MODAL: {
     ...getBasicClickEventParameters(category),
@@ -303,22 +242,6 @@ export const getEditItemsModalEvents = (category, itemType = 'Item') => ({
     element_name: 'save',
     type,
   }),
-  // GA3 events
-  CLOSE_ICON_EDIT_ITEM_MODAL: {
-    category,
-    action: `Click on Close Icon on Modal "Edit ${itemType}"`,
-    label: `Close modal "Edit ${itemType}"`,
-  },
-  CANCEL_BTN_EDIT_ITEM_MODAL: {
-    category,
-    action: `Click on Btn Cancel on Modal "Edit ${itemType}`,
-    label: `Close modal "Edit ${itemType}"`,
-  },
-  EDIT_ITEM_DESCRIPTION: {
-    category,
-    action: `Edit description in Modal "Edit ${itemType}"`,
-    label: 'Edit description',
-  },
 });
 
 const TEST_ITEM_DETAILS_MODAL = 'test_item_details';

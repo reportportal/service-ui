@@ -22,5 +22,11 @@ export {
   showDefaultErrorNotification,
   showErrorNotification,
   showSuccessNotification,
+  showInfoNotification,
+  showWarningNotification,
 } from './actionCreators';
-export { NOTIFICATION_TYPES } from './constants';
+export {
+  NOTIFICATION_TYPES,
+  NOTIFICATION_TYPOGRAPHY_COLOR_TYPES,
+  WARNING_NOTIFICATION_DURATION,
+} from './constants';

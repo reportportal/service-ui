@@ -15,11 +15,27 @@
  */
 
 .dashboard-item {
-  background: $COLOR--white-two;
+  background: var(--rp-ui-base-bg-000);
+}
 
-  &:hover .icon-close {
-    opacity: 1;
-  }
+.icon-close {
+  position: fixed;
+  top: 15px;
+  right: 15px;
+  width: 24px;
+  height: 24px;
+  opacity: 0;
+  padding: 0;
+  border: 0;
+  outline: 0;
+  background-color: transparent;
+  fill: var(--rp-ui-base-e-400);
+  cursor: pointer;
+  transition: opacity 0.5s ease;
+}
+
+.dashboard-item:hover .icon-close {
+  opacity: 1;
 }
 
 .buttons-container {
@@ -32,7 +48,7 @@
   min-height: 30px;
   margin: 0;
   padding: 20px 10px;
-  border-bottom: 1px solid $COLOR--gray-91;
+  border-bottom: 1px solid var(--rp-ui-base-e-91);
 
   @media (max-width: $SCREEN_XS_MAX) {
     display: none;
@@ -53,27 +69,15 @@
   display: flex;
   align-items: center;
   gap: 10px;
-}
 
-.icon-close {
-  position: fixed;
-  top: 15px;
-  right: 15px;
-  width: 24px;
-  height: 24px;
-  opacity: 0;
-  padding: 0;
-  border: 0;
-  outline: 0;
-  background-color: transparent;
-  fill: $COLOR--gray-60;
-  transition: opacity 0.5s ease;
-  cursor: pointer;
+  & > .dashboard-layout-settings-control:not(:last-child) {
+    margin-right: 24px;
+  }
 }
 
 :global {
   .fullscreen {
-    background: $COLOR--white-two;
+    background: var(--rp-ui-base-bg-000);
   }
 }
 

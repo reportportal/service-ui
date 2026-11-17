@@ -19,16 +19,19 @@ import PropTypes from 'prop-types';
 import { useIntl } from 'react-intl';
 import { reduxForm } from 'redux-form';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
-import { Button, Checkbox } from '@reportportal/ui-kit';
-import { Dropdown } from 'componentLibrary/dropdown';
+import { Button, Checkbox, Dropdown } from '@reportportal/ui-kit';
 import { useTracking } from 'react-tracking';
 import { PROJECT_SETTINGS_ANALYZER_EVENTS } from 'analyticsEvents/projectSettingsPageEvents';
 import { docsReferences, createExternalLink } from 'common/utils';
+import classNames from 'classnames/bind';
 import { FieldElement, LabeledPreloader, FormattedDescription } from '../../elements';
 import { messages } from './messages';
 import { UNIQUE_ERROR_ENABLED, UNIQUE_ERROR_REMOVE_NUMBERS } from '../constants';
 import { formatFieldName } from '../utils';
 import { Layout } from '../../layout';
+import styles from './uniqueErrors.scss';
+
+const cx = classNames.bind(styles);
 
 const UniqueErrors = ({
   analyzerConfig,
@@ -112,11 +115,13 @@ const UniqueErrors = ({
           disabled={isFieldDisabled}
           dataAutomationId="removeNumbersInErrorLogField"
         >
-          <Dropdown options={dropdownOptions} mobileDisabled />
+          <Dropdown className={cx('dropdown')} options={dropdownOptions} mobileDisabled />
         </FieldElement>
-        <Button type="submit" disabled={isFieldDisabled} data-automation-id="submitButton">
-          {formatMessage(COMMON_LOCALE_KEYS.SUBMIT)}
-        </Button>
+        {hasPermission && (
+          <Button type="submit" disabled={isFieldDisabled} data-automation-id="submitButton">
+            {formatMessage(COMMON_LOCALE_KEYS.SUBMIT)}
+          </Button>
+        )}
         {isPending && <LabeledPreloader text={formatMessage(COMMON_LOCALE_KEYS.processData)} />}
       </form>
     </Layout>

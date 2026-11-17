@@ -20,10 +20,12 @@ import Parser from 'html-react-parser';
 import classNames from 'classnames/bind';
 import track from 'react-tracking';
 import { WithStore, Slider, Slide, ButtonBack, ButtonNext } from 'pure-react-carousel';
+import { SpinLoader } from '@reportportal/ui-kit';
 import ArrowIcon from 'common/img/arrow-right-inline.svg';
 import { Image } from 'components/main/image';
 import { LOG_PAGE_EVENTS } from 'components/main/analytics/events';
 import { AttachmentActions } from 'pages/inside/logsPage/attachmentActions';
+import { createAttachmentName } from 'controllers/log/attachments';
 import { DEFAULT_VISIBLE_THUMBS } from '../constants';
 import styles from './attachmentsSlider.scss';
 
@@ -45,6 +47,7 @@ class AttachmentsSlider extends Component {
     visibleThumbs: PropTypes.number,
     carouselStore: PropTypes.object,
     withActions: PropTypes.bool,
+    loadingItemId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
   };
 
   static defaultProps = {
@@ -57,6 +60,7 @@ class AttachmentsSlider extends Component {
     visibleThumbs: DEFAULT_VISIBLE_THUMBS,
     carouselStore: {},
     withActions: false,
+    loadingItemId: null,
   };
 
   componentDidMount() {
@@ -75,14 +79,8 @@ class AttachmentsSlider extends Component {
     this.props.carouselStore.setStoreState({ currentSlide: this.props.currentThumb });
 
   nextArrowClickHandler = () => {
-    const {
-      isThumbsView,
-      activeItemId,
-      currentThumb,
-      carouselStore,
-      attachments,
-      visibleThumbs,
-    } = this.props;
+    const { isThumbsView, activeItemId, currentThumb, carouselStore, attachments, visibleThumbs } =
+      this.props;
 
     let nextItemId = activeItemId + 1;
     let thumbConfig = null;
@@ -131,39 +129,57 @@ class AttachmentsSlider extends Component {
   };
 
   render() {
-    const { isThumbsView, attachments, activeItemId, onClickItem, withActions } = this.props;
+    const { isThumbsView, attachments, activeItemId, onClickItem, withActions, loadingItemId } =
+      this.props;
     return (
       <Fragment>
         <Slider className={cx('slider', { 'thumbs-view': isThumbsView })}>
-          {attachments.map((attachment, index) => (
-            <Slide index={index} key={attachment.id}>
-              <div
-                className={cx('preview-container', {
-                  'main-area': !isThumbsView,
-                  active: isThumbsView && activeItemId === index,
-                })}
-                onClick={() => onClickItem(index)}
-              >
-                <Image
-                  className={cx('preview')}
-                  src={
-                    isThumbsView && attachment.isImage ? attachment.thumbnailSrc : attachment.src
-                  }
-                  alt={attachment.alt}
-                  isStatic={!attachment.isImage}
-                  preloaderColor="charcoal"
-                />
-              </div>
-              {withActions && (
-                <AttachmentActions
-                  value={attachment}
-                  showCaptions
-                  className={cx('actions')}
-                  events={LOG_PAGE_EVENTS.ATTACHMENT_IN_CAROUSEL}
-                />
-              )}
-            </Slide>
-          ))}
+          {attachments.map((attachment, index) => {
+            const fileName =
+              attachment.fileName || createAttachmentName(attachment.id, attachment.contentType);
+            const isLoading = !isThumbsView && attachment.id === loadingItemId;
+
+            return (
+              <Slide index={index} key={attachment.id}>
+                <div
+                  className={cx('preview-container', {
+                    'main-area': !isThumbsView,
+                    active: isThumbsView && activeItemId === index,
+                  })}
+                  onClick={() => onClickItem(index)}
+                >
+                  {isLoading ? (
+                    <SpinLoader className={cx('preview-loader')} />
+                  ) : (
+                    <Image
+                      className={cx('preview')}
+                      src={
+                        isThumbsView && attachment.isImage
+                          ? attachment.thumbnailSrc
+                          : attachment.src
+                      }
+                      alt={attachment.alt}
+                      isStatic={!attachment.isImage}
+                      preloaderColor="charcoal"
+                    />
+                  )}
+                  {!isThumbsView && (
+                    <div className={cx('file-name')} title={fileName}>
+                      {fileName}
+                    </div>
+                  )}
+                </div>
+                {withActions && (
+                  <AttachmentActions
+                    value={attachment}
+                    showCaptions
+                    className={cx('actions')}
+                    events={LOG_PAGE_EVENTS.ATTACHMENT_IN_CAROUSEL}
+                  />
+                )}
+              </Slide>
+            );
+          })}
         </Slider>
         <ButtonBack onClick={this.backArrowClickHandler} className={cx('arrow', 'prev-arrow')}>
           {Parser(ArrowIcon)}

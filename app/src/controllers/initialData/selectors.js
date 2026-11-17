@@ -15,3 +15,8 @@
  */
 
 export const initialDataReadySelector = (state) => state.initialDataReady;
+export const serviceAvailabilitySelector = (state) =>
+  state.serviceAvailability || {
+    checked: false,
+    apiUnavailable: false,
+  };

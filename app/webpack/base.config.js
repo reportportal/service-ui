@@ -19,6 +19,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const webpack = require('webpack');
 const WebpackNotifierPlugin = require('webpack-notifier');
 const ModuleFederationPlugin = require('webpack/lib/container/ModuleFederationPlugin');
+const FontPreloadPlugin = require('./fontPreloadPlugin');
 const pjson = require('../package.json');
 
 module.exports = {
@@ -38,17 +39,19 @@ module.exports = {
     },
   },
   resolve: {
-    extensions: ['.js', '.jsx', '.sass', '.scss', '.css'],
+    extensions: ['.ts', '.tsx', '.js', '.jsx', '.sass', '.scss', '.css'],
     alias: {
       components: path.resolve(__dirname, '../src/components'),
       componentLibrary: path.resolve(__dirname, '../src/componentLibrary'),
       controllers: path.resolve(__dirname, '../src/controllers'),
       common: path.resolve(__dirname, '../src/common'),
+      hooks: path.resolve(__dirname, '../src/hooks'),
       pages: path.resolve(__dirname, '../src/pages'),
       store: path.resolve(__dirname, '../src/store'),
       routes: path.resolve(__dirname, '../src/routes'),
       layouts: path.resolve(__dirname, '../src/layouts'),
       analyticsEvents: path.resolve(__dirname, '../src/components/main/analytics/events/ga4Events'),
+      types: path.resolve(__dirname, '../src/types'),
     },
     fallback: {
       path: require.resolve('path-browserify'),
@@ -57,7 +60,7 @@ module.exports = {
   module: {
     rules: [
       {
-        test: /\.(js|jsx|mjs)$/,
+        test: /\.(js|jsx|ts|tsx|mjs)$/,
         use: [
           {
             loader: 'babel-loader',
@@ -91,6 +94,7 @@ module.exports = {
       filename: 'index.html',
       favicon: path.resolve(__dirname, '../src/common/img/favicon.ico'),
     }),
+    new FontPreloadPlugin(),
     new webpack.ProvidePlugin({
       React: 'react',
       Utils: 'common/utils',
@@ -181,6 +185,14 @@ module.exports = {
         'react-copy-to-clipboard': {
           singleton: true,
           requiredVersion: pjson.dependencies['react-copy-to-clipboard'],
+        },
+        'react-dnd': {
+          singleton: true,
+          requiredVersion: pjson.dependencies['react-dnd'],
+        },
+        'react-dnd-html5-backend': {
+          singleton: true,
+          requiredVersion: pjson.dependencies['react-dnd-html5-backend'],
         },
       },
     }),

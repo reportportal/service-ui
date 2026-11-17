@@ -16,4 +16,9 @@
 
 export { LogsPage } from './logsPage';
 export { LogsPageContainer } from './logsPageContainer';
-export { CopySendDefectModal, AttachmentCodeModal, AttachmentHarFileModal } from './modals';
+export {
+  CopySendDefectModal,
+  AttachmentCodeModal,
+  AttachmentHarFileModal,
+  AttachmentVideoModal,
+} from './modals';

@@ -21,6 +21,7 @@ import Link from 'redux-first-router-link';
 import { useSelector } from 'react-redux';
 import CrossIcon from 'common/img/cross-icon-inline.svg';
 import { getLaunchFilterLinkSelector } from 'controllers/launch';
+import { urlOrganizationSlugSelector } from 'controllers/pages';
 import { FilterDescriptionTooltipIcon } from './filterDescriptionTooltipIcon';
 import styles from './filterItem.scss';
 
@@ -45,13 +46,14 @@ export const FilterItem = ({
   className,
   isDisabled,
 }) => {
+  const organizationSlug = useSelector(urlOrganizationSlugSelector);
   const getLaunchFilterLink = useSelector(getLaunchFilterLinkSelector);
 
   return (
     <Link
       className={cx('filter-item', className, { active })}
       onClick={isDisabled && handleClick}
-      to={getLaunchFilterLink(id, active)}
+      to={getLaunchFilterLink(id, active, organizationSlug)}
     >
       <span className={cx('name')}>
         {name}

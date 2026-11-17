@@ -24,12 +24,11 @@ import LazyLoad from 'react-lazyload';
 import { connect } from 'react-redux';
 import { fetch, isEmptyObject } from 'common/utils';
 import { URLS } from 'common/urls';
+import { projectKeySelector } from 'controllers/project';
 import { CUMULATIVE_TREND, TEST_CASE_SEARCH } from 'common/constants/widgetTypes';
-import { activeProjectSelector } from 'controllers/user';
 import { showModalAction } from 'controllers/modal';
 import { analyticsEnabledSelector, baseEventParametersSelector } from 'controllers/appInfo';
 import { SpinningPreloader } from 'components/preloaders/spinningPreloader';
-import { DASHBOARD_PAGE_EVENTS } from 'components/main/analytics/events';
 import { ErrorMessage } from 'components/main/errorMessage';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import {
@@ -68,7 +67,7 @@ const SILENT_UPDATE_TIMEOUT_FULLSCREEN = 30000;
 @injectIntl
 @connect(
   (state) => ({
-    activeProject: activeProjectSelector(state),
+    projectKey: projectKeySelector(state),
     activeDashboardId: activeDashboardIdSelector(state),
     isAnalyticsEnabled: analyticsEnabledSelector(state),
     baseEventParameters: baseEventParametersSelector(state),
@@ -82,7 +81,7 @@ const SILENT_UPDATE_TIMEOUT_FULLSCREEN = 30000;
 export class SimpleWidget extends Component {
   static propTypes = {
     intl: PropTypes.object.isRequired,
-    activeProject: PropTypes.string.isRequired,
+    projectKey: PropTypes.string.isRequired,
     widgetId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
     widgetType: PropTypes.string.isRequired,
     showModalAction: PropTypes.func.isRequired,
@@ -214,8 +213,8 @@ export class SimpleWidget extends Component {
   };
 
   getWidgetUrl = (params) => {
-    const { activeProject, widgetId, widgetType } = this.props;
-    let url = URLS.widget(activeProject, widgetId);
+    const { projectKey, widgetId, widgetType } = this.props;
+    let url = URLS.widget(projectKey, widgetId);
 
     if (MULTI_LEVEL_WIDGETS_MAP[widgetType]) {
       const { queryParameters } = this.state;
@@ -224,7 +223,7 @@ export class SimpleWidget extends Component {
         ...params,
       });
 
-      url = URLS.widgetMultilevel(activeProject, widgetId, queryParamsString);
+      url = URLS.widgetMultilevel(projectKey, widgetId, queryParamsString);
     }
     return url;
   };
@@ -318,27 +317,6 @@ export class SimpleWidget extends Component {
         widget: this.state.widget,
         onConfirm: (isForceUpdateNeeded) =>
           this.fetchWidget(isForceUpdateNeeded && { refresh: true }),
-        eventsInfo: {
-          closeIcon: DASHBOARD_PAGE_EVENTS.CLOSE_ICON_EDIT_WIDGET_MODAL,
-          cancelBtn: DASHBOARD_PAGE_EVENTS.CANCEL_BTN_EDIT_WIDGET_MODAL,
-          changeName: DASHBOARD_PAGE_EVENTS.WIDGET_NAME_EDIT_WIDGET_MODAL,
-          changeDescription: DASHBOARD_PAGE_EVENTS.WIDGET_DESCRIPTION_EDIT_WIDGET_MODAL,
-          okBtn: DASHBOARD_PAGE_EVENTS.SAVE_BTN_EDIT_WIDGET_MODAL,
-          editFilterIcon: DASHBOARD_PAGE_EVENTS.EDIT_FILTER_ICON_EDIT_WIDGET_MODAL,
-          enterSearchParams: DASHBOARD_PAGE_EVENTS.ENTER_SEARCH_PARAMS_EDIT_WIDGET_MODAL,
-          chooseFilter: DASHBOARD_PAGE_EVENTS.CHOOSE_FILTER_EDIT_WIDGET_MODAL,
-          addFilter: DASHBOARD_PAGE_EVENTS.ADD_FILTER_BTN_EDIT_WIDGET_MODAL,
-          cancelAddNewFilter: DASHBOARD_PAGE_EVENTS.CANCEL_BTN_ADD_NEW_FILTER_EDIT_WIDGET_MODAL,
-          addNewFilter: DASHBOARD_PAGE_EVENTS.ADD_NEW_FILTER_BTN_EDIT_WIDGET_MODAL,
-          editFilterName: DASHBOARD_PAGE_EVENTS.EDIT_FILTER_NAME_EDIT_WIDGET_MODAL,
-          sortingSelectParameters: DASHBOARD_PAGE_EVENTS.SORTING_FOR_NEW_FILTER_EDIT_WIDGET_MODAL,
-          selectParamsForFilter: DASHBOARD_PAGE_EVENTS.PARAMS_FOR_FILTER_EDIT_WIDGET_MODAL,
-          submitChanges: DASHBOARD_PAGE_EVENTS.SUBMIT_CHANGES_EDIT_WIDGET_MODAL,
-          cancelEditFilter: DASHBOARD_PAGE_EVENTS.CANCEL_EDIT_FILTER_EDIT_WIDGET_MODAL,
-          clickOnZoomWidgetArea: DASHBOARD_PAGE_EVENTS.CLICK_ZOOM_EDIT_WIDGET_AREA,
-          selectCriteria: DASHBOARD_PAGE_EVENTS.SELECT_CRITERIA_EDIT_WIDGET_MODAL,
-          selectToggleButtons: DASHBOARD_PAGE_EVENTS.SELECT_TOGGLE_BUTTONS_EDIT_WIDGET_MODAL,
-        },
       },
     });
   };
@@ -390,11 +368,6 @@ export class SimpleWidget extends Component {
       data: {
         widget: this.state.widget,
         onConfirm,
-        eventsInfo: {
-          closeIcon: DASHBOARD_PAGE_EVENTS.CLOSE_ICON_DELETE_WIDGET_MODAL,
-          cancelBtn: DASHBOARD_PAGE_EVENTS.CANCEL_BTN_DELETE_WIDGET_MODAL,
-          deleteBtn: DASHBOARD_PAGE_EVENTS.DELETE_BTN_DELETE_WIDGET_MODAL,
-        },
       },
     });
   };

@@ -36,19 +36,19 @@
   position: absolute;
   left: 0;
   top: 10px;
-  border-top: 1px solid $COLOR--steel-grey;
+  border-top: 1px solid var(--rp-ui-base-e-400);
   opacity: 0.2;
   width: 100%;
 }
 .or {
   position: relative;
   padding: 0 14px;
-  background: $COLOR--white-two;
+  background: var(--rp-ui-base-bg-000);
   display: inline-block;
   border: none;
   font-size: 15px;
   text-align: center;
-  color: $COLOR--steel-grey;
+  color: var(--rp-ui-base-e-400);
   box-sizing: border-box;
 }
 .bottom-content {

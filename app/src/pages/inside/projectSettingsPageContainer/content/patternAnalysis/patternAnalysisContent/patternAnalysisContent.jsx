@@ -17,7 +17,6 @@
 import React, { useEffect } from 'react';
 import { useTracking } from 'react-tracking';
 import { useDispatch, useSelector } from 'react-redux';
-import { SETTINGS_PAGE_EVENTS } from 'components/main/analytics/events';
 import {
   addPatternAction,
   deletePatternAction,
@@ -35,6 +34,7 @@ import BinIcon from 'common/img/newIcons/bin-inline.svg';
 import CopyIcon from 'common/img/newIcons/copy-inline.svg';
 import { docsReferences, createExternalLink } from 'common/utils';
 import { PROJECT_SETTINGS_PATTERN_ANALYSIS_EVENTS } from 'analyticsEvents/projectSettingsPageEvents';
+import { useUserPermissions } from 'hooks/useUserPermissions';
 import { PatternRuleContent, FieldElement, RuleList, FormattedDescription } from '../../elements';
 import { Layout } from '../../layout';
 import { messages } from '../messages';
@@ -53,14 +53,19 @@ export const PatternAnalysisContent = ({
   const { formatMessage } = useIntl();
   const dispatch = useDispatch();
   const PAState = useSelector(PAStateSelector);
+  const { canUpdateSettings } = useUserPermissions();
 
   useEffect(() => {
     setHeaderTitleNode(
-      <span className={cx('button')} onClick={onAddPattern}>
-        <Button disabled={disabled} data-automation-id="createPatternButton">
-          {formatMessage(messages.create)}
-        </Button>
-      </span>,
+      <>
+        {canUpdateSettings && (
+          <span className={cx('button')} onClick={onAddPattern}>
+            <Button disabled={disabled} data-automation-id="createPatternButton">
+              {formatMessage(messages.create)}
+            </Button>
+          </span>
+        )}
+      </>,
     );
 
     return () => setHeaderTitleNode(null);
@@ -70,7 +75,6 @@ export const PatternAnalysisContent = ({
     trackEvent(
       PROJECT_SETTINGS_PATTERN_ANALYSIS_EVENTS.CLICK_ACTION_ICON_PATTERN_ANALYSIS('icon_edit'),
     );
-    trackEvent(SETTINGS_PAGE_EVENTS.EDIT_PATTERN_ICON);
     dispatch(
       showModalAction({
         id: 'editPatternModalWindow',
@@ -91,7 +95,6 @@ export const PatternAnalysisContent = ({
         IS_DUPLICATE_MODAL,
       ),
     );
-    trackEvent(SETTINGS_PAGE_EVENTS.SAVE_BTN_CLONE_PATTERN_MODAL);
     dispatch(addPatternAction(pattern));
     dispatch(hideModalAction());
   };
@@ -99,7 +102,6 @@ export const PatternAnalysisContent = ({
     trackEvent(
       PROJECT_SETTINGS_PATTERN_ANALYSIS_EVENTS.CLICK_ACTION_ICON_PATTERN_ANALYSIS('icon_duplicate'),
     );
-    trackEvent(SETTINGS_PAGE_EVENTS.CLONE_PATTERN_ICON);
     const newPattern = {
       ...pattern,
       name: pattern.name + COPY_POSTFIX,
@@ -118,7 +120,6 @@ export const PatternAnalysisContent = ({
     );
   };
   const onDeletePattern = (pattern) => {
-    trackEvent(SETTINGS_PAGE_EVENTS.DELETE_PATTERN_ICON);
     dispatch(deletePatternAction(pattern));
     dispatch(hideModalAction());
   };
@@ -137,20 +138,10 @@ export const PatternAnalysisContent = ({
   };
   const onChangePatternAnalysis = (enabled) => {
     trackEvent(PROJECT_SETTINGS_PATTERN_ANALYSIS_EVENTS.SWITCH_AUTO_PATTERN_ANALYSIS(enabled));
-    trackEvent(
-      enabled
-        ? SETTINGS_PAGE_EVENTS.TURN_ON_PA_SWITCHER
-        : SETTINGS_PAGE_EVENTS.TURN_OFF_PA_SWITCHER,
-    );
     dispatch(updatePAStateAction(enabled));
   };
   const onToggleHandler = (enabled, pattern) => {
     trackEvent(PROJECT_SETTINGS_PATTERN_ANALYSIS_EVENTS.SWITCH_NAME_PATTERN_ANALYSIS(enabled));
-    trackEvent(
-      enabled
-        ? SETTINGS_PAGE_EVENTS.TURN_ON_PA_RULE_SWITCHER
-        : SETTINGS_PAGE_EVENTS.TURN_OFF_PA_RULE_SWITCHER,
-    );
     dispatch(
       updatePatternAction({
         ...pattern,

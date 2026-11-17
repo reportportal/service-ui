@@ -14,12 +14,9 @@
  * limitations under the License.
  */
 
-import { useSelector } from 'react-redux';
-import { activeProjectRoleSelector, userAccountRoleSelector } from 'controllers/user';
-import { canLockDashboard } from 'common/utils/permissions/permissions';
+import { useUserPermissions} from 'hooks/useUserPermissions';
 
 export const useCanLockDashboard = () => {
-  const userRole = useSelector(userAccountRoleSelector);
-  const projectRole = useSelector(activeProjectRoleSelector);
-  return canLockDashboard(userRole, projectRole, false);
+  const { canLockDashboard } = useUserPermissions();
+  return canLockDashboard;
 };

@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 
-import React, { Component, Fragment } from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
-import track from 'react-tracking';
+import { useDispatch, useSelector } from 'react-redux';
+import { useTracking } from 'react-tracking';
 import classNames from 'classnames/bind';
-import { defineMessages, injectIntl } from 'react-intl';
+import { defineMessages, useIntl } from 'react-intl';
 import Parser from 'html-react-parser';
 import { GhostButton } from 'components/buttons/ghostButton';
 import { getIssueTitle } from 'pages/inside/common/utils';
@@ -40,8 +40,7 @@ import {
 import { DefectTypeItem } from 'pages/inside/common/defectTypeItem';
 import { StatusDropdown } from 'pages/inside/common/statusDropdown';
 import { TestItemStatus } from 'pages/inside/common/testItemStatus';
-import { canChangeStatus } from 'common/utils/permissions';
-import { userAccountRoleSelector, activeProjectRoleSelector, userIdSelector } from 'controllers/user';
+import { userIdSelector } from 'controllers/user';
 import { isItemOwner } from 'controllers/testItem';
 import PlusIcon from 'common/img/plus-button-inline.svg';
 import CommentIcon from 'common/img/comment-inline.svg';
@@ -56,6 +55,8 @@ import {
   PALabel,
 } from 'pages/inside/stepPage/stepGrid/defectType/defectType';
 import { TO_INVESTIGATE_LOCATOR_PREFIX } from 'common/constants/defectTypes';
+import { useUserPermissions } from 'hooks/useUserPermissions';
+import { isEnterOrSpaceKey } from 'common/utils/helperUtils/eventUtils';
 import styles from './defectDetails.scss';
 
 const cx = classNames.bind(styles);
@@ -97,86 +98,29 @@ const messages = defineMessages({
 
 const getPostIssueEventsInfo = (place) => ({
   postBtn: LOG_PAGE_EVENTS.POST_ISSUE_MODAL_EVENTS.getClickPostIssueButtonEventParameters(place),
-  cancelBtn: LOG_PAGE_EVENTS.POST_ISSUE_MODAL_EVENTS.CANCEL_BTN_POST_ISSUE_MODAL,
-  closeIcon: LOG_PAGE_EVENTS.POST_ISSUE_MODAL_EVENTS.CLOSE_ICON_POST_ISSUE_MODAL,
 });
 const getLinkIssueEventsInfo = (place) => ({
   loadBtn: LOG_PAGE_EVENTS.LINK_ISSUE_MODAL_EVENTS.getClickLoadButtonEventParameters(place),
-  cancelBtn: LOG_PAGE_EVENTS.LINK_ISSUE_MODAL_EVENTS.CANCEL_BTN_LINK_ISSUE_MODAL,
-  addNewIssue: LOG_PAGE_EVENTS.LINK_ISSUE_MODAL_EVENTS.getClickAddNewIssueButtonEventParameters(
-    place,
-  ),
-  closeIcon: LOG_PAGE_EVENTS.LINK_ISSUE_MODAL_EVENTS.CLOSE_ICON_LINK_ISSUE_MODAL,
+  addNewIssue:
+    LOG_PAGE_EVENTS.LINK_ISSUE_MODAL_EVENTS.getClickAddNewIssueButtonEventParameters(place),
 });
 const getUnlinkIssueEventsInfo = (place) => ({
   unlinkBtn: LOG_PAGE_EVENTS.UNLINK_ISSUE_MODAL_EVENTS.getClickUnlinkButtonEventParameters(place),
-  cancelBtn: LOG_PAGE_EVENTS.UNLINK_ISSUE_MODAL_EVENTS.CANCEL_BTN_UNLINK_ISSUE_MODAL,
-  closeIcon: LOG_PAGE_EVENTS.UNLINK_ISSUE_MODAL_EVENTS.CLOSE_ICON_UNLINK_ISSUE_MODAL,
 });
 
-@connect(
-  (state) => ({
-    btsIntegrations: availableBtsIntegrationsSelector(state),
-    isBtsPluginsExist: isBtsPluginsExistSelector(state),
-    enabledBtsPlugins: enabledBtsPluginsSelector(state),
-    userRole: userAccountRoleSelector(state),
-    projectRole: activeProjectRoleSelector(state),
-    userId: userIdSelector(state),
-  }),
-  {
-    linkIssueAction,
-    unlinkIssueAction,
-    postIssueAction,
-    editDefectsAction,
-    updateHistoryItemIssues: updateHistoryItemIssuesAction,
-    fetchHistoryItemsWithLoading: fetchHistoryItemsWithLoadingAction,
-  },
-)
-@track()
-@injectIntl
-export class DefectDetails extends Component {
-  static propTypes = {
-    intl: PropTypes.object.isRequired,
-    editDefectsAction: PropTypes.func.isRequired,
-    linkIssueAction: PropTypes.func.isRequired,
-    unlinkIssueAction: PropTypes.func.isRequired,
-    postIssueAction: PropTypes.func.isRequired,
-    btsIntegrations: PropTypes.array.isRequired,
-    fetchFunc: PropTypes.func.isRequired,
-    updateHistoryItemIssues: PropTypes.func.isRequired,
-    debugMode: PropTypes.bool.isRequired,
-    fetchHistoryItemsWithLoading: PropTypes.func.isRequired,
-    tracking: PropTypes.shape({
-      trackEvent: PropTypes.func,
-      getTrackingData: PropTypes.func,
-    }).isRequired,
-    logItem: PropTypes.object,
-    isBtsPluginsExist: PropTypes.bool,
-    enabledBtsPlugins: PropTypes.array,
-    userRole: PropTypes.string,
-    projectRole: PropTypes.string,
-    userId: PropTypes.string,
-    parentLaunch: PropTypes.object,
-  };
-  static defaultProps = {
-    logItem: null,
-    isBtsPluginsExist: false,
-    enabledBtsPlugins: [],
-  };
+export const DefectDetails = ({ fetchFunc, debugMode, logItem, parentLaunch }) => {
+  const { formatMessage } = useIntl();
+  const { trackEvent } = useTracking();
+  const dispatch = useDispatch();
+  const btsIntegrations = useSelector(availableBtsIntegrationsSelector);
+  const isBtsPluginsExist = useSelector(isBtsPluginsExistSelector);
+  const enabledBtsPlugins = useSelector(enabledBtsPluginsSelector);
+  const userId = useSelector(userIdSelector);
+  const [expanded, setExpanded] = useState(false);
+  const { canChangeTestItemStatus, canMakeDecision, canManageBTSIssues } = useUserPermissions();
 
-  state = {
-    expanded: false,
-  };
-
-  getIssueActionTitle = (noIssueMessage, isPostIssueUnavailable) => {
-    const {
-      logItem,
-      intl: { formatMessage },
-      btsIntegrations,
-      isBtsPluginsExist,
-      enabledBtsPlugins,
-    } = this.props;
-
+  const isDefectTypeVisible = logItem.issue?.issueType;
+  const getIssueActionTitle = (noIssueMessage, isPostIssueUnavailable) => {
     if (!logItem.issue) {
       return formatMessage(noIssueMessage);
     }
@@ -190,21 +134,17 @@ export class DefectDetails extends Component {
     );
   };
 
-  isDefectTypeVisible = () => {
-    const { logItem } = this.props;
-    return logItem.issue?.issueType;
+  const handleLinkIssue = () => {
+    trackEvent(LOG_PAGE_EVENTS.LINK_ISSUE_ACTION);
+    dispatch(
+      linkIssueAction([logItem], {
+        fetchFunc,
+        eventsInfo: getLinkIssueEventsInfo(),
+      }),
+    );
   };
 
-  handleLinkIssue = () => {
-    this.props.tracking.trackEvent(LOG_PAGE_EVENTS.LINK_ISSUE_ACTION);
-    this.props.linkIssueAction([this.props.logItem], {
-      fetchFunc: this.props.fetchFunc,
-      eventsInfo: getLinkIssueEventsInfo(),
-    });
-  };
-
-  handleUnlinkTicket = (ticketId) => {
-    const { logItem, fetchFunc, tracking } = this.props;
+  const handleUnlinkTicket = (ticketId) => {
     const items = [
       {
         ...logItem,
@@ -217,238 +157,245 @@ export class DefectDetails extends Component {
       },
     ];
 
-    tracking.trackEvent(LOG_PAGE_EVENTS.UNLINK_ISSUES_ACTION);
+    trackEvent(LOG_PAGE_EVENTS.UNLINK_ISSUES_ACTION);
 
-    this.props.unlinkIssueAction(items, {
-      fetchFunc,
-      eventsInfo: getUnlinkIssueEventsInfo(),
-    });
+    dispatch(
+      unlinkIssueAction(items, {
+        fetchFunc,
+        eventsInfo: getUnlinkIssueEventsInfo(),
+      }),
+    );
   };
 
-  handlePostIssue = () => {
-    this.props.tracking.trackEvent(LOG_PAGE_EVENTS.POST_ISSUE_ACTION);
-    this.props.postIssueAction([this.props.logItem], {
-      fetchFunc: this.props.fetchFunc,
-      eventsInfo: getPostIssueEventsInfo(),
-    });
+  const handlePostIssue = () => {
+    trackEvent(LOG_PAGE_EVENTS.POST_ISSUE_ACTION);
+    dispatch(
+      postIssueAction([logItem], {
+        fetchFunc,
+        eventsInfo: getPostIssueEventsInfo(),
+      }),
+    );
   };
 
-  onDefectEdited = (issues) => {
-    const { fetchFunc, updateHistoryItemIssues } = this.props;
-
+  const onDefectEdited = (issues) => {
     if (issues) {
-      updateHistoryItemIssues(issues);
+      dispatch(updateHistoryItemIssuesAction(issues));
     } else {
       fetchFunc();
     }
   };
 
-  handleEditDefect = () => {
-    const { logItem } = this.props;
+  const handleEditDefect = () => {
     const MAKE_DECISION = 'make_decision';
 
-    this.props.tracking.trackEvent(
+    trackEvent(
       LOG_PAGE_EVENTS.MAKE_DECISION_MODAL_EVENTS.getOpenModalEvent(
         logItem.issue.issueType.startsWith(TO_INVESTIGATE_LOCATOR_PREFIX),
       ),
     );
-    this.props.editDefectsAction([logItem], {
-      fetchFunc: this.onDefectEdited,
-      eventsInfo: {
-        changeSearchMode: LOG_PAGE_EVENTS.CHANGE_SEARCH_MODE_EDIT_DEFECT_MODAL,
-        selectAllSimilarItems: LOG_PAGE_EVENTS.SELECT_ALL_SIMILAR_ITEMS_EDIT_DEFECT_MODAL,
-        selectSpecificSimilarItem: LOG_PAGE_EVENTS.SELECT_SPECIFIC_SIMILAR_ITEM_EDIT_DEFECT_MODAL,
-        editDefectsEvents: LOG_PAGE_EVENTS.MAKE_DECISION_MODAL_EVENTS,
-        unlinkIssueEvents: getUnlinkIssueEventsInfo(MAKE_DECISION),
-        postIssueEvents: getPostIssueEventsInfo(MAKE_DECISION),
-        linkIssueEvents: getLinkIssueEventsInfo(MAKE_DECISION),
-      },
-    });
-  };
-
-  toggleExpanded = () => {
-    this.setState(
-      (state) => ({
-        expanded: !state.expanded,
+    dispatch(
+      editDefectsAction([logItem], {
+        fetchFunc: onDefectEdited,
+        eventsInfo: {
+          editDefectsEvents: LOG_PAGE_EVENTS.MAKE_DECISION_MODAL_EVENTS,
+          unlinkIssueEvents: getUnlinkIssueEventsInfo(MAKE_DECISION),
+          postIssueEvents: getPostIssueEventsInfo(MAKE_DECISION),
+          linkIssueEvents: getLinkIssueEventsInfo(MAKE_DECISION),
+        },
       }),
-      () => {
-        this.props.tracking.trackEvent(
-          LOG_PAGE_EVENTS.getClickOnDefectDetailsTogglerEvent(this.state.expanded),
-        );
-      },
     );
   };
 
-  onChangeStatus = (status) =>
-    this.props.tracking.trackEvent(LOG_PAGE_EVENTS.getChangeItemStatusEvent(status));
-
-  onClickIssue = (pluginName) => {
-    this.props.tracking.trackEvent(LOG_PAGE_EVENTS.onClickIssueTicketEvent(pluginName));
+  const toggleExpanded = () => {
+    setExpanded(!expanded);
+    trackEvent(LOG_PAGE_EVENTS.getClickOnDefectDetailsTogglerEvent(expanded));
   };
 
-  render() {
-    const {
-      logItem,
-      btsIntegrations,
-      debugMode,
-      intl: { formatMessage },
-      fetchHistoryItemsWithLoading,
-      userRole,
-      projectRole,
-      userId,
-      parentLaunch,
-    } = this.props;
-    const { expanded } = this.state;
-    const isPostIssueUnavailable = !isPostIssueActionAvailable(this.props.btsIntegrations);
-    const isOwner = userId && logItem ? isItemOwner(userId, logItem, parentLaunch) : false;
-    const canChange = canChangeStatus(userRole, projectRole, isOwner);
+  const onChangeStatus = (status) => trackEvent(LOG_PAGE_EVENTS.getChangeItemStatusEvent(status));
 
-    return (
-      <div className={cx('details-container')}>
-        {this.isDefectTypeVisible() && (
-          <div className={cx('defect-details')}>
-            <div className={cx('details-row', 'start-align')}>
-              <span className={cx('details-row-caption')}>
-                <span className={cx('icon')}>{Parser(CommentIcon)}</span>
-                {formatMessage(messages.comment)}
-              </span>
-              <div className={cx('comment', { expanded })}>
-                {expanded ? (
-                  <ScrollWrapper autoHeight autoHeightMax={90}>
-                    <MarkdownViewer value={logItem.issue.comment} />
-                  </ScrollWrapper>
-                ) : (
+  const onClickIssue = (pluginName) => {
+    trackEvent(LOG_PAGE_EVENTS.onClickIssueTicketEvent(pluginName));
+  };
+
+  const isPostIssueUnavailable = !isPostIssueActionAvailable(btsIntegrations);
+
+  const isOwner = userId && logItem ? isItemOwner(userId, logItem, parentLaunch) : false;
+  const canChangeStatus = canChangeTestItemStatus || isOwner;
+
+  return (
+    <div className={cx('details-container')}>
+      {isDefectTypeVisible && (
+        <div className={cx('defect-details')}>
+          <div className={cx('details-row', 'start-align')}>
+            <span className={cx('details-row-caption')}>
+              <span className={cx('icon')}>{Parser(CommentIcon)}</span>
+              {formatMessage(messages.comment)}
+            </span>
+            <div className={cx('comment', { expanded })}>
+              {expanded ? (
+                <ScrollWrapper autoHeight autoHeightMax={90}>
                   <MarkdownViewer value={logItem.issue.comment} />
-                )}
-              </div>
-            </div>
-
-            <div className={cx('details-row')}>
-              {expanded && (
-                <Fragment>
-                  <span className={cx('details-row-caption')}>
-                    <span className={cx('icon')}>{Parser(BugIcon)}</span>
-                    {formatMessage(messages.btsLink)}
-                  </span>
-                  <div className={cx('issues')}>
-                    <IssueList
-                      issues={logItem.issue.externalSystemIssues}
-                      onRemove={this.handleUnlinkTicket}
-                      onClick={this.onClickIssue}
-                    />
-                  </div>
-                  {!debugMode && (
-                    <>
-                      <GhostButton
-                        tiny
-                        icon={PlusIcon}
-                        transparentBorder
-                        transparentBorderHover
-                        disabled={!logItem.issue || isPostIssueUnavailable}
-                        onClick={this.handlePostIssue}
-                        title={
-                          !logItem.issue || isPostIssueUnavailable
-                            ? this.getIssueActionTitle(
-                                messages.noDefectTypeToPostIssue,
-                                isPostIssueUnavailable,
-                              )
-                            : ''
-                        }
-                      >
-                        {formatMessage(messages.postIssue)}
-                      </GhostButton>
-                      <GhostButton
-                        icon={PlusIcon}
-                        transparentBorder
-                        transparentBorderHover
-                        disabled={!logItem.issue || !btsIntegrations.length}
-                        onClick={this.handleLinkIssue}
-                        title={
-                          !logItem.issue || !btsIntegrations.length
-                            ? this.getIssueActionTitle(
-                                messages.noDefectTypeToLinkIssue,
-                                isPostIssueUnavailable,
-                              )
-                            : ''
-                        }
-                      >
-                        {formatMessage(messages.linkIssue)}
-                      </GhostButton>
-                    </>
-                  )}
-                </Fragment>
+                </ScrollWrapper>
+              ) : (
+                <MarkdownViewer value={logItem.issue.comment} />
               )}
             </div>
           </div>
-        )}
 
-        <div className={cx('defect-type')}>
-          {this.isDefectTypeVisible() && (
-            <Fragment>
-              {expanded ? null : (
-                <div className={cx('collapsed-info')}>
-                  <span className={cx('expand-more')} onClick={this.toggleExpanded}>
-                    <span className={cx('icon')}>{Parser(ArrowDownIcon)}</span>
-                    {formatMessage(messages.more)}
-                  </span>
-                  <span className={cx('issues-info', 'with-separator')}>
-                    <span className={cx('icon')}>{Parser(BugIcon)}</span>
-                    {logItem.issue.externalSystemIssues.length}
-                  </span>
+          <div className={cx('details-row')}>
+            {expanded && (
+              <>
+                <span className={cx('details-row-caption')}>
+                  <span className={cx('icon')}>{Parser(BugIcon)}</span>
+                  {formatMessage(messages.btsLink)}
+                </span>
+                <div className={cx('issues')}>
+                  <IssueList
+                    issues={logItem.issue.externalSystemIssues}
+                    onRemove={handleUnlinkTicket}
+                    onClick={onClickIssue}
+                    readOnly={!canManageBTSIssues}
+                  />
                 </div>
-              )}
-              {logItem.issue.ignoreAnalyzer && <IgnoredInAALabel />}
-              {logItem.issue.autoAnalyzed && <AALabel />}
-              {!!logItem.patternTemplates.length && (
-                <PALabel patternTemplates={logItem.patternTemplates} />
-              )}
-            </Fragment>
-          )}
-          <span className={cx('status-wrapper', 'with-separator')}>
-            {canChange ? (
-              <StatusDropdown
-                itemId={logItem.id}
-                status={logItem.status}
-                attributes={logItem.attributes}
-                description={logItem.description}
-                fetchFunc={fetchHistoryItemsWithLoading}
-                onChange={this.onChangeStatus}
-                withIndicator
-              />
-            ) : (
-              <TestItemStatus status={logItem.status} className={cx('status')} />
+                {!debugMode && canManageBTSIssues && (
+                  <>
+                    <GhostButton
+                      tiny
+                      icon={PlusIcon}
+                      transparentBorder
+                      transparentBorderHover
+                      disabled={!logItem.issue || isPostIssueUnavailable}
+                      onClick={handlePostIssue}
+                      title={
+                        !logItem.issue || isPostIssueUnavailable
+                          ? getIssueActionTitle(
+                              messages.noDefectTypeToPostIssue,
+                              isPostIssueUnavailable,
+                            )
+                          : ''
+                      }
+                    >
+                      {formatMessage(messages.postIssue)}
+                    </GhostButton>
+                    <GhostButton
+                      icon={PlusIcon}
+                      transparentBorder
+                      transparentBorderHover
+                      disabled={!logItem.issue || !btsIntegrations.length}
+                      onClick={handleLinkIssue}
+                      title={
+                        !logItem.issue || !btsIntegrations.length
+                          ? getIssueActionTitle(
+                              messages.noDefectTypeToLinkIssue,
+                              isPostIssueUnavailable,
+                            )
+                          : ''
+                      }
+                    >
+                      {formatMessage(messages.linkIssue)}
+                    </GhostButton>
+                  </>
+                )}
+              </>
             )}
-          </span>
-          {this.isDefectTypeVisible() && (
-            <span className={cx('defect-item-wrapper', 'with-separator')}>
-              <DefectTypeItem
-                type={logItem.issue.issueType}
-                noBorder
-                onClick={null}
-                className={cx('defect-item')}
-              />
-            </span>
-          )}
-          {!debugMode && (
-            <div className={cx('make-decision-action')}>
-              <GhostButton
-                color="white"
-                disabled={!logItem.issue}
-                onClick={this.handleEditDefect}
-                title={!logItem.issue ? formatMessage(messages.makeDecisionTooltip) : ''}
-              >
-                {formatMessage(messages.makeDecision)}
-              </GhostButton>
-            </div>
-          )}
-          {expanded && logItem.issue && (
-            <span className={cx('expand-more', 'collapse')} onClick={this.toggleExpanded}>
-              <span className={cx('icon')}>{Parser(ArrowDownIcon)}</span>
-              {formatMessage(messages.showLess)}
-            </span>
-          )}
+          </div>
         </div>
+      )}
+      <div className={cx('defect-type')}>
+        {isDefectTypeVisible && (
+          <>
+            {expanded ? null : (
+              <div className={cx('collapsed-info')}>
+                <button
+                  className={cx('expand-more')}
+                  onClick={toggleExpanded}
+                  tabIndex={0}
+                  onKeyDown={(e) => {
+                    if (isEnterOrSpaceKey(e)) {
+                      toggleExpanded();
+                    }
+                  }}
+                >
+                  <span className={cx('icon')}>{Parser(ArrowDownIcon)}</span>
+                  {formatMessage(messages.more)}
+                </button>
+                <span className={cx('issues-info', 'with-separator')}>
+                  <span className={cx('icon')}>{Parser(BugIcon)}</span>
+                  {logItem.issue.externalSystemIssues.length}
+                </span>
+              </div>
+            )}
+            {logItem.issue.ignoreAnalyzer && <IgnoredInAALabel />}
+            {logItem.issue.autoAnalyzed && <AALabel />}
+            {!!logItem.patternTemplates.length && (
+              <PALabel patternTemplates={logItem.patternTemplates} />
+            )}
+          </>
+        )}
+        <span className={cx('status-wrapper', 'with-separator')}>
+          {canChangeStatus ? (
+            <StatusDropdown
+              itemId={logItem.id}
+              status={logItem.status}
+              attributes={logItem.attributes}
+              description={logItem.description}
+              fetchFunc={() => dispatch(fetchHistoryItemsWithLoadingAction())}
+              onChange={onChangeStatus}
+              withIndicator
+            />
+          ) : (
+            <TestItemStatus status={logItem.status} className={cx('status')} />
+          )}
+        </span>
+        {isDefectTypeVisible && (
+          <span className={cx('defect-item-wrapper', 'with-separator')}>
+            <DefectTypeItem
+              type={logItem.issue.issueType}
+              noBorder
+              onClick={null}
+              className={cx('defect-item')}
+            />
+          </span>
+        )}
+        {!debugMode && canMakeDecision && (
+          <div className={cx('make-decision-action')}>
+            <GhostButton
+              color="white"
+              disabled={!logItem.issue}
+              onClick={handleEditDefect}
+              title={!logItem.issue ? formatMessage(messages.makeDecisionTooltip) : ''}
+            >
+              {formatMessage(messages.makeDecision)}
+            </GhostButton>
+          </div>
+        )}
+        {expanded && logItem.issue && (
+          <button
+            className={cx('expand-more', 'collapse')}
+            onClick={toggleExpanded}
+            tabIndex={0}
+            onKeyDown={(e) => {
+              if (isEnterOrSpaceKey(e)) {
+                toggleExpanded();
+              }
+            }}
+          >
+            <span className={cx('icon')}>{Parser(ArrowDownIcon)}</span>
+            {formatMessage(messages.showLess)}
+          </button>
+        )}
       </div>
-    );
-  }
-}
+    </div>
+  );
+};
+
+DefectDetails.propTypes = {
+  fetchFunc: PropTypes.func.isRequired,
+  debugMode: PropTypes.bool.isRequired,
+  logItem: PropTypes.object,
+  parentLaunch: PropTypes.object,
+};
+
+DefectDetails.defaultProps = {
+  logItem: null,
+};

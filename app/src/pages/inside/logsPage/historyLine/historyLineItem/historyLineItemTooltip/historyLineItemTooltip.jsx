@@ -20,7 +20,6 @@ import PropTypes from 'prop-types';
 import { injectIntl, defineMessages } from 'react-intl';
 import Parser from 'html-react-parser';
 import classNames from 'classnames/bind';
-import { activeProjectSelector } from 'controllers/user';
 import { fetch, getDuration } from 'common/utils';
 import { URLS } from 'common/urls';
 import { statusLocalization } from 'common/constants/localization/statusLocalization';
@@ -29,6 +28,7 @@ import { DottedPreloader } from 'components/preloaders/dottedPreloader';
 import BugIcon from 'common/img/bug-inline.svg';
 import CommentIcon from 'common/img/comment-inline.svg';
 import { DefectTypeItem } from 'pages/inside/common/defectTypeItem';
+import { projectKeySelector } from 'controllers/project';
 import { Triangles } from '../triangles';
 import styles from './historyLineItemTooltip.scss';
 
@@ -66,16 +66,16 @@ const messages = defineMessages({
 });
 
 @connect((state) => ({
-  activeProject: activeProjectSelector(state),
+  projectKey: projectKeySelector(state),
 }))
 @injectIntl
 export class HistoryLineItemTooltip extends Component {
   static propTypes = {
     testItem: PropTypes.object.isRequired,
     intl: PropTypes.object.isRequired,
-    activeProject: PropTypes.string.isRequired,
     updateLaunchAttributes: PropTypes.func,
     includeAllLaunches: PropTypes.bool,
+    projectKey: PropTypes.string.isRequired,
   };
 
   state = {
@@ -91,11 +91,11 @@ export class HistoryLineItemTooltip extends Component {
   }
 
   fetchLaunch = () => {
-    const { activeProject, testItem } = this.props;
+    const { projectKey, testItem } = this.props;
     const { launchId } = testItem;
     this.setState({ loading: true });
 
-    fetch(URLS.launch(activeProject, launchId))
+    fetch(URLS.launch(projectKey, launchId))
       .then((launch) => {
         this.props.updateLaunchAttributes(launch);
         this.setState({ loading: false });

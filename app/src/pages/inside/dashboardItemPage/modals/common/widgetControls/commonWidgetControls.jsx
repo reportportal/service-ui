@@ -69,8 +69,6 @@ export class CommonWidgetControls extends Component {
     intl: PropTypes.object.isRequired,
     initializeControlsForm: PropTypes.func,
     widgetId: PropTypes.number,
-    eventsInfo: PropTypes.object,
-    trackEvent: PropTypes.func,
     dashboards: PropTypes.arrayOf(PropTypes.object),
     activeDashboard: PropTypes.object,
     isMainControlsDisabled: PropTypes.bool,
@@ -79,8 +77,6 @@ export class CommonWidgetControls extends Component {
   static defaultProps = {
     initializeControlsForm: null,
     widgetId: null,
-    eventsInfo: {},
-    trackEvent: () => {},
     dashboards: [],
     activeDashboard: {},
     intl: {},
@@ -101,8 +97,6 @@ export class CommonWidgetControls extends Component {
     const {
       intl: { formatMessage },
       widgetId,
-      trackEvent,
-      eventsInfo,
       dashboards,
       activeDashboard: { widgets = [] },
       isMainControlsDisabled,
@@ -115,7 +109,6 @@ export class CommonWidgetControls extends Component {
             name="name"
             validate={widgetNameValidator(formatMessage, widgetId, widgets)}
             placeholder={formatMessage(messages.namePlaceholder)}
-            onChange={() => trackEvent(eventsInfo.changeName)}
           >
             <FieldErrorHint>
               <Input maxLength="128" disabled={isMainControlsDisabled} />
@@ -127,7 +120,6 @@ export class CommonWidgetControls extends Component {
             name="description"
             maxLength="1500"
             placeholder={formatMessage(messages.descriptionPlaceholder)}
-            onChange={() => trackEvent(eventsInfo.changeDescription)}
           >
             <InputTextArea disabled={isMainControlsDisabled} />
           </FieldProvider>

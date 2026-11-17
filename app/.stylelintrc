@@ -1,6 +1,12 @@
 {
-  "extends": "stylelint-config-recommended-scss",
-  "plugins": ["stylelint-scss"],
+  "extends":  [
+    "stylelint-config-recommended-scss",
+    "stylelint-config-prettier-scss",
+  ],
+  "plugins": [
+    "stylelint-scss",
+    "stylelint-declaration-strict-value"
+  ],
   "rules": {
     "no-descending-specificity": [true, {"severity": "warning"}],
     "selector-pseudo-class-no-unknown": [true, {"ignorePseudoClasses": ["global"]}],
@@ -8,6 +14,9 @@
     "selector-max-attribute": null,
     "color-named": "never",
     "color-no-hex": true,
+    "declaration-property-value-keyword-no-deprecated": [true, {"ignoreKeywords": ["break-word"]}],
+    "scss/at-extend-no-missing-placeholder": null,
+    "scale-unlimited/declaration-strict-value": ["color", {"ignoreValues": ["inherit", "transparent"]}],
     "scss/operator-no-newline-after": null
   }
 }

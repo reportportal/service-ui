@@ -15,41 +15,27 @@
  */
 import classNames from 'classnames/bind';
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
 import { ContainerWithTabs } from 'components/main/containerWithTabs';
-import { activeProjectSelector } from 'controllers/user';
-import { PROFILE_PAGE_EVENTS } from 'components/main/analytics/events';
 import styles from './configExamplesBlock.scss';
 import { BlockContainerBody } from '../blockContainer';
 
 import { TabsConfig } from './tabsConfig';
 
 const cx = classNames.bind(styles);
-@connect((state) => ({
-  activeProject: activeProjectSelector(state),
-}))
+
 export class ConfigExamplesBlock extends Component {
-  static propTypes = {
-    activeProject: PropTypes.string,
-  };
-  static defaultProps = {
-    activeProject: '',
-  };
   render() {
-    const { activeProject } = this.props;
     return (
       <div className={cx('config-example-block')}>
         <BlockContainerBody>
           <div className={cx('content-container')}>
             <ContainerWithTabs
-              selectTabEventInfo={PROFILE_PAGE_EVENTS.SELECT_CONFIGURATION_TAB}
               data={[
-                TabsConfig.javaConfig(activeProject),
-                TabsConfig.pythonConfig(activeProject),
-                TabsConfig.dotNetConfig(activeProject),
-                TabsConfig.nodejsConfig(activeProject),
-                TabsConfig.rubyConfig(activeProject),
+                TabsConfig.javaConfig(),
+                TabsConfig.pythonConfig(),
+                TabsConfig.dotNetConfig(),
+                TabsConfig.nodejsConfig(),
+                TabsConfig.rubyConfig(),
               ]}
             />
           </div>
