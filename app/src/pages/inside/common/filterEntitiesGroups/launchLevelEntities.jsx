@@ -485,10 +485,9 @@ export class LaunchLevelEntities extends Component {
         removable: true,
         customProps: {
           disabled: true,
-          error: 'error',
-          ...(isRetentionPolicy && {
-            title: intl.formatMessage(messages.ImportanceDisabledTooltip),
-          }),
+          ...(isRetentionPolicy
+            ? { title: intl.formatMessage(messages.ImportanceDisabledTooltip) }
+            : { error: 'error' }),
         },
       };
     });
