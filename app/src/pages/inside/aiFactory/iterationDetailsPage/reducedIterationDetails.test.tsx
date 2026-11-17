@@ -33,7 +33,10 @@ import {
 import { GenerationReviewTraceChooser } from './generationReviewTraceChooser/generationReviewTraceChooser';
 import { LiveReviewCases } from './liveReviewCases/liveReviewCases';
 import { CaseLink } from './stagePanels/caseLink';
-import { ReducedIterationDetails } from './reducedIterationDetails';
+import {
+  ReducedIterationDetails,
+  type ReducedIterationDetailsProps,
+} from './reducedIterationDetails';
 
 jest.mock('@reportportal/ui-kit', () => ({
   Button: 'Button',
@@ -104,30 +107,37 @@ const detail = (overrides: Partial<ReducedPipelineIterationDetail> = {}) => ({
   ...overrides,
 });
 
+const renderTraceDetail = (
+  stages: ReducedPipelineDetailStage[],
+  overrides: Partial<ReducedIterationDetailsProps> = {},
+) =>
+  shallow(
+    <ReducedIterationDetails
+      iteration={detail({ stages })}
+      hasError={false}
+      isUnavailable={false}
+      breadcrumbDescriptors={breadcrumbDescriptors}
+      onRetry={jest.fn()}
+      projectKey="demo"
+      {...overrides}
+    />,
+  );
+
 describe('ReducedIterationDetails', () => {
   test('opens only the selected actual stageKey, with no synthetic key fallback', () => {
-    const wrapper = shallow(
-      <ReducedIterationDetails
-        iteration={detail({
-          stages: [
-            {
-              id: 11,
-              key: 'synthetic',
-              stageKey: 'agent-create',
-              label: 'Create',
-              sequence: 1,
-              status: 'PASSED',
-            },
-            { id: 12, key: 'upload', label: 'Upload', sequence: 2, status: 'PASSED' },
-          ],
-        })}
-        hasError={false}
-        isUnavailable={false}
-        breadcrumbDescriptors={breadcrumbDescriptors}
-        onRetry={jest.fn()}
-        projectKey="demo"
-        requestedStage="agent-create"
-      />,
+    const wrapper = renderTraceDetail(
+      [
+        {
+          id: 11,
+          key: 'synthetic',
+          stageKey: 'agent-create',
+          label: 'Create',
+          sequence: 1,
+          status: 'PASSED',
+        },
+        { id: 12, key: 'upload', label: 'Upload', sequence: 2, status: 'PASSED' },
+      ],
+      { requestedStage: 'agent-create' },
     );
     expect(traceEntry(wrapper).find(StageTraceAction).prop('stageKey')).toBe('agent-create');
     (wrapper.find('[data-automation-id="reducedStageCard-12"]').prop('onClick') as () => void)();
@@ -135,28 +145,10 @@ describe('ReducedIterationDetails', () => {
   });
 
   test('defaults to the first stage when a later legacy stage has no canonical stage key', () => {
-    const wrapper = shallow(
-      <ReducedIterationDetails
-        iteration={detail({
-          stages: [
-            {
-              id: 11,
-              key: 'create',
-              stageKey: 'create',
-              label: 'Create',
-              sequence: 1,
-              status: 'PASSED',
-            },
-            { id: 12, key: 'legacy-upload', label: 'Upload', sequence: 2, status: 'PASSED' },
-          ],
-        })}
-        hasError={false}
-        isUnavailable={false}
-        breadcrumbDescriptors={breadcrumbDescriptors}
-        onRetry={jest.fn()}
-        projectKey="demo"
-      />,
-    );
+    const wrapper = renderTraceDetail([
+      { id: 11, key: 'create', stageKey: 'create', label: 'Create', sequence: 1, status: 'PASSED' },
+      { id: 12, key: 'legacy-upload', label: 'Upload', sequence: 2, status: 'PASSED' },
+    ]);
     expect(traceEntry(wrapper).find(StageTraceAction).prop('stageKey')).toBe('create');
   });
 

@@ -2,49 +2,25 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may obtain a copy at http://www.apache.org/licenses/LICENSE-2.0
  */
+// Register shared module mocks before importing the components under test.
+import {
+  resetStageTraceTestContext,
+  type MountedTraceWrapper,
+} from 'pages/inside/aiFactory/common/stageTrace/stageTraceTestSetup';
+
 import { act } from 'react';
-import { mount, type ReactWrapper } from 'enzyme';
-import { useDispatch, useSelector } from 'react-redux';
+import { mount } from 'enzyme';
+import { useSelector } from 'react-redux';
 
 import { useAiFactoryEnabled } from 'controllers/aiFactory';
+
 import { getLiveIterationIdentity } from 'pages/inside/aiFactory/common/iterationReferences/liveIterationIdentity';
 
 import { LiveFixTraceAction, type LiveFixTraceActionProps } from './liveFixTraceAction';
 
-jest.mock('react-redux', () => ({ useDispatch: jest.fn(), useSelector: jest.fn() }));
-jest.mock('@reportportal/ui-kit', () => {
-  const React = jest.requireActual<typeof import('react')>('react');
-  return {
-    Button: ({
-      children,
-      onClick,
-      disabled,
-    }: {
-      children?: React.ReactNode;
-      onClick?: () => void;
-      disabled?: boolean;
-    }) => React.createElement('button', { onClick, disabled }, children),
-  };
-});
-jest.mock(
-  'react-intl',
-  () =>
-    jest.requireActual<typeof import('../../aiFactoryTestUtils')>(
-      'pages/inside/aiFactory/aiFactoryTestUtils',
-    ).reactIntlTestMock,
-);
-jest.mock('controllers/aiFactory', () => ({ useAiFactoryEnabled: jest.fn() }));
-jest.mock('controllers/pages', () => ({
-  PROJECT_PIPELINE_STAGE_TRACE_PAGE: 'PROJECT_PIPELINE_STAGE_TRACE_PAGE',
-  urlOrganizationAndProjectSelector: jest.fn(),
-}));
 jest.mock('pages/inside/aiFactory/common/iterationReferences/liveIterationIdentity', () => ({
   getLiveIterationIdentity: jest.fn(),
 }));
-
-interface MountedWrapper extends ReactWrapper {
-  update: () => MountedWrapper;
-}
 
 const dispatch = jest.fn();
 const identity = { id: 72, pipelineId: 800, number: 5 };
@@ -54,11 +30,11 @@ const props = (): LiveFixTraceActionProps => ({
   resultIterationId: 72,
   roundNumber: 9,
 });
-let wrapper: MountedWrapper | undefined;
+let wrapper: MountedTraceWrapper | undefined;
 
 const mountAction = async (overrides: Partial<LiveFixTraceActionProps> = {}) => {
   await act(async () => {
-    wrapper = mount(<LiveFixTraceAction {...props()} {...overrides} />) as MountedWrapper;
+    wrapper = mount(<LiveFixTraceAction {...props()} {...overrides} />) as MountedTraceWrapper;
     await Promise.resolve();
   });
   wrapper?.update();
@@ -72,10 +48,7 @@ const click = async () => {
 };
 
 beforeEach(() => {
-  jest.clearAllMocks();
-  jest.mocked(useDispatch).mockReturnValue(dispatch);
-  jest.mocked(useSelector).mockReturnValue({ organizationSlug: 'org', projectSlug: 'demo' });
-  jest.mocked(useAiFactoryEnabled).mockReturnValue(true);
+  resetStageTraceTestContext(dispatch);
   jest.mocked(getLiveIterationIdentity).mockResolvedValue(identity);
 });
 afterEach(() => {

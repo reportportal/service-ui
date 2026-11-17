@@ -14,60 +14,31 @@
  * limitations under the License.
  */
 
+// Register shared module mocks before importing the components under test.
+import {
+  resetStageTraceTestContext,
+  type MountedTraceWrapper,
+  type TraceNodes,
+} from 'pages/inside/aiFactory/common/stageTrace/stageTraceTestSetup';
+
 import { act } from 'react';
-import { mount, type ReactWrapper, type CommonWrapper } from 'enzyme';
-import { useDispatch, useSelector } from 'react-redux';
+import { mount } from 'enzyme';
 
 import { useAiFactoryEnabled } from 'controllers/aiFactory';
+
 import { loadStageTraceAttempts } from 'controllers/aiFactory/stageTrace';
 
 import { StageTraceAction } from './stageTraceAction';
 
-jest.mock('react-redux', () => ({ useDispatch: jest.fn(), useSelector: jest.fn() }));
-jest.mock('@reportportal/ui-kit', () => {
-  const React = jest.requireActual<typeof import('react')>('react');
-  return {
-    Button: ({
-      children,
-      onClick,
-      disabled,
-    }: {
-      children?: React.ReactNode;
-      onClick?: () => void;
-      disabled?: boolean;
-    }) => React.createElement('button', { onClick, disabled }, children),
-  };
-});
-jest.mock(
-  'react-intl',
-  () =>
-    jest.requireActual<typeof import('../../aiFactoryTestUtils')>(
-      'pages/inside/aiFactory/aiFactoryTestUtils',
-    ).reactIntlTestMock,
-);
-jest.mock('controllers/aiFactory', () => ({ useAiFactoryEnabled: jest.fn() }));
-jest.mock('controllers/pages', () => ({
-  PROJECT_PIPELINE_STAGE_TRACE_PAGE: 'PROJECT_PIPELINE_STAGE_TRACE_PAGE',
-  urlOrganizationAndProjectSelector: jest.fn(),
-}));
 jest.mock('controllers/aiFactory/stageTrace', () => ({
   loadStageTraceAttempts: jest.fn(),
   StageTraceError: class extends Error {},
 }));
 
 const dispatch = jest.fn();
-interface MountedWrapper extends ReactWrapper {
-  update: () => MountedWrapper;
-}
-interface Nodes extends CommonWrapper {
-  at: (index: number) => CommonWrapper;
-}
-let wrapper: MountedWrapper | undefined;
+let wrapper: MountedTraceWrapper | undefined;
 beforeEach(() => {
-  jest.clearAllMocks();
-  jest.mocked(useDispatch).mockReturnValue(dispatch);
-  jest.mocked(useSelector).mockReturnValue({ organizationSlug: 'org', projectSlug: 'demo' });
-  jest.mocked(useAiFactoryEnabled).mockReturnValue(true);
+  resetStageTraceTestContext(dispatch);
   jest.mocked(loadStageTraceAttempts).mockResolvedValue([
     { attempt: 1, traceStatus: 'REPORTED', eventCount: 3, current: false },
     { attempt: 2, traceStatus: 'NOT_REPORTED', eventCount: 0, current: true },
@@ -82,7 +53,7 @@ const mountAction = async () => {
   await act(async () => {
     wrapper = mount(
       <StageTraceAction projectKey="demo" pipelineId={8} iterationId={34} stageKey="create" />,
-    ) as MountedWrapper;
+    ) as MountedTraceWrapper;
     await Promise.resolve();
   });
   wrapper?.update();
@@ -96,7 +67,7 @@ test('loads only lightweight attempts and keeps earlier trace reachable when cur
   );
   expect(wrapper?.find('output').prop('children')).toContain('earlier attempt');
   act(() => {
-    ((wrapper?.find('button') as Nodes).at(0).prop('onClick') as () => void)();
+    ((wrapper?.find('button') as TraceNodes).at(0).prop('onClick') as () => void)();
   });
   expect(dispatch).toHaveBeenCalledWith({
     type: 'PROJECT_PIPELINE_STAGE_TRACE_PAGE',
