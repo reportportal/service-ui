@@ -122,6 +122,7 @@ import {
   PROJECT_TEST_PLAN_DETAILS_PAGE,
   PROJECT_PIPELINES_PAGE,
   PROJECT_PIPELINE_ITERATION_PAGE,
+  PROJECT_PIPELINE_STAGE_TRACE_PAGE,
   PROJECT_PIPELINE_COMPARISON_PAGE,
 } from 'controllers/pages/constants';
 import {
@@ -642,6 +643,9 @@ const routesMap = {
         dispatch(getPipelinesAction());
       }
     },
+  },
+  [PROJECT_PIPELINE_STAGE_TRACE_PAGE]: {
+    path: '/organizations/:organizationSlug/projects/:projectSlug/pipelines/:pipelineId/iterations/:iterationId/stages/:stageKey/trace',
   },
   [PROJECT_PIPELINE_ITERATION_PAGE]: {
     path: '/organizations/:organizationSlug/projects/:projectSlug/pipelines/:pipelineId/iterations/:iterationId',

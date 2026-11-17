@@ -726,3 +726,19 @@
     }
   }
 }
+
+.stage-trace-entry {
+  margin: 16px 0;
+  overflow-wrap: anywhere;
+}
+
+.stage-trace-action {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px 16px;
+
+  output {
+    flex: 1 1 240px;
+  }
+}

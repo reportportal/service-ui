@@ -59,6 +59,7 @@ export interface LivePipelineStageRaw {
   sections?: unknown;
   links?: unknown;
   attempt?: unknown;
+  attempts?: unknown;
   ownedBy?: unknown;
   affectsIterationStatus?: unknown;
   retryable?: unknown;
@@ -160,10 +161,23 @@ export interface ReducedPipelineStage {
   links?: Array<{ type: string; label: string; url: string }>;
 }
 
+export interface ReducedPipelineStageAttempt {
+  attempt: number;
+  status: ReducedPipelineStatus;
+  statusText?: string;
+  startedAt?: number;
+  finishedAt?: number;
+  durationMs?: number;
+  attributes?: ReducedPipelineAttribute[];
+  sections?: ReducedPipelineSection[];
+  links?: Array<{ type: string; label: string; url: string }>;
+}
+
 export interface ReducedPipelineDetailStage extends ReducedPipelineStage {
   id: number;
   sequence: number;
   attempt?: number;
+  attempts?: ReducedPipelineStageAttempt[];
   ownedBy?: string;
   affectsIterationStatus?: boolean;
   retryable?: boolean;
@@ -732,12 +746,74 @@ const adaptDetailStageMetadata = (raw: Record<string, unknown>) => {
   };
 };
 
+const adaptStageAttempt = (value: unknown): ReducedPipelineStageAttempt | null => {
+  const raw = asRecord(value);
+  if (!raw) {
+    return null;
+  }
+  const attempt = asPositiveInteger(raw.attempt);
+  const startedAt = asTimestamp(raw.startedAt);
+  const finishedAt = asTimestamp(raw.finishedAt);
+  const durationMs = asNonNegativeInteger(raw.durationMillis);
+  const attributes = adaptAttributes(raw.attributes);
+  const sections = adaptSections(raw.sections);
+  const links = adaptLinks(raw.links);
+  if (
+    !attempt ||
+    !attributes ||
+    !sections ||
+    !links ||
+    (raw.startedAt != null && startedAt === undefined) ||
+    (raw.finishedAt != null && finishedAt === undefined) ||
+    (raw.durationMillis != null && durationMs === undefined)
+  ) {
+    return null;
+  }
+  return {
+    attempt,
+    status: asStatus(raw.statusCategory ?? raw.status),
+    ...(raw.statusCategory !== undefined
+      ? { statusText: asTrimmedString(raw.status, MAX_NAME_LENGTH) }
+      : {}),
+    ...(startedAt !== undefined ? { startedAt } : {}),
+    ...(finishedAt !== undefined ? { finishedAt } : {}),
+    ...(durationMs !== undefined ? { durationMs } : {}),
+    ...(attributes.length ? { attributes } : {}),
+    ...(sections.length ? { sections } : {}),
+    ...(links.length ? { links } : {}),
+  };
+};
+
+const adaptStageAttempts = (
+  value: unknown,
+  currentAttempt?: number,
+): ReducedPipelineStageAttempt[] => {
+  if (!Array.isArray(value)) {
+    return [];
+  }
+  const counts = new Map<number, number>();
+  value.forEach((entry) => {
+    const attempt = asPositiveInteger(asRecord(entry)?.attempt);
+    if (attempt) counts.set(attempt, (counts.get(attempt) ?? 0) + 1);
+  });
+  return value
+    .map(adaptStageAttempt)
+    .filter(
+      (snapshot): snapshot is ReducedPipelineStageAttempt =>
+        snapshot !== null &&
+        counts.get(snapshot.attempt) === 1 &&
+        (currentAttempt === undefined || snapshot.attempt < currentAttempt),
+    )
+    .sort((first, second) => first.attempt - second.attempt);
+};
+
 const adaptDetailStage = (value: unknown): ReducedPipelineDetailStage | null => {
   const raw = asRecord(value);
   const stage = adaptStage(value);
   const id = raw ? asPositiveInteger(raw.id) : null;
   const sections = raw ? adaptSections(raw.sections) : null;
   const metadata = raw && adaptDetailStageMetadata(raw);
+  const attempts = adaptStageAttempts(raw?.attempts, metadata?.attempt);
   if (!stage || !id || stage.sequence === undefined || !sections || !metadata) {
     return null;
   }
@@ -746,6 +822,7 @@ const adaptDetailStage = (value: unknown): ReducedPipelineDetailStage | null => 
     id,
     sequence: stage.sequence,
     ...metadata,
+    ...(attempts.length ? { attempts } : {}),
     ...(sections.length ? { sections } : {}),
   };
 };

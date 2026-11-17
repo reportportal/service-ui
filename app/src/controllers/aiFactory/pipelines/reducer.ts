@@ -24,6 +24,7 @@ import { loadingReducer } from 'controllers/loading';
 import {
   PROJECT_PIPELINE_COMPARISON_PAGE,
   PROJECT_PIPELINE_ITERATION_PAGE,
+  PROJECT_PIPELINE_STAGE_TRACE_PAGE,
   PROJECT_PIPELINES_PAGE,
   TEST_CASE_LIBRARY_PAGE,
 } from 'controllers/pages';
@@ -509,6 +510,7 @@ const reducer = (
 export const aiFactoryPipelinesReducer = createPageScopedReducer(reducer, [
   PROJECT_PIPELINES_PAGE,
   PROJECT_PIPELINE_ITERATION_PAGE,
+  PROJECT_PIPELINE_STAGE_TRACE_PAGE,
   PROJECT_PIPELINE_COMPARISON_PAGE,
   TEST_CASE_LIBRARY_PAGE,
 ]);

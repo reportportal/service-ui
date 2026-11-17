@@ -12,6 +12,11 @@ import { IterationReferenceLinks } from '../common/iterationReferences/iteration
 import { LiveFixIterationLinks } from './liveFixIterationLinks';
 import type { LiveReviewCommentsLoadState } from './useLiveReviewComments';
 
+jest.mock(
+  'pages/inside/aiFactory/iterationDetailsPage/stageTraceAction/liveFixTraceAction',
+  () => ({ LiveFixTraceAction: () => null }),
+);
+
 jest.mock('react-redux', () => ({ useSelector: jest.fn() }));
 jest.mock('controllers/project', () => ({ projectKeySelector: jest.fn() }));
 jest.mock('../common/iterationReferences/iterationReferenceLinks', () => ({
@@ -92,6 +97,20 @@ describe('native Review fix iteration references', () => {
     });
     wrapper?.update();
     expect(links()?.prop('resourceKey')).not.toBe(caseScope);
+  });
+
+  test('does not render a numeric zero when the result iteration ID is absent', async () => {
+    await act(async () => {
+      wrapper = mount(
+        <LiveFixIterationLinks
+          reviewState={reviewState({ fixRoundState: { ...round, resultIterationId: 0 } })}
+          isReadOnly
+        />,
+      ) as MountedWrapper;
+      await Promise.resolve();
+    });
+    wrapper?.update();
+    expect(wrapper?.text()).toBe('');
   });
 
   test('offers no fabricated lookup when a round or its iteration IDs are absent', async () => {

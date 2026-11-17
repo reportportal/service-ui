@@ -18,6 +18,7 @@ import { useMemo } from 'react';
 import { useSelector } from 'react-redux';
 
 import { projectKeySelector } from 'controllers/project';
+import { LiveFixTraceAction } from 'pages/inside/aiFactory/iterationDetailsPage/stageTraceAction/liveFixTraceAction';
 import { IterationReferenceLinks } from 'pages/inside/aiFactory/common/iterationReferences/iterationReferenceLinks';
 import type { LiveReviewCommentsLoadState } from 'pages/inside/aiFactory/review/useLiveReviewComments';
 
@@ -41,11 +42,21 @@ export const LiveFixIterationLinks = ({ reviewState, isReadOnly }: LiveFixIterat
   );
   if (!round) return null;
   return (
-    <IterationReferenceLinks
-      projectKey={projectKey}
-      resourceKey={resourceKey}
-      previousIterationId={round.previousIterationId}
-      resultIterationId={round.resultIterationId}
-    />
+    <>
+      <IterationReferenceLinks
+        projectKey={projectKey}
+        resourceKey={resourceKey}
+        previousIterationId={round.previousIterationId}
+        resultIterationId={round.resultIterationId}
+      />
+      {!!round.resultIterationId && (
+        <LiveFixTraceAction
+          projectKey={projectKey}
+          resourceKey={resourceKey}
+          resultIterationId={round.resultIterationId}
+          roundNumber={round.roundNumber}
+        />
+      )}
+    </>
   );
 };

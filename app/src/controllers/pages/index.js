@@ -43,6 +43,7 @@ export {
   pageLevelSelector,
   pipelineIdSelector,
   iterationIdSelector,
+  stageKeySelector,
 } from './selectors';
 export { userRolesSelector } from './userRolesSelector';
 export { updatePagePropertiesAction, clearPageStateAction } from './actionCreators';
@@ -112,6 +113,7 @@ export {
   PROJECT_TEST_PLAN_DETAILS_PAGE,
   PROJECT_PIPELINES_PAGE,
   PROJECT_PIPELINE_ITERATION_PAGE,
+  PROJECT_PIPELINE_STAGE_TRACE_PAGE,
   PROJECT_PIPELINE_COMPARISON_PAGE,
   APP_LEVEL,
 } from './constants';

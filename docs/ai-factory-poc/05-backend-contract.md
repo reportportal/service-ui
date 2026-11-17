@@ -1,5 +1,7 @@
 # 05 · AI Factory backend integration contract
 
+> **Stage Trace addendum — 2026-11-17:** [29-stage-trace-ui-backend-handoff-2026-11-17.md](29-stage-trace-ui-backend-handoff-2026-11-17.md) records the source-confirmed attempts/trace GET contract, historical stage snapshots, local FE implementation and authenticated `NOT_REPORTED` responses from `superadmin_personal`. Native complete fix-round history, producer GRADERS payload and real CI → trace → UI acceptance remain open; local fixture validation is not live E2E. This addendum does not change unrelated R6 acceptance.
+
 ## Current native contract reconciliation (2026-10-25)
 
 The audit/source evidence and requested completion criteria are in [27](27-backend-integration-completion-contract-2026-10-25.md). This reconciliation takes precedence over historical inventories below.

@@ -25,9 +25,20 @@ import type {
 import { LivePipelineSettingsButton } from '../pipelineSettings';
 import { IterationProvenance } from './iterationProvenance';
 import { KpiTile } from './kpiTile';
+import { StageTraceAction } from './stageTraceAction/stageTraceAction';
+import {
+  IterationStageTraceEntry,
+  type IterationStageTraceEntryProps,
+} from './stageTraceAction/iterationStageTraceEntry';
+import { GenerationReviewTraceChooser } from './generationReviewTraceChooser/generationReviewTraceChooser';
 import { LiveReviewCases } from './liveReviewCases/liveReviewCases';
 import { CaseLink } from './stagePanels/caseLink';
-import { ReducedIterationDetails } from './reducedIterationDetails';
+import {
+  ReducedIterationDetails,
+  type ReducedIterationDetailsProps,
+} from './reducedIterationDetails';
+
+jest.mock('controllers/aiFactory', () => ({ useAiFactoryEnabled: () => true }));
 
 jest.mock('@reportportal/ui-kit', () => ({
   Button: 'Button',
@@ -69,6 +80,15 @@ interface TestNodes {
   map: <T>(callback: (node: CommonWrapper) => T) => T[];
 }
 
+const traceEntry = (wrapper: CommonWrapper) =>
+  shallow(
+    <IterationStageTraceEntry
+      {...(wrapper
+        .find(IterationStageTraceEntry)
+        .props() as unknown as IterationStageTraceEntryProps)}
+    />,
+  );
+
 const breadcrumbDescriptors = [{ id: 'iteration', title: 'Iteration #3' }];
 
 const detail = (overrides: Partial<ReducedPipelineIterationDetail> = {}) => ({
@@ -89,7 +109,116 @@ const detail = (overrides: Partial<ReducedPipelineIterationDetail> = {}) => ({
   ...overrides,
 });
 
+const renderTraceDetail = (
+  stages: ReducedPipelineDetailStage[],
+  overrides: Partial<ReducedIterationDetailsProps> = {},
+) =>
+  shallow(
+    <ReducedIterationDetails
+      iteration={detail({ stages })}
+      hasError={false}
+      isUnavailable={false}
+      breadcrumbDescriptors={breadcrumbDescriptors}
+      onRetry={jest.fn()}
+      projectKey="demo"
+      {...overrides}
+    />,
+  );
+
 describe('ReducedIterationDetails', () => {
+  test('opens only the selected actual stageKey, with no synthetic key fallback', () => {
+    const wrapper = renderTraceDetail(
+      [
+        {
+          id: 11,
+          key: 'synthetic',
+          stageKey: 'agent-create',
+          label: 'Create',
+          sequence: 1,
+          status: 'PASSED',
+        },
+        { id: 12, key: 'upload', label: 'Upload', sequence: 2, status: 'PASSED' },
+      ],
+      { requestedStage: 'agent-create' },
+    );
+    expect(traceEntry(wrapper).find(StageTraceAction).prop('stageKey')).toBe('agent-create');
+    expect(
+      wrapper
+        .find('[data-automation-id="reducedStagePanel"]')
+        .find('section.stage-panels__main')
+        .find(IterationStageTraceEntry),
+    ).toHaveLength(1);
+    (wrapper.find('[data-automation-id="reducedStageCard-12"]').prop('onClick') as () => void)();
+    expect(traceEntry(wrapper).find(StageTraceAction)).toHaveLength(0);
+  });
+
+  test('defaults to the first stage when a later legacy stage has no canonical stage key', () => {
+    const wrapper = renderTraceDetail([
+      { id: 11, key: 'create', stageKey: 'create', label: 'Create', sequence: 1, status: 'PASSED' },
+      { id: 12, key: 'legacy-upload', label: 'Upload', sequence: 2, status: 'PASSED' },
+    ]);
+    expect(traceEntry(wrapper).find(StageTraceAction).prop('stageKey')).toBe('create');
+  });
+
+  test.each(['TEST_CASE_GENERATION', undefined])(
+    'human generation Review with type %s chooses a known round instead of loading human trace',
+    (pipelineType) => {
+      const wrapper = shallow(
+        <ReducedIterationDetails
+          iteration={detail({
+            pipelineType,
+            stages: [
+              {
+                id: 12,
+                key: 'review',
+                stageKey: 'review',
+                label: 'Review',
+                ownedBy: 'REPORTPORTAL',
+                sequence: 1,
+                status: 'NEEDS_HUMAN',
+              },
+            ],
+          })}
+          hasError={false}
+          isUnavailable={false}
+          breadcrumbDescriptors={breadcrumbDescriptors}
+          onRetry={jest.fn()}
+          projectKey="demo"
+        />,
+      );
+      expect(traceEntry(wrapper).find(GenerationReviewTraceChooser)).toHaveLength(1);
+      expect(traceEntry(wrapper).find(StageTraceAction)).toHaveLength(0);
+    },
+  );
+
+  test('automation review has its own trace', () => {
+    const wrapper = shallow(
+      <ReducedIterationDetails
+        iteration={detail({
+          pipelineType: 'TEST_CASE_AUTOMATION',
+          stages: [
+            {
+              id: 12,
+              key: 'review',
+              stageKey: 'review',
+              label: 'Review',
+              ownedBy: 'REPORTPORTAL',
+              sequence: 1,
+              status: 'PASSED',
+            },
+          ],
+        })}
+        hasError={false}
+        isUnavailable={false}
+        breadcrumbDescriptors={breadcrumbDescriptors}
+        onRetry={jest.fn()}
+        projectKey="demo"
+      />,
+    );
+    expect(traceEntry(wrapper).find(GenerationReviewTraceChooser)).toHaveLength(0);
+    expect(traceEntry(wrapper).find(StageTraceAction).prop('stageKey')).toBe('review');
+  });
+
   test.each([
     ['unavailable', false, true, 'polite', 'info', 'unavailable'],
     ['failed', true, false, 'assertive', 'error', 'could not be loaded'],

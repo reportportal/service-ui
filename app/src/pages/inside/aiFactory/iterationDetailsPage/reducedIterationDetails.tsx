@@ -26,6 +26,7 @@ import {
 
 import { createClassnames, formatCost, formatTokens } from 'common/utils';
 import { formatDuration } from 'common/utils/timeDateUtils';
+import { isHttpUrl } from 'common/utils/isHttpUrl';
 import {
   ReducedPipelineIterationDetail,
   ReducedPipelineDetailStage,
@@ -41,6 +42,11 @@ import { IterationProvenance } from 'pages/inside/aiFactory/iterationDetailsPage
 import { getReducedStatusVariant } from '../common/reducedStatusVariant';
 import { LivePipelineSettingsButton } from '../pipelineSettings';
 import { LiveReviewCases } from './liveReviewCases/liveReviewCases';
+import {
+  IterationStageTraceEntry,
+  getLinkedCaseIds,
+  isReviewStage,
+} from './stageTraceAction/iterationStageTraceEntry';
 import { PageHeaderWithBreadcrumbsAndActions } from '../../common/pageHeaderWithBreadcrumbsAndActions';
 import { KpiTile } from './kpiTile';
 import { CaseLink } from './stagePanels/caseLink';
@@ -317,12 +323,15 @@ const findSelectedStage = (
   stages: ReducedPipelineDetailStage[],
   selectedStageId: number | null,
   requestedStage?: string,
-) =>
-  stages.find(({ id }) => id === selectedStageId) ??
-  stages.find(({ key, label }) =>
-    [key, label].some((value) => value.toLowerCase() === requestedStage?.toLowerCase()),
-  ) ??
-  stages[0];
+) => {
+  const requestedKey = requestedStage?.toLowerCase();
+  const requestedMatch = requestedKey
+    ? stages.find(({ key, label, stageKey }) =>
+        [stageKey, key, label].some((value) => value?.toLowerCase() === requestedKey),
+      )
+    : undefined;
+  return stages.find(({ id }) => id === selectedStageId) ?? requestedMatch ?? stages[0];
+};
 
 const numericAttribute = (attributes: ReducedPipelineAttribute[] | undefined, key: string) => {
   const value = attributes?.find((attribute) => attribute.key === key)?.value;
@@ -331,14 +340,6 @@ const numericAttribute = (attributes: ReducedPipelineAttribute[] | undefined, ke
   }
   const numericValue = Number(value);
   return Number.isFinite(numericValue) ? numericValue : undefined;
-};
-
-const isHttpUrl = (value: string) => {
-  try {
-    return ['http:', 'https:'].includes(new URL(value).protocol);
-  } catch {
-    return false;
-  }
 };
 
 const buildReducedMetadata = (
@@ -513,6 +514,7 @@ const renderReducedStagePanel = (
   formatMessage: ReturnType<typeof useIntl>['formatMessage'],
   generationKind?: GenerationStageKind,
   reviewContent?: ReactNode,
+  traceContent?: ReactNode,
 ) => (
   <div className={cx('panel-card')} data-automation-id="reducedStagePanel">
     <div className={panelCx('stage-panels')}>
@@ -535,6 +537,7 @@ const renderReducedStagePanel = (
             <span className={panelCx('panel-heading__summary')}>{currentStage.summary}</span>
           )}
         </div>
+        {traceContent}
         {currentStage.message && (
           <p className={cx('reduced-stage__message')}>{currentStage.message}</p>
         )}
@@ -725,23 +728,7 @@ export const ReducedIterationDetails = ({
   const metadata = buildReducedMetadata(iteration, formatMessage);
   const kpis = buildReducedKpis(iteration, formatMessage);
   const currentStage = findSelectedStage(iteration.stages, selectedStageId, requestedStage);
-  const linkedCaseIds = Array.from(
-    new Set(
-      iteration.stages.flatMap((stage) =>
-        (stage.relatedEntities ?? [])
-          .filter(
-            ({ entityType, entityId }) => entityType === 'TEST_CASE' && entityId.length <= 128,
-          )
-          .map(({ entityId }) => entityId),
-      ),
-    ),
-  );
-  const isReviewStage = Boolean(
-    currentStage &&
-    (currentStage.stageKey?.toLowerCase() === 'review' ||
-      (currentStage.ownedBy === 'REPORTPORTAL' &&
-        currentStage.attributes?.some(({ key }) => key === 'ready'))),
-  );
+  const linkedCaseIds = getLinkedCaseIds(iteration.stages);
   const bannerStage = iteration.stages.find(
     (stage) =>
       ['RUNNING', 'WAITING', 'NEEDS_HUMAN', 'FAILED'].includes(stage.status) && stage.message,
@@ -875,13 +862,19 @@ export const ReducedIterationDetails = ({
               toggleRowDetails,
               formatMessage,
               getGenerationStageKind(iteration.pipelineType, currentStage),
-              isReviewStage && projectKey ? (
+              isReviewStage(currentStage) && projectKey ? (
                 <LiveReviewCases
                   displayIds={linkedCaseIds}
                   projectKey={projectKey}
                   refreshIdentity={iteration}
                 />
               ) : undefined,
+              <IterationStageTraceEntry
+                iteration={iteration}
+                stage={currentStage}
+                projectKey={projectKey}
+                linkedCaseIds={linkedCaseIds}
+              />,
             )}
           <details className={cx('reduced-api-fields')}>
             <summary>{formatMessage(messages.validatedApiFields)}</summary>

@@ -52,6 +52,11 @@ export interface LocationQuery {
   pipeline?: string;
   baseline?: string;
   candidate?: string;
+  attempt?: string;
+  fixRoundNumber?: string;
+  returnPipelineId?: string;
+  returnIterationId?: string;
+  returnStageKey?: string;
 }
 
 export interface BaseAppState {
@@ -61,6 +66,9 @@ export interface BaseAppState {
       testPlanId?: string;
       testCaseId?: string;
       launchId?: string;
+      pipelineId?: string;
+      iterationId?: string;
+      stageKey?: string;
       manualLaunchPageRoute?: string;
     };
     query?: LocationQuery;

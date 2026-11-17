@@ -72,6 +72,7 @@ import {
   PROJECT_TEST_PLAN_DETAILS_PAGE,
   PROJECT_PIPELINES_PAGE,
   PROJECT_PIPELINE_ITERATION_PAGE,
+  PROJECT_PIPELINE_STAGE_TRACE_PAGE,
   PROJECT_PIPELINE_COMPARISON_PAGE,
   MANUAL_LAUNCHES_PAGE,
   MANUAL_LAUNCH_DETAILS_PAGE,
@@ -92,6 +93,7 @@ import { OrganizationEventsPage } from 'pages/organization/organizationEventsPag
 import { ProductVersionsPage } from 'pages/inside/productVersionsPage/productVersionsPage';
 import { TestCaseDetailsPage, TestCaseLibraryPageWrapper } from 'pages/inside/testCaseLibraryPage';
 import { PipelinesPage } from 'pages/inside/aiFactory/pipelinesPage';
+import { StageTracePage } from 'pages/inside/aiFactory/stageTracePage';
 import { IterationDetailsPage } from 'pages/inside/aiFactory/iterationDetailsPage';
 import { CompareIterationsPage } from 'pages/inside/aiFactory/compareIterationsPage';
 
@@ -248,6 +250,12 @@ export const pageRendering = {
   },
   [PROJECT_PIPELINES_PAGE]: {
     component: PipelinesPage,
+    layout: ProjectLayout,
+    rawContent: true,
+    isTMS: true,
+  },
+  [PROJECT_PIPELINE_STAGE_TRACE_PAGE]: {
+    component: StageTracePage,
     layout: ProjectLayout,
     rawContent: true,
     isTMS: true,
