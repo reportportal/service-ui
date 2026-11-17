@@ -132,8 +132,6 @@ export const InvestigatedTrendChart = ({
     [isTimeline, launchModeClickHandler, timeLineModeClickHandler],
   );
 
-  // Series hidden via the legend. Kept in a ref (not in the chart config deps), so toggling the
-  // legend never rebuilds the chart: the legend listener below updates the bars in place.
   const hiddenItemsRef = useRef(uncheckedLegendItems);
   const barDataParamsRef = useRef(null);
 
@@ -143,15 +141,11 @@ export const InvestigatedTrendChart = ({
       : { content: widget.content?.result, isTimeline, isPreview };
   }, [widget.content, isTimeline, isPreview, onStatusPageMode]);
 
-  // The current legend state is read when the option is built, so a rebuild (e.g. data refresh)
-  // keeps the bar rounding of the hidden series.
   const getOptionWithHiddenItems = useCallback(
     (params) => selectOptionFunction(isTimeline)({ ...params, hiddenItems: hiddenItemsRef.current }),
     [isTimeline],
   );
 
-  // Hiding a series via the legend doesn't rebuild the chart, so the bar top rounding is
-  // recalculated for the visible series here (updated in place).
   const onChartCreated = useCallback((_node, chart) => {
     chart.on('legendselectchanged', ({ selected }) => {
       hiddenItemsRef.current = Object.keys(selected).filter((name) => !selected[name]);

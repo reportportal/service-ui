@@ -43,11 +43,8 @@ const AXIS_TITLE_STYLE = {
   color: COLOR_AXIS_TITLE,
 };
 
-// white border = gap between stacked segments
 const BAR_SEGMENT_STYLE = { borderColor: COLOR_WHITE_TWO, borderWidth: 1 };
 const BAR_SEGMENT_STYLE_PREVIEW = { ...BAR_SEGMENT_STYLE, borderWidth: 0.5 };
-// The border is drawn centred on the edge and eats into the corner, so a path radius of 3
-// gives a visible ~2px rounding. The smaller preview uses a smaller radius.
 const BAR_TOP_RADIUS = [3, 3, 0, 0];
 const BAR_TOP_RADIUS_PREVIEW = [2, 2, 0, 0];
 
@@ -57,8 +54,6 @@ const TOOLTIP_SHELL = {
   extraCssText: 'box-shadow: none; padding: 0;',
 };
 
-// Round only the top corners of the topmost non-zero segment of each stack; inner joins stay square.
-// Series hidden via the legend are ignored, so the top visible segment is the rounded one.
 const withTopRounding = (itemNames, dataByName, isPreview, hiddenItems = []) => {
   const visibleNames = itemNames.filter((name) => !hiddenItems.includes(name));
   const count = itemNames.length ? dataByName[itemNames[0]].length : 0;
@@ -73,7 +68,6 @@ const withTopRounding = (itemNames, dataByName, isPreview, hiddenItems = []) => 
     itemNames.map((name) => [
       name,
       dataByName[name].map((value, index) => {
-        // zero points are not rendered at all (no ghost blocks on hover)
         if (!value) return null;
         return topSeriesByIndex[index] === name
           ? {
@@ -100,13 +94,11 @@ const buildBarSeries = ({ itemNames, dataByName, colors, isPreview, hiddenItems 
     },
   ).map((series) => ({
     ...series,
-    // hover only lightens the hovered segment (no size / border / shape change)
     emphasis: isPreview
       ? { disabled: true }
       : { focus: 'none', scale: false, itemStyle: { opacity: 0.75 } },
   }));
 
-// Bar data only (no option rebuild): used to re-round the bar tops when the legend toggles a series.
 export const getBarSeriesData = ({ itemNames, dataByName, isPreview, hiddenItems }) => {
   const barData = withTopRounding(itemNames, dataByName, isPreview, hiddenItems);
 

@@ -42,7 +42,6 @@ describe('investigatedTrendChart getOption', () => {
       { id: 'investigated', data: [60, 75, 50] },
       { id: 'toInvestigate', data: [40, 25, 50] },
     ]);
-    // only the topmost segment of each stack is rounded
     expect(option.series[1].data[0]).toMatchObject({ itemStyle: { borderRadius: [3, 3, 0, 0] } });
     expect(option.series[0].data[0]).toBe(60);
     expect(option.series[0]).toMatchObject({

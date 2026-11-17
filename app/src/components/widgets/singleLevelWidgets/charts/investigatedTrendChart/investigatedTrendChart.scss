@@ -33,7 +33,6 @@ div.tooltip {
   box-shadow: none;
   white-space: nowrap;
 
-  // the shared tooltip sets its own font/color on these children
   div,
   span {
     font-family: inherit;
@@ -55,7 +54,6 @@ div.tooltip {
   width: 100%;
   box-sizing: border-box;
 
-  // flex row with gaps instead of per-item margins: every wrapped row ends flush right
   [class*='content-wrapper'] {
     display: flex;
     flex-flow: row wrap;
@@ -63,7 +61,6 @@ div.tooltip {
     gap: 8px 20px;
   }
 
-  // legend items are rendered by the shared Legend component (hashed classes) — target by structure
   span[data-id] {
     margin: 0;
 
@@ -93,8 +90,6 @@ div.tooltip {
     }
   }
 
-  // always-visible scrollbar thumb so it is clear there are more legend items;
-  // the :hover selector outranks ScrollWrapper's `.scroll-component:hover .thumb-vertical`
   [class*='thumb-vertical'],
   [class*='scroll-component']:hover [class*='thumb-vertical'] {
     opacity: 1;

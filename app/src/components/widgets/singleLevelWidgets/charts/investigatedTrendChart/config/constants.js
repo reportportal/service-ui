@@ -19,7 +19,6 @@ import { COLOR_CHART_INVESTIGATED, COLOR_TO_INVESTIGATE } from 'common/constants
 export const TIMELINE_AXIS_DATE_FORMAT = 'DD.MM';
 export const TIMELINE_TOOLTIP_DATE_FORMAT = 'DD.MM.YYYY';
 
-// 3 legend rows: (18px line-height + 8px gap) * 3, so a 4th row is never partially visible
 export const LEGEND_MAX_HEIGHT = 78;
 
 export const INVESTIGATED_COLORS = {
