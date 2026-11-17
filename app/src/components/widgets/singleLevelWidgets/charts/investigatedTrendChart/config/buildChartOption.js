@@ -16,14 +16,15 @@
 
 import { buildTooltipFormatter } from 'components/widgets/common/echarts/configHelpers';
 import { CHART_FONT_FAMILY } from 'components/widgets/common/constants';
-import {
-  COLOR_ALMOST_BLACK,
-  COLOR_CHART_AXIS_LINE,
-  COLOR_WHITE_TWO,
-} from 'common/constants/colors';
+import { COLOR_ALMOST_BLACK, COLOR_CHART_AXIS_LINE } from 'common/constants/colors';
 import { IssueTypeStatTooltip } from '../../common/issueTypeStatTooltip';
 import { buildItemTooltip } from '../../common/echartsAxisBuilders';
 import { createBarSeries } from '../../common/stackedBarSeries';
+import {
+  BAR_SEGMENT_STYLE,
+  BAR_SEGMENT_STYLE_PREVIEW,
+  withTopRounding,
+} from '../../common/topRoundedBars';
 import { calculateTooltipParams, localMessages } from './utils';
 
 const AXIS_LABEL_STYLE = {
@@ -43,47 +44,16 @@ const AXIS_TITLE_STYLE = {
   color: COLOR_AXIS_TITLE,
 };
 
-const BAR_SEGMENT_STYLE = { borderColor: COLOR_WHITE_TWO, borderWidth: 1 };
-const BAR_SEGMENT_STYLE_PREVIEW = { ...BAR_SEGMENT_STYLE, borderWidth: 0.5 };
-const BAR_TOP_RADIUS = [3, 3, 0, 0];
-const BAR_TOP_RADIUS_PREVIEW = [2, 2, 0, 0];
-
 const TOOLTIP_SHELL = {
   backgroundColor: 'transparent',
   borderWidth: 0,
   extraCssText: 'box-shadow: none; padding: 0;',
 };
 
-const withTopRounding = (itemNames, dataByName, isPreview, hiddenItems = []) => {
-  const visibleNames = itemNames.filter((name) => !hiddenItems.includes(name));
-  const count = itemNames.length ? dataByName[itemNames[0]].length : 0;
-  const topSeriesByIndex = Array.from({ length: count }, (_, index) => {
-    for (let i = visibleNames.length - 1; i >= 0; i -= 1) {
-      if (dataByName[visibleNames[i]][index] > 0) return visibleNames[i];
-    }
-    return null;
-  });
-
-  return Object.fromEntries(
-    itemNames.map((name) => [
-      name,
-      dataByName[name].map((value, index) => {
-        if (!value) return null;
-        return topSeriesByIndex[index] === name
-          ? {
-              value,
-              itemStyle: { borderRadius: isPreview ? BAR_TOP_RADIUS_PREVIEW : BAR_TOP_RADIUS },
-            }
-          : value;
-      }),
-    ]),
-  );
-};
-
 const buildBarSeries = ({ itemNames, dataByName, colors, isPreview, hiddenItems }) =>
   createBarSeries(
     itemNames,
-    withTopRounding(itemNames, dataByName, isPreview, hiddenItems),
+    withTopRounding({ itemNames, dataByName, isPreview, hiddenItems }),
     colors,
     {
       silent: isPreview,
@@ -100,7 +70,7 @@ const buildBarSeries = ({ itemNames, dataByName, colors, isPreview, hiddenItems 
   }));
 
 export const getBarSeriesData = ({ itemNames, dataByName, isPreview, hiddenItems }) => {
-  const barData = withTopRounding(itemNames, dataByName, isPreview, hiddenItems);
+  const barData = withTopRounding({ itemNames, dataByName, isPreview, hiddenItems });
 
   return itemNames.map((name) => ({ id: name, data: barData[name] }));
 };
