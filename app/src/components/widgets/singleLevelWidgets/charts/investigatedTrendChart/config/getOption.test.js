@@ -14,11 +14,12 @@
  * limitations under the License.
  */
 
-import { COLOR_INVESTIGATED, COLOR_TO_INVESTIGATE } from 'common/constants/colors';
+import { COLOR_CHART_INVESTIGATED, COLOR_TO_INVESTIGATE } from 'common/constants/colors';
 import { PERIOD_VALUES } from 'common/constants/statusPeriodValues';
 import { getOption as getStatusPageOption } from '../../common/statusPageChartConfig';
 import { getLaunchModeOption } from './launchModeOption';
 import { getTimelineOption } from './timelineOption';
+import { calculateTooltipParams } from './utils';
 import {
   sampleLaunchContent,
   sampleStatusPageContent,
@@ -35,10 +36,15 @@ describe('investigatedTrendChart getOption', () => {
       formatMessage,
     });
 
-    expect(option.series.map(({ id, data }) => ({ id, data }))).toEqual([
+    const toValue = (point) => (point && typeof point === 'object' ? point.value : point);
+
+    expect(option.series.map(({ id, data }) => ({ id, data: data.map(toValue) }))).toEqual([
       { id: 'investigated', data: [60, 75, 50] },
       { id: 'toInvestigate', data: [40, 25, 50] },
     ]);
+    // only the topmost segment of each stack is rounded
+    expect(option.series[1].data[0]).toMatchObject({ itemStyle: { borderRadius: [3, 3, 0, 0] } });
+    expect(option.series[0].data[0]).toBe(60);
     expect(option.series[0]).toMatchObject({
       type: 'bar',
       stack: 'total',
@@ -49,7 +55,7 @@ describe('investigatedTrendChart getOption', () => {
     expect(option.xAxis.data).toEqual(['#1', '#2', '#3']);
     expect(option.tooltip.trigger).toBe('item');
     expect(option.customData.colors).toEqual({
-      investigated: COLOR_INVESTIGATED,
+      investigated: COLOR_CHART_INVESTIGATED,
       toInvestigate: COLOR_TO_INVESTIGATE,
     });
   });
@@ -75,12 +81,43 @@ describe('investigatedTrendChart getOption', () => {
     });
 
     expect(option.series).toHaveLength(2);
-    expect(option.series.map((item) => item.data)).toEqual([
+    const toValue = (point) => (point && typeof point === 'object' ? point.value : point);
+
+    expect(option.series.map((item) => item.data.map(toValue))).toEqual([
       [55, 70],
       [45, 30],
     ]);
-    expect(option.xAxis.data).toHaveLength(2);
+    expect(option.xAxis.data).toEqual(['01.01', '02.01']);
     expect(option.customData.legendItems).toEqual(['investigated', 'toInvestigate']);
+  });
+
+  test('timeline tooltip header uses DD.MM.YYYY and 2-decimal percent', () => {
+    const option = getTimelineOption({
+      content: sampleTimelineContent,
+      isPreview: false,
+      formatMessage,
+    });
+    const { itemsData } = option.customData;
+    const params = calculateTooltipParams(
+      [{ index: 0, id: 'investigated', value: 55 }],
+      () => '#000',
+      { itemsData, formatMessage, isTimeline: true },
+    );
+
+    expect(params.itemName).toBe('01.01.2021');
+    expect(params.itemCases).toBe('55.00%');
+  });
+
+  test('legend-hidden series: topmost visible segment is rounded', () => {
+    const option = getLaunchModeOption({
+      content: sampleLaunchContent,
+      isPreview: false,
+      formatMessage,
+      hiddenItems: ['toInvestigate'],
+    });
+
+    expect(option.series[0].data[0]).toMatchObject({ value: 60 });
+    expect(option.series[0].data[0].itemStyle.borderRadius).toEqual([3, 3, 0, 0]);
   });
 
   test('status page mode sets week axis title', () => {

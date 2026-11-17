@@ -14,8 +14,15 @@
  * limitations under the License.
  */
 
-import { getLaunchModeOption } from './launchModeOption';
-import { getTimelineOption } from './timelineOption';
+import { getBarSeriesData } from './buildChartOption';
+import { getLaunchModeData, getLaunchModeOption } from './launchModeOption';
+import { getTimelineData, getTimelineOption } from './timelineOption';
 
 export const selectOptionFunction = (isTimeline) =>
   isTimeline ? getTimelineOption : getLaunchModeOption;
+
+export const getHiddenItemsBarSeries = ({ content, isTimeline, isPreview, hiddenItems }) => {
+  const { itemNames, dataByName } = (isTimeline ? getTimelineData : getLaunchModeData)(content);
+
+  return getBarSeriesData({ itemNames, dataByName, isPreview, hiddenItems });
+};

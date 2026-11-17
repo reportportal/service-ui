@@ -14,8 +14,14 @@
  * limitations under the License.
  */
 
+import moment from 'moment';
+import classNames from 'classnames/bind';
 import { defineMessages } from 'react-intl';
 import { messages } from 'components/widgets/common/messages';
+import styles from '../investigatedTrendChart.scss';
+import { TIMELINE_TOOLTIP_DATE_FORMAT } from './constants';
+
+const cx = classNames.bind(styles);
 
 export const localMessages = defineMessages({
   yAxisInvestigationsTitle: {
@@ -30,10 +36,11 @@ export const calculateTooltipParams = (data, color, customProps) => {
   const { name, number, startTime, date } = itemsData[index];
 
   return {
-    itemName: isTimeline ? date : `${name} #${number}`,
+    itemName: isTimeline ? moment(date).format(TIMELINE_TOOLTIP_DATE_FORMAT) : `${name} #${number}`,
     startTime: isTimeline ? null : new Date(startTime).getTime(),
     itemCases: `${Number(value).toFixed(2)}%`,
     color: color(id),
+    wrapperClassName: cx('tooltip'),
     issueStatNameProps: { itemName: messages[id] ? formatMessage(messages[id]) : id },
   };
 };

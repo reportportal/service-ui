@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { useCallback, useMemo } from 'react';
+import { useCallback, useEffect, useMemo, useRef } from 'react';
 import PropTypes from 'prop-types';
 import { useIntl } from 'react-intl';
 import { useDispatch, useSelector } from 'react-redux';
@@ -40,7 +40,8 @@ import * as STATUSES from 'common/constants/testStatuses';
 import { ALL } from 'common/constants/reservedFilterIds';
 import { EChart } from 'components/widgets/common/echarts';
 import { getOption as getStatusPageOption } from '../common/statusPageChartConfig';
-import { selectOptionFunction } from './config';
+import { getHiddenItemsBarSeries, selectOptionFunction } from './config';
+import { LEGEND_MAX_HEIGHT } from './config/constants';
 import styles from './investigatedTrendChart.scss';
 
 const cx = classNames.bind(styles);
@@ -131,6 +132,39 @@ export const InvestigatedTrendChart = ({
     [isTimeline, launchModeClickHandler, timeLineModeClickHandler],
   );
 
+  // Series hidden via the legend. Kept in a ref (not in the chart config deps), so toggling the
+  // legend never rebuilds the chart: the legend listener below updates the bars in place.
+  const hiddenItemsRef = useRef(uncheckedLegendItems);
+  const barDataParamsRef = useRef(null);
+
+  useEffect(() => {
+    barDataParamsRef.current = onStatusPageMode
+      ? null
+      : { content: widget.content?.result, isTimeline, isPreview };
+  }, [widget.content, isTimeline, isPreview, onStatusPageMode]);
+
+  // The current legend state is read when the option is built, so a rebuild (e.g. data refresh)
+  // keeps the bar rounding of the hidden series.
+  const getOptionWithHiddenItems = useCallback(
+    (params) => selectOptionFunction(isTimeline)({ ...params, hiddenItems: hiddenItemsRef.current }),
+    [isTimeline],
+  );
+
+  // Hiding a series via the legend doesn't rebuild the chart, so the bar top rounding is
+  // recalculated for the visible series here (updated in place).
+  const onChartCreated = useCallback((_node, chart) => {
+    chart.on('legendselectchanged', ({ selected }) => {
+      hiddenItemsRef.current = Object.keys(selected).filter((name) => !selected[name]);
+      if (!barDataParamsRef.current?.content) return;
+      chart.setOption({
+        series: getHiddenItemsBarSeries({
+          ...barDataParamsRef.current,
+          hiddenItems: hiddenItemsRef.current,
+        }),
+      });
+    });
+  }, []);
+
   const configData = useMemo(() => {
     if (onStatusPageMode) {
       return {
@@ -145,14 +179,14 @@ export const InvestigatedTrendChart = ({
 
     return {
       formatMessage,
-      getOption: selectOptionFunction(isTimeline),
+      getOption: getOptionWithHiddenItems,
       onChartClick,
     };
   }, [
     formatMessage,
+    getOptionWithHiddenItems,
     integerValueType,
     interval,
-    isTimeline,
     onChartClick,
     onStatusPageMode,
   ]);
@@ -162,6 +196,11 @@ export const InvestigatedTrendChart = ({
       onChangeLegend,
       showLegend: !onStatusPageMode,
       uncheckedLegendItems,
+      legendProps: {
+        className: cx('legend'),
+        maxHeight: LEGEND_MAX_HEIGHT,
+        alwaysShowScroll: true,
+      },
     }),
     [onChangeLegend, onStatusPageMode, uncheckedLegendItems],
   );
@@ -173,6 +212,7 @@ export const InvestigatedTrendChart = ({
         className={cx('widget-wrapper')}
         legendConfig={legendConfig}
         configData={configData}
+        chartCreatedCallback={onChartCreated}
       />
     </div>
   );
