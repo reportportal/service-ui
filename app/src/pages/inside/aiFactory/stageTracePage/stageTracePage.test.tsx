@@ -15,6 +15,8 @@
  */
 
 import { act, type ReactNode } from 'react';
+import { Dropdown } from '@reportportal/ui-kit';
+import { StageTraceAttemptSwitcher } from './stageTraceAttemptSwitcher';
 import { createRoot, type Root } from 'react-dom/client';
 import { useStageTrace } from './useStageTrace';
 import { StageTracePage } from './stageTracePage';
@@ -70,6 +72,30 @@ jest.mock('@reportportal/ui-kit', () => ({
       {children}
     </button>
   ),
+  Dropdown: jest.fn(
+    ({
+      label,
+      options,
+      value,
+      onChange,
+    }: {
+      label: string;
+      options: { value: string; label: string }[];
+      value: string;
+      onChange: (value: unknown) => void;
+    }) => (
+      <label>
+        {label}
+        <select value={value} onChange={(event) => onChange(event.target.value)}>
+          {options.map((option) => (
+            <option key={option.value} value={option.value}>
+              {option.label}
+            </option>
+          ))}
+        </select>
+      </label>
+    ),
+  ),
   RefreshIcon: 'span',
   SystemMessage: 'section',
 }));
@@ -90,6 +116,7 @@ jest.mock('controllers/pages', () => ({
   PROJECT_PIPELINE_STAGE_TRACE_PAGE: 'TRACE',
   pipelineIdSelector: () => mockRoute.pipelineId,
   iterationIdSelector: () => mockRoute.iterationId,
+  stageKeySelector: () => mockRoute.stageKey,
   querySelector: () => mockQuery,
   urlOrganizationAndProjectSelector: () => mockRoute,
 }));
@@ -167,6 +194,7 @@ describe('stage trace page states and navigation', () => {
   beforeEach(() => {
     jest.clearAllMocks();
     mockEnabled = true;
+    mockRoute.stageKey = 'fix';
     mockQuery = {};
     mockProjectLoading = false;
     mockActiveProjectKey = 'project-key';
@@ -195,31 +223,25 @@ describe('stage trace page states and navigation', () => {
     });
   });
 
-  test.each([
-    [
-      'unresolved project metadata',
-      () => {
-        mockProjectLoading = true;
-      },
-    ],
-    [
-      'another active project key',
-      () => {
-        mockActiveProjectKey = 'other-project';
-      },
-    ],
-    [
-      'another active project route',
-      () => {
-        mockActiveProject = { organizationSlug: 'org', projectSlug: 'other' };
-      },
-    ],
-  ])('waits without requesting a trace for %s', (_name, setUnresolved) => {
-    setUnresolved();
+  test('waits for project metadata while it is actually loading', () => {
+    mockProjectLoading = true;
     const wrapper = render(<StageTracePage />);
     expect(useTraceMock).toHaveBeenCalledWith(expect.objectContaining({ enabled: false }));
     expect(wrapper.textContent).toContain('Loading trace');
+    expect(wrapper.querySelector('[role="alert"]')).toBeNull();
   });
+
+  test.each(['key', 'route'])(
+    'shows a settled project mismatch error for %s without requesting trace',
+    (mismatch) => {
+      if (mismatch === 'key') mockActiveProjectKey = 'other-project';
+      else mockActiveProject = { organizationSlug: 'org', projectSlug: 'other' };
+      const wrapper = render(<StageTracePage />);
+      expect(useTraceMock).toHaveBeenCalledWith(expect.objectContaining({ enabled: false }));
+      expect(wrapper.querySelector('[role="alert"]')).not.toBeNull();
+      expect(wrapper.textContent).not.toContain('Loading trace');
+    },
+  );
 
   test('enables a direct target route after the active project finishes changing', () => {
     mockProjectLoading = true;
@@ -238,27 +260,31 @@ describe('stage trace page states and navigation', () => {
     expect(container.textContent).not.toContain('Loading trace');
   });
 
-  test('preserves source iteration and stage when returning from a fix-round trace', () => {
-    mockQuery = {
-      returnPipelineId: '8',
-      returnIterationId: '29',
-      returnStageKey: 'review',
-      fixRoundNumber: '4',
-    };
-    const wrapper = render(<StageTracePage />);
-    expect(wrapper.querySelector('h1')?.textContent).toContain('fix round 4');
-    act(() =>
-      wrapper
-        .querySelector<HTMLButtonElement>('[data-automation-id="backFromStageTrace"]')
-        ?.click(),
-    );
-    expect(mockDispatch).toHaveBeenLastCalledWith(
-      expect.objectContaining({
-        payload: expect.objectContaining({ pipelineId: 8, iterationId: 29 }),
-        query: { stage: 'review' },
-      }),
-    );
-  });
+  test.each(['fix', 'test-case-fix'])(
+    'preserves source context and round header for %s trace',
+    (stageKey) => {
+      mockRoute.stageKey = stageKey;
+      mockQuery = {
+        returnPipelineId: '8',
+        returnIterationId: '29',
+        returnStageKey: 'review',
+        fixRoundNumber: '4',
+      };
+      const wrapper = render(<StageTracePage />);
+      expect(wrapper.querySelector('h1')?.textContent).toContain('fix round 4');
+      act(() =>
+        wrapper
+          .querySelector<HTMLButtonElement>('[data-automation-id="backFromStageTrace"]')
+          ?.click(),
+      );
+      expect(mockDispatch).toHaveBeenLastCalledWith(
+        expect.objectContaining({
+          payload: expect.objectContaining({ pipelineId: 8, iterationId: 29 }),
+          query: { stage: 'review' },
+        }),
+      );
+    },
+  );
 
   test('redirects with the feature off and disables trace loading', () => {
     mockEnabled = false;
@@ -279,7 +305,7 @@ describe('stage trace page states and navigation', () => {
   ] as const)('explains %s separately from not reported', (failure, text) => {
     useTraceMock.mockReturnValue({ scope: 'scope', loading: false, failure });
     const wrapper = render(<StageTracePage />);
-    expect(wrapper.textContent).toContain(text);
+    expect(wrapper.querySelector('[role="alert"]')?.textContent).toContain(text);
     expect(wrapper.textContent).not.toContain('Trace not reported');
   });
 
@@ -378,9 +404,14 @@ describe('trace event disclosure', () => {
     expect(wrapper.querySelectorAll<HTMLTextAreaElement>('textarea')).toHaveLength(0);
     expect(wrapper.textContent).not.toContain('README.md');
     expect(wrapper.querySelector('button')?.getAttribute('aria-expanded')).toBe('false');
+    expect(wrapper.querySelector('button')?.hasAttribute('aria-controls')).toBe(false);
     expect(wrapper.textContent).toContain('+0 ms');
     act(() => wrapper.querySelector('button')?.click());
     expect(wrapper.querySelector('button')?.getAttribute('aria-expanded')).toBe('true');
+    const contentId = wrapper.querySelector('button')?.getAttribute('aria-controls');
+    expect(Array.from(wrapper.querySelectorAll('[id]')).some((node) => node.id === contentId)).toBe(
+      true,
+    );
     expect(wrapper.querySelectorAll<HTMLTextAreaElement>('textarea')[0].value).toBe(text);
     expect(wrapper.querySelectorAll('img')).toHaveLength(0);
     expect(wrapper.querySelectorAll<HTMLTextAreaElement>('textarea')[1].value).toContain(
@@ -515,5 +546,52 @@ describe('grader trace presentation', () => {
     expect(wrapper.querySelector('table')).not.toBeNull();
     expect(wrapper.querySelector<HTMLTextAreaElement>('textarea')?.value).toBe('72 -> 88 / 100');
     expect(wrapper.textContent).toContain('72 → 88 / 100');
+  });
+});
+
+describe('attempt Dropdown contract', () => {
+  test.each([0, 1])('hides the switcher with %s available attempts', (count) => {
+    const wrapper = render(
+      <StageTraceAttemptSwitcher
+        attempts={readyState.attempts.slice(0, count)}
+        onChange={jest.fn()}
+      />,
+    );
+    expect(wrapper.childElementCount).toBe(0);
+  });
+
+  test('uses complete readable labels and accepts only an existing scalar string value', () => {
+    const onChange = jest.fn();
+    const attempts = [
+      {
+        attempt: 1,
+        traceStatus: 'REPORTED' as const,
+        eventCount: 1,
+        current: false,
+        stageStatus: 'Failed',
+      },
+      {
+        attempt: 2,
+        traceStatus: 'NOT_REPORTED' as const,
+        eventCount: 0,
+        current: true,
+        stageStatus: 'Passed',
+      },
+    ];
+    render(
+      <StageTraceAttemptSwitcher attempts={attempts} selectedAttempt={2} onChange={onChange} />,
+    );
+    const props = jest.mocked(Dropdown).mock.calls.slice(-1)[0][0];
+    expect(props.value).toBe('2');
+    expect(props.options).toEqual([
+      { value: '1', label: 'Attempt 1 · Failed · Trace reported' },
+      { value: '2', label: 'Attempt 2 · current · Passed · Trace not reported' },
+    ]);
+    props.onChange?.(['1']);
+    props.onChange?.(1);
+    props.onChange?.('unknown');
+    expect(onChange).not.toHaveBeenCalled();
+    props.onChange?.('1');
+    expect(onChange).toHaveBeenCalledWith('1');
   });
 });

@@ -81,7 +81,7 @@ export const GenerationReviewTraceChooser = ({
   const canLoad = Boolean(projectKey && ids.length && ids.length <= 50);
   const load = () => {
     if (!canLoad) return;
-    void run((signal) =>
+    run((signal) =>
       loadGenerationReviewRounds(
         projectKey,
         ids,
@@ -90,7 +90,7 @@ export const GenerationReviewTraceChooser = ({
       ),
     );
   };
-  const rounds = error ? [] : data?.rounds;
+  const rounds = error ? undefined : data?.rounds;
   if (!enabled) return null;
   return (
     <section data-automation-id="generation-review-trace-chooser">
@@ -104,7 +104,7 @@ export const GenerationReviewTraceChooser = ({
       )}
       {loading && <output aria-live="polite">{formatMessage(messages.loading)}</output>}
       {(error || data?.incomplete) && <p role="alert">{formatMessage(messages.incomplete)}</p>}
-      {rounds?.length === 0 && <p>{formatMessage(messages.empty)}</p>}
+      {!data?.incomplete && rounds?.length === 0 && <p>{formatMessage(messages.empty)}</p>}
       {rounds?.map((round) => (
         <Button
           key={`${round.testCaseId}:${round.roundId}`}
@@ -114,7 +114,11 @@ export const GenerationReviewTraceChooser = ({
             dispatch(
               createStageTraceAction(
                 { organizationSlug, projectSlug },
-                { pipelineId: round.pipelineId, iterationId: round.iterationId, stageKey: 'fix' },
+                {
+                  pipelineId: round.pipelineId,
+                  iterationId: round.iterationId,
+                  stageKey: round.stageKey,
+                },
                 {
                   fixRoundNumber: round.roundNumber,
                   returnTo: { pipelineId, iterationId, stageKey },

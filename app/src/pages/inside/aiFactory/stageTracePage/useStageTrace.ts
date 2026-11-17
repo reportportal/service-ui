@@ -78,29 +78,21 @@ export const useStageTrace = ({
       .then((iteration) => update({ iteration }))
       .catch(() => update({ metadataFailed: true }));
     const readTrace = async () => {
-      try {
-        const attempts = await loadStageTraceAttempts(
-          { projectKey, iterationId, stageKey },
-          signal,
-        );
-        if (signal.aborted) return;
-        update({ attempts });
-        const selected = attempt ?? attempts.find((item) => item.current)?.attempt;
-        if (selected === undefined) {
-          update({ failure: 'INVALID_RESPONSE', loading: false });
-          return;
-        }
-        const trace = await loadStageTrace(
-          { projectKey, iterationId, stageKey, attempt: selected },
-          signal,
-        );
-        if (signal.aborted) return;
-        update({ trace, loading: false });
-      } catch (error) {
-        update({ failure: getFailure(error), loading: false });
+      const attempts = await loadStageTraceAttempts({ projectKey, iterationId, stageKey }, signal);
+      if (signal.aborted) return;
+      update({ attempts });
+      const selected = attempt ?? attempts.find((item) => item.current)?.attempt;
+      if (selected === undefined) {
+        update({ failure: 'INVALID_RESPONSE', loading: false });
+        return;
       }
+      const trace = await loadStageTrace(
+        { projectKey, iterationId, stageKey, attempt: selected },
+        signal,
+      );
+      update({ trace, loading: false });
     };
-    void readTrace();
+    readTrace().catch((error: unknown) => update({ failure: getFailure(error), loading: false }));
     return () => controller.abort();
   }, [enabled, projectKey, pipelineId, iterationId, stageKey, attempt, refresh, scope]);
   return enabled && state.scope === scope ? state : { scope, loading: enabled };

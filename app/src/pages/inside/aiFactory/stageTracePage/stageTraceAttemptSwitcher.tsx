@@ -15,6 +15,7 @@
  */
 
 import { useIntl } from 'react-intl';
+import { Dropdown } from '@reportportal/ui-kit';
 
 import { createClassnames } from 'common/utils';
 import type { StageTraceAttempt } from 'controllers/aiFactory/stageTrace';
@@ -27,6 +28,19 @@ interface StageTraceAttemptSwitcherProps {
   onChange: (value: string) => void;
 }
 const cx = createClassnames(styles);
+const getAttemptLabel = (
+  attempt: StageTraceAttempt,
+  formatMessage: ReturnType<typeof useIntl>['formatMessage'],
+) =>
+  [
+    formatMessage(messages.attempt, { number: attempt.attempt }),
+    attempt.current ? formatMessage(messages.current) : undefined,
+    attempt.stageStatus,
+    formatMessage(attempt.traceStatus === 'REPORTED' ? messages.reported : messages.notReported),
+  ]
+    .filter(Boolean)
+    .join(' · ');
+
 export const StageTraceAttemptSwitcher = ({
   attempts = [],
   selectedAttempt,
@@ -34,23 +48,22 @@ export const StageTraceAttemptSwitcher = ({
 }: StageTraceAttemptSwitcherProps) => {
   const { formatMessage } = useIntl();
   if (attempts.length < 2) return null;
+  const options = attempts.map((attempt) => ({
+    value: String(attempt.attempt),
+    label: getAttemptLabel(attempt, formatMessage),
+  }));
   return (
-    <label className={cx('attempt-switcher')}>
-      {formatMessage(messages.attempts)}
-      <select
-        value={selectedAttempt ?? ''}
-        onChange={(event) => onChange(event.target.value)}
-        data-automation-id="stageTraceAttemptSwitcher"
-      >
-        {attempts.map((item) => (
-          <option key={item.attempt} value={item.attempt}>
-            {formatMessage(messages.attempt, { number: item.attempt })}
-            {item.current ? ` · ${formatMessage(messages.current)}` : ''}
-            {item.stageStatus ? ` · ${item.stageStatus}` : ''}
-            {` · ${formatMessage(item.traceStatus === 'REPORTED' ? messages.reported : messages.notReported)}`}
-          </option>
-        ))}
-      </select>
-    </label>
+    <Dropdown
+      className={cx('attempt-switcher')}
+      label={formatMessage(messages.attempts)}
+      options={options}
+      value={selectedAttempt === undefined ? '' : String(selectedAttempt)}
+      onChange={(value) => {
+        if (typeof value === 'string' && options.some((option) => option.value === value)) {
+          onChange(value);
+        }
+      }}
+      data-automation-id="stageTraceAttemptSwitcher"
+    />
   );
 };

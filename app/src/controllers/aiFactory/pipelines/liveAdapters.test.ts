@@ -1097,7 +1097,32 @@ describe('historical stage attempt metadata for trace snapshots', () => {
     [{ attempt: 4 }],
     [{ attempt: 0 }],
     [{ attempt: 1, durationMillis: -1 }],
-  ])('rejects duplicate, nonhistorical, or malformed attempt metadata %p', (...attempts) => {
-    expect(() => detail({ attempts })).toThrow('Invalid pipeline iteration detail response');
+  ])(
+    'discards duplicate, nonhistorical, or malformed history without losing the stage %p',
+    (...attempts) => {
+      const result = detail({ attempts }).stages[0];
+      expect(result.stageKey).toBe('create');
+      expect(result.attributes?.[0].value).toBe('current-model');
+      expect(result.attempts).toBeUndefined();
+    },
+  );
+
+  test.each([null, {}, 'invalid'])('ignores optional non-array history %p', (attempts) => {
+    expect(detail({ attempts }).stages[0].attempts).toBeUndefined();
+  });
+
+  test('retains valid siblings but excludes every snapshot with an ambiguous attempt number', () => {
+    const result = detail({
+      attempts: [
+        { attempt: 1, durationMillis: 0 },
+        { attempt: 2, durationMillis: 10 },
+        { attempt: 2, durationMillis: -1 },
+        null,
+        { attempt: 3 },
+        { attempt: 4 },
+      ],
+    }).stages[0];
+    expect(result.attempts).toEqual([expect.objectContaining({ attempt: 1, durationMs: 0 })]);
+    expect(result.durationMs).toBe(9000);
   });
 });

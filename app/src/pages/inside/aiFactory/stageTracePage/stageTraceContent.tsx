@@ -34,6 +34,7 @@ interface StageTraceContentProps {
   attempt?: StageTraceAttempt;
   failure?: TraceFailure;
   isLoading: boolean;
+  isProjectUnavailable?: boolean;
 }
 const cx = createClassnames(styles);
 const FAILURE_MESSAGES: Record<TraceFailure, keyof typeof messages> = {
@@ -48,12 +49,16 @@ export const StageTraceContent = ({
   attempt,
   failure,
   isLoading,
+  isProjectUnavailable = false,
 }: StageTraceContentProps) => {
   const { formatMessage } = useIntl();
-  if (failure)
+  const errorMessage = isProjectUnavailable
+    ? messages.projectUnavailable
+    : failure && messages[FAILURE_MESSAGES[failure]];
+  if (errorMessage)
     return (
       <SystemMessage mode="error">
-        <output aria-live="assertive">{formatMessage(messages[FAILURE_MESSAGES[failure]])}</output>
+        <div role="alert">{formatMessage(errorMessage)}</div>
       </SystemMessage>
     );
   if (isLoading)

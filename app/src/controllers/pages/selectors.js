@@ -76,6 +76,7 @@ export const querySelector = createSelector(locationSelector, (location) => loca
 // AI Factory PoC, EPMRPP-118192
 export const pipelineIdSelector = (state) => Number(payloadSelector(state).pipelineId) || null;
 export const iterationIdSelector = (state) => Number(payloadSelector(state).iterationId) || null;
+export const stageKeySelector = (state) => payloadSelector(state).stageKey ?? '';
 
 const commonPagePropertiesSelector = (query, namespace, mapping = undefined) => {
   if (!query) {

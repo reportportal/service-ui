@@ -43,6 +43,7 @@ export {
   pageLevelSelector,
   pipelineIdSelector,
   iterationIdSelector,
+  stageKeySelector,
 } from './selectors';
 export { userRolesSelector } from './userRolesSelector';
 export { updatePagePropertiesAction, clearPageStateAction } from './actionCreators';

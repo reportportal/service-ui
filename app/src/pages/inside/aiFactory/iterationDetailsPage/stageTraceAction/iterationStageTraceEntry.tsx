@@ -14,13 +14,18 @@
  * limitations under the License.
  */
 
+import { createClassnames } from 'common/utils';
+import { useAiFactoryEnabled } from 'controllers/aiFactory';
 import type {
   ReducedPipelineDetailStage,
   ReducedPipelineIterationDetail,
 } from 'controllers/aiFactory/pipelines';
 
-import { GenerationReviewTraceChooser } from '../generationReviewTraceChooser/generationReviewTraceChooser';
-import { StageTraceAction } from './stageTraceAction';
+import { GenerationReviewTraceChooser } from 'pages/inside/aiFactory/iterationDetailsPage/generationReviewTraceChooser/generationReviewTraceChooser';
+import { StageTraceAction } from 'pages/inside/aiFactory/iterationDetailsPage/stageTraceAction/stageTraceAction';
+import styles from 'pages/inside/aiFactory/iterationDetailsPage/iterationDetailsPage.scss';
+
+const cx = createClassnames(styles);
 
 export interface IterationStageTraceEntryProps {
   iteration: ReducedPipelineIterationDetail;
@@ -60,7 +65,8 @@ export const IterationStageTraceEntry = ({
   projectKey,
   linkedCaseIds,
 }: IterationStageTraceEntryProps) => {
-  if (!stage || !projectKey) return null;
+  const isEnabled = useAiFactoryEnabled();
+  if (!isEnabled || !stage || !projectKey) return null;
   const context = {
     projectKey,
     pipelineId: iteration.pipelineId,
@@ -68,8 +74,15 @@ export const IterationStageTraceEntry = ({
     stageKey: stage.stageKey,
     refreshIdentity: iteration,
   };
-  if (isHumanGenerationReview(stage, iteration.pipelineType))
-    return <GenerationReviewTraceChooser {...context} displayIds={linkedCaseIds} />;
-  if (!stage.stageKey) return null;
-  return <StageTraceAction {...context} stageKey={stage.stageKey} />;
+  const isHumanReview = isHumanGenerationReview(stage, iteration.pipelineType);
+  if (!isHumanReview && !stage.stageKey) return null;
+  return (
+    <div className={cx('stage-trace-entry')}>
+      {isHumanReview ? (
+        <GenerationReviewTraceChooser {...context} displayIds={linkedCaseIds} />
+      ) : (
+        <StageTraceAction {...context} stageKey={stage.stageKey} />
+      )}
+    </div>
+  );
 };

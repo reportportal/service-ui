@@ -16,10 +16,8 @@
 
 import { URLS } from 'common/urls';
 import { fetch } from 'common/utils';
-import {
-  getLiveIterationIdentity,
-  type LiveIterationIdentity,
-} from 'pages/inside/aiFactory/common/iterationReferences/liveIterationIdentity';
+import type { LiveIterationIdentity } from 'pages/inside/aiFactory/common/iterationReferences/liveIterationIdentity';
+import { getLiveFixTraceTarget } from 'pages/inside/aiFactory/common/stageTrace/liveFixTraceTarget';
 import {
   getLiveLibraryCases,
   type LiveLibraryCase,
@@ -34,6 +32,7 @@ export interface GenerationReviewTraceRound {
   roundNumber: number;
   iterationId: number;
   pipelineId: number;
+  stageKey: string;
 }
 
 export interface GenerationReviewSource {
@@ -66,7 +65,7 @@ const resolveCaseRound = async (
     const round = await loadLiveFixRound(projectKey, testCase.id, review.fixRoundId, signal);
     if (!round.resultIterationId || round.previousIterationId !== source.sourceIterationId)
       return { incomplete: false };
-    const iteration = await getLiveIterationIdentity(projectKey, round.resultIterationId, signal);
+    const iteration = await getLiveFixTraceTarget(projectKey, round.resultIterationId, signal);
     if (!iteration) return { incomplete: true };
     if (!isDirectResult(iteration, source)) return { incomplete: false };
     return {
@@ -78,6 +77,7 @@ const resolveCaseRound = async (
         roundNumber: round.roundNumber,
         iterationId: iteration.id,
         pipelineId: iteration.pipelineId,
+        stageKey: iteration.stageKey,
       },
     };
   } catch {

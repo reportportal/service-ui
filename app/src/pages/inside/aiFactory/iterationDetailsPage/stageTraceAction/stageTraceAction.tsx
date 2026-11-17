@@ -19,6 +19,7 @@ import { useIntl } from 'react-intl';
 import { useDispatch, useSelector } from 'react-redux';
 import { Button } from '@reportportal/ui-kit';
 
+import { createClassnames } from 'common/utils';
 import { useAiFactoryEnabled } from 'controllers/aiFactory';
 import {
   loadStageTraceAttempts,
@@ -29,7 +30,10 @@ import { urlOrganizationAndProjectSelector } from 'controllers/pages';
 import { createStageTraceAction } from 'pages/inside/aiFactory/common/stageTrace/navigation';
 import { ProjectDetails } from 'pages/organization/constants';
 
-import { messages } from './messages';
+import { messages } from 'pages/inside/aiFactory/iterationDetailsPage/stageTraceAction/messages';
+import styles from 'pages/inside/aiFactory/iterationDetailsPage/iterationDetailsPage.scss';
+
+const cx = createClassnames(styles);
 
 export interface StageTraceActionProps {
   projectKey: string;
@@ -96,7 +100,7 @@ export const StageTraceAction = ({
   const message = getAvailabilityMessage(current?.attempts, current?.error);
   const target = { pipelineId, iterationId, stageKey };
   return (
-    <div data-automation-id="stage-trace-action">
+    <div className={cx('stage-trace-action')} data-automation-id="stage-trace-action">
       <Button
         variant="text"
         onClick={() =>

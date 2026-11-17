@@ -19,6 +19,7 @@ import { useSelector } from 'react-redux';
 import {
   pipelineIdSelector,
   iterationIdSelector,
+  stageKeySelector,
   querySelector,
   urlOrganizationAndProjectSelector,
 } from 'controllers/pages';
@@ -35,9 +36,6 @@ import {
   readPositiveInteger,
   type StageTracePageRoute,
 } from 'pages/inside/aiFactory/stageTracePage/stageTracePageUtils';
-
-const stageKeySelector = (state: { location?: { payload?: { stageKey?: string } } }) =>
-  state.location?.payload?.stageKey ?? '';
 
 export const useStageTracePageRoute = () => {
   const projectKey = useSelector(projectKeySelector);
@@ -69,6 +67,7 @@ export const useStageTracePageRoute = () => {
     projectKey,
     projectName,
     hasProject,
+    isProjectLoading: loading,
     attempt: readPositiveInteger(query.attempt),
     isValidRoute: isValidTraceRoute(route, query.attempt),
   };

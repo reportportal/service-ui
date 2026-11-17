@@ -38,6 +38,8 @@ import {
   type ReducedIterationDetailsProps,
 } from './reducedIterationDetails';
 
+jest.mock('controllers/aiFactory', () => ({ useAiFactoryEnabled: () => true }));
+
 jest.mock('@reportportal/ui-kit', () => ({
   Button: 'Button',
   ConfigurationIcon: 'ConfigurationIcon',
@@ -140,6 +142,12 @@ describe('ReducedIterationDetails', () => {
       { requestedStage: 'agent-create' },
     );
     expect(traceEntry(wrapper).find(StageTraceAction).prop('stageKey')).toBe('agent-create');
+    expect(
+      wrapper
+        .find('[data-automation-id="reducedStagePanel"]')
+        .find('section.stage-panels__main')
+        .find(IterationStageTraceEntry),
+    ).toHaveLength(1);
     (wrapper.find('[data-automation-id="reducedStageCard-12"]').prop('onClick') as () => void)();
     expect(traceEntry(wrapper).find(StageTraceAction)).toHaveLength(0);
   });

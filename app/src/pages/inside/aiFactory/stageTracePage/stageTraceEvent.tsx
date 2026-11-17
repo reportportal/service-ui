@@ -37,7 +37,7 @@ export const TraceEvent = ({ event, expanded, onToggle }: TraceEventProps) => {
         type="button"
         className={cx('event__toggle')}
         aria-expanded={expanded}
-        aria-controls={`trace-event-${event.seq}`}
+        aria-controls={expanded ? `trace-event-${event.seq}` : undefined}
         onClick={onToggle}
         data-automation-id={`traceEvent-${event.seq}`}
       >

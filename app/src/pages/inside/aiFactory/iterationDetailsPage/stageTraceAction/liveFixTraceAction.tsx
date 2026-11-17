@@ -21,7 +21,7 @@ import { Button } from '@reportportal/ui-kit';
 
 import { useAiFactoryEnabled } from 'controllers/aiFactory';
 import { urlOrganizationAndProjectSelector } from 'controllers/pages';
-import { getLiveIterationIdentity } from 'pages/inside/aiFactory/common/iterationReferences/liveIterationIdentity';
+import { getLiveFixTraceTarget } from 'pages/inside/aiFactory/common/stageTrace/liveFixTraceTarget';
 import { createStageTraceAction } from 'pages/inside/aiFactory/common/stageTrace/navigation';
 import { useScopedTraceRequest } from 'pages/inside/aiFactory/common/stageTrace/useScopedTraceRequest';
 import { ProjectDetails } from 'pages/organization/constants';
@@ -59,21 +59,25 @@ export const LiveFixTraceAction = ({
     [projectKey, resourceKey, resultIterationId, roundNumber, organizationSlug, projectSlug],
   );
   const { loading, error, run } = useScopedTraceRequest<
-    NonNullable<Awaited<ReturnType<typeof getLiveIterationIdentity>>>
+    NonNullable<Awaited<ReturnType<typeof getLiveFixTraceTarget>>>
   >(resource, enabled);
   const open = () => {
     if (!projectKey) return;
-    void run(
+    run(
       async (signal) => {
-        const iteration = await getLiveIterationIdentity(projectKey, resultIterationId, signal);
-        if (!iteration) throw new Error('Missing fix iteration identity');
+        const iteration = await getLiveFixTraceTarget(projectKey, resultIterationId, signal);
+        if (!iteration) throw new Error('Missing fix trace target');
         return iteration;
       },
       (iteration) =>
         dispatch(
           createStageTraceAction(
             { organizationSlug, projectSlug },
-            { pipelineId: iteration.pipelineId, iterationId: iteration.id, stageKey: 'fix' },
+            {
+              pipelineId: iteration.pipelineId,
+              iterationId: iteration.id,
+              stageKey: iteration.stageKey,
+            },
             { fixRoundNumber: roundNumber },
           ),
         ),

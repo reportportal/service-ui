@@ -787,25 +787,24 @@ const adaptStageAttempt = (value: unknown): ReducedPipelineStageAttempt | null =
 const adaptStageAttempts = (
   value: unknown,
   currentAttempt?: number,
-): ReducedPipelineStageAttempt[] | null => {
-  if (value === undefined) {
+): ReducedPipelineStageAttempt[] => {
+  if (!Array.isArray(value)) {
     return [];
   }
-  if (!Array.isArray(value)) {
-    return null;
-  }
-  const attempts = value.map(adaptStageAttempt);
-  if (
-    attempts.some(
-      (attempt) => !attempt || (currentAttempt !== undefined && attempt.attempt >= currentAttempt),
+  const counts = new Map<number, number>();
+  value.forEach((entry) => {
+    const attempt = asPositiveInteger(asRecord(entry)?.attempt);
+    if (attempt) counts.set(attempt, (counts.get(attempt) ?? 0) + 1);
+  });
+  return value
+    .map(adaptStageAttempt)
+    .filter(
+      (snapshot): snapshot is ReducedPipelineStageAttempt =>
+        snapshot !== null &&
+        counts.get(snapshot.attempt) === 1 &&
+        (currentAttempt === undefined || snapshot.attempt < currentAttempt),
     )
-  ) {
-    return null;
-  }
-  if (new Set(attempts.map(({ attempt }) => attempt)).size !== attempts.length) {
-    return null;
-  }
-  return attempts.sort((first, second) => first.attempt - second.attempt);
+    .sort((first, second) => first.attempt - second.attempt);
 };
 
 const adaptDetailStage = (value: unknown): ReducedPipelineDetailStage | null => {
@@ -814,8 +813,8 @@ const adaptDetailStage = (value: unknown): ReducedPipelineDetailStage | null => 
   const id = raw ? asPositiveInteger(raw.id) : null;
   const sections = raw ? adaptSections(raw.sections) : null;
   const metadata = raw && adaptDetailStageMetadata(raw);
-  const attempts = raw && adaptStageAttempts(raw.attempts, metadata?.attempt);
-  if (!attempts || !stage || !id || stage.sequence === undefined || !sections || !metadata) {
+  const attempts = adaptStageAttempts(raw?.attempts, metadata?.attempt);
+  if (!stage || !id || stage.sequence === undefined || !sections || !metadata) {
     return null;
   }
   return {

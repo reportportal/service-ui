@@ -25,6 +25,7 @@ import {
   PROJECT_PIPELINE_STAGE_TRACE_PAGE,
 } from 'controllers/pages';
 import { SettingsLayout } from 'layouts/settingsLayout';
+import { isFixStageKey } from 'pages/inside/aiFactory/common/stageTrace/liveFixTraceTarget';
 import { StageTraceHeader } from 'pages/inside/aiFactory/stageTracePage/stageTraceHeader';
 import { StageTraceAttemptSwitcher } from 'pages/inside/aiFactory/stageTracePage/stageTraceAttemptSwitcher';
 import { StageTraceContent } from 'pages/inside/aiFactory/stageTracePage/stageTraceContent';
@@ -41,8 +42,16 @@ const cx = createClassnames(styles);
 export const StageTracePage = () => {
   const dispatch = useDispatch();
   const isEnabled = useAiFactoryEnabled();
-  const { route, query, projectKey, projectName, hasProject, attempt, isValidRoute } =
-    useStageTracePageRoute();
+  const {
+    route,
+    query,
+    projectKey,
+    projectName,
+    hasProject,
+    isProjectLoading,
+    attempt,
+    isValidRoute,
+  } = useStageTracePageRoute();
   const { organizationSlug, projectSlug, pipelineId, iterationId, stageKey } = route;
   const [refresh, setRefresh] = useState(0);
   const state = useStageTrace({
@@ -69,7 +78,7 @@ export const StageTracePage = () => {
   const onRefresh = useCallback(() => setRefresh((value) => value + 1), []);
   if (!isEnabled) return null;
   const selectedAttempt = getSelectedTraceAttempt(state.attempts, state.trace, attempt);
-  const isLoading = state.loading || (isValidRoute && !hasProject);
+  const isLoading = isValidRoute && (hasProject ? state.loading : isProjectLoading);
   return (
     <SettingsLayout>
       <div className={cx('page')} data-automation-id="stageTracePage">
@@ -78,7 +87,7 @@ export const StageTracePage = () => {
           projectName={projectName}
           iteration={state.iteration}
           attempt={selectedAttempt}
-          fixRound={stageKey === 'fix' ? readPositiveInteger(query.fixRoundNumber) : undefined}
+          fixRound={isFixStageKey(stageKey) ? readPositiveInteger(query.fixRoundNumber) : undefined}
           isLoading={isLoading}
           onBack={onBack}
           onRefresh={onRefresh}
@@ -94,6 +103,7 @@ export const StageTracePage = () => {
           attempt={selectedAttempt}
           failure={isValidRoute ? state.failure : 'INVALID_RESPONSE'}
           isLoading={isLoading}
+          isProjectUnavailable={isValidRoute && !hasProject && !isProjectLoading}
         />
       </div>
     </SettingsLayout>

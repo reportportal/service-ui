@@ -41,6 +41,10 @@ export const messages = defineMessages({
     id: 'StageTracePage.forbidden',
     defaultMessage: 'You do not have access to this trace',
   },
+  projectUnavailable: {
+    id: 'StageTracePage.projectUnavailable',
+    defaultMessage: 'The project for this trace is unavailable. Refresh to try again.',
+  },
   notFound: {
     id: 'StageTracePage.notFound',
     defaultMessage: 'This iteration, stage or attempt was not found',

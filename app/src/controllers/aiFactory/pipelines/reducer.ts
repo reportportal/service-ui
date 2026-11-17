@@ -236,9 +236,7 @@ const iterationDetailsReducer = (
     return state;
   }
   if (action.type === FETCH_SUCCESS) {
-    return (
-      (action.payload?.data as IterationRS | ReducedPipelineIterationDetail | undefined) ?? null
-    );
+    return (action.payload?.data as IterationRS | ReducedPipelineIterationDetail | undefined) ?? null;
   }
   if (
     action.type === FETCH_START &&
@@ -414,11 +412,7 @@ const getPipelineDetailMeta = (action: PipelineReducerAction): PipelineDetailMet
 };
 
 const matchesDetailCatalog = (state: PipelinesState, meta: PipelineDetailMeta): boolean => {
-  if (
-    meta.catalogTransport === 'live' &&
-    meta.catalogVersion === 0 &&
-    meta.catalogRequestId === 0
-  ) {
+  if (meta.catalogTransport === 'live' && meta.catalogVersion === 0 && meta.catalogRequestId === 0) {
     return state.transport === 'live';
   }
   return (

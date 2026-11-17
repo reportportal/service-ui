@@ -8,7 +8,7 @@
 
 Frontend-изменения подготовлены в `feature/pipeline-stage-trace-ui`, база `bootcamp-prototype` / `a59035d1ee24b6150dfe52a178225bb99204ffe9`. После локальной проверки пользователь запросил commit, push и PR в `bootcamp-prototype`; фактический статус публикации и CI отслеживается в GitHub PR. Деплой не входит в эту работу.
 
-Проверенный контракт бэка: `service-api`, `feature/pipelines`, SHA `ab4a85f83f653d8599ecd3ff2e3fbb59a5737f7c`; присланный `pipeline-stage-trace.md`; US-021 v0.2 в requirements repo на `901a39c1be98c13d25359bf93406146ff3241da1`.
+Проверенный контракт бэка: `service-api`, SHA `ab4a85f83f653d8599ecd3ff2e3fbb59a5737f7c`; описание Stage Trace и US-021 v0.2.
 
 ## Что реализовано на frontend
 
@@ -21,7 +21,7 @@ Frontend-изменения подготовлены в `feature/pipeline-stage-
 | GRADERS | Понятные producer-поля `caseId`, `total`, `before`, `after`, `criteria: [{name, score, max}]` отображаются без пересчёта, включая нули. Неизвестные поля и исходный JSON доступны полностью. Структурная таблица ограничена 100 критериями и 512 символами имени; это ограничение отображения, не обрезание payload — превышение остаётся доступным в raw JSON. |
 | Snapshot | Метрики, модель, окружение и CI RUN-ссылки выбранной попытки. Для прошлой попытки берётся её snapshot из `stages[].attempts`; текущие значения туда не переносятся. Общий контекст итерации показан отдельно. |
 | Состояния | Раздельные loading, `NOT_REPORTED` с reason при наличии, пустой `REPORTED`, 403, 404, невалидный ответ и request failure. |
-| Native fix trace | Из известной result iteration в Library доступен переход на её стадию `fix`. Из human generation Review — явный выбор известных текущих раундов, непосредственно связанных с исходной итерацией. Automation Review открывает собственную agent-стадию. |
+| Native fix trace | Из известной result iteration в Library доступен переход на однозначно определённую fix-стадию из её detail. Используется фактический `stageKey` (например, `fix` или `test-case-fix`), а не фиксированное значение маршрута. Из human generation Review — явный выбор известных текущих раундов, непосредственно связанных с исходной итерацией. Automation Review открывает собственную agent-стадию. |
 | Защита от неверного контекста | Из generation Review допускается round с `previousIterationId` исходной итерации, result из того же pipeline и согласованным `rerunOf`, если он задан. Неподтверждённая связь и result, совпадающий с source, не предлагаются. Последующие потомки и неизвестная история не восстанавливаются догадками. |
 
 Маршрут UI:
@@ -62,7 +62,7 @@ Trace загружается отдельно от результата стад
 
 ### 2. Общая кнопка generation Review
 
-Generation Review поддерживается ReportPortal; trace исправления принадлежит `resultIterationId` раунда, стадии `fix`. Automation Review принадлежит своей agent-стадии.
+Generation Review поддерживается ReportPortal; trace исправления принадлежит `resultIterationId` раунда и фактической fix-стадии этой итерации. UI резолвит её ключ из detail и не строит ссылку при отсутствии или неоднозначности стадии. Automation Review принадлежит своей agent-стадии.
 
 Нужно подтвердить поведение общей кнопки generation Review при отсутствии раундов и нескольких раундах. Сейчас реализован явный выбор доступного известного раунда и объяснение ограничения истории. Нет resultIterationId — нет ссылки на trace. Previous iteration не является заменой result iteration.
 
@@ -86,19 +86,15 @@ GET возвращает целый trace; серверной пагинации
 
 ## Отдельные зависимости среды и API
 
-### CI fix review — Vadzim / pipeline team
+### CI fix review — pipeline team
 
-В `rp-tests/main` на commit `60ba205602ebb6cc1600d383245557d6dd87dd17` подтверждены trigger-rule `FIX_ROUND_ID`, job `fix_test_case_round`, fix/re-grade вызовы и переключатель `RP_INSECURE_TLS`. Default RP host остаётся `https://tms.beta.reportportal.io`, project — `reportportal.epm-rpp`.
+Для совместной проверки необходимы корректная конфигурация целевой среды и доступность API для producer. Настройка CI выполняется отдельно; frontend не меняет конфигурацию runner.
 
-Для bootcamp необходимо подготовить правильные tms host/project, сертификат/CA либо согласованный временный CI TLS switch и доступ runner к действующему RP credential нужного проекта. Job использует `RP_LIBRARY_API_KEY` либо настроенный fallback Vault. Значения секретов и доступ Vault в этой работе не проверяются и не меняются.
+### Producer Stage Trace — pipeline team
 
-RP API credential и GitLab trigger token имеют разные назначения. Локальный `.env` UI не настраивает credential удалённого runner.
+Нужно отдельно подтвердить реальную отправку trace существующей попытки после её окончания, в том числе при failed stage; удаление чувствительных данных до отправки; независимость stage result от сбоя PUT trace; multipart без обрезания текста; отсутствие дублей при повторном seq.
 
-### Producer Stage Trace — Vadzim / pipeline team
-
-Нужно отдельно подтвердить реальную отправку trace существующей попытки после её окончания, в том числе при failed stage; redaction credentials до отправки; независимость stage result от сбоя PUT trace; multipart без обрезания текста; отсутствие дублей при повторном seq.
-
-Присутствие backend endpoints не доказывает, что producer их уже вызывает. Прямых trace-вызовов в проверенном `.gitlab-ci.yml` не найдено; подключённый rp-cli и реальное исполнение требуют отдельной проверки.
+Присутствие backend endpoints не доказывает, что producer их уже вызывает. Реальное исполнение требует отдельной проверки.
 
 ### GET test case / AI metrics — backend team
 
@@ -110,46 +106,46 @@ RP API credential и GitLab trigger token имеют разные назначе
 
 ### Локальная проверка реализации
 
-| Проверка | Результат |
-|---|---|
-| Jest: pipelines controller, trace transport, iteration detail, trace page, native fix links | **PASS: 25 suites / 332 tests** |
-| Полный TypeScript check приложения | **PASS** |
-| Production webpack build, Node 20.19.1 | **PASS** |
-| ESLint изменённых JS/TS и тестов | **0 errors, 1 warning**: `react-hooks/incompatible-library` у TanStack `useVirtualizer`; React Compiler пропускает мемоизацию этого компонента |
-| Stylelint нового SCSS; `git diff --check` | **PASS** |
-| Независимые code и security проверки с повторной проверкой исправлений | **PASS**, блокирующих замечаний не осталось |
-| Chrome, локальный fixture реальных Timeline/Graders/Snapshot компонентов и SCSS | **PASS в проверенном объёме**: раскрытие GRADERS, before/after и нулевой criterion, переключение на прошлую модель с duration/cost/tokens = 0, вывод HTML как текста, прокрутка виртуального списка до события 2101 |
+Текущее исправление замечаний review остаётся **локальным и незакоммиченным**. Ключ fix-стадии определяется из result detail; переключение attempts использует UI-kit Dropdown; trace-действия находятся внутри панелей стадий. Некорректная optional history не ломает iteration detail; дубликаты snapshot исключаются без подмены текущими данными. Request scope меняется только после commit React, с отменой запросов и защитой от устаревших обработчиков и abandoned render.
 
-Автотесты покрывают отмену и устаревшие ответы, смену project/attempt, feature OFF, Viewer/read-only, ошибки и `NOT_REPORTED`, identity, sparse seq, whitespace и текст до 10 млн символов, более 2000 событий, точный исторический snapshot, fix-round source/result guards и fallback полного JSON. Браузерный fixture не содержит авторизации, API, полного application shell или удалённого producer; он не является live E2E и не доказывает производительность на максимальном payload.
+| Проверка текущего локального исправления | Результат |
+|---|---|
+| Jest: 28 связанных suites | **PASS: 398 tests** |
+| Полный `npm run lint`, включая TypeScript, ESLint и Stylelint | **PASS**; ESLint: **0 errors / 122 warnings**, Stylelint: **0 errors / 200 warnings** |
+| `npm run deps:cycles` | **PASS**, циклов не найдено |
+| `git diff --check` | **PASS** |
+| Независимые code и security проверки | **PASS**, блокирующих замечаний не осталось |
+| Runtime нового UI-kit Dropdown в Chrome | **NOT VERIFIED**: необязательная браузерная проверка не состоялась из-за недоступности браузерной среды |
+
+Production webpack build и Chrome component fixture были проверены **ранее**, до текущего исправления review. Предыдущий fixture подтверждал раскрытие GRADERS, before/after и нулевой criterion, историческую модель с duration/cost/tokens = 0, вывод HTML как текста и прокрутку виртуального списка до события 2101. Это историческое свидетельство по компонентам, а не новая runtime-проверка изменённого Dropdown или полного приложения.
+
+Автотесты покрывают отмену и устаревшие ответы, смену project/attempt, feature OFF, Viewer/read-only, ошибки и `NOT_REPORTED`, identity, sparse seq, whitespace и текст до 10 млн символов, более 2000 событий, точный исторический snapshot, fix-round source/result guards и fallback полного JSON. Текущие регрессии также проверяют фактический fix-stage key, устойчивость optional history, committed request scope, ошибки callback и переключение attempts.
+
+Предыдущий браузерный fixture не содержит авторизации, API, полного application shell или удалённого producer; он не является live E2E и не доказывает производительность на максимальном payload. Результаты CI/Sonar относятся к предыдущему закоммиченному head и не подтверждают текущий локальный patch. Новый запуск CI/Sonar и деплой в рамках этих локальных проверок не заявляются.
 
 ### Read-only проверка реального стенда — 2026-11-17
 
-После обновления пользователем локального RP-токена выполнены только GET. HTTPS использовался с отключённой проверкой сертификата по ранее данному разрешению для этого стенда; это ограничение проверки среды, не изменение frontend TLS или runner config. Секреты в документ не включены.
+Выполнены только GET-запросы к доступному тестовому API. Проверки конфигурации среды и producer не входили в этот read-only этап.
 
-- `/api/info`: **200**, API Service `feature-pipelines-2926`, reported branch `HEAD-2b836dcdaec4361240f06f9520b5697e7f81eb97`. Это идентификатор, заявленный стендом; он отличается от source SHA контракта выше.
-- `GET /api/v1/project/superadmin_personal/pipeline`: **200**.
-- Detail итераций **16** (pipeline 6), **4** (pipeline 3), **19** (pipeline 1): **200**; реальные `stageKey` присутствуют.
-- Для восьми стадий из этих итераций оба trace GET дали **200**: `review`, `test-case-upload`, `upload`; `implement-test-case`; `prepare-test-case`, `prepare-test-case-2`, `develop-test-case`, `code-review`.
-- Все восемь проверенных стадий имеют current attempt **1**, `traceStatus/status: NOT_REPORTED`, `eventCount: 0`, без reason. В том числе `code-review` со статусом **FAILED**. Это подтверждает штатное чтение отсутствующего trace, но не отправку событий агентом и не отсутствие trace во всём проекте.
-- В этих трёх detail нет исторических attempts. Реальная проверка прошлой попытки остаётся **NOT VERIFIED**.
-- Запрос с `epm-rpp` вместо project key возвращает **404 / errorCode 4040**: `Project 'epm-rpp' not found. Did you use correct project key?`. Дополнительный `GET /api/v1/project/list` дал **200** и подтвердил разделение: UI slug `epm-rpp` → API key `my-organization.epm-rpp`; UI slug `superadmin-personal` → API key `superadmin_personal`. Это не ошибка trace endpoint: в API нельзя подставлять slug вместо разрешённого project key.
-- С правильным API key `my-organization.epm-rpp` detail итерации **34**, pipeline **8**, дал **200**. Для `create-test-case`, `test-case-review`, `test-case-fix` оба trace GET также дали **200**, current attempt **1**, `NOT_REPORTED`, 0 events, без reason и исторических snapshots. Итого проверены **11 стадий в четырёх итерациях двух проектов**; ни одна из них пока не подходит для live проверки отображения событий.
+- Pipeline catalog, детали четырёх итераций двух проектов и оба trace GET для одиннадцати стадий вернули **200**. Реальные `stageKey` присутствуют, включая `create-test-case`, `test-case-review`, `test-case-fix`.
+- Все одиннадцать проверенных стадий имеют current attempt **1**, `traceStatus/status: NOT_REPORTED`, `eventCount: 0`, без reason, в том числе стадия со статусом **FAILED**. Это подтверждает штатное чтение отсутствующего trace, но не отправку событий агентом и не отсутствие trace во всех проектах.
+- В этих деталях нет исторических attempts. Реальная проверка прошлой попытки остаётся **NOT VERIFIED**.
+- API требует разрешённый `projectKey`, который может отличаться от UI slug. Подстановка slug вместо ключа дала **404 / errorCode 4040**; запрос с фактическим ключом проекта вернул **200**. UI не должен заменять разрешённый API key значением slug.
 
 **NOT VERIFIED:** реальный `REPORTED` payload, полный путь от CI producer до UI, исторический snapshot на стенде, trace failed fix с resultIterationId, полная native fix-round history, production deployment frontend и Viewer через реальную учётную запись. Наличие endpoints и локальные fixtures эти пункты не закрывают. Ошибка отсутствия AI metrics в GET test case в этой работе не исправлялась и повторно не воспроизводилась.
 
 ## Что нужно для завершения совместной проверки
 
 1. **Backend / Product:** подтвердить history API и связь failed round → result iteration; согласовать поведение generation Review и форму GRADERS. Вернуть безопасные примеры ответов текущей и прошлой попыток, включая шесть критериев и snapshot с разными моделями.
-2. **Vadzim / pipeline team:** настроить tms host/project, TLS и RP credential runner; выполнить disposable сценарий, который отправит реальный trace. Нужны projectKey, pipelineId, iterationId, stageKey, attempt и ссылка на job без секретов. Включить успешную и failed stage; подтвердить redaction до PUT.
+2. **Pipeline team:** подготовить целевую среду и выполнить изолированный сценарий, который отправит реальный trace. Нужны projectKey, pipelineId, iterationId, stageKey, attempt и ссылка на job без секретов. Включить успешную и failed stage; подтвердить redaction до PUT.
 3. **Совместно с FE:** открыть локальную сборку/сборку ветки с AI Factory flag; Pipeline → Iteration → agent stage → Open trace. Проверить Network: attempts, отдельный trace GET, `attempt=N`, отсутствие PUT/retry при чтении. Проверить current/history snapshot, полный PROMPT/TOOL_CALL, GRADERS и 403/404/NOT_REPORTED, затем Back к исходной стадии.
-4. **Fix-flow:** для human generation Review выбрать конкретный известный round; убедиться, что URL указывает на `resultIterationId`, stage `fix`, правильный pipeline, а Back возвращает source. Для полной истории после публикации API потребуется FE подключение списка. Для Library проверить ссылку из известного результата и failed round со связью resultIterationId.
+4. **Fix-flow:** для human generation Review выбрать конкретный известный round; убедиться, что URL указывает на `resultIterationId`, фактический `stageKey` fix-стадии из result detail, правильный pipeline, а Back возвращает source. Для полной истории после публикации API потребуется FE подключение списка. Для Library проверить ссылку из известного результата и failed round со связью resultIterationId.
 5. **Backend:** проверить GET test case AI metrics и сообщить фактическую схему исправленного ответа; **FE** повторно проверит existing summary/refresh на этом ответе.
 
 До выполнения пунктов 1–4 нельзя объявлять US-021 целиком принятой или реальный E2E завершённым. Реализованные frontend части доступны для review; полный history consumer зависит от ещё не подтверждённого источника данных.
 
 ## Источники
 
-- [Story](https://git.epam.com/EPM-RPP/reportportal-requirements/-/blob/901a39c1be98c13d25359bf93406146ff3241da1/domains/projects/df_bootcamp_2026/stories/US-AI-FCTRY-021-open-stage-trace.md).
+- US-AI-FCTRY-021, v0.2; описание Stage Trace, предоставленное командой бэка.
 - [PipelineController](https://github.com/reportportal/service-api/blob/ab4a85f83f653d8599ecd3ff2e3fbb59a5737f7c/src/main/java/com/epam/reportportal/base/core/aifactory/controller/PipelineController.java).
 - [PipelineStageAttemptRS](https://github.com/reportportal/service-api/blob/ab4a85f83f653d8599ecd3ff2e3fbb59a5737f7c/src/main/java/com/epam/reportportal/base/core/aifactory/dto/PipelineStageAttemptRS.java).
-- [CI config](https://git.epam.com/EPM-RPP/rp-tests/-/blob/60ba205602ebb6cc1600d383245557d6dd87dd17/.gitlab-ci.yml).

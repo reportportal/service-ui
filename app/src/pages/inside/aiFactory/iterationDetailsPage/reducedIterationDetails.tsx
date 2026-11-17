@@ -514,6 +514,7 @@ const renderReducedStagePanel = (
   formatMessage: ReturnType<typeof useIntl>['formatMessage'],
   generationKind?: GenerationStageKind,
   reviewContent?: ReactNode,
+  traceContent?: ReactNode,
 ) => (
   <div className={cx('panel-card')} data-automation-id="reducedStagePanel">
     <div className={panelCx('stage-panels')}>
@@ -536,6 +537,7 @@ const renderReducedStagePanel = (
             <span className={panelCx('panel-heading__summary')}>{currentStage.summary}</span>
           )}
         </div>
+        {traceContent}
         {currentStage.message && (
           <p className={cx('reduced-stage__message')}>{currentStage.message}</p>
         )}
@@ -853,12 +855,6 @@ export const ReducedIterationDetails = ({
             </p>
           ))}
           {renderReducedStageCards(iteration, currentStage, setSelectedStageId, formatMessage)}
-          <IterationStageTraceEntry
-            iteration={iteration}
-            stage={currentStage}
-            projectKey={projectKey}
-            linkedCaseIds={linkedCaseIds}
-          />
           {currentStage &&
             renderReducedStagePanel(
               currentStage,
@@ -873,6 +869,12 @@ export const ReducedIterationDetails = ({
                   refreshIdentity={iteration}
                 />
               ) : undefined,
+              <IterationStageTraceEntry
+                iteration={iteration}
+                stage={currentStage}
+                projectKey={projectKey}
+                linkedCaseIds={linkedCaseIds}
+              />,
             )}
           <details className={cx('reduced-api-fields')}>
             <summary>{formatMessage(messages.validatedApiFields)}</summary>

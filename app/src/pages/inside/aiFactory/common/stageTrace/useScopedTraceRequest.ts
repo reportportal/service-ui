@@ -14,12 +14,15 @@
  * limitations under the License.
  */
 
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useLayoutEffect, useMemo, useRef, useState } from 'react';
 
 interface TraceRequestScope {
-  resource: object;
-  enabled: boolean;
-  active: boolean;
+  readonly resource: object;
+  readonly enabled: boolean;
+}
+
+interface TraceRequestRuntime {
+  scope: TraceRequestScope;
   controller?: AbortController;
 }
 
@@ -31,42 +34,44 @@ interface TraceRequestState<T> {
 }
 
 export const useScopedTraceRequest = <T>(resource: object, enabled: boolean) => {
-  const scope = useMemo<TraceRequestScope>(
-    () => ({ resource, enabled, active: true }),
-    [resource, enabled],
-  );
-  const latestScope = useRef(scope);
-  // Invalidate old event handlers during render, before effect cleanup runs.
-  latestScope.current = scope;
+  const scope = useMemo<TraceRequestScope>(() => ({ resource, enabled }), [resource, enabled]);
+  const committedRuntime = useRef<TraceRequestRuntime>();
   const [state, setState] = useState<TraceRequestState<T>>();
-  const isCurrent = () => scope.enabled && scope.active && latestScope.current === scope;
+  const isCurrent = () => scope.enabled && committedRuntime.current?.scope === scope;
 
-  useEffect(() => {
-    scope.active = true;
+  useLayoutEffect(() => {
+    const runtime: TraceRequestRuntime = { scope };
+    committedRuntime.current = runtime;
     return () => {
-      scope.active = false;
-      scope.controller?.abort();
+      runtime.controller?.abort();
+      if (committedRuntime.current === runtime) committedRuntime.current = undefined;
     };
   }, [scope]);
 
-  const run = async (
+  const execute = async (
+    controller: AbortController,
     request: (signal: AbortSignal) => Promise<T>,
     onSuccess?: (data: T) => void,
   ) => {
-    if (!isCurrent() || scope.controller) return;
+    const data = await request(controller.signal);
+    if (!isCurrent() || controller.signal.aborted) return;
+    setState({ scope, data });
+    onSuccess?.(data);
+  };
+
+  const run = (request: (signal: AbortSignal) => Promise<T>, onSuccess?: (data: T) => void) => {
+    const runtime = committedRuntime.current;
+    if (!isCurrent() || !runtime || runtime.controller) return;
     const controller = new AbortController();
-    scope.controller = controller;
+    runtime.controller = controller;
     setState({ scope, loading: true });
-    try {
-      const data = await request(controller.signal);
-      if (!isCurrent() || controller.signal.aborted) return;
-      setState({ scope, data });
-      onSuccess?.(data);
-    } catch {
-      if (isCurrent() && !controller.signal.aborted) setState({ scope, error: true });
-    } finally {
-      if (scope.controller === controller) scope.controller = undefined;
-    }
+    execute(controller, request, onSuccess)
+      .catch(() => {
+        if (isCurrent() && !controller.signal.aborted) setState({ scope, error: true });
+      })
+      .finally(() => {
+        if (runtime.controller === controller) runtime.controller = undefined;
+      });
   };
 
   const current = state?.scope === scope ? state : undefined;

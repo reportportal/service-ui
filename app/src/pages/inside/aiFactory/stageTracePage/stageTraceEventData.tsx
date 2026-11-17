@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { useIntl } from 'react-intl';
 
 import { createClassnames } from 'common/utils';
@@ -34,18 +34,20 @@ interface TraceEventJsonProps {
 const cx = createClassnames(styles);
 const TraceEventJson = ({ data }: TraceEventJsonProps) => {
   const { formatMessage } = useIntl();
-  return (
-    <StageTraceText
-      value={JSON.stringify(data, null, 2)}
-      label={formatMessage(messages.eventData)}
-    />
-  );
+  const text = useMemo(() => JSON.stringify(data, null, 2), [data]);
+  return <StageTraceText value={text} label={formatMessage(messages.eventData)} />;
 };
 export const StageTraceEventData = ({ event }: StageTraceEventDataProps) => {
   const { formatMessage } = useIntl();
   const [isRawOpen, setRawOpen] = useState(false);
+  const graderData = useMemo(
+    () =>
+      event.type === 'GRADERS' && event.data !== undefined
+        ? readTraceGraderData(event.data)
+        : undefined,
+    [event.type, event.data],
+  );
   if (event.data === undefined) return null;
-  const graderData = event.type === 'GRADERS' ? readTraceGraderData(event.data) : undefined;
   if (!graderData) return <TraceEventJson data={event.data} />;
   return (
     <>

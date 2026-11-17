@@ -29,17 +29,9 @@
   padding: 24px 0;
 }
 .attempt-switcher {
-  display: flex;
-  align-items: center;
-  gap: 12px;
+  width: 420px;
+  max-width: 100%;
   margin-bottom: 16px;
-  select {
-    padding: 8px;
-    background: var(--rp-ui-base-white);
-    color: inherit;
-    border: 1px solid var(--rp-ui-base-e-300);
-    border-radius: 4px;
-  }
 }
 .status {
   display: inline-block;
