@@ -108,11 +108,15 @@ const hasValidAiFilters = ({ lifecycle, hasAi, iterationId }: TestCaseAiFilterPa
   typeof hasAi === 'boolean' ||
   (Number.isSafeInteger(iterationId) && Number(iterationId) > 0);
 
-const buildAiFilterQuery = ({ lifecycle, hasAi, iterationId }: TestCaseAiFilterParams) => ({
-  'filter.eq.status': lifecycle,
-  'filter.eq.origin': typeof hasAi === 'boolean' ? (hasAi ? 'AI' : 'MANUAL') : undefined,
-  'filter.eq.iterationId': iterationId,
-});
+const buildAiFilterQuery = ({ lifecycle, hasAi, iterationId }: TestCaseAiFilterParams) => {
+  const origin = hasAi ? 'AI' : 'MANUAL';
+
+  return {
+    'filter.eq.status': lifecycle,
+    'filter.eq.origin': typeof hasAi === 'boolean' ? origin : undefined,
+    'filter.eq.iterationId': iterationId,
+  };
+};
 
 function* getTestCasesByFolderId(action: GetTestCasesByFolderIdAction): Generator {
   yield put(startLoadingTestCasesAction());
