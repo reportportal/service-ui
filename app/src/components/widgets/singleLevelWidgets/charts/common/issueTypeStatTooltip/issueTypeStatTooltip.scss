@@ -39,3 +39,27 @@
   font-family: $FONT-SEMIBOLD;
   font-size: 12px;
 }
+
+// long defect names are cut with an ellipsis; the marker and the count stay visible
+.stat-line.truncated {
+  display: flex;
+  align-items: center;
+  max-width: 100%;
+  min-width: 0;
+
+  .color-mark,
+  .item-cases {
+    flex-shrink: 0;
+  }
+
+  .color-mark {
+    top: 0;
+  }
+
+  .issue-name {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+}
