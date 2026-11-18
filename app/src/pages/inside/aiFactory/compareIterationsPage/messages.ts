@@ -70,6 +70,14 @@ export const messages = defineMessages({
     id: 'CompareIterationsPage.comparisonError',
     defaultMessage: 'The comparison could not be loaded.',
   },
+  iterationsError: {
+    id: 'CompareIterationsPage.iterationsError',
+    defaultMessage: 'The iterations could not be loaded.',
+  },
+  previousIterationError: {
+    id: 'CompareIterationsPage.previousIterationError',
+    defaultMessage: 'The previous iteration could not be loaded.',
+  },
   noComparisonData: {
     id: 'CompareIterationsPage.noComparisonData',
     defaultMessage: 'No comparable stage or metric data is available for these iterations.',

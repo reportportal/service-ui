@@ -116,6 +116,7 @@ jest.mock('controllers/aiFactory/pipelines', () => ({
   pipelineComparisonSelector: jest.fn(),
   pipelineIterationsByPipelineSelector: jest.fn(),
   pipelineIterationsLoadingSelector: jest.fn(),
+  pipelineIterationPagesSelector: jest.fn(),
   pipelinesLoadingSelector: jest.fn(),
   pipelinesSelector: jest.fn(),
 }));
