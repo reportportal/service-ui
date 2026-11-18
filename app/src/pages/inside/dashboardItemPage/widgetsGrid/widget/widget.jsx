@@ -26,7 +26,14 @@ import { DragNDropIcon } from '@reportportal/ui-kit';
 import { fetch, isEmptyObject } from 'common/utils';
 import { URLS } from 'common/urls';
 import { projectKeySelector, fetchProjectAction } from 'controllers/project';
-import { TEST_CASE_SEARCH } from 'common/constants/widgetTypes';
+import {
+  TEST_CASE_SEARCH,
+  PROJECT_ACTIVITY,
+  MOST_FAILED_TEST_CASES_TABLE,
+  FLAKY_TEST_CASES_TABLE,
+  PASSING_RATE_PER_LAUNCH,
+  MOST_TIME_CONSUMING,
+} from 'common/constants/widgetTypes';
 import { showModalAction } from 'controllers/modal';
 import { analyticsEnabledSelector, baseEventParametersSelector } from 'controllers/appInfo';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
@@ -79,6 +86,23 @@ const messages = defineMessages({
     id: 'Widget.noDataDescription',
     defaultMessage: 'No launches match the widget filter yet.',
   },
+  filterNotFoundTitle: {
+    id: 'Widget.filterNotFoundTitle',
+    defaultMessage: 'Widget filter not found',
+  },
+  filterNotFoundDescription: {
+    id: 'Widget.filterNotFoundDescription',
+    defaultMessage:
+      'The filter for this widget was deleted. Edit the widget to choose another filter.',
+  },
+  filterNotFoundExplanation: {
+    id: 'Widget.filterNotFoundExplanation',
+    defaultMessage: 'The filter for this widget was deleted.',
+  },
+  editWidget: {
+    id: 'Widget.editWidget',
+    defaultMessage: 'Edit widget',
+  },
   errorTitle: {
     id: 'Widget.errorTitle',
     defaultMessage: "Couldn't load the widget",
@@ -95,6 +119,18 @@ const messages = defineMessages({
 
 const SILENT_UPDATE_TIMEOUT = 60000;
 const SILENT_UPDATE_TIMEOUT_FULLSCREEN = 30000;
+
+const WIDGETS_WITHOUT_FILTER = new Set([
+  PROJECT_ACTIVITY,
+  MOST_FAILED_TEST_CASES_TABLE,
+  FLAKY_TEST_CASES_TABLE,
+  PASSING_RATE_PER_LAUNCH,
+  MOST_TIME_CONSUMING,
+  TEST_CASE_SEARCH,
+]);
+
+const isWidgetFilterMissing = (widget) =>
+  !WIDGETS_WITHOUT_FILTER.has(widget.widgetType) && !widget.appliedFilters?.length;
 
 @injectIntl
 @connect(
@@ -233,6 +269,27 @@ export class SimpleWidget extends Component {
           isLoading
           title={formatMessage(messages.generatingTitle)}
           description={formatMessage(messages.generatingDescription)}
+        />
+      );
+    }
+
+    if (isWidgetFilterMissing(widget)) {
+      const canEditWidget = this.canEdit() && !isPrintMode;
+
+      return (
+        <WidgetStateMessage
+          title={formatMessage(messages.filterNotFoundTitle)}
+          description={formatMessage(
+            canEditWidget ? messages.filterNotFoundDescription : messages.filterNotFoundExplanation,
+          )}
+          {...(canEditWidget
+            ? {
+                action: {
+                  label: formatMessage(messages.editWidget),
+                  onClick: this.showEditWidgetModal,
+                },
+              }
+            : {})}
         />
       );
     }
