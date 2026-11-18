@@ -96,7 +96,7 @@ describe('test case AI filter transport mapping', () => {
     jest.clearAllMocks();
   });
 
-  test('maps normalized AI filters to C3 query params for the all-cases request', async () => {
+  test('maps the No AI filter to MANUAL on the all-cases request', async () => {
     await runRequest(
       getAllTestCasesAction({
         offset: 50,
@@ -113,24 +113,21 @@ describe('test case AI filter transport mapping', () => {
         offset: 50,
         limit: 25,
         'filter.cnt.name': 'login',
-        'filter.eq.lifecycle': 'DRAFT',
-        'filter.eq.ai': false,
+        'filter.eq.status': 'DRAFT',
+        'filter.eq.origin': 'MANUAL',
         'filter.eq.iterationId': 103,
       }),
     );
   });
 
-  test('maps normalized AI filters to C3 query params for a folder request', async () => {
+  test('sends Draft and AI with the native filter keys for the folder Review queue', async () => {
     await runRequest(
       getTestCaseByFolderIdAction({
-        folderId: 7,
+        folderId: 19,
         offset: 0,
         limit: 50,
-        filterPriorities: 'HIGH',
-        filterTags: 'smoke',
-        lifecycle: 'READY',
+        lifecycle: 'DRAFT',
         hasAi: true,
-        iterationId: 101,
       }),
     );
 
@@ -138,10 +135,12 @@ describe('test case AI filter transport mapping', () => {
     const requestUrl = jest.mocked(fetch).mock.calls[0][0];
     const query = new URL(requestUrl, 'http://localhost').searchParams;
 
-    expect(query.get('filter.eq.testFolderId')).toBe('7');
-    expect(query.get('filter.eq.lifecycle')).toBe('READY');
-    expect(query.get('filter.eq.ai')).toBe('true');
-    expect(query.get('filter.eq.iterationId')).toBe('101');
+    expect(query.get('filter.eq.testFolderId')).toBe('19');
+    expect(query.get('filter.eq.status')).toBe('DRAFT');
+    expect(query.get('filter.eq.origin')).toBe('AI');
+    expect(query.has('filter.eq.lifecycle')).toBe(false);
+    expect(query.has('filter.eq.ai')).toBe(false);
+    expect(query.has('filter.eq.iterationId')).toBe(false);
     expect(query.get('offset')).toBe('0');
     expect(query.get('limit')).toBe('50');
   });

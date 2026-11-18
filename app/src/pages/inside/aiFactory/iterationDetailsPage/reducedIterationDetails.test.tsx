@@ -322,10 +322,20 @@ describe('ReducedIterationDetails', () => {
     expect(actionWrapper.find('span[title="Comparison is not available yet"]')).toHaveLength(1);
     expect(actionWrapper.find('span[title="Re-run is not available yet"]')).toHaveLength(1);
     const refresh = actionWrapper.find('[data-automation-id="refreshReducedIterationButton"]');
-    expect(refresh.prop('disabled')).toBeUndefined();
+    expect(refresh.prop('disabled')).toBe(false);
     const handleRefresh = refresh.prop('onClick') as () => void;
     handleRefresh();
     expect(onRetry).toHaveBeenCalledTimes(1);
+
+    wrapper.setProps({ isLoading: true });
+    const loadingActions = wrapper
+      .find('PageHeaderWithBreadcrumbsAndActions')
+      .prop('actions') as ReactElement;
+    expect(
+      shallow(loadingActions)
+        .find('[data-automation-id="refreshReducedIterationButton"]')
+        .prop('disabled'),
+    ).toBe(true);
   });
 
   test('opens live comparison and joins Review cases only from linked Test Case IDs', () => {

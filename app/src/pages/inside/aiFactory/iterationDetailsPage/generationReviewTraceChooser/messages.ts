@@ -25,27 +25,30 @@ export const messages = defineMessages({
   },
   loading: {
     id: 'GenerationReviewTraceChooser.loading',
-    defaultMessage: 'Loading known fix rounds…',
+    defaultMessage: 'Loading fix round history…',
   },
   limitation: {
     id: 'GenerationReviewTraceChooser.limitation',
     defaultMessage:
-      'Human review has no agent trace. Only the current fix round directly linked to this iteration can be resolved; complete fix round history is not available.',
+      'Human review has no single agent trace. Choose a fix round requested from this iteration to view its result trace.',
   },
   empty: {
     id: 'GenerationReviewTraceChooser.empty',
-    defaultMessage:
-      'No known fix round has a verified result for this source iteration. This does not mean that no earlier traces exist.',
+    defaultMessage: 'No fix rounds were requested from this source iteration.',
   },
   incomplete: {
     id: 'GenerationReviewTraceChooser.incomplete',
     defaultMessage:
-      'Some test case reviews or result iterations could not be resolved. Refresh to try again.',
+      'Some test case histories or result iterations could not be resolved. Refresh to try again.',
   },
   unsupported: {
     id: 'GenerationReviewTraceChooser.unsupported',
     defaultMessage:
       'No resolvable test case references, or too many references to load at once. Open the test case review in Library to view its fix round.',
+  },
+  unresolved: {
+    id: 'GenerationReviewTraceChooser.unresolved',
+    defaultMessage: 'The result trace could not be verified.',
   },
   open: {
     id: 'GenerationReviewTraceChooser.open',

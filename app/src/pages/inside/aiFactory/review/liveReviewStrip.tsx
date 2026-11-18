@@ -23,6 +23,7 @@ import { createClassnames } from 'common/utils';
 import { showModalAction } from 'controllers/modal';
 import { LifecycleBadge } from 'pages/inside/aiFactory/common';
 import { messages } from 'pages/inside/aiFactory/review/messages';
+import { LiveFixRoundHistory } from 'pages/inside/aiFactory/review/liveFixRoundHistory/liveFixRoundHistory';
 import { LiveFixIterationLinks } from 'pages/inside/aiFactory/review/liveFixIterationLinks';
 import type { LiveReviewCommentsLoadState } from 'pages/inside/aiFactory/review/useLiveReviewComments';
 import type { AiLifecycle } from 'types/aiFactory';
@@ -30,6 +31,7 @@ import type { AiLifecycle } from 'types/aiFactory';
 import styles from './reviewComments.scss';
 
 interface LiveReviewStripProps {
+  testCaseId: number;
   lifecycle?: AiLifecycle;
   reviewState: LiveReviewCommentsLoadState;
   isReadOnly: boolean;
@@ -109,7 +111,12 @@ const LivePushButton = ({
   );
 };
 
-export const LiveReviewStrip = ({ lifecycle, reviewState, isReadOnly }: LiveReviewStripProps) => {
+export const LiveReviewStrip = ({
+  testCaseId,
+  lifecycle,
+  reviewState,
+  isReadOnly,
+}: LiveReviewStripProps) => {
   const { formatMessage } = useIntl();
   const dispatch = useDispatch();
   const discard = () =>
@@ -176,6 +183,11 @@ export const LiveReviewStrip = ({ lifecycle, reviewState, isReadOnly }: LiveRevi
       )}
       <LiveFixFeedback reviewState={reviewState} />
       <LiveFixIterationLinks reviewState={reviewState} isReadOnly={isReadOnly} />
+      <LiveFixRoundHistory
+        testCaseId={testCaseId}
+        resourceKey={reviewState.resourceKey}
+        currentRound={reviewState.fixRoundState}
+      />
       {reviewState.isError && <div role="alert">{formatMessage(messages.loadError)}</div>}
       {reviewState.isMutationError && (
         <div role="alert">{formatMessage(messages.mutationError)}</div>

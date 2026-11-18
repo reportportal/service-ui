@@ -11,6 +11,7 @@
 import type { TestCase } from 'types/testCase';
 import {
   getNativeTestCaseSummary,
+  getNativeTestCaseMetrics,
   getTestCasePresentation,
   hasNativeTestCaseData,
 } from './nativeTestCase';
@@ -49,6 +50,8 @@ describe('native Test Case presentation', () => {
       isObsolete: false,
       model: 'auto (default)',
       costUsd: 0.235,
+      metrics: expect.objectContaining({ overallScore: 72, costUsd: 0.235, criteria: [] }),
+      unsentReviewComments: undefined,
     });
   });
 
@@ -66,6 +69,8 @@ describe('native Test Case presentation', () => {
       isObsolete: true,
       model: undefined,
       costUsd: 0,
+      metrics: expect.objectContaining({ overallScore: 0, costUsd: 0 }),
+      unsentReviewComments: undefined,
     });
   });
 
@@ -77,6 +82,8 @@ describe('native Test Case presentation', () => {
       isObsolete: false,
       model: undefined,
       costUsd: undefined,
+      metrics: metrics ? expect.objectContaining({ criteria: [] }) : undefined,
+      unsentReviewComments: undefined,
     });
   });
 
@@ -107,6 +114,8 @@ describe('native Test Case presentation', () => {
       costUsd: undefined,
       isObsolete: false,
       model: undefined,
+      metrics: undefined,
+      unsentReviewComments: undefined,
     });
   });
 
@@ -143,5 +152,54 @@ describe('native Test Case presentation', () => {
     } as unknown as TestCase;
 
     expect(getTestCasePresentation(testCase, true)).toBe(testCase);
+  });
+});
+
+test('keeps complete native metrics and unsent counts while preserving zero-valued producer data', () => {
+  const metrics = {
+    overallScore: 0,
+    evaluatedAt: 0,
+    obsolete: false,
+    criteria: [{ criterionId: 2, name: 'Clarity', score: 0, maxPoints: 0 }],
+    tokensIn: 0,
+    tokensOut: 0,
+    model: 'model',
+    skill: 'skill',
+    costUsd: 0,
+    pipelineIterationId: 72,
+    pipelineIterationNumber: 3,
+  };
+  expect(
+    getNativeTestCaseSummary({ origin: 'AI', metrics, unsentReviewComments: 2 }),
+  ).toMatchObject({ metrics, unsentReviewComments: 2 });
+  expect(
+    getNativeTestCaseSummary({ origin: 'MANUAL', metrics, unsentReviewComments: 2 }),
+  ).toMatchObject({ metrics: undefined, unsentReviewComments: undefined });
+});
+test.each([0, -1, 1.2, '2', Infinity])(
+  'does not manufacture a positive integral comment count from %p',
+  (unsentReviewComments) => {
+    expect(
+      getNativeTestCaseSummary({ origin: 'AI', unsentReviewComments } as unknown as TestCase)
+        ?.unsentReviewComments,
+    ).toBeUndefined();
+  },
+);
+test('drops invalid individual metrics without losing valid optional fields', () => {
+  const metrics = {
+    tokensIn: -1,
+    tokensOut: 0,
+    skill: ' ',
+    pipelineIterationId: '72',
+    pipelineIterationNumber: 1.5,
+    criteria: [null, { name: ' ', score: 10 }, { name: 'Clarity', score: '90', maxPoints: 0 }],
+  } as unknown as NonNullable<TestCase['metrics']>;
+  expect(getNativeTestCaseMetrics(metrics)).toMatchObject({
+    tokensIn: undefined,
+    tokensOut: 0,
+    skill: undefined,
+    pipelineIterationId: undefined,
+    pipelineIterationNumber: undefined,
+    criteria: [{ name: 'Clarity', score: undefined, maxPoints: 0 }],
   });
 });

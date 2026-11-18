@@ -444,11 +444,11 @@ export interface LifecycleHistoryEntryRS {
 
 /**
  * C3 — Library list filter params, added to the existing `GET tms/test-case` query
- * (AND with the existing priority/tags filters). ❓ exact param naming — Q-BE-03.
+ * (AND with the existing priority/tags filters).
  */
 export interface TestCaseAiFilterParams {
-  'filter.eq.lifecycle'?: AiLifecycle;
-  'filter.eq.ai'?: boolean;
+  'filter.eq.status'?: AiLifecycle;
+  'filter.eq.origin'?: 'AI' | 'MANUAL';
   'filter.eq.iterationId'?: number;
 }
 

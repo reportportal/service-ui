@@ -85,7 +85,10 @@ const mutateReviewComment = (
   data?: unknown,
 ): Promise<boolean> => runReviewCommand(scope, epoch, {
   execute: (signal) => fetch(url, { method, data, signal }),
-  onSuccess: () => { void refreshLiveReview(scope); },
+  onSuccess: () => {
+    void refreshLiveReview(scope);
+    scope.changedCallback?.();
+  },
 });
 
 export const addLiveReviewComment = (
@@ -128,6 +131,7 @@ export const approveLiveReview = (
     onSuccess: () => {
       scope.isApproved = true;
       void refreshLiveReview(scope);
+      scope.changedCallback?.();
     },
     onError: () => { void refreshLiveReview(scope); },
   });
@@ -160,7 +164,10 @@ export const pushLiveReviewToAgent = (scope: ReviewScope, epoch: number): Promis
       scope.publish();
       return startLiveFixRound(scope.projectKey, scope.testCaseId, signal);
     },
-    onSuccess: (round) => acceptStartedRound(scope, round),
+    onSuccess: (round) => {
+      acceptStartedRound(scope, round);
+      scope.changedCallback?.();
+    },
     onError: (error) => handleStartError(scope, error),
     rethrowError: false,
   });

@@ -51,6 +51,10 @@ beforeEach(() => {
       {
         testCaseId: 42,
         displayId: 'TC1',
+        id: 123,
+        status: 'FAILED',
+        previousIterationId: 34,
+        resultIterationId: 72,
         roundId: 123,
         roundNumber: 9,
         iterationId: 72,
@@ -86,7 +90,7 @@ test('loads native rounds only on demand and carries original Review return cont
   await mountChooser();
   expect(loadGenerationReviewRounds).not.toHaveBeenCalled();
   expect((wrapper?.find('p') as TraceNodes).at(0).prop('children')).toContain(
-    'complete fix round history is not available',
+    'Human review has no single agent trace',
   );
   await act(async () => {
     ((wrapper?.find('button') as TraceNodes).at(0).prop('onClick') as () => void)();
@@ -159,7 +163,7 @@ test.each(['rejected', 'incomplete'])(
     await mountChooser();
     await loadChooser();
     expect(wrapper?.find('[role="alert"]')).toHaveLength(1);
-    expect(paragraphText()).not.toContain('No known fix round');
+    expect(paragraphText()).not.toContain('No fix rounds were requested');
   },
 );
 
@@ -169,6 +173,10 @@ test('retains usable rounds alongside a partial failure alert', async () => {
       {
         testCaseId: 42,
         displayId: 'TC1',
+        id: 123,
+        status: 'FAILED',
+        previousIterationId: 34,
+        resultIterationId: 72,
         roundId: 123,
         roundNumber: 9,
         iterationId: 72,
@@ -182,7 +190,7 @@ test('retains usable rounds alongside a partial failure alert', async () => {
   await loadChooser();
   expect(wrapper?.find('[role="alert"]')).toHaveLength(1);
   expect(wrapper?.find('button')).toHaveLength(2);
-  expect(paragraphText()).not.toContain('No known fix round');
+  expect(paragraphText()).not.toContain('No fix rounds were requested');
 });
 
 test('reports an empty result only after a complete successful lookup', async () => {
@@ -190,5 +198,29 @@ test('reports an empty result only after a complete successful lookup', async ()
   await mountChooser();
   await loadChooser();
   expect(wrapper?.find('[role="alert"]')).toHaveLength(0);
-  expect(paragraphText()).toContain('No known fix round');
+  expect(paragraphText()).toContain('No fix rounds were requested');
+});
+
+test('shows a timeout round as history without offering a fabricated trace action', async () => {
+  jest.mocked(loadGenerationReviewRounds).mockResolvedValue({
+    rounds: [
+      {
+        id: 124,
+        testCaseId: 42,
+        displayId: 'TC1',
+        roundId: 124,
+        roundNumber: 10,
+        status: 'FAILED',
+        previousIterationId: 34,
+        failureReason: 'Agent timed out',
+      },
+    ],
+    incomplete: false,
+  });
+  await mountChooser();
+  await loadChooser();
+  expect(wrapper?.find('li')).toHaveLength(1);
+  expect(wrapper?.find('button')).toHaveLength(1);
+  expect(paragraphText()).toContain('No result iteration was reported');
+  expect(dispatch).not.toHaveBeenCalled();
 });

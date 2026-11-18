@@ -13,13 +13,11 @@ import { mount } from 'enzyme';
 
 import { NativeTestCaseSummary } from './nativeTestCaseSummary';
 
-jest.mock(
-  'react-intl',
-  () =>
-    jest.requireActual<typeof import('pages/inside/aiFactory/aiFactoryTestUtils')>(
-      'pages/inside/aiFactory/aiFactoryTestUtils',
-    ).reactIntlTestMock,
-);
+jest.mock('react-intl', () => {
+  const actual = jest.requireActual<typeof import('react-intl')>('react-intl');
+  const intl = actual.createIntl({ locale: 'en' });
+  return { ...actual, useIntl: () => intl };
+});
 jest.mock('common/utils', () => ({
   ...jest.requireActual<object>('common/utils/aiFactoryFormatUtils'),
   createClassnames:
@@ -113,6 +111,26 @@ describe('NativeTestCaseSummary', () => {
     );
 
     expect(container.textContent).toBe('AIDraft');
+    wrapper.unmount();
+  });
+});
+
+describe('native unsent review comment chip', () => {
+  test('uses the native DTO count and lets active review override it with zero', () => {
+    const summary = { isAi: true, isObsolete: false, unsentReviewComments: 2 };
+    const { container, wrapper } = renderSummary(<NativeTestCaseSummary summary={summary} />);
+    expect(container.textContent).toContain('2 comments not sent');
+    wrapper.setProps({ summary, unsentCount: 0 });
+    expect(container.textContent).not.toContain('comments not sent');
+    wrapper.unmount();
+  });
+  test('does not show AI review metadata on a Manual case', () => {
+    const { container, wrapper } = renderSummary(
+      <NativeTestCaseSummary
+        summary={{ isAi: false, isObsolete: false, unsentReviewComments: 2 }}
+      />,
+    );
+    expect(container.textContent).not.toContain('comments not sent');
     wrapper.unmount();
   });
 });

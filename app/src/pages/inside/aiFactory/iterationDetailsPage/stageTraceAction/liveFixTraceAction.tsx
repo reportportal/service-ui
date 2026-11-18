@@ -21,7 +21,7 @@ import { Button } from '@reportportal/ui-kit';
 
 import { useAiFactoryEnabled } from 'controllers/aiFactory';
 import { urlOrganizationAndProjectSelector } from 'controllers/pages';
-import { getLiveFixTraceTarget } from 'pages/inside/aiFactory/common/stageTrace/liveFixTraceTarget';
+import { getLiveFixRoundTraceTarget } from 'pages/inside/aiFactory/common/stageTrace/liveFixTraceTarget';
 import { createStageTraceAction } from 'pages/inside/aiFactory/common/stageTrace/navigation';
 import { useScopedTraceRequest } from 'pages/inside/aiFactory/common/stageTrace/useScopedTraceRequest';
 import { ProjectDetails } from 'pages/organization/constants';
@@ -31,6 +31,7 @@ import { messages } from './messages';
 export interface LiveFixTraceActionProps {
   projectKey: string;
   resourceKey: object;
+  previousIterationId?: number;
   resultIterationId: number;
   roundNumber: number;
 }
@@ -38,6 +39,7 @@ export interface LiveFixTraceActionProps {
 export const LiveFixTraceAction = ({
   projectKey,
   resourceKey,
+  previousIterationId,
   resultIterationId,
   roundNumber,
 }: LiveFixTraceActionProps) => {
@@ -51,21 +53,35 @@ export const LiveFixTraceAction = ({
     () => ({
       projectKey,
       resourceKey,
+      previousIterationId,
       resultIterationId,
       roundNumber,
       organizationSlug,
       projectSlug,
     }),
-    [projectKey, resourceKey, resultIterationId, roundNumber, organizationSlug, projectSlug],
+    [
+      projectKey,
+      resourceKey,
+      previousIterationId,
+      resultIterationId,
+      roundNumber,
+      organizationSlug,
+      projectSlug,
+    ],
   );
   const { loading, error, run } = useScopedTraceRequest<
-    NonNullable<Awaited<ReturnType<typeof getLiveFixTraceTarget>>>
+    NonNullable<Awaited<ReturnType<typeof getLiveFixRoundTraceTarget>>>
   >(resource, enabled);
   const open = () => {
     if (!projectKey) return;
     run(
       async (signal) => {
-        const iteration = await getLiveFixTraceTarget(projectKey, resultIterationId, signal);
+        const iteration = await getLiveFixRoundTraceTarget(
+          projectKey,
+          previousIterationId,
+          resultIterationId,
+          signal,
+        );
         if (!iteration) throw new Error('Missing fix trace target');
         return iteration;
       },

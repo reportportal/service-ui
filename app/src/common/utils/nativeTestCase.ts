@@ -15,7 +15,7 @@
  */
 
 import type { TestCaseAiExtension } from 'types/aiFactory';
-import type { TestCase, TestCaseStatus } from 'types/testCase';
+import type { TestCase, TestCaseCriterion, TestCaseMetrics, TestCaseStatus } from 'types/testCase';
 
 const LEGACY_AI_FIELDS: (keyof TestCaseAiExtension)[] = [
   'ai',
@@ -34,6 +34,8 @@ export interface NativeTestCaseSummary {
   isObsolete: boolean;
   model?: string;
   costUsd?: number;
+  metrics?: TestCaseMetrics;
+  unsentReviewComments?: number;
 }
 
 export const hasNativeTestCaseData = (testCase?: Partial<TestCase> | null): boolean =>
@@ -47,12 +49,53 @@ export const hasNativeTestCaseData = (testCase?: Partial<TestCase> | null): bool
 const isNonNegativeNumber = (value: unknown): value is number =>
   typeof value === 'number' && Number.isFinite(value) && value >= 0;
 
+const getMetricText = (value: unknown): string | undefined =>
+  typeof value === 'string' && value.trim() ? value : undefined;
+
+const getMetricNumber = (value: unknown): number | undefined =>
+  isNonNegativeNumber(value) ? value : undefined;
+
+const getPositiveSafeInteger = (value: unknown): number | undefined =>
+  Number.isSafeInteger(value) && Number(value) > 0 ? Number(value) : undefined;
+
+const normalizeCriterion = (criterion: TestCaseCriterion): TestCaseCriterion | undefined => {
+  const name = getMetricText(criterion?.name);
+  if (!name) return undefined;
+  return {
+    name,
+    criterionId: getPositiveSafeInteger(criterion.criterionId),
+    score: getMetricNumber(criterion.score),
+    maxPoints: getMetricNumber(criterion.maxPoints),
+  };
+};
+
+export const getNativeTestCaseMetrics = (
+  metrics?: TestCaseMetrics,
+): TestCaseMetrics | undefined => {
+  if (!metrics) return undefined;
+  return {
+    overallScore: getMetricNumber(metrics.overallScore),
+    obsolete: metrics.obsolete === true,
+    evaluatedAt: getMetricNumber(metrics.evaluatedAt),
+    criteria: Array.isArray(metrics.criteria)
+      ? metrics.criteria.map(normalizeCriterion).filter(Boolean)
+      : [],
+    tokensIn: getMetricNumber(metrics.tokensIn),
+    tokensOut: getMetricNumber(metrics.tokensOut),
+    model: getMetricText(metrics.model),
+    skill: getMetricText(metrics.skill),
+    costUsd: getMetricNumber(metrics.costUsd),
+    pipelineIterationId: getPositiveSafeInteger(metrics.pipelineIterationId),
+    pipelineIterationNumber: getPositiveSafeInteger(metrics.pipelineIterationNumber),
+  };
+};
+
 export const getNativeTestCaseSummary = (
   testCase?: Partial<TestCase> | null,
 ): NativeTestCaseSummary | undefined => {
   if (!hasNativeTestCaseData(testCase)) return undefined;
   const isAi = testCase?.origin === 'AI';
-  const metrics = isAi ? testCase?.metrics : undefined;
+  const metrics = isAi ? getNativeTestCaseMetrics(testCase?.metrics) : undefined;
   return {
     isAi,
     status:
@@ -60,7 +103,9 @@ export const getNativeTestCaseSummary = (
     score: isNonNegativeNumber(metrics?.overallScore) ? metrics.overallScore : undefined,
     isObsolete: metrics?.obsolete === true,
     model: typeof metrics?.model === 'string' && metrics.model.trim() ? metrics.model : undefined,
-    costUsd: isNonNegativeNumber(metrics?.costUsd) ? metrics.costUsd : undefined,
+    costUsd: metrics?.costUsd,
+    metrics,
+    unsentReviewComments: isAi ? getPositiveSafeInteger(testCase?.unsentReviewComments) : undefined,
   };
 };
 

@@ -63,8 +63,8 @@ export const useReviewQueueCount = (
     void fetch<ReviewQueueResponse>(
       URLS.testCases(projectKey, {
         limit: 1,
-        'filter.eq.lifecycle': Lifecycle.DRAFT,
-        'filter.eq.ai': true,
+        'filter.eq.status': Lifecycle.DRAFT,
+        'filter.eq.origin': 'AI',
       }),
       {
         abort: (cancel) => {

@@ -14,25 +14,24 @@
  * limitations under the License.
  */
 
-import { URLS } from 'common/urls';
-import { fetch } from 'common/utils';
 import type { LiveIterationIdentity } from 'pages/inside/aiFactory/common/iterationReferences/liveIterationIdentity';
-import { getLiveFixTraceTarget } from 'pages/inside/aiFactory/common/stageTrace/liveFixTraceTarget';
 import {
-  getLiveLibraryCases,
-  type LiveLibraryCase,
-} from 'pages/inside/aiFactory/iterationDetailsPage/liveReviewCases/liveLibraryCases';
-import { loadLiveFixRound } from 'pages/inside/aiFactory/review/liveFixRounds';
-import { normalizeLiveReview } from 'pages/inside/aiFactory/review/liveReviewComments';
+  getLiveFixTraceTarget,
+  type LiveFixTraceTarget,
+} from 'pages/inside/aiFactory/common/stageTrace/liveFixTraceTarget';
+import { getLiveLibraryCases } from 'pages/inside/aiFactory/iterationDetailsPage/liveReviewCases/liveLibraryCases';
+import {
+  loadLiveFixRoundHistory,
+  type NativeFixRound,
+} from 'pages/inside/aiFactory/review/liveFixRounds';
 
-export interface GenerationReviewTraceRound {
-  testCaseId: number;
+export interface GenerationReviewTraceRound extends NativeFixRound {
   displayId: string;
   roundId: number;
-  roundNumber: number;
-  iterationId: number;
-  pipelineId: number;
-  stageKey: string;
+  iterationId?: number;
+  pipelineId?: number;
+  stageKey?: string;
+  traceUnavailable?: boolean;
 }
 
 export interface GenerationReviewSource {
@@ -40,49 +39,54 @@ export interface GenerationReviewSource {
   sourceIterationId: number;
 }
 
-interface RoundResolution {
-  round?: GenerationReviewTraceRound;
-  incomplete: boolean;
-}
+const mapLimited = async <T, R>(items: T[], read: (item: T) => Promise<R>): Promise<R[]> => {
+  const results = new Array<R>(items.length);
+  let next = 0;
+  const work = async (): Promise<void> => {
+    const index = next;
+    next += 1;
+    if (index >= items.length) return;
+    results[index] = await read(items[index]);
+    return work();
+  };
+  await Promise.all(Array.from({ length: Math.min(5, items.length) }, work));
+  return results;
+};
 
 const isDirectResult = (iteration: LiveIterationIdentity, source: GenerationReviewSource) =>
   iteration.pipelineId === source.sourcePipelineId &&
   iteration.id !== source.sourceIterationId &&
   (iteration.rerunOf === undefined || iteration.rerunOf.id === source.sourceIterationId);
 
-const resolveCaseRound = async (
-  projectKey: string,
-  displayId: string,
-  testCase: LiveLibraryCase | null,
+const createTargetResolver = (projectKey: string, signal: AbortSignal) => {
+  const targets = new Map<number, Promise<LiveFixTraceTarget | undefined>>();
+  return (id: number) => {
+    const existing = targets.get(id);
+    if (existing !== undefined) return existing;
+    const request: Promise<LiveFixTraceTarget | undefined> = getLiveFixTraceTarget(
+      projectKey,
+      id,
+      signal,
+    ).catch((): undefined => undefined);
+    targets.set(id, request);
+    return request;
+  };
+};
+
+const resolveRound = async (
+  round: GenerationReviewTraceRound,
   source: GenerationReviewSource,
-  signal: AbortSignal,
-): Promise<RoundResolution> => {
-  if (!testCase || signal.aborted) return { incomplete: true };
-  try {
-    const response = await fetch(URLS.liveTestCaseReview(projectKey, testCase.id), { signal });
-    const review = normalizeLiveReview(response);
-    if (!review.fixRoundId) return { incomplete: false };
-    const round = await loadLiveFixRound(projectKey, testCase.id, review.fixRoundId, signal);
-    if (!round.resultIterationId || round.previousIterationId !== source.sourceIterationId)
-      return { incomplete: false };
-    const iteration = await getLiveFixTraceTarget(projectKey, round.resultIterationId, signal);
-    if (!iteration) return { incomplete: true };
-    if (!isDirectResult(iteration, source)) return { incomplete: false };
-    return {
-      incomplete: false,
-      round: {
-        testCaseId: testCase.id,
-        displayId,
-        roundId: round.id,
-        roundNumber: round.roundNumber,
-        iterationId: iteration.id,
-        pipelineId: iteration.pipelineId,
-        stageKey: iteration.stageKey,
-      },
-    };
-  } catch {
-    return { incomplete: true };
-  }
+  resolveTarget: ReturnType<typeof createTargetResolver>,
+): Promise<GenerationReviewTraceRound> => {
+  if (!round.resultIterationId) return round;
+  const iteration = await resolveTarget(round.resultIterationId);
+  if (!iteration || !isDirectResult(iteration, source)) return { ...round, traceUnavailable: true };
+  return {
+    ...round,
+    iterationId: iteration.id,
+    pipelineId: iteration.pipelineId,
+    stageKey: iteration.stageKey,
+  };
 };
 
 export const loadGenerationReviewRounds = async (
@@ -91,14 +95,31 @@ export const loadGenerationReviewRounds = async (
   source: GenerationReviewSource,
   signal: AbortSignal,
 ): Promise<{ rounds: GenerationReviewTraceRound[]; incomplete: boolean }> => {
-  const cases = await getLiveLibraryCases(projectKey, displayIds, signal);
-  const results = await Promise.all(
-    cases.map(({ displayId, testCase }) =>
-      resolveCaseRound(projectKey, displayId, testCase, source, signal),
-    ),
+  const cases = await mapLimited([...new Set(displayIds)], async (displayId) => {
+    const [result] = await getLiveLibraryCases(projectKey, [displayId], signal);
+    return result;
+  });
+  const histories = await mapLimited(cases, async ({ displayId, testCase }) => {
+    if (!testCase || signal.aborted) return { rounds: [], incomplete: true };
+    try {
+      const history = await loadLiveFixRoundHistory(projectKey, testCase.id, signal);
+      const rounds = history
+        .filter((round) => round.previousIterationId === source.sourceIterationId)
+        .map((round) => ({ ...round, roundId: round.id, displayId }));
+      return { rounds, incomplete: false };
+    } catch {
+      return { rounds: [], incomplete: true };
+    }
+  });
+  const resolveTarget = createTargetResolver(projectKey, signal);
+  const rounds = await mapLimited(
+    histories.flatMap((history) => history.rounds),
+    (round) => resolveRound(round, source, resolveTarget),
   );
   return {
-    rounds: results.flatMap(({ round }) => (round ? [round] : [])),
-    incomplete: results.some(({ incomplete }) => incomplete),
+    rounds,
+    incomplete:
+      histories.some((history) => history.incomplete) ||
+      rounds.some((round) => round.traceUnavailable),
   };
 };

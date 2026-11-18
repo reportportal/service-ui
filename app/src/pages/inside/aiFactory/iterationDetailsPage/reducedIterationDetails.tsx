@@ -94,6 +94,7 @@ export interface ReducedIterationDetailsProps {
   iteration: ReducedPipelineIterationDetail | null;
   hasError: boolean;
   isUnavailable: boolean;
+  isLoading?: boolean;
   isInvalidRoute?: boolean;
   failureKind?: 'forbidden' | 'notFound' | null;
   breadcrumbDescriptors: BreadcrumbDescriptors;
@@ -696,6 +697,7 @@ export const ReducedIterationDetails = ({
   iteration,
   hasError,
   isUnavailable,
+  isLoading = false,
   isInvalidRoute = false,
   failureKind = null,
   breadcrumbDescriptors,
@@ -793,6 +795,7 @@ export const ReducedIterationDetails = ({
                 variant="text"
                 data-automation-id="refreshReducedIterationButton"
                 icon={<RefreshIcon />}
+                disabled={isLoading}
                 onClick={onRetry}
               >
                 {formatMessage(messages.refresh)}

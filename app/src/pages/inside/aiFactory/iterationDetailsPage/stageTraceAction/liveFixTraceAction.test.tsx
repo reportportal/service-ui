@@ -14,12 +14,12 @@ import { useSelector } from 'react-redux';
 
 import { useAiFactoryEnabled } from 'controllers/aiFactory';
 
-import { getLiveFixTraceTarget } from 'pages/inside/aiFactory/common/stageTrace/liveFixTraceTarget';
+import { getLiveFixRoundTraceTarget } from 'pages/inside/aiFactory/common/stageTrace/liveFixTraceTarget';
 
 import { LiveFixTraceAction, type LiveFixTraceActionProps } from './liveFixTraceAction';
 
 jest.mock('pages/inside/aiFactory/common/stageTrace/liveFixTraceTarget', () => ({
-  getLiveFixTraceTarget: jest.fn(),
+  getLiveFixRoundTraceTarget: jest.fn(),
 }));
 
 const dispatch = jest.fn();
@@ -27,6 +27,7 @@ const identity = { id: 72, pipelineId: 800, number: 5, stageKey: 'test-case-fix'
 const props = (): LiveFixTraceActionProps => ({
   projectKey: 'demo',
   resourceKey: {},
+  previousIterationId: 31,
   resultIterationId: 72,
   roundNumber: 9,
 });
@@ -49,7 +50,7 @@ const click = async () => {
 
 beforeEach(() => {
   resetStageTraceTestContext(dispatch);
-  jest.mocked(getLiveFixTraceTarget).mockResolvedValue(identity);
+  jest.mocked(getLiveFixRoundTraceTarget).mockResolvedValue(identity);
 });
 afterEach(() => {
   wrapper?.unmount();
@@ -58,9 +59,9 @@ afterEach(() => {
 
 test('resolves only on click and routes to the actual result pipeline and fix stage', async () => {
   await mountAction();
-  expect(getLiveFixTraceTarget).not.toHaveBeenCalled();
+  expect(getLiveFixRoundTraceTarget).not.toHaveBeenCalled();
   await click();
-  expect(getLiveFixTraceTarget).toHaveBeenCalledWith('demo', 72, expect.any(AbortSignal));
+  expect(getLiveFixRoundTraceTarget).toHaveBeenCalledWith('demo', 31, 72, expect.any(AbortSignal));
   expect(dispatch).toHaveBeenCalledWith({
     type: 'PROJECT_PIPELINE_STAGE_TRACE_PAGE',
     payload: {
@@ -75,36 +76,36 @@ test('resolves only on click and routes to the actual result pipeline and fix st
 });
 
 test('locks duplicate clicks until the lookup completes', async () => {
-  jest.mocked(getLiveFixTraceTarget).mockImplementation(() => new Promise(() => {}));
+  jest.mocked(getLiveFixRoundTraceTarget).mockImplementation(() => new Promise(() => {}));
   await mountAction();
   const open = wrapper?.find('button').prop('onClick') as () => void;
   act(() => {
     open();
     open();
   });
-  expect(getLiveFixTraceTarget).toHaveBeenCalledTimes(1);
+  expect(getLiveFixRoundTraceTarget).toHaveBeenCalledTimes(1);
   wrapper?.update();
   expect(wrapper?.find('button').prop('disabled')).toBe(true);
 });
 
 test.each(['missing', 'failed'])('shows a retryable error for a %s lookup', async (failure) => {
-  if (failure === 'missing') jest.mocked(getLiveFixTraceTarget).mockResolvedValue(undefined);
-  else jest.mocked(getLiveFixTraceTarget).mockRejectedValue(new Error('Unavailable'));
+  if (failure === 'missing') jest.mocked(getLiveFixRoundTraceTarget).mockResolvedValue(undefined);
+  else jest.mocked(getLiveFixRoundTraceTarget).mockRejectedValue(new Error('Unavailable'));
   await mountAction();
   await click();
   expect(dispatch).not.toHaveBeenCalled();
   expect(wrapper?.find('[role="alert"]')).toHaveLength(1);
-  jest.mocked(getLiveFixTraceTarget).mockResolvedValue(identity);
+  jest.mocked(getLiveFixRoundTraceTarget).mockResolvedValue(identity);
   await click();
   expect(dispatch).toHaveBeenCalledTimes(1);
   expect(wrapper?.find('[role="alert"]')).toHaveLength(0);
 });
 
-test.each(['project', 'resource', 'round', 'route', 'disabled', 'unmount'])(
+test.each(['project', 'resource', 'round', 'source', 'route', 'disabled', 'unmount'])(
   'aborts and ignores a late lookup after %s changes',
   async (change) => {
     let resolve!: (value: typeof identity) => void;
-    jest.mocked(getLiveFixTraceTarget).mockImplementationOnce(
+    jest.mocked(getLiveFixRoundTraceTarget).mockImplementationOnce(
       () =>
         new Promise((done) => {
           resolve = done;
@@ -113,10 +114,11 @@ test.each(['project', 'resource', 'round', 'route', 'disabled', 'unmount'])(
     await mountAction();
     const oldClick = wrapper?.find('button').prop('onClick') as () => void;
     await click();
-    const signal = jest.mocked(getLiveFixTraceTarget).mock.calls[0][2];
+    const signal = jest.mocked(getLiveFixRoundTraceTarget).mock.calls[0][3];
     act(() => {
       if (change === 'project') wrapper?.setProps({ projectKey: 'another' });
       if (change === 'resource') wrapper?.setProps({ resourceKey: {} });
+      if (change === 'source') wrapper?.setProps({ previousIterationId: 99 });
       if (change === 'round') wrapper?.setProps({ resultIterationId: 73, roundNumber: 10 });
       if (change === 'route') {
         jest
@@ -141,7 +143,7 @@ test.each(['project', 'resource', 'round', 'route', 'disabled', 'unmount'])(
     });
     wrapper?.update();
     expect(dispatch).not.toHaveBeenCalled();
-    expect(getLiveFixTraceTarget).toHaveBeenCalledTimes(1);
+    expect(getLiveFixRoundTraceTarget).toHaveBeenCalledTimes(1);
     expect(wrapper?.find('output').length ?? 0).toBe(0);
   },
 );
@@ -155,5 +157,5 @@ test('does not load when disabled or when the project is absent', async () => {
     wrapper?.setProps({ projectKey: '' });
   });
   await click();
-  expect(getLiveFixTraceTarget).not.toHaveBeenCalled();
+  expect(getLiveFixRoundTraceTarget).not.toHaveBeenCalled();
 });

@@ -79,6 +79,13 @@ export const messages = defineMessages({
     defaultMessage: '{count, plural, one {# event} other {# events}}',
   },
   timeline: { id: 'StageTracePage.timeline', defaultMessage: 'Trace events' },
+  unitFilter: { id: 'StageTracePage.unitFilter', defaultMessage: 'Unit' },
+  allUnits: { id: 'StageTracePage.allUnits', defaultMessage: 'All events' },
+  stageEvents: { id: 'StageTracePage.stageEvents', defaultMessage: 'Stage' },
+  noUnitEvents: {
+    id: 'StageTracePage.noUnitEvents',
+    defaultMessage: 'No events match this unit filter',
+  },
   eventText: { id: 'StageTracePage.eventText', defaultMessage: 'Full event text' },
   eventData: { id: 'StageTracePage.eventData', defaultMessage: 'Event data' },
   eventTarget: { id: 'StageTracePage.eventTarget', defaultMessage: 'Target' },

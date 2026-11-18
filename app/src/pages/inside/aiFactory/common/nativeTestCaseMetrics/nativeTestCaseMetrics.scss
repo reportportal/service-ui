@@ -1,0 +1,11 @@
+.native-metrics {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 8px 0;
+  color: var(--rp-ui-base-e-400);
+  font-family: var(--rp-ui-base-font-family);
+  font-size: 12px;
+  line-height: 18px;
+  overflow-wrap: anywhere;
+}

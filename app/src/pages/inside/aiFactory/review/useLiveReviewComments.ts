@@ -73,6 +73,7 @@ interface LiveReviewCommentsOptions {
   versionId?: number;
   allowPush?: boolean;
   onFixCompleted?: () => void;
+  onReviewChanged?: () => void;
 }
 
 interface CompletionIdentity {
@@ -129,8 +130,13 @@ const updateScopePermissions = (
   if (!isDraft) scope.isApproved = false;
 };
 
-const updateCompletionCallback = (scope: ReviewScope, callback?: () => void): void => {
+const updateReviewCallbacks = (
+  scope: ReviewScope,
+  callback?: () => void,
+  changedCallback?: () => void,
+): void => {
   scope.completedCallback = callback;
+  scope.changedCallback = changedCallback;
 };
 
 const activateReviewScope = (scope: ReviewScope): (() => void) => {
@@ -147,7 +153,9 @@ export const useLiveReviewComments = (
   projectKey: string,
   testCaseId: number,
   isEnabled: boolean,
-  { canApprove = false, versionId, allowPush = true, onFixCompleted }: LiveReviewCommentsOptions = {},
+  {
+    canApprove = false, versionId, allowPush = true, onFixCompleted, onReviewChanged,
+  }: LiveReviewCommentsOptions = {},
 ): LiveReviewCommentsLoadState => {
   const { canReviewAiTestCases } = useUserPermissions();
   const currentUserId = useSelector(idSelector) as number | undefined;
@@ -182,8 +190,8 @@ export const useLiveReviewComments = (
     return next;
   }, [projectKey, testCaseId, versionId, isResourceEnabled, feedbackKey]);
   useLayoutEffect(() => {
-    updateCompletionCallback(scope, onFixCompleted);
-  }, [scope, onFixCompleted]);
+    updateReviewCallbacks(scope, onFixCompleted, onReviewChanged);
+  }, [scope, onFixCompleted, onReviewChanged]);
   updateScopePermissions(scope, canReviewAiTestCases,
     canApprove && canReviewAiTestCases && isResourceEnabled, currentUserId, allowPush, canApprove);
   const epoch = scope.commandGeneration;

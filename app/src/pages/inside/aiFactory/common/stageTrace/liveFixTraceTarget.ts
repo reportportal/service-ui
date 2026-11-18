@@ -19,6 +19,8 @@ import { fetch } from 'common/utils';
 import { isPositiveIterationId } from 'controllers/aiFactory/pipelines/iterationProvenance';
 import {
   adaptLiveIterationIdentity,
+  areIterationReferencesCoherent,
+  getLiveIterationIdentity,
   type LiveIterationIdentity,
 } from 'pages/inside/aiFactory/common/iterationReferences/liveIterationIdentity';
 
@@ -51,4 +53,26 @@ export const getLiveFixTraceTarget = async (
   const identity = adaptLiveIterationIdentity(response, resultIterationId);
   const stageKey = resolveFixStageKey(response);
   return identity && stageKey ? { ...identity, stageKey } : undefined;
+};
+
+export const getLiveFixRoundTraceTarget = async (
+  projectKey: string,
+  previousIterationId: number | undefined,
+  resultIterationId: number,
+  signal: AbortSignal,
+): Promise<LiveFixTraceTarget | undefined> => {
+  if (
+    !projectKey ||
+    !isPositiveIterationId(previousIterationId) ||
+    !isPositiveIterationId(resultIterationId) ||
+    previousIterationId === resultIterationId
+  )
+    return undefined;
+  const [previous, result] = await Promise.all([
+    getLiveIterationIdentity(projectKey, previousIterationId, signal),
+    getLiveFixTraceTarget(projectKey, resultIterationId, signal),
+  ]);
+  return previous && result && areIterationReferencesCoherent(previous, result)
+    ? result
+    : undefined;
 };

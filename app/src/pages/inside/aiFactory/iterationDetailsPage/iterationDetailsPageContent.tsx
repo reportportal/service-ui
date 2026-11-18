@@ -670,7 +670,9 @@ export const IterationDetailsPageContent = () => {
   ];
 
   const retryDetail = () => {
-    dispatch(getPipelineIterationDetailsAction(pipelineId, iterationId));
+    if (!isLoading || !detailMatchesRoute) {
+      dispatch(getPipelineIterationDetailsAction(pipelineId, iterationId));
+    }
   };
 
   const backToPipelines = () => {
@@ -710,6 +712,7 @@ export const IterationDetailsPageContent = () => {
         iteration={isReducedDetail(currentIteration) ? currentIteration : null}
         hasError={detailMatchesRoute && hasDetailError}
         isUnavailable={detailMatchesRoute && isDetailUnavailable}
+        isLoading={detailMatchesRoute && isLoading}
         failureKind={detailMatchesRoute ? detailFailureKind : null}
         breadcrumbDescriptors={breadcrumbDescriptors}
         requestedStage={typeof query.stage === 'string' ? query.stage : undefined}

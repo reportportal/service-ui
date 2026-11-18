@@ -51,6 +51,8 @@ import {
   getTestCasePresentation,
   hasNativeTestCaseData,
 } from 'common/utils/nativeTestCase';
+import { useRefetchCurrentTestCases } from 'pages/inside/testCaseLibraryPage/hooks/useRefetchCurrentTestCases';
+import { NativeTestCaseMetrics } from 'pages/inside/aiFactory/common/nativeTestCaseMetrics/nativeTestCaseMetrics';
 import { NativeTestCaseSummary } from 'pages/inside/aiFactory/common/nativeTestCaseSummary/nativeTestCaseSummary';
 import { PipelineLinks } from 'pages/inside/aiFactory/pipelineLinks';
 import { LaunchBlockedBanner } from 'pages/inside/aiFactory/readyOnlyGate';
@@ -343,7 +345,8 @@ const getTestCaseReadState = (
   return {
     testCaseDetails,
     nativeSummary,
-    isNativeReviewEnabled: nativeSummary?.isAi === true &&
+    isNativeReviewEnabled:
+      nativeSummary?.isAi === true &&
       (nativeSummary.status === 'DRAFT' || nativeSummary.status === 'READY'),
     isLegacyAiEnabled: isAiFactoryEnabled && !hasNativeTestCaseData(testCaseDetails),
   };
@@ -428,6 +431,7 @@ const TestCaseReviewStrip = ({
   if (isNativeReviewEnabled)
     return (
       <LiveReviewStrip
+        testCaseId={testCase.id}
         lifecycle={nativeLifecycle}
         reviewState={nativeReviewState}
         isReadOnly={isReadOnly}
@@ -474,13 +478,16 @@ export const TestCaseDetailsPage = () => {
   const automationDetails = aiDetailsState.data?.automation;
   const isAiReviewEnabled = isLegacyAiEnabled && Boolean(testCaseDetails?.ai);
   const reviewState = useReviewComments(projectKey, testCaseId, isAiReviewEnabled);
+  const refetchCurrentTestCases = useRefetchCurrentTestCases(0);
   const refreshAfterNativeFix = useCallback(() => {
     dispatch({ type: GET_TEST_CASE_DETAILS, payload: { testCaseId } });
-  }, [dispatch, testCaseId]);
+    refetchCurrentTestCases();
+  }, [dispatch, testCaseId, refetchCurrentTestCases]);
   const nativeReviewState = useLiveReviewComments(projectKey, testCaseId, isNativeReviewEnabled, {
     canApprove: nativeSummary?.status === 'DRAFT',
     versionId: testCaseDetails?.defaultVersionId,
     onFixCompleted: refreshAfterNativeFix,
+    onReviewChanged: refreshAfterNativeFix,
   });
   const refreshAfterFixRoundStart = useCallback(() => {
     reviewState.reload();
@@ -659,7 +666,19 @@ export const TestCaseDetailsPage = () => {
                 {childComponent}
               </CollapsibleSectionWithHeaderControl>
             ))}
-            {nativeSummary?.isAi && <NativeTestCaseSummary summary={nativeSummary} />}
+            {nativeSummary?.isAi && (
+              <>
+                <NativeTestCaseSummary
+                  summary={nativeSummary}
+                  unsentCount={
+                    nativeReviewState.isLoaded
+                      ? nativeReviewState.unsentCount
+                      : nativeSummary.unsentReviewComments
+                  }
+                />
+                <NativeTestCaseMetrics summary={nativeSummary} testCaseId={testCaseId} />
+              </>
+            )}
             {isAiFactoryEnabled && testCaseDetails.ai && (
               <>
                 <EvaluationPanel aiDetailsState={aiDetailsState} />

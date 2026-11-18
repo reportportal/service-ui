@@ -27,9 +27,10 @@ interface TraceEventProps {
   event: StageTraceEvent;
   expanded: boolean;
   onToggle: () => void;
+  groupLabel?: string;
 }
 const cx = createClassnames(styles);
-export const TraceEvent = ({ event, expanded, onToggle }: TraceEventProps) => {
+export const TraceEvent = ({ event, expanded, onToggle, groupLabel }: TraceEventProps) => {
   const { formatMessage } = useIntl();
   return (
     <article className={cx('event')}>
@@ -43,6 +44,7 @@ export const TraceEvent = ({ event, expanded, onToggle }: TraceEventProps) => {
       >
         <span aria-hidden="true">{expanded ? '▾' : '▸'}</span>
         <strong>{event.type}</strong>
+        {groupLabel !== undefined && <span className={cx('event__unit')}>{groupLabel}</span>}
         <span>{event.title}</span>
         {event.offsetMs !== undefined && (
           <span className={cx('event__time')}>+{event.offsetMs} ms</span>

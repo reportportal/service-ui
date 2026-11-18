@@ -26,6 +26,7 @@ interface NativeTestCaseSummaryProps {
   summary: NativeSummary;
   showIdentity?: boolean;
   showMetrics?: boolean;
+  unsentCount?: number;
 }
 
 const cx = createClassnames(styles);
@@ -34,12 +35,18 @@ export const NativeTestCaseSummary = ({
   summary,
   showIdentity = false,
   showMetrics = true,
+  unsentCount = summary.unsentReviewComments,
 }: NativeTestCaseSummaryProps) => {
   const { formatMessage } = useIntl();
   return (
     <div className={cx('native-summary')} data-automation-id="native-test-case-summary">
       {showIdentity && summary.isAi && <AiChip tooltip={formatMessage(messages.origin)} />}
       {showIdentity && summary.status && <LifecycleBadge lifecycle={summary.status} />}
+      {summary.isAi && Number.isSafeInteger(unsentCount) && unsentCount > 0 && (
+        <span data-automation-id="native-unsent-review-comments">
+          {formatMessage(messages.unsentComments, { count: unsentCount })}
+        </span>
+      )}
       {showMetrics && summary.score !== undefined && (
         <ScoreChip score={summary.score} obsolete={summary.isObsolete} />
       )}
