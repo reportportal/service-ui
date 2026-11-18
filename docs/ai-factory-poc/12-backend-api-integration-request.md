@@ -1,6 +1,6 @@
 # AI Factory backend API integration request
 
-> **Superseded current handoff — 2026-10-25:** send [27-backend-integration-completion-contract-2026-10-25.md](27-backend-integration-completion-contract-2026-10-25.md) to Backend. This document is the retained 2026-10-02/05 request baseline. Its statements that LP1/LP2 are arrays, live gates are closed, or all Test Case/Review/fix APIs are absent are historical and no longer normative. Current LP1–LP4 live integration and native R1–R5 are described in 27/25; only the scoped outstanding requests remain open.
+> **Historical request from 2026-10-02/05.** For the current Backend handoff, use [31](31-backend-handoff-2026-11-18.md). LP1/LP2 now use page envelopes. Native case, Review and fix-round APIs are available. [27](27-backend-integration-completion-contract-2026-10-25.md) retains the R6 outcome matrix.
 
 > **Status:** Proposed — not yet agreed or approved
 >

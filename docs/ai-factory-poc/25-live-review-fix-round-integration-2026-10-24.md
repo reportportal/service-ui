@@ -1,6 +1,6 @@
 # Live Review and fix-round integration
 
-**Completion handoff updated 2026-10-25:** [27](27-backend-integration-completion-contract-2026-10-25.md) is the current Backend request list and scope/evidence reconciliation; the dated implementation and runtime evidence below is preserved.
+**Current Backend handoff:** [31](31-backend-handoff-2026-11-18.md). [27](27-backend-integration-completion-contract-2026-10-25.md) retains the October requests and R6 outcome matrix. The dated implementation and runtime evidence follows.
 
 Date: 2026-10-24. Base: `bootcamp-prototype` at `e5a53e8b9`.
 

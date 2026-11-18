@@ -3,9 +3,15 @@
 > **Single source of truth for progress.** Update at the start and end of every task / session.
 > Legend: ⬜ todo · 🟨 in progress · 🟦 in review · ✅ done · ⛔ blocked · ➖ skipped
 
-**Last updated:** 2026-11-17 · **Branch:** `feature/pipeline-stage-trace-ui` · **Phase:** Stage Trace frontend implementation and backend handoff
+**Last updated:** 2026-11-18 · **Branch:** `bootcamp-prototype` · **Phase:** epic frontend/backend integration audit
 
-## Stage Trace — 2026-11-17
+## Current backend handoff — 2026-11-18
+
+[31 — API expectations and remaining mock usage](31-backend-handoff-2026-11-18.md) compares FE `f84903940` with TMS OpenAPI `feature-pipelines-2932` and its source revision. LP1–LP4, native Library status/origin filters and Review Queue totals, native Review/Approve/Push, current metrics, fix-round history and Stage Trace have native paths in the branch. Pipeline name search, Pipeline settings GET/PATCH and stage Retry already have API operations and need FE wiring where described in the handoff.
+
+Open contracts and data include iteration-scoped Library/Review, whole-plan Draft blockers, Pipeline CI settings, UI Re-run, Automation, real producer stage/trace payloads and the R6 CI/agent journey. [30](30-backend-contract-followup-2026-11-18.md) records earlier authenticated reads on TMS `2929`. The audit of `2932` verified public specification and source, with no new authenticated run. The dated sections below record prior task status.
+
+## Historical Stage Trace checkpoint — 2026-11-17
 
 [29 — Stage Trace implementation and backend handoff](29-stage-trace-ui-backend-handoff-2026-11-17.md) records the implemented read-only trace page, attempts, virtual timeline, GRADERS, historical snapshots and native fix-result links. Local validation: 25 suites / 332 tests, full TypeScript, production build and independent code/security reviews PASS; scoped ESLint has zero errors and one TanStack compiler warning. Component fixtures were exercised in Chrome; this is not authenticated application E2E.
 
@@ -19,9 +25,9 @@ Temporary mock data and integration workarounds are tracked for removal in
 [23-temporary-solutions-register.md](23-temporary-solutions-register.md). Close the relevant register
 row as part of each real API integration task.
 
-## Current Backend completion contract (2026-10-25)
+## Backend completion checkpoint (2026-10-25)
 
-[27 — current Backend handoff](27-backend-integration-completion-contract-2026-10-25.md) reconciles published native APIs with remaining FE work, Product decisions and runtime blockers. R6 needs a real disposable scenario and verified integration/deployment; stage panels, settings and Library queues remain separate scopes. Historical 05/10/12 contracts no longer imply native Review/criteria/filters are absent. No runtime outcome is newly claimed verified.
+[27 — October Backend handoff](27-backend-integration-completion-contract-2026-10-25.md) captures the R6 outcome matrix, integration decisions and October evidence. See [31](31-backend-handoff-2026-11-18.md) for the current status of the API and frontend.
 
 ## Live Review and fix-round integration (2026-10-24)
 

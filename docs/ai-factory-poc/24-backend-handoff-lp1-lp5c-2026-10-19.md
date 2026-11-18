@@ -2,7 +2,7 @@
 
 **Historical evidence as of:** 2026-10-19 · **Request reconciliation:** 2026-10-25
 
-> **Current Backend handoff:** [27](27-backend-integration-completion-contract-2026-10-25.md) supersedes current-state/absence requests here. R1–R5 native case/Review/Approve/Push/provenance are now implemented; R6 runtime awaits a real scenario and verified integration/deployment. Keep the dated observations below as evidence, not claims about today's deployed behavior. Generic project GitHub integration is published; full Pipeline CI-settings remains separate.
+> **Current Backend handoff:** [31](31-backend-handoff-2026-11-18.md). The dated observations below record the October LP1–LP5c integration work. [27](27-backend-integration-completion-contract-2026-10-25.md) retains the R6 outcome matrix.
 
 **Audience:** Pipeline backend, Product, QA
 

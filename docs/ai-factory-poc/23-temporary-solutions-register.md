@@ -1,11 +1,13 @@
 # Temporary solutions and mock removal register
 
+> **2026-11-18 audit** — [31 § Where mocks and UI without live data remain](31-backend-handoff-2026-11-18.md#where-mocks-and-ui-without-live-data-remain) reflects the epic branch and API `2932`. Status/origin filters and Review Queue totals have native paths with mocks off. The dev overlay can still intercept these requests. Native metrics and fix-round history are wired. Stage response `stageKey`, single Pipeline GET and name filtering are published. Use the table below as the October cleanup record.
+
 **Updated:** 2026-10-25. This is the cleanup checklist for the AI Factory PoC. An implemented UI
 screen does not mean its data is live. The user approved switching LP1–LP3 to API by default after
 authenticated nonempty local-proxy evidence; trusted HTTPS, deployed SHA and error/multi-page checks
 remain open. Update the relevant row when replacing mock or provisional behavior.
 The current integration sequence and Jira owners are in [21](21-live-pipeline-integration-2026-10-18.md),
-and the progress board is [00](00-status.md). [27](27-backend-integration-completion-contract-2026-10-25.md) is the current Backend completion handoff: native Review/fix APIs, filters/totals and criterion score DTOs are already published; remaining native quick-filter/count and criterion-renderer integration is FE work, while iteration-scoped pagination and other decisions remain explicit requests.
+and the progress board is [00](00-status.md). [27](27-backend-integration-completion-contract-2026-10-25.md) records the October integration checkpoint and R6 outcome matrix.
 
 | ID | Temporary solution / location | Removal condition | FE task / status |
 |---|---|---|---|

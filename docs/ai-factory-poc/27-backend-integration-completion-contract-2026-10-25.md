@@ -1,9 +1,9 @@
-# Backend integration completion contract — current handoff
+# Backend integration completion contract — October checkpoint
 
 **Updated:** 2026-10-25 · **Audience:** Backend/API, agent/workflow, DevOps, Frontend, Product and QA.
 **Scope:** remaining work after native Review/fix-round R1–R5; requested deliverables, not backend implementation claims or accepted Product decisions.
 
-This is the **current document to send to Backend**. It supersedes current-state/absence claims in [05](05-backend-contract.md), [10](10-backend-integration-contract.md), [12](12-backend-api-integration-request.md) and [24](24-backend-handoff-lp1-lp5c-2026-10-19.md); their dated evidence and future proposals remain historical references. [19](19-ci-connection-api-contract-request.md) remains the separate full Pipeline CI-settings proposal.
+For the **current Backend handoff**, use [31 — epic branch audit](31-backend-handoff-2026-11-18.md). This October snapshot preserves the R6 outcome matrix and earlier requests. In particular, review the new audit for stage keys, Pipeline GET/name filter, native filters/criteria and fix-round history. [19](19-ci-connection-api-contract-request.md) contains the Pipeline CI-settings proposal.
 
 ## 1. Problem Statement table
 

@@ -1,7 +1,8 @@
 # AI Factory mock backend
 
-Runtime mock groups and their removal conditions are tracked in
-[`docs/ai-factory-poc/23-temporary-solutions-register.md`](../../../../../docs/ai-factory-poc/23-temporary-solutions-register.md).
+Active runtime mock groups are listed in the
+[November backend handoff](../../../../../docs/ai-factory-poc/31-backend-handoff-2026-11-18.md#where-mocks-and-ui-without-live-data-remain).
+The [October removal register](../../../../../docs/ai-factory-poc/23-temporary-solutions-register.md) tracks earlier cleanup.
 
 Implements the remaining mock endpoint groups in [`docs/ai-factory-poc/05-backend-contract.md`](../../../../../docs/ai-factory-poc/05-backend-contract.md)
 on top of [`axios-mock-adapter`](https://github.com/ctimmerm/axios-mock-adapter), so the UI can be
@@ -27,7 +28,7 @@ built against a real HTTP contract before the backend exists. See
 `app/src/index.jsx` dynamically imports this folder and calls `installAiFactoryMocks(axios)` only when:
 
 1. `isAiFactoryEnabled()` is true (the feature toggle), **and**
-2. the build is not `production`, **and**
+2. the build is `development`, **and**
 3. `isAiFactoryMocksEnabled()` is true (localStorage `ai_factory_mocks`, default on).
 
 With the toggle off, none of this code is even fetched (it's a separate webpack chunk) — see the
@@ -35,17 +36,9 @@ toggle-OFF checklist in `03-frontend-architecture.md` §3.
 
 ## Mode A — Overlay
 
-The mock adapter is installed with `onNoMatch: 'passthrough'`: every request to a real endpoint
-(folders, existing test cases, plans, launches) reaches the real backend untouched. `overlay.ts`
-then enriches `GET tms/test-case` and `GET tms/test-case/{id}` responses with the AI/lifecycle
-fields, matched by `displayId` against the mock db.
+The mock adapter uses `onNoMatch: 'passthrough'`. The overlay interceptor also rewrites selected Library filter requests, emulates pagination and overrides Review Queue totals with the local seed count. It enriches legacy case rows by `displayId` and adds provisional Test Plan Draft summary fields. Native case DTOs bypass per-case enrichment and mock scenario edit side effects. Disable `ai_factory_mocks` and reload to check backend filtering, counts and case data.
 
-**What this means today:** the merge function and interceptor are real, tested code
-(`overlay.test.ts`). What is *not* wired up yet is actually creating AI-marked cases in a real
-project — that writes to a shared dev backend, and the target project/folder is still open
-(Q-ORG-07 in `docs/ai-factory-poc/06-open-questions.md`). Until that's answered, the overlay only
-enriches responses for cases that happen to share a `displayId` with the seed (`TC101`…`TC108`).
-Detecting a real scenario edit (`SCENARIO_CHANGED`) is deferred for the same reason.
+The overlay's demo fields are available on compatible legacy cases with seed IDs such as `TC101`…`TC108`. Native AI cases use the native case, Review and fix-round API contracts.
 
 ## Demo controls
 

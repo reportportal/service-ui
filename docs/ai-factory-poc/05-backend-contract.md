@@ -1,8 +1,8 @@
 # 05 · AI Factory backend integration contract
 
-> **Stage Trace addendum — 2026-11-17:** [29-stage-trace-ui-backend-handoff-2026-11-17.md](29-stage-trace-ui-backend-handoff-2026-11-17.md) records the source-confirmed attempts/trace GET contract, historical stage snapshots, local FE implementation and authenticated `NOT_REPORTED` responses from `superadmin_personal`. Native complete fix-round history, producer GRADERS payload and real CI → trace → UI acceptance remain open; local fixture validation is not live E2E. This addendum does not change unrelated R6 acceptance.
+> **Current API and FE status, 2026-11-18** — [31](31-backend-handoff-2026-11-18.md) takes precedence over the dated snapshots below. Build `2932` publishes stage response `stageKey`, Pipeline GET by ID and name filter, native case metrics, fix-round history and Stage Trace. See [30](30-backend-contract-followup-2026-11-18.md) for earlier authenticated evidence. Terms and provisional DTOs below document the original PoC.
 
-## Current native contract reconciliation (2026-10-25)
+## Native contract reconciliation (2026-10-25 snapshot)
 
 The audit/source evidence and requested completion criteria are in [27](27-backend-integration-completion-contract-2026-10-25.md). This reconciliation takes precedence over historical inventories below.
 
@@ -19,7 +19,7 @@ The audit/source evidence and requested completion criteria are in [27](27-backe
 R1–R5 implementation/CI is not merge, deployment or real workflow proof. Only local TLS trust failure is reproduced in the latest infrastructure audit; the real R6 outcomes remain NOT VERIFIED.
 
 
-> **Current contract update — 2026-10-25:** [27-backend-integration-completion-contract-2026-10-25.md](27-backend-integration-completion-contract-2026-10-25.md) is the current Backend handoff and remaining-work acceptance list. Native Review/fix-round R1–R5 are frontend-integrated; R6 awaits a real scenario and verified frontend-runtime/backend/workflow identities; local-frontend/real-backend E2E is eligible, while deployed rollout acceptance remains separate. Published APIs, implemented FE and observed end-to-end success remain different evidence levels.
+> **October contract update** — [27](27-backend-integration-completion-contract-2026-10-25.md) records the October handoff and R6 acceptance outcomes. Native Review/fix-round R1–R5 are frontend-integrated. R6 requires a real scenario and verified frontend-runtime/backend/workflow identities.
 >
 > **Historical baseline below:** the 2026-10-02/05 `feature-pipelines-2767` DTO inventory and provisional C/L/R/F paths are retained for traceability. Their mock-default, absent-API, plain-array LP1/LP2 and closed-gate claims do **not** describe current native integration. Current LP1/LP2 use `{content, page}`; LP1–LP4 use live API without response fallbacks. Read [25](25-live-review-fix-round-integration-2026-10-24.md) for R1–R5 boundaries and [26](26-github-actions-journey-verification-2026-10-24.md) for R6 runtime evidence.
 >
