@@ -719,7 +719,7 @@ export const ReducedIterationDetails = ({
       return next;
     });
   };
-  if (hasError || isUnavailable || !iteration || isInvalidRoute || failureKind) {
+  if (isUnavailable || !iteration || isInvalidRoute || failureKind) {
     return renderReducedDetailError(
       { isInvalidRoute, failureKind, hasError, onBack, onRetry },
       formatMessage,
@@ -804,6 +804,11 @@ export const ReducedIterationDetails = ({
           }
         />
         <div className={cx('content')} data-automation-id="reducedIterationDetails">
+          {hasError && (
+            <SystemMessage mode="warning">
+              <output aria-live="polite">{formatMessage(messages.automaticRefreshFailed)}</output>
+            </SystemMessage>
+          )}
           <section className={cx('summary-card')} aria-label={formatMessage(messages.summaryLabel)}>
             <IterationProvenance iteration={iteration} projectKey={projectKey} />
             {metadata.length > 0 && (

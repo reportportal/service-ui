@@ -27,6 +27,7 @@ import {
   GetPipelineIterationDetailsAction,
   GetPipelineIterationsAction,
   GetPipelinesAction,
+  PipelineIterationPollScope,
   PipelinePageRequest,
 } from './types';
 
@@ -46,9 +47,10 @@ export const getPipelineIterationsAction = (
 export const getPipelineIterationDetailsAction = (
   pipelineId: number,
   iterationId: number,
+  polling?: PipelineIterationPollScope,
 ): GetPipelineIterationDetailsAction => ({
   type: GET_PIPELINE_ITERATION_DETAILS,
-  payload: { pipelineId, iterationId },
+  payload: { pipelineId, iterationId, ...(polling && { polling }) },
 });
 
 export const getPipelineComparisonAction = (
