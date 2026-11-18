@@ -95,7 +95,7 @@ import {
 } from './actionCreators';
 import { patternsSelector, projectKeySelector } from './selectors';
 import { withActiveOrganization } from 'controllers/organization/withActiveOrganizationSaga';
-import { setActiveProjectKeyAction } from 'controllers/user';
+import { setActiveProjectKeyAction, activeProjectKeySelector } from 'controllers/user';
 
 export function* withActiveProject(
   organizationSlug,
@@ -493,11 +493,26 @@ function* watchUpdatePAState() {
   yield takeEvery(UPDATE_PA_STATE, updatePAStateWithNotification);
 }
 
+let latestFetchProjectRequestId = 0;
+
 function* fetchProject({ payload: { projectKey, fetchInfoOnly } }) {
+  latestFetchProjectRequestId += 1;
+  const requestId = latestFetchProjectRequestId;
+  const isStale = function* isStaleResponse() {
+    const activeProjectKey = yield select(activeProjectKeySelector);
+    return (
+      requestId !== latestFetchProjectRequestId ||
+      (Boolean(activeProjectKey) && Boolean(projectKey) && activeProjectKey !== projectKey)
+    );
+  };
+
   try {
     let project = null;
     if (projectKey) {
       project = yield call(fetch, URLS.projectByName(projectKey));
+      if (yield* isStale()) {
+        return;
+      }
       yield put(setProjectIntegrationsAction(project.integrations));
     }
     yield put(fetchProjectSuccessAction(project));
@@ -512,11 +527,13 @@ function* fetchProject({ payload: { projectKey, fetchInfoOnly } }) {
       yield put(fetchLogTypesAction(project.projectKey));
     }
   } catch (error) {
+    if (yield* isStale()) {
+      return;
+    }
     yield put(fetchProjectErrorAction(error, projectKey));
     yield put(showDefaultErrorNotification(error));
   }
 }
-
 function* watchFetchProject() {
   yield takeEvery(FETCH_PROJECT, fetchProject);
 }
