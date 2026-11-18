@@ -295,6 +295,82 @@ const useIterationDetailRequests = ({
   ]);
 };
 
+type IterationDetailPollingOptions = Pick<
+  DetailRequestOptions,
+  | 'dispatch'
+  | 'projectKey'
+  | 'pipelineId'
+  | 'iterationId'
+  | 'isLiveTransport'
+  | 'hasValidRoute'
+  | 'isLoading'
+  | 'currentIteration'
+> & {
+  hasDetailError: boolean;
+  hasLegacyPipeline: boolean;
+};
+
+const useIterationDetailPolling = ({
+  dispatch,
+  projectKey,
+  pipelineId,
+  iterationId,
+  isLiveTransport,
+  hasValidRoute,
+  isLoading,
+  currentIteration,
+  hasDetailError,
+  hasLegacyPipeline,
+}: IterationDetailPollingOptions) => {
+  const pollingKey =
+    isLiveTransport && projectKey && hasValidRoute
+      ? JSON.stringify([projectKey, pipelineId, iterationId])
+      : null;
+  const pollingRequest = useRef<{ key: string; controller: AbortController } | null>(null);
+  useLayoutEffect(() => {
+    if (!pollingKey) return undefined;
+
+    const controller = new AbortController();
+    pollingRequest.current = { key: pollingKey, controller };
+    return () => {
+      pollingRequest.current = null;
+      controller.abort();
+    };
+  }, [pollingKey]);
+
+  const isActive =
+    isLiveTransport
+      ? Boolean(pollingKey) && !hasDetailError && isActiveLiveIteration(currentIteration)
+      : hasLegacyPipeline && isActiveLegacyIteration(currentIteration);
+  const canPoll = !isLoading && isActive;
+
+  usePolling(
+    () => {
+      if (!canPoll) return undefined;
+      if (!isLiveTransport) {
+        dispatch(getPipelineIterationDetailsAction(pipelineId, iterationId));
+        return POLLING_REQUEST_STARTED;
+      }
+
+      const request = pollingRequest.current;
+      if (request?.key !== pollingKey || request.controller.signal.aborted) {
+        return undefined;
+      }
+
+      dispatch(
+        getPipelineIterationDetailsAction(pipelineId, iterationId, {
+          projectKey,
+          signal: request.controller.signal,
+        }),
+      );
+      // The live saga deduplicates requests even when Redux batches the loading state.
+      return undefined;
+    },
+    ITERATION_POLL_INTERVAL_MS,
+    canPoll,
+  );
+};
+
 interface RichIterationDetailsProps {
   richIteration: IterationRS;
   pipeline: PipelineRS;
@@ -633,52 +709,18 @@ export const IterationDetailsPageContent = () => {
     hasInitializedStage.current = true;
   }, [pipeline, query.stage]);
 
-  const pollingKey =
-    isLiveTransport && projectKey && hasValidRoute
-      ? JSON.stringify([projectKey, pipelineId, iterationId])
-      : null;
-  const pollingRequest = useRef<{ key: string; controller: AbortController } | null>(null);
-  useLayoutEffect(() => {
-    if (!pollingKey) return undefined;
-
-    const controller = new AbortController();
-    pollingRequest.current = { key: pollingKey, controller };
-    return () => {
-      pollingRequest.current = null;
-      controller.abort();
-    };
-  }, [pollingKey]);
-
-  const isActive =
-    isLiveTransport
-      ? Boolean(pollingKey) && !hasDetailError && isActiveLiveIteration(currentIteration)
-      : Boolean(pipeline) && isActiveLegacyIteration(currentIteration);
-  const canPoll = !isLoading && isActive;
-
-  usePolling(
-    () => {
-      if (!canPoll) return undefined;
-      if (isLiveTransport) {
-        const request = pollingRequest.current;
-        if (!request || request.key !== pollingKey || request.controller.signal.aborted) {
-          return undefined;
-        }
-
-        dispatch(
-          getPipelineIterationDetailsAction(pipelineId, iterationId, {
-            projectKey,
-            signal: request.controller.signal,
-          }),
-        );
-        // The live saga deduplicates requests even when Redux batches the loading state.
-        return undefined;
-      }
-      dispatch(getPipelineIterationDetailsAction(pipelineId, iterationId));
-      return POLLING_REQUEST_STARTED;
-    },
-    ITERATION_POLL_INTERVAL_MS,
-    canPoll,
-  );
+  useIterationDetailPolling({
+    dispatch,
+    projectKey,
+    pipelineId,
+    iterationId,
+    isLiveTransport,
+    hasValidRoute,
+    isLoading,
+    currentIteration,
+    hasDetailError,
+    hasLegacyPipeline: Boolean(pipeline),
+  });
 
   const breadcrumbDescriptors = [
     {
