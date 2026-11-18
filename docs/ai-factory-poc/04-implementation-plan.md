@@ -107,7 +107,7 @@ authentication and authorization remain mandatory—FE permission checks are gat
 | T4.1 | Ready-only gate: Add to Launch / Add to Test Plan disabled for Draft (header, side panel, bulk with skip report) with exact hints; **In plan · Launch blocked** banner on the case page and side panel | 014 | M | T2.1, T2.4 | ✅ EPMRPP-122032; exact hints and toggle-OFF parity are tested; C1 `blockedPlans` supplies plan names. Backend G1 enforcement is still required |
 | T4.2 | Test Plan page: Draft badges on plan cases, **Launch** disabled + banner "Launch blocked: N Draft Test Cases" with links (not prototyped — keep it minimal, ❓ Q-BA-04) | 014 | M | T4.1 | ✅ EPMRPP-122033; G2 drives the plan-level count/gate/link targets, C1 drives row badges and the safe loaded-row fallback; approving the last Draft re-enables Launch after refresh |
 | T4.3 ✅ | Compare iterations page: pipeline / baseline / candidate selects (pipeline change resets to the latest two), stage row with costs, metrics table with Δ and direction colouring, "Different requirements" note, entries from the list + "Compare with previous"; consume server compare `GET /v1/project/{projectKey}/pipeline/iteration/{iterationId}/compare` with required `with=<iterationId>` | 004 | M | T1.3 | EPMRPP-122034, branch `EPMRPP-122034-compare-iterations`; completed with URL-bound selectors, both entry points, exact-path LP4 identity validation, status-only/neutral live fallback and private versioned mock metrics. Validation: 7 focused suites / 91 tests, full 138 suites / 1072 tests, type-check, focused ESLint, targeted Stylelint, production build, clean dev compile, diff-check and senior code/security PASS. BE-014/BE-015 remain open for live rich metrics/direction semantics |
-| T4.4 | **New (2026-09-29 audit).** **Re-run** an iteration (header action, dialog with read-only requirement + environment + model select, creates a new iteration in its own folder through `POST /v1/project/{projectKey}/pipeline/iteration`, offers "Compare with Iteration #N" when done) and **Retry** a failed Create/Upload stage through `POST /v1/project/{projectKey}/pipeline/iteration/{iterationId}/stage/{stageId}/retry` (same iteration, keeps attempt history "Attempt K of N", cost accumulates); both gated on CI connection (T3.6) and Organization Manager/Instance Administrator (D15); disabled while Running | 020 | M | T3.6, T1.3u | US-AI-FCTRY-020 ACs; confirm idempotency and attempt-history semantics before wiring. FE gating is UX only; the backend must authenticate and authorize both mutations |
+| T4.4 | **Stage Retry:** retry an eligible failed Create or Upload stage through `POST /v1/project/{projectKey}/pipeline/iteration/{iterationId}/stage/{stageId}/retry`. Refresh the scoped iteration and lock the same attempt after an unconfirmed response. **Whole-iteration Re-run:** start a new CI run linked to the source iteration with the selected model and environment. | 020 | M | T1.3u. Stage Retry dispatch verification requires configured CI. Whole-iteration Re-run depends on the trigger and CI-settings contracts. | [PR #5923](https://github.com/reportportal/service-ui/pull/5923) delivers the Stage Retry slice for review. Verify real CI dispatch separately. Whole-iteration Re-run remains open. [Backend handoff](31-backend-handoff-2026-11-18.md#backend-and-producer-deliverables) |
 
 ## Phase 5 — Automation (US-015, 016, 017)
 
@@ -151,11 +151,9 @@ T0.6 ─┘               │                  └─ T3.4 (+T0.7) │
 Order for one developer: Phase 0 → Phase 1 → Phase 2 → Phase 3 → Phase 4 → Phase 5, with T6.x running continuously.
 T0.5 (mocks) and T0.6 (atoms) are prerequisites for everything, so finish them first.
 
-**New tasks from the 2026-09-29 audit** (not yet in the graph above): `T3.6` depends on `T3.4` + `T0.7`;
-`T4.4` depends on `T3.6` + `T1.3u`; `T1.2u` depends on `T1.2` + `T3.6`; `T1.3u` depends only on `T1.3`
-(no new dependency). `T1.2u`/`T1.3u` are rework of already-shipped code and are **not started** —
-see [01 §3a](01-knowledge-base.md#3a-requirements-audit-update-2026-09-29--supersedes-nothing-above-adds-to-it)
-for the exact diff before picking them up.
+The graph predates the [2026-09-29 requirements audit](01-knowledge-base.md#3a-requirements-audit-update-2026-09-29--supersedes-nothing-above-adds-to-it). Its follow-ups include `T3.6`, which depends on `T3.4` and `T0.7`, and the list and details rework. `T1.2u` depends on `T1.2` and `T3.6`. `T1.3u` depends on `T1.3`.
+
+Whole-iteration Re-run in `T4.4` depends on `T3.6` and `T1.3u`. The Stage Retry slice uses the published stage API and requires configured CI for dispatch verification.
 
 ## Jira mapping (FE sub-task parents)
 
@@ -183,7 +181,7 @@ Split a story or cross-cutting scope further when its estimate exceeds that ceil
 | 017 | EPMRPP-121680 | T5.3, T5.4 |
 | 018 | EPMRPP-121841 | T6.6-A implemented-surface NFR hardening → EPMRPP-122049; T6.7 visual alignment → EPMRPP-122052; dependent masked-credential and Re-run/Retry checks remain with T3.6/T4.4 |
 | 019 | EPMRPP-121842 | T3.6 contract-readiness slice → [EPMRPP-122050](https://jiraeu.epam.com/browse/EPMRPP-122050); runtime T3.6 and dependent T1.2u remain blocked pending authoritative requirements/OpenAPI contract |
-| 020 | EPMRPP-121843 | T4.4 — `[FE]` sub-task not yet created |
+| 020 | EPMRPP-121843 | T4.4 Stage Retry slice → [EPMRPP-123707](https://jiraeu.epam.com/browse/EPMRPP-123707). Whole-iteration Re-run remains open. |
 
 ---
 

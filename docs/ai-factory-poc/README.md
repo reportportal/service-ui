@@ -5,6 +5,8 @@ order, how far we are and what we still need from the backend. LP1–LP4, native
 
 **Current Backend handoff:** [31 — epic branch audit and API expectations](31-backend-handoff-2026-11-18.md). [26](26-github-actions-journey-verification-2026-10-24.md) contains the R6 UI/API verification checklist.
 
+**Frontend follow-ups:** [Six PRs under review](00-status.md#frontend-follow-ups-under-review--2026-11-18), with Jira links and local browser evidence.
+
 - Jira epic: [EPMRPP-118192](https://jiraeu.epam.com/browse/EPMRPP-118192)
 - Requirements (source of truth): [`reportportal-requirements/domains/projects/df_bootcamp_2026`](https://git.epam.com/EPM-RPP/reportportal-requirements/-/tree/main/domains/projects/df_bootcamp_2026)
 - UX reference: `html_prototype/ai-factory-bootcamp-poc-prototype.html` in that repo (open it locally in a browser)

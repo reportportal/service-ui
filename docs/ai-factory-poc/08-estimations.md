@@ -95,6 +95,12 @@ The user approved a focused cleanup PR after the live Compare migration. This is
 |---|---|---:|---:|---:|---:|
 | [EPMRPP-122692](https://jiraeu.epam.com/browse/EPMRPP-122692) | Remove obsolete Compare mock paths and unused transport helper; preserve automation test projections | 12 h | 3 h | 6 h | 3 h |
 
+## Stage Retry estimate (2026-11-18)
+
+| Jira | Scope | Original Estimate | Research | Implementation | Validation |
+|---|---|---:|---:|---:|---:|
+| [EPMRPP-123707](https://jiraeu.epam.com/browse/EPMRPP-123707) | Retry failed Create and Upload stages (T4.4, Stage Retry slice) | 12 h | 2 h | 6 h | 4 h |
+
 ## Per-task estimates
 
 Filled in as tasks complete. `—` = not done yet.
