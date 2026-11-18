@@ -78,6 +78,7 @@ export {
   canReviewAiTestCases,
   canAutomateTestCases,
   canManagePipelineSettings,
+  canRetryPipelineStages,
 } from './permissions';
 
 export { getRoleTitle, getRoleBadgesData, getOrgRoleTitle } from './getRoleTitle';

@@ -567,6 +567,7 @@ const RichIterationDetails = ({
 export const IterationDetailsPageContent = () => {
   const { formatMessage } = useIntl();
   const dispatch = useDispatch();
+  const { canRetryPipelineStages } = useUserPermissions();
   const projectName = useSelector(projectNameSelector);
   const projectKey = useSelector(projectKeySelector);
   const { organizationSlug, projectSlug } = useSelector(
@@ -719,6 +720,7 @@ export const IterationDetailsPageContent = () => {
         onRetry={retryDetail}
         onBack={backToPipelines}
         projectKey={projectKey}
+        canRetryStages={isLiveTransport && Boolean(canRetryPipelineStages)}
         onCompare={(selectedPipelineId, selectedIterationId) =>
           dispatch({
             type: PROJECT_PIPELINE_COMPARISON_PAGE,

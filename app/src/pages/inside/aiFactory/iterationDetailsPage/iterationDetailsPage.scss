@@ -225,6 +225,18 @@
   }
 }
 
+.reduced-stage-card {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  gap: 4px;
+  min-width: 0;
+
+  > :first-child {
+    flex: 1;
+  }
+}
+
 .reduced-stage {
   display: flex;
   flex-direction: column;

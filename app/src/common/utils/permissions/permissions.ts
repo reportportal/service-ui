@@ -88,3 +88,4 @@ export const canManageExecutions = checkPermission(ACTIONS.MANAGE_EXECUTIONS);
 export const canReviewAiTestCases = checkPermission(ACTIONS.REVIEW_AI_TEST_CASES);
 export const canAutomateTestCases = checkPermission(ACTIONS.AUTOMATE_TEST_CASES);
 export const canManagePipelineSettings = checkPermission(ACTIONS.MANAGE_PIPELINE_SETTINGS);
+export const canRetryPipelineStages = checkPermission(ACTIONS.RETRY_PIPELINE_STAGES);

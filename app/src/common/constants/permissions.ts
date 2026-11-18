@@ -87,6 +87,7 @@ export const ACTIONS: Record<string, string> = {
   REVIEW_AI_TEST_CASES: 'REVIEW_AI_TEST_CASES',
   AUTOMATE_TEST_CASES: 'AUTOMATE_TEST_CASES',
   MANAGE_PIPELINE_SETTINGS: 'MANAGE_PIPELINE_SETTINGS',
+  RETRY_PIPELINE_STAGES: 'RETRY_PIPELINE_STAGES',
 };
 
 export const PERMISSIONS_MAP: PermissionsMap = {
@@ -140,6 +141,7 @@ export const PERMISSIONS_MAP: PermissionsMap = {
     [ACTIONS.REVIEW_AI_TEST_CASES]: true,
     [ACTIONS.AUTOMATE_TEST_CASES]: true,
     [ACTIONS.MANAGE_PIPELINE_SETTINGS]: true,
+    [ACTIONS.RETRY_PIPELINE_STAGES]: true,
   },
   [MEMBER]: {
     [VIEWER]: {
@@ -151,6 +153,7 @@ export const PERMISSIONS_MAP: PermissionsMap = {
       [ACTIONS.REVIEW_AI_TEST_CASES]: false,
       [ACTIONS.AUTOMATE_TEST_CASES]: false,
       [ACTIONS.MANAGE_PIPELINE_SETTINGS]: false,
+      [ACTIONS.RETRY_PIPELINE_STAGES]: false,
     },
     [EDITOR]: {
       [ACTIONS.SEE_SETTINGS]: true,
@@ -195,6 +198,7 @@ export const PERMISSIONS_MAP: PermissionsMap = {
       [ACTIONS.REVIEW_AI_TEST_CASES]: true,
       [ACTIONS.AUTOMATE_TEST_CASES]: true,
       [ACTIONS.MANAGE_PIPELINE_SETTINGS]: false,
+      [ACTIONS.RETRY_PIPELINE_STAGES]: true,
     },
   },
 };
