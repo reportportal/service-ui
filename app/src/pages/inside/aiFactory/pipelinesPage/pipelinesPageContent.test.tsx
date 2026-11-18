@@ -18,7 +18,7 @@ import {
   getPipelinesAction,
   pipelineCatalogErrorSelector,
   pipelineCatalogPageSelector,
-  pipelineCatalogSearchSelector,
+  pipelineCatalogRequestSelector,
   pipelineCatalogTransportSelector,
   pipelineIterationPagesSelector,
   pipelineIterationsByPipelineSelector,
@@ -26,6 +26,7 @@ import {
   pipelineIterationsLoadingByPipelineSelector,
   pipelinesLoadingSelector,
   pipelinesSelector,
+  type PipelineCatalogPageRequest,
   type PipelinePageState,
 } from 'controllers/aiFactory/pipelines';
 import { showModalAction } from 'controllers/modal';
@@ -89,7 +90,7 @@ jest.mock('controllers/aiFactory/pipelines', () => ({
   pipelineCatalogTransportSelector: jest.fn(),
   pipelineCatalogErrorSelector: jest.fn(),
   pipelineCatalogPageSelector: jest.fn(),
-  pipelineCatalogSearchSelector: jest.fn(),
+  pipelineCatalogRequestSelector: jest.fn(),
   pipelineIterationPagesSelector: jest.fn(),
   pipelineIterationsByPipelineSelector: jest.fn(),
   pipelineIterationsErrorByPipelineSelector: jest.fn(),
@@ -154,7 +155,7 @@ interface RenderOptions {
   iterationsErrorByPipeline?: Record<number, boolean>;
   transport?: 'mock' | 'live';
   catalogPage?: PipelinePageState | null;
-  catalogSearch?: string;
+  catalogRequest?: PipelineCatalogPageRequest | null;
   catalogError?: boolean;
   iterationPages?: Record<number, PipelinePageState>;
 }
@@ -188,7 +189,7 @@ const renderPage = ({
   iterationsErrorByPipeline = {},
   transport = 'mock',
   catalogPage = null,
-  catalogSearch = '',
+  catalogRequest = null,
   catalogError = false,
   iterationPages = {},
 }: RenderOptions = {}): ShallowWrapper => {
@@ -203,7 +204,7 @@ const renderPage = ({
     [pipelineCatalogTransportSelector, transport],
     [pipelineCatalogErrorSelector, catalogError],
     [pipelineCatalogPageSelector, catalogPage],
-    [pipelineCatalogSearchSelector, catalogSearch],
+    [pipelineCatalogRequestSelector, catalogRequest],
     [pipelineIterationPagesSelector, iterationPages],
   ]);
   jest.mocked(useDispatch).mockReturnValue(dispatch as unknown as ReturnType<typeof useDispatch>);
@@ -237,7 +238,35 @@ describe('PipelinesPageContent polling', () => {
     wrapper.unmount();
   });
 
-  test('requests LP1 and LP2 pages while retaining iterations of a matching pipeline', () => {
+  test('retries the failed live catalog page with its original name filter and offset', () => {
+    const request = { name: 'Generation', offset: 100, limit: 100 };
+    const wrapper = renderPage({
+      transport: 'live',
+      pipelines: null,
+      catalogError: true,
+      catalogRequest: request,
+    });
+
+    (wrapper.find('.catalog-error').find('Button').prop('onClick') as () => void)();
+
+    expect(getPipelinesAction).toHaveBeenLastCalledWith(request);
+    wrapper.unmount();
+  });
+
+  test('refreshes the current live catalog page with its name filter', () => {
+    const request = { name: 'Generation', offset: 100, limit: 100 };
+    const wrapper = renderPage({ transport: 'live', catalogRequest: request });
+    const refreshButton = getHeaderActions(wrapper).find(
+      '[data-automation-id="refreshPipelinesButton"]',
+    );
+
+    (refreshButton.prop('onClick') as () => void)();
+
+    expect(getPipelinesAction).toHaveBeenLastCalledWith(request);
+    wrapper.unmount();
+  });
+
+  test('retains the catalog name filter while paging LP1 and LP2 independently', () => {
     const catalogPage: PipelinePageState = {
       number: 1,
       size: 1,
@@ -256,7 +285,7 @@ describe('PipelinesPageContent polling', () => {
     const wrapper = renderPage({
       transport: 'live',
       catalogPage,
-      catalogSearch: 'Generation',
+      catalogRequest: { name: 'Generation', offset: 0, limit: 1 },
       iterationPages: { 1: iterationPage },
       iterationsByPipeline: { 1: [iteration] },
     });
@@ -275,7 +304,7 @@ describe('PipelinesPageContent polling', () => {
     const catalogControls = wrapper.find('PageControls');
     (catalogControls.prop('onPageChange') as (offset: number) => void)(1);
     expect(getPipelinesAction).toHaveBeenLastCalledWith({
-      search: 'Generation',
+      name: 'Generation',
       offset: 1,
       limit: 1,
     });
@@ -292,7 +321,7 @@ describe('PipelinesPageContent polling', () => {
     };
     const wrapper = renderPage({
       transport: 'live',
-      catalogSearch: 'Generation',
+      catalogRequest: { name: 'Generation', offset: 0, limit: 100 },
       iterationPages: { 1: page },
     });
     const firstGroup = (wrapper.find('PipelineGroup') as unknown as PipelineGroupTestCollection).at(
@@ -308,12 +337,29 @@ describe('PipelinesPageContent polling', () => {
     wrapper.unmount();
   });
 
-  test('hides a live pipeline returned by LP1 for an iteration-field match', () => {
-    const wrapper = renderPage({ transport: 'live', catalogSearch: '#1' });
+  test('renders every pipeline returned by the live catalog without filtering again', () => {
+    const wrapper = renderPage({
+      transport: 'live',
+      catalogRequest: { name: 'Generation' },
+    });
+    const groups = wrapper.find('PipelineGroup') as unknown as PipelineGroupTestCollection & {
+      length: number;
+    };
+
+    expect(groups).toHaveLength(2);
+    expect(groups.at(1).props().pipeline).toEqual(automationPipeline);
+    wrapper.unmount();
+  });
+
+  test('shows an empty search result when the live catalog returns no pipelines', () => {
+    const wrapper = renderPage({
+      transport: 'live',
+      pipelines: [],
+      catalogRequest: { name: 'Generation' },
+    });
 
     expect(wrapper.find('PipelineGroup')).toHaveLength(0);
     expect(wrapper.text()).toContain('No pipelines match');
-    expect(getPipelineIterationsAction).not.toHaveBeenCalled();
     wrapper.unmount();
   });
 

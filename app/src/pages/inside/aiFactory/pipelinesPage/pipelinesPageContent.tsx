@@ -37,7 +37,7 @@ import {
   isReducedPipelineIteration,
   pipelineCatalogErrorSelector,
   pipelineCatalogPageSelector,
-  pipelineCatalogSearchSelector,
+  pipelineCatalogRequestSelector,
   pipelineCatalogTransportSelector,
   pipelineIterationPagesSelector,
   pipelineIterationsByPipelineSelector,
@@ -52,9 +52,9 @@ import { SettingsLayout } from 'layouts/settingsLayout';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
 import { SpinningPreloader } from 'components/preloaders/spinningPreloader';
 import { POLLING_REQUEST_STARTED, usePolling } from 'pages/inside/aiFactory/common';
+import { PageHeaderWithBreadcrumbsAndActions } from 'pages/inside/common/pageHeaderWithBreadcrumbsAndActions';
 import { IterationStatus, PipelineType } from 'types/aiFactory';
 
-import { PageHeaderWithBreadcrumbsAndActions } from '../../common/pageHeaderWithBreadcrumbsAndActions';
 import { PipelineGroup } from './pipelineGroup';
 import { PageControls } from './pageControls/pageControls';
 import { matchesPipelineName } from './pipelinesListUtils';
@@ -82,7 +82,8 @@ export const PipelinesPageContent = () => {
   const catalogTransport = useSelector(pipelineCatalogTransportSelector);
   const catalogError = useSelector(pipelineCatalogErrorSelector);
   const catalogPage = useSelector(pipelineCatalogPageSelector);
-  const catalogSearch = useSelector(pipelineCatalogSearchSelector);
+  const catalogRequest = useSelector(pipelineCatalogRequestSelector);
+  const catalogName = catalogRequest?.name ?? '';
   const iterationPages = useSelector(pipelineIterationPagesSelector);
   const transport = catalogTransport ?? 'live';
   const [search, setSearch] = useState('');
@@ -109,18 +110,14 @@ export const PipelinesPageContent = () => {
   }, [search]);
 
   useEffect(() => {
-    if (transport === 'live' && serverSearch !== catalogSearch) {
-      dispatch(getPipelinesAction({ search: serverSearch, offset: 0, limit: LIVE_PAGE_SIZE }));
+    if (transport === 'live' && serverSearch !== catalogName) {
+      dispatch(getPipelinesAction({ name: serverSearch, offset: 0, limit: LIVE_PAGE_SIZE }));
     }
-  }, [catalogSearch, dispatch, serverSearch, transport]);
+  }, [catalogName, dispatch, serverSearch, transport]);
 
   useEffect(() => {
     if (pipelines && pipelines.length > 0) {
-      const ids = pipelines
-        .filter(
-          (pipeline) => transport !== 'live' || matchesPipelineName(pipeline.name, catalogSearch),
-        )
-        .map((pipeline) => pipeline.id);
+      const ids = pipelines.map((pipeline) => pipeline.id);
       if (transport === 'live') {
         if (ids.length) {
           dispatch(
@@ -131,7 +128,7 @@ export const PipelinesPageContent = () => {
         dispatch(getPipelineIterationsAction(ids));
       }
     }
-  }, [catalogSearch, dispatch, pipelines, transport]);
+  }, [dispatch, pipelines, transport]);
 
   usePolling(
     () => {
@@ -209,20 +206,10 @@ export const PipelinesPageContent = () => {
   };
 
   const refreshCatalog = () =>
-    dispatch(
-      getPipelinesAction(
-        transport === 'live'
-          ? {
-              search: catalogSearch,
-              offset: catalogPage?.offset ?? 0,
-              limit: catalogPage?.size ?? LIVE_PAGE_SIZE,
-            }
-          : undefined,
-      ),
-    );
+    dispatch(getPipelinesAction(transport === 'live' ? (catalogRequest ?? undefined) : undefined));
 
   const renderContent = () => {
-    if (isLoading && !pipelines) {
+    if (isLoading && (transport === 'live' || !pipelines)) {
       return <SpinningPreloader />;
     }
 
@@ -237,10 +224,11 @@ export const PipelinesPageContent = () => {
       );
     }
 
-    const nameSearch = transport === 'live' ? catalogSearch : search;
-    const visiblePipelines = pipelines?.filter((pipeline) =>
-      matchesPipelineName(pipeline.name, nameSearch),
-    );
+    const nameSearch = transport === 'live' ? catalogName : search;
+    const visiblePipelines =
+      transport === 'live'
+        ? pipelines
+        : pipelines?.filter((pipeline) => matchesPipelineName(pipeline.name, nameSearch));
 
     if (!visiblePipelines || visiblePipelines.length === 0) {
       return (
@@ -356,7 +344,7 @@ export const PipelinesPageContent = () => {
               onPageChange={(offset) =>
                 dispatch(
                   getPipelinesAction({
-                    search: catalogSearch,
+                    ...catalogRequest,
                     offset,
                     limit: catalogPage.size,
                   }),

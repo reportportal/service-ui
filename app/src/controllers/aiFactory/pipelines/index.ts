@@ -37,7 +37,7 @@ export { aiFactoryPipelinesReducer } from './reducer';
 export {
   pipelinesSelector,
   pipelineCatalogPageSelector,
-  pipelineCatalogSearchSelector,
+  pipelineCatalogRequestSelector,
   pipelineIterationPagesSelector,
   pipelinesLoadingSelector,
   pipelineCatalogErrorSelector,
@@ -71,6 +71,7 @@ export type {
   IterationsLoadingByPipelineId,
   IterationsErrorByPipelineId,
   PipelineCatalogItem,
+  PipelineCatalogPageRequest,
   PipelinePageRequest,
   PipelinePageState,
   PipelineIterationItem,

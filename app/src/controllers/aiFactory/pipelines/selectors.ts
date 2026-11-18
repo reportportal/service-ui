@@ -25,7 +25,7 @@ export const pipelinesStateSelector = (state: PipelinesSelectorsRootState): Pipe
     catalogRequestId: null,
     catalogProjectKey: null,
     catalogPage: null,
-    catalogSearch: '',
+    catalogRequest: null,
     iterationsByPipeline: null,
     iterationPagesByPipeline: {},
     iterationsLoadingByPipeline: {},
@@ -58,8 +58,8 @@ export const pipelinesSelector = (state: PipelinesSelectorsRootState) =>
 export const pipelineCatalogPageSelector = (state: PipelinesSelectorsRootState) =>
   pipelinesStateSelector(state).catalogPage ?? null;
 
-export const pipelineCatalogSearchSelector = (state: PipelinesSelectorsRootState) =>
-  pipelinesStateSelector(state).catalogSearch ?? '';
+export const pipelineCatalogRequestSelector = (state: PipelinesSelectorsRootState) =>
+  pipelinesStateSelector(state).catalogRequest ?? null;
 
 export const pipelineIterationPagesSelector = (state: PipelinesSelectorsRootState) =>
   pipelinesStateSelector(state).iterationPagesByPipeline ?? {};

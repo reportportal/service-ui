@@ -44,6 +44,7 @@ import {
   IterationsLoadingByPipelineId,
   PipelineIterationItem,
   PipelineComparisonResult,
+  PipelineCatalogPageRequest,
   PipelinePageState,
   PipelinesState,
 } from './types';
@@ -61,7 +62,7 @@ interface PipelineReducerAction extends Action<string> {
     catalogVersion?: number;
     catalogRequestId?: number;
     projectKey?: string;
-    search?: string;
+    catalogRequest?: PipelineCatalogPageRequest;
     iterationId?: number;
     catalogTransport?: PipelineCatalogTransport;
     detailTransport?: PipelineDetailTransport;
@@ -111,9 +112,12 @@ const catalogPageReducer = (
   return action.type === FETCH_SUCCESS ? (action.payload?.page ?? null) : state;
 };
 
-const catalogSearchReducer = (state = '', action: PipelineReducerAction): string =>
+const catalogRequestReducer = (
+  state: PipelineCatalogPageRequest | null = null,
+  action: PipelineReducerAction,
+): PipelineCatalogPageRequest | null =>
   action.meta?.namespace === PIPELINES_NAMESPACE && action.type === FETCH_START
-    ? (action.meta.search ?? '')
+    ? (action.meta.catalogRequest ?? null)
     : state;
 
 const catalogErrorReducer = (state = false, action: PipelineReducerAction): boolean => {
@@ -326,7 +330,7 @@ const combinedReducer = combineReducers({
   catalogRequestId: catalogRequestIdReducer,
   catalogProjectKey: catalogProjectKeyReducer,
   catalogPage: catalogPageReducer,
-  catalogSearch: catalogSearchReducer,
+  catalogRequest: catalogRequestReducer,
   iterationsByPipeline: iterationsByPipelineReducer,
   iterationPagesByPipeline: iterationPagesByPipelineReducer,
   iterationsLoadingByPipeline: iterationsLoadingByPipelineReducer,

@@ -104,7 +104,7 @@ const resolvePageRequest = (request?: PipelinePageRequest) => {
   const hasQuery =
     request?.offset !== undefined || request?.limit !== undefined || request?.search !== undefined;
   const query = hasQuery ? { offset, limit, ...(search ? { search } : {}) } : {};
-  return { offset, search, query };
+  return { offset, query };
 };
 
 interface PipelineCatalogResult {
@@ -139,13 +139,15 @@ function* getPipelines(action: GetPipelinesAction): Generator {
   try {
     projectKey = (yield select(projectKeySelector)) as string;
     const transport = getPipelineCatalogTransport();
-    const { offset, search, query } = resolvePageRequest(action.payload);
+    const { offset, query } = resolvePageRequest(action.payload);
+    const name = action.payload?.name?.trim();
+    const catalogRequest = { ...query, ...(name ? { name } : {}) };
     const meta = {
       namespace: PIPELINES_NAMESPACE,
       catalogRequestId,
       projectKey,
       transport: transport.mode,
-      search,
+      catalogRequest,
     };
 
     yield put({
@@ -154,7 +156,7 @@ function* getPipelines(action: GetPipelinesAction): Generator {
       meta,
     });
 
-    const rawData = (yield call(fetch, URLS.pipelineCatalog(projectKey, query), {
+    const rawData = (yield call(fetch, URLS.pipelineCatalog(projectKey, catalogRequest), {
       signal: controller.signal,
     })) as unknown;
     const {
