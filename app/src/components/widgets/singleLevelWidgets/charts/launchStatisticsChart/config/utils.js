@@ -92,6 +92,7 @@ export const calculateTooltipParams = (data, color, customProps) => {
     itemCases: String(value), // string so a zero count is still rendered by the tooltip
     color: color(id),
     wrapperClassName: cx('tooltip'),
+    truncateName: true,
     issueStatNameProps: { itemName: id, defectTypes, formatMessage },
   };
 };

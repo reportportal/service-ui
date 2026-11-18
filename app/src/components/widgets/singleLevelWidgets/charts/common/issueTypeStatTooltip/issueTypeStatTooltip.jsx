@@ -32,6 +32,7 @@ export const IssueTypeStatTooltip = ({
   issueStatNameProps,
   itemCases,
   wrapperClassName,
+  truncateName,
 }) => {
   const issueStatName = issueStatNameProps.defectTypes
     ? getItemName(issueStatNameProps)
@@ -41,9 +42,9 @@ export const IssueTypeStatTooltip = ({
     <TooltipContent itemName={itemName} wrapperClassName={wrapperClassName}>
       {startTime && <div className={cx('start-time')}>{dateFormat(startTime)}</div>}
       {itemsCount && <div className={cx('items-count')}>{itemsCount}</div>}
-      <div>
+      <div className={cx('stat-line', { truncated: truncateName })}>
         <span className={cx('color-mark')} style={{ backgroundColor: color }} />
-        {issueStatName}
+        <span className={cx('issue-name')}>{issueStatName}</span>
         {itemCases && <span className={cx('item-cases')}>{`: ${itemCases}`}</span>}
       </div>
     </TooltipContent>
@@ -60,6 +61,7 @@ IssueTypeStatTooltip.propTypes = {
     defectTypes: PropTypes.object,
   }),
   wrapperClassName: PropTypes.string,
+  truncateName: PropTypes.bool,
 };
 IssueTypeStatTooltip.defaultProps = {
   itemName: '',
@@ -71,4 +73,5 @@ IssueTypeStatTooltip.defaultProps = {
     defectTypes: null,
   },
   wrapperClassName: '',
+  truncateName: false,
 };

@@ -54,6 +54,8 @@ describe('launchStatisticsChart getOption', () => {
     });
     expect(option.xAxis.data).toEqual(['#1', '#2', '#3']);
     expect(option.tooltip.trigger).toBe('item');
+    expect(option.tooltip.confine).toBe(true);
+    expect(option.tooltip.extraCssText).toContain('max-width: min(300px, 100%)');
     expect(typeof option.tooltip.formatter).toBe('function');
     expect(option.customData.legendItems).toHaveLength(3);
   });
@@ -95,6 +97,7 @@ describe('launchStatisticsChart getOption', () => {
       emphasis: { disabled: true },
     });
     expect(option.tooltip.trigger).toBe('axis');
+    expect(option.tooltip.confine).toBe(true);
     expect(option.tooltip.axisPointer).toEqual({ type: 'none' });
     expect(typeof option.tooltip.formatter).toBe('function');
     expect(option.customData.isAreaMode).toBe(true);
@@ -168,6 +171,7 @@ describe('launchStatisticsChart getOption', () => {
     expect(params.itemName).toBe('01.01.2021');
     expect(params.itemCases).toBe('7');
     expect(params.startTime).toBeNull();
+    expect(params.truncateName).toBe(true);
   });
 
   test('single column area: falls back to bar series (ECharts cannot fill area for one point)', () => {

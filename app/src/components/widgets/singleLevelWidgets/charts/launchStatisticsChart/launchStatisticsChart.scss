@@ -19,6 +19,10 @@
 }
 
 div.tooltip {
+  max-width: 100%;
+  overflow: hidden;
+  white-space: normal;
+  box-sizing: border-box;
   min-width: 0;
   padding: 8px 12px;
   font-family: var(--rp-ui-base-font-family);
