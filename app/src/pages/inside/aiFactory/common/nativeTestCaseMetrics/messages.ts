@@ -37,6 +37,34 @@ export const messages = defineMessages({
     id: 'NativeTestCaseMetrics.error',
     defaultMessage: 'Iteration could not be loaded. Try again.',
   },
+  currentQualityStandard: {
+    id: 'NativeTestCaseMetrics.currentQualityStandard',
+    defaultMessage: 'Current project Quality Standard',
+  },
+  qualityStandardLoading: {
+    id: 'NativeTestCaseMetrics.qualityStandardLoading',
+    defaultMessage: 'Loading the project Quality Standard…',
+  },
+  qualityStandardError: {
+    id: 'NativeTestCaseMetrics.qualityStandardError',
+    defaultMessage: 'The project Quality Standard could not be loaded.',
+  },
+  qualityStandardRetry: {
+    id: 'NativeTestCaseMetrics.qualityStandardRetry',
+    defaultMessage: 'Retry',
+  },
+  qualityStandardUnavailable: {
+    id: 'NativeTestCaseMetrics.qualityStandardUnavailable',
+    defaultMessage: 'No Quality Standard is configured for this project.',
+  },
+  qualityStandardEmpty: {
+    id: 'NativeTestCaseMetrics.qualityStandardEmpty',
+    defaultMessage: 'No criteria are configured.',
+  },
+  qualityStandardCriterion: {
+    id: 'NativeTestCaseMetrics.qualityStandardCriterion',
+    defaultMessage: '{name}: up to {points, plural, one {# point} other {# points}}',
+  },
   unavailable: {
     id: 'NativeTestCaseMetrics.unavailable',
     defaultMessage: 'Iteration is unavailable.',
