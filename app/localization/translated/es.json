@@ -2726,6 +2726,7 @@
   "Widget.errorDescription": "Algo salió mal al cargar los datos.",
   "Widget.errorTitle": "No se pudo cargar el widget",
   "Widget.filterNotFoundDescription": "El filtro de este widget fue eliminado. Edite el widget para elegir otro filtro.",
+  "Widget.filterNotFoundExplanation": "El filtro de este widget fue eliminado.",
   "Widget.filterNotFoundTitle": "No se encontró el filtro del widget",
   "Widget.forceUpdateWidgetMessage": "¿Está seguro de que quiere actualizar los datos en este widget? Esto puede tardar <b>hasta 15 minutos</b> dependiendo del tamaño de la base de datos del proyecto.",
   "Widget.forceUpdateWidgetTitle": "Actualizar datos del widget",

@@ -95,6 +95,10 @@ const messages = defineMessages({
     defaultMessage:
       'The filter for this widget was deleted. Edit the widget to choose another filter.',
   },
+  filterNotFoundExplanation: {
+    id: 'Widget.filterNotFoundExplanation',
+    defaultMessage: 'The filter for this widget was deleted.',
+  },
   editWidget: {
     id: 'Widget.editWidget',
     defaultMessage: 'Edit widget',
@@ -116,17 +120,17 @@ const messages = defineMessages({
 const SILENT_UPDATE_TIMEOUT = 60000;
 const SILENT_UPDATE_TIMEOUT_FULLSCREEN = 30000;
 
-const WIDGETS_WITHOUT_FILTER = [
+const WIDGETS_WITHOUT_FILTER = new Set([
   PROJECT_ACTIVITY,
   MOST_FAILED_TEST_CASES_TABLE,
   FLAKY_TEST_CASES_TABLE,
   PASSING_RATE_PER_LAUNCH,
   MOST_TIME_CONSUMING,
   TEST_CASE_SEARCH,
-];
+]);
 
 const isWidgetFilterMissing = (widget) =>
-  !WIDGETS_WITHOUT_FILTER.includes(widget.widgetType) && !widget.appliedFilters?.length;
+  !WIDGETS_WITHOUT_FILTER.has(widget.widgetType) && !widget.appliedFilters?.length;
 
 @injectIntl
 @connect(
@@ -275,7 +279,9 @@ export class SimpleWidget extends Component {
       return (
         <WidgetStateMessage
           title={formatMessage(messages.filterNotFoundTitle)}
-          description={formatMessage(messages.filterNotFoundDescription)}
+          description={formatMessage(
+            canEditWidget ? messages.filterNotFoundDescription : messages.filterNotFoundExplanation,
+          )}
           {...(canEditWidget
             ? {
                 action: {

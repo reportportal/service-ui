@@ -2724,6 +2724,7 @@
   "Widget.errorDescription": "加载数据时出错。",
   "Widget.errorTitle": "无法加载小部件",
   "Widget.filterNotFoundDescription": "此小部件的过滤器已被删除。请编辑小部件以选择其他过滤器。",
+  "Widget.filterNotFoundExplanation": "此小部件的过滤器已被删除。",
   "Widget.filterNotFoundTitle": "未找到小部件过滤器",
   "Widget.forceUpdateWidgetMessage": "您确定要更新此小部件中的数据吗？这可能需要<b>将近15分钟</b>，具体时间取决于项目数据库的大小。",
   "Widget.forceUpdateWidgetTitle": "更新小部件数据",

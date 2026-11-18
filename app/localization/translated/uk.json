@@ -2777,6 +2777,7 @@
   "Widget.errorDescription": "Під час завантаження даних сталася помилка.",
   "Widget.errorTitle": "Не вдалося завантажити віджет",
   "Widget.filterNotFoundDescription": "Фільтр для цього віджета було видалено. Відредагуйте віджет, щоб вибрати інший фільтр.",
+  "Widget.filterNotFoundExplanation": "Фільтр для цього віджета було видалено.",
   "Widget.filterNotFoundTitle": "Фільтр віджета не знайдено",
   "Widget.forceUpdateWidgetMessage": "Ви впевнені, що хочете оновити дані в цьому віджеті? Це може зайняти <b> до 15 хвилин </ b> в залежності від розміру бази даних проекту.",
   "Widget.forceUpdateWidgetTitle": "Оновити дані віджета",
