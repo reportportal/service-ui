@@ -790,7 +790,7 @@ export const ReducedIterationDetails = ({
                   {formatMessage(messages.rerun)}
                 </Button>
               </span>
-              <LivePipelineSettingsButton pipelineId={iteration.pipelineId} />
+              <LivePipelineSettingsButton pipelineId={iteration.pipelineId} fromIteration />
               <Button
                 variant="text"
                 data-automation-id="refreshReducedIterationButton"

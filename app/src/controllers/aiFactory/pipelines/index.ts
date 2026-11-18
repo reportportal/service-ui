@@ -91,6 +91,7 @@ export type {
 } from './liveAdapters';
 export type { LiveComparisonStage, LivePipelineComparison } from './liveCompareAdapter';
 export {
+  adaptLivePipeline,
   isReducedPipeline,
   isReducedPipelineIteration,
   isRichPipeline,

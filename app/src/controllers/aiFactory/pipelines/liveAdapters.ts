@@ -981,6 +981,14 @@ const adaptIteration = (
   };
 };
 
+export const adaptLivePipeline = (value: unknown, expectedPipelineId: number): ReducedPipeline => {
+  const pipeline = adaptPipeline(value);
+  if (!pipeline || pipeline.id !== expectedPipelineId) {
+    throw new Error('Invalid pipeline response');
+  }
+  return pipeline;
+};
+
 export const adaptLivePipelines = (value: unknown): ReducedPipeline[] => {
   const response = asRecord(value);
   const page = response ? asPage(response.page) : null;
