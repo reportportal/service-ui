@@ -25,7 +25,7 @@ import { connect } from 'react-redux';
 import { DragNDropIcon } from '@reportportal/ui-kit';
 import { fetch, isEmptyObject } from 'common/utils';
 import { URLS } from 'common/urls';
-import { projectKeySelector } from 'controllers/project';
+import { projectKeySelector, fetchProjectAction } from 'controllers/project';
 import { TEST_CASE_SEARCH } from 'common/constants/widgetTypes';
 import { showModalAction } from 'controllers/modal';
 import { analyticsEnabledSelector, baseEventParametersSelector } from 'controllers/appInfo';
@@ -108,6 +108,7 @@ const SILENT_UPDATE_TIMEOUT_FULLSCREEN = 30000;
   {
     showModalAction,
     refreshSearchedItemsAction,
+    fetchProjectAction,
   },
 )
 @track()
@@ -119,6 +120,7 @@ export class SimpleWidget extends Component {
     widgetType: PropTypes.string.isRequired,
     showModalAction: PropTypes.func.isRequired,
     refreshSearchedItemsAction: PropTypes.func.isRequired,
+    fetchProjectAction: PropTypes.func.isRequired,
     onDelete: PropTypes.func,
     isModifiable: PropTypes.bool,
     isFullscreen: PropTypes.bool,
@@ -380,6 +382,7 @@ export class SimpleWidget extends Component {
 
   refreshWidget = () => {
     this.props.tracking.trackEvent(WIDGETS_EVENTS.CLICK_ON_REFRESH_WIDGET_ICON);
+    this.props.fetchProjectAction(this.props.projectKey, true);
     void this.fetchWidget({}, false);
   };
 
