@@ -19,9 +19,7 @@
 }
 
 div.tooltip {
-  // shrink to the text, but never wider than this, so a long name ellipsizes inside the box
-  width: max-content;
-  max-width: 300px;
+  max-width: 100%;
   overflow: hidden;
   white-space: normal;
   box-sizing: border-box;

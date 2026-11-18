@@ -55,6 +55,7 @@ describe('launchStatisticsChart getOption', () => {
     expect(option.xAxis.data).toEqual(['#1', '#2', '#3']);
     expect(option.tooltip.trigger).toBe('item');
     expect(option.tooltip.confine).toBe(true);
+    expect(option.tooltip.extraCssText).toContain('max-width: min(300px, 100%)');
     expect(typeof option.tooltip.formatter).toBe('function');
     expect(option.customData.legendItems).toHaveLength(3);
   });
