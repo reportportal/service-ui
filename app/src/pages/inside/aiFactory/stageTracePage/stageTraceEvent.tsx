@@ -17,6 +17,7 @@
 import { useIntl } from 'react-intl';
 
 import { createClassnames } from 'common/utils';
+import { formatDuration } from 'common/utils/timeDateUtils';
 import type { StageTraceEvent } from 'controllers/aiFactory/stageTrace';
 import { StageTraceEventData } from 'pages/inside/aiFactory/stageTracePage/stageTraceEventData';
 import { StageTraceText } from 'pages/inside/aiFactory/stageTracePage/stageTraceText';
@@ -47,9 +48,9 @@ export const TraceEvent = ({ event, expanded, onToggle, groupLabel }: TraceEvent
         {groupLabel !== undefined && <span className={cx('event__unit')}>{groupLabel}</span>}
         <span>{event.title}</span>
         {event.offsetMs !== undefined && (
-          <span className={cx('event__time')}>+{event.offsetMs} ms</span>
+          <span className={cx('event__time')}>+{formatDuration(event.offsetMs, true)}</span>
         )}
-        {event.durationMs !== undefined && <span>{event.durationMs} ms</span>}
+        {event.durationMs !== undefined && <span>{formatDuration(event.durationMs, true)}</span>}
       </button>
       {expanded && (
         <div id={`trace-event-${event.seq}`} className={cx('event__body')}>

@@ -405,7 +405,7 @@ describe('trace event disclosure', () => {
     expect(wrapper.textContent).not.toContain('README.md');
     expect(wrapper.querySelector('button')?.getAttribute('aria-expanded')).toBe('false');
     expect(wrapper.querySelector('button')?.hasAttribute('aria-controls')).toBe(false);
-    expect(wrapper.textContent).toContain('+0 ms');
+    expect(wrapper.textContent).toContain('+0s');
     act(() => wrapper.querySelector('button')?.click());
     expect(wrapper.querySelector('button')?.getAttribute('aria-expanded')).toBe('true');
     const contentId = wrapper.querySelector('button')?.getAttribute('aria-controls');
@@ -422,6 +422,22 @@ describe('trace event disclosure', () => {
     act(() => wrapper.querySelector('button')?.click());
     expect(wrapper.querySelectorAll<HTMLTextAreaElement>('textarea')).toHaveLength(0);
   });
+});
+
+test('formats trace event offset and duration in hours, minutes, and seconds', () => {
+  const wrapper = render(
+    <StageTraceTimeline
+      events={[
+        { seq: 0, type: 'TOOL_CALL', offsetMs: 3_661_500, durationMs: 65_340 },
+        { seq: 1, type: 'TOOL_CALL', durationMs: 5 },
+      ]}
+    />,
+  );
+
+  const [first, second] = wrapper.querySelectorAll('[data-automation-id^="traceEvent-"]');
+  expect(first.textContent).toContain('+1h 1m');
+  expect(first.textContent).toContain('1m 5s');
+  expect(second.textContent).toContain('0.005s');
 });
 
 describe('grader trace presentation', () => {
