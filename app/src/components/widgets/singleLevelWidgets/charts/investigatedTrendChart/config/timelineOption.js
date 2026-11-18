@@ -16,11 +16,10 @@
 
 import moment from 'moment';
 import { buildAxisTicks } from 'components/widgets/common/echarts/configHelpers';
-import { COLORS } from 'components/widgets/common/constants';
-import { createStackedBarSeries } from '../../common/stackedBarSeries';
 import { buildInvestigatedChartOption } from './buildChartOption';
+import { INVESTIGATED_COLORS, TIMELINE_AXIS_DATE_FORMAT } from './constants';
 
-export const getTimelineOption = ({ content, isPreview, formatMessage }) => {
+export const getTimelineData = (content) => {
   const chartData = {};
   const colors = {};
   const itemsData = [];
@@ -31,7 +30,7 @@ export const getTimelineOption = ({ content, isPreview, formatMessage }) => {
 
   Object.keys(data[0].values).forEach((key) => {
     const shortKey = key.split('$').pop();
-    colors[shortKey] = COLORS[shortKey];
+    colors[shortKey] = INVESTIGATED_COLORS[shortKey];
     chartData[shortKey] = [];
   });
 
@@ -46,21 +45,24 @@ export const getTimelineOption = ({ content, isPreview, formatMessage }) => {
   });
 
   const itemNames = Object.keys(chartData);
-  const categories = itemsData.map((item) => {
-    const day = moment(item.date).format('dddd').substring(0, 3);
-    return `${day}, ${item.date}`;
-  });
+  const categories = itemsData.map((item) => moment(item.date).format(TIMELINE_AXIS_DATE_FORMAT));
 
-  return buildInvestigatedChartOption({
-    isPreview,
+  return {
+    itemsData,
+    itemNames,
+    colors,
+    dataByName: chartData,
     categories,
     tickValues: buildAxisTicks(itemsData.length, true),
-    series: createStackedBarSeries(itemNames, chartData, colors),
-    colors,
-    legendItems: itemNames,
-    itemsData,
+  };
+};
+
+export const getTimelineOption = ({ content, isPreview, formatMessage, hiddenItems }) =>
+  buildInvestigatedChartOption({
+    ...getTimelineData(content),
+    isPreview,
     formatMessage,
+    hiddenItems,
     gridRight: 30,
     tooltipExtra: { isTimeline: true },
   });
-};

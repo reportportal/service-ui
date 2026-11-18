@@ -25,9 +25,14 @@ import {
   COLOR_CHART_AXIS_LINE,
   COLOR_CHART_SLIDER_ACCENT,
   COLOR_CHART_SLIDER_BG,
-  COLOR_WHITE_TWO,
 } from 'common/constants/colors';
 import { createBarSeries } from '../../common/stackedBarSeries';
+import {
+  BAR_SEGMENT_STYLE,
+  BAR_SEGMENT_STYLE_PREVIEW,
+  getVisibleNames,
+  withTopRounding,
+} from '../../common/topRoundedBars';
 import { buildAxisTooltip, buildItemTooltip } from '../../common/echartsAxisBuilders';
 import { IssueTypeStatTooltip } from '../../common/issueTypeStatTooltip';
 import { getConfigData, calculateTooltipParams } from './utils';
@@ -47,22 +52,13 @@ const SLIDER_HANDLE_ICON =
 const SLIDER_HANDLE_HEIGHT = 20;
 const SLIDER_FILL_ALPHA = '26'; // hex alpha of the accent color (15%) for the selected range
 const SLIDER_MARGIN_TOP = 5; // extra space between the x-axis labels and the zoom slider
-// white border = gap between stacked segments
-const BAR_SEGMENT_STYLE = { borderColor: COLOR_WHITE_TWO, borderWidth: 1 };
-const BAR_SEGMENT_STYLE_PREVIEW = { ...BAR_SEGMENT_STYLE, borderWidth: 0.5 };
-// The 1px border is drawn centred on the edge and eats into the corner, so a path radius of 3
-// gives a visible 2px rounding. The smaller preview uses a smaller radius.
-const BAR_TOP_RADIUS = [3, 3, 0, 0];
-const BAR_TOP_RADIUS_PREVIEW = [2, 2, 0, 0];
 // Tiny non-zero segments (e.g. 1 of 500) are given a minimum share of the tallest stack so they stay
 // visible. Done in the data (not via barMinHeight) so segments never overlap and gaps stay uniform.
 const BAR_MIN_SEGMENT_SHARE = 0.04;
 const BAR_TINY_BASE = 0.2; // share of the threshold that the smallest non-zero value is drawn at
 
-// Round only the top corners of the topmost non-zero segment of each stack; inner joins stay square.
-// Series hidden via the legend are ignored, so the top visible segment is the rounded one.
-const withTopRounding = (itemNames, dataByName, isPreview, hiddenItems = []) => {
-  const visibleNames = itemNames.filter((name) => !hiddenItems.includes(name));
+const withMinSegmentRounding = (itemNames, dataByName, isPreview, hiddenItems = []) => {
+  const visibleNames = getVisibleNames(itemNames, hiddenItems);
   const count = itemNames.length ? dataByName[itemNames[0]].length : 0;
   const maxTotal = Math.max(
     0,
@@ -71,33 +67,18 @@ const withTopRounding = (itemNames, dataByName, isPreview, hiddenItems = []) => 
     ),
   );
   const minSegment = maxTotal * BAR_MIN_SEGMENT_SHARE;
-  const topSeriesByIndex = Array.from({ length: count }, (_, index) => {
-    for (let i = visibleNames.length - 1; i >= 0; i -= 1) {
-      if (dataByName[visibleNames[i]][index] > 0) return visibleNames[i];
-    }
-    return null;
-  });
 
-  return Object.fromEntries(
-    itemNames.map((name) => [
-      name,
-      dataByName[name].map((value, index) => {
-        // zero points are not rendered at all (no ghost blocks on hover)
-        if (!value) return null;
-        // below the threshold, scale from a small base up to the threshold so 1 still looks smaller than 5
-        const drawnValue =
-          value >= minSegment
-            ? value
-            : minSegment * BAR_TINY_BASE + (minSegment * (1 - BAR_TINY_BASE) * value) / minSegment;
-        return topSeriesByIndex[index] === name
-          ? {
-              value: drawnValue,
-              itemStyle: { borderRadius: isPreview ? BAR_TOP_RADIUS_PREVIEW : BAR_TOP_RADIUS },
-            }
-          : drawnValue;
-      }),
-    ]),
-  );
+  return withTopRounding({
+    itemNames,
+    dataByName,
+    isPreview,
+    hiddenItems,
+    // below the threshold, scale from a small base up to the threshold so 1 still looks smaller than 5
+    mapValue: (value) =>
+      value >= minSegment
+        ? value
+        : minSegment * BAR_TINY_BASE + (minSegment * (1 - BAR_TINY_BASE) * value) / minSegment,
+  });
 };
 
 const buildAreaTooltipCalculator = (hoveredSeriesRef) => (data, color, customProps) => {
@@ -187,7 +168,7 @@ const buildSeries = ({
     ? buildAreaSeries(itemNames, dataByName, colors, isPreview)
     : createBarSeries(
         itemNames,
-        withTopRounding(itemNames, dataByName, isPreview, hiddenItems),
+        withMinSegmentRounding(itemNames, dataByName, isPreview, hiddenItems),
         colors,
         {
           silent: isPreview,
@@ -247,7 +228,7 @@ export const getBarSeriesData = ({
     contentFields,
     isTimeline,
   });
-  const barData = withTopRounding(
+  const barData = withMinSegmentRounding(
     itemNames,
     buildDataByName(chartDataOrdered),
     isPreview,

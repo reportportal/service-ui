@@ -16,11 +16,10 @@
 
 import { buildAxisTicks } from 'components/widgets/common/echarts/configHelpers';
 import { transformCategoryLabelByDefault } from 'components/widgets/common/utils';
-import { COLORS } from 'components/widgets/common/constants';
-import { createStackedBarSeries } from '../../common/stackedBarSeries';
 import { buildInvestigatedChartOption } from './buildChartOption';
+import { INVESTIGATED_COLORS } from './constants';
 
-export const getLaunchModeOption = ({ content, isPreview, formatMessage }) => {
+export const getLaunchModeData = (content) => {
   const sortedResult = [...content].sort((a, b) => {
     const startTimeA = new Date(a.startTime);
     const startTimeB = new Date(b.startTime);
@@ -32,24 +31,30 @@ export const getLaunchModeOption = ({ content, isPreview, formatMessage }) => {
     number: item.number,
     startTime: item.startTime,
   }));
-  const groups = Object.keys(sortedResult[0].values);
+  const itemNames = Object.keys(sortedResult[0].values);
   const colors = {};
   const dataByName = {};
 
-  groups.forEach((type) => {
-    colors[type] = COLORS[type];
+  itemNames.forEach((type) => {
+    colors[type] = INVESTIGATED_COLORS[type];
     dataByName[type] = sortedResult.map((item) => Number.parseFloat(item.values[type] || 0));
   });
 
-  return buildInvestigatedChartOption({
-    isPreview,
+  return {
+    itemsData,
+    itemNames,
+    colors,
+    dataByName,
     categories: itemsData.map(transformCategoryLabelByDefault),
     tickValues: buildAxisTicks(itemsData.length),
-    series: createStackedBarSeries(groups, dataByName, colors),
-    colors,
-    legendItems: groups,
-    itemsData,
+  };
+};
+
+export const getLaunchModeOption = ({ content, isPreview, formatMessage, hiddenItems }) =>
+  buildInvestigatedChartOption({
+    ...getLaunchModeData(content),
+    isPreview,
     formatMessage,
+    hiddenItems,
     gridRight: 20,
   });
-};
