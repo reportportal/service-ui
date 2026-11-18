@@ -28,6 +28,7 @@ export interface NativeFixRound {
   previousIterationId?: number;
   resultIterationId?: number;
   requestedAt?: string;
+  finishedAt?: string;
   workflowUrl?: string;
   failureReason?: string;
 }
@@ -80,8 +81,10 @@ export const normalizeLiveFixRound = (
   if (!isPositiveId(round.id) || !isPositiveId(round.roundNumber)) return invalidRound();
   if (round.testCaseId !== testCaseId || !isPositiveId(round.testCaseId)) return invalidRound();
   if (expectedId !== undefined && round.id !== expectedId) return invalidRound();
-  if (typeof round.status !== 'string' ||
-    !['PENDING', 'FIXED', 'FIXED_GRADE_FAILED', 'FAILED'].includes(round.status))
+  if (
+    typeof round.status !== 'string' ||
+    !['PENDING', 'FIXED', 'FIXED_GRADE_FAILED', 'FAILED'].includes(round.status)
+  )
     return invalidRound();
   return {
     id: round.id,
@@ -91,6 +94,7 @@ export const normalizeLiveFixRound = (
     previousIterationId: optionalId(round.previousIterationId),
     resultIterationId: optionalId(round.resultIterationId),
     requestedAt: readRequestedAt(round.requestedAt),
+    finishedAt: readRequestedAt(round.finishedAt),
     workflowUrl: readWorkflowUrl(round.workflowUrl),
     failureReason: optionalText(round.failureReason),
   };
@@ -105,12 +109,16 @@ export const startLiveFixRound = async (
   signal: AbortSignal,
 ): Promise<NativeFixRound> => {
   try {
-    const response = await fetch<unknown>(URLS.liveTestCaseFixRounds(projectKey, testCaseId), {
-      method: 'POST',
-      signal,
-      validateStatus: (status) =>
-        (status >= 200 && status < 300) || [400, 403, 404, 409, 422].includes(status),
-    }, true);
+    const response = await fetch<unknown>(
+      URLS.liveTestCaseFixRounds(projectKey, testCaseId),
+      {
+        method: 'POST',
+        signal,
+        validateStatus: (status) =>
+          (status >= 200 && status < 300) || [400, 403, 404, 409, 422].includes(status),
+      },
+      true,
+    );
     if (response.status === 409) throw new LiveFixRoundError('CONFLICT');
     if (response.status >= 400) throw new LiveFixRoundError('FAILED');
     return normalizeLiveFixRound(response.data, testCaseId);
@@ -133,4 +141,25 @@ export const loadLiveFixRound = async (
   );
   if (response.status === 404) throw new LiveFixRoundError('MISSING');
   return normalizeLiveFixRound(response.data, testCaseId, roundId);
+};
+
+export const normalizeLiveFixRoundHistory = (
+  value: unknown,
+  testCaseId: number,
+): NativeFixRound[] => {
+  if (!Array.isArray(value)) return invalidRound();
+  const rounds = value.map((round) => normalizeLiveFixRound(round, testCaseId));
+  if (new Set(rounds.map(({ id }) => id)).size !== rounds.length) return invalidRound();
+  return rounds;
+};
+
+export const loadLiveFixRoundHistory = async (
+  projectKey: string,
+  testCaseId: number,
+  signal: AbortSignal,
+): Promise<NativeFixRound[]> => {
+  const response = await fetch<unknown>(URLS.liveTestCaseFixRounds(projectKey, testCaseId), {
+    signal,
+  });
+  return normalizeLiveFixRoundHistory(response, testCaseId);
 };

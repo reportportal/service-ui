@@ -101,9 +101,23 @@ export interface ManualScenario {
 export type TestCaseOrigin = 'AI' | 'MANUAL';
 export type TestCaseStatus = 'DRAFT' | 'READY';
 
+export interface TestCaseCriterion {
+  criterionId?: number;
+  name: string;
+  score?: number;
+  maxPoints?: number;
+}
+
 export interface TestCaseMetrics {
   overallScore?: number;
   obsolete?: boolean;
+  evaluatedAt?: number;
+  criteria?: TestCaseCriterion[];
+  tokensIn?: number;
+  tokensOut?: number;
+  skill?: string;
+  pipelineIterationId?: number;
+  pipelineIterationNumber?: number;
   model?: string;
   costUsd?: number;
 }
@@ -113,6 +127,7 @@ export interface TestCase extends Partial<TestCaseAiExtension> {
   status?: TestCaseStatus;
   defaultVersionId?: number;
   metrics?: TestCaseMetrics;
+  unsentReviewComments?: number;
   id: number;
   displayId: string;
   name: string;

@@ -21,6 +21,7 @@ import { createClassnames } from 'common/utils';
 import type { StageTraceAttempt } from 'controllers/aiFactory/stageTrace';
 import { StageTraceTimeline } from 'pages/inside/aiFactory/stageTracePage/stageTraceTimeline';
 import { StageTraceSnapshot } from 'pages/inside/aiFactory/stageTracePage/stageTraceSnapshot';
+import { findAttemptSnapshot } from 'pages/inside/aiFactory/stageTracePage/stageTraceSnapshotUtils';
 import type {
   StageTraceState,
   TraceFailure,
@@ -68,6 +69,8 @@ export const StageTraceContent = ({
       </output>
     );
   const { trace } = state;
+  const stage = state.iteration?.stages.find((item) => item.stageKey === stageKey);
+  const snapshot = findAttemptSnapshot(stage, attempt);
   return (
     <div className={cx('body')}>
       <main className={cx('main')}>
@@ -81,7 +84,11 @@ export const StageTraceContent = ({
         )}
         {trace?.status === 'REPORTED' &&
           (trace.events.length ? (
-            <StageTraceTimeline key={`${state.scope}:${trace.attempt}`} events={trace.events} />
+            <StageTraceTimeline
+              key={`${state.scope}:${trace.attempt}`}
+              events={trace.events}
+              sections={snapshot?.sections}
+            />
           ) : (
             <SystemMessage mode="info">{formatMessage(messages.empty)}</SystemMessage>
           ))}

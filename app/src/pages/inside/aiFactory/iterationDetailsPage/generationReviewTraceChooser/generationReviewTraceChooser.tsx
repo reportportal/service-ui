@@ -23,6 +23,7 @@ import { useAiFactoryEnabled } from 'controllers/aiFactory';
 import { urlOrganizationAndProjectSelector } from 'controllers/pages';
 import { createStageTraceAction } from 'pages/inside/aiFactory/common/stageTrace/navigation';
 import { useScopedTraceRequest } from 'pages/inside/aiFactory/common/stageTrace/useScopedTraceRequest';
+import { LiveFixRoundDetails } from 'pages/inside/aiFactory/review/liveFixRoundHistory/liveFixRoundDetails';
 import { ProjectDetails } from 'pages/organization/constants';
 
 import { loadGenerationReviewRounds } from './loadGenerationReviewRounds';
@@ -105,31 +106,43 @@ export const GenerationReviewTraceChooser = ({
       {loading && <output aria-live="polite">{formatMessage(messages.loading)}</output>}
       {(error || data?.incomplete) && <p role="alert">{formatMessage(messages.incomplete)}</p>}
       {!data?.incomplete && rounds?.length === 0 && <p>{formatMessage(messages.empty)}</p>}
-      {rounds?.map((round) => (
-        <Button
-          key={`${round.testCaseId}:${round.roundId}`}
-          variant="text"
-          onClick={() => {
-            if (!isCurrent()) return;
-            dispatch(
-              createStageTraceAction(
-                { organizationSlug, projectSlug },
-                {
-                  pipelineId: round.pipelineId,
-                  iterationId: round.iterationId,
-                  stageKey: round.stageKey,
-                },
-                {
-                  fixRoundNumber: round.roundNumber,
-                  returnTo: { pipelineId, iterationId, stageKey },
-                },
-              ),
-            );
-          }}
-        >
-          {formatMessage(messages.open, { caseName: round.displayId, number: round.roundNumber })}
-        </Button>
-      ))}
+      <ul>
+        {rounds?.map((round) => (
+          <li key={`${round.testCaseId}:${round.roundId}`}>
+            <span>{round.displayId}</span>
+            <LiveFixRoundDetails round={round} />
+            {round.traceUnavailable && <p>{formatMessage(messages.unresolved)}</p>}
+            {round.pipelineId && round.iterationId && round.stageKey && (
+              <Button
+                variant="text"
+                onClick={() => {
+                  if (!isCurrent() || !round.pipelineId || !round.iterationId || !round.stageKey)
+                    return;
+                  dispatch(
+                    createStageTraceAction(
+                      { organizationSlug, projectSlug },
+                      {
+                        pipelineId: round.pipelineId,
+                        iterationId: round.iterationId,
+                        stageKey: round.stageKey,
+                      },
+                      {
+                        fixRoundNumber: round.roundNumber,
+                        returnTo: { pipelineId, iterationId, stageKey },
+                      },
+                    ),
+                  );
+                }}
+              >
+                {formatMessage(messages.open, {
+                  caseName: round.displayId,
+                  number: round.roundNumber,
+                })}
+              </Button>
+            )}
+          </li>
+        ))}
+      </ul>
     </section>
   );
 };

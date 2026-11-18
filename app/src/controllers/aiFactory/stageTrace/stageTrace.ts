@@ -55,6 +55,7 @@ export type StageTraceEventType =
 export interface StageTraceEvent {
   seq: number;
   type: StageTraceEventType;
+  unitKey?: string;
   title?: string;
   offsetMs?: number;
   durationMs?: number;
@@ -137,9 +138,11 @@ const asReportedAt = (value: unknown): string | undefined => {
 
 export const normalizeStageTraceEvent = (value: unknown): StageTraceEvent => {
   const raw = asRecord(value);
+  if (raw.unitKey != null && typeof raw.unitKey !== 'string') return invalidResponse();
   return {
     seq: asInteger(raw.seq),
     type: asString(raw.type, 255, false),
+    ...(raw.unitKey == null ? {} : { unitKey: raw.unitKey as string }),
     title: asOptionalString(raw.title, 512),
     offsetMs: asOptionalInteger(raw.offsetMs),
     durationMs: asOptionalInteger(raw.durationMs),

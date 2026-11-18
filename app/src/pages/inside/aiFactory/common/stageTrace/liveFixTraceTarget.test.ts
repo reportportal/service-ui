@@ -4,7 +4,11 @@
  */
 import { fetch } from 'common/utils';
 import { URLS } from 'common/urls';
-import { getLiveFixTraceTarget, isFixStageKey } from './liveFixTraceTarget';
+import {
+  getLiveFixTraceTarget,
+  getLiveFixRoundTraceTarget,
+  isFixStageKey,
+} from './liveFixTraceTarget';
 
 jest.mock('common/utils', () => ({ fetch: jest.fn() }));
 const fetchMock = fetch as jest.MockedFunction<
@@ -87,3 +91,42 @@ test.each([undefined, null, 7, 'prefix-fix', 'fix-suffix', 'review'])(
     expect(isFixStageKey(key)).toBe(false);
   },
 );
+
+describe('Library fix round trace provenance', () => {
+  const source = { id: 31, pipelineId: 8, iterationNumber: 1 };
+  const result = {
+    ...response([{ stageKey: 'test-case-fix' }]),
+    rerunOf: { id: 31, iterationNumber: 1 },
+  };
+  test('resolves a failed round reported result only when source and result identities are coherent', async () => {
+    fetchMock.mockImplementation((url) => Promise.resolve(url.endsWith('/31') ? source : result));
+    await expect(getLiveFixRoundTraceTarget('demo', 31, 72, signal)).resolves.toMatchObject({
+      id: 72,
+      pipelineId: 8,
+      stageKey: 'test-case-fix',
+    });
+    expect(fetchMock).toHaveBeenCalledTimes(2);
+    expect(fetchMock).toHaveBeenCalledWith(URLS.pipelineIterationById('demo', 31), { signal });
+    expect(fetchMock).toHaveBeenCalledWith(URLS.pipelineIterationById('demo', 72), { signal });
+  });
+  test.each([
+    { ...result, pipelineId: 99 },
+    { ...result, rerunOf: { id: 99 } },
+    { ...result, rerunOf: { id: 31, iterationNumber: 99 } },
+    { ...result, stages: [{ stageKey: 'review' }] },
+  ])('refuses mismatched pipeline, lineage or stage %#', async (invalidResult) => {
+    fetchMock.mockImplementation((url) =>
+      Promise.resolve(url.endsWith('/31') ? source : invalidResult),
+    );
+    await expect(getLiveFixRoundTraceTarget('demo', 31, 72, signal)).resolves.toBeUndefined();
+  });
+  test.each([undefined, 0, -1, 72])(
+    'does not guess a missing or self-referencing source %p',
+    async (previousIterationId) => {
+      await expect(
+        getLiveFixRoundTraceTarget('demo', previousIterationId, 72, signal),
+      ).resolves.toBeUndefined();
+      expect(fetchMock).not.toHaveBeenCalled();
+    },
+  );
+});

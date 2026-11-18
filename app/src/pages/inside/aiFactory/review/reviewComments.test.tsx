@@ -369,6 +369,7 @@ describe('native AI review presentation', () => {
   test('shows the authoritative unsent count without claiming approval', () => {
     const wrapper = shallow(
       <LiveReviewStrip
+        testCaseId={42}
         lifecycle={Lifecycle.READY}
         reviewState={createLiveReviewState({ unsentCount: 7 })}
         isReadOnly={false}
@@ -389,7 +390,12 @@ describe('native AI review presentation', () => {
         pushToAgent: jest.fn(() => Promise.resolve(true)),
       });
       const wrapper = mount(
-        <LiveReviewStrip lifecycle={lifecycle} reviewState={state} isReadOnly={false} />,
+        <LiveReviewStrip
+          testCaseId={42}
+          lifecycle={lifecycle}
+          reviewState={state}
+          isReadOnly={false}
+        />,
       );
       const push = wrapper.find('button[data-automation-id="push-review-comments"]');
       expect(push.prop('children')).toBe('Push to agent · 7');
@@ -411,7 +417,7 @@ describe('native AI review presentation', () => {
       fixMonitoringError: 'READ',
       retryFixMonitoring: jest.fn(),
     });
-    const wrapper = mount(<LiveReviewStrip reviewState={state} isReadOnly />);
+    const wrapper = mount(<LiveReviewStrip testCaseId={42} reviewState={state} isReadOnly />);
     expect(wrapper.find('button[data-automation-id="push-review-comments"]')).toHaveLength(0);
     expect(wrapper.find('button[data-automation-id="discard-review-comments"]')).toHaveLength(0);
     (
@@ -432,7 +438,9 @@ describe('native AI review presentation', () => {
     { isError: true, isLoaded: false },
   ])('keeps Push disabled while the hook disallows a command: %j', (overrides) => {
     const state = createLiveReviewState({ unsentCount: 2, canPush: false, ...overrides });
-    const wrapper = mount(<LiveReviewStrip reviewState={state} isReadOnly={false} />);
+    const wrapper = mount(
+      <LiveReviewStrip testCaseId={42} reviewState={state} isReadOnly={false} />,
+    );
     expect(wrapper.find('button[data-automation-id="push-review-comments"]').prop('disabled')).toBe(
       true,
     );
@@ -450,7 +458,7 @@ describe('native AI review presentation', () => {
         fixCompleted: true,
         fixRoundState: { id: 5, testCaseId: 42, roundNumber: 1, status },
       });
-      const wrapper = mount(<LiveReviewStrip reviewState={state} isReadOnly />);
+      const wrapper = mount(<LiveReviewStrip testCaseId={42} reviewState={state} isReadOnly />);
       expect(stripFeedback(wrapper)).toContain(text);
       expect(stripFeedback(wrapper)).not.toMatch(/Auto-Ready|score|93/);
       expect(wrapper.find('button[data-automation-id="retry-fix-monitoring"]')).toHaveLength(0);
@@ -461,6 +469,7 @@ describe('native AI review presentation', () => {
   test('withdraws an old terminal summary when a new external fix is observed', () => {
     const wrapper = mount(
       <LiveReviewStrip
+        testCaseId={42}
         reviewState={createLiveReviewState({
           fixCompleted: true,
           fixRoundState: { id: 5, testCaseId: 42, roundNumber: 1, status: 'FIXED' },
@@ -483,7 +492,11 @@ describe('native AI review presentation', () => {
 
   test('presents Review-only completion without fabricating a successful round', () => {
     const wrapper = mount(
-      <LiveReviewStrip reviewState={createLiveReviewState({ fixCompleted: true })} isReadOnly />,
+      <LiveReviewStrip
+        testCaseId={42}
+        reviewState={createLiveReviewState({ fixCompleted: true })}
+        isReadOnly
+      />,
     );
     expect(stripFeedback(wrapper)).toContain('The fix is no longer in progress');
     expect(stripFeedback(wrapper)).not.toMatch(/Fix round 1|Auto-Ready|grading failed/);
@@ -498,7 +511,11 @@ describe('native AI review presentation', () => {
     'distinguishes the %s start outcome from a FAILED agent result',
     (fixStartError, text) => {
       const wrapper = mount(
-        <LiveReviewStrip reviewState={createLiveReviewState({ fixStartError })} isReadOnly />,
+        <LiveReviewStrip
+          testCaseId={42}
+          reviewState={createLiveReviewState({ fixStartError })}
+          isReadOnly
+        />,
       );
       expect(stripFeedback(wrapper)).toContain(text);
       expect(stripFeedback(wrapper)).not.toContain('Fix round 1 failed');
@@ -514,7 +531,7 @@ describe('native AI review presentation', () => {
         retryFixMonitoring: jest.fn(),
         pushToAgent: jest.fn(() => Promise.resolve(false)),
       });
-      const wrapper = mount(<LiveReviewStrip reviewState={state} isReadOnly />);
+      const wrapper = mount(<LiveReviewStrip testCaseId={42} reviewState={state} isReadOnly />);
       (
         wrapper
           .find('button[data-automation-id="retry-fix-monitoring"]')
@@ -529,7 +546,12 @@ describe('native AI review presentation', () => {
   test('shows a fixing message without inventing a round and wires explicit Refresh', () => {
     const state = createLiveReviewState({ fixInProgress: true, unsentCount: 2 });
     const wrapper = shallow(
-      <LiveReviewStrip lifecycle={Lifecycle.DRAFT} reviewState={state} isReadOnly />,
+      <LiveReviewStrip
+        testCaseId={42}
+        lifecycle={Lifecycle.DRAFT}
+        reviewState={state}
+        isReadOnly
+      />,
     );
 
     expect(wrapper.find('output').text()).toContain('Agent is fixing');
@@ -547,6 +569,7 @@ describe('native AI review presentation', () => {
     (lifecycle) => {
       const wrapper = shallow(
         <LiveReviewStrip
+          testCaseId={42}
           lifecycle={lifecycle}
           reviewState={createLiveReviewState()}
           isReadOnly={false}
@@ -563,6 +586,7 @@ describe('native AI review presentation', () => {
   test('does not display zero as authoritative while Review is loading', () => {
     const wrapper = shallow(
       <LiveReviewStrip
+        testCaseId={42}
         lifecycle={Lifecycle.DRAFT}
         reviewState={createLiveReviewState({ isLoading: true, isLoaded: false })}
         isReadOnly
@@ -574,7 +598,7 @@ describe('native AI review presentation', () => {
 
   test('shows load and mutation failures and permits explicit reload after failure', () => {
     const state = createLiveReviewState({ isLoaded: false, isError: true, isMutationError: true });
-    const wrapper = shallow(<LiveReviewStrip reviewState={state} isReadOnly />);
+    const wrapper = shallow(<LiveReviewStrip testCaseId={42} reviewState={state} isReadOnly />);
     expect(wrapper.find('[role="alert"]')).toHaveLength(2);
     expect(wrapper.find('[data-automation-id="refresh-review-comments"]').prop('disabled')).toBe(
       false,
@@ -583,7 +607,9 @@ describe('native AI review presentation', () => {
 
   test('confirms native discard before calling its mutation', async () => {
     const state = createLiveReviewState({ unsentCount: 2 });
-    const wrapper = shallow(<LiveReviewStrip reviewState={state} isReadOnly={false} />);
+    const wrapper = shallow(
+      <LiveReviewStrip testCaseId={42} reviewState={state} isReadOnly={false} />,
+    );
     const discard = wrapper
       .find('[data-automation-id="discard-review-comments"]')
       .prop('onClick') as () => void;
@@ -742,3 +768,5 @@ describe('native AI review presentation', () => {
     expect(wrapper.find('[aria-label="Delete comment"]')).toHaveLength(0);
   });
 });
+
+jest.mock('./liveFixRoundHistory/liveFixRoundHistory', () => ({ LiveFixRoundHistory: () => null }));

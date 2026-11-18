@@ -53,6 +53,7 @@ export const LiveFixIterationLinks = ({ reviewState, isReadOnly }: LiveFixIterat
         <LiveFixTraceAction
           projectKey={projectKey}
           resourceKey={resourceKey}
+          previousIterationId={round.previousIterationId}
           resultIterationId={round.resultIterationId}
           roundNumber={round.roundNumber}
         />

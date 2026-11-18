@@ -11,6 +11,7 @@
 import { shallow } from 'enzyme';
 import { useSelector } from 'react-redux';
 
+import { useRefetchCurrentTestCases } from 'pages/inside/testCaseLibraryPage/hooks/useRefetchCurrentTestCases';
 import { useAiFactoryEnabled } from 'controllers/aiFactory';
 import { projectKeySelector } from 'controllers/project';
 import { useUserPermissions } from 'hooks/useUserPermissions';
@@ -127,7 +128,7 @@ jest.mock('pages/inside/aiFactory/readyOnlyGate', () => ({
 }));
 const mockRefetch = jest.fn();
 jest.mock('pages/inside/testCaseLibraryPage/hooks/useRefetchCurrentTestCases', () => ({
-  useRefetchCurrentTestCases: () => mockRefetch,
+  useRefetchCurrentTestCases: jest.fn(() => mockRefetch),
 }));
 jest.mock('../../requirementsList/requirementsList', () => ({
   RequirementsList: 'RequirementsList',
@@ -195,6 +196,7 @@ describe('TestCaseSidePanel native approval', () => {
       canApprove: true,
       versionId: 100,
       onFixCompleted: expect.any(Function),
+      onReviewChanged: expect.any(Function),
       allowPush: false,
     });
     const approval = wrapper.find(NativeApproveButton);
@@ -210,6 +212,9 @@ describe('TestCaseSidePanel native approval', () => {
     expect(options).toMatchObject({ allowPush: false, versionId: 100 });
     options?.onFixCompleted?.();
     expect(mockRefetch).toHaveBeenCalledTimes(1);
+    options?.onReviewChanged?.();
+    expect(mockRefetch).toHaveBeenCalledTimes(2);
+    expect(useRefetchCurrentTestCases).toHaveBeenLastCalledWith(0);
   });
 
   test.each(['hidden', 'manual', 'ready', 'flag-off', 'viewer'] as const)(
@@ -246,6 +251,7 @@ describe('TestCaseSidePanel native approval', () => {
         canApprove: variant === 'viewer',
         versionId: 100,
         onFixCompleted: expect.any(Function),
+        onReviewChanged: expect.any(Function),
         allowPush: false,
       });
     },

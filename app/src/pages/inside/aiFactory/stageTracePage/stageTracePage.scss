@@ -46,6 +46,11 @@
   }
 }
 .timeline {
+  &__filter {
+    width: 320px;
+    max-width: 100%;
+    margin-bottom: 16px;
+  }
   h2 {
     font-size: 16px;
     margin-bottom: 12px;
@@ -88,6 +93,9 @@
   }
   &__time {
     margin-left: auto;
+    color: var(--rp-ui-base-e-600);
+  }
+  &__unit {
     color: var(--rp-ui-base-e-600);
   }
   &__body {

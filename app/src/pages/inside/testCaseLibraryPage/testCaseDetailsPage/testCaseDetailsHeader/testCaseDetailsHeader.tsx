@@ -274,7 +274,16 @@ export const TestCaseDetailsHeader = ({
           {testCase.name}
         </span>
         {nativeSummary && (
-          <NativeTestCaseSummary summary={nativeSummary} showIdentity showMetrics={false} />
+          <NativeTestCaseSummary
+            summary={nativeSummary}
+            showIdentity
+            showMetrics={false}
+            unsentCount={
+              nativeReviewState?.isLoaded
+                ? nativeReviewState.unsentCount
+                : nativeSummary.unsentReviewComments
+            }
+          />
         )}
         {isAiFactoryEnabled && testCase.lifecycle && (
           <LifecycleBadge lifecycle={testCase.lifecycle} />

@@ -62,6 +62,7 @@ interface ProbeProps {
   enabled?: boolean;
   canApprove?: boolean;
   versionId?: number;
+  onReviewChanged?: () => void;
   onState: (state: LiveReviewCommentsLoadState) => void;
 }
 
@@ -72,8 +73,13 @@ const Probe = ({
   canApprove = false,
   versionId,
   onState,
+  onReviewChanged,
 }: ProbeProps) => {
-  const state = useLiveReviewComments(projectKey, testCaseId, enabled, { canApprove, versionId });
+  const state = useLiveReviewComments(projectKey, testCaseId, enabled, {
+    canApprove,
+    versionId,
+    onReviewChanged,
+  });
   useEffect(() => onState(state), [state, onState]);
   return <div />;
 };
@@ -218,6 +224,54 @@ describe('useLiveReviewComments', () => {
 
     expect(latest(onState).comments).toHaveLength(1);
     expect(fetchMock).toHaveBeenCalledTimes(1);
+  });
+
+  test.each(['add', 'delete', 'discard'] as const)(
+    'notifies native metadata refresh only after a confirmed %s mutation',
+    async (operation) => {
+      const onReviewChanged = jest.fn();
+      fetchMock
+        .mockResolvedValueOnce(serverReview())
+        .mockResolvedValueOnce({})
+        .mockResolvedValueOnce(serverReview());
+      await render({ onReviewChanged });
+      expect(onReviewChanged).not.toHaveBeenCalled();
+      await act(async () => {
+        const reviewState = latest(onState);
+        if (operation === 'add') await reviewState.addComment(payload);
+        else if (operation === 'delete') await reviewState.deleteComment(21);
+        else await reviewState.discardPending();
+        await flush();
+      });
+      expect(onReviewChanged).toHaveBeenCalledTimes(1);
+    },
+  );
+
+  test('does not notify native metadata refresh after a rejected or stale mutation', async () => {
+    const onReviewChanged = jest.fn();
+    fetchMock
+      .mockResolvedValueOnce(serverReview())
+      .mockRejectedValueOnce(new Error('Rejected'))
+      .mockResolvedValueOnce(serverReview());
+    await render({ onReviewChanged });
+    await act(async () => {
+      await expect(latest(onState).addComment(payload)).rejects.toThrow('Rejected');
+      await flush();
+    });
+    expect(onReviewChanged).not.toHaveBeenCalled();
+    const pending = deferred<unknown>();
+    fetchMock.mockReturnValueOnce(pending.promise).mockResolvedValue(serverReview());
+    let command!: Promise<boolean>;
+    act(() => {
+      command = latest(onState).addComment(payload);
+    });
+    await update({ testCaseId: 99 });
+    await act(async () => {
+      pending.resolve({});
+      await command;
+      await flush();
+    });
+    expect(onReviewChanged).not.toHaveBeenCalled();
   });
 
   test('posts only the native request body then reconciles Review', async () => {

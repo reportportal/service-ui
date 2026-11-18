@@ -12,7 +12,13 @@ import { AxiosHeaders, type AxiosResponse } from 'axios';
 
 import { fetch } from 'common/utils';
 
-import { loadLiveFixRound, normalizeLiveFixRound, startLiveFixRound } from './liveFixRounds';
+import {
+  loadLiveFixRound,
+  loadLiveFixRoundHistory,
+  normalizeLiveFixRoundHistory,
+  normalizeLiveFixRound,
+  startLiveFixRound,
+} from './liveFixRounds';
 
 jest.mock('common/utils', () => ({ fetch: jest.fn() }));
 const fetchMock = jest.mocked(fetch);
@@ -172,5 +178,49 @@ describe('native fix round transport and validation', () => {
     fetchMock.mockRejectedValueOnce(error);
     await expect(loadLiveFixRound('demo', 42, 5, new AbortController().signal)).rejects.toBe(error);
     expect(fetchMock).toHaveBeenCalledTimes(1);
+  });
+});
+
+describe('complete native fix round history', () => {
+  test('loads the array endpoint with cancellation and keeps backend order without extra round reads', async () => {
+    const signal = new AbortController().signal;
+    fetchMock
+      .mockReset()
+      .mockResolvedValueOnce([
+        {
+          ...pending,
+          id: 11,
+          roundNumber: 2,
+          status: 'FAILED',
+          resultIterationId: 70,
+          finishedAt: '2026-11-18T09:10:00Z',
+        },
+        pending,
+      ] as unknown as AxiosResponse<unknown>);
+    const rounds = await loadLiveFixRoundHistory('demo', 42, signal);
+    expect(rounds.map(({ id }) => id)).toEqual([11, 5]);
+    expect(rounds[0]).toMatchObject({
+      status: 'FAILED',
+      resultIterationId: 70,
+      finishedAt: '2026-11-18T09:10:00Z',
+    });
+    expect(fetchMock).toHaveBeenCalledTimes(1);
+    expect(fetchMock).toHaveBeenCalledWith(
+      expect.stringMatching(/test-case\/42\/review\/fix-round$/),
+      { signal },
+    );
+  });
+  test.each([
+    {},
+    null,
+    { content: [] },
+    [pending, pending],
+    [{ ...pending, testCaseId: 99 }],
+    [{ ...pending, finishedAt: 'yesterday' }],
+  ])('rejects malformed or mixed-scope histories instead of claiming empty: %#', (value) => {
+    expect(() => normalizeLiveFixRoundHistory(value, 42)).toThrow();
+  });
+  test('accepts a successful empty array', () => {
+    expect(normalizeLiveFixRoundHistory([], 42)).toEqual([]);
   });
 });

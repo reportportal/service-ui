@@ -210,3 +210,31 @@ describe('stage trace read contract', () => {
     });
   });
 });
+
+describe('stage trace event unit identity', () => {
+  test.each(['', ' \n\t ', '  opaque / unit:stage  ', '__proto__', 'x'.repeat(5000)])(
+    'preserves the exact opaque unit key %# without an undocumented length cap',
+    (unitKey) => {
+      const result = normalizeStageTrace(
+        { ...response, events: [{ seq: 0, type: 'STEP', unitKey }] },
+        resource,
+      );
+      expect(result.events[0].unitKey).toBe(unitKey);
+    },
+  );
+
+  test.each([undefined, null])('accepts an omitted or null optional key %p', (unitKey) => {
+    const result = normalizeStageTraceEvent({ seq: 0, type: 'STEP', unitKey });
+    expect(result).not.toHaveProperty('unitKey');
+    expect(result).toMatchObject({ seq: 0, type: 'STEP' });
+  });
+
+  test.each([0, false, [], {}])(
+    'rejects a non-string unit key %p instead of misgrouping it',
+    (unitKey) => {
+      expect(() => normalizeStageTraceEvent({ seq: 0, type: 'STEP', unitKey })).toThrow(
+        StageTraceError,
+      );
+    },
+  );
+});

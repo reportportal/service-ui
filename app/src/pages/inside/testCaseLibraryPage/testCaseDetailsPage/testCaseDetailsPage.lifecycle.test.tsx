@@ -19,6 +19,7 @@ import { mount, shallow } from 'enzyme';
 import { useSelector } from 'react-redux';
 
 import { fetch } from 'common/utils';
+import { useRefetchCurrentTestCases } from 'pages/inside/testCaseLibraryPage/hooks/useRefetchCurrentTestCases';
 import { useAiFactoryEnabled } from 'controllers/aiFactory';
 import { urlOrganizationAndProjectSelector } from 'controllers/pages';
 import { projectKeySelector } from 'controllers/project';
@@ -71,6 +72,10 @@ jest.mock('react-intl', () => ({
   }),
 }));
 const mockDispatch = jest.fn();
+const mockRefetchCurrentTestCases = jest.fn();
+jest.mock('pages/inside/testCaseLibraryPage/hooks/useRefetchCurrentTestCases', () => ({
+  useRefetchCurrentTestCases: jest.fn(() => mockRefetchCurrentTestCases),
+}));
 
 jest.mock('react-redux', () => ({ useDispatch: () => mockDispatch, useSelector: jest.fn() }));
 jest.mock('react-tracking', () => ({ useTracking: () => ({ trackEvent: jest.fn() }) }));
@@ -353,6 +358,7 @@ describe('TestCaseDetailsPage lifecycle history', () => {
         canApprove: true,
         versionId: undefined,
         onFixCompleted: expect.any(Function),
+        onReviewChanged: expect.any(Function),
       });
       expect(useTestCaseAi).toHaveBeenLastCalledWith('demo', 42, false, 100);
       expect(useReviewComments).toHaveBeenLastCalledWith('demo', 42, false);
@@ -400,6 +406,7 @@ describe('TestCaseDetailsPage lifecycle history', () => {
       canApprove: true,
       versionId: 100,
       onFixCompleted: expect.any(Function),
+      onReviewChanged: expect.any(Function),
     });
     const header = mountedPage.find('mock-TestCaseDetailsHeader');
     const state = header.prop('nativeReviewState') as LiveReviewCommentsLoadState;
@@ -810,6 +817,7 @@ describe('TestCaseDetailsPage lifecycle history', () => {
         canApprove: status === 'DRAFT',
         versionId: undefined,
         onFixCompleted: expect.any(Function),
+        onReviewChanged: expect.any(Function),
       });
       expect(getReviewStrip(wrapper).find(LiveReviewStrip)).toHaveLength(1);
       expect(getReviewStrip(wrapper).find(LiveReviewStrip).prop('lifecycle')).toBe(status);
@@ -923,6 +931,7 @@ describe('TestCaseDetailsPage lifecycle history', () => {
         canApprove: false,
         versionId: undefined,
         onFixCompleted: expect.any(Function),
+        onReviewChanged: expect.any(Function),
       });
     },
   );
@@ -981,5 +990,18 @@ describe('TestCaseDetailsPage lifecycle history', () => {
     act(() => {
       wrapper.unmount();
     });
+  });
+});
+
+test('refreshes native details and the currently visible list after confirmed review changes', () => {
+  selectedTestCase = { ...testCase, origin: 'AI', status: 'DRAFT', defaultVersionId: 100 };
+  mockRefetchCurrentTestCases.mockClear();
+  renderPage(true);
+  jest.mocked(useLiveReviewComments).mock.lastCall?.[3]?.onReviewChanged?.();
+  expect(mockRefetchCurrentTestCases).toHaveBeenCalledTimes(1);
+  expect(useRefetchCurrentTestCases).toHaveBeenLastCalledWith(0);
+  expect(mockDispatch).toHaveBeenCalledWith({
+    type: 'GET_TEST_CASE_DETAILS',
+    payload: { testCaseId: 42 },
   });
 });

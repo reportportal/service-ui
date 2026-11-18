@@ -68,6 +68,7 @@ export interface ReviewScope {
   onCompleted: () => void;
   onObservationStarted: () => void;
   completedCallback?: () => void;
+  changedCallback?: () => void;
 }
 
 export const createReviewSnapshot = (): ReviewSnapshot => ({
