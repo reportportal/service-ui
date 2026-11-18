@@ -27,8 +27,8 @@ import {
   GetPipelineIterationDetailsAction,
   GetPipelineIterationsAction,
   GetPipelinesAction,
-  PipelineIterationPollScope,
   PipelinePageRequest,
+  PipelineIterationPollScope,
 } from './types';
 
 export const getPipelinesAction = (page?: PipelinePageRequest): GetPipelinesAction => ({
