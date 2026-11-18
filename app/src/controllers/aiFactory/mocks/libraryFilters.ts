@@ -33,10 +33,11 @@ interface TestCaseListResponse {
 
 type LibraryTestCase = Pick<TestCase, 'displayId'>;
 
-const LIFECYCLE_PARAM = 'filter.eq.lifecycle';
-const AI_PARAM = 'filter.eq.ai';
+const STATUS_PARAM = 'filter.eq.status';
+const ORIGIN_PARAM = 'filter.eq.origin';
 const ITERATION_PARAM = 'filter.eq.iterationId';
-const COUNT_REQUEST_PARAMS = new Set([LIFECYCLE_PARAM, AI_PARAM, 'limit', 'offset']);
+export const LIBRARY_FILTER_QUERY_KEYS = [STATUS_PARAM, ORIGIN_PARAM, ITERATION_PARAM];
+const COUNT_REQUEST_PARAMS = new Set([STATUS_PARAM, ORIGIN_PARAM, 'limit', 'offset']);
 
 const toParamsRecord = (params: unknown): Record<string, unknown> =>
   typeof params === 'object' && params !== null && !Array.isArray(params)
@@ -56,9 +57,9 @@ const readParam = (config: AxiosRequestConfig, key: string): unknown => {
 const parseLifecycle = (value: unknown): Lifecycle | undefined =>
   value === Lifecycle.DRAFT || value === Lifecycle.READY ? value : undefined;
 
-const parseAi = (value: unknown): boolean | undefined => {
-  if (value === true || value === 'true' || value === 'AI') return true;
-  if (value === false || value === 'false' || value === 'NO_AI') return false;
+const parseOrigin = (value: unknown): boolean | undefined => {
+  if (value === 'AI') return true;
+  if (value === 'MANUAL') return false;
   return undefined;
 };
 
@@ -69,8 +70,8 @@ const parseIterationId = (value: unknown): number | undefined => {
 };
 
 export const parseLibraryFilters = (config: AxiosRequestConfig): LibraryFilters => ({
-  lifecycle: parseLifecycle(readParam(config, LIFECYCLE_PARAM)),
-  ai: parseAi(readParam(config, AI_PARAM)),
+  lifecycle: parseLifecycle(readParam(config, STATUS_PARAM)),
+  ai: parseOrigin(readParam(config, ORIGIN_PARAM)),
   iterationId: parseIterationId(readParam(config, ITERATION_PARAM)),
 });
 

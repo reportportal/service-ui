@@ -108,6 +108,12 @@ const hasValidAiFilters = ({ lifecycle, hasAi, iterationId }: TestCaseAiFilterPa
   typeof hasAi === 'boolean' ||
   (Number.isSafeInteger(iterationId) && Number(iterationId) > 0);
 
+const buildAiFilterQuery = ({ lifecycle, hasAi, iterationId }: TestCaseAiFilterParams) => ({
+  'filter.eq.status': lifecycle,
+  'filter.eq.origin': typeof hasAi === 'boolean' ? (hasAi ? 'AI' : 'MANUAL') : undefined,
+  'filter.eq.iterationId': iterationId,
+});
+
 function* getTestCasesByFolderId(action: GetTestCasesByFolderIdAction): Generator {
   yield put(startLoadingTestCasesAction());
   const hasAiFilters = hasValidAiFilters(action.payload);
@@ -120,9 +126,6 @@ function* getTestCasesByFolderId(action: GetTestCasesByFolderIdAction): Generato
       testCasesSearchParams,
       filterPriorities,
       filterTags,
-      lifecycle,
-      hasAi,
-      iterationId,
     } = action.payload;
     const projectKey = (yield select(projectKeySelector)) as string;
     const result = (yield call(
@@ -131,9 +134,7 @@ function* getTestCasesByFolderId(action: GetTestCasesByFolderIdAction): Generato
         'filter.eq.testFolderId': folderId,
         'filter.cnt.name': testCasesSearchParams,
         ...buildTestCaseFilterParams(filterPriorities, filterTags),
-        'filter.eq.lifecycle': lifecycle,
-        'filter.eq.ai': hasAi,
-        'filter.eq.iterationId': iterationId,
+        ...buildAiFilterQuery(action.payload),
         offset,
         limit,
       }),
@@ -209,9 +210,6 @@ function* getAllTestCases(action: GetAllTestCasesAction): Generator {
       testCasesSearchParams,
       filterPriorities,
       filterTags,
-      lifecycle,
-      hasAi,
-      iterationId,
     } = action.payload;
     const projectKey = (yield select(projectKeySelector)) as string;
     const result = (yield call(
@@ -221,9 +219,7 @@ function* getAllTestCases(action: GetAllTestCasesAction): Generator {
         limit,
         'filter.cnt.name': testCasesSearchParams,
         ...buildTestCaseFilterParams(filterPriorities, filterTags),
-        'filter.eq.lifecycle': lifecycle,
-        'filter.eq.ai': hasAi,
-        'filter.eq.iterationId': iterationId,
+        ...buildAiFilterQuery(action.payload),
       }),
     )) as {
       content: TestCase[];

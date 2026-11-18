@@ -335,8 +335,8 @@ describe('installOverlayInterceptor', () => {
 
     const { data } = await http.get<{ content: TestCase[]; page: { totalElements: number } }>(url, {
       params: {
-        'filter.eq.lifecycle': Lifecycle.DRAFT,
-        'filter.eq.ai': true,
+        'filter.eq.status': Lifecycle.DRAFT,
+        'filter.eq.origin': 'AI',
         'filter.eq.iterationId': 102,
       },
     });
@@ -368,7 +368,7 @@ describe('installOverlayInterceptor', () => {
     });
 
     const { data } = await http.get<{ content: TestCase[]; page: { totalElements: number } }>(url, {
-      params: { limit: 2, offset: 2, 'filter.eq.lifecycle': Lifecycle.DRAFT },
+      params: { limit: 2, offset: 2, 'filter.eq.status': Lifecycle.DRAFT },
     });
 
     expect(data.content.map(({ displayId }) => displayId)).toEqual(['TC106', 'TC107']);
@@ -385,7 +385,7 @@ describe('installOverlayInterceptor', () => {
     });
 
     await expect(
-      http.get(url, { params: { 'filter.eq.lifecycle': Lifecycle.DRAFT } }),
+      http.get(url, { params: { 'filter.eq.status': Lifecycle.DRAFT } }),
     ).rejects.toThrow('AI Factory mock requires pagination metadata to filter Test Cases');
 
     mock.restore();
@@ -408,7 +408,7 @@ describe('installOverlayInterceptor', () => {
     });
 
     await expect(
-      http.get(url, { params: { 'filter.eq.lifecycle': Lifecycle.DRAFT } }),
+      http.get(url, { params: { 'filter.eq.status': Lifecycle.DRAFT } }),
     ).rejects.toThrow('AI Factory mock could not load the complete Test Case dataset');
 
     mock.restore();
@@ -423,7 +423,7 @@ describe('installOverlayInterceptor', () => {
     });
 
     await expect(
-      http.get(url, { params: { 'filter.eq.lifecycle': Lifecycle.DRAFT } }),
+      http.get(url, { params: { 'filter.eq.status': Lifecycle.DRAFT } }),
     ).rejects.toMatchObject({
       code: C3_OVERLAY_ERROR_CODE,
       name: 'C3OverlayError',
@@ -451,7 +451,7 @@ describe('installOverlayInterceptor', () => {
 
     const { data } = await http.get<{ content: TestCase[]; page: { totalElements: number; totalPages: number } }>(
       url,
-      { params: { limit: 5, offset: 0, 'filter.eq.ai': true } },
+      { params: { limit: 5, offset: 0, 'filter.eq.origin': 'AI' } },
     );
 
     // All twelve rows reuse seed displayIds TC101–TC108, so the AI filter keeps the full set.
@@ -474,7 +474,7 @@ describe('installOverlayInterceptor', () => {
         params: {
           limit: 20,
           offset: 0,
-          'filter.eq.lifecycle': Lifecycle.DRAFT,
+          'filter.eq.status': Lifecycle.DRAFT,
           ...pagination,
         },
       }),
@@ -517,7 +517,7 @@ describe('installOverlayInterceptor', () => {
 
     await expect(
       http.get(url, {
-        params: { 'filter.eq.lifecycle': Lifecycle.DRAFT },
+        params: { 'filter.eq.status': Lifecycle.DRAFT },
         headers: { Authorization: 'Bearer demo-token' },
         signal: controller.signal,
       }),
@@ -532,7 +532,7 @@ describe('installOverlayInterceptor', () => {
   test('overrides only metadata for the dedicated review-queue count request', async () => {
     const { http, mock } = setupOverlay();
     const url =
-      '/api/v1/project/demo/tms/test-case?limit=1&offset=0&filter.eq.lifecycle=DRAFT&filter.eq.ai=true';
+      '/api/v1/project/demo/tms/test-case?limit=1&offset=0&filter.eq.status=DRAFT&filter.eq.origin=AI';
     mock.onGet('/api/v1/project/demo/tms/test-case?limit=1&offset=0').reply(200, {
       content: [realTestCase('TC101')],
       page: { number: 1, size: 1, totalElements: 37, totalPages: 37 },
@@ -546,8 +546,8 @@ describe('installOverlayInterceptor', () => {
     expect(data.content).toHaveLength(1);
     expect(data.content[0]).toMatchObject({ displayId: 'TC101', lifecycle: Lifecycle.READY });
     expect(data.page).toMatchObject({ totalElements: 5, totalPages: 5 });
-    expect(mock.history.get[0].url).not.toContain('filter.eq.lifecycle');
-    expect(mock.history.get[0].url).not.toContain('filter.eq.ai');
+    expect(mock.history.get[0].url).not.toContain('filter.eq.status');
+    expect(mock.history.get[0].url).not.toContain('filter.eq.origin');
 
     mock.restore();
   });
@@ -555,7 +555,7 @@ describe('installOverlayInterceptor', () => {
   test('does not override metadata for a scoped review-queue request', async () => {
     const { http, mock } = setupOverlay();
     const url =
-      '/api/v1/project/demo/tms/test-case?limit=1&filter.eq.lifecycle=DRAFT&filter.eq.ai=true&filter.eq.testFolderId=42';
+      '/api/v1/project/demo/tms/test-case?limit=1&filter.eq.status=DRAFT&filter.eq.origin=AI&filter.eq.testFolderId=42';
     mock
       .onGet(
         '/api/v1/project/demo/tms/test-case?limit=1000&filter.eq.testFolderId=42&offset=0',

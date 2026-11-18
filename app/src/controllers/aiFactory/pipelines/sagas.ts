@@ -17,7 +17,7 @@
 import { call, select, all, put, takeEvery, takeLatest } from 'redux-saga/effects';
 
 import { URLS } from 'common/urls';
-import { fetch } from 'common/utils';
+import { ERROR_CANCELED, fetch } from 'common/utils';
 import { fetchSuccessAction, fetchErrorAction } from 'controllers/fetch';
 import { FETCH_ERROR, FETCH_START, FETCH_SUCCESS } from 'controllers/fetch/constants';
 import { showErrorNotification } from 'controllers/notification';
@@ -69,7 +69,9 @@ let abortController: AbortController | undefined;
 let pipelineCatalogRequestId = 0;
 const iterationsAbortControllers = new Set<AbortController>();
 let pipelineIterationsRequestId = 0;
-let iterationDetailsAbortController: AbortController | undefined;
+let activeIterationDetailsRequest:
+  | { meta: PipelineDetailRequestMeta; controller: AbortController }
+  | undefined;
 let iterationDetailsRequestId = 0;
 let comparisonAbortController: AbortController | undefined;
 
@@ -127,7 +129,7 @@ function* getPipelines(action: GetPipelinesAction): Generator {
   abortController?.abort();
   iterationsAbortControllers.forEach((iterationsController) => iterationsController.abort());
   iterationsAbortControllers.clear();
-  iterationDetailsAbortController?.abort();
+  activeIterationDetailsRequest?.controller.abort();
   comparisonAbortController?.abort();
   abortController = controller;
   pipelineCatalogRequestId += 1;
@@ -394,13 +396,15 @@ function* fetchPipelineIterationDetail(
 function* handlePipelineDetailFailure(
   error: unknown,
   requestMeta: PipelineDetailRequestMeta,
+  signal: AbortSignal,
 ): Generator {
-  const isCancellation = error instanceof Error && error.message === 'REQUEST_CANCELED';
+  const isCancellation =
+    signal.aborted || (error instanceof Error && error.message === ERROR_CANCELED);
   yield put({
     type: FETCH_ERROR,
     payload: error,
     error: true,
-    meta: { ...requestMeta, isCancellation },
+    meta: { ...requestMeta, isCancellation, silent: true },
   });
   const state = (yield select(pipelinesStateSelector)) as PipelinesState;
   const isCurrentRequest =
@@ -413,15 +417,33 @@ function* handlePipelineDetailFailure(
   }
 }
 
+const isSameIterationDetail = (first: PipelineDetailRequestMeta, second: PipelineDetailRequestMeta) =>
+  first.projectKey === second.projectKey &&
+  first.pipelineId === second.pipelineId &&
+  first.iterationId === second.iterationId &&
+  first.catalogTransport === second.catalogTransport &&
+  first.catalogVersion === second.catalogVersion &&
+  first.catalogRequestId === second.catalogRequestId;
+
 function* getPipelineIterationDetails(action: GetPipelineIterationDetailsAction): Generator {
   const requestMeta = (yield call(createPipelineDetailMeta, action)) as
     | PipelineDetailRequestMeta
     | undefined;
   if (!requestMeta) return;
 
+  const previousRequest = activeIterationDetailsRequest;
+  if (
+    previousRequest &&
+    !previousRequest.controller.signal.aborted &&
+    isSameIterationDetail(previousRequest.meta, requestMeta)
+  ) {
+    return;
+  }
+
   const controller = new AbortController();
-  iterationDetailsAbortController?.abort();
-  iterationDetailsAbortController = controller;
+  const request = { meta: requestMeta, controller };
+  activeIterationDetailsRequest = request;
+  previousRequest?.controller.abort();
 
   try {
     yield put({
@@ -452,18 +474,18 @@ function* getPipelineIterationDetails(action: GetPipelineIterationDetailsAction)
     }
     yield put({ type: FETCH_SUCCESS, payload: { data: result.data }, meta: requestMeta });
   } catch (error) {
-    yield call(handlePipelineDetailFailure, error, requestMeta);
+    yield call(handlePipelineDetailFailure, error, requestMeta, controller.signal);
   } finally {
-    if (iterationDetailsAbortController === controller) {
-      iterationDetailsAbortController = undefined;
+    if (activeIterationDetailsRequest === request) {
+      activeIterationDetailsRequest = undefined;
     }
   }
 }
 
 function handleLogoutDuringIterationDetailsFetch(): void {
-  const controller = iterationDetailsAbortController;
-  iterationDetailsAbortController = undefined;
-  controller?.abort();
+  const request = activeIterationDetailsRequest;
+  activeIterationDetailsRequest = undefined;
+  request?.controller.abort();
 }
 
 function* watchGetPipelineIterationDetails() {

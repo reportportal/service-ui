@@ -124,8 +124,8 @@ describe('useReviewQueueCount', () => {
     expect(fetch).toHaveBeenCalledWith(
       URLS.testCases('demo', {
         limit: 1,
-        'filter.eq.lifecycle': Lifecycle.DRAFT,
-        'filter.eq.ai': true,
+        'filter.eq.status': Lifecycle.DRAFT,
+        'filter.eq.origin': 'AI',
       }),
       expect.objectContaining({ abort: expect.any(Function) }),
     );

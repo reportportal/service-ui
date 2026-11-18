@@ -54,6 +54,7 @@ import {
   isReviewQueueCountRequest,
   matchesLibraryFilters,
   parseLibraryFilters,
+  LIBRARY_FILTER_QUERY_KEYS,
 } from './libraryFilters';
 import { toTestCaseAiExtension } from './viewModels';
 
@@ -99,11 +100,6 @@ interface TestPlanDetails {
 
 const FETCH_PAGE_SIZE = 1000;
 const MAX_FILTER_RECORDS = 5000;
-const C3_FILTER_KEYS = [
-  'filter.eq.lifecycle',
-  'filter.eq.ai',
-  'filter.eq.iterationId',
-];
 
 export const C3_OVERLAY_ERROR_CODE = 'AI_FACTORY_C3_OVERLAY_FAILED';
 
@@ -203,7 +199,7 @@ const mergedRequestParams = (config: AxiosRequestConfig): URLSearchParams => {
 const toCanonicalUrl = (config: AxiosRequestConfig, fetchCompleteDataset: boolean): string => {
   const [path] = (config.url ?? '').split('?');
   const params = mergedRequestParams(config);
-  C3_FILTER_KEYS.forEach((key) => params.delete(key));
+  LIBRARY_FILTER_QUERY_KEYS.forEach((key) => params.delete(key));
   if (fetchCompleteDataset) {
     params.set('offset', '0');
     params.set('limit', String(FETCH_PAGE_SIZE));

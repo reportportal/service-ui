@@ -55,7 +55,7 @@ const getMetricText = (value: unknown): string | undefined =>
 const getMetricNumber = (value: unknown): number | undefined =>
   isNonNegativeNumber(value) ? value : undefined;
 
-const getIterationId = (value: unknown): number | undefined =>
+const getPositiveSafeInteger = (value: unknown): number | undefined =>
   Number.isSafeInteger(value) && Number(value) > 0 ? Number(value) : undefined;
 
 const normalizeCriterion = (criterion: TestCaseCriterion): TestCaseCriterion | undefined => {
@@ -63,7 +63,7 @@ const normalizeCriterion = (criterion: TestCaseCriterion): TestCaseCriterion | u
   if (!name) return undefined;
   return {
     name,
-    criterionId: getIterationId(criterion.criterionId),
+    criterionId: getPositiveSafeInteger(criterion.criterionId),
     score: getMetricNumber(criterion.score),
     maxPoints: getMetricNumber(criterion.maxPoints),
   };
@@ -85,8 +85,8 @@ export const getNativeTestCaseMetrics = (
     model: getMetricText(metrics.model),
     skill: getMetricText(metrics.skill),
     costUsd: getMetricNumber(metrics.costUsd),
-    pipelineIterationId: getIterationId(metrics.pipelineIterationId),
-    pipelineIterationNumber: getIterationId(metrics.pipelineIterationNumber),
+    pipelineIterationId: getPositiveSafeInteger(metrics.pipelineIterationId),
+    pipelineIterationNumber: getPositiveSafeInteger(metrics.pipelineIterationNumber),
   };
 };
 
@@ -105,7 +105,7 @@ export const getNativeTestCaseSummary = (
     model: typeof metrics?.model === 'string' && metrics.model.trim() ? metrics.model : undefined,
     costUsd: metrics?.costUsd,
     metrics,
-    unsentReviewComments: isAi ? getIterationId(testCase?.unsentReviewComments) : undefined,
+    unsentReviewComments: isAi ? getPositiveSafeInteger(testCase?.unsentReviewComments) : undefined,
   };
 };
 

@@ -47,22 +47,22 @@ const displayIds = (content: TestCase[]) => content.map(({ displayId }) => displ
 beforeEach(() => resetMockDb());
 
 describe('parseLibraryFilters', () => {
-  test('parses C3 params from the Axios params object', () => {
+  test('parses native Library filters from Axios params', () => {
     expect(
       parseLibraryFilters({
         params: {
-          'filter.eq.lifecycle': 'DRAFT',
-          'filter.eq.ai': true,
+          'filter.eq.status': 'DRAFT',
+          'filter.eq.origin': 'AI',
           'filter.eq.iterationId': 101,
         },
       }),
     ).toEqual({ lifecycle: Lifecycle.DRAFT, ai: true, iterationId: 101 });
   });
 
-  test('accepts URL-facing AI values and query-string params', () => {
+  test('parses native MANUAL origin from the request query string', () => {
     expect(
       parseLibraryFilters({
-        url: '/tms/test-case?filter.eq.lifecycle=READY&filter.eq.ai=NO_AI&filter.eq.iterationId=102',
+        url: '/tms/test-case?filter.eq.status=READY&filter.eq.origin=MANUAL&filter.eq.iterationId=102',
       }),
     ).toEqual({ lifecycle: Lifecycle.READY, ai: false, iterationId: 102 });
   });
@@ -71,8 +71,8 @@ describe('parseLibraryFilters', () => {
     expect(
       parseLibraryFilters({
         params: {
-          'filter.eq.lifecycle': 'APPROVED',
-          'filter.eq.ai': 'yes',
+          'filter.eq.status': 'APPROVED',
+          'filter.eq.origin': 'yes',
           'filter.eq.iterationId': '-1.5',
         },
       }),
@@ -148,7 +148,7 @@ describe('isReviewQueueCountRequest', () => {
   test('recognizes only the dedicated unscoped count request', () => {
     const config = {
       method: 'get',
-      url: '/tms/test-case?limit=1&offset=0&filter.eq.lifecycle=DRAFT&filter.eq.ai=true',
+      url: '/tms/test-case?limit=1&offset=0&filter.eq.status=DRAFT&filter.eq.origin=AI',
     };
 
     expect(isReviewQueueCountRequest(config, filters)).toBe(true);
@@ -165,8 +165,8 @@ describe('isReviewQueueCountRequest', () => {
       params: {
         limit: 1,
         offset: 0,
-        'filter.eq.lifecycle': 'DRAFT',
-        'filter.eq.ai': true,
+        'filter.eq.status': 'DRAFT',
+        'filter.eq.origin': 'AI',
         ...extraParams,
       },
     };
@@ -182,8 +182,8 @@ describe('isReviewQueueCountRequest', () => {
           url: '/tms/test-case',
           params: {
             limit: 1,
-            'filter.eq.lifecycle': 'DRAFT',
-            'filter.eq.ai': true,
+            'filter.eq.status': 'DRAFT',
+            'filter.eq.origin': 'AI',
             'filter.eq.iterationId': 101,
           },
         },

@@ -262,6 +262,85 @@ describe('aiFactoryPipelinesSagas live transport', () => {
       await harness.stop();
     });
 
+    test('shares a pending detail request and accepts another refresh after it settles', async () => {
+      const response = {
+        status: 200,
+        data: { id: 51, pipelineId: 8, iterationNumber: 3, stages: [] },
+      };
+      let resolveFirst: (result: typeof response) => void = () => undefined;
+      const firstRequest = new Promise<typeof response>((resolve) => {
+        resolveFirst = resolve;
+      });
+      fetchMock.mockResolvedValue(response).mockReturnValueOnce(firstRequest);
+
+      const harness = startPipelineSagas(createSagaState());
+      const action = getPipelineIterationDetailsAction(8, 51);
+
+      try {
+        await Promise.resolve();
+        harness.dispatch(action);
+        harness.dispatch(action);
+        harness.dispatch(action);
+        const signal = fetchMock.mock.calls[0][1]?.signal as AbortSignal;
+        expect(fetchMock).toHaveBeenCalledTimes(1);
+        expect(signal.aborted).toBe(false);
+
+        resolveFirst(response);
+        await Promise.resolve();
+        expect(harness.dispatched).toContainEqual(expect.objectContaining({ type: FETCH_SUCCESS }));
+
+        harness.dispatch(action);
+        expect(fetchMock).toHaveBeenCalledTimes(2);
+        await Promise.resolve();
+        expect(harness.dispatched).not.toContainEqual(expect.objectContaining({ type: FETCH_ERROR }));
+      } finally {
+        await harness.stop();
+      }
+    });
+
+    test('silences the aborted request when navigating to another iteration', async () => {
+      fetchMock
+        .mockImplementationOnce((_url, params) => {
+          const signal = params?.signal as AbortSignal;
+          return new Promise((_resolve, reject) => {
+            signal.addEventListener('abort', () => reject(new Error('Request interrupted')), {
+              once: true,
+            });
+          });
+        })
+        .mockResolvedValue({
+          status: 200,
+          data: { id: 52, pipelineId: 8, iterationNumber: 4, stages: [] },
+        });
+      const harness = startPipelineSagas(createSagaState());
+
+      try {
+        await Promise.resolve();
+        harness.dispatch(getPipelineIterationDetailsAction(8, 51));
+        harness.dispatch(getPipelineIterationDetailsAction(8, 52));
+        await Promise.resolve();
+
+        expect(fetchMock.mock.calls.map(([url]) => url)).toEqual([
+          URLS.pipelineIterationById('demo', 51),
+          URLS.pipelineIterationById('demo', 52),
+        ]);
+        expect(harness.dispatched).toContainEqual(
+          expect.objectContaining({
+            type: FETCH_ERROR,
+            meta: expect.objectContaining({ iterationId: 51, isCancellation: true, silent: true }),
+          }),
+        );
+        expect(harness.dispatched).toContainEqual(
+          expect.objectContaining({
+            type: FETCH_SUCCESS,
+            meta: expect.objectContaining({ iterationId: 52 }),
+          }),
+        );
+      } finally {
+        await harness.stop();
+      }
+    });
+
     test.each([
       [403, null, 'forbidden'],
       [404, null, 'notFound'],
