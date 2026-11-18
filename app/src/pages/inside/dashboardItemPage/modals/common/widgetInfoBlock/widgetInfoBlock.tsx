@@ -28,12 +28,13 @@ import { WIDGETS_STATIC_PREVIEWS } from '../widgets';
 import { WidgetPreview } from '../widgetPreview';
 import styles from './widgetInfoBlock.scss';
 import { FieldLabel } from '@reportportal/ui-kit';
-import { Widget, ContentParameters } from '../../widgetWizardModal/types';
+import { Widget, ContentParameters, Filter } from '../../widgetWizardModal/types';
 
 const cx = createClassnames(styles);
 
 interface WidgetSettings {
   filterIds?: string[];
+  filters?: Filter[];
   contentParameters?: ContentParameters;
 }
 
@@ -101,7 +102,7 @@ export const WidgetInfoBlock = ({
     const prev = prevRef.current;
     prevRef.current = { activeWidgetId: activeWidget?.id, widgetSettings };
 
-    const { filterIds = [], contentParameters = {} } = widgetSettings;
+    const { filterIds = [], filters, contentParameters = {} } = widgetSettings;
 
     if (prev.activeWidgetId !== activeWidget?.id) {
       setWidgetData(null);
@@ -123,9 +124,10 @@ export const WidgetInfoBlock = ({
 
     const prevData = {
       filterIds: prevSettings?.filterIds,
+      filters: prevSettings?.filters,
       contentParameters: prevSettings?.contentParameters,
     };
-    const newData = { filterIds, contentParameters };
+    const newData = { filterIds, filters, contentParameters };
 
     if (
       customCondition &&
