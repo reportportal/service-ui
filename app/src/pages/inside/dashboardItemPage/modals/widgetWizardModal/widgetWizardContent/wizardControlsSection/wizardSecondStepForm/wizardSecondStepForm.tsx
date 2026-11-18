@@ -121,6 +121,10 @@ const WizardSecondStepFormBase: FC<Props> = ({
   };
 
   useEffect(() => {
+    if (widgetSettings?.name) {
+      return;
+    }
+
     const newDashboard = { name: formatMessage(messages.newDashboardName), description: '' };
     const selectedDashboard = dashboards.length > 0 ? dashboards[0] : newDashboard;
     dispatch(change(WIDGET_WIZARD_FORM, 'name', generateWidgetName()));
