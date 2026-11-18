@@ -28,13 +28,13 @@ import { WIDGETS_STATIC_PREVIEWS } from '../widgets';
 import { WidgetPreview } from '../widgetPreview';
 import styles from './widgetInfoBlock.scss';
 import { FieldLabel } from '@reportportal/ui-kit';
-import { Widget, ContentParameters } from '../../widgetWizardModal/types';
+import { Widget, ContentParameters, Filter } from '../../widgetWizardModal/types';
 
 const cx = createClassnames(styles);
 
 interface WidgetSettings {
   filterIds?: string[];
-  filters?: unknown;
+  filters?: Filter[];
   contentParameters?: ContentParameters;
 }
 
