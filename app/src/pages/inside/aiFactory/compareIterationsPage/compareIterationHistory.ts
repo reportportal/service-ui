@@ -77,7 +77,7 @@ export const resolvePreviousCompareIteration = async (
   candidateId: number,
 ): Promise<IterationChoice | null> => {
   const candidate = await getLiveIterationIdentity(request.projectKey, candidateId, request.signal);
-  if (!candidate || candidate.pipelineId !== request.pipelineId) {
+  if (candidate?.pipelineId !== request.pipelineId) {
     throw new Error('Invalid comparison candidate');
   }
   if (request.signal.aborted || candidate.number === 1) return null;

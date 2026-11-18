@@ -75,6 +75,61 @@ interface IterationBrowseState {
   selected: IterationChoice[];
 }
 
+interface CompareIterationHistorySelection {
+  projectKey: string;
+  catalogProjectKey: string | null;
+  pipelineId: number | null;
+  candidateId: number | null;
+  hasBaseline: boolean;
+}
+
+const useCompareIterationHistory = ({
+  projectKey,
+  catalogProjectKey,
+  pipelineId,
+  candidateId,
+  hasBaseline,
+}: CompareIterationHistorySelection) => {
+  const iterationsByPipeline = useSelector(pipelineIterationsByPipelineSelector);
+  const isIterationsLoading = useSelector(pipelineIterationsLoadingSelector);
+  const iterationsErrors = useSelector(pipelineIterationsErrorByPipelineSelector);
+  const iterationPages = useSelector(pipelineIterationPagesSelector);
+  const isCurrentPipeline = pipelineId !== null && catalogProjectKey === projectKey;
+  const iterations = isCurrentPipeline ? iterationsByPipeline?.[pipelineId] : undefined;
+  const iterationPage = isCurrentPipeline ? iterationPages?.[pipelineId] : undefined;
+  const hasIterationsError = Boolean(isCurrentPipeline && iterationsErrors?.[pipelineId]);
+
+  const selectedCandidate = iterations?.find(({ id }) => id === candidateId);
+  const previousOnPage = selectedCandidate
+    ? getClosestEarlierIteration(iterations, selectedCandidate.number)
+    : null;
+  const canFindEarlierInHistory =
+    iterationPage &&
+    (selectedCandidate
+      ? iterationPage.number < iterationPage.totalPages
+      : iterationPage.totalPages > 1);
+  const shouldLookUpPrevious =
+    !hasBaseline &&
+    !previousOnPage &&
+    canFindEarlierInHistory &&
+    !isIterationsLoading &&
+    !hasIterationsError;
+  const previousLookup = usePreviousCompareIteration(
+    projectKey,
+    pipelineId,
+    shouldLookUpPrevious ? candidateId : null,
+  );
+
+  return {
+    iterations,
+    iterationPage,
+    isIterationsLoading,
+    hasIterationsError,
+    previousOnPage,
+    previousLookup,
+  };
+};
+
 export const CompareIterationsPageContent = () => {
   const { formatMessage } = useIntl();
   const dispatch = useDispatch();
@@ -89,10 +144,6 @@ export const CompareIterationsPageContent = () => {
   const pipelines = catalogProjectKey === projectKey ? loadedPipelines : null;
   const hasCatalogError = useSelector(pipelineCatalogErrorSelector);
   const isPipelinesLoading = useSelector(pipelinesLoadingSelector);
-  const iterationsByPipeline = useSelector(pipelineIterationsByPipelineSelector);
-  const isIterationsLoading = useSelector(pipelineIterationsLoadingSelector);
-  const iterationsErrors = useSelector(pipelineIterationsErrorByPipelineSelector);
-  const iterationPages = useSelector(pipelineIterationPagesSelector);
   const comparison = useSelector(pipelineComparisonSelector);
   const isComparisonLoading = useSelector(pipelineComparisonLoadingSelector);
   const hasComparisonError = useSelector(pipelineComparisonErrorSelector);
@@ -100,13 +151,20 @@ export const CompareIterationsPageContent = () => {
   const baselineId = parseQueryId(query.baseline);
   const candidateId = parseQueryId(query.candidate);
   const pipeline = pipelines?.find((item) => item.id === pipelineId);
-  const iterations =
-    pipelineId && catalogProjectKey === projectKey ? iterationsByPipeline?.[pipelineId] : undefined;
-  const iterationPage =
-    pipelineId && catalogProjectKey === projectKey ? iterationPages?.[pipelineId] : undefined;
-  const hasIterationsError = Boolean(
-    pipelineId && catalogProjectKey === projectKey && iterationsErrors?.[pipelineId],
-  );
+  const {
+    iterations,
+    iterationPage,
+    isIterationsLoading,
+    hasIterationsError,
+    previousOnPage,
+    previousLookup,
+  } = useCompareIterationHistory({
+    projectKey,
+    catalogProjectKey,
+    pipelineId,
+    candidateId,
+    hasBaseline: query.baseline !== undefined,
+  });
   const [browseState, setBrowseState] = useState<IterationBrowseState>();
   const browsing =
     browseState && browseState.projectKey === projectKey && browseState.pipelineId === pipelineId
@@ -114,26 +172,6 @@ export const CompareIterationsPageContent = () => {
       : undefined;
   const needsDefaultPair = query.baseline === undefined && query.candidate === undefined;
   const needsFirstPage = needsDefaultPair && iterationPage?.offset > 0;
-  const selectedCandidate = iterations?.find(({ id }) => id === candidateId);
-  const previousOnPage = selectedCandidate
-    ? getClosestEarlierIteration(iterations, selectedCandidate.number)
-    : null;
-  const canFindEarlierInHistory =
-    iterationPage &&
-    (selectedCandidate
-      ? iterationPage.number < iterationPage.totalPages
-      : iterationPage.totalPages > 1);
-  const shouldLookUpPrevious =
-    query.baseline === undefined &&
-    !previousOnPage &&
-    canFindEarlierInHistory &&
-    !isIterationsLoading &&
-    !hasIterationsError;
-  const previousLookup = usePreviousCompareIteration(
-    projectKey,
-    pipelineId,
-    shouldLookUpPrevious ? candidateId : null,
-  );
 
   useEffect(() => {
     if (
