@@ -322,6 +322,91 @@ describe('IterationDetailsPageContent polling', () => {
     wrapper.unmount();
   });
 
+  test.each(['PENDING', 'RUNNING'])('polls live %s details without a loaded catalog', (status) => {
+    const iteration = {
+      kind: 'reduced',
+      id: 103,
+      pipelineId: 7,
+      number: 3,
+      status,
+      attributes: [],
+      stages: [],
+    };
+    const wrapper = renderPage(
+      IterationStatus.COMPLETED,
+      false,
+      null,
+      { catalogTransport: 'live', iteration },
+      true,
+    );
+
+    expect(usePolling).toHaveBeenLastCalledWith(expect.any(Function), 5000, true);
+    const poll = jest.mocked(usePolling).mock.calls.at(-1)?.[0];
+    poll?.();
+    const scope = jest.mocked(getPipelineIterationDetailsAction).mock.calls.at(-1)?.[2];
+    expect(scope).toMatchObject({ projectKey: 'demo', signal: expect.any(AbortSignal) });
+
+    selectorValues.set(pipelineIterationDetailsLoadingSelector, true);
+    wrapper.setProps({});
+    expect(usePolling).toHaveBeenLastCalledWith(expect.any(Function), 5000, false);
+    expect(jest.mocked(usePolling).mock.calls.at(-1)?.[0]()).toBeUndefined();
+
+    selectorValues.set(pipelineIterationDetailsLoadingSelector, false);
+    selectorValues.set(pipelineIterationDetailsSelector, { ...iteration, status: 'PASSED' });
+    wrapper.setProps({});
+    expect(usePolling).toHaveBeenLastCalledWith(expect.any(Function), 5000, false);
+
+    wrapper.unmount();
+    expect(scope?.signal.aborted).toBe(true);
+  });
+
+  test.each(['WAITING', 'NEEDS_HUMAN', 'FAILED', 'UNKNOWN'])(
+    'does not poll an inactive live %s iteration',
+    (status) => {
+      const wrapper = renderPage(IterationStatus.COMPLETED, false, null, {
+        catalogTransport: 'live',
+        iteration: { kind: 'reduced', id: 103, pipelineId: 7, number: 3, status, stages: [] },
+      });
+      expect(usePolling).toHaveBeenLastCalledWith(expect.any(Function), 5000, false);
+      wrapper.unmount();
+    },
+  );
+
+  test('pauses after a background error and cancels the old scope on navigation', () => {
+    const wrapper = renderPage(
+      IterationStatus.COMPLETED,
+      false,
+      null,
+      {
+        catalogTransport: 'live',
+        iteration: {
+          kind: 'reduced',
+          id: 103,
+          pipelineId: 7,
+          number: 3,
+          status: 'RUNNING',
+          stages: [],
+        },
+      },
+      true,
+    );
+    const poll = jest.mocked(usePolling).mock.calls.at(-1)?.[0];
+    poll?.();
+    const scope = jest.mocked(getPipelineIterationDetailsAction).mock.calls.at(-1)?.[2];
+
+    selectorValues.set(pipelineIterationDetailsErrorSelector, true);
+    wrapper.setProps({});
+    expect(usePolling).toHaveBeenLastCalledWith(expect.any(Function), 5000, false);
+    expect(wrapper.find(ReducedIterationDetails).prop('iteration')).toMatchObject({ id: 103 });
+
+    selectorValues.set(iterationIdSelector, 104);
+    wrapper.setProps({});
+    expect(scope?.signal.aborted).toBe(true);
+    expect(poll?.()).toBeUndefined();
+    expect(usePolling).toHaveBeenLastCalledWith(expect.any(Function), 5000, false);
+    wrapper.unmount();
+  });
+
   test('requests generic detail for a reduced catalog and renders only the reduced-detail surface', () => {
     const wrapper = renderPage(
       IterationStatus.COMPLETED,

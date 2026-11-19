@@ -308,6 +308,46 @@ describe('aiFactoryPipelinesSagas live transport', () => {
       }
     });
 
+    test('skips an automatic refresh for a different project and aborts it when the scope ends', async () => {
+      const scope = new AbortController();
+      const response = {
+        status: 200,
+        data: { id: 51, pipelineId: 8, iterationNumber: 3, stages: [] },
+      };
+      let resolveRequest: (result: typeof response) => void = () => undefined;
+      fetchMock.mockReturnValueOnce(new Promise((resolve) => { resolveRequest = resolve; }));
+      const harness = startPipelineSagas(createSagaState());
+
+      try {
+        await Promise.resolve();
+        harness.dispatch(getPipelineIterationDetailsAction(8, 51, {
+          projectKey: 'other-project',
+          signal: scope.signal,
+        }));
+        expect(fetchMock).not.toHaveBeenCalled();
+
+        harness.dispatch(getPipelineIterationDetailsAction(8, 51, {
+          projectKey: 'demo',
+          signal: scope.signal,
+        }));
+        expect(fetchMock).toHaveBeenCalledTimes(1);
+
+        scope.abort();
+        const signal = fetchMock.mock.calls[0][1]?.signal as AbortSignal;
+        expect(signal.aborted).toBe(true);
+        resolveRequest(response);
+        await Promise.resolve();
+
+        expect(harness.dispatched).toContainEqual(expect.objectContaining({
+          type: FETCH_ERROR,
+          meta: expect.objectContaining({ isCancellation: true, isPolling: true }),
+        }));
+        expect(harness.dispatched).not.toContainEqual(expect.objectContaining({ type: FETCH_SUCCESS }));
+      } finally {
+        await harness.stop();
+      }
+    });
+
     test('silences the aborted request when navigating to another iteration', async () => {
       fetchMock
         .mockImplementationOnce((_url, params) => {

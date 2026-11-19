@@ -99,10 +99,15 @@ export interface GetPipelineIterationsAction extends Action<typeof GET_PIPELINE_
   payload: { pipelineIds: number[] } & PipelinePageRequest;
 }
 
+export interface PipelineIterationPollScope {
+  projectKey: string;
+  signal: AbortSignal;
+}
+
 export interface GetPipelineIterationDetailsAction extends Action<
   typeof GET_PIPELINE_ITERATION_DETAILS
 > {
-  payload: { pipelineId: number; iterationId: number };
+  payload: { pipelineId: number; iterationId: number; polling?: PipelineIterationPollScope };
 }
 
 export interface GetPipelineComparisonAction extends Action<typeof GET_PIPELINE_COMPARISON> {

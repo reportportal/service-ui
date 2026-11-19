@@ -85,6 +85,7 @@ interface PipelineDetailRequestMeta {
   catalogVersion: number;
   catalogRequestId: number;
   detailTransport: PipelineDetailTransport;
+  isPolling?: boolean;
   detailFailureKind?: 'forbidden' | 'notFound';
 }
 
@@ -342,10 +343,11 @@ function* createPipelineDetailMeta(
   const catalogVersion = (yield select(pipelineCatalogVersionSelector)) as number;
   const catalogRequestId = (yield select(pipelineCatalogRequestIdSelector)) as number | null;
   const catalogProjectKey = (yield select(pipelineCatalogProjectKeySelector)) as string | null;
-  const { pipelineId, iterationId } = action.payload;
+  const { pipelineId, iterationId, polling } = action.payload;
   const isLiveCatalog = catalogTransport === 'live';
   if (
     !projectKey ||
+    (polling && (!isLiveCatalog || polling.projectKey !== projectKey || polling.signal.aborted)) ||
     (!isLiveCatalog &&
       (catalogVersion <= 0 || catalogRequestId === null || catalogProjectKey !== projectKey)) ||
     !isPositiveIdentity(pipelineId) ||
@@ -364,6 +366,7 @@ function* createPipelineDetailMeta(
     catalogVersion: isLiveCatalog ? 0 : catalogVersion,
     catalogRequestId: isLiveCatalog ? 0 : catalogRequestId,
     detailTransport: getPipelineDetailTransport(catalogTransport),
+    ...(polling && { isPolling: true }),
   };
 }
 
@@ -414,7 +417,7 @@ function* handlePipelineDetailFailure(
     state.detailProjectKey === requestMeta.projectKey &&
     state.detailCatalogVersion === requestMeta.catalogVersion &&
     state.detailCatalogRequestId === requestMeta.catalogRequestId;
-  if (!isCancellation && isCurrentRequest) {
+  if (!isCancellation && isCurrentRequest && !requestMeta.isPolling) {
     yield put(showErrorNotification({ messageId: 'aiFactoryPipelinesLoadingFailed' }));
   }
 }
@@ -431,7 +434,8 @@ function* getPipelineIterationDetails(action: GetPipelineIterationDetailsAction)
   const requestMeta = (yield call(createPipelineDetailMeta, action)) as
     | PipelineDetailRequestMeta
     | undefined;
-  if (!requestMeta) return;
+  const pollingSignal = action.payload.polling?.signal;
+  if (!requestMeta || pollingSignal?.aborted) return;
 
   const previousRequest = activeIterationDetailsRequest;
   if (
@@ -444,6 +448,8 @@ function* getPipelineIterationDetails(action: GetPipelineIterationDetailsAction)
 
   const controller = new AbortController();
   const request = { meta: requestMeta, controller };
+  const abortPollingRequest = () => controller.abort();
+  pollingSignal?.addEventListener('abort', abortPollingRequest, { once: true });
   activeIterationDetailsRequest = request;
   previousRequest?.controller.abort();
 
@@ -459,6 +465,15 @@ function* getPipelineIterationDetails(action: GetPipelineIterationDetailsAction)
       status: number;
       isEmpty?: boolean;
     };
+    if (controller.signal.aborted) {
+      yield call(
+        handlePipelineDetailFailure,
+        new Error(ERROR_CANCELED),
+        requestMeta,
+        controller.signal,
+      );
+      return;
+    }
     if (result.status === 403 || result.status === 404 || result.isEmpty) {
       yield put({
         type: FETCH_ERROR,
@@ -478,6 +493,7 @@ function* getPipelineIterationDetails(action: GetPipelineIterationDetailsAction)
   } catch (error) {
     yield call(handlePipelineDetailFailure, error, requestMeta, controller.signal);
   } finally {
+    pollingSignal?.removeEventListener('abort', abortPollingRequest);
     if (activeIterationDetailsRequest === request) {
       activeIterationDetailsRequest = undefined;
     }

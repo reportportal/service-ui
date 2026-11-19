@@ -339,6 +339,23 @@ describe('ReducedIterationDetails', () => {
     ).toBe(true);
   });
 
+  test('keeps the last details visible when automatic refresh fails', () => {
+    const wrapper = shallow(
+      <ReducedIterationDetails
+        iteration={detail()}
+        hasError
+        isUnavailable={false}
+        breadcrumbDescriptors={[]}
+        onRetry={jest.fn()}
+        onBack={jest.fn()}
+      />,
+    );
+
+    expect(wrapper.text()).toContain('Automatic refresh paused');
+    expect(wrapper.find('[data-automation-id="reducedIterationDetails"]')).toHaveLength(1);
+    wrapper.unmount();
+  });
+
   test('opens live comparison and joins Review cases only from linked Test Case IDs', () => {
     const onCompare = jest.fn();
     const wrapper = shallow(

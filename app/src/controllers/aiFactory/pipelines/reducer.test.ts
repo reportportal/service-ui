@@ -604,6 +604,42 @@ describe('aiFactoryPipelinesReducer iteration detail provenance', () => {
     });
   });
 
+  test.each([
+    ['network error', {}, true],
+    ['cancellation', { isCancellation: true }, true],
+    ['forbidden response', { detailFailureKind: 'forbidden' }, false],
+    ['unavailable detail', { isUnavailable: true }, false],
+  ] as const)('handles an automatic refresh %s against the previous detail', (_label, flags, preserve) => {
+    const initial = aiFactoryPipelinesReducer(
+      createCatalogState(),
+      detailAction(FETCH_START),
+    );
+    const loaded = aiFactoryPipelinesReducer(initial, detailAction(FETCH_SUCCESS));
+    const pollingMeta = { ...detailMeta, requestId: detailMeta.requestId + 1, isPolling: true };
+    const polling = aiFactoryPipelinesReducer(loaded, detailAction(FETCH_START, pollingMeta));
+    const error = aiFactoryPipelinesReducer(
+      polling,
+      detailAction(FETCH_ERROR, { ...pollingMeta, ...flags }),
+    ) as PipelinesState;
+
+    expect(error.iterationDetails).toBe(preserve ? detail : null);
+    expect(error.iterationDetailsLoading).toBe(false);
+    expect(error.iterationDetailsError).toBe(!('isCancellation' in flags) && !('isUnavailable' in flags));
+  });
+
+  test('keeps the existing snapshot object for an unchanged automatic response', () => {
+    const initial = aiFactoryPipelinesReducer(createCatalogState(), detailAction(FETCH_START));
+    const loaded = aiFactoryPipelinesReducer(initial, detailAction(FETCH_SUCCESS)) as PipelinesState;
+    const pollingMeta = { ...detailMeta, requestId: detailMeta.requestId + 1, isPolling: true };
+    const polling = aiFactoryPipelinesReducer(loaded, detailAction(FETCH_START, pollingMeta));
+    const unchanged = aiFactoryPipelinesReducer(polling, {
+      ...detailAction(FETCH_SUCCESS, pollingMeta),
+      payload: { data: { ...detail } },
+    }) as PipelinesState;
+
+    expect(unchanged.iterationDetails).toBe(loaded.iterationDetails);
+  });
+
   test('accepts only the matching detail success and exposes its reduced payload', () => {
     const loading = aiFactoryPipelinesReducer(
       createCatalogState(),

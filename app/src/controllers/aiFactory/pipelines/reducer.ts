@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+import isEqual from 'fast-deep-equal';
 import { Action, combineReducers } from 'redux';
 
 import { createPageScopedReducer } from 'common/utils/createPageScopedReducer';
@@ -67,6 +68,7 @@ interface PipelineReducerAction extends Action<string> {
     catalogTransport?: PipelineCatalogTransport;
     detailTransport?: PipelineDetailTransport;
     isUnavailable?: boolean;
+    isPolling?: boolean;
     detailFailureKind?: 'forbidden' | 'notFound';
   };
 }
@@ -240,10 +242,18 @@ const iterationDetailsReducer = (
     return state;
   }
   if (action.type === FETCH_SUCCESS) {
-    return (action.payload?.data as IterationRS | ReducedPipelineIterationDetail | undefined) ?? null;
+    const detail =
+      (action.payload?.data as IterationRS | ReducedPipelineIterationDetail | undefined) ?? null;
+    return action.meta?.isPolling && isEqual(state, detail) ? state : detail;
   }
+  const preservesDetails =
+    action.type === FETCH_START ||
+    (action.type === FETCH_ERROR &&
+      action.meta?.isPolling &&
+      !action.meta.isUnavailable &&
+      !action.meta.detailFailureKind);
   if (
-    action.type === FETCH_START &&
+    preservesDetails &&
     state?.pipelineId === action.meta?.pipelineId &&
     state.id === action.meta.iterationId
   ) {

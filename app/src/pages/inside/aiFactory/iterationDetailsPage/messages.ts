@@ -34,6 +34,11 @@ export const messages = defineMessages({
     id: 'IterationDetailsPage.detailError',
     defaultMessage: 'Iteration details could not be loaded',
   },
+  automaticRefreshFailed: {
+    id: 'IterationDetailsPage.automaticRefreshFailed',
+    defaultMessage:
+      'Automatic refresh paused. Showing the last loaded details. Select Refresh to try again.',
+  },
   detailInvalidRoute: {
     id: 'IterationDetailsPage.detailInvalidRoute',
     defaultMessage: 'Invalid pipeline or iteration address',
