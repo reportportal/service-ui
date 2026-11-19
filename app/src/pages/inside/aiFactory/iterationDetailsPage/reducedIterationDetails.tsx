@@ -601,7 +601,10 @@ const renderLegacyGradeResults = (
   stage: ReducedPipelineDetailStage,
   expandedRows: Set<string>,
   onToggleDetails: (rowKey: string) => void,
-  formatMessage: ReturnType<typeof useIntl>['formatMessage'],
+  {
+    formatMessage,
+    formatNumber,
+  }: Pick<ReturnType<typeof useIntl>, 'formatMessage' | 'formatNumber'>,
 ) => {
   const report = readLegacyGradeReport(stage.sections);
   if (!report) return null;
@@ -636,10 +639,10 @@ const renderLegacyGradeResults = (
 
   return renderReducedStageSection(
     section,
-    formatMessage(messages.scoreDetails),
     stage.id,
     expandedRows,
     onToggleDetails,
+    { formatMessage, formatNumber },
     'grade',
     formatMessage(messages.gradeReportSummary, {
       score: report.total_score,
@@ -703,7 +706,10 @@ const renderReducedStagePanel = (
           !currentStage.sections?.some(
             ({ key, role }) => key === 'gradedCases' && role === 'RESULT',
           ) &&
-          renderLegacyGradeResults(currentStage, expandedRows, onToggleDetails, formatMessage)}
+          renderLegacyGradeResults(currentStage, expandedRows, onToggleDetails, {
+            formatMessage,
+            formatNumber,
+          })}
         {reviewContent}
       </section>
       <aside className={panelCx('stage-panels__aside')}>
