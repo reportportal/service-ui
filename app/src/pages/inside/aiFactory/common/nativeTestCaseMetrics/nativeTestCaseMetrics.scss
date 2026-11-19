@@ -9,3 +9,19 @@
   line-height: 18px;
   overflow-wrap: anywhere;
 }
+
+.quality-standard {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 12px;
+  min-width: 0;
+  overflow-wrap: anywhere;
+
+  &__criteria {
+    display: grid;
+    gap: 8px;
+    padding-inline-start: 20px;
+    list-style-type: disc;
+  }
+}

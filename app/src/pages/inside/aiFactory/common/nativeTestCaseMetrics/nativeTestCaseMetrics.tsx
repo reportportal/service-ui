@@ -18,6 +18,7 @@ import { useIntl } from 'react-intl';
 
 import { createClassnames } from 'common/utils';
 import type { NativeTestCaseSummary } from 'common/utils/nativeTestCase';
+import { CurrentQualityStandard } from './currentQualityStandard';
 import { NativeMetricsIterationLink } from 'pages/inside/aiFactory/common/nativeTestCaseMetrics/nativeMetricsIterationLink';
 import { messages } from 'pages/inside/aiFactory/common/nativeTestCaseMetrics/messages';
 import styles from 'pages/inside/aiFactory/common/nativeTestCaseMetrics/nativeTestCaseMetrics.scss';
@@ -92,6 +93,7 @@ export const NativeTestCaseMetrics = ({ summary, testCaseId }: NativeTestCaseMet
           iterationNumber={metrics.pipelineIterationNumber}
         />
       )}
+      <CurrentQualityStandard testCaseId={testCaseId} />
     </section>
   );
 };

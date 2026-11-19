@@ -19,6 +19,7 @@ jest.mock('common/utils', () => ({
     (...names: string[]) =>
       names.join(' '),
 }));
+jest.mock('./currentQualityStandard', () => ({ CurrentQualityStandard: () => null }));
 jest.mock('./nativeMetricsIterationLink', () => ({
   NativeMetricsIterationLink: ({
     iterationId,

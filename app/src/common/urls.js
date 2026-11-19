@@ -486,6 +486,8 @@ export const URLS = {
   tmsPipelineSettings: (projectKey, pipelineId) =>
     `${urlBase}project/${projectKey}/tms/pipeline/${pipelineId}/settings`, // P4
 
+  projectQualityStandard: (projectKey) => `${urlBase}project/${projectKey}/tms/quality-standard`,
+
   testCaseAi: (projectKey, testCaseId) =>
     `${urlBase}project/${projectKey}/tms/test-case/${testCaseId}/ai`, // C2
 
