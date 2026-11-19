@@ -121,6 +121,27 @@ const TestCaseApproval = ({
   return <ApproveButton testCase={testCase} onSuccess={onRefresh} />;
 };
 
+const getAutomationActionState = (
+  testCase: ExtendedTestCase,
+  isNative: boolean,
+  isFixRunning: boolean,
+  nativeAutomationState?: TestCaseAutomationState,
+) => {
+  const automationState = isNative
+    ? (nativeAutomationState ?? getNativeAutomationState(testCase))
+    : undefined;
+  const automationCandidate = isNative
+    ? getNativeAutomationCandidate({ ...testCase, automationState }, isFixRunning)
+    : testCase;
+  const disabledReason = getAutomationSkipReason(automationCandidate);
+  const isCiUnavailable = automationState && automationState.ciConnection !== 'CONNECTED';
+  const automationDisabledMessage = disabledReason
+    ? automationDisabledMessages[disabledReason]
+    : isCiUnavailable && automationMessages.unavailableCiConnection;
+
+  return { automationState, automationCandidate, automationDisabledMessage };
+};
+
 export const TestCaseDetailsHeader = ({
   canShowAutomation = true,
   className,
@@ -153,13 +174,8 @@ export const TestCaseDetailsHeader = ({
   const isFixRunning = isNativeFixInProgress || Boolean(testCase.review?.fixRound);
   const gateStatus = nativeSummary?.status ?? testCase.lifecycle;
   const isDraft = isDraftGateActive(isAiFactoryEnabled, gateStatus);
-  const automationState = nativeSummary
-    ? (nativeAutomationState ?? getNativeAutomationState(testCase))
-    : undefined;
-  const automationCandidate = nativeSummary
-    ? getNativeAutomationCandidate({ ...testCase, automationState }, isFixRunning)
-    : testCase;
-  const automationDisabledReason = getAutomationSkipReason(automationCandidate);
+  const { automationState, automationCandidate, automationDisabledMessage } =
+    getAutomationActionState(testCase, Boolean(nativeSummary), isFixRunning, nativeAutomationState);
 
   const breadcrumbsTitles = {
     mainTitle: formatMessage(commonMessages.testCaseLibraryBreadcrumb),
@@ -216,11 +232,6 @@ export const TestCaseDetailsHeader = ({
 
     return moment(date).format(REVERSED_DATE_FORMAT as string);
   };
-
-  const isCiUnavailable = automationState && automationState.ciConnection !== 'CONNECTED';
-  const automationDisabledMessage = automationDisabledReason
-    ? automationDisabledMessages[automationDisabledReason]
-    : isCiUnavailable && automationMessages.unavailableCiConnection;
 
   const handleAutomate = () => {
     if (nativeSummary) {

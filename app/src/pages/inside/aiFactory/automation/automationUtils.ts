@@ -54,7 +54,7 @@ const asRecord = (value: unknown): Record<string, unknown> | null =>
 const isPositiveInteger = (value: unknown): value is number =>
   typeof value === 'number' && Number.isSafeInteger(value) && value > 0;
 
-const CI_CONNECTION_STATES = ['CONNECTED', 'NOT_CONNECTED', 'CONNECTION_FAILED'];
+const CI_CONNECTION_STATES = new Set(['CONNECTED', 'NOT_CONNECTED', 'CONNECTION_FAILED']);
 
 const isIteration = (value: unknown) => {
   const iteration = asRecord(value);
@@ -100,7 +100,7 @@ export const getNativeAutomationState = (
   const state = testCase?.automationState;
   if (
     !state ||
-    !CI_CONNECTION_STATES.includes(state.ciConnection) ||
+    !CI_CONNECTION_STATES.has(state.ciConnection) ||
     !Object.values(AutomationStatus).includes(state.status as AutomationStatus) ||
     typeof state.fixInProgress !== 'boolean' ||
     typeof state.scenarioChangedAfterAutomation !== 'boolean' ||

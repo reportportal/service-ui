@@ -127,22 +127,14 @@ const renderBulkAutomationAction = ({
 
   if (isEnabled) {
     return (
-      <Button
-        variant="ghost"
-        onClick={onClick}
-        data-automation-id="bulk-automate-test-cases"
-      >
+      <Button variant="ghost" onClick={onClick} data-automation-id="bulk-automate-test-cases">
         {label}
       </Button>
     );
   }
 
   return (
-    <Tooltip
-      wrapperClassName={cx('tooltip-wrapper')}
-      placement="top"
-      content={disabledMessage}
-    >
+    <Tooltip wrapperClassName={cx('tooltip-wrapper')} placement="top" content={disabledMessage}>
       <Button variant="ghost" disabled data-automation-id="bulk-automate-test-cases">
         {label}
       </Button>
@@ -194,6 +186,49 @@ const getReadyOnlySelection = (
   return {
     ...selection,
     hasOnlyDraftsSelected: selection.skippedDrafts.length > 0 && selection.eligibleIds.length === 0,
+  };
+};
+
+const getBulkAutomationState = (
+  selectedTestCases: (TestCase | SelectedTestCaseRow)[],
+  isAiFactoryEnabled: boolean,
+  projectKey: string,
+  canAutomateTestCases: boolean,
+) => {
+  const hasNativeSelection = isAiFactoryEnabled && selectedTestCases.some(hasNativeTestCaseData);
+  const isNativeAutomationSelection =
+    hasNativeSelection &&
+    Boolean(projectKey) &&
+    selectedTestCases.every(
+      (testCase) => hasNativeTestCaseData(testCase) && getNativeAutomationState(testCase),
+    );
+  const isCiUnavailable =
+    isNativeAutomationSelection &&
+    selectedTestCases.some(
+      (testCase) => getNativeAutomationState(testCase)?.ciConnection !== 'CONNECTED',
+    );
+  const automationCandidates = isNativeAutomationSelection
+    ? selectedTestCases.map((testCase) => getNativeAutomationCandidate(testCase))
+    : selectedTestCases;
+  const { eligible, skipped } = partitionAutomationSelection(automationCandidates);
+  const skipReasons = new Set(skipped.map(({ reason }) => reason));
+  const eligibilityMessage =
+    skipReasons.size === 1
+      ? automationDisabledMessages[skipped[0].reason]
+      : automationMessages.unavailableSelection;
+
+  return {
+    hasNativeSelection,
+    isNativeAutomationSelection,
+    automationCandidates,
+    automationDisabledMessage: isCiUnavailable
+      ? automationMessages.unavailableCiConnection
+      : eligibilityMessage,
+    isBulkAutomationEnabled: !isCiUnavailable && eligible.length > 0,
+    isBulkAutomationVisible:
+      isAiFactoryEnabled &&
+      canAutomateTestCases &&
+      (!hasNativeSelection || isNativeAutomationSelection),
   };
 };
 
@@ -255,37 +290,23 @@ export const AllTestCasesPage = ({
       ),
     [selectedRows, testCases, isAiFactoryEnabled],
   );
-  const hasNativeSelection = isAiFactoryEnabled && selectedTestCases.some(hasNativeTestCaseData);
-  const isNativeAutomationSelection =
-    hasNativeSelection &&
-    Boolean(projectKey) &&
-    selectedTestCases.every(
-      (testCase) => hasNativeTestCaseData(testCase) && getNativeAutomationState(testCase),
-    );
-  const isAutomationCiUnavailable =
-    isNativeAutomationSelection &&
-    selectedTestCases.some(
-      (testCase) => getNativeAutomationState(testCase)?.ciConnection !== 'CONNECTED',
-    );
-  const automationCandidates = useMemo(
+  const {
+    hasNativeSelection,
+    isNativeAutomationSelection,
+    automationCandidates,
+    automationDisabledMessage,
+    isBulkAutomationEnabled,
+    isBulkAutomationVisible,
+  } = useMemo(
     () =>
-      isNativeAutomationSelection
-        ? selectedTestCases.map((testCase) => getNativeAutomationCandidate(testCase))
-        : selectedTestCases,
-    [isNativeAutomationSelection, selectedTestCases],
+      getBulkAutomationState(
+        selectedTestCases,
+        isAiFactoryEnabled,
+        projectKey,
+        canAutomateTestCases,
+      ),
+    [selectedTestCases, isAiFactoryEnabled, projectKey, canAutomateTestCases],
   );
-  const automationSelection = useMemo(
-    () => partitionAutomationSelection(automationCandidates),
-    [automationCandidates],
-  );
-  const automationDisabledMessage = useMemo(() => {
-    if (isAutomationCiUnavailable) return automationMessages.unavailableCiConnection;
-
-    const reasons = new Set(automationSelection.skipped.map(({ reason }) => reason));
-    if (reasons.size !== 1) return automationMessages.unavailableSelection;
-
-    return automationDisabledMessages[[...reasons][0]];
-  }, [automationSelection.skipped, isAutomationCiUnavailable]);
   const { eligibleIds, skippedDrafts, hasOnlyDraftsSelected } = useMemo(
     () => getReadyOnlySelection(selectedRowIds, selectedTestCases, isAiFactoryEnabled),
     [isAiFactoryEnabled, selectedRowIds, selectedTestCases],
@@ -533,11 +554,8 @@ export const AllTestCasesPage = ({
             )}
             {renderBulkAutomationAction({
               disabledMessage: formatMessage(automationDisabledMessage),
-              isEnabled: !isAutomationCiUnavailable && automationSelection.eligible.length > 0,
-              isVisible:
-                isAiFactoryEnabled &&
-                canAutomateTestCases &&
-                (!hasNativeSelection || isNativeAutomationSelection),
+              isEnabled: isBulkAutomationEnabled,
+              isVisible: isBulkAutomationVisible,
               label: formatMessage(automationMessages.automate),
               onClick: handleOpenAutomationModal,
             })}
