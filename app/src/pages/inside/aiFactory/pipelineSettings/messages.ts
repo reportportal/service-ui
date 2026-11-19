@@ -64,6 +64,22 @@ export const messages = defineMessages({
     id: 'PipelineSettings.liveUnavailable',
     defaultMessage: 'Pipeline settings are unavailable until the pipeline catalog is loaded.',
   },
+  liveContextChanged: {
+    id: 'PipelineSettings.liveContextChanged',
+    defaultMessage: 'Reopen pipeline settings from the current iteration.',
+  },
+  liveLoading: {
+    id: 'PipelineSettings.liveLoading',
+    defaultMessage: 'Loading pipeline settings…',
+  },
+  liveLoadError: {
+    id: 'PipelineSettings.liveLoadError',
+    defaultMessage: 'Failed to load pipeline settings.',
+  },
+  liveRetry: {
+    id: 'PipelineSettings.liveRetry',
+    defaultMessage: 'Retry',
+  },
   liveNoSettings: {
     id: 'PipelineSettings.liveNoSettings',
     defaultMessage: 'The API did not provide Auto-Ready settings for this pipeline.',
