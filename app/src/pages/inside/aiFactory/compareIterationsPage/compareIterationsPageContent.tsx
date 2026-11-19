@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useIntl } from 'react-intl';
 import { Button, Dropdown, SystemMessage } from '@reportportal/ui-kit';
@@ -35,6 +35,7 @@ import {
   pipelineIterationsByPipelineSelector,
   pipelineIterationsErrorByPipelineSelector,
   pipelineIterationsLoadingSelector,
+  pipelineIterationPagesSelector,
   pipelinesLoadingSelector,
   pipelinesSelector,
 } from 'controllers/aiFactory/pipelines';
@@ -47,15 +48,87 @@ import {
 } from 'controllers/pages';
 import { projectKeySelector, projectNameSelector } from 'controllers/project';
 import { SettingsLayout } from 'layouts/settingsLayout';
+import { PageControls } from 'pages/inside/aiFactory/pipelinesPage/pageControls/pageControls';
 import { PageHeaderWithBreadcrumbsAndActions } from 'pages/inside/common/pageHeaderWithBreadcrumbsAndActions';
 import { ProjectDetails } from 'pages/organization/constants';
 
 import { ComparisonResult } from './comparisonResult';
-import { getLatestPair, parseQueryId } from './compareIterationsUtils';
+import { COMPARE_ITERATION_PAGE_SIZE } from './compareIterationHistory';
+import {
+  getAvailableIterationChoices,
+  getClosestEarlierIteration,
+  getLatestPair,
+  parseQueryId,
+  type IterationChoice,
+} from './compareIterationsUtils';
+import { usePreviousCompareIteration } from './usePreviousCompareIteration';
 import { messages } from './messages';
 import styles from './compareIterationsPage.scss';
 
 const cx = createClassnames(styles);
+
+interface IterationBrowseState {
+  projectKey: string;
+  pipelineId: number;
+  offset: number;
+  limit: number;
+  selected: IterationChoice[];
+}
+
+interface CompareIterationHistorySelection {
+  projectKey: string;
+  catalogProjectKey: string | null;
+  pipelineId: number | null;
+  candidateId: number | null;
+  hasBaseline: boolean;
+}
+
+const useCompareIterationHistory = ({
+  projectKey,
+  catalogProjectKey,
+  pipelineId,
+  candidateId,
+  hasBaseline,
+}: CompareIterationHistorySelection) => {
+  const iterationsByPipeline = useSelector(pipelineIterationsByPipelineSelector);
+  const isIterationsLoading = useSelector(pipelineIterationsLoadingSelector);
+  const iterationsErrors = useSelector(pipelineIterationsErrorByPipelineSelector);
+  const iterationPages = useSelector(pipelineIterationPagesSelector);
+  const isCurrentPipeline = pipelineId !== null && catalogProjectKey === projectKey;
+  const iterations = isCurrentPipeline ? iterationsByPipeline?.[pipelineId] : undefined;
+  const iterationPage = isCurrentPipeline ? iterationPages?.[pipelineId] : undefined;
+  const hasIterationsError = Boolean(isCurrentPipeline && iterationsErrors?.[pipelineId]);
+
+  const selectedCandidate = iterations?.find(({ id }) => id === candidateId);
+  const previousOnPage = selectedCandidate
+    ? getClosestEarlierIteration(iterations, selectedCandidate.number)
+    : null;
+  const canFindEarlierInHistory =
+    iterationPage &&
+    (selectedCandidate
+      ? iterationPage.number < iterationPage.totalPages
+      : iterationPage.totalPages > 1);
+  const shouldLookUpPrevious =
+    !hasBaseline &&
+    !previousOnPage &&
+    canFindEarlierInHistory &&
+    !isIterationsLoading &&
+    !hasIterationsError;
+  const previousLookup = usePreviousCompareIteration(
+    projectKey,
+    pipelineId,
+    shouldLookUpPrevious ? candidateId : null,
+  );
+
+  return {
+    iterations,
+    iterationPage,
+    isIterationsLoading,
+    hasIterationsError,
+    previousOnPage,
+    previousLookup,
+  };
+};
 
 export const CompareIterationsPageContent = () => {
   const { formatMessage } = useIntl();
@@ -71,9 +144,6 @@ export const CompareIterationsPageContent = () => {
   const pipelines = catalogProjectKey === projectKey ? loadedPipelines : null;
   const hasCatalogError = useSelector(pipelineCatalogErrorSelector);
   const isPipelinesLoading = useSelector(pipelinesLoadingSelector);
-  const iterationsByPipeline = useSelector(pipelineIterationsByPipelineSelector);
-  const isIterationsLoading = useSelector(pipelineIterationsLoadingSelector);
-  const iterationsErrors = useSelector(pipelineIterationsErrorByPipelineSelector);
   const comparison = useSelector(pipelineComparisonSelector);
   const isComparisonLoading = useSelector(pipelineComparisonLoadingSelector);
   const hasComparisonError = useSelector(pipelineComparisonErrorSelector);
@@ -81,9 +151,27 @@ export const CompareIterationsPageContent = () => {
   const baselineId = parseQueryId(query.baseline);
   const candidateId = parseQueryId(query.candidate);
   const pipeline = pipelines?.find((item) => item.id === pipelineId);
-  const pipelineIterations =
-    pipelineId && catalogProjectKey === projectKey ? iterationsByPipeline?.[pipelineId] : undefined;
-  const iterations = pipelineIterations;
+  const {
+    iterations,
+    iterationPage,
+    isIterationsLoading,
+    hasIterationsError,
+    previousOnPage,
+    previousLookup,
+  } = useCompareIterationHistory({
+    projectKey,
+    catalogProjectKey,
+    pipelineId,
+    candidateId,
+    hasBaseline: query.baseline !== undefined,
+  });
+  const [browseState, setBrowseState] = useState<IterationBrowseState>();
+  const browsing =
+    browseState && browseState.projectKey === projectKey && browseState.pipelineId === pipelineId
+      ? browseState
+      : undefined;
+  const needsDefaultPair = query.baseline === undefined && query.candidate === undefined;
+  const needsFirstPage = needsDefaultPair && iterationPage?.offset > 0;
 
   useEffect(() => {
     if (
@@ -110,40 +198,41 @@ export const CompareIterationsPageContent = () => {
     if (
       pipelineId &&
       catalogProjectKey === projectKey &&
-      !iterations &&
+      (!iterations || needsFirstPage) &&
       !isIterationsLoading &&
-      !iterationsErrors?.[pipelineId]
+      !hasIterationsError
     ) {
-      dispatch(getPipelineIterationsAction([pipelineId], { offset: 0, limit: 200 }));
+      dispatch(
+        getPipelineIterationsAction([pipelineId], {
+          offset: 0,
+          limit: COMPARE_ITERATION_PAGE_SIZE,
+        }),
+      );
     }
   }, [
     catalogProjectKey,
     dispatch,
     isIterationsLoading,
     iterations,
-    iterationsErrors,
+    hasIterationsError,
+    needsFirstPage,
     pipelineId,
     projectKey,
   ]);
 
   useEffect(() => {
-    if (!iterations || query.baseline !== undefined) {
+    if (
+      !iterations ||
+      query.baseline !== undefined ||
+      needsFirstPage ||
+      isIterationsLoading ||
+      hasIterationsError
+    ) {
       return;
     }
-    const selectedCandidate = candidateId
-      ? iterations.find((item) => item.id === candidateId)
-      : undefined;
-    const previous = selectedCandidate
-      ? [...iterations]
-          .filter((item) => item.number < selectedCandidate.number)
-          .sort((left, right) => right.number - left.number)[0]
-      : undefined;
-    let pair: { baselineId: number; candidateId: number } | null = null;
-    if (selectedCandidate && previous) {
-      pair = { baselineId: previous.id, candidateId: selectedCandidate.id };
-    } else if (!candidateId) {
-      pair = getLatestPair(iterations);
-    }
+    const earlierId = previousOnPage?.id ?? previousLookup.baselineId;
+    const latestPair = needsDefaultPair ? getLatestPair(iterations) : null;
+    const pair = candidateId && earlierId ? { baselineId: earlierId, candidateId } : latestPair;
     if (pair) {
       dispatch(
         updatePagePropertiesAction({
@@ -152,7 +241,19 @@ export const CompareIterationsPageContent = () => {
         }),
       );
     }
-  }, [candidateId, dispatch, iterations, query.baseline, query.candidate]);
+  }, [
+    candidateId,
+    dispatch,
+    hasIterationsError,
+    isIterationsLoading,
+    iterations,
+    needsDefaultPair,
+    needsFirstPage,
+    previousLookup.baselineId,
+    previousOnPage?.id,
+    query.baseline,
+    query.candidate,
+  ]);
 
   const hasValidPair = Boolean(
     pipelineId && baselineId && candidateId && baselineId !== candidateId,
@@ -186,11 +287,23 @@ export const CompareIterationsPageContent = () => {
   };
 
   const pipelineOptions = pipelines?.map((item) => ({ value: item.id, label: item.name })) ?? [];
-  const iterationOptions =
-    iterations?.map((item) => ({
-      value: item.id,
-      label: formatMessage(messages.iterationOption, { number: item.number }),
-    })) ?? [];
+  const previousComparisonChoices =
+    comparison?.pipelineId === pipelineId && comparison?.projectKey === projectKey
+      ? [comparison.baseline, comparison.candidate]
+      : [];
+  const selectedIds = [baselineId, candidateId];
+  const availableIterations = getAvailableIterationChoices(
+    iterations ?? [],
+    [...previousComparisonChoices, ...(browsing?.selected ?? [])],
+    selectedIds,
+  );
+  const iterationOptions = availableIterations.map((item) => ({
+    value: item.id,
+    label: formatMessage(messages.iterationOption, { number: item.number }),
+  }));
+  const isIterationSelectionDisabled =
+    !iterationOptions.length ||
+    (iterationOptions.length < 2 && (iterationPage?.totalElements ?? 0) < 2);
   const comparisonMatchesSelection = Boolean(
     comparison?.pipelineId === pipelineId &&
     comparison?.projectKey === projectKey &&
@@ -232,10 +345,41 @@ export const CompareIterationsPageContent = () => {
     }
   };
 
+  const loadIterationPage = (
+    offset: number,
+    limit = iterationPage?.size ?? COMPARE_ITERATION_PAGE_SIZE,
+  ) => {
+    if (!pipelineId || catalogProjectKey !== projectKey) return;
+    setBrowseState({
+      projectKey,
+      pipelineId,
+      offset,
+      limit,
+      selected: availableIterations.filter(({ id }) => selectedIds.includes(id)),
+    });
+    dispatch(getPipelineIterationsAction([pipelineId], { offset, limit }));
+  };
+
+  const retryIterationPage = () => loadIterationPage(browsing?.offset ?? 0, browsing?.limit);
+
+  const renderIterationError = (message: typeof messages.iterationsError, retry: () => void) => (
+    <SystemMessage mode="error">
+      {formatMessage(message)}
+      <div className={cx('error-action')}>
+        <Button variant="text" onClick={retry}>
+          {formatMessage(messages.retry)}
+        </Button>
+      </div>
+    </SystemMessage>
+  );
+
   const renderState = () => {
+    if (!hasValidPair && (hasIterationsError || previousLookup.hasError)) return null;
     if (
       !hasValidPair &&
-      ((isPipelinesLoading && !pipelines) || (isIterationsLoading && !iterations))
+      ((isPipelinesLoading && !pipelines) ||
+        (isIterationsLoading && !iterations) ||
+        previousLookup.isLoading)
     ) {
       return (
         <div className={cx('state', 'state--loading')}>
@@ -252,7 +396,7 @@ export const CompareIterationsPageContent = () => {
     if (!pipelineId || (!pipeline && !hasValidPair)) {
       return <div className={cx('state')}>{formatMessage(messages.invalidSelection)}</div>;
     }
-    if (iterations && iterations.length < 2 && !hasValidPair) {
+    if (iterations && (iterationPage?.totalElements ?? iterations.length) < 2 && !hasValidPair) {
       return <div className={cx('state')}>{formatMessage(messages.notEnoughIterations)}</div>;
     }
     if (!hasValidPair) {
@@ -318,7 +462,7 @@ export const CompareIterationsPageContent = () => {
                   ? updateSelection({ baseline: value })
                   : undefined
               }
-              disabled={iterationOptions.length < 2}
+              disabled={isIterationSelectionDisabled}
             />
             <Dropdown
               data-automation-id="comparisonCandidateSelect"
@@ -330,9 +474,19 @@ export const CompareIterationsPageContent = () => {
                   ? updateSelection({ candidate: value })
                   : undefined
               }
-              disabled={iterationOptions.length < 2}
+              disabled={isIterationSelectionDisabled}
             />
           </div>
+          {iterationPage && (
+            <PageControls
+              page={iterationPage}
+              isLoading={isIterationsLoading}
+              onPageChange={loadIterationPage}
+            />
+          )}
+          {hasIterationsError && renderIterationError(messages.iterationsError, retryIterationPage)}
+          {previousLookup.hasError &&
+            renderIterationError(messages.previousIterationError, previousLookup.retry)}
           {renderState()}
         </div>
       </ScrollWrapper>
