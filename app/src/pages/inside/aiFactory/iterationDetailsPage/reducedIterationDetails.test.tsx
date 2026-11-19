@@ -133,6 +133,128 @@ const renderTraceDetail = (
   );
 
 describe('ReducedIterationDetails', () => {
+  describe('Grade report from an existing iteration', () => {
+    const gradeReport = {
+      case_count: 1,
+      max_score: 100,
+      total_score: 95,
+      test_cases: [
+        {
+          name: 'Viewer cannot delete a folder',
+          line: 136,
+          total_score: 95,
+          criterias: [
+            {
+              name: 'no_invented_logic',
+              max_score: 20,
+              score: 15,
+              failure_reasons: ['The source does not say that the menu is hidden.'],
+            },
+            { name: 'atomicity', max_score: 15, score: 15, failure_reasons: [] },
+          ],
+        },
+      ],
+    };
+    const gradeOutput = `\`\`\`json\n${JSON.stringify(gradeReport)}\n\`\`\``;
+
+    const renderGrade = (
+      message: string,
+      additionalSections: ReducedPipelineDetailStage['sections'] = [],
+    ) =>
+      shallow(
+        <ReducedIterationDetails
+          iteration={detail({
+            pipelineType: 'TEST_CASE_GENERATION',
+            stages: [
+              {
+                id: 11,
+                key: 'grade',
+                stageKey: 'grade',
+                label: 'Grade',
+                sequence: 1,
+                status: 'PASSED',
+                sections: [
+                  ...additionalSections,
+                  {
+                    key: 'transcript',
+                    title: 'Transcript',
+                    role: 'DETAILS',
+                    columns: [{ key: 'action', label: 'Action' }],
+                    rows: [
+                      {
+                        key: 'tool',
+                        cells: { kind: 'Tool', action: gradeOutput },
+                        details: [],
+                      },
+                      {
+                        key: 'message',
+                        cells: { kind: 'Message', action: 'Message — preview' },
+                        details: [{ heading: 'Message', items: [message] }],
+                      },
+                      {
+                        key: 'usage',
+                        cells: { kind: 'Usage', action: 'usage: 123 tokens' },
+                        details: [],
+                      },
+                    ],
+                  },
+                ],
+              },
+            ],
+          })}
+          hasError={false}
+          isUnavailable={false}
+          breadcrumbDescriptors={breadcrumbDescriptors}
+          onRetry={jest.fn()}
+        />,
+      );
+
+    test('shows reported totals and reveals individual scores and reasons', () => {
+      const wrapper = renderGrade(gradeOutput);
+      const results = '[data-automation-id="live-grade-results"]';
+      expect(wrapper.find(results).text()).toContain('Suite score 95/100');
+      expect(wrapper.find(results).text()).toContain('Viewer cannot delete a folder');
+      expect(wrapper.find(results).text()).toContain('136');
+      expect(wrapper.find(results).text()).not.toContain('No invented logic');
+
+      (wrapper.find(`${results} button`).prop('onClick') as () => void)();
+
+      expect(wrapper.find(results).text()).toContain('No invented logic · 15/20');
+      expect(wrapper.find(results).text()).toContain('Atomicity · 15/15');
+      expect(wrapper.find(results).text()).toContain(
+        'The source does not say that the menu is hidden.',
+      );
+    });
+
+    test.each([
+      'This report is incomplete',
+      `\`\`\`json\n${JSON.stringify({ ...gradeReport, case_count: 2 })}\n\`\`\``,
+    ])('ignores an invalid final message even when a tool call has valid JSON', (message) => {
+      const wrapper = renderGrade(message);
+      expect(wrapper.find('[data-automation-id="live-grade-results"]')).toHaveLength(0);
+      expect(wrapper.text()).toContain('Transcript');
+    });
+
+    test('prefers the dedicated Result section when provided by the pipeline', () => {
+      const wrapper = renderGrade(gradeOutput, [
+        {
+          key: 'gradedCases',
+          title: 'Reported scores',
+          role: 'RESULT',
+          columns: [
+            { key: 'name', label: 'Case' },
+            { key: 'total', label: 'Score' },
+          ],
+          rows: [{ key: '1', cells: { name: 'Reported case', total: '100' }, details: [] }],
+        },
+      ]);
+      const results = wrapper.find('[data-automation-id="live-grade-results"]');
+      expect(results).toHaveLength(1);
+      expect(results.text()).toContain('Reported case');
+      expect(results.text()).not.toContain('Viewer cannot delete a folder');
+    });
+  });
+
   test('opens only the selected actual stageKey, with no synthetic key fallback', () => {
     const wrapper = renderTraceDetail(
       [

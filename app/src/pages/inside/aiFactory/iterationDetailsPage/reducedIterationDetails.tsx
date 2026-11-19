@@ -42,6 +42,7 @@ import {
 import { ScrollWrapper } from 'components/main/scrollWrapper';
 import { SettingsLayout } from 'layouts/settingsLayout';
 import { ScoreBar } from 'pages/inside/aiFactory/common';
+import { CRITERION_MESSAGE } from 'pages/inside/aiFactory/evaluation/criterionMessages';
 import { IterationProvenance } from 'pages/inside/aiFactory/iterationDetailsPage/iterationProvenance';
 import type { LiveLibraryCase } from 'pages/inside/aiFactory/iterationDetailsPage/liveReviewCases/liveLibraryCases';
 import { LiveReviewCases } from 'pages/inside/aiFactory/iterationDetailsPage/liveReviewCases/liveReviewCases';
@@ -57,6 +58,7 @@ import { PageHeaderWithBreadcrumbsAndActions } from '../../common/pageHeaderWith
 import { KpiTile } from './kpiTile';
 import { LiveStageRetryAction } from './liveStageRetryAction';
 import { CaseLink } from './stagePanels/caseLink';
+import { readLegacyGradeReport } from './readLegacyGradeReport';
 import { messages } from './messages';
 import stageCardStyles from './stageCards/stageCards.scss';
 import stagePanelStyles from './stagePanels/stagePanels.scss';
@@ -188,6 +190,7 @@ const renderReducedStageSection = (
     formatNumber,
   }: Pick<ReturnType<typeof useIntl>, 'formatMessage' | 'formatNumber'>,
   generationKind?: GenerationStageKind,
+  gradeSummary?: string,
 ) => {
   if (
     section.key === 'tokenUsage' &&
@@ -241,13 +244,15 @@ const renderReducedStageSection = (
     <section
       key={section.key}
       className={cx('reduced-section', {
-        'reduced-section--grade': section.key === 'gradedCases',
+        'reduced-section--grade': section.key === 'gradedCases' && !gradeSummary,
+        'reduced-section--grade-report': Boolean(gradeSummary),
         'reduced-section--create': generationKind === 'create',
         'reduced-section--upload': generationKind === 'upload',
       })}
       data-automation-id={generationKind ? `live-${generationKind}-results` : undefined}
     >
       <h3>{section.title}</h3>
+      {gradeSummary && <p className={cx('reduced-section__summary')}>{gradeSummary}</p>}
       <div className={cx('reduced-section__scroll')}>
         <table>
           <thead>
@@ -350,11 +355,13 @@ const renderReducedStageSection = (
                           {row.details.map((detail) => (
                             <div key={detail.heading}>
                               <strong>{detail.heading}</strong>
-                              <ul>
-                                {detail.items.map((item) => (
-                                  <li key={item}>{item}</li>
-                                ))}
-                              </ul>
+                              {detail.items.length > 0 && (
+                                <ul>
+                                  {detail.items.map((item) => (
+                                    <li key={item}>{item}</li>
+                                  ))}
+                                </ul>
+                              )}
                             </div>
                           ))}
                         </div>
@@ -590,6 +597,61 @@ const renderReducedStageCards = (
   );
 };
 
+const renderLegacyGradeResults = (
+  stage: ReducedPipelineDetailStage,
+  expandedRows: Set<string>,
+  onToggleDetails: (rowKey: string) => void,
+  {
+    formatMessage,
+    formatNumber,
+  }: Pick<ReturnType<typeof useIntl>, 'formatMessage' | 'formatNumber'>,
+) => {
+  const report = readLegacyGradeReport(stage.sections);
+  if (!report) return null;
+
+  const section: ReducedPipelineSection = {
+    key: 'gradedCases',
+    title: formatMessage(messages.gradedCases),
+    role: 'RESULT',
+    columns: [
+      { key: 'name', label: formatMessage(messages.gradeColumnCase) },
+      { key: 'line', label: formatMessage(messages.gradeSourceLine), valueType: 'NUMBER' },
+      { key: 'total', label: formatMessage(messages.gradeColumnScore), valueType: 'SCORE' },
+    ],
+    rows: report.test_cases.map((testCase, index) => ({
+      key: String(index),
+      cells: {
+        name: testCase.name,
+        line: testCase.line?.toString() ?? '',
+        total: `${testCase.total_score}/${report.max_score}`,
+      },
+      details: testCase.criterias.map((criterion) => {
+        const name = Object.prototype.hasOwnProperty.call(CRITERION_MESSAGE, criterion.name)
+          ? formatMessage(CRITERION_MESSAGE[criterion.name as keyof typeof CRITERION_MESSAGE])
+          : criterion.name;
+        return {
+          heading: `${name} · ${criterion.score}/${criterion.max_score}`,
+          items: [...new Set(criterion.failure_reasons)],
+        };
+      }),
+    })),
+  };
+
+  return renderReducedStageSection(
+    section,
+    stage.id,
+    expandedRows,
+    onToggleDetails,
+    { formatMessage, formatNumber },
+    'grade',
+    formatMessage(messages.gradeReportSummary, {
+      score: report.total_score,
+      max: report.max_score,
+      count: report.case_count,
+    }),
+  );
+};
+
 const renderReducedStagePanel = (
   currentStage: ReducedPipelineDetailStage,
   expandedRows: Set<string>,
@@ -640,6 +702,14 @@ const renderReducedStagePanel = (
               getGenerationSectionKind(section, generationKind),
             ),
           )}
+        {generationKind === 'grade' &&
+          !currentStage.sections?.some(
+            ({ key, role }) => key === 'gradedCases' && role === 'RESULT',
+          ) &&
+          renderLegacyGradeResults(currentStage, expandedRows, onToggleDetails, {
+            formatMessage,
+            formatNumber,
+          })}
         {reviewContent}
       </section>
       <aside className={panelCx('stage-panels__aside')}>

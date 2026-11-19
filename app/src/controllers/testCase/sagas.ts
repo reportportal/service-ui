@@ -166,6 +166,8 @@ function* getTestCasesByFolderId(action: GetTestCasesByFolderIdAction): Generato
 function* getTestCaseDetails(action: TestCaseDetailsAction) {
   try {
     const projectKey = (yield select(projectKeySelector)) as string;
+    const organizationSlug = (yield select(urlOrganizationSlugSelector)) as string;
+    const projectSlug = (yield select(urlProjectSlugSelector)) as string;
     const testCaseDetails = (yield call(
       fetch,
       URLS.testCaseDetails(projectKey, action.payload.testCaseId),
@@ -174,6 +176,7 @@ function* getTestCaseDetails(action: TestCaseDetailsAction) {
     yield put({
       type: GET_TEST_CASE_DETAILS_SUCCESS,
       payload: testCaseDetails,
+      context: { projectKey, organizationSlug, projectSlug },
     });
   } catch {
     const organizationSlug = (yield select(urlOrganizationSlugSelector)) as string;
@@ -503,7 +506,7 @@ function* watchGetAllTestCases() {
 }
 
 function* watchGetTestCaseDetails() {
-  yield takeEvery(GET_TEST_CASE_DETAILS, getTestCaseDetails);
+  yield takeLatest(GET_TEST_CASE_DETAILS, getTestCaseDetails);
 }
 
 function* watchGetFilteredFolders() {

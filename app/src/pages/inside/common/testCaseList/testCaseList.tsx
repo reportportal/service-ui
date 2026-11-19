@@ -70,6 +70,25 @@ interface ToggleRowSelectionParams {
   handleSelectedRows: (rows: SelectedTestCaseRow[]) => void;
 }
 
+const getSelectedTestCaseRow = (testCase: ExtendedTestCase): SelectedTestCaseRow => ({
+  id: testCase.id,
+  folderId: testCase.testFolder.id,
+  displayId: testCase.displayId,
+  ...(getNativeTestCaseSummary(testCase)
+    ? {
+        origin: testCase.origin,
+        status: testCase.status,
+        defaultVersionId: testCase.defaultVersionId,
+        metrics: testCase.metrics,
+        automationState: testCase.automationState,
+      }
+    : {}),
+  lifecycle: testCase.lifecycle,
+  name: testCase.name,
+  review: testCase.review,
+  automation: testCase.automation,
+});
+
 const toggleRowSelection = ({
   id,
   testCases,
@@ -85,26 +104,7 @@ const toggleRowSelection = ({
   const isCurrentlySelected = selectedRows.some((row) => row.id === id);
   const nextSelectedRows = isCurrentlySelected
     ? selectedRows.filter((row) => row.id !== id)
-    : [
-        ...selectedRows,
-        {
-          id: testCase.id,
-          folderId: testCase.testFolder.id,
-          displayId: testCase.displayId,
-          ...(getNativeTestCaseSummary(testCase)
-            ? {
-                origin: testCase.origin,
-                status: testCase.status,
-                defaultVersionId: testCase.defaultVersionId,
-                metrics: testCase.metrics,
-              }
-            : {}),
-          lifecycle: testCase.lifecycle,
-          name: testCase.name,
-          review: testCase.review,
-          automation: testCase.automation,
-        },
-      ];
+    : [...selectedRows, getSelectedTestCaseRow(testCase)];
 
   handleSelectedRows(nextSelectedRows);
 };
@@ -132,23 +132,7 @@ const toggleAllRowsSelection = ({
         ...selectedRows,
         ...testCases
           .filter((testCase) => !selectedRowIds.includes(testCase.id))
-          .map((testCase) => ({
-            id: testCase.id,
-            folderId: testCase.testFolder.id,
-            displayId: testCase.displayId,
-            ...(getNativeTestCaseSummary(testCase)
-              ? {
-                  origin: testCase.origin,
-                  status: testCase.status,
-                  defaultVersionId: testCase.defaultVersionId,
-                  metrics: testCase.metrics,
-                }
-              : {}),
-            lifecycle: testCase.lifecycle,
-            name: testCase.name,
-            review: testCase.review,
-            automation: testCase.automation,
-          })),
+          .map(getSelectedTestCaseRow),
       ];
 
   handleSelectedRows(nextSelectedRows);

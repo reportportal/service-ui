@@ -52,6 +52,7 @@ import {
   urlFolderIdSelector,
 } from 'controllers/pages';
 import { foldersSelector } from 'controllers/testCase';
+import { projectKeySelector } from 'controllers/project/selectors/typed-selectors';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { useUserPermissions } from 'hooks/useUserPermissions';
 import { useHasTestPlans } from 'hooks/useHasTestPlans';
@@ -63,6 +64,8 @@ import { BulkApproveButton } from 'pages/inside/aiFactory/approval';
 import {
   automationDisabledMessages,
   automationMessages,
+  getNativeAutomationCandidate,
+  getNativeAutomationState,
   partitionAutomationSelection,
   useAutomationModal,
 } from 'pages/inside/aiFactory/automation';
@@ -93,6 +96,7 @@ import { useRefetchCurrentTestCases } from '../hooks/useRefetchCurrentTestCases'
 import styles from './allTestCasesPage.scss';
 
 const cx = createClassnames(styles);
+const EMPTY_SELECTION: SelectedTestCaseRow[] = [];
 
 interface AllTestCasesPageProps {
   testCases: TestCase[];
@@ -103,44 +107,34 @@ interface AllTestCasesPageProps {
 }
 
 interface BulkAutomationActionProps {
-  canAutomateTestCases: boolean;
   disabledMessage: string;
-  hasEligibleCases: boolean;
-  isAiFactoryEnabled: boolean;
+  isEnabled: boolean;
+  isVisible: boolean;
   label: string;
   onClick: () => void;
 }
 
 const renderBulkAutomationAction = ({
-  canAutomateTestCases,
   disabledMessage,
-  hasEligibleCases,
-  isAiFactoryEnabled,
+  isEnabled,
+  isVisible,
   label,
   onClick,
 }: BulkAutomationActionProps) => {
-  if (!isAiFactoryEnabled || !canAutomateTestCases) {
+  if (!isVisible) {
     return null;
   }
 
-  if (hasEligibleCases) {
+  if (isEnabled) {
     return (
-      <Button
-        variant="ghost"
-        onClick={onClick}
-        data-automation-id="bulk-automate-test-cases"
-      >
+      <Button variant="ghost" onClick={onClick} data-automation-id="bulk-automate-test-cases">
         {label}
       </Button>
     );
   }
 
   return (
-    <Tooltip
-      wrapperClassName={cx('tooltip-wrapper')}
-      placement="top"
-      content={disabledMessage}
-    >
+    <Tooltip wrapperClassName={cx('tooltip-wrapper')} placement="top" content={disabledMessage}>
       <Button variant="ghost" disabled data-automation-id="bulk-automate-test-cases">
         {label}
       </Button>
@@ -195,6 +189,49 @@ const getReadyOnlySelection = (
   };
 };
 
+const getBulkAutomationState = (
+  selectedTestCases: (TestCase | SelectedTestCaseRow)[],
+  isAiFactoryEnabled: boolean,
+  projectKey: string,
+  canAutomateTestCases: boolean,
+) => {
+  const hasNativeSelection = isAiFactoryEnabled && selectedTestCases.some(hasNativeTestCaseData);
+  const isNativeAutomationSelection =
+    hasNativeSelection &&
+    Boolean(projectKey) &&
+    selectedTestCases.every(
+      (testCase) => hasNativeTestCaseData(testCase) && getNativeAutomationState(testCase),
+    );
+  const isCiUnavailable =
+    isNativeAutomationSelection &&
+    selectedTestCases.some(
+      (testCase) => getNativeAutomationState(testCase)?.ciConnection !== 'CONNECTED',
+    );
+  const automationCandidates = isNativeAutomationSelection
+    ? selectedTestCases.map((testCase) => getNativeAutomationCandidate(testCase))
+    : selectedTestCases;
+  const { eligible, skipped } = partitionAutomationSelection(automationCandidates);
+  const skipReasons = new Set(skipped.map(({ reason }) => reason));
+  const eligibilityMessage =
+    skipReasons.size === 1
+      ? automationDisabledMessages[skipped[0].reason]
+      : automationMessages.unavailableSelection;
+
+  return {
+    hasNativeSelection,
+    isNativeAutomationSelection,
+    automationCandidates,
+    automationDisabledMessage: isCiUnavailable
+      ? automationMessages.unavailableCiConnection
+      : eligibilityMessage,
+    isBulkAutomationEnabled: !isCiUnavailable && eligible.length > 0,
+    isBulkAutomationVisible:
+      isAiFactoryEnabled &&
+      canAutomateTestCases &&
+      (!hasNativeSelection || isNativeAutomationSelection),
+  };
+};
+
 export const AllTestCasesPage = ({
   testCases,
   isLoading,
@@ -205,6 +242,8 @@ export const AllTestCasesPage = ({
   const { formatMessage } = useIntl();
   const { trackEvent } = useTracking();
   const { organizationSlug, projectSlug } = useProjectDetails();
+  const selectionScope = `${organizationSlug}/${projectSlug}`;
+  const projectKey = useSelector(projectKeySelector);
   const payload = useSelector(payloadSelector);
   const query = useSelector(locationQuerySelector);
   const { setPageNumber, setPageSize, captions, activePage, pageSize, totalPages } =
@@ -215,7 +254,8 @@ export const AllTestCasesPage = ({
       shouldSaveUserPreferences: true,
       baseUrl: `/organizations/${organizationSlug}/projects/${projectSlug}/testLibrary${payload.testCasePageRoute ? '/' + payload.testCasePageRoute : ''}`,
     });
-  const [selectedRows, setSelectedRows] = useState<SelectedTestCaseRow[]>([]);
+  const [selection, setSelection] = useState({ scope: selectionScope, rows: EMPTY_SELECTION });
+  const selectedRows = selection.scope === selectionScope ? selection.rows : EMPTY_SELECTION;
   const folderId = useSelector(urlFolderIdSelector);
   const folders = useSelector(foldersSelector);
   const dispatch = useDispatch();
@@ -250,17 +290,23 @@ export const AllTestCasesPage = ({
       ),
     [selectedRows, testCases, isAiFactoryEnabled],
   );
-  const hasNativeSelection = isAiFactoryEnabled && selectedTestCases.some(hasNativeTestCaseData);
-  const automationSelection = useMemo(
-    () => partitionAutomationSelection(selectedTestCases),
-    [selectedTestCases],
+  const {
+    hasNativeSelection,
+    isNativeAutomationSelection,
+    automationCandidates,
+    automationDisabledMessage,
+    isBulkAutomationEnabled,
+    isBulkAutomationVisible,
+  } = useMemo(
+    () =>
+      getBulkAutomationState(
+        selectedTestCases,
+        isAiFactoryEnabled,
+        projectKey,
+        canAutomateTestCases,
+      ),
+    [selectedTestCases, isAiFactoryEnabled, projectKey, canAutomateTestCases],
   );
-  const automationDisabledMessage = useMemo(() => {
-    const reasons = new Set(automationSelection.skipped.map(({ reason }) => reason));
-    if (reasons.size !== 1) return automationMessages.unavailableSelection;
-
-    return automationDisabledMessages[[...reasons][0]];
-  }, [automationSelection.skipped]);
   const { eligibleIds, skippedDrafts, hasOnlyDraftsSelected } = useMemo(
     () => getReadyOnlySelection(selectedRowIds, selectedTestCases, isAiFactoryEnabled),
     [isAiFactoryEnabled, selectedRowIds, selectedTestCases],
@@ -287,7 +333,11 @@ export const AllTestCasesPage = ({
     [trackEvent],
   );
 
-  const onClearSelection = useCallback(() => setSelectedRows([]), []);
+  const onClearSelection = useCallback(() => {
+    setSelection((current) =>
+      current.scope === selectionScope ? { ...current, rows: EMPTY_SELECTION } : current,
+    );
+  }, [selectionScope]);
 
   const notifySkippedDrafts = useCallback(() => {
     if (skippedDrafts.length) {
@@ -301,7 +351,8 @@ export const AllTestCasesPage = ({
     }
   }, [dispatch, formatMessage, skippedDrafts]);
 
-  const handleSelectedRows = (rows: SelectedTestCaseRow[]) => setSelectedRows(rows);
+  const handleSelectedRows = (rows: SelectedTestCaseRow[]) =>
+    setSelection({ scope: selectionScope, rows });
 
   const folderTitle = useMemo(() => {
     const selectedFolder = folders.find((folder) => String(folder.id) === String(folderId));
@@ -396,14 +447,26 @@ export const AllTestCasesPage = ({
 
   const handleOpenAutomationModal = useCallback(() => {
     openAutomationModal({
-      testCases: selectedTestCases,
+      testCases: automationCandidates,
+      ...(isNativeAutomationSelection ? { expectedProjectKey: projectKey } : {}),
       onSuccess: ({ accepted }) => {
         const acceptedIds = new Set(accepted);
-        setSelectedRows((rows) => rows.filter(({ id }) => !acceptedIds.has(id)));
+        setSelection((current) =>
+          current.scope === selectionScope
+            ? { ...current, rows: current.rows.filter(({ id }) => !acceptedIds.has(id)) }
+            : current,
+        );
         refetchCurrentTestCases();
       },
     });
-  }, [openAutomationModal, refetchCurrentTestCases, selectedTestCases]);
+  }, [
+    automationCandidates,
+    isNativeAutomationSelection,
+    openAutomationModal,
+    projectKey,
+    refetchCurrentTestCases,
+    selectionScope,
+  ]);
 
   const handleQuickFiltersChange = (value: QuickFiltersValue) => {
     dispatch(updatePagePropertiesAction({ ...value, ...TestCasePageDefaultValues }));
@@ -490,10 +553,9 @@ export const AllTestCasesPage = ({
               />
             )}
             {renderBulkAutomationAction({
-              canAutomateTestCases,
               disabledMessage: formatMessage(automationDisabledMessage),
-              hasEligibleCases: automationSelection.eligible.length > 0,
-              isAiFactoryEnabled: isAiFactoryEnabled && !hasNativeSelection,
+              isEnabled: isBulkAutomationEnabled,
+              isVisible: isBulkAutomationVisible,
               label: formatMessage(automationMessages.automate),
               onClick: handleOpenAutomationModal,
             })}

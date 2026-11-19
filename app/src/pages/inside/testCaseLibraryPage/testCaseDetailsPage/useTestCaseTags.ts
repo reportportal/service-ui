@@ -22,7 +22,7 @@ import { fetch } from 'common/utils';
 import { useDebouncedSpinner, useNotification } from 'common/hooks';
 import { projectKeySelector } from 'controllers/project';
 import { GET_TEST_CASE_DETAILS_SUCCESS } from 'controllers/testCase/constants';
-import { testCaseDetailsSelector } from 'controllers/testCase';
+import { testCaseDetailsContextSelector, testCaseDetailsSelector } from 'controllers/testCase';
 import { Tag, ExtendedTestCase, Attribute } from 'types/testCase';
 
 import { UseTestCaseTagsParams, hasAttributeValue } from '../types';
@@ -32,7 +32,8 @@ export const useTestCaseTags = ({ testCaseId }: UseTestCaseTagsParams) => {
   const dispatch = useDispatch();
   const projectKey = useSelector(projectKeySelector);
   const testCaseDetails = useSelector(testCaseDetailsSelector);
-  const { showSuccessNotification, showErrorNotification } = useNotification();
+  const detailsContext = useSelector(testCaseDetailsContextSelector);
+  const { showErrorNotification } = useNotification();
 
   const updateTestCaseTags = useCallback(
     async (attributes: (Tag | Attribute)[]) => {
@@ -61,7 +62,11 @@ export const useTestCaseTags = ({ testCaseId }: UseTestCaseTagsParams) => {
         );
 
         if (response) {
-          dispatch({ type: GET_TEST_CASE_DETAILS_SUCCESS, payload: response });
+          dispatch({
+            type: GET_TEST_CASE_DETAILS_SUCCESS,
+            payload: response,
+            context: detailsContext,
+          });
         }
       } catch (error: unknown) {
         showErrorNotification({
@@ -76,7 +81,7 @@ export const useTestCaseTags = ({ testCaseId }: UseTestCaseTagsParams) => {
       projectKey,
       testCaseId,
       dispatch,
-      showSuccessNotification,
+      detailsContext,
       showErrorNotification,
       hideSpinner,
     ],

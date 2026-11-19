@@ -17,13 +17,16 @@
 import {
   AutomationStatus,
   Lifecycle,
+  MergeRequestState,
   SkipReason,
   type AiAutomationStatus,
   type AiLifecycle,
   type AutomateAcceptedRS,
   type AutomationEnvironmentsRS,
   type TestCaseAiExtension,
+  type TestCaseAutomationState,
 } from 'types/aiFactory';
+import type { TestCase } from 'types/testCase';
 
 export interface AutomationCandidate {
   id: number;
@@ -32,6 +35,7 @@ export interface AutomationCandidate {
   lifecycle?: AiLifecycle;
   review?: TestCaseAiExtension['review'];
   automation?: { status: AiAutomationStatus };
+  isFixRunning?: boolean;
 }
 
 export interface SkippedAutomationCandidate extends AutomationCandidate {
@@ -50,8 +54,83 @@ const asRecord = (value: unknown): Record<string, unknown> | null =>
 const isPositiveInteger = (value: unknown): value is number =>
   typeof value === 'number' && Number.isSafeInteger(value) && value > 0;
 
+const CI_CONNECTION_STATES = new Set(['CONNECTED', 'NOT_CONNECTED', 'CONNECTION_FAILED']);
+
+const isIteration = (value: unknown) => {
+  const iteration = asRecord(value);
+  return (
+    iteration &&
+    isPositiveInteger(iteration.pipelineId) &&
+    isPositiveInteger(iteration.iterationId) &&
+    isPositiveInteger(iteration.number)
+  );
+};
+
+const isLaunch = (value: unknown) => {
+  const launch = asRecord(value);
+  return (
+    launch &&
+    isPositiveInteger(launch.id) &&
+    isPositiveInteger(launch.number) &&
+    typeof launch.name === 'string'
+  );
+};
+
+const isMergeRequest = (value: unknown) => {
+  const mergeRequest = asRecord(value);
+  return (
+    mergeRequest &&
+    typeof mergeRequest.id === 'string' &&
+    Object.values(MergeRequestState).includes(mergeRequest.state as MergeRequestState)
+  );
+};
+
+const isLastResult = (value: unknown) => {
+  const result = asRecord(value);
+  return (
+    result &&
+    (result.status === 'PASSED' || result.status === 'FAILED') &&
+    (result.defectType === undefined || typeof result.defectType === 'string')
+  );
+};
+
+export const getNativeAutomationState = (
+  testCase?: Pick<TestCase, 'automationState'> | null,
+): TestCaseAutomationState | undefined => {
+  const state = testCase?.automationState;
+  if (
+    !state ||
+    !CI_CONNECTION_STATES.has(state.ciConnection) ||
+    !Object.values(AutomationStatus).includes(state.status as AutomationStatus) ||
+    typeof state.fixInProgress !== 'boolean' ||
+    typeof state.scenarioChangedAfterAutomation !== 'boolean' ||
+    (state.iteration !== undefined && !isIteration(state.iteration)) ||
+    (state.launch !== undefined && !isLaunch(state.launch)) ||
+    (state.mergeRequest !== undefined && !isMergeRequest(state.mergeRequest)) ||
+    (state.lastResult !== undefined && !isLastResult(state.lastResult))
+  ) {
+    return undefined;
+  }
+  return state;
+};
+
+export const getNativeAutomationCandidate = (
+  testCase: AutomationCandidate & Pick<TestCase, 'status' | 'automationState'>,
+  isFixRunning = false,
+): AutomationCandidate => {
+  const state = getNativeAutomationState(testCase);
+  return {
+    id: testCase.id,
+    displayId: testCase.displayId,
+    name: testCase.name,
+    lifecycle: testCase.status,
+    ...(state && { automation: { status: state.status } }),
+    ...((isFixRunning || state?.fixInProgress) && { isFixRunning: true }),
+  };
+};
+
 export const getAutomationSkipReason = (testCase: AutomationCandidate): SkipReason | null => {
-  if (testCase.review?.fixRound?.status === 'RUNNING') {
+  if (testCase.isFixRunning || testCase.review?.fixRound?.status === 'RUNNING') {
     return SkipReason.FIX_RUNNING;
   }
   if (testCase.automation?.status === AutomationStatus.IN_PROGRESS) {

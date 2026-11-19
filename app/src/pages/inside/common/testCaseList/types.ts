@@ -32,7 +32,7 @@ export enum TestCaseMenuAction {
 
 export interface SelectedTestCaseRow extends Pick<
   TestCase,
-  'origin' | 'status' | 'defaultVersionId' | 'metrics'
+  'origin' | 'status' | 'defaultVersionId' | 'metrics' | 'automationState'
 > {
   id: number;
   folderId: number;

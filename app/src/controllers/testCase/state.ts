@@ -19,6 +19,12 @@ import type { ExtendedTestCase, TestCase } from 'types/testCase';
 
 import { Folder } from './types';
 
+export interface TestCaseDetailsContext {
+  projectKey: string;
+  organizationSlug: string;
+  projectSlug: string;
+}
+
 export interface TestCaseState {
   folders?: {
     data?: Folder[];
@@ -42,5 +48,6 @@ export interface TestCaseState {
   details?: {
     data?: ExtendedTestCase;
     loading: boolean;
+    context?: TestCaseDetailsContext;
   };
 }

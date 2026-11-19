@@ -41,6 +41,7 @@ import { showModalAction } from 'controllers/modal';
 import { useAiFactoryEnabled } from 'controllers/aiFactory';
 import { GET_TEST_CASE_DETAILS } from 'controllers/testCase';
 import { TEST_CASE_LIBRARY_PAGE, urlOrganizationAndProjectSelector } from 'controllers/pages';
+import { projectKeySelector } from 'controllers/project/selectors/typed-selectors';
 import { useUserPermissions } from 'hooks/useUserPermissions';
 import { useHasTestPlans } from 'hooks/useHasTestPlans';
 import { PriorityIcon } from 'pages/inside/common/priorityIcon';
@@ -55,10 +56,17 @@ import {
   automationDisabledMessages,
   automationMessages,
   getAutomationSkipReason,
+  getNativeAutomationCandidate,
+  getNativeAutomationState,
   useAutomationModal,
 } from 'pages/inside/aiFactory/automation';
 import { isDraftGateActive, readyOnlyMessages } from 'pages/inside/aiFactory/readyOnlyGate';
-import { EvaluationState, Lifecycle } from 'types/aiFactory';
+import {
+  EvaluationState,
+  Lifecycle,
+  type AutomateAcceptedRS,
+  type TestCaseAutomationState,
+} from 'types/aiFactory';
 import type { ExtendedTestCase, TestCasePriority } from 'types/testCase';
 
 import { messages } from './messages';
@@ -74,6 +82,7 @@ import styles from './testCaseDetailsHeader.scss';
 const cx = createClassnames(styles);
 
 interface TestCaseDetailsHeaderProps {
+  canShowAutomation?: boolean;
   className?: string;
   testCase: ExtendedTestCase;
   onAddToTestPlan: () => void;
@@ -81,6 +90,8 @@ interface TestCaseDetailsHeaderProps {
   isScenarioEmpty?: boolean;
   isNativeFixInProgress?: boolean;
   nativeReviewState?: LiveReviewCommentsLoadState;
+  nativeAutomationState?: TestCaseAutomationState;
+  onAutomationStarted?: (response: AutomateAcceptedRS) => void;
 }
 
 interface TestCaseApprovalProps {
@@ -110,7 +121,29 @@ const TestCaseApproval = ({
   return <ApproveButton testCase={testCase} onSuccess={onRefresh} />;
 };
 
+const getAutomationActionState = (
+  testCase: ExtendedTestCase,
+  isNative: boolean,
+  isFixRunning: boolean,
+  nativeAutomationState?: TestCaseAutomationState,
+) => {
+  const automationState = isNative
+    ? (nativeAutomationState ?? getNativeAutomationState(testCase))
+    : undefined;
+  const automationCandidate = isNative
+    ? getNativeAutomationCandidate({ ...testCase, automationState }, isFixRunning)
+    : testCase;
+  const disabledReason = getAutomationSkipReason(automationCandidate);
+  const isCiUnavailable = automationState && automationState.ciConnection !== 'CONNECTED';
+  const automationDisabledMessage = disabledReason
+    ? automationDisabledMessages[disabledReason]
+    : isCiUnavailable && automationMessages.unavailableCiConnection;
+
+  return { automationState, automationCandidate, automationDisabledMessage };
+};
+
 export const TestCaseDetailsHeader = ({
+  canShowAutomation = true,
   className,
   testCase: rawTestCase,
   onAddToTestPlan,
@@ -118,6 +151,8 @@ export const TestCaseDetailsHeader = ({
   isScenarioEmpty = false,
   isNativeFixInProgress = false,
   nativeReviewState,
+  nativeAutomationState,
+  onAutomationStarted,
 }: TestCaseDetailsHeaderProps) => {
   const isAiFactoryEnabled = useAiFactoryEnabled();
   const testCase = getTestCasePresentation(rawTestCase, isAiFactoryEnabled);
@@ -128,6 +163,7 @@ export const TestCaseDetailsHeader = ({
   const { organizationSlug, projectSlug } = useSelector(
     urlOrganizationAndProjectSelector,
   ) as ProjectDetails;
+  const projectKey = useSelector(projectKeySelector);
   const dispatch = useDispatch();
   const testCaseIdString = String(testCase.id);
   const { openModal: openDeleteTestCaseModal } = useDeleteTestCaseModal();
@@ -138,7 +174,8 @@ export const TestCaseDetailsHeader = ({
   const isFixRunning = isNativeFixInProgress || Boolean(testCase.review?.fixRound);
   const gateStatus = nativeSummary?.status ?? testCase.lifecycle;
   const isDraft = isDraftGateActive(isAiFactoryEnabled, gateStatus);
-  const automationDisabledReason = getAutomationSkipReason(testCase);
+  const { automationState, automationCandidate, automationDisabledMessage } =
+    getAutomationActionState(testCase, Boolean(nativeSummary), isFixRunning, nativeAutomationState);
 
   const breadcrumbsTitles = {
     mainTitle: formatMessage(commonMessages.testCaseLibraryBreadcrumb),
@@ -196,11 +233,17 @@ export const TestCaseDetailsHeader = ({
     return moment(date).format(REVERSED_DATE_FORMAT as string);
   };
 
-  const automationDisabledMessage = automationDisabledReason
-    ? automationDisabledMessages[automationDisabledReason]
-    : null;
-
   const handleAutomate = () => {
+    if (nativeSummary) {
+      openAutomationModal({
+        testCases: [automationCandidate],
+        ...(automationState
+          ? { expectedProjectKey: projectKey, onSuccess: onAutomationStarted }
+          : { isPreview: true }),
+      });
+      return;
+    }
+
     openAutomationModal({
       testCases: [testCase],
       onSuccess: () =>
@@ -209,15 +252,15 @@ export const TestCaseDetailsHeader = ({
   };
 
   const items: PopoverItem[] = [
-    ...(isAiFactoryEnabled && !nativeSummary && canAutomateTestCases
+    ...(isAiFactoryEnabled && canAutomateTestCases && canShowAutomation
       ? [
           {
             label: formatMessage(automationMessages.automate),
-            disabled: Boolean(automationDisabledReason),
+            disabled: Boolean(automationDisabledMessage),
             tooltip: automationDisabledMessage
               ? formatMessage(automationDisabledMessage)
               : undefined,
-            onClick: handleAutomate,
+            onClick: automationDisabledMessage ? undefined : handleAutomate,
           },
         ]
       : []),

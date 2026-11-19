@@ -9,13 +9,16 @@
  */
 
 import { useCallback } from 'react';
+import { useSelector } from 'react-redux';
 
 import { useModal } from 'common/hooks/useModal';
+import { projectKeySelector } from 'controllers/project/selectors/typed-selectors';
 import { useUserPermissions } from 'hooks/useUserPermissions';
 
 import { AUTOMATION_MODAL_KEY, AutomationModal, type AutomationModalData } from './automationModal';
 
 export const useAutomationModal = () => {
+  const projectKey = useSelector(projectKeySelector);
   const { canAutomateTestCases } = useUserPermissions();
   const { openModal: openRawModal } = useModal<AutomationModalData>({
     modalKey: AUTOMATION_MODAL_KEY,
@@ -24,11 +27,11 @@ export const useAutomationModal = () => {
 
   const openModal = useCallback(
     (data?: AutomationModalData) => {
-      if (canAutomateTestCases) {
-        openRawModal(data);
+      if (canAutomateTestCases && data) {
+        openRawModal({ ...data, expectedProjectKey: data.expectedProjectKey ?? projectKey });
       }
     },
-    [canAutomateTestCases, openRawModal],
+    [canAutomateTestCases, openRawModal, projectKey],
   );
 
   return { openModal };

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import type { TestCaseAiExtension } from 'types/aiFactory';
+import type { TestCaseAiExtension, TestCaseAutomationState } from 'types/aiFactory';
 
 export type TestCasePriority = 'blocker' | 'critical' | 'high' | 'medium' | 'low' | 'unspecified';
 
@@ -128,6 +128,7 @@ export interface TestCase extends Partial<TestCaseAiExtension> {
   defaultVersionId?: number;
   metrics?: TestCaseMetrics;
   unsentReviewComments?: number;
+  automationState?: TestCaseAutomationState;
   id: number;
   displayId: string;
   name: string;

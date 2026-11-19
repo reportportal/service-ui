@@ -59,6 +59,8 @@ interface AutomationSectionProps {
   testCase: AutomationCandidate;
   automation?: TestCaseAiRS['automation'];
   canAutomate?: boolean;
+  isCiConnected?: boolean;
+  expectedProjectKey?: string;
   organizationSlug?: string;
   projectSlug?: string;
   isLoading?: boolean;
@@ -274,27 +276,25 @@ const renderScenarioWarning = (
   ) : null;
 
 interface AutomationActionProps {
-  disabledReason: ReturnType<typeof getAutomationSkipReason>;
+  disabledMessage?: MessageDescriptor;
   onClick: () => void;
 }
 
 const renderAutomationAction = (
-  { disabledReason, onClick }: AutomationActionProps,
+  { disabledMessage, onClick }: AutomationActionProps,
   formatMessage: FormatMessage,
 ): ReactNode => (
   <>
     <Button
       variant="ghost"
-      disabled={Boolean(disabledReason)}
-      onClick={onClick}
+      disabled={Boolean(disabledMessage)}
+      onClick={disabledMessage ? undefined : onClick}
       data-automation-id="automateTestCase"
     >
       {formatMessage(messages.automate)}
     </Button>
-    {disabledReason && (
-      <p className={cx('automation-section__hint')}>
-        {formatMessage(automationDisabledMessages[disabledReason])}
-      </p>
+    {disabledMessage && (
+      <p className={cx('automation-section__hint')}>{formatMessage(disabledMessage)}</p>
     )}
   </>
 );
@@ -303,6 +303,8 @@ export const AutomationSection = ({
   testCase,
   automation,
   canAutomate = true,
+  isCiConnected = true,
+  expectedProjectKey,
   organizationSlug,
   projectSlug,
   isLoading = false,
@@ -314,8 +316,16 @@ export const AutomationSection = ({
   const { formatMessage } = useIntl();
   const { openModal } = useAutomationModal();
   const disabledReason = getAutomationSkipReason(testCase);
+  const disabledMessage = disabledReason
+    ? automationDisabledMessages[disabledReason]
+    : !isCiConnected && messages.unavailableCiConnection;
   const hasResolvedData = Boolean(automation) || hasLoadedData || (!isLoading && !isError);
-  const openAutomationModal = () => openModal({ testCases: [testCase], onSuccess });
+  const openAutomationModal = () =>
+    openModal({
+      testCases: [testCase],
+      onSuccess,
+      ...(expectedProjectKey && { expectedProjectKey }),
+    });
 
   return (
     <CollapsibleSection title={formatMessage(messages.sectionTitle)} isInitiallyExpanded>
@@ -330,7 +340,10 @@ export const AutomationSection = ({
         {renderRequestState({ automation, isLoading, isError, onRetry }, formatMessage)}
         {renderScenarioWarning(automation?.scenarioChangedAfterAutomation, formatMessage)}
         {canAutomate &&
-          renderAutomationAction({ disabledReason, onClick: openAutomationModal }, formatMessage)}
+          renderAutomationAction(
+            { disabledMessage: disabledMessage || undefined, onClick: openAutomationModal },
+            formatMessage,
+          )}
       </div>
     </CollapsibleSection>
   );
