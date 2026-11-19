@@ -729,6 +729,48 @@ const renderReducedStagePanel = (
   </div>
 );
 
+const renderSelectedStagePanel = (
+  iteration: ReducedPipelineIterationDetail,
+  stage: ReducedPipelineDetailStage,
+  projectKey: string | undefined,
+  expandedRows: Set<string>,
+  onToggleDetails: (rowKey: string) => void,
+  intl: ReturnType<typeof useIntl>,
+) => {
+  const isHumanReview = isHumanGenerationReview(stage, iteration.pipelineType);
+  const isActiveIteration = iteration.status === 'PENDING' || iteration.status === 'RUNNING';
+  const reviewRefreshVersion = isActiveIteration ? undefined : iteration;
+  const renderStageTrace = (reviewCases?: LiveLibraryCase[]) => (
+    <IterationStageTraceEntry
+      iteration={iteration}
+      stage={stage}
+      projectKey={projectKey}
+      reviewCases={reviewCases}
+      reviewRefreshVersion={reviewRefreshVersion}
+    />
+  );
+  const reviewContent =
+    isReviewStage(stage) && projectKey ? (
+      <LiveReviewCases
+        projectKey={projectKey}
+        iterationId={iteration.id}
+        refreshVersion={reviewRefreshVersion}
+      >
+        {isHumanReview ? renderStageTrace : undefined}
+      </LiveReviewCases>
+    ) : undefined;
+
+  return renderReducedStagePanel(
+    stage,
+    expandedRows,
+    onToggleDetails,
+    intl,
+    getGenerationStageKind(iteration.pipelineType, stage),
+    reviewContent,
+    isHumanReview ? undefined : renderStageTrace(),
+  );
+};
+
 const renderReducedDetailError = (
   {
     isInvalidRoute,
@@ -814,19 +856,6 @@ export const ReducedIterationDetails = ({
   const metadata = buildReducedMetadata(iteration, formatMessage);
   const kpis = buildReducedKpis(iteration, formatMessage);
   const currentStage = findSelectedStage(iteration.stages, selectedStageId, requestedStage);
-  const isHumanReview =
-    currentStage && isHumanGenerationReview(currentStage, iteration.pipelineType);
-  const isActiveIteration = iteration.status === 'PENDING' || iteration.status === 'RUNNING';
-  const reviewRefreshVersion = isActiveIteration ? undefined : iteration;
-  const renderStageTrace = (reviewCases?: LiveLibraryCase[]) => (
-    <IterationStageTraceEntry
-      iteration={iteration}
-      stage={currentStage}
-      projectKey={projectKey}
-      reviewCases={reviewCases}
-      reviewRefreshVersion={reviewRefreshVersion}
-    />
-  );
   const bannerStage = iteration.stages.find(
     (stage) =>
       ['RUNNING', 'WAITING', 'NEEDS_HUMAN', 'FAILED'].includes(stage.status) && stage.message,
@@ -968,22 +997,13 @@ export const ReducedIterationDetails = ({
               : undefined,
           )}
           {currentStage &&
-            renderReducedStagePanel(
+            renderSelectedStagePanel(
+              iteration,
               currentStage,
+              projectKey,
               expandedRows,
               toggleRowDetails,
               intl,
-              getGenerationStageKind(iteration.pipelineType, currentStage),
-              isReviewStage(currentStage) && projectKey ? (
-                <LiveReviewCases
-                  projectKey={projectKey}
-                  iterationId={iteration.id}
-                  refreshVersion={reviewRefreshVersion}
-                >
-                  {isHumanReview ? renderStageTrace : undefined}
-                </LiveReviewCases>
-              ) : undefined,
-              isHumanReview ? undefined : renderStageTrace(),
             )}
           <details className={cx('reduced-api-fields')}>
             <summary>{formatMessage(messages.validatedApiFields)}</summary>

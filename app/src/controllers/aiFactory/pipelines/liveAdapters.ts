@@ -539,6 +539,17 @@ const adaptCellLink = (
   };
 };
 
+const fillUnlistedUnitLabels = (
+  cells: Record<string, unknown>,
+  displayCells: Record<string, string>,
+): void => {
+  for (const key of AGENT_UNIT_NAME_KEYS) {
+    if (displayCells[key] !== undefined) continue;
+    const label = asUnitLabel(cells[key]);
+    if (label) displayCells[key] = label;
+  }
+};
+
 const adaptSectionCells = (
   cells: Record<string, unknown>,
   columns: ReducedPipelineSection['columns'],
@@ -549,20 +560,14 @@ const adaptSectionCells = (
   for (const { key } of columns) {
     const cell = cells[key];
     if (cell === undefined) continue;
-    const isUnitLabel = isUnitsSection && AGENT_UNIT_NAME_KEYS.some((nameKey) => nameKey === key);
+    const isUnitLabel = isUnitsSection && AGENT_UNIT_NAME_KEYS.includes(key);
     const displayValue = isUnitLabel ? (asUnitLabel(cell) ?? '') : asCellText(cell);
     const link = adaptCellLink(cell);
     if (displayValue === undefined || !link) return null;
     displayCells[key] = displayValue;
     if (Object.keys(link).length) cellLinks[key] = link;
   }
-  if (isUnitsSection) {
-    for (const key of AGENT_UNIT_NAME_KEYS) {
-      if (displayCells[key] !== undefined) continue;
-      const label = asUnitLabel(cells[key]);
-      if (label) displayCells[key] = label;
-    }
-  }
+  if (isUnitsSection) fillUnlistedUnitLabels(cells, displayCells);
   return { cells: displayCells, ...(Object.keys(cellLinks).length ? { cellLinks } : {}) };
 };
 

@@ -15,7 +15,7 @@
  */
 
 export const AGENT_UNITS_SECTION_KEY = 'units';
-export const AGENT_UNIT_NAME_KEYS = ['name', 'unit'] as const;
+export const AGENT_UNIT_NAME_KEYS: readonly string[] = ['name', 'unit'];
 
 interface AgentUnitRow {
   key: string;
