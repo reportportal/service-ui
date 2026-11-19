@@ -23,10 +23,10 @@ import { FieldProvider } from 'components/fields/fieldProvider';
 import { CHART_MODES, MODES_VALUES } from 'common/constants/chartModes';
 import { URLS } from 'common/urls';
 import { projectKeySelector } from 'controllers/project';
-import { Dropdown, Checkbox } from '@reportportal/ui-kit';
+import { Checkbox } from '@reportportal/ui-kit';
 import { getWidgetCriteriaOptions } from './utils/getWidgetCriteriaOptions';
 import { PASSED_FAILED_LAUNCHES_OPTIONS } from './constants';
-import { RadioGroupControl, LaunchNameControl } from './controls';
+import { RadioGroupControl, LaunchNameControl, RequiredDropdownControl } from './controls';
 import { getWidgetModeOptions } from './utils/getWidgetModeOptions';
 
 const messages = defineMessages({
@@ -52,7 +52,7 @@ const messages = defineMessages({
   },
   ContentFieldsValidationError: {
     id: 'MostTimeConsumingTestCasesControls.ContentFieldsValidationError',
-    defaultMessage: 'You must select at least one item',
+    defaultMessage: 'Field is required',
   },
 });
 const validators = {
@@ -112,7 +112,7 @@ export class MostTimeConsumingTestCasesControls extends Component {
           name="contentParameters.contentFields"
           validate={validators.contentFields(formatMessage)}
         >
-          <Dropdown
+          <RequiredDropdownControl
             label={formatMessage(messages.CriteriaFieldLabel)}
             multiSelect
             isOptionAllVisible

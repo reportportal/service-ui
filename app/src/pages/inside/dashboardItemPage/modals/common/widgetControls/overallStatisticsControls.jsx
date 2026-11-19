@@ -21,7 +21,7 @@ import { injectIntl, defineMessages } from 'react-intl';
 import { messages as widgetControlsMessages } from './messages';
 import { connect } from 'react-redux';
 import { defectTypesSelector } from 'controllers/project';
-import { FieldNumber, Dropdown, Checkbox } from '@reportportal/ui-kit';
+import { FieldNumber, Checkbox } from '@reportportal/ui-kit';
 import { FieldProvider } from 'components/fields/fieldProvider';
 import { FieldErrorHint } from 'components/fields';
 import { commonValidators } from 'common/utils/validation';
@@ -29,7 +29,7 @@ import { CHART_MODES, MODES_VALUES } from 'common/constants/chartModes';
 import { getWidgetCriteriaOptions } from './utils/getWidgetCriteriaOptions';
 import { getWidgetModeOptions } from './utils/getWidgetModeOptions';
 import { LAUNCH_STATUSES_OPTIONS, DEFECT_TYPES_OPTIONS } from './constants';
-import { FiltersControlV2, RadioGroupControl } from './controls';
+import { FiltersControlV2, RadioGroupControl, RequiredDropdownControl } from './controls';
 import styles from './overallStatisticsControls.scss';
 
 const cx = classNames.bind(styles);
@@ -57,7 +57,7 @@ const messages = defineMessages({
   },
   ContentFieldsValidationError: {
     id: 'OverallStatisticsControls.ContentFieldsValidationError',
-    defaultMessage: 'You must select at least one item',
+    defaultMessage: 'Field is required',
   },
   SeparateInterruptedLabel: {
     id: 'OverallStatisticsControls.SeparateInterruptedLabel',
@@ -149,7 +149,7 @@ export class OverallStatisticsControls extends Component {
                 formatMessage(messages.ContentFieldsValidationError),
               )}
             >
-              <Dropdown
+              <RequiredDropdownControl
                 label={formatMessage(messages.CriteriaFieldLabel)}
                 multiSelect
                 isOptionAllVisible

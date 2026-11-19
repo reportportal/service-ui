@@ -20,8 +20,8 @@ import { injectIntl, defineMessages } from 'react-intl';
 import { messages as widgetControlsMessages } from './messages';
 import { connect } from 'react-redux';
 import { defectTypesSelector } from 'controllers/project';
-import { FieldText, FieldNumber, Dropdown, Checkbox } from '@reportportal/ui-kit';
-import { RadioGroupControl } from './controls';
+import { FieldText, FieldNumber, Checkbox } from '@reportportal/ui-kit';
+import { RadioGroupControl, RequiredDropdownControl } from './controls';
 import { FieldProvider } from 'components/fields/fieldProvider';
 import { FieldErrorHint } from 'components/fields';
 import { commonValidators } from 'common/utils/validation';
@@ -55,7 +55,7 @@ const messages = defineMessages({
   },
   ContentFieldsValidationError: {
     id: 'LaunchStatisticsControls.ContentFieldsValidationError',
-    defaultMessage: 'You must select at least one item',
+    defaultMessage: 'Field is required',
   },
 });
 
@@ -136,7 +136,7 @@ export class LaunchStatisticsControls extends Component {
                 formatMessage(messages.ContentFieldsValidationError),
               )}
             >
-              <Dropdown
+              <RequiredDropdownControl
                 label={formatMessage(messages.CriteriaFieldLabel)}
                 multiSelect
                 isOptionAllVisible

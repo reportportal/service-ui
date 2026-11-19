@@ -29,6 +29,7 @@ const cx = createClassnames(styles);
 interface WidgetPreviewData {
   widgetType?: string | number;
   content?: object;
+  contentParameters?: { contentFields?: unknown[] };
 }
 
 interface PreviewChartProps {
@@ -96,7 +97,10 @@ export const WidgetPreview = ({
     );
   }
 
-  if (data && !isWidgetDataAvailable(data)) {
+  const contentFields = data?.contentParameters?.contentFields;
+  const hasNoCriteria = Array.isArray(contentFields) && !contentFields.length;
+
+  if (data && (hasNoCriteria || !isWidgetDataAvailable(data))) {
     return (
       <PreviewFrame dynamic centered className={className} containerRef={setContainer}>
         {formatMessage(noDataMessages.noDataAvailable)}

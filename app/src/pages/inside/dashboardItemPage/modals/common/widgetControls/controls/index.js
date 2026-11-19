@@ -24,4 +24,5 @@ export { CustomColumnsControl } from './customColumnsControl';
 export { AttributesFieldArrayControl } from './attributesFieldArrayControl';
 export { SortingControl } from './sortingControl';
 export { RadioGroupControl } from './radioGroupControl';
+export { RequiredDropdownControl } from './requiredDropdownControl';
 export { LaunchNameControl } from './launchNameControl';
