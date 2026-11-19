@@ -244,6 +244,7 @@ const renderReducedStageSection = (
     <section
       key={section.key}
       className={cx('reduced-section', {
+        'reduced-section--single-column': section.role === 'DETAILS' && columns.length === 1,
         'reduced-section--grade': section.key === 'gradedCases' && !gradeSummary,
         'reduced-section--grade-report': Boolean(gradeSummary),
         'reduced-section--create': generationKind === 'create',
@@ -337,7 +338,10 @@ const renderReducedStageSection = (
                           {column.key === columns[0]?.key && row.details.length > 0 && (
                             <button
                               type="button"
-                              className={cx('reduced-section__details-toggle')}
+                              className={cx('reduced-section__details-toggle', {
+                                'reduced-section__details-toggle--inline':
+                                  section.key === 'transcript' && columns.length > 1,
+                              })}
                               aria-expanded={isExpanded}
                               onClick={() => onToggleDetails(detailsKey)}
                             >

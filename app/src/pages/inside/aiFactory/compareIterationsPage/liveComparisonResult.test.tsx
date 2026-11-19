@@ -59,6 +59,15 @@ interface TestNodes {
   map: <T>(callback: (node: CommonWrapper) => T) => T[];
 }
 
+interface RawResponseWrapper extends CommonWrapper {
+  simulate(event: 'toggle', target: { currentTarget: { open: boolean } }): void;
+}
+
+const findRawResponse = (wrapper: CommonWrapper) =>
+  (wrapper.find('FullComparisonApiResponse') as CommonWrapper & {
+    dive: () => RawResponseWrapper;
+  }).dive();
+
 describe('LiveComparisonResult', () => {
   test('shows server stages, metrics, and case rows for the confirmed same scope', () => {
     const wrapper = shallow(<LiveComparisonResult comparison={comparison(true)} />);
@@ -86,9 +95,11 @@ describe('LiveComparisonResult', () => {
     expect(wrapper.text()).toContain('Grade · Graded cases');
   });
 
-  test('styles live iteration statuses and exposes the unmodified API payload', () => {
+  test('styles live iteration statuses and serializes the API payload only while expanded', () => {
     const data = comparison(true);
-    data.rawResponse = { baseline: { id: 11 }, backendOnly: { value: 'present' } };
+    const payload = { baseline: { id: 11 }, backendOnly: { value: 'present' } };
+    const toJSON = jest.fn(() => payload);
+    data.rawResponse = { ...payload, toJSON };
     data.metrics[0] = {
       ...data.metrics[0],
       valueType: 'MONEY',
@@ -103,9 +114,17 @@ describe('LiveComparisonResult', () => {
     expect(wrapper.find('.live-status--warning')).toHaveLength(1);
     expect(wrapper.text()).toContain('$1.27');
     expect(wrapper.text()).toContain('+$0.73');
-    expect(wrapper.find('[data-automation-id="fullComparisonApiResponse"]').text()).toContain(
-      'backendOnly',
-    );
+    const rawResponse = findRawResponse(wrapper);
+    expect(rawResponse.find('pre')).toHaveLength(0);
+    expect(toJSON).not.toHaveBeenCalled();
+
+    rawResponse.simulate('toggle', { currentTarget: { open: true } });
+    expect(rawResponse.find('pre').text()).toBe(JSON.stringify(payload, null, 2));
+    expect(toJSON).toHaveBeenCalledTimes(1);
+
+    rawResponse.simulate('toggle', { currentTarget: { open: false } });
+    expect(rawResponse.find('pre')).toHaveLength(0);
+    expect(toJSON).toHaveBeenCalledTimes(1);
   });
 });
 
@@ -135,7 +154,8 @@ describe('fix subset comparison rendering', () => {
     data.rawResponse = { note: data.note, metrics: data.metrics, sections: data.sections };
 
     const wrapper = shallow(<LiveComparisonResult comparison={data} />);
-    const raw = wrapper.find('[data-automation-id="fullComparisonApiResponse"]');
+    const raw = findRawResponse(wrapper);
+    raw.simulate('toggle', { currentTarget: { open: true } });
     expect(raw.text()).toContain('The suite improved');
     expect(raw.text()).toContain('BETTER');
     const headings = (wrapper.find('th') as unknown as TestNodes).map((node) => node.text());

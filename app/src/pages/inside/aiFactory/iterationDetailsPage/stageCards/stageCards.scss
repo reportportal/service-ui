@@ -43,6 +43,7 @@
     gap: 8px;
     box-sizing: border-box;
     width: 100%;
+    min-width: 0;
     min-height: 140px;
     padding: 14px;
     background-color: var(--rp-ui-base-bg-000);
@@ -52,6 +53,7 @@
     font-family: $FONT-ROBOTO-REGULAR;
     color: var(--rp-ui-base-almost-black);
     text-align: left;
+    overflow-wrap: anywhere;
     transition: border-color 0.15s ease;
 
     &:hover {
@@ -86,7 +88,6 @@
     font-family: $FONT-ROBOTO-BOLD;
     font-weight: normal;
     font-size: 13px;
-    overflow-wrap: anywhere;
   }
 
   &__item-summary {

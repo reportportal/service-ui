@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+import { useState } from 'react';
 import { useIntl } from 'react-intl';
 import { SystemMessage } from '@reportportal/ui-kit';
 
@@ -102,6 +103,26 @@ const stageEntry = (stage: LiveComparisonStage, side: 'baseline' | 'candidate') 
 export interface LiveComparisonResultProps {
   comparison: LivePipelineComparison;
 }
+
+interface FullComparisonApiResponseProps {
+  response: Record<string, unknown>;
+}
+
+const FullComparisonApiResponse = ({ response }: FullComparisonApiResponseProps) => {
+  const { formatMessage } = useIntl();
+  const [isOpen, setIsOpen] = useState(false);
+
+  return (
+    <details
+      className={cx('live-api-response')}
+      data-automation-id="fullComparisonApiResponse"
+      onToggle={(event) => setIsOpen(event.currentTarget.open)}
+    >
+      <summary>{formatMessage(messages.fullApiResponse)}</summary>
+      {isOpen && <pre>{JSON.stringify(response, null, 2)}</pre>}
+    </details>
+  );
+};
 
 const renderComparisonScopeNotice = (
   comparison: LivePipelineComparison,
@@ -296,10 +317,7 @@ export const LiveComparisonResult = ({ comparison }: LiveComparisonResultProps) 
         </section>
       ))}
       {comparison.rawResponse && (
-        <details className={cx('live-api-response')} data-automation-id="fullComparisonApiResponse">
-          <summary>{formatMessage(messages.fullApiResponse)}</summary>
-          <pre>{JSON.stringify(comparison.rawResponse, null, 2)}</pre>
-        </details>
+        <FullComparisonApiResponse response={comparison.rawResponse} />
       )}
     </div>
   );

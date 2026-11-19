@@ -435,6 +435,12 @@
     cursor: pointer;
     white-space: nowrap;
 
+    &--inline {
+      display: inline-flex;
+      margin-top: 0;
+      vertical-align: middle;
+    }
+
     &::before {
       display: inline-block;
       flex: 0 0 6px;
@@ -511,6 +517,17 @@
   &__details-row td {
     padding: 14px 16px;
     background-color: var(--rp-ui-base-bg-100);
+  }
+
+  &--single-column {
+    table {
+      width: 100%;
+      overflow-wrap: anywhere;
+    }
+
+    th {
+      white-space: normal;
+    }
   }
 
   &--grade table th {
