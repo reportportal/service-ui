@@ -1529,7 +1529,7 @@
   "LaunchLevelEntities.descriptionStepLevelEntityHint": "La descripción debe tener entre 1 y 256 caracteres",
   "LaunchLevelEntities.entityItemStatistics.placeholder": "Ingrese cantidad",
   "LaunchLevelEntities.itemNameEntityHint": "Debe tener al menos 3 caracteres",
-  "LaunchLevelEntities.launchName.placeholder": "Ingrese el nombre",
+  "LaunchLevelEntities.launchName.placeholder": "Ingrese el nombre del lanzamiento",
   "LaunchLevelEntities.launchNumberEntityHint": "Este filtro solo acepta números",
   "LaunchLevelEntities.launchNumberPlaceholder": "Ingrese el número",
   "LaunchLevelEntities.ownerName.placeholder": "Ingrese el nombre de usuario (mínimo 3 caracteres)",

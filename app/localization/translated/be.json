@@ -1535,7 +1535,7 @@
   "LaunchLevelEntities.descriptionStepLevelEntityHint": "Апісанне павінна мець памер ад 1 да 256",
   "LaunchLevelEntities.entityItemStatistics.placeholder": "Увядзіце колькасць",
   "LaunchLevelEntities.itemNameEntityHint": "Неабходна мінімум 3 сімвала.",
-  "LaunchLevelEntities.launchName.placeholder": "Увядзіце iмя",
+  "LaunchLevelEntities.launchName.placeholder": "Увядзіце імя запуску",
   "LaunchLevelEntities.launchNumberEntityHint": "Гэты фільтр прымае толькі лічбы.",
   "LaunchLevelEntities.launchNumberPlaceholder": "Увядзіце нумар",
   "LaunchLevelEntities.ownerName.placeholder": "Увядзіце імя карыстальніка (мінімум 3 сімвала)",

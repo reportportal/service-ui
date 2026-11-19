@@ -1536,7 +1536,7 @@
   "LaunchLevelEntities.descriptionStepLevelEntityHint": "Описание должно быть длиной от 1 до 256",
   "LaunchLevelEntities.entityItemStatistics.placeholder": "Введите количество",
   "LaunchLevelEntities.itemNameEntityHint": "Необходимо минимум 3 символа.",
-  "LaunchLevelEntities.launchName.placeholder": "Введите имя",
+  "LaunchLevelEntities.launchName.placeholder": "Введите имя запуска",
   "LaunchLevelEntities.launchNumberEntityHint": "Этот фильтр принимает только цифры.",
   "LaunchLevelEntities.launchNumberPlaceholder": "Введите номер",
   "LaunchLevelEntities.ownerName.placeholder": "Введите имя пользователя (минимум 3 символа)",
