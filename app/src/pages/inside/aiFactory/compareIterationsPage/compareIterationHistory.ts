@@ -23,8 +23,10 @@ import {
 } from 'pages/inside/aiFactory/common/iterationReferences/liveIterationIdentity';
 
 export const COMPARE_ITERATION_PAGE_SIZE = 200;
+const HISTORY_CHANGED = Symbol('ITERATION_HISTORY_CHANGED');
 
 type IterationChoice = Pick<LiveIterationIdentity, 'id' | 'number'>;
+type HistoryLookup = IterationChoice | typeof HISTORY_CHANGED | null;
 
 interface CompareIterationHistoryRequest {
   projectKey: string;
@@ -61,15 +63,35 @@ const findEarlierInHistory = async (
   candidateNumber: number,
   firstIndex: number,
   lastIndex: number,
-): Promise<IterationChoice | null> => {
+  totalElements: number,
+): Promise<HistoryLookup> => {
   if (request.signal.aborted || firstIndex > lastIndex) return null;
 
   const index = firstIndex + Math.floor((lastIndex - firstIndex) / 2);
-  const { content } = await loadPage(request, index);
+  const { content, page } = await loadPage(request, index);
+  if (page.totalElements !== totalElements) return HISTORY_CHANGED;
+
   const earlier = content.find(({ number }) => number < candidateNumber);
-  if (!earlier) return findEarlierInHistory(request, candidateNumber, index + 1, lastIndex);
+  if (!earlier) {
+    return findEarlierInHistory(request, candidateNumber, index + 1, lastIndex, totalElements);
+  }
   if (earlier !== content[0]) return earlier;
-  return (await findEarlierInHistory(request, candidateNumber, firstIndex, index - 1)) ?? earlier;
+  return (
+    (await findEarlierInHistory(request, candidateNumber, firstIndex, index - 1, totalElements)) ??
+    earlier
+  );
+};
+
+const findPreviousInHistory = async (
+  request: CompareIterationHistoryRequest,
+  candidateNumber: number,
+): Promise<HistoryLookup> => {
+  const { content, page } = await loadPage(request, 0);
+  const earlier = content.find(({ number }) => number < candidateNumber);
+  return (
+    earlier ??
+    findEarlierInHistory(request, candidateNumber, 1, page.totalPages - 1, page.totalElements)
+  );
 };
 
 export const resolvePreviousCompareIteration = async (
@@ -82,7 +104,14 @@ export const resolvePreviousCompareIteration = async (
   }
   if (request.signal.aborted || candidate.number === 1) return null;
 
-  const { content, page } = await loadPage(request, 0);
-  const earlier = content.find(({ number }) => number < candidate.number);
-  return earlier ?? findEarlierInHistory(request, candidate.number, 1, page.totalPages - 1);
+  let previous = await findPreviousInHistory(request, candidate.number);
+  // A new iteration can shift offsets mid-search. Retry once from the first page.
+  if (previous === HISTORY_CHANGED && !request.signal.aborted) {
+    previous = await findPreviousInHistory(request, candidate.number);
+  }
+  if (request.signal.aborted) return null;
+  if (previous === HISTORY_CHANGED) {
+    throw new Error('Iteration history changed during comparison lookup');
+  }
+  return previous;
 };
