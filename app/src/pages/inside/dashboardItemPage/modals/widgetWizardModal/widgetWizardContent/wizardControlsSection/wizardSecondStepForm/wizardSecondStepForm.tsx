@@ -121,11 +121,19 @@ const WizardSecondStepFormBase: FC<Props> = ({
   };
 
   useEffect(() => {
-    const newDashboard = { name: formatMessage(messages.newDashboardName), description: '' };
-    const selectedDashboard = dashboards.length > 0 ? dashboards[0] : newDashboard;
-    dispatch(change(WIDGET_WIZARD_FORM, 'name', generateWidgetName()));
-    dispatch(change(WIDGET_WIZARD_FORM, 'description', ''));
-    dispatch(change(WIDGET_WIZARD_FORM, 'selectedDashboard', selectedDashboard));
+    // Each field is defaulted only when it has never been set. A cleared name
+    // must not wipe a description or dashboard the user already chose.
+    if (!widgetSettings?.name) {
+      dispatch(change(WIDGET_WIZARD_FORM, 'name', generateWidgetName()));
+    }
+    if (widgetSettings?.description == null) {
+      dispatch(change(WIDGET_WIZARD_FORM, 'description', ''));
+    }
+    if (!widgetSettings?.selectedDashboard) {
+      const newDashboard = { name: formatMessage(messages.newDashboardName), description: '' };
+      const selectedDashboard = dashboards.length > 0 ? dashboards[0] : newDashboard;
+      dispatch(change(WIDGET_WIZARD_FORM, 'selectedDashboard', selectedDashboard));
+    }
   }, []);
 
   useEffect(() => {
