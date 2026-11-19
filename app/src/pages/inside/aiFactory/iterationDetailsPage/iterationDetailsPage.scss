@@ -531,6 +531,22 @@
     min-width: 300px;
   }
 
+  &--grade-report {
+    table {
+      width: 100%;
+      table-layout: fixed;
+    }
+
+    th:nth-child(2),
+    th:nth-child(3) {
+      width: 86px;
+    }
+
+    td {
+      overflow-wrap: anywhere;
+    }
+  }
+
   &--grade table {
     width: 100%;
     min-width: 1050px;
@@ -547,6 +563,12 @@
     tbody tr:not(.reduced-section__details-row):hover td {
       background-color: var(--rp-ui-base-bg-100);
     }
+  }
+
+  &__summary {
+    margin: 0 0 8px;
+    font-size: 12px;
+    line-height: 18px;
   }
 
   details {

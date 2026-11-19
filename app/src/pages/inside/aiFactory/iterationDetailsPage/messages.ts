@@ -441,6 +441,19 @@ export const messages = defineMessages({
     id: 'IterationDetailsPage.gradeColumnCase',
     defaultMessage: 'Case',
   },
+  gradedCases: {
+    id: 'IterationDetailsPage.gradedCases',
+    defaultMessage: 'Graded cases',
+  },
+  gradeSourceLine: {
+    id: 'IterationDetailsPage.gradeSourceLine',
+    defaultMessage: 'Source line',
+  },
+  gradeReportSummary: {
+    id: 'IterationDetailsPage.gradeReportSummary',
+    defaultMessage:
+      'Suite score {score}/{max} · {count, plural, one {# graded case} other {# graded cases}}',
+  },
   gradeCaseDetails: {
     id: 'IterationDetailsPage.gradeCaseDetails',
     defaultMessage: 'Toggle score details for {name}',
