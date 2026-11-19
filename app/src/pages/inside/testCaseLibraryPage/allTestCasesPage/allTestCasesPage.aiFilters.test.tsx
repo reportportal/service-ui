@@ -393,6 +393,28 @@ describe('AllTestCasesPage AI filters', () => {
     expect(openAutomationModal).not.toHaveBeenCalled();
   });
 
+  test('clears selection when switching projects and keeps it cleared on return', () => {
+    const wrapper = renderPage(true);
+    const selectedRows: SelectedTestCaseRow[] = [{ id: testCase.id, folderId: 7 }];
+    (wrapper.find(TestCaseList).prop('handleSelectedRows') as (rows: SelectedTestCaseRow[]) => void)(
+      selectedRows,
+    );
+
+    wrapper.setProps({ testCases: [{ ...testCase, id: testCase.id + 1 }] });
+    expect(wrapper.find(TestCaseList).prop('selectedRows')).toEqual(selectedRows);
+
+    const originalProject = { organizationSlug: 'org', projectSlug: 'project' } as ReturnType<
+      typeof useProjectDetails
+    >;
+    jest.mocked(useProjectDetails).mockReturnValue({ ...originalProject, projectSlug: 'other' });
+    wrapper.setProps({ testCases: [testCase] });
+    expect(wrapper.find(TestCaseList).prop('selectedRows')).toEqual([]);
+
+    jest.mocked(useProjectDetails).mockReturnValue(originalProject);
+    wrapper.setProps({});
+    expect(wrapper.find(TestCaseList).prop('selectedRows')).toEqual([]);
+  });
+
   test('clears only backend-accepted rows and retains client and backend skips', () => {
     const backendSkipped = { ...testCase, id: 2, displayId: 'TC2', name: 'Backend skipped' };
     const clientSkipped = {
