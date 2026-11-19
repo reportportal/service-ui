@@ -494,6 +494,7 @@ export class SimpleWidget extends Component {
     const {
       intl: { formatMessage },
     } = this.props;
+    this.props.tracking.trackEvent(WIDGETS_EVENTS.CLICK_ON_REFRESH_WIDGET_ICON);
     this.props.showModalAction({
       id: 'confirmationModal',
       data: {
