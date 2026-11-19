@@ -61,6 +61,25 @@ test('resets a disappeared unit filter to All without interpreting reserved key 
   );
 });
 
+test('uses producer unit names without merging events for units that share a label', () => {
+  const units = getStageTraceUnits([
+    {
+      ...sections[0],
+      rows: [
+        { key: 'attempt-1', cells: { name: ' ', unit: 'Review single' }, details: [] },
+        { key: 'attempt-2', cells: { unit: 'Review single' }, details: [] },
+      ],
+    },
+  ]);
+  const keyedEvents = [
+    { seq: 1, type: 'STEP', unitKey: 'attempt-1' },
+    { seq: 2, type: 'STEP', unitKey: 'attempt-2' },
+  ];
+  expect(Array.from(units.values())).toEqual(['Review single', 'Review single']);
+  expect(filterStageTraceEvents(keyedEvents, units, 'unit:attempt-1')).toEqual([keyedEvents[0]]);
+  expect(filterStageTraceEvents(keyedEvents, units, 'unit:attempt-2')).toEqual([keyedEvents[1]]);
+});
+
 test('distinguishes special and case-sensitive row keys from the Stage filter', () => {
   const units = new Map([
     ['stage', 'Stage unit'],

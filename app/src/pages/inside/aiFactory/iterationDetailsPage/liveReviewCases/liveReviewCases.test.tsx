@@ -25,8 +25,8 @@ jest.mock(
 jest.mock('@reportportal/ui-kit', () => {
   const React = jest.requireActual<typeof import('react')>('react');
   return {
-    Button: ({ children, onClick }: { children?: React.ReactNode; onClick?: () => void }) =>
-      React.createElement('button', { onClick }, children),
+    Button: ({ children, onClick, disabled }: React.ComponentProps<'button'>) =>
+      React.createElement('button', { onClick, disabled }, children),
     SystemMessage: ({ children }: { children?: React.ReactNode }) =>
       React.createElement('div', null, children),
   };
@@ -38,7 +38,11 @@ jest.mock('common/utils', () => ({
     (...names: string[]) =>
       names.filter(Boolean).join(' '),
 }));
-jest.mock('../stagePanels/caseLink', () => ({ CaseLink: ({ name }: { name: string }) => name }));
+jest.mock('../stagePanels/caseLink', () => ({
+  CaseLink: ({ name, testCaseId }: { name: string; testCaseId: number }) => (
+    <a href={`/case/${testCaseId}`}>{name}</a>
+  ),
+}));
 
 const fetchMock = fetch as jest.MockedFunction<
   (url: string, options?: Record<string, unknown>) => Promise<unknown>
@@ -76,7 +80,7 @@ const mountIntoContainer = (node: ReactElement) =>
     attachTo: container,
   });
 
-describe('LiveReviewCases accepted iteration refresh', () => {
+describe('LiveReviewCases', () => {
   let wrapper: MountedWrapper | undefined;
   beforeEach(() => {
     container = document.createElement('div');
@@ -90,11 +94,22 @@ describe('LiveReviewCases accepted iteration refresh', () => {
     container.remove();
   });
 
-  test('reloads current Library status and score for a newly accepted iteration with unchanged linked IDs', async () => {
-    const iteration = { id: 31 };
+  const clickButton = async (label: string) => {
+    const button = Array.from(container.querySelectorAll('button')).find(
+      (element) => element.textContent === label,
+    );
+    expect(button).toBeDefined();
+    act(() => {
+      button?.click();
+    });
+    await flush();
+    wrapper?.update();
+  };
+
+  test('refreshes the score and status for the same iteration', async () => {
     await act(async () => {
       wrapper = mountIntoContainer(
-        <LiveReviewCases projectKey="project" displayIds={['TC101']} refreshIdentity={iteration} />,
+        <LiveReviewCases projectKey="project" iterationId={31} refreshVersion={1} />,
       );
       await Promise.resolve();
     });
@@ -104,68 +119,96 @@ describe('LiveReviewCases accepted iteration refresh', () => {
     expect(fetchMock).toHaveBeenCalledTimes(1);
 
     act(() => {
-      wrapper?.setProps({ displayIds: ['TC101'], refreshIdentity: iteration });
+      wrapper?.setProps({ refreshVersion: 1 });
     });
     await flush();
     expect(fetchMock).toHaveBeenCalledTimes(1);
 
-    fetchMock.mockResolvedValue(response('READY', 94));
+    const refreshResult = deferred();
+    fetchMock.mockReturnValueOnce(refreshResult.promise);
     act(() => {
-      wrapper?.setProps({ refreshIdentity: { id: 31 } });
+      wrapper?.setProps({ refreshVersion: 2 });
+    });
+    expect(container.textContent).toContain('Draft79');
+    act(() => {
+      refreshResult.resolve(response('READY', 94));
     });
     await flush();
     wrapper?.update();
     expect(fetchMock).toHaveBeenCalledTimes(2);
     expect(container.textContent).toContain('Ready94');
-    expect(fetchMock.mock.calls.every(([url]) => url.includes('filter.eq.displayId=TC101'))).toBe(
+    expect(fetchMock.mock.calls.every(([url]) => url.includes('filter.eq.iterationId=31'))).toBe(
       true,
     );
     expect(fetchMock.mock.calls.some(([url]) => url.includes('/review'))).toBe(false);
   });
 
-  test('deduplicates linked IDs before lookup and retains the maximum unique case bound', async () => {
+  test('opens a case after the first 50 and uses its numeric route ID', async () => {
+    fetchMock.mockImplementation((url) => {
+      const offset = Number(new URL(url, 'https://example.test').searchParams.get('offset'));
+      return Promise.resolve({
+        content: Array.from({ length: Math.min(25, 51 - offset) }, (_, index) => {
+          const number = offset + index + 1;
+          return { id: 9000 + number, displayId: `TC${number}`, name: `Case ${number}` };
+        }),
+        page: { totalElements: 51 },
+      });
+    });
+    await act(async () => {
+      wrapper = mountIntoContainer(<LiveReviewCases projectKey="project" iterationId={31} />);
+      await Promise.resolve();
+    });
+    await flush();
+    wrapper?.update();
+    expect(fetchMock).toHaveBeenCalledTimes(1);
+    expect(wrapper?.find('tbody tr')).toHaveLength(25);
+    await clickButton('Next');
+    expect(container.textContent).toContain('Case 26');
+    expect(wrapper?.find('tbody tr')).toHaveLength(25);
+    await clickButton('Next');
+    expect(wrapper?.find('tbody tr')).toHaveLength(1);
+    const lastCase = container.querySelector('tbody a');
+    expect(lastCase?.getAttribute('href')).toBe('/case/9051');
+    expect(lastCase?.textContent).toBe('TC51');
+    expect(
+      fetchMock.mock.calls.map(([url]) =>
+        new URL(url, 'https://example.test').searchParams.get('offset'),
+      ),
+    ).toEqual(['0', '25', '50']);
+  });
+
+  test('offers an explicit GET retry after a list error', async () => {
+    fetchMock.mockRejectedValue({ status: 404 });
+    await act(async () => {
+      wrapper = mountIntoContainer(<LiveReviewCases projectKey="project" iterationId={31} />);
+      await Promise.resolve();
+    });
+    await flush();
+    wrapper?.update();
+    expect(container.textContent).toContain('Could not load Library cases');
+    expect(container.querySelector('tbody')).toBeNull();
+    fetchMock.mockResolvedValue(response('READY', 94));
+    await clickButton('Refresh');
+    expect(container.textContent).toContain('Ready94');
+    expect(fetchMock).toHaveBeenCalledTimes(2);
+    expect(fetchMock.mock.calls.every(([, options]) => !options?.method)).toBe(true);
+  });
+
+  test('shows the empty iteration state after an authoritative zero total', async () => {
+    fetchMock.mockResolvedValue({ content: [], page: { totalElements: 0 } });
     await act(async () => {
       wrapper = mountIntoContainer(
-        <LiveReviewCases
-          projectKey="project"
-          displayIds={['TC101', 'TC101']}
-          refreshIdentity={{ id: 31 }}
-        />,
+        <div>
+          <LiveReviewCases projectKey="project" iterationId={31} />
+        </div>,
       );
       await Promise.resolve();
     });
     await flush();
     wrapper?.update();
-    expect(fetchMock).toHaveBeenCalledTimes(1);
-    expect(wrapper?.find('tbody tr')).toHaveLength(1);
-
-    act(() => {
-      wrapper?.setProps({ displayIds: Array.from({ length: 51 }, (_, i) => `TC${i}`) });
-    });
-    await flush();
-    wrapper?.update();
-    expect(fetchMock).toHaveBeenCalledTimes(1);
-    expect(container.textContent).toContain('Too many linked cases');
-  });
-
-  test('keeps missing and failed exact lookups unavailable and offers an explicit GET retry', async () => {
-    fetchMock.mockRejectedValue({ status: 404 });
-    await act(async () => {
-      wrapper = mountIntoContainer(<LiveReviewCases projectKey="project" displayIds={['TC101']} />);
-      await Promise.resolve();
-    });
-    await flush();
-    wrapper?.update();
-    expect(container.textContent).toContain('could not be matched uniquely');
-    fetchMock.mockResolvedValue(response('READY', 94));
-    act(() => {
-      (wrapper?.find('button').prop('onClick') as () => void)();
-    });
-    await flush();
-    wrapper?.update();
-    expect(container.textContent).toContain('Ready94');
-    expect(fetchMock).toHaveBeenCalledTimes(2);
-    expect(fetchMock.mock.calls.every(([, options]) => !options?.method)).toBe(true);
+    expect(container.textContent).toContain('No Library cases are linked to this iteration');
+    expect(container.textContent).not.toContain('Could not load Library cases');
+    expect(container.querySelector('tbody')).toBeNull();
   });
 
   test.each(['project', 'iteration'] as const)(
@@ -178,26 +221,15 @@ describe('LiveReviewCases accepted iteration refresh', () => {
         .mockReturnValueOnce(original.promise)
         .mockReturnValueOnce(other.promise)
         .mockReturnValueOnce(latest.promise);
-      const identity = { id: 31 };
       act(() => {
-        wrapper = mountIntoContainer(
-          <LiveReviewCases
-            projectKey="project"
-            displayIds={['TC101']}
-            refreshIdentity={identity}
-          />,
-        );
+        wrapper = mountIntoContainer(<LiveReviewCases projectKey="project" iterationId={31} />);
       });
       const firstSignal = fetchMock.mock.calls[0][1]?.signal as AbortSignal;
       act(() => {
-        wrapper?.setProps(
-          scope === 'project' ? { projectKey: 'other' } : { refreshIdentity: { id: 32 } },
-        );
+        wrapper?.setProps(scope === 'project' ? { projectKey: 'other' } : { iterationId: 32 });
       });
       act(() => {
-        wrapper?.setProps(
-          scope === 'project' ? { projectKey: 'project' } : { refreshIdentity: identity },
-        );
+        wrapper?.setProps(scope === 'project' ? { projectKey: 'project' } : { iterationId: 31 });
       });
       expect(firstSignal.aborted).toBe(true);
       await act(async () => {
@@ -224,7 +256,7 @@ describe('LiveReviewCases accepted iteration refresh', () => {
     const pending = deferred();
     fetchMock.mockReturnValue(pending.promise);
     await act(async () => {
-      wrapper = mountIntoContainer(<LiveReviewCases projectKey="project" displayIds={['TC101']} />);
+      wrapper = mountIntoContainer(<LiveReviewCases projectKey="project" iterationId={31} />);
       await Promise.resolve();
     });
     wrapper?.update();

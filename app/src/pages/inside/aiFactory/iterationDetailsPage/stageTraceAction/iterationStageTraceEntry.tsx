@@ -22,6 +22,7 @@ import type {
 } from 'controllers/aiFactory/pipelines';
 
 import { GenerationReviewTraceChooser } from 'pages/inside/aiFactory/iterationDetailsPage/generationReviewTraceChooser/generationReviewTraceChooser';
+import type { LiveLibraryCase } from 'pages/inside/aiFactory/iterationDetailsPage/liveReviewCases/liveLibraryCases';
 import { StageTraceAction } from 'pages/inside/aiFactory/iterationDetailsPage/stageTraceAction/stageTraceAction';
 import styles from 'pages/inside/aiFactory/iterationDetailsPage/iterationDetailsPage.scss';
 
@@ -31,7 +32,8 @@ export interface IterationStageTraceEntryProps {
   iteration: ReducedPipelineIterationDetail;
   stage?: ReducedPipelineDetailStage;
   projectKey?: string;
-  linkedCaseIds: string[];
+  reviewCases?: LiveLibraryCase[];
+  reviewRefreshVersion?: number | object;
 }
 
 export const isReviewStage = (stage?: ReducedPipelineDetailStage): boolean =>
@@ -41,17 +43,7 @@ export const isReviewStage = (stage?: ReducedPipelineDetailStage): boolean =>
       (stage.ownedBy === 'REPORTPORTAL' && stage.attributes?.some(({ key }) => key === 'ready'))),
   );
 
-export const getLinkedCaseIds = (stages: ReducedPipelineDetailStage[]): string[] => [
-  ...new Set(
-    stages.flatMap((stage) =>
-      (stage.relatedEntities ?? [])
-        .filter(({ entityType, entityId }) => entityType === 'TEST_CASE' && entityId.length <= 128)
-        .map(({ entityId }) => entityId),
-    ),
-  ),
-];
-
-const isHumanGenerationReview = (
+export const isHumanGenerationReview = (
   stage: ReducedPipelineDetailStage,
   pipelineType: ReducedPipelineIterationDetail['pipelineType'],
 ): boolean =>
@@ -63,7 +55,8 @@ export const IterationStageTraceEntry = ({
   iteration,
   stage,
   projectKey,
-  linkedCaseIds,
+  reviewCases,
+  reviewRefreshVersion,
 }: IterationStageTraceEntryProps) => {
   const isEnabled = useAiFactoryEnabled();
   if (!isEnabled || !stage || !projectKey) return null;
@@ -75,11 +68,19 @@ export const IterationStageTraceEntry = ({
     refreshIdentity: iteration,
   };
   const isHumanReview = isHumanGenerationReview(stage, iteration.pipelineType);
+  if (isHumanReview && !reviewCases) return null;
   if (!isHumanReview && !stage.stageKey) return null;
   return (
     <div className={cx('stage-trace-entry')}>
-      {isHumanReview ? (
-        <GenerationReviewTraceChooser {...context} displayIds={linkedCaseIds} />
+      {reviewCases && isHumanReview ? (
+        <GenerationReviewTraceChooser
+          projectKey={projectKey}
+          pipelineId={iteration.pipelineId}
+          iterationId={iteration.id}
+          stageKey={stage.stageKey}
+          cases={reviewCases}
+          refreshVersion={reviewRefreshVersion}
+        />
       ) : (
         <StageTraceAction {...context} stageKey={stage.stageKey} />
       )}

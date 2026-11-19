@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+import { AGENT_UNITS_SECTION_KEY, getAgentUnitName } from 'common/utils/agentUnitName';
 import type { ReducedPipelineSection } from 'controllers/aiFactory/pipelines/liveAdapters';
 import type { StageTraceEvent } from 'controllers/aiFactory/stageTrace';
 
@@ -24,11 +25,11 @@ export const getStageTraceUnits = (
 ): Map<string, string> => {
   const units = new Map<string, string>();
   sections
-    .filter((section) => section.key === 'units')
+    .filter((section) => section.key === AGENT_UNITS_SECTION_KEY)
     .flatMap((section) => section.rows)
     .forEach((row) => {
       if (!units.has(row.key)) {
-        units.set(row.key, typeof row.cells.name === 'string' ? row.cells.name : row.key);
+        units.set(row.key, getAgentUnitName(row));
       }
     });
   return units;

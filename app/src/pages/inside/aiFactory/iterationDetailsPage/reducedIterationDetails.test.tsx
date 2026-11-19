@@ -21,6 +21,7 @@ import type {
   ReducedPipelineDetailStage,
   ReducedPipelineIterationDetail,
 } from 'controllers/aiFactory/pipelines';
+import { adaptLivePipelineIterationDetail } from 'controllers/aiFactory/pipelines/liveAdapters';
 
 import { LivePipelineSettingsButton } from '../pipelineSettings';
 import { IterationProvenance } from './iterationProvenance';
@@ -32,6 +33,7 @@ import {
   type IterationStageTraceEntryProps,
 } from './stageTraceAction/iterationStageTraceEntry';
 import { GenerationReviewTraceChooser } from './generationReviewTraceChooser/generationReviewTraceChooser';
+import type { LiveLibraryCase } from './liveReviewCases/liveLibraryCases';
 import { LiveReviewCases } from './liveReviewCases/liveReviewCases';
 import { CaseLink } from './stagePanels/caseLink';
 import {
@@ -49,13 +51,20 @@ jest.mock('@reportportal/ui-kit', () => ({
   RerunIcon: 'RerunIcon',
   SystemMessage: 'SystemMessage',
 }));
-jest.mock(
-  'react-intl',
-  () =>
-    jest.requireActual<typeof import('../aiFactoryTestUtils')>(
-      'pages/inside/aiFactory/aiFactoryTestUtils',
-    ).reactIntlTestMock,
-);
+jest.mock('react-intl', () => {
+  const { reactIntlTestMock } = jest.requireActual<
+    typeof import('pages/inside/aiFactory/aiFactoryTestUtils')
+  >('pages/inside/aiFactory/aiFactoryTestUtils');
+
+  return {
+    ...reactIntlTestMock,
+    useIntl: () => ({
+      ...reactIntlTestMock.useIntl(),
+      formatNumber: (value: number, options: Intl.NumberFormatOptions) =>
+        new Intl.NumberFormat('en', options).format(value),
+    }),
+  };
+});
 jest.mock('common/utils', () => ({
   ...jest.requireActual<typeof import('common/utils/aiFactoryFormatUtils')>(
     'common/utils/aiFactoryFormatUtils',
@@ -64,9 +73,6 @@ jest.mock('common/utils', () => ({
     () =>
     (...classNames: string[]) =>
       classNames.filter(Boolean).join(' '),
-}));
-jest.mock('common/utils/timeDateUtils', () => ({
-  formatDuration: (value: number) => `${value} ms`,
 }));
 jest.mock('components/main/scrollWrapper', () => ({ ScrollWrapper: 'ScrollWrapper' }));
 jest.mock('layouts/settingsLayout', () => ({ SettingsLayout: 'SettingsLayout' }));
@@ -187,8 +193,13 @@ describe('ReducedIterationDetails', () => {
           projectKey="demo"
         />,
       );
-      expect(traceEntry(wrapper).find(GenerationReviewTraceChooser)).toHaveLength(1);
-      expect(traceEntry(wrapper).find(StageTraceAction)).toHaveLength(0);
+      const reviewCases = [{ id: 42, displayId: 'TC1', name: 'Generated case' }];
+      const renderTrace = wrapper.find(LiveReviewCases).prop('children') as (
+        cases: LiveLibraryCase[],
+      ) => ReactElement;
+      const trace = shallow(renderTrace(reviewCases));
+      expect(trace.find(GenerationReviewTraceChooser).prop('cases')).toBe(reviewCases);
+      expect(trace.find(StageTraceAction)).toHaveLength(0);
     },
   );
 
@@ -298,7 +309,7 @@ describe('ReducedIterationDetails', () => {
     expect(wrapper.text()).toContain('Passed');
     expect(wrapper.text()).toContain('Release validation');
     expect(wrapper.text()).toContain('Trigger:CI');
-    expect(wrapper.text()).toContain('60000 ms');
+    expect(wrapper.text()).toContain('1m');
     expect(wrapper.text()).toContain('branch:main');
     expect(wrapper.find('[data-automation-id="reducedStageCards"]')).toHaveLength(1);
     expect(wrapper.find('[data-automation-id="reducedStagePanel"]')).toHaveLength(1);
@@ -356,7 +367,7 @@ describe('ReducedIterationDetails', () => {
     wrapper.unmount();
   });
 
-  test('opens live comparison and joins Review cases only from linked Test Case IDs', () => {
+  test('opens live comparison and requests Review cases for the numeric iteration ID', () => {
     const onCompare = jest.fn();
     const wrapper = shallow(
       <ReducedIterationDetails
@@ -391,10 +402,8 @@ describe('ReducedIterationDetails', () => {
         onCompare={onCompare}
       />,
     );
-    expect(wrapper.find(LiveReviewCases).prop('displayIds')).toEqual(['TC101']);
-    expect(wrapper.find(LiveReviewCases).prop('refreshIdentity')).toBe(
-      wrapper.find(IterationProvenance).prop('iteration'),
-    );
+    expect(wrapper.find(LiveReviewCases).prop('iterationId')).toBe(103);
+    expect(wrapper.find(LiveReviewCases).prop('projectKey')).toBe('project');
     const actions = wrapper
       .find('PageHeaderWithBreadcrumbsAndActions')
       .prop('actions') as ReactElement;
@@ -758,6 +767,107 @@ describe('ReducedIterationDetails', () => {
     expect(wrapper.find('.reduced-section__details-row td').prop('colSpan')).toBe(3);
     expect(wrapper.text()).toContain('Name the message');
   });
+
+  test.each(['unit', 'name', undefined])(
+    'shows Agent units names and formats metrics when the name column is %s',
+    (unitColumn) => {
+      const iteration = adaptLivePipelineIterationDetail(
+        {
+          id: 103,
+          pipelineId: 7,
+          iterationNumber: 3,
+          stages: [
+            {
+              id: 11,
+              stageKey: 'grade',
+              name: 'Grade',
+              sequence: 1,
+              status: 'PASSED',
+              sections: [
+                {
+                  key: 'units',
+                  title: 'Agent units',
+                  role: 'DETAILS',
+                  columns: [
+                    ...(unitColumn ? [{ key: unitColumn, label: 'Unit' }] : []),
+                    { key: 'duration', label: 'Duration', valueType: 'DURATION' },
+                    { key: 'tokens', label: 'Tokens', valueType: 'NUMBER' },
+                    { key: 'identifier', label: 'ID', valueType: 'FUTURE_TYPE' },
+                  ],
+                  rows: [
+                    {
+                      key: 'first',
+                      cells: {
+                        unit: { value: 'Review single' },
+                        duration: { value: '130721' },
+                        tokens: { value: '12500' },
+                        identifier: { value: '00123' },
+                      },
+                    },
+                    {
+                      key: 'second',
+                      cells: { duration: { value: '0' }, tokens: { value: '0' } },
+                    },
+                    {
+                      key: 'third',
+                      cells: {
+                        name: { value: 'Legacy name' },
+                        unit: { value: 'Producer name' },
+                        duration: { value: '' },
+                        tokens: { value: 'not available' },
+                      },
+                    },
+                    {
+                      key: 'fourth',
+                      cells: {
+                        unit: { value: '   ' },
+                        duration: { value: '-5' },
+                        tokens: { value: '1234.56789' },
+                      },
+                    },
+                    {
+                      key: 'outside-safe-range',
+                      cells: { duration: { value: '1e22' }, tokens: { value: '9007199254740993' } },
+                    },
+                  ],
+                },
+              ],
+            },
+          ],
+        },
+        7,
+        103,
+      );
+      const wrapper = renderTraceDetail(iteration.stages, { iteration });
+      const cells = wrapper.find(
+        '[data-automation-id="reducedStageDetailSections"] tbody td',
+      ) as unknown as TestNodes;
+
+      expect(cells.map((cell) => cell.text())).toEqual([
+        'Review single',
+        '2m 10s',
+        '12,500',
+        '00123',
+        'second',
+        '0s',
+        '0',
+        '',
+        'Legacy name',
+        '',
+        'not available',
+        '',
+        'fourth',
+        '-5',
+        '1,234.56789',
+        '',
+        'outside-safe-range',
+        '1e22',
+        '9007199254740993',
+        '',
+      ]);
+      expect(cells.map((cell) => cell.prop('title')).slice(1, 3)).toEqual(['130721', '12500']);
+    },
+  );
 
   test('shows only the selected stage panel and keeps validated API fields available', () => {
     const iteration = detail({

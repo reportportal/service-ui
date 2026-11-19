@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+import { AGENT_UNIT_NAME_KEYS, AGENT_UNITS_SECTION_KEY } from 'common/utils/agentUnitName';
 import {
   adaptIterationReference,
   type IterationReference,
@@ -464,6 +465,9 @@ const asCellText = (value: unknown): string | undefined => {
     : asTrimmedString(content, MAX_CELL_VALUE_LENGTH);
 };
 
+const asUnitLabel = (cell: unknown): string | undefined =>
+  asTrimmedString(asRecord(cell)?.value ?? cell, MAX_CELL_VALUE_LENGTH);
+
 const adaptSectionColumns = (value: unknown): ReducedPipelineSection['columns'] | null => {
   if (!Array.isArray(value) || value.length > 30) {
     return null;
@@ -538,17 +542,26 @@ const adaptCellLink = (
 const adaptSectionCells = (
   cells: Record<string, unknown>,
   columns: ReducedPipelineSection['columns'],
+  isUnitsSection: boolean,
 ): Pick<ReducedPipelineSection['rows'][number], 'cells' | 'cellLinks'> | null => {
   const displayCells: Record<string, string> = {};
   const cellLinks: NonNullable<ReducedPipelineSection['rows'][number]['cellLinks']> = {};
   for (const { key } of columns) {
     const cell = cells[key];
     if (cell === undefined) continue;
-    const displayValue = asCellText(cell);
+    const isUnitLabel = isUnitsSection && AGENT_UNIT_NAME_KEYS.some((nameKey) => nameKey === key);
+    const displayValue = isUnitLabel ? (asUnitLabel(cell) ?? '') : asCellText(cell);
     const link = adaptCellLink(cell);
     if (displayValue === undefined || !link) return null;
     displayCells[key] = displayValue;
     if (Object.keys(link).length) cellLinks[key] = link;
+  }
+  if (isUnitsSection) {
+    for (const key of AGENT_UNIT_NAME_KEYS) {
+      if (displayCells[key] !== undefined) continue;
+      const label = asUnitLabel(cells[key]);
+      if (label) displayCells[key] = label;
+    }
   }
   return { cells: displayCells, ...(Object.keys(cellLinks).length ? { cellLinks } : {}) };
 };
@@ -556,6 +569,7 @@ const adaptSectionCells = (
 const adaptSectionRow = (
   value: unknown,
   columns: ReducedPipelineSection['columns'],
+  isUnitsSection: boolean,
 ): ReducedPipelineSection['rows'][number] | null => {
   const row = asRecord(value);
   const key = row && asTrimmedString(row.key, MAX_KEY_LENGTH);
@@ -563,7 +577,7 @@ const adaptSectionRow = (
   if (!row || !key || !cells || Object.keys(cells).length > 30) {
     return null;
   }
-  const adaptedCells = adaptSectionCells(cells, columns);
+  const adaptedCells = adaptSectionCells(cells, columns, isUnitsSection);
   const details = adaptSectionDetails(row.details);
   return adaptedCells && details ? { key, ...adaptedCells, details } : null;
 };
@@ -584,7 +598,7 @@ const adaptSection = (value: unknown): ReducedPipelineSection | null => {
   ) {
     return null;
   }
-  const rows = rawRows.map((row) => adaptSectionRow(row, columns));
+  const rows = rawRows.map((row) => adaptSectionRow(row, columns, key === AGENT_UNITS_SECTION_KEY));
   if (rows.some((row) => !row)) {
     return null;
   }

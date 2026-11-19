@@ -16,57 +16,62 @@
 
 import { fetch } from 'common/utils';
 
-import { adaptLiveLibraryCase, getLiveLibraryCases } from './liveLibraryCases';
+import { adaptLiveLibraryCases, getLiveLibraryCases } from './liveLibraryCases';
 
 jest.mock('common/utils', () => ({ fetch: jest.fn() }));
 
-describe('adaptLiveLibraryCase', () => {
-  test('accepts one exact display ID with a numeric route ID', () => {
+describe('adaptLiveLibraryCases', () => {
+  test('preserves the server total and numeric route IDs', () => {
     expect(
-      adaptLiveLibraryCase(
-        {
-          content: [
-            {
-              id: 9101,
-              displayId: 'TC101',
-              name: 'Generated case',
-              status: 'READY',
-              metrics: { overallScore: 94 },
-            },
-          ],
-          page: { totalElements: 1 },
-        },
-        'TC101',
-      ),
+      adaptLiveLibraryCases({
+        content: [
+          {
+            id: 9101,
+            displayId: 'TC101',
+            name: 'Generated case',
+            status: 'READY',
+            metrics: { overallScore: 0 },
+          },
+        ],
+        page: { totalElements: 51 },
+      }),
     ).toEqual({
-      id: 9101,
-      displayId: 'TC101',
-      name: 'Generated case',
-      status: 'READY',
-      overallScore: 94,
+      cases: [
+        {
+          id: 9101,
+          displayId: 'TC101',
+          name: 'Generated case',
+          status: 'READY',
+          overallScore: 0,
+        },
+      ],
+      totalElements: 51,
     });
   });
 
   test.each([
-    [{ content: [], page: { totalElements: 0 } }, 'TC101'],
-    [{ content: [{ id: 9101, displayId: 'TC102', name: 'Wrong' }] }, 'TC101'],
-    [
-      { content: [{ id: 9101, displayId: 'TC101', name: 'One' }], page: { totalElements: 2 } },
-      'TC101',
-    ],
-  ])('rejects absent, mismatched, or ambiguous results', (response, displayId) => {
-    expect(adaptLiveLibraryCase(response, displayId)).toBeNull();
+    { content: [] },
+    { content: [], page: { totalElements: -1 } },
+    { content: [{ id: '9101', displayId: 'TC101', name: 'Wrong' }], page: { totalElements: 1 } },
+  ])('rejects a malformed page %#', (response) => {
+    expect(adaptLiveLibraryCases(response)).toBeNull();
   });
 
-  test('queries the exact display ID and keeps an unresolved case unavailable', async () => {
+  test('requests one paginated list by numeric iteration ID', async () => {
     const fetchMock = fetch as jest.MockedFunction<
       (url: string, params?: Record<string, unknown>) => Promise<unknown>
     >;
     fetchMock.mockResolvedValue({ content: [], page: { totalElements: 0 } });
-    const cases = await getLiveLibraryCases('project', ['TC101'], new AbortController().signal);
-    expect(fetch).toHaveBeenCalledWith(expect.stringContaining('filter.eq.displayId=TC101'), {
-      signal: expect.any(AbortSignal),
-    });
-    expect(cases).toEqual([{ displayId: 'TC101', testCase: null }]);
+    const signal = new AbortController().signal;
+    const cases = await getLiveLibraryCases('project', 31, 50, 25, signal);
+    expect(fetchMock).toHaveBeenCalledTimes(1);
+    const [[url, options]] = fetchMock.mock.calls;
+    const params = new URL(url, 'https://example.test').searchParams;
+    expect(params.get('filter.eq.iterationId')).toBe('31');
+    expect(params.get('filter.eq.displayId')).toBeNull();
+    expect(params.get('offset')).toBe('50');
+    expect(params.get('limit')).toBe('25');
+    expect(options).toEqual({ signal });
+    expect(cases).toEqual({ cases: [], totalElements: 0 });
   });
 });
