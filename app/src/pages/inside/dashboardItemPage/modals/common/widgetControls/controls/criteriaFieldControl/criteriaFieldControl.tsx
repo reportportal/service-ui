@@ -16,12 +16,14 @@
 
 import { ComponentProps } from 'react';
 import { FieldProvider } from 'components/fields/fieldProvider';
+import { commonValidators } from 'common/utils/validation';
 import { RequiredDropdownControl } from '../requiredDropdownControl';
 
 interface CriteriaFieldControlProps {
   label: string;
   options: ComponentProps<typeof RequiredDropdownControl>['options'];
-  validate: (value: unknown) => string | false | undefined;
+  errorMessage?: string;
+  validate?: (value: unknown) => string | false | undefined;
   disabled?: boolean;
   parse?: (value: unknown) => unknown;
   format?: (value: unknown) => unknown;
@@ -31,6 +33,7 @@ interface CriteriaFieldControlProps {
 export const CriteriaFieldControl = ({
   label,
   options,
+  errorMessage,
   validate,
   disabled = false,
   parse,
@@ -38,7 +41,7 @@ export const CriteriaFieldControl = ({
 }: CriteriaFieldControlProps) => (
   <FieldProvider
     name="contentParameters.contentFields"
-    validate={validate}
+    validate={validate ?? commonValidators.createWidgetContentFieldsValidator(errorMessage)}
     parse={parse}
     format={format}
   >

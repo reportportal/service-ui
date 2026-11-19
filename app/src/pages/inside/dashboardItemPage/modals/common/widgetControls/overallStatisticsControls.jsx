@@ -146,9 +146,7 @@ export class OverallStatisticsControls extends Component {
             <CriteriaFieldControl
               label={formatMessage(messages.CriteriaFieldLabel)}
               options={this.criteria}
-              validate={commonValidators.createWidgetContentFieldsValidator(
-                formatMessage(messages.ContentFieldsValidationError),
-              )}
+              errorMessage={formatMessage(messages.ContentFieldsValidationError)}
               disabled={disabled || isMainControlsDisabled}
             />
             <FieldProvider
