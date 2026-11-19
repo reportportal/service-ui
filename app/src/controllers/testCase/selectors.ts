@@ -63,6 +63,9 @@ export const settledTestCasesRevisionSelector = (state: RootState): number =>
 
 export const testCaseDetailsSelector = (state: RootState) => state.testCase?.details?.data;
 
+export const testCaseDetailsContextSelector = (state: RootState) =>
+  state.testCase?.details?.context;
+
 export const isLoadingTestCaseDetailsSelector = (state: RootState) =>
   state.testCase?.details?.loading || false;
 

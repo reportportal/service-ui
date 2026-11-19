@@ -33,17 +33,18 @@ import { RequirementsList } from 'pages/inside/common/requirementsList/requireme
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { useUserPermissions } from 'hooks/useUserPermissions';
 import { useAiFactoryEnabled } from 'controllers/aiFactory';
-import { urlOrganizationAndProjectSelector } from 'controllers/pages';
+import { payloadSelector, urlOrganizationAndProjectSelector } from 'controllers/pages';
 import { projectKeySelector } from 'controllers/project';
 import {
   GET_TEST_CASE_DETAILS,
   isLoadingTestCaseDetailsSelector,
+  testCaseDetailsContextSelector,
   testCaseDetailsSelector,
 } from 'controllers/testCase';
 import { commonMessages } from 'pages/inside/common/common-messages';
 import { EvaluationPanel } from 'pages/inside/aiFactory/evaluation';
 import { GenerationCost } from 'pages/inside/aiFactory/generationCost';
-import { AutomationSection } from 'pages/inside/aiFactory/automation';
+import { AutomationSection, getNativeAutomationCandidate } from 'pages/inside/aiFactory/automation';
 import { POLLING_REQUEST_STARTED, usePolling } from 'pages/inside/aiFactory/common';
 import { LifecycleHistory, useTestCaseAi } from 'pages/inside/aiFactory/lifecycle';
 import {
@@ -89,6 +90,7 @@ import { TestCaseDetailsHeader } from './testCaseDetailsHeader';
 import { useAddTestCasesToTestPlanModal } from '../addTestCasesToTestPlanModal/useAddTestCasesToTestPlanModal';
 import { useDescriptionModal } from './descriptionModal';
 import { useTestCaseTags } from './useTestCaseTags';
+import { useTestCaseAutomation } from './useTestCaseAutomation';
 import { messages } from './messages';
 import { DetailsEmptyState } from '../emptyState/details/detailsEmptyState';
 import { AttachmentsWithSlider } from '../../common/attachmentsWithSlider';
@@ -461,19 +463,32 @@ export const TestCaseDetailsPage = () => {
   const { openModal: openDescriptionModal } = useDescriptionModal();
 
   const rawTestCaseDetails = useSelector(testCaseDetailsSelector);
+  const detailsContext = useSelector(testCaseDetailsContextSelector);
   const isLoadingTestCaseDetails = useSelector(isLoadingTestCaseDetailsSelector);
   const projectKey = useSelector(projectKeySelector);
+  const { testCasePageRoute } = useSelector(payloadSelector) ?? {};
   const projectRoute = useSelector(urlOrganizationAndProjectSelector) as ProjectDetails | undefined;
   const isAiFactoryEnabled = useAiFactoryEnabled();
   const { testCaseDetails, nativeSummary, isLegacyAiEnabled, isNativeReviewEnabled } =
     getTestCaseReadState(rawTestCaseDetails, isAiFactoryEnabled);
 
   const testCaseId = testCaseDetails?.id || 0;
+  const isNativeAutomationContextCurrent =
+    !isLoadingTestCaseDetails &&
+    Number(testCasePageRoute?.match(/^test-cases\/(\d+)$/)?.[1]) === testCaseId &&
+    Boolean(projectKey) &&
+    detailsContext?.projectKey === projectKey &&
+    detailsContext.organizationSlug === projectRoute?.organizationSlug &&
+    detailsContext.projectSlug === projectRoute?.projectSlug;
   const aiDetailsState = useTestCaseAi(
     projectKey,
     testCaseId,
     isAiFactoryEnabled && Boolean(testCaseDetails?.lifecycle),
     testCaseDetails?.updatedAt,
+  );
+  const nativeAutomation = useTestCaseAutomation(
+    projectKey,
+    nativeSummary && isNativeAutomationContextCurrent ? testCaseDetails : undefined,
   );
   const automationDetails = aiDetailsState.data?.automation;
   const isAiReviewEnabled = isLegacyAiEnabled && Boolean(testCaseDetails?.ai);
@@ -541,6 +556,13 @@ export const TestCaseDetailsPage = () => {
   });
 
   if (!testCaseDetails) return null;
+
+  const nativeAutomationCandidate = nativeAutomation.automation
+    ? getNativeAutomationCandidate(
+        { ...testCaseDetails, automationState: nativeAutomation.automation },
+        nativeReviewState.fixInProgress,
+      )
+    : undefined;
 
   const attributes = (testCaseDetails.attributes || []).filter(hasTagShape);
 
@@ -642,6 +664,9 @@ export const TestCaseDetailsPage = () => {
             testCase={reviewPresentation.renderedTestCase}
             isNativeFixInProgress={nativeReviewState.fixInProgress}
             nativeReviewState={nativeReviewState}
+            nativeAutomationState={nativeAutomation.automation}
+            onAutomationStarted={nativeAutomation.onStarted}
+            canShowAutomation={!nativeSummary || isNativeAutomationContextCurrent}
             onAddToTestPlan={handleAddToTestPlan}
             onMenuAction={noop}
             isScenarioEmpty={isScenarioEmpty}
@@ -685,6 +710,21 @@ export const TestCaseDetailsPage = () => {
                 <GenerationCost aiDetailsState={aiDetailsState} />
                 <PipelineLinks aiDetailsState={aiDetailsState} />
               </>
+            )}
+            {nativeAutomationCandidate && (
+              <AutomationSection
+                testCase={nativeAutomationCandidate}
+                automation={nativeAutomation.automation}
+                canAutomate={canAutomateTestCases}
+                isCiConnected={nativeAutomation.automation?.ciConnection === 'CONNECTED'}
+                expectedProjectKey={projectKey}
+                organizationSlug={projectRoute?.organizationSlug}
+                projectSlug={projectRoute?.projectSlug}
+                isLoading={nativeAutomation.isLoading}
+                isError={nativeAutomation.isError}
+                onRetry={() => void nativeAutomation.reload()}
+                onSuccess={nativeAutomation.onStarted}
+              />
             )}
             {isAutomationSectionVisible && (
               <AutomationSection

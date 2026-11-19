@@ -59,6 +59,7 @@ import { Page } from 'types/common';
 import { queueReducers } from 'common/utils';
 
 import { Folder } from './types';
+import type { TestCaseDetailsContext } from './state';
 import {
   DeleteFolderSuccessParams,
   DeleteTestCaseParams,
@@ -115,6 +116,7 @@ type InitialDetailsStateType = {
   data: TestCase;
   loading: boolean;
   error: string;
+  context?: TestCaseDetailsContext;
 };
 
 const INITIAL_DETAILS_STATE: InitialDetailsStateType = {
@@ -265,13 +267,23 @@ const folderReducer = (state = INITIAL_STATE.folders.data, action: FolderAction)
 
 const testCaseDetailsReducer = (
   state = INITIAL_DETAILS_STATE,
-  { type, payload, error }: { type: string; payload?: unknown; error?: string },
+  {
+    type,
+    payload,
+    error,
+    context,
+  }: {
+    type: string;
+    payload?: unknown;
+    error?: string;
+    context?: InitialDetailsStateType['context'];
+  },
 ) => {
   switch (type) {
     case GET_TEST_CASE_DETAILS:
       return { ...state, loading: true, error: null };
     case GET_TEST_CASE_DETAILS_SUCCESS:
-      return { ...state, loading: false, data: payload };
+      return { ...state, loading: false, data: payload, context };
     case GET_TEST_CASE_DETAILS_FAILURE:
       return { ...state, loading: false, error };
     case UPDATE_DESCRIPTION_SUCCESS:

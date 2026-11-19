@@ -13,6 +13,8 @@ export { useAutomationModal } from './useAutomationModal';
 export {
   getAutomationCandidateLabel,
   getAutomationSkipReason,
+  getNativeAutomationCandidate,
+  getNativeAutomationState,
   normalizeAutomateAccepted,
   normalizeAutomationEnvironments,
   partitionAutomationSelection,

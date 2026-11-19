@@ -433,6 +433,11 @@ export interface TestCaseAiRS {
   lifecycleHistory: LifecycleHistoryEntryRS[];
 }
 
+export type TestCaseAutomationState = NonNullable<TestCaseAiRS['automation']> & {
+  ciConnection: 'CONNECTED' | 'NOT_CONNECTED' | 'CONNECTION_FAILED';
+  fixInProgress: boolean;
+};
+
 export interface LifecycleHistoryEntryRS {
   from?: AiLifecycle;
   to: AiLifecycle;
@@ -573,6 +578,7 @@ export interface AutomatePayload {
   testCaseIds: number[];
   environment: string;
   confirmReautomate: boolean;
+  confirmedTestCaseIds?: number[];
 }
 export interface AutomateAcceptedRS {
   iteration: { pipelineId: number; iterationId: number; number: number };

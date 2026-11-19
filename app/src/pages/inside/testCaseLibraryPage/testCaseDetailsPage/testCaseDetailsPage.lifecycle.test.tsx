@@ -96,12 +96,14 @@ jest.mock('components/main/scrollWrapper', () => ({ ScrollWrapper: 'mock-ScrollW
 jest.mock('layouts/settingsLayout', () => ({ SettingsLayout: 'mock-SettingsLayout' }));
 jest.mock('controllers/aiFactory', () => ({ useAiFactoryEnabled: jest.fn() }));
 jest.mock('controllers/pages', () => ({
+  payloadSelector: jest.fn(),
   urlOrganizationAndProjectSelector: jest.fn(),
 }));
 jest.mock('controllers/project', () => ({ projectKeySelector: jest.fn() }));
 jest.mock('controllers/testCase', () => ({
   GET_TEST_CASE_DETAILS: 'GET_TEST_CASE_DETAILS',
   isLoadingTestCaseDetailsSelector: jest.fn(),
+  testCaseDetailsContextSelector: jest.fn(),
   testCaseDetailsSelector: jest.fn(),
 }));
 jest.mock('pages/inside/aiFactory/evaluation', () => ({ EvaluationPanel: 'mock-EvaluationPanel' }));
@@ -110,6 +112,9 @@ jest.mock('pages/inside/aiFactory/generationCost', () => ({
 }));
 jest.mock('pages/inside/aiFactory/automation', () => ({
   AutomationSection: 'mock-AutomationSection',
+  ...jest.requireActual<typeof import('pages/inside/aiFactory/automation/automationUtils')>(
+    'pages/inside/aiFactory/automation/automationUtils',
+  ),
 }));
 jest.mock('pages/inside/aiFactory/common', () => ({ usePolling: jest.fn() }));
 jest.mock('pages/inside/aiFactory/common/nativeTestCaseSummary/nativeTestCaseSummary', () => ({

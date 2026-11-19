@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { useMemo, useState } from 'react';
+import { useMemo, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useIntl } from 'react-intl';
 import { Button, Checkbox, Dropdown, Modal, SystemMessage } from '@reportportal/ui-kit';
@@ -44,6 +44,8 @@ export const AUTOMATION_MODAL_KEY = 'aiFactoryAutomationModal';
 
 export interface AutomationModalData {
   testCases: AutomationCandidate[];
+  isPreview?: boolean;
+  expectedProjectKey?: string;
   onSuccess?: (response: AutomateAcceptedRS) => void;
 }
 
@@ -56,7 +58,7 @@ const ERROR_MESSAGES: Record<AutomationRequestError, typeof messages.startFailed
 };
 
 export const AutomationModalContent = ({
-  data: { testCases, onSuccess },
+  data: { testCases, isPreview = false, expectedProjectKey, onSuccess },
 }: UseModalData<AutomationModalData>) => {
   const { formatMessage } = useIntl();
   const dispatch = useDispatch();
@@ -64,9 +66,13 @@ export const AutomationModalContent = ({
   const { canAutomateTestCases } = useUserPermissions();
   const selection = useMemo(() => partitionAutomationSelection(testCases), [testCases]);
   const [environment, setEnvironment] = useState('');
-  const [isReautomationConfirmed, setIsReautomationConfirmed] = useState(false);
-  const request = useAutomationRequest(projectKey, true);
-  const selectedEnvironment = environment || request.environments?.default || '';
+  const [confirmedCaseIdsKey, setConfirmedCaseIdsKey] = useState('');
+  const submitInProgress = useRef(false);
+  const isCurrentProject = expectedProjectKey === undefined || expectedProjectKey === projectKey;
+  const canRequest = !isPreview && isCurrentProject;
+  const request = useAutomationRequest(projectKey, canRequest);
+  const environments = request.environments?.environments;
+  const selectedEnvironment = environments?.includes(environment) ? environment : environments?.[0];
   const knownReautomationIds = selection.eligible
     .filter(({ automation }) => automation?.status === AutomationStatus.AUTOMATED)
     .map(({ id }) => id);
@@ -74,6 +80,9 @@ export const AutomationModalContent = ({
     ...new Set([...knownReautomationIds, ...(request.reautomationRequiredIds ?? [])]),
   ];
   const requiresConfirmation = reautomationRequiredIds.length > 0;
+  const requiredCaseIdsKey = [...reautomationRequiredIds].sort((a, b) => a - b).join(',');
+  const isReautomationConfirmed =
+    requiresConfirmation && confirmedCaseIdsKey === requiredCaseIdsKey;
   const testCaseById = new Map(testCases.map((testCase) => [testCase.id, testCase]));
 
   const close = () => {
@@ -82,20 +91,7 @@ export const AutomationModalContent = ({
     }
   };
 
-  const start = async () => {
-    if (!canAutomateTestCases || !selectedEnvironment || !selection.eligible.length) {
-      return;
-    }
-
-    const response = await request.start({
-      testCaseIds: selection.eligible.map(({ id }) => id),
-      environment: selectedEnvironment,
-      confirmReautomate: isReautomationConfirmed,
-    });
-    if (!response) {
-      return;
-    }
-
+  const handleSuccess = (response: AutomateAcceptedRS) => {
     onSuccess?.(response);
     if (response.skipped.length > 0) {
       const skippedCases = response.skipped
@@ -135,16 +131,37 @@ export const AutomationModalContent = ({
     !selection.eligible.length ||
     (requiresConfirmation && !isReautomationConfirmed);
 
+  const start = async () => {
+    if (!canRequest || isSubmitDisabled || !selectedEnvironment || submitInProgress.current) return;
+
+    submitInProgress.current = true;
+    try {
+      const response = await request.start({
+        testCaseIds: selection.eligible.map(({ id }) => id),
+        environment: selectedEnvironment,
+        confirmReautomate: isReautomationConfirmed,
+        ...(isReautomationConfirmed && { confirmedTestCaseIds: reautomationRequiredIds }),
+      });
+      if (response) handleSuccess(response);
+    } finally {
+      submitInProgress.current = false;
+    }
+  };
+
   return (
     <Modal
       title={formatMessage(messages.title)}
-      okButton={{
-        children: formatMessage(messages.automate),
-        disabled: isSubmitDisabled,
-        onClick: () => void start(),
-      }}
+      okButton={
+        !canRequest
+          ? undefined
+          : {
+              children: formatMessage(messages.send),
+              disabled: isSubmitDisabled,
+              onClick: () => void start(),
+            }
+      }
       cancelButton={{
-        children: formatMessage(COMMON_LOCALE_KEYS.CANCEL),
+        children: formatMessage(canRequest ? COMMON_LOCALE_KEYS.CANCEL : COMMON_LOCALE_KEYS.CLOSE),
         disabled: request.isStarting,
       }}
       allowCloseOutside={!request.isStarting}
@@ -170,7 +187,13 @@ export const AutomationModalContent = ({
             </ul>
           </div>
         )}
-        {request.environments && (
+        {isPreview && (
+          <SystemMessage mode="info">{formatMessage(messages.previewNotice)}</SystemMessage>
+        )}
+        {!isCurrentProject && (
+          <SystemMessage mode="info">{formatMessage(messages.projectChanged)}</SystemMessage>
+        )}
+        {canRequest && request.environments && (
           <Dropdown
             className={cx('automation-modal__environment')}
             data-automation-id="automationEnvironment"
@@ -206,7 +229,7 @@ export const AutomationModalContent = ({
             </ul>
           </div>
         )}
-        {requiresConfirmation && (
+        {canRequest && requiresConfirmation && (
           <div className={cx('automation-modal__confirmation')}>
             <Checkbox
               data-automation-id="confirmReautomation"
@@ -214,7 +237,7 @@ export const AutomationModalContent = ({
               disabled={request.isStarting}
               onChange={(event) => {
                 request.clearError();
-                setIsReautomationConfirmed(event.target.checked);
+                setConfirmedCaseIdsKey(event.target.checked ? requiredCaseIdsKey : '');
               }}
             >
               {formatMessage(messages.confirmReautomate, {
@@ -228,7 +251,7 @@ export const AutomationModalContent = ({
             </Checkbox>
           </div>
         )}
-        {request.error && (
+        {canRequest && request.error && (
           <SystemMessage mode="error">
             {formatMessage(ERROR_MESSAGES[request.error])}
             {(request.error === 'ENVIRONMENTS_LOAD_FAILED' ||

@@ -152,6 +152,20 @@ describe('AutomationModalContent', () => {
     expect(start).not.toHaveBeenCalled();
   });
 
+  test('shows the selected case without enabling requests or offering submission in preview', () => {
+    const wrapper = renderModal(
+      { testCases: [candidate], isPreview: true },
+      requestState({ environments: null }),
+    );
+
+    expect(useAutomationRequest).toHaveBeenCalledWith('demo', false);
+    expect(wrapper.find('.automation-modal__case-list').text()).toContain('TC42 · Checkout');
+    expect(wrapper.find('SystemMessage').text()).toContain('once the automation integration is available');
+    expect(wrapper.find('Modal').prop('okButton')).toBeUndefined();
+    expect(wrapper.find('Dropdown')).toHaveLength(0);
+    expect(start).not.toHaveBeenCalled();
+  });
+
   test('uses responsive modal and case-list classes', () => {
     const wrapper = renderModal({ testCases: [candidate] });
 

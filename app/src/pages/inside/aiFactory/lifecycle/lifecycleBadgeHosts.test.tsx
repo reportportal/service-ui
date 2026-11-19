@@ -383,8 +383,10 @@ describe('lifecycle badges in test case hosts', () => {
         status,
       });
       expect(sidePanel.find(NativeApproveButton)).toHaveLength(origin === 'AI' ? 1 : 0);
-      expect(header.find('mock-PopoverControl').prop('items')).not.toEqual(
-        expect.arrayContaining([expect.objectContaining({ label: 'Automate' })]),
+      expect(header.find('mock-PopoverControl').prop('items')).toEqual(
+        expect.arrayContaining([
+          expect.objectContaining({ label: 'Automate', disabled: status === 'DRAFT' }),
+        ]),
       );
       expect(sidePanel.find(ApproveButton)).toHaveLength(0);
       expect(sidePanel.find(ReviewFlags)).toHaveLength(0);

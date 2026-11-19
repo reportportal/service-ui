@@ -121,6 +121,7 @@ jest.mock('../editTestCaseModal/editTestCaseModal', () => ({
 const dispatch = jest.fn();
 interface AutomationModalData {
   testCases: AutomationCandidate[];
+  isPreview?: boolean;
   onSuccess?: (response: AutomateAcceptedRS) => void;
 }
 
@@ -220,6 +221,61 @@ describe('TestCaseDetailsHeader automation action', () => {
       disabled: true,
       tooltip: 'Only Ready Test Cases can be automated',
     });
+  });
+
+  test('opens an automation preview for a native Ready case', () => {
+    const nativeCase: ExtendedTestCase = {
+      ...testCase,
+      origin: 'AI',
+      status: 'READY',
+      lifecycle: Lifecycle.DRAFT,
+    };
+    const [item] = renderHeader(true, true, nativeCase)
+      .find(PopoverControl)
+      .prop('items') as AutomationMenuItem[];
+
+    expect(item).toMatchObject({ label: 'Automate', disabled: false, tooltip: undefined });
+    item.onClick();
+    expect(openAutomationModal).toHaveBeenCalledWith({
+      testCases: [{ id: 42, displayId: 'TC42', name: 'Checkout', lifecycle: 'READY' }],
+      isPreview: true,
+    });
+  });
+
+  test('keeps Automate disabled for a native Draft case', () => {
+    const nativeCase: ExtendedTestCase = { ...testCase, origin: 'AI', status: 'DRAFT' };
+    const items = renderHeader(true, true, nativeCase).find(PopoverControl).prop('items');
+
+    expect(items).toEqual([
+      {
+        label: 'Automate',
+        disabled: true,
+        tooltip: 'Only Ready Test Cases can be automated',
+        onClick: undefined,
+      },
+    ]);
+  });
+
+  test('shows the fix-round reason for a Ready case while the agent is fixing it', () => {
+    const nativeCase: ExtendedTestCase = { ...testCase, origin: 'AI', status: 'READY' };
+    const wrapper = renderHeader(true, true, nativeCase);
+    wrapper.setProps({ isNativeFixInProgress: true });
+
+    expect(wrapper.find(PopoverControl).prop('items')).toEqual([
+      {
+        label: 'Automate',
+        disabled: true,
+        tooltip: 'Automation is unavailable while the agent is fixing this Test Case',
+        onClick: undefined,
+      },
+    ]);
+  });
+
+  test('hides Automate for a native case without permission or with AI Factory off', () => {
+    const nativeCase: ExtendedTestCase = { ...testCase, origin: 'AI', status: 'READY' };
+
+    expect(renderHeader(true, false, nativeCase).find(PopoverControl)).toHaveLength(0);
+    expect(renderHeader(false, true, nativeCase).find(PopoverControl)).toHaveLength(0);
   });
 
   test('passes the shared native Review state to approval and refreshes the current details after reconciliation', () => {

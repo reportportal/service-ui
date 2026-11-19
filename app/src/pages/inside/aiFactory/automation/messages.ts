@@ -23,6 +23,10 @@ export const messages = defineMessages({
     id: 'AiFactoryAutomation.automate',
     defaultMessage: 'Automate',
   },
+  send: {
+    id: 'AiFactoryAutomation.send',
+    defaultMessage: 'Send',
+  },
   title: {
     id: 'AiFactoryAutomation.title',
     defaultMessage: 'Send to automation',
@@ -146,6 +150,18 @@ export const messages = defineMessages({
   unavailableNotReady: {
     id: 'AiFactoryAutomation.unavailableNotReady',
     defaultMessage: 'Only Ready Test Cases can be automated',
+  },
+  previewNotice: {
+    id: 'AiFactoryAutomation.previewNotice',
+    defaultMessage: 'You can send this Test Case once the automation integration is available.',
+  },
+  projectChanged: {
+    id: 'AiFactoryAutomation.projectChanged',
+    defaultMessage: 'The project changed. Open automation from the current project to continue.',
+  },
+  unavailableCiConnection: {
+    id: 'AiFactoryAutomation.unavailableCiConnection',
+    defaultMessage: 'This pipeline is not connected to CI — ask an Organization Manager',
   },
   unavailableFixRunning: {
     id: 'AiFactoryAutomation.unavailableFixRunning',
