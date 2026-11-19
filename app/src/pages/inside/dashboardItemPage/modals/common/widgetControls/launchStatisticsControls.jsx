@@ -20,8 +20,8 @@ import { injectIntl, defineMessages } from 'react-intl';
 import { messages as widgetControlsMessages } from './messages';
 import { connect } from 'react-redux';
 import { defectTypesSelector } from 'controllers/project';
-import { FieldText, FieldNumber, Dropdown, Checkbox } from '@reportportal/ui-kit';
-import { RadioGroupControl } from './controls';
+import { FieldText, FieldNumber, Checkbox } from '@reportportal/ui-kit';
+import { RadioGroupControl, CriteriaFieldControl, FiltersControlV2 } from './controls';
 import { FieldProvider } from 'components/fields/fieldProvider';
 import { FieldErrorHint } from 'components/fields';
 import { commonValidators } from 'common/utils/validation';
@@ -30,7 +30,6 @@ import classNames from 'classnames/bind';
 import { getWidgetCriteriaOptions } from './utils/getWidgetCriteriaOptions';
 import { getWidgetModeOptions } from './utils/getWidgetModeOptions';
 import { LAUNCH_STATUSES_OPTIONS, GROUPED_DEFECT_TYPES_OPTIONS } from './constants';
-import { FiltersControlV2 } from './controls';
 import styles from './widgetControls.scss';
 
 const cx = classNames.bind(styles);
@@ -55,7 +54,7 @@ const messages = defineMessages({
   },
   ContentFieldsValidationError: {
     id: 'LaunchStatisticsControls.ContentFieldsValidationError',
-    defaultMessage: 'You must select at least one item',
+    defaultMessage: 'Field is required',
   },
 });
 
@@ -130,20 +129,12 @@ export class LaunchStatisticsControls extends Component {
         </FieldProvider>
         {!formAppearance.isMainControlsLocked && (
           <Fragment>
-            <FieldProvider
-              name="contentParameters.contentFields"
-              validate={commonValidators.createWidgetContentFieldsValidator(
-                formatMessage(messages.ContentFieldsValidationError),
-              )}
-            >
-              <Dropdown
-                label={formatMessage(messages.CriteriaFieldLabel)}
-                multiSelect
-                isOptionAllVisible
-                options={this.criteria}
-                disabled={disabled || isMainControlsDisabled}
-              />
-            </FieldProvider>
+            <CriteriaFieldControl
+              label={formatMessage(messages.CriteriaFieldLabel)}
+              options={this.criteria}
+              errorMessage={formatMessage(messages.ContentFieldsValidationError)}
+              disabled={disabled || isMainControlsDisabled}
+            />
             <FieldProvider
               name="contentParameters.itemsCount"
               validate={commonValidators.createNumberOfLaunchesValidator(

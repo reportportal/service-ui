@@ -31,14 +31,14 @@ import {
   NO_DEFECT,
 } from 'common/constants/defectTypes';
 import { getWidgetCriteriaOptions } from './utils/getWidgetCriteriaOptions';
-import { Dropdown, FieldNumber } from '@reportportal/ui-kit';
+import { FieldNumber } from '@reportportal/ui-kit';
 import {
   LAUNCH_GRID_COLUMNS_OPTIONS,
   LAUNCH_STATUSES_OPTIONS,
   DEFECT_TYPES_GROUPS_OPTIONS,
   STATIC_CRITERIA,
 } from './constants';
-import { FiltersControlV2 } from './controls';
+import { FiltersControlV2, CriteriaFieldControl } from './controls';
 import { createClassnames } from 'common/utils';
 import styles from './widgetControls.scss';
 
@@ -66,7 +66,7 @@ const messages = defineMessages({
   },
   ContentFieldsValidationError: {
     id: 'LaunchesTableControls.ContentFieldsValidationError',
-    defaultMessage: 'You must select at least one item',
+    defaultMessage: 'Field is required',
   },
 });
 
@@ -166,22 +166,14 @@ export class LaunchesTableControls extends Component {
         </FieldProvider>
         {!formAppearance.isMainControlsLocked && (
           <Fragment>
-            <FieldProvider
-              name="contentParameters.contentFields"
+            <CriteriaFieldControl
+              label={formatMessage(messages.CriteriaFieldLabel)}
+              options={this.criteria}
               parse={this.parseContentFields}
               format={this.formatContentFields}
-              validate={contentFieldsValidator(
-                formatMessage(messages.ContentFieldsValidationError),
-              )}
-            >
-              <Dropdown
-                label={formatMessage(messages.CriteriaFieldLabel)}
-                multiSelect
-                isOptionAllVisible
-                options={this.criteria}
-                disabled={disabled || isMainControlsDisabled}
-              />
-            </FieldProvider>
+              validate={contentFieldsValidator(formatMessage(messages.ContentFieldsValidationError))}
+              disabled={disabled || isMainControlsDisabled}
+            />
             <FieldProvider
               name="contentParameters.itemsCount"
               validate={commonValidators.createNumberOfLaunchesValidator(
