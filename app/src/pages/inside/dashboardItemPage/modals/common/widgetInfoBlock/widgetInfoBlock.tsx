@@ -129,13 +129,16 @@ export const WidgetInfoBlock = ({
     };
     const newData = { filterIds, filters, contentParameters };
 
-    if (
-      customCondition &&
-      !isEqual(prevData, newData) &&
-      (filterIds.length || contentParameters?.widgetOptions?.launchNameFilter) &&
-      !WIDGETS_STATIC_PREVIEWS[activeWidget?.id ?? '']
-    ) {
-      fetchWidget(widgetSettings);
+    if (customCondition && !isEqual(prevData, newData)) {
+      const hasPreviewSource =
+        filterIds.length || contentParameters?.widgetOptions?.launchNameFilter;
+
+      if (!hasPreviewSource) {
+        setLoading(false);
+        setWidgetData(null);
+      } else if (!WIDGETS_STATIC_PREVIEWS[activeWidget?.id ?? '']) {
+        fetchWidget(widgetSettings);
+      }
     }
   }, [activeWidget?.id, widgetSettings, customCondition, fetchWidget]);
 
