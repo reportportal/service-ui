@@ -25,26 +25,25 @@ export interface LiveLibraryCase {
   overallScore?: number;
 }
 
+export interface LiveLibraryCasesPage {
+  cases: LiveLibraryCase[];
+  totalElements: number;
+}
+
 const asRecord = (value: unknown): Record<string, unknown> | null =>
   value !== null && typeof value === 'object' && !Array.isArray(value)
     ? (value as Record<string, unknown>)
     : null;
 
-export const adaptLiveLibraryCase = (
-  response: unknown,
-  displayId: string,
-): LiveLibraryCase | null => {
-  const page = asRecord(response);
-  const content = page?.content;
-  if (!Array.isArray(content) || content.length !== 1) return null;
-  const metadata = asRecord(page?.page);
-  if (metadata?.totalElements !== undefined && metadata.totalElements !== 1) return null;
-  const item = asRecord(content[0]);
+const adaptLiveLibraryCase = (value: unknown): LiveLibraryCase | null => {
+  const item = asRecord(value);
   if (
     !item ||
+    typeof item.id !== 'number' ||
     !Number.isSafeInteger(item.id) ||
-    (item.id as number) <= 0 ||
-    item.displayId !== displayId ||
+    item.id <= 0 ||
+    typeof item.displayId !== 'string' ||
+    !item.displayId.trim() ||
     typeof item.name !== 'string' ||
     !item.name.trim()
   ) {
@@ -53,8 +52,8 @@ export const adaptLiveLibraryCase = (
   const metrics = asRecord(item.metrics);
   const score = metrics?.overallScore;
   return {
-    id: item.id as number,
-    displayId,
+    id: item.id,
+    displayId: item.displayId,
     name: item.name,
     ...(item.status === 'DRAFT' || item.status === 'READY' ? { status: item.status } : {}),
     ...(typeof score === 'number' && Number.isFinite(score) && score >= 0 && score <= 100
@@ -63,21 +62,46 @@ export const adaptLiveLibraryCase = (
   };
 };
 
+export const adaptLiveLibraryCases = (response: unknown): LiveLibraryCasesPage | null => {
+  const page = asRecord(response);
+  const content: unknown = page?.content;
+  const totalElements = asRecord(page?.page)?.totalElements;
+  if (
+    !Array.isArray(content) ||
+    typeof totalElements !== 'number' ||
+    !Number.isSafeInteger(totalElements) ||
+    totalElements < content.length
+  ) {
+    return null;
+  }
+
+  const cases = new Map<number, LiveLibraryCase>();
+  for (const value of content) {
+    const testCase = adaptLiveLibraryCase(value);
+    if (!testCase || cases.has(testCase.id)) return null;
+    cases.set(testCase.id, testCase);
+  }
+  return { cases: [...cases.values()], totalElements };
+};
+
 export const getLiveLibraryCases = async (
   projectKey: string,
-  displayIds: string[],
+  iterationId: number,
+  offset: number,
+  limit: number,
   signal: AbortSignal,
-): Promise<Array<{ displayId: string; testCase: LiveLibraryCase | null }>> =>
-  Promise.all(
-    displayIds.map(async (displayId) => {
-      try {
-        const response = await fetch(
-          URLS.testCases(projectKey, { 'filter.eq.displayId': displayId, offset: 0, limit: 2 }),
-          { signal },
-        );
-        return { displayId, testCase: adaptLiveLibraryCase(response, displayId) };
-      } catch {
-        return { displayId, testCase: null };
-      }
-    }),
+): Promise<LiveLibraryCasesPage> => {
+  const response: unknown = await fetch(
+    URLS.testCases(projectKey, { 'filter.eq.iterationId': iterationId, offset, limit }),
+    { signal },
   );
+  const page = adaptLiveLibraryCases(response);
+  if (
+    !page ||
+    page.cases.length > limit ||
+    (!page.cases.length && offset < page.totalElements)
+  ) {
+    throw new Error('Invalid Review case page');
+  }
+  return page;
+};

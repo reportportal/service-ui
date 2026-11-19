@@ -18,6 +18,15 @@ import { defineMessages } from 'react-intl';
 
 export const messages = defineMessages({
   title: { id: 'GenerationReviewTraceChooser.title', defaultMessage: 'Fix round traces' },
+  caseLabel: { id: 'GenerationReviewTraceChooser.caseLabel', defaultMessage: 'Test case' },
+  casePlaceholder: {
+    id: 'GenerationReviewTraceChooser.casePlaceholder',
+    defaultMessage: 'Select a test case',
+  },
+  caseOption: {
+    id: 'GenerationReviewTraceChooser.caseOption',
+    defaultMessage: '{displayId} — {name}',
+  },
   load: { id: 'GenerationReviewTraceChooser.load', defaultMessage: 'Choose a fix round trace' },
   refresh: {
     id: 'GenerationReviewTraceChooser.refresh',
@@ -38,13 +47,11 @@ export const messages = defineMessages({
   },
   incomplete: {
     id: 'GenerationReviewTraceChooser.incomplete',
-    defaultMessage:
-      'Some test case histories or result iterations could not be resolved. Refresh to try again.',
+    defaultMessage: 'The test case history or a result iteration could not be resolved. Try again.',
   },
-  unsupported: {
-    id: 'GenerationReviewTraceChooser.unsupported',
-    defaultMessage:
-      'No resolvable test case references, or too many references to load at once. Open the test case review in Library to view its fix round.',
+  noCases: {
+    id: 'GenerationReviewTraceChooser.noCases',
+    defaultMessage: 'No test cases are available on this page.',
   },
   unresolved: {
     id: 'GenerationReviewTraceChooser.unresolved',

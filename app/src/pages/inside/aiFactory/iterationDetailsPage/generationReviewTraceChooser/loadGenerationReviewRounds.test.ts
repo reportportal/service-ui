@@ -15,7 +15,6 @@
  */
 
 import { getLiveFixTraceTarget } from 'pages/inside/aiFactory/common/stageTrace/liveFixTraceTarget';
-import { getLiveLibraryCases } from 'pages/inside/aiFactory/iterationDetailsPage/liveReviewCases/liveLibraryCases';
 import {
   loadLiveFixRoundHistory,
   type NativeFixRound,
@@ -24,9 +23,6 @@ import { loadGenerationReviewRounds } from './loadGenerationReviewRounds';
 
 jest.mock('pages/inside/aiFactory/common/stageTrace/liveFixTraceTarget', () => ({
   getLiveFixTraceTarget: jest.fn(),
-}));
-jest.mock('pages/inside/aiFactory/iterationDetailsPage/liveReviewCases/liveLibraryCases', () => ({
-  getLiveLibraryCases: jest.fn(),
 }));
 jest.mock('pages/inside/aiFactory/review/liveFixRounds', () => ({
   loadLiveFixRoundHistory: jest.fn(),
@@ -45,7 +41,6 @@ const round: NativeFixRound = {
 const target = { id: 72, pipelineId: 88, number: 3, stageKey: 'test-case-fix' };
 beforeEach(() => {
   jest.clearAllMocks();
-  jest.mocked(getLiveLibraryCases).mockResolvedValue([{ displayId: 'TC1', testCase }]);
   jest.mocked(loadLiveFixRoundHistory).mockResolvedValue([round]);
   jest.mocked(getLiveFixTraceTarget).mockResolvedValue(target);
 });
@@ -53,7 +48,7 @@ beforeEach(() => {
 test('keeps every matching round in backend order, including a failed result and a timeout without a result', async () => {
   const timeout = { ...round, id: 124, roundNumber: 10, resultIterationId: undefined };
   jest.mocked(loadLiveFixRoundHistory).mockResolvedValue([timeout, round]);
-  const result = await loadGenerationReviewRounds('demo', ['TC1'], source, signal);
+  const result = await loadGenerationReviewRounds('demo', testCase, source, signal);
   expect(result).toEqual({
     rounds: [
       { ...timeout, roundId: 124, displayId: 'TC1' },
@@ -76,7 +71,7 @@ test.each([undefined, 99])(
   'requires an explicit matching source iteration (%s)',
   async (previousIterationId) => {
     jest.mocked(loadLiveFixRoundHistory).mockResolvedValue([{ ...round, previousIterationId }]);
-    await expect(loadGenerationReviewRounds('demo', ['TC1'], source, signal)).resolves.toEqual({
+    await expect(loadGenerationReviewRounds('demo', testCase, source, signal)).resolves.toEqual({
       rounds: [],
       incomplete: false,
     });
@@ -91,46 +86,41 @@ test.each([
   undefined,
 ])('retains the round but does not expose an unverified result trace %#', async (resultTarget) => {
   jest.mocked(getLiveFixTraceTarget).mockResolvedValue(resultTarget);
-  const result = await loadGenerationReviewRounds('demo', ['TC1'], source, signal);
+  const result = await loadGenerationReviewRounds('demo', testCase, source, signal);
   expect(result.incomplete).toBe(true);
   expect(result.rounds).toEqual([
     { ...round, roundId: 123, displayId: 'TC1', traceUnavailable: true },
   ]);
 });
 
-test('deduplicates repeated cases and shared result reads without conflating per-case round numbers', async () => {
+test('deduplicates shared result reads for the selected case without conflating its rounds', async () => {
   jest
     .mocked(loadLiveFixRoundHistory)
     .mockResolvedValue([round, { ...round, id: 125, roundNumber: 8 }]);
-  const result = await loadGenerationReviewRounds('demo', ['TC1', 'TC1'], source, signal);
-  expect(getLiveLibraryCases).toHaveBeenCalledTimes(1);
+  const result = await loadGenerationReviewRounds('demo', testCase, source, signal);
   expect(loadLiveFixRoundHistory).toHaveBeenCalledTimes(1);
   expect(getLiveFixTraceTarget).toHaveBeenCalledTimes(1);
   expect(result.rounds.map(({ roundId }) => roundId)).toEqual([123, 125]);
 });
 
-test('distinguishes history access failure and unresolved cases from a successful empty history', async () => {
+test('distinguishes a case history access failure from a successful empty history', async () => {
   jest.mocked(loadLiveFixRoundHistory).mockResolvedValue([]);
-  await expect(loadGenerationReviewRounds('demo', ['TC1'], source, signal)).resolves.toEqual({
+  await expect(loadGenerationReviewRounds('demo', testCase, source, signal)).resolves.toEqual({
     rounds: [],
     incomplete: false,
   });
   jest.mocked(loadLiveFixRoundHistory).mockRejectedValue(new Error('Forbidden'));
-  await expect(loadGenerationReviewRounds('demo', ['TC1'], source, signal)).resolves.toEqual({
-    rounds: [],
-    incomplete: true,
-  });
-  jest.mocked(getLiveLibraryCases).mockResolvedValue([{ displayId: 'TC1', testCase: null }]);
-  await expect(loadGenerationReviewRounds('demo', ['TC1'], source, signal)).resolves.toEqual({
-    rounds: [],
-    incomplete: true,
-  });
+  await expect(loadGenerationReviewRounds('demo', testCase, source, signal)).rejects.toThrow(
+    'Forbidden',
+  );
 });
 
 test('does not read histories after cancellation', async () => {
   const controller = new AbortController();
   controller.abort();
-  await loadGenerationReviewRounds('demo', ['TC1'], source, controller.signal);
+  await expect(
+    loadGenerationReviewRounds('demo', testCase, source, controller.signal),
+  ).rejects.toMatchObject({ name: 'AbortError' });
   expect(loadLiveFixRoundHistory).not.toHaveBeenCalled();
   expect(getLiveFixTraceTarget).not.toHaveBeenCalled();
 });

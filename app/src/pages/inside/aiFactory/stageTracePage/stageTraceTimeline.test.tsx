@@ -236,15 +236,34 @@ const contentState = (attempt: number): StageTraceState => {
       id: 31,
       pipelineId: 7,
       iterationNumber: 3,
-      stages: [{ id: 1, stageKey: 'fix', sequence: 1, attempt: 2 }],
+      stages: [
+        {
+          id: 1,
+          stageKey: 'fix',
+          sequence: 1,
+          attempt: 2,
+          sections: unitSections('Current checkout'),
+          attempts: [
+            {
+              attempt: 1,
+              status: 'FAILED',
+              sections: [
+                {
+                  key: 'units',
+                  title: 'Units',
+                  role: 'RESULT',
+                  columns: [{ key: 'duration', label: 'Duration', valueType: 'DURATION' }],
+                  rows: [{ key: 'case-1', cells: { unit: { value: 'Historic checkout' } } }],
+                },
+              ],
+            },
+          ],
+        },
+      ],
     },
     7,
     31,
   );
-  iteration.stages[0].sections = unitSections('Current checkout');
-  iteration.stages[0].attempts = [
-    { attempt: 1, status: 'FAILED', sections: unitSections('Historic checkout') },
-  ];
   return {
     scope: `project:31:fix:${attempt}`,
     loading: false,
