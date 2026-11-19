@@ -25,6 +25,7 @@ import type {
 import { LivePipelineSettingsButton } from '../pipelineSettings';
 import { IterationProvenance } from './iterationProvenance';
 import { KpiTile } from './kpiTile';
+import { LiveStageRetryAction } from './liveStageRetryAction';
 import { StageTraceAction } from './stageTraceAction/stageTraceAction';
 import {
   IterationStageTraceEntry,
@@ -907,4 +908,52 @@ describe('ReducedIterationDetails', () => {
     expect(wrapper.find('.meta')).toHaveLength(0);
     expect(wrapper.find('.attributes')).toHaveLength(0);
   });
+});
+
+describe('stage retry availability', () => {
+  const create: ReducedPipelineDetailStage = {
+    id: 41,
+    key: 'create',
+    stageKey: 'create',
+    label: 'Create',
+    sequence: 1,
+    status: 'FAILED',
+    ownedBy: 'PIPELINE',
+    retryable: true,
+    attempt: 1,
+  };
+
+  test('offers separate actions for retryable failed generation Create and Upload stages', () => {
+    const stages: ReducedPipelineDetailStage[] = [
+      create,
+      { ...create, id: 42, key: 'upload', stageKey: 'upload', label: 'Upload', sequence: 2 },
+      { ...create, id: 43, key: 'review', stageKey: 'review', label: 'Review', sequence: 3 },
+      { ...create, id: 44, ownedBy: 'REPORTPORTAL', sequence: 4 },
+      { ...create, id: 45, status: 'PENDING', sequence: 5 },
+      { ...create, id: 46, retryable: false, sequence: 6 },
+    ];
+    const wrapper = renderTraceDetail(stages, {
+      projectKey: 'demo',
+      canRetryStages: true,
+      iteration: detail({ pipelineType: 'TEST_CASE_GENERATION', stages }),
+    });
+
+    expect(wrapper.find('button').find(LiveStageRetryAction)).toHaveLength(0);
+    const retryStageIds = (wrapper.find(LiveStageRetryAction) as unknown as TestNodes).map(
+      (action) => action.prop('stageId') as number,
+    );
+    expect(retryStageIds).toEqual([41, 42]);
+  });
+
+  test.each([false, true])(
+    'requires project identity and permission (permission=%s)',
+    (canRetryStages) => {
+      const wrapper = renderTraceDetail([create], {
+        iteration: detail({ pipelineType: 'TEST_CASE_GENERATION', stages: [create] }),
+        canRetryStages,
+        projectKey: canRetryStages ? undefined : 'demo',
+      });
+      expect(wrapper.find(LiveStageRetryAction)).toHaveLength(0);
+    },
+  );
 });

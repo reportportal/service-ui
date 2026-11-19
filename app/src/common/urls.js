@@ -475,6 +475,8 @@ export const URLS = {
     `${urlBase}project/${projectKey}/pipeline/iteration/${iterationId}/stage/${encodeURIComponent(stageKey)}/trace${getQueryParams(attempt === undefined ? {} : { attempt })}`,
   pipelineStageTraceAttempts: (projectKey, iterationId, stageKey) =>
     `${urlBase}project/${projectKey}/pipeline/iteration/${iterationId}/stage/${encodeURIComponent(stageKey)}/trace/attempts`,
+  retryPipelineStage: (projectKey, iterationId, stageId) =>
+    `${urlBase}project/${encodeURIComponent(projectKey)}/pipeline/iteration/${iterationId}/stage/${stageId}/retry`,
   pipelineIterationComparison: (projectKey, iterationId, withIterationId) =>
     `${urlBase}project/${projectKey}/pipeline/iteration/${iterationId}/compare${getQueryParams({
       with: withIterationId,

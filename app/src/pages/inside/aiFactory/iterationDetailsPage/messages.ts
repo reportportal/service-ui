@@ -303,6 +303,30 @@ export const messages = defineMessages({
     id: 'IterationDetailsPage.retryStage',
     defaultMessage: 'Retry {stage}',
   },
+  stageRetryRequested: {
+    id: 'IterationDetailsPage.stageRetryRequested',
+    defaultMessage: 'Retry requested.',
+  },
+  stageRetryUnavailable: {
+    id: 'IterationDetailsPage.stageRetryUnavailable',
+    defaultMessage: 'This stage cannot be retried. Check its status and CI integration.',
+  },
+  stageRetryForbidden: {
+    id: 'IterationDetailsPage.stageRetryForbidden',
+    defaultMessage: 'You do not have permission to retry this stage.',
+  },
+  stageRetryNotFound: {
+    id: 'IterationDetailsPage.stageRetryNotFound',
+    defaultMessage: 'This stage could not be found. Refresh the iteration.',
+  },
+  stageRetryConflict: {
+    id: 'IterationDetailsPage.stageRetryConflict',
+    defaultMessage: 'This stage is already running or being retried.',
+  },
+  stageRetryUnconfirmed: {
+    id: 'IterationDetailsPage.stageRetryUnconfirmed',
+    defaultMessage: 'Retry could not be confirmed. Check the CI run and refresh the iteration.',
+  },
   uploadRollbackWarning: {
     id: 'IterationDetailsPage.uploadRollbackWarning',
     defaultMessage: '{reason}. Upload is all or nothing: the Library is unchanged.',

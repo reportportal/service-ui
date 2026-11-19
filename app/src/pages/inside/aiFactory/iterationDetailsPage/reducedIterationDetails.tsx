@@ -49,6 +49,7 @@ import {
 } from './stageTraceAction/iterationStageTraceEntry';
 import { PageHeaderWithBreadcrumbsAndActions } from '../../common/pageHeaderWithBreadcrumbsAndActions';
 import { KpiTile } from './kpiTile';
+import { LiveStageRetryAction } from './liveStageRetryAction';
 import { CaseLink } from './stagePanels/caseLink';
 import { messages } from './messages';
 import stageCardStyles from './stageCards/stageCards.scss';
@@ -103,6 +104,7 @@ export interface ReducedIterationDetailsProps {
   onBack?: () => void;
   onCompare?: (pipelineId: number, iterationId: number) => void;
   projectKey?: string;
+  canRetryStages?: boolean;
 }
 
 type GenerationStageKind = 'create' | 'grade' | 'upload';
@@ -429,11 +431,24 @@ const buildReducedKpis = (
   return kpis;
 };
 
+interface StageRetryOptions {
+  projectKey: string;
+  disabled: boolean;
+  onRefresh: () => void;
+}
+
+const isRetryableStage = (stage: ReducedPipelineDetailStage) =>
+  stage.retryable === true &&
+  stage.ownedBy === 'PIPELINE' &&
+  stage.status === 'FAILED' &&
+  ['create', 'upload'].includes(stage.stageKey?.toLowerCase() ?? '');
+
 const renderReducedStageCards = (
   iteration: ReducedPipelineIterationDetail,
   currentStage: ReducedPipelineDetailStage | undefined,
   onSelect: (stageId: number) => void,
   formatMessage: ReturnType<typeof useIntl>['formatMessage'],
+  stageRetry?: StageRetryOptions,
 ) => {
   return (
     <section className={cx('stage-card-section')}>
@@ -454,51 +469,64 @@ const renderReducedStageCards = (
                     →
                   </span>
                 )}
-                <button
-                  type="button"
-                  className={cardCx('stage-cards__item', {
-                    'stage-cards__item--selected': stage.id === currentStage?.id,
-                  })}
-                  aria-pressed={stage.id === currentStage?.id}
-                  onClick={() => onSelect(stage.id)}
-                  data-automation-id={`reducedStageCard-${stage.id}`}
-                >
-                  <span className={cardCx('stage-cards__item-header')}>
-                    <strong className={cardCx('stage-cards__item-label')}>{stage.label}</strong>
-                    <span
-                      className={cx(
-                        'reduced-stage__status',
-                        `reduced-stage__status--${getReducedStatusVariant(stage.status)}`,
-                      )}
-                    >
-                      {stage.statusText ?? formatMessage(messages[STATUS_MESSAGES[stage.status]])}
-                    </span>
-                  </span>
-                  {stage.message && (
-                    <span className={cardCx('stage-cards__item-summary')}>{stage.message}</span>
-                  )}
-                  {stage.summary && (
-                    <span className={cardCx('stage-cards__item-description')}>{stage.summary}</span>
-                  )}
-                  {stage.attributes
-                    ?.filter(({ type }) => type === 'META')
-                    .map((attribute) => (
-                      <span key={attribute.key} className={cardCx('stage-cards__item-description')}>
-                        {attribute.label ?? attribute.key}: {attribute.value}
+                <div className={cx('reduced-stage-card')}>
+                  <button
+                    type="button"
+                    className={cardCx('stage-cards__item', {
+                      'stage-cards__item--selected': stage.id === currentStage?.id,
+                    })}
+                    aria-pressed={stage.id === currentStage?.id}
+                    onClick={() => onSelect(stage.id)}
+                    data-automation-id={`reducedStageCard-${stage.id}`}
+                  >
+                    <span className={cardCx('stage-cards__item-header')}>
+                      <strong className={cardCx('stage-cards__item-label')}>{stage.label}</strong>
+                      <span
+                        className={cx(
+                          'reduced-stage__status',
+                          `reduced-stage__status--${getReducedStatusVariant(stage.status)}`,
+                        )}
+                      >
+                        {stage.statusText ?? formatMessage(messages[STATUS_MESSAGES[stage.status]])}
                       </span>
-                    ))}
-                  {suiteScore !== undefined && <ScoreBar value={suiteScore} max={100} />}
-                  {readyCount !== undefined && totalCount !== undefined && (
-                    <ScoreBar value={readyCount} max={totalCount} />
-                  )}
-                  {(stage.durationMs !== undefined || stageCost !== undefined) && (
-                    <span className={cardCx('stage-cards__item-footer')}>
-                      {stage.durationMs !== undefined ? formatDuration(stage.durationMs) : ''}
-                      {stage.durationMs !== undefined && stageCost !== undefined ? ' · ' : ''}
-                      {stageCost !== undefined ? formatCost(stageCost) : ''}
                     </span>
+                    {stage.message && (
+                      <span className={cardCx('stage-cards__item-summary')}>{stage.message}</span>
+                    )}
+                    {stage.summary && (
+                      <span className={cardCx('stage-cards__item-description')}>{stage.summary}</span>
+                    )}
+                    {stage.attributes
+                      ?.filter(({ type }) => type === 'META')
+                      .map((attribute) => (
+                        <span key={attribute.key} className={cardCx('stage-cards__item-description')}>
+                          {attribute.label ?? attribute.key}: {attribute.value}
+                        </span>
+                      ))}
+                    {suiteScore !== undefined && <ScoreBar value={suiteScore} max={100} />}
+                    {readyCount !== undefined && totalCount !== undefined && (
+                      <ScoreBar value={readyCount} max={totalCount} />
+                    )}
+                    {(stage.durationMs !== undefined || stageCost !== undefined) && (
+                      <span className={cardCx('stage-cards__item-footer')}>
+                        {stage.durationMs !== undefined ? formatDuration(stage.durationMs) : ''}
+                        {stage.durationMs !== undefined && stageCost !== undefined ? ' · ' : ''}
+                        {stageCost !== undefined ? formatCost(stageCost) : ''}
+                      </span>
+                    )}
+                  </button>
+                  {stageRetry && isRetryableStage(stage) && (
+                    <LiveStageRetryAction
+                      key={`${stageRetry.projectKey}:${iteration.id}:${stage.id}:${stage.attempt}`}
+                      projectKey={stageRetry.projectKey}
+                      iterationId={iteration.id}
+                      stageId={stage.id}
+                      stageLabel={stage.label}
+                      disabled={stageRetry.disabled}
+                      onRefresh={stageRetry.onRefresh}
+                    />
                   )}
-                </button>
+                </div>
               </div>
             );
           })}
@@ -706,6 +734,7 @@ export const ReducedIterationDetails = ({
   onBack,
   onCompare,
   projectKey,
+  canRetryStages = false,
 }: ReducedIterationDetailsProps) => {
   const { formatMessage } = useIntl();
   const [selectedStageId, setSelectedStageId] = useState<number | null>(null);
@@ -857,7 +886,15 @@ export const ReducedIterationDetails = ({
               {warning}
             </p>
           ))}
-          {renderReducedStageCards(iteration, currentStage, setSelectedStageId, formatMessage)}
+          {renderReducedStageCards(
+            iteration,
+            currentStage,
+            setSelectedStageId,
+            formatMessage,
+            canRetryStages && projectKey && iteration.pipelineType === 'TEST_CASE_GENERATION'
+              ? { projectKey, disabled: isLoading, onRefresh: onRetry }
+              : undefined,
+          )}
           {currentStage &&
             renderReducedStagePanel(
               currentStage,

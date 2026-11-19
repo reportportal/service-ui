@@ -19,6 +19,7 @@ import {
   canReviewAiTestCases,
   canAutomateTestCases,
   canManagePipelineSettings,
+  canRetryPipelineStages,
 } from './permissions';
 
 const roles = (
@@ -33,6 +34,7 @@ describe('AI Factory permissions (F15)', () => {
 
     expect(canReviewAiTestCases(userRoles)).toBe(true);
     expect(canAutomateTestCases(userRoles)).toBe(true);
+    expect(canRetryPipelineStages(userRoles)).toBe(true);
     expect(canManagePipelineSettings(userRoles)).toBe(true);
   });
 
@@ -41,6 +43,7 @@ describe('AI Factory permissions (F15)', () => {
 
     expect(canReviewAiTestCases(userRoles)).toBe(true);
     expect(canAutomateTestCases(userRoles)).toBe(true);
+    expect(canRetryPipelineStages(userRoles)).toBe(true);
     expect(canManagePipelineSettings(userRoles)).toBe(true);
   });
 
@@ -49,6 +52,7 @@ describe('AI Factory permissions (F15)', () => {
 
     expect(canReviewAiTestCases(userRoles)).toBe(true);
     expect(canAutomateTestCases(userRoles)).toBe(true);
+    expect(canRetryPipelineStages(userRoles)).toBe(true);
     expect(canManagePipelineSettings(userRoles)).toBe(false);
   });
 
@@ -57,6 +61,7 @@ describe('AI Factory permissions (F15)', () => {
 
     expect(canReviewAiTestCases(userRoles)).toBe(false);
     expect(canAutomateTestCases(userRoles)).toBe(false);
+    expect(canRetryPipelineStages(userRoles)).toBe(false);
     expect(canManagePipelineSettings(userRoles)).toBe(false);
   });
 });
