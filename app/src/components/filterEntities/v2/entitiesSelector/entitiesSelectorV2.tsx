@@ -226,7 +226,9 @@ export const EntitiesSelectorV2 = ({ entities, onChange }: EntitiesSelectorV2Pro
                     onClick={() => handleSelect(option)}
                   >
                     {option.entity.meta?.subItem && <SubLevelIcon className={cx('sub-icon')} />}
-                    <span className={cx('option-label')}>{getEntityLabel(option.entity)}</span>
+                    <span className={cx('option-label')} title={getEntityLabel(option.entity)}>
+                      {getEntityLabel(option.entity)}
+                    </span>
                   </button>
                 ))}
               </Scrollbars>
