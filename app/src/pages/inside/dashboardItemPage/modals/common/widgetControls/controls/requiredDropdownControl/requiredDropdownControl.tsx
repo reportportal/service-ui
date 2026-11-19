@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { ComponentProps } from 'react';
+import { ComponentProps, useId } from 'react';
 import { Dropdown, FieldLabel } from '@reportportal/ui-kit';
 import { createClassnames } from 'common/utils';
 import styles from './requiredDropdownControl.scss';
@@ -30,16 +30,34 @@ type RequiredDropdownControlProps = Omit<DropdownProps, 'label' | 'value' | 'onC
   };
 
 // ui-kit Dropdown only highlights an invalid state: it shows neither the error text
-// nor the required asterisk, so both are rendered here.
+// nor the required asterisk, so both are rendered here. The Dropdown trigger accepts no
+// aria attributes, so the name and the error are attached to the wrapping group instead.
 export const RequiredDropdownControl = ({
   label,
   error,
   touched,
   ...rest
-}: RequiredDropdownControlProps) => (
-  <div>
-    <FieldLabel isRequired>{label}</FieldLabel>
-    <Dropdown error={error} touched={touched} {...(rest as DropdownProps)} />
-    {error && touched && <div className={cx('error')}>{error}</div>}
-  </div>
-);
+}: RequiredDropdownControlProps) => {
+  const id = useId();
+  const labelId = `${id}-label`;
+  const errorId = `${id}-error`;
+  const isErrorVisible = Boolean(error && touched);
+
+  return (
+    <div
+      role="group"
+      aria-labelledby={labelId}
+      aria-describedby={isErrorVisible ? errorId : undefined}
+    >
+      <FieldLabel id={labelId} isRequired>
+        {label}
+      </FieldLabel>
+      <Dropdown error={error} touched={touched} {...(rest as DropdownProps)} />
+      {isErrorVisible && (
+        <div id={errorId} role="alert" className={cx('error')}>
+          {error}
+        </div>
+      )}
+    </div>
+  );
+};

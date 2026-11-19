@@ -21,7 +21,7 @@ import { messages as widgetControlsMessages } from './messages';
 import { connect } from 'react-redux';
 import { defectTypesSelector } from 'controllers/project';
 import { FieldText, FieldNumber, Checkbox } from '@reportportal/ui-kit';
-import { RadioGroupControl, CriteriaFieldControl } from './controls';
+import { RadioGroupControl, CriteriaFieldControl, FiltersControlV2 } from './controls';
 import { FieldProvider } from 'components/fields/fieldProvider';
 import { FieldErrorHint } from 'components/fields';
 import { commonValidators } from 'common/utils/validation';
@@ -30,7 +30,6 @@ import classNames from 'classnames/bind';
 import { getWidgetCriteriaOptions } from './utils/getWidgetCriteriaOptions';
 import { getWidgetModeOptions } from './utils/getWidgetModeOptions';
 import { LAUNCH_STATUSES_OPTIONS, GROUPED_DEFECT_TYPES_OPTIONS } from './constants';
-import { FiltersControlV2 } from './controls';
 import styles from './widgetControls.scss';
 
 const cx = classNames.bind(styles);
