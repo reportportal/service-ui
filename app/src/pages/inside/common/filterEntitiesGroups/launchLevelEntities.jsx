@@ -153,7 +153,7 @@ const messages = defineMessages({
   },
   LAUNCH_NAME_PLACEHOLDER: {
     id: 'LaunchLevelEntities.launchName.placeholder',
-    defaultMessage: 'Enter name',
+    defaultMessage: 'Enter launch name',
   },
   ExecutionTypeTitle: {
     id: 'LaunchLevelEntities.ExecutionTypeTitle',

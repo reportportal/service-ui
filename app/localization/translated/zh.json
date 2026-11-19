@@ -1528,7 +1528,7 @@
   "LaunchLevelEntities.descriptionStepLevelEntityHint": "描述文本的长度应为1到256个字符",
   "LaunchLevelEntities.entityItemStatistics.placeholder": "请输入数量",
   "LaunchLevelEntities.itemNameEntityHint": "至少需要3个符号",
-  "LaunchLevelEntities.launchName.placeholder": "请输入名称",
+  "LaunchLevelEntities.launchName.placeholder": "请输入测试任务名称",
   "LaunchLevelEntities.launchNumberEntityHint": "此过滤器仅接受数字",
   "LaunchLevelEntities.launchNumberPlaceholder": "请输入编号",
   "LaunchLevelEntities.ownerName.placeholder": "请输入所有者姓名（至少3个字符）",
