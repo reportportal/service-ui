@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import React, { useState, useEffect, useMemo, useRef, useCallback } from 'react';
+import React, { useState, useEffect, useMemo, useRef } from 'react';
 import isEqual from 'fast-deep-equal';
 import { useSelector } from 'react-redux';
 import { useIntl } from 'react-intl';
@@ -64,17 +64,10 @@ export const WidgetInfoBlock = ({
   const [loading, setLoading] = useState(false);
   const [widgetData, setWidgetData] = useState<object | null>(null);
 
-  // Only the latest preview request may update the state: a response that arrives after
-  // the filter was changed or cleared must not bring the old preview back.
-  const requestIdRef = useRef(0);
-  const cancelPendingFetchRef = useRef<(() => void) | null>(null);
-
-  // Debounced fetch, recreated only when projectKey changes
+  // Debounced fetch, recreated only when projectKey changes; no refs read inside the callback
   const fetchWidget = useMemo(
     () =>
       debounce((ws: WidgetSettings) => {
-        requestIdRef.current += 1;
-        const requestId = requestIdRef.current;
         setLoading(true);
         setWidgetData(null);
         fetch(URLS.widgetPreview(projectKey), {
@@ -82,32 +75,15 @@ export const WidgetInfoBlock = ({
           data: ws,
         })
           .then((widget: object) => {
-            if (requestId !== requestIdRef.current) return;
             setLoading(false);
             setWidgetData({ content: widget, ...ws });
           })
           .catch(() => {
-            if (requestId !== requestIdRef.current) return;
             setLoading(false);
             setWidgetData(null);
           });
       }, 300),
     [projectKey],
-  );
-
-  const resetPreview = useCallback(() => {
-    cancelPendingFetchRef.current?.();
-    requestIdRef.current += 1;
-    setLoading(false);
-    setWidgetData(null);
-  }, []);
-
-  useEffect(
-    () => () => {
-      cancelPendingFetchRef.current?.();
-      requestIdRef.current += 1;
-    },
-    [],
   );
 
   const isMountedRef = useRef(false);
@@ -154,16 +130,17 @@ export const WidgetInfoBlock = ({
     const newData = { filterIds, filters, contentParameters };
 
     if (customCondition && !isEqual(prevData, newData)) {
-      const hasPreviewSource = filterIds.length || contentParameters?.widgetOptions?.launchNameFilter;
+      const hasPreviewSource =
+        filterIds.length || contentParameters?.widgetOptions?.launchNameFilter;
 
       if (!hasPreviewSource) {
-        // the filter was cleared: drop any pending/loaded preview and show the default one
-        resetPreview();
+        setLoading(false);
+        setWidgetData(null);
       } else if (!WIDGETS_STATIC_PREVIEWS[activeWidget?.id ?? '']) {
-        cancelPendingFetchRef.current = fetchWidget(widgetSettings);
+        fetchWidget(widgetSettings);
       }
     }
-  }, [activeWidget?.id, widgetSettings, customCondition, fetchWidget, resetPreview]);
+  }, [activeWidget?.id, widgetSettings, customCondition, fetchWidget]);
 
   return (
     activeWidget?.id && (
