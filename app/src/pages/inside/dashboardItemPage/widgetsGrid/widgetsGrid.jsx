@@ -127,7 +127,12 @@ export class WidgetsGrid extends Component {
   };
 
   onDragStop = (newLayout, oldWidgetPosition, newWidgetPosition) => {
-    this.props.tracking.trackEvent(WIDGETS_EVENTS.ON_DRAG_WIDGET);
+    const widgetMoved =
+      oldWidgetPosition.x !== newWidgetPosition.x || oldWidgetPosition.y !== newWidgetPosition.y;
+    // a click on a header control can start a drag that never leaves the cell
+    if (widgetMoved) {
+      this.props.tracking.trackEvent(WIDGETS_EVENTS.ON_DRAG_WIDGET);
+    }
     this.onGridItemChange(newLayout, oldWidgetPosition, newWidgetPosition);
   };
 
@@ -240,6 +245,7 @@ export class WidgetsGrid extends Component {
       onDragStop={this.onDragStop}
       onResizeStart={this.onResizeStart}
       onResizeStop={this.onResizeStop}
+      draggableCancel="button"
       cols={cols}
       isDraggable={this.props.isModifiable}
       isResizable={this.props.isModifiable}
