@@ -44,8 +44,8 @@ export const RequiredDropdownControl = ({
   const isErrorVisible = Boolean(error && touched);
 
   return (
-    <div
-      role="group"
+    <fieldset
+      className={cx('group')}
       aria-labelledby={labelId}
       aria-describedby={isErrorVisible ? errorId : undefined}
     >
@@ -58,6 +58,6 @@ export const RequiredDropdownControl = ({
           {error}
         </div>
       )}
-    </div>
+    </fieldset>
   );
 };
