@@ -91,11 +91,8 @@ export const readLegacyGradeReport = (
   if (!message) return undefined;
 
   const fullMessage = message.details.find(({ heading }) => heading === 'Message')?.items[0];
-  const text = fullMessage ?? message.cells.action;
-  const json = text
-    ?.replace(/^Message — /, '')
-    .trim()
-    .match(/^```json\s+(\{[\s\S]*\})\s*```$/)?.[1];
+  const text = (fullMessage ?? message.cells.action ?? '').replace(/^Message — /, '').trim();
+  const json = /^```json\s+(\{[\s\S]*\})\s*```$/.exec(text)?.[1];
   if (!json) return undefined;
 
   try {
