@@ -21,7 +21,7 @@ import { messages as widgetControlsMessages } from './messages';
 import { connect } from 'react-redux';
 import { defectTypesSelector } from 'controllers/project';
 import { FieldText, FieldNumber, Checkbox } from '@reportportal/ui-kit';
-import { RadioGroupControl, RequiredDropdownControl } from './controls';
+import { RadioGroupControl, CriteriaFieldControl } from './controls';
 import { FieldProvider } from 'components/fields/fieldProvider';
 import { FieldErrorHint } from 'components/fields';
 import { commonValidators } from 'common/utils/validation';
@@ -130,20 +130,14 @@ export class LaunchStatisticsControls extends Component {
         </FieldProvider>
         {!formAppearance.isMainControlsLocked && (
           <Fragment>
-            <FieldProvider
-              name="contentParameters.contentFields"
+            <CriteriaFieldControl
+              label={formatMessage(messages.CriteriaFieldLabel)}
+              options={this.criteria}
               validate={commonValidators.createWidgetContentFieldsValidator(
                 formatMessage(messages.ContentFieldsValidationError),
               )}
-            >
-              <RequiredDropdownControl
-                label={formatMessage(messages.CriteriaFieldLabel)}
-                multiSelect
-                isOptionAllVisible
-                options={this.criteria}
-                disabled={disabled || isMainControlsDisabled}
-              />
-            </FieldProvider>
+              disabled={disabled || isMainControlsDisabled}
+            />
             <FieldProvider
               name="contentParameters.itemsCount"
               validate={commonValidators.createNumberOfLaunchesValidator(

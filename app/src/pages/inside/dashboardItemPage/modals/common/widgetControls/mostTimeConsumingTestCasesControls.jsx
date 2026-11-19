@@ -26,7 +26,7 @@ import { projectKeySelector } from 'controllers/project';
 import { Checkbox } from '@reportportal/ui-kit';
 import { getWidgetCriteriaOptions } from './utils/getWidgetCriteriaOptions';
 import { PASSED_FAILED_LAUNCHES_OPTIONS } from './constants';
-import { RadioGroupControl, LaunchNameControl, RequiredDropdownControl } from './controls';
+import { RadioGroupControl, LaunchNameControl, CriteriaFieldControl } from './controls';
 import { getWidgetModeOptions } from './utils/getWidgetModeOptions';
 
 const messages = defineMessages({
@@ -108,18 +108,12 @@ export class MostTimeConsumingTestCasesControls extends Component {
 
     return (
       <Fragment>
-        <FieldProvider
-          name="contentParameters.contentFields"
+        <CriteriaFieldControl
+          label={formatMessage(messages.CriteriaFieldLabel)}
+          options={this.criteria}
           validate={validators.contentFields(formatMessage)}
-        >
-          <RequiredDropdownControl
-            label={formatMessage(messages.CriteriaFieldLabel)}
-            multiSelect
-            isOptionAllVisible
-            options={this.criteria}
-            disabled={isMainControlsDisabled}
-          />
-        </FieldProvider>
+          disabled={isMainControlsDisabled}
+        />
         <FieldProvider
           name="contentParameters.widgetOptions.launchNameFilter"
           validate={validators.launchNames(formatMessage)}

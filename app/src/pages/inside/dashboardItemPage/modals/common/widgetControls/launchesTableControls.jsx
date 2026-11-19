@@ -38,7 +38,7 @@ import {
   DEFECT_TYPES_GROUPS_OPTIONS,
   STATIC_CRITERIA,
 } from './constants';
-import { FiltersControlV2, RequiredDropdownControl } from './controls';
+import { FiltersControlV2, CriteriaFieldControl } from './controls';
 import { createClassnames } from 'common/utils';
 import styles from './widgetControls.scss';
 
@@ -166,22 +166,14 @@ export class LaunchesTableControls extends Component {
         </FieldProvider>
         {!formAppearance.isMainControlsLocked && (
           <Fragment>
-            <FieldProvider
-              name="contentParameters.contentFields"
+            <CriteriaFieldControl
+              label={formatMessage(messages.CriteriaFieldLabel)}
+              options={this.criteria}
               parse={this.parseContentFields}
               format={this.formatContentFields}
-              validate={contentFieldsValidator(
-                formatMessage(messages.ContentFieldsValidationError),
-              )}
-            >
-              <RequiredDropdownControl
-                label={formatMessage(messages.CriteriaFieldLabel)}
-                multiSelect
-                isOptionAllVisible
-                options={this.criteria}
-                disabled={disabled || isMainControlsDisabled}
-              />
-            </FieldProvider>
+              validate={contentFieldsValidator(formatMessage(messages.ContentFieldsValidationError))}
+              disabled={disabled || isMainControlsDisabled}
+            />
             <FieldProvider
               name="contentParameters.itemsCount"
               validate={commonValidators.createNumberOfLaunchesValidator(

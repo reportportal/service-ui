@@ -29,7 +29,7 @@ import { CHART_MODES, MODES_VALUES } from 'common/constants/chartModes';
 import { getWidgetCriteriaOptions } from './utils/getWidgetCriteriaOptions';
 import { getWidgetModeOptions } from './utils/getWidgetModeOptions';
 import { LAUNCH_STATUSES_OPTIONS, DEFECT_TYPES_OPTIONS } from './constants';
-import { FiltersControlV2, RadioGroupControl, RequiredDropdownControl } from './controls';
+import { FiltersControlV2, RadioGroupControl, CriteriaFieldControl } from './controls';
 import styles from './overallStatisticsControls.scss';
 
 const cx = classNames.bind(styles);
@@ -143,20 +143,14 @@ export class OverallStatisticsControls extends Component {
         </FieldProvider>
         {!formAppearance.isMainControlsLocked && (
           <Fragment>
-            <FieldProvider
-              name="contentParameters.contentFields"
+            <CriteriaFieldControl
+              label={formatMessage(messages.CriteriaFieldLabel)}
+              options={this.criteria}
               validate={commonValidators.createWidgetContentFieldsValidator(
                 formatMessage(messages.ContentFieldsValidationError),
               )}
-            >
-              <RequiredDropdownControl
-                label={formatMessage(messages.CriteriaFieldLabel)}
-                multiSelect
-                isOptionAllVisible
-                options={this.criteria}
-                disabled={disabled || isMainControlsDisabled}
-              />
-            </FieldProvider>
+              disabled={disabled || isMainControlsDisabled}
+            />
             <FieldProvider
               name="contentParameters.itemsCount"
               validate={commonValidators.createNumberOfLaunchesValidator(

@@ -21,9 +21,13 @@ import styles from './requiredDropdownControl.scss';
 
 const cx = createClassnames(styles);
 
-type RequiredDropdownControlProps = Omit<ComponentProps<typeof Dropdown>, 'label'> & {
-  label: string;
-};
+type DropdownProps = ComponentProps<typeof Dropdown>;
+
+// value and onChange are injected by FieldProvider, so they are optional here.
+type RequiredDropdownControlProps = Omit<DropdownProps, 'label' | 'value' | 'onChange'> &
+  Partial<Pick<DropdownProps, 'value' | 'onChange'>> & {
+    label: string;
+  };
 
 // ui-kit Dropdown only highlights an invalid state: it shows neither the error text
 // nor the required asterisk, so both are rendered here.
@@ -35,7 +39,7 @@ export const RequiredDropdownControl = ({
 }: RequiredDropdownControlProps) => (
   <div>
     <FieldLabel isRequired>{label}</FieldLabel>
-    <Dropdown error={error} touched={touched} {...rest} />
+    <Dropdown error={error} touched={touched} {...(rest as DropdownProps)} />
     {error && touched && <div className={cx('error')}>{error}</div>}
   </div>
 );
