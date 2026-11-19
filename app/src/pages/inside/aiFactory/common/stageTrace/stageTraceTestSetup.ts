@@ -26,6 +26,29 @@ jest.mock('@reportportal/ui-kit', () => {
       onClick?: () => void;
       disabled?: boolean;
     }) => React.createElement('button', { onClick, disabled }, children),
+    Dropdown: ({
+      label,
+      onChange,
+      options,
+      value,
+    }: {
+      label: string;
+      onChange: (value: string) => void;
+      options: Array<{ value: string; label: string }>;
+      value?: string;
+    }) =>
+      React.createElement(
+        'select',
+        {
+          'aria-label': label,
+          value: value ?? '',
+          onChange: (event: React.ChangeEvent<HTMLSelectElement>) => onChange(event.target.value),
+        },
+        React.createElement('option', { value: '' }),
+        options.map((option) =>
+          React.createElement('option', { value: option.value, key: option.value }, option.label),
+        ),
+      ),
   };
 });
 jest.mock(

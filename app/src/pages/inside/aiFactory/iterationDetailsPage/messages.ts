@@ -99,6 +99,10 @@ export const messages = defineMessages({
     id: 'IterationDetailsPage.scoreDetails',
     defaultMessage: 'Score details',
   },
+  agentUnitColumn: {
+    id: 'IterationDetailsPage.agentUnitColumn',
+    defaultMessage: 'Unit',
+  },
   pipelinesBreadcrumb: {
     id: 'IterationDetailsPage.pipelinesBreadcrumb',
     defaultMessage: 'Pipelines',

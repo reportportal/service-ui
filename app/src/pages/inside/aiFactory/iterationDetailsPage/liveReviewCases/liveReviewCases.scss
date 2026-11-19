@@ -23,6 +23,13 @@
     scrollbar-width: thin;
   }
 
+  &__pagination {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 12px;
+  }
+
   table {
     width: 100%;
     border-collapse: collapse;

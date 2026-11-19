@@ -19,17 +19,13 @@ import { defineMessages } from 'react-intl';
 export const messages = defineMessages({
   title: { id: 'LiveReviewCases.title', defaultMessage: 'Library cases' },
   loading: { id: 'LiveReviewCases.loading', defaultMessage: 'Loading Library cases…' },
-  noReferences: {
-    id: 'LiveReviewCases.noReferences',
-    defaultMessage: 'This iteration does not provide linked Library cases.',
+  empty: {
+    id: 'LiveReviewCases.empty',
+    defaultMessage: 'No Library cases are linked to this iteration.',
   },
-  tooManyReferences: {
-    id: 'LiveReviewCases.tooManyReferences',
-    defaultMessage: 'Too many linked cases to load here. Open the Test Case Library.',
-  },
-  unresolved: {
-    id: 'LiveReviewCases.unresolved',
-    defaultMessage: 'This case could not be matched uniquely in the Library.',
+  error: {
+    id: 'LiveReviewCases.error',
+    defaultMessage: 'Could not load Library cases. Select Refresh to try again.',
   },
   caseColumn: { id: 'LiveReviewCases.caseColumn', defaultMessage: 'Test case' },
   nameColumn: { id: 'LiveReviewCases.nameColumn', defaultMessage: 'Name' },
@@ -39,4 +35,7 @@ export const messages = defineMessages({
   ready: { id: 'LiveReviewCases.ready', defaultMessage: 'Ready' },
   unavailable: { id: 'LiveReviewCases.unavailable', defaultMessage: '—' },
   refresh: { id: 'LiveReviewCases.refresh', defaultMessage: 'Refresh' },
+  previous: { id: 'LiveReviewCases.previous', defaultMessage: 'Previous' },
+  next: { id: 'LiveReviewCases.next', defaultMessage: 'Next' },
+  page: { id: 'LiveReviewCases.page', defaultMessage: 'Page {current} of {total}' },
 });

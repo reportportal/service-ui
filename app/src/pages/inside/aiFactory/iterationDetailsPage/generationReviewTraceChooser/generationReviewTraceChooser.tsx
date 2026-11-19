@@ -14,37 +14,37 @@
  * limitations under the License.
  */
 
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import { useIntl } from 'react-intl';
 import { useDispatch, useSelector } from 'react-redux';
-import { Button } from '@reportportal/ui-kit';
+import { Button, Dropdown } from '@reportportal/ui-kit';
 
 import { useAiFactoryEnabled } from 'controllers/aiFactory';
 import { urlOrganizationAndProjectSelector } from 'controllers/pages';
 import { createStageTraceAction } from 'pages/inside/aiFactory/common/stageTrace/navigation';
 import { useScopedTraceRequest } from 'pages/inside/aiFactory/common/stageTrace/useScopedTraceRequest';
+import { loadGenerationReviewRounds } from 'pages/inside/aiFactory/iterationDetailsPage/generationReviewTraceChooser/loadGenerationReviewRounds';
+import type { LiveLibraryCase } from 'pages/inside/aiFactory/iterationDetailsPage/liveReviewCases/liveLibraryCases';
 import { LiveFixRoundDetails } from 'pages/inside/aiFactory/review/liveFixRoundHistory/liveFixRoundDetails';
 import { ProjectDetails } from 'pages/organization/constants';
-
-import { loadGenerationReviewRounds } from './loadGenerationReviewRounds';
-import { messages } from './messages';
+import { messages } from 'pages/inside/aiFactory/iterationDetailsPage/generationReviewTraceChooser/messages';
 
 export interface GenerationReviewTraceChooserProps {
   projectKey: string;
-  displayIds: string[];
+  cases: LiveLibraryCase[];
   pipelineId: number;
   iterationId: number;
   stageKey?: string;
-  refreshIdentity?: object;
+  refreshVersion?: number | object;
 }
 
 export const GenerationReviewTraceChooser = ({
   projectKey,
-  displayIds,
+  cases,
   pipelineId,
   iterationId,
   stageKey,
-  refreshIdentity,
+  refreshVersion,
 }: GenerationReviewTraceChooserProps) => {
   const { formatMessage } = useIntl();
   const enabled = useAiFactoryEnabled();
@@ -52,40 +52,34 @@ export const GenerationReviewTraceChooser = ({
   const { organizationSlug, projectSlug } = useSelector(
     urlOrganizationAndProjectSelector,
   ) as ProjectDetails;
-  const idsKey = JSON.stringify([...new Set(displayIds)]);
+  const caseScope = useMemo(
+    () => ({ projectKey, pipelineId, iterationId, stageKey, organizationSlug, projectSlug }),
+    [projectKey, pipelineId, iterationId, stageKey, organizationSlug, projectSlug],
+  );
+  const [selection, setSelection] = useState<{ scope: object; value: string }>();
+  const selected = cases.find(
+    ({ id }) => selection?.scope === caseScope && String(id) === selection.value,
+  );
+  const testCase = selected ?? (cases.length === 1 ? cases[0] : undefined);
+  const caseId = testCase?.id;
+  const displayId = testCase?.displayId;
   const resource = useMemo(
-    () => ({
-      projectKey,
-      idsKey,
-      pipelineId,
-      iterationId,
-      stageKey,
-      refreshIdentity,
-      organizationSlug,
-      projectSlug,
-    }),
-    [
-      projectKey,
-      idsKey,
-      pipelineId,
-      iterationId,
-      stageKey,
-      refreshIdentity,
-      organizationSlug,
-      projectSlug,
-    ],
+    () => ({ caseScope, caseId, displayId, refreshVersion }),
+    [caseScope, caseId, displayId, refreshVersion],
   );
   const { loading, data, error, run, isCurrent } = useScopedTraceRequest<
     Awaited<ReturnType<typeof loadGenerationReviewRounds>>
   >(resource, enabled);
-  const ids = JSON.parse(idsKey) as string[];
-  const canLoad = Boolean(projectKey && ids.length && ids.length <= 50);
+  const caseOptions = cases.map(({ id, displayId: label, name }) => ({
+    label: formatMessage(messages.caseOption, { displayId: label, name }),
+    value: String(id),
+  }));
   const load = () => {
-    if (!canLoad) return;
+    if (!testCase) return;
     run((signal) =>
       loadGenerationReviewRounds(
         projectKey,
-        ids,
+        testCase,
         { sourcePipelineId: pipelineId, sourceIterationId: iterationId },
         signal,
       ),
@@ -97,11 +91,24 @@ export const GenerationReviewTraceChooser = ({
     <section data-automation-id="generation-review-trace-chooser">
       <h3>{formatMessage(messages.title)}</h3>
       <p>{formatMessage(messages.limitation)}</p>
-      {!canLoad && <p>{formatMessage(messages.unsupported)}</p>}
-      {canLoad && (
-        <Button variant="text" disabled={loading} onClick={load}>
-          {formatMessage(rounds ? messages.refresh : messages.load)}
-        </Button>
+      {caseOptions.length > 0 ? (
+        <>
+          <Dropdown
+            label={formatMessage(messages.caseLabel)}
+            placeholder={formatMessage(messages.casePlaceholder)}
+            options={caseOptions}
+            value={testCase ? String(testCase.id) : ''}
+            onChange={(value) => {
+              if (typeof value === 'string') setSelection({ scope: caseScope, value });
+            }}
+            data-automation-id="generationReviewTraceCase"
+          />
+          <Button variant="text" disabled={loading || !testCase} onClick={load}>
+            {formatMessage(rounds ? messages.refresh : messages.load)}
+          </Button>
+        </>
+      ) : (
+        <p>{formatMessage(messages.noCases)}</p>
       )}
       {loading && <output aria-live="polite">{formatMessage(messages.loading)}</output>}
       {(error || data?.incomplete) && <p role="alert">{formatMessage(messages.incomplete)}</p>}

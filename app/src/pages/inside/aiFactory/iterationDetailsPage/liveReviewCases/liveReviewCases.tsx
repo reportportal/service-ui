@@ -14,127 +14,182 @@
  * limitations under the License.
  */
 
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState, type ReactNode } from 'react';
 import { useIntl } from 'react-intl';
 import { Button, SystemMessage } from '@reportportal/ui-kit';
 
 import { createClassnames } from 'common/utils';
 
-import { CaseLink } from '../stagePanels/caseLink';
-import { getLiveLibraryCases, type LiveLibraryCase } from './liveLibraryCases';
-import { messages } from './messages';
-import styles from './liveReviewCases.scss';
+import {
+  getLiveLibraryCases,
+  type LiveLibraryCase,
+  type LiveLibraryCasesPage,
+} from 'pages/inside/aiFactory/iterationDetailsPage/liveReviewCases/liveLibraryCases';
+import { CaseLink } from 'pages/inside/aiFactory/iterationDetailsPage/stagePanels/caseLink';
+import { messages } from 'pages/inside/aiFactory/iterationDetailsPage/liveReviewCases/messages';
+import styles from 'pages/inside/aiFactory/iterationDetailsPage/liveReviewCases/liveReviewCases.scss';
 
 const cx = createClassnames(styles);
-const MAX_CASES = 50;
+const PAGE_SIZE = 25;
 
 export interface LiveReviewCasesProps {
-  displayIds: string[];
   projectKey: string;
-  refreshIdentity?: object;
+  iterationId: number;
+  refreshVersion?: number | object;
+  children?: (cases: LiveLibraryCase[]) => ReactNode;
 }
 
-interface CaseResult {
-  displayId: string;
-  testCase: LiveLibraryCase | null;
+interface ReviewPageState {
+  scope: object;
+  page: number;
+  request: object;
+  data?: LiveLibraryCasesPage;
+  totalElements?: number;
+  hasError?: boolean;
 }
 
 export const LiveReviewCases = ({
-  displayIds: providedDisplayIds,
   projectKey,
-  refreshIdentity,
+  iterationId,
+  refreshVersion,
+  children,
 }: LiveReviewCasesProps) => {
   const { formatMessage } = useIntl();
-  const displayIds = Array.from(new Set(providedDisplayIds));
-  const [response, setResponse] = useState<{ requestKey: object; results: CaseResult[] } | null>(
-    null,
+  const scope = useMemo(() => ({ projectKey, iterationId }), [projectKey, iterationId]);
+  const [selection, setSelection] = useState<{ scope: object; page: number }>();
+  const [state, setState] = useState<ReviewPageState>();
+  const [revision, setRevision] = useState(0);
+  const page = selection?.scope === scope ? selection.page : 0;
+  const request = useMemo(
+    () => ({ scope, page, revision, refreshVersion }),
+    [scope, page, revision, refreshVersion],
   );
-  const [retry, setRetry] = useState(0);
-  const idsKey = JSON.stringify(displayIds);
-  const requestKey = useMemo(
-    () => ({ projectKey, idsKey, retry, refreshIdentity }),
-    [projectKey, idsKey, retry, refreshIdentity],
-  );
-  const results = response?.requestKey === requestKey ? response.results : null;
+  const currentScope = state?.scope === scope ? state : undefined;
+  const results = currentScope?.page === page ? currentScope.data : undefined;
+  const pageCount = Math.ceil((currentScope?.totalElements ?? 0) / PAGE_SIZE);
+  const isLoading = currentScope?.request !== request;
+  const hasError = !isLoading && currentScope?.hasError;
 
   useEffect(() => {
-    const requestedIds = JSON.parse(idsKey) as string[];
-    if (!projectKey || !requestedIds.length || requestedIds.length > MAX_CASES) return;
     const controller = new AbortController();
-    getLiveLibraryCases(projectKey, requestedIds, controller.signal).then(
+    getLiveLibraryCases(
+      projectKey,
+      iterationId,
+      page * PAGE_SIZE,
+      PAGE_SIZE,
+      controller.signal,
+    ).then(
       (data) => {
-        if (!controller.signal.aborted) setResponse({ requestKey, results: data });
+        if (controller.signal.aborted) return;
+        const lastPage = Math.max(0, Math.ceil(data.totalElements / PAGE_SIZE) - 1);
+        if (page > lastPage) {
+          setSelection({ scope, page: lastPage });
+          return;
+        }
+        setState({ scope, page, request, data, totalElements: data.totalElements });
       },
       () => {
-        if (!controller.signal.aborted) {
-          setResponse({
-            requestKey,
-            results: requestedIds.map((displayId) => ({ displayId, testCase: null })),
-          });
-        }
+        if (controller.signal.aborted) return;
+        setState((previous) => ({
+          scope,
+          page,
+          request,
+          data: previous?.scope === scope && previous.page === page ? previous.data : undefined,
+          totalElements: previous?.scope === scope ? previous.totalElements : undefined,
+          hasError: true,
+        }));
       },
     );
     return () => controller.abort();
-  }, [projectKey, idsKey, requestKey]);
+  }, [projectKey, iterationId, page, request, scope]);
 
   return (
-    <section className={cx('live-review-cases')} data-automation-id="liveReviewCases">
-      <div className={cx('live-review-cases__heading')}>
-        <h3>{formatMessage(messages.title)}</h3>
-        {displayIds.length > 0 && displayIds.length <= MAX_CASES && (
-          <Button variant="text" onClick={() => setRetry((value) => value + 1)}>
+    <>
+      <section className={cx('live-review-cases')} data-automation-id="liveReviewCases">
+        <div className={cx('live-review-cases__heading')}>
+          <h3>{formatMessage(messages.title)}</h3>
+          <Button
+            variant="text"
+            disabled={isLoading}
+            onClick={() => setRevision((value) => value + 1)}
+          >
             {formatMessage(messages.refresh)}
           </Button>
-        )}
-      </div>
-      {!displayIds.length && (
-        <SystemMessage mode="info">{formatMessage(messages.noReferences)}</SystemMessage>
-      )}
-      {displayIds.length > MAX_CASES && (
-        <SystemMessage mode="info">{formatMessage(messages.tooManyReferences)}</SystemMessage>
-      )}
-      {displayIds.length > 0 && displayIds.length <= MAX_CASES && !results && (
-        <output aria-live="polite">{formatMessage(messages.loading)}</output>
-      )}
-      {results && (
-        <div className={cx('live-review-cases__scroll')}>
-          <table>
-            <thead>
-              <tr>
-                <th scope="col">{formatMessage(messages.caseColumn)}</th>
-                <th scope="col">{formatMessage(messages.nameColumn)}</th>
-                <th scope="col">{formatMessage(messages.statusColumn)}</th>
-                <th scope="col">{formatMessage(messages.scoreColumn)}</th>
-              </tr>
-            </thead>
-            <tbody>
-              {results.map(({ displayId, testCase }) => (
-                <tr key={displayId}>
-                  <td>
-                    {testCase ? <CaseLink testCaseId={testCase.id} name={displayId} /> : displayId}
-                  </td>
-                  <td>{testCase?.name || formatMessage(messages.unresolved)}</td>
-                  <td>
-                    {testCase?.status ? (
-                      <span
-                        className={cx(
-                          'live-review-cases__status',
-                          `live-review-cases__status--${testCase.status.toLowerCase()}`,
-                        )}
-                      >
-                        {formatMessage(messages[testCase.status === 'READY' ? 'ready' : 'draft'])}
-                      </span>
-                    ) : (
-                      formatMessage(messages.unavailable)
-                    )}
-                  </td>
-                  <td>{testCase?.overallScore ?? formatMessage(messages.unavailable)}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
         </div>
-      )}
-    </section>
+        {isLoading && !results && (
+          <output aria-live="polite">{formatMessage(messages.loading)}</output>
+        )}
+        {hasError && <SystemMessage mode="error">{formatMessage(messages.error)}</SystemMessage>}
+        {results?.totalElements === 0 && !hasError && (
+          <SystemMessage mode="info">{formatMessage(messages.empty)}</SystemMessage>
+        )}
+        {!!results?.cases.length && <ReviewCaseTable cases={results.cases} />}
+        {pageCount > 1 && (
+          <div className={cx('live-review-cases__pagination')}>
+            <Button
+              variant="text"
+              disabled={isLoading || page === 0}
+              onClick={() => setSelection({ scope, page: page - 1 })}
+            >
+              {formatMessage(messages.previous)}
+            </Button>
+            <span aria-live="polite">
+              {formatMessage(messages.page, { current: page + 1, total: pageCount })}
+            </span>
+            <Button
+              variant="text"
+              disabled={isLoading || page + 1 >= pageCount}
+              onClick={() => setSelection({ scope, page: page + 1 })}
+            >
+              {formatMessage(messages.next)}
+            </Button>
+          </div>
+        )}
+      </section>
+      {results && children?.(results.cases)}
+    </>
+  );
+};
+
+const ReviewCaseTable = ({ cases }: { cases: LiveLibraryCase[] }) => {
+  const { formatMessage } = useIntl();
+  return (
+    <div className={cx('live-review-cases__scroll')}>
+      <table>
+        <thead>
+          <tr>
+            <th scope="col">{formatMessage(messages.caseColumn)}</th>
+            <th scope="col">{formatMessage(messages.nameColumn)}</th>
+            <th scope="col">{formatMessage(messages.statusColumn)}</th>
+            <th scope="col">{formatMessage(messages.scoreColumn)}</th>
+          </tr>
+        </thead>
+        <tbody>
+          {cases.map(({ id, displayId, name, status, overallScore }) => (
+            <tr key={id}>
+              <td>
+                <CaseLink testCaseId={id} name={displayId} />
+              </td>
+              <td>{name}</td>
+              <td>
+                {status ? (
+                  <span
+                    className={cx(
+                      'live-review-cases__status',
+                      `live-review-cases__status--${status.toLowerCase()}`,
+                    )}
+                  >
+                    {formatMessage(messages[status === 'READY' ? 'ready' : 'draft'])}
+                  </span>
+                ) : (
+                  formatMessage(messages.unavailable)
+                )}
+              </td>
+              <td>{overallScore ?? formatMessage(messages.unavailable)}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
   );
 };

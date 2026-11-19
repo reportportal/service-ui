@@ -32,6 +32,8 @@ import { loadGenerationReviewRounds } from './loadGenerationReviewRounds';
 jest.mock('./loadGenerationReviewRounds', () => ({ loadGenerationReviewRounds: jest.fn() }));
 
 const dispatch = jest.fn();
+const firstCase = { id: 42, displayId: 'TC1', name: 'Generated test' };
+const secondCase = { id: 84, displayId: 'TC2', name: 'Another test' };
 let wrapper: MountedTraceWrapper | undefined;
 interface ParagraphNodes {
   map: <T>(callback: (node: CommonWrapper) => T) => T[];
@@ -70,12 +72,12 @@ afterEach(() => {
   wrapper = undefined;
 });
 
-const mountChooser = async () => {
+const mountChooser = async (cases = [firstCase]) => {
   await act(async () => {
     wrapper = mount(
       <GenerationReviewTraceChooser
         projectKey="demo"
-        displayIds={['TC1']}
+        cases={cases}
         pipelineId={8}
         iterationId={34}
         stageKey="review"
@@ -99,7 +101,7 @@ test('loads native rounds only on demand and carries original Review return cont
   wrapper?.update();
   expect(loadGenerationReviewRounds).toHaveBeenCalledWith(
     'demo',
-    ['TC1'],
+    expect.objectContaining({ id: 42, displayId: 'TC1' }),
     { sourcePipelineId: 8, sourceIterationId: 34 },
     expect.any(AbortSignal),
   );
@@ -122,6 +124,26 @@ test('loads native rounds only on demand and carries original Review return cont
       returnStageKey: 'review',
     },
   });
+});
+
+test('loads only the chosen case when more than one case is available', async () => {
+  await mountChooser([firstCase, secondCase]);
+  expect(loadGenerationReviewRounds).not.toHaveBeenCalled();
+  expect((wrapper?.find('button') as TraceNodes).at(0).prop('disabled')).toBe(true);
+  act(() => {
+    (wrapper?.find('select').prop('onChange') as (event: unknown) => void)({
+      target: { value: '84' },
+    });
+  });
+  wrapper?.update();
+  await loadChooser();
+  expect(loadGenerationReviewRounds).toHaveBeenCalledTimes(1);
+  expect(loadGenerationReviewRounds).toHaveBeenCalledWith(
+    'demo',
+    expect.objectContaining({ id: 84, displayId: 'TC2' }),
+    { sourcePipelineId: 8, sourceIterationId: 34 },
+    expect.any(AbortSignal),
+  );
 });
 
 test('toggle OFF exposes no chooser and does not resolve native rounds', async () => {

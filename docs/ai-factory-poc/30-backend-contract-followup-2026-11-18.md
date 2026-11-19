@@ -15,7 +15,7 @@ TMS reports API `feature-pipelines-2929`, revision `723445217583298cb6f8052aaa4e
 
 ## Producer decisions still needed
 
-1. Confirm the units section key and name-column convention. The UI uses exact section key `units`, row key matching, and `cells.name` with the row key as fallback. It does not guess from other sections or event targets.
+1. Verify the `units` section and row-key matching with a real producer. The November 18 check used `cells.name`. The [November 19 frontend update](31-backend-handoff-2026-11-18.md#review-pagination-and-agent-units) also accepts `cells.unit` with `row.key` as the final fallback.
 2. Confirm actual GRADERS payloads and snapshot model/token/cost keys. The backend stores these as producer data; the structured UI is a tolerant projection with raw JSON retained.
 3. Cache tokens, criterion reasons and iteration cost share are absent. The UI must not manufacture them.
 4. Trace GET remains unpaged. Virtualization limits DOM work, not response bytes or JSON memory. Production size measurements should drive a future `fromSeq`/`limit` decision.

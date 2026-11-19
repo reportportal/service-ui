@@ -19,7 +19,7 @@ import {
   getLiveFixTraceTarget,
   type LiveFixTraceTarget,
 } from 'pages/inside/aiFactory/common/stageTrace/liveFixTraceTarget';
-import { getLiveLibraryCases } from 'pages/inside/aiFactory/iterationDetailsPage/liveReviewCases/liveLibraryCases';
+import type { LiveLibraryCase } from 'pages/inside/aiFactory/iterationDetailsPage/liveReviewCases/liveLibraryCases';
 import {
   loadLiveFixRoundHistory,
   type NativeFixRound,
@@ -89,37 +89,25 @@ const resolveRound = async (
   };
 };
 
+const ensureRequestIsActive = (signal: AbortSignal) => {
+  if (signal.aborted) throw new DOMException('Request aborted', 'AbortError');
+};
+
 export const loadGenerationReviewRounds = async (
   projectKey: string,
-  displayIds: string[],
+  testCase: Pick<LiveLibraryCase, 'id' | 'displayId'>,
   source: GenerationReviewSource,
   signal: AbortSignal,
 ): Promise<{ rounds: GenerationReviewTraceRound[]; incomplete: boolean }> => {
-  const cases = await mapLimited([...new Set(displayIds)], async (displayId) => {
-    const [result] = await getLiveLibraryCases(projectKey, [displayId], signal);
-    return result;
-  });
-  const histories = await mapLimited(cases, async ({ displayId, testCase }) => {
-    if (!testCase || signal.aborted) return { rounds: [], incomplete: true };
-    try {
-      const history = await loadLiveFixRoundHistory(projectKey, testCase.id, signal);
-      const rounds = history
-        .filter((round) => round.previousIterationId === source.sourceIterationId)
-        .map((round) => ({ ...round, roundId: round.id, displayId }));
-      return { rounds, incomplete: false };
-    } catch {
-      return { rounds: [], incomplete: true };
-    }
-  });
+  ensureRequestIsActive(signal);
+  const history = await loadLiveFixRoundHistory(projectKey, testCase.id, signal);
+  ensureRequestIsActive(signal);
+  const sourceRounds = history
+    .filter((round) => round.previousIterationId === source.sourceIterationId)
+    .map((round) => ({ ...round, roundId: round.id, displayId: testCase.displayId }));
   const resolveTarget = createTargetResolver(projectKey, signal);
-  const rounds = await mapLimited(
-    histories.flatMap((history) => history.rounds),
-    (round) => resolveRound(round, source, resolveTarget),
+  const rounds = await mapLimited(sourceRounds, (round) =>
+    resolveRound(round, source, resolveTarget),
   );
-  return {
-    rounds,
-    incomplete:
-      histories.some((history) => history.incomplete) ||
-      rounds.some((round) => round.traceUnavailable),
-  };
+  return { rounds, incomplete: rounds.some((round) => round.traceUnavailable) };
 };
