@@ -46,6 +46,10 @@ export interface PipelinePageRequest {
   search?: string;
 }
 
+export interface PipelineCatalogPageRequest extends PipelinePageRequest {
+  name?: string;
+}
+
 export interface PipelinePageState extends LivePage {
   offset: number;
 }
@@ -59,7 +63,7 @@ export interface PipelinesState {
   catalogRequestId: number | null;
   catalogProjectKey: string | null;
   catalogPage?: PipelinePageState | null;
-  catalogSearch?: string;
+  catalogRequest?: PipelineCatalogPageRequest | null;
   iterationsByPipeline: IterationsByPipelineId | null;
   iterationPagesByPipeline?: Record<number, PipelinePageState>;
   iterationsLoadingByPipeline: IterationsLoadingByPipelineId;
@@ -88,7 +92,7 @@ export interface PipelinesSelectorsRootState {
 }
 
 export interface GetPipelinesAction extends Action<typeof GET_PIPELINES> {
-  payload?: PipelinePageRequest;
+  payload?: PipelineCatalogPageRequest;
 }
 
 export interface GetPipelineIterationsAction extends Action<typeof GET_PIPELINE_ITERATIONS> {

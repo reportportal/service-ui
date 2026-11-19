@@ -168,9 +168,14 @@ describe('aiFactoryPipelinesSagas live transport', () => {
       await harness.stop();
     });
 
-    test('sends LP1 name search and page offset', async () => {
+    test.each([
+      ['name-only search', { name: '  Generation & Review  ' }, { name: 'Generation & Review' }],
+      ['broad search', { search: '  review  ' }, { search: 'review' }],
+      ['cleared name search', { name: '  ' }, {}],
+    ])('sends the requested LP1 page for %s', async (_scenario, filter, expectedFilter) => {
       fetchMock.mockResolvedValue({
-        content: [], page: { number: 1, size: 100, totalElements: 0, totalPages: 0 },
+        content: [{ id: 9, name: 'Generation & Review', type: 'TEST_CASE_GENERATION' }],
+        page: { number: 2, size: 100, totalElements: 101, totalPages: 2 },
       });
       let notifyComplete: () => void = () => undefined;
       const complete = new Promise<void>((resolve) => { notifyComplete = resolve; });
@@ -182,13 +187,18 @@ describe('aiFactoryPipelinesSagas live transport', () => {
       });
 
       await Promise.resolve();
-      harness.dispatch(getPipelinesAction({ search: 'missing', offset: 0, limit: 100 }));
+      const page = { offset: 100, limit: 100 };
+      const expectedRequest = { ...page, ...expectedFilter };
+      harness.dispatch(getPipelinesAction({ ...page, ...filter }));
       await complete;
 
-      expect(fetchMock).toHaveBeenCalledWith(
-        URLS.pipelineCatalog('demo', { offset: 0, limit: 100, search: 'missing' }),
-        { signal: expect.any(AbortSignal) },
-      );
+      expect(fetchMock).toHaveBeenCalledWith(URLS.pipelineCatalog('demo', expectedRequest), {
+        signal: expect.any(AbortSignal),
+      });
+      expect(harness.dispatched).toContainEqual(expect.objectContaining({
+        type: FETCH_START,
+        meta: expect.objectContaining({ catalogRequest: expectedRequest }),
+      }));
       await harness.stop();
     });
 

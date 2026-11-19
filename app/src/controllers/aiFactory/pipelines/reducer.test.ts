@@ -130,13 +130,20 @@ describe('aiFactoryPipelinesReducer comparison state', () => {
 });
 
 describe('aiFactoryPipelinesReducer catalog provenance', () => {
-  test('marks a current LP1 failure and clears the error on retry', () => {
-    const meta = { namespace: PIPELINES_NAMESPACE, catalogRequestId: 1, projectKey: 'demo' };
+  test('retains the failed catalog request so the same page can be retried', () => {
+    const catalogRequest = { name: 'Generation', offset: 100, limit: 100 };
+    const meta = {
+      namespace: PIPELINES_NAMESPACE,
+      catalogRequestId: 1,
+      projectKey: 'demo',
+      catalogRequest,
+    };
     const started = aiFactoryPipelinesReducer(undefined, { type: FETCH_START, meta }) as PipelinesState;
     const failed = aiFactoryPipelinesReducer(started, {
       type: FETCH_ERROR, payload: new Error('failed'), meta,
     }) as PipelinesState;
     expect(failed.catalogError).toBe(true);
+    expect(failed.catalogRequest).toEqual(catalogRequest);
     const retrying = aiFactoryPipelinesReducer(failed, {
       type: FETCH_START, meta: { ...meta, catalogRequestId: 2 },
     }) as PipelinesState;
@@ -147,7 +154,7 @@ describe('aiFactoryPipelinesReducer catalog provenance', () => {
     const catalogStart = {
       type: FETCH_START,
       meta: { namespace: PIPELINES_NAMESPACE, catalogRequestId: 1, projectKey: 'demo',
-        transport: 'live', search: 'first' },
+        transport: 'live', catalogRequest: { name: 'First', offset: 0, limit: 1 } },
     };
     const started = aiFactoryPipelinesReducer(undefined, catalogStart) as PipelinesState;
     const catalogLoaded = aiFactoryPipelinesReducer(started, {
@@ -172,9 +179,13 @@ describe('aiFactoryPipelinesReducer catalog provenance', () => {
 
     const next = aiFactoryPipelinesReducer(iterationsLoaded, {
       ...catalogStart,
-      meta: { ...catalogStart.meta, catalogRequestId: 2, search: 'second' },
+      meta: {
+        ...catalogStart.meta,
+        catalogRequestId: 2,
+        catalogRequest: { name: 'Second', offset: 0, limit: 1 },
+      },
     }) as PipelinesState;
-    expect(next.catalogSearch).toBe('second');
+    expect(next.catalogRequest).toEqual({ name: 'Second', offset: 0, limit: 1 });
     expect(next.catalogPage).toBeNull();
     expect(next.iterationPagesByPipeline).toEqual({});
   });
