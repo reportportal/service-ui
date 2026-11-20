@@ -127,10 +127,6 @@ export const messages = defineMessages({
     id: 'IterationDetailsPage.rerun',
     defaultMessage: 'Re-run',
   },
-  rerunUnavailable: {
-    id: 'IterationDetailsPage.rerunUnavailable',
-    defaultMessage: 'Re-run is not available yet',
-  },
   rerunPermissionUnavailable: {
     id: 'IterationDetailsPage.rerunPermissionUnavailable',
     defaultMessage: 'Re-run is available to Organization Managers and Administrators',
@@ -194,14 +190,6 @@ export const messages = defineMessages({
   stageRelatedEntities: {
     id: 'IterationDetailsPage.stageRelatedEntities',
     defaultMessage: 'Related entities',
-  },
-  validatedApiFields: {
-    id: 'IterationDetailsPage.validatedApiFields',
-    defaultMessage: 'Mapped API fields',
-  },
-  fullApiResponse: {
-    id: 'IterationDetailsPage.fullApiResponse',
-    defaultMessage: 'Full API response',
   },
   metaCiPipeline: {
     id: 'IterationDetailsPage.metaCiPipeline',
@@ -336,6 +324,10 @@ export const messages = defineMessages({
     id: 'IterationDetailsPage.stageRetryUnconfirmed',
     defaultMessage: 'Retry could not be confirmed. Check the CI run and refresh the iteration.',
   },
+  openUploadReportInLibrary: {
+    id: 'IterationDetailsPage.openUploadReportInLibrary',
+    defaultMessage: 'View in Test Library',
+  },
   uploadRollbackWarning: {
     id: 'IterationDetailsPage.uploadRollbackWarning',
     defaultMessage: '{reason}. Upload is all or nothing: the Library is unchanged.',
@@ -445,18 +437,21 @@ export const messages = defineMessages({
     id: 'IterationDetailsPage.gradeColumnCase',
     defaultMessage: 'Case',
   },
+  gradeColumnTestCase: {
+    id: 'IterationDetailsPage.gradeColumnTestCase',
+    defaultMessage: 'Test Case',
+  },
+  gradeColumnTotal: {
+    id: 'IterationDetailsPage.gradeColumnTotal',
+    defaultMessage: 'Total /{max}',
+  },
   gradedCases: {
     id: 'IterationDetailsPage.gradedCases',
     defaultMessage: 'Graded cases',
   },
-  gradeSourceLine: {
-    id: 'IterationDetailsPage.gradeSourceLine',
-    defaultMessage: 'Source line',
-  },
   gradeReportSummary: {
     id: 'IterationDetailsPage.gradeReportSummary',
-    defaultMessage:
-      'Suite score {score}/{max} · {count, plural, one {# graded case} other {# graded cases}}',
+    defaultMessage: 'Suite score {score} / {max} · evaluation only',
   },
   gradeCaseDetails: {
     id: 'IterationDetailsPage.gradeCaseDetails',
@@ -469,6 +464,10 @@ export const messages = defineMessages({
   gradeNoFailureReasons: {
     id: 'IterationDetailsPage.gradeNoFailureReasons',
     defaultMessage: 'At max score — nothing to explain',
+  },
+  gradeNoReportedReasons: {
+    id: 'IterationDetailsPage.gradeNoReportedReasons',
+    defaultMessage: 'No failure reasons reported.',
   },
   gradeLegend: {
     id: 'IterationDetailsPage.gradeLegend',

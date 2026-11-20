@@ -14,10 +14,13 @@
  * limitations under the License.
  */
 
-import { ComponentProps, Fragment, ReactNode, useState } from 'react';
+import { ComponentProps, Fragment, ReactNode, useEffect, useMemo, useState } from 'react';
 import { useIntl } from 'react-intl';
+import { useSelector } from 'react-redux';
+import Link from 'redux-first-router-link';
 import {
   Button,
+  ChevronDownDropdownIcon,
   CycleArrowsIcon,
   RefreshIcon,
   RerunIcon,
@@ -32,6 +35,7 @@ import {
 } from 'common/utils/agentUnitName';
 import { formatDuration } from 'common/utils/timeDateUtils';
 import { isHttpUrl } from 'common/utils/isHttpUrl';
+import { useAiFactoryEnabled } from 'controllers/aiFactory';
 import {
   ReducedPipelineIterationDetail,
   ReducedPipelineDetailStage,
@@ -39,18 +43,21 @@ import {
   ReducedPipelineSection,
   ReducedPipelineStatus,
 } from 'controllers/aiFactory/pipelines';
+import { loadStageTrace } from 'controllers/aiFactory/stageTrace';
+import { TEST_CASE_LIBRARY_PAGE, urlOrganizationAndProjectSelector } from 'controllers/pages';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
 import { SettingsLayout } from 'layouts/settingsLayout';
 import { ScoreBar } from 'pages/inside/aiFactory/common';
 import { CRITERION_MESSAGE } from 'pages/inside/aiFactory/evaluation/criterionMessages';
 import { IterationProvenance } from 'pages/inside/aiFactory/iterationDetailsPage/iterationProvenance';
-import type { LiveLibraryCase } from 'pages/inside/aiFactory/iterationDetailsPage/liveReviewCases/liveLibraryCases';
+import { getLiveLibraryCaseFolder } from 'pages/inside/aiFactory/iterationDetailsPage/liveReviewCases/liveLibraryCases';
 import { LiveReviewCases } from 'pages/inside/aiFactory/iterationDetailsPage/liveReviewCases/liveReviewCases';
 import {
   IterationStageTraceEntry,
-  isHumanGenerationReview,
   isReviewStage,
 } from 'pages/inside/aiFactory/iterationDetailsPage/stageTraceAction/iterationStageTraceEntry';
+import type { ProjectDetails } from 'pages/organization/constants';
+import { CriterionKey, type AiCriterionKey } from 'types/aiFactory';
 
 import { getReducedStatusVariant } from '../common/reducedStatusVariant';
 import { LivePipelineSettingsButton } from '../pipelineSettings';
@@ -58,7 +65,11 @@ import { PageHeaderWithBreadcrumbsAndActions } from '../../common/pageHeaderWith
 import { KpiTile } from './kpiTile';
 import { LiveStageRetryAction } from './liveStageRetryAction';
 import { CaseLink } from './stagePanels/caseLink';
-import { readLegacyGradeReport } from './readLegacyGradeReport';
+import {
+  readLegacyGradeReport,
+  readTraceGradeReport,
+  type GradeReport,
+} from './readLegacyGradeReport';
 import { messages } from './messages';
 import stageCardStyles from './stageCards/stageCards.scss';
 import stagePanelStyles from './stagePanels/stagePanels.scss';
@@ -67,6 +78,9 @@ import styles from './iterationDetailsPage.scss';
 const cx = createClassnames(styles);
 const cardCx = createClassnames(stageCardStyles);
 const panelCx = createClassnames(stagePanelStyles);
+
+const isVisibleAttribute = ({ key }: ReducedPipelineAttribute) =>
+  key !== 'autoReadyPromoted' && key !== 'autoReadyThreshold';
 
 const STATUS_MESSAGES: Record<ReducedPipelineStatus, keyof typeof messages> = {
   PENDING: 'liveStatusPending',
@@ -148,7 +162,11 @@ const renderGenerationHighlights = (
   stage: ReducedPipelineDetailStage,
   stageKind: GenerationStageKind | undefined,
 ) => {
-  const highlights = stageKind ? stage.attributes?.filter(({ type }) => type === 'META') : [];
+  const highlights = stageKind
+    ? stage.attributes?.filter(
+        (attribute) => attribute.type === 'META' && isVisibleAttribute(attribute),
+      )
+    : [];
   return highlights?.length ? (
     <dl className={cx('generation-highlights')} data-automation-id="generationStageHighlights">
       {highlights.map((attribute) => (
@@ -180,6 +198,56 @@ const formatStageTableValue = (
   return formatNumber(numericValue, { maximumFractionDigits: 20 });
 };
 
+interface UploadReportLibraryLinkProps {
+  projectKey: string;
+  iterationId: number;
+  displayId: string;
+}
+
+const UploadReportLibraryLink = ({
+  projectKey,
+  iterationId,
+  displayId,
+}: UploadReportLibraryLinkProps) => {
+  const { formatMessage } = useIntl();
+  const { organizationSlug, projectSlug } = useSelector(
+    urlOrganizationAndProjectSelector,
+  ) as ProjectDetails;
+  const scope = useMemo(
+    () => ({ projectKey, iterationId, displayId }),
+    [projectKey, iterationId, displayId],
+  );
+  const [result, setResult] = useState<{ scope: typeof scope; folderId: number }>();
+
+  useEffect(() => {
+    const controller = new AbortController();
+    getLiveLibraryCaseFolder(scope.projectKey, scope.displayId, controller.signal).then(
+      (folderId) => {
+        if (!controller.signal.aborted && folderId !== undefined) {
+          setResult({ scope, folderId });
+        }
+      },
+      () => {},
+    );
+    return () => controller.abort();
+  }, [scope]);
+
+  if (!result || result.scope !== scope) return null;
+
+  return (
+    <Link
+      className={cx('reduced-section__library-link')}
+      to={{
+        type: TEST_CASE_LIBRARY_PAGE,
+        payload: { organizationSlug, projectSlug, testCasePageRoute: `folder/${result.folderId}` },
+        query: { iteration: String(iterationId) },
+      }}
+    >
+      {formatMessage(messages.openUploadReportInLibrary)}
+    </Link>
+  );
+};
+
 const renderReducedStageSection = (
   section: ReducedPipelineSection,
   stageId: number,
@@ -189,8 +257,11 @@ const renderReducedStageSection = (
     formatMessage,
     formatNumber,
   }: Pick<ReturnType<typeof useIntl>, 'formatMessage' | 'formatNumber'>,
-  generationKind?: GenerationStageKind,
-  gradeSummary?: string,
+  {
+    generationKind,
+    gradeSummary,
+    action,
+  }: { generationKind?: GenerationStageKind; gradeSummary?: string; action?: ReactNode } = {},
 ) => {
   if (
     section.key === 'tokenUsage' &&
@@ -235,27 +306,36 @@ const renderReducedStageSection = (
     : undefined;
   const addUnitNameColumn = isUnitsSection && !reportedUnitNameColumn;
   const unitNameColumn = addUnitNameColumn ? 'name' : reportedUnitNameColumn;
-  const columns: ReducedPipelineSection['columns'] = addUnitNameColumn
-    ? [{ key: 'name', label: formatMessage(messages.agentUnitColumn) }, ...section.columns]
+  const isGradedCasesSection = section.key === 'gradedCases' && section.role === 'RESULT';
+  const resultColumns = isGradedCasesSection
+    ? section.columns.filter(({ key }) => key !== 'line')
     : section.columns;
+  const columns: ReducedPipelineSection['columns'] = addUnitNameColumn
+    ? [{ key: 'name', label: formatMessage(messages.agentUnitColumn) }, ...resultColumns]
+    : resultColumns;
   const scoreDetailsLabel = formatMessage(messages.scoreDetails);
+  const isGradeReport = gradeSummary !== undefined;
 
   return (
     <section
       key={section.key}
       className={cx('reduced-section', {
         'reduced-section--single-column': section.role === 'DETAILS' && columns.length === 1,
-        'reduced-section--grade': section.key === 'gradedCases' && !gradeSummary,
-        'reduced-section--grade-report': Boolean(gradeSummary),
+        'reduced-section--grade': isGradedCasesSection && !isGradeReport,
+        'reduced-section--grade-report': isGradeReport,
         'reduced-section--create': generationKind === 'create',
         'reduced-section--upload': generationKind === 'upload',
       })}
       data-automation-id={generationKind ? `live-${generationKind}-results` : undefined}
     >
-      <h3>{section.title}</h3>
-      {gradeSummary && <p className={cx('reduced-section__summary')}>{gradeSummary}</p>}
+      {action}
+      {isGradeReport ? (
+        <p className={cx('reduced-section__summary')}>{gradeSummary}</p>
+      ) : (
+        <h3>{section.title}</h3>
+      )}
       <div className={cx('reduced-section__scroll')}>
-        <table>
+        <table aria-label={isGradeReport ? section.title : undefined}>
           <thead>
             <tr>
               {columns.map((column) => (
@@ -275,7 +355,21 @@ const renderReducedStageSection = (
               const isExpanded = expandedRows.has(detailsKey);
               return (
                 <Fragment key={row.key}>
-                  <tr className={cx({ 'reduced-section__row--expanded': isExpanded })}>
+                  <tr
+                    className={cx({
+                      'reduced-section__row--expanded': isExpanded,
+                      'reduced-section__row--grade': isGradeReport,
+                    })}
+                    onClick={
+                      isGradeReport
+                        ? ({ target }) => {
+                            if (!(target instanceof Element && target.closest('button, a'))) {
+                              onToggleDetails(detailsKey);
+                            }
+                          }
+                        : undefined
+                    }
+                  >
                     {columns.map((column) => {
                       const isUnitName = column.key === unitNameColumn;
                       const value = isUnitName
@@ -334,20 +428,37 @@ const renderReducedStageSection = (
                             'reduced-section__total-cell': column.key === 'total',
                           })}
                         >
-                          {cellContent}
-                          {column.key === columns[0]?.key && row.details.length > 0 && (
-                            <button
-                              type="button"
-                              className={cx('reduced-section__details-toggle', {
-                                'reduced-section__details-toggle--inline':
-                                  section.key === 'transcript' && columns.length > 1,
-                              })}
-                              aria-expanded={isExpanded}
-                              onClick={() => onToggleDetails(detailsKey)}
-                            >
-                              {scoreDetailsLabel}
-                            </button>
+                          {isGradeReport && column.key === 'name' ? (
+                            <div className={cx('reduced-section__grade-case')}>
+                              <button
+                                type="button"
+                                className={cx('reduced-section__grade-toggle')}
+                                aria-expanded={isExpanded}
+                                aria-label={formatMessage(messages.gradeCaseDetails, { name: value })}
+                                onClick={() => onToggleDetails(detailsKey)}
+                              >
+                                <ChevronDownDropdownIcon aria-hidden="true" />
+                              </button>
+                              {cellContent}
+                            </div>
+                          ) : (
+                            cellContent
                           )}
+                          {!isGradeReport &&
+                            column.key === columns[0]?.key &&
+                            row.details.length > 0 && (
+                              <button
+                                type="button"
+                                className={cx('reduced-section__details-toggle', {
+                                  'reduced-section__details-toggle--inline':
+                                    section.key === 'transcript' && columns.length > 1,
+                                })}
+                                aria-expanded={isExpanded}
+                                onClick={() => onToggleDetails(detailsKey)}
+                              >
+                                {scoreDetailsLabel}
+                              </button>
+                            )}
                         </td>
                       );
                     })}
@@ -378,6 +489,9 @@ const renderReducedStageSection = (
           </tbody>
         </table>
       </div>
+      {isGradeReport && (
+        <p className={cx('reduced-section__legend')}>{formatMessage(messages.gradeLegend)}</p>
+      )}
     </section>
   );
 };
@@ -469,13 +583,6 @@ const buildReducedKpis = (
       value: suiteScore !== undefined ? `${suiteScore} / 100` : attributeValue('suiteScore'),
     },
     {
-      label: formatMessage(messages.kpiAutoReadyPromoted),
-      value:
-        attributeValue('autoReadyPromoted') && testCases
-          ? `${attributeValue('autoReadyPromoted')} / ${testCases}`
-          : attributeValue('autoReadyPromoted'),
-    },
-    {
       label: formatMessage(messages.kpiReadyNow),
       value:
         attributeValue('readyNow') && testCases
@@ -559,7 +666,9 @@ const renderReducedStageCards = (
                       </span>
                     )}
                     {stage.attributes
-                      ?.filter(({ type }) => type === 'META')
+                      ?.filter(
+                        (attribute) => attribute.type === 'META' && isVisibleAttribute(attribute),
+                      )
                       .map((attribute) => (
                         <span
                           key={attribute.key}
@@ -601,8 +710,18 @@ const renderReducedStageCards = (
   );
 };
 
-const renderLegacyGradeResults = (
-  stage: ReducedPipelineDetailStage,
+const GRADE_CRITERIA: ReadonlyArray<readonly [AiCriterionKey, string]> = [
+  [CriterionKey.ATOMICITY, 'A'],
+  [CriterionKey.CLEAR_STEPS, 'CS'],
+  [CriterionKey.EXPECTED_RESULTS, 'CER'],
+  [CriterionKey.NO_INVENTED_LOGIC, 'NIL'],
+  [CriterionKey.NO_INVENTED_UI, 'NIU'],
+  [CriterionKey.COHERENCE, 'C'],
+];
+
+const renderGradeReport = (
+  report: GradeReport,
+  stageId: number,
   expandedRows: Set<string>,
   onToggleDetails: (rowKey: string) => void,
   {
@@ -610,54 +729,141 @@ const renderLegacyGradeResults = (
     formatNumber,
   }: Pick<ReturnType<typeof useIntl>, 'formatMessage' | 'formatNumber'>,
 ) => {
-  const report = readLegacyGradeReport(stage.sections);
-  if (!report) return null;
-
+  const criterionColumns = GRADE_CRITERIA.map(([key, shortLabel]) => {
+    const maxima = new Set(
+      report.test_cases.flatMap(({ criterias }) =>
+        criterias.filter(({ name }) => name === key).map(({ max_score }) => max_score),
+      ),
+    );
+    const [max] = maxima;
+    return {
+      key,
+      label: maxima.size === 1 ? `${shortLabel} /${max}` : shortLabel,
+      valueType: 'SCORE',
+    };
+  });
   const section: ReducedPipelineSection = {
     key: 'gradedCases',
     title: formatMessage(messages.gradedCases),
     role: 'RESULT',
     columns: [
-      { key: 'name', label: formatMessage(messages.gradeColumnCase) },
-      { key: 'line', label: formatMessage(messages.gradeSourceLine), valueType: 'NUMBER' },
-      { key: 'total', label: formatMessage(messages.gradeColumnScore), valueType: 'SCORE' },
-    ],
-    rows: report.test_cases.map((testCase, index) => ({
-      key: String(index),
-      cells: {
-        name: testCase.name,
-        line: testCase.line?.toString() ?? '',
-        total: `${testCase.total_score}/${report.max_score}`,
+      { key: 'name', label: formatMessage(messages.gradeColumnTestCase) },
+      ...criterionColumns,
+      {
+        key: 'total',
+        label: formatMessage(messages.gradeColumnTotal, { max: report.max_score }),
+        valueType: 'SCORE',
       },
-      details: testCase.criterias.map((criterion) => {
-        const name = Object.prototype.hasOwnProperty.call(CRITERION_MESSAGE, criterion.name)
-          ? formatMessage(CRITERION_MESSAGE[criterion.name as keyof typeof CRITERION_MESSAGE])
-          : criterion.name;
-        return {
-          heading: `${name} · ${criterion.score}/${criterion.max_score}`,
-          items: [...new Set(criterion.failure_reasons)],
-        };
-      }),
-    })),
+    ],
+    rows: report.test_cases.map((testCase, index) => {
+      const criteria = new Map(testCase.criterias.map((criterion) => [criterion.name, criterion]));
+      const details = testCase.criterias.flatMap((criterion) => {
+        const rubricKey = GRADE_CRITERIA.find(([key]) => key === criterion.name)?.[0];
+        if (rubricKey && criterion.failure_reasons.length === 0) return [];
+        const name = rubricKey ? formatMessage(CRITERION_MESSAGE[rubricKey]) : criterion.name;
+        return [
+          {
+            heading: `${name} · ${criterion.score}/${criterion.max_score}`,
+            items: [...new Set(criterion.failure_reasons)],
+          },
+        ];
+      });
+      if (!details.length) {
+        details.push({ heading: formatMessage(messages.gradeNoReportedReasons), items: [] });
+      }
+      return {
+        key: String(index),
+        cells: {
+          ...Object.fromEntries(
+            criterionColumns.map(({ key }) => {
+              const criterion = criteria.get(key);
+              return [key, criterion ? String(criterion.score) : '—'];
+            }),
+          ),
+          name: testCase.name,
+          total: String(testCase.total_score),
+        },
+        cellLinks: { name: { entityType: 'TEST_CASE' } },
+        details,
+      };
+    }),
   };
 
   return renderReducedStageSection(
     section,
-    stage.id,
+    stageId,
     expandedRows,
     onToggleDetails,
     { formatMessage, formatNumber },
-    'grade',
-    formatMessage(messages.gradeReportSummary, {
-      score: report.total_score,
-      max: report.max_score,
-      count: report.case_count,
-    }),
+    {
+      generationKind: 'grade',
+      gradeSummary: formatMessage(messages.gradeReportSummary, {
+        score: report.total_score,
+        max: report.max_score,
+      }),
+    },
   );
+};
+
+interface TraceGradeResultsProps {
+  iteration: ReducedPipelineIterationDetail;
+  stageId: number;
+  stageKey: string;
+  attempt?: number;
+  projectKey: string;
+  expandedRows: Set<string>;
+  onToggleDetails: (rowKey: string) => void;
+}
+
+const TraceGradeResults = ({
+  iteration,
+  stageId,
+  stageKey,
+  attempt,
+  projectKey,
+  expandedRows,
+  onToggleDetails,
+}: TraceGradeResultsProps) => {
+  const enabled = useAiFactoryEnabled();
+  const intl = useIntl();
+  const scope = useMemo(
+    () => ({ iteration, projectKey, stageKey, attempt, enabled }),
+    [iteration, projectKey, stageKey, attempt, enabled],
+  );
+  const [result, setResult] = useState<{ scope: typeof scope; report?: GradeReport }>();
+
+  useEffect(() => {
+    if (!scope.enabled) return;
+
+    const controller = new AbortController();
+    loadStageTrace(
+      {
+        projectKey: scope.projectKey,
+        iterationId: scope.iteration.id,
+        stageKey: scope.stageKey,
+        attempt: scope.attempt,
+      },
+      controller.signal,
+    ).then(
+      (trace) => {
+        if (!controller.signal.aborted) setResult({ scope, report: readTraceGradeReport(trace) });
+      },
+      () => {
+        if (!controller.signal.aborted) setResult({ scope });
+      },
+    );
+    return () => controller.abort();
+  }, [scope]);
+
+  return result?.scope === scope && result.report
+    ? renderGradeReport(result.report, stageId, expandedRows, onToggleDetails, intl)
+    : null;
 };
 
 const renderReducedStagePanel = (
   currentStage: ReducedPipelineDetailStage,
+  iterationId: number,
+  projectKey: string | undefined,
   expandedRows: Set<string>,
   onToggleDetails: (rowKey: string) => void,
   {
@@ -667,6 +873,7 @@ const renderReducedStagePanel = (
   generationKind?: GenerationStageKind,
   reviewContent?: ReactNode,
   traceContent?: ReactNode,
+  gradeResults?: ReactNode,
 ) => (
   <div className={cx('panel-card')} data-automation-id="reducedStagePanel">
     <div className={panelCx('stage-panels')}>
@@ -689,35 +896,44 @@ const renderReducedStagePanel = (
             <span className={panelCx('panel-heading__summary')}>{currentStage.summary}</span>
           )}
         </div>
-        {traceContent}
         {currentStage.message && (
           <p className={cx('reduced-stage__message')}>{currentStage.message}</p>
         )}
         {renderGenerationHighlights(currentStage, generationKind)}
         {currentStage.sections
           ?.filter(({ role }) => role === 'RESULT')
-          .map((section) =>
-            renderReducedStageSection(
+          .map((section) => {
+            const sectionKind = getGenerationSectionKind(section, generationKind);
+            const displayId =
+              sectionKind === 'upload'
+                ? section.rows.find(({ cells }) => cells.testCase?.trim())?.cells.testCase.trim()
+                : undefined;
+            return renderReducedStageSection(
               section,
               currentStage.id,
               expandedRows,
               onToggleDetails,
               { formatMessage, formatNumber },
-              getGenerationSectionKind(section, generationKind),
-            ),
-          )}
-        {generationKind === 'grade' &&
-          !currentStage.sections?.some(
-            ({ key, role }) => key === 'gradedCases' && role === 'RESULT',
-          ) &&
-          renderLegacyGradeResults(currentStage, expandedRows, onToggleDetails, {
-            formatMessage,
-            formatNumber,
+              {
+                generationKind: sectionKind,
+                action: projectKey && displayId && (
+                  <UploadReportLibraryLink
+                    projectKey={projectKey}
+                    iterationId={iterationId}
+                    displayId={displayId}
+                  />
+                ),
+              },
+            );
           })}
+        {gradeResults}
         {reviewContent}
       </section>
       <aside className={panelCx('stage-panels__aside')}>
-        <h2 className={panelCx('aside-title')}>{formatMessage(messages.stageDetailsTitle)}</h2>
+        <div className={cx('stage-details-heading')}>
+          <h2 className={panelCx('aside-title')}>{formatMessage(messages.stageDetailsTitle)}</h2>
+          {traceContent}
+        </div>
         <dl className={panelCx('details-list')}>
           <dt>{formatMessage(messages.stageDetailsStage)}</dt>
           <dd>{currentStage.label}</dd>
@@ -775,7 +991,10 @@ const renderReducedStagePanel = (
             </Fragment>
           ))}
           {currentStage.attributes
-            ?.filter(({ type }) => !generationKind || type !== 'META')
+            ?.filter(
+              (attribute) =>
+                (!generationKind || attribute.type !== 'META') && isVisibleAttribute(attribute),
+            )
             .map((attribute) => (
               <Fragment key={attribute.key}>
                 <dt title={attribute.description}>{attribute.label ?? attribute.key}</dt>
@@ -811,37 +1030,51 @@ const renderSelectedStagePanel = (
   onToggleDetails: (rowKey: string) => void,
   intl: ReturnType<typeof useIntl>,
 ) => {
-  const isHumanReview = isHumanGenerationReview(stage, iteration.pipelineType);
+  const generationKind = getGenerationStageKind(iteration.pipelineType, stage);
   const isActiveIteration = iteration.status === 'PENDING' || iteration.status === 'RUNNING';
-  const reviewRefreshVersion = isActiveIteration ? undefined : iteration;
-  const renderStageTrace = (reviewCases?: LiveLibraryCase[]) => (
-    <IterationStageTraceEntry
-      iteration={iteration}
-      stage={stage}
-      projectKey={projectKey}
-      reviewCases={reviewCases}
-      reviewRefreshVersion={reviewRefreshVersion}
-    />
-  );
   const reviewContent =
     isReviewStage(stage) && projectKey ? (
       <LiveReviewCases
         projectKey={projectKey}
         iterationId={iteration.id}
-        refreshVersion={reviewRefreshVersion}
-      >
-        {isHumanReview ? renderStageTrace : undefined}
-      </LiveReviewCases>
+        refreshVersion={isActiveIteration ? undefined : iteration}
+      />
     ) : undefined;
+
+  let gradeResults: ReactNode;
+  if (
+    generationKind === 'grade' &&
+    !stage.sections?.some(({ key, role }) => key === 'gradedCases' && role === 'RESULT')
+  ) {
+    const report = readLegacyGradeReport(stage.sections);
+    if (report) {
+      gradeResults = renderGradeReport(report, stage.id, expandedRows, onToggleDetails, intl);
+    } else if (projectKey && stage.stageKey) {
+      gradeResults = (
+        <TraceGradeResults
+          iteration={iteration}
+          stageId={stage.id}
+          stageKey={stage.stageKey}
+          attempt={stage.attempt}
+          projectKey={projectKey}
+          expandedRows={expandedRows}
+          onToggleDetails={onToggleDetails}
+        />
+      );
+    }
+  }
 
   return renderReducedStagePanel(
     stage,
+    iteration.id,
+    projectKey,
     expandedRows,
     onToggleDetails,
     intl,
-    getGenerationStageKind(iteration.pipelineType, stage),
+    generationKind,
     reviewContent,
-    isHumanReview ? undefined : renderStageTrace(),
+    <IterationStageTraceEntry iteration={iteration} stage={stage} projectKey={projectKey} />,
+    gradeResults,
   );
 };
 
@@ -910,7 +1143,6 @@ export const ReducedIterationDetails = ({
   const { formatMessage } = intl;
   const [selectedStageId, setSelectedStageId] = useState<number | null>(null);
   const [expandedRows, setExpandedRows] = useState<Set<string>>(() => new Set());
-  const [showRawResponse, setShowRawResponse] = useState(false);
   const toggleRowDetails = (rowKey: string) => {
     setExpandedRows((previous) => {
       const next = new Set(previous);
@@ -926,8 +1158,8 @@ export const ReducedIterationDetails = ({
     );
   }
 
-  const { rawResponse, ...mappedFields } = iteration;
   const metadata = buildReducedMetadata(iteration, formatMessage);
+  const visibleAttributes = iteration.attributes.filter(isVisibleAttribute);
   const kpis = buildReducedKpis(iteration, formatMessage);
   const currentStage = findSelectedStage(iteration.stages, selectedStageId, requestedStage);
   const bannerStage = iteration.stages.find(
@@ -979,16 +1211,13 @@ export const ReducedIterationDetails = ({
                   {formatMessage(messages.compareWithPrevious)}
                 </Button>
               </span>
-              <span title={formatMessage(messages.rerunUnavailable)}>
-                <Button
-                  variant="text"
-                  data-automation-id="rerunIterationButton"
-                  icon={<RerunIcon />}
-                  disabled
-                >
-                  {formatMessage(messages.rerun)}
-                </Button>
-              </span>
+              <Button
+                variant="text"
+                data-automation-id="rerunIterationButton"
+                icon={<RerunIcon />}
+              >
+                {formatMessage(messages.rerun)}
+              </Button>
               <LivePipelineSettingsButton pipelineId={iteration.pipelineId} fromIteration />
               <Button
                 variant="text"
@@ -1020,9 +1249,9 @@ export const ReducedIterationDetails = ({
                 ))}
               </div>
             )}
-            {iteration.attributes.length > 0 && (
+            {visibleAttributes.length > 0 && (
               <div className={cx('attributes')}>
-                {iteration.attributes.map((attribute) => (
+                {visibleAttributes.map((attribute) => (
                   <span
                     key={attribute.key}
                     className={cx('attributes__chip')}
@@ -1079,20 +1308,6 @@ export const ReducedIterationDetails = ({
               toggleRowDetails,
               intl,
             )}
-          <details className={cx('reduced-api-fields')}>
-            <summary>{formatMessage(messages.validatedApiFields)}</summary>
-            <pre>{JSON.stringify(mappedFields, null, 2)}</pre>
-          </details>
-          {rawResponse && (
-            <details
-              className={cx('reduced-api-fields')}
-              data-automation-id="fullApiResponse"
-              onToggle={(event) => setShowRawResponse(event.currentTarget.open)}
-            >
-              <summary>{formatMessage(messages.fullApiResponse)}</summary>
-              {showRawResponse && <pre>{JSON.stringify(rawResponse, null, 2)}</pre>}
-            </details>
-          )}
         </div>
       </ScrollWrapper>
     </SettingsLayout>

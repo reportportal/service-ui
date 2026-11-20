@@ -15,6 +15,7 @@
  */
 
 import type { ReducedPipelineSection } from 'controllers/aiFactory/pipelines';
+import type { StageTrace } from 'controllers/aiFactory/stageTrace';
 
 interface GradeCriterion {
   name: string;
@@ -30,7 +31,7 @@ interface GradedCase {
   criterias: GradeCriterion[];
 }
 
-interface GradeReport {
+export interface GradeReport {
   total_score: number;
   max_score: number;
   case_count: number;
@@ -80,19 +81,9 @@ const isGradeReport = (value: unknown): value is GradeReport => {
   );
 };
 
-export const readLegacyGradeReport = (
-  sections: ReducedPipelineSection[] | undefined,
-): GradeReport | undefined => {
-  const transcript = sections?.find(({ key, role }) => key === 'transcript' && role === 'DETAILS');
-  if (!transcript) return undefined;
-
-  // The grader's final message is followed by usage events. Tool calls may contain drafts.
-  const message = [...transcript.rows].reverse().find(({ cells }) => cells.kind === 'Message');
-  if (!message) return undefined;
-
-  const fullMessage = message.details.find(({ heading }) => heading === 'Message')?.items[0];
-  const text = (fullMessage ?? message.cells.action ?? '').replace(/^Message — /, '').trim();
-  const json = /^```json\s+(\{[\s\S]*\})\s*```$/.exec(text)?.[1];
+const parseGradeReport = (message?: string): GradeReport | undefined => {
+  const text = message?.replace(/^Message — /, '').trim();
+  const json = text?.match(/^```json\s+(\{[\s\S]*\})\s*```$/)?.[1];
   if (!json) return undefined;
 
   try {
@@ -101,4 +92,27 @@ export const readLegacyGradeReport = (
   } catch {
     return undefined;
   }
+};
+
+export const readLegacyGradeReport = (
+  sections: ReducedPipelineSection[] | undefined,
+): GradeReport | undefined => {
+  const transcript = sections?.find(({ key, role }) => key === 'transcript' && role === 'DETAILS');
+  if (!transcript) return undefined;
+
+  const message = [...transcript.rows].reverse().find(({ cells }) => cells.kind === 'Message');
+  if (!message) return undefined;
+
+  const fullMessage = message.details.find(({ heading }) => heading === 'Message')?.items[0];
+  return parseGradeReport(fullMessage ?? message.cells.action);
+};
+
+export const readTraceGradeReport = ({ status, events }: StageTrace): GradeReport | undefined => {
+  if (status !== 'REPORTED') return undefined;
+
+  // The grader's final message is followed by usage and result events.
+  const message = [...events]
+    .reverse()
+    .find(({ type, title }) => type === 'AGENT' && title === 'Message');
+  return parseGradeReport(message?.text);
 };

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { useEffect, useMemo, useState, type ReactNode } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useIntl } from 'react-intl';
 import { Button, SystemMessage } from '@reportportal/ui-kit';
 
@@ -36,7 +36,6 @@ export interface LiveReviewCasesProps {
   projectKey: string;
   iterationId: number;
   refreshVersion?: number | object;
-  children?: (cases: LiveLibraryCase[]) => ReactNode;
 }
 
 interface ReviewPageState {
@@ -52,7 +51,6 @@ export const LiveReviewCases = ({
   projectKey,
   iterationId,
   refreshVersion,
-  children,
 }: LiveReviewCasesProps) => {
   const { formatMessage } = useIntl();
   const scope = useMemo(() => ({ projectKey, iterationId }), [projectKey, iterationId]);
@@ -104,50 +102,47 @@ export const LiveReviewCases = ({
   }, [projectKey, iterationId, page, request, scope]);
 
   return (
-    <>
-      <section className={cx('live-review-cases')} data-automation-id="liveReviewCases">
-        <div className={cx('live-review-cases__heading')}>
-          <h3>{formatMessage(messages.title)}</h3>
+    <section className={cx('live-review-cases')} data-automation-id="liveReviewCases">
+      <div className={cx('live-review-cases__heading')}>
+        <h3>{formatMessage(messages.title)}</h3>
+        <Button
+          variant="text"
+          disabled={isLoading}
+          onClick={() => setRevision((value) => value + 1)}
+        >
+          {formatMessage(messages.refresh)}
+        </Button>
+      </div>
+      {isLoading && !results && (
+        <output aria-live="polite">{formatMessage(messages.loading)}</output>
+      )}
+      {hasError && <SystemMessage mode="error">{formatMessage(messages.error)}</SystemMessage>}
+      {results?.totalElements === 0 && !hasError && (
+        <SystemMessage mode="info">{formatMessage(messages.empty)}</SystemMessage>
+      )}
+      {!!results?.cases.length && <ReviewCaseTable cases={results.cases} />}
+      {pageCount > 1 && (
+        <div className={cx('live-review-cases__pagination')}>
           <Button
             variant="text"
-            disabled={isLoading}
-            onClick={() => setRevision((value) => value + 1)}
+            disabled={isLoading || page === 0}
+            onClick={() => setSelection({ scope, page: page - 1 })}
           >
-            {formatMessage(messages.refresh)}
+            {formatMessage(messages.previous)}
+          </Button>
+          <span aria-live="polite">
+            {formatMessage(messages.page, { current: page + 1, total: pageCount })}
+          </span>
+          <Button
+            variant="text"
+            disabled={isLoading || page + 1 >= pageCount}
+            onClick={() => setSelection({ scope, page: page + 1 })}
+          >
+            {formatMessage(messages.next)}
           </Button>
         </div>
-        {isLoading && !results && (
-          <output aria-live="polite">{formatMessage(messages.loading)}</output>
-        )}
-        {hasError && <SystemMessage mode="error">{formatMessage(messages.error)}</SystemMessage>}
-        {results?.totalElements === 0 && !hasError && (
-          <SystemMessage mode="info">{formatMessage(messages.empty)}</SystemMessage>
-        )}
-        {!!results?.cases.length && <ReviewCaseTable cases={results.cases} />}
-        {pageCount > 1 && (
-          <div className={cx('live-review-cases__pagination')}>
-            <Button
-              variant="text"
-              disabled={isLoading || page === 0}
-              onClick={() => setSelection({ scope, page: page - 1 })}
-            >
-              {formatMessage(messages.previous)}
-            </Button>
-            <span aria-live="polite">
-              {formatMessage(messages.page, { current: page + 1, total: pageCount })}
-            </span>
-            <Button
-              variant="text"
-              disabled={isLoading || page + 1 >= pageCount}
-              onClick={() => setSelection({ scope, page: page + 1 })}
-            >
-              {formatMessage(messages.next)}
-            </Button>
-          </div>
-        )}
-      </section>
-      {results && children?.(results.cases)}
-    </>
+      )}
+    </section>
   );
 };
 

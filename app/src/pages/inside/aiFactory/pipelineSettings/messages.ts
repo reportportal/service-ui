@@ -55,10 +55,9 @@ export const messages = defineMessages({
     defaultMessage:
       'You can view these settings. Only an Organization Manager or Administrator can change them.',
   },
-  liveReadOnly: {
-    id: 'PipelineSettings.liveReadOnly',
-    defaultMessage:
-      'Live pipeline settings are available for viewing. Saving is not available yet.',
+  liveUnsupportedPipeline: {
+    id: 'PipelineSettings.liveUnsupportedPipeline',
+    defaultMessage: 'Auto-Ready applies to Test Case generation pipelines.',
   },
   liveUnavailable: {
     id: 'PipelineSettings.liveUnavailable',
@@ -84,9 +83,17 @@ export const messages = defineMessages({
     id: 'PipelineSettings.liveNoSettings',
     defaultMessage: 'The API did not provide Auto-Ready settings for this pipeline.',
   },
-  liveThresholdUnavailable: {
-    id: 'PipelineSettings.liveThresholdUnavailable',
-    defaultMessage: 'Quality threshold was not provided by the API.',
+  liveVerifyError: {
+    id: 'PipelineSettings.liveVerifyError',
+    defaultMessage: 'Failed to reload pipeline settings after saving.',
+  },
+  liveSettingsChanged: {
+    id: 'PipelineSettings.liveSettingsChanged',
+    defaultMessage: 'The API returned different settings after saving.',
+  },
+  resetAutoReady: {
+    id: 'PipelineSettings.resetAutoReady',
+    defaultMessage: 'Reset Auto-Ready',
   },
   automationNoSettings: {
     id: 'PipelineSettings.automationNoSettings',

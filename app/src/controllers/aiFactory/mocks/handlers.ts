@@ -120,7 +120,14 @@ export const installAiFactoryHandlers = (mock: MockAdapter): void => {
     return [200, pipeline.settings];
   });
 
-  // LP5 — PATCH pipeline/{id}; live Auto-Ready field names adapted to the PoC view model.
+  mock
+    .onPatch(/\/pipeline\/\d+$/, {
+      asymmetricMatch: (data: unknown) =>
+        typeof data === 'object' && data !== null && 'settings' in data,
+    })
+    .passThrough();
+
+  // Legacy LP5 — PATCH pipeline/{id} with the PoC's flat Auto-Ready fields.
   mock.onPatch(/\/pipeline\/(\d+)$/).reply((config) => {
     const [, pipelineId] = url(config).match(/\/pipeline\/(\d+)/);
     const pipeline = findPipeline(Number(pipelineId));

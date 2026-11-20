@@ -53,7 +53,6 @@ import {
   hasNativeTestCaseData,
 } from 'common/utils/nativeTestCase';
 import { useRefetchCurrentTestCases } from 'pages/inside/testCaseLibraryPage/hooks/useRefetchCurrentTestCases';
-import { NativeTestCaseMetrics } from 'pages/inside/aiFactory/common/nativeTestCaseMetrics/nativeTestCaseMetrics';
 import { NativeTestCaseSummary } from 'pages/inside/aiFactory/common/nativeTestCaseSummary/nativeTestCaseSummary';
 import { PipelineLinks } from 'pages/inside/aiFactory/pipelineLinks';
 import { LaunchBlockedBanner } from 'pages/inside/aiFactory/readyOnlyGate';
@@ -70,6 +69,7 @@ import {
   useLiveReviewComments,
   type LiveReviewCommentsLoadState,
 } from 'pages/inside/aiFactory/review/useLiveReviewComments';
+import { useReviewCommentAuthors } from 'pages/inside/aiFactory/review/useReviewCommentAuthors';
 import { LiveReviewStrip } from 'pages/inside/aiFactory/review/liveReviewStrip';
 import {
   AutomationStatus,
@@ -504,6 +504,7 @@ export const TestCaseDetailsPage = () => {
     onFixCompleted: refreshAfterNativeFix,
     onReviewChanged: refreshAfterNativeFix,
   });
+  const nativeReviewComments = useReviewCommentAuthors(projectKey, nativeReviewState.comments);
   const refreshAfterFixRoundStart = useCallback(() => {
     reviewState.reload();
   }, [reviewState]);
@@ -606,7 +607,7 @@ export const TestCaseDetailsPage = () => {
   const reviewPresentation = getReviewPresentation({
     testCaseDetails,
     reviewState,
-    nativeReviewState,
+    nativeReviewState: { ...nativeReviewState, comments: nativeReviewComments },
     fixRoundState,
     isNativeReviewEnabled,
     isAiReviewEnabled,
@@ -692,17 +693,14 @@ export const TestCaseDetailsPage = () => {
               </CollapsibleSectionWithHeaderControl>
             ))}
             {nativeSummary?.isAi && (
-              <>
-                <NativeTestCaseSummary
-                  summary={nativeSummary}
-                  unsentCount={
-                    nativeReviewState.isLoaded
-                      ? nativeReviewState.unsentCount
-                      : nativeSummary.unsentReviewComments
-                  }
-                />
-                <NativeTestCaseMetrics summary={nativeSummary} testCaseId={testCaseId} />
-              </>
+              <NativeTestCaseSummary
+                summary={nativeSummary}
+                unsentCount={
+                  nativeReviewState.isLoaded
+                    ? nativeReviewState.unsentCount
+                    : nativeSummary.unsentReviewComments
+                }
+              />
             )}
             {isAiFactoryEnabled && testCaseDetails.ai && (
               <>

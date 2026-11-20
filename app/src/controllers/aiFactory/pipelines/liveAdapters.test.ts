@@ -15,6 +15,7 @@
  */
 
 import {
+  adaptLivePipeline,
   adaptLivePipelineIterationDetail,
   adaptLivePipelineIterations,
   adaptLivePipelineIterationsPage,
@@ -45,7 +46,7 @@ describe('live pipeline catalog adapters', () => {
     ).toThrow('Invalid pipeline catalog response');
   });
 
-  test('adapts the backend journey LP1 page without inventing repository or settings fields', () => {
+  test('defaults missing Auto-Ready settings for a generation pipeline in the LP1 page', () => {
     expect(
       adaptLivePipelines({
         content: [
@@ -77,9 +78,36 @@ describe('live pipeline catalog adapters', () => {
         repository: 'EPM-RPP/rp-tests',
         description: undefined,
         iterationsCount: 1,
-        autoReady: undefined,
+        autoReady: { enabled: false },
       },
     ]);
+  });
+
+  test('defaults missing Auto-Ready settings in the Marketplace implementation response', () => {
+    expect(
+      adaptLivePipeline(
+        {
+          id: 15,
+          name: 'Marketplace implementation',
+          type: 'MARKETPLACE_IMPLEMENTATION',
+          attributes: [
+            {
+              key: 'repository',
+              label: 'Repository',
+              value: 'reportportal/service-marketplace',
+              type: 'META',
+              valueType: 'LINK',
+              url: 'https://github.com/reportportal/service-marketplace',
+              order: 1,
+              comparisonKey: false,
+            },
+          ],
+          iterationsCount: 2,
+          createdAt: '2026-11-19T13:34:02.190834Z',
+        },
+        15,
+      ).autoReady,
+    ).toEqual({ enabled: false });
   });
 
   test('adapts nested Auto-Ready settings from the backend journey LP1 page', () => {
@@ -95,6 +123,35 @@ describe('live pipeline catalog adapters', () => {
         page: { number: 1, size: 100, totalElements: 1, totalPages: 1 },
       })[0].autoReady,
     ).toEqual({ enabled: true, threshold: 90 });
+  });
+
+  test('defaults Auto-Ready when settings have only unrelated keys', () => {
+    expect(
+      adaptLivePipeline({ id: 7, name: 'Generation', settings: { unrelated: true } }, 7).autoReady,
+    ).toEqual({ enabled: false });
+  });
+
+  test('preserves a saved threshold of zero', () => {
+    const pipeline = adaptLivePipeline(
+      { id: 7, name: 'Generation', settings: { autoReady: { enabled: true, threshold: 0 } } },
+      7,
+    );
+
+    expect(pipeline.autoReady).toEqual({ enabled: true, threshold: 0 });
+  });
+
+  test.each([
+    { autoReady: { enabled: 'true', threshold: 90 } },
+    { autoReady: { enabled: true } },
+    { autoReady: { enabled: false, threshold: 101 } },
+    { autoReady: { enabled: true, threshold: 0.5 } },
+    { autoReady: null },
+    [],
+  ])('retains the pipeline when its Auto-Ready settings are malformed: %p', (settings) => {
+    const adapted = adaptLivePipeline({ id: 7, name: 'Generation', settings }, 7);
+
+    expect(adapted).toMatchObject({ id: 7, name: 'Generation' });
+    expect(adapted.autoReady).toBeUndefined();
   });
 
   test('preserves typed LP2 visual fields and derives trigger from iteration attributes', () => {
@@ -463,8 +520,7 @@ describe('live pipeline catalog adapters', () => {
           name: '  Release validation  ',
           description: '  Main pipeline  ',
           iterationsCount: 2,
-          autoReadyEnabled: true,
-          autoReadyThreshold: 85,
+          settings: { autoReady: { enabled: true, threshold: 85 } },
         },
       ]),
     ).toEqual([
@@ -475,6 +531,7 @@ describe('live pipeline catalog adapters', () => {
         description: 'Main pipeline',
         iterationsCount: 2,
         autoReady: { enabled: true, threshold: 85 },
+        hasAutoReadySettings: true,
       },
     ]);
   });
@@ -510,12 +567,6 @@ describe('live pipeline catalog adapters', () => {
     ['name length', { id: 7, name: 'x'.repeat(256) }],
     ['description length', { id: 7, name: 'Valid', description: 'x'.repeat(2001) }],
     ['iteration count', { id: 7, name: 'Valid', iterationsCount: -1 }],
-    ['Auto-Ready flag type', { id: 7, name: 'Valid', autoReadyEnabled: 'true' }],
-    ['orphan Auto-Ready threshold', { id: 7, name: 'Valid', autoReadyThreshold: 50 }],
-    [
-      'Auto-Ready threshold bound',
-      { id: 7, name: 'Valid', autoReadyEnabled: true, autoReadyThreshold: 101 },
-    ],
   ])('rejects invalid LP1 %s', (_description, pipeline) => {
     expect(() => adaptLivePipelines([pipeline])).toThrow('Invalid pipeline catalog entity');
   });

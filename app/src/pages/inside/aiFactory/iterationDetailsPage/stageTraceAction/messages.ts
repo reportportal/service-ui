@@ -24,31 +24,4 @@ export const messages = defineMessages({
     defaultMessage: 'The result iteration could not be resolved. Try again.',
   },
   open: { id: 'StageTraceAction.open', defaultMessage: 'Open trace' },
-  loading: { id: 'StageTraceAction.loading', defaultMessage: 'Loading trace availability…' },
-  refresh: { id: 'StageTraceAction.refresh', defaultMessage: 'Refresh trace availability' },
-  notReported: {
-    id: 'StageTraceAction.notReported',
-    defaultMessage: 'Trace has not been reported for the current attempt.',
-  },
-  earlier: {
-    id: 'StageTraceAction.earlier',
-    defaultMessage: 'Trace is available for an earlier attempt.',
-  },
-  reported: {
-    id: 'StageTraceAction.reported',
-    defaultMessage: '{count} trace events in the current attempt.',
-  },
-  forbidden: {
-    id: 'StageTraceAction.forbidden',
-    defaultMessage: 'You do not have access to this stage trace.',
-  },
-  missing: {
-    id: 'StageTraceAction.missing',
-    defaultMessage: 'Trace availability is not available for this stage.',
-  },
-  error: {
-    id: 'StageTraceAction.error',
-    defaultMessage:
-      'Trace availability could not be loaded. You can open the trace page or refresh.',
-  },
 });

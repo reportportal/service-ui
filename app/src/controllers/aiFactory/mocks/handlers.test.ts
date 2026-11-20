@@ -68,7 +68,7 @@ const reloadPersistedHandlers = (): void => {
 };
 
 describe('pipeline settings mocks and live comparison routing', () => {
-  test('LP5 PATCH updates settings through the live contract, with validation', async () => {
+  test('legacy flat LP5 PATCH updates mock settings with validation', async () => {
     const before = await http.get<PipelineSettingsRS>(URLS.tmsPipelineSettings(PROJECT, 1));
     expect(before.data).toMatchObject({ autoReady: true, threshold: 90 });
 
@@ -93,25 +93,36 @@ describe('pipeline settings mocks and live comparison routing', () => {
     expect(after.data).toEqual({ autoReady: false, threshold: 80, editable: true });
   });
 
-  test('LP4 passes through the dev mock adapter to the HTTP adapter', async () => {
-    const networkAdapter = jest.fn((config: InternalAxiosRequestConfig) => Promise.resolve({
-      data: { source: 'backend' },
-      status: 200,
-      statusText: 'OK',
-      headers: {},
-      config,
-    }));
+  test.each([
+    {
+      method: 'get',
+      url: URLS.pipelineIterationComparison(PROJECT, 2, 1),
+    },
+    {
+      method: 'patch',
+      url: URLS.pipelineById(PROJECT, 1),
+      data: { settings: { autoReady: { enabled: true, threshold: 90 } } },
+    },
+  ])('$method $url passes through the dev mock adapter', async (request) => {
+    const networkAdapter = jest.fn((config: InternalAxiosRequestConfig) =>
+      Promise.resolve({
+        data: { source: 'backend' },
+        status: 200,
+        statusText: 'OK',
+        headers: {},
+        config,
+      }),
+    );
     const client = axios.create({ adapter: networkAdapter });
     const passthroughMock = new MockAdapter(client, { onNoMatch: 'passthrough' });
     installAiFactoryHandlers(passthroughMock);
 
     try {
-      const url = URLS.pipelineIterationComparison(PROJECT, 2, 1);
-      const response = await client.get(url);
+      const response = await client.request(request);
 
       expect(response.data).toEqual({ source: 'backend' });
       expect(networkAdapter).toHaveBeenCalledTimes(1);
-      expect(networkAdapter.mock.calls[0][0].url).toBe(url);
+      expect(networkAdapter.mock.calls[0][0].url).toBe(request.url);
     } finally {
       passthroughMock.restore();
     }

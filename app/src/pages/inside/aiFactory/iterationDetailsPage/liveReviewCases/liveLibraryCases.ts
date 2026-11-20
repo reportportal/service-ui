@@ -21,6 +21,7 @@ export interface LiveLibraryCase {
   id: number;
   displayId: string;
   name: string;
+  folderId?: number;
   status?: 'DRAFT' | 'READY';
   overallScore?: number;
 }
@@ -51,10 +52,14 @@ const adaptLiveLibraryCase = (value: unknown): LiveLibraryCase | null => {
   }
   const metrics = asRecord(item.metrics);
   const score = metrics?.overallScore;
+  const folderId = asRecord(item.testFolder)?.id;
   return {
     id: item.id,
     displayId: item.displayId,
     name: item.name,
+    ...(typeof folderId === 'number' && Number.isSafeInteger(folderId) && folderId > 0
+      ? { folderId }
+      : {}),
     ...(item.status === 'DRAFT' || item.status === 'READY' ? { status: item.status } : {}),
     ...(typeof score === 'number' && Number.isFinite(score) && score >= 0 && score <= 100
       ? { overallScore: score }
@@ -104,4 +109,21 @@ export const getLiveLibraryCases = async (
     throw new Error('Invalid Review case page');
   }
   return page;
+};
+
+export const getLiveLibraryCaseFolder = async (
+  projectKey: string,
+  displayId: string,
+  signal: AbortSignal,
+): Promise<number | undefined> => {
+  const response = await fetch(
+    URLS.testCases(projectKey, { 'filter.eq.displayId': displayId, offset: 0, limit: 2 }),
+    { signal },
+  );
+  const page = adaptLiveLibraryCases(response);
+  const testCase = page?.cases[0];
+
+  return page?.totalElements === 1 && testCase?.displayId === displayId
+    ? testCase.folderId
+    : undefined;
 };

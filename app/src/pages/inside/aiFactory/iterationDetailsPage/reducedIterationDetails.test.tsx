@@ -14,14 +14,18 @@
  * limitations under the License.
  */
 
-import { ReactElement } from 'react';
+import { act, ReactElement } from 'react';
+import { createRoot } from 'react-dom/client';
 import { shallow, type CommonWrapper } from 'enzyme';
+import Link from 'redux-first-router-link';
 
 import type {
   ReducedPipelineDetailStage,
   ReducedPipelineIterationDetail,
 } from 'controllers/aiFactory/pipelines';
 import { adaptLivePipelineIterationDetail } from 'controllers/aiFactory/pipelines/liveAdapters';
+import { loadStageTrace, type StageTrace } from 'controllers/aiFactory/stageTrace';
+import { TEST_CASE_LIBRARY_PAGE } from 'controllers/pages';
 
 import { LivePipelineSettingsButton } from '../pipelineSettings';
 import { IterationProvenance } from './iterationProvenance';
@@ -32,8 +36,7 @@ import {
   IterationStageTraceEntry,
   type IterationStageTraceEntryProps,
 } from './stageTraceAction/iterationStageTraceEntry';
-import { GenerationReviewTraceChooser } from './generationReviewTraceChooser/generationReviewTraceChooser';
-import type { LiveLibraryCase } from './liveReviewCases/liveLibraryCases';
+import { getLiveLibraryCaseFolder } from './liveReviewCases/liveLibraryCases';
 import { LiveReviewCases } from './liveReviewCases/liveReviewCases';
 import { CaseLink } from './stagePanels/caseLink';
 import {
@@ -42,9 +45,17 @@ import {
 } from './reducedIterationDetails';
 
 jest.mock('controllers/aiFactory', () => ({ useAiFactoryEnabled: () => true }));
+jest.mock('controllers/aiFactory/stageTrace', () => ({ loadStageTrace: jest.fn() }));
+jest.mock('redux-first-router-link', () => jest.fn(() => null));
+jest.mock('./liveReviewCases/liveLibraryCases', () => ({ getLiveLibraryCaseFolder: jest.fn() }));
+jest.mock('react-redux', () => ({
+  ...jest.requireActual<typeof import('react-redux')>('react-redux'),
+  useSelector: () => ({ organizationSlug: 'my-org', projectSlug: 'my-project' }),
+}));
 
 jest.mock('@reportportal/ui-kit', () => ({
   Button: 'Button',
+  ChevronDownDropdownIcon: () => <svg />,
   ConfigurationIcon: 'ConfigurationIcon',
   CycleArrowsIcon: 'CycleArrowsIcon',
   RefreshIcon: 'RefreshIcon',
@@ -151,6 +162,10 @@ describe('ReducedIterationDetails', () => {
               failure_reasons: ['The source does not say that the menu is hidden.'],
             },
             { name: 'atomicity', max_score: 15, score: 15, failure_reasons: [] },
+            { name: 'clear_steps', max_score: 20, score: 20, failure_reasons: [] },
+            { name: 'expected_results', max_score: 20, score: 20, failure_reasons: [] },
+            { name: 'no_invented_ui', max_score: 15, score: 15, failure_reasons: [] },
+            { name: 'coherence', max_score: 10, score: 10, failure_reasons: [] },
           ],
         },
       ],
@@ -158,7 +173,7 @@ describe('ReducedIterationDetails', () => {
     const gradeOutput = `\`\`\`json\n${JSON.stringify(gradeReport)}\n\`\`\``;
 
     const renderGrade = (
-      message: string,
+      message?: string,
       additionalSections: ReducedPipelineDetailStage['sections'] = [],
     ) =>
       shallow(
@@ -173,31 +188,36 @@ describe('ReducedIterationDetails', () => {
                 label: 'Grade',
                 sequence: 1,
                 status: 'PASSED',
+                attempt: 1,
                 sections: [
                   ...additionalSections,
-                  {
-                    key: 'transcript',
-                    title: 'Transcript',
-                    role: 'DETAILS',
-                    columns: [{ key: 'action', label: 'Action' }],
-                    rows: [
-                      {
-                        key: 'tool',
-                        cells: { kind: 'Tool', action: gradeOutput },
-                        details: [],
-                      },
-                      {
-                        key: 'message',
-                        cells: { kind: 'Message', action: 'Message — preview' },
-                        details: [{ heading: 'Message', items: [message] }],
-                      },
-                      {
-                        key: 'usage',
-                        cells: { kind: 'Usage', action: 'usage: 123 tokens' },
-                        details: [],
-                      },
-                    ],
-                  },
+                  ...(message === undefined
+                    ? []
+                    : [
+                        {
+                          key: 'transcript',
+                          title: 'Transcript',
+                          role: 'DETAILS' as const,
+                          columns: [{ key: 'action', label: 'Action' }],
+                          rows: [
+                            {
+                              key: 'tool',
+                              cells: { kind: 'Tool', action: gradeOutput },
+                              details: [],
+                            },
+                            {
+                              key: 'message',
+                              cells: { kind: 'Message', action: 'Message — preview' },
+                              details: [{ heading: 'Message', items: [message] }],
+                            },
+                            {
+                              key: 'usage',
+                              cells: { kind: 'Usage', action: 'usage: 123 tokens' },
+                              details: [],
+                            },
+                          ],
+                        },
+                      ]),
                 ],
               },
             ],
@@ -206,21 +226,36 @@ describe('ReducedIterationDetails', () => {
           isUnavailable={false}
           breadcrumbDescriptors={breadcrumbDescriptors}
           onRetry={jest.fn()}
+          projectKey="demo"
         />,
       );
 
     test('shows reported totals and reveals individual scores and reasons', () => {
       const wrapper = renderGrade(gradeOutput);
       const results = '[data-automation-id="live-grade-results"]';
-      expect(wrapper.find(results).text()).toContain('Suite score 95/100');
-      expect(wrapper.find(results).text()).toContain('Viewer cannot delete a folder');
-      expect(wrapper.find(results).text()).toContain('136');
-      expect(wrapper.find(results).text()).not.toContain('No invented logic');
+      expect(wrapper.find('TraceGradeResults')).toHaveLength(0);
+      expect(wrapper.find(results).text()).toContain('Suite score 95 / 100');
+      const caseName = wrapper.find(`${results} .reduced-section__grade-case`).find(CaseLink);
+      expect(caseName.props()).toMatchObject({
+        name: 'Viewer cannot delete a folder',
+        searchName: 'Viewer cannot delete a folder',
+      });
+      expect(wrapper.find(`${results} button`).find(CaseLink)).toHaveLength(0);
+      expect(wrapper.find(results).text()).toContain('A /15');
+      expect(wrapper.find(results).text()).toContain('CS /20');
+      expect(wrapper.find(results).text()).toContain('CER /20');
+      expect(wrapper.find(results).text()).toContain('NIL /20');
+      expect(wrapper.find(results).text()).toContain('NIU /15');
+      expect(wrapper.find(results).text()).toContain('C /10');
+      expect(wrapper.find(results).text()).toContain('Total /100');
+      expect(wrapper.find(results).text()).not.toContain('136');
+      expect(wrapper.find(results).text()).not.toContain('Score details');
+      expect(wrapper.find(results).text()).not.toContain('No invented logic · 15/20');
 
       (wrapper.find(`${results} button`).prop('onClick') as () => void)();
 
       expect(wrapper.find(results).text()).toContain('No invented logic · 15/20');
-      expect(wrapper.find(results).text()).toContain('Atomicity · 15/15');
+      expect(wrapper.find(results).text()).not.toContain('136');
       expect(wrapper.find(results).text()).toContain(
         'The source does not say that the menu is hidden.',
       );
@@ -243,15 +278,93 @@ describe('ReducedIterationDetails', () => {
           role: 'RESULT',
           columns: [
             { key: 'name', label: 'Case' },
+            { key: 'line', label: 'Source line', valueType: 'NUMBER' },
             { key: 'total', label: 'Score' },
           ],
-          rows: [{ key: '1', cells: { name: 'Reported case', total: '100' }, details: [] }],
+          rows: [
+            { key: '1', cells: { name: 'Reported case', line: '136', total: '100' }, details: [] },
+          ],
         },
       ]);
       const results = wrapper.find('[data-automation-id="live-grade-results"]');
+      expect(wrapper.find('TraceGradeResults')).toHaveLength(0);
       expect(results).toHaveLength(1);
-      expect(results.text()).toContain('Reported case');
+      const headers = results.find('th') as unknown as TestNodes;
+      const cells = results.find('td') as unknown as TestNodes;
+      expect(headers.map((header) => header.text())).toEqual(['Case', 'Score']);
+      expect(cells.map((cell) => cell.text())).toEqual(['Reported case', '100']);
       expect(results.text()).not.toContain('Viewer cannot delete a folder');
+    });
+
+    const trace: StageTrace = {
+      iterationId: 103,
+      stageKey: 'grade',
+      attempt: 1,
+      status: 'REPORTED',
+      events: [
+        { seq: 74, type: 'TOOL_CALL', title: 'mcp', text: gradeOutput },
+        { seq: 75, type: 'AGENT', title: 'Message', text: gradeOutput },
+        { seq: 76, type: 'STEP', title: 'Usage' },
+        { seq: 77, type: 'FINAL', title: 'Result' },
+      ],
+    };
+
+    test.each([
+      { title: 'shows the final message from the current trace', trace, hasResults: true },
+      {
+        title: 'ignores a tool call containing scores when the final message is invalid',
+        trace: {
+          ...trace,
+          events: trace.events.map((event) =>
+            event.seq === 75 ? { ...event, text: 'Incomplete report' } : event,
+          ),
+        },
+        hasResults: false,
+      },
+      {
+        title: 'handles an unreported trace',
+        trace: { ...trace, status: 'NOT_REPORTED' as const, events: [] },
+        hasResults: false,
+      },
+    ])('$title', async ({ trace: traceResponse, hasResults }) => {
+      jest.mocked(loadStageTrace).mockResolvedValueOnce(traceResponse);
+      const fallback = renderGrade().find('TraceGradeResults') as CommonWrapper & {
+        getElement: () => ReactElement;
+      };
+      const container = document.createElement('div');
+      const root = createRoot(container);
+      const environment = globalThis as typeof globalThis & { IS_REACT_ACT_ENVIRONMENT?: boolean };
+      const previousActEnvironment = environment.IS_REACT_ACT_ENVIRONMENT;
+      environment.IS_REACT_ACT_ENVIRONMENT = true;
+      try {
+        await act(async () => {
+          root.render(fallback.getElement());
+          await Promise.resolve();
+        });
+        expect(loadStageTrace).toHaveBeenLastCalledWith(
+          { projectKey: 'demo', iterationId: 103, stageKey: 'grade', attempt: 1 },
+          expect.any(AbortSignal),
+        );
+        const results = container.querySelector('[data-automation-id="live-grade-results"]');
+        if (hasResults) {
+          expect(results?.textContent).toContain('Suite score 95 / 100');
+          expect(results?.textContent).toContain('Total /100');
+          expect(Link).toHaveBeenCalledWith(
+            expect.objectContaining({
+              children: 'Viewer cannot delete a folder',
+              to: expect.objectContaining({
+                query: { testCasesSearchParams: 'Viewer cannot delete a folder' },
+              }),
+            }),
+            expect.anything(),
+          );
+        } else {
+          expect(results).toBeNull();
+        }
+      } finally {
+        act(() => root.unmount());
+        environment.IS_REACT_ACT_ENVIRONMENT = previousActEnvironment;
+      }
     });
   });
 
@@ -271,12 +384,7 @@ describe('ReducedIterationDetails', () => {
       { requestedStage: 'agent-create' },
     );
     expect(traceEntry(wrapper).find(StageTraceAction).prop('stageKey')).toBe('agent-create');
-    expect(
-      wrapper
-        .find('[data-automation-id="reducedStagePanel"]')
-        .find('section.stage-panels__main')
-        .find(IterationStageTraceEntry),
-    ).toHaveLength(1);
+    expect(wrapper.find('.stage-details-heading > IterationStageTraceEntry')).toHaveLength(1);
     (wrapper.find('[data-automation-id="reducedStageCard-12"]').prop('onClick') as () => void)();
     expect(traceEntry(wrapper).find(StageTraceAction)).toHaveLength(0);
   });
@@ -290,7 +398,7 @@ describe('ReducedIterationDetails', () => {
   });
 
   test.each(['TEST_CASE_GENERATION', undefined])(
-    'human generation Review with type %s chooses a known round instead of loading human trace',
+    'human generation Review with type %s shows Library cases without trace controls',
     (pipelineType) => {
       const wrapper = shallow(
         <ReducedIterationDetails
@@ -315,13 +423,10 @@ describe('ReducedIterationDetails', () => {
           projectKey="demo"
         />,
       );
-      const reviewCases = [{ id: 42, displayId: 'TC1', name: 'Generated case' }];
-      const renderTrace = wrapper.find(LiveReviewCases).prop('children') as (
-        cases: LiveLibraryCase[],
-      ) => ReactElement;
-      const trace = shallow(renderTrace(reviewCases));
-      expect(trace.find(GenerationReviewTraceChooser).prop('cases')).toBe(reviewCases);
-      expect(trace.find(StageTraceAction)).toHaveLength(0);
+      const libraryCases = wrapper.find(LiveReviewCases);
+      expect(libraryCases).toHaveLength(1);
+      expect(libraryCases.prop('children')).toBeUndefined();
+      expect(traceEntry(wrapper).find(StageTraceAction)).toHaveLength(0);
     },
   );
 
@@ -349,7 +454,6 @@ describe('ReducedIterationDetails', () => {
         projectKey="demo"
       />,
     );
-    expect(traceEntry(wrapper).find(GenerationReviewTraceChooser)).toHaveLength(0);
     expect(traceEntry(wrapper).find(StageTraceAction).prop('stageKey')).toBe('review');
   });
 
@@ -410,7 +514,7 @@ describe('ReducedIterationDetails', () => {
     expect(onRetry).not.toHaveBeenCalled();
   });
 
-  test('renders live fields and unavailable header actions without mock mutations', () => {
+  test('renders live fields and keeps Re-run enabled without a click action', () => {
     const onRetry = jest.fn();
     const iteration = detail();
     const wrapper = shallow(
@@ -449,12 +553,11 @@ describe('ReducedIterationDetails', () => {
     expect(compare.text()).toBe('Compare with previous');
     expect(rerun.text()).toBe('Re-run');
     expect(actionWrapper.find(LivePipelineSettingsButton).prop('pipelineId')).toBe(7);
-    [compare, rerun].forEach((button) => {
-      expect(button.prop('disabled')).toBe(true);
-      expect(button.prop('onClick')).toBeUndefined();
-    });
+    expect(compare.prop('disabled')).toBe(true);
+    expect(compare.prop('onClick')).toBeUndefined();
+    expect(rerun.prop('disabled')).toBeFalsy();
+    expect(rerun.prop('onClick')).toBeUndefined();
     expect(actionWrapper.find('span[title="Comparison is not available yet"]')).toHaveLength(1);
-    expect(actionWrapper.find('span[title="Re-run is not available yet"]')).toHaveLength(1);
     const refresh = actionWrapper.find('[data-automation-id="refreshReducedIterationButton"]');
     expect(refresh.prop('disabled')).toBe(false);
     const handleRefresh = refresh.prop('onClick') as () => void;
@@ -541,7 +644,8 @@ describe('ReducedIterationDetails', () => {
     ['upload', 'uploadReport', 'testCase', 'result'],
   ])(
     'renders the %s panel only for a validated generation stage',
-    (kind, sectionKey, first, second) => {
+    async (kind, sectionKey, first, second) => {
+      const caseLabel = kind === 'upload' ? 'TC123' : 'Case 1';
       const stage: ReducedPipelineDetailStage = {
         id: 11,
         key: kind,
@@ -559,7 +663,7 @@ describe('ReducedIterationDetails', () => {
               { key: first, label: first },
               { key: second, label: second },
             ],
-            rows: [{ key: 'one', cells: { [first]: 'Case 1', [second]: 'Passed' }, details: [] }],
+            rows: [{ key: 'one', cells: { [first]: caseLabel, [second]: 'Passed' }, details: [] }],
           },
         ],
       };
@@ -569,18 +673,63 @@ describe('ReducedIterationDetails', () => {
           hasError={false}
           isUnavailable={false}
           breadcrumbDescriptors={breadcrumbDescriptors}
+          projectKey="demo"
           onRetry={jest.fn()}
         />,
       );
 
       expect(wrapper.find(`[data-automation-id="live-${kind}-panel"]`)).toHaveLength(1);
-      expect(wrapper.find(`[data-automation-id="live-${kind}-results"]`)).toHaveLength(1);
+      const results = wrapper.find(`[data-automation-id="live-${kind}-results"]`);
+      expect(results).toHaveLength(1);
       expect(wrapper.find('[data-automation-id="generationStageHighlights"]').text()).toContain(
         'SourceBackend',
       );
-      expect(wrapper.find(`[data-automation-id="live-${kind}-results"]`).text()).toContain(
-        'Case 1',
-      );
+      expect(results.text()).toContain(caseLabel);
+
+      const libraryLink = results.find('UploadReportLibraryLink');
+      if (kind === 'upload') {
+        expect(libraryLink).toHaveLength(1);
+        const [action, heading] = results.prop('children') as ReactElement[];
+        expect(heading.type).toBe('h3');
+        jest.mocked(getLiveLibraryCaseFolder).mockResolvedValueOnce(42);
+        const root = createRoot(document.createElement('div'));
+        const environment = globalThis as typeof globalThis & {
+          IS_REACT_ACT_ENVIRONMENT?: boolean;
+        };
+        const previousActEnvironment = environment.IS_REACT_ACT_ENVIRONMENT;
+        environment.IS_REACT_ACT_ENVIRONMENT = true;
+        try {
+          await act(async () => {
+            root.render(action);
+            await Promise.resolve();
+          });
+          expect(getLiveLibraryCaseFolder).toHaveBeenCalledWith(
+            'demo',
+            'TC123',
+            expect.any(AbortSignal),
+          );
+          expect(Link).toHaveBeenCalledWith(
+            expect.objectContaining({
+              children: 'View in Test Library',
+              to: {
+                type: TEST_CASE_LIBRARY_PAGE,
+                payload: {
+                  organizationSlug: 'my-org',
+                  projectSlug: 'my-project',
+                  testCasePageRoute: 'folder/42',
+                },
+                query: { iteration: '103' },
+              },
+            }),
+            expect.anything(),
+          );
+        } finally {
+          act(() => root.unmount());
+          environment.IS_REACT_ACT_ENVIRONMENT = previousActEnvironment;
+        }
+      } else {
+        expect(libraryLink).toHaveLength(0);
+      }
     },
   );
 
@@ -991,7 +1140,52 @@ describe('ReducedIterationDetails', () => {
     },
   );
 
-  test('shows only the selected stage panel and keeps validated API fields available', () => {
+  test('hides Auto-Ready from the iteration and stage metrics while keeping tokens and Ready', () => {
+    const autoReadyPromoted = {
+      key: 'autoReadyPromoted',
+      label: 'Auto-Ready promoted',
+      value: '0',
+      type: 'META' as const,
+    };
+    const uploadStage: ReducedPipelineDetailStage = {
+      id: 11,
+      key: 'upload',
+      stageKey: 'upload',
+      label: 'Upload',
+      sequence: 1,
+      status: 'PASSED',
+      attributes: [
+        autoReadyPromoted,
+        { key: 'autoReadyThreshold', label: 'Auto-Ready threshold', value: '90', type: 'NONE' },
+        { key: 'tokens', label: 'Tokens', value: '245852', type: 'META' },
+      ],
+    };
+    const wrapper = shallow(
+      <ReducedIterationDetails
+        iteration={detail({
+          pipelineType: 'TEST_CASE_GENERATION',
+          attributes: [autoReadyPromoted, { key: 'readyNow', value: '1' }],
+          stages: [uploadStage],
+        })}
+        hasError={false}
+        isUnavailable={false}
+        breadcrumbDescriptors={breadcrumbDescriptors}
+        onRetry={jest.fn()}
+      />,
+    );
+
+    const iteration = wrapper.find('section[aria-label="Iteration summary"]');
+    const stageCard = wrapper.find('[data-automation-id="reducedStageCard-11"]');
+    const stagePanel = wrapper.find('[data-automation-id="reducedStagePanel"]');
+    expect(iteration.text()).not.toContain('Auto-Ready');
+    expect(iteration.find('KpiTile').prop('label')).toBe('Ready now');
+    expect(stageCard.text()).not.toContain('Auto-Ready');
+    expect(stageCard.text()).toContain('Tokens: 245852');
+    expect(stagePanel.text()).not.toContain('Auto-Ready');
+    expect(stagePanel.text()).toContain('245852');
+  });
+
+  test('shows only the selected stage panel without API diagnostics', () => {
     const iteration = detail({
       rawResponse: { id: 103, pipelineId: 7, backendOnly: { value: 'present' } },
       stages: [
@@ -1067,13 +1261,10 @@ describe('ReducedIterationDetails', () => {
     expect(wrapper.find('[data-automation-id="reducedStagePanel"]').text()).not.toContain(
       'First case',
     );
-    expect(wrapper.text()).toContain('"pipelineId": 7');
+    expect(wrapper.text()).not.toContain('Mapped API fields');
+    expect(wrapper.text()).not.toContain('Full API response');
+    expect(wrapper.text()).not.toContain('"pipelineId": 7');
     expect(wrapper.text()).not.toContain('"backendOnly"');
-    const toggle = wrapper
-      .find('[data-automation-id="fullApiResponse"]')
-      .prop('onToggle') as (event: { currentTarget: { open: boolean } }) => void;
-    toggle({ currentTarget: { open: true } });
-    expect(wrapper.text()).toContain('"backendOnly"');
   });
 
   test('links a CI job when the API supplies an HTTP URL', () => {
