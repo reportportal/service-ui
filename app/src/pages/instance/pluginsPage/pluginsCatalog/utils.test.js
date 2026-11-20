@@ -16,7 +16,7 @@
 
 import catalogue from 'controllers/plugins/__fixtures__/catalogue.json';
 import { PLUGIN_TIERS, PLUGIN_TRUST_TIERS } from 'common/constants/pluginTiers';
-import { toAvailableRow, toInstalledRow } from './utils';
+import { getRowIncompatibility, toAvailableRow, toInstalledRow } from './utils';
 
 const availableEntry = (id) => catalogue.available.find((entry) => entry.id === id);
 const slack = availableEntry('plugin-notify-slack');
@@ -57,5 +57,61 @@ describe('the two axes the registry publishes', () => {
   test('an installed row whose block cannot be believed claims no trust', () => {
     expect(toInstalledRow({ name: jira.name }, jira, false).trust).toBeNull();
     expect(toInstalledRow({ name: jira.name }, undefined).trust).toBeNull();
+  });
+});
+
+describe('what an installed row says about the version it runs', () => {
+  const find = (name) => catalogue.installed.find((row) => row.name === name);
+  const rowOf = (name) => toInstalledRow({ name, details: { version: find(name).version } }, find(name));
+
+  test('the capped version is a running refusal carrying the operator’s reason', () => {
+    expect(getRowIncompatibility(rowOf('zephyr'))).toEqual({
+      running: true,
+      version: '3.1.0',
+      requires: '>=25.1, <26.0',
+      reason: 'Breaks the launch view on 26.0',
+    });
+  });
+
+  test('a withheld update is still the update sentence when the running version is fine', () => {
+    expect(getRowIncompatibility(rowOf('sauce-labs'))).toMatchObject({ newer: true, version: '5.0.0' });
+  });
+
+  test('a running refusal outranks a withheld update', () => {
+    const row = toInstalledRow(
+      { name: 'x', details: { version: '1.0.0' } },
+      {
+        marketplace: {
+          latestVersion: '2.0.0',
+          compatible: false,
+          requires: '>=27',
+          installedCompatibility: { compatible: false, requires: '<26' },
+        },
+      },
+    );
+
+    expect(getRowIncompatibility(row)).toMatchObject({ running: true, reason: null });
+  });
+
+  test('an unknown verdict, `{}`, or a current plugin says nothing', () => {
+    expect(getRowIncompatibility(rowOf('jira'))).toBeNull();
+    const unknown = toInstalledRow(
+      { name: 'x', details: { version: '1.0.0' } },
+      { marketplace: { installedCompatibility: {} } },
+    );
+    expect(getRowIncompatibility(unknown)).toBeNull();
+  });
+
+  test('an installed row that is out of range with nothing newer is no longer guessed at', () => {
+    const row = toInstalledRow(
+      { name: 'x', details: { version: '2.0.0' } },
+      { marketplace: { latestVersion: '2.0.0', compatible: false, requires: '>=27' } },
+    );
+
+    expect(getRowIncompatibility(row)).toBeNull();
+  });
+
+  test('a row without a believable block carries no verdict', () => {
+    expect(toInstalledRow({ name: 'zephyr' }, find('zephyr'), false).installedCompatibility).toBeNull();
   });
 });

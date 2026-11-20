@@ -990,6 +990,7 @@ export class InstalledTab extends Component {
         installedVersion={data.details?.version || null}
         installing={this.props.installingIds.includes(data.registryId)}
         productVersion={this.props.productVersion}
+        installedCompatibility={data.installedCompatibility || null}
         onUseVersion={(version) =>
           this.showVersionChangeModal(
             data.registryId,

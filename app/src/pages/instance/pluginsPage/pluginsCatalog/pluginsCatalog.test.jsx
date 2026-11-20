@@ -96,7 +96,7 @@ describe('PluginsCatalog', () => {
       expect(groupNames(wrapper)).toEqual([ALL_GROUP_TYPE, AVAILABLE_PLUGINS_TYPE]);
       expect(
         group(wrapper, ALL_GROUP_TYPE).find('[data-automation-id="pluginsGroupCount"]').text(),
-      ).toBe('(5)');
+      ).toBe('(6)');
       expect(
         group(wrapper, AVAILABLE_PLUGINS_TYPE)
           .find('[data-automation-id="pluginsGroupCount"]')
@@ -745,12 +745,13 @@ describe('PluginsCatalog', () => {
         marketplaceInstalled: catalogue.installed.filter((row) => row.name !== 'gitlab'),
       });
       const rows = group(wrapper, ALL_GROUP_TYPE).find('[data-automation-id="pluginRow"]');
-      const [absent, matched, , unmatched] = [rows.at(0), rows.at(1), rows.at(2), rows.at(3)];
+      const [absent, matched, , unmatched] = [rows.at(0), rows.at(1), rows.at(2), rows.at(4)];
 
       expect(rowNames(group(wrapper, ALL_GROUP_TYPE))).toEqual([
         'GitLab',
         'Jira',
         'Rally',
+        'Zephyr',
         'Custom Scanner',
         'Sauce Labs',
       ]);

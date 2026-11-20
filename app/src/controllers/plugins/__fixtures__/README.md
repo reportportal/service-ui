@@ -25,7 +25,8 @@ never sent and the UI must treat "missing" and "null" as the same thing.
 
 What each one covers:
 
-- `catalogue.json` — registry online. Installed: matched, unmatched, removed, and one whose
+- `catalogue.json` — registry online. Installed: matched, unmatched, removed, one held back by an
+  operator ceiling, and one whose
   update is withheld because the newest build does not run on this release. Available: one
   that runs here, one that does not, and a premium row that is locked. Plus an advisory, a
   blocked version and an update that is offered.

@@ -224,6 +224,8 @@ export const toInstalledRow = (plugin, mergedEntry, marketplaceTrusted = true) =
     // current apart from one whose update is being withheld: `updateAvailable` is null in both
     compatible: marketplace?.compatible,
     requires: marketplace?.requires || null,
+    // the verdict on the version running here, which `compatible` above does not speak for
+    installedCompatibility: marketplace?.installedCompatibility || null,
     // who wrote it is the registry's claim like every other one here, so it goes with the block
     trust: toTrustTier(marketplace?.tier),
   };
@@ -274,29 +276,37 @@ export const getRowAction = (row) => {
  * of those as "incompatible" would mark every plugin in the catalogue unusable on an instance that
  * simply never configured `rp.product.version`.
  *
- * <p>`newer` separates the two things a refusal can mean on an installed row. With a newer version
- * published, the row is holding back an update the instance cannot take — the state that was
- * indistinguishable from being up to date, because `updateAvailable` is absent either way. Without
- * one, the plugin this instance is actually running is the one out of range, which is a different
- * sentence and not an offer of anything.
+ * <p>`newer` marks an installed row that is holding back an update the instance cannot take — the
+ * state that was indistinguishable from being up to date, because `updateAvailable` is absent either
+ * way. `running` marks the plugin this instance is actually running being out of range, which is a
+ * different sentence and not an offer of anything; it carries the operator's ceiling reason if any.
  */
 export const getRowIncompatibility = (row) => {
-  if (row.compatible !== false) {
-    return null;
+  if (isAvailableRow(row)) {
+    return row.compatible === false
+      ? { version: row.latestVersion || null, requires: row.requires || null, newer: false }
+      : null;
   }
 
-  if (isAvailableRow(row)) {
-    return { version: row.latestVersion || null, requires: row.requires || null, newer: false };
+  // the version running here is out of range: it outranks a withheld update, which is about
+  // another version
+  const running = row.installedCompatibility;
+  if (running?.compatible === false) {
+    return {
+      running: true,
+      version: row.details?.version || null,
+      requires: running.requires || null,
+      reason: running.ceilingReason || null,
+    };
   }
 
   const latest = row.marketplace?.latestVersion || null;
   const installed = row.details?.version || null;
 
-  return {
-    version: latest,
-    requires: row.requires || null,
-    newer: Boolean(latest && installed && compareVersions(latest, installed) > 0),
-  };
+  // an installed row only warns about a newer version it is withholding
+  return row.compatible === false && latest && installed && compareVersions(latest, installed) > 0
+    ? { version: latest, requires: row.requires || null, newer: true }
+    : null;
 };
 
 /** Badges an installed row shows; the tier badge of an available row is rendered from `tier`. */

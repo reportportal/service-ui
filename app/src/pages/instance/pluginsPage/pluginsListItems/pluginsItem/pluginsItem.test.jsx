@@ -135,6 +135,55 @@ describe('PluginsItem', () => {
       expect(find(wrapper, 'pluginRowAction')).toHaveLength(0);
     });
 
+    describe('the version running here is out of range', () => {
+      const zephyr = catalogue.installed.find((row) => row.name === 'zephyr');
+      const local = {
+        name: zephyr.name,
+        enabled: zephyr.enabled,
+        groupType: zephyr.groupType,
+        details: { name: 'Zephyr', version: zephyr.version },
+      };
+      const withVerdict = (installedCompatibility) =>
+        toInstalledRow(local, {
+          ...zephyr,
+          marketplace: { ...zephyr.marketplace, installedCompatibility },
+        });
+
+      test('the tooltip names the running version, the range, this release and the operator’s note', () => {
+        const reason = reasonOf(render(toInstalledRow(local, zephyr)));
+
+        expect(reason).toBe(
+          'Version 3.1.0 supports ReportPortal >=25.1, <26.0. This instance runs 26.1.'
+            + ' Marketplace note: Breaks the launch view on 26.0',
+        );
+      });
+
+      test('without a note the tooltip has none', () => {
+        const reason = reasonOf(
+          render(withVerdict({ compatible: false, requires: '>=25.1, <26.0' })),
+        );
+
+        expect(reason).not.toContain('Marketplace note');
+        expect(reason).toContain('Version 3.1.0 supports');
+      });
+
+      test('without this instance’s release it says only that it is unsupported', () => {
+        const reason = reasonOf(
+          render(toInstalledRow(local, zephyr), { productVersion: undefined }),
+        );
+
+        expect(reason).toBe(
+          "Version 3.1.0 doesn't support the ReportPortal release this instance runs."
+            + ' Marketplace note: Breaks the launch view on 26.0',
+        );
+      });
+
+      test('an undecided verdict puts no mark on the row', () => {
+        expect(find(render(withVerdict({})), 'pluginIncompatibleMark')).toHaveLength(0);
+        expect(find(render(withVerdict(null)), 'pluginIncompatibleMark')).toHaveLength(0);
+      });
+    });
+
     test('an installed row that is genuinely current is not marked', () => {
       const rally = catalogue.installed.find((row) => row.name === 'rally');
       const wrapper = render(

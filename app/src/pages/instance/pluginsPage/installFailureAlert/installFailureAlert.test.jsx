@@ -52,6 +52,28 @@ describe('InstallFailureAlert', () => {
     });
   });
 
+  describe('an incompatible version', () => {
+    const incompatible = { errorCode: MARKETPLACE_INSTALL_ERROR.PLUGIN_INCOMPATIBLE };
+
+    test('the server’s message is quoted, so the operator’s ceiling reason reaches the admin', () => {
+      const body = text({
+        ...incompatible,
+        reason: "'jira:1.4.2' is capped by the marketplace operator at '<27.0': RP 27.0 removes X",
+      });
+
+      expect(body).toMatch(/^Nothing was installed/);
+      expect(body).toContain('capped by the marketplace operator');
+      expect(body).toContain('RP 27.0 removes X.');
+    });
+
+    test('without a message it still says what happened, not the generic line', () => {
+      const body = text(incompatible);
+
+      expect(body).toContain("doesn't support the ReportPortal release");
+      expect(body).not.toContain('reason this page cannot name');
+    });
+  });
+
   // ADR-011: the instance never validates the key — the registry does, and only at artifact
   // download — so this is the first and only place a bad licence can surface. The remedy is always
   // elsewhere, which is why the message has to name where.
@@ -131,10 +153,9 @@ describe('InstallFailureAlert', () => {
       expect(text({ errorCode: 40099 }).length).toBeGreaterThan(40);
     });
 
-    // the incompatibility codes are refused before the dialog is ever confirmed, so they arrive
-    // here only when something changed between listing and install — no special wording exists
-    test('a compatibility refusal is not given words it has not earned', () => {
-      expect(text({ errorCode: MARKETPLACE_INSTALL_ERROR.PLUGIN_INCOMPATIBLE })).toContain(
+    // an undecidable verdict has no wording of its own
+    test('a compatibility refusal that could not be decided is not given words it has not earned', () => {
+      expect(text({ errorCode: MARKETPLACE_INSTALL_ERROR.COMPATIBILITY_UNKNOWN })).toContain(
         'server log',
       );
     });

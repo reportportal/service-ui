@@ -36,7 +36,11 @@
         "blockedAt" : "2026-03-12T10:15:30Z",
         "reason" : "Signed with a revoked key"
       },
-      "locked" : true
+      "locked" : true,
+      "installedCompatibility" : {
+        "compatible" : true,
+        "requires" : ">=25.1"
+      }
     }
   }, {
     "integrationTypeId" : 8,
@@ -54,7 +58,11 @@
       "latestVersion" : "5.0.0",
       "compatible" : true,
       "requires" : ">=25.1",
-      "locked" : false
+      "locked" : false,
+      "installedCompatibility" : {
+        "compatible" : true,
+        "requires" : ">=25.1"
+      }
     }
   }, {
     "integrationTypeId" : 11,
@@ -72,7 +80,35 @@
       "latestVersion" : "5.0.0",
       "compatible" : false,
       "requires" : ">=26.2",
-      "locked" : false
+      "locked" : false,
+      "installedCompatibility" : {
+        "compatible" : true,
+        "requires" : ">=25.1"
+      }
+    }
+  }, {
+    "integrationTypeId" : 12,
+    "name" : "zephyr",
+    "version" : "3.1.0",
+    "enabled" : true,
+    "groupType" : "BTS",
+    "marketplace" : {
+      "pluginId" : "plugin-bts-zephyr",
+      "name" : "Zephyr",
+      "description" : "Zephyr test management.",
+      "author" : "SmartBear",
+      "access" : "public",
+      "tier" : "official",
+      "latestVersion" : "3.1.0",
+      "compatible" : false,
+      "requires" : ">=25.1, <26.0",
+      "locked" : false,
+      "installedCompatibility" : {
+        "compatible" : false,
+        "requires" : ">=25.1, <26.0",
+        "ceiling" : "<26.0",
+        "ceilingReason" : "Breaks the launch view on 26.0"
+      }
     }
   }, {
     "integrationTypeId" : 9,

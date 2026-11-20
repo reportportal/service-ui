@@ -97,6 +97,14 @@ const messages = defineMessages({
     id: 'VersionsTable.incompatibleNoRelease',
     defaultMessage: "This version doesn't run on the release this instance uses.",
   },
+  cappedByMarketplace: {
+    id: 'VersionsTable.cappedByMarketplace',
+    defaultMessage: 'Capped by the marketplace at {ceiling}: {reason}',
+  },
+  cappedByMarketplaceNoReason: {
+    id: 'VersionsTable.cappedByMarketplaceNoReason',
+    defaultMessage: 'Capped by the marketplace at {ceiling}.',
+  },
   blockedWithReason: {
     id: 'VersionsTable.blockedWithReason',
     defaultMessage:
@@ -213,6 +221,11 @@ export const VersionsTable = ({
 
   const incompatibleReason = (entry) => {
     const bound = readRangeBound(entry.requires);
+    // a capped range is compound (">=25.1, <26.0") and the bound this would pick may be the one
+    // the release satisfies, so a capped version is not given a direction, only the cap's note
+    if (entry.ceiling) {
+      return formatMessage(messages.incompatibleNoRelease);
+    }
     // without a release to compare against, or a range this cannot make a sentence of, the honest
     // thing is to say only that it does not run here rather than print a range at the reader
     if (!bound || !productVersion) {
@@ -224,6 +237,19 @@ export const VersionsTable = ({
       productVersion,
     });
   };
+
+  // the operator's cap is why `requires` is narrower than the author declared, so it goes with
+  // the verdict wherever one is shown
+  const cappedNote = (entry) =>
+    entry.ceiling
+      ? formatMessage(
+          entry.ceilingReason ? messages.cappedByMarketplace : messages.cappedByMarketplaceNoReason,
+          { ceiling: entry.ceiling, reason: entry.ceilingReason },
+        )
+      : null;
+
+  const incompatibleTooltip = (entry) =>
+    [incompatibleReason(entry), cappedNote(entry)].filter(Boolean).join(' ');
 
   const blockedReason = (entry) => {
     if (!entry.blockedAt) {
@@ -336,7 +362,7 @@ export const VersionsTable = ({
                   <VersionMark
                     tone={VERSION_MARK_TONES.INCOMPATIBLE}
                     automationId="incompatibleVersionMark"
-                    tooltipContent={incompatibleReason(entry)}
+                    tooltipContent={incompatibleTooltip(entry)}
                   />
                 )}
                 {entry.advisory && (

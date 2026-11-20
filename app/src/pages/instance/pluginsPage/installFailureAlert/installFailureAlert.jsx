@@ -55,6 +55,20 @@ const messages = defineMessages({
       'Nothing was installed. The marketplace refuses to serve version {version}: {reason} Pick' +
       ' another version, or upload a .jar of this one by hand if you kept one.',
   },
+  // The operator's ceiling can be what refuses it, and then the server says which and why. Quoted
+  // like the blocked reason, and for the same reason: it is theirs to say.
+  incompatible: {
+    id: 'InstallFailureAlert.incompatible',
+    defaultMessage:
+      "Nothing was installed. This version doesn't support the ReportPortal release this instance" +
+      ' runs. The server said: {reason} Pick another version.',
+  },
+  incompatibleNoReason: {
+    id: 'InstallFailureAlert.incompatibleNoReason',
+    defaultMessage:
+      "Nothing was installed. This version doesn't support the ReportPortal release this instance" +
+      ' runs. Pick another version.',
+  },
   // Temporary by nature, so it ends on when to try again rather than on a workaround. The address
   // is deliberately unnamed — ADR-004 lets an enterprise point the instance anywhere, so a literal
   // host helps exactly nobody who would see this.
@@ -82,7 +96,7 @@ const messages = defineMessages({
  * never installed, so the frames drop the clause entirely — the `License Invalid` spec says so
  * outright, because "keeps running" describes something that does not exist yet.
  *
- * <p>Four cases, keyed on service-api's `errorCode`. Anything else falls to the generic one, which
+ * <p>Five cases, keyed on service-api's `errorCode`. Anything else falls to the generic one, which
  * points at the log rather than inventing a cause — if a failure deserves its own words it gets its
  * own code and stops arriving here.
  */
@@ -100,6 +114,8 @@ export const InstallFailureAlert = ({
         return messages.licence;
       case MARKETPLACE_INSTALL_ERROR.VERSION_BLOCKED:
         return reason ? messages.blocked : messages.blockedNoReason;
+      case MARKETPLACE_INSTALL_ERROR.PLUGIN_INCOMPATIBLE:
+        return reason ? messages.incompatible : messages.incompatibleNoReason;
       case MARKETPLACE_INSTALL_ERROR.REGISTRY_UNREACHABLE:
         return messages.unreachable;
       default:
@@ -110,7 +126,7 @@ export const InstallFailureAlert = ({
   const text = formatMessage(descriptor(), {
     plugin: pluginName,
     version: version || '',
-    // only the blocked case quotes the operator, and it ends the sentence, so it carries its own
+    // only the blocked and incompatible cases quote the server, and it ends the sentence, so it carries its own
     // stop rather than relying on whoever wrote the reason to have supplied one
     reason: reason ? `${reason.replace(/\.$/, '')}.` : '',
   });

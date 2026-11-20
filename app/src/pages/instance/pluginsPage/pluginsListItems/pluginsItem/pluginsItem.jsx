@@ -161,6 +161,27 @@ const messages = defineMessages({
     id: 'PluginItem.incompatibleNoRelease',
     defaultMessage: "This version doesn't run on the release this instance uses.",
   },
+  installedIncompatible: {
+    id: 'PluginItem.installedIncompatible',
+    defaultMessage:
+      'Version {version} supports ReportPortal {requires}. This instance runs {productVersion}.',
+  },
+  installedIncompatibleReason: {
+    id: 'PluginItem.installedIncompatibleReason',
+    defaultMessage:
+      'Version {version} supports ReportPortal {requires}. This instance runs {productVersion}.'
+      + ' Marketplace note: {reason}',
+  },
+  installedIncompatibleNoRelease: {
+    id: 'PluginItem.installedIncompatibleNoRelease',
+    defaultMessage: "Version {version} doesn't support the ReportPortal release this instance runs.",
+  },
+  installedIncompatibleNoReleaseReason: {
+    id: 'PluginItem.installedIncompatibleNoReleaseReason',
+    defaultMessage:
+      "Version {version} doesn't support the ReportPortal release this instance runs."
+      + ' Marketplace note: {reason}',
+  },
   updateWithheld: {
     id: 'PluginItem.updateWithheld',
     defaultMessage:
@@ -290,9 +311,21 @@ export class PluginsItem extends Component {
       : formatMessage(undated);
   };
 
-  incompatibilityReason = ({ version, requires, newer }) => {
+  incompatibilityReason = ({ version, requires, newer, running, reason }) => {
     const { formatMessage } = this.props.intl;
     const { productVersion } = this.props;
+
+    if (running) {
+      const known = requires && productVersion;
+      let message = messages.installedIncompatibleNoRelease;
+      if (known) {
+        message = reason ? messages.installedIncompatibleReason : messages.installedIncompatible;
+      } else if (reason) {
+        message = messages.installedIncompatibleNoReleaseReason;
+      }
+
+      return formatMessage(message, { version, requires, productVersion, reason });
+    }
 
     if (newer) {
       return requires && productVersion

@@ -313,6 +313,37 @@ describe('VersionsTable', () => {
       );
     });
 
+    test('a ceiling and its reason follow the verdict', () => {
+      const wrapper = render({
+        versions: [
+          {
+            version: '5.8.0',
+            compatible: false,
+            requires: '>=25.1, <26.0',
+            ceiling: '<26.0',
+            ceilingReason: 'Breaks the launch view on 26.0',
+          },
+        ],
+        productVersion: '26.1',
+      });
+
+      expect(tooltipOf(wrapper, '5.8.0', 'incompatibleVersionMark')).toBe(
+        "This version doesn't run on the release this instance uses."
+          + ' Capped by the marketplace at <26.0: Breaks the launch view on 26.0',
+      );
+    });
+
+    test('a ceiling without a reason is still named', () => {
+      const wrapper = render({
+        versions: [{ version: '5.8.0', compatible: false, requires: '<26.0', ceiling: '<26.0' }],
+        productVersion: '26.1',
+      });
+
+      expect(tooltipOf(wrapper, '5.8.0', 'incompatibleVersionMark')).toContain(
+        'Capped by the marketplace at <26.0.',
+      );
+    });
+
     test('a range that makes no sentence says only that it does not run here', () => {
       const wrapper = render({
         versions: [{ version: '5.8.0', compatible: false, requires: 'whenever' }],
