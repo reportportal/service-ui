@@ -450,9 +450,8 @@ describe('VersionsTable', () => {
 
     test('the row is marked and names the severity, the date and where to go', () => {
       const wrapper = render({
-        versions: [{ version: '5.7.0', advisory }, { version: '5.8.0' }],
+        versions: [{ version: '5.7.0', advisory }, { version: '5.8.0', compatible: true }],
         installedVersion: '5.7.0',
-        latestVersion: '5.8.0',
       });
       const tooltip = tooltipOf(wrapper, '5.7.0', 'advisoryVersionMark');
 
@@ -591,7 +590,7 @@ describe('VersionsTable', () => {
     const advisory = { severity: 'high', text: 'CVE', attachedAt: '2026-02-15T12:00:00Z' };
     const versions = [
       { version: '5.8.0', compatible: false, requires: '>=26.2' },
-      { version: '5.7.5' },
+      { version: '5.7.5', compatible: true },
       { version: '5.7.0', advisory },
     ];
     const changelog = { version: '5.7.5', lines: ['Fixed it.'] };
@@ -614,6 +613,20 @@ describe('VersionsTable', () => {
     test('with nothing newer that runs here the advisory offers no upgrade', () => {
       const wrapper = render({
         versions: [{ version: '5.8.0', compatible: false }, { version: '5.7.0', advisory }],
+        installedVersion: '5.7.0',
+      });
+
+      expect(tooltipOf(wrapper, '5.7.0', 'advisoryVersionMark')).not.toContain('Upgrade to');
+    });
+
+    // service-api neither offers nor installs a version whose verdict is undecided
+    test('a version with no verdict is not offered', () => {
+      const wrapper = render({
+        versions: [
+          { version: '5.8.0', compatible: false },
+          { version: '5.7.5' },
+          { version: '5.7.0', advisory },
+        ],
         installedVersion: '5.7.0',
       });
 

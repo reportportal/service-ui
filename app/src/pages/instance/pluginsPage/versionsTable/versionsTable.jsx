@@ -195,21 +195,22 @@ export const VersionsTable = ({
 }) => {
   const { formatMessage, formatDate } = useIntl();
   const ordered = sortVersionsNewestFirst(versions);
-  // The version on offer, as service-api walks it: the newest row above the installed one that runs
-  // here and is not blocked. When the newest build does not run here this is an older one, so it is
+  // The version on offer, as service-api walks it: the newest row above the installed one that is
+  // known to run here and is not blocked. An undecided verdict is not offered, as service-api will
+  // not offer or install it. When the newest build does not run here this is an older one, so it is
   // not simply the top row.
   const offeredVersion = installedVersion
     ? ordered.find(
         (entry) =>
           compareVersions(entry.version, installedVersion) > 0
-          && entry.compatible !== false
+          && entry.compatible === true
           && !entry.blocked,
       )?.version || null
     : null;
   // FR-A-04 asks the detail page to expose the changelog of the version on offer without the reader
-  // having to find it, so that row opens on load. Only when there is one: with nothing installed,
-  // or already on the newest build, no row is more interesting than any other and the table starts
-  // closed.
+  // having to find it, so that row opens on load. With nothing on offer the newest build still
+  // opens when it is above the installed one; with nothing installed, or already on the newest
+  // build, no row is more interesting than any other and the table starts closed.
   const newerThanInstalled =
     offeredVersion
     || (installedVersion && ordered.length > 0 && compareVersions(ordered[0].version, installedVersion) > 0
