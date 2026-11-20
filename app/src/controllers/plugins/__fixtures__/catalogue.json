@@ -111,6 +111,26 @@
       }
     }
   }, {
+    "integrationTypeId" : 13,
+    "name" : "xray",
+    "version" : "2.0.0",
+    "enabled" : true,
+    "groupType" : "BTS",
+    "marketplace" : {
+      "pluginId" : "plugin-bts-xray",
+      "name" : "Xray",
+      "description" : "Xray test management.",
+      "author" : "Xblend",
+      "access" : "public",
+      "tier" : "official",
+      "latestVersion" : "2.0.0",
+      "locked" : false,
+      "installedCompatibility" : {
+        "ceiling" : "<26.0",
+        "ceilingReason" : "Breaks the launch view on 26.0"
+      }
+    }
+  }, {
     "integrationTypeId" : 9,
     "name" : "gitlab",
     "version" : "2.1.0",

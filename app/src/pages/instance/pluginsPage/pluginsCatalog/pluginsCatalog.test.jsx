@@ -102,7 +102,7 @@ describe('PluginsCatalog', () => {
       expect(groupNames(wrapper)).toEqual([ALL_GROUP_TYPE, AVAILABLE_PLUGINS_TYPE]);
       expect(
         group(wrapper, ALL_GROUP_TYPE).find('[data-automation-id="pluginsGroupCount"]').text(),
-      ).toBe('(6)');
+      ).toBe('(7)');
       expect(
         group(wrapper, AVAILABLE_PLUGINS_TYPE)
           .find('[data-automation-id="pluginsGroupCount"]')
@@ -489,7 +489,13 @@ describe('PluginsCatalog', () => {
       // here, so it does not have to wait for the server
       const wrapper = render({ ...refreshing, activeCategory: BTS_GROUP_TYPE });
 
-      expect(rowNames(group(wrapper, ALL_GROUP_TYPE))).toEqual(['GitLab', 'Jira', 'Rally', 'Zephyr']);
+      expect(rowNames(group(wrapper, ALL_GROUP_TYPE))).toEqual([
+        'GitLab',
+        'Jira',
+        'Rally',
+        'Xray',
+        'Zephyr',
+      ]);
       expect(staleGroups(wrapper)).toBe(true);
     });
 
@@ -591,7 +597,7 @@ describe('PluginsCatalog', () => {
     test('a category chip narrows the locally held Installed group on top of the query', () => {
       const wrapper = render({ query: 'a', activeCategory: BTS_GROUP_TYPE, availablePlugins: [] });
 
-      expect(rowNames(group(wrapper, ALL_GROUP_TYPE))).toEqual(['GitLab', 'Jira', 'Rally']);
+      expect(rowNames(group(wrapper, ALL_GROUP_TYPE))).toEqual(['GitLab', 'Jira', 'Rally', 'Xray']);
       expect(group(wrapper, AVAILABLE_PLUGINS_TYPE)).toHaveLength(0);
     });
 
@@ -972,6 +978,20 @@ describe('PluginsCatalog', () => {
     });
   });
 
+  describe('an installed plugin with a ceiling but no verdict', () => {
+    test('carries no incompatibility mark, unlike the plugin the registry refused', () => {
+      const wrapper = render({ availablePlugins: [] });
+      const rows = group(wrapper, ALL_GROUP_TYPE).find('[data-automation-id="pluginRow"]');
+      const markOf = (name) =>
+        rows
+          .filterWhere((row) => rowNames(row).includes(name))
+          .find('[data-automation-id="pluginIncompatibleMark"]');
+
+      expect(markOf('Zephyr')).toHaveLength(1);
+      expect(markOf('Xray')).toHaveLength(0);
+    });
+  });
+
   describe('an installed plugin the registry could not match', () => {
     test('claims no marketplace signal, and says why it has none', () => {
       const wrapper = render({
@@ -981,12 +1001,13 @@ describe('PluginsCatalog', () => {
         marketplaceInstalled: catalogue.installed.filter((row) => row.name !== 'gitlab'),
       });
       const rows = group(wrapper, ALL_GROUP_TYPE).find('[data-automation-id="pluginRow"]');
-      const [absent, matched, , unmatched] = [rows.at(0), rows.at(1), rows.at(2), rows.at(4)];
+      const [absent, matched, , unmatched] = [rows.at(0), rows.at(1), rows.at(2), rows.at(5)];
 
       expect(rowNames(group(wrapper, ALL_GROUP_TYPE))).toEqual([
         'GitLab',
         'Jira',
         'Rally',
+        'Xray',
         'Zephyr',
         'Custom Scanner',
         'Sauce Labs',

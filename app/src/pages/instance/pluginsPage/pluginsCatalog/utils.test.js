@@ -73,6 +73,16 @@ describe('what an installed row says about the version it runs', () => {
     });
   });
 
+  // the registry set a ceiling but could not say whether this release is inside it: no verdict
+  // arrives, and an unknown verdict must not read as "does not run here"
+  test('a ceiling with no verdict says nothing', () => {
+    const row = rowOf('xray');
+
+    expect(row.installedCompatibility).toMatchObject({ ceiling: '<26.0' });
+    expect(row.installedCompatibility.compatible).toBeUndefined();
+    expect(getRowIncompatibility(row)).toBeNull();
+  });
+
   test('a withheld update is still the update sentence when the running version is fine', () => {
     expect(getRowIncompatibility(rowOf('sauce-labs'))).toMatchObject({ newer: true, version: '5.0.0' });
   });
