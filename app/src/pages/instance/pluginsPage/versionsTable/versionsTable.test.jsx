@@ -359,7 +359,7 @@ describe('VersionsTable', () => {
 
       expect(tooltipOf(wrapper, '5.8.0', 'incompatibleVersionMark')).toBe(
         'Built for ReportPortal before 26.0. This instance runs 26.1.'
-          + ' Capped by the marketplace at <26.0: Breaks the launch view on 26.0',
+          + ' The marketplace limits this version to ReportPortal before 26.0. Their reason: Breaks the launch view on 26.0',
       );
     });
 
@@ -379,7 +379,7 @@ describe('VersionsTable', () => {
 
       expect(tooltipOf(wrapper, '5.8.0', 'incompatibleVersionMark')).toBe(
         'Needs ReportPortal 25.1 or later. This instance runs 25.0.'
-          + ' Capped by the marketplace at <26.0: Breaks the launch view on 26.0',
+          + ' The marketplace limits this version to ReportPortal before 26.0. Their reason: Breaks the launch view on 26.0',
       );
     });
 
@@ -390,7 +390,18 @@ describe('VersionsTable', () => {
       });
 
       expect(tooltipOf(wrapper, '5.8.0', 'incompatibleVersionMark')).toContain(
-        'Capped by the marketplace at <26.0.',
+        'The marketplace limits this version to ReportPortal before 26.0.',
+      );
+    });
+
+    test('an inclusive ceiling reads as "or earlier"', () => {
+      const wrapper = render({
+        versions: [{ version: '5.7.0', compatible: true, ceiling: '<=26.0' }],
+        productVersion: '25.2',
+      });
+
+      expect(tooltipOf(wrapper, '5.7.0', 'cappedVersionMark')).toBe(
+        'The marketplace limits this version to ReportPortal 26.0 or earlier.',
       );
     });
 
@@ -409,7 +420,7 @@ describe('VersionsTable', () => {
 
       expect(find(rowFor(wrapper, '5.7.0'), 'incompatibleVersionMark')).toHaveLength(0);
       expect(tooltipOf(wrapper, '5.7.0', 'cappedVersionMark')).toBe(
-        'Capped by the marketplace at <26.0: Breaks the launch view on 26.0',
+        'The marketplace limits this version to ReportPortal before 26.0. Their reason: Breaks the launch view on 26.0',
       );
     });
 

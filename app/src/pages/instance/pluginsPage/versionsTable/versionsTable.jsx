@@ -116,11 +116,11 @@ const messages = defineMessages({
   },
   cappedByMarketplace: {
     id: 'VersionsTable.cappedByMarketplace',
-    defaultMessage: 'Capped by the marketplace at {ceiling}: {reason}',
+    defaultMessage: 'The marketplace limits this version to ReportPortal {ceiling}. Their reason: {reason}',
   },
   cappedByMarketplaceNoReason: {
     id: 'VersionsTable.cappedByMarketplaceNoReason',
-    defaultMessage: 'Capped by the marketplace at {ceiling}.',
+    defaultMessage: 'The marketplace limits this version to ReportPortal {ceiling}.',
   },
   blockedWithReason: {
     id: 'VersionsTable.blockedWithReason',
@@ -270,13 +270,23 @@ export const VersionsTable = ({
     return formatMessage(BOUND_MESSAGE[bound.operator], { version: bound.version, productVersion });
   };
 
+  // the ceiling as words, like the bound sentences above: `<26.0` is "before 26.0", `<=26.0` is
+  // "26.0 or earlier"
+  const plainCeiling = (ceiling) => {
+    const match = /^\s*(<=?)\s*(\S+)\s*$/.exec(ceiling);
+    if (!match) {
+      return ceiling;
+    }
+    return match[1] === '<=' ? `${match[2]} or earlier` : `before ${match[2]}`;
+  };
+
   // the operator's cap is why `requires` is narrower than the author declared, so it goes with
   // the verdict wherever one is shown, and stands alone on a version it does not affect here
   const cappedNote = (entry) =>
     entry.ceiling
       ? formatMessage(
           entry.ceilingReason ? messages.cappedByMarketplace : messages.cappedByMarketplaceNoReason,
-          { ceiling: entry.ceiling, reason: entry.ceilingReason },
+          { ceiling: plainCeiling(entry.ceiling), reason: entry.ceilingReason },
         )
       : null;
 
