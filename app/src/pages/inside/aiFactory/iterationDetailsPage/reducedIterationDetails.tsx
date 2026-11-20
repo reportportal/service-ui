@@ -248,6 +248,23 @@ const UploadReportLibraryLink = ({
   );
 };
 
+const renderCaseCellLink = (
+  row: ReducedPipelineSection['rows'][number],
+  columnKey: string,
+  name: string,
+) => {
+  const cellLink = row.cellLinks?.[columnKey];
+  if (cellLink?.entityType !== 'TEST_CASE') return undefined;
+
+  const entityId = cellLink.entityId ?? '';
+  const numericId = /^\d+$/.test(entityId) ? Number(entityId) : undefined;
+  const testCaseId = numericId && Number.isSafeInteger(numericId) ? numericId : undefined;
+  const searchName = testCaseId === undefined ? row.cells.name : undefined;
+  if (testCaseId === undefined && !searchName) return undefined;
+
+  return <CaseLink testCaseId={testCaseId} searchName={searchName} name={name} />;
+};
+
 const renderReducedStageSection = (
   section: ReducedPipelineSection,
   stageId: number,
@@ -375,25 +392,11 @@ const renderReducedStageSection = (
                       const value = isUnitName
                         ? getAgentUnitName(row)
                         : (row.cells[column.key] ?? '');
-                      const cellLink = row.cellLinks?.[column.key];
-                      const numericEntityId =
-                        cellLink?.entityType === 'TEST_CASE' &&
-                        /^\d+$/.test(cellLink.entityId ?? '')
-                          ? Number(cellLink.entityId)
-                          : undefined;
-                      const testCaseId =
-                        numericEntityId && Number.isSafeInteger(numericEntityId)
-                          ? numericEntityId
-                          : undefined;
-                      const searchName =
-                        cellLink?.entityType === 'TEST_CASE' && testCaseId === undefined
-                          ? row.cells.name
-                          : undefined;
                       const isStatusColumn =
                         column.valueType === 'STATUS' ||
                         /^(step)?status$/.test(column.key.toLowerCase().replace(/[_-]/g, '')) ||
                         (section.key === 'uploadReport' && column.key === 'result');
-                      let cellContent: ReactNode = value;
+                      let cellContent: ReactNode;
                       if (!isUnitName && isStatusColumn && value) {
                         cellContent = (
                           <span
@@ -405,15 +408,12 @@ const renderReducedStageSection = (
                             {value}
                           </span>
                         );
-                      } else if (
-                        cellLink?.entityType === 'TEST_CASE' &&
-                        (testCaseId !== undefined || searchName)
-                      ) {
-                        cellContent = (
-                          <CaseLink testCaseId={testCaseId} searchName={searchName} name={value} />
-                        );
-                      } else if (!isUnitName) {
-                        cellContent = formatStageTableValue(value, column.valueType, formatNumber);
+                      } else {
+                        cellContent =
+                          renderCaseCellLink(row, column.key, value) ??
+                          (isUnitName
+                            ? value
+                            : formatStageTableValue(value, column.valueType, formatNumber));
                       }
                       return (
                         <td

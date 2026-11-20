@@ -83,7 +83,9 @@ const isGradeReport = (value: unknown): value is GradeReport => {
 
 const parseGradeReport = (message?: string): GradeReport | undefined => {
   const text = message?.replace(/^Message — /, '').trim();
-  const json = text?.match(/^```json\s+(\{[\s\S]*\})\s*```$/)?.[1];
+  if (!text) return undefined;
+
+  const json = /^```json\s+(\{[\s\S]*\})\s*```$/.exec(text)?.[1];
   if (!json) return undefined;
 
   try {
