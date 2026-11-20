@@ -313,7 +313,9 @@ describe('VersionsTable', () => {
       );
     });
 
-    test('a ceiling and its reason follow the verdict', () => {
+    // the cap is why the range is compound, not why this release fails it: the sentence names the
+    // bound the release misses, and the cap is extra
+    test('a capped version over its ceiling says what it was built for, then the cap', () => {
       const wrapper = render({
         versions: [
           {
@@ -328,7 +330,27 @@ describe('VersionsTable', () => {
       });
 
       expect(tooltipOf(wrapper, '5.8.0', 'incompatibleVersionMark')).toBe(
-        "This version doesn't run on the release this instance uses."
+        'Built for ReportPortal 26.0 or earlier. This instance runs 26.1.'
+          + ' Capped by the marketplace at <26.0: Breaks the launch view on 26.0',
+      );
+    });
+
+    test('a capped version under its floor blames the floor, with the cap as extra', () => {
+      const wrapper = render({
+        versions: [
+          {
+            version: '5.8.0',
+            compatible: false,
+            requires: '>=25.1, <26.0',
+            ceiling: '<26.0',
+            ceilingReason: 'Breaks the launch view on 26.0',
+          },
+        ],
+        productVersion: '25.0',
+      });
+
+      expect(tooltipOf(wrapper, '5.8.0', 'incompatibleVersionMark')).toBe(
+        'Needs ReportPortal 25.1 or later. This instance runs 25.0.'
           + ' Capped by the marketplace at <26.0: Breaks the launch view on 26.0',
       );
     });
@@ -342,6 +364,38 @@ describe('VersionsTable', () => {
       expect(tooltipOf(wrapper, '5.8.0', 'incompatibleVersionMark')).toContain(
         'Capped by the marketplace at <26.0.',
       );
+    });
+
+    test('a capped version that still runs here carries only the cap note', () => {
+      const wrapper = render({
+        versions: [
+          {
+            version: '5.7.0',
+            compatible: true,
+            ceiling: '<26.0',
+            ceilingReason: 'Breaks the launch view on 26.0',
+          },
+        ],
+        productVersion: '25.2',
+      });
+
+      expect(find(rowFor(wrapper, '5.7.0'), 'incompatibleVersionMark')).toHaveLength(0);
+      expect(tooltipOf(wrapper, '5.7.0', 'cappedVersionMark')).toBe(
+        'Capped by the marketplace at <26.0: Breaks the launch view on 26.0',
+      );
+    });
+
+    test('an uncapped compatible version has no cap mark, and a refused one only its own', () => {
+      const wrapper = render({
+        versions: [
+          { version: '5.7.0', compatible: true },
+          { version: '5.8.0', compatible: false, requires: '<26.0', ceiling: '<26.0' },
+        ],
+        productVersion: '26.1',
+      });
+
+      expect(find(rowFor(wrapper, '5.7.0'), 'cappedVersionMark')).toHaveLength(0);
+      expect(find(rowFor(wrapper, '5.8.0'), 'cappedVersionMark')).toHaveLength(0);
     });
 
     test('a range that makes no sentence says only that it does not run here', () => {

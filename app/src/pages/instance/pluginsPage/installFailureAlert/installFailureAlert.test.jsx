@@ -62,6 +62,7 @@ describe('InstallFailureAlert', () => {
       });
 
       expect(body).toMatch(/^Nothing was installed/);
+      expect(body).toContain('The marketplace said: ');
       expect(body).toContain('capped by the marketplace operator');
       expect(body).toContain('RP 27.0 removes X.');
     });
@@ -71,7 +72,7 @@ describe('InstallFailureAlert', () => {
 
       expect(body).toContain("doesn't support the ReportPortal release");
       expect(body).not.toContain('reason this page cannot name');
-      expect(body).not.toContain('The server said');
+      expect(body).not.toContain('The marketplace said');
     });
   });
 

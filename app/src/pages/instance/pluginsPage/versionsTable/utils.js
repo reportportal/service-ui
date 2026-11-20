@@ -78,8 +78,7 @@ const compareSegments = (left = '0', right = '0') => {
   return restA.localeCompare(restB);
 };
 
-const LOWER_BOUND = /^\s*>=?\s*(\d[\dA-Za-z.\-+]*)/;
-const UPPER_BOUND = /^\s*<=?\s*(\d[\dA-Za-z.\-+]*)/;
+const BOUND = /^\s*(>=|<=|>|<|=)?\s*(\d[\dA-Za-z.\-+]*)\s*$/;
 
 /**
  * A declared range, read for which way it points and what it names.
@@ -89,28 +88,40 @@ const UPPER_BOUND = /^\s*<=?\s*(\d[\dA-Za-z.\-+]*)/;
  * different situations for the reader: one is solved by upgrading ReportPortal and the other never
  * will be. Showing `>=26.2` verbatim answers neither question and asks the reader to parse a range.
  *
- * <p>Only the first bound of each direction is read. A range is a display detail here — the verdict
- * itself was decided by service-api, which owns the parser — so anything this cannot make a
- * sentence of falls back to saying only that the version does not run here.
+ * <p>A compound range (">=25.1, <26.0") is read for the first bound the product fails, in any
+ * order, with service-api's operators (>=, >, <=, <, =) and missing segments counting as zero.
+ * A range is a display detail here — the verdict itself was decided by service-api, which owns the
+ * parser — so anything this cannot make a sentence of (no product, an unparsable part, no failed
+ * bound) falls back to saying only that the version does not run here.
  *
  * @returns {{direction: 'newer'|'older', version: string}|null}
  */
-export const readRangeBound = (range) => {
-  if (typeof range !== 'string' || !range.trim()) {
+export const readRangeBound = (range, productVersion) => {
+  if (typeof range !== 'string' || !range.trim() || !productVersion) {
     return null;
   }
 
   for (const part of range.split(',')) {
-    const lower = LOWER_BOUND.exec(part);
-    if (lower) {
-      return { direction: 'newer', version: lower[1] };
+    const match = BOUND.exec(part);
+    if (!match) {
+      return null;
     }
-  }
+    const [, op = '=', version] = match;
+    const diff = compareVersions(productVersion, version);
+    const satisfied = {
+      '>=': diff >= 0,
+      '>': diff > 0,
+      '<=': diff <= 0,
+      '<': diff < 0,
+      '=': diff === 0,
+    }[op];
 
-  for (const part of range.split(',')) {
-    const upper = UPPER_BOUND.exec(part);
-    if (upper) {
-      return { direction: 'older', version: upper[1] };
+    if (!satisfied) {
+      // an exact pin the product misses is a wall on one side only
+      return {
+        direction: op === '>=' || op === '>' || (op === '=' && diff < 0) ? 'newer' : 'older',
+        version,
+      };
     }
   }
 

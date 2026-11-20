@@ -290,11 +290,6 @@ export class PluginsItem extends Component {
     this.props.onClick(this.props.data);
   };
 
-  /**
-   * Why the row will not offer the build. The wording splits on whether anything newer exists:
-   * with a newer version the sentence is about an update being held back, and without one it is
-   * about the plugin this instance is already running having fallen out of range.
-   */
   /** The fixed-shape sentence a marketplace badge carries, dated where a date exists. */
   badgeHint = (badge) => {
     const [dated, undated] = BADGE_HINTS[badge] || [];
@@ -311,6 +306,13 @@ export class PluginsItem extends Component {
       : formatMessage(undated);
   };
 
+  /**
+   * Why the row will not offer the build. `running` means the plugin this instance already runs
+   * has fallen out of range, so the sentence is about the installed version and quotes the
+   * operator's ceiling reason where there is one. Otherwise `newer` says whether an update is
+   * being held back or the plugin has no newer build at all; either way the sentence needs both
+   * the declared range and the release to quote, and says only that it does not run without them.
+   */
   incompatibilityReason = ({ version, requires, newer, running, reason }) => {
     const { formatMessage } = this.props.intl;
     const { productVersion } = this.props;

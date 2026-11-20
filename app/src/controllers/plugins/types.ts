@@ -44,17 +44,6 @@ export interface PluginMetadata {
   multiple?: boolean;
 }
 
-/**
- * service-api's verdict on the version running here. `{}` means the registry read failed, so
- * nothing is known; only an explicit `compatible: false` may be acted on.
- */
-export interface InstalledCompatibility {
-  compatible?: boolean;
-  requires?: string;
-  ceiling?: string;
-  ceilingReason?: string;
-}
-
 export interface PluginDetails {
   id: string;
   name: string;

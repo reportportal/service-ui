@@ -61,7 +61,7 @@ const messages = defineMessages({
     id: 'InstallFailureAlert.incompatible',
     defaultMessage:
       "Nothing was installed. This version doesn't support the ReportPortal release this instance" +
-      ' runs. The server said: {reason} Pick another version.',
+      ' runs. The marketplace said: {reason} Pick another version.',
   },
   incompatibleNoReason: {
     id: 'InstallFailureAlert.incompatibleNoReason',
@@ -155,6 +155,6 @@ InstallFailureAlert.propTypes = {
   version: PropTypes.string,
   /** service-api's `errorCode`; an unmapped one falls to the generic message. */
   errorCode: PropTypes.number,
-  /** The operator's stated reason, quoted verbatim by the blocked case and nowhere else. */
+  /** The operator's stated reason, quoted verbatim by the blocked and incompatible cases. */
   reason: PropTypes.string,
 };

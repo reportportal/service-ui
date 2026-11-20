@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { compareVersions, sortVersionsNewestFirst } from './utils';
+import { compareVersions, readRangeBound, sortVersionsNewestFirst } from './utils';
 
 const order = (versions) =>
   sortVersionsNewestFirst(versions.map((version) => ({ version }))).map((e) => e.version);
@@ -67,5 +67,49 @@ describe('sortVersionsNewestFirst', () => {
     sortVersionsNewestFirst(versions);
 
     expect(versions.map((e) => e.version)).toEqual(['5.6.0', '5.8.0']);
+  });
+});
+
+describe('readRangeBound', () => {
+  test('a product above the cap fails the upper bound, so the build is for an older release', () => {
+    expect(readRangeBound('>=25.1, <26.0', '26.1')).toEqual({
+      direction: 'older',
+      version: '26.0',
+    });
+  });
+
+  test('a product below the floor fails the lower bound', () => {
+    expect(readRangeBound('>=25.1, <26.0', '25.0')).toEqual({
+      direction: 'newer',
+      version: '25.1',
+    });
+  });
+
+  test('the order of the parts does not matter', () => {
+    expect(readRangeBound('<26.0, >=25.1', '26.1')).toEqual({
+      direction: 'older',
+      version: '26.0',
+    });
+    expect(readRangeBound('<26.0, >=25.1', '25.0')).toEqual({
+      direction: 'newer',
+      version: '25.1',
+    });
+  });
+
+  test('every operator reads the way service-api does, missing segments being zero', () => {
+    expect(readRangeBound('>25.1', '25.1.0')).toEqual({ direction: 'newer', version: '25.1' });
+    expect(readRangeBound('<=25.1', '25.1.1')).toEqual({ direction: 'older', version: '25.1' });
+    expect(readRangeBound('=25.1', '25.0')).toEqual({ direction: 'newer', version: '25.1' });
+    expect(readRangeBound('=25.1', '26.0')).toEqual({ direction: 'older', version: '25.1' });
+    expect(readRangeBound('>=25.1, <26.0', '25.1.0')).toBeNull();
+  });
+
+  test('nothing to say when the range is unparsable or there is no product', () => {
+    expect(readRangeBound('whenever', '26.1')).toBeNull();
+    expect(readRangeBound('>=25.1, soon', '26.1')).toBeNull();
+    expect(readRangeBound('soon, >=27.0', '26.1')).toBeNull();
+    expect(readRangeBound('>=25.1', null)).toBeNull();
+    expect(readRangeBound('', '26.1')).toBeNull();
+    expect(readRangeBound(undefined, '26.1')).toBeNull();
   });
 });

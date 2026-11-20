@@ -466,6 +466,38 @@ describe('InstalledTab', () => {
       rendered.wrapper.update();
     };
 
+    // the running version's verdict travels from the row to the plugin page; `{}` is a failed
+    // registry read and proves nothing
+    describe('the running version is outside the range', () => {
+      const alertFor = (installedCompatibility) => {
+        const rendered = render();
+        const row = {
+          ...jiraRow,
+          installedCompatibility,
+        };
+
+        rendered.call(PluginsCatalog, 'onInstalledItemClick', row);
+        rendered.wrapper.update();
+
+        return rendered.wrapper.find('[data-automation-id="pluginInstalledIncompatibleAlert"]');
+      };
+
+      test('a capped plugin whose running version is refused says so on its page', () => {
+        const alert = alertFor({
+          compatible: false,
+          requires: '>=25.1, <26.0',
+          ceiling: '<26.0',
+          ceilingReason: 'Breaks the launch view on 26.0',
+        });
+
+        expect(alert.exists()).toBe(true);
+      });
+
+      test('an empty verdict raises nothing', () => {
+        expect(alertFor({}).exists()).toBe(false);
+      });
+    });
+
     /**
      * Plugin Detail. State. Update Available — there is no banner in the design. An available
      * upgrade is information rather than a warning, so it earns an action in the header beside the

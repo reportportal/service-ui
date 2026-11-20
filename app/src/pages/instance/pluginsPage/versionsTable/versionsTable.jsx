@@ -220,15 +220,10 @@ export const VersionsTable = ({
     value ? formatDate(value, { day: 'numeric', month: 'short', year: 'numeric' }) : '';
 
   const incompatibleReason = (entry) => {
-    const bound = readRangeBound(entry.requires);
-    // a capped range is compound (">=25.1, <26.0") and the bound this would pick may be the one
-    // the release satisfies, so a capped version is not given a direction, only the cap's note
-    if (entry.ceiling) {
-      return formatMessage(messages.incompatibleNoRelease);
-    }
+    const bound = readRangeBound(entry.requires, productVersion);
     // without a release to compare against, or a range this cannot make a sentence of, the honest
     // thing is to say only that it does not run here rather than print a range at the reader
-    if (!bound || !productVersion) {
+    if (!bound) {
       return formatMessage(messages.incompatibleNoRelease);
     }
 
@@ -239,7 +234,7 @@ export const VersionsTable = ({
   };
 
   // the operator's cap is why `requires` is narrower than the author declared, so it goes with
-  // the verdict wherever one is shown
+  // the verdict wherever one is shown, and stands alone on a version it does not affect here
   const cappedNote = (entry) =>
     entry.ceiling
       ? formatMessage(
@@ -365,6 +360,13 @@ export const VersionsTable = ({
                     tooltipContent={incompatibleTooltip(entry)}
                   />
                 )}
+                {entry.compatible !== false && entry.ceiling && (
+                  <VersionMark
+                    tone={VERSION_MARK_TONES.NEUTRAL}
+                    automationId="cappedVersionMark"
+                    tooltipContent={cappedNote(entry)}
+                  />
+                )}
                 {entry.advisory && (
                   <VersionMark
                     tone={VERSION_MARK_TONES.DANGER}
@@ -421,6 +423,9 @@ VersionsTable.propTypes = {
       compatible: PropTypes.bool,
       /** The range the version declares, quoted in the reason. */
       requires: PropTypes.string,
+      /** The operator's cap on the range, and the reason given for it. */
+      ceiling: PropTypes.string,
+      ceilingReason: PropTypes.string,
       advisory: PropTypes.shape({
         severity: PropTypes.string,
         text: PropTypes.string,
