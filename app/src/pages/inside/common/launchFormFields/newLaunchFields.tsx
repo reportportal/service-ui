@@ -107,6 +107,10 @@ export const NewLaunchFields = ({
       createWithoutConfirmation
       skipOptionCreation
       isDropdownMode
+      inputProps={{
+        clearable: !!input.value,
+        onClear: () => handleTestPlanChange(null, input),
+      }}
       minLength={0}
       menuClassName={cx('modal-autocomplete-menu', testPlanMenuClassName)}
       menuPortalRoot={menuPortalRoot}
@@ -144,8 +148,8 @@ export const NewLaunchFields = ({
             <FieldTextFlex
               ref={descriptionRef}
               label={formatMessage(commonMessages.description)}
-              maxLength={MAX_FIELD_LENGTH as number}
-              maxLengthDisplay={MAX_FIELD_LENGTH as number}
+              maxLength={MAX_FIELD_LENGTH}
+              maxLengthDisplay={MAX_FIELD_LENGTH}
               minHeight={120}
               value=""
             />

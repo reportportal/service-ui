@@ -137,11 +137,9 @@ export const TestsPageWrapped = ({
 
   useEffect(() => {
     return () => {
-      if (selectedTests.length > 0) {
-        dispatch(unselectAllTestsAction());
-      }
+      dispatch(unselectAllTestsAction());
     };
-  }, [selectedTests, dispatch]);
+  }, [dispatch]);
 
   return (
     <PageLayout>

@@ -14,11 +14,16 @@
  * limitations under the License.
  */
 
+import { useCallback } from 'react';
 import classNames from 'classnames/bind';
 import PropTypes from 'prop-types';
 import { Table } from '@reportportal/ui-kit';
 import { DEFAULT_PAGE_SIZE_OPTIONS } from 'controllers/members/constants';
 import { PaginationWrapper } from 'components/main/paginationWrapper';
+import {
+  cancelImageRequestGroup,
+  IMAGE_REQUEST_GROUP,
+} from 'components/main/image/imageRequestGroups';
 import styles from './membersListTable.scss';
 
 const cx = classNames.bind(styles);
@@ -46,6 +51,30 @@ export const MembersListTable = ({
   onToggleAllRowsSelection,
   bulkPanelProps,
 }) => {
+  const handleChangePage = useCallback(
+    (...args) => {
+      cancelImageRequestGroup(IMAGE_REQUEST_GROUP.MEMBERS_LIST_AVATARS);
+      onChangePage(...args);
+    },
+    [onChangePage],
+  );
+
+  const handleChangePageSize = useCallback(
+    (...args) => {
+      cancelImageRequestGroup(IMAGE_REQUEST_GROUP.MEMBERS_LIST_AVATARS);
+      onChangePageSize(...args);
+    },
+    [onChangePageSize],
+  );
+
+  const handleTableSorting = useCallback(
+    (...args) => {
+      cancelImageRequestGroup(IMAGE_REQUEST_GROUP.MEMBERS_LIST_AVATARS);
+      onTableSorting(...args);
+    },
+    [onTableSorting],
+  );
+
   return (
     <PaginationWrapper
       showPagination={showPagination}
@@ -54,8 +83,8 @@ export const MembersListTable = ({
       totalItems={itemCount}
       totalPages={pageCount}
       pageSizeOptions={DEFAULT_PAGE_SIZE_OPTIONS}
-      changePage={onChangePage}
-      changePageSize={onChangePageSize}
+      changePage={handleChangePage}
+      changePageSize={handleChangePageSize}
       className={cx('members-pagination-wrapper')}
       paginationContainerClassName={cx('members-pagination-container')}
       paginationClassName={cx('members-pagination')}
@@ -75,7 +104,7 @@ export const MembersListTable = ({
           renderRowActions={renderRowActions}
           sortingColumn={primaryColumn}
           sortingDirection={sortingDirection}
-          onChangeSorting={onTableSorting}
+          onChangeSorting={handleTableSorting}
           sortableColumns={primaryColumn.key}
           selectable={selectable}
           isCheckboxOutside={selectable}

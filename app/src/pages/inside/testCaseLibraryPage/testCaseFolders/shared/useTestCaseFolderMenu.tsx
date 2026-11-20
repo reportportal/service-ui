@@ -35,7 +35,7 @@ import { useHasTestPlans } from 'hooks/useHasTestPlans';
 import { PopoverItem } from 'pages/common/popoverControl';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { getAllSubfolderIds } from 'common/utils/folderUtils';
-import { fetchAllTestCasesByFolderIds } from 'pages/inside/common/testLibrarySidePanel/utils';
+import { hasTestCaseInFolders } from 'pages/inside/common/testLibrarySidePanel/utils';
 
 import { useAddToLaunchModal } from '../../addToLaunchModal';
 import { useAddTestCasesToTestPlanModal } from '../../addTestCasesToTestPlanModal/useAddTestCasesToTestPlanModal';
@@ -99,35 +99,39 @@ export const useTestCaseFolderMenu = ({
       return;
     }
 
-    let isCancelled = false;
+    const abortController = new AbortController();
+    const { signal } = abortController;
     const folderIds = getAllSubfolderIds(folder.id, allFolders);
 
-    fetchAllTestCasesByFolderIds(projectKey, folderIds, {
-      offset: 0,
-      limit: 50,
-    })
-      .then((testCases) => {
-        if (!isCancelled) {
-          setHasExecutableTestCases(
-            testCases.some((testCase) => !isManualScenarioEmpty(testCase.manualScenario)),
-          );
+    hasTestCaseInFolders(
+      projectKey,
+      folderIds,
+      (testCase) => !isManualScenarioEmpty(testCase.manualScenario),
+      {
+        offset: 0,
+        limit: 50,
+      },
+      signal,
+    )
+      .then((hasExecutable) => {
+        if (!signal.aborted) {
+          setHasExecutableTestCases(hasExecutable);
         }
       })
       .catch(() => {
-        if (!isCancelled) {
+        if (!signal.aborted) {
           setHasExecutableTestCases(true);
         }
       });
 
     return () => {
-      isCancelled = true;
+      abortController.abort();
     };
   }, [isMenuOpen, hasExecutableTestCases, isAddActionsDisabled, projectKey, folder.id, allFolders]);
 
   const isCheckingExecutableTestCases =
     isMenuOpen && !isAddActionsDisabled && hasExecutableTestCases === null;
-  const isMenuContentLoading =
-    isCheckingExecutableTestCases || (isMenuOpen && isCheckingTestPlansExistence);
+  const isMenuContentLoading = isMenuOpen && isCheckingTestPlansExistence;
   const isAddToLaunchDisabled = isAddActionsDisabled || hasExecutableTestCases === false;
 
   const getAddToTestPlanTooltip = () => {
@@ -226,6 +230,8 @@ export const useTestCaseFolderMenu = ({
             label: formatMessage(COMMON_LOCALE_KEYS.ADD_TO_LAUNCH),
             onClick: handleAddToLaunch,
             disabled: isAddToLaunchDisabled,
+            isLoading: isCheckingExecutableTestCases,
+            loadingLabel: formatMessage(commonMessages.checkingTestCasesAvailability),
             tooltip: getAddToLaunchTooltip(),
           },
         ],

@@ -26,6 +26,7 @@ export const WithAsyncLoading = (AutocompleteComponent) =>
       makeOptions: PropTypes.func,
       filterOption: PropTypes.func,
       minLength: PropTypes.number,
+      isDropdownMode: PropTypes.bool,
     };
 
     static defaultProps = {
@@ -34,6 +35,7 @@ export const WithAsyncLoading = (AutocompleteComponent) =>
       makeOptions: (values) => values,
       filterOption: () => true,
       minLength: 1,
+      isDropdownMode: false,
     };
 
     state = {
@@ -89,12 +91,18 @@ export const WithAsyncLoading = (AutocompleteComponent) =>
     };
 
     handleStateChange = (changes, { isOpen, inputValue }) => {
+      const { minLength, isDropdownMode } = this.props;
+
+      if (isDropdownMode && 'selectedItem' in changes) {
+        this.loadOptions('');
+      }
+
       if (!isOpen) return;
 
-      if (
-        ('isOpen' in changes && !this.props.minLength) ||
-        ('inputValue' in changes && (inputValue || '').trim().length >= this.props.minLength)
-      ) {
+      if ('isOpen' in changes && !minLength) {
+        const isInputChanged = 'inputValue' in changes;
+        this.loadOptions(isDropdownMode && !isInputChanged ? '' : inputValue || '');
+      } else if ('inputValue' in changes && (inputValue || '').trim().length >= minLength) {
         this.loadOptions(inputValue || '');
       }
     };

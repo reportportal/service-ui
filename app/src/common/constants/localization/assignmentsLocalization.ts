@@ -129,10 +129,6 @@ export const messages = defineMessages({
     id: 'Assignment.unassignPersonalOwnerSelfMessage',
     defaultMessage: 'As the owner, you cannot unassign yourself from a Personal Organization',
   },
-  unassignSelfMessage: {
-    id: 'Assignment.unassignSelfMessage',
-    defaultMessage: 'You cannot unassign yourself from the organization',
-  },
   organizationRoleDisabledOwnAccount: {
     id: 'Assignment.organizationRoleDisabledOwnAccount',
     defaultMessage:
