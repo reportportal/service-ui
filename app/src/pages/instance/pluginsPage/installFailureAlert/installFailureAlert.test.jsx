@@ -58,13 +58,17 @@ describe('InstallFailureAlert', () => {
     test('the server’s message is quoted, so the operator’s ceiling reason reaches the admin', () => {
       const body = text({
         ...incompatible,
-        reason: "'jira:1.4.2' is capped by the marketplace operator at '<27.0': RP 27.0 removes X",
+        reason:
+          'Marketplace plugin is not compatible: jira 1.4.2 only works with ReportPortal versions' +
+          ' below 27.0, and this server runs 27.1. The marketplace set this limit. Their reason:' +
+          ' RP 27.0 removes X',
       });
 
-      expect(body).toMatch(/^Nothing was installed/);
-      expect(body).toContain('The marketplace said: ');
-      expect(body).toContain('capped by the marketplace operator');
-      expect(body).toContain('RP 27.0 removes X.');
+      expect(body).toBe(
+        'Nothing was installed. Jira 1.4.2 only works with ReportPortal versions below 27.0, and' +
+          ' this server runs 27.1. The marketplace set this limit. Their reason: RP 27.0 removes X.' +
+          ' Pick another version.',
+      );
     });
 
     test('without a message it still says what happened, not the generic line', () => {
@@ -72,7 +76,7 @@ describe('InstallFailureAlert', () => {
 
       expect(body).toContain("doesn't support the ReportPortal release");
       expect(body).not.toContain('reason this page cannot name');
-      expect(body).not.toContain('The marketplace said');
+      expect(body).not.toContain('Marketplace plugin');
     });
   });
 

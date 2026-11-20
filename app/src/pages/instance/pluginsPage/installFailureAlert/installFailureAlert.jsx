@@ -55,13 +55,11 @@ const messages = defineMessages({
       'Nothing was installed. The marketplace refuses to serve version {version}: {reason} Pick' +
       ' another version, or upload a .jar of this one by hand if you kept one.',
   },
-  // The operator's ceiling can be what refuses it, and then the server says which and why. Quoted
-  // like the blocked reason, and for the same reason: it is theirs to say.
+  // The server's message already says in plain words what doesn't fit and, for an operator's
+  // ceiling, why; repeating a generic sentence before it would only say the same thing twice.
   incompatible: {
     id: 'InstallFailureAlert.incompatible',
-    defaultMessage:
-      "Nothing was installed. This version doesn't support the ReportPortal release this instance" +
-      ' runs. The marketplace said: {reason} Pick another version.',
+    defaultMessage: 'Nothing was installed. {reason} Pick another version.',
   },
   incompatibleNoReason: {
     id: 'InstallFailureAlert.incompatibleNoReason',
@@ -100,6 +98,13 @@ const messages = defineMessages({
  * points at the log rather than inventing a cause — if a failure deserves its own words it gets its
  * own code and stops arriving here.
  */
+// service-api prefixes each refusal with its error type ("Marketplace plugin is not compatible: …"),
+// which reads as a label rather than a sentence once the alert has said what happened
+const withoutErrorPrefix = (reason) => {
+  const text = reason.replace(/^Marketplace plugin [^:]*:\s*/, '');
+  return text.charAt(0).toUpperCase() + text.slice(1);
+};
+
 export const InstallFailureAlert = ({
   pluginName,
   version = null,
@@ -123,12 +128,17 @@ export const InstallFailureAlert = ({
     }
   };
 
+  // the incompatible message is the server's whole sentence, so it loses its label; a blocked
+  // reason is the operator's own words and is quoted as written
+  const quoted = (value) =>
+    errorCode === MARKETPLACE_INSTALL_ERROR.PLUGIN_INCOMPATIBLE ? withoutErrorPrefix(value) : value;
+
   const text = formatMessage(descriptor(), {
     plugin: pluginName,
     version: version || '',
     // only the blocked and incompatible cases quote the server, and it ends the sentence, so it carries its own
     // stop rather than relying on whoever wrote the reason to have supplied one
-    reason: reason ? `${reason.replace(/\.$/, '')}.` : '',
+    reason: reason ? `${quoted(reason).replace(/\.$/, '')}.` : '',
   });
 
   return (
