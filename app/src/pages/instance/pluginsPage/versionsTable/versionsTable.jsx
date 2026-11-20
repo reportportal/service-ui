@@ -186,7 +186,6 @@ const ACTION_MESSAGE = {
 export const VersionsTable = ({
   versions,
   installedVersion = null,
-  latestVersion = null,
   productVersion = null,
   changelog = null,
   onUseVersion = null,
@@ -196,14 +195,26 @@ export const VersionsTable = ({
 }) => {
   const { formatMessage, formatDate } = useIntl();
   const ordered = sortVersionsNewestFirst(versions);
+  // The version on offer, as service-api walks it: the newest row above the installed one that runs
+  // here and is not blocked. When the newest build does not run here this is an older one, so it is
+  // not simply the top row.
+  const offeredVersion = installedVersion
+    ? ordered.find(
+        (entry) =>
+          compareVersions(entry.version, installedVersion) > 0
+          && entry.compatible !== false
+          && !entry.blocked,
+      )?.version || null
+    : null;
   // FR-A-04 asks the detail page to expose the changelog of the version on offer without the reader
-  // having to find it, so the newer row opens on load. Only when there is one: with nothing
-  // installed, or already on the newest build, no row is more interesting than any other and the
-  // table starts closed.
+  // having to find it, so that row opens on load. Only when there is one: with nothing installed,
+  // or already on the newest build, no row is more interesting than any other and the table starts
+  // closed.
   const newerThanInstalled =
-    installedVersion && ordered.length > 0 && compareVersions(ordered[0].version, installedVersion) > 0
+    offeredVersion
+    || (installedVersion && ordered.length > 0 && compareVersions(ordered[0].version, installedVersion) > 0
       ? ordered[0].version
-      : null;
+      : null);
   const [expanded, setExpanded] = useState(newerThanInstalled);
   const [showingAll, setShowingAll] = useState(false);
   // A plugin with two dozen versions would otherwise push the uninstall block and the docs footer
@@ -260,9 +271,9 @@ export const VersionsTable = ({
   const advisoryReason = ({ advisory }) => {
     const common = { severity: advisory.severity, attachedAt: day(advisory.attachedAt) };
 
-    // nothing to move to when the advisory is on the newest build there is
-    return latestVersion && latestVersion !== installedVersion
-      ? formatMessage(messages.advisory, { ...common, latestVersion })
+    // nothing to move to when no newer build runs here
+    return offeredVersion
+      ? formatMessage(messages.advisory, { ...common, latestVersion: offeredVersion })
       : formatMessage(messages.advisoryNoUpgrade, common);
   };
 
@@ -435,8 +446,6 @@ VersionsTable.propTypes = {
   ).isRequired,
   /** The version this instance runs, or null when the plugin is not installed. */
   installedVersion: PropTypes.string,
-  /** The newest published version, named when advising a move off an advisory. */
-  latestVersion: PropTypes.string,
   /** The release this instance reports, quoted when explaining a refusal. */
   productVersion: PropTypes.string,
   /** Release notes, which the wire carries for one version only. */

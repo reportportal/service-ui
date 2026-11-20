@@ -44,6 +44,13 @@ describe('compareVersions', () => {
     expect(compareVersions(undefined, undefined)).toBe(0);
   });
 
+  // service-api ignores build metadata in precedence
+  test('build metadata does not take part in the comparison', () => {
+    expect(compareVersions('26.0+build.5', '26.0')).toBe(0);
+    expect(compareVersions('26.0+build.9', '26.0+build.5')).toBe(0);
+    expect(compareVersions('26.1+build.1', '26.0')).toBeGreaterThan(0);
+  });
+
   test('a release outranks the candidates on the way to it', () => {
     expect(compareVersions('5.8.0', '5.8.0-rc1')).toBeGreaterThan(0);
     expect(compareVersions('5.8.0-rc2', '5.8.0-rc1')).toBeGreaterThan(0);
@@ -111,5 +118,21 @@ describe('readRangeBound', () => {
     expect(readRangeBound('>=25.1', null)).toBeNull();
     expect(readRangeBound('', '26.1')).toBeNull();
     expect(readRangeBound(undefined, '26.1')).toBeNull();
+  });
+});
+
+describe('readRangeBound, as service-api reads a range', () => {
+  test('== is an exact pin, the same as =', () => {
+    expect(readRangeBound('==26.2', '26.0')).toEqual({ direction: 'newer', version: '26.2' });
+    expect(readRangeBound('==26.0', '26.2')).toEqual({ direction: 'older', version: '26.0' });
+    expect(readRangeBound('==26.2', '26.2')).toBeNull();
+  });
+
+  test('build metadata on the product does not fail a bound', () => {
+    expect(readRangeBound('>=26.0', '26.0+build.5')).toBeNull();
+  });
+
+  test('a product version of only whitespace is no product version', () => {
+    expect(readRangeBound('>=26.2', '   ')).toBeNull();
   });
 });

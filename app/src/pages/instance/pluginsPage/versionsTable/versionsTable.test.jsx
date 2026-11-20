@@ -585,4 +585,39 @@ describe('VersionsTable', () => {
       expect(actionOf(wrapper, '5.6.1').prop('disabled')).toBe(true);
     });
   });
+
+  // service-api walks down from a newest build that does not run here to the newest one that does
+  describe('Versions. Table. Offered Version Behind an Incompatible Latest', () => {
+    const advisory = { severity: 'high', text: 'CVE', attachedAt: '2026-02-15T12:00:00Z' };
+    const versions = [
+      { version: '5.8.0', compatible: false, requires: '>=26.2' },
+      { version: '5.7.5' },
+      { version: '5.7.0', advisory },
+    ];
+    const changelog = { version: '5.7.5', lines: ['Fixed it.'] };
+
+    test('the advisory names the version actually offered, not the incompatible latest', () => {
+      const wrapper = render({ versions, installedVersion: '5.7.0', changelog });
+      const tooltip = tooltipOf(wrapper, '5.7.0', 'advisoryVersionMark');
+
+      expect(tooltip).toContain('Upgrade to 5.7.5');
+      expect(tooltip).not.toContain('5.8.0');
+    });
+
+    test('the offered row is the one open on load', () => {
+      const wrapper = render({ versions, installedVersion: '5.7.0', changelog });
+
+      expect(find(rowFor(wrapper, '5.7.5'), 'versionReleaseNotes')).toHaveLength(1);
+      expect(find(wrapper, 'versionReleaseNotes')).toHaveLength(1);
+    });
+
+    test('with nothing newer that runs here the advisory offers no upgrade', () => {
+      const wrapper = render({
+        versions: [{ version: '5.8.0', compatible: false }, { version: '5.7.0', advisory }],
+        installedVersion: '5.7.0',
+      });
+
+      expect(tooltipOf(wrapper, '5.7.0', 'advisoryVersionMark')).not.toContain('Upgrade to');
+    });
+  });
 });

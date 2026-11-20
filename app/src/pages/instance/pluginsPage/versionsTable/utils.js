@@ -16,6 +16,9 @@
 
 const NUMERIC_PREFIX = /^\d+/;
 
+// build metadata (`26.0+build.5`) never takes part in precedence, as in service-api
+const withoutBuild = (value) => String(value ?? '').split('+')[0];
+
 /**
  * Newest first, by version rather than by publish date. A patch for an older branch can be
  * published after a newer release — ordinary, and the registry itself already refuses to call it
@@ -33,8 +36,8 @@ export const sortVersionsNewestFirst = (versions) =>
  * start with a digit compares as lower than one that does, which puts `5.8.0-rc1` below `5.8.0`.
  */
 export const compareVersions = (left, right) => {
-  const a = String(left ?? '').split('.');
-  const b = String(right ?? '').split('.');
+  const a = withoutBuild(left).split('.');
+  const b = withoutBuild(right).split('.');
 
   for (let i = 0; i < Math.max(a.length, b.length); i += 1) {
     const diff = compareSegments(a[i], b[i]);
@@ -78,7 +81,7 @@ const compareSegments = (left = '0', right = '0') => {
   return restA.localeCompare(restB);
 };
 
-const BOUND = /^\s*(>=|<=|>|<|=)?\s*(\d[\dA-Za-z.\-+]*)\s*$/;
+const BOUND = /^\s*(>=|<=|==|>|<|=)?\s*(\d[\dA-Za-z.\-+]*)\s*$/;
 
 /**
  * A declared range, read for which way it points and what it names.
@@ -89,7 +92,7 @@ const BOUND = /^\s*(>=|<=|>|<|=)?\s*(\d[\dA-Za-z.\-+]*)\s*$/;
  * will be. Showing `>=26.2` verbatim answers neither question and asks the reader to parse a range.
  *
  * <p>A compound range (">=25.1, <26.0") is read for the first bound the product fails, in any
- * order, with service-api's operators (>=, >, <=, <, =) and missing segments counting as zero.
+ * order, with service-api's operators (>=, >, <=, <, ==, =; `==` is read as `=`) and missing segments counting as zero.
  * A range is a display detail here — the verdict itself was decided by service-api, which owns the
  * parser — so anything this cannot make a sentence of (no product, an unparsable part, no failed
  * bound) falls back to saying only that the version does not run here.
@@ -97,7 +100,7 @@ const BOUND = /^\s*(>=|<=|>|<|=)?\s*(\d[\dA-Za-z.\-+]*)\s*$/;
  * @returns {{direction: 'newer'|'older', version: string}|null}
  */
 export const readRangeBound = (range, productVersion) => {
-  if (typeof range !== 'string' || !range.trim() || !productVersion) {
+  if (typeof range !== 'string' || !range.trim() || !productVersion?.trim()) {
     return null;
   }
 
@@ -106,7 +109,8 @@ export const readRangeBound = (range, productVersion) => {
     if (!match) {
       return null;
     }
-    const [, op = '=', version] = match;
+    const [, rawOp = '=', version] = match;
+    const op = rawOp === '==' ? '=' : rawOp;
     const diff = compareVersions(productVersion, version);
     const satisfied = {
       '>=': diff >= 0,

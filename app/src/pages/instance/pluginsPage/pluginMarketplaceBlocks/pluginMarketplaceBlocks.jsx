@@ -364,7 +364,6 @@ export const PluginMarketplaceBlocks = ({
           <VersionsTable
             versions={versions}
             installedVersion={installedVersion}
-            latestVersion={detail?.plugin?.latestVersion || null}
             productVersion={productVersion}
             changelog={changelog}
             onUseVersion={onUseVersion}
