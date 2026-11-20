@@ -700,6 +700,61 @@ describe('VersionsTable', () => {
       expect(tooltipOf(wrapper, '5.7.0', 'advisoryVersionMark')).not.toContain('Upgrade to');
     });
 
+    test('the offered version itself is not told to upgrade to itself', () => {
+      const wrapper = render({
+        versions: [
+          { version: '5.7.5', compatible: true, advisory },
+          { version: '5.7.0', advisory },
+        ],
+        installedVersion: '5.7.0',
+      });
+
+      expect(tooltipOf(wrapper, '5.7.5', 'advisoryVersionMark')).not.toContain('Upgrade to');
+      expect(tooltipOf(wrapper, '5.7.0', 'advisoryVersionMark')).toContain('Upgrade to 5.7.5');
+    });
+
+    // ten newer builds that do not run here push the offered one below the ten-row cut
+    describe('when the offered version is below the ten-row cut', () => {
+      const newerRefused = Array.from({ length: 10 }, (_, i) => ({
+        version: `5.${i + 3}.0`,
+        compatible: false,
+      }));
+      const deep = [
+        ...newerRefused,
+        { version: '5.2.0', compatible: true },
+        { version: '5.1.0', compatible: true },
+        { version: '5.0.0' },
+      ];
+      const deepChangelog = { version: '5.2.0', lines: ['Fixed it.'] };
+
+      test('the table reaches the offered row and shows its release notes', () => {
+        const wrapper = render({
+          versions: deep,
+          installedVersion: '5.0.0',
+          changelog: deepChangelog,
+        });
+
+        expect(rows(wrapper)).toHaveLength(11);
+        expect(rows(wrapper)).toContain('5.2.0');
+        expect(find(rowFor(wrapper, '5.2.0'), 'versionReleaseNotes')).toHaveLength(1);
+        // only as far as the offered row: the rest still waits behind Show All
+        expect(rows(wrapper)).not.toContain('5.1.0');
+        expect(find(wrapper, 'showAllVersions').exists()).toBe(true);
+      });
+
+      test('an offered version inside the first ten leaves the cut where it was', () => {
+        const wrapper = render({
+          versions: [
+            ...newerRefused.map((entry) => ({ ...entry, compatible: true })),
+            ...deep.slice(10),
+          ],
+          installedVersion: '5.0.0',
+        });
+
+        expect(rows(wrapper)).toHaveLength(10);
+      });
+    });
+
     // service-api neither offers nor installs a version whose verdict is undecided
     test('a version with no verdict is not offered', () => {
       const wrapper = render({

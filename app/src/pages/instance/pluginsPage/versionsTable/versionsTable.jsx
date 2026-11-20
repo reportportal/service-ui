@@ -248,7 +248,12 @@ export const VersionsTable = ({
   // far below the fold, so the page shows the most recent handful and offers the rest. Nothing in
   // the contract caps the list — the registry sends every version — so this is presentation only.
   const truncated = !showingAll && ordered.length > MAX_ROWS_BEFORE_TRUNCATION;
-  const shown = truncated ? ordered.slice(0, MAX_ROWS_BEFORE_TRUNCATION) : ordered;
+  // The row on offer opens on load, so it must be on screen: when ten or more newer builds are
+  // ineligible it sits below the cut, and the table reveals just enough rows to reach it.
+  const offeredIndex = ordered.findIndex((entry) => entry.version === offeredVersion);
+  const shown = truncated
+    ? ordered.slice(0, Math.max(MAX_ROWS_BEFORE_TRUNCATION, offeredIndex + 1))
+    : ordered;
 
   if (versions.length === 0) {
     return null;
@@ -304,11 +309,12 @@ export const VersionsTable = ({
       : formatMessage(messages.blockedOn, { blockedAt });
   };
 
-  const advisoryReason = ({ advisory }) => {
+  const advisoryReason = ({ advisory, version }) => {
     const common = { severity: advisory.severity, attachedAt: day(advisory.attachedAt) };
 
-    // nothing to move to when no newer build runs here
-    return offeredVersion
+    // nothing to move to when no build newer than this one runs here: the offered version itself
+    // is not an upgrade from the row that is that version
+    return offeredVersion && compareVersions(offeredVersion, version) > 0
       ? formatMessage(messages.advisory, { ...common, latestVersion: offeredVersion })
       : formatMessage(messages.advisoryNoUpgrade, common);
   };
@@ -354,15 +360,15 @@ export const VersionsTable = ({
     );
   };
 
+  let defaultDescription = formatMessage(messages.description);
+  if (truncated) {
+    defaultDescription = formatMessage(messages.descriptionTruncated, { shown: shown.length });
+  }
+
   return (
     <section className={cx('versions-table')} data-automation-id="pluginVersions">
       <h3 className={cx('header')}>{formatMessage(messages.header)}</h3>
-      <p className={cx('description')}>
-        {description ||
-          (truncated
-            ? formatMessage(messages.descriptionTruncated, { shown: shown.length })
-            : formatMessage(messages.description))}
-      </p>
+      <p className={cx('description')}>{description || defaultDescription}</p>
       <div className={cx('columns')} data-automation-id="versionsColumns">
         <span className={cx('column')}>{formatMessage(messages.columnVersion)}</span>
         <span className={cx('column')}>{formatMessage(messages.columnReleased)}</span>

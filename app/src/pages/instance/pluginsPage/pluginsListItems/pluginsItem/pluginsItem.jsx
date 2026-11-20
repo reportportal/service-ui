@@ -242,6 +242,20 @@ const badgeDate = (marketplace, badge) => {
   return marketplace?.removed?.removed || null;
 };
 
+/**
+ * Which sentence says the running version is out of range: the range and the release to quote when
+ * both are known, and the operator's reason when there is one; otherwise only that it does not run.
+ */
+const runningMessage = ({ requires, productVersion, reason }) => {
+  if (requires && productVersion) {
+    return reason ? messages.installedIncompatibleReason : messages.installedIncompatible;
+  }
+
+  return reason
+    ? messages.installedIncompatibleNoReleaseReason
+    : messages.installedIncompatibleNoRelease;
+};
+
 @injectIntl
 export class PluginsItem extends Component {
   static propTypes = {
@@ -323,15 +337,12 @@ export class PluginsItem extends Component {
     const { productVersion } = this.props;
 
     if (running) {
-      const known = requires && productVersion;
-      let message = messages.installedIncompatibleNoRelease;
-      if (known) {
-        message = reason ? messages.installedIncompatibleReason : messages.installedIncompatible;
-      } else if (reason) {
-        message = messages.installedIncompatibleNoReleaseReason;
-      }
-
-      return formatMessage(message, { version, requires, productVersion, reason });
+      return formatMessage(runningMessage({ requires, productVersion, reason }), {
+        version,
+        requires,
+        productVersion,
+        reason,
+      });
     }
 
     if (newer) {
