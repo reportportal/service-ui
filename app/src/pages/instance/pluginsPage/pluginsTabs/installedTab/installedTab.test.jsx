@@ -524,6 +524,60 @@ describe('InstalledTab', () => {
       test('an empty verdict raises nothing', () => {
         expect(alertFor({}).exists()).toBe(false);
       });
+
+      // the page opens on a copy of the row; an upgrade made from it must not leave the old
+      // version's verdict on screen
+      test('the page follows the plugin when its version changes under it', () => {
+        const verdict = (compatible) => ({
+          name: 'jira',
+          marketplace: {
+            pluginId: 'jira',
+            installedCompatibility: { compatible, requires: '>=25.1, <26.0' },
+          },
+        });
+        const stateWith = (installed) => ({
+          ...restOfState,
+          plugins: {
+            marketplace: marketplaceState({ installed }),
+            marketplacePluginDetail: {},
+            integrations: { globalIntegrations: [], projectIntegrations: [] },
+          },
+        });
+        let current = stateWith([verdict(false)]);
+        const store = createStore(() => current);
+        const tree = (plugins) => (
+          <Provider store={store}>
+            <IntlProvider locale="en" onError={() => {}}>
+              <InstalledTab filterItems={[BTS_GROUP_TYPE]} plugins={plugins} />
+            </IntlProvider>
+          </Provider>
+        );
+        const wrapper = mount(tree([{ ...localJira, id: 7 }]));
+        const alertExists = () => {
+          wrapper.update();
+
+          return wrapper.find('[data-automation-id="pluginInstalledIncompatibleAlert"]').exists();
+        };
+
+        act(() => {
+          wrapper.find(PluginsCatalog).first().prop('onInstalledItemClick')(
+            mergeInstalledRows([{ ...localJira, id: 7 }], [verdict(false)])[0],
+          );
+        });
+        expect(alertExists()).toBe(true);
+
+        // upgraded: the local list now carries the new version and the catalogue its verdict
+        current = stateWith([verdict(true)]);
+        act(() => {
+          store.dispatch({ type: 'refresh' });
+          wrapper.setProps({
+            children: tree([{ ...localJira, id: 7, details: { name: 'Jira', version: '1.6.0' } }])
+              .props.children,
+          });
+        });
+
+        expect(alertExists()).toBe(false);
+      });
     });
 
     /**

@@ -78,7 +78,13 @@ import styles from './installedTab.scss';
 import { PluginsFilter } from '../../pluginsFilter';
 import { ActionPanel } from '../../actionPanel';
 import { AvailablePluginDetail } from '../../availablePluginDetail';
-import { PluginsCatalog, ROW_ACTIONS, getDisplayName } from '../../pluginsCatalog';
+import {
+  PluginsCatalog,
+  ROW_ACTIONS,
+  getDisplayName,
+  isMarketplaceTrusted,
+  mergeInstalledRows,
+} from '../../pluginsCatalog';
 import { PluginMarketplaceBlocks } from '../../pluginMarketplaceBlocks';
 import { PluginBadge, BADGE_TONES } from '../../pluginBadge';
 import { compareVersions } from '../../versionsTable/utils';
@@ -554,11 +560,36 @@ export class InstalledTab extends Component {
       : this.showEnablePluginModal(pluginName, callback);
   };
 
+  /**
+   * The row the page was opened on goes stale the moment the plugin changes version: it holds the
+   * version and the registry's verdict from the click. The page reads the same merge the list does,
+   * from the current data, and keeps the captured row only when the plugin is no longer listed.
+   */
+  currentInstalledRow = (captured) => {
+    const plugin =
+      captured.id != null && this.props.plugins.find(({ id }) => id === captured.id);
+    if (!plugin) {
+      return captured;
+    }
+    const { marketplaceInstalled, registryOffline, catalogueFailed, configuredPlugins } = this.props;
+
+    return mergeInstalledRows(
+      [plugin],
+      marketplaceInstalled,
+      isMarketplaceTrusted({ offline: registryOffline, failed: catalogueFailed }),
+      configuredPlugins,
+    )[0];
+  };
+
   getPageContent = () => {
     const {
-      subPage: { type, data, title },
+      subPage: { type, title },
       activeFilterItem,
     } = this.state;
+    const data =
+      type === INSTALLED_PLUGINS_SUBPAGE
+        ? this.currentInstalledRow(this.state.subPage.data)
+        : this.state.subPage.data;
     const { filterItems } = this.props;
 
     switch (type) {
