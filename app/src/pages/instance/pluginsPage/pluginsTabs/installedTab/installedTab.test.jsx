@@ -580,6 +580,48 @@ describe('InstalledTab', () => {
 
         expect(alertExists()).toBe(false);
       });
+
+      // the upload answers with the integration type's id, which GET /v1/plugin sends as `type`
+      test('an uploaded plugin opens its page once the refetch brings it in', () => {
+        const store = createStore(() => ({
+          ...restOfState,
+          plugins: {
+            marketplace: marketplaceState({
+              installed: [
+                {
+                  name: 'jira',
+                  marketplace: {
+                    pluginId: 'jira',
+                    installedCompatibility: { compatible: false, requires: '>=25.1, <26.0' },
+                  },
+                },
+              ],
+            }),
+            marketplacePluginDetail: {},
+            integrations: { globalIntegrations: [], projectIntegrations: [] },
+          },
+        }));
+        const tree = (plugins) => (
+          <Provider store={store}>
+            <IntlProvider locale="en" onError={() => {}}>
+              <InstalledTab filterItems={[BTS_GROUP_TYPE]} plugins={plugins} />
+            </IntlProvider>
+          </Provider>
+        );
+        const wrapper = mount(tree([]));
+
+        act(() => {
+          wrapper.find('ActionPanel').first().prop('onUploaded')(7);
+        });
+        act(() => {
+          wrapper.setProps({ children: tree([{ ...localJira, type: 7 }]).props.children });
+        });
+        wrapper.update();
+
+        expect(
+          wrapper.find('[data-automation-id="pluginInstalledIncompatibleAlert"]').exists(),
+        ).toBe(true);
+      });
     });
 
     /**

@@ -360,7 +360,7 @@ export class InstalledTab extends Component {
       return;
     }
 
-    const uploaded = this.props.plugins.find((plugin) => plugin.id === uploadedPluginId);
+    const uploaded = this.props.plugins.find((plugin) => plugin.type === uploadedPluginId);
     if (uploaded) {
       this.setState({ uploadedPluginId: null });
       this.installedPluginsSubPageHandler(uploaded);
