@@ -276,9 +276,10 @@ export const getRowAction = (row) => {
  * of those as "incompatible" would mark every plugin in the catalogue unusable on an instance that
  * simply never configured `rp.product.version`.
  *
- * <p>`newer` marks an installed row that is holding back an update the instance cannot take — the
- * state that was indistinguishable from being up to date, because `updateAvailable` is absent either
- * way. `running` marks the plugin this instance is actually running being out of range, which is a
+ * <p>`newer` marks an installed row whose newest build cannot be taken here — the state that was
+ * indistinguishable from being up to date when no `updateAvailable` came with it. service-api may
+ * still offer an older build that does run here; `update` then carries that version (when it
+ * differs from the newest), so the sentence can say which one the UPDATE action targets. `running` marks the plugin this instance is actually running being out of range, which is a
  * different sentence and not an offer of anything; it carries the operator's ceiling reason if any.
  */
 export const getRowIncompatibility = (row) => {
@@ -304,9 +305,16 @@ export const getRowIncompatibility = (row) => {
   const installed = row.details?.version || null;
 
   // an installed row only warns about a newer version it is withholding
-  return row.compatible === false && latest && installed && compareVersions(latest, installed) > 0
-    ? { version: latest, requires: row.requires || null, newer: true }
-    : null;
+  if (row.compatible === false && latest && installed && compareVersions(latest, installed) > 0) {
+    return {
+      version: latest,
+      requires: row.requires || null,
+      newer: true,
+      update: row.updateAvailable && row.updateAvailable !== latest ? row.updateAvailable : null,
+    };
+  }
+
+  return null;
 };
 
 /** Badges an installed row shows; the tier badge of an available row is rendered from `tier`. */

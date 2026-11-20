@@ -803,8 +803,9 @@ export class InstalledTab extends Component {
    * <p>There is no "update available" banner in the design and this is why: an available upgrade is
    * information, not a warning, so it earns an action rather than an alert. The action targets the
    * newest *compatible* version, which is the same one the top row of the versions table offers —
-   * service-api decides that, and withholds `updateAvailable` when the newest build does not run
-   * here, so the button is absent in exactly the cases where pressing it would fail.
+   * service-api decides that: when the newest build does not run here it offers the newest older
+   * one that does, or no `updateAvailable` at all, so the button is absent in exactly the cases
+   * where pressing it would fail.
    */
   /**
    * Provenance, beside the name: this plugin came from a .jar rather than from the marketplace.

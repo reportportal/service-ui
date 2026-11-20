@@ -77,6 +77,31 @@ describe('what an installed row says about the version it runs', () => {
     expect(getRowIncompatibility(rowOf('sauce-labs'))).toMatchObject({ newer: true, version: '5.0.0' });
   });
 
+  describe('an older update offered in place of the withheld newest', () => {
+    const sauce = find('sauce-labs');
+    const withUpdate = (updateAvailable) =>
+      toInstalledRow(
+        { name: 'sauce-labs', details: { version: sauce.version } },
+        { ...sauce, marketplace: { ...sauce.marketplace, updateAvailable } },
+      );
+
+    test('is carried beside the withheld version', () => {
+      expect(getRowIncompatibility(withUpdate({ version: '4.5.0' }))).toMatchObject({
+        newer: true,
+        version: '5.0.0',
+        update: '4.5.0',
+      });
+    });
+
+    test('is absent when none is offered', () => {
+      expect(getRowIncompatibility(rowOf('sauce-labs')).update).toBeNull();
+    });
+
+    test('is not repeated when it is the newest itself', () => {
+      expect(getRowIncompatibility(withUpdate({ version: '5.0.0' })).update).toBeNull();
+    });
+  });
+
   test('a running refusal outranks a withheld update', () => {
     const row = toInstalledRow(
       { name: 'x', details: { version: '1.0.0' } },

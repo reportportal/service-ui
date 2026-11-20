@@ -135,6 +135,27 @@ describe('PluginsItem', () => {
       expect(find(wrapper, 'pluginRowAction')).toHaveLength(0);
     });
 
+    describe('an older update is offered while the newest is withheld', () => {
+      const withheld =
+        'Version 5.0.0 is available but needs ReportPortal >=26.2. This instance runs 26.1.';
+      const withUpdate = (updateAvailable) =>
+        toInstalledRow(localSauce, {
+          ...sauce,
+          marketplace: { ...sauce.marketplace, updateAvailable },
+        });
+
+      test('the tooltip names the older version as the newest that runs here', () => {
+        const wrapper = render(withUpdate({ version: '4.5.0' }));
+
+        expect(reasonOf(wrapper)).toBe(`${withheld} Version 4.5.0 is the newest that runs here.`);
+        expect(find(wrapper, 'pluginRowAction')).toHaveLength(1);
+      });
+
+      test('without one the tooltip says only what is withheld', () => {
+        expect(reasonOf(render(toInstalledRow(localSauce, sauce)))).toBe(withheld);
+      });
+    });
+
     describe('the version running here is out of range', () => {
       const zephyr = catalogue.installed.find((row) => row.name === 'zephyr');
       const local = {

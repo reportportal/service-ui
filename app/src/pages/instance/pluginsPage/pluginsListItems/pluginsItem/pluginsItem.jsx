@@ -188,6 +188,10 @@ const messages = defineMessages({
       'Version {version} is available but needs ReportPortal {requires}. This instance runs'
       + ' {productVersion}.',
   },
+  updateNewestHere: {
+    id: 'PluginItem.updateNewestHere',
+    defaultMessage: 'Version {update} is the newest that runs here.',
+  },
   updateWithheldNoRelease: {
     id: 'PluginItem.updateWithheldNoRelease',
     defaultMessage: "Version {version} is available but doesn't run on the release this instance uses.",
@@ -312,8 +316,9 @@ export class PluginsItem extends Component {
    * operator's ceiling reason where there is one. Otherwise `newer` says whether an update is
    * being held back or the plugin has no newer build at all; either way the sentence needs both
    * the declared range and the release to quote, and says only that it does not run without them.
+   * `update` is an older build service-api offers instead, named after the withheld one.
    */
-  incompatibilityReason = ({ version, requires, newer, running, reason }) => {
+  incompatibilityReason = ({ version, requires, newer, running, reason, update }) => {
     const { formatMessage } = this.props.intl;
     const { productVersion } = this.props;
 
@@ -330,9 +335,13 @@ export class PluginsItem extends Component {
     }
 
     if (newer) {
-      return requires && productVersion
-        ? formatMessage(messages.updateWithheld, { version, requires, productVersion })
-        : formatMessage(messages.updateWithheldNoRelease, { version });
+      const withheld =
+        requires && productVersion
+          ? formatMessage(messages.updateWithheld, { version, requires, productVersion })
+          : formatMessage(messages.updateWithheldNoRelease, { version });
+
+      // an older build that does run here may be on offer, and it is the one UPDATE installs
+      return update ? `${withheld} ${formatMessage(messages.updateNewestHere, { update })}` : withheld;
     }
 
     return requires && productVersion
