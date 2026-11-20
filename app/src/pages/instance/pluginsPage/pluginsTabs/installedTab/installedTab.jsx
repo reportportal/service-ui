@@ -566,8 +566,10 @@ export class InstalledTab extends Component {
    * from the current data, and keeps the captured row only when the plugin is no longer listed.
    */
   currentInstalledRow = (captured) => {
+    // by name, as mergeInstalledRows does: local plugins carry `type` rather than `id`, and the
+    // name survives a version change
     const plugin =
-      captured.id != null && this.props.plugins.find(({ id }) => id === captured.id);
+      captured.name != null && this.props.plugins.find(({ name }) => name === captured.name);
     if (!plugin) {
       return captured;
     }

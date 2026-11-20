@@ -552,7 +552,9 @@ describe('InstalledTab', () => {
             </IntlProvider>
           </Provider>
         );
-        const wrapper = mount(tree([{ ...localJira, id: 7 }]));
+        // the wire shape of GET /v1/plugin: the numeric id serialised as `type`, no `id`
+        const wireJira = { ...localJira, type: 7 };
+        const wrapper = mount(tree([wireJira]));
         const alertExists = () => {
           wrapper.update();
 
@@ -561,7 +563,7 @@ describe('InstalledTab', () => {
 
         act(() => {
           wrapper.find(PluginsCatalog).first().prop('onInstalledItemClick')(
-            mergeInstalledRows([{ ...localJira, id: 7 }], [verdict(false)])[0],
+            mergeInstalledRows([wireJira], [verdict(false)])[0],
           );
         });
         expect(alertExists()).toBe(true);
@@ -571,7 +573,7 @@ describe('InstalledTab', () => {
         act(() => {
           store.dispatch({ type: 'refresh' });
           wrapper.setProps({
-            children: tree([{ ...localJira, id: 7, details: { name: 'Jira', version: '1.6.0' } }])
+            children: tree([{ ...wireJira, details: { name: 'Jira', version: '1.6.0' } }])
               .props.children,
           });
         });
