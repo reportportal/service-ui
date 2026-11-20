@@ -17,6 +17,8 @@
 import {
   getBasicChooseEventParameters,
   getBasicClickEventParameters,
+  getBasicPageViewEventParameters,
+  type PageViewContentType,
 } from '../common/ga4Utils';
 
 const TEST_CASE_LIBRARY = 'test_case_library';
@@ -74,6 +76,7 @@ const TEST_CASE_ELEMENT = {
   SUBMIT_DUPLICATE: 'submit_duplicate_test_case',
   SUBMIT_MOVE: 'submit_move_test_case',
   SEARCH: 'search_test_cases',
+  SEARCH_HISTORY_OF_ACTION: 'search_history_of_action',
   APPLY_FILTER: 'apply_filter_test_cases',
   TABLE_ROW: 'table_row_content',
   PAGE_EDIT: 'page_edit_test_case',
@@ -291,6 +294,7 @@ export const TEST_CASE_TEXT_EDIT_FIELD = {
 export type TestCaseTextEditField =
   (typeof TEST_CASE_TEXT_EDIT_FIELD)[keyof typeof TEST_CASE_TEXT_EDIT_FIELD];
 
+const PAGE_VIEW = getBasicPageViewEventParameters();
 const CLICK = getBasicClickEventParameters(TEST_CASE_LIBRARY);
 const CHOOSE = getBasicChooseEventParameters(TEST_CASE_LIBRARY);
 
@@ -394,6 +398,17 @@ export const TEST_CASE_LIBRARY_EVENTS = {
     ...CLICK,
     element_name: TEST_CASE_ELEMENT.SEARCH,
   },
+  searchHistoryOfActions: (testCaseId?: string) => ({
+    ...CLICK,
+    place: TEST_CASE_PLACE.DETAILS_PAGE,
+    element_name: TEST_CASE_ELEMENT.SEARCH_HISTORY_OF_ACTION,
+    ...(testCaseId !== undefined && { test_case_id: testCaseId }),
+  }),
+  viewTestCaseLibraryPage: (type: PageViewContentType) => ({
+    ...PAGE_VIEW,
+    place: TEST_CASE_LIBRARY,
+    type,
+  }),
   applyFilterTestCases: (type?: FilterFieldType) => ({
     ...CLICK,
     modal: TEST_CASE_MODAL.FILTER_TEST_CASES,

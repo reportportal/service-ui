@@ -20,6 +20,7 @@ export { ExecutionStatus } from 'types/testCase';
 export interface LaunchAttribute {
   key: string;
   value: string;
+  system?: boolean;
 }
 
 export interface LaunchExecutions {
@@ -86,6 +87,7 @@ export interface ManualTestCase extends EntityWithDisplayId {
   inProgressTests: number;
   skippedTests: number;
   testsToRun: number;
+  retentionPolicy?: string;
 }
 
 export interface LaunchOwner {

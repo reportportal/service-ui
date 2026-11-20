@@ -140,3 +140,25 @@
   justify-content: center;
   min-height: 400px;
 }
+
+.no-results {
+  display: flex;
+  justify-content: center;
+  padding-top: 132px;
+
+  [class*='empty-page-state'] {
+    flex: 0 0 auto;
+    justify-content: flex-start;
+
+    [class*='content'] {
+      height: auto;
+      margin-top: 32px;
+      justify-content: flex-start;
+
+      [class*='label'] {
+        margin-right: 1px;
+        margin-bottom: 16px;
+      }
+    }
+  }
+}

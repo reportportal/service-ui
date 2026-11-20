@@ -48,7 +48,7 @@
     cursor: default;
 
     .eye-icon svg path {
-      fill: $COLOR--e-300;
+      fill: var(--rp-ui-base-grey-700);
     }
   }
 }

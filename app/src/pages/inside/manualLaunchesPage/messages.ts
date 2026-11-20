@@ -14,6 +14,11 @@ export const messages = defineMessages({
     defaultMessage:
       'You can either create a new Launch from an existing Test Plan or directly in the Test Case Library.',
   },
+  noLaunchesViewerDescription: {
+    id: 'ManualLaunchesPage.noLaunchesViewerDescription',
+    defaultMessage:
+      'Manual Launches will appear here once they are created from a Test Plan or the Test Case Library.',
+  },
   milestonesLink: {
     id: 'ManualLaunchesPage.milestonesLink',
     defaultMessage: 'Go to Milestones',

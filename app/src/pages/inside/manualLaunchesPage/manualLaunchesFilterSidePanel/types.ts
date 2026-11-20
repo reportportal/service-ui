@@ -30,6 +30,7 @@ export interface TestPlanFilterOption {
 export interface ManualLaunchesFilterPayload {
   statuses: string[];
   completion: string;
+  importance: string;
   startTime: StartTimeValue | null;
   testPlan: TestPlanFilterOption | null;
   attributes: LaunchAttribute[];

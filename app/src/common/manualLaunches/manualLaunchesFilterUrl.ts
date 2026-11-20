@@ -19,6 +19,7 @@ import { formatAttribute } from 'common/utils/attributeUtils';
 const URL_KEYS = {
   STATUSES: 'filterStatuses',
   COMPLETION: 'filterCompletion',
+  IMPORTANCE: 'filterImportance',
   START_TIME_FROM: 'filterStartTimeFrom',
   START_TIME_TO: 'filterStartTimeTo',
   TEST_PLAN: 'filterTestPlan',
@@ -45,6 +46,16 @@ export const readCompositeFromQuery = (
     query[COMPOSITE_ATTRIBUTE_QUERY_KEY]?.trim();
 
   return raw || undefined;
+};
+
+const VALID_RETENTION_POLICY_VALUES = new Set(['IMPORTANT', 'REGULAR']);
+
+export const resolveFilterRetentionPolicyForApi = (
+  query: { filterImportance?: string } | undefined,
+): string | undefined => {
+  const raw = query?.[URL_KEYS.IMPORTANCE]?.trim();
+
+  return raw && VALID_RETENTION_POLICY_VALUES.has(raw) ? raw : undefined;
 };
 
 export const resolveFilterCompositeAttributeForApi = (

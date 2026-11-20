@@ -103,6 +103,25 @@
   letter-spacing: 0;
 }
 
+// only when Install is refused: the button keeps its place and the reason sits under it
+.install-block {
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+  align-items: flex-end;
+  gap: 8px;
+  max-width: 200px;
+}
+
+.install-unavailable {
+  font-size: 11px;
+  font-family: var(--rp-ui-base-font-family-heading);
+  font-weight: var(--rp-ui-base-fw-regular);
+  color: var(--rp-ui-color-text-secondary);
+  line-height: 16px;
+  text-align: right;
+}
+
 .discover-button[class],
 .install-button[class] {
   flex-shrink: 0;

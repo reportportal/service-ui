@@ -49,7 +49,7 @@
 }
 
 .configuration-not-specified-info {
-  color: $COLOR--e-400;
+  color: var(--rp-ui-base-grey-800);
   font-size: 20px;
   font-family: $FONT-REGULAR;
   line-height: 31px;

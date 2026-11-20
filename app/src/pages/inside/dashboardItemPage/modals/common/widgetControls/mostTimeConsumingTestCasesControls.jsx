@@ -17,14 +17,16 @@
 import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { injectIntl, defineMessages } from 'react-intl';
+import { messages as widgetControlsMessages } from './messages';
 import { connect } from 'react-redux';
 import { FieldProvider } from 'components/fields/fieldProvider';
 import { CHART_MODES, MODES_VALUES } from 'common/constants/chartModes';
 import { URLS } from 'common/urls';
 import { projectKeySelector } from 'controllers/project';
+import { Checkbox } from '@reportportal/ui-kit';
 import { getWidgetCriteriaOptions } from './utils/getWidgetCriteriaOptions';
 import { PASSED_FAILED_LAUNCHES_OPTIONS } from './constants';
-import { DropdownControl, TogglerControl, TagsControl, CheckboxControl } from './controls';
+import { RadioGroupControl, LaunchNameControl, CriteriaFieldControl } from './controls';
 import { getWidgetModeOptions } from './utils/getWidgetModeOptions';
 
 const messages = defineMessages({
@@ -40,10 +42,6 @@ const messages = defineMessages({
     id: 'MostTimeConsumingTestCasesControls.LaunchNameFieldLabel',
     defaultMessage: 'Launch name',
   },
-  LaunchNamePlaceholder: {
-    id: 'MostTimeConsumingTestCasesControls.LaunchNamePlaceholder',
-    defaultMessage: 'Enter launch name',
-  },
   IncludeMethodsControlText: {
     id: 'MostTimeConsumingTestCasesControls.IncludeMethodsControlText',
     defaultMessage: 'Include Before and After methods',
@@ -54,7 +52,7 @@ const messages = defineMessages({
   },
   ContentFieldsValidationError: {
     id: 'MostTimeConsumingTestCasesControls.ContentFieldsValidationError',
-    defaultMessage: 'You must select at least one item',
+    defaultMessage: 'Field is required',
   },
 });
 const validators = {
@@ -110,47 +108,36 @@ export class MostTimeConsumingTestCasesControls extends Component {
 
     return (
       <Fragment>
-        <FieldProvider
-          name="contentParameters.contentFields"
+        <CriteriaFieldControl
+          label={formatMessage(messages.CriteriaFieldLabel)}
+          options={this.criteria}
           validate={validators.contentFields(formatMessage)}
-        >
-          <DropdownControl
-            fieldLabel={formatMessage(messages.CriteriaFieldLabel)}
-            multiple
-            selectAll
-            options={this.criteria}
-            disabled={isMainControlsDisabled}
-          />
-        </FieldProvider>
+          disabled={isMainControlsDisabled}
+        />
         <FieldProvider
           name="contentParameters.widgetOptions.launchNameFilter"
           validate={validators.launchNames(formatMessage)}
         >
-          <TagsControl
-            fieldLabel={formatMessage(messages.LaunchNameFieldLabel)}
-            placeholder={formatMessage(messages.LaunchNamePlaceholder)}
-            minLength={3}
-            maxLength={256}
+          <LaunchNameControl
+            label={formatMessage(messages.LaunchNameFieldLabel)}
             getURI={URLS.launchNameSearch(projectKey)}
             disabled={isMainControlsDisabled}
           />
         </FieldProvider>
         <FieldProvider name="contentParameters.widgetOptions.viewMode">
-          <TogglerControl
-            fieldLabel=" "
-            items={getWidgetModeOptions(
+          <RadioGroupControl
+            options={getWidgetModeOptions(
               [CHART_MODES.BAR_VIEW, CHART_MODES.TABLE_VIEW],
               formatMessage,
             )}
+            label={formatMessage(widgetControlsMessages.ViewLabel)}
             disabled={isMainControlsDisabled}
           />
         </FieldProvider>
         <FieldProvider name="contentParameters.widgetOptions.includeMethods">
-          <CheckboxControl
-            fieldLabel=" "
-            text={formatMessage(messages.IncludeMethodsControlText)}
-            disabled={isMainControlsDisabled}
-          />
+          <Checkbox disabled={isMainControlsDisabled}>
+            {formatMessage(messages.IncludeMethodsControlText)}
+          </Checkbox>
         </FieldProvider>
       </Fragment>
     );

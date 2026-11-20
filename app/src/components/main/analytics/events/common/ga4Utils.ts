@@ -23,6 +23,18 @@ export const getBasicEventParameters = <const ActionType, const CategoryType>(
   place: '',
 });
 
+export const getBasicPageViewEventParameters = () => ({
+  action: 'page_view' as const,
+  place: '',
+});
+
+export const PAGE_VIEW_CONTENT_TYPE = {
+  POPULATED: 'populated',
+  EMPTY: 'empty',
+} as const;
+export type PageViewContentType =
+  (typeof PAGE_VIEW_CONTENT_TYPE)[keyof typeof PAGE_VIEW_CONTENT_TYPE];
+
 export const getBasicClickEventParameters = <const CategoryType>(
   category: CategoryType,
 ) => getBasicEventParameters('click', category);

@@ -20,6 +20,7 @@ import { useDispatch } from 'react-redux';
 import { InjectedFormProps } from 'redux-form';
 import { Modal } from '@reportportal/ui-kit';
 
+import { createClassnames } from 'common/utils';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { hideModalAction } from 'controllers/modal';
 import { ModalLoadingOverlay } from 'components/modalLoadingOverlay';
@@ -30,6 +31,10 @@ import { getIsManualCovered } from '../testCaseList/utils';
 import { LaunchFormFields } from './launchFormFields';
 import { LaunchFormData, LaunchMode, LaunchOption, BaseLaunchModalProps } from './types';
 import { useCreateManualLaunch } from './useCreateManualLaunch';
+
+import styles from './launchFormFields.scss';
+
+const cx = createClassnames(styles);
 
 export const BaseLaunchModal = ({
   dirty,
@@ -122,8 +127,8 @@ export const BaseLaunchModal = ({
       onClose={() => dispatch(hideModalAction())}
       zIndex={MODAL_Z_INDEX}
     >
-      <div className={className ? `${className}__content-wrapper` : undefined}>
-        <form onSubmit={trackedSubmit as (event: FormEvent) => void}>
+      <div className={cx('content-wrapper')}>
+        <form onSubmit={trackedSubmit}>
           <div className={className ? `${className}__container` : undefined}>
             <LaunchFormFields
               activeMode={activeMode}

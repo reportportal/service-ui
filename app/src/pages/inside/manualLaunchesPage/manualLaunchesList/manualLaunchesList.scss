@@ -173,6 +173,46 @@
     &-cell-launch-name {
       font-weight: var(--rp-ui-base-fw-medium);
     }
+
+    &-cell-star {
+      display: inline-flex;
+      flex: 0 0 16px;
+      width: 16px;
+      margin-left: 8px;
+    }
+
+    &-cell-star-icon {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      width: 16px;
+      height: 16px;
+      font-style: normal;
+      overflow: visible;
+
+      > span[aria-hidden] {
+        display: inline-flex;
+        width: 16px;
+        height: 16px;
+      }
+
+      svg {
+        display: block;
+        width: 16px;
+        height: 16px;
+        flex-shrink: 0;
+      }
+    }
+
+    &-cell-star-label {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+      clip-path: inset(50%);
+      white-space: nowrap;
+    }
   }
 }
 

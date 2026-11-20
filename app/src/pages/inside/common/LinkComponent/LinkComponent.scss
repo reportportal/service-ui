@@ -36,6 +36,6 @@
   }
 
   svg * {
-    fill: $COLOR--e-300;
+    fill: var(--rp-ui-base-grey-700);
   }
 }

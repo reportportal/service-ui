@@ -23,7 +23,6 @@ import track from 'react-tracking';
 import { NOTIFICATION_TYPES } from 'controllers/notification';
 import { fetch } from 'common/utils';
 import { URLS } from 'common/urls';
-import { ScrollWrapper } from 'components/main/scrollWrapper';
 import PropTypes from 'prop-types';
 import { WIDGETS_EVENTS } from 'components/main/analytics/events/ga4Events/dashboardsPageEvents';
 import { EmptyWidgetGrid } from './emptyWidgetGrid';
@@ -33,6 +32,7 @@ import styles from './widgetsGrid.scss';
 const cx = classNames.bind(styles);
 const ResponsiveGridLayout = WidthProvider(Responsive);
 const rowHeight = 63;
+const WIDGETS_GAP = [8, 8];
 const breakpoints = { lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0 };
 const cols = { lg: 12, md: 12, sm: 4, xs: 4, xxs: 4 };
 const messages = defineMessages({
@@ -127,7 +127,12 @@ export class WidgetsGrid extends Component {
   };
 
   onDragStop = (newLayout, oldWidgetPosition, newWidgetPosition) => {
-    this.props.tracking.trackEvent(WIDGETS_EVENTS.ON_DRAG_WIDGET);
+    const widgetMoved =
+      oldWidgetPosition.x !== newWidgetPosition.x || oldWidgetPosition.y !== newWidgetPosition.y;
+    // a click on a header control can start a drag that never leaves the cell
+    if (widgetMoved) {
+      this.props.tracking.trackEvent(WIDGETS_EVENTS.ON_DRAG_WIDGET);
+    }
     this.onGridItemChange(newLayout, oldWidgetPosition, newWidgetPosition);
   };
 
@@ -135,12 +140,10 @@ export class WidgetsGrid extends Component {
     const widgets = this.props.dashboard.widgets;
     const targetWidget = widgets.find((widget) => +widget.widgetId === +oldItem.i);
     this.props.tracking.trackEvent(WIDGETS_EVENTS.clickOnResizeWidgetIcon(targetWidget.widgetType));
-    this.observer.publish(`${oldItem.i}_resizeStarted`);
   };
 
   onResizeStop = (newLayout, oldWidgetPosition, newWidgetPosition) => {
     this.onGridItemChange(newLayout, oldWidgetPosition, newWidgetPosition);
-    this.observer.publish('widgetResized');
   };
 
   onDeleteWidget = (widgetId) => {
@@ -236,11 +239,13 @@ export class WidgetsGrid extends Component {
       observer={this.observer}
       isFullscreen={this.props.isFullscreen}
       rowHeight={rowHeight}
+      margin={WIDGETS_GAP}
       breakpoints={breakpoints}
       onBreakpointChange={this.onBreakpointChange}
       onDragStop={this.onDragStop}
       onResizeStart={this.onResizeStart}
       onResizeStop={this.onResizeStop}
+      draggableCancel="button"
       cols={cols}
       isDraggable={this.props.isModifiable}
       isResizable={this.props.isModifiable}
@@ -257,13 +262,7 @@ export class WidgetsGrid extends Component {
     const { widgets = [] } = dashboard;
 
     if (widgets.length) {
-      return isFullscreen ? (
-        <ScrollWrapper autoHeight autoHeightMax={window.innerHeight} hideTracksWhenNotNeeded>
-          {this.renderWidgetsGridLayout()}
-        </ScrollWrapper>
-      ) : (
-        this.renderWidgetsGridLayout()
-      );
+      return this.renderWidgetsGridLayout();
     }
 
     return (

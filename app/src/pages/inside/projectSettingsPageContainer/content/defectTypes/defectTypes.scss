@@ -99,7 +99,7 @@ $DEFECT_NAME_PADDING: 16px;
 }
 
 .group-create {
-  @include fill-svg($COLOR--e-300);
+  @include fill-svg(var(--rp-ui-base-grey-700));
   position: relative;
   display: inline-block;
   width: 16px;
@@ -112,7 +112,7 @@ $DEFECT_NAME_PADDING: 16px;
   }
 
   &:hover:not(.disabled) {
-    @include fill-svg($COLOR--e-400);
+    @include fill-svg(var(--rp-ui-base-topaz-700));
   }
 }
 
@@ -121,7 +121,7 @@ $DEFECT_NAME_PADDING: 16px;
   justify-content: space-between;
   padding: 16px 124px 8px 44px;
   font-size: 11px;
-  color: $COLOR--e-300;
+  color: var(--rp-ui-base-grey-800);
   font-family: $FONT-ROBOTO-REGULAR;
 }
 

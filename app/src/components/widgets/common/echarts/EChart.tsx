@@ -36,6 +36,12 @@ const DEFAULT_LEGEND_CONFIG = {
   legendProps: {} as Record<string, unknown>,
 };
 
+const applyUncheckedLegendItems = (chart: EChartsType, items: string[]) => {
+  items.forEach((name) => {
+    chart.dispatchAction({ type: 'legendUnSelect', name });
+  });
+};
+
 const mergeOption = (option: EChartsOption): EChartsOption => {
   const themeGrid = ECHARTS_THEME.grid as object;
   const themeLegend = ECHARTS_THEME.legend as object;
@@ -88,26 +94,30 @@ export const EChart = ({
   const onChartReadyRef = useRef(onChartReady);
   const resizedCallbackRef = useRef(resizedCallback);
 
-  useEffect(() => {
-    chartCreatedCallbackRef.current = chartCreatedCallback;
-    onChartReadyRef.current = onChartReady;
-    resizedCallbackRef.current = resizedCallback;
-  }, [chartCreatedCallback, onChartReady, resizedCallback]);
-
   const {
     showLegend = false,
     onChangeLegend = DEFAULT_LEGEND_CONFIG.onChangeLegend,
     uncheckedLegendItems = [],
     legendProps = {},
   } = legendConfig;
+  const uncheckedLegendItemsRef = useRef(uncheckedLegendItems);
+  const isLegendInteractive =
+    !isPreview && showLegend && !(legendProps as { disabled?: boolean }).disabled;
+
+  useEffect(() => {
+    chartCreatedCallbackRef.current = chartCreatedCallback;
+    onChartReadyRef.current = onChartReady;
+    resizedCallbackRef.current = resizedCallback;
+    uncheckedLegendItemsRef.current = uncheckedLegendItems;
+  }, [chartCreatedCallback, onChartReady, resizedCallback, uncheckedLegendItems]);
 
   const built = useMemo(() => {
     if (optionProp) {
       return {
         option: mergeOption(optionProp),
-        customData: {} as EChartCustomData,
+        customData: {},
         legendItems: [] as string[],
-        colors: {} as Record<string, string>,
+        colors: {},
       };
     }
 
@@ -157,10 +167,9 @@ export const EChart = ({
 
     chart.setOption(built.option, { notMerge: true });
 
-    if (!isPreview && showLegend && !(legendProps as { disabled?: boolean }).disabled) {
-      uncheckedLegendItems.forEach((name) => {
-        chart.dispatchAction({ type: 'legendUnSelect', name });
-      });
+    // a rebuilt option restores all series, so the hidden ones are re-applied here
+    if (isLegendInteractive) {
+      applyUncheckedLegendItems(chart, uncheckedLegendItemsRef.current);
     }
 
     requestAnimationFrame(() => {
@@ -168,15 +177,15 @@ export const EChart = ({
     });
 
     return undefined;
-  }, [
-    built,
-    container,
-    heightOffset,
-    isPreview,
-    showLegend,
-    legendProps,
-    uncheckedLegendItems,
-  ]);
+  }, [built, container, heightOffset, isPreview, isLegendInteractive]);
+
+  // Legend changes don't rebuild the option (that would reset the zoom range), only the selection.
+  useEffect(() => {
+    const chart = chartRef.current;
+    if (chart && isLegendInteractive) {
+      applyUncheckedLegendItems(chart, uncheckedLegendItems);
+    }
+  }, [uncheckedLegendItems, isLegendInteractive]);
 
   // Opt-in (customData.resizeCursor): charts with drag-to-scroll show the horizontal-resize
   // cursor as the default over the plot area; hovering a series element keeps the pointer.
@@ -306,29 +315,36 @@ export const EChart = ({
     };
 
     if (isAreaMode) {
-      const areaCount = seriesList.length;
+      // Track the hovered area (used by the tooltip) and lighten only that area. Every series is sent
+      // with its id AND color, otherwise ECharts resets the colors to the same value.
+      const colors = ((customDataRef.current as Record<string, unknown>).colors ?? {}) as Record<
+        string,
+        string
+      >;
+      // without colors the update would reset the areas to one color, so leave them untouched
+      const paintAreas = (hoveredId: string | null) =>
+        Object.keys(colors).length > 0 &&
+        chart.setOption({
+          series: seriesList.map((s) => {
+            const id = s.id || s.name;
+            return {
+              id,
+              areaStyle: { color: colors[id], opacity: hoveredId === id ? 0.75 : 1 },
+            };
+          }),
+        });
 
-      const handleAreaMouseOver = (params: { seriesIndex?: number; seriesId?: string; seriesName?: string }) => {
-        const { seriesIndex, seriesId, seriesName } = params;
-        if (hoveredSeriesRef) {
-          hoveredSeriesRef.current = seriesId || seriesName || null;
-        }
-        if (seriesIndex !== undefined) {
-          chart.setOption({
-            series: Array.from({ length: areaCount }, (_, i) => ({
-              areaStyle: { opacity: i === seriesIndex ? 1 : 0.75 },
-            })),
-          });
-        }
+      const handleAreaMouseOver = (params: { seriesId?: string; seriesName?: string }) => {
+        const id = params.seriesId || params.seriesName || null;
+        if (!hoveredSeriesRef || hoveredSeriesRef.current === id) return;
+        hoveredSeriesRef.current = id;
+        paintAreas(id);
       };
 
       const handleAreaMouseOut = () => {
-        if (hoveredSeriesRef) {
-          hoveredSeriesRef.current = null;
-        }
-        chart.setOption({
-          series: Array.from({ length: areaCount }, () => ({ areaStyle: { opacity: 0.75 } })),
-        });
+        if (!hoveredSeriesRef?.current) return;
+        hoveredSeriesRef.current = null;
+        paintAreas(null);
       };
 
       chart.on('mouseover', handleAreaMouseOver);

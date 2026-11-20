@@ -99,6 +99,7 @@ export const EntityItemStartTime = ({
     onRemove={onRemove}
     vertical={vertical}
   >
+    {/* TODO: drop time selection (withoutTimeSelect) to match V2 StartTimeField / DateRangeFormField date-only contract */}
     <InputTimeDateRange
       presets={getTimeDateRangePresets()}
       onChange={(val) => {

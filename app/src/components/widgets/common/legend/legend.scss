@@ -22,7 +22,7 @@
   right: 0;
   height: 85px;
   width: 100%;
-  padding: 20px 20px 0;
+  padding: 0;
   box-sizing: border-box;
 }
 
@@ -83,6 +83,10 @@
 }
 
 .item-name {
-  font-size: 11px;
-  letter-spacing: 0.2px;
+  color: var(--rp-ui-base-almost-black);
+  font-family: var(--rp-ui-base-font-family);
+  font-weight: var(--rp-ui-base-fw-regular);
+  font-size: 12px;
+  line-height: 16px;
+  letter-spacing: 0;
 }

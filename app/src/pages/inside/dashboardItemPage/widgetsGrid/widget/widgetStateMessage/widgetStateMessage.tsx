@@ -1,0 +1,56 @@
+/*
+ * Copyright 2026 EPAM Systems
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+import { ReactNode } from 'react';
+import { BubblesLoader, Button } from '@reportportal/ui-kit';
+
+import { createClassnames } from 'common/utils';
+
+import styles from './widgetStateMessage.scss';
+
+const cx = createClassnames(styles);
+
+interface WidgetStateMessageProps {
+  title?: string;
+  description?: ReactNode;
+  isLoading?: boolean;
+  action?: {
+    label: string;
+    onClick: () => void;
+  };
+}
+
+export const WidgetStateMessage = ({
+  title,
+  description,
+  isLoading = false,
+  action,
+}: WidgetStateMessageProps) => (
+  <div className={cx('widget-state-message')}>
+    {isLoading && (
+      <div className={cx('loader')}>
+        <BubblesLoader />
+      </div>
+    )}
+    {title && <p className={cx('title')}>{title}</p>}
+    {description && <p className={cx('description')}>{description}</p>}
+    {action && (
+      <Button variant="ghost" className={cx('action')} onClick={action.onClick}>
+        {action.label}
+      </Button>
+    )}
+  </div>
+);

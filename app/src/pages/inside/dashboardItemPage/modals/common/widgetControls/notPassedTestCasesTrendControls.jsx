@@ -17,11 +17,16 @@
 import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { injectIntl, defineMessages } from 'react-intl';
+import { FieldNumber } from '@reportportal/ui-kit';
 import { FieldProvider } from 'components/fields/fieldProvider';
+import { FieldErrorHint } from 'components/fields';
 import { STATS_TOTAL, STATS_FAILED, STATS_SKIPPED } from 'common/constants/statistics';
 import { commonValidators } from 'common/utils/validation';
-import { ITEMS_INPUT_WIDTH } from './constants';
-import { FiltersControl, InputControl } from './controls';
+import { FiltersControlV2 } from './controls';
+import { createClassnames } from 'common/utils';
+import styles from './widgetControls.scss';
+
+const cx = createClassnames(styles);
 
 const DEFAULT_ITEMS_COUNT = '50';
 const messages = defineMessages({
@@ -77,14 +82,17 @@ export class NotPassedTestCasesTrendControls extends Component {
       eventsInfo,
       isMainControlsDisabled,
     } = this.props;
+    const filterId = this.props.widgetSettings?.filters?.length && this.props.widgetSettings.filters[0].value;
+    const disabled = !filterId;
 
     return (
       <Fragment>
         <FieldProvider name="filters" parse={this.parseFilterValue} format={this.formatFilterValue}>
-          <FiltersControl
+          <FiltersControlV2
             formAppearance={formAppearance}
             onFormAppearanceChange={onFormAppearanceChange}
             eventsInfo={eventsInfo}
+            required
           />
         </FieldProvider>
         {!formAppearance.isMainControlsLocked && (
@@ -96,14 +104,16 @@ export class NotPassedTestCasesTrendControls extends Component {
               )}
               format={String}
               normalize={this.normalizeValue}
+              className={cx('field-number')}
             >
-              <InputControl
-                fieldLabel={formatMessage(messages.ItemsFieldLabel)}
-                inputWidth={ITEMS_INPUT_WIDTH}
-                maxLength="3"
-                hintType={'top-right'}
-                disabled={isMainControlsDisabled}
-              />
+              <FieldErrorHint provideHint={false}>
+                <FieldNumber
+                  label={formatMessage(messages.ItemsFieldLabel)}
+                  maxLength={3}
+                  defaultWidth={false}
+                  disabled={disabled || isMainControlsDisabled}
+                />
+              </FieldErrorHint>
             </FieldProvider>
           </Fragment>
         )}

@@ -114,7 +114,7 @@ function* watchCreateProject() {
   yield takeEvery(CREATE_PROJECT, createProject);
 }
 
-function* deleteProject({ payload: { projectId, projectName } }) {
+function* deleteProject({ payload: { projectId, projectName, onError } }) {
   const { id: organizationId, slug: organizationSlug } = yield select(activeOrganizationSelector);
   try {
     yield call(fetch, URLS.organizationProjectById({ organizationId, projectId }), {
@@ -132,6 +132,7 @@ function* deleteProject({ payload: { projectId, projectName } }) {
       }),
     );
   } catch (err) {
+    onError?.();
     const error = err.message;
     yield put(
       showNotification({

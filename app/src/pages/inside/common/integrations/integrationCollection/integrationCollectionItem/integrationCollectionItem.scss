@@ -35,7 +35,7 @@
     box-shadow: $BOX_SHADOW--item-hover;
     .arrow-control {
       svg {
-        fill: var(--rp-ui-base-e-400);
+        fill: var(--rp-ui-base-grey-700);
       }
     }
   }
@@ -67,7 +67,7 @@
     overflow: hidden;
   }
   .creation-info {
-    color: var(--rp-ui-base-e-300);
+    color: var(--rp-ui-base-grey-800);
     line-height: 16px;
     font-size: 11px;
     font-family: var(--rp-ui-base-font-family);
@@ -79,7 +79,7 @@
   height: 16px;
 
   svg {
-    fill: var(--rp-ui-base-e-300);
+    fill: var(--rp-ui-base-grey-700);
 
     path {
       fill: inherit;

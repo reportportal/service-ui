@@ -92,7 +92,12 @@
 }
 
 .integration-version {
-  @include integration-measure(13px, 20px, var(--rp-ui-base-e-400), var(--rp-ui-base-font-family));
+  @include integration-measure(
+    13px,
+    20px,
+    var(--rp-ui-base-grey-800),
+    var(--rp-ui-base-font-family)
+  );
 }
 
 .integration-description {

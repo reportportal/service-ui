@@ -16,35 +16,38 @@
 
 .widget-preview {
   width: 100%;
-  height: 140px;
-  margin-top: 25px;
-  background-color: $COLOR--white-four;
+  margin-top: 24px;
   // The preview is purely illustrative: no hover/click/cursor feedback on chart elements.
   pointer-events: none;
   cursor: default;
+}
+
+.static-preview {
+  aspect-ratio: 1.618;
 
   svg {
     width: 100%;
-    height: 140px;
-    max-height: 140px;
+    height: 100%;
   }
+}
 
-  &.table {
-    svg {
-      height: 125px;
-    }
-  }
+.dynamic-preview {
+  box-sizing: border-box;
+  height: 200px;
+  padding: 12px;
+  background-color: var(--rp-ui-base-bg-100);
+  border-radius: 4px;
+}
 
-  &.expanded {
-    height: 190px;
+.preview-frame {
+  width: 100%;
+  height: 100%;
+}
 
-    svg {
-      height: 190px;
-      max-height: 190px;
-    }
-  }
-
-  &.donut {
-    margin-top: 0;
-  }
+.centered {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
 }

@@ -46,6 +46,12 @@ export class Legend extends Component {
     customBlock: PropTypes.node,
     uncheckedLegendItems: PropTypes.array,
     className: PropTypes.string,
+    itemClassName: PropTypes.string,
+    markClassName: PropTypes.string,
+    labelClassName: PropTypes.string,
+    getColor: PropTypes.func,
+    maxHeight: PropTypes.number,
+    alwaysShowScroll: PropTypes.bool,
   };
 
   static defaultProps = {
@@ -60,6 +66,37 @@ export class Legend extends Component {
     customBlock: null,
     uncheckedLegendItems: [],
     className: null,
+    itemClassName: null,
+    markClassName: null,
+    labelClassName: null,
+    getColor: getItemColor,
+    maxHeight: 65,
+    alwaysShowScroll: false,
+  };
+
+  componentDidMount() {
+    // the custom scrollbar only re-measures on update; re-measure when the legend is resized
+    // (e.g. widget resize) so the scrollbar doesn't stay visible when it is no longer needed
+    if (typeof ResizeObserver !== 'undefined' && this.containerRef) {
+      this.resizeObserver = new ResizeObserver(this.updateScrollbars);
+      this.resizeObserver.observe(this.containerRef);
+    }
+  }
+
+  componentWillUnmount() {
+    this.resizeObserver?.disconnect();
+  }
+
+  setContainerRef = (node) => {
+    this.containerRef = node;
+  };
+
+  setScrollRef = (node) => {
+    this.scrollRef = node;
+  };
+
+  updateScrollbars = () => {
+    this.scrollRef?.scrollbars?.update();
   };
 
   onClick = (e) => {
@@ -84,6 +121,10 @@ export class Legend extends Component {
       noTotal,
       onMouseOut,
       colors,
+      getColor,
+      itemClassName,
+      markClassName,
+      labelClassName,
     } = this.props;
 
     return items.map((name) => {
@@ -94,23 +135,25 @@ export class Legend extends Component {
         <span
           key={name}
           data-id={name}
-          className={cx('legend-item', {
-            disabled,
-            unchecked: uncheckedLegendItems.indexOf(name) !== -1,
-          })}
+          className={cx(
+            'legend-item',
+            {
+              disabled,
+              unchecked: uncheckedLegendItems.indexOf(name) !== -1,
+            },
+            itemClassName,
+          )}
           onClick={disabled || !clickable ? null : this.onClick}
           onMouseOver={disabled ? null : this.onMouseOver}
           onMouseOut={disabled ? null : onMouseOut}
         >
           <span
-            className={cx('color-mark')}
+            className={cx('color-mark', markClassName)}
             style={{
-              backgroundColor: isItemConfig
-                ? getItemColor(name, this.props.defectTypes)
-                : colors[name],
+              backgroundColor: isItemConfig ? getColor(name, this.props.defectTypes) : colors[name],
             }}
           />
-          <span className={cx('item-name')}>
+          <span className={cx('item-name', labelClassName)}>
             {isItemConfig
               ? getItemName({ itemName: name, defectTypes, noTotal, formatMessage })
               : formatMessage(messages[name])}
@@ -123,11 +166,17 @@ export class Legend extends Component {
   getTarget = ({ target }) => (target.getAttribute('data-id') ? target : target.parentElement);
 
   render() {
-    const { customBlock, className } = this.props;
+    const { customBlock, className, maxHeight, alwaysShowScroll } = this.props;
 
     return (
-      <div className={className || cx('legend')}>
-        <ScrollWrapper autoHide autoHeight autoHeightMax={65} hideTracksWhenNotNeeded>
+      <div ref={this.setContainerRef} className={className || cx('legend')}>
+        <ScrollWrapper
+          ref={this.setScrollRef}
+          autoHide={!alwaysShowScroll}
+          autoHeight
+          autoHeightMax={maxHeight}
+          hideTracksWhenNotNeeded
+        >
           <div className={cx('content-wrapper')}>
             {customBlock ? (
               <div className={cx('with-custom-block')}>

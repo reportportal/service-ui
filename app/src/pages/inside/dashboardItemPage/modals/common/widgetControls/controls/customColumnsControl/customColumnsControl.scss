@@ -1,5 +1,5 @@
 /*!
- * Copyright 2019 EPAM Systems
+ * Copyright 2026 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,31 +15,26 @@
  */
 
 .custom-columns-control {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  width: 100%;
 }
-.tip-field {
-  padding-bottom: 15px;
+
+.footer {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
 }
+
 .tip {
-  font-family: $FONT-REGULAR;
-  font-size: 12px;
-  line-height: 14px;
-  color: $COLOR--gray-60;
-}
-.add-column-field {
-  padding-bottom: 25px;
-}
-.add-column {
-  font-family: $FONT-REGULAR;
+  color: var(--rp-ui-color-text-secondary);
   font-size: 13px;
-  color: $COLOR--topaz;
-  cursor: pointer;
+  font-family: var(--rp-ui-base-font-family);
+  line-height: 20px;
 }
-.warning-field {
-  margin-top: -20px;
-}
+
 .warning {
-  font-family: $FONT-REGULAR;
-  font-size: 12px;
-  line-height: 14px;
-  color: $COLOR--fatal;
+  margin-top: -8px;
 }

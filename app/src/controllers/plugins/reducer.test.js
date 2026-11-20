@@ -107,6 +107,41 @@ describe('controllers/plugins/marketplaceReducer', () => {
     expect(state.catalogueState).toBe(MARKETPLACE_CATALOGUE_STATE.LOADED_OFFLINE);
   });
 
+  // a refetch has to be told from a first load even when the answer on screen was empty
+  test('records that an answer landed, empty or offline, and keeps it through a refetch', () => {
+    const initial = marketplaceReducer(undefined, {});
+    const empty = marketplaceReducer(
+      undefined,
+      fetchMarketplaceCatalogueSuccessAction({
+        registry: catalogue.registry,
+        installed: [],
+        available: [],
+      }),
+    );
+    const offline = marketplaceReducer(
+      undefined,
+      fetchMarketplaceCatalogueSuccessAction(offlinePayload),
+    );
+    const refetch = marketplaceReducer(empty, fetchMarketplaceCatalogueStartAction());
+
+    expect(initial.answered).toBe(false);
+    expect(empty.answered).toBe(true);
+    expect(offline.answered).toBe(true);
+    expect(refetch.catalogueState).toBe(MARKETPLACE_CATALOGUE_STATE.LOADING);
+    expect(refetch.answered).toBe(true);
+  });
+
+  test('a failure leaves no answer to refresh', () => {
+    const loaded = marketplaceReducer(
+      undefined,
+      fetchMarketplaceCatalogueSuccessAction(onlinePayload),
+    );
+    const failed = marketplaceReducer(loaded, fetchMarketplaceCatalogueErrorAction('boom'));
+
+    expect(failed.answered).toBe(false);
+    expect(marketplaceReducer(failed, fetchMarketplaceCatalogueStartAction()).answered).toBe(false);
+  });
+
   test('remembers the filter a fetch was started with', () => {
     const state = marketplaceReducer(
       undefined,

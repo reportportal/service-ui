@@ -1,5 +1,5 @@
 /*!
- * Copyright 2019 EPAM Systems
+ * Copyright 2026 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,67 +15,7 @@
  */
 
 .add-dashboard-form {
-  width: 415px;
-}
-
-.dashboard-config-button {
-  color: $COLOR--topaz;
-  cursor: pointer;
-  margin-top: 8px;
-  margin-left: 9px;
-  margin-bottom: 0px;
-  font-family: $FONT-SEMIBOLD;
-  font-size: 13px;
-  line-height: 17.7px;
-  background: none;
-  border: none;
-  padding: 0;
-  text-align: left;
-}
-
-.configuration-content {
-  width: 100%;
-}
-
-.configuration-hint {
-  box-sizing: border-box;
-  width: 100%;
-  padding-right: 10px;
-  margin-top: 8px;
-  font-family: $FONT-REGULAR;
-  font-size: 10px;
-  line-height: 14px;
-  color: $COLOR--black-2;
-}
-
-.configuration-pasted {
   display: flex;
-  align-items: center;
-  gap: 8px;
-  margin-bottom: 8px;
-
-  .pasted-icon {
-    display: flex;
-    align-items: center;
-
-    svg {
-      width: 20px;
-      height: 20px;
-    }
-  }
-
-  .pasted-text {
-    font-family: $FONT-SEMIBOLD;
-    font-size: 13px;
-    line-height: 17.7px;
-    color: $COLOR--charcoal-grey;
-  }
-}
-
-.remove-configuration {
-  margin-top: 16px;
-
-  .configuration-hint {
-    margin-top: 8px;
-  }
+  flex-direction: column;
+  gap: 16px;
 }

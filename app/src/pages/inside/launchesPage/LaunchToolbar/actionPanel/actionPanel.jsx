@@ -33,7 +33,6 @@ import { PLUGIN_DISABLED_MESSAGES_BY_GROUP_TYPE } from 'components/integrations/
 import { messages as hamburgerMessages } from 'pages/inside/common/launchSuiteGrid/hamburger/messages';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { IMPORT_GROUP_TYPE } from 'common/constants/pluginsGroupTypes';
-import AddWidgetIcon from 'common/img/add-widget-inline.svg';
 import ImportIcon from 'common/img/import-inline.svg';
 import { createExternalLink, docsReferences } from 'common/utils';
 import { useUserPermissions } from 'hooks/useUserPermissions';
@@ -87,17 +86,15 @@ export const ActionPanel = ({
   onDelete,
   onExportReport,
   activeFilterId,
-  onAddNewWidget,
   finishedLaunchesCount,
 }) => {
   const breadcrumbs = useSelector(breadcrumbsSelector);
-  const { canBulkEditItems, canWorkWithWidgets, canImportLaunches } = useUserPermissions();
+  const { canBulkEditItems, canImportLaunches } = useUserPermissions();
   const isImportPluginsAvailable = useSelector(isImportPluginsAvailableSelector);
   const { formatMessage } = useIntl();
   const { trackEvent } = useTracking();
   const dispatch = useDispatch();
 
-  const isShowWidgetButton = Number.isInteger(activeFilterId) && canWorkWithWidgets;
   const isShowImportButton =
     canBulkEditItems && !debugMode && !Number.isInteger(activeFilterId) && canImportLaunches;
   const onClickActionButton = () => trackEvent(LAUNCHES_PAGE_EVENTS.CLICK_ACTIONS_BTN);
@@ -231,13 +228,6 @@ export const ActionPanel = ({
             )}
           </div>
         )}
-        {isShowWidgetButton && (
-          <div className={cx('action-button', 'mobile-hidden')}>
-            <GhostButton icon={AddWidgetIcon} onClick={onAddNewWidget}>
-              <FormattedMessage id="LaunchesPage.addNewWidget" defaultMessage="Add new widget" />
-            </GhostButton>
-          </div>
-        )}
         {(canBulkEditItems || !debugMode) && (
           <div className={cx('action-button', 'tablet-hidden')}>
             <GhostMenuButton
@@ -283,7 +273,6 @@ ActionPanel.propTypes = {
   onDelete: PropTypes.func,
   onExportReport: PropTypes.func,
   activeFilterId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
-  onAddNewWidget: PropTypes.func,
   finishedLaunchesCount: PropTypes.number,
 };
 
@@ -305,6 +294,5 @@ ActionPanel.defaultProps = {
   onDelete: () => {},
   onExportReport: () => {},
   activeFilterId: null,
-  onAddNewWidget: () => {},
   finishedLaunchesCount: null,
 };

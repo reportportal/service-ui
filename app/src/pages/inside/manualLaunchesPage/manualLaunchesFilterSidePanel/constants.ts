@@ -29,6 +29,12 @@ export const COMPLETION_VALUES = {
   DONE: 'done',
 } as const;
 
+export const IMPORTANCE_VALUES = {
+  ALL: 'all',
+  IMPORTANT_ONLY: 'important_only',
+  NOT_IMPORTANT: 'not_important',
+} as const;
+
 export const START_TIME_PRESETS = {
   TODAY: 'today',
   LAST_7_DAYS: 'last7days',
@@ -48,6 +54,7 @@ export const END_OF_DAY_MS = 999;
 export const EMPTY_FILTER: ManualLaunchesFilterPayload = {
   statuses: [],
   completion: COMPLETION_VALUES.ALL,
+  importance: IMPORTANCE_VALUES.ALL,
   startTime: null,
   testPlan: null,
   attributes: [],

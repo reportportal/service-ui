@@ -14,41 +14,38 @@
  * limitations under the License.
  */
 
-import React, { Fragment } from 'react';
-import Parser from 'html-react-parser';
 import classNames from 'classnames/bind';
-import { useIntl, defineMessages, FormattedRelativeTime } from 'react-intl';
+import { useIntl, defineMessages } from 'react-intl';
 import PropTypes from 'prop-types';
-import { Toggle } from '@reportportal/ui-kit';
+import { Toggle, MeatballMenuIcon, RefreshIcon } from '@reportportal/ui-kit';
 import { useSelector } from 'react-redux';
 import { activeDashboardItemSelector } from 'controllers/dashboard';
-import CrossIcon from 'common/img/cross-icon-inline.svg';
-import PencilIcon from 'common/img/pencil-icon-inline.svg';
-import RefreshIcon from 'common/img/refresh-icon-inline.svg';
 import { getRelativeUnits } from 'common/utils/timeDateUtils';
+import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { widgetTypesMessages } from 'pages/inside/dashboardItemPage/modals/common/messages';
-import {
-  widgetModeMessages,
-  getWidgetModeByValue,
-} from 'pages/inside/dashboardItemPage/modals/common/widgetControls/utils/getWidgetModeOptions';
 import { STATE_RENDERING } from 'components/widgets/common/constants';
 import { MATERIALIZED_VIEW_WIDGETS } from 'components/widgets';
-import { canWorkWithWidgets } from 'common/utils/permissions/permissions';
-import { userRolesSelector } from 'controllers/pages';
-import { LockedDashboardTooltip } from 'pages/inside/common/lockedDashboardTooltip';
+import { ActionMenu } from 'components/actionMenu';
 import { useCanLockDashboard } from 'common/hooks';
-import { DescriptionTooltipIcon } from './descriptionTooltipIcon';
 import styles from './widgetHeader.scss';
 
 const cx = classNames.bind(styles);
 const messages = defineMessages({
   lastRefresh: {
     id: 'WidgetHeader.lastRefresh',
-    defaultMessage: 'Updated:',
+    defaultMessage: 'Updated',
   },
-  forceUpdate: {
-    id: 'WidgetHeader.forceUpdate',
-    defaultMessage: 'Update',
+  refresh: {
+    id: 'WidgetHeader.refresh',
+    defaultMessage: 'Refresh',
+  },
+  moreActions: {
+    id: 'WidgetHeader.moreActions',
+    defaultMessage: 'More actions',
+  },
+  displayLaunches: {
+    id: 'WidgetHeader.displayLaunches',
+    defaultMessage: 'Display launches',
   },
 });
 
@@ -58,111 +55,107 @@ export const WidgetHeader = ({
   onDelete,
   onEdit,
   onForceUpdate,
-  customClass,
+  canEdit,
   isPrintMode,
+  isRefreshing,
   isDisplayedLaunches,
   onDisplayLaunchesToggle,
 }) => {
-  const { formatMessage } = useIntl();
+  const { formatMessage, formatRelativeTime } = useIntl();
   const dashboard = useSelector(activeDashboardItemSelector);
-  const userRoles = useSelector(userRolesSelector);
   const canLock = useCanLockDashboard();
-  const deleteDisabled = dashboard?.locked && !canLock;
+  const isDeleteDisabled = dashboard?.locked && !canLock;
   const isForceUpdateAvailable = MATERIALIZED_VIEW_WIDGETS.includes(data.type);
-  const isEditControlHidden = isForceUpdateAvailable && data.state === STATE_RENDERING;
+  const isEditHidden = isForceUpdateAvailable && data.state === STATE_RENDERING;
   const { value: startTime, unit } = getRelativeUnits(data.lastRefresh);
-  const isDisabled = !canWorkWithWidgets(userRoles);
+  // the short style gives "1 min. ago"; the design shows "1 min ago"
+  const lastRefreshText = formatRelativeTime(startTime, unit, {
+    numeric: 'auto',
+    style: 'short',
+  }).replace('min.', 'min');
 
-  const renderMetaInfo = () =>
-    data.meta?.map((item, index) => {
-      const widgetMode = getWidgetModeByValue(item);
-      return (
-        // eslint-disable-next-line react/no-array-index-key
-        <div key={`${widgetMode}_${index}`} className={cx('meta-info')}>
-          {widgetModeMessages[widgetMode]
-            ? formatMessage(widgetModeMessages[widgetMode])
-            : widgetMode}
-        </div>
-      );
-    });
+  const menuActions = [
+    {
+      label: formatMessage(COMMON_LOCALE_KEYS.EDIT),
+      onClick: onEdit,
+      hasPermission: canEdit && !isEditHidden,
+    },
+    {
+      label: formatMessage(COMMON_LOCALE_KEYS.DELETE),
+      onClick: onDelete,
+      hasPermission: canEdit,
+      disabled: isDeleteDisabled,
+      danger: true,
+    },
+  ];
+  const hasMenuActions = menuActions.some(({ hasPermission }) => hasPermission);
 
   return (
     <div className={cx('widget-header')}>
       <div className={cx('info-block')}>
-        <div className={cx('widget-name')}>
-          <div className={cx('widget-name-block')}>{data.name}</div>
-          <div className={cx('icons-block')}>
-            {data.description && (
-              <div className={cx('icon')}>
-                <DescriptionTooltipIcon tooltipContent={data.description} />
-              </div>
-            )}
-          </div>
-        </div>
-        <br />
-        <div className={cx('widget-type')}>
-          <span className={cx('type')}>
-            {widgetTypesMessages[data.type]
-              ? formatMessage(widgetTypesMessages[data.type])
-              : data.type}
+        <div className={cx('title-row')}>
+          <span className={cx('widget-name')} title={data.name}>
+            {data.name}
           </span>
-          {renderMetaInfo()}
+          {data.type && (
+            <span className={cx('type-label')}>
+              {widgetTypesMessages[data.type]
+                ? formatMessage(widgetTypesMessages[data.type])
+                : data.type}
+            </span>
+          )}
         </div>
+        {data.description && (
+          <div className={cx('widget-description')} title={data.description}>
+            {data.description}
+          </div>
+        )}
       </div>
       {!isPrintMode && (
-        <div className={customClass}>
-          <div
-            className={cx('controls-block', { 'controls-block-update': isForceUpdateAvailable })}
-          >
-            {onDisplayLaunchesToggle && (
-              <Toggle
-                value={isDisplayedLaunches}
-                onChange={onDisplayLaunchesToggle}
-                className={cx('display-launches-wrapper')}
-              >
-                <span className={cx('title')}>Display launches</span>
-              </Toggle>
-            )}
-            {isForceUpdateAvailable && (
-              <div className={cx('force-update', 'mobile-hide')}>
-                {data.lastRefresh && (
-                  <Fragment>
-                    {formatMessage(messages.lastRefresh)}
-                    <span className={cx('force-update-time')}>
-                      <FormattedRelativeTime value={startTime} unit={unit} numeric="auto" />
-                    </span>
-                  </Fragment>
-                )}
-                <button className={cx('control', 'force-update-control')} onClick={onForceUpdate}>
-                  {Parser(RefreshIcon)}
-                  <span className={cx('force-update-label')}>
-                    {formatMessage(messages.forceUpdate)}
-                  </span>
-                </button>
-              </div>
-            )}
-            {!isEditControlHidden && data.type && !isDisabled && (
-              <button className={cx('control', 'mobile-hide')} onClick={onEdit}>
-                {Parser(PencilIcon)}
-              </button>
-            )}
-            {!isForceUpdateAvailable && data.type && (
-              <button className={cx('control')} onClick={onRefresh}>
-                {Parser(RefreshIcon)}
-              </button>
-            )}
-            {!isDisabled && (
-              <LockedDashboardTooltip locked={dashboard?.locked}>
-                <button
-                  className={cx('control', 'mobile-hide')}
-                  onClick={onDelete}
-                  disabled={deleteDisabled}
-                >
-                  {Parser(CrossIcon)}
-                </button>
-              </LockedDashboardTooltip>
-            )}
-          </div>
+        <div className={cx('controls-block')}>
+          {onDisplayLaunchesToggle && (
+            <Toggle
+              value={isDisplayedLaunches}
+              onChange={onDisplayLaunchesToggle}
+              className={cx('display-launches')}
+            >
+              <span className={cx('display-launches-title')}>
+                {formatMessage(messages.displayLaunches)}
+              </span>
+            </Toggle>
+          )}
+          {isForceUpdateAvailable && data.lastRefresh && (
+            <span className={cx('last-refresh')}>
+              {formatMessage(messages.lastRefresh)} {lastRefreshText}
+            </span>
+          )}
+          {data.type && (
+            <button
+              type="button"
+              className={cx('control', { pressed: isRefreshing })}
+              aria-label={formatMessage(messages.refresh)}
+              aria-pressed={isRefreshing}
+              onClick={isForceUpdateAvailable ? onForceUpdate : onRefresh}
+            >
+              <RefreshIcon />
+            </button>
+          )}
+          {data.type && hasMenuActions && (
+            <div className={cx('menu')}>
+              <ActionMenu
+                actions={menuActions}
+                trigger={
+                  <button
+                    type="button"
+                    className={cx('control')}
+                    aria-label={formatMessage(messages.moreActions)}
+                  >
+                    <MeatballMenuIcon />
+                  </button>
+                }
+              />
+            </div>
+          )}
         </div>
       )}
     </div>
@@ -175,8 +168,9 @@ WidgetHeader.propTypes = {
   onDelete: PropTypes.func,
   onEdit: PropTypes.func,
   onForceUpdate: PropTypes.func,
-  customClass: PropTypes.string,
+  canEdit: PropTypes.bool,
   isPrintMode: PropTypes.bool,
+  isRefreshing: PropTypes.bool,
   isDisplayedLaunches: PropTypes.bool,
   onDisplayLaunchesToggle: PropTypes.func,
 };
@@ -187,7 +181,8 @@ WidgetHeader.defaultProps = {
   onDelete: () => {},
   onEdit: () => {},
   onForceUpdate: () => {},
-  customClass: null,
+  canEdit: false,
   isPrintMode: false,
+  isRefreshing: false,
   isDisplayedLaunches: false,
 };

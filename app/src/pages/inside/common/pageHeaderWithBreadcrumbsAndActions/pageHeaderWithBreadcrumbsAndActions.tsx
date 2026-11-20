@@ -36,6 +36,7 @@ interface PageHeaderWithBreadcrumbsAndActionsProps {
   title: ReactNode;
   breadcrumbDescriptors: BreadcrumbDescriptor[];
   titleAddon?: ReactNode;
+  description?: ReactNode;
   actions?: ReactNode;
   actionsClassName?: string;
   titleTailNumChars?: number;
@@ -45,6 +46,7 @@ export const PageHeaderWithBreadcrumbsAndActions = ({
   title,
   breadcrumbDescriptors = [],
   titleAddon,
+  description,
   actions,
   actionsClassName,
   titleTailNumChars,
@@ -52,6 +54,13 @@ export const PageHeaderWithBreadcrumbsAndActions = ({
   const breadcrumbsTree = useBreadCrumbsTree();
   const stringTitle = typeof title === 'string' ? title : undefined;
   const { ref: titleRef, title: ellipsisTitle } = useEllipsisTitle(stringTitle);
+
+  // with a description the actions are aligned with it, otherwise with the title
+  const actionsBlock = actions && (
+    <div className={cx('page-header-with-breadcrumbs-and-actions__actions', actionsClassName)}>
+      {actions}
+    </div>
+  );
 
   return (
     <header className={cx('page-header-with-breadcrumbs-and-actions')}>
@@ -74,12 +83,16 @@ export const PageHeaderWithBreadcrumbsAndActions = ({
           </h1>
           {titleAddon}
         </div>
-        {actions && (
-          <div className={cx('page-header-with-breadcrumbs-and-actions__actions', actionsClassName)}>
-            {actions}
-          </div>
-        )}
+        {!description && actionsBlock}
       </div>
+      {description && (
+        <div className={cx('page-header-with-breadcrumbs-and-actions__description-row')}>
+          <p className={cx('page-header-with-breadcrumbs-and-actions__description')}>
+            {description}
+          </p>
+          {actionsBlock}
+        </div>
+      )}
     </header>
   );
 };

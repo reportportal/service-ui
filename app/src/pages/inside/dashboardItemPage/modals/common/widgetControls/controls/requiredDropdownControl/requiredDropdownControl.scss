@@ -1,0 +1,14 @@
+// Reset the default fieldset look so the field renders as it did inside a plain div.
+.group {
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.error {
+  margin-top: 4px;
+  color: var(--rp-ui-color-error);
+  font-size: 12px;
+  line-height: 16px;
+}

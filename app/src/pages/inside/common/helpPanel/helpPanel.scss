@@ -50,7 +50,7 @@
         font-size: 11px;
         line-height: 16px;
         font-family: $FONT-ROBOTO-REGULAR;
-        color: $COLOR--e-300;
+        color: var(--rp-ui-base-grey-800);
       }
     }
   }
@@ -66,5 +66,5 @@
   height: 16px;
 }
 .icon > svg > * {
-  fill: $COLOR--e-300;
+  fill: var(--rp-ui-base-grey-700);
 }

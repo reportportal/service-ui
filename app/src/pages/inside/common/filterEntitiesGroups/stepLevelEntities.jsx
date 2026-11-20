@@ -119,7 +119,7 @@ const messages = defineMessages({
   },
   Attribute: {
     id: 'LaunchLevelEntities.AttributeTitle',
-    defaultMessage: 'Attribute',
+    defaultMessage: 'Attributes',
   },
   BtsIssueTitle: {
     id: 'StepLevelEntities.BtsIssueTitle',

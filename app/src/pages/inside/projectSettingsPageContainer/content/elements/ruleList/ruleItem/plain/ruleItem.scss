@@ -95,7 +95,7 @@
 }
 
 .icon {
-  @include fill-svg($COLOR--e-300);
+  @include fill-svg(var(--rp-ui-base-grey-700));
   display: inline-flex;
   width: 16px;
   height: 16px;
@@ -107,7 +107,7 @@
   }
 
   &:hover {
-    @include fill-svg($COLOR--e-400);
+    @include fill-svg(var(--rp-ui-base-topaz-700));
   }
 
   &:active {

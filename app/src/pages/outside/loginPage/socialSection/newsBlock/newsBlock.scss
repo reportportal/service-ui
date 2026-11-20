@@ -17,6 +17,7 @@
 $stack-spring-easing: cubic-bezier(0.34, 1.45, 0.64, 1);
 $stack-soft-easing: cubic-bezier(0.33, 1, 0.42, 1);
 $stack-speed: 420ms;
+$fade-height: 40px;
 
 .news-block {
   display: flex;
@@ -81,7 +82,7 @@ $stack-speed: 420ms;
     width: 100%;
     max-width: 479px;
     min-height: 100%;
-    padding-top: 0;
+    padding-top: $fade-height;
     align-content: end;
     touch-action: auto;
     box-sizing: border-box;
@@ -89,10 +90,57 @@ $stack-speed: 420ms;
 }
 
 .posts-scroll {
+  position: relative;
   flex: 1;
   min-height: 0;
   width: 100%;
   max-width: 479px;
+
+  &::before,
+  &::after {
+    position: absolute;
+    right: 0;
+    left: 0;
+    z-index: 2;
+    height: $fade-height;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 200ms ease;
+    content: '';
+  }
+
+  &--fade-top::before,
+  &--fade-bottom::after {
+    opacity: 1;
+  }
+
+  &::before {
+    top: 0;
+    background: linear-gradient(
+      180deg,
+      $COLOR--news-panel-background 0%,
+      rgba($COLOR--news-panel-background, 0.2) 50%,
+      rgba($COLOR--news-panel-background, 0) 100%
+    );
+  }
+
+  &::after {
+    bottom: 0;
+    background: linear-gradient(
+      0deg,
+      $COLOR--news-panel-background 0%,
+      rgba($COLOR--news-panel-background, 0.2) 50%,
+      rgba($COLOR--news-panel-background, 0) 100%
+    );
+  }
+}
+
+.posts-scroll-view {
+  scrollbar-width: none;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
 }
 
 .deck-controls {
@@ -101,6 +149,10 @@ $stack-speed: 420ms;
   align-items: center;
   gap: 8px;
   margin-top: 10px;
+
+  &--expanded {
+    margin-top: 3px;
+  }
 }
 
 .undo-pill {
@@ -126,6 +178,10 @@ $stack-speed: 420ms;
 
   @media (prefers-reduced-motion: reduce) {
     transition: none;
+  }
+
+  &--collapsed {
+    display: none;
   }
 
   &--shown {

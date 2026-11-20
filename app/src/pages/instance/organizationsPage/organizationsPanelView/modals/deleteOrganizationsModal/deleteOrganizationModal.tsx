@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import type { ReactNode } from 'react';
+import { useState, type ReactNode } from 'react';
 import { useDispatch } from 'react-redux';
 import { useIntl } from 'react-intl';
 import { useTracking } from 'react-tracking';
@@ -34,6 +34,7 @@ import { ModalButtonProps } from 'types/common';
 import { messages } from 'pages/instance/organizationsPage/messages';
 import { deleteOrganizationAction } from 'controllers/instance/organizations/actionCreators';
 import { PreservedText } from 'components/preservedText';
+import { LoadingSubmitButton } from 'components/loadingSubmitButton';
 
 import styles from './deleteOrganizationModal.scss';
 
@@ -72,21 +73,37 @@ const DeleteOrganizationModal = ({
   const { formatMessage } = useIntl();
   const { trackEvent } = useTracking();
 
+  const [isLoading, setIsLoading] = useState(false);
+
   const onSubmit = () => {
-    dispatch(deleteOrganizationAction(organization.id, onDelete));
-    dispatch(hideModalAction());
+    setIsLoading(true);
+    dispatch(
+      deleteOrganizationAction(
+        organization.id,
+        () => {
+          dispatch(hideModalAction());
+          onDelete?.();
+        },
+        () => setIsLoading(false),
+      ),
+    );
     trackEvent(ORGANIZATION_PAGE_EVENTS.DELETE_ORGANIZATION);
   };
 
   const okButton: ModalButtonProps = {
-    children: formatMessage(COMMON_LOCALE_KEYS.DELETE),
+    children: (
+      <LoadingSubmitButton isLoading={isLoading}>
+        {formatMessage(COMMON_LOCALE_KEYS.DELETE)}
+      </LoadingSubmitButton>
+    ),
     onClick: handleSubmit(onSubmit) as () => void,
     variant: 'danger',
-    disabled: anyTouched && invalid,
+    disabled: isLoading || (anyTouched && invalid),
   };
 
   const cancelButton: ModalButtonProps = {
     children: formatMessage(COMMON_LOCALE_KEYS.CANCEL),
+    disabled: isLoading,
   };
 
   return (
@@ -94,7 +111,7 @@ const DeleteOrganizationModal = ({
       title={formatMessage(messages.deleteOrganization)}
       okButton={okButton}
       cancelButton={cancelButton}
-      allowCloseOutside={!dirty}
+      allowCloseOutside={!dirty && !isLoading}
     >
       <div className={cx('modal-content')}>
         <p>

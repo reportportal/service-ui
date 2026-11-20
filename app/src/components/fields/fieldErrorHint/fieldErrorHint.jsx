@@ -61,7 +61,7 @@ const messages = {
     },
     filterNameDuplicateHint: {
       id: 'FiltersPage.filterNameDuplicateHint',
-      defaultMessage: 'Filter with the same name already exists in system.',
+      defaultMessage: 'Filter with the same name already exists in this project.',
     },
     launchNameHint: {
       id: 'LaunchMergeModal.launchNameHint',

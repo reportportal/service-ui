@@ -170,7 +170,7 @@ export class ConnectionSection extends Component {
             running, so neither the failure banner nor the badge below has anything to report, and
             printing the last answer is worse than printing none. */}
         {!connected && !statusUnknown && (
-          <div className={cx({ 'with-global-message': blocked })}>
+          <div className={cx('connection-error', { 'with-global-message': blocked })}>
             <SystemMessage
               header={formatMessage(messages.connectionErrorMessage)}
               mode="error"

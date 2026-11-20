@@ -28,7 +28,7 @@
   overflow: hidden;
   font-size: 13px;
   font-family: $FONT-REGULAR;
-  color: $COLOR--e-400;
+  color: var(--rp-ui-base-grey-800);
   text-decoration: none;
   user-select: none;
   -webkit-user-select: none;
@@ -36,14 +36,19 @@
 
 .breadcrumb:last-child {
   .breadcrumb-text {
-    color: var(--rp-ui-base-e-300);
+    color: var(--rp-ui-base-grey-700);
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
   }
 }
 
-.link .breadcrumb-text {
+.breadcrumb:last-child .link .breadcrumb-text {
+  color: var(--rp-ui-base-grey-800);
+}
+
+.link .breadcrumb-text,
+.breadcrumb:last-child .link .breadcrumb-text {
   &:hover {
     color: $COLOR--topaz-hover-2;
   }

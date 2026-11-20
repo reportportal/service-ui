@@ -17,6 +17,7 @@
 import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { injectIntl, defineMessages } from 'react-intl';
+import { messages as widgetControlsMessages } from './messages';
 import { connect } from 'react-redux';
 import { defectTypesSelector, projectKeySelector } from 'controllers/project';
 import { FieldProvider } from 'components/fields/fieldProvider';
@@ -37,13 +38,10 @@ import { CHART_MODES, MODES_VALUES } from 'common/constants/chartModes';
 import { getWidgetCriteriaOptions } from './utils/getWidgetCriteriaOptions';
 import { getWidgetModeOptions } from './utils/getWidgetModeOptions';
 import { GROUPED_DEFECT_TYPES_OPTIONS } from './constants';
-import {
-  DropdownControl,
-  TogglerControl,
-  CheckboxControl,
-  TagsControl,
-  CustomColumnsControl,
-} from './controls';
+import { Dropdown, Checkbox } from '@reportportal/ui-kit';
+import { FieldErrorHint } from 'components/fields';
+import { AsyncMultipleAutocompleteV2 } from 'componentLibrary/autocompletes/asyncMultipleAutocompleteV2';
+import { CustomColumnsControl, RadioGroupControl } from './controls';
 
 const DEFAULT_ITEMS_COUNT = '50';
 const messages = defineMessages({
@@ -99,6 +97,12 @@ const validators = {
       ? 'customColumnsDuplicationHint'
       : undefined,
 };
+
+const makeFilterOptions = (response) =>
+  (response?.content || []).map((filter) => ({
+    value: String(filter.id),
+    name: filter.name,
+  }));
 
 @injectIntl
 @connect((state) => ({
@@ -172,28 +176,35 @@ export class ProductStatusControls extends Component {
       <Fragment>
         <FieldProvider
           name="filters"
-          format={this.formatFilters}
-          parse={this.parseFilters}
           validate={validators.filters(formatMessage)}
           dumbOnBlur
         >
-          <TagsControl
-            fieldLabel={formatMessage(messages.FiltersFieldLabel)}
-            placeholder={formatMessage(messages.FiltersPlaceholder)}
-            minLength={3}
-            multi
-            getURI={() => filtersSearchUrl}
-          />
+          <FieldErrorHint provideHint={false}>
+            <AsyncMultipleAutocompleteV2
+              placeholder={formatMessage(messages.FiltersPlaceholder)}
+              getURI={(search) => `${filtersSearchUrl}${encodeURIComponent(search || '')}`}
+              makeOptions={makeFilterOptions}
+              parseValueToString={(item) => item?.name || ''}
+              minLength={3}
+              useFixedPositioning
+              dropdownMatchInputWidth
+              inputProps={{
+                label: formatMessage(messages.FiltersFieldLabel),
+                clearable: true,
+                isRequired: true,
+              }}
+            />
+          </FieldErrorHint>
         </FieldProvider>
         <FieldProvider
           name="contentParameters.contentFields"
           format={this.formatBasicColumns}
           parse={this.parseBasicColumns}
         >
-          <DropdownControl
-            fieldLabel={formatMessage(messages.BasicColumnsFieldLabel)}
-            multiple
-            selectAll
+          <Dropdown
+            label={formatMessage(messages.BasicColumnsFieldLabel)}
+            multiSelect
+            isOptionAllVisible
             options={this.criteria}
           />
         </FieldProvider>
@@ -206,16 +217,16 @@ export class ProductStatusControls extends Component {
           <CustomColumnsControl getURI={URLS.launchAttributeKeysSearch(projectKey)} />
         </FieldProvider>
         <FieldProvider name="contentParameters.widgetOptions.latest">
-          <TogglerControl
-            fieldLabel=" "
-            items={getWidgetModeOptions(
+          <RadioGroupControl
+            options={getWidgetModeOptions(
               [CHART_MODES.ALL_LAUNCHES, CHART_MODES.LATEST_LAUNCHES],
               formatMessage,
             )}
+            label={formatMessage(widgetControlsMessages.ModeLabel)}
           />
         </FieldProvider>
         <FieldProvider name="contentParameters.widgetOptions.group">
-          <CheckboxControl fieldLabel=" " text={formatMessage(messages.GroupControlText)} />
+          <Checkbox>{formatMessage(messages.GroupControlText)}</Checkbox>
         </FieldProvider>
       </Fragment>
     );

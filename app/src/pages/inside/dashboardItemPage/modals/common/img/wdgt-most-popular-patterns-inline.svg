@@ -1,50 +1,28 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<svg width="250px" height="125px" viewBox="0 0 250 125" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-    <!-- Generator: Sketch 55.2 (78181) - https://sketchapp.com -->
-    <title>Group 2</title>
-    <desc>Created with Sketch.</desc>
-    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-        <g id="Comulative-wizard-3" transform="translate(-376.000000, -756.000000)">
-            <g id="Group-2" transform="translate(376.000000, 756.000000)">
-                <rect id="Rectangle" fill="#FAFAFA" x="0" y="0" width="250" height="125"></rect>
-                <rect id="Rectangle" fill="#FFFFFF" x="137" y="10" width="74" height="10"></rect>
-                <g id="Group" transform="translate(39.000000, 25.000000)">
-                    <rect id="Rectangle-Copy" fill="#FFFFFF" x="0" y="0" width="172" height="10"></rect>
-                    <rect id="Rectangle-Copy" fill="#EBEBEB" x="5" y="3" width="80" height="4"></rect>
-                    <rect id="Rectangle-Copy-8" fill="#4D9DD2" x="147" y="3" width="20" height="4"></rect>
-                </g>
-                <g id="Group-Copy" transform="translate(39.000000, 40.000000)">
-                    <rect id="Rectangle-Copy" fill="#FFFFFF" x="0" y="0" width="172" height="10"></rect>
-                    <rect id="Rectangle-Copy" fill="#EBEBEB" x="5" y="3" width="80" height="4"></rect>
-                    <rect id="Rectangle-Copy-8" fill="#4D9DD2" x="147" y="3" width="20" height="4"></rect>
-                </g>
-                <g id="Group-Copy-2" transform="translate(39.000000, 55.000000)">
-                    <rect id="Rectangle-Copy" fill="#FFFFFF" x="0" y="0" width="172" height="10"></rect>
-                    <rect id="Rectangle-Copy" fill="#EBEBEB" x="5" y="3" width="80" height="4"></rect>
-                    <rect id="Rectangle-Copy-8" fill="#4D9DD2" x="147" y="3" width="20" height="4"></rect>
-                </g>
-                <g id="Group-Copy-3" transform="translate(39.000000, 70.000000)">
-                    <rect id="Rectangle-Copy" fill="#FFFFFF" x="0" y="0" width="172" height="10"></rect>
-                    <rect id="Rectangle-Copy" fill="#EBEBEB" x="5" y="3" width="80" height="4"></rect>
-                    <rect id="Rectangle-Copy-8" fill="#4D9DD2" x="147" y="3" width="20" height="4"></rect>
-                </g>
-                <g id="Group-Copy-4" transform="translate(39.000000, 85.000000)">
-                    <rect id="Rectangle-Copy" fill="#FFFFFF" x="0" y="0" width="172" height="10"></rect>
-                    <rect id="Rectangle-Copy" fill="#EBEBEB" x="5" y="3" width="80" height="4"></rect>
-                    <rect id="Rectangle-Copy-8" fill="#4D9DD2" x="147" y="3" width="20" height="4"></rect>
-                </g>
-                <g id="Group-Copy-5" transform="translate(39.000000, 100.000000)">
-                    <rect id="Rectangle-Copy" fill="#FFFFFF" x="0" y="0" width="172" height="10"></rect>
-                    <rect id="Rectangle-Copy" fill="#EBEBEB" x="5" y="3" width="80" height="4"></rect>
-                    <rect id="Rectangle-Copy-8" fill="#4D9DD2" x="147" y="3" width="20" height="4"></rect>
-                </g>
-                <g id="Group-Copy-6" transform="translate(39.000000, 115.000000)">
-                    <rect id="Rectangle-Copy" fill="#FFFFFF" x="0" y="0" width="172" height="10"></rect>
-                    <rect id="Rectangle-Copy" fill="#EBEBEB" x="5" y="3" width="80" height="4"></rect>
-                    <rect id="Rectangle-Copy-8" fill="#4D9DD2" x="147" y="3" width="20" height="4"></rect>
-                </g>
-                <polygon id="Path-2" fill="#000000" points="201 14 207 14 204 16"></polygon>
-            </g>
-        </g>
-    </g>
+<svg width="268" height="166" viewBox="0 0 268 166" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g clip-path="url(#clip-widget-preview-18)">
+<rect width="268" height="166" rx="4" fill="#F7F7F8"/>
+<path d="M217.182 7.18198L215.061 5.06066C214.475 4.47487 213.525 4.47487 212.939 5.06066L210.818 7.18198C210.232 7.76777 210.232 8.71751 210.818 9.3033L212.939 11.4246C213.525 12.0104 214.475 12.0104 215.061 11.4246L217.182 9.3033C217.768 8.71751 217.768 7.76777 217.182 7.18198Z" fill="#E3E7EC"/>
+<path d="M10.2909 67.9L8.03923 66.6C7.46528 66.2686 6.73137 66.4653 6.4 67.0392L5.1 69.2909C4.76863 69.8648 4.96528 70.5988 5.53923 70.9301L7.7909 72.2301C8.36485 72.5615 9.09876 72.3648 9.43013 71.7909L10.7301 69.5392C11.0615 68.9653 10.8648 68.2314 10.2909 67.9Z" fill="#ECEFF4"/>
+<path d="M54.2286 153.539L51.4095 152.513C50.6311 152.23 49.7703 152.631 49.487 153.41L48.4609 156.229C48.1776 157.007 48.579 157.868 49.3574 158.151L52.1765 159.177C52.955 159.461 53.8157 159.059 54.0991 158.281L55.1251 155.462C55.4085 154.683 55.0071 153.822 54.2286 153.539Z" fill="#E3E7EC"/>
+<path d="M236.595 34.7582L41.3408 17.6756C35.839 17.1943 30.9886 21.2642 30.5073 26.766L22.3147 120.408C21.8333 125.91 25.9032 130.76 31.405 131.242L226.659 148.324C232.161 148.806 237.011 144.736 237.493 139.234L245.685 45.5917C246.167 40.0898 242.097 35.2395 236.595 34.7582Z" fill="#E3E7EC"/>
+<path d="M232 26H36C30.4772 26 26 30.4772 26 36V130C26 135.523 30.4772 140 36 140H232C237.523 140 242 135.523 242 130V36C242 30.4772 237.523 26 232 26Z" fill="white"/>
+<path d="M201 42H153C151.343 42 150 43.3431 150 45V51C150 52.6569 151.343 54 153 54H201C202.657 54 204 52.6569 204 51V45C204 43.3431 202.657 42 201 42Z" fill="white" stroke="#E3E7EC"/>
+<path d="M179 46H157C155.895 46 155 46.8954 155 48C155 49.1046 155.895 50 157 50H179C180.105 50 181 49.1046 181 48C181 46.8954 180.105 46 179 46Z" fill="#C1C7D0"/>
+<path d="M193 46.5H199L196 50L193 46.5Z" fill="#A2AAB5"/>
+<path d="M116 62H66C64.8954 62 64 62.8954 64 64C64 65.1046 64.8954 66 66 66H116C117.105 66 118 65.1046 118 64C118 62.8954 117.105 62 116 62Z" fill="#C1C7D0"/>
+<path d="M202 62H186C184.895 62 184 62.8954 184 64C184 65.1046 184.895 66 186 66H202C203.105 66 204 65.1046 204 64C204 62.8954 203.105 62 202 62Z" fill="#96DCEA"/>
+<path d="M106 74H66C64.8954 74 64 74.8954 64 76C64 77.1046 64.8954 78 66 78H106C107.105 78 108 77.1046 108 76C108 74.8954 107.105 74 106 74Z" fill="#C1C7D0"/>
+<path d="M199 74H186C184.895 74 184 74.8954 184 76C184 77.1046 184.895 78 186 78H199C200.105 78 201 77.1046 201 76C201 74.8954 200.105 74 199 74Z" fill="#96DCEA"/>
+<path d="M96 86H66C64.8954 86 64 86.8954 64 88C64 89.1046 64.8954 90 66 90H96C97.1046 90 98 89.1046 98 88C98 86.8954 97.1046 86 96 86Z" fill="#C1C7D0"/>
+<path d="M196 86H186C184.895 86 184 86.8954 184 88C184 89.1046 184.895 90 186 90H196C197.105 90 198 89.1046 198 88C198 86.8954 197.105 86 196 86Z" fill="#96DCEA"/>
+<path d="M116 98H66C64.8954 98 64 98.8954 64 100C64 101.105 64.8954 102 66 102H116C117.105 102 118 101.105 118 100C118 98.8954 117.105 98 116 98Z" fill="#C1C7D0"/>
+<path d="M193 98H186C184.895 98 184 98.8954 184 100C184 101.105 184.895 102 186 102H193C194.105 102 195 101.105 195 100C195 98.8954 194.105 98 193 98Z" fill="#96DCEA"/>
+<path d="M106 110H66C64.8954 110 64 110.895 64 112C64 113.105 64.8954 114 66 114H106C107.105 114 108 113.105 108 112C108 110.895 107.105 110 106 110Z" fill="#C1C7D0"/>
+<path d="M190 110H186C184.895 110 184 110.895 184 112C184 113.105 184.895 114 186 114H190C191.105 114 192 113.105 192 112C192 110.895 191.105 110 190 110Z" fill="#96DCEA"/>
+</g>
+<defs>
+<clipPath id="clip-widget-preview-18">
+<rect width="268" height="166" rx="4" fill="white"/>
+</clipPath>
+</defs>
 </svg>

@@ -40,6 +40,7 @@ import flag from './img/test-plans-empty-state-inline.svg';
 import loop from './img/loop-empty-state-inline.svg';
 import plugins from './img/plugins-empty-state-inline.svg';
 import dashboards from './img/dashboards-empty-state-inline.svg';
+import widgets from './img/widgets-empty-state-inline.svg';
 
 const cx = classNames.bind(styles);
 
@@ -56,6 +57,7 @@ const images = {
   loop,
   plugins,
   dashboards,
+  widgets,
 };
 
 export const EmptyStatePage = ({
@@ -135,6 +137,7 @@ EmptyStatePage.propTypes = {
     'loop',
     'plugins',
     'dashboards',
+    'widgets',
   ]),
   documentationDataAutomationId: PropTypes.string,
   buttons: PropTypes.arrayOf(
@@ -143,7 +146,7 @@ EmptyStatePage.propTypes = {
       dataAutomationId: PropTypes.string,
       isDisabled: PropTypes.bool,
       handleButton: PropTypes.func,
-      icon: PropTypes.oneOfType([PropTypes.elementType, PropTypes.string]),
+      icon: PropTypes.oneOfType([PropTypes.elementType, PropTypes.node]),
       isCompact: PropTypes.bool,
       variant: PropTypes.oneOf(['primary', 'ghost', 'danger', 'text']),
     }),

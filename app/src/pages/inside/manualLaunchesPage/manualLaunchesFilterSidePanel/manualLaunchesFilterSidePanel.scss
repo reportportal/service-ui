@@ -77,8 +77,12 @@
 .radio-group {
   display: flex;
   align-items: center;
-  gap: 16px;
+  gap: 24px;
   padding-top: 4px;
+
+  :global(span[role='radio']) {
+    margin-right: 8px;
+  }
 
   :global(span[role='radio']) + span {
     font-weight: var(--rp-ui-base-fw-regular);

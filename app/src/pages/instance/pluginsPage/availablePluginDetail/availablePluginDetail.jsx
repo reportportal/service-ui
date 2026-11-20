@@ -47,6 +47,13 @@ const messages = defineMessages({
     id: 'PluginItem.premiumDescription',
     defaultMessage: 'Upgrade your subscription to access this plugin',
   },
+  // A configured licence unlocks Install, not the plugin: what it covers is checked only when the
+  // artifact is downloaded (ADR-011), so this may not claim the licence covers it. An uncovered
+  // plugin is refused at install and told as marketplaceInstallLicenceRejected.
+  premiumLicensedDescription: {
+    id: 'AvailablePluginDetail.premiumLicensedDescription',
+    defaultMessage: "Uses this instance's licence, checked against this plugin when you install",
+  },
   freeDescription: {
     id: 'PluginItem.freeDescription',
     defaultMessage: 'Available with your current plan',
@@ -71,7 +78,20 @@ const messages = defineMessages({
     id: 'AvailablePluginDetail.author',
     defaultMessage: 'by {author}',
   },
+  noVersionRuns: {
+    id: 'AvailablePluginDetail.noVersionRuns',
+    defaultMessage: 'No published version runs on ReportPortal {productVersion}.',
+  },
+  noVersionInstallable: {
+    id: 'AvailablePluginDetail.noVersionInstallable',
+    defaultMessage: 'No published version can be installed on this instance.',
+  },
 });
+
+// The test the version rows and the install dialog already apply: a blocked version is refused
+// outright, and only an explicit `false` is a refusal of compatibility. An undecided verdict
+// arrives as nothing at all and installs, as it does everywhere else; the server still refuses.
+const isInstallable = (entry) => !entry.blocked && entry.compatible !== false;
 
 /**
  * A marketplace plugin's page. The header is what service-api merged for the catalogue row; the
@@ -102,6 +122,27 @@ export const AvailablePluginDetail = ({
   // the registry's, read off the detail response; the row's copy is the same value
   const author = detail?.plugin?.author || plugin.author || null;
 
+  // Only the registry's own answer can say no version fits; until it has landed, and whenever it
+  // cannot be believed, the header behaves as it always did and the server has the last word.
+  const listedVersions =
+    !loading && !offline && !failed && Array.isArray(detail?.versions) ? detail.versions : [];
+  const noVersionInstallable =
+    !isLocked && listedVersions.length > 0 && !listedVersions.some(isInstallable);
+  const unavailableReason = () => {
+    // compatibility is the cause only when something unblocked was on offer
+    const refusedForRelease = listedVersions.some((entry) => !entry.blocked);
+
+    return refusedForRelease && productVersion
+      ? formatMessage(messages.noVersionRuns, { productVersion })
+      : formatMessage(messages.noVersionInstallable);
+  };
+
+  // `locked` is premium with no licence configured here, per instance rather than per plugin
+  let tierDescription = messages.freeDescription;
+  if (isPremium) {
+    tierDescription = isLocked ? messages.premiumDescription : messages.premiumLicensedDescription;
+  }
+
   const actionLabel = () => {
     if (isLocked) {
       return messages.discoverPremium;
@@ -123,6 +164,23 @@ export const AvailablePluginDetail = ({
     dispatch(
       showModalAction(premiumPromoModal({ trackEvent, title, contactUrl: plugin.contactUrl })),
     );
+
+  const actionButton = (
+    <Button
+      variant="primary"
+      adjustWidthOn="content"
+      data-automation-id={isLocked ? 'discoverPremiumAction' : 'installAction'}
+      className={cx(isLocked ? 'discover-button' : 'install-button')}
+      onClick={isLocked ? handleDiscoverPremium : handleInstall}
+      // a second press while the first install is still in flight would start a second download
+      // of the same plugin; the row in the catalogue has always said so, and this button is the
+      // same request made from a different place. With no version that fits, the version rows
+      // below are dead, so this is too: the dialog it opens would have nothing to offer.
+      disabled={!isLocked && (!version || installing || noVersionInstallable)}
+    >
+      {formatMessage(actionLabel())}
+    </Button>
+  );
 
   return (
     <div className={cx('available-plugin-detail')}>
@@ -155,26 +213,29 @@ export const AvailablePluginDetail = ({
                 <PluginBadge tone={isPremium ? BADGE_TONES.PREMIUM : BADGE_TONES.FREE}>
                   {formatMessage(isPremium ? messages.premium : messages.free)}
                 </PluginBadge>
-                <span className={cx('tier-description')}>
-                  {formatMessage(
-                    isPremium ? messages.premiumDescription : messages.freeDescription,
-                  )}
+                <span
+                  className={cx('tier-description')}
+                  data-automation-id="pluginDetailTierDescription"
+                >
+                  {formatMessage(tierDescription)}
                 </span>
               </div>
             </div>
-            <Button
-              variant="primary"
-              adjustWidthOn="content"
-              data-automation-id={isLocked ? 'discoverPremiumAction' : 'installAction'}
-              className={cx(isLocked ? 'discover-button' : 'install-button')}
-              onClick={isLocked ? handleDiscoverPremium : handleInstall}
-              // a second press while the first install is still in flight would start a second
-              // download of the same plugin; the row in the catalogue has always said so, and
-              // this button is the same request made from a different place
-              disabled={!isLocked && (!version || installing)}
-            >
-              {formatMessage(actionLabel())}
-            </Button>
+            {/* the reason is written out rather than put in a tooltip: a disabled button takes no
+                hover, and the button sits alone, with no row beside it to explain it */}
+            {noVersionInstallable ? (
+              <div className={cx('install-block')}>
+                {actionButton}
+                <p
+                  className={cx('install-unavailable')}
+                  data-automation-id="installUnavailableReason"
+                >
+                  {unavailableReason()}
+                </p>
+              </div>
+            ) : (
+              actionButton
+            )}
           </div>
           <p className={cx('description')}>{plugin.description}</p>
         </div>

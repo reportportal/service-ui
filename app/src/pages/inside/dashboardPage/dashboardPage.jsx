@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 EPAM Systems
+ * Copyright 2026 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,7 +29,6 @@ import { projectNameSelector } from 'controllers/project';
 import { PROJECT_DASHBOARD_PAGE, urlOrganizationAndProjectSelector } from 'controllers/pages';
 import {
   changeVisibilityTypeAction,
-  deleteDashboardAction,
   updateDashboardAction,
   addDashboardAction,
   duplicateDashboardAction,
@@ -43,13 +42,13 @@ import {
 import { DEFAULT_PAGINATION, PAGE_KEY, SIZE_KEY, withPagination } from 'controllers/pagination';
 import { DEFAULT_PAGE_SIZE_OPTIONS } from 'controllers/members/constants';
 import { messages as paginationMessages } from 'hooks/usePagination';
-import { DASHBOARD_EVENTS, DASHBOARDS } from 'analyticsEvents/dashboardsPageEvents';
+import { DASHBOARDS } from 'analyticsEvents/dashboardsPageEvents';
 import { userInfoSelector } from 'controllers/user';
 import { showModalAction } from 'controllers/modal';
 import { withFilter } from 'controllers/filter';
-import { DeleteDashboardConfirmationMessage } from 'pages/inside/common/modals/deleteDashboardConfirmationMessage';
 import { DashboardList } from './dashboardList';
 import { DashboardPageToolbar } from './dashboardPageToolbar';
+import { AddEditModal, DeleteDashboardModal } from './modals';
 import styles from './dashboardPage.scss';
 
 const cx = classNames.bind(styles);
@@ -67,23 +66,6 @@ const messages = defineMessages({
     id: 'DashboardPage.noResults',
     defaultMessage: 'No results found',
   },
-  modalCancelButtonText: {
-    id: 'DashboardPage.modal.modalCancelButtonText',
-    defaultMessage: 'Cancel',
-  },
-  deleteModalWarningMessage: {
-    id: 'DashboardPage.modal.deleteModalWarningMessage',
-    defaultMessage:
-      'You are going to delete not your own dashboard. This may affect other users information on the project.',
-  },
-  deleteModalTitle: {
-    id: 'DashboardPage.modal.deleteModalTitle',
-    defaultMessage: 'Delete Dashboard',
-  },
-  deleteModalSubmitButtonText: {
-    id: 'DashboardPage.modal.deleteModalSubmitButtonText',
-    defaultMessage: 'Delete',
-  },
 });
 
 @connect(
@@ -98,7 +80,6 @@ const messages = defineMessages({
   {
     changeVisibilityType: changeVisibilityTypeAction,
     showModal: showModalAction,
-    deleteDashboard: deleteDashboardAction,
     editDashboard: updateDashboardAction,
     addDashboard: addDashboardAction,
     duplicateDashboard: duplicateDashboardAction,
@@ -114,7 +95,6 @@ export class DashboardPage extends Component {
   static propTypes = {
     intl: PropTypes.object.isRequired,
     showModal: PropTypes.func,
-    deleteDashboard: PropTypes.func,
     editDashboard: PropTypes.func,
     addDashboard: PropTypes.func,
     userInfo: PropTypes.object,
@@ -140,7 +120,6 @@ export class DashboardPage extends Component {
 
   static defaultProps = {
     showModal: () => {},
-    deleteDashboard: () => {},
     editDashboard: () => {},
     addDashboard: () => {},
     duplicateDashboard: () => {},
@@ -182,28 +161,9 @@ export class DashboardPage extends Component {
   };
 
   onDeleteDashboardItem = (item) => {
-    const {
-      intl: { formatMessage },
-      userInfo: { userId },
-      showModal,
-      deleteDashboard,
-    } = this.props;
-    const { id } = item;
+    const { showModal } = this.props;
 
-    const warning = item.owner === userId ? '' : formatMessage(messages.deleteModalWarningMessage);
-    showModal({
-      id: 'deleteItemsModal',
-      data: {
-        items: [item],
-        onConfirm: () => deleteDashboard(item),
-        header: formatMessage(messages.deleteModalTitle),
-        mainContent: <DeleteDashboardConfirmationMessage name={item.name} />,
-        warning,
-        eventsInfo: {
-          deleteBtn: DASHBOARD_EVENTS.clickOnButtonDeleteInModalDeleteDashboard(id),
-        },
-      },
-    });
+    showModal({ component: <DeleteDashboardModal dashboardItem={item} /> });
   };
 
   onDuplicateDashboardItem = (item) => {
@@ -215,12 +175,13 @@ export class DashboardPage extends Component {
     };
 
     showModal({
-      id: 'dashboardAddEditModal',
-      data: {
-        dashboardItem: duplicateItem,
-        onSubmit: duplicateDashboard,
-        type: 'duplicate',
-      },
+      component: (
+        <AddEditModal
+          dashboardItem={duplicateItem}
+          onSubmit={duplicateDashboard}
+          type="duplicate"
+        />
+      ),
     });
   };
 
@@ -228,25 +189,13 @@ export class DashboardPage extends Component {
     const { showModal, editDashboard } = this.props;
 
     showModal({
-      id: 'dashboardAddEditModal',
-      data: {
-        dashboardItem: item,
-        onSubmit: editDashboard,
-        type: 'edit',
-      },
+      component: <AddEditModal dashboardItem={item} onSubmit={editDashboard} type="edit" />,
     });
   };
 
   onAddDashboardItem = () => {
     const { showModal, addDashboard } = this.props;
-
-    showModal({
-      id: 'dashboardAddEditModal',
-      data: {
-        onSubmit: addDashboard,
-        type: 'add',
-      },
-    });
+    showModal({ component: <AddEditModal onSubmit={addDashboard} type="add" /> });
   };
 
   getBreadcrumbDescriptors = () => {

@@ -17,8 +17,9 @@
 import {
   getBasicChooseEventParameters,
   getBasicClickEventParameters,
-  getBasicEventParameters,
+  getBasicPageViewEventParameters,
   normalizeEventParameter,
+  type PageViewContentType,
 } from '../common/ga4Utils';
 
 const MANUAL_LAUNCHES = 'manual_launches';
@@ -67,6 +68,8 @@ const MANUAL_LAUNCHES_MODAL = {
   CLEAR_STATUS: 'clear_status',
   ADD_TO_TEST_PLAN: 'add_to_test_plan',
   POST_LINK_BTS: 'post_link_bts',
+  MARK_AS_IMPORTANT: 'mark_as_important',
+  UNMARK_AS_IMPORTANT: 'unmark_as_important',
 } as const;
 
 const MANUAL_LAUNCHES_ELEMENT = {
@@ -96,6 +99,8 @@ const MANUAL_LAUNCHES_ELEMENT = {
   START_BULK_DELETE_TEST_EXECUTION: 'start_bulk_delete_test_execution',
   CONTINUE_TESTING: 'continue_testing',
   SEARCH_MANUAL_LAUNCHES: 'search_manual_launches',
+  CONFIRM_MARK_AS_IMPORTANT: 'confirm_mark_as_important',
+  CONFIRM_UNMARK_AS_IMPORTANT: 'confirm_unmark_as_important',
 } as const;
 
 export const TEST_EXECUTION_TEMPLATE_TYPE = {
@@ -119,15 +124,16 @@ export const BTS_ACTION_TYPE = {
 } as const;
 export type BtsActionType = (typeof BTS_ACTION_TYPE)[keyof typeof BTS_ACTION_TYPE];
 
-const PAGE_VIEW = getBasicEventParameters('page_view', MANUAL_LAUNCHES);
+const PAGE_VIEW = getBasicPageViewEventParameters();
 const CLICK = getBasicClickEventParameters(MANUAL_LAUNCHES);
 const CHOOSE = getBasicChooseEventParameters(MANUAL_LAUNCHES);
 
 export const MANUAL_LAUNCHES_PAGE_EVENTS = {
-  VIEW_MANUAL_LAUNCHES_PAGE: {
+  viewManualLaunchesPage: (type: PageViewContentType) => ({
     ...PAGE_VIEW,
     place: MANUAL_LAUNCHES_PLACE.MANUAL_LAUNCHES_LIST,
-  },
+    type,
+  }),
   CLICK_GO_TO_TEST_PLANS: {
     ...CLICK,
     place: MANUAL_LAUNCHES_PLACE.MANUAL_LAUNCHES_LIST,
@@ -148,15 +154,17 @@ export const MANUAL_LAUNCHES_PAGE_EVENTS = {
     place: MANUAL_LAUNCHES_PLACE.MANUAL_LAUNCHES_LIST,
     element_name: MANUAL_LAUNCHES_ELEMENT.OPEN_LAUNCH_DETAILS,
   },
-  VIEW_ALL_TEST_EXECUTIONS_PAGE: {
+  viewAllTestExecutionsPage: (type: PageViewContentType) => ({
     ...PAGE_VIEW,
     place: MANUAL_LAUNCHES_PLACE.ALL_TEST_EXECUTIONS,
-  },
-  CLICK_APPLY_LAUNCHES_FILTER: {
+    type,
+  }),
+  clickApplyLaunchesFilter: (condition?: string) => ({
     ...CLICK,
     place: MANUAL_LAUNCHES_PLACE.MANUAL_LAUNCHES_FILTER_PANEL,
     element_name: MANUAL_LAUNCHES_ELEMENT.APPLY_FILTER,
-  },
+    ...(condition && { condition }),
+  }),
   clickShowToRun: (place: ManualLaunchListOrSidebarPlace) => ({
     ...CLICK,
     place,
@@ -286,5 +294,15 @@ export const MANUAL_LAUNCHES_PAGE_EVENTS = {
   CLICK_SEARCH_MANUAL_LAUNCHES: {
     ...CLICK,
     element_name: MANUAL_LAUNCHES_ELEMENT.SEARCH_MANUAL_LAUNCHES,
+  },
+  CONFIRM_MARK_AS_IMPORTANT: {
+    ...CLICK,
+    modal: MANUAL_LAUNCHES_MODAL.MARK_AS_IMPORTANT,
+    element_name: MANUAL_LAUNCHES_ELEMENT.CONFIRM_MARK_AS_IMPORTANT,
+  },
+  CONFIRM_UNMARK_AS_IMPORTANT: {
+    ...CLICK,
+    modal: MANUAL_LAUNCHES_MODAL.UNMARK_AS_IMPORTANT,
+    element_name: MANUAL_LAUNCHES_ELEMENT.CONFIRM_UNMARK_AS_IMPORTANT,
   },
 };

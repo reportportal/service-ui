@@ -150,8 +150,10 @@ import {
 import {
   MANUAL_LAUNCHES_FILTER_URL_KEYS,
   resolveFilterCompositeAttributeForApi,
+  resolveFilterRetentionPolicyForApi,
 } from 'common/manualLaunches/manualLaunchesFilterUrl';
 import { getRouterParams } from 'common/utils';
+import { importantLaunchesEnabledSelector } from 'controllers/appInfo';
 
 const redirectRoute = (path, createNewAction, onRedirect = () => {}) => ({
   path,
@@ -415,6 +417,9 @@ const routesMap = {
           searchQuery,
           filterStatuses,
           filterCompletion: query[MANUAL_LAUNCHES_FILTER_URL_KEYS.COMPLETION] || undefined,
+          filterRetentionPolicy: importantLaunchesEnabledSelector(state)
+            ? resolveFilterRetentionPolicyForApi(query)
+            : undefined,
           filterStartTimeFrom: Number.isFinite(filterStartTimeFrom)
             ? filterStartTimeFrom
             : undefined,

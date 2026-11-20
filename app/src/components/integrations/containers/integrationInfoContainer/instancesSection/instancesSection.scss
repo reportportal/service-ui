@@ -39,7 +39,7 @@
 .no-items-message,
 .uninstall-plugin-note {
   margin-top: 10px;
-  color: $COLOR--gray-60;
+  color: var(--rp-ui-base-grey-800);
   font-size: 13px;
   font-family: $FONT-REGULAR;
   line-height: 1.54;

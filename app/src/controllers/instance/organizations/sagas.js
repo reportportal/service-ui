@@ -55,7 +55,7 @@ function* fetchFilteredOrganizations() {
   );
 }
 
-function* deleteOrganization({ payload: { organizationId, onSuccess } }) {
+function* deleteOrganization({ payload: { organizationId, onSuccess, onError } }) {
   try {
     yield call(fetch, URLS.organizationById(organizationId), {
       method: 'delete',
@@ -63,6 +63,7 @@ function* deleteOrganization({ payload: { organizationId, onSuccess } }) {
     yield put(showSuccessNotification({ messageId: 'deleteOrganizationSuccess' }));
     onSuccess?.();
   } catch ({ errorCode }) {
+    onError?.();
     yield put(showErrorNotification({ messageId: 'deleteOrganizationError' }));
 
     if (errorCode === ERROR_CODES.NOT_FOUND) {

@@ -21,7 +21,9 @@ import { VoidFn } from '@reportportal/ui-kit/common/types/commonTypes';
 import { URLS } from 'common/urls';
 import { fetch } from 'common/utils';
 import { useDebouncedSpinner } from 'common/hooks';
+import { resolveFilterRetentionPolicyForApi } from 'common/manualLaunches/manualLaunchesFilterUrl';
 import { projectKeySelector } from 'controllers/project';
+import { importantLaunchesEnabledSelector } from 'controllers/appInfo';
 import { locationQuerySelector } from 'controllers/pages';
 import { hideModalAction } from 'controllers/modal';
 import { showSuccessNotification, showErrorNotification } from 'controllers/notification';
@@ -39,6 +41,7 @@ export const useDeleteManualLaunches = ({ onSuccess, data }: UseDeleteManualLaun
   const dispatch = useDispatch();
   const projectKey = useSelector(projectKeySelector);
   const query = useSelector(locationQuerySelector);
+  const isImportantLaunchesEnabled = useSelector(importantLaunchesEnabledSelector);
 
   const handleLimitOffset = useCallback(() => {
     const limit = Number(query?.limit) || defaultManualLaunchesQueryParams.limit;
@@ -55,8 +58,11 @@ export const useDeleteManualLaunches = ({ onSuccess, data }: UseDeleteManualLaun
     return {
       offset: nextOffset,
       limit,
+      filterRetentionPolicy: isImportantLaunchesEnabled
+        ? resolveFilterRetentionPolicyForApi(query)
+        : undefined,
     };
-  }, [query]);
+  }, [query, data, isImportantLaunchesEnabled]);
 
   const deleteLaunches = useCallback(
     async (data: DeleteManualLaunchModalData) => {
@@ -105,7 +111,7 @@ export const useDeleteManualLaunches = ({ onSuccess, data }: UseDeleteManualLaun
         hideSpinner();
       }
     },
-    [projectKey, query, showSpinner, hideSpinner, onSuccess, dispatch],
+    [showSpinner, dispatch, handleLimitOffset, onSuccess, projectKey, hideSpinner],
   );
 
   return { isLoading, deleteLaunches };

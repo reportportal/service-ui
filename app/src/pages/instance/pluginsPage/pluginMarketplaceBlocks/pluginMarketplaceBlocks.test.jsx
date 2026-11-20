@@ -101,11 +101,16 @@ describe('PluginMarketplaceBlocks', () => {
   describe('rolling back to another version', () => {
     const installed = { installedVersion: '1.6.0', onUseVersion: () => {} };
     const rowFor = (wrapper, version) =>
-      find(wrapper, 'pluginVersionRow').filterWhere((node) => node.prop('data-version') === version);
+      find(wrapper, 'pluginVersionRow').filterWhere(
+        (node) => node.prop('data-version') === version,
+      );
 
     test('posts the version whose row was clicked', () => {
       // 1.5.2 is blocked in the fixture, so an unblocked older version is added to roll back to
-      const versions = [...detail.versions, { version: '1.4.0', publishedAt: '2025-11-01T00:00:00Z', blocked: false }];
+      const versions = [
+        ...detail.versions,
+        { version: '1.4.0', publishedAt: '2025-11-01T00:00:00Z', blocked: false },
+      ];
       const posted = [];
       const wrapper = render({
         detail: { ...detail, versions },
@@ -113,7 +118,10 @@ describe('PluginMarketplaceBlocks', () => {
         onUseVersion: (version) => posted.push(version),
       });
 
-      rowFor(wrapper, '1.4.0').find('[data-automation-id="useVersionAction"]').first().prop('onClick')();
+      rowFor(wrapper, '1.4.0')
+        .find('[data-automation-id="useVersionAction"]')
+        .first()
+        .prop('onClick')();
 
       expect(posted).toEqual(['1.4.0']);
     });
@@ -162,8 +170,43 @@ describe('PluginMarketplaceBlocks', () => {
       expect(find(render(), 'pluginChangelog').text()).toContain("What's new in 1.6.0");
     });
 
+    // the server sends the document as lines; each comes back as a block of its own
     test('every changelog line is rendered', () => {
-      expect(find(render(), 'pluginChangelogLine')).toHaveLength(2);
+      const paragraphs = find(render(), 'pluginChangelogBody').hostNodes().find('p');
+
+      expect(paragraphs.map((node) => node.text())).toEqual(detail.changelog.lines);
+    });
+
+    // as reported on Test Executions 6.0.0: the markdown was printed rather than rendered
+    test('is rendered as markdown, under the block heading, with long links able to wrap', () => {
+      const body = find(
+        render({
+          detail: {
+            ...detail,
+            changelog: {
+              version: '6.0.0',
+              lines: [
+                '# RC 6.0.0',
+                "## What's Changed",
+                '* Retry **flaky** launches',
+                '**Full Changelog**: https://git.epam.com/epm-rpp/plugin/compare/5.9.0...6.0.0',
+              ],
+            },
+          },
+        }),
+        'pluginChangelogBody',
+      ).hostNodes();
+      const link = body.find('a');
+
+      expect(body.find('h4').text()).toBe('RC 6.0.0');
+      expect(body.find('h5').text()).toBe("What's Changed");
+      expect(body.find('h1')).toHaveLength(0);
+      expect(body.find('li strong').text()).toBe('flaky');
+      expect(link.prop('href')).toBe('https://git.epam.com/epm-rpp/plugin/compare/5.9.0...6.0.0');
+      expect(link.prop('target')).toBe('_blank');
+      expect(link.prop('rel')).toBe('noopener noreferrer');
+      expect(body.hasClass('registry-markdown')).toBe(true);
+      expect(body.text()).not.toMatch(/[#*]{1,2} ?/);
     });
 
     test('the changelog block is absent when there is none', () => {

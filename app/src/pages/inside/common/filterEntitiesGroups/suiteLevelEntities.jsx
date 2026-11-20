@@ -67,7 +67,7 @@ const messages = defineMessages({
   },
   Attribute: {
     id: 'LaunchLevelEntities.AttributeTitle',
-    defaultMessage: 'Attribute',
+    defaultMessage: 'Attributes',
   },
   TotalTitle: {
     id: 'SuiteLevelEntities.TotalTitle',

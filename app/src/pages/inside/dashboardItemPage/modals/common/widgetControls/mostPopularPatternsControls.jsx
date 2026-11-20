@@ -18,18 +18,21 @@ import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { injectIntl, defineMessages } from 'react-intl';
+import { FieldNumber } from '@reportportal/ui-kit';
+import { messages as widgetControlsMessages } from './messages';
 import { FieldProvider } from 'components/fields/fieldProvider';
-import { FieldErrorHint } from 'components/fields/fieldErrorHint';
+import { FieldErrorHint } from 'components/fields';
+import { AsyncAutocompleteV2 } from 'componentLibrary/autocompletes/asyncAutocompleteV2';
 import { URLS } from 'common/urls';
-import { AsyncAutocomplete } from 'components/inputs/autocompletes/asyncAutocomplete';
-import { ModalField } from 'components/main/modal';
+import { createClassnames } from 'common/utils';
 import { projectKeySelector } from 'controllers/project';
 import { CHART_MODES, MODES_VALUES } from 'common/constants/chartModes';
 import { bindMessageToValidator, commonValidators, validate } from 'common/utils/validation';
-import { FIELD_LABEL_WIDTH } from 'pages/inside/dashboardItemPage/modals/common/widgetControls/controls/constants';
-import { FiltersControl, InputControl, TogglerControl } from './controls';
+import { RadioGroupControl, FiltersControlV2 } from './controls';
 import { getWidgetModeOptions } from './utils/getWidgetModeOptions';
-import { ITEMS_INPUT_WIDTH } from './constants';
+import styles from './widgetControls.scss';
+
+const cx = createClassnames(styles);
 
 const DEFAULT_LAUNCHES_COUNT = '600';
 const messages = defineMessages({
@@ -101,6 +104,7 @@ export class MostPopularPatternsControls extends Component {
 
   formatFilterValue = (value) => value?.[0];
   parseFilterValue = (value) => value && [value];
+
   render() {
     const {
       intl,
@@ -110,23 +114,27 @@ export class MostPopularPatternsControls extends Component {
       eventsInfo,
       isMainControlsDisabled,
     } = this.props;
+    const filterId =
+      this.props.widgetSettings?.filters?.length && this.props.widgetSettings.filters[0].value;
+    const disabled = !filterId;
     return (
       <Fragment>
         <FieldProvider name="filters" parse={this.parseFilterValue} format={this.formatFilterValue}>
-          <FiltersControl
+          <FiltersControlV2
             formAppearance={formAppearance}
             onFormAppearanceChange={onFormAppearanceChange}
             eventsInfo={eventsInfo}
+            required
           />
         </FieldProvider>
         <FieldProvider name="contentParameters.widgetOptions.latest">
-          <TogglerControl
-            fieldLabel=" "
-            items={getWidgetModeOptions(
+          <RadioGroupControl
+            options={getWidgetModeOptions(
               [CHART_MODES.ALL_LAUNCHES, CHART_MODES.LATEST_LAUNCHES],
               intl.formatMessage,
             )}
-            disabled={isMainControlsDisabled}
+            label={intl.formatMessage(widgetControlsMessages.ModeLabel)}
+            disabled={disabled || isMainControlsDisabled}
           />
         </FieldProvider>
         <FieldProvider
@@ -136,36 +144,40 @@ export class MostPopularPatternsControls extends Component {
           )}
           format={String}
           normalize={this.normalizeValue}
+          className={cx('field-number')}
         >
-          <InputControl
-            fieldLabel={intl.formatMessage(messages.numberOfLaunchesLabel)}
-            inputWidth={ITEMS_INPUT_WIDTH}
-            maxLength="3"
-            hintType={'top-right'}
-            disabled={isMainControlsDisabled}
-          />
+          <FieldErrorHint provideHint={false}>
+            <FieldNumber
+              label={intl.formatMessage(messages.numberOfLaunchesLabel)}
+              maxLength={3}
+              defaultWidth={false}
+              disabled={disabled || isMainControlsDisabled}
+            />
+          </FieldErrorHint>
         </FieldProvider>
-        <ModalField
-          label={intl.formatMessage(messages.attributeKeyFieldLabel)}
-          labelWidth={FIELD_LABEL_WIDTH}
+        <FieldProvider
+          name="contentParameters.widgetOptions.attributeKey"
+          validate={attributeKeyValidator(
+            intl.formatMessage(messages.attributeKeyValidationError),
+          )}
         >
-          <FieldProvider
-            name="contentParameters.widgetOptions.attributeKey"
-            validate={attributeKeyValidator(
-              intl.formatMessage(messages.attributeKeyValidationError),
-            )}
-          >
-            <FieldErrorHint>
-              <AsyncAutocomplete
-                getURI={URLS.launchAttributeKeysSearch(projectKey)}
-                minLength={1}
-                creatable
-                placeholder={intl.formatMessage(messages.attributeKeyFieldPlaceholder)}
-                disabled={isMainControlsDisabled}
-              />
-            </FieldErrorHint>
-          </FieldProvider>
-        </ModalField>
+          <FieldErrorHint provideHint={false}>
+            <AsyncAutocompleteV2
+              getURI={URLS.launchAttributeKeysSearch(projectKey)}
+              minLength={1}
+              maxLength={512}
+              placeholder={intl.formatMessage(messages.attributeKeyFieldPlaceholder)}
+              disabled={disabled || isMainControlsDisabled}
+              menuPortalRoot={document.getElementById('tooltip-root') || document.body}
+              dropdownMatchInputWidth
+              useFixedPositioning={false}
+              inputProps={{
+                label: intl.formatMessage(messages.attributeKeyFieldLabel),
+                clearable: true,
+              }}
+            />
+          </FieldErrorHint>
+        </FieldProvider>
       </Fragment>
     );
   }

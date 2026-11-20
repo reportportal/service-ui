@@ -1,5 +1,5 @@
 /*!
- * Copyright 2019 EPAM Systems
+ * Copyright 2026 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,34 +15,20 @@
  */
 
 .widget-info-block {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
   width: 100%;
   box-sizing: border-box;
-  padding-top: 20px;
 }
 
 .widget-title {
-  display: inline-block;
-  width: 100%;
-  font-family: $FONT-SEMIBOLD;
-  font-size: 14px;
-  line-height: 17px;
-  color: $COLOR--charcoal-grey;
-  text-align: center;
+  margin: 0;
 }
 
 .widget-description {
-  display: inline-block;
+  font-size: 13px;
+  line-height: 20px;
+  color: var(--rp-ui-color-text-secondary);
   box-sizing: border-box;
-  width: 100%;
-  font-family: $FONT-REGULAR;
-  font-size: 13px;
-  line-height: 22px;
-  color: $COLOR--gray-47;
-  margin: 10px 0;
-}
-
-.link {
-  font-family: $FONT-REGULAR;
-  line-height: 22px;
-  font-size: 13px;
 }

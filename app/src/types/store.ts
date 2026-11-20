@@ -38,6 +38,7 @@ export interface LocationQuery {
   statusFilter?: string;
   filterStatuses?: string;
   filterCompletion?: string;
+  filterImportance?: string;
   filterStartTimeFrom?: string;
   filterStartTimeTo?: string;
   filterTestPlan?: string;

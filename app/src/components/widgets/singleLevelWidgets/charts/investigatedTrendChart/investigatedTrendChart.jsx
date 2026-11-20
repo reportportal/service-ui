@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { useCallback, useMemo } from 'react';
+import { useCallback, useEffect, useMemo, useRef } from 'react';
 import PropTypes from 'prop-types';
 import { useIntl } from 'react-intl';
 import { useDispatch, useSelector } from 'react-redux';
@@ -40,7 +40,8 @@ import * as STATUSES from 'common/constants/testStatuses';
 import { ALL } from 'common/constants/reservedFilterIds';
 import { EChart } from 'components/widgets/common/echarts';
 import { getOption as getStatusPageOption } from '../common/statusPageChartConfig';
-import { selectOptionFunction } from './config';
+import { getHiddenItemsBarSeries, selectOptionFunction } from './config';
+import { LEGEND_MAX_HEIGHT } from './config/constants';
 import styles from './investigatedTrendChart.scss';
 
 const cx = classNames.bind(styles);
@@ -100,10 +101,12 @@ export const InvestigatedTrendChart = ({
   );
 
   const sortedLaunchResult = useMemo(
-    () =>
-      [...(widget.content?.result ?? [])].sort(
+    () => {
+      const result = Array.isArray(widget.content?.result) ? [...widget.content.result] : [];
+      return result.sort(
         (a, b) => new Date(a.startTime) - new Date(b.startTime),
-      ),
+      );
+    },
     [widget.content?.result],
   );
 
@@ -129,6 +132,33 @@ export const InvestigatedTrendChart = ({
     [isTimeline, launchModeClickHandler, timeLineModeClickHandler],
   );
 
+  const hiddenItemsRef = useRef(uncheckedLegendItems);
+  const barDataParamsRef = useRef(null);
+
+  useEffect(() => {
+    barDataParamsRef.current = onStatusPageMode
+      ? null
+      : { content: widget.content?.result, isTimeline, isPreview };
+  }, [widget.content, isTimeline, isPreview, onStatusPageMode]);
+
+  const getOptionWithHiddenItems = useCallback(
+    (params) => selectOptionFunction(isTimeline)({ ...params, hiddenItems: hiddenItemsRef.current }),
+    [isTimeline],
+  );
+
+  const onChartCreated = useCallback((_node, chart) => {
+    chart.on('legendselectchanged', ({ selected }) => {
+      hiddenItemsRef.current = Object.keys(selected).filter((name) => !selected[name]);
+      if (!barDataParamsRef.current?.content) return;
+      chart.setOption({
+        series: getHiddenItemsBarSeries({
+          ...barDataParamsRef.current,
+          hiddenItems: hiddenItemsRef.current,
+        }),
+      });
+    });
+  }, []);
+
   const configData = useMemo(() => {
     if (onStatusPageMode) {
       return {
@@ -143,14 +173,14 @@ export const InvestigatedTrendChart = ({
 
     return {
       formatMessage,
-      getOption: selectOptionFunction(isTimeline),
+      getOption: getOptionWithHiddenItems,
       onChartClick,
     };
   }, [
     formatMessage,
+    getOptionWithHiddenItems,
     integerValueType,
     interval,
-    isTimeline,
     onChartClick,
     onStatusPageMode,
   ]);
@@ -160,6 +190,11 @@ export const InvestigatedTrendChart = ({
       onChangeLegend,
       showLegend: !onStatusPageMode,
       uncheckedLegendItems,
+      legendProps: {
+        className: cx('legend'),
+        maxHeight: LEGEND_MAX_HEIGHT,
+        alwaysShowScroll: true,
+      },
     }),
     [onChangeLegend, onStatusPageMode, uncheckedLegendItems],
   );
@@ -171,6 +206,7 @@ export const InvestigatedTrendChart = ({
         className={cx('widget-wrapper')}
         legendConfig={legendConfig}
         configData={configData}
+        chartCreatedCallback={onChartCreated}
       />
     </div>
   );

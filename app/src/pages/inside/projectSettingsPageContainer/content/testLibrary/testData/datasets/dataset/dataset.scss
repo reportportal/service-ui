@@ -34,7 +34,7 @@
     }
 
     path {
-      fill: var(--rp-ui-base-e-300);
+      fill: var(--rp-ui-base-grey-700);
     }
   }
 
@@ -60,7 +60,7 @@
   &__timestamp {
     margin-top: 4px;
     font-family: $FONT_ROBOTO-REGULAR;
-    color: var(--rp-ui-base-e-400);
+    color: var(--rp-ui-base-grey-800);
     font-size: 11px;
     line-height: 14px;
   }

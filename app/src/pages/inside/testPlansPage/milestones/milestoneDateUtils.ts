@@ -43,3 +43,9 @@ export const isoToDateOnlyFormValue = (iso: string): string => {
   const parsedDate = parseISO(iso);
   return isValid(parsedDate) ? toDateOnlyString(parsedDate) : '';
 };
+
+export const isDeadlineBeforeStart = (startDate: string, endDate: string | undefined): boolean => {
+  const trimmedEndDate = endDate?.trim();
+
+  return !!trimmedEndDate && trimmedEndDate < startDate;
+};

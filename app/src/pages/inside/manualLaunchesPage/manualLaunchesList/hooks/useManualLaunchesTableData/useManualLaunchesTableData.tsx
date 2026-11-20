@@ -25,12 +25,16 @@ import {
 import { useIntl } from 'react-intl';
 import { useDispatch } from 'react-redux';
 import { useTracking } from 'react-tracking';
+import Parser from 'html-react-parser';
+import { Tooltip } from '@reportportal/ui-kit';
 import { RowData } from '@reportportal/ui-kit/components/table/types';
 
 import { AbsRelTime } from 'components/main/absRelTime';
 import { SegmentStatus, SegmentedStatusBar } from 'components/statusBar';
 import { createClassnames, debounce } from 'common/utils';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
+import { RETENTION_POLICY } from 'common/constants/retentionPolicy';
+import StarIcon from 'common/img/star-inline.svg';
 import { isEnterOrSpaceKey } from 'common/utils/helperUtils/eventUtils';
 import { MANUAL_LAUNCH_DETAILS_PAGE } from 'controllers/pages';
 import { useProjectDetails } from 'hooks/useTypedSelector';
@@ -40,6 +44,7 @@ import {
   MANUAL_LAUNCHES_PLACE,
 } from 'components/main/analytics/events/ga4Events/manualLaunchesPageEvents';
 
+import { messages as retentionPolicyMessages } from '../../../retentionPolicyModal/messages';
 import { TestRunButton } from '../../testRunButton/testRunButton';
 import { ManualTestCase } from '../../../types';
 
@@ -134,6 +139,7 @@ export const useManualLaunchesTableData = (
           testsToRun,
           successTests,
           inProgressTests,
+          retentionPolicy,
         }) => {
           const isSelected = id === selectedLaunchId;
 
@@ -181,6 +187,20 @@ export const useManualLaunchesTableData = (
                   >
                     {name}
                   </button>
+                  {retentionPolicy === RETENTION_POLICY.IMPORTANT && (
+                    <Tooltip
+                      content={formatMessage(retentionPolicyMessages.importantLaunchTooltip)}
+                      placement="top"
+                      wrapperClassName={cx('manual-launches-list-table-cell-star')}
+                    >
+                      <i className={cx('manual-launches-list-table-cell-star-icon')}>
+                        <span aria-hidden="true">{Parser(StarIcon)}</span>
+                        <span className={cx('manual-launches-list-table-cell-star-label')}>
+                          {formatMessage(retentionPolicyMessages.importantLaunchLabel)}
+                        </span>
+                      </i>
+                    </Tooltip>
+                  )}
                 </div>
               ),
             },
@@ -252,7 +272,7 @@ export const useManualLaunchesTableData = (
                 />
               ),
             },
-            metaData: { id, name, displayId },
+            metaData: { id, name, displayId, retentionPolicy },
           };
         },
       ),

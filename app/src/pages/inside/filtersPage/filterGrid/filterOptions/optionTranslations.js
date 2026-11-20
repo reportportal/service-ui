@@ -109,6 +109,10 @@ export const messages = defineMessages({
     id: 'FilterOptions.compositeAttribute',
     defaultMessage: 'Attribute',
   },
+  retentionPolicy: {
+    id: 'FilterOptions.retentionPolicy',
+    defaultMessage: 'Importance',
+  },
   sort: {
     id: 'FilterOptions.sort',
     defaultMessage: 'sorted by',

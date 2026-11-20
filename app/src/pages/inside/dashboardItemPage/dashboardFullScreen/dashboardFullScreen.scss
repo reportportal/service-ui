@@ -1,0 +1,110 @@
+/*!
+ * Copyright 2026 EPAM Systems
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+@use '../../../../common/css/mixins';
+
+.dashboard-full-screen {
+  position: fixed;
+  inset: 0;
+  z-index: $Z-INDEX-OVERLAY-PANEL;
+  display: flex;
+  flex-direction: column;
+  background-color: var(--rp-ui-base-bg-100);
+
+  &__header {
+    display: flex;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    padding: 16px 24px;
+  }
+
+  &__title {
+    min-width: 0;
+    margin: 0;
+    overflow: hidden;
+    color: var(--rp-ui-base-almost-black);
+    font-family: var(--rp-ui-base-font-family-heading);
+    font-size: 20px;
+    font-weight: 400;
+    line-height: 31px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  &__close {
+    @include mixins.button-reset;
+
+    display: flex;
+    flex-shrink: 0;
+    color: var(--rp-ui-base-e-400);
+
+    &:hover {
+      color: var(--rp-ui-base-topaz);
+    }
+
+    svg {
+      width: 16px;
+      height: 16px;
+    }
+  }
+
+  // the hint is shown for a few seconds after opening the full screen mode
+  &__exit-note {
+    position: fixed;
+    top: 50px;
+    left: 50%;
+    z-index: 1;
+    width: 400px;
+    max-width: 100%;
+    padding: 15px;
+    box-sizing: border-box;
+    border-radius: 4px;
+    background-color: rgba(57, 57, 57, 0.8);
+    color: var(--rp-ui-base-bg-000);
+    font-size: 16px;
+    text-align: center;
+    transform: translateX(-50%);
+    opacity: 0;
+    pointer-events: none;
+    animation: exit-note 5s 0.5s;
+
+    b {
+      margin: 0 2px;
+      padding: 2px;
+      border: 1px solid var(--rp-ui-base-bg-000);
+      border-radius: 2px;
+    }
+  }
+
+  &__content {
+    flex: 1;
+    min-height: 0;
+  }
+}
+
+@keyframes exit-note {
+  0%,
+  100% {
+    opacity: 0;
+  }
+
+  8%,
+  92% {
+    opacity: 1;
+  }
+}

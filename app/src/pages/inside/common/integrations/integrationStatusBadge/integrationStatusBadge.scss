@@ -60,11 +60,11 @@
 
 .inactive,
 .not-configured {
-  border-color: var(--rp-ui-base-e-300);
-  color: var(--rp-ui-base-e-300);
+  border-color: var(--rp-ui-base-grey-700);
+  color: var(--rp-ui-base-grey-800);
 
   .icon svg path {
-    fill: var(--rp-ui-base-e-300);
+    fill: var(--rp-ui-base-grey-700);
   }
 }
 

@@ -102,7 +102,13 @@ export const DateRangeFormField = ({
 };
 DateRangeFormField.propTypes = {
   input: PropTypes.shape({
-    value: PropTypes.string,
+    value: PropTypes.oneOfType([
+      PropTypes.string,
+      PropTypes.shape({
+        startDate: PropTypes.instanceOf(Date),
+        endDate: PropTypes.instanceOf(Date),
+      }),
+    ]),
     onChange: PropTypes.func,
   }).isRequired,
   onClose: PropTypes.func,

@@ -68,6 +68,7 @@ export const AttributeEditor = ({
   allowCustomValues = true,
   refFunction,
   hideActionButtons = false,
+  focusOnMount = true,
   onValuesChange,
 }) => {
   const [keyTouched, setTouchKey] = useState(false);
@@ -101,8 +102,10 @@ export const AttributeEditor = ({
   };
 
   useEffect(() => {
-    keyEditorRef.current?.focus();
-  }, []);
+    if (focusOnMount) {
+      keyEditorRef.current?.focus();
+    }
+  }, [focusOnMount]);
 
   const refFunctionRef = useRef(refFunction);
   refFunctionRef.current = refFunction;
@@ -338,6 +341,7 @@ AttributeEditor.propTypes = {
   allowCustomValues: PropTypes.bool,
   refFunction: PropTypes.func,
   hideActionButtons: PropTypes.bool,
+  focusOnMount: PropTypes.bool,
   onValuesChange: PropTypes.func,
 };
 AttributeEditor.defaultProps = {
@@ -362,5 +366,6 @@ AttributeEditor.defaultProps = {
   isAttributeValueRequired: true,
   allowCustomValues: true,
   hideActionButtons: false,
+  focusOnMount: true,
   onValuesChange: undefined,
 };

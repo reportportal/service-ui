@@ -17,10 +17,14 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import track from 'react-tracking';
+import classNames from 'classnames/bind';
 import { InputDropdown } from 'components/inputs/inputDropdown';
 import { FieldFilterEntity } from 'components/fields/fieldFilterEntity';
 import { GROUP_TO_ACTION_MAP } from 'common/constants/actionTypes';
 import { arrayRemoveDoubles } from 'common/utils';
+import styles from './entityDropdown.scss';
+
+const cx = classNames.bind(styles);
 
 @track()
 export class EntityDropdown extends Component {
@@ -114,13 +118,17 @@ export class EntityDropdown extends Component {
         onRemove={onRemove}
         vertical={vertical}
       >
-        <InputDropdown
-          value={this.getValue()}
-          onChange={this.handleChange}
-          disabled={disabled}
-          title={browserTooltipTitle}
-          {...customProps}
-        />
+        {/* Block wrapper prevents the inline-block dropdown from adding a baseline gap,
+            so it aligns with the other entities (e.g. the name filter) */}
+        <div className={cx('dropdown-holder')}>
+          <InputDropdown
+            value={this.getValue()}
+            onChange={this.handleChange}
+            disabled={disabled}
+            title={browserTooltipTitle}
+            {...customProps}
+          />
+        </div>
       </FieldFilterEntity>
     );
   }

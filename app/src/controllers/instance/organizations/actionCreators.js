@@ -28,7 +28,7 @@ export const fetchFilteredOrganizationsAction = () => ({
   type: FETCH_FILTERED_ORGANIZATIONS,
 });
 
-export const deleteOrganizationAction = (organizationId, onSuccess) => ({
+export const deleteOrganizationAction = (organizationId, onSuccess, onError) => ({
   type: DELETE_ORGANIZATION,
-  payload: { organizationId, onSuccess },
+  payload: { organizationId, onSuccess, onError },
 });

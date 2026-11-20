@@ -15,28 +15,80 @@
  */
 
 import { buildTooltipFormatter } from 'components/widgets/common/echarts/configHelpers';
+import { CHART_FONT_FAMILY } from 'components/widgets/common/constants';
+import { COLOR_ALMOST_BLACK, COLOR_CHART_AXIS_LINE } from 'common/constants/colors';
 import { IssueTypeStatTooltip } from '../../common/issueTypeStatTooltip';
+import { buildItemTooltip } from '../../common/echartsAxisBuilders';
+import { createBarSeries } from '../../common/stackedBarSeries';
 import {
-  buildCategoryXAxis,
-  buildItemTooltip,
-  buildValueYAxis,
-} from '../../common/echartsAxisBuilders';
-import { AXIS_LABEL_STYLE } from '../../common/stackedBarSeries';
+  BAR_SEGMENT_STYLE,
+  BAR_SEGMENT_STYLE_PREVIEW,
+  withTopRounding,
+} from '../../common/topRoundedBars';
 import { calculateTooltipParams, localMessages } from './utils';
+
+const AXIS_LABEL_STYLE = {
+  fontFamily: CHART_FONT_FAMILY,
+  fontWeight: 400,
+  fontSize: 12,
+  lineHeight: 16,
+  color: COLOR_ALMOST_BLACK,
+};
+const COLOR_AXIS_TITLE = '#8d95a1'; // --rp-ui-base-e-400
+const AXIS_TITLE_STYLE = {
+  fontFamily: CHART_FONT_FAMILY,
+  fontWeight: 400,
+  fontStyle: 'normal',
+  fontSize: 12,
+  lineHeight: 16,
+  color: COLOR_AXIS_TITLE,
+};
+
+const TOOLTIP_SHELL = {
+  backgroundColor: 'transparent',
+  borderWidth: 0,
+  extraCssText: 'box-shadow: none; padding: 0;',
+};
+
+const buildBarSeries = ({ itemNames, dataByName, colors, isPreview, hiddenItems }) =>
+  createBarSeries(
+    itemNames,
+    withTopRounding({ itemNames, dataByName, isPreview, hiddenItems }),
+    colors,
+    {
+      silent: isPreview,
+      stack: 'total',
+      barWidth: '60%',
+      barCategoryGap: '40%',
+      itemStyle: isPreview ? BAR_SEGMENT_STYLE_PREVIEW : BAR_SEGMENT_STYLE,
+    },
+  ).map((series) => ({
+    ...series,
+    emphasis: isPreview
+      ? { disabled: true }
+      : { focus: 'none', scale: false, itemStyle: { opacity: 0.75 } },
+  }));
+
+export const getBarSeriesData = ({ itemNames, dataByName, isPreview, hiddenItems }) => {
+  const barData = withTopRounding({ itemNames, dataByName, isPreview, hiddenItems });
+
+  return itemNames.map((name) => ({ id: name, data: barData[name] }));
+};
 
 export const buildInvestigatedChartOption = ({
   isPreview,
   categories,
   tickValues,
-  series,
+  itemNames,
+  dataByName,
   colors,
-  legendItems,
   itemsData,
   formatMessage,
+  hiddenItems = [],
   gridRight = 20,
   tooltipExtra = {},
 }) => ({
-  color: legendItems.map((name) => colors[name]),
+  color: itemNames.map((name) => colors[name]),
   textStyle: AXIS_LABEL_STYLE,
   grid: {
     top: isPreview ? 0 : 85,
@@ -45,31 +97,58 @@ export const buildInvestigatedChartOption = ({
     bottom: isPreview ? 0 : 40,
     containLabel: false,
   },
-  xAxis: buildCategoryXAxis({
+  xAxis: {
+    type: 'category',
     show: !isPreview,
     data: categories,
-    onZero: true,
-    axisLabelInterval: (index) => tickValues.includes(index),
-  }),
-  yAxis: buildValueYAxis({
+    boundaryGap: true,
+    axisLine: { show: true, lineStyle: { color: COLOR_CHART_AXIS_LINE, width: 1 } },
+    axisTick: { show: false },
+    axisLabel: {
+      ...AXIS_LABEL_STYLE,
+      margin: 8,
+      interval: (index) => tickValues.includes(index),
+      hideOverlap: true,
+    },
+  },
+  yAxis: {
+    type: 'value',
     show: !isPreview,
-    name: isPreview ? undefined : formatMessage(localMessages.yAxisInvestigationsTitle),
-  }),
-  tooltip: buildItemTooltip({
-    show: !isPreview,
-    formatter: buildTooltipFormatter(IssueTypeStatTooltip, calculateTooltipParams, {
-      itemsData,
-      formatMessage,
-      ...tooltipExtra,
+    min: 0,
+    max: 100,
+    interval: 10,
+    ...(isPreview
+      ? {}
+      : {
+          name: formatMessage(localMessages.yAxisInvestigationsTitle),
+          nameLocation: 'middle',
+          nameGap: 47,
+          nameRotate: 90,
+          nameTextStyle: AXIS_TITLE_STYLE,
+        }),
+    axisLabel: { ...AXIS_LABEL_STYLE, margin: 8 },
+    axisLine: { show: false },
+    axisTick: { show: false },
+    splitLine: { show: !isPreview, lineStyle: { color: COLOR_CHART_AXIS_LINE, width: 1 } },
+  },
+  tooltip: {
+    ...buildItemTooltip({
+      show: !isPreview,
+      formatter: buildTooltipFormatter(IssueTypeStatTooltip, calculateTooltipParams, {
+        itemsData,
+        formatMessage,
+        ...tooltipExtra,
+      }),
     }),
-  }),
+    ...TOOLTIP_SHELL,
+  },
   legend: {
     show: false,
   },
-  series,
+  series: buildBarSeries({ itemNames, dataByName, colors, isPreview, hiddenItems }),
   customData: {
     itemsData,
     colors,
-    legendItems,
+    legendItems: itemNames,
   },
 });

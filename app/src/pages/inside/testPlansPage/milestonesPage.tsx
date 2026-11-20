@@ -22,7 +22,8 @@ import { useEffect, useMemo, useRef } from 'react';
 import { useTracking } from 'react-tracking';
 import { Button, RefreshIcon } from '@reportportal/ui-kit';
 
-import { MILESTONES_PAGE_EVENTS, MILESTONES_PAGE_VIEW_TYPE } from 'analyticsEvents/milestonesPageEvents';
+import { MILESTONES_PAGE_EVENTS } from 'analyticsEvents/milestonesPageEvents';
+import { PAGE_VIEW_CONTENT_TYPE } from 'components/main/analytics/events/common/ga4Utils';
 
 import { SettingsLayout } from 'layouts/settingsLayout';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
@@ -94,7 +95,7 @@ export const MilestonesPage = () => {
     hasTrackedViewRef.current = true;
     trackEvent(
       MILESTONES_PAGE_EVENTS.viewMilestonesPage(
-        isEmpty(milestones) ? MILESTONES_PAGE_VIEW_TYPE.EMPTY : MILESTONES_PAGE_VIEW_TYPE.POPULATED,
+        isEmpty(milestones) ? PAGE_VIEW_CONTENT_TYPE.EMPTY : PAGE_VIEW_CONTENT_TYPE.POPULATED,
       ),
     );
   }, [milestones, milestonesLoading, trackEvent]);

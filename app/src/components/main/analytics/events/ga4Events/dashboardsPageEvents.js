@@ -293,7 +293,7 @@ export const DASHBOARD_EVENTS = {
 
   clickOnButtonInModalAddNewDashboard: (dashboardId, linkName, condition = 'standard') => ({
     ...getBasicClickEventParameters(DASHBOARDS),
-    element_name: 'add',
+    element_name: 'submit_add_new_dashboard',
     modal: 'add_new_dashboard',
     link_name: linkName,
     condition,

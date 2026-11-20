@@ -1,5 +1,5 @@
 /*!
- * Copyright 2019 EPAM Systems
+ * Copyright 2026 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,73 +14,15 @@
  * limitations under the License.
  */
 
-.dashboard-item {
-  background: var(--rp-ui-base-bg-000);
-}
+.dashboard-item-page {
+  &__content {
+    max-width: 1370px;
+    margin: 0 auto;
+    padding: 16px 16px 24px;
+    box-sizing: border-box;
 
-.icon-close {
-  position: fixed;
-  top: 15px;
-  right: 15px;
-  width: 24px;
-  height: 24px;
-  opacity: 0;
-  padding: 0;
-  border: 0;
-  outline: 0;
-  background-color: transparent;
-  fill: var(--rp-ui-base-e-400);
-  cursor: pointer;
-  transition: opacity 0.5s ease;
-}
-
-.dashboard-item:hover .icon-close {
-  opacity: 1;
-}
-
-.buttons-container {
-  display: flex;
-  justify-content: space-between;
-  flex-wrap: wrap;
-  align-items: center;
-  row-gap: 8px;
-  column-gap: 44px;
-  min-height: 30px;
-  margin: 0;
-  padding: 20px 10px;
-  border-bottom: 1px solid var(--rp-ui-base-e-91);
-
-  @media (max-width: $SCREEN_XS_MAX) {
-    display: none;
+    &.full-width {
+      max-width: none;
+    }
   }
-}
-
-.locked-dashboard {
-  display: flex;
-  gap: 8px;
-  align-items: center;
-  font-size: 13px;
-  line-height: 1;
-  margin-left: auto;
-  color: $COLOR--charcoal-grey;
-}
-
-.buttons-block {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-
-  & > .dashboard-layout-settings-control:not(:last-child) {
-    margin-right: 24px;
-  }
-}
-
-:global {
-  .fullscreen {
-    background: var(--rp-ui-base-bg-000);
-  }
-}
-
-.print-button {
-  text-decoration: none;
 }

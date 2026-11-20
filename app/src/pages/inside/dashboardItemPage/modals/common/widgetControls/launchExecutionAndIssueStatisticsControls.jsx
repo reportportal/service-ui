@@ -20,7 +20,7 @@ import { connect } from 'react-redux';
 import { injectIntl } from 'react-intl';
 import { FieldProvider } from 'components/fields/fieldProvider';
 import { defectTypesSelector } from 'controllers/project';
-import { FiltersControl } from './controls';
+import { FiltersControlV2 } from './controls';
 import { DEFECT_TYPES_OPTIONS, LAUNCH_STATUSES_OPTIONS } from './constants';
 import { getWidgetCriteriaOptions } from './utils/getWidgetCriteriaOptions';
 
@@ -68,10 +68,11 @@ export class LaunchExecutionAndIssueStatisticsControls extends Component {
     return (
       <Fragment>
         <FieldProvider name="filters" parse={this.parseFilterValue} format={this.formatFilterValue}>
-          <FiltersControl
+          <FiltersControlV2
             formAppearance={formAppearance}
             onFormAppearanceChange={onFormAppearanceChange}
             eventsInfo={eventsInfo}
+            required
           />
         </FieldProvider>
       </Fragment>
