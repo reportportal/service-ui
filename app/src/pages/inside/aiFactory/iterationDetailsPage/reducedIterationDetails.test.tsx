@@ -1140,7 +1140,7 @@ describe('ReducedIterationDetails', () => {
     },
   );
 
-  test('hides Auto-Ready from the iteration and stage metrics while keeping tokens and Ready', () => {
+  test('hides Auto-Ready metrics and the Tokens highlight while keeping Ready and stage metadata', () => {
     const autoReadyPromoted = {
       key: 'autoReadyPromoted',
       label: 'Auto-Ready promoted',
@@ -1182,7 +1182,7 @@ describe('ReducedIterationDetails', () => {
     expect(stageCard.text()).not.toContain('Auto-Ready');
     expect(stageCard.text()).toContain('Tokens: 245852');
     expect(stagePanel.text()).not.toContain('Auto-Ready');
-    expect(stagePanel.text()).toContain('245852');
+    expect(stagePanel.find('[data-automation-id="generationStageHighlights"]')).toHaveLength(0);
   });
 
   test('shows only the selected stage panel without API diagnostics', () => {

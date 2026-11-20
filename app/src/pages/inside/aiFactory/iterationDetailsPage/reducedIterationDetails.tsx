@@ -164,7 +164,8 @@ const renderGenerationHighlights = (
 ) => {
   const highlights = stageKind
     ? stage.attributes?.filter(
-        (attribute) => attribute.type === 'META' && isVisibleAttribute(attribute),
+        (attribute) =>
+          attribute.type === 'META' && attribute.key !== 'tokens' && isVisibleAttribute(attribute),
       )
     : [];
   return highlights?.length ? (
