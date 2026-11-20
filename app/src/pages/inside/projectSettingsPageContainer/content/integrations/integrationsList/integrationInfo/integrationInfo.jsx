@@ -244,6 +244,10 @@ export const IntegrationInfo = (props) => {
       newData.name = updatedFormData.integrationName;
     }
 
+    if (!integrationInfo.isGlobal && !integrationInfo.isOrganizational) {
+      trackEvent(PROJECT_SETTINGS_INTEGRATION.CLICK_SAVE_EDIT_PROJECT_INTEGRATION(pluginName));
+    }
+
     dispatch(
       updateIntegrationAction(
         newData,

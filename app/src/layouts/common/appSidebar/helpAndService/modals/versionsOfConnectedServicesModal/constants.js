@@ -16,3 +16,4 @@
 
 export const PRODUCT_VERSION = '26.1';
 export const PRODUCT_VERSION_LINK = 'https://reportportal.io/docs/releases/Version26.1/';
+export const ANALYZER_REPOSITORY = 'reportportal/service-auto-analyzer';

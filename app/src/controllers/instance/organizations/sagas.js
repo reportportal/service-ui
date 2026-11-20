@@ -22,7 +22,10 @@ import {
   showSuccessNotification,
 } from 'controllers/notification';
 import { fetchDataAction } from 'controllers/fetch';
+import { setActiveOrganizationAction } from 'controllers/organization/actionCreators';
+import { activeOrganizationIdSelector } from 'controllers/organization/selectors';
 import { prepareQueryFilters } from 'components/filterEntities/utils';
+import { stringEqual } from 'common/utils/stringUtils';
 import { querySelector } from './selectors';
 import {
   FETCH_ORGANIZATIONS,
@@ -60,6 +63,10 @@ function* deleteOrganization({ payload: { organizationId, onSuccess, onError } }
     yield call(fetch, URLS.organizationById(organizationId), {
       method: 'delete',
     });
+    const activeOrganizationId = yield select(activeOrganizationIdSelector);
+    if (stringEqual(activeOrganizationId, organizationId)) {
+      yield put(setActiveOrganizationAction(null));
+    }
     yield put(showSuccessNotification({ messageId: 'deleteOrganizationSuccess' }));
     onSuccess?.();
   } catch ({ errorCode }) {

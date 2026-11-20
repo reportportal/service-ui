@@ -2,7 +2,7 @@ import { useIntl } from 'react-intl';
 
 import { useUserPermissions } from 'hooks/useUserPermissions';
 import { EmptyStatePage } from 'pages/inside/common/emptyStatePage';
-import { createClassnames } from 'common/utils';
+import { createClassnames, docsReferences } from 'common/utils';
 
 import { messages } from '../messages';
 import { useManualLaunchesEmptyStateButtons } from './hooks/useManualLaunchesEmptyStateButtons';

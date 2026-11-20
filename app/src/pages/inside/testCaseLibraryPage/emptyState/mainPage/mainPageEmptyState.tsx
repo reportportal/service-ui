@@ -21,7 +21,7 @@ import { useTracking } from 'react-tracking';
 import { TEST_CASE_LIBRARY_EVENTS } from 'analyticsEvents/testCaseLibraryPageEvents';
 import { NumerableBlock } from 'pages/common/numerableBlock';
 import { EmptyStatePage } from 'pages/inside/common/emptyStatePage';
-import { createClassnames, referenceDictionary } from 'common/utils';
+import { createClassnames, docsReferences } from 'common/utils';
 import { useUserPermissions } from 'hooks/useUserPermissions';
 import { useCreateFolderModal } from 'pages/inside/testCaseLibraryPage/testCaseFolders/modals/createFolderModal';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
@@ -97,7 +97,7 @@ export const MainPageEmptyState = () => {
         title={formatMessage(messages.emptyPageTitle)}
         description={formatMessage(messages.emptyPageDescription)}
         imageType="docs"
-        documentationLink={referenceDictionary.rpDoc}
+        documentationLink={docsReferences.emptyStateTestCaseLibraryDocs}
         handleDocumentationClick={handleDocumentationClick}
         buttons={buttons}
       />

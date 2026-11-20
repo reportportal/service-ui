@@ -17,7 +17,6 @@
 import { useDispatch, useSelector } from 'react-redux';
 import { noop } from 'es-toolkit';
 import { VoidFn } from '@reportportal/ui-kit/common/types/commonTypes';
-import { push } from 'redux-first-router';
 
 import { URLS } from 'common/urls';
 import { fetch } from 'common/utils';
@@ -26,13 +25,7 @@ import { projectKeySelector } from 'controllers/project';
 import { hideModalAction } from 'controllers/modal';
 import { showSuccessNotification, showErrorNotification } from 'controllers/notification';
 import { getMilestonesAction } from 'controllers/milestone';
-import {
-  defaultQueryParams,
-  getTestPlansAction,
-  testPlanListPaginationSelector,
-  testPlansSelector,
-} from 'controllers/testPlan';
-import { useProjectDetails } from 'hooks/useTypedSelector';
+import { defaultQueryParams, getTestPlansAction } from 'controllers/testPlan';
 import { resetHasTestPlansCache } from 'hooks/useHasTestPlans';
 
 interface UseDeleteTestPlanOptions {
@@ -43,9 +36,6 @@ export const useDeleteTestPlan = ({ onSuccess = noop }: UseDeleteTestPlanOptions
   const { isLoading, showSpinner, hideSpinner } = useDebouncedSpinner();
   const dispatch = useDispatch();
   const projectKey = useSelector(projectKeySelector);
-  const { organizationSlug, projectSlug } = useProjectDetails();
-  const testPlanListPagination = useSelector(testPlanListPaginationSelector);
-  const testPlans = useSelector(testPlansSelector);
   const queryParams = useQueryParams(defaultQueryParams);
 
   const deleteTestPlan = async (testPlanId: number) => {
@@ -64,20 +54,8 @@ export const useDeleteTestPlan = ({ onSuccess = noop }: UseDeleteTestPlanOptions
       );
       resetHasTestPlansCache();
 
-      const isSingleItemOnTheLastPage =
-        testPlanListPagination != null &&
-        testPlanListPagination.number === testPlanListPagination.totalPages &&
-        testPlans?.length === 1;
-
-      if (isSingleItemOnTheLastPage) {
-        const offset = Number(queryParams.offset) - Number(queryParams.limit);
-        const url = `/organizations/${organizationSlug}/projects/${projectSlug}/milestones?offset=${offset}&limit=${queryParams.limit}`;
-
-        push(url);
-      } else {
-        dispatch(getTestPlansAction(queryParams));
-        dispatch(getMilestonesAction(queryParams));
-      }
+      dispatch(getTestPlansAction(queryParams));
+      dispatch(getMilestonesAction(queryParams));
 
       onSuccess();
     } catch {
