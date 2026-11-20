@@ -14,18 +14,12 @@
  * limitations under the License.
  */
 
-import { useEffect, useMemo, useState } from 'react';
 import { useIntl } from 'react-intl';
 import { useDispatch, useSelector } from 'react-redux';
 import { Button } from '@reportportal/ui-kit';
 
 import { createClassnames } from 'common/utils';
 import { useAiFactoryEnabled } from 'controllers/aiFactory';
-import {
-  loadStageTraceAttempts,
-  StageTraceError,
-  type StageTraceAttempt,
-} from 'controllers/aiFactory/stageTrace';
 import { urlOrganizationAndProjectSelector } from 'controllers/pages';
 import { createStageTraceAction } from 'pages/inside/aiFactory/common/stageTrace/navigation';
 import { ProjectDetails } from 'pages/organization/constants';
@@ -36,73 +30,26 @@ import styles from 'pages/inside/aiFactory/iterationDetailsPage/iterationDetails
 const cx = createClassnames(styles);
 
 export interface StageTraceActionProps {
-  projectKey: string;
   pipelineId: number;
   iterationId: number;
   stageKey: string;
-  refreshIdentity?: object;
 }
 
-const getAvailabilityMessage = (attempts?: StageTraceAttempt[], error?: string) => {
-  if (error === 'FORBIDDEN') return messages.forbidden;
-  if (error === 'NOT_FOUND') return messages.missing;
-  if (error) return messages.error;
-  if (!attempts) return messages.loading;
-  if (attempts.some(({ current, traceStatus }) => current && traceStatus === 'REPORTED'))
-    return messages.reported;
-  if (attempts.some(({ traceStatus }) => traceStatus === 'REPORTED')) return messages.earlier;
-  return messages.notReported;
-};
-
-export const StageTraceAction = ({
-  projectKey,
-  pipelineId,
-  iterationId,
-  stageKey,
-  refreshIdentity,
-}: StageTraceActionProps) => {
+export const StageTraceAction = ({ pipelineId, iterationId, stageKey }: StageTraceActionProps) => {
   const { formatMessage } = useIntl();
   const enabled = useAiFactoryEnabled();
   const dispatch = useDispatch();
   const { organizationSlug, projectSlug } = useSelector(
     urlOrganizationAndProjectSelector,
   ) as ProjectDetails;
-  const [retry, setRetry] = useState(0);
-  const scope = useMemo(
-    () => ({ projectKey, pipelineId, iterationId, stageKey, refreshIdentity, retry, enabled }),
-    [projectKey, pipelineId, iterationId, stageKey, refreshIdentity, retry, enabled],
-  );
-  const [state, setState] = useState<{
-    scope: object;
-    attempts?: StageTraceAttempt[];
-    error?: string;
-  }>();
-  useEffect(() => {
-    if (!enabled || !projectKey || !stageKey) return;
-    const controller = new AbortController();
-    loadStageTraceAttempts({ projectKey, iterationId, stageKey }, controller.signal).then(
-      (attempts) => {
-        if (!controller.signal.aborted) setState({ scope, attempts });
-      },
-      (error: unknown) => {
-        if (!controller.signal.aborted)
-          setState({
-            scope,
-            error: error instanceof StageTraceError ? error.reason : 'REQUEST_FAILED',
-          });
-      },
-    );
-    return () => controller.abort();
-  }, [scope, enabled, projectKey, iterationId, stageKey]);
   if (!enabled) return null;
-  const current = state?.scope === scope ? state : undefined;
-  const currentAttempt = current?.attempts?.find(({ current: isCurrent }) => isCurrent);
-  const message = getAvailabilityMessage(current?.attempts, current?.error);
   const target = { pipelineId, iterationId, stageKey };
   return (
     <div className={cx('stage-trace-action')} data-automation-id="stage-trace-action">
       <Button
-        variant="text"
+        variant="ghost"
+        adjustWidthOn="content"
+        className={cx('stage-trace-action__open')}
         onClick={() =>
           dispatch(
             createStageTraceAction({ organizationSlug, projectSlug }, target, { returnTo: target }),
@@ -110,12 +57,6 @@ export const StageTraceAction = ({
         }
       >
         {formatMessage(messages.open)}
-      </Button>
-      <output aria-live="polite">
-        {formatMessage(message, { count: currentAttempt?.eventCount ?? 0 })}
-      </output>
-      <Button variant="text" onClick={() => setRetry((value) => value + 1)}>
-        {formatMessage(messages.refresh)}
       </Button>
     </div>
   );

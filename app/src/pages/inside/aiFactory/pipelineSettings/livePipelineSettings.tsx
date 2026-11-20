@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState, type ReactNode } from 'react';
 import { useDispatch, useSelector, useStore } from 'react-redux';
-import { useIntl, type IntlShape } from 'react-intl';
+import { useIntl } from 'react-intl';
 import {
   Button,
   ConfigurationIcon,
@@ -33,20 +33,25 @@ import { URLS } from 'common/urls';
 import { createClassnames, fetch } from 'common/utils';
 import {
   adaptLivePipeline,
+  getPipelinesAction,
   isReducedPipeline,
   pipelineCatalogProjectKeySelector,
+  pipelineCatalogRequestSelector,
   pipelineCatalogTransportSelector,
   pipelinesSelector,
   type ReducedPipeline,
 } from 'controllers/aiFactory/pipelines';
 import { hideModalAction, withModal } from 'controllers/modal';
+import { showSuccessNotification } from 'controllers/notification';
 import { currentPathSelector, pipelineIdSelector } from 'controllers/pages';
 import { projectKeySelector } from 'controllers/project';
+import { useUserPermissions } from 'hooks/useUserPermissions';
 import { AiDetailsSectionState } from 'pages/inside/aiFactory/common/aiDetailsSectionState';
 import type { PipelineSettingsState } from 'pages/inside/aiFactory/pipelineSettings/pipelineSettingsProvenance';
+import { parseThreshold } from 'pages/inside/aiFactory/pipelineSettings/pipelineSettingsUtils';
 
-import { messages } from './messages';
-import styles from './pipelineSettings.scss';
+import { messages } from 'pages/inside/aiFactory/pipelineSettings/messages';
+import styles from 'pages/inside/aiFactory/pipelineSettings/pipelineSettings.scss';
 
 const cx = createClassnames(styles);
 const LIVE_PIPELINE_SETTINGS_MODAL_KEY = 'livePipelineSettingsModal';
@@ -68,6 +73,19 @@ export interface LivePipelineSettingsButtonProps {
 interface PipelineSettingsResponse {
   attempt: number;
   pipeline: ReducedPipeline | null;
+}
+
+interface AutoReadyDraft {
+  enabled: boolean;
+  thresholdValue: string;
+  reset?: boolean;
+}
+
+interface PipelineSettingsDialogProps {
+  children: ReactNode;
+  save?: () => void;
+  canSave?: boolean;
+  isSaving?: boolean;
 }
 
 export const selectLivePipelineSettings = (
@@ -96,49 +114,74 @@ const isCurrentIteration = (
   pipelineIdSelector(state) === pipelineId &&
   currentPathSelector(state) === iterationPath;
 
-const renderAutoReady = (pipeline: ReducedPipeline, formatMessage: IntlShape['formatMessage']) => {
-  const autoReady = pipeline.autoReady;
-  if (!autoReady) {
-    return <SystemMessage mode="info">{formatMessage(messages.liveNoSettings)}</SystemMessage>;
-  }
-
+const PipelineSettingsDialog = ({
+  children,
+  save,
+  canSave = false,
+  isSaving = false,
+}: PipelineSettingsDialogProps) => {
+  const { formatMessage } = useIntl();
+  const dispatch = useDispatch();
   return (
-    <>
-      <SystemMessage mode="info">{formatMessage(messages.liveReadOnly)}</SystemMessage>
-      <div className={cx('settings__toggle-row')}>
-        <Toggle value={autoReady.enabled} aria-label={formatMessage(messages.autoReady)} disabled />
-        <span>{formatMessage(messages.autoReady)}</span>
-      </div>
-      <p className={cx('settings__description')}>{formatMessage(messages.autoReadyDescription)}</p>
-      {autoReady.threshold === undefined ? (
-        <p className={cx('settings__empty')}>{formatMessage(messages.liveThresholdUnavailable)}</p>
-      ) : (
-        <div className={cx('settings__live-threshold-group')}>
-          <FieldText
-            className={cx('settings__live-threshold')}
-            label={formatMessage(messages.threshold)}
-            value={String(autoReady.threshold)}
-            disabled
-          />
-        </div>
-      )}
-    </>
+    <Modal
+      title={formatMessage(messages.title)}
+      okButton={
+        save
+          ? { children: formatMessage(COMMON_LOCALE_KEYS.SAVE), disabled: !canSave, onClick: save }
+          : undefined
+      }
+      cancelButton={{
+        children: formatMessage(save ? COMMON_LOCALE_KEYS.CANCEL : COMMON_LOCALE_KEYS.CLOSE),
+        disabled: isSaving,
+      }}
+      allowCloseOutside={!isSaving}
+      onClose={() => dispatch(hideModalAction())}
+      zIndex={MODAL_Z_INDEX}
+    >
+      <div className={cx('settings')}>{children}</div>
+    </Modal>
   );
 };
 
-const DirectPipelineSettings = ({ pipelineId, projectKey }: PipelineSettingsTarget) => {
+const canOpenSettings = (state: PipelineSettingsState, data: LivePipelineSettingsData): boolean =>
+  data.iterationPath !== undefined
+    ? isCurrentIteration(state, data)
+    : Boolean(selectLivePipelineSettings(state, data));
+
+const loadPipeline = async (
+  { projectKey, pipelineId }: PipelineSettingsTarget,
+  signal: AbortSignal,
+): Promise<ReducedPipeline> =>
+  adaptLivePipeline(await fetch(URLS.pipelineById(projectKey, pipelineId), { signal }), pipelineId);
+
+const toDraft = (autoReady?: ReducedPipeline['autoReady']): AutoReadyDraft => ({
+  enabled: Boolean(autoReady?.enabled),
+  thresholdValue: String(autoReady?.threshold ?? ''),
+});
+
+const CurrentPipelineSettingsModal = (data: LivePipelineSettingsData) => {
   const { formatMessage } = useIntl();
+  const dispatch = useDispatch();
+  const store = useStore<PipelineSettingsState>();
+  const { canManagePipelineSettings } = useUserPermissions();
+  const { projectKey, pipelineId, iterationPath } = data;
   const [attempt, setAttempt] = useState(0);
   const [response, setResponse] = useState<PipelineSettingsResponse>();
+  const [draft, setDraft] = useState<AutoReadyDraft>(() => toDraft());
+  const [isSaving, setIsSaving] = useState(false);
+  const [feedback, setFeedback] = useState<keyof typeof messages>();
+  const saveRequest = useRef<AbortController>();
+
+  useEffect(() => () => saveRequest.current?.abort(), []);
 
   useEffect(() => {
     const controller = new AbortController();
 
-    fetch(URLS.pipelineById(projectKey, pipelineId), { signal: controller.signal })
-      .then((payload) => adaptLivePipeline(payload, pipelineId))
+    loadPipeline({ projectKey, pipelineId }, controller.signal)
       .then((pipeline) => {
         if (!controller.signal.aborted) {
           setResponse({ attempt, pipeline });
+          setDraft(toDraft(pipeline.autoReady));
         }
       })
       .catch(() => {
@@ -151,34 +194,158 @@ const DirectPipelineSettings = ({ pipelineId, projectKey }: PipelineSettingsTarg
   }, [attempt, pipelineId, projectKey]);
 
   const current = response?.attempt === attempt ? response : undefined;
+  const pipeline = current?.pipeline;
+  const autoReady = pipeline?.autoReady;
+  const isGeneration = pipeline?.type === 'TEST_CASE_GENERATION';
+  const canEdit = Boolean(autoReady && canManagePipelineSettings && isGeneration);
+  const threshold = parseThreshold(draft.thresholdValue) ?? undefined;
+  const isInvalidThreshold =
+    threshold === undefined && (draft.enabled || draft.thresholdValue !== '');
+  const hasChanges =
+    draft.reset || draft.enabled !== autoReady?.enabled || threshold !== autoReady?.threshold;
+  const canSave = canEdit && !isSaving && !isInvalidThreshold && hasChanges;
+  const nextAutoReady = draft.reset
+    ? null
+    : { enabled: draft.enabled, ...(threshold === undefined ? {} : { threshold }) };
+
+  const isCurrentRequest = (signal: AbortSignal) =>
+    !signal.aborted && canOpenSettings(store.getState(), data);
+
+  const verifySettings = async (signal: AbortSignal) => {
+    const updated = await loadPipeline(data, signal);
+    if (!isCurrentRequest(signal)) return;
+
+    const wasSaved = nextAutoReady
+      ? updated.hasAutoReadySettings &&
+        nextAutoReady.enabled === updated.autoReady?.enabled &&
+        nextAutoReady.threshold === updated.autoReady?.threshold
+      : updated.autoReady && !updated.hasAutoReadySettings;
+    if (!wasSaved) {
+      setResponse({ attempt, pipeline: updated });
+      setDraft(toDraft(updated.autoReady));
+      setFeedback('liveSettingsChanged');
+      return;
+    }
+
+    dispatch(showSuccessNotification({ message: formatMessage(messages.updateSuccess) }));
+    dispatch(hideModalAction());
+    if (iterationPath === undefined) {
+      dispatch(getPipelinesAction(pipelineCatalogRequestSelector(store.getState()) ?? undefined));
+    }
+  };
+
+  const save = async () => {
+    if (!canSave || saveRequest.current || !canOpenSettings(store.getState(), data)) return;
+
+    const controller = new AbortController();
+    saveRequest.current = controller;
+    setIsSaving(true);
+    setFeedback(undefined);
+    let didPatch = false;
+    try {
+      await fetch(URLS.pipelineById(projectKey, pipelineId), {
+        method: 'PATCH',
+        data: { settings: { autoReady: nextAutoReady } },
+        signal: controller.signal,
+      });
+      didPatch = true;
+      if (isCurrentRequest(controller.signal)) await verifySettings(controller.signal);
+    } catch {
+      if (isCurrentRequest(controller.signal)) {
+        setFeedback(didPatch ? 'liveVerifyError' : 'updateFailed');
+        if (didPatch) setResponse({ attempt, pipeline: null });
+      }
+    } finally {
+      saveRequest.current = undefined;
+      if (!controller.signal.aborted) setIsSaving(false);
+    }
+  };
+
   return (
-    <AiDetailsSectionState
-      className={cx('settings')}
-      isLoading={!current}
-      isError={current?.pipeline === null}
-      loadingLabel={formatMessage(messages.liveLoading)}
-      errorMessage={formatMessage(messages.liveLoadError)}
-      retryLabel={formatMessage(messages.liveRetry)}
-      retryAutomationId="retryPipelineSettings"
-      onRetry={() => setAttempt((previous) => previous + 1)}
+    <PipelineSettingsDialog
+      save={canEdit ? () => void save() : undefined}
+      canSave={canSave}
+      isSaving={isSaving}
     >
-      {current?.pipeline && renderAutoReady(current.pipeline, formatMessage)}
-    </AiDetailsSectionState>
-  );
-};
-
-const IterationPipelineSettings = (data: LivePipelineSettingsData) => {
-  const { formatMessage } = useIntl();
-  const isCurrent = useSelector((state: PipelineSettingsState) => isCurrentIteration(state, data));
-
-  return isCurrent ? (
-    <DirectPipelineSettings
-      key={`${data.projectKey}:${data.iterationPath}`}
-      pipelineId={data.pipelineId}
-      projectKey={data.projectKey}
-    />
-  ) : (
-    <SystemMessage mode="info">{formatMessage(messages.liveContextChanged)}</SystemMessage>
+      <AiDetailsSectionState
+        className={cx('settings')}
+        isLoading={!current}
+        isError={pipeline === null}
+        loadingLabel={formatMessage(messages.liveLoading)}
+        errorMessage={formatMessage(
+          feedback === 'liveVerifyError' ? messages.liveVerifyError : messages.liveLoadError,
+        )}
+        retryLabel={formatMessage(messages.liveRetry)}
+        retryAutomationId="retryPipelineSettings"
+        onRetry={() => {
+          setFeedback(undefined);
+          setAttempt((previous) => previous + 1);
+        }}
+      >
+        {feedback && (
+          <SystemMessage mode="error">{formatMessage(messages[feedback])}</SystemMessage>
+        )}
+        {autoReady ? (
+          <>
+            {!canEdit && (
+              <SystemMessage mode="info">
+                {formatMessage(isGeneration ? messages.readOnly : messages.liveUnsupportedPipeline)}
+              </SystemMessage>
+            )}
+            <div className={cx('settings__toggle-row')}>
+              <Toggle
+                value={draft.enabled}
+                aria-label={formatMessage(messages.autoReady)}
+                disabled={!canEdit || isSaving}
+                onChange={(event) =>
+                  setDraft({
+                    enabled: event.target.checked,
+                    thresholdValue:
+                      !event.target.checked && isInvalidThreshold
+                        ? String(autoReady.threshold ?? '')
+                        : draft.thresholdValue,
+                  })
+                }
+              />
+              <span>{formatMessage(messages.autoReady)}</span>
+            </div>
+            <p className={cx('settings__description')}>
+              {formatMessage(messages.autoReadyDescription)}
+            </p>
+            <div className={cx('settings__live-threshold-group')}>
+              <FieldText
+                className={cx('settings__live-threshold')}
+                label={formatMessage(messages.threshold)}
+                helpText={formatMessage(messages.thresholdHelp)}
+                value={draft.thresholdValue}
+                inputMode="numeric"
+                maxLength={3}
+                disabled={!canEdit || isSaving || !draft.enabled}
+                touched={isInvalidThreshold && draft.thresholdValue !== ''}
+                error={isInvalidThreshold ? formatMessage(messages.thresholdError) : undefined}
+                onChange={(event) => setDraft({ ...draft, thresholdValue: event.target.value })}
+              />
+            </div>
+            {canEdit && (
+              <p className={cx('settings__note')}>{formatMessage(messages.appliesNext)}</p>
+            )}
+            {canEdit && pipeline.hasAutoReadySettings && (
+              <Button
+                className={cx('settings__reset-auto-ready')}
+                variant="text"
+                adjustWidthOn="content"
+                disabled={isSaving || draft.reset}
+                onClick={() => setDraft({ ...toDraft(), reset: true })}
+              >
+                {formatMessage(messages.resetAutoReady)}
+              </Button>
+            )}
+          </>
+        ) : (
+          <SystemMessage mode="info">{formatMessage(messages.liveNoSettings)}</SystemMessage>
+        )}
+      </AiDetailsSectionState>
+    </PipelineSettingsDialog>
   );
 };
 
@@ -186,39 +353,25 @@ export const LivePipelineSettingsModalContent = ({
   data,
 }: UseModalData<LivePipelineSettingsData>) => {
   const { formatMessage } = useIntl();
-  const dispatch = useDispatch();
-  const fromIteration = data.iterationPath !== undefined;
-  const pipeline = useSelector((state: PipelineSettingsState) =>
-    fromIteration ? null : selectLivePipelineSettings(state, data),
-  );
-  const catalogContent = pipeline ? (
-    renderAutoReady(pipeline, formatMessage)
-  ) : (
-    <SystemMessage mode="info">{formatMessage(messages.liveUnavailable)}</SystemMessage>
-  );
+  const isCurrent = useSelector((state: PipelineSettingsState) => canOpenSettings(state, data));
+  const unavailable =
+    data.iterationPath === undefined ? messages.liveUnavailable : messages.liveContextChanged;
 
-  return (
-    <Modal
-      title={formatMessage(messages.title)}
-      cancelButton={{ children: formatMessage(COMMON_LOCALE_KEYS.CLOSE) }}
-      onClose={() => dispatch(hideModalAction())}
-      zIndex={MODAL_Z_INDEX}
-    >
-      <div className={cx('settings')}>
-        {fromIteration ? <IterationPipelineSettings {...data} /> : catalogContent}
-      </div>
-    </Modal>
+  return isCurrent ? (
+    <CurrentPipelineSettingsModal
+      key={JSON.stringify([data.projectKey, data.pipelineId, data.iterationPath])}
+      {...data}
+    />
+  ) : (
+    <PipelineSettingsDialog>
+      <SystemMessage mode="info">{formatMessage(unavailable)}</SystemMessage>
+    </PipelineSettingsDialog>
   );
 };
 
 const LivePipelineSettingsModal = withModal(LIVE_PIPELINE_SETTINGS_MODAL_KEY)(
   LivePipelineSettingsModalContent,
 );
-
-const canOpenSettings = (state: PipelineSettingsState, data: LivePipelineSettingsData): boolean =>
-  data.iterationPath !== undefined
-    ? isCurrentIteration(state, data)
-    : Boolean(selectLivePipelineSettings(state, data));
 
 export const LivePipelineSettingsButton = ({
   pipelineId,

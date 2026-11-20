@@ -18,10 +18,8 @@
 import {
   resetStageTraceTestContext,
   type MountedTraceWrapper,
-  type TraceNodes,
 } from 'pages/inside/aiFactory/common/stageTrace/stageTraceTestSetup';
 
-import { act } from 'react';
 import { mount } from 'enzyme';
 
 import { useAiFactoryEnabled } from 'controllers/aiFactory';
@@ -32,43 +30,31 @@ import { StageTraceAction } from './stageTraceAction';
 
 jest.mock('controllers/aiFactory/stageTrace', () => ({
   loadStageTraceAttempts: jest.fn(),
-  StageTraceError: class extends Error {},
 }));
 
 const dispatch = jest.fn();
 let wrapper: MountedTraceWrapper | undefined;
 beforeEach(() => {
   resetStageTraceTestContext(dispatch);
-  jest.mocked(loadStageTraceAttempts).mockResolvedValue([
-    { attempt: 1, traceStatus: 'REPORTED', eventCount: 3, current: false },
-    { attempt: 2, traceStatus: 'NOT_REPORTED', eventCount: 0, current: true },
-  ]);
 });
 afterEach(() => {
   wrapper?.unmount();
   wrapper = undefined;
 });
 
-const mountAction = async () => {
-  await act(async () => {
-    wrapper = mount(
-      <StageTraceAction projectKey="demo" pipelineId={8} iterationId={34} stageKey="create" />,
-    ) as MountedTraceWrapper;
-    await Promise.resolve();
-  });
-  wrapper?.update();
+const mountAction = () => {
+  wrapper = mount(
+    <StageTraceAction pipelineId={8} iterationId={34} stageKey="create" />,
+  ) as MountedTraceWrapper;
+  return wrapper;
 };
 
-test('loads only lightweight attempts and keeps earlier trace reachable when current trace is absent', async () => {
-  await mountAction();
-  expect(loadStageTraceAttempts).toHaveBeenCalledWith(
-    { projectKey: 'demo', iterationId: 34, stageKey: 'create' },
-    expect.any(AbortSignal),
-  );
-  expect(wrapper?.find('output').prop('children')).toContain('earlier attempt');
-  act(() => {
-    ((wrapper?.find('button') as TraceNodes).at(0).prop('onClick') as () => void)();
-  });
+test('renders only Open trace and navigates without fetching availability', () => {
+  const action = mountAction();
+  expect(action.find('button')).toHaveLength(1);
+  expect(action.find('output')).toHaveLength(0);
+  (action.find('button[children="Open trace"]').prop('onClick') as () => void)();
+  expect(loadStageTraceAttempts).not.toHaveBeenCalled();
   expect(dispatch).toHaveBeenCalledWith({
     type: 'PROJECT_PIPELINE_STAGE_TRACE_PAGE',
     payload: {
@@ -82,37 +68,7 @@ test('loads only lightweight attempts and keeps earlier trace reachable when cur
   });
 });
 
-test('toggle OFF performs no requests and renders no entry', async () => {
+test('toggle OFF renders no entry', () => {
   jest.mocked(useAiFactoryEnabled).mockReturnValue(false);
-  await mountAction();
-  expect(loadStageTraceAttempts).not.toHaveBeenCalled();
-  expect(wrapper?.find('button')).toHaveLength(0);
-});
-
-test('aborts the old stage request and rejects its late result', async () => {
-  let resolve: (value: Awaited<ReturnType<typeof loadStageTraceAttempts>>) => void;
-  jest.mocked(loadStageTraceAttempts).mockImplementationOnce(
-    () =>
-      new Promise((done) => {
-        resolve = done;
-      }),
-  );
-  await mountAction();
-  const signal = jest.mocked(loadStageTraceAttempts).mock.calls[0][1];
-  await act(async () => {
-    wrapper?.setProps({ stageKey: 'upload' });
-    await Promise.resolve();
-  });
-  wrapper?.update();
-  expect(signal?.aborted).toBe(true);
-  await act(async () => {
-    resolve([{ attempt: 1, traceStatus: 'REPORTED', eventCount: 999, current: true }]);
-    await Promise.resolve();
-  });
-  wrapper?.update();
-  expect(wrapper?.find('output').prop('children')).not.toContain('999');
-  expect(loadStageTraceAttempts).toHaveBeenLastCalledWith(
-    { projectKey: 'demo', iterationId: 34, stageKey: 'upload' },
-    expect.any(AbortSignal),
-  );
+  expect(mountAction().find('button')).toHaveLength(0);
 });

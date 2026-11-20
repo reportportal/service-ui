@@ -24,6 +24,7 @@ import { useAiFactoryEnabled } from 'controllers/aiFactory';
 import { urlOrganizationAndProjectSelector } from 'controllers/pages';
 import { projectKeySelector } from 'controllers/project';
 import { isLoadingTestCaseDetailsSelector, testCaseDetailsSelector } from 'controllers/testCase';
+import { userInfoSelector } from 'controllers/user';
 import { useUserPermissions } from 'hooks/useUserPermissions';
 import { LifecycleHistory, useTestCaseAi } from 'pages/inside/aiFactory/lifecycle';
 import { EvaluationPanel } from 'pages/inside/aiFactory/evaluation';
@@ -38,6 +39,7 @@ import {
   ReviewStrip,
   useFixRound,
   useReviewComments,
+  type ReviewCommentsViewState,
 } from 'pages/inside/aiFactory/review';
 import { LiveReviewStrip } from 'pages/inside/aiFactory/review/liveReviewStrip';
 import { useLiveReviewComments } from 'pages/inside/aiFactory/review/useLiveReviewComments';
@@ -437,6 +439,81 @@ describe('TestCaseDetailsPage lifecycle history', () => {
     ).toBe(true);
     act(() => mountedPage.unmount());
   });
+
+  test.each([true, false])(
+    'resolves native step comment authors without blocking review if the member lookup fails (success=%s)',
+    async (lookupSucceeds) => {
+      jest.mocked(checkScenario).mockReturnValue(false);
+      jest.mocked(hasStepContent).mockReturnValue(true);
+      selectedTestCase = {
+        ...testCase,
+        origin: 'AI',
+        status: 'DRAFT',
+        manualScenario: {
+          manualScenarioType: 'STEPS',
+          requirements: [],
+          steps: [{ id: 900, instructions: 'Open Library', expectedResult: 'Library appears' }],
+        },
+      } as ExtendedTestCase;
+      renderPage(true);
+      const select = jest.mocked(useSelector).getMockImplementation();
+      jest.mocked(useSelector).mockImplementation((selector) =>
+        selector === userInfoSelector
+          ? { id: 1, fullName: 'Alex Rivera', userId: 'alex' }
+          : select?.(selector),
+      );
+      jest
+        .mocked(useLiveReviewComments)
+        .mockImplementation(
+          jest.requireActual<typeof import('pages/inside/aiFactory/review/useLiveReviewComments')>(
+            'pages/inside/aiFactory/review/useLiveReviewComments',
+          ).useLiveReviewComments,
+        );
+      const comments = [1, 12, 12].map((authorId, index) => ({
+        id: index + 1,
+        authorId,
+        targetType: 'STEP',
+        stepNumber: 1,
+        text: 'Clarify this step',
+        state: index === 0 ? 'NOT_SENT' : 'SENT',
+        createdAt: '2026-11-20T10:00:00Z',
+      }));
+      fetchMock.mockImplementation((url) => {
+        if (url.endsWith('/review')) {
+          return Promise.resolve({ comments, unsentCount: 1, fixInProgress: false });
+        }
+        if (url.endsWith('/project/demo/users')) {
+          return lookupSucceeds
+            ? Promise.resolve({ content: [{ id: 12, fullName: 'Jamie Chen' }] })
+            : Promise.reject(new Error('Forbidden'));
+        }
+        throw new Error(`Unexpected request ${url}`);
+      });
+      let mountedPage!: ReturnType<typeof mount> & { update: () => void };
+      await act(async () => {
+        mountedPage = mount(<TestCaseDetailsPage />) as typeof mountedPage;
+        await Promise.resolve();
+      });
+      mountedPage.update();
+      const renderControl = mountedPage.find('mock-StepsList').prop('renderReviewControl') as (
+        id: number,
+        stepNumber: number,
+      ) => React.ReactElement<{ reviewState: ReviewCommentsViewState }>;
+
+      const otherAuthor = lookupSucceeds ? { id: 12, name: 'Jamie Chen' } : { id: 12 };
+      expect(renderControl(900, 1).props.reviewState.comments.map(({ author }) => author)).toEqual([
+        { id: 1, name: 'Alex Rivera' },
+        otherAuthor,
+        otherAuthor,
+      ]);
+      expect(fetchMock).toHaveBeenCalledTimes(2);
+      expect(fetchMock).toHaveBeenCalledWith(expect.stringMatching(/\/project\/demo\/users$/), {
+        params: { 'filter.in.id': '12', 'page.size': 1 },
+        signal: expect.any(AbortSignal),
+      });
+      act(() => mountedPage.unmount());
+    },
+  );
 
   test.each(['FIXED', 'FIXED_GRADE_FAILED', 'FAILED'] as const)(
     'a mounted native %s completion refreshes the current case and Review through live endpoints',

@@ -39,6 +39,12 @@
     width: 180px;
   }
 
+  > .settings__reset-auto-ready {
+    align-self: flex-start;
+    // Match the content edge while keeping the UI kit button's focus border.
+    margin-inline-start: -2px;
+  }
+
   &__live-threshold-group {
     display: flex;
     flex-direction: column;

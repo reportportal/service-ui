@@ -16,9 +16,17 @@
 
 import { fetch } from 'common/utils';
 
-import { adaptLiveLibraryCases, getLiveLibraryCases } from './liveLibraryCases';
+import {
+  adaptLiveLibraryCases,
+  getLiveLibraryCaseFolder,
+  getLiveLibraryCases,
+} from './liveLibraryCases';
 
 jest.mock('common/utils', () => ({ fetch: jest.fn() }));
+
+const fetchMock = fetch as jest.MockedFunction<
+  (url: string, params?: Record<string, unknown>) => Promise<unknown>
+>;
 
 describe('adaptLiveLibraryCases', () => {
   test('preserves the server total and numeric route IDs', () => {
@@ -58,9 +66,6 @@ describe('adaptLiveLibraryCases', () => {
   });
 
   test('requests one paginated list by numeric iteration ID', async () => {
-    const fetchMock = fetch as jest.MockedFunction<
-      (url: string, params?: Record<string, unknown>) => Promise<unknown>
-    >;
     fetchMock.mockResolvedValue({ content: [], page: { totalElements: 0 } });
     const signal = new AbortController().signal;
     const cases = await getLiveLibraryCases('project', 31, 50, 25, signal);
@@ -73,5 +78,32 @@ describe('adaptLiveLibraryCases', () => {
     expect(params.get('limit')).toBe('25');
     expect(options).toEqual({ signal });
     expect(cases).toEqual({ cases: [], totalElements: 0 });
+  });
+});
+
+describe('getLiveLibraryCaseFolder', () => {
+  const testCase = { id: 9101, displayId: 'TC101', name: 'Generated case', testFolder: { id: 42 } };
+
+  test('resolves the folder from one exact Library case match', async () => {
+    fetchMock.mockResolvedValueOnce({ content: [testCase], page: { totalElements: 1 } });
+    const signal = new AbortController().signal;
+
+    await expect(getLiveLibraryCaseFolder('project', 'TC101', signal)).resolves.toBe(42);
+    expect(fetch).toHaveBeenLastCalledWith(expect.stringContaining('filter.eq.displayId=TC101'), {
+      signal,
+    });
+  });
+
+  test.each([
+    [[{ ...testCase, displayId: 'TC102' }], 1],
+    [[{ ...testCase, testFolder: { id: 0 } }], 1],
+    [[testCase, { ...testCase, id: 9102 }], 2],
+    [[], 0],
+  ])('leaves the folder unresolved for invalid matches %#', async (content, totalElements) => {
+    fetchMock.mockResolvedValueOnce({ content, page: { totalElements } });
+
+    await expect(
+      getLiveLibraryCaseFolder('project', 'TC101', new AbortController().signal),
+    ).resolves.toBeUndefined();
   });
 });

@@ -36,8 +36,6 @@ export interface LivePipelineRaw {
   type?: unknown;
   attributes?: unknown;
   settings?: unknown;
-  autoReadyEnabled?: unknown;
-  autoReadyThreshold?: unknown;
   iterationsCount?: unknown;
   latestIteration?: unknown;
   createdAt?: unknown;
@@ -146,6 +144,7 @@ export interface ReducedPipeline {
     enabled: boolean;
     threshold?: number;
   };
+  hasAutoReadySettings?: true;
 }
 
 export interface ReducedPipelineStage {
@@ -896,6 +895,27 @@ const adaptDetailStages = (value: unknown): ReducedPipelineDetailStage[] | null 
   );
 };
 
+const adaptAutoReady = (
+  value: unknown,
+): Pick<ReducedPipeline, 'autoReady' | 'hasAutoReadySettings'> => {
+  const settings = value === undefined ? {} : asRecord(value);
+  if (!settings) return {};
+  if (settings.autoReady === undefined) return { autoReady: { enabled: false } };
+
+  const autoReady = asRecord(settings.autoReady);
+  const enabled = autoReady?.enabled;
+  const threshold = asNonNegativeInteger(autoReady?.threshold);
+  if (
+    typeof enabled !== 'boolean' ||
+    (threshold === undefined && (enabled || autoReady?.threshold !== undefined)) ||
+    (threshold !== undefined && threshold > 100)
+  ) {
+    return {};
+  }
+
+  return { autoReady: { enabled, threshold }, hasAutoReadySettings: true };
+};
+
 const adaptPipeline = (value: unknown): ReducedPipeline | null => {
   const raw = asRecord(value);
   if (!raw) {
@@ -907,27 +927,15 @@ const adaptPipeline = (value: unknown): ReducedPipeline | null => {
   const type = asTrimmedString(raw.type, MAX_KEY_LENGTH);
   const attributes = adaptAttributes(raw.attributes);
   const repository = attributes?.find(({ key }) => key === 'repository')?.value;
-  const settings = raw.settings === undefined ? undefined : asRecord(raw.settings);
-  const nestedAutoReady =
-    settings?.autoReady === undefined ? undefined : asRecord(settings.autoReady);
   if (!id || !name) {
     return null;
   }
-  const autoReadyEnabled = nestedAutoReady?.enabled ?? raw.autoReadyEnabled;
-  const rawAutoReadyThreshold = nestedAutoReady?.threshold ?? raw.autoReadyThreshold;
-  const isAutoReadyConfigured = typeof autoReadyEnabled === 'boolean';
   const iterationsCount = asNonNegativeInteger(raw.iterationsCount);
-  const autoReadyThreshold = asNonNegativeInteger(rawAutoReadyThreshold);
   if (
     !attributes ||
     (raw.type !== undefined && type === undefined) ||
-    (raw.settings !== undefined && !settings) ||
-    (settings?.autoReady !== undefined && !nestedAutoReady) ||
     (raw.iterationsCount !== undefined && iterationsCount === undefined) ||
-    (raw.description !== undefined && description === undefined) ||
-    (autoReadyEnabled !== undefined && !isAutoReadyConfigured) ||
-    (rawAutoReadyThreshold !== undefined &&
-      (!isAutoReadyConfigured || autoReadyThreshold === undefined || autoReadyThreshold > 100))
+    (raw.description !== undefined && description === undefined)
   ) {
     return null;
   }
@@ -940,12 +948,7 @@ const adaptPipeline = (value: unknown): ReducedPipeline | null => {
     ...(type ? { type } : {}),
     ...(repository ? { repository } : {}),
     iterationsCount,
-    autoReady: isAutoReadyConfigured
-      ? {
-          enabled: autoReadyEnabled,
-          threshold: autoReadyThreshold,
-        }
-      : undefined,
+    ...adaptAutoReady(raw.settings),
   };
 };
 

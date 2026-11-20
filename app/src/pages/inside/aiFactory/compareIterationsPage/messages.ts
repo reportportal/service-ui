@@ -126,8 +126,4 @@ export const messages = defineMessages({
     id: 'CompareIterationsPage.unavailable',
     defaultMessage: '—',
   },
-  fullApiResponse: {
-    id: 'CompareIterationsPage.fullApiResponse',
-    defaultMessage: 'Full API response',
-  },
 });

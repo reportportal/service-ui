@@ -73,7 +73,6 @@ import { useLiveReviewComments } from 'pages/inside/aiFactory/review/useLiveRevi
 import { ReviewFlags } from 'pages/inside/aiFactory/library/reviewFlags';
 import { useTestCaseAi } from 'pages/inside/aiFactory/lifecycle';
 import { getNativeTestCaseSummary, getTestCasePresentation } from 'common/utils/nativeTestCase';
-import { NativeTestCaseMetrics } from 'pages/inside/aiFactory/common/nativeTestCaseMetrics/nativeTestCaseMetrics';
 import { NativeTestCaseSummary } from 'pages/inside/aiFactory/common/nativeTestCaseSummary/nativeTestCaseSummary';
 import {
   isDraftGateActive,
@@ -390,18 +389,15 @@ export const TestCaseSidePanel = memo(
               </div>
             </div>
             {nativeSummary && (
-              <>
-                <NativeTestCaseSummary
-                  summary={nativeSummary}
-                  showIdentity
-                  unsentCount={
-                    nativeReviewState.isLoaded
-                      ? nativeReviewState.unsentCount
-                      : nativeSummary.unsentReviewComments
-                  }
-                />
-                <NativeTestCaseMetrics summary={nativeSummary} testCaseId={testCase.id} />
-              </>
+              <NativeTestCaseSummary
+                summary={nativeSummary}
+                showIdentity
+                unsentCount={
+                  nativeReviewState.isLoaded
+                    ? nativeReviewState.unsentCount
+                    : nativeSummary.unsentReviewComments
+                }
+              />
             )}
             {isAiFactoryEnabled && testCase.lifecycle && (
               <div className={cx('ai-status')} data-automation-id="ai-status-row">
