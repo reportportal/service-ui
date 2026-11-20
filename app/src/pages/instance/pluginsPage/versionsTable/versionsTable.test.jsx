@@ -341,6 +341,102 @@ describe('VersionsTable', () => {
       );
     });
 
+    // the cap is why the range is compound, not why this release fails it: the sentence names the
+    // bound the release misses, and the cap is extra
+    test('a capped version over its ceiling says what it was built for, then the cap', () => {
+      const wrapper = render({
+        versions: [
+          {
+            version: '5.8.0',
+            compatible: false,
+            requires: '>=25.1, <26.0',
+            ceiling: '<26.0',
+            ceilingReason: 'Breaks the launch view on 26.0',
+          },
+        ],
+        productVersion: '26.1',
+      });
+
+      expect(tooltipOf(wrapper, '5.8.0', 'incompatibleVersionMark')).toBe(
+        'Built for ReportPortal before 26.0. This instance runs 26.1.'
+          + ' The marketplace limits this version to ReportPortal before 26.0. Their reason: Breaks the launch view on 26.0',
+      );
+    });
+
+    test('a capped version under its floor blames the floor, with the cap as extra', () => {
+      const wrapper = render({
+        versions: [
+          {
+            version: '5.8.0',
+            compatible: false,
+            requires: '>=25.1, <26.0',
+            ceiling: '<26.0',
+            ceilingReason: 'Breaks the launch view on 26.0',
+          },
+        ],
+        productVersion: '25.0',
+      });
+
+      expect(tooltipOf(wrapper, '5.8.0', 'incompatibleVersionMark')).toBe(
+        'Needs ReportPortal 25.1 or later. This instance runs 25.0.'
+          + ' The marketplace limits this version to ReportPortal before 26.0. Their reason: Breaks the launch view on 26.0',
+      );
+    });
+
+    test('a ceiling without a reason is still named', () => {
+      const wrapper = render({
+        versions: [{ version: '5.8.0', compatible: false, requires: '<26.0', ceiling: '<26.0' }],
+        productVersion: '26.1',
+      });
+
+      expect(tooltipOf(wrapper, '5.8.0', 'incompatibleVersionMark')).toContain(
+        'The marketplace limits this version to ReportPortal before 26.0.',
+      );
+    });
+
+    test('an inclusive ceiling reads as "or earlier"', () => {
+      const wrapper = render({
+        versions: [{ version: '5.7.0', compatible: true, ceiling: '<=26.0' }],
+        productVersion: '25.2',
+      });
+
+      expect(tooltipOf(wrapper, '5.7.0', 'cappedVersionMark')).toBe(
+        'The marketplace limits this version to ReportPortal 26.0 or earlier.',
+      );
+    });
+
+    test('a capped version that still runs here carries only the cap note', () => {
+      const wrapper = render({
+        versions: [
+          {
+            version: '5.7.0',
+            compatible: true,
+            ceiling: '<26.0',
+            ceilingReason: 'Breaks the launch view on 26.0',
+          },
+        ],
+        productVersion: '25.2',
+      });
+
+      expect(find(rowFor(wrapper, '5.7.0'), 'incompatibleVersionMark')).toHaveLength(0);
+      expect(tooltipOf(wrapper, '5.7.0', 'cappedVersionMark')).toBe(
+        'The marketplace limits this version to ReportPortal before 26.0. Their reason: Breaks the launch view on 26.0',
+      );
+    });
+
+    test('an uncapped compatible version has no cap mark, and a refused one only its own', () => {
+      const wrapper = render({
+        versions: [
+          { version: '5.7.0', compatible: true },
+          { version: '5.8.0', compatible: false, requires: '<26.0', ceiling: '<26.0' },
+        ],
+        productVersion: '26.1',
+      });
+
+      expect(find(rowFor(wrapper, '5.7.0'), 'cappedVersionMark')).toHaveLength(0);
+      expect(find(rowFor(wrapper, '5.8.0'), 'cappedVersionMark')).toHaveLength(0);
+    });
+
     // reported: `>=25.0, <26.0` on 26.0 named the lower bound, which this release meets, so the
     // reason read as a reason the version should run
     test('a range with both bounds names the one this release actually fails', () => {
@@ -435,9 +531,8 @@ describe('VersionsTable', () => {
 
     test('the row is marked and names the severity, the date and where to go', () => {
       const wrapper = render({
-        versions: [{ version: '5.7.0', advisory }, { version: '5.8.0' }],
+        versions: [{ version: '5.7.0', advisory }, { version: '5.8.0', compatible: true }],
         installedVersion: '5.7.0',
-        latestVersion: '5.8.0',
       });
       const tooltip = tooltipOf(wrapper, '5.7.0', 'advisoryVersionMark');
 
@@ -568,6 +663,110 @@ describe('VersionsTable', () => {
 
       expect(actionOf(wrapper, '5.8.0').prop('disabled')).toBe(true);
       expect(actionOf(wrapper, '5.6.1').prop('disabled')).toBe(true);
+    });
+  });
+
+  // service-api walks down from a newest build that does not run here to the newest one that does
+  describe('Versions. Table. Offered Version Behind an Incompatible Latest', () => {
+    const advisory = { severity: 'high', text: 'CVE', attachedAt: '2026-02-15T12:00:00Z' };
+    const versions = [
+      { version: '5.8.0', compatible: false, requires: '>=26.2' },
+      { version: '5.7.5', compatible: true },
+      { version: '5.7.0', advisory },
+    ];
+    const changelog = { version: '5.7.5', lines: ['Fixed it.'] };
+
+    test('the advisory names the version actually offered, not the incompatible latest', () => {
+      const wrapper = render({ versions, installedVersion: '5.7.0', changelog });
+      const tooltip = tooltipOf(wrapper, '5.7.0', 'advisoryVersionMark');
+
+      expect(tooltip).toContain('Upgrade to 5.7.5');
+      expect(tooltip).not.toContain('5.8.0');
+    });
+
+    test('the offered row is the one open on load', () => {
+      const wrapper = render({ versions, installedVersion: '5.7.0', changelog });
+
+      expect(find(rowFor(wrapper, '5.7.5'), 'versionReleaseNotes')).toHaveLength(1);
+      expect(find(wrapper, 'versionReleaseNotes')).toHaveLength(1);
+    });
+
+    test('with nothing newer that runs here the advisory offers no upgrade', () => {
+      const wrapper = render({
+        versions: [{ version: '5.8.0', compatible: false }, { version: '5.7.0', advisory }],
+        installedVersion: '5.7.0',
+      });
+
+      expect(tooltipOf(wrapper, '5.7.0', 'advisoryVersionMark')).not.toContain('Upgrade to');
+    });
+
+    test('the offered version itself is not told to upgrade to itself', () => {
+      const wrapper = render({
+        versions: [
+          { version: '5.7.5', compatible: true, advisory },
+          { version: '5.7.0', advisory },
+        ],
+        installedVersion: '5.7.0',
+      });
+
+      expect(tooltipOf(wrapper, '5.7.5', 'advisoryVersionMark')).not.toContain('Upgrade to');
+      expect(tooltipOf(wrapper, '5.7.0', 'advisoryVersionMark')).toContain('Upgrade to 5.7.5');
+    });
+
+    // ten newer builds that do not run here push the offered one below the ten-row cut
+    describe('when the offered version is below the ten-row cut', () => {
+      const newerRefused = Array.from({ length: 10 }, (_, i) => ({
+        version: `5.${i + 3}.0`,
+        compatible: false,
+      }));
+      const deep = [
+        ...newerRefused,
+        { version: '5.2.0', compatible: true },
+        { version: '5.1.0', compatible: true },
+        { version: '5.0.0' },
+      ];
+      const deepChangelog = { version: '5.2.0', lines: ['Fixed it.'] };
+
+      test('the table reaches the offered row and shows its release notes', () => {
+        const wrapper = render({
+          versions: deep,
+          installedVersion: '5.0.0',
+          changelog: deepChangelog,
+        });
+
+        expect(rows(wrapper)).toHaveLength(11);
+        expect(rows(wrapper)).toContain('5.2.0');
+        expect(find(rowFor(wrapper, '5.2.0'), 'versionReleaseNotes')).toHaveLength(1);
+        // only as far as the offered row: the rest still waits behind Show All
+        expect(rows(wrapper)).not.toContain('5.1.0');
+        expect(find(wrapper, 'showAllVersions').exists()).toBe(true);
+      });
+
+      test('an offered version inside the first ten leaves the cut where it was', () => {
+        const wrapper = render({
+          versions: [
+            ...newerRefused.map((entry) => ({ ...entry, compatible: true })),
+            ...deep.slice(10),
+          ],
+          installedVersion: '5.0.0',
+        });
+
+        expect(rows(wrapper)).toHaveLength(10);
+      });
+    });
+
+    // service-api neither offers nor installs a version whose verdict is undecided
+    test('a version with no verdict is not offered', () => {
+      const wrapper = render({
+        versions: [
+          { version: '5.8.0', compatible: false },
+          { version: '5.7.5' },
+          { version: '5.7.0', advisory },
+        ],
+        installedVersion: '5.7.0',
+      });
+
+      expect(tooltipOf(wrapper, '5.7.0', 'advisoryVersionMark')).not.toContain('Upgrade to');
     });
   });
 });

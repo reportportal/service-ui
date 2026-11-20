@@ -494,6 +494,136 @@ describe('InstalledTab', () => {
       rendered.wrapper.update();
     };
 
+    // the running version's verdict travels from the row to the plugin page; `{}` is a failed
+    // registry read and proves nothing
+    describe('the running version is outside the range', () => {
+      const alertFor = (installedCompatibility) => {
+        const rendered = render();
+        const row = {
+          ...jiraRow,
+          installedCompatibility,
+        };
+
+        rendered.call(PluginsCatalog, 'onInstalledItemClick', row);
+        rendered.wrapper.update();
+
+        return rendered.wrapper.find('[data-automation-id="pluginInstalledIncompatibleAlert"]');
+      };
+
+      test('a capped plugin whose running version is refused says so on its page', () => {
+        const alert = alertFor({
+          compatible: false,
+          requires: '>=25.1, <26.0',
+          ceiling: '<26.0',
+          ceilingReason: 'Breaks the launch view on 26.0',
+        });
+
+        expect(alert.exists()).toBe(true);
+      });
+
+      test('an empty verdict raises nothing', () => {
+        expect(alertFor({}).exists()).toBe(false);
+      });
+
+      // the page opens on a copy of the row; an upgrade made from it must not leave the old
+      // version's verdict on screen
+      test('the page follows the plugin when its version changes under it', () => {
+        const verdict = (compatible) => ({
+          name: 'jira',
+          marketplace: {
+            pluginId: 'jira',
+            installedCompatibility: { compatible, requires: '>=25.1, <26.0' },
+          },
+        });
+        const stateWith = (installed) => ({
+          ...restOfState,
+          plugins: {
+            marketplace: marketplaceState({ installed }),
+            marketplacePluginDetail: {},
+            integrations: { globalIntegrations: [], projectIntegrations: [] },
+          },
+        });
+        let current = stateWith([verdict(false)]);
+        const store = createStore(() => current);
+        const tree = (plugins) => (
+          <Provider store={store}>
+            <IntlProvider locale="en" onError={() => {}}>
+              <InstalledTab filterItems={[BTS_GROUP_TYPE]} plugins={plugins} />
+            </IntlProvider>
+          </Provider>
+        );
+        // the wire shape of GET /v1/plugin: the numeric id serialised as `type`, no `id`
+        const wireJira = { ...localJira, type: 7 };
+        const wrapper = mount(tree([wireJira]));
+        const alertExists = () => {
+          wrapper.update();
+
+          return wrapper.find('[data-automation-id="pluginInstalledIncompatibleAlert"]').exists();
+        };
+
+        act(() => {
+          wrapper.find(PluginsCatalog).first().prop('onInstalledItemClick')(
+            mergeInstalledRows([wireJira], [verdict(false)])[0],
+          );
+        });
+        expect(alertExists()).toBe(true);
+
+        // upgraded: the local list now carries the new version and the catalogue its verdict
+        current = stateWith([verdict(true)]);
+        act(() => {
+          store.dispatch({ type: 'refresh' });
+          wrapper.setProps({
+            children: tree([{ ...wireJira, details: { name: 'Jira', version: '1.6.0' } }])
+              .props.children,
+          });
+        });
+
+        expect(alertExists()).toBe(false);
+      });
+
+      // the upload answers with the integration type's id, which GET /v1/plugin sends as `type`
+      test('an uploaded plugin opens its page once the refetch brings it in', () => {
+        const store = createStore(() => ({
+          ...restOfState,
+          plugins: {
+            marketplace: marketplaceState({
+              installed: [
+                {
+                  name: 'jira',
+                  marketplace: {
+                    pluginId: 'jira',
+                    installedCompatibility: { compatible: false, requires: '>=25.1, <26.0' },
+                  },
+                },
+              ],
+            }),
+            marketplacePluginDetail: {},
+            integrations: { globalIntegrations: [], projectIntegrations: [] },
+          },
+        }));
+        const tree = (plugins) => (
+          <Provider store={store}>
+            <IntlProvider locale="en" onError={() => {}}>
+              <InstalledTab filterItems={[BTS_GROUP_TYPE]} plugins={plugins} />
+            </IntlProvider>
+          </Provider>
+        );
+        const wrapper = mount(tree([]));
+
+        act(() => {
+          wrapper.find('ActionPanel').first().prop('onUploaded')(7);
+        });
+        act(() => {
+          wrapper.setProps({ children: tree([{ ...localJira, type: 7 }]).props.children });
+        });
+        wrapper.update();
+
+        expect(
+          wrapper.find('[data-automation-id="pluginInstalledIncompatibleAlert"]').exists(),
+        ).toBe(true);
+      });
+    });
+
     /**
      * Plugin Detail. State. Update Available — there is no banner in the design. An available
      * upgrade is information rather than a warning, so it earns an action in the header beside the
