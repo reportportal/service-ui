@@ -51,6 +51,7 @@ describe('investigatedTrendChart getOption', () => {
       barCategoryGap: '40%',
     });
     expect(option.yAxis).toMatchObject({ type: 'value', max: 100, name: '% of investigations' });
+    expect(option.yAxis.axisLabel.hideOverlap).toBe(true);
     expect(option.xAxis.data).toEqual(['#1', '#2', '#3']);
     expect(option.tooltip.trigger).toBe('item');
     expect(option.customData.colors).toEqual({
