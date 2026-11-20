@@ -82,6 +82,8 @@ const panelCx = createClassnames(stagePanelStyles);
 const isVisibleAttribute = ({ key }: ReducedPipelineAttribute) =>
   key !== 'autoReadyPromoted' && key !== 'autoReadyThreshold';
 
+const HIDDEN_SUMMARY_ATTRIBUTE = /^(?:agent[ _-]?output|warnings)$/i;
+
 const STATUS_MESSAGES: Record<ReducedPipelineStatus, keyof typeof messages> = {
   PENDING: 'liveStatusPending',
   RUNNING: 'liveStatusRunning',
@@ -1160,7 +1162,12 @@ export const ReducedIterationDetails = ({
   }
 
   const metadata = buildReducedMetadata(iteration, formatMessage);
-  const visibleAttributes = iteration.attributes.filter(isVisibleAttribute);
+  const visibleAttributes = iteration.attributes.filter(
+    (attribute) =>
+      isVisibleAttribute(attribute) &&
+      !HIDDEN_SUMMARY_ATTRIBUTE.test(attribute.key) &&
+      !HIDDEN_SUMMARY_ATTRIBUTE.test(attribute.label ?? ''),
+  );
   const kpis = buildReducedKpis(iteration, formatMessage);
   const currentStage = findSelectedStage(iteration.stages, selectedStageId, requestedStage);
   const bannerStage = iteration.stages.find(

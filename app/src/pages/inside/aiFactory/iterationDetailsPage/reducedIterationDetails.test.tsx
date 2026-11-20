@@ -1185,6 +1185,28 @@ describe('ReducedIterationDetails', () => {
     expect(stagePanel.find('[data-automation-id="generationStageHighlights"]')).toHaveLength(0);
   });
 
+  test('hides Agent output and Warnings from the iteration summary', () => {
+    const wrapper = shallow(
+      <ReducedIterationDetails
+        iteration={detail({
+          attributes: [
+            { key: 'agentOutput', value: '```json' },
+            { key: 'agent_output', label: 'Agent output', value: '```json' },
+            { key: 'warnings', label: 'Warnings', value: '1' },
+            { key: 'branch', label: 'Branch', value: 'main' },
+          ],
+        })}
+        hasError={false}
+        isUnavailable={false}
+        breadcrumbDescriptors={breadcrumbDescriptors}
+        onRetry={jest.fn()}
+      />,
+    );
+
+    const attributes = wrapper.find('section[aria-label="Iteration summary"] .attributes');
+    expect(attributes.text()).toBe('Branch:main');
+  });
+
   test('shows only the selected stage panel without API diagnostics', () => {
     const iteration = detail({
       rawResponse: { id: 103, pipelineId: 7, backendOnly: { value: 'present' } },
