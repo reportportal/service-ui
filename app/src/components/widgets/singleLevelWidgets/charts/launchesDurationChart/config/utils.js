@@ -19,6 +19,10 @@ import { duration as calculateDuration } from 'moment';
 import { messages } from 'components/widgets/common/messages';
 import { getTimeType } from 'components/widgets/common/utils';
 import { DURATION } from 'components/widgets/common/constants';
+import classNames from 'classnames/bind';
+import styles from '../launchesDurationChart.scss';
+
+const cx = classNames.bind(styles);
 
 export const isValueInterrupted = (item) => item.status === STATUSES.INTERRUPTED;
 
@@ -72,5 +76,6 @@ export const calculateTooltipParams = (data, color, customProps) => {
   return {
     itemName: `${name} #${number}`,
     duration: humanDuration,
+    wrapperClassName: cx('tooltip'),
   };
 };

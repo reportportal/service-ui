@@ -18,10 +18,11 @@ import {
   COLOR_BLACK,
   COLOR_CHART_DURATION,
   COLOR_GRAY_80,
-  COLOR_INTERRUPTED,
+  COLOR_CHART_AXIS_LINE,
+  COLOR_CHART_AXIS_TITLE,
 } from 'common/constants/colors';
 import { getNiceTickStep, transformCategoryLabelByDefault } from 'components/widgets/common/utils';
-import { buildAxisTicks, buildTooltipFormatter } from 'components/widgets/common/echarts/configHelpers';
+import { buildTooltipFormatter } from 'components/widgets/common/echarts/configHelpers';
 import { messages } from 'components/widgets/common/messages';
 import { DURATION } from 'components/widgets/common/constants';
 import { AXIS_LABEL_STYLE, STACKED_BAR_EMPHASIS } from '../../common/stackedBarSeries';
@@ -31,6 +32,17 @@ import { LaunchesDurationTooltip } from './launchesDurationTooltip';
 
 const DISPLAY_TICK_STEP = 0.5;
 const VALUE_AXIS_TICKS_COUNT = 10;
+// Gridlines are spaced twice as far apart as the default step
+const VALUE_AXIS_STEP_MULTIPLIER = 2;
+// The dark tooltip look lives in the widget scss (`tooltip` class on the wrapper)
+const TOOLTIP_SHELL = {
+  backgroundColor: 'transparent',
+  borderWidth: 0,
+  extraCssText: 'box-shadow: none; padding: 0;',
+};
+const COLOR_INTERRUPTED_BAR = '#fdc63a';
+const BAR_END_RADIUS = [0, 3, 3, 0];
+const BAR_END_RADIUS_PREVIEW = [0, 2, 2, 0];
 
 const formatDurationTick = (value, timeTypeValue) =>
   (Number(value) / timeTypeValue).toFixed(2);
@@ -39,19 +51,20 @@ export const getOption = ({ content, isPreview, formatMessage }) => {
   const { timeType, chartData, itemsData = [] } = prepareChartData(content || []);
   const values = chartData.slice(1).map(Number);
   const categories = itemsData.map(transformCategoryLabelByDefault);
-  // Same launches get a label as before the migration: every Nth one, counting from the first.
-  const labelledIndexes = new Set(buildAxisTicks(itemsData.length));
-  const isLabelledIndex = (index) => labelledIndexes.has(index);
+  // DS 6: a label (and tick) on every second launch, starting from the first.
+  const isLabelledIndex = (index) => index % 2 === 0;
   const maxValue = Math.max(0, ...values.filter(Number.isFinite));
   const valueAxisInterval =
-    maxValue > 0 ? getNiceTickStep(maxValue, VALUE_AXIS_TICKS_COUNT) : timeType.value * DISPLAY_TICK_STEP;
+    maxValue > 0
+      ? getNiceTickStep(maxValue, VALUE_AXIS_TICKS_COUNT) * VALUE_AXIS_STEP_MULTIPLIER
+      : timeType.value * DISPLAY_TICK_STEP;
 
   const isMaxOnTick = maxValue % valueAxisInterval === 0;
 
   const seriesData = values.map((value, index) => ({
     value,
     itemStyle: {
-      color: isValueInterrupted(itemsData[index]) ? COLOR_INTERRUPTED : COLOR_CHART_DURATION,
+      color: isValueInterrupted(itemsData[index]) ? COLOR_INTERRUPTED_BAR : COLOR_CHART_DURATION,
     },
   }));
 
@@ -76,6 +89,7 @@ export const getOption = ({ content, isPreview, formatMessage }) => {
       nameTextStyle: {
         ...AXIS_LABEL_STYLE,
         fontSize: 12,
+        color: COLOR_CHART_AXIS_TITLE,
       },
       axisLabel: {
         ...AXIS_LABEL_STYLE,
@@ -97,7 +111,7 @@ export const getOption = ({ content, isPreview, formatMessage }) => {
         show: !isPreview,
         showMaxLine: isMaxOnTick,
         lineStyle: {
-          color: COLOR_GRAY_80,
+          color: COLOR_CHART_AXIS_LINE,
           width: 1,
         },
       },
@@ -128,14 +142,17 @@ export const getOption = ({ content, isPreview, formatMessage }) => {
         show: false,
       },
     },
-    tooltip: buildItemTooltip({
-      show: !isPreview,
-      formatter: buildTooltipFormatter(LaunchesDurationTooltip, calculateTooltipParams, {
-        itemsData,
-        timeType,
-        formatMessage,
+    tooltip: {
+      ...buildItemTooltip({
+        show: !isPreview,
+        formatter: buildTooltipFormatter(LaunchesDurationTooltip, calculateTooltipParams, {
+          itemsData,
+          timeType,
+          formatMessage,
+        }),
       }),
-    }),
+      ...TOOLTIP_SHELL,
+    },
     legend: {
       show: false,
     },
@@ -147,7 +164,8 @@ export const getOption = ({ content, isPreview, formatMessage }) => {
         data: seriesData,
         barWidth: '60%',
         barCategoryGap: '40%',
-        emphasis: STACKED_BAR_EMPHASIS,
+        itemStyle: { borderRadius: isPreview ? BAR_END_RADIUS_PREVIEW : BAR_END_RADIUS },
+        emphasis: isPreview ? { disabled: true } : STACKED_BAR_EMPHASIS,
       },
     ],
     customData: {

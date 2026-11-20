@@ -14,7 +14,9 @@
  * limitations under the License.
  */
 
-import { COLOR_CHART_DURATION, COLOR_INTERRUPTED } from 'common/constants/colors';
+import { COLOR_CHART_DURATION } from 'common/constants/colors';
+
+const COLOR_INTERRUPTED = '#fdc63a';
 import { DURATION } from 'components/widgets/common/constants';
 import { getOption } from './getOption';
 import {
@@ -62,8 +64,8 @@ describe('launchesDurationChart getOption', () => {
       min: 0,
       max: 4607,
     });
-    // 4607 / 10 = 460.7 → nice step 500
-    expect(option.xAxis.interval).toBe(500);
+    // 4607 / 10 = 460.7 → nice step 500, doubled for DS 6 gridline spacing
+    expect(option.xAxis.interval).toBe(1000);
     expect(option.xAxis.axisLabel.formatter(4607)).toBe('4.61');
     expect(option.tooltip).toEqual(
       expect.objectContaining({ trigger: 'item', formatter: expect.any(Function), show: true }),
@@ -107,7 +109,7 @@ describe('launchesDurationChart getOption', () => {
 
     expect(option.xAxis.name).toBe('minutes');
     expect(option.xAxis.max).toBe(3300000);
-    expect(option.xAxis.interval).toBe(500000);
+    expect(option.xAxis.interval).toBe(1000000);
     // 3,300,000 is not a multiple of 500,000, so the extra line/label at max is hidden
     expect(option.xAxis.splitLine.showMaxLine).toBe(false);
     expect(option.xAxis.axisLabel.showMaxLabel).toBe(false);
