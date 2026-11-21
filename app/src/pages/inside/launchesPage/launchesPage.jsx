@@ -75,6 +75,7 @@ import { DebugFiltersContainer } from './debugFiltersContainer';
 import { LaunchToolbar } from './LaunchToolbar';
 import { LaunchExportModal } from './modals/launchExportModal';
 import { NoItemsDemo } from './noItemsDemo';
+import { getDeleteLaunchesResult } from './utils';
 
 const messages = defineMessages({
   success: {
@@ -393,9 +394,25 @@ export class LaunchesPage extends Component {
     fetch(URLS.launches(this.props.projectKey, ids), {
       method: 'delete',
     })
-      .then(() => {
-        this.unselectAndFetchLaunches();
+      .then((response) => {
+        const { failedItems, successCount, totalCount, failureCount, errorsText } =
+          getDeleteLaunchesResult(items, response);
+        const selectedIds = this.props.selectedLaunches.map(({ id }) => id);
+        const failedSelectedItems = failedItems.filter(({ id }) => selectedIds.includes(id));
+        this.props.unselectAllLaunchesAction();
+        if (failedSelectedItems.length) {
+          this.props.selectLaunchesAction(failedSelectedItems);
+        }
+        this.props.fetchLaunchesAction();
         this.props.hideScreenLockAction();
+        if (failedItems.length) {
+          this.props.showNotification({
+            messageId: 'batchPartialFailure',
+            values: { successCount, totalCount, failureCount, errors: errorsText },
+            type: NOTIFICATION_TYPES.WARNING,
+          });
+          return;
+        }
         this.props.showNotification({
           message:
             items.length === 1
