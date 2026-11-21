@@ -18,7 +18,7 @@ import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 
 import { projectKeySelector } from 'controllers/project';
-import { fetchAllMilestoneTestPlans } from 'pages/inside/testCaseLibraryPage/addTestCasesToTestPlanModal/fetchMilestoneTestPlans';
+import { hasMilestoneTestPlans } from 'pages/inside/testCaseLibraryPage/addTestCasesToTestPlanModal/fetchMilestoneTestPlans';
 
 // The "Add to Test Plan" modal only lets a user pick from test plans that are
 // linked to a milestone (see useLaunchTestPlansForAddModal / fetchAllMilestoneTestPlans),
@@ -33,13 +33,11 @@ const getHasTestPlansPromise = (projectKey: string): Promise<boolean> => {
   }
 
   cachedProjectKey = projectKey;
-  cachedPromise = fetchAllMilestoneTestPlans(projectKey)
-    .then((testPlans) => testPlans.length > 0)
-    .catch(() => {
-      cachedProjectKey = null;
-      cachedPromise = null;
-      return false;
-    });
+  cachedPromise = hasMilestoneTestPlans(projectKey).catch(() => {
+    cachedProjectKey = null;
+    cachedPromise = null;
+    return false;
+  });
 
   return cachedPromise;
 };
