@@ -65,6 +65,8 @@ export interface CreateManualLaunchDto {
   startTime: string;
   mode: string;
   testCaseIds: number[];
+  // Folders whose whole subtrees the server adds to the launch.
+  folderIds?: number[];
   attributes: Attribute[];
   description?: string;
   testPlan?: { id: number };
@@ -116,6 +118,8 @@ export interface BaseLaunchModalProps {
   testCases: ExtendedTestCase[];
   selectedTestCaseIds?: number[];
   folderId?: number;
+  // Several folders at once (e.g. dropped in the test library side panel); used instead of folderId.
+  folderIds?: number[];
   testPlanId?: number;
   modalTitle: string;
   okButtonText: MessageDescriptor;
