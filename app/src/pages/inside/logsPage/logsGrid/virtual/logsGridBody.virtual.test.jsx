@@ -396,6 +396,19 @@ describe('LogsGridBody in the page layout', () => {
     expect(scrollContainer.current.scrollTop).toBe(0);
   });
 
+  test('does not write back a stale offset when rows are added below during a scroll', () => {
+    const wrapper = mountGrid(createTestStore().store);
+    mockVirtualizer.scrollOffset = 30;
+    wrapper.setProps({});
+    // the view keeps scrolling without a new render of the rows
+    mockVirtualizer.scrollOffset = 40;
+
+    wrapper.setProps({ data: [...DATA, log(3), log(4)] });
+
+    expect(mockVirtualizer.scrollOffset).toBe(40);
+    expect(scrollContainer.current.scrollTop).toBe(0);
+  });
+
   describe('when the rows move down in the scroll element', () => {
     const OriginalResizeObserver = global.ResizeObserver;
     const originalGetBoundingClientRect = Element.prototype.getBoundingClientRect;

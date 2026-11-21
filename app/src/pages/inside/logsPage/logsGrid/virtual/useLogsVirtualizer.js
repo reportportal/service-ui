@@ -72,10 +72,8 @@ export const useLogsVirtualizer = ({ rows, layoutKey, logsSize, scrollContainer 
     const index = rows.findIndex(({ key }) => key === anchor.key);
     // the measurements of the new rows are computed with the total size
     virtualizer.getTotalSize();
-    const offset = getAnchoredScrollOffset(
-      anchor,
-      index < 0 ? undefined : virtualizer.measurementsCache[index]?.start,
-    );
+    const start = index < 0 ? undefined : virtualizer.measurementsCache[index]?.start;
+    const offset = getAnchoredScrollOffset(anchor, start, virtualizer.options.scrollMargin);
     if (
       offset !== null &&
       virtualizer.scrollOffset !== null &&
@@ -84,7 +82,16 @@ export const useLogsVirtualizer = ({ rows, layoutKey, logsSize, scrollContainer 
       virtualizer.scrollOffset = offset;
       pendingScrollOffsetRef.current = offset;
     }
-    scrollAnchorRef.current = { ...anchor, rows, scrollMargin: virtualizer.options.scrollMargin };
+    scrollAnchorRef.current = {
+      ...anchor,
+      start: start ?? anchor.start,
+      offsetInRow:
+        offset === null && start !== undefined && virtualizer.scrollOffset !== null
+          ? virtualizer.scrollOffset - start
+          : anchor.offsetInRow,
+      rows,
+      scrollMargin: virtualizer.options.scrollMargin,
+    };
   }
 
   useLayoutEffect(() => {

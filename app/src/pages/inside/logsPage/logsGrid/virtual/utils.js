@@ -65,10 +65,25 @@ export const getScrollAnchor = (virtualItems, scrollOffset, scrollMargin, rows) 
   }
   const item = virtualItems.find(({ end }) => end > scrollOffset);
   return item
-    ? { key: item.key, offsetInRow: scrollOffset - item.start, rows, scrollMargin }
+    ? {
+        key: item.key,
+        start: item.start,
+        offsetInRow: scrollOffset - item.start,
+        rows,
+        scrollMargin,
+      }
     : null;
 };
 
-// The scroll offset that shows the anchor row as it was, from its new start; null when it is gone.
-export const getAnchoredScrollOffset = (anchor, anchorStart) =>
-  anchorStart === undefined ? null : Math.max(anchorStart + anchor.offsetInRow, 0);
+// The scroll offset that shows the anchor row as it was, from its new start; null when the row is
+// gone or did not move (the recorded offset into the row can lag behind a running scroll, it is
+// not written back then).
+export const getAnchoredScrollOffset = (anchor, anchorStart, scrollMargin) => {
+  if (
+    anchorStart === undefined ||
+    (anchorStart === anchor.start && scrollMargin === anchor.scrollMargin)
+  ) {
+    return null;
+  }
+  return Math.max(anchorStart + anchor.offsetInRow, 0);
+};

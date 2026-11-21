@@ -100,6 +100,7 @@ describe('getScrollAnchor', () => {
   test('is the first row that reaches below the top of the view and the offset into it', () => {
     expect(getScrollAnchor(items, 140, 100, rows)).toEqual({
       key: 4,
+      start: 140,
       offsetInRow: 0,
       rows,
       scrollMargin: 100,
@@ -118,18 +119,26 @@ describe('getScrollAnchor', () => {
 });
 
 describe('getAnchoredScrollOffset', () => {
-  const anchor = { key: 'log-4', offsetInRow: 5 };
+  const anchor = { key: 'log-4', start: 140, offsetInRow: 5, scrollMargin: 100 };
 
-  test('shows the anchor row at its new start as far into it as before', () => {
-    expect(getAnchoredScrollOffset(anchor, 440)).toBe(445);
-    expect(getAnchoredScrollOffset(anchor, 100)).toBe(105);
+  test('shows the moved anchor row as far into it as before', () => {
+    expect(getAnchoredScrollOffset(anchor, 440, 100)).toBe(445);
+    expect(getAnchoredScrollOffset(anchor, 100, 100)).toBe(105);
+  });
+
+  test('follows the rows moved by a new scroll margin', () => {
+    expect(getAnchoredScrollOffset(anchor, 200, 160)).toBe(205);
+  });
+
+  test('is null when the anchor row did not move', () => {
+    expect(getAnchoredScrollOffset(anchor, 140, 100)).toBeNull();
   });
 
   test('is never negative', () => {
-    expect(getAnchoredScrollOffset({ key: 'a', offsetInRow: -20 }, 10)).toBe(0);
+    expect(getAnchoredScrollOffset({ ...anchor, offsetInRow: -20 }, 10, 100)).toBe(0);
   });
 
   test('is null when the anchor row is gone', () => {
-    expect(getAnchoredScrollOffset(anchor, undefined)).toBeNull();
+    expect(getAnchoredScrollOffset(anchor, undefined, 100)).toBeNull();
   });
 });
