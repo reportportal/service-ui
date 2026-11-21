@@ -109,18 +109,22 @@ function* openHarModalWorker(data) {
 }
 
 /* IMAGE */
-function* openImageModalsWorker(data) {
+export function* openImageModalsWorker(data) {
   const imageData = yield call(fetchFileData, data, { responseType: 'blob' });
   const imageURL = URL.createObjectURL(imageData);
-  yield put(
-    showModalAction({
-      id: ATTACHMENT_IMAGE_MODAL_ID,
-      data: { image: imageURL, fileName: data.fileName },
-    }),
-  );
-  yield put(setAttachmentModalLoadingIdAction(null));
-  yield take(HIDE_MODAL);
-  URL.revokeObjectURL(imageURL);
+  try {
+    yield put(
+      showModalAction({
+        id: ATTACHMENT_IMAGE_MODAL_ID,
+        data: { image: imageURL, fileName: data.fileName },
+      }),
+    );
+    yield put(setAttachmentModalLoadingIdAction(null));
+    yield take(HIDE_MODAL);
+  } finally {
+    // also when opening another attachment cancels this worker
+    URL.revokeObjectURL(imageURL);
+  }
 }
 
 /* BINARY */
