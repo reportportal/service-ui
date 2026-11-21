@@ -109,3 +109,13 @@ export const isFileActionAllowed = (contentType, action) => {
 
   return !!allowedFileTypes.some((type) => type === extension || type === extensionFromPattern);
 };
+
+// Mirrors the server's inline-safe list: anything else is opened as plain text so an attachment
+// can never become a document (HTML, SVG, XML) running in the application origin.
+const INLINE_SAFE_CONTENT_TYPE =
+  /^(?:image\/(?!svg)[\w.+-]+|video\/[\w.+-]+|audio\/[\w.+-]+|application\/pdf|text\/plain)$/i;
+
+export const getInlineSafeContentType = (contentType) => {
+  const mimeType = (contentType || '').split(';')[0].trim();
+  return INLINE_SAFE_CONTENT_TYPE.test(mimeType) ? mimeType : 'text/plain';
+};
