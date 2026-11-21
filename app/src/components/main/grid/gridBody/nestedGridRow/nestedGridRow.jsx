@@ -97,7 +97,7 @@ LoadButton.defaultProps = {
 
 // The circular dependency will not be fixed because there is a direct dependency of this component on NestedGridBody.
 
-export const NestedGridRow = track()(({
+const NestedGridRowComponent = track()(({
   tracking,
   data,
   level,
@@ -111,10 +111,24 @@ export const NestedGridRow = track()(({
   const { collapsed, loading, content, page } = useSelector((state) =>
     nestedStepSelector(state, id),
   );
-  const allNestedStepsData = useSelector(nestedStepsSelector);
+  // select only the derived flag so a row re-renders when its own button changes, not on any step
+  // update; the flag is recomputed only when the nested steps state changes
+  const loadCurrentStepCache = React.useRef({});
+  const showLoadCurrentStepButton = useSelector((state) => {
+    const allNestedStepsData = nestedStepsSelector(state);
+    const cache = loadCurrentStepCache.current;
+    if (cache.steps !== allNestedStepsData || cache.page !== page || cache.data !== data) {
+      loadCurrentStepCache.current = {
+        steps: allNestedStepsData,
+        page,
+        data,
+        result: isLoadCurrentStepButtonVisible(page, data, allNestedStepsData),
+      };
+    }
+    return loadCurrentStepCache.current.result;
+  });
   const showPreviousButton = isLoadPreviousButtonVisible(page);
   const showMoreButton = isLoadMoreButtonVisible(page);
-  const showLoadCurrentStepButton = isLoadCurrentStepButtonVisible(page, data, allNestedStepsData);
   const [itemIntoViewId, setItemIntoViewId] = React.useState(null);
   const [direction, setDirection] = React.useState(null);
   const itemIntoViewRef = React.useRef(null);
@@ -234,12 +248,14 @@ export const NestedGridRow = track()(({
   );
 });
 
-NestedGridRow.propTypes = {
+NestedGridRowComponent.propTypes = {
   data: PropTypes.object,
   level: PropTypes.number,
   nestedStepHeader: PropTypes.elementType.isRequired,
 };
-NestedGridRow.defaultProps = {
+NestedGridRowComponent.defaultProps = {
   data: {},
   level: 0,
 };
+
+export const NestedGridRow = React.memo(NestedGridRowComponent);

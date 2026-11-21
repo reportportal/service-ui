@@ -26,7 +26,8 @@ export const FETCH_NESTED_STEP_ERROR = 'fetchNestedStepErrorAction';
 export const FETCH_CURRENT_STEP = 'fetchCurrentStep';
 
 export const PAGINATION_OFFSET = 300;
-export const MAX_PAGE_SIZE = 300000;
+// "Load current step" reads the step in pages of this size instead of one huge request
+export const MAX_PAGE_SIZE = 1000;
 
 export const INITIAL_STATE = {
   loading: false,
