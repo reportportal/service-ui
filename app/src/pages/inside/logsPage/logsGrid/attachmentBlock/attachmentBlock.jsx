@@ -111,6 +111,7 @@ export class AttachmentBlock extends Component {
                 alt={value.contentType}
                 isStatic={!isImage}
                 lazy
+                cached
                 onClick={isValidToOpenInModal ? this.openAttachmentInModal : null}
               />
             )}
