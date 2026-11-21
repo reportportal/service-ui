@@ -15,7 +15,7 @@
  */
 
 import { fetch } from 'common/utils/fetch';
-import { fetchFileData } from './sagas';
+import { fetchFileData, openImageModalsWorker } from './sagas';
 
 jest.mock('common/utils/fetch', () => ({
   fetch: jest.fn(),
@@ -31,5 +31,31 @@ describe('Attachments Sagas', () => {
     const params = { responseType: 'blob' };
     fetchFileData(mockParams, params);
     expect(fetch).toHaveBeenCalledWith('../api/v1/data/test_project/abcd', params);
+  });
+});
+
+describe('openImageModalsWorker', () => {
+  const originalCreate = URL.createObjectURL;
+  const originalRevoke = URL.revokeObjectURL;
+
+  beforeEach(() => {
+    URL.createObjectURL = jest.fn(() => 'blob:image');
+    URL.revokeObjectURL = jest.fn();
+  });
+
+  afterEach(() => {
+    URL.createObjectURL = originalCreate;
+    URL.revokeObjectURL = originalRevoke;
+  });
+
+  test('revokes the image URL when another attachment cancels the worker', () => {
+    const gen = openImageModalsWorker({ ...mockParams, fileName: 'a.png' });
+    gen.next(); // fetch
+    gen.next(new Blob(['x'])); // show modal
+    gen.next(); // reset loading id
+    gen.next(); // wait for HIDE_MODAL
+    gen.return(); // takeLatest cancels the worker
+
+    expect(URL.revokeObjectURL).toHaveBeenCalledWith('blob:image');
   });
 });
