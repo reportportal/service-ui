@@ -22,6 +22,7 @@ import { fetch } from 'common/utils';
 import { SpinningPreloader } from 'components/preloaders/spinningPreloader';
 import { statusPageWidgets, activityItem } from './statusPageWidgets';
 import { StatusPageItem } from './statusPageItem';
+import { messages } from './messages';
 import styles from './statusPageContent.scss';
 
 const cx = classNames.bind(styles);
@@ -40,6 +41,7 @@ export class StatusPageContent extends Component {
 
   state = {
     widgetsData: {},
+    failedSources: {},
     loading: true,
   };
 
@@ -56,56 +58,73 @@ export class StatusPageContent extends Component {
     }
   }
 
+  componentWillUnmount() {
+    this.latestRequestId += 1;
+  }
+
+  latestRequestId = 0;
+
   fetchData = async () => {
     const { projectKey, interval } = this.props;
+    this.latestRequestId += 1;
+    const requestId = this.latestRequestId;
     this.setState({
       loading: true,
     });
     const widgetsWithUrls = [...statusPageWidgets.filter((item) => item.getUrl), activityItem];
 
-    try {
-      const responses = [];
-
-      /* eslint-disable no-await-in-loop */
-      for (let i = 0; i < widgetsWithUrls.length; i += 1) {
-        const response = await fetch(widgetsWithUrls[i].getUrl(projectKey, interval));
-        responses.push(response);
-      }
-
-      const widgetsData = widgetsWithUrls.reduce(
-        (acc, item, index) => ({
-          ...acc,
-          [item.id]: responses[index],
-        }),
-        {},
-      );
-
-      this.setState({
-        widgetsData,
-        loading: false,
-      });
-    } catch {
-      this.setState({
-        widgetsData: {},
-        loading: false,
-      });
-    }
-  };
-
-  renderWidget = (widgetData) => {
-    const widget = this.state.widgetsData[widgetData.source];
-    return (
-      <StatusPageItem title={this.props.intl.formatMessage(widgetData.title)}>
-        {this.state.loading ? (
-          <div className={cx('status-page-spinner-wrapper')}>
-            <SpinningPreloader />
-          </div>
-        ) : (
-          widget && widgetData.component(widget, this.props.interval)
-        )}
-      </StatusPageItem>
+    const results = await Promise.allSettled(
+      widgetsWithUrls.map((item) => fetch(item.getUrl(projectKey, interval))),
     );
+
+    // A newer interval/project (or unmount) superseded this request.
+    if (requestId !== this.latestRequestId) {
+      return;
+    }
+
+    const widgetsData = {};
+    const failedSources = {};
+    results.forEach((result, index) => {
+      const { id } = widgetsWithUrls[index];
+      if (result.status === 'fulfilled') {
+        widgetsData[id] = result.value;
+      } else {
+        failedSources[id] = true;
+      }
+    });
+
+    this.setState({
+      widgetsData,
+      failedSources,
+      loading: false,
+    });
   };
+
+  renderWidgetContent = (widgetData) => {
+    const { widgetsData, failedSources, loading } = this.state;
+    if (loading) {
+      return (
+        <div className={cx('status-page-spinner-wrapper')}>
+          <SpinningPreloader />
+        </div>
+      );
+    }
+    if (failedSources[widgetData.source]) {
+      return (
+        <div className={cx('status-page-error')}>
+          {this.props.intl.formatMessage(messages.loadError)}
+        </div>
+      );
+    }
+    const widget = widgetsData[widgetData.source];
+    return widget && widgetData.component(widget, this.props.interval);
+  };
+
+  renderWidget = (widgetData) => (
+    <StatusPageItem title={this.props.intl.formatMessage(widgetData.title)}>
+      {this.renderWidgetContent(widgetData)}
+    </StatusPageItem>
+  );
 
   render() {
     return (

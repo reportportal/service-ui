@@ -57,4 +57,8 @@ export const messages = defineMessages({
     id: 'StatusPageContent.activities',
     defaultMessage: 'Project activity panel',
   },
+  loadError: {
+    id: 'StatusPageContent.loadError',
+    defaultMessage: 'Failed to load data',
+  },
 });
