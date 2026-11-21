@@ -197,14 +197,18 @@ export const urlOrganizationAndProjectSelector = createSelector(
 
 // TODO: User role selectors are stored here due to circular dependency
 export const activeProjectRoleSelector = createSelector(
+  urlOrganizationSlugSelector,
   urlProjectSlugSelector,
+  assignedOrganizationsSelector,
   assignedProjectsSelector,
-  (projectSlug, assignedProjects) => {
-    const assignedProject = Object.values(assignedProjects || {}).find(
-      (project) => project.projectSlug === projectSlug,
-    );
+  (organizationSlug, projectSlug, assignedOrganizations, assignedProjects) => {
+    // project slugs are unique only within an organization
+    const organizationId = organizationSlug
+      ? assignedOrganizations?.[organizationSlug]?.organizationId
+      : undefined;
 
-    return assignedProject?.projectRole;
+    return findAssignedProjectByOrganization(assignedProjects || {}, organizationId, projectSlug)
+      ?.projectRole;
   },
 );
 
