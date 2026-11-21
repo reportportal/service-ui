@@ -38,6 +38,7 @@ import {
   MOVE_FOLDER_SUCCESS,
   DELETE_TEST_CASE_SUCCESS,
   UPDATE_FOLDER_COUNTER,
+  UPDATE_FOLDER_COUNTERS,
   UPDATE_DESCRIPTION_SUCCESS,
   TOGGLE_FOLDER_EXPANSION,
   EXPAND_FOLDERS_TO_LEVEL,
@@ -200,6 +201,12 @@ export const moveFolderSuccessAction = (params: MoveFolderParams) => ({
 export const updateFolderCounterAction = (params: UpdateFolderCounterParams) => ({
   type: UPDATE_FOLDER_COUNTER,
   payload: params,
+});
+
+// Applies several counter deltas (folderId -> delta) in one store update.
+export const updateFolderCountersAction = (folderDeltas: Record<number, number>) => ({
+  type: UPDATE_FOLDER_COUNTERS,
+  payload: folderDeltas,
 });
 
 export const updateDescriptionSuccessAction = (description: string) => ({

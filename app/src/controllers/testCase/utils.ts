@@ -18,11 +18,32 @@ import { isEmpty } from 'es-toolkit/compat';
 
 import { Folder, FolderWithFullPath } from './types';
 
-const addSubfoldersToFolder = (folder: Folder, otherPlainFolders: Folder[]): Folder => {
-  const subFolders = otherPlainFolders.filter(({ parentFolderId }) => parentFolderId === folder.id);
+const groupByParentId = (folders: Folder[]): Map<number, Folder[]> => {
+  const childrenByParentId = new Map<number, Folder[]>();
+
+  folders.forEach((folder) => {
+    if (folder.parentFolderId) {
+      const siblings = childrenByParentId.get(folder.parentFolderId);
+
+      if (siblings) {
+        siblings.push(folder);
+      } else {
+        childrenByParentId.set(folder.parentFolderId, [folder]);
+      }
+    }
+  });
+
+  return childrenByParentId;
+};
+
+const addSubfoldersToFolder = (
+  folder: Folder,
+  childrenByParentId: Map<number, Folder[]>,
+): Folder => {
+  const subFolders = childrenByParentId.get(folder.id) ?? [];
 
   const mappedSubFolders = subFolders.map((subFolder) =>
-    addSubfoldersToFolder(subFolder, otherPlainFolders),
+    addSubfoldersToFolder(subFolder, childrenByParentId),
   );
 
   return { ...folder, subFolders: mappedSubFolders };
@@ -31,10 +52,13 @@ const addSubfoldersToFolder = (folder: Folder, otherPlainFolders: Folder[]): Fol
 const buildFoldersPath = (folderName: string, parentFolderName?: string) =>
   parentFolderName ? `${parentFolderName} / ${folderName}` : folderName;
 
+// Children are grouped by parent once, so building the tree is O(n) instead of O(n^2).
 export const buildFoldersMap = (folders: Folder[], parentFolders: Folder[] = []): Folder[] => {
+  const childrenByParentId = groupByParentId(folders);
+
   return folders.reduce((mergedFolders: Folder[], folder) => {
     if (!folder.parentFolderId) {
-      const folderWithSubfolders = addSubfoldersToFolder(folder, folders);
+      const folderWithSubfolders = addSubfoldersToFolder(folder, childrenByParentId);
       mergedFolders.push(folderWithSubfolders);
     }
 
