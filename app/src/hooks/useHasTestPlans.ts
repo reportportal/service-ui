@@ -24,15 +24,25 @@ import { hasMilestoneTestPlans } from 'pages/inside/testCaseLibraryPage/addTestC
 // linked to a milestone (see useLaunchTestPlansForAddModal / fetchAllMilestoneTestPlans),
 // since a test plan can exist without any milestone. This cache must check the same
 // source, otherwise the button could be enabled while the modal's dropdown is empty.
+// Linking a plan to a milestone elsewhere (e.g. "Edit test plan") does not reset the cache, so the
+// answer expires after a short time and is re-checked on the next mount.
+export const HAS_TEST_PLANS_CACHE_TTL = 10 * 1000;
+
 let cachedProjectKey: string | null = null;
 let cachedPromise: Promise<boolean> | null = null;
+let cachedAt = 0;
 
-const getHasTestPlansPromise = (projectKey: string): Promise<boolean> => {
-  if (cachedProjectKey === projectKey && cachedPromise !== null) {
+export const getHasTestPlansPromise = (projectKey: string): Promise<boolean> => {
+  if (
+    cachedProjectKey === projectKey &&
+    cachedPromise !== null &&
+    Date.now() - cachedAt < HAS_TEST_PLANS_CACHE_TTL
+  ) {
     return cachedPromise;
   }
 
   cachedProjectKey = projectKey;
+  cachedAt = Date.now();
   cachedPromise = hasMilestoneTestPlans(projectKey).catch(() => {
     cachedProjectKey = null;
     cachedPromise = null;
