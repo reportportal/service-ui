@@ -16,8 +16,7 @@
 
 import { TransformedFolder } from 'controllers/testCase';
 
-// Adding more test cases than this by dropping whole folders asks for confirmation first, because
-// every test case of the subtree is downloaded before the add request.
+// Adding more test cases than this by dropping whole folders asks for confirmation first.
 export const LARGE_FOLDER_ADD_THRESHOLD = 1000;
 
 // Test cases in the given folders and all their subfolders (testsCount is per folder).

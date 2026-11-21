@@ -95,27 +95,6 @@ export const useBatchFolderSelection = ({
     [flatFolders],
   );
 
-  const getFolderTestCaseIds = useCallback(
-    async (folder: TransformedFolder): Promise<number[]> => {
-      const { cachedIds, uncachedFolderIds } = getSelectionState(folder);
-
-      if (isEmpty(uncachedFolderIds)) {
-        return cachedIds;
-      }
-
-      addToSet({ setter: setBatchLoadingFolderIds, ids: [folder.id] });
-
-      try {
-        const { selectableIds: fetchedIds } = await fetchAndCache(uncachedFolderIds);
-
-        return [...cachedIds, ...fetchedIds];
-      } finally {
-        removeFromSet({ setter: setBatchLoadingFolderIds, ids: [folder.id] });
-      }
-    },
-    [fetchAndCache, getSelectionState, setBatchLoadingFolderIds],
-  );
-
   const batchSelectFolder = useCallback(
     async (folder: TransformedFolder) => {
       const { cachedIds, uncachedFolderIds } = getSelectionState(folder);
@@ -194,6 +173,5 @@ export const useBatchFolderSelection = ({
   return {
     batchSelectFolder,
     batchDeselectFolder,
-    getFolderTestCaseIds,
   };
 };

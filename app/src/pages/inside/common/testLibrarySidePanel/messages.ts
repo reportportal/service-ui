@@ -64,6 +64,6 @@ export const messages = defineMessages({
   largeFolderAddMessage: {
     id: 'TestLibrarySidePanel.largeFolderAddMessage',
     defaultMessage:
-      'The dropped folders contain {count} test cases. All of them will be loaded and added, which may take a while.',
+      'The dropped folders contain {count} test cases. All of them will be added, which may take a while.',
   },
 });

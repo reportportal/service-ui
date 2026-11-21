@@ -25,6 +25,7 @@ import {
   TransformedFolder,
 } from 'controllers/testCase';
 import { activeTestPlanSelector, testPlanFoldersSelector } from 'controllers/testPlan';
+import type { BatchAddTestCasesRQ } from 'controllers/testPlan/types';
 import { TestCase } from 'types/testCase';
 
 import {
@@ -41,7 +42,7 @@ import { useBatchFolderSelection } from './useBatchFolderSelection';
 interface UseTestLibraryPanelProps {
   isOpen: boolean;
   shouldHideAddedTestCases: boolean;
-  onAddTestCases: (testCaseIds: number[]) => Promise<boolean>;
+  onAddTestCases: (request: BatchAddTestCasesRQ) => Promise<boolean>;
   onClose: VoidFn;
 }
 
@@ -171,7 +172,7 @@ export const useTestLibraryPanel = ({
       return false;
     }
 
-    const isSuccess = await onAddTestCases(selectedIds);
+    const isSuccess = await onAddTestCases({ testCaseIds: selectedIds });
 
     if (isSuccess) {
       clearSelection();
@@ -181,7 +182,7 @@ export const useTestLibraryPanel = ({
     return isSuccess;
   }, [selectedTestCasesIds, onAddTestCases, clearSelection, onClose]);
 
-  const { batchSelectFolder, batchDeselectFolder, getFolderTestCaseIds } = useBatchFolderSelection({
+  const { batchSelectFolder, batchDeselectFolder } = useBatchFolderSelection({
     isOpenRef,
     testPlanId,
     testCasesMap,
@@ -220,7 +221,6 @@ export const useTestLibraryPanel = ({
       toggleFolder,
       batchSelectFolder,
       batchDeselectFolder,
-      getFolderTestCaseIds,
     }),
     [
       isOpenRef,
@@ -230,7 +230,6 @@ export const useTestLibraryPanel = ({
       toggleFolder,
       batchSelectFolder,
       batchDeselectFolder,
-      getFolderTestCaseIds,
     ],
   );
 

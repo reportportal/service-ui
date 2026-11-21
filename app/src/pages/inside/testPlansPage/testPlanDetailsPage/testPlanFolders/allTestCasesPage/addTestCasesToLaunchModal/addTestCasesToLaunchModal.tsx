@@ -18,6 +18,7 @@ import { useMemo, ReactNode, useCallback } from 'react';
 import { useIntl } from 'react-intl';
 import { InjectedFormProps, reduxForm } from 'redux-form';
 import { useTracking } from 'react-tracking';
+import { isEmpty } from 'es-toolkit/compat';
 
 import { createClassnames } from 'common/utils';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
@@ -48,6 +49,8 @@ const AddTestCasesToLaunchModalComponent = ({
   selectedRowsIds,
   testCases: allTestCases,
   testPlanId,
+  folderIds,
+  itemCount,
   onClearSelection,
   source,
   place,
@@ -60,18 +63,20 @@ const AddTestCasesToLaunchModalComponent = ({
     return allTestCases.filter((testCase) => selectedRowsIds.includes(testCase.id));
   }, [allTestCases, selectedRowsIds]);
 
+  const isFromFolders = !isEmpty(folderIds);
+
   const descriptionText = useMemo(() => {
     // Switch description text based on the number of selected test cases
-    return testCases.length !== 1
+    return isFromFolders || testCases.length !== 1
       ? formatMessage(messages.addSelectedTestCases, {
-          count: testCases.length,
+          count: isFromFolders ? (itemCount ?? 0) : testCases.length,
           bold: BoldTestCasesCount,
         })
       : formatMessage(messages.addSelectedTestCase, {
           testCaseName: testCases[0]?.name,
           bold: BoldTestCasesCount,
         });
-  }, [testCases, formatMessage]);
+  }, [isFromFolders, itemCount, testCases, formatMessage]);
 
   const handleSubmitSuccess = useCallback(
     (mode: LaunchMode) => {
@@ -96,7 +101,8 @@ const AddTestCasesToLaunchModalComponent = ({
     <BaseLaunchModal
       {...reduxFormProps}
       testCases={testCases}
-      selectedTestCaseIds={selectedRowsIds}
+      selectedTestCaseIds={isFromFolders ? undefined : selectedRowsIds}
+      folderIds={isFromFolders ? folderIds : undefined}
       testPlanId={Number(testPlanId)}
       modalTitle={formatMessage(messages.addToLaunch)}
       okButtonText={COMMON_LOCALE_KEYS.ADD}

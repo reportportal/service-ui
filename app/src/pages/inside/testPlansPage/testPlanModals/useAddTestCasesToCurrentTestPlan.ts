@@ -23,6 +23,7 @@ import { URLS } from 'common/urls';
 import { useDebouncedSpinner, useNotification } from 'common/hooks';
 import { projectKeySelector } from 'controllers/project';
 import { batchPartialFailureNotification } from 'controllers/testPlan/batchResult';
+import type { BatchAddTestCasesRQ } from 'controllers/testPlan/types';
 import { useTestPlanId } from 'hooks/useTypedSelector';
 
 import { useReloadActiveTestPlan } from './useReloadActiveTestPlan';
@@ -36,7 +37,7 @@ export const useAddTestCasesToCurrentTestPlan = () => {
   const reloadActiveTestPlan = useReloadActiveTestPlan();
 
   const addTestCasesToCurrentTestPlan = useCallback(
-    async (testCaseIds: number[]) => {
+    async (request: BatchAddTestCasesRQ) => {
       const numericTestPlanId = Number(testPlanId);
 
       if (!numericTestPlanId) {
@@ -50,12 +51,10 @@ export const useAddTestCasesToCurrentTestPlan = () => {
           URLS.testPlanTestCasesBatch(projectKey, numericTestPlanId),
           {
             method: 'post',
-            data: {
-              testCaseIds,
-            },
+            data: request,
           },
         );
-        const batchResult = readBatchResult(response, testCaseIds.length);
+        const batchResult = readBatchResult(response, request.testCaseIds?.length);
 
         reloadActiveTestPlan();
 

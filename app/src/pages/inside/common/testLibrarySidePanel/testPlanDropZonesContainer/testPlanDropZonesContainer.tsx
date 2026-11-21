@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { useCallback, useRef, useState } from 'react';
+import { useCallback, useState } from 'react';
 import { useIntl } from 'react-intl';
 import { useDispatch } from 'react-redux';
 import { useTracking } from 'react-tracking';
@@ -31,18 +31,17 @@ import {
 import { useModal, useNotification } from 'common/hooks';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { showModalAction } from 'controllers/modal';
-import { ERROR_CANCELED } from 'common/utils/fetch';
-import { getApiErrorMessage } from 'common/utils/apiResponse';
+import { ADD_BY_FOLDER_LIMIT } from 'common/constants/tms';
 import { BULK_ADD_TO_LAUNCH_MIN_SELECTION } from 'pages/inside/common/constants';
 import { TestCase } from 'types/testCase';
 import { TransformedFolder } from 'controllers/testCase';
+import type { BatchAddTestCasesRQ } from 'controllers/testPlan/types';
 import {
   AddTestCasesToLaunchModal,
   AddTestCasesToLaunchModalProps,
   ADD_TEST_CASES_TO_LAUNCH_MODAL_KEY,
 } from 'pages/inside/testPlansPage/testPlanDetailsPage/testPlanFolders/allTestCasesPage';
 
-import { usePanelActions, usePanelState } from '../testLibraryPanelContext';
 import { TestPlanDropZones } from '../testPlanDropZones';
 import { messages } from '../messages';
 import { countFolderTestCases, LARGE_FOLDER_ADD_THRESHOLD } from '../utils/countFolderTestCases';
@@ -50,7 +49,7 @@ import { VoidFn } from '@reportportal/ui-kit/common';
 
 interface TestPlanDropZonesContainerProps {
   testPlanId: number | null;
-  onAddTestCases: (testCaseIds: number[]) => Promise<boolean>;
+  onAddTestCases: (request: BatchAddTestCasesRQ) => Promise<boolean>;
   onClose: VoidFn;
 }
 
@@ -63,14 +62,9 @@ export const TestPlanDropZonesContainer = ({
   const { formatMessage } = useIntl();
   const dispatch = useDispatch();
   const { showErrorNotification } = useNotification();
-  const { getFolderTestCaseIds } = usePanelActions();
-  const { testCasesMap } = usePanelState();
   const [isAddToTestPlanLoading, setIsAddToTestPlanLoading] = useState(false);
   const [isAddToLaunchLoading, setIsAddToLaunchLoading] = useState(false);
   const [isAddInFlight, setIsAddInFlight] = useState(false);
-  const testCasesMapRef = useRef(testCasesMap);
-
-  testCasesMapRef.current = testCasesMap;
 
   const trackDropSuccess = useCallback(
     (switcher: DndDropTarget, count: number) => {
@@ -94,58 +88,14 @@ export const TestPlanDropZonesContainer = ({
       <AddTestCasesToLaunchModal
         selectedRowsIds={data.selectedRowsIds}
         testCases={data.testCases}
+        folderIds={data.folderIds}
+        itemCount={data.itemCount}
         testPlanId={data.testPlanId}
         source={data.source}
         place={data.place}
       />
     ),
   });
-
-  const getTestCasesFromIds = useCallback((ids: number[]): TestCase[] => {
-    const idSet = new Set(ids);
-    const result: TestCase[] = [];
-
-    testCasesMapRef.current.forEach(({ testCases }) => {
-      testCases.forEach((tc) => {
-        if (idSet.has(tc.id)) {
-          result.push(tc);
-          idSet.delete(tc.id);
-        }
-      });
-    });
-
-    return result;
-  }, []);
-
-  const getFolderIds = useCallback(
-    async (folders: TransformedFolder[]): Promise<number[]> => {
-      const idsPerFolder = await Promise.all(folders.map((folder) => getFolderTestCaseIds(folder)));
-
-      return Array.from(new Set(idsPerFolder.flat()));
-    },
-    [getFolderTestCaseIds],
-  );
-
-  // A failed folder download is reported instead of becoming an unhandled rejection.
-  const getFolderIdsOrNotify = useCallback(
-    async (folders: TransformedFolder[]): Promise<number[]> => {
-      try {
-        return await getFolderIds(folders);
-      } catch (error) {
-        if ((error as Error)?.message !== ERROR_CANCELED) {
-          const message = getApiErrorMessage(error);
-
-          showErrorNotification({
-            messageId: message ? undefined : 'testCasesAddingToTestPlanFailed',
-            message,
-          });
-        }
-
-        return [];
-      }
-    },
-    [getFolderIds, showErrorNotification],
-  );
 
   const addTestCases = useCallback(
     async (testCases: TestCase[]) => {
@@ -158,7 +108,7 @@ export const TestPlanDropZonesContainer = ({
 
       try {
         const ids = testCases.map(({ id }) => id);
-        const isSuccess = await onAddTestCases(ids);
+        const isSuccess = await onAddTestCases({ testCaseIds: ids });
 
         if (isSuccess) {
           trackDropSuccess(DND_DROP_TARGET.PLAN_LIST, ids.length);
@@ -183,7 +133,7 @@ export const TestPlanDropZonesContainer = ({
 
       try {
         const ids = testCases.map(({ id }) => id);
-        const isSuccess = await onAddTestCases(ids);
+        const isSuccess = await onAddTestCases({ testCaseIds: ids });
 
         if (isSuccess) {
           trackDropSuccess(DND_DROP_TARGET.ADD_AND_CREATE_LAUNCH, ids.length);
@@ -207,9 +157,13 @@ export const TestPlanDropZonesContainer = ({
     [isAddInFlight, onAddTestCases, onClose, openAddToLaunchModal, testPlanId, trackDropSuccess],
   );
 
+  // Dropped folders are sent as folder ids: the server adds their whole subtrees (test cases already
+  // in the plan count as added), so no test case is downloaded here.
   const addFolder = useCallback(
     async (folders: TransformedFolder[]) => {
-      if (isAddInFlight) {
+      const count = countFolderTestCases(folders);
+
+      if (count === 0 || isAddInFlight) {
         return;
       }
 
@@ -217,16 +171,10 @@ export const TestPlanDropZonesContainer = ({
       setIsAddToTestPlanLoading(true);
 
       try {
-        const ids = await getFolderIdsOrNotify(folders);
-
-        if (isEmpty(ids)) {
-          return;
-        }
-
-        const isSuccess = await onAddTestCases(ids);
+        const isSuccess = await onAddTestCases({ folderIds: folders.map(({ id }) => id) });
 
         if (isSuccess) {
-          trackDropSuccess(DND_DROP_TARGET.PLAN_LIST, ids.length);
+          trackDropSuccess(DND_DROP_TARGET.PLAN_LIST, count);
           onClose();
         }
       } finally {
@@ -234,12 +182,14 @@ export const TestPlanDropZonesContainer = ({
         setIsAddInFlight(false);
       }
     },
-    [getFolderIdsOrNotify, isAddInFlight, onAddTestCases, onClose, trackDropSuccess],
+    [isAddInFlight, onAddTestCases, onClose, trackDropSuccess],
   );
 
   const addFolderAndCreateLaunch = useCallback(
     async (folders: TransformedFolder[]) => {
-      if (testPlanId == null || isAddInFlight) {
+      const count = countFolderTestCases(folders);
+
+      if (count === 0 || testPlanId == null || isAddInFlight) {
         return;
       }
 
@@ -247,25 +197,20 @@ export const TestPlanDropZonesContainer = ({
       setIsAddToLaunchLoading(true);
 
       try {
-        const ids = await getFolderIdsOrNotify(folders);
-
-        if (isEmpty(ids)) {
-          return;
-        }
-
-        const isSuccess = await onAddTestCases(ids);
+        const folderIds = folders.map(({ id }) => id);
+        const isSuccess = await onAddTestCases({ folderIds });
 
         if (isSuccess) {
-          trackDropSuccess(DND_DROP_TARGET.ADD_AND_CREATE_LAUNCH, ids.length);
+          trackDropSuccess(DND_DROP_TARGET.ADD_AND_CREATE_LAUNCH, count);
           onClose();
           openAddToLaunchModal({
-            selectedRowsIds: ids,
-            testCases: getTestCasesFromIds(ids),
+            selectedRowsIds: [],
+            testCases: [],
+            folderIds,
+            itemCount: count,
             testPlanId: String(testPlanId),
             source:
-              ids.length >= BULK_ADD_TO_LAUNCH_MIN_SELECTION
-                ? ACTION_SOURCE.BULK
-                : ACTION_SOURCE.SINGLE,
+              count >= BULK_ADD_TO_LAUNCH_MIN_SELECTION ? ACTION_SOURCE.BULK : ACTION_SOURCE.SINGLE,
             place: PLACE_TEST_CASE_LIBRARY_SIDE_PANEL,
           });
         }
@@ -274,22 +219,21 @@ export const TestPlanDropZonesContainer = ({
         setIsAddInFlight(false);
       }
     },
-    [
-      getFolderIdsOrNotify,
-      getTestCasesFromIds,
-      isAddInFlight,
-      onAddTestCases,
-      onClose,
-      openAddToLaunchModal,
-      testPlanId,
-      trackDropSuccess,
-    ],
+    [isAddInFlight, onAddTestCases, onClose, openAddToLaunchModal, testPlanId, trackDropSuccess],
   );
 
-  // Dropping whole folders downloads every test case of the subtree first: above the threshold the
-  // user confirms before the download starts.
+  // Above the API limit nothing is sent; above the threshold the user confirms the large add first.
   const confirmLargeFolderAdd = (folders: TransformedFolder[], proceed: () => void) => {
     const count = countFolderTestCases(folders);
+
+    if (count > ADD_BY_FOLDER_LIMIT) {
+      showErrorNotification({
+        messageId: 'addByFolderLimitExceeded',
+        values: { count, limit: ADD_BY_FOLDER_LIMIT },
+      });
+
+      return;
+    }
 
     if (count <= LARGE_FOLDER_ADD_THRESHOLD) {
       proceed();
