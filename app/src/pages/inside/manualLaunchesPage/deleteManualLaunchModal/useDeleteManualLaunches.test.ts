@@ -18,19 +18,33 @@ import { act, createElement } from 'react';
 import { mount } from 'enzyme';
 import { fetch } from 'common/utils';
 import { NOTIFICATION_TYPES } from 'controllers/notification';
+import { updatePagePropertiesAction } from 'controllers/pages';
+import {
+  GET_MANUAL_LAUNCHES,
+  getManualLaunchesAction,
+  type GetManualLaunchesParams,
+} from 'controllers/manualLaunch';
 import { useDeleteManualLaunches } from './useDeleteManualLaunches';
 import { DeleteManualLaunchModalData } from './types';
 
 const mockDispatch = jest.fn();
-const mockState = {
+let mockState: Record<string, unknown>;
+const createState = (query: Record<string, string>, launchesOnPage: number) => ({
   project: { info: { projectKey: 'demo' } },
-  location: { query: {} },
-};
+  location: { query },
+  manualLaunch: {
+    data: {
+      content: Array.from({ length: launchesOnPage }, (_, index) => ({ id: index + 1 })),
+      page: {},
+    },
+  },
+});
 
 jest.mock('react-redux', () => ({
   ...jest.requireActual<Record<string, unknown>>('react-redux'),
   useDispatch: () => mockDispatch,
   useSelector: (selector: (state: unknown) => unknown) => selector(mockState),
+  useStore: () => ({ getState: () => mockState }),
 }));
 
 jest.mock('common/utils', () => ({
@@ -64,6 +78,7 @@ describe('useDeleteManualLaunches', () => {
   beforeEach(() => {
     mockDispatch.mockClear();
     mockedFetch.mockReset();
+    mockState = createState({}, 3);
   });
 
   test('a partially failed batch delete shows a warning and keeps the failed launches selected', async () => {
@@ -118,6 +133,49 @@ describe('useDeleteManualLaunches', () => {
           type: NOTIFICATION_TYPES.ERROR,
         }) as unknown,
       }),
+    );
+  });
+
+  test('the list is reloaded with the active search and filters after a delete', async () => {
+    mockState = createState(
+      { searchQuery: 'smoke', filterStatuses: 'FAILED', offset: '20', limit: '20' },
+      5,
+    );
+    mockedFetch.mockResolvedValue(undefined);
+    const data: DeleteManualLaunchModalData = { type: 'single', id: 1, name: 'launch' };
+    const deleteLaunches = renderHook(data);
+
+    await act(async () => {
+      await deleteLaunches(data);
+    });
+
+    expect(mockDispatch).toHaveBeenCalledWith(
+      getManualLaunchesAction(
+        expect.objectContaining({
+          offset: '20',
+          limit: '20',
+          searchQuery: 'smoke',
+          filterStatuses: ['FAILED'],
+        }) as GetManualLaunchesParams,
+      ),
+    );
+  });
+
+  test('deleting the last launch of a page moves back to the previous page', async () => {
+    mockState = createState({ offset: '40', limit: '20' }, 1);
+    mockedFetch.mockResolvedValue(undefined);
+    const data: DeleteManualLaunchModalData = { type: 'single', id: 1, name: 'launch' };
+    const deleteLaunches = renderHook(data);
+
+    await act(async () => {
+      await deleteLaunches(data);
+    });
+
+    expect(mockDispatch).toHaveBeenCalledWith(
+      updatePagePropertiesAction({ offset: 20, limit: 20 }),
+    );
+    expect(mockDispatch).not.toHaveBeenCalledWith(
+      expect.objectContaining({ type: GET_MANUAL_LAUNCHES }),
     );
   });
 });

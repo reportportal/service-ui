@@ -42,5 +42,6 @@ export * from './types';
 export {
   buildGetManualLaunchTestCaseExecutionsParams,
   getManualLaunchDetailsFetchParams,
+  getManualLaunchesFetchParams,
 } from './manualLaunchDetailsFetchParams';
 export type { ManualLaunchDetailsFetchParams } from './manualLaunchDetailsFetchParams';
