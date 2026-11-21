@@ -21,6 +21,12 @@ import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
 import { addApiKey } from './sagas';
 import { userInfoSelector } from './selectors';
 
+// Notification uids are unique per call, so compare the effect without them.
+const withoutUid = (effect) => {
+  const { uid, ...payload } = effect.PUT.action.payload;
+  return { ...effect.PUT.action, payload };
+};
+
 describe('user sagas: addApiKey', () => {
   const user = { id: 7 };
   const payload = { name: 'key', errorMessage: 'generate failed', onSuccess: jest.fn() };
@@ -33,8 +39,10 @@ describe('user sagas: addApiKey', () => {
     expect(gen.next(user).value).toEqual(
       call(fetch, URLS.apiKeys(7), { method: 'post', data: { name: 'key' } }),
     );
-    expect(gen.throw({ errorCode: 4001, message: 'Limit reached' }).value).toEqual(
-      put(showNotification({ message: 'Limit reached', type: NOTIFICATION_TYPES.ERROR })),
+    expect(withoutUid(gen.throw({ errorCode: 4001, message: 'Limit reached' }).value)).toEqual(
+      withoutUid(
+        put(showNotification({ message: 'Limit reached', type: NOTIFICATION_TYPES.ERROR })),
+      ),
     );
     expect(onError).toHaveBeenCalledTimes(1);
   });
@@ -44,8 +52,10 @@ describe('user sagas: addApiKey', () => {
     gen.next();
     gen.next(user);
 
-    expect(gen.throw(new Error('')).value).toEqual(
-      put(showNotification({ message: 'generate failed', type: NOTIFICATION_TYPES.ERROR })),
+    expect(withoutUid(gen.throw(new Error('')).value)).toEqual(
+      withoutUid(
+        put(showNotification({ message: 'generate failed', type: NOTIFICATION_TYPES.ERROR })),
+      ),
     );
   });
 });
