@@ -72,6 +72,18 @@ const BLOCKED_ERRORS = new Set<AutomationRequestError>([
   'INVALID_AUTOMATION_RESPONSE',
 ]);
 
+const RETRYABLE_ENVIRONMENT_ERRORS = new Set<AutomationRequestError>([
+  'ENVIRONMENTS_LOAD_FAILED',
+  'INVALID_ENVIRONMENTS_RESPONSE',
+  'ENVIRONMENTS_NOT_CONFIGURED',
+]);
+
+const getCiConnectionMessage = (showStatus: boolean, isLoading: boolean, failed: boolean) => {
+  if (!showStatus) return null;
+  if (isLoading) return messages.checkingCiConnection;
+  return failed ? messages.loadCiConnectionFailed : messages.unavailableCiConnection;
+};
+
 export const AutomationModalContent = ({
   data: {
     testCases,
@@ -185,12 +197,11 @@ export const AutomationModalContent = ({
     if (response) handleSuccess(response);
   };
 
-  const connectionMessage =
-    canRequest && !canStart && request.error !== 'CI_NOT_CONNECTED'
-      ? (isLoading && messages.checkingCiConnection) ||
-        (failed && messages.loadCiConnectionFailed) ||
-        messages.unavailableCiConnection
-      : null;
+  const connectionMessage = getCiConnectionMessage(
+    canRequest && !canStart && request.error !== 'CI_NOT_CONNECTED',
+    isLoading,
+    failed,
+  );
 
   return (
     <Modal
@@ -308,9 +319,7 @@ export const AutomationModalContent = ({
         {canRequest && request.error && request.error !== 'REAUTOMATE_CONFIRMATION_REQUIRED' && (
           <SystemMessage mode="error">
             {formatMessage(ERROR_MESSAGES[request.error])}
-            {(request.error === 'ENVIRONMENTS_LOAD_FAILED' ||
-              request.error === 'INVALID_ENVIRONMENTS_RESPONSE' ||
-              request.error === 'ENVIRONMENTS_NOT_CONFIGURED') && (
+            {RETRYABLE_ENVIRONMENT_ERRORS.has(request.error) && (
               <Button
                 variant="text"
                 onClick={request.reloadEnvironments}

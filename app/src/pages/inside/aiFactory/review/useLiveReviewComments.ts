@@ -230,7 +230,8 @@ export const useLiveReviewComments = (
   }, [epoch, refreshPushConnection, scope]);
   const retryFixMonitoring = useCallback(() => retryLiveFixObservation(scope), [scope]);
   const isCurrentState = isResourceEnabled && state.scope === scope;
-  const data = isCurrentState ? state.data : undefined;
+  const currentState = isCurrentState ? state : undefined;
+  const data = currentState?.data;
   const fixing = isCurrentState && isFixInProgress(scope);
   const completed = completion?.key === feedbackKey && !fixing;
   return {
@@ -245,10 +246,10 @@ export const useLiveReviewComments = (
     unsentCount: data?.unsentCount ?? 0,
     fixInProgress: fixing,
     ...getFixRoundFeedback(state, isCurrentState, completed, completion?.round),
-    isLoaded: Boolean(data) && !state.isError && isCurrentState,
-    isLoading: isResourceEnabled && (!isCurrentState || state.isLoading),
-    isError: isCurrentState && state.isError,
-    isMutating: isCurrentState && state.isMutating,
-    isMutationError: isCurrentState && state.isMutationError,
+    isLoaded: Boolean(data) && !currentState?.isError,
+    isLoading: isResourceEnabled && (currentState?.isLoading ?? true),
+    isError: currentState?.isError ?? false,
+    isMutating: currentState?.isMutating ?? false,
+    isMutationError: currentState?.isMutationError ?? false,
   };
 };

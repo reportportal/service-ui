@@ -635,10 +635,31 @@ const RichIterationDetails = ({
   );
 };
 
+const useIterationRetryConnection = (
+  projectKey: string,
+  pipelineId: number,
+  iteration: PipelineIteration | null,
+  isLiveTransport: boolean,
+) => {
+  const { canRetryPipelineStages } = useUserPermissions();
+  const canRetryStages = isLiveTransport && Boolean(canRetryPipelineStages);
+  const { connection, refresh } = usePipelineCiConnection(
+    projectKey,
+    canRetryStages && isReducedDetail(iteration) && iteration.pipelineType === 'TEST_CASE_GENERATION'
+      ? pipelineId
+      : undefined,
+  );
+
+  return {
+    canRetryStages,
+    canStartCiJobs: connection?.canStartJobs === true,
+    refreshCiConnection: refresh,
+  };
+};
+
 export const IterationDetailsPageContent = () => {
   const { formatMessage } = useIntl();
   const dispatch = useDispatch();
-  const { canRetryPipelineStages } = useUserPermissions();
   const projectName = useSelector(projectNameSelector);
   const projectKey = useSelector(projectKeySelector);
   const { organizationSlug, projectSlug } = useSelector(
@@ -678,14 +699,11 @@ export const IterationDetailsPageContent = () => {
 
   const { hasCurrentCatalog, pipelineCandidate, pipeline, isReducedCatalogPipeline } =
     resolvePipelineCatalog(pipelines, pipelineId, catalogVersion, catalogProjectKey, projectKey);
-  const canRetryStages = isLiveTransport && Boolean(canRetryPipelineStages);
-  const { connection: ciConnection, refresh: refreshCiConnection } = usePipelineCiConnection(
+  const { canRetryStages, canStartCiJobs, refreshCiConnection } = useIterationRetryConnection(
     projectKey,
-    canRetryStages &&
-      isReducedDetail(currentIteration) &&
-      currentIteration.pipelineType === 'TEST_CASE_GENERATION'
-      ? pipelineId
-      : undefined,
+    pipelineId,
+    currentIteration,
+    isLiveTransport,
   );
   const [selectedStage, setSelectedStage] = useState<AiStageKey | null>(null);
   const hasInitializedStage = useRef(false);
@@ -805,7 +823,7 @@ export const IterationDetailsPageContent = () => {
         onBack={backToPipelines}
         projectKey={projectKey}
         canRetryStages={canRetryStages}
-        canStartCiJobs={ciConnection?.canStartJobs === true}
+        canStartCiJobs={canStartCiJobs}
         onRefreshCiConnection={refreshCiConnection}
         onCompare={(selectedPipelineId, selectedIterationId) =>
           dispatch({

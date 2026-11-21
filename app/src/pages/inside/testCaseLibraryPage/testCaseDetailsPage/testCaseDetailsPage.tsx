@@ -765,11 +765,10 @@ export const TestCaseDetailsPage = () => {
           </div>
           <ScrollWrapper>
             <div
-              className={cx(
-                'page__main-content',
-                testCaseDetails?.id ? 'page__main-content-with-data' : '',
-                isLoadingTestCaseDetails ? 'page__loading-state' : '',
-              )}
+              className={cx('page__main-content', {
+                'page__main-content-with-data': Boolean(testCaseDetails.id),
+                'page__loading-state': isLoadingTestCaseDetails,
+              })}
             >
               {isLoadingTestCaseDetails ? (
                 <div className={cx('page__loader')}>

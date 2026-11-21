@@ -255,11 +255,11 @@ export const AllTestCasesPage = ({
       baseUrl: `/organizations/${organizationSlug}/projects/${projectSlug}/testLibrary${payload.testCasePageRoute ? '/' + payload.testCasePageRoute : ''}`,
     });
   const [selection, setSelection] = useState({ scope: selectionScope, rows: EMPTY_SELECTION });
-  const isSelectionInCurrentProject = selection.scope === selectionScope;
-  if (!isSelectionInCurrentProject) {
-    setSelection({ scope: selectionScope, rows: EMPTY_SELECTION });
+  let selectedRows = selection.rows;
+  if (selection.scope !== selectionScope) {
+    selectedRows = EMPTY_SELECTION;
+    setSelection({ scope: selectionScope, rows: selectedRows });
   }
-  const selectedRows = isSelectionInCurrentProject ? selection.rows : EMPTY_SELECTION;
   const folderId = useSelector(urlFolderIdSelector);
   const folders = useSelector(foldersSelector);
   const dispatch = useDispatch();
