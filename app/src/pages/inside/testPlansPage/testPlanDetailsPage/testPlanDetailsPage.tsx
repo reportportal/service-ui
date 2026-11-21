@@ -303,7 +303,13 @@ export const TestPlanDetailsPage = () => {
 
   const renderContent = () => {
     if (!testPlan?.executionStatistic.total && isEmpty(testPlanFolders)) {
-      return <EmptyTestPlan onOpenTestLibrary={() => setIsTestLibrarySidePanelOpen(true)} />;
+      return (
+        <EmptyTestPlan
+          onOpenTestLibrary={
+            canManageTestCases ? () => setIsTestLibrarySidePanelOpen(true) : undefined
+          }
+        />
+      );
     }
 
     return <TestPlanFolders isLoading={isTestPlanTestCasesLoading} />;
@@ -322,7 +328,7 @@ export const TestPlanDetailsPage = () => {
           <div className={cx('test-plan-details-page__content')}>{renderContent()}</div>
         </div>
       </ScrollWrapper>
-      {isTestLibrarySidePanelOpen && (
+      {isTestLibrarySidePanelOpen && canManageTestCases && (
         <TestLibrarySidePanel
           isOpen
           onAddTestCases={addTestCasesToCurrentTestPlan}
