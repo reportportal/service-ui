@@ -18,6 +18,7 @@ import { useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { fetch } from 'common/utils';
+import { getApiErrorMessage, readBatchResult } from 'common/utils/apiResponse';
 import { URLS } from 'common/urls';
 import { useDebouncedSpinner, useNotification } from 'common/hooks';
 import { projectKeySelector } from 'controllers/project';
@@ -27,6 +28,7 @@ import {
   defaultTestPlanTestCasesQueryParams,
   TEST_PLAN_FOLDERS_NAMESPACE,
 } from 'controllers/testPlan';
+import { batchPartialFailureNotification } from 'controllers/testPlan/batchResult';
 import { useTestPlanId } from 'hooks/useTypedSelector';
 
 export const useAddTestCasesToCurrentTestPlan = () => {
@@ -47,12 +49,16 @@ export const useAddTestCasesToCurrentTestPlan = () => {
       try {
         showSpinner();
 
-        await fetch(URLS.testPlanTestCasesBatch(projectKey, numericTestPlanId), {
-          method: 'post',
-          data: {
-            testCaseIds,
+        const response: unknown = await fetch(
+          URLS.testPlanTestCasesBatch(projectKey, numericTestPlanId),
+          {
+            method: 'post',
+            data: {
+              testCaseIds,
+            },
           },
-        });
+        );
+        const batchResult = readBatchResult(response, testCaseIds.length);
 
         const updatedFolders = await fetch(
           URLS.testFolders(projectKey, { 'filter.eq.testPlanId': numericTestPlanId }),
@@ -67,15 +73,25 @@ export const useAddTestCasesToCurrentTestPlan = () => {
           }),
         );
 
+        if (batchResult.failureCount > 0) {
+          // keep the library panel open so the user sees what was not added
+          dispatch(batchPartialFailureNotification(batchResult));
+
+          return false;
+        }
+
         showSuccessNotification({
           messageId: 'testCasesAddedToTestPlanFromLibrarySuccess',
-          values: { count: testCaseIds.length },
+          values: { count: batchResult.successCount },
         });
 
         return true;
       } catch (error) {
+        const message = getApiErrorMessage(error);
+
         showErrorNotification({
-          messageId: 'testCasesAddingToTestPlanFailed',
+          message,
+          messageId: message ? undefined : 'testCasesAddingToTestPlanFailed',
         });
         console.error(error);
 
