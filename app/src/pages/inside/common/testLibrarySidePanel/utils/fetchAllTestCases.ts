@@ -30,13 +30,17 @@ export interface TestCasesResponse {
 
 export const TEST_FOLDER_ID_IN_FILTER_KEY = 'filter.in.testFolderId';
 export const MAX_CONCURRENT_FOLDER_CHUNK_FETCHES = 5;
+// Whole folders are downloaded page by page; large pages keep the number of requests low
+// (20k test cases = 20 requests instead of 400).
+export const TEST_CASES_FETCH_PAGE_SIZE = 1000;
 
 export const fetchAllTestCases = async (
   projectKey: string,
   params: Record<string, string | number>,
   fetchedTestCases: TestCase[] = [],
+  signal?: AbortSignal,
 ): Promise<TestCase[]> => {
-  const response = await fetch<TestCasesResponse>(URLS.testCases(projectKey, params));
+  const response = await fetch<TestCasesResponse>(URLS.testCases(projectKey, params), { signal });
   const testCases = [...fetchedTestCases, ...response.content];
 
   if (response.page.number < response.page.totalPages) {
@@ -44,6 +48,7 @@ export const fetchAllTestCases = async (
       projectKey,
       { ...params, offset: response.page.number * response.page.size },
       testCases,
+      signal,
     );
   }
 
@@ -55,23 +60,26 @@ const fetchFolderIdChunks = async (
   folderIdChunks: number[][],
   params: Record<string, string | number>,
   startIndex = 0,
+  signal?: AbortSignal,
 ): Promise<TestCase[]> => {
   if (startIndex >= folderIdChunks.length) {
     return [];
   }
 
-  const batch = folderIdChunks.slice(
-    startIndex,
-    startIndex + MAX_CONCURRENT_FOLDER_CHUNK_FETCHES,
-  );
+  const batch = folderIdChunks.slice(startIndex, startIndex + MAX_CONCURRENT_FOLDER_CHUNK_FETCHES);
   const batchResults = await Promise.all(
     batch.map((folderIdChunk) =>
-      fetchAllTestCases(projectKey, {
-        offset: 0,
-        limit: 50,
-        ...params,
-        [TEST_FOLDER_ID_IN_FILTER_KEY]: folderIdChunk.join(','),
-      }),
+      fetchAllTestCases(
+        projectKey,
+        {
+          offset: 0,
+          limit: TEST_CASES_FETCH_PAGE_SIZE,
+          ...params,
+          [TEST_FOLDER_ID_IN_FILTER_KEY]: folderIdChunk.join(','),
+        },
+        [],
+        signal,
+      ),
     ),
   );
   const remainingResults = await fetchFolderIdChunks(
@@ -79,6 +87,7 @@ const fetchFolderIdChunks = async (
     folderIdChunks,
     params,
     startIndex + MAX_CONCURRENT_FOLDER_CHUNK_FETCHES,
+    signal,
   );
 
   return [...batchResults.flat(), ...remainingResults];
@@ -88,10 +97,11 @@ export const fetchAllTestCasesByFolderIds = async (
   projectKey: string,
   folderIds: number[],
   params: Record<string, string | number> = {},
+  signal?: AbortSignal,
 ): Promise<TestCase[]> => {
   if (isEmpty(folderIds)) {
     return [];
   }
 
-  return fetchFolderIdChunks(projectKey, chunkIdsForQueryFilter(folderIds), params);
+  return fetchFolderIdChunks(projectKey, chunkIdsForQueryFilter(folderIds), params, 0, signal);
 };

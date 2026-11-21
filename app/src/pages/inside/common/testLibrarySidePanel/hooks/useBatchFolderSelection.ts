@@ -44,6 +44,7 @@ interface UseBatchFolderSelectionProps {
   setSelectedTestCasesIds: SetState<NumberSet>;
   setSelectedFolderIds: SetState<NumberSet>;
   setBatchLoadingFolderIds: SetState<NumberSet>;
+  abortControllerRef?: RefObject<AbortController>;
 }
 
 export const useBatchFolderSelection = ({
@@ -54,6 +55,7 @@ export const useBatchFolderSelection = ({
   setSelectedTestCasesIds,
   setSelectedFolderIds,
   setBatchLoadingFolderIds,
+  abortControllerRef,
 }: UseBatchFolderSelectionProps) => {
   const flatFolders = useSelector(foldersSelector);
   const { showErrorNotification } = useNotification();
@@ -63,6 +65,7 @@ export const useBatchFolderSelection = ({
   const fetchAndCache = useFetchAndCacheTestCases({
     testPlanId,
     setTestCasesMap,
+    abortControllerRef,
   });
 
   const getSelectionState = useCallback(

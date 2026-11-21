@@ -15,6 +15,8 @@
  */
 
 import { useCallback, useRef, useState } from 'react';
+import { useIntl } from 'react-intl';
+import { useDispatch } from 'react-redux';
 import { useTracking } from 'react-tracking';
 import { isEmpty } from 'es-toolkit/compat';
 
@@ -27,6 +29,8 @@ import {
   PLACE_TEST_CASE_LIBRARY_SIDE_PANEL,
 } from 'analyticsEvents/testPlansPageEvents';
 import { useModal, useNotification } from 'common/hooks';
+import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
+import { showModalAction } from 'controllers/modal';
 import { ERROR_CANCELED } from 'common/utils/fetch';
 import { getApiErrorMessage } from 'common/utils/apiResponse';
 import { BULK_ADD_TO_LAUNCH_MIN_SELECTION } from 'pages/inside/common/constants';
@@ -40,6 +44,8 @@ import {
 
 import { usePanelActions, usePanelState } from '../testLibraryPanelContext';
 import { TestPlanDropZones } from '../testPlanDropZones';
+import { messages } from '../messages';
+import { countFolderTestCases, LARGE_FOLDER_ADD_THRESHOLD } from '../utils/countFolderTestCases';
 import { VoidFn } from '@reportportal/ui-kit/common';
 
 interface TestPlanDropZonesContainerProps {
@@ -54,6 +60,8 @@ export const TestPlanDropZonesContainer = ({
   onClose,
 }: TestPlanDropZonesContainerProps) => {
   const { trackEvent } = useTracking();
+  const { formatMessage } = useIntl();
+  const dispatch = useDispatch();
   const { showErrorNotification } = useNotification();
   const { getFolderTestCaseIds } = usePanelActions();
   const { testCasesMap } = usePanelState();
@@ -278,6 +286,31 @@ export const TestPlanDropZonesContainer = ({
     ],
   );
 
+  // Dropping whole folders downloads every test case of the subtree first: above the threshold the
+  // user confirms before the download starts.
+  const confirmLargeFolderAdd = (folders: TransformedFolder[], proceed: () => void) => {
+    const count = countFolderTestCases(folders);
+
+    if (count <= LARGE_FOLDER_ADD_THRESHOLD) {
+      proceed();
+
+      return;
+    }
+
+    dispatch(
+      showModalAction({
+        id: 'confirmationModal',
+        data: {
+          title: formatMessage(messages.largeFolderAddTitle, { count }),
+          message: formatMessage(messages.largeFolderAddMessage, { count }),
+          confirmText: formatMessage(COMMON_LOCALE_KEYS.ADD),
+          cancelText: formatMessage(COMMON_LOCALE_KEYS.CANCEL),
+          onConfirm: proceed,
+        },
+      }),
+    );
+  };
+
   return (
     <TestPlanDropZones
       isAddToTestPlanLoading={isAddToTestPlanLoading}
@@ -289,10 +322,14 @@ export const TestPlanDropZonesContainer = ({
         addTestCasesAndCreateLaunch(testCases);
       }}
       onAddFolderToTestPlan={(folder) => {
-        addFolder(folder);
+        confirmLargeFolderAdd(folder, () => {
+          addFolder(folder);
+        });
       }}
       onAddFolderAndCreateLaunch={(folder) => {
-        addFolderAndCreateLaunch(folder);
+        confirmLargeFolderAdd(folder, () => {
+          addFolderAndCreateLaunch(folder);
+        });
       }}
     />
   );
