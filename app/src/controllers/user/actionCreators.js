@@ -76,9 +76,9 @@ export const setActiveProjectKeyAction = (activeProjectKey) => ({
   payload: activeProjectKey,
 });
 
-export const addApiKeyAction = (name, successMessage, errorMessage, onSuccess) => ({
+export const addApiKeyAction = (name, successMessage, errorMessage, onSuccess, onError) => ({
   type: ADD_API_KEY,
-  payload: { name, successMessage, errorMessage, onSuccess },
+  payload: { name, successMessage, errorMessage, onSuccess, onError },
 });
 
 export const addApiKeySuccessAction = (apiKey) => ({
