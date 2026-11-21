@@ -22,6 +22,7 @@ import ReactObserver from 'react-event-observer';
 import track from 'react-tracking';
 import { NOTIFICATION_TYPES } from 'controllers/notification';
 import { fetch } from 'common/utils';
+import { getApiErrorMessage } from 'common/utils/apiResponse';
 import { URLS } from 'common/urls';
 import PropTypes from 'prop-types';
 import { WIDGETS_EVENTS } from 'components/main/analytics/events/ga4Events/dashboardsPageEvents';
@@ -151,18 +152,27 @@ export class WidgetsGrid extends Component {
 
     fetch(URLS.dashboardWidget(projectKey, dashboard.id, widgetId), {
       method: 'DELETE',
-    }).then(() => {
-      const newWidgets = this.getUpdatedWidgetsAfterDelete(widgetId);
+    })
+      .then(() => {
+        const newWidgets = this.getUpdatedWidgetsAfterDelete(widgetId);
 
-      this.props.updateDashboardWidgetsAction({
-        ...dashboard,
-        widgets: newWidgets,
+        this.props.updateDashboardWidgetsAction({
+          ...dashboard,
+          widgets: newWidgets,
+        });
+        this.props.showNotification({
+          type: NOTIFICATION_TYPES.SUCCESS,
+          message: this.props.intl.formatMessage(messages.deleteWidgetSuccess),
+        });
+      })
+      .catch((error) => {
+        const message = getApiErrorMessage(error);
+        this.props.showNotification({
+          type: NOTIFICATION_TYPES.ERROR,
+          message,
+          messageId: message ? '' : 'errorOccurredTryAgain',
+        });
       });
-      this.props.showNotification({
-        type: NOTIFICATION_TYPES.SUCCESS,
-        message: this.props.intl.formatMessage(messages.deleteWidgetSuccess),
-      });
-    });
   };
 
   getUpdatedWidgetsAfterDelete = (widgetId) => {
