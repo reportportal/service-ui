@@ -20,21 +20,22 @@ import { buildPluginCommandRQ } from 'controllers/plugins/utils';
 import { COMMAND_GET_ISSUE } from 'controllers/plugins/uiExtensions/constants';
 import { activeOrganizationIdSelector } from 'controllers/organization';
 import { projectInfoIdSelector, projectKeySelector } from 'controllers/project';
-import { getStorageItem, updateStorageItem } from 'common/utils';
+import {
+  getCachedTicket,
+  getTicketsStorageKey,
+  updateCachedTicket,
+} from 'common/utils/ticketsCache';
+import { userIdSelector } from 'controllers/user';
 import { ERROR_CANCELED, fetch } from 'common/utils/fetch';
 import { URLS } from 'common/urls';
 
 const FETCH_ISSUE_INTERVAL = 900000; // 15 min
 
-const getStorageKey = (projectKey) => `${projectKey}_tickets`;
-
-const getStoredIssueData = (projectKey, btsProject, ticketId) => {
-  const storageKey = getStorageKey(projectKey);
-  const data = getStorageItem(storageKey) || {};
-  return data[`${btsProject}_${ticketId}`] || {};
-};
+const getStoredIssueData = (userId, projectKey, btsProject, ticketId) =>
+  getCachedTicket(getTicketsStorageKey(userId, projectKey), `${btsProject}_${ticketId}`);
 
 export const useIssueInfo = (issue, pluginName) => {
+  const userId = useSelector(userIdSelector);
   const projectKey = useSelector(projectKeySelector);
   const projectId = useSelector(projectInfoIdSelector);
   const organizationId = useSelector(activeOrganizationIdSelector);
@@ -42,7 +43,7 @@ export const useIssueInfo = (issue, pluginName) => {
   const { ticketId, btsProject, btsUrl } = issue;
 
   const [state, setState] = useState(() => {
-    const stored = getStoredIssueData(projectKey, btsProject, ticketId);
+    const stored = getStoredIssueData(userId, projectKey, btsProject, ticketId);
     const timeSinceLastExecution = Date.now() - (stored.lastTime || 0);
     const needsFetch = !stored.lastTime || timeSinceLastExecution >= FETCH_ISSUE_INTERVAL;
 
@@ -58,10 +59,9 @@ export const useIssueInfo = (issue, pluginName) => {
 
   const updateIssueInStorage = useCallback(
     (data = {}) => {
-      const storageKey = getStorageKey(projectKey);
-      updateStorageItem(storageKey, { [`${btsProject}_${ticketId}`]: data });
+      updateCachedTicket(getTicketsStorageKey(userId, projectKey), `${btsProject}_${ticketId}`, data);
     },
-    [projectKey, btsProject, ticketId],
+    [userId, projectKey, btsProject, ticketId],
   );
 
   const fetchData = useCallback(() => {
