@@ -109,7 +109,7 @@ import {
 } from 'common/constants/userProfileRoutes';
 import { parseQueryToFilterEntityAction } from 'controllers/filter/actionCreators';
 import { fetchFilteredOrganizationsAction } from 'controllers/instance/organizations';
-import { fetchProjectAction } from 'controllers/project';
+import { fetchProjectAction, projectKeySelector } from 'controllers/project';
 import {
   prepareActiveOrganizationProjectsAction,
   prepareActiveOrganizationSettingsAction,
@@ -348,7 +348,10 @@ const routesMap = {
       const {
         location: { payload },
       } = getState();
-      dispatch(prepareActiveOrganizationSettingsAction(payload));
+      // Organization settings are shown on the General tab only.
+      if (payload.settingsTab === GENERAL) {
+        dispatch(prepareActiveOrganizationSettingsAction(payload));
+      }
     },
   },
 
@@ -555,9 +558,13 @@ const routesMap = {
       const {
         location: { payload },
       } = state;
-      dispatch(prepareActiveOrganizationSettingsAction(payload));
+      // Organization settings are shown on the General tab only.
+      if (payload.settingsTab === GENERAL) {
+        dispatch(prepareActiveOrganizationSettingsAction(payload));
+      }
       const projectKey = activeProjectKeySelector(state);
-      if (projectKey) {
+      // The project is already loaded when its pages were opened before (or by the project change).
+      if (projectKey && projectKey !== projectKeySelector(state)) {
         dispatch(fetchProjectAction(projectKey, true));
       }
     },
