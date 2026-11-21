@@ -29,6 +29,7 @@ import { Task } from 'redux-saga';
 import { isEmpty } from 'es-toolkit/compat';
 import { URLS } from 'common/urls';
 import { fetch, delayedPut } from 'common/utils';
+import { getApiErrorMessage } from 'common/utils/apiResponse';
 import { fetchSuccessAction, fetchErrorAction } from 'controllers/fetch';
 import { FETCH_START } from 'controllers/fetch/constants';
 import {
@@ -300,8 +301,8 @@ function* handleFolderCreation(
   } catch (error: unknown) {
     yield put(
       showErrorNotification({
-        message: (error as { error?: string })?.error,
-        messageId: null,
+        message: getApiErrorMessage(error),
+        messageId: getApiErrorMessage(error) ? '' : 'errorOccurredTryAgain',
         values: {},
       }),
     );
@@ -347,8 +348,8 @@ function* deleteFolder(action: DeleteFolderAction) {
   } catch (error: unknown) {
     yield put(
       showErrorNotification({
-        message: (error as { error?: string })?.error,
-        messageId: null,
+        message: getApiErrorMessage(error),
+        messageId: getApiErrorMessage(error) ? '' : 'errorOccurredTryAgain',
         values: {},
       }),
     );
@@ -382,8 +383,8 @@ function* renameFolder(action: RenameFolderAction) {
   } catch (error: unknown) {
     yield put(
       showErrorNotification({
-        message: (error as { error?: string })?.error,
-        messageId: null,
+        message: getApiErrorMessage(error),
+        messageId: getApiErrorMessage(error) ? '' : 'errorOccurredTryAgain',
         values: {},
       }),
     );
