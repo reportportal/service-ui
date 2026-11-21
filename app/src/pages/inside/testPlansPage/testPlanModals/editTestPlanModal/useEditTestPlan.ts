@@ -19,6 +19,7 @@ import { isNotNil } from 'es-toolkit';
 
 import { URLS } from 'common/urls';
 import { fetch } from 'common/utils';
+import { getApiErrorMessage } from 'common/utils/apiResponse';
 import { useDebouncedSpinner, useQueryParams } from 'common/hooks';
 import { projectKeySelector } from 'controllers/project';
 import { hideModalAction } from 'controllers/modal';
@@ -67,10 +68,11 @@ export const useEditTestPlan = ({ onSubmitSuccess }: UseEditTestPlanOptions = {}
       dispatch(getTestPlansAction(queryParams));
       dispatch(getMilestonesAction(queryParams));
       dispatch(getTestPlanAction({ ...queryParams, testPlanId: payload.id }));
-    } catch {
+    } catch (error) {
       dispatch(
         showErrorNotification({
-          messageId: 'errorOccurredTryAgain',
+          message: getApiErrorMessage(error),
+          messageId: getApiErrorMessage(error) ? '' : 'errorOccurredTryAgain',
         }),
       );
     } finally {
