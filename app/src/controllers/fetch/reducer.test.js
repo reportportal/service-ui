@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { FETCH_SUCCESS, INITIAL_STATE } from './constants';
+import { FETCH_ERROR, FETCH_SUCCESS, INITIAL_STATE } from './constants';
 import { fetchReducer } from './reducer';
 
 describe('fetch', () => {
@@ -73,5 +73,25 @@ describe('fetch', () => {
     ).toEqual({
       baz: 1,
     });
+  });
+
+  test('should reset to the initial state on FETCH_ERROR by default', () => {
+    const reducer = fetchReducer('test');
+    expect(
+      reducer([1, 2], { type: FETCH_ERROR, payload: {}, meta: { namespace: 'test' } }),
+    ).toEqual(INITIAL_STATE);
+  });
+
+  test('should keep loaded data on FETCH_ERROR with keepOnError', () => {
+    const reducer = fetchReducer('test', { keepOnError: true });
+    const state = reducer(INITIAL_STATE, {
+      type: FETCH_SUCCESS,
+      payload: [{ name: 'jira' }],
+      meta: { namespace: 'test' },
+    });
+    expect(reducer(state, { type: FETCH_ERROR, payload: {}, meta: { namespace: 'test' } })).toBe(
+      state,
+    );
+    expect(reducer(undefined, { type: '' })).toEqual(INITIAL_STATE);
   });
 });
