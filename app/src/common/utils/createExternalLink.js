@@ -15,13 +15,29 @@
  */
 
 import DOMPurify from 'dompurify';
+import { escapeHtml } from './escapeHtml';
 
-export const createExternalLink = (data, href, dataAutomationId, icon) =>
-  DOMPurify.sanitize(
-    `<a href=${href} target="_blank" rel="noreferrer noopener" data-automation-id=${dataAutomationId}>${data}${
-      icon || ''
-    }</a>`,
+const HTTP_URL = /^https?:\/\//i;
+
+// data and icon are app-provided markup (translation chunk text, bundled SVG icons); href may come
+// from plugin metadata, so it is scheme-checked, quoted and escaped. Non-http(s) links render as text.
+export const createExternalLink = (data, href, dataAutomationId, icon) => {
+  const content = `${data}${icon || ''}`;
+
+  if (typeof href !== 'string' || !HTTP_URL.test(href)) {
+    return DOMPurify.sanitize(`<span>${content}</span>`, { ALLOWED_ATTR: ['d', 'fill'] });
+  }
+
+  const automationIdAttribute = dataAutomationId
+    ? ` data-automation-id="${escapeHtml(dataAutomationId)}"`
+    : '';
+
+  return DOMPurify.sanitize(
+    `<a href="${escapeHtml(href)}" target="_blank" rel="noreferrer noopener"${automationIdAttribute}>${content}</a>`,
     {
       ALLOWED_ATTR: ['target', 'href', 'rel', 'data-automation-id', 'd', 'fill'],
+      // DOMPurify also tests non-URL attribute values (target, rel, d) against this pattern
+      ALLOWED_URI_REGEXP: /^(?:https?:|[^a-z]|[a-z+.-]+(?:[^a-z+.\-:]|$))/i,
     },
   );
+};

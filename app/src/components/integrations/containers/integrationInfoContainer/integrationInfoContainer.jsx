@@ -18,6 +18,7 @@ import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import Parser from 'html-react-parser';
+import { sanitizePluginHtml } from 'common/utils/sanitizePluginHtml';
 import {
   namedProjectIntegrationsSelector,
   namedGlobalIntegrationsSelector,
@@ -89,7 +90,8 @@ export class IntegrationInfoContainer extends Component {
       <Fragment>
         <InfoSection
           description={
-            PLUGIN_DESCRIPTIONS_MAP[name] || (details.description && Parser(details.description))
+            PLUGIN_DESCRIPTIONS_MAP[name] ||
+            (details.description && Parser(sanitizePluginHtml(details.description)))
           }
           title={pluginTitle}
           data={integrationType}
