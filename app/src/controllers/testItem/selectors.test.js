@@ -20,7 +20,7 @@ import {
   TEST_ITEM_PAGE,
   PROJECT_USERDEBUG_TEST_ITEM_PAGE,
 } from 'controllers/pages';
-import { logViewLinkSelector, listViewLinkSelector } from './selectors';
+import { logViewLinkSelector, listViewLinkSelector, nameLinkSelector } from './selectors';
 
 describe('testItem/log/selectors', () => {
   describe('logViewLinkSelector', () => {
@@ -157,6 +157,23 @@ describe('testItem/log/selectors', () => {
           },
         },
       });
+    });
+  });
+
+  describe('nameLinkSelector', () => {
+    test('does not modify the router payload of a dashboard page', () => {
+      const payload = { projectSlug: 'p', organizationSlug: 'o', dashboardId: 5 };
+      const state = {
+        launches: { debugMode: false },
+        location: { type: 'PROJECT_DASHBOARD_ITEM_PAGE', payload, query: {} },
+      };
+      const link = nameLinkSelector(state, {
+        itemId: 3,
+        ownLinkParams: { testItem: { launchId: 1, path: '1.2.3' }, page: TEST_ITEM_PAGE },
+      });
+
+      expect(link.payload.filterId).toBe('all');
+      expect(payload.filterId).toBeUndefined();
     });
   });
 });
