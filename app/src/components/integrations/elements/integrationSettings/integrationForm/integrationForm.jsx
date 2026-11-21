@@ -25,7 +25,8 @@ import { Button } from '@reportportal/ui-kit';
 import { PLUGINS_PAGE_EVENTS } from 'components/main/analytics/events';
 import { IntegrationAnalyticsContext } from 'components/integrations/integrationAnalyticsContext';
 import { removeNoneValues } from 'components/fields/dynamicFieldsSection/utils';
-import { trimStringValues } from 'common/utils';
+import { trimStringValues, omit } from 'common/utils';
+import { SECRET_FIELDS_KEY } from 'controllers/plugins/constants';
 import styles from './integrationForm.scss';
 
 const cx = classNames.bind(styles);
@@ -107,9 +108,11 @@ export class IntegrationForm extends Component {
     this.setState({ disabled: !this.state.disabled });
   };
 
+  // Secrets are not kept in the store after saving (see the plugins sagas), so the form is
+  // re-seeded without them as well instead of holding the plaintext in redux-form state.
   submitIntegrationSuccess = (formData) => {
     this.setState({ disabled: true });
-    this.props.initialize(formData);
+    this.props.initialize(omit(formData, this.state.metaData[SECRET_FIELDS_KEY] || []));
   };
 
   submitIntegration = (formData) => {

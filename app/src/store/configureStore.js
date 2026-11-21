@@ -24,7 +24,7 @@ import { initAuthInterceptor } from 'common/utils/fetch';
 import { LOGOUT_COMPLETE } from 'controllers/auth';
 import routesMap, { onBeforeRouteChange } from 'routes/routesMap';
 import { organizationProjectRouteMiddleware } from './organizationProjectRouteMiddleware';
-import { actionSanitizer } from './actionSanitizer';
+import { actionSanitizer, stateSanitizer } from './actionSanitizer';
 import reducers from './reducers';
 import { rootSagas } from './rootSaga';
 
@@ -40,7 +40,9 @@ const createRootReducer = (appReducer) => (state, action) => {
 };
 
 const composeEnhancers = (...args) =>
-  typeof window !== 'undefined' ? composeWithDevTools({ actionSanitizer })(...args) : compose(...args);
+  typeof window !== 'undefined'
+    ? composeWithDevTools({ actionSanitizer, stateSanitizer })(...args)
+    : compose(...args);
 
 export const configureStore = (history, preloadedState) => {
   const { reducer, middleware, enhancer, initialDispatch } = connectRoutes(history, routesMap, {
