@@ -53,7 +53,12 @@ export const setTokenAction = (token) => ({
   payload: token,
 });
 
-export const resetTokenAction = () => setTokenAction(DEFAULT_TOKEN);
+// revokedToken (the token string being logged out) lets the saga skip the localStorage write when
+// another tab has already stored a newer session.
+export const resetTokenAction = (revokedToken) => ({
+  ...setTokenAction(DEFAULT_TOKEN),
+  ...(revokedToken !== undefined && { meta: { revokedToken } }),
+});
 
 export const setLastFailedLoginTimeAction = (time) => ({
   type: SET_LAST_FAILED_LOGIN_TIME,
