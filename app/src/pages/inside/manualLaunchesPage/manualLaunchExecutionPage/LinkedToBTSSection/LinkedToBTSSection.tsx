@@ -60,6 +60,8 @@ const convertBTSTicketsToIssues = (tickets: BtsTicket[]): Issue[] =>
 
 interface LinkedToBTSSectionProps {
   execution: TestCaseExecution;
+  // False when no BTS integration is available: linked tickets stay visible, posting is hidden.
+  canAddIssues?: boolean;
 }
 
 const getTicketId = (value: unknown): string | null => {
@@ -76,13 +78,17 @@ const getTicketId = (value: unknown): string | null => {
   return typeof name === 'string' && name ? name : null;
 };
 
-export const LinkedToBTSSection: FC<LinkedToBTSSectionProps> = ({ execution }) => {
+export const LinkedToBTSSection: FC<LinkedToBTSSectionProps> = ({
+  execution,
+  canAddIssues = true,
+}) => {
   const { formatMessage } = useIntl();
   const { trackEvent } = useTracking();
   const dispatch = useDispatch();
   const projectKey = useSelector(projectKeySelector);
   const { openModal } = useBTSIssuesModal();
   const { canManageExecutions } = useUserPermissions();
+  const canPostOrLinkIssues = canManageExecutions && canAddIssues;
 
   const launchId = useManualLaunchId();
   const executionTickets = execution.btsTickets;
@@ -156,7 +162,7 @@ export const LinkedToBTSSection: FC<LinkedToBTSSectionProps> = ({ execution }) =
         </span>
         {hasBtsTickets &&
           execution.executionStatus === ExecutionStatus.FAILED &&
-          canManageExecutions && (
+          canPostOrLinkIssues && (
             <Button
               variant="text"
               iconPlace="start"
@@ -188,7 +194,7 @@ export const LinkedToBTSSection: FC<LinkedToBTSSectionProps> = ({ execution }) =
               defaultMessage: 'No linked issues yet',
             })}
           </span>
-          {execution.executionStatus === ExecutionStatus.FAILED && canManageExecutions && (
+          {execution.executionStatus === ExecutionStatus.FAILED && canPostOrLinkIssues && (
             <Button
               variant="text"
               iconPlace="start"

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { useCallback } from 'react';
+import { useCallback, useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { MetaData } from '@reportportal/ui-kit/components/table/types';
 import { VoidFn } from '@reportportal/ui-kit/common';
@@ -27,7 +27,7 @@ import { fetch } from 'common/utils';
 import { URLS } from 'common/urls';
 import { RETENTION_POLICY } from 'common/constants/retentionPolicy';
 import { projectKeySelector } from 'controllers/project';
-import { showErrorNotification } from 'controllers/notification';
+import { apiErrorNotificationAction } from 'common/manualLaunches/batchResultNotifications';
 
 import { useManualLaunchesListRowActions } from '../hooks/useManualLaunchesListRowActions';
 
@@ -57,14 +57,28 @@ export const ManualLaunchRowActions = ({
   });
   const retentionPolicy = metaData.retentionPolicy as string | undefined;
 
+  const editAbortControllerRef = useRef<AbortController | null>(null);
+
+  // Leaving the page (or the row) must not open the edit modal of a launch fetched for it.
+  useEffect(() => () => editAbortControllerRef.current?.abort(), []);
+
   const handleEdit = useCallback(() => {
     const launchId = metaData.id as number;
+
+    editAbortControllerRef.current?.abort();
+    const abortController = new AbortController();
+    editAbortControllerRef.current = abortController;
 
     const fetchAndOpenModal = async () => {
       try {
         const launchData = await fetch<ManualLaunchItem>(
           URLS.manualLaunchById(projectKey, launchId),
+          { signal: abortController.signal },
         );
+
+        if (abortController.signal.aborted) {
+          return;
+        }
 
         const modalData = {
           id: launchData.id,
@@ -77,12 +91,10 @@ export const ManualLaunchRowActions = ({
         };
 
         openEditModal(modalData);
-      } catch {
-        dispatch(
-          showErrorNotification({
-            messageId: 'errorOccurredTryAgain',
-          }),
-        );
+      } catch (error) {
+        if (!abortController.signal.aborted) {
+          dispatch(apiErrorNotificationAction(error));
+        }
       }
     };
 
