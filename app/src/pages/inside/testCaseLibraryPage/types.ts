@@ -53,9 +53,19 @@ export enum ManualScenarioType {
   TEXT = 'TEXT',
 }
 
+// A requirement in a create/update request; the server assigns the id when it is omitted.
+export type RequirementRQ = Partial<Pick<Requirement, 'id'>> & Pick<Requirement, 'value'>;
+
+// A form row: `key` is client-only (stable React key), `id` is present only for rows loaded from the server.
+export interface RequirementFormRow {
+  key: string;
+  id?: string;
+  value: string;
+}
+
 interface ManualScenarioCommon {
   executionEstimationTime: number;
-  requirements: Requirement[];
+  requirements: RequirementRQ[];
   manualScenarioType: ManualScenarioType;
   preconditions?: {
     value: string;
@@ -88,7 +98,7 @@ export interface CreateTestCaseFormData {
   description?: string;
   folder: FolderWithFullPath | string;
   priority?: TestCasePriority;
-  requirements?: Requirement[];
+  requirements?: RequirementFormRow[];
   executionEstimationTime?: number;
   manualScenarioType: ManualScenarioType;
   precondition?: string;

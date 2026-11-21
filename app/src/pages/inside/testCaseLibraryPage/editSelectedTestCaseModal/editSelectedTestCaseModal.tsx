@@ -36,6 +36,7 @@ import { TestCaseModal } from '../createTestCaseModal/testCaseModal/testCaseModa
 import { TEST_CASE_FORM_INITIAL_VALUES } from '../createTestCaseModal/constants';
 import { useTestCase } from '../hooks/useTestCase';
 import { useTestCaseFormInitialization } from '../hooks/useTestCaseFormInitialization';
+import { getRequirementIds } from '../utils/requirementsUtils';
 import {
   getEditedFieldsParam,
   getTestCaseAttachmentStatus,
@@ -75,7 +76,12 @@ const EditTestCaseModalComponent = ({
 
   const handleUpdate = useCallback(
     async (formData: CreateTestCaseFormData): Promise<void> => {
-      const response = await editTestCase(formData, testCase?.testFolder?.id);
+      const response = await editTestCase(
+        formData,
+        testCase?.testFolder?.id,
+        false,
+        getRequirementIds(initialFormValues?.requirements),
+      );
 
       if (response && testCase?.id) {
         trackEvent(
@@ -118,7 +124,7 @@ const ReduxFormComponent = reduxForm<CreateTestCaseFormData, EditTestCaseModalPr
   }),
   enableReinitialize: false,
 })(EditTestCaseModalComponent);
- 
+
 export const EditSelectedTestCaseModal = withModal(EDIT_SELECTED_TEST_CASE_MODAL_KEY)(
   ReduxFormComponent,
 );

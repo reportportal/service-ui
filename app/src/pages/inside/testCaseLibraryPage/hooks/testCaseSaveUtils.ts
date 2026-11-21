@@ -18,8 +18,7 @@ import { isEmpty } from 'es-toolkit/compat';
 
 import { fetch } from 'common/utils';
 import { URLS } from 'common/urls';
-import { uniqueId } from 'common/utils/uniqueId';
-import { Attribute, Requirement, TestCase } from 'types/testCase';
+import { Attribute } from 'types/testCase';
 
 const findExistingTag = async (projectKey: string, tag: Attribute): Promise<Attribute | null> => {
   try {
@@ -68,67 +67,4 @@ export const createNewTags = async (
   );
 
   return [...existingTags, ...createdTags.filter((tag): tag is Attribute => tag !== null)];
-};
-
-interface TestCaseRequestData {
-  manualScenario?: { requirements?: Requirement[] };
-}
-
-// The backend answers 409 (ErrorRS 409xx) when a requirement id minted in the browser already
-// belongs to another scenario.
-const isConflictError = (error: unknown) =>
-  String((error as { errorCode?: number } | null)?.errorCode ?? '').startsWith('409');
-
-const getPersistedRequirementIds = async (
-  projectKey: string,
-  testCaseId?: number,
-): Promise<Set<string>> => {
-  if (!testCaseId) {
-    return new Set();
-  }
-
-  const testCase = await fetch<TestCase>(URLS.testCaseDetails(projectKey, String(testCaseId)));
-
-  return new Set((testCase.manualScenario?.requirements ?? []).map(({ id }) => String(id)));
-};
-
-// Sends the create/update request; on a 409 it regenerates the ids of requirements that are not
-// stored for this test case yet and retries once.
-export const saveTestCaseWithRequirementRetry = async <T, D extends TestCaseRequestData>({
-  url,
-  method,
-  data,
-  projectKey,
-  testCaseId,
-}: {
-  url: string;
-  method: 'POST' | 'PUT';
-  data: D;
-  projectKey: string;
-  testCaseId?: number;
-}): Promise<T> => {
-  try {
-    return await fetch<T>(url, { method, data });
-  } catch (error) {
-    const requirements = data.manualScenario?.requirements ?? [];
-
-    if (!isConflictError(error) || isEmpty(requirements)) {
-      throw error;
-    }
-
-    const persistedIds =
-      method === 'PUT' ? await getPersistedRequirementIds(projectKey, testCaseId) : new Set();
-    const regenerated = requirements.map((requirement) =>
-      persistedIds.has(String(requirement.id)) ? requirement : { ...requirement, id: uniqueId() },
-    );
-
-    if (regenerated.every((requirement, index) => requirement === requirements[index])) {
-      throw error;
-    }
-
-    return fetch<T>(url, {
-      method,
-      data: { ...data, manualScenario: { ...data.manualScenario, requirements: regenerated } },
-    });
-  }
 };
