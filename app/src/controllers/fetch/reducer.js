@@ -66,7 +66,7 @@ export const fetchReducer =
         return data;
       }
       case FETCH_ERROR:
-        return computeInitialState(options);
+        return options.keepOnError ? state : computeInitialState(options);
       default:
         return state;
     }

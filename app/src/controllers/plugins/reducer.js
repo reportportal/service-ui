@@ -345,7 +345,11 @@ export const marketplaceLicenceReducer = (
 
 // TODO: store remote plugins separately
 export const pluginsReducer = combineReducers({
-  plugins: queueReducers(fetchReducer(NAMESPACE), updatePluginLocallyReducer),
+  // A failed refetch keeps the loaded plugins so plugin-driven UI does not disappear app-wide.
+  plugins: queueReducers(
+    fetchReducer(NAMESPACE, { keepOnError: true }),
+    updatePluginLocallyReducer,
+  ),
   publicPlugins: queueReducers(fetchReducer(PUBLIC_PLUGINS), updatePluginLocallyReducer),
   integrations: integrationsReducer,
   uiExtensions: uiExtensionsReducer,
