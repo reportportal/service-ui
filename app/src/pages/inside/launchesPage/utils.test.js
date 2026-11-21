@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { getDeleteLaunchesResult } from './utils';
+import { getDeleteLaunchesResult, getFinishedLaunchesUpdate } from './utils';
 
 describe('getDeleteLaunchesResult', () => {
   const items = [{ id: 1 }, { id: 2 }, { id: 3 }];
@@ -42,5 +42,37 @@ describe('getDeleteLaunchesResult', () => {
 
   test('treats a response without a body as a full success', () => {
     expect(getDeleteLaunchesResult(items, undefined).failedItems).toEqual([]);
+  });
+});
+
+describe('getFinishedLaunchesUpdate', () => {
+  const launches = [
+    { id: 1, status: 'IN_PROGRESS' },
+    { id: 2, status: 'IN_PROGRESS' },
+  ];
+
+  test('does not touch a launch that was not part of the request', () => {
+    const update = getFinishedLaunchesUpdate({
+      requestedIds: [1],
+      launchesWithStatus: { 1: 'PASSED' },
+      launchesInProgress: [1, 2],
+      launches,
+    });
+
+    expect(update.launchesInProgress).toEqual([2]);
+    expect(update.finishedCount).toBe(1);
+    expect(update.finishedLaunches).toHaveLength(1);
+    expect(update.finishedLaunches[0]).toMatchObject({ id: 1, status: 'PASSED' });
+  });
+
+  test('returns nothing when the requested launches are still in progress', () => {
+    expect(
+      getFinishedLaunchesUpdate({
+        requestedIds: [1],
+        launchesWithStatus: { 1: 'IN_PROGRESS' },
+        launchesInProgress: [1, 2],
+        launches,
+      }),
+    ).toBeNull();
   });
 });
