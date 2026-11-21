@@ -23,6 +23,7 @@ import { SpinningPreloader } from 'components/preloaders/spinningPreloader';
 import {
   isReducedPipeline,
   isReducedPipelineIteration,
+  isTestAutomationPipeline,
   PipelineCatalogItem,
   PipelineIterationItem,
   PipelinePageState,
@@ -30,6 +31,7 @@ import {
 import { PipelineType } from 'types/aiFactory';
 
 import { LivePipelineSettingsButton, PipelineSettingsButton } from '../../pipelineSettings';
+import { PipelineCiConnectionStatus } from '../../pipelineSettings/pipelineCiConnectionStatus';
 import { IterationCard } from '../iterationCard';
 import { ReducedIterationCard } from '../iterationCard/reducedIterationCard';
 import { PageControls } from '../pageControls/pageControls';
@@ -61,6 +63,9 @@ export const PipelineGroup = ({
 }: PipelineGroupProps) => {
   const { formatMessage } = useIntl();
   const [isOpen, setIsOpen] = useState(true);
+  const ciConnection = isReducedPipeline(pipeline) ? pipeline.ciConnection : undefined;
+  const needsCiSetup = isTestAutomationPipeline(pipeline) && ciConnection?.canStartJobs === false;
+  const emptyMessage = needsCiSetup ? messages.emptyAutomationPipeline : messages.noIterations;
 
   const renderIteration = (iteration: PipelineIterationItem) => {
     if (isReducedPipelineIteration(iteration)) {
@@ -102,7 +107,7 @@ export const PipelineGroup = ({
     if (!iterations || iterations.length === 0) {
       return (
         <p className={cx('empty')}>
-          {formatMessage(isSearching ? messages.noIterationsMatch : messages.noPipelines)}
+          {formatMessage(isSearching ? messages.noIterationsMatch : emptyMessage)}
         </p>
       );
     }
@@ -140,12 +145,17 @@ export const PipelineGroup = ({
               {formatMessage(messages.iterationsCount, { count: pipeline.iterationsCount })}
             </span>
           )}
-          {isReducedPipeline(pipeline) && pipeline.autoReady && (
-            <span className={cx('group__meta')}>
-              {pipeline.autoReady.enabled && pipeline.autoReady.threshold !== undefined
-                ? formatMessage(messages.autoReadyOn, { threshold: pipeline.autoReady.threshold })
-                : formatMessage(messages.autoReadyOff)}
-            </span>
+          {isReducedPipeline(pipeline) &&
+            pipeline.type === 'TEST_CASE_GENERATION' &&
+            pipeline.autoReady && (
+              <span className={cx('group__meta')}>
+                {pipeline.autoReady.enabled && pipeline.autoReady.threshold !== undefined
+                  ? formatMessage(messages.autoReadyOn, { threshold: pipeline.autoReady.threshold })
+                  : formatMessage(messages.autoReadyOff)}
+              </span>
+            )}
+          {ciConnection && ciConnection.state !== 'CONNECTED' && (
+            <PipelineCiConnectionStatus state={ciConnection.state} />
           )}
           {!isReducedPipeline(pipeline) &&
             pipeline.type === PipelineType.GENERATION &&

@@ -129,6 +129,8 @@ export interface ReducedIterationDetailsProps {
   onCompare?: (pipelineId: number, iterationId: number) => void;
   projectKey?: string;
   canRetryStages?: boolean;
+  canStartCiJobs?: boolean;
+  onRefreshCiConnection?: () => void;
 }
 
 type GenerationStageKind = 'create' | 'grade' | 'upload';
@@ -604,6 +606,8 @@ const buildReducedKpis = (
 interface StageRetryOptions {
   projectKey: string;
   disabled: boolean;
+  isCiUnavailable: boolean;
+  onRefreshCiConnection?: () => void;
   onRefresh: () => void;
 }
 
@@ -700,6 +704,8 @@ const renderReducedStageCards = (
                       stageId={stage.id}
                       stageLabel={stage.label}
                       disabled={stageRetry.disabled}
+                      isCiUnavailable={stageRetry.isCiUnavailable}
+                      onRefreshCiConnection={stageRetry.onRefreshCiConnection}
                       onRefresh={stageRetry.onRefresh}
                     />
                   )}
@@ -1141,6 +1147,8 @@ export const ReducedIterationDetails = ({
   onCompare,
   projectKey,
   canRetryStages = false,
+  canStartCiJobs = false,
+  onRefreshCiConnection,
 }: ReducedIterationDetailsProps) => {
   const intl = useIntl();
   const { formatMessage } = intl;
@@ -1304,7 +1312,13 @@ export const ReducedIterationDetails = ({
             setSelectedStageId,
             formatMessage,
             canRetryStages && projectKey && iteration.pipelineType === 'TEST_CASE_GENERATION'
-              ? { projectKey, disabled: isLoading, onRefresh: onRetry }
+              ? {
+                  projectKey,
+                  disabled: isLoading,
+                  isCiUnavailable: !canStartCiJobs,
+                  onRefresh: onRetry,
+                  onRefreshCiConnection,
+                }
               : undefined,
           )}
           {currentStage &&

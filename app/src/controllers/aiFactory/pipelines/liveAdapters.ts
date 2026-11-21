@@ -22,6 +22,8 @@ import {
 
 import { IterationSummaryRS, LivePipelineStatus, PipelineRS } from 'types/aiFactory';
 
+import { readPipelineCiConnection, type PipelineCiConnection } from './ciConnection';
+
 export type ReducedPipelineStatus =
   | LivePipelineStatus
   | 'RUNNING'
@@ -36,6 +38,7 @@ export interface LivePipelineRaw {
   type?: unknown;
   attributes?: unknown;
   settings?: unknown;
+  ciConnection?: unknown;
   iterationsCount?: unknown;
   latestIteration?: unknown;
   createdAt?: unknown;
@@ -140,6 +143,7 @@ export interface ReducedPipeline {
   type?: string;
   repository?: string;
   iterationsCount?: number;
+  ciConnection?: PipelineCiConnection;
   autoReady?: {
     enabled: boolean;
     threshold?: number;
@@ -931,6 +935,7 @@ const adaptPipeline = (value: unknown): ReducedPipeline | null => {
     return null;
   }
   const iterationsCount = asNonNegativeInteger(raw.iterationsCount);
+  const ciConnection = readPipelineCiConnection(raw.ciConnection);
   if (
     !attributes ||
     (raw.type !== undefined && type === undefined) ||
@@ -948,6 +953,7 @@ const adaptPipeline = (value: unknown): ReducedPipeline | null => {
     ...(type ? { type } : {}),
     ...(repository ? { repository } : {}),
     iterationsCount,
+    ...(ciConnection ? { ciConnection } : {}),
     ...adaptAutoReady(raw.settings),
   };
 };

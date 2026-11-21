@@ -320,6 +320,10 @@ export const messages = defineMessages({
     id: 'IterationDetailsPage.stageRetryConflict',
     defaultMessage: 'This stage is already running or being retried.',
   },
+  stageRetryCiUnavailable: {
+    id: 'IterationDetailsPage.stageRetryCiUnavailable',
+    defaultMessage: 'Retry is unavailable until the pipeline is connected to CI.',
+  },
   stageRetryUnconfirmed: {
     id: 'IterationDetailsPage.stageRetryUnconfirmed',
     defaultMessage: 'Retry could not be confirmed. Check the CI run and refresh the iteration.',

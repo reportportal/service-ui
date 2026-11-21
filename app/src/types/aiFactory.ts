@@ -577,7 +577,7 @@ export interface AutomationEnvironmentsRS {
 export interface AutomatePayload {
   testCaseIds: number[];
   environment: string;
-  confirmReautomate: boolean;
+  confirmReautomate?: boolean;
   confirmedTestCaseIds?: number[];
 }
 export interface AutomateAcceptedRS {

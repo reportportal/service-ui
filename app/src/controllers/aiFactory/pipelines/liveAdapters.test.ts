@@ -28,6 +28,24 @@ import {
 } from './liveAdapters';
 
 describe('live pipeline catalog adapters', () => {
+  test('keeps the server CI capability on the zero-iteration automation pipeline in list and detail', () => {
+    const pipeline = {
+      id: 8,
+      name: 'Test automation',
+      type: 'TEST_AUTOMATION',
+      iterationsCount: 0,
+      ciConnection: { state: 'CONNECTED', canStartJobs: false },
+    };
+
+    const catalog = adaptLivePipelinesPage({
+      content: [pipeline],
+      page: { number: 1, size: 100, totalElements: 1, totalPages: 1 },
+    });
+
+    expect(catalog.content).toEqual([expect.objectContaining(pipeline)]);
+    expect(adaptLivePipeline(pipeline, 8)).toEqual(expect.objectContaining(pipeline));
+  });
+
   test('preserves complete LP1 page metadata for server pagination', () => {
     const page = adaptLivePipelinesPage({
       content: [{ id: 7, name: 'Test case generation' }],

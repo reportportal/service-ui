@@ -16,9 +16,10 @@
 
 import { URLS } from 'common/urls';
 import { fetch } from 'common/utils';
+import { isCiNotConnectedError } from 'controllers/aiFactory/pipelines/ciConnection';
 
 export type NativeFixRoundStatus = 'PENDING' | 'FIXED' | 'FIXED_GRADE_FAILED' | 'FAILED';
-export type FixStartError = 'CONFLICT' | 'FAILED' | 'UNCONFIRMED';
+export type FixStartError = 'CI_NOT_CONNECTED' | 'CONFLICT' | 'FAILED' | 'UNCONFIRMED';
 
 export interface NativeFixRound {
   id: number;
@@ -119,11 +120,16 @@ export const startLiveFixRound = async (
       },
       true,
     );
-    if (response.status === 409) throw new LiveFixRoundError('CONFLICT');
+    if (response.status === 409) {
+      throw new LiveFixRoundError(
+        isCiNotConnectedError(response.data) ? 'CI_NOT_CONNECTED' : 'CONFLICT',
+      );
+    }
     if (response.status >= 400) throw new LiveFixRoundError('FAILED');
     return normalizeLiveFixRound(response.data, testCaseId);
   } catch (error: unknown) {
     if (error instanceof LiveFixRoundError) throw error;
+    if (isCiNotConnectedError(error)) throw new LiveFixRoundError('CI_NOT_CONNECTED');
     throw new LiveFixRoundError(isConflict(error) ? 'CONFLICT' : 'UNCONFIRMED');
   }
 };

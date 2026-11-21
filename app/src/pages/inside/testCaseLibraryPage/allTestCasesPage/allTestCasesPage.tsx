@@ -66,8 +66,11 @@ import {
   automationMessages,
   getNativeAutomationCandidate,
   getNativeAutomationState,
+  isAutomationDemoEnabled,
   partitionAutomationSelection,
   useAutomationModal,
+  useAutomationPipeline,
+  type AutomationPipelineGate,
 } from 'pages/inside/aiFactory/automation';
 import {
   formatSkippedDrafts,
@@ -194,6 +197,7 @@ const getBulkAutomationState = (
   isAiFactoryEnabled: boolean,
   projectKey: string,
   canAutomateTestCases: boolean,
+  automationPipeline: AutomationPipelineGate,
 ) => {
   const hasNativeSelection = isAiFactoryEnabled && selectedTestCases.some(hasNativeTestCaseData);
   const isNativeAutomationSelection =
@@ -202,11 +206,7 @@ const getBulkAutomationState = (
     selectedTestCases.every(
       (testCase) => hasNativeTestCaseData(testCase) && getNativeAutomationState(testCase),
     );
-  const isCiUnavailable =
-    isNativeAutomationSelection &&
-    selectedTestCases.some(
-      (testCase) => getNativeAutomationState(testCase)?.ciConnection !== 'CONNECTED',
-    );
+  const isCiUnavailable = isNativeAutomationSelection && !automationPipeline.pipelineId;
   const automationCandidates = isNativeAutomationSelection
     ? selectedTestCases.map((testCase) => getNativeAutomationCandidate(testCase))
     : selectedTestCases;
@@ -222,7 +222,7 @@ const getBulkAutomationState = (
     isNativeAutomationSelection,
     automationCandidates,
     automationDisabledMessage: isCiUnavailable
-      ? automationMessages.unavailableCiConnection
+      ? automationPipeline.disabledMessage ?? automationMessages.unavailableCiConnection
       : eligibilityMessage,
     isBulkAutomationEnabled: !isCiUnavailable && eligible.length > 0,
     isBulkAutomationVisible:
@@ -255,11 +255,11 @@ export const AllTestCasesPage = ({
       baseUrl: `/organizations/${organizationSlug}/projects/${projectSlug}/testLibrary${payload.testCasePageRoute ? '/' + payload.testCasePageRoute : ''}`,
     });
   const [selection, setSelection] = useState({ scope: selectionScope, rows: EMPTY_SELECTION });
-  const isSelectionInCurrentProject = selection.scope === selectionScope;
-  if (!isSelectionInCurrentProject) {
-    setSelection({ scope: selectionScope, rows: EMPTY_SELECTION });
+  let selectedRows = selection.rows;
+  if (selection.scope !== selectionScope) {
+    selectedRows = EMPTY_SELECTION;
+    setSelection({ scope: selectionScope, rows: selectedRows });
   }
-  const selectedRows = isSelectionInCurrentProject ? selection.rows : EMPTY_SELECTION;
   const folderId = useSelector(urlFolderIdSelector);
   const folders = useSelector(foldersSelector);
   const dispatch = useDispatch();
@@ -294,6 +294,12 @@ export const AllTestCasesPage = ({
       ),
     [selectedRows, testCases, isAiFactoryEnabled],
   );
+  const automationPipeline = useAutomationPipeline(
+    projectKey,
+    isAiFactoryEnabled &&
+      canAutomateTestCases &&
+      selectedTestCases.some((testCase) => Boolean(getNativeAutomationState(testCase))),
+  );
   const {
     hasNativeSelection,
     isNativeAutomationSelection,
@@ -308,8 +314,9 @@ export const AllTestCasesPage = ({
         isAiFactoryEnabled,
         projectKey,
         canAutomateTestCases,
+        automationPipeline,
       ),
-    [selectedTestCases, isAiFactoryEnabled, projectKey, canAutomateTestCases],
+    [selectedTestCases, isAiFactoryEnabled, projectKey, canAutomateTestCases, automationPipeline],
   );
   const { eligibleIds, skippedDrafts, hasOnlyDraftsSelected } = useMemo(
     () => getReadyOnlySelection(selectedRowIds, selectedTestCases, isAiFactoryEnabled),
@@ -450,9 +457,17 @@ export const AllTestCasesPage = ({
   }, [trackBulkOperation, selectedRows, openMoveTestCaseModal, selectedRowIds, onClearSelection]);
 
   const handleOpenAutomationModal = useCallback(() => {
+    if (!isBulkAutomationEnabled) return;
+    const isMock = !isNativeAutomationSelection && isAutomationDemoEnabled();
     openAutomationModal({
       testCases: automationCandidates,
-      ...(isNativeAutomationSelection ? { expectedProjectKey: projectKey } : {}),
+      ...(isNativeAutomationSelection
+        ? {
+            expectedProjectKey: projectKey,
+            pipelineId: automationPipeline.pipelineId,
+            onCiUnavailable: automationPipeline.refresh,
+          }
+        : isMock && { isMock }),
       onSuccess: ({ accepted }) => {
         const acceptedIds = new Set(accepted);
         setSelection((current) =>
@@ -465,6 +480,8 @@ export const AllTestCasesPage = ({
     });
   }, [
     automationCandidates,
+    automationPipeline,
+    isBulkAutomationEnabled,
     isNativeAutomationSelection,
     openAutomationModal,
     projectKey,

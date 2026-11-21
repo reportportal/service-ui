@@ -78,6 +78,10 @@ jest.mock('controllers/pages', () => ({
   pipelineIdSelector: () => null,
 }));
 jest.mock('hooks/useUserPermissions', () => ({ useUserPermissions: jest.fn() }));
+jest.mock('./pipelineCiConnectionSettings', () => ({
+  PipelineCiConnectionOverview: () => <div data-testid="read-only-ci-connection" />,
+  PipelineCiConnectionSettings: () => <div data-testid="editable-ci-connection" />,
+}));
 jest.mock('pages/inside/aiFactory/common/aiDetailsSectionState', () => ({
   AiDetailsSectionState: ({ children }: { children: ReactNode }) => <section>{children}</section>,
 }));
@@ -221,6 +225,8 @@ describe('live pipeline settings', () => {
       expect.objectContaining({ signal: expect.anything() }),
     );
     expect(view.find(Modal).prop('okButton')).toBeUndefined();
+    expect(view.find('[data-testid="read-only-ci-connection"]')).toHaveLength(1);
+    expect(view.find('[data-testid="editable-ci-connection"]')).toHaveLength(0);
     expect(view.find(Toggle).props()).toMatchObject({ value: true, disabled: true });
     expect(view.find(FieldText).props()).toMatchObject({ value: '84', disabled: true });
   });
@@ -228,6 +234,7 @@ describe('live pipeline settings', () => {
   test('shows Auto-Ready as off with an empty threshold when settings are absent', async () => {
     const view = await renderModal();
 
+    expect(view.find('[data-testid="editable-ci-connection"]')).toHaveLength(1);
     expect(view.find(Toggle).prop('value')).toBe(false);
     expect(view.find(FieldText).prop('value')).toBe('');
     expect(view.find(SystemMessage)).toHaveLength(0);

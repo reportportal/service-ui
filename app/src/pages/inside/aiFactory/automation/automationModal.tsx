@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-import { useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useIntl } from 'react-intl';
-import { Button, Checkbox, Dropdown, Modal, SystemMessage } from '@reportportal/ui-kit';
+import { Button, Dropdown, Modal, SystemMessage } from '@reportportal/ui-kit';
 
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { MODAL_Z_INDEX } from 'common/constants/zIndex';
@@ -27,7 +27,8 @@ import { hideModalAction } from 'controllers/modal';
 import { showSuccessNotification, showWarningNotification } from 'controllers/notification';
 import { projectKeySelector } from 'controllers/project/selectors/typed-selectors';
 import { useUserPermissions } from 'hooks/useUserPermissions';
-import { AutomationStatus, type AutomateAcceptedRS } from 'types/aiFactory';
+import { usePipelineCiConnection } from 'pages/inside/aiFactory/pipelineSettings/usePipelineCiConnection';
+import type { AutomateAcceptedRS } from 'types/aiFactory';
 
 import {
   getAutomationCandidateLabel,
@@ -45,20 +46,54 @@ export const AUTOMATION_MODAL_KEY = 'aiFactoryAutomationModal';
 export interface AutomationModalData {
   testCases: AutomationCandidate[];
   isPreview?: boolean;
+  isMock?: boolean;
+  pipelineId?: number;
   expectedProjectKey?: string;
+  onCiUnavailable?: () => void;
   onSuccess?: (response: AutomateAcceptedRS) => void;
 }
 
 const ERROR_MESSAGES: Record<AutomationRequestError, typeof messages.startFailed> = {
   ENVIRONMENTS_LOAD_FAILED: messages.loadEnvironmentsFailed,
+  ENVIRONMENTS_NOT_CONFIGURED: messages.environmentsNotConfigured,
   INVALID_ENVIRONMENTS_RESPONSE: messages.invalidEnvironmentsResponse,
-  REAUTOMATE_CONFIRMATION_REQUIRED: messages.reautomationConfirmationRequired,
+  REAUTOMATE_CONFIRMATION_REQUIRED: messages.confirmCases,
+  CI_NOT_CONNECTED: messages.unavailableCiConnection,
+  NO_ELIGIBLE_TEST_CASES: messages.noEligibleCases,
   JOB_START_FAILED: messages.startFailed,
+  START_NOT_CONFIRMED: messages.startNotConfirmed,
   INVALID_AUTOMATION_RESPONSE: messages.invalidStartResponse,
 };
 
+const BLOCKED_ERRORS = new Set<AutomationRequestError>([
+  'CI_NOT_CONNECTED',
+  'NO_ELIGIBLE_TEST_CASES',
+  'START_NOT_CONFIRMED',
+  'INVALID_AUTOMATION_RESPONSE',
+]);
+
+const RETRYABLE_ENVIRONMENT_ERRORS = new Set<AutomationRequestError>([
+  'ENVIRONMENTS_LOAD_FAILED',
+  'INVALID_ENVIRONMENTS_RESPONSE',
+  'ENVIRONMENTS_NOT_CONFIGURED',
+]);
+
+const getCiConnectionMessage = (showStatus: boolean, isLoading: boolean, failed: boolean) => {
+  if (!showStatus) return null;
+  if (isLoading) return messages.checkingCiConnection;
+  return failed ? messages.loadCiConnectionFailed : messages.unavailableCiConnection;
+};
+
 export const AutomationModalContent = ({
-  data: { testCases, isPreview = false, expectedProjectKey, onSuccess },
+  data: {
+    testCases,
+    isMock = false,
+    pipelineId,
+    isPreview = !isMock && !pipelineId,
+    expectedProjectKey,
+    onCiUnavailable,
+    onSuccess,
+  },
 }: UseModalData<AutomationModalData>) => {
   const { formatMessage } = useIntl();
   const dispatch = useDispatch();
@@ -66,99 +101,121 @@ export const AutomationModalContent = ({
   const { canAutomateTestCases } = useUserPermissions();
   const selection = useMemo(() => partitionAutomationSelection(testCases), [testCases]);
   const [environment, setEnvironment] = useState('');
-  const [confirmedCaseIdsKey, setConfirmedCaseIdsKey] = useState('');
-  const submitInProgress = useRef(false);
   const isCurrentProject = expectedProjectKey === undefined || expectedProjectKey === projectKey;
-  const canRequest = !isPreview && isCurrentProject;
-  const request = useAutomationRequest(projectKey, canRequest);
+  const canRequest = !isPreview && isCurrentProject && Boolean(pipelineId || isMock);
+  const { connection, isLoading, failed, refresh } = usePipelineCiConnection(
+    canRequest && canAutomateTestCases ? projectKey : '',
+    pipelineId,
+  );
+  const canStart = isMock || connection?.canStartJobs === true;
+  const request = useAutomationRequest(projectKey, canRequest, pipelineId);
+  useEffect(() => {
+    if (request.error === 'CI_NOT_CONNECTED' || request.error === 'JOB_START_FAILED') {
+      onCiUnavailable?.();
+      refresh();
+    }
+  }, [onCiUnavailable, refresh, request.error]);
   const environments = request.environments?.environments;
-  const selectedEnvironment = environments?.includes(environment) ? environment : environments?.[0];
-  const knownReautomationIds = selection.eligible
-    .filter(({ automation }) => automation?.status === AutomationStatus.AUTOMATED)
-    .map(({ id }) => id);
-  const reautomationRequiredIds = [
-    ...new Set([...knownReautomationIds, ...(request.reautomationRequiredIds ?? [])]),
-  ];
-  const requiresConfirmation = reautomationRequiredIds.length > 0;
-  const requiredCaseIdsKey = [...reautomationRequiredIds].sort((a, b) => a - b).join(',');
-  const isReautomationConfirmed =
-    requiresConfirmation && confirmedCaseIdsKey === requiredCaseIdsKey;
+  const selectedEnvironment = environments?.includes(environment)
+    ? environment
+    : request.environments?.default;
+  const confirmationIds = request.reautomationRequiredIds;
+  const requiresConfirmation = confirmationIds.length > 0;
+  const displayedEligible = request.error === 'NO_ELIGIBLE_TEST_CASES' ? [] : selection.eligible;
   const testCaseById = new Map(testCases.map((testCase) => [testCase.id, testCase]));
+  const labelForCase = (id: number, fallback = String(id)) => {
+    const testCase = testCaseById.get(id);
+    return testCase ? getAutomationCandidateLabel(testCase) : fallback;
+  };
+  const skipped = [
+    ...selection.skipped.map((testCase) => ({
+      id: testCase.id,
+      label: getAutomationCandidateLabel(testCase),
+      reason: testCase.reason,
+    })),
+    ...request.skipped.map(({ id, displayId, reason }) => ({
+      id,
+      label: labelForCase(id, displayId),
+      reason,
+    })),
+  ];
 
   const close = () => {
-    if (!request.isStarting) {
-      dispatch(hideModalAction());
-    }
+    if (!request.isStarting) dispatch(hideModalAction());
   };
 
-  const handleSuccess = (response: AutomateAcceptedRS) => {
+  const handleSuccess = (response: AutomateAcceptedRS & { unconfirmed?: number[] }) => {
     onSuccess?.(response);
-    if (response.skipped.length > 0) {
-      const skippedCases = response.skipped
-        .map(({ id, displayId, reason }) => {
-          const testCase = testCaseById.get(id);
-          const label = testCase ? getAutomationCandidateLabel(testCase) : displayId;
-          return `${label} — ${formatMessage(automationSkipReasonMessages[reason])}`;
-        })
-        .join('; ');
+    const values = { number: response.iteration.number, count: response.accepted.length };
+    if (response.unconfirmed?.length) {
       dispatch(
         showWarningNotification({
-          message: formatMessage(messages.startedWithSkipped, {
-            number: response.iteration.number,
-            count: response.accepted.length,
-            cases: skippedCases,
+          message: formatMessage(messages.startedWithUnconfirmedCases, {
+            ...values,
+            cases: response.unconfirmed.map((id) => labelForCase(id)).join(', '),
           }),
+        }),
+      );
+    } else if (response.skipped.length > 0) {
+      const skippedCases = response.skipped
+        .map(
+          ({ id, displayId, reason }) =>
+            `${labelForCase(id, displayId)} — ${formatMessage(automationSkipReasonMessages[reason])}`,
+        )
+        .join(', ');
+      dispatch(
+        showWarningNotification({
+          message: formatMessage(messages.startedWithSkipped, { ...values, cases: skippedCases }),
         }),
       );
     } else {
-      dispatch(
-        showSuccessNotification({
-          message: formatMessage(messages.started, {
-            number: response.iteration.number,
-            count: response.accepted.length,
-          }),
-        }),
-      );
+      dispatch(showSuccessNotification({ message: formatMessage(messages.started, values) }));
     }
     dispatch(hideModalAction());
   };
 
   const isSubmitDisabled =
     !canAutomateTestCases ||
+    !canStart ||
     request.isStarting ||
     request.isLoadingEnvironments ||
     !selectedEnvironment ||
     !selection.eligible.length ||
-    (requiresConfirmation && !isReautomationConfirmed);
+    (request.error !== null && BLOCKED_ERRORS.has(request.error));
 
   const start = async () => {
-    if (!canRequest || isSubmitDisabled || !selectedEnvironment || submitInProgress.current) return;
+    if (!canRequest || isSubmitDisabled || !selectedEnvironment) return;
 
-    submitInProgress.current = true;
-    try {
-      const response = await request.start({
-        testCaseIds: selection.eligible.map(({ id }) => id),
-        environment: selectedEnvironment,
-        confirmReautomate: isReautomationConfirmed,
-        ...(isReautomationConfirmed && { confirmedTestCaseIds: reautomationRequiredIds }),
-      });
-      if (response) handleSuccess(response);
-    } finally {
-      submitInProgress.current = false;
-    }
+    const response = await request.start({
+      testCaseIds: selection.eligible.map(({ id }) => id),
+      environment: selectedEnvironment,
+      ...(requiresConfirmation && {
+        confirmReautomate: true,
+        confirmedTestCaseIds: confirmationIds,
+      }),
+    });
+    if (response) handleSuccess(response);
   };
+
+  const connectionMessage = getCiConnectionMessage(
+    canRequest && !canStart && request.error !== 'CI_NOT_CONNECTED',
+    isLoading,
+    failed,
+  );
 
   return (
     <Modal
-      title={formatMessage(messages.title)}
+      title={formatMessage(requiresConfirmation ? messages.confirmTitle : messages.title)}
       okButton={
-        !canRequest
-          ? undefined
-          : {
-              children: formatMessage(messages.send),
+        canRequest
+          ? {
+              children: formatMessage(
+                requiresConfirmation ? messages.confirmAction : messages.send,
+              ),
               disabled: isSubmitDisabled,
               onClick: () => void start(),
             }
+          : undefined
       }
       cancelButton={{
         children: formatMessage(canRequest ? COMMON_LOCALE_KEYS.CANCEL : COMMON_LOCALE_KEYS.CLOSE),
@@ -169,23 +226,38 @@ export const AutomationModalContent = ({
       zIndex={MODAL_Z_INDEX}
     >
       <div className={cx('automation-modal')}>
-        <p className={cx('automation-modal__summary')}>
-          {formatMessage(messages.selectedSummary, {
-            selected: testCases.length,
-            eligible: selection.eligible.length,
-          })}
-        </p>
-        {selection.eligible.length > 0 && (
-          <div>
-            <h3 className={cx('automation-modal__list-title')}>
-              {formatMessage(messages.testCasesTitle)}
-            </h3>
+        {requiresConfirmation ? (
+          <div className={cx('automation-modal__confirmation')}>
+            <p className={cx('automation-modal__summary')}>
+              {formatMessage(messages.confirmCases)}
+            </p>
             <ul className={cx('automation-modal__case-list')}>
-              {selection.eligible.map((testCase) => (
-                <li key={testCase.id}>{getAutomationCandidateLabel(testCase)}</li>
+              {confirmationIds.map((id) => (
+                <li key={id}>{labelForCase(id)}</li>
               ))}
             </ul>
           </div>
+        ) : (
+          <>
+            <p className={cx('automation-modal__summary')}>
+              {formatMessage(messages.selectedSummary, {
+                selected: testCases.length,
+                eligible: displayedEligible.length,
+              })}
+            </p>
+            {displayedEligible.length > 0 && (
+              <div>
+                <h3 className={cx('automation-modal__list-title')}>
+                  {formatMessage(messages.testCasesTitle)}
+                </h3>
+                <ul className={cx('automation-modal__case-list')}>
+                  {displayedEligible.map((testCase) => (
+                    <li key={testCase.id}>{getAutomationCandidateLabel(testCase)}</li>
+                  ))}
+                </ul>
+              </div>
+            )}
+          </>
         )}
         {isPreview && (
           <SystemMessage mode="info">{formatMessage(messages.previewNotice)}</SystemMessage>
@@ -193,69 +265,61 @@ export const AutomationModalContent = ({
         {!isCurrentProject && (
           <SystemMessage mode="info">{formatMessage(messages.projectChanged)}</SystemMessage>
         )}
-        {canRequest && request.environments && (
-          <Dropdown
-            className={cx('automation-modal__environment')}
-            data-automation-id="automationEnvironment"
-            label={formatMessage(messages.environment)}
-            options={request.environments.environments.map((item) => ({
-              label: item,
-              value: item,
-            }))}
-            value={selectedEnvironment}
-            disabled={request.isStarting}
-            onChange={(value) => {
-              if (!Array.isArray(value) && typeof value === 'string') {
-                request.clearError();
-                setEnvironment(value);
-              }
-            }}
-          />
+        {connectionMessage && (
+          <SystemMessage mode={isLoading ? 'info' : 'error'}>
+            {formatMessage(connectionMessage)}
+            {failed && (
+              <Button variant="text" onClick={refresh}>
+                {formatMessage(messages.retry)}
+              </Button>
+            )}
+          </SystemMessage>
         )}
-        {selection.skipped.length > 0 && (
+        {canRequest && request.isLoadingEnvironments && (
+          <output>{formatMessage(messages.loadingEnvironments)}</output>
+        )}
+        {canRequest && request.environments && !requiresConfirmation && (
+          <div>
+            <Dropdown
+              className={cx('automation-modal__environment')}
+              data-automation-id="automationEnvironment"
+              label={formatMessage(messages.environment)}
+              options={request.environments.environments.map((item) => ({
+                label: item,
+                value: item,
+              }))}
+              value={selectedEnvironment}
+              disabled={request.isStarting}
+              onChange={(value) => {
+                if (!Array.isArray(value) && typeof value === 'string') setEnvironment(value);
+              }}
+            />
+            <p className={cx('automation-modal__hint')}>
+              {formatMessage(messages.environmentSource)}
+            </p>
+          </div>
+        )}
+        {skipped.length > 0 && (
           <div>
             <h3 className={cx('automation-modal__skipped-title')}>
               {formatMessage(messages.skippedTitle)}
             </h3>
             <ul className={cx('automation-modal__skipped-list')}>
-              {selection.skipped.map((testCase) => (
-                <li key={testCase.id}>
-                  {getAutomationCandidateLabel(testCase)}{' '}
+              {skipped.map(({ id, label, reason }) => (
+                <li key={id}>
+                  {label}{' '}
                   <span className={cx('automation-modal__skipped-reason')}>
-                    · {formatMessage(automationSkipReasonMessages[testCase.reason])}
+                    · {formatMessage(automationSkipReasonMessages[reason])}
                   </span>
                 </li>
               ))}
             </ul>
           </div>
         )}
-        {canRequest && requiresConfirmation && (
-          <div className={cx('automation-modal__confirmation')}>
-            <Checkbox
-              data-automation-id="confirmReautomation"
-              value={isReautomationConfirmed}
-              disabled={request.isStarting}
-              onChange={(event) => {
-                request.clearError();
-                setConfirmedCaseIdsKey(event.target.checked ? requiredCaseIdsKey : '');
-              }}
-            >
-              {formatMessage(messages.confirmReautomate, {
-                cases: reautomationRequiredIds
-                  .map((id) => {
-                    const testCase = testCaseById.get(id);
-                    return testCase ? getAutomationCandidateLabel(testCase) : String(id);
-                  })
-                  .join(', '),
-              })}
-            </Checkbox>
-          </div>
-        )}
-        {canRequest && request.error && (
+        {canRequest && request.error && request.error !== 'REAUTOMATE_CONFIRMATION_REQUIRED' && (
           <SystemMessage mode="error">
             {formatMessage(ERROR_MESSAGES[request.error])}
-            {(request.error === 'ENVIRONMENTS_LOAD_FAILED' ||
-              request.error === 'INVALID_ENVIRONMENTS_RESPONSE') && (
+            {RETRYABLE_ENVIRONMENT_ERRORS.has(request.error) && (
               <Button
                 variant="text"
                 onClick={request.reloadEnvironments}

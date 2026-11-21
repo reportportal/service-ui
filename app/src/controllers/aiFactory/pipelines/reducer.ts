@@ -38,6 +38,7 @@ import {
   PIPELINE_ITERATION_DETAILS_NAMESPACE,
   PIPELINE_ITERATIONS_NAMESPACE,
   PIPELINES_NAMESPACE,
+  UPDATE_PIPELINE_CI_CONNECTION,
 } from './constants';
 import {
   IterationsByPipelineId,
@@ -49,11 +50,16 @@ import {
   PipelinePageState,
   PipelinesState,
 } from './types';
-import { ReducedPipelineIterationDetail } from './liveAdapters';
+import { isReducedPipeline, ReducedPipelineIterationDetail } from './liveAdapters';
+import type { PipelineCiConnectionUpdate } from './ciConnection';
 import { PipelineCatalogTransport, PipelineDetailTransport } from './transport';
 
 interface PipelineReducerAction extends Action<string> {
-  payload?: { data?: unknown; page?: PipelinePageState };
+  payload?: {
+    data?: unknown;
+    page?: PipelinePageState;
+    ciConnectionUpdate?: PipelineCiConnectionUpdate;
+  };
   meta?: {
     namespace?: string;
     pipelineId?: number;
@@ -331,6 +337,14 @@ const comparisonErrorReducer = (state = false, action: PipelineReducerAction): b
   return action.type === FETCH_ERROR ? true : state;
 };
 
+const ciConnectionUpdateReducer = (
+  state: PipelineCiConnectionUpdate | null = null,
+  action: PipelineReducerAction,
+): PipelineCiConnectionUpdate | null =>
+  action.type === UPDATE_PIPELINE_CI_CONNECTION
+    ? (action.payload?.ciConnectionUpdate ?? null)
+    : state;
+
 const combinedReducer = combineReducers({
   data: fetchReducer(PIPELINES_NAMESPACE, { initialState: null, contentPath: 'data' }),
   isLoading: loadingReducer(PIPELINES_NAMESPACE),
@@ -341,6 +355,7 @@ const combinedReducer = combineReducers({
   catalogProjectKey: catalogProjectKeyReducer,
   catalogPage: catalogPageReducer,
   catalogRequest: catalogRequestReducer,
+  ciConnectionUpdate: ciConnectionUpdateReducer,
   iterationsByPipeline: iterationsByPipelineReducer,
   iterationPagesByPipeline: iterationPagesByPipelineReducer,
   iterationsLoadingByPipeline: iterationsLoadingByPipelineReducer,
@@ -426,7 +441,11 @@ const getPipelineDetailMeta = (action: PipelineReducerAction): PipelineDetailMet
 };
 
 const matchesDetailCatalog = (state: PipelinesState, meta: PipelineDetailMeta): boolean => {
-  if (meta.catalogTransport === 'live' && meta.catalogVersion === 0 && meta.catalogRequestId === 0) {
+  if (
+    meta.catalogTransport === 'live' &&
+    meta.catalogVersion === 0 &&
+    meta.catalogRequestId === 0
+  ) {
     return state.transport === 'live';
   }
   return (
@@ -466,6 +485,21 @@ const reducer = (
     return initialState;
   }
   const currentState = state ?? initialState;
+  const ciConnectionUpdate = action.payload?.ciConnectionUpdate;
+  if (action.type === UPDATE_PIPELINE_CI_CONNECTION && ciConnectionUpdate) {
+    return {
+      ...currentState,
+      ciConnectionUpdate: ciConnectionUpdateReducer(currentState.ciConnectionUpdate, action),
+      data:
+        currentState.catalogProjectKey === ciConnectionUpdate.projectKey
+          ? (currentState.data?.map((pipeline) =>
+              pipeline.id === ciConnectionUpdate.pipelineId && isReducedPipeline(pipeline)
+                ? { ...pipeline, ciConnection: ciConnectionUpdate.connection }
+                : pipeline,
+            ) ?? null)
+          : currentState.data,
+    };
+  }
   if (
     !isCurrentCatalogRequest(currentState, action) ||
     !isCurrentIterationRequest(currentState, action) ||

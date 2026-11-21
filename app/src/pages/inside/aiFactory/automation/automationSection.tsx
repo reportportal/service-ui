@@ -28,8 +28,13 @@ import {
   type TestCaseAiRS,
 } from 'types/aiFactory';
 
-import { getAutomationSkipReason, type AutomationCandidate } from './automationUtils';
+import {
+  getAutomationSkipReason,
+  isAutomationDemoEnabled,
+  type AutomationCandidate,
+} from './automationUtils';
 import { useAutomationModal } from './useAutomationModal';
+import type { AutomationPipelineGate } from './useAutomationPipeline';
 import { automationDisabledMessages, messages } from './messages';
 import styles from './automationSection.scss';
 
@@ -59,7 +64,7 @@ interface AutomationSectionProps {
   testCase: AutomationCandidate;
   automation?: TestCaseAiRS['automation'];
   canAutomate?: boolean;
-  isCiConnected?: boolean;
+  automationPipeline?: AutomationPipelineGate;
   expectedProjectKey?: string;
   organizationSlug?: string;
   projectSlug?: string;
@@ -303,7 +308,7 @@ export const AutomationSection = ({
   testCase,
   automation,
   canAutomate = true,
-  isCiConnected = true,
+  automationPipeline,
   expectedProjectKey,
   organizationSlug,
   projectSlug,
@@ -318,12 +323,16 @@ export const AutomationSection = ({
   const disabledReason = getAutomationSkipReason(testCase);
   const disabledMessage = disabledReason
     ? automationDisabledMessages[disabledReason]
-    : !isCiConnected && messages.unavailableCiConnection;
+    : automationPipeline?.disabledMessage;
   const hasResolvedData = Boolean(automation) || hasLoadedData || (!isLoading && !isError);
+  const isMock = !automationPipeline && isAutomationDemoEnabled();
   const openAutomationModal = () =>
     openModal({
       testCases: [testCase],
       onSuccess,
+      ...(automationPipeline?.pipelineId
+        ? { pipelineId: automationPipeline.pipelineId, onCiUnavailable: automationPipeline.refresh }
+        : isMock && { isMock }),
       ...(expectedProjectKey && { expectedProjectKey }),
     });
 

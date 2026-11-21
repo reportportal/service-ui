@@ -45,6 +45,10 @@ export const messages = defineMessages({
     id: 'AiReview.nativeFixConflict',
     defaultMessage: 'The Test Case changed or a fix is already in progress. Review the refreshed state.',
   },
+  nativeFixCiUnavailable: {
+    id: 'AiReview.nativeFixCiUnavailable',
+    defaultMessage: 'Push to agent is unavailable. Check the pipeline’s CI connection.',
+  },
   nativeFixReadError: {
     id: 'AiReview.nativeFixReadError',
     defaultMessage: 'Fix monitoring paused because its status could not be loaded. Retry monitoring to check the current fix.',

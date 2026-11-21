@@ -91,6 +91,18 @@ describe('live review contract adapter', () => {
     expect(normalizeLiveReview(review(), userId).comments[0].canDelete).toBe(false);
   });
 
+  test.each([
+    [{ id: 12, fullName: '  Reviewer Name  ', login: 'reviewer' }, { id: 12, name: 'Reviewer Name' }],
+    [{ id: 12, fullName: '  ', login: '  reviewer  ' }, { id: 12, name: 'reviewer' }],
+    [{ id: 12, fullName: 123, login: null }, { id: 12 }],
+    [{ id: 99, fullName: 'Another Reviewer', login: 'other' }, { id: 12 }],
+    [null, { id: 12 }],
+  ])('uses usable profile data only for the matching author: %j', (author, expected) => {
+    const result = normalizeLiveReview(review([{ ...nativeComment, author }]), 12);
+    expect(result.comments[0].author).toEqual(expected);
+    expect(result.comments[0].canDelete).toBe(true);
+  });
+
   test('locks deletion while the server reports a fix without inventing a round', () => {
     const result = normalizeLiveReview({ ...review(), fixInProgress: true }, 12);
 

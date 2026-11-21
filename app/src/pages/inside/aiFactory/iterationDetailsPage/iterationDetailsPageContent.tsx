@@ -69,6 +69,7 @@ import { AiStageKey, IterationRS, IterationStatus, PipelineRS, StageKey } from '
 
 import { PageHeaderWithBreadcrumbsAndActions } from '../../common/pageHeaderWithBreadcrumbsAndActions';
 import { PipelineSettingsButton } from '../pipelineSettings';
+import { usePipelineCiConnection } from '../pipelineSettings/usePipelineCiConnection';
 import { KpiTile } from './kpiTile';
 import { StageCards } from './stageCards';
 import { StagePanels } from './stagePanels';
@@ -634,10 +635,31 @@ const RichIterationDetails = ({
   );
 };
 
+const useIterationRetryConnection = (
+  projectKey: string,
+  pipelineId: number,
+  iteration: PipelineIteration | null,
+  isLiveTransport: boolean,
+) => {
+  const { canRetryPipelineStages } = useUserPermissions();
+  const canRetryStages = isLiveTransport && Boolean(canRetryPipelineStages);
+  const { connection, refresh } = usePipelineCiConnection(
+    projectKey,
+    canRetryStages && isReducedDetail(iteration) && iteration.pipelineType === 'TEST_CASE_GENERATION'
+      ? pipelineId
+      : undefined,
+  );
+
+  return {
+    canRetryStages,
+    canStartCiJobs: connection?.canStartJobs === true,
+    refreshCiConnection: refresh,
+  };
+};
+
 export const IterationDetailsPageContent = () => {
   const { formatMessage } = useIntl();
   const dispatch = useDispatch();
-  const { canRetryPipelineStages } = useUserPermissions();
   const projectName = useSelector(projectNameSelector);
   const projectKey = useSelector(projectKeySelector);
   const { organizationSlug, projectSlug } = useSelector(
@@ -677,6 +699,12 @@ export const IterationDetailsPageContent = () => {
 
   const { hasCurrentCatalog, pipelineCandidate, pipeline, isReducedCatalogPipeline } =
     resolvePipelineCatalog(pipelines, pipelineId, catalogVersion, catalogProjectKey, projectKey);
+  const { canRetryStages, canStartCiJobs, refreshCiConnection } = useIterationRetryConnection(
+    projectKey,
+    pipelineId,
+    currentIteration,
+    isLiveTransport,
+  );
   const [selectedStage, setSelectedStage] = useState<AiStageKey | null>(null);
   const hasInitializedStage = useRef(false);
   useIterationDetailRequests({
@@ -794,7 +822,9 @@ export const IterationDetailsPageContent = () => {
         onRetry={retryDetail}
         onBack={backToPipelines}
         projectKey={projectKey}
-        canRetryStages={isLiveTransport && Boolean(canRetryPipelineStages)}
+        canRetryStages={canRetryStages}
+        canStartCiJobs={canStartCiJobs}
+        onRefreshCiConnection={refreshCiConnection}
         onCompare={(selectedPipelineId, selectedIterationId) =>
           dispatch({
             type: PROJECT_PIPELINE_COMPARISON_PAGE,

@@ -9,6 +9,7 @@
  */
 
 import { act, useEffect } from 'react';
+import { AxiosError } from 'axios';
 import { mount, type ReactWrapper } from 'enzyme';
 
 import { URLS } from 'common/urls';
@@ -29,11 +30,12 @@ type HookResult = ReturnType<typeof useAutomationRequest>;
 interface HarnessProps {
   projectKey?: string;
   isEnabled?: boolean;
+  pipelineId?: number;
   onResult: (result: HookResult) => void;
 }
 
 const fetchMock = fetch as jest.MockedFunction<
-  (url: string, params?: Record<string, unknown>) => Promise<unknown>
+  (url: string, params?: Record<string, unknown>, isRawResponse?: boolean) => Promise<unknown>
 >;
 let result: HookResult;
 
@@ -48,8 +50,8 @@ const createDeferred = <T,>() => {
   return { promise, resolve, reject };
 };
 
-const Harness = ({ projectKey = 'demo', isEnabled = true, onResult }: HarnessProps) => {
-  const request = useAutomationRequest(projectKey, isEnabled);
+const Harness = ({ projectKey = 'demo', isEnabled = true, pipelineId = 2, onResult }: HarnessProps) => {
+  const request = useAutomationRequest(projectKey, isEnabled, pipelineId);
 
   useEffect(() => onResult(request), [onResult, request]);
 
@@ -60,6 +62,7 @@ const captureResult = (nextResult: HookResult) => {
   result = nextResult;
 };
 
+const reply = (status: number, data: unknown) => ({ status, data });
 const environments = { environments: ['beta5', 'qa'], default: 'beta5' };
 const accepted = {
   iteration: { pipelineId: 2, iterationId: 201, number: 1 },
@@ -69,7 +72,6 @@ const accepted = {
 const payload: AutomatePayload = {
   testCaseIds: [42],
   environment: 'beta5',
-  confirmReautomate: false,
 };
 
 describe('useAutomationRequest', () => {
@@ -138,13 +140,14 @@ describe('useAutomationRequest', () => {
   });
 
   test('loads and normalizes A1 environments', async () => {
-    fetchMock.mockResolvedValue(environments);
+    fetchMock.mockResolvedValue(reply(200, environments));
 
     await renderHook();
 
     expect(fetchMock).toHaveBeenCalledWith(
       URLS.tmsAutomationEnvironments('demo'),
-      expect.objectContaining({ abort: expect.any(Function) }),
+      expect.objectContaining({ signal: expect.any(AbortSignal) }),
+      true,
     );
     expect(result).toMatchObject({
       environments,
@@ -155,9 +158,9 @@ describe('useAutomationRequest', () => {
 
   test('keeps malformed A1 and transport failures inline and supports reload', async () => {
     fetchMock
-      .mockResolvedValueOnce({ environments: [], default: '' })
+      .mockResolvedValueOnce(reply(200, { environments: [], default: '' }))
       .mockRejectedValueOnce(new Error('502 Bad Gateway'))
-      .mockResolvedValueOnce(environments);
+      .mockResolvedValueOnce(reply(200, environments));
 
     await renderHook();
     expect(result.error).toBe('INVALID_ENVIRONMENTS_RESPONSE');
@@ -177,7 +180,7 @@ describe('useAutomationRequest', () => {
   });
 
   test('posts the exact A2 payload and returns a normalized response', async () => {
-    fetchMock.mockResolvedValueOnce(environments).mockResolvedValueOnce(accepted);
+    fetchMock.mockResolvedValueOnce(reply(200, environments)).mockResolvedValueOnce(reply(202, accepted));
     await renderHook();
 
     let response;
@@ -185,22 +188,22 @@ describe('useAutomationRequest', () => {
       response = await result.start(payload);
     });
 
-    expect(fetchMock).toHaveBeenLastCalledWith(URLS.tmsAutomation('demo'), {
-      method: 'POST',
-      data: payload,
-      abort: expect.any(Function),
-    });
+    expect(fetchMock).toHaveBeenLastCalledWith(
+      URLS.tmsAutomation('demo'),
+      expect.objectContaining({ method: 'POST', data: payload, signal: expect.any(AbortSignal) }),
+      true,
+    );
     expect(response).toEqual(accepted);
     expect(result).toMatchObject({ isStarting: false, error: null });
   });
 
   test('maps the A2 confirmation conflict separately from generic failures', async () => {
     fetchMock
-      .mockResolvedValueOnce(environments)
-      .mockRejectedValueOnce({
+      .mockResolvedValueOnce(reply(200, environments))
+      .mockResolvedValueOnce(reply(409, {
         reason: 'ALREADY_AUTOMATED_CONFIRM_REQUIRED',
         testCaseIds: [42],
-      })
+      }))
       .mockRejectedValueOnce(new Error('502 Bad Gateway'));
     await renderHook();
 
@@ -214,13 +217,13 @@ describe('useAutomationRequest', () => {
       expect(await result.start(payload)).toBeNull();
     });
     expect(result.error).toBe('JOB_START_FAILED');
-    expect(result.reautomationRequiredIds).toEqual([42]);
+    expect(result.reautomationRequiredIds).toEqual([]);
   });
 
-  test('rejects malformed A2 and can clear its inline error', async () => {
+  test('rejects malformed A2 without treating it as an accepted launch', async () => {
     fetchMock
-      .mockResolvedValueOnce(environments)
-      .mockResolvedValueOnce({ ...accepted, accepted: [] });
+      .mockResolvedValueOnce(reply(200, environments))
+      .mockResolvedValueOnce(reply(202, { ...accepted, accepted: [] }));
     await renderHook();
 
     await act(async () => {
@@ -228,8 +231,6 @@ describe('useAutomationRequest', () => {
     });
     expect(result.error).toBe('INVALID_AUTOMATION_RESPONSE');
 
-    act(() => result.clearError());
-    expect(result.error).toBeNull();
   });
 
   test.each([
@@ -238,7 +239,7 @@ describe('useAutomationRequest', () => {
     { reason: 'ALREADY_AUTOMATED_CONFIRM_REQUIRED', testCaseIds: [99] },
     { reason: 'ALREADY_AUTOMATED_CONFIRM_REQUIRED', testCaseIds: [42, 42] },
   ])('rejects a malformed 409 confirmation contract %#', async (error) => {
-    fetchMock.mockResolvedValueOnce(environments).mockRejectedValueOnce(error);
+    fetchMock.mockResolvedValueOnce(reply(200, environments)).mockResolvedValueOnce(reply(409, error));
     await renderHook();
 
     await act(async () => {
@@ -250,7 +251,7 @@ describe('useAutomationRequest', () => {
   });
 
   test('blocks A2 when the selected environment is not in the active A1 response', async () => {
-    fetchMock.mockResolvedValueOnce(environments);
+    fetchMock.mockResolvedValueOnce(reply(200, environments));
     await renderHook();
 
     await act(async () => {
@@ -262,14 +263,14 @@ describe('useAutomationRequest', () => {
   });
 
   test('clears A1 state and confirmation IDs when the project changes or reloads', async () => {
-    const replacementA1 = createDeferred<typeof environments>();
-    const reloadA1 = createDeferred<typeof environments>();
+    const replacementA1 = createDeferred<ReturnType<typeof reply>>();
+    const reloadA1 = createDeferred<ReturnType<typeof reply>>();
     fetchMock
-      .mockResolvedValueOnce(environments)
-      .mockRejectedValueOnce({
+      .mockResolvedValueOnce(reply(200, environments))
+      .mockResolvedValueOnce(reply(409, {
         reason: 'ALREADY_AUTOMATED_CONFIRM_REQUIRED',
         testCaseIds: [42],
-      })
+      }))
       .mockReturnValueOnce(replacementA1.promise)
       .mockReturnValueOnce(reloadA1.promise);
     await renderHook();
@@ -286,7 +287,7 @@ describe('useAutomationRequest', () => {
       reautomationRequiredIds: [],
     });
     await act(async () => {
-      replacementA1.resolve(environments);
+      replacementA1.resolve(reply(200, environments));
       await replacementA1.promise;
     });
 
@@ -297,28 +298,28 @@ describe('useAutomationRequest', () => {
       reautomationRequiredIds: [],
     });
     await act(async () => {
-      reloadA1.resolve(environments);
+      reloadA1.resolve(reply(200, environments));
       await reloadA1.promise;
     });
   });
 
   test('ignores stale overlapping A1 results and their finally handlers', async () => {
-    const first = createDeferred<typeof environments>();
-    const second = createDeferred<typeof environments>();
-    const firstCancel = jest.fn();
+    const first = createDeferred<ReturnType<typeof reply>>();
+    const second = createDeferred<ReturnType<typeof reply>>();
+    let firstSignal: AbortSignal | undefined;
     const secondEnvironments = { environments: ['dev5'], default: 'dev5' };
     fetchMock
       .mockImplementationOnce((_url, params) => {
-        (params?.abort as ((cancel: () => void) => void) | undefined)?.(firstCancel);
+        firstSignal = params?.signal as AbortSignal | undefined;
         return first.promise;
       })
       .mockReturnValueOnce(second.promise);
     wrapper = mount(<Harness projectKey="demo" onResult={captureResult} />);
 
     act(() => wrapper?.setProps({ projectKey: 'other' }));
-    expect(firstCancel).toHaveBeenCalled();
+    expect(firstSignal?.aborted).toBe(true);
     await act(async () => {
-      second.resolve(secondEnvironments);
+      second.resolve(reply(200, secondEnvironments));
       await second.promise;
     });
     expect(result).toMatchObject({
@@ -327,7 +328,7 @@ describe('useAutomationRequest', () => {
     });
 
     await act(async () => {
-      first.resolve(environments);
+      first.resolve(reply(200, environments));
       await first.promise;
     });
     expect(result).toMatchObject({
@@ -336,53 +337,95 @@ describe('useAutomationRequest', () => {
     });
   });
 
-  test('aborts and ignores stale overlapping A2 responses', async () => {
-    const first = createDeferred<typeof accepted>();
-    const second = createDeferred<typeof accepted>();
-    const firstCancel = jest.fn();
-    const secondAccepted = {
-      ...accepted,
-      iteration: { ...accepted.iteration, iterationId: 202, number: 2 },
-    };
-    fetchMock
-      .mockResolvedValueOnce(environments)
-      .mockImplementationOnce((_url, params) => {
-        (params?.abort as ((cancel: () => void) => void) | undefined)?.(firstCancel);
-        return first.promise;
-      })
-      .mockReturnValueOnce(second.promise);
+  test('sends only one POST when submission is invoked twice during the same request', async () => {
+    const response = createDeferred<ReturnType<typeof reply>>();
+    fetchMock.mockResolvedValueOnce(reply(200, environments)).mockReturnValueOnce(response.promise);
     await renderHook();
 
-    let firstResultPromise!: Promise<unknown>;
-    let secondResultPromise!: Promise<unknown>;
-    act(() => {
-      firstResultPromise = result.start(payload);
-      secondResultPromise = result.start(payload);
-    });
-    expect(firstCancel).toHaveBeenCalled();
     await act(async () => {
-      first.resolve(accepted);
-      second.resolve(secondAccepted);
-      await Promise.all([first.promise, second.promise]);
+      const first = result.start(payload);
+      await expect(result.start(payload)).resolves.toBeNull();
+      response.resolve(reply(202, accepted));
+      await expect(first).resolves.toEqual(accepted);
     });
 
-    await expect(firstResultPromise).resolves.toBeNull();
-    await expect(secondResultPromise).resolves.toEqual(secondAccepted);
-    expect(result).toMatchObject({ isStarting: false, error: null });
+    expect(fetchMock).toHaveBeenCalledTimes(2);
+  });
+
+  test('reports the environment configuration requirement on HTTP 400', async () => {
+    fetchMock.mockResolvedValueOnce(reply(400, { message: 'No environments' }));
+
+    await renderHook();
+
+    expect(result.environments).toBeNull();
+    expect(result.error).toBe('ENVIRONMENTS_NOT_CONFIGURED');
+  });
+
+  test.each([
+    [{ errorCode: 40916 }, 'CI_NOT_CONNECTED', []],
+    [
+      { reason: 'NO_ELIGIBLE_TEST_CASES', skipped: [{ id: 42, displayId: 'TC42', reason: 'FIX_RUNNING' }] },
+      'NO_ELIGIBLE_TEST_CASES',
+      [{ id: 42, displayId: 'TC42', reason: 'FIX_RUNNING' }],
+    ],
+  ])('maps the distinct conflict body %j', async (body, error, skipped) => {
+    fetchMock.mockResolvedValueOnce(reply(200, environments)).mockResolvedValueOnce(reply(409, body));
+    await renderHook();
+
+    await act(async () => expect(await result.start(payload)).toBeNull());
+    expect(result).toMatchObject({ error, skipped });
+  });
+
+  test('recovers a lost POST response by reading the case and never resends the job', async () => {
+    fetchMock
+      .mockResolvedValueOnce(reply(200, environments))
+      .mockRejectedValueOnce(new AxiosError('Network error', 'ERR_NETWORK'))
+      .mockResolvedValueOnce({
+        id: 42,
+        automationState: {
+          status: 'IN_PROGRESS',
+          ciConnection: 'CONNECTED',
+          fixInProgress: false,
+          scenarioChangedAfterAutomation: false,
+          iteration: accepted.iteration,
+        },
+      });
+    await renderHook();
+
+    await act(async () => expect(await result.start(payload)).toEqual(accepted));
+
+    expect(fetchMock).toHaveBeenCalledTimes(3);
+    expect(fetchMock).toHaveBeenLastCalledWith(
+      URLS.testCaseDetails('demo', 42),
+      expect.objectContaining({ signal: expect.any(AbortSignal) }),
+    );
+  });
+
+  test('keeps a lost POST outcome unconfirmed when its case cannot verify the iteration', async () => {
+    fetchMock
+      .mockResolvedValueOnce(reply(200, environments))
+      .mockRejectedValueOnce(new AxiosError('Network error', 'ERR_NETWORK'))
+      .mockResolvedValueOnce({ id: 42 });
+    await renderHook();
+
+    await act(async () => expect(await result.start(payload)).toBeNull());
+
+    expect(fetchMock).toHaveBeenCalledTimes(3);
+    expect(result.error).toBe('START_NOT_CONFIRMED');
   });
 
   test.each(['unmount', 'project replacement'] as const)(
     'aborts and ignores an A2 response after %s',
     async (transition) => {
-      const startRequest = createDeferred<typeof accepted>();
-      const startCancel = jest.fn();
+      const startRequest = createDeferred<ReturnType<typeof reply>>();
+      let startSignal: AbortSignal | undefined;
       fetchMock
-        .mockResolvedValueOnce(environments)
+        .mockResolvedValueOnce(reply(200, environments))
         .mockImplementationOnce((_url, params) => {
-          (params?.abort as ((cancel: () => void) => void) | undefined)?.(startCancel);
+          startSignal = params?.signal as AbortSignal | undefined;
           return startRequest.promise;
         })
-        .mockResolvedValueOnce(environments);
+        .mockResolvedValueOnce(reply(200, environments));
       await renderHook();
 
       let startResult!: Promise<unknown>;
@@ -397,13 +440,14 @@ describe('useAutomationRequest', () => {
       if (transition === 'project replacement') {
         expect(fetchMock).toHaveBeenCalledWith(
           URLS.tmsAutomationEnvironments('other'),
-          expect.objectContaining({ abort: expect.any(Function) }),
+          expect.objectContaining({ signal: expect.any(AbortSignal) }),
+      true,
         );
       }
-      expect(startCancel).toHaveBeenCalled();
+      expect(startSignal?.aborted).toBe(true);
 
       await act(async () => {
-        startRequest.resolve(accepted);
+        startRequest.resolve(reply(202, accepted));
         await startRequest.promise;
       });
       await expect(startResult).resolves.toBeNull();

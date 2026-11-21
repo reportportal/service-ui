@@ -40,6 +40,7 @@ import {
   deleteLiveReviewComment,
   discardLiveReviewComments,
   pushLiveReviewToAgent,
+  reloadLiveReview,
 } from 'pages/inside/aiFactory/review/liveReviewCommands';
 
 export interface LiveReviewCommentsLoadState {
@@ -55,6 +56,7 @@ export interface LiveReviewCommentsLoadState {
   fixStartError?: FixStartError;
   fixCompleted?: boolean;
   canPush?: boolean;
+  isPushCiUnavailable?: boolean;
   pushToAgent?: () => Promise<boolean>;
   retryFixMonitoring?: () => void;
   isLoaded: boolean;
@@ -72,6 +74,8 @@ interface LiveReviewCommentsOptions {
   canApprove?: boolean;
   versionId?: number;
   allowPush?: boolean;
+  canStartPush?: boolean;
+  refreshPushConnection?: () => void;
   onFixCompleted?: () => void;
   onReviewChanged?: () => void;
 }
@@ -154,7 +158,13 @@ export const useLiveReviewComments = (
   testCaseId: number,
   isEnabled: boolean,
   {
-    canApprove = false, versionId, allowPush = true, onFixCompleted, onReviewChanged,
+    canApprove = false,
+    versionId,
+    allowPush = true,
+    canStartPush = false,
+    refreshPushConnection,
+    onFixCompleted,
+    onReviewChanged,
   }: LiveReviewCommentsOptions = {},
 ): LiveReviewCommentsLoadState => {
   const { canReviewAiTestCases } = useUserPermissions();
@@ -193,7 +203,8 @@ export const useLiveReviewComments = (
     updateReviewCallbacks(scope, onFixCompleted, onReviewChanged);
   }, [scope, onFixCompleted, onReviewChanged]);
   updateScopePermissions(scope, canReviewAiTestCases,
-    canApprove && canReviewAiTestCases && isResourceEnabled, currentUserId, allowPush, canApprove);
+    canApprove && canReviewAiTestCases && isResourceEnabled,
+    currentUserId, allowPush && canStartPush, canApprove);
   const epoch = scope.commandGeneration;
   const approvalEpoch = scope.approvalGeneration;
 
@@ -202,7 +213,10 @@ export const useLiveReviewComments = (
     return activateReviewScope(scope);
   }, [isResourceEnabled, scope]);
 
-  const reload = useCallback(() => { void refreshLiveReview(scope); }, [scope]);
+  const reload = useCallback(
+    () => reloadLiveReview(scope, refreshPushConnection),
+    [refreshPushConnection, scope],
+  );
   const addComment = useCallback((payload: ReviewCommentPayload) =>
     addLiveReviewComment(scope, epoch, payload), [epoch, scope]);
   const deleteComment = useCallback((id: number) =>
@@ -212,11 +226,12 @@ export const useLiveReviewComments = (
     approveLiveReview(scope, epoch, approvalEpoch), [approvalEpoch, epoch, scope]);
   const pushToAgent = useCallback(() => {
     if (canPushLiveReview(scope)) setCompletion(undefined);
-    return pushLiveReviewToAgent(scope, epoch);
-  }, [epoch, scope]);
+    return pushLiveReviewToAgent(scope, epoch, refreshPushConnection);
+  }, [epoch, refreshPushConnection, scope]);
   const retryFixMonitoring = useCallback(() => retryLiveFixObservation(scope), [scope]);
   const isCurrentState = isResourceEnabled && state.scope === scope;
-  const data = isCurrentState ? state.data : undefined;
+  const currentState = isCurrentState ? state : undefined;
+  const data = currentState?.data;
   const fixing = isCurrentState && isFixInProgress(scope);
   const completed = completion?.key === feedbackKey && !fixing;
   return {
@@ -224,14 +239,17 @@ export const useLiveReviewComments = (
     pushToAgent, retryFixMonitoring,
     isApproved: isCurrentState && scope.isApproved,
     canPush: isCurrentState && canPushLiveReview(scope),
+    isPushCiUnavailable:
+      allowPush &&
+      (!canStartPush || (isCurrentState && scope.snapshot.fixStartError === 'CI_NOT_CONNECTED')),
     comments: data?.comments ?? EMPTY_COMMENTS,
     unsentCount: data?.unsentCount ?? 0,
     fixInProgress: fixing,
     ...getFixRoundFeedback(state, isCurrentState, completed, completion?.round),
-    isLoaded: Boolean(data) && !state.isError && isCurrentState,
-    isLoading: isResourceEnabled && (!isCurrentState || state.isLoading),
-    isError: isCurrentState && state.isError,
-    isMutating: isCurrentState && state.isMutating,
-    isMutationError: isCurrentState && state.isMutationError,
+    isLoaded: Boolean(data) && !currentState?.isError,
+    isLoading: isResourceEnabled && (currentState?.isLoading ?? true),
+    isError: currentState?.isError ?? false,
+    isMutating: currentState?.isMutating ?? false,
+    isMutationError: currentState?.isMutationError ?? false,
   };
 };

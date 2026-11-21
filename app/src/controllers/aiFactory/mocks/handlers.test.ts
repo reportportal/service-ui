@@ -290,7 +290,6 @@ describe('automation (A1-A2)', () => {
       { testCaseIds: [1005], environment: 'unknown', confirmReautomate: false },
       'unknown environment',
     ],
-    [{ testCaseIds: [1005], environment: 'beta5' }, 'missing confirmation'],
   ])('A2 rejects an invalid payload with %s (%s)', async (payload, _description) => {
     const response = await http.post(URLS.tmsAutomation(PROJECT), payload, {
       validateStatus: () => true,
@@ -307,7 +306,6 @@ describe('automation (A1-A2)', () => {
     const payload = {
       testCaseIds: [1001],
       environment: 'qa',
-      confirmReautomate: false,
     };
     const conflictResponse = await http.post(URLS.tmsAutomation(PROJECT), payload, {
       validateStatus: () => true,
@@ -322,6 +320,7 @@ describe('automation (A1-A2)', () => {
     const confirmed = await http.post<AutomateAcceptedRS>(URLS.tmsAutomation(PROJECT), {
       ...payload,
       confirmReautomate: true,
+      confirmedTestCaseIds: payload.testCaseIds,
     });
     expect(confirmed.status).toBe(202);
     expect(confirmed.data.accepted).toEqual([1001]);
@@ -371,10 +370,10 @@ describe('automation (A1-A2)', () => {
       { validateStatus: () => true },
     );
 
-    expect(response.status).toBe(400);
-    expect(response.data).toEqual({
-      errorCode: 40001,
-      message: 'No Ready Test Cases to automate',
+    expect(response.status).toBe(409);
+    expect(response.data).toMatchObject({
+      reason: 'NO_ELIGIBLE_TEST_CASES',
+      skipped: [expect.objectContaining({ id: 1006 }), expect.objectContaining({ id: 1007 })],
     });
   });
 
