@@ -188,7 +188,6 @@ export const useTestCaseMutations = (testCaseId?: number) => {
       showSpinner,
       hideSpinner,
       createNewTags,
-      projectKey,
       dispatch,
       completeFolderDestination,
       showSuccessNotification,
