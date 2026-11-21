@@ -25,6 +25,7 @@ import { TestCase } from 'types/testCase';
 
 import { usePanelActions, usePanelState } from '../testLibraryPanelContext';
 import { TestCasesResponse, fetchAllTestCases, isFolderFullyCached } from '../utils';
+import { TEST_CASES_FETCH_PAGE_SIZE } from '../utils/fetchAllTestCases';
 import { mergeFolderPage } from '../utils/mergeFolderPage';
 
 interface UseFolderTestCasesProps {
@@ -91,7 +92,7 @@ export const useFolderTestCases = ({ folderId, isOpen, testsCount }: UseFolderTe
                 'filter.eq.testPlanId': testPlanId,
                 'filter.eq.testFolderId': folderId,
                 offset: 0,
-                limit: 200,
+                limit: TEST_CASES_FETCH_PAGE_SIZE,
               }).catch((): null => null)
             : Promise.resolve(null);
 
