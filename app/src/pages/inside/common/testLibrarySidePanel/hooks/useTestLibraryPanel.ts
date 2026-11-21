@@ -112,7 +112,12 @@ export const useTestLibraryPanel = ({
   }, [isOpen]);
 
   const updateFolderTestCases = useCallback(
-    (folderId: number, newTestCases: Partial<FolderTestCases>) => {
+    (
+      folderId: number,
+      newTestCases:
+        | Partial<FolderTestCases>
+        | ((current: FolderTestCases) => Partial<FolderTestCases>),
+    ) => {
       if (!isOpenRef.current) {
         return;
       }
@@ -129,7 +134,7 @@ export const useTestLibraryPanel = ({
 
         updatedMap.set(folderId, {
           ...currentState,
-          ...newTestCases,
+          ...(typeof newTestCases === 'function' ? newTestCases(currentState) : newTestCases),
         });
 
         return updatedMap;

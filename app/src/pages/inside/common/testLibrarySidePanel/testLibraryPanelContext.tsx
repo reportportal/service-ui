@@ -41,9 +41,12 @@ export interface PanelActionsContextValue {
   isOpenRef: RefObject<boolean>;
   setScrollElement: (element: HTMLElement | null) => void;
   toggleTestCasesSelection: (testCaseIds: number[]) => void;
+  // Accepts an updater to merge with the latest entry instead of a value captured earlier.
   updateFolderTestCases: (
     folderId: number,
-    updatedFolderTestCases: Partial<FolderTestCases>,
+    updatedFolderTestCases:
+      | Partial<FolderTestCases>
+      | ((current: FolderTestCases) => Partial<FolderTestCases>),
   ) => void;
   toggleFolder: (folder: TransformedFolder) => void;
   batchSelectFolder: (folder: TransformedFolder) => Promise<void>;
