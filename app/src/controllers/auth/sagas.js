@@ -24,6 +24,7 @@ import {
   setStorageItem,
   updateStorageItem,
 } from 'common/utils/storageUtils';
+import { clearTicketsCache } from 'common/utils/ticketsCache';
 import { URLS } from 'common/urls';
 import { APPLICATION_SETTINGS } from 'common/constants/localStorageKeys';
 import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
@@ -130,6 +131,8 @@ export function* handleLogout({ payload }) {
   yield call(logoutOnServer, payload);
   // late responses of the finished session must not repopulate the store
   yield call(abortPendingRequests);
+  // cached BTS ticket details belong to the finished session
+  clearTicketsCache();
   if (isStoredToken(token)) {
     removeStorageItem(ACTIVITY_TIMESTAMP);
   }

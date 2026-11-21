@@ -62,6 +62,15 @@ describe('auth sagas: multi-tab token handling', () => {
       expect(getStorageItem(ACTIVITY_TIMESTAMP)).toBeNull();
     });
 
+    it('clears the cached BTS tickets', () => {
+      setStorageItem(TOKEN_KEY, OLD_TOKEN);
+      setStorageItem('5_proj_tickets', { a: {} });
+      const gen = runLogoutUntilReset();
+      gen.next();
+
+      expect(getStorageItem('5_proj_tickets')).toBeNull();
+    });
+
     it('keeps the activity timestamp of a newer session stored by another tab', () => {
       setStorageItem(TOKEN_KEY, NEW_TOKEN);
       setStorageItem(ACTIVITY_TIMESTAMP, 123);

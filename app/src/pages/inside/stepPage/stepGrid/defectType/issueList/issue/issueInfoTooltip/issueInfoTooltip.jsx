@@ -24,7 +24,12 @@ import { buildPluginCommandRQ } from 'controllers/plugins/utils';
 import { COMMAND_GET_ISSUE } from 'controllers/plugins/uiExtensions/constants';
 import { activeOrganizationIdSelector } from 'controllers/organization';
 import { projectInfoIdSelector, projectKeySelector } from 'controllers/project';
-import { getStorageItem, updateStorageItem } from 'common/utils';
+import {
+  getCachedTicket,
+  getTicketsStorageKey,
+  updateCachedTicket,
+} from 'common/utils/ticketsCache';
+import { userIdSelector } from 'controllers/user';
 import { ERROR_CANCELED, fetch } from 'common/utils/fetch';
 import { DottedPreloader } from 'components/preloaders/dottedPreloader';
 import styles from './issueInfoTooltip.scss';
@@ -53,11 +58,11 @@ const messages = defineMessages({
 });
 
 const isResolved = (status) => status.toUpperCase() === STATUS_RESOLVED;
-const getStorageKey = (projectKey) => `${projectKey}_tickets`;
 
 const FETCH_ISSUE_INTERVAL = 900000; // min request interval = 15 min
 
 @connect((state) => ({
+  userId: userIdSelector(state),
   projectKey: projectKeySelector(state),
   projectId: projectInfoIdSelector(state),
   organizationId: activeOrganizationIdSelector(state),
@@ -73,10 +78,12 @@ export class IssueInfoTooltip extends Component {
     btsUrl: PropTypes.string.isRequired,
     pluginName: PropTypes.string.isRequired,
     projectKey: PropTypes.string.isRequired,
+    userId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
   };
 
   static defaultProps = {
     organizationId: null,
+    userId: null,
   };
 
   constructor(props) {
@@ -113,18 +120,15 @@ export class IssueInfoTooltip extends Component {
   };
 
   getIssueFromStorage = () => {
-    const { projectKey, ticketId, btsProject } = this.props;
-    const storageKey = getStorageKey(projectKey);
+    const { userId, projectKey, ticketId, btsProject } = this.props;
 
-    const data = getStorageItem(storageKey) || {};
-    return data[`${btsProject}_${ticketId}`] || {};
+    return getCachedTicket(getTicketsStorageKey(userId, projectKey), `${btsProject}_${ticketId}`);
   };
 
   updateIssueInStorage = (data = {}) => {
-    const { projectKey, btsProject, ticketId } = this.props;
-    const storageKey = getStorageKey(projectKey);
+    const { userId, projectKey, btsProject, ticketId } = this.props;
 
-    updateStorageItem(storageKey, { [`${btsProject}_${ticketId}`]: data });
+    updateCachedTicket(getTicketsStorageKey(userId, projectKey), `${btsProject}_${ticketId}`, data);
   };
 
   fetchData = () => {
