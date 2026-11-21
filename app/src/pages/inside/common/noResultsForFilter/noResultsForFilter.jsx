@@ -15,7 +15,8 @@
  */
 
 import Parser from 'html-react-parser';
-import DOMPurify from 'dompurify';
+import { sanitizeTemplateHtml } from 'common/utils/sanitizeTemplateHtml';
+import { escapeHtml } from 'common/utils/escapeHtml';
 import PropTypes from 'prop-types';
 import { injectIntl, defineMessages } from 'react-intl';
 import classNames from 'classnames/bind';
@@ -36,9 +37,9 @@ export const NoResultsForFilter = injectIntl(
       <p className={cx('no-results-for-filter-text')}>
         <i className={cx('no-results-for-filter-icon')}>{Parser(ErrorIcon)}</i>
         {Parser(
-          DOMPurify.sanitize(
+          sanitizeTemplateHtml(
             formatMessage(notFoundMessage, {
-              filter: `<span className=${cx('no-results-for-filter-expression')}>${filter}</span>`,
+              filter: `<span>${escapeHtml(filter)}</span>`,
             }),
           ),
         )}
