@@ -62,6 +62,13 @@ export class GridRow extends Component {
       className: PropTypes.string,
     }),
     expanded: PropTypes.bool,
+    // expanded state kept outside of the row, restored when the row is mounted again
+    initialExpanded: PropTypes.bool,
+    onExpandedChange: PropTypes.func,
+    // run the highlight when the row is mounted already highlighted (rows can be mounted lazily)
+    highlightOnMount: PropTypes.bool,
+    // disable the built-in scrollIntoView when the scrolling is done by the owner of the rows
+    scrollOnHighlight: PropTypes.bool,
     setHighlighting: PropTypes.func,
     rowStylesMapper: PropTypes.func,
   };
@@ -89,13 +96,17 @@ export class GridRow extends Component {
     itemIntoViewRef: null,
     itemIntoViewId: null,
     expanded: false,
+    initialExpanded: undefined,
+    onExpandedChange: null,
+    highlightOnMount: false,
+    scrollOnHighlight: true,
     setHighlighting: () => {},
     rowStylesMapper: () => {},
   };
 
   state = {
     withAccordion: false,
-    expanded: this.props.expanded,
+    expanded: this.props.initialExpanded ?? this.props.expanded,
     updateHighlight: true,
     highlightBlockStyle: {},
   };
@@ -103,6 +114,10 @@ export class GridRow extends Component {
   componentDidMount() {
     this.handleAccordion();
     this.updateOverflowCellHeight();
+
+    if (this.props.highlightOnMount && this.checkIfTheHighlightNeeded()) {
+      this.highLightGridRow();
+    }
   }
 
   componentDidUpdate(prevProps) {
@@ -111,6 +126,7 @@ export class GridRow extends Component {
     if (prevProps.expanded !== this.props.expanded) {
       this.setState({ expanded: this.props.expanded }, () => {
         this.updateOverflowCellHeight();
+        this.props.onExpandedChange?.(this.props.value.id, this.props.expanded);
       });
     }
 
@@ -163,7 +179,8 @@ export class GridRow extends Component {
 
   highLightGridRow() {
     this.props.setHighlighting(true);
-    this.rowRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    this.props.scrollOnHighlight &&
+      this.rowRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
     const { onGridRowHighlighted } = this.props.rowHighlightingConfig;
     onGridRowHighlighted &&
       setTimeout(() => {
@@ -207,6 +224,7 @@ export class GridRow extends Component {
 
     this.setState({ expanded: !this.state.expanded }, () => {
       this.updateOverflowCellHeight();
+      this.props.onExpandedChange?.(this.props.value.id, this.state.expanded);
     });
   };
 
