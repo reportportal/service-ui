@@ -105,6 +105,7 @@ const GenerateApiKey = ({ invalid, handleSubmit, apiKeyName }) => {
         formatMessage(messages.successNotification),
         formatMessage(messages.notificationFail),
         onSuccessfulGeneration,
+        () => setLoading(false),
       ),
     );
     trackEvent(PROFILE_EVENTS.CLICK_GENERATE_API_KEY_BUTTON_IN_MODAL);
