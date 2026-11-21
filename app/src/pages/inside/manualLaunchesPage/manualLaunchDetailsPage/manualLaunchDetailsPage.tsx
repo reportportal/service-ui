@@ -41,6 +41,7 @@ import {
   isLoadingManualLaunchTestCaseExecutionsSelector,
   isLoadingManualLaunchFilteredFoldersSelector,
   defaultManualLaunchesQueryParams,
+  buildGetManualLaunchFoldersParams,
   buildGetManualLaunchTestCaseExecutionsParams,
   getManualLaunchDetailsFetchParams,
   MANUAL_LAUNCH_TO_RUN_STATUS_QUERY_VALUE,
@@ -137,8 +138,7 @@ export const ManualLaunchDetailsPage = () => {
     );
   }, [isLoading, launch, trackEvent]);
 
-  const selectedToRunOnly =
-    queryStatusFilter === MANUAL_LAUNCH_TO_RUN_STATUS_QUERY_VALUE;
+  const selectedToRunOnly = queryStatusFilter === MANUAL_LAUNCH_TO_RUN_STATUS_QUERY_VALUE;
 
   const activeFiltersCount = useMemo(() => {
     const priorities = parsePrioritiesFromQuery(queryFilterPriorities);
@@ -151,9 +151,7 @@ export const ManualLaunchDetailsPage = () => {
   const hasActiveFilters = activeFiltersCount > 0;
 
   const isSearchLoading =
-    searchValue !== appliedSearchQuery ||
-    isLoadingExecutions ||
-    isLoadingFilteredFolders;
+    searchValue !== appliedSearchQuery || isLoadingExecutions || isLoadingFilteredFolders;
 
   const handleFilterChange = useCallback(
     // eslint-disable-next-line react-hooks/use-memo
@@ -195,13 +193,7 @@ export const ManualLaunchDetailsPage = () => {
 
     dispatch(getManualLaunchAction({ launchId: params.launchId }));
     dispatch(
-      getManualLaunchFoldersAction({
-        launchId: params.launchId,
-        offset: 0,
-        limit: 100,
-        ...(params.filterPriorities && { filterPriorities: params.filterPriorities }),
-        ...(params.filterTags && { filterTags: params.filterTags }),
-      }),
+      getManualLaunchFoldersAction(buildGetManualLaunchFoldersParams(params, params.launchId)),
     );
     const executionsParams = buildGetManualLaunchTestCaseExecutionsParams(params);
 
@@ -265,7 +257,9 @@ export const ManualLaunchDetailsPage = () => {
         {hasActiveFilters ? (
           <>
             <FilterFilledIcon />
-            <span className={cx('manual-launch-details-page__filter-count')}>{activeFiltersCount}</span>
+            <span className={cx('manual-launch-details-page__filter-count')}>
+              {activeFiltersCount}
+            </span>
           </>
         ) : (
           <FilterOutlineIcon />

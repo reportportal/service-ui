@@ -254,10 +254,12 @@ interface GetManualLaunchFoldersAction extends Action<typeof GET_MANUAL_LAUNCH_F
   payload: GetManualLaunchFoldersParams;
 }
 
+const MANUAL_LAUNCH_FOLDERS_PAGE_SIZE = 100;
+
 function* getManualLaunchFolders(action: GetManualLaunchFoldersAction): Generator {
   try {
     const projectKey = (yield select(projectKeySelector)) as string;
-    const { launchId, offset, limit, filterPriorities, filterTags, statusFilter } = action.payload;
+    const { launchId, filterPriorities, filterTags, statusFilter } = action.payload;
 
     yield put({
       type: FETCH_START,
@@ -266,10 +268,7 @@ function* getManualLaunchFolders(action: GetManualLaunchFoldersAction): Generato
     });
 
     const typedURLS = URLS as UrlsHelper;
-    const params: Record<string, string | number> = {
-      offset,
-      limit,
-    };
+    const params: Record<string, string | number> = {};
 
     const normalizedFolderPriorities = normalizePrioritiesForExecutionApi(filterPriorities);
 
@@ -285,14 +284,28 @@ function* getManualLaunchFolders(action: GetManualLaunchFoldersAction): Generato
       params[MANUAL_LAUNCH_FOLDER_STATUS_FILTER_KEY] = statusFilter;
     }
 
-    const data = (yield call(
-      fetch,
-      typedURLS.manualLaunchFolders(projectKey, launchId, params),
-    )) as ManualLaunchFoldersResponse;
+    // The folder tree needs every folder of the launch: page through all of them.
+    const content: ManualLaunchFolder[] = [];
+    let data: ManualLaunchFoldersResponse;
+    let offset = 0;
+
+    do {
+      data = (yield call(
+        fetch,
+        typedURLS.manualLaunchFolders(projectKey, launchId, {
+          ...params,
+          offset,
+          limit: MANUAL_LAUNCH_FOLDERS_PAGE_SIZE,
+        }),
+      )) as ManualLaunchFoldersResponse;
+
+      content.push(...(data?.content ?? []));
+      offset += MANUAL_LAUNCH_FOLDERS_PAGE_SIZE;
+    } while (!isEmpty(data?.content) && offset < (data?.page?.totalElements ?? 0));
 
     yield put(
       fetchSuccessAction(MANUAL_LAUNCH_FOLDERS_NAMESPACE, {
-        data,
+        data: { ...data, content },
       }),
     );
   } catch (error) {

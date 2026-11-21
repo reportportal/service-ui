@@ -28,6 +28,7 @@ import {
   getBatchFailedIds,
 } from 'common/manualLaunches/batchResultNotifications';
 import {
+  buildGetManualLaunchFoldersParams,
   buildGetManualLaunchTestCaseExecutionsParams,
   getManualLaunchTestCaseExecutionsAction,
   getManualLaunchFoldersAction,
@@ -93,13 +94,7 @@ export const useDeleteExecution = () => {
           dispatch(getManualLaunchTestCaseExecutionsAction(executionsParams));
         }
         dispatch(
-          getManualLaunchFoldersAction({
-            launchId: payload.launchId,
-            offset: 0,
-            limit: 100,
-            ...(params.filterPriorities && { filterPriorities: params.filterPriorities }),
-            ...(params.filterTags && { filterTags: params.filterTags }),
-          }),
+          getManualLaunchFoldersAction(buildGetManualLaunchFoldersParams(params, payload.launchId)),
         );
         dispatch(getManualLaunchAction({ launchId: payload.launchId }));
       } catch (error) {

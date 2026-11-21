@@ -45,8 +45,6 @@ export interface GetManualLaunchParams {
 
 export interface GetManualLaunchFoldersParams {
   launchId: string | number;
-  offset?: string | number;
-  limit?: string | number;
   filterPriorities?: string;
   filterTags?: string;
   statusFilter?: ExecutionStatus;

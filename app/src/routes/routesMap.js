@@ -142,6 +142,7 @@ import {
   getManualLaunchFoldersAction,
   getManualLaunchTestCaseExecutionsAction,
   getManualLaunchExecutionAction,
+  buildGetManualLaunchFoldersParams,
   buildGetManualLaunchTestCaseExecutionsParams,
   getManualLaunchDetailsFetchParams,
   getManualLaunchesFetchParams,
@@ -406,22 +407,11 @@ const routesMap = {
     thunk: (dispatch, getState) => {
       const state = getState();
       const params = getManualLaunchDetailsFetchParams(state);
-      const { launchId, filterPriorities, filterTags, statusFilter } = params;
+      const { launchId } = params;
 
       if (launchId) {
         dispatch(getManualLaunchAction({ launchId }));
-
-        // Load folders
-        dispatch(
-          getManualLaunchFoldersAction({
-            launchId,
-            offset: 0,
-            limit: 100,
-            ...(filterPriorities && { filterPriorities }),
-            ...(filterTags && { filterTags }),
-            ...(statusFilter && { statusFilter }),
-          }),
-        );
+        dispatch(getManualLaunchFoldersAction(buildGetManualLaunchFoldersParams(params, launchId)));
 
         const executionsParams = buildGetManualLaunchTestCaseExecutionsParams(params);
 

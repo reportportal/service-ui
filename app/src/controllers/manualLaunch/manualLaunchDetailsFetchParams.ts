@@ -29,7 +29,11 @@ import {
   MANUAL_LAUNCH_TEST_CASE_EXECUTIONS_NAMESPACE,
   defaultManualLaunchesQueryParams,
 } from './constants';
-import type { GetManualLaunchesParams, GetManualLaunchTestCaseExecutionsParams } from './types';
+import type {
+  GetManualLaunchesParams,
+  GetManualLaunchFoldersParams,
+  GetManualLaunchTestCaseExecutionsParams,
+} from './types';
 
 // Launch list request built from the URL (paging, search and all filters), so every refetch
 // shows the same list the user is looking at.
@@ -120,3 +124,15 @@ export const buildGetManualLaunchTestCaseExecutionsParams = (
     ...(params.statusFilter && { statusFilter: params.statusFilter }),
   };
 };
+
+// Folder tree request with the same filters as the execution list (incl. "To run only"),
+// so folder counters match the table.
+export const buildGetManualLaunchFoldersParams = (
+  params: ManualLaunchDetailsFetchParams,
+  launchId: string | number,
+): GetManualLaunchFoldersParams => ({
+  launchId,
+  ...(params.filterPriorities && { filterPriorities: params.filterPriorities }),
+  ...(params.filterTags && { filterTags: params.filterTags }),
+  ...(params.statusFilter && { statusFilter: params.statusFilter }),
+});
