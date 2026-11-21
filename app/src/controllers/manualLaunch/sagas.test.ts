@@ -19,8 +19,16 @@ import createSagaMiddleware from 'redux-saga';
 import { fetch } from 'common/utils';
 import { FETCH_SUCCESS } from 'controllers/fetch/constants';
 import { manualLaunchesSagas } from './sagas';
-import { updateManualLaunchExecutionStatusAction } from './actionCreators';
-import { MANUAL_LAUNCH_TEST_CASE_EXECUTIONS_NAMESPACE } from './constants';
+import {
+  getManualLaunchFoldersAction,
+  updateManualLaunchExecutionStatusAction,
+} from './actionCreators';
+import {
+  MANUAL_LAUNCH_FOLDERS_NAMESPACE,
+  MANUAL_LAUNCH_TEST_CASE_EXECUTIONS_NAMESPACE,
+} from './constants';
+import { buildGetManualLaunchFoldersParams } from './manualLaunchDetailsFetchParams';
+import { ExecutionStatus } from 'types/testCase';
 
 jest.mock('common/utils', () => ({
   ...jest.requireActual<Record<string, unknown>>('common/utils'),
@@ -96,5 +104,42 @@ describe('controllers/manualLaunch/sagas', () => {
     );
     expect(listSyncs).toHaveLength(2);
     expect(onSuccess).toHaveBeenCalledTimes(2);
+  });
+
+  test('loads every folder of the launch page by page, keeping the status filter', async () => {
+    const folders = Array.from({ length: 130 }, (_, index) => ({ id: index + 1 }));
+    mockedFetch.mockImplementation((url: string) => {
+      const offset = Number(/offset=(\d+)/.exec(url)?.[1] ?? 0);
+
+      return Promise.resolve({
+        content: folders.slice(offset, offset + 100),
+        page: { totalElements: folders.length },
+      });
+    });
+    const { store, dispatched } = setupStore({ project: { info: { projectKey: 'demo' } } });
+
+    store.dispatch(
+      getManualLaunchFoldersAction(
+        buildGetManualLaunchFoldersParams(
+          { statusFilter: ExecutionStatus.TO_RUN } as Parameters<
+            typeof buildGetManualLaunchFoldersParams
+          >[0],
+          10,
+        ),
+      ),
+    );
+    await flush();
+
+    expect(mockedFetch).toHaveBeenCalledTimes(2);
+    mockedFetch.mock.calls.forEach(([url]: [string]) => {
+      expect(url).toContain('testCaseExecutionStatus=TO_RUN');
+    });
+    const success = dispatched.find(
+      (action) =>
+        action.type === FETCH_SUCCESS &&
+        (action.meta as { namespace?: string } | undefined)?.namespace ===
+          MANUAL_LAUNCH_FOLDERS_NAMESPACE,
+    );
+    expect((success?.payload as { data: { content: unknown[] } }).data.content).toHaveLength(130);
   });
 });

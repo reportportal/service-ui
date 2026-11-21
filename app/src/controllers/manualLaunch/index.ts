@@ -40,6 +40,7 @@ export {
 export * from './selectors';
 export * from './types';
 export {
+  buildGetManualLaunchFoldersParams,
   buildGetManualLaunchTestCaseExecutionsParams,
   getManualLaunchDetailsFetchParams,
   getManualLaunchesFetchParams,
