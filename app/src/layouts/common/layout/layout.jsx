@@ -18,7 +18,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { connect } from 'react-redux';
-import { ScrollWrapper, ScrollContainerContext } from 'components/main/scrollWrapper';
+import { ScrollWrapper } from 'components/main/scrollWrapper';
 import { getStorageItem, setStorageItem } from 'common/utils';
 import { ACTIVITY_TIMESTAMP } from 'controllers/user/constants';
 import { sessionExpirationTimeSelector } from 'controllers/appInfo';
@@ -65,8 +65,6 @@ export class Layout extends Component {
     sideMenuOpened: false,
     resetScroll: false,
   };
-
-  scrollContainerRef = React.createRef();
 
   componentDidMount() {
     window.addEventListener('resize', this.windowResizeHandler, false);
@@ -183,25 +181,22 @@ export class Layout extends Component {
                 {children}
               </>
             ) : (
-              <ScrollContainerContext.Provider value={this.scrollContainerRef}>
-                <ScrollWrapper
-                  withBackToTop
-                  resetRequired={this.state.resetScroll}
-                  onReset={this.unmarkScrollToReset}
-                  scrollContainerRef={this.scrollContainerRef}
-                >
-                  <div className={cx('scrolling-content')}>
-                    {!hideHeader && header}
-                    <div
-                      className={cx('page-container', {
-                        'full-width-page-container': fullWidthContainer,
-                      })}
-                    >
-                      {children}
-                    </div>
+              <ScrollWrapper
+                withBackToTop
+                resetRequired={this.state.resetScroll}
+                onReset={this.unmarkScrollToReset}
+              >
+                <div className={cx('scrolling-content')}>
+                  {!hideHeader && header}
+                  <div
+                    className={cx('page-container', {
+                      'full-width-page-container': fullWidthContainer,
+                    })}
+                  >
+                    {children}
                   </div>
-                </ScrollWrapper>
-              </ScrollContainerContext.Provider>
+                </div>
+              </ScrollWrapper>
             )}
             {!hideSidebar && (
               <div

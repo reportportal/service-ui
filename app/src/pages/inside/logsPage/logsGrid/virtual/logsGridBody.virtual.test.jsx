@@ -23,7 +23,9 @@ import { applyMiddleware, combineReducers, createStore } from 'redux';
 import { FAILED } from 'common/constants/testStatuses';
 import { Grid } from 'components/main/grid';
 import { GridRow } from 'components/main/grid/gridBody/gridRow';
+import { Scrollbars } from 'react-custom-scrollbars-2';
 import { ScrollContainerContext } from 'components/main/scrollWrapper';
+import { LogsPageContainer } from 'pages/inside/logsPage/logsPageContainer';
 import { PREVIOUS } from 'controllers/log';
 import {
   nestedStepsReducer,
@@ -44,6 +46,9 @@ jest.mock('react-tracking', () => {
 jest.mock('pages/inside/common/durationBlock', () => ({ DurationBlock: () => null }));
 jest.mock('pages/inside/common/testItemStatus', () => ({ TestItemStatus: () => null }));
 jest.mock('components/main/markdown', () => ({ MarkdownViewer: () => null }));
+// the real page container renders the grid in place of the whole logs page
+let mockLogsPageContent = null;
+jest.mock('pages/inside/logsPage/logsPage', () => ({ LogsPage: () => mockLogsPageContent }));
 
 // jsdom has no layout: the fake virtualiser lays the rows out with their estimated sizes and
 // renders the rows of mockRange ([first, last] indexes, all rows when null)
@@ -189,6 +194,7 @@ describe('LogsGridBody in the page layout', () => {
     mockVirtualizer.scrollToIndex.mockClear();
     mockVirtualizer.measure.mockClear();
     mockVirtualizer.measureElement.mockClear();
+    mockVirtualizer.elementsCache = new Map();
     Element.prototype.scrollIntoView = jest.fn();
   });
 
@@ -355,23 +361,28 @@ describe('LogsGridBody in the page layout', () => {
     const wrapper = mountGrid(createTestStore().store, { layoutKey: 'small' });
     expect(mockVirtualizer.measure).not.toHaveBeenCalled();
 
+    const mounted = document.createElement('div');
+    mockVirtualizer.elementsCache = new Map([['log-1', mounted]]);
+
     wrapper.setProps({ layoutKey: 'large' });
 
     expect(mockVirtualizer.measure).toHaveBeenCalledTimes(1);
+    // a mounted row is measured again even when its height did not change
+    expect(mockVirtualizer.measureElement).toHaveBeenCalledWith(mounted);
   });
 
   test('keeps the row at the top of the view in place when rows are added above it', () => {
     const { store } = createTestStore();
     const wrapper = mountGrid(store);
-    // the view starts at log 11 (row 3: 36 + 56 + 32 px from the top of the rows)
-    mockVirtualizer.scrollOffset = 124;
+    // the view starts 6px into log 11 (row 3: 36 + 56 + 32 px from the top of the rows)
+    mockVirtualizer.scrollOffset = 130;
     wrapper.setProps({});
 
     // a previous page of two logs is added above
     wrapper.setProps({ data: [log(-2), log(-1), ...DATA] });
 
-    expect(mockVirtualizer.scrollOffset).toBe(124 + 2 * 36);
-    expect(scrollContainer.current.scrollTop).toBe(124 + 2 * 36);
+    expect(mockVirtualizer.scrollOffset).toBe(130 + 2 * 36);
+    expect(scrollContainer.current.scrollTop).toBe(130 + 2 * 36);
   });
 
   test('does not move the view for rows added below the top of the view', () => {
@@ -383,5 +394,138 @@ describe('LogsGridBody in the page layout', () => {
 
     expect(mockVirtualizer.scrollOffset).toBe(40);
     expect(scrollContainer.current.scrollTop).toBe(0);
+  });
+
+  describe('when the rows move down in the scroll element', () => {
+    const OriginalResizeObserver = global.ResizeObserver;
+    const originalGetBoundingClientRect = Element.prototype.getBoundingClientRect;
+    let resizeCallbacks;
+    let rowsTop;
+
+    beforeEach(() => {
+      resizeCallbacks = [];
+      rowsTop = 0;
+      global.ResizeObserver = class {
+        constructor(callback) {
+          resizeCallbacks.push(callback);
+        }
+
+        observe() {}
+
+        disconnect() {}
+      };
+      // the top spacer is where the rows start
+      Element.prototype.getBoundingClientRect = function getBoundingClientRect() {
+        return { top: this.hasAttribute('data-virtual-spacer') ? rowsTop : 0 };
+      };
+    });
+
+    afterEach(() => {
+      global.ResizeObserver = OriginalResizeObserver;
+      Element.prototype.getBoundingClientRect = originalGetBoundingClientRect;
+    });
+
+    test('keeps the row at the top of the view in place', () => {
+      const wrapper = mountGrid(createTestStore().store);
+      mockVirtualizer.scrollOffset = 130;
+      wrapper.setProps({});
+
+      // the "previous page" loader (60px) appears above the rows
+      rowsTop = 60;
+      act(() => resizeCallbacks.forEach((callback) => callback([])));
+
+      expect(mockVirtualizer.options.scrollMargin).toBe(60);
+      expect(mockVirtualizer.scrollOffset).toBe(190);
+      expect(scrollContainer.current.scrollTop).toBe(190);
+    });
+
+    test('does not move the view while its top is above the rows', () => {
+      rowsTop = 300;
+      const wrapper = mountGrid(createTestStore().store);
+      mockVirtualizer.scrollOffset = 100;
+      wrapper.setProps({});
+
+      rowsTop = 360;
+      act(() => resizeCallbacks.forEach((callback) => callback([])));
+
+      expect(mockVirtualizer.scrollOffset).toBe(100);
+      expect(scrollContainer.current.scrollTop).toBe(0);
+    });
+  });
+});
+
+describe('LogsGridBody in the logs page container', () => {
+  const consoleError = console.error;
+
+  beforeAll(() => {
+    console.error = (message, ...rest) => {
+      if (!/validateDOMNesting|cannot appear as a child of|cannot be a child of/.test(message)) {
+        consoleError(message, ...rest);
+      }
+    };
+  });
+
+  afterAll(() => {
+    console.error = consoleError;
+    mockLogsPageContent = null;
+  });
+
+  beforeEach(() => {
+    mockRange = null;
+    mockVirtualizer.scrollOffset = null;
+    mockVirtualizer.options = null;
+    mockVirtualizer.scrollToIndex.mockClear();
+    mockVirtualizer.elementsCache = new Map();
+    Element.prototype.scrollIntoView = jest.fn();
+  });
+
+  const gridElement = (store, props = {}) => (
+    <Provider store={store}>
+      <IntlProvider locale="en" onError={() => {}}>
+        <div id="root">
+          <Grid
+            columns={[{ id: 'message', component: Cell }]}
+            data={DATA}
+            nestedView
+            nestedStepHeader={StepHeader}
+            eventsInfo={EVENTS_INFO}
+            renderBody={(bodyProps) => <LogsGridBody {...bodyProps} />}
+            {...props}
+          />
+        </div>
+      </IntlProvider>
+    </Provider>
+  );
+
+  test('virtualises the rows in the scroll element of the page container', () => {
+    jest.useFakeTimers();
+    mockLogsPageContent = gridElement(createTestStore().store);
+    const wrapper = mount(<LogsPageContainer />);
+    // the scroll element is known after the container is mounted: the rows check it again
+    act(() => {
+      jest.advanceTimersByTime(100);
+    });
+    jest.useRealTimers();
+    wrapper.update();
+
+    expect(mockVirtualizer.options.enabled).toBe(true);
+    expect(mockVirtualizer.options.getScrollElement()).toBe(
+      wrapper.find(Scrollbars).instance().view,
+    );
+    expect(spacers(wrapper)).toHaveLength(2);
+    expect(rowIds(wrapper)).toEqual([1, 10, 11, 12, 2]);
+  });
+
+  test('renders all rows without spacers and scrolls the highlighted row itself without a scroll element', () => {
+    const GridWithoutScrollElement = ({ store, ...props }) => gridElement(store, props);
+    const grid = mount(<GridWithoutScrollElement store={createTestStore().store} />);
+
+    grid.setProps({ rowHighlightingConfig: { highlightedRowId: 12, isGridRowHighlighted: true } });
+
+    expect(spacers(grid)).toHaveLength(0);
+    expect(rowIds(grid)).toEqual([1, 10, 11, 12, 2]);
+    expect(mockVirtualizer.options.enabled).toBe(false);
+    expect(mockVirtualizer.scrollToIndex).not.toHaveBeenCalled();
+    expect(Element.prototype.scrollIntoView).toHaveBeenCalled();
   });
 });

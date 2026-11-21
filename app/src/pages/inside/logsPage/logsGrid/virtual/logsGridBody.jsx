@@ -195,11 +195,22 @@ const LogsGridBodyComponent = ({
   // spacer rows stand for the rows that are not rendered, the grid keeps its full height
   return (
     <>
-      <div ref={bodyStartRef} className={cx('spacer')} style={{ height: padding.top }} aria-hidden>
+      <div
+        ref={bodyStartRef}
+        className={cx('spacer')}
+        style={{ height: padding.top }}
+        aria-hidden
+        data-virtual-spacer
+      >
         <div className={cx('spacer-cell')} />
       </div>
       {virtualItems.map(({ index }) => renderRow(rows[index], index))}
-      <div className={cx('spacer')} style={{ height: padding.bottom }} aria-hidden>
+      <div
+        className={cx('spacer')}
+        style={{ height: padding.bottom }}
+        aria-hidden
+        data-virtual-spacer
+      >
         <div className={cx('spacer-cell')} />
       </div>
     </>

@@ -16,8 +16,9 @@
 
 import { createContext, useContext } from 'react';
 
-// Holds a ref-like object ({ current }) that points to the scrolling element of the page layout.
-// It is null outside of the standard layout (plugins, tests), consumers must handle that.
+// Holds a ref-like object ({ current }) that points to the scrolling element of the nearest
+// ScrollWrapper; .current is filled when the wrapper is mounted. It is null outside of any
+// ScrollWrapper (plugins, tests), consumers must handle that.
 export const ScrollContainerContext = createContext(null);
 
 export const useScrollContainer = () => useContext(ScrollContainerContext);

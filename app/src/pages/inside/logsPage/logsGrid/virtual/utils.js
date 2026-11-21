@@ -56,18 +56,19 @@ export const getScrollMargin = (scrollElement, element) =>
       scrollElement.scrollTop,
   );
 
-// The first row at the top of the view, recorded to keep it in place when rows are added or
-// removed above it. There is none when the top of the view is above the rows.
+// The first row at the top of the view and how far into it the view starts, recorded to keep the
+// view in place when rows are added or removed above it or the rows move down (scroll margin).
+// There is none when the top of the view is above the rows.
 export const getScrollAnchor = (virtualItems, scrollOffset, scrollMargin, rows) => {
   if (scrollOffset === null || scrollOffset < scrollMargin) {
     return null;
   }
   const item = virtualItems.find(({ end }) => end > scrollOffset);
-  return item ? { key: item.key, start: item.start, rows } : null;
+  return item
+    ? { key: item.key, offsetInRow: scrollOffset - item.start, rows, scrollMargin }
+    : null;
 };
 
-// How far the anchor row moved in the new measurements; 0 when it is gone.
-export const getScrollAnchorShift = (anchor, measurements) => {
-  const item = measurements.find(({ key }) => key === anchor.key);
-  return item ? item.start - anchor.start : 0;
-};
+// The scroll offset that shows the anchor row as it was, from its new start; null when it is gone.
+export const getAnchoredScrollOffset = (anchor, anchorStart) =>
+  anchorStart === undefined ? null : Math.max(anchorStart + anchor.offsetInRow, 0);

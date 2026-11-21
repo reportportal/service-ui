@@ -206,8 +206,10 @@
 }
 
 // Only some of the rows of the virtualised grid are rendered: the widths of the columns are set on
-// the header cells instead of being computed from the content of the rendered rows.
-.virtual-grid {
+// the header cells instead of being computed from the content of the rendered rows. The rules
+// apply only while the rows are virtualised (spacer rows present); without a scroll element the
+// body renders all rows and the grid is laid out as before.
+.virtual-grid:has(> [data-virtual-spacer]) {
   overflow-anchor: none;
 
   @media (min-width: $SCREEN_XS_MAX + 1) {

@@ -21,7 +21,7 @@ import {
   estimateRowSize,
   getScrollMargin,
   getScrollAnchor,
-  getScrollAnchorShift,
+  getAnchoredScrollOffset,
 } from './utils';
 
 // frames to wait for the scroll element of the layout before the rows are rendered without it
@@ -32,7 +32,8 @@ const SCROLL_ELEMENT_WAIT_FRAMES = 30;
 // "virtual" is false when there is no scroll element to virtualise in: all rows are rendered then.
 export const useLogsVirtualizer = ({ rows, layoutKey, logsSize, scrollContainer }) => {
   const bodyStartRef = useRef(null);
-  const [scrollMargin, setScrollMargin] = useState(0);
+  // null until the offset of the rows in the scroll element is measured
+  const [scrollMargin, setScrollMargin] = useState(null);
   // the layout fills its scroll element ref after its children are mounted
   const [scrollElementCheck, setScrollElementCheck] = useState(0);
   const enabled = !!scrollContainer && scrollElementCheck < SCROLL_ELEMENT_WAIT_FRAMES;
@@ -51,43 +52,61 @@ export const useLogsVirtualizer = ({ rows, layoutKey, logsSize, scrollContainer 
     estimateSize,
     getItemKey,
     overscan: LOGS_OVERSCAN,
-    scrollMargin,
+    scrollMargin: scrollMargin ?? 0,
     enabled,
   });
 
   // The row at the top of the view stays in place when rows are added or removed above it ("load
-  // previous" pages, steps opened above the view), as the browser anchoring does for a full list
-  // (it is off for the virtualised grid). The new offset is applied before the rows to render are
-  // computed, so the rows of the new position are rendered in the same frame.
+  // previous" pages, steps opened above the view) or the rows move down (the previous page loader
+  // above the rows), as the browser anchoring does for a full list (it is off for the virtualised
+  // grid). The new offset is applied before the rows to render are computed, so the rows of the
+  // new position are rendered in the same frame.
   const scrollAnchorRef = useRef(null);
   const pendingScrollOffsetRef = useRef(null);
-  if (enabled && scrollAnchorRef.current && scrollAnchorRef.current.rows !== rows) {
+  const anchor = scrollAnchorRef.current;
+  if (
+    enabled &&
+    anchor &&
+    (anchor.rows !== rows || anchor.scrollMargin !== virtualizer.options.scrollMargin)
+  ) {
+    const index = rows.findIndex(({ key }) => key === anchor.key);
     // the measurements of the new rows are computed with the total size
     virtualizer.getTotalSize();
-    const shift = getScrollAnchorShift(scrollAnchorRef.current, virtualizer.measurementsCache);
-    if (shift !== 0 && virtualizer.scrollOffset !== null) {
-      virtualizer.scrollOffset += shift;
-      pendingScrollOffsetRef.current = virtualizer.scrollOffset;
+    const offset = getAnchoredScrollOffset(
+      anchor,
+      index < 0 ? undefined : virtualizer.measurementsCache[index]?.start,
+    );
+    if (
+      offset !== null &&
+      virtualizer.scrollOffset !== null &&
+      offset !== virtualizer.scrollOffset
+    ) {
+      virtualizer.scrollOffset = offset;
+      pendingScrollOffsetRef.current = offset;
     }
-    scrollAnchorRef.current = { ...scrollAnchorRef.current, rows };
+    scrollAnchorRef.current = { ...anchor, rows, scrollMargin: virtualizer.options.scrollMargin };
   }
 
   useLayoutEffect(() => {
     const scrollElement = enabled ? getScrollElement() : null;
     if (!scrollElement) {
       scrollAnchorRef.current = null;
+      pendingScrollOffsetRef.current = null;
       return;
     }
     if (pendingScrollOffsetRef.current !== null) {
       scrollElement.scrollTop = pendingScrollOffsetRef.current;
       pendingScrollOffsetRef.current = null;
     }
-    scrollAnchorRef.current = getScrollAnchor(
-      virtualizer.getVirtualItems(),
-      virtualizer.scrollOffset,
-      virtualizer.options.scrollMargin,
-      rows,
-    );
+    scrollAnchorRef.current =
+      scrollMargin === null
+        ? null
+        : getScrollAnchor(
+            virtualizer.getVirtualItems(),
+            virtualizer.scrollOffset,
+            scrollMargin,
+            rows,
+          );
   });
 
   useLayoutEffect(() => {
@@ -113,8 +132,10 @@ export const useLogsVirtualizer = ({ rows, layoutKey, logsSize, scrollContainer 
   useEffect(() => {
     if (layoutKeyRef.current !== layoutKey) {
       layoutKeyRef.current = layoutKey;
-      // the sizes of the rows that are not rendered are not valid anymore
+      // the sizes of the rows that are not rendered are not valid anymore; the rendered ones are
+      // measured again as a row that kept its height is not reported by the resize observer
       virtualizer.measure();
+      virtualizer.elementsCache.forEach((element) => virtualizer.measureElement(element));
     }
   }, [layoutKey, virtualizer]);
 

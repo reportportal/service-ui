@@ -21,7 +21,7 @@ import {
   getPadding,
   getScrollMargin,
   getScrollAnchor,
-  getScrollAnchorShift,
+  getAnchoredScrollOffset,
   ESTIMATED_LOAD_ROW_SIZE,
 } from './utils';
 
@@ -97,9 +97,14 @@ describe('getScrollAnchor', () => {
   const rows = [];
   const items = [item(3, 130, 10), item(4, 140, 10), item(5, 150, 10)];
 
-  test('is the first row that reaches below the top of the view', () => {
-    expect(getScrollAnchor(items, 140, 100, rows)).toEqual({ key: 4, start: 140, rows });
-    expect(getScrollAnchor(items, 145, 100, rows)).toEqual({ key: 4, start: 140, rows });
+  test('is the first row that reaches below the top of the view and the offset into it', () => {
+    expect(getScrollAnchor(items, 140, 100, rows)).toEqual({
+      key: 4,
+      offsetInRow: 0,
+      rows,
+      scrollMargin: 100,
+    });
+    expect(getScrollAnchor(items, 145, 100, rows)).toMatchObject({ key: 4, offsetInRow: 5 });
   });
 
   test('is none while the top of the view is above the rows', () => {
@@ -112,15 +117,19 @@ describe('getScrollAnchor', () => {
   });
 });
 
-describe('getScrollAnchorShift', () => {
-  const anchor = { key: 'log-4', start: 140 };
+describe('getAnchoredScrollOffset', () => {
+  const anchor = { key: 'log-4', offsetInRow: 5 };
 
-  test('is the distance the anchor row moved', () => {
-    expect(getScrollAnchorShift(anchor, [{ key: 'log-4', start: 440 }])).toBe(300);
-    expect(getScrollAnchorShift(anchor, [{ key: 'log-4', start: 100 }])).toBe(-40);
+  test('shows the anchor row at its new start as far into it as before', () => {
+    expect(getAnchoredScrollOffset(anchor, 440)).toBe(445);
+    expect(getAnchoredScrollOffset(anchor, 100)).toBe(105);
   });
 
-  test('is 0 when the anchor row is gone', () => {
-    expect(getScrollAnchorShift(anchor, [{ key: 'log-5', start: 440 }])).toBe(0);
+  test('is never negative', () => {
+    expect(getAnchoredScrollOffset({ key: 'a', offsetInRow: -20 }, 10)).toBe(0);
+  });
+
+  test('is null when the anchor row is gone', () => {
+    expect(getAnchoredScrollOffset(anchor, undefined)).toBeNull();
   });
 });
