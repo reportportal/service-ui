@@ -89,7 +89,7 @@ function* fetchFiltersConcat({ payload: { params, concat } }) {
   );
 }
 
-function* updateLaunchesFilter({ payload: filter }) {
+export function* updateLaunchesFilter({ payload: filter }) {
   const projectKey = yield select(projectKeySelector);
   const shallowFilter = {
     ...filter,
@@ -101,6 +101,10 @@ function* updateLaunchesFilter({ payload: filter }) {
       data: omit(shallowFilter, ['id']),
     }),
   );
+  const response = yield take(createFetchPredicate(LAUNCHES_FILTERS_UPDATE_NAMESPACE));
+  if (response.type === FETCH_ERROR) {
+    return;
+  }
   yield put(updateFilterSuccessAction(shallowFilter));
   yield put(
     showNotification({
