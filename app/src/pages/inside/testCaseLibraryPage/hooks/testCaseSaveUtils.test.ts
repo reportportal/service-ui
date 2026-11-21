@@ -15,7 +15,7 @@
  */
 
 import { fetch } from 'common/utils';
-import { createNewTags } from './testCaseSaveUtils';
+import { createNewTags, saveTestCaseWithRequirementRetry } from './testCaseSaveUtils';
 
 jest.mock('common/utils', () => ({
   fetch: jest.fn(),
@@ -51,6 +51,53 @@ describe('testCaseSaveUtils', () => {
       await expect(createNewTags('demo', [{ id: -5, key: 'smoke', value: '' }])).resolves.toEqual(
         [],
       );
+    });
+  });
+
+  describe('saveTestCaseWithRequirementRetry', () => {
+    const conflict = { errorCode: 4091, message: 'Requirement already exists' };
+    const data = {
+      name: 'Case',
+      manualScenario: {
+        requirements: [
+          { id: 'stored', value: 'A' },
+          { id: '_new', value: 'B' },
+        ],
+      },
+    };
+
+    test('regenerates ids of not yet stored requirements and retries once on 409', async () => {
+      fetchMock
+        .mockRejectedValueOnce(conflict)
+        .mockResolvedValueOnce({ manualScenario: { requirements: [{ id: 'stored', value: 'A' }] } })
+        .mockResolvedValueOnce({ id: 7 });
+
+      const response = await saveTestCaseWithRequirementRetry({
+        url: '/test-case/7',
+        method: 'PUT',
+        data,
+        projectKey: 'demo',
+        testCaseId: 7,
+      });
+
+      expect(response).toEqual({ id: 7 });
+      const [, retryParams] = fetchMock.mock.calls[2] as [
+        string,
+        { data: typeof data; method: string },
+      ];
+      const [stored, regenerated] = retryParams.data.manualScenario.requirements;
+      expect(stored).toEqual({ id: 'stored', value: 'A' });
+      expect(regenerated.value).toBe('B');
+      expect(regenerated.id).not.toBe('_new');
+    });
+
+    test('rethrows other errors without retrying', async () => {
+      fetchMock.mockRejectedValueOnce({ errorCode: 4001, message: 'bad' });
+
+      await expect(
+        saveTestCaseWithRequirementRetry({ url: '/x', method: 'POST', data, projectKey: 'demo' }),
+      ).rejects.toEqual({ errorCode: 4001, message: 'bad' });
+      expect(fetchMock).toHaveBeenCalledTimes(1);
     });
   });
 });
