@@ -27,7 +27,13 @@ const cx = classNames.bind(styles);
 export const IssueWithTooltip = withTooltip({
   TooltipComponent: IssueInfoTooltip,
 })(({ ticketId, url, onRemove, onClick, className, readOnly }) => (
-  <a target="_blank" href={url} onClick={onClick} className={cx('issue', className)}>
+  <a
+    target="_blank"
+    rel="noopener noreferrer"
+    href={url}
+    onClick={onClick}
+    className={cx('issue', className)}
+  >
     <div className={cx('title')}>{ticketId}</div>
     {!readOnly && (
       <div

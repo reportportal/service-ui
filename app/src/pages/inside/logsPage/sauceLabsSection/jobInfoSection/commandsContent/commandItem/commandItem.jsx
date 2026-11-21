@@ -107,7 +107,12 @@ export class CommandItem extends Component {
             <div className={cx('path-column')}>{isUrlRequest || path}</div>
           </div>
           <div className={cx('content-part-wrapper')}>
-            <a target="_blank" href={screenShotLink} className={cx('screenshot-column')}>
+            <a
+              target="_blank"
+              rel="noopener noreferrer"
+              href={screenShotLink}
+              className={cx('screenshot-column')}
+            >
               {screenShotLink && Parser(ScreenShotIcon)}
             </a>
           </div>
