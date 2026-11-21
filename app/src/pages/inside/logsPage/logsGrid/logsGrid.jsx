@@ -39,6 +39,8 @@ import { LogMessageBlock } from './logMessageBlock';
 import { AttachmentBlock } from './attachmentBlock';
 import { NestedStepHeader } from './nestedStepHeader';
 import { LogStatusBlock } from './logStatusBlock';
+import { LogsGridBody } from './virtual';
+import { LOGS_VIRTUALIZATION_ENABLED } from './constants';
 import styles from './logsGrid.scss';
 
 const cx = classNames.bind(styles);
@@ -422,6 +424,8 @@ export class LogsGrid extends Component {
     />
   );
 
+  renderBody = (bodyProps) => <LogsGridBody {...bodyProps} />;
+
   render() {
     const {
       intl,
@@ -457,6 +461,7 @@ export class LogsGrid extends Component {
           loadPrevious={loadPrevious}
           loadingDirection={loadingDirection}
           rowStylesMapper={this.getLogRowStyles}
+          {...(LOGS_VIRTUALIZATION_ENABLED && { renderBody: this.renderBody })}
         />
         {!logItems.length && !loading && (
           <NoItemMessage message={intl.formatMessage(COMMON_LOCALE_KEYS.NO_RESULTS)} />
