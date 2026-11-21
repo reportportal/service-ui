@@ -36,9 +36,10 @@ export const fetchNestedStepSuccessAction = (payload) => ({
   type: FETCH_NESTED_STEP_SUCCESS,
   payload,
 });
-export const fetchNestedStepErrorAction = (payload) => ({
+export const fetchNestedStepErrorAction = (payload, id) => ({
   type: FETCH_NESTED_STEP_ERROR,
   payload,
+  meta: { id },
 });
 
 export const toggleNestedStepAction = (payload) => ({

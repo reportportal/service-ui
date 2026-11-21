@@ -60,7 +60,7 @@ function* fetchNestedStep({ payload = {} }) {
     });
     yield put(fetchNestedStepSuccessAction({ id, ...response }));
   } catch (err) {
-    yield put(fetchNestedStepErrorAction(err));
+    yield put(fetchNestedStepErrorAction(err, id));
   } finally {
     if (yield cancelled()) {
       cancelRequest();
@@ -71,7 +71,10 @@ function* fetchNestedStep({ payload = {} }) {
 function* fetchCurrentStep({ payload = {} }) {
   const { id } = payload;
   yield call(fetchNestedStep, { payload: { id, loadDirection: ALL } });
-  const { collapsed, content } = yield select(nestedStepSelector, id);
+  const { collapsed, content, initial } = yield select(nestedStepSelector, id);
+  if (initial) {
+    return;
+  }
 
   if (collapsed) {
     yield put(toggleNestedStepAction({ id }));
@@ -95,6 +98,10 @@ export function* requestNestedStep({ payload = {} }) {
   const nestedStep = yield select(nestedStepSelector, id);
   if (nestedStep.initial) {
     yield call(fetchNestedStep, { payload });
+    const { initial } = yield select(nestedStepSelector, id);
+    if (initial) {
+      return;
+    }
   }
   yield put(toggleNestedStepAction(payload));
 }

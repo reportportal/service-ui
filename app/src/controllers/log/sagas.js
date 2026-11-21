@@ -15,7 +15,6 @@
  */
 
 import { all, call, cancelled, put, select, take, takeEvery, throttle } from 'redux-saga/effects';
-import { delay } from 'redux-saga';
 import {
   fetchParentItems,
   itemsSelector,
@@ -211,18 +210,16 @@ function* fetchStackTrace({ payload: logItem }) {
   });
 }
 
-function* loadStep({ id, errorLogPage }) {
-  yield put(loadMoreNestedStepAction({ id, errorLogPage }));
-  yield take([FETCH_NESTED_STEP_SUCCESS, FETCH_NESTED_STEP_ERROR]);
+const getNestedStepActionId = (action) =>
+  action.type === FETCH_NESTED_STEP_ERROR ? action.meta?.id : action.payload?.id;
 
-  let loadingRunning = true;
-  while (loadingRunning) {
-    const { loading } = yield select(nestedStepSelector, id);
-    if (!loading) {
-      loadingRunning = loading;
-    }
-    yield delay(10);
-  }
+const isNestedStepLoadedAction = (id) => (action) =>
+  (action.type === FETCH_NESTED_STEP_SUCCESS || action.type === FETCH_NESTED_STEP_ERROR) &&
+  +getNestedStepActionId(action) === +id;
+
+export function* loadStep({ id, errorLogPage }) {
+  yield put(loadMoreNestedStepAction({ id, errorLogPage }));
+  yield take(isNestedStepLoadedAction(id));
 }
 
 function* waitLoadAllNestedSteps() {
@@ -323,17 +320,9 @@ function* fetchLog({ payload: { logInfo, callback, shouldClearSearchFilter = fal
       );
       // wait until wanted step is load
       if (isWantedStepFailed) {
-        let isWrongId = true;
-        while (isWrongId) {
-          const {
-            payload: { id: takenId },
-          } = yield take([FETCH_NESTED_STEP_SUCCESS, FETCH_NESTED_STEP_ERROR]);
-          if (+takenId === +parentId) {
-            isWrongId = false;
-            // prevent collapse failed step as they unfold by default
-            skipIds.push(+parentId);
-          }
-        }
+        yield take(isNestedStepLoadedAction(parentId));
+        // prevent collapse failed step as they unfold by default
+        skipIds.push(+parentId);
       }
     }
 
