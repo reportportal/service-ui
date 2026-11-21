@@ -61,3 +61,13 @@
   align-items: center;
   min-height: 180px;
 }
+
+.status-page-error {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 180px;
+  font-family: $FONT-REGULAR;
+  font-size: 13px;
+  color: $COLOR--gray-60;
+}
