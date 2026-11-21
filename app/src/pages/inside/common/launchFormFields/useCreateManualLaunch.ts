@@ -22,24 +22,31 @@ import { isEmpty, isNumber } from 'es-toolkit/compat';
 
 import { URLS } from 'common/urls';
 import { fetch } from 'common/utils';
+import { BatchResult, getApiErrorMessage, readBatchResult } from 'common/utils/apiResponse';
+import {
+  batchPartialFailureNotificationAction,
+  getBatchFailedIds,
+} from 'common/manualLaunches/batchResultNotifications';
 import { projectKeySelector } from 'controllers/project';
 import { hideModalAction } from 'controllers/modal';
-import { showErrorNotification, showSuccessNotification } from 'controllers/notification';
+import {
+  showErrorNotification,
+  showSuccessNotification,
+  showWarningNotification,
+} from 'controllers/notification';
 import { foldersSelector } from 'controllers/testCase';
 import { getAllSubfolderIds } from 'common/utils/folderUtils';
 
 import { getIsManualCovered } from 'pages/inside/common/testCaseList/utils';
-import {
-  CreateManualLaunchDto,
-  isLaunchObject,
-  LaunchFormData,
-  LaunchMode,
-} from './types';
+import { CreateManualLaunchDto, isLaunchObject, LaunchFormData, LaunchMode } from './types';
 import { ExtendedTestCase } from 'types/testCase';
 import { ManualLaunchItem } from 'pages/inside/manualLaunchesPage/types';
 import { generateUUID } from './utils';
 import { messages } from './messages';
-import { fetchAllTestCasesByFolderIds, fetchAllTestPlanTestCases } from '../testLibrarySidePanel/utils';
+import {
+  fetchAllTestCasesByFolderIds,
+  fetchAllTestPlanTestCases,
+} from '../testLibrarySidePanel/utils';
 
 const resolveTestCaseIds = ({
   folderId,
@@ -100,27 +107,51 @@ const createNewManualLaunch = async (
   });
 };
 
+interface AddToExistingLaunchResult {
+  result: BatchResult;
+  // Set when the test cases were added to the launch but syncing them to its test plan failed.
+  planSyncError?: unknown;
+}
+
 const addTestCasesToExistingLaunch = async (
   projectKey: string,
   launchId: number,
   testCaseIds: number[],
-): Promise<void> => {
-  await fetch(URLS.batchAddTestCasesToLaunch(projectKey, launchId), {
+): Promise<AddToExistingLaunchResult> => {
+  const response: unknown = await fetch(URLS.batchAddTestCasesToLaunch(projectKey, launchId), {
     method: 'POST',
     data: { testCaseIds },
   });
+  const result = readBatchResult(response, testCaseIds.length);
+  // Only the test cases that really landed in the launch go to its test plan.
+  const failedTestCaseIds = getBatchFailedIds(result);
+  let addedTestCaseIds: number[] = [];
 
-  const launchDetail: ManualLaunchItem = await fetch(
-    URLS.manualLaunchById(projectKey, launchId),
-  );
-  const linkedTestPlanId = launchDetail?.testPlan?.id;
-
-  if (isNumber(linkedTestPlanId)) {
-    await fetch(URLS.testPlanTestCasesBatch(projectKey, linkedTestPlanId), {
-      method: 'POST',
-      data: { testCaseIds },
-    });
+  if (!isEmpty(result.successIds)) {
+    addedTestCaseIds = result.successIds.map(Number);
+  } else if (failedTestCaseIds.length === result.failureCount) {
+    addedTestCaseIds = testCaseIds.filter((id) => !failedTestCaseIds.includes(id));
   }
+
+  if (isEmpty(addedTestCaseIds)) {
+    return { result };
+  }
+
+  try {
+    const launchDetail: ManualLaunchItem = await fetch(URLS.manualLaunchById(projectKey, launchId));
+    const linkedTestPlanId = launchDetail?.testPlan?.id;
+
+    if (isNumber(linkedTestPlanId)) {
+      await fetch(URLS.testPlanTestCasesBatch(projectKey, linkedTestPlanId), {
+        method: 'POST',
+        data: { testCaseIds: addedTestCaseIds },
+      });
+    }
+  } catch (planSyncError) {
+    return { result, planSyncError };
+  }
+
+  return { result };
 };
 
 export const useCreateManualLaunch = (
@@ -150,7 +181,10 @@ export const useCreateManualLaunch = (
   const getTestCasesForSubmit = useCallback(async () => {
     try {
       if (folderId) {
-        return await fetchAllTestCasesByFolderIds(projectKey, getAllSubfolderIds(folderId, folders));
+        return await fetchAllTestCasesByFolderIds(
+          projectKey,
+          getAllSubfolderIds(folderId, folders),
+        );
       }
 
       if (isNumber(testPlanId) && !selectedTestCaseIds?.length) {
@@ -187,9 +221,7 @@ export const useCreateManualLaunch = (
       const isWholeTestPlanSubmit =
         isNumber(resolvedTestPlanId) && !folderId && !selectedTestCaseIds?.length;
       const shouldCreateWholePlan =
-        activeMode === LaunchMode.NEW &&
-        isWholeTestPlanSubmit &&
-        !formValues.uncoveredTestsOnly;
+        activeMode === LaunchMode.NEW && isWholeTestPlanSubmit && !formValues.uncoveredTestsOnly;
 
       try {
         let testCaseIds: number[] = [];
@@ -221,26 +253,47 @@ export const useCreateManualLaunch = (
         }
 
         if (activeMode === LaunchMode.EXISTING) {
-          const launchId = isLaunchObject(formValues.name)
-            ? formValues.name.id
-            : selectedLaunchId;
+          const launchId = isLaunchObject(formValues.name) ? formValues.name.id : selectedLaunchId;
 
           if (!launchId) {
             return;
           }
 
-          await addTestCasesToExistingLaunch(projectKey, launchId, testCaseIds);
-
-          dispatch(
-            showSuccessNotification({
-              message:
-                testCaseIds.length > 1
-                  ? formatMessage(messages.testCasesAddedSuccess)
-                  : formatMessage(messages.testCaseAddedSuccess, {
-                      testCaseName: primaryTestCaseName,
-                    }),
-            }),
+          const { result, planSyncError } = await addTestCasesToExistingLaunch(
+            projectKey,
+            launchId,
+            testCaseIds,
           );
+
+          if (result.failureCount > 0) {
+            dispatch(batchPartialFailureNotificationAction(result));
+          } else {
+            dispatch(
+              showSuccessNotification({
+                message:
+                  testCaseIds.length > 1
+                    ? formatMessage(messages.testCasesAddedSuccess)
+                    : formatMessage(messages.testCaseAddedSuccess, {
+                        testCaseName: primaryTestCaseName,
+                      }),
+              }),
+            );
+          }
+
+          if (planSyncError) {
+            dispatch(
+              showWarningNotification({
+                message: formatMessage(messages.testPlanSyncFailed, {
+                  reason: getApiErrorMessage(planSyncError) ?? '',
+                }),
+              }),
+            );
+          }
+
+          if (result.successCount === 0) {
+            // Nothing was added: keep the modal open so the user can change the selection.
+            return;
+          }
         } else if (activeMode === LaunchMode.NEW) {
           const launchData = buildCreateManualLaunchDto({
             formValues,
