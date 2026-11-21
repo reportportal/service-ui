@@ -27,10 +27,7 @@ import type { AttachmentFormValue } from '../types';
 import { useAttachmentUpload } from './useAttachmentUpload';
 import { useAttachmentValidation } from './attachmentValidationContext';
 import { messages } from './messages';
-import {
-  areAttachmentFormListsEqual,
-  normalizeAttachmentsFromUnknown,
-} from './utils';
+import { areAttachmentFormListsEqual, normalizeAttachmentsFromUnknown } from './utils';
 
 type FieldAttachmentRow = AttachmentFormValue | BaseAttachmentFile;
 
@@ -49,9 +46,11 @@ interface UseTmsFileUploadOptions {
 
 export const useTmsFileUpload = ({ formName, fieldName }: UseTmsFileUploadOptions) => {
   const dispatch = useDispatch();
-  const { uploadAttachment } = useAttachmentUpload();
+  const { uploadAttachment, deleteAttachment } = useAttachmentUpload();
   const { formatMessage } = useIntl();
-  const { addBlocker, removeBlocker } = useAttachmentValidation();
+  const { addBlocker, removeBlocker, pendingUploads } = useAttachmentValidation();
+  // Files removed while their upload was still running: the upload is deleted once it finishes.
+  const removedWhileUploadingRef = useRef(new WeakSet<File>());
   const isBlockingRef = useRef(false);
   const isInitializedRef = useRef(false);
   const selector = formValueSelector(formName || 'no-form');
@@ -68,9 +67,16 @@ export const useTmsFileUpload = ({ formName, fieldName }: UseTmsFileUploadOption
     async (file: File) => {
       try {
         const response = await uploadAttachment(file);
+        const attachmentId = String(response.id);
+
+        if (removedWhileUploadingRef.current.has(file)) {
+          deleteAttachment(attachmentId);
+        } else {
+          pendingUploads.track(attachmentId);
+        }
 
         return {
-          attachmentId: String(response.id),
+          attachmentId,
         };
       } catch {
         return {
@@ -78,13 +84,34 @@ export const useTmsFileUpload = ({ formName, fieldName }: UseTmsFileUploadOption
         };
       }
     },
-    [formatMessage, uploadAttachment],
+    [formatMessage, uploadAttachment, deleteAttachment, pendingUploads],
   );
 
-  const { attachedFiles, addFiles, removeFile, downloadFile, setAttachedFiles } =
-    useFileProcessing<BaseAttachmentFile>({
-      onUpload: handleUpload,
-    });
+  const {
+    attachedFiles,
+    addFiles,
+    removeFile: removeAttachedFile,
+    downloadFile,
+    setAttachedFiles,
+  } = useFileProcessing<BaseAttachmentFile>({
+    onUpload: handleUpload,
+  });
+
+  const removeFile = useCallback(
+    (fileId: string) => {
+      const removedFile = attachedFiles.find(({ id }) => id === fileId);
+
+      if (removedFile?.attachmentId) {
+        // Only uploads of this modal session are deleted; saved attachments are unlinked on save.
+        pendingUploads.discard(removedFile.attachmentId);
+      } else if (removedFile?.file) {
+        removedWhileUploadingRef.current.add(removedFile.file);
+      }
+
+      removeAttachedFile(fileId);
+    },
+    [attachedFiles, pendingUploads, removeAttachedFile],
+  );
 
   // Track whether this field is currently blocking so we only call add/remove on transitions.
   useEffect(() => {
@@ -114,8 +141,7 @@ export const useTmsFileUpload = ({ formName, fieldName }: UseTmsFileUploadOption
       const backendAttachments: BaseAttachmentFile[] = fieldAttachments.flatMap(
         (attachment: FieldAttachmentRow) => {
           const id =
-            attachment.id ??
-            ('attachmentId' in attachment ? attachment.attachmentId : undefined);
+            attachment.id ?? ('attachmentId' in attachment ? attachment.attachmentId : undefined);
 
           if (id == null || id === '' || !attachment.fileName) {
             return [];
