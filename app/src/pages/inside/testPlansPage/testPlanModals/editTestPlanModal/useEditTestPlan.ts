@@ -26,6 +26,7 @@ import { hideModalAction } from 'controllers/modal';
 import { showSuccessNotification, showErrorNotification } from 'controllers/notification';
 import { getMilestonesAction } from 'controllers/milestone';
 import { getTestPlansAction, getTestPlanAction, defaultQueryParams } from 'controllers/testPlan';
+import { resetHasTestPlansCache } from 'hooks/useHasTestPlans';
 
 import { TestPlanFormValues } from '../testPlanModal';
 
@@ -59,6 +60,9 @@ export const useEditTestPlan = ({ onSubmitSuccess }: UseEditTestPlanOptions = {}
       });
 
       onSubmitSuccess?.(payload, payload.attributes?.length ?? 0);
+      if (isNotNil(payload.milestoneId)) {
+        resetHasTestPlansCache();
+      }
       dispatch(hideModalAction());
       dispatch(
         showSuccessNotification({
