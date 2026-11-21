@@ -42,7 +42,18 @@ export const useAttachmentUpload = () => {
     [projectKey],
   );
 
+  // Best effort: the backend refuses (400) to delete an attachment that is already linked.
+  const deleteAttachment = useCallback(
+    (attachmentId: string) => {
+      fetch(URLS.tmsAttachment(projectKey, attachmentId), { method: 'DELETE' }).catch(
+        () => undefined,
+      );
+    },
+    [projectKey],
+  );
+
   return {
     uploadAttachment,
+    deleteAttachment,
   };
 };
