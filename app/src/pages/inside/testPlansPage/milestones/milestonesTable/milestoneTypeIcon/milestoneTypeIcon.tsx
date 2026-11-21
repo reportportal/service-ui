@@ -38,7 +38,8 @@ interface MilestoneTypeIconProps {
 }
 
 export const MilestoneTypeIcon = ({ type }: MilestoneTypeIconProps) => {
-  const Icon = ICONS[type];
+  // a type added on the backend later must not break the whole milestones list
+  const Icon = ICONS[type] ?? ICONS[MilestoneType.OTHER];
 
   return (
     <span className={cx('milestone-type-icon')} aria-hidden>
