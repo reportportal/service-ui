@@ -12,7 +12,7 @@ fetchExtensionManifestsSuccessAction.mockImplementation(() => ({ type: 'test', p
 describe('controllers/plugins/uiExtensions/sagas', () => {
   describe('fetchExtensionManifests', () => {
     beforeEach(() => {
-      fetch.mockClear();
+      jest.clearAllMocks();
     });
 
     test('should do nothing in case no plugins found', async () => {
