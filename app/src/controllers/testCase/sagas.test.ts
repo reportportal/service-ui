@@ -28,7 +28,9 @@ import {
   STOP_LOADING_TEST_CASES,
   GET_FOLDERS,
   NAMESPACE,
+  GET_TEST_CASE_DETAILS,
 } from './constants';
+import { TEST_CASE_LIBRARY_PAGE } from 'controllers/pages';
 import { FETCH_PROJECT_SUCCESS } from 'controllers/project';
 import { FETCH_SUCCESS } from 'controllers/fetch/constants';
 
@@ -177,6 +179,49 @@ describe('controllers/testCase/sagas', () => {
           ({ type, meta }) => type === FETCH_SUCCESS && meta?.namespace === NAMESPACE,
         ),
       ).toHaveLength(0);
+    });
+  });
+
+  describe('test case details', () => {
+    const run = async (error: unknown, details?: { id: number }) => {
+      fetchMock.mockRejectedValue(error);
+      const state = createState({
+        testCase: { folders: { data: [] }, details: { data: details } },
+      });
+      const { dispatched, dispatch, task } = startSagas(() => state);
+
+      dispatch({ type: GET_TEST_CASE_DETAILS, payload: { testCaseId: '7' } });
+      await flush();
+      task.cancel();
+
+      return {
+        redirected: dispatched.some(({ type }) => type === TEST_CASE_LIBRARY_PAGE),
+        notifications: dispatched.filter(({ type }) => type === 'showNotification'),
+      };
+    };
+
+    test('redirects to the library when the test case is not found', async () => {
+      const { redirected, notifications } = await run({ errorCode: 40430, message: 'not found' });
+
+      expect(redirected).toBe(true);
+      expect(notifications[0].payload.messageId).toBe('redirectWarningMessage');
+    });
+
+    test('stays on the page on a transient error while the test case is displayed', async () => {
+      const { redirected, notifications } = await run(
+        { errorCode: 5000, message: 'boom' },
+        { id: 7 },
+      );
+
+      expect(redirected).toBe(false);
+      expect(notifications[0].payload.message).toBe('boom');
+    });
+
+    test('does nothing visible when the request was cancelled', async () => {
+      const { redirected, notifications } = await run(new Error('REQUEST_CANCELED'), { id: 7 });
+
+      expect(redirected).toBe(false);
+      expect(notifications).toHaveLength(0);
     });
   });
 });

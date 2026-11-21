@@ -32,6 +32,7 @@ import { isEmpty } from 'es-toolkit/compat';
 import { URLS } from 'common/urls';
 import { fetch, delayedPut } from 'common/utils';
 import { getApiErrorMessage } from 'common/utils/apiResponse';
+import { ERROR_CANCELED } from 'common/utils/fetch';
 import { fetchSuccessAction, fetchErrorAction } from 'controllers/fetch';
 import { FETCH_START } from 'controllers/fetch/constants';
 import {
@@ -93,7 +94,11 @@ import { getAllFolderIdsToDelete } from 'common/utils/folderUtils';
 import { fetchAllFolders } from './utils/fetchAllFolders';
 import { TestCase } from 'types/testCase';
 import { Page } from 'types/common';
-import { areFoldersFetchedSelector, foldersSelector } from 'controllers/testCase/selectors';
+import {
+  areFoldersFetchedSelector,
+  foldersSelector,
+  testCaseDetailsSelector,
+} from 'controllers/testCase/selectors';
 import {
   TEST_CASE_LIBRARY_PAGE,
   urlOrganizationSlugSelector,
@@ -142,6 +147,13 @@ function* getTestCasesByFolderId(action: GetTestCasesByFolderIdAction): Generato
   }
 }
 
+// ErrorRS codes: 404xx = not found, 4003 = access denied.
+const isNotFoundOrForbidden = (error: unknown) => {
+  const errorCode = String((error as { errorCode?: number })?.errorCode ?? '');
+
+  return errorCode.startsWith('404') || errorCode === '4003';
+};
+
 function* getTestCaseDetails(action: TestCaseDetailsAction) {
   try {
     const projectKey = (yield select(projectKeySelector)) as string;
@@ -154,31 +166,52 @@ function* getTestCaseDetails(action: TestCaseDetailsAction) {
       type: GET_TEST_CASE_DETAILS_SUCCESS,
       payload: testCaseDetails,
     });
-  } catch {
-    const organizationSlug = (yield select(urlOrganizationSlugSelector)) as string;
-    const projectSlug = (yield select(urlProjectSlugSelector)) as string;
-
-    yield put({
-      type: TEST_CASE_LIBRARY_PAGE,
-      payload: {
-        organizationSlug,
-        projectSlug,
-      },
-    });
-
+  } catch (error: unknown) {
     yield put({
       type: GET_TEST_CASE_DETAILS_FAILURE,
       error: 'errorOccurredTryAgain',
     });
 
-    yield put(
-      showNotification({
-        messageId: 'redirectWarningMessage',
-        type: NOTIFICATION_TYPES.WARNING,
-        typographyColor: NOTIFICATION_TYPOGRAPHY_COLOR_TYPES.BLACK,
-        duration: WARNING_NOTIFICATION_DURATION,
-      }),
-    );
+    if ((error as Error)?.message === ERROR_CANCELED) {
+      return;
+    }
+
+    const isMissing = isNotFoundOrForbidden(error);
+    const currentDetails = (yield select(testCaseDetailsSelector)) as TestCase | undefined;
+    const hasCurrentDetails = String(currentDetails?.id) === String(action.payload.testCaseId);
+
+    // Stay on the page for transient errors when the requested test case is already displayed;
+    // leave it when the test case is gone, or when only another test case's data could be shown.
+    if (isMissing || !hasCurrentDetails) {
+      const organizationSlug = (yield select(urlOrganizationSlugSelector)) as string;
+      const projectSlug = (yield select(urlProjectSlugSelector)) as string;
+
+      yield put({
+        type: TEST_CASE_LIBRARY_PAGE,
+        payload: {
+          organizationSlug,
+          projectSlug,
+        },
+      });
+    }
+
+    if (isMissing) {
+      yield put(
+        showNotification({
+          messageId: 'redirectWarningMessage',
+          type: NOTIFICATION_TYPES.WARNING,
+          typographyColor: NOTIFICATION_TYPOGRAPHY_COLOR_TYPES.BLACK,
+          duration: WARNING_NOTIFICATION_DURATION,
+        }),
+      );
+    } else {
+      yield put(
+        showErrorNotification({
+          message: getApiErrorMessage(error),
+          messageId: getApiErrorMessage(error) ? '' : 'errorOccurredTryAgain',
+        }),
+      );
+    }
   }
 }
 
