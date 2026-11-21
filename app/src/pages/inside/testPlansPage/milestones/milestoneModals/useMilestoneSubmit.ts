@@ -27,6 +27,7 @@ import {
   getMilestonesAction,
   TmsMilestoneRS,
 } from 'controllers/milestone';
+import { resetHasTestPlansCache } from 'hooks/useHasTestPlans';
 
 import type { MilestoneSubmitPayload, UseMilestoneSubmitParams } from './types';
 
@@ -57,6 +58,7 @@ export const useMilestoneSubmit = ({
       });
 
       onSuccess?.();
+      resetHasTestPlansCache();
       dispatch(hideModalAction());
       dispatch(
         showSuccessNotification({

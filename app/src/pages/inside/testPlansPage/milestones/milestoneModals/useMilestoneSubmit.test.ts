@@ -17,6 +17,8 @@
 import { act, createElement } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
 
+import { resetHasTestPlansCache } from 'hooks/useHasTestPlans';
+
 import { useMilestoneSubmit } from './useMilestoneSubmit';
 
 const mockDispatch = jest.fn();
@@ -39,6 +41,10 @@ jest.mock('common/hooks', () => ({
     hideSpinner: jest.fn(),
   }),
   useQueryParams: () => ({ offset: 0, limit: 20 }),
+}));
+
+jest.mock('hooks/useHasTestPlans', () => ({
+  resetHasTestPlansCache: jest.fn(),
 }));
 
 (globalThis as { IS_REACT_ACT_ENVIRONMENT?: boolean }).IS_REACT_ACT_ENVIRONMENT = true;
@@ -115,5 +121,13 @@ describe('useMilestoneSubmit', () => {
         }) as unknown,
       }),
     );
+  });
+
+  test('resets the "has test plans" cache after a successful submit', async () => {
+    mockFetch.mockResolvedValueOnce({});
+
+    await hook.submit(payload);
+
+    expect(resetHasTestPlansCache).toHaveBeenCalledTimes(1);
   });
 });
