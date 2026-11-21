@@ -142,6 +142,7 @@ export const ManualLaunchExecutions = ({
         executionIds: selectedRowIds,
         launchId,
         onClearSelection,
+        onKeepSelection: setSelectedRowIds,
       });
     }
   }, [selectedRowIds, launchId, openDeleteExecutionModal, onClearSelection, trackEvent]);

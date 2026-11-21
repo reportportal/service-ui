@@ -28,6 +28,7 @@ export interface BatchDeleteExecutionData {
   executionIds: number[];
   launchId: string | number;
   onClearSelection?: VoidFn;
+  onKeepSelection?: (executionIds: number[]) => void;
 }
 
 export type DeleteExecutionModalData = SingleDeleteExecutionData | BatchDeleteExecutionData;
