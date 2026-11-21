@@ -21,6 +21,7 @@ import { isNotNil } from 'es-toolkit';
 import { MILESTONES_PAGE_EVENTS } from 'analyticsEvents/milestonesPageEvents';
 import { URLS } from 'common/urls';
 import { fetch } from 'common/utils';
+import { getApiErrorMessage } from 'common/utils/apiResponse';
 import { useDebouncedSpinner, useQueryParams } from 'common/hooks';
 import { projectKeySelector } from 'controllers/project';
 import { hideModalAction } from 'controllers/modal';
@@ -91,10 +92,11 @@ export const useCreateTestPlan = ({ milestoneId }: CreateTestPlanModalData = {})
         dispatch(getMilestonesAction());
         resetHasTestPlansCache();
       }
-    } catch {
+    } catch (error) {
       dispatch(
         showErrorNotification({
-          messageId: 'errorOccurredTryAgain',
+          message: getApiErrorMessage(error),
+          messageId: getApiErrorMessage(error) ? '' : 'errorOccurredTryAgain',
         }),
       );
     } finally {

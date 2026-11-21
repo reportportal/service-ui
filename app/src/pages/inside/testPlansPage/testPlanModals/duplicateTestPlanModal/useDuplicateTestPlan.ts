@@ -19,6 +19,7 @@ import { isNotNil, noop } from 'es-toolkit';
 
 import { URLS } from 'common/urls';
 import { fetch } from 'common/utils';
+import { getApiErrorMessage } from 'common/utils/apiResponse';
 import { useDebouncedSpinner, useQueryParams } from 'common/hooks';
 import { projectKeySelector } from 'controllers/project';
 import { hideModalAction } from 'controllers/modal';
@@ -68,10 +69,11 @@ export const useDuplicateTestPlan = ({
       dispatch(getTestPlansAction(queryParams));
       dispatch(getMilestonesAction());
       onSuccess(response.id, payload.attributes?.length ?? 0);
-    } catch {
+    } catch (error) {
       dispatch(
         showErrorNotification({
-          messageId: 'errorOccurredTryAgain',
+          message: getApiErrorMessage(error),
+          messageId: getApiErrorMessage(error) ? '' : 'errorOccurredTryAgain',
         }),
       );
     } finally {
