@@ -1173,7 +1173,7 @@
   "ForgotPasswordForm.cancel": "Cancelar",
   "ForgotPasswordForm.emailPlaceholder": "Correo electrónico",
   "ForgotPasswordForm.sendEmail": "Enviar",
-  "ForgotPasswordForm.successSendEmail": "Las instrucciones para restablecer la contraseña se han enviado a la dirección de correo electrónico {email}",
+  "ForgotPasswordForm.successSendEmail": "Si existe una cuenta para {email}, se han enviado a esa dirección las instrucciones para restablecer la contraseña",
   "Fullscreen.exitNote": "Presione <b>Esc</b> para salir del modo de pantalla completa",
   "GeneralTab.day1": "1 día",
   "GeneralTab.day2": "2 días",

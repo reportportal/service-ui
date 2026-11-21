@@ -16,6 +16,25 @@
 
 import { fetch } from 'common/utils/fetch';
 
+// Reads the file name from a Content-Disposition header. Prefers the RFC 5987 `filename*` parameter
+// (percent-encoded UTF-8) and falls back to the plain `filename`, quoted or not, wherever it stands.
+export const getFileNameFromContentDisposition = (header, fileNameFallback = '') => {
+  if (!header) {
+    return fileNameFallback;
+  }
+  const encoded = /filename\*\s*=\s*(?:UTF-8'[^']*')?([^;]+)/i.exec(header);
+  if (encoded) {
+    try {
+      return decodeURIComponent(encoded[1].trim().replace(/^"|"$/g, ''));
+    } catch {
+      // malformed encoding: fall through to the plain parameter
+    }
+  }
+  const plain = /filename\s*=\s*(?:"([^"]*)"|([^;]+))/i.exec(header);
+  const fileName = plain ? (plain[1] ?? plain[2]).trim() : '';
+  return fileName || fileNameFallback;
+};
+
 export const downloadFile = (url, requestParams = {}, fileNameFallback = '') => {
   return fetch(
     url,
@@ -27,8 +46,7 @@ export const downloadFile = (url, requestParams = {}, fileNameFallback = '') => 
   ).then((response) => {
     const data = response.data;
     const attachmentHeader = response.headers['content-disposition'];
-    const extractedFileName = /filename="(.*?)"(?:$)/.exec(attachmentHeader);
-    const fileName = extractedFileName ? extractedFileName[1] : fileNameFallback;
+    const fileName = getFileNameFromContentDisposition(attachmentHeader, fileNameFallback);
     const objectURL = URL.createObjectURL(data);
     if ('msSaveOrOpenBlob' in navigator) {
       navigator.msSaveOrOpenBlob(data, fileName);

@@ -23,6 +23,7 @@ import Parser from 'html-react-parser';
 import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
 import { showModalAction } from 'controllers/modal';
 import { userInfoSelector, fetchUserAction } from 'controllers/user';
+import { logoutAction } from 'controllers/auth';
 import { fetch } from 'common/utils';
 import { URLS } from 'common/urls';
 import { INTERNAL } from 'common/constants/accountType';
@@ -36,6 +37,10 @@ const messages = defineMessages({
     id: 'UserInfo.submitSuccess',
     defaultMessage: 'Changes have been saved successfully',
   },
+  emailChanged: {
+    id: 'UserInfo.emailChanged',
+    defaultMessage: 'Your email has been changed. Please sign in again with the new email',
+  },
   submitError: {
     id: 'UserInfo.submitError',
     defaultMessage: "Error! Can't save changes",
@@ -47,7 +52,7 @@ const messages = defineMessages({
     name: userInfoSelector(state).fullName,
     email: userInfoSelector(state).email,
   }),
-  { showNotification, showModalAction, fetchUserAction },
+  { showNotification, showModalAction, fetchUserAction, logoutAction },
 )
 @injectIntl
 export class UserInfo extends Component {
@@ -60,6 +65,7 @@ export class UserInfo extends Component {
     showModalAction: PropTypes.func.isRequired,
     showNotification: PropTypes.func.isRequired,
     fetchUserAction: PropTypes.func,
+    logoutAction: PropTypes.func,
   };
   static defaultProps = {
     userId: '',
@@ -67,6 +73,7 @@ export class UserInfo extends Component {
     email: '',
     accountType: '',
     fetchUserAction: () => {},
+    logoutAction: () => {},
   };
 
   onEdit = () => {
@@ -87,6 +94,18 @@ export class UserInfo extends Component {
       data: { fullName: data.name, email: data.email },
     })
       .then(() => {
+        // The email is the login: the server revokes the user's tokens when it changes,
+        // so the current session cannot be continued.
+        const isEmailChanged =
+          (data.email || '').trim().toLowerCase() !== (this.props.email || '').trim().toLowerCase();
+        if (isEmailChanged) {
+          this.props.showNotification({
+            message: this.props.intl.formatMessage(messages.emailChanged),
+            type: NOTIFICATION_TYPES.SUCCESS,
+          });
+          this.props.logoutAction();
+          return;
+        }
         this.props.fetchUserAction();
         this.props.showNotification({
           message: this.props.intl.formatMessage(messages.submitSuccess),

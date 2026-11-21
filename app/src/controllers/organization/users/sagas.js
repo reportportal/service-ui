@@ -20,7 +20,11 @@ import { put, select, takeEvery, call, all } from 'redux-saga/effects';
 import { querySelector } from './selectors';
 import { fetchOrganizationUsersAction } from './actionCreators';
 import { withActiveOrganization } from '../withActiveOrganizationSaga';
-import { showSuccessNotification, showErrorNotification } from 'controllers/notification';
+import {
+  showSuccessNotification,
+  showErrorNotification,
+  showDefaultErrorNotification,
+} from 'controllers/notification';
 import { fetch } from 'common/utils';
 import { userInfoSelector } from 'controllers/user';
 import {
@@ -115,9 +119,14 @@ function* updateUserAssignments({ payload }) {
     );
     yield put(fetchOrganizationUsersAction(organizationId));
     onSuccess?.();
-  } catch {
+  } catch (error) {
     yield put({ type: UPDATE_USER_ASSIGNMENTS_FAILURE });
-    yield put(showErrorNotification({ messageId: 'updateAssignmentsError' }));
+    // The server explains why an assignment change was refused (user type, own role, personal organization).
+    yield put(
+      error?.message
+        ? showDefaultErrorNotification(error)
+        : showErrorNotification({ messageId: 'updateAssignmentsError' }),
+    );
   }
 }
 
