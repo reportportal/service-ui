@@ -3,6 +3,7 @@ import { all, takeEvery } from 'redux-saga/effects';
 import { URLS } from 'common/urls';
 import { fetch } from 'common/utils';
 import { setActiveProjectAction } from 'controllers/user';
+import { showDefaultErrorNotification } from 'controllers/notification';
 import { SET_ACTIVE_PROJECT, SET_ACTIVE_PROJECT_KEY } from 'controllers/user/constants';
 import {
   setProjectNotificationsLoadingAction,
@@ -16,6 +17,9 @@ import {
   fetchExistingLaunchNames,
   fetchProject,
   prepareActiveProject,
+  fetchProjectPreferences,
+  fetchConfigurationAttributes,
+  updateProjectFilterPreferences,
 } from './sagas';
 
 jest.mock('common/utils', () => ({
@@ -188,6 +192,33 @@ describe('controllers/project/sagas', () => {
         { type: ROUTE_TYPE, payload: { organizationSlug: 'org', projectSlug: 'b' } },
       ]);
       expect(fetch).toHaveBeenCalledTimes(2);
+    });
+  });
+
+  describe('failing project requests', () => {
+    test.each([
+      ['fetchProjectPreferences', fetchProjectPreferences, { payload: 'demo' }],
+      ['fetchConfigurationAttributes', fetchConfigurationAttributes, { payload: 'demo' }],
+      [
+        'updateProjectFilterPreferences',
+        updateProjectFilterPreferences,
+        { payload: { filterId: 1, method: 'PUT' } },
+      ],
+    ])('%s shows an error notification instead of throwing', async (name, saga, action) => {
+      const error = { message: 'Bad gateway' };
+      const dispatched = [];
+      fetch.mockRejectedValue(error);
+
+      await runSaga(
+        {
+          dispatch: (dispatchedAction) => dispatched.push(dispatchedAction),
+          getState: () => ({ project: { info: { projectKey: 'demo' } } }),
+        },
+        saga,
+        action,
+      ).done;
+
+      expect(dispatched).toEqual([showDefaultErrorNotification(error)]);
     });
   });
 });

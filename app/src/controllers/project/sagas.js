@@ -592,19 +592,27 @@ function* watchPrepareActiveProject() {
   yield takeEvery(PREPARE_ACTIVE_PROJECT, prepareActiveProject);
 }
 
-function* fetchProjectPreferences({ payload: projectKey }) {
-  const preferences = yield call(fetch, URLS.projectPreferences(projectKey));
-  yield put(fetchProjectPreferencesSuccessAction(preferences));
-  yield put(fetchUserFiltersSuccessAction(preferences.filters));
+export function* fetchProjectPreferences({ payload: projectKey }) {
+  try {
+    const preferences = yield call(fetch, URLS.projectPreferences(projectKey));
+    yield put(fetchProjectPreferencesSuccessAction(preferences));
+    yield put(fetchUserFiltersSuccessAction(preferences.filters));
+  } catch (error) {
+    yield put(showDefaultErrorNotification(error));
+  }
 }
 
 function* watchFetchProjectPreferences() {
   yield takeEvery(FETCH_PROJECT_PREFERENCES, fetchProjectPreferences);
 }
 
-function* fetchConfigurationAttributes({ payload: projectKey }) {
-  const project = yield call(fetch, URLS.projectByName(projectKey));
-  yield put(updateConfigurationAttributesAction(project));
+export function* fetchConfigurationAttributes({ payload: projectKey }) {
+  try {
+    const project = yield call(fetch, URLS.projectByName(projectKey));
+    yield put(updateConfigurationAttributesAction(project));
+  } catch (error) {
+    yield put(showDefaultErrorNotification(error));
+  }
 }
 
 function* watchFetchConfigurationAttributes() {
@@ -632,10 +640,14 @@ function* watchShowFilterOnLaunches() {
   yield takeEvery(SHOW_FILTER_ON_LAUNCHES, showFilterOnLaunches);
 }
 
-function* updateProjectFilterPreferences({ payload = {} }) {
+export function* updateProjectFilterPreferences({ payload = {} }) {
   const { filterId, method } = payload;
-  const projectKey = yield select(projectKeySelector);
-  yield call(fetch, URLS.projectPreferences(projectKey, filterId), { method });
+  try {
+    const projectKey = yield select(projectKeySelector);
+    yield call(fetch, URLS.projectPreferences(projectKey, filterId), { method });
+  } catch (error) {
+    yield put(showDefaultErrorNotification(error));
+  }
 }
 
 function* watchUpdateProjectFilterPreferences() {
