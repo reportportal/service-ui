@@ -81,6 +81,7 @@ export const ExpandedOptions = ({
   onMoveTestCase,
   onDuplicateTestCase,
   onFolderTreeViewControl,
+  pendingFolderIds,
 }: ExpandedOptionsProps) => {
   const { formatMessage } = useIntl();
   const { expandedIds, onToggleFolder, setExpandedIds } = useStorageFolders(instanceKey);
@@ -119,8 +120,7 @@ export const ExpandedOptions = ({
   } = searchFilteredData ?? internalSearchData;
 
   const hasFolderSidebarFilters = useMemo(
-    () =>
-      Boolean(pageSearchQuery || (searchExtraFilters && !isEmpty(searchExtraFilters))),
+    () => Boolean(pageSearchQuery || (searchExtraFilters && !isEmpty(searchExtraFilters))),
     [pageSearchQuery, searchExtraFilters],
   );
 
@@ -143,9 +143,7 @@ export const ExpandedOptions = ({
   );
 
   const folderSearchSource = hasFolderSidebarFilters ? searchFilteredFolders : folders;
-  const folderSearchExpandedIds = hasFolderSidebarFilters
-    ? searchFilteredExpandedIds
-    : expandedIds;
+  const folderSearchExpandedIds = hasFolderSidebarFilters ? searchFilteredExpandedIds : expandedIds;
 
   const {
     searchQuery,
@@ -383,6 +381,7 @@ export const ExpandedOptions = ({
                 enableDragAndDrop={isDragAndDropEnabled}
                 isFlatView={isFlatView}
                 hiddenActiveFolderIndicatorId={hiddenActiveFolderIndicatorId}
+                pendingFolderIds={pendingFolderIds}
                 canDropOn={isDragAndDropEnabled ? canDropOn : undefined}
                 setAllTestCases={setAllTestCases}
                 onToggleFolder={handleToggleFolder}
