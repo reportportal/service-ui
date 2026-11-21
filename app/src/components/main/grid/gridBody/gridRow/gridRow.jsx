@@ -71,6 +71,9 @@ export class GridRow extends Component {
     scrollOnHighlight: PropTypes.bool,
     setHighlighting: PropTypes.func,
     rowStylesMapper: PropTypes.func,
+    // lets the owner of the rows measure the row element (virtualised lists)
+    measureRef: PropTypes.func,
+    dataIndex: PropTypes.number,
   };
 
   static defaultProps = {
@@ -102,6 +105,8 @@ export class GridRow extends Component {
     scrollOnHighlight: true,
     setHighlighting: () => {},
     rowStylesMapper: () => {},
+    measureRef: null,
+    dataIndex: undefined,
   };
 
   state = {
@@ -176,6 +181,11 @@ export class GridRow extends Component {
 
   rowRef = React.createRef();
   descriptionRef = React.createRef();
+
+  setRowRef = (element) => {
+    this.rowRef.current = element;
+    this.props.measureRef?.(element);
+  };
 
   highLightGridRow() {
     this.props.setHighlighting(true);
@@ -256,7 +266,8 @@ export class GridRow extends Component {
           ...customClasses,
         })}
         data-id={value.id}
-        ref={this.rowRef}
+        data-index={this.props.dataIndex}
+        ref={this.setRowRef}
         onClick={onClickRow ? this.handleRowClick : null}
         style={{
           '--background-color': !isSelected && backgroundColor,

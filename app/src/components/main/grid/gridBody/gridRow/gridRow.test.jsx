@@ -170,4 +170,31 @@ describe('GridRow', () => {
       expect(wrapper.state('expanded')).toBe(true);
     });
   });
+
+  describe('measuring', () => {
+    test('passes the row element to measureRef and marks it with the index', () => {
+      const measureRef = jest.fn();
+      const wrapper = render({ measureRef, dataIndex: 7 });
+      const element = wrapper.find('.grid-row-wrapper').getDOMNode();
+
+      expect(measureRef).toHaveBeenCalledWith(element);
+      expect(element.getAttribute('data-index')).toBe('7');
+    });
+
+    test('keeps its own row reference for the highlight scrolling', () => {
+      render({
+        measureRef: jest.fn(),
+        highlightOnMount: true,
+        rowHighlightingConfig: { highlightedRowId: 5, isGridRowHighlighted: true },
+      });
+
+      expect(scrollIntoView).toHaveBeenCalledTimes(1);
+    });
+
+    test('renders no index without dataIndex', () => {
+      const element = render().find('.grid-row-wrapper').getDOMNode();
+
+      expect(element.hasAttribute('data-index')).toBe(false);
+    });
+  });
 });

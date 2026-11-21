@@ -59,6 +59,9 @@ export class NestedStepHeader extends Component {
     logsSize: PropTypes.string,
     autoExpandDone: PropTypes.bool,
     requestNestedStep: PropTypes.func,
+    // lets the owner of the rows measure the header element (virtualised lists)
+    measureRef: PropTypes.func,
+    dataIndex: PropTypes.number,
   };
 
   static defaultProps = {
@@ -72,6 +75,8 @@ export class NestedStepHeader extends Component {
     logsSize: DEFAULT_LOGS_SIZE,
     autoExpandDone: false,
     requestNestedStep: () => {},
+    measureRef: null,
+    dataIndex: undefined,
   };
 
   componentDidMount() {
@@ -144,9 +149,13 @@ export class NestedStepHeader extends Component {
   };
 
   render() {
-    const { data, level, logsSize } = this.props;
+    const { data, level, logsSize, measureRef, dataIndex } = this.props;
     return (
-      <div className={cx('header-container', `header-size-${logsSize}`)}>
+      <div
+        className={cx('header-container', `header-size-${logsSize}`)}
+        ref={measureRef}
+        data-index={dataIndex}
+      >
         <div
           className={cx('row', {
             [`level-${level}`]: level !== 0,

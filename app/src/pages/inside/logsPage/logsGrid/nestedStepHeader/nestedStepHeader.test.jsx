@@ -92,4 +92,16 @@ describe('NestedStepHeader', () => {
 
     expect(requests()).toHaveLength(0);
   });
+
+  test('passes the header element to measureRef and marks it with the index', () => {
+    const { store } = createTestStore();
+    const measureRef = jest.fn();
+
+    const element = mountHeader(store, { measureRef, dataIndex: 4, collapsed: false })
+      .find('.header-container')
+      .getDOMNode();
+
+    expect(measureRef).toHaveBeenCalledWith(element);
+    expect(element.getAttribute('data-index')).toBe('4');
+  });
 });
