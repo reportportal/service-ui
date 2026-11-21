@@ -34,13 +34,17 @@ interface UseTestCaseDetailsParams {
 export const useTestCaseDetails = ({ testCaseId, testPlanId }: UseTestCaseDetailsParams) => {
   const { isLoading, showSpinner, hideSpinner } = useDebouncedSpinner();
   const [testCaseDetails, setTestCaseDetails] = useState<ExtendedTestCase | null>(null);
+  const [isFailed, setIsFailed] = useState(false);
 
   const dispatch = useDispatch();
   const projectKey = useSelector(projectKeySelector);
 
   useEffect(() => {
+    // never show the previous test case's details under the newly selected one
+    setTestCaseDetails(null);
+    setIsFailed(false);
+
     if (!testCaseId) {
-      setTestCaseDetails(null);
       return;
     }
 
@@ -65,6 +69,7 @@ export const useTestCaseDetails = ({ testCaseId, testPlanId }: UseTestCaseDetail
           return;
         }
 
+        setIsFailed(true);
         dispatch(
           showErrorNotification({
             message: getApiErrorMessage(error),
@@ -94,6 +99,7 @@ export const useTestCaseDetails = ({ testCaseId, testPlanId }: UseTestCaseDetail
   return {
     testCaseDetails,
     isLoading,
+    isFailed,
     isManualCovered,
   };
 };
