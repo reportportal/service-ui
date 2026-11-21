@@ -32,10 +32,18 @@ export function mapAttachmentForExecutionCommentPayload(a: Attachment): {
   };
 }
 
-export function isAttachmentRemoved(
-  id: string | number,
-  removed: Array<string | number>,
-): boolean {
+export function isAttachmentRemoved(id: string | number, removed: Array<string | number>): boolean {
   const idStr = String(id);
   return removed.some((r) => String(r) === idStr);
+}
+
+// The API reports "not found" with errorCode 404x / 404xx (ErrorRS); the HTTP status is not
+// available after fetch rethrows the response body.
+export function isNotFoundApiError(error: unknown): boolean {
+  const errorCode = (error as { errorCode?: unknown } | null | undefined)?.errorCode;
+
+  return (
+    (typeof errorCode === 'number' || typeof errorCode === 'string') &&
+    String(errorCode).startsWith('404')
+  );
 }

@@ -18,7 +18,8 @@ import { applyMiddleware, createStore, AnyAction } from 'redux';
 import createSagaMiddleware from 'redux-saga';
 import { fetch } from 'common/utils';
 import { URLS } from 'common/urls';
-import { FETCH_SUCCESS } from 'controllers/fetch/constants';
+import { FETCH_ERROR, FETCH_SUCCESS } from 'controllers/fetch/constants';
+import { MANUAL_LAUNCHES_PAGE } from 'controllers/pages';
 import { manualLaunchesSagas } from './sagas';
 import {
   getManualLaunchAction,
@@ -181,5 +182,36 @@ describe('controllers/manualLaunch/sagas', () => {
     );
     // The launch is already in the store for the same route, yet "force" fetches it again.
     expect(mockedFetch).toHaveBeenCalledWith(URLS.manualLaunchById('demo', 10));
+  });
+
+  describe('launch load errors', () => {
+    const launchPageState = {
+      project: { info: { projectKey: 'demo' } },
+      location: {
+        type: 'MANUAL_LAUNCH_DETAILS_PAGE',
+        payload: { launchId: '10', organizationSlug: 'org', projectSlug: 'prj' },
+      },
+    };
+
+    test('a missing launch redirects to the launch list', async () => {
+      mockedFetch.mockRejectedValue({ errorCode: 40430, message: 'not found' });
+      const { store, dispatched } = setupStore(launchPageState);
+
+      store.dispatch(getManualLaunchAction({ launchId: '10' }));
+      await flush();
+
+      expect(dispatched.map((action) => action.type as string)).toContain(MANUAL_LAUNCHES_PAGE);
+    });
+
+    test('any other error stays on the page', async () => {
+      mockedFetch.mockRejectedValue({ errorCode: 5000, message: 'statistics failed' });
+      const { store, dispatched } = setupStore(launchPageState);
+
+      store.dispatch(getManualLaunchAction({ launchId: '10' }));
+      await flush();
+
+      expect(dispatched.map((action) => action.type as string)).not.toContain(MANUAL_LAUNCHES_PAGE);
+      expect(dispatched.map((action) => action.type as string)).toContain(FETCH_ERROR);
+    });
   });
 });
