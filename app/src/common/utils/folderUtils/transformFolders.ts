@@ -120,17 +120,34 @@ export const collectAllTransformedFolderIds = (folders: TransformedFolder[]): nu
  * Recursively collects all folder IDs that should be deleted when a folder is deleted
  * (including all subfolders)
  */
+const groupChildIdsByParentId = (folders: BaseFolder[]): Map<number, number[]> => {
+  const childIdsByParentId = new Map<number, number[]>();
+
+  folders.forEach(({ id, parentFolderId }) => {
+    if (isNil(parentFolderId)) {
+      return;
+    }
+
+    const childIds = childIdsByParentId.get(parentFolderId);
+
+    if (childIds) {
+      childIds.push(id);
+    } else {
+      childIdsByParentId.set(parentFolderId, [id]);
+    }
+  });
+
+  return childIdsByParentId;
+};
+
 export const getAllFolderIdsToDelete = (targetId: number, folderList: BaseFolder[]): number[] => {
   const idsToDelete: number[] = [];
+  const childIdsByParentId = groupChildIdsByParentId(folderList);
 
   const collectIds = (id: number) => {
     idsToDelete.push(id);
 
-    folderList.forEach((folder) => {
-      if (folder.parentFolderId === id) {
-        collectIds(folder.id);
-      }
-    });
+    childIdsByParentId.get(id)?.forEach(collectIds);
   };
 
   collectIds(targetId);
@@ -158,13 +175,12 @@ export const filterEmptyFolders = (folders: TransformedFolder[]): TransformedFol
  */
 export const getAllSubfolderIds = (folderId: number, folders: BaseFolder[]): number[] => {
   const subfolderIds: number[] = [folderId];
+  const childIdsByParentId = groupChildIdsByParentId(folders);
 
   const collectSubfolderIds = (parentId: number) => {
-    folders.forEach((folder) => {
-      if (folder.parentFolderId === parentId) {
-        subfolderIds.push(folder.id);
-        collectSubfolderIds(folder.id);
-      }
+    childIdsByParentId.get(parentId)?.forEach((childId) => {
+      subfolderIds.push(childId);
+      collectSubfolderIds(childId);
     });
   };
 
