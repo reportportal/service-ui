@@ -361,28 +361,33 @@ function* fetchLog({ payload: { logInfo, callback, shouldClearSearchFilter = fal
   yield callback?.();
 }
 
-function* fetchHistoryItems({ payload } = { payload: {} }) {
+export function* fetchHistoryItems({ payload } = { payload: {} }) {
   const { loadMore, callback } = payload;
-  const projectKey = yield select(projectKeySelector);
-  const logItemId = yield select(logItemIdSelector);
-  const historyItems = yield select(historyItemsSelector);
-  const isAllLaunches = yield select(includeAllLaunchesSelector);
-  const historyLineMode = isAllLaunches ? HISTORY_LINE_TABLE_MODE : HISTORY_LINE_DEFAULT_VALUE;
-  const historyDepth = loadMore
-    ? historyItems.length + NUMBER_OF_ITEMS_TO_LOAD
-    : DEFAULT_HISTORY_DEPTH;
-  const response = yield call(
-    fetch,
-    URLS.testItemsHistory(projectKey, historyDepth, historyLineMode, logItemId),
-  );
+  try {
+    const projectKey = yield select(projectKeySelector);
+    const logItemId = yield select(logItemIdSelector);
+    const historyItems = yield select(historyItemsSelector);
+    const isAllLaunches = yield select(includeAllLaunchesSelector);
+    const historyLineMode = isAllLaunches ? HISTORY_LINE_TABLE_MODE : HISTORY_LINE_DEFAULT_VALUE;
+    const historyDepth = loadMore
+      ? historyItems.length + NUMBER_OF_ITEMS_TO_LOAD
+      : DEFAULT_HISTORY_DEPTH;
+    const response = yield call(
+      fetch,
+      URLS.testItemsHistory(projectKey, historyDepth, historyLineMode, logItemId),
+    );
 
-  yield put(fetchHistoryItemsSuccessAction(response.content));
-  if (!loadMore) {
-    const currentItems = yield select(historyItemsSelector);
-    const loadedItems = currentItems.length - DEFAULT_HISTORY_DEPTH;
-    yield put(setShouldShowLoadMoreAction(loadedItems >= 0));
+    yield put(fetchHistoryItemsSuccessAction(response.content));
+    if (!loadMore) {
+      const currentItems = yield select(historyItemsSelector);
+      const loadedItems = currentItems.length - DEFAULT_HISTORY_DEPTH;
+      yield put(setShouldShowLoadMoreAction(loadedItems >= 0));
+    }
+  } catch (error) {
+    yield call(handleError, { payload: error });
+  } finally {
+    callback?.();
   }
-  callback?.();
 }
 
 function* fetchDetailsLog() {
@@ -412,17 +417,20 @@ function* fetchLogs() {
   }
 }
 
-function* fetchWholePage() {
+export function* fetchWholePage() {
   yield put(setPageLoadingAction(true));
-  yield call(fetchParentItems);
-  const testItems = yield select(itemsSelector);
-  if (!testItems.length) {
-    const offset = yield select(logPageOffsetSelector);
+  try {
+    yield call(fetchParentItems);
+    const testItems = yield select(itemsSelector);
+    if (!testItems.length) {
+      const offset = yield select(logPageOffsetSelector);
 
-    yield put(fetchTestItemsAction({ offset }));
+      yield put(fetchTestItemsAction({ offset }));
+    }
+    yield call(fetchLogs);
+  } finally {
+    yield put(setPageLoadingAction(false));
   }
-  yield call(fetchLogs);
-  yield put(setPageLoadingAction(false));
 }
 
 function* fetchHistoryItemData() {
@@ -474,8 +482,11 @@ function* fetchLogPageData({ meta = {} }) {
 
 function* fetchHistoryItemsWithLoading() {
   yield put(setPageLoadingAction(true));
-  yield call(fetchHistoryItems);
-  yield put(setPageLoadingAction(false));
+  try {
+    yield call(fetchHistoryItems);
+  } finally {
+    yield put(setPageLoadingAction(false));
+  }
 }
 
 function* loadMoreLogs({ payload: { direction } }) {

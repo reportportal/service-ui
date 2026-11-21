@@ -19,7 +19,8 @@ import {
   fetchNestedStepSuccessAction,
   loadMoreNestedStepAction,
 } from './nestedSteps/actionCreators';
-import { loadStep } from './sagas';
+import { setPageLoadingAction } from './actionCreators';
+import { loadStep, fetchHistoryItems, fetchWholePage } from './sagas';
 
 describe('controllers/log/sagas loadStep', () => {
   test('finishes as soon as the requested step fails to load', () => {
@@ -35,5 +36,27 @@ describe('controllers/log/sagas loadStep', () => {
     expect(pattern(fetchNestedStepSuccessAction({ id: 6 }))).toBe(false);
 
     expect(gen.next(fetchNestedStepErrorAction({ message: 'x' }, 5)).done).toBe(true);
+  });
+});
+
+describe('controllers/log/sagas history errors', () => {
+  test('fetchHistoryItems reports a failed request and still runs the callback', () => {
+    const callback = jest.fn();
+    const gen = fetchHistoryItems({ payload: { callback } });
+    let step = gen.next();
+    while (!step.value.CALL || step.value.CALL.args.length === 0) {
+      step = gen.next([]);
+    }
+    const errorStep = gen.throw({ message: 'History is unavailable' });
+    expect(errorStep.value.CALL.args).toEqual([{ payload: { message: 'History is unavailable' } }]);
+    expect(gen.next().done).toBe(true);
+    expect(callback).toHaveBeenCalledTimes(1);
+  });
+
+  test('fetchWholePage hides the page spinner when loading fails', () => {
+    const gen = fetchWholePage();
+    expect(gen.next().value.PUT.action).toEqual(setPageLoadingAction(true));
+    gen.next();
+    expect(gen.throw(new Error('boom')).value.PUT.action).toEqual(setPageLoadingAction(false));
   });
 });
