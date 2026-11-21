@@ -59,7 +59,11 @@ export const useIssueInfo = (issue, pluginName) => {
 
   const updateIssueInStorage = useCallback(
     (data = {}) => {
-      updateCachedTicket(getTicketsStorageKey(userId, projectKey), `${btsProject}_${ticketId}`, data);
+      updateCachedTicket(
+        getTicketsStorageKey(userId, projectKey),
+        `${btsProject}_${ticketId}`,
+        data,
+      );
     },
     [userId, projectKey, btsProject, ticketId],
   );
