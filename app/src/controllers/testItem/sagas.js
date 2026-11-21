@@ -409,7 +409,7 @@ function* refreshSearchedItemsFromWidget({ payload: widgetId }) {
   yield put(testItemsSearchAction({ widgetId, searchParams: { searchCriteria } }));
 }
 
-function* loadMoreSearchedItemsFromWidget({
+export function* loadMoreSearchedItemsFromWidget({
   payload: { widgetId, trackPerformance = () => {}, isDisplayedLaunches = false },
 }) {
   const startTime = performance.now();
@@ -418,12 +418,20 @@ function* loadMoreSearchedItemsFromWidget({
   const { searchCriteria, sortingDirection, page, content = [] } = targetWidgetSearch;
   const currentPageNumber = page?.number;
   yield updateSearchedItemsState(widgetId)({ ...targetWidgetSearch, loadingMore: true });
-  const result = yield call(
-    fetchSearchedItems,
-    searchCriteria,
-    sortingDirection,
-    currentPageNumber + 1,
-  );
+  let result;
+  try {
+    result = yield call(
+      fetchSearchedItems,
+      searchCriteria,
+      sortingDirection,
+      currentPageNumber + 1,
+    );
+  } catch (error) {
+    // keep the items already shown and let the user try "Load more" again
+    yield updateSearchedItemsState(widgetId)({ ...targetWidgetSearch, loadingMore: false });
+    yield put(showDefaultErrorNotification(error));
+    return;
+  }
   yield updateSearchedItemsState(widgetId)({
     searchCriteria,
     sortingDirection,
