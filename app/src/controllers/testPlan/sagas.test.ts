@@ -18,7 +18,7 @@ import { runSaga } from 'redux-saga';
 
 import { PROJECT_MILESTONES_PAGE } from 'controllers/pages';
 
-import { getTestPlanAction } from './actionCreators';
+import { getTestPlanAction, type GetTestPlanParams } from './actionCreators';
 import { getTestPlan } from './sagas';
 
 const mockFetch = jest.fn();
@@ -30,7 +30,9 @@ jest.mock('common/utils', () => ({
 
 const locationPayload = { organizationSlug: 'org', projectSlug: 'proj', testPlanId: '5' };
 
-const runGetTestPlan = async () => {
+let prevPayload: Record<string, string> = {};
+
+const runGetTestPlan = async (params: Partial<GetTestPlanParams> = {}) => {
   const dispatched: Array<{ type: string; payload?: Record<string, unknown> }> = [];
 
   await runSaga(
@@ -38,11 +40,11 @@ const runGetTestPlan = async () => {
       dispatch: (action: { type: string }) => dispatched.push(action),
       getState: () => ({
         project: { info: { projectKey: 'proj' } },
-        location: { payload: locationPayload, prev: { payload: {} } },
+        location: { payload: locationPayload, prev: { payload: prevPayload } },
       }),
     },
     getTestPlan,
-    getTestPlanAction({ testPlanId: 5 }),
+    getTestPlanAction({ testPlanId: 5, ...params }),
   ).done;
 
   return dispatched;
@@ -51,6 +53,7 @@ const runGetTestPlan = async () => {
 describe('getTestPlan saga', () => {
   beforeEach(() => {
     mockFetch.mockReset();
+    prevPayload = {};
   });
 
   test('redirects to milestones when the plan is not found', async () => {
@@ -75,5 +78,27 @@ describe('getTestPlan saga', () => {
         }) as unknown,
       }),
     );
+  });
+
+  test('reloads the plan header and folders in place when forced on the same plan', async () => {
+    prevPayload = locationPayload;
+    mockFetch.mockResolvedValue({ id: 5, content: [] });
+
+    await runGetTestPlan({ folderId: '12', offset: 100, limit: 50, forceReloadPlan: true });
+
+    const urls = mockFetch.mock.calls.map(([url]) => String(url));
+    expect(urls).toHaveLength(3);
+    expect(urls[0]).toContain('/tms/test-plan/5');
+    expect(urls[2]).toContain('filter.eq.testFolderId=12');
+    expect(urls[2]).toContain('offset=100');
+  });
+
+  test('does not refetch the plan on the same plan without the flag', async () => {
+    prevPayload = locationPayload;
+    mockFetch.mockResolvedValue({ content: [] });
+
+    await runGetTestPlan();
+
+    expect(mockFetch).toHaveBeenCalledTimes(1);
   });
 });

@@ -23,6 +23,7 @@ const mockDispatch = jest.fn();
 const mockFetch = jest.fn();
 const mockShowSuccessNotification = jest.fn();
 const mockShowErrorNotification = jest.fn();
+const mockReloadActiveTestPlan = jest.fn();
 
 jest.mock('react-redux', () => ({
   useDispatch: () => mockDispatch,
@@ -44,6 +45,10 @@ jest.mock('common/hooks', () => ({
     showSuccessNotification: mockShowSuccessNotification,
     showErrorNotification: mockShowErrorNotification,
   }),
+}));
+
+jest.mock('./useReloadActiveTestPlan', () => ({
+  useReloadActiveTestPlan: () => mockReloadActiveTestPlan,
 }));
 
 jest.mock('hooks/useTypedSelector', () => ({
@@ -90,11 +95,11 @@ describe('useAddTestCasesToCurrentTestPlan', () => {
       successTestCaseIds: [1, 2],
       errors: [{ testCaseId: 3, message: 'Test case 3 is already in the test plan' }],
     });
-    mockFetch.mockResolvedValueOnce([]);
 
     const result = await hook.addTestCasesToCurrentTestPlan([1, 2, 3]);
 
     expect(result).toBe(false);
+    expect(mockReloadActiveTestPlan).toHaveBeenCalledTimes(1);
     expect(mockShowSuccessNotification).not.toHaveBeenCalled();
     expect(mockDispatch).toHaveBeenCalledWith(
       expect.objectContaining({
@@ -114,11 +119,11 @@ describe('useAddTestCasesToCurrentTestPlan', () => {
 
   test('reports the number of added test cases from the response', async () => {
     mockFetch.mockResolvedValueOnce({ totalCount: 2, successCount: 2, failureCount: 0 });
-    mockFetch.mockResolvedValueOnce([]);
 
     const result = await hook.addTestCasesToCurrentTestPlan([1, 2]);
 
     expect(result).toBe(true);
+    expect(mockReloadActiveTestPlan).toHaveBeenCalledTimes(1);
     expect(mockShowSuccessNotification).toHaveBeenCalledWith({
       messageId: 'testCasesAddedToTestPlanFromLibrarySuccess',
       values: { count: 2 },
