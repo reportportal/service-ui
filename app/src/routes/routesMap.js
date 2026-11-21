@@ -304,9 +304,7 @@ const routesMap = {
       const hasAccess = canSeeActivityOption({ userRole: state.user.info.userRole });
 
       if (!hasAccess) {
-        return dispatch({
-          type: ORGANIZATIONS_PAGE,
-        });
+        return dispatch(redirect({ type: ORGANIZATIONS_PAGE }));
       }
 
       const {
