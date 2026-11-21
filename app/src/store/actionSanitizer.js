@@ -14,24 +14,115 @@
  * limitations under the License.
  */
 
-// Credentials the user types travel as an action payload to the saga that sends them, and the
-// DevTools enhancer is wired in production too (log-only). The extension would otherwise keep
-// them in its action history, so they are replaced before it ever sees the action. This feeds
-// the devtools stream only — reducers and sagas still receive the real payload.
-const SECRET_PAYLOAD_FIELDS = ['password', 'privateKey'];
+import { SET_TOKEN, LOGIN_SUCCESS } from 'controllers/auth/constants';
+import { SECRET_FIELDS_KEY } from 'controllers/plugins/constants';
+
+// Credentials and tokens travel in action payloads (login, integration forms, generated API keys,
+// the OAuth redirect query) and live in the auth and redux-form state, and the DevTools enhancer is
+// wired in production too (log-only). The extension would otherwise keep them in its history, so
+// they are replaced before it ever sees an action or a state. This feeds the devtools stream only:
+// reducers and sagas still receive the real values.
+export const REDACTED = '[redacted]';
+
+const SECRET_KEYS = new Set(
+  [
+    'password',
+    'privateKey',
+    'accessToken',
+    'clientSecret',
+    'managerPassword',
+    'oauthAccessKey',
+    'apiToken',
+    'apiKey',
+    'token',
+  ].map((key) => key.toLowerCase()),
+);
+const TOKEN_ACTIONS = [SET_TOKEN, LOGIN_SUCCESS];
+const SANITIZED_STATE_SLICES = ['auth', 'form', 'modal', 'location'];
+
+const isPlainObject = (value) => {
+  if (value === null || typeof value !== 'object') {
+    return false;
+  }
+  const prototype = Object.getPrototypeOf(value);
+  return prototype === Object.prototype || prototype === null;
+};
+
+// Returns the same reference when nothing had to be redacted.
+const redact = (value, extraKeys, seen = new WeakSet()) => {
+  if (Array.isArray(value)) {
+    if (seen.has(value)) {
+      return value;
+    }
+    seen.add(value);
+    let changed = false;
+    const result = value.map((item) => {
+      const redacted = redact(item, extraKeys, seen);
+      changed = changed || redacted !== item;
+      return redacted;
+    });
+    return changed ? result : value;
+  }
+  if (!isPlainObject(value) || seen.has(value)) {
+    return value;
+  }
+  seen.add(value);
+  let result = value;
+  Object.keys(value).forEach((key) => {
+    const item = value[key];
+    const isSecret = SECRET_KEYS.has(key.toLowerCase()) || extraKeys.has(key);
+    let redacted;
+    if (isSecret) {
+      redacted = item === undefined || item === null || item === '' ? item : REDACTED;
+    } else {
+      redacted = redact(item, extraKeys, seen);
+    }
+    if (redacted !== item) {
+      if (result === value) {
+        result = { ...value };
+      }
+      result[key] = redacted;
+    }
+  });
+  return result;
+};
 
 export const actionSanitizer = (action) => {
-  const secrets = SECRET_PAYLOAD_FIELDS.filter((field) => action?.payload?.[field]);
-
-  if (secrets.length === 0) {
+  if (!action) {
     return action;
   }
 
-  return {
-    ...action,
-    payload: {
-      ...action.payload,
-      ...Object.fromEntries(secrets.map((field) => [field, '[redacted]'])),
-    },
-  };
+  const secretFields = action.meta?.[SECRET_FIELDS_KEY];
+  const extraKeys = new Set(Array.isArray(secretFields) ? secretFields : []);
+  const sanitized = redact(action, extraKeys);
+
+  if (TOKEN_ACTIONS.includes(action.type) && sanitized.payload) {
+    return {
+      ...sanitized,
+      payload: isPlainObject(sanitized.payload)
+        ? { ...sanitized.payload, value: REDACTED }
+        : REDACTED,
+    };
+  }
+
+  return sanitized;
+};
+
+export const stateSanitizer = (state) => {
+  if (!isPlainObject(state)) {
+    return state;
+  }
+
+  const emptyKeys = new Set();
+  let result = state;
+  SANITIZED_STATE_SLICES.forEach((slice) => {
+    const sanitized = redact(state[slice], emptyKeys);
+    if (sanitized !== state[slice]) {
+      if (result === state) {
+        result = { ...state };
+      }
+      result[slice] = sanitized;
+    }
+  });
+  return result;
 };
