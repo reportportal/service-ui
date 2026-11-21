@@ -118,7 +118,9 @@ export class Layout extends Component {
     const { sessionExpirationConfig, logout } = this.props;
     const currentTime = Date.now();
 
-    const lastActivityTimestamp = Number(getStorageItem(ACTIVITY_TIMESTAMP));
+    // a missing timestamp (e.g. removed by another tab) means "active now", not "expired"
+    const storedTimestamp = getStorageItem(ACTIVITY_TIMESTAMP);
+    const lastActivityTimestamp = storedTimestamp === null ? currentTime : Number(storedTimestamp);
     if (currentTime - lastActivityTimestamp >= sessionExpirationConfig) {
       logout();
     } else {

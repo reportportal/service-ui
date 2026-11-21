@@ -17,6 +17,7 @@
 import { all, call, put, select, takeEvery, take } from 'redux-saga/effects';
 import { fetch, updateToken } from 'common/utils/fetch';
 import {
+  getStorageItem,
   getSessionItem,
   removeSessionItem,
   removeStorageItem,
@@ -84,6 +85,12 @@ import {
 } from './constants';
 import { tokenSelector, lastFailedLoginTimeSelector, failedLoginAttemptsSelector } from './selectors';
 
+const toTokenString = (token) => (token ? `${token.type} ${token.value}` : '');
+
+// The token in localStorage is shared by all tabs: a tab must not wipe a session that another tab
+// has stored in the meantime.
+const isStoredToken = (tokenString) => toTokenString(getStorageItem(TOKEN_KEY)) === tokenString;
+
 function* logoutOnServer(redirectedPage) {
   if (redirectedPage === ACCOUNT_REMOVED_PAGE) {
     return;
@@ -97,7 +104,7 @@ function* logoutOnServer(redirectedPage) {
 }
 
 // TODO: clear cookie on logout
-function* handleLogout({ payload }) {
+export function* handleLogout({ payload }) {
   const token = yield select(tokenSelector);
   if (!token) {
     yield put(logoutCompleteAction());
@@ -111,7 +118,10 @@ function* handleLogout({ payload }) {
   }).catch((error) => console.error('Failed to revoke Grafana session on logout', error));
 
   yield call(logoutOnServer, payload);
-  yield put(resetTokenAction());
+  if (isStoredToken(token)) {
+    removeStorageItem(ACTIVITY_TIMESTAMP);
+  }
+  yield put(resetTokenAction(token));
   yield put(
     redirect({
       type: payload || LOGIN_PAGE,
@@ -127,7 +137,6 @@ function* handleLogout({ payload }) {
       type: NOTIFICATION_TYPES.INFO,
     }),
   );
-  removeStorageItem(ACTIVITY_TIMESTAMP);
 }
 
 function* watchLogout() {
@@ -346,9 +355,12 @@ function* watchLogin() {
   yield takeEvery(LOGIN, handleLogin);
 }
 
-function* handleSetToken({ payload }) {
+export function* handleSetToken({ payload, meta }) {
   const tokenString = yield select(tokenSelector);
   yield call(updateToken, tokenString);
+  if (meta?.revokedToken !== undefined && !isStoredToken(meta.revokedToken)) {
+    return;
+  }
   yield call(setStorageItem, TOKEN_KEY, payload);
 }
 
