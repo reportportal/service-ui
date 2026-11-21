@@ -110,6 +110,7 @@ export class AttachmentBlock extends Component {
                 src={getFileIconSource(value, projectKey, true)}
                 alt={value.contentType}
                 isStatic={!isImage}
+                lazy
                 onClick={isValidToOpenInModal ? this.openAttachmentInModal : null}
               />
             )}

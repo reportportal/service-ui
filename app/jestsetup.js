@@ -46,6 +46,27 @@ global.localStorage = (() => {
   };
 })();
 
+// jsdom has no layout engine: these browser APIs are missing, so they are stubbed with no-ops.
+// A test that needs an observer to fire replaces the stub with its own implementation.
+class ObserverStub {
+  observe() {}
+  unobserve() {}
+  disconnect() {}
+  takeRecords() {
+    return [];
+  }
+}
+
+if (typeof global.ResizeObserver === 'undefined') {
+  global.ResizeObserver = ObserverStub;
+}
+if (typeof global.IntersectionObserver === 'undefined') {
+  global.IntersectionObserver = ObserverStub;
+}
+if (typeof Element !== 'undefined' && !Element.prototype.scrollIntoView) {
+  Element.prototype.scrollIntoView = () => {};
+}
+
 // A console.error is a failed test here. React's own notices are not defects of the test that
 // happens to mount the component — the enzyme react-18 adapter reads text through findDOMNode,
 // and plenty of components still declare defaultProps — so they are dropped once, here, rather
