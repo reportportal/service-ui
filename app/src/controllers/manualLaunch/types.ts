@@ -113,8 +113,10 @@ export interface ManualLaunchState {
     page: Page | null;
   };
   isLoading?: boolean;
+  loadFailed?: boolean;
   activeManualLaunch?: Launch | null;
   isLoadingActive?: boolean;
+  activeLoadFailed?: boolean;
 }
 
 export interface ManualLaunchFoldersState {

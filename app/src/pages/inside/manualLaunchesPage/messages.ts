@@ -35,4 +35,16 @@ export const messages = defineMessages({
     id: 'ManualLaunchesPage.launchIdColumn',
     defaultMessage: 'ID',
   },
+  launchesLoadFailed: {
+    id: 'ManualLaunchesPage.launchesLoadFailed',
+    defaultMessage: 'Failed to load launches',
+  },
+  launchLoadFailed: {
+    id: 'ManualLaunchesPage.launchLoadFailed',
+    defaultMessage: 'Failed to load the launch',
+  },
+  retry: {
+    id: 'ManualLaunchesPage.retry',
+    defaultMessage: 'Retry',
+  },
 });

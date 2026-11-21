@@ -27,6 +27,7 @@ import {
   MANUAL_LAUNCH_EXECUTION_FILTER_KEYS,
 } from 'pages/inside/common/testCaseList/constants';
 import { fetchSuccessAction, fetchErrorAction } from 'controllers/fetch';
+import { apiErrorNotificationAction } from 'common/manualLaunches/batchResultNotifications';
 import { FETCH_START } from 'controllers/fetch/constants';
 import { AppState } from 'types/store';
 import {
@@ -76,7 +77,11 @@ import {
   defaultManualLaunchesQueryParams,
   MANUAL_LAUNCH_TO_RUN_STATUS_QUERY_VALUE,
 } from './constants';
-import { isAttachmentRemoved, mapAttachmentForExecutionCommentPayload } from './utils';
+import {
+  isAttachmentRemoved,
+  isNotFoundApiError,
+  mapAttachmentForExecutionCommentPayload,
+} from './utils';
 import {
   buildGetManualLaunchFoldersParams,
   getManualLaunchDetailsFetchParams,
@@ -245,7 +250,21 @@ function* getManualLaunch(action: GetManualLaunchAction): Generator {
       }
     }
   } catch (error) {
+    const isNotFound = isNotFoundApiError(error);
+
+    if (force && !isNotFound) {
+      // Keep the launch on screen: only the in-place reload failed.
+      yield put(apiErrorNotificationAction(error));
+      return;
+    }
+
     yield put(fetchErrorAction(ACTIVE_MANUAL_LAUNCH_NAMESPACE, error, true));
+
+    if (!isNotFound) {
+      // Not a missing launch: the page shows the error with a retry instead of leaving it.
+      return;
+    }
+
     yield put(
       showNotification({
         messageId: 'manualLaunchRedirectWarningMessage',
