@@ -14,7 +14,8 @@
  * limitations under the License.
  */
 
-import { processFolder } from './testCaseUtils';
+import { ManualScenarioType } from '../types';
+import { buildManualScenario, buildTestCaseData, processFolder } from './testCaseUtils';
 
 describe('processFolder', () => {
   it('sends testFolderId when the selected folder has an id', () => {
@@ -64,5 +65,43 @@ describe('processFolder', () => {
     expect(result.payload).toEqual({
       testFolder: { name: 'New folder', parentTestFolderId: 0 },
     });
+  });
+});
+
+describe('requirements in the create/update request body', () => {
+  const formData = {
+    name: 'Case',
+    folder: { id: 1, name: 'F', fullPath: 'F' },
+    manualScenarioType: ManualScenarioType.TEXT,
+    requirements: [
+      { key: 'srv-1', id: 'srv-1', value: 'REQ-1' },
+      { key: '_new', value: 'REQ-2' },
+      { key: '_blank', value: ' ' },
+    ],
+  } as Parameters<typeof buildManualScenario>[0];
+
+  const requirementsOf = (persistedIds?: Set<string>) =>
+    buildTestCaseData(formData, buildManualScenario(formData, persistedIds), []).manualScenario
+      .requirements;
+
+  it('create sends values only', () => {
+    expect(requirementsOf()).toEqual([{ value: 'REQ-1' }, { value: 'REQ-2' }]);
+  });
+
+  it('duplicate sends values only even though the form rows carry the original ids', () => {
+    expect(requirementsOf(new Set())).toEqual([{ value: 'REQ-1' }, { value: 'REQ-2' }]);
+  });
+
+  it('edit keeps ids of the loaded test case and sends new rows without id', () => {
+    expect(requirementsOf(new Set(['srv-1']))).toEqual([
+      { id: 'srv-1', value: 'REQ-1' },
+      { value: 'REQ-2' },
+    ]);
+  });
+
+  it('never sends the client key', () => {
+    [requirementsOf(), requirementsOf(new Set(['srv-1']))].forEach((requirements) =>
+      requirements.forEach((requirement) => expect(requirement).not.toHaveProperty('key')),
+    );
   });
 });
