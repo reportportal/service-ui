@@ -260,7 +260,12 @@ export class LogsGrid extends Component {
           consoleView: true,
           rawHeaderCellStylesConfig: this.props.rawHeaderCellStylesConfig,
           logsSize,
-          gridHeaderCellStyles: cx('header', `column-size-${logsSize}`),
+          gridHeaderCellStyles: cx(
+            'header',
+            'attachment-column-header',
+            'console',
+            `column-size-${logsSize}`,
+          ),
         },
       },
       {
@@ -315,7 +320,7 @@ export class LogsGrid extends Component {
       component: StatusColumn,
       customProps: {
         logsSize,
-        gridHeaderCellStyles: cx('header', `column-size-${logsSize}`),
+        gridHeaderCellStyles: cx('header', 'status-column-header', `column-size-${logsSize}`),
       },
     };
     const columns = [
@@ -346,7 +351,7 @@ export class LogsGrid extends Component {
         customProps: {
           rawHeaderCellStylesConfig,
           logsSize,
-          gridHeaderCellStyles: cx('header', `column-size-${logsSize}`),
+          gridHeaderCellStyles: cx('header', 'attachment-column-header', `column-size-${logsSize}`),
         },
       },
       {
@@ -360,7 +365,7 @@ export class LogsGrid extends Component {
         customProps: {
           rawHeaderCellStylesConfig,
           logsSize,
-          gridHeaderCellStyles: cx('header', `column-size-${logsSize}`),
+          gridHeaderCellStyles: cx('header', 'time-column-header', `column-size-${logsSize}`),
           logLevels,
         },
       },
@@ -424,7 +429,17 @@ export class LogsGrid extends Component {
     />
   );
 
-  renderBody = (bodyProps) => <LogsGridBody {...bodyProps} />;
+  renderBody = (bodyProps) => {
+    const { logsSize, consoleView, markdownMode, noLogsCollapsing } = this.props;
+
+    return (
+      <LogsGridBody
+        {...bodyProps}
+        logsSize={logsSize}
+        layoutKey={`${logsSize}:${consoleView}:${markdownMode}:${noLogsCollapsing}`}
+      />
+    );
+  };
 
   render() {
     const {
@@ -461,7 +476,10 @@ export class LogsGrid extends Component {
           loadPrevious={loadPrevious}
           loadingDirection={loadingDirection}
           rowStylesMapper={this.getLogRowStyles}
-          {...(LOGS_VIRTUALIZATION_ENABLED && { renderBody: this.renderBody })}
+          {...(LOGS_VIRTUALIZATION_ENABLED && {
+            renderBody: this.renderBody,
+            className: cx('virtual-grid'),
+          })}
         />
         {!logItems.length && !loading && (
           <NoItemMessage message={intl.formatMessage(COMMON_LOCALE_KEYS.NO_RESULTS)} />

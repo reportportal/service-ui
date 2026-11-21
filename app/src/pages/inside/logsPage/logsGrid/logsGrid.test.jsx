@@ -58,9 +58,15 @@ describe('LogsGrid', () => {
   });
 
   test('renders the rows with the flat logs body when the virtualisation is enabled', () => {
-    const body = shallow(<div>{renderGrid().renderBody({ data: [] })}</div>);
+    const gridProps = renderGrid();
+    const body = shallow(<div>{gridProps.renderBody({ data: [] })}</div>).find(LogsGridBody);
 
-    expect(body.find(LogsGridBody).exists()).toBe(true);
+    expect(body.exists()).toBe(true);
+    expect(body.props()).toMatchObject({
+      logsSize: 'medium',
+      layoutKey: 'medium:false:false:false',
+    });
+    expect(gridProps.className).toBe('virtual-grid');
   });
 
   test('keeps the rows of the shared grid when the virtualisation is switched off', () => {
@@ -69,6 +75,7 @@ describe('LogsGrid', () => {
     const gridProps = renderGrid();
 
     expect(gridProps.renderBody).toBeUndefined();
+    expect(gridProps.className).toBeUndefined();
     expect(gridProps.nestedView).toBe(true);
   });
 });

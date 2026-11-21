@@ -16,4 +16,4 @@
 
 // Kill switch of the flat (virtualised) log rows. When false the logs grid renders the recursive
 // nested rows of the shared grid, as before.
-export const LOGS_VIRTUALIZATION_ENABLED = false;
+export const LOGS_VIRTUALIZATION_ENABLED = true;

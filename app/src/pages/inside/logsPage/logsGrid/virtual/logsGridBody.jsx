@@ -18,6 +18,9 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 import { useDispatch, useSelector } from 'react-redux';
 import track from 'react-tracking';
+import classNames from 'classnames/bind';
+import { useScrollContainer } from 'components/main/scrollWrapper';
+import { DEFAULT_LOGS_SIZE } from 'common/constants/logsSettings';
 import { PREVIOUS } from 'controllers/log';
 import {
   nestedStepsSelector,
@@ -26,8 +29,13 @@ import {
   fetchCurrentStepAction,
 } from 'controllers/log/nestedSteps';
 import { INITIAL_STATE } from 'controllers/log/nestedSteps/constants';
-import { buildLogRows, ROW_KIND } from './buildLogRows';
+import { buildLogRows, findLogRowIndex, ROW_KIND } from './buildLogRows';
 import { LogRow } from './logRows';
+import { useLogsVirtualizer } from './useLogsVirtualizer';
+import { getPadding } from './utils';
+import styles from './logRows.scss';
+
+const cx = classNames.bind(styles);
 
 const isStep = (item) => 'hasContent' in item;
 
@@ -71,12 +79,20 @@ const LogsGridBodyComponent = ({
   groupHeader,
   groupFunction,
   gridRowClassName,
+  logsSize,
+  layoutKey,
   ...rowProps
 }) => {
   const dispatch = useDispatch();
   const nestedSteps = useSelector(nestedStepsSelector);
   const rows = useMemo(() => buildLogRows(data, nestedSteps), [data, nestedSteps]);
-  const { eventsInfo = {}, expanded } = rowProps;
+  const { eventsInfo = {}, expanded, rowHighlightingConfig = {} } = rowProps;
+  const { virtualizer, bodyStartRef, virtual } = useLogsVirtualizer({
+    rows,
+    layoutKey,
+    logsSize,
+    scrollContainer: useScrollContainer(),
+  });
 
   // the expanded state of long messages, restored when a row is mounted again; it starts over
   // when the "no logs collapsing" setting changes, as the rows do
@@ -87,11 +103,37 @@ const LogsGridBodyComponent = ({
   );
 
   const itemIntoViewRef = useRef(null);
-  const scrollToLog = useCallback(() => {
-    itemIntoViewRef.current?.scrollIntoView({ block: 'center' });
-    itemIntoViewRef.current = null;
-  }, []);
+  const scrollToLog = useCallback(
+    (logId) => {
+      if (virtual) {
+        // the row can be far from the rendered ones: the virtualiser scrolls to it
+        const index = findLogRowIndex(rows, logId);
+        index >= 0 && virtualizer.scrollToIndex(index, { align: 'center' });
+      } else {
+        itemIntoViewRef.current?.scrollIntoView({ block: 'center' });
+      }
+      itemIntoViewRef.current = null;
+    },
+    [virtual, rows, virtualizer],
+  );
   const { anchorId, setAnchor } = useLoadPreviousAnchor(nestedSteps, scrollToLog);
+
+  // jump to error / jump to log: the highlighted row is scrolled to once per highlight, the row
+  // itself only runs the highlight when it is mounted or updated (its own scrolling is off)
+  const { highlightedRowId, isGridRowHighlighted } = rowHighlightingConfig;
+  const highlightTarget = virtual && isGridRowHighlighted ? highlightedRowId : null;
+  const scrolledHighlightRef = useRef(null);
+  useEffect(() => {
+    if (highlightTarget === null || highlightTarget === undefined) {
+      scrolledHighlightRef.current = null;
+      return;
+    }
+    const index = findLogRowIndex(rows, highlightTarget);
+    if (scrolledHighlightRef.current !== highlightTarget && index >= 0) {
+      scrolledHighlightRef.current = highlightTarget;
+      virtualizer.scrollToIndex(index, { align: 'center' });
+    }
+  }, [highlightTarget, rows, virtualizer]);
 
   const onToggleStep = useCallback((id) => dispatch(requestNestedStepAction({ id })), [dispatch]);
   const onLoadMore = useCallback(
@@ -112,13 +154,14 @@ const LogsGridBodyComponent = ({
     [dispatch, tracking, eventsInfo],
   );
 
-  return rows.map((row) => {
+  const renderRow = (row, index) => {
     const logRowProps =
       row.kind === ROW_KIND.LOG
         ? {
             initialExpanded: expandedRows.get(row.item.id),
             onExpandedChange,
             ...(row.item.id === anchorId && { itemIntoViewId: anchorId, itemIntoViewRef }),
+            ...(virtual && { highlightOnMount: true, scrollOnHighlight: false }),
           }
         : {};
 
@@ -131,10 +174,35 @@ const LogsGridBodyComponent = ({
         onToggleStep={onToggleStep}
         onLoadMore={onLoadMore}
         onLoadCurrentStep={onLoadCurrentStep}
+        {...(virtual && { measureRef: virtualizer.measureElement, dataIndex: index })}
         {...logRowProps}
       />
     );
-  });
+  };
+
+  if (!virtual) {
+    return rows.map((row, index) => renderRow(row, index));
+  }
+
+  const virtualItems = virtualizer.getVirtualItems();
+  const padding = getPadding(
+    virtualItems,
+    virtualizer.getTotalSize(),
+    virtualizer.options.scrollMargin,
+  );
+
+  // spacer rows stand for the rows that are not rendered, the grid keeps its full height
+  return (
+    <>
+      <div ref={bodyStartRef} className={cx('spacer')} style={{ height: padding.top }} aria-hidden>
+        <div className={cx('spacer-cell')} />
+      </div>
+      {virtualItems.map(({ index }) => renderRow(rows[index], index))}
+      <div className={cx('spacer')} style={{ height: padding.bottom }} aria-hidden>
+        <div className={cx('spacer-cell')} />
+      </div>
+    </>
+  );
 };
 LogsGridBodyComponent.propTypes = {
   tracking: PropTypes.shape({
@@ -147,6 +215,8 @@ LogsGridBodyComponent.propTypes = {
   groupHeader: PropTypes.oneOfType([PropTypes.node, PropTypes.elementType]),
   groupFunction: PropTypes.func,
   gridRowClassName: PropTypes.string,
+  logsSize: PropTypes.string,
+  layoutKey: PropTypes.string,
 };
 LogsGridBodyComponent.defaultProps = {
   data: [],
@@ -155,6 +225,8 @@ LogsGridBodyComponent.defaultProps = {
   groupHeader: null,
   groupFunction: null,
   gridRowClassName: '',
+  logsSize: DEFAULT_LOGS_SIZE,
+  layoutKey: '',
 };
 
 // The rows of the logs grid rendered from a flat row model (log rows, nested step headers and

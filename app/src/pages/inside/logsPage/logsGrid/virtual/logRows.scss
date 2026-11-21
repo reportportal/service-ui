@@ -17,3 +17,12 @@
 .load-more-row {
   display: table-row;
 }
+
+// stands for the rows above or below the rendered ones of the virtualised grid
+.spacer {
+  display: table-row;
+}
+
+.spacer-cell {
+  display: table-cell;
+}

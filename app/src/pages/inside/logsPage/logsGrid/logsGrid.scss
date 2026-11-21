@@ -204,3 +204,41 @@
     padding-right: 158px;
   }
 }
+
+// Only some of the rows of the virtualised grid are rendered: the widths of the columns are set on
+// the header cells instead of being computed from the content of the rendered rows.
+.virtual-grid {
+  overflow-anchor: none;
+
+  @media (min-width: $SCREEN_XS_MAX + 1) {
+    table-layout: fixed;
+
+    .attachment-column-header {
+      width: 80px;
+
+      &.column-size-large {
+        width: 95px;
+      }
+
+      &.console {
+        width: 56px;
+      }
+    }
+
+    .status-column-header {
+      width: 150px;
+    }
+
+    .time-column-header {
+      width: 185px;
+
+      &.column-size-small {
+        width: 170px;
+      }
+
+      &.column-size-large {
+        width: 200px;
+      }
+    }
+  }
+}

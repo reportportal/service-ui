@@ -71,40 +71,50 @@ LoadCurrentStepButton.defaultProps = {
   className: '',
 };
 
-const StepHeaderRow = memo(({ row, stepHeader: StepHeader, onToggleStep, onLoadCurrentStep }) => (
-  <StepHeader
-    data={row.item}
-    collapsed={row.collapsed}
-    loading={row.collapsed && row.loading}
-    onToggle={() => onToggleStep(row.stepId)}
-    level={row.level}
-    additionalNameCellBlock={
-      row.showLoadCurrentStep && (
-        <LoadCurrentStepButton
-          row={row}
-          onLoadCurrentStep={onLoadCurrentStep}
-          className={cxNested('overflowed-button', {
-            'overflowed-button-collapsed-view': row.collapsed,
-          })}
-        />
-      )
-    }
-  />
-));
+const StepHeaderRow = memo(
+  ({ row, stepHeader: StepHeader, onToggleStep, onLoadCurrentStep, measureRef, dataIndex }) => (
+    <StepHeader
+      measureRef={measureRef}
+      dataIndex={dataIndex}
+      data={row.item}
+      collapsed={row.collapsed}
+      loading={row.collapsed && row.loading}
+      onToggle={() => onToggleStep(row.stepId)}
+      level={row.level}
+      additionalNameCellBlock={
+        row.showLoadCurrentStep && (
+          <LoadCurrentStepButton
+            row={row}
+            onLoadCurrentStep={onLoadCurrentStep}
+            className={cxNested('overflowed-button', {
+              'overflowed-button-collapsed-view': row.collapsed,
+            })}
+          />
+        )
+      }
+    />
+  ),
+);
 StepHeaderRow.propTypes = {
   row: rowPropTypes.isRequired,
   stepHeader: PropTypes.elementType.isRequired,
   onToggleStep: PropTypes.func.isRequired,
   onLoadCurrentStep: PropTypes.func.isRequired,
+  measureRef: PropTypes.func,
+  dataIndex: PropTypes.number,
+};
+StepHeaderRow.defaultProps = {
+  measureRef: null,
+  dataIndex: undefined,
 };
 
-const LoadMoreRow = memo(({ row, onLoadMore, onLoadCurrentStep }) => {
+const LoadMoreRow = memo(({ row, onLoadMore, onLoadCurrentStep, measureRef, dataIndex }) => {
   const { formatMessage } = useIntl();
   const isPrevious = row.kind === ROW_KIND.LOAD_PREVIOUS;
 
   // a real table row around the cell: two adjacent cells would otherwise share one anonymous row
   return (
-    <div className={cx('load-more-row')}>
+    <div className={cx('load-more-row')} ref={measureRef} data-index={dataIndex}>
       <RowMore level={row.level}>
         <LoadButton
           loading={row.loading}
@@ -127,6 +137,12 @@ LoadMoreRow.propTypes = {
   row: rowPropTypes.isRequired,
   onLoadMore: PropTypes.func.isRequired,
   onLoadCurrentStep: PropTypes.func.isRequired,
+  measureRef: PropTypes.func,
+  dataIndex: PropTypes.number,
+};
+LoadMoreRow.defaultProps = {
+  measureRef: null,
+  dataIndex: undefined,
 };
 
 // Renders one row of the flat row model with the same components as the recursive nested grid.
@@ -137,11 +153,22 @@ export const LogRow = ({
   onToggleStep,
   onLoadMore,
   onLoadCurrentStep,
+  measureRef,
+  dataIndex,
   ...logRowProps
 }) => {
   switch (row.kind) {
     case ROW_KIND.LOG:
-      return <MemoGridRow value={row.item} level={row.level} {...rowProps} {...logRowProps} />;
+      return (
+        <MemoGridRow
+          value={row.item}
+          level={row.level}
+          measureRef={measureRef}
+          dataIndex={dataIndex}
+          {...rowProps}
+          {...logRowProps}
+        />
+      );
     case ROW_KIND.STEP_HEADER:
       return (
         <StepHeaderRow
@@ -149,11 +176,19 @@ export const LogRow = ({
           stepHeader={stepHeader}
           onToggleStep={onToggleStep}
           onLoadCurrentStep={onLoadCurrentStep}
+          measureRef={measureRef}
+          dataIndex={dataIndex}
         />
       );
     default:
       return (
-        <LoadMoreRow row={row} onLoadMore={onLoadMore} onLoadCurrentStep={onLoadCurrentStep} />
+        <LoadMoreRow
+          row={row}
+          onLoadMore={onLoadMore}
+          onLoadCurrentStep={onLoadCurrentStep}
+          measureRef={measureRef}
+          dataIndex={dataIndex}
+        />
       );
   }
 };
@@ -164,4 +199,10 @@ LogRow.propTypes = {
   onToggleStep: PropTypes.func.isRequired,
   onLoadMore: PropTypes.func.isRequired,
   onLoadCurrentStep: PropTypes.func.isRequired,
+  measureRef: PropTypes.func,
+  dataIndex: PropTypes.number,
+};
+LogRow.defaultProps = {
+  measureRef: null,
+  dataIndex: undefined,
 };
