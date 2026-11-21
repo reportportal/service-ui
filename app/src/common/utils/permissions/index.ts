@@ -68,6 +68,7 @@ export {
   canSeeInstanceLevelPluginsPages,
   canRenameOrganization,
   canLockDashboard,
+  canRunPluginCommands,
 
   // TMS FEATURES:
   canCreateManualLaunch,
