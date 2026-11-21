@@ -102,6 +102,7 @@ import {
 import { MANUAL_LAUNCH_FOLDER_SEARCH_FILTER_KEY } from 'controllers/manualLaunch/constants';
 
 function* getTestCasesByFolderId(action: GetTestCasesByFolderIdAction): Generator {
+  const controller = new AbortController();
   yield put(startLoadingTestCasesAction());
 
   try {
@@ -117,6 +118,7 @@ function* getTestCasesByFolderId(action: GetTestCasesByFolderIdAction): Generato
         offset,
         limit,
       }),
+      { signal: controller.signal },
     )) as {
       content: TestCase[];
       page: Page;
@@ -130,7 +132,11 @@ function* getTestCasesByFolderId(action: GetTestCasesByFolderIdAction): Generato
       }),
     );
   } finally {
-    yield put(stopLoadingTestCasesAction());
+    if (yield cancelled()) {
+      controller.abort();
+    } else {
+      yield put(stopLoadingTestCasesAction());
+    }
   }
 }
 
@@ -175,6 +181,7 @@ function* getTestCaseDetails(action: TestCaseDetailsAction) {
 }
 
 function* getAllTestCases(action: GetAllTestCasesAction): Generator {
+  const controller = new AbortController();
   yield put(startLoadingTestCasesAction());
 
   try {
@@ -188,6 +195,7 @@ function* getAllTestCases(action: GetAllTestCasesAction): Generator {
         'filter.cnt.name': testCasesSearchParams,
         ...buildTestCaseFilterParams(filterPriorities, filterTags),
       }),
+      { signal: controller.signal },
     )) as {
       content: TestCase[];
       page: Page;
@@ -200,7 +208,11 @@ function* getAllTestCases(action: GetAllTestCasesAction): Generator {
       }),
     );
   } finally {
-    yield put(stopLoadingTestCasesAction());
+    if (yield cancelled()) {
+      controller.abort();
+    } else {
+      yield put(stopLoadingTestCasesAction());
+    }
   }
 }
 
@@ -453,12 +465,18 @@ function* watchCreateFolder() {
   yield takeEvery(CREATE_FOLDER, createFolder);
 }
 
-function* watchGetTestCasesByFolderId() {
-  yield takeLatest(GET_TEST_CASES_BY_FOLDER_ID, getTestCasesByFolderId);
+function* getTestCases(action: GetTestCasesByFolderIdAction | GetAllTestCasesAction) {
+  if (action.type === GET_TEST_CASES_BY_FOLDER_ID) {
+    yield call(getTestCasesByFolderId, action);
+  } else {
+    yield call(getAllTestCases, action);
+  }
 }
 
-function* watchGetAllTestCases() {
-  yield takeLatest(GET_ALL_TEST_CASES, getAllTestCases);
+// Both lists write the same testCases slice, so they share one takeLatest channel: switching between
+// a folder and "All test cases" cancels the request that is no longer on screen.
+function* watchGetTestCases() {
+  yield takeLatest([GET_TEST_CASES_BY_FOLDER_ID, GET_ALL_TEST_CASES], getTestCases);
 }
 
 function* watchGetTestCaseDetails() {
@@ -474,8 +492,7 @@ export function* testCaseSagas() {
     watchGetTestCaseDetails(),
     watchGetFolders(),
     watchCreateFolder(),
-    watchGetTestCasesByFolderId(),
-    watchGetAllTestCases(),
+    watchGetTestCases(),
     watchGetFilteredFolders(),
     takeEvery(DELETE_FOLDER, deleteFolder),
     takeEvery(RENAME_FOLDER, renameFolder),

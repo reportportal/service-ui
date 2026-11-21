@@ -18,7 +18,15 @@ import { runSaga } from 'redux-saga';
 import { fetch } from 'common/utils';
 import { NOTIFICATION_TYPES } from 'controllers/notification';
 import { testCaseSagas } from './sagas';
-import { RENAME_FOLDER, DELETE_FOLDER, CREATE_FOLDER } from './constants';
+import {
+  RENAME_FOLDER,
+  DELETE_FOLDER,
+  CREATE_FOLDER,
+  GET_TEST_CASES_BY_FOLDER_ID,
+  GET_ALL_TEST_CASES,
+  SET_TEST_CASES,
+  STOP_LOADING_TEST_CASES,
+} from './constants';
 
 jest.mock('common/utils', () => ({
   ...jest.requireActual<Record<string, unknown>>('common/utils'),
@@ -102,6 +110,39 @@ describe('controllers/testCase/sagas', () => {
       task.cancel();
 
       expect(errorNotifications(dispatched)[0].payload.messageId).toBe('errorOccurredTryAgain');
+    });
+  });
+
+  describe('test case lists', () => {
+    test('a late folder response does not overwrite the "All test cases" list', async () => {
+      let resolveFolder: (value: unknown) => void = () => {};
+      const folderPage = { content: [{ id: 1 }], page: { totalElements: 1 } };
+      const allPage = { content: [{ id: 2 }, { id: 3 }], page: { totalElements: 2 } };
+      fetchMock
+        .mockImplementationOnce(
+          () =>
+            new Promise((resolve) => {
+              resolveFolder = resolve;
+            }),
+        )
+        .mockResolvedValueOnce(allPage);
+      const { dispatched, dispatch, task } = startSagas();
+
+      dispatch({
+        type: GET_TEST_CASES_BY_FOLDER_ID,
+        payload: { folderId: 5, offset: 0, limit: 50 },
+      });
+      dispatch({ type: GET_ALL_TEST_CASES, payload: { offset: 0, limit: 50 } });
+      await flush();
+      resolveFolder(folderPage);
+      await flush();
+      task.cancel();
+
+      const lists = dispatched.filter(({ type }) => type === SET_TEST_CASES);
+      expect(lists).toEqual([{ type: SET_TEST_CASES, payload: allPage }]);
+      expect(dispatched.filter(({ type }) => type === STOP_LOADING_TEST_CASES)).toHaveLength(1);
+      const [, folderParams] = fetchMock.mock.calls[0] as [string, { signal: AbortSignal }];
+      expect(folderParams.signal.aborted).toBe(true);
     });
   });
 });
