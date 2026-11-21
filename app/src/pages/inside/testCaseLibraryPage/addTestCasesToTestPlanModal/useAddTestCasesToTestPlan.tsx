@@ -99,6 +99,11 @@ export const useAddTestCasesToTestPlan = ({
       return;
     }
 
+    // an empty folder (known count) has nothing to add: no request and no success toast
+    if (isFromFolder && itemCount === 0) {
+      return;
+    }
+
     if (isFromFolder && count > ADD_BY_FOLDER_LIMIT) {
       showErrorNotification({
         messageId: 'addByFolderLimitExceeded',

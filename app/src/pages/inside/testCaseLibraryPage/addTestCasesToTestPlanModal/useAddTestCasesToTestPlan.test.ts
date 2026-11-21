@@ -126,6 +126,16 @@ describe('useAddTestCasesToTestPlan', () => {
     expect(mockShowErrorNotification).not.toHaveBeenCalled();
   });
 
+  test('does nothing for a folder without test cases', async () => {
+    render({ folderId: FOLDER_ID, itemCount: 0 });
+
+    await submit();
+
+    expect(mockFetch).not.toHaveBeenCalled();
+    expect(mockShowSuccessNotification).not.toHaveBeenCalled();
+    expect(mockShowErrorNotification).not.toHaveBeenCalled();
+  });
+
   test('a folder whose test cases are already in the plan is a success, not a partial failure', async () => {
     mockFetch.mockResolvedValueOnce({
       totalCount: 2,
