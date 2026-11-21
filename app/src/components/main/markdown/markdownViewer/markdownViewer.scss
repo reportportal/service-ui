@@ -28,6 +28,7 @@
   font-size: 12px;
   overflow: hidden;
   overflow-wrap: anywhere;
+  contain: paint;
 
   .CodeMirror {
     .CodeMirror-lines {
