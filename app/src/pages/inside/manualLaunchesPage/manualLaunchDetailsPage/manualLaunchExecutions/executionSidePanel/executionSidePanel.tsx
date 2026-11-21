@@ -213,9 +213,15 @@ export const ExecutionSidePanel = ({ executionId, onClose }: ExecutionSidePanelP
     </div>
   );
 
+  // Tickets and attachments are shown even when the tester left no comment text.
+  const hasExecutionInfo =
+    Boolean(executionDetails?.executionComment?.comment) ||
+    !isEmpty(executionDetails?.btsTickets) ||
+    !isEmpty(executionDetails?.executionComment?.attachments);
+
   const contentComponent = (
     <div className={cx('content-wrapper')}>
-      {executionDetails?.executionComment?.comment && (
+      {hasExecutionInfo && (
         <div className={cx('execution-info')}>
           {!isEmpty(executionDetails?.btsTickets) && (
             <div className={cx('info-item')}>
@@ -226,13 +232,13 @@ export const ExecutionSidePanel = ({ executionId, onClose }: ExecutionSidePanelP
               />
             </div>
           )}
-          {executionDetails.executionComment.comment && (
+          {executionDetails.executionComment?.comment && (
             <div className={cx('info-item')}>
               <span className={cx('info-label')}>{formatMessage(messages.executionComment)}</span>
               <span className={cx('info-value')}>{executionDetails.executionComment.comment}</span>
             </div>
           )}
-          {!isEmpty(executionDetails.executionComment.attachments) && (
+          {!isEmpty(executionDetails.executionComment?.attachments) && (
             <>
               <Divider />
               <div className={cx('info-item')}>
