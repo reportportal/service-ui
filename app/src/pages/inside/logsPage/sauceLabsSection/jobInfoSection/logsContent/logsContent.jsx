@@ -66,7 +66,12 @@ export class LogsContent extends Component {
       <div className={cx('logs-content')}>
         <div className={cx('log-item-options')}>
           <span className={cx('log-name')}>{this.availableLogs[0]}</span>
-          <a className={cx('download-item')} href={this.getLogFileLink()} target="_blank">
+          <a
+            className={cx('download-item')}
+            href={this.getLogFileLink()}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
             {Parser(DownloadIcon)}
           </a>
         </div>

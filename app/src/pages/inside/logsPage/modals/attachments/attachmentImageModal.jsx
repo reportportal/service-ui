@@ -118,7 +118,12 @@ export class AttachmentImageModal extends Component {
       >
         <div className={cx('attachment-modal-content-wrapper')}>
           <div className={cx('attachment-image-wrapper')}>
-            <a href={image} target="_blank" className={cx('attachment-image')}>
+            <a
+              href={image}
+              target="_blank"
+              rel="noopener noreferrer"
+              className={cx('attachment-image')}
+            >
               <img
                 ref={this.imageRef}
                 className={cx('image-item')}

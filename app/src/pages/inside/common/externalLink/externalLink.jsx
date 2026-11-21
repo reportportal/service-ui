@@ -35,6 +35,7 @@ export const ExternalLink = ({
   <a
     href={href}
     target="_blank"
+    rel="noopener noreferrer"
     className={cx('link', variant, className)}
     data-automation-id={dataAutomationId}
     onClick={onClick}

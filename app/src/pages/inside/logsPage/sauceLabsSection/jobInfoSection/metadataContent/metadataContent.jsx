@@ -80,11 +80,21 @@ export class MetadataContent extends Component {
           ))}
         </ScrollWrapper>
         <div className={cx('download-assets-block', { 'full-screen': isFullscreenMode })}>
-          <a className={cx('assets-block-item')} href={this.getScreenShotsLink()} target="_blank">
+          <a
+            className={cx('assets-block-item')}
+            href={this.getScreenShotsLink()}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
             {`${this.getScreenShotsCount()} Screenshots`}
             {Parser(DownloadIcon)}
           </a>
-          <a className={cx('assets-block-item')} href={this.getVideoLink()} target="_blank">
+          <a
+            className={cx('assets-block-item')}
+            href={this.getVideoLink()}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
             1 Video
             {Parser(DownloadIcon)}
           </a>
