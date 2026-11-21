@@ -44,6 +44,15 @@ const handleError = (error: unknown): never => {
 
 const handleResponse = <T>(res: AxiosResponse<T>): T => res.data;
 
+// Requests without their own cancellation share this controller so that they can all be aborted
+// when the user logs out and late responses do not repopulate the cleared store.
+let sessionAbortController = new AbortController();
+
+export const abortPendingRequests = (): void => {
+  sessionAbortController.abort();
+  sessionAbortController = new AbortController();
+};
+
 type ParamsSerializer = (params?: Record<string, unknown>) => string;
 
 interface FetchParams extends Omit<AxiosRequestConfig<unknown>, 'url'> {
@@ -78,7 +87,7 @@ export const fetch: FetchFn = <T = unknown>(
   const requestParams: AxiosRequestConfig<unknown> = {
     ...params,
     paramsSerializer,
-    signal: controller?.signal ?? params.signal,
+    signal: controller?.signal ?? params.signal ?? sessionAbortController.signal,
     url,
     headers,
   };
