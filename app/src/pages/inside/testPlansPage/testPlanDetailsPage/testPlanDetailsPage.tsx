@@ -36,13 +36,6 @@ import {
   locationSelector,
   updatePagePropertiesAction,
 } from 'controllers/pages';
-import { isAuthorizedSelector } from 'controllers/auth';
-import {
-  showNotification,
-  NOTIFICATION_TYPES,
-  NOTIFICATION_TYPOGRAPHY_COLOR_TYPES,
-  WARNING_NOTIFICATION_DURATION,
-} from 'controllers/notification';
 import {
   useProjectDetails,
   useTestPlanId,
@@ -101,7 +94,6 @@ export const TestPlanDetailsPage = () => {
   const testCases = useTestPlanSelector(testPlanTestCasesSelector);
 
   const location = useSelector(locationSelector);
-  const isAuthorized = useSelector(isAuthorizedSelector);
   const isLoadingFilteredFolders = useSelector(isLoadingFilteredFoldersSelector);
   const areFoldersLoading = useSelector(areFoldersLoadingSelector);
   const areFoldersFetched = useSelector(areFoldersFetchedSelector);
@@ -240,24 +232,6 @@ export const TestPlanDetailsPage = () => {
       ),
     );
   }, [isLoading, areFoldersLoading, testPlan, testPlanFolders, testPlanId, trackEvent]);
-
-  useEffect(() => {
-    if (!isLoading && isEmpty(testPlan) && isAuthorized) {
-      dispatch(
-        showNotification({
-          type: NOTIFICATION_TYPES.WARNING,
-          message: formatMessage(messages.testPlanNotFoundRedirect),
-          typographyColor: NOTIFICATION_TYPOGRAPHY_COLOR_TYPES.BLACK,
-          duration: WARNING_NOTIFICATION_DURATION,
-        }),
-      );
-
-      dispatch({
-        type: PROJECT_MILESTONES_PAGE,
-        payload: { organizationSlug, projectSlug },
-      });
-    }
-  }, [isLoading, testPlan, isAuthorized, dispatch, organizationSlug, projectSlug, formatMessage]);
 
   const breadcrumbDescriptors = [
     {

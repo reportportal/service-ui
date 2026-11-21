@@ -19,6 +19,7 @@ import { takeLatest, takeEvery, call, select, all, put } from 'redux-saga/effect
 
 import { URLS } from 'common/urls';
 import { fetch } from 'common/utils';
+import { getApiErrorMessage } from 'common/utils/apiResponse';
 import { fetchSuccessAction, fetchErrorAction } from 'controllers/fetch';
 import { FETCH_START } from 'controllers/fetch/constants';
 import {
@@ -94,7 +95,17 @@ function* getTestPlans(action: GetTestPlansAction): Generator {
   }
 }
 
-function* getTestPlan(action: GetTestPlanAction): Generator {
+// All "not found" error codes of the API start with 404 (4040-4050, 40429, 40430).
+const isNotFoundError = (error: unknown): boolean => {
+  const errorCode = (error as { errorCode?: unknown } | null)?.errorCode;
+
+  return (
+    (typeof errorCode === 'number' || typeof errorCode === 'string') &&
+    String(errorCode).startsWith('404')
+  );
+};
+
+export function* getTestPlan(action: GetTestPlanAction): Generator {
   const controller = new AbortController();
   abortController?.abort();
   abortController = controller;
@@ -135,18 +146,30 @@ function* getTestPlan(action: GetTestPlanAction): Generator {
 
     if (!isCancellation) {
       yield put(fetchErrorAction(ACTIVE_TEST_PLAN_NAMESPACE, error, true));
-      yield put(
-        showNotification({
-          messageId: 'testPlanRedirectWarningMessage',
-          type: NOTIFICATION_TYPES.WARNING,
-          typographyColor: NOTIFICATION_TYPOGRAPHY_COLOR_TYPES.BLACK,
-          duration: WARNING_NOTIFICATION_DURATION,
-        }),
-      );
-      yield put({
-        type: PROJECT_MILESTONES_PAGE,
-        payload: location.payload,
-      });
+
+      if (isNotFoundError(error)) {
+        yield put(
+          showNotification({
+            messageId: 'testPlanRedirectWarningMessage',
+            type: NOTIFICATION_TYPES.WARNING,
+            typographyColor: NOTIFICATION_TYPOGRAPHY_COLOR_TYPES.BLACK,
+            duration: WARNING_NOTIFICATION_DURATION,
+          }),
+        );
+        yield put({
+          type: PROJECT_MILESTONES_PAGE,
+          payload: location.payload,
+        });
+      } else {
+        const message = getApiErrorMessage(error);
+
+        yield put(
+          showErrorNotification({
+            message,
+            messageId: message ? '' : 'testPlanLoadingFailed',
+          }),
+        );
+      }
     }
 
     return;
