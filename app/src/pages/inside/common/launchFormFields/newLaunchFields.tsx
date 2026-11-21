@@ -73,7 +73,7 @@ export const NewLaunchFields = ({
   const retrieveTestPlans = (value: string) =>
     URLS.testPlan(
       projectKey,
-      value ? { [LAUNCH_NAME_FILTER_KEY]: value, pageSize: 50 } : { pageSize: 50 },
+      value ? { [LAUNCH_NAME_FILTER_KEY]: value, limit: 50 } : { limit: 50 },
     );
 
   const getURIKey = useCallback(

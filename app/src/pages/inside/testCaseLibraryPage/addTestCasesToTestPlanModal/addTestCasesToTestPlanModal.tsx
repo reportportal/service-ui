@@ -14,29 +14,30 @@
  * limitations under the License.
  */
 
-import { ComponentProps, ReactNode, useCallback, useMemo, useState } from 'react';
+import { ReactNode, useCallback, useMemo } from 'react';
 import { noop } from 'es-toolkit';
 import { useIntl } from 'react-intl';
 import { useDispatch, useSelector } from 'react-redux';
 import { InjectedFormProps, reduxForm, SubmitHandler } from 'redux-form';
 
-import { FieldLabel, Modal, SingleAutocomplete } from '@reportportal/ui-kit';
+import { FieldLabel, Modal } from '@reportportal/ui-kit';
 
+import { URLS } from 'common/urls';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { createClassnames } from 'common/utils';
 import { commonValidators } from 'common/utils/validation';
+import { AsyncAutocompleteV2 } from 'componentLibrary/autocompletes/asyncAutocompleteV2';
 import { LoadingSubmitButton } from 'components/loadingSubmitButton';
 import { hideModalAction, withModal } from 'controllers/modal';
 import { projectKeySelector } from 'controllers/project';
+import { defaultSortParam } from 'controllers/testPlan/constants';
 import type { TestPlanDto } from 'controllers/testPlan/types';
 import { MODAL_Z_INDEX } from 'common/constants/zIndex';
 
 import { ADD_TO_TEST_PLAN_MODAL_FORM } from './constants';
-import { filterTestPlansByName } from './fetchMilestoneTestPlans';
 import { messages } from './messages';
 import { AddTestCasesToTestPlanFormData, AddTestCasesToTestPlanModalProps } from './types';
 import { useAddTestCasesToTestPlan } from './useAddTestCasesToTestPlan';
-import { useLaunchTestPlansForAddModal } from './useLaunchTestPlansForAddModal';
 
 import styles from './addTestCasesToTestPlanModal.module.scss';
 
@@ -45,13 +46,13 @@ type AddTestCasesSubmitHandler = SubmitHandler<
   AddTestCasesToTestPlanModalProps
 >;
 
-type TestPlanAutocompleteStateChange = ComponentProps<
-  typeof SingleAutocomplete<TestPlanDto>
->['onStateChange'];
-
 const cx = createClassnames(styles);
 
 export const ADD_TO_TEST_PLAN_MODAL_KEY = 'addToTestPlanModalKey';
+
+const TEST_PLANS_PAGE_SIZE = 50;
+
+const makeTestPlanOptions = (response: { content: TestPlanDto[] }) => response.content;
 
 export const AddTestCasesToTestPlanModal = ({
   change,
@@ -63,9 +64,6 @@ export const AddTestCasesToTestPlanModal = ({
   const { formatMessage } = useIntl();
   const dispatch = useDispatch();
   const projectKey = useSelector(projectKeySelector);
-  const [testPlanSearchInput, setTestPlanSearchInput] = useState('');
-  const { launchTestPlans, isLaunchTestPlansLoading } =
-    useLaunchTestPlansForAddModal(projectKey);
 
   const isFromFolder = folderId && !selectedTestCaseIds;
   const testCaseCount = isFromFolder ? itemCount : selectedTestCaseIds?.length || 0;
@@ -83,18 +81,17 @@ export const AddTestCasesToTestPlanModal = ({
     change,
   });
 
-  const filteredTestPlans = useMemo(
-    () => filterTestPlansByName(launchTestPlans, testPlanSearchInput),
-    [launchTestPlans, testPlanSearchInput],
-  );
-
-  const handleTestPlanAutocompleteStateChange: TestPlanAutocompleteStateChange = useCallback(
-    (changes) => {
-      if ('inputValue' in changes) {
-        setTestPlanSearchInput(changes.inputValue || '');
-      }
-    },
-    [],
+  // Only test plans linked to a milestone can be picked; the server filters and searches by name.
+  const getTestPlansURI = useCallback(
+    (search: string) =>
+      URLS.testPlan(projectKey, {
+        'filter.ex.milestoneId': true,
+        ...(search ? { 'filter.cnt.name': search } : {}),
+        limit: TEST_PLANS_PAGE_SIZE,
+        offset: 0,
+        sortBy: defaultSortParam,
+      }),
+    [projectKey],
   );
 
   const description = useMemo(
@@ -134,11 +131,12 @@ export const AddTestCasesToTestPlanModal = ({
           {testCaseCount > 1 && description}
           <div className={cx('autocomplete-wrapper')}>
             <FieldLabel>{formatMessage(COMMON_LOCALE_KEYS.TEST_PLAN_LABEL)}</FieldLabel>
-            <SingleAutocomplete<TestPlanDto>
+            <AsyncAutocompleteV2
               value={selectedTestPlan ?? null}
               placeholder={formatMessage(COMMON_LOCALE_KEYS.SELECT_TEST_PLAN_PLACEHOLDER)}
-              options={filteredTestPlans}
-              loading={isLaunchTestPlansLoading}
+              getURI={getTestPlansURI}
+              makeOptions={makeTestPlanOptions}
+              minLength={0}
               onChange={setSelectedTestPlan}
               refFunction={inputRefFunction}
               isDropdownMode
@@ -147,7 +145,6 @@ export const AddTestCasesToTestPlanModal = ({
               getUniqKey={(value: TestPlanDto) => String(value?.id)}
               createWithoutConfirmation
               skipOptionCreation
-              onStateChange={handleTestPlanAutocompleteStateChange}
               useFixedPositioning={false}
               onFocus={noop}
               onBlur={noop}
