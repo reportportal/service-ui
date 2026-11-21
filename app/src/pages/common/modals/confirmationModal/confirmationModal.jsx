@@ -18,6 +18,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import Parser from 'html-react-parser';
+import { sanitizeTemplateHtml } from 'common/utils/sanitizeTemplateHtml';
 import classNames from 'classnames/bind';
 import { ModalLayout, withModal } from 'components/main/modal';
 import { confirmModalAction } from 'controllers/modal';
@@ -67,7 +68,7 @@ export class ConfirmationModal extends Component {
           text: cancelText,
         }}
       >
-        <p className={cx('message')}>{Parser(message)}</p>
+        <p className={cx('message')}>{Parser(sanitizeTemplateHtml(message))}</p>
       </ModalLayout>
     );
   }

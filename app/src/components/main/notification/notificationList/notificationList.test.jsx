@@ -25,8 +25,8 @@ import {
 import { NotificationList, notificationMessages } from './notificationList';
 
 // the list reads the notifications out of the store, so one is put there rather than passed in
-const render = (messageId) => {
-  const notifications = [{ uid: 1, type: 'error', messageId, values: {} }];
+const render = (messageId, message) => {
+  const notifications = [{ uid: 1, type: 'error', messageId, values: {}, message }];
   const store = createStore(() => ({ notifications }));
 
   return mount(
@@ -75,5 +75,22 @@ describe('the marketplace install failures', () => {
     const toasts = codes.map(toastFor);
 
     expect(new Set(toasts).size).toBe(codes.length);
+  });
+});
+
+describe('a notification with a plain message', () => {
+  test('renders inline emphasis and links but no images, styles or forms', () => {
+    const wrapper = render(
+      undefined,
+      'Failed for <b>name</b><img src="https://example.com/p.png"><style>body{}</style><form></form> <a href="https://example.com/docs">docs</a>',
+    );
+    const link = wrapper.find('a');
+
+    expect(wrapper.find('b').text()).toBe('name');
+    expect(wrapper.find('img')).toHaveLength(0);
+    expect(wrapper.find('style')).toHaveLength(0);
+    expect(wrapper.find('form')).toHaveLength(0);
+    expect(link.prop('href')).toBe('https://example.com/docs');
+    expect(link.prop('rel')).toBe('noopener noreferrer');
   });
 });
