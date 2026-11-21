@@ -22,7 +22,6 @@ import { InjectedFormProps, reduxForm, SubmitHandler } from 'redux-form';
 
 import { FieldLabel, Modal } from '@reportportal/ui-kit';
 
-import { URLS } from 'common/urls';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { createClassnames } from 'common/utils';
 import { commonValidators } from 'common/utils/validation';
@@ -30,11 +29,11 @@ import { AsyncAutocompleteV2 } from 'componentLibrary/autocompletes/asyncAutocom
 import { LoadingSubmitButton } from 'components/loadingSubmitButton';
 import { hideModalAction, withModal } from 'controllers/modal';
 import { projectKeySelector } from 'controllers/project';
-import { defaultSortParam } from 'controllers/testPlan/constants';
 import type { TestPlanDto } from 'controllers/testPlan/types';
 import { MODAL_Z_INDEX } from 'common/constants/zIndex';
 
 import { ADD_TO_TEST_PLAN_MODAL_FORM } from './constants';
+import { getTestPlansSearchUri } from './getTestPlansSearchUri';
 import { messages } from './messages';
 import { AddTestCasesToTestPlanFormData, AddTestCasesToTestPlanModalProps } from './types';
 import { useAddTestCasesToTestPlan } from './useAddTestCasesToTestPlan';
@@ -49,8 +48,6 @@ type AddTestCasesSubmitHandler = SubmitHandler<
 const cx = createClassnames(styles);
 
 export const ADD_TO_TEST_PLAN_MODAL_KEY = 'addToTestPlanModalKey';
-
-const TEST_PLANS_PAGE_SIZE = 50;
 
 const makeTestPlanOptions = (response: { content: TestPlanDto[] }) => response.content;
 
@@ -83,14 +80,7 @@ export const AddTestCasesToTestPlanModal = ({
 
   // Only test plans linked to a milestone can be picked; the server filters and searches by name.
   const getTestPlansURI = useCallback(
-    (search: string) =>
-      URLS.testPlan(projectKey, {
-        'filter.ex.milestoneId': true,
-        ...(search ? { 'filter.cnt.name': search } : {}),
-        limit: TEST_PLANS_PAGE_SIZE,
-        offset: 0,
-        sortBy: defaultSortParam,
-      }),
+    (search: string) => getTestPlansSearchUri(projectKey, search),
     [projectKey],
   );
 
@@ -140,7 +130,10 @@ export const AddTestCasesToTestPlanModal = ({
               onChange={setSelectedTestPlan}
               refFunction={inputRefFunction}
               isDropdownMode
-              inputProps={{ clearable: !!selectedTestPlan, onClear: () => setSelectedTestPlan(null) }}
+              inputProps={{
+                clearable: !!selectedTestPlan,
+                onClear: () => setSelectedTestPlan(null),
+              }}
               parseValueToString={(value: TestPlanDto | null) => value?.name ?? ''}
               getUniqKey={(value: TestPlanDto) => String(value?.id)}
               createWithoutConfirmation
