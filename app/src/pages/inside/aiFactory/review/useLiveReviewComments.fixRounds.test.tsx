@@ -69,6 +69,8 @@ interface ProbeProps {
   enabled?: boolean;
   canApprove?: boolean;
   allowPush?: boolean;
+  canStartPush?: boolean;
+  refreshPushConnection?: () => void;
   onFixCompleted?: () => void;
   onState: (state: LiveReviewCommentsLoadState) => void;
 }
@@ -79,6 +81,8 @@ const Probe = ({
   enabled = true,
   canApprove = false,
   allowPush = true,
+  canStartPush = true,
+  refreshPushConnection,
   onFixCompleted,
   onState,
 }: ProbeProps) => {
@@ -86,6 +90,8 @@ const Probe = ({
     versionId,
     canApprove,
     allowPush,
+    canStartPush,
+    refreshPushConnection,
     onFixCompleted,
   });
   useEffect(() => onState(state), [onState, state]);
@@ -229,6 +235,19 @@ describe('native Review Push and fix monitoring', () => {
       await flush();
     });
     expect(state().canPush).toBe(true);
+  });
+
+  test('disables Push while CI cannot start jobs and still allows review comments', async () => {
+    await render({ canStartPush: false });
+    expect(state()).toMatchObject({ isPushCiUnavailable: true, canPush: false });
+    expect(await push()).toBe(false);
+    expect(starts()).toHaveLength(0);
+    await act(async () => {
+      expect(await state().addComment(payload)).toBe(true);
+      await flush();
+    });
+    await update({ canStartPush: true });
+    expect(state()).toMatchObject({ isPushCiUnavailable: false, canPush: true });
   });
 
   test('a viewer monitors an existing fix but cannot start another one', async () => {
@@ -481,6 +500,31 @@ describe('native Review Push and fix monitoring', () => {
       expect(reads().length).toBeGreaterThan(1);
       await tick(LIVE_FIX_POLL_INTERVAL * 3);
       expect(starts()).toHaveLength(1);
+    },
+  );
+
+  test.each([{ errorCode: 40916 }, { reason: 'CI_NOT_CONNECTED' }])(
+    'refreshes CI after 409 and blocks another Push until review is refreshed: %j',
+    async (body) => {
+      const refreshPushConnection = jest.fn();
+      await render({ refreshPushConnection });
+      fetchMock.mockResolvedValueOnce({ status: 409, data: body });
+      expect(await push()).toBe(false);
+      expect(state()).toMatchObject({
+        fixInProgress: false,
+        fixStartError: 'CI_NOT_CONNECTED',
+        isPushCiUnavailable: true,
+        canPush: false,
+      });
+      expect(refreshPushConnection).toHaveBeenCalledTimes(1);
+      expect(await push()).toBe(false);
+      expect(starts()).toHaveLength(1);
+
+      await act(async () => {
+        state().reload();
+        await flush();
+      });
+      expect(state()).toMatchObject({ isPushCiUnavailable: false, canPush: true });
     },
   );
 

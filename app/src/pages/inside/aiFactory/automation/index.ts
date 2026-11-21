@@ -11,10 +11,15 @@
 export { AutomationSection } from './automationSection';
 export { useAutomationModal } from './useAutomationModal';
 export {
+  useAutomationPipeline,
+  type AutomationPipelineGate,
+} from './useAutomationPipeline';
+export {
   getAutomationCandidateLabel,
   getAutomationSkipReason,
   getNativeAutomationCandidate,
   getNativeAutomationState,
+  isAutomationDemoEnabled,
   normalizeAutomateAccepted,
   normalizeAutomationEnvironments,
   partitionAutomationSelection,

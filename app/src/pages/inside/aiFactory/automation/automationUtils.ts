@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+import { isAiFactoryMocksEnabled } from 'controllers/aiFactory/mockMode';
 import {
   AutomationStatus,
   Lifecycle,
@@ -27,6 +28,9 @@ import {
   type TestCaseAutomationState,
 } from 'types/aiFactory';
 import type { TestCase } from 'types/testCase';
+
+export const isAutomationDemoEnabled = () =>
+  process.env.NODE_ENV === 'development' && isAiFactoryMocksEnabled();
 
 export interface AutomationCandidate {
   id: number;
@@ -196,9 +200,40 @@ const isSkippedCase = (value: unknown): value is AutomateAcceptedRS['skipped'][n
     skipped &&
     isPositiveInteger(skipped.id) &&
     typeof skipped.displayId === 'string' &&
-    typeof skipped.reason === 'string' &&
-    Object.values(SkipReason).includes(skipped.reason as SkipReason),
+    (skipped.reason === SkipReason.FIX_RUNNING ||
+      skipped.reason === SkipReason.NOT_READY ||
+      skipped.reason === SkipReason.AUTOMATION_IN_PROGRESS),
   );
+};
+
+export const getReautomationRequiredIds = (value: unknown, requestedIds: readonly number[]) => {
+  const response = asRecord(value);
+  const ids: unknown = response?.testCaseIds;
+  if (
+    response?.reason !== 'ALREADY_AUTOMATED_CONFIRM_REQUIRED' ||
+    !Array.isArray(ids) ||
+    ids.length === 0 ||
+    new Set(ids).size !== ids.length ||
+    !ids.every((id) => isPositiveInteger(id) && requestedIds.includes(id))
+  ) {
+    return undefined;
+  }
+  return ids as number[];
+};
+
+export const getNoEligibleCases = (value: unknown, requestedIds: readonly number[]) => {
+  const response = asRecord(value);
+  const skipped: unknown = response?.skipped;
+  if (
+    response?.reason !== 'NO_ELIGIBLE_TEST_CASES' ||
+    !Array.isArray(skipped) ||
+    !skipped.every(isSkippedCase) ||
+    new Set(skipped.map(({ id }) => id)).size !== skipped.length ||
+    !skipped.every(({ id }) => requestedIds.includes(id))
+  ) {
+    return undefined;
+  }
+  return skipped;
 };
 
 export const normalizeAutomateAccepted = (
@@ -212,9 +247,7 @@ export const normalizeAutomateAccepted = (
     ? response.accepted.filter(isPositiveInteger)
     : [];
   const skippedEntries = Array.isArray(response?.skipped) ? response.skipped : [];
-  const skippedIds = skippedEntries
-    .map((entry) => asRecord(entry)?.id)
-    .filter(isPositiveInteger);
+  const skippedIds = skippedEntries.map((entry) => asRecord(entry)?.id).filter(isPositiveInteger);
   const resultIds = [...acceptedIds, ...skippedIds];
   if (
     requestedIds.length === 0 ||

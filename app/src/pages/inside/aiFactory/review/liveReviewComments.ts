@@ -53,10 +53,24 @@ const invalidReview = (): never => {
   throw new Error('Invalid test case review response');
 };
 
-const asRecord = (value: unknown): Record<string, unknown> =>
+const optionalRecord = (value: unknown): Record<string, unknown> | undefined =>
   typeof value === 'object' && value !== null && !Array.isArray(value)
     ? (value as Record<string, unknown>)
-    : invalidReview();
+    : undefined;
+
+const asRecord = (value: unknown): Record<string, unknown> =>
+  optionalRecord(value) ?? invalidReview();
+
+const nonEmptyText = (value: unknown): string | undefined =>
+  typeof value === 'string' ? value.trim() || undefined : undefined;
+
+const readAuthor = (id: number, value: unknown): ReviewCommentRS['author'] => {
+  const author = optionalRecord(value);
+  if (author?.id !== id) return { id };
+
+  const name = nonEmptyText(author.fullName) ?? nonEmptyText(author.login);
+  return name ? { id, name } : { id };
+};
 
 const isPositiveInteger = (value: unknown): value is number =>
   typeof value === 'number' && Number.isSafeInteger(value) && value > 0;
@@ -103,7 +117,7 @@ const readComment = (value: unknown, currentUserId?: number): ReviewCommentRS =>
     id: comment.id,
     target: readTarget(comment),
     text: comment.text,
-    author: { id: comment.authorId },
+    author: readAuthor(comment.authorId, comment.author),
     createdAt: readTimestamp(comment.createdAt),
     state,
     fixRound: optionalRound(comment.roundNumber),

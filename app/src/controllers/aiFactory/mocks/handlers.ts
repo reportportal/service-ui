@@ -23,6 +23,7 @@
 import MockAdapter from 'axios-mock-adapter';
 import { AxiosRequestConfig } from 'axios';
 import {
+  type AutomatePayload,
   AutomationStatus,
   EvaluationState,
   FixRoundRS,
@@ -70,23 +71,23 @@ const body = <T>(config: AxiosRequestConfig): T =>
 const notFound = (): [number, { errorCode: number; message: string }] => [404, { errorCode: 40404, message: 'Not found' }];
 const conflict = (reason: string): [number, { reason: string }] => [409, { reason }];
 
-interface AutomationPayload {
-  testCaseIds: number[];
-  environment: string;
-  confirmReautomate: boolean;
-}
-
-const isAutomationPayload = (value: unknown): value is AutomationPayload => {
+const isAutomationPayload = (value: unknown): value is AutomatePayload => {
   if (typeof value !== 'object' || value === null) return false;
-  const payload = value as Record<string, unknown>;
+  const { testCaseIds, environment, confirmReautomate, confirmedTestCaseIds } = value as Record<
+    string,
+    unknown
+  >;
   return (
-    Array.isArray(payload.testCaseIds) &&
-    payload.testCaseIds.length > 0 &&
-    payload.testCaseIds.every((id) => typeof id === 'number' && Number.isSafeInteger(id) && id > 0) &&
-    new Set(payload.testCaseIds).size === payload.testCaseIds.length &&
-    typeof payload.environment === 'string' &&
-    AUTOMATION_ENVIRONMENTS.includes(payload.environment) &&
-    typeof payload.confirmReautomate === 'boolean'
+    Array.isArray(testCaseIds) &&
+    testCaseIds.length > 0 &&
+    testCaseIds.every((id) => typeof id === 'number' && Number.isSafeInteger(id) && id > 0) &&
+    new Set(testCaseIds).size === testCaseIds.length &&
+    typeof environment === 'string' &&
+    AUTOMATION_ENVIRONMENTS.includes(environment) &&
+    (confirmReautomate === undefined || typeof confirmReautomate === 'boolean') &&
+    (confirmedTestCaseIds === undefined ||
+      (Array.isArray(confirmedTestCaseIds) &&
+        confirmedTestCaseIds.every((id) => testCaseIds.includes(id))))
   );
 };
 
@@ -288,11 +289,7 @@ export const installAiFactoryHandlers = (mock: MockAdapter): void => {
     }
     const accepted: number[] = [];
     const skipped: { id: number; displayId: string; reason: string }[] = [];
-    const again = payload.testCaseIds.filter((id) => {
-      const c = findCase(id);
-      return c?.automation?.status === AutomationStatus.AUTOMATED && automateSkipReason(c) === null;
-    });
-    if (again.length && !payload.confirmReautomate) return [409, { reason: 'ALREADY_AUTOMATED_CONFIRM_REQUIRED', testCaseIds: again }];
+    const again: number[] = [];
     payload.testCaseIds.forEach((id) => {
       const c = findCase(id);
       const reason = automateSkipReason(c);
@@ -300,9 +297,16 @@ export const installAiFactoryHandlers = (mock: MockAdapter): void => {
         skipped.push({ id, displayId: c.displayId, reason });
       } else {
         accepted.push(id);
+        if (c.automation?.status === AutomationStatus.AUTOMATED) again.push(id);
       }
     });
-    if (!accepted.length) return [400, { errorCode: 40001, message: 'No Ready Test Cases to automate' }];
+    if (!accepted.length) return [409, { reason: 'NO_ELIGIBLE_TEST_CASES', skipped }];
+    if (
+      again.length &&
+      (!payload.confirmReautomate || !again.every((id) => payload.confirmedTestCaseIds?.includes(id)))
+    ) {
+      return [409, { reason: 'ALREADY_AUTOMATED_CONFIRM_REQUIRED', testCaseIds: again }];
+    }
     const canonicalCaseIds = accepted.flatMap((id) => {
       const caseRecord = findCase(id);
       return caseRecord ? [caseRecord.id] : [];

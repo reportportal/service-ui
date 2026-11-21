@@ -115,6 +115,14 @@ export const messages = defineMessages({
     id: 'AiFactoryAutomation.environment',
     defaultMessage: 'Environment',
   },
+  environmentSource: {
+    id: 'AiFactoryAutomation.environmentSource',
+    defaultMessage: 'Environments come from the Test automation pipeline’s CI connection.',
+  },
+  loadingEnvironments: {
+    id: 'AiFactoryAutomation.loadingEnvironments',
+    defaultMessage: 'Loading environments',
+  },
   selectedSummary: {
     id: 'AiFactoryAutomation.selectedSummary',
     defaultMessage: '{selected} selected · {eligible} eligible',
@@ -129,7 +137,7 @@ export const messages = defineMessages({
   },
   reasonNotReady: {
     id: 'AiFactoryAutomation.reasonNotReady',
-    defaultMessage: 'Draft',
+    defaultMessage: 'Not Ready',
   },
   reasonAlreadyReady: {
     id: 'AiFactoryAutomation.reasonAlreadyReady',
@@ -161,7 +169,15 @@ export const messages = defineMessages({
   },
   unavailableCiConnection: {
     id: 'AiFactoryAutomation.unavailableCiConnection',
-    defaultMessage: 'This pipeline is not connected to CI — ask an Organization Manager',
+    defaultMessage: 'The Test automation pipeline cannot start jobs. Check its CI connection.',
+  },
+  checkingCiConnection: {
+    id: 'AiFactoryAutomation.checkingCiConnection',
+    defaultMessage: 'Checking the Test automation pipeline’s CI connection',
+  },
+  loadCiConnectionFailed: {
+    id: 'AiFactoryAutomation.loadCiConnectionFailed',
+    defaultMessage: 'The Test automation pipeline’s CI connection could not be loaded.',
   },
   unavailableFixRunning: {
     id: 'AiFactoryAutomation.unavailableFixRunning',
@@ -175,13 +191,25 @@ export const messages = defineMessages({
     id: 'AiFactoryAutomation.unavailableSelection',
     defaultMessage: 'The selected Test Cases cannot be automated',
   },
-  confirmReautomate: {
-    id: 'AiFactoryAutomation.confirmReautomate',
-    defaultMessage: 'Already automated: {cases}. Automate again?',
+  confirmTitle: {
+    id: 'AiFactoryAutomation.confirmTitle',
+    defaultMessage: 'Automate again?',
+  },
+  confirmAction: {
+    id: 'AiFactoryAutomation.confirmAction',
+    defaultMessage: 'Automate again',
+  },
+  confirmCases: {
+    id: 'AiFactoryAutomation.confirmCases',
+    defaultMessage: 'These Test Cases have already been automated. Confirm to automate them again.',
   },
   loadEnvironmentsFailed: {
     id: 'AiFactoryAutomation.loadEnvironmentsFailed',
     defaultMessage: 'Environments could not be loaded. Try again.',
+  },
+  environmentsNotConfigured: {
+    id: 'AiFactoryAutomation.environmentsNotConfigured',
+    defaultMessage: 'Set up environments in the pipeline’s CI connection to continue.',
   },
   invalidEnvironmentsResponse: {
     id: 'AiFactoryAutomation.invalidEnvironmentsResponse',
@@ -195,9 +223,19 @@ export const messages = defineMessages({
     id: 'AiFactoryAutomation.startFailed',
     defaultMessage: 'Automation could not be started. Try again.',
   },
+  noEligibleCases: {
+    id: 'AiFactoryAutomation.noEligibleCases',
+    defaultMessage: 'None of the selected Test Cases can be sent to automation.',
+  },
+  startNotConfirmed: {
+    id: 'AiFactoryAutomation.startNotConfirmed',
+    defaultMessage:
+      'The start could not be confirmed. Check the Test Cases’ automation status before sending them again.',
+  },
   invalidStartResponse: {
     id: 'AiFactoryAutomation.invalidStartResponse',
-    defaultMessage: 'Automation returned an invalid response. Try again.',
+    defaultMessage:
+      'Automation returned an invalid response. Check the Test Cases’ automation status before sending them again.',
   },
   started: {
     id: 'AiFactoryAutomation.started',
@@ -207,6 +245,11 @@ export const messages = defineMessages({
     id: 'AiFactoryAutomation.startedWithSkipped',
     defaultMessage:
       'Automation iteration #{number} started for {count} Test Cases. Skipped: {cases}',
+  },
+  startedWithUnconfirmedCases: {
+    id: 'AiFactoryAutomation.startedWithUnconfirmedCases',
+    defaultMessage:
+      'Automation iteration #{number} started for {count} Test Cases. Start not confirmed for: {cases}.',
   },
   retry: {
     id: 'AiFactoryAutomation.retry',

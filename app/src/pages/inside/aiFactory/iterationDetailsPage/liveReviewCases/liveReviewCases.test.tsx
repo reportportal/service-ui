@@ -177,6 +177,41 @@ describe('LiveReviewCases', () => {
     ).toEqual(['0', '25', '50']);
   });
 
+  test('renders Ready attribution from the existing Library list response', async () => {
+    const at = '2026-11-21T10:00:00Z';
+    const actors = [
+      { type: 'USER', user: { id: 7, login: 'user1', fullName: 'Ann Smith' }, at },
+      { type: 'USER', user: { id: 8, login: 'user2', fullName: ' ' }, at },
+      { type: 'AUTO_READY', at },
+      { type: 'USER', user: {}, at },
+      { type: 'SYSTEM', user: { fullName: 'Unrecognized actor' }, at },
+      null,
+      undefined,
+    ];
+    fetchMock.mockResolvedValue({
+      content: actors.map((madeReadyBy, index) => ({
+        id: 9101 + index,
+        displayId: `TC${101 + index}`,
+        name: `Case ${index + 1}`,
+        status: madeReadyBy === null ? 'DRAFT' : 'READY',
+        ...(madeReadyBy === undefined ? {} : { madeReadyBy }),
+      })),
+      page: { totalElements: actors.length },
+    });
+    await act(async () => {
+      wrapper = mountIntoContainer(<LiveReviewCases projectKey="project" iterationId={31} />);
+      await Promise.resolve();
+    });
+    await flush();
+    wrapper?.update();
+
+    expect(container.querySelector('th:last-child')?.textContent).toBe('Made Ready by');
+    expect(
+      Array.from(container.querySelectorAll('tbody td:last-child'), (cell) => cell.textContent),
+    ).toEqual(['Ann Smith', 'user2', 'Auto-Ready', '—', '—', '—', '—']);
+    expect(fetchMock).toHaveBeenCalledTimes(1);
+  });
+
   test('offers an explicit GET retry after a list error', async () => {
     fetchMock.mockRejectedValue({ status: 404 });
     await act(async () => {

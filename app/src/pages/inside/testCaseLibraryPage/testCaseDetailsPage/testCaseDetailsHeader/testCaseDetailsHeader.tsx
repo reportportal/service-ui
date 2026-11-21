@@ -58,7 +58,9 @@ import {
   getAutomationSkipReason,
   getNativeAutomationCandidate,
   getNativeAutomationState,
+  isAutomationDemoEnabled,
   useAutomationModal,
+  type AutomationPipelineGate,
 } from 'pages/inside/aiFactory/automation';
 import { isDraftGateActive, readyOnlyMessages } from 'pages/inside/aiFactory/readyOnlyGate';
 import {
@@ -91,6 +93,7 @@ interface TestCaseDetailsHeaderProps {
   isNativeFixInProgress?: boolean;
   nativeReviewState?: LiveReviewCommentsLoadState;
   nativeAutomationState?: TestCaseAutomationState;
+  automationPipeline?: AutomationPipelineGate;
   onAutomationStarted?: (response: AutomateAcceptedRS) => void;
 }
 
@@ -125,7 +128,8 @@ const getAutomationActionState = (
   testCase: ExtendedTestCase,
   isNative: boolean,
   isFixRunning: boolean,
-  nativeAutomationState?: TestCaseAutomationState,
+  nativeAutomationState: TestCaseAutomationState | undefined,
+  automationPipeline: AutomationPipelineGate | undefined,
 ) => {
   const automationState = isNative
     ? (nativeAutomationState ?? getNativeAutomationState(testCase))
@@ -134,10 +138,12 @@ const getAutomationActionState = (
     ? getNativeAutomationCandidate({ ...testCase, automationState }, isFixRunning)
     : testCase;
   const disabledReason = getAutomationSkipReason(automationCandidate);
-  const isCiUnavailable = automationState && automationState.ciConnection !== 'CONNECTED';
+  const ciDisabledMessage = automationState && !automationPipeline?.pipelineId
+    ? automationPipeline?.disabledMessage ?? automationMessages.unavailableCiConnection
+    : undefined;
   const automationDisabledMessage = disabledReason
     ? automationDisabledMessages[disabledReason]
-    : isCiUnavailable && automationMessages.unavailableCiConnection;
+    : ciDisabledMessage;
 
   return { automationState, automationCandidate, automationDisabledMessage };
 };
@@ -152,6 +158,7 @@ export const TestCaseDetailsHeader = ({
   isNativeFixInProgress = false,
   nativeReviewState,
   nativeAutomationState,
+  automationPipeline,
   onAutomationStarted,
 }: TestCaseDetailsHeaderProps) => {
   const isAiFactoryEnabled = useAiFactoryEnabled();
@@ -175,7 +182,13 @@ export const TestCaseDetailsHeader = ({
   const gateStatus = nativeSummary?.status ?? testCase.lifecycle;
   const isDraft = isDraftGateActive(isAiFactoryEnabled, gateStatus);
   const { automationState, automationCandidate, automationDisabledMessage } =
-    getAutomationActionState(testCase, Boolean(nativeSummary), isFixRunning, nativeAutomationState);
+    getAutomationActionState(
+      testCase,
+      Boolean(nativeSummary),
+      isFixRunning,
+      nativeAutomationState,
+      automationPipeline,
+    );
 
   const breadcrumbsTitles = {
     mainTitle: formatMessage(commonMessages.testCaseLibraryBreadcrumb),
@@ -237,15 +250,22 @@ export const TestCaseDetailsHeader = ({
     if (nativeSummary) {
       openAutomationModal({
         testCases: [automationCandidate],
-        ...(automationState
-          ? { expectedProjectKey: projectKey, onSuccess: onAutomationStarted }
+        ...(automationState && automationPipeline?.pipelineId
+          ? {
+              expectedProjectKey: projectKey,
+              pipelineId: automationPipeline.pipelineId,
+              onCiUnavailable: automationPipeline.refresh,
+              onSuccess: onAutomationStarted,
+            }
           : { isPreview: true }),
       });
       return;
     }
 
+    const isMock = isAutomationDemoEnabled();
     openAutomationModal({
       testCases: [testCase],
+      ...(isMock && { isMock }),
       onSuccess: () =>
         dispatch({ type: GET_TEST_CASE_DETAILS, payload: { testCaseId: testCase.id } }),
     });

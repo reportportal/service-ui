@@ -20,7 +20,9 @@ import {
   GET_PIPELINE_ITERATION_DETAILS,
   GET_PIPELINE_ITERATIONS,
   GET_PIPELINES,
+  UPDATE_PIPELINE_CI_CONNECTION,
 } from './constants';
+import type { PipelineCiConnectionUpdate } from './ciConnection';
 import {
   ClearPipelineComparisonAction,
   GetPipelineComparisonAction,
@@ -35,6 +37,11 @@ import {
 export const getPipelinesAction = (page?: PipelineCatalogPageRequest): GetPipelinesAction => ({
   type: GET_PIPELINES,
   ...(page ? { payload: page } : {}),
+});
+
+export const updatePipelineCiConnectionAction = (update: PipelineCiConnectionUpdate) => ({
+  type: UPDATE_PIPELINE_CI_CONNECTION,
+  payload: { ciConnectionUpdate: update },
 });
 
 export const getPipelineIterationsAction = (

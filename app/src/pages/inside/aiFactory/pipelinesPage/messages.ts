@@ -68,6 +68,14 @@ export const messages = defineMessages({
     id: 'PipelinesPage.noIterationsMatch',
     defaultMessage: 'No iterations match',
   },
+  noIterations: {
+    id: 'PipelinesPage.noIterations',
+    defaultMessage: 'No iterations yet',
+  },
+  emptyAutomationPipeline: {
+    id: 'PipelinesPage.emptyAutomationPipeline',
+    defaultMessage: 'Configure the CI connection in Pipeline settings to start automating Test Cases.',
+  },
   noPipelinesMatch: {
     id: 'PipelinesPage.noPipelinesMatch',
     defaultMessage: 'No pipelines match',

@@ -20,7 +20,6 @@ import { useAutomationRequest, type AutomationRequestState } from './useAutomati
 
 jest.mock('@reportportal/ui-kit', () => ({
   Button: 'Button',
-  Checkbox: 'Checkbox',
   Dropdown: 'Dropdown',
   Modal: 'Modal',
   SystemMessage: 'SystemMessage',
@@ -59,7 +58,9 @@ jest.mock('./useAutomationRequest', () => ({ useAutomationRequest: jest.fn() }))
 const dispatch = jest.fn();
 const start = jest.fn();
 const reloadEnvironments = jest.fn();
-const clearError = jest.fn();
+jest.mock('pages/inside/aiFactory/pipelineSettings/usePipelineCiConnection', () => ({
+  usePipelineCiConnection: () => ({ connection: { state: 'CONNECTED', canStartJobs: true }, refresh: jest.fn() }),
+}));
 
 const candidate = {
   id: 42,
@@ -79,16 +80,16 @@ const requestState = (overrides: Partial<AutomationRequestState> = {}): Automati
   isStarting: false,
   error: null,
   reautomationRequiredIds: [],
+  skipped: [],
   start,
   reloadEnvironments,
-  clearError,
   ...overrides,
 });
 
 const renderModal = (data: AutomationModalData, state = requestState()) => {
   jest.mocked(useAutomationRequest).mockReturnValue(state);
 
-  return shallow(<AutomationModalContent data={data} />);
+  return shallow(<AutomationModalContent data={{ pipelineId: 2, ...data }} />);
 };
 
 describe('AutomationModalContent', () => {
@@ -107,7 +108,7 @@ describe('AutomationModalContent', () => {
     const wrapper = renderModal({ testCases: [candidate], onSuccess });
     const modal = wrapper.find('Modal');
 
-    expect(useAutomationRequest).toHaveBeenCalledWith('demo', true);
+    expect(useAutomationRequest).toHaveBeenCalledWith('demo', true, 2);
     expect(wrapper.find('Dropdown').props()).toMatchObject({
       value: 'beta5',
       options: [
@@ -125,7 +126,6 @@ describe('AutomationModalContent', () => {
     expect(start).toHaveBeenCalledWith({
       testCaseIds: [42],
       environment: 'beta5',
-      confirmReautomate: false,
     });
     expect(onSuccess).toHaveBeenCalledWith(accepted);
     expect(dispatch).toHaveBeenCalledWith({
@@ -142,7 +142,7 @@ describe('AutomationModalContent', () => {
     const wrapper = renderModal({ testCases: [candidate] });
     const modal = wrapper.find('Modal');
 
-    expect(useAutomationRequest).toHaveBeenCalledWith('demo', true);
+    expect(useAutomationRequest).toHaveBeenCalledWith('demo', true, 2);
     expect(modal.prop('okButton')).toMatchObject({ disabled: true });
 
     await act(async () => {
@@ -158,7 +158,7 @@ describe('AutomationModalContent', () => {
       requestState({ environments: null }),
     );
 
-    expect(useAutomationRequest).toHaveBeenCalledWith('demo', false);
+    expect(useAutomationRequest).toHaveBeenCalledWith('demo', false, 2);
     expect(wrapper.find('.automation-modal__case-list').text()).toContain('TC42 · Checkout');
     expect(wrapper.find('SystemMessage').text()).toContain('once the automation integration is available');
     expect(wrapper.find('Modal').prop('okButton')).toBeUndefined();
@@ -174,7 +174,7 @@ describe('AutomationModalContent', () => {
     expect(wrapper.find('Dropdown').prop('className')).toBe('automation-modal__environment');
   });
 
-  test('uses the explicitly selected environment and clears an existing error', async () => {
+  test('uses the explicitly selected environment', async () => {
     start.mockResolvedValue(accepted);
     const wrapper = renderModal({ testCases: [candidate] });
 
@@ -186,7 +186,6 @@ describe('AutomationModalContent', () => {
       await Promise.resolve();
     });
 
-    expect(clearError).toHaveBeenCalled();
     expect(start).toHaveBeenCalledWith(expect.objectContaining({ environment: 'qa' }));
   });
 
@@ -196,68 +195,80 @@ describe('AutomationModalContent', () => {
     });
 
     expect(wrapper.text()).toContain('TC42 · Checkout');
-    expect(wrapper.text()).toContain('Draft');
+    expect(wrapper.text()).toContain('Not Ready');
     expect(wrapper.find('Modal').prop('okButton')).toMatchObject({ disabled: true });
   });
 
-  test('requires confirmation for an automated candidate before sending', async () => {
-    start.mockResolvedValue(accepted);
+  test('lets the backend determine which already automated candidates require confirmation', async () => {
+    start.mockResolvedValue(null);
     const wrapper = renderModal({
       testCases: [{ ...candidate, automation: { status: AutomationStatus.AUTOMATED } }],
     });
 
-    expect(wrapper.find('Checkbox')).toHaveLength(1);
-    expect(wrapper.find('Checkbox').text()).toContain('TC42 · Checkout');
-    expect(wrapper.find('Modal').prop('okButton')).toMatchObject({ disabled: true });
-
-    act(() => {
-      (
-        wrapper.find('Checkbox').prop('onChange') as (event: {
-          target: { checked: boolean };
-        }) => void
-      )({ target: { checked: true } });
-    });
-    expect(wrapper.find('Modal').prop('okButton')).toMatchObject({ disabled: false });
-
+    const action = wrapper.find('Modal').prop('okButton') as { disabled: boolean; onClick: () => void };
+    expect(action.disabled).toBe(false);
     await act(async () => {
-      (wrapper.find('Modal').prop('okButton') as { onClick: () => void }).onClick();
+      action.onClick();
       await Promise.resolve();
     });
-    expect(start).toHaveBeenCalledWith(expect.objectContaining({ confirmReautomate: true }));
+
+    expect(start).toHaveBeenCalledWith({ testCaseIds: [42], environment: 'beta5' });
   });
 
-  test('turns a 409 into an inline confirmation flow and retries confirmed', async () => {
-    start.mockResolvedValue(accepted);
+  test('confirms exactly the cases identified by the backend conflict', async () => {
+    start.mockResolvedValue(null);
+    const second = { ...candidate, id: 43, displayId: 'TC43', name: 'Other checkout' };
     const wrapper = renderModal(
-      { testCases: [candidate] },
+      { testCases: [candidate, second] },
       requestState({
         error: 'REAUTOMATE_CONFIRMATION_REQUIRED',
         reautomationRequiredIds: [42],
       }),
     );
 
-    expect(wrapper.find('SystemMessage').text()).toContain('Confirm re-automation to continue.');
-    expect(wrapper.find('Checkbox').text()).toContain('TC42 · Checkout');
-    expect(wrapper.find('Modal').prop('okButton')).toMatchObject({ disabled: true });
+    const modal = wrapper.find('Modal');
+    expect(modal.prop('title')).toBe('Automate again?');
+    expect(wrapper.find('.automation-modal__case-list').text()).toContain('TC42 · Checkout');
+    expect(wrapper.find('.automation-modal__case-list').text()).not.toContain('TC43');
+    expect(modal.prop('okButton')).toMatchObject({ children: 'Automate again', disabled: false });
 
-    act(() => {
-      (wrapper.find('Dropdown').prop('onChange') as (value: string) => void)('qa');
-    });
-    expect(wrapper.find('Checkbox').text()).toContain('TC42 · Checkout');
-
-    act(() => {
-      (
-        wrapper.find('Checkbox').prop('onChange') as (event: {
-          target: { checked: boolean };
-        }) => void
-      )({ target: { checked: true } });
-    });
     await act(async () => {
-      (wrapper.find('Modal').prop('okButton') as { onClick: () => void }).onClick();
+      (modal.prop('okButton') as { onClick: () => void }).onClick();
       await Promise.resolve();
     });
 
-    expect(start).toHaveBeenCalledWith(expect.objectContaining({ confirmReautomate: true }));
+    expect(start).toHaveBeenCalledWith({
+      testCaseIds: [42, 43],
+      environment: 'beta5',
+      confirmReautomate: true,
+      confirmedTestCaseIds: [42],
+    });
+  });
+
+  test('does not show an environment picker before CI environments are configured', () => {
+    const wrapper = renderModal(
+      { testCases: [candidate] },
+      requestState({ environments: null, error: 'ENVIRONMENTS_NOT_CONFIGURED' }),
+    );
+
+    expect(wrapper.find('SystemMessage').text()).toContain('Set up environments');
+    expect(wrapper.find('Dropdown')).toHaveLength(0);
+    expect(wrapper.find('Modal').prop('okButton')).toMatchObject({ disabled: true });
+  });
+
+  test('shows the server skip reason and zero eligible cases after a stale selection', () => {
+    const wrapper = renderModal(
+      { testCases: [candidate] },
+      requestState({
+        error: 'NO_ELIGIBLE_TEST_CASES',
+        skipped: [{ id: 42, displayId: 'TC42', reason: 'FIX_RUNNING' }],
+      }),
+    );
+
+    expect(wrapper.text()).toContain('1 selected · 0 eligible');
+    expect(wrapper.find('.automation-modal__case-list')).toHaveLength(0);
+    expect(wrapper.find('.automation-modal__skipped-list').text()).toContain('Fix is running');
+    expect(wrapper.find('Modal').prop('okButton')).toMatchObject({ disabled: true });
   });
 
   test('lists requested cases and reports authoritative backend skips with truthful count', async () => {
@@ -287,7 +298,6 @@ describe('AutomationModalContent', () => {
     expect(start).toHaveBeenCalledWith({
       testCaseIds: [42, 43],
       environment: 'beta5',
-      confirmReautomate: false,
     });
     expect(onSuccess).toHaveBeenCalledWith(acceptedWithSkipped);
     expect(dispatch).toHaveBeenCalledWith({

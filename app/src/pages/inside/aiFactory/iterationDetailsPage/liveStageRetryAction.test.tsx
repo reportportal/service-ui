@@ -149,6 +149,21 @@ describe('LiveStageRetryAction', () => {
     expect(container.querySelector('button')?.disabled).toBe(shouldRefresh);
   });
 
+  test('keeps a disconnected stage disabled and refreshes CI after a stale 40916', async () => {
+    const onRefreshCiConnection = jest.fn();
+    render({ isCiUnavailable: true, onRefreshCiConnection });
+    await clickAndSettle();
+    expect(fetchMock).not.toHaveBeenCalled();
+    expect(container.textContent).toMatch(/until the pipeline is connected to CI/i);
+
+    fetchMock.mockResolvedValue({ status: 409, data: { errorCode: 40916 } } as AxiosResponse);
+    render({ isCiUnavailable: false, onRefreshCiConnection });
+    await clickAndSettle();
+    expect(onRefreshCiConnection).toHaveBeenCalledTimes(1);
+    expect(onRefresh).not.toHaveBeenCalled();
+    expect(container.textContent).toMatch(/until the pipeline is connected to CI/i);
+  });
+
   test.each([new Error('Network error'), { status: 503 }])(
     'locks an unconfirmed outcome for this attempt and refreshes once (%s)',
     async (error) => {

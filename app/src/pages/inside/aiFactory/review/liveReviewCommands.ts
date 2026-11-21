@@ -139,9 +139,23 @@ export const approveLiveReview = (
 
 export const canPushLiveReview = (scope: ReviewScope): boolean =>
   canMutateLiveReview(scope) && scope.allowPush && !scope.isApproved &&
-  Boolean(scope.review?.unsentCount) && !scope.snapshot.fixMonitoringError;
+  Boolean(scope.review?.unsentCount) && !scope.snapshot.fixMonitoringError &&
+  scope.snapshot.fixStartError !== 'CI_NOT_CONNECTED';
 
-const handleStartError = (scope: ReviewScope, error: unknown): void => {
+export const reloadLiveReview = (scope: ReviewScope, refreshPushConnection?: () => void): void => {
+  if (!scope.isCurrent()) return;
+  if (scope.snapshot.fixStartError === 'CI_NOT_CONNECTED') {
+    scope.snapshot.fixStartError = undefined;
+  }
+  refreshPushConnection?.();
+  void refreshLiveReview(scope);
+};
+
+const handleStartError = (
+  scope: ReviewScope,
+  error: unknown,
+  refreshPushConnection?: () => void,
+): void => {
   const reason = error instanceof LiveFixRoundError ? error.reason : 'UNCONFIRMED';
   if (reason === 'UNCONFIRMED') {
     reconcileUnconfirmedStart(scope);
@@ -149,11 +163,16 @@ const handleStartError = (scope: ReviewScope, error: unknown): void => {
   }
   scope.isFixLocked = false;
   scope.fixStartedAt = undefined;
-  scope.snapshot.fixStartError = reason === 'CONFLICT' ? 'CONFLICT' : 'FAILED';
+  scope.snapshot.fixStartError = reason === 'MISSING' ? 'FAILED' : reason;
+  if (reason === 'CI_NOT_CONNECTED' || reason === 'FAILED') refreshPushConnection?.();
   void refreshLiveReview(scope);
 };
 
-export const pushLiveReviewToAgent = (scope: ReviewScope, epoch: number): Promise<boolean> => {
+export const pushLiveReviewToAgent = (
+  scope: ReviewScope,
+  epoch: number,
+  refreshPushConnection?: () => void,
+): Promise<boolean> => {
   if (!canPushLiveReview(scope)) return Promise.resolve(false);
   return runReviewCommand(scope, epoch, {
     execute: (signal) => {
@@ -168,7 +187,7 @@ export const pushLiveReviewToAgent = (scope: ReviewScope, epoch: number): Promis
       acceptStartedRound(scope, round);
       scope.changedCallback?.();
     },
-    onError: (error) => handleStartError(scope, error),
+    onError: (error) => handleStartError(scope, error, refreshPushConnection),
     rethrowError: false,
   });
 };

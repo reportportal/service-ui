@@ -31,6 +31,7 @@ import type {
   ReducedPipelineIterationDetail,
 } from './liveAdapters';
 import type { LivePipelineComparison } from './liveCompareAdapter';
+import type { PipelineCiConnectionUpdate } from './ciConnection';
 import type { PipelineCatalogTransport, PipelineDetailTransport } from './transport';
 
 export type PipelineCatalogItem = PipelineRS | ReducedPipeline;
@@ -64,6 +65,7 @@ export interface PipelinesState {
   catalogProjectKey: string | null;
   catalogPage?: PipelinePageState | null;
   catalogRequest?: PipelineCatalogPageRequest | null;
+  ciConnectionUpdate?: PipelineCiConnectionUpdate | null;
   iterationsByPipeline: IterationsByPipelineId | null;
   iterationPagesByPipeline?: Record<number, PipelinePageState>;
   iterationsLoadingByPipeline: IterationsLoadingByPipelineId;

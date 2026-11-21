@@ -44,7 +44,11 @@ import {
 import { commonMessages } from 'pages/inside/common/common-messages';
 import { EvaluationPanel } from 'pages/inside/aiFactory/evaluation';
 import { GenerationCost } from 'pages/inside/aiFactory/generationCost';
-import { AutomationSection, getNativeAutomationCandidate } from 'pages/inside/aiFactory/automation';
+import {
+  AutomationSection,
+  getNativeAutomationCandidate,
+  useAutomationPipeline,
+} from 'pages/inside/aiFactory/automation';
 import { POLLING_REQUEST_STARTED, usePolling } from 'pages/inside/aiFactory/common';
 import { LifecycleHistory, useTestCaseAi } from 'pages/inside/aiFactory/lifecycle';
 import {
@@ -70,6 +74,7 @@ import {
   type LiveReviewCommentsLoadState,
 } from 'pages/inside/aiFactory/review/useLiveReviewComments';
 import { useReviewCommentAuthors } from 'pages/inside/aiFactory/review/useReviewCommentAuthors';
+import { useNativePushConnection } from 'pages/inside/aiFactory/review/useNativePushConnection';
 import { LiveReviewStrip } from 'pages/inside/aiFactory/review/liveReviewStrip';
 import {
   AutomationStatus,
@@ -473,7 +478,7 @@ export const TestCaseDetailsPage = () => {
     getTestCaseReadState(rawTestCaseDetails, isAiFactoryEnabled);
 
   const testCaseId = testCaseDetails?.id || 0;
-  const isNativeAutomationContextCurrent =
+  const isTestCaseDetailsContextCurrent =
     !isLoadingTestCaseDetails &&
     Number(testCasePageRoute?.match(/^test-cases\/(\d+)$/)?.[1]) === testCaseId &&
     Boolean(projectKey) &&
@@ -488,7 +493,11 @@ export const TestCaseDetailsPage = () => {
   );
   const nativeAutomation = useTestCaseAutomation(
     projectKey,
-    nativeSummary && isNativeAutomationContextCurrent ? testCaseDetails : undefined,
+    nativeSummary && isTestCaseDetailsContextCurrent ? testCaseDetails : undefined,
+  );
+  const automationPipeline = useAutomationPipeline(
+    projectKey,
+    canAutomateTestCases && Boolean(nativeAutomation.automation),
   );
   const automationDetails = aiDetailsState.data?.automation;
   const isAiReviewEnabled = isLegacyAiEnabled && Boolean(testCaseDetails?.ai);
@@ -498,9 +507,17 @@ export const TestCaseDetailsPage = () => {
     dispatch({ type: GET_TEST_CASE_DETAILS, payload: { testCaseId } });
     refetchCurrentTestCases();
   }, [dispatch, testCaseId, refetchCurrentTestCases]);
+  const { canStartPush, refreshPushConnection } = useNativePushConnection(
+    projectKey,
+    isNativeReviewEnabled && canReviewAiTestCases && isTestCaseDetailsContextCurrent
+      ? nativeSummary?.metrics?.pipelineIterationId
+      : undefined,
+  );
   const nativeReviewState = useLiveReviewComments(projectKey, testCaseId, isNativeReviewEnabled, {
     canApprove: nativeSummary?.status === 'DRAFT',
     versionId: testCaseDetails?.defaultVersionId,
+    canStartPush,
+    refreshPushConnection,
     onFixCompleted: refreshAfterNativeFix,
     onReviewChanged: refreshAfterNativeFix,
   });
@@ -666,8 +683,9 @@ export const TestCaseDetailsPage = () => {
             isNativeFixInProgress={nativeReviewState.fixInProgress}
             nativeReviewState={nativeReviewState}
             nativeAutomationState={nativeAutomation.automation}
+            automationPipeline={automationPipeline}
             onAutomationStarted={nativeAutomation.onStarted}
-            canShowAutomation={!nativeSummary || isNativeAutomationContextCurrent}
+            canShowAutomation={!nativeSummary || isTestCaseDetailsContextCurrent}
             onAddToTestPlan={handleAddToTestPlan}
             onMenuAction={noop}
             isScenarioEmpty={isScenarioEmpty}
@@ -714,7 +732,7 @@ export const TestCaseDetailsPage = () => {
                 testCase={nativeAutomationCandidate}
                 automation={nativeAutomation.automation}
                 canAutomate={canAutomateTestCases}
-                isCiConnected={nativeAutomation.automation?.ciConnection === 'CONNECTED'}
+                automationPipeline={automationPipeline}
                 expectedProjectKey={projectKey}
                 organizationSlug={projectRoute?.organizationSlug}
                 projectSlug={projectRoute?.projectSlug}

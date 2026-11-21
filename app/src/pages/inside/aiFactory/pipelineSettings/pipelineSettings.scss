@@ -63,4 +63,9 @@
     font-weight: var(--rp-ui-base-fw-bold);
     line-height: 20px;
   }
+
+  &__ci {
+    padding-top: 16px;
+    border-top: 1px solid var(--rp-ui-base-e-100);
+  }
 }

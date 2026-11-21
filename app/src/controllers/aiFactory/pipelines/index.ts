@@ -27,6 +27,7 @@ export {
 } from './constants';
 export {
   getPipelinesAction,
+  updatePipelineCiConnectionAction,
   getPipelineIterationsAction,
   getPipelineIterationDetailsAction,
   getPipelineComparisonAction,
@@ -35,7 +36,17 @@ export {
 export { aiFactoryPipelinesSagas } from './sagas';
 export { aiFactoryPipelinesReducer } from './reducer';
 export {
+  isCiNotConnectedError,
+  isTestAutomationPipeline,
+  readPipelineCiConnection,
+  TEST_AUTOMATION_PIPELINE_NAME,
+  type PipelineCiConnection,
+  type PipelineCiConnectionState,
+  type PipelineCiTarget,
+} from './ciConnection';
+export {
   pipelinesSelector,
+  pipelineCiConnectionUpdateSelector,
   pipelineCatalogPageSelector,
   pipelineCatalogRequestSelector,
   pipelineIterationPagesSelector,

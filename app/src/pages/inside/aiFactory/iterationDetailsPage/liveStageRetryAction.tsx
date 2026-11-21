@@ -20,6 +20,7 @@ import { Button, RerunIcon } from '@reportportal/ui-kit';
 
 import { URLS } from 'common/urls';
 import { fetch } from 'common/utils';
+import { isCiNotConnectedError } from 'controllers/aiFactory/pipelines/ciConnection';
 
 import { messages } from './messages';
 
@@ -29,7 +30,9 @@ interface LiveStageRetryActionProps {
   stageId: number;
   stageLabel: string;
   disabled: boolean;
+  isCiUnavailable?: boolean;
   onRefresh: () => void;
+  onRefreshCiConnection?: () => void;
 }
 
 const retryResponseMessages: Partial<Record<number, keyof typeof messages>> = {
@@ -51,7 +54,9 @@ export const LiveStageRetryAction = ({
   stageId,
   stageLabel,
   disabled,
+  isCiUnavailable = false,
   onRefresh,
+  onRefreshCiConnection,
 }: LiveStageRetryActionProps) => {
   const { formatMessage } = useIntl();
   const currentRequest = useRef<AbortController>();
@@ -67,7 +72,9 @@ export const LiveStageRetryAction = ({
   );
 
   const retry = async () => {
-    if (disabled || currentRequest.current || isCurrentAttemptLocked.current) return;
+    if (disabled || isCiUnavailable || currentRequest.current || isCurrentAttemptLocked.current) {
+      return;
+    }
     const controller = new AbortController();
     currentRequest.current = controller;
     setIsSending(true);
@@ -75,7 +82,7 @@ export const LiveStageRetryAction = ({
 
     let result: keyof typeof messages;
     try {
-      const { status } = await fetch(
+      const { status, data } = await fetch(
         URLS.retryPipelineStage(projectKey, iterationId, stageId),
         {
           method: 'POST',
@@ -84,9 +91,12 @@ export const LiveStageRetryAction = ({
         },
         true,
       );
-      result = retryResponseMessages[status] ?? 'stageRetryUnconfirmed';
-    } catch {
-      result = 'stageRetryUnconfirmed';
+      result =
+        status === 409 && isCiNotConnectedError(data)
+          ? 'stageRetryCiUnavailable'
+          : (retryResponseMessages[status] ?? 'stageRetryUnconfirmed');
+    } catch (error) {
+      result = isCiNotConnectedError(error) ? 'stageRetryCiUnavailable' : 'stageRetryUnconfirmed';
     }
 
     currentRequest.current = undefined;
@@ -96,6 +106,13 @@ export const LiveStageRetryAction = ({
     isCurrentAttemptLocked.current = blocksRetryForAttempt(result);
     setIsSending(false);
     setFeedback(result);
+    if (
+      result === 'stageRetryCiUnavailable' ||
+      result === 'stageRetryUnavailable' ||
+      result === 'stageRetryUnconfirmed'
+    ) {
+      onRefreshCiConnection?.();
+    }
     if (isCurrentAttemptLocked.current) onRefresh();
   };
 
@@ -105,14 +122,17 @@ export const LiveStageRetryAction = ({
         variant="text"
         icon={<RerunIcon />}
         data-automation-id={`retryReducedStage-${stageId}`}
-        disabled={disabled || isSending || blocksRetryForAttempt(feedback)}
+        disabled={disabled || isCiUnavailable || isSending || blocksRetryForAttempt(feedback)}
         onClick={() => {
           void retry();
         }}
       >
         {formatMessage(messages.retryStage, { stage: stageLabel })}
       </Button>
-      <output aria-live="polite">{feedback && formatMessage(messages[feedback])}</output>
+      <output aria-live="polite">
+        {feedback && formatMessage(messages[feedback])}
+        {!feedback && isCiUnavailable && formatMessage(messages.stageRetryCiUnavailable)}
+      </output>
     </div>
   );
 };

@@ -31,6 +31,8 @@ export const messages = defineMessages({
   nameColumn: { id: 'LiveReviewCases.nameColumn', defaultMessage: 'Name' },
   statusColumn: { id: 'LiveReviewCases.statusColumn', defaultMessage: 'Library status' },
   scoreColumn: { id: 'LiveReviewCases.scoreColumn', defaultMessage: 'Current score' },
+  madeReadyByColumn: { id: 'LiveReviewCases.madeReadyByColumn', defaultMessage: 'Made Ready by' },
+  autoReady: { id: 'LiveReviewCases.autoReady', defaultMessage: 'Auto-Ready' },
   draft: { id: 'LiveReviewCases.draft', defaultMessage: 'Draft' },
   ready: { id: 'LiveReviewCases.ready', defaultMessage: 'Ready' },
   unavailable: { id: 'LiveReviewCases.unavailable', defaultMessage: '—' },

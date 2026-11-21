@@ -157,10 +157,11 @@ const ReviewCaseTable = ({ cases }: { cases: LiveLibraryCase[] }) => {
             <th scope="col">{formatMessage(messages.nameColumn)}</th>
             <th scope="col">{formatMessage(messages.statusColumn)}</th>
             <th scope="col">{formatMessage(messages.scoreColumn)}</th>
+            <th scope="col">{formatMessage(messages.madeReadyByColumn)}</th>
           </tr>
         </thead>
         <tbody>
-          {cases.map(({ id, displayId, name, status, overallScore }) => (
+          {cases.map(({ id, displayId, name, status, overallScore, madeReadyBy }) => (
             <tr key={id}>
               <td>
                 <CaseLink testCaseId={id} name={displayId} />
@@ -181,6 +182,11 @@ const ReviewCaseTable = ({ cases }: { cases: LiveLibraryCase[] }) => {
                 )}
               </td>
               <td>{overallScore ?? formatMessage(messages.unavailable)}</td>
+              <td>
+                {madeReadyBy?.type === 'AUTO_READY'
+                  ? formatMessage(messages.autoReady)
+                  : (madeReadyBy?.name ?? formatMessage(messages.unavailable))}
+              </td>
             </tr>
           ))}
         </tbody>

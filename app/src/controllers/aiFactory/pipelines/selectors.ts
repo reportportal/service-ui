@@ -55,6 +55,9 @@ export const pipelineCatalogErrorSelector = (state: PipelinesSelectorsRootState)
 export const pipelinesSelector = (state: PipelinesSelectorsRootState) =>
   pipelinesStateSelector(state).data;
 
+export const pipelineCiConnectionUpdateSelector = (state: PipelinesSelectorsRootState) =>
+  pipelinesStateSelector(state).ciConnectionUpdate;
+
 export const pipelineCatalogPageSelector = (state: PipelinesSelectorsRootState) =>
   pipelinesStateSelector(state).catalogPage ?? null;
 

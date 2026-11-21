@@ -17,6 +17,8 @@
 import { URLS } from 'common/urls';
 import { fetch } from 'common/utils';
 
+type MadeReadyBy = { type: 'USER'; name: string } | { type: 'AUTO_READY' };
+
 export interface LiveLibraryCase {
   id: number;
   displayId: string;
@@ -24,6 +26,7 @@ export interface LiveLibraryCase {
   folderId?: number;
   status?: 'DRAFT' | 'READY';
   overallScore?: number;
+  madeReadyBy?: MadeReadyBy;
 }
 
 export interface LiveLibraryCasesPage {
@@ -35,6 +38,18 @@ const asRecord = (value: unknown): Record<string, unknown> | null =>
   value !== null && typeof value === 'object' && !Array.isArray(value)
     ? (value as Record<string, unknown>)
     : null;
+
+const adaptMadeReadyBy = (value: unknown): MadeReadyBy | undefined => {
+  const actor = asRecord(value);
+  if (actor?.type === 'AUTO_READY') return { type: 'AUTO_READY' };
+  if (actor?.type !== 'USER') return undefined;
+
+  const user = asRecord(actor.user);
+  const fullName = typeof user?.fullName === 'string' ? user.fullName.trim() : '';
+  const login = typeof user?.login === 'string' ? user.login.trim() : '';
+  const name = fullName || login;
+  return name ? { type: 'USER', name } : undefined;
+};
 
 const adaptLiveLibraryCase = (value: unknown): LiveLibraryCase | null => {
   const item = asRecord(value);
@@ -53,6 +68,7 @@ const adaptLiveLibraryCase = (value: unknown): LiveLibraryCase | null => {
   const metrics = asRecord(item.metrics);
   const score = metrics?.overallScore;
   const folderId = asRecord(item.testFolder)?.id;
+  const madeReadyBy = adaptMadeReadyBy(item.madeReadyBy);
   return {
     id: item.id,
     displayId: item.displayId,
@@ -64,6 +80,7 @@ const adaptLiveLibraryCase = (value: unknown): LiveLibraryCase | null => {
     ...(typeof score === 'number' && Number.isFinite(score) && score >= 0 && score <= 100
       ? { overallScore: score }
       : {}),
+    ...(madeReadyBy ? { madeReadyBy } : {}),
   };
 };
 

@@ -483,6 +483,8 @@ export const URLS = {
     })}`, // LP4
   pipelineById: (projectKey, pipelineId) =>
     `${urlBase}project/${projectKey}/pipeline/${pipelineId}`, // LP5
+  pipelineCiConnection: (projectKey, pipelineId) =>
+    `${urlBase}project/${encodeURIComponent(projectKey)}/pipeline/${pipelineId}/ci-connection`,
   tmsPipelineSettings: (projectKey, pipelineId) =>
     `${urlBase}project/${projectKey}/tms/pipeline/${pipelineId}/settings`, // P4
 

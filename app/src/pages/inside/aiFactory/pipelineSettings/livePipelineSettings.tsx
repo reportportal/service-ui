@@ -49,6 +49,10 @@ import { useUserPermissions } from 'hooks/useUserPermissions';
 import { AiDetailsSectionState } from 'pages/inside/aiFactory/common/aiDetailsSectionState';
 import type { PipelineSettingsState } from 'pages/inside/aiFactory/pipelineSettings/pipelineSettingsProvenance';
 import { parseThreshold } from 'pages/inside/aiFactory/pipelineSettings/pipelineSettingsUtils';
+import {
+  PipelineCiConnectionOverview,
+  PipelineCiConnectionSettings,
+} from 'pages/inside/aiFactory/pipelineSettings/pipelineCiConnectionSettings';
 
 import { messages } from 'pages/inside/aiFactory/pipelineSettings/messages';
 import styles from 'pages/inside/aiFactory/pipelineSettings/pipelineSettings.scss';
@@ -125,6 +129,8 @@ const PipelineSettingsDialog = ({
   return (
     <Modal
       title={formatMessage(messages.title)}
+      size="large"
+      scrollable
       okButton={
         save
           ? { children: formatMessage(COMMON_LOCALE_KEYS.SAVE), disabled: !canSave, onClick: save }
@@ -135,7 +141,9 @@ const PipelineSettingsDialog = ({
         disabled: isSaving,
       }}
       allowCloseOutside={!isSaving}
-      onClose={() => dispatch(hideModalAction())}
+      onClose={() => {
+        if (!isSaving) dispatch(hideModalAction());
+      }}
       zIndex={MODAL_Z_INDEX}
     >
       <div className={cx('settings')}>{children}</div>
@@ -169,6 +177,7 @@ const CurrentPipelineSettingsModal = (data: LivePipelineSettingsData) => {
   const [response, setResponse] = useState<PipelineSettingsResponse>();
   const [draft, setDraft] = useState<AutoReadyDraft>(() => toDraft());
   const [isSaving, setIsSaving] = useState(false);
+  const [isCiBusy, setIsCiBusy] = useState(false);
   const [feedback, setFeedback] = useState<keyof typeof messages>();
   const saveRequest = useRef<AbortController>();
 
@@ -195,15 +204,15 @@ const CurrentPipelineSettingsModal = (data: LivePipelineSettingsData) => {
 
   const current = response?.attempt === attempt ? response : undefined;
   const pipeline = current?.pipeline;
-  const autoReady = pipeline?.autoReady;
   const isGeneration = pipeline?.type === 'TEST_CASE_GENERATION';
+  const autoReady = isGeneration ? pipeline?.autoReady : undefined;
   const canEdit = Boolean(autoReady && canManagePipelineSettings && isGeneration);
   const threshold = parseThreshold(draft.thresholdValue) ?? undefined;
   const isInvalidThreshold =
     threshold === undefined && (draft.enabled || draft.thresholdValue !== '');
   const hasChanges =
     draft.reset || draft.enabled !== autoReady?.enabled || threshold !== autoReady?.threshold;
-  const canSave = canEdit && !isSaving && !isInvalidThreshold && hasChanges;
+  const canSave = canEdit && !isSaving && !isCiBusy && !isInvalidThreshold && hasChanges;
   const nextAutoReady = draft.reset
     ? null
     : { enabled: draft.enabled, ...(threshold === undefined ? {} : { threshold }) };
@@ -265,7 +274,7 @@ const CurrentPipelineSettingsModal = (data: LivePipelineSettingsData) => {
     <PipelineSettingsDialog
       save={canEdit ? () => void save() : undefined}
       canSave={canSave}
-      isSaving={isSaving}
+      isSaving={isSaving || isCiBusy}
     >
       <AiDetailsSectionState
         className={cx('settings')}
@@ -285,12 +294,10 @@ const CurrentPipelineSettingsModal = (data: LivePipelineSettingsData) => {
         {feedback && (
           <SystemMessage mode="error">{formatMessage(messages[feedback])}</SystemMessage>
         )}
-        {autoReady ? (
+        {autoReady && (
           <>
             {!canEdit && (
-              <SystemMessage mode="info">
-                {formatMessage(isGeneration ? messages.readOnly : messages.liveUnsupportedPipeline)}
-              </SystemMessage>
+              <SystemMessage mode="info">{formatMessage(messages.readOnly)}</SystemMessage>
             )}
             <div className={cx('settings__toggle-row')}>
               <Toggle
@@ -341,8 +348,24 @@ const CurrentPipelineSettingsModal = (data: LivePipelineSettingsData) => {
               </Button>
             )}
           </>
-        ) : (
+        )}
+        {!autoReady && isGeneration && (
           <SystemMessage mode="info">{formatMessage(messages.liveNoSettings)}</SystemMessage>
+        )}
+        {pipeline && (
+          <div className={cx({ settings__ci: autoReady })}>
+            {canManagePipelineSettings ? (
+              <PipelineCiConnectionSettings
+                pipeline={pipeline}
+                projectKey={projectKey}
+                pipelineId={pipelineId}
+                disabled={isSaving}
+                onBusyChange={setIsCiBusy}
+              />
+            ) : (
+              <PipelineCiConnectionOverview connection={pipeline.ciConnection} />
+            )}
+          </div>
         )}
       </AiDetailsSectionState>
     </PipelineSettingsDialog>

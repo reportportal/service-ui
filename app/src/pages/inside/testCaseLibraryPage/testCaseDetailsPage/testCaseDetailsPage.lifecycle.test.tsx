@@ -21,9 +21,13 @@ import { useSelector } from 'react-redux';
 import { fetch } from 'common/utils';
 import { useRefetchCurrentTestCases } from 'pages/inside/testCaseLibraryPage/hooks/useRefetchCurrentTestCases';
 import { useAiFactoryEnabled } from 'controllers/aiFactory';
-import { urlOrganizationAndProjectSelector } from 'controllers/pages';
+import { payloadSelector, urlOrganizationAndProjectSelector } from 'controllers/pages';
 import { projectKeySelector } from 'controllers/project';
-import { isLoadingTestCaseDetailsSelector, testCaseDetailsSelector } from 'controllers/testCase';
+import {
+  isLoadingTestCaseDetailsSelector,
+  testCaseDetailsContextSelector,
+  testCaseDetailsSelector,
+} from 'controllers/testCase';
 import { userInfoSelector } from 'controllers/user';
 import { useUserPermissions } from 'hooks/useUserPermissions';
 import { LifecycleHistory, useTestCaseAi } from 'pages/inside/aiFactory/lifecycle';
@@ -114,6 +118,7 @@ jest.mock('pages/inside/aiFactory/generationCost', () => ({
 }));
 jest.mock('pages/inside/aiFactory/automation', () => ({
   AutomationSection: 'mock-AutomationSection',
+  useAutomationPipeline: () => ({ pipelineId: 8, refresh: jest.fn() }),
   ...jest.requireActual<typeof import('pages/inside/aiFactory/automation/automationUtils')>(
     'pages/inside/aiFactory/automation/automationUtils',
   ),
@@ -364,6 +369,8 @@ describe('TestCaseDetailsPage lifecycle history', () => {
       expect(useLiveReviewComments).toHaveBeenLastCalledWith('demo', 42, origin === 'AI', {
         canApprove: true,
         versionId: undefined,
+        canStartPush: false,
+        refreshPushConnection: expect.any(Function),
         onFixCompleted: expect.any(Function),
         onReviewChanged: expect.any(Function),
       });
@@ -412,6 +419,8 @@ describe('TestCaseDetailsPage lifecycle history', () => {
     expect(useLiveReviewComments).toHaveBeenLastCalledWith('demo', 42, true, {
       canApprove: true,
       versionId: 100,
+      canStartPush: false,
+      refreshPushConnection: expect.any(Function),
       onFixCompleted: expect.any(Function),
       onReviewChanged: expect.any(Function),
     });
@@ -440,9 +449,10 @@ describe('TestCaseDetailsPage lifecycle history', () => {
     act(() => mountedPage.unmount());
   });
 
-  test.each([true, false])(
-    'resolves native step comment authors without blocking review if the member lookup fails (success=%s)',
-    async (lookupSucceeds) => {
+  test.each(['Review response', 'project members', 'unavailable'] as const)(
+    'shows native step comment authors from %s',
+    async (source) => {
+      const hasInlineAuthors = source === 'Review response';
       jest.mocked(checkScenario).mockReturnValue(false);
       jest.mocked(hasStepContent).mockReturnValue(true);
       selectedTestCase = {
@@ -472,6 +482,13 @@ describe('TestCaseDetailsPage lifecycle history', () => {
       const comments = [1, 12, 12].map((authorId, index) => ({
         id: index + 1,
         authorId,
+        ...(hasInlineAuthors && {
+          author: {
+            id: authorId,
+            fullName: index === 0 ? 'Alex R.' : 'Jamie Chen',
+            login: index === 0 ? 'alex' : 'jamie',
+          },
+        }),
         targetType: 'STEP',
         stepNumber: 1,
         text: 'Clarify this step',
@@ -483,7 +500,7 @@ describe('TestCaseDetailsPage lifecycle history', () => {
           return Promise.resolve({ comments, unsentCount: 1, fixInProgress: false });
         }
         if (url.endsWith('/project/demo/users')) {
-          return lookupSucceeds
+          return source === 'project members'
             ? Promise.resolve({ content: [{ id: 12, fullName: 'Jamie Chen' }] })
             : Promise.reject(new Error('Forbidden'));
         }
@@ -500,17 +517,19 @@ describe('TestCaseDetailsPage lifecycle history', () => {
         stepNumber: number,
       ) => React.ReactElement<{ reviewState: ReviewCommentsViewState }>;
 
-      const otherAuthor = lookupSucceeds ? { id: 12, name: 'Jamie Chen' } : { id: 12 };
+      const otherAuthor = source !== 'unavailable' ? { id: 12, name: 'Jamie Chen' } : { id: 12 };
       expect(renderControl(900, 1).props.reviewState.comments.map(({ author }) => author)).toEqual([
-        { id: 1, name: 'Alex Rivera' },
+        { id: 1, name: hasInlineAuthors ? 'Alex R.' : 'Alex Rivera' },
         otherAuthor,
         otherAuthor,
       ]);
-      expect(fetchMock).toHaveBeenCalledTimes(2);
-      expect(fetchMock).toHaveBeenCalledWith(expect.stringMatching(/\/project\/demo\/users$/), {
-        params: { 'filter.in.id': '12', 'page.size': 1 },
-        signal: expect.any(AbortSignal),
-      });
+      expect(fetchMock).toHaveBeenCalledTimes(hasInlineAuthors ? 1 : 2);
+      if (!hasInlineAuthors) {
+        expect(fetchMock).toHaveBeenCalledWith(expect.stringMatching(/\/project\/demo\/users$/), {
+          params: { 'filter.in.id': '12', 'page.size': 1 },
+          signal: expect.any(AbortSignal),
+        });
+      }
       act(() => mountedPage.unmount());
     },
   );
@@ -524,9 +543,21 @@ describe('TestCaseDetailsPage lifecycle history', () => {
         origin: 'AI',
         status: 'DRAFT',
         defaultVersionId: 100,
-        metrics: { overallScore: 92 },
+        metrics: { overallScore: 92, pipelineIterationId: 101 },
       };
       renderPage(true);
+      const select = jest.mocked(useSelector).getMockImplementation();
+      jest.mocked(useSelector).mockImplementation((selector) => {
+        if (selector === testCaseDetailsContextSelector) {
+          return {
+            projectKey: 'demo',
+            organizationSlug: 'my-organization',
+            projectSlug: 'demo-project',
+          };
+        }
+        if (selector === payloadSelector) return { testCasePageRoute: 'test-cases/42' };
+        return select?.(selector);
+      });
       jest
         .mocked(useLiveReviewComments)
         .mockImplementation(
@@ -537,6 +568,17 @@ describe('TestCaseDetailsPage lifecycle history', () => {
       let currentRound = { id: 5, testCaseId: 42, roundNumber: 1, status: 'PENDING' };
       let unsentCount = 1;
       fetchMock.mockImplementation((url, params) => {
+        if (url.endsWith('/pipeline/iteration/101')) {
+          return Promise.resolve({ id: 101, pipelineId: 7, iterationNumber: 1 });
+        }
+        if (url.endsWith('/pipeline/7')) {
+          return Promise.resolve({
+            id: 7,
+            name: 'Test case generation',
+            attributes: [],
+            ciConnection: { state: 'CONNECTED', canStartJobs: true },
+          });
+        }
         if (url.endsWith('/review'))
           return Promise.resolve({ comments: [], unsentCount, fixInProgress: false });
         if (url.endsWith('/review/fix-round') && params?.method === 'POST')
@@ -898,6 +940,8 @@ describe('TestCaseDetailsPage lifecycle history', () => {
       expect(useLiveReviewComments).toHaveBeenLastCalledWith('demo', 42, true, {
         canApprove: status === 'DRAFT',
         versionId: undefined,
+        canStartPush: false,
+        refreshPushConnection: expect.any(Function),
         onFixCompleted: expect.any(Function),
         onReviewChanged: expect.any(Function),
       });
@@ -1012,6 +1056,8 @@ describe('TestCaseDetailsPage lifecycle history', () => {
       expect(useLiveReviewComments).toHaveBeenLastCalledWith('demo', 42, true, {
         canApprove: false,
         versionId: undefined,
+        canStartPush: false,
+        refreshPushConnection: expect.any(Function),
         onFixCompleted: expect.any(Function),
         onReviewChanged: expect.any(Function),
       });

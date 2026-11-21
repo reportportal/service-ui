@@ -50,6 +50,7 @@ const MONITOR_ERROR_MESSAGES = {
   MISSING: messages.nativeFixMissing,
 };
 const START_ERROR_MESSAGES = {
+  CI_NOT_CONNECTED: messages.nativeFixCiUnavailable,
   CONFLICT: messages.nativeFixConflict,
   FAILED: messages.nativeFixStartFailed,
   UNCONFIRMED: messages.nativeFixStartUnconfirmed,
@@ -96,7 +97,9 @@ const LivePushButton = ({
 }: Pick<LiveReviewStripProps, 'reviewState' | 'isReadOnly'>) => {
   const { formatMessage } = useIntl();
   if (isReadOnly) return null;
-  const hint = reviewState.fixInProgress ? messages.fixingHint : messages.addAtLeastOne;
+  let hint = messages.addAtLeastOne;
+  if (reviewState.fixInProgress) hint = messages.fixingHint;
+  else if (reviewState.isPushCiUnavailable) hint = messages.nativeFixCiUnavailable;
   return (
     <Button
       variant="primary"
@@ -173,6 +176,12 @@ export const LiveReviewStrip = ({
           {formatMessage(messages.refresh)}
         </Button>
       </div>
+      {!isReadOnly && reviewState.isPushCiUnavailable && !reviewState.fixStartError &&
+        reviewState.unsentCount > 0 && (
+          <output className={cx('review-strip__status')}>
+            {formatMessage(messages.nativeFixCiUnavailable)}
+          </output>
+        )}
       {reviewState.fixInProgress && (
         <output className={cx('review-strip__status')} aria-live="polite">
           {formatMessage(
