@@ -31,10 +31,11 @@ import {
 } from 'controllers/plugins';
 import { createFetchPredicate } from 'controllers/fetch';
 import { getStorageItem } from 'common/utils';
+import { ERROR_UNAUTHORIZED } from 'common/utils/fetch';
 import { setInitialDataReadyAction, setServiceAvailabilityAction } from './actionCreators';
 import { FETCH_INITIAL_DATA } from './constants';
 
-function* fetchInitialData() {
+export function* fetchInitialData() {
   yield put(setTokenAction(getStorageItem(TOKEN_KEY) || DEFAULT_TOKEN));
   yield put(
     setServiceAvailabilityAction({
@@ -56,9 +57,12 @@ function* fetchInitialData() {
     yield put(authSuccessAction());
     yield put(fetchPluginsAction());
     yield put(fetchGlobalIntegrationsAction());
-  } else {
+  } else if (userResult.payload === ERROR_UNAUTHORIZED) {
     yield put(resetTokenAction());
     yield put(fetchPublicPluginsAction());
+  } else {
+    // the stored token may still be valid: keep it and show the unavailable screen
+    yield put(setServiceAvailabilityAction({ checked: true, apiUnavailable: true }));
   }
   yield put(setInitialDataReadyAction());
 }
