@@ -23,7 +23,6 @@ import Parser from 'html-react-parser';
 import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
 import { showModalAction } from 'controllers/modal';
 import { userInfoSelector, fetchUserAction } from 'controllers/user';
-import { logoutAction } from 'controllers/auth';
 import { fetch } from 'common/utils';
 import { URLS } from 'common/urls';
 import { INTERNAL } from 'common/constants/accountType';
@@ -37,9 +36,10 @@ const messages = defineMessages({
     id: 'UserInfo.submitSuccess',
     defaultMessage: 'Changes have been saved successfully',
   },
-  emailChanged: {
-    id: 'UserInfo.emailChanged',
-    defaultMessage: 'Your email has been changed. Please sign in again with the new email',
+  emailConfirmationSent: {
+    id: 'UserInfo.emailConfirmationSent',
+    defaultMessage:
+      'A confirmation link has been sent to {email}. Your email will change after you open the link',
   },
   submitError: {
     id: 'UserInfo.submitError',
@@ -52,7 +52,7 @@ const messages = defineMessages({
     name: userInfoSelector(state).fullName,
     email: userInfoSelector(state).email,
   }),
-  { showNotification, showModalAction, fetchUserAction, logoutAction },
+  { showNotification, showModalAction, fetchUserAction },
 )
 @injectIntl
 export class UserInfo extends Component {
@@ -65,7 +65,6 @@ export class UserInfo extends Component {
     showModalAction: PropTypes.func.isRequired,
     showNotification: PropTypes.func.isRequired,
     fetchUserAction: PropTypes.func,
-    logoutAction: PropTypes.func,
   };
   static defaultProps = {
     userId: '',
@@ -73,7 +72,6 @@ export class UserInfo extends Component {
     email: '',
     accountType: '',
     fetchUserAction: () => {},
-    logoutAction: () => {},
   };
 
   onEdit = () => {
@@ -94,21 +92,15 @@ export class UserInfo extends Component {
       data: { fullName: data.name, email: data.email },
     })
       .then(() => {
-        // The email is the login: the server revokes the user's tokens when it changes,
-        // so the current session cannot be continued.
-        const isEmailChanged =
-          (data.email || '').trim().toLowerCase() !== (this.props.email || '').trim().toLowerCase();
-        if (isEmailChanged) {
-          this.props.showNotification({
-            message: this.props.intl.formatMessage(messages.emailChanged),
-            type: NOTIFICATION_TYPES.SUCCESS,
-          });
-          this.props.logoutAction();
-          return;
-        }
+        // A changed email is not applied until the link sent to the new address is opened:
+        // the session and the current email stay as they are.
+        const newEmail = (data.email || '').trim();
+        const isEmailChanged = newEmail.toLowerCase() !== (this.props.email || '').trim().toLowerCase();
         this.props.fetchUserAction();
         this.props.showNotification({
-          message: this.props.intl.formatMessage(messages.submitSuccess),
+          message: isEmailChanged
+            ? this.props.intl.formatMessage(messages.emailConfirmationSent, { email: newEmail })
+            : this.props.intl.formatMessage(messages.submitSuccess),
           type: NOTIFICATION_TYPES.SUCCESS,
         });
       })

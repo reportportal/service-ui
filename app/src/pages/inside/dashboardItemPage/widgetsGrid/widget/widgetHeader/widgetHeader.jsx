@@ -26,7 +26,7 @@ import { widgetTypesMessages } from 'pages/inside/dashboardItemPage/modals/commo
 import { STATE_RENDERING } from 'components/widgets/common/constants';
 import { MATERIALIZED_VIEW_WIDGETS } from 'components/widgets';
 import { ActionMenu } from 'components/actionMenu';
-import { useCanLockDashboard } from 'common/hooks';
+import { useCanOverrideDashboardLock } from 'common/hooks';
 import styles from './widgetHeader.scss';
 
 const cx = classNames.bind(styles);
@@ -63,8 +63,9 @@ export const WidgetHeader = ({
 }) => {
   const { formatMessage, formatRelativeTime } = useIntl();
   const dashboard = useSelector(activeDashboardItemSelector);
-  const canLock = useCanLockDashboard();
-  const isDeleteDisabled = dashboard?.locked && !canLock;
+  const canOverrideLock = useCanOverrideDashboardLock(dashboard?.owner);
+  // widgets of a locked dashboard can be edited or deleted only by the owner, a manager or an administrator
+  const isLockedForUser = dashboard?.locked && !canOverrideLock;
   const isForceUpdateAvailable = MATERIALIZED_VIEW_WIDGETS.includes(data.type);
   const isEditHidden = isForceUpdateAvailable && data.state === STATE_RENDERING;
   const { value: startTime, unit } = getRelativeUnits(data.lastRefresh);
@@ -79,12 +80,13 @@ export const WidgetHeader = ({
       label: formatMessage(COMMON_LOCALE_KEYS.EDIT),
       onClick: onEdit,
       hasPermission: canEdit && !isEditHidden,
+      disabled: isLockedForUser,
     },
     {
       label: formatMessage(COMMON_LOCALE_KEYS.DELETE),
       onClick: onDelete,
       hasPermission: canEdit,
-      disabled: isDeleteDisabled,
+      disabled: isLockedForUser,
       danger: true,
     },
   ];

@@ -24,7 +24,7 @@ import { MeatballMenuIcon } from '@reportportal/ui-kit';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { URLS } from 'common/urls';
 import { createClassnames, fetch, copyToClipboard } from 'common/utils';
-import { useCanLockDashboard } from 'common/hooks/useCanLockDashboard';
+import { useCanOverrideDashboardLock } from 'common/hooks/useCanOverrideDashboardLock';
 import { useUserPermissions } from 'hooks/useUserPermissions';
 import { activeProjectKeySelector } from 'controllers/user';
 import { showDefaultErrorNotification, showSuccessNotification } from 'controllers/notification';
@@ -53,7 +53,7 @@ export const DashboardActions = ({
   const dispatch = useDispatch();
   const activeProjectKey = useSelector(activeProjectKeySelector);
   const { canWorkWithDashboard } = useUserPermissions();
-  const canLock = useCanLockDashboard();
+  const canOverrideLock = useCanOverrideDashboardLock(item.owner);
 
   // The promise should be stored in state to prevent losing document focus (causes errors) in Safari when clicking to copy
   const [dashboardConfigPromise, setDashboardConfigPromise] = useState<Promise<unknown> | null>(
@@ -61,7 +61,7 @@ export const DashboardActions = ({
   );
 
   const { id, locked } = item;
-  const canModify = canWorkWithDashboard && !(locked && !canLock);
+  const canModify = canWorkWithDashboard && !(locked && !canOverrideLock);
 
   const fetchDashboardConfig = () => {
     const configPromise = fetch(URLS.dashboardConfig(activeProjectKey, id));

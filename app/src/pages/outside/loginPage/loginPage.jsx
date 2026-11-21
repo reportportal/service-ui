@@ -23,7 +23,7 @@ import { updateStorageItem } from 'common/utils/storageUtils';
 import { APPLICATION_SETTINGS } from 'common/constants/localStorageKeys';
 import { pagePropertiesSelector } from 'controllers/pages';
 import { showDefaultErrorNotification } from 'controllers/notification';
-import { lastFailedLoginTimeSelector } from 'controllers/auth';
+import { lastFailedLoginTimeSelector, confirmEmailAction, getConfirmEmailUuid } from 'controllers/auth';
 import { setLastFailedLoginTimeAction } from 'controllers/auth/actionCreators';
 import {
   hasExpiredLoginLockout,
@@ -75,12 +75,33 @@ export const LoginPage = () => {
   const dispatch = useDispatch();
   const { trackEvent } = useTracking();
 
-  const { forgotPass, reset, errorAuth, multipleAuth, selectSso, ldapLogin, registration } =
-    useSelector(pagePropertiesSelector) ?? {};
+  const {
+    forgotPass,
+    reset,
+    confirmEmail,
+    errorAuth,
+    multipleAuth,
+    selectSso,
+    ldapLogin,
+    registration,
+  } = useSelector(pagePropertiesSelector) ?? {};
   const extensions = useSelector(uiExtensionLoginPageSelector);
   const lastFailedLoginTime = useSelector(lastFailedLoginTimeSelector);
 
   const prevErrorRef = useRef(null);
+  const confirmedEmailUuidRef = useRef(null);
+
+  useEffect(() => {
+    const uuid = getConfirmEmailUuid({ confirmEmail });
+
+    // the saga removes the parameter from the URL; the ref guards against a repeated call
+    if (!uuid || confirmedEmailUuidRef.current === uuid) {
+      return;
+    }
+
+    confirmedEmailUuidRef.current = uuid;
+    dispatch(confirmEmailAction(uuid));
+  }, [dispatch, confirmEmail]);
 
   useEffect(() => {
     if (!isLoginLockoutErrorAuthMessage(errorAuth)) {

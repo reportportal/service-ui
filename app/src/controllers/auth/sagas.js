@@ -30,6 +30,7 @@ import { fetchAppInfoAction } from 'controllers/appInfo';
 import {
   OAUTH_SUCCESS,
   pagePropertiesSelector,
+  updatePagePropertiesAction,
   LOGIN_PAGE,
   ACCOUNT_REMOVED_PAGE,
 } from 'controllers/pages';
@@ -59,6 +60,7 @@ import {
   setFailedLoginAttemptsAction,
   clearLoginLockoutAction,
   loginSuccessAction,
+  logoutAction,
   setBadCredentialsAction,
   setLoginLoadingAction,
 } from './actionCreators';
@@ -75,6 +77,8 @@ import {
 import {
   LOGIN,
   LOGOUT,
+  LOGOUT_COMPLETE,
+  CONFIRM_EMAIL,
   TOKEN_KEY,
   GRANT_TYPES,
   SET_TOKEN,
@@ -82,7 +86,12 @@ import {
   ANONYMOUS_REDIRECT_PATH_STORAGE_KEY,
   GRAFANA_SESSION_REVOKE_TIMEOUT,
 } from './constants';
-import { tokenSelector, lastFailedLoginTimeSelector, failedLoginAttemptsSelector } from './selectors';
+import {
+  tokenSelector,
+  isAuthorizedSelector,
+  lastFailedLoginTimeSelector,
+  failedLoginAttemptsSelector,
+} from './selectors';
 
 function* logoutOnServer(redirectedPage) {
   if (redirectedPage === ACCOUNT_REMOVED_PAGE) {
@@ -338,6 +347,50 @@ function* handleOauthSuccess() {
   yield put(loginSuccessAction({ value, type }));
 }
 
+export function* handleConfirmEmail({ payload: uuid }) {
+  if (!uuid) {
+    return;
+  }
+
+  // The confirmation revokes the user's tokens on the server, so a session that this browser
+  // still holds must end here: sign out first (this also drops the token, so the confirm
+  // request itself goes out unauthenticated), then confirm.
+  const authorized = yield select(isAuthorizedSelector);
+  if (authorized) {
+    yield put(logoutAction());
+    yield take(LOGOUT_COMPLETE);
+  }
+
+  // remove the parameter from the URL so that a page refresh does not repeat the request
+  yield put(updatePagePropertiesAction({ confirmEmail: undefined }));
+
+  try {
+    yield call(fetch, URLS.userEmailConfirm(), { method: 'POST', data: { uuid } });
+    yield put(
+      showNotification({
+        messageId: 'emailConfirmed',
+        type: NOTIFICATION_TYPES.SUCCESS,
+      }),
+    );
+  } catch (error) {
+    if (error?.message) {
+      yield put(showNotification({ message: error.message, type: NOTIFICATION_TYPES.ERROR }));
+    } else {
+      yield put(
+        showNotification({
+          messageId: 'failureDefault',
+          type: NOTIFICATION_TYPES.ERROR,
+          values: { error: String(error) },
+        }),
+      );
+    }
+  }
+}
+
+function* watchConfirmEmail() {
+  yield takeEvery(CONFIRM_EMAIL, handleConfirmEmail);
+}
+
 function* watchOauthSuccess() {
   yield takeEvery(OAUTH_SUCCESS, handleOauthSuccess);
 }
@@ -363,5 +416,6 @@ export function* authSagas() {
     watchSetToken(),
     watchOauthSuccess(),
     watchLoginSuccess(),
+    watchConfirmEmail(),
   ]);
 }

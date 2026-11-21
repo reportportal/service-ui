@@ -18,6 +18,7 @@ import {
   AUTH_ERROR,
   AUTH_SUCCESS,
   LOGIN,
+  CONFIRM_EMAIL,
   LOGOUT,
   LOGOUT_COMPLETE,
   SET_TOKEN,
@@ -43,6 +44,8 @@ export const loginSuccessAction = (token) => ({
   type: LOGIN_SUCCESS,
   payload: token,
 });
+
+export const confirmEmailAction = (uuid) => ({ type: CONFIRM_EMAIL, payload: uuid });
 
 export const logoutAction = (redirectedPage) => ({ type: LOGOUT, payload: redirectedPage });
 

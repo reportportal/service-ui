@@ -244,14 +244,19 @@ function* updateDashboard({ payload: dashboard }) {
 function* updateDashboardWidgets({ payload: dashboard }) {
   const projectKey = yield select(projectKeySelector);
 
-  yield call(fetch, URLS.dashboard(projectKey, dashboard.id), {
-    method: 'put',
-    data: {
-      name: dashboard.name,
-      updateWidgets: dashboard.widgets,
-    },
-  });
-  yield put(updateDashboardItemSuccessAction(dashboard));
+  try {
+    yield call(fetch, URLS.dashboard(projectKey, dashboard.id), {
+      method: 'put',
+      data: {
+        name: dashboard.name,
+        updateWidgets: dashboard.widgets,
+      },
+    });
+    yield put(updateDashboardItemSuccessAction(dashboard));
+  } catch (error) {
+    // e.g. 403 for a locked dashboard: show the server's message
+    yield put(showDefaultErrorNotification(error));
+  }
 }
 
 function* removeDashboard({ payload: id }) {

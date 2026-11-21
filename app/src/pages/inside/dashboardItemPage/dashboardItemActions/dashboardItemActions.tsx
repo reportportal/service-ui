@@ -18,7 +18,7 @@ import { useIntl } from 'react-intl';
 import { Button, MaximizeIcon, MeatballMenuIcon, PlusIcon, Toggle } from '@reportportal/ui-kit';
 
 import { createClassnames } from 'common/utils';
-import { useCanLockDashboard } from 'common/hooks';
+import { useCanLockDashboard, useCanOverrideDashboardLock } from 'common/hooks';
 import { useUserPermissions } from 'hooks/useUserPermissions';
 import { ActionMenu, ActionItem } from 'components/actionMenu';
 import { LockedDashboardTooltip } from 'pages/inside/common/lockedDashboardTooltip';
@@ -31,6 +31,7 @@ const cx = createClassnames(styles);
 
 interface DashboardItemActionsProps {
   locked?: boolean;
+  owner?: string;
   isEmpty?: boolean;
   fullWidthMode?: boolean;
   onToggleFullWidthMode?: () => void;
@@ -44,6 +45,7 @@ interface DashboardItemActionsProps {
 
 export const DashboardItemActions = ({
   locked = false,
+  owner = '',
   isEmpty = false,
   fullWidthMode = false,
   onToggleFullWidthMode = noop,
@@ -57,7 +59,8 @@ export const DashboardItemActions = ({
   const { formatMessage } = useIntl();
   const { canWorkWithWidgets } = useUserPermissions();
   const canLock = useCanLockDashboard();
-  const isModificationDisabled = locked && !canLock;
+  const canOverrideLock = useCanOverrideDashboardLock(owner);
+  const isModificationDisabled = locked && !canOverrideLock;
   const canModify = canWorkWithWidgets && !isModificationDisabled;
 
   const actions: ActionItem[] = [
@@ -65,7 +68,8 @@ export const DashboardItemActions = ({
     {
       label: formatMessage(locked ? messages.unlockDashboard : messages.lockDashboard),
       onClick: onToggleLock,
-      hasPermission: canLock,
+      // a locked dashboard can be unlocked only by the owner, a manager or an administrator
+      hasPermission: canLock && (!locked || canOverrideLock),
     },
     { label: formatMessage(messages.editDashboard), onClick: onEdit, hasPermission: canModify },
     {
@@ -109,7 +113,7 @@ export const DashboardItemActions = ({
           }
         />
         {!isEmpty && canWorkWithWidgets && (
-          <LockedDashboardTooltip locked={locked}>
+          <LockedDashboardTooltip locked={locked} owner={owner}>
             <Button
               className={cx('add-widget-button')}
               icon={<PlusIcon />}

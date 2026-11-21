@@ -23,7 +23,7 @@ import { actionToPath, history, selectLocationState } from 'redux-first-router';
 
 import { URLS } from 'common/urls';
 import { createClassnames, fetch } from 'common/utils';
-import { useCanLockDashboard } from 'common/hooks';
+import { useCanOverrideDashboardLock } from 'common/hooks';
 import { useProjectDetails } from 'hooks/useTypedSelector';
 import { SettingsLayout } from 'layouts/settingsLayout';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
@@ -86,8 +86,8 @@ export const DashboardItemPage = () => {
   const query = useSelector(pagePropertiesSelector);
   const { routesMap } = useSelector(selectLocationState);
   const loading = useSelector(loadingSelector);
-  const canLock = useCanLockDashboard();
-  const isDisabled = dashboard?.locked && !canLock;
+  const canOverrideLock = useCanOverrideDashboardLock(dashboard?.owner);
+  const isDisabled = dashboard?.locked && !canOverrideLock;
   const isCurrentDashboard = dashboard?.id && +dashboard.id === +activeDashboardId;
   const isEmpty = !dashboard?.widgets?.length;
 
@@ -229,7 +229,7 @@ export const DashboardItemPage = () => {
           breadcrumbDescriptors={breadcrumbDescriptors}
           titleAddon={
             dashboard.locked && (
-              <LockedDashboardTooltip locked>
+              <LockedDashboardTooltip locked owner={dashboard.owner}>
                 <DashboardLockedIcon />
               </LockedDashboardTooltip>
             )
@@ -237,6 +237,7 @@ export const DashboardItemPage = () => {
           actions={
             <DashboardItemActions
               locked={dashboard.locked}
+              owner={dashboard.owner}
               isEmpty={isEmpty}
               fullWidthMode={fullWidthMode}
               onToggleFullWidthMode={toggleFullWidthMode}

@@ -31,6 +31,7 @@ export const AUTH_ERROR = 'authErrorAction';
 export const LOGOUT = 'logoutAction';
 export const LOGOUT_COMPLETE = 'logoutCompleteAction';
 export const LOGIN = 'loginAction';
+export const CONFIRM_EMAIL = 'confirmEmailAction';
 export const LOGIN_SUCCESS = 'loginSuccessAction';
 export const SET_TOKEN = 'setToken';
 export const GRANT_TYPES = {

@@ -151,18 +151,26 @@ export class WidgetsGrid extends Component {
 
     fetch(URLS.dashboardWidget(projectKey, dashboard.id, widgetId), {
       method: 'DELETE',
-    }).then(() => {
-      const newWidgets = this.getUpdatedWidgetsAfterDelete(widgetId);
+    })
+      .then(() => {
+        const newWidgets = this.getUpdatedWidgetsAfterDelete(widgetId);
 
-      this.props.updateDashboardWidgetsAction({
-        ...dashboard,
-        widgets: newWidgets,
+        this.props.updateDashboardWidgetsAction({
+          ...dashboard,
+          widgets: newWidgets,
+        });
+        this.props.showNotification({
+          type: NOTIFICATION_TYPES.SUCCESS,
+          message: this.props.intl.formatMessage(messages.deleteWidgetSuccess),
+        });
+      })
+      .catch((error) => {
+        // e.g. 403 for a widget of a locked dashboard: show the server's message
+        this.props.showNotification({
+          type: NOTIFICATION_TYPES.ERROR,
+          message: error?.message,
+        });
       });
-      this.props.showNotification({
-        type: NOTIFICATION_TYPES.SUCCESS,
-        message: this.props.intl.formatMessage(messages.deleteWidgetSuccess),
-      });
-    });
   };
 
   getUpdatedWidgetsAfterDelete = (widgetId) => {
