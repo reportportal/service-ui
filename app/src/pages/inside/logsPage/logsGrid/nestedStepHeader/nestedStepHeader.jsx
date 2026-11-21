@@ -18,6 +18,7 @@ import { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import Parser from 'html-react-parser';
 import track from 'react-tracking';
+import { connect } from 'react-redux';
 import { FAILED } from 'common/constants/testStatuses';
 import { LOG_PAGE_EVENTS } from 'components/main/analytics/events';
 import { DurationBlock } from 'pages/inside/common/durationBlock';
@@ -25,6 +26,7 @@ import ArrowIcon from 'common/img/arrow-down-inline.svg';
 import AttachmentIcon from 'common/img/attachment-inline.svg';
 import { TestItemStatus } from 'pages/inside/common/testItemStatus';
 import { MarkdownViewer } from 'components/main/markdown';
+import { nestedStepSelector, requestNestedStepAction } from 'controllers/log/nestedSteps';
 import classNames from 'classnames/bind';
 import { SpinningPreloader } from 'components/preloaders/spinningPreloader';
 import { DEFAULT_LOGS_SIZE } from 'common/constants/logsSettings';
@@ -32,6 +34,14 @@ import styles from './nestedStepHeader.scss';
 
 const cx = classNames.bind(styles);
 
+@connect(
+  (state, { data: { id } }) => ({
+    autoExpandDone: !!nestedStepSelector(state, id).autoExpandDone,
+  }),
+  {
+    requestNestedStep: requestNestedStepAction,
+  },
+)
 @track()
 export class NestedStepHeader extends Component {
   static propTypes = {
@@ -47,6 +57,8 @@ export class NestedStepHeader extends Component {
     markdownMode: PropTypes.bool,
     additionalNameCellBlock: PropTypes.node,
     logsSize: PropTypes.string,
+    autoExpandDone: PropTypes.bool,
+    requestNestedStep: PropTypes.func,
   };
 
   static defaultProps = {
@@ -58,16 +70,23 @@ export class NestedStepHeader extends Component {
     markdownMode: false,
     additionalNameCellBlock: null,
     logsSize: DEFAULT_LOGS_SIZE,
+    autoExpandDone: false,
+    requestNestedStep: () => {},
   };
 
   componentDidMount() {
     const {
-      data: { status },
+      data: { id, status },
       collapsed,
-      onToggle,
+      autoExpandDone,
+      requestNestedStep,
     } = this.props;
 
-    status === FAILED && collapsed && onToggle();
+    // the header can be mounted many times (rows are mounted lazily), the step is opened only once
+    status === FAILED &&
+      collapsed &&
+      !autoExpandDone &&
+      requestNestedStep({ id, autoExpand: true });
   }
 
   onToggle = () => {
