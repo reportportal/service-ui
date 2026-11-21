@@ -39,13 +39,15 @@ import { AttributeListField } from 'components/main/attributeList';
 import { InputDropdown } from 'components/inputs/inputDropdown';
 import { FieldErrorHint } from 'components/fields/fieldErrorHint';
 import track from 'react-tracking';
+import {
+  DESCRIPTION_LEAVE,
+  DESCRIPTION_UPDATE,
+  DESCRIPTION_CREATE,
+  getDescriptionPayload,
+} from './utils';
 import styles from './editItemsModal.scss';
 
 const cx = classNames.bind(styles);
-
-const DESCRIPTION_LEAVE = 'LEAVE';
-const DESCRIPTION_UPDATE = 'UPDATE';
-const DESCRIPTION_CREATE = 'CREATE';
 
 const DESCRIPTION_ACTIONS_TITLES = {
   [DESCRIPTION_LEAVE]: 'dont_change',
@@ -324,10 +326,7 @@ export class EditItemsModal extends Component {
     };
 
     if (descriptionAction !== DESCRIPTION_LEAVE) {
-      data.description = {
-        action: descriptionAction,
-        comment: `${DESCRIPTION_UPDATE ? '\n' : ''}${description || ''}`,
-      };
+      data.description = getDescriptionPayload(descriptionAction, description);
     }
 
     fetch(fetchUrl, { method: 'put', data })
