@@ -27,9 +27,7 @@ export const useReloadActiveTestPlan = () => {
   const store = useStore();
 
   return useCallback(() => {
-    const params = getTestPlanDetailsFetchParams(
-      store.getState() as Parameters<typeof getTestPlanDetailsFetchParams>[0],
-    );
+    const params = getTestPlanDetailsFetchParams(store.getState());
 
     if (params) {
       dispatch(getTestPlanAction({ ...params, forceReloadPlan: true }));
