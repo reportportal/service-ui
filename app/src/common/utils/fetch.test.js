@@ -32,6 +32,17 @@ describe('fetch', () => {
         }),
     );
     axiosMock.onGet('https://api.com/unauthorized').reply(401);
+    axiosMock.onGet('https://api.com/error-object').reply(400, { errorCode: 4001, message: 'Bad' });
+    axiosMock
+      .onGet('https://api.com/error-html')
+      .reply(502, '<html><body>Bad Gateway</body></html>');
+    axiosMock.onGet('https://api.com/error-text').reply(400, 'Plain failure');
+    axiosMock.onGet('https://api.com/error-blob').reply(
+      404,
+      new Blob([JSON.stringify({ errorCode: 4041, message: 'Not found' })], {
+        type: 'application/json',
+      }),
+    );
   });
 
   it('should be cancelable', (done) => {
@@ -71,6 +82,34 @@ describe('fetch', () => {
     fetch('https://api.com/unauthorized').catch((err) => {
       expect(err.message).toBe(ERROR_UNAUTHORIZED);
       done();
+    });
+  });
+
+  it('should keep object error bodies as is', async () => {
+    await expect(fetch('https://api.com/error-object')).rejects.toEqual({
+      errorCode: 4001,
+      message: 'Bad',
+    });
+  });
+
+  it('should not expose HTML error bodies as the message', async () => {
+    await expect(fetch('https://api.com/error-html')).rejects.toEqual({
+      message: 'Request failed with status code 502',
+      status: 502,
+    });
+  });
+
+  it('should wrap plain text error bodies into an object', async () => {
+    await expect(fetch('https://api.com/error-text')).rejects.toEqual({
+      message: 'Plain failure',
+      status: 400,
+    });
+  });
+
+  it('should parse JSON error bodies of blob requests', async () => {
+    await expect(fetch('https://api.com/error-blob', { responseType: 'blob' })).rejects.toEqual({
+      errorCode: 4041,
+      message: 'Not found',
     });
   });
 });
