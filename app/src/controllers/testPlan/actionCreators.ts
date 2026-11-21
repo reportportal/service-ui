@@ -37,6 +37,8 @@ export interface GetTestPlanParams {
   offset?: string | number;
   limit?: string | number;
   testCasesSearchParams?: string;
+  /** Refetch the plan and its folders even when the route stays on the same plan. */
+  forceReloadPlan?: boolean;
 }
 
 export const getTestPlansAction = (params?: GetTestPlansParams) => ({

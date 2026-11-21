@@ -120,14 +120,18 @@ export function* getTestPlan(action: GetTestPlanAction): Generator {
   };
 
   try {
-    if (
-      String(location?.prev?.payload?.testPlanId) !== String(location?.payload?.testPlanId)
-    ) {
-      yield put({
-        type: FETCH_START,
-        payload: { projectKey },
-        meta: { namespace: ACTIVE_TEST_PLAN_NAMESPACE },
-      });
+    const isPlanChanged =
+      String(location?.prev?.payload?.testPlanId) !== String(location?.payload?.testPlanId);
+
+    if (isPlanChanged || action.payload.forceReloadPlan) {
+      // a forced reload refreshes the plan in place, without the full-page loader
+      if (isPlanChanged) {
+        yield put({
+          type: FETCH_START,
+          payload: { projectKey },
+          meta: { namespace: ACTIVE_TEST_PLAN_NAMESPACE },
+        });
+      }
 
       const data = (yield call(fetch, URLS.testPlanById(projectKey, testPlanId), {
         signal: controller.signal,

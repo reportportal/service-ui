@@ -22,14 +22,10 @@ import { getApiErrorMessage, readBatchResult } from 'common/utils/apiResponse';
 import { URLS } from 'common/urls';
 import { useDebouncedSpinner, useNotification } from 'common/hooks';
 import { projectKeySelector } from 'controllers/project';
-import { fetchSuccessAction } from 'controllers/fetch';
-import {
-  getTestPlanAction,
-  defaultTestPlanTestCasesQueryParams,
-  TEST_PLAN_FOLDERS_NAMESPACE,
-} from 'controllers/testPlan';
 import { batchPartialFailureNotification } from 'controllers/testPlan/batchResult';
 import { useTestPlanId } from 'hooks/useTypedSelector';
+
+import { useReloadActiveTestPlan } from './useReloadActiveTestPlan';
 
 export const useAddTestCasesToCurrentTestPlan = () => {
   const dispatch = useDispatch();
@@ -37,6 +33,7 @@ export const useAddTestCasesToCurrentTestPlan = () => {
   const testPlanId = useTestPlanId();
   const { showSuccessNotification, showErrorNotification } = useNotification();
   const { isLoading, showSpinner, hideSpinner } = useDebouncedSpinner();
+  const reloadActiveTestPlan = useReloadActiveTestPlan();
 
   const addTestCasesToCurrentTestPlan = useCallback(
     async (testCaseIds: number[]) => {
@@ -60,18 +57,7 @@ export const useAddTestCasesToCurrentTestPlan = () => {
         );
         const batchResult = readBatchResult(response, testCaseIds.length);
 
-        const updatedFolders = await fetch(
-          URLS.testFolders(projectKey, { 'filter.eq.testPlanId': numericTestPlanId }),
-        );
-
-        dispatch(fetchSuccessAction(TEST_PLAN_FOLDERS_NAMESPACE, updatedFolders));
-
-        dispatch(
-          getTestPlanAction({
-            testPlanId: numericTestPlanId,
-            ...defaultTestPlanTestCasesQueryParams,
-          }),
-        );
+        reloadActiveTestPlan();
 
         if (batchResult.failureCount > 0) {
           // keep the library panel open so the user sees what was not added
@@ -104,6 +90,7 @@ export const useAddTestCasesToCurrentTestPlan = () => {
       projectKey,
       testPlanId,
       dispatch,
+      reloadActiveTestPlan,
       showSpinner,
       hideSpinner,
       showSuccessNotification,
