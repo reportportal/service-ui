@@ -44,6 +44,7 @@ export const useLogsVirtualizer = ({ rows, layoutKey, logsSize, scrollContainer 
     [rows, logsSize],
   );
 
+  // eslint-disable-next-line react-hooks/incompatible-library -- nothing here is memoised on the returned functions
   const virtualizer = useVirtualizer({
     count: rows.length,
     getScrollElement,

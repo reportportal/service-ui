@@ -42,32 +42,29 @@ const isStep = (item) => 'hasContent' in item;
 // Keeps the place of the user when "load previous" adds rows above: the first log row the step had
 // before the load is brought back to the centre of the view once the step is loaded.
 const useLoadPreviousAnchor = (nestedSteps, scrollToLog) => {
-  const pendingRef = useRef(null);
-  const [anchorId, setAnchorId] = useState(null);
+  const [anchor, setAnchorState] = useState(null);
+  const scrolledAnchorRef = useRef(null);
 
   const setAnchor = useCallback((stepId, content) => {
     const logId = content.find((item) => !isStep(item))?.id;
-    pendingRef.current = logId === undefined ? null : { stepId, logId, sawLoading: false };
-    setAnchorId(logId ?? null);
+    setAnchorState(logId === undefined ? null : { stepId, logId, sawLoading: false });
   }, []);
 
-  useEffect(() => {
-    const pending = pendingRef.current;
-    if (!pending) {
-      return;
-    }
-    if ((nestedSteps[pending.stepId] || INITIAL_STATE).loading) {
-      pending.sawLoading = true;
-      return;
-    }
-    if (pending.sawLoading) {
-      pendingRef.current = null;
-      scrollToLog(pending.logId);
-      setAnchorId(null);
-    }
-  }, [nestedSteps, scrollToLog]);
+  const loading = anchor ? (nestedSteps[anchor.stepId] || INITIAL_STATE).loading : false;
+  if (anchor && loading && !anchor.sawLoading) {
+    // the request has started: the step is loaded when it stops loading
+    setAnchorState({ ...anchor, sawLoading: true });
+  }
+  const loaded = !!anchor && anchor.sawLoading && !loading;
 
-  return { anchorId, setAnchor };
+  useEffect(() => {
+    if (loaded && scrolledAnchorRef.current !== anchor) {
+      scrolledAnchorRef.current = anchor;
+      scrollToLog(anchor.logId);
+    }
+  }, [loaded, anchor, scrollToLog]);
+
+  return { anchorId: anchor ? anchor.logId : null, setAnchor };
 };
 
 const LogsGridBodyComponent = ({
@@ -96,7 +93,11 @@ const LogsGridBodyComponent = ({
 
   // the expanded state of long messages, restored when a row is mounted again; it starts over
   // when the "no logs collapsing" setting changes, as the rows do
-  const expandedRows = useMemo(() => new Map(), [expanded]);
+  const [expandedState, setExpandedState] = useState({ expanded, rows: new Map() });
+  if (expandedState.expanded !== expanded) {
+    setExpandedState({ expanded, rows: new Map() });
+  }
+  const expandedRows = expandedState.rows;
   const onExpandedChange = useCallback(
     (rowId, rowExpanded) => expandedRows.set(rowId, rowExpanded),
     [expandedRows],
