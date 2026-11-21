@@ -15,7 +15,7 @@
  */
 
 import { all, call, put, select, takeEvery, take } from 'redux-saga/effects';
-import { fetch, updateToken } from 'common/utils/fetch';
+import { abortPendingRequests, fetch, updateToken } from 'common/utils/fetch';
 import {
   getStorageItem,
   getSessionItem,
@@ -123,9 +123,13 @@ export function* handleLogout({ payload }) {
   fetch(URLS.grafanaSession(), {
     method: 'DELETE',
     timeout: GRAFANA_SESSION_REVOKE_TIMEOUT,
+    // must survive abortPendingRequests() below
+    signal: new AbortController().signal,
   }).catch((error) => console.error('Failed to revoke Grafana session on logout', error));
 
   yield call(logoutOnServer, payload);
+  // late responses of the finished session must not repopulate the store
+  yield call(abortPendingRequests);
   if (isStoredToken(token)) {
     removeStorageItem(ACTIVITY_TIMESTAMP);
   }

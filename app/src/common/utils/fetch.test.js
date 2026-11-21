@@ -16,7 +16,7 @@
 
 import axios from 'axios';
 import MockAdapter from 'axios-mock-adapter';
-import { fetch, ERROR_CANCELED, ERROR_UNAUTHORIZED } from './fetch';
+import { abortPendingRequests, fetch, ERROR_CANCELED, ERROR_UNAUTHORIZED } from './fetch';
 
 const axiosMock = new MockAdapter(axios);
 
@@ -48,6 +48,24 @@ describe('fetch', () => {
     });
     jest.runAllTimers();
   }, 20);
+
+  it('aborts requests without their own signal when pending requests are aborted', async () => {
+    jest.useRealTimers();
+    const pending = fetch('https://api.com/timeout');
+    abortPendingRequests();
+
+    await expect(pending).rejects.toThrow(ERROR_CANCELED);
+    // the next request gets a fresh controller
+    await expect(fetch('https://api.com/success')).resolves.toBeDefined();
+  });
+
+  it('does not abort requests that bring their own signal', async () => {
+    const own = new AbortController();
+    const pending = fetch('https://api.com/timeout', { signal: own.signal });
+    abortPendingRequests();
+
+    await expect(pending).resolves.toBe('hello');
+  });
 
   it('should return authorization error on 401 response code', (done) => {
     fetch('https://api.com/unauthorized').catch((err) => {

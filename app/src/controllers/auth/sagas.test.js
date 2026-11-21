@@ -19,6 +19,7 @@ import { pagePropertiesSelector } from 'controllers/pages';
 
 jest.mock('common/utils/fetch', () => ({
   fetch: jest.fn(() => Promise.resolve()),
+  abortPendingRequests: jest.fn(),
   updateToken: jest.fn(),
 }));
 jest.mock('routes/routesMap', () => ({
@@ -42,6 +43,7 @@ const runLogoutUntilReset = () => {
   const gen = handleLogout({ payload: undefined });
   expect(gen.next().value).toEqual(select(tokenSelector));
   gen.next(OLD_TOKEN_STRING); // grafana revoke + call(logoutOnServer)
+  gen.next(); // call(abortPendingRequests)
   return gen;
 };
 
