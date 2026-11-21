@@ -16,7 +16,6 @@
 
 import { useCallback, useRef, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { isEmpty } from 'es-toolkit/compat';
 
 import { projectKeySelector } from 'controllers/project';
 import { FolderWithFullPath, GET_TEST_CASE_DETAILS } from 'controllers/testCase';
@@ -37,6 +36,7 @@ import {
 import { NewFolderData } from '../utils/getFolderFromFormValues';
 import { useFolderActions } from './useFolderActions';
 import { useRefetchCurrentTestCases } from './useRefetchCurrentTestCases';
+import { createNewTags as createTestCaseTags } from './testCaseSaveUtils';
 
 export interface TestCaseResponse {
   id?: number;
@@ -105,35 +105,7 @@ export const useTestCaseMutations = (testCaseId?: number) => {
   );
 
   const createNewTags = useCallback(
-    async (attributes: Attribute[] = []) => {
-      const newTags = attributes.filter(({ id }) => id < 0);
-      const existingTags = attributes.filter(({ id }) => id >= 0);
-
-      if (isEmpty(newTags)) {
-        return attributes;
-      }
-
-      if (!projectKey) {
-        return existingTags;
-      }
-
-      const createdTags = await Promise.all(
-        newTags.map(async (tag) => {
-          try {
-            return fetch<Attribute>(URLS.createTmsAttribute(projectKey), {
-              method: 'POST',
-              data: { key: tag.key, value: tag.value },
-            });
-          } catch {
-            return null;
-          }
-        }),
-      );
-
-      const successfullyCreatedTags = createdTags.filter((tag): tag is Attribute => tag !== null);
-
-      return [...existingTags, ...successfullyCreatedTags];
-    },
+    (attributes: Attribute[] = []) => createTestCaseTags(projectKey, attributes),
     [projectKey],
   );
 
