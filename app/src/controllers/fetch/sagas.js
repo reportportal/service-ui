@@ -15,8 +15,9 @@
  */
 
 import { takeEvery, call, all, put, cancelled } from 'redux-saga/effects';
-import { fetch } from 'common/utils/fetch';
+import { fetch, ERROR_CANCELED, ERROR_UNAUTHORIZED } from 'common/utils/fetch';
 import { showDefaultErrorNotification } from 'controllers/notification';
+import { LAUNCHES_FILTERS_UPDATE_NAMESPACE } from 'controllers/filter/constants';
 import {
   FETCH_DATA,
   FETCH_ERROR,
@@ -70,23 +71,49 @@ function* prependFetchData({ payload, meta }) {
   yield* commonFetchData({ payload, meta }, prependFetchSuccessAction);
 }
 
-function* fetchData({ payload, meta }) {
+// Namespaces whose FETCH_DATA requests are writes that must all complete (no latest-wins).
+const PARALLEL_FETCH_NAMESPACES = new Set([LAUNCHES_FILTERS_UPDATE_NAMESPACE]);
+const PARALLEL_FETCH_METHODS = ['put', 'patch', 'delete'];
+
+const latestFetchRequests = new Map();
+
+const isLatestWinsRequest = (namespace, options = {}) =>
+  !PARALLEL_FETCH_NAMESPACES.has(namespace) &&
+  !PARALLEL_FETCH_METHODS.includes(String(options.method || 'get').toLowerCase());
+
+export function* fetchData({ payload, meta }) {
   const namespace = meta.namespace;
-  let cancelRequest = () => {};
+  const options = payload.options || {};
+  const latestWins = isLatestWinsRequest(namespace, options);
+  const request = { cancel: () => {} };
+  if (latestWins) {
+    // A newer request for the same namespace supersedes the previous one: abort it and drop its result.
+    latestFetchRequests.get(namespace)?.cancel();
+    latestFetchRequests.set(namespace, request);
+  }
+  const isCurrent = () => !latestWins || latestFetchRequests.get(namespace) === request;
   try {
     yield put(fetchStartAction(namespace, payload));
     const response = yield call(fetch, payload.url, {
-      ...payload.options,
+      ...options,
       abort: (cancelFunc) => {
-        cancelRequest = cancelFunc;
+        request.cancel = cancelFunc;
+        options.abort?.(cancelFunc);
       },
     });
-    yield put(fetchSuccessAction(namespace, response));
+    if (isCurrent()) {
+      yield put(fetchSuccessAction(namespace, response));
+    }
   } catch (err) {
-    yield put(fetchErrorAction(namespace, err, meta.silent));
+    if (isCurrent()) {
+      yield put(fetchErrorAction(namespace, err, meta.silent));
+    }
   } finally {
+    if (latestWins && isCurrent()) {
+      latestFetchRequests.delete(namespace);
+    }
     if (yield cancelled()) {
-      cancelRequest();
+      request.cancel();
     }
   }
 }
@@ -107,8 +134,11 @@ function* watchFetchData() {
   yield takeEvery(FETCH_DATA, fetchData);
 }
 
+const SILENT_ERROR_MESSAGES = [ERROR_UNAUTHORIZED, ERROR_CANCELED];
+
 export function* handleError({ payload, meta: { silent } = {} }) {
-  if (silent) {
+  // Session expiry is reported by the logout flow; cancelled requests are intentional.
+  if (silent || SILENT_ERROR_MESSAGES.includes(payload?.message)) {
     return;
   }
   yield put(showDefaultErrorNotification(payload));
