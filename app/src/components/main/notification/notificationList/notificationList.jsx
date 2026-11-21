@@ -444,6 +444,11 @@ export const notificationMessages = defineMessages({
     id: 'TestCaseLibraryPage.testCaseAddingToTestPlanFailed',
     defaultMessage: 'Failed to add selected Test Case to the Test Plan.',
   },
+  addByFolderLimitExceeded: {
+    id: 'TestCaseLibraryPage.addByFolderLimitExceeded',
+    defaultMessage:
+      'The selected folders contain {count} test cases, but at most {limit} test cases can be added from folders at once. Add smaller folders or select test cases instead.',
+  },
   errorOccurredTryAgain: {
     id: 'Common.errorOccurredTryAgain',
     defaultMessage: 'An error occurred. Please try again later.',

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { useRef, useState } from 'react';
+import { useRef } from 'react';
 import { getFormValues, InjectedFormProps } from 'redux-form';
 import { useDispatch, useSelector } from 'react-redux';
 import { useTracking } from 'react-tracking';
@@ -30,12 +30,10 @@ import { getApiErrorMessage, readBatchResult } from 'common/utils/apiResponse';
 import { useDebouncedSpinner, useNotification } from 'common/hooks';
 import { URLS } from 'common/urls';
 import { hideModalAction } from 'controllers/modal';
-import type { TestPlanDto } from 'controllers/testPlan/types';
+import type { BatchAddTestCasesRQ, TestPlanDto } from 'controllers/testPlan/types';
 import { batchPartialFailureNotification } from 'controllers/testPlan/batchResult';
-import { foldersSelector } from 'controllers/testCase';
-import { getAllSubfolderIds } from 'common/utils/folderUtils';
+import { ADD_BY_FOLDER_LIMIT } from 'common/constants/tms';
 
-import { fetchAllTestCasesByFolderIds } from '../../common/testLibrarySidePanel/utils';
 import {
   AddTestCasesToTestPlanFormData,
   AddTestCasesToTestPlanModalData,
@@ -61,9 +59,7 @@ export const useAddTestCasesToTestPlan = ({
   const dispatch = useDispatch();
   const { trackEvent } = useTracking();
   const projectKey = useSelector(projectKeySelector);
-  const folders = useSelector(foldersSelector);
   const { showSuccessNotification, showErrorNotification } = useNotification();
-  const [isFetchingTestCases, setIsFetchingTestCases] = useState(false);
 
   const autompleteInputRef = useRef<HTMLInputElement>(null);
 
@@ -83,50 +79,32 @@ export const useAddTestCasesToTestPlan = ({
     autompleteInputRef.current?.blur();
   };
 
-  const getTestCases = async (): Promise<{ testCaseIds: number[]; count: number } | null> => {
+  // A folder is sent as is: the server adds its whole subtree, so no test case is downloaded here.
+  const getRequest = (): { data: BatchAddTestCasesRQ; count: number } => {
     if (isFromFolder) {
-      setIsFetchingTestCases(true);
-
-      try {
-        const testCases = await fetchAllTestCasesByFolderIds(
-          projectKey,
-          getAllSubfolderIds(folderId, folders),
-        );
-        const testCaseIds = testCases.map(({ id }) => id);
-
-        return {
-          testCaseIds,
-          count: testCaseIds.length,
-        };
-      } catch {
-        showErrorNotification({
-          messageId:
-            itemCount === 1 ? 'testCaseAddingToTestPlanFailed' : 'testCasesAddingToTestPlanFailed',
-        });
-
-        return null;
-      } finally {
-        setIsFetchingTestCases(false);
-      }
+      return { data: { folderIds: [folderId] }, count: itemCount ?? 0 };
     }
 
     return {
-      testCaseIds: selectedTestCaseIds || [],
+      data: { testCaseIds: selectedTestCaseIds || [] },
       count: selectedTestCaseIds?.length || 0,
     };
   };
 
   const addTestCasesToTestPlan = async (values: AddTestCasesToTestPlanFormData): Promise<void> => {
     const testPlan = values?.[SELECTED_TEST_PLAN_FIELD_NAME];
-    const testCases = await getTestCases();
+    const { data, count } = getRequest();
 
-    if (!testCases) {
+    if (isEmpty(data.folderIds) && isEmpty(data.testCaseIds)) {
       return;
     }
 
-    const { testCaseIds, count } = testCases;
+    if (isFromFolder && count > ADD_BY_FOLDER_LIMIT) {
+      showErrorNotification({
+        messageId: 'addByFolderLimitExceeded',
+        values: { count, limit: ADD_BY_FOLDER_LIMIT },
+      });
 
-    if (isEmpty(testCaseIds)) {
       return;
     }
 
@@ -142,14 +120,12 @@ export const useAddTestCasesToTestPlan = ({
 
     showSpinner();
 
-    fetch(fetchPath, {
+    await fetch(fetchPath, {
       method: 'post',
-      data: {
-        testCaseIds,
-      },
+      data,
     })
       .then((response: unknown) => {
-        const batchResult = readBatchResult(response, testCaseIds.length);
+        const batchResult = readBatchResult(response, data.testCaseIds?.length);
 
         trackEvent(TEST_CASE_LIBRARY_EVENTS.submitAddToTestPlan(addToTestPlanCondition));
 
@@ -186,7 +162,7 @@ export const useAddTestCasesToTestPlan = ({
   };
 
   return {
-    isAddTestCasesToTestPlanLoading: isAddTestCasesToTestPlanLoading || isFetchingTestCases,
+    isAddTestCasesToTestPlanLoading,
     selectedTestPlan,
     addTestCasesToTestPlan,
     setSelectedTestPlan,
