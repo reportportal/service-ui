@@ -28,6 +28,7 @@ import PropTypes from 'prop-types';
 import { WIDGETS_EVENTS } from 'components/main/analytics/events/ga4Events/dashboardsPageEvents';
 import { EmptyWidgetGrid } from './emptyWidgetGrid';
 import { Widget } from './widget';
+import { removeCachedWidget } from './widget/widgetCache';
 import styles from './widgetsGrid.scss';
 
 const cx = classNames.bind(styles);
@@ -154,6 +155,7 @@ export class WidgetsGrid extends Component {
       method: 'DELETE',
     })
       .then(() => {
+        removeCachedWidget(projectKey, widgetId);
         const newWidgets = this.getUpdatedWidgetsAfterDelete(widgetId);
 
         this.props.updateDashboardWidgetsAction({
