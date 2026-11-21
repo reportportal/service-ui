@@ -37,7 +37,12 @@ import {
   showErrorNotification,
 } from 'controllers/notification';
 import { projectKeySelector } from 'controllers/project';
-import { locationSelector, MANUAL_LAUNCHES_PAGE } from 'controllers/pages';
+import {
+  locationSelector,
+  pageSelector,
+  MANUAL_LAUNCHES_PAGE,
+  MANUAL_LAUNCH_DETAILS_PAGE,
+} from 'controllers/pages';
 import { LocationInfo } from 'controllers/pages/typed-selectors';
 import { Launch, UrlsHelper } from 'pages/inside/manualLaunchesPage/types';
 import { Page } from 'types/common';
@@ -73,6 +78,10 @@ import {
 } from './constants';
 import { isAttachmentRemoved, mapAttachmentForExecutionCommentPayload } from './utils';
 import {
+  buildGetManualLaunchFoldersParams,
+  getManualLaunchDetailsFetchParams,
+} from './manualLaunchDetailsFetchParams';
+import {
   GetManualLaunchesParams,
   GetManualLaunchParams,
   GetManualLaunchFoldersParams,
@@ -93,6 +102,8 @@ import {
   activeManualLaunchExecutionSelector,
 } from './selectors';
 import {
+  getManualLaunchAction,
+  getManualLaunchFoldersAction,
   setManualLaunchFilteredFoldersAction,
   startLoadingManualLaunchFilteredFoldersAction,
   stopLoadingManualLaunchFilteredFoldersAction,
@@ -199,14 +210,18 @@ function* getManualLaunch(action: GetManualLaunchAction): Generator {
   const projectKey = (yield select(projectKeySelector)) as string;
   const location = (yield select(locationSelector)) as LocationInfo;
 
-  const { launchId } = action.payload;
+  const { launchId, force } = action.payload;
 
   try {
     const prevLaunchId = location?.prev?.payload?.launchId;
     const currentLaunchId = location?.payload?.launchId;
     const activeManualLaunch = (yield select(activeManualLaunchSelector)) as Launch | null;
 
-    if (
+    if (force) {
+      const data = (yield call(fetch, URLS.manualLaunchById(projectKey, launchId))) as Launch;
+
+      yield put(fetchSuccessAction(ACTIVE_MANUAL_LAUNCH_NAMESPACE, data));
+    } else if (
       !prevLaunchId ||
       String(prevLaunchId) !== String(currentLaunchId) ||
       !activeManualLaunch ||
@@ -259,13 +274,15 @@ const MANUAL_LAUNCH_FOLDERS_PAGE_SIZE = 100;
 function* getManualLaunchFolders(action: GetManualLaunchFoldersAction): Generator {
   try {
     const projectKey = (yield select(projectKeySelector)) as string;
-    const { launchId, filterPriorities, filterTags, statusFilter } = action.payload;
+    const { launchId, filterPriorities, filterTags, statusFilter, silent } = action.payload;
 
-    yield put({
-      type: FETCH_START,
-      payload: { projectKey },
-      meta: { namespace: MANUAL_LAUNCH_FOLDERS_NAMESPACE },
-    });
+    if (!silent) {
+      yield put({
+        type: FETCH_START,
+        payload: { projectKey },
+        meta: { namespace: MANUAL_LAUNCH_FOLDERS_NAMESPACE },
+      });
+    }
 
     const typedURLS = URLS as UrlsHelper;
     const params: Record<string, string | number> = {};
@@ -704,6 +721,24 @@ function mergeNonToRunExecutionComment(
   }
 }
 
+// A status change moves the launch statistics and the folder counters: reload both in place
+// while the launch details page is shown.
+function* reloadManualLaunchStatistics(launchId: string | number): Generator {
+  if ((yield select(pageSelector)) !== MANUAL_LAUNCH_DETAILS_PAGE) {
+    return;
+  }
+
+  const state = (yield select()) as AppState;
+
+  yield put(getManualLaunchAction({ launchId, force: true }));
+  yield put(
+    getManualLaunchFoldersAction({
+      ...buildGetManualLaunchFoldersParams(getManualLaunchDetailsFetchParams(state), launchId),
+      silent: true,
+    }),
+  );
+}
+
 function* updateManualLaunchExecutionStatus(
   action: UpdateManualLaunchExecutionStatusAction,
 ): Generator {
@@ -767,6 +802,8 @@ function* updateManualLaunchExecutionStatus(
       executionId,
       requestData,
     );
+
+    yield call(reloadManualLaunchStatistics, launchId);
 
     const capitalizedStatus =
       statusUpper.charAt(0).toUpperCase() + statusUpper.slice(1).toLowerCase();

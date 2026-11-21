@@ -17,9 +17,11 @@
 import { applyMiddleware, createStore, AnyAction } from 'redux';
 import createSagaMiddleware from 'redux-saga';
 import { fetch } from 'common/utils';
+import { URLS } from 'common/urls';
 import { FETCH_SUCCESS } from 'controllers/fetch/constants';
 import { manualLaunchesSagas } from './sagas';
 import {
+  getManualLaunchAction,
   getManualLaunchFoldersAction,
   updateManualLaunchExecutionStatusAction,
 } from './actionCreators';
@@ -65,6 +67,7 @@ describe('controllers/manualLaunch/sagas', () => {
     );
     const { store, dispatched } = setupStore({
       project: { info: { projectKey: 'demo' } },
+      location: { type: 'MANUAL_LAUNCH_EXECUTION_PAGE', payload: { launchId: 10 } },
       manualLaunchTestCaseExecutions: {
         data: { content: [{ id: 1 }, { id: 2 }], page: { totalElements: 2 } },
       },
@@ -141,5 +144,42 @@ describe('controllers/manualLaunch/sagas', () => {
           MANUAL_LAUNCH_FOLDERS_NAMESPACE,
     );
     expect((success?.payload as { data: { content: unknown[] } }).data.content).toHaveLength(130);
+  });
+
+  test('a status change on the launch page reloads the launch statistics and folder counters', async () => {
+    mockedFetch.mockImplementation((url: string) =>
+      Promise.resolve(url.includes('folder') ? { content: [], page: { totalElements: 0 } } : {}),
+    );
+    const { store, dispatched } = setupStore({
+      project: { info: { projectKey: 'demo' } },
+      location: {
+        type: 'MANUAL_LAUNCH_DETAILS_PAGE',
+        payload: { launchId: '10' },
+        prev: { payload: { launchId: '10' } },
+        query: { statusFilter: 'TO_RUN' },
+      },
+      manualLaunch: { activeManualLaunch: { id: 10 } },
+    });
+
+    store.dispatch(
+      updateManualLaunchExecutionStatusAction({
+        projectKey: 'demo',
+        launchId: 10,
+        executionId: 1,
+        status: 'PASSED',
+      }),
+    );
+    await flush();
+
+    expect(dispatched).toContainEqual(getManualLaunchAction({ launchId: 10, force: true }));
+    expect(dispatched).toContainEqual(
+      getManualLaunchFoldersAction({
+        launchId: 10,
+        statusFilter: ExecutionStatus.TO_RUN,
+        silent: true,
+      }),
+    );
+    // The launch is already in the store for the same route, yet "force" fetches it again.
+    expect(mockedFetch).toHaveBeenCalledWith(URLS.manualLaunchById('demo', 10));
   });
 });
