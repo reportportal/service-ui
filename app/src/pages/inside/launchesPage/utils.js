@@ -15,6 +15,7 @@
  */
 
 import { readBatchResult } from 'common/utils/apiResponse';
+import { IN_PROGRESS } from 'common/constants/testStatuses';
 
 // DeleteBulkRS answers 200 even when some launches were not deleted: the launches that are not
 // listed in `deleted` failed (their ErrorRS entries carry no id).
@@ -33,5 +34,31 @@ export const getDeleteLaunchesResult = (items, response) => {
     totalCount: items.length,
     failedItems,
     errorsText: messages.join(' '),
+  };
+};
+
+// Applies a launch status poll answer: only the launches that were asked about can be finished, so
+// launches that appeared while the request was in flight stay in progress until the next poll.
+export const getFinishedLaunchesUpdate = ({
+  requestedIds = [],
+  launchesWithStatus = {},
+  launchesInProgress = [],
+  launches = [],
+}) => {
+  const finishedIds = requestedIds.filter(
+    (id) => launchesInProgress.includes(id) && launchesWithStatus[id] !== IN_PROGRESS,
+  );
+  if (!finishedIds.length) {
+    return null;
+  }
+  const endTime = Date.now();
+  return {
+    launchesInProgress: launchesInProgress.filter((id) => !finishedIds.includes(id)),
+    finishedCount: finishedIds.length,
+    finishedLaunches: launches
+      .filter(
+        (item) => finishedIds.includes(item.id) && !item.endTime && launchesWithStatus[item.id],
+      )
+      .map((item) => ({ ...item, endTime, status: launchesWithStatus[item.id] })),
   };
 };
