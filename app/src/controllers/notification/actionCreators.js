@@ -22,6 +22,14 @@ import {
   NOTIFICATION_TYPOGRAPHY_COLOR_TYPES,
 } from './constants';
 
+let lastNotificationUid = 0;
+
+// Time-based but strictly increasing, so notifications created in the same millisecond never share a uid.
+const getNextNotificationUid = () => {
+  lastNotificationUid = Math.max(Date.now(), lastNotificationUid + 1);
+  return lastNotificationUid;
+};
+
 /**
  *
  * @param message? {string}
@@ -48,7 +56,7 @@ export const showNotification = ({
     typographyColor,
     duration,
     values,
-    uid: new Date().valueOf(),
+    uid: getNextNotificationUid(),
   },
 });
 
