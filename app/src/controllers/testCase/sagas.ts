@@ -24,6 +24,8 @@ import {
   cancel,
   takeLatest,
   cancelled,
+  race,
+  take,
 } from 'redux-saga/effects';
 import { Task } from 'redux-saga';
 import { isEmpty } from 'es-toolkit/compat';
@@ -41,7 +43,7 @@ import {
   showNotification,
   showSuccessNotification,
 } from 'controllers/notification';
-import { projectKeySelector } from 'controllers/project';
+import { FETCH_PROJECT_SUCCESS, projectKeySelector } from 'controllers/project';
 import { SPINNER_DEBOUNCE } from 'pages/inside/common/constants';
 import { buildTestCaseFilterParams } from 'pages/inside/common/testCaseList/filterSidePanel/utils';
 import { hideModalAction } from 'controllers/modal';
@@ -235,7 +237,18 @@ function* getFolders(action: GetFoldersAction) {
       });
     }
 
-    const allFolders = (yield call(fetchAllFolders, { projectKey })) as Folder[];
+    // The folders slice is reset when another project is loaded: drop (and abort) a fetch that is
+    // still running for the previous project so it cannot replace the new project's tree.
+    const controller = new AbortController();
+    const { allFolders } = (yield race({
+      allFolders: call(fetchAllFolders, { projectKey, signal: controller.signal }),
+      projectChanged: take(FETCH_PROJECT_SUCCESS),
+    })) as { allFolders?: Folder[] };
+
+    if (!allFolders) {
+      controller.abort();
+      return;
+    }
 
     yield put(
       fetchSuccessAction(NAMESPACE, {

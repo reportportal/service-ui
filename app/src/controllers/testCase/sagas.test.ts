@@ -26,7 +26,11 @@ import {
   GET_ALL_TEST_CASES,
   SET_TEST_CASES,
   STOP_LOADING_TEST_CASES,
+  GET_FOLDERS,
+  NAMESPACE,
 } from './constants';
+import { FETCH_PROJECT_SUCCESS } from 'controllers/project';
+import { FETCH_SUCCESS } from 'controllers/fetch/constants';
 
 jest.mock('common/utils', () => ({
   ...jest.requireActual<Record<string, unknown>>('common/utils'),
@@ -38,6 +42,7 @@ const fetchMock = fetch as unknown as jest.Mock;
 interface AnyAction {
   type: string;
   payload?: { type?: string; message?: string; messageId?: string } & Record<string, unknown>;
+  meta?: { namespace?: string };
 }
 
 const createState = (overrides: Record<string, unknown> = {}) => ({
@@ -143,6 +148,35 @@ describe('controllers/testCase/sagas', () => {
       expect(dispatched.filter(({ type }) => type === STOP_LOADING_TEST_CASES)).toHaveLength(1);
       const [, folderParams] = fetchMock.mock.calls[0] as [string, { signal: AbortSignal }];
       expect(folderParams.signal.aborted).toBe(true);
+    });
+  });
+
+  describe('folders', () => {
+    test('a folder fetch of the previous project is dropped after a project switch', async () => {
+      let resolveFolders: (value: unknown) => void = () => {};
+      fetchMock.mockImplementationOnce(
+        (_url: string, params: { signal: AbortSignal }) =>
+          new Promise((resolve) => {
+            resolveFolders = resolve;
+            expect(params.signal).toBeDefined();
+          }),
+      );
+      const { dispatched, dispatch, task } = startSagas();
+
+      dispatch({ type: GET_FOLDERS });
+      await flush();
+      dispatch({ type: FETCH_PROJECT_SUCCESS, payload: {} });
+      resolveFolders({ content: [{ id: 9 }], page: { totalPages: 1 } });
+      await flush();
+      task.cancel();
+
+      const [, params] = fetchMock.mock.calls[0] as [string, { signal: AbortSignal }];
+      expect(params.signal.aborted).toBe(true);
+      expect(
+        dispatched.filter(
+          ({ type, meta }) => type === FETCH_SUCCESS && meta?.namespace === NAMESPACE,
+        ),
+      ).toHaveLength(0);
     });
   });
 });
