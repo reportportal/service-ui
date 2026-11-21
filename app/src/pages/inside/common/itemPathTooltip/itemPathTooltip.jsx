@@ -18,17 +18,26 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { TextTooltip } from 'components/main/tooltips/textTooltip';
 
+// Item and launch names are plain text: build the tooltip from React elements, never from an HTML string.
 const getTooltipContent = (testItem = {}) => {
   const { itemPaths = [], launchPathName = {} } = testItem.pathNames;
 
-  return itemPaths.reduce(
-    (path, item, index) => `${path} \n<b>Parent ${index + 1}:</b> ${item.name}`,
-    `<b>Launch:</b> ${launchPathName.name} #${launchPathName.number}`,
+  return (
+    <>
+      <b>Launch:</b> {launchPathName.name} #{launchPathName.number}
+      {itemPaths.map((item, index) => (
+        // eslint-disable-next-line react/no-array-index-key
+        <React.Fragment key={index}>
+          {' \n'}
+          <b>Parent {index + 1}:</b> {item.name}
+        </React.Fragment>
+      ))}
+    </>
   );
 };
 
 export const ItemPathTooltip = ({ testItem }) => (
-  <TextTooltip tooltipContent={getTooltipContent(testItem)} />
+  <TextTooltip tooltipContent={getTooltipContent(testItem)} preventParsing />
 );
 ItemPathTooltip.propTypes = {
   testItem: PropTypes.object,
