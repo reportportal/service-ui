@@ -33,6 +33,7 @@ import {
   pagePropertiesSelector,
   LOGIN_PAGE,
   ACCOUNT_REMOVED_PAGE,
+  NOT_FOUND,
 } from 'controllers/pages';
 import {
   FETCH_USER_ERROR,
@@ -53,6 +54,7 @@ import routesMap, { getRedirectRoute } from 'routes/routesMap';
 import { ACTIVITY_TIMESTAMP } from 'controllers/user/constants';
 import {
   authSuccessAction,
+  logoutAction,
   resetTokenAction,
   logoutCompleteAction,
   setTokenAction,
@@ -76,6 +78,7 @@ import {
 import {
   LOGIN,
   LOGOUT,
+  LOGOUT_COMPLETE,
   TOKEN_KEY,
   GRANT_TYPES,
   SET_TOKEN,
@@ -83,7 +86,12 @@ import {
   ANONYMOUS_REDIRECT_PATH_STORAGE_KEY,
   GRAFANA_SESSION_REVOKE_TIMEOUT,
 } from './constants';
-import { tokenSelector, lastFailedLoginTimeSelector, failedLoginAttemptsSelector } from './selectors';
+import {
+  isAuthorizedSelector,
+  tokenSelector,
+  lastFailedLoginTimeSelector,
+  failedLoginAttemptsSelector,
+} from './selectors';
 
 const toTokenString = (token) => (token ? `${token.type} ${token.value}` : '');
 
@@ -172,18 +180,19 @@ function* loginSuccessHandler({ payload }) {
   const anonymousRedirectPath = getSessionItem(ANONYMOUS_REDIRECT_PATH_STORAGE_KEY);
   const userSettings = getUserSettingsFromStorage(userId);
   const redirectPath = anonymousRedirectPath || userSettings.lastPath;
+  const redirectAction = redirectPath ? pathToAction(redirectPath, routesMap, qs) : null;
 
-  if (redirectPath) {
-    yield put(redirect(pathToAction(redirectPath, routesMap, qs)));
-    if (anonymousRedirectPath) {
-      removeSessionItem(ANONYMOUS_REDIRECT_PATH_STORAGE_KEY);
-    }
+  if (anonymousRedirectPath) {
+    removeSessionItem(ANONYMOUS_REDIRECT_PATH_STORAGE_KEY);
+  }
+
+  if (redirectAction && redirectAction.type !== NOT_FOUND) {
+    yield put(redirect(redirectAction));
   } else {
     // Demo instance specific redirect to be implemented
     const page = getRedirectRoute(user);
     yield put(redirect(page));
   }
-
 }
 
 function* watchLoginSuccess() {
@@ -342,8 +351,14 @@ function* handleLogin({ payload }) {
   }
 }
 
-function* handleOauthSuccess() {
+export function* handleOauthSuccess() {
   const { token: value, token_type: type } = yield select(pagePropertiesSelector);
+  const authorized = yield select(isAuthorizedSelector);
+  if (authorized) {
+    // the OAuth login replaces the session of the currently logged in user
+    yield put(logoutAction());
+    yield take(LOGOUT_COMPLETE);
+  }
   yield put(loginSuccessAction({ value, type }));
 }
 

@@ -14,7 +14,8 @@
  * limitations under the License.
  */
 
-import { put, select } from 'redux-saga/effects';
+import { put, select, take } from 'redux-saga/effects';
+import { pagePropertiesSelector } from 'controllers/pages';
 
 jest.mock('common/utils/fetch', () => ({
   fetch: jest.fn(() => Promise.resolve()),
@@ -28,10 +29,10 @@ jest.mock('routes/routesMap', () => ({
 
 import { getStorageItem, setStorageItem } from 'common/utils/storageUtils';
 import { ACTIVITY_TIMESTAMP } from 'controllers/user/constants';
-import { resetTokenAction } from './actionCreators';
-import { DEFAULT_TOKEN, TOKEN_KEY } from './constants';
-import { tokenSelector } from './selectors';
-import { handleLogout, handleSetToken } from './sagas';
+import { logoutAction, loginSuccessAction, resetTokenAction } from './actionCreators';
+import { DEFAULT_TOKEN, LOGOUT_COMPLETE, TOKEN_KEY } from './constants';
+import { isAuthorizedSelector, tokenSelector } from './selectors';
+import { handleLogout, handleOauthSuccess, handleSetToken } from './sagas';
 
 const OLD_TOKEN = { type: 'Bearer', value: 'old' };
 const NEW_TOKEN = { type: 'Bearer', value: 'new' };
@@ -96,5 +97,28 @@ describe('auth sagas: multi-tab token handling', () => {
 
       expect(step.done).toBe(false);
     });
+  });
+});
+
+describe('auth sagas: OAuth success', () => {
+  const query = { token: 'abc', token_type: 'Bearer' };
+  const loginSuccess = loginSuccessAction({ value: 'abc', type: 'Bearer' });
+
+  it('replaces the session of an already authorized user', () => {
+    const gen = handleOauthSuccess();
+
+    expect(gen.next().value).toEqual(select(pagePropertiesSelector));
+    expect(gen.next(query).value).toEqual(select(isAuthorizedSelector));
+    expect(gen.next(true).value).toEqual(put(logoutAction()));
+    expect(gen.next().value).toEqual(take(LOGOUT_COMPLETE));
+    expect(gen.next().value).toEqual(put(loginSuccess));
+  });
+
+  it('logs in directly when nobody is authorized', () => {
+    const gen = handleOauthSuccess();
+    gen.next();
+    gen.next(query);
+
+    expect(gen.next(false).value).toEqual(put(loginSuccess));
   });
 });
