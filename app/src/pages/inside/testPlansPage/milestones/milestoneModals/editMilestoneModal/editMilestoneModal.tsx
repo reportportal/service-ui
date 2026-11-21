@@ -60,7 +60,6 @@ const EditMilestoneModalForm = ({
       status: milestone.status,
       startDate: startIso,
       endDate: endIso,
-      testPlans: (milestone.testPlans ?? []).map((plan) => ({ id: plan.id })),
     });
   };
 
