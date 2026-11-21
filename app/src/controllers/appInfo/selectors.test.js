@@ -18,8 +18,16 @@ import {
   instanceTypeSelector,
   shouldShowExploreCloudPromoSelector,
   tmsEnabledSelector,
+  serverSidebarLinksSelector,
 } from './selectors';
-import { EPAM, INSTANCE_TYPE, NOT_PROVIDED, SAAS, TMS_ENABLED_KEY } from './constants';
+import {
+  EPAM,
+  INSTANCE_TYPE,
+  NOT_PROVIDED,
+  SAAS,
+  TMS_ENABLED_KEY,
+  SERVER_SIDEBAR_LINKS_KEY,
+} from './constants';
 
 const getStateWithInstanceType = (instanceType) => ({
   appInfo: {
@@ -117,6 +125,32 @@ describe('appInfo/selectors', () => {
     test('should return false when appInfo is not set', () => {
       const state = {};
       expect(tmsEnabledSelector(state)).toBe(false);
+    });
+  });
+
+  describe('serverSidebarLinksSelector', () => {
+    const getStateWithLinks = (value) => ({
+      appInfo: { api: { extensions: { result: { [SERVER_SIDEBAR_LINKS_KEY]: value } } } },
+    });
+
+    test('should return parsed links', () => {
+      const links = [{ name: 'Wiki', url: 'https://wiki.example.com' }];
+      expect(serverSidebarLinksSelector(getStateWithLinks(JSON.stringify(links)))).toEqual(links);
+    });
+
+    test('should return an empty list for malformed JSON', () => {
+      expect(serverSidebarLinksSelector(getStateWithLinks('{not json'))).toEqual([]);
+    });
+
+    test('should return an empty list when the value is not an array', () => {
+      expect(serverSidebarLinksSelector(getStateWithLinks('{"name":"x"}'))).toEqual([]);
+    });
+
+    test('should drop entries without a name and url', () => {
+      const value = JSON.stringify([null, { name: 'Wiki' }, { name: 'Docs', url: '/docs' }]);
+      expect(serverSidebarLinksSelector(getStateWithLinks(value))).toEqual([
+        { name: 'Docs', url: '/docs' },
+      ]);
     });
   });
 });

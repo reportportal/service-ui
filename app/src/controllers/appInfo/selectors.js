@@ -89,9 +89,19 @@ export const passwordMinLengthSelector = (state) => {
   const normalized = Math.trunc(raw);
   return Math.max(PASSWORD_MIN_ALLOWED_LENGTH, Math.min(normalized, PASSWORD_MAX_ALLOWED_LENGTH));
 };
+const isSidebarLink = (link) => typeof link?.name === 'string' && typeof link?.url === 'string';
+
+// The setting is free text on the server: a malformed value must not break every page.
 export const serverSidebarLinksSelector = createSelector(
   extensionsConfigSelector,
-  (extensionsConfig) => JSON.parse(extensionsConfig?.[SERVER_SIDEBAR_LINKS_KEY] || `[]`),
+  (extensionsConfig) => {
+    try {
+      const links = JSON.parse(extensionsConfig?.[SERVER_SIDEBAR_LINKS_KEY] || `[]`);
+      return Array.isArray(links) ? links.filter(isSidebarLink) : [];
+    } catch {
+      return [];
+    }
+  },
 );
 export const isOldHistorySelector = (state) =>
   environmentSelector(state)[OLD_HISTORY_KEY] === 'true';
