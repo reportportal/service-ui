@@ -65,6 +65,7 @@ import {
   addDashboardSuccessAction,
   deleteDashboardSuccessAction,
   updateDashboardItemSuccessAction,
+  fetchDashboardAction,
 } from './actionCreators';
 import { getDashboardNotificationAction, tryParseConfig } from './utils';
 
@@ -241,17 +242,23 @@ function* updateDashboard({ payload: dashboard }) {
   }
 }
 
-function* updateDashboardWidgets({ payload: dashboard }) {
-  const projectKey = yield select(projectKeySelector);
+export function* updateDashboardWidgets({ payload: dashboard }) {
+  try {
+    const projectKey = yield select(projectKeySelector);
 
-  yield call(fetch, URLS.dashboard(projectKey, dashboard.id), {
-    method: 'put',
-    data: {
-      name: dashboard.name,
-      updateWidgets: dashboard.widgets,
-    },
-  });
-  yield put(updateDashboardItemSuccessAction(dashboard));
+    yield call(fetch, URLS.dashboard(projectKey, dashboard.id), {
+      method: 'put',
+      data: {
+        name: dashboard.name,
+        updateWidgets: dashboard.widgets,
+      },
+    });
+    yield put(updateDashboardItemSuccessAction(dashboard));
+  } catch (error) {
+    yield put(showDefaultErrorNotification(error));
+    // the grid already shows the unsaved layout: reload the one stored on the server
+    yield put(fetchDashboardAction());
+  }
 }
 
 function* removeDashboard({ payload: id }) {
