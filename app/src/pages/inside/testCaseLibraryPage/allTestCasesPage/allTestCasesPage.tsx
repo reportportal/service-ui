@@ -91,6 +91,20 @@ export const AllTestCasesPage = ({
     });
   const [selectedRows, setSelectedRows] = useState<SelectedTestCaseRow[]>([]);
   const folderId = useSelector(urlFolderIdSelector);
+  // The selection survives paging but not a change of folder, search or filters, so a bulk action
+  // never applies to test cases that are no longer in the list on screen.
+  const selectionScopeKey = [
+    folderId,
+    query?.testCasesSearchParams,
+    query?.filterPriorities,
+    query?.filterTags,
+  ].join('|');
+  const [selectionScope, setSelectionScope] = useState(selectionScopeKey);
+
+  if (selectionScope !== selectionScopeKey) {
+    setSelectionScope(selectionScopeKey);
+    setSelectedRows([]);
+  }
   const folders = useSelector(foldersSelector);
   const dispatch = useDispatch();
   const { openModal: openAddToTestPlanModal } = useAddTestCasesToTestPlanModal();
@@ -114,7 +128,9 @@ export const AllTestCasesPage = ({
       return false;
     }
 
-    return loadedSelectedTestCases.every((testCase) => isManualScenarioEmpty(testCase.manualScenario));
+    return loadedSelectedTestCases.every((testCase) =>
+      isManualScenarioEmpty(testCase.manualScenario),
+    );
   }, [selectedRowIds, testCases]);
 
   const trackBulkOperation = useCallback(
