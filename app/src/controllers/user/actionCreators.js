@@ -51,8 +51,9 @@ export const fetchUserSuccessAction = (user) => ({
   payload: user,
 });
 
-export const fetchUserErrorAction = () => ({
+export const fetchUserErrorAction = (error) => ({
   type: FETCH_USER_ERROR,
+  payload: error?.message,
   error: true,
 });
 

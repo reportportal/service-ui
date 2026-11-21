@@ -125,7 +125,7 @@ function* fetchUserInfo() {
     yield put(fetchUserSuccessAction(user));
     return user;
   } catch (err) {
-    yield put(fetchUserErrorAction());
+    yield put(fetchUserErrorAction(err));
   }
 }
 
