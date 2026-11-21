@@ -26,10 +26,12 @@ import {
 } from 'analyticsEvents/testCaseLibraryPageEvents';
 import { projectKeySelector } from 'controllers/project';
 import { fetch } from 'common/utils';
+import { getApiErrorMessage, readBatchResult } from 'common/utils/apiResponse';
 import { useDebouncedSpinner, useNotification } from 'common/hooks';
 import { URLS } from 'common/urls';
 import { hideModalAction } from 'controllers/modal';
 import type { TestPlanDto } from 'controllers/testPlan/types';
+import { batchPartialFailureNotification } from 'controllers/testPlan/batchResult';
 import { foldersSelector } from 'controllers/testCase';
 import { getAllSubfolderIds } from 'common/utils/folderUtils';
 
@@ -146,20 +148,35 @@ export const useAddTestCasesToTestPlan = ({
         testCaseIds,
       },
     })
-      .then(() => {
+      .then((response: unknown) => {
+        const batchResult = readBatchResult(response, testCaseIds.length);
+
         trackEvent(TEST_CASE_LIBRARY_EVENTS.submitAddToTestPlan(addToTestPlanCondition));
+
+        if (batchResult.failureCount > 0) {
+          // keep the modal open so the user sees what was not added
+          dispatch(batchPartialFailureNotification(batchResult));
+
+          return;
+        }
+
         dispatch(hideModalAction());
         showSuccessNotification({
-          messageId: isSingleTestCaseMode
-            ? 'testCaseAddingToTestPlanSuccess'
-            : 'testCasesAddingToTestPlanSuccess',
+          messageId:
+            batchResult.successCount === 1
+              ? 'testCaseAddingToTestPlanSuccess'
+              : 'testCasesAddingToTestPlanSuccess',
         });
       })
       .catch((error) => {
+        const message = getApiErrorMessage(error);
+        const fallbackMessageId = isSingleTestCaseMode
+          ? 'testCaseAddingToTestPlanFailed'
+          : 'testCasesAddingToTestPlanFailed';
+
         showErrorNotification({
-          messageId: isSingleTestCaseMode
-            ? 'testCaseAddingToTestPlanFailed'
-            : 'testCasesAddingToTestPlanFailed',
+          message,
+          messageId: message ? undefined : fallbackMessageId,
         });
         console.error(error);
       })
