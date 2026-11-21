@@ -26,7 +26,7 @@ import {
 import { URLS } from 'common/urls';
 import { APPLICATION_SETTINGS } from 'common/constants/localStorageKeys';
 import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
-import { fetchAppInfoAction } from 'controllers/appInfo';
+import { fetchAppInfoAction, fetchAppInfoAndWait } from 'controllers/appInfo';
 import {
   OAUTH_SUCCESS,
   pagePropertiesSelector,
@@ -146,7 +146,7 @@ function* watchLogout() {
   }
 }
 
-function* loginSuccessHandler({ payload }) {
+export function* loginSuccessHandler({ payload }) {
   setStorageItem(ACTIVITY_TIMESTAMP, Date.now());
   yield put(clearLoginLockoutAction());
 
@@ -166,6 +166,8 @@ function* loginSuccessHandler({ payload }) {
   yield put(fetchPluginsAction());
   yield put(fetchGlobalIntegrationsAction());
   yield put(authSuccessAction());
+  // the info loaded on the login page is the anonymous subset; load the full one before redirecting
+  yield call(fetchAppInfoAndWait);
 
   const userId = yield select(userIdSelector);
   const user = yield select(userInfoSelector);

@@ -19,9 +19,13 @@ import { fetch } from 'common/utils/fetch';
 import { URLS } from 'common/urls';
 import { NOTIFICATION_TYPES } from 'controllers/notification';
 import { updatePagePropertiesAction } from 'controllers/pages';
-import { handleConfirmEmail } from './sagas';
-import { logoutAction, confirmEmailAction } from './actionCreators';
-import { LOGOUT, LOGOUT_COMPLETE } from './constants';
+import { fetchSuccessAction } from 'controllers/fetch';
+import { APP_INFO_NAMESPACE, FETCH_APP_INFO } from 'controllers/appInfo/constants';
+import { FETCH_USER, FETCH_USER_SUCCESS } from 'controllers/user/constants';
+import { getRedirectRoute } from 'routes/routesMap';
+import { handleConfirmEmail, loginSuccessHandler } from './sagas';
+import { logoutAction, confirmEmailAction, loginSuccessAction } from './actionCreators';
+import { AUTH_SUCCESS, LOGOUT, LOGOUT_COMPLETE } from './constants';
 
 jest.mock('routes/routesMap', () => ({
   __esModule: true,
@@ -106,5 +110,44 @@ describe('handleConfirmEmail', () => {
 
     expect(dispatched).toEqual([]);
     expect(fetch).not.toHaveBeenCalled();
+  });
+});
+
+describe('loginSuccessHandler', () => {
+  const REDIRECT_PAGE = 'TEST_REDIRECT_PAGE';
+
+  test('loads the full info after sign-in and before leaving the login page', async () => {
+    getRedirectRoute.mockReturnValue({ type: REDIRECT_PAGE });
+    const dispatched = [];
+    const listeners = [];
+    const emit = (action) =>
+      Promise.resolve().then(() => listeners.forEach((listener) => listener(action)));
+
+    await runSaga(
+      {
+        subscribe: (listener) => {
+          listeners.push(listener);
+          return () => {};
+        },
+        dispatch: (action) => {
+          dispatched.push(action.type);
+          if (action.type === FETCH_USER) {
+            emit({ type: FETCH_USER_SUCCESS, payload: {} });
+          }
+          if (action.type === FETCH_APP_INFO) {
+            emit(fetchSuccessAction(APP_INFO_NAMESPACE, {}));
+          }
+        },
+        getState: () => ({ user: { info: { userId: 'user' } } }),
+      },
+      loginSuccessHandler,
+      loginSuccessAction({ type: 'Bearer', value: 'token' }),
+    ).done;
+
+    const authSuccessIndex = dispatched.indexOf(AUTH_SUCCESS);
+    const appInfoIndex = dispatched.indexOf(FETCH_APP_INFO);
+    expect(authSuccessIndex).toBeGreaterThan(-1);
+    expect(appInfoIndex).toBeGreaterThan(authSuccessIndex);
+    expect(dispatched.indexOf(REDIRECT_PAGE)).toBeGreaterThan(appInfoIndex);
   });
 });
