@@ -25,6 +25,7 @@ import { TestCase } from 'types/testCase';
 
 import { usePanelActions, usePanelState } from '../testLibraryPanelContext';
 import { TestCasesResponse, fetchAllTestCases, isFolderFullyCached } from '../utils';
+import { mergeFolderPage } from '../utils/mergeFolderPage';
 
 interface UseFolderTestCasesProps {
   folderId: number;
@@ -84,14 +85,15 @@ export const useFolderTestCases = ({ folderId, isOpen, testsCount }: UseFolderTe
           }),
         );
 
-        const testPlanTestCasesForFolderPromise: Promise<TestCase[] | null> = shouldFetchTestPlanTestCases
-          ? fetchAllTestCases(projectKey, {
-            'filter.eq.testPlanId': testPlanId,
-            'filter.eq.testFolderId': folderId,
-            offset: 0,
-            limit: 200,
-          }).catch((): null => null)
-          : Promise.resolve(null);
+        const testPlanTestCasesForFolderPromise: Promise<TestCase[] | null> =
+          shouldFetchTestPlanTestCases
+            ? fetchAllTestCases(projectKey, {
+                'filter.eq.testPlanId': testPlanId,
+                'filter.eq.testFolderId': folderId,
+                offset: 0,
+                limit: 200,
+              }).catch((): null => null)
+            : Promise.resolve(null);
 
         const [testCasesResponse, testPlanTestCases] = await Promise.all([
           testCasesPromise,
@@ -106,19 +108,9 @@ export const useFolderTestCases = ({ folderId, isOpen, testsCount }: UseFolderTe
           scrollRestoreRef.current = scrollElement.scrollTop;
         }
 
-        const addedToTestPlanIds =
-          testPlanTestCases !== null
-            ? new Set<number>(testPlanTestCases.map((testCase) => testCase.id))
-            : testCasesMap.get(folderId)?.addedToTestPlanIds;
-
-        updateFolderTestCases(folderId, {
-          testCases: [
-            ...(testCasesMap.get(folderId)?.testCases ?? []),
-            ...testCasesResponse.content,
-          ],
-          page: testCasesResponse.page,
-          ...(isFirstPage && { addedToTestPlanIds }),
-        });
+        updateFolderTestCases(folderId, (current) =>
+          mergeFolderPage(current, testCasesResponse, isFirstPage, testPlanTestCases),
+        );
       } catch {
         updateFolderTestCases(folderId, { isError: true });
       } finally {
@@ -132,7 +124,6 @@ export const useFolderTestCases = ({ folderId, isOpen, testsCount }: UseFolderTe
       showSpinner,
       folderId,
       updateFolderTestCases,
-      testCasesMap,
       hideSpinner,
       scrollElement,
     ],
