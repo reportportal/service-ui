@@ -16,7 +16,7 @@
 
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { useSelector } from 'react-redux';
-import { buildPluginCommandRQ } from 'controllers/plugins/utils';
+import { buildPluginCommandRQ, isPluginCommandForbidden } from 'controllers/plugins/utils';
 import { COMMAND_GET_ISSUE } from 'controllers/plugins/uiExtensions/constants';
 import { activeOrganizationIdSelector } from 'controllers/organization';
 import { projectInfoIdSelector, projectKeySelector } from 'controllers/project';
@@ -26,6 +26,8 @@ import {
   updateCachedTicket,
 } from 'common/utils/ticketsCache';
 import { userIdSelector } from 'controllers/user';
+import { userRolesSelector } from 'controllers/pages';
+import { canRunPluginCommands } from 'common/utils/permissions';
 import { ERROR_CANCELED, fetch } from 'common/utils/fetch';
 import { URLS } from 'common/urls';
 
@@ -39,10 +41,15 @@ export const useIssueInfo = (issue, pluginName) => {
   const projectKey = useSelector(projectKeySelector);
   const projectId = useSelector(projectInfoIdSelector);
   const organizationId = useSelector(activeOrganizationIdSelector);
+  // Plugin commands need project EDITOR: lower roles get a neutral state without a request.
+  const canLoadDetails = canRunPluginCommands(useSelector(userRolesSelector));
 
   const { ticketId, btsProject, btsUrl } = issue;
 
   const [state, setState] = useState(() => {
+    if (!canLoadDetails) {
+      return { issueInfo: null, loading: false, error: false, unavailable: true };
+    }
     const stored = getStoredIssueData(userId, projectKey, btsProject, ticketId);
     const timeSinceLastExecution = Date.now() - (stored.lastTime || 0);
     const needsFetch = !stored.lastTime || timeSinceLastExecution >= FETCH_ISSUE_INTERVAL;
@@ -51,6 +58,7 @@ export const useIssueInfo = (issue, pluginName) => {
       issueInfo: stored.issue || null,
       loading: needsFetch,
       error: false,
+      unavailable: !needsFetch && Boolean(stored.unavailable),
     };
   });
 
@@ -94,14 +102,15 @@ export const useIssueInfo = (issue, pluginName) => {
     fetch(url, requestParams)
       .then((fetchedIssue) => {
         updateIssueInStorage({ issue: fetchedIssue, lastTime: Date.now() });
-        setState({ issueInfo: fetchedIssue, loading: false, error: false });
+        setState({ issueInfo: fetchedIssue, loading: false, error: false, unavailable: false });
       })
       .catch((err) => {
         if (err.message === ERROR_CANCELED) {
           return;
         }
-        updateIssueInStorage({ lastTime: Date.now() });
-        setState((prev) => ({ ...prev, loading: false, error: true }));
+        const unavailable = isPluginCommandForbidden(err);
+        updateIssueInStorage({ lastTime: Date.now(), unavailable });
+        setState((prev) => ({ ...prev, loading: false, error: !unavailable, unavailable }));
       });
   }, [
     projectKey,
