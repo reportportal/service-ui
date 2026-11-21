@@ -67,6 +67,7 @@ export interface ExpandedOptionsProps {
   onMoveTestCase?: TestCaseFolderActionCallback;
   onDuplicateTestCase?: TestCaseFolderActionCallback;
   onFolderTreeViewControl?: FolderTreeViewControlHandler;
+  pendingFolderIds?: number[];
 }
 
 export interface UseFolderSearchParams {

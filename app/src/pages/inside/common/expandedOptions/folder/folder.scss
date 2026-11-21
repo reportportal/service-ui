@@ -54,6 +54,10 @@
     position: relative;
     box-sizing: border-box;
 
+    &--pending &-title--text {
+      opacity: 0.6;
+    }
+
     :global([class*='tree-sortable-item--drop-inside']) & &-title {
       outline: 2px dashed var(--rp-ui-base-topaz-focused);
       outline-offset: -2px;
@@ -93,6 +97,14 @@
         font-family: $FONT-ROBOTO-MEDIUM;
         font-weight: 500;
         color: var(--rp-ui-base-almost-black);
+      }
+
+      &--pending {
+        display: flex;
+        align-items: center;
+        margin-left: auto;
+        width: 16px;
+        height: 16px;
       }
 
       &--counter {
