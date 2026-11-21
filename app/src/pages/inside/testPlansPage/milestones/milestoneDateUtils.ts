@@ -14,14 +14,8 @@
  * limitations under the License.
  */
 
-import { format, isValid, parse, parseISO } from 'date-fns';
+import { differenceInCalendarDays, format, isValid, parse, parseISO, startOfDay } from 'date-fns';
 import { enUS } from 'date-fns/locale';
-
-export const formatIsoDateShort = (iso: string): string =>
-  format(parseISO(iso), 'P', { locale: enUS });
-
-export const formatIsoDateShortDashed = (iso: string): string =>
-  format(parseISO(iso), 'MM-dd-yyyy', { locale: enUS });
 
 export const parseDateOnly = (value: string): Date | null => {
   if (!value) return null;
@@ -39,9 +33,35 @@ export const dateOnlyStringToUtcIso = (value: string): string | null => {
   ).toISOString();
 };
 
-export const isoToDateOnlyFormValue = (iso: string): string => {
+// Milestone dates are calendar dates sent as UTC midnight (dateOnlyStringToUtcIso), so they are read
+// back by their UTC calendar components: the browser time zone must not move them by a day.
+export const isoToDateOnlyFormValue = (iso: string | null | undefined): string => {
+  if (!iso) return '';
   const parsedDate = parseISO(iso);
-  return isValid(parsedDate) ? toDateOnlyString(parsedDate) : '';
+  return isValid(parsedDate) ? parsedDate.toISOString().slice(0, 10) : '';
+};
+
+const isoToCalendarDate = (iso: string | null | undefined): Date | null =>
+  parseDateOnly(isoToDateOnlyFormValue(iso));
+
+export const formatIsoDateShort = (iso: string | null | undefined): string => {
+  const date = isoToCalendarDate(iso);
+  return date ? format(date, 'P', { locale: enUS }) : '';
+};
+
+export const formatIsoDateShortDashed = (iso: string | null | undefined): string => {
+  const date = isoToCalendarDate(iso);
+  return date ? format(date, 'MM-dd-yyyy', { locale: enUS }) : '';
+};
+
+export const isIsoOnCalendarDay = (iso: string | null | undefined, day: Date): boolean => {
+  const dateOnly = isoToDateOnlyFormValue(iso);
+  return !!dateOnly && dateOnly === toDateOnlyString(day);
+};
+
+export const daysUntilIsoDate = (iso: string | null | undefined, today: Date): number | null => {
+  const date = isoToCalendarDate(iso);
+  return date ? differenceInCalendarDays(date, startOfDay(today)) : null;
 };
 
 export const isDeadlineBeforeStart = (startDate: string, endDate: string | undefined): boolean => {
