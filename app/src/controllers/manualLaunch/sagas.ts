@@ -15,7 +15,7 @@
  */
 
 import { Action } from 'redux';
-import { takeLatest, call, select, all, put, cancelled } from 'redux-saga/effects';
+import { takeLatest, takeEvery, call, select, all, put, cancelled } from 'redux-saga/effects';
 import { isString, isUndefined } from 'es-toolkit';
 import { isEmpty, isNil, isNumber } from 'es-toolkit/compat';
 
@@ -887,12 +887,14 @@ function* updateManualLaunchExecutionComment(
   }
 }
 
+// Mutations must not cancel each other: a cancelled saga would skip the list sync, the
+// callbacks and the toast although its PATCH already reached the server.
 function* watchUpdateManualLaunchExecutionStatus() {
-  yield takeLatest(UPDATE_MANUAL_LAUNCH_EXECUTION_STATUS, updateManualLaunchExecutionStatus);
+  yield takeEvery(UPDATE_MANUAL_LAUNCH_EXECUTION_STATUS, updateManualLaunchExecutionStatus);
 }
 
 function* watchUpdateManualLaunchExecutionComment() {
-  yield takeLatest(UPDATE_MANUAL_LAUNCH_EXECUTION_COMMENT, updateManualLaunchExecutionComment);
+  yield takeEvery(UPDATE_MANUAL_LAUNCH_EXECUTION_COMMENT, updateManualLaunchExecutionComment);
 }
 
 function* watchGetManualLaunchFilteredFolders() {
