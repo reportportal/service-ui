@@ -72,10 +72,14 @@ export const useDeleteMilestone = () => {
 
       const isSingleItemOnTheLastPage =
         milestonesPageData?.number === milestonesPageData?.totalPages && milestones?.length === 1;
+      const previousPageOffset = Math.max(
+        0,
+        Number(queryParams.offset) - Number(queryParams.limit),
+      );
 
-      if (isSingleItemOnTheLastPage) {
-        const offset = Number(queryParams.offset) - Number(queryParams.limit);
-        const url = `/organizations/${organizationSlug}/projects/${projectSlug}/milestones?offset=${Math.max(0, offset)}&limit=${queryParams.limit}`;
+      // on the first page the URL does not change, so the list has to be refetched directly
+      if (isSingleItemOnTheLastPage && previousPageOffset !== Number(queryParams.offset)) {
+        const url = `/organizations/${organizationSlug}/projects/${projectSlug}/milestones?offset=${previousPageOffset}&limit=${queryParams.limit}`;
 
         dispatch(getTestPlansAction(defaultQueryParams));
         push(url);
