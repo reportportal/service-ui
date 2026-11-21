@@ -24,7 +24,54 @@ import { setServiceAvailabilityAction } from 'controllers/initialData/actionCrea
 export const ERROR_CANCELED = 'REQUEST_CANCELED';
 export const ERROR_UNAUTHORIZED = 'UNAUTHORIZED';
 
-const handleError = (error: unknown): never => {
+type ErrorBody = Record<string, unknown>;
+
+const isPlainObject = (value: unknown): value is ErrorBody =>
+  typeof value === 'object' && value !== null && !Array.isArray(value) && !(value instanceof Blob);
+
+const parseErrorText = (text: string, status: number | undefined, fallbackMessage: string) => {
+  try {
+    const parsed: unknown = JSON.parse(text);
+    if (isPlainObject(parsed)) {
+      return parsed;
+    }
+  } catch {
+    // not JSON: fall through
+  }
+  const trimmed = text.trim();
+  const isMarkup = trimmed.startsWith('<');
+  return { message: trimmed && !isMarkup ? trimmed : fallbackMessage, status };
+};
+
+const readBlobText = (blob: Blob): Promise<string> =>
+  typeof blob.text === 'function'
+    ? blob.text()
+    : new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(typeof reader.result === 'string' ? reader.result : '');
+        reader.onerror = () => reject(reader.error);
+        reader.readAsText(blob);
+      });
+
+// Error bodies are not always ErrorRS objects: proxies answer with HTML/text, blob requests with a Blob.
+export const normalizeErrorBody = (error: AxiosError): ErrorBody | Promise<ErrorBody> => {
+  const data: unknown = error.response?.data;
+  const status = error.response?.status;
+  if (isPlainObject(data)) {
+    return data;
+  }
+  if (typeof Blob !== 'undefined' && data instanceof Blob) {
+    return readBlobText(data)
+      .then((text) => parseErrorText(text, status, error.message))
+      .catch(() => ({ message: error.message, status }));
+  }
+  if (typeof data === 'string') {
+    return parseErrorText(data, status, error.message);
+  }
+  return { message: error.message, status };
+};
+
+const handleError = (error: unknown): Promise<never> => {
   if (axios.isCancel(error) || (error instanceof Error && error.name === 'AbortError')) {
     throw new Error(ERROR_CANCELED);
   }
@@ -35,7 +82,9 @@ const handleError = (error: unknown): never => {
     }
 
     if (error.response?.data) {
-      throw error.response.data;
+      // Callers read ErrorRS fields (message, errorCode) from the rejection reason.
+      // eslint-disable-next-line @typescript-eslint/prefer-promise-reject-errors
+      return Promise.resolve(normalizeErrorBody(error)).then((body) => Promise.reject(body));
     }
   }
 
