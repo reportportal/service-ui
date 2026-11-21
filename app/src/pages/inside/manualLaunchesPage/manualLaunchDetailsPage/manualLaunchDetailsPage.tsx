@@ -191,7 +191,7 @@ export const ManualLaunchDetailsPage = () => {
       return;
     }
 
-    dispatch(getManualLaunchAction({ launchId: params.launchId }));
+    dispatch(getManualLaunchAction({ launchId: params.launchId, force: true }));
     dispatch(
       getManualLaunchFoldersAction(buildGetManualLaunchFoldersParams(params, params.launchId)),
     );

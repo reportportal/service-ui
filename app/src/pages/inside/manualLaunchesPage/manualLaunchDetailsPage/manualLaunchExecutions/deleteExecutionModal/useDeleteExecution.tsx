@@ -96,7 +96,7 @@ export const useDeleteExecution = () => {
         dispatch(
           getManualLaunchFoldersAction(buildGetManualLaunchFoldersParams(params, payload.launchId)),
         );
-        dispatch(getManualLaunchAction({ launchId: payload.launchId }));
+        dispatch(getManualLaunchAction({ launchId: payload.launchId, force: true }));
       } catch (error) {
         dispatch(apiErrorNotificationAction(error));
       } finally {
