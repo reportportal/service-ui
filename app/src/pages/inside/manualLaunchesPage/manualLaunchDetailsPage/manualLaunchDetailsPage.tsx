@@ -163,7 +163,8 @@ export const ManualLaunchDetailsPage = () => {
       dispatch(
         updatePagePropertiesAction({
           searchQuery: value,
-          ...defaultManualLaunchesQueryParams,
+          // Back to the first page; the user's page size stays in the URL.
+          offset: defaultManualLaunchesQueryParams.offset,
         }),
       );
     }, SEARCH_DELAY),
@@ -242,7 +243,7 @@ export const ManualLaunchDetailsPage = () => {
         filterPriorities,
         filterTags,
         statusFilter,
-        ...defaultManualLaunchesQueryParams,
+        offset: defaultManualLaunchesQueryParams.offset,
       }),
     );
   };

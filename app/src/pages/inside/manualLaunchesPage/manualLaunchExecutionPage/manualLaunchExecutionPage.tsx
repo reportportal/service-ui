@@ -275,7 +275,12 @@ export const ManualLaunchExecutionPage = () => {
             ) : (
               <StepsBasedContent execution={execution} />
             )}
-            {!isEmpty(availableBtsIntegrations) && <LinkedToBTSSection execution={execution} />}
+            {(!isEmpty(availableBtsIntegrations) || !isEmpty(execution.btsTickets)) && (
+              <LinkedToBTSSection
+                execution={execution}
+                canAddIssues={!isEmpty(availableBtsIntegrations)}
+              />
+            )}
             {showExecutionCommentSection && <ExecutionCommentSection execution={execution} />}
           </div>
         </div>

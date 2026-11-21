@@ -17,7 +17,7 @@
 import { act, createElement } from 'react';
 import { mount } from 'enzyme';
 import { IntlProvider } from 'react-intl';
-import { IssueList } from '@reportportal/ui-kit';
+import { Button, IssueList } from '@reportportal/ui-kit';
 import { fetch } from 'common/utils';
 import { getManualLaunchExecutionAction, TestCaseExecution } from 'controllers/manualLaunch';
 import { ExecutionStatus } from 'types/testCase';
@@ -98,5 +98,21 @@ describe('LinkedToBTSSection', () => {
     expect(mockDispatch).toHaveBeenCalledWith(
       getManualLaunchExecutionAction({ launchId: '10', executionId: 5 }),
     );
+  });
+
+  test('without a BTS integration the linked tickets stay visible but posting is not offered', () => {
+    type Wrapper = {
+      find: (component: unknown) => { length: number; prop: (name: string) => unknown };
+    };
+    const wrapper = mount(
+      createElement(
+        IntlProvider,
+        { locale: 'en' },
+        createElement(LinkedToBTSSection, { execution, canAddIssues: false }),
+      ),
+    ) as unknown as Wrapper;
+
+    expect(wrapper.find(IssueList).prop('issues')).toHaveLength(1);
+    expect(wrapper.find(Button).length).toBe(0);
   });
 });
