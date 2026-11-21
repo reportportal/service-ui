@@ -20,14 +20,23 @@ import { VoidFn } from '@reportportal/ui-kit/common/types/commonTypes';
 
 import { URLS } from 'common/urls';
 import { fetch } from 'common/utils';
+import { readBatchResult } from 'common/utils/apiResponse';
 import { useDebouncedSpinner } from 'common/hooks';
 import { resolveFilterRetentionPolicyForApi } from 'common/manualLaunches/manualLaunchesFilterUrl';
+import {
+  apiErrorNotificationAction,
+  batchPartialFailureNotificationAction,
+  getBatchFailedIds,
+} from 'common/manualLaunches/batchResultNotifications';
 import { projectKeySelector } from 'controllers/project';
 import { importantLaunchesEnabledSelector } from 'controllers/appInfo';
 import { locationQuerySelector } from 'controllers/pages';
 import { hideModalAction } from 'controllers/modal';
-import { showSuccessNotification, showErrorNotification } from 'controllers/notification';
-import { getManualLaunchesAction, defaultManualLaunchesQueryParams } from 'controllers/manualLaunch';
+import { showSuccessNotification } from 'controllers/notification';
+import {
+  getManualLaunchesAction,
+  defaultManualLaunchesQueryParams,
+} from 'controllers/manualLaunch';
 
 import { DeleteManualLaunchModalData } from './types';
 
@@ -50,10 +59,7 @@ export const useDeleteManualLaunches = ({ onSuccess, data }: UseDeleteManualLaun
     const isBatchDelete = data.type !== 'single';
     const deletedCount = isBatchDelete ? data.launchIds.length : 1;
 
-    const nextOffset =
-      deletedCount >= limit && offset > 0
-        ? Math.max(offset - limit, 0)
-        : offset;
+    const nextOffset = deletedCount >= limit && offset > 0 ? Math.max(offset - limit, 0) : offset;
 
     return {
       offset: nextOffset,
@@ -81,32 +87,35 @@ export const useDeleteManualLaunches = ({ onSuccess, data }: UseDeleteManualLaun
             }),
           );
         } else {
-          await fetch(URLS.manualLaunch(projectKey), {
+          const response = await fetch(URLS.manualLaunch(projectKey), {
             method: 'DELETE',
             data: { launchIds: data.launchIds },
           });
+          const result = readBatchResult(response, data.launchIds.length);
 
-          dispatch(
-            showSuccessNotification({
-              messageId: 'manualLaunchesBatchDeletedSuccess',
-              values: { count: data.launchIds.length },
-            }),
-          );
+          if (result.failureCount > 0) {
+            // Keep the launches that were not deleted selected so the user can see and retry them.
+            const failedIds = getBatchFailedIds(result);
 
-          data.onClearSelection?.();
+            dispatch(batchPartialFailureNotificationAction(result));
+            data.onKeepSelection?.(failedIds.length ? failedIds : data.launchIds);
+          } else {
+            dispatch(
+              showSuccessNotification({
+                messageId: 'manualLaunchesBatchDeletedSuccess',
+                values: { count: data.launchIds.length },
+              }),
+            );
+
+            data.onClearSelection?.();
+          }
         }
 
         dispatch(hideModalAction());
-        dispatch(
-          getManualLaunchesAction(handleLimitOffset()),
-        );
+        dispatch(getManualLaunchesAction(handleLimitOffset()));
         onSuccess?.();
-      } catch {
-        dispatch(
-          showErrorNotification({
-            messageId: 'errorOccurredTryAgain',
-          }),
-        );
+      } catch (error) {
+        dispatch(apiErrorNotificationAction(error));
       } finally {
         hideSpinner();
       }

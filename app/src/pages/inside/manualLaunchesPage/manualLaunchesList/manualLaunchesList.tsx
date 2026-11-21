@@ -94,6 +94,7 @@ export const ManualLaunchesList = ({ fullLaunches, onRefresh }: ManualLaunchesLi
     openBatchDeleteModal({
       launchIds: selectedRowIds,
       onClearSelection: () => setSelectedRowIds([]),
+      onKeepSelection: setSelectedRowIds,
     });
   }, [openBatchDeleteModal, selectedRowIds, trackEvent]);
 
