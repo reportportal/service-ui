@@ -44,7 +44,12 @@ export const loginSuccessAction = (token) => ({
   payload: token,
 });
 
-export const logoutAction = (redirectedPage) => ({ type: LOGOUT, payload: redirectedPage });
+// silent: the session is replaced by a new login, so there is no logout page, refetch or toast
+export const logoutAction = (redirectedPage, { silent = false } = {}) => ({
+  type: LOGOUT,
+  payload: redirectedPage,
+  ...(silent && { meta: { silent } }),
+});
 
 export const logoutCompleteAction = () => ({ type: LOGOUT_COMPLETE });
 

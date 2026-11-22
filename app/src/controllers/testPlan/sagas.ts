@@ -45,6 +45,7 @@ import {
   defaultTestPlanTestCasesQueryParams,
 } from './constants';
 import { GetTestPlansParams, GetTestPlanParams } from './actionCreators';
+import { activeTestPlanSelector } from './selectors';
 import type { TestPlanDto, TestPlanFoldersDto, TestPlanTestCaseDto } from './types';
 import { Page } from '../../types/common';
 
@@ -119,13 +120,21 @@ export function* getTestPlan(action: GetTestPlanAction): Generator {
     'filter.cnt.name': testCasesSearchParams || undefined,
   };
 
+  let keepShownPlan = false;
+
   try {
     const isPlanChanged =
       String(location?.prev?.payload?.testPlanId) !== String(location?.payload?.testPlanId);
 
     if (isPlanChanged || action.payload.forceReloadPlan) {
-      // a forced reload refreshes the plan in place, without the full-page loader
-      if (isPlanChanged) {
+      // A forced reload refreshes the shown plan in place: the full-page loader would unmount the
+      // page, including the open library side panel. It is shown only when there is no plan to keep.
+      const hasActivePlan = Boolean(yield select(activeTestPlanSelector));
+      const showLoader = action.payload.forceReloadPlan ? !hasActivePlan : isPlanChanged;
+
+      keepShownPlan = Boolean(action.payload.forceReloadPlan) && hasActivePlan;
+
+      if (showLoader) {
         yield put({
           type: FETCH_START,
           payload: { projectKey },
@@ -149,9 +158,14 @@ export function* getTestPlan(action: GetTestPlanAction): Generator {
     const isCancellation = error instanceof Error && error.message === 'REQUEST_CANCELED';
 
     if (!isCancellation) {
-      yield put(fetchErrorAction(ACTIVE_TEST_PLAN_NAMESPACE, error, true));
+      const isNotFound = isNotFoundError(error);
 
-      if (isNotFoundError(error)) {
+      // A failed forced reload keeps the plan that is already shown; the error reducer would clear it.
+      if (isNotFound || !keepShownPlan) {
+        yield put(fetchErrorAction(ACTIVE_TEST_PLAN_NAMESPACE, error, true));
+      }
+
+      if (isNotFound) {
         yield put(
           showNotification({
             messageId: 'testPlanRedirectWarningMessage',
