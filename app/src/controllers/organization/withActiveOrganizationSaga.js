@@ -18,7 +18,7 @@ import { put, select, take } from 'redux-saga/effects';
 import { createFetchPredicate } from 'controllers/fetch';
 import { FETCH_SUCCESS } from 'controllers/fetch/constants';
 import { redirect } from 'redux-first-router';
-import { ORGANIZATIONS_PAGE } from 'controllers/pages';
+import { ORGANIZATIONS_PAGE, urlOrganizationSlugSelector } from 'controllers/pages';
 import { showDefaultErrorNotification } from 'controllers/notification';
 import { stringEqual } from 'common/utils/stringUtils';
 import { FETCH_ORGANIZATION_BY_SLUG } from './constants';
@@ -31,8 +31,12 @@ export function* withActiveOrganization(organizationSlug, onActiveOrgReady) {
     if (!activeOrganization || !stringEqual(organizationSlug, activeOrganization?.slug)) {
       const result = yield take(createFetchPredicate(FETCH_ORGANIZATION_BY_SLUG));
       const resultSlug = result.type === FETCH_SUCCESS ? result.payload?.items?.[0]?.slug : null;
-      if (resultSlug && !stringEqual(organizationSlug, resultSlug)) {
-        // Another organization was loaded after this one was requested: this navigation is superseded.
+      // Another organization was loaded (or the user has left for another organization or page)
+      // after this one was requested: this navigation is superseded, the newer one handles errors.
+      const isSuperseded = resultSlug
+        ? !stringEqual(organizationSlug, resultSlug)
+        : !stringEqual(organizationSlug, yield select(urlOrganizationSlugSelector));
+      if (isSuperseded) {
         return;
       }
       activeOrganization = yield select(activeOrganizationSelector);

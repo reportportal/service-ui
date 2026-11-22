@@ -30,6 +30,7 @@ const render = (props = {}) =>
   shallow(
     <Tooltip
       intl={intl}
+      userId={5}
       projectId={1}
       projectKey="demo"
       ticketId="BUG-1"

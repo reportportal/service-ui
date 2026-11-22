@@ -93,8 +93,7 @@ const handleError = (error: unknown): Promise<never> => {
 
 const handleResponse = <T>(res: AxiosResponse<T>): T => res.data;
 
-// Requests without their own cancellation share this controller so that they can all be aborted
-// when the user logs out and late responses do not repopulate the cleared store.
+// Aborting this controller cancels every pending request (see fetch()) when the user logs out.
 let sessionAbortController = new AbortController();
 
 export const abortPendingRequests = (): void => {
@@ -106,6 +105,8 @@ type ParamsSerializer = (params?: Record<string, unknown>) => string;
 
 interface FetchParams extends Omit<AxiosRequestConfig<unknown>, 'url'> {
   abort?: (cancel: (message?: string) => void) => void;
+  // the request is not aborted by abortPendingRequests() (e.g. a cleanup request sent on logout)
+  keepOnLogout?: boolean;
 }
 
 type FetchFn = {
@@ -122,26 +123,43 @@ export const fetch: FetchFn = <T = unknown>(
   params: FetchParams = {},
   isRawResponse = false,
 ): Promise<T | AxiosResponse<T>> => {
-  let controller: AbortController | undefined;
+  const { abort, keepOnLogout, signal, ...config } = params ?? {};
+  // Every request is aborted by its own cancel callback or signal and, unless it opts out, by
+  // abortPendingRequests() on logout, so late responses do not repopulate the cleared store.
+  const controller = new AbortController();
+  const abortRequest = () => controller.abort();
+  const sources = [signal, keepOnLogout ? undefined : sessionAbortController.signal].filter(
+    (source): source is NonNullable<typeof source> => Boolean(source),
+  );
+  sources.forEach((source) => {
+    if (source.aborted) {
+      abortRequest();
+    } else {
+      source.addEventListener?.('abort', abortRequest, { once: true });
+    }
+  });
+  abort?.(abortRequest);
 
-  if (params?.abort) {
-    controller = new AbortController();
-    params.abort(() => controller.abort());
-  }
-
-  const headersFromParams = params?.headers;
+  const headersFromParams = config.headers;
   const headers = headersFromParams ? { ...headersFromParams } : undefined;
   const paramsSerializer: ParamsSerializer = (parameters) => stringify(parameters ?? {});
 
   const requestParams: AxiosRequestConfig<unknown> = {
-    ...params,
+    ...config,
     paramsSerializer,
-    signal: controller?.signal ?? params.signal ?? sessionAbortController.signal,
+    signal: controller.signal,
     url,
     headers,
   };
 
-  const request = axios.request<T>(requestParams).catch(handleError);
+  const request = axios
+    .request<T>(requestParams)
+    .catch(handleError)
+    .finally(() => {
+      sources.forEach((source) => {
+        source.removeEventListener?.('abort', abortRequest);
+      });
+    });
 
   if (isRawResponse) {
     return request;

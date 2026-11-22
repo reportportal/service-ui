@@ -32,8 +32,18 @@ import {
 import { createFetchPredicate } from 'controllers/fetch';
 import { getStorageItem } from 'common/utils';
 import { ERROR_UNAUTHORIZED } from 'common/utils/fetch';
+import { ERROR_CODE_ACCESS_DENIED, ERROR_CODE_NOT_FOUND } from 'common/constants/apiErrorCodes';
 import { setInitialDataReadyAction, setServiceAvailabilityAction } from './actionCreators';
 import { FETCH_INITIAL_DATA } from './constants';
+
+// The stored token cannot open a session: it is expired (401), its user has no access (403,
+// ErrorType.ACCESS_DENIED) or no longer exists (ErrorType.USER_NOT_FOUND from GET /users).
+// Any other failure (network, 5xx) may be temporary, so the token is kept.
+const isTokenUnusable = ({ payload, meta }) =>
+  payload === ERROR_UNAUTHORIZED ||
+  meta?.status === 403 ||
+  meta?.errorCode === ERROR_CODE_ACCESS_DENIED ||
+  meta?.errorCode === ERROR_CODE_NOT_FOUND;
 
 export function* fetchInitialData() {
   yield put(setTokenAction(getStorageItem(TOKEN_KEY) || DEFAULT_TOKEN));
@@ -57,7 +67,7 @@ export function* fetchInitialData() {
     yield put(authSuccessAction());
     yield put(fetchPluginsAction());
     yield put(fetchGlobalIntegrationsAction());
-  } else if (userResult.payload === ERROR_UNAUTHORIZED) {
+  } else if (isTokenUnusable(userResult)) {
     yield put(resetTokenAction());
     yield put(fetchPublicPluginsAction());
   } else {

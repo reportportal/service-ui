@@ -15,7 +15,8 @@
  */
 
 import { put, select, take } from 'redux-saga/effects';
-import { pagePropertiesSelector } from 'controllers/pages';
+import { LOGIN_PAGE, pagePropertiesSelector } from 'controllers/pages';
+import { SHOW_NOTIFICATION } from 'controllers/notification/constants';
 
 jest.mock('common/utils/fetch', () => ({
   fetch: jest.fn(() => Promise.resolve()),
@@ -30,7 +31,12 @@ jest.mock('routes/routesMap', () => ({
 
 import { getStorageItem, setStorageItem } from 'common/utils/storageUtils';
 import { ACTIVITY_TIMESTAMP } from 'controllers/user/constants';
-import { logoutAction, loginSuccessAction, resetTokenAction } from './actionCreators';
+import {
+  logoutAction,
+  logoutCompleteAction,
+  loginSuccessAction,
+  resetTokenAction,
+} from './actionCreators';
 import { DEFAULT_TOKEN, LOGOUT_COMPLETE, TOKEN_KEY } from './constants';
 import { isAuthorizedSelector, tokenSelector } from './selectors';
 import { handleLogout, handleOauthSuccess, handleSetToken } from './sagas';
@@ -81,6 +87,37 @@ describe('auth sagas: multi-tab token handling', () => {
     });
   });
 
+  describe('silent logout', () => {
+    const runToEnd = (action) => {
+      setStorageItem(TOKEN_KEY, OLD_TOKEN);
+      const gen = handleLogout(action);
+      const effects = [];
+      let step = gen.next();
+      step = gen.next(OLD_TOKEN_STRING);
+      while (!step.done) {
+        effects.push(step.value);
+        step = gen.next();
+      }
+      return effects;
+    };
+    const puts = (effects) => effects.filter(({ PUT }) => PUT).map(({ PUT }) => PUT.action);
+
+    it('only resets the token and clears the store when the session is replaced', () => {
+      expect(puts(runToEnd(logoutAction(undefined, { silent: true })))).toEqual([
+        resetTokenAction(OLD_TOKEN_STRING),
+        logoutCompleteAction(),
+      ]);
+    });
+
+    it('redirects to the login page and tells the user on a normal logout', () => {
+      const types = puts(runToEnd(logoutAction())).map(({ type }) => type);
+
+      expect(types).toEqual(
+        expect.arrayContaining([LOGIN_PAGE, logoutCompleteAction().type, SHOW_NOTIFICATION]),
+      );
+    });
+  });
+
   describe('handleSetToken', () => {
     const run = (action) => {
       const gen = handleSetToken(action);
@@ -120,7 +157,7 @@ describe('auth sagas: OAuth success', () => {
 
     expect(gen.next().value).toEqual(select(pagePropertiesSelector));
     expect(gen.next(query).value).toEqual(select(isAuthorizedSelector));
-    expect(gen.next(true).value).toEqual(put(logoutAction()));
+    expect(gen.next(true).value).toEqual(put(logoutAction(undefined, { silent: true })));
     expect(gen.next().value).toEqual(take(LOGOUT_COMPLETE));
     expect(gen.next().value).toEqual(put(loginSuccess));
   });
