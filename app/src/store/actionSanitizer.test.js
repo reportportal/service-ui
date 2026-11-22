@@ -117,6 +117,78 @@ describe('actionSanitizer for tokens, API keys and integration secrets', () => {
   });
 });
 
+describe('actionSanitizer for repeated references and cycles', () => {
+  test('redacts a secret-bearing object referenced from two payload paths', () => {
+    const shared = { password: 'secret' };
+    const action = {
+      type: 'X',
+      payload: { first: shared, second: shared, list: [shared, shared] },
+    };
+    const { payload } = actionSanitizer(action);
+
+    expect(payload.first.password).toBe('[redacted]');
+    expect(payload.second.password).toBe('[redacted]');
+    expect(payload.list[1].password).toBe('[redacted]');
+    expect(shared.password).toBe('secret');
+  });
+
+  test('redacts secrets inside a cycle and keeps the cycle', () => {
+    const node = { name: 'n', password: 'secret' };
+    node.self = node;
+    const sanitized = actionSanitizer({ type: 'X', payload: node }).payload;
+
+    expect(sanitized.password).toBe('[redacted]');
+    expect(sanitized.self.password).toBe('[redacted]');
+    expect(sanitized.self).toBe(sanitized);
+    expect(node.password).toBe('secret');
+  });
+
+  test('keeps the same reference for a shared object without secrets', () => {
+    const shared = { a: 1 };
+    const action = { type: 'X', payload: { first: shared, second: shared } };
+
+    expect(actionSanitizer(action)).toBe(action);
+  });
+});
+
+describe('actionSanitizer for redux-form field actions', () => {
+  test.each(['@@redux-form/CHANGE', '@@redux-form/BLUR'])(
+    'redacts the value of a secret field in %s',
+    (type) => {
+      const action = { type, payload: 'secret', meta: { form: 'login', field: 'password' } };
+
+      expect(actionSanitizer(action).payload).toBe('[redacted]');
+      expect(action.payload).toBe('secret');
+    },
+  );
+
+  test('matches the last segment of a nested field path', () => {
+    const action = {
+      type: '@@redux-form/CHANGE',
+      payload: 'secret',
+      meta: { form: 'f', field: 'integrationParameters.apiKey' },
+    };
+
+    expect(actionSanitizer(action).payload).toBe('[redacted]');
+  });
+
+  test('redacts fields listed in the secret fields meta', () => {
+    const action = {
+      type: '@@redux-form/CHANGE',
+      payload: 'secret',
+      meta: { field: 'custom', [SECRET_FIELDS_KEY]: ['custom'] },
+    };
+
+    expect(actionSanitizer(action).payload).toBe('[redacted]');
+  });
+
+  test('keeps the value of a non-secret field', () => {
+    const action = { type: '@@redux-form/CHANGE', payload: 'jira', meta: { field: 'name' } };
+
+    expect(actionSanitizer(action)).toBe(action);
+  });
+});
+
 describe('stateSanitizer', () => {
   test('blanks the auth token and secrets in forms, modals and the location', () => {
     const state = {
@@ -142,6 +214,17 @@ describe('stateSanitizer', () => {
     expect(sanitized.location.query.token).toBe('[redacted]');
     expect(sanitized.launches).toBe(state.launches);
     expect(state.auth.token.value).toBe('jwt');
+  });
+
+  test('redacts the LDAP password attribute in form state', () => {
+    const state = {
+      form: { ldap: { values: { url: 'ldap://x', passwordAttribute: 'userPassword' } } },
+    };
+
+    expect(stateSanitizer(state).form.ldap.values).toEqual({
+      url: 'ldap://x',
+      passwordAttribute: '[redacted]',
+    });
   });
 
   test('returns the same state when there is nothing to redact', () => {

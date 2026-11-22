@@ -17,6 +17,7 @@
 import { takeEvery, take, all, put, select, call, race } from 'redux-saga/effects';
 import { redirect } from 'redux-first-router';
 import { URLS } from 'common/urls';
+import { clearWidgetCache } from 'pages/inside/dashboardItemPage/widgetsGrid/widget/widgetCache';
 import {
   showNotification,
   showDefaultErrorNotification,
@@ -153,6 +154,10 @@ export function* withActiveProject(
         return;
       }
 
+      const previousProjectKey = yield select(activeProjectKeySelector);
+      if (previousProjectKey !== resolvedKey) {
+        clearWidgetCache();
+      }
       yield put(setActiveProjectKeyAction(resolvedKey));
       yield put(fetchProjectAction(resolvedKey));
 

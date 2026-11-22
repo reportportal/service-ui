@@ -37,13 +37,15 @@ export function isAttachmentRemoved(id: string | number, removed: Array<string |
   return removed.some((r) => String(r) === idStr);
 }
 
-// The API reports "not found" with errorCode 404x / 404xx (ErrorRS); the HTTP status is not
-// available after fetch rethrows the response body.
+// ErrorType codes of "launch not found": LAUNCH_NOT_FOUND (4041) and the generic NOT_FOUND (40430).
+// The HTTP status is not available after fetch rethrows the response body, so match the code.
+const NOT_FOUND_ERROR_CODES = new Set(['4041', '40430']);
+
 export function isNotFoundApiError(error: unknown): boolean {
   const errorCode = (error as { errorCode?: unknown } | null | undefined)?.errorCode;
 
   return (
     (typeof errorCode === 'number' || typeof errorCode === 'string') &&
-    String(errorCode).startsWith('404')
+    NOT_FOUND_ERROR_CODES.has(String(errorCode))
   );
 }

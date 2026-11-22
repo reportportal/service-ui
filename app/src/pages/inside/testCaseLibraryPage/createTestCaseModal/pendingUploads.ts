@@ -23,6 +23,8 @@ export interface PendingUploads {
   isTracked: (attachmentId: string) => boolean;
   discard: (attachmentId: string) => void;
   discardAll: () => void;
+  // The save request was sent: the uploads may be linked to the test case now, stop tracking them.
+  release: () => void;
 }
 
 export const createPendingUploads = (
@@ -51,5 +53,6 @@ export const createPendingUploads = (
       attachmentIds.forEach((attachmentId) => deleteAttachment(attachmentId));
       attachmentIds.clear();
     },
+    release: () => attachmentIds.clear(),
   };
 };

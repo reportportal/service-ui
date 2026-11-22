@@ -73,4 +73,16 @@ describe('Image', () => {
     expect(fetch).toHaveBeenCalledTimes(1);
     expect(wrapper.find('img').exists()).toBe(true);
   });
+
+  test('renders the src once a pending URL request becomes static', () => {
+    fetch.mockImplementation(() => new Promise(() => {}));
+    const wrapper = mount(<Image src="https://cdn/icon.png" />);
+
+    expect(wrapper.find('img')).toHaveLength(0);
+
+    wrapper.setProps({ src: 'data:image/svg+xml;charset=utf-8,%3Csvg%2F%3E', isStatic: true });
+    wrapper.update();
+
+    expect(wrapper.find('img').prop('src')).toBe('data:image/svg+xml;charset=utf-8,%3Csvg%2F%3E');
+  });
 });

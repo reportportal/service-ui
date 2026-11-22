@@ -55,7 +55,10 @@ import {
 } from './utils';
 import { setAttachmentModalLoadingIdAction } from './actionCreators';
 
-const BLOB_URL_LIFETIME = 60000;
+// The browser revokes blob URLs itself when this document unloads; until then only the most recent
+// ones are kept alive so an opened tab can still reload or fetch sub-resources.
+const OPENED_BLOB_URLS_LIMIT = 20;
+const openedBlobUrls = [];
 
 function* getAttachmentURL() {
   const projectKey = yield select(projectKeySelector);
@@ -205,7 +208,10 @@ export function* openAttachmentInBrowser({ payload: id }) {
   const url = URL.createObjectURL(blob);
 
   window.open(url, '_blank', 'noopener,noreferrer');
-  setTimeout(() => URL.revokeObjectURL(url), BLOB_URL_LIFETIME);
+  openedBlobUrls.push(url);
+  if (openedBlobUrls.length > OPENED_BLOB_URLS_LIMIT) {
+    URL.revokeObjectURL(openedBlobUrls.shift());
+  }
 }
 
 function* watchFetchAttachments() {
