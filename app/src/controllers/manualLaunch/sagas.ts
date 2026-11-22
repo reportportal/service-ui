@@ -199,7 +199,7 @@ function* getManualLaunches(action: GetManualLaunchesAction): Generator {
       }),
     );
   } catch (error) {
-    yield put(fetchErrorAction(MANUAL_LAUNCHES_NAMESPACE, error));
+    yield put(fetchErrorAction(MANUAL_LAUNCHES_NAMESPACE, error, true));
     yield put(
       showErrorNotification({
         messageId: 'manualLaunchesLoadingFailed',
@@ -476,6 +476,7 @@ function* getManualLaunchExecution(action: GetManualLaunchExecutionAction): Gene
         fetchErrorAction(
           ACTIVE_MANUAL_LAUNCH_EXECUTION_NAMESPACE,
           new Error('Execution not found'),
+          true,
         ),
       );
       yield put(
@@ -489,6 +490,7 @@ function* getManualLaunchExecution(action: GetManualLaunchExecutionAction): Gene
       fetchErrorAction(
         ACTIVE_MANUAL_LAUNCH_EXECUTION_NAMESPACE,
         error instanceof Error ? error : new Error(String(error)),
+        true,
       ),
     );
     yield put(

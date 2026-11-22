@@ -27,6 +27,8 @@ import { notificationSagas } from 'controllers/notification/sagas';
 import { manualLaunchesSagas } from './sagas';
 import {
   getManualLaunchAction,
+  getManualLaunchesAction,
+  getManualLaunchExecutionAction,
   getManualLaunchFoldersAction,
   getManualLaunchTestCaseExecutionsAction,
   updateManualLaunchExecutionStatusAction,
@@ -368,6 +370,19 @@ describe('controllers/manualLaunch/sagas', () => {
 
       expect(toasts()).toHaveLength(1);
       expect(toasts()[0].payload).toMatchObject({ messageId: 'errorOccurredTryAgain' });
+    });
+
+    test.each([
+      ['launch list', () => getManualLaunchesAction()],
+      ['execution', () => getManualLaunchExecutionAction({ launchId: 10, executionId: 2 })],
+    ])('a server error on the %s load shows exactly one toast', async (_, createAction) => {
+      mockedFetch.mockRejectedValue(serverError);
+      const { store, toasts } = setupStoreWithNotifications(launchPageState);
+
+      store.dispatch(createAction());
+      await flush();
+
+      expect(toasts()).toHaveLength(1);
     });
 
     test('opening a missing launch shows only the redirect toast', async () => {
