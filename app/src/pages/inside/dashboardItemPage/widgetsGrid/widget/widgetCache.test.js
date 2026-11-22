@@ -14,7 +14,13 @@
  * limitations under the License.
  */
 
-import { getCachedWidget, setCachedWidget, removeCachedWidget } from './widgetCache';
+import {
+  getCachedWidget,
+  setCachedWidget,
+  removeCachedWidget,
+  clearWidgetCache,
+  cacheLoadedWidget,
+} from './widgetCache';
 
 describe('widgetCache', () => {
   test('returns the last payload of a widget with the time it was loaded', () => {
@@ -34,5 +40,35 @@ describe('widgetCache', () => {
     }
     expect(getCachedWidget('p', 0)).toBeUndefined();
     expect(getCachedWidget('p', 149).widget).toEqual({ id: 149 });
+  });
+
+  test('does not serve an entry older than maxAge', () => {
+    const now = jest.spyOn(Date, 'now').mockReturnValue(1000);
+    setCachedWidget('p', 1, { widget: { id: 1 } });
+    now.mockReturnValue(1000 + 59999);
+    expect(getCachedWidget('p', 1, 60000).widget).toEqual({ id: 1 });
+    now.mockReturnValue(1000 + 60000);
+    expect(getCachedWidget('p', 1, 60000)).toBeUndefined();
+    expect(getCachedWidget('p', 1)).toBeUndefined();
+    now.mockRestore();
+  });
+
+  test('clearWidgetCache drops every entry', () => {
+    setCachedWidget('p', 1, { widget: {} });
+    setCachedWidget('q', 2, { widget: {} });
+    clearWidgetCache();
+    expect(getCachedWidget('p', 1)).toBeUndefined();
+    expect(getCachedWidget('q', 2)).toBeUndefined();
+  });
+
+  test('a drilled-down multi-level payload is not cached and evicts the top-level one', () => {
+    cacheLoadedWidget('p', 1, { level: 1 }, false);
+    expect(getCachedWidget('p', 1)).toEqual({
+      widget: { level: 1 },
+      fetchedAt: expect.any(Number),
+    });
+    expect(getCachedWidget('p', 1).queryParameters).toBeUndefined();
+    cacheLoadedWidget('p', 1, { level: 2 }, true);
+    expect(getCachedWidget('p', 1)).toBeUndefined();
   });
 });

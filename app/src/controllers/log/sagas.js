@@ -193,7 +193,7 @@ function* fetchAllErrorLogs({
       yield take(createFetchPredicate(namespace));
     }
   } catch (err) {
-    yield handleError(err);
+    yield call(handleError, { payload: err });
   } finally {
     if (yield cancelled()) {
       cancelRequest();
@@ -505,7 +505,7 @@ function* loadMoreLogs({ payload: { direction } }) {
 
     yield call(fetchLogItems, { direction, targetPage });
   } catch (error) {
-    yield call(handleError, error);
+    yield call(handleError, { payload: error });
   }
 }
 

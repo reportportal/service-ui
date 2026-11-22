@@ -115,7 +115,15 @@ export const isFileActionAllowed = (contentType, action) => {
 const INLINE_SAFE_CONTENT_TYPE =
   /^(?:image\/(?!svg)[\w.+-]+|video\/[\w.+-]+|audio\/[\w.+-]+|application\/pdf|text\/plain)$/i;
 
+const CHARSET_PARAMETER_RE = /;\s*charset\s*=\s*"?([\w.:-]+)"?\s*(?:;|$)/i;
+
+// Only the MIME essence decides what is safe; for text a well-formed charset is kept, because the
+// bytes are not transcoded and dropping it would make the browser guess the encoding.
 export const getInlineSafeContentType = (contentType) => {
   const mimeType = (contentType || '').split(';')[0].trim();
-  return INLINE_SAFE_CONTENT_TYPE.test(mimeType) ? mimeType : 'text/plain';
+  if (!INLINE_SAFE_CONTENT_TYPE.test(mimeType)) {
+    return 'text/plain';
+  }
+  const charset = mimeType.toLowerCase() === 'text/plain' && CHARSET_PARAMETER_RE.exec(contentType);
+  return charset ? `${mimeType};charset=${charset[1]}` : mimeType;
 };

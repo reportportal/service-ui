@@ -105,6 +105,7 @@ import {
   manualLaunchContentSelector,
   activeManualLaunchSelector,
   activeManualLaunchExecutionSelector,
+  manualLaunchTestCaseExecutionsSelector,
 } from './selectors';
 import {
   getManualLaunchAction,
@@ -345,6 +346,11 @@ function* getManualLaunchFolders(action: GetManualLaunchFoldersAction): Generato
       }),
     );
   } catch (error) {
+    if (action.payload.silent) {
+      // A background refresh must not empty the tree the user is looking at.
+      return;
+    }
+
     yield put(fetchErrorAction(MANUAL_LAUNCH_FOLDERS_NAMESPACE, error));
     yield put(
       showErrorNotification({
@@ -800,9 +806,17 @@ function* updateManualLaunchExecutionStatus(
     if (statusUpper === MANUAL_LAUNCH_TO_RUN_STATUS_QUERY_VALUE) {
       applyToRunCommentClearIfNeeded(requestData, clearExecutionCommentAndBts);
     } else {
-      const currentExecution = (yield select(
+      const activeExecution = (yield select(
         activeManualLaunchExecutionSelector,
       )) as TestCaseExecution | null;
+      // The active-execution store may hold another execution (the launch page side panel does
+      // not load into it): take the comment and BTS tickets of the target one from the list.
+      const currentExecution =
+        activeExecution && String(activeExecution.id) === String(executionId)
+          ? activeExecution
+          : (((yield select(manualLaunchTestCaseExecutionsSelector)) as TestCaseExecution[]).find(
+              (execution) => String(execution.id) === String(executionId),
+            ) ?? null);
 
       mergeNonToRunExecutionComment(requestData, {
         trimmedComment,

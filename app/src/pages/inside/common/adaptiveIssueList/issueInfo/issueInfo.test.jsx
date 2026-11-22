@@ -47,7 +47,12 @@ const ISSUE = {
 
 const render = () =>
   mount(
-    <Provider store={createStore(() => ({ project: { info: { projectKey: 'demo', id: 1 } } }))}>
+    <Provider
+      store={createStore(() => ({
+        user: { info: { userId: 5 } },
+        project: { info: { projectKey: 'demo', id: 1 } },
+      }))}
+    >
       <IntlProvider locale="en" onError={() => {}}>
         <IssueInfo issue={ISSUE} />
       </IntlProvider>

@@ -23,6 +23,8 @@ import {
 import { NOTIFICATION_TYPES } from 'controllers/notification/constants';
 import { redirect } from 'redux-first-router';
 import { URLS } from 'common/urls';
+import { LOGOUT } from 'controllers/auth/constants';
+import { clearWidgetCache } from 'pages/inside/dashboardItemPage/widgetsGrid/widget/widgetCache';
 import { fetchDataAction } from 'controllers/fetch';
 import { userIdSelector, activeProjectKeySelector } from 'controllers/user';
 import { projectKeySelector } from 'controllers/project';
@@ -320,6 +322,11 @@ function* updateDashboardLocked({ payload: { locked, dashboard } }) {
   }
 }
 
+// widgets of the previous session must not be shown to the next user of the same tab
+export function* clearWidgetCacheOnLogout() {
+  yield call(clearWidgetCache);
+}
+
 export function* dashboardSagas() {
   yield all([
     yield takeEvery(FETCH_DASHBOARDS, fetchDashboards),
@@ -333,5 +340,6 @@ export function* dashboardSagas() {
     yield takeEvery(REMOVE_DASHBOARD_SUCCESS, redirectAfterDelete),
     yield takeEvery(DUPLICATE_DASHBOARD, duplicateDashboard),
     yield takeEvery(UPDATE_DASHBOARD_LOCKED, updateDashboardLocked),
+    yield takeEvery(LOGOUT, clearWidgetCacheOnLogout),
   ]);
 }
