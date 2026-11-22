@@ -26,6 +26,7 @@ interface BatchDeleteData {
   type: 'batch';
   launchIds: number[];
   onClearSelection?: VoidFn;
+  onKeepSelection?: (launchIds: number[]) => void;
 }
 
 export type DeleteManualLaunchModalData = SingleDeleteData | BatchDeleteData;

@@ -20,7 +20,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { projectKeySelector } from 'controllers/project';
 import { fetch } from 'common/utils';
 import { URLS } from 'common/urls';
-import { showErrorNotification } from 'controllers/notification';
+import { apiErrorNotificationAction } from 'common/manualLaunches/batchResultNotifications';
 import { useDebouncedSpinner } from 'common/hooks';
 
 import { ManualLaunchItem } from '../types';
@@ -81,16 +81,12 @@ export const useLaunchDetails = (launchId: number | null) => {
 
         setLaunchDetails(response);
         lastLoadedKeyRef.current = { id: launchId, projectKey, refetchTrigger };
-      } catch {
+      } catch (error) {
         if (abortController.signal.aborted) {
           return;
         }
 
-        dispatch(
-          showErrorNotification({
-            messageId: 'errorOccurredTryAgain',
-          }),
-        );
+        dispatch(apiErrorNotificationAction(error));
       } finally {
         hideSpinner();
       }

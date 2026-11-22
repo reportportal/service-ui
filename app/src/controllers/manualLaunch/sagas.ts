@@ -15,7 +15,7 @@
  */
 
 import { Action } from 'redux';
-import { takeLatest, call, select, all, put, cancelled } from 'redux-saga/effects';
+import { takeLatest, takeEvery, call, select, all, put, cancelled } from 'redux-saga/effects';
 import { isString, isUndefined } from 'es-toolkit';
 import { isEmpty, isNil, isNumber } from 'es-toolkit/compat';
 
@@ -27,6 +27,7 @@ import {
   MANUAL_LAUNCH_EXECUTION_FILTER_KEYS,
 } from 'pages/inside/common/testCaseList/constants';
 import { fetchSuccessAction, fetchErrorAction } from 'controllers/fetch';
+import { apiErrorNotificationAction } from 'common/manualLaunches/batchResultNotifications';
 import { FETCH_START } from 'controllers/fetch/constants';
 import { AppState } from 'types/store';
 import {
@@ -37,7 +38,12 @@ import {
   showErrorNotification,
 } from 'controllers/notification';
 import { projectKeySelector } from 'controllers/project';
-import { locationSelector, MANUAL_LAUNCHES_PAGE } from 'controllers/pages';
+import {
+  locationSelector,
+  pageSelector,
+  MANUAL_LAUNCHES_PAGE,
+  MANUAL_LAUNCH_DETAILS_PAGE,
+} from 'controllers/pages';
 import { LocationInfo } from 'controllers/pages/typed-selectors';
 import { Launch, UrlsHelper } from 'pages/inside/manualLaunchesPage/types';
 import { Page } from 'types/common';
@@ -71,7 +77,15 @@ import {
   defaultManualLaunchesQueryParams,
   MANUAL_LAUNCH_TO_RUN_STATUS_QUERY_VALUE,
 } from './constants';
-import { isAttachmentRemoved, mapAttachmentForExecutionCommentPayload } from './utils';
+import {
+  isAttachmentRemoved,
+  isNotFoundApiError,
+  mapAttachmentForExecutionCommentPayload,
+} from './utils';
+import {
+  buildGetManualLaunchFoldersParams,
+  getManualLaunchDetailsFetchParams,
+} from './manualLaunchDetailsFetchParams';
 import {
   GetManualLaunchesParams,
   GetManualLaunchParams,
@@ -91,8 +105,11 @@ import {
   manualLaunchContentSelector,
   activeManualLaunchSelector,
   activeManualLaunchExecutionSelector,
+  manualLaunchTestCaseExecutionsSelector,
 } from './selectors';
 import {
+  getManualLaunchAction,
+  getManualLaunchFoldersAction,
   setManualLaunchFilteredFoldersAction,
   startLoadingManualLaunchFilteredFoldersAction,
   stopLoadingManualLaunchFilteredFoldersAction,
@@ -199,14 +216,18 @@ function* getManualLaunch(action: GetManualLaunchAction): Generator {
   const projectKey = (yield select(projectKeySelector)) as string;
   const location = (yield select(locationSelector)) as LocationInfo;
 
-  const { launchId } = action.payload;
+  const { launchId, force } = action.payload;
 
   try {
     const prevLaunchId = location?.prev?.payload?.launchId;
     const currentLaunchId = location?.payload?.launchId;
     const activeManualLaunch = (yield select(activeManualLaunchSelector)) as Launch | null;
 
-    if (
+    if (force) {
+      const data = (yield call(fetch, URLS.manualLaunchById(projectKey, launchId))) as Launch;
+
+      yield put(fetchSuccessAction(ACTIVE_MANUAL_LAUNCH_NAMESPACE, data));
+    } else if (
       !prevLaunchId ||
       String(prevLaunchId) !== String(currentLaunchId) ||
       !activeManualLaunch ||
@@ -230,7 +251,21 @@ function* getManualLaunch(action: GetManualLaunchAction): Generator {
       }
     }
   } catch (error) {
+    const isNotFound = isNotFoundApiError(error);
+
+    if (force && !isNotFound) {
+      // Keep the launch on screen: only the in-place reload failed.
+      yield put(apiErrorNotificationAction(error));
+      return;
+    }
+
     yield put(fetchErrorAction(ACTIVE_MANUAL_LAUNCH_NAMESPACE, error, true));
+
+    if (!isNotFound) {
+      // Not a missing launch: the page shows the error with a retry instead of leaving it.
+      return;
+    }
+
     yield put(
       showNotification({
         messageId: 'manualLaunchRedirectWarningMessage',
@@ -254,22 +289,23 @@ interface GetManualLaunchFoldersAction extends Action<typeof GET_MANUAL_LAUNCH_F
   payload: GetManualLaunchFoldersParams;
 }
 
+const MANUAL_LAUNCH_FOLDERS_PAGE_SIZE = 100;
+
 function* getManualLaunchFolders(action: GetManualLaunchFoldersAction): Generator {
   try {
     const projectKey = (yield select(projectKeySelector)) as string;
-    const { launchId, offset, limit, filterPriorities, filterTags, statusFilter } = action.payload;
+    const { launchId, filterPriorities, filterTags, statusFilter, silent } = action.payload;
 
-    yield put({
-      type: FETCH_START,
-      payload: { projectKey },
-      meta: { namespace: MANUAL_LAUNCH_FOLDERS_NAMESPACE },
-    });
+    if (!silent) {
+      yield put({
+        type: FETCH_START,
+        payload: { projectKey },
+        meta: { namespace: MANUAL_LAUNCH_FOLDERS_NAMESPACE },
+      });
+    }
 
     const typedURLS = URLS as UrlsHelper;
-    const params: Record<string, string | number> = {
-      offset,
-      limit,
-    };
+    const params: Record<string, string | number> = {};
 
     const normalizedFolderPriorities = normalizePrioritiesForExecutionApi(filterPriorities);
 
@@ -285,17 +321,36 @@ function* getManualLaunchFolders(action: GetManualLaunchFoldersAction): Generato
       params[MANUAL_LAUNCH_FOLDER_STATUS_FILTER_KEY] = statusFilter;
     }
 
-    const data = (yield call(
-      fetch,
-      typedURLS.manualLaunchFolders(projectKey, launchId, params),
-    )) as ManualLaunchFoldersResponse;
+    // The folder tree needs every folder of the launch: page through all of them.
+    const content: ManualLaunchFolder[] = [];
+    let data: ManualLaunchFoldersResponse;
+    let offset = 0;
+
+    do {
+      data = (yield call(
+        fetch,
+        typedURLS.manualLaunchFolders(projectKey, launchId, {
+          ...params,
+          offset,
+          limit: MANUAL_LAUNCH_FOLDERS_PAGE_SIZE,
+        }),
+      )) as ManualLaunchFoldersResponse;
+
+      content.push(...(data?.content ?? []));
+      offset += MANUAL_LAUNCH_FOLDERS_PAGE_SIZE;
+    } while (!isEmpty(data?.content) && offset < (data?.page?.totalElements ?? 0));
 
     yield put(
       fetchSuccessAction(MANUAL_LAUNCH_FOLDERS_NAMESPACE, {
-        data,
+        data: { ...data, content },
       }),
     );
   } catch (error) {
+    if (action.payload.silent) {
+      // A background refresh must not empty the tree the user is looking at.
+      return;
+    }
+
     yield put(fetchErrorAction(MANUAL_LAUNCH_FOLDERS_NAMESPACE, error));
     yield put(
       showErrorNotification({
@@ -691,6 +746,24 @@ function mergeNonToRunExecutionComment(
   }
 }
 
+// A status change moves the launch statistics and the folder counters: reload both in place
+// while the launch details page is shown.
+function* reloadManualLaunchStatistics(launchId: string | number): Generator {
+  if ((yield select(pageSelector)) !== MANUAL_LAUNCH_DETAILS_PAGE) {
+    return;
+  }
+
+  const state = (yield select()) as AppState;
+
+  yield put(getManualLaunchAction({ launchId, force: true }));
+  yield put(
+    getManualLaunchFoldersAction({
+      ...buildGetManualLaunchFoldersParams(getManualLaunchDetailsFetchParams(state), launchId),
+      silent: true,
+    }),
+  );
+}
+
 function* updateManualLaunchExecutionStatus(
   action: UpdateManualLaunchExecutionStatusAction,
 ): Generator {
@@ -733,9 +806,17 @@ function* updateManualLaunchExecutionStatus(
     if (statusUpper === MANUAL_LAUNCH_TO_RUN_STATUS_QUERY_VALUE) {
       applyToRunCommentClearIfNeeded(requestData, clearExecutionCommentAndBts);
     } else {
-      const currentExecution = (yield select(
+      const activeExecution = (yield select(
         activeManualLaunchExecutionSelector,
       )) as TestCaseExecution | null;
+      // The active-execution store may hold another execution (the launch page side panel does
+      // not load into it): take the comment and BTS tickets of the target one from the list.
+      const currentExecution =
+        activeExecution && String(activeExecution.id) === String(executionId)
+          ? activeExecution
+          : (((yield select(manualLaunchTestCaseExecutionsSelector)) as TestCaseExecution[]).find(
+              (execution) => String(execution.id) === String(executionId),
+            ) ?? null);
 
       mergeNonToRunExecutionComment(requestData, {
         trimmedComment,
@@ -754,6 +835,8 @@ function* updateManualLaunchExecutionStatus(
       executionId,
       requestData,
     );
+
+    yield call(reloadManualLaunchStatistics, launchId);
 
     const capitalizedStatus =
       statusUpper.charAt(0).toUpperCase() + statusUpper.slice(1).toLowerCase();
@@ -887,12 +970,14 @@ function* updateManualLaunchExecutionComment(
   }
 }
 
+// Mutations must not cancel each other: a cancelled saga would skip the list sync, the
+// callbacks and the toast although its PATCH already reached the server.
 function* watchUpdateManualLaunchExecutionStatus() {
-  yield takeLatest(UPDATE_MANUAL_LAUNCH_EXECUTION_STATUS, updateManualLaunchExecutionStatus);
+  yield takeEvery(UPDATE_MANUAL_LAUNCH_EXECUTION_STATUS, updateManualLaunchExecutionStatus);
 }
 
 function* watchUpdateManualLaunchExecutionComment() {
-  yield takeLatest(UPDATE_MANUAL_LAUNCH_EXECUTION_COMMENT, updateManualLaunchExecutionComment);
+  yield takeEvery(UPDATE_MANUAL_LAUNCH_EXECUTION_COMMENT, updateManualLaunchExecutionComment);
 }
 
 function* watchGetManualLaunchFilteredFolders() {

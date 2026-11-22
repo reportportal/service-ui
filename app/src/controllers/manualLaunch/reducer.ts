@@ -20,6 +20,7 @@ import { isEmpty } from 'es-toolkit/compat';
 import { createPageScopedReducer } from 'common/utils/createPageScopedReducer';
 import { getParentFoldersIds } from 'common/utils/folderUtils';
 import { fetchReducer } from 'controllers/fetch';
+import { FETCH_ERROR, FETCH_START, FETCH_SUCCESS } from 'controllers/fetch/constants';
 import { loadingReducer } from 'controllers/loading';
 import {
   MANUAL_LAUNCHES_PAGE,
@@ -47,6 +48,7 @@ import {
   STOP_LOADING_MANUAL_LAUNCH_FILTERED_FOLDERS,
   CLEAR_MANUAL_LAUNCH_FILTERED_FOLDERS,
 } from './constants';
+import { isNotFoundApiError } from './utils';
 import {
   ExpandedFolderIdsAction,
   ManualLaunchFolder,
@@ -115,11 +117,36 @@ const expandedFolderIdsReducer = (
   }
 };
 
+// True after a load of the namespace failed for a reason other than "not found", so the page
+// can tell a failed load (inline error + retry) from an empty or missing one.
+const loadFailedReducer =
+  (namespace: string) =>
+  (
+    state = false,
+    action: { type: string; payload?: unknown; meta?: { namespace?: string } },
+  ): boolean => {
+    if (action.meta?.namespace !== namespace) {
+      return state;
+    }
+
+    switch (action.type) {
+      case FETCH_START:
+      case FETCH_SUCCESS:
+        return false;
+      case FETCH_ERROR:
+        return !isNotFoundApiError(action.payload);
+      default:
+        return state;
+    }
+  };
+
 const reducer = combineReducers({
   data: fetchReducer(MANUAL_LAUNCHES_NAMESPACE, { initialState: null, contentPath: 'data' }),
   isLoading: loadingReducer(MANUAL_LAUNCHES_NAMESPACE),
+  loadFailed: loadFailedReducer(MANUAL_LAUNCHES_NAMESPACE),
   activeManualLaunch: fetchReducer(ACTIVE_MANUAL_LAUNCH_NAMESPACE, { initialState: null }),
   isLoadingActive: loadingReducer(ACTIVE_MANUAL_LAUNCH_NAMESPACE),
+  activeLoadFailed: loadFailedReducer(ACTIVE_MANUAL_LAUNCH_NAMESPACE),
 });
 
 const filteredFoldersReducer = (
@@ -136,10 +163,7 @@ const filteredFoldersReducer = (
   }
 };
 
-const isLoadingFilteredFoldersReducer = (
-  state = false,
-  action: { type: string },
-): boolean => {
+const isLoadingFilteredFoldersReducer = (state = false, action: { type: string }): boolean => {
   switch (action.type) {
     case START_LOADING_MANUAL_LAUNCH_FILTERED_FOLDERS:
       return true;

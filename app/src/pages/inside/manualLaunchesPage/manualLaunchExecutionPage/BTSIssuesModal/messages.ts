@@ -53,6 +53,16 @@ export const messages = defineMessages({
     id: 'BTSIssuesModal.linkIssueFailed',
     defaultMessage: 'Failed to link issue',
   },
+  createdIssueNotLinked: {
+    id: 'BTSIssuesModal.createdIssueNotLinked',
+    defaultMessage:
+      'Issue {ticketId} was created in BTS but could not be linked to the execution. {reason}',
+  },
+  linkCreatedIssueHint: {
+    id: 'BTSIssuesModal.linkCreatedIssueHint',
+    defaultMessage:
+      'Issue {ticketId} is already created in BTS. Submit to link it to the execution without posting a new issue.',
+  },
   linkToIssue: {
     id: 'LinkBTSIssueForm.linkToIssue',
     defaultMessage: 'Link to issue',

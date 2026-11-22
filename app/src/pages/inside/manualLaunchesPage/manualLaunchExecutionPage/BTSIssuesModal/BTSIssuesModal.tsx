@@ -22,6 +22,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useTracking } from 'react-tracking';
 
 import { fetch, commonValidators, uniqueId, createClassnames } from 'common/utils';
+import { getApiErrorMessage } from 'common/utils/apiResponse';
 import { URLS } from 'common/urls';
 import { withModal } from 'controllers/modal';
 import { showSuccessNotification, showErrorNotification } from 'controllers/notification';
@@ -65,7 +66,10 @@ import {
 } from 'components/main/analytics/events/ga4Events/manualLaunchesPageEvents';
 
 import styles from './BTSIssuesModal.scss';
-import { activeManualLaunchExecutionSelector, getManualLaunchExecutionAction } from 'controllers/manualLaunch';
+import {
+  activeManualLaunchExecutionSelector,
+  getManualLaunchExecutionAction,
+} from 'controllers/manualLaunch';
 import { useManualLaunchId } from 'hooks/useTypedSelector';
 
 const cx = createClassnames(styles);
@@ -76,6 +80,14 @@ enum BTSIssueActionTypes {
 }
 
 const CONTROL_TYPE_FIELD = '_controlType';
+
+interface CreatedIssue {
+  ticketId: string;
+  url: string;
+  btsProject: string;
+  btsUrl: string;
+  pluginName: string;
+}
 
 let validationConfig: Record<string, unknown> | null = null;
 
@@ -113,6 +125,9 @@ const BTSIssuesModalComponent: FC<BTSIssuesModalProps> = ({
 
   const [selectedControl, setSelectedControl] = useState(BTSIssueActionTypes.LINK);
   const [isLoading, setIsLoading] = useState(false);
+  // An issue created in BTS whose link to the execution failed: retrying must only link it,
+  // posting again would create a duplicate ticket.
+  const [unlinkedCreatedIssue, setUnlinkedCreatedIssue] = useState<CreatedIssue | null>(null);
 
   const isMountedRef = useRef(true);
 
@@ -269,6 +284,48 @@ const BTSIssuesModalComponent: FC<BTSIssuesModalProps> = ({
     );
   }, [launchId, executionId, dispatch]);
 
+  const linkCreatedIssue = useCallback(
+    (createdIssue: CreatedIssue, onSuccess: () => void) => {
+      const testItemId = execution.testItemId || executionId;
+
+      setIsLoading(true);
+
+      fetch(URLS.testItemsLinkIssues(projectKey), {
+        method: 'PUT',
+        data: {
+          issues: [createdIssue],
+          testItemIds: [testItemId],
+        },
+      })
+        .then(() => {
+          if (!isMountedRef.current) return;
+          setIsLoading(false);
+          setUnlinkedCreatedIssue(null);
+          refreshExecutionData();
+          dispatch(
+            showSuccessNotification({
+              message: formatMessage(messages.postIssueSuccess),
+            }),
+          );
+          onSuccess();
+        })
+        .catch((err: unknown) => {
+          if (!isMountedRef.current) return;
+          setIsLoading(false);
+          setUnlinkedCreatedIssue(createdIssue);
+          dispatch(
+            showErrorNotification({
+              message: formatMessage(messages.createdIssueNotLinked, {
+                ticketId: createdIssue.ticketId,
+                reason: getApiErrorMessage(err) ?? '',
+              }),
+            }),
+          );
+        });
+    },
+    [projectKey, execution, executionId, dispatch, formatMessage, refreshExecutionData],
+  );
+
   const postIssue = useCallback(
     (issueData: Record<string, unknown>, onSuccess: () => void) => {
       const integration = namedBtsIntegrations[pluginName]?.find(
@@ -306,43 +363,21 @@ const BTSIssuesModalComponent: FC<BTSIssuesModalProps> = ({
 
       setIsLoading(true);
 
-      const testItemId = execution.testItemId || executionId;
-
       fetch(url, requestParams)
         .then((response: { id: string; url: string }) => {
-          return fetch(URLS.testItemsLinkIssues(projectKey), {
-            method: 'PUT',
-            data: {
-              issues: [
-                {
-                  ticketId: response.id,
-                  url: response.url,
-                  btsProject,
-                  btsUrl,
-                  pluginName,
-                },
-              ],
-              testItemIds: [testItemId],
-            },
-          });
-        })
-        .then(() => {
-          if (!isMountedRef.current) return;
-          setIsLoading(false);
-          refreshExecutionData();
-          dispatch(
-            showSuccessNotification({
-              message: formatMessage(messages.postIssueSuccess),
-            }),
+          linkCreatedIssue(
+            { ticketId: response.id, url: response.url, btsProject, btsUrl, pluginName },
+            onSuccess,
           );
-          onSuccess();
         })
-        .catch((err: Error) => {
+        .catch((err: unknown) => {
           if (!isMountedRef.current) return;
           setIsLoading(false);
           dispatch(
             showErrorNotification({
-              message: `${formatMessage(messages.postIssueFailed)}. ${err.message}`,
+              message: [formatMessage(messages.postIssueFailed), getApiErrorMessage(err)]
+                .filter(Boolean)
+                .join('. '),
             }),
           );
         });
@@ -354,10 +389,9 @@ const BTSIssuesModalComponent: FC<BTSIssuesModalProps> = ({
       namedBtsIntegrations,
       organizationId,
       projectInfo,
-      execution,
       dispatch,
       formatMessage,
-      refreshExecutionData,
+      linkCreatedIssue,
     ],
   );
 
@@ -480,6 +514,11 @@ const BTSIssuesModalComponent: FC<BTSIssuesModalProps> = ({
         };
 
         if (selectedControl === BTSIssueActionTypes.POST) {
+          if (unlinkedCreatedIssue) {
+            linkCreatedIssue(unlinkedCreatedIssue, onSuccess);
+            return;
+          }
+
           if (fields.length === 0) {
             return;
           }
@@ -540,6 +579,14 @@ const BTSIssuesModalComponent: FC<BTSIssuesModalProps> = ({
           options={segmentedControlOptions}
         />
       </div>
+
+      {selectedControl === BTSIssueActionTypes.POST && unlinkedCreatedIssue && (
+        <div className={cx('label')}>
+          {formatMessage(messages.linkCreatedIssueHint, {
+            ticketId: unlinkedCreatedIssue.ticketId,
+          })}
+        </div>
+      )}
 
       {selectedControl === BTSIssueActionTypes.POST && (
         <PostBTSIssueForm

@@ -15,19 +15,28 @@
  */
 
 import { useCallback } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch, useSelector, useStore } from 'react-redux';
 import { VoidFn } from '@reportportal/ui-kit/common/types/commonTypes';
 
 import { URLS } from 'common/urls';
 import { fetch } from 'common/utils';
+import { readBatchResult } from 'common/utils/apiResponse';
 import { useDebouncedSpinner } from 'common/hooks';
-import { resolveFilterRetentionPolicyForApi } from 'common/manualLaunches/manualLaunchesFilterUrl';
+import {
+  apiErrorNotificationAction,
+  batchPartialFailureNotificationAction,
+  getBatchFailedIds,
+} from 'common/manualLaunches/batchResultNotifications';
 import { projectKeySelector } from 'controllers/project';
-import { importantLaunchesEnabledSelector } from 'controllers/appInfo';
-import { locationQuerySelector } from 'controllers/pages';
+import { updatePagePropertiesAction } from 'controllers/pages';
 import { hideModalAction } from 'controllers/modal';
-import { showSuccessNotification, showErrorNotification } from 'controllers/notification';
-import { getManualLaunchesAction, defaultManualLaunchesQueryParams } from 'controllers/manualLaunch';
+import { showSuccessNotification } from 'controllers/notification';
+import {
+  getManualLaunchesAction,
+  getManualLaunchesFetchParams,
+  manualLaunchContentSelector,
+} from 'controllers/manualLaunch';
+import { AppState } from 'types/store';
 
 import { DeleteManualLaunchModalData } from './types';
 
@@ -36,39 +45,38 @@ interface UseDeleteManualLaunchesOptions {
   data: DeleteManualLaunchModalData;
 }
 
-export const useDeleteManualLaunches = ({ onSuccess, data }: UseDeleteManualLaunchesOptions) => {
+export const useDeleteManualLaunches = ({ onSuccess }: UseDeleteManualLaunchesOptions) => {
   const { isLoading, showSpinner, hideSpinner } = useDebouncedSpinner();
   const dispatch = useDispatch();
   const projectKey = useSelector(projectKeySelector);
-  const query = useSelector(locationQuerySelector);
-  const isImportantLaunchesEnabled = useSelector(importantLaunchesEnabledSelector);
+  const store = useStore<AppState>();
 
-  const handleLimitOffset = useCallback(() => {
-    const limit = Number(query?.limit) || defaultManualLaunchesQueryParams.limit;
-    const offset = Number(query?.offset) || defaultManualLaunchesQueryParams.offset;
+  const refetchLaunches = useCallback(
+    (deletedCount: number) => {
+      const state = store.getState();
+      const params = getManualLaunchesFetchParams(state);
+      const offset = Number(params.offset) || 0;
+      const limit = Number(params.limit);
+      const pageItemsCount = manualLaunchContentSelector(state)?.length ?? 0;
 
-    const isBatchDelete = data.type !== 'single';
-    const deletedCount = isBatchDelete ? data.launchIds.length : 1;
+      // The whole page was deleted: step back a page through the URL, the route reloads the list.
+      if (offset > 0 && deletedCount >= pageItemsCount) {
+        dispatch(updatePagePropertiesAction({ offset: Math.max(offset - limit, 0), limit }));
+        return;
+      }
 
-    const nextOffset =
-      deletedCount >= limit && offset > 0
-        ? Math.max(offset - limit, 0)
-        : offset;
-
-    return {
-      offset: nextOffset,
-      limit,
-      filterRetentionPolicy: isImportantLaunchesEnabled
-        ? resolveFilterRetentionPolicyForApi(query)
-        : undefined,
-    };
-  }, [query, data, isImportantLaunchesEnabled]);
+      dispatch(getManualLaunchesAction(params));
+    },
+    [store, dispatch],
+  );
 
   const deleteLaunches = useCallback(
     async (data: DeleteManualLaunchModalData) => {
       showSpinner();
 
       try {
+        let deletedCount = 1;
+
         if (data.type === 'single') {
           await fetch(URLS.manualLaunchById(projectKey, data.id), {
             method: 'DELETE',
@@ -81,37 +89,42 @@ export const useDeleteManualLaunches = ({ onSuccess, data }: UseDeleteManualLaun
             }),
           );
         } else {
-          await fetch(URLS.manualLaunch(projectKey), {
+          const response = await fetch(URLS.manualLaunch(projectKey), {
             method: 'DELETE',
             data: { launchIds: data.launchIds },
           });
+          const result = readBatchResult(response, data.launchIds.length);
 
-          dispatch(
-            showSuccessNotification({
-              messageId: 'manualLaunchesBatchDeletedSuccess',
-              values: { count: data.launchIds.length },
-            }),
-          );
+          deletedCount = result.successCount;
 
-          data.onClearSelection?.();
+          if (result.failureCount > 0) {
+            // Keep the launches that were not deleted selected so the user can see and retry them.
+            const failedIds = getBatchFailedIds(result);
+
+            dispatch(batchPartialFailureNotificationAction(result));
+            data.onKeepSelection?.(failedIds.length ? failedIds : data.launchIds);
+          } else {
+            dispatch(
+              showSuccessNotification({
+                messageId: 'manualLaunchesBatchDeletedSuccess',
+                values: { count: data.launchIds.length },
+              }),
+            );
+
+            data.onClearSelection?.();
+          }
         }
 
         dispatch(hideModalAction());
-        dispatch(
-          getManualLaunchesAction(handleLimitOffset()),
-        );
+        refetchLaunches(deletedCount);
         onSuccess?.();
-      } catch {
-        dispatch(
-          showErrorNotification({
-            messageId: 'errorOccurredTryAgain',
-          }),
-        );
+      } catch (error) {
+        dispatch(apiErrorNotificationAction(error));
       } finally {
         hideSpinner();
       }
     },
-    [showSpinner, dispatch, handleLimitOffset, onSuccess, projectKey, hideSpinner],
+    [showSpinner, dispatch, refetchLaunches, onSuccess, projectKey, hideSpinner],
   );
 
   return { isLoading, deleteLaunches };

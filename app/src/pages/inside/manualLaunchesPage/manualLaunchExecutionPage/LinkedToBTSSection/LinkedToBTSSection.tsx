@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { FC, useCallback, useState } from 'react';
+import { FC, useCallback, useMemo, useState } from 'react';
 import { useIntl } from 'react-intl';
 import { Button, IssueList, PlusIcon } from '@reportportal/ui-kit';
 import type { Issue } from '@reportportal/ui-kit/issueList';
@@ -23,11 +23,16 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useTracking } from 'react-tracking';
 
 import { createClassnames, fetch } from 'common/utils';
-import { BtsTicket, TestCaseExecution } from 'controllers/manualLaunch';
+import {
+  BtsTicket,
+  TestCaseExecution,
+  getManualLaunchExecutionAction,
+} from 'controllers/manualLaunch';
 import { URLS } from 'common/urls';
 import { projectKeySelector } from 'controllers/project';
-import { showErrorNotification } from 'controllers/notification';
+import { apiErrorNotificationAction } from 'common/manualLaunches/batchResultNotifications';
 import { useUserPermissions } from 'hooks/useUserPermissions';
+import { useManualLaunchId } from 'hooks/useTypedSelector';
 import { ExecutionStatus } from 'types/testCase';
 
 import { messages as executionPageMessages } from '../messages';
@@ -55,6 +60,8 @@ const convertBTSTicketsToIssues = (tickets: BtsTicket[]): Issue[] =>
 
 interface LinkedToBTSSectionProps {
   execution: TestCaseExecution;
+  // False when no BTS integration is available: linked tickets stay visible, posting is hidden.
+  canAddIssues?: boolean;
 }
 
 const getTicketId = (value: unknown): string | null => {
@@ -71,16 +78,32 @@ const getTicketId = (value: unknown): string | null => {
   return typeof name === 'string' && name ? name : null;
 };
 
-export const LinkedToBTSSection: FC<LinkedToBTSSectionProps> = ({ execution }) => {
+export const LinkedToBTSSection: FC<LinkedToBTSSectionProps> = ({
+  execution,
+  canAddIssues = true,
+}) => {
   const { formatMessage } = useIntl();
   const { trackEvent } = useTracking();
   const dispatch = useDispatch();
   const projectKey = useSelector(projectKeySelector);
   const { openModal } = useBTSIssuesModal();
   const { canManageExecutions } = useUserPermissions();
+  const canPostOrLinkIssues = canManageExecutions && canAddIssues;
 
-  const [displayedBtsTickets, setDisplayedBtsTickets] = useState<BtsTicket[]>(
-    execution.btsTickets ?? [],
+  const launchId = useManualLaunchId();
+  const executionTickets = execution.btsTickets;
+  // Tickets being unlinked are hidden right away; the list itself always comes from the store.
+  const [removedTicketIds, setRemovedTicketIds] = useState<string[]>([]);
+  const [ticketsOfRemoval, setTicketsOfRemoval] = useState(executionTickets);
+
+  if (ticketsOfRemoval !== executionTickets) {
+    setTicketsOfRemoval(executionTickets);
+    setRemovedTicketIds([]);
+  }
+
+  const displayedBtsTickets = useMemo(
+    () => (executionTickets ?? []).filter((ticket) => !removedTicketIds.includes(ticket.ticketId)),
+    [executionTickets, removedTicketIds],
   );
   const hasBtsTickets = !isEmpty(displayedBtsTickets);
   const btsIssues = convertBTSTicketsToIssues(displayedBtsTickets);
@@ -95,10 +118,7 @@ export const LinkedToBTSSection: FC<LinkedToBTSSectionProps> = ({ execution }) =
         return;
       }
 
-      const previousTickets = displayedBtsTickets;
-      const updatedTickets = displayedBtsTickets.filter((ticket) => ticket.ticketId !== ticketId);
-
-      setDisplayedBtsTickets(updatedTickets);
+      setRemovedTicketIds((ids) => [...ids, ticketId]);
 
       fetch(URLS.testItemsUnlinkIssues(projectKey), {
         method: 'PUT',
@@ -106,16 +126,19 @@ export const LinkedToBTSSection: FC<LinkedToBTSSectionProps> = ({ execution }) =
           ticketIds: [ticketId],
           testItemIds: [testItemId],
         },
-      }).catch((error: Error) => {
-        setDisplayedBtsTickets(previousTickets);
-        dispatch(
-          showErrorNotification({
-            message: error.message,
-          }),
-        );
-      });
+      })
+        .then(() => {
+          // Reload the execution so later comment/status saves do not send the unlinked ticket.
+          if (launchId) {
+            dispatch(getManualLaunchExecutionAction({ launchId, executionId }));
+          }
+        })
+        .catch((error: unknown) => {
+          setRemovedTicketIds((ids) => ids.filter((id) => id !== ticketId));
+          dispatch(apiErrorNotificationAction(error));
+        });
     },
-    [displayedBtsTickets, projectKey, testItemId, dispatch],
+    [projectKey, testItemId, dispatch, launchId, executionId],
   );
 
   const handleOpenBtsModal = useCallback(() => {
@@ -137,17 +160,19 @@ export const LinkedToBTSSection: FC<LinkedToBTSSectionProps> = ({ execution }) =
         <span className={cx('linked-to-bts-section__title')}>
           {formatMessage(executionSidePanelMessages.linkedToBTS)}
         </span>
-        {hasBtsTickets && execution.executionStatus === ExecutionStatus.FAILED && canManageExecutions && (
-          <Button
-            variant="text"
-            iconPlace="start"
-            icon={<PlusIcon />}
-            onClick={handleOpenBtsModal}
-            className={cx('linked-to-bts-section__action')}
-          >
-            {formatMessage(executionPageMessages.postOrLinkIssue)}
-          </Button>
-        )}
+        {hasBtsTickets &&
+          execution.executionStatus === ExecutionStatus.FAILED &&
+          canPostOrLinkIssues && (
+            <Button
+              variant="text"
+              iconPlace="start"
+              icon={<PlusIcon />}
+              onClick={handleOpenBtsModal}
+              className={cx('linked-to-bts-section__action')}
+            >
+              {formatMessage(executionPageMessages.postOrLinkIssue)}
+            </Button>
+          )}
       </div>
 
       {hasBtsTickets && (
@@ -169,7 +194,7 @@ export const LinkedToBTSSection: FC<LinkedToBTSSectionProps> = ({ execution }) =
               defaultMessage: 'No linked issues yet',
             })}
           </span>
-          {execution.executionStatus === ExecutionStatus.FAILED && canManageExecutions && (
+          {execution.executionStatus === ExecutionStatus.FAILED && canPostOrLinkIssues && (
             <Button
               variant="text"
               iconPlace="start"

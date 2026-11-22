@@ -44,6 +44,12 @@ export const activeManualLaunchSelector = (state: AppState) =>
 export const isLoadingActiveSelector = (state: AppState) =>
   Boolean(manualLaunchesSelector(state).isLoadingActive);
 
+export const manualLaunchesLoadFailedSelector = (state: AppState) =>
+  Boolean(manualLaunchesSelector(state).loadFailed);
+
+export const activeManualLaunchLoadFailedSelector = (state: AppState) =>
+  Boolean(manualLaunchesSelector(state).activeLoadFailed);
+
 export const manualLaunchByIdSelector = (launchId: string | number) => (state: AppState) => {
   const activeManualLaunch = activeManualLaunchSelector(state);
 

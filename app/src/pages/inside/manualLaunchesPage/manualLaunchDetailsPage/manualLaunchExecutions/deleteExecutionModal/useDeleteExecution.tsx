@@ -21,7 +21,14 @@ import { projectKeySelector } from 'controllers/project';
 import { useDebouncedSpinner, useNotification } from 'common/hooks';
 import { URLS } from 'common/urls';
 import { fetch } from 'common/utils';
+import { readBatchResult } from 'common/utils/apiResponse';
 import {
+  apiErrorNotificationAction,
+  batchPartialFailureNotificationAction,
+  getBatchFailedIds,
+} from 'common/manualLaunches/batchResultNotifications';
+import {
+  buildGetManualLaunchFoldersParams,
   buildGetManualLaunchTestCaseExecutionsParams,
   getManualLaunchTestCaseExecutionsAction,
   getManualLaunchFoldersAction,
@@ -36,7 +43,7 @@ export const useDeleteExecution = () => {
   const dispatch = useDispatch();
   const store = useStore();
   const projectKey = useSelector(projectKeySelector);
-  const { showSuccessNotification, showErrorNotification } = useNotification();
+  const { showSuccessNotification } = useNotification();
 
   const deleteExecutions = useCallback(
     async (payload: DeleteExecutionModalData) => {
@@ -50,15 +57,30 @@ export const useDeleteExecution = () => {
           );
           showSuccessNotification({ messageId: 'executionDeletedSuccess' });
         } else {
-          await fetch(URLS.batchDeleteExecutionsFromLaunch(projectKey, payload.launchId), {
-            method: 'DELETE',
-            data: { executionIds: payload.executionIds },
-          });
-          showSuccessNotification({
-            messageId:
-              payload.executionIds.length > 1 ? 'executionsDeletedSuccess' : 'executionDeletedSuccess',
-          });
-          payload.onClearSelection?.();
+          const response = await fetch(
+            URLS.batchDeleteExecutionsFromLaunch(projectKey, payload.launchId),
+            {
+              method: 'DELETE',
+              data: { executionIds: payload.executionIds },
+            },
+          );
+          const result = readBatchResult(response, payload.executionIds.length);
+
+          if (result.failureCount > 0) {
+            // Keep the executions that were not deleted selected so the user can see and retry them.
+            const failedIds = getBatchFailedIds(result);
+
+            dispatch(batchPartialFailureNotificationAction(result));
+            payload.onKeepSelection?.(failedIds.length ? failedIds : payload.executionIds);
+          } else {
+            showSuccessNotification({
+              messageId:
+                payload.executionIds.length > 1
+                  ? 'executionsDeletedSuccess'
+                  : 'executionDeletedSuccess',
+            });
+            payload.onClearSelection?.();
+          }
         }
 
         const params = getManualLaunchDetailsFetchParams(store.getState());
@@ -72,32 +94,16 @@ export const useDeleteExecution = () => {
           dispatch(getManualLaunchTestCaseExecutionsAction(executionsParams));
         }
         dispatch(
-          getManualLaunchFoldersAction({
-            launchId: payload.launchId,
-            offset: 0,
-            limit: 100,
-            ...(params.filterPriorities && { filterPriorities: params.filterPriorities }),
-            ...(params.filterTags && { filterTags: params.filterTags }),
-          }),
+          getManualLaunchFoldersAction(buildGetManualLaunchFoldersParams(params, payload.launchId)),
         );
-        dispatch(getManualLaunchAction({ launchId: payload.launchId }));
-      } catch {
-        showErrorNotification({
-          messageId: 'errorOccurredTryAgain',
-        });
+        dispatch(getManualLaunchAction({ launchId: payload.launchId, force: true }));
+      } catch (error) {
+        dispatch(apiErrorNotificationAction(error));
       } finally {
         hideSpinner();
       }
     },
-    [
-      projectKey,
-      dispatch,
-      store,
-      showSpinner,
-      hideSpinner,
-      showSuccessNotification,
-      showErrorNotification,
-    ],
+    [projectKey, dispatch, store, showSpinner, hideSpinner, showSuccessNotification],
   );
 
   return { isLoading, deleteExecutions };

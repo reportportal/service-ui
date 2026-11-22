@@ -41,12 +41,14 @@ export interface GetManualLaunchesParams {
 
 export interface GetManualLaunchParams {
   launchId: string | number;
+  // Reload from the server even if the launch is already in the store, keeping the page shown.
+  force?: boolean;
 }
 
 export interface GetManualLaunchFoldersParams {
   launchId: string | number;
-  offset?: string | number;
-  limit?: string | number;
+  // Reload without the loading state, keeping the current tree and table shown.
+  silent?: boolean;
   filterPriorities?: string;
   filterTags?: string;
   statusFilter?: ExecutionStatus;
@@ -111,8 +113,10 @@ export interface ManualLaunchState {
     page: Page | null;
   };
   isLoading?: boolean;
+  loadFailed?: boolean;
   activeManualLaunch?: Launch | null;
   isLoadingActive?: boolean;
+  activeLoadFailed?: boolean;
 }
 
 export interface ManualLaunchFoldersState {

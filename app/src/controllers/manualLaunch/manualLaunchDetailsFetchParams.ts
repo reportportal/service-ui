@@ -15,11 +15,64 @@
  */
 
 import { getRouterParams } from 'common/utils';
+import {
+  MANUAL_LAUNCHES_FILTER_URL_KEYS,
+  resolveFilterCompositeAttributeForApi,
+  resolveFilterRetentionPolicyForApi,
+} from 'common/manualLaunches/manualLaunchesFilterUrl';
+import { importantLaunchesEnabledSelector } from 'controllers/appInfo';
 import type { AppState } from 'types/store';
 import { ExecutionStatus } from 'types/testCase';
 
-import { MANUAL_LAUNCH_TEST_CASE_EXECUTIONS_NAMESPACE, defaultManualLaunchesQueryParams } from './constants';
-import type { GetManualLaunchTestCaseExecutionsParams } from './types';
+import {
+  MANUAL_LAUNCHES_NAMESPACE,
+  MANUAL_LAUNCH_TEST_CASE_EXECUTIONS_NAMESPACE,
+  defaultManualLaunchesQueryParams,
+} from './constants';
+import type {
+  GetManualLaunchesParams,
+  GetManualLaunchFoldersParams,
+  GetManualLaunchTestCaseExecutionsParams,
+} from './types';
+
+// Launch list request built from the URL (paging, search and all filters), so every refetch
+// shows the same list the user is looking at.
+export const getManualLaunchesFetchParams = (state: AppState): GetManualLaunchesParams => {
+  const { offset, limit } = getRouterParams({
+    namespace: MANUAL_LAUNCHES_NAMESPACE,
+    defaultParams: defaultManualLaunchesQueryParams,
+    state,
+  });
+
+  const { searchQuery, ...query } = (state.location?.query ?? {}) as Record<
+    string,
+    string | undefined
+  >;
+
+  const rawStatuses = query[MANUAL_LAUNCHES_FILTER_URL_KEYS.STATUSES];
+  const filterStatuses = rawStatuses ? rawStatuses.split(',').filter(Boolean) : undefined;
+
+  const rawStartTimeFrom = query[MANUAL_LAUNCHES_FILTER_URL_KEYS.START_TIME_FROM];
+  const filterStartTimeFrom = rawStartTimeFrom ? Number(rawStartTimeFrom) : undefined;
+
+  const rawStartTimeTo = query[MANUAL_LAUNCHES_FILTER_URL_KEYS.START_TIME_TO];
+  const filterEndTimeTo = rawStartTimeTo ? Number(rawStartTimeTo) : undefined;
+
+  return {
+    offset,
+    limit,
+    searchQuery,
+    filterStatuses,
+    filterCompletion: query[MANUAL_LAUNCHES_FILTER_URL_KEYS.COMPLETION] || undefined,
+    filterRetentionPolicy: importantLaunchesEnabledSelector(state)
+      ? resolveFilterRetentionPolicyForApi(query)
+      : undefined,
+    filterStartTimeFrom: Number.isFinite(filterStartTimeFrom) ? filterStartTimeFrom : undefined,
+    filterEndTimeTo: Number.isFinite(filterEndTimeTo) ? filterEndTimeTo : undefined,
+    filterTestPlan: query[MANUAL_LAUNCHES_FILTER_URL_KEYS.TEST_PLAN] || undefined,
+    filterCompositeAttribute: resolveFilterCompositeAttributeForApi(query),
+  };
+};
 
 export const getManualLaunchDetailsFetchParams = (state: AppState) => {
   const { launchId, manualLaunchPageRoute } = state.location?.payload || {};
@@ -71,3 +124,15 @@ export const buildGetManualLaunchTestCaseExecutionsParams = (
     ...(params.statusFilter && { statusFilter: params.statusFilter }),
   };
 };
+
+// Folder tree request with the same filters as the execution list (incl. "To run only"),
+// so folder counters match the table.
+export const buildGetManualLaunchFoldersParams = (
+  params: ManualLaunchDetailsFetchParams,
+  launchId: string | number,
+): GetManualLaunchFoldersParams => ({
+  launchId,
+  ...(params.filterPriorities && { filterPriorities: params.filterPriorities }),
+  ...(params.filterTags && { filterTags: params.filterTags }),
+  ...(params.statusFilter && { statusFilter: params.statusFilter }),
+});

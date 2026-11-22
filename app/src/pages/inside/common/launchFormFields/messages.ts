@@ -82,4 +82,9 @@ export const messages = defineMessages({
     id: 'LaunchFormFields.launchCreationFailed',
     defaultMessage: 'Failed to create launch',
   },
+  testPlanSyncFailed: {
+    id: 'LaunchFormFields.testPlanSyncFailed',
+    defaultMessage:
+      'Test cases have been added to the launch, but could not be added to its test plan. {reason}',
+  },
 });

@@ -56,6 +56,7 @@ import { ExecutionSidePanel } from './executionSidePanel';
 import { ITEMS_PER_PAGE_OPTIONS } from './constants';
 import { useDeleteExecutionModal } from './deleteExecutionModal';
 import { messages } from './messages';
+import { usePruneSelectionToRows } from '../../usePruneSelectionToRows';
 
 import styles from './manualLaunchExecutions.scss';
 
@@ -78,6 +79,8 @@ export const ManualLaunchExecutions = ({
   const { openModal: openDeleteExecutionModal } = useDeleteExecutionModal();
   const isAnyRowSelected = !isEmpty(selectedRowIds);
   const [selectedExecutionId, setSelectedExecutionId] = useState<number | null>(null);
+
+  usePruneSelectionToRows(executions, setSelectedRowIds);
 
   const { activePage, pageSize, setPageNumber, setPageSize, totalPages, captions } =
     useURLBoundPagination({
@@ -142,6 +145,7 @@ export const ManualLaunchExecutions = ({
         executionIds: selectedRowIds,
         launchId,
         onClearSelection,
+        onKeepSelection: setSelectedRowIds,
       });
     }
   }, [selectedRowIds, launchId, openDeleteExecutionModal, onClearSelection, trackEvent]);
