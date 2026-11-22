@@ -216,6 +216,17 @@ describe('stateSanitizer', () => {
     expect(state.auth.token.value).toBe('jwt');
   });
 
+  test('redacts the LDAP password attribute in form state', () => {
+    const state = {
+      form: { ldap: { values: { url: 'ldap://x', passwordAttribute: 'userPassword' } } },
+    };
+
+    expect(stateSanitizer(state).form.ldap.values).toEqual({
+      url: 'ldap://x',
+      passwordAttribute: '[redacted]',
+    });
+  });
+
   test('returns the same state when there is nothing to redact', () => {
     const state = { auth: { authorized: false }, form: {}, launches: {} };
 

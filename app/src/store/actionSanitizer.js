@@ -35,6 +35,7 @@ const SECRET_KEYS = new Set(
     'apiToken',
     'apiKey',
     'token',
+    'passwordAttribute',
   ].map((key) => key.toLowerCase()),
 );
 const TOKEN_ACTIONS = [SET_TOKEN, LOGIN_SUCCESS];
