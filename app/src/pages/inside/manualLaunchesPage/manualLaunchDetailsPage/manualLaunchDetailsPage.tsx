@@ -50,12 +50,6 @@ import {
 import NoResultsIcon from 'common/img/newIcons/no-results-icon-inline.svg';
 import { EmptyPageState } from 'pages/common';
 import {
-  showNotification,
-  NOTIFICATION_TYPES,
-  NOTIFICATION_TYPOGRAPHY_COLOR_TYPES,
-  WARNING_NOTIFICATION_DURATION,
-} from 'controllers/notification';
-import {
   useProjectDetails,
   useManualLaunchId,
   useManualLaunchById,
@@ -173,30 +167,12 @@ export const ManualLaunchDetailsPage = () => {
 
   useEffect(() => {
     if (!isLoading && !isLaunchLoadFailed && isEmpty(launch) && launchId) {
-      dispatch(
-        showNotification({
-          type: NOTIFICATION_TYPES.WARNING,
-          message: formatMessage(messages.manualLaunchNotFoundRedirect),
-          typographyColor: NOTIFICATION_TYPOGRAPHY_COLOR_TYPES.BLACK,
-          duration: WARNING_NOTIFICATION_DURATION,
-        }),
-      );
-
       dispatch({
         type: MANUAL_LAUNCHES_PAGE,
         payload: { organizationSlug, projectSlug },
       });
     }
-  }, [
-    isLoading,
-    isLaunchLoadFailed,
-    launch,
-    launchId,
-    dispatch,
-    organizationSlug,
-    projectSlug,
-    formatMessage,
-  ]);
+  }, [isLoading, isLaunchLoadFailed, launch, launchId, dispatch, organizationSlug, projectSlug]);
 
   const reloadPage = useCallback(
     (force: boolean) => {
