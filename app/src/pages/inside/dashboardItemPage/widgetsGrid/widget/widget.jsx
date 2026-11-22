@@ -219,7 +219,7 @@ export class SimpleWidget extends Component {
     });
     const age = Date.now() - cached.fetchedAt;
     if (age >= this.getSilentUpdateTimeout()) {
-      this.fetchWidget();
+      void this.fetchWidget();
     } else {
       this.scheduleSilentUpdate(this.getSilentUpdateTimeout() - age);
     }
