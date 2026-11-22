@@ -56,7 +56,7 @@ import { EditWidgetModal } from '../../modals/editWidgetModal';
 import { DeleteWidgetModal } from '../../modals/deleteWidgetModal';
 import { WidgetHeader } from './widgetHeader';
 import { WidgetStateMessage } from './widgetStateMessage';
-import { getCachedWidget, setCachedWidget } from './widgetCache';
+import { getCachedWidget, cacheLoadedWidget } from './widgetCache';
 import styles from './widget.scss';
 
 const cx = classNames.bind(styles);
@@ -206,23 +206,21 @@ export class SimpleWidget extends Component {
 
   componentDidMount() {
     const { projectKey, widgetId, isPrintMode } = this.props;
-    const cached = !isPrintMode && getCachedWidget(projectKey, widgetId);
+    const cached =
+      !isPrintMode && getCachedWidget(projectKey, widgetId, this.getSilentUpdateTimeout());
     if (!cached) {
-      this.fetchWidget({}, false);
+      void this.fetchWidget({}, false);
       return;
     }
-    // remounted after scrolling back into view: show the last payload and refresh it silently
+    // remounted after scrolling back into view: show the last payload and refresh it silently.
+    // Multi-level widgets keep their drill-down state inside the chart and restart from the top level,
+    // so the cached drill-down query parameters are not restored.
     this.setState({
       widget: cached.widget,
-      queryParameters: cached.queryParameters,
+      queryParameters: {},
       loading: false,
     });
-    const age = Date.now() - cached.fetchedAt;
-    if (age >= this.getSilentUpdateTimeout()) {
-      this.fetchWidget();
-    } else {
-      this.scheduleSilentUpdate(this.getSilentUpdateTimeout() - age);
-    }
+    this.scheduleSilentUpdate(this.getSilentUpdateTimeout() - (Date.now() - cached.fetchedAt));
   }
 
   componentWillUnmount() {
@@ -429,7 +427,10 @@ export class SimpleWidget extends Component {
             error: null,
           });
         }
-        setCachedWidget(this.props.projectKey, this.props.widgetId, { widget, queryParameters });
+        // multi-level charts restart from the top level on remount, so a drilled-down payload is not cached
+        const isDrilledDown =
+          !!MULTI_LEVEL_WIDGETS_MAP[this.props.widgetType] && !isEmptyObject(queryParameters);
+        cacheLoadedWidget(this.props.projectKey, this.props.widgetId, widget, isDrilledDown);
         this.scheduleSilentUpdate();
       })
       .catch((error) => {

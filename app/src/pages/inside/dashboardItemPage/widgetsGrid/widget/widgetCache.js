@@ -21,7 +21,16 @@ const cache = new Map();
 
 const getKey = (projectKey, widgetId) => `${projectKey}/${widgetId}`;
 
-export const getCachedWidget = (projectKey, widgetId) => cache.get(getKey(projectKey, widgetId));
+// an entry older than maxAge is not served, the widget loads as usual
+export const getCachedWidget = (projectKey, widgetId, maxAge = Infinity) => {
+  const key = getKey(projectKey, widgetId);
+  const entry = cache.get(key);
+  if (entry && Date.now() - entry.fetchedAt >= maxAge) {
+    cache.delete(key);
+    return undefined;
+  }
+  return entry;
+};
 
 export const setCachedWidget = (projectKey, widgetId, data) => {
   const key = getKey(projectKey, widgetId);
@@ -34,4 +43,16 @@ export const setCachedWidget = (projectKey, widgetId, data) => {
 
 export const removeCachedWidget = (projectKey, widgetId) => {
   cache.delete(getKey(projectKey, widgetId));
+};
+
+export const clearWidgetCache = () => {
+  cache.clear();
+};
+
+export const cacheLoadedWidget = (projectKey, widgetId, widget, isDrilledDown) => {
+  if (isDrilledDown) {
+    removeCachedWidget(projectKey, widgetId);
+  } else {
+    setCachedWidget(projectKey, widgetId, { widget });
+  }
 };

@@ -21,10 +21,13 @@ import { ORGANIZATIONS_PAGE } from 'controllers/pages';
 import { FETCH_ORGANIZATION_BY_SLUG } from './constants';
 import { withActiveOrganization } from './withActiveOrganizationSaga';
 
-const createStore = (activeOrganization) => {
+const createStore = (activeOrganization, urlOrganizationSlug) => {
   const listeners = [];
   const dispatched = [];
-  const state = { organizations: { organization: { activeOrganization } } };
+  const state = {
+    organizations: { organization: { activeOrganization } },
+    location: { payload: { organizationSlug: urlOrganizationSlug } },
+  };
   return {
     dispatched,
     getState: () => state,
@@ -80,7 +83,7 @@ describe('withActiveOrganization', () => {
   });
 
   test('redirects to the organizations list when its organization is not found', () => {
-    const store = createStore({ id: 1, slug: 'a' });
+    const store = createStore({ id: 1, slug: 'a' }, 'b');
     const { readyIds } = startWaiting(store, 'b');
 
     store.dispatch(fetchSuccessAction(FETCH_ORGANIZATION_BY_SLUG, { items: [] }));
@@ -90,12 +93,23 @@ describe('withActiveOrganization', () => {
   });
 
   test('redirects to the organizations list when loading fails', () => {
-    const store = createStore({ id: 1, slug: 'a' });
+    const store = createStore({ id: 1, slug: 'a' }, 'b');
     const { readyIds } = startWaiting(store, 'b');
 
     store.dispatch(fetchErrorAction(FETCH_ORGANIZATION_BY_SLUG, { message: 'boom' }));
 
     expect(readyIds).toEqual([]);
     expect(store.dispatched).toEqual([redirect({ type: ORGANIZATIONS_PAGE })]);
+  });
+
+  test('stops silently when loading fails after the user has moved to another organization', () => {
+    const store = createStore({ id: 1, slug: 'a' }, 'c');
+    const { task, readyIds } = startWaiting(store, 'b');
+
+    store.dispatch(fetchErrorAction(FETCH_ORGANIZATION_BY_SLUG, { message: 'boom' }));
+
+    expect(readyIds).toEqual([]);
+    expect(store.dispatched).toEqual([]);
+    expect(task.isRunning()).toBe(false);
   });
 });

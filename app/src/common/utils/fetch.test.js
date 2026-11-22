@@ -70,9 +70,31 @@ describe('fetch', () => {
     await expect(fetch('https://api.com/success')).resolves.toBeDefined();
   });
 
-  it('does not abort requests that bring their own signal', async () => {
+  it('aborts requests with their own cancel callback when pending requests are aborted', async () => {
+    const pending = fetch('https://api.com/timeout', { abort: () => {} });
+    abortPendingRequests();
+
+    await expect(pending).rejects.toThrow(ERROR_CANCELED);
+  });
+
+  it('aborts requests with their own signal when pending requests are aborted', async () => {
     const own = new AbortController();
     const pending = fetch('https://api.com/timeout', { signal: own.signal });
+    abortPendingRequests();
+
+    await expect(pending).rejects.toThrow(ERROR_CANCELED);
+  });
+
+  it('still aborts a request through its own signal', async () => {
+    const own = new AbortController();
+    const pending = fetch('https://api.com/timeout', { signal: own.signal });
+    own.abort();
+
+    await expect(pending).rejects.toThrow(ERROR_CANCELED);
+  });
+
+  it('keeps requests marked to outlive the session', async () => {
+    const pending = fetch('https://api.com/timeout', { keepOnLogout: true });
     abortPendingRequests();
 
     await expect(pending).resolves.toBe('hello');

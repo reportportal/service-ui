@@ -159,13 +159,14 @@ export class Image extends Component {
   getURL = () => {
     const { src, fallback, isStatic } = this.props;
     const { error, loading, fileURL } = this.state;
+    if (isStatic) {
+      return src;
+    }
     if (loading) {
       return null;
     }
     let url;
-    if (isStatic) {
-      url = src;
-    } else if (error) {
+    if (error) {
       url = fallback;
     } else {
       url = fileURL;

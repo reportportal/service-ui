@@ -47,4 +47,15 @@ describe('createPendingUploads', () => {
 
     expect(deleteAttachment.mock.calls).toEqual([['1'], ['2'], ['3']]);
   });
+
+  test('does not delete uploads once the save request was sent, even on a later cancel', () => {
+    const deleteAttachment = jest.fn();
+    const pendingUploads = createPendingUploads(deleteAttachment);
+
+    pendingUploads.track('1');
+    pendingUploads.release();
+    pendingUploads.discardAll();
+
+    expect(deleteAttachment).not.toHaveBeenCalled();
+  });
 });
