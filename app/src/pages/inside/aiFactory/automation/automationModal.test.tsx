@@ -320,6 +320,17 @@ describe('AutomationModalContent', () => {
     expect(dispatch).not.toHaveBeenCalled();
   });
 
+  test.each(['ENVIRONMENTS_LOAD_FAILED', 'JOB_START_FAILED'] as const)(
+    'shows the backend message for %s',
+    (error) => {
+      const errorMessage = 'The configured CI integration is disabled.';
+      const wrapper = renderModal({ testCases: [candidate] }, requestState({ error, errorMessage }));
+
+      expect(wrapper.find('SystemMessage').text()).toContain(errorMessage);
+      expect(wrapper.find('SystemMessage').text()).not.toContain('Set up environments');
+    },
+  );
+
   test('retries A1 errors inline', () => {
     const wrapper = renderModal(
       { testCases: [candidate] },
