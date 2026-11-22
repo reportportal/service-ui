@@ -14,16 +14,66 @@
  * limitations under the License.
  */
 
+import { act } from 'react';
 import { mount } from 'enzyme';
 import { fetch } from 'common/utils/fetch';
 import { Image } from './image';
+import { clearImageCache } from './imageBlobCache';
 
 jest.mock('common/utils/fetch', () => ({
+  ...jest.requireActual('common/utils/fetch'),
   fetch: jest.fn(),
-  ERROR_CANCELED: 'canceled',
 }));
 
+const SRC = '/api/v1/project/data/thumbnail-1';
+
+const mountImage = async (props = {}) => {
+  let wrapper;
+  await act(async () => {
+    wrapper = mount(<Image src={SRC} {...props} />);
+  });
+  wrapper.update();
+  return wrapper;
+};
+
 describe('Image', () => {
+  beforeAll(() => {
+    URL.createObjectURL = jest.fn(() => 'blob:image');
+    URL.revokeObjectURL = jest.fn();
+  });
+
+  beforeEach(() => {
+    clearImageCache();
+    fetch.mockReset();
+    fetch.mockResolvedValue(new Blob(['image'], { type: 'image/png' }));
+  });
+
+  test('shows a cached image mounted again without requesting it again', async () => {
+    (await mountImage({ cached: true })).unmount();
+
+    const wrapper = await mountImage({ cached: true });
+
+    expect(fetch).toHaveBeenCalledTimes(1);
+    expect(wrapper.find('img').prop('src')).toBe('blob:image');
+  });
+
+  test('requests the image on every mount without the cache', async () => {
+    (await mountImage()).unmount();
+
+    await mountImage();
+
+    expect(fetch).toHaveBeenCalledTimes(2);
+  });
+
+  test('shows a cached lazy image without waiting for it to become visible', async () => {
+    (await mountImage({ cached: true })).unmount();
+
+    const wrapper = await mountImage({ cached: true, lazy: true });
+
+    expect(fetch).toHaveBeenCalledTimes(1);
+    expect(wrapper.find('img').exists()).toBe(true);
+  });
+
   test('renders the src once a pending URL request becomes static', () => {
     fetch.mockImplementation(() => new Promise(() => {}));
     const wrapper = mount(<Image src="https://cdn/icon.png" />);

@@ -40,7 +40,7 @@ import styles from './nestedGridRow.scss';
 
 const cx = classNames.bind(styles);
 
-const messages = defineMessages({
+export const messages = defineMessages({
   loadPreviousLabel: {
     id: 'NestedGridRow.loadPreviousLabel',
     defaultMessage: 'Load previous 300',
@@ -55,7 +55,7 @@ const messages = defineMessages({
   },
 });
 
-const RowMore = ({ level, children }) => (
+export const RowMore = ({ level, children }) => (
   <td
     colSpan="100"
     className={cx('row-more', {
@@ -70,7 +70,14 @@ RowMore.propTypes = {
   children: PropTypes.node.isRequired,
 };
 
-const LoadButton = ({ loading, clickHandler, label, icon, iconClassName, customClassName }) => (
+export const LoadButton = ({
+  loading,
+  clickHandler,
+  label,
+  icon,
+  iconClassName,
+  customClassName,
+}) => (
   <div
     className={cx('load-button', { loading }, customClassName)}
     onClick={(e) => {

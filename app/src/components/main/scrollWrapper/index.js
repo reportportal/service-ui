@@ -15,3 +15,4 @@
  */
 
 export { ScrollWrapper } from './scrollWrapper';
+export { ScrollContainerContext, useScrollContainer } from './scrollContainerContext';

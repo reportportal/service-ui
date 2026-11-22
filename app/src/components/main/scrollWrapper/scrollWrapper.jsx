@@ -23,6 +23,7 @@ import { Scrollbars } from 'react-custom-scrollbars-2';
 import { forceCheck } from 'react-lazyload';
 import { scrollEventObserver, BACK_TO_TOP_EVENT } from 'common/observers/scrollObserver';
 import BackToTopIcon from './img/back-to-top-inline.svg';
+import { ScrollContainerContext } from './scrollContainerContext';
 import styles from './scrollWrapper.scss';
 
 const cx = classNames.bind(styles);
@@ -85,6 +86,9 @@ export class ScrollWrapper extends Component {
     showButton: false,
   };
 
+  // the scrolling element, provided to the descendants (the nearest wrapper wins)
+  viewRef = { current: null };
+
   componentDidMount() {
     this.props.initialScrollRight && this.scrollbars.scrollToRight();
     if (this.props.withBackToTop) {
@@ -126,6 +130,8 @@ export class ScrollWrapper extends Component {
   };
 
   updateScrollContainerRef = () => {
+    this.viewRef.current = this.scrollbars?.view ?? null;
+
     if (this.props.scrollContainerRef && this.scrollbars) {
       const viewElement = this.scrollbars.view;
 
@@ -211,7 +217,9 @@ export class ScrollWrapper extends Component {
         onScrollFrame={this.handleScrollFrame}
         onScrollStop={this.handleScrollStop}
       >
-        {this.props.children}
+        <ScrollContainerContext.Provider value={this.viewRef}>
+          {this.props.children}
+        </ScrollContainerContext.Provider>
         {this.state.showButton && (
           <div className={cx('back-to-top', this.props.classNameBackToTop)}>
             <button className={cx('back-to-top-button')} onClick={this.scrollTop} tabIndex={0}>

@@ -66,6 +66,7 @@ export const Grid = ({
   loadNext,
   loadPrevious,
   loadingDirection,
+  renderBody,
   ...rest
 }) => {
   const gridRef = useRef(null);
@@ -128,26 +129,25 @@ export const Grid = ({
         {loadPrevious && loadingDirection === PREVIOUS && <Loader className={cx('inner')} />}
         {loadPrevious && <div ref={topRef} className={cx('sentinel', 'top')} />}
 
-        {!(loading && !loadingDirection) && (
-          <GridBody
-            columns={columns}
-            data={data}
-            selectable={selectable}
-            selectedItems={selectedItems}
-            onToggleSelection={onToggleSelection}
-            changeOnlyMobileLayout={changeOnlyMobileLayout}
-            rowClassMapper={rowClassMapper}
-            groupHeader={groupHeader}
-            groupFunction={groupFunction}
-            grouped={grouped}
-            excludeFromSelection={excludeFromSelection}
-            gridRowClassName={gridRowClassName}
-            nestedStepHeader={nestedStepHeader}
-            nestedView={nestedView}
-            setHighlighting={setHighlighting}
-            {...rest}
-          />
-        )}
+        {!(loading && !loadingDirection) &&
+          renderBody({
+            columns,
+            data,
+            selectable,
+            selectedItems,
+            onToggleSelection,
+            changeOnlyMobileLayout,
+            rowClassMapper,
+            groupHeader,
+            groupFunction,
+            grouped,
+            excludeFromSelection,
+            gridRowClassName,
+            nestedStepHeader,
+            nestedView,
+            setHighlighting,
+            ...rest,
+          })}
 
         {loadNext && loadingDirection === NEXT && <Loader className={cx('inner')} />}
         {loadNext && <div ref={bottomRef} className={cx('sentinel', 'bottom')} />}
@@ -197,6 +197,8 @@ Grid.propTypes = {
   loadNext: PropTypes.func,
   loadPrevious: PropTypes.func,
   loadingDirection: PropTypes.string,
+  // renders the rows of the grid from the body props, the default is GridBody
+  renderBody: PropTypes.func,
 };
 Grid.defaultProps = {
   columns: [],
@@ -224,4 +226,5 @@ Grid.defaultProps = {
   nestedStepHeader: null,
   nestedView: false,
   loadingDirection: null,
+  renderBody: (bodyProps) => <GridBody {...bodyProps} />,
 };

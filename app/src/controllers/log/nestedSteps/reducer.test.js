@@ -19,6 +19,7 @@ import {
   fetchNestedStepStartAction,
   fetchNestedStepErrorAction,
   fetchNestedStepSuccessAction,
+  toggleNestedStepAction,
 } from './actionCreators';
 
 describe('nestedStepsReducer', () => {
@@ -46,5 +47,39 @@ describe('nestedStepsReducer', () => {
   test('ignores errors of unknown steps', () => {
     const state = {};
     expect(nestedStepsReducer(state, fetchNestedStepErrorAction({}, 1))).toBe(state);
+  });
+
+  describe('auto-expand guard', () => {
+    test('is not set by a regular request', () => {
+      const state = nestedStepsReducer({}, fetchNestedStepStartAction({ id: 7 }));
+
+      expect(state[7].autoExpandDone).toBeUndefined();
+    });
+
+    test('is set by an automatic request and survives the whole request life cycle', () => {
+      let state = nestedStepsReducer({}, fetchNestedStepStartAction({ id: 7, autoExpand: true }));
+      state = nestedStepsReducer(state, fetchNestedStepErrorAction({ message: 'x' }, 7));
+      expect(state[7].autoExpandDone).toBe(true);
+
+      state = nestedStepsReducer(
+        state,
+        fetchNestedStepSuccessAction({ id: 7, content: [], page: {} }),
+      );
+      expect(state[7].autoExpandDone).toBe(true);
+    });
+
+    test('is set by toggling the step', () => {
+      const loaded = nestedStepsReducer(
+        {},
+        fetchNestedStepSuccessAction({ id: 7, content: [], page: {} }),
+      );
+      const state = nestedStepsReducer(
+        { 7: { ...loaded[7], collapsed: true } },
+        toggleNestedStepAction({ id: 7 }),
+      );
+
+      expect(state[7].collapsed).toBe(false);
+      expect(state[7].autoExpandDone).toBe(true);
+    });
   });
 });

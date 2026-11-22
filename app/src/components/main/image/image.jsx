@@ -21,6 +21,7 @@ import { fetch, ERROR_CANCELED } from 'common/utils/fetch';
 import { DottedPreloader } from 'components/preloaders/dottedPreloader';
 import { registerImageRequest } from './imageRequestGroups';
 import { enqueueImageRequest, runImageRequestImmediately } from './imageRequestQueue';
+import { cacheImage, getCachedImage } from './imageBlobCache';
 import styles from './image.scss';
 
 const cx = classNames.bind(styles);
@@ -37,6 +38,8 @@ export class Image extends Component {
     requestParams: PropTypes.object,
     requestGroup: PropTypes.string,
     lazy: PropTypes.bool,
+    // keep the loaded image to show it without a request when it is mounted again
+    cached: PropTypes.bool,
   };
 
   static defaultProps = {
@@ -47,6 +50,7 @@ export class Image extends Component {
     requestParams: {},
     requestGroup: '',
     lazy: false,
+    cached: false,
   };
 
   constructor(props) {
@@ -65,6 +69,9 @@ export class Image extends Component {
   }
 
   componentDidMount() {
+    if (this.loadFromCache()) {
+      return;
+    }
     if (this.shouldLoadLazily()) {
       this.observeVisibility();
     } else {
@@ -76,6 +83,9 @@ export class Image extends Component {
     if (prevProps.src !== this.props.src) {
       this.cancelPendingRequest();
       this.isRequested = false;
+      if (this.loadFromCache()) {
+        return;
+      }
       if (this.shouldLoadLazily()) {
         this.restartLazyObservation();
         return;
@@ -107,6 +117,17 @@ export class Image extends Component {
     this.cancelPendingRequest();
     this.revokeURL();
   }
+
+  loadFromCache = () => {
+    const file = this.props.cached && !this.props.isStatic && getCachedImage(this.props.src);
+    if (!file) {
+      return false;
+    }
+    this.disconnectObserver();
+    this.isRequested = true;
+    this.createURL(file);
+    return true;
+  };
 
   shouldLoadLazily = () =>
     this.props.lazy && !this.props.isStatic && typeof IntersectionObserver !== 'undefined';
@@ -204,6 +225,7 @@ export class Image extends Component {
       task.promise
         .then((file) => {
           this.releaseRequest(task.cancel);
+          this.props.cached && cacheImage(this.props.src, file);
           this.createURL(file);
         })
         .catch((error) => {
@@ -263,6 +285,7 @@ export class Image extends Component {
       requestParams,
       requestGroup,
       lazy,
+      cached,
       ...rest
     } = this.props;
     const { loading } = this.state;

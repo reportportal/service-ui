@@ -28,9 +28,8 @@ import {
 export const nestedStepsReducer = (state = {}, action) => {
   switch (action.type) {
     case FETCH_NESTED_STEP_START: {
-      const {
-        payload: { id },
-      } = action;
+      const { payload } = action;
+      const { id } = payload;
       return {
         ...state,
         [id]: {
@@ -39,6 +38,8 @@ export const nestedStepsReducer = (state = {}, action) => {
           collapsed: true,
           ...state[id],
           loading: true,
+          // a FAILED step is opened automatically only once, no matter how often its header is mounted
+          ...(payload.autoExpand && { autoExpandDone: true }),
         },
       };
     }
@@ -90,6 +91,7 @@ export const nestedStepsReducer = (state = {}, action) => {
         [id]: {
           ...state[id],
           collapsed: !state[id].collapsed,
+          autoExpandDone: true,
         },
       };
     }
