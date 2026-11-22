@@ -45,11 +45,13 @@ export const isUrlChanged = (initialData, values) =>
   isAnyTargetChanged(TARGET_KEYS, initialData, values);
 
 // An empty manager password is fine in edit mode while the stored one is kept, which the server
-// does only while the url stays the same. Anonymous bind (no manager DN) never needs one.
+// does only while the url stays the same. Anonymous bind never needs one: that is the case when no
+// manager DN is stored, and also when the user has cleared the current manager DN.
 export const getManagerPasswordError = ({ value, isEdit, initialData, values }) =>
   isBlank(value) &&
   Boolean(isEdit) &&
   hasStoredManagerPassword(initialData) &&
+  !isBlank(values?.[MANAGER_DN_KEY]) &&
   isUrlChanged(initialData, values)
     ? MANAGER_PASSWORD_REQUIRED_ON_URL_CHANGE_ERROR
     : undefined;

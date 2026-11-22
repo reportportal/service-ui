@@ -241,7 +241,15 @@ export const IntegrationInfo = ({ plugin, integrationId = '' }: IntegrationInfoP
       return;
     }
 
-    const updatedFormData = applyIntegrationFormPrepare(pluginName, formData);
+    const updatedFormData = applyIntegrationFormPrepare(
+      pluginName,
+      formData,
+      // the integration as stored (including parameters saved in this session), as the baseline
+      {
+        ...integrationInfo.integrationParameters,
+        ...updatedParameters.integrationParameters,
+      },
+    );
     const newData: Record<string, unknown> = {
       enabled: true,
       parameters: updatedFormData,

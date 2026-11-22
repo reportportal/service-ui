@@ -22,18 +22,21 @@ interface LockedDashboardAccessParams {
   organizationRole?: string;
   userId?: string;
   owner?: string;
+  canWorkWithDashboard?: boolean;
 }
 
 /**
  * A locked dashboard (and the widgets on it) can be modified, deleted, locked or unlocked only by
- * its owner, an organization MANAGER or an instance ADMINISTRATOR.
+ * its owner, an organization MANAGER or an instance ADMINISTRATOR. The owner exception still
+ * requires the base dashboard-modification permission (editor level in the project).
  */
 export const canOverrideDashboardLock = ({
   userRole,
   organizationRole,
   userId,
   owner,
+  canWorkWithDashboard = false,
 }: LockedDashboardAccessParams): boolean =>
   userRole === ADMINISTRATOR ||
   organizationRole === MANAGER ||
-  (!!userId && !!owner && userId === owner);
+  (canWorkWithDashboard && !!userId && !!owner && userId === owner);

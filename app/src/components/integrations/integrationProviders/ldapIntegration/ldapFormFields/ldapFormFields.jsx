@@ -142,6 +142,7 @@ const LdapFormFieldsComponent = ({
   initialData,
   isEdit,
   url,
+  managerDn,
   passwordEncoderType,
   nameType,
   updateMetaData,
@@ -159,7 +160,11 @@ const LdapFormFieldsComponent = ({
       getPasswordAttributeError({ value, isEdit, initialData, values: allValues }),
     [isEdit, initialData],
   );
-  const currentValues = { [URL_KEY]: url, [PASSWORD_ENCODER_TYPE_KEY]: passwordEncoderType };
+  const currentValues = {
+    [URL_KEY]: url,
+    [MANAGER_DN_KEY]: managerDn,
+    [PASSWORD_ENCODER_TYPE_KEY]: passwordEncoderType,
+  };
   const isManagerPasswordRequired = Boolean(
     getManagerPasswordError({ value: '', isEdit, initialData, values: currentValues }),
   );
@@ -437,6 +442,7 @@ LdapFormFieldsComponent.propTypes = {
   initialData: PropTypes.object,
   isEdit: PropTypes.bool,
   url: PropTypes.string,
+  managerDn: PropTypes.string,
   passwordEncoderType: PropTypes.string,
   nameType: PropTypes.string,
   updateMetaData: PropTypes.func,
@@ -447,12 +453,14 @@ LdapFormFieldsComponent.defaultProps = {
   initialData: DEFAULT_FORM_CONFIG,
   isEdit: false,
   url: '',
+  managerDn: '',
   passwordEncoderType: '',
   nameType: FULL_NAME_KEY,
   updateMetaData: () => {},
 };
 export const LdapFormFields = connect((state) => ({
   url: integrationFormValueSelector(state, URL_KEY),
+  managerDn: integrationFormValueSelector(state, MANAGER_DN_KEY),
   passwordEncoderType: integrationFormValueSelector(state, PASSWORD_ENCODER_TYPE_KEY),
   nameType: integrationFormValueSelector(state, NAME_TYPE_KEY),
 }))(LdapFormFieldsComponent);

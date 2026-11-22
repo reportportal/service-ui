@@ -17,6 +17,7 @@
 import { useSelector } from 'react-redux';
 import { userRolesSelector } from 'controllers/pages';
 import { userIdSelector } from 'controllers/user';
+import { useUserPermissions } from 'hooks/useUserPermissions';
 import { canOverrideDashboardLock } from 'common/utils/permissions/lockedDashboardAccess';
 
 /**
@@ -26,6 +27,13 @@ import { canOverrideDashboardLock } from 'common/utils/permissions/lockedDashboa
 export const useCanOverrideDashboardLock = (owner) => {
   const { userRole, organizationRole } = useSelector(userRolesSelector);
   const userId = useSelector(userIdSelector);
+  const { canWorkWithDashboard } = useUserPermissions();
 
-  return canOverrideDashboardLock({ userRole, organizationRole, userId, owner });
+  return canOverrideDashboardLock({
+    userRole,
+    organizationRole,
+    userId,
+    owner,
+    canWorkWithDashboard,
+  });
 };

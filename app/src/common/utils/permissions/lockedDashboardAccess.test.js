@@ -17,10 +17,22 @@
 import { canOverrideDashboardLock } from './lockedDashboardAccess';
 
 describe('canOverrideDashboardLock', () => {
-  const editor = { userRole: 'USER', organizationRole: 'MEMBER', userId: 'editor' };
+  const editor = { userRole: 'USER', organizationRole: 'MEMBER', userId: 'editor', canWorkWithDashboard: true };
 
   test('is allowed for the owner', () => {
     expect(canOverrideDashboardLock({ ...editor, owner: 'editor' })).toBe(true);
+  });
+
+  test('is refused for the owner who lacks the base dashboard permission (viewer)', () => {
+    expect(
+      canOverrideDashboardLock({ ...editor, canWorkWithDashboard: false, owner: 'editor' }),
+    ).toBe(false);
+  });
+
+  test('is allowed for an organization manager or administrator without the base permission', () => {
+    const viewer = { ...editor, canWorkWithDashboard: false, owner: 'someone' };
+    expect(canOverrideDashboardLock({ ...viewer, organizationRole: 'MANAGER' })).toBe(true);
+    expect(canOverrideDashboardLock({ ...viewer, userRole: 'ADMINISTRATOR' })).toBe(true);
   });
 
   test('is allowed for an organization manager who is not the owner', () => {

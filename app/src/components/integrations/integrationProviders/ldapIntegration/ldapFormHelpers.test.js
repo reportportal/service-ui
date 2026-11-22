@@ -86,6 +86,15 @@ describe('ldapFormHelpers', () => {
       ).toBeUndefined();
     });
 
+    it('manager DN cleared in the form while the url changes: not required (anonymous bind)', () => {
+      const changed = { ...stored, managerDn: '', url: 'ldap://new.example.com' };
+      expect(managerError(stored, changed)).toBeUndefined();
+      expect(managerError(stored, { ...changed, managerDn: '   ' })).toBeUndefined();
+      expect(managerError(stored, { ...changed, managerDn: 'cn=admin' })).toBe(
+        MANAGER_PASSWORD_REQUIRED_ON_URL_CHANGE_ERROR,
+      );
+    });
+
     it('(d) create: never required', () => {
       expect(managerError(undefined, { url: 'ldap://new.example.com' }, '', false)).toBeUndefined();
       expect(
