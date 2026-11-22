@@ -60,7 +60,7 @@ describe('readBatchResult', () => {
         successCount: 2,
         failureCount: 1,
         successTestCaseIds: [1, 2],
-        errors: [{ testCaseId: 3, message: 'Not found' }],
+        errors: [{ testCaseId: 3, errorMessage: 'Not found' }],
       }),
     ).toEqual({
       successIds: [1, 2],
@@ -69,6 +69,45 @@ describe('readBatchResult', () => {
       totalCount: 3,
       errors: [{ id: 3, message: 'Not found' }],
     });
+  });
+
+  it('reads BatchDeleteTestCaseExecutionsResultRS', () => {
+    expect(
+      readBatchResult(
+        {
+          totalCount: 3,
+          successCount: 2,
+          failureCount: 1,
+          successExecutionIds: [10, 11],
+          errors: [{ executionId: 12, errorMessage: 'Execution not found' }],
+        },
+        3,
+      ),
+    ).toEqual({
+      successIds: [10, 11],
+      successCount: 2,
+      failureCount: 1,
+      totalCount: 3,
+      errors: [{ id: 12, message: 'Execution not found' }],
+    });
+  });
+
+  it('reads the error message from errorMessage or message', () => {
+    const { errors } = readBatchResult({
+      errors: [
+        { launchId: 1, errorMessage: 'Launch is locked' },
+        { message: 'In progress' },
+        'Plain reason',
+        { launchId: 2 },
+      ],
+    });
+
+    expect(errors).toEqual([
+      { id: 1, message: 'Launch is locked' },
+      { id: undefined, message: 'In progress' },
+      { message: 'Plain reason' },
+      { id: 2, message: '' },
+    ]);
   });
 
   it('reads DeleteBulkRS', () => {

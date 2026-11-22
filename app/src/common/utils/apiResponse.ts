@@ -62,12 +62,14 @@ const toError = (raw: unknown): BatchItemError => {
   return { id: id as number | string | undefined, message };
 };
 
-// Normalises the batch responses of the API (Batch*OperationResultRS and DeleteBulkRS) so callers
+// Normalises the batch responses of the API (Batch*OperationResultRS,
+// BatchDeleteTestCaseExecutionsResultRS and DeleteBulkRS) so callers
 // can tell a full success from a partial one instead of trusting the number of requested ids.
 export const readBatchResult = (response: unknown, requestedCount = 0): BatchResult => {
   const rs = (response ?? {}) as Record<string, unknown>;
   const successIds = (rs.successTestCaseIds ??
     rs.successLaunchIds ??
+    rs.successExecutionIds ??
     rs.successIds ??
     rs.deleted ??
     []) as Array<number | string>;
