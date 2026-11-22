@@ -113,7 +113,7 @@ function* logoutOnServer(redirectedPage) {
 }
 
 // TODO: clear cookie on logout
-export function* handleLogout({ payload }) {
+export function* handleLogout({ payload, meta }) {
   const token = yield select(tokenSelector);
   if (!token) {
     yield put(logoutCompleteAction());
@@ -137,6 +137,10 @@ export function* handleLogout({ payload }) {
     removeStorageItem(ACTIVITY_TIMESTAMP);
   }
   yield put(resetTokenAction(token));
+  if (meta?.silent) {
+    yield put(logoutCompleteAction());
+    return;
+  }
   yield put(
     redirect({
       type: payload || LOGIN_PAGE,
@@ -362,8 +366,9 @@ export function* handleOauthSuccess() {
   const { token: value, token_type: type } = yield select(pagePropertiesSelector);
   const authorized = yield select(isAuthorizedSelector);
   if (authorized) {
-    // the OAuth login replaces the session of the currently logged in user
-    yield put(logoutAction());
+    // the OAuth login replaces the session of the currently logged in user: the login that follows
+    // redirects and loads the data, so the logout itself stays silent
+    yield put(logoutAction(undefined, { silent: true }));
     yield take(LOGOUT_COMPLETE);
   }
   yield put(loginSuccessAction({ value, type }));
