@@ -43,7 +43,7 @@ describe('readBatchResult', () => {
         successCount: 2,
         failureCount: 1,
         successTestCaseIds: [1, 2],
-        errors: [{ testCaseId: 3, message: 'Not found' }],
+        errors: [{ testCaseId: 3, errorMessage: 'Not found' }],
       }),
     ).toEqual({
       successIds: [1, 2],

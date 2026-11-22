@@ -42,7 +42,8 @@ export const useAttachmentUpload = () => {
     [projectKey],
   );
 
-  // Best effort: the backend refuses (400) to delete an attachment that is already linked.
+  // Best effort. The backend deletes the attachment even when it is already linked to a test case,
+  // so only attachments that are still unsaved may be passed here.
   const deleteAttachment = useCallback(
     (attachmentId: string) => {
       fetch(URLS.tmsAttachment(projectKey, attachmentId), { method: 'DELETE' }).catch(

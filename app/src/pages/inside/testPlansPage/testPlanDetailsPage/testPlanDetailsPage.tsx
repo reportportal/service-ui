@@ -61,6 +61,7 @@ import { TestLibrarySidePanel } from '../../common/testLibrarySidePanel';
 import { PageHeaderWithBreadcrumbsAndActions } from '../../common/pageHeaderWithBreadcrumbsAndActions';
 import { PageLoader } from '../pageLoader';
 import { EmptyTestPlan } from './emptyTestPlan';
+import { TestPlanLoadError } from './testPlanLoadError';
 import { TestPlanActions } from '../testPlanActions';
 import { messages } from './messages';
 import { commonMessages } from '../commonMessages';
@@ -71,6 +72,7 @@ import {
   useCreateLaunchModal,
 } from '../testPlanModals';
 import { useAddTestCasesToCurrentTestPlan } from '../testPlanModals';
+import { useReloadActiveTestPlan } from '../testPlanModals/useReloadActiveTestPlan';
 import { TestPlanFolders } from './testPlanFolders';
 import { KEBAB_START_EVENT_MAP } from './constants';
 
@@ -212,6 +214,7 @@ export const TestPlanDetailsPage = () => {
   };
 
   const { addTestCasesToCurrentTestPlan, isAddingTestCases } = useAddTestCasesToCurrentTestPlan();
+  const reloadActiveTestPlan = useReloadActiveTestPlan();
 
   const lastTrackedTestPlanIdRef = useRef<string | number | null>(null);
 
@@ -301,8 +304,17 @@ export const TestPlanDetailsPage = () => {
     );
   }
 
+  // The plan request failed (other than "not found", which redirects): offer a retry.
+  if (!testPlan) {
+    return (
+      <SettingsLayout>
+        <TestPlanLoadError onRetry={reloadActiveTestPlan} />
+      </SettingsLayout>
+    );
+  }
+
   const renderContent = () => {
-    if (!testPlan?.executionStatistic.total && isEmpty(testPlanFolders)) {
+    if (!testPlan.executionStatistic.total && isEmpty(testPlanFolders)) {
       return (
         <EmptyTestPlan
           onOpenTestLibrary={
