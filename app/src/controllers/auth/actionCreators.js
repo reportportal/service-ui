@@ -44,7 +44,12 @@ export const loginSuccessAction = (token) => ({
   payload: token,
 });
 
-export const logoutAction = (redirectedPage) => ({ type: LOGOUT, payload: redirectedPage });
+// silent: the session is replaced by a new login, so there is no logout page, refetch or toast
+export const logoutAction = (redirectedPage, { silent = false } = {}) => ({
+  type: LOGOUT,
+  payload: redirectedPage,
+  ...(silent && { meta: { silent } }),
+});
 
 export const logoutCompleteAction = () => ({ type: LOGOUT_COMPLETE });
 
@@ -53,7 +58,12 @@ export const setTokenAction = (token) => ({
   payload: token,
 });
 
-export const resetTokenAction = () => setTokenAction(DEFAULT_TOKEN);
+// revokedToken (the token string being logged out) lets the saga skip the localStorage write when
+// another tab has already stored a newer session.
+export const resetTokenAction = (revokedToken) => ({
+  ...setTokenAction(DEFAULT_TOKEN),
+  ...(revokedToken !== undefined && { meta: { revokedToken } }),
+});
 
 export const setLastFailedLoginTimeAction = (time) => ({
   type: SET_LAST_FAILED_LOGIN_TIME,

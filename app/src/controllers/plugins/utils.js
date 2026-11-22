@@ -39,6 +39,7 @@ import {
   updateOrganizationIntegrationSuccessAction,
   updateProjectIntegrationSuccessAction,
 } from './actionCreators';
+import { ERROR_CODE_ACCESS_DENIED } from 'common/constants/apiErrorCodes';
 
 export const LIMITED_INTEGRATION_PLUGINS = [EMAIL, MOBITRU, SAUCE_LABS];
 
@@ -238,3 +239,7 @@ export const buildPluginCommandRQ = ({
     arguments: commandArguments,
   };
 };
+
+// Plugin commands need project EDITOR: a lower role gets 403 (ErrorType.ACCESS_DENIED).
+export const isPluginCommandForbidden = (error) =>
+  error?.errorCode === ERROR_CODE_ACCESS_DENIED || error?.status === 403;

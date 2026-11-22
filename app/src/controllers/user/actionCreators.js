@@ -51,9 +51,11 @@ export const fetchUserSuccessAction = (user) => ({
   payload: user,
 });
 
-export const fetchUserErrorAction = () => ({
+export const fetchUserErrorAction = (error) => ({
   type: FETCH_USER_ERROR,
+  payload: error?.message,
   error: true,
+  meta: { errorCode: error?.errorCode, status: error?.status },
 });
 
 export const setPhotoTimeStampAction = (timeStamp) => ({
@@ -76,9 +78,9 @@ export const setActiveProjectKeyAction = (activeProjectKey) => ({
   payload: activeProjectKey,
 });
 
-export const addApiKeyAction = (name, successMessage, errorMessage, onSuccess) => ({
+export const addApiKeyAction = (name, successMessage, errorMessage, onSuccess, onError) => ({
   type: ADD_API_KEY,
-  payload: { name, successMessage, errorMessage, onSuccess },
+  payload: { name, successMessage, errorMessage, onSuccess, onError },
 });
 
 export const addApiKeySuccessAction = (apiKey) => ({

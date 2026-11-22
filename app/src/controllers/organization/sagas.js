@@ -40,6 +40,7 @@ import {
 } from './constants';
 import { usersSagas } from './users/sagas';
 import { fetch } from 'common/utils';
+import { stringEqual } from 'common/utils/stringUtils';
 import { hideModalAction } from 'controllers/modal';
 import { normalizeIntegrationItem } from 'controllers/plugins/utils';
 import { setOrganizationIntegrationsAction } from 'controllers/plugins/actionCreators';
@@ -56,7 +57,8 @@ function* fetchOrganizationBySlug({ payload: { slug, withIntegrations } }) {
     yield put(fetchDataAction(FETCH_ORGANIZATION_BY_SLUG)(URLS.organizationList({ slug })));
     if (withIntegrations) {
       const fetchResult = yield take(createFetchPredicate(FETCH_ORGANIZATION_BY_SLUG));
-      if (fetchResult.type === FETCH_SUCCESS) {
+      const resultSlug = fetchResult.payload?.items?.[0]?.slug;
+      if (fetchResult.type === FETCH_SUCCESS && stringEqual(resultSlug, slug)) {
         const organizationId = yield select(activeOrganizationIdSelector);
         if (organizationId) {
           yield put(fetchOrganizationIntegrationsAction(organizationId));

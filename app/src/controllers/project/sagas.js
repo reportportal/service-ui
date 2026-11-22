@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { takeEvery, take, all, put, select, call } from 'redux-saga/effects';
+import { takeEvery, take, all, put, select, call, race } from 'redux-saga/effects';
 import { redirect } from 'redux-first-router';
 import { URLS } from 'common/urls';
 import { clearWidgetCache } from 'pages/inside/dashboardItemPage/widgetsGrid/widget/widgetCache';
@@ -96,7 +96,18 @@ import {
 } from './actionCreators';
 import { patternsSelector, projectKeySelector } from './selectors';
 import { withActiveOrganization } from 'controllers/organization/withActiveOrganizationSaga';
-import { setActiveProjectKeyAction, activeProjectKeySelector } from 'controllers/user';
+import {
+  setActiveProjectKeyAction,
+  activeProjectKeySelector,
+  activeProjectSelector,
+} from 'controllers/user';
+import { stringEqual } from 'common/utils/stringUtils';
+
+let latestActiveProjectRequestId = 0;
+
+const isProjectResultFor = (projectKey) => (action) =>
+  (action.type === FETCH_PROJECT_SUCCESS && action.payload?.projectKey === projectKey) ||
+  (action.type === FETCH_PROJECT_ERROR && action.payload?.projectKey === projectKey);
 
 export function* withActiveProject(
   organizationSlug,
@@ -108,6 +119,19 @@ export function* withActiveProject(
     type: ORGANIZATION_PROJECTS_PAGE,
     payload: { organizationSlug },
   });
+  latestActiveProjectRequestId += 1;
+  const requestId = latestActiveProjectRequestId;
+  // A newer project navigation (or a different active project) supersedes this one: stop silently.
+  const isSuperseded = function* isSupersededNavigation() {
+    if (requestId !== latestActiveProjectRequestId) {
+      return true;
+    }
+    const activeProject = yield select(activeProjectSelector);
+    return (
+      !stringEqual(activeProject.organizationSlug, organizationSlug) ||
+      !stringEqual(activeProject.projectSlug, projectSlug)
+    );
+  };
 
   yield* withActiveOrganization(organizationSlug, function* onActiveOrgReady(organizationId) {
     try {
@@ -119,6 +143,10 @@ export function* withActiveProject(
           URLS.organizationProjects(organizationId, { slug: projectSlug }),
         );
         resolvedKey = items?.[0]?.key;
+      }
+
+      if (yield* isSuperseded()) {
+        return;
       }
 
       if (!resolvedKey) {
@@ -133,14 +161,23 @@ export function* withActiveProject(
       yield put(setActiveProjectKeyAction(resolvedKey));
       yield put(fetchProjectAction(resolvedKey));
 
-      const { type } = yield take([FETCH_PROJECT_SUCCESS, FETCH_PROJECT_ERROR]);
-      if (type === FETCH_PROJECT_ERROR) {
+      const { result } = yield race({
+        result: take(isProjectResultFor(resolvedKey)),
+        superseded: take(PREPARE_ACTIVE_PROJECT),
+      });
+      if (!result || (yield* isSuperseded())) {
+        return;
+      }
+      if (result.type === FETCH_PROJECT_ERROR) {
         yield put(fallbackRedirect);
         return;
       }
 
       yield* onActiveProjectReady(resolvedKey);
     } catch (error) {
+      if (yield* isSuperseded()) {
+        return;
+      }
       yield put(showDefaultErrorNotification(error));
       yield put(fallbackRedirect);
     }
@@ -500,7 +537,7 @@ function* watchUpdatePAState() {
 
 let latestFetchProjectRequestId = 0;
 
-function* fetchProject({ payload: { projectKey, fetchInfoOnly } }) {
+export function* fetchProject({ payload: { projectKey, fetchInfoOnly } }) {
   latestFetchProjectRequestId += 1;
   const requestId = latestFetchProjectRequestId;
   const isStale = function* isStaleResponse() {
@@ -543,7 +580,9 @@ function* watchFetchProject() {
   yield takeEvery(FETCH_PROJECT, fetchProject);
 }
 
-function* prepareActiveProject({ payload: { organizationSlug, projectSlug, projectKey, action } }) {
+export function* prepareActiveProject({
+  payload: { organizationSlug, projectSlug, projectKey, action },
+}) {
   yield* withActiveProject(
     organizationSlug,
     projectSlug,
@@ -558,19 +597,27 @@ function* watchPrepareActiveProject() {
   yield takeEvery(PREPARE_ACTIVE_PROJECT, prepareActiveProject);
 }
 
-function* fetchProjectPreferences({ payload: projectKey }) {
-  const preferences = yield call(fetch, URLS.projectPreferences(projectKey));
-  yield put(fetchProjectPreferencesSuccessAction(preferences));
-  yield put(fetchUserFiltersSuccessAction(preferences.filters));
+export function* fetchProjectPreferences({ payload: projectKey }) {
+  try {
+    const preferences = yield call(fetch, URLS.projectPreferences(projectKey));
+    yield put(fetchProjectPreferencesSuccessAction(preferences));
+    yield put(fetchUserFiltersSuccessAction(preferences.filters));
+  } catch (error) {
+    yield put(showDefaultErrorNotification(error));
+  }
 }
 
 function* watchFetchProjectPreferences() {
   yield takeEvery(FETCH_PROJECT_PREFERENCES, fetchProjectPreferences);
 }
 
-function* fetchConfigurationAttributes({ payload: projectKey }) {
-  const project = yield call(fetch, URLS.projectByName(projectKey));
-  yield put(updateConfigurationAttributesAction(project));
+export function* fetchConfigurationAttributes({ payload: projectKey }) {
+  try {
+    const project = yield call(fetch, URLS.projectByName(projectKey));
+    yield put(updateConfigurationAttributesAction(project));
+  } catch (error) {
+    yield put(showDefaultErrorNotification(error));
+  }
 }
 
 function* watchFetchConfigurationAttributes() {
@@ -598,10 +645,14 @@ function* watchShowFilterOnLaunches() {
   yield takeEvery(SHOW_FILTER_ON_LAUNCHES, showFilterOnLaunches);
 }
 
-function* updateProjectFilterPreferences({ payload = {} }) {
+export function* updateProjectFilterPreferences({ payload = {} }) {
   const { filterId, method } = payload;
-  const projectKey = yield select(projectKeySelector);
-  yield call(fetch, URLS.projectPreferences(projectKey, filterId), { method });
+  try {
+    const projectKey = yield select(projectKeySelector);
+    yield call(fetch, URLS.projectPreferences(projectKey, filterId), { method });
+  } catch (error) {
+    yield put(showDefaultErrorNotification(error));
+  }
 }
 
 function* watchUpdateProjectFilterPreferences() {

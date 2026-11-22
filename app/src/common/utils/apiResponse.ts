@@ -14,14 +14,29 @@
  * limitations under the License.
  */
 
-// Backend errors arrive as the ErrorRS body ({ errorCode, message }) because fetch rethrows
-// error.response.data; some callers still get an Error or a plain string.
+import axios from 'axios';
+import { ERROR_CANCELED, ERROR_UNAUTHORIZED } from './fetch';
+
+const readMessage = (message: unknown): string | undefined =>
+  typeof message === 'string' && message.trim() ? message : undefined;
+
+// A message worth showing to the user: the ErrorRS body ({ errorCode, message }) that fetch
+// rethrows from error.response.data, or a string / Error a caller passes on purpose. Anything else
+// (axios errors such as "Network Error", fetch sentinels such as UNAUTHORIZED or REQUEST_CANCELED,
+// non-ErrorRS bodies) yields undefined, so the caller shows its generic message instead.
 export const getApiErrorMessage = (error: unknown): string | undefined => {
   if (typeof error === 'string') {
     return error.trim() || undefined;
   }
-  const message = (error as { message?: unknown } | null | undefined)?.message;
-  return typeof message === 'string' && message.trim() ? message : undefined;
+  if (error instanceof Error) {
+    const isInternal =
+      axios.isAxiosError(error) ||
+      error.message === ERROR_CANCELED ||
+      error.message === ERROR_UNAUTHORIZED;
+    return isInternal ? undefined : readMessage(error.message);
+  }
+  const body = error as { errorCode?: unknown; message?: unknown } | null | undefined;
+  return typeof body?.errorCode === 'number' ? readMessage(body.message) : undefined;
 };
 
 export interface BatchItemError {
@@ -43,16 +58,18 @@ const toError = (raw: unknown): BatchItemError => {
   }
   const item = (raw ?? {}) as Record<string, unknown>;
   const id = item.testCaseId ?? item.launchId ?? item.executionId ?? item.id;
-  const message = getApiErrorMessage(item) ?? getApiErrorMessage(item.errorMessage) ?? '';
+  const message = readMessage(item.errorMessage) ?? readMessage(item.message) ?? '';
   return { id: id as number | string | undefined, message };
 };
 
-// Normalises the batch responses of the API (Batch*OperationResultRS and DeleteBulkRS) so callers
+// Normalises the batch responses of the API (Batch*OperationResultRS,
+// BatchDeleteTestCaseExecutionsResultRS and DeleteBulkRS) so callers
 // can tell a full success from a partial one instead of trusting the number of requested ids.
 export const readBatchResult = (response: unknown, requestedCount = 0): BatchResult => {
   const rs = (response ?? {}) as Record<string, unknown>;
   const successIds = (rs.successTestCaseIds ??
     rs.successLaunchIds ??
+    rs.successExecutionIds ??
     rs.successIds ??
     rs.deleted ??
     []) as Array<number | string>;

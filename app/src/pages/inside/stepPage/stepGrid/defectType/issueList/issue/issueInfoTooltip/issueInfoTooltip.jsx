@@ -20,11 +20,18 @@ import classNames from 'classnames/bind';
 import { connect } from 'react-redux';
 import { defineMessages, injectIntl } from 'react-intl';
 import { URLS } from 'common/urls';
-import { buildPluginCommandRQ } from 'controllers/plugins/utils';
+import { buildPluginCommandRQ, isPluginCommandForbidden } from 'controllers/plugins/utils';
 import { COMMAND_GET_ISSUE } from 'controllers/plugins/uiExtensions/constants';
 import { activeOrganizationIdSelector } from 'controllers/organization';
 import { projectInfoIdSelector, projectKeySelector } from 'controllers/project';
-import { getStorageItem, updateStorageItem } from 'common/utils';
+import {
+  getCachedTicket,
+  getTicketsStorageKey,
+  updateCachedTicket,
+} from 'common/utils/ticketsCache';
+import { userIdSelector } from 'controllers/user';
+import { userRolesSelector } from 'controllers/pages';
+import { canRunPluginCommands } from 'common/utils/permissions';
 import { ERROR_CANCELED, fetch } from 'common/utils/fetch';
 import { DottedPreloader } from 'components/preloaders/dottedPreloader';
 import styles from './issueInfoTooltip.scss';
@@ -50,17 +57,26 @@ const messages = defineMessages({
     id: 'IssueInfoTooltip.issueNotFoundDescription',
     defaultMessage: "Issue doesn't exist or no connection to the BTS integration",
   },
+  issueDetailsUnavailableTitle: {
+    id: 'IssueInfoTooltip.issueDetailsUnavailableTitle',
+    defaultMessage: 'Issue details unavailable',
+  },
+  issueDetailsUnavailableDescription: {
+    id: 'IssueInfoTooltip.issueDetailsUnavailableDescription',
+    defaultMessage: 'Your project role does not allow loading issue details from the BTS',
+  },
 });
 
 const isResolved = (status) => status.toUpperCase() === STATUS_RESOLVED;
-const getStorageKey = (projectKey) => `${projectKey}_tickets`;
 
 const FETCH_ISSUE_INTERVAL = 900000; // min request interval = 15 min
 
 @connect((state) => ({
+  userId: userIdSelector(state),
   projectKey: projectKeySelector(state),
   projectId: projectInfoIdSelector(state),
   organizationId: activeOrganizationIdSelector(state),
+  canLoadDetails: canRunPluginCommands(userRolesSelector(state)),
 }))
 @injectIntl
 export class IssueInfoTooltip extends Component {
@@ -73,10 +89,14 @@ export class IssueInfoTooltip extends Component {
     btsUrl: PropTypes.string.isRequired,
     pluginName: PropTypes.string.isRequired,
     projectKey: PropTypes.string.isRequired,
+    userId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+    canLoadDetails: PropTypes.bool,
   };
 
   static defaultProps = {
     organizationId: null,
+    userId: null,
+    canLoadDetails: true,
   };
 
   constructor(props) {
@@ -88,6 +108,7 @@ export class IssueInfoTooltip extends Component {
     issue: null,
     loading: false,
     error: false,
+    unavailable: false,
   };
 
   componentDidMount() {
@@ -99,7 +120,12 @@ export class IssueInfoTooltip extends Component {
   }
 
   setupIssueData = () => {
-    const { issue, lastTime } = this.getIssueFromStorage();
+    // Plugin commands need project EDITOR: lower roles get a neutral state without a request.
+    if (!this.props.canLoadDetails) {
+      this.setState({ loading: false, unavailable: true });
+      return;
+    }
+    const { issue, lastTime, unavailable = false } = this.getIssueFromStorage();
     const timeSinceLastExecution = Date.now() - lastTime;
 
     if (!lastTime || timeSinceLastExecution >= FETCH_ISSUE_INTERVAL) {
@@ -108,23 +134,21 @@ export class IssueInfoTooltip extends Component {
       this.setState({
         loading: false,
         issue,
+        unavailable,
       });
     }
   };
 
   getIssueFromStorage = () => {
-    const { projectKey, ticketId, btsProject } = this.props;
-    const storageKey = getStorageKey(projectKey);
+    const { userId, projectKey, ticketId, btsProject } = this.props;
 
-    const data = getStorageItem(storageKey) || {};
-    return data[`${btsProject}_${ticketId}`] || {};
+    return getCachedTicket(getTicketsStorageKey(userId, projectKey), `${btsProject}_${ticketId}`);
   };
 
   updateIssueInStorage = (data = {}) => {
-    const { projectKey, btsProject, ticketId } = this.props;
-    const storageKey = getStorageKey(projectKey);
+    const { userId, projectKey, btsProject, ticketId } = this.props;
 
-    updateStorageItem(storageKey, { [`${btsProject}_${ticketId}`]: data });
+    updateCachedTicket(getTicketsStorageKey(userId, projectKey), `${btsProject}_${ticketId}`, data);
   };
 
   fetchData = () => {
@@ -156,6 +180,12 @@ export class IssueInfoTooltip extends Component {
         this.setState({ loading: false, issue });
       })
       .catch((err) => {
+        if (isPluginCommandForbidden(err)) {
+          // Remembered like a fetched issue, so hovering again does not repeat the request.
+          this.updateIssueInStorage({ unavailable: true, lastTime: Date.now() });
+          this.setState({ loading: false, unavailable: true });
+          return;
+        }
         this.updateIssueInStorage();
         if (err.message === ERROR_CANCELED) {
           return;
@@ -168,13 +198,24 @@ export class IssueInfoTooltip extends Component {
     const {
       intl: { formatMessage },
     } = this.props;
-    const { loading, issue } = this.state;
+    const { loading, issue, unavailable } = this.state;
 
     if (loading) {
       return (
         <div className={cx('progressbar')}>
           <DottedPreloader color="charcoal" />
         </div>
+      );
+    }
+
+    if (unavailable) {
+      return (
+        <Fragment>
+          <h4 className={cx('header')}>{formatMessage(messages.issueDetailsUnavailableTitle)}</h4>
+          <p className={cx('content')}>
+            {formatMessage(messages.issueDetailsUnavailableDescription)}
+          </p>
+        </Fragment>
       );
     }
 
