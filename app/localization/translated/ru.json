@@ -1173,7 +1173,7 @@
   "ForgotPasswordForm.cancel": "Отменить",
   "ForgotPasswordForm.emailPlaceholder": "Электронная почта",
   "ForgotPasswordForm.sendEmail": "Отправить",
-  "ForgotPasswordForm.successSendEmail": "Если учётная запись для {email} существует, вы вскоре получите инструкции по восстановлению пароля. Если письмо не придёт, обратитесь к администратору.",
+  "ForgotPasswordForm.successSendEmail": "Если учётная запись для {email} существует, инструкции по восстановлению скоро придут",
   "Fullscreen.exitNote": "Нажмите <b>Esc</b>, чтобы выйти из полноэкранного режима",
   "GeneralTab.day1": "1 день",
   "GeneralTab.day2": "2 дня",

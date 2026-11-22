@@ -1173,7 +1173,7 @@
   "ForgotPasswordForm.cancel": "Скасувати",
   "ForgotPasswordForm.emailPlaceholder": "Електронна пошта",
   "ForgotPasswordForm.sendEmail": "Надіслати",
-  "ForgotPasswordForm.successSendEmail": "Якщо обліковий запис для {email} існує, незабаром ви отримаєте інструкції щодо відновлення пароля. Якщо лист не надійде, зверніться до адміністратора.",
+  "ForgotPasswordForm.successSendEmail": "Якщо обліковий запис для {email} існує, інструкції з відновлення незабаром надійдуть",
   "Fullscreen.exitNote": "Натисніть <b>Еку</b> дозволяє вийти з повноекранного режиму щоб",
   "GeneralTab.day1": "1 день",
   "GeneralTab.day2": "2 дні",
