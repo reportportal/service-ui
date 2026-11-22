@@ -318,7 +318,10 @@ export const sanitizeUserHtml = (html) => {
   if (typeof html !== 'string' || size > CACHE_ENTRY_MAX_SIZE) {
     return sanitized;
   }
-  while (cache.size >= CACHE_LIMIT || cacheTotalSize + size > CACHE_TOTAL_MAX_SIZE) {
+  while (
+    cache.size > 0 &&
+    (cache.size >= CACHE_LIMIT || cacheTotalSize + size > CACHE_TOTAL_MAX_SIZE)
+  ) {
     evictOldest();
   }
   cache.set(html, sanitized);
