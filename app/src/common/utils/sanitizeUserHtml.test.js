@@ -20,6 +20,7 @@ import {
   sanitizeUserHtml,
   sanitizeStyleAttribute,
   getSanitizeUserHtmlCacheSize,
+  getSanitizeUserHtmlCacheTotalSize,
 } from './sanitizeUserHtml';
 
 const toDom = (html) => {
@@ -226,5 +227,20 @@ describe('sanitizeUserHtml', () => {
     }
 
     expect(getSanitizeUserHtmlCacheSize()).toBeLessThanOrEqual(1000);
+  });
+
+  test('does not cache oversized values and bounds the total retained size', () => {
+    const before = getSanitizeUserHtmlCacheTotalSize();
+    const big = `<p>${'x'.repeat(100 * 1024)}</p>`;
+
+    expect(sanitizeUserHtml(big)).toBe(big);
+    expect(getSanitizeUserHtmlCacheTotalSize()).toBe(before);
+
+    for (let i = 0; i < 400; i += 1) {
+      sanitizeUserHtml(`<p>${i}${'y'.repeat(30 * 1024)}</p>`);
+    }
+
+    expect(getSanitizeUserHtmlCacheTotalSize()).toBeLessThanOrEqual(8 * 1024 * 1024);
+    expect(getSanitizeUserHtmlCacheSize()).toBeLessThan(400);
   });
 });
