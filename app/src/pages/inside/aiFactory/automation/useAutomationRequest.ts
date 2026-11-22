@@ -19,6 +19,7 @@ import { isAxiosError } from 'axios';
 
 import { URLS } from 'common/urls';
 import { fetch } from 'common/utils';
+import { getErrorMessage } from 'common/utils/helperUtils/errorUtils';
 import { isCiNotConnectedError } from 'controllers/aiFactory/pipelines/ciConnection';
 import { useUserPermissions } from 'hooks/useUserPermissions';
 import {
@@ -51,6 +52,7 @@ export type AutomationRequestError =
 type AutomationStartResult = AutomateAcceptedRS & { unconfirmed?: number[] };
 
 const AMBIGUOUS_STATUS_CODES = new Set([408, 502, 503, 504]);
+const AUTOMATION_ENVIRONMENTS_NOT_CONFIGURED = 40060;
 const START_TIMEOUT_MS = 30_000;
 const RECOVERY_TIMEOUT_MS = 10_000;
 
@@ -58,9 +60,25 @@ type SkippedCases = AutomateAcceptedRS['skipped'];
 
 interface AutomationRequestFailure {
   error: AutomationRequestError;
+  errorMessage?: string;
   reautomationRequiredIds?: number[];
   skipped?: SkippedCases;
 }
+
+const getBadRequest = (
+  body: unknown,
+  fallback: 'ENVIRONMENTS_LOAD_FAILED' | 'JOB_START_FAILED',
+): AutomationRequestFailure => {
+  if (
+    typeof body === 'object' &&
+    body !== null &&
+    'errorCode' in body &&
+    body.errorCode === AUTOMATION_ENVIRONMENTS_NOT_CONFIGURED
+  ) {
+    return { error: 'ENVIRONMENTS_NOT_CONFIGURED' };
+  }
+  return { error: fallback, errorMessage: getErrorMessage(body) };
+};
 
 const getConflict = (body: unknown, testCaseIds: number[]): AutomationRequestFailure => {
   if (isCiNotConnectedError(body)) return { error: 'CI_NOT_CONNECTED' };
@@ -121,7 +139,7 @@ const loadEnvironments = async (
   projectKey: string,
   pipelineId: number | undefined,
   signal: AbortSignal,
-) => {
+): Promise<{ environments: AutomationEnvironmentsRS } | AutomationRequestFailure> => {
   const response = await fetch<unknown>(
     URLS.tmsAutomationEnvironments(projectKey),
     {
@@ -131,8 +149,9 @@ const loadEnvironments = async (
     },
     true,
   );
-  if (response.status === 400) return { error: 'ENVIRONMENTS_NOT_CONFIGURED' as const };
-  return { environments: normalizeAutomationEnvironments(response.data) };
+  if (response.status === 400) return getBadRequest(response.data, 'ENVIRONMENTS_LOAD_FAILED');
+  const environments = normalizeAutomationEnvironments(response.data);
+  return environments ? { environments } : { error: 'INVALID_ENVIRONMENTS_RESPONSE' };
 };
 
 type AutomationStartOutcome = { response: AutomationStartResult } | AutomationRequestFailure;
@@ -165,7 +184,7 @@ const submitAutomation = async (
   });
   if (!response || AMBIGUOUS_STATUS_CODES.has(response.status)) return recover();
   if (response.status === 409) return getConflict(response.data, payload.testCaseIds);
-  if (response.status === 400) return { error: 'JOB_START_FAILED' };
+  if (response.status === 400) return getBadRequest(response.data, 'JOB_START_FAILED');
   const result = normalizeAutomateAccepted(response.data, payload.testCaseIds);
   if (!result || (pipelineId && result.iteration.pipelineId !== pipelineId)) {
     return { error: 'INVALID_AUTOMATION_RESPONSE' };
@@ -178,6 +197,7 @@ export interface AutomationRequestState {
   isLoadingEnvironments: boolean;
   isStarting: boolean;
   error: AutomationRequestError | null;
+  errorMessage?: string;
   reautomationRequiredIds: number[];
   skipped: SkippedCases;
   start: (payload: AutomatePayload) => Promise<AutomationStartResult | null>;
@@ -212,10 +232,10 @@ export const useAutomationRequest = (
     void loadEnvironments(projectKey, pipelineId, controller.signal)
       .then((result) => {
         if (controller.signal.aborted) return;
-        if (result.environments) {
+        if ('environments' in result) {
           setEnvironments(result.environments);
         } else {
-          setFailure({ error: result.error ?? 'INVALID_ENVIRONMENTS_RESPONSE' });
+          setFailure(result);
         }
       })
       .catch(() => {
@@ -248,6 +268,7 @@ export const useAutomationRequest = (
         const outcome = await submitAutomation(projectKey, payload, pipelineId, controller.signal);
         if (!isCurrent()) return null;
         if ('response' in outcome) return outcome.response;
+        if (outcome.error === 'ENVIRONMENTS_NOT_CONFIGURED') setEnvironments(null);
         setFailure(outcome);
         return null;
       } catch {
@@ -268,6 +289,7 @@ export const useAutomationRequest = (
     isLoadingEnvironments,
     isStarting,
     error: failure?.error ?? null,
+    errorMessage: failure?.errorMessage,
     reautomationRequiredIds: failure?.reautomationRequiredIds ?? [],
     skipped: failure?.skipped ?? [],
     start,

@@ -318,7 +318,7 @@ export const AutomationModalContent = ({
         )}
         {canRequest && request.error && request.error !== 'REAUTOMATE_CONFIRMATION_REQUIRED' && (
           <SystemMessage mode="error">
-            {formatMessage(ERROR_MESSAGES[request.error])}
+            {request.errorMessage || formatMessage(ERROR_MESSAGES[request.error])}
             {RETRYABLE_ENVIRONMENT_ERRORS.has(request.error) && (
               <Button
                 variant="text"

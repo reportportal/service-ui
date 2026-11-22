@@ -352,14 +352,35 @@ describe('useAutomationRequest', () => {
     expect(fetchMock).toHaveBeenCalledTimes(2);
   });
 
-  test('reports the environment configuration requirement on HTTP 400', async () => {
-    fetchMock.mockResolvedValueOnce(reply(400, { message: 'No environments' }));
+  test.each([
+    [40060, 'ENVIRONMENTS_NOT_CONFIGURED', undefined],
+    [40016, 'ENVIRONMENTS_LOAD_FAILED', 'Could not resolve CI integration'],
+  ])('handles environment lookup HTTP 400 with code %s', async (errorCode, error, errorMessage) => {
+    fetchMock.mockResolvedValueOnce(
+      reply(400, { errorCode, message: 'Could not resolve CI integration' }),
+    );
 
     await renderHook();
 
-    expect(result.environments).toBeNull();
-    expect(result.error).toBe('ENVIRONMENTS_NOT_CONFIGURED');
+    expect(result).toMatchObject({ environments: null, error, errorMessage });
   });
+
+  test.each([
+    [40060, 'ENVIRONMENTS_NOT_CONFIGURED', undefined, null],
+    [40016, 'JOB_START_FAILED', 'Unknown environment beta5', environments],
+  ])(
+    'handles automation start HTTP 400 with code %s',
+    async (errorCode, error, errorMessage, currentEnvironments) => {
+      fetchMock
+        .mockResolvedValueOnce(reply(200, environments))
+        .mockResolvedValueOnce(reply(400, { errorCode, message: 'Unknown environment beta5' }));
+      await renderHook();
+
+      await act(async () => expect(await result.start(payload)).toBeNull());
+
+      expect(result).toMatchObject({ environments: currentEnvironments, error, errorMessage });
+    },
+  );
 
   test.each([
     [{ errorCode: 40916 }, 'CI_NOT_CONNECTED', []],
