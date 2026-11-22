@@ -30,7 +30,7 @@ import {
   NAMESPACE,
   GET_TEST_CASE_DETAILS,
 } from './constants';
-import { TEST_CASE_LIBRARY_PAGE } from 'controllers/pages';
+import { TEST_CASE_DETAILS_PAGE, TEST_CASE_LIBRARY_PAGE } from 'controllers/pages';
 import { FETCH_PROJECT_SUCCESS } from 'controllers/project';
 import { FETCH_SUCCESS } from 'controllers/fetch/constants';
 
@@ -183,9 +183,14 @@ describe('controllers/testCase/sagas', () => {
   });
 
   describe('test case details', () => {
-    const run = async (error: unknown, details?: { id: number }) => {
+    const run = async (
+      error: unknown,
+      details?: { id: number },
+      pageType: string = TEST_CASE_DETAILS_PAGE,
+    ) => {
       fetchMock.mockRejectedValue(error);
       const state = createState({
+        location: { type: pageType, payload: { organizationSlug: 'org', projectSlug: 'prj' } },
         testCase: { folders: { data: [] }, details: { data: details } },
       });
       const { dispatched, dispatch, task } = startSagas(() => state);
@@ -211,6 +216,17 @@ describe('controllers/testCase/sagas', () => {
       const { redirected, notifications } = await run(
         { errorCode: 5000, message: 'boom' },
         { id: 7 },
+      );
+
+      expect(redirected).toBe(false);
+      expect(notifications[0].payload.message).toBe('boom');
+    });
+
+    test('only shows the notification when the details are reloaded from the library list', async () => {
+      const { redirected, notifications } = await run(
+        { errorCode: 5000, message: 'boom' },
+        { id: 99 },
+        TEST_CASE_LIBRARY_PAGE,
       );
 
       expect(redirected).toBe(false);

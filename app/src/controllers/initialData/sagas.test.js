@@ -16,6 +16,7 @@
 
 import { put, take } from 'redux-saga/effects';
 import { FETCH_USER_ERROR, FETCH_USER_SUCCESS } from 'controllers/user';
+import { fetchUserErrorAction } from 'controllers/user/actionCreators';
 import { resetTokenAction } from 'controllers/auth';
 import { ERROR_UNAUTHORIZED } from 'common/utils/fetch';
 import { setInitialDataReadyAction, setServiceAvailabilityAction } from './actionCreators';
@@ -41,6 +42,26 @@ describe('fetchInitialData', () => {
 
     expect(gen.next({ error: true, payload: ERROR_UNAUTHORIZED }).value).toEqual(
       put(resetTokenAction()),
+    );
+  });
+
+  it.each([
+    ['access is denied', { status: 403 }],
+    ['access is denied by ErrorRS', { errorCode: 4003 }],
+    ['the user no longer exists', { errorCode: 4046 }],
+  ])('resets the token when %s', (_, error) => {
+    const gen = advanceToUserResult();
+
+    expect(gen.next(fetchUserErrorAction({ message: 'x', ...error })).value).toEqual(
+      put(resetTokenAction()),
+    );
+  });
+
+  it('keeps the token on a not found answer that is not about the user', () => {
+    const gen = advanceToUserResult();
+
+    expect(gen.next(fetchUserErrorAction({ message: 'x', status: 404 })).value).toEqual(
+      put(setServiceAvailabilityAction({ checked: true, apiUnavailable: true })),
     );
   });
 

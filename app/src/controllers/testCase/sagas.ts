@@ -100,7 +100,9 @@ import {
   testCaseDetailsSelector,
 } from 'controllers/testCase/selectors';
 import {
+  TEST_CASE_DETAILS_PAGE,
   TEST_CASE_LIBRARY_PAGE,
+  pageSelector,
   urlOrganizationSlugSelector,
   urlProjectSlugSelector,
   urlFolderIdSelector,
@@ -180,9 +182,13 @@ function* getTestCaseDetails(action: TestCaseDetailsAction) {
     const currentDetails = (yield select(testCaseDetailsSelector)) as TestCase | undefined;
     const hasCurrentDetails = String(currentDetails?.id) === String(action.payload.testCaseId);
 
-    // Stay on the page for transient errors when the requested test case is already displayed;
-    // leave it when the test case is gone, or when only another test case's data could be shown.
-    if (isMissing || !hasCurrentDetails) {
+    const page = (yield select(pageSelector)) as string;
+
+    // Only the details page leaves for the library: it stays for transient errors when the
+    // requested test case is already displayed, and leaves when the test case is gone or when only
+    // another test case's data could be shown. Other pages (the library list reloads the details
+    // after a save) just show the notification.
+    if (page === TEST_CASE_DETAILS_PAGE && (isMissing || !hasCurrentDetails)) {
       const organizationSlug = (yield select(urlOrganizationSlugSelector)) as string;
       const projectSlug = (yield select(urlProjectSlugSelector)) as string;
 

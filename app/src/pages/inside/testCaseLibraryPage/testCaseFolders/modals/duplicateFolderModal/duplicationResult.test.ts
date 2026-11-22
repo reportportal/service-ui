@@ -36,7 +36,7 @@ describe('getDuplicationFailure', () => {
           totalCount: 500,
           successCount: 488,
           failureCount: 12,
-          errors: [{ testCaseId: 5, message: 'Name is too long' }],
+          errors: [{ testCaseId: 5, errorMessage: 'Name is too long' }],
         },
         folderDuplicationStatistic: { totalCount: 2, successCount: 2, failureCount: 0 },
       }),

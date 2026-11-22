@@ -249,7 +249,9 @@ export const TestCaseFolders = () => {
     }
 
     setPendingFolderIds((ids) => [...ids, folderId]);
-    operation()
+    // Fire-and-forget: moveFolder/duplicateFolder report their own errors, and the catch below
+    // swallows anything else so the returned promise never rejects.
+    void operation()
       .catch(noop)
       .finally(() => setPendingFolderIds((ids) => ids.filter((id) => id !== folderId)));
   };

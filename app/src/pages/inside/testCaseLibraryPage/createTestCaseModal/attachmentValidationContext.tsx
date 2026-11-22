@@ -31,6 +31,7 @@ const NO_PENDING_UPLOADS: PendingUploads = {
   isTracked: () => false,
   discard: () => undefined,
   discardAll: () => undefined,
+  release: () => undefined,
 };
 
 const AttachmentValidationContext = createContext<AttachmentValidationContextValue | null>(null);

@@ -95,7 +95,7 @@ describe('useAddTestCasesToCurrentTestPlan', () => {
       successCount: 2,
       failureCount: 1,
       successTestCaseIds: [1, 2],
-      errors: [{ testCaseId: 3, message: 'Test case 3 is already in the test plan' }],
+      errors: [{ testCaseId: 3, errorMessage: 'Test case 3 is already in the test plan' }],
     });
 
     const result = await hook.addTestCasesToCurrentTestPlan({ testCaseIds: [1, 2, 3] });

@@ -19,7 +19,8 @@ import { UPDATE_FILTER_SUCCESS, LAUNCHES_FILTERS_UPDATE_NAMESPACE } from './cons
 import { updateLaunchesFilter } from './sagas';
 
 const filter = { id: 5, name: 'f', conditions: [{ value: 'a' }] };
-const meta = { namespace: LAUNCHES_FILTERS_UPDATE_NAMESPACE };
+const updateNamespace = `${LAUNCHES_FILTERS_UPDATE_NAMESPACE}/${filter.id}`;
+const meta = { namespace: updateNamespace };
 
 const runUntilTake = () => {
   const gen = updateLaunchesFilter({ payload: filter });
@@ -29,6 +30,13 @@ const runUntilTake = () => {
   const takeEffect = gen.next().value;
   expect(takeEffect.TAKE).toBeDefined();
   return gen;
+};
+
+const takeOf = () => {
+  const gen = updateLaunchesFilter({ payload: filter });
+  gen.next();
+  gen.next('project');
+  return gen.next().value.TAKE;
 };
 
 describe('controllers/filter/sagas updateLaunchesFilter', () => {
@@ -45,5 +53,20 @@ describe('controllers/filter/sagas updateLaunchesFilter', () => {
     const notification = gen.next().value;
     expect(notification.PUT.action.payload.messageId).toBe('updateFilterSuccess');
     expect(gen.next().done).toBe(true);
+  });
+
+  test('ignores responses of saveNewFilter and of other filters (interleaved requests)', () => {
+    const { pattern } = takeOf();
+    const saveNewResponse = {
+      type: FETCH_SUCCESS,
+      meta: { namespace: LAUNCHES_FILTERS_UPDATE_NAMESPACE },
+    };
+    const otherFilterResponse = {
+      type: FETCH_ERROR,
+      meta: { namespace: `${LAUNCHES_FILTERS_UPDATE_NAMESPACE}/6` },
+    };
+    expect(pattern(saveNewResponse)).toBe(false);
+    expect(pattern(otherFilterResponse)).toBe(false);
+    expect(pattern({ type: FETCH_ERROR, meta })).toBe(true);
   });
 });

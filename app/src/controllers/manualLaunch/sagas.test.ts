@@ -19,6 +19,7 @@ import createSagaMiddleware from 'redux-saga';
 import { fetch } from 'common/utils';
 import { URLS } from 'common/urls';
 import { FETCH_ERROR, FETCH_SUCCESS } from 'controllers/fetch/constants';
+import { SHOW_NOTIFICATION } from 'controllers/notification/constants';
 import { MANUAL_LAUNCHES_PAGE } from 'controllers/pages';
 import { manualLaunchesSagas } from './sagas';
 import {
@@ -184,6 +185,78 @@ describe('controllers/manualLaunch/sagas', () => {
     expect(mockedFetch).toHaveBeenCalledWith(URLS.manualLaunchById('demo', 10));
   });
 
+  test('a failed silent folder reload keeps the tree and shows no error', async () => {
+    mockedFetch.mockRejectedValue({ errorCode: 5000, message: 'bad gateway' });
+    const { store, dispatched } = setupStore({ project: { info: { projectKey: 'demo' } } });
+
+    store.dispatch(getManualLaunchFoldersAction({ launchId: 10, silent: true }));
+    await flush();
+
+    expect(dispatched.map((action) => action.type as string)).not.toContain(FETCH_ERROR);
+    expect(dispatched.map((action) => action.type as string)).not.toContain(SHOW_NOTIFICATION);
+  });
+
+  test('a failed regular folder load still shows the error', async () => {
+    mockedFetch.mockRejectedValue({ errorCode: 5000, message: 'bad gateway' });
+    const { store, dispatched } = setupStore({ project: { info: { projectKey: 'demo' } } });
+
+    store.dispatch(getManualLaunchFoldersAction({ launchId: 10 }));
+    await flush();
+
+    expect(dispatched.map((action) => action.type as string)).toContain(FETCH_ERROR);
+  });
+
+  test('a status change uses the comment and BTS tickets of the target execution, not the active one', async () => {
+    mockedFetch.mockImplementation(() => Promise.resolve({ id: 2, status: 'PASSED' }));
+    const { store } = setupStore({
+      project: { info: { projectKey: 'demo' } },
+      location: { type: 'MANUAL_LAUNCH_EXECUTION_PAGE', payload: { launchId: 10 } },
+      activeManualLaunchExecution: {
+        data: {
+          id: 1,
+          executionComment: { comment: 'comment of A' },
+          btsTickets: [{ ticketId: 'A-1' }],
+        },
+      },
+      manualLaunchTestCaseExecutions: {
+        data: {
+          content: [
+            {
+              id: 1,
+              executionComment: { comment: 'comment of A' },
+              btsTickets: [{ ticketId: 'A-1' }],
+            },
+            {
+              id: 2,
+              executionComment: { comment: 'comment of B' },
+              btsTickets: [{ ticketId: 'B-1' }],
+            },
+          ],
+          page: { totalElements: 2 },
+        },
+      },
+    });
+
+    store.dispatch(
+      updateManualLaunchExecutionStatusAction({
+        projectKey: 'demo',
+        launchId: 10,
+        executionId: 2,
+        status: 'PASSED',
+        preserveExistingCommentIfFormSkipped: true,
+      }),
+    );
+    await flush();
+
+    const patch = (
+      mockedFetch.mock.calls as Array<[string, { method?: string; data?: unknown }?]>
+    ).find(([, options]) => options?.method === 'PATCH');
+    const body = patch?.[1]?.data as { executionComment: { comment: string } };
+    expect(body.executionComment.comment).toBe('comment of B');
+    expect(JSON.stringify(body)).toContain('B-1');
+    expect(JSON.stringify(body)).not.toContain('A-1');
+  });
+
   describe('launch load errors', () => {
     const launchPageState = {
       project: { info: { projectKey: 'demo' } },
@@ -201,6 +274,26 @@ describe('controllers/manualLaunch/sagas', () => {
       await flush();
 
       expect(dispatched.map((action) => action.type as string)).toContain(MANUAL_LAUNCHES_PAGE);
+    });
+
+    test('a missing launch shows a single redirect toast', async () => {
+      mockedFetch.mockRejectedValue({ errorCode: 40430, message: 'not found' });
+      const { store, dispatched } = setupStore(launchPageState);
+
+      store.dispatch(getManualLaunchAction({ launchId: '10' }));
+      await flush();
+
+      expect(dispatched.filter((action) => action.type === SHOW_NOTIFICATION)).toHaveLength(1);
+    });
+
+    test('a 404x code that is not a not-found error stays on the page', async () => {
+      mockedFetch.mockRejectedValue({ errorCode: 40412, message: 'unable to create widget' });
+      const { store, dispatched } = setupStore(launchPageState);
+
+      store.dispatch(getManualLaunchAction({ launchId: '10' }));
+      await flush();
+
+      expect(dispatched.map((action) => action.type as string)).not.toContain(MANUAL_LAUNCHES_PAGE);
     });
 
     test('any other error stays on the page', async () => {

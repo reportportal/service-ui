@@ -29,6 +29,15 @@ describe('ticketsCache', () => {
     expect(getTicketsStorageKey(5, 'proj')).toBe('5_proj_tickets');
   });
 
+  it('does not cache tickets before the user is loaded', () => {
+    const key = getTicketsStorageKey(undefined, 'proj');
+    updateCachedTicket(key, 'jira_A-1', { lastTime: 10 });
+
+    expect(key).toBeNull();
+    expect(getCachedTicket(key, 'jira_A-1')).toEqual({});
+    expect(localStorage).toHaveLength(0);
+  });
+
   it('stores and reads a ticket', () => {
     const key = getTicketsStorageKey(5, 'proj');
     updateCachedTicket(key, 'jira_A-1', { issue: { id: 1 }, lastTime: 10 });
