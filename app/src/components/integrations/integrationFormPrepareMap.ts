@@ -15,7 +15,7 @@
  */
 
 import { EMAIL, GITHUB } from 'common/constants/pluginNames';
-import { combineNameAndEmailToFrom } from 'common/utils';
+import { prepareEmailFormData } from './integrationProviders/emailIntegration/emailFormHelpers';
 import { prepareGithubIntegrationFormData } from './prepareIntegrationFormData';
 
 export type IntegrationFormPrepareFn = (
@@ -23,7 +23,7 @@ export type IntegrationFormPrepareFn = (
 ) => Record<string, unknown>;
 
 export const INTEGRATION_FORM_PREPARE_MAP: Partial<Record<string, IntegrationFormPrepareFn>> = {
-  [EMAIL]: combineNameAndEmailToFrom,
+  [EMAIL]: prepareEmailFormData,
   [GITHUB]: prepareGithubIntegrationFormData,
 };
 

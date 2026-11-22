@@ -32,6 +32,7 @@ import {
   HOST_KEY,
   PORT_KEY,
   USERNAME_KEY,
+  PASSWORD_MASK,
 } from '../constants';
 import styles from './emailDetailsCard.scss';
 
@@ -79,8 +80,6 @@ const messages = defineMessages({
     defaultMessage: '{creator} on {date}',
   },
 });
-
-const PASSWORD_MASK = '\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022';
 
 interface EmailDetailsCardProps {
   readonly data: IntegrationData;

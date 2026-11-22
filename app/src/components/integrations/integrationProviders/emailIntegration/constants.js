@@ -26,6 +26,9 @@ export const USERNAME_KEY = 'username';
 export const PASSWORD_KEY = 'password';
 const RP_HOST = 'rpHost';
 
+// Shown wherever a stored (never returned by the API) password has to be indicated.
+export const PASSWORD_MASK = '\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022';
+
 export const ENCRYPTION_MODE_NONE = 'none';
 export const ENCRYPTION_MODE_TLS = 'tls';
 export const ENCRYPTION_MODE_SSL = 'ssl';
