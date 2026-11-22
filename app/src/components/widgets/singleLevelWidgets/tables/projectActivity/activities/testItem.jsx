@@ -119,7 +119,13 @@ export class TestItem extends Component {
           const ticketData = this.getTicketUrlId(ticket);
           const comma = tickets.length > 1 && t < tickets.length - 1 ? ',' : '';
           return (
-            <a target="_blank" className={cx('link')} href={ticketData.url} key={`${t + 1}`}>
+            <a
+              target="_blank"
+              rel="noopener noreferrer"
+              className={cx('link')}
+              href={ticketData.url}
+              key={`${t + 1}`}
+            >
               {ticketData.id}
               {comma}
             </a>

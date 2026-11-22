@@ -51,8 +51,14 @@ import {
   extractExtension,
   isTextWithJson,
   createAttachmentName,
+  getInlineSafeContentType,
 } from './utils';
 import { setAttachmentModalLoadingIdAction } from './actionCreators';
+
+// The browser revokes blob URLs itself when this document unloads; until then only the most recent
+// ones are kept alive so an opened tab can still reload or fetch sub-resources.
+const OPENED_BLOB_URLS_LIMIT = 20;
+const openedBlobUrls = [];
 
 function* getAttachmentURL() {
   const projectKey = yield select(projectKeySelector);
@@ -191,27 +197,16 @@ function* downloadAttachment({ payload: { id, contentType } }) {
   downloadFile(URLS.getFileById(projectKey, id), {}, createAttachmentName(id, contentType));
 }
 
-function* openAttachmentInBrowser({ payload: id }) {
+export function* openAttachmentInBrowser({ payload: id }) {
   const projectKey = yield select(projectKeySelector);
   const data = yield call(fetch, URLS.getFileById(projectKey, id), { responseType: 'blob' });
+  const blob = new Blob([data], { type: getInlineSafeContentType(data.type) });
+  const url = URL.createObjectURL(blob);
 
-  if (window.navigator?.msSaveOrOpenBlob) {
-    window.navigator.msSaveOrOpenBlob(data);
-  } else {
-    const url = URL.createObjectURL(data);
-    const newWindow = window.open(url);
-    if (newWindow) {
-      newWindow.onbeforeunload = () => URL.revokeObjectURL(url);
-    } else {
-      const link = document.createElement('a');
-      link.href = url;
-      link.target = '_blank';
-      link.rel = 'noopener noreferrer';
-      document.body.appendChild(link);
-      link.click();
-      link.remove();
-      setTimeout(() => URL.revokeObjectURL(url), 60000);
-    }
+  window.open(url, '_blank', 'noopener,noreferrer');
+  openedBlobUrls.push(url);
+  if (openedBlobUrls.length > OPENED_BLOB_URLS_LIMIT) {
+    URL.revokeObjectURL(openedBlobUrls.shift());
   }
 }
 

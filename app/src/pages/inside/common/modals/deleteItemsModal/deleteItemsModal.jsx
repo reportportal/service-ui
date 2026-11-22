@@ -19,7 +19,7 @@ import PropTypes from 'prop-types';
 import Parser from 'html-react-parser';
 import classNames from 'classnames/bind';
 import { useIntl } from 'react-intl';
-import DOMPurify from 'dompurify';
+import { sanitizeTemplateHtml } from 'common/utils/sanitizeTemplateHtml';
 import { withModal, ModalLayout } from 'components/main/modal';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import styles from './deleteItemsModal.scss';
@@ -28,7 +28,7 @@ const cx = classNames.bind(styles);
 
 const renderMainContent = (mainContent) => {
   if (typeof mainContent === 'string') {
-    return Parser(DOMPurify.sanitize(mainContent));
+    return Parser(sanitizeTemplateHtml(mainContent));
   }
 
   return mainContent;

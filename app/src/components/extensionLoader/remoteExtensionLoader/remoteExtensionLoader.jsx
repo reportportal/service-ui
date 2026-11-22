@@ -15,9 +15,9 @@
  */
 
 import classNames from 'classnames/bind';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { BubblesLoader } from '@reportportal/ui-kit';
-import { getExtensionUrl } from '../utils';
+import { getExtensionUrl, isSameOriginUrl } from '../utils';
 import { ExtensionError } from '../extensionError';
 import { extensionType } from '../extensionTypes';
 import styles from './remoteExtensionLoader.scss';
@@ -28,6 +28,23 @@ export function RemoteExtensionLoader({ extension }) {
   const [isLoaded, setIsLoaded] = useState(false);
   const [hasError, setHasError] = useState(false);
   const url = getExtensionUrl(extension);
+
+  useEffect(() => {
+    if (url && isSameOriginUrl(url)) {
+      // allow-same-origin + allow-scripts do not isolate a same-origin page: it runs with first-party trust
+      console.warn(
+        `Remote extension "${extension.pluginName}" is served from the application origin and is not isolated by the iframe sandbox.`,
+      );
+    }
+  }, [url, extension.pluginName]);
+
+  if (!url) {
+    return (
+      <div className={cx('remote-extension-loader')}>
+        <ExtensionError />
+      </div>
+    );
+  }
 
   const onLoad = () => {
     setIsLoaded(true);

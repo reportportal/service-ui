@@ -22,7 +22,7 @@ import { connect } from 'react-redux';
 import { hideNotification } from 'controllers/notification';
 import { SystemAlert } from '@reportportal/ui-kit';
 import Parser from 'html-react-parser';
-import DOMPurify from 'dompurify';
+import { sanitizeTemplateHtml } from 'common/utils/sanitizeTemplateHtml';
 import { defineMessages, injectIntl } from 'react-intl';
 import styles from './notificationList.scss';
 
@@ -448,6 +448,11 @@ export const notificationMessages = defineMessages({
     id: 'Common.errorOccurredTryAgain',
     defaultMessage: 'An error occurred. Please try again later.',
   },
+  batchPartialFailure: {
+    id: 'Common.batchPartialFailure',
+    defaultMessage:
+      '{successCount} of {totalCount} items were processed, {failureCount} failed. {errors}',
+  },
   redirectWarningMessage: {
     id: 'TestCaseLibraryPage.redirectWarningMessage',
     defaultMessage:
@@ -626,11 +631,10 @@ export class NotificationList extends PureComponent {
                     typographyColor={typographyColor}
                     duration={duration}
                     title={Parser(
-                      DOMPurify.sanitize(
+                      sanitizeTemplateHtml(
                         messageId && notificationMessages[messageId]
                           ? formatMessage(notificationMessages[messageId], values)
                           : message,
-                        { ADD_ATTR: ['target'] },
                       ),
                     )}
                     onClose={() => this.props.hideNotification(uid)}

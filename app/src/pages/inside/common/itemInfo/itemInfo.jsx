@@ -172,7 +172,7 @@ export class ItemInfo extends Component {
             onClick={onNameClick}
             target={customProps.openInNewTab ? '_blank' : '_self'}
           >
-            <ItemNameTooltip tooltipContent={value.name}>
+            <ItemNameTooltip tooltipContent={value.name} preventParsing>
               <span>{formatItemName(value.name)}</span>
               {customProps?.openInNewTab && (
                 <i className={cx('external-icon')}>{Parser(ExternalLinkIcon)}</i>

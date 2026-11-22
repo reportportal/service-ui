@@ -21,7 +21,8 @@ import classNames from 'classnames/bind';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { injectIntl, defineMessages } from 'react-intl';
-import DOMPurify from 'dompurify';
+import { sanitizeTemplateHtml } from 'common/utils/sanitizeTemplateHtml';
+import { escapeHtml } from 'common/utils/escapeHtml';
 import { LAUNCH_ITEM_TYPES } from 'common/constants/launchItemTypes';
 import { PageLayout, PageSection } from 'layouts/pageLayout';
 import { SpinningPreloader } from 'components/preloaders/spinningPreloader';
@@ -103,8 +104,8 @@ export const getDeleteItemsActionParameters = (
   mainContent:
     items.length === 1
       ? formatMessage(messages.deleteModalContent, {
-          b: (data) => DOMPurify.sanitize(`<b>${data}</b>`),
-          name: items[0].name,
+          b: (data) => sanitizeTemplateHtml(`<b>${data}</b>`),
+          name: escapeHtml(items[0].name),
         })
       : formatMessage(messages.deleteModalMultipleContent),
   ...rest,

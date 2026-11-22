@@ -697,7 +697,7 @@ const NewsDeck = ({ tweets = [], onExpandedChange = null }) => {
     if (wasPeeking) {
       const link = front?.querySelector('a');
       if (link) {
-        window.open(link.href, '_blank', 'noopener');
+        window.open(link.href, '_blank', 'noopener,noreferrer');
       }
 
       return;

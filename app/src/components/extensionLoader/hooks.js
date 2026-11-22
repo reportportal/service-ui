@@ -12,6 +12,12 @@ const useDynamicScript = (scope, url) => {
       return;
     }
 
+    if (!url) {
+      setReady(false);
+      setFailed(true);
+      return;
+    }
+
     setReady(false);
     setFailed(false);
 

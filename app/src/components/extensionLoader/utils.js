@@ -14,22 +14,41 @@
  *  limitations under the License.
  */
 
-import DOMPurify from 'dompurify';
 import { URLS } from 'common/urls';
 
 const DEFAULT_EXTENSION_FILE_NAME = 'remoteEntity.js';
+const ALLOWED_PROTOCOLS = ['http:', 'https:'];
 
+// Returns the extension entry URL, or null when the manifest URLs are not valid http(s) URLs.
 export const getExtensionUrl = (extension) => {
-  const {
-    pluginName,
-    url: baseUrl,
-    payload: { url },
-  } = extension;
+  const { pluginName, url: baseUrl, payload: { url } = {} } = extension;
   const fileName = DEFAULT_EXTENSION_FILE_NAME;
 
-  if (baseUrl) {
-    return DOMPurify.sanitize(new URL(url || `/${fileName}`, baseUrl));
+  if (!baseUrl) {
+    return URLS.pluginPublicFile(pluginName, fileName);
   }
 
-  return URLS.pluginPublicFile(pluginName, fileName);
+  try {
+    const base = new URL(baseUrl, window.location.origin);
+    const resolved = new URL(url || `/${fileName}`, base);
+
+    if (
+      !ALLOWED_PROTOCOLS.includes(base.protocol) ||
+      !ALLOWED_PROTOCOLS.includes(resolved.protocol)
+    ) {
+      return null;
+    }
+
+    return resolved.href;
+  } catch {
+    return null;
+  }
+};
+
+export const isSameOriginUrl = (url) => {
+  try {
+    return new URL(url, window.location.origin).origin === window.location.origin;
+  } catch {
+    return false;
+  }
 };

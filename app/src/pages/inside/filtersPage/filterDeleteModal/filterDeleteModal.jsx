@@ -18,7 +18,8 @@ import { Component } from 'react';
 import PropTypes from 'prop-types';
 import Parser from 'html-react-parser';
 import classNames from 'classnames/bind';
-import DOMPurify from 'dompurify';
+import { sanitizeTemplateHtml } from 'common/utils/sanitizeTemplateHtml';
+import { escapeHtml } from 'common/utils/escapeHtml';
 import { injectIntl, defineMessages } from 'react-intl';
 import { withModal, ModalLayout } from 'components/main/modal';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
@@ -89,10 +90,12 @@ export class FilterDeleteModal extends Component {
       >
         <p className={cx('message')}>
           {Parser(
-            intl.formatMessage(messages.deleteFilterText, {
-              b: (data) => DOMPurify.sanitize(`<b>${data}</b>`),
-              name: filter.name,
-            }),
+            sanitizeTemplateHtml(
+              intl.formatMessage(messages.deleteFilterText, {
+                b: (data) => `<b>${data}</b>`,
+                name: escapeHtml(filter.name),
+              }),
+            ),
           )}
         </p>
       </ModalLayout>
