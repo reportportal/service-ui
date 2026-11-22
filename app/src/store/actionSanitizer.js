@@ -38,7 +38,7 @@ const SECRET_KEYS = new Set(
     'passwordAttribute',
   ].map((key) => key.toLowerCase()),
 );
-const TOKEN_ACTIONS = [SET_TOKEN, LOGIN_SUCCESS];
+const TOKEN_ACTIONS = new Set([SET_TOKEN, LOGIN_SUCCESS]);
 const SANITIZED_STATE_SLICES = ['auth', 'form', 'modal', 'location'];
 
 const isPlainObject = (value) => {
@@ -107,7 +107,7 @@ export const actionSanitizer = (action) => {
     sanitized = { ...sanitized, payload: REDACTED };
   }
 
-  if (TOKEN_ACTIONS.includes(action.type) && sanitized.payload) {
+  if (TOKEN_ACTIONS.has(action.type) && sanitized.payload) {
     return {
       ...sanitized,
       payload: isPlainObject(sanitized.payload)

@@ -17,7 +17,7 @@
 import { URLS } from 'common/urls';
 
 const DEFAULT_EXTENSION_FILE_NAME = 'remoteEntity.js';
-const ALLOWED_PROTOCOLS = ['http:', 'https:'];
+const ALLOWED_PROTOCOLS = new Set(['http:', 'https:']);
 
 // Returns the extension entry URL, or null when the manifest URLs are not valid http(s) URLs.
 export const getExtensionUrl = (extension) => {
@@ -33,8 +33,8 @@ export const getExtensionUrl = (extension) => {
     const resolved = new URL(url || `/${fileName}`, base);
 
     if (
-      !ALLOWED_PROTOCOLS.includes(base.protocol) ||
-      !ALLOWED_PROTOCOLS.includes(resolved.protocol)
+      !ALLOWED_PROTOCOLS.has(base.protocol) ||
+      !ALLOWED_PROTOCOLS.has(resolved.protocol)
     ) {
       return null;
     }

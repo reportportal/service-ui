@@ -18,7 +18,7 @@ import { pluginByNameSelector } from 'controllers/plugins';
 import { updateExtensionManifestAction, addExtensionManifestAction } from './actions';
 import { MANIFEST_FILE_KEY } from './constants';
 
-const ALLOWED_PROTOCOLS = ['http:', 'https:'];
+const ALLOWED_PROTOCOLS = new Set(['http:', 'https:']);
 
 // window.RP is the documented developer workflow for testing plugin builds (docs/9-localization.md).
 // A client-side role check would not be a security boundary (any script on the page can inject a
@@ -30,7 +30,7 @@ const validateExtensionUrl = (url) => {
   } catch {
     throw new Error(`Extension URL must be an absolute http(s) URL: ${url}`);
   }
-  if (!ALLOWED_PROTOCOLS.includes(parsed.protocol)) {
+  if (!ALLOWED_PROTOCOLS.has(parsed.protocol)) {
     throw new Error(`Extension URL must be an absolute http(s) URL: ${url}`);
   }
 };

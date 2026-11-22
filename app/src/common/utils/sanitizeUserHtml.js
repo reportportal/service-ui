@@ -297,12 +297,6 @@ const CACHE_TOTAL_MAX_SIZE = 8 * 1024 * 1024;
 const cache = new Map();
 let cacheTotalSize = 0;
 
-const evictOldest = () => {
-  const [oldestKey, oldest] = cache.entries().next().value;
-  cache.delete(oldestKey);
-  cacheTotalSize -= oldestKey.length + oldest.length;
-};
-
 export const sanitizeUserHtml = (html) => {
   if (!html) {
     return '';
@@ -318,11 +312,13 @@ export const sanitizeUserHtml = (html) => {
   if (typeof html !== 'string' || size > CACHE_ENTRY_MAX_SIZE) {
     return sanitized;
   }
-  while (
-    cache.size > 0 &&
-    (cache.size >= CACHE_LIMIT || cacheTotalSize + size > CACHE_TOTAL_MAX_SIZE)
-  ) {
-    evictOldest();
+  // Map iterates in insertion order, so the least recently used entries come first
+  for (const [key, value] of cache) {
+    if (cache.size < CACHE_LIMIT && cacheTotalSize + size <= CACHE_TOTAL_MAX_SIZE) {
+      break;
+    }
+    cache.delete(key);
+    cacheTotalSize -= key.length + value.length;
   }
   cache.set(html, sanitized);
   cacheTotalSize += size;
