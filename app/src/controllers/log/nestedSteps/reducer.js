@@ -15,9 +15,11 @@
  */
 
 import { omit } from 'common/utils/omit';
+import { isEmptyObject } from 'common/utils/isEmptyObject';
 import {
   FETCH_NESTED_STEP_START,
   FETCH_NESTED_STEP_SUCCESS,
+  FETCH_NESTED_STEP_ERROR,
   CLEAR_NESTED_STEP,
   CLEAR_NESTED_STEPS,
   TOGGLE_NESTED_STEP,
@@ -50,8 +52,24 @@ export const nestedStepsReducer = (state = {}, action) => {
         [id]: {
           ...state[id],
           loading: false,
+          initial: false,
           content,
           page,
+        },
+      };
+    }
+    case FETCH_NESTED_STEP_ERROR: {
+      const id = action.meta?.id;
+      if (!state[id]) {
+        return state;
+      }
+      return {
+        ...state,
+        [id]: {
+          ...state[id],
+          loading: false,
+          // nothing was loaded yet: the next click requests the step again
+          ...(isEmptyObject(state[id].page || {}) && { initial: true }),
         },
       };
     }

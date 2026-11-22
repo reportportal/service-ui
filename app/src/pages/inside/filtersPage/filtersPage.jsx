@@ -20,6 +20,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { injectIntl, defineMessages } from 'react-intl';
 import { fetch } from 'common/utils';
+import { getApiErrorMessage } from 'common/utils/apiResponse';
 import { URLS } from 'common/urls';
 import {
   withFilter,
@@ -175,7 +176,8 @@ export class FiltersPage extends Component {
           type: NOTIFICATION_TYPES.SUCCESS,
           message: this.props.intl.formatMessage(messages.filterUpdated),
         });
-      });
+      })
+      .catch(this.showErrorNotification);
 
   deleteFilter = (filter) => {
     fetch(URLS.filter(this.props.projectKey, filter.id), {
@@ -192,7 +194,17 @@ export class FiltersPage extends Component {
           type: NOTIFICATION_TYPES.SUCCESS,
           message: this.props.intl.formatMessage(messages.filterDeleted),
         });
-      });
+      })
+      .catch(this.showErrorNotification);
+  };
+
+  showErrorNotification = (error) => {
+    const message = getApiErrorMessage(error);
+    this.props.showNotification({
+      type: NOTIFICATION_TYPES.ERROR,
+      message,
+      messageId: message ? '' : 'errorOccurredTryAgain',
+    });
   };
 
   addFilter = () => {

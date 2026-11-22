@@ -15,7 +15,6 @@
  */
 
 import { all, call, cancelled, put, select, take, takeEvery, throttle } from 'redux-saga/effects';
-import { delay } from 'redux-saga';
 import {
   fetchParentItems,
   itemsSelector,
@@ -194,7 +193,7 @@ function* fetchAllErrorLogs({
       yield take(createFetchPredicate(namespace));
     }
   } catch (err) {
-    yield handleError(err);
+    yield call(handleError, { payload: err });
   } finally {
     if (yield cancelled()) {
       cancelRequest();
@@ -211,18 +210,16 @@ function* fetchStackTrace({ payload: logItem }) {
   });
 }
 
-function* loadStep({ id, errorLogPage }) {
-  yield put(loadMoreNestedStepAction({ id, errorLogPage }));
-  yield take([FETCH_NESTED_STEP_SUCCESS, FETCH_NESTED_STEP_ERROR]);
+const getNestedStepActionId = (action) =>
+  action.type === FETCH_NESTED_STEP_ERROR ? action.meta?.id : action.payload?.id;
 
-  let loadingRunning = true;
-  while (loadingRunning) {
-    const { loading } = yield select(nestedStepSelector, id);
-    if (!loading) {
-      loadingRunning = loading;
-    }
-    yield delay(10);
-  }
+const isNestedStepLoadedAction = (id) => (action) =>
+  (action.type === FETCH_NESTED_STEP_SUCCESS || action.type === FETCH_NESTED_STEP_ERROR) &&
+  +getNestedStepActionId(action) === +id;
+
+export function* loadStep({ id, errorLogPage }) {
+  yield put(loadMoreNestedStepAction({ id, errorLogPage }));
+  yield take(isNestedStepLoadedAction(id));
 }
 
 function* waitLoadAllNestedSteps() {
@@ -323,17 +320,9 @@ function* fetchLog({ payload: { logInfo, callback, shouldClearSearchFilter = fal
       );
       // wait until wanted step is load
       if (isWantedStepFailed) {
-        let isWrongId = true;
-        while (isWrongId) {
-          const {
-            payload: { id: takenId },
-          } = yield take([FETCH_NESTED_STEP_SUCCESS, FETCH_NESTED_STEP_ERROR]);
-          if (+takenId === +parentId) {
-            isWrongId = false;
-            // prevent collapse failed step as they unfold by default
-            skipIds.push(+parentId);
-          }
-        }
+        yield take(isNestedStepLoadedAction(parentId));
+        // prevent collapse failed step as they unfold by default
+        skipIds.push(+parentId);
       }
     }
 
@@ -372,28 +361,33 @@ function* fetchLog({ payload: { logInfo, callback, shouldClearSearchFilter = fal
   yield callback?.();
 }
 
-function* fetchHistoryItems({ payload } = { payload: {} }) {
+export function* fetchHistoryItems({ payload } = { payload: {} }) {
   const { loadMore, callback } = payload;
-  const projectKey = yield select(projectKeySelector);
-  const logItemId = yield select(logItemIdSelector);
-  const historyItems = yield select(historyItemsSelector);
-  const isAllLaunches = yield select(includeAllLaunchesSelector);
-  const historyLineMode = isAllLaunches ? HISTORY_LINE_TABLE_MODE : HISTORY_LINE_DEFAULT_VALUE;
-  const historyDepth = loadMore
-    ? historyItems.length + NUMBER_OF_ITEMS_TO_LOAD
-    : DEFAULT_HISTORY_DEPTH;
-  const response = yield call(
-    fetch,
-    URLS.testItemsHistory(projectKey, historyDepth, historyLineMode, logItemId),
-  );
+  try {
+    const projectKey = yield select(projectKeySelector);
+    const logItemId = yield select(logItemIdSelector);
+    const historyItems = yield select(historyItemsSelector);
+    const isAllLaunches = yield select(includeAllLaunchesSelector);
+    const historyLineMode = isAllLaunches ? HISTORY_LINE_TABLE_MODE : HISTORY_LINE_DEFAULT_VALUE;
+    const historyDepth = loadMore
+      ? historyItems.length + NUMBER_OF_ITEMS_TO_LOAD
+      : DEFAULT_HISTORY_DEPTH;
+    const response = yield call(
+      fetch,
+      URLS.testItemsHistory(projectKey, historyDepth, historyLineMode, logItemId),
+    );
 
-  yield put(fetchHistoryItemsSuccessAction(response.content));
-  if (!loadMore) {
-    const currentItems = yield select(historyItemsSelector);
-    const loadedItems = currentItems.length - DEFAULT_HISTORY_DEPTH;
-    yield put(setShouldShowLoadMoreAction(loadedItems >= 0));
+    yield put(fetchHistoryItemsSuccessAction(response.content));
+    if (!loadMore) {
+      const currentItems = yield select(historyItemsSelector);
+      const loadedItems = currentItems.length - DEFAULT_HISTORY_DEPTH;
+      yield put(setShouldShowLoadMoreAction(loadedItems >= 0));
+    }
+  } catch (error) {
+    yield call(handleError, { payload: error });
+  } finally {
+    callback?.();
   }
-  callback?.();
 }
 
 function* fetchDetailsLog() {
@@ -423,17 +417,20 @@ function* fetchLogs() {
   }
 }
 
-function* fetchWholePage() {
+export function* fetchWholePage() {
   yield put(setPageLoadingAction(true));
-  yield call(fetchParentItems);
-  const testItems = yield select(itemsSelector);
-  if (!testItems.length) {
-    const offset = yield select(logPageOffsetSelector);
+  try {
+    yield call(fetchParentItems);
+    const testItems = yield select(itemsSelector);
+    if (!testItems.length) {
+      const offset = yield select(logPageOffsetSelector);
 
-    yield put(fetchTestItemsAction({ offset }));
+      yield put(fetchTestItemsAction({ offset }));
+    }
+    yield call(fetchLogs);
+  } finally {
+    yield put(setPageLoadingAction(false));
   }
-  yield call(fetchLogs);
-  yield put(setPageLoadingAction(false));
 }
 
 function* fetchHistoryItemData() {
@@ -485,8 +482,11 @@ function* fetchLogPageData({ meta = {} }) {
 
 function* fetchHistoryItemsWithLoading() {
   yield put(setPageLoadingAction(true));
-  yield call(fetchHistoryItems);
-  yield put(setPageLoadingAction(false));
+  try {
+    yield call(fetchHistoryItems);
+  } finally {
+    yield put(setPageLoadingAction(false));
+  }
 }
 
 function* loadMoreLogs({ payload: { direction } }) {
@@ -505,7 +505,7 @@ function* loadMoreLogs({ payload: { direction } }) {
 
     yield call(fetchLogItems, { direction, targetPage });
   } catch (error) {
-    yield call(handleError, error);
+    yield call(handleError, { payload: error });
   }
 }
 

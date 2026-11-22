@@ -14,10 +14,14 @@
  * limitations under the License.
  */
 
+import { memo } from 'react';
 import PropTypes from 'prop-types';
 import { NestedGridRow } from './nestedGridRow';
 import { GridRow } from './gridRow';
 import { columnPropTypes } from '../propTypes';
+
+// Log steps can hold thousands of rows: skip re-rendering the ones whose props did not change.
+const MemoGridRow = memo(GridRow);
 
 // The circular dependency will not be fixed because there is a direct dependency of this component on NestedGridRow.
 
@@ -27,7 +31,7 @@ export const NestedGridBody = ({ data, ...rest }) => {
     'hasContent' in nodeData ? (
       <Component data={nodeData} {...rest} key={nodeData.id} />
     ) : (
-      <GridRow value={nodeData} {...rest} key={nodeData.id} />
+      <MemoGridRow value={nodeData} {...rest} key={nodeData.id} />
     ),
   );
 };
