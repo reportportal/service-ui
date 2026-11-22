@@ -24,6 +24,7 @@ import {
   updateStorageItem,
 } from 'common/utils/storageUtils';
 import { URLS } from 'common/urls';
+import { clearWidgetCache } from 'pages/inside/dashboardItemPage/widgetsGrid/widget/widgetCache';
 import { APPLICATION_SETTINGS } from 'common/constants/localStorageKeys';
 import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
 import { fetchAppInfoAction } from 'controllers/appInfo';
@@ -98,6 +99,7 @@ function* logoutOnServer(redirectedPage) {
 
 // TODO: clear cookie on logout
 function* handleLogout({ payload }) {
+  clearWidgetCache();
   const token = yield select(tokenSelector);
   if (!token) {
     yield put(logoutCompleteAction());
