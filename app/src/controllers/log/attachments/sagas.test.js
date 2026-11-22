@@ -76,8 +76,16 @@ describe('openAttachmentInBrowser', () => {
     },
   );
 
-  test('drops content type parameters', () => {
-    expect(run('text/plain;charset=utf-8').type).toBe('text/plain');
+  test('drops content type parameters other than the text charset', () => {
+    expect(run('image/png;foo=bar').type).toBe('image/png');
+  });
+
+  test('keeps a valid charset of a plain text attachment', () => {
+    expect(run('text/plain; charset=Shift_JIS').type).toBe('text/plain;charset=shift_jis');
+  });
+
+  test('drops a malformed charset', () => {
+    expect(run('text/plain;charset=x"<script>').type).toBe('text/plain');
   });
 
   test('opens the blob without an opener and revokes it later', () => {
