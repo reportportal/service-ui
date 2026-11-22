@@ -125,7 +125,7 @@ export function* handleLogout({ payload }) {
     method: 'DELETE',
     timeout: GRAFANA_SESSION_REVOKE_TIMEOUT,
     // must survive abortPendingRequests() below
-    signal: new AbortController().signal,
+    keepOnLogout: true,
   }).catch((error) => console.error('Failed to revoke Grafana session on logout', error));
 
   yield call(logoutOnServer, payload);
