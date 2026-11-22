@@ -16,22 +16,72 @@
 
 import { fetch } from 'common/utils/fetch';
 
-// Reads the file name from a Content-Disposition header. Prefers the RFC 5987 `filename*` parameter
-// (percent-encoded UTF-8) and falls back to the plain `filename`, quoted or not, wherever it stands.
+// Splits a header value on `;` outside of quoted strings (a quoted value may contain `;`).
+const splitParameters = (header) => {
+  const parts = [];
+  let current = '';
+  let inQuotes = false;
+  for (let i = 0; i < header.length; i += 1) {
+    const char = header[i];
+    if (inQuotes && char === '\\' && i + 1 < header.length) {
+      current += char + header[i + 1];
+      i += 1;
+    } else {
+      if (char === '"') {
+        inQuotes = !inQuotes;
+      }
+      if (char === ';' && !inQuotes) {
+        parts.push(current);
+        current = '';
+      } else {
+        current += char;
+      }
+    }
+  }
+  parts.push(current);
+  return parts;
+};
+
+const parseParameters = (header) =>
+  splitParameters(header).reduce((params, part) => {
+    const separatorIndex = part.indexOf('=');
+    if (separatorIndex < 0) {
+      return params;
+    }
+    const name = part.slice(0, separatorIndex).trim().toLowerCase();
+    const value = part.slice(separatorIndex + 1).trim();
+    if (name && !(name in params)) {
+      params[name] = value;
+    }
+    return params;
+  }, {});
+
+const unquote = (value) =>
+  value.length >= 2 && value.startsWith('"') && value.endsWith('"')
+    ? value.slice(1, -1).replace(/\\(.)/g, '$1')
+    : value;
+
+// Reads the file name from a Content-Disposition header. Parameter names are matched as a whole
+// (so `x-filename` is not `filename`), case-insensitively. Prefers the RFC 5987 `filename*`
+// parameter (`charset'language'percent-encoded`) and falls back to the plain `filename`.
 export const getFileNameFromContentDisposition = (header, fileNameFallback = '') => {
   if (!header) {
     return fileNameFallback;
   }
-  const encoded = /filename\*\s*=\s*(?:UTF-8'[^']*')?([^;]+)/i.exec(header);
+  const params = parseParameters(header);
+  const encoded = params['filename*'];
   if (encoded) {
+    const match = /^(?:[^']*)'[^']*'(.*)$/.exec(unquote(encoded));
     try {
-      return decodeURIComponent(encoded[1].trim().replace(/^"|"$/g, ''));
+      const decoded = decodeURIComponent((match ? match[1] : unquote(encoded)).trim());
+      if (decoded) {
+        return decoded;
+      }
     } catch {
       // malformed encoding: fall through to the plain parameter
     }
   }
-  const plain = /filename\s*=\s*(?:"([^"]*)"|([^;]+))/i.exec(header);
-  const fileName = plain ? (plain[1] ?? plain[2]).trim() : '';
+  const fileName = params.filename ? unquote(params.filename).trim() : '';
   return fileName || fileNameFallback;
 };
 

@@ -48,7 +48,9 @@ describe('getFileNameFromContentDisposition', () => {
 
   test('falls back to the plain filename when filename* is malformed', () => {
     expect(
-      getFileNameFromContentDisposition('attachment; filename="a.txt"; filename*=UTF-8\'\'%E0%A4%A'),
+      getFileNameFromContentDisposition(
+        'attachment; filename="a.txt"; filename*=UTF-8\'\'%E0%A4%A',
+      ),
     ).toBe('a.txt');
   });
 
@@ -56,6 +58,34 @@ describe('getFileNameFromContentDisposition', () => {
     expect(getFileNameFromContentDisposition(undefined, 'attachment_1.png')).toBe(
       'attachment_1.png',
     );
-    expect(getFileNameFromContentDisposition('inline', 'attachment_1.png')).toBe('attachment_1.png');
+    expect(getFileNameFromContentDisposition('inline', 'attachment_1.png')).toBe(
+      'attachment_1.png',
+    );
+  });
+
+  test('does not match a parameter whose name merely ends with filename', () => {
+    expect(
+      getFileNameFromContentDisposition(
+        'attachment; x-filename="other.txt"; filename="report.pdf"',
+      ),
+    ).toBe('report.pdf');
+  });
+
+  test('keeps a semicolon inside a quoted filename', () => {
+    expect(getFileNameFromContentDisposition('attachment; filename="a;b.txt"; size=5')).toBe(
+      'a;b.txt',
+    );
+  });
+
+  test('matches parameter names case-insensitively', () => {
+    expect(getFileNameFromContentDisposition('attachment; FILENAME="REPORT.pdf"')).toBe(
+      'REPORT.pdf',
+    );
+  });
+
+  test('reads filename* with a language tag', () => {
+    expect(
+      getFileNameFromContentDisposition("attachment; filename*=UTF-8'en'na%C3%AFve%20file.txt"),
+    ).toBe('naïve file.txt');
   });
 });

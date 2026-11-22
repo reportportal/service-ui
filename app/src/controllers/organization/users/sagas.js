@@ -23,7 +23,6 @@ import { withActiveOrganization } from '../withActiveOrganizationSaga';
 import {
   showSuccessNotification,
   showErrorNotification,
-  showDefaultErrorNotification,
 } from 'controllers/notification';
 import { fetch } from 'common/utils';
 import { userInfoSelector } from 'controllers/user';
@@ -124,7 +123,7 @@ function* updateUserAssignments({ payload }) {
     // The server explains why an assignment change was refused (user type, own role, personal organization).
     yield put(
       error?.message
-        ? showDefaultErrorNotification(error)
+        ? showErrorNotification({ message: error.message })
         : showErrorNotification({ messageId: 'updateAssignmentsError' }),
     );
   }

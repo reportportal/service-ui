@@ -1172,7 +1172,7 @@
   "ForgotPasswordForm.cancel": "取消",
   "ForgotPasswordForm.emailPlaceholder": "请输入账号",
   "ForgotPasswordForm.sendEmail": "发送",
-  "ForgotPasswordForm.successSendEmail": "如果{email}对应的账户存在，密码恢复说明已发送至该邮箱",
+  "ForgotPasswordForm.successSendEmail": "如果{email}对应的账户存在，您将很快收到密码恢复说明。如果没有收到邮件，请联系您的管理员。",
   "Fullscreen.exitNote": "按<b>Esc</b>退出全屏模式",
   "GeneralTab.day1": "1天",
   "GeneralTab.day2": "2天",

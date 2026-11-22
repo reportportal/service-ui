@@ -51,7 +51,7 @@ const notifications = defineMessages({
   successSendEmail: {
     id: 'ForgotPasswordForm.successSendEmail',
     defaultMessage:
-      'If an account exists for {email}, password recovery instructions have been sent to it',
+      'If an account exists for {email}, you will receive password recovery instructions shortly. If no email arrives, contact your administrator.',
   },
 });
 
