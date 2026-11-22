@@ -18,8 +18,8 @@ import { combineNameAndEmailToFrom } from 'common/utils/fieldTransformer';
 import { isBlank, isAnyTargetChanged } from 'components/integrations/integrationTargetHelpers';
 import { AUTH_ENABLED_KEY, HOST_KEY, PORT_KEY, PROTOCOL_KEY, PASSWORD_KEY } from './constants';
 
-export const PASSWORD_REQUIRED_ERROR = 'requiredFieldHint';
-export const PASSWORD_REQUIRED_ON_TARGET_CHANGE_ERROR = 'emailPasswordRequiredOnTargetChangeHint';
+export const SECRET_REQUIRED_HINT = 'requiredFieldHint';
+export const SECRET_REQUIRED_ON_TARGET_CHANGE_HINT = 'emailPasswordRequiredOnTargetChangeHint';
 
 const TARGET_KEYS = [HOST_KEY, PORT_KEY, PROTOCOL_KEY];
 
@@ -47,8 +47,8 @@ export const getPasswordError = ({ value, editAuthMode, initialData, values }) =
     return undefined;
   }
   return editAuthMode && hasStoredPassword(initialData) && isTargetChanged(initialData, values)
-    ? PASSWORD_REQUIRED_ON_TARGET_CHANGE_ERROR
-    : PASSWORD_REQUIRED_ERROR;
+    ? SECRET_REQUIRED_ON_TARGET_CHANGE_HINT
+    : SECRET_REQUIRED_HINT;
 };
 
 // With auth on, a blank password is not sent at all (validation lets it through only when a stored

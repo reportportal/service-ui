@@ -19,8 +19,8 @@ import {
   hasStoredPassword,
   isTargetChanged,
   prepareEmailFormData,
-  PASSWORD_REQUIRED_ERROR,
-  PASSWORD_REQUIRED_ON_TARGET_CHANGE_ERROR,
+  SECRET_REQUIRED_HINT,
+  SECRET_REQUIRED_ON_TARGET_CHANGE_HINT,
 } from './emailFormHelpers';
 
 const stored = {
@@ -99,7 +99,7 @@ describe('emailFormHelpers', () => {
 
     it('requires the password with an explanatory message', () => {
       expect(getPasswordError({ value: '', editAuthMode: true, initialData: stored, values })).toBe(
-        PASSWORD_REQUIRED_ON_TARGET_CHANGE_ERROR,
+        SECRET_REQUIRED_ON_TARGET_CHANGE_HINT,
       );
     });
 
@@ -123,7 +123,7 @@ describe('emailFormHelpers', () => {
 
     it('requires a password because none is stored', () => {
       expect(getPasswordError({ value: '', editAuthMode: true, initialData, values })).toBe(
-        PASSWORD_REQUIRED_ERROR,
+        SECRET_REQUIRED_HINT,
       );
     });
   });
@@ -133,7 +133,7 @@ describe('emailFormHelpers', () => {
 
     it('requires the password', () => {
       expect(getPasswordError({ value: '', editAuthMode: false, initialData: {}, values })).toBe(
-        PASSWORD_REQUIRED_ERROR,
+        SECRET_REQUIRED_HINT,
       );
     });
 
