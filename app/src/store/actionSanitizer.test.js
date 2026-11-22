@@ -117,6 +117,40 @@ describe('actionSanitizer for tokens, API keys and integration secrets', () => {
   });
 });
 
+describe('actionSanitizer for repeated references and cycles', () => {
+  test('redacts a secret-bearing object referenced from two payload paths', () => {
+    const shared = { password: 'secret' };
+    const action = {
+      type: 'X',
+      payload: { first: shared, second: shared, list: [shared, shared] },
+    };
+    const { payload } = actionSanitizer(action);
+
+    expect(payload.first.password).toBe('[redacted]');
+    expect(payload.second.password).toBe('[redacted]');
+    expect(payload.list[1].password).toBe('[redacted]');
+    expect(shared.password).toBe('secret');
+  });
+
+  test('redacts secrets inside a cycle and keeps the cycle', () => {
+    const node = { name: 'n', password: 'secret' };
+    node.self = node;
+    const sanitized = actionSanitizer({ type: 'X', payload: node }).payload;
+
+    expect(sanitized.password).toBe('[redacted]');
+    expect(sanitized.self.password).toBe('[redacted]');
+    expect(sanitized.self).toBe(sanitized);
+    expect(node.password).toBe('secret');
+  });
+
+  test('keeps the same reference for a shared object without secrets', () => {
+    const shared = { a: 1 };
+    const action = { type: 'X', payload: { first: shared, second: shared } };
+
+    expect(actionSanitizer(action)).toBe(action);
+  });
+});
+
 describe('stateSanitizer', () => {
   test('blanks the auth token and secrets in forms, modals and the location', () => {
     const state = {

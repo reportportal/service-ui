@@ -48,42 +48,34 @@ const isPlainObject = (value) => {
   return prototype === Object.prototype || prototype === null;
 };
 
-// Returns the same reference when nothing had to be redacted.
-const redact = (value, extraKeys, seen = new WeakSet()) => {
-  if (Array.isArray(value)) {
-    if (seen.has(value)) {
-      return value;
-    }
-    seen.add(value);
-    let changed = false;
-    const result = value.map((item) => {
-      const redacted = redact(item, extraKeys, seen);
-      changed = changed || redacted !== item;
-      return redacted;
-    });
-    return changed ? result : value;
-  }
-  if (!isPlainObject(value) || seen.has(value)) {
+// Returns the same reference when nothing had to be redacted. Every visited container is
+// memoised with its sanitized counterpart (registered before recursing), so an object reachable
+// through several paths or through a cycle is redacted everywhere, never returned as the original.
+const redact = (value, extraKeys, visited = new Map()) => {
+  const isArray = Array.isArray(value);
+  if (!isArray && !isPlainObject(value)) {
     return value;
   }
-  seen.add(value);
-  let result = value;
+  if (visited.has(value)) {
+    return visited.get(value);
+  }
+  const copy = isArray ? [] : {};
+  visited.set(value, copy);
+  let changed = false;
   Object.keys(value).forEach((key) => {
     const item = value[key];
-    const isSecret = SECRET_KEYS.has(key.toLowerCase()) || extraKeys.has(key);
+    const isSecret = !isArray && (SECRET_KEYS.has(key.toLowerCase()) || extraKeys.has(key));
     let redacted;
     if (isSecret) {
       redacted = item === undefined || item === null || item === '' ? item : REDACTED;
     } else {
-      redacted = redact(item, extraKeys, seen);
+      redacted = redact(item, extraKeys, visited);
     }
-    if (redacted !== item) {
-      if (result === value) {
-        result = { ...value };
-      }
-      result[key] = redacted;
-    }
+    changed = changed || redacted !== item;
+    copy[key] = redacted;
   });
+  const result = changed ? copy : value;
+  visited.set(value, result);
   return result;
 };
 
