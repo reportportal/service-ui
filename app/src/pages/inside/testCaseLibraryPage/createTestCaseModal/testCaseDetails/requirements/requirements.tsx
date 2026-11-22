@@ -20,8 +20,8 @@ import { FieldText, Button, PlusIcon, FieldLabel, CloseIcon } from '@reportporta
 
 import { FieldErrorHint, FieldProvider } from 'components/fields';
 import { createClassnames, uniqueId } from 'common/utils';
-import { Requirement } from 'types/testCase';
 import { commonMessages } from 'pages/inside/common/common-messages';
+import { RequirementFormRow } from '../../../types';
 import { REQUIREMENT_FIELD_MAX_LENGTH } from '../../constants';
 
 import styles from './requirements.scss';
@@ -40,7 +40,7 @@ const messages = defineMessages({
   },
 });
 
-const RequirementsList = ({ fields }: WrappedFieldArrayProps<Requirement>) => {
+const RequirementsList = ({ fields }: WrappedFieldArrayProps<RequirementFormRow>) => {
   const { formatMessage } = useIntl();
 
   return (
@@ -50,7 +50,7 @@ const RequirementsList = ({ fields }: WrappedFieldArrayProps<Requirement>) => {
         const fieldData = fields.get(index);
 
         return (
-          <div key={fieldData.id} className={cx('requirement-row')}>
+          <div key={fieldData.key ?? fieldData.id} className={cx('requirement-row')}>
             <div className={cx('input-container')}>
               <FieldProvider name={`${item}.value`} placeholder={formatMessage(messages.enterLink)}>
                 <FieldErrorHint provideHint={false}>
@@ -74,7 +74,7 @@ const RequirementsList = ({ fields }: WrappedFieldArrayProps<Requirement>) => {
         <Button
           variant="text"
           type="button"
-          onClick={() => fields.push({ id: uniqueId(), value: '' })}
+          onClick={() => fields.push({ key: uniqueId(), value: '' })}
           className={cx('add-button')}
           iconPlace="start"
           icon={<PlusIcon />}

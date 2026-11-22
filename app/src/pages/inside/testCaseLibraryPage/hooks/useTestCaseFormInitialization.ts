@@ -97,8 +97,8 @@ export const useTestCaseFormInitialization = ({
           manualScenario?.executionEstimationTime ??
           TEST_CASE_FORM_INITIAL_VALUES.executionEstimationTime,
         requirements: isEmpty(manualScenario?.requirements)
-          ? [{ id: uniqueId(), value: '' }]
-          : manualScenario?.requirements,
+          ? [{ key: uniqueId(), value: '' }]
+          : manualScenario?.requirements?.map(({ id, value }) => ({ key: id, id, value })),
         precondition: manualScenario?.preconditions?.value ?? '',
         preconditionAttachments: normalizeAttachmentsForForm(
           manualScenario?.preconditions?.attachments,

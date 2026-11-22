@@ -40,6 +40,7 @@ import {
   getTestCaseTemplateIcon,
   getTestCaseTimeCondition,
 } from '../utils/getTestCaseAnalyticsParams';
+import { getRequirementIds } from '../utils/requirementsUtils';
 import { EditScenarioModalContent } from './editScenarioModalContent';
 import { EDIT_SCENARIO_MODAL_KEY, EDIT_SCENARIO_FORM_NAME } from './constants';
 import { EditScenarioModalProps } from './types';
@@ -70,7 +71,12 @@ const EditScenarioModalComponent = ({
 
   const handleUpdate = useCallback(
     async (formData: CreateTestCaseFormData): Promise<void> => {
-      const response = await editTestCase(formData, testCase?.testFolder?.id, true);
+      const response = await editTestCase(
+        formData,
+        testCase?.testFolder?.id,
+        true,
+        getRequirementIds(initialFormValues?.requirements),
+      );
 
       if (response && testCase?.id) {
         trackEvent(

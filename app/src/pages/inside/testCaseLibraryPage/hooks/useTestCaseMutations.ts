@@ -37,10 +37,7 @@ import {
 import { NewFolderData } from '../utils/getFolderFromFormValues';
 import { useFolderActions } from './useFolderActions';
 import { useRefetchCurrentTestCases } from './useRefetchCurrentTestCases';
-import {
-  createNewTags as createTestCaseTags,
-  saveTestCaseWithRequirementRetry,
-} from './testCaseSaveUtils';
+import { createNewTags as createTestCaseTags } from './testCaseSaveUtils';
 
 export interface TestCaseResponse {
   id?: number;
@@ -123,6 +120,7 @@ export const useTestCaseMutations = (testCaseId?: number) => {
         errorMessageId: NotificationMessageKey;
         currentFolderId?: number;
         isDetailsPage?: boolean;
+        persistedRequirementIds?: Set<string>;
       },
     ): Promise<TestCaseResponse | null> => {
       try {
@@ -130,18 +128,12 @@ export const useTestCaseMutations = (testCaseId?: number) => {
 
         const updatedAttributes = await createNewTags(payload.attributes);
 
-        const manualScenario = buildManualScenario(payload);
+        const manualScenario = buildManualScenario(payload, options.persistedRequirementIds);
         const { newFolderDetails, existingFolderId } = processFolder(payload.folder);
 
-        const response = await saveTestCaseWithRequirementRetry<
-          TestCaseResponse,
-          ReturnType<typeof buildTestCaseData>
-        >({
-          url: options.url,
+        const response = await fetch<TestCaseResponse>(options.url, {
           method: options.method,
           data: buildTestCaseData(payload, manualScenario, updatedAttributes),
-          projectKey,
-          testCaseId: options.method === 'PUT' ? testCaseId : undefined,
         });
 
         const refreshedTestCaseId = response?.id ?? testCaseId;
@@ -196,7 +188,6 @@ export const useTestCaseMutations = (testCaseId?: number) => {
       showSpinner,
       hideSpinner,
       createNewTags,
-      projectKey,
       dispatch,
       completeFolderDestination,
       showSuccessNotification,
@@ -226,6 +217,7 @@ export const useTestCaseMutations = (testCaseId?: number) => {
       payload: CreateTestCaseFormData,
       currentFolderId?: number,
       isDetailsPage?: boolean,
+      persistedRequirementIds?: Set<string>,
     ): Promise<TestCaseResponse | null> => {
       if (!testCaseId) {
         showErrorNotification({ messageId: 'testCaseUpdateFailed' });
@@ -240,6 +232,7 @@ export const useTestCaseMutations = (testCaseId?: number) => {
         errorMessageId: 'testCaseUpdateFailed',
         currentFolderId,
         isDetailsPage,
+        persistedRequirementIds,
       });
     },
     [testCaseId, projectKey, handleTestCaseCreation, showErrorNotification],

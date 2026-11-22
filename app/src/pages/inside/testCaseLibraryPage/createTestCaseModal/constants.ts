@@ -8,7 +8,7 @@ export const TEST_CASE_FORM_INITIAL_VALUES = {
   manualScenarioType: ManualScenarioType.STEPS,
   executionEstimationTime: DEFAULT_EXECUTION_ESTIMATION_TIME,
   attributes: [],
-  requirements: [{ id: uniqueId(), value: '' }],
+  requirements: [{ key: uniqueId(), value: '' }],
 };
 
 export const NAME_FIELD_MAX_LENGTH = 255;
