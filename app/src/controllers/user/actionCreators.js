@@ -55,6 +55,7 @@ export const fetchUserErrorAction = (error) => ({
   type: FETCH_USER_ERROR,
   payload: error?.message,
   error: true,
+  meta: { errorCode: error?.errorCode, status: error?.status },
 });
 
 export const setPhotoTimeStampAction = (timeStamp) => ({
