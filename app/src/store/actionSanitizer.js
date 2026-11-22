@@ -87,7 +87,11 @@ const isSecretFieldAction = (action, extraKeys) => {
   if (typeof field !== 'string' || !action.payload || typeof action.payload === 'object') {
     return false;
   }
-  const name = field.split(/[.[\]]+/).filter(Boolean).pop() || '';
+  const name =
+    field
+      .split(/[.[\]]+/)
+      .filter(Boolean)
+      .pop() || '';
   return SECRET_KEYS.has(name.toLowerCase()) || extraKeys.has(name);
 };
 
