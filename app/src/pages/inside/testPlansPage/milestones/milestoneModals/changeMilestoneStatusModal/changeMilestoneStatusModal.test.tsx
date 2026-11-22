@@ -68,6 +68,45 @@ const findButtonByText = (text: string): HTMLButtonElement | undefined =>
     (button) => button.textContent?.trim() === text,
   );
 
+const nullDateCases = [
+  {
+    name: '"Start without a date" sends an explicit null startDate',
+    buttonText: 'Start Without a Date',
+    nullField: 'startDate',
+    milestone: milestoneFixture({
+      status: MilestoneStatus.SCHEDULED,
+      startDate: null,
+      endDate: '2026-12-31T00:00:00Z',
+    }),
+    targetStatus: MilestoneStatus.TESTING,
+    expectedData: {
+      name: 'Release 1.0',
+      type: 'RELEASE',
+      status: MilestoneStatus.TESTING,
+      startDate: null,
+      endDate: '2026-12-31T00:00:00Z',
+    },
+  },
+  {
+    name: '"Complete without deadline" sends an explicit null endDate',
+    buttonText: 'Complete without Deadline',
+    nullField: 'endDate',
+    milestone: milestoneFixture({
+      status: MilestoneStatus.TESTING,
+      startDate: '2026-01-01T00:00:00Z',
+      endDate: null,
+    }),
+    targetStatus: MilestoneStatus.COMPLETED,
+    expectedData: {
+      name: 'Release 1.0',
+      type: 'RELEASE',
+      status: MilestoneStatus.COMPLETED,
+      startDate: '2026-01-01T00:00:00Z',
+      endDate: null,
+    },
+  },
+];
+
 describe('ChangeMilestoneStatusModal request bodies', () => {
   let container: HTMLDivElement;
   let root: Root;
@@ -106,49 +145,18 @@ describe('ChangeMilestoneStatusModal request bodies', () => {
     container.remove();
   });
 
-  test('"Start without a date" sends an explicit null startDate', async () => {
-    const milestone = milestoneFixture({
-      status: MilestoneStatus.SCHEDULED,
-      startDate: null,
-      endDate: '2026-12-31T00:00:00Z',
-    });
-    renderModal({ milestone, targetStatus: MilestoneStatus.TESTING });
+  test.each(nullDateCases)(
+    '$name',
+    async ({ buttonText, nullField, milestone, targetStatus, expectedData }) => {
+      renderModal({ milestone, targetStatus });
 
-    await clickButton('Start Without a Date');
+      await clickButton(buttonText);
 
-    expect(mockFetch).toHaveBeenCalledTimes(1);
-    const [, params] = mockFetch.mock.calls[0] as [string, { method: string; data: unknown }];
-    expect(params.method).toBe('patch');
-    expect(params.data).toEqual({
-      name: 'Release 1.0',
-      type: 'RELEASE',
-      status: MilestoneStatus.TESTING,
-      startDate: null,
-      endDate: '2026-12-31T00:00:00Z',
-    });
-    expect(JSON.stringify(params.data)).toContain('"startDate":null');
-  });
-
-  test('"Complete without deadline" sends an explicit null endDate', async () => {
-    const milestone = milestoneFixture({
-      status: MilestoneStatus.TESTING,
-      startDate: '2026-01-01T00:00:00Z',
-      endDate: null,
-    });
-    renderModal({ milestone, targetStatus: MilestoneStatus.COMPLETED });
-
-    await clickButton('Complete without Deadline');
-
-    expect(mockFetch).toHaveBeenCalledTimes(1);
-    const [, params] = mockFetch.mock.calls[0] as [string, { method: string; data: unknown }];
-    expect(params.method).toBe('patch');
-    expect(params.data).toEqual({
-      name: 'Release 1.0',
-      type: 'RELEASE',
-      status: MilestoneStatus.COMPLETED,
-      startDate: '2026-01-01T00:00:00Z',
-      endDate: null,
-    });
-    expect(JSON.stringify(params.data)).toContain('"endDate":null');
-  });
+      expect(mockFetch).toHaveBeenCalledTimes(1);
+      const [, params] = mockFetch.mock.calls[0] as [string, { method: string; data: unknown }];
+      expect(params.method).toBe('patch');
+      expect(params.data).toEqual(expectedData);
+      expect(JSON.stringify(params.data)).toContain(`"${nullField}":null`);
+    },
+  );
 });
