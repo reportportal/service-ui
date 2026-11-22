@@ -88,4 +88,28 @@ describe('getFileNameFromContentDisposition', () => {
       getFileNameFromContentDisposition("attachment; filename*=UTF-8'en'na%C3%AFve%20file.txt"),
     ).toBe('naïve file.txt');
   });
+
+  test('decodes filename* declared as ISO-8859-1', () => {
+    expect(
+      getFileNameFromContentDisposition("attachment; filename*=ISO-8859-1''caf%E9.txt", 'fb.txt'),
+    ).toBe('café.txt');
+  });
+
+  test('matches the filename* charset case-insensitively', () => {
+    expect(
+      getFileNameFromContentDisposition("attachment; filename*=utf-8''caf%C3%A9.txt", 'fb.txt'),
+    ).toBe('café.txt');
+  });
+
+  test('falls back for a malformed ISO-8859-1 filename*', () => {
+    expect(
+      getFileNameFromContentDisposition("attachment; filename*=iso-8859-1''caf%E.txt", 'fb.txt'),
+    ).toBe('fb.txt');
+  });
+
+  test('falls back for an unsupported filename* charset', () => {
+    expect(
+      getFileNameFromContentDisposition("attachment; filename*=koi8-r''%D0%D2.txt", 'fb.txt'),
+    ).toBe('fb.txt');
+  });
 });

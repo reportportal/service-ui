@@ -61,6 +61,22 @@ const unquote = (value) =>
     ? value.slice(1, -1).replace(/\\(.)/g, '$1')
     : value;
 
+// Decodes the percent-encoded value of an RFC 5987 `filename*` according to its declared charset.
+// Throws for malformed input and for charsets other than UTF-8 and ISO-8859-1.
+const decodeExtValue = (value, charset) => {
+  const normalizedCharset = charset.toLowerCase();
+  if (normalizedCharset === 'utf-8' || normalizedCharset === '') {
+    return decodeURIComponent(value);
+  }
+  if (normalizedCharset === 'iso-8859-1') {
+    if (/%(?![0-9a-f]{2})/i.test(value)) {
+      throw new URIError('malformed percent-encoding');
+    }
+    return value.replace(/%([0-9a-f]{2})/gi, (_, hex) => String.fromCharCode(parseInt(hex, 16)));
+  }
+  throw new Error(`unsupported charset: ${charset}`);
+};
+
 // Reads the file name from a Content-Disposition header. Parameter names are matched as a whole
 // (so `x-filename` is not `filename`), case-insensitively. Prefers the RFC 5987 `filename*`
 // parameter (`charset'language'percent-encoded`) and falls back to the plain `filename`.
@@ -71,14 +87,16 @@ export const getFileNameFromContentDisposition = (header, fileNameFallback = '')
   const params = parseParameters(header);
   const encoded = params['filename*'];
   if (encoded) {
-    const match = /^(?:[^']*)'[^']*'(.*)$/.exec(unquote(encoded));
+    const match = /^([^']*)'[^']*'(.*)$/.exec(unquote(encoded));
     try {
-      const decoded = decodeURIComponent((match ? match[1] : unquote(encoded)).trim());
+      const decoded = match
+        ? decodeExtValue(match[2].trim(), match[1].trim())
+        : decodeURIComponent(unquote(encoded).trim());
       if (decoded) {
         return decoded;
       }
     } catch {
-      // malformed encoding: fall through to the plain parameter
+      // malformed encoding or unsupported charset: fall through to the plain parameter
     }
   }
   const fileName = params.filename ? unquote(params.filename).trim() : '';
