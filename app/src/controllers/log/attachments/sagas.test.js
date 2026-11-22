@@ -88,15 +88,30 @@ describe('openAttachmentInBrowser', () => {
     expect(run('text/plain;charset=x"<script>').type).toBe('text/plain');
   });
 
-  test('opens the blob without an opener and revokes it later', () => {
+  test('opens the blob without an opener and keeps its URL valid while the tab is open', () => {
     run('image/png');
 
     expect(openSpy).toHaveBeenCalledWith('blob:attachment', '_blank', 'noopener,noreferrer');
     expect(createObjectURL).toHaveBeenCalledTimes(1);
-    expect(revokeObjectURL).not.toHaveBeenCalled();
 
     jest.runAllTimers();
 
-    expect(revokeObjectURL).toHaveBeenCalledWith('blob:attachment');
+    expect(revokeObjectURL).not.toHaveBeenCalled();
+  });
+
+  test('revokes only URLs older than the 20 most recently opened attachments', () => {
+    for (let i = 0; i < 25; i += 1) {
+      createObjectURL.mockReturnValueOnce(`blob:attachment-${i}`);
+      const saga = openAttachmentInBrowser({ payload: 'abcd' });
+      saga.next();
+      saga.next('test_project');
+      saga.next(new Blob(['content'], { type: 'image/png' }));
+    }
+
+    const revoked = revokeObjectURL.mock.calls.map(([url]) => url);
+
+    expect(revoked).toContain('blob:attachment-0');
+    expect(revoked).not.toContain('blob:attachment-24');
+    expect(revoked).not.toContain('blob:attachment-5');
   });
 });
