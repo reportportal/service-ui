@@ -15,8 +15,15 @@
  */
 
 import { SHOW_DEFAULT_ERROR_NOTIFICATION } from 'controllers/notification/constants';
-import { updateDashboardWidgets } from './sagas';
+import { runSaga } from 'redux-saga';
+import { LOGOUT } from 'controllers/auth/constants';
+import { clearWidgetCache } from 'pages/inside/dashboardItemPage/widgetsGrid/widget/widgetCache';
+import { updateDashboardWidgets, dashboardSagas } from './sagas';
 import { fetchDashboardAction, updateDashboardItemSuccessAction } from './actionCreators';
+
+jest.mock('pages/inside/dashboardItemPage/widgetsGrid/widget/widgetCache', () => ({
+  clearWidgetCache: jest.fn(),
+}));
 
 describe('controllers/dashboard/sagas updateDashboardWidgets', () => {
   const dashboard = { id: 1, name: 'd', widgets: [] };
@@ -37,5 +44,26 @@ describe('controllers/dashboard/sagas updateDashboardWidgets', () => {
     expect(errorStep.value.PUT.action.payload.error).toBe('Dashboard is locked');
     expect(gen.next().value.PUT.action).toEqual(fetchDashboardAction());
     expect(gen.next().done).toBe(true);
+  });
+});
+
+describe('controllers/dashboard/sagas logout', () => {
+  test('the logout action clears the widget cache', () => {
+    let emit;
+    const task = runSaga(
+      {
+        subscribe: (callback) => {
+          emit = callback;
+          return () => {};
+        },
+        dispatch: () => {},
+        getState: () => ({}),
+      },
+      dashboardSagas,
+    );
+    expect(clearWidgetCache).not.toHaveBeenCalled();
+    emit({ type: LOGOUT });
+    expect(clearWidgetCache).toHaveBeenCalledTimes(1);
+    task.cancel();
   });
 });
