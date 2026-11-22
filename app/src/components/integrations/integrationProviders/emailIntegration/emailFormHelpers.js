@@ -15,6 +15,7 @@
  */
 
 import { combineNameAndEmailToFrom } from 'common/utils/fieldTransformer';
+import { isBlank, isAnyTargetChanged } from 'components/integrations/integrationTargetHelpers';
 import { AUTH_ENABLED_KEY, HOST_KEY, PORT_KEY, PROTOCOL_KEY, PASSWORD_KEY } from './constants';
 
 export const PASSWORD_REQUIRED_ERROR = 'requiredFieldHint';
@@ -24,10 +25,6 @@ const TARGET_KEYS = [HOST_KEY, PORT_KEY, PROTOCOL_KEY];
 
 export const isAuthOn = (value) => value === true || value === 'true';
 
-const isBlank = (value) => value === undefined || value === null || `${value}`.trim() === '';
-
-const normalizeTargetValue = (value) => (isBlank(value) ? '' : `${value}`.trim());
-
 // The API never returns the password. The only signal that one is stored is that authentication
 // was enabled when the integration was loaded: the server keeps a password only with auth on,
 // and switching auth off blanks it. Limit: an integration saved with auth on and an empty
@@ -35,9 +32,7 @@ const normalizeTargetValue = (value) => (isBlank(value) ? '' : `${value}`.trim()
 export const hasStoredPassword = (initialData) => isAuthOn(initialData?.[AUTH_ENABLED_KEY]);
 
 export const isTargetChanged = (initialData, values) =>
-  TARGET_KEYS.some(
-    (key) => normalizeTargetValue(initialData?.[key]) !== normalizeTargetValue(values?.[key]),
-  );
+  isAnyTargetChanged(TARGET_KEYS, initialData, values);
 
 // An empty password is acceptable in edit mode only when one is stored and will be kept, which
 // the server does only while host, port and protocol stay the same.

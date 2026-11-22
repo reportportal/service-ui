@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import React, { Fragment, useEffect } from 'react';
+import React, { Fragment, useEffect, useMemo } from 'react';
 import PropTypes from 'prop-types';
 import { defineMessages, useIntl } from 'react-intl';
 import { formValueSelector } from 'redux-form';
@@ -48,6 +48,7 @@ import {
   LAST_NAME_KEY,
   FIRST_AND_LAST_NAME_KEY,
 } from '../constants';
+import { getManagerPasswordError, getPasswordAttributeError } from '../ldapFormHelpers';
 import { FieldTextConditional } from './fieldTextConditional';
 import styles from './ldapFormFields.scss';
 
@@ -139,11 +140,29 @@ const LdapFormFieldsComponent = ({
   disabled,
   lineAlign,
   initialData,
+  isEdit,
+  url,
   passwordEncoderType,
   nameType,
   updateMetaData,
 }) => {
   const { formatMessage } = useIntl();
+
+  // Stable references on purpose: redux-form re-registers the field when `validate` changes.
+  const validateManagerPassword = useMemo(
+    () => (value, allValues) =>
+      getManagerPasswordError({ value, isEdit, initialData, values: allValues }),
+    [isEdit, initialData],
+  );
+  const validatePasswordAttribute = useMemo(
+    () => (value, allValues) =>
+      getPasswordAttributeError({ value, isEdit, initialData, values: allValues }),
+    [isEdit, initialData],
+  );
+  const currentValues = { [URL_KEY]: url, [PASSWORD_ENCODER_TYPE_KEY]: passwordEncoderType };
+  const isManagerPasswordRequired = Boolean(
+    getManagerPasswordError({ value: '', isEdit, initialData, values: currentValues }),
+  );
 
   useEffect(() => {
     const data = !isEmptyObject(initialData)
@@ -263,9 +282,11 @@ const LdapFormFieldsComponent = ({
         fieldProps: {
           name: MANAGER_PASSWORD_KEY,
           type: 'password',
+          validate: validateManagerPassword,
+          required: isManagerPasswordRequired,
         },
         label: messages.managerPasswordLabel,
-        children: defaultField,
+        children: <FieldErrorHint>{defaultField}</FieldErrorHint>,
       },
       {
         fieldProps: {
@@ -341,9 +362,10 @@ const LdapFormFieldsComponent = ({
       const passwordField = {
         fieldProps: {
           name: PASSWORD_ATTRIBUTE_KEY,
+          validate: validatePasswordAttribute,
         },
         label: messages.passwordAttributeLabel,
-        children: defaultField,
+        children: <FieldErrorHint>{defaultField}</FieldErrorHint>,
       };
       firstStepFields.splice(9, 0, passwordField);
     }
@@ -413,6 +435,8 @@ LdapFormFieldsComponent.propTypes = {
   disabled: PropTypes.bool,
   lineAlign: PropTypes.bool,
   initialData: PropTypes.object,
+  isEdit: PropTypes.bool,
+  url: PropTypes.string,
   passwordEncoderType: PropTypes.string,
   nameType: PropTypes.string,
   updateMetaData: PropTypes.func,
@@ -421,11 +445,14 @@ LdapFormFieldsComponent.defaultProps = {
   disabled: false,
   lineAlign: false,
   initialData: DEFAULT_FORM_CONFIG,
+  isEdit: false,
+  url: '',
   passwordEncoderType: '',
   nameType: FULL_NAME_KEY,
   updateMetaData: () => {},
 };
 export const LdapFormFields = connect((state) => ({
+  url: integrationFormValueSelector(state, URL_KEY),
   passwordEncoderType: integrationFormValueSelector(state, PASSWORD_ENCODER_TYPE_KEY),
   nameType: integrationFormValueSelector(state, NAME_TYPE_KEY),
 }))(LdapFormFieldsComponent);

@@ -14,23 +14,28 @@
  * limitations under the License.
  */
 
-import { EMAIL, GITHUB } from 'common/constants/pluginNames';
+import { EMAIL, GITHUB, LDAP } from 'common/constants/pluginNames';
 import { prepareEmailFormData } from './integrationProviders/emailIntegration/emailFormHelpers';
+import { prepareLdapFormData } from './integrationProviders/ldapIntegration/ldapFormHelpers';
 import { prepareGithubIntegrationFormData } from './prepareIntegrationFormData';
 
+// initialData is the integration as loaded (edit mode only), for rules that depend on what changed.
 export type IntegrationFormPrepareFn = (
   formData: Record<string, unknown>,
+  initialData?: Record<string, unknown>,
 ) => Record<string, unknown>;
 
 export const INTEGRATION_FORM_PREPARE_MAP: Partial<Record<string, IntegrationFormPrepareFn>> = {
   [EMAIL]: prepareEmailFormData,
   [GITHUB]: prepareGithubIntegrationFormData,
+  [LDAP]: prepareLdapFormData,
 };
 
 export const applyIntegrationFormPrepare = (
   pluginName: string,
   formData: Record<string, unknown>,
+  initialData?: Record<string, unknown>,
 ): Record<string, unknown> => {
   const prepare = INTEGRATION_FORM_PREPARE_MAP[pluginName];
-  return prepare ? prepare(formData) : formData;
+  return prepare ? prepare(formData, initialData) : formData;
 };
