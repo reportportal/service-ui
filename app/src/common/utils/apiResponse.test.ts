@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+import { AxiosError } from 'axios';
+import { ERROR_CANCELED, ERROR_UNAUTHORIZED } from './fetch';
 import { getApiErrorMessage, readBatchResult } from './apiResponse';
 
 describe('getApiErrorMessage', () => {
@@ -25,13 +27,28 @@ describe('getApiErrorMessage', () => {
 
   it('returns undefined for empty or missing messages', () => {
     expect(getApiErrorMessage({ error: 'x' })).toBeUndefined();
-    expect(getApiErrorMessage({ message: '  ' })).toBeUndefined();
+    expect(getApiErrorMessage({ errorCode: 4001, message: '  ' })).toBeUndefined();
     expect(getApiErrorMessage(null)).toBeUndefined();
   });
 
   it('accepts Error instances and strings', () => {
     expect(getApiErrorMessage(new Error('boom'))).toBe('boom');
     expect(getApiErrorMessage('plain')).toBe('plain');
+  });
+
+  it('does not surface axios errors or fetch sentinels', () => {
+    expect(getApiErrorMessage(new AxiosError('Network Error'))).toBeUndefined();
+    expect(getApiErrorMessage(new AxiosError('timeout of 1000ms exceeded'))).toBeUndefined();
+    expect(getApiErrorMessage(new Error(ERROR_UNAUTHORIZED))).toBeUndefined();
+    expect(getApiErrorMessage(new Error(ERROR_CANCELED))).toBeUndefined();
+  });
+
+  it('does not trust messages of bodies that are not ErrorRS', () => {
+    // fetch wraps non-JSON error bodies as { message, status }
+    expect(
+      getApiErrorMessage({ message: 'Request failed with status code 502', status: 502 }),
+    ).toBeUndefined();
+    expect(getApiErrorMessage({ message: 'Plain failure' })).toBeUndefined();
   });
 });
 
