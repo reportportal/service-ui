@@ -19,7 +19,6 @@ import { TestCase } from 'types/testCase';
 import { TransformedFolder } from 'controllers/testCase';
 import { Page } from 'types/common';
 
-export type GetFolderTestCaseIds = (folder: TransformedFolder) => Promise<number[]>;
 export type NumberSet = Set<number>;
 export type SetState<T> = Dispatch<SetStateAction<T>>;
 
@@ -51,7 +50,6 @@ export interface PanelActionsContextValue {
   toggleFolder: (folder: TransformedFolder) => void;
   batchSelectFolder: (folder: TransformedFolder) => Promise<void>;
   batchDeselectFolder: (folder: TransformedFolder) => void;
-  getFolderTestCaseIds: GetFolderTestCaseIds;
 }
 
 export interface PanelStateContextValue {

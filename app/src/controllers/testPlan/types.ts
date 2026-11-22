@@ -45,3 +45,10 @@ export type TestPlanTestCaseDto = {
   content: ExtendedTestCase[];
   page: PageInfo;
 };
+
+// Body of the batch add endpoints of a test plan and of a manual launch: explicit test cases, whole
+// folder subtrees resolved by the server, or both.
+export interface BatchAddTestCasesRQ {
+  testCaseIds?: number[];
+  folderIds?: number[];
+}

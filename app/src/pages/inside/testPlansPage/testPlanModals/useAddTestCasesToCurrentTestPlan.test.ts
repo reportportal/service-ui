@@ -17,6 +17,8 @@
 import { act, createElement } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
 
+import { URLS } from 'common/urls';
+
 import { useAddTestCasesToCurrentTestPlan } from './useAddTestCasesToCurrentTestPlan';
 
 const mockDispatch = jest.fn();
@@ -96,7 +98,7 @@ describe('useAddTestCasesToCurrentTestPlan', () => {
       errors: [{ testCaseId: 3, errorMessage: 'Test case 3 is already in the test plan' }],
     });
 
-    const result = await hook.addTestCasesToCurrentTestPlan([1, 2, 3]);
+    const result = await hook.addTestCasesToCurrentTestPlan({ testCaseIds: [1, 2, 3] });
 
     expect(result).toBe(false);
     expect(mockReloadActiveTestPlan).toHaveBeenCalledTimes(1);
@@ -120,7 +122,7 @@ describe('useAddTestCasesToCurrentTestPlan', () => {
   test('reports the number of added test cases from the response', async () => {
     mockFetch.mockResolvedValueOnce({ totalCount: 2, successCount: 2, failureCount: 0 });
 
-    const result = await hook.addTestCasesToCurrentTestPlan([1, 2]);
+    const result = await hook.addTestCasesToCurrentTestPlan({ testCaseIds: [1, 2] });
 
     expect(result).toBe(true);
     expect(mockReloadActiveTestPlan).toHaveBeenCalledTimes(1);
@@ -130,11 +132,34 @@ describe('useAddTestCasesToCurrentTestPlan', () => {
     });
   });
 
+  test('adds folders by id and treats test cases already in the plan as added', async () => {
+    mockFetch.mockResolvedValueOnce({
+      totalCount: 4,
+      successCount: 4,
+      failureCount: 0,
+      successTestCaseIds: [1, 2, 3, 4],
+      errors: [],
+    });
+
+    const result = await hook.addTestCasesToCurrentTestPlan({ folderIds: [5, 6] });
+
+    expect(result).toBe(true);
+    expect(mockFetch).toHaveBeenCalledWith(URLS.testPlanTestCasesBatch('project_key', 7), {
+      method: 'post',
+      data: { folderIds: [5, 6] },
+    });
+    expect(mockDispatch).not.toHaveBeenCalled();
+    expect(mockShowSuccessNotification).toHaveBeenCalledWith({
+      messageId: 'testCasesAddedToTestPlanFromLibrarySuccess',
+      values: { count: 4 },
+    });
+  });
+
   test('shows the backend error message', async () => {
     jest.spyOn(console, 'error').mockImplementation(() => {});
     mockFetch.mockRejectedValueOnce({ errorCode: 4091, message: 'Test plan is locked' });
 
-    const result = await hook.addTestCasesToCurrentTestPlan([1]);
+    const result = await hook.addTestCasesToCurrentTestPlan({ testCaseIds: [1] });
 
     expect(result).toBe(false);
     expect(mockShowErrorNotification).toHaveBeenCalledWith({

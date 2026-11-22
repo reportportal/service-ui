@@ -35,7 +35,10 @@ import {
   showWarningNotification,
 } from 'controllers/notification';
 import { foldersSelector } from 'controllers/testCase';
+import type { Folder } from 'controllers/testCase/types';
+import type { BatchAddTestCasesRQ } from 'controllers/testPlan/types';
 import { getAllSubfolderIds } from 'common/utils/folderUtils';
+import { ADD_BY_FOLDER_LIMIT } from 'common/constants/tms';
 
 import { getIsManualCovered } from 'pages/inside/common/testCaseList/utils';
 import { CreateManualLaunchDto, isLaunchObject, LaunchFormData, LaunchMode } from './types';
@@ -43,23 +46,18 @@ import { ExtendedTestCase } from 'types/testCase';
 import { ManualLaunchItem } from 'pages/inside/manualLaunchesPage/types';
 import { generateUUID } from './utils';
 import { messages } from './messages';
-import {
-  fetchAllTestCasesByFolderIds,
-  fetchAllTestPlanTestCases,
-} from '../testLibrarySidePanel/utils';
+import { fetchAllTestPlanTestCases } from '../testLibrarySidePanel/utils';
 
 const resolveTestCaseIds = ({
-  folderId,
   selectedTestCaseIds,
   submitTestCases,
   uncoveredTestsOnly,
 }: {
-  folderId?: number;
   selectedTestCaseIds?: number[];
   submitTestCases: ExtendedTestCase[];
   uncoveredTestsOnly?: boolean;
 }): number[] => {
-  if (!folderId && selectedTestCaseIds?.length) {
+  if (selectedTestCaseIds?.length) {
     if (!uncoveredTestsOnly) {
       return selectedTestCaseIds;
     }
@@ -78,13 +76,27 @@ const resolveTestCaseIds = ({
   return addedTestCases.map((testCase) => testCase.id);
 };
 
+// Test cases of the given folders and their subfolders according to the library folder tree; 0 when
+// the tree is not loaded (the server enforces the same limit).
+const countSubtreeTestCases = (folderIds: number[], folders: Folder[]): number => {
+  const subtreeIds = new Set(
+    folderIds.flatMap((folderId) => getAllSubfolderIds(folderId, folders)),
+  );
+
+  return folders
+    .filter(({ id }) => subtreeIds.has(id))
+    .reduce((total, { countOfTestCases }) => total + (countOfTestCases || 0), 0);
+};
+
 const buildCreateManualLaunchDto = ({
   formValues,
   testCaseIds,
+  folderIds,
   testPlanId,
 }: {
   formValues: LaunchFormData;
   testCaseIds: number[];
+  folderIds?: number[];
   testPlanId?: number | null;
 }): CreateManualLaunchDto => ({
   name: isString(formValues.name) ? formValues.name : '',
@@ -92,6 +104,7 @@ const buildCreateManualLaunchDto = ({
   startTime: new Date().toISOString(),
   mode: 'DEFAULT',
   testCaseIds,
+  ...(!isEmpty(folderIds) && { folderIds }),
   attributes: (formValues.attributes || []).filter((attr) => attr.key && attr.value),
   description: formValues.description || '',
   ...(isNumber(testPlanId) && { testPlan: { id: testPlanId } }),
@@ -113,17 +126,16 @@ interface AddToExistingLaunchResult {
   planSyncError?: unknown;
 }
 
-const addTestCasesToExistingLaunch = async (
-  projectKey: string,
-  launchId: number,
-  testCaseIds: number[],
-): Promise<AddToExistingLaunchResult> => {
-  const response: unknown = await fetch(URLS.batchAddTestCasesToLaunch(projectKey, launchId), {
-    method: 'POST',
-    data: { testCaseIds },
-  });
-  const result = readBatchResult(response, testCaseIds.length);
-  // Only the test cases that really landed in the launch go to its test plan.
+// Only the test cases that really landed in the launch go to its test plan. Folders go as they are:
+// the server adds their subtrees idempotently, so the plan gets the same test cases in one request.
+const getPlanSyncRequest = (
+  { testCaseIds = [], folderIds }: BatchAddTestCasesRQ,
+  result: BatchResult,
+): BatchAddTestCasesRQ | null => {
+  if (!isEmpty(folderIds)) {
+    return result.successCount > 0 ? { folderIds } : null;
+  }
+
   const failedTestCaseIds = getBatchFailedIds(result);
   let addedTestCaseIds: number[] = [];
 
@@ -133,7 +145,22 @@ const addTestCasesToExistingLaunch = async (
     addedTestCaseIds = testCaseIds.filter((id) => !failedTestCaseIds.includes(id));
   }
 
-  if (isEmpty(addedTestCaseIds)) {
+  return isEmpty(addedTestCaseIds) ? null : { testCaseIds: addedTestCaseIds };
+};
+
+const addTestCasesToExistingLaunch = async (
+  projectKey: string,
+  launchId: number,
+  request: BatchAddTestCasesRQ,
+): Promise<AddToExistingLaunchResult> => {
+  const response: unknown = await fetch(URLS.batchAddTestCasesToLaunch(projectKey, launchId), {
+    method: 'POST',
+    data: request,
+  });
+  const result = readBatchResult(response, request.testCaseIds?.length);
+  const planSyncRequest = getPlanSyncRequest(request, result);
+
+  if (!planSyncRequest) {
     return { result };
   }
 
@@ -144,7 +171,7 @@ const addTestCasesToExistingLaunch = async (
     if (isNumber(linkedTestPlanId)) {
       await fetch(URLS.testPlanTestCasesBatch(projectKey, linkedTestPlanId), {
         method: 'POST',
-        data: { testCaseIds: addedTestCaseIds },
+        data: planSyncRequest,
       });
     }
   } catch (planSyncError) {
@@ -159,7 +186,7 @@ export const useCreateManualLaunch = (
   activeMode: LaunchMode,
   testPlanId?: number | null,
   selectedLaunchId?: number,
-  folderId?: number,
+  folderIds?: number[],
   onClearSelection?: () => void,
   onSubmitSuccess?: (mode: LaunchMode) => void,
   selectedTestCaseIds?: number[],
@@ -178,15 +205,10 @@ export const useCreateManualLaunch = (
     );
   }, [dispatch, formatMessage]);
 
+  const isFolderSubmit = !isEmpty(folderIds);
+
   const getTestCasesForSubmit = useCallback(async () => {
     try {
-      if (folderId) {
-        return await fetchAllTestCasesByFolderIds(
-          projectKey,
-          getAllSubfolderIds(folderId, folders),
-        );
-      }
-
       if (isNumber(testPlanId) && !selectedTestCaseIds?.length) {
         return await fetchAllTestPlanTestCases(projectKey, testPlanId);
       }
@@ -197,15 +219,7 @@ export const useCreateManualLaunch = (
 
       return null;
     }
-  }, [
-    folderId,
-    folders,
-    projectKey,
-    selectedTestCaseIds,
-    showLaunchCreationError,
-    testCases,
-    testPlanId,
-  ]);
+  }, [projectKey, selectedTestCaseIds, showLaunchCreationError, testCases, testPlanId]);
 
   const finishSuccessfully = useCallback(() => {
     onSubmitSuccess?.(activeMode);
@@ -215,11 +229,26 @@ export const useCreateManualLaunch = (
 
   const handleSubmit = useCallback(
     async (formValues: LaunchFormData) => {
+      if (isFolderSubmit) {
+        const folderTestCasesCount = countSubtreeTestCases(folderIds ?? [], folders);
+
+        if (folderTestCasesCount > ADD_BY_FOLDER_LIMIT) {
+          dispatch(
+            showErrorNotification({
+              messageId: 'addByFolderLimitExceeded',
+              values: { count: folderTestCasesCount, limit: ADD_BY_FOLDER_LIMIT },
+            }),
+          );
+
+          return;
+        }
+      }
+
       setIsLoading(true);
 
       const resolvedTestPlanId = testPlanId ?? formValues.testPlan?.id;
       const isWholeTestPlanSubmit =
-        isNumber(resolvedTestPlanId) && !folderId && !selectedTestCaseIds?.length;
+        isNumber(resolvedTestPlanId) && !isFolderSubmit && !selectedTestCaseIds?.length;
       const shouldCreateWholePlan =
         activeMode === LaunchMode.NEW && isWholeTestPlanSubmit && !formValues.uncoveredTestsOnly;
 
@@ -227,7 +256,8 @@ export const useCreateManualLaunch = (
         let testCaseIds: number[] = [];
         let primaryTestCaseName: string | undefined;
 
-        if (!shouldCreateWholePlan) {
+        // Folders are resolved by the server, so no test case of them is downloaded here.
+        if (!shouldCreateWholePlan && !isFolderSubmit) {
           const submitTestCases = await getTestCasesForSubmit();
 
           if (!submitTestCases) {
@@ -235,7 +265,6 @@ export const useCreateManualLaunch = (
           }
 
           testCaseIds = resolveTestCaseIds({
-            folderId,
             selectedTestCaseIds,
             submitTestCases,
             uncoveredTestsOnly: formValues.uncoveredTestsOnly,
@@ -262,7 +291,7 @@ export const useCreateManualLaunch = (
           const { result, planSyncError } = await addTestCasesToExistingLaunch(
             projectKey,
             launchId,
-            testCaseIds,
+            isFolderSubmit ? { folderIds } : { testCaseIds },
           );
 
           if (result.failureCount > 0) {
@@ -271,7 +300,7 @@ export const useCreateManualLaunch = (
             dispatch(
               showSuccessNotification({
                 message:
-                  testCaseIds.length > 1
+                  isFolderSubmit || testCaseIds.length > 1
                     ? formatMessage(messages.testCasesAddedSuccess)
                     : formatMessage(messages.testCaseAddedSuccess, {
                         testCaseName: primaryTestCaseName,
@@ -298,6 +327,7 @@ export const useCreateManualLaunch = (
           const launchData = buildCreateManualLaunchDto({
             formValues,
             testCaseIds,
+            folderIds,
             testPlanId: resolvedTestPlanId,
           });
 
@@ -330,7 +360,9 @@ export const useCreateManualLaunch = (
     [
       testPlanId,
       getTestCasesForSubmit,
-      folderId,
+      isFolderSubmit,
+      folderIds,
+      folders,
       selectedTestCaseIds,
       selectedLaunchId,
       activeMode,

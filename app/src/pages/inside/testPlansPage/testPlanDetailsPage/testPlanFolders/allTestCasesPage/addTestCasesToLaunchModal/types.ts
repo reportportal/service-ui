@@ -20,6 +20,9 @@ import { ActionSource, AddToTestLaunchPlace } from 'analyticsEvents/testPlansPag
 export interface AddTestCasesToLaunchModalProps {
   selectedRowsIds: number[];
   testCases: TestCase[];
+  // Whole folders to add instead of the selected rows, and the number of test cases they hold.
+  folderIds?: number[];
+  itemCount?: number;
   testPlanId: string;
   onClearSelection?: () => void;
   source?: ActionSource;

@@ -30,6 +30,7 @@ import { BULK_ADD_TO_LAUNCH_MIN_SELECTION } from 'pages/inside/common/constants'
 import { createClassnames } from 'common/utils';
 import { useModal } from 'common/hooks';
 import { useUserPermissions } from 'hooks/useUserPermissions';
+import type { BatchAddTestCasesRQ } from 'controllers/testPlan/types';
 import { commonMessages } from 'pages/inside/common/common-messages';
 import {
   AddTestCasesToLaunchModalProps,
@@ -52,7 +53,7 @@ interface TestLibrarySidePanelProps {
   isOpen: boolean;
   isAddingToTestPlan?: boolean;
   onClose: VoidFn;
-  onAddTestCases: (testCaseIds: number[]) => Promise<boolean>;
+  onAddTestCases: (request: BatchAddTestCasesRQ) => Promise<boolean>;
 }
 
 export const TestLibrarySidePanel = ({

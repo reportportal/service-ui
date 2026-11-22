@@ -19,13 +19,17 @@ import { mount } from 'enzyme';
 import { IntlProvider } from 'react-intl';
 import { URLS } from 'common/urls';
 import { fetch } from 'common/utils';
+import { ADD_BY_FOLDER_LIMIT } from 'common/constants/tms';
 import { NOTIFICATION_TYPES } from 'controllers/notification';
 import { ExtendedTestCase } from 'types/testCase';
 import { useCreateManualLaunch } from './useCreateManualLaunch';
 import { LaunchFormData, LaunchMode } from './types';
 
 const mockDispatch = jest.fn();
-const mockState = { project: { info: { projectKey: 'demo' } } };
+const mockState = {
+  project: { info: { projectKey: 'demo' } },
+  testCase: { folders: { data: [] as unknown[] } },
+};
 
 jest.mock('react-redux', () => ({
   ...jest.requireActual<Record<string, unknown>>('react-redux'),
@@ -46,7 +50,14 @@ const formValues: LaunchFormData = { name: { id: LAUNCH_ID, name: 'launch' }, at
 
 type HandleSubmit = ReturnType<typeof useCreateManualLaunch>['handleSubmit'];
 
-const renderHook = (onSubmitSuccess: jest.Mock) => {
+const renderHook = (
+  onSubmitSuccess: jest.Mock,
+  {
+    mode = LaunchMode.EXISTING,
+    folderIds,
+    selectedTestCaseIds = [1, 2, 3],
+  }: { mode?: LaunchMode; folderIds?: number[]; selectedTestCaseIds?: number[] } = {},
+) => {
   let handleSubmit: HandleSubmit | null = null;
   const capture = (result: ReturnType<typeof useCreateManualLaunch>) => {
     handleSubmit = result.handleSubmit;
@@ -55,13 +66,13 @@ const renderHook = (onSubmitSuccess: jest.Mock) => {
     capture(
       useCreateManualLaunch(
         testCases,
-        LaunchMode.EXISTING,
+        mode,
         null,
         LAUNCH_ID,
-        undefined,
+        folderIds,
         undefined,
         onSubmitSuccess,
-        [1, 2, 3],
+        selectedTestCaseIds,
       ),
     );
     return null;
@@ -133,5 +144,152 @@ describe('useCreateManualLaunch: add to existing launch', () => {
 
     expect(notificationTypes()).toEqual([NOTIFICATION_TYPES.SUCCESS, NOTIFICATION_TYPES.WARNING]);
     expect(onSubmitSuccess).toHaveBeenCalledWith(LaunchMode.EXISTING);
+  });
+});
+
+describe('useCreateManualLaunch: add folders', () => {
+  const FOLDER_ID = 21;
+  const SUBFOLDER_ID = 22;
+  const setLibraryFolders = (rootCount: number, subfolderCount: number) => {
+    mockState.testCase.folders.data = [
+      { id: FOLDER_ID, name: 'Root', countOfTestCases: rootCount, parentFolderId: null },
+      {
+        id: SUBFOLDER_ID,
+        name: 'Child',
+        countOfTestCases: subfolderCount,
+        parentFolderId: FOLDER_ID,
+      },
+    ];
+  };
+  const requestedUrls = () => mockedFetch.mock.calls.map(([url]: [string]) => url);
+
+  beforeEach(() => {
+    mockDispatch.mockClear();
+    mockedFetch.mockReset();
+    setLibraryFolders(2, 3);
+  });
+
+  test('adds a folder to an existing launch and its test plan by folder id', async () => {
+    mockFetchByUrl({
+      [URLS.batchAddTestCasesToLaunch('demo', LAUNCH_ID)]: () =>
+        Promise.resolve({
+          totalCount: 5,
+          successCount: 5,
+          failureCount: 0,
+          successTestCaseIds: [1, 2, 3, 4, 5],
+          errors: [],
+        }),
+      [URLS.manualLaunchById('demo', LAUNCH_ID)]: () =>
+        Promise.resolve({ id: LAUNCH_ID, testPlan: { id: TEST_PLAN_ID } }),
+      [URLS.testPlanTestCasesBatch('demo', TEST_PLAN_ID)]: () => Promise.resolve({}),
+    });
+    const onSubmitSuccess = jest.fn();
+    const handleSubmit = renderHook(onSubmitSuccess, {
+      folderIds: [FOLDER_ID],
+      selectedTestCaseIds: undefined,
+    });
+
+    await act(async () => {
+      await handleSubmit(formValues);
+    });
+
+    expect(requestedUrls()).toEqual([
+      URLS.batchAddTestCasesToLaunch('demo', LAUNCH_ID),
+      URLS.manualLaunchById('demo', LAUNCH_ID),
+      URLS.testPlanTestCasesBatch('demo', TEST_PLAN_ID),
+    ]);
+    expect(mockedFetch).toHaveBeenCalledWith(URLS.batchAddTestCasesToLaunch('demo', LAUNCH_ID), {
+      method: 'POST',
+      data: { folderIds: [FOLDER_ID] },
+    });
+    expect(mockedFetch).toHaveBeenCalledWith(URLS.testPlanTestCasesBatch('demo', TEST_PLAN_ID), {
+      method: 'POST',
+      data: { folderIds: [FOLDER_ID] },
+    });
+    expect(notificationTypes()).toEqual([NOTIFICATION_TYPES.SUCCESS]);
+    expect(onSubmitSuccess).toHaveBeenCalledWith(LaunchMode.EXISTING);
+  });
+
+  test('creates a new launch from a folder without downloading its test cases', async () => {
+    mockFetchByUrl({
+      [URLS.manualLaunch('demo')]: () => Promise.resolve({ id: LAUNCH_ID }),
+    });
+    const onSubmitSuccess = jest.fn();
+    const handleSubmit = renderHook(onSubmitSuccess, {
+      mode: LaunchMode.NEW,
+      folderIds: [FOLDER_ID],
+      selectedTestCaseIds: undefined,
+    });
+
+    await act(async () => {
+      await handleSubmit({ name: 'New launch', attributes: [] });
+    });
+
+    expect(requestedUrls()).toEqual([URLS.manualLaunch('demo')]);
+    expect(mockedFetch).toHaveBeenCalledWith(URLS.manualLaunch('demo'), {
+      method: 'POST',
+      data: expect.objectContaining({
+        name: 'New launch',
+        testCaseIds: [],
+        folderIds: [FOLDER_ID],
+      }) as unknown,
+    });
+    expect(onSubmitSuccess).toHaveBeenCalledWith(LaunchMode.NEW);
+  });
+
+  test('a folder subtree above the limit shows the limit message and sends nothing', async () => {
+    setLibraryFolders(ADD_BY_FOLDER_LIMIT, 1);
+    const onSubmitSuccess = jest.fn();
+    const handleSubmit = renderHook(onSubmitSuccess, {
+      folderIds: [FOLDER_ID],
+      selectedTestCaseIds: undefined,
+    });
+
+    await act(async () => {
+      await handleSubmit(formValues);
+    });
+
+    expect(mockedFetch).not.toHaveBeenCalled();
+    expect(mockDispatch).toHaveBeenCalledWith(
+      expect.objectContaining({
+        payload: expect.objectContaining({
+          type: NOTIFICATION_TYPES.ERROR,
+          messageId: 'addByFolderLimitExceeded',
+          values: { count: ADD_BY_FOLDER_LIMIT + 1, limit: ADD_BY_FOLDER_LIMIT },
+        }) as unknown,
+      }),
+    );
+    expect(onSubmitSuccess).not.toHaveBeenCalled();
+  });
+
+  test('a folder rejected by the server over the limit shows the server message', async () => {
+    mockFetchByUrl({
+      [URLS.batchAddTestCasesToLaunch('demo', LAUNCH_ID)]: () =>
+        Promise.reject(
+          Object.assign(
+            new Error('Folders contain 6000 test cases, the limit per request is 5000'),
+            { errorCode: 40016 },
+          ),
+        ),
+    });
+    const onSubmitSuccess = jest.fn();
+    const handleSubmit = renderHook(onSubmitSuccess, {
+      folderIds: [FOLDER_ID],
+      selectedTestCaseIds: undefined,
+    });
+
+    await act(async () => {
+      await handleSubmit(formValues);
+    });
+
+    expect(mockDispatch).toHaveBeenCalledWith(
+      expect.objectContaining({
+        payload: expect.objectContaining({
+          type: NOTIFICATION_TYPES.ERROR,
+          message: 'Folders contain 6000 test cases, the limit per request is 5000',
+        }) as unknown,
+      }),
+    );
+    expect(onSubmitSuccess).not.toHaveBeenCalled();
   });
 });
