@@ -104,9 +104,11 @@ export class UserInfo extends Component {
           type: NOTIFICATION_TYPES.SUCCESS,
         });
       })
-      .catch(() => {
+      .catch((error) => {
+        // The server explains a refused email change (address taken, request repeated too soon,
+        // confirmation link unavailable for this host); show that instead of a generic failure.
         this.props.showNotification({
-          message: this.props.intl.formatMessage(messages.submitError),
+          message: error?.message || this.props.intl.formatMessage(messages.submitError),
           type: NOTIFICATION_TYPES.ERROR,
         });
       });
