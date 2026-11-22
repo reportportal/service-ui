@@ -79,6 +79,17 @@ const redact = (value, extraKeys, visited = new Map()) => {
   return result;
 };
 
+// redux-form CHANGE/BLUR (and similar) actions carry the bare value in `payload` and the field
+// path in `meta.field`, so the payload has no key of its own to match.
+const isSecretFieldAction = (action, extraKeys) => {
+  const field = action.meta?.field;
+  if (typeof field !== 'string' || !action.payload || typeof action.payload === 'object') {
+    return false;
+  }
+  const name = field.split(/[.[\]]+/).filter(Boolean).pop() || '';
+  return SECRET_KEYS.has(name.toLowerCase()) || extraKeys.has(name);
+};
+
 export const actionSanitizer = (action) => {
   if (!action) {
     return action;
@@ -86,7 +97,10 @@ export const actionSanitizer = (action) => {
 
   const secretFields = action.meta?.[SECRET_FIELDS_KEY];
   const extraKeys = new Set(Array.isArray(secretFields) ? secretFields : []);
-  const sanitized = redact(action, extraKeys);
+  let sanitized = redact(action, extraKeys);
+  if (isSecretFieldAction(action, extraKeys)) {
+    sanitized = { ...sanitized, payload: REDACTED };
+  }
 
   if (TOKEN_ACTIONS.includes(action.type) && sanitized.payload) {
     return {

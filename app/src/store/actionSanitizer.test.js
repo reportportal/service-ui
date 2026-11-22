@@ -151,6 +151,44 @@ describe('actionSanitizer for repeated references and cycles', () => {
   });
 });
 
+describe('actionSanitizer for redux-form field actions', () => {
+  test.each(['@@redux-form/CHANGE', '@@redux-form/BLUR'])(
+    'redacts the value of a secret field in %s',
+    (type) => {
+      const action = { type, payload: 'secret', meta: { form: 'login', field: 'password' } };
+
+      expect(actionSanitizer(action).payload).toBe('[redacted]');
+      expect(action.payload).toBe('secret');
+    },
+  );
+
+  test('matches the last segment of a nested field path', () => {
+    const action = {
+      type: '@@redux-form/CHANGE',
+      payload: 'secret',
+      meta: { form: 'f', field: 'integrationParameters.apiKey' },
+    };
+
+    expect(actionSanitizer(action).payload).toBe('[redacted]');
+  });
+
+  test('redacts fields listed in the secret fields meta', () => {
+    const action = {
+      type: '@@redux-form/CHANGE',
+      payload: 'secret',
+      meta: { field: 'custom', [SECRET_FIELDS_KEY]: ['custom'] },
+    };
+
+    expect(actionSanitizer(action).payload).toBe('[redacted]');
+  });
+
+  test('keeps the value of a non-secret field', () => {
+    const action = { type: '@@redux-form/CHANGE', payload: 'jira', meta: { field: 'name' } };
+
+    expect(actionSanitizer(action)).toBe(action);
+  });
+});
+
 describe('stateSanitizer', () => {
   test('blanks the auth token and secrets in forms, modals and the location', () => {
     const state = {
