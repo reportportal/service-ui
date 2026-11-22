@@ -351,12 +351,17 @@ function* getManualLaunchFolders(action: GetManualLaunchFoldersAction): Generato
       return;
     }
 
-    yield put(fetchErrorAction(MANUAL_LAUNCH_FOLDERS_NAMESPACE, error));
-    yield put(
-      showErrorNotification({
-        messageId: 'errorOccurredTryAgain',
-      }),
-    );
+    // Silent: the saga shows its own toast; the generic FETCH_ERROR handler would add a second.
+    yield put(fetchErrorAction(MANUAL_LAUNCH_FOLDERS_NAMESPACE, error, true));
+
+    // A missing launch is reported once, by the launch request's redirect notice.
+    if (!isNotFoundApiError(error)) {
+      yield put(
+        showErrorNotification({
+          messageId: 'errorOccurredTryAgain',
+        }),
+      );
+    }
   }
 }
 
@@ -429,12 +434,17 @@ function* getManualLaunchTestCaseExecutions(
       }),
     );
   } catch (error) {
-    yield put(fetchErrorAction(MANUAL_LAUNCH_TEST_CASE_EXECUTIONS_NAMESPACE, error));
-    yield put(
-      showErrorNotification({
-        messageId: 'errorOccurredTryAgain',
-      }),
-    );
+    // Silent: the saga shows its own toast; the generic FETCH_ERROR handler would add a second.
+    yield put(fetchErrorAction(MANUAL_LAUNCH_TEST_CASE_EXECUTIONS_NAMESPACE, error, true));
+
+    // A missing launch is reported once, by the launch request's redirect notice.
+    if (!isNotFoundApiError(error)) {
+      yield put(
+        showErrorNotification({
+          messageId: 'errorOccurredTryAgain',
+        }),
+      );
+    }
   }
 }
 

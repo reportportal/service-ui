@@ -16,15 +16,19 @@
 
 import { applyMiddleware, createStore, AnyAction } from 'redux';
 import createSagaMiddleware from 'redux-saga';
+import { all } from 'redux-saga/effects';
 import { fetch } from 'common/utils';
 import { URLS } from 'common/urls';
 import { FETCH_ERROR, FETCH_SUCCESS } from 'controllers/fetch/constants';
 import { SHOW_NOTIFICATION } from 'controllers/notification/constants';
 import { MANUAL_LAUNCHES_PAGE } from 'controllers/pages';
+import { fetchSagas } from 'controllers/fetch/sagas';
+import { notificationSagas } from 'controllers/notification/sagas';
 import { manualLaunchesSagas } from './sagas';
 import {
   getManualLaunchAction,
   getManualLaunchFoldersAction,
+  getManualLaunchTestCaseExecutionsAction,
   updateManualLaunchExecutionStatusAction,
 } from './actionCreators';
 import {
@@ -52,6 +56,21 @@ const setupStore = (state: Record<string, unknown>) => {
   }, applyMiddleware(sagaMiddleware));
   sagaMiddleware.run(manualLaunchesSagas);
   return { store, dispatched };
+};
+
+// Also runs the app-wide FETCH_ERROR and notification sagas, so every toast the user sees is counted.
+const setupStoreWithNotifications = (state: Record<string, unknown>) => {
+  const dispatched: AnyAction[] = [];
+  const sagaMiddleware = createSagaMiddleware();
+  const store = createStore((s = state, action: AnyAction) => {
+    dispatched.push(action);
+    return s;
+  }, applyMiddleware(sagaMiddleware));
+  sagaMiddleware.run(function* rootSaga() {
+    yield all([manualLaunchesSagas(), fetchSagas(), notificationSagas()]);
+  });
+  const toasts = () => dispatched.filter((action) => action.type === SHOW_NOTIFICATION);
+  return { store, dispatched, toasts };
 };
 
 describe('controllers/manualLaunch/sagas', () => {
@@ -305,6 +324,74 @@ describe('controllers/manualLaunch/sagas', () => {
 
       expect(dispatched.map((action) => action.type as string)).not.toContain(MANUAL_LAUNCHES_PAGE);
       expect(dispatched.map((action) => action.type as string)).toContain(FETCH_ERROR);
+    });
+  });
+  describe('toasts of the launch page loads', () => {
+    const launchNotFound = { errorCode: 4041, message: "Launch '10' not found." };
+    const serverError = { errorCode: 5000, message: 'bad gateway' };
+    const launchPageState = {
+      project: { info: { projectKey: 'demo' } },
+      location: {
+        type: 'MANUAL_LAUNCH_DETAILS_PAGE',
+        payload: { launchId: '10', organizationSlug: 'org', projectSlug: 'prj' },
+      },
+    };
+
+    test.each([
+      ['folders', () => getManualLaunchFoldersAction({ launchId: 10 })],
+      [
+        'executions',
+        () => getManualLaunchTestCaseExecutionsAction({ launchId: 10, offset: 0, limit: 20 }),
+      ],
+    ])('a missing launch on the %s load shows no toast', async (_, createAction) => {
+      mockedFetch.mockRejectedValue(launchNotFound);
+      const { store, toasts } = setupStoreWithNotifications(launchPageState);
+
+      store.dispatch(createAction());
+      await flush();
+
+      expect(toasts()).toHaveLength(0);
+    });
+
+    test.each([
+      ['folders', () => getManualLaunchFoldersAction({ launchId: 10 })],
+      [
+        'executions',
+        () => getManualLaunchTestCaseExecutionsAction({ launchId: 10, offset: 0, limit: 20 }),
+      ],
+    ])('a server error on the %s load shows exactly one toast', async (_, createAction) => {
+      mockedFetch.mockRejectedValue(serverError);
+      const { store, toasts } = setupStoreWithNotifications(launchPageState);
+
+      store.dispatch(createAction());
+      await flush();
+
+      expect(toasts()).toHaveLength(1);
+      expect(toasts()[0].payload).toMatchObject({ messageId: 'errorOccurredTryAgain' });
+    });
+
+    test('opening a missing launch shows only the redirect toast', async () => {
+      mockedFetch.mockImplementation((url: string) =>
+        Promise.reject(
+          Object.assign(
+            new Error('not found'),
+            url === URLS.manualLaunchById('demo', '10') ? { errorCode: 40430 } : launchNotFound,
+          ),
+        ),
+      );
+      const { store, toasts } = setupStoreWithNotifications(launchPageState);
+
+      store.dispatch(getManualLaunchAction({ launchId: '10' }));
+      store.dispatch(getManualLaunchFoldersAction({ launchId: '10' }));
+      store.dispatch(
+        getManualLaunchTestCaseExecutionsAction({ launchId: '10', offset: 0, limit: 20 }),
+      );
+      await flush();
+
+      expect(toasts()).toHaveLength(1);
+      expect(toasts()[0].payload).toMatchObject({
+        messageId: 'manualLaunchRedirectWarningMessage',
+      });
     });
   });
 });
