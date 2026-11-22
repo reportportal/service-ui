@@ -24,11 +24,15 @@ import {
   cancel,
   takeLatest,
   cancelled,
+  race,
+  take,
 } from 'redux-saga/effects';
 import { Task } from 'redux-saga';
 import { isEmpty } from 'es-toolkit/compat';
 import { URLS } from 'common/urls';
 import { fetch, delayedPut } from 'common/utils';
+import { getApiErrorMessage } from 'common/utils/apiResponse';
+import { ERROR_CANCELED } from 'common/utils/fetch';
 import { fetchSuccessAction, fetchErrorAction } from 'controllers/fetch';
 import { FETCH_START } from 'controllers/fetch/constants';
 import {
@@ -40,7 +44,7 @@ import {
   showNotification,
   showSuccessNotification,
 } from 'controllers/notification';
-import { projectKeySelector } from 'controllers/project';
+import { FETCH_PROJECT_SUCCESS, projectKeySelector } from 'controllers/project';
 import { SPINNER_DEBOUNCE } from 'pages/inside/common/constants';
 import { buildTestCaseFilterParams } from 'pages/inside/common/testCaseList/filterSidePanel/utils';
 import { hideModalAction } from 'controllers/modal';
@@ -90,9 +94,15 @@ import { getAllFolderIdsToDelete } from 'common/utils/folderUtils';
 import { fetchAllFolders } from './utils/fetchAllFolders';
 import { TestCase } from 'types/testCase';
 import { Page } from 'types/common';
-import { areFoldersFetchedSelector, foldersSelector } from 'controllers/testCase/selectors';
 import {
+  areFoldersFetchedSelector,
+  foldersSelector,
+  testCaseDetailsSelector,
+} from 'controllers/testCase/selectors';
+import {
+  TEST_CASE_DETAILS_PAGE,
   TEST_CASE_LIBRARY_PAGE,
+  pageSelector,
   urlOrganizationSlugSelector,
   urlProjectSlugSelector,
   urlFolderIdSelector,
@@ -101,6 +111,7 @@ import {
 import { MANUAL_LAUNCH_FOLDER_SEARCH_FILTER_KEY } from 'controllers/manualLaunch/constants';
 
 function* getTestCasesByFolderId(action: GetTestCasesByFolderIdAction): Generator {
+  const controller = new AbortController();
   yield put(startLoadingTestCasesAction());
 
   try {
@@ -116,6 +127,7 @@ function* getTestCasesByFolderId(action: GetTestCasesByFolderIdAction): Generato
         offset,
         limit,
       }),
+      { signal: controller.signal },
     )) as {
       content: TestCase[];
       page: Page;
@@ -129,9 +141,20 @@ function* getTestCasesByFolderId(action: GetTestCasesByFolderIdAction): Generato
       }),
     );
   } finally {
-    yield put(stopLoadingTestCasesAction());
+    if (yield cancelled()) {
+      controller.abort();
+    } else {
+      yield put(stopLoadingTestCasesAction());
+    }
   }
 }
+
+// ErrorRS codes: 404xx = not found, 4003 = access denied.
+const isNotFoundOrForbidden = (error: unknown) => {
+  const errorCode = String((error as { errorCode?: number })?.errorCode ?? '');
+
+  return errorCode.startsWith('404') || errorCode === '4003';
+};
 
 function* getTestCaseDetails(action: TestCaseDetailsAction) {
   try {
@@ -145,35 +168,61 @@ function* getTestCaseDetails(action: TestCaseDetailsAction) {
       type: GET_TEST_CASE_DETAILS_SUCCESS,
       payload: testCaseDetails,
     });
-  } catch {
-    const organizationSlug = (yield select(urlOrganizationSlugSelector)) as string;
-    const projectSlug = (yield select(urlProjectSlugSelector)) as string;
-
-    yield put({
-      type: TEST_CASE_LIBRARY_PAGE,
-      payload: {
-        organizationSlug,
-        projectSlug,
-      },
-    });
-
+  } catch (error: unknown) {
     yield put({
       type: GET_TEST_CASE_DETAILS_FAILURE,
       error: 'errorOccurredTryAgain',
     });
 
-    yield put(
-      showNotification({
-        messageId: 'redirectWarningMessage',
-        type: NOTIFICATION_TYPES.WARNING,
-        typographyColor: NOTIFICATION_TYPOGRAPHY_COLOR_TYPES.BLACK,
-        duration: WARNING_NOTIFICATION_DURATION,
-      }),
-    );
+    if ((error as Error)?.message === ERROR_CANCELED) {
+      return;
+    }
+
+    const isMissing = isNotFoundOrForbidden(error);
+    const currentDetails = (yield select(testCaseDetailsSelector)) as TestCase | undefined;
+    const hasCurrentDetails = String(currentDetails?.id) === String(action.payload.testCaseId);
+
+    const page = (yield select(pageSelector)) as string;
+
+    // Only the details page leaves for the library: it stays for transient errors when the
+    // requested test case is already displayed, and leaves when the test case is gone or when only
+    // another test case's data could be shown. Other pages (the library list reloads the details
+    // after a save) just show the notification.
+    if (page === TEST_CASE_DETAILS_PAGE && (isMissing || !hasCurrentDetails)) {
+      const organizationSlug = (yield select(urlOrganizationSlugSelector)) as string;
+      const projectSlug = (yield select(urlProjectSlugSelector)) as string;
+
+      yield put({
+        type: TEST_CASE_LIBRARY_PAGE,
+        payload: {
+          organizationSlug,
+          projectSlug,
+        },
+      });
+    }
+
+    if (isMissing) {
+      yield put(
+        showNotification({
+          messageId: 'redirectWarningMessage',
+          type: NOTIFICATION_TYPES.WARNING,
+          typographyColor: NOTIFICATION_TYPOGRAPHY_COLOR_TYPES.BLACK,
+          duration: WARNING_NOTIFICATION_DURATION,
+        }),
+      );
+    } else {
+      yield put(
+        showErrorNotification({
+          message: getApiErrorMessage(error),
+          messageId: getApiErrorMessage(error) ? '' : 'errorOccurredTryAgain',
+        }),
+      );
+    }
   }
 }
 
 function* getAllTestCases(action: GetAllTestCasesAction): Generator {
+  const controller = new AbortController();
   yield put(startLoadingTestCasesAction());
 
   try {
@@ -187,6 +236,7 @@ function* getAllTestCases(action: GetAllTestCasesAction): Generator {
         'filter.cnt.name': testCasesSearchParams,
         ...buildTestCaseFilterParams(filterPriorities, filterTags),
       }),
+      { signal: controller.signal },
     )) as {
       content: TestCase[];
       page: Page;
@@ -199,7 +249,11 @@ function* getAllTestCases(action: GetAllTestCasesAction): Generator {
       }),
     );
   } finally {
-    yield put(stopLoadingTestCasesAction());
+    if (yield cancelled()) {
+      controller.abort();
+    } else {
+      yield put(stopLoadingTestCasesAction());
+    }
   }
 }
 
@@ -222,7 +276,18 @@ function* getFolders(action: GetFoldersAction) {
       });
     }
 
-    const allFolders = (yield call(fetchAllFolders, { projectKey })) as Folder[];
+    // The folders slice is reset when another project is loaded: drop (and abort) a fetch that is
+    // still running for the previous project so it cannot replace the new project's tree.
+    const controller = new AbortController();
+    const { allFolders } = (yield race({
+      allFolders: call(fetchAllFolders, { projectKey, signal: controller.signal }),
+      projectChanged: take(FETCH_PROJECT_SUCCESS),
+    })) as { allFolders?: Folder[] };
+
+    if (!allFolders) {
+      controller.abort();
+      return;
+    }
 
     yield put(
       fetchSuccessAction(NAMESPACE, {
@@ -300,8 +365,8 @@ function* handleFolderCreation(
   } catch (error: unknown) {
     yield put(
       showErrorNotification({
-        message: (error as { error?: string })?.error,
-        messageId: null,
+        message: getApiErrorMessage(error),
+        messageId: getApiErrorMessage(error) ? '' : 'errorOccurredTryAgain',
         values: {},
       }),
     );
@@ -347,8 +412,8 @@ function* deleteFolder(action: DeleteFolderAction) {
   } catch (error: unknown) {
     yield put(
       showErrorNotification({
-        message: (error as { error?: string })?.error,
-        messageId: null,
+        message: getApiErrorMessage(error),
+        messageId: getApiErrorMessage(error) ? '' : 'errorOccurredTryAgain',
         values: {},
       }),
     );
@@ -382,8 +447,8 @@ function* renameFolder(action: RenameFolderAction) {
   } catch (error: unknown) {
     yield put(
       showErrorNotification({
-        message: (error as { error?: string })?.error,
-        messageId: null,
+        message: getApiErrorMessage(error),
+        messageId: getApiErrorMessage(error) ? '' : 'errorOccurredTryAgain',
         values: {},
       }),
     );
@@ -452,12 +517,18 @@ function* watchCreateFolder() {
   yield takeEvery(CREATE_FOLDER, createFolder);
 }
 
-function* watchGetTestCasesByFolderId() {
-  yield takeLatest(GET_TEST_CASES_BY_FOLDER_ID, getTestCasesByFolderId);
+function* getTestCases(action: GetTestCasesByFolderIdAction | GetAllTestCasesAction) {
+  if (action.type === GET_TEST_CASES_BY_FOLDER_ID) {
+    yield call(getTestCasesByFolderId, action);
+  } else {
+    yield call(getAllTestCases, action);
+  }
 }
 
-function* watchGetAllTestCases() {
-  yield takeLatest(GET_ALL_TEST_CASES, getAllTestCases);
+// Both lists write the same testCases slice, so they share one takeLatest channel: switching between
+// a folder and "All test cases" cancels the request that is no longer on screen.
+function* watchGetTestCases() {
+  yield takeLatest([GET_TEST_CASES_BY_FOLDER_ID, GET_ALL_TEST_CASES], getTestCases);
 }
 
 function* watchGetTestCaseDetails() {
@@ -473,8 +544,7 @@ export function* testCaseSagas() {
     watchGetTestCaseDetails(),
     watchGetFolders(),
     watchCreateFolder(),
-    watchGetTestCasesByFolderId(),
-    watchGetAllTestCases(),
+    watchGetTestCases(),
     watchGetFilteredFolders(),
     takeEvery(DELETE_FOLDER, deleteFolder),
     takeEvery(RENAME_FOLDER, renameFolder),

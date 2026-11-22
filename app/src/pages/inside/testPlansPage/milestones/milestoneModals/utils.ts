@@ -14,29 +14,18 @@
  * limitations under the License.
  */
 
-import { isSameDay, isValid, parseISO, startOfDay } from 'date-fns';
-
 import {
   MilestoneStatus,
   type TmsMilestoneRS,
   type TmsMilestoneStatus,
 } from 'controllers/milestone';
 
-import { isoToDateOnlyFormValue } from '../milestoneDateUtils';
+import { isIsoOnCalendarDay, isoToDateOnlyFormValue } from '../milestoneDateUtils';
 import { changeMilestoneStatusFlowType } from './changeMilestoneStatusModal/constants';
 import type { ChangeMilestoneStatusFlow } from './changeMilestoneStatusModal/types';
 
-const hasMeaningfulDateOnly = (iso: string): boolean => Boolean(isoToDateOnlyFormValue(iso).trim());
-
-const isIsoOnLocalCalendarDay = (iso: string, day: Date): boolean => {
-  const parsed = parseISO(iso);
-
-  if (!isValid(parsed)) {
-    return false;
-  }
-
-  return isSameDay(parsed, startOfDay(day));
-};
+const hasMeaningfulDateOnly = (iso: string | null): boolean =>
+  Boolean(isoToDateOnlyFormValue(iso).trim());
 
 const getFlowForStartTestingFromScheduled = (
   milestone: TmsMilestoneRS,
@@ -45,7 +34,7 @@ const getFlowForStartTestingFromScheduled = (
     return { type: changeMilestoneStatusFlowType.START_TESTING_NO_START_DATE };
   }
 
-  if (!isIsoOnLocalCalendarDay(milestone.startDate, new Date())) {
+  if (!isIsoOnCalendarDay(milestone.startDate, new Date())) {
     return {
       type: changeMilestoneStatusFlowType.START_TESTING_DATE_CHOICE,
       startDateIso: milestone.startDate,
@@ -62,7 +51,7 @@ const getFlowForCompleteFromTestingOrScheduled = (
     return { type: changeMilestoneStatusFlowType.COMPLETE_NO_DEADLINE };
   }
 
-  if (!isIsoOnLocalCalendarDay(milestone.endDate, new Date())) {
+  if (!isIsoOnCalendarDay(milestone.endDate, new Date())) {
     return {
       type: changeMilestoneStatusFlowType.COMPLETE_DATE_CHOICE,
       deadlineIso: milestone.endDate,

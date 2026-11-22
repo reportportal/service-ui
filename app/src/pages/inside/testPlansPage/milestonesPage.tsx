@@ -15,7 +15,7 @@
  */
 
 import { useIntl } from 'react-intl';
-import { isNotNil, isUndefined } from 'es-toolkit';
+import { isNotNil } from 'es-toolkit';
 import { isEmpty } from 'es-toolkit/compat';
 import { useSelector, useDispatch } from 'react-redux';
 import { useEffect, useMemo, useRef } from 'react';
@@ -55,6 +55,7 @@ import {
 import { BetaBadge } from '../common/betaBadge';
 import { PageHeaderWithBreadcrumbsAndActions } from '../common/pageHeaderWithBreadcrumbsAndActions';
 import { commonMessages } from './commonMessages';
+import { useInitialMilestonesFetch } from './useInitialMilestonesFetch';
 
 export const MilestonesPage = () => {
   const { formatMessage } = useIntl();
@@ -80,11 +81,7 @@ export const MilestonesPage = () => {
   const { offset, limit } = useQueryParams(defaultMilestoneQueryParams);
   const queryParams = useMemo(() => ({ offset, limit }), [offset, limit]);
 
-  useEffect(() => {
-    if (isUndefined(milestones) && !milestonesLoading && isAuthorized) {
-      dispatch(getMilestonesAction(queryParams));
-    }
-  }, [dispatch, milestones, milestonesLoading, queryParams, isAuthorized]);
+  useInitialMilestonesFetch(queryParams);
 
   const hasTrackedViewRef = useRef(false);
 

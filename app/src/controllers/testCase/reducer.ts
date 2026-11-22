@@ -47,6 +47,7 @@ import {
   TOGGLE_FOLDER_EXPANSION,
   UPDATE_DESCRIPTION_SUCCESS,
   UPDATE_FOLDER_COUNTER,
+  UPDATE_FOLDER_COUNTERS,
   SET_FILTERED_FOLDERS,
   START_LOADING_FILTERED_FOLDERS,
   STOP_LOADING_FILTERED_FOLDERS,
@@ -124,7 +125,8 @@ type FolderAction =
   | { type: typeof MOVE_FOLDER_SUCCESS; payload: MoveFolderParams }
   | { type: typeof CREATE_FOLDER_SUCCESS; payload: Folder }
   | { type: typeof CREATE_FOLDERS_BATCH_SUCCESS; payload: Folder[] }
-  | { type: typeof UPDATE_FOLDER_COUNTER; payload: UpdateFolderCounterParams };
+  | { type: typeof UPDATE_FOLDER_COUNTER; payload: UpdateFolderCounterParams }
+  | { type: typeof UPDATE_FOLDER_COUNTERS; payload: Record<number, number> };
 
 const isCreatingFolderReducer = (
   state = INITIAL_STATE.folders.isCreatingFolder,
@@ -241,6 +243,15 @@ const folderReducer = (state = INITIAL_STATE.folders.data, action: FolderAction)
         }
 
         return { ...folder, countOfTestCases: folder.countOfTestCases + action.payload.delta };
+      });
+    }
+    case UPDATE_FOLDER_COUNTERS: {
+      const folderDeltas = action.payload;
+
+      return state.map((folder) => {
+        const delta = folderDeltas[folder.id];
+
+        return delta ? { ...folder, countOfTestCases: folder.countOfTestCases + delta } : folder;
       });
     }
     default:

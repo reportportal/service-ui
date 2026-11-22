@@ -24,12 +24,19 @@ import { fetchSuccessAction } from 'controllers/fetch';
 import { projectKeySelector } from 'controllers/project';
 import { NAMESPACE } from 'controllers/testCase/constants';
 import { foldersSelector } from 'controllers/testCase';
-import { Folder } from 'controllers/testCase/types';
 import { fetchAllFolders } from 'controllers/testCase/utils/fetchAllFolders';
+import {
+  NOTIFICATION_TYPES,
+  NOTIFICATION_TYPOGRAPHY_COLOR_TYPES,
+  WARNING_NOTIFICATION_DURATION,
+  showNotification,
+} from 'controllers/notification';
+import { getApiErrorMessage } from 'common/utils/apiResponse';
 
 import { useNavigateToFolder } from '../../../hooks/useNavigateToFolder';
 import { useFolderOperationUI } from '../../../hooks/useFolderOperationUI';
 import { getFolderNames } from '../../../utils/getFolderNames';
+import { DuplicateFolderResponse, getDuplicationFailure } from './duplicationResult';
 
 export const useDuplicateFolder = () => {
   const {
@@ -61,7 +68,7 @@ export const useDuplicateFolder = () => {
       const isDragDropOperation = Boolean(fromDragDrop);
       handleOperationStart({ fromDragDrop: isDragDropOperation });
 
-      let duplicatedFolder: Folder;
+      let duplicatedFolder: DuplicateFolderResponse;
 
       try {
         const data: { name: string; parentTestFolderId?: number; index?: number } = {
@@ -73,13 +80,19 @@ export const useDuplicateFolder = () => {
           data.parentTestFolderId = parentFolderId;
         }
 
-        duplicatedFolder = await fetch<Folder>(URLS.testFolderDuplicate(projectKey, folderId), {
-          method: 'POST',
-          data,
-        });
-      } catch {
+        duplicatedFolder = await fetch<DuplicateFolderResponse>(
+          URLS.testFolderDuplicate(projectKey, folderId),
+          {
+            method: 'POST',
+            data,
+          },
+        );
+      } catch (error) {
+        const message = getApiErrorMessage(error);
+
         showErrorNotification({
-          messageId: 'errorOccurredTryAgain',
+          messageId: message ? undefined : 'errorOccurredTryAgain',
+          message,
         });
         handleOperationError({ fromDragDrop: isDragDropOperation });
 
@@ -102,15 +115,29 @@ export const useDuplicateFolder = () => {
         duplicatedFolder.parentFolderId,
       );
 
+      const duplicationFailure = getDuplicationFailure(duplicatedFolder);
+
       handleOperationSuccess({
         fromDragDrop: isDragDropOperation,
         skipFolderRefresh: true,
-        successMessageId: 'testCaseFolderDuplicatedSuccess',
+        successMessageId: duplicationFailure ? undefined : 'testCaseFolderDuplicatedSuccess',
         messageValues: {
           folderName: originalFolderName,
           targetFolderName,
         },
       });
+
+      if (duplicationFailure) {
+        dispatch(
+          showNotification({
+            messageId: 'batchPartialFailure',
+            values: duplicationFailure,
+            type: NOTIFICATION_TYPES.WARNING,
+            typographyColor: NOTIFICATION_TYPOGRAPHY_COLOR_TYPES.BLACK,
+            duration: WARNING_NOTIFICATION_DURATION,
+          }),
+        );
+      }
 
       navigateToFolderAfterAction({
         targetFolderId: duplicatedFolder.id,

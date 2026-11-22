@@ -84,6 +84,7 @@ export const useTestLibraryPanel = ({
   const [batchLoadingFolderIds, setBatchLoadingFolderIds] = useState<NumberSet>(new Set());
 
   const isOpenRef = useRef(isOpen);
+  const abortControllerRef = useRef(new AbortController());
 
   const folders = useSelector(transformedFoldersSelector);
   const activeTestPlan = useSelector(activeTestPlanSelector);
@@ -103,6 +104,9 @@ export const useTestLibraryPanel = ({
     isOpenRef.current = isOpen;
 
     if (!isOpen) {
+      // Stop folder downloads that are still running for the closed panel.
+      abortControllerRef.current.abort();
+      abortControllerRef.current = new AbortController();
       setSelectedTestCasesIds(new Set());
       setSelectedFolderIds(new Set());
       setExpandedIds(new Set());
@@ -111,8 +115,15 @@ export const useTestLibraryPanel = ({
     }
   }, [isOpen]);
 
+  useEffect(() => () => abortControllerRef.current.abort(), []);
+
   const updateFolderTestCases = useCallback(
-    (folderId: number, newTestCases: Partial<FolderTestCases>) => {
+    (
+      folderId: number,
+      newTestCases:
+        | Partial<FolderTestCases>
+        | ((current: FolderTestCases) => Partial<FolderTestCases>),
+    ) => {
       if (!isOpenRef.current) {
         return;
       }
@@ -129,7 +140,7 @@ export const useTestLibraryPanel = ({
 
         updatedMap.set(folderId, {
           ...currentState,
-          ...newTestCases,
+          ...(typeof newTestCases === 'function' ? newTestCases(currentState) : newTestCases),
         });
 
         return updatedMap;
@@ -178,6 +189,7 @@ export const useTestLibraryPanel = ({
     setSelectedTestCasesIds,
     setSelectedFolderIds,
     setBatchLoadingFolderIds,
+    abortControllerRef,
   });
 
   const checkboxStatesMap = useMemo(() => {

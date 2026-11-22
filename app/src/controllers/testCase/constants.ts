@@ -38,6 +38,7 @@ export const RENAME_FOLDER = 'renameFolder' as const;
 export const RENAME_FOLDER_SUCCESS = 'renameFolderSuccess' as const;
 export const MOVE_FOLDER_SUCCESS = 'moveFolderSuccess' as const;
 export const UPDATE_FOLDER_COUNTER = 'updateFolderCounter' as const;
+export const UPDATE_FOLDER_COUNTERS = 'updateFolderCounters' as const;
 export const UPDATE_DESCRIPTION_SUCCESS = 'updateDescriptionSuccess' as const;
 export const TOGGLE_FOLDER_EXPANSION = 'toggleFolderExpansion' as const;
 export const EXPAND_FOLDERS_TO_LEVEL = 'expandFoldersToLevel' as const;

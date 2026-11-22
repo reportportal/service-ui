@@ -241,13 +241,30 @@ export const TestCaseFolders = () => {
       </Button>
     ) : null;
 
+  // The dragged folder shows a spinner and cannot be dragged again until its request finishes.
+  const [pendingFolderIds, setPendingFolderIds] = useState<number[]>([]);
+  const runFolderDrop = (folderId: number, operation: () => Promise<void>) => {
+    if (pendingFolderIds.includes(folderId)) {
+      return;
+    }
+
+    setPendingFolderIds((ids) => [...ids, folderId]);
+    // Fire-and-forget: moveFolder/duplicateFolder report their own errors, and the catch below
+    // swallows anything else so the returned promise never rejects.
+    void operation()
+      .catch(noop)
+      .finally(() => setPendingFolderIds((ids) => ids.filter((id) => id !== folderId)));
+  };
+
   const { handleMoveFolder, handleDuplicateFolder } = useFolderDragDrop({
     folders: initialFolders,
     onMove: (params) => {
-      moveFolder({ ...params, parentTestFolderId: params.parentFolderId });
+      runFolderDrop(params.folderId, () =>
+        moveFolder({ ...params, parentTestFolderId: params.parentFolderId }),
+      );
     },
     onDuplicate: (params) => {
-      duplicateFolder(params);
+      runFolderDrop(params.folderId, () => duplicateFolder(params));
     },
   });
 
@@ -312,6 +329,7 @@ export const TestCaseFolders = () => {
       onMoveTestCase={canManageTestCases ? handleMoveTestCase : undefined}
       onDuplicateTestCase={canManageTestCases ? handleDuplicateTestCase : undefined}
       onFolderTreeViewControl={handleFolderTreeViewControl}
+      pendingFolderIds={pendingFolderIds}
     >
       <AllTestCasesPage
         testCases={testCases}

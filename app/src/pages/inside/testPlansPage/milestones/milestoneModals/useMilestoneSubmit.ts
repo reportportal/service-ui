@@ -18,6 +18,7 @@ import { useDispatch } from 'react-redux';
 import { isUndefined } from 'es-toolkit';
 
 import { fetch } from 'common/utils';
+import { getApiErrorMessage } from 'common/utils/apiResponse';
 import { useDebouncedSpinner, useQueryParams } from 'common/hooks';
 import { hideModalAction } from 'controllers/modal';
 import { showSuccessNotification, showErrorNotification } from 'controllers/notification';
@@ -26,6 +27,7 @@ import {
   getMilestonesAction,
   TmsMilestoneRS,
 } from 'controllers/milestone';
+import { resetHasTestPlansCache } from 'hooks/useHasTestPlans';
 
 import type { MilestoneSubmitPayload, UseMilestoneSubmitParams } from './types';
 
@@ -56,6 +58,7 @@ export const useMilestoneSubmit = ({
       });
 
       onSuccess?.();
+      resetHasTestPlansCache();
       dispatch(hideModalAction());
       dispatch(
         showSuccessNotification({
@@ -63,10 +66,11 @@ export const useMilestoneSubmit = ({
         }),
       );
       dispatch(getMilestonesAction(queryParams));
-    } catch {
+    } catch (error) {
       dispatch(
         showErrorNotification({
-          messageId: 'errorOccurredTryAgain',
+          message: getApiErrorMessage(error),
+          messageId: getApiErrorMessage(error) ? '' : 'errorOccurredTryAgain',
         }),
       );
     } finally {

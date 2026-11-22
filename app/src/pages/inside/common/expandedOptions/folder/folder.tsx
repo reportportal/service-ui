@@ -28,6 +28,7 @@ import {
   MeatballMenuIcon,
   DragNDropIcon,
   FolderIcon,
+  SpinLoader,
 } from '@reportportal/ui-kit';
 import { VoidFn } from '@reportportal/ui-kit/common';
 
@@ -55,6 +56,7 @@ interface FolderRowProps {
   nextNodeDepth: number;
   hasHiddenActiveDescendant?: boolean;
   isDragging?: boolean;
+  isPending?: boolean;
   enableDragAndDrop?: boolean;
   dragRef?: (element: HTMLElement | null) => void;
   style?: CSSProperties;
@@ -72,6 +74,7 @@ export const Folder = ({
   enableDragAndDrop = false,
   hasHiddenActiveDescendant = false,
   isDragging: isDraggingFolder = false,
+  isPending = false,
   dragRef,
   style,
   onFolderClick,
@@ -133,7 +136,9 @@ export const Folder = ({
     <div
       className={cx('folders-tree__item', {
         'folders-tree__item--open': isOpen,
+        'folders-tree__item--pending': isPending,
       })}
+      aria-busy={isPending || undefined}
       role="treeitem"
       tabIndex={0}
       aria-level={depth + 1}
@@ -203,7 +208,12 @@ export const Folder = ({
               </PopoverControl>
             </button>
           )}
-          {enableDragAndDrop && (showDragIcon || isDraggingFolder) ? (
+          {isPending && (
+            <span className={cx('folders-tree__item-title--pending')}>
+              <SpinLoader />
+            </span>
+          )}
+          {!isPending && enableDragAndDrop && (showDragIcon || isDraggingFolder) ? (
             <button
               ref={dragRef}
               type="button"
@@ -219,9 +229,11 @@ export const Folder = ({
               <DragNDropIcon />
             </button>
           ) : (
-            <span className={cx('folders-tree__item-title--counter')}>
-              {folder.testsCount || 0}
-            </span>
+            !isPending && (
+              <span className={cx('folders-tree__item-title--counter')}>
+                {folder.testsCount || 0}
+              </span>
+            )
           )}
         </div>
       </div>

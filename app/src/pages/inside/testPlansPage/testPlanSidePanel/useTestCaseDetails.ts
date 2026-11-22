@@ -19,6 +19,7 @@ import { useDispatch, useSelector } from 'react-redux';
 
 import { projectKeySelector } from 'controllers/project';
 import { fetch } from 'common/utils';
+import { getApiErrorMessage } from 'common/utils/apiResponse';
 import { URLS } from 'common/urls';
 import { showErrorNotification } from 'controllers/notification';
 import { useDebouncedSpinner } from 'common/hooks';
@@ -33,13 +34,17 @@ interface UseTestCaseDetailsParams {
 export const useTestCaseDetails = ({ testCaseId, testPlanId }: UseTestCaseDetailsParams) => {
   const { isLoading, showSpinner, hideSpinner } = useDebouncedSpinner();
   const [testCaseDetails, setTestCaseDetails] = useState<ExtendedTestCase | null>(null);
+  const [isFailed, setIsFailed] = useState(false);
 
   const dispatch = useDispatch();
   const projectKey = useSelector(projectKeySelector);
 
   useEffect(() => {
+    // never show the previous test case's details under the newly selected one
+    setTestCaseDetails(null);
+    setIsFailed(false);
+
     if (!testCaseId) {
-      setTestCaseDetails(null);
       return;
     }
 
@@ -59,14 +64,16 @@ export const useTestCaseDetails = ({ testCaseId, testPlanId }: UseTestCaseDetail
         });
 
         setTestCaseDetails(response);
-      } catch {
+      } catch (error) {
         if (abortController.signal.aborted) {
           return;
         }
 
+        setIsFailed(true);
         dispatch(
           showErrorNotification({
-            messageId: 'errorOccurredTryAgain',
+            message: getApiErrorMessage(error),
+            messageId: getApiErrorMessage(error) ? '' : 'errorOccurredTryAgain',
           }),
         );
       } finally {
@@ -92,6 +99,7 @@ export const useTestCaseDetails = ({ testCaseId, testPlanId }: UseTestCaseDetail
   return {
     testCaseDetails,
     isLoading,
+    isFailed,
     isManualCovered,
   };
 };

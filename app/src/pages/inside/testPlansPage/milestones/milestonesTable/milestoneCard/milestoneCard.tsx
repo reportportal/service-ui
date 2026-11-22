@@ -43,6 +43,8 @@ import styles from './milestoneCard.scss';
 
 const cx = createClassnames(styles);
 
+const NO_DATE = '—';
+
 export const MilestoneCard = ({
   milestone,
   onEditMilestone,
@@ -62,7 +64,7 @@ export const MilestoneCard = ({
   const { coveredPct, plansCount } = aggregateMilestoneCoverage(milestone);
   const daysLeft = daysLeftUntil(milestone.endDate);
 
-  const dateRange = `${formatIsoDateShortDashed(milestone.startDate)} — ${formatIsoDateShortDashed(milestone.endDate)}`;
+  const dateRange = `${formatIsoDateShortDashed(milestone.startDate) || NO_DATE} — ${formatIsoDateShortDashed(milestone.endDate) || NO_DATE}`;
 
   const testPlanRows = useMemo(
     () => milestoneTestPlansAsTestPlanDtos(milestone.testPlans, milestone.id),
@@ -119,7 +121,7 @@ export const MilestoneCard = ({
                 </span>
               </div>
               <div className={cx('milestone-card__metric')}>
-                <span className={cx('milestone-card__metric-value')}>{daysLeft}</span>
+                <span className={cx('milestone-card__metric-value')}>{daysLeft ?? NO_DATE}</span>
                 <span className={cx('milestone-card__metric-label')}>
                   {formatMessage(messages.daysLeftLabel)}
                 </span>

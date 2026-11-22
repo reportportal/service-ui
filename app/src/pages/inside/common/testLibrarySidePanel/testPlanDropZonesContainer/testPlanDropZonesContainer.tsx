@@ -15,6 +15,8 @@
  */
 
 import { useCallback, useRef, useState } from 'react';
+import { useIntl } from 'react-intl';
+import { useDispatch } from 'react-redux';
 import { useTracking } from 'react-tracking';
 import { isEmpty } from 'es-toolkit/compat';
 
@@ -26,7 +28,11 @@ import {
   ACTION_SOURCE,
   PLACE_TEST_CASE_LIBRARY_SIDE_PANEL,
 } from 'analyticsEvents/testPlansPageEvents';
-import { useModal } from 'common/hooks';
+import { useModal, useNotification } from 'common/hooks';
+import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
+import { showModalAction } from 'controllers/modal';
+import { ERROR_CANCELED } from 'common/utils/fetch';
+import { getApiErrorMessage } from 'common/utils/apiResponse';
 import { BULK_ADD_TO_LAUNCH_MIN_SELECTION } from 'pages/inside/common/constants';
 import { TestCase } from 'types/testCase';
 import { TransformedFolder } from 'controllers/testCase';
@@ -38,6 +44,8 @@ import {
 
 import { usePanelActions, usePanelState } from '../testLibraryPanelContext';
 import { TestPlanDropZones } from '../testPlanDropZones';
+import { messages } from '../messages';
+import { countFolderTestCases, LARGE_FOLDER_ADD_THRESHOLD } from '../utils/countFolderTestCases';
 import { VoidFn } from '@reportportal/ui-kit/common';
 
 interface TestPlanDropZonesContainerProps {
@@ -52,6 +60,9 @@ export const TestPlanDropZonesContainer = ({
   onClose,
 }: TestPlanDropZonesContainerProps) => {
   const { trackEvent } = useTracking();
+  const { formatMessage } = useIntl();
+  const dispatch = useDispatch();
+  const { showErrorNotification } = useNotification();
   const { getFolderTestCaseIds } = usePanelActions();
   const { testCasesMap } = usePanelState();
   const [isAddToTestPlanLoading, setIsAddToTestPlanLoading] = useState(false);
@@ -113,6 +124,27 @@ export const TestPlanDropZonesContainer = ({
       return Array.from(new Set(idsPerFolder.flat()));
     },
     [getFolderTestCaseIds],
+  );
+
+  // A failed folder download is reported instead of becoming an unhandled rejection.
+  const getFolderIdsOrNotify = useCallback(
+    async (folders: TransformedFolder[]): Promise<number[]> => {
+      try {
+        return await getFolderIds(folders);
+      } catch (error) {
+        if ((error as Error)?.message !== ERROR_CANCELED) {
+          const message = getApiErrorMessage(error);
+
+          showErrorNotification({
+            messageId: message ? undefined : 'testCasesAddingToTestPlanFailed',
+            message,
+          });
+        }
+
+        return [];
+      }
+    },
+    [getFolderIds, showErrorNotification],
   );
 
   const addTestCases = useCallback(
@@ -185,7 +217,7 @@ export const TestPlanDropZonesContainer = ({
       setIsAddToTestPlanLoading(true);
 
       try {
-        const ids = await getFolderIds(folders);
+        const ids = await getFolderIdsOrNotify(folders);
 
         if (isEmpty(ids)) {
           return;
@@ -202,7 +234,7 @@ export const TestPlanDropZonesContainer = ({
         setIsAddInFlight(false);
       }
     },
-    [getFolderIds, isAddInFlight, onAddTestCases, onClose, trackDropSuccess],
+    [getFolderIdsOrNotify, isAddInFlight, onAddTestCases, onClose, trackDropSuccess],
   );
 
   const addFolderAndCreateLaunch = useCallback(
@@ -215,7 +247,7 @@ export const TestPlanDropZonesContainer = ({
       setIsAddToLaunchLoading(true);
 
       try {
-        const ids = await getFolderIds(folders);
+        const ids = await getFolderIdsOrNotify(folders);
 
         if (isEmpty(ids)) {
           return;
@@ -243,7 +275,7 @@ export const TestPlanDropZonesContainer = ({
       }
     },
     [
-      getFolderIds,
+      getFolderIdsOrNotify,
       getTestCasesFromIds,
       isAddInFlight,
       onAddTestCases,
@@ -253,6 +285,31 @@ export const TestPlanDropZonesContainer = ({
       trackDropSuccess,
     ],
   );
+
+  // Dropping whole folders downloads every test case of the subtree first: above the threshold the
+  // user confirms before the download starts.
+  const confirmLargeFolderAdd = (folders: TransformedFolder[], proceed: () => void) => {
+    const count = countFolderTestCases(folders);
+
+    if (count <= LARGE_FOLDER_ADD_THRESHOLD) {
+      proceed();
+
+      return;
+    }
+
+    dispatch(
+      showModalAction({
+        id: 'confirmationModal',
+        data: {
+          title: formatMessage(messages.largeFolderAddTitle, { count }),
+          message: formatMessage(messages.largeFolderAddMessage, { count }),
+          confirmText: formatMessage(COMMON_LOCALE_KEYS.ADD),
+          cancelText: formatMessage(COMMON_LOCALE_KEYS.CANCEL),
+          onConfirm: proceed,
+        },
+      }),
+    );
+  };
 
   return (
     <TestPlanDropZones
@@ -265,10 +322,14 @@ export const TestPlanDropZonesContainer = ({
         addTestCasesAndCreateLaunch(testCases);
       }}
       onAddFolderToTestPlan={(folder) => {
-        addFolder(folder);
+        confirmLargeFolderAdd(folder, () => {
+          addFolder(folder);
+        });
       }}
       onAddFolderAndCreateLaunch={(folder) => {
-        addFolderAndCreateLaunch(folder);
+        confirmLargeFolderAdd(folder, () => {
+          addFolderAndCreateLaunch(folder);
+        });
       }}
     />
   );

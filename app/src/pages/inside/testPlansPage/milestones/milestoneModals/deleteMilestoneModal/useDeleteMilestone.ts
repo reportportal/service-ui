@@ -22,6 +22,7 @@ import { useTracking } from 'react-tracking';
 import { MILESTONES_PAGE_EVENTS } from 'analyticsEvents/milestonesPageEvents';
 import { URLS } from 'common/urls';
 import { fetch } from 'common/utils';
+import { getApiErrorMessage } from 'common/utils/apiResponse';
 import { useDebouncedSpinner, useQueryParams } from 'common/hooks';
 import { projectKeySelector } from 'controllers/project';
 import { hideModalAction } from 'controllers/modal';
@@ -71,10 +72,14 @@ export const useDeleteMilestone = () => {
 
       const isSingleItemOnTheLastPage =
         milestonesPageData?.number === milestonesPageData?.totalPages && milestones?.length === 1;
+      const previousPageOffset = Math.max(
+        0,
+        Number(queryParams.offset) - Number(queryParams.limit),
+      );
 
-      if (isSingleItemOnTheLastPage) {
-        const offset = Number(queryParams.offset) - Number(queryParams.limit);
-        const url = `/organizations/${organizationSlug}/projects/${projectSlug}/milestones?offset=${Math.max(0, offset)}&limit=${queryParams.limit}`;
+      // on the first page the URL does not change, so the list has to be refetched directly
+      if (isSingleItemOnTheLastPage && previousPageOffset !== Number(queryParams.offset)) {
+        const url = `/organizations/${organizationSlug}/projects/${projectSlug}/milestones?offset=${previousPageOffset}&limit=${queryParams.limit}`;
 
         dispatch(getTestPlansAction(defaultQueryParams));
         push(url);
@@ -82,10 +87,11 @@ export const useDeleteMilestone = () => {
         dispatch(getMilestonesAction(queryParams));
         dispatch(getTestPlansAction(defaultQueryParams));
       }
-    } catch {
+    } catch (error) {
       dispatch(
         showErrorNotification({
-          messageId: 'errorOccurredTryAgain',
+          message: getApiErrorMessage(error),
+          messageId: getApiErrorMessage(error) ? '' : 'errorOccurredTryAgain',
         }),
       );
     } finally {

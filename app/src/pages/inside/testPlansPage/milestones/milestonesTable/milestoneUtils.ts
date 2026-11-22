@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-import { differenceInCalendarDays, parseISO, startOfDay } from 'date-fns';
-
 import type { TmsMilestoneRS } from 'controllers/milestone';
+
+import { daysUntilIsoDate } from '../milestoneDateUtils';
 
 export { milestoneTestPlansAsTestPlanDtos } from 'controllers/milestone';
 
@@ -37,5 +37,7 @@ export const aggregateMilestoneCoverage = (
   return { coveredPct, plansCount: plans.length };
 };
 
-export const daysLeftUntil = (endDateIso: string): number =>
-  Math.max(0, differenceInCalendarDays(startOfDay(parseISO(endDateIso)), startOfDay(new Date())));
+export const daysLeftUntil = (endDateIso: string | null | undefined): number | null => {
+  const days = daysUntilIsoDate(endDateIso, new Date());
+  return days === null ? null : Math.max(0, days);
+};

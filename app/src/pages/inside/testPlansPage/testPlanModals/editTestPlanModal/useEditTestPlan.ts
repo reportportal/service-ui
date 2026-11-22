@@ -19,14 +19,17 @@ import { isNotNil } from 'es-toolkit';
 
 import { URLS } from 'common/urls';
 import { fetch } from 'common/utils';
+import { getApiErrorMessage } from 'common/utils/apiResponse';
 import { useDebouncedSpinner, useQueryParams } from 'common/hooks';
 import { projectKeySelector } from 'controllers/project';
 import { hideModalAction } from 'controllers/modal';
 import { showSuccessNotification, showErrorNotification } from 'controllers/notification';
 import { getMilestonesAction } from 'controllers/milestone';
-import { getTestPlansAction, getTestPlanAction, defaultQueryParams } from 'controllers/testPlan';
+import { getTestPlansAction, defaultQueryParams } from 'controllers/testPlan';
+import { resetHasTestPlansCache } from 'hooks/useHasTestPlans';
 
 import { TestPlanFormValues } from '../testPlanModal';
+import { useReloadActiveTestPlan } from '../useReloadActiveTestPlan';
 
 interface EditTestPlanFormValues extends TestPlanFormValues {
   id: number;
@@ -42,6 +45,7 @@ export const useEditTestPlan = ({ onSubmitSuccess }: UseEditTestPlanOptions = {}
   const dispatch = useDispatch();
   const projectKey = useSelector(projectKeySelector);
   const queryParams = useQueryParams(defaultQueryParams);
+  const reloadActiveTestPlan = useReloadActiveTestPlan();
 
   const submitTestPlan = async (payload: EditTestPlanFormValues) => {
     try {
@@ -58,6 +62,9 @@ export const useEditTestPlan = ({ onSubmitSuccess }: UseEditTestPlanOptions = {}
       });
 
       onSubmitSuccess?.(payload, payload.attributes?.length ?? 0);
+      if (isNotNil(payload.milestoneId)) {
+        resetHasTestPlansCache();
+      }
       dispatch(hideModalAction());
       dispatch(
         showSuccessNotification({
@@ -66,11 +73,12 @@ export const useEditTestPlan = ({ onSubmitSuccess }: UseEditTestPlanOptions = {}
       );
       dispatch(getTestPlansAction(queryParams));
       dispatch(getMilestonesAction(queryParams));
-      dispatch(getTestPlanAction({ ...queryParams, testPlanId: payload.id }));
-    } catch {
+      reloadActiveTestPlan();
+    } catch (error) {
       dispatch(
         showErrorNotification({
-          messageId: 'errorOccurredTryAgain',
+          message: getApiErrorMessage(error),
+          messageId: getApiErrorMessage(error) ? '' : 'errorOccurredTryAgain',
         }),
       );
     } finally {

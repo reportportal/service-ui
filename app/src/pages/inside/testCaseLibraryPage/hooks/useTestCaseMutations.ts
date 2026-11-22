@@ -16,7 +16,6 @@
 
 import { useCallback, useRef, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { isEmpty } from 'es-toolkit/compat';
 
 import { projectKeySelector } from 'controllers/project';
 import { FolderWithFullPath, GET_TEST_CASE_DETAILS } from 'controllers/testCase';
@@ -26,6 +25,7 @@ import { useDebouncedSpinner, useNotification } from 'common/hooks';
 import { urlFolderIdSelector } from 'controllers/pages';
 import { NotificationMessageKey } from 'common/hooks/useNotification';
 import { URLS } from 'common/urls';
+import { getApiErrorMessage } from 'common/utils/apiResponse';
 import { Attribute } from 'types/testCase';
 
 import { CreateTestCaseFormData } from '../types';
@@ -37,6 +37,10 @@ import {
 import { NewFolderData } from '../utils/getFolderFromFormValues';
 import { useFolderActions } from './useFolderActions';
 import { useRefetchCurrentTestCases } from './useRefetchCurrentTestCases';
+import {
+  createNewTags as createTestCaseTags,
+  saveTestCaseWithRequirementRetry,
+} from './testCaseSaveUtils';
 
 export interface TestCaseResponse {
   id?: number;
@@ -105,35 +109,7 @@ export const useTestCaseMutations = (testCaseId?: number) => {
   );
 
   const createNewTags = useCallback(
-    async (attributes: Attribute[] = []) => {
-      const newTags = attributes.filter(({ id }) => id < 0);
-      const existingTags = attributes.filter(({ id }) => id >= 0);
-
-      if (isEmpty(newTags)) {
-        return attributes;
-      }
-
-      if (!projectKey) {
-        return existingTags;
-      }
-
-      const createdTags = await Promise.all(
-        newTags.map(async (tag) => {
-          try {
-            return fetch<Attribute>(URLS.createTmsAttribute(projectKey), {
-              method: 'POST',
-              data: { key: tag.key, value: tag.value },
-            });
-          } catch {
-            return null;
-          }
-        }),
-      );
-
-      const successfullyCreatedTags = createdTags.filter((tag): tag is Attribute => tag !== null);
-
-      return [...existingTags, ...successfullyCreatedTags];
-    },
+    (attributes: Attribute[] = []) => createTestCaseTags(projectKey, attributes),
     [projectKey],
   );
 
@@ -157,9 +133,15 @@ export const useTestCaseMutations = (testCaseId?: number) => {
         const manualScenario = buildManualScenario(payload);
         const { newFolderDetails, existingFolderId } = processFolder(payload.folder);
 
-        const response = await fetch<TestCaseResponse>(options.url, {
+        const response = await saveTestCaseWithRequirementRetry<
+          TestCaseResponse,
+          ReturnType<typeof buildTestCaseData>
+        >({
+          url: options.url,
           method: options.method,
           data: buildTestCaseData(payload, manualScenario, updatedAttributes),
+          projectKey,
+          testCaseId: options.method === 'PUT' ? testCaseId : undefined,
         });
 
         const refreshedTestCaseId = response?.id ?? testCaseId;
@@ -201,8 +183,10 @@ export const useTestCaseMutations = (testCaseId?: number) => {
         }
 
         return response ?? null;
-      } catch {
-        showErrorNotification({ messageId: options.errorMessageId });
+      } catch (error) {
+        const message = getApiErrorMessage(error);
+
+        showErrorNotification({ messageId: message ? undefined : options.errorMessageId, message });
         return null;
       } finally {
         hideSpinner();
@@ -212,6 +196,7 @@ export const useTestCaseMutations = (testCaseId?: number) => {
       showSpinner,
       hideSpinner,
       createNewTags,
+      projectKey,
       dispatch,
       completeFolderDestination,
       showSuccessNotification,
