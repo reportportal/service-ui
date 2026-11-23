@@ -20,6 +20,7 @@ import {
   removeCachedWidget,
   clearWidgetCache,
   cacheLoadedWidget,
+  getWidgetCacheGeneration,
 } from './widgetCache';
 
 describe('widgetCache', () => {
@@ -70,5 +71,14 @@ describe('widgetCache', () => {
     expect(getCachedWidget('p', 1).queryParameters).toBeUndefined();
     cacheLoadedWidget('p', 1, { level: 2 }, true);
     expect(getCachedWidget('p', 1)).toBeUndefined();
+  });
+
+  test('a payload of a request started before the cache was cleared is not cached', () => {
+    const generation = getWidgetCacheGeneration();
+    clearWidgetCache();
+    cacheLoadedWidget('p', 1, { id: 1 }, false, generation);
+    expect(getCachedWidget('p', 1)).toBeUndefined();
+    cacheLoadedWidget('p', 1, { id: 1 }, false, getWidgetCacheGeneration());
+    expect(getCachedWidget('p', 1).widget).toEqual({ id: 1 });
   });
 });

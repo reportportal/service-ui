@@ -56,7 +56,7 @@ import { EditWidgetModal } from '../../modals/editWidgetModal';
 import { DeleteWidgetModal } from '../../modals/deleteWidgetModal';
 import { WidgetHeader } from './widgetHeader';
 import { WidgetStateMessage } from './widgetStateMessage';
-import { getCachedWidget, cacheLoadedWidget } from './widgetCache';
+import { getCachedWidget, cacheLoadedWidget, getWidgetCacheGeneration } from './widgetCache';
 import styles from './widget.scss';
 
 const cx = classNames.bind(styles);
@@ -393,6 +393,7 @@ export class SimpleWidget extends Component {
     this.requestId += 1;
     const requestId = this.requestId;
     const isOutdated = () => this.isUnmounted || requestId !== this.requestId;
+    const cacheGeneration = getWidgetCacheGeneration();
 
     if (!silent) {
       this.setState({
@@ -430,7 +431,13 @@ export class SimpleWidget extends Component {
         // multi-level charts restart from the top level on remount, so a drilled-down payload is not cached
         const isDrilledDown =
           !!MULTI_LEVEL_WIDGETS_MAP[this.props.widgetType] && !isEmptyObject(queryParameters);
-        cacheLoadedWidget(this.props.projectKey, this.props.widgetId, widget, isDrilledDown);
+        cacheLoadedWidget(
+          this.props.projectKey,
+          this.props.widgetId,
+          widget,
+          isDrilledDown,
+          cacheGeneration,
+        );
         this.scheduleSilentUpdate();
       })
       .catch((error) => {

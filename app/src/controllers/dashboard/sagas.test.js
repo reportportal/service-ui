@@ -16,7 +16,7 @@
 
 import { SHOW_DEFAULT_ERROR_NOTIFICATION } from 'controllers/notification/constants';
 import { runSaga } from 'redux-saga';
-import { LOGOUT } from 'controllers/auth/constants';
+import { LOGOUT, LOGOUT_COMPLETE } from 'controllers/auth/constants';
 import { clearWidgetCache } from 'pages/inside/dashboardItemPage/widgetsGrid/widget/widgetCache';
 import { updateDashboardWidgets, dashboardSagas } from './sagas';
 import { fetchDashboardAction, updateDashboardItemSuccessAction } from './actionCreators';
@@ -58,13 +58,14 @@ describe('controllers/dashboard/sagas updateDashboardWidgets', () => {
 });
 
 describe('controllers/dashboard/sagas logout', () => {
-  test('the logout action clears the widget cache', () => {
-    let emit;
+  test('the logout actions clear the widget cache', () => {
+    const subscribers = [];
+    const emit = (action) => subscribers.slice().forEach((callback) => callback(action));
     const task = runSaga(
       {
         subscribe: (callback) => {
-          emit = callback;
-          return () => {};
+          subscribers.push(callback);
+          return () => subscribers.splice(subscribers.indexOf(callback), 1);
         },
         dispatch: () => {},
         getState: () => ({}),
@@ -74,6 +75,8 @@ describe('controllers/dashboard/sagas logout', () => {
     expect(clearWidgetCache).not.toHaveBeenCalled();
     emit({ type: LOGOUT });
     expect(clearWidgetCache).toHaveBeenCalledTimes(1);
+    emit({ type: LOGOUT_COMPLETE });
+    expect(clearWidgetCache).toHaveBeenCalledTimes(2);
     task.cancel();
   });
 });

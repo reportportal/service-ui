@@ -18,6 +18,8 @@
 // renders instantly when it comes back and does not re-request data that is still fresh.
 const MAX_CACHED_WIDGETS = 100;
 const cache = new Map();
+// bumped on every clear, so a request that started before the clear cannot repopulate the cache
+let generation = 0;
 
 const getKey = (projectKey, widgetId) => `${projectKey}/${widgetId}`;
 
@@ -45,11 +47,25 @@ export const removeCachedWidget = (projectKey, widgetId) => {
   cache.delete(getKey(projectKey, widgetId));
 };
 
+export const getWidgetCacheGeneration = () => generation;
+
 export const clearWidgetCache = () => {
+  generation += 1;
   cache.clear();
 };
 
-export const cacheLoadedWidget = (projectKey, widgetId, widget, isDrilledDown) => {
+// requestGeneration is the generation read when the request started: a payload loaded for the
+// previous session or project is dropped
+export const cacheLoadedWidget = (
+  projectKey,
+  widgetId,
+  widget,
+  isDrilledDown,
+  requestGeneration = generation,
+) => {
+  if (requestGeneration !== generation) {
+    return;
+  }
   if (isDrilledDown) {
     removeCachedWidget(projectKey, widgetId);
   } else {
