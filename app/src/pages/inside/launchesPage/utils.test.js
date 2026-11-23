@@ -19,9 +19,9 @@ import { getDeleteLaunchesResult, getFinishedLaunchesUpdate } from './utils';
 describe('getDeleteLaunchesResult', () => {
   const items = [{ id: 1 }, { id: 2 }, { id: 3 }];
 
-  test('reports the launches missing from "deleted" as failed', () => {
+  test('reports the launches missing from "successfullyDeleted" as failed', () => {
     const result = getDeleteLaunchesResult(items, {
-      deleted: [1],
+      successfullyDeleted: [1],
       notFound: [3],
       errors: [{ errorCode: 4003, message: 'Launch is in progress' }],
     });
@@ -34,10 +34,26 @@ describe('getDeleteLaunchesResult', () => {
   });
 
   test('reports no failures when every launch was deleted', () => {
-    const result = getDeleteLaunchesResult(items, { deleted: [1, 2, 3], notFound: [], errors: [] });
+    const result = getDeleteLaunchesResult(items, {
+      successfullyDeleted: [1, 2, 3],
+      notFound: [],
+      errors: [],
+    });
 
     expect(result.failedItems).toEqual([]);
     expect(result.successCount).toBe(3);
+    expect(result.failureCount).toBe(0);
+  });
+
+  test('counts the failures when the response has no list of deleted launches', () => {
+    const result = getDeleteLaunchesResult(items, {
+      errors: [{ errorCode: 4003, message: 'Launch is in progress' }],
+    });
+
+    expect(result.failedItems).toEqual([]);
+    expect(result.failureCount).toBe(1);
+    expect(result.successCount).toBe(2);
+    expect(result.errorsText).toBe('Launch is in progress');
   });
 
   test('treats a response without a body as a full success', () => {

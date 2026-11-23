@@ -18,22 +18,25 @@ import { readBatchResult } from 'common/utils/apiResponse';
 import { IN_PROGRESS } from 'common/constants/testStatuses';
 
 // DeleteBulkRS answers 200 even when some launches were not deleted: the launches that are not
-// listed in `deleted` failed (their ErrorRS entries carry no id).
+// listed in `successfullyDeleted` failed (their ErrorRS entries carry no id).
 export const getDeleteLaunchesResult = (items, response) => {
-  const result = readBatchResult(response, items.length);
-  if (!Array.isArray(response?.deleted)) {
-    return { ...result, failedItems: [] };
+  const deleted = response?.successfullyDeleted ?? response?.deleted;
+  const result = readBatchResult(response && { ...response, deleted }, items.length);
+  const messages = [...new Set(result.errors.map(({ message }) => message).filter(Boolean))];
+  const errorsText = messages.join(' ');
+  // without the list of deleted ids the failed launches are unknown, only their number is
+  if (!Array.isArray(deleted)) {
+    return { ...result, failedItems: [], errorsText };
   }
   const deletedIds = result.successIds.map(String);
   const failedItems = items.filter((item) => !deletedIds.includes(String(item.id)));
-  const messages = [...new Set(result.errors.map(({ message }) => message).filter(Boolean))];
   return {
     ...result,
     successCount: items.length - failedItems.length,
     failureCount: failedItems.length,
     totalCount: items.length,
     failedItems,
-    errorsText: messages.join(' '),
+    errorsText,
   };
 };
 

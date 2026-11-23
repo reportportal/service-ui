@@ -404,7 +404,7 @@ export class LaunchesPage extends Component {
         }
         this.props.fetchLaunchesAction();
         this.props.hideScreenLockAction();
-        if (failedItems.length) {
+        if (failureCount > 0) {
           this.props.showNotification({
             messageId: 'batchPartialFailure',
             values: { successCount, totalCount, failureCount, errors: errorsText },
