@@ -1,9 +1,13 @@
 import { runSaga } from 'redux-saga';
 import { all, takeEvery } from 'redux-saga/effects';
 import { URLS } from 'common/urls';
+import { redirect } from 'redux-first-router';
 import { fetch } from 'common/utils';
 import { ERROR_CANCELED, ERROR_UNAUTHORIZED } from 'common/utils/fetch';
 import { setActiveProjectAction } from 'controllers/user';
+import { fetchErrorAction } from 'controllers/fetch';
+import { ORGANIZATIONS_PAGE } from 'controllers/pages';
+import { FETCH_ORGANIZATION_BY_SLUG } from 'controllers/organization/constants';
 import { showDefaultErrorNotification } from 'controllers/notification';
 import { SET_ACTIVE_PROJECT, SET_ACTIVE_PROJECT_KEY } from 'controllers/user/constants';
 import {
@@ -40,6 +44,8 @@ const createProjectNavigationStore = () => {
   const state = {
     organizations: { organization: { activeOrganization: { id: 1, slug: 'org' } } },
     user: { activeProject: {}, activeProjectKey: '' },
+    // the middleware holds the route action until the project is ready: the URL is the previous page's
+    location: { payload: { organizationSlug: 'org' } },
   };
   const store = {
     dispatched,
@@ -61,12 +67,12 @@ const createProjectNavigationStore = () => {
     },
   };
   // Mirrors organizationProjectRouteMiddleware: set the active project, then prepare it.
-  store.navigate = (projectSlug) => {
-    const action = { type: ROUTE_TYPE, payload: { organizationSlug: 'org', projectSlug } };
-    store.dispatch(setActiveProjectAction({ organizationSlug: 'org', projectSlug }));
+  store.navigate = (projectSlug, organizationSlug = 'org') => {
+    const action = { type: ROUTE_TYPE, payload: { organizationSlug, projectSlug } };
+    store.dispatch(setActiveProjectAction({ organizationSlug, projectSlug }));
     store.dispatch(
       prepareActiveProjectAction({
-        organizationSlug: 'org',
+        organizationSlug,
         projectSlug,
         projectKey: projectSlug.toUpperCase(),
         action,
@@ -193,6 +199,36 @@ describe('controllers/project/sagas', () => {
         { type: ROUTE_TYPE, payload: { organizationSlug: 'org', projectSlug: 'b' } },
       ]);
       expect(fetch).toHaveBeenCalledTimes(2);
+    });
+  });
+
+  describe('prepareActiveProject in another organization', () => {
+    test('redirects to the organizations list when the organization request fails', () => {
+      const store = createProjectNavigationStore();
+      const task = runSaga(store, projectNavigationSaga);
+
+      store.navigate('a', 'other');
+      store.dispatch(fetchErrorAction(FETCH_ORGANIZATION_BY_SLUG, { message: 'boom' }));
+      task.cancel();
+
+      expect(store.dispatched).toContainEqual(redirect({ type: ORGANIZATIONS_PAGE }));
+      expect(store.dispatched.filter(({ type }) => type === ROUTE_TYPE)).toEqual([]);
+    });
+
+    test('stops silently when a newer project navigation superseded it', () => {
+      const store = createProjectNavigationStore();
+      const task = runSaga(store, projectNavigationSaga);
+
+      store.navigate('a', 'other');
+      store.navigate('b', 'third');
+      store.dispatch(fetchErrorAction(FETCH_ORGANIZATION_BY_SLUG, { message: 'boom' }));
+      task.cancel();
+
+      expect(
+        store.dispatched.filter(
+          (action) => action.type === redirect({ type: ORGANIZATIONS_PAGE }).type,
+        ),
+      ).toHaveLength(1);
     });
   });
 

@@ -143,7 +143,7 @@ export function* withActiveProject(
     );
   };
 
-  yield* withActiveOrganization(organizationSlug, function* onActiveOrgReady(organizationId) {
+  const onActiveOrgReady = function* onActiveOrgReady(organizationId) {
     try {
       let resolvedKey = projectKey;
 
@@ -187,7 +187,10 @@ export function* withActiveProject(
       yield put(showDefaultErrorNotification(error));
       yield put(fallbackRedirect);
     }
-  });
+  };
+
+  // the route action is held until the project is ready, so the URL cannot tell a superseded navigation
+  yield* withActiveOrganization(organizationSlug, onActiveOrgReady, isSuperseded);
 }
 
 function* updateDefectType({ payload: defectTypes }) {

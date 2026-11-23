@@ -18,6 +18,7 @@ import { runSaga } from 'redux-saga';
 import { redirect } from 'redux-first-router';
 import { fetchErrorAction, fetchSuccessAction } from 'controllers/fetch';
 import { ORGANIZATIONS_PAGE } from 'controllers/pages';
+import { fetchOrganizationBySlugAction } from './actionCreators';
 import { FETCH_ORGANIZATION_BY_SLUG } from './constants';
 import { withActiveOrganization } from './withActiveOrganizationSaga';
 
@@ -47,11 +48,17 @@ const createStore = (activeOrganization, urlOrganizationSlug) => {
   };
 };
 
-const startWaiting = (store, slug) => {
+const startWaiting = (store, slug, isNavigationSuperseded) => {
   const readyIds = [];
-  const task = runSaga(store, withActiveOrganization, slug, function* onActiveOrgReady(id) {
-    yield readyIds.push(id);
-  });
+  const task = runSaga(
+    store,
+    withActiveOrganization,
+    slug,
+    function* onActiveOrgReady(id) {
+      yield readyIds.push(id);
+    },
+    isNavigationSuperseded,
+  );
   return { task, readyIds };
 };
 
@@ -109,6 +116,52 @@ describe('withActiveOrganization', () => {
     store.dispatch(fetchErrorAction(FETCH_ORGANIZATION_BY_SLUG, { message: 'boom' }));
 
     expect(readyIds).toEqual([]);
+    expect(store.dispatched).toEqual([]);
+    expect(task.isRunning()).toBe(false);
+  });
+
+  test('stops silently once another organization is requested, even if the URL still shows its own', () => {
+    const store = createStore({ id: 1, slug: 'a' }, 'b');
+    const { task, readyIds } = startWaiting(store, 'b');
+
+    store.dispatch(fetchOrganizationBySlugAction('c'));
+    store.dispatch(fetchErrorAction(FETCH_ORGANIZATION_BY_SLUG, { message: 'boom' }));
+
+    expect(readyIds).toEqual([]);
+    expect(store.dispatched).toEqual([fetchOrganizationBySlugAction('c')]);
+    expect(task.isRunning()).toBe(false);
+  });
+
+  test('keeps waiting when its own organization is requested again', () => {
+    const store = createStore({ id: 1, slug: 'a' }, 'b');
+    const { task } = startWaiting(store, 'b');
+
+    store.dispatch(fetchOrganizationBySlugAction('b'));
+
+    expect(task.isRunning()).toBe(true);
+    task.cancel();
+  });
+
+  test("uses the caller's check instead of the URL when the route is held (project pages)", () => {
+    const store = createStore({ id: 1, slug: 'a' }, 'a');
+    const { readyIds } = startWaiting(store, 'b', function* isNavigationSuperseded() {
+      return yield false;
+    });
+
+    store.dispatch(fetchErrorAction(FETCH_ORGANIZATION_BY_SLUG, { message: 'boom' }));
+
+    expect(readyIds).toEqual([]);
+    expect(store.dispatched).toEqual([redirect({ type: ORGANIZATIONS_PAGE })]);
+  });
+
+  test("stops silently when the caller's check reports a newer navigation", () => {
+    const store = createStore({ id: 1, slug: 'a' }, 'b');
+    const { task } = startWaiting(store, 'b', function* isNavigationSuperseded() {
+      return yield true;
+    });
+
+    store.dispatch(fetchSuccessAction(FETCH_ORGANIZATION_BY_SLUG, { items: [] }));
+
     expect(store.dispatched).toEqual([]);
     expect(task.isRunning()).toBe(false);
   });
