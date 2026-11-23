@@ -25,6 +25,7 @@ interface LocationPayload {
   testPlanId?: string;
   testPlanRoute?: string;
   launchId?: string;
+  executionId?: string;
 }
 
 export type LocationInfo = {

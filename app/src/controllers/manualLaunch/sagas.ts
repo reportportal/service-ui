@@ -43,6 +43,7 @@ import {
   pageSelector,
   MANUAL_LAUNCHES_PAGE,
   MANUAL_LAUNCH_DETAILS_PAGE,
+  MANUAL_LAUNCH_EXECUTION_PAGE,
 } from 'controllers/pages';
 import { LocationInfo } from 'controllers/pages/typed-selectors';
 import { Launch, UrlsHelper } from 'pages/inside/manualLaunchesPage/types';
@@ -670,7 +671,17 @@ function* patchManualLaunchExecutionAndSyncList(
     },
   )) as TestCaseExecution;
 
-  yield put(fetchSuccessAction(ACTIVE_MANUAL_LAUNCH_EXECUTION_NAMESPACE, data));
+  // Mutations run concurrently: one that finishes after the user opened another execution
+  // must not replace the execution page with the old one.
+  const location = (yield select(locationSelector)) as LocationInfo;
+  const isOtherExecutionPageShown =
+    location?.type === MANUAL_LAUNCH_EXECUTION_PAGE &&
+    (String(location.payload?.launchId) !== String(launchId) ||
+      String(location.payload?.executionId) !== String(executionId));
+
+  if (!isOtherExecutionPageShown) {
+    yield put(fetchSuccessAction(ACTIVE_MANUAL_LAUNCH_EXECUTION_NAMESPACE, data));
+  }
 
   const executionsState = (yield select(
     (state: AppState) => state.manualLaunchTestCaseExecutions?.data,

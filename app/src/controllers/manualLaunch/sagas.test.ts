@@ -34,6 +34,7 @@ import {
   updateManualLaunchExecutionStatusAction,
 } from './actionCreators';
 import {
+  ACTIVE_MANUAL_LAUNCH_EXECUTION_NAMESPACE,
   MANUAL_LAUNCH_FOLDERS_NAMESPACE,
   MANUAL_LAUNCH_TEST_CASE_EXECUTIONS_NAMESPACE,
 } from './constants';
@@ -129,6 +130,66 @@ describe('controllers/manualLaunch/sagas', () => {
           MANUAL_LAUNCH_TEST_CASE_EXECUTIONS_NAMESPACE,
     );
     expect(listSyncs).toHaveLength(2);
+    expect(onSuccess).toHaveBeenCalledTimes(2);
+  });
+
+  test('a mutation finished after opening another execution syncs the list but keeps that execution shown', async () => {
+    const resolvers: Array<(value: unknown) => void> = [];
+    mockedFetch.mockImplementation(
+      () =>
+        new Promise((resolve) => {
+          resolvers.push(resolve);
+        }),
+    );
+    const { store, dispatched } = setupStore({
+      project: { info: { projectKey: 'demo' } },
+      location: {
+        type: 'MANUAL_LAUNCH_EXECUTION_PAGE',
+        payload: { launchId: '10', executionId: '2' },
+      },
+      manualLaunchTestCaseExecutions: {
+        data: { content: [{ id: 1 }, { id: 2 }], page: { totalElements: 2 } },
+      },
+    });
+    const onSuccess = jest.fn();
+
+    store.dispatch(
+      updateManualLaunchExecutionStatusAction({
+        projectKey: 'demo',
+        launchId: 10,
+        executionId: 1,
+        status: 'TO_RUN',
+        onSuccess,
+      }),
+    );
+    store.dispatch(
+      updateManualLaunchExecutionStatusAction({
+        projectKey: 'demo',
+        launchId: 10,
+        executionId: 2,
+        status: 'TO_RUN',
+        onSuccess,
+      }),
+    );
+    await flush();
+
+    resolvers[1]({ id: 2, status: 'TO_RUN' });
+    await flush();
+    resolvers[0]({ id: 1, status: 'TO_RUN' });
+    await flush();
+
+    const successesOf = (namespace: string) =>
+      dispatched.filter(
+        (action) =>
+          action.type === FETCH_SUCCESS &&
+          (action.meta as { namespace?: string } | undefined)?.namespace === namespace,
+      );
+    expect(
+      successesOf(ACTIVE_MANUAL_LAUNCH_EXECUTION_NAMESPACE).map(
+        (action) => (action.payload as { id: number }).id,
+      ),
+    ).toEqual([2]);
+    expect(successesOf(MANUAL_LAUNCH_TEST_CASE_EXECUTIONS_NAMESPACE)).toHaveLength(2);
     expect(onSuccess).toHaveBeenCalledTimes(2);
   });
 
