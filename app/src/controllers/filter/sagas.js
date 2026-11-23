@@ -98,7 +98,11 @@ export function* updateLaunchesFilter({ payload: filter }) {
     ...filter,
     conditions: filter.conditions.filter((item) => item.value.trim()),
   };
-  const findDraft = (filters) => filters.find(({ id }) => id === shallowFilter.id);
+  // only the conditions and orders can be edited on the launches page while the save is pending
+  const findDraft = (filters) => {
+    const draft = filters.find(({ id }) => id === shallowFilter.id);
+    return draft && { conditions: draft.conditions, orders: draft.orders };
+  };
   const draftBeforeSave = findDraft(yield select(launchFiltersSelector));
   // own namespace per request, so the response of saveNewFilter, of another filter or of an earlier
   // save of the same filter is not taken for this one
@@ -114,7 +118,7 @@ export function* updateLaunchesFilter({ payload: filter }) {
   if (response.type === FETCH_ERROR) {
     return;
   }
-  // the conditions stay editable while the request is pending: keep the newer draft then
+  // keep the conditions and orders edited while the request was pending
   const keepDraft = !isEqual(findDraft(yield select(launchFiltersSelector)), draftBeforeSave);
   yield put(updateFilterSuccessAction(shallowFilter, undefined, keepDraft));
   yield put(

@@ -40,6 +40,20 @@ const updateFilterOrders = (filters, filterId, orders) => {
   return updateFilter(filters, { ...filter, orders });
 };
 
+// a save that finished after the conditions or orders were edited on the launches page: take the saved
+// filter (e.g. its new name) but keep the edited conditions and orders
+const mergeSavedFilter = (filters, savedFilter) => {
+  const draft = filters.find((item) => item.id === savedFilter.id);
+  if (!draft) {
+    return filters;
+  }
+  return updateFilter(filters, {
+    ...savedFilter,
+    conditions: draft.conditions,
+    orders: draft.orders,
+  });
+};
+
 export const launchesFiltersReducer = (
   state = [],
   { type = '', payload = {}, meta: { oldId, keepDraft } = {} },
@@ -55,7 +69,7 @@ export const launchesFiltersReducer = (
     case UPDATE_FILTER_ORDERS:
       return updateFilterOrders(state, payload.filterId, payload.orders);
     case UPDATE_FILTER_SUCCESS:
-      return keepDraft ? state : updateFilter(state, payload, oldId);
+      return keepDraft ? mergeSavedFilter(state, payload) : updateFilter(state, payload, oldId);
     case ADD_FILTER:
       return [...state, payload];
     case REMOVE_FILTER:

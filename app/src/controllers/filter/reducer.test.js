@@ -90,12 +90,43 @@ describe('filter reducer', () => {
       ).toEqual([saved]);
     });
 
-    test('keeps the edited filter on UPDATE_FILTER_SUCCESS with keepDraft', () => {
-      const oldState = [{ id: 1, conditions: [{ value: 'b' }] }];
+    test('keeps the edited conditions and orders on UPDATE_FILTER_SUCCESS with keepDraft', () => {
+      const orders = [{ sortingColumn: 'name', isAsc: true }];
+      const oldState = [{ id: 1, name: 'f', conditions: [{ value: 'b' }], orders }];
       expect(
         launchesFiltersReducer(
           oldState,
-          updateFilterSuccessAction({ id: 1, conditions: [{ value: 'a' }] }, undefined, true),
+          updateFilterSuccessAction(
+            { id: 1, name: 'f', conditions: [{ value: 'a' }], orders: [] },
+            undefined,
+            true,
+          ),
+        ),
+      ).toEqual([{ id: 1, name: 'f', conditions: [{ value: 'b' }], orders }]);
+    });
+
+    test('takes the new name of a renamed filter but keeps the edited conditions with keepDraft', () => {
+      const oldState = [{ id: 1, name: 'old', conditions: [{ value: 'b' }], orders: [] }];
+      expect(
+        launchesFiltersReducer(
+          oldState,
+          updateFilterSuccessAction(
+            { id: 1, name: 'new', description: 'd', conditions: [{ value: 'a' }], orders: [] },
+            undefined,
+            true,
+          ),
+        ),
+      ).toEqual([
+        { id: 1, name: 'new', description: 'd', conditions: [{ value: 'b' }], orders: [] },
+      ]);
+    });
+
+    test('ignores UPDATE_FILTER_SUCCESS with keepDraft when the filter was closed', () => {
+      const oldState = [{ id: 2, conditions: [] }];
+      expect(
+        launchesFiltersReducer(
+          oldState,
+          updateFilterSuccessAction({ id: 1, conditions: [] }, undefined, true),
         ),
       ).toBe(oldState);
     });

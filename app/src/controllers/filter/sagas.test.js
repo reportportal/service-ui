@@ -68,6 +68,13 @@ describe('controllers/filter/sagas updateLaunchesFilter', () => {
     expect(successPut.PUT.action.meta.keepDraft).toBe(true);
   });
 
+  test('replaces the filter when only its name changed while the save was pending', () => {
+    const gen = runUntilTake();
+    gen.next({ type: FETCH_SUCCESS, meta });
+    const successPut = gen.next([{ ...filter, name: 'renamed' }]).value;
+    expect(successPut.PUT.action.meta.keepDraft).toBe(false);
+  });
+
   test('ignores responses of saveNewFilter and of other filters (interleaved requests)', () => {
     const { pattern } = takeOf();
     const saveNewResponse = {
