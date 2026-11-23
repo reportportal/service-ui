@@ -258,8 +258,12 @@ export function* updateDashboardWidgets({ payload: dashboard }) {
     yield put(updateDashboardItemSuccessAction(dashboard));
   } catch (error) {
     yield put(showDefaultErrorNotification(error));
-    // the grid already shows the unsaved layout: reload the one stored on the server
-    yield put(fetchDashboardAction());
+    // the grid already shows the unsaved layout: reload the one stored on the server,
+    // unless the user has already left this dashboard (fetchDashboard loads the one in the route)
+    const activeDashboardId = yield select(activeDashboardIdSelector);
+    if (String(activeDashboardId) === String(dashboard.id)) {
+      yield put(fetchDashboardAction());
+    }
   }
 }
 

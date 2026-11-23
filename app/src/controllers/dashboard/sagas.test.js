@@ -42,8 +42,18 @@ describe('controllers/dashboard/sagas updateDashboardWidgets', () => {
     const errorStep = gen.throw({ message: 'Dashboard is locked' });
     expect(errorStep.value.PUT.action.type).toBe(SHOW_DEFAULT_ERROR_NOTIFICATION);
     expect(errorStep.value.PUT.action.payload.error).toBe('Dashboard is locked');
-    expect(gen.next().value.PUT.action).toEqual(fetchDashboardAction());
+    gen.next(); // select active dashboard id
+    expect(gen.next('1').value.PUT.action).toEqual(fetchDashboardAction());
     expect(gen.next().done).toBe(true);
+  });
+
+  test('does not reload the dashboard when saving fails after the user left it', () => {
+    const gen = updateDashboardWidgets({ payload: dashboard });
+    gen.next();
+    gen.next('project');
+    gen.throw({ message: 'Dashboard is locked' });
+    gen.next(); // select active dashboard id
+    expect(gen.next(undefined).done).toBe(true);
   });
 });
 
