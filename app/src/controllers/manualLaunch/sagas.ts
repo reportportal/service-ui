@@ -505,6 +505,16 @@ function* getManualLaunchExecution(action: GetManualLaunchExecutionAction): Gene
           messageId: 'errorOccurredTryAgain',
         }),
       );
+      return;
+    }
+
+    // The launch was taken from the store or the list without a request, so nothing reported it
+    // missing yet: a forced reload does, with the redirect notice.
+    const { launchId } = action.payload;
+    const activeManualLaunch = (yield select(activeManualLaunchSelector)) as Launch | null;
+
+    if (activeManualLaunch && String(activeManualLaunch.id) === String(launchId)) {
+      yield put(getManualLaunchAction({ launchId, force: true }));
     }
   }
 }

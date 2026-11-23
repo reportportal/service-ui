@@ -14,12 +14,13 @@
  * limitations under the License.
  */
 
-import { applyMiddleware, createStore, AnyAction } from 'redux';
+import { applyMiddleware, combineReducers, createStore, AnyAction } from 'redux';
 import createSagaMiddleware from 'redux-saga';
 import { all } from 'redux-saga/effects';
 import { fetch } from 'common/utils';
 import { URLS } from 'common/urls';
 import { FETCH_ERROR, FETCH_START, FETCH_SUCCESS } from 'controllers/fetch/constants';
+import { fetchSuccessAction } from 'controllers/fetch';
 import { SHOW_NOTIFICATION } from 'controllers/notification/constants';
 import { MANUAL_LAUNCHES_PAGE } from 'controllers/pages';
 import { fetchSagas } from 'controllers/fetch/sagas';
@@ -33,8 +34,10 @@ import {
   getManualLaunchTestCaseExecutionsAction,
   updateManualLaunchExecutionStatusAction,
 } from './actionCreators';
+import { manualLaunchesReducer } from './reducer';
 import {
   ACTIVE_MANUAL_LAUNCH_EXECUTION_NAMESPACE,
+  MANUAL_LAUNCHES_NAMESPACE,
   MANUAL_LAUNCH_FOLDERS_NAMESPACE,
   MANUAL_LAUNCH_TEST_CASE_EXECUTIONS_NAMESPACE,
 } from './constants';
@@ -550,6 +553,82 @@ describe('controllers/manualLaunch/sagas', () => {
       expect(toasts()[0].payload).toMatchObject({
         messageId: 'manualLaunchRedirectWarningMessage',
       });
+    });
+
+    test('a launch shown from the store that was deleted meanwhile redirects with one toast', async () => {
+      mockedFetch.mockRejectedValue(launchNotFound);
+      const { store, dispatched, toasts } = setupStoreWithNotifications({
+        project: { info: { projectKey: 'demo' } },
+        location: {
+          type: 'MANUAL_LAUNCH_EXECUTION_PAGE',
+          payload: {
+            launchId: '10',
+            executionId: '2',
+            organizationSlug: 'org',
+            projectSlug: 'prj',
+          },
+          prev: { payload: { launchId: '10' } },
+        },
+        manualLaunch: { activeManualLaunch: { id: 10 } },
+      });
+
+      store.dispatch(getManualLaunchAction({ launchId: '10' }));
+      store.dispatch(getManualLaunchExecutionAction({ launchId: '10', executionId: 2 }));
+      await flush();
+
+      expect(mockedFetch).toHaveBeenCalledWith(URLS.manualLaunchById('demo', '10'));
+      expect(toasts()).toHaveLength(1);
+      expect(toasts()[0].payload).toMatchObject({
+        messageId: 'manualLaunchRedirectWarningMessage',
+      });
+      expect(dispatched.map((action) => action.type as string)).toContain(MANUAL_LAUNCHES_PAGE);
+    });
+
+    test('a launch taken from the list that was deleted meanwhile redirects with one toast', async () => {
+      mockedFetch.mockRejectedValue(launchNotFound);
+      const dispatched: AnyAction[] = [];
+      const sagaMiddleware = createSagaMiddleware();
+      const store = createStore(
+        combineReducers({
+          project: (state: unknown = { info: { projectKey: 'demo' } }) => state,
+          location: (
+            state: unknown = {
+              type: 'MANUAL_LAUNCH_EXECUTION_PAGE',
+              payload: {
+                launchId: '10',
+                executionId: '2',
+                organizationSlug: 'org',
+                projectSlug: 'prj',
+              },
+            },
+          ) => state,
+          manualLaunch: manualLaunchesReducer,
+          notifications: (state: unknown = [], action: AnyAction) => {
+            dispatched.push(action);
+            return state;
+          },
+        }),
+        applyMiddleware(sagaMiddleware),
+      );
+      sagaMiddleware.run(function* rootSaga() {
+        yield all([manualLaunchesSagas(), fetchSagas(), notificationSagas()]);
+      });
+      store.dispatch(
+        fetchSuccessAction(MANUAL_LAUNCHES_NAMESPACE, {
+          data: { content: [{ id: 10 }], page: {} },
+        }),
+      );
+
+      store.dispatch(getManualLaunchAction({ launchId: '10' }));
+      store.dispatch(getManualLaunchExecutionAction({ launchId: '10', executionId: 2 }));
+      await flush();
+
+      const toasts = dispatched.filter((action) => action.type === SHOW_NOTIFICATION);
+      expect(toasts).toHaveLength(1);
+      expect(toasts[0].payload).toMatchObject({
+        messageId: 'manualLaunchRedirectWarningMessage',
+      });
+      expect(dispatched.map((action) => action.type as string)).toContain(MANUAL_LAUNCHES_PAGE);
     });
 
     test('a missing execution of an existing launch shows one error toast', async () => {
