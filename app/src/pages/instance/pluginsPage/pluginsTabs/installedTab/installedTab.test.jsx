@@ -622,6 +622,61 @@ describe('InstalledTab', () => {
           wrapper.find('[data-automation-id="pluginInstalledIncompatibleAlert"]').exists(),
         ).toBe(true);
       });
+
+      // opened while the registry was offline, so the row had no registry id to fetch detail for
+      test('the page fetches detail once a catalogue retry matches the plugin', () => {
+        const dispatched = [];
+        const stateWith = (marketplace) => ({
+          ...restOfState,
+          plugins: {
+            marketplace,
+            marketplacePluginDetail: {},
+            integrations: { globalIntegrations: [], projectIntegrations: [] },
+          },
+        });
+        let current = stateWith(
+          marketplaceState({
+            catalogueState: MARKETPLACE_CATALOGUE_STATE.LOADED_OFFLINE,
+            installed: catalogueOffline.installed,
+          }),
+        );
+        const store = createStore((state, action) => {
+          dispatched.push(action);
+          return current;
+        });
+        const wireJira = { ...localJira, type: 7 };
+        const wrapper = mount(
+          <Provider store={store}>
+            <IntlProvider locale="en" onError={() => {}}>
+              <InstalledTab filterItems={[BTS_GROUP_TYPE]} plugins={[wireJira]} />
+            </IntlProvider>
+          </Provider>,
+        );
+        const detailFetches = () =>
+          dispatched
+            .filter(({ type }) => type === FETCH_MARKETPLACE_PLUGIN_DETAIL)
+            .map(({ payload }) => payload);
+
+        act(() => {
+          wrapper.find(PluginsCatalog).first().prop('onInstalledItemClick')(
+            mergeInstalledRows([wireJira], catalogueOffline.installed)[0],
+          );
+        });
+        expect(detailFetches()).toEqual([]);
+
+        current = stateWith(marketplaceState({ installed: catalogue.installed }));
+        act(() => {
+          store.dispatch({ type: 'refresh' });
+        });
+        wrapper.update();
+        expect(detailFetches()).toEqual(['plugin-bts-jira']);
+
+        // a retry asks for the matched plugin, not the null id the page opened with
+        act(() => {
+          wrapper.find(PluginMarketplaceBlocks).first().prop('onRetry')();
+        });
+        expect(detailFetches()).toEqual(['plugin-bts-jira', 'plugin-bts-jira']);
+      });
     });
 
     /**

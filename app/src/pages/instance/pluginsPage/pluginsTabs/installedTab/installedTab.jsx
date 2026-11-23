@@ -355,6 +355,8 @@ export class InstalledTab extends Component {
    * server's own, from the upload response, so nothing is guessed from a file name.
    */
   componentDidUpdate() {
+    this.fetchDetailOnceMatched();
+
     const { uploadedPluginId } = this.state;
     if (!uploadedPluginId) {
       return;
@@ -366,6 +368,24 @@ export class InstalledTab extends Component {
       this.installedPluginsSubPageHandler(uploaded);
     }
   }
+
+  // registry id the installed page last fetched detail for
+  detailRegistryId = null;
+
+  // A page opened while the registry was offline has no registry id. Once a catalogue retry
+  // matches the plugin, fetch its detail.
+  fetchDetailOnceMatched = () => {
+    const { type, data } = this.state.subPage;
+    if (type !== INSTALLED_PLUGINS_SUBPAGE) {
+      return;
+    }
+
+    const { registryId } = this.currentInstalledRow(data);
+    if (registryId && registryId !== this.detailRegistryId) {
+      this.detailRegistryId = registryId;
+      this.fetchPluginDetail(registryId);
+    }
+  };
 
   // Null when the server answered without an id, and then the page stays where it is: landing
   // somewhere wrong is worse than not moving.
@@ -1056,7 +1076,11 @@ export class InstalledTab extends Component {
     }
   };
 
-  refetchPluginDetail = () => this.fetchPluginDetail(this.state.subPage.data?.registryId);
+  refetchPluginDetail = () => {
+    const { type, data } = this.state.subPage;
+    const row = type === INSTALLED_PLUGINS_SUBPAGE ? this.currentInstalledRow(data) : data;
+    this.fetchPluginDetail(row?.registryId);
+  };
 
   // the page has the registry's version list in hand, so the header offers the choice the design
   // asks for; with no list to offer it falls back to the plain confirmation and the latest build
@@ -1081,6 +1105,7 @@ export class InstalledTab extends Component {
   };
 
   installedPluginsSubPageHandler = (pageData) => {
+    this.detailRegistryId = pageData.registryId || null;
     this.fetchPluginDetail(pageData.registryId);
 
     return this.changeSubPage({
