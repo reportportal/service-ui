@@ -95,10 +95,19 @@ export const LinkedToBTSSection: FC<LinkedToBTSSectionProps> = ({
   // Tickets being unlinked are hidden right away; the list itself always comes from the store.
   const [removedTicketIds, setRemovedTicketIds] = useState<string[]>([]);
   const [ticketsOfRemoval, setTicketsOfRemoval] = useState(executionTickets);
+  const [executionOfRemoval, setExecutionOfRemoval] = useState(execution.id);
 
-  if (ticketsOfRemoval !== executionTickets) {
+  if (executionOfRemoval !== execution.id) {
+    setExecutionOfRemoval(execution.id);
     setTicketsOfRemoval(executionTickets);
     setRemovedTicketIds([]);
+  } else if (ticketsOfRemoval !== executionTickets) {
+    // A reload after one unlink must not show tickets whose own unlink is still pending:
+    // an id stays hidden until the server no longer returns it or its request fails.
+    setTicketsOfRemoval(executionTickets);
+    setRemovedTicketIds((ids) =>
+      ids.filter((id) => (executionTickets ?? []).some(({ ticketId }) => ticketId === id)),
+    );
   }
 
   const displayedBtsTickets = useMemo(

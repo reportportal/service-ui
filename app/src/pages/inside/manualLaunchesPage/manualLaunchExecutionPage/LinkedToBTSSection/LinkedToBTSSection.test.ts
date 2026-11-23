@@ -100,6 +100,53 @@ describe('LinkedToBTSSection', () => {
     );
   });
 
+  test('a reload after one unlink keeps the tickets whose unlink is still pending hidden', async () => {
+    const otherTicket = { ...ticket, ticketId: 'EPM-2', url: 'https://jira/EPM-2' };
+    const resolvers: Record<string, (value: unknown) => void> = {};
+    mockedFetch.mockImplementation(
+      (_url: string, { data }: { data: { ticketIds: string[] } }) =>
+        new Promise((resolve) => {
+          resolvers[data.ticketIds[0]] = resolve;
+        }),
+    );
+    type Wrapper = {
+      find: (component: unknown) => { length: number; prop: (name: string) => unknown };
+      setProps: (props: { children: unknown }) => void;
+      update: () => void;
+    };
+    const renderSection = (btsTickets: (typeof ticket)[]) =>
+      createElement(LinkedToBTSSection, { execution: { ...execution, btsTickets } });
+    const wrapper = mount(
+      createElement(IntlProvider, { locale: 'en' }, renderSection([ticket, otherTicket])),
+    ) as unknown as Wrapper;
+    // The list is not rendered at all once every ticket is hidden.
+    const shownTicketIds = () => {
+      const issueList = wrapper.find(IssueList);
+
+      return issueList.length
+        ? (issueList.prop('issues') as Array<{ ticketId: string }>).map(({ ticketId }) => ticketId)
+        : [];
+    };
+    const onIssueRemove = wrapper.find(IssueList).prop('onIssueRemove') as (issue: unknown) => void;
+
+    await act(async () => {
+      onIssueRemove({ ticketId: 'EPM-1' });
+      onIssueRemove({ ticketId: 'EPM-2' });
+      await Promise.resolve();
+    });
+    await act(async () => {
+      resolvers['EPM-1']({});
+      await Promise.resolve();
+    });
+    // The reload triggered by the first unlink still contains the second ticket.
+    act(() => {
+      wrapper.setProps({ children: renderSection([otherTicket]) });
+    });
+    wrapper.update();
+
+    expect(shownTicketIds()).toEqual([]);
+  });
+
   test('without a BTS integration the linked tickets stay visible but posting is not offered', () => {
     type Wrapper = {
       find: (component: unknown) => { length: number; prop: (name: string) => unknown };
