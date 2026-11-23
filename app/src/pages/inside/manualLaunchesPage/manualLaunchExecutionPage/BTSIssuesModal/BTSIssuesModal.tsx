@@ -89,6 +89,13 @@ interface CreatedIssue {
   pluginName: string;
 }
 
+// The item the created issue was meant for: a retry links it there even if the active
+// execution changes while the modal stays open.
+interface UnlinkedCreatedIssue {
+  issue: CreatedIssue;
+  testItemId: number;
+}
+
 let validationConfig: Record<string, unknown> | null = null;
 
 interface BTSIssuesModalOwnProps {
@@ -127,7 +134,9 @@ const BTSIssuesModalComponent: FC<BTSIssuesModalProps> = ({
   const [isLoading, setIsLoading] = useState(false);
   // An issue created in BTS whose link to the execution failed: retrying must only link it,
   // posting again would create a duplicate ticket.
-  const [unlinkedCreatedIssue, setUnlinkedCreatedIssue] = useState<CreatedIssue | null>(null);
+  const [unlinkedCreatedIssue, setUnlinkedCreatedIssue] = useState<UnlinkedCreatedIssue | null>(
+    null,
+  );
 
   const isMountedRef = useRef(true);
 
@@ -285,9 +294,11 @@ const BTSIssuesModalComponent: FC<BTSIssuesModalProps> = ({
   }, [launchId, executionId, dispatch]);
 
   const linkCreatedIssue = useCallback(
-    (createdIssue: CreatedIssue, onSuccess: () => void) => {
-      const testItemId = execution.testItemId || executionId;
-
+    (
+      createdIssue: CreatedIssue,
+      onSuccess: () => void,
+      testItemId: number = execution.testItemId || executionId,
+    ) => {
       setIsLoading(true);
 
       fetch(URLS.testItemsLinkIssues(projectKey), {
@@ -312,7 +323,7 @@ const BTSIssuesModalComponent: FC<BTSIssuesModalProps> = ({
         .catch((err: unknown) => {
           if (!isMountedRef.current) return;
           setIsLoading(false);
-          setUnlinkedCreatedIssue(createdIssue);
+          setUnlinkedCreatedIssue({ issue: createdIssue, testItemId });
           dispatch(
             showErrorNotification({
               message: formatMessage(messages.createdIssueNotLinked, {
@@ -515,7 +526,11 @@ const BTSIssuesModalComponent: FC<BTSIssuesModalProps> = ({
 
         if (selectedControl === BTSIssueActionTypes.POST) {
           if (unlinkedCreatedIssue) {
-            linkCreatedIssue(unlinkedCreatedIssue, onSuccess);
+            linkCreatedIssue(
+              unlinkedCreatedIssue.issue,
+              onSuccess,
+              unlinkedCreatedIssue.testItemId,
+            );
             return;
           }
 
@@ -583,7 +598,7 @@ const BTSIssuesModalComponent: FC<BTSIssuesModalProps> = ({
       {selectedControl === BTSIssueActionTypes.POST && unlinkedCreatedIssue && (
         <div className={cx('label')}>
           {formatMessage(messages.linkCreatedIssueHint, {
-            ticketId: unlinkedCreatedIssue.ticketId,
+            ticketId: unlinkedCreatedIssue.issue.ticketId,
           })}
         </div>
       )}
