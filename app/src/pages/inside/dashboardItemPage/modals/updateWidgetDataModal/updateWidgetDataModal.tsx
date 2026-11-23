@@ -39,6 +39,10 @@ const messages = defineMessages({
   },
 });
 
+const renderBoldText = (text: ReactNode) => (
+  <b className={cx('update-widget-data-modal__text--bold')}>{text}</b>
+);
+
 interface UpdateWidgetDataModalProps {
   data: {
     onConfirm: () => void;
@@ -72,9 +76,7 @@ export const UpdateWidgetDataModal = ({ data: { onConfirm } }: UpdateWidgetDataM
       cancelButton={cancelButton}
       onClose={() => dispatch(hideModalAction())}
     >
-      {formatMessage(messages.description, {
-        b: (text: ReactNode) => <b className={cx('update-widget-data-modal__text--bold')}>{text}</b>,
-      })}
+      {formatMessage(messages.description, { b: renderBoldText })}
     </Modal>
   );
 };
