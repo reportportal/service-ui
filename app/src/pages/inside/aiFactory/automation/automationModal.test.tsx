@@ -13,6 +13,7 @@ import { shallow } from 'enzyme';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { useUserPermissions } from 'hooks/useUserPermissions';
+import { usePipelineCiConnection } from 'pages/inside/aiFactory/pipelineSettings/usePipelineCiConnection';
 import { AutomationStatus, Lifecycle } from 'types/aiFactory';
 
 import { AutomationModalContent, type AutomationModalData } from './automationModal';
@@ -59,7 +60,7 @@ const dispatch = jest.fn();
 const start = jest.fn();
 const reloadEnvironments = jest.fn();
 jest.mock('pages/inside/aiFactory/pipelineSettings/usePipelineCiConnection', () => ({
-  usePipelineCiConnection: () => ({ connection: { state: 'CONNECTED', canStartJobs: true }, refresh: jest.fn() }),
+  usePipelineCiConnection: jest.fn(),
 }));
 
 const candidate = {
@@ -100,6 +101,12 @@ describe('AutomationModalContent', () => {
     } as ReturnType<typeof useUserPermissions>);
     jest.mocked(useDispatch).mockReturnValue(dispatch);
     jest.mocked(useSelector).mockReturnValue('demo');
+    jest.mocked(usePipelineCiConnection).mockReturnValue({
+      connection: { state: 'CONNECTED', canStartJobs: true },
+      refresh: jest.fn(),
+      isLoading: false,
+      failed: false,
+    });
   });
 
   test('loads A1, selects its default and submits the exact A2 payload', async () => {
@@ -256,6 +263,32 @@ describe('AutomationModalContent', () => {
     expect(wrapper.find('Modal').prop('okButton')).toMatchObject({ disabled: true });
   });
 
+  test('shows only the environment setup hint when connected CI cannot start jobs without environments', () => {
+    jest.mocked(usePipelineCiConnection).mockReturnValue({
+      connection: { state: 'CONNECTED', canStartJobs: false },
+      refresh: jest.fn(),
+      isLoading: false,
+      failed: false,
+    });
+    const wrapper = renderModal(
+      { testCases: [candidate] },
+      requestState({ environments: null, error: 'ENVIRONMENTS_NOT_CONFIGURED' }),
+    );
+
+    expect(wrapper.find('SystemMessage')).toHaveLength(1);
+    expect(wrapper.find('SystemMessage').text()).toContain('Set up environments');
+    expect(wrapper.find('Modal').prop('okButton')).toMatchObject({ disabled: true });
+  });
+
+  test('labels an in-progress case and keeps Send disabled', () => {
+    const wrapper = renderModal({
+      testCases: [{ ...candidate, automation: { status: AutomationStatus.IN_PROGRESS } }],
+    });
+
+    expect(wrapper.find('.automation-modal__skipped-list').text()).toContain('Already in automation');
+    expect(wrapper.find('Modal').prop('okButton')).toMatchObject({ disabled: true });
+  });
+
   test('shows the server skip reason and zero eligible cases after a stale selection', () => {
     const wrapper = renderModal(
       { testCases: [candidate] },
@@ -267,7 +300,7 @@ describe('AutomationModalContent', () => {
 
     expect(wrapper.text()).toContain('1 selected · 0 eligible');
     expect(wrapper.find('.automation-modal__case-list')).toHaveLength(0);
-    expect(wrapper.find('.automation-modal__skipped-list').text()).toContain('Fix is running');
+    expect(wrapper.find('.automation-modal__skipped-list').text()).toContain('Agent is fixing');
     expect(wrapper.find('Modal').prop('okButton')).toMatchObject({ disabled: true });
   });
 
@@ -304,10 +337,40 @@ describe('AutomationModalContent', () => {
       type: 'WARNING',
       payload: {
         message:
-          'Automation iteration #7 started for 1 Test Cases. Skipped: TC43 · Refund — Fix is running',
+          'Automation iteration #7 started for 1 Test Cases. Skipped: TC43 · Refund — Agent is fixing',
       },
     });
   });
+
+  test.each([
+    [[], 'Your start request could not be confirmed.'],
+    [
+      [43],
+      'No matching active iteration was found for: TC43 · Refund. Your start request could not be confirmed.',
+    ],
+  ] as const)(
+    'reports recovered automation as observed status for unconfirmed cases %j',
+    async (unconfirmed, detail) => {
+      start.mockResolvedValue({ ...accepted, recovery: { unconfirmed } });
+      const testCases = unconfirmed.length
+        ? [candidate, { ...candidate, id: 43, displayId: 'TC43', name: 'Refund' }]
+        : [candidate];
+      const wrapper = renderModal({ testCases });
+
+      await act(async () => {
+        (wrapper.find('Modal').prop('okButton') as { onClick: () => void }).onClick();
+        await Promise.resolve();
+      });
+
+      expect(dispatch).toHaveBeenCalledWith({
+        type: 'WARNING',
+        payload: {
+          message: `Automation iteration #7 is in progress for 1 selected Test Cases. ${detail}`,
+        },
+      });
+      expect(dispatch).not.toHaveBeenCalledWith(expect.objectContaining({ type: 'SUCCESS' }));
+    },
+  );
 
   test.each([
     ['JOB_START_FAILED', 'Automation could not be started'],

@@ -134,14 +134,14 @@ export const getNativeAutomationCandidate = (
 };
 
 export const getAutomationSkipReason = (testCase: AutomationCandidate): SkipReason | null => {
+  if (testCase.lifecycle !== Lifecycle.READY) {
+    return SkipReason.NOT_READY;
+  }
   if (testCase.isFixRunning || testCase.review?.fixRound?.status === 'RUNNING') {
     return SkipReason.FIX_RUNNING;
   }
   if (testCase.automation?.status === AutomationStatus.IN_PROGRESS) {
     return SkipReason.AUTOMATION_IN_PROGRESS;
-  }
-  if (testCase.lifecycle !== Lifecycle.READY) {
-    return SkipReason.NOT_READY;
   }
 
   return null;

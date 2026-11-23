@@ -38,20 +38,19 @@ describe('automation selection', () => {
     );
   });
 
-  test('uses deterministic fix-running then automation-running then lifecycle precedence', () => {
+  test('uses the API precedence for ineligible cases', () => {
     const allBlocked = candidate({
       lifecycle: Lifecycle.DRAFT,
       review: { unsentCommentsCount: 0, fixRound: { number: 2, status: 'RUNNING' } },
       automation: { status: AutomationStatus.IN_PROGRESS },
     });
 
-    expect(getAutomationSkipReason(allBlocked)).toBe(SkipReason.FIX_RUNNING);
-    expect(getAutomationSkipReason({ ...allBlocked, review: undefined })).toBe(
+    expect(getAutomationSkipReason(allBlocked)).toBe(SkipReason.NOT_READY);
+    const ready = { ...allBlocked, lifecycle: Lifecycle.READY };
+    expect(getAutomationSkipReason(ready)).toBe(SkipReason.FIX_RUNNING);
+    expect(getAutomationSkipReason({ ...ready, review: undefined })).toBe(
       SkipReason.AUTOMATION_IN_PROGRESS,
     );
-    expect(
-      getAutomationSkipReason({ ...allBlocked, review: undefined, automation: undefined }),
-    ).toBe(SkipReason.NOT_READY);
   });
 
   test('partitions mixed candidates and requests confirmation only for eligible automated cases', () => {

@@ -12,11 +12,13 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 
 import { URLS } from 'common/urls';
 import { fetch } from 'common/utils';
-import { getNativeAutomationState } from 'pages/inside/aiFactory/automation';
+import {
+  getNativeAutomationState,
+  type AutomationStartResult,
+} from 'pages/inside/aiFactory/automation';
 import { usePolling } from 'pages/inside/aiFactory/common';
 import {
   AutomationStatus,
-  type AutomateAcceptedRS,
   type TestCaseAutomationState,
 } from 'types/aiFactory';
 import type { TestCase } from 'types/testCase';
@@ -134,7 +136,7 @@ export const useTestCaseAutomation = (projectKey: string, testCase?: AutomationC
   }, [automation, initialAutomation, projectKey, scope, testCaseId]);
 
   const onStarted = useCallback(
-    (response: AutomateAcceptedRS) => {
+    (response: AutomationStartResult) => {
       if (
         !scope ||
         activeScope.current !== scope ||
@@ -148,6 +150,10 @@ export const useTestCaseAutomation = (projectKey: string, testCase?: AutomationC
 
       activeRequest.current?.cancel?.();
       activeRequest.current = undefined;
+      if (response.recovery) {
+        void reload();
+        return;
+      }
       setReadState({
         scope,
         initialAutomation,

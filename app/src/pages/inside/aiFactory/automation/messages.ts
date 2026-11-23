@@ -149,11 +149,11 @@ export const messages = defineMessages({
   },
   reasonFixRunning: {
     id: 'AiFactoryAutomation.reasonFixRunning',
-    defaultMessage: 'Fix is running',
+    defaultMessage: 'Agent is fixing',
   },
   reasonAutomationInProgress: {
     id: 'AiFactoryAutomation.reasonAutomationInProgress',
-    defaultMessage: 'Automation is in progress',
+    defaultMessage: 'Already in automation',
   },
   unavailableNotReady: {
     id: 'AiFactoryAutomation.unavailableNotReady',
@@ -246,10 +246,15 @@ export const messages = defineMessages({
     defaultMessage:
       'Automation iteration #{number} started for {count} Test Cases. Skipped: {cases}',
   },
-  startedWithUnconfirmedCases: {
-    id: 'AiFactoryAutomation.startedWithUnconfirmedCases',
+  recoveredInProgress: {
+    id: 'AiFactoryAutomation.recoveredInProgress',
     defaultMessage:
-      'Automation iteration #{number} started for {count} Test Cases. Start not confirmed for: {cases}.',
+      'Automation iteration #{number} is in progress for {count} selected Test Cases. Your start request could not be confirmed.',
+  },
+  recoveredWithUnconfirmedCases: {
+    id: 'AiFactoryAutomation.recoveredWithUnconfirmedCases',
+    defaultMessage:
+      'Automation iteration #{number} is in progress for {count} selected Test Cases. No matching active iteration was found for: {cases}. Your start request could not be confirmed.',
   },
   retry: {
     id: 'AiFactoryAutomation.retry',
