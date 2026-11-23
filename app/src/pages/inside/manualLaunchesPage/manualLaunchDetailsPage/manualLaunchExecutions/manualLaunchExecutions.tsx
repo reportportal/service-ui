@@ -80,7 +80,7 @@ export const ManualLaunchExecutions = ({
   const isAnyRowSelected = !isEmpty(selectedRowIds);
   const [selectedExecutionId, setSelectedExecutionId] = useState<number | null>(null);
 
-  usePruneSelectionToRows(executions, setSelectedRowIds);
+  const keepVisibleSelection = usePruneSelectionToRows(executions, setSelectedRowIds);
 
   const { activePage, pageSize, setPageNumber, setPageSize, totalPages, captions } =
     useURLBoundPagination({
@@ -145,10 +145,17 @@ export const ManualLaunchExecutions = ({
         executionIds: selectedRowIds,
         launchId,
         onClearSelection,
-        onKeepSelection: setSelectedRowIds,
+        onKeepSelection: keepVisibleSelection,
       });
     }
-  }, [selectedRowIds, launchId, openDeleteExecutionModal, onClearSelection, trackEvent]);
+  }, [
+    selectedRowIds,
+    launchId,
+    openDeleteExecutionModal,
+    onClearSelection,
+    keepVisibleSelection,
+    trackEvent,
+  ]);
 
   const getPopoverItems = (executionId: number): PopoverItem[] => {
     if (!canManageTestCases) {

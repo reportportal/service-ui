@@ -65,7 +65,7 @@ export const ManualLaunchesList = ({ fullLaunches, onRefresh }: ManualLaunchesLi
   const [selectedLaunchId, setSelectedLaunchId] = useState<number | null>(null);
   const isAnyRowSelected = !isEmpty(selectedRowIds);
 
-  usePruneSelectionToRows(data, setSelectedRowIds);
+  const keepVisibleSelection = usePruneSelectionToRows(data, setSelectedRowIds);
 
   const handleRowSelect = useCallback((id: number) => {
     setSelectedRowIds((selectedRows) => xor(selectedRows, [id]));
@@ -97,9 +97,9 @@ export const ManualLaunchesList = ({ fullLaunches, onRefresh }: ManualLaunchesLi
     openBatchDeleteModal({
       launchIds: selectedRowIds,
       onClearSelection: () => setSelectedRowIds([]),
-      onKeepSelection: setSelectedRowIds,
+      onKeepSelection: keepVisibleSelection,
     });
-  }, [openBatchDeleteModal, selectedRowIds, trackEvent]);
+  }, [openBatchDeleteModal, selectedRowIds, trackEvent, keepVisibleSelection]);
 
   const manualLaunchesTableData = useManualLaunchesTableData(
     data,

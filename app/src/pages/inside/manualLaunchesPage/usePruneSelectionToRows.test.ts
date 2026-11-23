@@ -22,13 +22,17 @@ type Rows = Array<{ id: number }>;
 
 const renderSelection = (initialRows: Rows, initialSelection: number[]) => {
   const selections: number[][] = [];
+  let keepVisibleSelection: (ids: number[]) => void = () => {};
   const capture = (selection: number[]) => {
     selections.push(selection);
+  };
+  const captureKeepSelection = (keep: (ids: number[]) => void) => {
+    keepVisibleSelection = keep;
   };
   const Harness = ({ rows }: { rows: Rows }) => {
     const [selectedIds, setSelectedIds] = useState(initialSelection);
 
-    usePruneSelectionToRows(rows, setSelectedIds);
+    captureKeepSelection(usePruneSelectionToRows(rows, setSelectedIds));
     capture(selectedIds);
 
     return null;
@@ -44,6 +48,11 @@ const renderSelection = (initialRows: Rows, initialSelection: number[]) => {
       });
     },
     lastSelection: () => selections[selections.length - 1],
+    keepSelection: (ids: number[]) => {
+      act(() => {
+        keepVisibleSelection(ids);
+      });
+    },
   };
 };
 
@@ -60,5 +69,18 @@ describe('usePruneSelectionToRows', () => {
     setRows([{ id: 3 }, { id: 4 }]);
 
     expect(lastSelection()).toEqual([3]);
+  });
+
+  test('a selection restored after the rows changed keeps only the ids still shown', () => {
+    const { setRows, keepSelection, lastSelection } = renderSelection(
+      [{ id: 1 }, { id: 2 }, { id: 3 }],
+      [1, 2, 3],
+    );
+
+    // The rows change while the delete request is pending, then it restores its failed ids.
+    setRows([{ id: 2 }, { id: 4 }]);
+    keepSelection([1, 2]);
+
+    expect(lastSelection()).toEqual([2]);
   });
 });

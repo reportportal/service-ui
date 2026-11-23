@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { Dispatch, SetStateAction, useState } from 'react';
+import { Dispatch, SetStateAction, useCallback, useEffect, useRef, useState } from 'react';
 
 // Drops selected ids that are no longer among the shown rows (page, search or filter change,
 // deleted rows), so bulk actions only ever act on rows the user can see.
@@ -35,4 +35,21 @@ export const usePruneSelectionToRows = (
       return visibleSelectedIds.length === selectedIds.length ? selectedIds : visibleSelectedIds;
     });
   }
+
+  const rowsRef = useRef(rows);
+
+  useEffect(() => {
+    rowsRef.current = rows;
+  }, [rows]);
+
+  // Selects only the given ids that are shown now: a request that resolves after the rows
+  // changed must not restore ids the prune above has already dropped.
+  return useCallback(
+    (ids: number[]) => {
+      const rowIds = new Set(rowsRef.current.map(({ id }) => id));
+
+      setSelectedIds(ids.filter((id) => rowIds.has(id)));
+    },
+    [setSelectedIds],
+  );
 };
