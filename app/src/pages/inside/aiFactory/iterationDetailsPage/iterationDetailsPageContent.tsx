@@ -666,6 +666,7 @@ export const IterationDetailsPageContent = () => {
   const pipelineId = useSelector(pipelineIdSelector);
   const iterationId = useSelector(iterationIdSelector);
   const query = useSelector(querySelector);
+  const requestedStage = typeof query.stage === 'string' ? query.stage : undefined;
   const pipelines = useSelector(pipelinesSelector);
   const catalogProjectKey = useSelector(pipelineCatalogProjectKeySelector);
   const catalogTransport = useSelector(pipelineCatalogTransportSelector);
@@ -728,14 +729,14 @@ export const IterationDetailsPageContent = () => {
     if (hasInitializedStage.current || !pipeline) {
       return;
     }
-    const requestedStage = typeof query.stage === 'string' ? query.stage.toUpperCase() : undefined;
+    const stageKey = requestedStage?.toUpperCase();
     setSelectedStage(
-      requestedStage && STAGE_KEYS.has(requestedStage)
-        ? (requestedStage as AiStageKey)
+      stageKey && STAGE_KEYS.has(stageKey)
+        ? (stageKey as AiStageKey)
         : defaultStageKey(pipeline.type),
     );
     hasInitializedStage.current = true;
-  }, [pipeline, query.stage]);
+  }, [pipeline, requestedStage]);
 
   useIterationDetailPolling({
     dispatch,
@@ -789,7 +790,7 @@ export const IterationDetailsPageContent = () => {
         isUnavailable={false}
         isInvalidRoute
         breadcrumbDescriptors={breadcrumbDescriptors}
-        requestedStage={typeof query.stage === 'string' ? query.stage : undefined}
+        requestedStage={requestedStage}
         onRetry={retryDetail}
         onBack={backToPipelines}
         projectKey={projectKey}
@@ -817,7 +818,7 @@ export const IterationDetailsPageContent = () => {
         isLoading={detailMatchesRoute && isLoading}
         failureKind={detailMatchesRoute ? detailFailureKind : null}
         breadcrumbDescriptors={breadcrumbDescriptors}
-        requestedStage={typeof query.stage === 'string' ? query.stage : undefined}
+        requestedStage={requestedStage}
         onRetry={retryDetail}
         onBack={backToPipelines}
         projectKey={projectKey}

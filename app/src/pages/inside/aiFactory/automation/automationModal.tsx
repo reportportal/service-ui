@@ -35,7 +35,11 @@ import {
   partitionAutomationSelection,
   type AutomationCandidate,
 } from './automationUtils';
-import { useAutomationRequest, type AutomationRequestError } from './useAutomationRequest';
+import {
+  useAutomationRequest,
+  type AutomationRequestError,
+  type AutomationRequestState,
+} from './useAutomationRequest';
 import { automationSkipReasonMessages, messages } from './messages';
 import styles from './automationModal.scss';
 
@@ -78,8 +82,19 @@ const RETRYABLE_ENVIRONMENT_ERRORS = new Set<AutomationRequestError>([
   'ENVIRONMENTS_NOT_CONFIGURED',
 ]);
 
-const getCiConnectionMessage = (showStatus: boolean, isLoading: boolean, failed: boolean) => {
-  if (!showStatus) return null;
+const getCiConnectionMessage = (
+  canRequest: boolean,
+  canStart: boolean,
+  { connection, isLoading, failed }: ReturnType<typeof usePipelineCiConnection>,
+  { error, isLoadingEnvironments }: Pick<AutomationRequestState, 'error' | 'isLoadingEnvironments'>,
+) => {
+  if (!canRequest || canStart || error === 'CI_NOT_CONNECTED') return null;
+  if (
+    connection?.state === 'CONNECTED' &&
+    (isLoadingEnvironments || error === 'ENVIRONMENTS_NOT_CONFIGURED')
+  ) {
+    return null;
+  }
   if (isLoading) return messages.checkingCiConnection;
   return failed ? messages.loadCiConnectionFailed : messages.unavailableCiConnection;
 };
@@ -103,12 +118,12 @@ export const AutomationModalContent = ({
   const [environment, setEnvironment] = useState('');
   const isCurrentProject = expectedProjectKey === undefined || expectedProjectKey === projectKey;
   const canRequest = !isPreview && isCurrentProject && Boolean(pipelineId || isMock);
-  const { connection, isLoading, failed, refresh } = usePipelineCiConnection(
+  const ci = usePipelineCiConnection(
     canRequest && canAutomateTestCases ? projectKey : '',
     pipelineId,
   );
-  const isConnected = connection?.state === 'CONNECTED';
-  const canStart = isMock || (isConnected && connection.canStartJobs);
+  const { connection, isLoading, failed, refresh } = ci;
+  const canStart = isMock || (connection?.state === 'CONNECTED' && connection.canStartJobs);
   const request = useAutomationRequest(projectKey, canRequest, pipelineId);
   useEffect(() => {
     if (request.error === 'CI_NOT_CONNECTED' || request.error === 'JOB_START_FAILED') {
@@ -198,15 +213,7 @@ export const AutomationModalContent = ({
     if (response) handleSuccess(response);
   };
 
-  const isShowingEnvironmentAvailability =
-    isConnected &&
-    (request.isLoadingEnvironments || request.error === 'ENVIRONMENTS_NOT_CONFIGURED');
-  const showConnectionStatus =
-    canRequest &&
-    !canStart &&
-    request.error !== 'CI_NOT_CONNECTED' &&
-    !isShowingEnvironmentAvailability;
-  const connectionMessage = getCiConnectionMessage(showConnectionStatus, isLoading, failed);
+  const connectionMessage = getCiConnectionMessage(canRequest, canStart, ci, request);
 
   return (
     <Modal
