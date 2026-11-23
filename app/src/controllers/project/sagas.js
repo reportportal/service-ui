@@ -27,6 +27,7 @@ import {
 import { hideModalAction } from 'controllers/modal';
 import { showScreenLockAction, hideScreenLockAction } from 'controllers/screenLock';
 import { fetch } from 'common/utils';
+import { ERROR_CANCELED, ERROR_UNAUTHORIZED } from 'common/utils/fetch';
 import { setProjectIntegrationsAction } from 'controllers/plugins/actionCreators';
 import {
   addFilterAction,
@@ -103,6 +104,16 @@ import {
 import { stringEqual } from 'common/utils/stringUtils';
 
 let latestActiveProjectRequestId = 0;
+
+// Requests aborted on logout and session expiry are not failures to report: the logout flow informs the user.
+const isSilentRequestError = (error) =>
+  [ERROR_CANCELED, ERROR_UNAUTHORIZED].includes(error?.message);
+
+function* showRequestErrorNotification(error) {
+  if (!isSilentRequestError(error)) {
+    yield put(showDefaultErrorNotification(error));
+  }
+}
 
 const isProjectResultFor = (projectKey) => (action) =>
   (action.type === FETCH_PROJECT_SUCCESS && action.payload?.projectKey === projectKey) ||
@@ -598,7 +609,7 @@ export function* fetchProjectPreferences({ payload: projectKey }) {
     yield put(fetchProjectPreferencesSuccessAction(preferences));
     yield put(fetchUserFiltersSuccessAction(preferences.filters));
   } catch (error) {
-    yield put(showDefaultErrorNotification(error));
+    yield call(showRequestErrorNotification, error);
   }
 }
 
@@ -611,7 +622,7 @@ export function* fetchConfigurationAttributes({ payload: projectKey }) {
     const project = yield call(fetch, URLS.projectByName(projectKey));
     yield put(updateConfigurationAttributesAction(project));
   } catch (error) {
-    yield put(showDefaultErrorNotification(error));
+    yield call(showRequestErrorNotification, error);
   }
 }
 
@@ -646,7 +657,7 @@ export function* updateProjectFilterPreferences({ payload = {} }) {
     const projectKey = yield select(projectKeySelector);
     yield call(fetch, URLS.projectPreferences(projectKey, filterId), { method });
   } catch (error) {
-    yield put(showDefaultErrorNotification(error));
+    yield call(showRequestErrorNotification, error);
   }
 }
 
