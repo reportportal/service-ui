@@ -206,6 +206,34 @@ describe('controllers/manualLaunch/sagas', () => {
     expect(mockedFetch).toHaveBeenCalledWith(URLS.manualLaunchById('demo', 10));
   });
 
+  test('a status change finished after moving to another launch does not reload that page', async () => {
+    mockedFetch.mockImplementation(() => Promise.resolve({ id: 1, status: 'PASSED' }));
+    const { store, dispatched } = setupStore({
+      project: { info: { projectKey: 'demo' } },
+      location: {
+        type: 'MANUAL_LAUNCH_DETAILS_PAGE',
+        payload: { launchId: '20' },
+        prev: { payload: { launchId: '10' } },
+      },
+      manualLaunch: { activeManualLaunch: { id: 20 } },
+    });
+
+    store.dispatch(
+      updateManualLaunchExecutionStatusAction({
+        projectKey: 'demo',
+        launchId: 10,
+        executionId: 1,
+        status: 'PASSED',
+      }),
+    );
+    await flush();
+
+    expect(dispatched).not.toContainEqual(getManualLaunchAction({ launchId: 10, force: true }));
+    expect(dispatched.map((action) => action.type as string)).not.toContain(
+      getManualLaunchFoldersAction({ launchId: 10 }).type,
+    );
+  });
+
   test('a failed silent folder reload keeps the tree and shows no error', async () => {
     mockedFetch.mockRejectedValue({ errorCode: 5000, message: 'bad gateway' });
     const { store, dispatched } = setupStore({ project: { info: { projectKey: 'demo' } } });

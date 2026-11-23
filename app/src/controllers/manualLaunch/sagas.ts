@@ -764,9 +764,19 @@ function mergeNonToRunExecutionComment(
 }
 
 // A status change moves the launch statistics and the folder counters: reload both in place
-// while the launch details page is shown.
-function* reloadManualLaunchStatistics(launchId: string | number): Generator {
+// while the details page of that launch is shown.
+function* reloadManualLaunchStatistics(projectKey: string, launchId: string | number): Generator {
   if ((yield select(pageSelector)) !== MANUAL_LAUNCH_DETAILS_PAGE) {
+    return;
+  }
+
+  const location = (yield select(locationSelector)) as LocationInfo;
+  const currentProjectKey = (yield select(projectKeySelector)) as string;
+
+  if (
+    String(location?.payload?.launchId) !== String(launchId) ||
+    currentProjectKey !== projectKey
+  ) {
     return;
   }
 
@@ -853,7 +863,7 @@ function* updateManualLaunchExecutionStatus(
       requestData,
     );
 
-    yield call(reloadManualLaunchStatistics, launchId);
+    yield call(reloadManualLaunchStatistics, projectKey, launchId);
 
     const capitalizedStatus =
       statusUpper.charAt(0).toUpperCase() + statusUpper.slice(1).toLowerCase();
