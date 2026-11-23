@@ -55,6 +55,18 @@ const messages = defineMessages({
       'Nothing was installed. The marketplace refuses to serve version {version}: {reason} Pick' +
       ' another version, or upload a .jar of this one by hand if you kept one.',
   },
+  // The server's message already says in plain words what doesn't fit and, for an operator's
+  // ceiling, why; repeating a generic sentence before it would only say the same thing twice.
+  incompatible: {
+    id: 'InstallFailureAlert.incompatible',
+    defaultMessage: 'Nothing was installed. {reason} Pick another version.',
+  },
+  incompatibleNoReason: {
+    id: 'InstallFailureAlert.incompatibleNoReason',
+    defaultMessage:
+      "Nothing was installed. This version doesn't support the ReportPortal release this instance" +
+      ' runs. Pick another version.',
+  },
   // Temporary by nature, so it ends on when to try again rather than on a workaround. The address
   // is deliberately unnamed — ADR-004 lets an enterprise point the instance anywhere, so a literal
   // host helps exactly nobody who would see this.
@@ -82,10 +94,17 @@ const messages = defineMessages({
  * never installed, so the frames drop the clause entirely — the `License Invalid` spec says so
  * outright, because "keeps running" describes something that does not exist yet.
  *
- * <p>Four cases, keyed on service-api's `errorCode`. Anything else falls to the generic one, which
+ * <p>Five cases, keyed on service-api's `errorCode`. Anything else falls to the generic one, which
  * points at the log rather than inventing a cause — if a failure deserves its own words it gets its
  * own code and stops arriving here.
  */
+// service-api prefixes each refusal with its error type ("Marketplace plugin is not compatible: …"),
+// which reads as a label rather than a sentence once the alert has said what happened
+const withoutErrorPrefix = (reason) => {
+  const text = reason.replace(/^Marketplace plugin [^:]*:\s*/, '');
+  return text.charAt(0).toUpperCase() + text.slice(1);
+};
+
 export const InstallFailureAlert = ({
   pluginName,
   version = null,
@@ -100,6 +119,8 @@ export const InstallFailureAlert = ({
         return messages.licence;
       case MARKETPLACE_INSTALL_ERROR.VERSION_BLOCKED:
         return reason ? messages.blocked : messages.blockedNoReason;
+      case MARKETPLACE_INSTALL_ERROR.PLUGIN_INCOMPATIBLE:
+        return reason ? messages.incompatible : messages.incompatibleNoReason;
       case MARKETPLACE_INSTALL_ERROR.REGISTRY_UNREACHABLE:
         return messages.unreachable;
       default:
@@ -107,12 +128,17 @@ export const InstallFailureAlert = ({
     }
   };
 
+  // the incompatible message is the server's whole sentence, so it loses its label; a blocked
+  // reason is the operator's own words and is quoted as written
+  const quoted = (value) =>
+    errorCode === MARKETPLACE_INSTALL_ERROR.PLUGIN_INCOMPATIBLE ? withoutErrorPrefix(value) : value;
+
   const text = formatMessage(descriptor(), {
     plugin: pluginName,
     version: version || '',
-    // only the blocked case quotes the operator, and it ends the sentence, so it carries its own
+    // only the blocked and incompatible cases quote the server, and it ends the sentence, so it carries its own
     // stop rather than relying on whoever wrote the reason to have supplied one
-    reason: reason ? `${reason.replace(/\.$/, '')}.` : '',
+    reason: reason ? `${quoted(reason).replace(/\.$/, '')}.` : '',
   });
 
   return (
@@ -139,6 +165,6 @@ InstallFailureAlert.propTypes = {
   version: PropTypes.string,
   /** service-api's `errorCode`; an unmapped one falls to the generic message. */
   errorCode: PropTypes.number,
-  /** The operator's stated reason, quoted verbatim by the blocked case and nowhere else. */
+  /** The operator's stated reason, quoted verbatim by the blocked and incompatible cases. */
   reason: PropTypes.string,
 };

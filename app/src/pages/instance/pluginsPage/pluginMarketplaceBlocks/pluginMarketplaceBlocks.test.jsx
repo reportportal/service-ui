@@ -77,7 +77,7 @@ describe('PluginMarketplaceBlocks', () => {
     test('lists every published version, newest first', () => {
       const text = find(render(), 'pluginVersions').text();
 
-      expect(find(render(), 'pluginVersionRow')).toHaveLength(2);
+      expect(find(render(), 'pluginVersionRow')).toHaveLength(3);
       // the design numbers the rows plainly; the old list prefixed them with "v."
       expect(text.indexOf('1.6.0')).toBeLessThan(text.indexOf('1.5.2'));
     });
@@ -311,6 +311,54 @@ describe('PluginMarketplaceBlocks', () => {
       expect(find(wrapper, 'pluginAdvisoryAlert').text()).not.toContain('9.9.9');
       expect(find(wrapper, 'pluginBlockedAlert').text()).not.toContain('never sent');
       expect(find(wrapper, 'pluginRemovedAlert').text()).not.toContain('Jan 5, 2026');
+    });
+  });
+
+  describe('the installed version is out of range', () => {
+    const capped = {
+      compatible: false,
+      requires: '>=25.1, <26.0',
+      ceiling: '<26.0',
+      ceilingReason: 'Breaks the launch view on 26.0',
+    };
+    const alert = (props) =>
+      find(
+        render({ installedVersion: '1.5.2', productVersion: '26.1', ...props }),
+        'pluginInstalledIncompatibleAlert',
+      );
+
+    test('the alert states the version, the range, this release and the operator’s note', () => {
+      const text = alert({ installedCompatibility: capped }).text();
+
+      expect(text).toContain("This version doesn't support this ReportPortal release");
+      expect(text).toContain('Version 1.5.2 supports ReportPortal >=25.1, <26.0');
+      expect(text).toContain('this instance runs 26.1');
+      expect(text).toContain('Marketplace note: Breaks the launch view on 26.0');
+    });
+
+    test('without a ceiling reason there is no note', () => {
+      const text = alert({
+        installedCompatibility: { compatible: false, requires: '<26.0' },
+      }).text();
+
+      expect(text).toContain('Version 1.5.2 supports');
+      expect(text).not.toContain('Marketplace note');
+    });
+
+    test.each([
+      ['compatible', { compatible: true, requires: '>=25.1' }],
+      ['unknown', {}],
+      ['absent', null],
+    ])('is hidden when the verdict is %s', (_, installedCompatibility) => {
+      expect(alert({ installedCompatibility })).toHaveLength(0);
+    });
+
+    test.each([
+      ['offline', { offline: true }],
+      ['failed', { failed: true }],
+      ['unmatched', { unmatched: true }],
+    ])('is hidden when the marketplace is %s', (_, state) => {
+      expect(alert({ installedCompatibility: capped, ...state })).toHaveLength(0);
     });
   });
 

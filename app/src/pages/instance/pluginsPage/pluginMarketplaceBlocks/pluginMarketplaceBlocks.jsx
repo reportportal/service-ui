@@ -101,6 +101,19 @@ const messages = defineMessages({
     defaultMessage:
       'Blocked on {date}: {reason}. The plugin keeps running, but this version cannot be reinstalled or rolled back to. Archive the current .jar before upgrading if you may need to return to it.',
   },
+  installedIncompatibleHeader: {
+    id: 'PluginMarketplaceBlocks.installedIncompatibleHeader',
+    defaultMessage: "This version doesn't support this ReportPortal release",
+  },
+  installedIncompatibleBody: {
+    id: 'PluginMarketplaceBlocks.installedIncompatibleBody',
+    defaultMessage:
+      "Version {version} supports ReportPortal {requires}; this instance runs {productVersion}. The plugin is still installed and ReportPortal doesn't switch it off, but it may not work correctly. Install a version that supports this release.",
+  },
+  installedIncompatibleReason: {
+    id: 'PluginMarketplaceBlocks.installedIncompatibleReason',
+    defaultMessage: 'Marketplace note: {reason}',
+  },
   removedHeader: {
     id: 'PluginMarketplaceBlocks.removedHeader',
     defaultMessage: 'Plugin removed from the marketplace',
@@ -163,6 +176,7 @@ export const PluginMarketplaceBlocks = ({
   showTier = true,
   installing = false,
   productVersion = null,
+  installedCompatibility = null,
 }) => {
   const { formatMessage, formatDate } = useIntl();
   const trusted = isMarketplaceTrusted({ offline, failed, unmatched });
@@ -271,6 +285,29 @@ export const PluginMarketplaceBlocks = ({
               </SystemMessage>
             </div>
           )}
+          {/* only an explicit false: `{}` is a failed registry read, which proves nothing */}
+          {trusted && installedCompatibility?.compatible === false && (
+            <div className={cx('alert')} data-automation-id="pluginInstalledIncompatibleAlert">
+              <SystemMessage
+                mode="warning"
+                header={formatMessage(messages.installedIncompatibleHeader)}
+              >
+                {formatMessage(messages.installedIncompatibleBody, {
+                  version: installedVersion || '',
+                  requires: installedCompatibility.requires || '',
+                  productVersion: productVersion || '',
+                })}
+                {installedCompatibility.ceilingReason && (
+                  <>
+                    <br />
+                    {formatMessage(messages.installedIncompatibleReason, {
+                      reason: installedCompatibility.ceilingReason,
+                    })}
+                  </>
+                )}
+              </SystemMessage>
+            </div>
+          )}
           {removed && (
             <div className={cx('alert')} data-automation-id="pluginRemovedAlert">
               <SystemMessage mode="warning" header={formatMessage(messages.removedHeader)}>
@@ -326,7 +363,6 @@ export const PluginMarketplaceBlocks = ({
           <VersionsTable
             versions={versions}
             installedVersion={installedVersion}
-            latestVersion={detail?.plugin?.latestVersion || null}
             productVersion={productVersion}
             changelog={changelog}
             onUseVersion={onUseVersion}
@@ -344,6 +380,13 @@ PluginMarketplaceBlocks.propTypes = {
   installing: PropTypes.bool,
   /** The release this instance reports, quoted when a version will not run here. */
   productVersion: PropTypes.string,
+  /** The verdict on the installed version; only an explicit `compatible: false` shows an alert. */
+  installedCompatibility: PropTypes.shape({
+    compatible: PropTypes.bool,
+    requires: PropTypes.string,
+    ceiling: PropTypes.string,
+    ceilingReason: PropTypes.string,
+  }),
   detail: PropTypes.shape({
     /** The registry's own answer about the plugin, `access` and `tier` among it. */
     plugin: PropTypes.object,

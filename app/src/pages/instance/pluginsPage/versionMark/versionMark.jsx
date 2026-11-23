@@ -29,6 +29,8 @@ export const VERSION_MARK_TONES = {
   INCOMPATIBLE: 'incompatible',
   /** A security advisory, or a version the operator blocked. Both are about risk. */
   DANGER: 'danger',
+  /** Worth knowing, nothing to act on: a cap that does not touch this release. */
+  NEUTRAL: 'neutral',
 };
 
 const Mark = ({ tone, automationId }) => (
