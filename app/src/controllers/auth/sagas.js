@@ -86,6 +86,7 @@ import {
   LOGIN_SUCCESS,
   ANONYMOUS_REDIRECT_PATH_STORAGE_KEY,
   GRAFANA_SESSION_REVOKE_TIMEOUT,
+  LOGOUT_REQUEST_TIMEOUT,
 } from './constants';
 import {
   isAuthorizedSelector,
@@ -106,7 +107,7 @@ function* logoutOnServer(redirectedPage) {
   }
 
   try {
-    yield call(fetch, URLS.logout(), { method: 'POST' });
+    yield call(fetch, URLS.logout(), { method: 'POST', timeout: LOGOUT_REQUEST_TIMEOUT });
   } catch {
     // proceed with local logout regardless of API errors
   }

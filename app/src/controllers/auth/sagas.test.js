@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { put, select, take } from 'redux-saga/effects';
+import { call, put, select, take } from 'redux-saga/effects';
 import { LOGIN_PAGE, pagePropertiesSelector } from 'controllers/pages';
 import { SHOW_NOTIFICATION } from 'controllers/notification/constants';
 
@@ -29,7 +29,9 @@ jest.mock('routes/routesMap', () => ({
   getRedirectRoute: jest.fn(),
 }));
 
+import { fetch } from 'common/utils/fetch';
 import { getStorageItem, setStorageItem } from 'common/utils/storageUtils';
+import { URLS } from 'common/urls';
 import { ACTIVITY_TIMESTAMP } from 'controllers/user/constants';
 import {
   logoutAction,
@@ -37,7 +39,7 @@ import {
   loginSuccessAction,
   resetTokenAction,
 } from './actionCreators';
-import { DEFAULT_TOKEN, LOGOUT_COMPLETE, TOKEN_KEY } from './constants';
+import { DEFAULT_TOKEN, LOGOUT_COMPLETE, LOGOUT_REQUEST_TIMEOUT, TOKEN_KEY } from './constants';
 import { isAuthorizedSelector, tokenSelector } from './selectors';
 import { handleLogout, handleOauthSuccess, handleSetToken } from './sagas';
 
@@ -59,6 +61,17 @@ describe('auth sagas: multi-tab token handling', () => {
   });
 
   describe('handleLogout', () => {
+    it('bounds the logout request with a timeout', () => {
+      const gen = handleLogout({ payload: undefined });
+      gen.next();
+      const logoutOnServer = gen.next(OLD_TOKEN_STRING).value.CALL;
+      const request = logoutOnServer.fn(...logoutOnServer.args).next().value;
+
+      expect(request).toEqual(
+        call(fetch, URLS.logout(), { method: 'POST', timeout: LOGOUT_REQUEST_TIMEOUT }),
+      );
+    });
+
     it('removes the activity timestamp when the stored token is the revoked one', () => {
       setStorageItem(TOKEN_KEY, OLD_TOKEN);
       setStorageItem(ACTIVITY_TIMESTAMP, 123);
