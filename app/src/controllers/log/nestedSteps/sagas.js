@@ -58,15 +58,15 @@ export function* fetchNestedStep({ payload = {} }) {
     let response = yield fetchPage(paginationParams);
     if (loadDirection === ALL) {
       // read the whole step page by page instead of a single unbounded request
-      let { content } = response;
+      const pages = [response.content];
       while (response.page && response.page.number < response.page.totalPages) {
         response = yield fetchPage({
           ...paginationParams,
           [PAGE_KEY]: response.page.number + 1,
         });
-        content = content.concat(response.content);
+        pages.push(response.content);
       }
-      response = { ...response, content };
+      response = { ...response, content: [].concat(...pages) };
     }
     const merged = mergeNestedStepPage(currentStep, response, loadDirection, errorLogPage);
     yield put(fetchNestedStepSuccessAction({ id, ...response, ...merged }));
