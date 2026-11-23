@@ -25,7 +25,7 @@ import { useDebouncedSpinner } from 'common/hooks';
 import {
   apiErrorNotificationAction,
   batchPartialFailureNotificationAction,
-  getBatchFailedIds,
+  getBatchRetainedIds,
 } from 'common/manualLaunches/batchResultNotifications';
 import { projectKeySelector } from 'controllers/project';
 import { updatePagePropertiesAction } from 'controllers/pages';
@@ -99,10 +99,8 @@ export const useDeleteManualLaunches = ({ onSuccess }: UseDeleteManualLaunchesOp
 
           if (result.failureCount > 0) {
             // Keep the launches that were not deleted selected so the user can see and retry them.
-            const failedIds = getBatchFailedIds(result);
-
             dispatch(batchPartialFailureNotificationAction(result));
-            data.onKeepSelection?.(failedIds.length ? failedIds : data.launchIds);
+            data.onKeepSelection?.(getBatchRetainedIds(result, data.launchIds));
           } else {
             dispatch(
               showSuccessNotification({

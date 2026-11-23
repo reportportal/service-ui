@@ -20,6 +20,21 @@ import { showErrorNotification, showWarningNotification } from 'controllers/noti
 export const getBatchFailedIds = (result: BatchResult): number[] =>
   result.errors.map(({ id }) => Number(id)).filter((id) => Number.isFinite(id));
 
+// Ids to keep selected after a partly failed batch: the failed ids when the response names every
+// failure, otherwise the requested ids the response does not report as done.
+export const getBatchRetainedIds = (result: BatchResult, requestedIds: number[]): number[] => {
+  const failedIds = getBatchFailedIds(result);
+
+  if (failedIds.length > 0 && failedIds.length >= result.failureCount) {
+    return failedIds;
+  }
+
+  const successIds = new Set(result.successIds.map(Number));
+  const notDoneIds = requestedIds.filter((id) => !successIds.has(id));
+
+  return notDoneIds.length ? notDoneIds : requestedIds;
+};
+
 // Warning toast for a batch that was only partly applied, with the per-item reasons.
 export const batchPartialFailureNotificationAction = (result: BatchResult) =>
   showWarningNotification({

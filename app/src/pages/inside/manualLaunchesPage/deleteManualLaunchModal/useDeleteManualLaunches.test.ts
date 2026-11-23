@@ -117,6 +117,27 @@ describe('useDeleteManualLaunches', () => {
     );
   });
 
+  test('a failure without an id keeps every launch that was not reported as deleted', async () => {
+    mockedFetch.mockResolvedValue({
+      deleted: [1],
+      notFound: [2],
+      errors: [{ message: 'In progress' }],
+    });
+    const onKeepSelection = jest.fn();
+    const data: DeleteManualLaunchModalData = {
+      type: 'batch',
+      launchIds: [1, 2, 3],
+      onKeepSelection,
+    };
+    const deleteLaunches = renderHook(data);
+
+    await act(async () => {
+      await deleteLaunches(data);
+    });
+
+    expect(onKeepSelection).toHaveBeenCalledWith([2, 3]);
+  });
+
   test('a rejected delete shows the backend message', async () => {
     mockedFetch.mockRejectedValue({ errorCode: 4001, message: 'Launch not found' });
     const data: DeleteManualLaunchModalData = { type: 'single', id: 1, name: 'launch' };

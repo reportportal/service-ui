@@ -25,7 +25,7 @@ import { readBatchResult } from 'common/utils/apiResponse';
 import {
   apiErrorNotificationAction,
   batchPartialFailureNotificationAction,
-  getBatchFailedIds,
+  getBatchRetainedIds,
 } from 'common/manualLaunches/batchResultNotifications';
 import {
   buildGetManualLaunchFoldersParams,
@@ -68,10 +68,8 @@ export const useDeleteExecution = () => {
 
           if (result.failureCount > 0) {
             // Keep the executions that were not deleted selected so the user can see and retry them.
-            const failedIds = getBatchFailedIds(result);
-
             dispatch(batchPartialFailureNotificationAction(result));
-            payload.onKeepSelection?.(failedIds.length ? failedIds : payload.executionIds);
+            payload.onKeepSelection?.(getBatchRetainedIds(result, payload.executionIds));
           } else {
             showSuccessNotification({
               messageId:
