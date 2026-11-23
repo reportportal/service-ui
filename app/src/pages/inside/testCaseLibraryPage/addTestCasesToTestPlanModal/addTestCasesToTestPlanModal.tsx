@@ -90,7 +90,7 @@ export const AddTestCasesToTestPlanModal = ({
 
   const handleTestPlanAutocompleteStateChange: TestPlanAutocompleteStateChange = useCallback(
     (changes) => {
-      if (changes.inputValue !== undefined) {
+      if ('inputValue' in changes) {
         setTestPlanSearchInput(changes.inputValue || '');
       }
     },
@@ -135,14 +135,15 @@ export const AddTestCasesToTestPlanModal = ({
           <div className={cx('autocomplete-wrapper')}>
             <FieldLabel>{formatMessage(COMMON_LOCALE_KEYS.TEST_PLAN_LABEL)}</FieldLabel>
             <SingleAutocomplete<TestPlanDto>
-              value={selectedTestPlan ?? undefined}
+              value={selectedTestPlan ?? null}
               placeholder={formatMessage(COMMON_LOCALE_KEYS.SELECT_TEST_PLAN_PLACEHOLDER)}
               options={filteredTestPlans}
               loading={isLaunchTestPlansLoading}
               onChange={setSelectedTestPlan}
               refFunction={inputRefFunction}
               isDropdownMode
-              parseValueToString={(value: TestPlanDto) => value?.name}
+              inputProps={{ clearable: !!selectedTestPlan, onClear: () => setSelectedTestPlan(null) }}
+              parseValueToString={(value: TestPlanDto | null) => value?.name ?? ''}
               getUniqKey={(value: TestPlanDto) => String(value?.id)}
               createWithoutConfirmation
               skipOptionCreation

@@ -187,6 +187,7 @@ import { MultipleAutocomplete } from 'components/inputs/autocompletes/multipleAu
 import { WithAsyncLoading } from 'components/inputs/autocompletes/withAsyncLoading';
 import { InputBigSwitcher } from 'components/inputs/inputBigSwitcher';
 import { InputDropdownSorting } from 'components/inputs/inputDropdownSorting';
+import { DropdownSorting } from 'components/dropdownSorting';
 import { InputSlider } from 'components/inputs/inputSlider';
 import { InputRadioGroup } from 'components/inputs/inputRadioGroup';
 import { InputSwitcher } from 'components/inputs/inputSwitcher';
@@ -365,6 +366,7 @@ export const createImportProps = (pluginName) => ({
     QualityGatesPromoLayout,
     OrganizationDashboardsPromoLayout,
     Dropdown,
+    DropdownSorting,
     FieldNumber,
     SystemMessage,
     AsyncAutocompleteField,

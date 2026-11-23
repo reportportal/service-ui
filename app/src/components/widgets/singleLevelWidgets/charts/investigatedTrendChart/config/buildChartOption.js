@@ -126,7 +126,7 @@ export const buildInvestigatedChartOption = ({
           nameRotate: 90,
           nameTextStyle: AXIS_TITLE_STYLE,
         }),
-    axisLabel: { ...AXIS_LABEL_STYLE, margin: 8 },
+    axisLabel: { ...AXIS_LABEL_STYLE, margin: 8, hideOverlap: true },
     axisLine: { show: false },
     axisTick: { show: false },
     splitLine: { show: !isPreview, lineStyle: { color: COLOR_CHART_AXIS_LINE, width: 1 } },

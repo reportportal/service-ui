@@ -17,7 +17,7 @@
 import Parser from 'html-react-parser';
 import { useIntl } from 'react-intl';
 
-import { createClassnames, referenceDictionary } from 'common/utils';
+import { createClassnames, docsReferences } from 'common/utils';
 import { EmptyStatePage } from 'pages/inside/common/emptyStatePage';
 import { NumerableBlock } from 'pages/common/numerableBlock';
 import { commonMessages } from 'pages/inside/testPlansPage/commonMessages';
@@ -59,7 +59,7 @@ export const EmptyMilestones = ({ onCreateMilestone }: EmptyMilestonesProps) => 
         title={formatMessage(emptyStateMessages.pageHeader)}
         description={formatMessage(emptyStateMessages.pageDescription)}
         imageType="flag"
-        documentationLink={referenceDictionary.rpDoc}
+        documentationLink={docsReferences.emptyStateMilestonesDocs}
         documentationLinkClassName={cx('empty-milestones__documentation-link')}
         buttons={buttons}
       />
