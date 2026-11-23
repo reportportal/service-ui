@@ -89,14 +89,18 @@ function* fetchFiltersConcat({ payload: { params, concat } }) {
   );
 }
 
+let filterUpdateRequestId = 0;
+
 export function* updateLaunchesFilter({ payload: filter }) {
   const projectKey = yield select(projectKeySelector);
   const shallowFilter = {
     ...filter,
     conditions: filter.conditions.filter((item) => item.value.trim()),
   };
-  // own namespace per filter, so the response of saveNewFilter (or of another filter) is not taken for this one
-  const namespace = `${LAUNCHES_FILTERS_UPDATE_NAMESPACE}/${shallowFilter.id}`;
+  // own namespace per request, so the response of saveNewFilter, of another filter or of an earlier
+  // save of the same filter is not taken for this one
+  filterUpdateRequestId += 1;
+  const namespace = `${LAUNCHES_FILTERS_UPDATE_NAMESPACE}/${shallowFilter.id}/${filterUpdateRequestId}`;
   yield put(
     fetchDataAction(namespace)(URLS.filter(projectKey, shallowFilter.id), {
       method: 'put',

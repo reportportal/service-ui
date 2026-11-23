@@ -19,14 +19,14 @@ import { UPDATE_FILTER_SUCCESS, LAUNCHES_FILTERS_UPDATE_NAMESPACE } from './cons
 import { updateLaunchesFilter } from './sagas';
 
 const filter = { id: 5, name: 'f', conditions: [{ value: 'a' }] };
-const updateNamespace = `${LAUNCHES_FILTERS_UPDATE_NAMESPACE}/${filter.id}`;
-const meta = { namespace: updateNamespace };
+let meta;
 
 const runUntilTake = () => {
   const gen = updateLaunchesFilter({ payload: filter });
   gen.next(); // select projectKey
   const putFetch = gen.next('project').value;
   expect(putFetch.PUT.action.payload.options.method).toBe('put');
+  meta = { namespace: putFetch.PUT.action.meta.namespace };
   const takeEffect = gen.next().value;
   expect(takeEffect.TAKE).toBeDefined();
   return gen;
@@ -35,7 +35,7 @@ const runUntilTake = () => {
 const takeOf = () => {
   const gen = updateLaunchesFilter({ payload: filter });
   gen.next();
-  gen.next('project');
+  meta = { namespace: gen.next('project').value.PUT.action.meta.namespace };
   return gen.next().value.TAKE;
 };
 
@@ -68,5 +68,16 @@ describe('controllers/filter/sagas updateLaunchesFilter', () => {
     expect(pattern(saveNewResponse)).toBe(false);
     expect(pattern(otherFilterResponse)).toBe(false);
     expect(pattern({ type: FETCH_ERROR, meta })).toBe(true);
+  });
+
+  test('ignores the response of an earlier save of the same filter', () => {
+    const { pattern: firstPattern } = takeOf();
+    const firstMeta = meta;
+    const { pattern: secondPattern } = takeOf();
+
+    expect(meta.namespace).not.toBe(firstMeta.namespace);
+    expect(secondPattern({ type: FETCH_ERROR, meta: firstMeta })).toBe(false);
+    expect(firstPattern({ type: FETCH_SUCCESS, meta })).toBe(false);
+    expect(secondPattern({ type: FETCH_SUCCESS, meta })).toBe(true);
   });
 });
