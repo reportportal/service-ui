@@ -26,7 +26,13 @@ describe('ticketsCache', () => {
   beforeEach(() => localStorage.clear());
 
   it('keys the cache by user and project', () => {
-    expect(getTicketsStorageKey(5, 'proj')).toBe('5_proj_tickets');
+    expect(getTicketsStorageKey(5, 'proj')).toBe('[5,"proj"]_tickets');
+  });
+
+  it('does not share a key between user and project pairs that join to the same string', () => {
+    expect(getTicketsStorageKey('alice_demo', 'test')).not.toBe(
+      getTicketsStorageKey('alice', 'demo_test'),
+    );
   });
 
   it('does not cache tickets before the user is loaded', () => {
@@ -60,11 +66,13 @@ describe('ticketsCache', () => {
   });
 
   it('clears ticket caches of all users and keeps other keys', () => {
+    updateCachedTicket(getTicketsStorageKey(5, 'proj'), 'a', {});
     updateCachedTicket('5_proj_tickets', 'a', {});
     updateCachedTicket('proj_tickets', 'a', {});
     localStorage.setItem('5_settings', '{}');
     clearTicketsCache();
 
+    expect(localStorage.getItem(getTicketsStorageKey(5, 'proj'))).toBeNull();
     expect(localStorage.getItem('5_proj_tickets')).toBeNull();
     expect(localStorage.getItem('proj_tickets')).toBeNull();
     expect(localStorage.getItem('5_settings')).toBe('{}');

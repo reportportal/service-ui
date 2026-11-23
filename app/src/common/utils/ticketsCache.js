@@ -20,9 +20,10 @@ const TICKETS_KEY_SUFFIX = '_tickets';
 export const MAX_CACHED_TICKETS = 500;
 
 // BTS ticket details are user data: key them by user so that a shared browser does not leak them.
+// The pair is serialized as a JSON array, because both ids may contain '_' and a plain join could collide.
 // Without a loaded user (or project) there is no key and nothing is cached.
 export const getTicketsStorageKey = (userId, projectKey) =>
-  userId && projectKey ? `${userId}_${projectKey}${TICKETS_KEY_SUFFIX}` : null;
+  userId && projectKey ? `${JSON.stringify([userId, projectKey])}${TICKETS_KEY_SUFFIX}` : null;
 
 export const getCachedTicket = (storageKey, ticketKey) =>
   (storageKey && getStorageItem(storageKey)?.[ticketKey]) || {};
