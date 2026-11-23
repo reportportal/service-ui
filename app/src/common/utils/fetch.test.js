@@ -34,6 +34,9 @@ describe('fetch', () => {
     axiosMock.onGet('https://api.com/unauthorized').reply(401);
     axiosMock.onGet('https://api.com/error-object').reply(400, { errorCode: 4001, message: 'Bad' });
     axiosMock
+      .onGet('https://api.com/error-object-status')
+      .reply(403, { message: 'Forbidden', status: 4031 });
+    axiosMock
       .onGet('https://api.com/error-html')
       .reply(502, '<html><body>Bad Gateway</body></html>');
     axiosMock.onGet('https://api.com/error-text').reply(400, 'Plain failure');
@@ -107,10 +110,18 @@ describe('fetch', () => {
     });
   });
 
-  it('should keep object error bodies as is', async () => {
+  it('should keep object error bodies and add the HTTP status', async () => {
     await expect(fetch('https://api.com/error-object')).rejects.toEqual({
       errorCode: 4001,
       message: 'Bad',
+      status: 400,
+    });
+  });
+
+  it('should keep the status of the error body', async () => {
+    await expect(fetch('https://api.com/error-object-status')).rejects.toEqual({
+      message: 'Forbidden',
+      status: 4031,
     });
   });
 
@@ -132,6 +143,7 @@ describe('fetch', () => {
     await expect(fetch('https://api.com/error-blob', { responseType: 'blob' })).rejects.toEqual({
       errorCode: 4041,
       message: 'Not found',
+      status: 404,
     });
   });
 });

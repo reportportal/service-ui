@@ -29,11 +29,15 @@ type ErrorBody = Record<string, unknown>;
 const isPlainObject = (value: unknown): value is ErrorBody =>
   typeof value === 'object' && value !== null && !Array.isArray(value) && !(value instanceof Blob);
 
+// ErrorRS bodies carry no HTTP status, which callers need when a body has no errorCode (e.g. a plain 403)
+const withStatus = (body: ErrorBody, status: number | undefined): ErrorBody =>
+  status === undefined || body.status !== undefined ? body : { ...body, status };
+
 const parseErrorText = (text: string, status: number | undefined, fallbackMessage: string) => {
   try {
     const parsed: unknown = JSON.parse(text);
     if (isPlainObject(parsed)) {
-      return parsed;
+      return withStatus(parsed, status);
     }
   } catch {
     // not JSON: fall through
@@ -58,7 +62,7 @@ export const normalizeErrorBody = (error: AxiosError): ErrorBody | Promise<Error
   const data: unknown = error.response?.data;
   const status = error.response?.status;
   if (isPlainObject(data)) {
-    return data;
+    return withStatus(data, status);
   }
   if (typeof Blob !== 'undefined' && data instanceof Blob) {
     return readBlobText(data)
