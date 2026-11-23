@@ -19,7 +19,7 @@ import { useIntl } from 'react-intl';
 import { Button, IssueList, PlusIcon } from '@reportportal/ui-kit';
 import type { Issue } from '@reportportal/ui-kit/issueList';
 import { isEmpty } from 'es-toolkit/compat';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch, useSelector, useStore } from 'react-redux';
 import { useTracking } from 'react-tracking';
 
 import { createClassnames, fetch } from 'common/utils';
@@ -30,6 +30,8 @@ import {
 } from 'controllers/manualLaunch';
 import { URLS } from 'common/urls';
 import { projectKeySelector } from 'controllers/project';
+import { locationSelector, MANUAL_LAUNCH_EXECUTION_PAGE } from 'controllers/pages';
+import { LocationInfo } from 'controllers/pages/typed-selectors';
 import { apiErrorNotificationAction } from 'common/manualLaunches/batchResultNotifications';
 import { useUserPermissions } from 'hooks/useUserPermissions';
 import { useManualLaunchId } from 'hooks/useTypedSelector';
@@ -85,6 +87,7 @@ export const LinkedToBTSSection: FC<LinkedToBTSSectionProps> = ({
   const { formatMessage } = useIntl();
   const { trackEvent } = useTracking();
   const dispatch = useDispatch();
+  const store = useStore<{ location: LocationInfo }>();
   const projectKey = useSelector(projectKeySelector);
   const { openModal } = useBTSIssuesModal();
   const { canManageExecutions } = useUserPermissions();
@@ -137,8 +140,15 @@ export const LinkedToBTSSection: FC<LinkedToBTSSectionProps> = ({
         },
       })
         .then(() => {
-          // Reload the execution so later comment/status saves do not send the unlinked ticket.
-          if (launchId) {
+          // Reload the execution so later comment/status saves do not send the unlinked ticket,
+          // unless the user has moved on: the reload would replace the execution now shown.
+          const location = locationSelector(store.getState());
+          const isExecutionStillShown =
+            location.type === MANUAL_LAUNCH_EXECUTION_PAGE &&
+            String(location.payload?.launchId) === String(launchId) &&
+            String(location.payload?.executionId) === String(executionId);
+
+          if (launchId && isExecutionStillShown) {
             dispatch(getManualLaunchExecutionAction({ launchId, executionId }));
           }
         })
@@ -147,7 +157,7 @@ export const LinkedToBTSSection: FC<LinkedToBTSSectionProps> = ({
           dispatch(apiErrorNotificationAction(error));
         });
     },
-    [projectKey, testItemId, dispatch, launchId, executionId],
+    [projectKey, testItemId, dispatch, store, launchId, executionId],
   );
 
   const handleOpenBtsModal = useCallback(() => {

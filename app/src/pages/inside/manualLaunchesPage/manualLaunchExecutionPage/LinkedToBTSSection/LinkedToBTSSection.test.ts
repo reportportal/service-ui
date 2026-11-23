@@ -24,10 +24,15 @@ import { ExecutionStatus } from 'types/testCase';
 import { LinkedToBTSSection } from './LinkedToBTSSection';
 
 const mockDispatch = jest.fn();
+let mockLocation = {
+  type: 'MANUAL_LAUNCH_EXECUTION_PAGE',
+  payload: { launchId: '10', executionId: '5' },
+};
 
 jest.mock('react-redux', () => ({
   ...jest.requireActual<Record<string, unknown>>('react-redux'),
   useDispatch: () => mockDispatch,
+  useStore: () => ({ getState: () => ({ location: mockLocation }) }),
   useSelector: () => 'demo',
 }));
 
@@ -74,6 +79,13 @@ const execution = {
 } as unknown as TestCaseExecution;
 
 describe('LinkedToBTSSection', () => {
+  beforeEach(() => {
+    mockLocation = {
+      type: 'MANUAL_LAUNCH_EXECUTION_PAGE',
+      payload: { launchId: '10', executionId: '5' },
+    };
+  });
+
   test('unlinking a ticket reloads the execution from the server', async () => {
     mockedFetch.mockResolvedValue({});
     type Wrapper = { find: (component: unknown) => { prop: (name: string) => unknown } };
@@ -96,6 +108,34 @@ describe('LinkedToBTSSection', () => {
       data: { ticketIds: ['EPM-1'], testItemIds: [50] },
     });
     expect(mockDispatch).toHaveBeenCalledWith(
+      getManualLaunchExecutionAction({ launchId: '10', executionId: 5 }),
+    );
+  });
+
+  test('an unlink finished after opening another execution does not reload the old one', async () => {
+    mockedFetch.mockResolvedValue({});
+    mockDispatch.mockClear();
+    mockLocation = {
+      type: 'MANUAL_LAUNCH_EXECUTION_PAGE',
+      payload: { launchId: '10', executionId: '6' },
+    };
+    type Wrapper = { find: (component: unknown) => { prop: (name: string) => unknown } };
+    const wrapper = mount(
+      createElement(
+        IntlProvider,
+        { locale: 'en' },
+        createElement(LinkedToBTSSection, { execution }),
+      ),
+    ) as unknown as Wrapper;
+    const onIssueRemove = wrapper.find(IssueList).prop('onIssueRemove') as (issue: unknown) => void;
+
+    await act(async () => {
+      onIssueRemove({ ticketId: 'EPM-1' });
+      await Promise.resolve();
+    });
+
+    expect(mockedFetch).toHaveBeenCalled();
+    expect(mockDispatch).not.toHaveBeenCalledWith(
       getManualLaunchExecutionAction({ launchId: '10', executionId: 5 }),
     );
   });
