@@ -71,10 +71,10 @@ function* getTestPlans(action: GetTestPlansAction): Generator {
 
     const params = action.payload
       ? {
-        limit: action.payload.limit,
-        offset: action.payload.offset,
-        sortBy: defaultQueryParams.sortBy,
-      }
+          limit: action.payload.limit,
+          offset: action.payload.offset,
+          sortBy: defaultQueryParams.sortBy,
+        }
       : defaultQueryParams;
     const data = (yield call(fetch, URLS.testPlan(projectKey, params))) as {
       content: TestPlanDto[];
@@ -128,8 +128,10 @@ export function* getTestPlan(action: GetTestPlanAction): Generator {
 
     if (isPlanChanged || action.payload.forceReloadPlan) {
       // A forced reload refreshes the shown plan in place: the full-page loader would unmount the
-      // page, including the open library side panel. It is shown only when there is no plan to keep.
-      const hasActivePlan = Boolean(yield select(activeTestPlanSelector));
+      // page, including the open library side panel. It is shown only when the requested plan is not
+      // the one already shown.
+      const activePlan = (yield select(activeTestPlanSelector)) as TestPlanDto | null;
+      const hasActivePlan = Boolean(activePlan) && String(activePlan.id) === String(testPlanId);
       const showLoader = action.payload.forceReloadPlan ? !hasActivePlan : isPlanChanged;
 
       keepShownPlan = Boolean(action.payload.forceReloadPlan) && hasActivePlan;
@@ -203,15 +205,16 @@ export function* getTestPlan(action: GetTestPlanAction): Generator {
     let planTestCases: TestPlanTestCaseDto;
 
     if (!action.payload.folderId) {
-      planTestCases = (yield call(
-        fetch,
-        URLS.testPlanTestCases(projectKey, testPlanId, params),
-        { signal: controller.signal },
-      )) as TestPlanTestCaseDto;
+      planTestCases = (yield call(fetch, URLS.testPlanTestCases(projectKey, testPlanId, params), {
+        signal: controller.signal,
+      })) as TestPlanTestCaseDto;
     } else {
       planTestCases = (yield call(
         fetch,
-        URLS.testPlanTestCases(projectKey, testPlanId, { 'filter.eq.testFolderId': action.payload.folderId, ...params }),
+        URLS.testPlanTestCases(projectKey, testPlanId, {
+          'filter.eq.testFolderId': action.payload.folderId,
+          ...params,
+        }),
         { signal: controller.signal },
       )) as TestPlanTestCaseDto;
     }
