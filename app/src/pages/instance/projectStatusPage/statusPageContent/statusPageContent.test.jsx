@@ -79,11 +79,40 @@ describe('StatusPageContent', () => {
 
     await wrapper.instance().fetchData();
 
-    const { widgetsData, failedSources, loading } = wrapper.state();
-    expect(loading).toBe(false);
-    expect(failedSources).toEqual({ [failedId]: true });
+    const { widgetsData, failedSources, loadingSources } = wrapper.state();
+    expect(Object.values(loadingSources).some(Boolean)).toBe(false);
+    expect(Object.keys(failedSources).filter((id) => failedSources[id])).toEqual([failedId]);
     expect(Object.keys(widgetsData)).toHaveLength(widgetsWithUrls.length - 1);
     expect(wrapper.find('.status-page-error').length).toBeGreaterThan(0);
+  });
+
+  test('shows settled sources while another source is still loading', async () => {
+    const [general, lastLaunch] = widgetsWithUrls;
+    fetch.mockImplementation((url) => {
+      if (url === general.getUrl('demo', '3M')) {
+        return Promise.resolve({ ok: true });
+      }
+      if (url === lastLaunch.getUrl('demo', '3M')) {
+        return Promise.reject(new Error('500'));
+      }
+      return new Promise(() => {});
+    });
+    const wrapper = render();
+
+    wrapper.instance().fetchData();
+    await new Promise((resolve) => setTimeout(resolve, 0));
+    wrapper.update();
+
+    const { widgetsData, failedSources, loadingSources } = wrapper.state();
+    expect(widgetsData).toEqual({ [general.id]: { ok: true } });
+    expect(failedSources[lastLaunch.id]).toBe(true);
+    expect(loadingSources).toEqual({
+      [general.id]: false,
+      [lastLaunch.id]: false,
+      [activityItem.id]: true,
+    });
+    expect(wrapper.find('.status-page-error')).toHaveLength(1);
+    expect(wrapper.find('.status-page-spinner-wrapper')).toHaveLength(1);
   });
 
   test('ignores results of a request superseded by a newer interval', async () => {

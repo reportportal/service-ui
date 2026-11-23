@@ -27,6 +27,11 @@ import styles from './statusPageContent.scss';
 
 const cx = classNames.bind(styles);
 
+const getWidgetsWithUrls = () => [...statusPageWidgets.filter((item) => item.getUrl), activityItem];
+
+const getLoadingSources = () =>
+  getWidgetsWithUrls().reduce((acc, { id }) => ({ ...acc, [id]: true }), {});
+
 @injectIntl
 export class StatusPageContent extends Component {
   static propTypes = {
@@ -42,7 +47,7 @@ export class StatusPageContent extends Component {
   state = {
     widgetsData: {},
     failedSources: {},
-    loading: true,
+    loadingSources: getLoadingSources(),
   };
 
   componentDidMount() {
@@ -64,45 +69,40 @@ export class StatusPageContent extends Component {
 
   latestRequestId = 0;
 
-  fetchData = async () => {
+  fetchData = () => {
     const { projectKey, interval } = this.props;
     this.latestRequestId += 1;
     const requestId = this.latestRequestId;
     this.setState({
-      loading: true,
+      loadingSources: getLoadingSources(),
     });
-    const widgetsWithUrls = [...statusPageWidgets.filter((item) => item.getUrl), activityItem];
 
-    const results = await Promise.allSettled(
-      widgetsWithUrls.map((item) => fetch(item.getUrl(projectKey, interval))),
-    );
-
-    // A newer interval/project (or unmount) superseded this request.
-    if (requestId !== this.latestRequestId) {
-      return;
-    }
-
-    const widgetsData = {};
-    const failedSources = {};
-    results.forEach((result, index) => {
-      const { id } = widgetsWithUrls[index];
-      if (result.status === 'fulfilled') {
-        widgetsData[id] = result.value;
-      } else {
-        failedSources[id] = true;
+    // Each source is shown as soon as its own request settles.
+    const settleSource = (id, data, failed) => {
+      // A newer interval/project (or unmount) superseded this request.
+      if (requestId !== this.latestRequestId) {
+        return;
       }
-    });
+      this.setState(({ widgetsData, failedSources, loadingSources }) => ({
+        widgetsData: failed ? widgetsData : { ...widgetsData, [id]: data },
+        failedSources: { ...failedSources, [id]: failed },
+        loadingSources: { ...loadingSources, [id]: false },
+      }));
+    };
 
-    this.setState({
-      widgetsData,
-      failedSources,
-      loading: false,
-    });
+    return Promise.all(
+      getWidgetsWithUrls().map(({ id, getUrl }) =>
+        fetch(getUrl(projectKey, interval)).then(
+          (data) => settleSource(id, data, false),
+          () => settleSource(id, undefined, true),
+        ),
+      ),
+    );
   };
 
   renderWidgetContent = (widgetData) => {
-    const { widgetsData, failedSources, loading } = this.state;
-    if (loading) {
+    const { widgetsData, failedSources, loadingSources } = this.state;
+    if (loadingSources[widgetData.source]) {
       return (
         <div className={cx('status-page-spinner-wrapper')}>
           <SpinningPreloader />
