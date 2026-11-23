@@ -149,7 +149,7 @@ export const LinkedToBTSSection: FC<LinkedToBTSSectionProps> = ({
             String(location.payload?.executionId) === String(executionId);
 
           if (launchId && isExecutionStillShown) {
-            dispatch(getManualLaunchExecutionAction({ launchId, executionId }));
+            dispatch(getManualLaunchExecutionAction({ launchId, executionId, silent: true }));
           }
         })
         .catch((error: unknown) => {

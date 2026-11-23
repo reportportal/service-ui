@@ -108,7 +108,7 @@ describe('LinkedToBTSSection', () => {
       data: { ticketIds: ['EPM-1'], testItemIds: [50] },
     });
     expect(mockDispatch).toHaveBeenCalledWith(
-      getManualLaunchExecutionAction({ launchId: '10', executionId: 5 }),
+      getManualLaunchExecutionAction({ launchId: '10', executionId: 5, silent: true }),
     );
   });
 

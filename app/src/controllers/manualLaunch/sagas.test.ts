@@ -19,7 +19,7 @@ import createSagaMiddleware from 'redux-saga';
 import { all } from 'redux-saga/effects';
 import { fetch } from 'common/utils';
 import { URLS } from 'common/urls';
-import { FETCH_ERROR, FETCH_SUCCESS } from 'controllers/fetch/constants';
+import { FETCH_ERROR, FETCH_START, FETCH_SUCCESS } from 'controllers/fetch/constants';
 import { SHOW_NOTIFICATION } from 'controllers/notification/constants';
 import { MANUAL_LAUNCHES_PAGE } from 'controllers/pages';
 import { fetchSagas } from 'controllers/fetch/sagas';
@@ -293,6 +293,38 @@ describe('controllers/manualLaunch/sagas', () => {
     expect(dispatched.map((action) => action.type as string)).not.toContain(
       getManualLaunchFoldersAction({ launchId: 10 }).type,
     );
+  });
+
+  test('a silent execution reload keeps the page shown instead of starting a load', async () => {
+    mockedFetch.mockResolvedValue({ id: 2 });
+    const { store, dispatched } = setupStore({ project: { info: { projectKey: 'demo' } } });
+
+    store.dispatch(getManualLaunchExecutionAction({ launchId: 10, executionId: 2, silent: true }));
+    await flush();
+
+    const isExecutionAction = (action: AnyAction) =>
+      (action.meta as { namespace?: string } | undefined)?.namespace ===
+      ACTIVE_MANUAL_LAUNCH_EXECUTION_NAMESPACE;
+    const types = dispatched.filter(isExecutionAction).map((action) => action.type as string);
+    expect(types).not.toContain(FETCH_START);
+    expect(types).toContain(FETCH_SUCCESS);
+  });
+
+  test('a regular execution load starts a load', async () => {
+    mockedFetch.mockResolvedValue({ id: 2 });
+    const { store, dispatched } = setupStore({ project: { info: { projectKey: 'demo' } } });
+
+    store.dispatch(getManualLaunchExecutionAction({ launchId: 10, executionId: 2 }));
+    await flush();
+
+    expect(
+      dispatched.some(
+        (action) =>
+          action.type === FETCH_START &&
+          (action.meta as { namespace?: string } | undefined)?.namespace ===
+            ACTIVE_MANUAL_LAUNCH_EXECUTION_NAMESPACE,
+      ),
+    ).toBe(true);
   });
 
   test('a failed silent folder reload keeps the tree and shows no error', async () => {

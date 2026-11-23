@@ -457,13 +457,15 @@ interface GetManualLaunchExecutionAction extends Action<typeof GET_MANUAL_LAUNCH
 function* getManualLaunchExecution(action: GetManualLaunchExecutionAction): Generator {
   try {
     const projectKey = (yield select(projectKeySelector)) as string;
-    const { launchId, executionId } = action.payload;
+    const { launchId, executionId, silent } = action.payload;
 
-    yield put({
-      type: FETCH_START,
-      payload: { projectKey },
-      meta: { namespace: ACTIVE_MANUAL_LAUNCH_EXECUTION_NAMESPACE },
-    });
+    if (!silent) {
+      yield put({
+        type: FETCH_START,
+        payload: { projectKey },
+        meta: { namespace: ACTIVE_MANUAL_LAUNCH_EXECUTION_NAMESPACE },
+      });
+    }
 
     const typedURLS = URLS as UrlsHelper;
     const data = (yield call(

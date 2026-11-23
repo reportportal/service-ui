@@ -289,6 +289,7 @@ const BTSIssuesModalComponent: FC<BTSIssuesModalProps> = ({
       getManualLaunchExecutionAction({
         launchId,
         executionId,
+        silent: true,
       }),
     );
   }, [launchId, executionId, dispatch]);

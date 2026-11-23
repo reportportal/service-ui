@@ -76,6 +76,8 @@ export interface GetManualLaunchFilteredFoldersParams {
 export interface GetManualLaunchExecutionParams {
   launchId: string | number;
   executionId: string | number;
+  // Background reload: keep the page shown instead of switching it to the loader.
+  silent?: boolean;
 }
 
 export interface ManualLaunchExecutionActionKey {
