@@ -180,6 +180,31 @@ describe('controllers/testCase/sagas', () => {
         ),
       ).toHaveLength(0);
     });
+    test('a folder fetch survives a refresh of the same project', async () => {
+      let resolveFolders: (value: unknown) => void = () => {};
+      fetchMock.mockImplementationOnce(
+        () =>
+          new Promise((resolve) => {
+            resolveFolders = resolve;
+          }),
+      );
+      const { dispatched, dispatch, task } = startSagas();
+
+      dispatch({ type: GET_FOLDERS });
+      await flush();
+      dispatch({ type: FETCH_PROJECT_SUCCESS, payload: { projectKey: 'demo' } });
+      resolveFolders({ content: [{ id: 9 }], page: { totalPages: 1 } });
+      await flush();
+      task.cancel();
+
+      const [, params] = fetchMock.mock.calls[0] as [string, { signal: AbortSignal }];
+      expect(params.signal.aborted).toBe(false);
+      expect(
+        dispatched.filter(
+          ({ type, meta }) => type === FETCH_SUCCESS && meta?.namespace === NAMESPACE,
+        ),
+      ).toHaveLength(1);
+    });
   });
 
   describe('test case details', () => {

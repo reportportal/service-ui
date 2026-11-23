@@ -278,10 +278,15 @@ function* getFolders(action: GetFoldersAction) {
 
     // The folders slice is reset when another project is loaded: drop (and abort) a fetch that is
     // still running for the previous project so it cannot replace the new project's tree.
+    // A refresh of the same project keeps the fetch, so its response restores the reset tree.
     const controller = new AbortController();
     const { allFolders } = (yield race({
       allFolders: call(fetchAllFolders, { projectKey, signal: controller.signal }),
-      projectChanged: take(FETCH_PROJECT_SUCCESS),
+      projectChanged: take(
+        (projectAction: { type: string; payload?: { projectKey?: string } }) =>
+          projectAction.type === FETCH_PROJECT_SUCCESS &&
+          projectAction.payload?.projectKey !== projectKey,
+      ),
     })) as { allFolders?: Folder[] };
 
     if (!allFolders) {
