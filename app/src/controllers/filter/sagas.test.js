@@ -24,7 +24,8 @@ let meta;
 const runUntilTake = () => {
   const gen = updateLaunchesFilter({ payload: filter });
   gen.next(); // select projectKey
-  const putFetch = gen.next('project').value;
+  gen.next('project'); // select the filters on the launches page
+  const putFetch = gen.next([filter]).value;
   expect(putFetch.PUT.action.payload.options.method).toBe('put');
   meta = { namespace: putFetch.PUT.action.meta.namespace };
   const takeEffect = gen.next().value;
@@ -35,7 +36,8 @@ const runUntilTake = () => {
 const takeOf = () => {
   const gen = updateLaunchesFilter({ payload: filter });
   gen.next();
-  meta = { namespace: gen.next('project').value.PUT.action.meta.namespace };
+  gen.next('project');
+  meta = { namespace: gen.next([filter]).value.PUT.action.meta.namespace };
   return gen.next().value.TAKE;
 };
 
@@ -48,11 +50,22 @@ describe('controllers/filter/sagas updateLaunchesFilter', () => {
 
   test('reports success after the PUT succeeds', () => {
     const gen = runUntilTake();
-    const successPut = gen.next({ type: FETCH_SUCCESS, meta }).value;
+    gen.next({ type: FETCH_SUCCESS, meta }); // select the filters on the launches page
+    const successPut = gen.next([filter]).value;
     expect(successPut.PUT.action.type).toBe(UPDATE_FILTER_SUCCESS);
+    expect(successPut.PUT.action.meta.keepDraft).toBe(false);
     const notification = gen.next().value;
     expect(notification.PUT.action.payload.messageId).toBe('updateFilterSuccess');
     expect(gen.next().done).toBe(true);
+  });
+
+  test('keeps conditions edited while the save was pending', () => {
+    const gen = runUntilTake();
+    gen.next({ type: FETCH_SUCCESS, meta });
+    const editedFilter = { ...filter, conditions: [{ value: 'b' }] };
+    const successPut = gen.next([editedFilter]).value;
+    expect(successPut.PUT.action.payload).toEqual(filter);
+    expect(successPut.PUT.action.meta.keepDraft).toBe(true);
   });
 
   test('ignores responses of saveNewFilter and of other filters (interleaved requests)', () => {

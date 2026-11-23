@@ -19,6 +19,7 @@ import {
   UPDATE_FILTER_CONDITIONS,
   SET_PAGE_LOADING,
 } from './constants';
+import { updateFilterSuccessAction } from './actionCreators';
 import { launchesFiltersReducer, launchesFiltersReadyReducer, pageLoadingReducer } from './reducer';
 
 describe('filter reducer', () => {
@@ -80,6 +81,23 @@ describe('filter reducer', () => {
           ],
         },
       ]);
+    });
+
+    test('replaces the filter with the saved one on UPDATE_FILTER_SUCCESS', () => {
+      const saved = { id: 1, conditions: [{ value: 'a' }] };
+      expect(
+        launchesFiltersReducer([{ id: 1, conditions: [] }], updateFilterSuccessAction(saved)),
+      ).toEqual([saved]);
+    });
+
+    test('keeps the edited filter on UPDATE_FILTER_SUCCESS with keepDraft', () => {
+      const oldState = [{ id: 1, conditions: [{ value: 'b' }] }];
+      expect(
+        launchesFiltersReducer(
+          oldState,
+          updateFilterSuccessAction({ id: 1, conditions: [{ value: 'a' }] }, undefined, true),
+        ),
+      ).toBe(oldState);
     });
   });
 

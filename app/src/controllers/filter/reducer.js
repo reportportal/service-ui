@@ -42,7 +42,7 @@ const updateFilterOrders = (filters, filterId, orders) => {
 
 export const launchesFiltersReducer = (
   state = [],
-  { type = '', payload = {}, meta: { oldId } = {} },
+  { type = '', payload = {}, meta: { oldId, keepDraft } = {} },
 ) => {
   switch (type) {
     case FETCH_USER_FILTERS_SUCCESS: {
@@ -55,7 +55,7 @@ export const launchesFiltersReducer = (
     case UPDATE_FILTER_ORDERS:
       return updateFilterOrders(state, payload.filterId, payload.orders);
     case UPDATE_FILTER_SUCCESS:
-      return updateFilter(state, payload, oldId);
+      return keepDraft ? state : updateFilter(state, payload, oldId);
     case ADD_FILTER:
       return [...state, payload];
     case REMOVE_FILTER:

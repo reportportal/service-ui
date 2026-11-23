@@ -42,6 +42,7 @@ import { fetchLaunchesAction } from 'controllers/launch/actionCreators';
 import { omit } from 'common/utils/omit';
 import { NEW_FILTER_PREFIX, CUSTOM_FILTER } from 'common/constants/reservedFilterIds';
 import { redirect } from 'redux-first-router';
+import isEqual from 'fast-deep-equal';
 import { canWorkWithFilters } from 'common/utils/permissions';
 import {
   NAMESPACE,
@@ -97,6 +98,8 @@ export function* updateLaunchesFilter({ payload: filter }) {
     ...filter,
     conditions: filter.conditions.filter((item) => item.value.trim()),
   };
+  const findDraft = (filters) => filters.find(({ id }) => id === shallowFilter.id);
+  const draftBeforeSave = findDraft(yield select(launchFiltersSelector));
   // own namespace per request, so the response of saveNewFilter, of another filter or of an earlier
   // save of the same filter is not taken for this one
   filterUpdateRequestId += 1;
@@ -111,7 +114,9 @@ export function* updateLaunchesFilter({ payload: filter }) {
   if (response.type === FETCH_ERROR) {
     return;
   }
-  yield put(updateFilterSuccessAction(shallowFilter));
+  // the conditions stay editable while the request is pending: keep the newer draft then
+  const keepDraft = !isEqual(findDraft(yield select(launchFiltersSelector)), draftBeforeSave);
+  yield put(updateFilterSuccessAction(shallowFilter, undefined, keepDraft));
   yield put(
     showNotification({
       messageId: 'updateFilterSuccess',
