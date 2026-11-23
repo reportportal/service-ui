@@ -507,33 +507,29 @@ const BTSIssuesModalComponent: FC<BTSIssuesModalProps> = ({
 
   const isPostIssueWithoutFields =
     selectedControl === BTSIssueActionTypes.POST && fields.length === 0;
+  // Retrying the link of an already created issue does not use the creation form fields.
+  const isLinkRetry = selectedControl === BTSIssueActionTypes.POST && !!unlinkedCreatedIssue;
 
   const { okButton, cancelButton, hideModal } = useModalButtons({
     okButtonText: 'OK',
     isLoading,
-    isSubmitButtonDisabled: invalid || isPostIssueWithoutFields,
+    isSubmitButtonDisabled: !isLinkRetry && (invalid || isPostIssueWithoutFields),
     onSubmit: () => {
+      const btsActionType: BtsActionType =
+        selectedControl === BTSIssueActionTypes.POST ? BTS_ACTION_TYPE.POST : BTS_ACTION_TYPE.LINK;
+
+      const onSuccess = () => {
+        trackEvent(MANUAL_LAUNCHES_PAGE_EVENTS.submitBtsAction(data.entryPlace, btsActionType));
+        hideModal();
+      };
+
+      if (isLinkRetry) {
+        linkCreatedIssue(unlinkedCreatedIssue.issue, onSuccess, unlinkedCreatedIssue.testItemId);
+        return;
+      }
+
       handleSubmit((values: Record<string, unknown>) => {
-        const btsActionType: BtsActionType =
-          selectedControl === BTSIssueActionTypes.POST
-            ? BTS_ACTION_TYPE.POST
-            : BTS_ACTION_TYPE.LINK;
-
-        const onSuccess = () => {
-          trackEvent(MANUAL_LAUNCHES_PAGE_EVENTS.submitBtsAction(data.entryPlace, btsActionType));
-          hideModal();
-        };
-
         if (selectedControl === BTSIssueActionTypes.POST) {
-          if (unlinkedCreatedIssue) {
-            linkCreatedIssue(
-              unlinkedCreatedIssue.issue,
-              onSuccess,
-              unlinkedCreatedIssue.testItemId,
-            );
-            return;
-          }
-
           if (fields.length === 0) {
             return;
           }

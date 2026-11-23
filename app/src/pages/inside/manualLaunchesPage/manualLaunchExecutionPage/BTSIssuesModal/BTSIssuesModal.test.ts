@@ -59,7 +59,15 @@ jest.mock('@reportportal/ui-kit', () => ({
   },
 }));
 
-jest.mock('./PostBTSIssueForm/PostBTSIssueForm', () => ({ PostBTSIssueForm: () => null }));
+// Registers the creation field, so its validation error makes the form invalid.
+jest.mock('./PostBTSIssueForm/PostBTSIssueForm', () => {
+  const { createElement: createMockElement } = jest.requireActual<typeof import('react')>('react');
+  const { Field } = jest.requireActual<typeof import('redux-form')>('redux-form');
+
+  return {
+    PostBTSIssueForm: () => createMockElement(Field, { name: 'summary', component: () => null }),
+  };
+});
 jest.mock('./LinkBTSIssueForm', () => ({ LinkBTSIssueForm: () => null }));
 
 jest.mock('pages/inside/stepPage/modals/postIssueModal/utils', () => ({
@@ -175,5 +183,24 @@ describe('BTSIssuesModal', () => {
       issues: [{ ticketId: 'EPM-1' }],
       testItemIds: [50],
     });
+  });
+
+  test('a link retry is not blocked by an invalid creation form', async () => {
+    const store = await renderWithFailedLink();
+
+    mockFormErrors = { summary: 'Required' };
+    await act(async () => {
+      store.dispatch(change('btsIssuesModalForm', 'summary', ''));
+      await flush();
+    });
+
+    expect(lastModalButtons().isSubmitButtonDisabled).toBe(false);
+
+    await act(async () => {
+      lastModalButtons().onSubmit();
+      await flush();
+    });
+
+    expect(linkCalls()).toHaveLength(2);
   });
 });
