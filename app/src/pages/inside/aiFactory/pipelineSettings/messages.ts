@@ -223,10 +223,6 @@ export const messages = defineMessages({
     id: 'PipelineSettings.ciOrderedListError',
     defaultMessage: 'Enter at least one value and remove duplicates.',
   },
-  ciModelsError: {
-    id: 'PipelineSettings.ciModelsError',
-    defaultMessage: 'Remove duplicate values.',
-  },
   ciSave: { id: 'PipelineSettings.ciSave', defaultMessage: 'Save' },
   ciSaved: {
     id: 'PipelineSettings.ciSaved',

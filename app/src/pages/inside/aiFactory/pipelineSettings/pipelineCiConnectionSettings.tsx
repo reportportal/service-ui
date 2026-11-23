@@ -83,7 +83,7 @@ const fieldMessages = {
   },
   models: {
     label: messages.ciModels,
-    error: messages.ciModelsError,
+    error: messages.ciOrderedListError,
     help: messages.ciOrderedListHint,
   },
 };
@@ -93,8 +93,6 @@ const placeholderByField: Partial<Record<keyof typeof fieldMessages, string>> = 
   fix: 'fix_test_case',
   models: 'auto, model-A, model-B',
 };
-
-const optionalFields = new Set<keyof typeof fieldMessages>(['generation', 'fix', 'models']);
 
 const fieldsByKind: Record<PipelineCiFormKind, Array<keyof typeof fieldMessages>> = {
   generation: ['generation', 'fix', 'models'],
@@ -183,7 +181,7 @@ const CiFields = ({
           classNameHelpText={cx('ci-settings__note')}
           error={error}
           touched={Boolean(error)}
-          aria-required={!optionalFields.has(name)}
+          aria-required
           defaultWidth={false}
           value={draft[name]}
           disabled={disabled}
