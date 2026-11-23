@@ -23,7 +23,6 @@
 // DS 6 dark tooltip
 div.tooltip {
   min-width: 0;
-  max-width: none;
   padding: 8px 12px;
   font-family: var(--rp-ui-base-font-family);
   font-size: 12px;
@@ -33,7 +32,8 @@ div.tooltip {
   border: none;
   border-radius: 8px;
   box-shadow: none;
-  white-space: nowrap;
+  // ECharts sets nowrap on its tooltip container; long launch names must wrap within the 300px cap
+  white-space: normal;
 
   div,
   span {
