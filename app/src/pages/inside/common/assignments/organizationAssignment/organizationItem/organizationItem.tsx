@@ -35,7 +35,7 @@ import { getOrgRoleTitle } from 'common/utils/permissions';
 import { URLS } from 'common/urls';
 import { ProjectsSearchesResponseData } from 'controllers/organization/projects';
 import { OrganizationType } from 'controllers/organization';
-import { idSelector } from 'controllers/user';
+import { idSelector, isAdminSelector } from 'controllers/user';
 import { IconsBlock } from 'pages/instance/organizationsPage/organizationsPanelView/iconsBlock/iconsBlock';
 import { useAssignmentsUtils } from 'pages/inside/common/assignments/hooks';
 
@@ -90,6 +90,7 @@ export const OrganizationItem = ({
 }: OrganizationItemProps) => {
   const { formatMessage } = useIntl();
   const currentUserId = useSelector(idSelector) as number;
+  const isAdmin = useSelector(isAdminSelector);
   const {
     id,
     name,
@@ -108,15 +109,17 @@ export const OrganizationItem = ({
     }
     const isOwnAccount = currentUserId === invitedUserId;
     const isAssignedUserOrgOwner = ownerId != null && invitedUserId === ownerId;
-    if (!isOwnAccount && !isAssignedUserOrgOwner) {
-      return null;
+
+    if (isAssignedUserOrgOwner) {
+      return formatMessage(assignmentMessages.organizationRoleDisabledOwner);
     }
-    return formatMessage(
-      isOwnAccount
-        ? assignmentMessages.organizationRoleDisabledOwnAccount
-        : assignmentMessages.organizationRoleDisabledOwner,
-    );
-  }, [invitedUserId, isNew, currentUserId, ownerId, formatMessage]);
+
+    if (isOwnAccount && !isAdmin && role === MANAGER) {
+      return formatMessage(assignmentMessages.organizationRoleDisabledOwnAccount);
+    }
+
+    return null;
+  }, [invitedUserId, isNew, currentUserId, ownerId, formatMessage, isAdmin, role]);
 
   const disableOrganizationRole = Boolean(organizationRoleDisabledTooltip);
   const menuPortalRoot = isBrowser()

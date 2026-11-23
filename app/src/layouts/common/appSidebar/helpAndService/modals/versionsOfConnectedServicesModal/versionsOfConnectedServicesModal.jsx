@@ -33,7 +33,8 @@ import {
   LOGIN_PAGE_EVENTS,
   SIDEBAR_CATEGORY,
 } from 'components/main/analytics/events/ga4Events/loginPageEvents';
-import { PRODUCT_VERSION, PRODUCT_VERSION_LINK } from './constants';
+import { isOutdatedVersion } from 'common/utils/isOutdatedVersion';
+import { ANALYZER_REPOSITORY, PRODUCT_VERSION, PRODUCT_VERSION_LINK } from './constants';
 import { ServiceVersion } from './serviceVersion';
 import styles from './versionsOfConnectedServicesModal.scss';
 
@@ -71,7 +72,7 @@ const VersionsOfConnectedServices = ({ data: { latestServiceVersions, analyticsC
         name: versionsServicesNames[serviceKey],
         version: currentVersion,
         linkTo: servicesUpdate[serviceKey],
-        isNewVersion: currentVersion !== latestVersion,
+        isNewVersion: isOutdatedVersion(currentVersion, latestVersion),
       });
     });
 
@@ -82,6 +83,10 @@ const VersionsOfConnectedServices = ({ data: { latestServiceVersions, analyticsC
         name: 'Service Analyzer',
         version: analyzer.version,
         linkTo: servicesUpdate.analyzer,
+        isNewVersion: isOutdatedVersion(
+          analyzer.version,
+          latestServiceVersions[ANALYZER_REPOSITORY],
+        ),
         isUnavailable: !analyzer.available,
       });
     }

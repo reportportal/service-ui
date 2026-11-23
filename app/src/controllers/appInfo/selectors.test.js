@@ -14,10 +14,52 @@
  * limitations under the License.
  */
 
-import { tmsEnabledSelector } from './selectors';
-import { TMS_ENABLED_KEY } from './constants';
+import {
+  instanceTypeSelector,
+  shouldShowExploreCloudPromoSelector,
+  tmsEnabledSelector,
+} from './selectors';
+import { EPAM, INSTANCE_TYPE, NOT_PROVIDED, SAAS, TMS_ENABLED_KEY } from './constants';
+
+const getStateWithInstanceType = (instanceType) => ({
+  appInfo: {
+    api: {
+      environment: {
+        [INSTANCE_TYPE]: instanceType,
+      },
+    },
+  },
+});
 
 describe('appInfo/selectors', () => {
+  describe('instanceTypeSelector', () => {
+    test('should return "SAAS" when instance type is set to "SAAS"', () => {
+      expect(instanceTypeSelector(getStateWithInstanceType('SAAS'))).toBe(SAAS);
+    });
+
+    test('should not match SAAS constant when instance type is set to "SaaS"', () => {
+      expect(instanceTypeSelector(getStateWithInstanceType('SaaS'))).not.toBe(SAAS);
+    });
+
+    test('should return EPAM when instance type is set to "EPAM"', () => {
+      expect(instanceTypeSelector(getStateWithInstanceType('EPAM'))).toBe(EPAM);
+    });
+
+    test('should return NOT_PROVIDED when instance type is not set', () => {
+      expect(instanceTypeSelector({ appInfo: { api: { environment: {} } } })).toBe(NOT_PROVIDED);
+    });
+  });
+
+  describe('shouldShowExploreCloudPromoSelector', () => {
+    test('should return false for "SAAS" instance type', () => {
+      expect(shouldShowExploreCloudPromoSelector(getStateWithInstanceType('SAAS'))).toBe(false);
+    });
+
+    test('should return true when instance type is not provided', () => {
+      expect(shouldShowExploreCloudPromoSelector({ appInfo: {} })).toBe(true);
+    });
+  });
+
   describe('tmsEnabledSelector', () => {
     test('should return true when TMS_ENABLED_KEY is set to "true"', () => {
       const state = {
