@@ -55,7 +55,7 @@ export const ProjectsListTable = ({
   const onTableColumnSort = ({ key }) => {
     trackEvent(PROJECTS_PAGE_EVENTS.projectsSortingArrowClick());
     onChangeSorting(key);
-    dispatch(prepareActiveOrganizationProjectsAction());
+    dispatch(prepareActiveOrganizationProjectsAction({ organizationSlug }));
   };
   const data = useMemo(
     () =>

@@ -21,6 +21,7 @@ import { useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { AbsRelTime } from 'components/main/absRelTime';
 import { userInfoSelector } from 'controllers/user';
+import { activeOrganizationSelector } from 'controllers/organization';
 import { getRoleBadgesData } from 'common/utils/permissions/getRoleTitle';
 import { DEFAULT_PAGE_SIZE, DEFAULT_PAGINATION, PAGE_KEY } from 'controllers/pagination';
 import { prepareActiveOrganizationUsersAction } from 'controllers/organization/users';
@@ -47,6 +48,7 @@ export const OrganizationTeamListTable = ({
   const { formatMessage } = useIntl();
   const dispatch = useDispatch();
   const currentUser = useSelector(userInfoSelector);
+  const organizationSlug = useSelector(activeOrganizationSelector)?.slug;
 
   const data = useMemo(
     () =>
@@ -128,7 +130,7 @@ export const OrganizationTeamListTable = ({
 
   const onTableSorting = ({ key }) => {
     onChangeSorting(key);
-    dispatch(prepareActiveOrganizationUsersAction());
+    dispatch(prepareActiveOrganizationUsersAction({ organizationSlug }));
   };
 
   return (
