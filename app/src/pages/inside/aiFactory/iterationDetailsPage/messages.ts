@@ -127,6 +127,10 @@ export const messages = defineMessages({
     id: 'IterationDetailsPage.rerun',
     defaultMessage: 'Re-run',
   },
+  rerunUnavailable: {
+    id: 'IterationDetailsPage.rerunUnavailable',
+    defaultMessage: 'Re-run requires a CI command from the server.',
+  },
   rerunPermissionUnavailable: {
     id: 'IterationDetailsPage.rerunPermissionUnavailable',
     defaultMessage: 'Re-run is available to Organization Managers and Administrators',

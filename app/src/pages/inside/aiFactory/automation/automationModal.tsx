@@ -107,7 +107,8 @@ export const AutomationModalContent = ({
     canRequest && canAutomateTestCases ? projectKey : '',
     pipelineId,
   );
-  const canStart = isMock || connection?.canStartJobs === true;
+  const isConnected = connection?.state === 'CONNECTED';
+  const canStart = isMock || (isConnected && connection.canStartJobs);
   const request = useAutomationRequest(projectKey, canRequest, pipelineId);
   useEffect(() => {
     if (request.error === 'CI_NOT_CONNECTED' || request.error === 'JOB_START_FAILED') {
@@ -197,11 +198,15 @@ export const AutomationModalContent = ({
     if (response) handleSuccess(response);
   };
 
-  const connectionMessage = getCiConnectionMessage(
-    canRequest && !canStart && request.error !== 'CI_NOT_CONNECTED',
-    isLoading,
-    failed,
-  );
+  const isShowingEnvironmentAvailability =
+    isConnected &&
+    (request.isLoadingEnvironments || request.error === 'ENVIRONMENTS_NOT_CONFIGURED');
+  const showConnectionStatus =
+    canRequest &&
+    !canStart &&
+    request.error !== 'CI_NOT_CONNECTED' &&
+    !isShowingEnvironmentAvailability;
+  const connectionMessage = getCiConnectionMessage(showConnectionStatus, isLoading, failed);
 
   return (
     <Modal

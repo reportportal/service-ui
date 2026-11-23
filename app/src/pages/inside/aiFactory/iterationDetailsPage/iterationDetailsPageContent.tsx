@@ -639,10 +639,8 @@ const useIterationRetryConnection = (
   projectKey: string,
   pipelineId: number,
   iteration: PipelineIteration | null,
-  isLiveTransport: boolean,
+  canRetryStages: boolean,
 ) => {
-  const { canRetryPipelineStages } = useUserPermissions();
-  const canRetryStages = isLiveTransport && Boolean(canRetryPipelineStages);
   const { connection, refresh } = usePipelineCiConnection(
     projectKey,
     canRetryStages && isReducedDetail(iteration) && iteration.pipelineType === 'TEST_CASE_GENERATION'
@@ -651,7 +649,6 @@ const useIterationRetryConnection = (
   );
 
   return {
-    canRetryStages,
     canStartCiJobs: connection?.canStartJobs === true,
     refreshCiConnection: refresh,
   };
@@ -659,6 +656,7 @@ const useIterationRetryConnection = (
 
 export const IterationDetailsPageContent = () => {
   const { formatMessage } = useIntl();
+  const { canManagePipelineSettings, canRetryPipelineStages } = useUserPermissions();
   const dispatch = useDispatch();
   const projectName = useSelector(projectNameSelector);
   const projectKey = useSelector(projectKeySelector);
@@ -699,11 +697,12 @@ export const IterationDetailsPageContent = () => {
 
   const { hasCurrentCatalog, pipelineCandidate, pipeline, isReducedCatalogPipeline } =
     resolvePipelineCatalog(pipelines, pipelineId, catalogVersion, catalogProjectKey, projectKey);
-  const { canRetryStages, canStartCiJobs, refreshCiConnection } = useIterationRetryConnection(
+  const canRetryStages = isLiveTransport && Boolean(canRetryPipelineStages);
+  const { canStartCiJobs, refreshCiConnection } = useIterationRetryConnection(
     projectKey,
     pipelineId,
     currentIteration,
-    isLiveTransport,
+    canRetryStages,
   );
   const [selectedStage, setSelectedStage] = useState<AiStageKey | null>(null);
   const hasInitializedStage = useRef(false);
@@ -822,6 +821,7 @@ export const IterationDetailsPageContent = () => {
         onRetry={retryDetail}
         onBack={backToPipelines}
         projectKey={projectKey}
+        showRerun={canManagePipelineSettings}
         canRetryStages={canRetryStages}
         canStartCiJobs={canStartCiJobs}
         onRefreshCiConnection={refreshCiConnection}

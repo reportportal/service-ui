@@ -514,7 +514,7 @@ describe('ReducedIterationDetails', () => {
     expect(onRetry).not.toHaveBeenCalled();
   });
 
-  test('renders live fields and keeps Re-run enabled without a click action', () => {
+  test('renders live fields and keeps Re-run disabled when the manager can see it', () => {
     const onRetry = jest.fn();
     const iteration = detail();
     const wrapper = shallow(
@@ -524,6 +524,7 @@ describe('ReducedIterationDetails', () => {
         isUnavailable={false}
         breadcrumbDescriptors={breadcrumbDescriptors}
         onRetry={onRetry}
+        showRerun
       />,
     );
 
@@ -555,7 +556,8 @@ describe('ReducedIterationDetails', () => {
     expect(actionWrapper.find(LivePipelineSettingsButton).prop('pipelineId')).toBe(7);
     expect(compare.prop('disabled')).toBe(true);
     expect(compare.prop('onClick')).toBeUndefined();
-    expect(rerun.prop('disabled')).toBeFalsy();
+    expect(rerun.prop('disabled')).toBe(true);
+    expect(rerun.prop('aria-description')).toBe('Re-run requires a CI command from the server.');
     expect(rerun.prop('onClick')).toBeUndefined();
     expect(actionWrapper.find('span[title="Comparison is not available yet"]')).toHaveLength(1);
     const refresh = actionWrapper.find('[data-automation-id="refreshReducedIterationButton"]');
@@ -573,6 +575,14 @@ describe('ReducedIterationDetails', () => {
         .find('[data-automation-id="refreshReducedIterationButton"]')
         .prop('disabled'),
     ).toBe(true);
+
+    wrapper.setProps({ showRerun: false });
+    const restrictedActions = wrapper
+      .find('PageHeaderWithBreadcrumbsAndActions')
+      .prop('actions') as ReactElement;
+    expect(shallow(restrictedActions).find('[data-automation-id="rerunIterationButton"]')).toHaveLength(
+      0,
+    );
   });
 
   test('keeps the last details visible when automatic refresh fails', () => {

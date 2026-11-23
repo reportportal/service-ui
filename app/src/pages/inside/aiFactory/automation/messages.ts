@@ -149,11 +149,11 @@ export const messages = defineMessages({
   },
   reasonFixRunning: {
     id: 'AiFactoryAutomation.reasonFixRunning',
-    defaultMessage: 'Fix is running',
+    defaultMessage: 'Agent is fixing',
   },
   reasonAutomationInProgress: {
     id: 'AiFactoryAutomation.reasonAutomationInProgress',
-    defaultMessage: 'Automation is in progress',
+    defaultMessage: 'Already in automation',
   },
   unavailableNotReady: {
     id: 'AiFactoryAutomation.unavailableNotReady',

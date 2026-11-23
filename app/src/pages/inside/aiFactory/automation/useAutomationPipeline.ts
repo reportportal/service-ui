@@ -98,16 +98,15 @@ export const useAutomationPipeline = (
 
   const currentRead = read?.scope === scope ? read : undefined;
   const pipeline = currentRead?.pipeline;
-  const pipelineId = pipeline?.ciConnection?.canStartJobs === true ? pipeline.id : undefined;
-  const disabledMessage = getDisabledMessage(Boolean(scope), currentRead);
+  const pipelineId = pipeline?.ciConnection?.state === 'CONNECTED' ? pipeline.id : undefined;
+  const disabledMessage = scope && !pipelineId ? getDisabledMessage(currentRead) : undefined;
   return useMemo(
     () => ({ pipelineId, disabledMessage, refresh }),
     [pipelineId, disabledMessage, refresh],
   );
 };
 
-const getDisabledMessage = (enabled: boolean, read?: AutomationPipelineRead) => {
-  if (!enabled || read?.pipeline?.ciConnection?.canStartJobs === true) return undefined;
+const getDisabledMessage = (read?: AutomationPipelineRead) => {
   if (!read) return messages.checkingCiConnection;
   if (read.failed) return messages.loadCiConnectionFailed;
   return messages.unavailableCiConnection;

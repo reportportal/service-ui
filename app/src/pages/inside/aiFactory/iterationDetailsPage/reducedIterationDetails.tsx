@@ -128,6 +128,7 @@ export interface ReducedIterationDetailsProps {
   onBack?: () => void;
   onCompare?: (pipelineId: number, iterationId: number) => void;
   projectKey?: string;
+  showRerun?: boolean;
   canRetryStages?: boolean;
   canStartCiJobs?: boolean;
   onRefreshCiConnection?: () => void;
@@ -1146,6 +1147,7 @@ export const ReducedIterationDetails = ({
   onBack,
   onCompare,
   projectKey,
+  showRerun = false,
   canRetryStages = false,
   canStartCiJobs = false,
   onRefreshCiConnection,
@@ -1227,13 +1229,19 @@ export const ReducedIterationDetails = ({
                   {formatMessage(messages.compareWithPrevious)}
                 </Button>
               </span>
-              <Button
-                variant="text"
-                data-automation-id="rerunIterationButton"
-                icon={<RerunIcon />}
-              >
-                {formatMessage(messages.rerun)}
-              </Button>
+              {showRerun && (
+                <span title={formatMessage(messages.rerunUnavailable)}>
+                  <Button
+                    variant="text"
+                    data-automation-id="rerunIterationButton"
+                    icon={<RerunIcon />}
+                    aria-description={formatMessage(messages.rerunUnavailable)}
+                    disabled
+                  >
+                    {formatMessage(messages.rerun)}
+                  </Button>
+                </span>
+              )}
               <LivePipelineSettingsButton pipelineId={iteration.pipelineId} fromIteration />
               <Button
                 variant="text"
