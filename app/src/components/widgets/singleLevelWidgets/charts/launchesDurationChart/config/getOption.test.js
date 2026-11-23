@@ -60,7 +60,6 @@ describe('launchesDurationChart getOption', () => {
     expect(option.xAxis).toMatchObject({
       type: 'value',
       show: true,
-      name: 'seconds',
       min: 0,
       max: 4607,
     });
@@ -107,7 +106,7 @@ describe('launchesDurationChart getOption', () => {
       formatMessage,
     });
 
-    expect(option.xAxis.name).toBe('minutes');
+    expect(option.graphic[0].children[1].style.text).toBe('minutes');
     expect(option.xAxis.max).toBe(3300000);
     expect(option.xAxis.interval).toBe(1000000);
     // 3,300,000 is not a multiple of 500,000, so the extra line/label at max is hidden
