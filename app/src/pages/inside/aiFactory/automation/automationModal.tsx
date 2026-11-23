@@ -39,6 +39,7 @@ import {
   useAutomationRequest,
   type AutomationRequestError,
   type AutomationRequestState,
+  type AutomationStartResult,
 } from './useAutomationRequest';
 import { automationSkipReasonMessages, messages } from './messages';
 import styles from './automationModal.scss';
@@ -160,16 +161,15 @@ export const AutomationModalContent = ({
     if (!request.isStarting) dispatch(hideModalAction());
   };
 
-  const handleSuccess = (response: AutomateAcceptedRS & { unconfirmed?: number[] }) => {
+  const handleSuccess = (response: AutomationStartResult) => {
     onSuccess?.(response);
     const values = { number: response.iteration.number, count: response.accepted.length };
-    if (response.unconfirmed?.length) {
+    if (response.recovery) {
+      const cases = response.recovery.unconfirmed.map((id) => labelForCase(id)).join(', ');
+      const message = cases ? messages.recoveredWithUnconfirmedCases : messages.recoveredInProgress;
       dispatch(
         showWarningNotification({
-          message: formatMessage(messages.startedWithUnconfirmedCases, {
-            ...values,
-            cases: response.unconfirmed.map((id) => labelForCase(id)).join(', '),
-          }),
+          message: formatMessage(message, { ...values, cases }),
         }),
       );
     } else if (response.skipped.length > 0) {

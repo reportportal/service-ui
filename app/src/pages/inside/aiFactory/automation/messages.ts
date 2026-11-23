@@ -246,10 +246,15 @@ export const messages = defineMessages({
     defaultMessage:
       'Automation iteration #{number} started for {count} Test Cases. Skipped: {cases}',
   },
-  startedWithUnconfirmedCases: {
-    id: 'AiFactoryAutomation.startedWithUnconfirmedCases',
+  recoveredInProgress: {
+    id: 'AiFactoryAutomation.recoveredInProgress',
     defaultMessage:
-      'Automation iteration #{number} started for {count} Test Cases. Start not confirmed for: {cases}.',
+      'Automation iteration #{number} is in progress for {count} selected Test Cases. Your start request could not be confirmed.',
+  },
+  recoveredWithUnconfirmedCases: {
+    id: 'AiFactoryAutomation.recoveredWithUnconfirmedCases',
+    defaultMessage:
+      'Automation iteration #{number} is in progress for {count} selected Test Cases. No matching active iteration was found for: {cases}. Your start request could not be confirmed.',
   },
   retry: {
     id: 'AiFactoryAutomation.retry',

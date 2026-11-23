@@ -69,6 +69,16 @@ const accepted = {
   accepted: [42],
   skipped: [],
 };
+const activeCase = (id: number, iteration = accepted.iteration) => ({
+  id,
+  automationState: {
+    status: 'IN_PROGRESS',
+    ciConnection: 'CONNECTED',
+    fixInProgress: false,
+    scenarioChangedAfterAutomation: false,
+    iteration,
+  },
+});
 const payload: AutomatePayload = {
   testCaseIds: [42],
   environment: 'beta5',
@@ -88,6 +98,7 @@ describe('useAutomationRequest', () => {
   afterEach(() => {
     wrapper?.unmount();
     wrapper = undefined;
+    jest.useRealTimers();
   });
 
   const renderHook = async (props: Omit<HarnessProps, 'onResult'> = {}) => {
@@ -401,38 +412,186 @@ describe('useAutomationRequest', () => {
     fetchMock
       .mockResolvedValueOnce(reply(200, environments))
       .mockRejectedValueOnce(new AxiosError('Network error', 'ERR_NETWORK'))
-      .mockResolvedValueOnce({
-        id: 42,
-        automationState: {
-          status: 'IN_PROGRESS',
-          ciConnection: 'CONNECTED',
-          fixInProgress: false,
-          scenarioChangedAfterAutomation: false,
-          iteration: accepted.iteration,
-        },
-      });
+      .mockResolvedValueOnce(activeCase(42));
     await renderHook();
 
-    await act(async () => expect(await result.start(payload)).toEqual(accepted));
+    await act(async () =>
+      expect(await result.start(payload)).toEqual({ ...accepted, recovery: { unconfirmed: [] } }),
+    );
 
     expect(fetchMock).toHaveBeenCalledTimes(3);
     expect(fetchMock).toHaveBeenLastCalledWith(
       URLS.testCaseDetails('demo', 42),
-      expect.objectContaining({ signal: expect.any(AbortSignal) }),
+      expect.objectContaining({ signal: expect.any(AbortSignal), timeout: 10_000 }),
     );
   });
 
+  test('retries only GET after a gateway timeout until the active iteration is visible', async () => {
+    jest.useFakeTimers();
+    fetchMock
+      .mockResolvedValueOnce(reply(200, environments))
+      .mockResolvedValueOnce(reply(504, {}))
+      .mockResolvedValueOnce({ id: 42 })
+      .mockRejectedValueOnce(new AxiosError('Network error', 'ERR_NETWORK'))
+      .mockResolvedValueOnce(activeCase(42));
+    await renderHook();
+
+    await act(async () => {
+      const outcome = result.start(payload);
+      await jest.advanceTimersByTimeAsync(4_000);
+      await expect(outcome).resolves.toEqual({ ...accepted, recovery: { unconfirmed: [] } });
+    });
+
+    expect(fetchMock.mock.calls.map(([url]) => url)).toEqual([
+      URLS.tmsAutomationEnvironments('demo'),
+      URLS.tmsAutomation('demo'),
+      ...Array(3).fill(URLS.testCaseDetails('demo', 42)),
+    ]);
+  });
+
   test('keeps a lost POST outcome unconfirmed when its case cannot verify the iteration', async () => {
+    jest.useFakeTimers();
     fetchMock
       .mockResolvedValueOnce(reply(200, environments))
       .mockRejectedValueOnce(new AxiosError('Network error', 'ERR_NETWORK'))
-      .mockResolvedValueOnce({ id: 42 });
+      .mockResolvedValue({ id: 42 });
     await renderHook();
 
-    await act(async () => expect(await result.start(payload)).toBeNull());
+    await act(async () => {
+      const outcome = result.start(payload);
+      await jest.advanceTimersByTimeAsync(9_000);
+      await expect(outcome).resolves.toBeNull();
+    });
 
+    expect(fetchMock).toHaveBeenCalledTimes(6);
+    expect(fetchMock.mock.calls.filter(([url]) => url === URLS.tmsAutomation('demo'))).toHaveLength(1);
+    expect(result.error).toBe('START_NOT_CONFIRMED');
+  });
+
+  test('ends recovery after 30 seconds even if a case GET is still pending', async () => {
+    jest.useFakeTimers();
+    const pendingRead = createDeferred<ReturnType<typeof activeCase>>();
+    let recoverySignal: AbortSignal | undefined;
+    fetchMock
+      .mockResolvedValueOnce(reply(200, environments))
+      .mockRejectedValueOnce(new AxiosError('Network error', 'ERR_NETWORK'))
+      .mockImplementationOnce((_url, params) => {
+        recoverySignal = params?.signal as AbortSignal;
+        return pendingRead.promise;
+      });
+    await renderHook();
+
+    let outcome!: Promise<unknown>;
+    await act(async () => {
+      outcome = result.start(payload);
+      await jest.advanceTimersByTimeAsync(29_999);
+    });
+    expect(result.isStarting).toBe(true);
+    expect(recoverySignal?.aborted).toBe(false);
+
+    await act(async () => {
+      await jest.advanceTimersByTimeAsync(1);
+      await expect(outcome).resolves.toBeNull();
+    });
+    expect(recoverySignal?.aborted).toBe(true);
+    expect(result).toMatchObject({ isStarting: false, error: 'START_NOT_CONFIRMED' });
+
+    await act(async () => {
+      pendingRead.resolve(activeCase(42));
+      await jest.advanceTimersByTimeAsync(10_000);
+    });
     expect(fetchMock).toHaveBeenCalledTimes(3);
     expect(result.error).toBe('START_NOT_CONFIRMED');
+  });
+
+  test('does not treat concurrent iterations for different selected cases as one job', async () => {
+    fetchMock
+      .mockResolvedValueOnce(reply(200, environments))
+      .mockRejectedValueOnce(new AxiosError('Network error', 'ERR_NETWORK'))
+      .mockResolvedValueOnce(activeCase(42))
+      .mockResolvedValueOnce(activeCase(43, { ...accepted.iteration, iterationId: 202, number: 2 }));
+    await renderHook();
+
+    await act(async () => {
+      await expect(result.start({ ...payload, testCaseIds: [42, 43] })).resolves.toBeNull();
+    });
+
+    expect(fetchMock).toHaveBeenCalledTimes(4);
+    expect(result.error).toBe('START_NOT_CONFIRMED');
+  });
+
+  test('does not attribute a later snapshot to a different iteration during recovery', async () => {
+    jest.useFakeTimers();
+    const otherIteration = { ...accepted.iteration, iterationId: 202, number: 2 };
+    fetchMock
+      .mockResolvedValueOnce(reply(200, environments))
+      .mockRejectedValueOnce(new AxiosError('Network error', 'ERR_NETWORK'))
+      .mockResolvedValueOnce(activeCase(42))
+      .mockResolvedValueOnce({ id: 43 })
+      .mockResolvedValueOnce(activeCase(42, otherIteration))
+      .mockResolvedValueOnce(activeCase(43, otherIteration));
+    await renderHook();
+
+    await act(async () => {
+      const outcome = result.start({ ...payload, testCaseIds: [42, 43] });
+      await jest.advanceTimersByTimeAsync(1_000);
+      await expect(outcome).resolves.toBeNull();
+    });
+
+    expect(fetchMock).toHaveBeenCalledTimes(6);
+    expect(result.error).toBe('START_NOT_CONFIRMED');
+  });
+
+  test('returns only the cases observed in the last consistent snapshot', async () => {
+    jest.useFakeTimers();
+    fetchMock
+      .mockResolvedValueOnce(reply(200, environments))
+      .mockRejectedValueOnce(new AxiosError('Network error', 'ERR_NETWORK'))
+      .mockResolvedValueOnce({ id: 42 })
+      .mockResolvedValueOnce(activeCase(43))
+      .mockImplementation((url) =>
+        Promise.resolve(url === URLS.testCaseDetails('demo', 42) ? activeCase(42) : { id: 43 }),
+      );
+    await renderHook();
+
+    await act(async () => {
+      const outcome = result.start({ ...payload, testCaseIds: [42, 43] });
+      await jest.advanceTimersByTimeAsync(9_000);
+      await expect(outcome).resolves.toEqual({ ...accepted, recovery: { unconfirmed: [43] } });
+    });
+
+    expect(fetchMock).toHaveBeenCalledTimes(10);
+  });
+
+  test('cancels recovery and its retries when the project changes', async () => {
+    jest.useFakeTimers();
+    fetchMock
+      .mockResolvedValueOnce(reply(200, environments))
+      .mockRejectedValueOnce(new AxiosError('Network error', 'ERR_NETWORK'))
+      .mockResolvedValueOnce({ id: 42 })
+      .mockResolvedValueOnce(reply(200, environments));
+    await renderHook();
+
+    let outcome!: Promise<unknown>;
+    await act(async () => {
+      outcome = result.start(payload);
+      await jest.advanceTimersByTimeAsync(0);
+    });
+    const recoverySignal = fetchMock.mock.calls[2][1]?.signal as AbortSignal;
+
+    await act(async () => {
+      wrapper?.setProps({ projectKey: 'other' });
+      await Promise.resolve();
+    });
+    await expect(outcome).resolves.toBeNull();
+    await act(async () => {
+      await jest.advanceTimersByTimeAsync(30_000);
+    });
+
+    expect(recoverySignal.aborted).toBe(true);
+    expect(fetchMock).toHaveBeenCalledTimes(4);
+    expect(fetchMock.mock.calls[3][0]).toBe(URLS.tmsAutomationEnvironments('other'));
+    expect(result).toMatchObject({ isStarting: false, error: null });
   });
 
   test.each(['unmount', 'project replacement'] as const)(

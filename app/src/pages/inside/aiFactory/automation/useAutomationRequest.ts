@@ -19,6 +19,7 @@ import { isAxiosError } from 'axios';
 
 import { URLS } from 'common/urls';
 import { fetch } from 'common/utils';
+import { delay } from 'common/utils/delay';
 import { getErrorMessage } from 'common/utils/helperUtils/errorUtils';
 import { isCiNotConnectedError } from 'controllers/aiFactory/pipelines/ciConnection';
 import { useUserPermissions } from 'hooks/useUserPermissions';
@@ -49,12 +50,17 @@ export type AutomationRequestError =
   | 'START_NOT_CONFIRMED'
   | 'INVALID_AUTOMATION_RESPONSE';
 
-type AutomationStartResult = AutomateAcceptedRS & { unconfirmed?: number[] };
+export type AutomationStartResult = AutomateAcceptedRS & {
+  recovery?: { unconfirmed: number[] };
+};
 
 const AMBIGUOUS_STATUS_CODES = new Set([408, 502, 503, 504]);
 const AUTOMATION_ENVIRONMENTS_NOT_CONFIGURED = 40060;
 const START_TIMEOUT_MS = 30_000;
-const RECOVERY_TIMEOUT_MS = 10_000;
+const RECOVERY_READ_TIMEOUT_MS = 10_000;
+const RECOVERY_TIMEOUT_MS = 30_000;
+const RECOVERY_RETRY_DELAYS_MS = [0, 1_000, 3_000, 5_000];
+const CONFLICTING_ITERATIONS = Symbol('conflicting iterations');
 
 type SkippedCases = AutomateAcceptedRS['skipped'];
 
@@ -98,7 +104,7 @@ const readActiveIteration = async (
 ) => {
   const testCase = await fetch<Pick<TestCase, 'id' | 'automationState'>>(
     URLS.testCaseDetails(projectKey, testCaseId),
-    { signal, timeout: RECOVERY_TIMEOUT_MS },
+    { signal, timeout: RECOVERY_READ_TIMEOUT_MS },
   );
   const automation = testCase?.id === testCaseId ? getNativeAutomationState(testCase) : undefined;
   if (
@@ -110,13 +116,12 @@ const readActiveIteration = async (
   return { id: testCaseId, iteration: automation.iteration };
 };
 
-const readStartOutcome = async (
+const readStartSnapshot = async (
   projectKey: string,
   testCaseIds: number[],
-  pipelineId: number | undefined,
+  pipelineId: number,
   signal: AbortSignal,
-): Promise<AutomationStartResult | undefined> => {
-  if (!pipelineId) return undefined;
+): Promise<AutomationStartResult | typeof CONFLICTING_ITERATIONS | undefined> => {
   const reads = await Promise.allSettled(
     testCaseIds.map((id) => readActiveIteration(projectKey, id, pipelineId, signal)),
   );
@@ -124,15 +129,72 @@ const readStartOutcome = async (
     read.status === 'fulfilled' && read.value ? [read.value] : [],
   );
   const iteration = confirmed[0]?.iteration;
+  if (!iteration) return undefined;
   if (
-    !iteration ||
-    confirmed.some((entry) => entry.iteration.iterationId !== iteration.iterationId)
+    confirmed.some(
+      (entry) =>
+        entry.iteration.iterationId !== iteration.iterationId ||
+        entry.iteration.number !== iteration.number,
+    )
   ) {
-    return undefined;
+    return CONFLICTING_ITERATIONS;
   }
   const accepted = confirmed.map(({ id }) => id);
-  const unconfirmed = testCaseIds.filter((id) => !accepted.includes(id));
-  return { iteration, accepted, skipped: [], ...(unconfirmed.length > 0 && { unconfirmed }) };
+  const acceptedIds = new Set(accepted);
+  const unconfirmed = testCaseIds.filter((id) => !acceptedIds.has(id));
+  return { iteration, accepted, skipped: [], recovery: { unconfirmed } };
+};
+
+const pollStartOutcome = async (
+  projectKey: string,
+  testCaseIds: number[],
+  pipelineId: number,
+  signal: AbortSignal,
+) => {
+  let latestSnapshot: AutomationStartResult | undefined;
+  let observedIterationId: number | undefined;
+  /* eslint-disable no-await-in-loop -- Complete each snapshot before starting the next read. */
+  for (const retryDelay of RECOVERY_RETRY_DELAYS_MS) {
+    if (retryDelay) await delay(retryDelay);
+    if (signal.aborted) return undefined;
+
+    const snapshot = await readStartSnapshot(projectKey, testCaseIds, pipelineId, signal);
+    if (snapshot === CONFLICTING_ITERATIONS) return undefined;
+    const iterationId = snapshot?.iteration.iterationId;
+    if (observedIterationId && iterationId && iterationId !== observedIterationId) return undefined;
+
+    observedIterationId ??= iterationId;
+    latestSnapshot = snapshot;
+    if (snapshot?.accepted.length === testCaseIds.length) break;
+  }
+  /* eslint-enable no-await-in-loop */
+  return latestSnapshot;
+};
+
+const readStartOutcome = async (
+  projectKey: string,
+  testCaseIds: number[],
+  pipelineId: number | undefined,
+  signal: AbortSignal,
+) => {
+  if (!pipelineId || signal.aborted) return undefined;
+  const recovery = new AbortController();
+  const stopRecovery = () => recovery.abort();
+  const stopped = new Promise<undefined>((resolve) => {
+    recovery.signal.addEventListener('abort', () => resolve(undefined), { once: true });
+  });
+  const timeout = setTimeout(stopRecovery, RECOVERY_TIMEOUT_MS);
+  signal.addEventListener('abort', stopRecovery, { once: true });
+  try {
+    return await Promise.race([
+      stopped,
+      pollStartOutcome(projectKey, testCaseIds, pipelineId, recovery.signal),
+    ]);
+  } finally {
+    clearTimeout(timeout);
+    signal.removeEventListener('abort', stopRecovery);
+    stopRecovery();
+  }
 };
 
 const loadEnvironments = async (

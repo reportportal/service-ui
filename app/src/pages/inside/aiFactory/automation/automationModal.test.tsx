@@ -343,6 +343,36 @@ describe('AutomationModalContent', () => {
   });
 
   test.each([
+    [[], 'Your start request could not be confirmed.'],
+    [
+      [43],
+      'No matching active iteration was found for: TC43 · Refund. Your start request could not be confirmed.',
+    ],
+  ] as const)(
+    'reports recovered automation as observed status for unconfirmed cases %j',
+    async (unconfirmed, detail) => {
+      start.mockResolvedValue({ ...accepted, recovery: { unconfirmed } });
+      const testCases = unconfirmed.length
+        ? [candidate, { ...candidate, id: 43, displayId: 'TC43', name: 'Refund' }]
+        : [candidate];
+      const wrapper = renderModal({ testCases });
+
+      await act(async () => {
+        (wrapper.find('Modal').prop('okButton') as { onClick: () => void }).onClick();
+        await Promise.resolve();
+      });
+
+      expect(dispatch).toHaveBeenCalledWith({
+        type: 'WARNING',
+        payload: {
+          message: `Automation iteration #7 is in progress for 1 selected Test Cases. ${detail}`,
+        },
+      });
+      expect(dispatch).not.toHaveBeenCalledWith(expect.objectContaining({ type: 'SUCCESS' }));
+    },
+  );
+
+  test.each([
     ['JOB_START_FAILED', 'Automation could not be started'],
     ['INVALID_AUTOMATION_RESPONSE', 'Automation returned an invalid response'],
     ['INVALID_ENVIRONMENTS_RESPONSE', 'The environments response is invalid'],

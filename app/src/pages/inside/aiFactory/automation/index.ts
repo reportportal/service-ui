@@ -10,6 +10,7 @@
 
 export { AutomationSection } from './automationSection';
 export { useAutomationModal } from './useAutomationModal';
+export type { AutomationStartResult } from './useAutomationRequest';
 export {
   useAutomationPipeline,
   type AutomationPipelineGate,
