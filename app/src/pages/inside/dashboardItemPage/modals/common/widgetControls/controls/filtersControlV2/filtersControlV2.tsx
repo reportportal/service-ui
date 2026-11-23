@@ -300,7 +300,15 @@ export const FiltersControlV2 = ({
       !lastSearchRef.current && (response.page?.totalElements ?? 0) > PRELOAD_PAGE_SIZE,
     );
 
-    return response.content ?? [];
+    const filters = response.content ?? [];
+    const isSelectedMissing =
+      !lastSearchRef.current &&
+      selectedFilter &&
+      !filters.some((filter) => filter.id === selectedFilter.id);
+
+    // The autocomplete clears the selection on blur when it is not among the options.
+    // The default list holds only the latest filters, so keep the selected one in it.
+    return isSelectedMissing ? [selectedFilter, ...filters] : filters;
   };
 
   return (
