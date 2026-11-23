@@ -1,5 +1,5 @@
 /**
- * @jest-environment ./test/newYorkTimezoneEnvironment.js
+ * @jest-environment <rootDir>/test/newYorkTimezoneEnvironment.js
  */
 
 /*

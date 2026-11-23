@@ -25,6 +25,7 @@ const mockDispatch = jest.fn();
 const mockFetch = jest.fn();
 const mockFetchAllFolders = jest.fn();
 const mockHandleOperationError = jest.fn();
+const mockShowErrorNotification = jest.fn();
 const mockHandleOperationSuccess = jest.fn();
 
 jest.mock('react-redux', () => ({
@@ -44,7 +45,7 @@ jest.mock('../../../hooks/useFolderOperationUI', () => ({
     handleOperationStart: jest.fn(),
     handleOperationSuccess: mockHandleOperationSuccess,
     handleOperationError: mockHandleOperationError,
-    showErrorNotification: jest.fn(),
+    showErrorNotification: mockShowErrorNotification,
   }),
 }));
 jest.mock('../../../hooks/useNavigateToFolder', () => ({
@@ -89,6 +90,7 @@ describe('useDuplicateFolder', () => {
 
     expect(mockHandleOperationError).toHaveBeenCalled();
     expect(mockHandleOperationSuccess).not.toHaveBeenCalled();
+    expect(mockShowErrorNotification).toHaveBeenCalledWith({ messageId: 'errorOccurredTryAgain' });
     expect(mockDispatch).toHaveBeenCalledWith(
       expect.objectContaining({
         payload: expect.objectContaining({

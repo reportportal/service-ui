@@ -119,6 +119,7 @@ export const useDuplicateFolder = () => {
 
         dispatch(fetchSuccessAction(NAMESPACE, { content: updatedFolders }));
       } catch {
+        showErrorNotification({ messageId: 'errorOccurredTryAgain' });
         handleOperationError({ fromDragDrop: isDragDropOperation });
 
         return;
