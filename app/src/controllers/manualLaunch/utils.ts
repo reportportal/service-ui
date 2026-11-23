@@ -49,3 +49,11 @@ export function isNotFoundApiError(error: unknown): boolean {
     NOT_FOUND_ERROR_CODES.has(String(errorCode))
   );
 }
+
+// Only LAUNCH_NOT_FOUND (4041): the execution endpoint answers a missing execution with the
+// generic NOT_FOUND, which must still be reported.
+export function isLaunchNotFoundApiError(error: unknown): boolean {
+  const errorCode = (error as { errorCode?: unknown } | null | undefined)?.errorCode;
+
+  return errorCode === 4041 || errorCode === '4041';
+}

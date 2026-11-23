@@ -408,5 +408,38 @@ describe('controllers/manualLaunch/sagas', () => {
         messageId: 'manualLaunchRedirectWarningMessage',
       });
     });
+
+    test('opening an execution of a missing launch shows only the redirect toast', async () => {
+      mockedFetch.mockImplementation((url: string) =>
+        Promise.reject(
+          Object.assign(
+            new Error('not found'),
+            url === URLS.manualLaunchById('demo', '10') ? { errorCode: 40430 } : launchNotFound,
+          ),
+        ),
+      );
+      const { store, toasts } = setupStoreWithNotifications(launchPageState);
+
+      store.dispatch(getManualLaunchAction({ launchId: '10' }));
+      store.dispatch(getManualLaunchFoldersAction({ launchId: '10' }));
+      store.dispatch(getManualLaunchExecutionAction({ launchId: '10', executionId: 2 }));
+      await flush();
+
+      expect(toasts()).toHaveLength(1);
+      expect(toasts()[0].payload).toMatchObject({
+        messageId: 'manualLaunchRedirectWarningMessage',
+      });
+    });
+
+    test('a missing execution of an existing launch shows one error toast', async () => {
+      mockedFetch.mockRejectedValue({ errorCode: 40430, message: "'2' not found." });
+      const { store, toasts } = setupStoreWithNotifications(launchPageState);
+
+      store.dispatch(getManualLaunchExecutionAction({ launchId: '10', executionId: 2 }));
+      await flush();
+
+      expect(toasts()).toHaveLength(1);
+      expect(toasts()[0].payload).toMatchObject({ messageId: 'errorOccurredTryAgain' });
+    });
   });
 });

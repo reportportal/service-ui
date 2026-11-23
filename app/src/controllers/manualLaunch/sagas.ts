@@ -79,6 +79,7 @@ import {
 } from './constants';
 import {
   isAttachmentRemoved,
+  isLaunchNotFoundApiError,
   isNotFoundApiError,
   mapAttachmentForExecutionCommentPayload,
 } from './utils';
@@ -493,11 +494,15 @@ function* getManualLaunchExecution(action: GetManualLaunchExecutionAction): Gene
         true,
       ),
     );
-    yield put(
-      showErrorNotification({
-        messageId: 'errorOccurredTryAgain',
-      }),
-    );
+
+    // A missing launch is reported once, by the launch request's redirect notice.
+    if (!isLaunchNotFoundApiError(error)) {
+      yield put(
+        showErrorNotification({
+          messageId: 'errorOccurredTryAgain',
+        }),
+      );
+    }
   }
 }
 
