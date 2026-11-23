@@ -99,6 +99,21 @@ export const useDuplicateFolder = () => {
         return;
       }
 
+      // The copy is already done: report a partial result even if the folder refresh fails.
+      const duplicationFailure = getDuplicationFailure(duplicatedFolder);
+
+      if (duplicationFailure) {
+        dispatch(
+          showNotification({
+            messageId: 'batchPartialFailure',
+            values: duplicationFailure,
+            type: NOTIFICATION_TYPES.WARNING,
+            typographyColor: NOTIFICATION_TYPOGRAPHY_COLOR_TYPES.BLACK,
+            duration: WARNING_NOTIFICATION_DURATION,
+          }),
+        );
+      }
+
       try {
         const updatedFolders = await fetchAllFolders({ projectKey });
 
@@ -115,8 +130,6 @@ export const useDuplicateFolder = () => {
         duplicatedFolder.parentFolderId,
       );
 
-      const duplicationFailure = getDuplicationFailure(duplicatedFolder);
-
       handleOperationSuccess({
         fromDragDrop: isDragDropOperation,
         skipFolderRefresh: true,
@@ -126,18 +139,6 @@ export const useDuplicateFolder = () => {
           targetFolderName,
         },
       });
-
-      if (duplicationFailure) {
-        dispatch(
-          showNotification({
-            messageId: 'batchPartialFailure',
-            values: duplicationFailure,
-            type: NOTIFICATION_TYPES.WARNING,
-            typographyColor: NOTIFICATION_TYPOGRAPHY_COLOR_TYPES.BLACK,
-            duration: WARNING_NOTIFICATION_DURATION,
-          }),
-        );
-      }
 
       navigateToFolderAfterAction({
         targetFolderId: duplicatedFolder.id,
