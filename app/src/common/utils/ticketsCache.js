@@ -45,12 +45,17 @@ export const updateCachedTicket = (storageKey, ticketKey, data = {}) => {
   setStorageItem(storageKey, tickets);
 };
 
-// removes the ticket caches of every user and project (including the old, user-less keys)
-export const clearTicketsCache = () => {
+const removeTicketCaches = (isRemoved) => {
   if (typeof localStorage === 'undefined') {
     return;
   }
   Object.keys(localStorage)
-    .filter((key) => key.endsWith(TICKETS_KEY_SUFFIX))
+    .filter((key) => key.endsWith(TICKETS_KEY_SUFFIX) && isRemoved(key))
     .forEach((key) => localStorage.removeItem(key));
 };
+
+// removes the ticket caches of every user and project (including the old, user-less keys)
+export const clearTicketsCache = () => removeTicketCaches(() => true);
+
+// removes the caches written before the JSON-array key format, which are never read again
+export const clearLegacyTicketsCache = () => removeTicketCaches((key) => !key.startsWith('['));

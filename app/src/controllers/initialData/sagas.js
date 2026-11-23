@@ -31,6 +31,7 @@ import {
 } from 'controllers/plugins';
 import { createFetchPredicate } from 'controllers/fetch';
 import { getStorageItem } from 'common/utils';
+import { clearLegacyTicketsCache } from 'common/utils/ticketsCache';
 import { ERROR_UNAUTHORIZED } from 'common/utils/fetch';
 import { ERROR_CODE_ACCESS_DENIED, ERROR_CODE_NOT_FOUND } from 'common/constants/apiErrorCodes';
 import { setInitialDataReadyAction, setServiceAvailabilityAction } from './actionCreators';
@@ -46,6 +47,7 @@ const isTokenUnusable = ({ payload, meta }) =>
   meta?.errorCode === ERROR_CODE_NOT_FOUND;
 
 export function* fetchInitialData() {
+  clearLegacyTicketsCache();
   yield put(setTokenAction(getStorageItem(TOKEN_KEY) || DEFAULT_TOKEN));
   yield put(
     setServiceAvailabilityAction({

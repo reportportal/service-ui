@@ -16,6 +16,7 @@
 
 import {
   MAX_CACHED_TICKETS,
+  clearLegacyTicketsCache,
   clearTicketsCache,
   getCachedTicket,
   getTicketsStorageKey,
@@ -73,6 +74,19 @@ describe('ticketsCache', () => {
     clearTicketsCache();
 
     expect(localStorage.getItem(getTicketsStorageKey(5, 'proj'))).toBeNull();
+    expect(localStorage.getItem('5_proj_tickets')).toBeNull();
+    expect(localStorage.getItem('proj_tickets')).toBeNull();
+    expect(localStorage.getItem('5_settings')).toBe('{}');
+  });
+
+  it('clears only the ticket caches with the old key format', () => {
+    updateCachedTicket(getTicketsStorageKey(5, 'proj'), 'a', {});
+    updateCachedTicket('5_proj_tickets', 'a', {});
+    updateCachedTicket('proj_tickets', 'a', {});
+    localStorage.setItem('5_settings', '{}');
+    clearLegacyTicketsCache();
+
+    expect(localStorage.getItem(getTicketsStorageKey(5, 'proj'))).not.toBeNull();
     expect(localStorage.getItem('5_proj_tickets')).toBeNull();
     expect(localStorage.getItem('proj_tickets')).toBeNull();
     expect(localStorage.getItem('5_settings')).toBe('{}');
