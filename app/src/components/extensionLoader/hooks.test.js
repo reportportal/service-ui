@@ -14,6 +14,7 @@
  *  limitations under the License.
  */
 
+import PropTypes from 'prop-types';
 import { mount } from 'enzyme';
 import { useFederatedComponent } from './hooks';
 
@@ -23,18 +24,23 @@ jest.mock('./loadComponent', () => ({
 
 const SCOPE = 'loadedScope';
 
-const renderHook = (url) => {
-  const HookProbe = () => {
-    const { failed, Component } = useFederatedComponent(SCOPE, './module', url);
+const VALID_URL = 'https://plugins.example.com/remoteEntity.js';
 
-    return <div data-failed={failed} data-has-component={!!Component} />;
-  };
+const HookProbe = ({ url }) => {
+  const { failed, Component } = useFederatedComponent(SCOPE, './module', url);
 
-  return mount(<HookProbe />)
-    .update()
-    .find('div')
-    .props();
+  return <div data-failed={failed} data-has-component={!!Component} />;
 };
+HookProbe.propTypes = {
+  url: PropTypes.string,
+};
+HookProbe.defaultProps = {
+  url: null,
+};
+
+const probeProps = (wrapper) => wrapper.update().find('div').props();
+
+const renderHook = (url) => probeProps(mount(<HookProbe url={url} />));
 
 describe('useFederatedComponent with an already loaded scope', () => {
   beforeEach(() => {
@@ -53,7 +59,16 @@ describe('useFederatedComponent with an already loaded scope', () => {
   });
 
   test('loads the registered module for a valid URL', () => {
-    const props = renderHook('https://plugins.example.com/remoteEntity.js');
+    const props = renderHook(VALID_URL);
+
+    expect(props['data-failed']).toBe(false);
+    expect(props['data-has-component']).toBe(true);
+  });
+
+  test('clears the failure when an invalid URL is replaced by a valid one', () => {
+    const wrapper = mount(<HookProbe url={null} />);
+    wrapper.setProps({ url: VALID_URL });
+    const props = probeProps(wrapper);
 
     expect(props['data-failed']).toBe(false);
     expect(props['data-has-component']).toBe(true);

@@ -10,6 +10,8 @@ const useDynamicScript = (scope, url) => {
 
   React.useEffect(() => {
     if (loaded) {
+      setReady(true);
+      setFailed(false);
       return;
     }
 
