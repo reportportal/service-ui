@@ -28,8 +28,8 @@ export const getDeleteLaunchesResult = (items, response) => {
   if (!Array.isArray(deleted)) {
     return { ...result, failedItems: [], errorsText };
   }
-  const deletedIds = result.successIds.map(String);
-  const failedItems = items.filter((item) => !deletedIds.includes(String(item.id)));
+  const deletedIds = new Set(result.successIds.map(String));
+  const failedItems = items.filter((item) => !deletedIds.has(String(item.id)));
   return {
     ...result,
     successCount: items.length - failedItems.length,
