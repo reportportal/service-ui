@@ -1235,17 +1235,13 @@ export const ReducedIterationDetails = ({
                 </Button>
               </span>
               {showRerun && (
-                <span title={formatMessage(messages.rerunUnavailable)}>
-                  <Button
-                    variant="text"
-                    data-automation-id="rerunIterationButton"
-                    icon={<RerunIcon />}
-                    aria-description={formatMessage(messages.rerunUnavailable)}
-                    disabled
-                  >
-                    {formatMessage(messages.rerun)}
-                  </Button>
-                </span>
+                <Button
+                  variant="text"
+                  data-automation-id="rerunIterationButton"
+                  icon={<RerunIcon />}
+                >
+                  {formatMessage(messages.rerun)}
+                </Button>
               )}
               <LivePipelineSettingsButton pipelineId={iteration.pipelineId} fromIteration />
               <Button

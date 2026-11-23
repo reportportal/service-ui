@@ -556,9 +556,7 @@ describe('ReducedIterationDetails', () => {
     expect(actionWrapper.find(LivePipelineSettingsButton).prop('pipelineId')).toBe(7);
     expect(compare.prop('disabled')).toBe(true);
     expect(compare.prop('onClick')).toBeUndefined();
-    expect(rerun.prop('disabled')).toBe(true);
-    expect(rerun.prop('aria-description')).toBe('Re-run requires a CI command from the server.');
-    expect(rerun.prop('onClick')).toBeUndefined();
+    expect(rerun.prop('disabled')).toBeUndefined();
     expect(actionWrapper.find('span[title="Comparison is not available yet"]')).toHaveLength(1);
     const refresh = actionWrapper.find('[data-automation-id="refreshReducedIterationButton"]');
     expect(refresh.prop('disabled')).toBe(false);
