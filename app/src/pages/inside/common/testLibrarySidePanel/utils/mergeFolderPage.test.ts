@@ -46,4 +46,12 @@ describe('mergeFolderPage', () => {
       mergeFolderPage(partial, { content: [testCase(2)], page: page(2, 2) }, false, null),
     ).toEqual({ testCases: [testCase(1), testCase(2)], page: page(2, 2) });
   });
+
+  test('skips a page that a concurrent request for the same offset has already merged', () => {
+    const merged = { testCases: [testCase(1), testCase(2)], page: page(2, 3), isLoading: false };
+
+    expect(
+      mergeFolderPage(merged, { content: [testCase(2)], page: page(2, 3) }, false, null),
+    ).toEqual({});
+  });
 });

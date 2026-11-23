@@ -22,13 +22,16 @@ import { isFolderFullyCached } from './isFolderFullyCached';
 
 // Merges a fetched page into the latest cache entry. A folder batch fetch (checkbox, drop) may have
 // cached the complete folder while the page was in flight: a partial page must not replace it.
+// Two requests for the same offset may also be in flight: a page that is already merged is skipped.
 export const mergeFolderPage = (
   current: FolderTestCases,
   response: TestCasesResponse,
   isFirstPage: boolean,
   testPlanTestCases: TestCase[] | null,
 ): Partial<FolderTestCases> => {
-  if (isFolderFullyCached(current)) {
+  const isPageMerged = current.page != null && response.page.number <= current.page.number;
+
+  if (isFolderFullyCached(current) || isPageMerged) {
     return {};
   }
 
