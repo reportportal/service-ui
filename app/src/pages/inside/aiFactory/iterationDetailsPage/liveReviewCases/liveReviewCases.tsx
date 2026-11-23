@@ -16,9 +16,13 @@
 
 import { useEffect, useMemo, useState } from 'react';
 import { useIntl } from 'react-intl';
+import { useSelector } from 'react-redux';
+import Link from 'redux-first-router-link';
 import { Button, SystemMessage } from '@reportportal/ui-kit';
 
 import { createClassnames } from 'common/utils';
+import { TEST_CASE_LIBRARY_PAGE, urlOrganizationAndProjectSelector } from 'controllers/pages';
+import { ProjectDetails } from 'pages/organization/constants';
 
 import {
   getLiveLibraryCases,
@@ -53,6 +57,9 @@ export const LiveReviewCases = ({
   refreshVersion,
 }: LiveReviewCasesProps) => {
   const { formatMessage } = useIntl();
+  const { organizationSlug, projectSlug } = useSelector(
+    urlOrganizationAndProjectSelector,
+  ) as ProjectDetails;
   const scope = useMemo(() => ({ projectKey, iterationId }), [projectKey, iterationId]);
   const [selection, setSelection] = useState<{ scope: object; page: number }>();
   const [state, setState] = useState<ReviewPageState>();
@@ -101,8 +108,26 @@ export const LiveReviewCases = ({
     return () => controller.abort();
   }, [projectKey, iterationId, page, request, scope]);
 
+  const libraryFolderId = results?.cases.find(({ folderId }) => folderId !== undefined)?.folderId;
+
   return (
     <section className={cx('live-review-cases')} data-automation-id="liveReviewCases">
+      {libraryFolderId !== undefined && (
+        <Link
+          className={cx('live-review-cases__library-link')}
+          to={{
+            type: TEST_CASE_LIBRARY_PAGE,
+            payload: {
+              organizationSlug,
+              projectSlug,
+              testCasePageRoute: `folder/${libraryFolderId}`,
+            },
+            query: { iteration: String(iterationId) },
+          }}
+        >
+          {formatMessage(messages.viewInLibrary)}
+        </Link>
+      )}
       <div className={cx('live-review-cases__heading')}>
         <h3>{formatMessage(messages.title)}</h3>
         <Button

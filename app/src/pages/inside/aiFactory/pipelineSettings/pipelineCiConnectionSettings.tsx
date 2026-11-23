@@ -83,10 +83,18 @@ const fieldMessages = {
   },
   models: {
     label: messages.ciModels,
-    error: messages.ciOrderedListError,
+    error: messages.ciModelsError,
     help: messages.ciOrderedListHint,
   },
 };
+
+const placeholderByField: Partial<Record<keyof typeof fieldMessages, string>> = {
+  generation: 'create_test_cases',
+  fix: 'fix_test_case',
+  models: 'auto, model-A, model-B',
+};
+
+const optionalFields = new Set<keyof typeof fieldMessages>(['generation', 'fix', 'models']);
 
 const fieldsByKind: Record<PipelineCiFormKind, Array<keyof typeof fieldMessages>> = {
   generation: ['generation', 'fix', 'models'],
@@ -170,11 +178,12 @@ const CiFields = ({
           name={name}
           data-automation-id={`pipelineCiField-${name}`}
           title={name === 'repository' ? draft.repository || undefined : undefined}
+          placeholder={placeholderByField[name]}
           helpText={hint ? formatMessage(hint) : undefined}
           classNameHelpText={cx('ci-settings__note')}
           error={error}
           touched={Boolean(error)}
-          aria-required
+          aria-required={!optionalFields.has(name)}
           defaultWidth={false}
           value={draft[name]}
           disabled={disabled}
@@ -535,9 +544,11 @@ export const PipelineCiConnectionSettings = ({
               >
                 {formatMessage(messages.ciSave)}
               </Button>
-              <p className={cx('ci-settings__note', 'ci-settings__actions-note')}>
-                {formatMessage(hasChanges ? messages.ciSaveBeforeTest : messages.ciTestHint)}
-              </p>
+              {hasChanges && (
+                <p className={cx('ci-settings__note', 'ci-settings__actions-note')}>
+                  {formatMessage(messages.ciSaveBeforeTest)}
+                </p>
+              )}
             </div>
             <CiVerdict check={verdict ?? settings} isTestResult={Boolean(verdict)} />
             {feedback && (

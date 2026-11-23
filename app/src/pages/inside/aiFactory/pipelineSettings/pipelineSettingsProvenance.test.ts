@@ -81,9 +81,9 @@ describe('pipeline settings provenance', () => {
     const openingState = createState('project_a', pipeline);
     const provenance = getPipelineSettingsProvenance(openingState, pipeline);
 
-    expect(
-      matchesPipelineSettingsProvenance(currentState, pipeline, provenance ?? undefined),
-    ).toBe(false);
+    expect(matchesPipelineSettingsProvenance(currentState, pipeline, provenance ?? undefined)).toBe(
+      false,
+    );
   });
 
   test('does not create provenance for unresolved, live, or project-mismatched catalogs', () => {

@@ -59,26 +59,22 @@ export const PipelineSettingsModalContent = ({
   );
   const { canManagePipelineSettings } = useUserPermissions();
   const [isSaving, setIsSaving] = useState(false);
-  const [autoReadyEnabled, setAutoReadyEnabled] = useState(
-    Boolean(pipeline.settings?.autoReady),
-  );
-  const [thresholdValue, setThresholdValue] = useState(
-    String(pipeline.settings?.threshold ?? ''),
-  );
+  const [autoReadyEnabled, setAutoReadyEnabled] = useState(Boolean(pipeline.settings?.autoReady));
+  const [thresholdValue, setThresholdValue] = useState(String(pipeline.settings?.threshold ?? ''));
 
   const isGeneration = pipeline.type === PipelineType.GENERATION;
   const sourceProjectKey = provenance?.projectKey;
   const canEdit = Boolean(
     isGeneration &&
-      pipeline.settings &&
-      pipeline.settings.editable !== false &&
-      hasMatchingProvenance &&
-      canManagePipelineSettings,
+    pipeline.settings &&
+    pipeline.settings.editable !== false &&
+    hasMatchingProvenance &&
+    canManagePipelineSettings,
   );
   const threshold = parseThreshold(thresholdValue);
   const hasChanges = Boolean(
     pipeline.settings &&
-      (autoReadyEnabled !== pipeline.settings.autoReady || threshold !== pipeline.settings.threshold),
+    (autoReadyEnabled !== pipeline.settings.autoReady || threshold !== pipeline.settings.threshold),
   );
 
   const close = () => {

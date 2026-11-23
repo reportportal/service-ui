@@ -18,6 +18,19 @@
     font-weight: 400;
   }
 
+  &__library-link {
+    align-self: flex-start;
+    display: inline-flex;
+    align-items: center;
+    min-height: 28px;
+    padding: 0 12px;
+    border: 1px solid currentColor;
+    border-radius: 3px;
+    color: var(--rp-ui-base-topaz);
+    font-size: 12px;
+    text-decoration: none;
+  }
+
   &__scroll {
     overflow-x: auto;
     scrollbar-width: thin;

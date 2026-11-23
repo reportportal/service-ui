@@ -167,12 +167,15 @@ const renderGenerationHighlights = (
   stage: ReducedPipelineDetailStage,
   stageKind: GenerationStageKind | undefined,
 ) => {
-  const highlights = stageKind
-    ? stage.attributes?.filter(
-        (attribute) =>
-          attribute.type === 'META' && attribute.key !== 'tokens' && isVisibleAttribute(attribute),
-      )
-    : [];
+  const highlights =
+    stageKind && stageKind !== 'upload'
+      ? stage.attributes?.filter(
+          (attribute) =>
+            attribute.type === 'META' &&
+            attribute.key !== 'tokens' &&
+            isVisibleAttribute(attribute),
+        )
+      : [];
   return highlights?.length ? (
     <dl className={cx('generation-highlights')} data-automation-id="generationStageHighlights">
       {highlights.map((attribute) => (
@@ -440,7 +443,9 @@ const renderReducedStageSection = (
                                 type="button"
                                 className={cx('reduced-section__grade-toggle')}
                                 aria-expanded={isExpanded}
-                                aria-label={formatMessage(messages.gradeCaseDetails, { name: value })}
+                                aria-label={formatMessage(messages.gradeCaseDetails, {
+                                  name: value,
+                                })}
                                 onClick={() => onToggleDetails(detailsKey)}
                               >
                                 <ChevronDownDropdownIcon aria-hidden="true" />

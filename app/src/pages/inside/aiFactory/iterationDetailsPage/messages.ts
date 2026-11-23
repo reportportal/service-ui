@@ -532,7 +532,7 @@ export const messages = defineMessages({
   },
   reviewColumnMadeReadyBy: {
     id: 'IterationDetailsPage.reviewColumnMadeReadyBy',
-    defaultMessage: 'Made Ready by',
+    defaultMessage: 'Made ready by',
   },
   reviewColumnUnsentComments: {
     id: 'IterationDetailsPage.reviewColumnUnsentComments',

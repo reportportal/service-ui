@@ -38,6 +38,17 @@ jest.mock('common/utils', () => ({
     (...names: string[]) =>
       names.filter(Boolean).join(' '),
 }));
+jest.mock('react-redux', () => ({
+  useSelector: () => ({ organizationSlug: 'org', projectSlug: 'project' }),
+}));
+jest.mock('redux-first-router-link', () => ({
+  __esModule: true,
+  default: ({ children }: { children?: React.ReactNode }) => <a href="/library">{children}</a>,
+}));
+jest.mock('controllers/pages', () => ({
+  TEST_CASE_LIBRARY_PAGE: 'TEST_CASE_LIBRARY_PAGE',
+  urlOrganizationAndProjectSelector: jest.fn(),
+}));
 jest.mock('../stagePanels/caseLink', () => ({
   CaseLink: ({ name, testCaseId }: { name: string; testCaseId: number }) => (
     <a href={`/case/${testCaseId}`}>{name}</a>
@@ -205,7 +216,7 @@ describe('LiveReviewCases', () => {
     await flush();
     wrapper?.update();
 
-    expect(container.querySelector('th:last-child')?.textContent).toBe('Made Ready by');
+    expect(container.querySelector('th:last-child')?.textContent).toBe('Made ready by');
     expect(
       Array.from(container.querySelectorAll('tbody td:last-child'), (cell) => cell.textContent),
     ).toEqual(['Ann Smith', 'user2', 'Auto-Ready', '—', '—', '—', '—']);

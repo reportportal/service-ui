@@ -177,15 +177,13 @@ export const requiresReplacementCredential = (
 
 export const getCiDraftErrors = (draft: PipelineCiDraft, kind: PipelineCiFormKind) => ({
   repository: !getRepositoryOrigin(draft.repository.trim()),
-  generation: kind === 'generation' && !draft.generation.trim(),
-  fix: kind === 'generation' && !draft.fix.trim(),
+  generation: false,
+  fix: false,
   automation: kind === 'automation' && !draft.automation.trim(),
   jobs: kind === 'other' && !Object.keys(parseCustomJobs(draft.jobs) ?? {}).length,
   environments:
     !splitNames(draft.environments).length || hasDuplicates(splitNames(draft.environments)),
-  models:
-    (kind === 'generation' && !splitNames(draft.models).length) ||
-    (kind === 'generation' && hasDuplicates(splitNames(draft.models))),
+  models: kind === 'generation' && hasDuplicates(splitNames(draft.models)),
 });
 
 const makeJobMap = (
@@ -194,7 +192,14 @@ const makeJobMap = (
   kind: PipelineCiFormKind,
 ) => {
   if (kind === 'generation') {
-    return { ...settings.jobs, generation: draft.generation.trim(), fix: draft.fix.trim() };
+    const otherJobs = { ...settings.jobs };
+    delete otherJobs.generation;
+    delete otherJobs.fix;
+    return {
+      ...otherJobs,
+      ...(draft.generation.trim() ? { generation: draft.generation.trim() } : {}),
+      ...(draft.fix.trim() ? { fix: draft.fix.trim() } : {}),
+    };
   }
   if (kind === 'automation') {
     return { ...settings.jobs, automation: draft.automation.trim() };

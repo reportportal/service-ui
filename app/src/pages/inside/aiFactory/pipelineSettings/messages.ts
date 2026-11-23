@@ -223,6 +223,10 @@ export const messages = defineMessages({
     id: 'PipelineSettings.ciOrderedListError',
     defaultMessage: 'Enter at least one value and remove duplicates.',
   },
+  ciModelsError: {
+    id: 'PipelineSettings.ciModelsError',
+    defaultMessage: 'Remove duplicate values.',
+  },
   ciSave: { id: 'PipelineSettings.ciSave', defaultMessage: 'Save' },
   ciSaved: {
     id: 'PipelineSettings.ciSaved',
@@ -233,11 +237,6 @@ export const messages = defineMessages({
     defaultMessage: 'Failed to save the CI connection settings.',
   },
   ciTest: { id: 'PipelineSettings.ciTest', defaultMessage: 'Test connection' },
-  ciTestHint: {
-    id: 'PipelineSettings.ciTestHint',
-    defaultMessage:
-      'Test connection checks the saved repository and credential. Job names are not verified.',
-  },
   ciSaveBeforeTest: {
     id: 'PipelineSettings.ciSaveBeforeTest',
     defaultMessage: 'Save your changes before testing the connection.',

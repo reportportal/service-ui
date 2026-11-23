@@ -54,7 +54,10 @@ jest.mock('react-redux', () => ({
   useStore: jest.fn(),
 }));
 jest.mock('common/utils', () => ({
-  createClassnames: () => (...classNames: string[]) => classNames.filter(Boolean).join(' '),
+  createClassnames:
+    () =>
+    (...classNames: string[]) =>
+      classNames.filter(Boolean).join(' '),
   fetch: jest.fn(),
 }));
 jest.mock('controllers/aiFactory/pipelines', () => {
@@ -195,20 +198,12 @@ describe('pipeline settings', () => {
 
   test('PATCHes LP5 using live field names and refreshes the pipeline list', async () => {
     fetchMock.mockResolvedValue({});
-    const wrapper = renderModal(
-      generationPipeline,
-      true,
-      'mock',
-      1,
-      'project_a',
-      7,
-      'project_a',
-    );
+    const wrapper = renderModal(generationPipeline, true, 'mock', 1, 'project_a', 7, 'project_a');
 
     act(() => {
-      const onChange = wrapper.find(Toggle).prop('onChange') as (
-        event: { target: { checked: boolean } },
-      ) => void;
+      const onChange = wrapper.find(Toggle).prop('onChange') as (event: {
+        target: { checked: boolean };
+      }) => void;
       onChange({ target: { checked: false } });
     });
 
@@ -234,9 +229,9 @@ describe('pipeline settings', () => {
     const wrapper = renderModal();
 
     act(() => {
-      const onChange = wrapper.find(FieldText).prop('onChange') as (
-        event: { target: { value: string } },
-      ) => void;
+      const onChange = wrapper.find(FieldText).prop('onChange') as (event: {
+        target: { value: string };
+      }) => void;
       onChange({ target: { value: '101' } });
     });
 
@@ -279,19 +274,11 @@ describe('pipeline settings', () => {
   });
 
   test('stays read-only and refuses a captured save after navigation to another catalog', async () => {
-    const wrapper = renderModal(
-      generationPipeline,
-      true,
-      'mock',
-      9,
-      'project_a',
-      11,
-      'project_a',
-    );
+    const wrapper = renderModal(generationPipeline, true, 'mock', 9, 'project_a', 11, 'project_a');
     act(() => {
-      const onChange = wrapper.find(Toggle).prop('onChange') as (
-        event: { target: { checked: boolean } },
-      ) => void;
+      const onChange = wrapper.find(Toggle).prop('onChange') as (event: {
+        target: { checked: boolean };
+      }) => void;
       onChange({ target: { checked: false } });
     });
     const capturedSave = (wrapper.find(Modal).prop('okButton') as ModalButtonProps).onClick;

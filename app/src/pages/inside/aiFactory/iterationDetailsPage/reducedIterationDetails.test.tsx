@@ -580,9 +580,9 @@ describe('ReducedIterationDetails', () => {
     const restrictedActions = wrapper
       .find('PageHeaderWithBreadcrumbsAndActions')
       .prop('actions') as ReactElement;
-    expect(shallow(restrictedActions).find('[data-automation-id="rerunIterationButton"]')).toHaveLength(
-      0,
-    );
+    expect(
+      shallow(restrictedActions).find('[data-automation-id="rerunIterationButton"]'),
+    ).toHaveLength(0);
   });
 
   test('keeps the last details visible when automatic refresh fails', () => {
@@ -691,9 +691,12 @@ describe('ReducedIterationDetails', () => {
       expect(wrapper.find(`[data-automation-id="live-${kind}-panel"]`)).toHaveLength(1);
       const results = wrapper.find(`[data-automation-id="live-${kind}-results"]`);
       expect(results).toHaveLength(1);
-      expect(wrapper.find('[data-automation-id="generationStageHighlights"]').text()).toContain(
-        'SourceBackend',
-      );
+      const highlights = wrapper.find('[data-automation-id="generationStageHighlights"]');
+      if (kind === 'upload') {
+        expect(highlights).toHaveLength(0);
+      } else {
+        expect(highlights.text()).toContain('SourceBackend');
+      }
       expect(results.text()).toContain(caseLabel);
 
       const libraryLink = results.find('UploadReportLibraryLink');
