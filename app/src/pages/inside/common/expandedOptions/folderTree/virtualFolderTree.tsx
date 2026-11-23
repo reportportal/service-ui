@@ -227,6 +227,7 @@ export const VirtualFolderTree = ({
               nextNodeDepth={nextNodeDepth}
               enableDragAndDrop={enableDragAndDrop}
               hasHiddenActiveDescendant={folder.folder.id === hiddenActiveFolderIndicatorId}
+              isPending={pendingFolderIds?.includes(folder.folder.id)}
               style={rowStyle}
               onFolderClick={onFolderClick}
               setAllTestCases={setAllTestCases}
