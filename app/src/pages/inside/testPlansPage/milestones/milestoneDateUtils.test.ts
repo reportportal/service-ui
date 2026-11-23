@@ -1,3 +1,7 @@
+/**
+ * @jest-environment ./test/newYorkTimezoneEnvironment.js
+ */
+
 /*
  * Copyright 2026 EPAM Systems
  *
@@ -24,14 +28,8 @@ import {
 import { daysLeftUntil } from './milestonesTable/milestoneUtils';
 
 describe('milestoneDateUtils (west of UTC)', () => {
-  const originalTz = process.env.TZ;
-
-  beforeAll(() => {
-    process.env.TZ = 'America/New_York';
-  });
-
-  afterAll(() => {
-    process.env.TZ = originalTz;
+  test('runs in a timezone west of UTC', () => {
+    expect(new Date(2026, 2, 10).getTimezoneOffset()).toBe(240);
   });
 
   test('reads the stored date by its UTC calendar day', () => {
