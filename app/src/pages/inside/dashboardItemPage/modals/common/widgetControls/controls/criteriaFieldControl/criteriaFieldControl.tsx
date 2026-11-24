@@ -20,8 +20,12 @@ import { FieldProvider } from 'components/fields/fieldProvider';
 import { commonValidators } from 'common/utils/validation';
 import { RequiredDropdownControl } from '../requiredDropdownControl';
 
-type CriteriaOptions = NonNullable<ComponentProps<typeof RequiredDropdownControl>['options']>;
+type DropdownControlProps = ComponentProps<typeof RequiredDropdownControl>;
+type CriteriaOptions = NonNullable<DropdownControlProps['options']>;
 
+// Defect type options come flat: a group option carries 'groupId' and its types carry 'groupRef'.
+// The dropdown draws nested checkboxes from 'children', so the types are moved under their group.
+// Options without groups are returned as they are.
 const nestGroupedOptions = (options: CriteriaOptions): CriteriaOptions => {
   const groups = new Map<string, CriteriaOptions[number]>();
   const result: CriteriaOptions = [];
@@ -36,8 +40,11 @@ const nestGroupedOptions = (options: CriteriaOptions): CriteriaOptions => {
       groups.set(groupId, nestedGroup);
       result.push(nestedGroup);
     } else if (group) {
+      // 'groupRef' makes the dropdown add its own label padding, which widens the gap after the
+      // checkbox; the nesting itself already gives the type its indent
       const type = omit(option, ['groupRef']) as CriteriaOptions[number];
 
+      // a long name is cut with an ellipsis, so keep the full one in the tooltip
       group.children?.push({ title: type.label, ...type });
     } else {
       result.push(option);
@@ -45,6 +52,34 @@ const nestGroupedOptions = (options: CriteriaOptions): CriteriaOptions => {
   });
 
   return result;
+};
+
+const CriteriaDropdown = ({ options = [], value, onChange, ...rest }: DropdownControlProps) => {
+  const groupValues = useMemo(
+    () => new Set(options.filter(({ children }) => children?.length).map(({ value: v }) => v)),
+    [options],
+  );
+
+  const handleChange: DropdownControlProps['onChange'] = (nextValue) => {
+    if (!Array.isArray(nextValue) || !nextValue.length || !Array.isArray(value)) {
+      onChange?.(nextValue);
+      return;
+    }
+
+    const keptTotals = value.filter((item) => groupValues.has(item) && !nextValue.includes(item));
+
+    onChange?.([...nextValue, ...keptTotals]);
+  };
+
+  return (
+    <RequiredDropdownControl
+      {...rest}
+      options={options}
+      value={value}
+      onChange={handleChange}
+      includeGroupValue
+    />
+  );
 };
 
 interface CriteriaFieldControlProps {
@@ -76,13 +111,12 @@ export const CriteriaFieldControl = ({
       parse={parse}
       format={format}
     >
-      <RequiredDropdownControl
+      <CriteriaDropdown
         label={label}
         options={nestedOptions}
         disabled={disabled}
         multiSelect
         isOptionAllVisible
-        includeGroupValue
       />
     </FieldProvider>
   );
