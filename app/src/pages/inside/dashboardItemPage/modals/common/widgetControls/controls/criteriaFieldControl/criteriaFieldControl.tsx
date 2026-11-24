@@ -14,14 +14,42 @@
  * limitations under the License.
  */
 
-import { ComponentProps } from 'react';
+import { ComponentProps, useMemo } from 'react';
+import { omit } from 'es-toolkit';
 import { FieldProvider } from 'components/fields/fieldProvider';
 import { commonValidators } from 'common/utils/validation';
 import { RequiredDropdownControl } from '../requiredDropdownControl';
 
+type CriteriaOptions = NonNullable<ComponentProps<typeof RequiredDropdownControl>['options']>;
+
+const nestGroupedOptions = (options: CriteriaOptions): CriteriaOptions => {
+  const groups = new Map<string, CriteriaOptions[number]>();
+  const result: CriteriaOptions = [];
+
+  options.forEach((option) => {
+    const { groupId, groupRef } = option as { groupId?: string; groupRef?: string };
+    const group = groupRef ? groups.get(groupRef) : undefined;
+
+    if (groupId) {
+      const nestedGroup = { ...option, children: [] };
+
+      groups.set(groupId, nestedGroup);
+      result.push(nestedGroup);
+    } else if (group) {
+      const type = omit(option, ['groupRef']) as CriteriaOptions[number];
+
+      group.children?.push({ title: type.label, ...type });
+    } else {
+      result.push(option);
+    }
+  });
+
+  return result;
+};
+
 interface CriteriaFieldControlProps {
   label: string;
-  options: ComponentProps<typeof RequiredDropdownControl>['options'];
+  options: CriteriaOptions;
   errorMessage?: string;
   validate?: (value: unknown) => string | false | undefined;
   disabled?: boolean;
@@ -38,19 +66,24 @@ export const CriteriaFieldControl = ({
   disabled = false,
   parse,
   format,
-}: CriteriaFieldControlProps) => (
-  <FieldProvider
-    name="contentParameters.contentFields"
-    validate={validate ?? commonValidators.createWidgetContentFieldsValidator(errorMessage)}
-    parse={parse}
-    format={format}
-  >
-    <RequiredDropdownControl
-      label={label}
-      options={options}
-      disabled={disabled}
-      multiSelect
-      isOptionAllVisible
-    />
-  </FieldProvider>
-);
+}: CriteriaFieldControlProps) => {
+  const nestedOptions = useMemo(() => nestGroupedOptions(options), [options]);
+
+  return (
+    <FieldProvider
+      name="contentParameters.contentFields"
+      validate={validate ?? commonValidators.createWidgetContentFieldsValidator(errorMessage)}
+      parse={parse}
+      format={format}
+    >
+      <RequiredDropdownControl
+        label={label}
+        options={nestedOptions}
+        disabled={disabled}
+        multiSelect
+        isOptionAllVisible
+        includeGroupValue
+      />
+    </FieldProvider>
+  );
+};
