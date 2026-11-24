@@ -25,7 +25,17 @@
 
 .popup-reference {
   position: absolute;
-  width: 100px;
+  // flex keeps the inline-block popover wrapper on the click point
+  // instead of letting it sit on a text baseline a few px lower
+  display: flex;
+  // nudge the popup 8px up and 2px left of the click point
+  margin: -8px 0 0 -2px;
+  width: 1px;
+  height: 1px;
+}
+
+.popup-anchor {
+  width: 1px;
   height: 1px;
 }
 

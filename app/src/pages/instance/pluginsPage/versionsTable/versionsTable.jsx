@@ -114,6 +114,14 @@ const messages = defineMessages({
     id: 'VersionsTable.incompatibleNoRelease',
     defaultMessage: "This version doesn't run on the release this instance uses.",
   },
+  cappedByMarketplace: {
+    id: 'VersionsTable.cappedByMarketplace',
+    defaultMessage: 'The marketplace limits this version to ReportPortal {ceiling}. Their reason: {reason}',
+  },
+  cappedByMarketplaceNoReason: {
+    id: 'VersionsTable.cappedByMarketplaceNoReason',
+    defaultMessage: 'The marketplace limits this version to ReportPortal {ceiling}.',
+  },
   blockedWithReason: {
     id: 'VersionsTable.blockedWithReason',
     defaultMessage:
@@ -204,7 +212,6 @@ const ACTION_MESSAGE = {
 export const VersionsTable = ({
   versions,
   installedVersion = null,
-  latestVersion = null,
   productVersion = null,
   changelog = null,
   onUseVersion = null,
@@ -214,21 +221,39 @@ export const VersionsTable = ({
 }) => {
   const { formatMessage, formatDate } = useIntl();
   const ordered = sortVersionsNewestFirst(versions);
+  // The version on offer, as service-api walks it: the newest row above the installed one that is
+  // known to run here and is not blocked. An undecided verdict is not offered, as service-api will
+  // not offer or install it. When the newest build does not run here this is an older one, so it is
+  // not simply the top row.
+  const offeredVersion = installedVersion
+    ? ordered.find(
+        (entry) =>
+          compareVersions(entry.version, installedVersion) > 0
+          && entry.compatible === true
+          && !entry.blocked,
+      )?.version || null
+    : null;
   // FR-A-04 asks the detail page to expose the changelog of the version on offer without the reader
-  // having to find it, so the newer row opens on load. Only when there is one: with nothing
-  // installed, or already on the newest build, no row is more interesting than any other and the
-  // table starts closed.
+  // having to find it, so that row opens on load. With nothing on offer the newest build still
+  // opens when it is above the installed one; with nothing installed, or already on the newest
+  // build, no row is more interesting than any other and the table starts closed.
   const newerThanInstalled =
-    installedVersion && ordered.length > 0 && compareVersions(ordered[0].version, installedVersion) > 0
+    offeredVersion
+    || (installedVersion && ordered.length > 0 && compareVersions(ordered[0].version, installedVersion) > 0
       ? ordered[0].version
-      : null;
+      : null);
   const [expanded, setExpanded] = useState(newerThanInstalled);
   const [showingAll, setShowingAll] = useState(false);
   // A plugin with two dozen versions would otherwise push the uninstall block and the docs footer
   // far below the fold, so the page shows the most recent handful and offers the rest. Nothing in
   // the contract caps the list — the registry sends every version — so this is presentation only.
   const truncated = !showingAll && ordered.length > MAX_ROWS_BEFORE_TRUNCATION;
-  const shown = truncated ? ordered.slice(0, MAX_ROWS_BEFORE_TRUNCATION) : ordered;
+  // The row on offer opens on load, so it must be on screen: when ten or more newer builds are
+  // ineligible it sits below the cut, and the table reveals just enough rows to reach it.
+  const offeredIndex = ordered.findIndex((entry) => entry.version === offeredVersion);
+  const shown = truncated
+    ? ordered.slice(0, Math.max(MAX_ROWS_BEFORE_TRUNCATION, offeredIndex + 1))
+    : ordered;
 
   if (versions.length === 0) {
     return null;
@@ -250,6 +275,29 @@ export const VersionsTable = ({
     return formatMessage(BOUND_MESSAGE[bound.operator], { version: bound.version, productVersion });
   };
 
+  // the ceiling as words, like the bound sentences above: `<26.0` is "before 26.0", `<=26.0` is
+  // "26.0 or earlier"
+  const plainCeiling = (ceiling) => {
+    const match = /^\s*(<=?)\s*(\S+)\s*$/.exec(ceiling);
+    if (!match) {
+      return ceiling;
+    }
+    return match[1] === '<=' ? `${match[2]} or earlier` : `before ${match[2]}`;
+  };
+
+  // the operator's cap is why `requires` is narrower than the author declared, so it goes with
+  // the verdict wherever one is shown, and stands alone on a version it does not affect here
+  const cappedNote = (entry) =>
+    entry.ceiling
+      ? formatMessage(
+          entry.ceilingReason ? messages.cappedByMarketplace : messages.cappedByMarketplaceNoReason,
+          { ceiling: plainCeiling(entry.ceiling), reason: entry.ceilingReason },
+        )
+      : null;
+
+  const incompatibleTooltip = (entry) =>
+    [incompatibleReason(entry), cappedNote(entry)].filter(Boolean).join(' ');
+
   const blockedReason = (entry) => {
     if (!entry.blockedAt) {
       return formatMessage(messages.blockedUndated);
@@ -261,12 +309,13 @@ export const VersionsTable = ({
       : formatMessage(messages.blockedOn, { blockedAt });
   };
 
-  const advisoryReason = ({ advisory }) => {
+  const advisoryReason = ({ advisory, version }) => {
     const common = { severity: advisory.severity, attachedAt: day(advisory.attachedAt) };
 
-    // nothing to move to when the advisory is on the newest build there is
-    return latestVersion && latestVersion !== installedVersion
-      ? formatMessage(messages.advisory, { ...common, latestVersion })
+    // nothing to move to when no build newer than this one runs here: the offered version itself
+    // is not an upgrade from the row that is that version
+    return offeredVersion && compareVersions(offeredVersion, version) > 0
+      ? formatMessage(messages.advisory, { ...common, latestVersion: offeredVersion })
       : formatMessage(messages.advisoryNoUpgrade, common);
   };
 
@@ -311,15 +360,15 @@ export const VersionsTable = ({
     );
   };
 
+  let defaultDescription = formatMessage(messages.description);
+  if (truncated) {
+    defaultDescription = formatMessage(messages.descriptionTruncated, { shown: shown.length });
+  }
+
   return (
     <section className={cx('versions-table')} data-automation-id="pluginVersions">
       <h3 className={cx('header')}>{formatMessage(messages.header)}</h3>
-      <p className={cx('description')}>
-        {description ||
-          (truncated
-            ? formatMessage(messages.descriptionTruncated, { shown: shown.length })
-            : formatMessage(messages.description))}
-      </p>
+      <p className={cx('description')}>{description || defaultDescription}</p>
       <div className={cx('columns')} data-automation-id="versionsColumns">
         <span className={cx('column')}>{formatMessage(messages.columnVersion)}</span>
         <span className={cx('column')}>{formatMessage(messages.columnReleased)}</span>
@@ -361,7 +410,14 @@ export const VersionsTable = ({
                   <VersionMark
                     tone={VERSION_MARK_TONES.INCOMPATIBLE}
                     automationId="incompatibleVersionMark"
-                    tooltipContent={incompatibleReason(entry)}
+                    tooltipContent={incompatibleTooltip(entry)}
+                  />
+                )}
+                {entry.compatible !== false && entry.ceiling && (
+                  <VersionMark
+                    tone={VERSION_MARK_TONES.NEUTRAL}
+                    automationId="cappedVersionMark"
+                    tooltipContent={cappedNote(entry)}
                   />
                 )}
                 {entry.advisory && (
@@ -421,6 +477,9 @@ VersionsTable.propTypes = {
       compatible: PropTypes.bool,
       /** The range the version declares, quoted in the reason. */
       requires: PropTypes.string,
+      /** The operator's cap on the range, and the reason given for it. */
+      ceiling: PropTypes.string,
+      ceilingReason: PropTypes.string,
       advisory: PropTypes.shape({
         severity: PropTypes.string,
         text: PropTypes.string,
@@ -430,8 +489,6 @@ VersionsTable.propTypes = {
   ).isRequired,
   /** The version this instance runs, or null when the plugin is not installed. */
   installedVersion: PropTypes.string,
-  /** The newest published version, named when advising a move off an advisory. */
-  latestVersion: PropTypes.string,
   /** The release this instance reports, quoted when explaining a refusal. */
   productVersion: PropTypes.string,
   /** Release notes, which the wire carries for one version only. */

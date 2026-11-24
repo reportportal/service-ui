@@ -69,10 +69,7 @@
 
     &--disabled {
       cursor: default;
-
-      div:first-child {
-        opacity: 0.3;
-      }
+      opacity: 0.3;
 
       &:hover,
       &:active,
@@ -119,5 +116,32 @@
     align-items: center;
     justify-content: center;
     padding: 8px 16px;
+  }
+
+  &--compact {
+    min-width: 123px;
+    max-width: 480px;
+
+    .popover-control__item-button {
+      align-items: flex-start;
+      column-gap: 8px;
+      padding: 8px 16px;
+      font-family: var(--rp-ui-base-font-family);
+      font-weight: var(--rp-ui-base-fw-regular);
+      line-height: 20px;
+      letter-spacing: 0;
+
+      svg {
+        flex-shrink: 0;
+        width: 16px;
+        height: 16px;
+        margin-top: 2px;
+
+        // the ui-kit icons hardcode their fill
+        path {
+          fill: var(--rp-ui-base-almost-black);
+        }
+      }
+    }
   }
 }

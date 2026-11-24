@@ -20,8 +20,9 @@ import classNames from 'classnames/bind';
 import isEqual from 'fast-deep-equal';
 import { useDispatch, useSelector } from 'react-redux';
 import { useIntl } from 'react-intl';
+import { FilterOutlineIcon, SearchIcon } from '@reportportal/ui-kit';
 import { NoDataAvailableMaterializedView } from 'components/widgets/multiLevelWidgets/common/noDataAvailableMaterializedView';
-import { VirtualPopup } from 'components/main/virtualPopup';
+import { PopoverControl } from 'pages/common/popoverControl';
 import { EChart } from 'components/widgets/common/echarts';
 import { urlOrganizationAndProjectSelector } from 'controllers/pages';
 import {
@@ -35,14 +36,18 @@ import { SCREEN_XS_MAX } from 'common/constants/screenSizeVariables';
 import { PASSED, FAILED, SKIPPED, INTERRUPTED } from 'common/constants/testStatuses';
 import { formatAttribute } from 'common/utils/attributeUtils';
 import { BEFORE_AFTER_METHOD_TYPES_SEQUENCE } from 'common/constants/methodTypes';
-import { STATE_READY, DEFECTS, TOTAL_KEY } from 'components/widgets/common/constants';
-import SearchIcon from 'common/img/search-icon-inline.svg';
-import FiltersIcon from 'common/img/filters-icon-inline.svg';
+import {
+  STATE_READY,
+  STATE_RENDERING,
+  DEFECTS,
+  TOTAL_KEY,
+} from 'components/widgets/common/constants';
+import { WidgetStateMessage } from 'pages/inside/dashboardItemPage/widgetsGrid/widget/widgetStateMessage';
 import { getChartColor } from 'components/widgets/common/chartColors';
 import { getOption, getStackSeriesIds } from './config/getOption';
 import { EXECUTION_FIELDS, getDefectFields } from './config/utils';
 import { CumulativeChartLegend } from './legend/cumulativeChartLegend';
-import { ActionsPopup } from './actionsPopup';
+import { messages } from './messages';
 import {
   getDefectTypeLocators,
   getItemNameConfig,
@@ -54,7 +59,6 @@ const cx = classNames.bind(styles);
 
 const LEGEND_HEIGHT = 44;
 const PRINTED_LEGEND_HEIGHT = 80;
-const ACTIONS_POPUP_Z_INDEX = 9999999;
 
 const getSelectedStatus = (statKey) => {
   if (!statKey) {
@@ -298,20 +302,18 @@ export const CumulativeTrendChart = ({
   const getPopupActionItems = useCallback(
     () => [
       {
-        id: 'drillDown',
-        icon: SearchIcon,
-        title: 'Drill down',
+        label: formatMessage(messages.drillDown),
+        icon: <SearchIcon />,
         onClick: drillDown,
         disabled: attributes.length <= activeAttributes.length + 1,
       },
       {
-        id: 'showFilter',
-        icon: FiltersIcon,
-        title: 'Show filter',
+        label: formatMessage(messages.showFilter),
+        icon: <FilterOutlineIcon />,
         onClick: showFilter,
       },
     ],
-    [activeAttributes.length, attributes.length, drillDown, showFilter],
+    [activeAttributes.length, attributes.length, drillDown, showFilter, formatMessage],
   );
 
   const onChartElementClick = useCallback(
@@ -416,20 +418,34 @@ export const CumulativeTrendChart = ({
         />
       ) : (
         <div className={cx('no-data-wrapper')}>
-          <NoDataAvailableMaterializedView state={widgetState} isLoading={isLoading} />
+          {isLoading || widgetState === STATE_RENDERING ? (
+            <NoDataAvailableMaterializedView state={widgetState} isLoading={isLoading} />
+          ) : (
+            <WidgetStateMessage
+              title={formatMessage(messages.noDataTitle)}
+              description={formatMessage(messages.noDataDescription)}
+            />
+          )}
         </div>
       )}
       {popupState.isShown && (
-        <VirtualPopup
-          boundariesElement={container}
-          referenceConfig={{
-            className: cx('popup-reference'),
-            style: { left: clickPositionRef.current.left, top: clickPositionRef.current.top },
-          }}
-          zIndex={ACTIONS_POPUP_Z_INDEX}
+        <div
+          className={cx('popup-reference')}
+          style={{ left: clickPositionRef.current.left, top: clickPositionRef.current.top }}
         >
-          <ActionsPopup items={getPopupActionItems()} />
-        </VirtualPopup>
+          <PopoverControl
+            items={getPopupActionItems()}
+            placement="right"
+            strategy="fixed"
+            shouldUsePortal
+            isFocusDisabled
+            isCompact
+            isOpened
+            setIsOpened={(isOpened) => !isOpened && hideActionsPopup()}
+          >
+            <div className={cx('popup-anchor')} />
+          </PopoverControl>
+        </div>
       )}
     </div>
   );

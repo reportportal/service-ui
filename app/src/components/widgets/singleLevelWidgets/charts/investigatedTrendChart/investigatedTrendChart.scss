@@ -21,6 +21,10 @@
 }
 
 div.tooltip {
+  max-width: 100%;
+  overflow: hidden;
+  white-space: normal;
+  box-sizing: border-box;
   min-width: 0;
   padding: 8px 12px;
   font-family: var(--rp-ui-base-font-family);
@@ -31,7 +35,6 @@ div.tooltip {
   border: none;
   border-radius: 8px;
   box-shadow: none;
-  white-space: nowrap;
 
   div,
   span {

@@ -1,5 +1,5 @@
-/*!
- * Copyright 2019 EPAM Systems
+/*
+ * Copyright 2026 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,19 +14,4 @@
  * limitations under the License.
  */
 
-.actions-popup {
-  display: flex;
-  flex-direction: column;
-
-  @media print {
-    display: none;
-  }
-}
-
-.action-item {
-  box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.25);
-
-  &:not(:last-child) {
-    margin-bottom: 3px;
-  }
-}
+export { UpdateWidgetDataModal } from './updateWidgetDataModal';

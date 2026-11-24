@@ -1,5 +1,7 @@
 {
   "AALabel.investigatedByAA": "Проанализировано Авто-Анализом",
+  "CumulativeTrendChart.drillDown": "Детализировать",
+  "CumulativeTrendChart.showFilter": "Показать фильтр",
   "DashboardEmptyResults.emptyActionText": "Создать дашборд",
   "DashboardEmptyResults.emptyHeadline": "Дашборды ещё не созданы",
   "DashboardEmptyResults.emptyText": "Отслеживайте прогресс и достижения вашего проекта, создав первый дашборд.",
@@ -2780,7 +2782,7 @@
   "Widget.filterNotFoundDescription": "Фильтр для этого виджета был удален. Отредактируйте виджет, чтобы выбрать другой фильтр.",
   "Widget.filterNotFoundExplanation": "Фильтр для этого виджета был удален.",
   "Widget.filterNotFoundTitle": "Фильтр виджета не найден",
-  "Widget.forceUpdateWidgetMessage": "Вы уверены, что хотите обновить данные в этом виджете? Это может занять <b> до 15 минут </ b> в зависимости от размера базы данных проекта.",
+  "Widget.forceUpdateWidgetMessage": "Вы уверены, что хотите обновить данные в этом виджете? Это может занять <b>до 15 минут</b> в зависимости от размера базы данных проекта.",
   "Widget.forceUpdateWidgetTitle": "Обновить данные виджета",
   "Widget.generatingDescription": "Это может занять до нескольких минут.",
   "Widget.generatingTitle": "Подготовка данных виджета",

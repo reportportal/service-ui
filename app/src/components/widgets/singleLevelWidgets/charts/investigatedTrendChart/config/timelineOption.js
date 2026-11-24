@@ -57,12 +57,19 @@ export const getTimelineData = (content) => {
   };
 };
 
-export const getTimelineOption = ({ content, isPreview, formatMessage, hiddenItems }) =>
+export const getTimelineOption = ({
+  content,
+  isPreview,
+  formatMessage,
+  hiddenItems,
+  legendHeight,
+}) =>
   buildInvestigatedChartOption({
     ...getTimelineData(content),
     isPreview,
     formatMessage,
     hiddenItems,
+    legendHeight,
     gridRight: 30,
     tooltipExtra: { isTimeline: true },
   });
