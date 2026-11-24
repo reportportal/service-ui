@@ -26,6 +26,7 @@ import {
   withTopRounding,
 } from '../../common/topRoundedBars';
 import { calculateTooltipParams, localMessages } from './utils';
+import { LEGEND_CHART_GAP, LEGEND_DEFAULT_HEIGHT } from './constants';
 
 const AXIS_LABEL_STYLE = {
   fontFamily: CHART_FONT_FAMILY,
@@ -88,11 +89,12 @@ export const buildInvestigatedChartOption = ({
   hiddenItems = [],
   gridRight = 20,
   tooltipExtra = {},
+  legendHeight = LEGEND_DEFAULT_HEIGHT,
 }) => ({
   color: itemNames.map((name) => colors[name]),
   textStyle: AXIS_LABEL_STYLE,
   grid: {
-    top: isPreview ? 0 : 85,
+    top: isPreview ? 0 : legendHeight + LEGEND_CHART_GAP,
     left: isPreview ? 0 : 60,
     right: isPreview ? 0 : gridRight,
     bottom: isPreview ? 0 : 40,
