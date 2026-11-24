@@ -19,6 +19,14 @@
     "compatible" : true,
     "requires" : ">=26.0"
   }, {
+    "version" : "1.5.9",
+    "publishedAt" : "2026-03-12T10:15:30Z",
+    "blocked" : false,
+    "compatible" : false,
+    "requires" : ">=25.1, <26.0",
+    "ceiling" : "<26.0",
+    "ceilingReason" : "Breaks the launch view on 26.0"
+  }, {
     "version" : "1.5.2",
     "publishedAt" : "2026-01-05T12:00:00Z",
     "blocked" : true,

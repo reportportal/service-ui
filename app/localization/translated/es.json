@@ -1,5 +1,7 @@
 {
   "AALabel.investigatedByAA": "Analizado por Auto-Análisis",
+  "CumulativeTrendChart.drillDown": "Desglosar",
+  "CumulativeTrendChart.showFilter": "Mostrar filtro",
   "DashboardEmptyResults.emptyActionText": "Crear dashboard",
   "DashboardEmptyResults.emptyHeadline": "Aún no se han creado dashboards",
   "DashboardEmptyResults.emptyText": "Haga un seguimiento del progreso y los logros de su proyecto creando su primer dashboard.",

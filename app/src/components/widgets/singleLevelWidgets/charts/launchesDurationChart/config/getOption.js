@@ -18,10 +18,11 @@ import {
   COLOR_BLACK,
   COLOR_CHART_DURATION,
   COLOR_GRAY_80,
-  COLOR_INTERRUPTED,
+  COLOR_CHART_AXIS_LINE,
+  COLOR_CHART_AXIS_TITLE,
 } from 'common/constants/colors';
 import { getNiceTickStep, transformCategoryLabelByDefault } from 'components/widgets/common/utils';
-import { buildAxisTicks, buildTooltipFormatter } from 'components/widgets/common/echarts/configHelpers';
+import { buildTooltipFormatter } from 'components/widgets/common/echarts/configHelpers';
 import { messages } from 'components/widgets/common/messages';
 import { DURATION } from 'components/widgets/common/constants';
 import { AXIS_LABEL_STYLE, STACKED_BAR_EMPHASIS } from '../../common/stackedBarSeries';
@@ -31,6 +32,70 @@ import { LaunchesDurationTooltip } from './launchesDurationTooltip';
 
 const DISPLAY_TICK_STEP = 0.5;
 const VALUE_AXIS_TICKS_COUNT = 10;
+// Gridlines are spaced twice as far apart as the default step
+const VALUE_AXIS_STEP_MULTIPLIER = 2;
+// The dark tooltip look lives in the widget scss (`tooltip` class on the wrapper)
+const TOOLTIP_SHELL = {
+  backgroundColor: 'transparent',
+  borderWidth: 0,
+  extraCssText: 'box-shadow: none; padding: 0;',
+};
+const COLOR_INTERRUPTED_BAR = '#fdc63a';
+// DS 6 axis tick labels: Roboto 400, 12px / 16px, #3F3F3F
+const TICK_LABEL_STYLE = {
+  fontFamily: 'Roboto',
+  fontWeight: 400,
+  fontStyle: 'normal',
+  fontSize: 12,
+  lineHeight: 16,
+  color: '#3f3f3f',
+};
+// The chart canvas already sits 24px from the widget's left/bottom border (widget padding),
+// so the y labels block starts at the canvas edge and the x title sits on the canvas bottom.
+const Y_LABEL_WIDTH = 36;
+const Y_LABEL_HEIGHT = 16;
+const Y_LABEL_MARGIN = 8;
+const GRID_LEFT = Y_LABEL_WIDTH + Y_LABEL_MARGIN;
+const GRID_RIGHT = 20;
+
+// ECharts clamps a native axis name ~5px above the canvas bottom whatever `nameGap` is,
+// so the unit title (seconds / minutes / hours) is drawn as a graphic pinned to the bottom,
+// centered over the plot area (not the whole canvas).
+const AXIS_TITLE_PLOT_OFFSET = (GRID_LEFT - GRID_RIGHT) / 2;
+const AXIS_TITLE_BOX_HALF_WIDTH = 100;
+const buildAxisTitle = (text) => ({
+  type: 'group',
+  left: 'center',
+  bottom: 0,
+  silent: true,
+  children: [
+    // invisible rect shifts the group's bounding box so the text lands at the plot center
+    {
+      type: 'rect',
+      shape: {
+        x: -AXIS_TITLE_BOX_HALF_WIDTH - AXIS_TITLE_PLOT_OFFSET,
+        y: 0,
+        width: AXIS_TITLE_BOX_HALF_WIDTH * 2,
+        height: 1,
+      },
+      style: { fill: 'transparent' },
+    },
+    {
+      type: 'text',
+      x: 0,
+      y: 0,
+      style: {
+        text,
+        font: '400 12px Roboto',
+        fill: COLOR_CHART_AXIS_TITLE,
+        textAlign: 'center',
+        textVerticalAlign: 'bottom',
+      },
+    },
+  ],
+});
+const BAR_END_RADIUS = [0, 3, 3, 0];
+const BAR_END_RADIUS_PREVIEW = [0, 2, 2, 0];
 
 const formatDurationTick = (value, timeTypeValue) =>
   (Number(value) / timeTypeValue).toFixed(2);
@@ -39,30 +104,34 @@ export const getOption = ({ content, isPreview, formatMessage }) => {
   const { timeType, chartData, itemsData = [] } = prepareChartData(content || []);
   const values = chartData.slice(1).map(Number);
   const categories = itemsData.map(transformCategoryLabelByDefault);
-  // Same launches get a label as before the migration: every Nth one, counting from the first.
-  const labelledIndexes = new Set(buildAxisTicks(itemsData.length));
-  const isLabelledIndex = (index) => labelledIndexes.has(index);
+  // DS 6: a label (and tick) on every second launch, starting from the first.
+  const isLabelledIndex = (index) => index % 2 === 0;
   const maxValue = Math.max(0, ...values.filter(Number.isFinite));
   const valueAxisInterval =
-    maxValue > 0 ? getNiceTickStep(maxValue, VALUE_AXIS_TICKS_COUNT) : timeType.value * DISPLAY_TICK_STEP;
+    maxValue > 0
+      ? getNiceTickStep(maxValue, VALUE_AXIS_TICKS_COUNT) * VALUE_AXIS_STEP_MULTIPLIER
+      : timeType.value * DISPLAY_TICK_STEP;
 
   const isMaxOnTick = maxValue % valueAxisInterval === 0;
 
   const seriesData = values.map((value, index) => ({
     value,
     itemStyle: {
-      color: isValueInterrupted(itemsData[index]) ? COLOR_INTERRUPTED : COLOR_CHART_DURATION,
+      color: isValueInterrupted(itemsData[index]) ? COLOR_INTERRUPTED_BAR : COLOR_CHART_DURATION,
     },
   }));
 
   return {
     textStyle: AXIS_LABEL_STYLE,
+    graphic: isPreview ? [] : [buildAxisTitle(formatMessage(messages[timeType.type]))],
     grid: {
       top: isPreview ? 0 : 20,
-      left: isPreview ? 0 : 40,
-      right: isPreview ? 0 : 20,
+      left: isPreview ? 0 : GRID_LEFT,
+      right: isPreview ? 0 : GRID_RIGHT,
       bottom: isPreview ? 0 : 40,
       containLabel: false,
+      // without this ECharts 6 shifts the grid to fit labels, overriding the exact offsets above
+      outerBoundsMode: 'none',
     },
     xAxis: {
       type: 'value',
@@ -70,15 +139,9 @@ export const getOption = ({ content, isPreview, formatMessage }) => {
       min: 0,
       max: maxValue > 0 ? maxValue : undefined,
       interval: valueAxisInterval,
-      name: isPreview ? undefined : formatMessage(messages[timeType.type]),
-      nameLocation: 'middle',
-      nameGap: 28,
-      nameTextStyle: {
-        ...AXIS_LABEL_STYLE,
-        fontSize: 12,
-      },
       axisLabel: {
-        ...AXIS_LABEL_STYLE,
+        ...TICK_LABEL_STYLE,
+        align: 'center',
         margin: 8,
         showMaxLabel: isMaxOnTick,
         formatter: (value) => formatDurationTick(value, timeType.value),
@@ -97,7 +160,7 @@ export const getOption = ({ content, isPreview, formatMessage }) => {
         show: !isPreview,
         showMaxLine: isMaxOnTick,
         lineStyle: {
-          color: COLOR_GRAY_80,
+          color: COLOR_CHART_AXIS_LINE,
           width: 1,
         },
       },
@@ -119,8 +182,13 @@ export const getOption = ({ content, isPreview, formatMessage }) => {
         lineStyle: { color: COLOR_BLACK, width: 1 },
       },
       axisLabel: {
-        ...AXIS_LABEL_STYLE,
-        margin: 8,
+        ...TICK_LABEL_STYLE,
+        // DS 6: 36x16 label block, number in its right part, close to the axis
+        width: Y_LABEL_WIDTH,
+        height: Y_LABEL_HEIGHT,
+        overflow: 'truncate',
+        align: 'right',
+        margin: Y_LABEL_MARGIN,
         interval: isLabelledIndex,
         hideOverlap: true,
       },
@@ -128,14 +196,17 @@ export const getOption = ({ content, isPreview, formatMessage }) => {
         show: false,
       },
     },
-    tooltip: buildItemTooltip({
-      show: !isPreview,
-      formatter: buildTooltipFormatter(LaunchesDurationTooltip, calculateTooltipParams, {
-        itemsData,
-        timeType,
-        formatMessage,
+    tooltip: {
+      ...buildItemTooltip({
+        show: !isPreview,
+        formatter: buildTooltipFormatter(LaunchesDurationTooltip, calculateTooltipParams, {
+          itemsData,
+          timeType,
+          formatMessage,
+        }),
       }),
-    }),
+      ...TOOLTIP_SHELL,
+    },
     legend: {
       show: false,
     },
@@ -147,7 +218,8 @@ export const getOption = ({ content, isPreview, formatMessage }) => {
         data: seriesData,
         barWidth: '60%',
         barCategoryGap: '40%',
-        emphasis: STACKED_BAR_EMPHASIS,
+        itemStyle: { borderRadius: isPreview ? BAR_END_RADIUS_PREVIEW : BAR_END_RADIUS },
+        emphasis: isPreview ? { disabled: true } : STACKED_BAR_EMPHASIS,
       },
     ],
     customData: {

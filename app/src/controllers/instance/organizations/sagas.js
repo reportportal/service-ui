@@ -58,7 +58,7 @@ function* fetchFilteredOrganizations() {
   );
 }
 
-function* deleteOrganization({ payload: { organizationId, onSuccess, onError } }) {
+export function* deleteOrganization({ payload: { organizationId, onSuccess, onError } }) {
   try {
     yield call(fetch, URLS.organizationById(organizationId), {
       method: 'delete',

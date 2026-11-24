@@ -62,6 +62,7 @@ import {
   removeOrganizationIntegrationsByTypeSuccessAction,
   fetchGlobalIntegrationsSuccessAction,
   removeGlobalIntegrationsByTypeSuccessAction,
+  fetchPluginsAction,
   fetchMarketplaceCatalogueAction,
   fetchMarketplaceCatalogueStartAction,
   fetchMarketplaceCatalogueSuccessAction,
@@ -372,6 +373,9 @@ export function* installMarketplacePlugin({ payload: { registryId, version } }) 
     // refetch with the filter still on screen, not the unfiltered catalogue
     const query = yield select(marketplaceCatalogueQuerySelector);
     yield put(fetchMarketplaceCatalogueAction(query));
+    // the installed rows pair the local version with the catalogue's verdict on it, so the
+    // local list is refetched too, or the old version is read against the new verdict
+    yield put(fetchPluginsAction());
   } catch (error) {
     yield put(
       installMarketplacePluginErrorAction(registryId, error.message, error?.errorCode, version),

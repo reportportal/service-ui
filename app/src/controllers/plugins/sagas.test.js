@@ -371,10 +371,30 @@ describe('controllers/plugins/sagas marketplace', () => {
         'installMarketplacePluginSuccess',
         'showNotification',
         'fetchMarketplaceCatalogue',
+        'fetchPlugins',
       ]);
       expect(dispatched[0]).toEqual(installMarketplacePluginStartAction('slack'));
       expect(dispatched[1]).toEqual(installMarketplacePluginSuccessAction('slack'));
       expect(dispatched[3]).toEqual(fetchMarketplaceCatalogueAction({ q: null, category: null }));
+    });
+
+    // the installed rows read the local version beside the catalogue's verdict on it, so the
+    // local list has to move with the catalogue or the two describe different versions
+    test('refetches the local installed list on success, and not on failure', async () => {
+      fetch.mockResolvedValueOnce({});
+      const ok = await run(
+        installMarketplacePlugin,
+        installMarketplacePluginAction('slack', '1.2.0'),
+      );
+
+      fetch.mockRejectedValueOnce(new Error('boom'));
+      const failed = await run(
+        installMarketplacePlugin,
+        installMarketplacePluginAction('slack', '1.2.0'),
+      );
+
+      expect(ok.some((action) => action.type === 'fetchPlugins')).toBe(true);
+      expect(failed.some((action) => action.type === 'fetchPlugins')).toBe(false);
     });
 
     test('says so, naming the version that is now active', async () => {
