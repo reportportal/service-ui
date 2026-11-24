@@ -272,9 +272,10 @@ export const breadcrumbsSelector = createSelector(
 
 export const nameLinkSelector = (state, ownProps) => {
   const { ownLinkParams, itemId, uniqueId } = ownProps;
-  const payload = ownLinkParams?.payload || payloadSelector(state);
+  let payload = ownLinkParams?.payload || payloadSelector(state);
   if (payload.dashboardId && !payload.filterId) {
-    payload.filterId = ALL;
+    // copy: the payload belongs to the router location in the store
+    payload = { ...payload, filterId: ALL };
   }
   let testItemIds = ownLinkParams?.testItemIds || testItemIdsSelector(state);
   const isDebugMode = ownLinkParams?.isDebugMode ?? debugModeSelector(state);

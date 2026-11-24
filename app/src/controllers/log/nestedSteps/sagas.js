@@ -34,33 +34,44 @@ import {
 } from './actionCreators';
 import { collectLogPayload } from '../sagaUtils';
 import { nestedStepSelector } from './selectors';
-import { getDirectedPagination } from './utils';
+import { getDirectedPagination, mergeNestedStepPage } from './utils';
 
-function* fetchNestedStep({ payload = {} }) {
+export function* fetchNestedStep({ payload = {} }) {
   const { id, errorLogPage, loadDirection = NEXT } = payload;
   const { projectKey, query, filterLevel } = yield call(collectLogPayload);
   const logLevel = filterLevel;
   const paramsExcludingPagination = omit(query, [PAGE_KEY, SIZE_KEY]);
-  const { page } = yield select(nestedStepSelector, id);
-  const paginationParams = getDirectedPagination(page, loadDirection, errorLogPage);
-
-  const fetchParams = {
-    ...paramsExcludingPagination,
-    ...paginationParams,
-  };
+  const currentStep = yield select(nestedStepSelector, id);
+  const paginationParams = getDirectedPagination(currentStep.page, loadDirection, errorLogPage);
 
   let cancelRequest = () => {};
-  try {
-    yield put(fetchNestedStepStartAction(payload));
-    const response = yield call(fetch, URLS.logItems(projectKey, id, logLevel), {
-      params: fetchParams,
+  const fetchPage = (pagination) =>
+    call(fetch, URLS.logItems(projectKey, id, logLevel), {
+      params: { ...paramsExcludingPagination, ...pagination },
       abort: (cancelFunc) => {
         cancelRequest = cancelFunc;
       },
     });
-    yield put(fetchNestedStepSuccessAction({ id, ...response }));
+
+  try {
+    yield put(fetchNestedStepStartAction(payload));
+    let response = yield fetchPage(paginationParams);
+    if (loadDirection === ALL) {
+      // read the whole step page by page instead of a single unbounded request
+      const pages = [response.content];
+      while (response.page && response.page.number < response.page.totalPages) {
+        response = yield fetchPage({
+          ...paginationParams,
+          [PAGE_KEY]: response.page.number + 1,
+        });
+        pages.push(response.content);
+      }
+      response = { ...response, content: [].concat(...pages) };
+    }
+    const merged = mergeNestedStepPage(currentStep, response, loadDirection, errorLogPage);
+    yield put(fetchNestedStepSuccessAction({ id, ...response, ...merged }));
   } catch (err) {
-    yield put(fetchNestedStepErrorAction(err));
+    yield put(fetchNestedStepErrorAction(err, id));
   } finally {
     if (yield cancelled()) {
       cancelRequest();
@@ -71,7 +82,10 @@ function* fetchNestedStep({ payload = {} }) {
 function* fetchCurrentStep({ payload = {} }) {
   const { id } = payload;
   yield call(fetchNestedStep, { payload: { id, loadDirection: ALL } });
-  const { collapsed, content } = yield select(nestedStepSelector, id);
+  const { collapsed, content, initial } = yield select(nestedStepSelector, id);
+  if (initial) {
+    return;
+  }
 
   if (collapsed) {
     yield put(toggleNestedStepAction({ id }));
@@ -95,6 +109,10 @@ export function* requestNestedStep({ payload = {} }) {
   const nestedStep = yield select(nestedStepSelector, id);
   if (nestedStep.initial) {
     yield call(fetchNestedStep, { payload });
+    const { initial } = yield select(nestedStepSelector, id);
+    if (initial) {
+      return;
+    }
   }
   yield put(toggleNestedStepAction(payload));
 }

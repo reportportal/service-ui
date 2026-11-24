@@ -16,7 +16,7 @@
 
 import { isEmptyObject } from 'common/utils';
 import { PAGE_KEY, SIZE_KEY } from 'controllers/pagination';
-import { NEXT, PREVIOUS } from 'controllers/log/constants';
+import { NEXT, PREVIOUS, ALL } from 'controllers/log/constants';
 import { MAX_PAGE_SIZE, PAGINATION_OFFSET } from './constants';
 
 export const isLoadMoreButtonVisible = (pageData) => {
@@ -31,8 +31,8 @@ export const isLoadPreviousButtonVisible = (pageData) => {
   if (!pageData || isEmptyObject(pageData)) {
     return false;
   }
-  const { number } = pageData;
-  return number !== 1;
+  const { number, firstNumber = number } = pageData;
+  return firstNumber !== 1;
 };
 
 export const isLoadCurrentStepButtonVisible = (pageData, step, allSteps) => {
@@ -60,29 +60,55 @@ export const isLoadCurrentStepButtonVisible = (pageData, step, allSteps) => {
     }
   }
 
-  const { size, totalElements } = pageData;
-  return size < totalElements;
+  const { size, loaded = size, totalElements } = pageData;
+  return loaded < totalElements;
 };
 
+// The step keeps a window of loaded pages of PAGINATION_OFFSET items: page.firstNumber..page.number.
+// "Previous"/"next" request only the adjacent page and add it to the loaded content.
 export function getDirectedPagination(pageData, loadDirection, nextPage) {
-  const { number, size, totalElements } = pageData;
+  const { number, firstNumber = number } = pageData;
   switch (loadDirection) {
     case PREVIOUS: {
-      return { [PAGE_KEY]: number - 1, [SIZE_KEY]: size + PAGINATION_OFFSET };
+      return { [PAGE_KEY]: firstNumber - 1, [SIZE_KEY]: PAGINATION_OFFSET };
     }
     case NEXT: {
-      const pageNumber = nextPage || 1;
-      let pageSize;
-      if (isEmptyObject(pageData) || nextPage) {
-        pageSize = PAGINATION_OFFSET;
-      } else {
-        pageSize =
-          size + PAGINATION_OFFSET >= totalElements ? totalElements : size + PAGINATION_OFFSET;
-      }
-      return { [PAGE_KEY]: pageNumber, [SIZE_KEY]: pageSize };
+      const pageNumber = isEmptyObject(pageData) || nextPage ? nextPage || 1 : number + 1;
+      return { [PAGE_KEY]: pageNumber, [SIZE_KEY]: PAGINATION_OFFSET };
     }
     default: {
-      return { [PAGE_KEY]: 1, [SIZE_KEY]: totalElements || MAX_PAGE_SIZE };
+      return { [PAGE_KEY]: 1, [SIZE_KEY]: MAX_PAGE_SIZE };
     }
   }
 }
+
+// Combines a loaded page with the content the step already has for the given load direction.
+export const mergeNestedStepPage = (current, response, loadDirection, nextPage) => {
+  const { content: currentContent = [], page: currentPage = {} } = current;
+  const { content = [], page = {} } = response;
+  const isAppend = loadDirection === NEXT && !nextPage && !isEmptyObject(currentPage);
+  const isPrepend = loadDirection === PREVIOUS && !isEmptyObject(currentPage);
+  const { number: currentNumber, firstNumber: currentFirstNumber = currentNumber } = currentPage;
+
+  if (isAppend) {
+    const mergedContent = currentContent.concat(content);
+    return {
+      content: mergedContent,
+      page: { ...page, firstNumber: currentFirstNumber, loaded: mergedContent.length },
+    };
+  }
+  if (isPrepend) {
+    const mergedContent = content.concat(currentContent);
+    return {
+      content: mergedContent,
+      page: {
+        ...page,
+        number: currentNumber,
+        firstNumber: page.number,
+        loaded: mergedContent.length,
+      },
+    };
+  }
+  const firstNumber = loadDirection === ALL ? 1 : page.number;
+  return { content, page: { ...page, firstNumber, loaded: content.length } };
+};

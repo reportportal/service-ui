@@ -42,6 +42,7 @@ import { fetchLaunchesAction } from 'controllers/launch/actionCreators';
 import { omit } from 'common/utils/omit';
 import { NEW_FILTER_PREFIX, CUSTOM_FILTER } from 'common/constants/reservedFilterIds';
 import { redirect } from 'redux-first-router';
+import isEqual from 'fast-deep-equal';
 import { canWorkWithFilters } from 'common/utils/permissions';
 import {
   NAMESPACE,
@@ -89,19 +90,37 @@ function* fetchFiltersConcat({ payload: { params, concat } }) {
   );
 }
 
-function* updateLaunchesFilter({ payload: filter }) {
+let filterUpdateRequestId = 0;
+
+export function* updateLaunchesFilter({ payload: filter }) {
   const projectKey = yield select(projectKeySelector);
   const shallowFilter = {
     ...filter,
     conditions: filter.conditions.filter((item) => item.value.trim()),
   };
+  // only the conditions and orders can be edited on the launches page while the save is pending
+  const findDraft = (filters) => {
+    const draft = filters.find(({ id }) => id === shallowFilter.id);
+    return draft && { conditions: draft.conditions, orders: draft.orders };
+  };
+  const draftBeforeSave = findDraft(yield select(launchFiltersSelector));
+  // own namespace per request, so the response of saveNewFilter, of another filter or of an earlier
+  // save of the same filter is not taken for this one
+  filterUpdateRequestId += 1;
+  const namespace = `${LAUNCHES_FILTERS_UPDATE_NAMESPACE}/${shallowFilter.id}/${filterUpdateRequestId}`;
   yield put(
-    fetchDataAction(LAUNCHES_FILTERS_UPDATE_NAMESPACE)(URLS.filter(projectKey, shallowFilter.id), {
+    fetchDataAction(namespace)(URLS.filter(projectKey, shallowFilter.id), {
       method: 'put',
       data: omit(shallowFilter, ['id']),
     }),
   );
-  yield put(updateFilterSuccessAction(shallowFilter));
+  const response = yield take(createFetchPredicate(namespace));
+  if (response.type === FETCH_ERROR) {
+    return;
+  }
+  // keep the conditions and orders edited while the request was pending
+  const keepDraft = !isEqual(findDraft(yield select(launchFiltersSelector)), draftBeforeSave);
+  yield put(updateFilterSuccessAction(shallowFilter, undefined, keepDraft));
   yield put(
     showNotification({
       messageId: 'updateFilterSuccess',

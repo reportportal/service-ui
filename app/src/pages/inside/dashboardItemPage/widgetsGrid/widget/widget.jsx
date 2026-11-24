@@ -56,6 +56,7 @@ import { DeleteWidgetModal } from '../../modals/deleteWidgetModal';
 import { UpdateWidgetDataModal } from '../../modals/updateWidgetDataModal';
 import { WidgetHeader } from './widgetHeader';
 import { WidgetStateMessage } from './widgetStateMessage';
+import { getCachedWidget, cacheLoadedWidget, getWidgetCacheGeneration } from './widgetCache';
 import styles from './widget.scss';
 
 const cx = classNames.bind(styles);
@@ -195,13 +196,33 @@ export class SimpleWidget extends Component {
   }
 
   componentDidMount() {
-    this.fetchWidget({}, false);
+    const { projectKey, widgetId, isPrintMode } = this.props;
+    const cached =
+      !isPrintMode && getCachedWidget(projectKey, widgetId, this.getSilentUpdateTimeout());
+    if (!cached) {
+      void this.fetchWidget({}, false);
+      return;
+    }
+    // remounted after scrolling back into view: show the last payload and refresh it silently.
+    // Multi-level widgets keep their drill-down state inside the chart and restart from the top level,
+    // so the cached drill-down query parameters are not restored.
+    this.setState({
+      widget: cached.widget,
+      queryParameters: {},
+      loading: false,
+    });
+    this.scheduleSilentUpdate(this.getSilentUpdateTimeout() - (Date.now() - cached.fetchedAt));
   }
 
   componentWillUnmount() {
     this.isUnmounted = true;
     this.clearSilentUpdater();
+    this.cancelRequest();
   }
+
+  cancelRequest = () => {};
+
+  requestId = 0;
 
   onChangeUserSettings = (settings, callback = () => {}) => {
     this.setState({ userSettings: { ...this.state.userSettings, ...settings } }, callback);
@@ -358,6 +379,12 @@ export class SimpleWidget extends Component {
   fetchWidget = (params = {}, silent = true, shouldClearQueryParams = true) => {
     const url = this.getWidgetUrl(params);
     this.clearSilentUpdater();
+    // only the latest request of the widget may update it
+    this.cancelRequest();
+    this.requestId += 1;
+    const requestId = this.requestId;
+    const isOutdated = () => this.isUnmounted || requestId !== this.requestId;
+    const cacheGeneration = getWidgetCacheGeneration();
 
     if (!silent) {
       this.setState({
@@ -365,8 +392,15 @@ export class SimpleWidget extends Component {
       });
     }
 
-    return fetch(url)
+    return fetch(url, {
+      abort: (cancel) => {
+        this.cancelRequest = cancel;
+      },
+    })
       .then((widget) => {
+        if (isOutdated()) {
+          return;
+        }
         const queryParameters = {
           ...this.state.queryParameters,
           ...params,
@@ -385,9 +419,22 @@ export class SimpleWidget extends Component {
             error: null,
           });
         }
+        // multi-level charts restart from the top level on remount, so a drilled-down payload is not cached
+        const isDrilledDown =
+          !!MULTI_LEVEL_WIDGETS_MAP[this.props.widgetType] && !isEmptyObject(queryParameters);
+        cacheLoadedWidget(
+          this.props.projectKey,
+          this.props.widgetId,
+          widget,
+          isDrilledDown,
+          cacheGeneration,
+        );
         this.scheduleSilentUpdate();
       })
       .catch((error) => {
+        if (isOutdated()) {
+          return;
+        }
         if (shouldClearQueryParams && !isEmptyObject(this.state.queryParameters)) {
           this.clearQueryParams();
         }
@@ -402,15 +449,15 @@ export class SimpleWidget extends Component {
       });
   };
 
-  scheduleSilentUpdate = () => {
+  getSilentUpdateTimeout = () =>
+    this.props.isFullscreen ? SILENT_UPDATE_TIMEOUT_FULLSCREEN : SILENT_UPDATE_TIMEOUT;
+
+  scheduleSilentUpdate = (timeout = this.getSilentUpdateTimeout()) => {
     if (this.props.isPrintMode || this.isUnmounted) {
       return;
     }
     this.clearSilentUpdater();
-    this.silentUpdaterId = setTimeout(
-      this.fetchWidget,
-      this.props.isFullscreen ? SILENT_UPDATE_TIMEOUT_FULLSCREEN : SILENT_UPDATE_TIMEOUT,
-    );
+    this.silentUpdaterId = setTimeout(() => this.fetchWidget(), timeout);
   };
 
   showEditWidgetModal = () => {

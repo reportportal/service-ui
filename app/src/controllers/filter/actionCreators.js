@@ -112,11 +112,13 @@ export const saveNewFilterAction = (filter) => ({
   payload: filter,
 });
 
-export const updateFilterSuccessAction = (filter, oldId) => ({
+// keepDraft: only the saved filter is updated, the edited one on the launches page is kept
+export const updateFilterSuccessAction = (filter, oldId, keepDraft = false) => ({
   type: UPDATE_FILTER_SUCCESS,
   payload: filter,
   meta: {
     oldId,
+    keepDraft,
   },
 });
 

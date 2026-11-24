@@ -19,7 +19,6 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { injectIntl, defineMessages } from 'react-intl';
 import track from 'react-tracking';
-import isEqual from 'fast-deep-equal';
 import {
   LAUNCHES_PAGE_EVENTS,
   LAUNCHES_MODAL_EVENTS,
@@ -75,6 +74,7 @@ import { DebugFiltersContainer } from './debugFiltersContainer';
 import { LaunchToolbar } from './LaunchToolbar';
 import { LaunchExportModal } from './modals/launchExportModal';
 import { NoItemsDemo } from './noItemsDemo';
+import { getDeleteLaunchesResult, getFinishedLaunchesUpdate } from './utils';
 
 const messages = defineMessages({
   success: {
@@ -393,9 +393,25 @@ export class LaunchesPage extends Component {
     fetch(URLS.launches(this.props.projectKey, ids), {
       method: 'delete',
     })
-      .then(() => {
-        this.unselectAndFetchLaunches();
+      .then((response) => {
+        const { failedItems, successCount, totalCount, failureCount, errorsText } =
+          getDeleteLaunchesResult(items, response);
+        const selectedIds = this.props.selectedLaunches.map(({ id }) => id);
+        const failedSelectedItems = failedItems.filter(({ id }) => selectedIds.includes(id));
+        this.props.unselectAllLaunchesAction();
+        if (failedSelectedItems.length) {
+          this.props.selectLaunchesAction(failedSelectedItems);
+        }
+        this.props.fetchLaunchesAction();
         this.props.hideScreenLockAction();
+        if (failureCount > 0) {
+          this.props.showNotification({
+            messageId: 'batchPartialFailure',
+            values: { successCount, totalCount, failureCount, errors: errorsText },
+            type: NOTIFICATION_TYPES.WARNING,
+          });
+          return;
+        }
         this.props.showNotification({
           message:
             items.length === 1
@@ -447,34 +463,30 @@ export class LaunchesPage extends Component {
   fetchLaunchStatus = (launches) => {
     fetch(URLS.launchStatus(this.props.projectKey, launches), {
       method: 'get',
-    }).then((launchesWithStatus) => {
-      const newLaunchesInProgress = this.state.launchesInProgress.filter(
-        (item) => launchesWithStatus[item] === IN_PROGRESS,
-      );
-
-      if (!isEqual(this.state.launchesInProgress, newLaunchesInProgress)) {
-        const { finishedLaunchesCount, launchesInProgress } = this.state;
-        const diff = launchesInProgress.length - newLaunchesInProgress.length;
-        const newFinishedLaunchesCount = finishedLaunchesCount
-          ? finishedLaunchesCount + diff
-          : diff;
-
-        const newLaunchesData = this.props.launches
-          .filter((item) => !item.endTime && !newLaunchesInProgress.includes(item.id))
-          .map((item) => ({
-            ...item,
-            endTime: Date.now(),
-            status: launchesWithStatus[item.id],
-          }));
-
-        this.props.updateLaunchesLocallyAction(newLaunchesData);
-
-        this.setState({
-          launchesInProgress: newLaunchesInProgress,
-          finishedLaunchesCount: newFinishedLaunchesCount,
+    })
+      .then((launchesWithStatus) => {
+        const update = getFinishedLaunchesUpdate({
+          requestedIds: launches,
+          launchesWithStatus,
+          launchesInProgress: this.state.launchesInProgress,
+          launches: this.props.launches,
         });
-      }
-    });
+
+        if (update) {
+          const { finishedLaunchesCount } = this.state;
+          const { finishedCount } = update;
+          this.props.updateLaunchesLocallyAction(update.finishedLaunches);
+
+          this.setState({
+            launchesInProgress: update.launchesInProgress,
+            finishedLaunchesCount: finishedLaunchesCount
+              ? finishedLaunchesCount + finishedCount
+              : finishedCount,
+          });
+        }
+      })
+      // a failed poll is retried on the next tick
+      .catch(() => {});
   };
 
   openEditModal = (launch) => {
