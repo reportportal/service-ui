@@ -20,6 +20,9 @@ export const TIMELINE_AXIS_DATE_FORMAT = 'DD.MM';
 export const TIMELINE_TOOLTIP_DATE_FORMAT = 'DD.MM.YYYY';
 
 export const LEGEND_MAX_HEIGHT = 78;
+// height of a one-row legend, used until the real legend height is measured
+export const LEGEND_DEFAULT_HEIGHT = 18;
+export const LEGEND_CHART_GAP = 15;
 
 export const INVESTIGATED_COLORS = {
   investigated: COLOR_CHART_INVESTIGATED,
