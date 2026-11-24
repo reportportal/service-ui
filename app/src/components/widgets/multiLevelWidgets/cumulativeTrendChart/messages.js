@@ -77,4 +77,20 @@ export const messages = defineMessages({
     id: 'Widgets.ofTestCases',
     defaultMessage: 'of test cases',
   },
+  drillDown: {
+    id: 'CumulativeTrendChart.drillDown',
+    defaultMessage: 'Drill down',
+  },
+  showFilter: {
+    id: 'CumulativeTrendChart.showFilter',
+    defaultMessage: 'Show filter',
+  },
+  noDataTitle: {
+    id: 'Widget.noDataTitle',
+    defaultMessage: 'No data to display',
+  },
+  noDataDescription: {
+    id: 'Widget.noDataDescription',
+    defaultMessage: 'No launches match the widget filter yet.',
+  },
 });

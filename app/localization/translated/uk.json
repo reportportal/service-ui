@@ -1,5 +1,7 @@
 {
   "AALabel.investigatedByAA": "Проаналізовано Авто-Аналізом",
+  "CumulativeTrendChart.drillDown": "Деталізувати",
+  "CumulativeTrendChart.showFilter": "Показати фільтр",
   "DashboardEmptyResults.emptyActionText": "Створити дашборд",
   "DashboardEmptyResults.emptyHeadline": "Дашборди ще не створено",
   "DashboardEmptyResults.emptyText": "Відстежуйте прогрес і досягнення вашого проєкту, створивши перший дашборд.",
@@ -2780,7 +2782,7 @@
   "Widget.filterNotFoundDescription": "Фільтр для цього віджета було видалено. Відредагуйте віджет, щоб вибрати інший фільтр.",
   "Widget.filterNotFoundExplanation": "Фільтр для цього віджета було видалено.",
   "Widget.filterNotFoundTitle": "Фільтр віджета не знайдено",
-  "Widget.forceUpdateWidgetMessage": "Ви впевнені, що хочете оновити дані в цьому віджеті? Це може зайняти <b> до 15 хвилин </ b> в залежності від розміру бази даних проекту.",
+  "Widget.forceUpdateWidgetMessage": "Ви впевнені, що хочете оновити дані в цьому віджеті? Це може зайняти <b>до 15 хвилин</b> в залежності від розміру бази даних проекту.",
   "Widget.forceUpdateWidgetTitle": "Оновити дані віджета",
   "Widget.generatingDescription": "Це може зайняти до кількох хвилин.",
   "Widget.generatingTitle": "Підготовка даних віджета",
