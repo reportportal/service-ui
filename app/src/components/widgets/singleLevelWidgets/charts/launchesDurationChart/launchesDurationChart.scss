@@ -19,3 +19,27 @@
   width: 100%;
   height: 100%;
 }
+
+// DS 6 dark tooltip
+div.tooltip {
+  min-width: 0;
+  padding: 8px 12px;
+  font-family: var(--rp-ui-base-font-family);
+  font-size: 12px;
+  line-height: 16px;
+  color: var(--rp-ui-base-bg-000);
+  background-color: color-mix(in srgb, var(--rp-ui-base-dark-e-400) 92%, transparent);
+  border: none;
+  border-radius: 8px;
+  box-shadow: none;
+  // ECharts sets nowrap on its tooltip container; long launch names must wrap within the 300px cap
+  white-space: normal;
+
+  div,
+  span {
+    margin: 0;
+    font-family: inherit;
+    font-weight: var(--rp-ui-base-fw-regular);
+    color: inherit;
+  }
+}

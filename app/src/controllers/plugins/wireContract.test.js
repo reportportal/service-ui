@@ -32,7 +32,7 @@ import pluginDetailOffline from './__fixtures__/plugin-detail-offline.json';
  * whose wire shape changed, or they were never regenerated after it changed and now describe a
  * service that no longer exists. `__fixtures__/README.md` says how to regenerate them.
  */
-const CONTRACT_HASH = '810734afc56f362f5209d2f48c0c7c39256ae402856cd094277ec404f639dd23';
+const CONTRACT_HASH = 'c2267dd6a2baab54185c3625258d200dd8bb0052730de729b0390a04596932fe';
 
 const INSTALL_ROUTE = 'POST /v1/plugins/{registryId}/install';
 const LICENCE_ROUTE = 'PUT /v1/plugins/licence';
@@ -70,6 +70,15 @@ describe('the checked-in marketplace fixtures', () => {
 
   test('cover the licence body the UI sends', () => {
     expect(Object.keys(licenceRequest)).toEqual(marker.routes[LICENCE_ROUTE]);
+  });
+
+  // the fixtures must keep one row the UI can warn about, or the warning is tested on nothing
+  test('carry an installed plugin whose running version is capped by the operator', () => {
+    const capped = catalogue.installed.find(
+      (row) => row.marketplace?.installedCompatibility?.compatible === false,
+    );
+
+    expect(capped.marketplace.installedCompatibility.ceilingReason).toBeTruthy();
   });
 
   test('carry only trust tiers the registry can emit', () => {

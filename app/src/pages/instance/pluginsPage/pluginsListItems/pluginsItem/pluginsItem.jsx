@@ -161,11 +161,36 @@ const messages = defineMessages({
     id: 'PluginItem.incompatibleNoRelease',
     defaultMessage: "This version doesn't run on the release this instance uses.",
   },
+  installedIncompatible: {
+    id: 'PluginItem.installedIncompatible',
+    defaultMessage:
+      'Version {version} supports ReportPortal {requires}. This instance runs {productVersion}.',
+  },
+  installedIncompatibleReason: {
+    id: 'PluginItem.installedIncompatibleReason',
+    defaultMessage:
+      'Version {version} supports ReportPortal {requires}. This instance runs {productVersion}.'
+      + ' Marketplace note: {reason}',
+  },
+  installedIncompatibleNoRelease: {
+    id: 'PluginItem.installedIncompatibleNoRelease',
+    defaultMessage: "Version {version} doesn't support the ReportPortal release this instance runs.",
+  },
+  installedIncompatibleNoReleaseReason: {
+    id: 'PluginItem.installedIncompatibleNoReleaseReason',
+    defaultMessage:
+      "Version {version} doesn't support the ReportPortal release this instance runs."
+      + ' Marketplace note: {reason}',
+  },
   updateWithheld: {
     id: 'PluginItem.updateWithheld',
     defaultMessage:
       'Version {version} is available but needs ReportPortal {requires}. This instance runs'
       + ' {productVersion}.',
+  },
+  updateNewestHere: {
+    id: 'PluginItem.updateNewestHere',
+    defaultMessage: 'Version {update} is the newest that runs here.',
   },
   updateWithheldNoRelease: {
     id: 'PluginItem.updateWithheldNoRelease',
@@ -215,6 +240,20 @@ const badgeDate = (marketplace, badge) => {
   }
 
   return marketplace?.removed?.removed || null;
+};
+
+/**
+ * Which sentence says the running version is out of range: the range and the release to quote when
+ * both are known, and the operator's reason when there is one; otherwise only that it does not run.
+ */
+const runningMessage = ({ requires, productVersion, reason }) => {
+  if (requires && productVersion) {
+    return reason ? messages.installedIncompatibleReason : messages.installedIncompatible;
+  }
+
+  return reason
+    ? messages.installedIncompatibleNoReleaseReason
+    : messages.installedIncompatibleNoRelease;
 };
 
 @injectIntl
@@ -269,11 +308,6 @@ export class PluginsItem extends Component {
     this.props.onClick(this.props.data);
   };
 
-  /**
-   * Why the row will not offer the build. The wording splits on whether anything newer exists:
-   * with a newer version the sentence is about an update being held back, and without one it is
-   * about the plugin this instance is already running having fallen out of range.
-   */
   /** The fixed-shape sentence a marketplace badge carries, dated where a date exists. */
   badgeHint = (badge) => {
     const [dated, undated] = BADGE_HINTS[badge] || [];
@@ -290,14 +324,35 @@ export class PluginsItem extends Component {
       : formatMessage(undated);
   };
 
-  incompatibilityReason = ({ version, requires, newer }) => {
+  /**
+   * Why the row will not offer the build. `running` means the plugin this instance already runs
+   * has fallen out of range, so the sentence is about the installed version and quotes the
+   * operator's ceiling reason where there is one. Otherwise `newer` says whether an update is
+   * being held back or the plugin has no newer build at all; either way the sentence needs both
+   * the declared range and the release to quote, and says only that it does not run without them.
+   * `update` is an older build service-api offers instead, named after the withheld one.
+   */
+  incompatibilityReason = ({ version, requires, newer, running, reason, update }) => {
     const { formatMessage } = this.props.intl;
     const { productVersion } = this.props;
 
+    if (running) {
+      return formatMessage(runningMessage({ requires, productVersion, reason }), {
+        version,
+        requires,
+        productVersion,
+        reason,
+      });
+    }
+
     if (newer) {
-      return requires && productVersion
-        ? formatMessage(messages.updateWithheld, { version, requires, productVersion })
-        : formatMessage(messages.updateWithheldNoRelease, { version });
+      const withheld =
+        requires && productVersion
+          ? formatMessage(messages.updateWithheld, { version, requires, productVersion })
+          : formatMessage(messages.updateWithheldNoRelease, { version });
+
+      // an older build that does run here may be on offer, and it is the one UPDATE installs
+      return update ? `${withheld} ${formatMessage(messages.updateNewestHere, { update })}` : withheld;
     }
 
     return requires && productVersion

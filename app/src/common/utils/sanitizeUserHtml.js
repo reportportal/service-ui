@@ -290,7 +290,12 @@ purifier.addHook('afterSanitizeAttributes', (node) => {
 });
 
 const CACHE_LIMIT = 1000;
+// Values with embedded base64 screenshots can be megabytes long, so the cache is also bounded by
+// the characters it retains (input plus output): larger values are not cached at all.
+const CACHE_ENTRY_MAX_SIZE = 64 * 1024;
+const CACHE_TOTAL_MAX_SIZE = 8 * 1024 * 1024;
 const cache = new Map();
+let cacheTotalSize = 0;
 
 export const sanitizeUserHtml = (html) => {
   if (!html) {
@@ -303,11 +308,22 @@ export const sanitizeUserHtml = (html) => {
     return cached;
   }
   const sanitized = purifier.sanitize(String(html));
-  if (cache.size >= CACHE_LIMIT) {
-    cache.delete(cache.keys().next().value);
+  const size = String(html).length + sanitized.length;
+  if (typeof html !== 'string' || size > CACHE_ENTRY_MAX_SIZE) {
+    return sanitized;
+  }
+  // Map iterates in insertion order, so the least recently used entries come first
+  for (const [key, value] of cache) {
+    if (cache.size < CACHE_LIMIT && cacheTotalSize + size <= CACHE_TOTAL_MAX_SIZE) {
+      break;
+    }
+    cache.delete(key);
+    cacheTotalSize -= key.length + value.length;
   }
   cache.set(html, sanitized);
+  cacheTotalSize += size;
   return sanitized;
 };
 
 export const getSanitizeUserHtmlCacheSize = () => cache.size;
+export const getSanitizeUserHtmlCacheTotalSize = () => cacheTotalSize;

@@ -78,7 +78,13 @@ import styles from './installedTab.scss';
 import { PluginsFilter } from '../../pluginsFilter';
 import { ActionPanel } from '../../actionPanel';
 import { AvailablePluginDetail } from '../../availablePluginDetail';
-import { PluginsCatalog, ROW_ACTIONS, getDisplayName } from '../../pluginsCatalog';
+import {
+  PluginsCatalog,
+  ROW_ACTIONS,
+  getDisplayName,
+  isMarketplaceTrusted,
+  mergeInstalledRows,
+} from '../../pluginsCatalog';
 import { PluginMarketplaceBlocks } from '../../pluginMarketplaceBlocks';
 import { PluginBadge, BADGE_TONES } from '../../pluginBadge';
 import { compareVersions } from '../../versionsTable/utils';
@@ -349,17 +355,37 @@ export class InstalledTab extends Component {
    * server's own, from the upload response, so nothing is guessed from a file name.
    */
   componentDidUpdate() {
+    this.fetchDetailOnceMatched();
+
     const { uploadedPluginId } = this.state;
     if (!uploadedPluginId) {
       return;
     }
 
-    const uploaded = this.props.plugins.find((plugin) => plugin.id === uploadedPluginId);
+    const uploaded = this.props.plugins.find((plugin) => plugin.type === uploadedPluginId);
     if (uploaded) {
       this.setState({ uploadedPluginId: null });
       this.installedPluginsSubPageHandler(uploaded);
     }
   }
+
+  // registry id the installed page last fetched detail for
+  detailRegistryId = null;
+
+  // A page opened while the registry was offline has no registry id. Once a catalogue retry
+  // matches the plugin, fetch its detail.
+  fetchDetailOnceMatched = () => {
+    const { type, data } = this.state.subPage;
+    if (type !== INSTALLED_PLUGINS_SUBPAGE) {
+      return;
+    }
+
+    const { registryId } = this.currentInstalledRow(data);
+    if (registryId && registryId !== this.detailRegistryId) {
+      this.detailRegistryId = registryId;
+      this.fetchPluginDetail(registryId);
+    }
+  };
 
   // Null when the server answered without an id, and then the page stays where it is: landing
   // somewhere wrong is worse than not moving.
@@ -554,11 +580,38 @@ export class InstalledTab extends Component {
       : this.showEnablePluginModal(pluginName, callback);
   };
 
+  /**
+   * The row the page was opened on goes stale the moment the plugin changes version: it holds the
+   * version and the registry's verdict from the click. The page reads the same merge the list does,
+   * from the current data, and keeps the captured row only when the plugin is no longer listed.
+   */
+  currentInstalledRow = (captured) => {
+    // by name, as mergeInstalledRows does: local plugins carry `type` rather than `id`, and the
+    // name survives a version change
+    const plugin =
+      captured.name != null && this.props.plugins.find(({ name }) => name === captured.name);
+    if (!plugin) {
+      return captured;
+    }
+    const { marketplaceInstalled, registryOffline, catalogueFailed, configuredPlugins } = this.props;
+
+    return mergeInstalledRows(
+      [plugin],
+      marketplaceInstalled,
+      isMarketplaceTrusted({ offline: registryOffline, failed: catalogueFailed }),
+      configuredPlugins,
+    )[0];
+  };
+
   getPageContent = () => {
     const {
-      subPage: { type, data, title },
+      subPage: { type, title },
       activeFilterItem,
     } = this.state;
+    const data =
+      type === INSTALLED_PLUGINS_SUBPAGE
+        ? this.currentInstalledRow(this.state.subPage.data)
+        : this.state.subPage.data;
     const { filterItems } = this.props;
 
     switch (type) {
@@ -811,9 +864,11 @@ export class InstalledTab extends Component {
    *
    * <p>There is no "update available" banner in the design and this is why: an available upgrade is
    * information, not a warning, so it earns an action rather than an alert. The action targets the
-   * newest *compatible* version, which is the same one the top row of the versions table offers —
-   * service-api decides that, and withholds `updateAvailable` when the newest build does not run
-   * here, so the button is absent in exactly the cases where pressing it would fail.
+   * newest *compatible* version, which is the same one the versions table opens and names in an advisory hint (the newest
+   * compatible row above the installed one, not necessarily the top row) —
+   * service-api decides that: when the newest build does not run here it offers the newest older
+   * one that does, or no `updateAvailable` at all, so the button is absent in exactly the cases
+   * where pressing it would fail.
    */
   /**
    * Provenance, beside the name: this plugin came from a .jar rather than from the marketplace.
@@ -999,6 +1054,7 @@ export class InstalledTab extends Component {
         installedVersion={data.details?.version || null}
         installing={this.props.installingIds.includes(data.registryId)}
         productVersion={this.props.productVersion}
+        installedCompatibility={data.installedCompatibility || null}
         onUseVersion={(version) =>
           this.showVersionChangeModal(
             data.registryId,
@@ -1020,7 +1076,11 @@ export class InstalledTab extends Component {
     }
   };
 
-  refetchPluginDetail = () => this.fetchPluginDetail(this.state.subPage.data?.registryId);
+  refetchPluginDetail = () => {
+    const { type, data } = this.state.subPage;
+    const row = type === INSTALLED_PLUGINS_SUBPAGE ? this.currentInstalledRow(data) : data;
+    this.fetchPluginDetail(row?.registryId);
+  };
 
   // the page has the registry's version list in hand, so the header offers the choice the design
   // asks for; with no list to offer it falls back to the plain confirmation and the latest build
@@ -1045,6 +1105,7 @@ export class InstalledTab extends Component {
   };
 
   installedPluginsSubPageHandler = (pageData) => {
+    this.detailRegistryId = pageData.registryId || null;
     this.fetchPluginDetail(pageData.registryId);
 
     return this.changeSubPage({

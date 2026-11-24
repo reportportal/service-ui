@@ -50,6 +50,13 @@ describe('compareVersions', () => {
     expect(compareVersions(undefined, undefined)).toBe(0);
   });
 
+  // service-api ignores build metadata in precedence
+  test('build metadata does not take part in the comparison', () => {
+    expect(compareVersions('26.0+build.5', '26.0')).toBe(0);
+    expect(compareVersions('26.0+build.9', '26.0+build.5')).toBe(0);
+    expect(compareVersions('26.1+build.1', '26.0')).toBeGreaterThan(0);
+  });
+
   test('a release outranks the candidates on the way to it', () => {
     expect(compareVersions('5.8.0', '5.8.0-rc1')).toBeGreaterThan(0);
     expect(compareVersions('5.8.0-rc2', '5.8.0-rc1')).toBeGreaterThan(0);
@@ -213,5 +220,36 @@ describe('violatedRangeBound agrees with the server on what matches', () => {
     ['>=25.10', '25.10', true],
   ])('%s on %s matches: %p', (range, productVersion, matches) => {
     expect(violatedRangeBound(range, productVersion) === null).toBe(matches);
+  });
+});
+
+// cases the ceiling branch pinned for its own reading of a range, kept against the port
+describe('violatedRangeBound, beyond the first bound written', () => {
+  test('the order of the parts does not matter', () => {
+    expect(violatedRangeBound('<26.0, >=25.1', '26.1')).toEqual({ operator: '<', version: '26.0' });
+    expect(violatedRangeBound('<26.0, >=25.1', '25.0')).toEqual({
+      operator: '>=',
+      version: '25.1',
+    });
+  });
+
+  test('== is an exact pin, failed from either side', () => {
+    expect(violatedRangeBound('==26.2', '26.0')).toEqual({ operator: '==', version: '26.2' });
+    expect(violatedRangeBound('==26.0', '26.2')).toEqual({ operator: '==', version: '26.0' });
+    expect(violatedRangeBound('==26.2', '26.2')).toBeNull();
+  });
+
+  test('build metadata on the product does not fail a bound', () => {
+    expect(violatedRangeBound('>=26.0', '26.0+build.5')).toBeNull();
+    expect(violatedRangeBound('<26.0', '26.0+build.5')).toEqual({ operator: '<', version: '26.0' });
+  });
+
+  test('a product version of only whitespace is no product version', () => {
+    expect(violatedRangeBound('>=26.2', '   ')).toBeNull();
+  });
+
+  test('one unreadable part leaves nothing to name, wherever it sits', () => {
+    expect(violatedRangeBound('>=25.1, soon', '25.0')).toBeNull();
+    expect(violatedRangeBound('soon, >=27.0', '26.1')).toBeNull();
   });
 });

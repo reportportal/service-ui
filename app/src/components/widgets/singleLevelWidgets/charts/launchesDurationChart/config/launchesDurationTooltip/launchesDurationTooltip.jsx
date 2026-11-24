@@ -22,16 +22,18 @@ import styles from './launchesDurationTooltip.scss';
 
 const cx = classNames.bind(styles);
 
-export const LaunchesDurationTooltip = ({ itemName, duration }) => (
-  <TooltipContent itemName={itemName}>
+export const LaunchesDurationTooltip = ({ itemName, duration, wrapperClassName }) => (
+  <TooltipContent itemName={itemName} wrapperClassName={wrapperClassName}>
     <div className={cx('duration')}>{duration}</div>
   </TooltipContent>
 );
 LaunchesDurationTooltip.propTypes = {
   itemName: PropTypes.string.isRequired,
   duration: PropTypes.string,
+  wrapperClassName: PropTypes.string,
 };
 LaunchesDurationTooltip.defaultProps = {
   itemName: '',
   duration: '',
+  wrapperClassName: '',
 };

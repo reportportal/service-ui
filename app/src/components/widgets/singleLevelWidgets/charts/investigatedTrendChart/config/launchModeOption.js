@@ -50,11 +50,18 @@ export const getLaunchModeData = (content) => {
   };
 };
 
-export const getLaunchModeOption = ({ content, isPreview, formatMessage, hiddenItems }) =>
+export const getLaunchModeOption = ({
+  content,
+  isPreview,
+  formatMessage,
+  hiddenItems,
+  legendHeight,
+}) =>
   buildInvestigatedChartOption({
     ...getLaunchModeData(content),
     isPreview,
     formatMessage,
     hiddenItems,
+    legendHeight,
     gridRight: 20,
   });
