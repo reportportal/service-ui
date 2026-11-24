@@ -78,6 +78,19 @@ const execution = {
   btsTickets: [ticket],
 } as unknown as TestCaseExecution;
 
+const mountAndUnlinkTicket = async (ticketId: string) => {
+  type Wrapper = { find: (component: unknown) => { prop: (name: string) => unknown } };
+  const wrapper = mount(
+    createElement(IntlProvider, { locale: 'en' }, createElement(LinkedToBTSSection, { execution })),
+  ) as unknown as Wrapper;
+  const onIssueRemove = wrapper.find(IssueList).prop('onIssueRemove') as (issue: unknown) => void;
+
+  await act(async () => {
+    onIssueRemove({ ticketId });
+    await Promise.resolve();
+  });
+};
+
 describe('LinkedToBTSSection', () => {
   beforeEach(() => {
     mockLocation = {
@@ -88,20 +101,7 @@ describe('LinkedToBTSSection', () => {
 
   test('unlinking a ticket reloads the execution from the server', async () => {
     mockedFetch.mockResolvedValue({});
-    type Wrapper = { find: (component: unknown) => { prop: (name: string) => unknown } };
-    const wrapper = mount(
-      createElement(
-        IntlProvider,
-        { locale: 'en' },
-        createElement(LinkedToBTSSection, { execution }),
-      ),
-    ) as unknown as Wrapper;
-    const onIssueRemove = wrapper.find(IssueList).prop('onIssueRemove') as (issue: unknown) => void;
-
-    await act(async () => {
-      onIssueRemove({ ticketId: 'EPM-1' });
-      await Promise.resolve();
-    });
+    await mountAndUnlinkTicket('EPM-1');
 
     expect(mockedFetch).toHaveBeenCalledWith(expect.stringContaining('unlink'), {
       method: 'PUT',
@@ -119,20 +119,7 @@ describe('LinkedToBTSSection', () => {
       type: 'MANUAL_LAUNCH_EXECUTION_PAGE',
       payload: { launchId: '10', executionId: '6' },
     };
-    type Wrapper = { find: (component: unknown) => { prop: (name: string) => unknown } };
-    const wrapper = mount(
-      createElement(
-        IntlProvider,
-        { locale: 'en' },
-        createElement(LinkedToBTSSection, { execution }),
-      ),
-    ) as unknown as Wrapper;
-    const onIssueRemove = wrapper.find(IssueList).prop('onIssueRemove') as (issue: unknown) => void;
-
-    await act(async () => {
-      onIssueRemove({ ticketId: 'EPM-1' });
-      await Promise.resolve();
-    });
+    await mountAndUnlinkTicket('EPM-1');
 
     expect(mockedFetch).toHaveBeenCalled();
     expect(mockDispatch).not.toHaveBeenCalledWith(
@@ -200,6 +187,6 @@ describe('LinkedToBTSSection', () => {
     ) as unknown as Wrapper;
 
     expect(wrapper.find(IssueList).prop('issues')).toHaveLength(1);
-    expect(wrapper.find(Button).length).toBe(0);
+    expect(wrapper.find(Button)).toHaveLength(0);
   });
 });

@@ -79,46 +79,55 @@ const setupStoreWithNotifications = (state: Record<string, unknown>) => {
   return { store, dispatched, toasts };
 };
 
+// Keeps every fetch pending and returns its resolvers, so a test decides when each request finishes.
+const deferFetchResponses = () => {
+  const resolvers: Array<(value: unknown) => void> = [];
+  mockedFetch.mockImplementation(
+    () =>
+      new Promise((resolve) => {
+        resolvers.push(resolve);
+      }),
+  );
+  return resolvers;
+};
+
+const dispatchToRunStatusChanges = (
+  store: ReturnType<typeof setupStore>['store'],
+  executionIds: number[],
+  onSuccess: () => void,
+) => {
+  executionIds.forEach((executionId) => {
+    store.dispatch(
+      updateManualLaunchExecutionStatusAction({
+        projectKey: 'demo',
+        launchId: 10,
+        executionId,
+        status: 'TO_RUN',
+        onSuccess,
+      }),
+    );
+  });
+};
+
+const twoExecutionsListState = {
+  data: { content: [{ id: 1 }, { id: 2 }], page: { totalElements: 2 } },
+};
+
 describe('controllers/manualLaunch/sagas', () => {
   beforeEach(() => {
     mockedFetch.mockReset();
   });
 
   test('two status changes in a row both finish and sync the list', async () => {
-    const resolvers: Array<(value: unknown) => void> = [];
-    mockedFetch.mockImplementation(
-      () =>
-        new Promise((resolve) => {
-          resolvers.push(resolve);
-        }),
-    );
+    const resolvers = deferFetchResponses();
     const { store, dispatched } = setupStore({
       project: { info: { projectKey: 'demo' } },
       location: { type: 'MANUAL_LAUNCH_EXECUTION_PAGE', payload: { launchId: 10 } },
-      manualLaunchTestCaseExecutions: {
-        data: { content: [{ id: 1 }, { id: 2 }], page: { totalElements: 2 } },
-      },
+      manualLaunchTestCaseExecutions: twoExecutionsListState,
     });
     const onSuccess = jest.fn();
 
-    store.dispatch(
-      updateManualLaunchExecutionStatusAction({
-        projectKey: 'demo',
-        launchId: 10,
-        executionId: 1,
-        status: 'TO_RUN',
-        onSuccess,
-      }),
-    );
-    store.dispatch(
-      updateManualLaunchExecutionStatusAction({
-        projectKey: 'demo',
-        launchId: 10,
-        executionId: 2,
-        status: 'TO_RUN',
-        onSuccess,
-      }),
-    );
+    dispatchToRunStatusChanges(store, [1, 2], onSuccess);
     await flush();
 
     expect(resolvers).toHaveLength(2);
@@ -137,43 +146,18 @@ describe('controllers/manualLaunch/sagas', () => {
   });
 
   test('a mutation finished after opening another execution syncs the list but keeps that execution shown', async () => {
-    const resolvers: Array<(value: unknown) => void> = [];
-    mockedFetch.mockImplementation(
-      () =>
-        new Promise((resolve) => {
-          resolvers.push(resolve);
-        }),
-    );
+    const resolvers = deferFetchResponses();
     const { store, dispatched } = setupStore({
       project: { info: { projectKey: 'demo' } },
       location: {
         type: 'MANUAL_LAUNCH_EXECUTION_PAGE',
         payload: { launchId: '10', executionId: '2' },
       },
-      manualLaunchTestCaseExecutions: {
-        data: { content: [{ id: 1 }, { id: 2 }], page: { totalElements: 2 } },
-      },
+      manualLaunchTestCaseExecutions: twoExecutionsListState,
     });
     const onSuccess = jest.fn();
 
-    store.dispatch(
-      updateManualLaunchExecutionStatusAction({
-        projectKey: 'demo',
-        launchId: 10,
-        executionId: 1,
-        status: 'TO_RUN',
-        onSuccess,
-      }),
-    );
-    store.dispatch(
-      updateManualLaunchExecutionStatusAction({
-        projectKey: 'demo',
-        launchId: 10,
-        executionId: 2,
-        status: 'TO_RUN',
-        onSuccess,
-      }),
-    );
+    dispatchToRunStatusChanges(store, [1, 2], onSuccess);
     await flush();
 
     resolvers[1]({ id: 2, status: 'TO_RUN' });
@@ -509,7 +493,16 @@ describe('controllers/manualLaunch/sagas', () => {
       expect(toasts()).toHaveLength(1);
     });
 
-    test('opening a missing launch shows only the redirect toast', async () => {
+    test.each([
+      [
+        'a missing launch',
+        () => getManualLaunchTestCaseExecutionsAction({ launchId: '10', offset: 0, limit: 20 }),
+      ],
+      [
+        'an execution of a missing launch',
+        () => getManualLaunchExecutionAction({ launchId: '10', executionId: 2 }),
+      ],
+    ])('opening %s shows only the redirect toast', async (_, createPageLoadAction) => {
       mockedFetch.mockImplementation((url: string) =>
         Promise.reject(
           Object.assign(
@@ -522,31 +515,7 @@ describe('controllers/manualLaunch/sagas', () => {
 
       store.dispatch(getManualLaunchAction({ launchId: '10' }));
       store.dispatch(getManualLaunchFoldersAction({ launchId: '10' }));
-      store.dispatch(
-        getManualLaunchTestCaseExecutionsAction({ launchId: '10', offset: 0, limit: 20 }),
-      );
-      await flush();
-
-      expect(toasts()).toHaveLength(1);
-      expect(toasts()[0].payload).toMatchObject({
-        messageId: 'manualLaunchRedirectWarningMessage',
-      });
-    });
-
-    test('opening an execution of a missing launch shows only the redirect toast', async () => {
-      mockedFetch.mockImplementation((url: string) =>
-        Promise.reject(
-          Object.assign(
-            new Error('not found'),
-            url === URLS.manualLaunchById('demo', '10') ? { errorCode: 40430 } : launchNotFound,
-          ),
-        ),
-      );
-      const { store, toasts } = setupStoreWithNotifications(launchPageState);
-
-      store.dispatch(getManualLaunchAction({ launchId: '10' }));
-      store.dispatch(getManualLaunchFoldersAction({ launchId: '10' }));
-      store.dispatch(getManualLaunchExecutionAction({ launchId: '10', executionId: 2 }));
+      store.dispatch(createPageLoadAction());
       await flush();
 
       expect(toasts()).toHaveLength(1);
