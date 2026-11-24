@@ -47,7 +47,8 @@ const AXIS_TITLE_STYLE = {
 const TOOLTIP_SHELL = {
   backgroundColor: 'transparent',
   borderWidth: 0,
-  extraCssText: 'box-shadow: none; padding: 0;',
+  extraCssText: 'box-shadow: none; padding: 0; max-width: min(300px, 100%);',
+  confine: true,
 };
 
 const buildBarSeries = ({ itemNames, dataByName, colors, isPreview, hiddenItems }) =>
