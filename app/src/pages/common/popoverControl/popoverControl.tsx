@@ -52,6 +52,8 @@ interface PopoverControlProps {
   placement?: ComponentProps<typeof Popover>['placement'];
   strategy?: ComponentProps<typeof Popover>['strategy'];
   shouldUsePortal?: ComponentProps<typeof Popover>['shouldUsePortal'];
+  isFocusDisabled?: ComponentProps<typeof Popover>['isFocusDisabled'];
+  isCompact?: boolean;
   children?: ReactNode;
   isOpened?: boolean;
   setIsOpened?: (isOpened: boolean) => void;
@@ -63,6 +65,8 @@ export const PopoverControl = ({
   placement,
   strategy,
   shouldUsePortal,
+  isFocusDisabled,
+  isCompact = false,
   children,
   isOpened,
   setIsOpened,
@@ -155,12 +159,13 @@ export const PopoverControl = ({
 
   return (
     <Popover
-      className={cx('popover-control')}
+      className={cx('popover-control', { 'popover-control--compact': isCompact })}
       isOpened={isOpened}
       content={content}
       placement={placement}
       strategy={strategy}
       shouldUsePortal={shouldUsePortal}
+      isFocusDisabled={isFocusDisabled}
       setIsOpened={setIsOpened}
     >
       {children}

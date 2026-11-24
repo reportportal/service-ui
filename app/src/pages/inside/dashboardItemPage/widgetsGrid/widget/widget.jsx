@@ -36,7 +36,6 @@ import {
 } from 'common/constants/widgetTypes';
 import { showModalAction } from 'controllers/modal';
 import { analyticsEnabledSelector, baseEventParametersSelector } from 'controllers/appInfo';
-import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import {
   CHARTS,
   MATERIALIZED_VIEW_WIDGETS,
@@ -54,6 +53,7 @@ import { widgetTypesMessages } from 'pages/inside/dashboardItemPage/modals/commo
 import { isWidgetDataAvailable } from '../../modals/common/utils';
 import { EditWidgetModal } from '../../modals/editWidgetModal';
 import { DeleteWidgetModal } from '../../modals/deleteWidgetModal';
+import { UpdateWidgetDataModal } from '../../modals/updateWidgetDataModal';
 import { WidgetHeader } from './widgetHeader';
 import { WidgetStateMessage } from './widgetStateMessage';
 import styles from './widget.scss';
@@ -61,15 +61,6 @@ import styles from './widget.scss';
 const cx = classNames.bind(styles);
 
 const messages = defineMessages({
-  forceUpdateWidgetTitle: {
-    id: 'Widget.forceUpdateWidgetTitle',
-    defaultMessage: 'Update widget data',
-  },
-  forceUpdateWidgetMessage: {
-    id: 'Widget.forceUpdateWidgetMessage',
-    defaultMessage:
-      'Are you sure you want to update data in this widget? It could take <b>up to 15 minutes</b> depend on a database size on the project.',
-  },
   generatingTitle: {
     id: 'Widget.generatingTitle',
     defaultMessage: 'Preparing widget data',
@@ -491,19 +482,13 @@ export class SimpleWidget extends Component {
   };
 
   showForceUpdateWidgetModal = () => {
-    const {
-      intl: { formatMessage },
-    } = this.props;
     this.props.tracking.trackEvent(WIDGETS_EVENTS.CLICK_ON_REFRESH_WIDGET_ICON);
     this.props.showModalAction({
-      id: 'confirmationModal',
-      data: {
-        message: formatMessage(messages.forceUpdateWidgetMessage),
-        onConfirm: () => this.fetchWidget({ refresh: true }, false),
-        title: formatMessage(messages.forceUpdateWidgetTitle),
-        confirmText: formatMessage(COMMON_LOCALE_KEYS.UPDATE),
-        cancelText: formatMessage(COMMON_LOCALE_KEYS.CANCEL),
-      },
+      component: (
+        <UpdateWidgetDataModal
+          data={{ onConfirm: () => this.fetchWidget({ refresh: true }, false) }}
+        />
+      ),
     });
   };
 

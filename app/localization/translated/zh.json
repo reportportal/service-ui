@@ -1,5 +1,7 @@
 {
   "AALabel.investigatedByAA": "通过自动分析服务进行分析",
+  "CumulativeTrendChart.drillDown": "下钻",
+  "CumulativeTrendChart.showFilter": "显示过滤器",
   "DashboardEmptyResults.emptyActionText": "创建仪表板",
   "DashboardEmptyResults.emptyHeadline": "尚未创建仪表板",
   "DashboardEmptyResults.emptyText": "创建您的第一个仪表板，跟踪项目进度与成果。",

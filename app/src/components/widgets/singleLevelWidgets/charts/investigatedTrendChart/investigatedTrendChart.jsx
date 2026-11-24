@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { useCallback, useEffect, useMemo, useRef } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 import { useIntl } from 'react-intl';
 import { useDispatch, useSelector } from 'react-redux';
@@ -41,7 +41,7 @@ import { ALL } from 'common/constants/reservedFilterIds';
 import { EChart } from 'components/widgets/common/echarts';
 import { getOption as getStatusPageOption } from '../common/statusPageChartConfig';
 import { getHiddenItemsBarSeries, selectOptionFunction } from './config';
-import { LEGEND_MAX_HEIGHT } from './config/constants';
+import { LEGEND_DEFAULT_HEIGHT, LEGEND_MAX_HEIGHT } from './config/constants';
 import styles from './investigatedTrendChart.scss';
 
 const cx = classNames.bind(styles);
@@ -141,9 +141,41 @@ export const InvestigatedTrendChart = ({
       : { content: widget.content?.result, isTimeline, isPreview };
   }, [widget.content, isTimeline, isPreview, onStatusPageMode]);
 
+  const chartWrapperRef = useRef(null);
+  const [legendHeight, setLegendHeight] = useState(LEGEND_DEFAULT_HEIGHT);
+
+  // the legend is drawn over the chart, so the plot area starts below the measured legend
+  useEffect(() => {
+    const wrapper = chartWrapperRef.current;
+    if (!wrapper || isPreview || onStatusPageMode) {
+      return undefined;
+    }
+
+    const measureLegend = () => {
+      const legend = wrapper.querySelector(`.${cx('legend')}`);
+      if (legend) {
+        setLegendHeight(Math.ceil(legend.getBoundingClientRect().height));
+      }
+    };
+
+    measureLegend();
+    if (typeof ResizeObserver === 'undefined') {
+      return undefined;
+    }
+    const resizeObserver = new ResizeObserver(measureLegend);
+    resizeObserver.observe(wrapper);
+
+    return () => resizeObserver.disconnect();
+  }, [widget.content, isPreview, onStatusPageMode]);
+
   const getOptionWithHiddenItems = useCallback(
-    (params) => selectOptionFunction(isTimeline)({ ...params, hiddenItems: hiddenItemsRef.current }),
-    [isTimeline],
+    (params) =>
+      selectOptionFunction(isTimeline)({
+        ...params,
+        hiddenItems: hiddenItemsRef.current,
+        legendHeight,
+      }),
+    [isTimeline, legendHeight],
   );
 
   const onChartCreated = useCallback((_node, chart) => {
@@ -200,7 +232,10 @@ export const InvestigatedTrendChart = ({
   );
 
   return (
-    <div className={cx('investigated-trend-chart', { 'timeline-mode': isTimeline })}>
+    <div
+      ref={chartWrapperRef}
+      className={cx('investigated-trend-chart', { 'timeline-mode': isTimeline })}
+    >
       <EChart
         {...getChartDefaultProps({ widget, container, isPreview, observer, heightOffset })}
         className={cx('widget-wrapper')}
