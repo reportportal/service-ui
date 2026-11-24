@@ -33,8 +33,9 @@ jest.mock('react-redux', () => ({
     selector({ project: { info: { projectKey: 'proj' } }, form: {} }),
 }));
 
-jest.mock('react-tracking', () => ({
-  useTracking: () => ({ trackEvent: jest.fn() }),
+jest.mock('common/hooks', () => ({
+  useDebouncedSpinner: () => ({ isLoading: false, showSpinner: jest.fn(), hideSpinner: jest.fn() }),
+  useQueryParams: () => ({ offset: 0, limit: 20 }),
 }));
 
 jest.mock('common/utils', () => ({
@@ -42,9 +43,8 @@ jest.mock('common/utils', () => ({
   fetch: (...args: unknown[]) => mockFetch(...args) as unknown,
 }));
 
-jest.mock('common/hooks', () => ({
-  useDebouncedSpinner: () => ({ isLoading: false, showSpinner: jest.fn(), hideSpinner: jest.fn() }),
-  useQueryParams: () => ({ offset: 0, limit: 20 }),
+jest.mock('react-tracking', () => ({
+  useTracking: () => ({ trackEvent: jest.fn() }),
 }));
 
 (globalThis as { IS_REACT_ACT_ENVIRONMENT?: boolean }).IS_REACT_ACT_ENVIRONMENT = true;
