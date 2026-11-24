@@ -233,23 +233,26 @@ const AutomationResults = ({
 };
 
 interface RequestStateProps {
-  automation?: Automation;
-  isLoading: boolean;
+  isInitialLoading: boolean;
+  isAutomationInProgress: boolean;
   isError: boolean;
   onRetry?: () => void;
 }
 
 const renderRequestState = (
-  { automation, isLoading, isError, onRetry }: RequestStateProps,
+  { isInitialLoading, isAutomationInProgress, isError, onRetry }: RequestStateProps,
   formatMessage: FormatMessage,
 ): ReactNode => (
   <>
-    {isLoading && (
+    {(isInitialLoading || isAutomationInProgress) && (
       <output
         className={cx('automation-section__state')}
-        aria-label={formatMessage(automation ? messages.updatingResults : messages.loadingResults)}
+        aria-label={formatMessage(
+          isAutomationInProgress ? messages.updatingResults : messages.loadingResults,
+        )}
       >
-        {automation ? formatMessage(messages.updatingResults) : <BubblesLoader />}
+        <BubblesLoader />
+        {isAutomationInProgress && formatMessage(messages.updatingResults)}
       </output>
     )}
     {isError && (
@@ -324,6 +327,8 @@ export const AutomationSection = ({
   const disabledMessage = disabledReason
     ? automationDisabledMessages[disabledReason]
     : automationPipeline?.disabledMessage;
+  const automationStatus = automation?.status ?? testCase.automation?.status;
+  const showAutomationAction = canAutomate && automationStatus !== AutomationStatus.AUTOMATED;
   const hasResolvedData = Boolean(automation) || hasLoadedData || (!isLoading && !isError);
   const isMock = !automationPipeline && isAutomationDemoEnabled();
   const openAutomationModal = () =>
@@ -346,13 +351,21 @@ export const AutomationSection = ({
             projectSlug={projectSlug}
           />
         )}
-        {renderRequestState({ automation, isLoading, isError, onRetry }, formatMessage)}
         {renderScenarioWarning(automation?.scenarioChangedAfterAutomation, formatMessage)}
-        {canAutomate &&
+        {showAutomationAction &&
           renderAutomationAction(
             { disabledMessage: disabledMessage || undefined, onClick: openAutomationModal },
             formatMessage,
           )}
+        {renderRequestState(
+          {
+            isInitialLoading: isLoading && !hasResolvedData,
+            isAutomationInProgress: automationStatus === AutomationStatus.IN_PROGRESS && !isError,
+            isError,
+            onRetry,
+          },
+          formatMessage,
+        )}
       </div>
     </CollapsibleSection>
   );

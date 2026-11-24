@@ -95,7 +95,7 @@ import { TestCaseDetailsHeader } from './testCaseDetailsHeader';
 import { useAddTestCasesToTestPlanModal } from '../addTestCasesToTestPlanModal/useAddTestCasesToTestPlanModal';
 import { useDescriptionModal } from './descriptionModal';
 import { useTestCaseTags } from './useTestCaseTags';
-import { useTestCaseAutomation } from './useTestCaseAutomation';
+import { AUTOMATION_POLL_INTERVAL_MS, useTestCaseAutomation } from './useTestCaseAutomation';
 import { messages } from './messages';
 import { DetailsEmptyState } from '../emptyState/details/detailsEmptyState';
 import { AttachmentsWithSlider } from '../../common/attachmentsWithSlider';
@@ -114,7 +114,6 @@ import { checkScenario } from './utils';
 import styles from './testCaseDetailsPage.scss';
 
 const cx = createClassnames(styles);
-const AUTOMATION_POLL_INTERVAL_MS = 3000;
 
 interface AutomationPollingCriteria {
   isAiFactoryEnabled: boolean;

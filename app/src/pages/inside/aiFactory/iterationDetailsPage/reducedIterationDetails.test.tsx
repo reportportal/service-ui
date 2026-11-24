@@ -881,6 +881,38 @@ describe('ReducedIterationDetails', () => {
     expect(wrapper.text()).toContain('In progress');
   });
 
+  test.each([
+    { status: 'PASSED', statusText: 'Done', ready: 9, barCount: 0 },
+    { status: 'WAITING', statusText: 'In progress', ready: 7, barCount: 1 },
+  ] as const)('shows $ready/9 Ready and $barCount progress bars when Review is $statusText', ({
+    status,
+    statusText,
+    ready,
+    barCount,
+  }) => {
+    const wrapper = renderTraceDetail([
+      {
+        id: 12,
+        key: 'review',
+        stageKey: 'review',
+        label: 'Review',
+        sequence: 1,
+        status,
+        statusText,
+        summary: `${ready}/9 Ready`,
+        attributes: [
+          { key: 'ready', value: String(ready) },
+          { key: 'total', value: '9' },
+        ],
+      },
+    ]);
+
+    const card = wrapper.find('[data-automation-id="reducedStageCard-12"]');
+    expect(card.text()).toContain(statusText);
+    expect(card.text()).toContain(`${ready}/9 Ready`);
+    expect(card.find('ScoreBar')).toHaveLength(barCount);
+  });
+
   test('explains why the first iteration cannot be compared with a previous one', () => {
     const wrapper = shallow(
       <ReducedIterationDetails

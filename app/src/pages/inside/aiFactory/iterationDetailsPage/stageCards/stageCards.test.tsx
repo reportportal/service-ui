@@ -22,9 +22,11 @@ import { StageCards } from './stageCards';
 
 jest.mock('@reportportal/ui-kit', () => ({ RerunIcon: 'RerunIcon' }));
 jest.mock('pages/inside/aiFactory/common', () => ({
+  ScoreBar: 'ScoreBar',
   STAGE_LABEL_MESSAGE: {
     CREATE: { defaultMessage: 'Create' },
     GRADE: { defaultMessage: 'Grade' },
+    REVIEW: { defaultMessage: 'Review' },
   },
   StageStatusDot: 'StageStatusDot',
   StageStatusLabel: 'StageStatusLabel',
@@ -38,6 +40,23 @@ jest.mock('react-intl', () => ({
 }));
 
 describe('StageCards', () => {
+  test.each([
+    { status: StageStatus.DONE, readyCount: 9, barCount: 0 },
+    { status: StageStatus.IN_PROGRESS, readyCount: 7, barCount: 1 },
+  ])('renders $barCount progress bars when Review is $status', ({ status, readyCount, barCount }) => {
+    const wrapper = shallow(
+      <StageCards
+        stages={[{ key: StageKey.REVIEW, status, cost: 0, tokens: [] }]}
+        testCasesCount={9}
+        readyCount={readyCount}
+        selectedStage={StageKey.REVIEW}
+        onSelect={jest.fn()}
+      />,
+    );
+
+    expect(wrapper.find('ScoreBar')).toHaveLength(barCount);
+  });
+
   test('exposes the selected stage and keeps connector arrows decorative', () => {
     const onSelect = jest.fn();
     const stages = [

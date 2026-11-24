@@ -911,7 +911,7 @@ Contract rules:
 |---|---:|---|---|
 | Rich iteration detail P3 | 5 s | `RUNNING` or `IN_REVIEW` | Stop on `COMPLETED`/`FAILED`; refresh detail replaces stage state |
 | Automation Pipeline list P2 | 5 s | A mock-rich automation iteration is `RUNNING` | Stop when no automation iteration is running |
-| Test Case automation projection C2 | 3 s | C1/C2 automation is `IN_PROGRESS` | Stop on `AUTOMATED`/`FAILED`; refresh Test Case + C2 |
+| Test Case automation projection C2 | 30 s | C1/C2 automation is `IN_PROGRESS` | Stop on `AUTOMATED`/`FAILED`; refresh Test Case + C2 |
 | Fix round F2 | 3 s | Latest valid round is `RUNNING` | Stop on `PASSED`/`GRADE_FAILED`/`FAILED`; refresh C1/C2/comments/cost |
 
 Polling pauses while the page is hidden, does not intentionally overlap an outstanding request and must not run

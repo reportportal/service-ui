@@ -17,7 +17,7 @@ import { AutomationStatus, Lifecycle, MergeRequestState } from 'types/aiFactory'
 import { AutomationSection } from './automationSection';
 import { useAutomationModal } from './useAutomationModal';
 
-jest.mock('@reportportal/ui-kit', () => ({ BubblesLoader: 'BubblesLoader', Button: 'Button' }));
+jest.mock('@reportportal/ui-kit', () => ({ BubblesLoader: () => <span />, Button: 'button' }));
 jest.mock(
   'react-intl',
   () =>
@@ -130,6 +130,20 @@ describe('AutomationSection', () => {
     expect(renderResults(wrapper).find('[data-automation-id="automationStatus"]').text()).toBe(
       label,
     );
+    expect(wrapper.find('[data-automation-id="automateTestCase"]')).toHaveLength(
+      status === AutomationStatus.AUTOMATED ? 0 : 1,
+    );
+  });
+
+  test('hides the action when the case is already automated and results are loading', () => {
+    const wrapper = shallow(
+      <AutomationSection
+        testCase={{ ...testCase, automation: { status: AutomationStatus.AUTOMATED } }}
+        isLoading
+      />,
+    );
+
+    expect(wrapper.find('[data-automation-id="automateTestCase"]')).toHaveLength(0);
   });
 
   test('keeps terminal results visible for a viewer without rendering the Automate action', () => {
@@ -235,6 +249,32 @@ describe('AutomationSection', () => {
     expect(wrapper.find('BubblesLoader')).toHaveLength(1);
   });
 
+  test.each([false, true])(
+    'keeps polling feedback and loader visible with isLoading=%s',
+    (isLoading) => {
+      const automation = {
+        status: AutomationStatus.IN_PROGRESS,
+        scenarioChangedAfterAutomation: false,
+      };
+      const wrapper = shallow(
+        <AutomationSection
+          testCase={{ ...testCase, automation }}
+          automation={automation}
+          isLoading={isLoading}
+        />,
+      );
+      const markup = document.createElement('template');
+      markup.innerHTML = wrapper.find('.automation-section').html();
+
+      expect(
+        markup.content.querySelector(
+          'button[data-automation-id="automateTestCase"]:disabled ~ output[aria-label="Updating automation results"]',
+        ),
+      ).not.toBeNull();
+      expect(wrapper.find('BubblesLoader')).toHaveLength(1);
+    },
+  );
+
   test('renders an accessible error and invokes retry', () => {
     const onRetry = jest.fn();
     const wrapper = shallow(
@@ -264,7 +304,7 @@ describe('AutomationSection', () => {
     );
 
     expect(renderResults(loadingWrapper).text()).toContain('Automated');
-    expect(loadingWrapper.find('output').text()).toBe('Updating automation results');
+    expect(loadingWrapper.find('output')).toHaveLength(0);
     expect(renderResults(errorWrapper).text()).toContain('Passed');
     expect(errorWrapper.find('[role="alert"]')).toHaveLength(1);
   });

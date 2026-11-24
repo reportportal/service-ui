@@ -194,9 +194,11 @@ export const StageCards = ({
                   <strong>{stage.grade.suiteScore}</strong>
                 </div>
               )}
-              {stage.key === StageKey.REVIEW && stage.status !== StageStatus.PENDING && (
-                <ScoreBar value={readyCount} max={testCasesCount || 1} />
-              )}
+              {stage.key === StageKey.REVIEW &&
+                stage.status !== StageStatus.PENDING &&
+                stage.status !== StageStatus.DONE && (
+                  <ScoreBar value={readyCount} max={testCasesCount || 1} />
+                )}
               {description && (
                 <span className={cx('stage-cards__item-description')}>{description}</span>
               )}

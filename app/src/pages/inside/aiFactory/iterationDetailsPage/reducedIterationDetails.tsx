@@ -642,6 +642,7 @@ const renderReducedStageCards = (
             const readyCount = numericAttribute(stage.attributes, 'ready');
             const totalCount = numericAttribute(stage.attributes, 'total');
             const stageCost = numericAttribute(stage.attributes, 'cost');
+            const isCompletedReview = stage.status === 'PASSED' && isReviewStage(stage);
             return (
               <div key={stage.id} className={cardCx('stage-cards__item-wrapper')}>
                 {index > 0 && (
@@ -691,7 +692,7 @@ const renderReducedStageCards = (
                         </span>
                       ))}
                     {suiteScore !== undefined && <ScoreBar value={suiteScore} max={100} />}
-                    {readyCount !== undefined && totalCount !== undefined && (
+                    {!isCompletedReview && readyCount !== undefined && totalCount !== undefined && (
                       <ScoreBar value={readyCount} max={totalCount} />
                     )}
                     {(stage.durationMs !== undefined || stageCost !== undefined) && (

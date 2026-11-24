@@ -386,7 +386,7 @@ describe('TestCaseDetailsPage lifecycle history', () => {
       expect(wrapper.find(LifecycleHistory)).toHaveLength(0);
       expect(wrapper.find(AutomationSection)).toHaveLength(0);
       expect(wrapper.find(LaunchBlockedBanner)).toHaveLength(0);
-      expect(usePolling).toHaveBeenCalledWith(expect.any(Function), 3000, false);
+      expect(usePolling).toHaveBeenCalledWith(expect.any(Function), 30_000, false);
       act(() => mountedPage.unmount());
     },
   );
@@ -802,10 +802,10 @@ describe('TestCaseDetailsPage lifecycle history', () => {
 
     renderPage(isEnabled);
 
-    expect(usePolling).toHaveBeenLastCalledWith(expect.any(Function), 3000, false);
+    expect(usePolling).toHaveBeenLastCalledWith(expect.any(Function), 30_000, false);
   });
 
-  test('polls a running automation every 3 seconds and refreshes both resources', () => {
+  test('polls a running automation every 30 seconds and refreshes both resources', () => {
     selectedAiDetails = {
       pipelineLinks: [],
       lifecycleHistory: [],
@@ -818,7 +818,7 @@ describe('TestCaseDetailsPage lifecycle history', () => {
     renderPage(true);
     const poll = jest.mocked(usePolling).mock.calls.at(-1)?.[0];
 
-    expect(usePolling).toHaveBeenLastCalledWith(expect.any(Function), 3000, true);
+    expect(usePolling).toHaveBeenLastCalledWith(expect.any(Function), 30_000, true);
     poll?.();
     expect(aiDetailsReload).toHaveBeenCalledTimes(1);
     expect(mockDispatch).toHaveBeenCalledWith({
@@ -838,7 +838,7 @@ describe('TestCaseDetailsPage lifecycle history', () => {
 
       renderPage(true);
 
-      expect(usePolling).toHaveBeenLastCalledWith(expect.any(Function), 3000, false);
+      expect(usePolling).toHaveBeenLastCalledWith(expect.any(Function), 30_000, false);
     },
   );
 
@@ -973,7 +973,7 @@ describe('TestCaseDetailsPage lifecycle history', () => {
     const header = wrapper.find('mock-TestCaseDetailsHeader');
     expect(header.prop('testCase')).not.toHaveProperty('review.fixRound');
     expect(header.prop('isNativeFixInProgress')).toBe(true);
-    expect(usePolling).toHaveBeenCalledWith(expect.any(Function), 3000, false);
+    expect(usePolling).toHaveBeenCalledWith(expect.any(Function), 30_000, false);
   });
 
   test.each([true, false])(

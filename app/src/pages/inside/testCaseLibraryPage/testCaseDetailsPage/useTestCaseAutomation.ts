@@ -37,7 +37,7 @@ interface AutomationReadRequest {
 
 type AutomationCase = Pick<TestCase, 'id' | 'updatedAt' | 'automationState'>;
 
-const POLL_INTERVAL_MS = 3000;
+export const AUTOMATION_POLL_INTERVAL_MS = 30_000;
 
 const getDetailsAutomation = (testCase?: AutomationCase) => {
   const automation = getNativeAutomationState(testCase);
@@ -174,7 +174,7 @@ export const useTestCaseAutomation = (projectKey: string, testCase?: AutomationC
 
   usePolling(
     reload,
-    POLL_INTERVAL_MS,
+    AUTOMATION_POLL_INTERVAL_MS,
     automation?.status === AutomationStatus.IN_PROGRESS && !isError,
   );
 
