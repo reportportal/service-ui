@@ -103,7 +103,7 @@ export const WidgetPreview = ({
   if (data && (hasNoCriteria || !isWidgetDataAvailable(data))) {
     return (
       <PreviewFrame dynamic centered className={className} containerRef={setContainer}>
-        {formatMessage(noDataMessages.noDataAvailable)}
+        <span className={cx('no-data')}>{formatMessage(noDataMessages.noDataAvailable)}</span>
       </PreviewFrame>
     );
   }

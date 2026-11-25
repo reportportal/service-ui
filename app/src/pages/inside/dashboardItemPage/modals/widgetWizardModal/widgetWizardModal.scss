@@ -29,6 +29,14 @@
   &.without-footer > div[class*='modal-content'] {
     padding-bottom: 0;
   }
+
+  [class*='radio-button'] [class*='toggler'] {
+    margin-right: 8px;
+  }
+
+  [class*='attributeEditor__separator'] {
+    color: var(--rp-ui-base-e-300);
+  }
 }
 
 .wizard-footer {
