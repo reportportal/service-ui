@@ -17,6 +17,7 @@
 import { COLOR_CHART_DURATION } from 'common/constants/colors';
 
 const COLOR_INTERRUPTED = '#fdc63a';
+const COLOR_STOPPED = '#a2aab5';
 import { DURATION } from 'components/widgets/common/constants';
 import { getOption } from './getOption';
 import {
@@ -47,7 +48,7 @@ describe('launchesDurationChart getOption', () => {
       },
     });
     expect(option.series[0].data).toEqual([
-      { value: 4607, itemStyle: { color: COLOR_CHART_DURATION } },
+      { value: 4607, itemStyle: { color: COLOR_STOPPED } },
       { value: 1526, itemStyle: { color: COLOR_CHART_DURATION } },
       { value: 830, itemStyle: { color: COLOR_CHART_DURATION } },
     ]);
@@ -70,6 +71,14 @@ describe('launchesDurationChart getOption', () => {
       expect.objectContaining({ trigger: 'item', formatter: expect.any(Function), show: true }),
     );
     expect(option.customData.itemsData).toHaveLength(3);
+  });
+
+  test('keeps the tooltip inside the widget and draws the y axis above the bars', () => {
+    const option = getOption({ content: sampleContent, isPreview: false, formatMessage });
+
+    expect(option.tooltip.confine).toBe(true);
+    expect(option.tooltip.extraCssText).toContain('max-width: min(300px, 100%)');
+    expect(option.yAxis.z).toBeGreaterThan(option.series[0].z ?? 2);
   });
 
   test('uses average duration and interrupted color for interrupted launches', () => {

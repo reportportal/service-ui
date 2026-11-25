@@ -28,7 +28,8 @@ jest.mock('components/widgets/common/tooltip', () => ({
   createTooltipRenderer:
     (_TooltipComponent, paramsCalculator, customProps) => (data, _title, _value, color) => {
       const props = paramsCalculator(data, color, customProps);
-      return `<div>${props.issueStatNameProps.itemName}:${props.itemsCount}</div>`;
+      const launch = props.itemName ? `${props.itemName}|` : '';
+      return `<div>${launch}${props.issueStatNameProps.itemName}:${props.itemCases}</div>`;
     },
 }));
 
@@ -43,10 +44,10 @@ describe('donutChart getOption', () => {
       chartText: 'SUM',
     });
 
-    expect(option.series).toHaveLength(2);
+    expect(option.series).toHaveLength(1);
     expect(option.series[0]).toMatchObject({
       type: 'pie',
-      radius: ['40%', '68%'],
+      radius: ['64%', '80%'],
       // Shifted down from dead-center so the ring doesn't sit flush against
       // the legend/title above it.
       center: ['50%', '60%'],
@@ -75,43 +76,10 @@ describe('donutChart getOption', () => {
     // must fall through to each data point's own name, not the series id.
     expect(option.series[0].id).toBeUndefined();
     expect(option.series[0].name).toBeUndefined();
-    // The ring's own hover-grow effect is off whenever the separate label
-    // series is also rendered: that series can't react to the ring's hover
-    // state, so scaling the ring here would visibly detach the percentage
-    // label from its slice while hovered.
+    expect(option.series).toHaveLength(1);
     expect(option.series[0].emphasis.scale).toBe(false);
-    // The visible ring draws no labels itself...
     expect(option.series[0].label.show).toBe(false);
     expect(option.series[0].labelLine.show).toBe(false);
-    // ...they're carried by an invisible, non-interactive pie whose band is
-    // biased inward, so the percentages sit a bit closer to the center than
-    // the ring's own mid-radius, without changing the ring's thickness.
-    const labelSeries = option.series[1];
-    expect(labelSeries).toMatchObject({
-      type: 'pie',
-      radius: ['40%', '64%'],
-      center: ['50%', '60%'],
-      silent: true,
-      itemStyle: { color: 'transparent', borderWidth: 0 },
-      emphasis: { disabled: true },
-    });
-    expect(labelSeries.data.map(({ id, value }) => ({ id, value }))).toEqual(
-      option.series[0].data.map(({ id, value }) => ({ id, value })),
-    );
-    // Percentage labels sit inside each slice, not floating outside with leader
-    // lines, are regular weight (not bold), and centered on their anchor.
-    expect(labelSeries.label).toMatchObject({
-      show: true,
-      position: 'inside',
-      fontSize: 13,
-      fontWeight: 400,
-      align: 'center',
-      verticalAlign: 'middle',
-    });
-    // One decimal place (e.g. "100.0%"), not the whole-number rounding of `{d}%`.
-    expect(labelSeries.label.formatter({ percent: 100 })).toBe('100.0%');
-    expect(labelSeries.label.formatter({ percent: 33.333 })).toBe('33.3%');
-    expect(labelSeries.labelLine.show).toBe(false);
     expect(option.customData.legendItems).toEqual([
       'statistics$executions$passed',
       'statistics$executions$failed',
@@ -126,16 +94,23 @@ describe('donutChart getOption', () => {
       isPreview: false,
       formatMessage,
       configParams: { getColumns: sampleGetColumns },
-      chartText: 'SUM',
+      chartText: 'Sum',
     });
 
     expect(option.graphic).toHaveLength(2);
-    expect(option.graphic[0].style).toMatchObject({ text: '100', fontSize: 25 });
+    expect(option.graphic[0].style).toMatchObject({
+      text: '100',
+      fontSize: 24,
+      fontWeight: 400,
+      fill: '#3f3f3f',
+      fontFamily: 'Roboto',
+    });
     expect(option.graphic[1].style).toMatchObject({
-      text: 'SUM',
-      fontSize: 23,
-      fontWeight: 700,
-      fill: '#666666',
+      text: 'Sum',
+      fontSize: 13,
+      fontWeight: 400,
+      fill: '#8d95a1',
+      fontFamily: 'Roboto',
     });
     // Centered as a pair a couple points above the ring's own true center
     // (60%), not flush on it.
@@ -251,7 +226,7 @@ describe('donutChart getOption', () => {
     // No separate label series in small-view mode (only the ring itself),
     // so there's nothing for the hover-grow effect to detach from.
     expect(option.series).toHaveLength(1);
-    expect(option.series[0].emphasis.scale).toBe(true);
+    expect(option.series[0].emphasis.scale).toBe(false);
   });
 
   test('shrinks and lowers the ring itself in small-view mode, not just its labels', () => {
@@ -274,13 +249,13 @@ describe('donutChart getOption', () => {
       small: true,
     });
 
-    expect(smallOption.series[0].radius).toEqual(['30%', '50%']);
+    expect(smallOption.series[0].radius).toEqual(['40%', '50%']);
     expect(smallOption.series[0].center).toEqual(['50%', '70%']);
     expect(smallOption.series[0].radius).not.toEqual(normalOption.series[0].radius);
     expect(smallOption.series[0].center).not.toEqual(normalOption.series[0].center);
   });
 
-  test('hides per-slice labels and tooltip and makes the pie non-interactive in preview mode, but still shows the center total', () => {
+  test('hides per-slice labels and tooltip and makes the pie non-interactive in preview mode, without a center total', () => {
     const option = getOption({
       content: sampleContent,
       contentFields: sampleContentFields,
@@ -293,15 +268,7 @@ describe('donutChart getOption', () => {
     expect(option.series[0].silent).toBe(true);
     expect(option.series[0].label.show).toBe(false);
     expect(option.tooltip.show).toBe(false);
-    // A preview with no numbers in it isn't a meaningful preview.
-    expect(option.graphic).toHaveLength(2);
-    expect(option.graphic[0].style.text).toBe('100');
-    expect(option.graphic[1].style.text).toBe('SUM');
-    // A dedicated, smaller preview font — preview is a fixed, tiny
-    // thumbnail regardless of how `small` (a container-size check) is
-    // computed, so it doesn't just fall back to the general small tier.
-    expect(option.graphic[0].style.fontSize).toBe(12);
-    expect(option.graphic[1].style.fontSize).toBe(10);
+    expect(option.graphic).toEqual([]);
   });
 
   test('centers the ring in preview mode even when small, since no legend renders there to clear', () => {
@@ -316,8 +283,6 @@ describe('donutChart getOption', () => {
     });
 
     expect(option.series[0].center).toEqual(['50%', '50%']);
-    expect(option.graphic[0].top).toBe('40%');
-    expect(option.graphic[1].top).toBe('52%');
   });
 
   test('uses a bigger ring in preview than the general small-view size, since preview never needs legend clearance', () => {
@@ -340,7 +305,7 @@ describe('donutChart getOption', () => {
       small: true,
     });
 
-    expect(previewOption.series[0].radius).toEqual(['48%', '82%']);
+    expect(previewOption.series[0].radius).toEqual(['65.6%', '82%']);
     expect(previewOption.series[0].radius).not.toEqual(smallOption.series[0].radius);
   });
 
@@ -370,14 +335,14 @@ describe('donutChart getOption', () => {
     expect(option.graphic[1].style.text).toBe('ISSUES');
   });
 
-  test('tooltip formatter reports the hovered slice value and percentage of the total', () => {
+  test('tooltip formatter reports the hovered slice as series: value', () => {
     const option = getOption({
       content: sampleContent,
       contentFields: sampleContentFields,
       isPreview: false,
       formatMessage,
       configParams: { getColumns: sampleGetColumns },
-      chartText: 'SUM',
+      chartText: 'Sum',
     });
 
     const html = option.tooltip.formatter({
@@ -389,5 +354,25 @@ describe('donutChart getOption', () => {
 
     // The id comes from the slice's own `name`, not the (unset) series id.
     expect(html).toBe('<div>statistics$executions$passed:60 (60.00%)</div>');
+  });
+
+  test('tooltip formatter includes launch name when content has name/number', () => {
+    const option = getOption({
+      content: { name: 'Nightly', number: 160, values: sampleContent[0].values },
+      contentFields: sampleContentFields,
+      isPreview: false,
+      formatMessage,
+      configParams: { getColumns: sampleGetColumns },
+      chartText: 'Sum',
+    });
+
+    const html = option.tooltip.formatter({
+      dataIndex: 0,
+      name: 'statistics$executions$passed',
+      value: 60,
+      color: '#56b985',
+    });
+
+    expect(html).toBe('<div>Nightly #160|statistics$executions$passed:60 (60.00%)</div>');
   });
 });

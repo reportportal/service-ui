@@ -1,4 +1,4 @@
-/*!
+/*
  * Copyright 2026 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,8 +14,18 @@
  * limitations under the License.
  */
 
+@use '../../../../common/chartStyles' as *;
+
 .donut-chart {
   position: relative;
   width: 100%;
   height: 100%;
+}
+
+div.tooltip {
+  @include chart-tooltip-dark;
+}
+
+.legend {
+  @include chart-legend-compact;
 }

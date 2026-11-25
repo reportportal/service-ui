@@ -25,34 +25,41 @@ describe('buildCenterLabelGraphic', () => {
       type: 'text',
       left: 'center',
       top: '50%',
-      style: { text: '42', fontSize: 25 },
+      style: {
+        text: '42',
+        fontSize: 24,
+        fontWeight: 400,
+        fontFamily: 'Roboto',
+        fill: '#3f3f3f',
+      },
     });
   });
 
-  test('adds a second, bold line below the value when a subtitle is given', () => {
-    const graphics = buildCenterLabelGraphic({ value: 10, subtitle: 'SUM' });
+  test('adds a second line below the value when a subtitle is given', () => {
+    const graphics = buildCenterLabelGraphic({ value: 10, subtitle: 'Sum' });
 
     expect(graphics).toHaveLength(2);
-    expect(graphics[0].style).toMatchObject({ text: '10', fontSize: 25 });
+    expect(graphics[0].style).toMatchObject({ text: '10', fontSize: 24 });
     expect(graphics[0].top).toBe('46%');
     expect(graphics[1].style).toMatchObject({
-      text: 'SUM',
-      fontSize: 23,
-      fontWeight: 700,
-      fill: '#666666',
+      text: 'Sum',
+      fontSize: 13,
+      fontWeight: 400,
+      fill: '#8d95a1',
+      fontFamily: 'Roboto',
     });
     expect(graphics[1].top).toBe('54%');
   });
 
   test('shrinks both lines in small-container mode', () => {
-    const graphics = buildCenterLabelGraphic({ value: 10, subtitle: 'ISSUES', small: true });
+    const graphics = buildCenterLabelGraphic({ value: 10, subtitle: 'Issues', small: true });
 
     expect(graphics[0].style.fontSize).toBe(15);
     expect(graphics[1].style.fontSize).toBe(13);
   });
 
   test('shifts both lines to track a custom vertical center', () => {
-    const graphics = buildCenterLabelGraphic({ value: 10, subtitle: 'SUM', centerY: 54 });
+    const graphics = buildCenterLabelGraphic({ value: 10, subtitle: 'Sum', centerY: 54 });
 
     expect(graphics[0].top).toBe('50%');
     expect(graphics[1].top).toBe('58%');
@@ -64,17 +71,5 @@ describe('buildCenterLabelGraphic', () => {
     graphics.forEach((graphic) => {
       expect(graphic.silent).toBe(true);
     });
-  });
-
-  test('accepts custom colors for the value and subtitle', () => {
-    const graphics = buildCenterLabelGraphic({
-      value: 1,
-      subtitle: 'Y',
-      valueColor: '#111111',
-      subtitleColor: '#222222',
-    });
-
-    expect(graphics[0].style.fill).toBe('#111111');
-    expect(graphics[1].style.fill).toBe('#222222');
   });
 });

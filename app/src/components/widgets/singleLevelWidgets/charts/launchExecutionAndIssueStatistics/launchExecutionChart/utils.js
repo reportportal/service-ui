@@ -14,13 +14,13 @@
  * limitations under the License.
  */
 
-import * as COLORS from 'common/constants/colors';
+import { getChartColor } from 'components/widgets/common/chartColors';
 import { getChartData } from '../common/config/utils';
 
 export const getColumns = (content, contentFields, params = {}) => {
   const { separateInterrupted } = params;
   const values = (content[0] || content).values;
-  const { itemTypes: chartData, itemColors: colors } = getChartData(values, '$executions$');
+  const { itemTypes: chartData } = getChartData(values, '$executions$');
   const columns = [];
 
   chartData.statistics$executions$passed &&
@@ -30,11 +30,11 @@ export const getColumns = (content, contentFields, params = {}) => {
   if (separateInterrupted) {
     const interruptedVal = chartData.statistics$executions$interrupted ?? 0;
     columns.push(['statistics$executions$interrupted', interruptedVal]);
-    colors.statistics$executions$interrupted =
-      colors.statistics$executions$interrupted || COLORS.COLOR_INTERRUPTED;
   }
   chartData.statistics$executions$skipped &&
     columns.push(['statistics$executions$skipped', chartData.statistics$executions$skipped]);
+
+  const colors = Object.fromEntries(columns.map(([id]) => [id, getChartColor(id)]));
 
   return {
     columns,

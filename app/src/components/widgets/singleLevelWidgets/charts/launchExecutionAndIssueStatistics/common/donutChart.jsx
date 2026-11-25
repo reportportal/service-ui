@@ -24,16 +24,24 @@ import { TEST_ITEMS_TYPE_LIST } from 'controllers/testItem';
 import { userFiltersSelector } from 'controllers/project';
 import { urlOrganizationAndProjectSelector, TEST_ITEM_PAGE } from 'controllers/pages';
 import {
+  getItemColor,
   getItemNameConfig,
   getChartDefaultProps,
   getDefaultTestItemLinkParams,
 } from 'components/widgets/common/utils';
+import { getChartColor } from 'components/widgets/common/chartColors';
+import { EXECUTIONS } from 'components/widgets/common/constants';
 import { EChart } from 'components/widgets/common/echarts';
 import { getOption } from './config/getOption';
 import { isSmallDonutChartView } from './config/utils';
 import styles from './donutChart.scss';
 
 const cx = classNames.bind(styles);
+
+const getLegendColor = (name, defectTypes) =>
+  getItemNameConfig(name).itemType === EXECUTIONS
+    ? getChartColor(name)
+    : getItemColor(name, defectTypes);
 
 export const DonutChart = ({
   widget,
@@ -176,6 +184,12 @@ export const DonutChart = ({
       showLegend: !onStatusPageMode,
       onChangeLegend,
       uncheckedLegendItems,
+      legendProps: {
+        className: cx('legend'),
+        maxHeight: 78,
+        alwaysShowScroll: true,
+        getColor: getLegendColor,
+      },
     }),
     [onStatusPageMode, onChangeLegend, uncheckedLegendItems],
   );

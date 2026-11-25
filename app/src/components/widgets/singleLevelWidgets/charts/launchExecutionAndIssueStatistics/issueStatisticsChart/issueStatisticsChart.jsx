@@ -74,7 +74,7 @@ export class IssueStatisticsChart extends Component {
     return (
       <DonutChart
         {...props}
-        chartText={'ISSUES'}
+        chartText={'Issues'}
         getLink={this.getChartClickLink}
         configParams={{ getColumns, defectTypes, orderedContentFields }}
       />
