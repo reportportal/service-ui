@@ -14,28 +14,25 @@
  * limitations under the License.
  */
 
+import { COLOR_WHITE_TWO } from 'common/constants/colors';
 import { createTooltipRenderer } from 'components/widgets/common/tooltip';
 import { buildCenterLabelGraphic } from 'components/widgets/common/echarts/centerLabelGraphic';
+import { CHART_TOOLTIP_SHELL } from 'components/widgets/common/echarts/configHelpers';
 import { IssueTypeStatTooltip } from '../../../common/issueTypeStatTooltip';
 import { calculateTooltipParams } from './utils';
 
-const DONUT_RADIUS = ['40%', '68%'];
+// Outer radius is capped at 80%: ECharts sizes percentages off the shorter side, so with
+// the center at 60% a 90% ring would overflow the bottom of a short box. Inner/outer 0.8 keeps
+// the Figma ring proportion.
+const DONUT_RADIUS = ['64%', '80%'];
 const DONUT_CENTER_Y = 60;
-const DONUT_RADIUS_SMALL = ['30%', '50%'];
+const DONUT_RADIUS_SMALL = ['40%', '50%'];
 const DONUT_CENTER_Y_SMALL = 70;
 // Preview never has a legend to clear (see `centerY` below), so it can use
 // more of its box than the general "small" ring size, which is sized to
-// leave room for one — bigger overall, and a bit thinner (a smaller gap
-// between the two radii) than the full-widget ring.
-const DONUT_RADIUS_PREVIEW = ['48%', '82%'];
+// leave room for one. Same inner/outer ratio (0.8) as the full-widget ring.
+const DONUT_RADIUS_PREVIEW = ['65.6%', '82%'];
 const DONUT_CENTER_Y_PREVIEW = 50;
-// ECharts always places `inside` pie labels at the exact middle of the ring
-// band, with no setting to shift them along the radius. To pull the slice
-// percentages a bit closer to the center without changing the visible ring,
-// they're drawn on a second, invisible pie whose band is biased inward
-// (mid-radius 52% instead of the ring's 54%).
-const DONUT_LABEL_RADIUS = ['40%', '64%'];
-
 /**
  * `createTooltipRenderer` expects `{index, id, value, name}` data
  * and a `color(id)` lookup. A pie/donut chart has one series with many data
@@ -80,7 +77,6 @@ export const getOption = ({
   if (isPreview) centerY = DONUT_CENTER_Y_PREVIEW;
   let radius = small ? DONUT_RADIUS_SMALL : DONUT_RADIUS;
   if (isPreview) radius = DONUT_RADIUS_PREVIEW;
-  const showSliceLabels = !isPreview && !small;
   const pieData = plottedColumns.map(([id, value]) => ({
     id,
     name: id,
@@ -101,58 +97,16 @@ export const getOption = ({
       show: false,
     },
     itemStyle: {
-      borderColor: '#fff',
+      borderColor: COLOR_WHITE_TWO,
       borderWidth: isPreview ? 0 : 2,
     },
     emphasis: {
-      // Only when the ring is the sole series (small view): when the
-      // percentage labels are drawn by the separate `sliceLabelSeries`
-      // below, that series doesn't grow with the ring on hover (it's
-      // silent/emphasis-disabled, so it can't react to the ring's hover
-      // state), so scaling the ring here would visibly detach the label
-      // from its slice for as long as it's hovered.
-      scale: !isPreview && !showSliceLabels,
-      scaleSize: 4,
+      scale: false,
     },
     data: pieData,
   };
 
-  const sliceLabelSeries = {
-    type: 'pie',
-    radius: DONUT_LABEL_RADIUS,
-    center: ['50%', `${centerY}%`],
-    avoidLabelOverlap: false,
-    // Purely a label carrier: never hit-tested, so hover, tooltip and clicks
-    // all go to the real ring underneath.
-    silent: true,
-    z: 3,
-    label: {
-      show: true,
-      position: 'inside',
-      // `{d}%` rounds to a whole number; a formatter function gives
-      // one decimal place instead (e.g. "100.0%", not "100%").
-      formatter: (params) => `${params.percent.toFixed(1)}%`,
-      color: '#fff',
-      fontSize: 13,
-      fontWeight: 400,
-      align: 'center',
-      verticalAlign: 'middle',
-    },
-    labelLine: {
-      show: false,
-    },
-    itemStyle: {
-      color: 'transparent',
-      borderWidth: 0,
-    },
-    emphasis: {
-      disabled: true,
-    },
-    data: pieData.map(({ id, name, value }) => ({ id, name, value })),
-  };
-
-  let series = [];
-  if (hasData) series = showSliceLabels ? [ringSeries, sliceLabelSeries] : [ringSeries];
+  const series = hasData ? [ringSeries] : [];
 
   return {
     color: columns.map(([id]) => colors[id]),
@@ -160,34 +114,27 @@ export const getOption = ({
     tooltip: {
       trigger: 'item',
       show: !isPreview,
-      formatter: buildDonutTooltipFormatter({ ...params, total: visibleTotal, formatMessage }),
+      formatter: buildDonutTooltipFormatter({
+        ...params,
+        total: visibleTotal,
+        formatMessage,
+        itemsData: content,
+      }),
+      ...CHART_TOOLTIP_SHELL,
     },
     legend: {
       show: false,
     },
-    // Shown in preview too (a thumbnail with no numbers in it isn't a
-    // meaningful preview) — always at the smaller font size there, since
-    // the bigger preview ring (see `DONUT_RADIUS_PREVIEW`) leaves less
-    // room in the hole for it than `small`'s own container-size check
-    // would otherwise assume.
-    graphic: buildCenterLabelGraphic({
-      value: visibleTotal,
-      subtitle: chartText,
-      small: small || isPreview,
-      // A bit above the ring's own center — as a pair, the value/subtitle
-      // text otherwise reads as sitting a bit low against the ring's
-      // visual middle. Preview's bigger ring (see `DONUT_RADIUS_PREVIEW`)
-      // needs a bit more of a nudge than the full widget.
-      centerY: isPreview ? centerY - 4 : centerY - 2,
-      // Preview's ring/hole is bigger (see `DONUT_RADIUS_PREVIEW`) so it can
-      // take a bit more breathing room between the two lines; the full
-      // widget keeps the tighter default gap.
-      gap: isPreview ? 6 : 4,
-      // Smaller than the general `small` tier (15/13) — preview is a fixed,
-      // tiny thumbnail regardless of how `small` was computed.
-      valueFontSize: isPreview ? 12 : undefined,
-      subtitleFontSize: isPreview ? 10 : undefined,
-    }),
+    // A bit above the ring's own center: as a pair, the value/subtitle text
+    // otherwise reads as sitting a bit low against the ring's visual middle.
+    graphic: isPreview
+      ? []
+      : buildCenterLabelGraphic({
+          value: visibleTotal,
+          subtitle: chartText,
+          small,
+          centerY: centerY - 2,
+        }),
     customData: {
       itemsData: content,
       colors,

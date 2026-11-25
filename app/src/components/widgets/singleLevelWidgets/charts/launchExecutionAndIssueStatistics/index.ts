@@ -14,4 +14,7 @@
  * limitations under the License.
  */
 
-export { OverallStatistics } from './overallStatistics';
+export { LaunchExecutionChart } from './launchExecutionChart/launchExecutionChart';
+export { IssueStatisticsChart } from './issueStatisticsChart/issueStatisticsChart';
+export { LaunchExecutionAndIssueStatistics } from './launchExecutionAndIssueStatistics';
+export type { LaunchExecutionAndIssueStatisticsProps } from './launchExecutionAndIssueStatistics';

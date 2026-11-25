@@ -22,6 +22,7 @@ export {
   buildColorMap,
   buildLegendItems,
   buildTooltipFormatter,
+  CHART_TOOLTIP_SHELL,
   ECHARTS_THEME,
 } from './configHelpers';
 export { buildCenterLabelGraphic } from './centerLabelGraphic';

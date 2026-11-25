@@ -74,7 +74,7 @@ export class LaunchExecutionChart extends Component {
       <DonutChart
         {...props}
         widget={widget}
-        chartText={'SUM'}
+        chartText={'Sum'}
         getLink={this.getChartClickLink}
         configParams={{
           getColumns,

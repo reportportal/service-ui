@@ -14,19 +14,18 @@
  * limitations under the License.
  */
 
-import { COLOR_BLACK } from 'common/constants/colors';
+import { COLOR_ALMOST_BLACK, COLOR_TEXT_SECONDARY } from 'common/constants/colors';
 
-const DEFAULT_SUBTITLE_COLOR = '#666666';
+const FONT_FAMILY = 'Roboto';
+const FONT_WEIGHT = 400;
 
 export interface CenterLabelGraphicOptions {
-  /** Main value shown at the center (e.g. a donut's total, a gauge's rate). */
+  /** Main value shown at the center (e.g. a donut's total). */
   value: string | number;
-  /** Optional smaller line rendered below the value (e.g. "SUM", "ISSUES"). */
+  /** Optional smaller line below the value (e.g. "Sum", "Issues"). */
   subtitle?: string | null;
-  /** Shrinks both lines for small chart containers, matching the old CSS "small-view" tier. */
+  /** Shrinks both lines for small chart containers / preview. */
   small?: boolean;
-  valueColor?: string;
-  subtitleColor?: string;
   /** Vertical center (0-100, as a % of the chart area) — match the pie/donut's own `center`. */
   centerY?: number;
   /** Vertical distance (in the same 0-100 % units as `centerY`) between the value/subtitle pair and their shared center. */
@@ -39,25 +38,19 @@ export interface CenterLabelGraphicOptions {
 
 /**
  * Builds an ECharts `graphic` array that renders a value (and optional subtitle)
- * centered over a pie/donut/gauge chart. The graphic is plain declarative option
- * state (no manual SVG/DOM patching after render), so it just updates with the
- * rest of the chart on `setOption`.
+ * centered over a donut chart. Declarative option state — updates with `setOption`.
  *
- * Shared across donut-style charts (see `donutChart`) and reused by the
- * passing-rate charts (EPMRPP-121493 / EPMRPP-121494).
+ * Used by Launch execution / Overall statistics Donut view.
  */
 export const buildCenterLabelGraphic = ({
   value,
   subtitle,
   small = false,
-  valueColor = COLOR_BLACK,
-  subtitleColor = DEFAULT_SUBTITLE_COLOR,
   centerY = 50,
   gap = 4,
-  valueFontSize = small ? 15 : 25,
-  subtitleFontSize = small ? 13 : 23,
+  valueFontSize = small ? 15 : 24,
+  subtitleFontSize = 13,
 }: CenterLabelGraphicOptions) => {
-
   const graphics = [
     {
       type: 'text',
@@ -67,10 +60,10 @@ export const buildCenterLabelGraphic = ({
       top: subtitle ? `${centerY - gap}%` : `${centerY}%`,
       style: {
         text: String(value),
-        fontFamily: 'sans-serif',
+        fontFamily: FONT_FAMILY,
         fontSize: valueFontSize,
-        fontWeight: 700,
-        fill: valueColor,
+        fontWeight: FONT_WEIGHT,
+        fill: COLOR_ALMOST_BLACK,
         align: 'center',
         verticalAlign: 'middle',
       },
@@ -86,10 +79,10 @@ export const buildCenterLabelGraphic = ({
       top: `${centerY + gap}%`,
       style: {
         text: subtitle,
-        fontFamily: 'sans-serif',
+        fontFamily: FONT_FAMILY,
         fontSize: subtitleFontSize,
-        fontWeight: 700,
-        fill: subtitleColor,
+        fontWeight: FONT_WEIGHT,
+        fill: COLOR_TEXT_SECONDARY,
         align: 'center',
         verticalAlign: 'middle',
       },

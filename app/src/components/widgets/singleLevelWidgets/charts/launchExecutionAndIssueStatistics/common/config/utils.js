@@ -14,35 +14,33 @@
  * limitations under the License.
  */
 
-import * as COLORS from 'common/constants/colors';
+import { createClassnames } from 'common/utils';
+import { getPercentage } from '../../../common/passingRateChart/config/utils';
+import styles from '../donutChart.scss';
 
-const getItemName = (item) => item.split('$')[2].toUpperCase();
-
-export const getPercentage = (value) => (value * 100).toFixed(2);
+const cx = createClassnames(styles);
 
 export const getChartData = (data, filter) => {
   const itemTypes = {};
-  const itemColors = {};
   Object.keys(data).forEach((key) => {
     if (key.includes(filter)) {
-      const itemName = getItemName(key);
       itemTypes[key] = +data[key];
-      itemColors[key] = COLORS[`COLOR_${itemName}`];
     }
   });
-  return { itemTypes, itemColors };
+  return { itemTypes };
 };
 
 export const calculateTooltipParams = (data, color, customProps) => {
-  const { defectTypes = {}, formatMessage, total = 0 } = customProps;
+  const { defectTypes = {}, formatMessage, itemsData, total } = customProps;
   const { value, id } = data[0];
-  // ECharts pie tooltip params don't carry a `.ratio` — derive it from the
-  // series total instead (passed in via customProps).
-  const ratio = total ? value / total : 0;
+  const { name, number, startTime } = (Array.isArray(itemsData) ? itemsData[0] : itemsData) ?? {};
 
   return {
-    itemsCount: `${value} (${getPercentage(ratio)}%)`,
+    itemName: number ? `${name} #${number}` : (name ?? ''),
+    startTime: startTime ? new Date(startTime).getTime() : null,
+    itemCases: `${value} (${getPercentage(value, total)}%)`,
     color: color(id),
+    wrapperClassName: cx('tooltip'),
     issueStatNameProps: { itemName: id, defectTypes, formatMessage },
   };
 };
