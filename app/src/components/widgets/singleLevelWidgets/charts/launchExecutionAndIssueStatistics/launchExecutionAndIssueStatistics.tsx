@@ -14,15 +14,14 @@
  * limitations under the License.
  */
 
-import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
-import { injectIntl, defineMessages } from 'react-intl';
+import { useIntl, defineMessages } from 'react-intl';
 import { LaunchExecutionChart } from './launchExecutionChart';
 import { IssueStatisticsChart } from './issueStatisticsChart';
 import styles from './launchExecutionAndIssueStatistics.scss';
 
 const cx = classNames.bind(styles);
-const launchNameBlockHeight = 40;
+const launchNameBlockHeight = 28;
 
 const localMessages = defineMessages({
   launchNameText: {
@@ -31,14 +30,31 @@ const localMessages = defineMessages({
   },
 });
 
-export const LaunchExecutionAndIssueStatistics = injectIntl((props) => {
+export interface LaunchExecutionAndIssueStatisticsProps {
+  widget: {
+    content: {
+      result?: { name: string; number?: number }[];
+    };
+  };
+  container?: Element;
+  isPreview?: boolean;
+  observer?: unknown;
+  uncheckedLegendItems?: string[];
+  onChangeLegend?: () => void;
+  onStatusPageMode?: boolean;
+}
+
+export const LaunchExecutionAndIssueStatistics = (
+  props: LaunchExecutionAndIssueStatisticsProps,
+) => {
   const {
     widget: {
       content: { result = [] },
     },
-    onStatusPageMode,
-    isPreview,
+    onStatusPageMode = false,
+    isPreview = false,
   } = props;
+  const { formatMessage } = useIntl();
   const { name, number } = result[0];
   const launchName = number ? `${name} #${number}` : name;
   const isLaunchNameBlockNeeded = !isPreview && launchName && !onStatusPageMode;
@@ -49,12 +65,12 @@ export const LaunchExecutionAndIssueStatistics = injectIntl((props) => {
       {isLaunchNameBlockNeeded && (
         <div className={cx('launch-name-block')}>
           <span className={cx('launch-name-text')}>
-            {`${props.intl.formatMessage(localMessages.launchNameText)} `}
+            {formatMessage(localMessages.launchNameText)}
           </span>
           <span className={cx('launch-name')}>{launchName}</span>
         </div>
       )}
-      <div className={cx('widgets-wrapper', { 'with-launch-name-block': isLaunchNameBlockNeeded })}>
+      <div className={cx('widgets-wrapper')}>
         <div className={cx('chart-container')}>
           <LaunchExecutionChart {...props} heightOffset={heightOffset} />
         </div>
@@ -64,23 +80,4 @@ export const LaunchExecutionAndIssueStatistics = injectIntl((props) => {
       </div>
     </div>
   );
-});
-
-LaunchExecutionAndIssueStatistics.propTypes = {
-  widget: PropTypes.object.isRequired,
-  container: PropTypes.instanceOf(Element).isRequired,
-  isPreview: PropTypes.bool,
-  observer: PropTypes.object,
-  uncheckedLegendItems: PropTypes.array,
-  onChangeLegend: PropTypes.func,
-  onStatusPageMode: PropTypes.bool,
-};
-
-LaunchExecutionAndIssueStatistics.defaultProps = {
-  isPreview: false,
-  height: 0,
-  observer: undefined,
-  uncheckedLegendItems: [],
-  onChangeLegend: () => {},
-  onStatusPageMode: false,
 };

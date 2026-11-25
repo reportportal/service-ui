@@ -16,19 +16,29 @@
 
 .container {
   display: flex;
-  background-color: $COLOR--light-yellow;
+  flex-direction: column;
   height: 100%;
 }
 
 .total {
-  align-self: center;
   width: 100%;
-  max-width: 285px;
   box-sizing: border-box;
-  padding: 20px;
+}
+
+.divider {
+  height: 1px;
+  margin: 20px 0;
+  background-color: var(--rp-ui-base-e-100);
 }
 
 .defects {
+  flex: 1;
+  min-height: 0;
   width: 100%;
-  background-color: $COLOR--white-two;
+}
+
+.preview {
+  .total {
+    margin: auto;
+  }
 }

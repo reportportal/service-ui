@@ -120,6 +120,17 @@ export const buildAxisTicks = (count: number, isTimeline = false): number[] =>
 
 export const buildLegendItems = (keys: string[]): string[] => [...keys];
 
+/**
+ * Transparent ECharts tooltip chrome so the React tooltip markup
+ * (`wrapperClassName` + `chart-tooltip-dark` styles) owns the look.
+ */
+export const CHART_TOOLTIP_SHELL = {
+  backgroundColor: 'transparent',
+  borderWidth: 0,
+  extraCssText: 'box-shadow: none; padding: 0; max-width: min(300px, 100%);',
+  confine: true,
+};
+
 /** Shared visual defaults for ECharts-based widgets. */
 export const ECHARTS_THEME: EChartsOption = {
   color: [],

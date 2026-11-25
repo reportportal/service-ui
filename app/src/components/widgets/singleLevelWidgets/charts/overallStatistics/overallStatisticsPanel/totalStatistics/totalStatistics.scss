@@ -15,61 +15,121 @@
  */
 
 .total {
-  text-align: center;
-  padding: 0 10px 10px 10px;
-  text-transform: uppercase;
-  font-family: $FONT-SEMIBOLD;
-  font-size: 12px;
-  line-height: normal;
+  display: flex;
+  align-items: baseline;
+  column-gap: 8px;
+  padding-bottom: 12px;
+  font-family: var(--rp-ui-base-font-family);
+  color: var(--rp-ui-color-text-secondary);
+  font-size: 13px;
+  line-height: 20px;
+
+  .amount {
+    font-size: 32px;
+    line-height: 40px;
+  }
 }
 
 .details {
   display: flex;
   flex-direction: column;
-  column-gap: 8px;
+  column-gap: 40px;
   row-gap: 16px;
-  padding-top: 10px;
-  color: $COLOR--gray-47;
+  padding-top: 12px;
   font-size: 12px;
-  font-family: $FONT-SEMIBOLD;
-  text-transform: uppercase;
-  line-height: normal;
+  line-height: 16px;
+  color: var(--rp-ui-color-text-secondary);
+  font-family: var(--rp-ui-base-font-family);
 }
 
 .details-row {
   display: flex;
-  justify-content: space-between;
+  column-gap: 40px;
 }
 
-.details-row-interrupted {
-  justify-content: flex-start;
+.details-item {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
 }
 
 .amount {
   font-size: 20px;
+  line-height: 28px;
+  font-weight: var(--rp-ui-base-fw-medium);
+  color: var(--rp-ui-base-almost-black);
 }
 
 .label {
+  display: flex;
+  gap: 6px;
+  align-items: center;
   white-space: nowrap;
 }
 
 .marker {
   display: inline-block;
-  width: 12px;
-  height: 12px;
+  width: 10px;
+  height: 10px;
   border-radius: 50%;
-  margin-right: 2px;
-  background-color: $COLOR--skipped;
+  background-color: $COLOR--e-200;
 }
 
 .passed {
-  background-color: $COLOR--passed;
+  background-color: $COLOR--test-execution-status-passed;
 }
 
 .failed {
-  background-color: $COLOR--failed;
+  background-color: $COLOR--red-failed-2;
 }
 
 .interrupted {
   background-color: $COLOR--blush;
+}
+
+.preview {
+  .marker {
+    display: none;
+  }
+
+  .amount-passed {
+    color: $COLOR--test-execution-status-passed;
+  }
+
+  .amount-failed {
+    color: $COLOR--red-failed-2;
+  }
+
+  .amount-interrupted {
+    color: $COLOR--blush;
+  }
+
+  .amount-skipped {
+    color: $COLOR--e-200;
+  }
+
+  .total {
+    flex-direction: column;
+    gap: 0;
+    padding: 0;
+    align-items: center;
+    font-size: 12px;
+    line-height: 16px;
+  }
+
+  .details {
+    align-items: center;
+    row-gap: 12px;
+    font-size: 12px;
+    line-height: 16px;
+  }
+
+  .details-row {
+    column-gap: 20px;
+  }
+
+  .details-item {
+    gap: 0;
+    align-items: center;
+  }
 }
