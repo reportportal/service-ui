@@ -19,12 +19,12 @@ import {
   COLOR_CHART_DURATION,
   COLOR_GRAY_80,
   COLOR_CHART_AXIS_LINE,
-  COLOR_CHART_AXIS_TITLE,
 } from 'common/constants/colors';
 import { getNiceTickStep, transformCategoryLabelByDefault } from 'components/widgets/common/utils';
 import { buildTooltipFormatter } from 'components/widgets/common/echarts/configHelpers';
 import { messages } from 'components/widgets/common/messages';
 import { DURATION } from 'components/widgets/common/constants';
+import { STOPPED } from 'common/constants/testStatuses';
 import { AXIS_LABEL_STYLE, STACKED_BAR_EMPHASIS } from '../../common/stackedBarSeries';
 import { buildItemTooltip } from '../../common/echartsAxisBuilders';
 import { isValueInterrupted, prepareChartData, calculateTooltipParams } from './utils';
@@ -38,9 +38,12 @@ const VALUE_AXIS_STEP_MULTIPLIER = 2;
 const TOOLTIP_SHELL = {
   backgroundColor: 'transparent',
   borderWidth: 0,
-  extraCssText: 'box-shadow: none; padding: 0;',
+  extraCssText: 'box-shadow: none; padding: 0; max-width: min(300px, 100%);',
+  confine: true,
 };
 const COLOR_INTERRUPTED_BAR = '#fdc63a';
+const COLOR_STOPPED_BAR = '#a2aab5';
+const COLOR_AXIS_TITLE = '#8d95a1';
 // DS 6 axis tick labels: Roboto 400, 12px / 16px, #3F3F3F
 const TICK_LABEL_STYLE = {
   fontFamily: 'Roboto',
@@ -87,13 +90,21 @@ const buildAxisTitle = (text) => ({
       style: {
         text,
         font: '400 12px Roboto',
-        fill: COLOR_CHART_AXIS_TITLE,
+        fill: COLOR_AXIS_TITLE,
         textAlign: 'center',
         textVerticalAlign: 'bottom',
       },
     },
   ],
 });
+const getBarColor = (item) => {
+  if (isValueInterrupted(item)) {
+    return COLOR_INTERRUPTED_BAR;
+  }
+
+  return item.status === STOPPED ? COLOR_STOPPED_BAR : COLOR_CHART_DURATION;
+};
+
 const BAR_END_RADIUS = [0, 3, 3, 0];
 const BAR_END_RADIUS_PREVIEW = [0, 2, 2, 0];
 
@@ -117,7 +128,7 @@ export const getOption = ({ content, isPreview, formatMessage }) => {
   const seriesData = values.map((value, index) => ({
     value,
     itemStyle: {
-      color: isValueInterrupted(itemsData[index]) ? COLOR_INTERRUPTED_BAR : COLOR_CHART_DURATION,
+      color: getBarColor(itemsData[index]),
     },
   }));
 
@@ -170,6 +181,7 @@ export const getOption = ({ content, isPreview, formatMessage }) => {
       show: !isPreview,
       data: categories,
       inverse: true,
+      z: 3,
       axisLine: {
         show: true,
         lineStyle: { color: COLOR_BLACK, width: 1 },

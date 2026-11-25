@@ -22,6 +22,9 @@
 
 // DS 6 dark tooltip
 div.tooltip {
+  max-width: 100%;
+  overflow: hidden;
+  box-sizing: border-box;
   min-width: 0;
   padding: 8px 12px;
   font-family: var(--rp-ui-base-font-family);
