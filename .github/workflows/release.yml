@@ -89,16 +89,23 @@ jobs:
           git push --tags
 
       - name: Create Release
+        id: createRelease
+        uses: actions/create-release@v1
         env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          BASE_REF: ${{ github.event.pull_request.base.ref }}
-        run: |
-          LATEST_FLAG="--latest"
-          if [[ "$BASE_REF" == support/* ]]; then
-            LATEST_FLAG="--latest=false"
-          fi
-          gh release create "$RELEASE_VERSION" \
-            "${{ github.workspace }}/${{ env.RELEASE_DIR }}/${{ env.UI_ARTIFACT_NAME }}" \
-            --title "Release $RELEASE_VERSION" \
-            --verify-tag \
-            $LATEST_FLAG
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ env.RELEASE_VERSION }}
+          release_name: "Release ${{ env.RELEASE_VERSION }}"
+          draft: false
+          prerelease: false
+
+      - name: Upload UI Asset
+        id: upload-ui-asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.createRelease.outputs.upload_url }}
+          asset_path: '${{ github.workspace }}/${{ env.RELEASE_DIR }}/${{ env.UI_ARTIFACT_NAME }}'
+          asset_name: ${{ env.UI_ARTIFACT_NAME }}
+          asset_content_type: application/gzip
