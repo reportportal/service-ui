@@ -362,24 +362,37 @@ export const CumulativeTrendChart = ({
     chart.on('mouseout', toggleStackHighlight('downplay'));
   }, []);
 
-  // the option is built once, so the segment border follows the size when the widget is resized
+  // the option is built once, so the segment border (and the total line placed against it)
+  // follows the size when the widget is resized
   const onChartResized = useCallback(() => {
     const chart = chartRef.current;
     if (!chart || chart.isDisposed()) {
       return;
     }
-    const { separate } = stackSettingsRef.current;
+    const chartHeight = chart.getHeight();
+    const { getOption: buildOption, ...configParams } = configData;
     const borderWidth = getSegmentBorderWidth({
       isPreview: false,
-      chartHeight: chart.getHeight(),
-      separate,
+      chartHeight,
+      separate: configParams.userSettings.separate,
     });
-    const barSeries = (chart.getOption().series || []).filter(({ type }) => type === 'bar');
-    if (!barSeries.length || barSeries[0].itemStyle?.borderWidth === borderWidth) {
+    const currentSeries = chart.getOption().series || [];
+    const barSeries = currentSeries.find(({ type }) => type === 'bar');
+    if (!barSeries || barSeries.itemStyle?.borderWidth === borderWidth) {
       return;
     }
-    chart.setOption({ series: barSeries.map(({ id }) => ({ id, itemStyle: { borderWidth } })) });
-  }, []);
+    const currentIds = new Set(currentSeries.map(({ id }) => id));
+    const { series } = buildOption({
+      ...configParams,
+      content: widget.content?.result,
+      size: { height: chartHeight },
+    });
+    chart.setOption({
+      series: series
+        .filter(({ id }) => currentIds.has(id))
+        .map(({ id, itemStyle, renderItem }) => ({ id, itemStyle, ...(renderItem && { renderItem }) })),
+    });
+  }, [configData, widget]);
 
   useEffect(() => {
     const chart = chartRef.current;

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import React, { Fragment, useEffect, useMemo, useRef, useState } from 'react';
+import React, { Fragment, useEffect, useMemo, useRef } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { useIntl, defineMessages } from 'react-intl';
@@ -89,7 +89,7 @@ const attributeKeyValidator = (attributes) =>
 
 const parseContentFields = (criteria) =>
   STATIC_CONTENT_FIELDS.concat(
-    criteria.map((item) => item.value || item).reduce((acc, val) => acc.concat(val), []),
+    criteria.map((item) => item.value || item).flat(),
   );
 
 const normalizeValue = (value) => value && `${value}`.replace(/\D+/g, '');
@@ -139,7 +139,9 @@ export const CumulativeTrendControls = ({
   const disabled = !filterId;
 
   // the form has to be initialized before the fields render, like the constructor did
-  useState(() => {
+  const isFormInitializedRef = useRef(null);
+  if (isFormInitializedRef.current === null) {
+    isFormInitializedRef.current = true;
     const criteria = getWidgetCriteriaOptions(
       [DEFECT_STATISTICS_OPTIONS, TO_INVESTIGATE_OPTION],
       formatMessage,
@@ -154,9 +156,7 @@ export const CumulativeTrendControls = ({
         },
       },
     });
-
-    return true;
-  });
+  }
 
   const prevFilterIdRef = useRef(filterId);
   useEffect(() => {
