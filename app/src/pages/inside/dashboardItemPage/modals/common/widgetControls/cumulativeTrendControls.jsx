@@ -89,7 +89,7 @@ const attributeKeyValidator = (attributes) =>
 
 const parseContentFields = (criteria) =>
   STATIC_CONTENT_FIELDS.concat(
-    criteria.map((item) => item.value || item).flat(),
+    criteria.flatMap((item) => item.value || item),
   );
 
 const normalizeValue = (value) => value && `${value}`.replace(/\D+/g, '');
