@@ -88,7 +88,8 @@ const buildDefectRowGraphics = (items) =>
       },
       {
         type: 'text',
-        silent: true,
+        cursor: 'pointer',
+        name: key,
         left: DEFECT_NAME_OFFSET,
         top: rowTop + DEFECT_TEXT_TOP,
         style: {

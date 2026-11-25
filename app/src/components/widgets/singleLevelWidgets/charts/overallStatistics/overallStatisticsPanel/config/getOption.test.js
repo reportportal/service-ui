@@ -101,6 +101,14 @@ describe('overallStatisticsPanel getOption', () => {
       expect(option.graphic[2].style.text).toBe('7');
     });
 
+    it('makes the defect name clickable with the defect field as name', () => {
+      const option = getDefectsOption(params);
+      const label = option.graphic.find(({ id }) => id === `${AUTOMATION_BUG_KEY}-name`);
+
+      expect(label.silent).toBeUndefined();
+      expect(label.name).toBe(AUTOMATION_BUG_KEY);
+    });
+
     it('scales bars to the largest value and colors them by defect type', () => {
       const option = getDefectsOption(params);
 

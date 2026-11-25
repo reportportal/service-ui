@@ -112,8 +112,8 @@ export const OverallStatisticsPanel = ({
 
   const getTotals = () => {
     const { values } = widget.content.result[0];
-    const fields = widget.contentParameters.contentFields.filter(
-      (field) => field.indexOf('executions') !== -1,
+    const fields = widget.contentParameters.contentFields.filter((field) =>
+      field.includes('executions'),
     );
     const newValues: Record<string, number> = {};
 

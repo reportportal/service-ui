@@ -76,11 +76,10 @@ export const OverallDefects = ({
   const rowsCount = defectItems.length;
 
   const handleChartCreated = (_node: HTMLElement, chart: EChartsType) => {
-    chart.on('click', (params: { componentType?: string; data?: unknown }) => {
-      const { id } = (params.data ?? {}) as { id?: string };
-
-      if (params.componentType === 'series' && id) {
-        latestClickRef.current(id);
+    // name = defect key: yAxis category for bar clicks, graphic text `name` for label clicks
+    chart.on('click', ({ name }: { name?: string }) => {
+      if (name) {
+        latestClickRef.current(name);
       }
     });
   };
