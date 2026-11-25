@@ -44,6 +44,7 @@ const cx = classNames.bind(styles);
 const MAX_ATTRIBUTES_AMOUNT = 2;
 const STATIC_CONTENT_FIELDS = [STATS_FAILED, STATS_SKIPPED, STATS_PASSED];
 const ATTRIBUTES_FIELD = 'contentParameters.widgetOptions.attributes';
+const DEFAULT_EVENTS_INFO = {};
 
 const messages = defineMessages({
   CriteriaFieldLabel: {
@@ -96,7 +97,7 @@ const formatFilterValue = (value) => value?.[0];
 const parseFilterValue = (value) => value && [value];
 
 // defined at module level so FieldArray keeps the same component between renders
-const AttributesField = ({ fields, fieldValidator, projectKey, disabled }) => {
+const AttributesField = ({ fields, fieldValidator, projectKey, disabled = false }) => {
   const { formatMessage } = useIntl();
 
   return (
@@ -122,18 +123,13 @@ AttributesField.propTypes = {
   disabled: PropTypes.bool,
 };
 
-AttributesField.defaultProps = {
-  fieldValidator: undefined,
-  disabled: false,
-};
-
 export const CumulativeTrendControls = ({
   widgetSettings,
   initializeControlsForm,
   formAppearance,
   onFormAppearanceChange,
-  eventsInfo,
-  isMainControlsDisabled,
+  eventsInfo = DEFAULT_EVENTS_INFO,
+  isMainControlsDisabled = false,
 }) => {
   const { formatMessage } = useIntl();
   const dispatch = useDispatch();
@@ -233,9 +229,4 @@ CumulativeTrendControls.propTypes = {
   onFormAppearanceChange: PropTypes.func.isRequired,
   eventsInfo: PropTypes.object,
   isMainControlsDisabled: PropTypes.bool,
-};
-
-CumulativeTrendControls.defaultProps = {
-  eventsInfo: {},
-  isMainControlsDisabled: false,
 };
