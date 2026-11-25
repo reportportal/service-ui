@@ -601,7 +601,7 @@
   "CreateUserModal.userExistsDuplicate": "Ya existe un usuario con email={email}. No se puede crear el duplicado",
   "CumulativeTrendControls.CriteriaFieldLabel": "Criterios para el widget",
   "CumulativeTrendControls.LaunchesLimitFieldLabel": "Número de ejecuciones",
-  "CumulativeTrendControls.LaunchesLimitValidationError": "El número de elementos debe ser entre 1 y 20000",
+  "CumulativeTrendControls.LaunchesLimitValidationError": "El número de lanzamientos debe ser entre 1 y 20000",
   "CumulativeTrendControls.attributeKeyFieldLabelDetailedView": "(vista detallada)",
   "CumulativeTrendControls.attributeKeyFieldLabelOverview": "(vista general)",
   "CumulativeTrendControls.attributesArrayValidationError": "Introduzca una clave de atributo cuyos valores únicos se utilizarán para agrupar ejecuciones en grupos",

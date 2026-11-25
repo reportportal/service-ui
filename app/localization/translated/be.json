@@ -601,7 +601,7 @@
   "CreateUserModal.userExistsDuplicate": "Карыстальнік з email={email} ужо існуе. Немагчыма стварыць дублікат",
   "CumulativeTrendControls.CriteriaFieldLabel": "Крытэрыі для віджэта",
   "CumulativeTrendControls.LaunchesLimitFieldLabel": "Колькасць запускаў",
-  "CumulativeTrendControls.LaunchesLimitValidationError": "Колькасць айтемов павінна быць ад 1 да 20000",
+  "CumulativeTrendControls.LaunchesLimitValidationError": "Колькасць запускаў павінна быць ад 1 да 20000",
   "CumulativeTrendControls.attributeKeyFieldLabelDetailedView": "(дэталізаваны выгляд)",
   "CumulativeTrendControls.attributeKeyFieldLabelOverview": "(агульны выгляд)",
   "CumulativeTrendControls.attributesArrayValidationError": "Увядзіце ключ атрыбуту, унікальныя значэння якога будуць выкарыстоўвацца для аб'яднання запускаў ў групы",

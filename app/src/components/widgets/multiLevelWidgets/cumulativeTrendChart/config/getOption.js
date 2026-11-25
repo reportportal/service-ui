@@ -61,8 +61,21 @@ const TOTAL_LABEL_STYLE = {
   lineHeight: 16,
   fill: COLOR_ALMOST_BLACK,
 };
-const BAR_SEGMENT_STYLE = { borderColor: COLOR_WHITE_TWO, borderWidth: 1 };
-const BAR_SEGMENT_STYLE_PREVIEW = { ...BAR_SEGMENT_STYLE, borderWidth: 0.5 };
+const BAR_SEGMENT_BORDER_WIDTH = 1;
+// the preview and short charts get a hairline: a 1px border would swallow thin segments there
+const BAR_SEGMENT_BORDER_WIDTH_THIN = 0.5;
+const COMPACT_CHART_HEIGHT = 200;
+
+// the border only separates stacked sections; separate bars have none, so it would just thin them
+export const getSegmentBorderWidth = ({ isPreview, chartHeight, separate }) => {
+  if (separate) {
+    return 0;
+  }
+
+  return isPreview || chartHeight < COMPACT_CHART_HEIGHT
+    ? BAR_SEGMENT_BORDER_WIDTH_THIN
+    : BAR_SEGMENT_BORDER_WIDTH;
+};
 // the border is centred on the edge and eats into the corner: radius 3 looks like 2px
 export const BAR_TOP_RADIUS = [3, 3, 0, 0];
 const BAR_TOP_RADIUS_PREVIEW = [2, 2, 0, 0];
@@ -73,15 +86,23 @@ const TOOLTIP_ROW_GAP = 4;
 // ECharts' own default gap between bar groups in a category, as a fraction
 // of the bar width (`defaultBarGap` on bar series).
 const DEFAULT_BAR_GAP_RATIO = 0.1;
+// a bit more air between the bars of one category when they are not stacked
+const BAR_GAP_RATIO_SEPARATE = 0.25;
 
 // Mirrors ECharts' own bar layout math. Can't use `api.barLayout` here: it
 // doesn't resolve percentage `barWidth` values, so it returns NaN offsets.
-export const getBarsLeftOffset = ({ bandWidth, groupCount, barWidthPercent, barMaxWidth }) => {
+export const getBarsLeftOffset = ({
+  bandWidth,
+  groupCount,
+  barWidthPercent,
+  barMaxWidth,
+  barGapRatio = DEFAULT_BAR_GAP_RATIO,
+}) => {
   if (!groupCount) {
     return 0;
   }
   const width = Math.min((Number.parseFloat(barWidthPercent) / 100) * bandWidth, barMaxWidth);
-  const totalWidth = groupCount * width + (groupCount - 1) * width * DEFAULT_BAR_GAP_RATIO;
+  const totalWidth = groupCount * width + (groupCount - 1) * width * barGapRatio;
   return -totalWidth / 2;
 };
 
@@ -178,6 +199,7 @@ const buildTotalSeries = ({
   separate,
   percentage,
   isPreview,
+  borderWidth,
   absTotals,
   data,
 }) => {
@@ -210,10 +232,10 @@ const buildTotalSeries = ({
         groupCount,
         barWidthPercent,
         barMaxWidth,
+        barGapRatio: separate ? BAR_GAP_RATIO_SEPARATE : DEFAULT_BAR_GAP_RATIO,
       });
       // the bars' border is centred on their edge, so their colour starts half a border inside it
-      const barBorderInset =
-        (isPreview ? BAR_SEGMENT_STYLE_PREVIEW : BAR_SEGMENT_STYLE).borderWidth / 2;
+      const barBorderInset = borderWidth / 2;
       const visibleBarLeft = centerX + leftOffset + barBorderInset;
       const x = visibleBarLeft - TOTAL_LINE_GAP - TOTAL_LINE_WIDTH / 2;
       const line = {
@@ -299,6 +321,7 @@ const buildBarSeries = ({
   separate,
   focusDefectTypes,
   isPreview,
+  borderWidth,
 }) => {
   const stack = separate ? undefined : getStackKey(field, defectFields, separate);
   const opacity = isDefect && !focusDefectTypes ? MUTED_DEFECTS_OPACITY : 1;
@@ -312,11 +335,13 @@ const buildBarSeries = ({
     barWidth: separate ? BAR_WIDTH_SEPARATE : BAR_WIDTH,
     barMaxWidth: separate ? BAR_MAX_WIDTH_SEPARATE : BAR_MAX_WIDTH,
     barCategoryGap: '35%',
+    ...(separate && { barGap: `${BAR_GAP_RATIO_SEPARATE * 100}%` }),
     silent: isPreview,
     itemStyle: {
       color: getChartColor(field),
       opacity,
-      ...(isPreview ? BAR_SEGMENT_STYLE_PREVIEW : BAR_SEGMENT_STYLE),
+      borderColor: COLOR_WHITE_TWO,
+      borderWidth,
     },
     // cumulativeTrendChart.jsx highlights the whole hovered stack
     emphasis: isPreview
@@ -377,6 +402,7 @@ const TOOLTIP_STYLE = {
 export const getOption = ({
   content,
   isPreview,
+  size,
   formatMessage,
   contentFields,
   attributes = [],
@@ -391,6 +417,7 @@ export const getOption = ({
     percentage = false,
   } = userSettings;
 
+  const borderWidth = getSegmentBorderWidth({ isPreview, chartHeight: size?.height, separate });
   const defectFields = getDefectFields(contentFields);
   const executionFields = focusDefectTypes ? [] : EXECUTION_FIELDS;
 
@@ -439,6 +466,7 @@ export const getOption = ({
             separate,
             percentage,
             isPreview,
+            borderWidth,
             absTotals: valuesByField[TOTAL_FIELD],
             data: displayValuesByField[TOTAL_FIELD],
           }),
@@ -453,6 +481,7 @@ export const getOption = ({
         separate,
         focusDefectTypes,
         isPreview,
+        borderWidth,
       }),
     ),
   ];

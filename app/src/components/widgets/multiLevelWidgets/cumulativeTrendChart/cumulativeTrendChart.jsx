@@ -44,7 +44,7 @@ import {
 } from 'components/widgets/common/constants';
 import { WidgetStateMessage } from 'pages/inside/dashboardItemPage/widgetsGrid/widget/widgetStateMessage';
 import { getChartColor } from 'components/widgets/common/chartColors';
-import { getOption, getStackSeriesIds } from './config/getOption';
+import { getOption, getStackSeriesIds, getSegmentBorderWidth } from './config/getOption';
 import { EXECUTION_FIELDS, getDefectFields } from './config/utils';
 import { CumulativeChartLegend } from './legend/cumulativeChartLegend';
 import { messages } from './messages';
@@ -362,6 +362,25 @@ export const CumulativeTrendChart = ({
     chart.on('mouseout', toggleStackHighlight('downplay'));
   }, []);
 
+  // the option is built once, so the segment border follows the size when the widget is resized
+  const onChartResized = useCallback(() => {
+    const chart = chartRef.current;
+    if (!chart || chart.isDisposed()) {
+      return;
+    }
+    const { separate } = stackSettingsRef.current;
+    const borderWidth = getSegmentBorderWidth({
+      isPreview: false,
+      chartHeight: chart.getHeight(),
+      separate,
+    });
+    const barSeries = (chart.getOption().series || []).filter(({ type }) => type === 'bar');
+    if (!barSeries.length || barSeries[0].itemStyle?.borderWidth === borderWidth) {
+      return;
+    }
+    chart.setOption({ series: barSeries.map(({ id }) => ({ id, itemStyle: { borderWidth } })) });
+  }, []);
+
   useEffect(() => {
     const chart = chartRef.current;
     if (!chart || chart.isDisposed()) {
@@ -415,6 +434,7 @@ export const CumulativeTrendChart = ({
           heightOffset={getLegendHeight()}
           configData={configData}
           chartCreatedCallback={onChartCreated}
+          resizedCallback={onChartResized}
         />
       ) : (
         <div className={cx('no-data-wrapper')}>

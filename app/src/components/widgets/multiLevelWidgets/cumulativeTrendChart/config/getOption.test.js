@@ -28,6 +28,7 @@ import {
   TOTAL_LINE_COLOR,
   getBarsLeftOffset,
   getOption,
+  getSegmentBorderWidth,
   getStackSeriesIds,
 } from './getOption';
 import { sampleContent, sampleContentFields } from './fixtures/sampleContent';
@@ -145,6 +146,54 @@ describe('cumulativeTrendChart getOption', () => {
       expect(series.itemStyle).toMatchObject({ borderColor: COLOR_WHITE_TWO, borderWidth: 1 });
     });
   });
+
+  test('thins the section border to a hairline on short charts so thin sections keep their color', () => {
+    const option = getOption({
+      content: sampleContent,
+      contentFields: sampleContentFields,
+      isPreview: false,
+      size: { height: 150 },
+      formatMessage,
+      attributes,
+      userSettings: {},
+    });
+
+    option.series.forEach((series) => {
+      expect(series.itemStyle.borderWidth).toBe(0.5);
+    });
+  });
+
+  test('draws separate bars without a border and with a wider gap between them', () => {
+    const option = getOption({
+      content: sampleContent,
+      contentFields: sampleContentFields,
+      isPreview: false,
+      size: { height: 400 },
+      formatMessage,
+      attributes,
+      userSettings: { separate: true },
+    });
+
+    option.series.forEach((series) => {
+      expect(series.itemStyle.borderWidth).toBe(0);
+      expect(series.barGap).toBe('25%');
+    });
+  });
+
+  test.each`
+    isPreview | chartHeight  | separate | expected
+    ${false}  | ${400}       | ${false} | ${1}
+    ${false}  | ${150}       | ${false} | ${0.5}
+    ${false}  | ${undefined} | ${false} | ${1}
+    ${true}   | ${400}       | ${false} | ${0.5}
+    ${false}  | ${400}       | ${true}  | ${0}
+    ${true}   | ${150}       | ${true}  | ${0}
+  `(
+    'getSegmentBorderWidth returns $expected (preview: $isPreview, height: $chartHeight, separate: $separate)',
+    ({ isPreview, chartHeight, separate, expected }) => {
+      expect(getSegmentBorderWidth({ isPreview, chartHeight, separate })).toBe(expected);
+    },
+  );
 
   test('converts every series to a percentage of the relevant total when percentage mode is on', () => {
     const option = getOption({
@@ -325,9 +374,10 @@ describe('cumulativeTrendChart getOption', () => {
   test('sits left of the whole group of columns when "Separate" is on', () => {
     const { line } = renderTotal({ separate: true });
 
-    // 5 bars (3 statuses + 2 defects) of 5% of 400 = 20px with 2px gaps: 108px, centered;
+    // 5 bars (3 statuses + 2 defects) of 5% of 400 = 20px with 5px gaps (25%): 120px, centered;
     // 6px from the visible left edge of the first column to the right edge of the line
-    const visibleBarLeft = 500 - 54 + 0.5;
+    // separate bars have no section border, so the layout edge is the visible edge
+    const visibleBarLeft = 500 - 60;
     expect(visibleBarLeft - (line.shape.x1 + 1)).toBeCloseTo(6);
   });
 

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { COLOR_BLACK } from 'common/constants/colors';
+import { COLOR_ALMOST_BLACK } from 'common/constants/colors';
 
 const DEFAULT_SUBTITLE_COLOR = '#666666';
 
@@ -50,7 +50,7 @@ export const buildCenterLabelGraphic = ({
   value,
   subtitle,
   small = false,
-  valueColor = COLOR_BLACK,
+  valueColor = COLOR_ALMOST_BLACK,
   subtitleColor = DEFAULT_SUBTITLE_COLOR,
   centerY = 50,
   gap = 4,
