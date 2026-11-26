@@ -20,6 +20,7 @@ import {
   COLOR_CHART_AXIS_LINE,
   COLOR_CHART_AXIS_TITLE,
   COLOR_CHART_FAILED,
+  COLOR_TEXT_SECONDARY,
 } from 'common/constants/colors';
 import { CHART_TOOLTIP_SHELL } from 'components/widgets/common/echarts/configHelpers';
 import {
@@ -55,7 +56,7 @@ const TICK_LABEL_STYLE = {
 };
 const AXIS_TITLE_STYLE = {
   ...TICK_LABEL_STYLE,
-  color: COLOR_CHART_AXIS_TITLE,
+  color: COLOR_TEXT_SECONDARY,
 };
 
 const getExtremums = (values) => ({

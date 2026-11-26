@@ -14,7 +14,27 @@
  * limitations under the License.
  */
 
+import moment from 'moment';
+import classNames from 'classnames/bind';
 import { messages } from 'components/widgets/common/messages';
+import styles from '../nonPassedTestCasesTrendChart.scss';
+
+const cx = classNames.bind(styles);
+
+export const TOOLTIP_DATE_FORMAT = 'DD.MM.YYYY, HH:mm';
+
+const REFERENCE_WIDTH = 668;
+const REFERENCE_LABELS_COUNT = 6;
+const PX_PER_X_LABEL = REFERENCE_WIDTH / REFERENCE_LABELS_COUNT;
+const MIN_LABELS_COUNT = 3;
+
+export const getXLabelStep = (count, chartWidth) => {
+  const labelsCount = chartWidth
+    ? Math.max(MIN_LABELS_COUNT, Math.round(chartWidth / PX_PER_X_LABEL))
+    : REFERENCE_LABELS_COUNT;
+
+  return Math.max(1, Math.ceil(count / labelsCount));
+};
 
 export const calculateTooltipParams = (data, color, customProps) => {
   const { itemsData, formatMessage } = customProps;
@@ -23,9 +43,10 @@ export const calculateTooltipParams = (data, color, customProps) => {
 
   return {
     itemName: `${name} #${number}`,
-    startTime: new Date(startTime).getTime(),
-    itemCases: `${Number(value).toFixed(2)}%`,
+    startTimeText: moment(new Date(startTime).getTime()).format(TOOLTIP_DATE_FORMAT),
+    itemCases: Number(value).toFixed(2),
     color: color(id),
     issueStatNameProps: { itemName: formatMessage(messages.failedSkippedTotal) },
+    wrapperClassName: cx('tooltip'),
   };
 };

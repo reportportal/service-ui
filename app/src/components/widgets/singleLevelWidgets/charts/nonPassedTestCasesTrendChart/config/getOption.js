@@ -16,18 +16,19 @@
 
 import { defineMessages } from 'react-intl';
 import {
-  COLOR_BLACK,
-  COLOR_CHARCOAL_GREY,
-  COLOR_FAILEDSKIPPEDTOTAL,
-  COLOR_GRAY_80,
+  COLOR_ALMOST_BLACK,
+  COLOR_CHART_AXIS_LINE,
+  COLOR_CHART_AXIS_TITLE,
+  COLOR_CHART_NON_PASSED,
+  COLOR_TEXT_SECONDARY,
 } from 'common/constants/colors';
+import { CHART_TOOLTIP_SHELL } from 'components/widgets/common/echarts/configHelpers';
 import {
-  buildAxisTicks,
-  buildTooltipFormatter,
-} from 'components/widgets/common/echarts/configHelpers';
+  buildSingleLineTrendOption,
+  buildTrendChartYAxis,
+} from '../../common/lineTrendChartOption';
 import { IssueTypeStatTooltip } from '../../common/issueTypeStatTooltip';
-import { buildTrendChartGrid, getTrendChartSymbolSize } from '../../common/lineTrendChartOption';
-import { calculateTooltipParams } from './utils';
+import { calculateTooltipParams, getXLabelStep } from './utils';
 
 const localMessages = defineMessages({
   nonPassedCases: {
@@ -36,136 +37,129 @@ const localMessages = defineMessages({
   },
 });
 
-const FAILED_SKIPPED_TOTAL = '% (Failed+Skipped)/Total';
+export const FAILED_SKIPPED_TOTAL = '% (Failed+Skipped)/Total';
 const SERIES_ID = 'notPassed';
+const Y_AXIS_NAME_GAP = 36;
+const Y_AXIS_MIN = 0;
+const Y_AXIS_MAX = 100;
+const LINE_WIDTH = 2;
+const GRID_TOP = 34;
+const GRID_BOTTOM = 38;
 
-const AXIS_LABEL_STYLE = {
-  fontFamily: 'OpenSans',
-  fontSize: 10,
+const Y_LABEL_GAP = 8;
+const X_LABEL_GAP = 16;
+
+const TICK_LABEL_STYLE = {
+  fontFamily: 'Roboto',
   fontWeight: 400,
-  color: COLOR_CHARCOAL_GREY,
+  fontStyle: 'normal',
+  fontSize: 12,
+  lineHeight: 16,
+  color: COLOR_ALMOST_BLACK,
+};
+const AXIS_TITLE_STYLE = {
+  ...TICK_LABEL_STYLE,
+  color: COLOR_TEXT_SECONDARY,
 };
 
-export const getOption = ({ content, isPreview, formatMessage }) => {
-  const itemsData = [];
-  const values = [];
+const buildLabelledIndexCheck = (count, width) => {
+  const step = getXLabelStep(count, width);
+  return (index) => index % step === 0;
+};
 
-  content.forEach((item) => {
-    const { id, name, number, startTime } = item;
-    itemsData.push({ id, name, number, startTime });
-    values.push(Number.parseFloat(item.values[FAILED_SKIPPED_TOTAL]));
+export const getAxesUpdate = (content, { width }) => ({
+  xAxis: { axisLabel: { interval: buildLabelledIndexCheck(content.length, width) } },
+});
+
+const buildYAxis = ({ isPreview, formatMessage }) => {
+  const yAxis = buildTrendChartYAxis({
+    isPreview,
+    name: `% ${formatMessage(localMessages.nonPassedCases)}`,
+    nameGap: Y_AXIS_NAME_GAP,
+    min: Y_AXIS_MIN,
+    max: Y_AXIS_MAX,
   });
 
-  const categories = itemsData.map((item) => `# ${item.number}`);
-  const tickValues = buildAxisTicks(itemsData.length);
-  const singlePoint = itemsData.length === 1;
+  if (isPreview) {
+    return yAxis;
+  }
 
   return {
-    color: [COLOR_FAILEDSKIPPEDTOTAL],
-    textStyle: AXIS_LABEL_STYLE,
-    grid: buildTrendChartGrid(isPreview),
-    xAxis: {
-      type: 'category',
-      show: !isPreview,
-      data: categories,
-      boundaryGap: true,
-      axisLine: {
-        show: true,
-        onZero: true,
-        lineStyle: {
-          color: COLOR_BLACK,
-          width: 1,
-        },
-      },
-      axisTick: {
-        show: true,
-        interval: 0,
-        alignWithLabel: true,
-        inside: false,
-        length: 6,
-        lineStyle: {
-          color: COLOR_BLACK,
-          width: 1,
-        },
-      },
-      axisLabel: {
-        ...AXIS_LABEL_STYLE,
-        margin: 8,
-        interval: (index) => tickValues.includes(index),
-        hideOverlap: true,
-      },
+    ...yAxis,
+    nameTextStyle: AXIS_TITLE_STYLE,
+    axisLabel: {
+      ...yAxis.axisLabel,
+      ...TICK_LABEL_STYLE,
+      margin: Y_LABEL_GAP,
     },
-    yAxis: {
-      type: 'value',
-      show: !isPreview,
-      min: 0,
-      max: 100,
-      interval: 10,
-      name: isPreview ? undefined : `% ${formatMessage(localMessages.nonPassedCases)}`,
-      nameLocation: 'middle',
-      nameGap: 32,
-      nameRotate: 90,
-      nameTextStyle: {
-        ...AXIS_LABEL_STYLE,
-        fontSize: 12,
-      },
-      axisLabel: {
-        ...AXIS_LABEL_STYLE,
-        margin: 8,
-      },
-      axisLine: {
-        show: false,
-      },
-      axisTick: {
-        show: false,
-      },
-      splitLine: {
-        show: !isPreview,
-        lineStyle: {
-          color: COLOR_GRAY_80,
-          width: 1,
-        },
-      },
-    },
-    tooltip: {
-      trigger: 'axis',
-      show: !isPreview,
-      formatter: buildTooltipFormatter(IssueTypeStatTooltip, calculateTooltipParams, {
-        itemsData,
-        formatMessage,
-      }),
-    },
-    legend: {
-      show: false,
-    },
-    series: [
-      {
-        id: SERIES_ID,
-        name: SERIES_ID,
-        type: 'line',
-        data: values,
-        showSymbol: true,
-        symbolSize: getTrendChartSymbolSize(isPreview, singlePoint),
-        lineStyle: {
-          width: 1,
-        },
-        emphasis: {
-          scale: 4,
-          itemStyle: {
-            borderWidth: 2,
-          },
-        },
-        triggerLineEvent: true,
-        cursor: isPreview ? 'default' : 'pointer',
-        silent: isPreview,
-      },
-    ],
-    customData: {
-      itemsData,
-      colors: {
-        [SERIES_ID]: COLOR_FAILEDSKIPPEDTOTAL,
-      },
-      legendItems: [SERIES_ID],
+    splitLine: {
+      ...yAxis.splitLine,
+      lineStyle: { color: COLOR_CHART_AXIS_LINE, width: 1 },
     },
   };
+};
+
+const INVISIBLE_POINT_SIZE = 8;
+const HIDDEN_POINT_STYLE = { opacity: 0, borderWidth: 0 };
+
+const buildSeriesStyle = (series) => {
+  const hasLine = series.data.length > 1;
+
+  return {
+    ...series,
+    lineStyle: { ...series.lineStyle, width: LINE_WIDTH },
+    ...(hasLine ? { symbolSize: INVISIBLE_POINT_SIZE, itemStyle: HIDDEN_POINT_STYLE } : {}),
+    emphasis: {
+      ...series.emphasis,
+      scale: false,
+      ...(hasLine ? { itemStyle: HIDDEN_POINT_STYLE } : {}),
+    },
+  };
+};
+
+const applyDesignSystemStyles = (option, width) => ({
+  ...option,
+  textStyle: TICK_LABEL_STYLE,
+  grid: { ...option.grid, top: GRID_TOP, bottom: GRID_BOTTOM, outerBoundsMode: 'none' },
+  xAxis: {
+    ...option.xAxis,
+    axisLine: {
+      ...option.xAxis.axisLine,
+      lineStyle: { color: COLOR_CHART_AXIS_LINE, width: 1 },
+    },
+    axisTick: { show: false },
+    axisLabel: {
+      ...option.xAxis.axisLabel,
+      ...TICK_LABEL_STYLE,
+      margin: X_LABEL_GAP,
+      interval: buildLabelledIndexCheck(option.xAxis.data.length, width),
+    },
+  },
+  tooltip: {
+    ...option.tooltip,
+    ...CHART_TOOLTIP_SHELL,
+    axisPointer: {
+      type: 'line',
+      lineStyle: { color: COLOR_CHART_AXIS_TITLE, width: 1, type: 'solid' },
+    },
+  },
+  series: option.series.map((series) => buildSeriesStyle(series)),
+});
+
+export const getOption = ({ content, isPreview, formatMessage, size }) => {
+  const option = buildSingleLineTrendOption({
+    content,
+    isPreview,
+    formatMessage,
+    seriesId: SERIES_ID,
+    color: COLOR_CHART_NON_PASSED,
+    getValue: (item) => Number.parseFloat(item.values[FAILED_SKIPPED_TOTAL]),
+    buildYAxis,
+    TooltipComponent: IssueTypeStatTooltip,
+    calculateTooltipParams,
+  });
+
+  return isPreview
+    ? { ...option, series: option.series.map(buildSeriesStyle) }
+    : applyDesignSystemStyles(option, size?.width);
 };

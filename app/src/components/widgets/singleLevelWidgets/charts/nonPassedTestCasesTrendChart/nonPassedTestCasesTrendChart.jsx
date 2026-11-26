@@ -14,25 +14,22 @@
  * limitations under the License.
  */
 
-import { useCallback, useMemo } from 'react';
+import { useCallback, useMemo, useRef } from 'react';
 import PropTypes from 'prop-types';
 import { useIntl } from 'react-intl';
-import { useDispatch, useSelector } from 'react-redux';
 import classNames from 'classnames/bind';
 import { EChart } from 'components/widgets/common/echarts';
-import {
-  getChartDefaultProps,
-  getDefaultTestItemLinkParams,
-} from 'components/widgets/common/utils';
-import { statisticsLinkSelector } from 'controllers/testItem';
-import { urlOrganizationAndProjectSelector } from 'controllers/pages';
+import { getChartDefaultProps } from 'components/widgets/common/utils';
+import { useTrendChartClickNavigation } from 'components/widgets/common/utils/useTrendChartClickNavigation';
 import { FAILED, SKIPPED, INTERRUPTED } from 'common/constants/testStatuses';
-import { getOption } from './config/getOption';
+import { COLOR_CHART_NON_PASSED } from 'common/constants/colors';
+import { getOption, getAxesUpdate } from './config/getOption';
 import styles from './nonPassedTestCasesTrendChart.scss';
 
 const cx = classNames.bind(styles);
 
 const FAILED_SKIPPED_STATISTICS_KEY = 'statistics$executions$failedSkippedTotal';
+const STATUSES_LINK_PARAMS = { statuses: [FAILED, SKIPPED, INTERRUPTED], types: null };
 
 export const NonPassedTestCasesTrendChart = ({
   widget,
@@ -42,29 +39,7 @@ export const NonPassedTestCasesTrendChart = ({
   heightOffset,
 }) => {
   const { formatMessage } = useIntl();
-  const dispatch = useDispatch();
-  const slugs = useSelector(urlOrganizationAndProjectSelector);
-  const getStatisticsLink = useSelector(statisticsLinkSelector);
-
-  const onChartClick = useCallback(
-    (data) => {
-      const { organizationSlug, projectSlug } = slugs;
-      const launchIds = widget.content.result.map((item) => item.id);
-      const link = getStatisticsLink({
-        statuses: [FAILED, SKIPPED, INTERRUPTED],
-        types: null,
-      });
-      const navigationParams = getDefaultTestItemLinkParams(
-        projectSlug,
-        widget.appliedFilters[0].id,
-        launchIds[data.index],
-        organizationSlug,
-      );
-
-      dispatch(Object.assign(link, navigationParams));
-    },
-    [dispatch, getStatisticsLink, slugs, widget],
-  );
+  const onChartClick = useTrendChartClickNavigation(widget, STATUSES_LINK_PARAMS);
 
   const configData = useMemo(
     () => ({
@@ -75,10 +50,25 @@ export const NonPassedTestCasesTrendChart = ({
     [formatMessage, onChartClick],
   );
 
+  const chartRef = useRef(null);
+  const content = widget.content?.result;
+
+  const onChartCreated = useCallback((_node, chart) => {
+    chartRef.current = chart;
+  }, []);
+
+  const onResized = useCallback(() => {
+    const chart = chartRef.current;
+    if (!chart || !content?.length) return;
+    chart.setOption(getAxesUpdate(content, { width: chart.getWidth() }));
+  }, [content]);
+
   const legendConfig = useMemo(
     () => ({
       showLegend: true,
       legendProps: {
+        className: cx('legend'),
+        getColor: () => COLOR_CHART_NON_PASSED,
         items: [FAILED_SKIPPED_STATISTICS_KEY],
         disabled: true,
       },
@@ -92,6 +82,8 @@ export const NonPassedTestCasesTrendChart = ({
         {...getChartDefaultProps({ widget, container, isPreview, observer, heightOffset })}
         configData={configData}
         legendConfig={legendConfig}
+        chartCreatedCallback={onChartCreated}
+        resizedCallback={onResized}
       />
     </div>
   );
