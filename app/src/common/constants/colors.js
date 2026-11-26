@@ -51,6 +51,7 @@ export const COLOR_INTERRUPTED = '#ffc64a';
 export const COLOR_CHART_PASSED = '#3AA76D';
 export const COLOR_CHART_FAILED = '#DC5959';
 export const COLOR_CHART_SKIPPED = '#C1C7D0';
+export const COLOR_CHART_TOTAL = '#23A6DE';
 export const COLOR_ALMOST_BLACK = '#3f3f3f'; // same as $COLOR--almost-black / --rp-ui-base-almost-black
 export const COLOR_TEXT_SECONDARY = '#8d95a1'; // --rp-ui-color-text-secondary / --rp-ui-base-e-400
 export const COLOR_CHART_AXIS_LINE = '#e1e4e9';
