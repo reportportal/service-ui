@@ -16,11 +16,23 @@
 
 import { createContext, PropsWithChildren, useCallback, useContext, useState } from 'react';
 
+import { createPendingUploads, PendingUploads } from './pendingUploads';
+import { useAttachmentUpload } from './useAttachmentUpload';
+
 interface AttachmentValidationContextValue {
   addBlocker: () => void;
   removeBlocker: () => void;
   hasBlockingAttachments: boolean;
+  pendingUploads: PendingUploads;
 }
+
+const NO_PENDING_UPLOADS: PendingUploads = {
+  track: () => undefined,
+  isTracked: () => false,
+  discard: () => undefined,
+  discardAll: () => undefined,
+  release: () => undefined,
+};
 
 const AttachmentValidationContext = createContext<AttachmentValidationContextValue | null>(null);
 
@@ -29,10 +41,18 @@ export const AttachmentValidationProvider = ({ children }: PropsWithChildren) =>
 
   const addBlocker = useCallback(() => setBlockingCount((c) => c + 1), []);
   const removeBlocker = useCallback(() => setBlockingCount((c) => Math.max(0, c - 1)), []);
+  const { deleteAttachment } = useAttachmentUpload();
+  // The project cannot change while a modal is open, so the delete callback of the first render is kept.
+  const [pendingUploads] = useState(() => createPendingUploads(deleteAttachment));
 
   return (
     <AttachmentValidationContext.Provider
-      value={{ addBlocker, removeBlocker, hasBlockingAttachments: blockingCount > 0 }}
+      value={{
+        addBlocker,
+        removeBlocker,
+        hasBlockingAttachments: blockingCount > 0,
+        pendingUploads,
+      }}
     >
       {children}
     </AttachmentValidationContext.Provider>
@@ -47,6 +67,7 @@ export const useAttachmentValidation = (): AttachmentValidationContextValue => {
       addBlocker: () => undefined,
       removeBlocker: () => undefined,
       hasBlockingAttachments: false,
+      pendingUploads: NO_PENDING_UPLOADS,
     };
   }
 

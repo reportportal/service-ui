@@ -19,6 +19,7 @@ import { takeLatest, takeEvery, call, select, all, put } from 'redux-saga/effect
 
 import { URLS } from 'common/urls';
 import { fetch } from 'common/utils';
+import { getApiErrorMessage } from 'common/utils/apiResponse';
 import { fetchSuccessAction, fetchErrorAction } from 'controllers/fetch';
 import { FETCH_START } from 'controllers/fetch/constants';
 import {
@@ -44,6 +45,7 @@ import {
   defaultTestPlanTestCasesQueryParams,
 } from './constants';
 import { GetTestPlansParams, GetTestPlanParams } from './actionCreators';
+import { activeTestPlanSelector } from './selectors';
 import type { TestPlanDto, TestPlanFoldersDto, TestPlanTestCaseDto } from './types';
 import { Page } from '../../types/common';
 
@@ -69,10 +71,10 @@ function* getTestPlans(action: GetTestPlansAction): Generator {
 
     const params = action.payload
       ? {
-        limit: action.payload.limit,
-        offset: action.payload.offset,
-        sortBy: defaultQueryParams.sortBy,
-      }
+          limit: action.payload.limit,
+          offset: action.payload.offset,
+          sortBy: defaultQueryParams.sortBy,
+        }
       : defaultQueryParams;
     const data = (yield call(fetch, URLS.testPlan(projectKey, params))) as {
       content: TestPlanDto[];
@@ -94,7 +96,17 @@ function* getTestPlans(action: GetTestPlansAction): Generator {
   }
 }
 
-function* getTestPlan(action: GetTestPlanAction): Generator {
+// All "not found" error codes of the API start with 404 (4040-4050, 40429, 40430).
+const isNotFoundError = (error: unknown): boolean => {
+  const errorCode = (error as { errorCode?: unknown } | null)?.errorCode;
+
+  return (
+    (typeof errorCode === 'number' || typeof errorCode === 'string') &&
+    String(errorCode).startsWith('404')
+  );
+};
+
+export function* getTestPlan(action: GetTestPlanAction): Generator {
   const controller = new AbortController();
   abortController?.abort();
   abortController = controller;
@@ -108,15 +120,29 @@ function* getTestPlan(action: GetTestPlanAction): Generator {
     'filter.cnt.name': testCasesSearchParams || undefined,
   };
 
+  let keepShownPlan = false;
+
   try {
-    if (
-      String(location?.prev?.payload?.testPlanId) !== String(location?.payload?.testPlanId)
-    ) {
-      yield put({
-        type: FETCH_START,
-        payload: { projectKey },
-        meta: { namespace: ACTIVE_TEST_PLAN_NAMESPACE },
-      });
+    const isPlanChanged =
+      String(location?.prev?.payload?.testPlanId) !== String(location?.payload?.testPlanId);
+
+    if (isPlanChanged || action.payload.forceReloadPlan) {
+      // A forced reload refreshes the shown plan in place: the full-page loader would unmount the
+      // page, including the open library side panel. It is shown only when the requested plan is not
+      // the one already shown.
+      const activePlan = (yield select(activeTestPlanSelector)) as TestPlanDto | null;
+      const hasActivePlan = Boolean(activePlan) && String(activePlan.id) === String(testPlanId);
+      const showLoader = action.payload.forceReloadPlan ? !hasActivePlan : isPlanChanged;
+
+      keepShownPlan = Boolean(action.payload.forceReloadPlan) && hasActivePlan;
+
+      if (showLoader) {
+        yield put({
+          type: FETCH_START,
+          payload: { projectKey },
+          meta: { namespace: ACTIVE_TEST_PLAN_NAMESPACE },
+        });
+      }
 
       const data = (yield call(fetch, URLS.testPlanById(projectKey, testPlanId), {
         signal: controller.signal,
@@ -134,19 +160,36 @@ function* getTestPlan(action: GetTestPlanAction): Generator {
     const isCancellation = error instanceof Error && error.message === 'REQUEST_CANCELED';
 
     if (!isCancellation) {
-      yield put(fetchErrorAction(ACTIVE_TEST_PLAN_NAMESPACE, error, true));
-      yield put(
-        showNotification({
-          messageId: 'testPlanRedirectWarningMessage',
-          type: NOTIFICATION_TYPES.WARNING,
-          typographyColor: NOTIFICATION_TYPOGRAPHY_COLOR_TYPES.BLACK,
-          duration: WARNING_NOTIFICATION_DURATION,
-        }),
-      );
-      yield put({
-        type: PROJECT_MILESTONES_PAGE,
-        payload: location.payload,
-      });
+      const isNotFound = isNotFoundError(error);
+
+      // A failed forced reload keeps the plan that is already shown; the error reducer would clear it.
+      if (isNotFound || !keepShownPlan) {
+        yield put(fetchErrorAction(ACTIVE_TEST_PLAN_NAMESPACE, error, true));
+      }
+
+      if (isNotFound) {
+        yield put(
+          showNotification({
+            messageId: 'testPlanRedirectWarningMessage',
+            type: NOTIFICATION_TYPES.WARNING,
+            typographyColor: NOTIFICATION_TYPOGRAPHY_COLOR_TYPES.BLACK,
+            duration: WARNING_NOTIFICATION_DURATION,
+          }),
+        );
+        yield put({
+          type: PROJECT_MILESTONES_PAGE,
+          payload: location.payload,
+        });
+      } else {
+        const message = getApiErrorMessage(error);
+
+        yield put(
+          showErrorNotification({
+            message,
+            messageId: message ? '' : 'testPlanLoadingFailed',
+          }),
+        );
+      }
     }
 
     return;
@@ -162,15 +205,16 @@ function* getTestPlan(action: GetTestPlanAction): Generator {
     let planTestCases: TestPlanTestCaseDto;
 
     if (!action.payload.folderId) {
-      planTestCases = (yield call(
-        fetch,
-        URLS.testPlanTestCases(projectKey, testPlanId, params),
-        { signal: controller.signal },
-      )) as TestPlanTestCaseDto;
+      planTestCases = (yield call(fetch, URLS.testPlanTestCases(projectKey, testPlanId, params), {
+        signal: controller.signal,
+      })) as TestPlanTestCaseDto;
     } else {
       planTestCases = (yield call(
         fetch,
-        URLS.testPlanTestCases(projectKey, testPlanId, { 'filter.eq.testFolderId': action.payload.folderId, ...params }),
+        URLS.testPlanTestCases(projectKey, testPlanId, {
+          'filter.eq.testFolderId': action.payload.folderId,
+          ...params,
+        }),
         { signal: controller.signal },
       )) as TestPlanTestCaseDto;
     }

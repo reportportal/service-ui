@@ -91,7 +91,7 @@ export const TestPlanSidePanel = memo(
     const location = useSelector(locationSelector);
     const testPlanId = location.payload?.testPlanId ? Number(location.payload.testPlanId) : null;
 
-    const { testCaseDetails, isLoading, isManualCovered } = useTestCaseDetails({
+    const { testCaseDetails, isLoading, isFailed, isManualCovered } = useTestCaseDetails({
       testCaseId: testPlan?.id ?? null,
       testPlanId,
     });
@@ -113,16 +113,17 @@ export const TestPlanSidePanel = memo(
 
     useOnClickOutside(sidePanelRef, onClose);
 
-    if (!testCaseDetails || !testPlan) {
+    if (!testPlan || isFailed) {
       return null;
     }
 
-    const testCaseBusinessId = testCaseDetails.displayId;
+    const isDetailsLoading = isLoading || !testCaseDetails;
+    const testCaseBusinessId = testCaseDetails?.displayId;
 
     const handleRemoveFromTestPlan = () => {
       openRemoveTestCasesModal({
         selectedTestCaseIds: [testPlan.id],
-        testCaseName: testCaseDetails.name,
+        testCaseName: testCaseDetails?.name,
         onClearSelection: () => {
           onClose();
         },
@@ -155,7 +156,7 @@ export const TestPlanSidePanel = memo(
 
     const menuItems = [];
 
-    if (testPlanId && canManageTestCases) {
+    if (testPlanId && canManageTestCases && testCaseDetails) {
       menuItems.push({
         label: formatMessage(messages.removeFromTestPlan),
         onClick: handleRemoveFromTestPlan,
@@ -304,8 +305,8 @@ export const TestPlanSidePanel = memo(
         <SidePanel
           className={cx('test-plan-side-panel')}
           headerComponent={headerComponent}
-          descriptionComponent={isLoading ? <BubblesLoader /> : descriptionComponent}
-          contentComponent={isLoading ? <BubblesLoader /> : contentComponent}
+          descriptionComponent={isDetailsLoading ? <BubblesLoader /> : descriptionComponent}
+          contentComponent={isDetailsLoading ? <BubblesLoader /> : contentComponent}
           footerComponent={footerComponent}
           isOpen={isVisible}
           onClose={onClose}

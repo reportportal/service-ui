@@ -32,7 +32,8 @@ import styles from './emptyTestPlan.scss';
 const cx = createClassnames(styles);
 
 interface EmptyTestPlanProps {
-  onOpenTestLibrary: () => void;
+  /** Omitted for users who cannot add test cases: the call to action is hidden. */
+  onOpenTestLibrary?: () => void;
 }
 
 export const EmptyTestPlan = ({ onOpenTestLibrary }: EmptyTestPlanProps) => {
@@ -43,7 +44,7 @@ export const EmptyTestPlan = ({ onOpenTestLibrary }: EmptyTestPlanProps) => {
     trackEvent(
       TEST_PLANS_PAGE_EVENTS.clickOpenAddTestsSidebar(ADD_TESTS_SIDEBAR_CONDITION.EMPTY_PLAN_CTA),
     );
-    onOpenTestLibrary();
+    onOpenTestLibrary?.();
   };
 
   return (
@@ -52,14 +53,18 @@ export const EmptyTestPlan = ({ onOpenTestLibrary }: EmptyTestPlanProps) => {
         title={formatMessage(messages.pageHeader)}
         description={formatMessage(messages.pageDescription)}
         imageType="docs"
-        buttons={[
-          {
-            name: formatMessage(commonMessages.addTestsFromLibrary),
-            dataAutomationId: 'addTestsFromLibraryButton',
-            isCompact: true,
-            handleButton: handleOpenTestLibrary,
-          },
-        ]}
+        buttons={
+          onOpenTestLibrary
+            ? [
+                {
+                  name: formatMessage(commonMessages.addTestsFromLibrary),
+                  dataAutomationId: 'addTestsFromLibraryButton',
+                  isCompact: true,
+                  handleButton: handleOpenTestLibrary,
+                },
+              ]
+            : []
+        }
       />
     </div>
   );

@@ -443,6 +443,8 @@ export const URLS = {
   tmsAttachmentUpload: (projectKey) => `${urlBase}project/${projectKey}/tms/attachment/upload`,
   tmsAttachmentDownload: (projectKey, attachmentId) =>
     `${urlBase}project/${projectKey}/tms/attachment/${attachmentId}`,
+  tmsAttachment: (projectKey, attachmentId) =>
+    `${urlBase}project/${projectKey}/tms/attachment/${attachmentId}`,
   manualLaunchesList: (projectKey) => `${urlBase}/${projectKey}/launch`,
   manualLaunchById: (projectKey, launchId) =>
     `${urlBase}project/${projectKey}/launch/manual/${launchId}`,

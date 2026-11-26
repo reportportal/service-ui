@@ -15,6 +15,10 @@
  */
 
 import { useEffect, useState } from 'react';
+import { useDispatch } from 'react-redux';
+
+import { getApiErrorMessage } from 'common/utils/apiResponse';
+import { showErrorNotification } from 'controllers/notification';
 
 import type { TestPlanDto } from 'controllers/testPlan/types';
 
@@ -23,6 +27,7 @@ import { fetchAllMilestoneTestPlans } from './fetchMilestoneTestPlans';
 export const useLaunchTestPlansForAddModal = (projectKey: string) => {
   const [launchTestPlans, setLaunchTestPlans] = useState<TestPlanDto[]>([]);
   const [isLaunchTestPlansLoading, setIsLaunchTestPlansLoading] = useState(true);
+  const dispatch = useDispatch();
 
   useEffect(() => {
     if (!projectKey) {
@@ -43,9 +48,15 @@ export const useLaunchTestPlansForAddModal = (projectKey: string) => {
           setLaunchTestPlans(plans);
         }
       })
-      .catch(() => {
+      .catch((error) => {
         if (!isCancelled) {
           setLaunchTestPlans([]);
+          dispatch(
+            showErrorNotification({
+              message: getApiErrorMessage(error),
+              messageId: getApiErrorMessage(error) ? '' : 'errorOccurredTryAgain',
+            }),
+          );
         }
       })
       .finally(() => {
@@ -57,7 +68,7 @@ export const useLaunchTestPlansForAddModal = (projectKey: string) => {
     return () => {
       isCancelled = true;
     };
-  }, [projectKey]);
+  }, [projectKey, dispatch]);
 
   return { launchTestPlans, isLaunchTestPlansLoading };
 };

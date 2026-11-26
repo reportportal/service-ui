@@ -22,33 +22,55 @@ import { milestoneTestPlansAsTestPlanDtos } from 'controllers/milestone';
 import type { TmsMilestonePageRS } from 'controllers/milestone';
 import type { TestPlanDto } from 'controllers/testPlan/types';
 
-export const fetchAllMilestoneTestPlans = async (
-  projectKey: string,
-  fetchedTestPlans: TestPlanDto[] = [],
-  fetchedMilestonesCount = 0,
-): Promise<TestPlanDto[]> => {
-  const response = await fetch<TmsMilestonePageRS>(
+const MILESTONES_PAGE_SIZE = 100;
+
+const fetchMilestonesPage = (projectKey: string, offset: number) =>
+  fetch<TmsMilestonePageRS>(
     URLS.tmsMilestone(projectKey, {
-      limit: 100,
-      offset: fetchedMilestonesCount,
+      limit: MILESTONES_PAGE_SIZE,
+      offset,
     }),
   );
 
-  if (isEmpty(response.content)) {
-    return fetchedTestPlans;
-  }
-
-  const pageTestPlans = response.content.flatMap((milestone) =>
+const pageTestPlans = (response: TmsMilestonePageRS): TestPlanDto[] =>
+  (response.content ?? []).flatMap((milestone) =>
     milestoneTestPlansAsTestPlanDtos(milestone.testPlans, milestone.id),
   );
-  const testPlans = [...fetchedTestPlans, ...pageTestPlans];
-  const nextMilestonesCount = fetchedMilestonesCount + response.content.length;
 
-  if (response.page.number < response.page.totalPages) {
-    return fetchAllMilestoneTestPlans(projectKey, testPlans, nextMilestonesCount);
+// Test plans linked to milestones: the first page tells how many pages there are, the rest are
+// requested in parallel instead of one after another.
+export const fetchAllMilestoneTestPlans = async (projectKey: string): Promise<TestPlanDto[]> => {
+  const firstPage = await fetchMilestonesPage(projectKey, 0);
+
+  if (isEmpty(firstPage.content)) {
+    return [];
   }
 
-  return testPlans;
+  const totalPages = firstPage.page?.totalPages ?? 1;
+  const restPages = await Promise.all(
+    Array.from({ length: Math.max(totalPages - 1, 0) }, (_, index) =>
+      fetchMilestonesPage(projectKey, (index + 1) * MILESTONES_PAGE_SIZE),
+    ),
+  );
+
+  return [firstPage, ...restPages].flatMap(pageTestPlans);
+};
+
+// Whether at least one test plan is linked to a milestone; stops at the first page that has one.
+export const hasMilestoneTestPlans = async (projectKey: string, offset = 0): Promise<boolean> => {
+  const response = await fetchMilestonesPage(projectKey, offset);
+
+  if (isEmpty(response.content)) {
+    return false;
+  }
+
+  if (!isEmpty(pageTestPlans(response))) {
+    return true;
+  }
+
+  return response.page.number < response.page.totalPages
+    ? hasMilestoneTestPlans(projectKey, offset + response.content.length)
+    : false;
 };
 
 export const filterTestPlansByName = (testPlans: TestPlanDto[], search: string): TestPlanDto[] => {

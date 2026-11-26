@@ -65,8 +65,9 @@ export type TmsMilestoneRS = {
   name: string;
   type: TmsMilestoneType;
   status: TmsMilestoneStatus;
-  startDate: string;
-  endDate: string;
+  /** UTC midnight of a calendar date; null when the milestone was started/completed without one. */
+  startDate: string | null;
+  endDate: string | null;
   testPlans: TmsTestPlanInMilestoneRS[];
 };
 

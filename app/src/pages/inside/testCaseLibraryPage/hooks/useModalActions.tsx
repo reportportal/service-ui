@@ -23,6 +23,7 @@ import { hideModalAction } from 'controllers/modal';
 import { LoadingSubmitButton } from 'components/loadingSubmitButton';
 
 import { CreateTestCaseFormData } from '../types';
+import { useAttachmentValidation } from '../createTestCaseModal/attachmentValidationContext';
 
 interface ModalButton {
   children: ReactNode;
@@ -56,10 +57,22 @@ export const useModalActions = ({
   invalid = false,
   hasBlockingAttachments = false,
   handleSubmit,
-  onSubmitHandler,
+  onSubmitHandler: submitHandler,
 }: UseModalActionsParams): UseModalActionsReturn => {
   const { formatMessage } = useIntl();
   const dispatch = useDispatch();
+  const { pendingUploads } = useAttachmentValidation();
+
+  // Once the form is submitted the save request goes out and its response may be lost, so the
+  // uploads may already be linked to the test case: they must not be deleted by a later cancel.
+  const onSubmitHandler = useCallback(
+    (formData: CreateTestCaseFormData) => {
+      pendingUploads.release();
+
+      return submitHandler(formData);
+    },
+    [pendingUploads, submitHandler],
+  );
 
   const isSubmitDisabled = Boolean(isLoading || pristine || invalid || hasBlockingAttachments);
 
@@ -80,9 +93,11 @@ export const useModalActions = ({
     [formatMessage, isLoading],
   );
 
+  // Closing without saving (Cancel, X, Esc, click outside) discards the files uploaded meanwhile.
   const handleClose = useCallback(() => {
+    pendingUploads.discardAll();
     dispatch(hideModalAction());
-  }, [dispatch]);
+  }, [dispatch, pendingUploads]);
 
   const handleFormSubmit = useCallback(
     (event: FormEvent) => {

@@ -448,6 +448,11 @@ export const notificationMessages = defineMessages({
     id: 'Common.errorOccurredTryAgain',
     defaultMessage: 'An error occurred. Please try again later.',
   },
+  batchPartialFailure: {
+    id: 'Common.batchPartialFailure',
+    defaultMessage:
+      '{successCount} of {totalCount} items were processed, {failureCount} failed. {errors}',
+  },
   redirectWarningMessage: {
     id: 'TestCaseLibraryPage.redirectWarningMessage',
     defaultMessage:

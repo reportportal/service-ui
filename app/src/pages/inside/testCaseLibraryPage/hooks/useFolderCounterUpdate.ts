@@ -18,7 +18,14 @@ import { useCallback } from 'react';
 import { useDispatch } from 'react-redux';
 import { forOwn } from 'es-toolkit/compat';
 
-import { updateFolderCounterAction } from 'controllers/testCase/actionCreators';
+import {
+  updateFolderCounterAction,
+  updateFolderCountersAction,
+} from 'controllers/testCase/actionCreators';
+
+const addDelta = (folderDeltas: Record<number, number>, folderId: number, delta: number) => {
+  folderDeltas[folderId] = (folderDeltas[folderId] ?? 0) + delta;
+};
 
 export const useFolderCounterUpdate = () => {
   const dispatch = useDispatch();
@@ -38,14 +45,14 @@ export const useFolderCounterUpdate = () => {
       folderDeltasMap: Record<string, number> | Record<number, number>;
       isRemoval?: boolean;
     }) => {
+      const folderDeltas: Record<number, number> = {};
+
       forOwn(folderDeltasMap, (delta, folderId) => {
-        dispatch(
-          updateFolderCounterAction({
-            folderId: Number(folderId),
-            delta: isRemoval ? -delta : delta,
-          }),
-        );
+        addDelta(folderDeltas, Number(folderId), isRemoval ? -delta : delta);
       });
+
+      // One action for all folders: every counter change rebuilds the folder tree selectors.
+      dispatch(updateFolderCountersAction(folderDeltas));
     },
     [dispatch],
   );
@@ -62,18 +69,20 @@ export const useFolderCounterUpdate = () => {
       sourceFolderId?: number;
       folderDeltasMap?: Record<number, number>;
     }) => {
+      const folderDeltas: Record<number, number> = {};
+
       if (folderDeltasMap) {
-        batchFolderCounterUpdate({ folderDeltasMap });
-      } else if (sourceFolderId) {
-        updateFolderCounter({
-          folderId: sourceFolderId,
-          delta: -testCaseCount,
+        forOwn(folderDeltasMap, (delta, folderId) => {
+          addDelta(folderDeltas, Number(folderId), delta);
         });
+      } else if (sourceFolderId) {
+        addDelta(folderDeltas, sourceFolderId, -testCaseCount);
       }
 
-      updateFolderCounter({ folderId: targetFolderId, delta: testCaseCount });
+      addDelta(folderDeltas, targetFolderId, testCaseCount);
+      dispatch(updateFolderCountersAction(folderDeltas));
     },
-    [updateFolderCounter, batchFolderCounterUpdate],
+    [dispatch],
   );
 
   return {

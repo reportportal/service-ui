@@ -36,13 +36,6 @@ import {
   locationSelector,
   updatePagePropertiesAction,
 } from 'controllers/pages';
-import { isAuthorizedSelector } from 'controllers/auth';
-import {
-  showNotification,
-  NOTIFICATION_TYPES,
-  NOTIFICATION_TYPOGRAPHY_COLOR_TYPES,
-  WARNING_NOTIFICATION_DURATION,
-} from 'controllers/notification';
 import {
   useProjectDetails,
   useTestPlanId,
@@ -68,6 +61,7 @@ import { TestLibrarySidePanel } from '../../common/testLibrarySidePanel';
 import { PageHeaderWithBreadcrumbsAndActions } from '../../common/pageHeaderWithBreadcrumbsAndActions';
 import { PageLoader } from '../pageLoader';
 import { EmptyTestPlan } from './emptyTestPlan';
+import { TestPlanLoadError } from './testPlanLoadError';
 import { TestPlanActions } from '../testPlanActions';
 import { messages } from './messages';
 import { commonMessages } from '../commonMessages';
@@ -78,6 +72,7 @@ import {
   useCreateLaunchModal,
 } from '../testPlanModals';
 import { useAddTestCasesToCurrentTestPlan } from '../testPlanModals';
+import { useReloadActiveTestPlan } from '../testPlanModals/useReloadActiveTestPlan';
 import { TestPlanFolders } from './testPlanFolders';
 import { KEBAB_START_EVENT_MAP } from './constants';
 
@@ -101,7 +96,6 @@ export const TestPlanDetailsPage = () => {
   const testCases = useTestPlanSelector(testPlanTestCasesSelector);
 
   const location = useSelector(locationSelector);
-  const isAuthorized = useSelector(isAuthorizedSelector);
   const isLoadingFilteredFolders = useSelector(isLoadingFilteredFoldersSelector);
   const areFoldersLoading = useSelector(areFoldersLoadingSelector);
   const areFoldersFetched = useSelector(areFoldersFetchedSelector);
@@ -220,6 +214,7 @@ export const TestPlanDetailsPage = () => {
   };
 
   const { addTestCasesToCurrentTestPlan, isAddingTestCases } = useAddTestCasesToCurrentTestPlan();
+  const reloadActiveTestPlan = useReloadActiveTestPlan();
 
   const lastTrackedTestPlanIdRef = useRef<string | number | null>(null);
 
@@ -240,24 +235,6 @@ export const TestPlanDetailsPage = () => {
       ),
     );
   }, [isLoading, areFoldersLoading, testPlan, testPlanFolders, testPlanId, trackEvent]);
-
-  useEffect(() => {
-    if (!isLoading && isEmpty(testPlan) && isAuthorized) {
-      dispatch(
-        showNotification({
-          type: NOTIFICATION_TYPES.WARNING,
-          message: formatMessage(messages.testPlanNotFoundRedirect),
-          typographyColor: NOTIFICATION_TYPOGRAPHY_COLOR_TYPES.BLACK,
-          duration: WARNING_NOTIFICATION_DURATION,
-        }),
-      );
-
-      dispatch({
-        type: PROJECT_MILESTONES_PAGE,
-        payload: { organizationSlug, projectSlug },
-      });
-    }
-  }, [isLoading, testPlan, isAuthorized, dispatch, organizationSlug, projectSlug, formatMessage]);
 
   const breadcrumbDescriptors = [
     {
@@ -327,9 +304,24 @@ export const TestPlanDetailsPage = () => {
     );
   }
 
+  // The plan request failed (other than "not found", which redirects): offer a retry.
+  if (!testPlan) {
+    return (
+      <SettingsLayout>
+        <TestPlanLoadError onRetry={reloadActiveTestPlan} />
+      </SettingsLayout>
+    );
+  }
+
   const renderContent = () => {
-    if (!testPlan?.executionStatistic.total && isEmpty(testPlanFolders)) {
-      return <EmptyTestPlan onOpenTestLibrary={() => setIsTestLibrarySidePanelOpen(true)} />;
+    if (!testPlan.executionStatistic.total && isEmpty(testPlanFolders)) {
+      return (
+        <EmptyTestPlan
+          onOpenTestLibrary={
+            canManageTestCases ? () => setIsTestLibrarySidePanelOpen(true) : undefined
+          }
+        />
+      );
     }
 
     return <TestPlanFolders isLoading={isTestPlanTestCasesLoading} />;
@@ -348,7 +340,7 @@ export const TestPlanDetailsPage = () => {
           <div className={cx('test-plan-details-page__content')}>{renderContent()}</div>
         </div>
       </ScrollWrapper>
-      {isTestLibrarySidePanelOpen && (
+      {isTestLibrarySidePanelOpen && canManageTestCases && (
         <TestLibrarySidePanel
           isOpen
           onAddTestCases={addTestCasesToCurrentTestPlan}

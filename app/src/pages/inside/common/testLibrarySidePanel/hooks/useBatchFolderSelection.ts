@@ -20,6 +20,9 @@ import { useSelector } from 'react-redux';
 
 import { foldersSelector, TransformedFolder } from 'controllers/testCase';
 import { getAllSubfolderIds } from 'common/utils/folderUtils';
+import { useNotification } from 'common/hooks';
+import { ERROR_CANCELED } from 'common/utils/fetch';
+import { getApiErrorMessage } from 'common/utils/apiResponse';
 
 import { FolderTestCases, NumberSet, SetState } from '../testLibraryPanelContext';
 import {
@@ -41,6 +44,7 @@ interface UseBatchFolderSelectionProps {
   setSelectedTestCasesIds: SetState<NumberSet>;
   setSelectedFolderIds: SetState<NumberSet>;
   setBatchLoadingFolderIds: SetState<NumberSet>;
+  abortControllerRef?: RefObject<AbortController>;
 }
 
 export const useBatchFolderSelection = ({
@@ -51,14 +55,17 @@ export const useBatchFolderSelection = ({
   setSelectedTestCasesIds,
   setSelectedFolderIds,
   setBatchLoadingFolderIds,
+  abortControllerRef,
 }: UseBatchFolderSelectionProps) => {
   const flatFolders = useSelector(foldersSelector);
+  const { showErrorNotification } = useNotification();
   const testCasesMapRef = useRef(testCasesMap);
   testCasesMapRef.current = testCasesMap;
 
   const fetchAndCache = useFetchAndCacheTestCases({
     testPlanId,
     setTestCasesMap,
+    abortControllerRef,
   });
 
   const getSelectionState = useCallback(
@@ -140,6 +147,16 @@ export const useBatchFolderSelection = ({
 
         addToSet({ setter: setSelectedTestCasesIds, ids: [...cachedIds, ...fetchedIds] });
         addToSet({ setter: setSelectedFolderIds, ids: [...emptyLeafIds, ...allAddedLeafIds] });
+      } catch (error) {
+        // The folder stays unselected; tell the user instead of leaving an unhandled rejection.
+        if ((error as Error)?.message !== ERROR_CANCELED) {
+          const message = getApiErrorMessage(error);
+
+          showErrorNotification({
+            messageId: message ? undefined : 'errorOccurredTryAgain',
+            message,
+          });
+        }
       } finally {
         removeFromSet({ setter: setBatchLoadingFolderIds, ids: [folder.id] });
       }
@@ -151,6 +168,7 @@ export const useBatchFolderSelection = ({
       setSelectedTestCasesIds,
       setSelectedFolderIds,
       setBatchLoadingFolderIds,
+      showErrorNotification,
     ],
   );
 

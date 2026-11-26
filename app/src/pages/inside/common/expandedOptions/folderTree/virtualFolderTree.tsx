@@ -54,6 +54,8 @@ export interface VirtualFolderTreeProps {
   enableDragAndDrop?: boolean;
   isFlatView?: boolean;
   hiddenActiveFolderIndicatorId?: number | null;
+  // Folders with a drag-and-drop operation in flight: shown with a spinner and not draggable.
+  pendingFolderIds?: number[];
   canDropOn?: (draggedItem: TreeDragItem, targetId: string | number) => boolean;
   onFolderClick: (id: number) => void;
   setAllTestCases: VoidFn;
@@ -74,6 +76,7 @@ export const VirtualFolderTree = ({
   enableDragAndDrop = false,
   isFlatView = false,
   hiddenActiveFolderIndicatorId = null,
+  pendingFolderIds,
   canDropOn,
   onFolderClick,
   setAllTestCases,
@@ -154,6 +157,7 @@ export const VirtualFolderTree = ({
       enableDragAndDrop={enableDragAndDrop}
       hasHiddenActiveDescendant={node.folder.id === hiddenActiveFolderIndicatorId}
       isDragging={isDragging}
+      isPending={pendingFolderIds?.includes(node.folder.id)}
       dragRef={dragRef}
       style={style}
       onFolderClick={onFolderClick}
@@ -174,6 +178,7 @@ export const VirtualFolderTree = ({
       parentId={node.parentId}
       type={FOLDER_DRAG_TYPE}
       hideDefaultPreview
+      isDisabled={pendingFolderIds?.includes(node.folder.id)}
       className={cx('virtual-folder-tree__sortable-item')}
       style={style}
       canDropOn={canDropOn}
@@ -222,6 +227,7 @@ export const VirtualFolderTree = ({
               nextNodeDepth={nextNodeDepth}
               enableDragAndDrop={enableDragAndDrop}
               hasHiddenActiveDescendant={folder.folder.id === hiddenActiveFolderIndicatorId}
+              isPending={pendingFolderIds?.includes(folder.folder.id)}
               style={rowStyle}
               onFolderClick={onFolderClick}
               setAllTestCases={setAllTestCases}
