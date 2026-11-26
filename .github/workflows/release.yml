@@ -5,6 +5,7 @@ on:
     types: [closed]
     branches:
       - master
+      - 'support/**'
   workflow_dispatch:
     inputs:
       version:
