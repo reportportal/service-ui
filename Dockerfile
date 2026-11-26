@@ -1,4 +1,4 @@
-# Only for technical/build aims, built image will be with nginxinc/nginx-unprivileged:alpine according to the last step
+# Only for technical/build aims, built image will be with nginx/nginx-unprivileged:alpine according to the last step
 
 
 FROM alpine:3.23.3 AS generate-build-info
@@ -16,7 +16,7 @@ COPY ./app/ /usr/src/app/
 RUN export NODE_OPTIONS="--max-old-space-size=4096"
 RUN npm ci --legacy-peer-deps && npm run build
 
-FROM nginxinc/nginx-unprivileged:1.30.4-alpine3.24
+FROM nginx/nginx-unprivileged:1.30.7-alpine3.24
 
 USER root
 
