@@ -51,7 +51,7 @@ export type EChartOptionResult = EChartsOption & {
 export type GetOptionParams = {
   content: unknown;
   isPreview: boolean;
-  size: { height: number };
+  size: { height: number; width?: number };
   [key: string]: unknown;
 };
 

@@ -130,7 +130,7 @@ export const EChart = ({
     const result: EChartOptionResult = getOption({
       content: widget.content?.result,
       isPreview,
-      size: { height },
+      size: { height, width: container.clientWidth },
       ...configParams,
     });
     const { customData = {}, ...option } = result;

@@ -132,7 +132,7 @@ const buildSeriesStyle = (series) => {
   };
 };
 
-const applyDesignSystemStyles = (option) => ({
+const applyDesignSystemStyles = (option, width) => ({
   ...option,
   textStyle: TICK_LABEL_STYLE,
   grid: { ...option.grid, top: GRID_TOP, bottom: GRID_BOTTOM, outerBoundsMode: 'none' },
@@ -147,7 +147,7 @@ const applyDesignSystemStyles = (option) => ({
       ...option.xAxis.axisLabel,
       ...TICK_LABEL_STYLE,
       margin: X_LABEL_GAP,
-      interval: buildLabelledIndexCheck(option.xAxis.data.length),
+      interval: buildLabelledIndexCheck(option.xAxis.data.length, width),
     },
   },
   tooltip: {
@@ -174,5 +174,5 @@ export const getOption = ({ content, isPreview, formatMessage, size }) => {
 
   return isPreview
     ? { ...option, series: option.series.map(buildSeriesStyle) }
-    : applyDesignSystemStyles(option);
+    : applyDesignSystemStyles(option, size?.width);
 };

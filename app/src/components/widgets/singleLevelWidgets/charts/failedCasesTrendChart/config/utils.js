@@ -60,7 +60,7 @@ export const getTicks = (bottom, top, maxIntervals = DEFAULT_TICK_INTERVALS) => 
   const step = height / intervals;
 
   return Array.from({ length: intervals + 1 }, (_, index) =>
-    index === intervals ? top : bottom + step * index,
+    index === intervals ? top : Math.round(bottom + step * index),
   );
 };
 

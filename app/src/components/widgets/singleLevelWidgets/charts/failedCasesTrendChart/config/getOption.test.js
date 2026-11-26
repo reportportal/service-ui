@@ -106,8 +106,8 @@ describe('failedCasesTrendChart getOption', () => {
 
     expect(option.yAxis.min).toBe(0);
     expect(option.yAxis.max).toBe(9);
-    expect(option.yAxis.axisLabel.customValues).toEqual([0, 1.8, 3.6, 5.4, 7.2, 9]);
-    expect(option.yAxis.axisTick.customValues).toEqual([0, 1.8, 3.6, 5.4, 7.2, 9]);
+    expect(option.yAxis.axisLabel.customValues).toEqual([0, 2, 4, 5, 7, 9]);
+    expect(option.yAxis.axisTick.customValues).toEqual([0, 2, 4, 5, 7, 9]);
   });
 
   test('shows a larger symbol when there is a single data point', () => {
@@ -165,5 +165,14 @@ describe('failedCasesTrendChart y ticks', () => {
     expect(getXLabelStep(12, 1336)).toBe(1);
     expect(getXLabelStep(12, 330)).toBe(4);
     expect(getTicks(0, 100, 10)).toHaveLength(11);
+    expect(getTicks(0, 9, 2)).toEqual([0, 5, 9]);
+  });
+
+  test('keeps the width-based X label density when the option is rebuilt (e.g. on refresh)', () => {
+    const content = Array.from({ length: 12 }, (_, i) => ({ ...sampleContent[0], number: String(i) }));
+    const option = getOption({ content, isPreview: false, formatMessage, size: { height: 496, width: 330 } });
+
+    expect(option.xAxis.axisLabel.interval(4)).toBe(true);
+    expect(option.xAxis.axisLabel.interval(2)).toBe(false);
   });
 });
