@@ -15,14 +15,16 @@
  */
 
 import { all, call, put, select, takeEvery, take } from 'redux-saga/effects';
-import { fetch, updateToken } from 'common/utils/fetch';
+import { abortPendingRequests, fetch, updateToken } from 'common/utils/fetch';
 import {
+  getStorageItem,
   getSessionItem,
   removeSessionItem,
   removeStorageItem,
   setStorageItem,
   updateStorageItem,
 } from 'common/utils/storageUtils';
+import { clearTicketsCache } from 'common/utils/ticketsCache';
 import { URLS } from 'common/urls';
 import { APPLICATION_SETTINGS } from 'common/constants/localStorageKeys';
 import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
@@ -32,6 +34,7 @@ import {
   pagePropertiesSelector,
   LOGIN_PAGE,
   ACCOUNT_REMOVED_PAGE,
+  NOT_FOUND,
 } from 'controllers/pages';
 import {
   FETCH_USER_ERROR,
@@ -52,6 +55,7 @@ import routesMap, { getRedirectRoute } from 'routes/routesMap';
 import { ACTIVITY_TIMESTAMP } from 'controllers/user/constants';
 import {
   authSuccessAction,
+  logoutAction,
   resetTokenAction,
   logoutCompleteAction,
   setTokenAction,
@@ -75,14 +79,27 @@ import {
 import {
   LOGIN,
   LOGOUT,
+  LOGOUT_COMPLETE,
   TOKEN_KEY,
   GRANT_TYPES,
   SET_TOKEN,
   LOGIN_SUCCESS,
   ANONYMOUS_REDIRECT_PATH_STORAGE_KEY,
   GRAFANA_SESSION_REVOKE_TIMEOUT,
+  LOGOUT_REQUEST_TIMEOUT,
 } from './constants';
-import { tokenSelector, lastFailedLoginTimeSelector, failedLoginAttemptsSelector } from './selectors';
+import {
+  isAuthorizedSelector,
+  tokenSelector,
+  lastFailedLoginTimeSelector,
+  failedLoginAttemptsSelector,
+} from './selectors';
+
+const toTokenString = (token) => (token ? `${token.type} ${token.value}` : '');
+
+// The token in localStorage is shared by all tabs: a tab must not wipe a session that another tab
+// has stored in the meantime.
+const isStoredToken = (tokenString) => toTokenString(getStorageItem(TOKEN_KEY)) === tokenString;
 
 function* logoutOnServer(redirectedPage) {
   if (redirectedPage === ACCOUNT_REMOVED_PAGE) {
@@ -90,14 +107,14 @@ function* logoutOnServer(redirectedPage) {
   }
 
   try {
-    yield call(fetch, URLS.logout(), { method: 'POST' });
+    yield call(fetch, URLS.logout(), { method: 'POST', timeout: LOGOUT_REQUEST_TIMEOUT });
   } catch {
     // proceed with local logout regardless of API errors
   }
 }
 
 // TODO: clear cookie on logout
-function* handleLogout({ payload }) {
+export function* handleLogout({ payload, meta }) {
   const token = yield select(tokenSelector);
   if (!token) {
     yield put(logoutCompleteAction());
@@ -108,10 +125,23 @@ function* handleLogout({ payload }) {
   fetch(URLS.grafanaSession(), {
     method: 'DELETE',
     timeout: GRAFANA_SESSION_REVOKE_TIMEOUT,
+    // must survive abortPendingRequests() below
+    keepOnLogout: true,
   }).catch((error) => console.error('Failed to revoke Grafana session on logout', error));
 
   yield call(logoutOnServer, payload);
-  yield put(resetTokenAction());
+  // late responses of the finished session must not repopulate the store
+  yield call(abortPendingRequests);
+  // cached BTS ticket details belong to the finished session
+  clearTicketsCache();
+  if (isStoredToken(token)) {
+    removeStorageItem(ACTIVITY_TIMESTAMP);
+  }
+  yield put(resetTokenAction(token));
+  if (meta?.silent) {
+    yield put(logoutCompleteAction());
+    return;
+  }
   yield put(
     redirect({
       type: payload || LOGIN_PAGE,
@@ -127,7 +157,6 @@ function* handleLogout({ payload }) {
       type: NOTIFICATION_TYPES.INFO,
     }),
   );
-  removeStorageItem(ACTIVITY_TIMESTAMP);
 }
 
 function* watchLogout() {
@@ -163,18 +192,19 @@ function* loginSuccessHandler({ payload }) {
   const anonymousRedirectPath = getSessionItem(ANONYMOUS_REDIRECT_PATH_STORAGE_KEY);
   const userSettings = getUserSettingsFromStorage(userId);
   const redirectPath = anonymousRedirectPath || userSettings.lastPath;
+  const redirectAction = redirectPath ? pathToAction(redirectPath, routesMap, qs) : null;
 
-  if (redirectPath) {
-    yield put(redirect(pathToAction(redirectPath, routesMap, qs)));
-    if (anonymousRedirectPath) {
-      removeSessionItem(ANONYMOUS_REDIRECT_PATH_STORAGE_KEY);
-    }
+  if (anonymousRedirectPath) {
+    removeSessionItem(ANONYMOUS_REDIRECT_PATH_STORAGE_KEY);
+  }
+
+  if (redirectAction && redirectAction.type !== NOT_FOUND) {
+    yield put(redirect(redirectAction));
   } else {
     // Demo instance specific redirect to be implemented
     const page = getRedirectRoute(user);
     yield put(redirect(page));
   }
-
 }
 
 function* watchLoginSuccess() {
@@ -333,8 +363,15 @@ function* handleLogin({ payload }) {
   }
 }
 
-function* handleOauthSuccess() {
+export function* handleOauthSuccess() {
   const { token: value, token_type: type } = yield select(pagePropertiesSelector);
+  const authorized = yield select(isAuthorizedSelector);
+  if (authorized) {
+    // the OAuth login replaces the session of the currently logged in user: the login that follows
+    // redirects and loads the data, so the logout itself stays silent
+    yield put(logoutAction(undefined, { silent: true }));
+    yield take(LOGOUT_COMPLETE);
+  }
   yield put(loginSuccessAction({ value, type }));
 }
 
@@ -346,9 +383,12 @@ function* watchLogin() {
   yield takeEvery(LOGIN, handleLogin);
 }
 
-function* handleSetToken({ payload }) {
+export function* handleSetToken({ payload, meta }) {
   const tokenString = yield select(tokenSelector);
   yield call(updateToken, tokenString);
+  if (meta?.revokedToken !== undefined && !isStoredToken(meta.revokedToken)) {
+    return;
+  }
   yield call(setStorageItem, TOKEN_KEY, payload);
 }
 

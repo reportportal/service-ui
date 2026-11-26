@@ -22,9 +22,15 @@ import { fetch } from 'common/utils';
 import { SpinningPreloader } from 'components/preloaders/spinningPreloader';
 import { statusPageWidgets, activityItem } from './statusPageWidgets';
 import { StatusPageItem } from './statusPageItem';
+import { messages } from './messages';
 import styles from './statusPageContent.scss';
 
 const cx = classNames.bind(styles);
+
+const getWidgetsWithUrls = () => [...statusPageWidgets.filter((item) => item.getUrl), activityItem];
+
+const getLoadingSources = () =>
+  getWidgetsWithUrls().reduce((acc, { id }) => ({ ...acc, [id]: true }), {});
 
 @injectIntl
 export class StatusPageContent extends Component {
@@ -40,7 +46,8 @@ export class StatusPageContent extends Component {
 
   state = {
     widgetsData: {},
-    loading: true,
+    failedSources: {},
+    loadingSources: getLoadingSources(),
   };
 
   componentDidMount() {
@@ -56,56 +63,68 @@ export class StatusPageContent extends Component {
     }
   }
 
-  fetchData = async () => {
+  componentWillUnmount() {
+    this.latestRequestId += 1;
+  }
+
+  latestRequestId = 0;
+
+  fetchData = () => {
     const { projectKey, interval } = this.props;
+    this.latestRequestId += 1;
+    const requestId = this.latestRequestId;
     this.setState({
-      loading: true,
+      loadingSources: getLoadingSources(),
     });
-    const widgetsWithUrls = [...statusPageWidgets.filter((item) => item.getUrl), activityItem];
 
-    try {
-      const responses = [];
-
-      /* eslint-disable no-await-in-loop */
-      for (let i = 0; i < widgetsWithUrls.length; i += 1) {
-        const response = await fetch(widgetsWithUrls[i].getUrl(projectKey, interval));
-        responses.push(response);
+    // Each source is shown as soon as its own request settles.
+    const settleSource = (id, data, failed) => {
+      // A newer interval/project (or unmount) superseded this request.
+      if (requestId !== this.latestRequestId) {
+        return;
       }
+      this.setState(({ widgetsData, failedSources, loadingSources }) => ({
+        widgetsData: failed ? widgetsData : { ...widgetsData, [id]: data },
+        failedSources: { ...failedSources, [id]: failed },
+        loadingSources: { ...loadingSources, [id]: false },
+      }));
+    };
 
-      const widgetsData = widgetsWithUrls.reduce(
-        (acc, item, index) => ({
-          ...acc,
-          [item.id]: responses[index],
-        }),
-        {},
-      );
-
-      this.setState({
-        widgetsData,
-        loading: false,
-      });
-    } catch {
-      this.setState({
-        widgetsData: {},
-        loading: false,
-      });
-    }
-  };
-
-  renderWidget = (widgetData) => {
-    const widget = this.state.widgetsData[widgetData.source];
-    return (
-      <StatusPageItem title={this.props.intl.formatMessage(widgetData.title)}>
-        {this.state.loading ? (
-          <div className={cx('status-page-spinner-wrapper')}>
-            <SpinningPreloader />
-          </div>
-        ) : (
-          widget && widgetData.component(widget, this.props.interval)
-        )}
-      </StatusPageItem>
+    return Promise.all(
+      getWidgetsWithUrls().map(({ id, getUrl }) =>
+        fetch(getUrl(projectKey, interval)).then(
+          (data) => settleSource(id, data, false),
+          () => settleSource(id, undefined, true),
+        ),
+      ),
     );
   };
+
+  renderWidgetContent = (widgetData) => {
+    const { widgetsData, failedSources, loadingSources } = this.state;
+    if (loadingSources[widgetData.source]) {
+      return (
+        <div className={cx('status-page-spinner-wrapper')}>
+          <SpinningPreloader />
+        </div>
+      );
+    }
+    if (failedSources[widgetData.source]) {
+      return (
+        <div className={cx('status-page-error')}>
+          {this.props.intl.formatMessage(messages.loadError)}
+        </div>
+      );
+    }
+    const widget = widgetsData[widgetData.source];
+    return widget && widgetData.component(widget, this.props.interval);
+  };
+
+  renderWidget = (widgetData) => (
+    <StatusPageItem title={this.props.intl.formatMessage(widgetData.title)}>
+      {this.renderWidgetContent(widgetData)}
+    </StatusPageItem>
+  );
 
   render() {
     return (

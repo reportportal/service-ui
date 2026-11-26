@@ -24,7 +24,58 @@ import { setServiceAvailabilityAction } from 'controllers/initialData/actionCrea
 export const ERROR_CANCELED = 'REQUEST_CANCELED';
 export const ERROR_UNAUTHORIZED = 'UNAUTHORIZED';
 
-const handleError = (error: unknown): never => {
+type ErrorBody = Record<string, unknown>;
+
+const isPlainObject = (value: unknown): value is ErrorBody =>
+  typeof value === 'object' && value !== null && !Array.isArray(value) && !(value instanceof Blob);
+
+// ErrorRS bodies carry no HTTP status, which callers need when a body has no errorCode (e.g. a plain 403)
+const withStatus = (body: ErrorBody, status: number | undefined): ErrorBody =>
+  status === undefined || body.status !== undefined ? body : { ...body, status };
+
+const parseErrorText = (text: string, status: number | undefined, fallbackMessage: string) => {
+  try {
+    const parsed: unknown = JSON.parse(text);
+    if (isPlainObject(parsed)) {
+      return withStatus(parsed, status);
+    }
+  } catch {
+    // not JSON: fall through
+  }
+  const trimmed = text.trim();
+  const isMarkup = trimmed.startsWith('<');
+  return { message: trimmed && !isMarkup ? trimmed : fallbackMessage, status };
+};
+
+const readBlobText = (blob: Blob): Promise<string> =>
+  typeof blob.text === 'function'
+    ? blob.text()
+    : new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(typeof reader.result === 'string' ? reader.result : '');
+        reader.onerror = () => reject(reader.error);
+        reader.readAsText(blob);
+      });
+
+// Error bodies are not always ErrorRS objects: proxies answer with HTML/text, blob requests with a Blob.
+export const normalizeErrorBody = (error: AxiosError): ErrorBody | Promise<ErrorBody> => {
+  const data: unknown = error.response?.data;
+  const status = error.response?.status;
+  if (isPlainObject(data)) {
+    return withStatus(data, status);
+  }
+  if (typeof Blob !== 'undefined' && data instanceof Blob) {
+    return readBlobText(data)
+      .then((text) => parseErrorText(text, status, error.message))
+      .catch(() => ({ message: error.message, status }));
+  }
+  if (typeof data === 'string') {
+    return parseErrorText(data, status, error.message);
+  }
+  return { message: error.message, status };
+};
+
+const handleError = (error: unknown): Promise<never> => {
   if (axios.isCancel(error) || (error instanceof Error && error.name === 'AbortError')) {
     throw new Error(ERROR_CANCELED);
   }
@@ -35,7 +86,9 @@ const handleError = (error: unknown): never => {
     }
 
     if (error.response?.data) {
-      throw error.response.data;
+      // Callers read ErrorRS fields (message, errorCode) from the rejection reason.
+      // eslint-disable-next-line @typescript-eslint/prefer-promise-reject-errors
+      return Promise.resolve(normalizeErrorBody(error)).then((body) => Promise.reject(body));
     }
   }
 
@@ -44,10 +97,20 @@ const handleError = (error: unknown): never => {
 
 const handleResponse = <T>(res: AxiosResponse<T>): T => res.data;
 
+// Aborting this controller cancels every pending request (see fetch()) when the user logs out.
+let sessionAbortController = new AbortController();
+
+export const abortPendingRequests = (): void => {
+  sessionAbortController.abort();
+  sessionAbortController = new AbortController();
+};
+
 type ParamsSerializer = (params?: Record<string, unknown>) => string;
 
 interface FetchParams extends Omit<AxiosRequestConfig<unknown>, 'url'> {
   abort?: (cancel: (message?: string) => void) => void;
+  // the request is not aborted by abortPendingRequests() (e.g. a cleanup request sent on logout)
+  keepOnLogout?: boolean;
 }
 
 type FetchFn = {
@@ -64,26 +127,43 @@ export const fetch: FetchFn = <T = unknown>(
   params: FetchParams = {},
   isRawResponse = false,
 ): Promise<T | AxiosResponse<T>> => {
-  let controller: AbortController | undefined;
+  const { abort, keepOnLogout, signal, ...config } = params ?? {};
+  // Every request is aborted by its own cancel callback or signal and, unless it opts out, by
+  // abortPendingRequests() on logout, so late responses do not repopulate the cleared store.
+  const controller = new AbortController();
+  const abortRequest = () => controller.abort();
+  const sources = [signal, keepOnLogout ? undefined : sessionAbortController.signal].filter(
+    (source): source is NonNullable<typeof source> => Boolean(source),
+  );
+  sources.forEach((source) => {
+    if (source.aborted) {
+      abortRequest();
+    } else {
+      source.addEventListener?.('abort', abortRequest, { once: true });
+    }
+  });
+  abort?.(abortRequest);
 
-  if (params?.abort) {
-    controller = new AbortController();
-    params.abort(() => controller.abort());
-  }
-
-  const headersFromParams = params?.headers;
+  const headersFromParams = config.headers;
   const headers = headersFromParams ? { ...headersFromParams } : undefined;
   const paramsSerializer: ParamsSerializer = (parameters) => stringify(parameters ?? {});
 
   const requestParams: AxiosRequestConfig<unknown> = {
-    ...params,
+    ...config,
     paramsSerializer,
-    signal: controller?.signal ?? params.signal,
+    signal: controller.signal,
     url,
     headers,
   };
 
-  const request = axios.request<T>(requestParams).catch(handleError);
+  const request = axios
+    .request<T>(requestParams)
+    .catch(handleError)
+    .finally(() => {
+      sources.forEach((source) => {
+        source.removeEventListener?.('abort', abortRequest);
+      });
+    });
 
   if (isRawResponse) {
     return request;

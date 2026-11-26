@@ -19,19 +19,27 @@ import { URLS } from 'common/urls';
 import { projectKeySelector, projectInfoIdSelector } from 'controllers/project';
 import { activeOrganizationIdSelector } from 'controllers/organization';
 import { fetchParentItems, fetchParentLaunch, launchSelector } from 'controllers/testItem';
-import { createFetchPredicate, fetchDataAction } from 'controllers/fetch';
+import {
+  createFetchPredicate,
+  fetchDataAction,
+  fetchErrorAction,
+  handleError,
+} from 'controllers/fetch';
+import { FETCH_ERROR } from 'controllers/fetch/constants';
+import { canRunPluginCommands } from 'common/utils/permissions';
 import {
   launchIdSelector,
   pagePropertiesSelector,
   pathnameChangedSelector,
   locationSelector,
+  userRolesSelector,
 } from 'controllers/pages';
 import { PAGE_KEY, SIZE_KEY } from 'controllers/pagination';
 import { SORTING_KEY } from 'controllers/sorting';
 import { unselectAllItemsAction } from 'controllers/groupOperations';
 import { NAMESPACE as PLUGINS_NAMESPACE } from 'controllers/plugins/constants';
 import { pluginsSelector } from 'controllers/plugins';
-import { buildPluginCommandRQ } from 'controllers/plugins/utils';
+import { buildPluginCommandRQ, isPluginCommandForbidden } from 'controllers/plugins/utils';
 import { COMMAND_GET_CLUSTERS } from 'controllers/plugins/uiExtensions/constants';
 import { queryParametersSelector } from './selectors';
 import {
@@ -60,7 +68,7 @@ function* getPlugin() {
   return supportedPlugin.enabled && supportedPlugin;
 }
 
-function* fetchClusters(payload = {}) {
+export function* fetchClusters(payload = {}) {
   const { refresh = false } = payload;
   const launchId = yield select(launchIdSelector);
   const parentLaunch = yield select(launchSelector);
@@ -83,14 +91,14 @@ function* fetchClusters(payload = {}) {
   }
 
   const query = yield select(queryParametersSelector, NAMESPACE);
-  let url;
-  const requestParams = {};
-  const plugin = yield call(getPlugin);
+  const waitForResult = isPathNameChanged && !refresh;
+  const userRoles = yield select(userRolesSelector);
+  // Plugin commands need project EDITOR: lower roles use the native endpoint directly.
+  const plugin = canRunPluginCommands(userRoles) ? yield call(getPlugin) : null;
+  let result = null;
   if (plugin) {
-    url = URLS.pluginsCommandsCommon(plugin.name, COMMAND_GET_CLUSTERS);
-    requestParams.method = 'POST';
     const uniqueErrorsParams = yield select(pagePropertiesSelector, NAMESPACE);
-    requestParams.data = buildPluginCommandRQ({
+    const data = buildPluginCommandRQ({
       projectKey,
       projectId,
       organizationId,
@@ -102,18 +110,37 @@ function* fetchClusters(payload = {}) {
         pageSort: query[SORTING_KEY],
       },
     });
-  } else {
-    url = URLS.clusterByLaunchId(projectKey, launchId, {
-      [PAGE_KEY]: query[PAGE_KEY],
-      [SIZE_KEY]: query[SIZE_KEY],
-      [SORTING_KEY]: query[SORTING_KEY],
-    });
+    yield put(
+      fetchDataAction(NAMESPACE, true)(
+        URLS.pluginsCommandsCommon(plugin.name, COMMAND_GET_CLUSTERS),
+        { method: 'POST', data },
+      ),
+    );
+    result = yield take(createFetchPredicate(NAMESPACE));
+    if (result.type === FETCH_ERROR) {
+      if (isPluginCommandForbidden(result.payload)) {
+        result = null;
+      } else {
+        yield call(handleError, fetchErrorAction(NAMESPACE, result.payload));
+      }
+    }
   }
-  yield put(fetchDataAction(NAMESPACE)(url, requestParams));
+  if (!result) {
+    yield put(
+      fetchDataAction(NAMESPACE)(
+        URLS.clusterByLaunchId(projectKey, launchId, {
+          [PAGE_KEY]: query[PAGE_KEY],
+          [SIZE_KEY]: query[SIZE_KEY],
+          [SORTING_KEY]: query[SORTING_KEY],
+        }),
+      ),
+    );
+    if (waitForResult) {
+      yield take(createFetchPredicate(NAMESPACE));
+    }
+  }
 
-  if (isPathNameChanged && !refresh) {
-    const waitEffects = [take(createFetchPredicate(NAMESPACE))];
-    yield all(waitEffects);
+  if (waitForResult) {
     yield put(setPageLoadingAction(false));
   }
 }

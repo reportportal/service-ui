@@ -16,6 +16,7 @@
 
 import { takeLatest, takeEvery, call, all, put, select } from 'redux-saga/effects';
 import { fetch } from 'common/utils/fetch';
+import { getApiErrorMessage } from 'common/utils/apiResponse';
 import { URLS } from 'common/urls';
 import {
   showNotification,
@@ -124,7 +125,7 @@ function* fetchUserInfo() {
     yield put(fetchUserSuccessAction(user));
     return user;
   } catch (err) {
-    yield put(fetchUserErrorAction());
+    yield put(fetchUserErrorAction(err));
   }
 }
 
@@ -219,8 +220,8 @@ function* setLaunchExportFlatAttachments({ payload }) {
   });
 }
 
-function* addApiKey({ payload = {} }) {
-  const { name, successMessage, errorMessage, onSuccess } = payload;
+export function* addApiKey({ payload = {} }) {
+  const { name, successMessage, errorMessage, onSuccess, onError } = payload;
   const user = yield select(userInfoSelector);
   try {
     const response = yield call(fetch, URLS.apiKeys(user.id), {
@@ -241,9 +242,10 @@ function* addApiKey({ payload = {} }) {
       );
     }
     yield put(addApiKeySuccessAction({ id, name, created_at }));
-  } catch ({ message }) {
-    const showingMessage = errorMessage || message;
-    if (errorMessage) {
+  } catch (error) {
+    onError?.();
+    const showingMessage = getApiErrorMessage(error) || errorMessage;
+    if (showingMessage) {
       yield put(
         showNotification({
           message: showingMessage,

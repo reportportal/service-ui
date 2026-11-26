@@ -77,6 +77,7 @@ export const canSeeActivityOption = checkPermission(ACTIONS.ACTIVITY_OPTION);
 export const canSeeInstanceLevelPluginsPages = checkPermission(ACTIONS.INSTANCE_LEVEL_PLUGIN_PAGES);
 export const canChangeStatus = checkPermission(ACTIONS.CHANGE_STATUS);
 export const canLockDashboard = checkPermission(ACTIONS.LOCK_DASHBOARD);
+export const canRunPluginCommands = checkPermission(ACTIONS.RUN_PLUGIN_COMMANDS);
 
 // TMS FEATURES:
 export const canCreateManualLaunch = checkPermission(ACTIONS.CREATE_MANUAL_LAUNCH);

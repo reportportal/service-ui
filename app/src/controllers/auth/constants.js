@@ -40,3 +40,5 @@ export const GRANT_TYPES = {
 export const ANONYMOUS_REDIRECT_PATH_STORAGE_KEY = 'anonymousRedirectPath';
 
 export const GRAFANA_SESSION_REVOKE_TIMEOUT = 2000;
+// bounds the logout request, which the OAuth login over an existing session waits for
+export const LOGOUT_REQUEST_TIMEOUT = 5000;

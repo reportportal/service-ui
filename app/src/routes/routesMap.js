@@ -109,7 +109,7 @@ import {
 } from 'common/constants/userProfileRoutes';
 import { parseQueryToFilterEntityAction } from 'controllers/filter/actionCreators';
 import { fetchFilteredOrganizationsAction } from 'controllers/instance/organizations';
-import { fetchProjectAction } from 'controllers/project';
+import { fetchProjectAction, projectKeySelector } from 'controllers/project';
 import {
   prepareActiveOrganizationProjectsAction,
   prepareActiveOrganizationSettingsAction,
@@ -157,6 +157,7 @@ import { importantLaunchesEnabledSelector } from 'controllers/appInfo';
 
 const redirectRoute = (path, createNewAction, onRedirect = () => {}) => ({
   path,
+  isRedirectOnly: true,
   thunk: (dispatch, getState) => {
     const { location } = getState();
     const newAction = createNewAction(location.payload, getState);
@@ -168,10 +169,19 @@ const redirectRoute = (path, createNewAction, onRedirect = () => {}) => ({
 const getLastPathRoute = (userId) => {
   const userSettings = getUserSettingsFromStorage(userId);
   if (userSettings?.lastPath) {
-    return pathToAction(userSettings.lastPath, routesMap, qs);
+    const lastPathAction = pathToAction(userSettings.lastPath, routesMap, qs);
+    // a stale path that no longer resolves must not send the user to "page not found"
+    return lastPathAction.type === NOT_FOUND ? null : lastPathAction;
   }
   return null;
 };
+
+// Pages that make no sense as a place to return to after login / when opening /login.
+const shouldStoreLastPath = (pageType) =>
+  pageType !== NOT_FOUND &&
+  pageType !== OAUTH_SUCCESS &&
+  pageType !== PROJECT_DASHBOARD_PRINT_PAGE &&
+  !routesMap[pageType]?.isRedirectOnly;
 
 /*
  * Define the correct redirect route based on user assignments.
@@ -294,9 +304,7 @@ const routesMap = {
       const hasAccess = canSeeActivityOption({ userRole: state.user.info.userRole });
 
       if (!hasAccess) {
-        return dispatch({
-          type: ORGANIZATIONS_PAGE,
-        });
+        return dispatch(redirect({ type: ORGANIZATIONS_PAGE }));
       }
 
       const {
@@ -340,7 +348,10 @@ const routesMap = {
       const {
         location: { payload },
       } = getState();
-      dispatch(prepareActiveOrganizationSettingsAction(payload));
+      // Organization settings are shown on the General tab only.
+      if (payload.settingsTab === GENERAL) {
+        dispatch(prepareActiveOrganizationSettingsAction(payload));
+      }
     },
   },
 
@@ -547,9 +558,13 @@ const routesMap = {
       const {
         location: { payload },
       } = state;
-      dispatch(prepareActiveOrganizationSettingsAction(payload));
+      // Organization settings are shown on the General tab only.
+      if (payload.settingsTab === GENERAL) {
+        dispatch(prepareActiveOrganizationSettingsAction(payload));
+      }
       const projectKey = activeProjectKeySelector(state);
-      if (projectKey) {
+      // The project is already loaded when its pages were opened before (or by the project change).
+      if (projectKey && projectKey !== projectKeySelector(state)) {
         dispatch(fetchProjectAction(projectKey, true));
       }
     },
@@ -664,7 +679,8 @@ export const onBeforeRouteChange = (dispatch, getState, { action }) => {
   const page = pageRendering[nextPageType];
   const redirectPath = actionToPath(action, routesMap, qs);
 
-  if (redirectPath) {
+  // the OAuth callback URL carries the access token
+  if (redirectPath && nextPageType !== OAUTH_SUCCESS) {
     setSessionItem(LAST_VISITED_PATH_STORAGE_KEY, redirectPath);
   }
 
@@ -673,7 +689,8 @@ export const onBeforeRouteChange = (dispatch, getState, { action }) => {
 
     switch (access) {
       case ANONYMOUS_ACCESS:
-        if (authorized) {
+        // a new OAuth login replaces the current session (handled by the auth saga)
+        if (authorized && nextPageType !== OAUTH_SUCCESS) {
           const redirectRoute = getLastPathRoute(userId) || getRedirectRoute(user);
           dispatch(redirect(redirectRoute));
         }
@@ -692,7 +709,7 @@ export const onBeforeRouteChange = (dispatch, getState, { action }) => {
               type: LOGIN_PAGE,
             }),
           );
-        } else {
+        } else if (shouldStoreLastPath(nextPageType)) {
           updateStorageItem(`${userId}_settings`, {
             lastPath: redirectPath,
           });
@@ -709,7 +726,7 @@ export const onBeforeRouteChange = (dispatch, getState, { action }) => {
               },
             }),
           );
-        } else {
+        } else if (shouldStoreLastPath(nextPageType)) {
           updateStorageItem(`${userId}_settings`, {
             lastPath: redirectPath,
           });

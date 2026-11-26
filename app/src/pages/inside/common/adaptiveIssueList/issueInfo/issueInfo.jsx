@@ -38,19 +38,34 @@ const messages = defineMessages({
     id: 'IssueInfoTooltip.issueNotFoundDescription',
     defaultMessage: "Issue doesn't exist or no connection to the BTS integration",
   },
+  issueDetailsUnavailableTitle: {
+    id: 'IssueInfoTooltip.issueDetailsUnavailableTitle',
+    defaultMessage: 'Issue details unavailable',
+  },
+  issueDetailsUnavailableDescription: {
+    id: 'IssueInfoTooltip.issueDetailsUnavailableDescription',
+    defaultMessage: 'Your project role does not allow loading issue details from the BTS',
+  },
 });
 
 const isResolved = (status = '') => status.toUpperCase() === STATUS_RESOLVED;
 
 export const IssueInfo = ({ issue }) => {
   const { formatMessage } = useIntl();
-  const { issueInfo, loading } = useIssueInfo(issue, issue.pluginName);
+  const { issueInfo, loading, unavailable } = useIssueInfo(issue, issue.pluginName);
+
+  const renderUnavailable = () => (
+    <div className={cx('content')}>
+      <h4 className={cx('header')}>{formatMessage(messages.issueDetailsUnavailableTitle)}</h4>
+      <div>{formatMessage(messages.issueDetailsUnavailableDescription)}</div>
+    </div>
+  );
 
   return (
     <div className={cx('issue-tooltip')}>
-      {loading ? (
-        <BubblesLoader className={cx('preloader')} />
-      ) : (
+      {loading && <BubblesLoader className={cx('preloader')} />}
+      {!loading && unavailable && renderUnavailable()}
+      {!loading && !unavailable && (
         <div className={cx('content')}>
           <h4 className={cx('header')}>
             {issueInfo ? issue.ticketId : formatMessage(messages.issueNotFoundTitle)}
