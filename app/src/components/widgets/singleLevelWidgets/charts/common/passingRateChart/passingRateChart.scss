@@ -14,24 +14,58 @@
  * limitations under the License.
  */
 
+@use '../../../../common/chartStyles' as *;
+
+div.tooltip {
+  @include chart-tooltip-dark;
+}
+
 .passing-rate-chart {
   height: 100%;
+
+  // Shared legend box is 85px high and would cover the top of the chart;
+  // keep in sync with PIE_LEGEND_HEIGHT in config/getOption.js
+  > [class*='legend'] {
+    height: 52px;
+  }
+
+  [class*='with-custom-block'] {
+    column-gap: 24px;
+  }
+
+  .legend-item {
+    height: 20px;
+    margin: 0 20px 0 0;
+
+    &:last-child {
+      margin-right: 0;
+    }
+  }
+
+  .legend-mark {
+    margin-right: 8px;
+  }
+
+  .legend-label {
+    font-size: 13px;
+    line-height: 18px;
+  }
 }
 
 .filter-info-block {
-  display: inline-block;
-  width: 100%;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
   max-width: 80%;
-  margin-bottom: 10px;
-  padding: 1px 0;
-  color: $COLOR--gray-47;
-  font-family: $FONT-SEMIBOLD;
+  height: 20px;
+  color: var(--rp-ui-color-text-secondary);
+  font-family: var(--rp-ui-base-font-family);
   font-size: 12px;
+  line-height: 16px;
   text-align: left;
 
   .filter-name-title {
-    margin-right: 5px;
-    text-transform: uppercase;
+    font-weight: var(--rp-ui-base-fw-regular);
   }
 
   .filter-name {
@@ -39,8 +73,8 @@
     max-width: 73%;
     overflow: hidden;
     vertical-align: sub;
-    color: $COLOR--charcoal-grey;
-    font-size: 13px;
+    color: var(--rp-ui-base-almost-black);
+    font-weight: var(--rp-ui-base-fw-medium);
     white-space: nowrap;
     text-overflow: ellipsis;
   }

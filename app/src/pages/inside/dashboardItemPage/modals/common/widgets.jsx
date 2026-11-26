@@ -321,6 +321,7 @@ export const getWidgets = (formatMessage) => [
       />
     ),
     preview: Parser(PASSING_RATE_PER_LAUNCH_PREVIEW),
+    criteriaRequired: false,
     controls: PassingRatePerLaunchControls,
     documentationLink: widgetDocsReferences.passingRatePerLaunch,
     documentationClickEventInfo: WIDGETS_EVENTS.onWidgetDocumentLinkClick,

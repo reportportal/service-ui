@@ -45,6 +45,7 @@ interface WidgetPreviewProps {
   loading?: boolean;
   defaultPreview?: ReactNode;
   className?: string;
+  criteriaRequired?: boolean;
 }
 
 interface PreviewFrameProps {
@@ -79,6 +80,7 @@ export const WidgetPreview = ({
   loading = false,
   defaultPreview = null,
   className,
+  criteriaRequired = true,
 }: WidgetPreviewProps) => {
   const { formatMessage } = useIntl();
   const [container, setContainer] = useState<HTMLDivElement | null>(null);
@@ -98,7 +100,7 @@ export const WidgetPreview = ({
   }
 
   const contentFields = data?.contentParameters?.contentFields;
-  const hasNoCriteria = Array.isArray(contentFields) && !contentFields.length;
+  const hasNoCriteria = criteriaRequired && Array.isArray(contentFields) && !contentFields.length;
 
   if (data && (hasNoCriteria || !isWidgetDataAvailable(data))) {
     return (
