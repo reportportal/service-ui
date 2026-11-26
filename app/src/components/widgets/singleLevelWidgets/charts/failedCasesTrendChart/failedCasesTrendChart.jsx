@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { useMemo } from 'react';
+import { useCallback, useMemo, useRef } from 'react';
 import PropTypes from 'prop-types';
 import { useIntl } from 'react-intl';
 import classNames from 'classnames/bind';
@@ -22,8 +22,9 @@ import { EChart } from 'components/widgets/common/echarts';
 import { getChartDefaultProps } from 'components/widgets/common/utils';
 import { useTrendChartClickNavigation } from 'components/widgets/common/utils/useTrendChartClickNavigation';
 import { FAILED, INTERRUPTED } from 'common/constants/testStatuses';
+import { COLOR_CHART_FAILED } from 'common/constants/colors';
 import { STATS_FAILED } from 'common/constants/statistics';
-import { getOption } from './config/getOption';
+import { getOption, getAxesUpdate } from './config/getOption';
 import styles from './failedCasesTrendChart.scss';
 
 const cx = classNames.bind(styles);
@@ -49,10 +50,25 @@ export const FailedCasesTrendChart = ({
     [formatMessage, onChartClick],
   );
 
+  const chartRef = useRef(null);
+  const content = widget.content?.result;
+
+  const onChartCreated = useCallback((_node, chart) => {
+    chartRef.current = chart;
+  }, []);
+
+  const onResized = useCallback(() => {
+    const chart = chartRef.current;
+    if (!chart || !content?.length) return;
+    chart.setOption(getAxesUpdate(content, { width: chart.getWidth(), height: chart.getHeight() }));
+  }, [content]);
+
   const legendConfig = useMemo(
     () => ({
       showLegend: true,
       legendProps: {
+        className: cx('legend'),
+        getColor: () => COLOR_CHART_FAILED,
         items: [STATS_FAILED],
         disabled: true,
       },
@@ -66,6 +82,8 @@ export const FailedCasesTrendChart = ({
         {...getChartDefaultProps({ widget, container, isPreview, observer, heightOffset })}
         configData={configData}
         legendConfig={legendConfig}
+        chartCreatedCallback={onChartCreated}
+        resizedCallback={onResized}
       />
     </div>
   );

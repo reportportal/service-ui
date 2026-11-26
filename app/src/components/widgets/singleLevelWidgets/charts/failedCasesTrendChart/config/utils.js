@@ -14,30 +14,54 @@
  * limitations under the License.
  */
 
-import { range } from 'common/utils';
+import moment from 'moment';
+import classNames from 'classnames/bind';
 import { FAILED } from 'common/constants/testStatuses';
 import { statusLocalization } from 'common/constants/localization/statusLocalization';
-import { messages } from 'components/widgets/common/messages';
+import styles from '../failedCasesTrendChart.scss';
 
-export const getTicks = (bottom, top) => {
-  const count = 6; // change it if want to increase/decrease Y-lines
-  const height = top - bottom;
-  let step;
-  const result = [bottom];
-  if (height < 1) {
-    step = 0.2;
-  } else if (height < 10) {
-    step = 2;
-  } else {
-    step = Math.round(height / count / 10) * 10;
+const cx = classNames.bind(styles);
+
+export const TOOLTIP_DATE_FORMAT = 'DD.MM.YYYY, HH:mm';
+
+const REFERENCE_WIDTH = 668;
+const REFERENCE_HEIGHT = 496;
+const REFERENCE_LABELS_COUNT = 6;
+const PX_PER_X_LABEL = REFERENCE_WIDTH / REFERENCE_LABELS_COUNT;
+const PX_PER_Y_LABEL = REFERENCE_HEIGHT / REFERENCE_LABELS_COUNT;
+const MIN_LABELS_COUNT = 3;
+const MAX_Y_LABELS_COUNT = 13;
+
+const DEFAULT_TICK_INTERVALS = REFERENCE_LABELS_COUNT - 1;
+
+export const getMaxTickIntervals = (chartHeight) => {
+  if (!chartHeight) {
+    return DEFAULT_TICK_INTERVALS;
   }
-  range(0, top, step || 1).forEach((item) => {
-    if (item > bottom) {
-      result.push(item);
-    }
-  });
-  result.push(top);
-  return result;
+  const labelsCount = Math.round(chartHeight / PX_PER_Y_LABEL);
+
+  return Math.min(MAX_Y_LABELS_COUNT, Math.max(MIN_LABELS_COUNT, labelsCount)) - 1;
+};
+
+export const getXLabelStep = (count, chartWidth) => {
+  const labelsCount = chartWidth
+    ? Math.max(MIN_LABELS_COUNT, Math.round(chartWidth / PX_PER_X_LABEL))
+    : REFERENCE_LABELS_COUNT;
+
+  return Math.max(1, Math.ceil(count / labelsCount));
+};
+
+export const getTicks = (bottom, top, maxIntervals = DEFAULT_TICK_INTERVALS) => {
+  const height = top - bottom;
+  if (height <= 0) {
+    return [bottom];
+  }
+  const intervals = Math.min(maxIntervals, Math.ceil(height));
+  const step = height / intervals;
+
+  return Array.from({ length: intervals + 1 }, (_, index) =>
+    index === intervals ? top : Math.round(bottom + step * index),
+  );
 };
 
 export const calculateTooltipParams = (data, color, customProps) => {
@@ -47,9 +71,10 @@ export const calculateTooltipParams = (data, color, customProps) => {
 
   return {
     itemName: `${name} #${number}`,
-    startTime: new Date(startTime).getTime(),
-    itemCases: `${value} ${formatMessage(messages.cases)}`,
+    startTimeText: moment(new Date(startTime).getTime()).format(TOOLTIP_DATE_FORMAT),
+    itemCases: String(value),
     color: color(id),
     issueStatNameProps: { itemName: formatMessage(statusLocalization[FAILED]) },
+    wrapperClassName: cx('tooltip'),
   };
 };
