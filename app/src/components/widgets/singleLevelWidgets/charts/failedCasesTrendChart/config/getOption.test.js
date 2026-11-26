@@ -14,12 +14,13 @@
  * limitations under the License.
  */
 
-import { COLOR_FAILED } from 'common/constants/colors';
+import { COLOR_CHART_FAILED } from 'common/constants/colors';
 import {
   expectPreviewModeHidesChart,
   expectSingleSeriesCustomData,
 } from '../../common/trendChartOptionAssertions';
 import { getOption } from './getOption';
+import { calculateTooltipParams, getMaxTickIntervals, getTicks, getXLabelStep } from './utils';
 import { sampleContent } from './fixtures/sampleContent';
 
 const formatMessage = (msg) => msg.defaultMessage || msg.id;
@@ -37,9 +38,10 @@ describe('failedCasesTrendChart getOption', () => {
       id: 'failed',
       type: 'line',
       data: [3, 5, 2],
-      lineStyle: { width: 1 },
+      lineStyle: { width: 2 },
       showSymbol: true,
-      symbolSize: 1.2,
+      symbolSize: 8,
+      itemStyle: { opacity: 0 },
       cursor: 'pointer',
     });
     expect(option.series[0].areaStyle).toBeUndefined();
@@ -49,16 +51,16 @@ describe('failedCasesTrendChart getOption', () => {
       max: 5,
       show: true,
       axisLabel: {
-        fontFamily: 'OpenSans',
-        fontSize: 10,
+        fontFamily: 'Roboto',
+        fontSize: 12,
         fontWeight: 400,
-        customValues: [2, 4, 5],
+        customValues: [2, 3, 4, 5],
       },
       axisTick: {
-        customValues: [2, 4, 5],
+        customValues: [2, 3, 4, 5],
       },
       nameTextStyle: {
-        fontFamily: 'OpenSans',
+        fontFamily: 'Roboto',
         fontSize: 12,
         fontWeight: 400,
       },
@@ -69,7 +71,7 @@ describe('failedCasesTrendChart getOption', () => {
       data: ['# 1', '# 2', '# 3'],
       show: true,
     });
-    expect(option.color).toEqual([COLOR_FAILED]);
+    expect(option.color).toEqual([COLOR_CHART_FAILED]);
     expect(option.tooltip).toEqual(
       expect.objectContaining({
         trigger: 'axis',
@@ -79,7 +81,7 @@ describe('failedCasesTrendChart getOption', () => {
     );
     expectSingleSeriesCustomData(option, {
       seriesId: 'failed',
-      color: COLOR_FAILED,
+      color: COLOR_CHART_FAILED,
       itemsDataLength: 3,
     });
   });
@@ -104,8 +106,8 @@ describe('failedCasesTrendChart getOption', () => {
 
     expect(option.yAxis.min).toBe(0);
     expect(option.yAxis.max).toBe(9);
-    expect(option.yAxis.axisLabel.customValues).toEqual([0, 2, 4, 6, 8, 9]);
-    expect(option.yAxis.axisTick.customValues).toEqual([0, 2, 4, 6, 8, 9]);
+    expect(option.yAxis.axisLabel.customValues).toEqual([0, 1.8, 3.6, 5.4, 7.2, 9]);
+    expect(option.yAxis.axisTick.customValues).toEqual([0, 1.8, 3.6, 5.4, 7.2, 9]);
   });
 
   test('shows a larger symbol when there is a single data point', () => {
@@ -130,5 +132,38 @@ describe('failedCasesTrendChart getOption', () => {
 
     expect(option.series[0].cursor).toBe('default');
     expect(option.series[0].silent).toBe(true);
+  });
+
+  test('uses DS 6 chart styling: 2px line, no x ticks, width-driven x labels', () => {
+    const option = getOption({ content: sampleContent, isPreview: false, formatMessage });
+
+    expect(option.series[0].lineStyle.width).toBe(2);
+    expect(option.xAxis.axisTick.show).toBe(false);
+    expect(option.xAxis.axisLabel.interval(0)).toBe(true);
+    expect(option.yAxis.axisLabel.formatter(22.4)).toBe('22');
+    expect(option.tooltip.axisPointer.type).toBe('line');
+  });
+
+  test('tooltip shows DD.MM.YYYY, HH:mm date and "Failed: <n>" without "cases"', () => {
+    const params = calculateTooltipParams([{ index: 0, id: 'failed', value: 44 }], () => '#f00', {
+      itemsData: [{ name: 'Nightly regression', number: '145', startTime: '2026-10-25T02:14:00' }],
+      formatMessage: (msg) => msg.defaultMessage || msg.id,
+    });
+
+    expect(params.itemName).toBe('Nightly regression #145');
+    expect(params.startTimeText).toBe('25.10.2026, 02:14');
+    expect(params.itemCases).toBe('44');
+  });});
+
+describe('failedCasesTrendChart y ticks', () => {
+  test('a taller chart gets more Y gridlines', () => {
+    expect(getMaxTickIntervals(496)).toBe(5);
+    expect(getMaxTickIntervals(250)).toBe(2);
+    expect(getMaxTickIntervals(830)).toBe(9);
+    expect(getMaxTickIntervals(undefined)).toBe(5);
+    expect(getXLabelStep(12, 668)).toBe(2);
+    expect(getXLabelStep(12, 1336)).toBe(1);
+    expect(getXLabelStep(12, 330)).toBe(4);
+    expect(getTicks(0, 100, 10)).toHaveLength(11);
   });
 });
