@@ -601,7 +601,7 @@
   "CreateUserModal.userExistsDuplicate": "使用 email={email} 的用户已存在。无法创建重复项",
   "CumulativeTrendControls.CriteriaFieldLabel": "小部件的标准",
   "CumulativeTrendControls.LaunchesLimitFieldLabel": "测试任务的数量",
-  "CumulativeTrendControls.LaunchesLimitValidationError": "测试项个数应为1到20000个",
+  "CumulativeTrendControls.LaunchesLimitValidationError": "启动次数应为1到20000",
   "CumulativeTrendControls.attributeKeyFieldLabelDetailedView": "（详情）",
   "CumulativeTrendControls.attributeKeyFieldLabelOverview": "（概述）",
   "CumulativeTrendControls.attributesArrayValidationError": "请输入一个唯一的关键词作为属性，用于将测试合并成组",

@@ -44,7 +44,7 @@ import {
 } from 'components/widgets/common/constants';
 import { WidgetStateMessage } from 'pages/inside/dashboardItemPage/widgetsGrid/widget/widgetStateMessage';
 import { getChartColor } from 'components/widgets/common/chartColors';
-import { getOption, getStackSeriesIds } from './config/getOption';
+import { getOption, getStackSeriesIds, getSegmentBorderWidth } from './config/getOption';
 import { EXECUTION_FIELDS, getDefectFields } from './config/utils';
 import { CumulativeChartLegend } from './legend/cumulativeChartLegend';
 import { messages } from './messages';
@@ -362,6 +362,38 @@ export const CumulativeTrendChart = ({
     chart.on('mouseout', toggleStackHighlight('downplay'));
   }, []);
 
+  // the option is built once, so the segment border (and the total line placed against it)
+  // follows the size when the widget is resized
+  const onChartResized = useCallback(() => {
+    const chart = chartRef.current;
+    if (!chart || chart.isDisposed()) {
+      return;
+    }
+    const chartHeight = chart.getHeight();
+    const { getOption: buildOption, ...configParams } = configData;
+    const borderWidth = getSegmentBorderWidth({
+      isPreview: false,
+      chartHeight,
+      separate: configParams.userSettings.separate,
+    });
+    const currentSeries = chart.getOption().series || [];
+    const barSeries = currentSeries.find(({ type }) => type === 'bar');
+    if (!barSeries || barSeries.itemStyle?.borderWidth === borderWidth) {
+      return;
+    }
+    const currentIds = new Set(currentSeries.map(({ id }) => id));
+    const { series } = buildOption({
+      ...configParams,
+      content: widget.content?.result,
+      size: { height: chartHeight },
+    });
+    chart.setOption({
+      series: series
+        .filter(({ id }) => currentIds.has(id))
+        .map(({ id, itemStyle, renderItem }) => ({ id, itemStyle, ...(renderItem && { renderItem }) })),
+    });
+  }, [configData, widget]);
+
   useEffect(() => {
     const chart = chartRef.current;
     if (!chart || chart.isDisposed()) {
@@ -415,6 +447,7 @@ export const CumulativeTrendChart = ({
           heightOffset={getLegendHeight()}
           configData={configData}
           chartCreatedCallback={onChartCreated}
+          resizedCallback={onChartResized}
         />
       ) : (
         <div className={cx('no-data-wrapper')}>

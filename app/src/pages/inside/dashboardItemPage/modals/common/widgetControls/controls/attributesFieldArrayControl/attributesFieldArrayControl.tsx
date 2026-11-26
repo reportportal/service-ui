@@ -196,8 +196,8 @@ const LevelAttributeAutocomplete = ({
       value={value}
       placeholder={placeholder}
       disabled={disabled}
-      error={error}
-      touched={touched}
+      error={disabled ? '' : error}
+      touched={touched && !disabled}
       isDropdownMode={showOwner}
       minLength={showOwner ? 0 : SEARCH_MIN_LENGTH}
       maxLength={512}
@@ -236,6 +236,7 @@ const LevelAttributeAutocomplete = ({
       inputProps={{
         clearable: true,
         startIcon,
+        placeholder,
       }}
     />
   );
