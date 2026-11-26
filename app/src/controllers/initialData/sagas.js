@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-import { put, takeEvery, take, all } from 'redux-saga/effects';
-import { fetchAppInfoAction, APP_INFO_NAMESPACE } from 'controllers/appInfo';
+import { put, takeEvery, take, all, call } from 'redux-saga/effects';
+import { fetchAppInfoAndWait } from 'controllers/appInfo';
 import { FETCH_USER_ERROR, FETCH_USER_SUCCESS, fetchUserAction } from 'controllers/user';
 import {
   DEFAULT_TOKEN,
@@ -29,12 +29,11 @@ import {
   fetchPluginsAction,
   fetchPublicPluginsAction,
 } from 'controllers/plugins';
-import { createFetchPredicate } from 'controllers/fetch';
 import { getStorageItem } from 'common/utils';
 import { setInitialDataReadyAction, setServiceAvailabilityAction } from './actionCreators';
 import { FETCH_INITIAL_DATA } from './constants';
 
-function* fetchInitialData() {
+export function* fetchInitialData() {
   yield put(setTokenAction(getStorageItem(TOKEN_KEY) || DEFAULT_TOKEN));
   yield put(
     setServiceAvailabilityAction({
@@ -42,8 +41,8 @@ function* fetchInitialData() {
       apiUnavailable: false,
     }),
   );
-  yield put(fetchAppInfoAction());
-  const appInfoResult = yield take(createFetchPredicate(APP_INFO_NAMESPACE));
+  // anonymous: the login page needs it even when the restored token turns out to be stale
+  const appInfoResult = yield call(fetchAppInfoAndWait);
 
   if (appInfoResult.error) {
     yield put(setInitialDataReadyAction());
@@ -56,6 +55,8 @@ function* fetchInitialData() {
     yield put(authSuccessAction());
     yield put(fetchPluginsAction());
     yield put(fetchGlobalIntegrationsAction());
+    // the session is valid: replace the anonymous info with the full one before any signed-in page renders
+    yield call(fetchAppInfoAndWait);
   } else {
     yield put(resetTokenAction());
     yield put(fetchPublicPluginsAction());

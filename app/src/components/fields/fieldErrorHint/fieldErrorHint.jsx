@@ -246,6 +246,21 @@ const messages = {
       id: 'EmailFormFields.portFieldHint',
       defaultMessage: "Only numbers from '1' to '65535' are possible.",
     },
+    emailPasswordRequiredOnTargetChangeHint: {
+      id: 'EmailFormFields.passwordRequiredOnTargetChangeHint',
+      defaultMessage:
+        'Enter the password again: the stored one cannot be kept when the host, port or protocol changes.',
+    },
+    ldapManagerPasswordRequiredOnUrlChangeHint: {
+      id: 'LdapFormFields.managerPasswordRequiredOnUrlChangeHint',
+      defaultMessage:
+        'Enter the manager password again: the stored one cannot be kept when the server URL changes.',
+    },
+    ldapPasswordAttributeRequiredOnUrlChangeHint: {
+      id: 'LdapFormFields.passwordAttributeRequiredOnUrlChangeHint',
+      defaultMessage:
+        'Enter the password attribute again: the stored one cannot be kept when the server URL changes.',
+    },
     patternNameLengthHint: {
       id: 'PatternAnalysis.patternNameLengthHint',
       defaultMessage: 'Pattern name should have size from 1 to 55',

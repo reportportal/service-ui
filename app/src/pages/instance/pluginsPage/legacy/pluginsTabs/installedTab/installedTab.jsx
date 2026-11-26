@@ -124,7 +124,28 @@ export class InstalledTab extends Component {
   state = {
     activeFilterItem: ALL_GROUP_TYPE,
     subPage: DEFAULT_BREADCRUMB,
+    // null until the catalogue request settles, then true or false
+    uploadAllowed: null,
   };
+
+  componentDidMount() {
+    // The catalogue response carries the instance's upload capability (rp.plugins.upload.allowed).
+    // Asked quietly: against a service-api without the catalogue endpoint (or without the flag)
+    // the upload control is shown. The control stays hidden until the answer is known.
+    this.isUnmounted = false;
+    fetch(URLS.marketplaceCatalogue())
+      .then((catalogue) => catalogue?.instance?.uploadAllowed !== false)
+      .catch(() => true)
+      .then((uploadAllowed) => {
+        if (!this.isUnmounted) {
+          this.setState({ uploadAllowed });
+        }
+      });
+  }
+
+  componentWillUnmount() {
+    this.isUnmounted = true;
+  }
 
   onToggleActive = (itemData) => {
     const {
@@ -263,7 +284,7 @@ export class InstalledTab extends Component {
                 activeItem={activeFilterItem}
                 onFilterChange={this.handleFilterChange}
               />
-              <ActionPanel />
+              {this.state.uploadAllowed === true && <ActionPanel />}
             </div>
             <div className={cx('plugins-content')}>
               {this.renderFilterMobileBlock()}

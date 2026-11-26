@@ -16,25 +16,43 @@
 
 import { fetch } from 'common/utils';
 import { URLS } from 'common/urls';
-import { call, takeEvery, all, put } from 'redux-saga/effects';
-import { fetchStartAction, fetchSuccessAction, fetchErrorAction } from 'controllers/fetch';
-import { updateServerSettingsSuccessAction } from 'controllers/appInfo/actionCreators';
+import { call, takeEvery, takeLatest, all, put, select, take } from 'redux-saga/effects';
+import {
+  fetchStartAction,
+  fetchSuccessAction,
+  fetchErrorAction,
+  createFetchPredicate,
+} from 'controllers/fetch';
+import { isAuthorizedSelector } from 'controllers/auth/selectors';
+import {
+  fetchAppInfoAction,
+  updateServerSettingsSuccessAction,
+} from 'controllers/appInfo/actionCreators';
 import { NOTIFICATION_TYPES, showNotification } from 'controllers/notification';
 import { APP_INFO_NAMESPACE, FETCH_APP_INFO, UPDATE_SERVER_SETTINGS } from './constants';
 import { composeAppInfo } from './utils';
 
-const APP_INFO_FETCH_OPTIONS = {
+// The API answers /info with a reduced, pre-login payload to anonymous callers and with the full one to a
+// signed-in caller. The token is sent only once the session is authorized: a stale token restored from
+// storage would be refused with 401 and the login page would get no info at all.
+const ANONYMOUS_FETCH_OPTIONS = {
   headers: { Authorization: undefined },
 };
+const AUTHORIZED_FETCH_OPTIONS = {};
 
 const silentFetch = (...args) => fetch(...args).catch(() => null);
 
-function* fetchAppInfo() {
+export function* fetchAppInfo() {
   try {
     yield put(fetchStartAction(APP_INFO_NAMESPACE, {}));
+    const isAuthorized = yield select(isAuthorizedSelector);
     const [apiInfo, uiInfo] = yield all([
-      call(fetch, URLS.appInfoApi(), APP_INFO_FETCH_OPTIONS),
-      call(silentFetch, URLS.appInfoUi(), APP_INFO_FETCH_OPTIONS),
+      call(
+        fetch,
+        URLS.appInfoApi(),
+        isAuthorized ? AUTHORIZED_FETCH_OPTIONS : ANONYMOUS_FETCH_OPTIONS,
+      ),
+      call(silentFetch, URLS.appInfoUi(), ANONYMOUS_FETCH_OPTIONS),
     ]);
     yield put(fetchSuccessAction(APP_INFO_NAMESPACE, composeAppInfo(apiInfo, uiInfo || {})));
   } catch (error) {
@@ -62,8 +80,17 @@ function* updateServerSettings({ payload }) {
   }
 }
 
+// Loads info for the current session state and waits for the result: called once the session becomes
+// authorized, so the full payload is in the store before signed-in pages render.
+export function* fetchAppInfoAndWait() {
+  yield put(fetchAppInfoAction());
+  return yield take(createFetchPredicate(APP_INFO_NAMESPACE));
+}
+
 function* watchFetchAppInfo() {
-  yield takeEvery(FETCH_APP_INFO, fetchAppInfo);
+  // the latest request wins: an anonymous response that arrives after sign-in (or a full one that arrives
+  // after sign-out) must not overwrite the payload for the current session
+  yield takeLatest(FETCH_APP_INFO, fetchAppInfo);
 }
 
 function* watchUpdateServerSettings() {

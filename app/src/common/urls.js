@@ -319,6 +319,7 @@ export const URLS = {
   userPasswordResetToken: (token) => `${urlBase}users/password/reset/${token}`,
   userPasswordRestore: () => `${urlBase}users/password/restore`,
   userChangePassword: () => `${urlBase}users/password/change`,
+  userEmailConfirm: () => `${urlBase}users/email/confirm`,
   userInfo: (userId) => `${urlBase}users/${userId}`,
   deleteUsers: (ids) => `${urlBase}users${getQueryParams({ ids })}`,
   userInviteInternal: (projectKey) => `${urlBase}project/${projectKey}/assign`,

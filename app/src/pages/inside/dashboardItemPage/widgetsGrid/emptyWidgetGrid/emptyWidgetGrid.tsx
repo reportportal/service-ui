@@ -19,7 +19,7 @@ import { useSelector } from 'react-redux';
 import { PlusIcon } from '@reportportal/ui-kit';
 
 import { createClassnames } from 'common/utils';
-import { useCanLockDashboard } from 'common/hooks';
+import { useCanOverrideDashboardLock } from 'common/hooks';
 import { useUserPermissions } from 'hooks/useUserPermissions';
 import { activeDashboardItemSelector } from 'controllers/dashboard';
 import { EmptyStatePage } from 'pages/inside/common/emptyStatePage';
@@ -39,9 +39,9 @@ interface EmptyWidgetGridProps {
 export const EmptyWidgetGrid = ({ action, isDisable = false }: EmptyWidgetGridProps) => {
   const { formatMessage } = useIntl();
   const { canWorkWithWidgets } = useUserPermissions();
-  const canLock = useCanLockDashboard();
   const dashboard = useSelector(activeDashboardItemSelector) as ActiveDashboardItem;
-  const isButtonDisabled = dashboard?.locked && !canLock;
+  const canOverrideLock = useCanOverrideDashboardLock(dashboard?.owner);
+  const isButtonDisabled = dashboard?.locked && !canOverrideLock;
 
   const buttons = canWorkWithWidgets
     ? [

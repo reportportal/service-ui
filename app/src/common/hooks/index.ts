@@ -34,3 +34,4 @@ export type {
 } from './useSearchFilteredFolderDisplay';
 export { useBreadCrumbsTree } from './useBreadCrumbsTree';
 export { useCanLockDashboard } from './useCanLockDashboard';
+export { useCanOverrideDashboardLock } from './useCanOverrideDashboardLock';

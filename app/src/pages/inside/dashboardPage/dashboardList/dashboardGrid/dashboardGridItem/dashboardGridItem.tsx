@@ -100,7 +100,7 @@ export const DashboardGridItem = ({
             </span>
           </NavLink>
           {locked && (
-            <LockedDashboardTooltip locked={locked}>
+            <LockedDashboardTooltip locked={locked} owner={owner}>
               <DashboardLockedIcon className={cx('dashboard-card__locked')} />
             </LockedDashboardTooltip>
           )}

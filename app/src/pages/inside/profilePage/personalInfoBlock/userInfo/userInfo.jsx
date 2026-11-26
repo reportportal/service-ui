@@ -36,6 +36,11 @@ const messages = defineMessages({
     id: 'UserInfo.submitSuccess',
     defaultMessage: 'Changes have been saved successfully',
   },
+  emailConfirmationSent: {
+    id: 'UserInfo.emailConfirmationSent',
+    defaultMessage:
+      'A confirmation link has been sent to {email}. Your email will change after you open the link',
+  },
   submitError: {
     id: 'UserInfo.submitError',
     defaultMessage: "Error! Can't save changes",
@@ -87,15 +92,23 @@ export class UserInfo extends Component {
       data: { fullName: data.name, email: data.email },
     })
       .then(() => {
+        // A changed email is not applied until the link sent to the new address is opened:
+        // the session and the current email stay as they are.
+        const newEmail = (data.email || '').trim();
+        const isEmailChanged = newEmail.toLowerCase() !== (this.props.email || '').trim().toLowerCase();
         this.props.fetchUserAction();
         this.props.showNotification({
-          message: this.props.intl.formatMessage(messages.submitSuccess),
+          message: isEmailChanged
+            ? this.props.intl.formatMessage(messages.emailConfirmationSent, { email: newEmail })
+            : this.props.intl.formatMessage(messages.submitSuccess),
           type: NOTIFICATION_TYPES.SUCCESS,
         });
       })
-      .catch(() => {
+      .catch((error) => {
+        // The server explains a refused email change (address taken, request repeated too soon,
+        // confirmation link unavailable for this host); show that instead of a generic failure.
         this.props.showNotification({
-          message: this.props.intl.formatMessage(messages.submitError),
+          message: error?.message || this.props.intl.formatMessage(messages.submitError),
           type: NOTIFICATION_TYPES.ERROR,
         });
       });

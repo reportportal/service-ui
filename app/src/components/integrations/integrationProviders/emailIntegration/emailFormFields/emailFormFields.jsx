@@ -43,12 +43,14 @@ import {
   PORT_KEY,
   USERNAME_KEY,
   PASSWORD_KEY,
+  PASSWORD_MASK,
   FROM_EMAIL_KEY,
   ENCRYPTION_MODE_NONE,
   ENCRYPTION_MODE_TLS,
   ENCRYPTION_MODE_SSL,
   PROTOCOL_SMTP,
 } from '../constants';
+import { canKeepStoredPassword, getPasswordError } from '../emailFormHelpers';
 import styles from './emailFormFields.scss';
 
 const cx = classNames.bind(styles);
@@ -188,6 +190,9 @@ AuthRadios.propTypes = {
   authEnabled: formValueSelector(INTEGRATION_FORM)(state, AUTH_ENABLED_KEY),
   tlsEnabled: formValueSelector(INTEGRATION_FORM)(state, TLS_KEY),
   sslEnabled: formValueSelector(INTEGRATION_FORM)(state, SSL_KEY),
+  host: formValueSelector(INTEGRATION_FORM)(state, HOST_KEY),
+  port: formValueSelector(INTEGRATION_FORM)(state, PORT_KEY),
+  protocol: formValueSelector(INTEGRATION_FORM)(state, PROTOCOL_KEY),
 }))
 @injectIntl
 export class EmailFormFields extends Component {
@@ -199,6 +204,9 @@ export class EmailFormFields extends Component {
     authEnabled: PropTypes.bool,
     tlsEnabled: PropTypes.bool,
     sslEnabled: PropTypes.bool,
+    host: PropTypes.string,
+    port: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+    protocol: PropTypes.string,
     initialData: PropTypes.object,
     editAuthMode: PropTypes.bool,
     updateMetaData: PropTypes.func,
@@ -263,6 +271,15 @@ export class EmailFormFields extends Component {
     }
   };
 
+  // Stable reference on purpose: redux-form re-registers the field when `validate` changes.
+  validatePassword = (value, allValues) =>
+    getPasswordError({
+      value,
+      editAuthMode: this.props.editAuthMode,
+      initialData: this.props.initialData,
+      values: allValues,
+    });
+
   formatPortValue = (value) => value && String(value);
   normalizeValue = (value) => `${value}`.replace(/\D+/g, '');
 
@@ -273,7 +290,20 @@ export class EmailFormFields extends Component {
       tlsEnabled,
       sslEnabled,
       disabled,
+      editAuthMode,
+      initialData,
+      host,
+      port,
+      protocol,
     } = this.props;
+
+    // An empty password field means "keep the stored one", shown with the same mask as the
+    // details card. It stops being true once the target changes: the server drops the secret then.
+    const keepsStoredPassword = canKeepStoredPassword({
+      editAuthMode,
+      initialData,
+      values: { [HOST_KEY]: host, [PORT_KEY]: port, [PROTOCOL_KEY]: protocol },
+    });
 
     const encryptionMode = getEncryptionMode(tlsEnabled, sslEnabled);
     const encryptionOptions = [
@@ -391,9 +421,11 @@ export class EmailFormFields extends Component {
               label={formatMessage(messages.passwordLabel)}
               disabled={disabled}
               className={cx('fields')}
-              validate={commonValidators.requiredField}
-              isRequired
-              placeholder={formatMessage(messages.passwordPlaceholder)}
+              validate={this.validatePassword}
+              isRequired={!keepsStoredPassword}
+              placeholder={
+                keepsStoredPassword ? PASSWORD_MASK : formatMessage(messages.passwordPlaceholder)
+              }
             >
               <FieldErrorHint provideHint={false}>
                 <FieldText defaultWidth={false} type="password" />

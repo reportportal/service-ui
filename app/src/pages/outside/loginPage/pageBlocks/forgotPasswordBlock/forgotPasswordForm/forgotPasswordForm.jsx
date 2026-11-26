@@ -50,7 +50,8 @@ const placeholders = defineMessages({
 const notifications = defineMessages({
   successSendEmail: {
     id: 'ForgotPasswordForm.successSendEmail',
-    defaultMessage: 'Password recovery instructions have been sent to email {email}',
+    defaultMessage:
+      'If an account exists for {email}, recovery instructions will arrive shortly',
   },
 });
 

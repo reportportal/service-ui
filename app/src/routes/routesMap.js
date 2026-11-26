@@ -77,7 +77,11 @@ import {
   LINKS_AND_BRANDING,
   FEATURES,
 } from 'common/constants/settingsTabs';
-import { ANONYMOUS_REDIRECT_PATH_STORAGE_KEY, isAuthorizedSelector } from 'controllers/auth';
+import {
+  ANONYMOUS_REDIRECT_PATH_STORAGE_KEY,
+  isAuthorizedSelector,
+  getConfirmEmailUuid,
+} from 'controllers/auth';
 import {
   fetchDashboardsAction,
   fetchDashboardAction,
@@ -673,7 +677,9 @@ export const onBeforeRouteChange = (dispatch, getState, { action }) => {
 
     switch (access) {
       case ANONYMOUS_ACCESS:
-        if (authorized) {
+        // An email confirmation link must reach the login page even when this browser still
+        // holds a session: the page signs that session out before confirming.
+        if (authorized && !(nextPageType === LOGIN_PAGE && getConfirmEmailUuid(action))) {
           const redirectRoute = getLastPathRoute(userId) || getRedirectRoute(user);
           dispatch(redirect(redirectRoute));
         }

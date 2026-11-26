@@ -74,7 +74,11 @@ export class IntegrationSettingsContainer extends Component {
       },
       isGlobal,
     } = this.props;
-    const updatedFormData = applyIntegrationFormPrepare(pluginName, formData);
+    const updatedFormData = applyIntegrationFormPrepare(
+      pluginName,
+      formData,
+      this.props.data.integrationParameters,
+    );
     const data = {
       enabled: true,
       integrationParameters: updatedFormData,

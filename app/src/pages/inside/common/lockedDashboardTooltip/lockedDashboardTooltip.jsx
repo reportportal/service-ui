@@ -19,17 +19,17 @@ import classNames from 'classnames/bind';
 import PropTypes from 'prop-types';
 import { Tooltip } from '@reportportal/ui-kit';
 import { useIntl } from 'react-intl';
-import { useCanLockDashboard } from 'common/hooks/useCanLockDashboard';
+import { useCanOverrideDashboardLock } from 'common/hooks/useCanOverrideDashboardLock';
 import { messages } from './messages';
 import styles from './lockedDashboardTooltip.scss';
 
 const cx = classNames.bind(styles);
 
-export const LockedDashboardTooltip = ({ children, locked, variant }) => {
+export const LockedDashboardTooltip = ({ children, locked, variant, owner }) => {
   const { formatMessage } = useIntl();
-  const canLock = useCanLockDashboard();
+  const canOverrideLock = useCanOverrideDashboardLock(owner);
 
-  if (!locked || canLock) return children;
+  if (!locked || canOverrideLock) return children;
 
   const portalRoot = typeof document !== 'undefined' ? document.getElementById('tooltip-root') : null;
   const message = variant === 'widget' ? messages.lockedWidget : messages.lockedDashboard;
@@ -51,10 +51,12 @@ LockedDashboardTooltip.propTypes = {
   children: PropTypes.node,
   locked: PropTypes.bool,
   variant: PropTypes.oneOf(['dashboard', 'widget']),
+  owner: PropTypes.string,
 };
 
 LockedDashboardTooltip.defaultProps = {
   children: null,
   locked: false,
   variant: 'dashboard',
+  owner: '',
 };

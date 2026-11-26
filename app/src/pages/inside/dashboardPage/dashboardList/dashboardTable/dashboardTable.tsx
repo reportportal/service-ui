@@ -92,7 +92,7 @@ export const DashboardTable = ({
                     {name}
                   </NavLink>
                   {locked && (
-                    <LockedDashboardTooltip locked={locked}>
+                    <LockedDashboardTooltip locked={locked} owner={owner}>
                       <DashboardLockedIcon />
                     </LockedDashboardTooltip>
                   )}

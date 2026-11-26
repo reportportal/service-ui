@@ -18,6 +18,23 @@ import {
   instanceTypeSelector,
   shouldShowExploreCloudPromoSelector,
   tmsEnabledSelector,
+  apiBuildVersionSelector,
+  authExtensionsSelector,
+  analyticsEnabledSelector,
+  instanceIdSelector,
+  gaMeasurementIdSelector,
+  passwordMinLengthSelector,
+  isDemoInstanceSelector,
+  flushDataInSelector,
+  analyzerExtensionsSelector,
+  isAnalyzerAvailableSelector,
+  ssoUsersOnlySelector,
+  sessionExpirationTimeSelector,
+  serverSidebarLinksSelector,
+  importantLaunchesEnabledSelector,
+  personalOrganizationsSelector,
+  isOldHistorySelector,
+  allowDeleteAccountSelector,
 } from './selectors';
 import { EPAM, INSTANCE_TYPE, NOT_PROVIDED, SAAS, TMS_ENABLED_KEY } from './constants';
 
@@ -117,6 +134,54 @@ describe('appInfo/selectors', () => {
     test('should return false when appInfo is not set', () => {
       const state = {};
       expect(tmsEnabledSelector(state)).toBe(false);
+    });
+  });
+
+  describe('with the anonymous (pre-login) payload of /info', () => {
+    // what the API returns to a caller that is not signed in; everything else is absent
+    const anonymousState = {
+      appInfo: {
+        api: {
+          build: { name: 'API Service', version: '26.1.0' },
+          authExtensions: { github: { button: '<span>GitHub</span>', path: '/oauth/login/github' } },
+          extensions: {
+            result: {
+              'server.analytics.all': 'true',
+              'server.details.instance': 'instance-id',
+              'server.password.min.length': '12',
+            },
+          },
+          environment: { ga_measurement_id: 'G-TEST', instance_type: 'SAAS' },
+          jobs: { flushingDataTrigger: {} },
+        },
+        ui: {},
+        jobs: {},
+      },
+    };
+
+    test('pre-login selectors read their values', () => {
+      expect(apiBuildVersionSelector(anonymousState)).toBe('26.1.0');
+      expect(Object.keys(authExtensionsSelector(anonymousState))).toEqual(['github']);
+      expect(analyticsEnabledSelector(anonymousState)).toBe(true);
+      expect(instanceIdSelector(anonymousState)).toBe('instance-id');
+      expect(gaMeasurementIdSelector(anonymousState)).toBe('G-TEST');
+      expect(passwordMinLengthSelector(anonymousState)).toBe(12);
+      expect(instanceTypeSelector(anonymousState)).toBe(SAAS);
+      expect(isDemoInstanceSelector(anonymousState)).toBe(true);
+    });
+
+    test('post-login selectors fall back to defaults instead of failing', () => {
+      expect(flushDataInSelector(anonymousState)).toBeNull();
+      expect(analyzerExtensionsSelector(anonymousState)).toEqual([]);
+      expect(isAnalyzerAvailableSelector(anonymousState)).toBe(false);
+      expect(ssoUsersOnlySelector(anonymousState)).toBe(false);
+      expect(sessionExpirationTimeSelector(anonymousState)).toBe(Infinity);
+      expect(serverSidebarLinksSelector(anonymousState)).toEqual([]);
+      expect(importantLaunchesEnabledSelector(anonymousState)).toBe(false);
+      expect(personalOrganizationsSelector(anonymousState)).toBe(false);
+      expect(isOldHistorySelector(anonymousState)).toBe(false);
+      expect(allowDeleteAccountSelector(anonymousState)).toBe(false);
+      expect(tmsEnabledSelector(anonymousState)).toBe(false);
     });
   });
 });

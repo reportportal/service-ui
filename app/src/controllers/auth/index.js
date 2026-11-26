@@ -18,11 +18,13 @@ export { TOKEN_KEY, DEFAULT_TOKEN, SET_TOKEN, LOGOUT, LOGOUT_COMPLETE } from './
 export {
   loginAction,
   logoutAction,
+  confirmEmailAction,
   authSuccessAction,
   setTokenAction,
   resetTokenAction,
   clearLoginLockoutAction,
 } from './actionCreators';
+export { getConfirmEmailUuid } from './emailConfirmation';
 export { authReducer } from './reducer';
 export {
   isAuthorizedSelector,
