@@ -14,80 +14,25 @@
  * limitations under the License.
  */
 
-import { useCallback, useMemo, useRef } from 'react';
 import PropTypes from 'prop-types';
-import { useIntl } from 'react-intl';
-import classNames from 'classnames/bind';
-import { EChart } from 'components/widgets/common/echarts';
-import { getChartDefaultProps } from 'components/widgets/common/utils';
-import { useTrendChartClickNavigation } from 'components/widgets/common/utils/useTrendChartClickNavigation';
 import { FAILED, SKIPPED, INTERRUPTED } from 'common/constants/testStatuses';
 import { COLOR_CHART_NON_PASSED } from 'common/constants/colors';
+import { TrendLineChart } from '../common/trendLineChart/trendLineChart';
 import { getOption, getAxesUpdate } from './config/getOption';
-import styles from './nonPassedTestCasesTrendChart.scss';
-
-const cx = classNames.bind(styles);
 
 const FAILED_SKIPPED_STATISTICS_KEY = 'statistics$executions$failedSkippedTotal';
 const STATUSES_LINK_PARAMS = { statuses: [FAILED, SKIPPED, INTERRUPTED], types: null };
 
-export const NonPassedTestCasesTrendChart = ({
-  widget,
-  container,
-  isPreview = false,
-  observer = {},
-  heightOffset,
-}) => {
-  const { formatMessage } = useIntl();
-  const onChartClick = useTrendChartClickNavigation(widget, STATUSES_LINK_PARAMS);
-
-  const configData = useMemo(
-    () => ({
-      getOption,
-      onChartClick,
-      formatMessage,
-    }),
-    [formatMessage, onChartClick],
-  );
-
-  const chartRef = useRef(null);
-  const content = widget.content?.result;
-
-  const onChartCreated = useCallback((_node, chart) => {
-    chartRef.current = chart;
-  }, []);
-
-  const onResized = useCallback(() => {
-    const chart = chartRef.current;
-    if (!chart || !content?.length) return;
-    chart.setOption(getAxesUpdate(content, { width: chart.getWidth() }));
-  }, [content]);
-
-  const legendConfig = useMemo(
-    () => ({
-      showLegend: true,
-      legendProps: {
-        className: cx('legend'),
-        getColor: () => COLOR_CHART_NON_PASSED,
-        items: [FAILED_SKIPPED_STATISTICS_KEY],
-        disabled: true,
-      },
-    }),
-    [],
-  );
-
-  return (
-    <div className={cx('non-passed-cases-trend-chart')}>
-      <EChart
-        {...getChartDefaultProps({ widget, container, isPreview, observer, heightOffset })}
-        configData={configData}
-        legendConfig={legendConfig}
-        chartCreatedCallback={onChartCreated}
-        resizedCallback={onResized}
-      />
-    </div>
-  );
-};
+export const NonPassedTestCasesTrendChart = (props) => (
+  <TrendLineChart
+    {...props}
+    getOption={getOption}
+    getAxesUpdate={getAxesUpdate}
+    statusesLinkParams={STATUSES_LINK_PARAMS}
+    legendItem={FAILED_SKIPPED_STATISTICS_KEY}
+    legendColor={COLOR_CHART_NON_PASSED}
+  />
+);
 
 NonPassedTestCasesTrendChart.propTypes = {
   widget: PropTypes.object.isRequired,

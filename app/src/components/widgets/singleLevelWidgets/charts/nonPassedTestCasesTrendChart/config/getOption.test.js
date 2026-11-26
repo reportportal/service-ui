@@ -14,13 +14,14 @@
  * limitations under the License.
  */
 
+import moment from 'moment';
 import { COLOR_CHART_NON_PASSED } from 'common/constants/colors';
 import {
   expectPreviewModeHidesChart,
   expectSingleSeriesCustomData,
 } from '../../common/trendChartOptionAssertions';
 import { getOption, getAxesUpdate } from './getOption';
-import { calculateTooltipParams } from './utils';
+import { calculateTooltipParams, getPercentTicks } from './utils';
 import { sampleContent } from './fixtures/sampleContent';
 
 const formatMessage = (msg) => msg.defaultMessage || msg.id;
@@ -99,6 +100,43 @@ describe('nonPassedTestCasesTrendChart getOption', () => {
 
     const update = getAxesUpdate(content, { width: 1336 });
     expect(update.xAxis.axisLabel.interval(1)).toBe(true);
+  });
+
+  test('y gridlines follow chart height with evenly spaced 0-100 ticks', () => {
+    const build = (height) =>
+      getOption({ content: sampleContent, isPreview: false, formatMessage, size: { height } });
+
+    expect(getPercentTicks(5)).toEqual([0, 20, 40, 60, 80, 100]);
+    expect(getPercentTicks(2)).toEqual([0, 50, 100]);
+    expect(getPercentTicks(9)).toEqual([0, 20, 40, 60, 80, 100]);
+    expect(getPercentTicks(12)).toEqual([0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100]);
+    expect(getPercentTicks(1)).toEqual([0, 100]);
+
+    expect(build(496).yAxis.axisLabel.customValues).toEqual([0, 20, 40, 60, 80, 100]);
+    expect(build(496).yAxis.axisTick.customValues).toEqual([0, 20, 40, 60, 80, 100]);
+    expect(build(250).yAxis.axisLabel.customValues).toEqual([0, 50, 100]);
+    expect(build(1200).yAxis.axisLabel.customValues).toHaveLength(11);
+    expect(build(undefined).yAxis.axisLabel.customValues).toEqual([0, 20, 40, 60, 80, 100]);
+  });
+
+  test('resize update recalculates both x labels and y ticks', () => {
+    const update = getAxesUpdate(sampleContent, { width: 1336, height: 830 });
+
+    expect(update.xAxis.axisLabel.interval(1)).toBe(true);
+    expect(update.yAxis.axisLabel.customValues).toEqual([0, 20, 40, 60, 80, 100]);
+    expect(update.yAxis.axisTick.customValues).toEqual([0, 20, 40, 60, 80, 100]);
+  });
+
+  test('tooltip formats epoch-ms startTime given as number or digit-only string', () => {
+    const build = (startTime) =>
+      calculateTooltipParams([{ index: 0, id: 'notPassed', value: 1 }], () => '#f00', {
+        itemsData: [{ name: 'Demo', number: '1', startTime }],
+        formatMessage,
+      }).startTimeText;
+    const expected = moment(1609459200000).format('DD.MM.YYYY, HH:mm');
+
+    expect(build('1609459200000')).toBe(expected);
+    expect(build(1609459200000)).toBe(expected);
   });
 
   test('tooltip shows DD.MM.YYYY, HH:mm and a 2-decimal value', () => {

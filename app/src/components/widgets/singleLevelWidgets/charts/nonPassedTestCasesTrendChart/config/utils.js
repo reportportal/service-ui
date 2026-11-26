@@ -14,26 +14,20 @@
  * limitations under the License.
  */
 
-import moment from 'moment';
-import classNames from 'classnames/bind';
 import { messages } from 'components/widgets/common/messages';
-import styles from '../nonPassedTestCasesTrendChart.scss';
+import { getTrendTooltipBaseParams } from '../../common/trendLineChart/trendChartDesignStyles';
 
-const cx = classNames.bind(styles);
+// Gridline steps that divide the fixed 0-100 axis evenly, from densest to sparsest.
+const PERCENT_STEPS = [5, 10, 20, 25, 50, 100];
+const PERCENT_MAX = 100;
 
-export const TOOLTIP_DATE_FORMAT = 'DD.MM.YYYY, HH:mm';
+/** Y ticks for the 0-100 axis: the smallest nice step whose gridline count fits maxIntervals. */
+export const getPercentTicks = (maxIntervals) => {
+  const step =
+    PERCENT_STEPS.find((item) => PERCENT_MAX / item <= maxIntervals) ??
+    PERCENT_STEPS[PERCENT_STEPS.length - 1];
 
-const REFERENCE_WIDTH = 668;
-const REFERENCE_LABELS_COUNT = 6;
-const PX_PER_X_LABEL = REFERENCE_WIDTH / REFERENCE_LABELS_COUNT;
-const MIN_LABELS_COUNT = 3;
-
-export const getXLabelStep = (count, chartWidth) => {
-  const labelsCount = chartWidth
-    ? Math.max(MIN_LABELS_COUNT, Math.round(chartWidth / PX_PER_X_LABEL))
-    : REFERENCE_LABELS_COUNT;
-
-  return Math.max(1, Math.ceil(count / labelsCount));
+  return Array.from({ length: PERCENT_MAX / step + 1 }, (_, index) => index * step);
 };
 
 export const calculateTooltipParams = (data, color, customProps) => {
@@ -42,11 +36,10 @@ export const calculateTooltipParams = (data, color, customProps) => {
   const { name, number, startTime } = itemsData[index];
 
   return {
+    ...getTrendTooltipBaseParams(startTime),
     itemName: `${name} #${number}`,
-    startTimeText: moment(new Date(startTime).getTime()).format(TOOLTIP_DATE_FORMAT),
     itemCases: Number(value).toFixed(2),
     color: color(id),
     issueStatNameProps: { itemName: formatMessage(messages.failedSkippedTotal) },
-    wrapperClassName: cx('tooltip'),
   };
 };
