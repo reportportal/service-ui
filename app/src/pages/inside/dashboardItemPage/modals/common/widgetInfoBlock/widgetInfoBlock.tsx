@@ -43,6 +43,7 @@ interface ActiveWidget extends Widget {
   documentationLink?: string;
   documentationClickEventInfo?: (id: string | number, dashboardId: string) => object;
   preview?: React.ReactNode;
+  criteriaRequired?: boolean;
 }
 
 interface WidgetInfoBlockProps {
@@ -161,6 +162,7 @@ export const WidgetInfoBlock = ({
           defaultPreview={activeWidget?.preview}
           loading={loading}
           widgetType={activeWidget?.id}
+          criteriaRequired={activeWidget?.criteriaRequired}
           data={widgetData}
         />
       </div>

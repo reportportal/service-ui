@@ -15,35 +15,63 @@
  */
 
 import { useCallback, useEffect, useMemo, useRef } from 'react';
-import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { useIntl } from 'react-intl';
+import type { MessageDescriptor } from 'react-intl';
+import type { EChartsType } from 'echarts/core';
 import { CHART_MODES, MODES_VALUES } from 'common/constants/chartModes';
+import { COLOR_CHART_PASSED, COLOR_CHART_FAILED } from 'common/constants/colors';
 import { STATS_FAILED, STATS_PASSED } from 'common/constants/statistics';
 import { EChart } from 'components/widgets/common/echarts';
+import type {
+  ChartObserver,
+  EChartConfigData,
+  WidgetLike,
+} from 'components/widgets/common/echarts/types';
 import { getChartDefaultProps } from 'components/widgets/common/utils';
 import { getOption, NOT_PASSED_STATISTICS_KEY } from './config/getOption';
 import styles from './passingRateChart.scss';
 
 const cx = classNames.bind(styles);
 
+const getLegendColor = (name: string): string =>
+  name === STATS_PASSED ? COLOR_CHART_PASSED : COLOR_CHART_FAILED;
+
+interface PassingRateChartWidget extends WidgetLike {
+  contentParameters: {
+    widgetOptions: {
+      excludeSkipped?: boolean;
+      viewMode: string;
+    };
+  };
+}
+
+export interface PassingRateChartProps {
+  widget: PassingRateChartWidget;
+  container: Element;
+  isPreview?: boolean;
+  observer?: ChartObserver;
+  filterNameTitle?: MessageDescriptor;
+  filterName?: string;
+  onChartClick?: (data: { id: string }) => void;
+}
+
 export const PassingRateChart = ({
   widget,
   container,
   isPreview = false,
-  observer = {},
+  observer = {} as ChartObserver,
   filterNameTitle = {},
   filterName = '',
   onChartClick = () => {},
-}) => {
+}: PassingRateChartProps) => {
   const { formatMessage } = useIntl();
-  const chartRef = useRef(null);
-
+  const chartRef = useRef<EChartsType | null>(null);
   const { excludeSkipped, viewMode } = widget.contentParameters.widgetOptions;
   const isBarMode = viewMode === MODES_VALUES[CHART_MODES.BAR_VIEW];
   const statisticKey = excludeSkipped ? STATS_FAILED : NOT_PASSED_STATISTICS_KEY;
 
-  const onChartCreated = useCallback((_, chart) => {
+  const onChartCreated = useCallback((_: HTMLElement, chart: EChartsType) => {
     chartRef.current = chart;
   }, []);
 
@@ -55,7 +83,7 @@ export const PassingRateChart = ({
       return undefined;
     }
 
-    const handleClick = (params) => {
+    const handleClick = (params: { componentType?: string; name?: string }) => {
       if (params.componentType === 'series') {
         onChartClick({ id: params.name });
       }
@@ -81,12 +109,13 @@ export const PassingRateChart = ({
     [filterName, filterNameTitle, formatMessage],
   );
 
-  const configData = useMemo(
+  const configData: EChartConfigData = useMemo(
     () => ({
-      getOption,
+      getOption: getOption as unknown as EChartConfigData['getOption'],
       formatMessage,
       viewMode,
       excludeSkipped,
+      tooltipClassName: cx('tooltip'),
       ...(isBarMode ? { onChartClick } : {}),
     }),
     [excludeSkipped, formatMessage, isBarMode, onChartClick, viewMode],
@@ -97,7 +126,11 @@ export const PassingRateChart = ({
       showLegend: true,
       legendProps: {
         items: [STATS_PASSED, statisticKey],
-        clickable: false,
+        disabled: true,
+        itemClassName: cx('legend-item'),
+        markClassName: cx('legend-mark'),
+        labelClassName: cx('legend-label'),
+        getColor: getLegendColor,
         customBlock,
       },
     }),
@@ -107,21 +140,11 @@ export const PassingRateChart = ({
   return (
     <div className={cx('passing-rate-chart', viewMode)}>
       <EChart
-        {...getChartDefaultProps({ widget, container, isPreview, observer })}
+        {...getChartDefaultProps({ widget, container, isPreview, observer, heightOffset: 0 })}
         legendConfig={legendConfig}
         configData={configData}
         chartCreatedCallback={onChartCreated}
       />
     </div>
   );
-};
-
-PassingRateChart.propTypes = {
-  widget: PropTypes.object.isRequired,
-  container: PropTypes.instanceOf(Element).isRequired,
-  isPreview: PropTypes.bool,
-  observer: PropTypes.object,
-  filterNameTitle: PropTypes.object,
-  filterName: PropTypes.string,
-  onChartClick: PropTypes.func,
 };

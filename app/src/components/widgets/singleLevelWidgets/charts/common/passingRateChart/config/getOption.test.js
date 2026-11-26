@@ -16,7 +16,7 @@
 
 import { STATS_PASSED, STATS_FAILED } from 'common/constants/statistics';
 import { MODES_VALUES, CHART_MODES } from 'common/constants/chartModes';
-import { COLOR_PASSED, COLOR_NOTPASSED } from 'common/constants/colors';
+import { COLOR_CHART_PASSED, COLOR_CHART_FAILED, COLOR_WHITE_TWO } from 'common/constants/colors';
 import { getOption, NOT_PASSED_STATISTICS_KEY } from './getOption';
 import { sampleContent } from './fixtures/sampleContent';
 
@@ -47,8 +47,31 @@ describe('passingRateChart getOption', () => {
     test('uses correct colors', () => {
       const option = getOption({ content: sampleContent, isPreview: false, formatMessage, viewMode, excludeSkipped: false });
 
-      expect(option.series[0].itemStyle.color).toBe(COLOR_PASSED);
-      expect(option.series[1].itemStyle.color).toBe(COLOR_NOTPASSED);
+      expect(option.series[0].itemStyle.color).toBe(COLOR_CHART_PASSED);
+      expect(option.series[1].itemStyle.color).toBe(COLOR_CHART_FAILED);
+    });
+
+    test('only the outer (not passed) segment has rounded end', () => {
+      const option = getOption({ content: sampleContent, isPreview: false, formatMessage, viewMode, excludeSkipped: false });
+
+      expect(option.series[0].itemStyle.borderRadius).toBeUndefined();
+      expect(option.series[1].itemStyle.borderRadius).toEqual([0, 2, 2, 0]);
+    });
+
+    test('segments are separated by a 1px card-colored border', () => {
+      const option = getOption({ content: sampleContent, isPreview: false, formatMessage, viewMode, excludeSkipped: false });
+
+      option.series.forEach((series) => {
+        expect(series.itemStyle).toMatchObject({ borderColor: COLOR_WHITE_TWO, borderWidth: 1 });
+      });
+    });
+
+    test('segment border is kept in preview', () => {
+      const option = getOption({ content: sampleContent, isPreview: true, formatMessage, viewMode, excludeSkipped: false });
+
+      option.series.forEach((series) => {
+        expect(series.itemStyle).toMatchObject({ borderColor: COLOR_WHITE_TWO, borderWidth: 1 });
+      });
     });
 
     test('uses STATS_FAILED key when excludeSkipped is true', () => {
@@ -110,6 +133,14 @@ describe('passingRateChart getOption', () => {
         name: NOT_PASSED_STATISTICS_KEY,
         value: sampleContent.total - sampleContent.passed,
       });
+    });
+
+    test('omits zero-value slices so a 100% pie has no separator line', () => {
+      const content = { total: 30, passed: 30, skipped: 0 };
+      const option = getOption({ content, isPreview: false, formatMessage, viewMode, excludeSkipped: false });
+
+      expect(option.series[0].data).toHaveLength(1);
+      expect(option.series[0].data[0]).toMatchObject({ name: STATS_PASSED, value: 30 });
     });
 
     test('pie has full radius (no inner hole)', () => {

@@ -18,12 +18,13 @@ export const getPercentage = (value, totalItems) =>
   totalItems > 0 ? ((value / totalItems) * 100).toFixed(2) : '0.00';
 
 export const calculateTooltipParams = (data, color, customProps) => {
-  const { totalItems, formatMessage } = customProps;
+  const { totalItems, formatMessage, wrapperClassName } = customProps;
   const { id, name, value } = data[0];
 
   return {
-    itemsCount: `${value} (${getPercentage(value, totalItems)}%)`,
+    itemCases: `${value} (${getPercentage(value, totalItems)}%)`,
     color: color(id),
     issueStatNameProps: { itemName: name, defectTypes: {}, formatMessage },
+    wrapperClassName,
   };
 };

@@ -136,7 +136,7 @@ export class PassingRateSummaryControls extends Component {
               </FieldErrorHint>
             </FieldProvider>
             <FieldProvider name="contentParameters.widgetOptions.viewMode">
-            <RadioGroupControl
+              <RadioGroupControl
                 options={getWidgetModeOptions(
                   [CHART_MODES.BAR_VIEW, CHART_MODES.PIE_VIEW],
                   formatMessage,
