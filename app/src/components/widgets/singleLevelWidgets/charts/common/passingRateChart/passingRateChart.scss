@@ -23,6 +23,12 @@ div.tooltip {
 .passing-rate-chart {
   height: 100%;
 
+  // Shared legend box is 85px high and would cover the top of the chart;
+  // keep in sync with PIE_LEGEND_HEIGHT in config/getOption.js
+  > [class*='legend'] {
+    height: 52px;
+  }
+
   [class*='with-custom-block'] {
     column-gap: 24px;
   }
