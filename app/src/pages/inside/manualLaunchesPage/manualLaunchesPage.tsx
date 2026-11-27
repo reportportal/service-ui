@@ -48,6 +48,7 @@ import {
   manualLaunchContentSelector,
   isLoadingSelector,
   manualLaunchPageSelector,
+  manualLaunchesLoadFailedSelector,
   getManualLaunchesAction,
   MANUAL_LAUNCHES_NAMESPACE,
   defaultManualLaunchesQueryParams,
@@ -86,6 +87,7 @@ export const ManualLaunchesPage = () => {
   const content = useSelector(manualLaunchContentSelector);
   const pageInfo = useSelector(manualLaunchPageSelector);
   const isLoading = useSelector(isLoadingSelector);
+  const isLoadFailed = useSelector(manualLaunchesLoadFailedSelector);
   const { organizationSlug, projectSlug } = useSelector(
     urlOrganizationAndProjectSelector,
   ) as ProjectDetails;
@@ -96,16 +98,13 @@ export const ManualLaunchesPage = () => {
   const [searchValue, setSearchValue] = useState(appliedSearchQuery);
   const searchSessionTrackedRef = useRef(false);
   const [isFilterSidePanelVisible, setIsFilterSidePanelVisible] = useState(false);
-  const appliedFilters = useMemo<ManualLaunchesFilterPayload>(
-    () => {
-      const parsedFilters = parseFiltersFromURLQuery(location?.query);
+  const appliedFilters = useMemo<ManualLaunchesFilterPayload>(() => {
+    const parsedFilters = parseFiltersFromURLQuery(location?.query);
 
-      return isImportantLaunchesEnabled
-        ? parsedFilters
-        : { ...parsedFilters, importance: EMPTY_FILTER.importance };
-    },
-    [location?.query, isImportantLaunchesEnabled],
-  );
+    return isImportantLaunchesEnabled
+      ? parsedFilters
+      : { ...parsedFilters, importance: EMPTY_FILTER.importance };
+  }, [location?.query, isImportantLaunchesEnabled]);
 
   const activeFiltersCount = useMemo(() => {
     let count = 0;
@@ -227,7 +226,8 @@ export const ManualLaunchesPage = () => {
         limit: pageSize,
         searchQuery: appliedSearchQuery || undefined,
         filterStatuses: statuses,
-        filterCompletion: location?.query?.[MANUAL_LAUNCHES_FILTER_URL_KEYS.COMPLETION] || undefined,
+        filterCompletion:
+          location?.query?.[MANUAL_LAUNCHES_FILTER_URL_KEYS.COMPLETION] || undefined,
         filterRetentionPolicy: retentionPolicy,
         filterStartTimeFrom: startTime?.startDate ? startTime.startDate.getTime() : undefined,
         filterEndTimeTo: startTime?.endDate ? startTime.endDate.getTime() : undefined,
@@ -249,7 +249,12 @@ export const ManualLaunchesPage = () => {
           title={formatMessage(messages.manualLaunchesTitle)}
           titleAddon={<BetaBadge />}
           breadcrumbDescriptors={breadcrumbDescriptors}
-          {...((!isEmpty(content) || appliedSearchQuery || searchValue || isLoading || hasActiveFilters) && {
+          {...((!isEmpty(content) ||
+            appliedSearchQuery ||
+            searchValue ||
+            isLoading ||
+            isLoadFailed ||
+            hasActiveFilters) && {
             actions: (
               <div className={cx('header-actions')}>
                 <SearchField
@@ -308,6 +313,7 @@ export const ManualLaunchesPage = () => {
             isLoading={isLoading}
             onRefresh={handleRefresh}
             hasActiveSearchOrFilters={hasActiveFilters || Boolean(appliedSearchQuery)}
+            isLoadFailed={isLoadFailed}
           />
         </div>
         {Boolean(pageInfo?.totalElements) && (

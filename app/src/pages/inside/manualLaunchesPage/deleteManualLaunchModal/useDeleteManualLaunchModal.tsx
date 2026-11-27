@@ -20,10 +20,7 @@ import { VoidFn } from '@reportportal/ui-kit/common/types/commonTypes';
 
 import { useModal } from 'common/hooks';
 
-import {
-  DELETE_MANUAL_LAUNCH_MODAL_KEY,
-  DeleteManualLaunchModal,
-} from './deleteManualLaunchModal';
+import { DELETE_MANUAL_LAUNCH_MODAL_KEY, DeleteManualLaunchModal } from './deleteManualLaunchModal';
 import { DeleteManualLaunchModalData } from './types';
 
 interface UseDeleteManualLaunchModalOptions {
@@ -51,6 +48,7 @@ export const useDeleteManualLaunchModal = ({
 interface BatchDeleteData {
   launchIds: number[];
   onClearSelection?: VoidFn;
+  onKeepSelection?: (launchIds: number[]) => void;
 }
 
 export const useBatchDeleteManualLaunchesModal = () => {

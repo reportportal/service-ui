@@ -29,6 +29,7 @@ import { messages as testCaseListMessages } from 'pages/inside/common/testCaseLi
 import { ManualLaunchesEmptyState } from '../emptyState/manualLaunchesEmptyState';
 import { ManualLaunchesList } from '../manualLaunchesList';
 import { Launch } from '../types';
+import { messages } from '../messages';
 
 import styles from '../manualLaunchesPage.scss';
 
@@ -39,6 +40,7 @@ export interface ManualLaunchesPageContentProps {
   fullLaunches?: Launch[];
   onRefresh?: VoidFn;
   hasActiveSearchOrFilters?: boolean;
+  isLoadFailed?: boolean;
 }
 
 export const ManualLaunchesPageContent = ({
@@ -46,6 +48,7 @@ export const ManualLaunchesPageContent = ({
   fullLaunches = [],
   onRefresh,
   hasActiveSearchOrFilters = false,
+  isLoadFailed = false,
 }: ManualLaunchesPageContentProps) => {
   const { formatMessage } = useIntl();
   const hasData = !isEmpty(fullLaunches);
@@ -59,6 +62,20 @@ export const ManualLaunchesPageContent = ({
   }
 
   if (!hasData) {
+    if (isLoadFailed) {
+      return (
+        <div className={cx('no-results')}>
+          <EmptyPageState
+            emptyIcon={NoResultsIcon}
+            label={formatMessage(messages.launchesLoadFailed)}
+            hasPermission={Boolean(onRefresh)}
+            buttonTitle={formatMessage(messages.retry)}
+            onClick={onRefresh}
+          />
+        </div>
+      );
+    }
+
     if (hasActiveSearchOrFilters) {
       return (
         <div className={cx('no-results')}>

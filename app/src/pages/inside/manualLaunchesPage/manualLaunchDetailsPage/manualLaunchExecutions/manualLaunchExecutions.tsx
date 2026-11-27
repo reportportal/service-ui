@@ -56,6 +56,7 @@ import { ExecutionSidePanel } from './executionSidePanel';
 import { ITEMS_PER_PAGE_OPTIONS } from './constants';
 import { useDeleteExecutionModal } from './deleteExecutionModal';
 import { messages } from './messages';
+import { usePruneSelectionToRows } from '../../usePruneSelectionToRows';
 
 import styles from './manualLaunchExecutions.scss';
 
@@ -78,6 +79,8 @@ export const ManualLaunchExecutions = ({
   const { openModal: openDeleteExecutionModal } = useDeleteExecutionModal();
   const isAnyRowSelected = !isEmpty(selectedRowIds);
   const [selectedExecutionId, setSelectedExecutionId] = useState<number | null>(null);
+
+  const keepVisibleSelection = usePruneSelectionToRows(executions, setSelectedRowIds);
 
   const { activePage, pageSize, setPageNumber, setPageSize, totalPages, captions } =
     useURLBoundPagination({
@@ -142,9 +145,17 @@ export const ManualLaunchExecutions = ({
         executionIds: selectedRowIds,
         launchId,
         onClearSelection,
+        onKeepSelection: keepVisibleSelection,
       });
     }
-  }, [selectedRowIds, launchId, openDeleteExecutionModal, onClearSelection, trackEvent]);
+  }, [
+    selectedRowIds,
+    launchId,
+    openDeleteExecutionModal,
+    onClearSelection,
+    keepVisibleSelection,
+    trackEvent,
+  ]);
 
   const getPopoverItems = (executionId: number): PopoverItem[] => {
     if (!canManageTestCases) {

@@ -137,23 +137,17 @@ import {
   defaultMilestoneQueryParams,
 } from 'controllers/milestone';
 import {
-  MANUAL_LAUNCHES_NAMESPACE,
-  defaultManualLaunchesQueryParams,
   getManualLaunchesAction,
   getManualLaunchAction,
   getManualLaunchFoldersAction,
   getManualLaunchTestCaseExecutionsAction,
   getManualLaunchExecutionAction,
+  buildGetManualLaunchFoldersParams,
   buildGetManualLaunchTestCaseExecutionsParams,
   getManualLaunchDetailsFetchParams,
+  getManualLaunchesFetchParams,
 } from 'controllers/manualLaunch';
-import {
-  MANUAL_LAUNCHES_FILTER_URL_KEYS,
-  resolveFilterCompositeAttributeForApi,
-  resolveFilterRetentionPolicyForApi,
-} from 'common/manualLaunches/manualLaunchesFilterUrl';
 import { getRouterParams } from 'common/utils';
-import { importantLaunchesEnabledSelector } from 'controllers/appInfo';
 
 const redirectRoute = (path, createNewAction, onRedirect = () => {}) => ({
   path,
@@ -392,42 +386,7 @@ const routesMap = {
   [MANUAL_LAUNCHES_PAGE]: {
     path: '/organizations/:organizationSlug/projects/:projectSlug/manualLaunches',
     thunk: (dispatch, getState) => {
-      const state = getState();
-      const { offset, limit } = getRouterParams({
-        namespace: MANUAL_LAUNCHES_NAMESPACE,
-        defaultParams: defaultManualLaunchesQueryParams,
-        state,
-      });
-
-      const { searchQuery, ...query } = state.location?.query ?? {};
-
-      const rawStatuses = query[MANUAL_LAUNCHES_FILTER_URL_KEYS.STATUSES];
-      const filterStatuses = rawStatuses ? rawStatuses.split(',').filter(Boolean) : undefined;
-
-      const rawStartTimeFrom = query[MANUAL_LAUNCHES_FILTER_URL_KEYS.START_TIME_FROM];
-      const filterStartTimeFrom = rawStartTimeFrom ? Number(rawStartTimeFrom) : undefined;
-
-      const rawStartTimeTo = query[MANUAL_LAUNCHES_FILTER_URL_KEYS.START_TIME_TO];
-      const filterEndTimeTo = rawStartTimeTo ? Number(rawStartTimeTo) : undefined;
-
-      dispatch(
-        getManualLaunchesAction({
-          offset,
-          limit,
-          searchQuery,
-          filterStatuses,
-          filterCompletion: query[MANUAL_LAUNCHES_FILTER_URL_KEYS.COMPLETION] || undefined,
-          filterRetentionPolicy: importantLaunchesEnabledSelector(state)
-            ? resolveFilterRetentionPolicyForApi(query)
-            : undefined,
-          filterStartTimeFrom: Number.isFinite(filterStartTimeFrom)
-            ? filterStartTimeFrom
-            : undefined,
-          filterEndTimeTo: Number.isFinite(filterEndTimeTo) ? filterEndTimeTo : undefined,
-          filterTestPlan: query[MANUAL_LAUNCHES_FILTER_URL_KEYS.TEST_PLAN] || undefined,
-          filterCompositeAttribute: resolveFilterCompositeAttributeForApi(query),
-        }),
-      );
+      dispatch(getManualLaunchesAction(getManualLaunchesFetchParams(getState())));
     },
   },
   [MANUAL_LAUNCH_EXECUTION_PAGE]: {
@@ -448,22 +407,11 @@ const routesMap = {
     thunk: (dispatch, getState) => {
       const state = getState();
       const params = getManualLaunchDetailsFetchParams(state);
-      const { launchId, filterPriorities, filterTags, statusFilter } = params;
+      const { launchId } = params;
 
       if (launchId) {
         dispatch(getManualLaunchAction({ launchId }));
-
-        // Load folders
-        dispatch(
-          getManualLaunchFoldersAction({
-            launchId,
-            offset: 0,
-            limit: 100,
-            ...(filterPriorities && { filterPriorities }),
-            ...(filterTags && { filterTags }),
-            ...(statusFilter && { statusFilter }),
-          }),
-        );
+        dispatch(getManualLaunchFoldersAction(buildGetManualLaunchFoldersParams(params, launchId)));
 
         const executionsParams = buildGetManualLaunchTestCaseExecutionsParams(params);
 
@@ -563,8 +511,7 @@ const routesMap = {
     },
   },
   [PLUGIN_UI_EXTENSION_ADMIN_PAGE]: '/plugin/:pluginPage/:pluginRoute*',
-  [ORGANIZATION_PLUGIN_PAGE]:
-    '/organizations/:organizationSlug/plugin/:pluginPage/:pluginRoute*',
+  [ORGANIZATION_PLUGIN_PAGE]: '/organizations/:organizationSlug/plugin/:pluginPage/:pluginRoute*',
   [PROJECT_PLUGIN_PAGE]:
     '/organizations/:organizationSlug/projects/:projectSlug/plugin/:pluginPage/:pluginRoute*',
   [TEST_CASE_LIBRARY_PAGE]: {

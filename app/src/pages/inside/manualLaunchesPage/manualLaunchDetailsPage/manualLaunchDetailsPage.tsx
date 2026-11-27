@@ -41,16 +41,14 @@ import {
   isLoadingManualLaunchTestCaseExecutionsSelector,
   isLoadingManualLaunchFilteredFoldersSelector,
   defaultManualLaunchesQueryParams,
+  buildGetManualLaunchFoldersParams,
   buildGetManualLaunchTestCaseExecutionsParams,
   getManualLaunchDetailsFetchParams,
+  activeManualLaunchLoadFailedSelector,
   MANUAL_LAUNCH_TO_RUN_STATUS_QUERY_VALUE,
 } from 'controllers/manualLaunch';
-import {
-  showNotification,
-  NOTIFICATION_TYPES,
-  NOTIFICATION_TYPOGRAPHY_COLOR_TYPES,
-  WARNING_NOTIFICATION_DURATION,
-} from 'controllers/notification';
+import NoResultsIcon from 'common/img/newIcons/no-results-icon-inline.svg';
+import { EmptyPageState } from 'pages/common';
 import {
   useProjectDetails,
   useManualLaunchId,
@@ -93,6 +91,7 @@ export const ManualLaunchDetailsPage = () => {
   const launchId = useManualLaunchId();
   const launch = useManualLaunchById(launchId);
   const isLoading = useActiveManualLaunchLoading();
+  const isLaunchLoadFailed = useSelector(activeManualLaunchLoadFailedSelector);
   const folders = useSelector(manualLaunchFoldersSelector);
   const executions = useSelector(manualLaunchTestCaseExecutionsSelector);
   const isLoadingFolders = useSelector(isLoadingManualLaunchFoldersSelector);
@@ -137,8 +136,7 @@ export const ManualLaunchDetailsPage = () => {
     );
   }, [isLoading, launch, trackEvent]);
 
-  const selectedToRunOnly =
-    queryStatusFilter === MANUAL_LAUNCH_TO_RUN_STATUS_QUERY_VALUE;
+  const selectedToRunOnly = queryStatusFilter === MANUAL_LAUNCH_TO_RUN_STATUS_QUERY_VALUE;
 
   const activeFiltersCount = useMemo(() => {
     const priorities = parsePrioritiesFromQuery(queryFilterPriorities);
@@ -151,9 +149,7 @@ export const ManualLaunchDetailsPage = () => {
   const hasActiveFilters = activeFiltersCount > 0;
 
   const isSearchLoading =
-    searchValue !== appliedSearchQuery ||
-    isLoadingExecutions ||
-    isLoadingFilteredFolders;
+    searchValue !== appliedSearchQuery || isLoadingExecutions || isLoadingFilteredFolders;
 
   const handleFilterChange = useCallback(
     // eslint-disable-next-line react-hooks/use-memo
@@ -161,7 +157,8 @@ export const ManualLaunchDetailsPage = () => {
       dispatch(
         updatePagePropertiesAction({
           searchQuery: value,
-          ...defaultManualLaunchesQueryParams,
+          // Back to the first page; the user's page size stays in the URL.
+          offset: defaultManualLaunchesQueryParams.offset,
         }),
       );
     }, SEARCH_DELAY),
@@ -169,46 +166,38 @@ export const ManualLaunchDetailsPage = () => {
   );
 
   useEffect(() => {
-    if (!isLoading && isEmpty(launch) && launchId) {
-      dispatch(
-        showNotification({
-          type: NOTIFICATION_TYPES.WARNING,
-          message: formatMessage(messages.manualLaunchNotFoundRedirect),
-          typographyColor: NOTIFICATION_TYPOGRAPHY_COLOR_TYPES.BLACK,
-          duration: WARNING_NOTIFICATION_DURATION,
-        }),
-      );
-
+    if (!isLoading && !isLaunchLoadFailed && isEmpty(launch) && launchId) {
       dispatch({
         type: MANUAL_LAUNCHES_PAGE,
         payload: { organizationSlug, projectSlug },
       });
     }
-  }, [isLoading, launch, launchId, dispatch, organizationSlug, projectSlug, formatMessage]);
+  }, [isLoading, isLaunchLoadFailed, launch, launchId, dispatch, organizationSlug, projectSlug]);
 
-  const handleRefresh = useCallback(() => {
-    const params = getManualLaunchDetailsFetchParams(store.getState());
+  const reloadPage = useCallback(
+    (force: boolean) => {
+      const params = getManualLaunchDetailsFetchParams(store.getState());
 
-    if (!params.launchId) {
-      return;
-    }
+      if (!params.launchId) {
+        return;
+      }
 
-    dispatch(getManualLaunchAction({ launchId: params.launchId }));
-    dispatch(
-      getManualLaunchFoldersAction({
-        launchId: params.launchId,
-        offset: 0,
-        limit: 100,
-        ...(params.filterPriorities && { filterPriorities: params.filterPriorities }),
-        ...(params.filterTags && { filterTags: params.filterTags }),
-      }),
-    );
-    const executionsParams = buildGetManualLaunchTestCaseExecutionsParams(params);
+      dispatch(getManualLaunchAction({ launchId: params.launchId, force }));
+      dispatch(
+        getManualLaunchFoldersAction(buildGetManualLaunchFoldersParams(params, params.launchId)),
+      );
+      const executionsParams = buildGetManualLaunchTestCaseExecutionsParams(params);
 
-    if (executionsParams) {
-      dispatch(getManualLaunchTestCaseExecutionsAction(executionsParams));
-    }
-  }, [dispatch, store]);
+      if (executionsParams) {
+        dispatch(getManualLaunchTestCaseExecutionsAction(executionsParams));
+      }
+    },
+    [dispatch, store],
+  );
+
+  // Refresh reloads the shown launch in place; Retry after a failed load shows the page loader.
+  const handleRefresh = useCallback(() => reloadPage(true), [reloadPage]);
+  const handleRetry = useCallback(() => reloadPage(false), [reloadPage]);
 
   const handleCloseFilterSidePanel = () => {
     setIsFilterSidePanelVisible(false);
@@ -230,7 +219,7 @@ export const ManualLaunchDetailsPage = () => {
         filterPriorities,
         filterTags,
         statusFilter,
-        ...defaultManualLaunchesQueryParams,
+        offset: defaultManualLaunchesQueryParams.offset,
       }),
     );
   };
@@ -265,7 +254,9 @@ export const ManualLaunchDetailsPage = () => {
         {hasActiveFilters ? (
           <>
             <FilterFilledIcon />
-            <span className={cx('manual-launch-details-page__filter-count')}>{activeFiltersCount}</span>
+            <span className={cx('manual-launch-details-page__filter-count')}>
+              {activeFiltersCount}
+            </span>
           </>
         ) : (
           <FilterOutlineIcon />
@@ -287,6 +278,20 @@ export const ManualLaunchDetailsPage = () => {
     return (
       <SettingsLayout>
         <PageLoader />
+      </SettingsLayout>
+    );
+  }
+
+  if (isLaunchLoadFailed && isEmpty(launch)) {
+    return (
+      <SettingsLayout>
+        <EmptyPageState
+          emptyIcon={NoResultsIcon}
+          label={formatMessage(manualLaunchesMessages.launchLoadFailed)}
+          hasPermission
+          buttonTitle={formatMessage(manualLaunchesMessages.retry)}
+          onClick={handleRetry}
+        />
       </SettingsLayout>
     );
   }
