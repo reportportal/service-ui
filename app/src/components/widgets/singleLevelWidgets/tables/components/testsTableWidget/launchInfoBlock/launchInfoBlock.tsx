@@ -14,15 +14,21 @@
  * limitations under the License.
  */
 
-import * as React from 'react';
-import { string, element } from 'prop-types';
+import { ReactNode } from 'react';
 import { FormattedMessage } from 'react-intl';
-import classNames from 'classnames/bind';
+
+import { createClassnames } from 'common/utils';
+
 import styles from './launchInfoBlock.scss';
 
-const cx = classNames.bind(styles);
+const cx = createClassnames(styles);
 
-export const LaunchInfoBlock = ({ launchName, issueType }) => (
+interface LaunchInfoBlockProps {
+  launchName: string;
+  issueType?: ReactNode;
+}
+
+export const LaunchInfoBlock = ({ launchName, issueType = null }: LaunchInfoBlockProps) => (
   <div className={cx('info-block')}>
     <p>
       <FormattedMessage id="TestsTableWidget.header.launchName" defaultMessage="Launch name" />:{' '}
@@ -36,12 +42,3 @@ export const LaunchInfoBlock = ({ launchName, issueType }) => (
     )}
   </div>
 );
-
-LaunchInfoBlock.propTypes = {
-  launchName: string.isRequired,
-  issueType: element,
-};
-
-LaunchInfoBlock.defaultProps = {
-  issueType: null,
-};

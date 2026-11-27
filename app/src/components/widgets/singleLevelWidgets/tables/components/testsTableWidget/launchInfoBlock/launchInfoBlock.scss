@@ -15,21 +15,19 @@
  */
 
 .info-block {
-  font-family: $FONT-SEMIBOLD;
-  font-size: 12px;
-  padding-bottom: 10px;
-  color: $COLOR--gray-47;
-  text-transform: uppercase;
+  font-family: var(--rp-ui-base-font-family);
+  font-size: 13px;
+  color: var(--rp-ui-color-text-secondary);
   white-space: nowrap;
   text-overflow: ellipsis;
   overflow: hidden;
+
   p {
-    margin: 12px 0 0 0;
-    line-height: 17px;
+    margin: 0;
+    line-height: 20px;
+
     .info-block-launch-name {
-      font-size: 13px;
-      color: $COLOR--charcoal-grey;
-      text-transform: none;
+      color: var(--rp-ui-base-almost-black);
     }
   }
 }

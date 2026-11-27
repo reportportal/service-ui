@@ -15,9 +15,5 @@
  */
 
 .count {
-  color: $COLOR--charcoal-grey;
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  left: 60px;
+  color: var(--rp-ui-color-text);
 }
