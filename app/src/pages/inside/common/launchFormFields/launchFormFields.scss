@@ -44,10 +44,10 @@
 .test-plan-notice {
   margin-top: 16px;
 
-  // The ui-kit SystemMessage header is capitalized with a stronger selector;
-  // the mockup uses sentence case ("Test plan changed").
-  h1 {
-    text-transform: none !important;
+  :global([class*='system-message'])
+    :global([class*='text-container'])
+    :global([class*='message-header']) {
+    text-transform: none;
   }
 }
 
