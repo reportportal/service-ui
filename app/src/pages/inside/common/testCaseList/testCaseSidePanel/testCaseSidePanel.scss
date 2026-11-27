@@ -141,6 +141,37 @@
     overflow-wrap: anywhere;
   }
 
+  .edit-name-button {
+    display: flex;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+    width: 16px;
+    height: 31px;
+    padding: 0;
+    border: none;
+    background: none;
+    cursor: pointer;
+
+    svg {
+      width: 16px;
+      height: 16px;
+    }
+
+    path {
+      fill: var(--rp-ui-base-e-300);
+    }
+
+    &:hover path {
+      fill: var(--rp-ui-base-e-400);
+    }
+
+    &:focus-visible {
+      outline: 2px solid var(--rp-ui-base-topaz-focused);
+      outline-offset: 2px;
+    }
+  }
+
   .close-button {
     background: none;
     border: none;
