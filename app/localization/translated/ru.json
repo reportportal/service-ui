@@ -1922,7 +1922,6 @@
   "MostFailedTests.table.header.ofIssues": "% ошибок",
   "MostFailedTests.table.header.ofIssuesShort": "% ошб",
   "MostFailedTests.table.header.testCase": "Тестовый сценарий",
-  "MostPopularPatterns.launchName": "Запуск",
   "MostPopularPatterns.patternName": "Паттерн",
   "MostPopularPatterns.testCases": "Тестовые сценарии",
   "MostPopularPatternsControls.CriteriaFieldLabel": "Критерии виджета",

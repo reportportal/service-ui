@@ -1899,7 +1899,6 @@
   "MostFailedTests.table.header.ofIssues": "% de errores",
   "MostFailedTests.table.header.ofIssuesShort": "% errores",
   "MostFailedTests.table.header.testCase": "Caso de prueba",
-  "MostPopularPatterns.launchName": "Ejecución",
   "MostPopularPatterns.patternName": "Patrón",
   "MostPopularPatterns.testCases": "Casos de prueba",
   "MostPopularPatternsControls.CriteriaFieldLabel": "Criterios para el widget",

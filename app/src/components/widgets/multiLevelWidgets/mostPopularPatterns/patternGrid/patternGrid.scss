@@ -1,5 +1,5 @@
 /*!
- * Copyright 2019 EPAM Systems
+ * Copyright 2026 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,59 +16,59 @@
 
 .patterns-table {
   width: 100%;
+  table-layout: fixed;
+  border-collapse: collapse;
+  font-family: var(--rp-ui-base-font-family);
   font-size: 13px;
-  color: $COLOR--black-2;
+  line-height: 20px;
+  color: var(--rp-ui-color-text);
 }
 
 .patterns-header {
-  font-family: $FONT-SEMIBOLD;
-  color: $COLOR--gray-47;
-  line-height: 1.8;
-  height: 34px;
-  background-color: $COLOR--white-two;
-  border-top: 1px solid $COLOR--gray-91;
-  border-bottom: 1px solid $COLOR--gray-91;
+  height: 32px;
+  border-bottom: 1px solid var(--rp-ui-base-e-100);
+  font-size: 11px;
+  line-height: 16px;
+  color: var(--rp-ui-color-text-secondary);
 }
 
 .patterns-row {
-  font-family: $FONT-SEMIBOLD;
-  line-height: 1.8;
-  vertical-align: middle;
-  height: 47px;
-  border-bottom: 1px solid $COLOR--gray-91;
-  background-color: $COLOR--white-two;
-  transition: background-color 0.2s ease 0s;
-  &:hover {
-    background-color: $COLOR--tealish-hover;
-  }
+  height: 44px;
+  border-bottom: 1px solid var(--rp-ui-base-e-100);
 }
 
 .cell {
+  box-sizing: border-box;
+  padding: 0 16px;
   vertical-align: middle;
-  padding: 0 20px;
+  font-weight: normal;
+  text-align: left;
 }
 
 .pattern-col {
-  width: 70%;
-  text-align: left;
-}
-
-.launch-col {
-  width: 70%;
-  text-align: left;
+  overflow: hidden;
 }
 
 .test-cases-col {
-  width: 30%;
+  width: 120px;
   text-align: right;
 }
 
 .pattern-link {
-  color: $COLOR--topaz;
+  display: block;
+  max-width: 100%;
+  padding: 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  color: var(--rp-ui-color-primary-text);
+  text-align: left;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
   cursor: pointer;
 }
 
-.launches-link {
-  color: $COLOR--topaz;
-  text-decoration: none;
+.test-cases {
+  color: var(--rp-ui-color-text);
 }

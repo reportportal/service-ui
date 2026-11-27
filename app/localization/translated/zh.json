@@ -1897,7 +1897,6 @@
   "MostFailedTests.table.header.ofIssues": "%的问题",
   "MostFailedTests.table.header.ofIssuesShort": "%的问题",
   "MostFailedTests.table.header.testCase": "测试用例",
-  "MostPopularPatterns.launchName": "测试任务名称",
   "MostPopularPatterns.patternName": "模板名称",
   "MostPopularPatterns.testCases": "测试用例",
   "MostPopularPatternsControls.CriteriaFieldLabel": "小部件的标准",
