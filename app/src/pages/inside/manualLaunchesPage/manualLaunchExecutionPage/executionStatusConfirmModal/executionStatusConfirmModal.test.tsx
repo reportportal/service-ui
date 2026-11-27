@@ -236,6 +236,9 @@ describe('ExecutionStatusConfirmModal', () => {
       MANUAL_LAUNCHES_PLACE.EXECUTION_DETAILS_SIDEBAR_FAILED,
       1,
     );
+    expect(onStatusSet.mock.invocationCallOrder[0]).toBeLessThan(
+      mockOpenBtsModal.mock.invocationCallOrder[0],
+    );
     expect(mockDispatch).not.toHaveBeenCalledWith({ type: HIDE_MODAL });
   });
 });
