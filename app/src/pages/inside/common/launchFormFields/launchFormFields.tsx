@@ -46,6 +46,8 @@ export const LaunchFormFields = ({
   isUncoveredTestsCheckboxAvailable = true,
   areAllTestCasesCovered = false,
   hideTestPlanField = false,
+  linkedLaunchesTestPlanId,
+  isExistingModeDisabled = false,
 }: LaunchFormFieldsProps) => {
   const { formatMessage } = useIntl();
 
@@ -92,6 +94,13 @@ export const LaunchFormFields = ({
         handleActiveButton={handleModeChange}
         defaultActiveButton={toSwitcherOption(activeMode)}
         buttonsOrder={modesOrder.map(toSwitcherOption)}
+        disabledButtons={
+          isExistingModeDisabled
+            ? {
+                [ButtonSwitcherOption.EXISTING]: formatMessage(messages.noLaunchesLinkedToTestPlan),
+              }
+            : undefined
+        }
       />
 
       {isUncoveredTestsCheckboxAvailable && (
@@ -104,7 +113,10 @@ export const LaunchFormFields = ({
       )}
 
       {isExistingMode ? (
-        <ExistingLaunchFields onLaunchSelect={onLaunchSelect} />
+        <ExistingLaunchFields
+          onLaunchSelect={onLaunchSelect}
+          linkedLaunchesTestPlanId={linkedLaunchesTestPlanId}
+        />
       ) : (
         <NewLaunchFields hideTestPlanField={hideTestPlanField} />
       )}

@@ -17,6 +17,8 @@
 import { useEffect, useState, ReactNode } from 'react';
 
 import { createClassnames } from 'common/utils';
+import { MODAL_POPUP_Z_INDEX } from 'common/constants/zIndex';
+import { ConditionalTooltip } from 'components/main/conditionalTooltip';
 
 import styles from './buttonSwitcher.scss';
 
@@ -36,6 +38,8 @@ interface ButtonSwitcherProps {
   handleActiveButton: (activeButton: string) => void;
   defaultActiveButton?: ButtonSwitcherOption;
   buttonsOrder?: ButtonSwitcherOption[];
+  /** Options that cannot be selected, mapped to the tooltip shown on hover. */
+  disabledButtons?: Partial<Record<ButtonSwitcherOption, ReactNode>>;
 }
 
 export const ButtonSwitcher = ({
@@ -45,6 +49,7 @@ export const ButtonSwitcher = ({
   handleActiveButton,
   defaultActiveButton = ButtonSwitcherOption.EXISTING,
   buttonsOrder = DEFAULT_BUTTONS_ORDER,
+  disabledButtons = {},
 }: ButtonSwitcherProps) => {
   const [activeButton, setActiveButton] = useState(defaultActiveButton);
 
@@ -61,20 +66,34 @@ export const ButtonSwitcher = ({
     <div className={cx('buttons-switcher')}>
       {description}
       <div className={cx('buttons-switcher__wrapper')}>
-        {buttonsOrder.map((option) => (
-          <button
-            key={option}
-            type="button"
-            className={cx('buttons-switcher__button', {
-              'buttons-switcher__button--active': activeButton === option,
-            })}
-            onClick={() => {
-              setActiveButton(option);
-            }}
-          >
-            {buttonTitles[option]}
-          </button>
-        ))}
+        {buttonsOrder.map((option) => {
+          const isDisabled = option in disabledButtons;
+
+          return (
+            <ConditionalTooltip
+              key={option}
+              content={disabledButtons[option]}
+              placement="top"
+              wrapperClassName={cx('buttons-switcher__tooltip-wrapper')}
+              zIndex={MODAL_POPUP_Z_INDEX}
+              portalRoot={document.getElementById('tooltip-root')}
+            >
+              <button
+                type="button"
+                disabled={isDisabled}
+                className={cx('buttons-switcher__button', {
+                  'buttons-switcher__button--active': activeButton === option,
+                  'buttons-switcher__button--disabled': isDisabled,
+                })}
+                onClick={() => {
+                  setActiveButton(option);
+                }}
+              >
+                {buttonTitles[option]}
+              </button>
+            </ConditionalTooltip>
+          );
+        })}
       </div>
     </div>
   );

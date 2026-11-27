@@ -17,8 +17,9 @@
 import { useMemo, FC, useRef } from 'react';
 import { useIntl } from 'react-intl';
 import { useTracking } from 'react-tracking';
-import { reduxForm, InjectedFormProps } from 'redux-form';
-import { Modal } from '@reportportal/ui-kit';
+import { useSelector } from 'react-redux';
+import { reduxForm, InjectedFormProps, formValueSelector } from 'redux-form';
+import { Modal, SystemMessage } from '@reportportal/ui-kit';
 import { noop } from 'es-toolkit';
 import { VoidFn } from '@reportportal/ui-kit/common';
 
@@ -27,7 +28,11 @@ import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { INCOMPLETE_ATTRIBUTE_ERROR } from 'common/utils/validation/constants';
 import { useTextareaAutoResize } from 'common/hooks';
 import { LoadingSubmitButton } from 'components/loadingSubmitButton';
-import { LaunchFormData, Attribute } from 'pages/inside/common/launchFormFields/types';
+import {
+  LaunchFormData,
+  Attribute,
+  TestPlanOption,
+} from 'pages/inside/common/launchFormFields/types';
 import { NewLaunchFields } from 'pages/inside/common/launchFormFields/newLaunchFields';
 import { LAUNCH_FORM_FIELD_NAMES } from 'pages/inside/common/launchFormFields/constants';
 import { useModalButtons } from 'hooks/useModalButtons';
@@ -37,10 +42,24 @@ import { useEditManualLaunch } from './useEditManualLaunch';
 import { EditManualLaunchModalProps } from './types';
 import { messages } from './messages';
 import { EDIT_MANUAL_LAUNCH_FORM } from './constants';
+import { getTestPlanChange, TestPlanChange } from './utils';
 
 import styles from './editManualLaunchModal.scss';
 
 const cx = createClassnames(styles);
+
+const selectFormValue = formValueSelector(EDIT_MANUAL_LAUNCH_FORM);
+
+const TEST_PLAN_CHANGE_MESSAGES = {
+  [TestPlanChange.CHANGED]: {
+    title: messages.testPlanChangedTitle,
+    text: messages.testPlanChangedWarning,
+  },
+  [TestPlanChange.REMOVED]: {
+    title: messages.testPlanRemovedTitle,
+    text: messages.testPlanRemovedWarning,
+  },
+};
 
 const EditManualLaunchModalComponent = ({
   data,
@@ -55,6 +74,19 @@ const EditManualLaunchModalComponent = ({
   const descriptionRef = useRef<HTMLTextAreaElement | null>(null);
 
   useTextareaAutoResize(descriptionRef);
+
+  const selectedTestPlan = useSelector(
+    (state) => selectFormValue(state, LAUNCH_FORM_FIELD_NAMES.TEST_PLAN) as TestPlanOption | null,
+  );
+  const testPlanChange = getTestPlanChange(data.testPlan, selectedTestPlan);
+  const testPlanNotice = testPlanChange ? (
+    <SystemMessage
+      mode="warning"
+      header={formatMessage(TEST_PLAN_CHANGE_MESSAGES[testPlanChange].title)}
+    >
+      {formatMessage(TEST_PLAN_CHANGE_MESSAGES[testPlanChange].text)}
+    </SystemMessage>
+  ) : null;
 
   const { handleSubmit: handleEditLaunch, isLoading } = useEditManualLaunch({
     launchId: data.id,
@@ -100,6 +132,7 @@ const EditManualLaunchModalComponent = ({
           testPlanPlaceholder={formatMessage(messages.testPlanPlaceholder)}
           descriptionRef={descriptionRef}
           testPlanMenuClassName="test-plan-dropdown"
+          testPlanNotice={testPlanNotice}
           autocompleteProps={{
             useFixedPositioning: true,
             keyMenuClassName: 'attribute-key-dropdown',
@@ -122,7 +155,7 @@ const EditManualLaunchModalReduxForm = reduxForm<LaunchFormData, EditManualLaunc
     if (Array.isArray(values.attributes)) {
       const hasIncompleteAttribute = values.attributes.some((attr: Attribute) => attr.edited);
       if (hasIncompleteAttribute) {
-        errors.attributes = INCOMPLETE_ATTRIBUTE_ERROR as string;
+        errors.attributes = INCOMPLETE_ATTRIBUTE_ERROR;
       }
     }
 

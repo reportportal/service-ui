@@ -19,12 +19,14 @@ import { useIntl } from 'react-intl';
 import { Field, WrappedFieldProps } from 'redux-form';
 import { FieldLabel } from '@reportportal/ui-kit';
 import { useSelector } from 'react-redux';
+import { isNil } from 'es-toolkit';
 
 import { createClassnames } from 'common/utils';
 import { URLS } from 'common/urls';
 import { projectKeySelector } from 'controllers/project';
 import { AsyncAutocompleteV2 } from 'componentLibrary/autocompletes/asyncAutocompleteV2';
 import { LAUNCH_NAME_FILTER_KEY } from 'pages/inside/common/constants';
+import { MANUAL_LAUNCH_TEST_PLAN_ID_FILTER_KEY } from 'controllers/manualLaunch/constants';
 
 import { ExistingLaunchFieldsProps, LaunchOption } from './types';
 import { LAUNCH_FORM_FIELD_NAMES, PAGE_SIZE, LAUNCH_NAME_MAX_LENGTH } from './constants';
@@ -37,23 +39,30 @@ const cx = createClassnames(styles);
 interface LaunchAutocompleteFieldProps extends WrappedFieldProps {
   projectKey: string;
   menuPortalRoot: HTMLElement;
+  placeholder: string;
   onLaunchSelect?: ExistingLaunchFieldsProps['onLaunchSelect'];
+  linkedLaunchesTestPlanId?: number;
 }
 
 const LaunchAutocompleteField = ({
   input,
   projectKey,
   menuPortalRoot,
+  placeholder,
   onLaunchSelect,
+  linkedLaunchesTestPlanId,
 }: LaunchAutocompleteFieldProps) => {
   const { formatMessage } = useIntl();
   const [showLimitationText, setShowLimitationText] = useState(false);
 
   const retrieveLaunches = (value: string) =>
-    URLS.manualLaunchesListPagination(
-      projectKey,
-      value ? { [LAUNCH_NAME_FILTER_KEY]: value, limit: PAGE_SIZE } : { limit: PAGE_SIZE },
-    );
+    URLS.manualLaunchesListPagination(projectKey, {
+      ...(value ? { [LAUNCH_NAME_FILTER_KEY]: value } : {}),
+      ...(isNil(linkedLaunchesTestPlanId)
+        ? {}
+        : { [MANUAL_LAUNCH_TEST_PLAN_ID_FILTER_KEY]: linkedLaunchesTestPlanId }),
+      limit: PAGE_SIZE,
+    });
 
   const makeLaunchOptions = (response: {
     content: Array<{ id: number; name: string }>;
@@ -74,7 +83,7 @@ const LaunchAutocompleteField = ({
     <AsyncAutocompleteV2
       value={input.value}
       name={input.name}
-      placeholder={formatMessage(messages.searchAndSelectLaunch)}
+      placeholder={placeholder}
       getURI={retrieveLaunches}
       makeOptions={makeLaunchOptions}
       onChange={(value) => handleLaunchChange(value, input)}
@@ -93,21 +102,40 @@ const LaunchAutocompleteField = ({
   );
 };
 
-export const ExistingLaunchFields = ({ onLaunchSelect }: ExistingLaunchFieldsProps) => {
+export const ExistingLaunchFields = ({
+  onLaunchSelect,
+  linkedLaunchesTestPlanId,
+}: ExistingLaunchFieldsProps) => {
   const { formatMessage } = useIntl();
   const projectKey = useSelector(projectKeySelector);
   const menuPortalRoot = document.getElementById('tooltip-root') || document.body;
+  const isLinkedLaunchesOnly = !isNil(linkedLaunchesTestPlanId);
 
   return (
     <div className={cx('launch-name-field')}>
-      <FieldLabel isRequired>{formatMessage(messages.launchName)}</FieldLabel>
+      {isLinkedLaunchesOnly ? (
+        <FieldLabel>{formatMessage(messages.linkedLaunches)}</FieldLabel>
+      ) : (
+        <FieldLabel isRequired>{formatMessage(messages.launchName)}</FieldLabel>
+      )}
       <Field
         name={LAUNCH_FORM_FIELD_NAMES.NAME}
         component={LaunchAutocompleteField}
         projectKey={projectKey}
         menuPortalRoot={menuPortalRoot}
+        placeholder={formatMessage(
+          isLinkedLaunchesOnly
+            ? messages.searchAndSelectLinkedLaunch
+            : messages.searchAndSelectLaunch,
+        )}
         onLaunchSelect={onLaunchSelect}
+        linkedLaunchesTestPlanId={linkedLaunchesTestPlanId}
       />
+      {isLinkedLaunchesOnly && (
+        <span className={cx('launch-name-field__helper')}>
+          {formatMessage(messages.onlyLaunchesLinkedToTestPlan)}
+        </span>
+      )}
     </div>
   );
 };

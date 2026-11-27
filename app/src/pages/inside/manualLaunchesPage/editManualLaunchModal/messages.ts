@@ -29,6 +29,24 @@ export const messages = defineMessages({
     id: 'EditManualLaunchModal.testPlanPlaceholder',
     defaultMessage: 'Select the Test Plan',
   },
+  testPlanChangedTitle: {
+    id: 'EditManualLaunchModal.testPlanChangedTitle',
+    defaultMessage: 'Test plan changed',
+  },
+  testPlanChangedWarning: {
+    id: 'EditManualLaunchModal.testPlanChangedWarning',
+    defaultMessage:
+      'Changing the test plan will affect its coverage. Test cases in this launch will be automatically added to the newly selected test plan.',
+  },
+  testPlanRemovedTitle: {
+    id: 'EditManualLaunchModal.testPlanRemovedTitle',
+    defaultMessage: 'Test plan removed',
+  },
+  testPlanRemovedWarning: {
+    id: 'EditManualLaunchModal.testPlanRemovedWarning',
+    defaultMessage:
+      'Removing the test plan will affect its coverage. Test cases in this launch will no longer count toward any test plan.',
+  },
   launchUpdatedSuccess: {
     id: 'EditManualLaunchModal.launchUpdatedSuccess',
     defaultMessage: 'Launch "{launchName}" updated successfully',

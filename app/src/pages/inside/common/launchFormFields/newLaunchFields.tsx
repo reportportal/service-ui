@@ -46,6 +46,7 @@ export const NewLaunchFields = ({
   testPlanPlaceholder,
   descriptionRef,
   testPlanMenuClassName,
+  testPlanNotice,
   autocompleteProps,
 }: NewLaunchFieldsProps) => {
   const { formatMessage } = useIntl();
@@ -162,6 +163,10 @@ export const NewLaunchFields = ({
           <FieldLabel>{formatMessage(commonMessages.testPlanLabel)}</FieldLabel>
           <Field name={LAUNCH_FORM_FIELD_NAMES.TEST_PLAN} component={renderTestPlanField} />
         </div>
+      )}
+
+      {!hideTestPlanField && testPlanNotice && (
+        <div className={cx('test-plan-notice')}>{testPlanNotice}</div>
       )}
 
       <div className={cx('attributes-section')}>

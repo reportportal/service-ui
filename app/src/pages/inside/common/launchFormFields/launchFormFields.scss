@@ -30,6 +30,25 @@
 
 .launch-name-field {
   margin-top: 16px;
+
+  &__helper {
+    display: block;
+    margin-top: 4px;
+    font-family: var(--rp-ui-base-font-family);
+    font-size: 11px;
+    line-height: 16px;
+    color: var(--rp-ui-base-e-400);
+  }
+}
+
+.test-plan-notice {
+  margin-top: 16px;
+
+  // The ui-kit SystemMessage header is capitalized with a stronger selector;
+  // the mockup uses sentence case ("Test plan changed").
+  h1 {
+    text-transform: none !important;
+  }
 }
 
 .modal-autocomplete-menu {
