@@ -19,7 +19,8 @@ import PropTypes from 'prop-types';
 import Parser from 'html-react-parser';
 import { defineMessages, useIntl } from 'react-intl';
 import classNames from 'classnames/bind';
-import DOMPurify from 'dompurify';
+import { sanitizeTemplateHtml } from 'common/utils/sanitizeTemplateHtml';
+import { escapeHtml } from 'common/utils/escapeHtml';
 import { withModal, ModalLayout } from 'components/main/modal';
 import { LAUNCHES_MODAL_EVENTS } from 'components/main/analytics/events';
 import { RETENTION_POLICY } from 'common/constants/retentionPolicy';
@@ -123,29 +124,29 @@ const DeleteLaunchModal = ({ data: { launches, confirmDeleteLaunches, userId } }
     if (selectedImportantLaunches.length > 0 && selectedRegularLaunches.length > 0) {
       return selectedImportantLaunches.length === 1
         ? formatMessage(messages.deleteWithImportantLaunchMessage, {
-            b: (data) => DOMPurify.sanitize(`<b>${data}</b>`),
-            name: selectedImportantLaunches[0].name,
+            b: (data) => sanitizeTemplateHtml(`<b>${data}</b>`),
+            name: escapeHtml(selectedImportantLaunches[0].name),
           })
         : formatMessage(messages.deleteWithImportantLaunchesMessage, {
-            b: (data) => DOMPurify.sanitize(`<b>${data}</b>`),
+            b: (data) => sanitizeTemplateHtml(`<b>${data}</b>`),
             importantCount: selectedImportantLaunches.length,
             totalCount: launches.length,
           });
     } else if (selectedImportantLaunches.length > 0) {
       return selectedImportantLaunches.length === 1
         ? formatMessage(messages.deleteImportantLaunchMessage, {
-            b: (data) => DOMPurify.sanitize(`<b>${data}</b>`),
-            name: selectedImportantLaunches[0].name,
+            b: (data) => sanitizeTemplateHtml(`<b>${data}</b>`),
+            name: escapeHtml(selectedImportantLaunches[0].name),
           })
         : formatMessage(messages.deleteImportantLaunchesMessage, {
-            b: (data) => DOMPurify.sanitize(`<b>${data}</b>`),
+            b: (data) => sanitizeTemplateHtml(`<b>${data}</b>`),
             importantCount: selectedImportantLaunches.length,
           });
     } else {
       return launches.length === 1
         ? formatMessage(messages.deleteModalContent, {
-            b: (data) => DOMPurify.sanitize(`<b>${data}</b>`),
-            name: launches[0].name,
+            b: (data) => sanitizeTemplateHtml(`<b>${data}</b>`),
+            name: escapeHtml(launches[0].name),
           })
         : formatMessage(messages.deleteModalMultipleContent);
     }
@@ -172,7 +173,7 @@ const DeleteLaunchModal = ({ data: { launches, confirmDeleteLaunches, userId } }
       CustomFooter={selectedImportantLaunches.length > 0 ? CustomFooter : null}
       contentClassName={cx('delete-launch-modal-content')}
     >
-      <p className={cx('message')}>{Parser(DOMPurify.sanitize(getMainContent()))}</p>
+      <p className={cx('message')}>{Parser(sanitizeTemplateHtml(getMainContent()))}</p>
     </ModalLayout>
   );
 };

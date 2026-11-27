@@ -144,7 +144,12 @@ export class HistoryItem extends Component {
           return (
             <span key={ticketId}>
               {ticket ? (
-                <a className={cx('link')} href={ticket.url} target="_blank">
+                <a
+                  className={cx('link')}
+                  href={ticket.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
                   {ticketId}
                 </a>
               ) : (

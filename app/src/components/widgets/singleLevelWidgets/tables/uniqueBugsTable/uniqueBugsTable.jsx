@@ -41,7 +41,7 @@ const ColumnProps = {
 const BugIDColumn = ({ className, value: { id, url } }) => (
   <div className={cx('bug-id-col', className)}>
     {url ? (
-      <a href={url} target="_blank" className={cx('bug-link')}>
+      <a href={url} target="_blank" rel="noopener noreferrer" className={cx('bug-link')}>
         {id}
       </a>
     ) : (

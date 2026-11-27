@@ -17,6 +17,7 @@
 import { ReactNode } from 'react';
 import { useIntl } from 'react-intl';
 import Parser from 'html-react-parser';
+import { isHttpUrl, sanitizePluginHtml } from 'common/utils/sanitizePluginHtml';
 import { useTracking } from 'react-tracking';
 import { Breadcrumbs } from '@reportportal/ui-kit';
 import { PLUGIN_DESCRIPTIONS_MAP } from 'components/integrations/messages';
@@ -92,16 +93,22 @@ export const IntegrationHeader = ({
     </>
   ) : (
     <>
-      {details.description && Parser(details.description)} Link to{' '}
-      <a
-        onClick={handleDocumentationClick}
-        target="_blank"
-        rel="noreferrer noopener"
-        href={documentationLink}
-        data-automation-id="documentationLink"
-      >
-        Documentation
-      </a>
+      {details.description && Parser(sanitizePluginHtml(details.description))}
+      {isHttpUrl(documentationLink) && (
+        <>
+          {' '}
+          Link to{' '}
+          <a
+            onClick={handleDocumentationClick}
+            target="_blank"
+            rel="noreferrer noopener"
+            href={documentationLink}
+            data-automation-id="documentationLink"
+          >
+            Documentation
+          </a>
+        </>
+      )}
     </>
   );
 

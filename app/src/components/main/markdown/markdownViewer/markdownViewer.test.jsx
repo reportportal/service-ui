@@ -15,6 +15,7 @@
  */
 
 import { mount } from 'enzyme';
+import * as sanitizeModule from 'common/utils/sanitizeUserHtml';
 import { MarkdownViewer } from './markdownViewer';
 
 const boldMock = '**bold**';
@@ -146,5 +147,116 @@ describe('MarkdownViewer', () => {
     expect(wrapper.find('form')).toHaveLength(0);
     expect(wrapper.find('button')).toHaveLength(0);
     expect(container.innerHTML).not.toMatch(/position:fixed/i);
+  });
+  test('a typical markdown log renders the same elements as before the sanitiser rewrite', () => {
+    const log = [
+      '## Step result',
+      '',
+      'Request **GET** `/api/v1/launch` returned *200*, see [docs](https://reportportal.io/docs).',
+      '',
+      '| Field | Expected | Actual |',
+      '|---|:---:|---:|',
+      '| status | 200 | 200 |',
+      '| time | <span style="color:red">35ms</span> | 40ms |',
+      '',
+      '```java',
+      'assertEquals(1, 2);',
+      '```',
+      '',
+      '> quoted line',
+      '',
+      '- item one',
+      '- item two',
+      '',
+      '1. first',
+      '2. second',
+      '',
+      '![screenshot](https://example.com/s.png)',
+      '![inline](data:image/png;base64,iVBORw0KGgo=)',
+      '',
+      '<details><summary>More</summary>hidden text</details>',
+    ].join('\n');
+    const wrapper = mount(<MarkdownViewer value={log} />);
+    const container = wrapper.instance().container.current;
+    const tags = Array.from(container.querySelectorAll('*')).map((node) =>
+      node.tagName.toLowerCase(),
+    );
+
+    // element sequence captured from the previous implementation
+    expect(tags).toEqual([
+      'h2',
+      'p',
+      'strong',
+      'code',
+      'em',
+      'a',
+      'table',
+      'thead',
+      'tr',
+      'th',
+      'th',
+      'th',
+      'tbody',
+      'tr',
+      'td',
+      'td',
+      'td',
+      'tr',
+      'td',
+      'td',
+      'span',
+      'td',
+      'pre',
+      'code',
+      'blockquote',
+      'p',
+      'ul',
+      'li',
+      'li',
+      'ol',
+      'li',
+      'li',
+      'p',
+      'img',
+      'br',
+      'img',
+      'details',
+      'summary',
+    ]);
+    expect(container.querySelector('th[align="center"]')).not.toBeNull();
+    expect(container.querySelector('span').getAttribute('style')).toMatch(/color:\s*red/);
+    expect(container.querySelector('pre code').className).toBe('language-java');
+    expect(container.querySelector('a').getAttribute('href')).toBe('https://reportportal.io/docs');
+    expect(container.querySelectorAll('img')[0].getAttribute('src')).toBe(
+      'https://example.com/s.png',
+    );
+    expect(container.querySelectorAll('img')[1].getAttribute('src')).toMatch(/^data:image\/png/);
+  });
+  test('links open in a new tab without opener and referrer', () => {
+    const wrapper = mount(<MarkdownViewer value={linkMock} />);
+    const link = wrapper.instance().container.current.querySelector('a');
+
+    expect(link.getAttribute('target')).toBe('_blank');
+    expect(link.getAttribute('rel')).toBe('noopener noreferrer');
+  });
+  test('a heading cannot take over an app root element id', () => {
+    const wrapper = mount(<MarkdownViewer value="# tooltip root" />);
+    const container = wrapper.instance().container.current;
+
+    expect(container.querySelector('#tooltip-root')).toBeNull();
+    expect(container.querySelector('h1').id).toBe('user-content-tooltip-root');
+  });
+  test('re-rendering with the same value does not sanitise again', () => {
+    const spy = jest.spyOn(sanitizeModule, 'sanitizeUserHtml');
+    const wrapper = mount(<MarkdownViewer value="**unique re-render value**" />);
+    wrapper.setProps({ className: 'other' });
+    wrapper.setProps({ mode: 'other-mode' });
+
+    expect(spy).toHaveBeenCalledTimes(1);
+
+    wrapper.setProps({ value: '**changed value**' });
+
+    expect(spy).toHaveBeenCalledTimes(2);
+    spy.mockRestore();
   });
 });

@@ -16,7 +16,8 @@
 
 import { Component } from 'react';
 import PropTypes from 'prop-types';
-import DOMPurify from 'dompurify';
+import { sanitizeTemplateHtml } from 'common/utils/sanitizeTemplateHtml';
+import { escapeHtml } from 'common/utils/escapeHtml';
 import { connect } from 'react-redux';
 import classNames from 'classnames/bind';
 import { injectIntl, defineMessages } from 'react-intl';
@@ -138,10 +139,12 @@ export class IncludeInAAModal extends Component {
     } = this.props;
     return items.length === 1
       ? Parser(
-          intl.formatMessage(messages.text, {
-            b: (data) => DOMPurify.sanitize(`<b>${data}</b>`),
-            name: items[0].name,
-          }),
+          sanitizeTemplateHtml(
+            intl.formatMessage(messages.text, {
+              b: (data) => `<b>${data}</b>`,
+              name: escapeHtml(items[0].name),
+            }),
+          ),
         )
       : intl.formatMessage(messages.textMultiple);
   };

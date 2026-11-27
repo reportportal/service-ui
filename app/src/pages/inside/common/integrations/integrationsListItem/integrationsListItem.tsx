@@ -16,6 +16,7 @@
 
 import { defineMessages, useIntl } from 'react-intl';
 import Parser from 'html-react-parser';
+import { sanitizePluginHtml } from 'common/utils/sanitizePluginHtml';
 import { PLUGIN_DESCRIPTIONS_MAP } from 'components/integrations/messages';
 import { PluginIcon } from 'components/integrations/elements/pluginIcon';
 import type { Plugin } from 'controllers/plugins';
@@ -68,7 +69,8 @@ export const IntegrationsListItem = ({
           </span>
         </div>
         <p className={cx('integration-description')}>
-          {PLUGIN_DESCRIPTIONS_MAP[name] || (details.description && Parser(details.description))}
+          {PLUGIN_DESCRIPTIONS_MAP[name] ||
+            (details.description && Parser(sanitizePluginHtml(details.description)))}
         </p>
       </div>
     </button>

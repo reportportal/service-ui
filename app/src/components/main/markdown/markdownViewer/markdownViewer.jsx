@@ -68,10 +68,15 @@ export class MarkdownViewer extends Component {
         };
       });
     }
-    this.container.current.querySelectorAll('a').forEach((elem) => {
-      elem.setAttribute('target', '_blank');
-      elem.setAttribute('rel', 'noreferrer noopener');
-    });
+  };
+
+  // Links get target/rel from the sanitiser hook; the parsed tree is reused while value is unchanged.
+  getContent = (value) => {
+    if (this.content === undefined || this.renderedValue !== value) {
+      this.renderedValue = value;
+      this.content = Parser(sanitizeUserHtml(this.easyMDE.markdown(value || '')).trim());
+    }
+    return this.content;
   };
 
   render() {
@@ -83,7 +88,7 @@ export class MarkdownViewer extends Component {
           ref={this.container}
           className={cx('markdown-viewer', { [`mode-${mode}`]: mode }, this.props.className)}
         >
-          {Parser(sanitizeUserHtml(this.easyMDE.markdown(value || '')).trim())}
+          {this.getContent(value)}
         </div>
       </div>
     );

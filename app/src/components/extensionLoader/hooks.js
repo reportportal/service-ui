@@ -3,12 +3,21 @@ import { loadComponent } from './loadComponent';
 
 const useDynamicScript = (scope, url) => {
   const isDev = process.env.NODE_ENV === 'development';
-  const loaded = isDev ? false : !!window[scope];
+  // An invalid (null) URL must always report a failure, even if the scope is already registered.
+  const loaded = isDev || !url ? false : !!window[scope];
   const [ready, setReady] = React.useState(loaded);
   const [failed, setFailed] = React.useState(false);
 
   React.useEffect(() => {
     if (loaded) {
+      setReady(true);
+      setFailed(false);
+      return;
+    }
+
+    if (!url) {
+      setReady(false);
+      setFailed(true);
       return;
     }
 

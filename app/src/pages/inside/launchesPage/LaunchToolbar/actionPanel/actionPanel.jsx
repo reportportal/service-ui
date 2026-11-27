@@ -223,7 +223,6 @@ export const ActionPanel = ({
                   a: (data) => createExternalLink(data, docsReferences.pluginsDocs),
                 })}
                 className={cx('no-import-message')}
-                preventTargetSanitizing
               />
             )}
           </div>
