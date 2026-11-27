@@ -1,6 +1,9 @@
 # Only for technical/build aims, built image will be with nginx/nginx-unprivileged:alpine according to the last step
 
-FROM alpine:3.23.3 AS generate-build-info
+# The build stages produce only static files (JSON, JS, CSS, HTML), which are the same for every architecture, so they
+# run on the builder's native platform ($BUILDPLATFORM). For multi-arch builds this avoids running npm ci and webpack
+# under QEMU emulation; only the final nginx stage is built per target platform.
+FROM --platform=$BUILDPLATFORM alpine:3.23.3 AS generate-build-info
 RUN mkdir -p /usr/src/app/build
 WORKDIR /usr/src
 ARG APP_VERSION=develop
@@ -8,7 +11,7 @@ ARG BUILD_BRANCH
 ARG BUILD_DATE
 RUN echo {\"build\": { \"version\": \"${APP_VERSION}\", \"branch\": \"${BUILD_BRANCH}\", \"build_date\": \"${BUILD_DATE}\", \"name\": \"Service UI\", \"repo\": \"reportportal/service-ui\"}} > ./app/build/buildInfo.json
 
-FROM node:20-alpine AS build-frontend
+FROM --platform=$BUILDPLATFORM node:20-alpine AS build-frontend
 RUN mkdir -p /usr/src/app
 WORKDIR /usr/src/app
 COPY ./app/ /usr/src/app/
