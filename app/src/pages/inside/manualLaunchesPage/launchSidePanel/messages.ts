@@ -29,9 +29,9 @@ export const messages = defineMessages({
     id: 'LaunchSidePanel.deleteLaunch',
     defaultMessage: 'Delete launch',
   },
-  toRunWithCount: {
-    id: 'LaunchSidePanel.toRunWithCount',
-    defaultMessage: 'Show To Run {testCount}',
+  showNotExecuted: {
+    id: 'LaunchSidePanel.showNotExecuted',
+    defaultMessage: 'Show Not Executed',
   },
   attributesTitle: {
     id: 'LaunchSidePanel.attributesTitle',

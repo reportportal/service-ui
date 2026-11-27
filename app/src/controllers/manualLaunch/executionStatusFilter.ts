@@ -24,6 +24,11 @@ export const MANUAL_LAUNCH_FILTER_EXECUTION_STATUSES = [
   ExecutionStatus.SKIPPED,
 ] as const;
 
+export const MANUAL_LAUNCH_NOT_EXECUTED_STATUSES = [
+  ExecutionStatus.TO_RUN,
+  ExecutionStatus.IN_PROGRESS,
+] as const;
+
 export type ManualLaunchFilterExecutionStatus =
   (typeof MANUAL_LAUNCH_FILTER_EXECUTION_STATUSES)[number];
 
@@ -47,3 +52,15 @@ export const serializeExecutionStatusFilter = (statuses: readonly string[]): str
 
 export const normalizeExecutionStatusFilter = (raw?: string | null): string | undefined =>
   serializeExecutionStatusFilter(parseExecutionStatusFilter(raw));
+
+export const MANUAL_LAUNCH_NOT_EXECUTED_STATUS_FILTER = serializeExecutionStatusFilter(
+  MANUAL_LAUNCH_NOT_EXECUTED_STATUSES,
+);
+
+export const getNotExecutedCount = ({
+  toRun = 0,
+  inProgress = 0,
+}: {
+  toRun?: number;
+  inProgress?: number;
+}): number => toRun + inProgress;

@@ -15,6 +15,8 @@
  */
 
 import {
+  MANUAL_LAUNCH_NOT_EXECUTED_STATUS_FILTER,
+  getNotExecutedCount,
   normalizeExecutionStatusFilter,
   parseExecutionStatusFilter,
   serializeExecutionStatusFilter,
@@ -56,6 +58,18 @@ describe('executionStatusFilter', () => {
     it('normalizes a raw query value', () => {
       expect(normalizeExecutionStatusFilter('in_progress,to_run')).toBe('TO_RUN,IN_PROGRESS');
       expect(normalizeExecutionStatusFilter('INFO')).toBeUndefined();
+    });
+  });
+
+  describe('not executed', () => {
+    it('filters by To Run and In Progress', () => {
+      expect(MANUAL_LAUNCH_NOT_EXECUTED_STATUS_FILTER).toBe('TO_RUN,IN_PROGRESS');
+    });
+
+    it('counts To Run and In Progress executions', () => {
+      expect(getNotExecutedCount({ toRun: 2, inProgress: 1 })).toBe(3);
+      expect(getNotExecutedCount({ toRun: 0, inProgress: 1 })).toBe(1);
+      expect(getNotExecutedCount({})).toBe(0);
     });
   });
 });

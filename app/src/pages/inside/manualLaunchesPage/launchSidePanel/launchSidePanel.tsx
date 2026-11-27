@@ -38,10 +38,10 @@ import { CollapsibleSection } from 'components/collapsibleSection';
 import { ExpandedTextSection } from 'components/fields/expandedTextSection';
 import { formatTimestampForSidePanel } from 'pages/inside/common/testCaseList/utils';
 import { MANUAL_LAUNCH_DETAILS_PAGE } from 'controllers/pages';
+import { getNotExecutedCount } from 'controllers/manualLaunch';
 import { useUserPermissions } from 'hooks/useUserPermissions';
 import { useProjectDetails } from 'hooks/useTypedSelector';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
-import { ExecutionStatus } from 'types/testCase';
 
 import { commonMessages } from 'pages/inside/common/common-messages';
 import {
@@ -51,6 +51,7 @@ import {
 import { LaunchAttribute } from '../launchAttribute';
 import { TestStatisticsChart } from '../testStatisticsChart';
 import { useEditManualLaunchModal } from '../editManualLaunchModal';
+import { useOpenNotExecutedExecutions } from '../useOpenNotExecutedExecutions';
 import { useLaunchDetails } from './useLaunchDetails';
 import { messages } from './messages';
 
@@ -74,6 +75,7 @@ export const LaunchSidePanel = memo(
     const { canEditLaunch } = useUserPermissions();
     const sidePanelRef = useRef<HTMLDivElement>(null);
     const { launchDetails, isLoading, refetchLaunchDetails } = useLaunchDetails(launchId);
+    const openNotExecutedExecutions = useOpenNotExecutedExecutions();
     const { openModal: openEditModal } = useEditManualLaunchModal({
       onSuccess: () => {
         refetchLaunchDetails();
@@ -124,8 +126,10 @@ export const LaunchSidePanel = memo(
 
     const { total, passed, failed, skipped, toRun, inProgress } = launchDetails.executionStatistic;
 
-    const handleToRunClick = () => {
-      if (toRun === 0) {
+    const notExecutedCount = getNotExecutedCount({ toRun, inProgress });
+
+    const handleShowNotExecutedClick = () => {
+      if (notExecutedCount === 0) {
         onClose();
         return;
       }
@@ -134,11 +138,7 @@ export const LaunchSidePanel = memo(
         trackEvent(
           MANUAL_LAUNCHES_PAGE_EVENTS.clickShowToRun(MANUAL_LAUNCHES_PLACE.LAUNCH_DETAILS_SIDEBAR),
         );
-        dispatch({
-          type: MANUAL_LAUNCH_DETAILS_PAGE,
-          payload: { organizationSlug, projectSlug, launchId: launchId.toString() },
-          meta: { query: { statusFilter: ExecutionStatus.TO_RUN } },
-        });
+        openNotExecutedExecutions(launchId);
         onClose();
       }
     };
@@ -277,12 +277,10 @@ export const LaunchSidePanel = memo(
         <Button
           variant="primary"
           className={cx('action-button', 'last-button')}
-          onClick={handleToRunClick}
+          onClick={handleShowNotExecutedClick}
           data-automation-id="launch-to-run"
         >
-          {formatMessage(toRun ? messages.toRunWithCount : COMMON_LOCALE_KEYS.DONE, {
-            testCount: toRun,
-          })}
+          {formatMessage(notExecutedCount ? messages.showNotExecuted : COMMON_LOCALE_KEYS.DONE)}
         </Button>
       </div>
     );
