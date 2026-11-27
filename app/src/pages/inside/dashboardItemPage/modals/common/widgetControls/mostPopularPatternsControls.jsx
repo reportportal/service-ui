@@ -127,57 +127,61 @@ export class MostPopularPatternsControls extends Component {
             required
           />
         </FieldProvider>
-        <FieldProvider name="contentParameters.widgetOptions.latest">
-          <RadioGroupControl
-            options={getWidgetModeOptions(
-              [CHART_MODES.ALL_LAUNCHES, CHART_MODES.LATEST_LAUNCHES],
-              intl.formatMessage,
-            )}
-            label={intl.formatMessage(widgetControlsMessages.ModeLabel)}
-            disabled={disabled || isMainControlsDisabled}
-          />
-        </FieldProvider>
-        <FieldProvider
-          name="contentParameters.itemsCount"
-          validate={commonValidators.createNumberOfLaunchesValidator(
-            intl.formatMessage(messages.numberOfLaunchesValidationError),
-          )}
-          format={String}
-          normalize={this.normalizeValue}
-          className={cx('field-number')}
-        >
-          <FieldErrorHint provideHint={false}>
-            <FieldNumber
-              label={intl.formatMessage(messages.numberOfLaunchesLabel)}
-              maxLength={3}
-              defaultWidth={false}
-              disabled={disabled || isMainControlsDisabled}
-            />
-          </FieldErrorHint>
-        </FieldProvider>
-        <FieldProvider
-          name="contentParameters.widgetOptions.attributeKey"
-          validate={attributeKeyValidator(
-            intl.formatMessage(messages.attributeKeyValidationError),
-          )}
-        >
-          <FieldErrorHint provideHint={false}>
-            <AsyncAutocompleteV2
-              getURI={URLS.launchAttributeKeysSearch(projectKey)}
-              minLength={1}
-              maxLength={512}
-              placeholder={intl.formatMessage(messages.attributeKeyFieldPlaceholder)}
-              disabled={disabled || isMainControlsDisabled}
-              menuPortalRoot={document.getElementById('tooltip-root') || document.body}
-              dropdownMatchInputWidth
-              useFixedPositioning={false}
-              inputProps={{
-                label: intl.formatMessage(messages.attributeKeyFieldLabel),
-                clearable: true,
-              }}
-            />
-          </FieldErrorHint>
-        </FieldProvider>
+        {!formAppearance.isMainControlsLocked && (
+          <Fragment>
+            <FieldProvider name="contentParameters.widgetOptions.latest">
+              <RadioGroupControl
+                options={getWidgetModeOptions(
+                  [CHART_MODES.ALL_LAUNCHES, CHART_MODES.LATEST_LAUNCHES],
+                  intl.formatMessage,
+                )}
+                label={intl.formatMessage(widgetControlsMessages.ModeLabel)}
+                disabled={disabled || isMainControlsDisabled}
+              />
+            </FieldProvider>
+            <FieldProvider
+              name="contentParameters.itemsCount"
+              validate={commonValidators.createNumberOfLaunchesValidator(
+                intl.formatMessage(messages.numberOfLaunchesValidationError),
+              )}
+              format={String}
+              normalize={this.normalizeValue}
+              className={cx('field-number')}
+            >
+              <FieldErrorHint provideHint={false}>
+                <FieldNumber
+                  label={intl.formatMessage(messages.numberOfLaunchesLabel)}
+                  maxLength={3}
+                  defaultWidth={false}
+                  disabled={disabled || isMainControlsDisabled}
+                />
+              </FieldErrorHint>
+            </FieldProvider>
+            <FieldProvider
+              name="contentParameters.widgetOptions.attributeKey"
+              validate={attributeKeyValidator(
+                intl.formatMessage(messages.attributeKeyValidationError),
+              )}
+            >
+              <FieldErrorHint provideHint={false}>
+                <AsyncAutocompleteV2
+                  getURI={URLS.launchAttributeKeysSearch(projectKey)}
+                  minLength={1}
+                  maxLength={512}
+                  placeholder={intl.formatMessage(messages.attributeKeyFieldPlaceholder)}
+                  disabled={disabled || isMainControlsDisabled}
+                  menuPortalRoot={document.getElementById('tooltip-root') || document.body}
+                  dropdownMatchInputWidth
+                  useFixedPositioning={false}
+                  inputProps={{
+                    label: intl.formatMessage(messages.attributeKeyFieldLabel),
+                    clearable: true,
+                  }}
+                />
+              </FieldErrorHint>
+            </FieldProvider>
+          </Fragment>
+        )}
       </Fragment>
     );
   }
