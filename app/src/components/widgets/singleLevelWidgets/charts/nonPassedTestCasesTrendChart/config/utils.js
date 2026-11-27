@@ -15,6 +15,20 @@
  */
 
 import { messages } from 'components/widgets/common/messages';
+import { getTrendTooltipBaseParams } from '../../common/trendLineChart/trendChartDesignStyles';
+
+// Gridline steps that divide the fixed 0-100 axis evenly, from densest to sparsest.
+const PERCENT_STEPS = [5, 10, 20, 25, 50, 100];
+const PERCENT_MAX = 100;
+
+/** Y ticks for the 0-100 axis: the smallest nice step whose gridline count fits maxIntervals. */
+export const getPercentTicks = (maxIntervals) => {
+  const step =
+    PERCENT_STEPS.find((item) => PERCENT_MAX / item <= maxIntervals) ??
+    PERCENT_STEPS[PERCENT_STEPS.length - 1];
+
+  return Array.from({ length: PERCENT_MAX / step + 1 }, (_, index) => index * step);
+};
 
 export const calculateTooltipParams = (data, color, customProps) => {
   const { itemsData, formatMessage } = customProps;
@@ -22,9 +36,9 @@ export const calculateTooltipParams = (data, color, customProps) => {
   const { name, number, startTime } = itemsData[index];
 
   return {
+    ...getTrendTooltipBaseParams(startTime),
     itemName: `${name} #${number}`,
-    startTime: new Date(startTime).getTime(),
-    itemCases: `${Number(value).toFixed(2)}%`,
+    itemCases: Number(value).toFixed(2),
     color: color(id),
     issueStatNameProps: { itemName: formatMessage(messages.failedSkippedTotal) },
   };

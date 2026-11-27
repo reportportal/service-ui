@@ -50,6 +50,7 @@ export const COLOR_INTERRUPTED = '#ffc64a';
 // DS 6 chart tokens
 export const COLOR_CHART_PASSED = '#3AA76D';
 export const COLOR_CHART_FAILED = '#DC5959';
+export const COLOR_CHART_NON_PASSED = '#F45C5C';
 export const COLOR_CHART_SKIPPED = '#C1C7D0';
 export const COLOR_CHART_TOTAL = '#23A6DE';
 export const COLOR_ALMOST_BLACK = '#3f3f3f'; // same as $COLOR--almost-black / --rp-ui-base-almost-black

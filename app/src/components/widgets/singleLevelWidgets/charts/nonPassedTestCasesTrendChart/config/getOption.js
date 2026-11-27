@@ -15,19 +15,19 @@
  */
 
 import { defineMessages } from 'react-intl';
+import { COLOR_CHART_NON_PASSED } from 'common/constants/colors';
 import {
-  COLOR_BLACK,
-  COLOR_CHARCOAL_GREY,
-  COLOR_FAILEDSKIPPEDTOTAL,
-  COLOR_GRAY_80,
-} from 'common/constants/colors';
+  buildSingleLineTrendOption,
+  buildTrendChartYAxis,
+} from '../../common/lineTrendChartOption';
 import {
-  buildAxisTicks,
-  buildTooltipFormatter,
-} from 'components/widgets/common/echarts/configHelpers';
+  applyTrendChartDesignStyles,
+  applyTrendChartPreviewStyles,
+  buildLabelledIndexCheck,
+  getMaxTickIntervals,
+} from '../../common/trendLineChart/trendChartDesignStyles';
 import { IssueTypeStatTooltip } from '../../common/issueTypeStatTooltip';
-import { buildTrendChartGrid, getTrendChartSymbolSize } from '../../common/lineTrendChartOption';
-import { calculateTooltipParams } from './utils';
+import { calculateTooltipParams, getPercentTicks } from './utils';
 
 const localMessages = defineMessages({
   nonPassedCases: {
@@ -36,136 +36,47 @@ const localMessages = defineMessages({
   },
 });
 
-const FAILED_SKIPPED_TOTAL = '% (Failed+Skipped)/Total';
+export const FAILED_SKIPPED_TOTAL = '% (Failed+Skipped)/Total';
 const SERIES_ID = 'notPassed';
+// Y labels go up to "100", so the title sits further from the axis than in the failed chart.
+const Y_AXIS_NAME_GAP = 36;
+const Y_AXIS_MIN = 0;
+const Y_AXIS_MAX = 100;
 
-const AXIS_LABEL_STYLE = {
-  fontFamily: 'OpenSans',
-  fontSize: 10,
-  fontWeight: 400,
-  color: COLOR_CHARCOAL_GREY,
-};
-
-export const getOption = ({ content, isPreview, formatMessage }) => {
-  const itemsData = [];
-  const values = [];
-
-  content.forEach((item) => {
-    const { id, name, number, startTime } = item;
-    itemsData.push({ id, name, number, startTime });
-    values.push(Number.parseFloat(item.values[FAILED_SKIPPED_TOTAL]));
-  });
-
-  const categories = itemsData.map((item) => `# ${item.number}`);
-  const tickValues = buildAxisTicks(itemsData.length);
-  const singlePoint = itemsData.length === 1;
+// Applied on resize so axis label density follows the current chart size.
+export const getAxesUpdate = (content, { width, height }) => {
+  const customValues = getPercentTicks(getMaxTickIntervals(height));
 
   return {
-    color: [COLOR_FAILEDSKIPPEDTOTAL],
-    textStyle: AXIS_LABEL_STYLE,
-    grid: buildTrendChartGrid(isPreview),
-    xAxis: {
-      type: 'category',
-      show: !isPreview,
-      data: categories,
-      boundaryGap: true,
-      axisLine: {
-        show: true,
-        onZero: true,
-        lineStyle: {
-          color: COLOR_BLACK,
-          width: 1,
-        },
-      },
-      axisTick: {
-        show: true,
-        interval: 0,
-        alignWithLabel: true,
-        inside: false,
-        length: 6,
-        lineStyle: {
-          color: COLOR_BLACK,
-          width: 1,
-        },
-      },
-      axisLabel: {
-        ...AXIS_LABEL_STYLE,
-        margin: 8,
-        interval: (index) => tickValues.includes(index),
-        hideOverlap: true,
-      },
-    },
-    yAxis: {
-      type: 'value',
-      show: !isPreview,
-      min: 0,
-      max: 100,
-      interval: 10,
-      name: isPreview ? undefined : `% ${formatMessage(localMessages.nonPassedCases)}`,
-      nameLocation: 'middle',
-      nameGap: 32,
-      nameRotate: 90,
-      nameTextStyle: {
-        ...AXIS_LABEL_STYLE,
-        fontSize: 12,
-      },
-      axisLabel: {
-        ...AXIS_LABEL_STYLE,
-        margin: 8,
-      },
-      axisLine: {
-        show: false,
-      },
-      axisTick: {
-        show: false,
-      },
-      splitLine: {
-        show: !isPreview,
-        lineStyle: {
-          color: COLOR_GRAY_80,
-          width: 1,
-        },
-      },
-    },
-    tooltip: {
-      trigger: 'axis',
-      show: !isPreview,
-      formatter: buildTooltipFormatter(IssueTypeStatTooltip, calculateTooltipParams, {
-        itemsData,
-        formatMessage,
-      }),
-    },
-    legend: {
-      show: false,
-    },
-    series: [
-      {
-        id: SERIES_ID,
-        name: SERIES_ID,
-        type: 'line',
-        data: values,
-        showSymbol: true,
-        symbolSize: getTrendChartSymbolSize(isPreview, singlePoint),
-        lineStyle: {
-          width: 1,
-        },
-        emphasis: {
-          scale: 4,
-          itemStyle: {
-            borderWidth: 2,
-          },
-        },
-        triggerLineEvent: true,
-        cursor: isPreview ? 'default' : 'pointer',
-        silent: isPreview,
-      },
-    ],
-    customData: {
-      itemsData,
-      colors: {
-        [SERIES_ID]: COLOR_FAILEDSKIPPEDTOTAL,
-      },
-      legendItems: [SERIES_ID],
-    },
+    xAxis: { axisLabel: { interval: buildLabelledIndexCheck(content.length, width) } },
+    yAxis: { axisLabel: { customValues }, axisTick: { customValues } },
   };
+};
+
+const buildYAxis = ({ isPreview, formatMessage, height }) =>
+  buildTrendChartYAxis({
+    isPreview,
+    name: `% ${formatMessage(localMessages.nonPassedCases)}`,
+    nameGap: Y_AXIS_NAME_GAP,
+    min: Y_AXIS_MIN,
+    max: Y_AXIS_MAX,
+    customValues: getPercentTicks(getMaxTickIntervals(height)),
+  });
+
+export const getOption = ({ content, isPreview, formatMessage, size }) => {
+  const option = buildSingleLineTrendOption({
+    content,
+    isPreview,
+    formatMessage,
+    seriesId: SERIES_ID,
+    color: COLOR_CHART_NON_PASSED,
+    getValue: (item) => Number.parseFloat(item.values[FAILED_SKIPPED_TOTAL]),
+    buildYAxis: (params) => buildYAxis({ ...params, height: size?.height }),
+    TooltipComponent: IssueTypeStatTooltip,
+    calculateTooltipParams,
+  });
+
+  return isPreview
+    ? applyTrendChartPreviewStyles(option)
+    : applyTrendChartDesignStyles(option, size?.width);
 };

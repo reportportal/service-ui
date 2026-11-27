@@ -14,42 +14,17 @@
  * limitations under the License.
  */
 
-import moment from 'moment';
-import classNames from 'classnames/bind';
 import { FAILED } from 'common/constants/testStatuses';
 import { statusLocalization } from 'common/constants/localization/statusLocalization';
-import styles from '../failedCasesTrendChart.scss';
+import {
+  DEFAULT_TICK_INTERVALS,
+  getTrendTooltipBaseParams,
+} from '../../common/trendLineChart/trendChartDesignStyles';
 
-const cx = classNames.bind(styles);
-
-export const TOOLTIP_DATE_FORMAT = 'DD.MM.YYYY, HH:mm';
-
-const REFERENCE_WIDTH = 668;
-const REFERENCE_HEIGHT = 496;
-const REFERENCE_LABELS_COUNT = 6;
-const PX_PER_X_LABEL = REFERENCE_WIDTH / REFERENCE_LABELS_COUNT;
-const PX_PER_Y_LABEL = REFERENCE_HEIGHT / REFERENCE_LABELS_COUNT;
-const MIN_LABELS_COUNT = 3;
-const MAX_Y_LABELS_COUNT = 13;
-
-const DEFAULT_TICK_INTERVALS = REFERENCE_LABELS_COUNT - 1;
-
-export const getMaxTickIntervals = (chartHeight) => {
-  if (!chartHeight) {
-    return DEFAULT_TICK_INTERVALS;
-  }
-  const labelsCount = Math.round(chartHeight / PX_PER_Y_LABEL);
-
-  return Math.min(MAX_Y_LABELS_COUNT, Math.max(MIN_LABELS_COUNT, labelsCount)) - 1;
-};
-
-export const getXLabelStep = (count, chartWidth) => {
-  const labelsCount = chartWidth
-    ? Math.max(MIN_LABELS_COUNT, Math.round(chartWidth / PX_PER_X_LABEL))
-    : REFERENCE_LABELS_COUNT;
-
-  return Math.max(1, Math.ceil(count / labelsCount));
-};
+export {
+  getXLabelStep,
+  getMaxTickIntervals,
+} from '../../common/trendLineChart/trendChartDesignStyles';
 
 export const getTicks = (bottom, top, maxIntervals = DEFAULT_TICK_INTERVALS) => {
   const height = top - bottom;
@@ -70,11 +45,10 @@ export const calculateTooltipParams = (data, color, customProps) => {
   const { name, number, startTime } = itemsData[index];
 
   return {
+    ...getTrendTooltipBaseParams(startTime),
     itemName: `${name} #${number}`,
-    startTimeText: moment(new Date(startTime).getTime()).format(TOOLTIP_DATE_FORMAT),
     itemCases: String(value),
     color: color(id),
     issueStatNameProps: { itemName: formatMessage(statusLocalization[FAILED]) },
-    wrapperClassName: cx('tooltip'),
   };
 };
