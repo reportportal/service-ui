@@ -57,6 +57,19 @@
   color: var(--rp-ui-base-almost-black);
 }
 
+.priority-option {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+
+  &__label {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+}
+
 .filter-footer {
   display: flex;
   justify-content: space-between;
