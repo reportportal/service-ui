@@ -54,14 +54,18 @@
   text-align: right;
 }
 
-.patterns-name {
+.pattern-link {
+  display: block;
+  max-width: 100%;
+  padding: 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  color: var(--rp-ui-color-primary-text);
+  text-align: left;
+  white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.pattern-link {
-  color: var(--rp-ui-color-primary-text);
   cursor: pointer;
 }
 

@@ -26,15 +26,13 @@ interface PatternNameColumnProps {
 }
 
 export const PatternNameColumn = ({ value, onPatternClick }: PatternNameColumnProps) => (
-  <div className={cx('patterns-name')}>
-    <span
-      className={cx('pattern-link')}
-      title={value.name}
-      onClick={() => onPatternClick(value.name)}
-    >
-      {value.name}
-    </span>
-  </div>
+  <button
+    type="button"
+    className={cx('pattern-link')}
+    onClick={() => onPatternClick(value.name)}
+  >
+    {value.name}
+  </button>
 );
 
 interface TestCasesColumnProps {
