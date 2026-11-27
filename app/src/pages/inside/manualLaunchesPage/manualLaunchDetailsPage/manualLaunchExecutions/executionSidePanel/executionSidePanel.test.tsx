@@ -26,7 +26,7 @@ import { ExecutionSidePanel } from './executionSidePanel';
 
 const mockDispatch = jest.fn();
 const mockPermissions = { canManageExecutions: true };
-const mockExecutionDetails = {
+const mockExecutionDetails: Record<string, unknown> = {
   id: 11,
   testCaseId: 22,
   testCaseName: 'Login',
@@ -48,8 +48,17 @@ jest.mock('redux-first-router-link', () => ({
 }));
 
 jest.mock('@reportportal/ui-kit', () => ({
-  SidePanel: ({ footerComponent }: { footerComponent: ReactNode }) => (
-    <div data-testid="footer">{footerComponent}</div>
+  SidePanel: ({
+    contentComponent,
+    footerComponent,
+  }: {
+    contentComponent: ReactNode;
+    footerComponent: ReactNode;
+  }) => (
+    <>
+      <div data-testid="content">{contentComponent}</div>
+      <div data-testid="footer">{footerComponent}</div>
+    </>
   ),
   Button: ({
     children,
@@ -186,5 +195,60 @@ describe('ExecutionSidePanel footer', () => {
         executionId: 11,
       },
     });
+  });
+});
+
+describe('ExecutionSidePanel execution comment block', () => {
+  let container: HTMLDivElement;
+  let root: Root;
+
+  const renderPanel = () => {
+    act(() => {
+      root.render(
+        <IntlProvider locale="en">
+          <ExecutionSidePanel executionId={11} onClose={jest.fn()} />
+        </IntlProvider>,
+      );
+    });
+  };
+
+  const hasExecutionInfo = () => !!container.querySelector('.execution-info');
+
+  beforeAll(() => {
+    (globalThis as { IS_REACT_ACT_ENVIRONMENT?: boolean }).IS_REACT_ACT_ENVIRONMENT = true;
+  });
+
+  beforeEach(() => {
+    container = document.createElement('div');
+    document.body.appendChild(container);
+    root = createRoot(container);
+  });
+
+  afterEach(() => {
+    act(() => root.unmount());
+    container.remove();
+    delete mockExecutionDetails.executionComment;
+    delete mockExecutionDetails.btsTickets;
+  });
+
+  test('should not show the block without a comment, execution attachments and BTS tickets', () => {
+    mockExecutionDetails.executionComment = { comment: '', attachments: [] };
+    renderPanel();
+
+    expect(hasExecutionInfo()).toBe(false);
+  });
+
+  test('should show the block for a comment', () => {
+    mockExecutionDetails.executionComment = { comment: 'Order button is missing', attachments: [] };
+    renderPanel();
+
+    expect(hasExecutionInfo()).toBe(true);
+  });
+
+  test('should show the block for execution attachments without a comment', () => {
+    mockExecutionDetails.executionComment = { comment: '', attachments: [{ id: 1 }] };
+    renderPanel();
+
+    expect(hasExecutionInfo()).toBe(true);
   });
 });

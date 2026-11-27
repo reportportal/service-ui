@@ -19,6 +19,7 @@ import { useIntl } from 'react-intl';
 
 import { createClassnames } from 'common/utils';
 import { commonMessages } from 'pages/inside/common/common-messages';
+import { EMPTY_FIELD_VALUE } from 'pages/inside/common/constants';
 
 import { AttachmentsWithSlider } from '../../../common/attachmentsWithSlider';
 import { type Attachment } from '../../../common/attachmentList';
@@ -48,8 +49,8 @@ export const Step = ({ index, instructions = '', expectedResult = '', attachment
       <div className={cx('step__content')}>
         {(instructions || expectedResult) && (
           <div className={cx('step__description')}>
-            <div className={cx('step__instruction')}>{instructions}</div>
-            <div className={cx('step__expected-result')}>{expectedResult}</div>
+            <div className={cx('step__instruction')}>{instructions || EMPTY_FIELD_VALUE}</div>
+            <div className={cx('step__expected-result')}>{expectedResult || EMPTY_FIELD_VALUE}</div>
           </div>
         )}
         {!isEmpty(attachments) && (

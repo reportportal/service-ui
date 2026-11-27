@@ -15,12 +15,23 @@
  */
 
 .expanded-text-section {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+
+  &.compact {
+    gap: 4px;
+  }
+
   .text-content {
+    align-self: stretch;
     color: var(--rp-ui-base-almost-black);
-    line-height: 1.4;
-    overflow-wrap: anywhere;
-    white-space: pre-wrap;
     font-family: $FONT-ROBOTO-REGULAR;
+    font-size: 13px;
+    line-height: 20px;
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
 
     &.truncated {
       display: -webkit-box;
@@ -33,16 +44,15 @@
   }
 
   .toggle-button {
-    background: none;
-    border: none;
-    color: var(--rp-ui-base-topaz);
-    cursor: pointer;
-    font-size: 13px;
-    margin-top: 8px;
     padding: 0;
-    text-decoration: none;
+    border: none;
+    background: none;
+    color: var(--rp-ui-base-topaz);
     font-family: $FONT-ROBOTO-REGULAR;
+    font-size: 13px;
     line-height: 20px;
+    text-decoration: none;
+    cursor: pointer;
 
     &:hover {
       color: var(--rp-ui-base-topaz-hover);

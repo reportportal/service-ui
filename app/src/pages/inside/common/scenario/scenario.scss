@@ -15,27 +15,56 @@
  */
 
 .scenario {
-  &__section {
-    margin-bottom: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+
+  &__card {
+    box-sizing: border-box;
+    padding: 16px;
+    border-radius: 4px;
+    background-color: var(--rp-ui-base-bg-000);
+    box-shadow: var(--rp-ui-base-shadow);
+  }
+
+  &__columns {
+    display: flex;
+    gap: 16px;
+  }
+
+  &__field {
+    display: flex;
+    flex: 1 1 0;
+    flex-direction: column;
+    min-width: 0;
+    gap: 4px;
+
+    &--divided {
+      padding-right: 16px;
+      border-right: 1px solid var(--rp-ui-base-e-100);
+    }
+  }
+
+  &__label {
+    margin: 0;
     color: var(--rp-ui-base-almost-black);
+    font-family: $FONT-ROBOTO-MEDIUM;
     font-size: 13px;
     line-height: 20px;
 
-    &:last-child {
-      margin-bottom: 0;
+    &--secondary {
+      color: var(--rp-ui-base-e-400);
+      font-family: $FONT-ROBOTO-REGULAR;
     }
+  }
 
-    &-header {
-      font-family: var(--rp-ui-base-font-family);
-      font-weight: 500;
-      margin-bottom: 4px;
-    }
-
-    &-value {
-      font-family: var(--rp-ui-base-font-family);
-      font-weight: 400;
-      white-space: pre-wrap;
-      overflow-wrap: anywhere;
-    }
+  &__value {
+    margin: 0;
+    color: var(--rp-ui-base-almost-black);
+    font-family: $FONT-ROBOTO-REGULAR;
+    font-size: 13px;
+    line-height: 20px;
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
   }
 }

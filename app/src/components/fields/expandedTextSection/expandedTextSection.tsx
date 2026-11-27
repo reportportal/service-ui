@@ -14,66 +14,72 @@
  * limitations under the License.
  */
 
-import { useState, useRef, useEffect } from 'react';
+import { useLayoutEffect, useRef, useState } from 'react';
 import { useIntl } from 'react-intl';
 
 import { createClassnames } from 'common/utils';
-import { messages } from 'pages/inside/productVersionPage/linkedTestCasesTab/tagList/messages';
+
+import { messages } from './messages';
 
 import styles from './expandedTextSection.scss';
 
 const cx = createClassnames(styles);
 
-const OFFSET_COEFFICIENT = 1.4;
-
 interface ExpandedTextSectionProps {
   text: string;
   defaultVisibleLines?: number;
-  fontSize?: number;
+  isCompact?: boolean;
 }
 
 export const ExpandedTextSection = ({
   text,
   defaultVisibleLines = 3,
-  fontSize = 13,
+  isCompact = false,
 }: ExpandedTextSectionProps) => {
   const { formatMessage } = useIntl();
-  const [isExpanded, setIsExpanded] = useState(false);
-  const [shouldTruncate, setShouldTruncate] = useState(false);
+  const [expandedText, setExpandedText] = useState<string | null>(null);
+  const [isOverflowing, setIsOverflowing] = useState(false);
   const textRef = useRef<HTMLDivElement>(null);
+  const isExpanded = expandedText === text;
 
-  useEffect(() => {
-    if (textRef.current) {
-      const lineHeight = fontSize * OFFSET_COEFFICIENT;
-      const maxHeight = lineHeight * defaultVisibleLines;
-      const actualHeight = textRef.current.scrollHeight;
+  useLayoutEffect(() => {
+    const element = textRef.current;
 
-      setShouldTruncate(actualHeight > maxHeight);
+    if (!element || isExpanded) {
+      return undefined;
     }
-  }, [text, defaultVisibleLines, fontSize]);
+
+    const measureOverflow = () => setIsOverflowing(element.scrollHeight > element.clientHeight);
+
+    measureOverflow();
+
+    if (typeof ResizeObserver === 'undefined') {
+      return undefined;
+    }
+
+    const resizeObserver = new ResizeObserver(measureOverflow);
+
+    resizeObserver.observe(element);
+
+    return () => resizeObserver.disconnect();
+  }, [text, defaultVisibleLines, isExpanded]);
 
   const handleToggle = () => {
-    setIsExpanded(!isExpanded);
+    setExpandedText(isExpanded ? null : text);
   };
 
   return (
-    <div className={cx('expanded-text-section')}>
+    <div className={cx('expanded-text-section', { compact: isCompact })}>
       <div
         ref={textRef}
-        className={cx('text-content', { truncated: shouldTruncate && !isExpanded })}
-        style={
-          {
-            fontSize: `${fontSize}px`,
-            '--visible-lines': defaultVisibleLines,
-            '--line-height': `${fontSize * OFFSET_COEFFICIENT}px`,
-          } as React.CSSProperties
-        }
+        className={cx('text-content', { truncated: !isExpanded })}
+        style={{ '--visible-lines': defaultVisibleLines } as React.CSSProperties}
       >
         {text}
       </div>
-      {shouldTruncate && (
+      {(isOverflowing || isExpanded) && (
         <button type="button" className={cx('toggle-button')} onClick={handleToggle}>
-          {isExpanded ? formatMessage(messages.hideAll) : formatMessage(messages.showAll)}
+          {formatMessage(isExpanded ? messages.showLess : messages.showMore)}
         </button>
       )}
     </div>

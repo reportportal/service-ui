@@ -310,41 +310,37 @@ export const TestCaseSidePanel = memo(
             instanceKey={TMS_INSTANCE_KEY.TEST_CASE}
             onNavigate={onClose}
           />
-          <div className={cx('header-meta')}>
-            <div className={cx('meta-row')}>
-              <div className={cx('meta-item-row', 'id-row')}>
-                <span className={cx('meta-label')}>ID:</span>
-                <span className={cx('meta-value')}>{testCaseBusinessId}</span>
-                <button
-                  type="button"
-                  className={cx('copy-button')}
-                  onClick={handleCopyId}
-                  aria-label={formatMessage(commonMessages.copyId)}
-                  data-automation-id="copy-test-case-id"
-                >
-                  <CopyIcon />
-                </button>
-              </div>
-              <div className={cx('meta-item-row')}>
-                <span className={cx('meta-label')}>Created:</span>
-                <span className={cx('meta-value')}>{formatTimestamp(testCase.createdAt)}</span>
-              </div>
+          <div className={cx('meta-row')}>
+            <div className={cx('meta-item-row', 'id-row')}>
+              <span className={cx('meta-label')}>ID:</span>
+              <span className={cx('meta-value')}>{testCaseBusinessId}</span>
+              <button
+                type="button"
+                className={cx('copy-button')}
+                onClick={handleCopyId}
+                aria-label={formatMessage(commonMessages.copyId)}
+                data-automation-id="copy-test-case-id"
+              >
+                <CopyIcon />
+              </button>
             </div>
-            <div className={cx('meta-row')}>
-              {!!testCase?.lastExecution?.startedAt && (
-                <div className={cx('meta-item-row')}>
-                  <RerunIcon />
-                  <span className={cx('meta-value')}>
-                    {formatTimestamp(testCase.lastExecution.startedAt)}
-                  </span>
-                </div>
-              )}
-              <ExecutionEstimationTime
-                executionEstimationTime={testCase?.manualScenario?.executionEstimationTime}
-                className={cx('meta-item-row')}
-                valueClassName={cx('meta-value')}
-              />
+            <div className={cx('meta-item-row')}>
+              <span className={cx('meta-label')}>Created:</span>
+              <span className={cx('meta-value')}>{formatTimestamp(testCase.createdAt)}</span>
             </div>
+            {!!testCase?.lastExecution?.startedAt && (
+              <div className={cx('meta-item-row', 'meta-icon-item')}>
+                <RerunIcon />
+                <span className={cx('meta-value')}>
+                  {formatTimestamp(testCase.lastExecution.startedAt)}
+                </span>
+              </div>
+            )}
+            <ExecutionEstimationTime
+              executionEstimationTime={testCase?.manualScenario?.executionEstimationTime}
+              className={cx('meta-item-row', 'execution-time')}
+              valueClassName={cx('meta-value')}
+            />
           </div>
         </div>
         <div className={cx('content')}>

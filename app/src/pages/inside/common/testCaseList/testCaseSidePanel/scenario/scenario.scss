@@ -17,7 +17,7 @@
 .scenario-wrapper {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 8px;
 }
 
 .scenario {
@@ -30,32 +30,6 @@
     height: 1px;
     background-color: var(--rp-ui-base-e-100);
     margin: 16px -16px 0;
-  }
-
-  .precondition-text {
-    color: var(--rp-ui-base-almost-black);
-    font-size: 13px;
-    font-weight: 400;
-    line-height: 20px;
-    white-space: pre-wrap;
-    overflow-wrap: anywhere;
-  }
-
-  &.full-view {
-    gap: 8px;
-    border: none;
-    background: none;
-    padding: 0 0 8px;
-
-    h4 {
-      color: var(--rp-ui-base-almost-black);
-      font-weight: 500;
-      line-height: 20px;
-    }
-  }
-
-  .sub-header {
-    font-family: var(--rp-ui-base-font-family);
   }
 }
 

@@ -17,42 +17,59 @@
 import { MessageDescriptor, useIntl } from 'react-intl';
 
 import { createClassnames } from 'common/utils';
-import { commonMessages } from 'pages/inside/common/common-messages';
+import { ExpandedTextSection } from 'components/fields/expandedTextSection';
+import { EMPTY_FIELD_VALUE } from 'pages/inside/common/constants';
+import { messages } from 'pages/inside/common/testCaseList/testCaseSidePanel/scenario/messages';
 
 import styles from './scenario.scss';
 
 const cx = createClassnames(styles);
 
+const COLLAPSED_TEXT_LINES = 5;
+
 interface ScenarioProps {
   precondition?: string;
   instructions?: string;
   expectedResult?: string;
+  isTextCollapsible?: boolean;
+  hasSecondaryLabels?: boolean;
 }
 
-export const Scenario = ({ precondition, instructions, expectedResult }: ScenarioProps) => {
+export const Scenario = ({
+  precondition,
+  instructions,
+  expectedResult,
+  isTextCollapsible = false,
+  hasSecondaryLabels = false,
+}: ScenarioProps) => {
   const { formatMessage } = useIntl();
-  const getSubScenario = ({ header, value }: { header: MessageDescriptor; value?: string }) =>
-    value ? (
-      <div className={cx('scenario__section')}>
-        <h4 className={cx('scenario__section-header')}>{formatMessage(header)}</h4>
-        <p className={cx('scenario__section-value')}>{value}</p>
-      </div>
-    ) : null;
+
+  const renderField = (header: MessageDescriptor, value?: string) => (
+    <>
+      <h4 className={cx('scenario__label', { 'scenario__label--secondary': hasSecondaryLabels })}>
+        {formatMessage(header)}
+      </h4>
+      {value && isTextCollapsible ? (
+        <ExpandedTextSection text={value} defaultVisibleLines={COLLAPSED_TEXT_LINES} isCompact />
+      ) : (
+        <p className={cx('scenario__value')}>{value || EMPTY_FIELD_VALUE}</p>
+      )}
+    </>
+  );
 
   return (
     <section className={cx('scenario')}>
-      {getSubScenario({
-        header: commonMessages.precondition,
-        value: precondition,
-      })}
-      {getSubScenario({
-        header: commonMessages.instructions,
-        value: instructions,
-      })}
-      {getSubScenario({
-        header: commonMessages.expectedResult,
-        value: expectedResult,
-      })}
+      <div className={cx('scenario__card', 'scenario__field')}>
+        {renderField(messages.precondition, precondition)}
+      </div>
+      <div className={cx('scenario__card', 'scenario__columns')}>
+        <div className={cx('scenario__field', 'scenario__field--divided')}>
+          {renderField(messages.instructions, instructions)}
+        </div>
+        <div className={cx('scenario__field')}>
+          {renderField(messages.expectedResult, expectedResult)}
+        </div>
+      </div>
     </section>
   );
 };

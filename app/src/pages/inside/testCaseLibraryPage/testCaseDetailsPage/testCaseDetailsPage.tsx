@@ -150,6 +150,7 @@ const MAIN_CONTENT_COLLAPSIBLE_SECTIONS_CONFIG = ({
             expectedResult={manualScenario.expectedResult}
             instructions={manualScenario.instructions}
             precondition={manualScenario.preconditions?.value}
+            hasSecondaryLabels
           />
         ),
       },
