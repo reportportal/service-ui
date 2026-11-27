@@ -28,6 +28,7 @@ import type { ExecutionStatusChangePlace } from 'components/main/analytics/event
 import { STATUS_CONFIG } from '../manualLaunchExecutionPage/constants';
 import type { ExecutionStatusType } from '../manualLaunchExecutionPage/types';
 import { useExecutionStatusModal } from '../manualLaunchExecutionPage/executionStatusConfirmModal';
+import { ExecutionStatusBadge } from '../executionStatusBadge';
 import { messages } from './messages';
 import { messages as commonMessages } from '../manualLaunchExecutionPage/messages';
 
@@ -78,20 +79,16 @@ export const ExecutionStatusPopover: FC<ExecutionStatusPopoverProps> = ({
 
   const renderPopoverContent = () => (
     <div className={cx('status-options')}>
-      {availableStatuses.map((status) => {
-        const config = STATUS_CONFIG[status];
-
-        return (
-          <button
-            key={status}
-            type="button"
-            className={cx('status-option')}
-            onClick={() => handleStatusChange(status)}
-          >
-            {formatMessage(messages.markAs, { status: formatMessage(config.label) })}
-          </button>
-        );
-      })}
+      {availableStatuses.map((status) => (
+        <button
+          key={status}
+          type="button"
+          className={cx('status-option')}
+          onClick={() => handleStatusChange(status)}
+        >
+          {formatMessage(messages.markAs, { status: <ExecutionStatusBadge status={status} /> })}
+        </button>
+      ))}
       {status !== ExecutionStatus.TO_RUN && (
         <>
           <Divider />
