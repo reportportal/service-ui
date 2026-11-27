@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { LaunchFormData } from './types';
+import { LaunchFormData, LaunchMode } from './types';
 
 export const INITIAL_LAUNCH_FORM_VALUES: LaunchFormData = {
   name: '',
@@ -30,6 +30,9 @@ export const LAUNCH_FORM_FIELD_NAMES = {
   UNCOVERED_TESTS_ONLY: 'uncoveredTestsOnly',
   TEST_PLAN: 'testPlan',
 } as const;
+
+export const DEFAULT_LAUNCH_MODES_ORDER = [LaunchMode.EXISTING, LaunchMode.NEW];
+export const NEW_LAUNCH_FIRST_MODES_ORDER = [LaunchMode.NEW, LaunchMode.EXISTING];
 
 export const PAGE_SIZE = 50;
 export const LAUNCH_NAME_MAX_LENGTH = 255;

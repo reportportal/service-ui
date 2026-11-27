@@ -16,7 +16,12 @@
 
 export { LaunchFormFields } from './launchFormFields';
 export { BaseLaunchModal } from './baseLaunchModal';
-export { INITIAL_LAUNCH_FORM_VALUES, LAUNCH_FORM_FIELD_NAMES } from './constants';
+export {
+  INITIAL_LAUNCH_FORM_VALUES,
+  LAUNCH_FORM_FIELD_NAMES,
+  DEFAULT_LAUNCH_MODES_ORDER,
+  NEW_LAUNCH_FIRST_MODES_ORDER,
+} from './constants';
 export { useCreateManualLaunch } from './useCreateManualLaunch';
 export { generateUUID } from './utils';
 export { messages } from './messages';

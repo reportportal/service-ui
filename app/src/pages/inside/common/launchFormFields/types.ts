@@ -72,6 +72,7 @@ export interface CreateManualLaunchDto {
 
 export interface LaunchFormFieldsProps {
   activeMode?: LaunchMode;
+  modesOrder?: LaunchMode[];
   onModeChange?: (mode: LaunchMode) => void;
   onLaunchSelect?: OnLaunchChangeHandler;
   description?: ReactNode;
@@ -123,6 +124,8 @@ export interface BaseLaunchModalProps {
   className?: string;
   isUncoveredTestsCheckboxAvailable?: boolean;
   hideTestPlanField?: boolean;
+  defaultMode?: LaunchMode;
+  modesOrder?: LaunchMode[];
   onClearSelection?: () => void;
   onSubmitSuccess?: (mode: LaunchMode) => void;
 }

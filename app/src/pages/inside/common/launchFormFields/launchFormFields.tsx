@@ -20,12 +20,12 @@ import { Field, WrappedFieldProps } from 'redux-form';
 
 import { createClassnames } from 'common/utils';
 import { MODAL_POPUP_Z_INDEX } from 'common/constants/zIndex';
-import { ButtonSwitcher } from 'pages/inside/common/buttonSwitcher';
+import { ButtonSwitcher, ButtonSwitcherOption } from 'pages/inside/common/buttonSwitcher';
 import { ConditionalTooltip } from 'components/main/conditionalTooltip';
 import { Checkbox } from '@reportportal/ui-kit';
 
 import { LaunchFormFieldsProps, LaunchMode } from './types';
-import { LAUNCH_FORM_FIELD_NAMES } from './constants';
+import { DEFAULT_LAUNCH_MODES_ORDER, LAUNCH_FORM_FIELD_NAMES } from './constants';
 import { messages } from './messages';
 import { ExistingLaunchFields } from './existingLaunchFields';
 import { NewLaunchFields } from './newLaunchFields';
@@ -34,8 +34,12 @@ import styles from './launchFormFields.scss';
 
 const cx = createClassnames(styles);
 
+const toSwitcherOption = (mode: LaunchMode) =>
+  mode === LaunchMode.NEW ? ButtonSwitcherOption.NEW : ButtonSwitcherOption.EXISTING;
+
 export const LaunchFormFields = ({
   activeMode = LaunchMode.NEW,
+  modesOrder = DEFAULT_LAUNCH_MODES_ORDER,
   onModeChange,
   onLaunchSelect,
   description,
@@ -86,6 +90,8 @@ export const LaunchFormFields = ({
         createNewButtonTitle={formatMessage(messages.createNewLaunch)}
         existingButtonTitle={formatMessage(messages.addToExistingLaunch)}
         handleActiveButton={handleModeChange}
+        defaultActiveButton={toSwitcherOption(activeMode)}
+        buttonsOrder={modesOrder.map(toSwitcherOption)}
       />
 
       {isUncoveredTestsCheckboxAvailable && (

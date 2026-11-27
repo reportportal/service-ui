@@ -27,11 +27,15 @@ export enum ButtonSwitcherOption {
   NEW = 'new',
 }
 
+const DEFAULT_BUTTONS_ORDER = [ButtonSwitcherOption.EXISTING, ButtonSwitcherOption.NEW];
+
 interface ButtonSwitcherProps {
   description: ReactNode;
   existingButtonTitle: string;
   createNewButtonTitle: string;
   handleActiveButton: (activeButton: string) => void;
+  defaultActiveButton?: ButtonSwitcherOption;
+  buttonsOrder?: ButtonSwitcherOption[];
 }
 
 export const ButtonSwitcher = ({
@@ -39,39 +43,38 @@ export const ButtonSwitcher = ({
   existingButtonTitle,
   createNewButtonTitle,
   handleActiveButton,
+  defaultActiveButton = ButtonSwitcherOption.EXISTING,
+  buttonsOrder = DEFAULT_BUTTONS_ORDER,
 }: ButtonSwitcherProps) => {
-  const [activeButton, setActiveButton] = useState(ButtonSwitcherOption.EXISTING);
+  const [activeButton, setActiveButton] = useState(defaultActiveButton);
 
   useEffect(() => {
     handleActiveButton(activeButton);
   }, [handleActiveButton, activeButton]);
 
+  const buttonTitles: Record<ButtonSwitcherOption, string> = {
+    [ButtonSwitcherOption.EXISTING]: existingButtonTitle,
+    [ButtonSwitcherOption.NEW]: createNewButtonTitle,
+  };
+
   return (
     <div className={cx('buttons-switcher')}>
       {description}
       <div className={cx('buttons-switcher__wrapper')}>
-        <button
-          type="button"
-          className={cx('buttons-switcher__button', {
-            'buttons-switcher__button--active': activeButton === ButtonSwitcherOption.EXISTING,
-          })}
-          onClick={() => {
-            setActiveButton(ButtonSwitcherOption.EXISTING);
-          }}
-        >
-          {existingButtonTitle}
-        </button>
-        <button
-          type="button"
-          className={cx('buttons-switcher__button', {
-            'buttons-switcher__button--active': activeButton === ButtonSwitcherOption.NEW,
-          })}
-          onClick={() => {
-            setActiveButton(ButtonSwitcherOption.NEW);
-          }}
-        >
-          {createNewButtonTitle}
-        </button>
+        {buttonsOrder.map((option) => (
+          <button
+            key={option}
+            type="button"
+            className={cx('buttons-switcher__button', {
+              'buttons-switcher__button--active': activeButton === option,
+            })}
+            onClick={() => {
+              setActiveButton(option);
+            }}
+          >
+            {buttonTitles[option]}
+          </button>
+        ))}
       </div>
     </div>
   );
