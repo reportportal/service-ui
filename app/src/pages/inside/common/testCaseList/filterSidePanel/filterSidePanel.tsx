@@ -38,6 +38,8 @@ import styles from './filterSidePanel.scss';
 
 const cx = createClassnames(styles);
 
+type DropdownSelection = string | string[] | null;
+
 const EMPTY_STATUSES: string[] = [];
 
 const STATUS_OPTION_MESSAGES = {
@@ -48,11 +50,11 @@ const STATUS_OPTION_MESSAGES = {
   [ExecutionStatus.SKIPPED]: commonMessages.skipped,
 };
 
-const STATUSES_WITH_DOT: string[] = [
+const STATUSES_WITH_DOT = new Set<string>([
   ExecutionStatus.PASSED,
   ExecutionStatus.FAILED,
   ExecutionStatus.SKIPPED,
-];
+]);
 
 const renderStatusOption = ({ option }: DropdownOptionProps) => {
   const status = String(option.value);
@@ -61,7 +63,7 @@ const renderStatusOption = ({ option }: DropdownOptionProps) => {
     <span className={cx('status-option')}>
       <span
         className={cx('status-option-dot', {
-          [`status-option-dot--${status.toLowerCase()}`]: STATUSES_WITH_DOT.includes(status),
+          [`status-option-dot--${status.toLowerCase()}`]: STATUSES_WITH_DOT.has(status),
         })}
         aria-hidden
       />
@@ -171,15 +173,15 @@ const FilterSidePanelComponent = ({
     onClose();
   };
 
-  const handlePriorityChange = (value: string | string[] | null) => {
+  const handlePriorityChange = (value: DropdownSelection) => {
     setLocalSelectedPriorities(ensureArray(value));
   };
 
-  const handleTagsChange = (value: string | string[] | null) => {
+  const handleTagsChange = (value: DropdownSelection) => {
     setLocalSelectedTags(ensureArray(value));
   };
 
-  const handleStatusesChange = (value: string | string[] | null) => {
+  const handleStatusesChange = (value: DropdownSelection) => {
     setLocalSelectedStatuses(ensureArray(value));
   };
 
