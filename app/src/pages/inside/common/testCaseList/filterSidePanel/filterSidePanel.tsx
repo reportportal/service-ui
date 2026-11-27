@@ -27,10 +27,13 @@ import { createPortal } from 'react-dom';
 import { useIntl } from 'react-intl';
 import isEqual from 'fast-deep-equal';
 import { Button, SidePanel, Dropdown, Checkbox } from '@reportportal/ui-kit';
+import type { DropdownValue, RenderDropdownOption } from '@reportportal/ui-kit/dropdown';
 import { isEmpty } from 'es-toolkit/compat';
 
 import { createClassnames } from 'common/utils';
 import { commonMessages } from 'pages/inside/common/common-messages';
+import { PriorityIcon } from 'pages/inside/common/priorityIcon';
+import type { TestCasePriority } from 'types/testCase';
 import { messages as priorityMessages } from 'pages/inside/testCaseLibraryPage/createTestCaseModal/basicInformation/messages';
 
 import { STATUS_TYPES } from '../constants';
@@ -42,6 +45,18 @@ import type { FilterApplyPayload } from './types';
 import styles from './filterSidePanel.scss';
 
 const cx = createClassnames(styles);
+
+const PRIORITY_VALUES: readonly DropdownValue[] = Object.values(STATUS_TYPES);
+
+const isTestCasePriority = (value: DropdownValue): value is TestCasePriority =>
+  PRIORITY_VALUES.includes(value);
+
+export const renderPriorityOption: RenderDropdownOption = ({ option }) => (
+  <div className={cx('priority-option')}>
+    {isTestCasePriority(option.value) && <PriorityIcon priority={option.value} />}
+    <span className={cx('priority-option__label')}>{option.label}</span>
+  </div>
+);
 
 interface FilterSidePanelProps {
   isVisible: boolean;
@@ -80,7 +95,6 @@ const FilterSidePanelComponent = ({
       setLocalSelectedPriorities(selectedPriorities);
       setLocalSelectedTags(selectedTags);
       setLocalToRunOnly(Boolean(selectedToRunOnly));
-      // eslint-disable-next-line @typescript-eslint/no-floating-promises -- fire-and-forget when panel opens
       fetchTagOptions();
     }
 
@@ -190,6 +204,7 @@ const FilterSidePanelComponent = ({
           value={localSelectedPriorities}
           onChange={handlePriorityChange}
           placeholder={formatMessage(messages.selectPriority)}
+          renderOption={renderPriorityOption}
           multiSelect
           clearable
         />
