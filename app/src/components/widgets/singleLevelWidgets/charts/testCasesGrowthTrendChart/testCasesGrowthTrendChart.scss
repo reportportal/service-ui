@@ -50,16 +50,4 @@ div.tooltip {
   [class*='launch-start-time'] {
     color: var(--rp-ui-base-e-300);
   }
-
-  [class*='item-cases-growth'] span[class*='increase'] {
-    color: $COLOR--test-execution-status-passed;
-  }
-
-  [class*='item-cases-growth'] span[class*='decrease'] {
-    color: $COLOR--red-failed-2;
-  }
-
-  [class*='item-cases-total'] span {
-    font-weight: var(--rp-ui-base-fw-bold);
-  }
 }

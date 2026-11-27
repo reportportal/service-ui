@@ -265,7 +265,7 @@ export const getOption = ({ content, isPreview, formatMessage, isTimeline = fals
       axisLabel: {
         ...TICK_LABEL_STYLE,
         margin: 8,
-        formatter: (value) => String(value),
+        formatter: String,
       },
       axisLine: { show: false },
       axisTick: { show: false },
