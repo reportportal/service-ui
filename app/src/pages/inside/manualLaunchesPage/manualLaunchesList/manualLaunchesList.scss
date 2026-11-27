@@ -14,8 +14,6 @@
  * limitations under the License.
  */
 
-@use '../../../../common/css/mixins';
-
 .manual-launches-list {
   --manual-launches-list-grid: 96px minmax(100px, 1fr) 155px 80px 110px 100px 80px 48px;
 
@@ -83,11 +81,6 @@
         outline: 1px solid var(--rp-ui-base-topaz-focused);
       }
 
-      &:has(.manual-launches-list-table-cell-hoverable:hover)
-        .manual-launches-list-table-cell-hoverable {
-        color: var(--rp-ui-base-topaz-hover);
-      }
-
       :global([class*='table-row-content']) {
         box-sizing: border-box;
         height: 100%;
@@ -112,6 +105,8 @@
             font-weight: var(--rp-ui-base-fw-medium);
             text-align: left;
             padding-left: 0;
+            // the name link covers the right padding of the cell
+            padding-right: 0;
           }
 
           // statusBar cell
@@ -139,20 +134,6 @@
       --table-header-bg-color: transparent;
     }
 
-    &__details-button {
-      @include mixins.button-reset();
-
-      display: block;
-      max-width: 100%;
-      min-width: 0;
-      overflow: hidden;
-      color: var(--rp-ui-base-almost-black);
-      margin: 8px 0;
-      text-align: left;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-    }
-
     &-cell-launch-id {
       border-radius: 0;
       margin: 0;
@@ -171,7 +152,26 @@
     }
 
     &-cell-launch-name {
+      display: block;
+      min-width: 0;
+      margin: 8px 0;
+      overflow: hidden;
       font-weight: var(--rp-ui-base-fw-medium);
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    &__name-link {
+      box-sizing: border-box;
+      padding-right: 16px;
+      text-decoration: none;
+
+      &:hover,
+      &:focus-visible {
+        .manual-launches-list-table-cell-launch-name {
+          color: var(--rp-ui-base-topaz-hover);
+        }
+      }
     }
 
     &-cell-star {

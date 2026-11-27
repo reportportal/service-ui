@@ -14,24 +14,18 @@
  * limitations under the License.
  */
 
-import {
-  Dispatch,
-  SetStateAction,
-  useMemo,
-  KeyboardEvent,
-  useCallback,
-  MouseEvent,
-} from 'react';
+import { Dispatch, SetStateAction, useMemo, KeyboardEvent, useCallback, MouseEvent } from 'react';
 import { useIntl } from 'react-intl';
 import { useDispatch } from 'react-redux';
 import { useTracking } from 'react-tracking';
 import Parser from 'html-react-parser';
+import Link from 'redux-first-router-link';
 import { Tooltip } from '@reportportal/ui-kit';
 import { RowData } from '@reportportal/ui-kit/components/table/types';
 
 import { AbsRelTime } from 'components/main/absRelTime';
 import { SegmentStatus, SegmentedStatusBar } from 'components/statusBar';
-import { createClassnames, debounce } from 'common/utils';
+import { createClassnames } from 'common/utils';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { RETENTION_POLICY } from 'common/constants/retentionPolicy';
 import StarIcon from 'common/img/star-inline.svg';
@@ -62,14 +56,20 @@ export const useManualLaunchesTableData = (
   const { trackEvent } = useTracking();
   const { organizationSlug, projectSlug } = useProjectDetails();
 
-  const navigateToDetailsImpl = useCallback(
-    (id: number) => {
-      dispatch({
-        type: MANUAL_LAUNCH_DETAILS_PAGE,
-        payload: { organizationSlug, projectSlug, launchId: id.toString() },
-      });
+  const getLaunchDetailsLink = useCallback(
+    (id: number) => ({
+      type: MANUAL_LAUNCH_DETAILS_PAGE,
+      payload: { organizationSlug, projectSlug, launchId: id.toString() },
+    }),
+    [organizationSlug, projectSlug],
+  );
+
+  const handleLaunchNameClick = useCallback(
+    (event: MouseEvent) => {
+      event.stopPropagation();
+      trackEvent(MANUAL_LAUNCHES_PAGE_EVENTS.CLICK_OPEN_LAUNCH_DETAILS);
     },
-    [dispatch, organizationSlug, projectSlug],
+    [trackEvent],
   );
 
   const navigateToDetailsToRunOnly = useCallback(
@@ -81,19 +81,6 @@ export const useManualLaunchesTableData = (
       });
     },
     [dispatch, organizationSlug, projectSlug],
-  );
-
-  const debouncedNavigateToDetails = useMemo(
-    () => debounce((id: number) => navigateToDetailsImpl(id), 500),
-    [navigateToDetailsImpl],
-  );
-
-  const navigateToDetails = useCallback(
-    (id: number) => {
-      trackEvent(MANUAL_LAUNCHES_PAGE_EVENTS.CLICK_OPEN_LAUNCH_DETAILS);
-      debouncedNavigateToDetails(id);
-    },
-    [trackEvent, debouncedNavigateToDetails],
   );
 
   const openLaunchSidebar = useCallback(
@@ -143,11 +130,6 @@ export const useManualLaunchesTableData = (
         }) => {
           const isSelected = id === selectedLaunchId;
 
-          const navigateToDetailsHandlers = getHandlers({
-            id,
-            handler: navigateToDetails,
-          });
-
           const openSidePanelHandlers = getHandlers({
             id,
             handler: openLaunchSidebar,
@@ -174,19 +156,16 @@ export const useManualLaunchesTableData = (
             name: {
               content: name,
               component: (
-                <div {...baseCellProps} {...openSidePanelHandlers}>
-                  <button
-                    {...navigateToDetailsHandlers}
-                    className={cx(
-                      'manual-launches-list-table__details-button',
-                      'manual-launches-list-table-cell-launch-name',
-                      'manual-launches-list-table-cell-hoverable',
-                    )}
-                    type="button"
-                    title={name}
-                  >
+                <Link
+                  to={getLaunchDetailsLink(id)}
+                  className={cx('cell-content', 'manual-launches-list-table__name-link', {
+                    selected: isSelected,
+                  })}
+                  onClick={handleLaunchNameClick}
+                >
+                  <span className={cx('manual-launches-list-table-cell-launch-name')} title={name}>
                     {name}
-                  </button>
+                  </span>
                   {retentionPolicy === RETENTION_POLICY.IMPORTANT && (
                     <Tooltip
                       content={formatMessage(retentionPolicyMessages.importantLaunchTooltip)}
@@ -201,7 +180,7 @@ export const useManualLaunchesTableData = (
                       </i>
                     </Tooltip>
                   )}
-                </div>
+                </Link>
               ),
             },
             startTime: {
@@ -280,7 +259,8 @@ export const useManualLaunchesTableData = (
       data,
       selectedLaunchId,
       getHandlers,
-      navigateToDetails,
+      getLaunchDetailsLink,
+      handleLaunchNameClick,
       navigateToDetailsToRunOnly,
       openLaunchSidebar,
       formatMessage,
