@@ -71,7 +71,7 @@ const resolveTestCaseIds = ({
   return addedTestCases.map((testCase) => testCase.id);
 };
 
-const buildCreateManualLaunchDto = ({
+export const buildCreateManualLaunchDto = ({
   formValues,
   testCaseIds,
   testPlanId,
@@ -90,7 +90,7 @@ const buildCreateManualLaunchDto = ({
   ...(isNumber(testPlanId) && { testPlan: { id: testPlanId } }),
 });
 
-const createNewManualLaunch = async (
+export const createNewManualLaunch = async (
   projectKey: string,
   launchData: CreateManualLaunchDto,
 ): Promise<void> => {

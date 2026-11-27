@@ -111,6 +111,8 @@ export interface NewLaunchFieldsProps {
   descriptionRef?: React.RefObject<HTMLTextAreaElement>;
   testPlanMenuClassName?: string;
   testPlanNotice?: ReactNode;
+  /** Helper text right under the Test Plan dropdown. */
+  testPlanHint?: ReactNode;
   autocompleteProps?: {
     useFixedPositioning?: boolean;
     keyMenuClassName?: string;
