@@ -17,6 +17,10 @@
 import { defineMessages } from 'react-intl';
 
 export const messages = defineMessages({
+  status: {
+    id: 'ExecutionSidePanel.status',
+    defaultMessage: 'Status',
+  },
   executionId: {
     id: 'ExecutionSidePanel.executionId',
     defaultMessage: 'Test case ID',
@@ -32,6 +36,10 @@ export const messages = defineMessages({
   changeStatus: {
     id: 'ExecutionSidePanel.changeStatus',
     defaultMessage: 'Change Status',
+  },
+  openDetails: {
+    id: 'ExecutionSidePanel.openDetails',
+    defaultMessage: 'Open Details',
   },
   continueTesting: {
     id: 'ExecutionSidePanel.continueTesting',

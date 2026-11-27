@@ -53,7 +53,6 @@ import {
   MANUAL_LAUNCHES_PAGE_EVENTS,
   MANUAL_LAUNCHES_PLACE,
   getBtsModalEntryPlaceFromStatusChangePlace,
-  type ExecutionStatusType as AnalyticsExecutionStatusType,
 } from 'components/main/analytics/events/ga4Events/manualLaunchesPageEvents';
 import { useUserPermissions } from 'hooks/useUserPermissions';
 
@@ -155,12 +154,7 @@ const ExecutionStatusConfirmModalComponent: FC<
     if (isClearStatus) {
       trackEvent(MANUAL_LAUNCHES_PAGE_EVENTS.CLICK_CLEAR_TEST_STATUS);
     } else if (data?.place) {
-      trackEvent(
-        MANUAL_LAUNCHES_PAGE_EVENTS.chooseExecutionStatus(
-          data.place,
-          status as AnalyticsExecutionStatusType,
-        ),
-      );
+      trackEvent(MANUAL_LAUNCHES_PAGE_EVENTS.chooseExecutionStatus(data.place, status));
     }
 
     const shouldOpenBtsModal =
@@ -182,6 +176,8 @@ const ExecutionStatusConfirmModalComponent: FC<
           ? { removedServerAttachmentIds: Array.from(removedServerAttachmentIds) }
           : {}),
         onSuccess: () => {
+          data?.onStatusSet?.();
+
           if (shouldOpenBtsModal) {
             const entryPlace = data?.place
               ? getBtsModalEntryPlaceFromStatusChangePlace(data.place)

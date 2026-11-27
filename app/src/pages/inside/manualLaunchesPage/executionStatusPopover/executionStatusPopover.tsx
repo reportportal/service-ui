@@ -28,6 +28,7 @@ import type { ExecutionStatusChangePlace } from 'components/main/analytics/event
 import { STATUS_CONFIG } from '../manualLaunchExecutionPage/constants';
 import type { ExecutionStatusType } from '../manualLaunchExecutionPage/types';
 import { useExecutionStatusModal } from '../manualLaunchExecutionPage/executionStatusConfirmModal';
+import { ExecutionStatusBadge } from '../executionStatusBadge';
 import { messages } from './messages';
 import { messages as commonMessages } from '../manualLaunchExecutionPage/messages';
 
@@ -44,6 +45,7 @@ interface ExecutionStatusPopoverProps {
   children: ReactNode;
   shouldUsePortal?: ComponentProps<typeof Popover>['shouldUsePortal'];
   strategy?: ComponentProps<typeof Popover>['strategy'];
+  onStatusSet?: () => void;
 }
 
 export const ExecutionStatusPopover: FC<ExecutionStatusPopoverProps> = ({
@@ -55,6 +57,7 @@ export const ExecutionStatusPopover: FC<ExecutionStatusPopoverProps> = ({
   children,
   shouldUsePortal,
   strategy,
+  onStatusSet,
 }) => {
   const { formatMessage } = useIntl();
   const { openModal } = useExecutionStatusModal();
@@ -72,26 +75,23 @@ export const ExecutionStatusPopover: FC<ExecutionStatusPopoverProps> = ({
       status: newStatus as ExecutionStatusType,
       currentStatus: status,
       place,
+      onStatusSet,
     });
     setIsOpened(false);
   };
 
   const renderPopoverContent = () => (
     <div className={cx('status-options')}>
-      {availableStatuses.map((status) => {
-        const config = STATUS_CONFIG[status];
-
-        return (
-          <button
-            key={status}
-            type="button"
-            className={cx('status-option')}
-            onClick={() => handleStatusChange(status)}
-          >
-            {formatMessage(messages.markAs, { status: formatMessage(config.label) })}
-          </button>
-        );
-      })}
+      {availableStatuses.map((status) => (
+        <button
+          key={status}
+          type="button"
+          className={cx('status-option')}
+          onClick={() => handleStatusChange(status)}
+        >
+          {formatMessage(messages.markAs, { status: <ExecutionStatusBadge status={status} /> })}
+        </button>
+      ))}
       {status !== ExecutionStatus.TO_RUN && (
         <>
           <Divider />
