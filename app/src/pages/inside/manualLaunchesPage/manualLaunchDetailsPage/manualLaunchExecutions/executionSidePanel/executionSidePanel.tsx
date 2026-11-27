@@ -66,6 +66,8 @@ import styles from './executionSidePanel.scss';
 
 const cx = createClassnames(styles);
 
+const COLLAPSED_TEXT_LINES = 5;
+
 interface ExecutionSidePanelProps {
   executionId: number | null;
   onClose: () => void;
@@ -214,7 +216,7 @@ export const ExecutionSidePanel = ({ executionId, onClose }: ExecutionSidePanelP
             </div>
           )}
         {executionDetails.duration != null && (
-          <div className={cx('meta-row-item')}>
+          <div className={cx('meta-row-item', 'duration')}>
             <DurationIcon />
             <span className={cx('meta-value')}>{formatDuration(executionDetails.duration)}</span>
           </div>
@@ -223,9 +225,14 @@ export const ExecutionSidePanel = ({ executionId, onClose }: ExecutionSidePanelP
     </div>
   );
 
+  const hasExecutionInfo =
+    !!executionDetails?.executionComment?.comment ||
+    !isEmpty(executionDetails?.executionComment?.attachments) ||
+    !isEmpty(executionDetails?.btsTickets);
+
   const contentComponent = (
     <div className={cx('content-wrapper')}>
-      {executionDetails?.executionComment?.comment && (
+      {hasExecutionInfo && (
         <div className={cx('execution-info')}>
           {!isEmpty(executionDetails?.btsTickets) && (
             <div className={cx('info-item')}>
@@ -236,15 +243,20 @@ export const ExecutionSidePanel = ({ executionId, onClose }: ExecutionSidePanelP
               />
             </div>
           )}
-          {executionDetails.executionComment.comment && (
+          {executionDetails.executionComment?.comment && (
             <div className={cx('info-item')}>
               <span className={cx('info-label')}>{formatMessage(messages.executionComment)}</span>
-              <span className={cx('info-value')}>{executionDetails.executionComment.comment}</span>
+              <ExpandedTextSection
+                text={executionDetails.executionComment.comment}
+                defaultVisibleLines={COLLAPSED_TEXT_LINES}
+                isCompact
+              />
             </div>
           )}
-          {!isEmpty(executionDetails.executionComment.attachments) && (
+          {!isEmpty(executionDetails.executionComment?.attachments) && (
             <>
-              <Divider />
+              {(executionDetails.executionComment?.comment ||
+                !isEmpty(executionDetails.btsTickets)) && <Divider />}
               <div className={cx('info-item')}>
                 <span
                   className={cx('meta-label')}
@@ -264,7 +276,7 @@ export const ExecutionSidePanel = ({ executionId, onClose }: ExecutionSidePanelP
         {executionDetails?.testCaseDescription && (
           <ExpandedTextSection
             text={executionDetails.testCaseDescription}
-            defaultVisibleLines={5}
+            defaultVisibleLines={COLLAPSED_TEXT_LINES}
           />
         )}
       </CollapsibleSection>

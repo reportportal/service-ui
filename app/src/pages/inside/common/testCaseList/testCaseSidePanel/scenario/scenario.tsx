@@ -18,8 +18,10 @@ import { useIntl } from 'react-intl';
 import { isEmpty } from 'es-toolkit/compat';
 
 import { createClassnames } from 'common/utils';
+import { ExpandedTextSection } from 'components/fields/expandedTextSection';
 import { AttachmentList } from 'pages/inside/common/attachmentList';
 import { commonMessages } from 'pages/inside/common/common-messages';
+import { Scenario as TextScenario } from 'pages/inside/common/scenario';
 
 import { FieldSection } from '../../../fieldSection';
 import { ManualScenario, TestCaseManualScenario } from 'types/testCase';
@@ -29,6 +31,8 @@ import { StepsList } from '../../stepsList';
 import styles from './scenario.scss';
 
 const cx = createClassnames(styles);
+
+const COLLAPSED_TEXT_LINES = 5;
 
 interface ScenarioProps {
   scenario: ManualScenario;
@@ -49,7 +53,11 @@ export const Scenario = ({ scenario }: ScenarioProps) => {
           <div className={cx('scenario', 'steps-scenario', 'with-attachments')}>
             {preconditionValue && (
               <FieldSection title={formatMessage(messages.precondition)}>
-                <div className={cx('precondition-text')}>{preconditionValue}</div>
+                <ExpandedTextSection
+                  text={preconditionValue}
+                  defaultVisibleLines={COLLAPSED_TEXT_LINES}
+                  isCompact
+                />
               </FieldSection>
             )}
             {hasPreconditionAttachments && (
@@ -76,27 +84,12 @@ export const Scenario = ({ scenario }: ScenarioProps) => {
     );
   }
 
-  const preconditionValue = scenario.preconditions?.value;
-
   return (
-    <div className={cx('scenario-wrapper')}>
-      <div className={cx('scenario', 'full-view')}>
-        {preconditionValue && (
-          <FieldSection title={formatMessage(messages.precondition)} className={cx('sub-header')}>
-            <div className={cx('precondition-text')}>{preconditionValue}</div>
-          </FieldSection>
-        )}
-        {scenario.instructions && (
-          <FieldSection title={formatMessage(messages.instructions)} className={cx('sub-header')}>
-            <div className={cx('precondition-text')}>{scenario.instructions}</div>
-          </FieldSection>
-        )}
-        {scenario.expectedResult && (
-          <FieldSection title={formatMessage(messages.expectedResult)} className={cx('sub-header')}>
-            <div className={cx('precondition-text')}>{scenario.expectedResult}</div>
-          </FieldSection>
-        )}
-      </div>
-    </div>
+    <TextScenario
+      precondition={scenario.preconditions?.value}
+      instructions={scenario.instructions}
+      expectedResult={scenario.expectedResult}
+      isTextCollapsible
+    />
   );
 };

@@ -20,6 +20,8 @@ import { isEmpty } from 'es-toolkit/compat';
 
 import { createClassnames } from 'common/utils';
 import { FieldErrorHint, FieldProvider } from 'components/fields';
+import { ExpandedTextSection } from 'components/fields/expandedTextSection';
+import { EMPTY_FIELD_VALUE } from 'pages/inside/common/constants';
 import { AttachmentList, type Attachment } from 'pages/inside/common/attachmentList';
 import { FieldSection } from 'pages/inside/common/fieldSection';
 import {
@@ -63,6 +65,7 @@ interface StepProps {
 }
 
 const textAreaHeight = 53;
+const COLLAPSED_TEXT_LINES = 5;
 
 export const Step = ({
   stepId,
@@ -75,19 +78,23 @@ export const Step = ({
 
   if (isReadMode) {
     const isTextInformation = instructions || expectedResult;
+    const renderReadField = (label: string, value?: string) => (
+      <div className={cx('field-group')}>
+        <span className={cx('field-label')}>{label}</span>
+        {value ? (
+          <ExpandedTextSection text={value} defaultVisibleLines={COLLAPSED_TEXT_LINES} isCompact />
+        ) : (
+          <div className={cx('field-value')}>{EMPTY_FIELD_VALUE}</div>
+        )}
+      </div>
+    );
 
     return (
       <div className={cx('step', 'read-mode')}>
-        {instructions && (
-          <div className={cx('field-group')}>
-            <span className={cx('field-label')}>{formatMessage(messages.instructions)}</span>
-            <div className={cx('field-value')}>{instructions}</div>
-          </div>
-        )}
-        {expectedResult && (
-          <div className={cx('field-group')}>
-            <span className={cx('field-label')}>{formatMessage(messages.expectedResult)}</span>
-            <div className={cx('field-value')}>{expectedResult}</div>
+        {isTextInformation && (
+          <div className={cx('fields-row')}>
+            {renderReadField(formatMessage(messages.instructions), instructions)}
+            {renderReadField(formatMessage(messages.expectedResult), expectedResult)}
           </div>
         )}
         {!isEmpty(attachments) && (

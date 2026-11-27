@@ -18,7 +18,8 @@
   position: fixed;
   top: 0;
   right: 0;
-  width: 560px;
+  box-sizing: border-box;
+  width: 720px;
   height: 100%;
   background-color: var(--rp-ui-base-bg-100);
   border-left: 1px solid var(--rp-ui-base-e-100);
@@ -43,12 +44,6 @@
       gap: 8px;
       min-width: 0;
     }
-
-    &-meta {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-    }
   }
 
   .test-case-name {
@@ -61,6 +56,7 @@
 
   .meta-row {
     display: flex;
+    flex-wrap: wrap;
     align-items: center;
     gap: 16px;
     font-size: 13px;
@@ -75,8 +71,16 @@
 
   .meta-item-row {
     display: flex;
-    gap: 8px;
+    gap: 4px;
     align-items: center;
+
+    &.meta-icon-item {
+      gap: 8px;
+    }
+
+    &.execution-time {
+      gap: 7px;
+    }
 
     &.id-row {
       position: relative;
