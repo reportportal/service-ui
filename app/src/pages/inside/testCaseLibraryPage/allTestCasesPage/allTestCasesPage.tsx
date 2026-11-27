@@ -40,7 +40,7 @@ import { SelectedTestCaseRow } from 'pages/inside/common/testCaseList/types';
 import { PopoverControl, PopoverItem } from 'pages/common/popoverControl/popoverControl';
 import { showModalAction } from 'controllers/modal';
 import { locationQuerySelector, payloadSelector, urlFolderIdSelector } from 'controllers/pages';
-import { foldersSelector } from 'controllers/testCase';
+import { foldersSelector, TestCaseSorting } from 'controllers/testCase';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { useUserPermissions } from 'hooks/useUserPermissions';
 import { useHasTestPlans } from 'hooks/useHasTestPlans';
@@ -58,6 +58,7 @@ import { useBatchDeleteTestCasesModal } from './batchDeleteTestCasesModal';
 import { useMoveTestCaseModal } from '../moveTestCaseModal';
 import { useBatchEditTagsModal } from './batchEditTagsModal';
 import { useAddToLaunchModal } from '../addToLaunchModal';
+import { TestCaseSortingControl } from '../testCaseSortingControl';
 
 import styles from './allTestCasesPage.scss';
 
@@ -68,6 +69,8 @@ interface AllTestCasesPageProps {
   testCasesPageData: Page;
   isLoading: boolean;
   instanceKey: TMS_INSTANCE_KEY;
+  sorting: TestCaseSorting;
+  onSortingChange: (sorting: TestCaseSorting) => void;
 }
 
 export const AllTestCasesPage = ({
@@ -75,20 +78,29 @@ export const AllTestCasesPage = ({
   isLoading,
   instanceKey,
   testCasesPageData,
+  sorting,
+  onSortingChange,
 }: AllTestCasesPageProps) => {
   const { formatMessage } = useIntl();
   const { trackEvent } = useTracking();
   const { organizationSlug, projectSlug } = useProjectDetails();
   const payload = useSelector(payloadSelector);
   const query = useSelector(locationQuerySelector);
-  const { setPageNumber, setPageSize, captions, activePage, pageSize, totalPages } =
-    useURLBoundPagination({
-      pageData: testCasesPageData,
-      defaultQueryParams: TestCasePageDefaultValues,
-      namespace: TEST_CASE_LIST_NAMESPACE,
-      shouldSaveUserPreferences: true,
-      baseUrl: `/organizations/${organizationSlug}/projects/${projectSlug}/testLibrary${payload.testCasePageRoute ? '/' + payload.testCasePageRoute : ''}`,
-    });
+  const {
+    setPageNumber,
+    setPageSize,
+    resetToFirstPage,
+    captions,
+    activePage,
+    pageSize,
+    totalPages,
+  } = useURLBoundPagination({
+    pageData: testCasesPageData,
+    defaultQueryParams: TestCasePageDefaultValues,
+    namespace: TEST_CASE_LIST_NAMESPACE,
+    shouldSaveUserPreferences: true,
+    baseUrl: `/organizations/${organizationSlug}/projects/${projectSlug}/testLibrary${payload.testCasePageRoute ? '/' + payload.testCasePageRoute : ''}`,
+  });
   const [selectedRows, setSelectedRows] = useState<SelectedTestCaseRow[]>([]);
   const folderId = useSelector(urlFolderIdSelector);
   const folders = useSelector(foldersSelector);
@@ -114,7 +126,9 @@ export const AllTestCasesPage = ({
       return false;
     }
 
-    return loadedSelectedTestCases.every((testCase) => isManualScenarioEmpty(testCase.manualScenario));
+    return loadedSelectedTestCases.every((testCase) =>
+      isManualScenarioEmpty(testCase.manualScenario),
+    );
   }, [selectedRowIds, testCases]);
 
   const trackBulkOperation = useCallback(
@@ -127,6 +141,17 @@ export const AllTestCasesPage = ({
   const onClearSelection = useCallback(() => setSelectedRows([]), []);
 
   const handleSelectedRows = (rows: SelectedTestCaseRow[]) => setSelectedRows(rows);
+
+  const handleSortingChange = useCallback(
+    (nextSorting: TestCaseSorting) => {
+      onSortingChange(nextSorting);
+
+      if (Number(query?.offset) > 0) {
+        resetToFirstPage();
+      }
+    },
+    [onSortingChange, query?.offset, resetToFirstPage],
+  );
 
   const folderTitle = useMemo(() => {
     const selectedFolder = folders.find((folder) => String(folder.id) === String(folderId));
@@ -243,6 +268,9 @@ export const AllTestCasesPage = ({
           folderTitle={folderTitle}
           instanceKey={instanceKey}
           handleSelectedRows={handleSelectedRows}
+          headerControls={
+            <TestCaseSortingControl sorting={sorting} onChange={handleSortingChange} />
+          }
         />
       </div>
       {Boolean(testCasesPageData?.totalElements) && (

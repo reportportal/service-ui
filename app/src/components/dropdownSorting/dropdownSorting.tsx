@@ -14,17 +14,17 @@
  * limitations under the License.
  */
 
-import { FC, useCallback, useEffect, useRef, useState } from 'react';
+import { FC, ReactNode, useCallback, useEffect, useRef, useState } from 'react';
 import { Popover, DropdownIcon } from '@reportportal/ui-kit';
 import { useIntl } from 'react-intl';
 
 import { createClassnames } from 'common/utils';
-import { SORTING_ASC, SORTING_DESC } from 'controllers/sorting';
 import { SortingDirection } from 'controllers/sorting/types';
 import { Keys } from 'common/constants/keyCodes';
 
 import { DropdownSortingOption } from './dropdownSortingOption';
 import { DirectionIcon } from './directionIcon';
+import { DropdownSortingOptionItem, getOptionDirection, getNextSortingDirection } from './utils';
 import { messages } from './messages';
 
 import styles from './dropdownSorting.scss';
@@ -37,10 +37,11 @@ interface SortParams {
 }
 
 interface DropdownSortingProps {
-  options: Array<{ value: string; label: string }>;
+  options: DropdownSortingOptionItem[];
   value: string;
   direction: SortingDirection;
   onChange: ({ value, direction }: SortParams) => void;
+  icon?: ReactNode;
 }
 
 export const DropdownSorting: FC<DropdownSortingProps> = ({
@@ -48,6 +49,7 @@ export const DropdownSorting: FC<DropdownSortingProps> = ({
   value,
   direction,
   onChange,
+  icon,
 }) => {
   const { formatMessage } = useIntl();
   const [isOpened, setIsOpened] = useState(false);
@@ -72,15 +74,13 @@ export const DropdownSorting: FC<DropdownSortingProps> = ({
 
   const handleChange = useCallback(
     (selectedValue: string) => {
-      const toggleDirection = (current: string) =>
-        current === SORTING_ASC ? SORTING_DESC : SORTING_ASC;
-
-      const newDirection = selectedValue === value ? toggleDirection(direction) : SORTING_ASC;
+      const selectedOption = options.find((option) => option.value === selectedValue);
+      const newDirection = getNextSortingDirection(selectedOption, value, direction);
 
       onChange({ value: selectedValue, direction: newDirection });
       setIsOpened(false);
     },
-    [value, direction, onChange],
+    [options, value, direction, onChange],
   );
 
   const setOptionRef = useCallback(
@@ -128,7 +128,7 @@ export const DropdownSorting: FC<DropdownSortingProps> = ({
             label={option.label}
             onChange={handleChange}
             onKeyDown={handleKeyDown}
-            direction={direction}
+            direction={selected ? direction : getOptionDirection(option)}
           />
         </li>
       );
@@ -149,7 +149,7 @@ export const DropdownSorting: FC<DropdownSortingProps> = ({
         className={cx('value', { open: isOpened })}
         onKeyDown={() => setIsKeyboardMode(true)}
       >
-        <DirectionIcon direction={direction} />
+        {icon ?? <DirectionIcon direction={direction} />}
         {displayedValue}
         <div className={cx('arrow')}>
           <DropdownIcon />

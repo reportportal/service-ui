@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { memo, useState } from 'react';
+import { memo, ReactNode, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { useIntl } from 'react-intl';
 import { useSelector } from 'react-redux';
@@ -55,6 +55,7 @@ interface TestCaseListProps {
   selectable?: boolean;
   instanceKey: TMS_INSTANCE_KEY;
   handleSelectedRows: (rows: SelectedTestCaseRow[]) => void;
+  headerControls?: ReactNode;
 }
 
 export const TestCaseList = memo(
@@ -67,6 +68,7 @@ export const TestCaseList = memo(
     selectable = true,
     instanceKey,
     handleSelectedRows,
+    headerControls,
   }: TestCaseListProps) => {
     const { formatMessage } = useIntl();
     const { trackEvent } = useTracking();
@@ -193,6 +195,7 @@ export const TestCaseList = memo(
         {!showNoSearchResults && (
           <div className={cx('controls')}>
             <div className={cx('controls-title')}>{folderTitle}</div>
+            {headerControls}
           </div>
         )}
         {isLoading ? (
@@ -212,7 +215,7 @@ export const TestCaseList = memo(
                     <EmptyPageState
                       label={formatMessage(COMMON_LOCALE_KEYS.NO_RESULTS)}
                       description={formatMessage(messages.noResultsDescription)}
-                      emptyIcon={NoResultsIcon as unknown as string}
+                      emptyIcon={NoResultsIcon}
                     />
                   ) : (
                     formatMessage(messages.noResultsEmptyMessage)

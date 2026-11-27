@@ -38,6 +38,10 @@ import {
   foldersSelector,
   testCasesPageSelector,
   FolderWithFullPath,
+  TestCaseSorting,
+  getTestCaseSorting,
+  getTestCaseSortParam,
+  saveTestCaseSorting,
 } from 'controllers/testCase';
 import {
   locationSelector,
@@ -58,7 +62,6 @@ import { TestCasePageDefaultValues } from 'pages/inside/common/testCaseList/cons
 import { userIdSelector } from 'controllers/user';
 import { ExtendedTestCase } from 'types/testCase';
 import { findFolderById } from 'pages/inside/common/hooks';
-import type { NotificationMessageKey } from 'common/hooks/useNotification';
 
 import { ExpandedOptions } from '../../common/expandedOptions';
 import { commonMessages } from '../commonMessages';
@@ -117,6 +120,17 @@ export const TestCaseFolders = () => {
   );
   const userSettings = getStorageItem(`${userId}_settings`) as Record<string, unknown> | undefined;
   const savedLimit = userSettings?.testCaseListPageSize as number;
+  const [sorting, setSorting] = useState<TestCaseSorting>(() => getTestCaseSorting(userId));
+  const sortParam = getTestCaseSortParam(sorting);
+
+  const handleSortingChange = useCallback(
+    (nextSorting: TestCaseSorting) => {
+      saveTestCaseSorting(userId, nextSorting);
+      setSorting(nextSorting);
+    },
+    [userId],
+  );
+
   const queryParams = useMemo(
     () => ({
       limit: Number(query?.limit) || savedLimit || TestCasePageDefaultValues.limit,
@@ -142,8 +156,10 @@ export const TestCaseFolders = () => {
         queryParams.testCasesSearchParams ?? '',
         queryParams.filterPriorities ?? '',
         queryParams.filterTags ?? '',
+        sortParam,
       ].join('|'),
     [
+      sortParam,
       urlFolderId,
       queryParams.limit,
       queryParams.offset,
@@ -222,6 +238,7 @@ export const TestCaseFolders = () => {
     queryParams.testCasesSearchParams,
     queryParams.filterPriorities,
     queryParams.filterTags,
+    sortParam,
   ]);
 
   const handleFolderClick = (id: number) => {
@@ -268,7 +285,7 @@ export const TestCaseFolders = () => {
         testCaseId: testCase.id,
         testCasesSourceFolderId: testCase.testFolder?.id,
         destinationFolder: destinationFolderPayload,
-        successMessageId: 'testCaseMovedSuccessWithDetails' as NotificationMessageKey,
+        successMessageId: 'testCaseMovedSuccessWithDetails',
         successMessageValues: {
           testCaseName: testCase.name,
           folderName: destinationFolder.name,
@@ -287,7 +304,7 @@ export const TestCaseFolders = () => {
       await batchDuplicateTestCases({
         testCaseIds: [testCase.id],
         testFolderId: destinationFolder.id,
-        successMessageId: 'testCaseDuplicatedSuccessWithDetails' as NotificationMessageKey,
+        successMessageId: 'testCaseDuplicatedSuccessWithDetails',
         successMessageValues: {
           testCaseName: testCase.name,
           folderName: destinationFolder.name,
@@ -318,6 +335,8 @@ export const TestCaseFolders = () => {
         testCasesPageData={testCasesPageData}
         instanceKey={TMS_INSTANCE_KEY.TEST_CASE}
         isLoading={isLoadingTestCases || isTestCasesQueryStale || areFoldersLoading}
+        sorting={sorting}
+        onSortingChange={handleSortingChange}
       />
     </ExpandedOptions>
   );

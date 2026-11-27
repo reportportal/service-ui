@@ -31,3 +31,4 @@ export * from './constants';
 export * from './types';
 export { testCaseReducer } from './reducer';
 export * from './selectors';
+export * from './sorting';
