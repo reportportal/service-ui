@@ -52,6 +52,7 @@ export interface ExecutionStatusData {
   status: ExecutionStatusType | ExecutionStatus.TO_RUN;
   currentStatus?: string;
   place: ExecutionStatusChangePlace;
+  onStatusSet?: () => void;
 }
 
 export type ExecutionStatusConfirmModalData = ExecutionStatusData;

@@ -145,7 +145,7 @@ export const ExecutionSidePanel = ({ executionId, onClose }: ExecutionSidePanelP
           key: String(ticket.ticketId),
           name: ticket.ticketId,
           link: ticket.url,
-        }) as Issue,
+        }),
     );
   };
 
@@ -310,6 +310,7 @@ export const ExecutionSidePanel = ({ executionId, onClose }: ExecutionSidePanelP
           place={MANUAL_LAUNCHES_PLACE.EXECUTION_DETAILS_SIDEBAR}
           shouldUsePortal
           strategy="fixed"
+          onStatusSet={onClose}
         >
           <Button
             variant="ghost"
