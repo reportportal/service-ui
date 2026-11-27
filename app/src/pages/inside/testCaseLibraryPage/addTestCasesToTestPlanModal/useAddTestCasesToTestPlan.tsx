@@ -29,7 +29,6 @@ import { fetch } from 'common/utils';
 import { useDebouncedSpinner, useNotification } from 'common/hooks';
 import { URLS } from 'common/urls';
 import { hideModalAction } from 'controllers/modal';
-import type { TestPlanDto } from 'controllers/testPlan/types';
 import { foldersSelector } from 'controllers/testCase';
 import { getAllSubfolderIds } from 'common/utils/folderUtils';
 
@@ -38,6 +37,7 @@ import {
   AddTestCasesToTestPlanFormData,
   AddTestCasesToTestPlanModalData,
   AddTestCasesToTestPlanModalProps,
+  TestPlanWithMilestone,
 } from './types';
 import { ADD_TO_TEST_PLAN_MODAL_FORM, SELECTED_TEST_PLAN_FIELD_NAME } from './constants';
 
@@ -76,7 +76,7 @@ export const useAddTestCasesToTestPlan = ({
     autompleteInputRef.current = node;
   };
 
-  const setSelectedTestPlan = (value: TestPlanDto | null) => {
+  const setSelectedTestPlan = (value: TestPlanWithMilestone | null) => {
     change(SELECTED_TEST_PLAN_FIELD_NAME, value || null);
     autompleteInputRef.current?.blur();
   };

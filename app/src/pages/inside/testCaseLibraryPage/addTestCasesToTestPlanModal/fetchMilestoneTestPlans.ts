@@ -20,13 +20,14 @@ import { isEmpty } from 'es-toolkit/compat';
 
 import { milestoneTestPlansAsTestPlanDtos } from 'controllers/milestone';
 import type { TmsMilestonePageRS } from 'controllers/milestone';
-import type { TestPlanDto } from 'controllers/testPlan/types';
+
+import type { TestPlanWithMilestone } from './types';
 
 export const fetchAllMilestoneTestPlans = async (
   projectKey: string,
-  fetchedTestPlans: TestPlanDto[] = [],
+  fetchedTestPlans: TestPlanWithMilestone[] = [],
   fetchedMilestonesCount = 0,
-): Promise<TestPlanDto[]> => {
+): Promise<TestPlanWithMilestone[]> => {
   const response = await fetch<TmsMilestonePageRS>(
     URLS.tmsMilestone(projectKey, {
       limit: 100,
@@ -39,7 +40,10 @@ export const fetchAllMilestoneTestPlans = async (
   }
 
   const pageTestPlans = response.content.flatMap((milestone) =>
-    milestoneTestPlansAsTestPlanDtos(milestone.testPlans, milestone.id),
+    milestoneTestPlansAsTestPlanDtos(milestone.testPlans, milestone.id).map((plan) => ({
+      ...plan,
+      milestoneName: milestone.name,
+    })),
   );
   const testPlans = [...fetchedTestPlans, ...pageTestPlans];
   const nextMilestonesCount = fetchedMilestonesCount + response.content.length;
@@ -51,12 +55,27 @@ export const fetchAllMilestoneTestPlans = async (
   return testPlans;
 };
 
-export const filterTestPlansByName = (testPlans: TestPlanDto[], search: string): TestPlanDto[] => {
+export const getTestPlanOptionLabel = (plan: TestPlanWithMilestone | null): string => {
+  if (!plan) {
+    return '';
+  }
+
+  return plan.milestoneName ? `${plan.name}, ${plan.milestoneName}` : plan.name;
+};
+
+export const filterTestPlansByNameOrMilestone = (
+  testPlans: TestPlanWithMilestone[],
+  search: string,
+): TestPlanWithMilestone[] => {
   const query = search.trim().toLowerCase();
 
   if (!query) {
     return testPlans;
   }
 
-  return testPlans.filter((plan) => plan.name.toLowerCase().includes(query));
+  return testPlans.filter((plan) =>
+    [plan.name, plan.milestoneName, getTestPlanOptionLabel(plan)].some((value) =>
+      value?.toLowerCase().includes(query),
+    ),
+  );
 };
