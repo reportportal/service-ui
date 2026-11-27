@@ -123,7 +123,9 @@ jest.mock('pages/inside/common/requirementsList/requirementsList', () => ({
 jest.mock('pages/inside/common/testCaseList/testCaseSidePanel/scenario', () => ({
   Scenario: () => null,
 }));
-jest.mock('pages/inside/common/attachmentList', () => ({ AttachmentList: () => null }));
+jest.mock('pages/inside/common/attachmentsWithSlider', () => ({
+  AttachmentsWithSlider: () => null,
+}));
 jest.mock('pages/inside/projectSettingsPageContainer/content/elements', () => ({
   Divider: () => null,
 }));

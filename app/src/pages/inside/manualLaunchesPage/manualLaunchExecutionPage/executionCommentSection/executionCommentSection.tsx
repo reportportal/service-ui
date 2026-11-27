@@ -40,6 +40,8 @@ import {
 import { useManualLaunchId } from 'hooks/useTypedSelector';
 import { useUserPermissions } from 'hooks/useUserPermissions';
 import { useFileAttachments, type AttachedFileData } from 'hooks/useFileAttachments';
+import { AttachmentsWithSlider } from 'pages/inside/common/attachmentsWithSlider';
+import type { AttachmentWithSlider } from 'pages/inside/common/attachmentsWithSlider/types';
 
 import { messages as statusModalMessages } from '../executionStatusConfirmModal/messages';
 import { messages } from '../messages';
@@ -80,7 +82,6 @@ export const ExecutionCommentSection: FC<ExecutionCommentSectionProps> = ({ exec
     pendingFiles,
     removedAttachmentIds,
     visibleExistingAttachments,
-    existingAttachmentsData,
     pendingFilesData,
     handleFilesAdded: handleFilesAddedFromHook,
     handlePendingRemove,
@@ -92,6 +93,9 @@ export const ExecutionCommentSection: FC<ExecutionCommentSectionProps> = ({ exec
     existingAttachments: execution.executionComment?.attachments ?? [],
     messages,
   });
+
+  // Saved files are shown as previews: the hook keeps the server objects, which carry the file type.
+  const savedAttachments = visibleExistingAttachments as AttachmentWithSlider[];
 
   if (execution.id !== prevExecutionId) {
     setPrevExecutionId(execution.id);
@@ -325,7 +329,7 @@ export const ExecutionCommentSection: FC<ExecutionCommentSectionProps> = ({ exec
               )}
               <div className={cx('attachments-block__header')}>
                 <span className={cx('attachments-block__title')}>
-                  {formatMessage(commonMessages.attachments)}
+                  {formatMessage(commonMessages.executionAttachments)}
                 </span>
                 {canManageExecutions && (
                   <div className={cx('attachments-block__add')}>
@@ -341,16 +345,16 @@ export const ExecutionCommentSection: FC<ExecutionCommentSectionProps> = ({ exec
                   </div>
                 )}
               </div>
-              {!isEmpty(existingAttachmentsData) && (
-                <FileDropArea.AttachedFilesList
-                  className={cx('attachments-block__list')}
-                  files={existingAttachmentsData}
-                  onRemoveFile={
+              {!isEmpty(savedAttachments) && (
+                <AttachmentsWithSlider
+                  className={cx('attachments-block__previews')}
+                  attachments={savedAttachments}
+                  onRemove={
                     canManageExecutions
-                      ? (id) => handleExistingRemoveWithSave(id)
+                      ? (attachment) => handleExistingRemoveWithSave(attachment.id)
                       : undefined
                   }
-                  onDownloadFile={handleDownloadFile}
+                  removeButtonLabel={formatMessage(commonMessages.removeAttachment)}
                 />
               )}
               {canManageExecutions && !isEmpty(pendingFilesData) && (

@@ -69,6 +69,18 @@ export const commonMessages: Record<string, MessageDescriptor> = defineMessages(
     id: 'Common.attachments',
     defaultMessage: 'Attachments',
   },
+  testCaseAttachments: {
+    id: 'Common.testCaseAttachments',
+    defaultMessage: 'Test case attachments',
+  },
+  executionAttachments: {
+    id: 'Common.executionAttachments',
+    defaultMessage: 'Execution attachments',
+  },
+  removeAttachment: {
+    id: 'Common.removeAttachment',
+    defaultMessage: 'Remove attachment',
+  },
   toRun: {
     id: 'Common.toRun',
     defaultMessage: 'To Run',

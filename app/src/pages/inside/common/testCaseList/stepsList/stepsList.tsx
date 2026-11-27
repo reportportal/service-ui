@@ -26,9 +26,10 @@ const cx = createClassnames(styles);
 
 interface StepsListProps {
   steps: StepType[];
+  attachmentsTitle?: string;
 }
 
-export const StepsList = ({ steps }: StepsListProps) => {
+export const StepsList = ({ steps, attachmentsTitle }: StepsListProps) => {
   return (
     <div className={cx('steps-list')}>
       {steps
@@ -53,6 +54,7 @@ export const StepsList = ({ steps }: StepsListProps) => {
                   instructions={instructions}
                   expectedResult={expectedResult}
                   attachments={attachments}
+                  attachmentsTitle={attachmentsTitle}
                 />
               </AttachmentArea>
             </div>

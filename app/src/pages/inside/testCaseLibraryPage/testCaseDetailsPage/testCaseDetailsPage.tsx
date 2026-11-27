@@ -155,8 +155,8 @@ const MAIN_CONTENT_COLLAPSIBLE_SECTIONS_CONFIG = ({
         ),
       },
       {
-        titleKey: 'attachments',
-        defaultMessage: messages.noAttachments,
+        titleKey: 'testCaseAttachments',
+        defaultMessage: commonMessages.noAttachmentsAdded,
         childComponent: !isEmpty(manualScenario?.attachments) && (
           <AttachmentsWithSlider
             attachments={manualScenario.attachments}

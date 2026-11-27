@@ -22,7 +22,7 @@ import { commonMessages } from 'pages/inside/common/common-messages';
 import { EMPTY_FIELD_VALUE } from 'pages/inside/common/constants';
 
 import { AttachmentsWithSlider } from '../../../common/attachmentsWithSlider';
-import { type Attachment } from '../../../common/attachmentList';
+import { type Attachment } from 'types/testCase';
 import { hasStepContent } from '../../../common/scenarioUtils';
 
 import styles from './step.scss';

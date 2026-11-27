@@ -113,6 +113,8 @@ export const AttachmentsGallerySlider = ({
   const onWindowKeyDown = useCallback((event: globalThis.KeyboardEvent): void => {
     if (event.key === 'Escape') {
       event.preventDefault();
+      // Close only the gallery, not a side panel or modal opened under it.
+      event.stopPropagation();
       onClose();
 
       return;
@@ -322,6 +324,9 @@ export const AttachmentsGallerySlider = ({
       ref={overlayRef}
       tabIndex={-1}
       className={cx('overlay', { singleItem: isSingleAttachment })}
+      // The gallery is portaled to <body>: keep its clicks from reaching "click outside" handlers
+      // of a side panel that opened it.
+      onPointerUp={(event) => event.nativeEvent.stopPropagation()}
     >
       <div className={styles.backdrop} />
       <div className={styles.toolbar}>

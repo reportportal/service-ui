@@ -19,7 +19,7 @@ import { isEmpty } from 'es-toolkit/compat';
 
 import { createClassnames } from 'common/utils';
 import { ExpandedTextSection } from 'components/fields/expandedTextSection';
-import { AttachmentList } from 'pages/inside/common/attachmentList';
+import { AttachmentsWithSlider } from 'pages/inside/common/attachmentsWithSlider';
 import { commonMessages } from 'pages/inside/common/common-messages';
 import { Scenario as TextScenario } from 'pages/inside/common/scenario';
 
@@ -36,10 +36,13 @@ const COLLAPSED_TEXT_LINES = 5;
 
 interface ScenarioProps {
   scenario: ManualScenario;
+  /** Caption of the precondition and step attachments; "Attachments" by default. */
+  attachmentsTitle?: string;
 }
 
-export const Scenario = ({ scenario }: ScenarioProps) => {
+export const Scenario = ({ scenario, attachmentsTitle }: ScenarioProps) => {
   const { formatMessage } = useIntl();
+  const attachmentsCaption = attachmentsTitle ?? formatMessage(commonMessages.attachments);
   const isStepsManualScenario = scenario.manualScenarioType === TestCaseManualScenario.STEPS;
 
   if (isStepsManualScenario) {
@@ -64,9 +67,9 @@ export const Scenario = ({ scenario }: ScenarioProps) => {
               <>
                 {preconditionValue && <div className={cx('section-border')} />}
                 <FieldSection
-                  title={`${formatMessage(commonMessages.attachments)} ${scenario.preconditions?.attachments?.length}`}
+                  title={`${attachmentsCaption} ${scenario.preconditions?.attachments?.length}`}
                 >
-                  <AttachmentList attachments={scenario.preconditions?.attachments} />
+                  <AttachmentsWithSlider attachments={scenario.preconditions?.attachments} />
                 </FieldSection>
               </>
             )}
@@ -78,7 +81,7 @@ export const Scenario = ({ scenario }: ScenarioProps) => {
         isEmpty(firstStep?.attachments) ? (
           <div className={cx('empty-section')}>{formatMessage(messages.noSteps)}</div>
         ) : (
-          <StepsList steps={scenario.steps} />
+          <StepsList steps={scenario.steps} attachmentsTitle={attachmentsTitle} />
         )}
       </div>
     );

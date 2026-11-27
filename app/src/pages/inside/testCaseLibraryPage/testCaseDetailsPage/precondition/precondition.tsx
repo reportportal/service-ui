@@ -21,7 +21,7 @@ import { createClassnames } from 'common/utils';
 import { commonMessages } from 'pages/inside/common/common-messages';
 
 import { AttachmentsWithSlider } from '../../../common/attachmentsWithSlider';
-import { type Attachment } from '../../../common/attachmentList';
+import { type Attachment } from 'types/testCase';
 
 import styles from './preconditions.scss';
 

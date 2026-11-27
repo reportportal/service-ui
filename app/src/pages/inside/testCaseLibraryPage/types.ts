@@ -24,10 +24,9 @@ import type {
   ExtendedTestCase,
   Step,
   TestCasePriority,
+  Attachment,
 } from 'types/testCase';
 import { FolderWithFullPath } from 'controllers/testCase/types';
-
-import { Attachment } from '../common/attachmentList';
 
 // The structure must be corrected after BE integration
 export interface IAttachment {

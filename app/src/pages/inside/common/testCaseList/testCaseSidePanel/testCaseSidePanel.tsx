@@ -53,7 +53,7 @@ import { FolderBreadcrumbs } from 'components/folderBreadcrumbs';
 import { useUserPermissions } from 'hooks/useUserPermissions';
 import { TEST_CASE_LIBRARY_PAGE, urlOrganizationAndProjectSelector } from 'controllers/pages';
 import { AdaptiveTagList } from 'pages/inside/productVersionPage/linkedTestCasesTab/tagList';
-import { AttachmentList } from 'pages/inside/common/attachmentList';
+import { AttachmentsWithSlider } from 'pages/inside/common/attachmentsWithSlider';
 import { ManualScenario, ExtendedTestCase, Requirement, TestCaseManualScenario } from 'types/testCase';
 import { useAddTestCasesToTestPlanModal } from 'pages/inside/testCaseLibraryPage/addTestCasesToTestPlanModal/useAddTestCasesToTestPlanModal';
 import { commonMessages as testCaseLibraryCommonMessages } from 'pages/inside/testCaseLibraryPage/commonMessages';
@@ -139,10 +139,10 @@ export const COLLAPSIBLE_SECTIONS_CONFIG = ({
     ...(scenario?.manualScenarioType === TestCaseManualScenario.TEXT
       ? [
           {
-            titleKey: 'attachments',
+            titleKey: 'testCaseAttachments',
             defaultMessageKey: 'noAttachmentsAdded',
             childComponent: isEmpty(scenario?.attachments) ? null : (
-              <AttachmentList attachments={scenario.attachments} />
+              <AttachmentsWithSlider attachments={scenario.attachments} />
             ),
           },
         ]

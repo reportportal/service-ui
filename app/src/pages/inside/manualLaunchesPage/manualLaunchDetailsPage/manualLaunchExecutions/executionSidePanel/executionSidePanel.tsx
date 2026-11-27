@@ -49,11 +49,11 @@ import {
   hasExecutionStatusBadge,
 } from 'pages/inside/manualLaunchesPage/executionStatusBadge';
 import { Divider } from 'pages/inside/projectSettingsPageContainer/content/elements';
-import { AttachmentList, type Attachment } from 'pages/inside/common/attachmentList';
+import { AttachmentsWithSlider } from 'pages/inside/common/attachmentsWithSlider';
 import { IN_PROGRESS } from 'common/constants/testStatuses';
 import { projectKeySelector } from 'controllers/project';
 import { ExecutionStatus } from 'pages/inside/manualLaunchesPage/types';
-import { TestCaseManualScenario } from 'types/testCase';
+import { TestCaseManualScenario, type Attachment } from 'types/testCase';
 import {
   MANUAL_LAUNCHES_PAGE_EVENTS,
   MANUAL_LAUNCHES_PLACE,
@@ -260,8 +260,8 @@ export const ExecutionSidePanel = ({ executionId, onClose }: ExecutionSidePanelP
               <div className={cx('info-item')}>
                 <span
                   className={cx('meta-label')}
-                >{`${formatMessage(commonMessages.attachments)} ${executionDetails.executionComment.attachments.length}`}</span>
-                <AttachmentList
+                >{`${formatMessage(commonMessages.executionAttachments)} ${executionDetails.executionComment.attachments.length}`}</span>
+                <AttachmentsWithSlider
                   attachments={executionDetails.executionComment.attachments as Attachment[]}
                 />
               </div>
@@ -302,18 +302,22 @@ export const ExecutionSidePanel = ({ executionId, onClose }: ExecutionSidePanelP
         title={formatMessage(commonMessages.scenario)}
         defaultMessage={formatMessage(testCaseMessages.noDetailsForScenario)}
       >
-        {isScenarioProvided && <Scenario scenario={executionDetails.manualScenario} />}
+        {isScenarioProvided && (
+          <Scenario
+            scenario={executionDetails.manualScenario}
+            attachmentsTitle={formatMessage(commonMessages.testCaseAttachments)}
+          />
+        )}
       </CollapsibleSection>
       {executionDetails?.manualScenario?.manualScenarioType === TestCaseManualScenario.TEXT && (
         <CollapsibleSection
-          title={formatMessage(commonMessages.attachments)}
+          title={formatMessage(commonMessages.testCaseAttachments)}
           defaultMessage={formatMessage(commonMessages.noAttachmentsAdded)}
         >
           {!isEmpty(executionDetails.manualScenario?.attachments) && (
-            <AttachmentList
+            <AttachmentsWithSlider
               attachments={executionDetails.manualScenario.attachments}
               className={cx('attachments-list')}
-              withPreview
             />
           )}
         </CollapsibleSection>

@@ -45,10 +45,6 @@ export const messages = defineMessages({
     id: 'TestCaseDetailsPage.noSteps',
     defaultMessage: 'No steps yet',
   },
-  noAttachments: {
-    id: 'TestCaseDetailsPage.noAttachments',
-    defaultMessage: 'No attachments added yet',
-  },
   noScenario: {
     id: 'TestCaseDetailsPage.noScenario',
     defaultMessage: 'No details for this scenario yet',
