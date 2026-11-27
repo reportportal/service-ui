@@ -35,4 +35,8 @@ export const messages = defineMessages({
     id: 'ManualLaunchesPage.launchIdColumn',
     defaultMessage: 'ID',
   },
+  notExecutedFilterApplied: {
+    id: 'ManualLaunchesPage.notExecutedFilterApplied',
+    defaultMessage: 'The test executions list is filtered to show only not executed items.',
+  },
 });

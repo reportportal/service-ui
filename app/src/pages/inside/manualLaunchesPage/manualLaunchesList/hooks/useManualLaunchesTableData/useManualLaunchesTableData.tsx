@@ -37,8 +37,8 @@ import { RETENTION_POLICY } from 'common/constants/retentionPolicy';
 import StarIcon from 'common/img/star-inline.svg';
 import { isEnterOrSpaceKey } from 'common/utils/helperUtils/eventUtils';
 import { MANUAL_LAUNCH_DETAILS_PAGE } from 'controllers/pages';
+import { getNotExecutedCount } from 'controllers/manualLaunch';
 import { useProjectDetails } from 'hooks/useTypedSelector';
-import { ExecutionStatus } from 'types/testCase';
 import {
   MANUAL_LAUNCHES_PAGE_EVENTS,
   MANUAL_LAUNCHES_PLACE,
@@ -47,6 +47,7 @@ import {
 import { messages as retentionPolicyMessages } from '../../../retentionPolicyModal/messages';
 import { TestRunButton } from '../../testRunButton/testRunButton';
 import { ManualTestCase } from '../../../types';
+import { useOpenNotExecutedExecutions } from '../../../useOpenNotExecutedExecutions';
 
 import styles from '../../manualLaunchesList.scss';
 
@@ -72,16 +73,7 @@ export const useManualLaunchesTableData = (
     [dispatch, organizationSlug, projectSlug],
   );
 
-  const navigateToDetailsToRunOnly = useCallback(
-    (id: number) => {
-      dispatch({
-        type: MANUAL_LAUNCH_DETAILS_PAGE,
-        payload: { organizationSlug, projectSlug, launchId: id.toString() },
-        meta: { query: { statusFilter: ExecutionStatus.TO_RUN } },
-      });
-    },
-    [dispatch, organizationSlug, projectSlug],
-  );
+  const openNotExecutedExecutions = useOpenNotExecutedExecutions();
 
   const debouncedNavigateToDetails = useMemo(
     () => debounce((id: number) => navigateToDetailsImpl(id), 500),
@@ -142,6 +134,10 @@ export const useManualLaunchesTableData = (
           retentionPolicy,
         }) => {
           const isSelected = id === selectedLaunchId;
+          const notExecutedTests = getNotExecutedCount({
+            toRun: testsToRun,
+            inProgress: inProgressTests,
+          });
 
           const navigateToDetailsHandlers = getHandlers({
             id,
@@ -257,11 +253,11 @@ export const useManualLaunchesTableData = (
               ),
             },
             testsToRun: {
-              content: testsToRun,
+              content: notExecutedTests,
               component: (
                 <TestRunButton
-                  count={testsToRun}
-                  onClick={() => navigateToDetailsToRunOnly(id)}
+                  count={notExecutedTests}
+                  onClick={() => openNotExecutedExecutions(id)}
                   onTrackClick={() =>
                     trackEvent(
                       MANUAL_LAUNCHES_PAGE_EVENTS.clickShowToRun(
@@ -281,7 +277,7 @@ export const useManualLaunchesTableData = (
       selectedLaunchId,
       getHandlers,
       navigateToDetails,
-      navigateToDetailsToRunOnly,
+      openNotExecutedExecutions,
       openLaunchSidebar,
       formatMessage,
       trackEvent,
