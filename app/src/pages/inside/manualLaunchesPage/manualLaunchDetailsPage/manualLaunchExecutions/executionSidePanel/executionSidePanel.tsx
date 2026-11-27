@@ -44,6 +44,10 @@ import { RequirementsList } from 'pages/inside/common/requirementsList/requireme
 import { Scenario } from 'pages/inside/common/testCaseList/testCaseSidePanel/scenario';
 import { formatTimestamp } from 'pages/inside/common/testCaseList/utils';
 import { ExecutionStatusPopover } from 'pages/inside/manualLaunchesPage/executionStatusPopover';
+import {
+  ExecutionStatusBadge,
+  hasExecutionStatusBadge,
+} from 'pages/inside/manualLaunchesPage/executionStatusBadge';
 import { Divider } from 'pages/inside/projectSettingsPageContainer/content/elements';
 import { AttachmentList, type Attachment } from 'pages/inside/common/attachmentList';
 import { IN_PROGRESS } from 'common/constants/testStatuses';
@@ -145,7 +149,7 @@ export const ExecutionSidePanel = ({ executionId, onClose }: ExecutionSidePanelP
           key: String(ticket.ticketId),
           name: ticket.ticketId,
           link: ticket.url,
-        }) as Issue,
+        }),
     );
   };
 
@@ -175,6 +179,12 @@ export const ExecutionSidePanel = ({ executionId, onClose }: ExecutionSidePanelP
         withoutRedirect
       />
       <div className={cx('meta-row')}>
+        {hasExecutionStatusBadge(currentStatus) && (
+          <div className={cx('meta-row-item')} data-automation-id="execution-side-panel-status">
+            <span className={cx('meta-label')}>{formatMessage(messages.status)}:</span>
+            <ExecutionStatusBadge status={currentStatus} className={cx('meta-value')} />
+          </div>
+        )}
         <div className={cx('meta-row-item')}>
           <span className={cx('meta-label')}>{formatMessage(messages.executionId)}:</span>
           <Link
