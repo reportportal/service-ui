@@ -25,7 +25,6 @@ import {
   clearManualLaunchFilteredFoldersAction,
 } from 'controllers/manualLaunch';
 import type { ManualLaunchFolder } from 'controllers/manualLaunch';
-import { ExecutionStatus } from 'types/testCase';
 import { useSearchFilteredFolderDisplay } from 'common/hooks';
 
 interface UseManualLaunchSearchFilteredFoldersParams {
@@ -33,7 +32,7 @@ interface UseManualLaunchSearchFilteredFoldersParams {
   launchId: string | number;
   filterPriorities?: string;
   filterTags?: string;
-  statusFilter?: ExecutionStatus;
+  statusFilter?: string;
 }
 
 export const useManualLaunchSearchFilteredFolders = ({

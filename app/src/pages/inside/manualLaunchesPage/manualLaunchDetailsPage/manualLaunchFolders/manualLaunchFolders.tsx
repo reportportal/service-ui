@@ -27,9 +27,9 @@ import {
   urlManualLaunchFolderIdSelector,
   expandManualLaunchFoldersToLevelAction,
   defaultManualLaunchesQueryParams,
+  normalizeExecutionStatusFilter,
 } from 'controllers/manualLaunch';
 import { MANUAL_LAUNCH_DETAILS_PAGE, locationSelector } from 'controllers/pages';
-import { ExecutionStatus } from 'types/testCase';
 import { useManualLaunchId, useProjectDetails } from 'hooks/useTypedSelector';
 import { TMS_INSTANCE_KEY } from 'pages/inside/common/constants';
 import { transformFoldersToDisplay, filterEmptyFolders } from 'common/utils/folderUtils';
@@ -51,9 +51,10 @@ export const ManualLaunchFolders = () => {
     searchQuery,
     filterPriorities,
     filterTags,
-    statusFilter,
+    statusFilter: queryStatusFilter,
     limit: queryLimit,
   } = useSelector(locationSelector)?.query ?? {};
+  const statusFilter = normalizeExecutionStatusFilter(queryStatusFilter);
 
   const urlFolderId = useSelector(urlManualLaunchFolderIdSelector);
   const urlFolderIdNumber = urlFolderId ? Number(urlFolderId) : null;
@@ -93,7 +94,7 @@ export const ManualLaunchFolders = () => {
     launchId,
     filterPriorities,
     filterTags,
-    statusFilter: statusFilter as ExecutionStatus | undefined,
+    statusFilter,
   });
 
   const navigateToFolder = useCallback(
