@@ -16,9 +16,9 @@
 
 import { getRouterParams } from 'common/utils';
 import type { AppState } from 'types/store';
-import { ExecutionStatus } from 'types/testCase';
 
 import { MANUAL_LAUNCH_TEST_CASE_EXECUTIONS_NAMESPACE, defaultManualLaunchesQueryParams } from './constants';
+import { normalizeExecutionStatusFilter } from './executionStatusFilter';
 import type { GetManualLaunchTestCaseExecutionsParams } from './types';
 
 export const getManualLaunchDetailsFetchParams = (state: AppState) => {
@@ -33,8 +33,7 @@ export const getManualLaunchDetailsFetchParams = (state: AppState) => {
     state,
   });
 
-  const rawStatus = query.statusFilter;
-  const statusFilter = rawStatus ? (rawStatus as ExecutionStatus) : undefined;
+  const statusFilter = normalizeExecutionStatusFilter(query.statusFilter);
 
   return {
     launchId,

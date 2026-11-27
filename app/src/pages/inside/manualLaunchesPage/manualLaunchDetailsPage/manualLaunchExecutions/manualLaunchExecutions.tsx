@@ -43,8 +43,8 @@ import { AdaptiveTagList } from 'pages/inside/productVersionPage/linkedTestCases
 import type { TestCasePriority } from 'types/testCase';
 import {
   MANUAL_LAUNCH_TEST_CASE_EXECUTIONS_NAMESPACE,
-  MANUAL_LAUNCH_TO_RUN_STATUS_QUERY_VALUE,
   defaultManualLaunchesQueryParams,
+  normalizeExecutionStatusFilter,
 } from 'controllers/manualLaunch';
 import type { TestCaseExecution } from 'controllers/manualLaunch';
 import { MANUAL_LAUNCHES_PAGE_EVENTS } from 'components/main/analytics/events/ga4Events/manualLaunchesPageEvents';
@@ -95,7 +95,7 @@ export const ManualLaunchExecutions = ({
       !!searchQuery ||
       !!query?.filterPriorities ||
       !!query?.filterTags ||
-      query?.statusFilter === MANUAL_LAUNCH_TO_RUN_STATUS_QUERY_VALUE
+      !!normalizeExecutionStatusFilter(query?.statusFilter)
     );
   }, [searchQuery, location?.query]);
 
@@ -335,7 +335,7 @@ export const ManualLaunchExecutions = ({
     return (
       <div className={cx('manual-launch-executions__empty')}>
         <EmptyPageState
-          emptyIcon={NoResultsIcon as unknown as string}
+          emptyIcon={NoResultsIcon}
           label={formatMessage(messages.noExecutions)}
         />
       </div>
@@ -361,7 +361,7 @@ export const ManualLaunchExecutions = ({
         {hasNoMatchingResults ? (
           <div className={cx('executions-table-wrapper', 'executions-table-wrapper--empty')}>
             <EmptyPageState
-              emptyIcon={NoResultsIcon as unknown as string}
+              emptyIcon={NoResultsIcon}
               label={formatMessage(COMMON_LOCALE_KEYS.NO_RESULTS)}
               description={formatMessage(messages.noResultsDescription)}
             />

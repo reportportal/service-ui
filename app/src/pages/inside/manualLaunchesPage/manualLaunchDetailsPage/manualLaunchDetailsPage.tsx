@@ -43,7 +43,8 @@ import {
   defaultManualLaunchesQueryParams,
   buildGetManualLaunchTestCaseExecutionsParams,
   getManualLaunchDetailsFetchParams,
-  MANUAL_LAUNCH_TO_RUN_STATUS_QUERY_VALUE,
+  parseExecutionStatusFilter,
+  serializeExecutionStatusFilter,
 } from 'controllers/manualLaunch';
 import {
   showNotification,
@@ -67,7 +68,6 @@ import {
   toBackendPriority,
 } from 'pages/inside/common/testCaseList/filterSidePanel/utils';
 import { messages as testCaseListMessages } from 'pages/inside/common/testCaseList/messages';
-import { ExecutionStatus } from 'types/testCase';
 import { MANUAL_LAUNCHES_PAGE_EVENTS } from 'components/main/analytics/events/ga4Events/manualLaunchesPageEvents';
 import { PAGE_VIEW_CONTENT_TYPE } from 'components/main/analytics/events/common/ga4Utils';
 
@@ -137,16 +137,17 @@ export const ManualLaunchDetailsPage = () => {
     );
   }, [isLoading, launch, trackEvent]);
 
-  const selectedToRunOnly =
-    queryStatusFilter === MANUAL_LAUNCH_TO_RUN_STATUS_QUERY_VALUE;
+  const selectedStatuses: string[] = useMemo(
+    () => parseExecutionStatusFilter(queryStatusFilter),
+    [queryStatusFilter],
+  );
 
   const activeFiltersCount = useMemo(() => {
     const priorities = parsePrioritiesFromQuery(queryFilterPriorities);
     const tags = parseTagsFromQuery(queryFilterTags);
-    const toRun = queryStatusFilter === MANUAL_LAUNCH_TO_RUN_STATUS_QUERY_VALUE;
 
-    return (isEmpty(priorities) ? 0 : 1) + (isEmpty(tags) ? 0 : 1) + (toRun ? 1 : 0);
-  }, [queryFilterPriorities, queryFilterTags, queryStatusFilter]);
+    return [priorities, tags, selectedStatuses].filter((group) => !isEmpty(group)).length;
+  }, [queryFilterPriorities, queryFilterTags, selectedStatuses]);
 
   const hasActiveFilters = activeFiltersCount > 0;
 
@@ -201,6 +202,7 @@ export const ManualLaunchDetailsPage = () => {
         limit: 100,
         ...(params.filterPriorities && { filterPriorities: params.filterPriorities }),
         ...(params.filterTags && { filterTags: params.filterTags }),
+        ...(params.statusFilter && { statusFilter: params.statusFilter }),
       }),
     );
     const executionsParams = buildGetManualLaunchTestCaseExecutionsParams(params);
@@ -218,10 +220,10 @@ export const ManualLaunchDetailsPage = () => {
     setIsFilterSidePanelVisible(true);
   };
 
-  const handleApplyFilters = ({ priorities, tags, toRunOnly }: FilterApplyPayload) => {
+  const handleApplyFilters = ({ priorities, tags, statuses }: FilterApplyPayload) => {
     const filterPriorities = isEmpty(priorities) ? undefined : toBackendPriority(priorities);
     const filterTags = isEmpty(tags) ? undefined : tags.join(',');
-    const statusFilter = toRunOnly ? ExecutionStatus.TO_RUN : undefined;
+    const statusFilter = serializeExecutionStatusFilter(statuses);
 
     trackEvent(MANUAL_LAUNCHES_PAGE_EVENTS.CLICK_APPLY_EXECUTIONS_FILTER);
 
@@ -295,7 +297,7 @@ export const ManualLaunchDetailsPage = () => {
     !!appliedSearchQuery ||
     !!queryFilterPriorities ||
     !!queryFilterTags ||
-    queryStatusFilter === MANUAL_LAUNCH_TO_RUN_STATUS_QUERY_VALUE;
+    !isEmpty(selectedStatuses);
 
   const renderContent = () => {
     const hasData = !isEmpty(folders) || !isEmpty(executions);
@@ -327,8 +329,8 @@ export const ManualLaunchDetailsPage = () => {
             onClose={handleCloseFilterSidePanel}
             selectedPriorities={selectedPriorities}
             selectedTags={selectedTags}
-            selectedToRunOnly={selectedToRunOnly}
-            showToRunOnly
+            selectedStatuses={selectedStatuses}
+            showStatusFilter
             onPrioritiesChange={setSelectedPriorities}
             onTagsChange={setSelectedTags}
             onApply={handleApplyFilters}

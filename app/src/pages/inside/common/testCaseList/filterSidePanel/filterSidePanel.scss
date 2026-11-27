@@ -44,9 +44,30 @@
   display: flex;
   flex-direction: column;
   gap: 4px;
+}
 
-  &--checkbox {
-    margin-top: 4px;
+.status-option {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.status-option-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  flex-shrink: 0;
+
+  &--passed {
+    background-color: var(--rp-ui-base-test-execution-status-passed);
+  }
+
+  &--failed {
+    background-color: var(--rp-ui-base-error);
+  }
+
+  &--skipped {
+    background-color: var(--rp-ui-base-e-200);
   }
 }
 

@@ -14,22 +14,17 @@
  * limitations under the License.
  */
 
-import {
-  memo,
-  useRef,
-  useMemo,
-  useState,
-  useEffect,
-  useCallback,
-  type ChangeEvent,
-} from 'react';
+import { memo, useRef, useMemo, useState, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import { useIntl } from 'react-intl';
 import isEqual from 'fast-deep-equal';
-import { Button, SidePanel, Dropdown, Checkbox } from '@reportportal/ui-kit';
+import { Button, SidePanel, Dropdown } from '@reportportal/ui-kit';
+import type { DropdownOptionProps } from '@reportportal/ui-kit/dropdown';
 import { isEmpty } from 'es-toolkit/compat';
 
 import { createClassnames } from 'common/utils';
+import { MANUAL_LAUNCH_FILTER_EXECUTION_STATUSES } from 'controllers/manualLaunch';
+import { ExecutionStatus } from 'types/testCase';
 import { commonMessages } from 'pages/inside/common/common-messages';
 import { messages as priorityMessages } from 'pages/inside/testCaseLibraryPage/createTestCaseModal/basicInformation/messages';
 
@@ -43,13 +38,47 @@ import styles from './filterSidePanel.scss';
 
 const cx = createClassnames(styles);
 
+type DropdownSelection = string | string[] | null;
+
+const EMPTY_STATUSES: string[] = [];
+
+const STATUS_OPTION_MESSAGES = {
+  [ExecutionStatus.TO_RUN]: commonMessages.toRun,
+  [ExecutionStatus.IN_PROGRESS]: commonMessages.inProgress,
+  [ExecutionStatus.PASSED]: commonMessages.passed,
+  [ExecutionStatus.FAILED]: commonMessages.failed,
+  [ExecutionStatus.SKIPPED]: commonMessages.skipped,
+};
+
+const STATUSES_WITH_DOT = new Set<string>([
+  ExecutionStatus.PASSED,
+  ExecutionStatus.FAILED,
+  ExecutionStatus.SKIPPED,
+]);
+
+const renderStatusOption = ({ option }: DropdownOptionProps) => {
+  const status = String(option.value);
+
+  return (
+    <span className={cx('status-option')}>
+      <span
+        className={cx('status-option-dot', {
+          [`status-option-dot--${status.toLowerCase()}`]: STATUSES_WITH_DOT.has(status),
+        })}
+        aria-hidden
+      />
+      {option.label}
+    </span>
+  );
+};
+
 interface FilterSidePanelProps {
   isVisible: boolean;
   onClose: () => void;
   selectedPriorities: string[];
   selectedTags: string[];
-  selectedToRunOnly?: boolean;
-  showToRunOnly?: boolean;
+  selectedStatuses?: string[];
+  showStatusFilter?: boolean;
   onPrioritiesChange: (priorities: string[]) => void;
   onTagsChange: (tags: string[]) => void;
   onApply: (payload: FilterApplyPayload) => void;
@@ -60,8 +89,8 @@ const FilterSidePanelComponent = ({
   onClose,
   selectedPriorities,
   selectedTags,
-  selectedToRunOnly = false,
-  showToRunOnly = false,
+  selectedStatuses = EMPTY_STATUSES,
+  showStatusFilter = false,
   onPrioritiesChange,
   onTagsChange,
   onApply,
@@ -73,19 +102,18 @@ const FilterSidePanelComponent = ({
   const [localSelectedPriorities, setLocalSelectedPriorities] =
     useState<string[]>(selectedPriorities);
   const [localSelectedTags, setLocalSelectedTags] = useState<string[]>(selectedTags);
-  const [localToRunOnly, setLocalToRunOnly] = useState(Boolean(selectedToRunOnly));
+  const [localSelectedStatuses, setLocalSelectedStatuses] = useState<string[]>(selectedStatuses);
 
   useEffect(() => {
     if (isVisible && !wasVisibleRef.current) {
       setLocalSelectedPriorities(selectedPriorities);
       setLocalSelectedTags(selectedTags);
-      setLocalToRunOnly(Boolean(selectedToRunOnly));
-      // eslint-disable-next-line @typescript-eslint/no-floating-promises -- fire-and-forget when panel opens
+      setLocalSelectedStatuses(selectedStatuses);
       fetchTagOptions();
     }
 
     wasVisibleRef.current = isVisible;
-  }, [isVisible, selectedPriorities, selectedTags, selectedToRunOnly, fetchTagOptions]);
+  }, [isVisible, selectedPriorities, selectedTags, selectedStatuses, fetchTagOptions]);
 
   const priorityOptions = useMemo(
     () => [
@@ -99,6 +127,15 @@ const FilterSidePanelComponent = ({
         label: formatMessage(priorityMessages.priorityUnspecified),
       },
     ],
+    [formatMessage],
+  );
+
+  const statusOptions = useMemo(
+    () =>
+      MANUAL_LAUNCH_FILTER_EXECUTION_STATUSES.map((status) => ({
+        value: status,
+        label: formatMessage(STATUS_OPTION_MESSAGES[status]),
+      })),
     [formatMessage],
   );
 
@@ -116,14 +153,14 @@ const FilterSidePanelComponent = ({
   const handleClearAllFilters = () => {
     setLocalSelectedPriorities([]);
     setLocalSelectedTags([]);
-    setLocalToRunOnly(false);
+    setLocalSelectedStatuses([]);
   };
 
   const handleApplyFilters = () => {
     const payload: FilterApplyPayload = {
       priorities: localSelectedPriorities,
       tags: localSelectedTags,
-      toRunOnly: showToRunOnly ? localToRunOnly : false,
+      statuses: showStatusFilter ? localSelectedStatuses : [],
     };
 
     onPrioritiesChange(payload.priorities);
@@ -136,45 +173,43 @@ const FilterSidePanelComponent = ({
     onClose();
   };
 
-  const handlePriorityChange = (value: string | string[] | null) => {
+  const handlePriorityChange = (value: DropdownSelection) => {
     setLocalSelectedPriorities(ensureArray(value));
   };
 
-  const handleTagsChange = (value: string | string[] | null) => {
+  const handleTagsChange = (value: DropdownSelection) => {
     setLocalSelectedTags(ensureArray(value));
   };
 
-  const handleToRunOnlyChange = useCallback((event: ChangeEvent<HTMLInputElement>) => {
-    setLocalToRunOnly(event.target.checked);
-  }, []);
+  const handleStatusesChange = (value: DropdownSelection) => {
+    setLocalSelectedStatuses(ensureArray(value));
+  };
 
-  const appliedToRunOnly = showToRunOnly ? Boolean(selectedToRunOnly) : false;
+  const appliedStatuses = showStatusFilter ? selectedStatuses : EMPTY_STATUSES;
+  const pendingStatuses = showStatusFilter ? localSelectedStatuses : EMPTY_STATUSES;
   const hasActiveFilters =
-    !isEmpty(localSelectedPriorities) ||
-    !isEmpty(localSelectedTags) ||
-    (showToRunOnly && localToRunOnly);
+    !isEmpty(localSelectedPriorities) || !isEmpty(localSelectedTags) || !isEmpty(pendingStatuses);
 
   const hasChanges = useMemo(() => {
     const applied = {
       priorities: normalizeSelection(selectedPriorities),
       tags: normalizeSelection(selectedTags),
-      toRunOnly: appliedToRunOnly,
+      statuses: normalizeSelection(appliedStatuses),
     };
     const pending = {
       priorities: normalizeSelection(localSelectedPriorities),
       tags: normalizeSelection(localSelectedTags),
-      toRunOnly: showToRunOnly ? localToRunOnly : false,
+      statuses: normalizeSelection(pendingStatuses),
     };
 
     return !isEqual(applied, pending);
   }, [
     localSelectedPriorities,
     localSelectedTags,
-    localToRunOnly,
     selectedPriorities,
     selectedTags,
-    appliedToRunOnly,
-    showToRunOnly,
+    appliedStatuses,
+    pendingStatuses,
   ]);
 
   const titleComponent = (
@@ -183,6 +218,20 @@ const FilterSidePanelComponent = ({
 
   const contentComponent = (
     <div className={cx('filter-content')}>
+      {showStatusFilter && (
+        <div className={cx('filter-section')}>
+          <div className={cx('filter-label')}>{formatMessage(messages.status)}</div>
+          <Dropdown
+            options={statusOptions}
+            value={localSelectedStatuses}
+            onChange={handleStatusesChange}
+            placeholder={formatMessage(messages.selectExecutionStatuses)}
+            renderOption={renderStatusOption}
+            multiSelect
+            clearable
+          />
+        </div>
+      )}
       <div className={cx('filter-section')}>
         <div className={cx('filter-label')}>{formatMessage(commonMessages.priority)}</div>
         <Dropdown
@@ -206,13 +255,6 @@ const FilterSidePanelComponent = ({
           clearable
         />
       </div>
-      {showToRunOnly && (
-        <div className={cx('filter-section', 'filter-section--checkbox')}>
-          <Checkbox value={localToRunOnly} onChange={handleToRunOnlyChange}>
-            {formatMessage(messages.showToRunOnly)}
-          </Checkbox>
-        </div>
-      )}
     </div>
   );
 

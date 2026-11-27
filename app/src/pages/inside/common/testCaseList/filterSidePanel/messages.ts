@@ -25,8 +25,12 @@ export const messages = defineMessages({
     id: 'FilterSidePanel.selectTags',
     defaultMessage: 'Search and select tags to filter',
   },
-  showToRunOnly: {
-    id: 'FilterSidePanel.showToRunOnly',
-    defaultMessage: "Show 'To Run' only",
+  status: {
+    id: 'FilterSidePanel.status',
+    defaultMessage: 'Status',
+  },
+  selectExecutionStatuses: {
+    id: 'FilterSidePanel.selectExecutionStatuses',
+    defaultMessage: 'Select execution statuses',
   },
 });
