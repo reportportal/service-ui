@@ -79,7 +79,7 @@ const safeGetMessage = (
   return messageDescriptor ? formatMessage(messageDescriptor) : key;
 };
 
-const COLLAPSIBLE_SECTIONS_CONFIG = ({
+export const COLLAPSIBLE_SECTIONS_CONFIG = ({
   attributes,
   scenario,
   testCaseDescription,
@@ -111,6 +111,13 @@ const COLLAPSIBLE_SECTIONS_CONFIG = ({
       ),
     },
     {
+      titleKey: 'description',
+      defaultMessageKey: 'descriptionNotSpecified',
+      childComponent: testCaseDescription ? (
+        <ExpandedTextSection text={testCaseDescription} defaultVisibleLines={5} />
+      ) : null,
+    },
+    {
       titleKey: 'requirements',
       defaultMessageKey: 'requirementsAreNotSpecified',
       childComponent: isEmpty(requirements) ? null : <RequirementsList items={requirements} />,
@@ -131,13 +138,6 @@ const COLLAPSIBLE_SECTIONS_CONFIG = ({
           },
         ]
       : []),
-    {
-      titleKey: 'description',
-      defaultMessageKey: 'descriptionNotSpecified',
-      childComponent: testCaseDescription ? (
-        <ExpandedTextSection text={testCaseDescription} defaultVisibleLines={5} />
-      ) : null,
-    },
   ] as const;
 };
 
@@ -281,7 +281,7 @@ export const TestCaseSidePanel = memo(
               aria-label={formatMessage(commonMessages.closePanel)}
               data-automation-id="close-test-case-panel"
             >
-              {Parser(CrossIcon as unknown as string)}
+              {Parser(CrossIcon)}
             </button>
           </div>
           <FolderBreadcrumbs
