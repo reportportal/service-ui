@@ -36,14 +36,14 @@
 
     .item-cases-growth {
       .increase {
-        color: $COLOR--dark-pastel-green;
+        color: $COLOR--test-execution-status-passed;
       }
       .decrease {
-        color: $COLOR--orange-red;
+        color: $COLOR--red-failed-2;
       }
     }
-    span {
-      font-family: $FONT-SEMIBOLD;
+    .item-cases-total span {
+      font-weight: var(--rp-ui-base-fw-bold);
     }
   }
 }

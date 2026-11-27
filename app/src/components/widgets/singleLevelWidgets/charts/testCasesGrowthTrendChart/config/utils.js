@@ -16,7 +16,15 @@
 
 import { defineMessages } from 'react-intl';
 import classNames from 'classnames/bind';
-import { dateFormat } from 'common/utils/timeDateUtils';
+import moment from 'moment';
+import { TIMELINE_TOOLTIP_DATE_FORMAT } from '../../launchStatisticsChart/constants';
+import { TOOLTIP_DATE_FORMAT } from '../../common/trendLineChart/trendChartDesignStyles';
+import styles from '../testCasesGrowthTrendChart.scss';
+
+const cx = classNames.bind(styles);
+
+const toTimestamp = (value) =>
+  /^\d+$/.test(String(value)) ? Number(value) : new Date(value).getTime();
 
 const localMessages = defineMessages({
   growTestCases: {
@@ -49,8 +57,9 @@ export const calculateTooltipParams = (data, color, customProps) => {
   });
 
   return {
-    itemName: isTimeline ? date : `${name} #${number}`,
-    startTime: isTimeline ? '' : dateFormat(new Date(startTime).getTime()),
+    itemName: isTimeline ? moment(date).format(TIMELINE_TOOLTIP_DATE_FORMAT) : `${name} #${number}`,
+    startTime: isTimeline ? '' : moment(toTimestamp(startTime)).format(TOOLTIP_DATE_FORMAT),
+    wrapperClassName: cx('tooltip'),
     growth,
     growthClass,
     total,

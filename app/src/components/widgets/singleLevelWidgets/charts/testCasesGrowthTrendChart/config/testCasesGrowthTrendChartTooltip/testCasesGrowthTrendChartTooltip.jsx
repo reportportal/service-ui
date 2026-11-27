@@ -24,6 +24,7 @@ const cx = classNames.bind(styles);
 
 export const TestCasesGrowthTrendChartTooltip = ({
   itemName,
+  wrapperClassName,
   startTime,
   growthClass,
   growth,
@@ -31,7 +32,7 @@ export const TestCasesGrowthTrendChartTooltip = ({
   growTestCasesMessage,
   totalTestCasesMessage,
 }) => (
-  <TooltipContent itemName={itemName}>
+  <TooltipContent itemName={itemName} wrapperClassName={wrapperClassName}>
     {startTime && <div className={cx('launch-start-time')}>{startTime}</div>}
     <div className={cx('item-wrapper')}>
       <div className={cx('item-cases')}>
@@ -49,6 +50,7 @@ export const TestCasesGrowthTrendChartTooltip = ({
 );
 TestCasesGrowthTrendChartTooltip.propTypes = {
   itemName: PropTypes.string.isRequired,
+  wrapperClassName: PropTypes.string,
   startTime: PropTypes.string,
   growthClass: PropTypes.string,
   growth: PropTypes.number,
@@ -58,6 +60,7 @@ TestCasesGrowthTrendChartTooltip.propTypes = {
 };
 TestCasesGrowthTrendChartTooltip.defaultProps = {
   itemName: '',
+  wrapperClassName: '',
   startTime: '',
   growthClass: '',
   growth: 0,

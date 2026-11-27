@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { useCallback, useMemo } from 'react';
+import { useCallback, useMemo, useRef } from 'react';
 import PropTypes from 'prop-types';
 import { useIntl } from 'react-intl';
 import { useDispatch, useSelector } from 'react-redux';
@@ -31,7 +31,7 @@ import {
   getDefaultTestItemLinkParams,
 } from 'components/widgets/common/utils';
 import { urlOrganizationAndProjectSelector } from 'controllers/pages';
-import { getOption } from './config/getOption';
+import { getOption, getAxesUpdate } from './config/getOption';
 import styles from './testCasesGrowthTrendChart.scss';
 
 const cx = classNames.bind(styles);
@@ -52,8 +52,7 @@ export const TestCasesGrowthTrendChart = ({
     () =>
       Boolean(
         widget.contentParameters &&
-          widget.contentParameters.widgetOptions.timeline ===
-            MODES_VALUES[CHART_MODES.TIMELINE_MODE],
+        widget.contentParameters.widgetOptions.timeline === MODES_VALUES[CHART_MODES.TIMELINE_MODE],
       ),
     [widget.contentParameters],
   );
@@ -89,6 +88,21 @@ export const TestCasesGrowthTrendChart = ({
     [isTimeline, launchModeClickHandler, timeLineModeClickHandler],
   );
 
+  const chartRef = useRef(null);
+  const content = widget.content?.result;
+
+  const onChartCreated = useCallback((_node, chart) => {
+    chartRef.current = chart;
+  }, []);
+
+  const onResized = useCallback(() => {
+    const chart = chartRef.current;
+    if (!chart || isPreview || !content) return;
+    chart.setOption(
+      getAxesUpdate(content, { width: chart.getWidth(), height: chart.getHeight(), isTimeline }),
+    );
+  }, [content, isPreview, isTimeline]);
+
   const configData = useMemo(
     () => ({
       getOption,
@@ -104,6 +118,8 @@ export const TestCasesGrowthTrendChart = ({
       <EChart
         {...getChartDefaultProps({ widget, container, isPreview, observer, heightOffset })}
         configData={configData}
+        chartCreatedCallback={onChartCreated}
+        resizedCallback={onResized}
         legendConfig={{
           showLegend: false,
         }}
