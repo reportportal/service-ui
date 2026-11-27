@@ -1,5 +1,5 @@
 /*!
- * Copyright 2019 EPAM Systems
+ * Copyright 2026 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,30 +15,33 @@
  */
 
 .matrix {
-  display: table;
-  max-width: 50px;
-  min-height: 35px;
+  flex-shrink: 0;
+  width: 49px;
+
   .squares-wrapper {
-    display: table-cell;
-    vertical-align: middle;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1px;
+
     .square {
-      float: left;
       width: 4px;
       height: 4px;
-      margin-right: 1px;
-      margin-bottom: 1px;
-      background-color: $COLOR--booger;
+      background-color: var(--rp-ui-base-test-execution-status-passed);
+
       &.most-failed {
-        background-color: $COLOR--tealish;
+        background-color: var(--rp-ui-base-error);
       }
+
       &.passed {
-        background-color: $COLOR--passed;
+        background-color: var(--rp-ui-base-test-execution-status-passed);
       }
+
       &.failed {
-        background-color: $COLOR--failed;
+        background-color: var(--rp-ui-base-error);
       }
+
       &.skipped {
-        background-color: $COLOR--skipped;
+        background-color: var(--rp-ui-base-e-200);
       }
     }
   }

@@ -97,15 +97,23 @@ export class TestsTableRow extends Component {
         </div>
         {Matrix && count && (
           <div className={cx('col', 'col-count')} title={matrixTooltip}>
-            <Count count={count} total={total} />
             <Matrix tests={matrixData} id={uniqueId} />
+            <Count count={count} total={total} />
           </div>
         )}
         {percentage && <div className={cx('col', 'col-percents')}>{percentage}%</div>}
-        {status && <div className={cx('col', 'col-status')}>{status}</div>}
+        {status && (
+          <div className={cx('col', 'col-status')}>
+            <span className={cx('status-dot', status)} />
+            {status}
+          </div>
+        )}
         {duration && <div className={cx('col', 'col-duration')}>{duration}</div>}
         <div className={cx('col', 'col-date')}>
-          <AbsRelTime startTime={Array.isArray(time) ? time[time.length - 1] : time} />
+          <AbsRelTime
+            startTime={Array.isArray(time) ? time[time.length - 1] : time}
+            customClass={cx('date')}
+          />
         </div>
       </div>
     );
