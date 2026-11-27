@@ -25,6 +25,7 @@ import { createClassnames } from 'common/utils';
 import { FieldProvider } from 'components/fields';
 import {
   normalizeExecutionEstimationTime,
+  EXECUTION_ESTIMATION_TIME_FIELD_MIN_VALUE,
   EXECUTION_ESTIMATION_TIME_MAX_VALUE,
   createExecutionEstimationTimeMaxValidator,
 } from '../utils/executionEstimationTimeFieldUtils';
@@ -78,7 +79,8 @@ export const ScenarioFields = ({ formName }: ScenarioFieldsProps) => {
           validate={validateExecutionTime}
         >
           <FieldNumber
-            min={1}
+            min={EXECUTION_ESTIMATION_TIME_FIELD_MIN_VALUE}
+            placeholder=""
             max={EXECUTION_ESTIMATION_TIME_MAX_VALUE}
             label={formatMessage(commonMessages.executionTime)}
             onChange={noop}

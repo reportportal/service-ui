@@ -27,11 +27,12 @@ import {
 } from '../types';
 import { NewFolderData, isNewFolderData } from '../utils/getFolderFromFormValues';
 import { getMeaningfulRequirements } from '../utils/requirementsUtils';
+import { getExecutionEstimationTimePayload } from '../utils/executionEstimationTimeFieldUtils';
 import { hasStepContent } from '../../common/scenarioUtils';
 
 export const buildManualScenario = (payload: CreateTestCaseFormData): ManualScenarioDto => {
   const commonData = {
-    executionEstimationTime: payload.executionEstimationTime,
+    executionEstimationTime: getExecutionEstimationTimePayload(payload.executionEstimationTime),
     requirements: getMeaningfulRequirements(payload.requirements),
     manualScenarioType: payload.manualScenarioType,
     preconditions: {

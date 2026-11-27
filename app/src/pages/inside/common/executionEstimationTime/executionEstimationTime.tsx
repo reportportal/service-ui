@@ -20,6 +20,8 @@ import { MILLISECONDS_IN_MINUTE } from 'common/constants/common';
 
 import { formatDuration } from '../testCaseList/utils';
 
+const EMPTY_EXECUTION_ESTIMATION_TIME = '—';
+
 interface ExecutionEstimationTimeProps {
   executionEstimationTime: number | undefined | null;
   className?: string;
@@ -30,17 +32,13 @@ export const ExecutionEstimationTime = ({
   executionEstimationTime,
   className,
   valueClassName,
-}: ExecutionEstimationTimeProps) => {
-  if (!executionEstimationTime) {
-    return null;
-  }
-
-  return (
-    <div className={className}>
-      <DurationIcon />
-      <span className={valueClassName}>
-        {formatDuration(executionEstimationTime * MILLISECONDS_IN_MINUTE)}
-      </span>
-    </div>
-  );
-};
+}: ExecutionEstimationTimeProps) => (
+  <div className={className}>
+    <DurationIcon />
+    <span className={valueClassName}>
+      {executionEstimationTime
+        ? formatDuration(executionEstimationTime * MILLISECONDS_IN_MINUTE)
+        : EMPTY_EXECUTION_ESTIMATION_TIME}
+    </span>
+  </div>
+);

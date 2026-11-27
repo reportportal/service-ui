@@ -24,6 +24,8 @@ import { FieldProvider } from 'components/fields';
 import { ManualScenarioType } from 'pages/inside/testCaseLibraryPage/types';
 import { commonMessages } from 'pages/inside/testCaseLibraryPage/commonMessages';
 import {
+  normalizeExecutionEstimationTime,
+  EXECUTION_ESTIMATION_TIME_FIELD_MIN_VALUE,
   EXECUTION_ESTIMATION_TIME_MAX_VALUE,
   createExecutionEstimationTimeMaxValidator,
 } from 'pages/inside/testCaseLibraryPage/utils/executionEstimationTimeFieldUtils';
@@ -98,9 +100,14 @@ export const Template = ({ isTemplateFieldDisabled = false }: TemplateProps) => 
         />
       </FieldProvider>
       <div className={cx('template__execution-time')}>
-        <FieldProvider name="executionEstimationTime" validate={validateExecutionTime}>
+        <FieldProvider
+          name="executionEstimationTime"
+          parse={normalizeExecutionEstimationTime}
+          validate={validateExecutionTime}
+        >
           <FieldNumber
-            min={1}
+            min={EXECUTION_ESTIMATION_TIME_FIELD_MIN_VALUE}
+            placeholder=""
             max={EXECUTION_ESTIMATION_TIME_MAX_VALUE}
             label={formatMessage(commonMessages.executionTime)}
             onChange={noop}

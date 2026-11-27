@@ -21,12 +21,7 @@ import { isEmpty } from 'es-toolkit/compat';
 import { uniqueId } from 'common/utils';
 import { ExtendedTestCase } from 'types/testCase';
 
-import {
-  CreateTestCaseFormData,
-  hasTagShape,
-  ManualScenarioType,
-  StepFormValue,
-} from '../types';
+import { CreateTestCaseFormData, hasTagShape, ManualScenarioType, StepFormValue } from '../types';
 import { TEST_CASE_FORM_INITIAL_VALUES } from '../createTestCaseModal/constants';
 import { normalizeAttachmentsForForm } from '../createTestCaseModal/utils';
 import { createEmptyStep } from '../editScenarioModal/constants';
@@ -93,9 +88,7 @@ export const useTestCaseFormInitialization = ({
           value: value ?? '',
         })),
         manualScenarioType,
-        executionEstimationTime:
-          manualScenario?.executionEstimationTime ??
-          TEST_CASE_FORM_INITIAL_VALUES.executionEstimationTime,
+        executionEstimationTime: manualScenario?.executionEstimationTime,
         requirements: isEmpty(manualScenario?.requirements)
           ? [{ id: uniqueId(), value: '' }]
           : manualScenario?.requirements,
@@ -111,7 +104,7 @@ export const useTestCaseFormInitialization = ({
         }),
       };
 
-      initialize({ ...formData } as unknown as Partial<CreateTestCaseFormData>);
+      initialize({ ...formData } as unknown);
 
       // Reset form to pristine state and set initialized flag
       const timeoutId = setTimeout(() => {

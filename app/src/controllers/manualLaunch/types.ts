@@ -230,7 +230,7 @@ export interface ManualScenarioRequirement {
 
 export interface ManualScenario {
   id: number;
-  executionEstimationTime: number;
+  executionEstimationTime: number | null;
   linkToRequirements?: string;
   requirements?: ManualScenarioRequirement[];
   preconditions?: Preconditions;
