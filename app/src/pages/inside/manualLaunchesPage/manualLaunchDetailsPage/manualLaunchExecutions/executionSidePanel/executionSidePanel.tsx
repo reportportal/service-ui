@@ -145,7 +145,7 @@ export const ExecutionSidePanel = ({ executionId, onClose }: ExecutionSidePanelP
           key: String(ticket.ticketId),
           name: ticket.ticketId,
           link: ticket.url,
-        }) as Issue,
+        }),
     );
   };
 
@@ -299,9 +299,9 @@ export const ExecutionSidePanel = ({ executionId, onClose }: ExecutionSidePanelP
     </div>
   );
 
-  const footerComponent =
+  const manageActions =
     canManageExecutions && executionDetails ? (
-      <div className={cx('footer')}>
+      <div className={cx('footer-actions')}>
         <ExecutionStatusPopover
           executionId={executionId}
           isOpened={isStatusPopoverOpen}
@@ -344,6 +344,20 @@ export const ExecutionSidePanel = ({ executionId, onClose }: ExecutionSidePanelP
         )}
       </div>
     ) : null;
+
+  const footerComponent = executionDetails ? (
+    <div className={cx('footer')}>
+      <Button
+        variant="text"
+        adjustWidthOn="content"
+        onClick={navigateToExecutionPage}
+        data-automation-id="execution-open-details"
+      >
+        {formatMessage(messages.openDetails)}
+      </Button>
+      {manageActions}
+    </div>
+  ) : null;
 
   return (
     <div ref={sidePanelRef}>
