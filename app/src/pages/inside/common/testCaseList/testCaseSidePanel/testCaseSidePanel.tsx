@@ -27,7 +27,14 @@ import {
   TEST_CASE_PLACE,
   type TestCaseMenuElementName,
 } from 'analyticsEvents/testCaseLibraryPageEvents';
-import { Button, MeatballMenuIcon, Tooltip, CopyIcon, RerunIcon } from '@reportportal/ui-kit';
+import {
+  Button,
+  MeatballMenuIcon,
+  Tooltip,
+  CopyIcon,
+  RerunIcon,
+  EditIcon,
+} from '@reportportal/ui-kit';
 import { isEmpty } from 'es-toolkit/compat';
 
 import { createClassnames, copyToClipboard } from 'common/utils';
@@ -51,6 +58,8 @@ import { ManualScenario, ExtendedTestCase, Requirement, TestCaseManualScenario }
 import { useAddTestCasesToTestPlanModal } from 'pages/inside/testCaseLibraryPage/addTestCasesToTestPlanModal/useAddTestCasesToTestPlanModal';
 import { commonMessages as testCaseLibraryCommonMessages } from 'pages/inside/testCaseLibraryPage/commonMessages';
 import { useEditTestCaseModal } from 'pages/inside/testCaseLibraryPage/createTestCaseModal';
+import { useEditNameAndPriorityModal } from 'pages/inside/testCaseLibraryPage/testCaseDetailsPage/editTestCaseModal';
+import { messages as testCaseDetailsMessages } from 'pages/inside/testCaseLibraryPage/testCaseDetailsPage/messages';
 import { useDeleteTestCaseModal } from 'pages/inside/testCaseLibraryPage/deleteTestCaseModal';
 import { useMoveTestCaseModal } from 'pages/inside/testCaseLibraryPage/moveTestCaseModal/useMoveTestCaseModal';
 import { useDuplicateSelectedTestCaseModal } from 'pages/inside/testCaseLibraryPage/duplicateSelectedTestCaseModal';
@@ -159,6 +168,7 @@ export const TestCaseSidePanel = memo(
     const sidePanelRef = useRef<HTMLDivElement>(null);
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const { openModal: openEditTestCaseModal } = useEditTestCaseModal();
+    const { openModal: openEditNameAndPriorityModal } = useEditNameAndPriorityModal();
     const { openModal: openAddTestCasesToTestPlanModal } = useAddTestCasesToTestPlanModal();
     const { openModal: openDeleteTestCaseModal } = useDeleteTestCaseModal();
     const { openModal: openMoveTestCaseModal } = useMoveTestCaseModal();
@@ -273,6 +283,17 @@ export const TestCaseSidePanel = memo(
               <span className={cx('test-name')} title={testCase.name}>
                 {testCase.name}
               </span>
+              {canManageTestCases && (
+                <button
+                  type="button"
+                  className={cx('edit-name-button')}
+                  onClick={() => openEditNameAndPriorityModal(testCase)}
+                  aria-label={formatMessage(testCaseDetailsMessages.editTestCase)}
+                  data-automation-id="edit-test-case-name-and-priority"
+                >
+                  <EditIcon />
+                </button>
+              )}
             </div>
             <button
               type="button"

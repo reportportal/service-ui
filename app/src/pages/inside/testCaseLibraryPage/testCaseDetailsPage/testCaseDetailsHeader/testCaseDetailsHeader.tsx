@@ -37,7 +37,6 @@ import { PopoverControl } from 'pages/common/popoverControl';
 import { PopoverItem } from 'pages/common/popoverControl/popoverControl';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { REVERSED_DATE_FORMAT } from 'common/constants/timeDateFormat';
-import { showModalAction } from 'controllers/modal';
 import { TEST_CASE_LIBRARY_PAGE, urlOrganizationAndProjectSelector } from 'controllers/pages';
 import { useUserPermissions } from 'hooks/useUserPermissions';
 import { useHasTestPlans } from 'hooks/useHasTestPlans';
@@ -48,7 +47,7 @@ import type { ExtendedTestCase, TestCasePriority } from 'types/testCase';
 
 import { messages } from './messages';
 import { commonMessages } from '../../commonMessages';
-import { EDIT_TEST_CASE_MODAL_KEY } from '../editTestCaseModal/editTestCaseModal';
+import { useEditNameAndPriorityModal } from '../editTestCaseModal';
 import { useDeleteTestCaseModal } from '../../deleteTestCaseModal';
 import { useEditScenarioModal } from '../../editScenarioModal';
 import { useDuplicateSelectedTestCaseModal } from '../../duplicateSelectedTestCaseModal';
@@ -84,6 +83,7 @@ export const TestCaseDetailsHeader = ({
   const { openModal: openDeleteTestCaseModal } = useDeleteTestCaseModal();
   const { openModal: openDuplicateSelectedTestCaseModal } = useDuplicateSelectedTestCaseModal();
   const { openModal: openEditScenarioModal } = useEditScenarioModal();
+  const { openModal: openEditNameAndPriorityModal } = useEditNameAndPriorityModal();
   const { hasTestPlans } = useHasTestPlans();
 
   const breadcrumbsTitles = {
@@ -166,22 +166,6 @@ export const TestCaseDetailsHeader = ({
     openEditScenarioModal({ testCase });
   };
 
-  const openEditNameAndPriorityModal = () => {
-    dispatch(
-      showModalAction({
-        id: EDIT_TEST_CASE_MODAL_KEY,
-        data: {
-          initialValues: {
-            name: testCase.name,
-            priority: testCasePriority,
-            testFolderId: testCase.testFolder.id,
-          },
-          testCaseId: testCase.id,
-        },
-      }),
-    );
-  };
-
   return (
     <div className={cx('header', className)}>
       <div className={cx('header__breadcrumb')}>
@@ -197,7 +181,7 @@ export const TestCaseDetailsHeader = ({
           <button
             type="button"
             className={cx('header__edit-button')}
-            onClick={openEditNameAndPriorityModal}
+            onClick={() => openEditNameAndPriorityModal(testCase)}
           >
             {Parser(PencilIcon as unknown as string)}
           </button>
