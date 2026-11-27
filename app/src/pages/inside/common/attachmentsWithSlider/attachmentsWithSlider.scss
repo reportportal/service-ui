@@ -20,7 +20,41 @@
   flex-wrap: wrap;
   align-items: flex-start;
   margin-top: 8px;
-  gap: 8px;
+  gap: 16px;
+}
+
+.removable-item {
+  position: relative;
+}
+
+.remove-button {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  padding: 2px;
+  border: none;
+  border-radius: 50%;
+  background-color: var(--rp-ui-base-bg-000);
+  box-shadow: var(--rp-ui-base-shadow);
+  cursor: pointer;
+
+  svg {
+    width: 16px;
+    height: 16px;
+  }
+
+  svg path {
+    fill: var(--rp-ui-base-e-300);
+  }
+
+  &:hover svg path {
+    fill: var(--rp-ui-base-topaz-hover);
+  }
 }
 
 .galleryItem {

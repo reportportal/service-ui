@@ -22,7 +22,8 @@ import { createClassnames } from 'common/utils';
 import { FieldErrorHint, FieldProvider } from 'components/fields';
 import { ExpandedTextSection } from 'components/fields/expandedTextSection';
 import { EMPTY_FIELD_VALUE } from 'pages/inside/common/constants';
-import { AttachmentList, type Attachment } from 'pages/inside/common/attachmentList';
+import { type Attachment } from 'pages/inside/common/attachmentList';
+import { AttachmentsWithSlider } from 'pages/inside/common/attachmentsWithSlider';
 import { FieldSection } from 'pages/inside/common/fieldSection';
 import {
   INSTRUCTIONS_FIELD_MAX_LENGTH,
@@ -62,6 +63,8 @@ interface StepProps {
   instructions?: string;
   expectedResult?: string;
   attachments?: Attachment[];
+  /** Caption of the attachments block in read mode; "Attachments" by default. */
+  attachmentsTitle?: string;
 }
 
 const textAreaHeight = 53;
@@ -73,6 +76,7 @@ export const Step = ({
   instructions,
   expectedResult,
   attachments,
+  attachmentsTitle,
 }: StepProps) => {
   const { formatMessage } = useIntl();
 
@@ -101,10 +105,10 @@ export const Step = ({
           <>
             {isTextInformation && <div className={cx('section-border')} />}
             <FieldSection
-              title={`${formatMessage(messages.attachments)} ${attachments.length}`}
+              title={`${attachmentsTitle ?? formatMessage(messages.attachments)} ${attachments.length}`}
               className={cx(isTextInformation ? '' : 'header-no-margin')}
             >
-              <AttachmentList attachments={attachments} />
+              <AttachmentsWithSlider attachments={attachments} />
             </FieldSection>
           </>
         )}

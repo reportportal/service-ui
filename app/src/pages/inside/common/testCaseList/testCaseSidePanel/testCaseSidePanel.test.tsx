@@ -36,13 +36,13 @@ describe('COLLAPSIBLE_SECTIONS_CONFIG', () => {
     ]);
   });
 
-  it('places Description right after Tags and Attachments last for a text-based test case', () => {
+  it('places Description right after Tags and Test case attachments last for a text-based test case', () => {
     expect(getTitleKeys(TestCaseManualScenario.TEXT)).toEqual([
       'tags',
       'description',
       'requirements',
       'scenarioTitle',
-      'attachments',
+      'testCaseAttachments',
     ]);
   });
 });

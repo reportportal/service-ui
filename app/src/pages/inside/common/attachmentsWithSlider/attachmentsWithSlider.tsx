@@ -14,15 +14,31 @@
  * limitations under the License.
  */
 
-import { useCallback, useEffect, useLayoutEffect, useRef, useState, MutableRefObject } from 'react';
+import {
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+  useState,
+  MutableRefObject,
+} from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { isEmpty } from 'es-toolkit/compat';
-import { CsvIcon, ImageIcon, JarIcon, PdfIcon, XlsIcon, FileOtherIcon } from '@reportportal/ui-kit';
+import {
+  CsvIcon,
+  ImageIcon,
+  JarIcon,
+  PdfIcon,
+  XlsIcon,
+  FileOtherIcon,
+  CloseIcon,
+} from '@reportportal/ui-kit';
 import { createClassnames } from 'common/utils';
 
 import { svgToBase64 } from '../utils';
 import type { AttachmentWithSlider } from './types';
-import { applyFullImageStateForAttachment, getFileExtension } from './utils';
+import { applyFullImageStateForAttachment, getFileExtension, withThumbnailFlag } from './utils';
 import { useAttachmentsWithSlider } from './hooks/useAttachmentsWithSlider';
 import { GalleryAttachmentTile } from './galleryAttachmentTile';
 import { AttachmentsGallerySlider } from './attachmentsGallerySlider';
@@ -34,6 +50,9 @@ const cx = createClassnames(styles);
 interface AttachmentWithSliderProps {
   attachments: AttachmentWithSlider[];
   className?: string;
+  /** Shows a remove button on every preview (for example, saved execution attachments). */
+  onRemove?: (attachment: AttachmentWithSlider) => void;
+  removeButtonLabel?: string;
 }
 
 const svgFallbacks = {
@@ -51,9 +70,12 @@ const svgFallbacks = {
 } as const;
 
 export const AttachmentsWithSlider = ({
-  attachments,
+  attachments: sourceAttachments,
   className = '',
+  onRemove,
+  removeButtonLabel,
 }: AttachmentWithSliderProps) => {
+  const attachments = useMemo(() => sourceAttachments.map(withThumbnailFlag), [sourceAttachments]);
   const { fetchAttachmentPreview, fetchFullAttachmentBlob, downloadAttachment } =
     useAttachmentsWithSlider();
   const shouldApplyAttachmentPreviewRef = useRef(true);
@@ -244,16 +266,35 @@ export const AttachmentsWithSlider = ({
 
   return (
     <div className={cx('attachmentsList', className)}>
-      {displayedAttachments.map((attachment, index) => (
-        <GalleryAttachmentTile
-          key={attachment.id}
-          attachment={attachment}
-          index={index}
-          isReady={isReady}
-          galleryItemClass={styles.galleryItem}
-          onOpen={openGallery}
-        />
-      ))}
+      {displayedAttachments.map((attachment, index) => {
+        const tile = (
+          <GalleryAttachmentTile
+            key={attachment.id}
+            attachment={attachment}
+            index={index}
+            isReady={isReady}
+            galleryItemClass={styles.galleryItem}
+            onOpen={openGallery}
+          />
+        );
+
+        return onRemove ? (
+          <div key={attachment.id} className={cx('removable-item')}>
+            {tile}
+            <button
+              type="button"
+              className={cx('remove-button')}
+              aria-label={removeButtonLabel}
+              title={removeButtonLabel}
+              onClick={() => onRemove(attachment)}
+            >
+              <CloseIcon />
+            </button>
+          </div>
+        ) : (
+          tile
+        );
+      })}
       <AttachmentsGallerySlider
         isOpen={isGalleryOpen}
         activeIndex={galleryIndex}
