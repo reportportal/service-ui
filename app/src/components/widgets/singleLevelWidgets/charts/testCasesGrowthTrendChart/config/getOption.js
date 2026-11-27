@@ -16,42 +16,66 @@
 
 import moment from 'moment';
 import {
-  COLOR_BLACK,
   COLOR_CHARCOAL_GREY,
-  COLOR_DARK_PASTEL_GREEN,
-  COLOR_GRAY_80,
-  COLOR_ORANGE_RED,
+  COLOR_CHART_AXIS_LINE,
+  COLOR_CHART_FAILED,
+  COLOR_CHART_PASSED,
 } from 'common/constants/colors';
 import {
-  buildAxisTicks,
   buildTooltipFormatter,
+  CHART_TOOLTIP_SHELL,
 } from 'components/widgets/common/echarts/configHelpers';
 import { messages } from 'components/widgets/common/messages';
 import { normalizeChartData } from 'components/widgets/common/utils';
-import { AXIS_LABEL_STYLE, STACKED_BAR_EMPHASIS } from '../../common/stackedBarSeries';
+import { STACKED_BAR_EMPHASIS } from '../../common/stackedBarSeries';
+import { buildAxisTooltip, buildCategoryXAxis } from '../../common/echartsAxisBuilders';
 import {
-  buildAxisTooltip,
-  buildCategoryXAxis,
-} from '../../common/echartsAxisBuilders';
+  AXIS_TITLE_STYLE,
+  TICK_LABEL_STYLE,
+} from '../../common/trendLineChart/trendChartDesignStyles';
+import { TIMELINE_AXIS_DATE_FORMAT } from '../../launchStatisticsChart/constants';
 import { TestCasesGrowthTrendChartTooltip } from './testCasesGrowthTrendChartTooltip';
 import { calculateTooltipParams } from './utils';
 
 const OFFSET_SERIES_ID = 'offset';
 const BAR_SERIES_ID = 'bar';
 const ZERO_DELTA_SERIES_ID = 'zeroDelta';
-const GRID_DASH = [3, 3];
+const POSITIVE_BAR_RADIUS = [2, 2, 0, 0];
+const NEGATIVE_BAR_RADIUS = [0, 0, 2, 2];
 const BAR_WIDTH_RATIO = 0.6;
-const Y_AXIS_TICK_TARGET = 15;
+const X_LABEL_MARGIN = 4;
 
-const computeYInterval = (max) => {
+const REFERENCE_WIDTH = 668;
+const REFERENCE_HEIGHT = 496;
+const REFERENCE_Y_INTERVALS = 11;
+const REFERENCE_X_LABELS_LAUNCH = 16;
+const REFERENCE_X_LABELS_TIMELINE = 8;
+const MIN_Y_INTERVALS = 2;
+const MIN_X_LABELS = 2;
+const NICE_STEPS = [1, 2, 4, 5, 8, 10];
+
+const getYIntervalsCount = (height) =>
+  height
+    ? Math.max(MIN_Y_INTERVALS, Math.round((height / REFERENCE_HEIGHT) * REFERENCE_Y_INTERVALS))
+    : REFERENCE_Y_INTERVALS;
+
+const getXLabelStep = (itemsCount, width, isTimeline) => {
+  const reference = isTimeline ? REFERENCE_X_LABELS_TIMELINE : REFERENCE_X_LABELS_LAUNCH;
+  const labelsCount = width
+    ? Math.max(MIN_X_LABELS, Math.round((width / REFERENCE_WIDTH) * reference))
+    : reference;
+
+  return Math.max(1, Math.ceil(itemsCount / labelsCount));
+};
+
+const computeYInterval = (max, intervalsCount) => {
   if (max <= 0) return 1;
-  const rough = max / Y_AXIS_TICK_TARGET;
+  const rough = max / intervalsCount;
   if (rough <= 1) return 1;
   const magnitude = Math.pow(10, Math.floor(Math.log10(rough)));
   const normalized = rough / magnitude;
-  if (normalized <= 2) return 2 * magnitude;
-  if (normalized <= 5) return 5 * magnitude;
-  return 10 * magnitude;
+  const step = NICE_STEPS.find((nice) => normalized <= nice) || 10;
+  return step * magnitude;
 };
 
 const getGridBottom = (isTimeline) => (isTimeline ? 50 : 40);
@@ -67,8 +91,7 @@ const getLabelStep = (itemsCount, isTimeline) => {
 const buildCategories = (itemsData, isTimeline) =>
   itemsData.map((item) => {
     if (isTimeline) {
-      const day = moment(item.date).format('dddd').substring(0, 3);
-      return `${day}, ${item.date}`;
+      return moment(item.date).format(TIMELINE_AXIS_DATE_FORMAT);
     }
 
     return `#${item.number}`;
@@ -87,7 +110,8 @@ const buildBarDataItem = (value, isPositive) => {
   return {
     value,
     itemStyle: {
-      color: isPositive ? COLOR_DARK_PASTEL_GREEN : COLOR_ORANGE_RED,
+      color: isPositive ? COLOR_CHART_PASSED : COLOR_CHART_FAILED,
+      borderRadius: isPositive ? POSITIVE_BAR_RADIUS : NEGATIVE_BAR_RADIUS,
     },
   };
 };
@@ -152,7 +176,31 @@ const buildZeroDeltaSeries = (bars, offsets, categories, yAxisMax) => ({
   },
 });
 
-export const getOption = ({ content, isPreview, formatMessage, isTimeline = false }) => {
+const getDataMax = (data) =>
+  data.reduce((max, { values }) => {
+    const delta = Number.parseFloat(values.delta);
+    const total = Number.parseFloat(values.statistics$executions$total);
+
+    return Math.max(max, delta >= 0 ? total : total + Math.abs(delta));
+  }, 0);
+
+const getYScale = (dataMax, height) => {
+  const interval = computeYInterval(dataMax, getYIntervalsCount(height));
+
+  return { interval, max: Math.ceil(dataMax / interval) * interval || 1 };
+};
+
+export const getAxesUpdate = (content, { width, height, isTimeline = false }) => {
+  const data = normalizeChartData(content || (isTimeline ? {} : []), isTimeline);
+  const xLabelStep = getXLabelStep(data.length, width, isTimeline);
+
+  return {
+    xAxis: { axisLabel: { interval: (index) => index % xLabelStep === 0 } },
+    yAxis: getYScale(getDataMax(data), height),
+  };
+};
+
+export const getOption = ({ content, isPreview, formatMessage, isTimeline = false, size }) => {
   const data = normalizeChartData(content || (isTimeline ? {} : []), isTimeline);
   const itemsData = [];
   const offsets = [];
@@ -173,16 +221,14 @@ export const getOption = ({ content, isPreview, formatMessage, isTimeline = fals
 
   const gridBottom = isPreview ? 0 : getGridBottom(isTimeline);
   const categories = buildCategories(itemsData, isTimeline);
-  const tickValues = buildAxisTicks(itemsData.length, isTimeline);
+  const xLabelStep = getXLabelStep(itemsData.length, size?.width, isTimeline);
   const labelStep = getLabelStep(itemsData.length, isTimeline);
   const barData = bars.map((value, index) => buildBarDataItem(value, positiveTrend[index]));
-  const dataMax = offsets.length ? Math.max(...offsets.map((o, i) => o + bars[i])) : 0;
-  const yInterval = computeYInterval(dataMax);
-  const yAxisMax = Math.ceil(dataMax / yInterval) * yInterval || 1;
+  const { interval: yInterval, max: yAxisMax } = getYScale(getDataMax(data), size?.height);
   const zeroDeltaSeries = buildZeroDeltaSeries(bars, offsets, categories, yAxisMax);
 
   return {
-    textStyle: AXIS_LABEL_STYLE,
+    textStyle: TICK_LABEL_STYLE,
     grid: {
       top: isPreview ? 0 : 30,
       left: isPreview ? 0 : 60,
@@ -195,15 +241,13 @@ export const getOption = ({ content, isPreview, formatMessage, isTimeline = fals
         show: !isPreview,
         data: categories,
         onZero: true,
-        axisLineColor: COLOR_BLACK,
-        showAxisTick: true,
-        axisTickColor: COLOR_BLACK,
-        axisTickLength: 6,
+        axisLineColor: COLOR_CHART_AXIS_LINE,
+        showAxisTick: false,
       }),
       axisLabel: {
-        ...AXIS_LABEL_STYLE,
-        margin: 8,
-        interval: (index) => tickValues.includes(index),
+        ...TICK_LABEL_STYLE,
+        margin: X_LABEL_MARGIN,
+        interval: (index) => index % xLabelStep === 0,
         hideOverlap: true,
       },
     },
@@ -217,46 +261,36 @@ export const getOption = ({ content, isPreview, formatMessage, isTimeline = fals
       nameLocation: 'middle',
       nameGap: 40,
       nameRotate: 90,
-      nameTextStyle: AXIS_LABEL_STYLE,
+      nameTextStyle: AXIS_TITLE_STYLE,
       axisLabel: {
-        ...AXIS_LABEL_STYLE,
+        ...TICK_LABEL_STYLE,
         margin: 8,
-        formatter: (value) => (value === yAxisMax && yAxisMax > dataMax ? "" : String(value)),
+        formatter: (value) => String(value),
       },
-      axisLine: {
-        show: true,
-        lineStyle: {
-          color: COLOR_BLACK,
-          width: 1,
-        },
-      },
-      axisTick: {
-        show: true,
-        length: 6,
-        lineStyle: {
-          color: COLOR_BLACK,
-          width: 1,
-        },
-      },
+      axisLine: { show: false },
+      axisTick: { show: false },
       splitLine: {
         show: !isPreview,
-        showMaxLine: false,
         lineStyle: {
-          color: COLOR_GRAY_80,
+          color: COLOR_CHART_AXIS_LINE,
           width: 1,
-          type: GRID_DASH,
+          type: 'solid',
         },
       },
     },
-    tooltip: buildAxisTooltip({
-      show: !isPreview,
-      formatter: buildTooltipFormatter(TestCasesGrowthTrendChartTooltip, calculateTooltipParams, {
-        itemsData,
-        positiveTrend,
-        isTimeline,
-        formatMessage,
+    tooltip: {
+      ...buildAxisTooltip({
+        show: !isPreview,
+        axisPointer: { type: 'none' },
+        formatter: buildTooltipFormatter(TestCasesGrowthTrendChartTooltip, calculateTooltipParams, {
+          itemsData,
+          positiveTrend,
+          isTimeline,
+          formatMessage,
+        }),
       }),
-    }),
+      ...CHART_TOOLTIP_SHELL,
+    },
     legend: {
       show: false,
     },
@@ -291,7 +325,7 @@ export const getOption = ({ content, isPreview, formatMessage, isTimeline = fals
           show: !isPreview,
           position: 'top',
           distance: 2,
-          ...AXIS_LABEL_STYLE,
+          ...TICK_LABEL_STYLE,
           formatter: (params) => {
             const raw = params.value;
             const value = raw && typeof raw === 'object' && 'value' in raw ? raw.value : raw;

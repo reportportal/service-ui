@@ -15,12 +15,11 @@
  */
 
 import {
-  COLOR_BLACK,
-  COLOR_CHARCOAL_GREY,
-  COLOR_DARK_PASTEL_GREEN,
-  COLOR_ORANGE_RED,
+  COLOR_CHART_AXIS_LINE,
+  COLOR_CHART_FAILED,
+  COLOR_CHART_PASSED,
 } from 'common/constants/colors';
-import { getOption } from './getOption';
+import { getOption, getAxesUpdate } from './getOption';
 import { sampleLaunchContent, sampleTimelineContent } from './fixtures/sampleContent';
 
 const formatMessage = (msg) => msg.defaultMessage || msg.id;
@@ -55,8 +54,14 @@ describe('testCasesGrowthTrendChart getOption', () => {
       },
     });
     expect(option.series[1].data).toEqual([
-      { value: 5, itemStyle: { color: COLOR_DARK_PASTEL_GREEN } },
-      { value: 3, itemStyle: { color: COLOR_ORANGE_RED } },
+      {
+        value: 5,
+        itemStyle: { color: COLOR_CHART_PASSED, borderRadius: [2, 2, 0, 0] },
+      },
+      {
+        value: 3,
+        itemStyle: { color: COLOR_CHART_FAILED, borderRadius: [0, 0, 2, 2] },
+      },
       {
         value: 0,
         itemStyle: {
@@ -74,14 +79,8 @@ describe('testCasesGrowthTrendChart getOption', () => {
       type: 'category',
       data: ['#1', '#2', '#3'],
       show: true,
-      axisLine: {
-        show: true,
-        lineStyle: { color: COLOR_BLACK, width: 1 },
-      },
-      axisLabel: {
-        color: COLOR_CHARCOAL_GREY,
-        fontSize: 10,
-      },
+      axisLine: { show: true, lineStyle: { color: COLOR_CHART_AXIS_LINE, width: 1 } },
+      axisTick: { show: false },
     });
     expect(option.yAxis).toMatchObject({
       type: 'value',
@@ -89,23 +88,11 @@ describe('testCasesGrowthTrendChart getOption', () => {
       min: 0,
       interval: 2,
       show: true,
-      axisLine: {
-        show: true,
-        lineStyle: { color: COLOR_BLACK, width: 1 },
-      },
+      axisLine: { show: false },
+      axisTick: { show: false },
       splitLine: {
         show: true,
-        lineStyle: {
-          type: [3, 3],
-        },
-      },
-      nameTextStyle: {
-        color: COLOR_CHARCOAL_GREY,
-        fontSize: 10,
-      },
-      axisLabel: {
-        color: COLOR_CHARCOAL_GREY,
-        fontSize: 10,
+        lineStyle: { color: COLOR_CHART_AXIS_LINE, width: 1, type: 'solid' },
       },
     });
     expect(option.tooltip).toEqual(
@@ -139,10 +126,10 @@ describe('testCasesGrowthTrendChart getOption', () => {
 
     expect(option.series[0].data).toEqual([40, 46]);
     expect(option.series[1].data.map((item) => item.value)).toEqual([10, 4]);
-    expect(option.series[1].data[0].itemStyle.color).toBe(COLOR_DARK_PASTEL_GREEN);
-    expect(option.series[1].data[1].itemStyle.color).toBe(COLOR_ORANGE_RED);
+    expect(option.series[1].data[0].itemStyle.color).toBe(COLOR_CHART_PASSED);
+    expect(option.series[1].data[1].itemStyle.color).toBe(COLOR_CHART_FAILED);
     expect(option.xAxis.data).toHaveLength(2);
-    expect(option.xAxis.data[0]).toMatch(/2021-01-01/);
+    expect(option.xAxis.data[0]).toBe('01.01');
     expect(option.customData.itemsData).toEqual([{ date: '2021-01-01' }, { date: '2021-01-02' }]);
     expect(option.series.some((series) => series.id === 'zeroDelta')).toBe(false);
   });
@@ -188,5 +175,59 @@ describe('testCasesGrowthTrendChart getOption', () => {
     });
     expect(typeof zeroSeries.renderItem).toBe('function');
     expect(option.series[1].barMinHeight).toBeUndefined();
+  });
+
+  describe('label density by chart size', () => {
+    const buildLaunches = (count) =>
+      Array.from({ length: count }, (_, index) => ({
+        id: `launch-${index}`,
+        name: 'Regression',
+        number: String(index + 1),
+        startTime: String(1609459200000 + index * 86400000),
+        values: { delta: '5', statistics$executions$total: String(5 * (index + 1)) },
+      }));
+    const buildDays = (count) =>
+      Object.fromEntries(
+        buildLaunches(count).map(({ values }, index) => [
+          `2021-01-${String(index + 1).padStart(2, '0')}`,
+          { values },
+        ]),
+      );
+    const countLabelled = (interval, count) =>
+      Array.from({ length: count }, (_, index) => index).filter(interval).length;
+
+    test('reference size labels every launch and every second day', () => {
+      const size = { width: 668, height: 496 };
+      const launch = getOption({ content: buildLaunches(14), formatMessage, size });
+      const timeline = getOption({
+        content: buildDays(14),
+        formatMessage,
+        isTimeline: true,
+        size,
+      });
+
+      expect(countLabelled(launch.xAxis.axisLabel.interval, 14)).toBe(14);
+      expect(countLabelled(timeline.xAxis.axisLabel.interval, 14)).toBe(7);
+    });
+
+    test('a taller and wider chart gets more labels on resize', () => {
+      const content = buildLaunches(40);
+      const small = getAxesUpdate(content, { width: 400, height: 250 });
+      const large = getAxesUpdate(content, { width: 1200, height: 900 });
+
+      expect(large.yAxis.interval).toBeLessThan(small.yAxis.interval);
+      expect(countLabelled(large.xAxis.axisLabel.interval, 40)).toBeGreaterThan(
+        countLabelled(small.xAxis.axisLabel.interval, 40),
+      );
+    });
+
+    test('axes update matches the initial option for the same size', () => {
+      const content = buildLaunches(20);
+      const size = { width: 668, height: 496 };
+      const option = getOption({ content, formatMessage, size });
+      const update = getAxesUpdate(content, size);
+
+      expect(update.yAxis).toEqual({ max: option.yAxis.max, interval: option.yAxis.interval });
+    });
   });
 });

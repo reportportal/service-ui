@@ -20,3 +20,46 @@
   height: 100%;
   padding-top: 5px;
 }
+
+div.tooltip {
+  max-width: 100%;
+  min-width: 0;
+  padding: 8px 12px;
+  font-family: var(--rp-ui-base-font-family);
+  font-size: 12px;
+  line-height: 16px;
+  color: var(--rp-ui-base-bg-000);
+  background-color: color-mix(in srgb, var(--rp-ui-base-dark-e-400) 92%, transparent);
+  border: none;
+  border-radius: 8px;
+  box-shadow: none;
+  white-space: normal;
+  box-sizing: border-box;
+
+  div,
+  span {
+    font-family: inherit;
+    font-weight: var(--rp-ui-base-fw-regular);
+    color: inherit;
+  }
+
+  > div:first-child {
+    font-weight: var(--rp-ui-base-fw-semi-bold);
+  }
+
+  [class*='launch-start-time'] {
+    color: var(--rp-ui-base-e-300);
+  }
+
+  [class*='item-cases-growth'] span[class*='increase'] {
+    color: $COLOR--test-execution-status-passed;
+  }
+
+  [class*='item-cases-growth'] span[class*='decrease'] {
+    color: $COLOR--red-failed-2;
+  }
+
+  [class*='item-cases-total'] span {
+    font-weight: var(--rp-ui-base-fw-bold);
+  }
+}
