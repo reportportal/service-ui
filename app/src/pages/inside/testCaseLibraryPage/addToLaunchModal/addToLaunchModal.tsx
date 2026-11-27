@@ -32,6 +32,7 @@ import {
   LaunchFormData,
   LaunchMode,
   INITIAL_LAUNCH_FORM_VALUES,
+  NEW_LAUNCH_FIRST_MODES_ORDER,
 } from 'pages/inside/common/launchFormFields';
 import { testCaseDetailsSelector, testCasesSelector } from 'controllers/testCase';
 import { ExtendedTestCase } from 'types/testCase';
@@ -145,6 +146,8 @@ const AddToLaunchModalComponent = ({
       className={cx('add-to-launch-modal')}
       onClearSelection={onClearSelection}
       isUncoveredTestsCheckboxAvailable={isUncoveredTestsCheckboxAvailable}
+      defaultMode={LaunchMode.NEW}
+      modesOrder={NEW_LAUNCH_FIRST_MODES_ORDER}
       onSubmitSuccess={handleSubmitSuccess}
     />
   );

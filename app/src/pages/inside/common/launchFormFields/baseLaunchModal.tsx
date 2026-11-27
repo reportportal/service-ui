@@ -29,6 +29,7 @@ import { MODAL_Z_INDEX } from 'common/constants/zIndex';
 
 import { getIsManualCovered } from '../testCaseList/utils';
 import { LaunchFormFields } from './launchFormFields';
+import { DEFAULT_LAUNCH_MODES_ORDER } from './constants';
 import { LaunchFormData, LaunchMode, LaunchOption, BaseLaunchModalProps } from './types';
 import { useCreateManualLaunch } from './useCreateManualLaunch';
 
@@ -51,13 +52,15 @@ export const BaseLaunchModal = ({
   description,
   isUncoveredTestsCheckboxAvailable,
   hideTestPlanField = false,
+  defaultMode = LaunchMode.EXISTING,
+  modesOrder = DEFAULT_LAUNCH_MODES_ORDER,
   className,
   onClearSelection,
   onSubmitSuccess,
 }: BaseLaunchModalProps & InjectedFormProps<LaunchFormData>) => {
   const dispatch = useDispatch();
   const { formatMessage } = useIntl();
-  const [activeMode, setActiveMode] = useState<LaunchMode>(LaunchMode.EXISTING);
+  const [activeMode, setActiveMode] = useState<LaunchMode>(defaultMode);
   const [selectedLaunch, setSelectedLaunch] = useState<LaunchOption | null>(null);
 
   const { handleSubmit: handleCreateLaunch, isLoading } = useCreateManualLaunch(
@@ -132,6 +135,7 @@ export const BaseLaunchModal = ({
           <div className={className ? `${className}__container` : undefined}>
             <LaunchFormFields
               activeMode={activeMode}
+              modesOrder={modesOrder}
               onModeChange={handleModeChange}
               onLaunchSelect={setSelectedLaunch}
               description={description}
