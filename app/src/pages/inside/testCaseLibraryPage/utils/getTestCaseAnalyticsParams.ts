@@ -29,7 +29,7 @@ import {
 } from 'analyticsEvents/testCaseLibraryPageEvents';
 import { compareAttributes } from 'common/utils/attributeUtils';
 import { hasStepContent } from 'pages/inside/common/scenarioUtils';
-import { Attachment } from 'pages/inside/common/attachmentList';
+import { Attachment } from 'types/testCase';
 
 import { CreateTestCaseFormData, ManualScenarioType, TestStep } from '../types';
 import { getMeaningfulRequirements } from './requirementsUtils';

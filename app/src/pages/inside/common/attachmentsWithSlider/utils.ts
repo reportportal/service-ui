@@ -21,18 +21,19 @@ import type { AttachmentWithSlider } from './types';
 export const getFileExtension = (fileName: string | undefined): string | undefined =>
   fileName?.split('.').pop()?.toLowerCase();
 
-const IMAGE_FILE_TYPE_PREFIX = 'image/';
+// The server makes TMS attachment thumbnails only for PNG and JPEG uploads.
+const THUMBNAIL_FILE_TYPES = new Set(['image/png', 'image/jpeg']);
 
 /**
  * Execution comment attachments come without `hasThumbnail`; the server still has thumbnails
- * for their images. Use the flag when it is set, otherwise decide by the file type.
+ * for their PNG and JPEG files. Use the flag when it is set, otherwise decide by the file type.
  */
 export const withThumbnailFlag = (attachment: AttachmentWithSlider): AttachmentWithSlider =>
   isBoolean(attachment.hasThumbnail)
     ? attachment
     : {
         ...attachment,
-        hasThumbnail: Boolean(attachment.fileType?.startsWith(IMAGE_FILE_TYPE_PREFIX)),
+        hasThumbnail: THUMBNAIL_FILE_TYPES.has(attachment.fileType),
       };
 
 export const applyFullImageStateForAttachment = (

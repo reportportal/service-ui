@@ -22,7 +22,7 @@ import { createClassnames } from 'common/utils';
 import { FieldErrorHint, FieldProvider } from 'components/fields';
 import { ExpandedTextSection } from 'components/fields/expandedTextSection';
 import { EMPTY_FIELD_VALUE } from 'pages/inside/common/constants';
-import { type Attachment } from 'pages/inside/common/attachmentList';
+import { type Attachment } from 'types/testCase';
 import { AttachmentsWithSlider } from 'pages/inside/common/attachmentsWithSlider';
 import { FieldSection } from 'pages/inside/common/fieldSection';
 import {

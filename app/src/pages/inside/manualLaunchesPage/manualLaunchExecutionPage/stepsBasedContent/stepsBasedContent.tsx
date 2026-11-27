@@ -23,8 +23,7 @@ import { RequirementsList } from 'pages/inside/common/requirementsList/requireme
 import { Precondition } from 'pages/inside/testCaseLibraryPage/testCaseDetailsPage/precondition';
 import { StepsList } from 'pages/inside/testCaseLibraryPage/testCaseDetailsPage/stepsList';
 import { hasStepContent } from 'pages/inside/common/scenarioUtils';
-import { Step as StepType } from 'types/testCase';
-import { type Attachment } from 'pages/inside/common/attachmentList';
+import { Step as StepType, type Attachment } from 'types/testCase';
 
 import { messages } from '../messages';
 import { commonMessages } from 'pages/inside/common/common-messages';

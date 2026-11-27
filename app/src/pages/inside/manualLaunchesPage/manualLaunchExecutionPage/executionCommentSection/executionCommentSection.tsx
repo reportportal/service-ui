@@ -94,14 +94,8 @@ export const ExecutionCommentSection: FC<ExecutionCommentSectionProps> = ({ exec
     messages,
   });
 
-  // Saved files are shown as previews; the server objects carry the file type for the thumbnail.
-  const savedAttachments = useMemo(
-    () =>
-      (execution.executionComment?.attachments ?? []).filter(
-        (attachment) => !removedAttachmentIds.has(String(attachment.id)),
-      ) as AttachmentWithSlider[],
-    [execution.executionComment?.attachments, removedAttachmentIds],
-  );
+  // Saved files are shown as previews: the hook keeps the server objects, which carry the file type.
+  const savedAttachments = visibleExistingAttachments as AttachmentWithSlider[];
 
   if (execution.id !== prevExecutionId) {
     setPrevExecutionId(execution.id);

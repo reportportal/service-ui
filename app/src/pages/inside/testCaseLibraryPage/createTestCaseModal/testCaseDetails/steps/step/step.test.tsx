@@ -23,7 +23,6 @@ import { Step } from './step';
 jest.mock('components/fields/expandedTextSection', () => ({
   ExpandedTextSection: ({ text }: { text: string }) => <div>{text}</div>,
 }));
-jest.mock('pages/inside/common/attachmentList', () => ({ AttachmentList: () => null }));
 
 describe('Step (read mode)', () => {
   let container: HTMLDivElement;

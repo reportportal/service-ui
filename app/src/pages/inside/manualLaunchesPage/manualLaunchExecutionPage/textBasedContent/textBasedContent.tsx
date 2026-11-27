@@ -20,7 +20,7 @@ import { isEmpty } from 'es-toolkit/compat';
 import { createClassnames } from 'common/utils';
 import { CollapsibleSection } from 'components/collapsibleSection';
 import { RequirementsList } from 'pages/inside/common/requirementsList/requirementsList';
-import { type Attachment } from 'pages/inside/common/attachmentList';
+import { type Attachment } from 'types/testCase';
 import { AttachmentsWithSlider } from 'pages/inside/common/attachmentsWithSlider';
 import { Scenario } from 'pages/inside/common/scenario';
 import { hasScenarioContent } from 'pages/inside/common/scenarioUtils';

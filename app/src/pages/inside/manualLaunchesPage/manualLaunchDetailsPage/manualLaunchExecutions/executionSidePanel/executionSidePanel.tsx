@@ -49,12 +49,11 @@ import {
   hasExecutionStatusBadge,
 } from 'pages/inside/manualLaunchesPage/executionStatusBadge';
 import { Divider } from 'pages/inside/projectSettingsPageContainer/content/elements';
-import { type Attachment } from 'pages/inside/common/attachmentList';
 import { AttachmentsWithSlider } from 'pages/inside/common/attachmentsWithSlider';
 import { IN_PROGRESS } from 'common/constants/testStatuses';
 import { projectKeySelector } from 'controllers/project';
 import { ExecutionStatus } from 'pages/inside/manualLaunchesPage/types';
-import { TestCaseManualScenario } from 'types/testCase';
+import { TestCaseManualScenario, type Attachment } from 'types/testCase';
 import {
   MANUAL_LAUNCHES_PAGE_EVENTS,
   MANUAL_LAUNCHES_PLACE,

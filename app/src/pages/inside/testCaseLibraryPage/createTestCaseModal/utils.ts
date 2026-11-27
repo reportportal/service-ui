@@ -16,7 +16,7 @@
 
 import isEqual from 'fast-deep-equal';
 
-import type { Attachment } from 'pages/inside/common/attachmentList';
+import type { Attachment } from 'types/testCase';
 
 import type { AttachmentFormValue, AttachmentInput } from '../types';
 

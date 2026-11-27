@@ -30,12 +30,15 @@ describe('withThumbnailFlag', () => {
     expect(withThumbnailFlag(attachment('application/pdf', true)).hasThumbnail).toBe(true);
   });
 
-  test('marks images without the flag as having a thumbnail', () => {
+  test('marks PNG and JPEG files without the flag as having a thumbnail', () => {
     expect(withThumbnailFlag(attachment('image/png')).hasThumbnail).toBe(true);
     expect(withThumbnailFlag(attachment('image/jpeg')).hasThumbnail).toBe(true);
   });
 
   test('marks other files without the flag as having no thumbnail', () => {
+    expect(withThumbnailFlag(attachment('image/gif')).hasThumbnail).toBe(false);
+    expect(withThumbnailFlag(attachment('image/svg+xml')).hasThumbnail).toBe(false);
+    expect(withThumbnailFlag(attachment('image/webp')).hasThumbnail).toBe(false);
     expect(withThumbnailFlag(attachment('application/pdf')).hasThumbnail).toBe(false);
     expect(withThumbnailFlag(attachment('text/plain')).hasThumbnail).toBe(false);
     expect(withThumbnailFlag({ ...attachment(''), fileType: undefined }).hasThumbnail).toBe(false);
