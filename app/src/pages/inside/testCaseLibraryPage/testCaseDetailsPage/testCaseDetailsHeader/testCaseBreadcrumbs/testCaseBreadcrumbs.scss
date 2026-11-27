@@ -1,0 +1,59 @@
+/*
+ * Copyright 2026 EPAM Systems
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+.test-case-breadcrumbs {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  min-width: 0;
+  font-family: var(--rp-ui-base-font-family);
+
+  svg {
+    flex-shrink: 0;
+  }
+
+  &__container {
+    min-width: 0;
+
+    // Only the test case (last) crumb shrinks when the line does not fit;
+    // folder crumbs are capped at 200 px instead, the first crumb is never cut.
+    div:has(> [data-testid='breadcrumb']):not(:last-child) {
+      flex-shrink: 0;
+    }
+  }
+
+  &__folder {
+    max-width: 200px;
+  }
+
+  &__hidden {
+    display: flex;
+    align-items: center;
+    height: 20px;
+  }
+
+  &__hidden-trigger {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 16px;
+    height: 20px;
+    padding: 0;
+    border: none;
+    background: none;
+    cursor: pointer;
+  }
+}

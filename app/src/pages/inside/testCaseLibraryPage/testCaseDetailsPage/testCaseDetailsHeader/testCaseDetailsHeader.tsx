@@ -20,7 +20,7 @@ import Parser from 'html-react-parser';
 import { useDispatch, useSelector } from 'react-redux';
 import { useTracking } from 'react-tracking';
 import moment from 'moment';
-import { BreadcrumbsTreeIcon, Button, MeatballMenuIcon, Tooltip } from '@reportportal/ui-kit';
+import { Button, MeatballMenuIcon, Tooltip } from '@reportportal/ui-kit';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 
 import {
@@ -31,7 +31,6 @@ import {
 import { createClassnames } from 'common/utils';
 import PencilIcon from 'common/img/newIcons/pencil-inline.svg';
 import IconDuplicate from 'common/img/duplicate-inline.svg';
-import { Breadcrumbs } from 'componentLibrary/breadcrumbs';
 import { ProjectDetails } from 'pages/organization/constants';
 import { PopoverControl } from 'pages/common/popoverControl';
 import { PopoverItem } from 'pages/common/popoverControl/popoverControl';
@@ -42,11 +41,11 @@ import { TEST_CASE_LIBRARY_PAGE, urlOrganizationAndProjectSelector } from 'contr
 import { useUserPermissions } from 'hooks/useUserPermissions';
 import { useHasTestPlans } from 'hooks/useHasTestPlans';
 import { PriorityIcon } from 'pages/inside/common/priorityIcon';
-import { testCaseLibraryBreadcrumbsSelector } from 'controllers/pages/selectors';
 import { ExecutionEstimationTime } from 'pages/inside/common/executionEstimationTime';
 import type { ExtendedTestCase, TestCasePriority } from 'types/testCase';
 
 import { messages } from './messages';
+import { TestCaseBreadcrumbs } from './testCaseBreadcrumbs';
 import { commonMessages } from '../../commonMessages';
 import { EDIT_TEST_CASE_MODAL_KEY } from '../editTestCaseModal/editTestCaseModal';
 import { useDeleteTestCaseModal } from '../../deleteTestCaseModal';
@@ -86,12 +85,6 @@ export const TestCaseDetailsHeader = ({
   const { openModal: openEditScenarioModal } = useEditScenarioModal();
   const { hasTestPlans } = useHasTestPlans();
 
-  const breadcrumbsTitles = {
-    mainTitle: formatMessage(commonMessages.testCaseLibraryBreadcrumb),
-    testTitle: testCase.name,
-  };
-
-  const breadcrumbs = useSelector(testCaseLibraryBreadcrumbsSelector(breadcrumbsTitles));
   const testCaseBusinessId = testCase.displayId;
 
   const testCasePriority = (testCase.priority?.toLowerCase() ??
@@ -140,7 +133,7 @@ export const TestCaseDetailsHeader = ({
   const getCreationDate = (timestamp: number) => {
     const date = new Date(timestamp);
 
-    return moment(date).format(REVERSED_DATE_FORMAT as string);
+    return moment(date).format(REVERSED_DATE_FORMAT);
   };
 
   const items: PopoverItem[] = canManageTestCases
@@ -184,10 +177,11 @@ export const TestCaseDetailsHeader = ({
 
   return (
     <div className={cx('header', className)}>
-      <div className={cx('header__breadcrumb')}>
-        <BreadcrumbsTreeIcon />
-        <Breadcrumbs descriptors={breadcrumbs} />
-      </div>
+      <TestCaseBreadcrumbs
+        className={cx('header__breadcrumb')}
+        testCaseName={testCase.name}
+        folderId={testCase.testFolder?.id}
+      />
       <div className={cx('header__title')}>
         <PriorityIcon priority={testCasePriority} className={cx('header__title-icon')} />
         <span className={cx('header__title-text')} title={testCase.name}>
@@ -199,7 +193,7 @@ export const TestCaseDetailsHeader = ({
             className={cx('header__edit-button')}
             onClick={openEditNameAndPriorityModal}
           >
-            {Parser(PencilIcon as unknown as string)}
+            {Parser(PencilIcon)}
           </button>
         )}
       </div>
@@ -213,7 +207,7 @@ export const TestCaseDetailsHeader = ({
             <span className={cx('header__meta-label')}>{formatMessage(messages.id)}</span>
             <span className={cx('header__meta-value')}>{testCaseBusinessId}</span>
             <CopyToClipboard text={testCaseBusinessId} className={cx('header__copy')}>
-              {Parser(IconDuplicate as unknown as string)}
+              {Parser(IconDuplicate)}
             </CopyToClipboard>
           </div>
           <ExecutionEstimationTime
