@@ -54,7 +54,7 @@ export enum ManualScenarioType {
 }
 
 interface ManualScenarioCommon {
-  executionEstimationTime: number;
+  executionEstimationTime: number | null;
   requirements: Requirement[];
   manualScenarioType: ManualScenarioType;
   preconditions?: {
@@ -138,7 +138,7 @@ export const hasTagShape = (attr: Tag | Attribute): attr is Tag => {
   return (
     isObject(attr) &&
     'key' in attr &&
-    isString((attr as Tag).key) &&
+    isString(attr.key) &&
     (!('value' in attr) || isNil(attr.value))
   );
 };

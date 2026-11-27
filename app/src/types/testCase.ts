@@ -83,7 +83,7 @@ export interface Execution {
 export interface ManualScenario {
   manualScenarioType: TestCaseManualScenario;
   id: number;
-  executionEstimationTime: number;
+  executionEstimationTime: number | null;
   requirements: Requirement[];
   preconditions?: {
     value?: string;

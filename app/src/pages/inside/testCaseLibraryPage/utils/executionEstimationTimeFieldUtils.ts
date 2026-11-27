@@ -14,6 +14,11 @@
  * limitations under the License.
  */
 
+export const EXECUTION_ESTIMATION_TIME_MAX_VALUE = 2147483647;
+
+// FieldNumber replaces an empty value with `min` on blur, so the field uses 0 and 0 means "empty"
+export const EXECUTION_ESTIMATION_TIME_FIELD_MIN_VALUE = 0;
+
 export const normalizeExecutionEstimationTime = (value: unknown): string | number => {
   if (value === '' || value == null) {
     return '';
@@ -21,10 +26,18 @@ export const normalizeExecutionEstimationTime = (value: unknown): string | numbe
 
   const time = Number(value);
 
-  return Number.isNaN(time) ? (value as string | number) : time;
+  if (Number.isNaN(time)) {
+    return value as string | number;
+  }
+
+  return time === EXECUTION_ESTIMATION_TIME_FIELD_MIN_VALUE ? '' : time;
 };
 
-export const EXECUTION_ESTIMATION_TIME_MAX_VALUE = 2147483647;
+export const getExecutionEstimationTimePayload = (value: unknown): number | null => {
+  const time = normalizeExecutionEstimationTime(value);
+
+  return typeof time === 'number' ? time : null;
+};
 
 export const createExecutionEstimationTimeMaxValidator =
   (errorMessage: string) =>

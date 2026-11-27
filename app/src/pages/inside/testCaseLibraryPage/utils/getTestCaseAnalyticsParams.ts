@@ -32,8 +32,8 @@ import { hasStepContent } from 'pages/inside/common/scenarioUtils';
 import { Attachment } from 'pages/inside/common/attachmentList';
 
 import { CreateTestCaseFormData, ManualScenarioType, TestStep } from '../types';
-import { DEFAULT_EXECUTION_ESTIMATION_TIME } from '../createTestCaseModal/constants';
 import { getMeaningfulRequirements } from './requirementsUtils';
+import { getExecutionEstimationTimePayload } from './executionEstimationTimeFieldUtils';
 
 const isStepTemplate = (formData: CreateTestCaseFormData): boolean =>
   formData.manualScenarioType === ManualScenarioType.STEPS;
@@ -56,10 +56,9 @@ export const getTestCaseTemplateIcon = (
 export const getTestCaseTimeCondition = (
   formData: CreateTestCaseFormData,
 ): TestCaseTimeConditionType =>
-  formData.executionEstimationTime !== undefined &&
-  formData.executionEstimationTime !== DEFAULT_EXECUTION_ESTIMATION_TIME
-    ? TEST_CASE_TIME_CONDITION.CUSTOMIZE
-    : TEST_CASE_TIME_CONDITION.NO_CUSTOMIZE;
+  getExecutionEstimationTimePayload(formData.executionEstimationTime) === null
+    ? TEST_CASE_TIME_CONDITION.NO_CUSTOMIZE
+    : TEST_CASE_TIME_CONDITION.CUSTOMIZE;
 
 const countMeaningfulRequirements = (formData: CreateTestCaseFormData): number =>
   size(getMeaningfulRequirements(formData.requirements));
@@ -194,7 +193,10 @@ type EditFieldKey =
   | (typeof TEST_CASE_STEP_EDIT_FIELD)[keyof typeof TEST_CASE_STEP_EDIT_FIELD]
   | (typeof TEST_CASE_TEXT_EDIT_FIELD)[keyof typeof TEST_CASE_TEXT_EDIT_FIELD];
 
-type EditFieldDiffer = (initial: CreateTestCaseFormData, current: CreateTestCaseFormData) => boolean;
+type EditFieldDiffer = (
+  initial: CreateTestCaseFormData,
+  current: CreateTestCaseFormData,
+) => boolean;
 
 const EDIT_FIELD_DIFFERS: Record<EditFieldKey, EditFieldDiffer> = {
   [TEST_CASE_STEP_EDIT_FIELD.TAGS]: (initial, current) =>
@@ -204,7 +206,8 @@ const EDIT_FIELD_DIFFERS: Record<EditFieldKey, EditFieldDiffer> = {
   [TEST_CASE_STEP_EDIT_FIELD.REQUIREMENTS]: (initial, current) =>
     !areRequirementsEqual(initial.requirements, current.requirements),
   [TEST_CASE_STEP_EDIT_FIELD.EXECUTIONS_TIME]: (initial, current) =>
-    (initial.executionEstimationTime ?? null) !== (current.executionEstimationTime ?? null),
+    getExecutionEstimationTimePayload(initial.executionEstimationTime) !==
+    getExecutionEstimationTimePayload(current.executionEstimationTime),
   [TEST_CASE_STEP_EDIT_FIELD.STEPS]: (initial, current) =>
     !areStepsEqual(initial.steps, current.steps),
   [TEST_CASE_TEXT_EDIT_FIELD.INSTRUCTIONS]: (initial, current) =>
