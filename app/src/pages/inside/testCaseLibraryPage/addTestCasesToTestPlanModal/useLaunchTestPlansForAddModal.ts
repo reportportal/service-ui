@@ -16,12 +16,11 @@
 
 import { useEffect, useState } from 'react';
 
-import type { TestPlanDto } from 'controllers/testPlan/types';
-
 import { fetchAllMilestoneTestPlans } from './fetchMilestoneTestPlans';
+import type { TestPlanWithMilestone } from './types';
 
 export const useLaunchTestPlansForAddModal = (projectKey: string) => {
-  const [launchTestPlans, setLaunchTestPlans] = useState<TestPlanDto[]>([]);
+  const [launchTestPlans, setLaunchTestPlans] = useState<TestPlanWithMilestone[]>([]);
   const [isLaunchTestPlansLoading, setIsLaunchTestPlansLoading] = useState(true);
 
   useEffect(() => {

@@ -21,6 +21,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { InjectedFormProps, reduxForm, SubmitHandler } from 'redux-form';
 
 import { FieldLabel, Modal, SingleAutocomplete } from '@reportportal/ui-kit';
+import { AutocompleteOption } from '@reportportal/ui-kit/autocompletes';
 
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { createClassnames } from 'common/utils';
@@ -28,13 +29,19 @@ import { commonValidators } from 'common/utils/validation';
 import { LoadingSubmitButton } from 'components/loadingSubmitButton';
 import { hideModalAction, withModal } from 'controllers/modal';
 import { projectKeySelector } from 'controllers/project';
-import type { TestPlanDto } from 'controllers/testPlan/types';
 import { MODAL_Z_INDEX } from 'common/constants/zIndex';
 
 import { ADD_TO_TEST_PLAN_MODAL_FORM } from './constants';
-import { filterTestPlansByName } from './fetchMilestoneTestPlans';
+import {
+  filterTestPlansByNameOrMilestone,
+  getTestPlanOptionLabel,
+} from './fetchMilestoneTestPlans';
 import { messages } from './messages';
-import { AddTestCasesToTestPlanFormData, AddTestCasesToTestPlanModalProps } from './types';
+import {
+  AddTestCasesToTestPlanFormData,
+  AddTestCasesToTestPlanModalProps,
+  TestPlanWithMilestone,
+} from './types';
 import { useAddTestCasesToTestPlan } from './useAddTestCasesToTestPlan';
 import { useLaunchTestPlansForAddModal } from './useLaunchTestPlansForAddModal';
 
@@ -45,11 +52,29 @@ type AddTestCasesSubmitHandler = SubmitHandler<
   AddTestCasesToTestPlanModalProps
 >;
 
-type TestPlanAutocompleteStateChange = ComponentProps<
-  typeof SingleAutocomplete<TestPlanDto>
->['onStateChange'];
+type TestPlanAutocompleteProps = ComponentProps<typeof SingleAutocomplete<TestPlanWithMilestone>>;
+
+type TestPlanAutocompleteStateChange = TestPlanAutocompleteProps['onStateChange'];
+
+type TestPlanAutocompleteRenderOption = NonNullable<TestPlanAutocompleteProps['renderOption']>;
 
 const cx = createClassnames(styles);
+
+const renderTestPlanOption: TestPlanAutocompleteRenderOption = (
+  plan,
+  index,
+  _isNew,
+  getItemProps,
+) => (
+  <AutocompleteOption {...getItemProps({ item: plan, index })} key={plan.id} isNew={false}>
+    <span className={cx('test-plan-option')}>
+      <span className={cx('test-plan-option__name')}>{plan.name}</span>
+      {plan.milestoneName && (
+        <span className={cx('test-plan-option__milestone')}>{plan.milestoneName}</span>
+      )}
+    </span>
+  </AutocompleteOption>
+);
 
 export const ADD_TO_TEST_PLAN_MODAL_KEY = 'addToTestPlanModalKey';
 
@@ -64,8 +89,7 @@ export const AddTestCasesToTestPlanModal = ({
   const dispatch = useDispatch();
   const projectKey = useSelector(projectKeySelector);
   const [testPlanSearchInput, setTestPlanSearchInput] = useState('');
-  const { launchTestPlans, isLaunchTestPlansLoading } =
-    useLaunchTestPlansForAddModal(projectKey);
+  const { launchTestPlans, isLaunchTestPlansLoading } = useLaunchTestPlansForAddModal(projectKey);
 
   const isFromFolder = folderId && !selectedTestCaseIds;
   const testCaseCount = isFromFolder ? itemCount : selectedTestCaseIds?.length || 0;
@@ -84,7 +108,7 @@ export const AddTestCasesToTestPlanModal = ({
   });
 
   const filteredTestPlans = useMemo(
-    () => filterTestPlansByName(launchTestPlans, testPlanSearchInput),
+    () => filterTestPlansByNameOrMilestone(launchTestPlans, testPlanSearchInput),
     [launchTestPlans, testPlanSearchInput],
   );
 
@@ -134,7 +158,7 @@ export const AddTestCasesToTestPlanModal = ({
           {testCaseCount > 1 && description}
           <div className={cx('autocomplete-wrapper')}>
             <FieldLabel>{formatMessage(COMMON_LOCALE_KEYS.TEST_PLAN_LABEL)}</FieldLabel>
-            <SingleAutocomplete<TestPlanDto>
+            <SingleAutocomplete<TestPlanWithMilestone>
               value={selectedTestPlan ?? null}
               placeholder={formatMessage(COMMON_LOCALE_KEYS.SELECT_TEST_PLAN_PLACEHOLDER)}
               options={filteredTestPlans}
@@ -142,9 +166,14 @@ export const AddTestCasesToTestPlanModal = ({
               onChange={setSelectedTestPlan}
               refFunction={inputRefFunction}
               isDropdownMode
-              inputProps={{ clearable: !!selectedTestPlan, onClear: () => setSelectedTestPlan(null) }}
-              parseValueToString={(value: TestPlanDto | null) => value?.name ?? ''}
-              getUniqKey={(value: TestPlanDto) => String(value?.id)}
+              inputProps={{
+                clearable: !!selectedTestPlan,
+                onClear: () => setSelectedTestPlan(null),
+              }}
+              parseValueToString={getTestPlanOptionLabel}
+              renderOption={renderTestPlanOption}
+              menuClassName={cx('test-plan-menu')}
+              getUniqKey={(value: TestPlanWithMilestone) => String(value?.id)}
               createWithoutConfirmation
               skipOptionCreation
               onStateChange={handleTestPlanAutocompleteStateChange}

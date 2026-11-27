@@ -1,5 +1,9 @@
 import type { TestPlanDto } from 'controllers/testPlan/types';
 
+export type TestPlanWithMilestone = TestPlanDto & {
+  milestoneName?: string;
+};
+
 export interface AddTestCasesToTestPlanModalData {
   folderId?: number;
   itemCount?: number;
@@ -11,5 +15,5 @@ export interface AddTestCasesToTestPlanModalProps {
 }
 
 export interface AddTestCasesToTestPlanFormData {
-  selectedTestPlan: TestPlanDto;
+  selectedTestPlan: TestPlanWithMilestone;
 }
