@@ -1,5 +1,5 @@
 /*!
- * Copyright 2019 EPAM Systems
+ * Copyright 2026 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,74 +19,47 @@
   overflow: hidden;
   display: flex;
   flex-direction: column;
-  justify-content: stretch;
 }
-.attribute-selector {
-  padding: 10px 20px;
-  display: flex;
-  justify-content: flex-start;
-  font-family: $FONT-REGULAR;
-  font-size: 13px;
-  color: $COLOR--black-2;
-  flex-wrap: wrap;
 
-  .description {
-    font-family: $FONT-SEMIBOLD;
-    font-size: 12px;
-    line-height: 16px;
-    color: $COLOR--gray-47;
-    text-transform: uppercase;
-  }
+.attribute-selector {
+  display: flex;
+  flex-wrap: wrap;
+  flex-shrink: 0;
+  align-items: center;
+  gap: 8px 24px;
+  padding-bottom: 12px;
+  font-family: var(--rp-ui-base-font-family);
+  font-size: 13px;
+  line-height: 20px;
+  color: var(--rp-ui-color-text);
 }
 
 .attribute-key,
 .attribute-input {
-  width: 310px;
   display: flex;
   align-items: center;
-  column-gap: 8px;
+  gap: 8px;
+  max-width: 100%;
+  min-width: 0;
+}
+
+.description {
+  color: var(--rp-ui-color-text-secondary);
+  white-space: nowrap;
 }
 
 .attribute-label {
-  padding-right: 10px;
-  line-height: 30px;
+  min-width: 0;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 
-.second-level-panel {
-  display: flex;
-  justify-content: flex-start;
-  font-family: $FONT-REGULAR;
-  font-size: 13px;
-  line-height: 20px;
-  color: $COLOR--black-2;
-  padding: 0 15px 10px 15px;
-}
-
-.back {
-  display: flex;
-  border-right: 1px solid $COLOR--gray-91;
-  padding-right: 15px;
-  color: $COLOR--topaz;
-  cursor: pointer;
-}
-
-.pattern {
-  font-family: $FONT-SEMIBOLD;
-  padding-left: 15px;
+.dropdown {
+  width: 200px;
 }
 
 .patterns-grid {
-  flex-grow: 1;
-}
-
-.icon {
-  display: inline-block;
-  position: relative;
-  width: 20px;
-  height: 20px;
-  margin: auto 0;
-  fill: $COLOR--topaz;
+  flex: 1 1 auto;
+  min-height: 0;
 }

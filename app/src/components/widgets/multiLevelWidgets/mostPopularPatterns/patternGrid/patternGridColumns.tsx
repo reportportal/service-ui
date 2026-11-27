@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 EPAM Systems
+ * Copyright 2026 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,33 +14,33 @@
  * limitations under the License.
  */
 
-import PropTypes from 'prop-types';
-import React from 'react';
 import classNames from 'classnames/bind';
+import { PatternItem } from '../types';
 import styles from './patternGrid.scss';
 
 const cx = classNames.bind(styles);
 
-export const PatternNameColumn = ({ value, onPatternClick }) => (
+interface PatternNameColumnProps {
+  value: PatternItem;
+  onPatternClick: (patternName: string) => void;
+}
+
+export const PatternNameColumn = ({ value, onPatternClick }: PatternNameColumnProps) => (
   <div className={cx('patterns-name')}>
-    <span className={cx('pattern-link')} onClick={() => onPatternClick(value.name)}>
+    <span
+      className={cx('pattern-link')}
+      title={value.name}
+      onClick={() => onPatternClick(value.name)}
+    >
       {value.name}
     </span>
   </div>
 );
-PatternNameColumn.propTypes = {
-  value: PropTypes.object,
-  onPatternClick: PropTypes.func,
-};
-PatternNameColumn.defaultProps = {
-  value: {},
-  onPatternClick: () => {},
-};
 
-export const TestCasesColumn = ({ value }) => <div className={cx('test-cases')}>{value.count}</div>;
-TestCasesColumn.propTypes = {
-  value: PropTypes.object,
-};
-TestCasesColumn.defaultProps = {
-  value: {},
-};
+interface TestCasesColumnProps {
+  value: PatternItem;
+}
+
+export const TestCasesColumn = ({ value }: TestCasesColumnProps) => (
+  <div className={cx('test-cases')}>{value.count}</div>
+);

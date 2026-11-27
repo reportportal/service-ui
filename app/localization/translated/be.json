@@ -1921,7 +1921,6 @@
   "MostFailedTests.table.header.ofIssues": "% праблем ",
   "MostFailedTests.table.header.ofIssuesShort": "% праблем ",
   "MostFailedTests.table.header.testCase": "Тэставы сцэнар",
-  "MostPopularPatterns.launchName": "Запуск",
   "MostPopularPatterns.patternName": "Патэрн",
   "MostPopularPatterns.testCases": "Тэставыя сцэнары",
   "MostPopularPatternsControls.CriteriaFieldLabel": "Крытэрыі фішкі",
