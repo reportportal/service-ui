@@ -38,7 +38,7 @@
     "copy-to-clipboard": "^3.3.3",
     "core-js": "3.41.0",
     "date-fns": "2.29.3",
-    "dompurify": "^3.4.16",
+    "dompurify": "^3.4.17",
     "dotenv": "5.0.1",
     "downshift": "6.1.7",
     "easymde": "2.21.0",
