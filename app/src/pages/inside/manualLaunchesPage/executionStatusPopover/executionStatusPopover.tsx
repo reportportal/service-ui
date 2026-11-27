@@ -44,6 +44,7 @@ interface ExecutionStatusPopoverProps {
   children: ReactNode;
   shouldUsePortal?: ComponentProps<typeof Popover>['shouldUsePortal'];
   strategy?: ComponentProps<typeof Popover>['strategy'];
+  onStatusSet?: () => void;
 }
 
 export const ExecutionStatusPopover: FC<ExecutionStatusPopoverProps> = ({
@@ -55,6 +56,7 @@ export const ExecutionStatusPopover: FC<ExecutionStatusPopoverProps> = ({
   children,
   shouldUsePortal,
   strategy,
+  onStatusSet,
 }) => {
   const { formatMessage } = useIntl();
   const { openModal } = useExecutionStatusModal();
@@ -72,6 +74,7 @@ export const ExecutionStatusPopover: FC<ExecutionStatusPopoverProps> = ({
       status: newStatus as ExecutionStatusType,
       currentStatus: status,
       place,
+      onStatusSet,
     });
     setIsOpened(false);
   };
