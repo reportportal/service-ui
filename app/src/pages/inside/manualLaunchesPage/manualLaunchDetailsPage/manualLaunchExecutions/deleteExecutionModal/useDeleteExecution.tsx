@@ -27,6 +27,7 @@ import {
   getManualLaunchFoldersAction,
   getManualLaunchAction,
   getManualLaunchDetailsFetchParams,
+  MANUAL_LAUNCH_FOLDERS_LIMIT,
 } from 'controllers/manualLaunch';
 
 import type { DeleteExecutionModalData } from './types';
@@ -75,7 +76,7 @@ export const useDeleteExecution = () => {
           getManualLaunchFoldersAction({
             launchId: payload.launchId,
             offset: 0,
-            limit: 100,
+            limit: MANUAL_LAUNCH_FOLDERS_LIMIT,
             ...(params.filterPriorities && { filterPriorities: params.filterPriorities }),
             ...(params.filterTags && { filterTags: params.filterTags }),
           }),
