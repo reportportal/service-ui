@@ -51,6 +51,9 @@ export const useMilestoneSubmit = ({
           status: payload.status,
           startDate: payload.startDate,
           endDate: payload.endDate,
+          autoStartOnStartDate: payload.autoStartOnStartDate,
+          autoStartOnFirstExecution: payload.autoStartOnFirstExecution,
+          autoCompleteAfterDeadline: payload.autoCompleteAfterDeadline,
           ...(isUndefined(payload.testPlans) ? {} : { testPlans: payload.testPlans }),
         },
       });

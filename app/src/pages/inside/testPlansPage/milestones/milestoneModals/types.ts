@@ -16,7 +16,9 @@
 
 import type { CreateMilestonePayload, TmsTestPlanInMilestoneRS } from 'controllers/milestone';
 
-export type MilestoneSubmitPayload = CreateMilestonePayload & {
+export type MilestoneSubmitPayload = Omit<CreateMilestonePayload, 'status'> & {
+  /** Omitted by Edit: the server keeps the current status, which may have changed automatically. */
+  status?: CreateMilestonePayload['status'];
   testPlans?: Pick<TmsTestPlanInMilestoneRS, 'id'>[];
 };
 

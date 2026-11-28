@@ -57,9 +57,11 @@ const EditMilestoneModalForm = ({
     submitMilestone({
       name: values.name.trim(),
       type: values.type as TmsMilestoneType,
-      status: milestone.status,
       startDate: startIso,
       endDate: endIso,
+      autoStartOnStartDate: Boolean(values.autoStartOnStartDate),
+      autoStartOnFirstExecution: Boolean(values.autoStartOnFirstExecution),
+      autoCompleteAfterDeadline: Boolean(values.autoCompleteAfterDeadline),
       testPlans: (milestone.testPlans ?? []).map((plan) => ({ id: plan.id })),
     });
   };
@@ -91,6 +93,7 @@ const EditMilestoneModalForm = ({
             formName={EDIT_MILESTONE_FORM_NAME}
             isLoading={isLoading}
             onChange={onChange}
+            withAutomaticStatus
           />
         </form>
       </div>
@@ -116,6 +119,9 @@ export const EditMilestoneModal = ({ data }: EditMilestoneModalProps) => {
     type: data.type,
     startDate: isoToDateOnlyFormValue(data.startDate),
     endDate: isoToDateOnlyFormValue(data.endDate),
+    autoStartOnStartDate: Boolean(data.autoStartOnStartDate),
+    autoStartOnFirstExecution: Boolean(data.autoStartOnFirstExecution),
+    autoCompleteAfterDeadline: Boolean(data.autoCompleteAfterDeadline),
   };
 
   return (

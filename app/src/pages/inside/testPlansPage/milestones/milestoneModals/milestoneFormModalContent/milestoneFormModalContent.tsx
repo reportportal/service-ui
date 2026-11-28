@@ -36,6 +36,7 @@ import { MilestoneDateField } from '../../milestoneDateField/milestoneDateField'
 import { MilestoneTypeDropdown } from '../../milestoneTypeDropdown/milestoneTypeDropdown';
 import { isDeadlineBeforeStart } from '../../milestoneDateUtils';
 import { useMilestoneDateBounds } from '../useMilestoneDateBounds';
+import { MilestoneAutomaticStatus } from '../milestoneAutomaticStatus';
 
 import type { MilestoneFormModalContentProps } from './types';
 
@@ -47,6 +48,7 @@ export const MilestoneFormModalContent = ({
   formName,
   isLoading,
   onChange,
+  withAutomaticStatus = false,
 }: MilestoneFormModalContentProps) => {
   const { formatMessage } = useIntl();
   const { startDate, endDate, startDateAsDate, endDateAsDate } = useMilestoneDateBounds(formName);
@@ -151,6 +153,7 @@ export const MilestoneFormModalContent = ({
           />
         </div>
       </div>
+      {withAutomaticStatus && <MilestoneAutomaticStatus disabled={isLoading} />}
     </Fragment>
   );
 };

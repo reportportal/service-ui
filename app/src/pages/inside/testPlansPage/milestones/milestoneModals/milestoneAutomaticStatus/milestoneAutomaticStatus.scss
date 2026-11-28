@@ -1,0 +1,33 @@
+@use '../../milestonesTable/milestonesShared' as ms;
+
+.milestone-automatic-status {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+
+  &__title {
+    @include ms.milestone-body-13-medium;
+
+    color: var(--rp-ui-color-text);
+  }
+
+  &__options {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  &__option {
+    display: flex;
+    flex-direction: column;
+    // ui-kit Checkbox row is 20px; 4px puts the helper 24px below the row top, as in the mockup.
+    gap: 4px;
+  }
+
+  &__helper {
+    @include ms.milestone-body-13;
+
+    padding-left: 24px;
+    color: var(--rp-ui-base-e-400);
+  }
+}
