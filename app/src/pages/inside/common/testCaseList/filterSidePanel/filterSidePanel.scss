@@ -50,6 +50,57 @@
   }
 }
 
+.requirements-header {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-bottom: 4px;
+}
+
+.requirements-help-text {
+  font-size: 12px;
+  line-height: 1.5em;
+  color: var(--rp-ui-base-e-400);
+}
+
+.requirements-fields {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.requirement-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.requirement-field {
+  flex: 1;
+  min-width: 0;
+
+  input {
+    text-overflow: ellipsis;
+  }
+}
+
+.requirement-remove {
+  flex-shrink: 0;
+  width: 36px;
+  height: 36px;
+  padding: 10px;
+
+  svg {
+    width: 10px;
+    height: 10px;
+  }
+}
+
+.add-requirement {
+  align-self: flex-start;
+  margin-top: 4px;
+}
+
 .filter-label {
   font-size: 13px;
   font-weight: 500;

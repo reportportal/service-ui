@@ -17,5 +17,6 @@
 export interface FilterApplyPayload {
   priorities: string[];
   tags: string[];
+  requirements: string[];
   toRunOnly: boolean;
 }

@@ -104,15 +104,22 @@ function* getTestCasesByFolderId(action: GetTestCasesByFolderIdAction): Generato
   yield put(startLoadingTestCasesAction());
 
   try {
-    const { folderId, offset, limit, testCasesSearchParams, filterPriorities, filterTags } =
-      action.payload;
+    const {
+      folderId,
+      offset,
+      limit,
+      testCasesSearchParams,
+      filterPriorities,
+      filterTags,
+      filterRequirements,
+    } = action.payload;
     const projectKey = (yield select(projectKeySelector)) as string;
     const result = (yield call(
       fetch,
       URLS.testCases(projectKey, {
         'filter.eq.testFolderId': folderId,
         'filter.cnt.name': testCasesSearchParams,
-        ...buildTestCaseFilterParams(filterPriorities, filterTags),
+        ...buildTestCaseFilterParams(filterPriorities, filterTags, filterRequirements),
         offset,
         limit,
       }),
@@ -177,7 +184,14 @@ function* getAllTestCases(action: GetAllTestCasesAction): Generator {
   yield put(startLoadingTestCasesAction());
 
   try {
-    const { offset, limit, testCasesSearchParams, filterPriorities, filterTags } = action.payload;
+    const {
+      offset,
+      limit,
+      testCasesSearchParams,
+      filterPriorities,
+      filterTags,
+      filterRequirements,
+    } = action.payload;
     const projectKey = (yield select(projectKeySelector)) as string;
     const result = (yield call(
       fetch,
@@ -185,7 +199,7 @@ function* getAllTestCases(action: GetAllTestCasesAction): Generator {
         offset,
         limit,
         'filter.cnt.name': testCasesSearchParams,
-        ...buildTestCaseFilterParams(filterPriorities, filterTags),
+        ...buildTestCaseFilterParams(filterPriorities, filterTags, filterRequirements),
       }),
     )) as {
       content: TestCase[];
@@ -405,7 +419,7 @@ function* getFilteredFolders(action: GetFilteredFoldersAction) {
   try {
     yield put(startLoadingFilteredFoldersAction());
 
-    const filters: Record<string, string | number> = { ...extraFilters };
+    const filters: Record<string, string | number | string[]> = { ...extraFilters };
     if (searchQuery) {
       filters[MANUAL_LAUNCH_FOLDER_SEARCH_FILTER_KEY] = searchQuery;
     }

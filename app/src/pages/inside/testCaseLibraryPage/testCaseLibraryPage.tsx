@@ -59,7 +59,13 @@ import {
   FilterSidePanel,
   type FilterApplyPayload,
 } from 'pages/inside/common/testCaseList/filterSidePanel';
-import { toBackendPriority, parsePrioritiesFromQuery, parseTagsFromQuery } from 'pages/inside/common/testCaseList/filterSidePanel/utils';
+import {
+  toBackendPriority,
+  parsePrioritiesFromQuery,
+  parseTagsFromQuery,
+  parseRequirementsFromQuery,
+  serializeRequirements,
+} from 'pages/inside/common/testCaseList/filterSidePanel/utils';
 import { messages as testCaseListMessages } from 'pages/inside/common/testCaseList/messages';
 
 import { TestCaseFolders } from './testCaseFolders';
@@ -98,11 +104,19 @@ export const TestCaseLibraryPage = () => {
   const [selectedTags, setSelectedTags] = useState<string[]>(
     () => parseTagsFromQuery(location?.query?.filterTags),
   );
+  const [selectedRequirements, setSelectedRequirements] = useState<string[]>(() =>
+    parseRequirementsFromQuery(location?.query?.filterRequirements),
+  );
 
   useEffect(() => {
     setSelectedPriorities(parsePrioritiesFromQuery(location?.query?.filterPriorities));
     setSelectedTags(parseTagsFromQuery(location?.query?.filterTags));
-  }, [location?.query?.filterPriorities, location?.query?.filterTags]);
+    setSelectedRequirements(parseRequirementsFromQuery(location?.query?.filterRequirements));
+  }, [
+    location?.query?.filterPriorities,
+    location?.query?.filterTags,
+    location?.query?.filterRequirements,
+  ]);
 
   const { canManageTestCases } = useUserPermissions();
   const projectLink = { type: PROJECT_DASHBOARD_PAGE, payload: { organizationSlug, projectSlug } };
@@ -124,7 +138,9 @@ export const TestCaseLibraryPage = () => {
     searchValue !== (location?.query?.testCasesSearchParams || '') || isLoadingFilteredFolders;
 
   const activeFiltersCount =
-    (isEmpty(selectedPriorities) ? 0 : 1) + (isEmpty(selectedTags) ? 0 : 1);
+    (isEmpty(selectedPriorities) ? 0 : 1) +
+    (isEmpty(selectedTags) ? 0 : 1) +
+    (isEmpty(selectedRequirements) ? 0 : 1);
   const hasActiveFilters = activeFiltersCount > 0;
 
   const handleFilterChange = useCallback(
@@ -155,7 +171,7 @@ export const TestCaseLibraryPage = () => {
     setIsFilterSidePanelVisible(true);
   };
 
-  const handleApplyFilters = ({ priorities, tags }: FilterApplyPayload) => {
+  const handleApplyFilters = ({ priorities, tags, requirements }: FilterApplyPayload) => {
     const hasPriorities = !isEmpty(priorities);
     const hasTags = !isEmpty(tags);
     const filterPriorities = hasPriorities ? toBackendPriority(priorities) : undefined;
@@ -178,6 +194,7 @@ export const TestCaseLibraryPage = () => {
       updatePagePropertiesAction({
         filterPriorities,
         filterTags,
+        filterRequirements: serializeRequirements(requirements),
         ...TestCasePageDefaultValues,
       }),
     );
@@ -190,7 +207,8 @@ export const TestCaseLibraryPage = () => {
   const hasActiveSearchOrFilters =
     !!location?.query?.testCasesSearchParams ||
     !!location?.query?.filterPriorities ||
-    !!location?.query?.filterTags;
+    !!location?.query?.filterTags ||
+    !!location?.query?.filterRequirements;
 
   const showEmptyState = !areFoldersLoading && !hasFolders && !hasActiveSearchOrFilters;
 
@@ -297,6 +315,8 @@ export const TestCaseLibraryPage = () => {
             onClose={handleCloseFilterSidePanel}
             selectedPriorities={selectedPriorities}
             selectedTags={selectedTags}
+            selectedRequirements={selectedRequirements}
+            showRequirements
             onPrioritiesChange={setSelectedPriorities}
             onTagsChange={setSelectedTags}
             onApply={handleApplyFilters}

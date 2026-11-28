@@ -30,7 +30,7 @@ import { useSearchFilteredFolderDisplay } from 'common/hooks';
 
 interface UseSearchFilteredFoldersParams {
   searchQuery?: string;
-  extraFilters?: Record<string, string | number>;
+  extraFilters?: Record<string, string | number | string[]>;
   allFoldersOverride?: Folder[];
 }
 
