@@ -15,7 +15,7 @@
  */
 
 import { useIntl } from 'react-intl';
-import { useCallback } from 'react';
+import { useCallback, useRef } from 'react';
 import { Field, WrappedFieldProps } from 'redux-form';
 import { FieldText, FieldTextFlex, FieldLabel } from '@reportportal/ui-kit';
 import { AutocompleteOption } from '@reportportal/ui-kit/autocompletes';
@@ -37,6 +37,7 @@ import { LAUNCH_FORM_FIELD_NAMES, LAUNCH_NAME_MAX_LENGTH } from './constants';
 import { messages } from './messages';
 import { AttributeListField } from './attributeListField';
 import { getTestPlanMilestoneName, getTestPlanOptionLabel } from './utils';
+import { keepTestPlanOnBlur } from './testPlanFieldState';
 
 import styles from './launchFormFields.scss';
 
@@ -127,6 +128,26 @@ export const NewLaunchFields = ({
     input.onChange(value);
   };
 
+  // Set while the Test Plan input loses focus: the field then keeps the selected plan
+  // instead of dropping it for a typed search that matches no option.
+  const isLeavingTestPlanFieldRef = useRef(false);
+  const handleTestPlanBlur = () => {
+    isLeavingTestPlanFieldRef.current = true;
+    setTimeout(() => {
+      isLeavingTestPlanFieldRef.current = false;
+    });
+  };
+  const testPlanStateReducer = <T, C extends { selectedItem?: T | null; inputValue?: string }>(
+    state: { selectedItem: T | null; inputValue: string | null },
+    changes: C,
+  ) =>
+    keepTestPlanOnBlur(
+      state,
+      changes,
+      isLeavingTestPlanFieldRef.current,
+      getTestPlanOptionLabel as (item: T) => string,
+    );
+
   const renderTestPlanField = ({ input }: WrappedFieldProps) => (
     <AsyncAutocompleteV2
       value={input.value as TestPlanOption | undefined}
@@ -136,6 +157,8 @@ export const NewLaunchFields = ({
       onChange={(value) => handleTestPlanChange(value, input)}
       parseValueToString={getTestPlanOptionLabel}
       renderOption={renderTestPlanOption}
+      onBlur={handleTestPlanBlur}
+      stateReducer={testPlanStateReducer}
       getUniqKey={(value: { id?: number }) => value?.id}
       createWithoutConfirmation
       skipOptionCreation
