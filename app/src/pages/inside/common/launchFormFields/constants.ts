@@ -36,3 +36,6 @@ export const NEW_LAUNCH_FIRST_MODES_ORDER = [LaunchMode.NEW, LaunchMode.EXISTING
 
 export const PAGE_SIZE = 50;
 export const LAUNCH_NAME_MAX_LENGTH = 255;
+
+/** Matches the Test Plan name, its Milestone name or the "Plan name, Milestone name" label. */
+export const TEST_PLAN_SEARCH_FILTER_KEY = 'filter.cnt.nameOrMilestoneName';

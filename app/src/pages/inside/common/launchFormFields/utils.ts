@@ -15,6 +15,7 @@
  */
 
 import { TestPlanOption } from './types';
+import { PAGE_SIZE, TEST_PLAN_SEARCH_FILTER_KEY } from './constants';
 
 type TestPlanLabelSource = Pick<TestPlanOption, 'name' | 'milestone'> | null | undefined | '';
 
@@ -38,6 +39,13 @@ export const getTestPlanOptionLabel = (testPlan: TestPlanLabelSource): string =>
 
   return milestoneName ? `${name}, ${milestoneName}` : name;
 };
+
+/**
+ * Query params of the Test Plan search in the launch modals. The search matches the plan name
+ * and the Milestone name, so the "Plan name, Milestone name" value of a selected plan finds it.
+ */
+export const getTestPlanSearchParams = (search: string): Record<string, string | number> =>
+  search ? { [TEST_PLAN_SEARCH_FILTER_KEY]: search, pageSize: PAGE_SIZE } : { pageSize: PAGE_SIZE };
 
 /**
  * Generate UUID with fallback for non-secure contexts (HTTP)

@@ -29,14 +29,13 @@ import { FieldProvider, FieldErrorHint } from 'components/fields';
 import { AsyncAutocompleteV2 } from 'componentLibrary/autocompletes/asyncAutocompleteV2';
 import { FieldElement } from 'pages/inside/projectSettingsPageContainer/content/elements';
 import { commonMessages } from 'pages/inside/common/common-messages';
-import { LAUNCH_NAME_FILTER_KEY } from 'pages/inside/common/constants';
 import { MAX_FIELD_LENGTH } from 'common/utils/validation';
 
 import { NewLaunchFieldsProps, TestPlanOption } from './types';
 import { LAUNCH_FORM_FIELD_NAMES, LAUNCH_NAME_MAX_LENGTH } from './constants';
 import { messages } from './messages';
 import { AttributeListField } from './attributeListField';
-import { getTestPlanMilestoneName, getTestPlanOptionLabel } from './utils';
+import { getTestPlanMilestoneName, getTestPlanOptionLabel, getTestPlanSearchParams } from './utils';
 
 import styles from './launchFormFields.scss';
 
@@ -104,10 +103,7 @@ export const NewLaunchFields = ({
   };
 
   const retrieveTestPlans = (value: string) =>
-    URLS.testPlan(
-      projectKey,
-      value ? { [LAUNCH_NAME_FILTER_KEY]: value, pageSize: 50 } : { pageSize: 50 },
-    );
+    URLS.testPlan(projectKey, getTestPlanSearchParams(value));
 
   const getURIKey = useCallback(
     (search = '') => URLS.launchAttributeKeysSearch(projectKey)(search),
