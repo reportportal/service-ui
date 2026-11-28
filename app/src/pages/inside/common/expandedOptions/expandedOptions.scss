@@ -75,19 +75,77 @@
   height: 100%;
 
   &__sidebar {
+    position: relative;
     display: flex;
     flex-direction: column;
-    min-width: 360px;
-    max-width: 360px;
+    width: var(--folder-tree-width, 360px);
     min-height: 0;
     height: 100%;
     border-right: 1px solid var(--rp-ui-base-e-100);
     background-color: var(--rp-ui-base-bg-000);
   }
 
+  &__resize-line {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 7px;
+    width: 2px;
+    pointer-events: none;
+    background-color: currentcolor;
+  }
+
+  // Resizable tree (EPMRPP-123499): 16px hover zone centred on the right border, a 2px topaz
+  // line on hover, and the two resize hint shapes in the middle of the panel.
+  &__resize-handle {
+    position: absolute;
+    z-index: 2;
+    top: 0;
+    bottom: 0;
+    right: -8px;
+    width: 16px;
+    padding: 0;
+    border: none;
+    background: none;
+    color: transparent;
+    cursor: col-resize;
+    touch-action: none;
+
+    &::before,
+    &::after {
+      content: '';
+      position: absolute;
+      top: calc(50% - 8px);
+      width: 2px;
+      height: 16px;
+      border-radius: 1px;
+      background-color: var(--rp-ui-base-e-300);
+    }
+
+    &::before {
+      left: 4px;
+    }
+
+    &::after {
+      right: 4px;
+    }
+
+    &:hover,
+    &:focus-visible,
+    &--active {
+      outline: none;
+      color: var(--rp-ui-base-topaz-focused);
+
+      &::before,
+      &::after {
+        background-color: var(--rp-ui-base-topaz-focused);
+      }
+    }
+  }
+
   &__sidebar-separator {
     flex-shrink: 0;
-    width: 312px;
+    width: calc(100% - 48px);
     height: 1px;
     margin: 8px auto;
     background-color: var(--rp-ui-base-e-100);
@@ -181,7 +239,7 @@
     background-color: var(--rp-ui-base-bg-200);
 
     > div {
-      max-width: 312px;
+      max-width: calc(100% - 32px);
     }
   }
 

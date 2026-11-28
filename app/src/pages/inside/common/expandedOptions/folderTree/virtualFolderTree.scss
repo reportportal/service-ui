@@ -18,10 +18,12 @@
   position: absolute;
   top: 0;
   left: 0;
-  right: 0;
+  // Keep the scrollbar out of the 8px inner part of the tree resize handle (EPMRPP-123499);
+  // rows keep their width: 8px here + 16px padding = the former 24px right padding.
+  right: 8px;
   bottom: 0;
   overflow-y: auto;
-  padding: 0 24px 20px 24px;
+  padding: 0 16px 20px 24px;
 
   &__list {
     position: relative;

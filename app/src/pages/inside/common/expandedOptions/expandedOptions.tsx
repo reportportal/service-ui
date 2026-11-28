@@ -55,6 +55,7 @@ import type { ExpandedOptionsProps } from './types';
 import { useFolderSearch } from './useFolderSearch';
 import { useSearchFilteredFolders } from './useSearchFilteredFolders';
 import { useExpandCollapseAll } from './useExpandCollapseAll';
+import { useResizableFolderTree } from './useResizableFolderTree';
 import { FOLDER_DRAG_TYPE, EXTERNAL_TREE_DROP_TYPE } from './constants';
 import {
   createTestCaseDropHandler,
@@ -97,6 +98,13 @@ export const ExpandedOptions = ({
   const { formatMessage } = useIntl();
   const { expandedIds, onToggleFolder, setExpandedIds } = useStorageFolders(instanceKey);
   const isFlatView = viewMode === FolderTreeViewMode.FLAT;
+  const {
+    width: folderTreeWidth,
+    isResizing: isFolderTreeResizing,
+    handlePointerDown: handleResizePointerDown,
+    handleDoubleClick: handleResizeDoubleClick,
+    handleKeyDown: handleResizeKeyDown,
+  } = useResizableFolderTree();
   const allFolders = useSelector(foldersSelector);
   const [scrollEdges, setScrollEdges] = useState<ScrollOverflowEdges>(NO_SCROLL_OVERFLOW_EDGES);
 
@@ -309,13 +317,19 @@ export const ExpandedOptions = ({
           }}
         />
       )}
-      <div className={cx('expanded-options', { 'expanded-options--no-sidebar': hideSidebar })}>
+      <div
+        className={cx('expanded-options', { 'expanded-options--no-sidebar': hideSidebar })}
+        style={{ '--folder-tree-width': `${folderTreeWidth}px` } as CSSProperties}
+      >
         {hideSidebar || (
           <div
             className={cx('expanded-options__sidebar')}
             style={
               {
-                '--folder-tree-scrollbar-gutter': `${scrollEdges.scrollbarGutter}px`,
+                // The tree scroll area ends 8px before the panel edge (resize handle), see virtualFolderTree.scss
+                '--folder-tree-scrollbar-gutter': `${
+                  scrollEdges.scrollbarGutter ? scrollEdges.scrollbarGutter + 8 : 0
+                }px`,
               } as CSSProperties
             }
           >
@@ -406,6 +420,18 @@ export const ExpandedOptions = ({
                 onScrollEdgesChange={handleScrollEdgesChange}
               />
             </div>
+            <button
+              type="button"
+              aria-label={formatMessage(messages.resizeFolderTree)}
+              className={cx('expanded-options__resize-handle', {
+                'expanded-options__resize-handle--active': isFolderTreeResizing,
+              })}
+              onPointerDown={handleResizePointerDown}
+              onDoubleClick={handleResizeDoubleClick}
+              onKeyDown={handleResizeKeyDown}
+            >
+              <span className={cx('expanded-options__resize-line')} />
+            </button>
             {!isEmpty(filteredFolders) && (
               <FolderTreeFooter
                 viewMode={viewMode}

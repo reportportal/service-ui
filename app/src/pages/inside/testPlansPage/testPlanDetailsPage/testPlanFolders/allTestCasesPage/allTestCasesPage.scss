@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-$sidebar-width: calc(100vw - 408px);
+$sidebar-width: calc(100vw - 48px - var(--folder-tree-width, 360px));
 
 .all-test-cases-page {
   display: flex;

@@ -17,3 +17,9 @@
 export const FOLDER_DRAG_TYPE = 'TEST_CASE_FOLDER';
 export const EXTERNAL_TREE_DROP_TYPE = 'EXTERNAL_TREE_DROP';
 
+// Resizable folder tree (EPMRPP-123499, handoff 4.3): min = the default width, max 700 px.
+export const FOLDER_TREE_DEFAULT_WIDTH = 360;
+export const FOLDER_TREE_MIN_WIDTH = FOLDER_TREE_DEFAULT_WIDTH;
+export const FOLDER_TREE_MAX_WIDTH = 700;
+export const FOLDER_TREE_KEYBOARD_STEP = 16;
+export const FOLDER_TREE_WIDTH_SETTINGS_KEY = 'tmsFolderTreeWidth';
