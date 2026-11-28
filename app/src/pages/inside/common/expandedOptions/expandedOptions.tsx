@@ -33,8 +33,8 @@ import type { TreeDragItem, TreeDropPosition } from '@reportportal/ui-kit/common
 import { TMS_INSTANCE_KEY } from 'pages/inside/common/constants';
 import { createClassnames } from 'common/utils';
 import { useStorageFolders } from 'hooks/useStorageFolders';
-import { useFlatViewPreference } from 'hooks/useFlatViewPreference';
 import { TransformedFolder, foldersSelector } from 'controllers/testCase';
+import { FolderTreeViewMode } from 'common/utils/folderUtils';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
 import OutlineSearchIcon from 'common/img/search-outline-icon-inline.svg';
 import FilledSearchIcon from 'common/img/search-filled-icon-inline.svg';
@@ -56,17 +56,28 @@ import { useFolderSearch } from './useFolderSearch';
 import { useSearchFilteredFolders } from './useSearchFilteredFolders';
 import { useExpandCollapseAll } from './useExpandCollapseAll';
 import { FOLDER_DRAG_TYPE, EXTERNAL_TREE_DROP_TYPE } from './constants';
-import { createTestCaseDropHandler, getHiddenActiveFolderIndicatorId } from './utils';
+import {
+  createTestCaseDropHandler,
+  getHiddenActiveFolderIndicatorId,
+  getSubfolderTotalsById,
+} from './utils';
 
 import styles from './expandedOptions.scss';
 
 const cx = createClassnames(styles);
 
+const DEFAULT_VIEW_MODES = [
+  FolderTreeViewMode.TREE,
+  FolderTreeViewMode.FLAT,
+  FolderTreeViewMode.SUBFOLDERS,
+];
+
 export const ExpandedOptions = ({
   folders,
   activeFolderId,
   instanceKey,
-  flatViewScopeId,
+  viewMode,
+  viewModes = DEFAULT_VIEW_MODES,
   children,
   searchQuery: pageSearchQuery,
   searchExtraFilters,
@@ -80,14 +91,12 @@ export const ExpandedOptions = ({
   onDuplicateFolder,
   onMoveTestCase,
   onDuplicateTestCase,
+  onViewModeChange,
   onFolderTreeViewControl,
 }: ExpandedOptionsProps) => {
   const { formatMessage } = useIntl();
   const { expandedIds, onToggleFolder, setExpandedIds } = useStorageFolders(instanceKey);
-  const { isFlatView, setIsFlatView } = useFlatViewPreference({
-    instanceKey,
-    flatViewScopeId,
-  });
+  const isFlatView = viewMode === FolderTreeViewMode.FLAT;
   const allFolders = useSelector(foldersSelector);
   const [scrollEdges, setScrollEdges] = useState<ScrollOverflowEdges>(NO_SCROLL_OVERFLOW_EDGES);
 
@@ -234,6 +243,11 @@ export const ExpandedOptions = ({
       setAllExpandedInFilter,
       setAllCollapsedInFilter,
     });
+
+  const subfolderTotalsById = useMemo(
+    () => getSubfolderTotalsById(folderSearchSource),
+    [folderSearchSource],
+  );
 
   const hiddenActiveFolderIndicatorId = useMemo(() => {
     if (isFlatView || searchQuery) {
@@ -382,6 +396,8 @@ export const ExpandedOptions = ({
                 hasAnyMatch={hasAnyMatch}
                 enableDragAndDrop={isDragAndDropEnabled}
                 isFlatView={isFlatView}
+                subfolderTotalsById={subfolderTotalsById}
+                showSubfolderTotalsOnly={viewMode === FolderTreeViewMode.SUBFOLDERS}
                 hiddenActiveFolderIndicatorId={hiddenActiveFolderIndicatorId}
                 canDropOn={isDragAndDropEnabled ? canDropOn : undefined}
                 setAllTestCases={setAllTestCases}
@@ -392,11 +408,12 @@ export const ExpandedOptions = ({
             </div>
             {!isEmpty(filteredFolders) && (
               <FolderTreeFooter
-                isFlatView={isFlatView}
+                viewMode={viewMode}
+                viewModes={viewModes}
                 isExpandAllDisabled={isExpandAllDisabled}
                 isCollapseAllDisabled={isCollapseAllDisabled}
                 showBottomFade={scrollEdges.canScrollDown}
-                onFlatViewChange={setIsFlatView}
+                onViewModeChange={onViewModeChange}
                 onExpandAll={handleExpandAll}
                 onCollapseAll={handleCollapseAll}
                 onTrackViewControl={onFolderTreeViewControl}

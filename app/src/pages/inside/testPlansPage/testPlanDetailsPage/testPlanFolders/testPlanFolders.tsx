@@ -24,9 +24,14 @@ import {
 import { PROJECT_TEST_PLAN_DETAILS_PAGE, locationSelector } from 'controllers/pages';
 import { TMS_INSTANCE_KEY } from 'pages/inside/common/constants';
 import { useTestPlanActiveFolders } from 'pages/inside/common/hooks';
+import { useFolderTreeViewMode } from 'hooks/useFolderTreeViewMode';
+import { FolderTreeViewMode } from 'common/utils/folderUtils';
 
 import { ExpandedOptions } from '../../../common/expandedOptions';
 import { AllTestCasesPage } from './allTestCasesPage';
+
+// "All test cases within subfolders" is designed for the Test Case Library and Manual Launch trees only.
+const TEST_PLAN_VIEW_MODES = [FolderTreeViewMode.TREE, FolderTreeViewMode.FLAT];
 
 interface TestPlanFoldersProps {
   isLoading?: boolean;
@@ -39,6 +44,10 @@ export const TestPlanFolders = ({ isLoading = false }: TestPlanFoldersProps) => 
   const testCasesSearchParams = location?.query?.testCasesSearchParams;
   const { activeFolderId, activeFolder, payload, folders, transformedFolders } =
     useTestPlanActiveFolders();
+  const { viewMode, setViewMode } = useFolderTreeViewMode({
+    instanceKey: TMS_INSTANCE_KEY.TEST_PLAN,
+    scopeId: payload.testPlanId,
+  });
 
   const searchExtraFilters = useMemo(
     () => ({ 'filter.eq.testPlanId': payload.testPlanId }),
@@ -81,7 +90,9 @@ export const TestPlanFolders = ({ isLoading = false }: TestPlanFoldersProps) => 
       activeFolderId={activeFolderId}
       folders={transformedFolders}
       instanceKey={TMS_INSTANCE_KEY.TEST_PLAN}
-      flatViewScopeId={payload.testPlanId}
+      viewMode={viewMode}
+      viewModes={TEST_PLAN_VIEW_MODES}
+      onViewModeChange={setViewMode}
       searchQuery={testCasesSearchParams}
       searchExtraFilters={searchExtraFilters}
       searchAllFolders={folders}

@@ -17,6 +17,7 @@
 import { ReactNode } from 'react';
 
 import { TMS_INSTANCE_KEY } from 'pages/inside/common/constants';
+import { FolderTreeViewMode } from 'common/utils/folderUtils';
 import { Folder, TransformedFolder } from 'controllers/testCase';
 import { TreeDragItem, TreeDropPosition } from '@reportportal/ui-kit/common';
 import { ExtendedTestCase } from 'types/testCase';
@@ -47,7 +48,10 @@ export interface ExpandedOptionsProps {
   onFolderClick: (id: number) => void;
   children: ReactNode;
   instanceKey: TMS_INSTANCE_KEY;
-  flatViewScopeId?: string | number | null;
+  viewMode: FolderTreeViewMode;
+  /** View modes offered in the tree footer. Default: Tree, Flat view, All test cases within subfolders. */
+  viewModes?: FolderTreeViewMode[];
+  onViewModeChange: (viewMode: FolderTreeViewMode) => void;
   searchQuery?: string;
   searchExtraFilters?: Record<string, string | number>;
   searchAllFolders?: Folder[];

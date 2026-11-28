@@ -35,6 +35,7 @@ export const MANUAL_SCENARIO_TYPE_TEXT = 'TEXT' as const;
 export const MANUAL_SCENARIO_TYPE_STEPS = 'STEPS' as const;
 
 export const TEST_FOLDER_ID_FILTER_KEY = 'filter.eq.testFolderId' as const;
+export const TEST_FOLDER_IDS_FILTER_KEY = 'filter.in.testFolderId' as const;
 
 export const MANUAL_LAUNCH_NAME_FILTER_KEY = 'filter.cnt.name' as const;
 export const MANUAL_LAUNCH_STATUS_FILTER_KEY = 'filter.eq.status' as const;

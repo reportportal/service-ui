@@ -20,8 +20,8 @@
   display: flex;
   align-items: center;
   height: 48px;
-  gap: 56px;
-  padding: 0 16px 0 24px;
+  gap: 16px;
+  padding: 0 32px;
   border-top: 1px solid var(--rp-ui-base-e-100);
   background-color: var(--rp-ui-base-bg-000);
   box-sizing: border-box;
@@ -41,14 +41,9 @@
     );
   }
 
-  &__toggle {
-    display: flex;
-    width: 100%;
-    white-space: nowrap;
-  }
-
   &__actions {
     display: flex;
+    margin-left: auto;
     align-items: center;
     gap: 16px;
 

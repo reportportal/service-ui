@@ -15,7 +15,7 @@
  */
 
 import { useCallback, useMemo, useEffect } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import { useSelector, useDispatch, useStore } from 'react-redux';
 import { isEmpty } from 'es-toolkit/compat';
 
 import {
@@ -27,19 +27,33 @@ import {
   urlManualLaunchFolderIdSelector,
   expandManualLaunchFoldersToLevelAction,
   defaultManualLaunchesQueryParams,
+  getManualLaunchTestCaseExecutionsAction,
+  getManualLaunchDetailsFetchParams,
+  buildGetManualLaunchTestCaseExecutionsParams,
 } from 'controllers/manualLaunch';
 import { MANUAL_LAUNCH_DETAILS_PAGE, locationSelector } from 'controllers/pages';
 import { ExecutionStatus } from 'types/testCase';
 import { useManualLaunchId, useProjectDetails } from 'hooks/useTypedSelector';
 import { TMS_INSTANCE_KEY } from 'pages/inside/common/constants';
-import { transformFoldersToDisplay, filterEmptyFolders } from 'common/utils/folderUtils';
+import {
+  transformFoldersToDisplay,
+  filterEmptyFolders,
+  FolderTreeViewMode,
+} from 'common/utils/folderUtils';
+import { useFolderTreeViewMode } from 'hooks/useFolderTreeViewMode';
+import type { AppState } from 'types/store';
 import { ExpandedOptions } from '../../../common/expandedOptions';
 import { ManualLaunchExecutions } from '../manualLaunchExecutions';
 import { useManualLaunchSearchFilteredFolders } from './useManualLaunchSearchFilteredFolders';
 
 export const ManualLaunchFolders = () => {
   const dispatch = useDispatch();
+  const store = useStore<AppState>();
   const launchId = useManualLaunchId();
+  const { viewMode, setViewMode } = useFolderTreeViewMode({
+    instanceKey: TMS_INSTANCE_KEY.MANUAL_LAUNCH,
+    scopeId: launchId,
+  });
   const { organizationSlug, projectSlug } = useProjectDetails();
   const folders = useSelector(manualLaunchFoldersSelector);
   const executions = useSelector(manualLaunchTestCaseExecutionsSelector);
@@ -138,6 +152,37 @@ export const ManualLaunchFolders = () => {
     [navigateToFolder],
   );
 
+  const handleViewModeChange = useCallback(
+    (nextViewMode: FolderTreeViewMode) => {
+      const isSubfoldersModeChanged =
+        nextViewMode === FolderTreeViewMode.SUBFOLDERS ||
+        viewMode === FolderTreeViewMode.SUBFOLDERS;
+
+      setViewMode(nextViewMode);
+
+      // Only the list of a selected folder depends on the "All test cases within subfolders" mode.
+      if (!urlFolderIdNumber || !isSubfoldersModeChanged) {
+        return;
+      }
+
+      const fetchParams = getManualLaunchDetailsFetchParams(store.getState());
+
+      // The list changes, so start again from the first page.
+      if (Number(fetchParams.offset) > 0) {
+        navigateToFolder(urlFolderIdNumber);
+
+        return;
+      }
+
+      const executionsParams = buildGetManualLaunchTestCaseExecutionsParams(fetchParams);
+
+      if (executionsParams) {
+        dispatch(getManualLaunchTestCaseExecutionsAction(executionsParams));
+      }
+    },
+    [viewMode, setViewMode, urlFolderIdNumber, store, dispatch, navigateToFolder],
+  );
+
   const handleAllExecutionsClick = useCallback(() => {
     navigateToFolder();
   }, [navigateToFolder]);
@@ -197,7 +242,8 @@ export const ManualLaunchFolders = () => {
       activeFolderId={urlFolderIdNumber}
       folders={transformedFolders}
       instanceKey={TMS_INSTANCE_KEY.MANUAL_LAUNCH}
-      flatViewScopeId={launchId}
+      viewMode={viewMode}
+      onViewModeChange={handleViewModeChange}
       searchQuery={searchQuery}
       searchAllFolders={folders}
       searchFilteredData={searchFilteredData}

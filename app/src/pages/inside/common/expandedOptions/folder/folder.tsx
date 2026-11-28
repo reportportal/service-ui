@@ -47,6 +47,32 @@ import styles from './folder.scss';
 
 const cx = createClassnames(styles);
 
+/**
+ * Tree and Flat view: "local/total" for a folder with subfolders, one number otherwise.
+ * "All test cases within subfolders": one number, the total of the folder and its subfolders.
+ */
+export const getFolderCounter = ({
+  testsCount,
+  totalTestsCount,
+  hasSubfolders,
+  showTotalOnly,
+}: {
+  testsCount: number;
+  totalTestsCount?: number;
+  hasSubfolders: boolean;
+  showTotalOnly: boolean;
+}): string => {
+  if (totalTestsCount === undefined) {
+    return String(testsCount);
+  }
+
+  if (showTotalOnly) {
+    return String(totalTestsCount);
+  }
+
+  return hasSubfolders ? `${testsCount}/${totalTestsCount}` : String(testsCount);
+};
+
 interface FolderRowProps {
   node: FlatFolderNode;
   activeFolderId: number | null;
@@ -54,6 +80,8 @@ interface FolderRowProps {
   searchQuery: string;
   nextNodeDepth: number;
   hasHiddenActiveDescendant?: boolean;
+  totalTestsCount?: number;
+  showTotalTestsCountOnly?: boolean;
   isDragging?: boolean;
   enableDragAndDrop?: boolean;
   dragRef?: (element: HTMLElement | null) => void;
@@ -71,6 +99,8 @@ export const Folder = ({
   nextNodeDepth,
   enableDragAndDrop = false,
   hasHiddenActiveDescendant = false,
+  totalTestsCount,
+  showTotalTestsCountOnly = false,
   isDragging: isDraggingFolder = false,
   dragRef,
   style,
@@ -220,7 +250,12 @@ export const Folder = ({
             </button>
           ) : (
             <span className={cx('folders-tree__item-title--counter')}>
-              {folder.testsCount || 0}
+              {getFolderCounter({
+                testsCount: folder.testsCount || 0,
+                totalTestsCount,
+                hasSubfolders: !isEmpty(folder.folders),
+                showTotalOnly: showTotalTestsCountOnly,
+              })}
             </span>
           )}
         </div>

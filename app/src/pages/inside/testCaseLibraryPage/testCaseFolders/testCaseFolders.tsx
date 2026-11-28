@@ -19,7 +19,7 @@ import { useIntl } from 'react-intl';
 import { useDispatch, useSelector } from 'react-redux';
 import { useTracking } from 'react-tracking';
 import { Button, PlusIcon } from '@reportportal/ui-kit';
-import { noop } from 'es-toolkit';
+import { noop, omit } from 'es-toolkit';
 
 import {
   TEST_CASE_LIBRARY_EVENTS,
@@ -53,12 +53,13 @@ import {
   showNotification,
 } from 'controllers/notification';
 import { useUserPermissions } from 'hooks/useUserPermissions';
+import { useFolderTreeViewMode } from 'hooks/useFolderTreeViewMode';
+import { FolderTreeViewMode } from 'common/utils/folderUtils';
 import { TMS_INSTANCE_KEY } from 'pages/inside/common/constants';
 import { TestCasePageDefaultValues } from 'pages/inside/common/testCaseList/constants';
 import { userIdSelector } from 'controllers/user';
 import { ExtendedTestCase } from 'types/testCase';
 import { findFolderById } from 'pages/inside/common/hooks';
-import type { NotificationMessageKey } from 'common/hooks/useNotification';
 
 import { ExpandedOptions } from '../../common/expandedOptions';
 import { commonMessages } from '../commonMessages';
@@ -109,6 +110,11 @@ export const TestCaseFolders = () => {
   const { query } = useSelector(locationSelector);
   const userId = useSelector(userIdSelector) as string;
   const { canManageTestCases } = useUserPermissions();
+  const { viewMode, setViewMode } = useFolderTreeViewMode({
+    instanceKey: TMS_INSTANCE_KEY.TEST_CASE,
+  });
+  // Only the "All test cases within subfolders" mode changes the list of a folder.
+  const isSubfoldersViewMode = viewMode === FolderTreeViewMode.SUBFOLDERS;
 
   const urlFolderIdNumber = Number(urlFolderId);
   const activeFolder = useMemo(
@@ -137,6 +143,7 @@ export const TestCaseFolders = () => {
     () =>
       [
         urlFolderId ?? '',
+        urlFolderId ? isSubfoldersViewMode : '',
         queryParams.limit,
         queryParams.offset,
         queryParams.testCasesSearchParams ?? '',
@@ -145,6 +152,7 @@ export const TestCaseFolders = () => {
       ].join('|'),
     [
       urlFolderId,
+      isSubfoldersViewMode,
       queryParams.limit,
       queryParams.offset,
       queryParams.testCasesSearchParams,
@@ -217,12 +225,47 @@ export const TestCaseFolders = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     urlFolderId,
+    isSubfoldersViewMode,
     queryParams.limit,
     queryParams.offset,
     queryParams.testCasesSearchParams,
     queryParams.filterPriorities,
     queryParams.filterTags,
   ]);
+
+  const handleViewModeChange = useCallback(
+    (nextViewMode: FolderTreeViewMode) => {
+      const isSubfoldersModeChanged =
+        nextViewMode === FolderTreeViewMode.SUBFOLDERS || isSubfoldersViewMode;
+
+      setViewMode(nextViewMode);
+
+      // The list of the folder changes, so start again from the first page.
+      if (urlFolderId && isSubfoldersModeChanged && queryParams.offset > 0) {
+        const queryWithoutOffset = omit(query ?? {}, ['offset']);
+
+        dispatch({
+          type: TEST_CASE_LIBRARY_PAGE,
+          payload: {
+            testCasePageRoute: `folder/${urlFolderId}`,
+            organizationSlug,
+            projectSlug,
+          },
+          query: queryWithoutOffset,
+        });
+      }
+    },
+    [
+      isSubfoldersViewMode,
+      setViewMode,
+      urlFolderId,
+      queryParams.offset,
+      query,
+      dispatch,
+      organizationSlug,
+      projectSlug,
+    ],
+  );
 
   const handleFolderClick = (id: number) => {
     navigateToFolder({ folderId: id });
@@ -268,7 +311,7 @@ export const TestCaseFolders = () => {
         testCaseId: testCase.id,
         testCasesSourceFolderId: testCase.testFolder?.id,
         destinationFolder: destinationFolderPayload,
-        successMessageId: 'testCaseMovedSuccessWithDetails' as NotificationMessageKey,
+        successMessageId: 'testCaseMovedSuccessWithDetails',
         successMessageValues: {
           testCaseName: testCase.name,
           folderName: destinationFolder.name,
@@ -287,7 +330,7 @@ export const TestCaseFolders = () => {
       await batchDuplicateTestCases({
         testCaseIds: [testCase.id],
         testFolderId: destinationFolder.id,
-        successMessageId: 'testCaseDuplicatedSuccessWithDetails' as NotificationMessageKey,
+        successMessageId: 'testCaseDuplicatedSuccessWithDetails',
         successMessageValues: {
           testCaseName: testCase.name,
           folderName: destinationFolder.name,
@@ -302,6 +345,8 @@ export const TestCaseFolders = () => {
       activeFolderId={urlFolderIdNumber || null}
       folders={folders}
       instanceKey={TMS_INSTANCE_KEY.TEST_CASE}
+      viewMode={viewMode}
+      onViewModeChange={handleViewModeChange}
       searchQuery={queryParams.testCasesSearchParams}
       searchExtraFilters={searchExtraFilters}
       setAllTestCases={navigateToAllTestCases}

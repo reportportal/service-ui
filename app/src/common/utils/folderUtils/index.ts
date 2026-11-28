@@ -25,3 +25,10 @@ export {
   type BaseFolder,
   type TransformedFolder,
 } from './transformFolders';
+export {
+  FolderTreeViewMode,
+  FolderTreeViewModeScope,
+  getFolderTreeViewMode,
+  saveFolderTreeViewMode,
+  getFolderIdsForViewMode,
+} from './folderTreeViewMode';

@@ -41,9 +41,21 @@ export const messages = defineMessages({
     id: 'expandedOptions.dragToReorder',
     defaultMessage: 'Drag to reorder',
   },
+  viewMode: {
+    id: 'expandedOptions.viewMode',
+    defaultMessage: 'View mode',
+  },
+  treeView: {
+    id: 'expandedOptions.treeView',
+    defaultMessage: 'Tree',
+  },
   flatView: {
     id: 'expandedOptions.flatView',
     defaultMessage: 'Flat view',
+  },
+  subfoldersView: {
+    id: 'expandedOptions.subfoldersView',
+    defaultMessage: 'All test cases within subfolders',
   },
   expandAll: {
     id: 'expandedOptions.expandAll',
