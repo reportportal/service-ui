@@ -16,14 +16,15 @@
 
 import { defineMessages, useIntl } from 'react-intl';
 import { useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { isNumber } from 'es-toolkit/compat';
 
 import {
   DEFAULT_CURRENT_PAGE,
   DEFAULT_ITEMS_PER_PAGE,
 } from 'pages/inside/common/testCaseList/configUtils';
-import { userIdSelector } from 'controllers/user';
+import { activeProjectKeySelector, userIdSelector } from 'controllers/user';
+import { isTmsUserSettingKey, updateTmsUserSettingsAction } from 'controllers/tmsUserSettings';
 import { updateStorageItem, getStorageItem } from 'common/utils';
 
 export const messages = defineMessages({
@@ -68,7 +69,9 @@ export const usePagination = ({
 }: PaginationType) => {
   const { formatMessage } = useIntl();
   const [activePage, setActivePage] = useState<number>(DEFAULT_CURRENT_PAGE);
+  const dispatch = useDispatch();
   const userId = useSelector(userIdSelector) as string;
+  const projectKey = useSelector(activeProjectKeySelector) as string | undefined;
   const [pageSize, setPageSize] = useState(() => {
     if (shouldSaveUserPreferences) {
       const settings = getStorageItem(`${userId}_settings`) as Record<string, unknown> | undefined;
@@ -87,9 +90,17 @@ export const usePagination = ({
 
   const changePageSize = (size: number) => {
     if (shouldSaveUserPreferences) {
-      updateStorageItem(`${userId}_settings`, {
-        [`${namespace}PageSize`]: size,
-      });
+      const key = `${namespace}PageSize`;
+      const settings = getStorageItem(`${userId}_settings`) as Record<string, unknown> | undefined;
+
+      // Also called on every URL sync: save only a changed value, so the server gets one request.
+      if (settings?.[key] !== size) {
+        updateStorageItem(`${userId}_settings`, { [key]: size });
+
+        if (projectKey && isTmsUserSettingKey(key)) {
+          dispatch(updateTmsUserSettingsAction(projectKey, { [key]: size }));
+        }
+      }
     }
 
     setPageSize(size);

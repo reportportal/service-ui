@@ -37,6 +37,7 @@ import {
 import { userRolesSelector, ORGANIZATION_PROJECTS_PAGE } from 'controllers/pages';
 import { canWorkWithFilters } from 'common/utils/permissions';
 import { fetchDataAction } from 'controllers/fetch';
+import { syncTmsUserSettings } from 'controllers/tmsUserSettings/sagas';
 import {
   UPDATE_DEFECT_TYPE,
   ADD_DEFECT_TYPE,
@@ -509,7 +510,12 @@ function* fetchProject({ payload: { projectKey, fetchInfoOnly } }) {
   try {
     let project = null;
     if (projectKey) {
-      project = yield call(fetch, URLS.projectByName(projectKey));
+      // TMS list settings are loaded together with the project, so local storage holds the
+      // values of this project before its pages read them.
+      [project] = yield all([
+        call(fetch, URLS.projectByName(projectKey)),
+        ...(fetchInfoOnly ? [] : [call(syncTmsUserSettings, projectKey)]),
+      ]);
       if (yield* isStale()) {
         return;
       }
