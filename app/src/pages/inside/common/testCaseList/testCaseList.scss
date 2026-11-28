@@ -72,6 +72,26 @@
   &:has(.selected) :global([class*='table-row-content']) {
     outline: 2px solid var(--rp-ui-base-topaz-focused);
   }
+
+  // Drop indicator for reordering in Custom order: a line in the gap above or below the row
+  &:global(.test-case-row-drop-before)::before,
+  &:global(.test-case-row-drop-after)::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background-color: var(--rp-ui-base-topaz);
+    pointer-events: none;
+  }
+
+  &:global(.test-case-row-drop-before)::before {
+    top: -3px;
+  }
+
+  &:global(.test-case-row-drop-after)::after {
+    bottom: -3px;
+  }
 }
 
 .cell-wrapper {

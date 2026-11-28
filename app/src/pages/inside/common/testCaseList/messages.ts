@@ -29,6 +29,10 @@ export const messages = defineMessages({
     id: 'TestCaseList.noResultsEmptyMessage',
     defaultMessage: 'No test cases available',
   },
+  selectedTestCasesDragPreview: {
+    id: 'TestCaseList.selectedTestCasesDragPreview',
+    defaultMessage: '{count} selected test cases',
+  },
   nameHeader: {
     id: 'TestCaseList.nameHeader',
     defaultMessage: 'Name',

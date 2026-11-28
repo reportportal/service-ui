@@ -21,16 +21,24 @@ export interface DropdownSortingOptionItem {
   value: string;
   label: string;
   defaultDirection?: SortingDirection;
+  /** An option with one direction only (e.g. a custom order): no arrow, picking it again keeps it */
+  fixedDirection?: SortingDirection;
+  /** Show a divider above the option */
+  hasDividerBefore?: boolean;
 }
 
 export const getOptionDirection = (option?: DropdownSortingOptionItem): SortingDirection =>
-  option?.defaultDirection ?? SORTING_ASC;
+  option?.fixedDirection ?? option?.defaultDirection ?? SORTING_ASC;
 
 export const getNextSortingDirection = (
   selectedOption: DropdownSortingOptionItem | undefined,
   currentValue: string,
   currentDirection: SortingDirection,
 ): SortingDirection => {
+  if (selectedOption?.fixedDirection) {
+    return selectedOption.fixedDirection;
+  }
+
   if (selectedOption?.value === currentValue) {
     return currentDirection === SORTING_ASC ? SORTING_DESC : SORTING_ASC;
   }

@@ -32,10 +32,19 @@ interface DropdownSortingOptionProps {
   direction: SortingDirection;
   onChange: (value: string) => void;
   onKeyDown: (event: React.KeyboardEvent<HTMLButtonElement>) => void;
+  withDirection?: boolean;
 }
 
 export const DropdownSortingOptionWrapped = (
-  { label, selected, value, direction, onChange, onKeyDown }: DropdownSortingOptionProps,
+  {
+    label,
+    selected,
+    value,
+    direction,
+    onChange,
+    onKeyDown,
+    withDirection = true,
+  }: DropdownSortingOptionProps,
   ref: React.Ref<HTMLButtonElement>,
 ) => {
   const onKeyDownHandler = (event: React.KeyboardEvent<HTMLButtonElement>) => {
@@ -55,9 +64,11 @@ export const DropdownSortingOptionWrapped = (
       ref={ref}
       tabIndex={-1}
     >
-      <div className={cx('icon')}>
-        <DirectionIcon direction={direction} />
-      </div>
+      {withDirection && (
+        <div className={cx('icon')}>
+          <DirectionIcon direction={direction} />
+        </div>
+      )}
       <div className={cx('label')}>{label}</div>
     </button>
   );

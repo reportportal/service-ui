@@ -40,7 +40,7 @@ import { SelectedTestCaseRow } from 'pages/inside/common/testCaseList/types';
 import { PopoverControl, PopoverItem } from 'pages/common/popoverControl/popoverControl';
 import { showModalAction } from 'controllers/modal';
 import { locationQuerySelector, payloadSelector, urlFolderIdSelector } from 'controllers/pages';
-import { foldersSelector, TestCaseSorting } from 'controllers/testCase';
+import { foldersSelector, isCustomOrderSorting, TestCaseSorting } from 'controllers/testCase';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { useUserPermissions } from 'hooks/useUserPermissions';
 import { useHasTestPlans } from 'hooks/useHasTestPlans';
@@ -58,6 +58,7 @@ import { useBatchDeleteTestCasesModal } from './batchDeleteTestCasesModal';
 import { useMoveTestCaseModal } from '../moveTestCaseModal';
 import { useBatchEditTagsModal } from './batchEditTagsModal';
 import { useAddToLaunchModal } from '../addToLaunchModal';
+import { useReorderTestCases } from '../hooks/useReorderTestCases';
 import { TestCaseSortingControl } from '../testCaseSortingControl';
 
 import styles from './allTestCasesPage.scss';
@@ -113,6 +114,26 @@ export const AllTestCasesPage = ({
   const { openModal: openBatchEditTagsModal } = useBatchEditTagsModal();
   const { canManageTestCases } = useUserPermissions();
   const { hasTestPlans } = useHasTestPlans();
+
+  const { reorderTestCases } = useReorderTestCases();
+  const isFolder = Boolean(folderId);
+  const hasSearchOrFilters = Boolean(
+    query?.testCasesSearchParams || query?.filterPriorities || query?.filterTags,
+  );
+  // Reordering: Custom order in a folder, Editors only, not while a search or a filter is active
+  const canReorder =
+    isFolder && canManageTestCases && isCustomOrderSorting(sorting) && !hasSearchOrFilters;
+
+  const handleReorder = useCallback(
+    (params: {
+      testCaseIds: number[];
+      anchorTestCaseId: number;
+      placement: 'before' | 'after';
+    }) => {
+      void reorderTestCases({ folderId: Number(folderId), ...params });
+    },
+    [folderId, reorderTestCases],
+  );
 
   const isAnyRowSelected = !isEmpty(selectedRows);
   const selectedRowIds = useMemo(() => selectedRows.map((row) => row.id), [selectedRows]);
@@ -269,8 +290,13 @@ export const AllTestCasesPage = ({
           instanceKey={instanceKey}
           handleSelectedRows={handleSelectedRows}
           headerControls={
-            <TestCaseSortingControl sorting={sorting} onChange={handleSortingChange} />
+            <TestCaseSortingControl
+              sorting={sorting}
+              onChange={handleSortingChange}
+              isFolder={isFolder}
+            />
           }
+          onReorder={canReorder ? handleReorder : undefined}
         />
       </div>
       {Boolean(testCasesPageData?.totalElements) && (

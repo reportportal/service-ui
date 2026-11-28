@@ -16,9 +16,12 @@
 
 import {
   clearUnsavedTestCaseSorting,
+  DEFAULT_FOLDER_TEST_CASE_SORTING,
   DEFAULT_TEST_CASE_SORTING,
   getTestCaseSorting,
   getTestCaseSortParam,
+  isCustomOrderSorting,
+  resolveTestCaseSorting,
   saveTestCaseSorting,
   TEST_CASE_SORTING_DEFAULT_DIRECTIONS,
 } from './sorting';
@@ -107,6 +110,38 @@ describe('test case list sorting', () => {
       name: 'ASC',
       priorityRank: 'DESC',
       lastExecutionAt: 'DESC',
+      position: 'ASC',
     });
+  });
+
+  it('uses Custom order inside a folder when nothing is saved', () => {
+    expect(getTestCaseSorting(userId, true)).toEqual({ field: 'position', direction: 'ASC' });
+    expect(getTestCaseSorting(undefined, true)).toEqual(DEFAULT_FOLDER_TEST_CASE_SORTING);
+    expect(getTestCaseSortParam(getTestCaseSorting(userId, true))).toBe('position,ASC');
+  });
+
+  it('keeps a saved Custom order but uses Creation date in All test cases', () => {
+    saveTestCaseSorting(userId, { field: 'position', direction: 'ASC' });
+
+    expect(getTestCaseSorting(userId, true)).toEqual({ field: 'position', direction: 'ASC' });
+    expect(getTestCaseSorting(userId, false)).toEqual(DEFAULT_TEST_CASE_SORTING);
+    expect(JSON.parse(localStorage.getItem(settingsKey))).toEqual({
+      testCaseListSorting: { field: 'position', direction: 'ASC' },
+    });
+  });
+
+  it('uses the saved option in folders and in All test cases alike', () => {
+    const name = { field: 'name', direction: 'DESC' } as const;
+
+    expect(resolveTestCaseSorting(name, true)).toEqual(name);
+    expect(resolveTestCaseSorting(name, false)).toEqual(name);
+  });
+
+  it('always sends Custom order ascending', () => {
+    expect(resolveTestCaseSorting({ field: 'position', direction: 'DESC' }, true)).toEqual(
+      DEFAULT_FOLDER_TEST_CASE_SORTING,
+    );
+    expect(isCustomOrderSorting(DEFAULT_FOLDER_TEST_CASE_SORTING)).toBe(true);
+    expect(isCustomOrderSorting(DEFAULT_TEST_CASE_SORTING)).toBe(false);
   });
 });

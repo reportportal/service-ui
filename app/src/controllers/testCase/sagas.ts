@@ -102,10 +102,10 @@ import {
 import { MANUAL_LAUNCH_FOLDER_SEARCH_FILTER_KEY } from 'controllers/manualLaunch/constants';
 import { getTestCaseSortParam, getTestCaseSorting } from './sorting';
 
-function* selectTestCaseSortParam(): Generator<unknown, string, unknown> {
+function* selectTestCaseSortParam(isFolder: boolean): Generator<unknown, string, unknown> {
   const userId = (yield select(userIdSelector)) as string | undefined;
 
-  return getTestCaseSortParam(getTestCaseSorting(userId));
+  return getTestCaseSortParam(getTestCaseSorting(userId, isFolder));
 }
 
 function* getTestCasesByFolderId(action: GetTestCasesByFolderIdAction): Generator {
@@ -115,7 +115,7 @@ function* getTestCasesByFolderId(action: GetTestCasesByFolderIdAction): Generato
     const { folderId, offset, limit, testCasesSearchParams, filterPriorities, filterTags } =
       action.payload;
     const projectKey = (yield select(projectKeySelector)) as string;
-    const sort = (yield call(selectTestCaseSortParam)) as string;
+    const sort = (yield call(selectTestCaseSortParam, true)) as string;
     const result = (yield call(
       fetch,
       URLS.testCases(projectKey, {
@@ -189,7 +189,7 @@ function* getAllTestCases(action: GetAllTestCasesAction): Generator {
   try {
     const { offset, limit, testCasesSearchParams, filterPriorities, filterTags } = action.payload;
     const projectKey = (yield select(projectKeySelector)) as string;
-    const sort = (yield call(selectTestCaseSortParam)) as string;
+    const sort = (yield call(selectTestCaseSortParam, false)) as string;
     const result = (yield call(
       fetch,
       URLS.testCases(projectKey, {

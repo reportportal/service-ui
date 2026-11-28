@@ -39,8 +39,9 @@ import {
   testCasesPageSelector,
   FolderWithFullPath,
   TestCaseSorting,
-  getTestCaseSorting,
+  getSavedTestCaseSorting,
   getTestCaseSortParam,
+  resolveTestCaseSorting,
   saveTestCaseSorting,
   getUserSettingsKey,
   clearUnsavedTestCaseSorting,
@@ -122,13 +123,16 @@ export const TestCaseFolders = () => {
   );
   const userSettings = getStorageItem(`${userId}_settings`) as Record<string, unknown> | undefined;
   const savedLimit = userSettings?.testCaseListPageSize as number;
-  const [sorting, setSorting] = useState<TestCaseSorting>(() => getTestCaseSorting(userId));
+  const [savedSorting, setSavedSorting] = useState<TestCaseSorting | null>(() =>
+    getSavedTestCaseSorting(userId),
+  );
+  const sorting = resolveTestCaseSorting(savedSorting, Boolean(urlFolderId));
   const sortParam = getTestCaseSortParam(sorting);
 
   const handleSortingChange = useCallback(
     (nextSorting: TestCaseSorting) => {
       saveTestCaseSorting(userId, nextSorting);
-      setSorting(nextSorting);
+      setSavedSorting(nextSorting);
     },
     [userId],
   );
@@ -138,7 +142,7 @@ export const TestCaseFolders = () => {
     const handleStorageChange = ({ key }: StorageEvent) => {
       if (key === null || key === getUserSettingsKey(userId)) {
         clearUnsavedTestCaseSorting();
-        setSorting(getTestCaseSorting(userId));
+        setSavedSorting(getSavedTestCaseSorting(userId));
       }
     };
 

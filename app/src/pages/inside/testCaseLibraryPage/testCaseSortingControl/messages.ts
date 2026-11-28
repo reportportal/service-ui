@@ -33,4 +33,8 @@ export const messages = defineMessages({
     id: 'TestCaseLibraryPage.sorting.lastExecutionDate',
     defaultMessage: 'Last execution date',
   },
+  customOrder: {
+    id: 'TestCaseLibraryPage.sorting.customOrder',
+    defaultMessage: 'Custom order',
+  },
 });
