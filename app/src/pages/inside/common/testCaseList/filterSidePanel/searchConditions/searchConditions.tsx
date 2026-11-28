@@ -40,10 +40,6 @@ interface SearchConditionsProps {
   onChange: (conditions: SearchCondition[]) => void;
 }
 
-/**
- * Search block of the filter panel: conditions "field contains text", combined with AND.
- * Each field can be added once; removing a condition returns its field to the popover.
- */
 export const SearchConditions = ({ conditions, onChange }: SearchConditionsProps) => {
   const { formatMessage } = useIntl();
   const [isPopoverOpened, setIsPopoverOpened] = useState(false);

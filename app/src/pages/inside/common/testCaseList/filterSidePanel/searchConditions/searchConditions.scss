@@ -32,16 +32,17 @@
   }
 
   &__label {
+    color: var(--rp-ui-base-almost-black);
     font-family: $FONT-ROBOTO-MEDIUM;
     font-size: 13px;
     line-height: 1.5em;
-    color: var(--rp-ui-base-almost-black);
   }
 
   &__help-text {
+    color: var(--rp-ui-base-e-400);
+    font-family: $FONT-ROBOTO-REGULAR;
     font-size: 12px;
     line-height: 16px;
-    color: var(--rp-ui-base-e-400);
   }
 
   &__add {
@@ -55,10 +56,10 @@
   gap: 4px;
 
   &__label {
-    font-family: $FONT-ROBOTO-MEDIUM;
+    color: var(--rp-ui-base-almost-black);
+    font-family: $FONT-ROBOTO-REGULAR;
     font-size: 13px;
     line-height: 1.5em;
-    color: var(--rp-ui-base-almost-black);
   }
 
   &__row {

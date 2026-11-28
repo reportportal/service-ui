@@ -24,13 +24,11 @@ export const SEARCH_FIELDS = [
 
 export type SearchField = (typeof SEARCH_FIELDS)[number];
 
-/** One condition of the Search block: where to search and the text to find. */
 export interface SearchCondition {
   field: SearchField;
   value: string;
 }
 
-/** Fields searched in the steps or the scenario text; they use a text area. */
 export const MULTILINE_SEARCH_FIELDS: readonly SearchField[] = ['instructions', 'expectedResult'];
 
 const TEST_CASE_SEARCH_KEYS: Record<SearchField, string> = {
@@ -52,7 +50,6 @@ const FOLDER_SEARCH_KEYS: Record<SearchField, string> = {
 const isSearchField = (value: unknown): value is SearchField =>
   SEARCH_FIELDS.includes(value as SearchField);
 
-/** Trims the values and drops empty conditions; each field is kept once (the first one). */
 export const normalizeSearchConditions = (conditions: SearchCondition[]): SearchCondition[] => {
   const seen = new Set<SearchField>();
   return conditions.reduce<SearchCondition[]>((result, { field, value }) => {
