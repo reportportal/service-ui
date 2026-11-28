@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { getTestPlanMilestoneName, getTestPlanOptionLabel } from './utils';
+import { getTestPlanMilestoneName, getTestPlanOptionLabel, getTestPlanSearchParams } from './utils';
 
 describe('getTestPlanOptionLabel', () => {
   it('shows "Plan name, Milestone name" when the API returns the Milestone', () => {
@@ -50,5 +50,18 @@ describe('getTestPlanMilestoneName', () => {
     );
     expect(getTestPlanMilestoneName({ name: 'Plan' })).toBe('');
     expect(getTestPlanMilestoneName(null)).toBe('');
+  });
+});
+
+describe('getTestPlanSearchParams', () => {
+  it('searches by plan name or Milestone name', () => {
+    expect(getTestPlanSearchParams('Smoke regression, Release')).toEqual({
+      'filter.cnt.nameOrMilestoneName': 'Smoke regression, Release',
+      pageSize: 50,
+    });
+  });
+
+  it('sends only the page size without a search value', () => {
+    expect(getTestPlanSearchParams('')).toEqual({ pageSize: 50 });
   });
 });
