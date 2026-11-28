@@ -59,6 +59,10 @@ export const STOP_LOADING_MANUAL_LAUNCH_FILTERED_FOLDERS =
   'stopLoadingManualLaunchFilteredFolders' as const;
 export const CLEAR_MANUAL_LAUNCH_FILTERED_FOLDERS = 'clearManualLaunchFilteredFolders' as const;
 
+// Folders of a Manual Launch loaded for the tree (one page). The "All test cases within subfolders"
+// mode takes the subfolder ids from this list, so a launch with more folders gets an incomplete list.
+export const MANUAL_LAUNCH_FOLDERS_LIMIT = 300;
+
 export const defaultManualLaunchesQueryParams = {
   limit: 20,
   offset: 0,
