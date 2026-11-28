@@ -49,7 +49,7 @@ export interface ExpandedOptionsProps {
   instanceKey: TMS_INSTANCE_KEY;
   flatViewScopeId?: string | number | null;
   searchQuery?: string;
-  searchExtraFilters?: Record<string, string | number>;
+  searchExtraFilters?: Record<string, string | number | string[]>;
   searchAllFolders?: Folder[];
   searchFilteredData?: SearchFilteredData;
   hideFolderSidebar?: boolean;

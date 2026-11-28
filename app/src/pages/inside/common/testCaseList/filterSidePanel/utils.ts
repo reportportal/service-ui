@@ -51,17 +51,67 @@ export const isAllPrioritiesSelected = (priorities: string[]): boolean => {
   return ALL_PRIORITY_VALUES.every((priority) => uniqueNormalized.includes(priority));
 };
 
+export type FilterParams = Record<string, string | string[]>;
+
+/** Requirement values may contain commas, so the URL query keeps them one per line. */
+export const REQUIREMENTS_QUERY_SEPARATOR = '\n';
+
+/** Trims the values and drops empty values and duplicates that differ only in case. */
+export const normalizeRequirements = (values: string[]): string[] => {
+  const unique = new Map<string, string>();
+  values.forEach((value) => {
+    const trimmed = value.trim();
+    if (trimmed && !unique.has(trimmed.toLowerCase())) {
+      unique.set(trimmed.toLowerCase(), trimmed);
+    }
+  });
+  return Array.from(unique.values());
+};
+
+export const parseRequirementsFromQuery = (raw?: string): string[] =>
+  raw ? normalizeRequirements(raw.split(REQUIREMENTS_QUERY_SEPARATOR)) : [];
+
+export const serializeRequirements = (values: string[]): string | undefined => {
+  const normalized = normalizeRequirements(values);
+  return normalized.length ? normalized.join(REQUIREMENTS_QUERY_SEPARATOR) : undefined;
+};
+
+const LINK_PREFIX = /^(https?:\/\/)?(www\.)?/i;
+const LINK_START = /^(https?:\/\/|www\.)/i;
+
+/**
+ * Search terms for the requirement values. A link is searched without "http(s)://" and "www.",
+ * and its last part (for example EPMRPP-116856 of .../browse/EPMRPP-116856) is searched too.
+ */
+export const toRequirementSearchTerms = (values: string[]): string[] =>
+  normalizeRequirements(
+    normalizeRequirements(values).flatMap((value) => {
+      if (!LINK_START.test(value)) {
+        return [value];
+      }
+      const withoutPrefix = value.replace(LINK_PREFIX, '').replace(/[/?#]+$/, '');
+      const [path] = withoutPrefix.split(/[?#]/);
+      const lastPart = path.split('/').filter(Boolean).pop() ?? '';
+      return [withoutPrefix, lastPart];
+    }),
+  );
+
 const buildFilterParams = (
   keys: FilterKeyMap,
   filterPriorities?: string,
   filterTags?: string,
-): Record<string, string> => {
-  const params: Record<string, string> = {};
+  filterRequirements?: string,
+): FilterParams => {
+  const params: FilterParams = {};
   if (filterPriorities) {
     params[keys.priority] = filterPriorities.toUpperCase();
   }
   if (filterTags) {
     params[keys.attributeKey] = filterTags;
+  }
+  const requirementTerms = toRequirementSearchTerms(parseRequirementsFromQuery(filterRequirements));
+  if (keys.requirement && requirementTerms.length) {
+    params[keys.requirement] = requirementTerms;
   }
   return params;
 };
@@ -72,18 +122,28 @@ export const parsePrioritiesFromQuery = (raw?: string): string[] =>
 export const parseTagsFromQuery = (raw?: string): string[] =>
   raw ? raw.split(',') : [];
 
-export const buildTestCaseFilterParams = (filterPriorities?: string, filterTags?: string) =>
+export const buildTestCaseFilterParams = (
+  filterPriorities?: string,
+  filterTags?: string,
+  filterRequirements?: string,
+) =>
   buildFilterParams(
     TEST_CASE_FILTER_KEYS,
     normalizePrioritiesForExecutionApi(filterPriorities),
     filterTags,
+    filterRequirements,
   );
 
-export const buildFolderFilterParams = (filterPriorities?: string, filterTags?: string) =>
+export const buildFolderFilterParams = (
+  filterPriorities?: string,
+  filterTags?: string,
+  filterRequirements?: string,
+) =>
   buildFilterParams(
     FOLDER_FILTER_KEYS,
     normalizePrioritiesForExecutionApi(filterPriorities),
     filterTags,
+    filterRequirements,
   );
 
 export const normalizePrioritiesForExecutionApi = (filterPriorities?: string): string | undefined => {

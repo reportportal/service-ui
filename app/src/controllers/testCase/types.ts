@@ -57,6 +57,7 @@ export interface GetAllTestCases {
   testCasesSearchParams?: string;
   filterPriorities?: string;
   filterTags?: string;
+  filterRequirements?: string;
 }
 
 export interface GetTestCasesByFolderIdParams extends GetAllTestCases {
@@ -86,7 +87,7 @@ export interface RenameFolderParams {
 
 export interface GetFilteredFoldersParams {
   searchQuery?: string;
-  extraFilters?: Record<string, string | number>;
+  extraFilters?: Record<string, string | number | string[]>;
 }
 
 // Action types for sagas

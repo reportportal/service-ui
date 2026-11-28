@@ -25,6 +25,27 @@ export const messages = defineMessages({
     id: 'FilterSidePanel.selectTags',
     defaultMessage: 'Search and select tags to filter',
   },
+  requirements: {
+    id: 'FilterSidePanel.requirements',
+    defaultMessage: 'Requirements',
+  },
+  requirementsHelpText: {
+    id: 'FilterSidePanel.requirementsHelpText',
+    defaultMessage:
+      'Enter a requirement ID, a link or any text. Test cases that match at least one value are shown.',
+  },
+  requirementPlaceholder: {
+    id: 'FilterSidePanel.requirementPlaceholder',
+    defaultMessage: 'Enter link, requirement ID or description',
+  },
+  addRequirement: {
+    id: 'FilterSidePanel.addRequirement',
+    defaultMessage: 'Add Requirement',
+  },
+  removeRequirement: {
+    id: 'FilterSidePanel.removeRequirement',
+    defaultMessage: 'Remove requirement',
+  },
   showToRunOnly: {
     id: 'FilterSidePanel.showToRunOnly',
     defaultMessage: "Show 'To Run' only",
