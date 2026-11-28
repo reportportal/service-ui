@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { memo, ReactNode, useState } from 'react';
+import { memo, ReactNode, useCallback, useMemo, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { useIntl } from 'react-intl';
 import { useSelector } from 'react-redux';
@@ -37,7 +37,11 @@ import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import NoResultsIcon from 'common/img/newIcons/no-results-icon-inline.svg';
 
 import { EXTERNAL_TREE_DROP_TYPE } from 'pages/inside/common/expandedOptions/constants';
-import { DraggableTestCaseNameCell } from './draggableTestCaseNameCell';
+import {
+  DraggableTestCaseNameCell,
+  RowDropPlacement,
+  TestCaseRowReorder,
+} from './draggableTestCaseNameCell';
 import { TestCaseExecutionCell } from './testCaseExecutionCell';
 import { TestCaseSidePanel } from './testCaseSidePanel';
 import { messages } from './messages';
@@ -56,6 +60,12 @@ interface TestCaseListProps {
   instanceKey: TMS_INSTANCE_KEY;
   handleSelectedRows: (rows: SelectedTestCaseRow[]) => void;
   headerControls?: ReactNode;
+  // Set when the list can be reordered by drag and drop (Custom order in a folder, Editors only)
+  onReorder?: (params: {
+    testCaseIds: number[];
+    anchorTestCaseId: number;
+    placement: RowDropPlacement;
+  }) => void;
 }
 
 export const TestCaseList = memo(
@@ -69,6 +79,7 @@ export const TestCaseList = memo(
     instanceKey,
     handleSelectedRows,
     headerControls,
+    onReorder,
   }: TestCaseListProps) => {
     const { formatMessage } = useIntl();
     const { trackEvent } = useTracking();
@@ -134,6 +145,33 @@ export const TestCaseList = memo(
       handleSelectedRows(newSelectedRows);
     };
 
+    // Dragging a selected test case moves all selected test cases of this page as one block
+    const getMovedTestCaseIds = useCallback(
+      (draggedTestCaseId: number): number[] =>
+        selectedRowIds.includes(draggedTestCaseId)
+          ? testCases.filter(({ id }) => selectedRowIds.includes(id)).map(({ id }) => id)
+          : [draggedTestCaseId],
+      [selectedRowIds, testCases],
+    );
+
+    const reorder: TestCaseRowReorder | undefined = useMemo(() => {
+      if (!onReorder) {
+        return undefined;
+      }
+
+      return {
+        canDrop: (draggedTestCaseId, targetTestCaseId) =>
+          testCases.some(({ id }) => id === draggedTestCaseId) &&
+          !getMovedTestCaseIds(draggedTestCaseId).includes(targetTestCaseId),
+        onDrop: (draggedTestCaseId, targetTestCaseId, placement) =>
+          onReorder({
+            testCaseIds: getMovedTestCaseIds(draggedTestCaseId),
+            anchorTestCaseId: targetTestCaseId,
+            placement,
+          }),
+      };
+    }, [onReorder, getMovedTestCaseIds, testCases]);
+
     const selectedTestPlan = testCases.find((testCase) => testCase.id === selectedTestCaseId);
 
     const tableData = testCases.map((testCase) => ({
@@ -152,6 +190,7 @@ export const TestCaseList = memo(
               name={testCase.name}
               tags={testCase?.attributes?.map(({ key }) => key)}
               searchQuery={searchQuery}
+              reorder={reorder}
             />
           </button>
         ),
@@ -230,9 +269,15 @@ export const TestCaseList = memo(
                   renderPreview={(item: { id: number | string; testCase?: ExtendedTestCase }) => {
                     const draggedTestCase =
                       item.testCase ?? testCases.find((testCase) => testCase.id === item.id);
+                    const movedCount = onReorder ? getMovedTestCaseIds(Number(item.id)).length : 1;
+
                     return (
                       <span className={cx('test-case-drag-preview__text')}>
-                        {draggedTestCase?.name}
+                        {movedCount > 1
+                          ? formatMessage(messages.selectedTestCasesDragPreview, {
+                              count: movedCount,
+                            })
+                          : draggedTestCase?.name}
                       </span>
                     );
                   }}

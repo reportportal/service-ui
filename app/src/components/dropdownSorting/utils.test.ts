@@ -38,4 +38,16 @@ describe('dropdownSorting utils', () => {
     expect(getNextSortingDirection(name, 'name', 'ASC')).toBe('DESC');
     expect(getNextSortingDirection(createdAt, 'createdAt', 'DESC')).toBe('ASC');
   });
+
+  it('keeps the fixed direction of an option with one direction only', () => {
+    const customOrder = {
+      value: 'position',
+      label: 'Custom order',
+      fixedDirection: 'ASC' as const,
+    };
+
+    expect(getOptionDirection(customOrder)).toBe('ASC');
+    expect(getNextSortingDirection(customOrder, 'name', 'DESC')).toBe('ASC');
+    expect(getNextSortingDirection(customOrder, 'position', 'ASC')).toBe('ASC');
+  });
 });

@@ -36,9 +36,15 @@ const cx = createClassnames(styles);
 interface TestCaseSortingControlProps {
   sorting: TestCaseSorting;
   onChange: (sorting: TestCaseSorting) => void;
+  // Custom order is offered inside a folder only
+  isFolder?: boolean;
 }
 
-export const TestCaseSortingControl = ({ sorting, onChange }: TestCaseSortingControlProps) => {
+export const TestCaseSortingControl = ({
+  sorting,
+  onChange,
+  isFolder = false,
+}: TestCaseSortingControlProps) => {
   const { formatMessage } = useIntl();
 
   const options = useMemo(
@@ -64,8 +70,19 @@ export const TestCaseSortingControl = ({ sorting, onChange }: TestCaseSortingCon
         defaultDirection:
           TEST_CASE_SORTING_DEFAULT_DIRECTIONS[TEST_CASE_SORTING_FIELDS.LAST_EXECUTION],
       },
+      ...(isFolder
+        ? [
+            {
+              value: TEST_CASE_SORTING_FIELDS.CUSTOM_ORDER,
+              label: formatMessage(messages.customOrder),
+              fixedDirection:
+                TEST_CASE_SORTING_DEFAULT_DIRECTIONS[TEST_CASE_SORTING_FIELDS.CUSTOM_ORDER],
+              hasDividerBefore: true,
+            },
+          ]
+        : []),
     ],
-    [formatMessage],
+    [formatMessage, isFolder],
   );
 
   const handleChange = ({ value, direction }: { value: string; direction: SortingDirection }) => {

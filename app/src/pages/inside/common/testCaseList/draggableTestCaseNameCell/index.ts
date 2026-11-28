@@ -1,2 +1,6 @@
 export { DraggableTestCaseNameCell } from './draggableTestCaseNameCell';
-export type { ExternalTreeDropItem } from './draggableTestCaseNameCell';
+export type {
+  ExternalTreeDropItem,
+  RowDropPlacement,
+  TestCaseRowReorder,
+} from './draggableTestCaseNameCell';

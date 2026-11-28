@@ -437,6 +437,8 @@ export const URLS = {
     `${urlBase}project/${projectKey}/tms/folder${getQueryParams(query)}`,
   testFolderDuplicate: (projectKey, folderId) =>
     `${urlBase}project/${projectKey}/tms/folder/${folderId}/duplicate`,
+  testFolderTestCaseOrder: (projectKey, folderId) =>
+    `${urlBase}project/${projectKey}/tms/folder/${folderId}/test-case/order`,
   folder: (projectKey, folderId) => `${urlBase}project/${projectKey}/tms/folder/${folderId}`,
   attachmentThumbnail: (projectKey, attachmentId) =>
     `${urlBase}project/${projectKey}/tms/attachment/${attachmentId}/thumbnail`,

@@ -14,7 +14,8 @@
  * limitations under the License.
  */
 
-import { useMemo } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { DropTargetMonitor, useDrop } from 'react-dnd';
 import { DragNDropIcon } from '@reportportal/ui-kit';
 
 import { createClassnames } from 'common/utils';
@@ -37,12 +38,41 @@ export interface ExternalTreeDropItem extends Record<string, unknown> {
   folderId?: number;
 }
 
+export type RowDropPlacement = 'before' | 'after';
+
+export interface TestCaseRowReorder {
+  canDrop: (draggedTestCaseId: number, targetTestCaseId: number) => boolean;
+  onDrop: (
+    draggedTestCaseId: number,
+    targetTestCaseId: number,
+    placement: RowDropPlacement,
+  ) => void;
+}
+
+const ROW_SELECTOR = '.test-case-table-row-global';
+const DROP_BEFORE_CLASS = 'test-case-row-drop-before';
+const DROP_AFTER_CLASS = 'test-case-row-drop-after';
+
+const getPlacement = (row: HTMLElement | null, monitor: DropTargetMonitor): RowDropPlacement => {
+  const offset = monitor.getClientOffset();
+
+  if (!row || !offset) {
+    return 'after';
+  }
+
+  const { top, height } = row.getBoundingClientRect();
+
+  return offset.y < top + height / 2 ? 'before' : 'after';
+};
+
 interface DraggableTestCaseNameCellProps {
   testCase: ExtendedTestCase;
   priority: TestCasePriority;
   name: string;
   tags: string[];
   searchQuery?: string;
+  // Reordering inside the list (Custom order); without it rows are not drop targets
+  reorder?: TestCaseRowReorder;
 }
 
 export const DraggableTestCaseNameCell = ({
@@ -51,8 +81,11 @@ export const DraggableTestCaseNameCell = ({
   name,
   tags,
   searchQuery,
+  reorder,
 }: DraggableTestCaseNameCellProps) => {
   const { canManageTestCases } = useUserPermissions();
+  const rowRef = useRef<HTMLElement | null>(null);
+  const [placement, setPlacement] = useState<RowDropPlacement | null>(null);
 
   const dragItem: ExternalTreeDropItem = useMemo(
     () => ({
@@ -69,11 +102,48 @@ export const DraggableTestCaseNameCell = ({
     type: EXTERNAL_TREE_DROP_TYPE,
     item: dragItem,
     canDrag: canManageTestCases,
-    rowSelector: '.test-case-table-row-global',
+    rowSelector: ROW_SELECTOR,
   });
 
+  const [{ isOver }, dropRef] = useDrop(
+    () => ({
+      accept: EXTERNAL_TREE_DROP_TYPE,
+      canDrop: (item: ExternalTreeDropItem) =>
+        Boolean(reorder?.canDrop(Number(item.id), testCase.id)),
+      hover: (item: ExternalTreeDropItem, monitor) => {
+        if (monitor.canDrop()) {
+          setPlacement(getPlacement(rowRef.current, monitor));
+        }
+      },
+      drop: (item: ExternalTreeDropItem, monitor) => {
+        reorder?.onDrop(Number(item.id), testCase.id, getPlacement(rowRef.current, monitor));
+      },
+      collect: (monitor) => ({ isOver: monitor.isOver() && monitor.canDrop() }),
+    }),
+    [reorder, testCase.id],
+  );
+
+  const cellRef = useCallback(
+    (node: HTMLElement | null) => {
+      dragSourceRef(node);
+      rowRef.current = node?.closest<HTMLElement>(ROW_SELECTOR) ?? null;
+    },
+    [dragSourceRef],
+  );
+
+  useEffect(() => {
+    dropRef(reorder ? rowRef.current : null);
+  }, [dropRef, reorder]);
+
+  useEffect(() => {
+    const row = rowRef.current;
+
+    row?.classList.toggle(DROP_BEFORE_CLASS, isOver && placement === 'before');
+    row?.classList.toggle(DROP_AFTER_CLASS, isOver && placement === 'after');
+  }, [isOver, placement]);
+
   return (
-    <div ref={dragSourceRef}>
+    <div ref={cellRef}>
       <TestCaseNameCell
         displayId={testCase.displayId}
         priority={priority}

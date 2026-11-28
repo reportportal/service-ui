@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { FC, ReactNode, useCallback, useEffect, useRef, useState } from 'react';
+import { FC, Fragment, ReactNode, useCallback, useEffect, useRef, useState } from 'react';
 import { Popover, DropdownIcon } from '@reportportal/ui-kit';
 import { useIntl } from 'react-intl';
 
@@ -120,17 +120,21 @@ export const DropdownSorting: FC<DropdownSortingProps> = ({
       const selected = option.value === value;
 
       return (
-        <li key={option.value}>
-          <DropdownSortingOption
-            ref={setOptionRef(index)}
-            value={option.value}
-            selected={selected}
-            label={option.label}
-            onChange={handleChange}
-            onKeyDown={handleKeyDown}
-            direction={selected ? direction : getOptionDirection(option)}
-          />
-        </li>
+        <Fragment key={option.value}>
+          {option.hasDividerBefore && <li className={cx('divider')} role="separator" />}
+          <li>
+            <DropdownSortingOption
+              ref={setOptionRef(index)}
+              value={option.value}
+              selected={selected}
+              label={option.label}
+              onChange={handleChange}
+              onKeyDown={handleKeyDown}
+              direction={selected ? direction : getOptionDirection(option)}
+              withDirection={!option.fixedDirection}
+            />
+          </li>
+        </Fragment>
       );
     });
   };
