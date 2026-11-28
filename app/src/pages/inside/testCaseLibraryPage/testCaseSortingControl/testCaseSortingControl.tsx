@@ -53,6 +53,17 @@ export const TestCaseSortingControl = ({ sorting, onChange }: TestCaseSortingCon
         label: formatMessage(messages.name),
         defaultDirection: TEST_CASE_SORTING_DEFAULT_DIRECTIONS[TEST_CASE_SORTING_FIELDS.NAME],
       },
+      {
+        value: TEST_CASE_SORTING_FIELDS.PRIORITY,
+        label: formatMessage(messages.priority),
+        defaultDirection: TEST_CASE_SORTING_DEFAULT_DIRECTIONS[TEST_CASE_SORTING_FIELDS.PRIORITY],
+      },
+      {
+        value: TEST_CASE_SORTING_FIELDS.LAST_EXECUTION,
+        label: formatMessage(messages.lastExecutionDate),
+        defaultDirection:
+          TEST_CASE_SORTING_DEFAULT_DIRECTIONS[TEST_CASE_SORTING_FIELDS.LAST_EXECUTION],
+      },
     ],
     [formatMessage],
   );
