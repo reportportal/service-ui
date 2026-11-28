@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-// Sidebar width calculation: 100vw - (side menu 48px + detail panel 360px)
-$sidebar-width: calc(100vw - 408px);
+// Sidebar width calculation: 100vw - (side menu 48px + folder tree, resizable, 360px by default)
+$sidebar-width: calc(100vw - 48px - var(--folder-tree-width, 360px));
 
 .manual-launch-executions {
   display: flex;

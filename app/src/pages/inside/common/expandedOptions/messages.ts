@@ -57,6 +57,10 @@ export const messages = defineMessages({
     id: 'expandedOptions.subfoldersView',
     defaultMessage: 'All test cases within subfolders',
   },
+  resizeFolderTree: {
+    id: 'expandedOptions.resizeFolderTree',
+    defaultMessage: 'Resize folder tree',
+  },
   expandAll: {
     id: 'expandedOptions.expandAll',
     defaultMessage: 'Expand All',
