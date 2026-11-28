@@ -29,6 +29,22 @@ export const messages = defineMessages({
     id: 'LaunchFormFields.searchAndSelectLaunch',
     defaultMessage: 'Search and select launch',
   },
+  linkedLaunches: {
+    id: 'LaunchFormFields.linkedLaunches',
+    defaultMessage: 'Linked launches',
+  },
+  searchAndSelectLinkedLaunch: {
+    id: 'LaunchFormFields.searchAndSelectLinkedLaunch',
+    defaultMessage: 'Search and select linked launch',
+  },
+  onlyLaunchesLinkedToTestPlan: {
+    id: 'LaunchFormFields.onlyLaunchesLinkedToTestPlan',
+    defaultMessage: 'Only launches linked to this test plan',
+  },
+  noLaunchesLinkedToTestPlan: {
+    id: 'LaunchFormFields.noLaunchesLinkedToTestPlan',
+    defaultMessage: 'No launches linked to this test plan yet',
+  },
   enterLaunchName: {
     id: 'LaunchFormFields.enterLaunchName',
     defaultMessage: 'Enter launch name',

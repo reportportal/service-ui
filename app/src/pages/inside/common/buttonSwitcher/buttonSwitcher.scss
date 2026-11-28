@@ -45,5 +45,19 @@
       box-shadow: var(--rp-ui-base-shadow);
       background-color: var(--rp-ui-base-bg-000);
     }
+
+    // Disabled buttons do not receive mouse events, so the tooltip wrapper gets the hover.
+    &--disabled {
+      color: var(--rp-ui-base-e-300);
+      cursor: default;
+      pointer-events: none;
+    }
+  }
+
+  // Stronger than the ui-kit tooltip wrapper (width: 100%), so the option keeps its own width.
+  &__wrapper &__tooltip-wrapper {
+    display: flex;
+    width: auto;
+    cursor: default;
   }
 }

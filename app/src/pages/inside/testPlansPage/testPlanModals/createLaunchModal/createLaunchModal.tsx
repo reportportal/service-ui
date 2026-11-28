@@ -90,6 +90,7 @@ const CreateLaunchModalComponent = ({
       {...reduxFormProps}
       testCases={testCases}
       testPlanId={testPlanId}
+      linkedLaunchesTestPlanId={testPlanId}
       modalTitle={formatMessage(messages.addToLaunch)}
       okButtonText={COMMON_LOCALE_KEYS.ADD}
       description={descriptionText}

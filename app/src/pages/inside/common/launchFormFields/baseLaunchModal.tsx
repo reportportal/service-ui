@@ -32,6 +32,7 @@ import { LaunchFormFields } from './launchFormFields';
 import { DEFAULT_LAUNCH_MODES_ORDER } from './constants';
 import { LaunchFormData, LaunchMode, LaunchOption, BaseLaunchModalProps } from './types';
 import { useCreateManualLaunch } from './useCreateManualLaunch';
+import { useLinkedLaunchesAvailability } from './useLinkedLaunchesAvailability';
 
 import styles from './launchFormFields.scss';
 
@@ -54,14 +55,21 @@ export const BaseLaunchModal = ({
   hideTestPlanField = false,
   defaultMode = LaunchMode.EXISTING,
   modesOrder = DEFAULT_LAUNCH_MODES_ORDER,
+  linkedLaunchesTestPlanId,
   className,
   onClearSelection,
   onSubmitSuccess,
 }: BaseLaunchModalProps & InjectedFormProps<LaunchFormData>) => {
   const dispatch = useDispatch();
   const { formatMessage } = useIntl();
-  const [activeMode, setActiveMode] = useState<LaunchMode>(defaultMode);
+  const [selectedMode, setSelectedMode] = useState<LaunchMode>(defaultMode);
   const [selectedLaunch, setSelectedLaunch] = useState<LaunchOption | null>(null);
+  const { isChecking: isCheckingLinkedLaunches, hasLinkedLaunches } =
+    useLinkedLaunchesAvailability(linkedLaunchesTestPlanId);
+  const isExistingModeDisabled = !hasLinkedLaunches;
+  // Without linked launches the modal opens on "Create new launch".
+  const activeMode =
+    isExistingModeDisabled && selectedMode === LaunchMode.EXISTING ? LaunchMode.NEW : selectedMode;
 
   const { handleSubmit: handleCreateLaunch, isLoading } = useCreateManualLaunch(
     testCases,
@@ -82,12 +90,15 @@ export const BaseLaunchModal = ({
   );
 
   const isSubmitDisabled =
-    isLoading || invalid || (activeMode === LaunchMode.EXISTING ? !selectedLaunch : pristine);
+    isLoading ||
+    isCheckingLinkedLaunches ||
+    invalid ||
+    (activeMode === LaunchMode.EXISTING ? !selectedLaunch : pristine);
 
   const handleModeChange = useCallback(
     (mode: LaunchMode) => {
       if (mode !== activeMode) {
-        setActiveMode(mode);
+        setSelectedMode(mode);
         setSelectedLaunch(null);
         // Clear the name field when switching modes to prevent type conflicts
         change('name', mode === LaunchMode.NEW ? '' : null);
@@ -133,19 +144,23 @@ export const BaseLaunchModal = ({
       <div className={cx('content-wrapper')}>
         <form onSubmit={trackedSubmit}>
           <div className={className ? `${className}__container` : undefined}>
-            <LaunchFormFields
-              activeMode={activeMode}
-              modesOrder={modesOrder}
-              onModeChange={handleModeChange}
-              onLaunchSelect={setSelectedLaunch}
-              description={description}
-              isUncoveredTestsCheckboxAvailable={isUncoveredTestsCheckboxAvailable}
-              areAllTestCasesCovered={areAllTestCasesCovered}
-              hideTestPlanField={hideTestPlanField}
-            />
+            {!isCheckingLinkedLaunches && (
+              <LaunchFormFields
+                activeMode={activeMode}
+                modesOrder={modesOrder}
+                onModeChange={handleModeChange}
+                onLaunchSelect={setSelectedLaunch}
+                description={description}
+                isUncoveredTestsCheckboxAvailable={isUncoveredTestsCheckboxAvailable}
+                areAllTestCasesCovered={areAllTestCasesCovered}
+                hideTestPlanField={hideTestPlanField}
+                linkedLaunchesTestPlanId={linkedLaunchesTestPlanId}
+                isExistingModeDisabled={isExistingModeDisabled}
+              />
+            )}
           </div>
         </form>
-        <ModalLoadingOverlay isVisible={isLoading} />
+        <ModalLoadingOverlay isVisible={isLoading || isCheckingLinkedLaunches} />
       </div>
     </Modal>
   );

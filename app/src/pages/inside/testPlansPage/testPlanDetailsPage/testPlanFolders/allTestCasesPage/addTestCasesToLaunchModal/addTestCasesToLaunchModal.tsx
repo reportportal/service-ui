@@ -40,6 +40,12 @@ import styles from './addTestCasesToLaunchModal.scss';
 
 const cx = createClassnames(styles);
 
+const toNumericId = (id: string) => {
+  const numericId = Number(id);
+
+  return id && Number.isFinite(numericId) ? numericId : undefined;
+};
+
 const BoldTestCasesCount = (parts: ReactNode[]) => (
   <b className={cx('selected-test-cases')}>{parts}</b>
 );
@@ -98,6 +104,7 @@ const AddTestCasesToLaunchModalComponent = ({
       testCases={testCases}
       selectedTestCaseIds={selectedRowsIds}
       testPlanId={Number(testPlanId)}
+      linkedLaunchesTestPlanId={toNumericId(testPlanId)}
       modalTitle={formatMessage(messages.addToLaunch)}
       okButtonText={COMMON_LOCALE_KEYS.ADD}
       description={descriptionText}

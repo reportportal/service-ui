@@ -79,6 +79,8 @@ export interface LaunchFormFieldsProps {
   isUncoveredTestsCheckboxAvailable?: boolean;
   areAllTestCasesCovered?: boolean;
   hideTestPlanField?: boolean;
+  linkedLaunchesTestPlanId?: number;
+  isExistingModeDisabled?: boolean;
 }
 
 export interface AttributeListFieldProps {
@@ -98,6 +100,8 @@ export interface AttributeListFieldProps {
 
 export interface ExistingLaunchFieldsProps {
   onLaunchSelect?: OnLaunchChangeHandler;
+  /** When set, only Manual Launches linked to this Test Plan are listed. */
+  linkedLaunchesTestPlanId?: number;
 }
 
 export interface NewLaunchFieldsProps {
@@ -106,6 +110,7 @@ export interface NewLaunchFieldsProps {
   testPlanPlaceholder?: string;
   descriptionRef?: React.RefObject<HTMLTextAreaElement>;
   testPlanMenuClassName?: string;
+  testPlanNotice?: ReactNode;
   autocompleteProps?: {
     useFixedPositioning?: boolean;
     keyMenuClassName?: string;
@@ -126,6 +131,8 @@ export interface BaseLaunchModalProps {
   hideTestPlanField?: boolean;
   defaultMode?: LaunchMode;
   modesOrder?: LaunchMode[];
+  /** When set, "Add to existing launch" lists only launches linked to this Test Plan. */
+  linkedLaunchesTestPlanId?: number;
   onClearSelection?: () => void;
   onSubmitSuccess?: (mode: LaunchMode) => void;
 }

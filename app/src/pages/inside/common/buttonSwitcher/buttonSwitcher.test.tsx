@@ -26,6 +26,7 @@ const ACTIVE_CLASS = 'buttons-switcher__button--active';
 interface SwitcherProps {
   defaultActiveButton?: ButtonSwitcherOption;
   buttonsOrder?: ButtonSwitcherOption[];
+  disabledButtons?: Partial<Record<ButtonSwitcherOption, string>>;
 }
 
 describe('ButtonSwitcher', () => {
@@ -111,5 +112,26 @@ describe('ButtonSwitcher', () => {
 
     expect(getActiveTitles()).toEqual([EXISTING_TITLE]);
     expect(handleActiveButton).toHaveBeenLastCalledWith(ButtonSwitcherOption.EXISTING);
+  });
+
+  test('should disable an option and keep the other one selectable', () => {
+    const handleActiveButton = renderSwitcher({
+      defaultActiveButton: ButtonSwitcherOption.NEW,
+      disabledButtons: {
+        [ButtonSwitcherOption.EXISTING]: 'No launches linked to this test plan yet',
+      },
+    });
+    const [existingButton, newButton] = getButtons();
+
+    expect(existingButton.disabled).toBe(true);
+    expect(existingButton.classList.contains('buttons-switcher__button--disabled')).toBe(true);
+    expect(newButton.disabled).toBe(false);
+
+    act(() => {
+      existingButton.click();
+    });
+
+    expect(getActiveTitles()).toEqual([NEW_TITLE]);
+    expect(handleActiveButton).not.toHaveBeenCalledWith(ButtonSwitcherOption.EXISTING);
   });
 });
