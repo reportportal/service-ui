@@ -21,10 +21,10 @@ $sidebar-width: calc(100vw - 408px);
   display: flex;
   flex-direction: column;
   height: fit-content;
-  padding: 20px 32px 72px;
+  padding: 20px 32px 68px;
 
   &--with-panel {
-    padding-bottom: 124px;
+    padding-bottom: 120px;
   }
 
   &__loader {
@@ -51,7 +51,7 @@ $sidebar-width: calc(100vw - 408px);
     padding: 5px 32px;
     border-top: 1px solid var(--rp-ui-base-e-100);
     margin-top: auto;
-    height: 64px;
+    height: 60px;
     box-sizing: border-box;
     position: fixed;
     width: $sidebar-width;
@@ -61,7 +61,7 @@ $sidebar-width: calc(100vw - 408px);
     &--with-panel {
       padding: 0 32px;
       height: 40px;
-      bottom: 64px;
+      bottom: 60px;
     }
   }
 }
@@ -320,7 +320,7 @@ $sidebar-width: calc(100vw - 408px);
   padding: 12px 32px;
   border-top: 1px solid var(--rp-ui-base-e-100);
   margin-top: auto;
-  height: 64px;
+  height: 60px;
 
   &-controls {
     display: flex;

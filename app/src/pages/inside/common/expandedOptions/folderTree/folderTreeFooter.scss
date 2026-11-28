@@ -19,9 +19,10 @@
   flex-shrink: 0;
   display: flex;
   align-items: center;
-  height: 48px;
+  height: 60px;
   gap: 16px;
-  padding: 0 32px;
+  // 1px bottom padding balances the 1px top border, so the 40px control sits 10px from the top (_Tree_footer)
+  padding: 0 32px 1px;
   border-top: 1px solid var(--rp-ui-base-e-100);
   background-color: var(--rp-ui-base-bg-000);
   box-sizing: border-box;
