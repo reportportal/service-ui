@@ -139,6 +139,7 @@ import {
 import {
   MANUAL_LAUNCHES_NAMESPACE,
   defaultManualLaunchesQueryParams,
+  MANUAL_LAUNCH_FOLDERS_LIMIT,
   getManualLaunchesAction,
   getManualLaunchAction,
   getManualLaunchFoldersAction,
@@ -458,7 +459,7 @@ const routesMap = {
           getManualLaunchFoldersAction({
             launchId,
             offset: 0,
-            limit: 100,
+            limit: MANUAL_LAUNCH_FOLDERS_LIMIT,
             ...(filterPriorities && { filterPriorities }),
             ...(filterTags && { filterTags }),
             ...(statusFilter && { statusFilter }),

@@ -44,6 +44,7 @@ import {
   buildGetManualLaunchTestCaseExecutionsParams,
   getManualLaunchDetailsFetchParams,
   MANUAL_LAUNCH_TO_RUN_STATUS_QUERY_VALUE,
+  MANUAL_LAUNCH_FOLDERS_LIMIT,
 } from 'controllers/manualLaunch';
 import {
   showNotification,
@@ -198,7 +199,7 @@ export const ManualLaunchDetailsPage = () => {
       getManualLaunchFoldersAction({
         launchId: params.launchId,
         offset: 0,
-        limit: 100,
+        limit: MANUAL_LAUNCH_FOLDERS_LIMIT,
         ...(params.filterPriorities && { filterPriorities: params.filterPriorities }),
         ...(params.filterTags && { filterTags: params.filterTags }),
       }),
