@@ -35,6 +35,7 @@ export interface LocationQuery {
   searchQuery?: string;
   filterPriorities?: string;
   filterTags?: string;
+  filterSearch?: string;
   statusFilter?: string;
   filterStatuses?: string;
   filterCompletion?: string;

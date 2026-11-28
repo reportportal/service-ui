@@ -185,7 +185,8 @@ export const TestCaseList = memo(
     const hasActiveSearchOrFilters =
       !!location?.query?.testCasesSearchParams ||
       !!location?.query?.filterPriorities ||
-      !!location?.query?.filterTags;
+      !!location?.query?.filterTags ||
+      !!location?.query?.filterSearch;
     const showNoSearchResults = !isLoading && isEmpty(testCases) && hasActiveSearchOrFilters;
 
     return (
@@ -212,7 +213,7 @@ export const TestCaseList = memo(
                     <EmptyPageState
                       label={formatMessage(COMMON_LOCALE_KEYS.NO_RESULTS)}
                       description={formatMessage(messages.noResultsDescription)}
-                      emptyIcon={NoResultsIcon as unknown as string}
+                      emptyIcon={NoResultsIcon}
                     />
                   ) : (
                     formatMessage(messages.noResultsEmptyMessage)
