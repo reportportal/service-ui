@@ -53,11 +53,13 @@ import {
   defaultManualLaunchesQueryParams,
 } from 'controllers/manualLaunch';
 import { SearchField } from 'components/fields/searchField';
+import { useUserPermissions } from 'hooks/useUserPermissions';
 import { MANUAL_LAUNCHES_PAGE_EVENTS } from 'components/main/analytics/events/ga4Events/manualLaunchesPageEvents';
 import { PAGE_VIEW_CONTENT_TYPE } from 'components/main/analytics/events/common/ga4Utils';
 
 import { messages } from './messages';
 import { ManualLaunchesPageContent } from './manualLaunchesPageContent';
+import { useCreateManualLaunchModal, createManualLaunchMessages } from './createManualLaunchModal';
 import { commonMessages } from '../testPlansPage/commonMessages';
 import { ITEMS_PER_PAGE_OPTIONS } from './manualLaunchesList/contants';
 import { useURLBoundPagination } from '../common/testCaseList/useURLBoundPagination';
@@ -91,6 +93,7 @@ export const ManualLaunchesPage = () => {
   ) as ProjectDetails;
   const location = useSelector(locationSelector);
   const isImportantLaunchesEnabled = useSelector(importantLaunchesEnabledSelector);
+  const { canCreateManualLaunch } = useUserPermissions();
 
   const appliedSearchQuery = location?.query?.searchQuery || '';
   const [searchValue, setSearchValue] = useState(appliedSearchQuery);
@@ -237,6 +240,22 @@ export const ManualLaunchesPage = () => {
     );
   }, [dispatch, offset, pageSize, appliedSearchQuery, appliedFilters, location?.query]);
 
+  const { openModal: openCreateLaunchModal } = useCreateManualLaunchModal(handleRefresh);
+
+  const hasListToolbar = Boolean(
+    !isEmpty(content) || appliedSearchQuery || searchValue || isLoading || hasActiveFilters,
+  );
+
+  const createLaunchButton = canCreateManualLaunch ? (
+    <Button
+      variant="ghost"
+      data-automation-id="createManualLaunchButton"
+      onClick={() => openCreateLaunchModal()}
+    >
+      {formatMessage(createManualLaunchMessages.createLaunch)}
+    </Button>
+  ) : null;
+
   const projectLink = { type: PROJECT_DASHBOARD_PAGE, payload: { organizationSlug, projectSlug } };
   const breadcrumbDescriptors = [
     { id: 'project', title: <PreservedText>{projectName}</PreservedText>, link: projectLink },
@@ -249,7 +268,7 @@ export const ManualLaunchesPage = () => {
           title={formatMessage(messages.manualLaunchesTitle)}
           titleAddon={<BetaBadge />}
           breadcrumbDescriptors={breadcrumbDescriptors}
-          {...((!isEmpty(content) || appliedSearchQuery || searchValue || isLoading || hasActiveFilters) && {
+          {...(hasListToolbar && {
             actions: (
               <div className={cx('header-actions')}>
                 <SearchField
@@ -298,9 +317,11 @@ export const ManualLaunchesPage = () => {
                 >
                   {formatMessage(commonMessages.refreshPage)}
                 </Button>
+                {createLaunchButton}
               </div>
             ),
           })}
+          {...(!hasListToolbar && { actions: createLaunchButton })}
         />
         <div className={cx('content-wrapper')}>
           <ManualLaunchesPageContent
