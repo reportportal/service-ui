@@ -18,6 +18,7 @@ import { useIntl } from 'react-intl';
 import { useCallback, useRef } from 'react';
 import { Field, WrappedFieldProps } from 'redux-form';
 import { FieldText, FieldTextFlex, FieldLabel } from '@reportportal/ui-kit';
+import { AutocompleteOption } from '@reportportal/ui-kit/autocompletes';
 import { useSelector } from 'react-redux';
 import { isString } from 'es-toolkit';
 
@@ -35,11 +36,41 @@ import { NewLaunchFieldsProps, TestPlanOption } from './types';
 import { LAUNCH_FORM_FIELD_NAMES, LAUNCH_NAME_MAX_LENGTH } from './constants';
 import { messages } from './messages';
 import { AttributeListField } from './attributeListField';
+import { getTestPlanMilestoneName, getTestPlanOptionLabel } from './utils';
 import { keepTestPlanOnBlur } from './testPlanFieldState';
 
 import styles from './launchFormFields.scss';
 
 const cx = createClassnames(styles);
+
+type GetTestPlanItemProps = (options: {
+  item: TestPlanOption;
+  index: number;
+}) => Record<string, unknown>;
+
+const renderTestPlanOption = (
+  testPlan: TestPlanOption,
+  index: number,
+  _isNew: boolean,
+  getItemProps: GetTestPlanItemProps,
+) => {
+  const milestoneName = getTestPlanMilestoneName(testPlan);
+
+  return (
+    <AutocompleteOption
+      {...getItemProps({ item: testPlan, index })}
+      key={testPlan.id}
+      isNew={false}
+    >
+      <span className={cx('test-plan-option')}>
+        <span className={cx('test-plan-option__name')}>{testPlan.name}</span>
+        {milestoneName && (
+          <span className={cx('test-plan-option__milestone')}>{milestoneName}</span>
+        )}
+      </span>
+    </AutocompleteOption>
+  );
+};
 
 export const NewLaunchFields = ({
   hideTestPlanField = false,
@@ -91,8 +122,7 @@ export const NewLaunchFields = ({
     [projectKey],
   );
 
-  const makeTestPlanOptions = (response: { content: Array<{ id: number; name: string }> }) =>
-    response.content;
+  const makeTestPlanOptions = (response: { content: TestPlanOption[] }) => response.content;
 
   const handleTestPlanChange = (value: unknown, input: { onChange: (value: unknown) => void }) => {
     input.onChange(value);
@@ -101,7 +131,6 @@ export const NewLaunchFields = ({
   // Set while the Test Plan input loses focus: the field then keeps the selected plan
   // instead of dropping it for a typed search that matches no option.
   const isLeavingTestPlanFieldRef = useRef(false);
-  const parseTestPlanToString = (value: { name?: string }) => value?.name || '';
   const handleTestPlanBlur = () => {
     isLeavingTestPlanFieldRef.current = true;
     setTimeout(() => {
@@ -116,7 +145,7 @@ export const NewLaunchFields = ({
       state,
       changes,
       isLeavingTestPlanFieldRef.current,
-      parseTestPlanToString as (item: T) => string,
+      getTestPlanOptionLabel as (item: T) => string,
     );
 
   const renderTestPlanField = ({ input }: WrappedFieldProps) => (
@@ -126,7 +155,8 @@ export const NewLaunchFields = ({
       getURI={retrieveTestPlans}
       makeOptions={makeTestPlanOptions}
       onChange={(value) => handleTestPlanChange(value, input)}
-      parseValueToString={parseTestPlanToString}
+      parseValueToString={getTestPlanOptionLabel}
+      renderOption={renderTestPlanOption}
       onBlur={handleTestPlanBlur}
       stateReducer={testPlanStateReducer}
       getUniqKey={(value: { id?: number }) => value?.id}
@@ -138,7 +168,7 @@ export const NewLaunchFields = ({
         onClear: () => handleTestPlanChange(null, input),
       }}
       minLength={0}
-      menuClassName={cx('modal-autocomplete-menu', testPlanMenuClassName)}
+      menuClassName={cx('modal-autocomplete-menu', 'test-plan-menu', testPlanMenuClassName)}
       menuPortalRoot={menuPortalRoot}
       dropdownMatchInputWidth
     />

@@ -30,9 +30,16 @@ export interface LaunchOption {
   name: string;
 }
 
+export interface TestPlanMilestoneReference {
+  id: number;
+  name?: string;
+}
+
 export interface TestPlanOption {
   id: number;
   name: string;
+  milestoneId?: number;
+  milestone?: TestPlanMilestoneReference;
 }
 
 export type OnLaunchChangeHandler = (launch: LaunchOption | null) => void;

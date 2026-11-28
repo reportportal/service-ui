@@ -84,6 +84,29 @@
   margin-top: 16px;
 }
 
+.test-plan-option {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+
+  &__name,
+  &__milestone {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+
+  &__milestone {
+    color: var(--rp-ui-base-e-400);
+  }
+}
+
+// The ui-kit option label sizes to its content; it must fill the option so long names end with an ellipsis.
+.test-plan-menu li > :global(.label) {
+  flex: 1;
+  min-width: 0;
+}
+
 .attributes-section {
   margin-top: 16px;
 

@@ -43,6 +43,7 @@ import { EditManualLaunchModalProps } from './types';
 import { messages } from './messages';
 import { EDIT_MANUAL_LAUNCH_FORM } from './constants';
 import { getTestPlanChange, TestPlanChange } from './utils';
+import { useTestPlanWithMilestone } from './useTestPlanWithMilestone';
 
 import styles from './editManualLaunchModal.scss';
 
@@ -148,6 +149,7 @@ const EditManualLaunchModalReduxForm = reduxForm<LaunchFormData, EditManualLaunc
   form: EDIT_MANUAL_LAUNCH_FORM,
   destroyOnUnmount: true,
   enableReinitialize: true,
+  keepDirtyOnReinitialize: true,
   validate: (values) => {
     const errors: Partial<Record<keyof LaunchFormData, string>> = {};
 
@@ -164,14 +166,15 @@ const EditManualLaunchModalReduxForm = reduxForm<LaunchFormData, EditManualLaunc
 })(EditManualLaunchModalComponent);
 
 export const EditManualLaunchModal: FC<EditManualLaunchModalProps> = (props) => {
+  const initialTestPlan = useTestPlanWithMilestone(props.data.testPlan);
   const initialValues = useMemo(
     () => ({
       [LAUNCH_FORM_FIELD_NAMES.NAME]: props.data.name,
       [LAUNCH_FORM_FIELD_NAMES.DESCRIPTION]: props.data.description || '',
-      [LAUNCH_FORM_FIELD_NAMES.TEST_PLAN]: props.data.testPlan || null,
+      [LAUNCH_FORM_FIELD_NAMES.TEST_PLAN]: initialTestPlan,
       [LAUNCH_FORM_FIELD_NAMES.ATTRIBUTES]: props.data.attributes || [],
     }),
-    [props.data],
+    [props.data, initialTestPlan],
   );
 
   return <EditManualLaunchModalReduxForm {...props} initialValues={initialValues} />;

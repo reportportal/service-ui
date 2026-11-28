@@ -14,6 +14,31 @@
  * limitations under the License.
  */
 
+import { TestPlanOption } from './types';
+
+type TestPlanLabelSource = Pick<TestPlanOption, 'name' | 'milestone'> | null | undefined | '';
+
+/**
+ * The Milestone name of a Test Plan, if the API returned it (service-api adds `milestone` to TmsTestPlanRS).
+ */
+export const getTestPlanMilestoneName = (testPlan: TestPlanLabelSource): string =>
+  (testPlan && testPlan.milestone?.name) || '';
+
+/**
+ * The value shown in a Test Plan field: "Plan name, Milestone name", or only the plan name
+ * when the plan has no Milestone or the API did not return its name.
+ */
+export const getTestPlanOptionLabel = (testPlan: TestPlanLabelSource): string => {
+  if (!testPlan) {
+    return '';
+  }
+
+  const milestoneName = getTestPlanMilestoneName(testPlan);
+  const name = testPlan.name || '';
+
+  return milestoneName ? `${name}, ${milestoneName}` : name;
+};
+
 /**
  * Generate UUID with fallback for non-secure contexts (HTTP)
  * crypto.randomUUID() requires HTTPS or localhost, this provides a fallback
