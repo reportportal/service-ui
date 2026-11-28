@@ -61,6 +61,9 @@ const CreateMilestoneModalForm = ({
       status: MilestoneStatus.SCHEDULED,
       startDate: startIso,
       endDate: endIso,
+      autoStartOnStartDate: Boolean(values.autoStartOnStartDate),
+      autoStartOnFirstExecution: Boolean(values.autoStartOnFirstExecution),
+      autoCompleteAfterDeadline: Boolean(values.autoCompleteAfterDeadline),
     });
   };
 
@@ -91,6 +94,7 @@ const CreateMilestoneModalForm = ({
             formName={CREATE_MILESTONE_FORM_NAME}
             isLoading={isLoading}
             onChange={onChange}
+            withAutomaticStatus
           />
         </form>
       </div>

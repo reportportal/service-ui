@@ -25,6 +25,9 @@ export interface MilestoneFormValues {
   type: TmsMilestoneType | '';
   startDate: string;
   endDate: string;
+  autoStartOnStartDate?: boolean;
+  autoStartOnFirstExecution?: boolean;
+  autoCompleteAfterDeadline?: boolean;
 }
 
 export type MilestoneTypeDropdownOption = {

@@ -52,6 +52,9 @@ export const useCreateMilestone = () => {
           status: payload.status,
           startDate: payload.startDate,
           endDate: payload.endDate,
+          autoStartOnStartDate: payload.autoStartOnStartDate,
+          autoStartOnFirstExecution: payload.autoStartOnFirstExecution,
+          autoCompleteAfterDeadline: payload.autoCompleteAfterDeadline,
         },
       });
 

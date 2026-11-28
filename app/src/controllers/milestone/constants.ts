@@ -67,6 +67,10 @@ export type TmsMilestoneRS = {
   status: TmsMilestoneStatus;
   startDate: string;
   endDate: string;
+  /** Automatic status options; absent in responses of older API versions. */
+  autoStartOnStartDate?: boolean;
+  autoStartOnFirstExecution?: boolean;
+  autoCompleteAfterDeadline?: boolean;
   testPlans: TmsTestPlanInMilestoneRS[];
 };
 

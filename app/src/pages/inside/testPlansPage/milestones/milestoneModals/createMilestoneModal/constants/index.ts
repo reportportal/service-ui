@@ -29,4 +29,7 @@ export const INITIAL_MILESTONE_FORM_VALUES: MilestoneFormValues = {
   type: '',
   startDate: '',
   endDate: '',
+  autoStartOnStartDate: false,
+  autoStartOnFirstExecution: false,
+  autoCompleteAfterDeadline: false,
 };
