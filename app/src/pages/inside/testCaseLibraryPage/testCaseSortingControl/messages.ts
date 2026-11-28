@@ -25,4 +25,12 @@ export const messages = defineMessages({
     id: 'TestCaseLibraryPage.sorting.name',
     defaultMessage: 'Name',
   },
+  priority: {
+    id: 'TestCaseLibraryPage.sorting.priority',
+    defaultMessage: 'Priority',
+  },
+  lastExecutionDate: {
+    id: 'TestCaseLibraryPage.sorting.lastExecutionDate',
+    defaultMessage: 'Last execution date',
+  },
 });

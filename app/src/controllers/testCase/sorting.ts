@@ -18,10 +18,13 @@ import { getStorageItem, updateStorageItem } from 'common/utils';
 import { SORTING_ASC, SORTING_DESC } from 'controllers/sorting/constants';
 import type { SortingDirection } from 'controllers/sorting/types';
 
-// TODO: add Priority, Last execution date and Custom order (EPMRPP-115683) when the backend supports them
+// TODO: add Custom order (EPMRPP-115683) when the backend supports it
+// The values are sort criteria of GET /tms/test-case: priorityRank sorts by importance, not by name
 export const TEST_CASE_SORTING_FIELDS = {
   CREATED_AT: 'createdAt',
   NAME: 'name',
+  PRIORITY: 'priorityRank',
+  LAST_EXECUTION: 'lastExecutionAt',
 } as const;
 
 export type TestCaseSortingField =
@@ -36,6 +39,8 @@ export const TEST_CASE_SORTING_DEFAULT_DIRECTIONS: Record<TestCaseSortingField, 
   {
     [TEST_CASE_SORTING_FIELDS.CREATED_AT]: SORTING_DESC,
     [TEST_CASE_SORTING_FIELDS.NAME]: SORTING_ASC,
+    [TEST_CASE_SORTING_FIELDS.PRIORITY]: SORTING_DESC,
+    [TEST_CASE_SORTING_FIELDS.LAST_EXECUTION]: SORTING_DESC,
   };
 
 export const DEFAULT_TEST_CASE_SORTING: TestCaseSorting = {

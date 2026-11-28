@@ -20,6 +20,7 @@ import {
   getTestCaseSorting,
   getTestCaseSortParam,
   saveTestCaseSorting,
+  TEST_CASE_SORTING_DEFAULT_DIRECTIONS,
 } from './sorting';
 
 describe('test case list sorting', () => {
@@ -90,5 +91,22 @@ describe('test case list sorting', () => {
 
   it('builds the sort parameter of GET /tms/test-case', () => {
     expect(getTestCaseSortParam({ field: 'name', direction: 'DESC' })).toBe('name,DESC');
+  });
+
+  it('reads Priority and Last execution date back and sends their API sort criteria', () => {
+    saveTestCaseSorting(userId, { field: 'priorityRank', direction: 'DESC' });
+    expect(getTestCaseSorting(userId)).toEqual({ field: 'priorityRank', direction: 'DESC' });
+
+    saveTestCaseSorting(userId, { field: 'lastExecutionAt', direction: 'ASC' });
+    expect(getTestCaseSortParam(getTestCaseSorting(userId))).toBe('lastExecutionAt,ASC');
+  });
+
+  it('starts Priority with the most important and Last execution date with the newest', () => {
+    expect(TEST_CASE_SORTING_DEFAULT_DIRECTIONS).toEqual({
+      createdAt: 'DESC',
+      name: 'ASC',
+      priorityRank: 'DESC',
+      lastExecutionAt: 'DESC',
+    });
   });
 });
