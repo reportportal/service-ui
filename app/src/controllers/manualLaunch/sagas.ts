@@ -15,7 +15,7 @@
  */
 
 import { Action } from 'redux';
-import { takeLatest, call, select, all, put, cancelled } from 'redux-saga/effects';
+import { takeLatest, call, select, all, put, cancelled, take } from 'redux-saga/effects';
 import { isString, isUndefined } from 'es-toolkit';
 import { isEmpty, isNil, isNumber } from 'es-toolkit/compat';
 
@@ -27,7 +27,14 @@ import {
   MANUAL_LAUNCH_EXECUTION_FILTER_KEYS,
 } from 'pages/inside/common/testCaseList/constants';
 import { fetchSuccessAction, fetchErrorAction } from 'controllers/fetch';
-import { FETCH_START } from 'controllers/fetch/constants';
+import { FETCH_ERROR, FETCH_START, FETCH_SUCCESS } from 'controllers/fetch/constants';
+import {
+  FolderTreeViewMode,
+  FolderTreeViewModeScope,
+  getFolderIdsForViewMode,
+  getFolderTreeViewMode,
+} from 'common/utils/folderUtils';
+import { userIdSelector } from 'controllers/user';
 import { AppState } from 'types/store';
 import {
   showNotification,
@@ -57,6 +64,7 @@ import {
   MANUAL_LAUNCH_TEST_CASE_EXECUTIONS_NAMESPACE,
   ACTIVE_MANUAL_LAUNCH_EXECUTION_NAMESPACE,
   TEST_FOLDER_ID_FILTER_KEY,
+  TEST_FOLDER_IDS_FILTER_KEY,
   MANUAL_LAUNCH_NAME_FILTER_KEY,
   MANUAL_LAUNCH_STATUS_FILTER_KEY,
   MANUAL_LAUNCH_FOLDER_SEARCH_FILTER_KEY,
@@ -91,6 +99,8 @@ import {
   manualLaunchContentSelector,
   activeManualLaunchSelector,
   activeManualLaunchExecutionSelector,
+  manualLaunchFoldersSelector,
+  isLoadingManualLaunchFoldersSelector,
 } from './selectors';
 import {
   setManualLaunchFilteredFoldersAction,
@@ -311,6 +321,34 @@ interface GetManualLaunchTestCaseExecutionsAction extends Action<
   payload: GetManualLaunchTestCaseExecutionsParams;
 }
 
+const isManualLaunchFoldersFetchEnd = (action: { type: string; meta?: { namespace?: string } }) =>
+  (action.type === FETCH_SUCCESS || action.type === FETCH_ERROR) &&
+  action.meta?.namespace === MANUAL_LAUNCH_FOLDERS_NAMESPACE;
+
+/**
+ * In the "All test cases within subfolders" view mode the executions of the folder and all its
+ * subfolders are requested. The subfolder ids come from the launch folders, so wait for them
+ * if they are still loading (the route loads folders and executions at the same time).
+ */
+function* getExecutionFolderIds(launchId: string | number, folderId: string | number): Generator {
+  const userId = (yield select(userIdSelector)) as string | undefined;
+  const viewMode = getFolderTreeViewMode(userId, FolderTreeViewModeScope.MANUAL_LAUNCH, launchId);
+
+  if (viewMode !== FolderTreeViewMode.SUBFOLDERS) {
+    return [Number(folderId)];
+  }
+
+  const isLoadingFolders = (yield select(isLoadingManualLaunchFoldersSelector)) as boolean;
+
+  if (isLoadingFolders) {
+    yield take(isManualLaunchFoldersFetchEnd);
+  }
+
+  const folders = (yield select(manualLaunchFoldersSelector)) as ManualLaunchFolder[];
+
+  return getFolderIdsForViewMode(Number(folderId), folders, viewMode);
+}
+
 function* getManualLaunchTestCaseExecutions(
   action: GetManualLaunchTestCaseExecutionsAction,
 ): Generator {
@@ -350,7 +388,13 @@ function* getManualLaunchTestCaseExecutions(
     }
 
     if (!isNil(folderId)) {
-      params[TEST_FOLDER_ID_FILTER_KEY] = folderId;
+      const folderIds = (yield call(getExecutionFolderIds, launchId, folderId)) as number[];
+
+      if (folderIds.length > 1) {
+        params[TEST_FOLDER_IDS_FILTER_KEY] = folderIds.join(',');
+      } else {
+        params[TEST_FOLDER_ID_FILTER_KEY] = folderId;
+      }
     }
 
     const trimmedSearch = searchQuery?.trim();

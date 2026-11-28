@@ -14,12 +14,23 @@
  * limitations under the License.
  */
 
-import { ChangeEvent } from 'react';
+import { useMemo } from 'react';
 import { useIntl } from 'react-intl';
-import { Button, Toggle } from '@reportportal/ui-kit';
+import {
+  Button,
+  FlatViewIcon,
+  SegmentedControl,
+  SubfoldersIcon,
+  TreeViewIcon,
+} from '@reportportal/ui-kit';
+import type {
+  SegmentedControlOption,
+  SegmentedControlValue,
+} from '@reportportal/ui-kit/segmentedControl';
 import { VoidFn } from '@reportportal/ui-kit/common';
 
 import { createClassnames } from 'common/utils';
+import { FolderTreeViewMode } from 'common/utils/folderUtils';
 import { FOLDER_TREE_VIEW_CONTROL_ELEMENT_NAME } from 'analyticsEvents/testCaseLibraryPageEvents';
 
 import { messages } from '../messages';
@@ -29,35 +40,66 @@ import styles from './folderTreeFooter.scss';
 
 const cx = createClassnames(styles);
 
+const VIEW_MODE_OPTIONS = [
+  { value: FolderTreeViewMode.TREE, icon: <TreeViewIcon />, tooltip: messages.treeView },
+  { value: FolderTreeViewMode.FLAT, icon: <FlatViewIcon />, tooltip: messages.flatView },
+  {
+    value: FolderTreeViewMode.SUBFOLDERS,
+    icon: <SubfoldersIcon />,
+    tooltip: messages.subfoldersView,
+  },
+];
+
 interface FolderTreeFooterProps {
-  isFlatView: boolean;
+  viewMode: FolderTreeViewMode;
+  viewModes: FolderTreeViewMode[];
   isExpandAllDisabled: boolean;
   isCollapseAllDisabled: boolean;
   showBottomFade?: boolean;
-  onFlatViewChange: (value: boolean) => void;
+  onViewModeChange: (viewMode: FolderTreeViewMode) => void;
   onExpandAll: VoidFn;
   onCollapseAll: VoidFn;
   onTrackViewControl?: FolderTreeViewControlHandler;
 }
 
 export const FolderTreeFooter = ({
-  isFlatView,
+  viewMode,
+  viewModes,
   isExpandAllDisabled,
   isCollapseAllDisabled,
   showBottomFade = false,
-  onFlatViewChange,
+  onViewModeChange,
   onExpandAll,
   onCollapseAll,
   onTrackViewControl,
 }: FolderTreeFooterProps) => {
   const { formatMessage } = useIntl();
 
-  const handleFlatViewChange = (event: ChangeEvent<HTMLInputElement>) => {
-    const nextValue = event.currentTarget.checked;
-    if (nextValue && nextValue !== isFlatView) {
+  const viewModeOptions = useMemo<SegmentedControlOption[]>(
+    () =>
+      VIEW_MODE_OPTIONS.filter(({ value }) => viewModes.includes(value)).map(
+        ({ value, icon, tooltip }) => ({
+          value,
+          icon,
+          tooltip: formatMessage(tooltip),
+          selected: value === viewMode,
+        }),
+      ),
+    [viewModes, viewMode, formatMessage],
+  );
+
+  const handleViewModeChange = (value: SegmentedControlValue) => {
+    const nextViewMode = value as FolderTreeViewMode;
+
+    if (nextViewMode === viewMode) {
+      return;
+    }
+
+    if (nextViewMode === FolderTreeViewMode.FLAT) {
       onTrackViewControl?.(FOLDER_TREE_VIEW_CONTROL_ELEMENT_NAME.FLAT_VIEW_ACTIVE);
     }
-    onFlatViewChange(nextValue);
+
+    onViewModeChange(nextViewMode);
   };
 
   const handleExpandAll = () => {
@@ -76,14 +118,12 @@ export const FolderTreeFooter = ({
         'folder-tree-footer--fade-bottom': showBottomFade,
       })}
     >
-      <Toggle
-        value={isFlatView}
-        className={cx('folder-tree-footer__toggle')}
-        onChange={handleFlatViewChange}
-      >
-        {formatMessage(messages.flatView)}
-      </Toggle>
-      {!isFlatView && (
+      <SegmentedControl
+        options={viewModeOptions}
+        ariaLabel={formatMessage(messages.viewMode)}
+        onChange={handleViewModeChange}
+      />
+      {viewMode !== FolderTreeViewMode.FLAT && (
         <div className={cx('folder-tree-footer__actions')}>
           <Button variant="text" disabled={isExpandAllDisabled} onClick={handleExpandAll}>
             {formatMessage(messages.expandAll)}

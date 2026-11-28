@@ -53,6 +53,10 @@ export interface VirtualFolderTreeProps {
   pageSearchQuery?: string;
   enableDragAndDrop?: boolean;
   isFlatView?: boolean;
+  /** Test cases of every folder together with its subfolders, by folder id. */
+  subfolderTotalsById?: Map<number, number>;
+  /** "All test cases within subfolders" mode: counters show only the total. */
+  showSubfolderTotalsOnly?: boolean;
   hiddenActiveFolderIndicatorId?: number | null;
   canDropOn?: (draggedItem: TreeDragItem, targetId: string | number) => boolean;
   onFolderClick: (id: number) => void;
@@ -73,6 +77,8 @@ export const VirtualFolderTree = ({
   hasAnyMatch,
   enableDragAndDrop = false,
   isFlatView = false,
+  subfolderTotalsById,
+  showSubfolderTotalsOnly = false,
   hiddenActiveFolderIndicatorId = null,
   canDropOn,
   onFolderClick,
@@ -153,6 +159,8 @@ export const VirtualFolderTree = ({
       nextNodeDepth={nextNodeDepth}
       enableDragAndDrop={enableDragAndDrop}
       hasHiddenActiveDescendant={node.folder.id === hiddenActiveFolderIndicatorId}
+      totalTestsCount={subfolderTotalsById?.get(node.folder.id)}
+      showTotalTestsCountOnly={showSubfolderTotalsOnly}
       isDragging={isDragging}
       dragRef={dragRef}
       style={style}
@@ -222,6 +230,8 @@ export const VirtualFolderTree = ({
               nextNodeDepth={nextNodeDepth}
               enableDragAndDrop={enableDragAndDrop}
               hasHiddenActiveDescendant={folder.folder.id === hiddenActiveFolderIndicatorId}
+              totalTestsCount={subfolderTotalsById?.get(folder.folder.id)}
+              showTotalTestsCountOnly={showSubfolderTotalsOnly}
               style={rowStyle}
               onFolderClick={onFolderClick}
               setAllTestCases={setAllTestCases}

@@ -122,3 +122,23 @@ export const createTestCaseDropHandler = (action: TestCaseFolderActionCallback |
     }
   };
 };
+
+/** Total test cases of every folder together with all its subfolders, by folder id. */
+export const getSubfolderTotalsById = (folders: TransformedFolder[]): Map<number, number> => {
+  const totals = new Map<number, number>();
+
+  const collectTotal = (folder: TransformedFolder): number => {
+    const total = (folder.folders ?? []).reduce(
+      (sum, subfolder) => sum + collectTotal(subfolder),
+      folder.testsCount || 0,
+    );
+
+    totals.set(folder.id, total);
+
+    return total;
+  };
+
+  folders.forEach(collectTotal);
+
+  return totals;
+};

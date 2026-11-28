@@ -86,7 +86,13 @@ import {
   startLoadingFilteredFoldersAction,
   stopLoadingFilteredFoldersAction,
 } from './actionCreators';
-import { getAllFolderIdsToDelete } from 'common/utils/folderUtils';
+import {
+  FolderTreeViewModeScope,
+  getAllFolderIdsToDelete,
+  getFolderIdsForViewMode,
+  getFolderTreeViewMode,
+} from 'common/utils/folderUtils';
+import { userIdSelector } from 'controllers/user';
 import { fetchAllFolders } from './utils/fetchAllFolders';
 import { TestCase } from 'types/testCase';
 import { Page } from 'types/common';
@@ -107,10 +113,18 @@ function* getTestCasesByFolderId(action: GetTestCasesByFolderIdAction): Generato
     const { folderId, offset, limit, testCasesSearchParams, filterPriorities, filterTags } =
       action.payload;
     const projectKey = (yield select(projectKeySelector)) as string;
+    const userId = (yield select(userIdSelector)) as string | undefined;
+    const folders = (yield select(foldersSelector)) as Folder[];
+    const viewMode = getFolderTreeViewMode(userId, FolderTreeViewModeScope.TEST_CASE_LIBRARY);
+    const folderIds = getFolderIdsForViewMode(folderId, folders, viewMode);
+    const folderFilter =
+      folderIds.length > 1
+        ? { 'filter.in.testFolderId': folderIds.join(',') }
+        : { 'filter.eq.testFolderId': folderId };
     const result = (yield call(
       fetch,
       URLS.testCases(projectKey, {
-        'filter.eq.testFolderId': folderId,
+        ...folderFilter,
         'filter.cnt.name': testCasesSearchParams,
         ...buildTestCaseFilterParams(filterPriorities, filterTags),
         offset,
