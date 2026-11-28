@@ -419,6 +419,7 @@ export const URLS = {
         limit: 20,
         ...(search ? { search } : {}),
       })}`,
+  tmsUserSettings: (projectKey) => `${urlBase}project/${projectKey}/tms/user-settings`,
   tmsMilestone: (projectKey, query = {}) =>
     `${urlBase}project/${projectKey}/tms/milestone${getQueryParams(query)}`,
   tmsMilestoneById: (projectKey, milestoneId) =>
