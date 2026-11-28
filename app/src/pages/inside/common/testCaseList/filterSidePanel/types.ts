@@ -14,8 +14,11 @@
  * limitations under the License.
  */
 
+import type { SearchCondition } from './searchConditions';
+
 export interface FilterApplyPayload {
   priorities: string[];
   tags: string[];
   toRunOnly: boolean;
+  searchConditions?: SearchCondition[];
 }

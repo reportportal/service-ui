@@ -36,7 +36,7 @@ export const fetchAllFolders = async ({
   signal,
 }: {
   projectKey: string;
-  filters?: Record<string, string | number>;
+  filters?: Record<string, string | number | string[]>;
   signal?: AbortSignal;
 }): Promise<Folder[]> => {
   const limit = 1000;

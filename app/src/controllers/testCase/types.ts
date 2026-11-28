@@ -57,6 +57,7 @@ export interface GetAllTestCases {
   testCasesSearchParams?: string;
   filterPriorities?: string;
   filterTags?: string;
+  filterSearch?: string;
 }
 
 export interface GetTestCasesByFolderIdParams extends GetAllTestCases {

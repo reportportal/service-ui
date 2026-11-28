@@ -28,6 +28,7 @@ import {
 
 import { createClassnames, getStorageItem } from 'common/utils';
 import { buildFolderFilterParams } from 'pages/inside/common/testCaseList/filterSidePanel/utils';
+import { buildFolderSearchParams } from 'pages/inside/common/testCaseList/filterSidePanel/searchConditions/utils';
 import {
   transformedFoldersSelector,
   areFoldersLoadingSelector,
@@ -58,7 +59,6 @@ import { TestCasePageDefaultValues } from 'pages/inside/common/testCaseList/cons
 import { userIdSelector } from 'controllers/user';
 import { ExtendedTestCase } from 'types/testCase';
 import { findFolderById } from 'pages/inside/common/hooks';
-import type { NotificationMessageKey } from 'common/hooks/useNotification';
 
 import { ExpandedOptions } from '../../common/expandedOptions';
 import { commonMessages } from '../commonMessages';
@@ -124,13 +124,17 @@ export const TestCaseFolders = () => {
       testCasesSearchParams: query?.testCasesSearchParams,
       filterPriorities: query?.filterPriorities,
       filterTags: query?.filterTags,
+      filterSearch: query?.filterSearch,
     }),
     [query, savedLimit],
   );
 
   const searchExtraFilters = useMemo(
-    () => buildFolderFilterParams(queryParams.filterPriorities, queryParams.filterTags),
-    [queryParams.filterPriorities, queryParams.filterTags],
+    () => ({
+      ...buildFolderFilterParams(queryParams.filterPriorities, queryParams.filterTags),
+      ...buildFolderSearchParams(queryParams.filterSearch),
+    }),
+    [queryParams.filterPriorities, queryParams.filterTags, queryParams.filterSearch],
   );
 
   const currentQueryKey = useMemo(
@@ -142,6 +146,7 @@ export const TestCaseFolders = () => {
         queryParams.testCasesSearchParams ?? '',
         queryParams.filterPriorities ?? '',
         queryParams.filterTags ?? '',
+        queryParams.filterSearch ?? '',
       ].join('|'),
     [
       urlFolderId,
@@ -150,6 +155,7 @@ export const TestCaseFolders = () => {
       queryParams.testCasesSearchParams,
       queryParams.filterPriorities,
       queryParams.filterTags,
+      queryParams.filterSearch,
     ],
   );
   const [loadedQueryKey, setLoadedQueryKey] = useState<string | null>(null);
@@ -175,6 +181,7 @@ export const TestCaseFolders = () => {
         ...(query?.testCasesSearchParams && { testCasesSearchParams: query.testCasesSearchParams }),
         ...(query?.filterPriorities && { filterPriorities: query.filterPriorities }),
         ...(query?.filterTags && { filterTags: query.filterTags }),
+        ...(query?.filterSearch && { filterSearch: query.filterSearch }),
       },
     });
   }, [
@@ -184,6 +191,7 @@ export const TestCaseFolders = () => {
     query?.testCasesSearchParams,
     query?.filterPriorities,
     query?.filterTags,
+    query?.filterSearch,
   ]);
 
   useEffect(() => {
@@ -222,6 +230,7 @@ export const TestCaseFolders = () => {
     queryParams.testCasesSearchParams,
     queryParams.filterPriorities,
     queryParams.filterTags,
+    queryParams.filterSearch,
   ]);
 
   const handleFolderClick = (id: number) => {
@@ -268,7 +277,7 @@ export const TestCaseFolders = () => {
         testCaseId: testCase.id,
         testCasesSourceFolderId: testCase.testFolder?.id,
         destinationFolder: destinationFolderPayload,
-        successMessageId: 'testCaseMovedSuccessWithDetails' as NotificationMessageKey,
+        successMessageId: 'testCaseMovedSuccessWithDetails',
         successMessageValues: {
           testCaseName: testCase.name,
           folderName: destinationFolder.name,
@@ -287,7 +296,7 @@ export const TestCaseFolders = () => {
       await batchDuplicateTestCases({
         testCaseIds: [testCase.id],
         testFolderId: destinationFolder.id,
-        successMessageId: 'testCaseDuplicatedSuccessWithDetails' as NotificationMessageKey,
+        successMessageId: 'testCaseDuplicatedSuccessWithDetails',
         successMessageValues: {
           testCaseName: testCase.name,
           folderName: destinationFolder.name,

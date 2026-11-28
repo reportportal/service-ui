@@ -58,6 +58,7 @@ export interface GetTestCasesByFolderIdParams {
   testCasesSearchParams?: string;
   filterPriorities?: string;
   filterTags?: string;
+  filterSearch?: string;
 }
 
 export interface GetAllTestCases {
@@ -66,6 +67,7 @@ export interface GetAllTestCases {
   testCasesSearchParams?: string;
   filterPriorities?: string;
   filterTags?: string;
+  filterSearch?: string;
 }
 
 export interface CreateFolderParams {

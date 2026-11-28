@@ -222,7 +222,8 @@ export const AllTestCasesPage = ({
     !isLoading &&
     !query?.testCasesSearchParams &&
     !query?.filterPriorities &&
-    !query?.filterTags
+    !query?.filterTags &&
+    !query?.filterSearch
   ) {
     return <FolderEmptyState folderTitle={folderTitle} />;
   }

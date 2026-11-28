@@ -407,7 +407,7 @@ export const URLS = {
   testCaseBatchDuplicate: (projectKey) =>
     `${urlBase}project/${projectKey}/tms/test-case/batch/duplicate`,
   testCases: (projectKey, query = {}) =>
-    `${urlBase}project/${projectKey}/tms/test-case${getQueryParams(query)}`,
+    `${urlBase}project/${projectKey}/tms/test-case${getQueryParams(query, { arrayFormat: 'repeat' })}`,
   testPlanTestCases: (projectKey, id, query = {}) =>
     `${urlBase}project/${projectKey}/tms/test-plan/${id}/test-case${getQueryParams(query)}`,
   testPlan: (projectKey, query = {}) =>
@@ -434,7 +434,7 @@ export const URLS = {
   testPlanDuplicate: (projectKey, testPlanId) =>
     `${urlBase}project/${projectKey}/tms/test-plan/${testPlanId}/duplicate`,
   testFolders: (projectKey, query = {}) =>
-    `${urlBase}project/${projectKey}/tms/folder${getQueryParams(query)}`,
+    `${urlBase}project/${projectKey}/tms/folder${getQueryParams(query, { arrayFormat: 'repeat' })}`,
   testFolderDuplicate: (projectKey, folderId) =>
     `${urlBase}project/${projectKey}/tms/folder/${folderId}/duplicate`,
   folder: (projectKey, folderId) => `${urlBase}project/${projectKey}/tms/folder/${folderId}`,

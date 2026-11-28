@@ -43,6 +43,10 @@ import {
 import { projectKeySelector } from 'controllers/project';
 import { SPINNER_DEBOUNCE } from 'pages/inside/common/constants';
 import { buildTestCaseFilterParams } from 'pages/inside/common/testCaseList/filterSidePanel/utils';
+import {
+  addSearchValue,
+  buildTestCaseSearchParams,
+} from 'pages/inside/common/testCaseList/filterSidePanel/searchConditions/utils';
 import { hideModalAction } from 'controllers/modal';
 import {
   GET_FOLDERS,
@@ -104,18 +108,32 @@ function* getTestCasesByFolderId(action: GetTestCasesByFolderIdAction): Generato
   yield put(startLoadingTestCasesAction());
 
   try {
-    const { folderId, offset, limit, testCasesSearchParams, filterPriorities, filterTags } =
-      action.payload;
+    const {
+      folderId,
+      offset,
+      limit,
+      testCasesSearchParams,
+      filterPriorities,
+      filterTags,
+      filterSearch,
+    } = action.payload;
     const projectKey = (yield select(projectKeySelector)) as string;
     const result = (yield call(
       fetch,
-      URLS.testCases(projectKey, {
-        'filter.eq.testFolderId': folderId,
-        'filter.cnt.name': testCasesSearchParams,
-        ...buildTestCaseFilterParams(filterPriorities, filterTags),
-        offset,
-        limit,
-      }),
+      URLS.testCases(
+        projectKey,
+        addSearchValue(
+          {
+            'filter.eq.testFolderId': folderId,
+            ...buildTestCaseFilterParams(filterPriorities, filterTags),
+            ...buildTestCaseSearchParams(filterSearch),
+            offset,
+            limit,
+          },
+          'filter.cnt.name',
+          testCasesSearchParams,
+        ),
+      ),
     )) as {
       content: TestCase[];
       page: Page;
@@ -177,16 +195,24 @@ function* getAllTestCases(action: GetAllTestCasesAction): Generator {
   yield put(startLoadingTestCasesAction());
 
   try {
-    const { offset, limit, testCasesSearchParams, filterPriorities, filterTags } = action.payload;
+    const { offset, limit, testCasesSearchParams, filterPriorities, filterTags, filterSearch } =
+      action.payload;
     const projectKey = (yield select(projectKeySelector)) as string;
     const result = (yield call(
       fetch,
-      URLS.testCases(projectKey, {
-        offset,
-        limit,
-        'filter.cnt.name': testCasesSearchParams,
-        ...buildTestCaseFilterParams(filterPriorities, filterTags),
-      }),
+      URLS.testCases(
+        projectKey,
+        addSearchValue(
+          {
+            offset,
+            limit,
+            ...buildTestCaseFilterParams(filterPriorities, filterTags),
+            ...buildTestCaseSearchParams(filterSearch),
+          },
+          'filter.cnt.name',
+          testCasesSearchParams,
+        ),
+      ),
     )) as {
       content: TestCase[];
       page: Page;
@@ -405,10 +431,11 @@ function* getFilteredFolders(action: GetFilteredFoldersAction) {
   try {
     yield put(startLoadingFilteredFoldersAction());
 
-    const filters: Record<string, string | number> = { ...extraFilters };
-    if (searchQuery) {
-      filters[MANUAL_LAUNCH_FOLDER_SEARCH_FILTER_KEY] = searchQuery;
-    }
+    const filters = addSearchValue<Record<string, string | number | string[]>>(
+      { ...extraFilters },
+      MANUAL_LAUNCH_FOLDER_SEARCH_FILTER_KEY,
+      searchQuery,
+    );
 
     const folders = (yield call(fetchAllFolders, {
       projectKey,

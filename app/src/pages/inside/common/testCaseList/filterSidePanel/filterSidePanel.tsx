@@ -37,11 +37,18 @@ import { STATUS_TYPES } from '../constants';
 import { messages } from './messages';
 import { ensureArray, normalizeSelection } from './utils';
 import { useTagOptions } from './useTagOptions';
+import {
+  SearchConditions,
+  normalizeSearchConditions,
+  type SearchCondition,
+} from './searchConditions';
 import type { FilterApplyPayload } from './types';
 
 import styles from './filterSidePanel.scss';
 
 const cx = createClassnames(styles);
+
+const EMPTY_SEARCH_CONDITIONS: SearchCondition[] = [];
 
 interface FilterSidePanelProps {
   isVisible: boolean;
@@ -50,6 +57,8 @@ interface FilterSidePanelProps {
   selectedTags: string[];
   selectedToRunOnly?: boolean;
   showToRunOnly?: boolean;
+  selectedSearchConditions?: SearchCondition[];
+  showSearchConditions?: boolean;
   onPrioritiesChange: (priorities: string[]) => void;
   onTagsChange: (tags: string[]) => void;
   onApply: (payload: FilterApplyPayload) => void;
@@ -62,6 +71,8 @@ const FilterSidePanelComponent = ({
   selectedTags,
   selectedToRunOnly = false,
   showToRunOnly = false,
+  selectedSearchConditions = EMPTY_SEARCH_CONDITIONS,
+  showSearchConditions = false,
   onPrioritiesChange,
   onTagsChange,
   onApply,
@@ -74,18 +85,36 @@ const FilterSidePanelComponent = ({
     useState<string[]>(selectedPriorities);
   const [localSelectedTags, setLocalSelectedTags] = useState<string[]>(selectedTags);
   const [localToRunOnly, setLocalToRunOnly] = useState(Boolean(selectedToRunOnly));
+  const [localSearchConditions, setLocalSearchConditions] =
+    useState<SearchCondition[]>(selectedSearchConditions);
 
   useEffect(() => {
     if (isVisible && !wasVisibleRef.current) {
       setLocalSelectedPriorities(selectedPriorities);
       setLocalSelectedTags(selectedTags);
       setLocalToRunOnly(Boolean(selectedToRunOnly));
-      // eslint-disable-next-line @typescript-eslint/no-floating-promises -- fire-and-forget when panel opens
+      setLocalSearchConditions(selectedSearchConditions);
+       
       fetchTagOptions();
     }
 
     wasVisibleRef.current = isVisible;
-  }, [isVisible, selectedPriorities, selectedTags, selectedToRunOnly, fetchTagOptions]);
+  }, [
+    isVisible,
+    selectedPriorities,
+    selectedTags,
+    selectedToRunOnly,
+    selectedSearchConditions,
+    fetchTagOptions,
+  ]);
+
+  const pendingSearchConditions = useMemo(
+    () =>
+      showSearchConditions
+        ? normalizeSearchConditions(localSearchConditions)
+        : EMPTY_SEARCH_CONDITIONS,
+    [showSearchConditions, localSearchConditions],
+  );
 
   const priorityOptions = useMemo(
     () => [
@@ -117,6 +146,7 @@ const FilterSidePanelComponent = ({
     setLocalSelectedPriorities([]);
     setLocalSelectedTags([]);
     setLocalToRunOnly(false);
+    setLocalSearchConditions([]);
   };
 
   const handleApplyFilters = () => {
@@ -124,6 +154,7 @@ const FilterSidePanelComponent = ({
       priorities: localSelectedPriorities,
       tags: localSelectedTags,
       toRunOnly: showToRunOnly ? localToRunOnly : false,
+      searchConditions: pendingSearchConditions,
     };
 
     onPrioritiesChange(payload.priorities);
@@ -152,18 +183,23 @@ const FilterSidePanelComponent = ({
   const hasActiveFilters =
     !isEmpty(localSelectedPriorities) ||
     !isEmpty(localSelectedTags) ||
-    (showToRunOnly && localToRunOnly);
+    (showToRunOnly && localToRunOnly) ||
+    localSearchConditions.length > 0;
 
   const hasChanges = useMemo(() => {
     const applied = {
       priorities: normalizeSelection(selectedPriorities),
       tags: normalizeSelection(selectedTags),
       toRunOnly: appliedToRunOnly,
+      searchConditions: showSearchConditions
+        ? normalizeSearchConditions(selectedSearchConditions)
+        : EMPTY_SEARCH_CONDITIONS,
     };
     const pending = {
       priorities: normalizeSelection(localSelectedPriorities),
       tags: normalizeSelection(localSelectedTags),
       toRunOnly: showToRunOnly ? localToRunOnly : false,
+      searchConditions: pendingSearchConditions,
     };
 
     return !isEqual(applied, pending);
@@ -175,6 +211,9 @@ const FilterSidePanelComponent = ({
     selectedTags,
     appliedToRunOnly,
     showToRunOnly,
+    selectedSearchConditions,
+    pendingSearchConditions,
+    showSearchConditions,
   ]);
 
   const titleComponent = (
@@ -183,6 +222,9 @@ const FilterSidePanelComponent = ({
 
   const contentComponent = (
     <div className={cx('filter-content')}>
+      {showSearchConditions && (
+        <SearchConditions conditions={localSearchConditions} onChange={setLocalSearchConditions} />
+      )}
       <div className={cx('filter-section')}>
         <div className={cx('filter-label')}>{formatMessage(commonMessages.priority)}</div>
         <Dropdown

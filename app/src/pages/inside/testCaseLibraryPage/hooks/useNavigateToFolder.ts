@@ -70,6 +70,7 @@ export const useNavigateToFolder = () => {
             testCasesSearchParams: query?.testCasesSearchParams,
             filterPriorities: query?.filterPriorities,
             filterTags: query?.filterTags,
+            filterSearch: query?.filterSearch,
           }),
         );
       } else {
@@ -84,6 +85,7 @@ export const useNavigateToFolder = () => {
             ...(query?.testCasesSearchParams && { testCasesSearchParams: query.testCasesSearchParams }),
             ...(query?.filterPriorities && { filterPriorities: query.filterPriorities }),
             ...(query?.filterTags && { filterTags: query.filterTags }),
+            ...(query?.filterSearch && { filterSearch: query.filterSearch }),
           },
         });
       }
