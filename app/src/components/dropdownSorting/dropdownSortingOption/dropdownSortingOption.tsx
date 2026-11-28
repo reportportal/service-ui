@@ -38,8 +38,6 @@ export const DropdownSortingOptionWrapped = (
   { label, selected, value, direction, onChange, onKeyDown }: DropdownSortingOptionProps,
   ref: React.Ref<HTMLButtonElement>,
 ) => {
-  const icon = selected ? <DirectionIcon direction={direction} /> : <DirectionIcon />;
-
   const onKeyDownHandler = (event: React.KeyboardEvent<HTMLButtonElement>) => {
     onKeyDown(event);
   };
@@ -57,7 +55,9 @@ export const DropdownSortingOptionWrapped = (
       ref={ref}
       tabIndex={-1}
     >
-      <div className={cx('icon')}>{icon}</div>
+      <div className={cx('icon')}>
+        <DirectionIcon direction={direction} />
+      </div>
       <div className={cx('label')}>{label}</div>
     </button>
   );
