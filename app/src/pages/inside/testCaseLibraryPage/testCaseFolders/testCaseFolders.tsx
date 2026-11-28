@@ -43,6 +43,8 @@ import {
   getTestCaseSortParam,
   resolveTestCaseSorting,
   saveTestCaseSorting,
+  getUserSettingsKey,
+  clearUnsavedTestCaseSorting,
 } from 'controllers/testCase';
 import {
   locationSelector,
@@ -134,6 +136,20 @@ export const TestCaseFolders = () => {
     },
     [userId],
   );
+
+  // The list requests read the saved option, so follow the changes saved in another tab
+  useEffect(() => {
+    const handleStorageChange = ({ key }: StorageEvent) => {
+      if (key === null || key === getUserSettingsKey(userId)) {
+        clearUnsavedTestCaseSorting();
+        setSavedSorting(getSavedTestCaseSorting(userId));
+      }
+    };
+
+    window.addEventListener('storage', handleStorageChange);
+
+    return () => window.removeEventListener('storage', handleStorageChange);
+  }, [userId]);
 
   const queryParams = useMemo(
     () => ({

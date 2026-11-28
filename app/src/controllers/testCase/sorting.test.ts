@@ -15,6 +15,7 @@
  */
 
 import {
+  clearUnsavedTestCaseSorting,
   DEFAULT_FOLDER_TEST_CASE_SORTING,
   DEFAULT_TEST_CASE_SORTING,
   getTestCaseSorting,
@@ -31,6 +32,11 @@ describe('test case list sorting', () => {
 
   beforeEach(() => {
     localStorage.clear();
+    clearUnsavedTestCaseSorting();
+  });
+
+  afterEach(() => {
+    jest.restoreAllMocks();
   });
 
   it('returns Creation date, newest first, when nothing is saved', () => {
@@ -62,6 +68,28 @@ describe('test case list sorting', () => {
       JSON.stringify({ testCaseListSorting: { field: 'name', direction: 'up' } }),
     );
     expect(getTestCaseSorting(userId)).toEqual(DEFAULT_TEST_CASE_SORTING);
+  });
+
+  it('keeps the selected option when it cannot be saved', () => {
+    saveTestCaseSorting(userId, { field: 'name', direction: 'ASC' });
+    jest.spyOn(Storage.prototype, 'setItem').mockImplementation(() => {
+      throw new DOMException('The quota has been exceeded.', 'QuotaExceededError');
+    });
+
+    expect(() =>
+      saveTestCaseSorting(userId, { field: 'createdAt', direction: 'ASC' }),
+    ).not.toThrow();
+    expect(getTestCaseSorting(userId)).toEqual({ field: 'createdAt', direction: 'ASC' });
+    expect(getTestCaseSorting('user-2')).toEqual(DEFAULT_TEST_CASE_SORTING);
+
+    jest.restoreAllMocks();
+    saveTestCaseSorting(userId, { field: 'name', direction: 'DESC' });
+    localStorage.setItem(
+      settingsKey,
+      JSON.stringify({ testCaseListSorting: { field: 'name', direction: 'ASC' } }),
+    );
+
+    expect(getTestCaseSorting(userId)).toEqual({ field: 'name', direction: 'ASC' });
   });
 
   it('builds the sort parameter of GET /tms/test-case', () => {

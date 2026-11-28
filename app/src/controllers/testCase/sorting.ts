@@ -59,7 +59,15 @@ export const DEFAULT_FOLDER_TEST_CASE_SORTING: TestCaseSorting = {
 
 const TEST_CASE_SORTING_STORAGE_KEY = 'testCaseListSorting';
 
-const getUserSettingsKey = (userId: string | number) => `${userId}_settings`;
+export const getUserSettingsKey = (userId: string | number) => `${userId}_settings`;
+
+// The last option that could not be saved (e.g. the storage quota is full). It is used until the next
+// successful save or a change made in another tab, so the list and the control keep the selected option.
+let unsavedSorting: { userId: string; sorting: TestCaseSorting } | null = null;
+
+export const clearUnsavedTestCaseSorting = (): void => {
+  unsavedSorting = null;
+};
 
 const isSortingField = (value: unknown): value is TestCaseSortingField =>
   Object.values(TEST_CASE_SORTING_FIELDS).includes(value as TestCaseSortingField);
@@ -72,6 +80,10 @@ export const getSavedTestCaseSorting = (
 ): TestCaseSorting | null => {
   if (!userId) {
     return null;
+  }
+
+  if (unsavedSorting?.userId === String(userId)) {
+    return unsavedSorting.sorting;
   }
 
   const settings = getStorageItem(getUserSettingsKey(userId)) as Record<string, unknown> | null;
@@ -111,7 +123,12 @@ export const isCustomOrderSorting = ({ field }: TestCaseSorting): boolean =>
   field === TEST_CASE_SORTING_FIELDS.CUSTOM_ORDER;
 
 export const saveTestCaseSorting = (userId: string | number, sorting: TestCaseSorting): void => {
-  updateStorageItem(getUserSettingsKey(userId), { [TEST_CASE_SORTING_STORAGE_KEY]: sorting });
+  try {
+    updateStorageItem(getUserSettingsKey(userId), { [TEST_CASE_SORTING_STORAGE_KEY]: sorting });
+    unsavedSorting = null;
+  } catch {
+    unsavedSorting = { userId: String(userId), sorting };
+  }
 };
 
 export const getTestCaseSortParam = ({ field, direction }: TestCaseSorting): string =>
